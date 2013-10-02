@@ -1202,7 +1202,15 @@ wxString CommandManager::GetPrefixedLabelFromName(wxString name)
    if (!entry)
       return wxT("");
 
+#if defined(EXPERIMENTAL_KEY_VIEW)
+   wxString prefix;
+   if (!entry->labelPrefix.IsEmpty()) {
+      prefix = entry->labelPrefix + wxT(" - ");
+   }
+   return wxMenuItem::GetLabelFromText(prefix + entry->label);
+#else
    return wxString(entry->labelPrefix + wxT(" ") + entry->label).Trim(false).Trim(true);
+#endif
 }
 
 wxString CommandManager::GetCategoryFromName(wxString name)

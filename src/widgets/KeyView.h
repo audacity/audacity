@@ -26,10 +26,9 @@ class KeyNode
 public:
    KeyNode()
    {
-      node = -1;
       index = -1;
-      depth = -1;
       line = -1;
+      depth = -1;
       iscat = false;
       ispfx = false;
       isparent = false;
@@ -37,14 +36,14 @@ public:
    }
 
 public:
+   wxString name;
    wxString category;
    wxString prefix;
    wxString label;
    wxString key;
-   int node;
    int index;
-   int depth;
    int line;
+   int depth;
    bool iscat;
    bool ispfx;
    bool isparent;
@@ -79,6 +78,7 @@ public:
            const wxPoint & pos = wxDefaultPosition,
            const wxSize & size = wxDefaultSize);
    virtual ~KeyView();
+   wxString GetName() const; // Gets the control name from the base class
 
    void RefreshBindings(const wxArrayString & names,
                         const wxArrayString & categories,
@@ -86,35 +86,49 @@ public:
                         const wxArrayString & labels,
                         const wxArrayString & keys);
 
-   wxString GetLabel(int line);
-   wxString GetFullLabel(int line);
-   wxString GetKey(int line);
-   int GetIndex(int line);
+   int GetSelected() const;
 
-   void SetKey(int line, const wxString & key);
+   wxString GetLabel(int index) const;
+   wxString GetFullLabel(int index) const;
+
+   int GetIndexByName(const wxString & name) const;
+   wxString GetName(int index) const;
+   wxString GetNameByKey(const wxString & key) const;
+
+   int GetIndexByKey(const wxString & key) const;
+   wxString GetKey(int index) const;
+   bool CanSetKey(int index) const;
+   bool SetKey(int index, const wxString & key);
+   bool SetKeyByName(const wxString & name, const wxString & key);
+
    void SetView(ViewByType type);
+
    void SetFilter(const wxString & filter);
 
    void ExpandAll();
    void CollapseAll();
 
 private:
-   void OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const;
+   void RecalcExtents();
+   void UpdateHScroll();
+   void RefreshLines();
+
+   void SelectNode(int index);
+
+   int LineToIndex(int line) const;
+   int IndexToLine(int index) const;
+
    void OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const;
+   void OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const;
    wxCoord OnMeasureItem(size_t line) const;
 
-   void OnLeftDown(wxMouseEvent & event);
-   void OnKeyDown(wxKeyEvent & event);
    void OnSelected(wxCommandEvent & event);
    void OnSetFocus(wxFocusEvent & event);
    void OnKillFocus(wxFocusEvent & event);
-   void OnScroll(wxScrollWinEvent & event);
    void OnSize(wxSizeEvent & event);
-
-   void RecalcExtents();
-   void RefreshLineCount();
-   void UpdateHScroll();
-   void SelectLine(int line);
+   void OnScroll(wxScrollWinEvent & event);
+   void OnKeyDown(wxKeyEvent & event);
+   void OnLeftDown(wxMouseEvent & event);
 
    static int CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2);
    static int CmpKeyNodeByName(KeyNode ***n1, KeyNode ***n2);
@@ -172,7 +186,8 @@ public:
 
    void SetCurrentLine(int row);
    void ListUpdated();
-   bool GetLine(int childId, int & line);
+   bool LineToId(int line, int & childId);
+   bool IdToLine(int childId, int & line);
 
    // Retrieves the address of an IDispatch interface for the specified child.
    // All objects must support this property.

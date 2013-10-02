@@ -62,6 +62,8 @@ private:
 
    KeyView *mView;
    wxTextCtrl *mKey;
+   wxButton *mSet;
+   wxButton *mClear;
 
    wxTextCtrl *mFilter;
    wxStaticText *mFilterLabel;

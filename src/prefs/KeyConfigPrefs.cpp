@@ -135,6 +135,12 @@ void KeyConfigPrefs::Populate()
 
    PopulateOrExchange(S);
 
+   mCommandSelected = wxNOT_FOUND;
+
+   mManager = project->GetCommandManager();
+
+   RefreshBindings();
+
    if (mViewByTree->GetValue()) {
       mView->SetView(ViewByTree);
    }
@@ -144,12 +150,6 @@ void KeyConfigPrefs::Populate()
    else if (mViewByKey->GetValue()) {
       mView->SetView(ViewByKey);
    }
-
-   mCommandSelected = -1;
-
-   mManager = project->GetCommandManager();
-
-   RefreshBindings();
 }
 
 /// Normally in classes derived from PrefsPanel this function 
@@ -257,8 +257,8 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
          S.AddWindow(mKey);
 
          /* i18n-hint: (verb)*/
-         S.Id(SetButtonID).AddButton(_("&Set"));
-         S.Id(ClearButtonID).AddButton(_("Cl&ear"));
+         mSet = S.Id(SetButtonID).AddButton(_("&Set"));
+         mClear = S.Id(ClearButtonID).AddButton(_("Cl&ear"));
       }
       S.EndThreeColumn();
 
@@ -288,6 +288,8 @@ void KeyConfigPrefs::RefreshBindings()
    wxArrayString Prefixes;
 
    mNames.Clear();
+   mKeys.Clear();
+   mDefaultKeys.Clear();
    mManager->GetAllCommandData(
       mNames, 
       mKeys, 
@@ -429,7 +431,7 @@ void KeyConfigPrefs::OnHotkeyKillFocus(wxFocusEvent & e)
    e.Skip();
 }
 
-void KeyConfigPrefs::OnFilterTimer(wxTimerEvent & e)
+void KeyConfigPrefs::OnFilterTimer(wxTimerEvent & WXUNUSED(e))
 {
    // The filter timer has expired, so set the filter
    if (mFilterPending)
@@ -493,45 +495,69 @@ void KeyConfigPrefs::OnFilterChar(wxKeyEvent & e)
 // corresponding command, or the empty string if none is found.
 wxString KeyConfigPrefs::NameFromKey(const wxString & key)
 {
-   int i = mNewKeys.Index(key);
-
-   if (i == wxNOT_FOUND) {
-      return wxEmptyString;
-   }
-
-   return mNames[i];
+   return mView->GetNameByKey(key);
 }
 
 // Sets the selected command to have this key
 // This is not yet a committed change, which will happen on a save.
 void KeyConfigPrefs::SetKeyForSelected(const wxString & key)
 {
-   int index = mView->GetIndex(mCommandSelected);
+   wxString name = mView->GetName(mCommandSelected);
+
+   if (!mView->CanSetKey(mCommandSelected))
+   {
+      wxMessageBox(_("You may not assign a key to this entry"),
+         _("Error"), wxICON_ERROR | wxCENTRE, this);
+      return;
+   }
 
    mView->SetKey(mCommandSelected, key);
-   mManager->SetKeyFromIndex(index, key);
-   mNewKeys[index] = key;
+   mManager->SetKeyFromName(name, key);
+   mNewKeys[mNames.Index(name)] = key;
 }
 
 
 void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
 {
-   wxString newKey = mKey->GetValue();
-
-   wxString alreadyAssignedName = NameFromKey(newKey);
-
-   // Prevent same hotkey combination being used twice.
-   if (!alreadyAssignedName.IsEmpty()) {
-      wxMessageBox(
-         wxString::Format(
-            _("The keyboard shortcut '%s' is already assigned to:\n\n'%s'"),
-            newKey.c_str(),
-            alreadyAssignedName.c_str()),
-         _("Error"), wxICON_STOP | wxCENTRE, this);
+   if (mCommandSelected == wxNOT_FOUND) {
+      wxMessageBox(_("You must select a binding before assigning a shortcut"),
+         _("Error"), wxICON_WARNING | wxCENTRE, this);
       return;
    }
 
-   SetKeyForSelected(newKey);
+   wxString key = mKey->GetValue();
+   wxString oldname = mView->GetNameByKey(key);
+   wxString newname = mView->GetName(mCommandSelected);
+
+   // Just ignore it if they are the same
+   if (oldname == newname) {
+      return;
+   }
+
+   // Prevent same hotkey combination being used twice.
+   if (!oldname.IsEmpty()) {
+      wxString oldlabel = mManager->GetCategoryFromName(oldname) + wxT(" - ") +
+                          mManager->GetPrefixedLabelFromName(oldname);
+      wxString newlabel = mManager->GetCategoryFromName(newname) + wxT(" - ") +
+                          mManager->GetPrefixedLabelFromName(newname);
+      if (wxMessageBox(
+            wxString::Format(
+            _("The keyboard shortcut '%s' is already assigned to:\n\n\t'%s'\n\nClick OK to assign the shortcut to\n\n\t'%s'\n\ninstead.  Otherwise, click Cancel."),
+            key.c_str(),
+            oldlabel.c_str(),
+            newlabel.c_str()),
+            _("Error"), wxOK | wxCANCEL | wxICON_STOP | wxCENTRE, this) == wxCANCEL)
+      {
+         return;
+      }
+
+      mView->SetKeyByName(oldname, wxEmptyString);
+      mManager->SetKeyFromName(oldname, wxEmptyString);
+      mNewKeys[mNames.Index(oldname)].Empty();
+      
+   }
+
+   SetKeyForSelected(key);
 }
 
 void KeyConfigPrefs::OnClear(wxCommandEvent& WXUNUSED(event))
@@ -543,10 +569,17 @@ void KeyConfigPrefs::OnClear(wxCommandEvent& WXUNUSED(event))
 
 void KeyConfigPrefs::OnSelected(wxCommandEvent & e)
 {
-   mCommandSelected = e.GetInt();
-
+   mCommandSelected = mView->GetSelected();
    mKey->Clear();
-   mKey->AppendText(mView->GetKey(mCommandSelected));
+
+   bool canset = mView->CanSetKey(mCommandSelected);
+   if (canset) {
+      mKey->AppendText(mView->GetKey(mCommandSelected));
+   }
+
+   mKey->Enable(canset);
+   mSet->Enable(canset);
+   mClear->Enable(canset);
 }
 
 void KeyConfigPrefs::OnViewBy(wxCommandEvent & e)

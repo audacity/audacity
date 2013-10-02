@@ -113,107 +113,232 @@ KeyView::~KeyView()
 }
 
 //
-// Returns the label for the given line
+// Returns the index of the selected node
+//
+int
+KeyView::GetSelected() const
+{
+   return LineToIndex(GetSelection());
+}
+
+//
+// Returns the name of the control
 //
 wxString
-KeyView::GetLabel(int line)
+KeyView::GetName() const
 {
-   // Make sure line is valid
-   if (line < 0 || line >= (int) mLines.GetCount())
+   // Just forward request
+   return wxVListBox::GetName();
+}
+
+//
+// Returns the label for the given index
+//
+wxString
+KeyView::GetLabel(int index) const
+{
+   // Make sure index is valid
+   if (index < 0 || index >= (int) mNodes.GetCount())
    {
       wxASSERT(false);
       return wxEmptyString;
    }
 
-   return mLines[line]->label;
+   return mNodes[index].label;
 }
 
 //
-// Returns the prefix (if available) prepended to the label for the given line
+// Returns the prefix (if available) prepended to the label for the given index
 //
 wxString
-KeyView::GetFullLabel(int line)
+KeyView::GetFullLabel(int index) const
 {
-   // Make sure line is valid
-   if (line < 0 || line >= (int) mLines.GetCount())
+   // Make sure index is valid
+   if (index < 0 || index >= (int) mNodes.GetCount())
    {
       wxASSERT(false);
       return wxEmptyString;
    }
 
    // Cache the node and label
-   KeyNode *node = mLines[line];
-   wxString label = node->label;
+   KeyNode & node = mNodes[index];
+   wxString label = node.label;
 
    // Prepend the prefix if available
-   if (!node->prefix.IsEmpty())
+   if (!node.prefix.IsEmpty())
    {
-      label = node->prefix + wxT(" - ") + label;
+      label = node.prefix + wxT(" - ") + label;
    }
 
    return label;
 }
 
 //
-// Returns the key for the given line
+// Returns the index for the given name
+//
+int
+KeyView::GetIndexByName(const wxString & name) const
+{
+   int cnt = (int) mNodes.GetCount();
+
+   // Search the nodes for the key
+   for (int i = 0; i < cnt; i++)
+   {
+      if (name.CmpNoCase(mNodes[i].name) == 0)
+      {
+         return mNodes[i].index;
+      }
+   }
+
+   return wxNOT_FOUND;
+}
+
+//
+// Returns the command manager name for the given index
 //
 wxString
-KeyView::GetKey(int line)
+KeyView::GetName(int index) const
 {
-   // Make sure line is valid
-   if (line < 0 || line >= (int) mLines.GetCount())
+   // Make sure index is valid
+   if (index < 0 || index >= (int) mNodes.GetCount())
    {
       wxASSERT(false);
       return wxEmptyString;
    }
 
-   return mLines[line]->key;
+   return mNodes[index].name;
 }
 
 //
-// Returns the command manager index for the given line
+// Returns the command manager index for the given key combination
+//
+wxString
+KeyView::GetNameByKey(const wxString & key) const
+{
+   int cnt = (int) mNodes.GetCount();
+
+   // Search the nodes for the key
+   for (int i = 0; i < cnt; i++)
+   {
+      if (key.CmpNoCase(mNodes[i].key) == 0)
+      {
+         return mNodes[i].name;
+      }
+   }
+
+   return wxEmptyString;
+}
+
+//
+// Returns the index for the given key
 //
 int
-KeyView::GetIndex(int line)
+KeyView::GetIndexByKey(const wxString & key) const
 {
-   // Make sure line is valid
-   if (line < 0 || line >= (int) mLines.GetCount())
+   int cnt = (int) mNodes.GetCount();
+
+   // Search the nodes for the key
+   for (int i = 0; i < cnt; i++)
    {
-      wxASSERT(false);
-      return wxNOT_FOUND;
+      if (key.CmpNoCase(mNodes[i].key) == 0)
+      {
+         return mNodes[i].index;
+      }
    }
 
-   return mLines[line]->index;
+   return wxNOT_FOUND;
 }
 
 //
-// Sets the key for the given line
+// Returns the key for the given index
 //
-void
-KeyView::SetKey(int line, const wxString & key)
+wxString
+KeyView::GetKey(int index) const
 {
-   // Make sure line is valid
-   if (line < 0 || line >= (int) mLines.GetCount())
+   // Make sure index is valid
+   if (index < 0 || index >= (int) mNodes.GetCount())
    {
-      return;
+      wxASSERT(false);
+      return wxEmptyString;
    }
 
-   // Cache the node and set the new key
-   KeyNode *node = mLines[line];
-   node->key = key;
+   return mNodes[index].key;
+}
+
+//
+// Use to determine if a key can be assigned to the given index
+//
+bool
+KeyView::CanSetKey(int index) const
+{
+   // Make sure index is valid
+   if (index < 0 || index >= (int) mNodes.GetCount())
+   {
+      wxASSERT(false);
+      return false;
+   }
+
+   // Parents can't be assigned keys
+   return !mNodes[index].isparent;
+}
+
+//
+// Sets the key for the given index
+//
+bool
+KeyView::SetKey(int index, const wxString & key)
+{
+   // Make sure index is valid
+   if (index < 0 || index >= (int) mNodes.GetCount())
+   {
+      wxASSERT(false);
+      return false;
+   }
+
+   // Cache the node
+   KeyNode & node = mNodes[index];
+
+   // Do not allow setting keys on branches
+   if (node.isparent)
+   {
+      return false;
+   }
+   
+   // Set the new key
+   node.key = key;
 
    // Check to see if the key column needs to be expanded
    int x, y;
-   GetTextExtent(node->key, &x, &y);
+   GetTextExtent(node.key, &x, &y);
    if (x > mKeyWidth || y > mLineHeight)
    {
       // New key is wider than column to recalc extents (will refresh view)
       RecalcExtents();
-      return;
+      return true;
    }
 
    // Refresh the view lines
-   RefreshLine(line);
+   RefreshAll();
+
+   return true;
+}
+
+//
+// Sets the key for the given name
+//
+bool
+KeyView::SetKeyByName(const wxString & name, const wxString & key)
+{
+   int index = GetIndexByName(name);
+
+   // Bail is the name wasn't found
+   if (index == wxNOT_FOUND)
+   {
+      return false;
+   }
+
+   // Go set the key
+   return SetKey(index, key);
 }
 
 //
@@ -222,24 +347,23 @@ KeyView::SetKey(int line, const wxString & key)
 void
 KeyView::SetView(ViewByType type)
 {
-   int line = GetSelection();
-   KeyNode *node = NULL;
+   int index = LineToIndex(GetSelection());
 
    // Handle an existing selection
-   if (line != wxNOT_FOUND)
+   if (index != wxNOT_FOUND)
    {
       // Cache the currently selected node
-      node = mLines[line];
+      KeyNode & node = mNodes[index];
 
       // Expand branches if switching to Tree view and a line
       // is currently selected
       if (type == ViewByTree)
       {
          // Cache the node's depth
-         int depth = node->depth;
+         int depth = node.depth;
 
          // Search for its parents, setting each one as open
-         for (int i = node->node - 1; i >= 0 && depth > 1; i--)
+         for (int i = node.index - 1; i >= 0 && depth > 1; i--)
          {
             if (mNodes[i].depth < depth)
             {
@@ -250,26 +374,19 @@ KeyView::SetView(ViewByType type)
       }
    }
 
+   // Unselect any currently selected line...do even if none selected
+   SelectNode(-1);
+
    // Save new type
    mViewType = type;
 
    // Refresh the view lines
-   RefreshLineCount();
+   RefreshLines();
 
-   // Unselect any currently selected line...do even if none selected
-   SelectLine(-1);
-
-   // Locate the previously selected node and reselect
-   if (node)
+   // Reselect old node
+   if (index != wxNOT_FOUND)
    {
-      for (size_t i = 0; i < mLines.GetCount(); i++)
-      {
-         if (mLines[i]->node == node->node)
-         {
-            SelectLine(i);
-            break;
-         }
-      }
+      SelectNode(index);
    }
 
    return;
@@ -283,7 +400,7 @@ KeyView::SetFilter(const wxString & filter)
 {
    // Save it and refresh to filter the view
    mFilter = filter.Lower();
-   RefreshLineCount();
+   RefreshLines();
 }
 
 //
@@ -292,7 +409,7 @@ KeyView::SetFilter(const wxString & filter)
 void
 KeyView::ExpandAll()
 {
-   size_t cnt = mNodes.GetCount();
+   int cnt = (int) mNodes.GetCount();
 
    // Set all parent nodes to open
    for (int i = 0; i < cnt; i++)
@@ -305,7 +422,7 @@ KeyView::ExpandAll()
       }
    }
 
-   RefreshLineCount();
+   RefreshLines();
 }
 
 //
@@ -314,7 +431,7 @@ KeyView::ExpandAll()
 void
 KeyView::CollapseAll()
 {
-   size_t cnt = mNodes.GetCount();
+   int cnt = (int) mNodes.GetCount();
 
    // Set all parent nodes to closed
    for (int i = 0; i < cnt; i++)
@@ -327,7 +444,7 @@ KeyView::CollapseAll()
       }
    }
 
-   RefreshLineCount();
+   RefreshLines();
 }
 
 //
@@ -342,7 +459,8 @@ KeyView::RecalcExtents()
    mKeyWidth = 0;
 
    // Examine all nodes
-   for (size_t i = 0; i < mNodes.GetCount(); i++)
+   int cnt = (int) mNodes.GetCount();
+   for (int i = 0; i < cnt; i++)
    {
       KeyNode & node = mNodes[i];
       int x, y;
@@ -444,8 +562,10 @@ KeyView::RefreshBindings(const wxArrayString & names,
    bool inpfx = false;
 
    // Examine all names...all arrays passed have the same indexes
-   for (size_t i = 0; i < names.GetCount(); i++)
+   int cnt = (int) names.GetCount();
+   for (int i = 0; i < cnt; i++)
    {
+      wxString name = names[i];
       int x, y;
 
       // Remove any menu code from the category and prefix
@@ -487,18 +607,17 @@ KeyView::RefreshBindings(const wxArrayString & names,
             KeyNode node;
 
             // Fill in the node info
+            node.name = wxEmptyString;    // don't associate branches with a command
             node.category = cat;
             node.prefix = pfx;
             node.label = cat;
-            node.node = ++nodecnt;
-            node.index = i;
+            node.index = nodecnt++;
             node.iscat = true;
             node.isparent = true;
-            node.depth = depth;
+            node.depth = depth++;
 
             // Add it to the tree
             mNodes.Add(node);
-            depth++;
             incat = true;
 
             // Measure category
@@ -527,18 +646,17 @@ KeyView::RefreshBindings(const wxArrayString & names,
             KeyNode node;
 
             // Fill in the node info
+            node.name = wxEmptyString;    // don't associate branches with a command
             node.category = cat;
             node.prefix = pfx;
             node.label = pfx;
-            node.node = ++nodecnt;
-            node.index = i;
+            node.index = nodecnt++;
             node.ispfx = true;
             node.isparent = true;
-            node.depth = depth;
+            node.depth = depth++;
 
             // Add it to the tree
             mNodes.Add(node);
-            depth++;
             inpfx = true;
 
             // Measure prefix
@@ -556,11 +674,11 @@ KeyView::RefreshBindings(const wxArrayString & names,
       // Labels for undo and redo change according to the last command
       // which can be undone/redone, so give them a special check in order
       // not to confuse users
-      if (names[i] == wxT("Undo"))
+      if (name == wxT("Undo"))
       {
          node.label = _("Undo");
       }
-      else if (names[i] == wxT("Redo"))
+      else if (name == wxT("Redo"))
       {
          node.label = _("Redo");
       }
@@ -571,9 +689,9 @@ KeyView::RefreshBindings(const wxArrayString & names,
       }
       
       // Fill in remaining info
+      node.name = name;
       node.key = KeyStringDisplay(keys[i]);
-      node.node = ++nodecnt;
-      node.index = i;
+      node.index = nodecnt++;
       node.depth = depth;
 
       // Add it to the tree
@@ -595,7 +713,6 @@ KeyView::RefreshBindings(const wxArrayString & names,
       GetTextExtent(label, &x, &y);
       mLineHeight = wxMax(mLineHeight, y);
       mCommandWidth = wxMax(mCommandWidth, x);
-
    }
 
 #if 0
@@ -603,15 +720,15 @@ KeyView::RefreshBindings(const wxArrayString & names,
    for (int j = 0; j < mNodes.GetCount(); j++)
    {
       KeyNode & node = mNodes[j];
-      wxLogDebug(wxT("NODE line %4d node %4d index %4d depth %1d open %1d parent %1d cat %1d pfx %1d STR %s | %s | %s"),
+      wxLogDebug(wxT("NODE line %4d index %4d depth %1d open %1d parent %1d cat %1d pfx %1d name %s STR %s | %s | %s"),
          node.line,
-         node.node,
          node.index,
          node.depth,
          node.isopen,
          node.isparent,
          node.iscat,
          node.ispfx,
+         node.name.c_str(),
          node.category.c_str(),
          node.prefix.c_str(),
          node.label.c_str());
@@ -622,24 +739,24 @@ KeyView::RefreshBindings(const wxArrayString & names,
    UpdateHScroll();
 
    // Refresh the view lines
-   RefreshLineCount();
+   RefreshLines();
 }
 
 //
 // Refresh the list of lines within the current view
 //
 void
-KeyView::RefreshLineCount()
+KeyView::RefreshLines()
 {
-   size_t cnt = mNodes.GetCount();
-   int numlines = 0;
+   int cnt = (int) mNodes.GetCount();
+   int linecnt = 0;
    mLines.Empty();
 
    // Process a filter if one is set
    if (!mFilter.IsEmpty())
    {
       // Examine all nodes
-      for (size_t i = 0; i < cnt; i++)
+      for (int i = 0; i < cnt; i++)
       {
          KeyNode & node = mNodes[i];
 
@@ -677,7 +794,7 @@ KeyView::RefreshLineCount()
             }
 
             // Examine siblings until a parent is found.
-            for (int j = node.node - 1; j >= 0 && depth > 0; j--)
+            for (int j = node.index - 1; j >= 0 && depth > 0; j--)
             {
                // Found a parent               
                if (mNodes[j].depth < depth)
@@ -685,11 +802,11 @@ KeyView::RefreshLineCount()
                   // Examine all previously added nodes to see if this nodes
                   // ancestors need to be added prior to adding this node.
                   bool found = false;
-                  for (int k = mLines.GetCount() - 1; k >= 0; k--)
+                  for (int k = (int) mLines.GetCount() - 1; k >= 0; k--)
                   {
-                     // The node indexes match, so we've found the child nodes
-                     // parent.
-                     if (mLines[k]->node == mNodes[j].node)
+                     // The node indexes match, so we've found the parent of the
+                     // child node.
+                     if (mLines[k]->index == mNodes[j].index)
                      {
                         found = true;
                         break;
@@ -711,37 +828,37 @@ KeyView::RefreshLineCount()
 
             // Add any queues nodes to list.  This will all be
             // parent nodes, so mark them as open.
-            for (int j = queue.GetCount() - 1; j >= 0; j--)
+            for (int j = (int) queue.GetCount() - 1; j >= 0; j--)
             {
                queue[j]->isopen = true;
-               queue[j]->line = numlines++;
+               queue[j]->line = linecnt++;
                mLines.Add(queue[j]);
             }
          }
 
          // Finally add the child node
-         node.line = numlines++;
+         node.line = linecnt++;
          mLines.Add(&node);
       }
    }
    else
    {
       // Examine all nodes - non-filtered
-      for (size_t i = 0; i < cnt; i++)
+      for (int i = 0; i < cnt; i++)
       {
          KeyNode & node = mNodes[i];
 
          // Node is either a category or prefix
          if (node.isparent)
          {
-            // Only need to do this for non-tree views
+            // Only need to do this for tree views
             if (mViewType != ViewByTree)
             {
                continue;
             }
 
             // Add the node
-            node.line = numlines++;
+            node.line = linecnt++;
             mLines.Add(&node);
 
             // If this node is not open, then skip all of it's decendants
@@ -774,30 +891,10 @@ KeyView::RefreshLineCount()
          }
 
          // Add child node to list
-         node.line = numlines++;
+         node.line = linecnt++;
          mLines.Add(&node);
       }
    }
-
-#if 0
-   // For debugging
-   for (int j = 0; j < mLines.GetCount() ; j++)
-   {
-      KeyNode & node = *mLines[j];
-      wxLogDebug(wxT("LINE line %4d node %4d index %4d depth %1d open %1d parent %1d cat %1d pfx %1d STR %s | %s | %s"),
-         node.line,
-         node.node,
-         node.index,
-         node.depth,
-         node.isopen,
-         node.isparent,
-         node.iscat,
-         node.ispfx,
-         node.category.c_str(),
-         node.prefix.c_str(),
-         node.label.c_str());
-   }
-#endif
 
    // Sort list based on type
    switch (mViewType)
@@ -815,6 +912,32 @@ KeyView::RefreshLineCount()
       break;
    }
 
+   // Now, reassign the line numbers
+   for (int i = 0; i < mLines.GetCount(); i++)
+   {
+      mLines[i]->line = i;
+   }
+
+#if 0
+   // For debugging
+   for (int j = 0; j < mLines.GetCount(); j++)
+   {
+      KeyNode & node = *mLines[j];
+      wxLogDebug(wxT("LINE line %4d index %4d depth %1d open %1d parent %1d cat %1d pfx %1d name %s STR %s | %s | %s"),
+         node.line,
+         node.index,
+         node.depth,
+         node.isopen,
+         node.isparent,
+         node.iscat,
+         node.ispfx,
+         node.name.c_str(),
+         node.category.c_str(),
+         node.prefix.c_str(),
+         node.label.c_str());
+   }
+#endif
+
    // Tell listbox the new count and refresh the entire view
    SetItemCount(mLines.GetCount());
    RefreshAll();
@@ -826,27 +949,55 @@ KeyView::RefreshLineCount()
 }
 
 //
-// Select a line
+// Select a node
 //
 // Parameter can be wxNOT_FOUND to clear selection
 //
 void
-KeyView::SelectLine(int line)
+KeyView::SelectNode(int index)
 {
    // Tell the listbox to select the line
-   SetSelection(line);
+   SetSelection(IndexToLine(index));
 
 #if wxUSE_ACCESSIBILITY
    // And accessibility
-   mAx->SetCurrentLine(line);
+   mAx->SetCurrentLine(IndexToLine(index));
 #endif
 
    // If not clearing, then send a selected event as it is not
    // automatically done.
-   if (line != wxNOT_FOUND)
+   if (index != wxNOT_FOUND)
    {
       SendSelectedEvent();
    }
+}
+
+//
+// Converts a line index to a node index
+//
+int
+KeyView::LineToIndex(int line) const
+{
+   if (line < 0 || line >= (int) mLines.GetCount())
+   {
+      return wxNOT_FOUND;
+   }
+
+   return mLines[line]->index;
+}
+
+//
+// Converts a node index to a line index
+//
+int
+KeyView::IndexToLine(int index) const
+{
+   if (index < 0 || index >= (int) mNodes.GetCount())
+   {
+      return wxNOT_FOUND;
+   }
+
+   return mNodes[index].line;
 }
 
 //
@@ -1052,7 +1203,7 @@ KeyView::OnKillFocus(wxFocusEvent & event)
 // Handle the wxEVT_SIZE event
 //
 void
-KeyView::OnSize(wxSizeEvent & event)
+KeyView::OnSize(wxSizeEvent & WXUNUSED(event))
 {
    // Update horizontal scrollbar
    UpdateHScroll();
@@ -1086,7 +1237,7 @@ KeyView::OnScroll(wxScrollWinEvent & event)
 void
 KeyView::OnKeyDown(wxKeyEvent & event)
 {
-   size_t line = GetSelection();
+   int line = GetSelection();
 
    int keycode = event.GetKeyCode();
    switch (keycode)
@@ -1096,7 +1247,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
       case WXK_LEFT:
       {
          // Nothing selected...nothing to do
-         if (line == (size_t) wxNOT_FOUND)
+         if (line == wxNOT_FOUND)
          {
             // Allow further processing
             event.Skip();
@@ -1116,13 +1267,13 @@ KeyView::OnKeyDown(wxKeyEvent & event)
             size_t topline = GetVisibleBegin();
 
             // Refresh the view now that the number of lines have changed
-            RefreshLineCount();
+            RefreshLines();
 
             // Reset the original top line
             ScrollToLine(topline);
 
             // And make sure current line is still selected
-            SelectLine(line);
+            SelectNode(LineToIndex(line));
          }
          else
          {
@@ -1133,13 +1284,13 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                if (mLines[i]->depth < node->depth)
                {
                   // So select it
-                  SelectLine(i);
+                  SelectNode(LineToIndex(i));
                   break;
                }
             }
          }
 
-         // Further processing of the event is not allowed
+         // Further processing of the event is not wanted
          // (we didn't call event.Skip()
       }
       break;
@@ -1149,7 +1300,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
       case WXK_RIGHT:
       {
          // Nothing selected...nothing to do
-         if (line == (size_t) wxNOT_FOUND)
+         if (line == wxNOT_FOUND)
          {
             // Allow further processing
             event.Skip();
@@ -1165,9 +1316,9 @@ KeyView::OnKeyDown(wxKeyEvent & event)
             if (node->isopen)
             {
                // But only if there is one
-               if (line < mLines.GetCount() - 1)
+               if (line < (int) mLines.GetCount() - 1)
                {
-                  SelectLine(line + 1);
+                  SelectNode(LineToIndex(line + 1));
                }
             }
             else
@@ -1180,17 +1331,17 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                size_t topline = GetVisibleBegin();
 
                // Refresh the view now that the number of lines have changed
-               RefreshLineCount();
+               RefreshLines();
 
                // Reset the original top line
                ScrollToLine(topline);
 
                // And make sure current line is still selected
-               SelectLine(line);
+               SelectNode(LineToIndex(line));
             }
          }
 
-         // Further processing of the event is not allowed
+         // Further processing of the event is not wanted
          // (we didn't call event.Skip()
       }
       break;
@@ -1199,11 +1350,11 @@ KeyView::OnKeyDown(wxKeyEvent & event)
       // the keycode
       default:
       {
-         int cnt = mLines.GetCount();
+         int cnt = (int) mLines.GetCount();
          bool found = false;
 
          // Search the entire list if not is currently selected
-         if (line == (size_t) wxNOT_FOUND)
+         if (line == wxNOT_FOUND)
          {
             line = cnt;
          }
@@ -1217,16 +1368,16 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                // Get the string to search based on view type
                if (mViewType == ViewByKey)
                {
-                  label = GetKey(i);
+                  label = GetKey(LineToIndex(i));
                }
                else
                {
-                  label = GetFullLabel(i);
+                  label = GetFullLabel(LineToIndex(i));
                }
 
                // Move selection if they match
                if (label.Left(1).IsSameAs(keycode, false)) {
-                  SelectLine(i);
+                  SelectNode(LineToIndex(i));
 
                   found = true;
 
@@ -1239,23 +1390,23 @@ KeyView::OnKeyDown(wxKeyEvent & event)
          if (!found)
          {
             // So scan from the start of the list to the current node
-            for (int i = 0; i < (int) line; i++)
+            for (int i = 0; i < line; i++)
             {
                wxString label;
 
                // Get the string to search based on view type
                if (mViewType == ViewByKey)
                {
-                  label = GetKey(i);
+                  label = GetKey(LineToIndex(i));
                }
                else
                {
-                  label = GetFullLabel(i);
+                  label = GetFullLabel(LineToIndex(i));
                }
 
                // Move selection if they match
                if (label.Left(1).IsSameAs(keycode, false)) {
-                  SelectLine(i);
+                  SelectNode(LineToIndex(i));
 
                   found = true;
 
@@ -1269,7 +1420,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
             event.Skip();
          }
 
-         // Otherwise, further processing of the event is not allowed
+         // Otherwise, further processing of the event is not wanted
          // (we didn't call event.Skip()
       }
    }
@@ -1294,17 +1445,15 @@ KeyView::OnLeftDown(wxMouseEvent & event)
    wxPoint pos = event.GetPosition();
 
    // And see if it was on a line within the view
-   size_t line = HitTest(pos);
+   int line = HitTest(pos);
 
    // It was on a line
-   if ((int) line != wxNOT_FOUND)
+   if (line != wxNOT_FOUND)
    {
       KeyNode *node = mLines[line];
-      wxCoord indent = KV_LEFT_MARGIN + node->depth * KV_BITMAP_SIZE;
 
-      // Toggle the open state if this is a parent node and the click
-      // happened to the left of the text (I know...lazy ;-))
-      if (node->isparent && pos.x < indent)
+      // Toggle the open state if this is a parent node
+      if (node->isparent)
       {
          // Toggle state
          node->isopen = !node->isopen;
@@ -1314,13 +1463,13 @@ KeyView::OnLeftDown(wxMouseEvent & event)
          size_t topline = GetVisibleBegin();
 
          // Refresh the view now that the number of lines have changed
-         RefreshLineCount();
+         RefreshLines();
 
          // Reset the original top line
          ScrollToLine(topline);
 
          // And make sure current line is still selected
-         SelectLine(line);
+         SelectNode(LineToIndex(line));
       }
    }
 
@@ -1562,8 +1711,8 @@ KeyView::GetValue(int line)
    }
 
    // Get the label and key values
-   wxString value = GetLabel(line);
-   wxString key = GetKey(line);
+   wxString value = GetLabel(LineToIndex(line));
+   wxString key = GetKey(LineToIndex(line));
 
    // Add the key if it isn't empty
    if (!key.IsEmpty())
@@ -1621,7 +1770,7 @@ KeyViewAx::SetCurrentLine(int line)
    if (line != wxNOT_FOUND)
    {
       // Convert line number to childId
-      mLastId = line + 1;
+      LineToId(line + 1, mLastId);
 
       // Send notifications that the line has focus
       NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
@@ -1642,7 +1791,7 @@ KeyViewAx::SetCurrentLine(int line)
 // represents a child or TRUE if it a line
 //
 bool
-KeyViewAx::GetLine(int childId, int & line)
+KeyViewAx::IdToLine(int childId, int & line)
 {
    if (childId == wxACC_SELF)
    {
@@ -1651,6 +1800,18 @@ KeyViewAx::GetLine(int childId, int & line)
 
    // Convert to line
    line = childId - 1;
+
+   return true;
+}
+
+//
+// Convert the line number to a childId.
+//
+bool
+KeyViewAx::LineToId(int line, int & childId)
+{
+   // Convert to line
+   childId = line - 1;
 
    return true;
 }
@@ -1676,7 +1837,7 @@ KeyViewAx::GetChild(int childId, wxAccessible** child)
 wxAccStatus
 KeyViewAx::GetChildCount(int *childCount)
 {
-   *childCount = mView->GetLineCount();
+   *childCount = (int) mView->GetLineCount();
 
    return wxACC_OK;
 }
@@ -1730,7 +1891,7 @@ KeyViewAx::GetLocation(wxRect & rect, int elementId)
 {
    int line;
 
-   if (GetLine(elementId, line))
+   if (IdToLine(elementId, line))
    {
       wxRect rectLine;
 
@@ -1772,7 +1933,7 @@ KeyViewAx::GetName(int childId, wxString *name)
    }
    else
    {
-      if (GetLine(childId, line))
+      if (IdToLine(childId, line))
       {
          *name = mView->GetValue(line);
       }
@@ -1835,7 +1996,7 @@ KeyViewAx::GetState(int childId, long *state)
               wxACC_STATE_SYSTEM_SELECTABLE;
    int line;
 
-   if (!GetLine(childId, line))
+   if (!IdToLine(childId, line))
    {
       *state = 0;
       return wxACC_FAIL;
