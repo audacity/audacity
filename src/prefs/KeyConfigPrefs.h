@@ -141,6 +141,6 @@ class KeyConfigPrefs:public PrefsPanel
 
    DECLARE_EVENT_TABLE();
 };
-#endif#endif
+#endif
 
 #endif
