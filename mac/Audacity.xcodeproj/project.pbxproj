@@ -762,6 +762,8 @@
 		284B279F0FC66864005EAC96 /* RecordingPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27980FC66863005EAC96 /* RecordingPrefs.cpp */; };
 		284B27E40FC66CCD005EAC96 /* TracksPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27E00FC66CCD005EAC96 /* TracksPrefs.cpp */; };
 		284B27E50FC66CCD005EAC96 /* WarningsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27E20FC66CCD005EAC96 /* WarningsPrefs.cpp */; };
+		284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284FD04017FC72A50009A025 /* ScienFilter.cpp */; };
+		284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284FD04317FC72EE0009A025 /* Biquad.cpp */; };
 		28501EA10CEECEF80029ABAA /* HelpText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E9D0CEECEF80029ABAA /* HelpText.cpp */; };
 		28501EA20CEECEF80029ABAA /* SplashDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E9F0CEECEF80029ABAA /* SplashDialog.cpp */; };
 		28501EAA0CEED0670029ABAA /* LoadVamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E970CEECE910029ABAA /* LoadVamp.cpp */; };
@@ -3414,6 +3416,10 @@
 		284B27E10FC66CCD005EAC96 /* TracksPrefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = TracksPrefs.h; sourceTree = "<group>"; tabWidth = 3; };
 		284B27E20FC66CCD005EAC96 /* WarningsPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = WarningsPrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		284B27E30FC66CCD005EAC96 /* WarningsPrefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = WarningsPrefs.h; sourceTree = "<group>"; tabWidth = 3; };
+		284FD04017FC72A50009A025 /* ScienFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScienFilter.cpp; sourceTree = "<group>"; };
+		284FD04117FC72A50009A025 /* ScienFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScienFilter.h; sourceTree = "<group>"; };
+		284FD04317FC72EE0009A025 /* Biquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Biquad.cpp; sourceTree = "<group>"; };
+		284FD04417FC72EE0009A025 /* Biquad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Biquad.h; sourceTree = "<group>"; };
 		28501E970CEECE910029ABAA /* LoadVamp.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = LoadVamp.cpp; path = vamp/LoadVamp.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28501E980CEECE920029ABAA /* LoadVamp.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = LoadVamp.h; path = vamp/LoadVamp.h; sourceTree = "<group>"; tabWidth = 3; };
 		28501E990CEECE920029ABAA /* VampEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = VampEffect.cpp; path = vamp/VampEffect.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5041,8 +5047,6 @@
 		1790AFFD09883BFD008A330A /* effects */ = {
 			isa = PBXGroup;
 			children = (
-				ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */,
-				ED64C822124567ED007CF2FC /* ScoreAlignDialog.h */,
 				1790B00009883BFD008A330A /* audiounits */,
 				1790B02309883BFD008A330A /* ladspa */,
 				28D587C50E264CBB009C7DEA /* lv2 */,
@@ -5055,6 +5059,8 @@
 				28D65C710B97E54B000E001A /* AutoDuck.h */,
 				EDD2431216934A6100D9DEC2 /* BassTreble.cpp */,
 				EDD2431316934A6100D9DEC2 /* BassTreble.h */,
+				284FD04317FC72EE0009A025 /* Biquad.cpp */,
+				284FD04417FC72EE0009A025 /* Biquad.h */,
 				1790B00C09883BFD008A330A /* ChangePitch.cpp */,
 				1790B00D09883BFD008A330A /* ChangePitch.h */,
 				1790B00E09883BFD008A330A /* ChangeSpeed.cpp */,
@@ -5109,6 +5115,10 @@
 				1790B04109883BFD008A330A /* Reverse.h */,
 				ED27074B0EF9C64F007D4FFD /* SBSMSEffect.cpp */,
 				ED27074C0EF9C64F007D4FFD /* SBSMSEffect.h */,
+				284FD04017FC72A50009A025 /* ScienFilter.cpp */,
+				284FD04117FC72A50009A025 /* ScienFilter.h */,
+				ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */,
+				ED64C822124567ED007CF2FC /* ScoreAlignDialog.h */,
 				1790B04209883BFD008A330A /* Silence.cpp */,
 				1790B04309883BFD008A330A /* Silence.h */,
 				1790B04409883BFD008A330A /* SimpleMono.cpp */,
@@ -8806,6 +8816,8 @@
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 				ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */,
 				2849A42017F8BEC2005C653F /* KeyView.cpp in Sources */,
+				284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */,
+				284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
