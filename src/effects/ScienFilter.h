@@ -1,12 +1,12 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+Audacity: A Digital Audio Editor
 
-  EffectScienFilter.h
+EffectScienFilter.h
 
-  Norm C
-  Mitch Golden
-  Vaughan Johnson (Preview)
+Norm C
+Mitch Golden
+Vaughan Johnson (Preview)
 
 ***********************************************************************/
 
@@ -69,7 +69,7 @@ public:
    virtual bool PromptUser();
    virtual bool DontPromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
-	bool CalcFilterCoeffs (void);
+   bool CalcFilterCoeffs (void);
 
    virtual bool Process();
 
@@ -78,10 +78,10 @@ public:
 
 private:
    bool ProcessOne(int count, WaveTrack * t,
-                   sampleCount start, sampleCount len);
+      sampleCount start, sampleCount len);
 
    void Filter(sampleCount len,
-               float *buffer);
+      float *buffer);
    void ReadPrefs();
 
    //int mM;
@@ -101,8 +101,8 @@ private:
 
 public:
 
-friend class ScienFilterDialog;
-friend class ScienFilterPanel;
+   friend class ScienFilterDialog;
+   friend class ScienFilterPanel;
 };
 
 
@@ -110,15 +110,15 @@ class ScienFilterPanel: public wxPanel
 {
 public:
    ScienFilterPanel( double loFreq, double hiFreq,
-               ScienFilterDialog *parent,
-               wxWindowID id,
-               const wxPoint& pos = wxDefaultPosition,
-               const wxSize& size = wxDefaultSize);
+      ScienFilterDialog *parent,
+      wxWindowID id,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize);
    ~ScienFilterPanel();
 
 #if 0
-Needed only if user can draw in the graph
-   void OnMouseEvent(wxMouseEvent & event);
+   Needed only if user can draw in the graph
+      void OnMouseEvent(wxMouseEvent & event);
    void OnCaptureLost(wxMouseCaptureLostEvent & event);
 #endif
    void OnPaint(wxPaintEvent & event);
@@ -156,13 +156,13 @@ class ScienFilterDialog: public wxDialog //, public XMLTagHandler
 public:
    // constructors and destructors
    ScienFilterDialog(EffectScienFilter * effect,
-               double loFreq, double hiFreq,
-               //long windowSize, wxString CurveName, bool disallowCustom,
-               wxWindow *parent, wxWindowID id,
-               const wxString &title,
-               const wxPoint& pos = wxDefaultPosition,
-               const wxSize& size = wxDefaultSize,
-               long style = wxDEFAULT_DIALOG_STYLE );
+      double loFreq, double hiFreq,
+      //long windowSize, wxString CurveName, bool disallowCustom,
+      wxWindow *parent, wxWindowID id,
+      const wxString &title,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize,
+      long style = wxDEFAULT_DIALOG_STYLE );
    ~ScienFilterDialog();
 
    // WDR: method declarations for ScienFilterDialog
@@ -170,7 +170,7 @@ public:
    virtual bool TransferDataToWindow();
    virtual bool TransferGraphLimitsFromWindow();
    virtual bool CalcFilter(EffectScienFilter* effect);
-	float FilterMagnAtFreq (float Freq);
+   float FilterMagnAtFreq (float Freq);
 
    wxChoice* mFilterTypeCtl;
    wxChoice* mFilterSubTypeCtl;
