@@ -913,7 +913,7 @@ KeyView::RefreshLines()
    }
 
    // Now, reassign the line numbers
-   for (int i = 0; i < mLines.GetCount(); i++)
+   for (int i = 0; i < (int) mLines.GetCount(); i++)
    {
       mLines[i]->line = i;
    }
@@ -1366,17 +1366,22 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                wxString label;
 
                // Get the string to search based on view type
-               if (mViewType == ViewByKey)
+               if (mViewType == ViewByTree)
                {
-                  label = GetKey(LineToIndex(i));
+                  label = GetLabel(LineToIndex(i));
                }
-               else
+               else if (mViewType == ViewByName)
                {
                   label = GetFullLabel(LineToIndex(i));
                }
+               else if (mViewType == ViewByKey)
+               {
+                  label = GetKey(LineToIndex(i));
+               }
 
                // Move selection if they match
-               if (label.Left(1).IsSameAs(keycode, false)) {
+               if (label.Left(1).IsSameAs(keycode, false))
+               {
                   SelectNode(LineToIndex(i));
 
                   found = true;
@@ -1395,17 +1400,22 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                wxString label;
 
                // Get the string to search based on view type
-               if (mViewType == ViewByKey)
+               if (mViewType == ViewByTree)
                {
-                  label = GetKey(LineToIndex(i));
+                  label = GetLabel(LineToIndex(i));
                }
-               else
+               else if (mViewType == ViewByName)
                {
                   label = GetFullLabel(LineToIndex(i));
                }
+               else if (mViewType == ViewByKey)
+               {
+                  label = GetKey(LineToIndex(i));
+               }
 
                // Move selection if they match
-               if (label.Left(1).IsSameAs(keycode, false)) {
+               if (label.Left(1).IsSameAs(keycode, false))
+               {
                   SelectNode(LineToIndex(i));
 
                   found = true;
@@ -1592,7 +1602,7 @@ KeyView::CmpKeyNodeByName(KeyNode ***n1, KeyNode ***n2)
 // This will force them to the end, but still allow them to be sorted in
 // ascending order.
 //
-// This assigned entries simply get sorted as normal.
+// The assigned entries simply get sorted as normal.
 //
 int
 KeyView::CmpKeyNodeByKey(KeyNode ***n1, KeyNode ***n2)
@@ -1770,7 +1780,7 @@ KeyViewAx::SetCurrentLine(int line)
    if (line != wxNOT_FOUND)
    {
       // Convert line number to childId
-      LineToId(line + 1, mLastId);
+      LineToId(line, mLastId);
 
       // Send notifications that the line has focus
       NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
@@ -1811,7 +1821,7 @@ bool
 KeyViewAx::LineToId(int line, int & childId)
 {
    // Convert to line
-   childId = line - 1;
+   childId = line + 1;
 
    return true;
 }
@@ -1898,7 +1908,7 @@ KeyViewAx::GetLocation(wxRect & rect, int elementId)
       rectLine.width = mView->GetClientSize().GetWidth();
 
       // iterate over all visible lines
-      for (int i = 0; i <= line; i++)
+      for (int i = 0; i < line; i++)
       {
          wxCoord hLine = mView->GetLineHeight(i);
 

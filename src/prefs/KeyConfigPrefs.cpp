@@ -237,10 +237,12 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                   wxT(""),
                                   wxDefaultPosition,
 #if defined(__WXMAC__)                                  
-                                  wxSize(300, -1));
+                                  wxSize(300, -1),
 #else
-                                  wxSize(210, -1));
+                                  wxSize(210, -1),
 #endif
+                                  wxTE_PROCESS_ENTER);
+
             mKey->SetName(_("Short cut"));
             mKey->Connect(wxEVT_KEY_DOWN,
                           wxKeyEventHandler(KeyConfigPrefs::OnHotkeyKeyDown),
