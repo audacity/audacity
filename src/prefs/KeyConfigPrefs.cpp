@@ -25,6 +25,7 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/ffile.h>
 #include <wx/intl.h>
 #include <wx/filedlg.h>
+#include <wx/button.h>
 
 #include "../Prefs.h"
 #include "../Project.h"
@@ -567,7 +568,7 @@ void KeyConfigPrefs::OnClear(wxCommandEvent& WXUNUSED(event))
    SetKeyForSelected(wxEmptyString);
 }
 
-void KeyConfigPrefs::OnSelected(wxCommandEvent & e)
+void KeyConfigPrefs::OnSelected(wxCommandEvent & WXUNUSED(e))
 {
    mCommandSelected = mView->GetSelected();
    mKey->Clear();
