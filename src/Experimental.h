@@ -31,8 +31,8 @@
 #define __EXPERIMENTAL__
 
 
-// JKC (for Norm C)
-#define EXPERIMENTAL_SCIENCE_FILTERS
+// JKC (effect by Norm C, 02 Oct 2013)  disabled for now.
+//#define EXPERIMENTAL_SCIENCE_FILTERS
 
 // LLL, 01 Oct 2013:
 // new key assignment view for preferences
