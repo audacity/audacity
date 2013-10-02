@@ -40,6 +40,7 @@ a graph for EffectScienFilter.
 
 #include "../Audacity.h"
 #include "ScienFilter.h"
+#include "Equalization.h" // For SliderAx
 #include "../AColor.h"
 #include "../ShuttleGui.h"
 #include "../PlatformCompatibility.h"
