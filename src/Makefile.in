@@ -151,6 +151,7 @@ OBJS = \
 	effects/Amplify.o \
 	effects/AutoDuck.o \
 	effects/BassTreble.o \
+	effects/Biquad.o \
 	effects/ChangePitch.o \
 	effects/ChangeSpeed.o \
 	effects/ChangeTempo.o \
@@ -173,6 +174,7 @@ OBJS = \
 	effects/Repeat.o \
 	effects/Reverb.o \
 	effects/Reverse.o \
+	effects/ScienFilter.o \
 	effects/Silence.o \
 	effects/StereoToMono.o \
 	effects/TimeWarper.o \

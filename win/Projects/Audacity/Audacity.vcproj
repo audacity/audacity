@@ -1100,6 +1100,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\effects\Biquad.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\effects\Biquad.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\effects\ChangePitch.cpp"
 				>
 			</File>
@@ -1325,6 +1333,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\effects\SBSMSEffect.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\effects\ScienFilter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\effects\ScienFilter.h"
 				>
 			</File>
 			<File
