@@ -4,6 +4,7 @@
 
   EffectScienFilter.h
 
+  Norm C
   Mitch Golden
   Vaughan Johnson (Preview)
 
@@ -91,7 +92,7 @@ private:
    float mStopbandRipple;
    int mFilterType;		// Butterworth etc.
    int mFilterSubtype;	// lowpass, highpass
-	BiquadStruct* mpBiquad[5];	// MAX_ORDER/2
+   BiquadStruct* mpBiquad[5];	// MAX_ORDER/2
 
    double mdBMax;
    double mdBMin;
@@ -327,15 +328,3 @@ private:
 #endif // wxUSE_ACCESSIBILITY
 
 #endif
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 309f263d-748c-4dc0-9e68-9e86732890bb
-

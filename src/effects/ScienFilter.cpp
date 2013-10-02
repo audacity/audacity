@@ -4,6 +4,7 @@
 
   Effect/ScienFilter.cpp
 
+  Norm C
   Mitch Golden
   Vaughan Johnson (Preview)
 
@@ -14,7 +15,6 @@
 ScienFilterPanel.
 
 *//****************************************************************//**
-
 
 \class EffectScienFilter
 \brief An Effect.
@@ -272,61 +272,61 @@ bool EffectScienFilter::Process()
 
 
 bool EffectScienFilter::ProcessOne(int count, WaveTrack * t,
-                                 sampleCount start, sampleCount len)
+                                   sampleCount start, sampleCount len)
 {
-	// Create a new WaveTrack to hold all of the output
-	AudacityProject *p = GetActiveProject();
-	WaveTrack *output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
+   // Create a new WaveTrack to hold all of the output
+   AudacityProject *p = GetActiveProject();
+   WaveTrack *output = p->GetTrackFactory()->NewWaveTrack(floatSample, t->GetRate());
 
-	sampleCount s = start;
-	sampleCount idealBlockLen = t->GetMaxBlockSize();
-	float *buffer = new float[idealBlockLen];
-	sampleCount originalLen = len;
+   sampleCount s = start;
+   sampleCount idealBlockLen = t->GetMaxBlockSize();
+   float *buffer = new float[idealBlockLen];
+   sampleCount originalLen = len;
 
-	TrackProgress(count, 0.0);
-	bool bLoopSuccess = true;
+   TrackProgress(count, 0.0);
+   bool bLoopSuccess = true;
 
-	for (int iPair = 0; iPair < (mOrder+1)/2; iPair++)
+   for (int iPair = 0; iPair < (mOrder+1)/2; iPair++)
       mpBiquad [iPair]->fPrevIn = mpBiquad [iPair]->fPrevPrevIn = mpBiquad [iPair]->fPrevOut = mpBiquad [iPair]->fPrevPrevOut = 0;
 
-	while(len)
-	{
-		sampleCount block = idealBlockLen;
-		if (block > len)
-			block = len;
+   while(len)
+   {
+      sampleCount block = idealBlockLen;
+      if (block > len)
+         block = len;
 
-		t->Get((samplePtr)buffer, floatSample, s, block);
+      t->Get((samplePtr)buffer, floatSample, s, block);
 
-		for (int iPair = 0; iPair < (mOrder+1)/2; iPair++)
-		{
-			mpBiquad[iPair]->pfIn = buffer;
-			mpBiquad[iPair]->pfOut = buffer;
-			Biquad_Process (mpBiquad[iPair], block);
-		}
-		output->Append ((samplePtr)buffer, floatSample, block);
-		len -= block;
-		s += block;
+      for (int iPair = 0; iPair < (mOrder+1)/2; iPair++)
+      {
+         mpBiquad[iPair]->pfIn = buffer;
+         mpBiquad[iPair]->pfOut = buffer;
+         Biquad_Process (mpBiquad[iPair], block);
+      }
+      output->Append ((samplePtr)buffer, floatSample, block);
+      len -= block;
+      s += block;
 
-		if (TrackProgress (count, (s-start)/(double)originalLen))
-		{
-			bLoopSuccess = false;
-			break;
-		}
-	}
-	if (bLoopSuccess)
-	{
-		output->Flush();
-		// Now move the appropriate bit of the output back to the track
-		float *bigBuffer = new float[originalLen];
-		output->Get((samplePtr)bigBuffer, floatSample, 0, originalLen);
-		t->Set((samplePtr)bigBuffer, floatSample, start, originalLen);
-		delete[] bigBuffer;
-	}
+      if (TrackProgress (count, (s-start)/(double)originalLen))
+      {
+         bLoopSuccess = false;
+         break;
+      }
+   }
+   if (bLoopSuccess)
+   {
+      output->Flush();
+      // Now move the appropriate bit of the output back to the track
+      float *bigBuffer = new float[originalLen];
+      output->Get((samplePtr)bigBuffer, floatSample, 0, originalLen);
+      t->Set((samplePtr)bigBuffer, floatSample, start, originalLen);
+      delete[] bigBuffer;
+   }
 
-	delete[] buffer;
-	delete output;
+   delete[] buffer;
+   delete output;
 
-	return bLoopSuccess;
+   return bLoopSuccess;
 }
 
 void EffectScienFilter::Filter(sampleCount WXUNUSED(len),
@@ -436,8 +436,8 @@ void ScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       x = mEnvRect.x + i;
       freq = pow(10., loLog + i*step);             //Hz
-	   yF = mParent->FilterMagnAtFreq (freq);
-	   yF = 20*log10(yF);
+      yF = mParent->FilterMagnAtFreq (freq);
+      yF = 20*log10(yF);
 
       if(yF < dBMin)
          yF = dBMin;
@@ -461,7 +461,7 @@ void ScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    mParent->dBRuler->ruler.DrawGrid(memDC, mEnvRect.width+2, true, true, 1, 2);
 
    dc.Blit(0, 0, mWidth, mHeight,
-           &memDC, 0, 0, wxCOPY, FALSE);
+      &memDC, 0, 0, wxCOPY, FALSE);
 }
 
 
@@ -516,8 +516,8 @@ ScienFilterDialog::ScienFilterDialog(EffectScienFilter * effect,
    memset (effect->mpBiquad, 0, sizeof(effect->mpBiquad));
    for (int i = 0; i < MAX_FILTER_ORDER/2; i++)
    {
-		effect->mpBiquad[i] = (BiquadStruct*)calloc (sizeof (BiquadStruct), 1);
-		effect->mpBiquad[i]->fNumerCoeffs [0] = 1.0;	// straight-through
+      effect->mpBiquad[i] = (BiquadStruct*)calloc (sizeof (BiquadStruct), 1);
+      effect->mpBiquad[i]->fNumerCoeffs [0] = 1.0;	// straight-through
    }
 
    // Create the dialog
@@ -533,8 +533,8 @@ ScienFilterDialog::~ScienFilterDialog()
 //
 void ScienFilterDialog::MakeScienFilterDialog()
 {
-	mCutoffCtl = NULL;
-	mRippleCtl = NULL;
+   mCutoffCtl = NULL;
+   mRippleCtl = NULL;
    mStopbandRippleCtl = NULL;
 
    // Create the base sizer
@@ -768,126 +768,126 @@ bool ScienFilterDialog::CalcFilter (EffectScienFilter* effect)
 
    // Set up the coefficients in all the biquads
    float fNorm = Cutoff / hiFreq;
-	if (fNorm >= 0.9999)
-		fNorm = 0.9999F;
-	float fC = tan (PI * fNorm / 2);
-	float fDCPoleDistSqr = 1.0F;
-	float fZPoleX, fZPoleY;
+   if (fNorm >= 0.9999)
+      fNorm = 0.9999F;
+   float fC = tan (PI * fNorm / 2);
+   float fDCPoleDistSqr = 1.0F;
+   float fZPoleX, fZPoleY;
    float fZZeroX, fZZeroY;
    float beta = cos (fNorm*PI);
    switch (FilterType)
    {
    case 0:     // Butterworth
-	   if ((Order & 1) == 0)
-	   {
-		   // Even order
-		   for (int iPair = 0; iPair < Order/2; iPair++)
-		   {
-			   float fSPoleX = fC * cos (PI - (iPair + 0.5) * PI / Order);
-			   float fSPoleY = fC * sin (PI - (iPair + 0.5) * PI / Order);
-			   BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
-			   effect->mpBiquad[iPair]->fNumerCoeffs [0] = 1;
-			   if (FilterSubtype == 0)		// LOWPASS
-				   effect->mpBiquad[iPair]->fNumerCoeffs [1] = 2;
-			   else
-				   effect->mpBiquad[iPair]->fNumerCoeffs [1] = -2;
-			   effect->mpBiquad[iPair]->fNumerCoeffs [2] = 1;
-			   effect->mpBiquad[iPair]->fDenomCoeffs [0] = -2 * fZPoleX;
-			   effect->mpBiquad[iPair]->fDenomCoeffs [1] = square(fZPoleX) + square(fZPoleY);
-			   if (FilterSubtype == 0)		// LOWPASS
-				   fDCPoleDistSqr *= Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY);
-			   else
-				   fDCPoleDistSqr *= Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY);		// distance from Nyquist
-		   }
-	   }
-	   else
-	   {
-		   // Odd order - first do the 1st-order section
-		   float fSPoleX = -fC;
-		   float fSPoleY = 0;
-		   BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
-		   effect->mpBiquad[0]->fNumerCoeffs [0] = 1;
-		   if (FilterSubtype == 0)		// LOWPASS
-   		   effect->mpBiquad[0]->fNumerCoeffs [1] = 1;
+      if ((Order & 1) == 0)
+      {
+         // Even order
+         for (int iPair = 0; iPair < Order/2; iPair++)
+         {
+            float fSPoleX = fC * cos (PI - (iPair + 0.5) * PI / Order);
+            float fSPoleY = fC * sin (PI - (iPair + 0.5) * PI / Order);
+            BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
+            effect->mpBiquad[iPair]->fNumerCoeffs [0] = 1;
+            if (FilterSubtype == 0)		// LOWPASS
+               effect->mpBiquad[iPair]->fNumerCoeffs [1] = 2;
+            else
+               effect->mpBiquad[iPair]->fNumerCoeffs [1] = -2;
+            effect->mpBiquad[iPair]->fNumerCoeffs [2] = 1;
+            effect->mpBiquad[iPair]->fDenomCoeffs [0] = -2 * fZPoleX;
+            effect->mpBiquad[iPair]->fDenomCoeffs [1] = square(fZPoleX) + square(fZPoleY);
+            if (FilterSubtype == 0)		// LOWPASS
+               fDCPoleDistSqr *= Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY);
+            else
+               fDCPoleDistSqr *= Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY);		// distance from Nyquist
+         }
+      }
+      else
+      {
+         // Odd order - first do the 1st-order section
+         float fSPoleX = -fC;
+         float fSPoleY = 0;
+         BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
+         effect->mpBiquad[0]->fNumerCoeffs [0] = 1;
+         if (FilterSubtype == 0)		// LOWPASS
+            effect->mpBiquad[0]->fNumerCoeffs [1] = 1;
          else
-   		   effect->mpBiquad[0]->fNumerCoeffs [1] = -1;
-		   effect->mpBiquad[0]->fNumerCoeffs [2] = 0;
-		   effect->mpBiquad[0]->fDenomCoeffs [0] = -fZPoleX;
-		   effect->mpBiquad[0]->fDenomCoeffs [1] = 0;
-		   if (FilterSubtype == 0)		// LOWPASS
-   		   fDCPoleDistSqr = 1 - fZPoleX;
+            effect->mpBiquad[0]->fNumerCoeffs [1] = -1;
+         effect->mpBiquad[0]->fNumerCoeffs [2] = 0;
+         effect->mpBiquad[0]->fDenomCoeffs [0] = -fZPoleX;
+         effect->mpBiquad[0]->fDenomCoeffs [1] = 0;
+         if (FilterSubtype == 0)		// LOWPASS
+            fDCPoleDistSqr = 1 - fZPoleX;
          else
-   		   fDCPoleDistSqr = fZPoleX + 1;    // dist from Nyquist
-		   for (int iPair = 1; iPair <= Order/2; iPair++)
-		   {
-			   float fSPoleX = fC * cos (PI - iPair * PI / Order);
-			   float fSPoleY = fC * sin (PI - iPair * PI / Order);
-			   BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
-			   effect->mpBiquad[iPair]->fNumerCoeffs [0] = 1;
-			   if (FilterSubtype == 0)		// LOWPASS
-				   effect->mpBiquad[iPair]->fNumerCoeffs [1] = 2;
-			   else
-				   effect->mpBiquad[iPair]->fNumerCoeffs [1] = -2;
-			   effect->mpBiquad[iPair]->fNumerCoeffs [2] = 1;
-			   effect->mpBiquad[iPair]->fDenomCoeffs [0] = -2 * fZPoleX;
-			   effect->mpBiquad[iPair]->fDenomCoeffs [1] = square(fZPoleX) + square(fZPoleY);
-			   if (FilterSubtype == 0)		// LOWPASS
-				   fDCPoleDistSqr *= Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY);
-			   else
-				   fDCPoleDistSqr *= Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY);		// distance from Nyquist
-		   }
-	   }
-	   effect->mpBiquad[0]->fNumerCoeffs [0] *= fDCPoleDistSqr / (1 << Order);	// mult by DC dist from poles, divide by dist from zeroes
-	   effect->mpBiquad[0]->fNumerCoeffs [1] *= fDCPoleDistSqr / (1 << Order);
-	   effect->mpBiquad[0]->fNumerCoeffs [2] *= fDCPoleDistSqr / (1 << Order);
+            fDCPoleDistSqr = fZPoleX + 1;    // dist from Nyquist
+         for (int iPair = 1; iPair <= Order/2; iPair++)
+         {
+            float fSPoleX = fC * cos (PI - iPair * PI / Order);
+            float fSPoleY = fC * sin (PI - iPair * PI / Order);
+            BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
+            effect->mpBiquad[iPair]->fNumerCoeffs [0] = 1;
+            if (FilterSubtype == 0)		// LOWPASS
+               effect->mpBiquad[iPair]->fNumerCoeffs [1] = 2;
+            else
+               effect->mpBiquad[iPair]->fNumerCoeffs [1] = -2;
+            effect->mpBiquad[iPair]->fNumerCoeffs [2] = 1;
+            effect->mpBiquad[iPair]->fDenomCoeffs [0] = -2 * fZPoleX;
+            effect->mpBiquad[iPair]->fDenomCoeffs [1] = square(fZPoleX) + square(fZPoleY);
+            if (FilterSubtype == 0)		// LOWPASS
+               fDCPoleDistSqr *= Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY);
+            else
+               fDCPoleDistSqr *= Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY);		// distance from Nyquist
+         }
+      }
+      effect->mpBiquad[0]->fNumerCoeffs [0] *= fDCPoleDistSqr / (1 << Order);	// mult by DC dist from poles, divide by dist from zeroes
+      effect->mpBiquad[0]->fNumerCoeffs [1] *= fDCPoleDistSqr / (1 << Order);
+      effect->mpBiquad[0]->fNumerCoeffs [2] *= fDCPoleDistSqr / (1 << Order);
       break;
 
    case 1:     // Chebyshev Type 1
       double eps; eps = sqrt (pow (10.0, __max(0.001, Ripple) / 10.0) - 1);
       double a; a = log (1 / eps + sqrt(1 / square(eps) + 1)) / Order;
-	   // Assume even order to start
-	   for (int iPair = 0; iPair < Order/2; iPair++)
-	   {
-		   float fSPoleX = -fC * sinh (a) * sin ((2*iPair + 1) * PI / (2 * Order));
-		   float fSPoleY = fC * cosh (a) * cos ((2*iPair + 1) * PI / (2 * Order));
-		   BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
-		   if (FilterSubtype == 0)		// LOWPASS
+      // Assume even order to start
+      for (int iPair = 0; iPair < Order/2; iPair++)
+      {
+         float fSPoleX = -fC * sinh (a) * sin ((2*iPair + 1) * PI / (2 * Order));
+         float fSPoleY = fC * cosh (a) * cos ((2*iPair + 1) * PI / (2 * Order));
+         BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
+         if (FilterSubtype == 0)		// LOWPASS
          {
             fZZeroX = -1;
-			   fDCPoleDistSqr = Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY);
+            fDCPoleDistSqr = Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY);
             fDCPoleDistSqr /= 2*2;  // dist from zero at Nyquist
          }
-		   else
+         else
          {
             // Highpass - do the digital LP->HP transform on the poles and zeroes
             ComplexDiv (beta - fZPoleX, -fZPoleY, 1 - beta * fZPoleX, -beta * fZPoleY, &fZPoleX, &fZPoleY);
             fZZeroX = 1;
-			   fDCPoleDistSqr = Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY);		// distance from Nyquist
+            fDCPoleDistSqr = Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY);		// distance from Nyquist
             fDCPoleDistSqr /= 2*2;  // dist from zero at Nyquist
          }
-		   effect->mpBiquad[iPair]->fNumerCoeffs [0] = fDCPoleDistSqr;
-		   effect->mpBiquad[iPair]->fNumerCoeffs [1] = -2 * fZZeroX * fDCPoleDistSqr;
-		   effect->mpBiquad[iPair]->fNumerCoeffs [2] = fDCPoleDistSqr;
-		   effect->mpBiquad[iPair]->fDenomCoeffs [0] = -2 * fZPoleX;
-		   effect->mpBiquad[iPair]->fDenomCoeffs [1] = square(fZPoleX) + square(fZPoleY);
-	   }
+         effect->mpBiquad[iPair]->fNumerCoeffs [0] = fDCPoleDistSqr;
+         effect->mpBiquad[iPair]->fNumerCoeffs [1] = -2 * fZZeroX * fDCPoleDistSqr;
+         effect->mpBiquad[iPair]->fNumerCoeffs [2] = fDCPoleDistSqr;
+         effect->mpBiquad[iPair]->fDenomCoeffs [0] = -2 * fZPoleX;
+         effect->mpBiquad[iPair]->fDenomCoeffs [1] = square(fZPoleX) + square(fZPoleY);
+      }
       if ((Order & 1) == 0)
       {
          float fTemp = pow (10.0, -__max(0.001, Ripple) / 20.0);      // at DC the response is down R dB (for even-order)
-	      effect->mpBiquad[0]->fNumerCoeffs [0] *= fTemp;
-	      effect->mpBiquad[0]->fNumerCoeffs [1] *= fTemp;
-	      effect->mpBiquad[0]->fNumerCoeffs [2] *= fTemp;
+         effect->mpBiquad[0]->fNumerCoeffs [0] *= fTemp;
+         effect->mpBiquad[0]->fNumerCoeffs [1] *= fTemp;
+         effect->mpBiquad[0]->fNumerCoeffs [2] *= fTemp;
       }
-	   else
-	   {
-		   // Odd order - now do the 1st-order section
-		   float fSPoleX = -fC * sinh (a);
-		   float fSPoleY = 0;
-		   BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
-		   if (FilterSubtype == 0)		// LOWPASS
+      else
+      {
+         // Odd order - now do the 1st-order section
+         float fSPoleX = -fC * sinh (a);
+         float fSPoleY = 0;
+         BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
+         if (FilterSubtype == 0)		// LOWPASS
          {
             fZZeroX = -1;
-			   fDCPoleDistSqr = sqrt(Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY));
+            fDCPoleDistSqr = sqrt(Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY));
             fDCPoleDistSqr /= 2;  // dist from zero at Nyquist
          }
          else
@@ -895,86 +895,86 @@ bool ScienFilterDialog::CalcFilter (EffectScienFilter* effect)
             // Highpass - do the digital LP->HP transform on the poles and zeroes
             ComplexDiv (beta - fZPoleX, -fZPoleY, 1 - beta * fZPoleX, -beta * fZPoleY, &fZPoleX, &fZPoleY);
             fZZeroX = 1;
-			   fDCPoleDistSqr = sqrt(Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY));		// distance from Nyquist
+            fDCPoleDistSqr = sqrt(Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY));		// distance from Nyquist
             fDCPoleDistSqr /= 2;  // dist from zero at Nyquist
          }
-		   effect->mpBiquad[(Order-1)/2]->fNumerCoeffs [0] = fDCPoleDistSqr;
- 		   effect->mpBiquad[(Order-1)/2]->fNumerCoeffs [1] = -fZZeroX * fDCPoleDistSqr;
-		   effect->mpBiquad[(Order-1)/2]->fNumerCoeffs [2] = 0;
-		   effect->mpBiquad[(Order-1)/2]->fDenomCoeffs [0] = -fZPoleX;
-		   effect->mpBiquad[(Order-1)/2]->fDenomCoeffs [1] = 0;
-	   }
+         effect->mpBiquad[(Order-1)/2]->fNumerCoeffs [0] = fDCPoleDistSqr;
+         effect->mpBiquad[(Order-1)/2]->fNumerCoeffs [1] = -fZZeroX * fDCPoleDistSqr;
+         effect->mpBiquad[(Order-1)/2]->fNumerCoeffs [2] = 0;
+         effect->mpBiquad[(Order-1)/2]->fDenomCoeffs [0] = -fZPoleX;
+         effect->mpBiquad[(Order-1)/2]->fDenomCoeffs [1] = 0;
+      }
       break;
 
    case 2:     // Chebyshev Type 2
       float fSZeroX, fSZeroY;
-	   float fSPoleX, fSPoleY;
+      float fSPoleX, fSPoleY;
       eps = pow (10.0, -__max(0.001, StopbandRipple) / 20.0);
       a = log (1 / eps + sqrt(1 / square(eps) + 1)) / Order;
 
-	   // Assume even order
-	   for (int iPair = 0; iPair < Order/2; iPair++)
-	   {
+      // Assume even order
+      for (int iPair = 0; iPair < Order/2; iPair++)
+      {
          ComplexDiv (fC, 0, -sinh (a) * sin ((2*iPair + 1) * PI / (2 * Order)),
-                              cosh (a) * cos ((2*iPair + 1) * PI / (2 * Order)),
-                              &fSPoleX, &fSPoleY);
-		   BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
+            cosh (a) * cos ((2*iPair + 1) * PI / (2 * Order)),
+            &fSPoleX, &fSPoleY);
+         BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
          fSZeroX = 0;
          fSZeroY = fC / cos (((2 * iPair) + 1) * PI / (2 * Order));
-		   BilinTransform (fSZeroX, fSZeroY, &fZZeroX, &fZZeroY);
+         BilinTransform (fSZeroX, fSZeroY, &fZZeroX, &fZZeroY);
 
-		   if (FilterSubtype == 0)		// LOWPASS
+         if (FilterSubtype == 0)		// LOWPASS
          {
-			   fDCPoleDistSqr = Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY);
+            fDCPoleDistSqr = Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY);
             fDCPoleDistSqr /= Calc2D_DistSqr (1, 0, fZZeroX, fZZeroY);
          }
-		   else
+         else
          {
             // Highpass - do the digital LP->HP transform on the poles and zeroes
             ComplexDiv (beta - fZPoleX, -fZPoleY, 1 - beta * fZPoleX, -beta * fZPoleY, &fZPoleX, &fZPoleY);
             ComplexDiv (beta - fZZeroX, -fZZeroY, 1 - beta * fZZeroX, -beta * fZZeroY, &fZZeroX, &fZZeroY);
-			   fDCPoleDistSqr = Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY);		// distance from Nyquist
+            fDCPoleDistSqr = Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY);		// distance from Nyquist
             fDCPoleDistSqr /= Calc2D_DistSqr (-1, 0, fZZeroX, fZZeroY);
          }
          effect->mpBiquad[iPair]->fNumerCoeffs [0] = fDCPoleDistSqr;
-		   effect->mpBiquad[iPair]->fNumerCoeffs [1] = -2 * fZZeroX * fDCPoleDistSqr;
-			effect->mpBiquad[iPair]->fNumerCoeffs [2] = (square(fZZeroX) + square(fZZeroY)) * fDCPoleDistSqr;
-		   effect->mpBiquad[iPair]->fDenomCoeffs [0] = -2 * fZPoleX;
-		   effect->mpBiquad[iPair]->fDenomCoeffs [1] = square(fZPoleX) + square(fZPoleY);
-	   }
+         effect->mpBiquad[iPair]->fNumerCoeffs [1] = -2 * fZZeroX * fDCPoleDistSqr;
+         effect->mpBiquad[iPair]->fNumerCoeffs [2] = (square(fZZeroX) + square(fZZeroY)) * fDCPoleDistSqr;
+         effect->mpBiquad[iPair]->fDenomCoeffs [0] = -2 * fZPoleX;
+         effect->mpBiquad[iPair]->fDenomCoeffs [1] = square(fZPoleX) + square(fZPoleY);
+      }
       // Now, if it's odd order, we have one more to do
       if (Order & 1)
       {
          int iPair = (Order-1)/2; // we'll do it as a biquad, but it's just first-order
          ComplexDiv (fC, 0, -sinh (a) * sin ((2*iPair + 1) * PI / (2 * Order)),
-                              cosh (a) * cos ((2*iPair + 1) * PI / (2 * Order)),
-                              &fSPoleX, &fSPoleY);
-		   BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
+            cosh (a) * cos ((2*iPair + 1) * PI / (2 * Order)),
+            &fSPoleX, &fSPoleY);
+         BilinTransform (fSPoleX, fSPoleY, &fZPoleX, &fZPoleY);
          fZZeroX = -1;     // in the s-plane, the zero is at infinity
          fZZeroY = 0;
-		   if (FilterSubtype == 0)		// LOWPASS
+         if (FilterSubtype == 0)		// LOWPASS
          {
-			   fDCPoleDistSqr = sqrt(Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY));
+            fDCPoleDistSqr = sqrt(Calc2D_DistSqr (1, 0, fZPoleX, fZPoleY));
             fDCPoleDistSqr /= 2;
          }
-		   else
+         else
          {
             // Highpass - do the digital LP->HP transform on the poles and zeroes
             ComplexDiv (beta - fZPoleX, -fZPoleY, 1 - beta * fZPoleX, -fZPoleY, &fZPoleX, &fZPoleY);
             fZZeroX = 1;
-			   fDCPoleDistSqr = sqrt(Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY));		// distance from Nyquist
+            fDCPoleDistSqr = sqrt(Calc2D_DistSqr (-1, 0, fZPoleX, fZPoleY));		// distance from Nyquist
             fDCPoleDistSqr /= 2;
          }
          effect->mpBiquad[iPair]->fNumerCoeffs [0] = fDCPoleDistSqr;
-		   effect->mpBiquad[iPair]->fNumerCoeffs [1] = -fZZeroX * fDCPoleDistSqr;
-			effect->mpBiquad[iPair]->fNumerCoeffs [2] = 0;
-		   effect->mpBiquad[iPair]->fDenomCoeffs [0] = -fZPoleX;
-		   effect->mpBiquad[iPair]->fDenomCoeffs [1] = 0;
+         effect->mpBiquad[iPair]->fNumerCoeffs [1] = -fZZeroX * fDCPoleDistSqr;
+         effect->mpBiquad[iPair]->fNumerCoeffs [2] = 0;
+         effect->mpBiquad[iPair]->fDenomCoeffs [0] = -fZPoleX;
+         effect->mpBiquad[iPair]->fDenomCoeffs [1] = 0;
       }
       break;
    }
    effect->mOrder = Order;    // ?? needed for ProcessOne to work in Preview. This probably should be done a different way, but how?
-	return true;
+   return true;
 }
 
 static double s_fChebyCoeffs [MAX_FILTER_ORDER][MAX_FILTER_ORDER+1] = {
@@ -1008,43 +1008,43 @@ static double ChebyPoly (int Order, double NormFreq)   // NormFreq = 1 at the f0
 
 float ScienFilterDialog::FilterMagnAtFreq (float Freq)
 {
-	float Magn;
-	if (Freq >= mNyquist)
-		Freq = mNyquist - 1;	// prevent tan(PI/2)
-	float FreqWarped = tan (PI * Freq/(2*mNyquist));
-	if (Cutoff >= mNyquist)
-		Cutoff = mNyquist - 1;
-	float CutoffWarped = tan (PI * Cutoff/(2*mNyquist));
+   float Magn;
+   if (Freq >= mNyquist)
+      Freq = mNyquist - 1;	// prevent tan(PI/2)
+   float FreqWarped = tan (PI * Freq/(2*mNyquist));
+   if (Cutoff >= mNyquist)
+      Cutoff = mNyquist - 1;
+   float CutoffWarped = tan (PI * Cutoff/(2*mNyquist));
    float fOverflowThresh = pow (10.0, 12.0 / (2*Order));    // once we exceed 10^12 there's not much to be gained and overflow could happen
 
-	switch (FilterType)
-	{
-	case 0:		// Butterworth
-	default:
-		switch (FilterSubtype)
-		{
-		case 0:	// lowpass
-		default:
-			if (FreqWarped/CutoffWarped > fOverflowThresh)	// prevent pow() overflow
-				Magn = 0;
-			else
-				Magn = sqrt (1 / (1 + pow (FreqWarped/CutoffWarped, 2*Order)));
-			break;
-		case 1:	// highpass
-			if (FreqWarped/CutoffWarped > fOverflowThresh)
-				Magn = 1;
-			else
-				Magn = sqrt (pow (FreqWarped/CutoffWarped, 2*Order) / (1 + pow (FreqWarped/CutoffWarped, 2*Order)));
-			break;
-		}
-		break;
+   switch (FilterType)
+   {
+   case 0:		// Butterworth
+   default:
+      switch (FilterSubtype)
+      {
+      case 0:	// lowpass
+      default:
+         if (FreqWarped/CutoffWarped > fOverflowThresh)	// prevent pow() overflow
+            Magn = 0;
+         else
+            Magn = sqrt (1 / (1 + pow (FreqWarped/CutoffWarped, 2*Order)));
+         break;
+      case 1:	// highpass
+         if (FreqWarped/CutoffWarped > fOverflowThresh)
+            Magn = 1;
+         else
+            Magn = sqrt (pow (FreqWarped/CutoffWarped, 2*Order) / (1 + pow (FreqWarped/CutoffWarped, 2*Order)));
+         break;
+      }
+      break;
 
    case 1:     // Chebyshev Type 1
       double eps; eps = sqrt(pow (10.0, __max(0.001, Ripple)/10.0) - 1);
-		switch (FilterSubtype)
-		{
-		case 0:	// lowpass
-		default:
+      switch (FilterSubtype)
+      {
+      case 0:	// lowpass
+      default:
          Magn = sqrt (1 / (1 + square(eps) * square(ChebyPoly(Order, FreqWarped/CutoffWarped))));
          break;
       case 1:
@@ -1055,10 +1055,10 @@ float ScienFilterDialog::FilterMagnAtFreq (float Freq)
 
    case 2:     // Chebyshev Type 2
       eps = 1 / sqrt(pow (10.0, __max(0.001, StopbandRipple)/10.0) - 1);
-		switch (FilterSubtype)
-		{
-		case 0:	// lowpass
-		default:
+      switch (FilterSubtype)
+      {
+      case 0:	// lowpass
+      default:
          Magn = sqrt (1 / (1 + 1 / (square(eps) * square(ChebyPoly(Order, CutoffWarped/FreqWarped)))));
          break;
       case 1:
@@ -1066,9 +1066,9 @@ float ScienFilterDialog::FilterMagnAtFreq (float Freq)
          break;
       }
       break;
-	}
+   }
 
-	return Magn;
+   return Magn;
 }
 
 
@@ -1096,12 +1096,12 @@ void ScienFilterDialog::OnFilterSubtype (wxCommandEvent &WXUNUSED(event))
 
 void ScienFilterDialog::OnCutoff (wxCommandEvent &WXUNUSED(event))
 {
-	double CutoffTemp;
-	if (mCutoffCtl)
-	{
-		if (mCutoffCtl->GetValue().ToDouble(&CutoffTemp))
+   double CutoffTemp;
+   if (mCutoffCtl)
+   {
+      if (mCutoffCtl->GetValue().ToDouble(&CutoffTemp))
       {
-			Cutoff = CutoffTemp;
+         Cutoff = CutoffTemp;
          if (Cutoff >= mNyquist)
          {
             Cutoff = mNyquist - 1;  // could handle Nyquist as a special case? eg. straight through if LPF
@@ -1116,30 +1116,30 @@ void ScienFilterDialog::OnCutoff (wxCommandEvent &WXUNUSED(event))
          else
             ok->Enable(1);
       }
-		mPanel->Refresh (false);
-	}
+      mPanel->Refresh (false);
+   }
 }
 
 void ScienFilterDialog::OnRipple (wxCommandEvent &WXUNUSED(event))
 {
-	double RippleTemp;
-	if (mRippleCtl)
-	{
-		if (mRippleCtl->GetValue().ToDouble(&RippleTemp))
-			Ripple = RippleTemp;
-		mPanel->Refresh (false);
-	}
+   double RippleTemp;
+   if (mRippleCtl)
+   {
+      if (mRippleCtl->GetValue().ToDouble(&RippleTemp))
+         Ripple = RippleTemp;
+      mPanel->Refresh (false);
+   }
 }
 
 void ScienFilterDialog::OnStopbandRipple (wxCommandEvent &WXUNUSED(event))
 {
-	double RippleTemp;
-	if (mStopbandRippleCtl)
-	{
-		if (mStopbandRippleCtl->GetValue().ToDouble(&RippleTemp))
-			StopbandRipple = RippleTemp;
-		mPanel->Refresh (false);
-	}
+   double RippleTemp;
+   if (mStopbandRippleCtl)
+   {
+      if (mStopbandRippleCtl->GetValue().ToDouble(&RippleTemp))
+         StopbandRipple = RippleTemp;
+      mPanel->Refresh (false);
+   }
 }
 
 void ScienFilterDialog::OnSliderDBMIN(wxCommandEvent &WXUNUSED(event))
@@ -1232,17 +1232,4 @@ void ScienFilterDialog::EnableDisableRippleCtl (int FilterType)
       mStopbandRippleCtl->SetBackgroundColour (*wxWHITE);
    }
 }
-
-
-
-// Indentation settings for Vim and Emacs and unique identifier for Arch, a
-// version control system. Please do not modify past this point.
-//
-// Local Variables:
-// c-basic-offset: 3
-// indent-tabs-mode: nil
-// End:
-//
-// vim: et sts=3 sw=3
-// arch-tag: 65b35bfa-632c-46fe-9170-840a158b3c97
 
