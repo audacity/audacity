@@ -264,7 +264,9 @@ void LoadEffects()
    em.RegisterEffect(new EffectRepeat());
    em.RegisterEffect(new EffectReverb());
    em.RegisterEffect(new EffectReverse());
+#ifdef EXPERIMENTAL_SCIENCE_FILTERS
    em.RegisterEffect(new EffectScienFilter());
+#endif
    em.RegisterEffect(new EffectStereoToMono(), HIDDEN_EFFECT);// NOT in normal effects list.
    em.RegisterEffect(new EffectTruncSilence(), SIMPLE_EFFECT);
 #ifdef USE_SBSMS 

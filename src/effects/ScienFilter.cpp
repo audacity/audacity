@@ -205,8 +205,9 @@ bool EffectScienFilter::DontPromptUser()
       hiFreq = ((float)(t->GetRate())/2.);
    else
       hiFreq = ((float)(GetActiveProject()->GetRate())/2.);
-
-   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, NULL, -1, _("ScienFilter"));
+   /*i18n-hint: The 'scientific filter' is an audio effect.  It's a low-pass or high-pass 
+   filter with specfic characteristics.*/
+   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, NULL, -1, _("Scientific Filter"));
    dlog.dBMin = mdBMin;
    dlog.dBMax = mdBMax;
    dlog.Order = mOrder;
@@ -614,22 +615,26 @@ void ScienFilterDialog::MakeScienFilterDialog()
    szr3 = new wxFlexGridSizer (7, 0, 0);
    szr3->Add (new wxStaticText(this, wxID_ANY, _("Filter Type:")), wxRIGHT);
    mFilterTypeCtl = new wxChoice (this, ID_FILTER_TYPE);
+   /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    mFilterTypeCtl->Append (_("Butterworth"));
+   /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
    mFilterTypeCtl->Append (_("Chebyshev Type I"));
+   /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
    mFilterTypeCtl->Append (_("Chebyshev Type II"));
    szr3->Add (mFilterTypeCtl);
+   /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
    szr3->Add( new wxStaticText(this, wxID_ANY, _(" Order:")), wxRIGHT );
    mFilterOrderCtl = new wxChoice (this, ID_FILTER_ORDER);
-   mFilterOrderCtl->Append (_("1"));
-   mFilterOrderCtl->Append (_("2"));
-   mFilterOrderCtl->Append (_("3"));
-   mFilterOrderCtl->Append (_("4"));
-   mFilterOrderCtl->Append (_("5"));
-   mFilterOrderCtl->Append (_("6"));
-   mFilterOrderCtl->Append (_("7"));
-   mFilterOrderCtl->Append (_("8"));
-   mFilterOrderCtl->Append (_("9"));
-   mFilterOrderCtl->Append (_("10"));
+   mFilterOrderCtl->Append (wxT("1"));
+   mFilterOrderCtl->Append (wxT("2"));
+   mFilterOrderCtl->Append (wxT("3"));
+   mFilterOrderCtl->Append (wxT("4"));
+   mFilterOrderCtl->Append (wxT("5"));
+   mFilterOrderCtl->Append (wxT("6"));
+   mFilterOrderCtl->Append (wxT("7"));
+   mFilterOrderCtl->Append (wxT("8"));
+   mFilterOrderCtl->Append (wxT("9"));
+   mFilterOrderCtl->Append (wxT("10"));
    szr3->Add (mFilterOrderCtl);
    szr3->Add (new wxStaticText(this, wxID_ANY, _("Passband Ripple:")), wxSizerFlags().Right());
    wxSize Size(wxDefaultSize);
@@ -644,11 +649,11 @@ void ScienFilterDialog::MakeScienFilterDialog()
    szr3->Add (mFilterSubTypeCtl);
    szr3->Add( new wxStaticText(this, wxID_ANY, _("Cutoff:")), wxRIGHT );
    Size.SetWidth (50);
-   mCutoffCtl = new wxTextCtrl (this, ID_CUTOFF, _("0.0"), wxDefaultPosition, Size);
+   mCutoffCtl = new wxTextCtrl (this, ID_CUTOFF, wxT("0.0"), wxDefaultPosition, Size);
    szr3->Add (mCutoffCtl, 0 );
    szr3->Add( new wxStaticText(this, wxID_ANY, _("Hz  Stopband Ripple:")), 0 );
    Size.SetWidth (40);
-   mStopbandRippleCtl = new wxTextCtrl (this, ID_STOPBAND_RIPPLE, _("0.0"), wxDefaultPosition, Size);
+   mStopbandRippleCtl = new wxTextCtrl (this, ID_STOPBAND_RIPPLE, wxT("0.0"), wxDefaultPosition, Size);
    szr3->Add (mStopbandRippleCtl, 0 );
    szr3->Add( new wxStaticText(this, wxID_ANY, _("dB")), 0 );
 
