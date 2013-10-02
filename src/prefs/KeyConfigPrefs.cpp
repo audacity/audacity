@@ -287,6 +287,7 @@ void KeyConfigPrefs::RefreshBindings()
    wxArrayString Categories;
    wxArrayString Prefixes;
 
+   mNames.Clear();
    mManager->GetAllCommandData(
       mNames, 
       mKeys, 
