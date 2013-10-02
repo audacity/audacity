@@ -4930,6 +4930,8 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    double offset;
    double minOffset = 1000000000.0;
    double maxEndOffset = 0.0;
+   double leftOffset = 0.0;
+   bool bRightChannel = false;
    double avgOffset = 0.0;
    int numSelected = 0;
    Track *t = iter.First();
@@ -4948,22 +4950,34 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
 #endif
          offset = t->GetOffset();
-         avgOffset += offset;
+         if (t->GetLinked()) {   // Left channel of stereo track.
+            leftOffset = offset;
+            bRightChannel = true; // next track is the right channel.
+         } else {
+            if (bRightChannel) {
+               // Align channel with earlier start  time
+               offset = (offset < leftOffset)? offset : leftOffset;
+               leftOffset = 0.0;
+               bRightChannel = false;
+            }
+            avgOffset += offset;
+            if (numSelected == 0) {
+               firstTrackOffset = offset; // For Align End to End.
+            }
+            numSelected++;
+         }
          trackStartArray.Add(t->GetStartTime());
          trackEndArray.Add(t->GetEndTime());
 
-         if (numSelected == 0)
-            firstTrackOffset = offset;
          if (offset < minOffset)
             minOffset = offset;
          if (t->GetEndTime() > maxEndOffset)
             maxEndOffset = t->GetEndTime();
-         numSelected++;
       }
       t = iter.Next();
    }
 
-   avgOffset /= numSelected;
+   avgOffset /= numSelected;  // numSelected is mono/stereo tracks not channels.
 
    switch(index) {
    case kAlignStartZero:
@@ -5003,23 +5017,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       shortAction = _("Together");
    }
 
-   if (index == kAlignTogether){
-      TrackListIterator iter(mTracks);
-      Track *t = iter.First();
-      
-      while (t) {
-         // This shifts different tracks in different ways, so no sync-lock move.
-         // FIXME: We only want to move Wave Tracks and Note Tracks.
-         // FIXME: Tracks misaligned if stereo channels have different starts or ends.
-         if (t->GetSelected()) {
-            t->SetOffset(newPos);
-         }
-         t = iter.Next();
-      }
-   }
-   
-   // TODO: 'Align Together' should be handled here rather than duplicating code.
-   if (index == kAlignEndToEnd) {
+   if ((unsigned)index >= mAlignLabelsCount) { // This is an alignLabelsNoSync command. 
       TrackListIterator iter(mTracks);
       Track *t = iter.First();
       double leftChannelStart = 0.0;
@@ -5037,46 +5035,43 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
          if (t->GetSelected() && (t->GetKind() == Track::Wave)) {
 #endif
             t->SetOffset(newPos);   // Move the track
-            if (t->GetLinked()) {
-               // Left channel of stereo track.
+
+            if (t->GetLinked()) {   // Left channel of stereo track.
                leftChannelStart = trackStartArray[arrayIndex];
                leftChannelEnd = trackEndArray[arrayIndex];
                rightChannelStart = trackStartArray[1+arrayIndex];
                rightChannelEnd = trackEndArray[1+arrayIndex];
-               // If the start time of the right channel is earlier, we need to shift this track.
-               // If this is the first track then it is already in correct place.
-               if ((rightChannelStart < leftChannelStart) && (arrayIndex > 0)) {
-                  newPos += leftChannelStart - rightChannelStart;
-                  t->SetOffset(newPos);
+               bRightChannel = true;   // next track is the right channel.
+               // newPos is the offset for the earlier channel.
+               // If right channel started first, offset the left channel.
+               if (rightChannelStart < leftChannelStart) {
+                  t->SetOffset(newPos + leftChannelStart - rightChannelStart);
                }
-               // Now set newPos for the right channel.
-               newPos += rightChannelStart - leftChannelStart;
                arrayIndex++;
             } else {
-               if (rightChannelEnd > 0) {
-               // Right channel of stereo track
-               // If channels may not have the same start or end times.
-               // Align to end of the stereo track.
-               if (leftChannelStart > rightChannelStart) {
-                  // current position is start of stereo track.
-                  newPos += wxMax(leftChannelEnd, rightChannelEnd) - wxMin(leftChannelStart, rightChannelStart);
-               } else {
-                  // current position is offset by difference in channel start times
-                  newPos += ((wxMax(leftChannelEnd, rightChannelEnd) - 
-                               wxMin(leftChannelStart, rightChannelStart)) -
-                            (rightChannelStart - leftChannelStart));
-               }
-               rightChannelEnd = 0.0;  // Reset right channel end to zero.
-               } else {
-                  // Mono track
-                  newPos += (trackEndArray[arrayIndex] - trackStartArray[arrayIndex]);
+               if (bRightChannel) {
+                  // If left channel started first, offset the right channel.
+                  if (leftChannelStart < rightChannelStart) {
+                     t->SetOffset(newPos + rightChannelStart - leftChannelStart);
+                  }
+                  if (index == kAlignEndToEnd) {
+                     // Now set position for start of next track.
+                     newPos += wxMax(leftChannelEnd, rightChannelEnd) - wxMin(leftChannelStart, rightChannelStart);
+                  }
+                  bRightChannel = false;
+               } else { // Mono track
+                  if (index == kAlignEndToEnd) {
+                     newPos += (trackEndArray[arrayIndex] - trackStartArray[arrayIndex]);
+                  }
                }
                arrayIndex++;
             }
          }
          t = iter.Next();
       }
-      OnZoomFit();
+      if (index == kAlignEndToEnd) {
+         OnZoomFit();
+      }
    }
 
    if (delta != 0.0) {
