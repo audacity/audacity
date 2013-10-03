@@ -173,8 +173,11 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
             S.StartRadioButtonGroup(wxT("/Prefs/KeyConfig/ViewBy"), wxT("tree"));
             {
                mViewByTree = S.Id(ViewByTreeID).TieRadioButton(_("&Tree"), wxT("tree"));
+               mViewByTree->SetName(_("View by tree"));
                mViewByName = S.Id(ViewByNameID).TieRadioButton(_("&Name"), wxT("name"));
+               mViewByName->SetName(_("View by name"));
                mViewByKey = S.Id(ViewByKeyID).TieRadioButton(_("&Key"), wxT("key"));
+               mViewByKey->SetName(_("View by key"));
             }
             S.EndRadioButtonGroup();
          }
