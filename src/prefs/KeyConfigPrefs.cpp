@@ -567,7 +567,9 @@ void KeyConfigPrefs::OnClear(wxCommandEvent& WXUNUSED(event))
 {
    mKey->Clear();
 
-   SetKeyForSelected(wxEmptyString);
+   if (mCommandSelected != wxNOT_FOUND) {
+      SetKeyForSelected(wxEmptyString);
+   }
 }
 
 void KeyConfigPrefs::OnSelected(wxCommandEvent & WXUNUSED(e))
