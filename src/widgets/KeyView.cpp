@@ -1721,13 +1721,28 @@ KeyView::GetValue(int line)
    }
 
    // Get the label and key values
-   wxString value = GetFullLabel(LineToIndex(line));
+   wxString value;
+   if (mViewType == ViewByTree)
+   {
+      value = GetLabel(LineToIndex(line));
+   }
+   else
+   {
+      value = GetFullLabel(LineToIndex(line));
+   }
    wxString key = GetKey(LineToIndex(line));
 
    // Add the key if it isn't empty
    if (!key.IsEmpty())
    {
-      value += wxT(" ") + key;
+      if (mViewType == ViewByKey)
+      {
+         value = key + wxT(" ") + value;
+      }
+      else
+      {
+         value = value + wxT(" ") + key;
+      }
    }
 
    return value;
