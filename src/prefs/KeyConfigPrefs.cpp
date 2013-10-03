@@ -610,6 +610,15 @@ void KeyConfigPrefs::OnViewBy(wxCommandEvent & e)
 
 bool KeyConfigPrefs::Apply()
 {
+   // On the Mac, preferences may be changed without any active
+   // projects.  This means that the CommandManager isn't availabe
+   // either.  So we can't attempt to save preferences, otherwise
+   // NULL ptr dereferences will happen in ShuttleGui because the
+   // radio buttons are never created.  (See Populate() above.)
+   if (!GetActiveProject()) {
+      return true;
+   }
+
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
