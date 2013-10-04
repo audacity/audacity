@@ -760,15 +760,28 @@ KeyView::RefreshLines()
       {
          KeyNode & node = mNodes[i];
 
-         // Search the label (with possible prefix) and key
-         //
-         // The x"01" separator is used to prevent finding a
-         // match comprising the end of the label and beginning
-         // of the key.  It was chosen since it's not very likely
-         // to appear in the filter itself.
-         wxString searchit = node.label.Lower() +
-                             wxT("\01x") +
-                             node.key.Lower();
+         // Search columns based on view type
+         wxString searchit;
+         switch (mViewType)
+         {
+            // The x"01" separator is used to prevent finding a
+            // match comprising the end of the label and beginning
+            // of the key.  It was chosen since it's not very likely
+            // to appear in the filter itself.
+            case ViewByTree:
+               searchit = node.label.Lower() +
+                          wxT("\01x") +
+                          node.key.Lower();
+            break;
+
+            case ViewByName:
+               searchit = node.label.Lower();
+            break;
+
+            case ViewByKey:
+               searchit = node.key.Lower();
+            break;
+         }
          if (searchit.Find(mFilter) == wxNOT_FOUND)
          {
             // Not found so continue to next node
