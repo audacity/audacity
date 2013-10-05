@@ -67,12 +67,12 @@ KeyView::KeyView(wxWindow *parent,
 
    // Create the device context
    wxMemoryDC dc;
-   dc.SetBrush(*wxWHITE_BRUSH);
 
    // Create the open/expanded bitmap
    mOpen = new wxBitmap(16, 16);
    dc.SelectObject(*mOpen);
 
+   dc.SetBrush(*wxWHITE_BRUSH);
    dc.SetPen(*wxWHITE_PEN);
    dc.DrawRectangle(0, 0, 16, 16);
 
@@ -85,6 +85,7 @@ KeyView::KeyView(wxWindow *parent,
    mClosed = new wxBitmap(16, 16);
    dc.SelectObject(*mClosed);
 
+   dc.SetBrush(*wxWHITE_BRUSH);
    dc.SetPen(*wxWHITE_PEN);
    dc.DrawRectangle(0, 0, 16, 16);
 
