@@ -672,11 +672,6 @@ KeyView::RefreshBindings(const wxArrayString & names,
             // Add it to the tree
             mNodes.Add(node);
             inpfx = true;
-
-            // Measure prefix
-            GetTextExtent(pfx, &x, &y);
-            mLineHeight = wxMax(mLineHeight, y);
-            mCommandWidth = wxMax(mCommandWidth, x);
          }
       }
 
@@ -716,9 +711,10 @@ KeyView::RefreshBindings(const wxArrayString & names,
       mLineHeight = wxMax(mLineHeight, y);
       mKeyWidth = wxMax(mKeyWidth, x);
 
-      // Prepend prefix for view types other than tree
+      // Prepend prefix for all view types to determine maximum
+      // column widths
       wxString label = node.label;
-      if (mViewType != ViewByTree && !node.prefix.IsEmpty())
+      if (!node.prefix.IsEmpty())
       {
          label = node.prefix + wxT(" - ") + label;
       }
@@ -764,12 +760,6 @@ KeyView::RefreshLines()
 {
    int cnt = (int) mNodes.GetCount();
    int linecnt = 0;
-
-   // Clear any previously assigned line numbers
-   for (int i = 0, lcnt = (int) mLines.GetCount(); i < lcnt; i++)
-   {
-      mLines[i]->line = -1;
-   }
    mLines.Empty();
 
    // Process a filter if one is set
@@ -779,6 +769,9 @@ KeyView::RefreshLines()
       for (int i = 0; i < cnt; i++)
       {
          KeyNode & node = mNodes[i];
+
+         // Reset line number
+         node.line = wxNOT_FOUND;
 
          // Search columns based on view type
          wxString searchit;
@@ -880,6 +873,9 @@ KeyView::RefreshLines()
       for (int i = 0; i < cnt; i++)
       {
          KeyNode & node = mNodes[i];
+
+         // Reset line number
+         node.line = wxNOT_FOUND;
 
          // Node is either a category or prefix
          if (node.isparent)
