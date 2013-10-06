@@ -600,7 +600,7 @@ void ScienFilterDialog::MakeScienFilterDialog()
    freqRuler->ruler.SetLog(true);
    freqRuler->ruler.SetRange(mLoFreq, mNyquist);
    freqRuler->ruler.SetFormat(Ruler::IntFormat);
-   freqRuler->ruler.SetUnits(_(""));
+   freqRuler->ruler.SetUnits(wxT(""));
    freqRuler->ruler.SetFlip(true);
    freqRuler->ruler.SetLabelEdges(true);
    freqRuler->ruler.GetMaxSize(NULL, &h);
@@ -639,7 +639,7 @@ void ScienFilterDialog::MakeScienFilterDialog()
    szr3->Add (new wxStaticText(this, wxID_ANY, _("Passband Ripple:")), wxSizerFlags().Right());
    wxSize Size(wxDefaultSize);
    Size.SetWidth (40);
-   mRippleCtl = new wxTextCtrl (this, ID_RIPPLE, _("0.0"), wxDefaultPosition, Size);
+   mRippleCtl = new wxTextCtrl (this, ID_RIPPLE, wxT("0.0"), wxDefaultPosition, Size);
    szr3->Add (mRippleCtl, 0 );
    szr3->Add( new wxStaticText(this, wxID_ANY, _("dB")), 0 );
    szr3->Add( new wxStaticText(this, wxID_ANY, _("Subtype:")), wxRIGHT );
