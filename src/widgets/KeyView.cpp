@@ -384,7 +384,7 @@ KeyView::SetView(ViewByType type)
    // Refresh the view lines
    RefreshLines();
 
-   // Reselect old node
+   // Reselect old node (if possible)
    if (index != wxNOT_FOUND)
    {
       SelectNode(index);
@@ -399,9 +399,22 @@ KeyView::SetView(ViewByType type)
 void
 KeyView::SetFilter(const wxString & filter)
 {
-   // Save it and refresh to filter the view
+   int index = LineToIndex(GetSelection());
+
+   // Unselect any currently selected line...do even if none selected
+   SelectNode(-1);
+
+   // Save the filter
    mFilter = filter.Lower();
+
+   // Refresh the view lines
    RefreshLines();
+
+   // Reselect old node (if possible)
+   if (index != wxNOT_FOUND)
+   {
+      SelectNode(index);
+   }
 }
 
 //
@@ -751,6 +764,12 @@ KeyView::RefreshLines()
 {
    int cnt = (int) mNodes.GetCount();
    int linecnt = 0;
+
+   // Clear any previously assigned line numbers
+   for (int i = 0, lcnt = (int) mLines.GetCount(); i < lcnt; i++)
+   {
+      mLines[i]->line = -1;
+   }
    mLines.Empty();
 
    // Process a filter if one is set
@@ -970,20 +989,25 @@ KeyView::RefreshLines()
 void
 KeyView::SelectNode(int index)
 {
+   int line = IndexToLine(index);
+
    // Tell the listbox to select the line
-   SetSelection(IndexToLine(index));
+   SetSelection(line);
 
 #if wxUSE_ACCESSIBILITY
    // And accessibility
-   mAx->SetCurrentLine(IndexToLine(index));
+   mAx->SetCurrentLine(line);
 #endif
 
-   // If not clearing, then send a selected event as it is not
-   // automatically done.
-   if (index != wxNOT_FOUND)
-   {
-      SendSelectedEvent();
-   }
+   // Always send an event to let parent know of selection change
+   //
+   // Must do this ourselves becuase we want to send notifications
+   // even if there isn't an item selected and SendSelectedEvent()
+   // doesn't allow sending an event for indexes not in the listbox.
+   wxCommandEvent event(wxEVT_COMMAND_LISTBOX_SELECTED, GetId());
+   event.SetEventObject(this);
+   event.SetInt(line);
+   (void)GetEventHandler()->ProcessEvent(event);
 }
 
 //

@@ -580,14 +580,16 @@ void KeyConfigPrefs::OnSelected(wxCommandEvent & WXUNUSED(e))
    mCommandSelected = mView->GetSelected();
    mKey->Clear();
 
-   bool canset = mView->CanSetKey(mCommandSelected);
-   if (canset) {
-      mKey->AppendText(mView->GetKey(mCommandSelected));
-   }
+   if (mCommandSelected != wxNOT_FOUND) {
+      bool canset = mView->CanSetKey(mCommandSelected);
+      if (canset) {
+         mKey->AppendText(mView->GetKey(mCommandSelected));
+      }
 
-   mKey->Enable(canset);
-   mSet->Enable(canset);
-   mClear->Enable(canset);
+      mKey->Enable(canset);
+      mSet->Enable(canset);
+      mClear->Enable(canset);
+   }
 }
 
 void KeyConfigPrefs::OnViewBy(wxCommandEvent & e)
