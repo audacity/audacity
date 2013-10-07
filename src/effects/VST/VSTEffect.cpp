@@ -112,6 +112,318 @@ void RegisterVSTEffects()
    pm.Close();
 }
 
+#if wxUSE_ACCESSIBILITY
+
+class CheckListAx: public wxWindowAccessible
+{
+ public:
+   CheckListAx(wxListCtrl * window);
+
+   virtual ~ CheckListAx();
+
+   // Retrieves the address of an IDispatch interface for the specified child.
+   // All objects must support this property.
+   virtual wxAccStatus GetChild( int childId, wxAccessible **child );
+
+   // Gets the number of children.
+   virtual wxAccStatus GetChildCount( int *childCount );
+
+   // Gets the default action for this object (0) or > 0 (the action for a child).
+   // Return wxACC_OK even if there is no action. actionName is the action, or the empty
+   // string if there is no action.
+   // The retrieved string describes the action that is performed on an object,
+   // not what the object does as a result. For example, a toolbar button that prints
+   // a document has a default action of "Press" rather than "Prints the current document."
+   virtual wxAccStatus GetDefaultAction( int childId, wxString *actionName );
+
+   // Returns the description for this object or a child.
+   virtual wxAccStatus GetDescription( int childId, wxString *description );
+
+   // Gets the window with the keyboard focus.
+   // If childId is 0 and child is NULL, no object in
+   // this subhierarchy has the focus.
+   // If this object has the focus, child should be 'this'.
+   virtual wxAccStatus GetFocus( int *childId, wxAccessible **child );
+
+   // Returns help text for this object or a child, similar to tooltip text.
+   virtual wxAccStatus GetHelpText( int childId, wxString *helpText );
+
+   // Returns the keyboard shortcut for this object or child.
+   // Return e.g. ALT+K
+   virtual wxAccStatus GetKeyboardShortcut( int childId, wxString *shortcut );
+
+   // Returns the rectangle for this object (id = 0) or a child element (id > 0).
+   // rect is in screen coordinates.
+   virtual wxAccStatus GetLocation( wxRect& rect, int elementId );
+
+   // Gets the name of the specified object.
+   virtual wxAccStatus GetName( int childId, wxString *name );
+
+   // Returns a role constant.
+   virtual wxAccStatus GetRole( int childId, wxAccRole *role );
+
+   // Gets a variant representing the selected children
+   // of this object.
+   // Acceptable values:
+   // - a null variant (IsNull() returns TRUE)
+   // - a list variant (GetType() == wxT("list"))
+   // - an integer representing the selected child element,
+   //   or 0 if this object is selected (GetType() == wxT("long"))
+   // - a "void*" pointer to a wxAccessible child object
+   virtual wxAccStatus GetSelections( wxVariant *selections );
+
+   // Returns a state constant.
+   virtual wxAccStatus GetState( int childId, long* state );
+
+   // Returns a localized string representing the value for the object
+   // or child.
+   virtual wxAccStatus GetValue( int childId, wxString *strValue );
+
+   void SetSelected( int item );
+ private:
+   wxListCtrl *mParent;
+   int mLastId;
+};
+
+CheckListAx::CheckListAx( wxListCtrl * window ):
+   wxWindowAccessible( window )
+{
+   mParent = window;
+   mLastId = -1;
+}
+
+CheckListAx::~CheckListAx()
+{
+}
+
+void CheckListAx::SetSelected( int item )
+{
+#if 0
+   NotifyEvent(wxACC_EVENT_OBJECT_REORDER,
+               mParent,
+               wxOBJID_CLIENT,
+               0);
+#endif
+#if 1
+   if (mLastId != -1) {
+      NotifyEvent(wxACC_EVENT_OBJECT_SELECTIONREMOVE,
+               mParent,
+               wxOBJID_CLIENT,
+               mLastId);
+      mLastId = -1;
+   }
+
+   if (item != -1)
+   {
+      NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
+                  mParent,
+                  wxOBJID_CLIENT,
+                  item + 1);
+
+      NotifyEvent(wxACC_EVENT_OBJECT_SELECTION,
+                  mParent,
+                  wxOBJID_CLIENT,
+                  item + 1);
+
+      mLastId = item + 1;
+   }
+#endif
+}
+
+// Retrieves the address of an IDispatch interface for the specified child.
+// All objects must support this property.
+wxAccStatus CheckListAx::GetChild( int childId, wxAccessible** child )
+{
+   if( childId == wxACC_SELF )
+   {
+      *child = this;
+   }
+   else
+   {
+      *child = NULL;
+   }
+
+   return wxACC_OK;
+}
+
+// Gets the number of children.
+wxAccStatus CheckListAx::GetChildCount( int *childCount )
+{
+   *childCount = mParent->GetItemCount();
+
+   return wxACC_OK;
+}
+
+// Gets the default action for this object (0) or > 0 (the action for a child).
+// Return wxACC_OK even if there is no action. actionName is the action, or the empty
+// string if there is no action.
+// The retrieved string describes the action that is performed on an object,
+// not what the object does as a result. For example, a toolbar button that prints
+// a document has a default action of "Press" rather than "Prints the current document."
+wxAccStatus CheckListAx::GetDefaultAction( int WXUNUSED(childId), wxString *actionName )
+{
+   actionName->Clear();
+
+   return wxACC_OK;
+}
+
+// Returns the description for this object or a child.
+wxAccStatus CheckListAx::GetDescription( int WXUNUSED(childId), wxString *description )
+{
+   description->Clear();
+
+   return wxACC_OK;
+}
+
+// Gets the window with the keyboard focus.
+// If childId is 0 and child is NULL, no object in
+// this subhierarchy has the focus.
+// If this object has the focus, child should be 'this'.
+wxAccStatus CheckListAx::GetFocus( int *childId, wxAccessible **child )
+{
+   *childId = 0;
+   *child = this;
+
+   return wxACC_OK;
+}
+
+// Returns help text for this object or a child, similar to tooltip text.
+wxAccStatus CheckListAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
+{
+   helpText->Clear();
+
+   return wxACC_OK;
+}
+
+// Returns the keyboard shortcut for this object or child.
+// Return e.g. ALT+K
+wxAccStatus CheckListAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
+{
+   shortcut->Clear();
+
+   return wxACC_OK;
+}
+
+// Returns the rectangle for this object (id = 0) or a child element (id > 0).
+// rect is in screen coordinates.
+wxAccStatus CheckListAx::GetLocation( wxRect& rect, int elementId )
+{
+   if( elementId == wxACC_SELF )
+   {
+      rect = mParent->GetRect();
+      rect.SetPosition( mParent->GetParent()->ClientToScreen( rect.GetPosition() ) );
+   }
+   else
+   {
+      if( elementId <= mParent->GetItemCount() )
+      {
+         mParent->GetItemRect( elementId - 1, rect, wxLIST_RECT_LABEL );
+         rect.SetPosition( mParent->ClientToScreen( rect.GetPosition() ) );
+      }
+   }
+
+   return wxACC_OK;
+}
+
+// Gets the name of the specified object.
+wxAccStatus CheckListAx::GetName( int WXUNUSED(childId), wxString *name )
+{
+   *name = mParent->GetName();
+
+   return wxACC_OK;
+}
+
+// Returns a role constant.
+wxAccStatus CheckListAx::GetRole( int childId, wxAccRole *role )
+{
+   if( childId == wxACC_SELF )
+   {
+      *role = wxROLE_SYSTEM_LIST;
+   }
+   else
+   {
+      *role = wxROLE_SYSTEM_LISTITEM;
+   }
+
+   return wxACC_OK;
+}
+
+// Gets a variant representing the selected children
+// of this object.
+// Acceptable values:
+// - a null variant (IsNull() returns TRUE)
+// - a list variant (GetType() == wxT("list"))
+// - an integer representing the selected child element,
+//   or 0 if this object is selected (GetType() == wxT("long"))
+// - a "void*" pointer to a wxAccessible child object
+wxAccStatus CheckListAx::GetSelections( wxVariant * WXUNUSED(selections) )
+{
+   return wxACC_NOT_IMPLEMENTED;
+}
+
+// Returns a state constant.
+wxAccStatus CheckListAx::GetState( int childId, long *state )
+{
+   int flag = wxACC_STATE_SYSTEM_FOCUSABLE;
+
+   if( childId == wxACC_SELF )
+   {
+      flag |= wxACC_STATE_SYSTEM_FOCUSED;
+   }
+   else
+   {
+      wxListItem item;
+
+      item.SetId( childId - 1 );
+      item.SetState( wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED );
+      item.SetMask( wxLIST_MASK_IMAGE | wxLIST_MASK_STATE );
+
+      if( mParent->GetItem( item ) )
+      {
+         flag |= wxACC_STATE_SYSTEM_SELECTABLE;
+
+         long state = item.GetState();
+
+         if( state & wxLIST_STATE_FOCUSED )
+         {
+            flag |= wxACC_STATE_SYSTEM_FOCUSED;
+         }
+
+         if( state & wxLIST_STATE_SELECTED )
+         {
+            flag |= wxACC_STATE_SYSTEM_SELECTED;
+         }
+
+         if( item.GetImage() != 0 )
+         {
+            flag |= wxACC_STATE_SYSTEM_CHECKED;
+         }
+      }
+   }
+
+   *state = flag;
+
+   return wxACC_OK;
+}
+
+// Returns a localized string representing the value for the object
+// or child.
+wxAccStatus CheckListAx::GetValue( int childId, wxString *strValue )
+{
+   if( childId == 0 )
+   {
+      return wxACC_OK;
+   }
+   else
+   {
+      *strValue = mParent->GetItemText( childId - 1 );
+   }
+
+   return wxACC_OK;
+}
+
+#endif
+
 class PluginRegistrationDialog:public wxDialog {
  public:
    // constructors and destructors
@@ -123,21 +435,20 @@ class PluginRegistrationDialog:public wxDialog {
 
    void OnApply(wxCommandEvent & event);
    void OnCancel(wxCommandEvent & event);
-   void OnToggleState( wxListEvent & event );
-   void OnChar( wxListEvent & event );
+   void OnListChar( wxKeyEvent & event );
+   void OnListMouseDown( wxMouseEvent & event );
 
    void SetBoldOrRegular( int i );
    void ToggleItem(int i);
 
+#if wxUSE_ACCESSIBILITY
+   CheckListAx *mAx;
+#endif
    wxButton *mOK;
    wxButton *mCancel;
    wxListCtrl *mPlugins;
-   int miSelected;
    wxArrayString mFiles;
    wxArrayInt miState;
-
-   bool mAbort;
-   bool mbNextSelectToggles;
 
    DECLARE_EVENT_TABLE()
 };
@@ -148,10 +459,6 @@ class PluginRegistrationDialog:public wxDialog {
 BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialog)
    EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnApply)
    EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
-   EVT_LIST_ITEM_SELECTED( PluginListID, PluginRegistrationDialog::OnToggleState )
-   EVT_LIST_ITEM_ACTIVATED( PluginListID, PluginRegistrationDialog::OnToggleState )
-   //EVT_LIST_ITEM_DESELECTED( wxID_ANY, PluginRegistrationDialog::OnToggleState )
-   EVT_LIST_KEY_DOWN( PluginListID, PluginRegistrationDialog::OnChar )
 END_EVENT_TABLE()
 
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow * parent, const wxArrayString & files):
@@ -160,17 +467,23 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow * parent, const wxAr
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-   miSelected = 0;
-   mbNextSelectToggles = true;
+   mPlugins = NULL;
    SetLabel(_("Install VST Effects"));         // Provide visual label
    SetName(_("Install VST Effects"));          // Provide audible label
    Populate();
    SetReturnCode( wxID_OK);
-   mAbort = false;
 }
 
 PluginRegistrationDialog::~PluginRegistrationDialog()
 {
+   mPlugins->Disconnect(wxEVT_LEFT_DOWN,
+                        wxMouseEventHandler(PluginRegistrationDialog::OnListMouseDown),
+                        NULL,
+                        this);
+   mPlugins->Disconnect(wxEVT_KEY_DOWN,
+                        wxKeyEventHandler(PluginRegistrationDialog::OnListChar),
+                        NULL,
+                        this);
 }
 
 void PluginRegistrationDialog::Populate()
@@ -190,6 +503,9 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 #define SHOW_CHECKED (1)
 #define SHOW_ARROW (2)
 
+#define COL_NAME (0)
+#define COL_PATH (1)
+
    pImageList->Add(wxIcon(unchecked_xpm));
    pImageList->Add(wxIcon(checked_xpm));
    pImageList->Add(wxIcon(arrow15x15_xpm));
@@ -198,12 +514,25 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: The dialog shows a list of plugins with check-boxes 
        beside each one.*/
-      S.StartStatic(_("&Select Plugins to Install"), true);
+      S.StartStatic(_("&Select Plug-ins to Install or press ENTER to Install All"), true);
       {
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES );
          mPlugins = S.Id(PluginListID).AddListControlReportMode();
+         mPlugins->Connect(wxEVT_LEFT_DOWN,
+                           wxMouseEventHandler(PluginRegistrationDialog::OnListMouseDown),
+                           NULL,
+                           this);
+         mPlugins->Connect(wxEVT_KEY_DOWN,
+                           wxKeyEventHandler(PluginRegistrationDialog::OnListChar),
+                           NULL,
+                           this);
+#if wxUSE_ACCESSIBILITY
+         mAx = new CheckListAx(mPlugins);
+         mPlugins->SetAccessible(mAx);
+#endif
          mPlugins->AssignImageList( pImageList, wxIMAGE_LIST_SMALL );
-         mPlugins->InsertColumn(0, _("Plugin File"), wxLIST_FORMAT_LEFT);
+         mPlugins->InsertColumn(COL_NAME, _("Plugin Name"));
+         mPlugins->InsertColumn(COL_PATH, _("Path"));
       }
       S.EndStatic();
 
@@ -217,25 +546,46 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
    S.EndVerticalLay();
 
-   wxClientDC dc( this );
-   
    // The dc is used to compute the text width in pixels.
    // FIXME: That works fine for PC, but apparently comes out too small for wxMAC.
    // iLen is minimum width in pixels shown for the file names.  200 is reasonable.
-   int iLen = 200;
-   wxSize siz;
-   for (int i = 0; i < (int)mFiles.GetCount(); i++) {
+   int iNameLen = 0;
+   int iPathLen = 0;
+   int x, y;
+   for (int i = 0; i < (int)mFiles.GetCount(); i++)
+   {
       miState.Add( SHOW_CHECKED );
-      mPlugins->InsertItem(i, wxString(wxT(" ")) + mFiles[i], SHOW_CHECKED);
-      siz = dc.GetTextExtent( mFiles[i] );
-      if( siz.GetWidth() > iLen )
-         iLen = siz.GetWidth();
+
+      wxFileName fn(mFiles[i]);
+      wxString space(wxT(" "));
+      wxString name(space + fn.GetName() + space );
+      wxString path(space + fn.GetFullPath() + space );
+
+      mPlugins->InsertItem( i, name, SHOW_CHECKED );
+      mPlugins->SetItem( i, COL_PATH, path );
+
+      wxRect r;
+      mPlugins->GetItemRect( i, r, wxLIST_RECT_ICON );
+      mPlugins->GetTextExtent( name, &x, &y );
+      iNameLen = wxMax( iNameLen, x + r.width + (r.x * 2) );
+      mPlugins->GetTextExtent( path, &x, &y );
+      iPathLen = wxMax( iPathLen, x + r.width + (r.x * 2) );
    }
+
+   mPlugins->SetColumnWidth(COL_NAME, iNameLen);
+   mPlugins->SetColumnWidth(COL_PATH, iPathLen);
+
    //SetBoldOrRegular( miSelected );
-   mPlugins->SetColumnWidth(0, iLen);
-   mPlugins->SetSizeHints( iLen, 200 );
+   mPlugins->SetSizeHints( iNameLen + iPathLen, 200 );
    if( mFiles.GetCount() > 0 )
-      mPlugins->SetItemState( 0, wxLIST_STATE_FOCUSED, wxLIST_STATE_FOCUSED);
+   {
+      // Make sure first item is selected/focused.
+      mPlugins->SetFocus();
+      mPlugins->SetItemState( 0, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
+#if wxUSE_ACCESSIBILITY
+      mAx->SetSelected( 0 );
+#endif
+   }
    Layout();
    Fit();
    SetSizeHints(GetSize());
@@ -244,57 +594,46 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
 }
 
-void PluginRegistrationDialog::OnChar( wxListEvent & event  )
+void PluginRegistrationDialog::OnListMouseDown( wxMouseEvent & event )
 {
-   int iKeyCode = event.GetKeyCode();
-   //int iItem = event.GetIndex(); // Grrr doesn't tell us item for key presses.
-   //use this instead:
-   int iItem = mPlugins->GetNextItem( -1, wxLIST_NEXT_ALL, wxLIST_STATE_FOCUSED);
-   bool bHandleSpecially = iItem != -1;
+   wxPoint p = event.GetPosition();
+   int flags = wxLIST_HITTEST_ONITEM;
+   int item = mPlugins->HitTest( p, flags );
 
-   if( bHandleSpecially )
+   if( item != wxNOT_FOUND )
    {
-      // UP and DOWN cause the next item to be selected.
-      // We pre-toggle so that the toggle due to selection 
-      // sets it back!  
-      if( iKeyCode == WXK_UP )
-      {
-         iItem--;
-      }
-      else if( iKeyCode == WXK_DOWN )
-      {
-         iItem++;
-         if( iItem >= (int)mFiles.GetCount())
-            iItem = -1;
-      }
-      else if( iKeyCode == WXK_END )
-      {
-         iItem = mFiles.GetCount()-1;
-      }
-      else if( iKeyCode == WXK_HOME )
-      {
-         iItem = 0;
-      }
-      else if(( iKeyCode == WXK_PAGEUP ) || ( iKeyCode == WXK_PAGEDOWN ))
-      {
-         // ignore page up and page down for now.
-         // At some future date we can calculate where they take the focus to
-         // and extra-toggle that item.
-         event.Veto();
-         return;
-      }
-      else
-      {
-         iItem = -1;
-      }
-      // Item must be in range.
-      // Extra-toggle so that item is toggled back.
-      if( (iItem >= 0 ) && (iItem < (int)mFiles.GetCount() ))
-         ToggleItem(iItem);
+      ToggleItem( item );
    }
+
    event.Skip();
 }
 
+void PluginRegistrationDialog::OnListChar( wxKeyEvent & event )
+{
+   switch( event.GetKeyCode() )
+   {
+      case WXK_SPACE:
+      {
+         int iItem = mPlugins->GetNextItem( -1, wxLIST_NEXT_ALL, wxLIST_STATE_FOCUSED);
+
+         if( iItem != wxNOT_FOUND )
+         {
+            ToggleItem( iItem );
+         }
+      }
+      break;
+
+      case WXK_RETURN:
+         // Don't know why wxListCtrls prevent default dialog action,
+         // but they do, so handle it.
+         EmulateButtonClickIfPresent( GetAffirmativeId() );
+      break;
+
+      default:
+         event.Skip();
+      break;
+   }
+}
 
 void PluginRegistrationDialog::SetBoldOrRegular( int i )
 {
@@ -312,17 +651,11 @@ void PluginRegistrationDialog::ToggleItem(int i)
 {
    miState[ i ] = (miState[ i ]==SHOW_CHECKED) ? SHOW_UNCHECKED : SHOW_CHECKED; // Toggle it.
    mPlugins->SetItemImage( i, miState[i] );
-   miSelected = i;
-// SetBoldOrRegular( i );
-}
+#if wxUSE_ACCESSIBILITY
+   mAx->SetSelected( i );
+#endif
 
-
-void PluginRegistrationDialog::OnToggleState(wxListEvent & event)
-{
-   int i = event.GetIndex();
-   mPlugins->SetItemState( i, 0 ,wxLIST_STATE_SELECTED);
-   //miSelected = i;
-   ToggleItem( i );
+   // SetBoldOrRegular( i );
 }
 
 void PluginRegistrationDialog::OnApply(wxCommandEvent & WXUNUSED(event))
