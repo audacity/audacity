@@ -23,7 +23,7 @@ class RingBuffer {
    //
 
    int AvailForPut();
-   int Put(samplePtr buffer, sampleFormat format, int samples, int stride = 1);
+   int Put(samplePtr buffer, sampleFormat format, int samples);
 
    //
    // For the reader only:

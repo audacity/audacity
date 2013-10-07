@@ -53,7 +53,7 @@ int RingBuffer::AvailForPut()
 }
 
 int RingBuffer::Put(samplePtr buffer, sampleFormat format,
-                    int samplesToCopy, int stride /* = 1 */)
+                    int samplesToCopy)
 {
    samplePtr src;
    int block;
@@ -75,7 +75,7 @@ int RingBuffer::Put(samplePtr buffer, sampleFormat format,
       
       CopySamples(src, format,
                   mBuffer + pos * SAMPLE_SIZE(mFormat), mFormat,
-                  block, true, stride);
+                  block);
 
       src += block * SAMPLE_SIZE(format);
       pos = (pos + block) % mBufferSize;
