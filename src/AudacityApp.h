@@ -149,8 +149,6 @@ class AudacityApp:public wxApp {
     virtual void MacOpenFile(const wxString &fileName) ;
     virtual void MacPrintFile(const wxString &fileName) ;
     virtual void MacNewFile() ;
-    virtual void MacReopenApp() ;
-    void OnMacOpenFile(wxCommandEvent & event);
    #endif
 
    #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)

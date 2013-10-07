@@ -681,30 +681,21 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef __WXMAC__
-#include <wx/recguard.h>
+
+// Where drag/drop or "Open With" filenames get stored until
+// the timer routine gets around to picking them up.
+static wxArrayString ofqueue;
 
 // in response of an open-document apple event
 void AudacityApp::MacOpenFile(const wxString &fileName)
 {
-   if (!gInited) {
-      return;
-   }
-
-   wxCommandEvent e(EVT_OPEN_AUDIO_FILE);
-   e.SetString(fileName);
-   AddPendingEvent(e);
+   ofqueue.Add(fileName);
 }
 
 // in response of a print-document apple event
 void AudacityApp::MacPrintFile(const wxString &fileName)
 {
-   if (!gInited) {
-      return;
-   }
-
-   wxCommandEvent e(EVT_OPEN_AUDIO_FILE);
-   e.SetString(fileName);
-   AddPendingEvent(e);
+   ofqueue.Add(fileName);
 }
 
 // in response of a open-application apple event
@@ -721,37 +712,6 @@ void AudacityApp::MacNewFile()
    }
 }
 
-// in response of a reopen-application apple event
-void AudacityApp::MacReopenApp()
-{
-   // Not sure what to do here...bring it to the foreground???
-}
-
-void AudacityApp::OnMacOpenFile(wxCommandEvent & event)
-{
-   // Add name to queue
-   static wxArrayString ofqueue;
-   ofqueue.Add(event.GetString());
-
-   // Do not attempt to load more than one file at a time
-   static wxRecursionGuardFlag guardflag;
-   wxRecursionGuard guard(guardflag);
-   if (guard.IsInside()) {
-      return;
-   }
-
-   // Load each file on the queue
-   while (ofqueue.GetCount()) {
-      wxString name(ofqueue[0]);
-      ofqueue.RemoveAt(0);
-      // TODO: Handle failures better.
-      // Some failures are OK, e.g. file not found, just would-be-nices to do better,
-      // so FAIL_MSG is more a case of an enhancement request than an actual  problem.
-      if (!MRUOpen(name)) {
-         wxFAIL_MSG(wxT("MRUOpen failed"));
-      }
-   }
-}
 #endif //__WXMAC__
 
 typedef int (AudacityApp::*SPECIALKEYEVENT)(wxKeyEvent&);
@@ -776,8 +736,6 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_MENU(wxID_ABOUT, AudacityApp::OnMenuAbout)
    EVT_MENU(wxID_PREFERENCES, AudacityApp::OnMenuPreferences)
    EVT_MENU(wxID_EXIT, AudacityApp::OnMenuExit)
-
-   EVT_COMMAND(wxID_ANY, EVT_OPEN_AUDIO_FILE, AudacityApp::OnMacOpenFile)
 #endif
    // Recent file event handlers.  
    EVT_MENU(ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
@@ -864,6 +822,28 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
+#if defined(__WXMAC__)
+   // Filenames are queued when Audacity receives the a few of the 
+   // AppleEvent messages (via wxWidgets).  So, open any that are
+   // in the queue and clean the queue.
+   if (ofqueue.GetCount()) {
+      // Load each file on the queue
+      while (ofqueue.GetCount()) {
+         wxString name(ofqueue[0]);
+         ofqueue.RemoveAt(0);
+         // TODO: Handle failures better.
+         // Some failures are OK, e.g. file not found, just would-be-nices to do better,
+         // so FAIL_MSG is more a case of an enhancement request than an actual  problem.
+         // LL:  In all but one case an appropriate message is already displayed.  The
+         //      instance that a message is NOT displayed is when a failure to write
+         //      to the config file has occurred.
+         if (!MRUOpen(name)) {
+            wxFAIL_MSG(wxT("MRUOpen failed"));
+         }
+      }
+   }
+#endif
+ 
    // Check if a warning for missing aliased files should be displayed
    if (ShouldShowMissingAliasedFileWarning()) {
       // find which project owns the blockfile
