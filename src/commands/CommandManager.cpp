@@ -165,6 +165,7 @@ void CommandManager::PurgeData()
    mCurrentMenu = NULL;
    mCurrentMenuName = COMMAND;
    mCurrentID = 0;
+   mOpenMenu = NULL;
 }
 
 

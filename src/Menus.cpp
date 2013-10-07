@@ -1341,25 +1341,16 @@ void AudacityProject::RebuildMenuBar()
    }
 #endif
 
+   // Allow FileHistory to remove its own menu
+   wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
+
    // Delete the menus, since we will soon recreate them.
    // Rather oddly, the menus don't vanish as a result of doing this.
    wxMenuBar *menuBar = GetMenuBar();
    DetachMenuBar();
    delete menuBar;
 
-   /*
-   // msmeyer: This also makes gtk2 crash on Linux
-   for (int i = menuBar->GetMenuCount()-1; i >= 0; i--)
-      delete menuBar->Remove(i);
-
-   // msmeyer: However, this doesn't seem to matter, because CommandManager
-   // knows how to properly rebuild menus, even when the menu bar is already
-   // populated. So we just don't mess with the menus at this stage.
-   */
-  
    mCommandManager.PurgeData();
-
-   wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
 
    CreateMenusAndCommands();
 
@@ -3072,16 +3063,6 @@ void AudacityProject::OnPreferences()
 
       p->RebuildMenuBar();
       p->RebuildOtherMenus();
-#if defined(__WXGTK__)
-      // Workaround for:
-      //
-      //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
-      //
-      // This should be removed with wxWidgets 2.8.13 is released.
-      wxRect r = p->GetRect();
-      p->SetSize(wxSize(1,1));
-      p->SetSize(r.GetSize());
-#endif
    }
 }
 
