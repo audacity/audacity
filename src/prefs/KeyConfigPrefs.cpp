@@ -883,7 +883,7 @@ void KeyConfigPrefs::RepopulateBindingsList()
          label = _("Redo");
       }
       else {
-         label = Labels[i];//mManager->GetPrefixedLabelFromName(name);
+         label = mManager->GetPrefixedLabelFromName(name);
       }
 
       label = wxMenuItem::GetLabelFromText(label.BeforeFirst(wxT('\t')));
