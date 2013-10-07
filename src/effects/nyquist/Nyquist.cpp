@@ -698,8 +698,8 @@ bool EffectNyquist::Process()
          //
          // MB: setlocale is not thread-safe.  Should use uselocale()
          //     if available, or fix libnyquist to be locale-independent.
-         char *prevlocale = setlocale(LC_NUMERIC, NULL);
-         setlocale(LC_NUMERIC, "C");
+         wxString prevlocale = wxSetlocale(LC_NUMERIC, NULL);
+         wxSetlocale(LC_NUMERIC, wxT("C"));
 
          nyx_init();
          nyx_set_os_callback(StaticOSCallback, (void *)this);
@@ -712,7 +712,7 @@ bool EffectNyquist::Process()
          nyx_cleanup();
 
          // Reset previous locale
-         setlocale(LC_NUMERIC, prevlocale);
+         wxSetlocale(LC_NUMERIC, prevlocale);
 
          if (!success) {
             goto finish;
