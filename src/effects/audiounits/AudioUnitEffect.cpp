@@ -102,7 +102,6 @@ AudioUnitEffect::AudioUnitEffect(wxString name, Component component):
    SetEffectFlags(PLUGIN_EFFECT | PROCESS_EFFECT);
 
    mUnit = NULL;
-   OpenAComponent(mComponent, &mUnit);
 }
 
 AudioUnitEffect::~AudioUnitEffect()
@@ -145,6 +144,7 @@ wxString AudioUnitEffect::GetEffectAction()
 
 bool AudioUnitEffect::Init()
 {
+   OpenAComponent(mComponent, &mUnit);
    if (!mUnit) {
       return false;
    }
@@ -243,6 +243,8 @@ bool AudioUnitEffect::Process()
    
 void AudioUnitEffect::End()
 {
+   CloseComponent(mUnit);
+   mUnit = NULL;
 }
 
 bool AudioUnitEffect::SetRateAndChannels(AudioUnit unit,
