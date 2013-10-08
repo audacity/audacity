@@ -232,7 +232,12 @@ void SelectionBar::Populate()
     * because the boundaries 'snap to' the nearest whole number.*/
    mSnapTo = new wxCheckBox(this, OnSnapToID, _("Snap To"),
                             wxDefaultPosition, wxDefaultSize,
+#if defined(__WXGTK__)
+   // See bug #356 for explanation
+                            wxALIGN_LEFT);
+#else
                             wxALIGN_RIGHT);
+#endif
    mainSizer->Add(mSnapTo,
                   0, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER | wxRIGHT, 5);
    mSnapTo->SetName(_("Snap To"));
