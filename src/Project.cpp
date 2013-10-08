@@ -3437,6 +3437,7 @@ void AudacityProject::AddImportedTracks(wxString fileName,
 
    OnZoomFit();
 
+   mTrackPanel->SetFocus();
    mTrackPanel->EnsureVisible(mTrackPanel->GetFirstSelectedTrack());
    mTrackPanel->Refresh(false);
 
