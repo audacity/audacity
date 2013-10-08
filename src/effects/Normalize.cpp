@@ -500,7 +500,7 @@ bool NormalizeDialog::TransferDataToWindow()
 {
    mGainCheckBox->SetValue(mGain);
    mDCCheckBox->SetValue(mDC);
-   mLevelTextCtrl->SetValue(Internat::ToString(mLevel, 1));
+   mLevelTextCtrl->SetValue(Internat::ToDisplayString(mLevel, 1));
    mStereoIndCheckBox->SetValue(mStereoInd);
    
    UpdateUI();
