@@ -1909,7 +1909,6 @@ void AudacityProject::OnPlayStopSelect()
          mViewInfo.sel1 = mViewInfo.sel0;
       }
       toolbar->OnStop(evt);
-      ModifyState();
    }
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
