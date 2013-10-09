@@ -557,9 +557,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       miState.Add( SHOW_CHECKED );
 
       wxFileName fn(mFiles[i]);
-      wxString space(wxT(" "));
-      wxString name(space + fn.GetName() + space );
-      wxString path(space + fn.GetFullPath() + space );
+      wxString name( fn.GetName() );
+      wxString path( fn.GetFullPath() );
 
       mPlugins->InsertItem( i, name, SHOW_CHECKED );
       mPlugins->SetItem( i, COL_PATH, path );
@@ -572,11 +571,11 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       iPathLen = wxMax( iPathLen, x + r.width + (r.x * 2) );
    }
 
-   mPlugins->SetColumnWidth(COL_NAME, iNameLen);
-   mPlugins->SetColumnWidth(COL_PATH, iPathLen);
+   mPlugins->SetColumnWidth(COL_NAME, iNameLen + /* fudge */ 5);
+   mPlugins->SetColumnWidth(COL_PATH, iPathLen + /* fudge */ 5);
 
    //SetBoldOrRegular( miSelected );
-   mPlugins->SetSizeHints( iNameLen + iPathLen, 200 );
+   mPlugins->SetSizeHints( iNameLen + iPathLen + /* fudge */ 15 , 200 );
    if( mFiles.GetCount() > 0 )
    {
       // Make sure first item is selected/focused.
