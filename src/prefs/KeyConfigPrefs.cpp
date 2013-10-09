@@ -985,7 +985,7 @@ void KeyConfigPrefs::OnCaptureKeyDown(wxKeyEvent & e)
 {
    wxTextCtrl *t = (wxTextCtrl *)e.GetEventObject();
 
-#if defined(__WXMAC__)
+#if defined(__WXMAC__) || defined(__WXGTK__)
    if (e.GetKeyCode() == WXK_TAB) {
       wxNavigationKeyEvent nevent;
       nevent.SetWindowChange(e.ControlDown());
