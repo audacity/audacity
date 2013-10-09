@@ -698,6 +698,8 @@ bool EffectNyquist::Process()
          //
          // MB: setlocale is not thread-safe.  Should use uselocale()
          //     if available, or fix libnyquist to be locale-independent.
+         // See also http://bugzilla.audacityteam.org/show_bug.cgi?id=642#c9 
+         // for further info about this thread safety question.
          wxString prevlocale = wxSetlocale(LC_NUMERIC, NULL);
          wxSetlocale(LC_NUMERIC, wxT("C"));
 
