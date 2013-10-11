@@ -990,6 +990,29 @@ void AudacityApp::OnFatalException()
    exit(-1);
 }
 
+#if defined(__WXGTK__)
+// On wxGTK, there's a focus issue where dialogs do not automatically pass focus
+// to the first child.  This means that you can use the keyboard to navigate within
+// the dialog.  Watching for the ACTIVATE event allows us to set the focus ourselves
+// when each dialog opens.
+//
+// See bug #57
+//
+int AudacityApp::FilterEvent(wxEvent & event)
+{
+   if (event.GetEventType() == wxEVT_ACTIVATE)
+   {
+      wxActivateEvent & e = (wxActivateEvent &) event;
+      if (e.GetEventObject() && e.GetActive())
+      {
+         ((wxWindow *)e.GetEventObject())->SetFocus();
+      }
+   }
+
+   return -1;
+}
+#endif
+
 // The `main program' equivalent, creating the windows and returning the
 // main frame
 bool AudacityApp::OnInit()

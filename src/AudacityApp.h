@@ -98,6 +98,10 @@ class AudacityApp:public wxApp {
    virtual int OnExit(void);
    virtual void OnFatalException();
 
+#if defined(__WXGTK__)
+   int FilterEvent(wxEvent & event);
+#endif
+
    void InitLang( const wxString & lang );
 
    // These are currently only used on Mac OS, where it's
