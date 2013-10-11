@@ -531,7 +531,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          mPlugins->SetAccessible(mAx);
 #endif
          mPlugins->AssignImageList( pImageList, wxIMAGE_LIST_SMALL );
-         mPlugins->InsertColumn(COL_NAME, _("Plugin Name"));
+         mPlugins->InsertColumn(COL_NAME, _("Plug-in Name"));
          mPlugins->InsertColumn(COL_PATH, _("Path"));
       }
       S.EndStatic();
