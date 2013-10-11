@@ -1302,7 +1302,12 @@ void EqualizationDialog::MakeEqualizationDialog()
    szrC->Add( btn, 0, wxALIGN_CENTRE | wxALL, 4 );
    mGridOnOff = new wxCheckBox(this, GridOnOffID, _("G&rids"),
                             wxDefaultPosition, wxDefaultSize,
+#if defined(__WXGTK__)
+// Fixes bug #662
+                            wxALIGN_LEFT);
+#else
                             wxALIGN_RIGHT);
+#endif
    mGridOnOff->SetName(_("Grids"));
    szrC->Add( mGridOnOff, 0, wxALIGN_CENTRE | wxALL, 4 );
 

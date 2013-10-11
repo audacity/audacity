@@ -237,7 +237,12 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    mGridOnOff = new wxCheckBox(this, GridOnOffID, _("Grids"),
                             wxDefaultPosition, wxDefaultSize,
+#if defined(__WXGTK__)
+// Fixes bug #662
+                            wxALIGN_LEFT);
+#else
                             wxALIGN_RIGHT);
+#endif
    mGridOnOff->SetName(_("Grids"));
    mGridOnOff->SetValue(mDrawGrid);
 
