@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-08-28 17:18+0100\n"
-"PO-Revision-Date: 2013-08-28 17:33-0000\n"
+"PO-Revision-Date: 2013-10-12 08:17-0000\n"
 "Last-Translator: Yuri Chornoivan\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "MIME-Version: 1.0\n"
@@ -279,6 +279,10 @@ msgstr "Індикатор рівня на вході"
 #: AudacityApp.cpp:1056
 msgid "Output Meter"
 msgstr "Індикатор рівня на виході"
+
+#: AudacityApp.cpp:1150
+msgid "Audacity is starting up..."
+msgstr "Триває запуск Audacity…"
 
 #. i18n-hint: "New" is an action (verb) to create a new project
 #: AudacityApp.cpp:1200
@@ -1711,7 +1715,7 @@ msgstr "байтів"
 #. i18n-hint: Abbreviation for Kilo bytes
 #: Internat.cpp:154
 msgid "KB"
-msgstr "КБ"
+msgstr "кБ"
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: Internat.cpp:158
@@ -1781,23 +1785,6 @@ msgstr "Час закінчення"
 msgid "New..."
 msgstr "Створити…"
 
-#: LabelDialog.cpp:360
-msgid ""
-"You have left blank label names.  These will be\n"
-"skipped when repopulating the Label Tracks.\n"
-"\n"
-"Would you like to go back and provide names?"
-msgstr ""
-"Ви залишили порожніми назви позначок.  Їх буде\n"
-"пропущено під час повторного заповнення доріжок для позначок.\n"
-"\n"
-"Бажаєте повернутися та визначити назви?"
-
-#: LabelDialog.cpp:361
-#: LangChoice.cpp:134
-msgid "Confirm"
-msgstr "Підтвердити"
-
 #: LabelDialog.cpp:522
 #: Menus.cpp:4736
 msgid "Select a text file containing labels..."
@@ -1860,6 +1847,11 @@ msgstr "Виберіть мову інтерфейсу для Audacity:"
 #, c-format
 msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
 msgstr "Вибрана вами мова, %s (%s), не збігається з мовою, встановленою у системі, %s (%s)."
+
+#: LabelDialog.cpp:361
+#: LangChoice.cpp:134
+msgid "Confirm"
+msgstr "Підтвердити"
 
 #: Legacy.cpp:372
 #, c-format
@@ -2274,13 +2266,13 @@ msgstr "Піді&гнати до розміру вікна"
 msgid "Fit &Vertically"
 msgstr "Розмістити по &вертикалі"
 
-#: Menus.cpp:548
-msgid "&Go to Selection Start"
-msgstr "Пере&йти до початку позначеного"
+#: Menus.cpp:544
+msgid "Go to Selection Sta&rt"
+msgstr "Перейти до по&чатку позначеного"
 
-#: Menus.cpp:549
-msgid "&Go to Selection End"
-msgstr "Пере&йти до кінця позначеного"
+#: Menus.cpp:545
+msgid "Go to Selection En&d"
+msgstr "Перейти до &кінця позначеного"
 
 #: Menus.cpp:552
 msgid "&Collapse All Tracks"
@@ -2490,45 +2482,37 @@ msgstr "&Увімкнути звук на всіх доріжках"
 msgid "&Align End to End"
 msgstr "&Вирівняти за кінцями"
 
+#: Menus.cpp:730
+msgid "Align &Together"
+msgstr "Спі&льне вирівнювання"
+
+#: Menus.cpp:733
+msgid "Start to &Zero"
+msgstr "Почати з &нуля"
+
 #: Menus.cpp:734
-msgid "Align Tracks To&gether"
-msgstr "Вирівняти дорі&жки"
+msgid "Start to &Cursor/Selection Start"
+msgstr "Почати з &курсора або початку позначеного"
+
+#: Menus.cpp:735
+msgid "Start to Selection &End"
+msgstr "Почати з &кінця позначеного"
+
+#: Menus.cpp:736
+msgid "End to Cu&rsor/Selection Start"
+msgstr "Завершити на к&урсорі або початку позначеного"
 
 #: Menus.cpp:737
-msgid "Align with &Zero"
-msgstr "Вирівняти за &нулем"
-
-#: Menus.cpp:738
-msgid "Align with &Cursor"
-msgstr "Вирівняти за &курсором"
-
-#: Menus.cpp:739
-msgid "Align with Selection &Start"
-msgstr "Вирівняти за &початком вибраного"
-
-#: Menus.cpp:740
-msgid "Align with Selection &End"
-msgstr "Вирівняти за кінцем &вибраного"
-
-#: Menus.cpp:741
-msgid "Align End with Cu&rsor"
-msgstr "Встановити закінчення на к&урсор"
-
-#: Menus.cpp:742
-msgid "Align End with Selection Star&t"
-msgstr "Встановити кінець на по&чаток вибраного"
-
-#: Menus.cpp:743
-msgid "Align End with Selection En&d"
-msgstr "Встановити закінчення на кінець виді&леного"
+msgid "End to Selection En&d"
+msgstr "Завершити на &кінці позначеного"
 
 #: Menus.cpp:751
 msgid "&Align Tracks"
 msgstr "Ви&рівняти доріжки"
 
-#: Menus.cpp:761
-msgid "Ali&gn and Move Cursor"
-msgstr "Вир&івняти та перемістити курсор"
+#: Menus.cpp:756
+msgid "Move Sele&ction when Aligning"
+msgstr "Пересувати позна&чене під час вирівнювання"
 
 #: Menus.cpp:775
 #: Menus.cpp:5304
@@ -3281,54 +3265,74 @@ msgstr "Змікшовано та перетворено %d доріжок у о
 msgid "Mix and Render"
 msgstr "Мікшувати і перетворити"
 
-#: Menus.cpp:5064
-msgid "Aligned with zero"
-msgstr "Вирівняно до нуля"
+#: Menus.cpp:4986
+msgid "start to zero"
+msgstr "початок з нуля"
 
-#: Menus.cpp:5068
-msgid "Aligned cursor"
-msgstr "Вирівняно до курсора"
+#: effects/Contrast.cpp:251
+#: effects/ToneGen.cpp:305
+msgid "Start"
+msgstr "Початок"
 
-#: Menus.cpp:5072
-msgid "Aligned with selection start"
-msgstr "Вирівняти до початку вибраної ділянки"
+#: Menus.cpp:4991
+msgid "start to cursor/selection start"
+msgstr "початок з курсора або початку позначеного"
 
-#: Menus.cpp:5076
-msgid "Aligned with selection end"
-msgstr "Вирівняти до кінця вибраної ділянки"
+#: Menus.cpp:4996
+msgid "start to selection end"
+msgstr "початок до кінця позначеного"
 
-#: Menus.cpp:5080
-msgid "Aligned end with cursor"
-msgstr "Встановлено закінчення на позицію курсора"
+#: Menus.cpp:5001
+msgid "end to cursor/selection start"
+msgstr "кінець до курсора або початку позначеного"
 
-#: Menus.cpp:5084
-msgid "Aligned end with selection start"
-msgstr "Вирівняно закінчення до початку вибраної ділянки"
+#: effects/Contrast.cpp:252
+#: effects/ToneGen.cpp:306
+#: toolbars/SelectionBar.cpp:151
+#: toolbars/SelectionBar.cpp:154
+#: toolbars/SelectionBar.cpp:262
+msgid "End"
+msgstr "Кінець"
 
-#: Menus.cpp:5088
-msgid "Aligned end with selection end"
-msgstr "Встановлено закінчення на кінець вибраної ділянки"
+#: Menus.cpp:5006
+msgid "end to selection end"
+msgstr "кінець до кінця позначеного"
 
-#: Menus.cpp:5093
-msgid "Aligned end to end"
-msgstr "Вирівняти за кінцями"
+#: Menus.cpp:5012
+msgid "end to end"
+msgstr "кінець до кінця"
 
-#: Menus.cpp:5097
-msgid "Aligned together"
-msgstr "Вирівняти доріжки"
+#: Menus.cpp:5013
+msgid "End to End"
+msgstr "Кінець до кінця"
 
-#: Menus.cpp:5192
+#: Menus.cpp:5017
+msgid "together"
+msgstr "разом"
+
+#: Menus.cpp:5018
+msgid "Together"
+msgstr "Разом"
+
+#: Menus.cpp:5094
 #, c-format
-msgid "%s/Move"
-msgstr "%s/Пересунути"
+msgid "Aligned/Moved %s"
+msgstr "Вирівняно/Пересунуто %s"
 
-#: Menus.cpp:5193
-msgid "Align and Move"
-msgstr "Вирівняти і пересунути"
+#: Menus.cpp:5095
+#, c-format
+msgid "Align %s/Move"
+msgstr "Вирівняти %s/Пересунути"
 
-#: Menus.cpp:5195
-msgid "Align"
-msgstr "Вирівняти"
+#: Menus.cpp:5098
+#, c-format
+msgid "Aligned %s"
+msgstr "Вирівняний %s"
+
+#: Menus.cpp:5099
+#, c-format
+msgid "Align %s"
+msgstr "Вирівняти %s"
 
 #: Menus.cpp:5305
 msgid "Synchronizing MIDI and Audio Tracks"
@@ -5089,15 +5093,10 @@ msgstr "Недостатньо простору для поширення лін
 msgid "Command"
 msgstr "Команда"
 
-#: commands/CommandManager.cpp:559
+#: commands/CommandManager.cpp:577
 #, c-format
-msgid "Plugins 1 to %i"
-msgstr "Модулі від 1 до %i"
-
-#: commands/CommandManager.cpp:573
-#, c-format
-msgid "Plugins %i to %i"
-msgstr "Модулі від %i до %i"
+msgid "Plug-ins %i to %i"
+msgstr "Додатки від %i до %i"
 
 #: commands/CommandManager.cpp:968
 msgid ""
@@ -5119,7 +5118,7 @@ msgstr ""
 msgid ""
 "You must first select some stereo audio for this\n"
 " to use. (You cannot use this with mono.)"
-msgstr "Спочатку слід виділити область стереозвуку. Цю дію не можна використовувати для моно."
+msgstr "Спочатку слід позначити область стереозвуку. Цю дію не можна використовувати для моно."
 
 #: commands/CommandManager.cpp:976
 msgid "You must first select some audio for this to use."
@@ -5130,8 +5129,8 @@ msgid ""
 "You must first select some audio for this\n"
 " to use. (Selecting other kinds of track won't work.)"
 msgstr ""
-"Спочатку треба виділити область звуку.\n"
-"(Вибір інших типів доріжки не підійде.)"
+"Спочатку треба позначити область звуку.\n"
+"(Позначення інших типів доріжки не працюватиме.)"
 
 #: commands/CommandManager.cpp:983
 msgid "Disallowed"
@@ -5641,7 +5640,7 @@ msgstr "Компресор…"
 
 #: effects/Compressor.h:51
 msgid "Applying Dynamic Range Compression..."
-msgstr "Застосовується компресія динамічного діапазону…"
+msgstr "Застосовуємо стискання динамічного діапазону…"
 
 #: effects/Contrast.cpp:65
 msgid "Contrast Analysis (WCAG 2 compliance)"
@@ -5682,19 +5681,6 @@ msgstr "Будь ласка, позначте щось для вимірюван
 #: effects/Contrast.cpp:241
 msgid "Contrast Analyzer, for measuring rms volume differences between two selections of audio."
 msgstr "Аналізатор контрастності для вимірювання відносної різниці у гучності між двома ділянками звукової доріжки."
-
-#: effects/Contrast.cpp:251
-#: effects/ToneGen.cpp:305
-msgid "Start"
-msgstr "Початок"
-
-#: effects/Contrast.cpp:252
-#: effects/ToneGen.cpp:306
-#: toolbars/SelectionBar.cpp:151
-#: toolbars/SelectionBar.cpp:154
-#: toolbars/SelectionBar.cpp:262
-msgid "End"
-msgstr "Кінець"
 
 #: effects/Contrast.cpp:254
 msgid "Volume    "
@@ -5995,7 +5981,7 @@ msgstr "Луна…"
 
 #: effects/Echo.h:48
 msgid "Performing Echo"
-msgstr "Застосовується ефект «Луна»"
+msgstr "Застосовуємо ефект «Луна»"
 
 #: effects/Effect.cpp:480
 msgid "Preparing preview"
@@ -6339,7 +6325,7 @@ msgstr "Еквалайзер…"
 
 #: effects/Equalization.h:99
 msgid "Performing Equalization"
-msgstr "Застосовується ефект «Еквалайзер»"
+msgstr "Застосовуємо ефект «Еквалайзер»"
 
 #: effects/Fade.h:24
 msgid "Fade In"
@@ -6347,7 +6333,7 @@ msgstr "Повільне наростання"
 
 #: effects/Fade.h:38
 msgid "Fading In"
-msgstr "Застосовується «Повільне наростання»"
+msgstr "Застосовуємо ефект «Повільне наростання»"
 
 #: effects/Fade.h:54
 msgid "Fade Out"
@@ -6355,7 +6341,7 @@ msgstr "Повільне згасання"
 
 #: effects/Fade.h:68
 msgid "Fading Out"
-msgstr "Застосовується «Повільне загасання»"
+msgstr "Застосовуємо ефект «Повільне загасання»"
 
 #: effects/FindClipping.cpp:50
 msgid "Detect clipping"
@@ -6441,7 +6427,7 @@ msgstr "Вирівнювання…"
 
 #: effects/Leveller.h:42
 msgid "Applying Leveler..."
-msgstr "Застосовується вирівнювання…"
+msgstr "Застосовуємо вирівнювання…"
 
 #: effects/LoadEffects.cpp:105
 msgid "Generator"
@@ -6505,7 +6491,7 @@ msgstr "Фільтр"
 
 #: effects/LoadEffects.cpp:136
 msgid "Lowpass"
-msgstr "Низькочастотний фільтр"
+msgstr "Низькочастотний"
 
 #: effects/LoadEffects.cpp:138
 msgid "Bandpass"
@@ -6513,7 +6499,7 @@ msgstr "Смуговий фільтр"
 
 #: effects/LoadEffects.cpp:140
 msgid "Highpass"
-msgstr "Високочастотний фільтр"
+msgstr "Високочастотний"
 
 #: effects/LoadEffects.cpp:142
 msgid "Comb"
@@ -6821,7 +6807,7 @@ msgid ""
 "The selection is too short.\n"
 " It must be much longer than the Time Resolution."
 msgstr ""
-"Помилка у Paulstretch:\n"
+"Помилка у фільтрі надзвичайного уповільнення:\n"
 "Позначено надто короткий фрагмент.\n"
 " Тривалість фрагмента має перевищувати роздільність за часом."
 
@@ -6843,7 +6829,7 @@ msgstr "Роздільність за часом (у секундах):"
 #.
 #: effects/Paulstretch.h:30
 msgid "Paulstretch..."
-msgstr "Paulstretch…"
+msgstr "Надзвичайне уповільнення…"
 
 #. i18n-hint: This is the text that is shown whilst the effect is being
 #. * processed. The effect stretches the input in time, making the sound
@@ -6852,7 +6838,7 @@ msgstr "Paulstretch…"
 #.
 #: effects/Paulstretch.h:39
 msgid "Stretching with Paulstretch"
-msgstr "Видовження за допомогою Paulstretch"
+msgstr "Надзвичайне уповільнення"
 
 #: effects/Phaser.cpp:66
 #, c-format
@@ -6918,7 +6904,7 @@ msgstr "Фазер…"
 
 #: effects/Phaser.h:59
 msgid "Applying Phaser"
-msgstr "Застосовується ефект «Фазер»"
+msgstr "Застосовуємо ефект «Фазер»"
 
 #: effects/Repair.cpp:100
 msgid ""
@@ -6946,7 +6932,7 @@ msgstr ""
 
 #: effects/Repair.h:29
 msgid "Repair"
-msgstr "Відновити"
+msgstr "Відновлення"
 
 #: effects/Repair.h:43
 msgid "Repairing damaged audio"
@@ -7182,7 +7168,62 @@ msgstr "Реверс"
 
 #: effects/Reverse.h:44
 msgid "Reversing"
-msgstr "Застосовується реверс"
+msgstr "Застосовуємо реверс"
+
+#. i18n-hint: The 'scientific filter' is an audio effect.  It's a low-pass or high-pass
+#. filter with specfic characteristics.
+#: effects/ScienFilter.cpp:156
+#: effects/ScienFilter.cpp:210
+msgid "Scientific Filter"
+msgstr "Інженерний фільтр"
+
+#: effects/ScienFilter.cpp:616
+msgid "Filter Type:"
+msgstr "Тип фільтрування:"
+
+#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
+#: effects/ScienFilter.cpp:619
+msgid "Butterworth"
+msgstr "Баттерворт"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#: effects/ScienFilter.cpp:621
+msgid "Chebyshev Type I"
+msgstr "Чебишев (тип I)"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#: effects/ScienFilter.cpp:623
+msgid "Chebyshev Type II"
+msgstr "Чебишев (тип II)"
+
+#. i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.
+#: effects/ScienFilter.cpp:626
+msgid " Order:"
+msgstr " Порядок:"
+
+#: effects/ScienFilter.cpp:639
+msgid "Passband Ripple:"
+msgstr "Пульсація смуги пропускання:"
+
+#: effects/ScienFilter.cpp:645
+msgid "Subtype:"
+msgstr "Підтип:"
+
+#: export/ExportFFmpegDialogs.cpp:1379
+msgid "Cutoff:"
+msgstr "Пропускання:"
+
+#: effects/ScienFilter.cpp:654
+msgid "Hz  Stopband Ripple:"
+msgstr "Гц  Пульсація смуги затримування:"
+
+#: effects/ScienFilter.h:51
+msgid "Scientific Filter..."
+msgstr "Інженерний фільтр…"
+
+#: effects/ScienFilter.h:65
+msgid "Performing ScienFilter"
+msgstr "Виконуємо інженерне фільтрування"
 
 #: effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
@@ -7469,13 +7510,17 @@ msgstr "Встановити ефекти VST"
 
 #. i18n-hint: The dialog shows a list of plugins with check-boxes
 #. beside each one.
-#: effects/VST/VSTEffect.cpp:196
-msgid "&Select Plugins to Install"
-msgstr "&Вибрати додатки, які слід встановити"
+#: effects/VST/VSTEffect.cpp:517
+msgid "&Select Plug-ins to Install or press ENTER to Install All"
+msgstr "Ви&беріть додатки для встановлення або натисніть Enter, щоб встановити усі"
 
-#: effects/VST/VSTEffect.cpp:201
-msgid "Plugin File"
-msgstr "Файл додатка"
+#: effects/VST/VSTEffect.cpp:534
+msgid "Plugin Name"
+msgstr "Назва додатка"
+
+#: effects/VST/VSTEffect.cpp:535
+msgid "Path"
+msgstr "Шлях"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: effects/VST/VSTEffect.cpp:209
@@ -7523,7 +7568,7 @@ msgstr "Цей файл параметрів було збережено у %s. 
 
 #: effects/VST/VSTEffect.cpp:1467
 msgid "Performing Effect: "
-msgstr "Застосовується ефект: "
+msgstr "Застосовуємо ефект: "
 
 #: effects/VST/VSTEffect.cpp:1498
 msgid "Both channels of a stereo track must be the same sample rate."
@@ -7549,7 +7594,7 @@ msgstr "Застосовано ефект: %s частота = %.1f Гц, поч
 
 #: effects/Wahwah.cpp:204
 msgid "Wahwah"
-msgstr "Wahwah"
+msgstr "Вау-вау"
 
 #: effects/Wahwah.cpp:240
 msgid "Depth (%):"
@@ -7565,26 +7610,26 @@ msgstr "Резонанс"
 
 #: effects/Wahwah.cpp:258
 msgid "Wah Frequency Offset (%):"
-msgstr "Зсув частоти Wah (%):"
+msgstr "Зсув частоти «вау» (%):"
 
 #: effects/Wahwah.cpp:262
 msgid "Wah frequency offset in percent"
-msgstr "Зсув частоти Wah (%)"
+msgstr "Зсув частоти «вау» (%)"
 
 #: effects/Wahwah.h:41
 msgid "Wahwah..."
-msgstr "Wahwah…"
+msgstr "Вау-вау…"
 
 #: effects/Wahwah.h:55
 msgid "Applying Wahwah"
-msgstr "Застосовується ефект «Wahwah»"
+msgstr "Застосовуємо ефект «вау-вау»"
 
 #: effects/audiounits/AudioUnitEffect.cpp:142
 #: effects/ladspa/LadspaEffect.cpp:178
 #: effects/lv2/LV2Effect.cpp:193
 #, c-format
 msgid "Performing Effect: %s"
-msgstr "Застосовується ефект: %s"
+msgstr "Застосовуємо ефект: %s"
 
 #: effects/ladspa/LadspaEffect.cpp:198
 #: effects/lv2/LV2Effect.cpp:213
@@ -7621,7 +7666,7 @@ msgstr "Нотний ключ"
 
 #: effects/nyquist/Nyquist.cpp:73
 msgid "Applying Nyquist Effect..."
-msgstr "Застосовується ефект Nyquist…"
+msgstr "Застосовуємо ефект Nyquist…"
 
 #: effects/nyquist/Nyquist.cpp:97
 msgid "Nyquist Prompt..."
@@ -8203,10 +8248,6 @@ msgid ""
 msgstr ""
 "Частота вибірки (Гц)\n"
 "0 — не змінювати частоту вибірки"
-
-#: export/ExportFFmpegDialogs.cpp:1379
-msgid "Cutoff:"
-msgstr "Пропускання:"
 
 #: export/ExportFFmpegDialogs.cpp:1380
 msgid ""
@@ -9884,44 +9925,66 @@ msgstr "Зараз ви не можете налаштувати клавіат�
 msgid "Open a new project to modify keyboard shortcuts."
 msgstr "Відкрийте новий проект, щоб мати змогу змінити клавіатурні скорочення."
 
-#: prefs/KeyConfigPrefs.cpp:111
-#: prefs/KeyConfigPrefs.cpp:246
-msgid "All"
-msgstr "Всі"
-
 #: prefs/KeyConfigPrefs.cpp:127
 #: prefs/KeyConfigPrefs.cpp:139
 msgid "Key Bindings"
 msgstr "Прив'язка до клавіш"
 
-#: prefs/KeyConfigPrefs.cpp:132
-msgid "C&ategory:"
-msgstr "К&атегорія:"
+#: prefs/KeyConfigPrefs.cpp:172
+msgid "View by:"
+msgstr "Критерій перегляду:"
+
+#: prefs/KeyConfigPrefs.cpp:175
+msgid "&Tree"
+msgstr "&Ієрархія"
+
+#: prefs/KeyConfigPrefs.cpp:176
+msgid "View by tree"
+msgstr "Перегляд за ієрархією"
+
+#: prefs/KeyConfigPrefs.cpp:177
+msgid "&Name"
+msgstr "&Назва"
+
+#: prefs/KeyConfigPrefs.cpp:178
+msgid "View by name"
+msgstr "Перегляд за назвою"
+
+#: prefs/KeyConfigPrefs.cpp:179
+msgid "&Key"
+msgstr "&Клавіша"
+
+#: prefs/KeyConfigPrefs.cpp:180
+msgid "View by key"
+msgstr "Перегляд за клавішами"
+
+#: prefs/KeyConfigPrefs.cpp:194
+#: prefs/KeyConfigPrefs.cpp:601
+#: prefs/KeyConfigPrefs.cpp:606
+msgid "Searc&h:"
+msgstr "&Шукати:"
+
+#: prefs/KeyConfigPrefs.cpp:228
+msgid "Bindings"
+msgstr "Прив’язки"
+
+#: prefs/KeyConfigPrefs.cpp:249
+msgid "Short cut"
+msgstr "Скорочення"
 
 #. i18n-hint: (verb)
-#: prefs/KeyConfigPrefs.cpp:161
-msgid "Set"
-msgstr "Встановити"
+#: prefs/KeyConfigPrefs.cpp:266
+msgid "&Set"
+msgstr "Вс&тановити"
 
 #: prefs/KeyConfigPrefs.cpp:167
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
 msgstr "Примітка: натиснення комбінації клавіш Cmd+Q призведе до завершення. Усі інші комбінації є дійсними."
 
-#: prefs/KeyConfigPrefs.cpp:186
-msgid "Key Combination"
-msgstr "Комбінація клавіш"
-
-#: prefs/KeyConfigPrefs.cpp:255
-#: toolbars/EditToolBar.cpp:144
-#: toolbars/EditToolBar.cpp:200
-msgid "Undo"
-msgstr "Вернути"
-
-#: prefs/KeyConfigPrefs.cpp:258
-#: toolbars/EditToolBar.cpp:146
-#: toolbars/EditToolBar.cpp:201
-msgid "Redo"
-msgstr "Повторити"
+#: prefs/KeyConfigPrefs.cpp:286
+#: prefs/KeyConfigPrefs.cpp:611
+msgid "&Hotkey:"
+msgstr "К&лавіатурне скорочення:"
 
 #: prefs/KeyConfigPrefs.cpp:284
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -9938,6 +10001,67 @@ msgstr "Експортувати комбінації клавіш як:"
 #: prefs/KeyConfigPrefs.cpp:343
 msgid "Error Exporting Keyboard Shortcuts"
 msgstr "Помилка під час експортування клавіатурних скорочень"
+
+#: prefs/KeyConfigPrefs.cpp:515
+msgid "You may not assign a key to this entry"
+msgstr "Не можна призначати скорочення для цього пункту"
+
+#: prefs/KeyConfigPrefs.cpp:529
+msgid "You must select a binding before assigning a shortcut"
+msgstr "До призначення скорочення вам слід вибрати прив’язку"
+
+#: prefs/KeyConfigPrefs.cpp:551
+#, c-format
+msgid ""
+"The keyboard shortcut '%s' is already assigned to:\n"
+"\n"
+"\t'%s'\n"
+"\n"
+"Click OK to assign the shortcut to\n"
+"\n"
+"\t'%s'\n"
+"\n"
+"instead.  Otherwise, click Cancel."
+msgstr ""
+"Клавіатурне скорочення «%s» вже призначено до такої дії:\n"
+"\n"
+"\t«%s»\n"
+"\n"
+"Натисніть кнопку «Гаразд», щоб призначити скорочення до такої дії:\n"
+"\n"
+"\t«%s»\n"
+"\n"
+"Якщо змінювати призначення не слід, натисніть кнопку «Скасувати»."
+
+#: prefs/KeyConfigPrefs.cpp:111
+#: prefs/KeyConfigPrefs.cpp:246
+msgid "All"
+msgstr "Всі"
+
+#: prefs/KeyConfigPrefs.cpp:132
+msgid "C&ategory:"
+msgstr "К&атегорія:"
+
+#. i18n-hint: (verb)
+#: prefs/KeyConfigPrefs.cpp:161
+msgid "Set"
+msgstr "Встановити"
+
+#: prefs/KeyConfigPrefs.cpp:186
+msgid "Key Combination"
+msgstr "Комбінація клавіш"
+
+#: prefs/KeyConfigPrefs.cpp:255
+#: toolbars/EditToolBar.cpp:144
+#: toolbars/EditToolBar.cpp:200
+msgid "Undo"
+msgstr "Вернути"
+
+#: prefs/KeyConfigPrefs.cpp:258
+#: toolbars/EditToolBar.cpp:146
+#: toolbars/EditToolBar.cpp:201
+msgid "Redo"
+msgstr "Повторити"
 
 #: prefs/KeyConfigPrefs.cpp:427
 #, c-format
@@ -10999,9 +11123,13 @@ msgid "Input Volume (Unavailable; use system mixer.)"
 msgstr "Рівень вхідного сигналу (недоступний, скористайтеся мікшером системи)"
 
 #: toolbars/MixerToolBar.cpp:303
+msgid " (emulated)"
+msgstr " (емуляція)"
+
+#: toolbars/MixerToolBar.cpp:303
 #, c-format
-msgid "Output Volume: %.2f"
-msgstr "Рівень на виході: %.2f"
+msgid "Output Volume: %.2f%s"
+msgstr "Гучність на виході: %.2f%s"
 
 #: toolbars/MixerToolBar.cpp:307
 msgid "Output Volume (Unavailable; use system mixer.)"
@@ -11202,6 +11330,10 @@ msgstr "Захоплення"
 #: widgets/Grid.cpp:723
 msgid "Empty"
 msgstr "Порожній"
+
+#: widgets/KeyView.cpp:593
+msgid "Menu"
+msgstr "Меню"
 
 #: widgets/Meter.cpp:406
 msgid "Enable Meter"
