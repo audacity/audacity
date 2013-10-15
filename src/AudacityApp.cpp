@@ -1003,7 +1003,8 @@ int AudacityApp::FilterEvent(wxEvent & event)
    if (event.GetEventType() == wxEVT_ACTIVATE)
    {
       wxActivateEvent & e = (wxActivateEvent &) event;
-      if (e.GetEventObject() && e.GetActive())
+      
+      if (e.GetEventObject() && e.GetActive() && e.GetEventObject()->IsKindOf(CLASSINFO(wxDialog)))
       {
          ((wxWindow *)e.GetEventObject())->SetFocus();
       }
