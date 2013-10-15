@@ -618,6 +618,11 @@ void ContrastDialog::OnReset(wxCommandEvent & event)
 
 void ContrastDialog::OnChar(wxKeyEvent & event)
 {
+   if (event.GetKeyCode() == WXK_TAB) {
+      event.Skip();
+      return;
+   }
+
    event.Skip(false);
    return;
 }
