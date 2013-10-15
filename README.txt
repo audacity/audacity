@@ -20,12 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.0.4 
+Version 2.0.5 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.0.3 
+2.  Changes since version 2.0.4 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -57,59 +57,76 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.0.3: 
+2. Changes since version 2.0.4: 
 
 Bug fixes for:
 
- * Keyboard Preferences: Shortcuts for Generators, Effects and Analyzers 
-    were not exported. All imported shortcut changes were discarded.
- * Equalization curves were corrupted in Graphic EQ mode after switching 
-    to/from Draw Curves or after	running the effect then reopening it. 
- * Change Pitch displayed corrupted values when reducing pitch or editing 
-    "from" Frequency. Detection was very inaccurate at high sample rates. 
- * Bass Boost no longer clips if the track contains 32-bit audio.   
- * Auto Duck was excessively slow on older machines. 
- * (Windows) Exported MP3 comments tags were not seen by Windows programs.   
- * (Windows and OS X) Audacity crashed if you used system quit before
-    file import was complete. 
- * (Linux) Equalization crashed Audacity if the XML file was corrupted.  
- * (Linux) When configuring effect parameters in "Edit Chains", "Preview" 
-    (not intended to be functional) caused a crash.
- * (Linux) LICENSE.txt and README.txt were wrongly installed in
-     /usr/local/share/doc instead of /usr/local/share/doc/audacity/ .
- * Accessibility: ENTER did not toggle selectedness of a label track unless
-    a label was selected.  
- * Numerous other interface fixes.  
+ * Shaped dither was corrupted and too loud on all stereo exports except FLAC. 
+
+ * Keyboard Preferences: some Edit and Align commands for different sub-menus
+    showed the same name.   
+
+ * Recordings stopped with "Stop and Set Cursor" shortcut could not be undone.
+
+ * In locales that use comma for decimal separator:
+    * Text boxes with slider in Nyquist effects only produced whole numbers 
+       when using comma to enter a fractional number. Text boxes without 
+       slider still have this problem.   
+    * Built-in generators produced silence after running a Nyquist effect.  
+
+ * (Windows) When first changing to Windows WASAPI host, the input volume slider
+    in Mixer Toolbar was enabled when it should have been permanently disabled. 
+
+ * (Windows) On some machines, launching Audacity then recording from the current
+    Device Toolbar input would not record until the input was reselected. 
+
+ * (OS X) Frequent crashes occurred on importing audio files on some machines.
+
+ * (OS X) Files did not open using Finder "Open with", double-clicking the 
+    file or dragging the file to the Audacity icon.    
+
+ * (Linux 64-bit) Fixed a crash when using Equalization.
+
+ * (Linux) It was not possible to open an effect or other dialog then navigate
+    through the dialog using TAB.
+
+ * (Linux) The Play shortcut did not play a read-directly WAV, AIFF or FLAC 
+    import if the warning for importing uncompressed files appeared. 
 
 
 Changes and Improvements:
 
- * New "Reverb" effect to replace GVerb, based on the original "Freeverb".
- * New View > Go to Selection Start and Go to Selection End commands.  
- * New "Align End to End" command to append existing tracks to each other. 
- * Change Tempo now supports fractional BPM.    
- * Plot Spectrum now supports FFT sizes up to 65536.  
- * WAV files now support "Album Title", "Track Number" and "Genre" LIST INFO 
-    tags and also support ID3 tags.
- * Handle a bug in older iPods or some OS X applications that cause them to 
-    refuse AIFF files whose metadata contains an uneven number of characters,   
- * (Windows) Added support for "Windows WDM-KS" host which can provide very
-    low latencies if you reduce "Audio to Buffer" in Recording Preferences.
- * (Windows Vista and later) You can now record computer playback by choosing
-    the new "Windows WASAPI" host in Device Toolbar then a "loopback" input.
- * (Windows and Mac OS X): VST scanning dialog now replaced with a dialog
-    for choosing which VST effects to load. 
- * (Linux) CTRL + ALT can now be used to smooth samples in Draw Tool. 
- * Modules Preferences replaced with a dialog on launch of Audacity 
-    enabling you to choose which modules to load.  
+ * Tracks Menu:
+   * The separate commands that aligned track start or end with the cursor or
+      with selection start are combined into "Cursor/Selection Start" commands.
+   * "Align and Move Cursor" renamed to "Move Selection when Aligning".   
 
+ * Label Tracks:
+   * Labels Editor now allows empty labels to be saved on closing the editor.
+   * TAB and SHIFT+TAB when the label track has focus now always move forwards
+      or backwards respectively to the nearest label.
+
+ * (Windows) On a very few machines, the Windows WDM-KS low latency audio host
+    introduced in Audacity 2.0.4 caused Audacity to hang or the computer to 
+    crash. WDM-KS has been removed from 2.0.5 until it can be safely enabled.
+
+ * (Windows and OS X) Screen reader improvements for Install VST Effects dialog.  
+
+ * (OS X) Audio Unit plug-ins detected by Audacity on launch are now not loaded
+    until chosen from the Effect menu. This should speed up launch and avoid
+    crashes at launch due to misbehaving Audio Units.  
+
+ * (Linux) Update to PortAudio r1910 fixes memory and other bugs under ALSA.
+
+ * (Linux) Applied fix for wxGTK 2.8.12 bug which resulted in loss of Audacity's
+    menu bar (or visual corruption under Unity) on Debian-based systems.
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.0.4:
+3. Known Issues in 2.0.5:
 
-For known issues at release of 2.0.4, please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.4#known
+For known issues at release of 2.0.5, please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.5#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -265,7 +282,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.0.4 requires wxWidgets 2.8.12
+First you must download wxWidgets. Audacity 2.0.5 requires wxWidgets 2.8.12
 from:
 
    http://www.wxWidgets.org/ .
@@ -315,6 +332,53 @@ or ask at:
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+Changes in version 2.0.4:
+
+Bug fixes for:
+
+ * Keyboard Preferences: Shortcuts for Generators, Effects and Analyzers 
+    were not exported. All imported shortcut changes were discarded.
+ * Equalization curves were corrupted in Graphic EQ mode after switching 
+    to/from Draw Curves or after	running the effect then reopening it. 
+ * Change Pitch displayed corrupted values when reducing pitch or editing 
+    "from" Frequency. Detection was very inaccurate at high sample rates. 
+ * Bass Boost no longer clips if the track contains 32-bit audio.   
+ * Auto Duck was excessively slow on older machines. 
+ * (Windows) Exported MP3 comments tags were not seen by Windows programs.   
+ * (Windows and OS X) Audacity crashed if you used system quit before
+    file import was complete. 
+ * (Linux) Equalization crashed Audacity if the XML file was corrupted.  
+ * (Linux) When configuring effect parameters in "Edit Chains", "Preview" 
+    (not intended to be functional) caused a crash.
+ * (Linux) LICENSE.txt and README.txt were wrongly installed in
+     /usr/local/share/doc instead of /usr/local/share/doc/audacity/ .
+ * Accessibility: ENTER did not toggle selectedness of a label track unless
+    a label was selected.  
+ * Numerous other interface fixes.  
+
+
+Changes and Improvements:
+
+ * New "Reverb" effect to replace GVerb, based on the original "Freeverb".
+ * New View > Go to Selection Start and Go to Selection End commands.  
+ * New "Align End to End" command to append existing tracks to each other. 
+ * Change Tempo now supports fractional BPM.    
+ * Plot Spectrum now supports FFT sizes up to 65536.  
+ * WAV files now support "Album Title", "Track Number" and "Genre" LIST INFO 
+    tags and also support ID3 tags.
+ * Handle a bug in older iPods or some OS X applications that cause them to 
+    refuse AIFF files whose metadata contains an uneven number of characters,   
+ * (Windows) Added support for "Windows WDM-KS" host which can provide very
+    low latencies if you reduce "Audio to Buffer" in Recording Preferences.
+ * (Windows Vista and later) You can now record computer playback by choosing
+    the new "Windows WASAPI" host in Device Toolbar then a "loopback" input.
+ * (Windows and Mac OS X): VST scanning dialog now replaced with a dialog
+    for choosing which VST effects to load. 
+ * (Linux) CTRL + ALT can now be used to smooth samples in Draw Tool. 
+ * Modules Preferences replaced with a dialog on launch of Audacity 
+    enabling you to choose which modules to load.  
+
 
 Changes in version 2.0.3:
 
