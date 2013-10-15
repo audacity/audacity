@@ -120,7 +120,5 @@ Problems?
 
 There is more help at http://wiki.audacityteam.org/wiki/Developing_On_Mac .
 
-
-(This is just a tag identifying this file to Arch)
-arch-tag: 4388ba16-7889-4874-a000-d8699498ef16
-
+For those building Audacity for the first time on Leopard or later, there are good
+working steps at: http://wiki.audacityteam.org/wiki/Building_On_Mac .
