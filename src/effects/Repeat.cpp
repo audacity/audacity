@@ -66,6 +66,11 @@ bool EffectRepeat::PromptUser()
          (sampleCount)((track->GetEndTime() - track->GetStartTime()) * 
                        track->GetRate());
       sampleCount selectionLen = (sampleCount)((mT1 - mT0) * track->GetRate());
+      if (selectionLen == 0) {
+         wxMessageBox(_("Selection is too short to repeat."),
+                      _("Repeat"), wxOK | wxCENTRE, mParent);
+         return false;
+      }      
       int availSamples = 2147483647 - trackLen;
       int count = availSamples / selectionLen;
       if (maxCount == -1 || count < maxCount)
@@ -75,6 +80,8 @@ bool EffectRepeat::PromptUser()
    }
    
    if (maxCount <= 1) {
+      // TO DO: Not really true now that SampleCount is 64-bit int, but while bug 416
+      // is open, do we want to encourage repeating hugely long tracks?
       wxMessageBox(_("Tracks are too long to repeat the selection."),
                    _("Repeat"), wxOK | wxCENTRE, mParent);
       return false;
