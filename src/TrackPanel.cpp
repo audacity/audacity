@@ -5213,11 +5213,10 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
             if (track->ExpandCutLine(mCapturedTrackLocation.pos, &cutlineStart, &cutlineEnd))
             {
                WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
-               if (linked)
-               {
-                  bool bResult = linked->ExpandCutLine(mCapturedTrackLocation.pos);
-                  wxASSERT(bResult); // TO DO: Actually handle this.
-               }
+               if (linked && 
+                     !linked->ExpandCutLine(mCapturedTrackLocation.pos))
+                        return false;
+
                mViewInfo->sel0 = cutlineStart;
                mViewInfo->sel1 = cutlineEnd;
                DisplaySelection();
@@ -5226,14 +5225,14 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
             }
          } else if (mCapturedTrackLocation.typ == WaveTrack::locationMergePoint)
          {
-            bool bResult = track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
-            wxASSERT(bResult); // TO DO: Actually handle this.
+            if (!track->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2))
+               return false;
+
             WaveTrack* linked = (WaveTrack*)mTracks->GetLink(track);
-            if (linked)
-            {
-               bResult = linked->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2);
-               wxASSERT(bResult); // TO DO: Actually handle this.
-            }
+            if (linked && 
+                  !linked->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2))
+                     return false;
+
             MakeParentPushState(_("Merged Clips"),_("Merge"), PUSH_CONSOLIDATE|PUSH_CALC_SPACE);
             handled = true;
          }
