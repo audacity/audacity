@@ -25,6 +25,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #include <wx/defs.h>
 #include <wx/app.h>
+#include <wx/bitmap.h>
 #include <wx/docview.h>
 #include <wx/event.h>
 #include <wx/ipc.h>
@@ -34,6 +35,7 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
 #include <wx/snglinst.h>
+#include <wx/splash.h>
 #include <wx/sysopt.h>
 #include <wx/fontmap.h>
 
@@ -203,6 +205,8 @@ It handles initialization and termination by subclassing wxApp.
 #  endif
 
 #endif //(__WXMSW__)
+
+#include "../images/AudacityLogoWithName.xpm"
 
 ////////////////////////////////////////////////////////////
 /// Custom events
@@ -1171,22 +1175,20 @@ bool AudacityApp::OnInit()
    #endif //__WXMAC__
 
    // BG: Create a temporary window to set as the top window
-   wxFrame *temporarywindow = new wxFrame(NULL, -1, _("Audacity is starting up..."));
+   wxImage logoimage((const char **) AudacityLogoWithName_xpm);
+   logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
+   wxBitmap logo(logoimage);
+   wxSplashScreen *temporarywindow =
+      new wxSplashScreen(logo,
+                         wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT,
+                         0,
+                         NULL,
+                         wxID_ANY,
+                         wxDefaultPosition,
+                         wxDefaultSize,
+                         wxSTAY_ON_TOP);
+   temporarywindow->SetTitle(_("Audacity is starting up..."));
    SetTopWindow(temporarywindow);
-
-   // Iconize and 'Show' the temporary window, only so that we have a button on the taskbar
-   // from early on in initialising.
-   // Clicking the taskbar button gives a way for users to find the VST scanning
-   // dialog, if it is present but hidden behind other windows.  They will also 
-   // unfortunately see the 'Audacity is starting up..' dialog.  Better than
-   // thinking nothing is happenning, but not ideal.
-   // TODO: temporary window should perhaps iconize after it 'raises' child window 
-   // to the front, if we care enough about this case.
-   // Only on Windows, as apparently crashes on MAC! (and not needed on Mac anyway).
-#ifdef __WXMSW__
-   temporarywindow->Iconize( true );
-   temporarywindow->Show( true );
-#endif
 
    // Initialize the CommandHandler
    InitCommandHandler();
