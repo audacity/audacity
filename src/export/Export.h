@@ -141,6 +141,7 @@ public:
    Exporter();
    virtual ~Exporter();
 
+   void SetFileDialogTitle( const wxString & DialogTitle );
    void RegisterPlugin(ExportPlugin *plugin);
 
    bool Process(AudacityProject *project, bool selectedOnly,
@@ -164,6 +165,7 @@ private:
 
 private:
    FileDialog *mDialog;
+   wxString mFileDialogTitle;
    AudacityProject *mProject;
    MixerSpec *mMixerSpec;
 

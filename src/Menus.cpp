@@ -3034,6 +3034,7 @@ void AudacityProject::OnExportSelection()
    Exporter e;
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
+   e.SetFileDialogTitle( _("Export Selection") );
    e.Process(this, true, mViewInfo.sel0, mViewInfo.sel1);
 }
 

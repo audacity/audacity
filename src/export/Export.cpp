@@ -289,6 +289,7 @@ Mixer* ExportPlugin::CreateMixer(int numInputTracks, WaveTrack **inputTracks,
 Exporter::Exporter()
 {
    mMixerSpec = NULL;
+   SetFileDialogTitle( _("Export File") );
 
    RegisterPlugin(New_ExportPCM());
    RegisterPlugin(New_ExportMP3());
@@ -323,6 +324,12 @@ Exporter::~Exporter()
    if (mMixerSpec) {
       delete mMixerSpec;
    }
+}
+
+void Exporter::SetFileDialogTitle( const wxString & DialogTitle )
+{
+   // The default title is "Export File"
+   mFileDialogTitle = DialogTitle;
 }
 
 int Exporter::FindFormatIndex(int exportindex)
@@ -542,7 +549,7 @@ bool Exporter::GetFilename()
    while (true) {
 
       FileDialog fd(mProject,
-                    _("Export File"),
+                    mFileDialogTitle,
                     mFilename.GetPath(),
                     mFilename.GetFullName(),
                     maskString,
