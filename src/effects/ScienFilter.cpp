@@ -539,6 +539,9 @@ void ScienFilterDialog::MakeScienFilterDialog()
    mRippleCtl = NULL;
    mStopbandRippleCtl = NULL;
 
+   // TODO: This code would be more readable if using ShuttleGUI.
+   // Some updates to ShuttleGui would help this.
+
    // Create the base sizer
    szrV = new wxBoxSizer( wxVERTICAL );
 
@@ -651,7 +654,9 @@ void ScienFilterDialog::MakeScienFilterDialog()
    Size.SetWidth (50);
    mCutoffCtl = new wxTextCtrl (this, ID_CUTOFF, wxT("0.0"), wxDefaultPosition, Size);
    szr3->Add (mCutoffCtl, 0 );
-   szr3->Add( new wxStaticText(this, wxID_ANY, _("Hz  Stopband Ripple:")), 0 );
+   // The Hz is the units for Cutoff, and then we have a space and then the prompt.
+   // TODO: Use ShuttleGui::AddUnits() here, rather than a clever text string.
+   szr3->Add( new wxStaticText(this, wxID_ANY, wxString(_("Hz"))+ wxT("  ") + _("Stopband Ripple:")), 0 );
    Size.SetWidth (40);
    mStopbandRippleCtl = new wxTextCtrl (this, ID_STOPBAND_RIPPLE, wxT("0.0"), wxDefaultPosition, Size);
    szr3->Add (mStopbandRippleCtl, 0 );
