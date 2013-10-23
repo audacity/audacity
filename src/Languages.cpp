@@ -49,7 +49,13 @@ static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
                                                    code.c_str()),
                                   audacityPathList,
                                   results);
-   
+#if defined(__WXMAC__)
+   wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s.lproj/audacity.mo"),
+                                                   code.c_str()),
+                                  audacityPathList,
+                                  results);
+#endif
+
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s/LC_MESSAGES/audacity.mo"),
                                                    code.c_str()),
                                   audacityPathList,

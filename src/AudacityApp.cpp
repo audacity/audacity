@@ -1157,8 +1157,10 @@ bool AudacityApp::OnInit()
    // the great-great-grandparent of the directory containing the executable.
    AddUniquePathToPathList(progPath+wxT("/../../../"), audacityPathList);
 
-   AddUniquePathToPathList(progPath+wxT("/Languages"), audacityPathList);
-   AddUniquePathToPathList(progPath+wxT("/../../../Languages"), audacityPathList);
+   // These allow for searching the "bundle"
+   AddUniquePathToPathList(progPath+wxT("/../"), audacityPathList);
+   AddUniquePathToPathList(progPath+wxT("/../Resources"), audacityPathList);
+
    defaultTempDir.Printf(wxT("%s/audacity-%s"), 
                          tmpDirLoc.c_str(),
                          wxGetUserId().c_str());
