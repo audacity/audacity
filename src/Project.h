@@ -360,10 +360,11 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // SelectionBar callback methods
 
+   virtual double AS_GetRate();
    virtual void AS_SetRate(double rate);
-   virtual void AS_ModifySelection(double &start, double &end);
-   virtual void AS_SetSnapTo(bool state);
    virtual bool AS_GetSnapTo();
+   virtual void AS_SetSnapTo(bool state);
+   virtual void AS_ModifySelection(double &start, double &end);
 
    void SetStateTo(unsigned int n);
 

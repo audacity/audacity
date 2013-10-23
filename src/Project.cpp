@@ -729,7 +729,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat((sampleFormat) gPrefs->
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
-     mSnapTo(0), 
+     mSnapTo((bool) gPrefs->Read(wxT("/SnapTo"), (long) false)),
      mDirty(false),
      mTrackPanel(NULL),
      mTrackFactory(NULL),
@@ -836,7 +836,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    mToolManager = new ToolManager( this );
    GetSelectionBar()->SetListener(this);
-   GetSelectionBar()->SetRate(mRate);
    mToolManager->LayoutToolBars();
 
    // Fix the sliders on the mixer toolbar so that the tip windows
@@ -1047,8 +1046,6 @@ void AudacityProject::UpdatePrefs()
    if (mMixerBoard)
       mMixerBoard->ResizeTrackClusters(); // in case prefs "/GUI/Solo" changed
 
-   SetSnapTo(gPrefs->Read(wxT("/SnapTo"), 0L)!=0);
-
    if (mToolManager) {
       mToolManager->UpdatePrefs();
    }
@@ -1176,10 +1173,14 @@ void AudacityProject::SetProjectTitle()
    SetName(name);       // to make the nvda screen reader read the correct title
 }
 
-void AudacityProject::AS_SetSnapTo(bool state)
+double AudacityProject::AS_GetRate()
 {
-   SetSnapTo(state);
-   RedrawProject();
+   return mRate;
+}
+
+void AudacityProject::AS_SetRate(double rate)
+{
+   mRate = rate;
 }
 
 bool AudacityProject::AS_GetSnapTo()
@@ -1187,9 +1188,15 @@ bool AudacityProject::AS_GetSnapTo()
    return GetSnapTo();
 }
 
-void AudacityProject::AS_SetRate(double rate)
+void AudacityProject::AS_SetSnapTo(bool state)
 {
-   mRate = rate;
+   mSnapTo = state;
+
+   mCommandManager.Check(wxT("Snap"), mSnapTo);
+   gPrefs->Write(wxT("/SnapTo"), mSnapTo);
+   gPrefs->Flush();
+
+   RedrawProject();
 }
 
 void AudacityProject::AS_ModifySelection(double &start, double &end)
@@ -4530,11 +4537,7 @@ bool AudacityProject::GetCacheBlockFiles()
 
 void AudacityProject::SetSnapTo(bool state)
 {
-   mSnapTo = state;
-   mCommandManager.Check(wxT("Snap"), mSnapTo);
-   gPrefs->Write(wxT("/SnapTo"), mSnapTo);
-   gPrefs->Flush();
-
+   AS_SetSnapTo(state);
    if (GetSelectionBar()) {
       GetSelectionBar()->SetSnapTo(state);
    }

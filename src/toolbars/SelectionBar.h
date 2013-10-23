@@ -32,10 +32,11 @@ class AUDACITY_DLL_API SelectionBarListener {
    SelectionBarListener(){};
    virtual ~SelectionBarListener(){};
 
+   virtual double AS_GetRate() = 0;
    virtual void AS_SetRate(double rate) = 0;
-   virtual void AS_ModifySelection(double &start, double &end) = 0;
    virtual bool AS_GetSnapTo() = 0;
    virtual void AS_SetSnapTo(bool state) = 0;
+   virtual void AS_ModifySelection(double &start, double &end) = 0;
 };
 
 class SelectionBar:public ToolBar {

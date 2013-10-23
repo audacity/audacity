@@ -241,7 +241,7 @@ void SelectionBar::Populate()
    mainSizer->Add(mSnapTo,
                   0, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER | wxRIGHT, 5);
    mSnapTo->SetName(_("Snap To"));
-   mSnapTo->SetValue(gPrefs->Read(wxT("/SnapTo"), 0L)!=0);
+   mSnapTo->SetValue(mListener ? mListener->AS_GetSnapTo() : false);
    #if wxUSE_TOOLTIPS
       mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
    #endif
@@ -303,6 +303,8 @@ void SelectionBar::UpdatePrefs()
 void SelectionBar::SetListener(SelectionBarListener *l)
 {
    mListener = l;
+   SetRate(mListener->AS_GetRate());
+   SetSnapTo(mListener->AS_GetSnapTo());
 };
 
 void SelectionBar::OnSize(wxSizeEvent &evt)
