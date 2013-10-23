@@ -22,6 +22,7 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "UndoManager.h" //JKC: Included for PUSH_XXX definitions.
+#include "widgets/TimeTextCtrl.h"
 
 class wxMenu;
 class wxRect;
@@ -600,6 +601,8 @@ protected:
    wxInt64 mSnapLeft;
    wxInt64 mSnapRight;
    bool mSnapPreferRightEdge;
+
+   TimeConverter mConverter;
 
    Track * mDrawingTrack;          // Keeps track of which track you are drawing on between events cf. HandleDraw()
    int mDrawingTrackTop;           // Keeps track of the top position of the drawing track.

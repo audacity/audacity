@@ -55,14 +55,13 @@ void TimeDialog::PopulateOrExchange(ShuttleGui &S)
          mTimeCtrl = new
             TimeTextCtrl(this,
                          wxID_ANY,
-                         wxT(""),
+                         mFormat,
                          mTime,
                          mRate,
                          wxDefaultPosition,
                          wxDefaultSize,
                          true);
          mTimeCtrl->SetName(mPrompt);
-         mTimeCtrl->SetFormatString(mTimeCtrl->GetBuiltinFormat(mFormat));
          S.AddWindow(mTimeCtrl);
          mTimeCtrl->EnableMenu();
       }

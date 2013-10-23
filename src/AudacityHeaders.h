@@ -59,7 +59,6 @@
 #include "Resample.h"
 #include "SampleFormat.h"
 #include "Sequence.h"
-#include "TimeDialog.h"
 #include "TimeTrack.h"
 #include "Track.h"
 #include "UndoManager.h"

@@ -32,7 +32,8 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TIMETEXTCTRL_UPDATED, -1);
 /** \brief struct to hold a formatting control string and it's user facing name
  * Used in an array to hold the built-in time formats that are always available
  * to the user */
-struct BuiltinFormatString {
+struct BuiltinFormatString
+{
    wxString name;
    wxString formatStr;
 };
@@ -46,7 +47,49 @@ WX_DECLARE_OBJARRAY(DigitInfo, DigitInfoArray);
 class TimeConverter
 {
 public:
-   TimeConverter();
+   TimeConverter::TimeConverter(const wxString & formatName = wxEmptyString,
+                                double timeValue = 0.0f,
+                                double sampleRate = 1.0f /* to prevent div by 0 */);
+
+   virtual void ValueToControls();
+   virtual void ValueToControls(double RawTime, bool nearest = true);
+   virtual void ControlsToValue();
+   virtual void ParseFormatString(const wxString & format);
+
+   void PrintDebugInfo();
+   void SetFormatString(const wxString & formatName);
+   void SetSampleRate(double sampleRate);
+   void SetTimeValue(double newTime);
+   double GetTimeValue();
+
+   wxString GetTimeString();
+
+   wxString GetFormatString();
+   int GetFormatIndex();
+
+   int GetNumBuiltins();
+   wxString GetBuiltinName(const int index);
+   wxString GetBuiltinFormat(const int index);
+   wxString GetBuiltinFormat(const wxString & name);
+
+   // Adjust the value by the number "steps" in the active format.
+   // Increment if "dir" is 1, descrement if "dir" is -1.
+   void Adjust(int steps, int dir);
+
+   void Increment();
+   void Decrement();
+
+protected:
+   /** \brief array of formats the control knows about internally
+    *  array of string pairs for name of the format and the format string
+    *  needed to create that format output. This is used for the pop-up
+    *  list of formats to choose from in the control. Note that the size will
+    *  need adjusting if new time formats are added */
+   BuiltinFormatString BuiltinFormatStrings[16];
+   double         mTimeValue;
+
+   wxString       mFormatString;
+
    TimeFieldArray mFields;
    wxString       mPrefix;
    wxString       mValueTemplate;
@@ -57,13 +100,12 @@ public:
    double         mSampleRate;
    bool           mNtscDrop;
 
-   void ParseFormatString( const wxString & format );
-   void PrintDebugInfo();
-   void ValueToControls( double RawTime );
-   double ControlsToValue();
+   int            mFocusedDigit;
+   DigitInfoArray mDigits;
 };
 
-class TimeTextCtrl: public wxControl{
+class TimeTextCtrl: public wxControl, public TimeConverter
+{
    friend class TimeTextCtrlAx;
 
  public:
@@ -71,7 +113,7 @@ class TimeTextCtrl: public wxControl{
 
    TimeTextCtrl(wxWindow *parent,
                 wxWindowID id,
-                wxString formatString = wxT(""),
+                wxString formatName = wxT(""),
                 double timeValue = 0.0,
                 double sampleRate = 44100,
                 const wxPoint &pos = wxDefaultPosition,
@@ -83,23 +125,11 @@ class TimeTextCtrl: public wxControl{
    virtual bool Layout();
    virtual void Fit();
 
-   void SetFieldFocus(int digit);
-   void SetFormatString(wxString formatString);
    void SetSampleRate(double sampleRate);
    void SetTimeValue(double newTime);
-   void Increment();
-   void Decrement();
-   const double GetTimeValue();
+   void SetFormatString(const wxString & formatString);
 
-   wxString GetTimeString();
-
-   wxString GetFormatString();
-   int GetFormatIndex();
-
-   int GetNumBuiltins();
-   wxString GetBuiltinName(const int index);
-   wxString GetBuiltinFormat(const int index);
-   wxString GetBuiltinFormat(const wxString &name);
+   void SetFieldFocus(int digit);
 
    void EnableMenu(bool enable = true);
 
@@ -121,24 +151,13 @@ private:
    void ValueToControls();
    void ControlsToValue();
 
-   void PrintDebugInfo();
-
    // If autoPos was enabled, focus the first non-zero digit
    void UpdateAutoFocus();
 
    void Updated(bool keyup = false);
-   void Increase(int steps);
-   void Decrease(int steps);
 
-   /** \brief array of formats the control knows about internally
-    *  array of string pairs for name of the format and the format string
-    *  needed to create that format output. This is used for the pop-up
-    *  list of formats to choose from in the control. Note that the size will
-    *  need adjusting if new time formats are added */
-   BuiltinFormatString BuiltinFormatStrings[16];
-   double         mTimeValue;
+private:
 
-   wxString       mFormatString;
    bool           mMenuEnabled;
 
    wxBitmap      *mBackgroundBitmap;
@@ -157,15 +176,10 @@ private:
    int            mHeight;
    int            mButtonWidth;
 
-   int            mFocusedDigit;
    int            mLastField;
 
    // If true, the focus will be set to the first non-zero digit
    bool           mAutoPos;
-
-   DigitInfoArray mDigits;
-   TimeConverter  mConverter;
-
 
    // Keeps track of extra fractional scrollwheel steps
    double         mScrollRemainder;

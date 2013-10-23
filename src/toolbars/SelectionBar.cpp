@@ -114,11 +114,8 @@ void SelectionBar::Populate()
     * to do some look-ups, so we'll have to create one. We can't make the 
     * look-ups static because they depend on translations which are done at
     * runtime */
-   TimeTextCtrl *ttc = new TimeTextCtrl(this, wxID_ANY, wxT(""), 0.0, mRate);
    wxString formatName;
    gPrefs->Read(wxT("/SelectionFormat"), &formatName);
-   wxString format = ttc->GetBuiltinFormat(formatName);
-   delete ttc;
 
    mainSizer = new wxFlexGridSizer(7, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL);
@@ -255,13 +252,12 @@ void SelectionBar::Populate()
                     NULL,
                     this);
    
-   mLeftTime = new TimeTextCtrl(this, OnLeftTimeID, wxT(""), 0.0, mRate);
-   mLeftTime->SetFormatString(format);
+   mLeftTime = new TimeTextCtrl(this, OnLeftTimeID, formatName, 0.0, mRate);
    mLeftTime->SetName(_("Selection Start:"));
    mLeftTime->EnableMenu();
    mainSizer->Add(mLeftTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mRightTime = new TimeTextCtrl(this, OnRightTimeID, format, 0.0, mRate);
+   mRightTime = new TimeTextCtrl(this, OnRightTimeID, formatName, 0.0, mRate);
    mRightTime->SetName(wxString(_("Selection ")) + (showSelectionLength ?
                                                    _("Length") :
                                                    _("End")));
@@ -273,7 +269,7 @@ void SelectionBar::Populate()
                                    wxLI_VERTICAL),
                   0, wxRIGHT, 5);
 
-   mAudioTime = new TimeTextCtrl(this, -1, format, 0.0, mRate);
+   mAudioTime = new TimeTextCtrl(this, wxID_ANY, formatName, 0.0, mRate);
    mAudioTime->SetName(_("Audio Position:"));
    mAudioTime->EnableMenu();
    mainSizer->Add(mAudioTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
@@ -368,18 +364,17 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    
    evt.Skip(false);
    
-   /* we don't actually need a TimeTextCtrl, but need it's 
-    * translations which are done at runtime */
-   
-   TimeTextCtrl *ttc = new TimeTextCtrl(this, wxID_ANY, wxT(""), 0.0, mRate);
-   wxString formatName(ttc->GetBuiltinName(index));
-   gPrefs->Write(wxT("/SelectionFormat"), formatName);
-   gPrefs->Flush();
-   #if wxUSE_TOOLTIPS
-      mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
-   #endif
-   delete ttc;
+   wxString format;
 
+   // Save format name before recreating the controls so they resize properly
+   format = mLeftTime->GetBuiltinName(index);
+   gPrefs->Write(wxT("/SelectionFormat"), format);
+   gPrefs->Flush();
+
+#if wxUSE_TOOLTIPS
+   mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), format.c_str()));
+#endif
+   
    // ToolBar::ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
    mLeftTime =
@@ -396,10 +391,10 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    ValuesToControls();
 
-   wxString formatString = mLeftTime->GetBuiltinFormat(index);
-   mLeftTime->SetFormatString(formatString);
-   mRightTime->SetFormatString(formatString);
-   mAudioTime->SetFormatString(formatString);
+   format = mLeftTime->GetBuiltinFormat(index);
+   mLeftTime->SetFormatString(format);
+   mRightTime->SetFormatString(format);
+   mAudioTime->SetFormatString(format);
 
    if (leftFocus) {
       mLeftTime->SetFocus();

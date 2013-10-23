@@ -260,14 +260,13 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mForegroundStartT = new
             TimeTextCtrl(this,
                          ID_FOREGROUNDSTART_T,
-                         wxT(""),
+                         _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
                          wxDefaultPosition,
                          wxDefaultSize,
                          true);
             mForegroundStartT->SetName(_("Foreground start time"));
-            mForegroundStartT->SetFormatString(mForegroundStartT->GetBuiltinFormat(_("hh:mm:ss + hundredths")));
             mForegroundStartT->EnableMenu(false);
          }
          S.AddWindow(mForegroundStartT);
@@ -277,14 +276,13 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mForegroundEndT = new
             TimeTextCtrl(this,
                          ID_FOREGROUNDEND_T,
-                         wxT(""),
+                         _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
                          wxDefaultPosition,
                          wxDefaultSize,
                          true);
             mForegroundEndT->SetName(_("Foreground end time"));
-            mForegroundEndT->SetFormatString(mForegroundEndT->GetBuiltinFormat(_("hh:mm:ss + hundredths")));
             mForegroundEndT->EnableMenu(false);
          }
          S.AddWindow(mForegroundEndT);
@@ -300,14 +298,13 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mBackgroundStartT = new
             TimeTextCtrl(this,
                          ID_BACKGROUNDSTART_T,
-                         wxT(""),
+                         _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
                          wxDefaultPosition,
                          wxDefaultSize,
                          true);
             mBackgroundStartT->SetName(_("Background start time"));
-            mBackgroundStartT->SetFormatString(mBackgroundStartT->GetBuiltinFormat(_("hh:mm:ss + hundredths")));
             mBackgroundStartT->EnableMenu(false);
          }
          S.AddWindow(mBackgroundStartT);
@@ -317,14 +314,13 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
             mBackgroundEndT = new
             TimeTextCtrl(this,
                          ID_BACKGROUNDEND_T,
-                         wxT(""),
+                         _("hh:mm:ss + hundredths"),
                          0.0,
                          mProjectRate,
                          wxDefaultPosition,
                          wxDefaultSize,
                          true);
             mBackgroundEndT->SetName(_("Background end time"));
-            mBackgroundEndT->SetFormatString(mBackgroundEndT->GetBuiltinFormat(_("hh:mm:ss + hundredths")));
             mBackgroundEndT->EnableMenu(false);
          }
          S.AddWindow(mBackgroundEndT);

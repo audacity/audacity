@@ -458,18 +458,17 @@ void DtmfDialog::PopulateOrExchange( ShuttleGui & S )
          mDtmfDurationT = new
             TimeTextCtrl(this,
                          ID_DTMF_DURATION_TEXT,
-                         wxT(""),
+         /* use this instead of "seconds" because if a selection is passed to the
+         * effect, I want it (dDuration) to be used as the duration, and with
+         * "seconds" this does not always work properly. For example, it rounds
+         * down to zero... */
+                         dIsSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
                          dDuration,
                          mEffect->mProjectRate,
                          wxDefaultPosition,
                          wxDefaultSize,
                          true);
-         /* use this instead of "seconds" because if a selection is passed to the
-         * effect, I want it (dDuration) to be used as the duration, and with
-         * "seconds" this does not always work properly. For example, it rounds
-         * down to zero... */
          mDtmfDurationT->SetName(_("Duration"));
-         mDtmfDurationT->SetFormatString(mDtmfDurationT->GetBuiltinFormat(dIsSelection==true?(_("hh:mm:ss + samples")):(_("hh:mm:ss + milliseconds"))));
          mDtmfDurationT->EnableMenu();
       }
       S.AddWindow(mDtmfDurationT);

@@ -30,25 +30,18 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
 
    // Grab time-snapping prefs (unless otherwise requested)
    mSnapToTime = false;
-   TimeTextCtrl *ttc = NULL;
 
-   // TODO: Switch over from using TimeTextCtrl to TimeConverter.
-   // This will prevent an annoying tiny toolbar appearing in top left
-   // every time we click the mouse left button.  It's the time text 
-   // ctrl.
-
-   //TimeConverter *pTc=NULL;
    if (gPrefs->Read(wxT("/SnapTo"), 0L) != 0L && !noTimeSnap)
    {
       // Look up the format string
       AudacityProject *p = GetActiveProject();
+      wxASSERT(p);
       if (p) {
+         mConverter.SetSampleRate(p->GetRate());
          mSnapToTime = true;
-         ttc = new TimeTextCtrl(p, wxID_ANY, wxT(""), 0.0, p->GetRate());
          wxString formatName;
          gPrefs->Read(wxT("/SelectionFormat"), &formatName);
-         mFormat = ttc->GetBuiltinFormat(formatName);
-         ttc->SetFormatString(mFormat);
+         mConverter.SetFormatString(mConverter.GetBuiltinFormat(formatName));
       }
    }
 
@@ -73,9 +66,9 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
          LabelTrack *labelTrack = (LabelTrack *)track;
          for(i = 0; i < labelTrack->GetNumLabels(); i++) {
             const LabelStruct *label = labelTrack->GetLabel(i);
-            CondListAdd(label->t, labelTrack, ttc);
+            CondListAdd(label->t, labelTrack);
             if (label->t1 != label->t) {
-               CondListAdd(label->t1, labelTrack, ttc);
+               CondListAdd(label->t1, labelTrack);
             }
          }
       }
@@ -94,30 +87,26 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
                if (skip)
                   continue;
             }
-            CondListAdd(clip->GetStartTime(), waveTrack, ttc);
-            CondListAdd(clip->GetEndTime(), waveTrack, ttc);
+            CondListAdd(clip->GetStartTime(), waveTrack);
+            CondListAdd(clip->GetEndTime(), waveTrack);
          }
       }
 #ifdef USE_MIDI
       else if (track->GetKind() == Track::Note) {
-         CondListAdd(track->GetStartTime(), track, ttc);
-         CondListAdd(track->GetEndTime(), track, ttc);
+         CondListAdd(track->GetStartTime(), track);
+         CondListAdd(track->GetEndTime(), track);
       }
 #endif
       track = iter.Next();
    }
-
-   if (ttc)
-      delete ttc;
 }
 
-// Adds to mSnapPoints, filtering by ttc if it's not NULL
-void SnapManager::CondListAdd(double t, Track *tr, TimeTextCtrl *ttc)
+// Adds to mSnapPoints, filtering by TimeConverter
+void SnapManager::CondListAdd(double t, Track *tr)
 {
-   if (ttc)
-      ttc->SetTimeValue(t);
+   mConverter.SetTimeValue(t);
 
-   if (!ttc || ttc->GetTimeValue() == t)
+   if (mConverter.GetTimeValue() == t)
       mSnapPoints->Add(new SnapPoint(t, tr));
 }
 
@@ -260,27 +249,9 @@ bool SnapManager::Snap(Track *currentTrack,
       }
       else {
          // Snap time to the grid
-         AudacityProject *p = GetActiveProject();
-#if 0
-         // Old code for snapping.
-         // This created a new ctrl for every tiny drag.
-         TimeTextCtrl ttc(p, wxID_ANY, wxT(""), 0.0, p->GetRate());
-         ttc.SetFormatString(mFormat);
-         ttc.SetTimeValue(t);
-         *out_t = ttc.GetTimeValue();
-#else
-         // Replacement code.  It's still inefficient, since we
-         // repeatedly parse the format, but it now doesn't
-         // create a new ctrl too.
-         // TODO: Move Tc into being a member variable of 
-         // SnapManager.  Then we won't be repeatedly 
-         // parsing the format string.
-         TimeConverter Tc;
-         Tc.mSampleRate = p->GetRate();
-         Tc.ParseFormatString( mFormat );
-         Tc.ValueToControls( t );
-         *out_t = Tc.ControlsToValue();
-#endif
+         mConverter.ValueToControls(t, false);
+         mConverter.ControlsToValue();
+         *out_t = mConverter.GetTimeValue();
          *snappedTime = true;
       }
    }
