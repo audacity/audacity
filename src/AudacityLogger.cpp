@@ -21,6 +21,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 
 #include <wx/log.h>
 #include <wx/frame.h>
+#include <wx/icon.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 
