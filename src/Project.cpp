@@ -2051,13 +2051,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    
    if (gAudacityProjects.IsEmpty() && !gIsQuitting) {
 
-      if( wxGetApp().mLogger )
-         wxGetApp().mLogger->Show(false);
-      
 #if !defined(__WXMAC__)
-      // LL:  On the Mac, we don't want the logger open after all projects
-      //      have been closed since its menu will show instead of the
-      //      common menu.
       if (quitOnClose) {
          QuitAudacity();
       }

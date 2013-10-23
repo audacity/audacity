@@ -58,6 +58,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "AudacityApp.h"
 
+#include "AudacityLogger.h"
 #include "AboutDialog.h"
 #include "AColor.h"
 #include "AudioIO.h"
@@ -284,15 +285,6 @@ void QuitAudacity(bool bForce)
 
    ModuleManager::Dispatch(AppQuiting);
 
-   wxLogWindow *lw = wxGetApp().mLogger;
-   if (lw)
-   {
-      lw->EnableLogging(false);
-      lw->SetActiveTarget(NULL);
-      delete lw;
-      wxGetApp().mLogger = NULL;
-   }
-
    if (gParentFrame)
       gParentFrame->Destroy();
    gParentFrame = NULL;
@@ -312,6 +304,9 @@ void QuitAudacity(bool bForce)
    
    //delete the static lock for audacity projects
    AudacityProject::DeleteAllProjectsDeleteLock();
+
+   //remove our logger
+   delete wxLog::SetActiveTarget(NULL);
 
    if (bForce)
    {
@@ -936,6 +931,11 @@ bool AudacityApp::ShouldShowMissingAliasedFileWarning()
    return ret;
 }
 
+AudacityLogger *AudacityApp::GetLogger()
+{
+   return wxStaticCast(wxLog::GetActiveTarget(), AudacityLogger);
+}
+
 void AudacityApp::InitLang( const wxString & lang )
 {
    if( mLocale )
@@ -1022,6 +1022,8 @@ int AudacityApp::FilterEvent(wxEvent & event)
 // main frame
 bool AudacityApp::OnInit()
 {
+   delete wxLog::SetActiveTarget(new AudacityLogger);
+
    m_aliasMissingWarningShouldShow = true;
    m_LastMissingBlockFile = NULL;
 
@@ -1058,18 +1060,6 @@ bool AudacityApp::OnInit()
       return false;
    }
 #endif
-
-   mLogger=NULL;
-   /* i18n-hint: We translate the title of the log window, but
-    * we're not translating its contents, since the contents will be read by
-    * English speaking engineers */
-   #ifndef __WXMAC__
-      mLogger = new wxLogWindow(NULL, _("Audacity Log"), false, false);
-      mLogger->SetActiveTarget(mLogger);
-      mLogger->EnableLogging(true);
-      mLogger->SetLogLevel(wxLOG_Max);
-      wxLogMessage(wxString::Format(wxT("Audacity %s"), AUDACITY_VERSION_STRING));
-   #endif
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...
@@ -1275,14 +1265,6 @@ bool AudacityApp::OnInit()
    // PLAY or RECORD completes.  
    // So we also call StartMonitoring when STOP is called.
    project->MayStartMonitoring();
-
-   #ifdef __WXMAC__
-      mLogger = new wxLogWindow(NULL, _("Audacity Log"), false, false);
-      mLogger->SetActiveTarget(mLogger);
-      mLogger->EnableLogging(true);
-      mLogger->SetLogLevel(wxLOG_Max);
-      wxLogMessage(wxString::Format(wxT("Audacity %s"), AUDACITY_VERSION_STRING));
-   #endif
 
    #ifdef USE_FFMPEG
    FFmpegStartup();

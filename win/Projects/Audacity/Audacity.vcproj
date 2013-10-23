@@ -432,6 +432,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\..\src\AudacityLogger.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\AudacityLogger.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\AudioIO.cpp"
 				>
 			</File>

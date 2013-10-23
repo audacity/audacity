@@ -112,8 +112,6 @@ Module::~Module()
 
 bool Module::Load()
 {
-//   wxLogNull logNo;
-
    if (mLib->IsLoaded()) {
       if (mDispatch) {
          return true;

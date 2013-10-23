@@ -33,6 +33,7 @@ class IPCServ;
 class Importer;
 class CommandHandler;
 class AppCommandEvent;
+class AudacityLogger;
 
 void SaveWindowSize();
 
@@ -187,9 +188,9 @@ class AudacityApp:public wxApp {
    bool GetWindowRectAlreadySaved()const {return mWindowRectAlreadySaved;}
    void SetWindowRectAlreadySaved(bool alreadySaved) {mWindowRectAlreadySaved = alreadySaved;}
 
-   Importer *mImporter;
+   AudacityLogger *GetLogger();
 
-   wxLogWindow *mLogger;
+   Importer *mImporter;
 
 #if defined(__WXGTK__)
    /** \brief This flag is set true when in a keyboard event handler.

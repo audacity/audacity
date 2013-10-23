@@ -52,6 +52,7 @@ simplifies construction of menu items.
 #include "effects/EffectManager.h"
 
 #include "AudacityApp.h"
+#include "AudacityLogger.h"
 #include "AudioIO.h"
 #include "Dependencies.h"
 #include "float_cast.h"
@@ -5736,25 +5737,10 @@ void AudacityProject::OnManual()
 
 void AudacityProject::OnShowLog()
 {
-   wxLogWindow* pLogger = wxGetApp().mLogger;
-   // It's possible a log window was not created.
-   if( !pLogger )
-      return;
-   wxFrame* pLoggerFrame = pLogger->GetFrame();
-   if (!pLoggerFrame->IsShown())
-   {
-      // Show latest lines.
-      //bool bSuccess = pLoggerFrame->ScrollPages(999); //v Doesn't work!
-      int width, height;
-      pLoggerFrame->GetVirtualSize(&width, &height);
-      //pLoggerFrame->SetScrollPos(wxVERTICAL, height); //v Doesn't work!
-      pLoggerFrame->SetSize(width, 430); // Have to just hope this brings the last into view.
-
-      pLogger->Show();
+   AudacityLogger *logger = wxGetApp().GetLogger();
+   if (logger) {
+      logger->Show();
    }
-   pLoggerFrame->Enable(); 
-   pLoggerFrame->Raise();
-   pLoggerFrame->SetFocus();
 }
 
 void AudacityProject::OnBenchmark()

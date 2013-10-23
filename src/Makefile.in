@@ -51,6 +51,7 @@ OBJS = \
 	AColor.o \
 	AboutDialog.o \
 	AudacityApp.o \
+	AudacityLogger.o \
 	AudioIO.o \
 	AutoRecovery.o \
 	BatchCommandDialog.o \

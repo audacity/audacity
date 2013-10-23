@@ -902,6 +902,7 @@
 		28BD8AB2101DF4C700686679 /* CommandDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAA101DF4C600686679 /* CommandDirectory.cpp */; };
 		28BD8AB3101DF4C700686679 /* ExecMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */; };
 		28BD8AB4101DF4C700686679 /* GetAllMenuCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAE101DF4C600686679 /* GetAllMenuCommands.cpp */; };
+		28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */; };
 		28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		28CCDD000F939FD70081F2FC /* FileHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */; };
 		28D540050FD1912A00FA7C75 /* AppCommandEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D53FFA0FD1912A00FA7C75 /* AppCommandEvent.cpp */; };
@@ -3607,6 +3608,8 @@
 		28BD8AAE101DF4C600686679 /* GetAllMenuCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = GetAllMenuCommands.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28BD8AAF101DF4C600686679 /* GetAllMenuCommands.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = GetAllMenuCommands.h; sourceTree = "<group>"; tabWidth = 3; };
 		28BD8AB0101DF4C600686679 /* Validators.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Validators.h; sourceTree = "<group>"; tabWidth = 3; };
+		28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityLogger.cpp; sourceTree = "<group>"; };
+		28C3946C1818356800FDDAC9 /* AudacityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityLogger.h; sourceTree = "<group>"; };
 		28C816B81312555B0035BB10 /* Audacity.sh */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text.script.sh; name = Audacity.sh; path = mac/Audacity.sh; sourceTree = "<group>"; };
 		28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FileHistory.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28CCDD040F93A0B20081F2FC /* FileHistory.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileHistory.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -4866,6 +4869,8 @@
 				1790AFCE09883BFD008A330A /* AudacityApp.cpp */,
 				1790AFCF09883BFD008A330A /* AudacityApp.h */,
 				1790AFD009883BFD008A330A /* AudacityHeaders.h */,
+				28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */,
+				28C3946C1818356800FDDAC9 /* AudacityLogger.h */,
 				1790AFD209883BFD008A330A /* AudioIO.cpp */,
 				1790AFD309883BFD008A330A /* AudioIO.h */,
 				28560C8F0A75E40F00A3429E /* AutoRecovery.cpp */,
@@ -8818,6 +8823,7 @@
 				2849A42017F8BEC2005C653F /* KeyView.cpp in Sources */,
 				284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */,
 				284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */,
+				28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
