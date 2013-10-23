@@ -18,6 +18,11 @@
 #include "WaveTrack.h"
 #include "widgets/TimeTextCtrl.h"
 
+// Change this to "true" to snap to nearest and "false" to snap to previous
+// As of 2013/10/23, defaulting to "true" until a decision is made on
+// which method is prefered.
+#define SNAP_TO_NEAREST false
+
 static int CompareSnapPoints(SnapPoint *s1, SnapPoint *s2)
 {
    return (s1->t - s2->t > 0? 1 : -1);
@@ -249,7 +254,7 @@ bool SnapManager::Snap(Track *currentTrack,
       }
       else {
          // Snap time to the grid
-         mConverter.ValueToControls(t, false);
+         mConverter.ValueToControls(t, SNAP_TO_NEAREST);
          mConverter.ControlsToValue();
          *out_t = mConverter.GetTimeValue();
          *snappedTime = true;
