@@ -25,7 +25,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
+				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PX_USE_WIN_MME 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories="..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portaudio-v19\include;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;PX_USE_WIN_MME"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -92,7 +92,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
+				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PX_USE_WIN_MME 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -110,7 +110,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portaudio-v19\include;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;PX_USE_WIN_MME"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				StringPooling="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -161,7 +161,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
+				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PX_USE_WIN_MME 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -179,7 +179,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portaudio-v19\include;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;PX_USE_WIN_MME"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				StringPooling="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -230,7 +230,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
+				CommandLine="echo // Automatically generated file &gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PX_USE_WIN_MME 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;&quot;$(InputDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -248,7 +248,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				AdditionalIncludeDirectories="..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portaudio-v19\include;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;PX_USE_WIN_MME"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -352,6 +352,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\lib-src\portmixer\src\px_win_endpoint.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\lib-src\portmixer\src\px_win_wasapi.c"
 				>
 			</File>
 			<File
