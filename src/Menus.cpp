@@ -1923,6 +1923,7 @@ void AudacityProject::OnPlayStopSelect()
       if( mViewInfo.sel1 < mViewInfo.sel0 ) {
          mViewInfo.sel1 = mViewInfo.sel0;
       }
+      ModifyState();
       toolbar->OnStop(evt);
    }
    else if (!gAudioIO->IsBusy()) {
@@ -2114,6 +2115,7 @@ void AudacityProject::OnSkipStart()
    wxCommandEvent evt;
 
    GetControlToolBar()->OnRewind(evt);
+   ModifyState();
 }
 
 void AudacityProject::OnSkipEnd()
@@ -2121,6 +2123,7 @@ void AudacityProject::OnSkipEnd()
    wxCommandEvent evt;
 
    GetControlToolBar()->OnFF(evt);
+   ModifyState();
 }
 
 void AudacityProject::OnSeekLeftShort()
@@ -4245,13 +4248,18 @@ void AudacityProject::OnSelectStartCursor()
 
 void AudacityProject::OnSelectSyncLockSel()
 {
+   bool selected = false;
    TrackListIterator iter(mTracks);
    for (Track *t = iter.First(); t; t = iter.Next())
    {
       if (t->IsSyncLockSelected()) {
          t->SetSelected(true);
+         selected = true;
       }
    }
+
+   if (selected)
+      ModifyState();
 
    mTrackPanel->Refresh(false);
    if (mMixerBoard)
@@ -4264,6 +4272,8 @@ void AudacityProject::OnSelectAllTracks()
    for (Track *t = iter.First(); t; t = iter.Next()) {
       t->SetSelected(true);
    }
+
+   ModifyState();
 
    mTrackPanel->Refresh(false);
    if (mMixerBoard)

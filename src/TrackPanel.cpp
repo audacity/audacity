@@ -6259,6 +6259,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       t = iter.Last();
       SetFocusedTrack( t );
       EnsureVisible( t );
+      MakeParentModifyState();
       return;
    }
 
@@ -6292,6 +6293,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          mTracks->Select( t, false );
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
+         MakeParentModifyState();
          return;
       }
       if( tSelected && !pSelected )
@@ -6299,6 +6301,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          mTracks->Select( p, true );
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
+         MakeParentModifyState();
          return;
       }
       if( !tSelected && pSelected )
@@ -6306,6 +6309,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          mTracks->Select( p, false );
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
+         MakeParentModifyState();
          return;
       }
       if( !tSelected && !pSelected )
@@ -6313,6 +6317,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          mTracks->Select( t, true );
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
+         MakeParentModifyState();
          return;
       }
    }
@@ -6331,6 +6336,7 @@ void TrackPanel::OnPrevTrack( bool shift )
             }
             SetFocusedTrack( p );   // Wrap to the first track
             EnsureVisible( p );
+            MakeParentModifyState();
             return;
          }
          else
@@ -6343,6 +6349,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       {
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
+         MakeParentModifyState();
          return;
       }
    }
@@ -6364,6 +6371,7 @@ void TrackPanel::OnNextTrack( bool shift )
       t = iter.First();
       SetFocusedTrack( t );
       EnsureVisible( t );
+      MakeParentModifyState();
       return;
    }
 
@@ -6391,6 +6399,7 @@ void TrackPanel::OnNextTrack( bool shift )
          mTracks->Select( t, false );
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
+         MakeParentModifyState();
          return;
       }
       if( tSelected && !nSelected )
@@ -6398,6 +6407,7 @@ void TrackPanel::OnNextTrack( bool shift )
          mTracks->Select( n, true );
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
+         MakeParentModifyState();
          return;
       }
       if( !tSelected && nSelected )
@@ -6405,6 +6415,7 @@ void TrackPanel::OnNextTrack( bool shift )
          mTracks->Select( n, false );
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
+         MakeParentModifyState();
          return;
       }
       if( !tSelected && !nSelected )
@@ -6412,6 +6423,7 @@ void TrackPanel::OnNextTrack( bool shift )
          mTracks->Select( t, true );
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
+         MakeParentModifyState();
          return;
       }
    }
@@ -6427,6 +6439,7 @@ void TrackPanel::OnNextTrack( bool shift )
             n = iter.First();
             SetFocusedTrack( n );   // Wrap to the first track
             EnsureVisible( n );
+            MakeParentModifyState();
             return;
          }
          else
@@ -6439,6 +6452,7 @@ void TrackPanel::OnNextTrack( bool shift )
       {
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
+         MakeParentModifyState();
          return;
       }
    }
@@ -6454,6 +6468,7 @@ void TrackPanel::OnToggle()
 
    mTracks->Select( t, !t->GetSelected() );
    EnsureVisible( t );
+   MakeParentModifyState();
 
    mAx->Updated();
 

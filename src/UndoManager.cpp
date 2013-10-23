@@ -186,6 +186,10 @@ bool UndoManager::RedoAvailable()
 
 void UndoManager::ModifyState(TrackList * l, double sel0, double sel1)
 {
+   if (current == wxNOT_FOUND) {
+      return;
+   }
+
    SonifyBeginModifyState();
    // Delete current
    stack[current]->tracks->Clear(true);

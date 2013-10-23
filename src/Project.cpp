@@ -4631,6 +4631,7 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
          }
       }
    }
+   ModifyState();
 }
 
 // Type of solo (standard or simple) follows the set preference, unless
@@ -4689,5 +4690,6 @@ void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
          i = iter.Next();
       }
    }
+   ModifyState();
 }
 
