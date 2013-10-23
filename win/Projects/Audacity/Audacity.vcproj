@@ -1912,6 +1912,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\widgets\numformatter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\widgets\numformatter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\widgets\ProgressDialog.cpp"
 				>
 			</File>
@@ -1933,6 +1941,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\widgets\TimeTextCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\widgets\valnum.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\widgets\valnum.h"
 				>
 			</File>
 			<File

@@ -53,6 +53,7 @@ effects from this one class.
 #include "../../LabelTrack.h"
 #include "../../Internat.h"
 #include "../../ShuttleGui.h"
+#include "../../widgets/valnum.h"
 
 #include "Nyquist.h"
 
@@ -1217,8 +1218,16 @@ NyquistDialog::NyquistDialog(wxWindow * parent, wxWindowID id,
          item = new wxTextCtrl(this, ID_NYQ_TEXT+i, wxT(""),
                                wxDefaultPosition, wxSize(60, -1));
          item->SetName(ctrl->name);
-         wxTextValidator vld(wxFILTER_NUMERIC);
-         item->SetValidator(vld);
+         if (ctrl->type == NYQ_CTRL_REAL) {
+            wxFloatingPointValidator<double> vld(2, &ctrl->val);
+            vld.SetRange(ctrl->low, ctrl->high);
+            item->SetValidator(vld);
+         }
+         else {
+            wxIntegerValidator<double> vld(&ctrl->val);
+            vld.SetRange(ctrl->low, ctrl->high);
+            item->SetValidator(vld);
+         }
 
          grid->Add(item, 0, wxALIGN_CENTRE | wxALIGN_CENTER_VERTICAL | wxALL, 5);
          
@@ -1298,33 +1307,8 @@ void NyquistDialog::OnSlider(wxCommandEvent & /* event */)
          newVal /= pow(10.0, precision);
 
          ctrl->val = newVal;
-      }
 
-      wxString valStr;
-      if (ctrl->type == NYQ_CTRL_REAL) {
-         // If this is a user-typed value, allow unlimited precision
-         if (ctrl->val != newVal)
-         {
-            valStr = Internat::ToDisplayString(ctrl->val);
-         }
-         else
-         {
-            if (precision == 0)
-            {
-               valStr.Printf(wxT("%d"), (int)floor(ctrl->val + 0.5));
-            }
-            else
-            {
-               valStr = Internat::ToDisplayString(ctrl->val, precision);
-            }
-         }
-      }
-      else if (ctrl->type == NYQ_CTRL_INT) {
-         valStr.Printf(wxT("%d"), (int)floor(ctrl->val + 0.5));
-      }
-
-      if (valStr != wxT("")) {
-         text->SetValue(valStr);
+         text->GetValidator()->TransferToWindow();
       }
    }
 
@@ -1365,24 +1349,21 @@ void NyquistDialog::OnText(wxCommandEvent &event)
    wxTextCtrl *text = (wxTextCtrl *)FindWindow(ID_NYQ_TEXT + ctrlId);
    wxASSERT(text);
 
-   ctrl->valStr = text->GetValue();
-
    if (ctrl->type != NYQ_CTRL_STRING) {
+      text->GetValidator()->TransferFromWindow();
       wxSlider *slider = (wxSlider *)FindWindow(ID_NYQ_SLIDER + ctrlId);
       wxASSERT(slider);
 
-      if (ctrl->valStr.ToDouble(&ctrl->val)) {
-         int pos = (int)floor((ctrl->val - ctrl->low) /
-                              (ctrl->high - ctrl->low) * ctrl->ticks + 0.5);
-         if (pos < 0) {
-            pos = 0;
-         }
-         else if (pos > ctrl->ticks) {
-            pos = ctrl->ticks;
-         }
-
-         slider->SetValue(pos);
+      int pos = (int)floor((ctrl->val - ctrl->low) /
+                           (ctrl->high - ctrl->low) * ctrl->ticks + 0.5);
+      if (pos < 0) {
+         pos = 0;
       }
+      else if (pos > ctrl->ticks) {
+         pos = ctrl->ticks;
+      }
+
+      slider->SetValue(pos);
    }   
 
    mInHandler = false;   

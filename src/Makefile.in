@@ -257,6 +257,8 @@ OBJS = \
 	widgets/Ruler.o \
 	widgets/TimeTextCtrl.o \
 	widgets/Warning.o \
+	widgets/numformatter.o \
+	widgets/valnum.o \
 	xml/XMLFileReader.o \
 	xml/XMLWriter.o \
 	@OPTOBJS@

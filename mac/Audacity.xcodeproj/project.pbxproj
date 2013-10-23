@@ -1162,6 +1162,8 @@
 		28F1D81D0A2D0019005506A7 /* AttachableScrollBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */; };
 		28F1D81E0A2D0019005506A7 /* ExpandingToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D8190A2D0018005506A7 /* ExpandingToolBar.cpp */; };
 		28F1D81F0A2D0019005506A7 /* ImageRoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */; };
+		28F2CED4181867BB00573D61 /* numformatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F2CED0181867BB00573D61 /* numformatter.cpp */; };
+		28F2CED5181867BB00573D61 /* valnum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F2CED2181867BB00573D61 /* valnum.cpp */; };
 		28F5C1110BE5886A00D17341 /* FileDialogPrivate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F5C10F0BE5886A00D17341 /* FileDialogPrivate.cpp */; };
 		28FC1AFB0A47762C00A188AE /* WrappedType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FC1AF90A47762C00A188AE /* WrappedType.cpp */; };
 		28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */; };
@@ -3876,6 +3878,10 @@
 		28F1D81A0A2D0018005506A7 /* ExpandingToolBar.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExpandingToolBar.h; sourceTree = "<group>"; tabWidth = 3; };
 		28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImageRoll.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28F1D81C0A2D0019005506A7 /* ImageRoll.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ImageRoll.h; sourceTree = "<group>"; tabWidth = 3; };
+		28F2CED0181867BB00573D61 /* numformatter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = numformatter.cpp; sourceTree = "<group>"; };
+		28F2CED1181867BB00573D61 /* numformatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = numformatter.h; sourceTree = "<group>"; };
+		28F2CED2181867BB00573D61 /* valnum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = valnum.cpp; sourceTree = "<group>"; };
+		28F2CED3181867BB00573D61 /* valnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = valnum.h; sourceTree = "<group>"; };
 		28F3A3F60E28289500729866 /* algrd_internal.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = algrd_internal.h; path = portsmf/algrd_internal.h; sourceTree = "<group>"; tabWidth = 3; };
 		28F3A3F70E28289500729866 /* algsmfrd_internal.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = algsmfrd_internal.h; path = portsmf/algsmfrd_internal.h; sourceTree = "<group>"; tabWidth = 3; };
 		28F3A3F80E28289500729866 /* allegro.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = allegro.cpp; path = portsmf/allegro.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5331,12 +5337,16 @@
 				1790B10409883BFD008A330A /* Meter.h */,
 				1790B10509883BFD008A330A /* MultiDialog.cpp */,
 				1790B10609883BFD008A330A /* MultiDialog.h */,
+				28F2CED0181867BB00573D61 /* numformatter.cpp */,
+				28F2CED1181867BB00573D61 /* numformatter.h */,
 				28530C4A0DF2105200555C94 /* ProgressDialog.cpp */,
 				28530C4B0DF2105200555C94 /* ProgressDialog.h */,
 				1790B10709883BFD008A330A /* Ruler.cpp */,
 				1790B10809883BFD008A330A /* Ruler.h */,
 				1790B10909883BFD008A330A /* TimeTextCtrl.cpp */,
 				1790B10A09883BFD008A330A /* TimeTextCtrl.h */,
+				28F2CED2181867BB00573D61 /* valnum.cpp */,
+				28F2CED3181867BB00573D61 /* valnum.h */,
 				1790B10B09883BFD008A330A /* Warning.cpp */,
 				1790B10C09883BFD008A330A /* Warning.h */,
 			);
@@ -8824,6 +8834,8 @@
 				284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */,
 				284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */,
 				28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */,
+				28F2CED4181867BB00573D61 /* numformatter.cpp in Sources */,
+				28F2CED5181867BB00573D61 /* valnum.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
