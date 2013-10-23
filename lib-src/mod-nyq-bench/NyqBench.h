@@ -218,7 +218,7 @@ class NyqBench:public wxFrame
 class ModNyqBenchCommandFunctor:public CommandFunctor
 {
  public:
-   virtual void operator()(int index = 0);
+   virtual void operator()(int index = 0, const wxEvent *e = NULL);
 };
 
 #endif

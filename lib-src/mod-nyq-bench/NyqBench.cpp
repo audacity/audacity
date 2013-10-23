@@ -562,7 +562,7 @@ void NyqRedirector::AppendText()
 // Connects Audacity menu item to an action in this dll.
 // Only one action implemented so far.
 //----------------------------------------------------------------------------
-void ModNyqBenchCommandFunctor::operator()(int index)
+void ModNyqBenchCommandFunctor::operator()(int index, const wxEvent *e)
 {
    if (gBench) {
       gBench->Show();
