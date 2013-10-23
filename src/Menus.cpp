@@ -4824,6 +4824,7 @@ void AudacityProject::HandleMixAndRender(bool toNewTrack)
          PushState(msg, _("Mix and Render"));
       }
 
+      mTrackPanel->SetFocus();
       mTrackPanel->SetFocusedTrack(newLeft);
       mTrackPanel->EnsureVisible(newLeft);
       RedrawProject();
