@@ -314,7 +314,7 @@ void SelectionBar::OnSize(wxSizeEvent &evt)
    evt.Skip();
 }
 
-void SelectionBar::ModifySelection()
+void SelectionBar::ModifySelection(bool done)
 {
    mStart = mLeftTime->GetTimeValue();
    double right = mRightTime->GetTimeValue();
@@ -328,17 +328,17 @@ void SelectionBar::ModifySelection()
    else
       mEnd = mStart + right;
 
-   mListener->AS_ModifySelection(mStart, mEnd);
+   mListener->AS_ModifySelection(mStart, mEnd, done);
 }
 
-void SelectionBar::OnLeftTime(wxCommandEvent & WXUNUSED(event))
+void SelectionBar::OnLeftTime(wxCommandEvent & event)
 {
-   ModifySelection();
+   ModifySelection(event.GetInt() != 0);
 }
 
-void SelectionBar::OnRightTime(wxCommandEvent & WXUNUSED(event))
+void SelectionBar::OnRightTime(wxCommandEvent & event)
 {
-   ModifySelection();
+   ModifySelection(event.GetInt() != 0);
 }
 
 void SelectionBar::OnLengthRadio(wxCommandEvent & WXUNUSED(event))

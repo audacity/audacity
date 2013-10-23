@@ -198,6 +198,7 @@ BEGIN_EVENT_TABLE(TimeTextCtrl, wxControl)
    EVT_MENU_RANGE(ID_MENU, ID_MENU+100, TimeTextCtrl::OnMenu)
    EVT_MOUSE_EVENTS(TimeTextCtrl::OnMouse)
    EVT_KEY_DOWN(TimeTextCtrl::OnKeyDown)
+   EVT_KEY_UP(TimeTextCtrl::OnKeyUp)
    EVT_SET_FOCUS(TimeTextCtrl::OnFocus)
    EVT_KILL_FOCUS(TimeTextCtrl::OnFocus)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, TimeTextCtrl::OnCaptureKey)
@@ -1081,6 +1082,23 @@ void TimeTextCtrl::OnCaptureKey(wxCommandEvent &event)
    return;
 }
 
+void TimeTextCtrl::OnKeyUp(wxKeyEvent &event)
+{
+   int keyCode = event.GetKeyCode();
+
+   event.Skip(true);
+   
+   if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9))
+      keyCode -= WXK_NUMPAD0 - '0';
+
+   if ((keyCode >= '0' && keyCode <= '9') ||
+       (keyCode == WXK_BACK) ||
+       (keyCode == WXK_UP) ||
+       (keyCode == WXK_DOWN)) {
+      Updated(true);
+   }
+}
+
 void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
 {
    if (mDigits.GetCount() == 0)
@@ -1089,7 +1107,8 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
       return;
    }
 
-   event.Skip(false);
+   event.Skip();
+
    int keyCode = event.GetKeyCode();
    int digit = mFocusedDigit;
 
@@ -1161,6 +1180,7 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
       nevent.SetEventObject(parent);
       nevent.SetCurrentFocus(parent);
       GetParent()->ProcessEvent(nevent);
+      event.Skip(false);
    } 
 
    else if (keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER) {
@@ -1170,6 +1190,7 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
          wxCommandEvent cevent(wxEVT_COMMAND_BUTTON_CLICKED,
                                def->GetId());
          GetParent()->ProcessEvent(cevent);
+         event.Skip(false);
       }
    }
 
@@ -1181,8 +1202,6 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
    if (digit != mFocusedDigit) {
       SetFieldFocus(mFocusedDigit);
    }
-
-   event.Skip(false);
 }
 
 void TimeTextCtrl::SetFieldFocus(int digit)
@@ -1214,18 +1233,25 @@ void TimeTextCtrl::SetFieldFocus(int digit)
 #endif
 }
 
-void TimeTextCtrl::Updated()
+void TimeTextCtrl::Updated(bool keyup /* = false */)
 {
    wxCommandEvent event(wxEVT_COMMAND_TEXT_UPDATED, GetId());
+
+   // This will give listeners the ability to do tasks when the
+   // update has been completed, like when the UP ARROW has been
+   // held down and is finally released.
+   event.SetInt(keyup);
    event.SetEventObject(this);
    GetEventHandler()->ProcessEvent(event);
 
 #if wxUSE_ACCESSIBILITY
-   GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
-                                this,
-                                wxOBJID_CLIENT,
-                                mFocusedDigit + 1);
-   SetFieldFocus(mFocusedDigit);
+   if (!keyup) {
+      GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
+                                   this,
+                                   wxOBJID_CLIENT,
+                                   mFocusedDigit + 1);
+      SetFieldFocus(mFocusedDigit);
+   }
 #endif
 }
 

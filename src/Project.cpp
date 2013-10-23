@@ -1199,12 +1199,14 @@ void AudacityProject::AS_SetSnapTo(bool state)
    RedrawProject();
 }
 
-void AudacityProject::AS_ModifySelection(double &start, double &end)
+void AudacityProject::AS_ModifySelection(double &start, double &end, bool done)
 {
    mViewInfo.sel0 = start;
    mViewInfo.sel1 = end;
    mTrackPanel->Refresh(false);
-   ModifyState();
+   if (done) {
+      ModifyState();
+   }
 }
 
 void AudacityProject::FinishAutoScroll()

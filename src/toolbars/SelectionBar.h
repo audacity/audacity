@@ -36,7 +36,7 @@ class AUDACITY_DLL_API SelectionBarListener {
    virtual void AS_SetRate(double rate) = 0;
    virtual bool AS_GetSnapTo() = 0;
    virtual void AS_SetSnapTo(bool state) = 0;
-   virtual void AS_ModifySelection(double &start, double &end) = 0;
+   virtual void AS_ModifySelection(double &start, double &end, bool done) = 0;
 };
 
 class SelectionBar:public ToolBar {
@@ -80,7 +80,7 @@ class SelectionBar:public ToolBar {
 
    void OnSize(wxSizeEvent &evt);
 
-   void ModifySelection();
+   void ModifySelection(bool done = false);
 
    void UpdateRates();
 

@@ -364,7 +364,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual void AS_SetRate(double rate);
    virtual bool AS_GetSnapTo();
    virtual void AS_SetSnapTo(bool state);
-   virtual void AS_ModifySelection(double &start, double &end);
+   virtual void AS_ModifySelection(double &start, double &end, bool done);
 
    void SetStateTo(unsigned int n);
 

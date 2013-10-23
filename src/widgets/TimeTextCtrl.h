@@ -110,6 +110,7 @@ private:
 
    void OnCaptureKey(wxCommandEvent &event);
    void OnKeyDown(wxKeyEvent &event);
+   void OnKeyUp(wxKeyEvent &event);
    void OnMouse(wxMouseEvent &event);
    void OnErase(wxEraseEvent &event);
    void OnPaint(wxPaintEvent &event);
@@ -125,7 +126,7 @@ private:
    // If autoPos was enabled, focus the first non-zero digit
    void UpdateAutoFocus();
 
-   void Updated();
+   void Updated(bool keyup = false);
    void Increase(int steps);
    void Decrease(int steps);
 
