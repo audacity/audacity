@@ -138,6 +138,16 @@ AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *pr
 {
    mProject = project;
    mCommandFunction = commandFunction;
+   mCommandKeyFunction = NULL;
+   mCommandListFunction = NULL;
+}
+
+AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *project,
+                              audCommandKeyFunction commandFunction)
+{
+   mProject = project;
+   mCommandFunction = NULL;
+   mCommandKeyFunction = commandFunction;
    mCommandListFunction = NULL;
 }
 
@@ -146,6 +156,7 @@ AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *pr
 {
    mProject = project;
    mCommandFunction = NULL;
+   mCommandKeyFunction = NULL;
    mCommandListFunction = commandFunction;
 }
 
@@ -155,16 +166,19 @@ AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *pr
 {
    mProject = project;
    mCommandFunction = NULL;
+   mCommandKeyFunction = NULL;
    mCommandListFunction = commandFunction;
    mExplicitIndices = explicitIndices;
 }
 
-void AudacityProjectCommandFunctor::operator()(int index )
+void AudacityProjectCommandFunctor::operator()(int index, const wxEvent * evt)
 {
    if (mCommandListFunction && mExplicitIndices.GetCount() > 0)
       (mProject->*(mCommandListFunction)) (mExplicitIndices[index]);
    else if (mCommandListFunction)
       (mProject->*(mCommandListFunction)) (index);
+   else if (mCommandKeyFunction)
+      (mProject->*(mCommandKeyFunction)) (evt);
    else
       (mProject->*(mCommandFunction)) ();
 }
@@ -1116,21 +1130,21 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("Toggle"), _("Toggle Focused Track"), FN(OnToggle), wxT("Return"));
    c->AddCommand(wxT("ToggleAlt"), _("Toggle Focused Track"), FN(OnToggle), wxT("NUMPAD_ENTER"));
 
-   c->AddCommand(wxT("CursorLeft"), _("Cursor Left"), FN(OnCursorLeft), wxT("Left\tallowdup"));
-   c->AddCommand(wxT("CursorRight"), _("Cursor Right"), FN(OnCursorRight), wxT("Right\tallowdup"));
+   c->AddCommand(wxT("CursorLeft"), _("Cursor Left"), FN(OnCursorLeft), wxT("Left\twantevent\tallowdup"));
+   c->AddCommand(wxT("CursorRight"), _("Cursor Right"), FN(OnCursorRight), wxT("Right\twantevent\tallowdup"));
    c->AddCommand(wxT("CursorShortJumpLeft"), _("Cursor Short Jump Left"), FN(OnCursorShortJumpLeft), wxT(","));
    c->AddCommand(wxT("CursorShortJumpRight"), _("Cursor Short Jump Right"), FN(OnCursorShortJumpRight), wxT("."));
    c->AddCommand(wxT("CursorLongJumpLeft"), _("Cursor Long Jump Left"), FN(OnCursorLongJumpLeft), wxT("Shift+,"));
    c->AddCommand(wxT("CursorLongJumpRight"), _("Cursor Long Jump Right"), FN(OnCursorLongJumpRight), wxT("Shift+."));
 
-   c->AddCommand(wxT("SelExtLeft"), _("Selection Extend Left"), FN(OnSelExtendLeft), wxT("Shift+Left\tallowdup"));
-   c->AddCommand(wxT("SelExtRight"), _("Selection Extend Right"), FN(OnSelExtendRight), wxT("Shift+Right\tallowdup"));
+   c->AddCommand(wxT("SelExtLeft"), _("Selection Extend Left"), FN(OnSelExtendLeft), wxT("Shift+Left\twantevent\tallowdup"));
+   c->AddCommand(wxT("SelExtRight"), _("Selection Extend Right"), FN(OnSelExtendRight), wxT("Shift+Right\twantevent\tallowdup"));
 
    c->AddCommand(wxT("SelSetExtLeft"), _("Set (or Extend) Left Selection"), FN(OnSelSetExtendLeft));
    c->AddCommand(wxT("SelSetExtRight"), _("Set (or Extend) Right Selection"), FN(OnSelSetExtendRight));
 
-   c->AddCommand(wxT("SelCntrLeft"), _("Selection Contract Left"), FN(OnSelContractLeft), wxT("Ctrl+Shift+Right"));
-   c->AddCommand(wxT("SelCntrRight"), _("Selection Contract Right"), FN(OnSelContractRight), wxT("Ctrl+Shift+Left"));
+   c->AddCommand(wxT("SelCntrLeft"), _("Selection Contract Left"), FN(OnSelContractLeft), wxT("Ctrl+Shift+Right\twantevent"));
+   c->AddCommand(wxT("SelCntrRight"), _("Selection Contract Right"), FN(OnSelContractRight), wxT("Ctrl+Shift+Left\twantevent"));
 
    c->AddCommand(wxT("TrackPan"), _("Change pan on focused track"), FN(OnTrackPan), wxT("Shift+P"));
    c->AddCommand(wxT("TrackPanLeft"), _("Pan left on focused track"), FN(OnTrackPanLeft), wxT("Alt+Shift+Left"));
@@ -2166,14 +2180,14 @@ void AudacityProject::OnToggle()
    mTrackPanel->OnToggle( );
 }
 
-void AudacityProject::OnCursorLeft()
+void AudacityProject::OnCursorLeft(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorLeft( false, false );
+   mTrackPanel->OnCursorLeft( false, false, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
-void AudacityProject::OnCursorRight()
+void AudacityProject::OnCursorRight(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorRight( false, false );
+   mTrackPanel->OnCursorRight( false, false, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
 void AudacityProject::OnCursorShortJumpLeft()
@@ -2206,24 +2220,24 @@ void AudacityProject::OnSelSetExtendRight()
    mTrackPanel->OnBoundaryMove( false, false);
 }
 
-void AudacityProject::OnSelExtendLeft()
+void AudacityProject::OnSelExtendLeft(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorLeft( true, false );
+   mTrackPanel->OnCursorLeft( true, false, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
-void AudacityProject::OnSelExtendRight()
+void AudacityProject::OnSelExtendRight(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorRight( true, false );
+   mTrackPanel->OnCursorRight( true, false, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
-void AudacityProject::OnSelContractLeft()
+void AudacityProject::OnSelContractLeft(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorRight( true, true );
+   mTrackPanel->OnCursorRight( true, true, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
-void AudacityProject::OnSelContractRight()
+void AudacityProject::OnSelContractRight(const wxEvent * evt)
 {
-   mTrackPanel->OnCursorLeft( true, true );
+   mTrackPanel->OnCursorLeft( true, true, evt->GetEventType() == wxEVT_KEY_UP );
 }
 
 //this pops up a dialog which allows the left selection to be set.

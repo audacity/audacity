@@ -1707,7 +1707,7 @@ bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
    if (event.GetKeyCode() == WXK_CONTROL)
       mTrackPanel->HandleControlKey(false);
 
-   return false;
+   return mCommandManager.HandleKey(event, GetUpdateFlags(), 0xFFFFFFFF);
 }
 
 void AudacityProject::OnMenuEvent(wxMenuEvent & event)

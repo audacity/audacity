@@ -6479,8 +6479,20 @@ void TrackPanel::ScrollIntoView(int x)
    ScrollIntoView(PositionToTime(x, GetLeftOffset()));
 }
 
-void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
+void TrackPanel::OnCursorLeft( bool shift, bool ctrl, bool keyup )
 {
+   if( keyup )
+   {
+      int token = GetProject()->GetAudioIOToken();
+      if( token > 0 && gAudioIO->IsStreamActive( token ) )
+      {
+         return;
+      }
+
+      MakeParentModifyState();
+      return;
+   }
+
    // If the last adjustment was very recent, we are
    // holding the key down and should move faster.
    wxLongLong curtime = ::wxGetLocalTimeMillis();
@@ -6579,12 +6591,22 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl )
       // Make sure it's visible
       ScrollIntoView( mViewInfo->sel0 );
    }
-
-   MakeParentModifyState();
 }
 
-void TrackPanel::OnCursorRight( bool shift, bool ctrl )
+void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
 {
+   if( keyup )
+   {
+      int token = GetProject()->GetAudioIOToken();
+      if( token > 0 && gAudioIO->IsStreamActive( token ) )
+      {
+         return;
+      }
+
+      MakeParentModifyState();
+      return;
+   }
+
    // If the last adjustment was very recent, we are
    // holding the key down and should move faster.
    wxLongLong curtime = ::wxGetLocalTimeMillis();
@@ -6685,8 +6707,6 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl )
       // Make sure new position is in view
       ScrollIntoView( mViewInfo->sel1 );
    }
-
-   MakeParentModifyState();
 }
 
 // Handles moving a selection edge with the keyboard in snap-to-time mode;

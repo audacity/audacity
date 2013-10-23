@@ -695,6 +695,7 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
    tmpEntry->flags = mDefaultFlags;
    tmpEntry->mask = mDefaultMask;
    tmpEntry->enabled = true;
+   tmpEntry->wantevent = (label.Find(wxT("\twantevent")) != wxNOT_FOUND);
 
    // Key from preferences overridse the default key given
    gPrefs->SetPath(wxT("/NewKeys"));
@@ -1000,7 +1001,7 @@ void CommandManager::TellUserWhyDisallowed( wxUint32 flagsGot, wxUint32 flagsReq
 /// returning true iff successful.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask)
+bool CommandManager::HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt)
 {
    if (!entry || !entry->enabled)
       return false;
@@ -1025,7 +1026,7 @@ bool CommandManager::HandleCommandEntry(CommandListEntry * entry, wxUint32 flags
       }
    }
 
-   (*(entry->callback))(entry->index);
+   (*(entry->callback))(entry->index, evt);
 
    return true;
 }
@@ -1050,7 +1051,17 @@ bool CommandManager::HandleKey(wxKeyEvent &evt, wxUint32 flags, wxUint32 mask)
 {
    wxString keyStr = KeyEventToKeyString(evt);
    CommandListEntry *entry = mCommandKeyHash[keyStr];
-   return HandleCommandEntry( entry, flags, mask );
+   if (evt.GetEventType() == wxEVT_KEY_DOWN)
+   {
+      return HandleCommandEntry( entry, flags, mask, &evt );
+   }
+
+   if (entry && entry->wantevent)
+   {
+      return HandleCommandEntry( entry, flags, mask, &evt );
+   }
+
+   return false;
 }
 
 /// HandleTextualCommand() allows us a limitted version of script/batch

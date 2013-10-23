@@ -569,6 +569,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 };
 
 typedef void (AudacityProject::*audCommandFunction)();
+typedef void (AudacityProject::*audCommandKeyFunction)(const wxEvent *);
 typedef void (AudacityProject::*audCommandListFunction)(int);
 
 // Previously this was in menus.cpp, and the declaration of the
@@ -579,14 +580,17 @@ public:
    AudacityProjectCommandFunctor(AudacityProject *project,
       audCommandFunction commandFunction);
    AudacityProjectCommandFunctor(AudacityProject *project,
+      audCommandKeyFunction commandFunction);
+   AudacityProjectCommandFunctor(AudacityProject *project,
       audCommandListFunction commandFunction);
    AudacityProjectCommandFunctor(AudacityProject *project,
       audCommandListFunction commandFunction,
       wxArrayInt explicitIndices);
-   virtual void operator()(int index = 0);
+   virtual void operator()(int index = 0, const wxEvent *evt = NULL);
 private:
    AudacityProject *mProject;
    audCommandFunction mCommandFunction;
+   audCommandKeyFunction mCommandKeyFunction;
    audCommandListFunction mCommandListFunction;
    wxArrayInt mExplicitIndices;
 };

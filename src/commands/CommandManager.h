@@ -25,7 +25,7 @@ class AUDACITY_DLL_API CommandFunctor
 public:
    CommandFunctor(){};
    virtual ~CommandFunctor(){};
-   virtual void operator()(int index = 0) = 0;
+   virtual void operator()(int index = 0, const wxEvent *e = NULL) = 0;
 };
 
 struct MenuBarListEntry
@@ -55,6 +55,7 @@ struct CommandListEntry
    int index;
    int count;
    bool enabled;
+   bool wantevent;
    wxUint32 flags;
    wxUint32 mask;
 };
@@ -180,7 +181,7 @@ class AUDACITY_DLL_API CommandManager: public XMLTagHandler
    //
    // Executing commands
    //
-   bool HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask);
+   bool HandleCommandEntry(CommandListEntry * entry, wxUint32 flags, wxUint32 mask, const wxEvent * evt = NULL);
    bool HandleMenuID(int id, wxUint32 flags, wxUint32 mask);
    bool HandleKey(wxKeyEvent &evt, wxUint32 flags, wxUint32 mask);
    bool HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint32 mask);

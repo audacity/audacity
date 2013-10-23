@@ -136,12 +136,12 @@ void OnCursorDown();
 void OnShiftDown();
 void OnToggle();
 
-void OnCursorLeft();
-void OnCursorRight();
-void OnSelExtendLeft();
-void OnSelExtendRight();
-void OnSelContractLeft();
-void OnSelContractRight();
+void OnCursorLeft(const wxEvent * evt);
+void OnCursorRight(const wxEvent * evt);
+void OnSelExtendLeft(const wxEvent * evt);
+void OnSelExtendRight(const wxEvent * evt);
+void OnSelContractLeft(const wxEvent * evt);
+void OnSelContractRight(const wxEvent * evt);
 
 void OnCursorShortJumpLeft();
 void OnCursorShortJumpRight();

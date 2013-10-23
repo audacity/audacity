@@ -235,8 +235,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnNextTrack(bool shift = false);
    virtual void OnToggle();
 
-   virtual void OnCursorLeft(bool shift, bool ctrl);
-   virtual void OnCursorRight(bool shift, bool ctrl);
+   virtual void OnCursorLeft(bool shift, bool ctrl, bool keyup = false);
+   virtual void OnCursorRight(bool shift, bool ctrl, bool keyup = false);
    virtual void OnCursorMove(bool forward, bool jump, bool longjump);
    virtual void OnBoundaryMove(bool left, bool boundaryContract);
    virtual void ScrollIntoView(double pos);
