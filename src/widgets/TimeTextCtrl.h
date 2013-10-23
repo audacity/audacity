@@ -47,9 +47,9 @@ WX_DECLARE_OBJARRAY(DigitInfo, DigitInfoArray);
 class TimeConverter
 {
 public:
-   TimeConverter::TimeConverter(const wxString & formatName = wxEmptyString,
-                                double timeValue = 0.0f,
-                                double sampleRate = 1.0f /* to prevent div by 0 */);
+   TimeConverter(const wxString & formatName = wxEmptyString,
+                 double timeValue = 0.0f,
+                 double sampleRate = 1.0f /* to prevent div by 0 */);
 
    virtual void ValueToControls();
    virtual void ValueToControls(double RawTime, bool nearest = true);
