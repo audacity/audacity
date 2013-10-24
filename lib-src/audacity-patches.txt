@@ -33,6 +33,7 @@ Patches: mac-asm-fixes.patch. Fixes build on OS X Intel 10.4 by creating and
             object format for Mach-O. Needs to go upstream
         flac-lite.diff. Remove all the things not included in Audacity SVN from
             the build system so it will build with 50% less stuff
+        libflac++-static.patch.  Adds static build of libFLAC++.
 Upstream version: 1.3.0
 
 libid3tag

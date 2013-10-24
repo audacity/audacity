@@ -131,14 +131,18 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(m4datadir)" \
 	"$(DESTDIR)$(pkgconfigdir)"
-LTLIBRARIES = $(lib_LTLIBRARIES)
+LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
+libFLAC___static_la_DEPENDENCIES =
+am__objects_1 = metadata.lo stream_decoder.lo stream_encoder.lo
+am_libFLAC___static_la_OBJECTS = $(am__objects_1)
+libFLAC___static_la_OBJECTS = $(am_libFLAC___static_la_OBJECTS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
 libFLAC___la_DEPENDENCIES = ../libFLAC/libFLAC.la
 am_libFLAC___la_OBJECTS = metadata.lo stream_decoder.lo \
 	stream_encoder.lo
 libFLAC___la_OBJECTS = $(am_libFLAC___la_OBJECTS)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
 libFLAC___la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(libFLAC___la_LDFLAGS) $(LDFLAGS) -o $@
@@ -168,8 +172,8 @@ am__v_CXXLD_0 = @echo "  CXXLD " $@;
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(libFLAC___la_SOURCES)
-DIST_SOURCES = $(libFLAC___la_SOURCES)
+SOURCES = $(libFLAC___static_la_SOURCES) $(libFLAC___la_SOURCES)
+DIST_SOURCES = $(libFLAC___static_la_SOURCES) $(libFLAC___la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -330,6 +334,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 lib_LTLIBRARIES = libFLAC++.la
+noinst_LTLIBRARIES = libFLAC++-static.la
 m4datadir = $(datadir)/aclocal
 m4data_DATA = libFLAC++.m4
 pkgconfigdir = $(libdir)/pkgconfig
@@ -351,6 +356,8 @@ libFLAC___la_SOURCES = \
 	stream_decoder.cpp \
 	stream_encoder.cpp
 
+libFLAC___static_la_LIBADD = $(LOCAL_EXTRA_LIBADD)
+libFLAC___static_la_SOURCES = $(libFLAC___la_SOURCES)
 all: all-am
 
 .SUFFIXES:
@@ -419,6 +426,17 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+	@list='$(noinst_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libFLAC++-static.la: $(libFLAC___static_la_OBJECTS) $(libFLAC___static_la_DEPENDENCIES) $(EXTRA_libFLAC___static_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK)  $(libFLAC___static_la_OBJECTS) $(libFLAC___static_la_LIBADD) $(LIBS)
 libFLAC++.la: $(libFLAC___la_OBJECTS) $(libFLAC___la_DEPENDENCIES) $(EXTRA_libFLAC___la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(libFLAC___la_LINK) -rpath $(libdir) $(libFLAC___la_OBJECTS) $(libFLAC___la_LIBADD) $(LIBS)
 
@@ -626,7 +644,7 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
-	mostlyclean-am
+	clean-noinstLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -698,20 +716,20 @@ uninstall-am: uninstall-libLTLIBRARIES uninstall-m4dataDATA \
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libLTLIBRARIES clean-libtool ctags distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-m4dataDATA install-man \
-	install-pdf install-pdf-am install-pkgconfigDATA install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-libLTLIBRARIES uninstall-m4dataDATA \
-	uninstall-pkgconfigDATA
+	clean-libLTLIBRARIES clean-libtool clean-noinstLTLIBRARIES \
+	ctags distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-libLTLIBRARIES install-m4dataDATA \
+	install-man install-pdf install-pdf-am install-pkgconfigDATA \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-libLTLIBRARIES \
+	uninstall-m4dataDATA uninstall-pkgconfigDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

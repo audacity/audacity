@@ -30,6 +30,7 @@
 #  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 lib_LTLIBRARIES = libFLAC++.la
+noinst_LTLIBRARIES = libFLAC++-static.la
 
 m4datadir = $(datadir)/aclocal
 m4data_DATA = libFLAC++.m4
@@ -52,3 +53,6 @@ libFLAC___la_SOURCES = \
 	metadata.cpp \
 	stream_decoder.cpp \
 	stream_encoder.cpp
+
+libFLAC___static_la_LIBADD = $(LOCAL_EXTRA_LIBADD)
+libFLAC___static_la_SOURCES = $(libFLAC___la_SOURCES)

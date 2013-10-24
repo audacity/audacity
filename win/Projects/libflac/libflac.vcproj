@@ -347,6 +347,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\lib-src\libflac\src\share\win_utf8_io\win_utf8_io.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\lib-src\libflac\src\libFLAC\window.c"
 				>
 			</File>

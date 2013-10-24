@@ -6933,6 +6933,7 @@ fi
       # this file shouldn't be built at if no libflac is available
       LIBFLAC_LOCAL_OPTOBJS="ondemand/ODDecodeFlacTask.o"
       LIBFLAC_LOCAL_CONFIG_SUBDIRS="lib-src/libflac"
+      LIBFLAC_LOCAL_CONFIGURE_ARGS="--disable-xmms-plugin --disable-doxygen-docs --disable-thorough-tests"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: FLAC libraries are available in this source tree" >&5
 $as_echo "$as_me: FLAC libraries are available in this source tree" >&6;}

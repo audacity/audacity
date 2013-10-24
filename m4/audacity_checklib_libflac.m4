@@ -63,7 +63,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBFLAC], [
       # this file shouldn't be built at if no libflac is available
       LIBFLAC_LOCAL_OPTOBJS="ondemand/ODDecodeFlacTask.o"
       LIBFLAC_LOCAL_CONFIG_SUBDIRS="lib-src/libflac"
-	
+      LIBFLAC_LOCAL_CONFIGURE_ARGS="--disable-xmms-plugin --disable-doxygen-docs --disable-thorough-tests"
+
       AC_MSG_NOTICE([FLAC libraries are available in this source tree])
    else
       AC_MSG_NOTICE([FLAC libraries are NOT available in this source tree])
