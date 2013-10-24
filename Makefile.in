@@ -91,6 +91,11 @@ install-extra-data:
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/mime/packages
 	$(INSTALL) -m 644 src/audacity.xml $(DESTDIR)$(DATADIR)/mime/packages
 
+	# install AppData file for package managers
+	$(INSTALL) -d $(DESTDIR)$(DATADIR)/appdata
+	$(INSTALL) -m 644 help/audacity.appdata.xml $(DESTDIR)$(DATADIR)/appdata/$(AUDACITY_NAME).appdata.xml
+
+
 .PHONY: install-lrdf-data
 install-lrdf-data:
 	# install basic LRDF ontology file
@@ -129,6 +134,7 @@ uninstall: $(EXTRAUNINSTALLTARGETS)
 uninstall-extra-data:
 	rm -f $(DESTDIR)$(DATADIR)/applications/$(AUDACITY_NAME).desktop
 	rm -f $(DESTDIR)$(DATADIR)/mime/packages/audacity.xml
+	rm -f $(DESTDIR)$(DATADIR)/appdata/$(AUDACITY_NAME).appdata.xml
 
 .PHONY: uninstall-lrdf-data
 uninstall-lrdf-data:
