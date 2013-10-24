@@ -196,6 +196,7 @@ distclean:
 	test ! -f soundtouch/Makefile || $(MAKE) -C soundtouch distclean
 	test ! -f twolame/Makefile || $(MAKE) -C twolame distclean
 	rm -f @LOCAL_LIBS@
+	rm -f Makefile
 
 # list here all the targets that aren't actually files to be made
 .PHONY: portsmf-recursive eexpat-recursive FileDialog-recursive \

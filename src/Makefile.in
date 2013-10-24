@@ -341,6 +341,9 @@ clean:
 	rm -rf $(OBJS) $(LIBAUDACITY_OBJS)
 	rm -f libaudacity.a AudacityHeaders.h.gch
 
+distclean: clean
+	rm -f configunix.h Makefile
+
 #
 # Rule for compiling C++ files
 #

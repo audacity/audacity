@@ -166,8 +166,8 @@ distclean: clean
 	$(MAKE) -C locale distclean
 	$(MAKE) -C lib-src distclean
 	test ! -f tests/Makefile || $(MAKE) -C tests distclean
+	$(MAKE) -C src distclean
 
-	rm -f Makefile src/Makefile lib-src/Makefile
-	rm -f locale/Makefile src/configunix.h
+	rm -f Makefile
 	rm -f config.log config.status config.cache
 
