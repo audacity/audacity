@@ -1,0 +1,594 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15"/>
+<title>Ogg Documentation</title>
+
+<style type="text/css">
+body {
+  margin: 0 18px 0 18px;
+  padding-bottom: 30px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  color: #333333;
+  font-size: .8em;
+}
+
+a {
+  color: #3366cc;
+}
+
+img {
+  border: 0;
+}
+
+#xiphlogo {
+  margin: 30px 0 16px 0;
+}
+
+#content p {
+  line-height: 1.4;
+}
+
+h1, h1 a, h2, h2 a, h3, h3 a {
+  font-weight: bold;
+  color: #ff9900;
+  margin: 1.3em 0 8px 0;
+}
+
+h1 {
+  font-size: 1.3em;
+}
+
+h2 {
+  font-size: 1.2em;
+}
+
+h3 {
+  font-size: 1.1em;
+}
+
+li {
+  line-height: 1.4;
+}
+
+#copyright {
+  margin-top: 30px;
+  line-height: 1.5em;
+  text-align: center;
+  font-size: .8em;
+  color: #888888;
+  clear: both;
+}
+
+.caption {
+  color: #000000;
+  background-color: #aabbff;
+  margin: 1em;
+  margin-left: 2em;
+  margin-right: 2em;
+  padding: 1em;
+  padding-bottom: 0em;
+  overflow: hidden;
+}
+
+.caption p {
+  clear: none;
+}
+
+.caption img {
+  display: block;
+  margin: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.5em;
+  background-color: #ffffff;
+  padding: 10px;
+}
+   
+#thepage {
+  margin-left: auto;
+  margin-right: auto;
+  width: 840px;
+}
+
+</style>
+
+</head>
+
+<body>
+<div id="thepage">
+
+<div id="xiphlogo">
+  <a href="http://www.xiph.org/"><img src="fish_xiph_org.png" alt="Fish Logo and Xiph.org"/></a>
+</div>
+
+<h1>Ogg bitstream overview</h1>
+
+<p>This document serves as starting point for understanding the design
+and implementation of the Ogg container format.  If you're new to Ogg
+or merely want a high-level technical overview, start reading here.
+Other documents linked from the <a href="index.html">index page</a>
+give distilled technical descriptions and references of the container
+mechanisms.  This document is intended to aid understanding.
+
+<h2>Container format design points</h2>
+
+<p>Ogg is intended to be a simplest-possible container, concerned only
+with framing, ordering, and interleave. It can be used as a stream delivery
+mechanism, for media file storage, or as a building block toward
+implementing a more complex, non-linear container (for example, see
+the <a href="skeleton.html">Skeleton</a> or <a
+href="http://en.wikipedia.org/wiki/Annodex">Annodex/CMML</a>).
+
+<p>The Ogg container is not intended to be a monolithic
+'kitchen-sink'.  It exists only to frame and deliver in-order stream
+data and as such is vastly simpler than most other containers.
+Elementary and multiplexed streams are both constructed entirely from a
+single building block (an Ogg page) comprised of eight fields
+totalling twenty-eight bytes (the page header) a list of packet lengths
+(up to 255 bytes) and payload data (up to 65025 bytes).  The structure
+of every page is the same.  There are no optional fields or alternate
+encodings.
+
+<p>Stream and media metadata is contained in Ogg and not built into
+the Ogg container itself.  Metadata is thus compartmentalized and
+layered rather than part of a monolithic design, an especially good
+idea as no two groups seem able to agree on what a complete or
+complete-enough metadata set should be. In this way, the container and
+container implementation are isolated from unnecessary metadata design
+flux.
+
+<h3>Streaming</h3> 
+
+<p>The Ogg container is primarily a streaming format,
+encapsulating chronological, time-linear mixed media into a single
+delivery stream or file. The design is such that an application can
+always encode and/or decode all features of a bitstream in one pass
+with no seeking and minimal buffering.  Seeking to provide optimized
+encoding (such as two-pass encoding) or interactive decoding (such as
+scrubbing or instant replay) is not disallowed or discouraged, however
+no container feature requires nonlinear access of the bitstream.
+
+<h3>Variable Bit Rate, Variable Payload Size</h3>
+
+<p>Ogg is designed to contain any size data payload with bounded,
+predictable efficiency.  Ogg packets have no maximum size and a
+zero-byte minimum size.  There is no restriction on size changes from
+packet to packet. Variable size packets do not require the use of any
+optional or additional container features.  There is no optimal
+suggested packet size, though special consideration was paid to make
+sure 50-200 byte packets were no less efficient than larger packet
+sizes.  The original design criteria was a 2% overhead at 50 byte
+packets, dropping to a maximum working overhead of 1% with larger
+packets, and a typical working overhead of .5-.7% for most practical
+uses. 
+
+<h3>Simple pagination</h3>
+
+<p>Ogg is a byte-aligned container with no context-dependent, optional
+or variable-length fields.  Ogg requires no repacking of codec data.
+The page structure is written out in-line as packet data is submitted
+to the streaming abstraction.  In addition, it is possible to
+implement both Ogg mux and demux as MT-hot zero-copy abstractions (as
+is done in the Tremor sourcebase).
+
+<h3>Capture</h3>
+
+<p>Ogg is designed for efficient and immediate stream capture with
+high confidence.  Although packets have no size limit in Ogg, pages
+are a maximum of just under 64kB meaning that any Ogg stream can be
+captured with confidence after seeing 128kB of data or less [worst
+case; typical figure is 6kB] from any random starting point in the
+stream.
+
+<h3>Seeking</h3>
+
+<p>Ogg implements simple coarse- and fine-grained seeking by design.
+
+<p>Coarse seeking may be performed by simply 'moving the tone arm' to a
+new position and 'dropping the needle'.  Rapid capture with
+accompanying timecode from any location in an Ogg file is guaranteed
+by the stream design.  From the acquisition of the first timecode,
+all data needed to play back from that time code forward is ahead of
+the stream cursor.
+
+<p>Ogg implements full sample-granularity seeking using an
+interpolated bisection search built on the capture and timecode
+mechanisms used by coarse seeking.  As above, once a search finds
+the desired timecode, all data needed to play back from that time code
+forward is ahead of the stream cursor.
+
+<p>Both coarse and fine seeking use the page structure and sequencing
+inherent to the Ogg format.  All Ogg streams are fully seekable from
+creation; seekability is unaffected by truncation or missing data, and
+is tolerant of gross corruption.  Seek operations are neither 'fuzzy' nor
+heuristic.
+
+<p>Seeking without use of an index is a major point of the Ogg
+design. There two primary reasons why Ogg transport forgoes an index:
+			  
+<ol>
+
+<li>An index is only marginally useful in Ogg for the complexity
+added; it adds no new functionality and seldom improves performance
+noticeably.  Empirical testing shows that indexless interpolation
+search does not require many more seeks in practice than using an
+index would.
+
+<li>'Optional' indexes encourage lazy implementations that can seek
+only when indexes are present, or that implement indexless seeking
+only by building an internal index after reading the entire file
+beginning to end.  This has been the fate of other containers that
+specify optional indexing.
+
+</ol>
+
+<p>In addition, it must be possible to create an Ogg stream in a
+single pass. Although an optional index can simply be tacked on the
+end of the created stream, some software groups object to
+end-positioned indexes and claim to be unwilling to support indexes
+not located at the stream beginning.
+
+<p><i>All this said, it's become clear that an optional index is a
+demanded feature.  For this reason, the <a
+href="http://wiki.xiph.org/Ogg_Index">OggSkeleton now defines a
+proposed index.</a></i>
+
+<h3>Simple multiplexing</h3>
+
+<p>Ogg multiplexes streams by interleaving pages from multiple elementary streams into a
+multiplexed stream in time order.  The multiplexed pages are not
+altered.  Muxing an Ogg AV stream out of separate audio,
+video and data streams is akin to shuffling several decks of cards
+together into a single deck; the cards themselves remain unchanged.
+Demultiplexing is similarly simple (as the cards are marked).
+
+<p>The goal of this design is to make the mux/demux operation as
+trivial as possible to allow live streaming systems to build and
+rebuild streams on the fly with minimal CPU usage and no additional
+storage or latency requirements.
+
+<h3>Continuous and Discontinuous Media</h3>
+
+<p>Ogg streams belong to one of two categories, "Continuous" streams and
+"Discontinuous" streams.
+
+<p>A stream that provides a gapless, time-continuous media type with a
+fine-grained timebase is considered to be 'Continuous'. A continuous
+stream should never be starved of data. Examples of continuous data
+types include broadcast audio and video.
+
+<p>A stream that delivers data in a potentially irregular pattern or
+with widely spaced timing gaps is considered to be 'Discontinuous'. A
+discontinuous stream may be best thought of as data representing
+scattered events; although they happen in order, they are typically
+unconnected data often located far apart. One example of a
+discontinuous stream types would be captioning such as <a
+href="http://wiki.xiph.org/OggKate">Ogg Kate</a>. Although it's
+possible to design captions as a continuous stream type, it's most
+natural to think of captions as widely spaced pieces of text with
+little happening between.
+
+<p>The fundamental reason for distinction between continuous and
+discontinuous streams concerns buffering.
+
+<h3>Buffering</h3>
+
+<p>A continuous stream is, by definition, gapless. Ogg buffering is based
+on the simple premise of never allowing an active continuous stream
+to starve for data during decode; buffering works ahead until all
+continuous streams in a physical stream have data ready and no further.
+
+<p>Discontinuous stream data is not assumed to be predictable. The
+buffering design takes discontinuous data 'as it comes' rather than
+working ahead to look for future discontinuous data for a potentially
+unbounded period. Thus, the buffering process makes no attempt to fill
+discontinuous stream buffers; their pages simply 'fall out' of the
+stream when continuous streams are handled properly.
+
+<p>Buffering requirements in this design need not be explicitly
+declared or managed in the encoded stream. The decoder simply reads as
+much data as is necessary to keep all continuous stream types gapless
+and no more, with discontinuous data processed as it arrives in the
+continuous data. Buffering is implicitly optimal for the given
+stream. Because all pages of all data types are stamped with absolute
+timing information within the stream, inter-stream synchronization
+timing is always maintained without the need for explicitly declared
+buffer-ahead hinting.
+
+<h3>Codec metadata</h3>
+
+<p>Ogg does not replicate codec-specific metadata into the mux layer
+in an attempt to make the mux and codec layer implementations 'fully
+separable'.  Things like specific timebase, keyframing strategy, frame
+duration, etc, do not appear in the Ogg container.  The mux layer is,
+instead, expected to query a codec through a centralized interface,
+left to the implementation, for this data when it is needed.
+
+<p>Though modern design wisdom usually prefers to predict all possible
+needs of current and future codecs then embed these dependencies and
+the required metadata into the container itself, this strategy
+increases container specification complexity, fragility, and rigidity.
+The mux and codec code becomes more independent, but the
+specifications become logically less independent. A codec can't do
+what a container hasn't already provided for.  Novel codecs are harder
+to support, and you can do fewer useful things with the ones you've
+already got (eg, try to make a good splitter without using any codecs.
+Such a splitter is limited to splitting at keyframes only, or building
+yet another new mechanism into the container layer to mark what frames
+to skip displaying).
+
+<p>Ogg's design goes the opposite direction, where the specification
+is to be as simple, easy to understand, and 'proofed' against novel
+codecs as possible.  When an Ogg mux layer requires codec-specific
+information, it queries the codec (or a codec stub).  This trades a
+more complex implementation for a simpler, more flexible
+specification.
+
+<h3>Stream structure metadata</h3>
+
+<p>The Ogg container itself does not define a metadata system for
+declaring the structure and interrelations between multiple media
+types in a muxed stream.  That is, the Ogg container itself does not
+specify data like 'which steam is the subtitle stream?' or 'which
+video stream is the primary angle?'.  This metadata still exists, but
+is stored by the Ogg container rather than being built into the Ogg
+container itself.  Xiph specifies the 'Skeleton' metadata format for Ogg
+streams, but this decoupling of container and stream structure
+metadata means it is possible to use Ogg with any metadata
+specification without altering the container itself, or without stream
+structure metadata at all.
+
+<h3>Frame accurate absolute position</h3>
+
+<p>Every Ogg page is stamped with a 64 bit 'granule position' that
+serves as an absolute timestamp for mux and seeking.  A few nifty
+little tricks are usually also embedded in the granpos state, but
+we'll leave those aside for the moment (strictly speaking, they're
+part of each codec's mapping, not Ogg).
+
+<p>As previously mentioned above, granule positions are mapped into
+absolute timestamps by the codec, rather than being a hard timestamp.
+This allows maximally efficient use of the available 64 bits to
+address every sample/frame position without approximation while
+supporting new and previously unknown timebase encodings without
+needing to extend or update the mux layer.  When a codec needs a novel
+timebase, it simply brings the code for that mapping along with it.
+This is not a theoretical curiosity; new, wholly novel timebases were
+deployed with the adoption of both Theora and Dirac.  "Rolling INTRA"
+(keyframeless video) also benefits from novel use of the granule
+position.
+
+<h2>Ogg stream arrangement</h2>
+
+<h3>Packets, pages, and bitstreams</h3>
+
+<p>Ogg codecs place raw compressed data into <em>packets</em>.
+Packets are octet payloads containing the data needed for a single
+decompressed unit, eg, one video frame. Packets have no maximum size
+and may be zero length. They do not generally have any framing
+information; strung together, the unframed packets form a <em>logical
+bitstream</em> of codec data with no internal landmarks.
+
+<div class="caption">
+  <img src="packets.png"> 
+
+  <p> Packets of raw codec data are not typically internally framed.
+  When they are strung together into a stream without any container to
+  provide framing, they lose their individual boundaries. Seek and
+  capture are not possible within an unframed stream, and for many
+  codecs with variable length payloads and/or early-packet termination
+  (such as Vorbis), it may become impossible to recover the original
+  frame boundaries even if the stream is scanned linearly from
+  beginning to end.
+
+</div>
+
+<p>Logical bitstream packets are grouped and framed into Ogg pages
+along with a unique stream <em>serial number</em> to produce a
+<em>physical bitstream</em>.  An <em>elementary stream</em> is a
+physical bitstream containing only a single logical bitstream. Each
+page is a self contained entity, although a packet may be split and
+encoded across one or more pages. The page decode mechanism is
+designed to recognize, verify and handle single pages at a time from
+the overall bitstream.
+
+<div class="caption">
+  <img src="pages.png"> 
+
+  <p> The primary purpose of a container is to provide framing for raw
+  packets, marking the packet boundaries so the exact packets can be
+  retrieved for decode later.  The container also provides secondary
+  functions such as capture, timestamping, sequencing, stream
+  identification and so on.  Not all of these functions are represented in the diagram.
+
+  <p>In the Ogg container, pages do not necessarily contain
+  integer numbers of packets. Packets may span across page boundaries
+  or even multiple pages.  This is necessary as pages have a maximum
+  possible size in order to provide capture guarantees, but packet
+  size is unbounded.
+</div>
+
+
+<p><a href="framing.html">Ogg Bitstream Framing</a> specifies
+the page format of an Ogg bitstream, the packet coding process
+and elementary bitstreams in detail.
+
+<h3>Multiplexed bitstreams</h3>
+
+<p>Multiple logical/elementary bitstreams can be combined into a single
+<em>multiplexed bitstream</em> by interleaving whole pages from each
+contributing elementary stream in time order. The result is a single
+physical stream that multiplexes and frames multiple logical streams.
+Each logical stream is identified by the unique stream serial number
+stamped in its pages.  A physical stream may include a 'meta-header'
+(such as the <a href="skeleton.html">Ogg Skeleton</a>) comprising its
+own Ogg page at the beginning of the physical stream. A decoder
+recovers the original logical/elementary bitstreams out of the
+physical bitstream by taking the pages in order from the physical
+bitstream and redirecting them into the appropriate logical decoding
+entity.
+
+<div class="caption">
+  <img src="multiplex1.png"> 
+
+<p>Multiple media types are mutliplexed into a single Ogg stream by
+interleaving the pages from each elementary physical stream.  
+
+</div>
+
+<p><a href="ogg-multiplex.html">Ogg Bitstream Multiplexing</a> specifies
+proper multiplexing of an Ogg bitstream in detail.
+
+<h3>Chaining</h3>
+
+<p>Multiple Ogg physical bitstreams may be concatenated into a single new
+stream; this is <em>chaining</em>. The bitstreams do not overlap; the
+final page of a given logical bitstream is immediately followed by the
+initial page of the next.</p>
+
+<p>Each logical bitstream in a chain must have a unique serial number
+within the scope of the full physical bitstream, not only within a
+particular <em>link</em> or <em>segment</em> of the chain.</p>
+
+<h3>Continuous and discontinuous streams</h3>
+
+<p>Within Ogg, each stream must be declared (by the codec) to be
+continuous- or discontinuous-time.  Most codecs treat all streams they
+use as either inherently continuous- or discontinuous-time, although
+this is not a requirement. A codec may, as part of its mapping, choose
+according to data in the initial header.
+
+<p>Continuous-time pages are stamped by end-time, discontinuous pages
+are stamped by begin-time.  Pages in a multiplexed stream are
+interleaved in order of the time stamp regardless of stream type.
+Both continuous and discontinuous logical streams are used to seek
+within a physical stream, however only continuous streams are used to
+determine buffering depth; because discontinuous streams are stamped
+by start time, they will always 'fall out' at the proper time when
+buffering the continuous streams.  See 'Examples' for an illustration
+of the buffering mechanism.
+
+<h2>Multiplexing Requirements</h2>
+
+<p>Multiplexing requirements within Ogg are straightforward. When
+constructing a single-link (unchained) physical bitstream consisting
+of multiple elementary streams:
+
+<ol>
+
+<li><p> The initial header for each stream appears in sequence, each
+header on a single page.  All initial headers must appear with no
+intervening data (no auxiliary header pages or packets, no data pages
+or packets).  Order of the initial headers is unspecified. The
+'beginning of stream' flag is set on each initial header.
+
+<li><p> All auxiliary headers for all streams must follow.  Order
+is unspecified.  The final auxiliary header of each stream must flush
+its page.
+
+<li><p>Data pages for each stream follow, interleaved in time order. 
+
+<li><p>The final page of each stream sets the 'end of stream' flag.
+Unlike initial pages, terminal pages for the logical bitstreams need
+not occur contiguously; indeed it may not be possible for them to do so.
+</oL>
+
+<p><p>Each grouped bitstream must have a unique serial number within the
+scope of the physical bitstream.</p>
+
+<h3>chaining and multiplexing</h3>
+
+<p>Multiplexed and/or unmultiplexed bitstreams may be chained
+consecutively. Such a physical bitstream obeys all the rules of both
+chained and multiplexed streams.  Each link, when unchained, must
+stand on its own as a valid physical bitstream.  Chained streams do
+not mix or interleave; a new segment may not begin until all streams
+in the preceding segment have terminated. </p>
+
+<h2>Codec Mapping Requirements</h2>
+
+<p>Each codec is allowed some freedom in deciding how its logical
+bitstream is encapsulated into an Ogg bitstream (even if it is a
+trivial mapping, eg, 'plop the packets in and go'). This is the
+codec's <em>mapping</em>. Ogg imposes a few mapping requirements
+on any codec.
+
+<ol>
+
+<li><p>The <a href="framing.html">framing specification</a> defines
+'beginning of stream' and 'end of stream' page markers via a header
+flag (it is possible for a stream to consist of a single page). A
+correct stream always consists of an integer number of pages, an easy
+requirement given the variable size nature of pages.</p>
+
+<li><p>The first page of an elementary Ogg bitstream consists of a single,
+small 'initial header' packet that must include sufficient information
+to identify the exact CODEC type. From this initial header, the codec
+must also be able to determine its timebase and whether or not it is a
+continuous- or discontinuous-time stream.  The initial header must fit
+on a single page. If a codec makes use of auxiliary headers (for
+example, Vorbis uses two auxiliary headers), these headers must follow
+the initial header immediately.  The last header finishes its page;
+data begins on a fresh page.
+
+<p><p>As an example, Ogg Vorbis places the name and revision of the
+Vorbis CODEC, the audio rate and the audio quality into this initial
+header.  Vorbis comments and detailed codec setup appears in the larger
+auxiliary headers.</p>
+
+<li><p>Granule positions must be translatable to an exact absolute
+time value.  As described above, the mux layer is permitted to query a
+codec or codec stub plugin to perform this mapping. It is not
+necessary for an absolute time to be mappable into a single unique
+granule position value.
+
+<li><p>Codecs are not required to use a fixed duration-per-packet (for
+example, Vorbis does not).  the mux layer is permitted to query a
+codec or codec stub plugin for the time duration of a packet.
+
+<li><p>Although an absolute time need not be translatable to a unique
+granule position, a codec must be able to determine the unique granule
+position of the current packet using the granule position of a
+preceeding packet.
+
+<li><p>Packets and pages must be arranged in ascending
+granule-position and time order.
+
+</ol>
+
+<h2>Examples</h2>
+
+<em>[More to come shortly; this section is currently being revised and expanded]</em>
+
+<p>Below, we present an example of a multiplexed and chained bitstream:</p>
+
+<p><img src="stream.png" alt="stream"/></p>
+
+<p>In this example, we see pages from five total logical bitstreams
+multiplexed into a physical bitstream. Note the following
+characteristics:</p>
+
+<ol>
+<li>Multiplexed bitstreams in a given link begin together; all of the
+initial pages must appear before any data pages. When concurrently
+multiplexed groups are chained, the new group does not begin until all
+the bitstreams in the previous group have terminated.</li>
+
+<li>The ordering of pages of concurrently multiplexed bitstreams is
+goverened by timestamp (not shown here); there is no regular
+interleaving order.  Pages within a logical bitstream appear in
+sequence order.</li>
+</ol>
+
+<div id="copyright">
+  The Xiph Fish Logo is a
+  trademark (&trade;) of Xiph.Org.<br/>
+
+  These pages &copy; 1994 - 2010 Xiph.Org. All rights reserved.
+</div>
+
+</div>
+</body>
+</html>

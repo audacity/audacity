@@ -1,0 +1,71 @@
+<html>
+
+<head>
+<title>libogg - function - ogg_stream_check</title>
+<link rel=stylesheet href="style.css" type="text/css">
+</head>
+
+<body bgcolor=white text=black link="#5555ff" alink="#5555ff" vlink="#5555ff">
+<table border=0 width=100%>
+<tr>
+<td><p class=tiny>libogg documentation</p></td>
+<td align=right><p class=tiny>libogg release 1.3.1 - 20130512</p></td>
+</tr>
+</table>
+
+<h1>ogg_stream_check</h1>
+
+<p><i>declared in "ogg/ogg.h";</i></p>
+
+<p>This function is used to check the error or readiness condition of an <a href="ogg_stream_state.html">ogg_stream_state</a> structure.  
+<p>It is safe practice to ignore unrecoverable errors (such as an internal error caused by a malloc() failure) returned by ogg stream synchronization calls. Should an
+internal error occur, the <a href="ogg_stream_state.html">ogg_stream_state</a> structure will be cleared (equivalent to a
+call to
+<a href="ogg_stream_clear.html">ogg_stream_clear</a>) and subsequent calls
+using this <a href="ogg_stream_state.html">ogg_stream_state</a> will be
+noops. Error detection is then handled via a single call to
+ogg_stream_check at the end of the operational block. </p>
+
+<br><br>
+<table border=0 color=black cellspacing=0 cellpadding=7>
+<tr bgcolor=#cccccc>
+	<td>
+<pre><b>
+int ogg_stream_check(<a href="ogg_stream_state.html">ogg_stream_state</a> *os);
+</b></pre>
+	</td>
+</tr>
+</table>
+
+<h3>Parameters</h3>
+<dl>
+<dt><i>os</i></dt>
+<dd>Pointer to a previously declared <a href="ogg_stream_state.html">ogg_stream_state</a> struct.</dd>
+</dl>
+
+
+<h3>Return Values</h3>
+<blockquote>
+<li>
+0 is returned if the <a href="ogg_stream_state.html">ogg_stream_state</a> structure is initialized and ready.</li>
+<li>
+nonzero is returned if the structure was never initialized, or if an unrecoverable internal error occurred in a previous call using the passed in <a href="ogg_stream_state.html">ogg_stream_state</a> struct.</li>
+</blockquote>
+<p>
+
+<br><br>
+<hr noshade>
+<table border=0 width=100%>
+<tr valign=top>
+<td><p class=tiny>copyright &copy; 2000-2013 Xiph.Org</p></td>
+<td align=right><p class=tiny><a href="http://www.xiph.org/ogg/">Ogg Container Format</a></p></td>
+</tr><tr>
+<td><p class=tiny>libogg documentation</p></td>
+<td align=right><p class=tiny>libogg release 1.3.1 - 20130512</p></td>
+</tr>
+</table>
+
+
+</body>
+
+</html>

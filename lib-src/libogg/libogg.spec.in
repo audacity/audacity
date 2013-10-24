@@ -67,8 +67,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/white-ogg.png
 %doc doc/white-xifish.png
 %doc doc/stream.png
-%doc doc/ogg/*.html
-%doc doc/ogg/style.css
+%doc doc/libogg/*.html
+%doc doc/libogg/style.css
 %dir %{_includedir}/ogg
 %{_includedir}/ogg/ogg.h
 %{_includedir}/ogg/os_types.h
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/ogg.m4
 
 %changelog
+* Thu Nov 08 2007 Conrad Parker <conrad@metadecks.org>
+- update doc dir (reported by thosmos on #vorbis)
+
 * Thu Jun 10 2004 Thomas Vander Stichele <thomas at apestaart dot org>
 - autogenerate from configure
 - fix download location

@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>The Ogg Skeleton Metadata Bitstream</title>
+
+<style type="text/css">
+body {
+  margin: 0 18px 0 18px;
+  padding-bottom: 30px;
+  font-family: Verdana, "DejaVu Sans", sans-serif;
+  color: #333333;
+  font-size: .8em;
+}
+
+a {
+  color: #3366cc;
+}
+
+img {
+  border: 0;
+}
+
+#xiphlogo {
+  margin: 30px 0 16px 0;
+}
+
+#content p {
+  line-height: 1.4;
+}
+
+h1, h1 a, h2, h2 a, h3, h3 a {
+  font-weight: bold;
+  color: #ff9900;
+  margin: 1.3em 0 8px 0;
+}
+
+h1 {
+  font-size: 1.3em;
+}
+
+h2 {
+  font-size: 1.2em;
+}
+
+h3 {
+  font-size: 1.1em;
+}
+
+li {
+  line-height: 1.4;
+}
+
+#copyright {
+  margin-top: 30px;
+  line-height: 1.5em;
+  text-align: center;
+  font-size: .8em;
+  color: #888888;
+  clear: both;
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="xiphlogo">
+  <a href="http://xiph.org/"><img src="fish_xiph_org.png" alt="Fish Logo and Xiph.org"></a>
+</div>
+
+<h1>The Ogg Skeleton Metadata Bitstream</h1>
+
+<h2>Overview</h2>
+
+<p><strong>Ogg Skeleton</strong> provides structuring information for multitrack <a href="//xiph.org/ogg">Ogg</a> files. It is compatible with Ogg <a rel="external" href="//theora.org">Theora</a> and provides extra clues for synchronization and content negotiation such as language selection.</p>
+
+<p>Ogg is a generic container format for time-continuous data streams, enabling interleaving of several tracks of frame-wise encoded content in a time-multiplexed manner. As an example, an Ogg physical bitstream could encapsulate several tracks of video encoded in Theora and multiple tracks of audio encoded in Speex or Vorbis or FLAC at the same time. A player that decodes such a bitstream could then, for example, play one video channel as the main video playback, alpha-blend another one on top of it (e.g. a caption track), play a main Vorbis audio together with several FLAC audio tracks simultaneously (e.g. as sound effects), and provide a choice of Speex channels (e.g. providing commentary in different languages). Such a file is generally possible to create with Ogg, it is however not possible to generically parse such a file, seek on it, understand what codecs are contained in such a file, and dynamically handle and play back such content.</p>
+
+<p>Ogg does not know anything about the content it carries and leaves it to the media mapping of each codec to declare and describe itself. There is no meta information available at the Ogg level about the content tracks encapsulated within an Ogg physical bitstream. This is particularly a problem if you don't have all the decoder libraries available and just want to parse an Ogg file to find out what type of data it encapsulates (such as the "file" command under *nix to determine what file it is through magic numbers), or want to seek to a temporal offset without having to decode the data (such as on a Web server that just serves out Ogg files and parts thereof).</p>
+
+<p>Ogg Skeleton is being designed to overcome these problems. Ogg Skeleton is a logical bitstream within an Ogg stream that contains information about the other encapsulated logical bitstreams. For each logical bitstream it provides information such as its media type, and explains the way the granulepos field in Ogg pages is mapped to time.</p>
+
+<p>Ogg Skeleton is also designed to allow the creation of substreams from Ogg physical bitstreams that retain the original timing information. For example, when cutting out the segment between the 7th and the 59th second of an Ogg file, it would be nice to continue to start this cut out file with a playback time of 7 seconds and not of 0. This is of particular interest if you're streaming this file from a Web server after a query for a temporal subpart such as in http://example.com/video.ogv?t=7-59</p>
+
+<h2>Specification</h2>
+
+<h3>How to describe the logical bitstreams within an Ogg container?</h3>
+
+<p>The following information about a logical bitstream is of interest to contain as meta information in the Skeleton:</p>
+<ul>
+<li>the serial number: it identifies a content track</li>
+<li>the mime type: it identifies the content type</li>
+<li>other generic name-value fields that can provide meta information such as the language of a track or the video height and width</li>
+<li>the number of header packets: this informs a parser about the number of actual header packets in an Ogg logical bitstream</li>
+<li>the granule rate: the granule rate represents the data rate in Hz at which content is sampled for the particular logical bitstream, allowing to map a granule position to time by calculating "granulepos / granulerate"</li>
+<li>the preroll: the number of past content packets to take into account when decoding the current Ogg page, which is necessary for seeking (vorbis has generally 2, speex 3)</li>
+<li>the granuleshift: the number of lower bits from the granulepos field that are used to provide position information for sub-seekable units (like the keyframe shift in theora)</li>
+<li>a basetime: it provides a mapping for granule position 0 (for all logical bitstreams) to a playback time; an example use: most content in professional analog video creation actually starts at a time of 1 hour and thus adding this additional field allows them retain this mapping on digitizing their content</li>
+<li>a UTC time: it provides a mapping for granule position 0 (for all logical bitstreams) to a real-world clock time allowing to remember e.g. the recording or broadcast time of some content</li>
+</ul>
+
+<h3>How to allow the creation of substreams from an Ogg physical bitstream?</h3>
+
+<p>When cutting out a subpart of an Ogg physical bitstream, the aim is to keep all the content pages intact (including the framing and granule positions) and just change some information in the Skeleton that allows reconstruction of the accurate time mapping. When remultiplexing such a bitstream, it is necessary to take into account all the different contained logical bitstreams. A given cut-in time maps to several different byte positions in the Ogg physical bitstream because each logical bitstream has its relevant information for that time at a different location. In addition, the resolution of each logical bitstream may not be high enough to accommodate for the given cut-in time and thus there may be some surplus information necessary to be remuxed into the new bitstream.</p>
+
+<p>The following information is necessary to be added to the Skeleton to allow a correct presentation of a subpart of an Ogg bitstream:</p>
+<ul>
+<li>the presentation time: this is the actual cut-in time and all logical bitstreams are meant to start presenting from this time onwards, not from the time their data starts, which may be some time before that (because this time may have mapped right into the middle of a packet, or because the logical bitstream has a preroll or a keyframe shift)</li>
+<li>the basegranule: this represents the granule number with which this logical bitstream starts in the remuxed stream and provides for each logical bitstream the accurate start time of its data stream; this information is necessary to allow correct decoding and timing of the first data packets contained in a logcial bitstream of a remuxed Ogg stream</li>
+</ul>
+
+<h3>Ogg Skeleton version 3.0 Format Specification</h3>
+
+<p>Adding the above information into an Ogg bitstream without breaking existing Ogg functionality and code requires the use of a logical bitstream for Ogg Skeleton. This logical bitstream may be ignored on decoding such that existing players can still continue to play back Ogg files that have a Skeleton bitstream. Skeleton enriches the Ogg bitstream to provide meta information about structure and content of the Ogg bitstream.</p>
+
+<p>The Skeleton logical bitstream starts with an ident header that contains information about all of the logical bitstreams and is mapped into the Skeleton bos page.  The first 8 bytes provide the magic identifier "fishead\0".
+After the fishead follows a set of secondary header packets, each of which contains information about one logical bitstream. These secondary header packets are identified by an 8 byte code of "fisbone\0". The Skeleton logical bitstream has no actual content packets. Its eos page is included into the stream before any data pages of the other logical bitstreams appear and contains a packet of length 0.</p>
+
+<p>The fishead ident header looks as follows:</p>
+<pre>
+
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1| Byte
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Identifier 'fishead\0'                                        | 0-3
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 4-7
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Version major                 | Version minor                 | 8-11
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Presentationtime numerator                                    | 12-15
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 16-19
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Presentationtime denominator                                  | 20-23
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 24-27
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Basetime numerator                                            | 28-31
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 32-35
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Basetime denominator                                          | 36-39
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 40-43
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | UTC                                                           | 44-47
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 48-51
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 52-55
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 56-59
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 60-63
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</pre>
+<p>The version fields provide version information for the Skeleton track, currently being 3.0 (the number having evolved within the Annodex project).</p>
+
+<p>Presentation time and basetime are specified as a rational number, the denominator providing the temporal resolution at which the time is given (e.g. to specify time in milliseconds, provide a denominator of 1000).</p>
+
+<p>The fisbone secondary header packet looks as follows:</p>
+<pre>
+
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1| Byte
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Identifier 'fisbone\0'                                        | 0-3
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 4-7
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Offset to message header fields                               | 8-11
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Serial number                                                 | 12-15
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Number of header packets                                      | 16-19
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Granulerate numerator                                         | 20-23
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 24-27
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Granulerate denominator                                       | 28-31
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 32-35
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Basegranule                                                   | 36-39
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                                                               | 40-43
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Preroll                                                       | 44-47
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Granuleshift  | Padding/future use                            | 48-51
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Message header fields ...                                     | 52-
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</pre>
+<p>The mime type is provided as a message header field specified in the same way that HTTP header fields are given (e.g. "Content-Type: audio/vorbis"). Further meta information (such as language and screen size) are also included as message header fields. The offset to the message header fields at the beginning of a fisbone packet is included for forward compatibility - to allow further fields to be included into the packet without disrupting the message header field parsing.</p>
+
+<p>The granule rate is again given as a rational number in the same way that presentation time and basetime were provided above.</p>
+
+<p>A further restriction on how to encapsulate Skeleton into Ogg is proposed to allow for easier parsing:</p>
+<ul>
+<li>there can only be one Skeleton logical bitstream in a Ogg bitstream</li>
+<li>the Skeleton bos page is the very first bos page in the Ogg stream such that it can be identified straight away and decoders don't get confused about it being e.g. Ogg Vorbis without this meta information</li>
+<li>the bos pages of all the other logical bistreams come next (a requirement of Ogg)</li>
+<li>the secondary header pages of all logical bitstreams come next, including Skeleton's secondary header packets</li>
+<li>the Skeleton eos page end the control section of the Ogg stream before any content pages of any of the other logical bitstreams appear</li>
+</ul>
+
+<div id="copyright">
+  The Xiph Fish Logo is a
+  trademark (&trade;) of the Xiph.Org Foundation.<br>
+
+  These pages &copy; 1994 - 2008 Xiph.Org Foundation. Some rights reserved.
+</div>
+
+</body>
+</html>
