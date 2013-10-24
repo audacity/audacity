@@ -35,7 +35,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBMAD], [
    if test "x$libmad_available_system" = "xyes" ; then
       LIBMAD_SYSTEM_AVAILABLE="yes"
       LIBMAD_SYSTEM_LIBS="$LIBMAD_LIBS"
-	  LIBMAD_SYSTEM_CXXFLAGS="$LIBMAD_CFLAGS"
+      LIBMAD_SYSTEM_CXXFLAGS="$LIBMAD_CFLAGS"
       LIBMAD_SYSTEM_CPPSYMBOLS="USE_LIBMAD"
       AC_MSG_NOTICE([libmad libraries are available as system libraries])
    else

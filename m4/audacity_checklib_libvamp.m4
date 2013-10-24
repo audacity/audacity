@@ -26,7 +26,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVAMP], [
       LIBVAMP_SYSTEM_AVAILABLE="yes"
       LIBVAMP_SYSTEM_LIBS=$VAMP_LIBS
       LIBVAMP_SYSTEM_CXXFLAGS=$VAMP_CFLAGS
-	  dnl still need these local objects for the support in audacity
+      dnl still need these local objects for the support in audacity
       LIBVAMP_SYSTEM_OPTOBJS="effects/vamp/VampEffect.o effects/vamp/LoadVamp.o"
       LIBVAMP_SYSTEM_CPPSYMBOLS="USE_VAMP"
       AC_MSG_NOTICE([Vamp libraries are available as system libraries])
@@ -43,18 +43,18 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVAMP], [
 
    if test "x$vamp_h_found" = "xyes" ; then
       LIBVAMP_LOCAL_AVAILABLE="yes"
-	  dnl Add vamp to the list of things to build in lib-src
+      dnl Add vamp to the list of things to build in lib-src
       LIBVAMP_LOCAL_BUILD="vamp-sdk"
-	  dnl compiler and linker flags
+      dnl compiler and linker flags
       LIBVAMP_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libvamp'
       LIBVAMP_LOCAL_LDFLAGS='-L$(top_builddir)/lib-src/libvamp/src -lvamp-hostsdk'
-	  dnl add some extra object files we can build
+      dnl add some extra object files we can build
       LIBVAMP_LOCAL_OPTOBJS="effects/vamp/VampEffect.o effects/vamp/LoadVamp.o"
-	  dnl define a pre-processor symbol to tell other code that the vamp host
-	  dnl SDK is available
+      dnl define a pre-processor symbol to tell other code that the vamp host
+      dnl SDK is available
       LIBVAMP_LOCAL_CPPSYMBOLS="USE_VAMP"
-	  dnl do not build programs we don't need
-	   LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"
+      dnl do not build programs we don't need
+      LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       AC_MSG_NOTICE([Vamp libraries are available in the local tree])
    else

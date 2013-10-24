@@ -52,4 +52,3 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBEXPAT], [
       AC_MSG_NOTICE([Expat libraries are NOT available in the local tree])
    fi
 ])
-

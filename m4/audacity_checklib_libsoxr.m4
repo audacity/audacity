@@ -22,8 +22,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSOXR], [
    dnl more recent)
 
    PKG_CHECK_MODULES(SOXR, soxr >= 0.0.5,
-		     soxr_available_system="yes",
-		     soxr_available_system="no")
+                     soxr_available_system="yes",
+                     soxr_available_system="no")
 
    if test "x$soxr_available_system" = "xyes" ; then
       LIBSOXR_SYSTEM_AVAILABLE="yes"

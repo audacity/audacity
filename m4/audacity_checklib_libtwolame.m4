@@ -44,9 +44,9 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBTWOLAME], [
       LIBTWOLAME_LOCAL_LIBS="libtwolame.a"
       LIBTWOLAME_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/twolame/libtwolame'
       LIBTWOLAME_LOCAL_CPPSYMBOLS="USE_LIBTWOLAME"
-	
-	  dnl disable programs we don't need to build
-	   LIBTWOLAME_LOCAL_CONFIGURE_ARGS="--disable-programs"
+
+      dnl disable programs we don't need to build
+      LIBTWOLAME_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       AC_MSG_NOTICE([libtwolame library is available in the local tree])
    else

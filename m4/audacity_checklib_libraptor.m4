@@ -10,7 +10,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBRAPTOR], [
                LIBRAPTOR_ARGUMENT=$withval,
                LIBRAPTOR_ARGUMENT="unspecified")
 
-   dnl Check for a system copy of libraptor to use. 
+   dnl Check for a system copy of libraptor to use.
 
    PKG_CHECK_MODULES(LIBRAPTOR, raptor >= 1.4.17,
                      libraptor_available_system="yes",

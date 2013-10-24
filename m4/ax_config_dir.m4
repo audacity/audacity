@@ -6,8 +6,8 @@ dnl We don't worry about whether the configuration worked or not - it is
 dnl assumed that the next thing after this will be a package-specific check to
 dnl see if the package is actually available. (Hint: use pkg-config and
 dnl -uninstalled.pc files if available).
-dnl code based on a simplification of _AC_OUTPUT_SUBDIRS in 
-dnl /usr/share/autoconf/autoconf/status.m4 which implements part of 
+dnl code based on a simplification of _AC_OUTPUT_SUBDIRS in
+dnl /usr/share/autoconf/autoconf/status.m4 which implements part of
 dnl AC_CONFIG_SUBDIRS
 
 AC_DEFUN([AX_CONFIG_DIR], [

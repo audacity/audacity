@@ -16,7 +16,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBLRDF], [
                 [Define if liblrdf (metadata for LADSPA plugins) support should be enabled])
    fi
 
-   dnl Check for a system copy of liblrdf to use. I've only tested with 
+   dnl Check for a system copy of liblrdf to use. I've only tested with
    dnl version 0.4.0, this requirement might be relaxed in the future if
    dnl someone else has it working with an earlier version.
 

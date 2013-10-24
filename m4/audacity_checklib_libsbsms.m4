@@ -45,8 +45,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSBSMS], [
       LIBSBSMS_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/sbsms/include'
       LIBSBSMS_LOCAL_CPPSYMBOLS="USE_SBSMS"
 
-	  dnl do not build programs we don't need
-	   LIBSBSMS_LOCAL_CONFIGURE_ARGS="--disable-programs"
+      dnl do not build programs we don't need
+      LIBSBSMS_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       AC_MSG_NOTICE([libsbsms libraries are available in the local tree])
    else
