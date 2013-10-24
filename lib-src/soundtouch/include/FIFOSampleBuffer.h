@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 ///
-/// A buffer class for temporarily storaging sound samples, operates as a
+/// A buffer class for temporarily storaging sound samples, operates as a 
 /// first-in-first-out pipe.
 ///
-/// Samples are added to the end of the sample buffer with the 'putSamples'
+/// Samples are added to the end of the sample buffer with the 'putSamples' 
 /// function, and are received from the beginning of the buffer by calling
-/// the 'receiveSamples' function. The class automatically removes the
-/// output samples from the buffer as well as grows the storage size
+/// the 'receiveSamples' function. The class automatically removes the 
+/// output samples from the buffer as well as grows the storage size 
 /// whenever necessary.
 ///
 /// Author        : Copyright (c) Olli Parviainen
@@ -15,10 +15,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2008-03-17 22:29:58 $
-// File revision : $Revision: 1.5 $
+// Last changed  : $Date: 2012-06-13 22:29:53 +0300 (Wed, 13 Jun 2012) $
+// File revision : $Revision: 4 $
 //
-// $Id: FIFOSampleBuffer.h,v 1.5 2008-03-17 22:29:58 richardash1981 Exp $
+// $Id: FIFOSampleBuffer.h 143 2012-06-13 19:29:53Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -54,7 +54,7 @@ namespace soundtouch
 /// Sample buffer working in FIFO (first-in-first-out) principle. The class takes
 /// care of storage size adjustment and data moving during input/output operations.
 ///
-/// Notice that in case of stereo audio, one sample is considered to consist of
+/// Notice that in case of stereo audio, one sample is considered to consist of 
 /// both channel data.
 class FIFOSampleBuffer : public FIFOSamplePipe
 {
@@ -75,17 +75,17 @@ private:
     /// Channels, 1=mono, 2=stereo.
     uint channels;
 
-    /// Current position pointer to the buffer. This pointer is increased when samples are
+    /// Current position pointer to the buffer. This pointer is increased when samples are 
     /// removed from the pipe so that it's necessary to actually rewind buffer (move data)
     /// only new data when is put to the pipe.
     uint bufferPos;
 
-    /// Rewind the buffer by moving data from position pointed by 'bufferPos' to real
+    /// Rewind the buffer by moving data from position pointed by 'bufferPos' to real 
     /// beginning of the buffer.
     void rewind();
 
     /// Ensures that the buffer has capacity for at least this many samples.
-    void ensureCapacity(const uint capacityRequirement);
+    void ensureCapacity(uint capacityRequirement);
 
     /// Returns current capacity.
     uint getCapacity() const;
@@ -93,34 +93,34 @@ private:
 public:
 
     /// Constructor
-    FIFOSampleBuffer(uint numChannels = 2     ///< Number of channels, 1=mono, 2=stereo.
+    FIFOSampleBuffer(int numChannels = 2     ///< Number of channels, 1=mono, 2=stereo.
                                               ///< Default is stereo.
                      );
 
     /// destructor
     ~FIFOSampleBuffer();
 
-    /// Returns a pointer to the beginning of the output samples.
-    /// This function is provided for accessing the output samples directly.
+    /// Returns a pointer to the beginning of the output samples. 
+    /// This function is provided for accessing the output samples directly. 
     /// Please be careful for not to corrupt the book-keeping!
     ///
     /// When using this function to output samples, also remember to 'remove' the
-    /// output samples from the buffer by calling the
+    /// output samples from the buffer by calling the 
     /// 'receiveSamples(numSamples)' function
-    virtual SAMPLETYPE *ptrBegin() const;
+    virtual SAMPLETYPE *ptrBegin();
 
-    /// Returns a pointer to the end of the used part of the sample buffer (i.e.
-    /// where the new samples are to be inserted). This function may be used for
+    /// Returns a pointer to the end of the used part of the sample buffer (i.e. 
+    /// where the new samples are to be inserted). This function may be used for 
     /// inserting new samples into the sample buffer directly. Please be careful
     /// not corrupt the book-keeping!
     ///
-    /// When using this function as means for inserting new samples, also remember
-    /// to increase the sample count afterwards, by calling  the
+    /// When using this function as means for inserting new samples, also remember 
+    /// to increase the sample count afterwards, by calling  the 
     /// 'putSamples(numSamples)' function.
     SAMPLETYPE *ptrEnd(
-                uint slackCapacity   ///< How much free capacity (in samples) there _at least_
-                                     ///< should be so that the caller can succesfully insert the
-                                     ///< desired samples to the buffer. If necessary, the function
+                uint slackCapacity   ///< How much free capacity (in samples) there _at least_ 
+                                     ///< should be so that the caller can succesfully insert the 
+                                     ///< desired samples to the buffer. If necessary, the function 
                                      ///< grows the buffer size to comply with this requirement.
                 );
 
@@ -130,17 +130,17 @@ public:
                             uint numSamples                         ///< Number of samples to insert.
                             );
 
-    /// Adjusts the book-keeping to increase number of samples in the buffer without
+    /// Adjusts the book-keeping to increase number of samples in the buffer without 
     /// copying any actual samples.
     ///
     /// This function is used to update the number of samples in the sample buffer
-    /// when accessing the buffer directly with 'ptrEnd' function. Please be
+    /// when accessing the buffer directly with 'ptrEnd' function. Please be 
     /// careful though!
     virtual void putSamples(uint numSamples   ///< Number of samples been inserted.
                             );
 
-    /// Output samples from beginning of the sample buffer. Copies requested samples to
-    /// output buffer and removes them from the sample buffer. If there are less than
+    /// Output samples from beginning of the sample buffer. Copies requested samples to 
+    /// output buffer and removes them from the sample buffer. If there are less than 
     /// 'numsample' samples in the buffer, returns all that available.
     ///
     /// \return Number of samples returned.
@@ -148,8 +148,8 @@ public:
                                 uint maxSamples                 ///< How many samples to receive at max.
                                 );
 
-    /// Adjusts book-keeping so that given number of samples are removed from beginning of the
-    /// sample buffer without copying them anywhere.
+    /// Adjusts book-keeping so that given number of samples are removed from beginning of the 
+    /// sample buffer without copying them anywhere. 
     ///
     /// Used to reduce the number of samples in the buffer when accessing the sample buffer directly
     /// with 'ptrBegin' function.
@@ -160,13 +160,17 @@ public:
     virtual uint numSamples() const;
 
     /// Sets number of channels, 1 = mono, 2 = stereo.
-    void setChannels(const uint numChannels);
+    void setChannels(int numChannels);
 
     /// Returns nonzero if there aren't any samples available for outputting.
     virtual int isEmpty() const;
 
     /// Clears all the samples.
     virtual void clear();
+
+    /// allow trimming (downwards) amount of samples in pipeline.
+    /// Returns adjusted amount of samples
+    uint adjustAmountOfSamples(uint numSamples);
 };
 
 }

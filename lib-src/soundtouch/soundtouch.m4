@@ -1,7 +1,7 @@
 # m4 configure test script for the SoundTouch library
 # (c)2003 David W. Durham
 #
-# $Id: soundtouch.m4,v 1.2 2006-09-18 07:31:36 richardash1981 Exp $
+# $Id: soundtouch.m4 20 2008-02-17 14:20:52Z oparviai $
 #
 # This file can be included with other packages that need to test
 # for libSoundTouch.

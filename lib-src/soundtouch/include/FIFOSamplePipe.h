@@ -5,7 +5,7 @@
 /// into one end of the pipe with the 'putSamples' function, and the processed
 /// samples are received from the other end with the 'receiveSamples' function.
 ///
-/// 'FIFOProcessor' : A base class for classes the do signal processing with
+/// 'FIFOProcessor' : A base class for classes the do signal processing with 
 /// the samples while operating like a first-in-first-out pipe. When samples
 /// are input with the 'putSamples' function, the class processes them
 /// and moves the processed samples to the given 'output' pipe object, which
@@ -17,10 +17,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2006-09-18 22:29:21 $
-// File revision : $Revision: 1.4 $
+// Last changed  : $Date: 2012-06-13 22:29:53 +0300 (Wed, 13 Jun 2012) $
+// File revision : $Revision: 4 $
 //
-// $Id: FIFOSamplePipe.h,v 1.4 2006-09-18 22:29:21 martynshaw Exp $
+// $Id: FIFOSamplePipe.h 143 2012-06-13 19:29:53Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -59,19 +59,23 @@ namespace soundtouch
 class FIFOSamplePipe
 {
 public:
-    /// Returns a pointer to the beginning of the output samples.
-    /// This function is provided for accessing the output samples directly.
+    // virtual default destructor
+    virtual ~FIFOSamplePipe() {}
+
+
+    /// Returns a pointer to the beginning of the output samples. 
+    /// This function is provided for accessing the output samples directly. 
     /// Please be careful for not to corrupt the book-keeping!
     ///
     /// When using this function to output samples, also remember to 'remove' the
-    /// output samples from the buffer by calling the
+    /// output samples from the buffer by calling the 
     /// 'receiveSamples(numSamples)' function
-    virtual SAMPLETYPE *ptrBegin() const = 0;
+    virtual SAMPLETYPE *ptrBegin() = 0;
 
     /// Adds 'numSamples' pcs of samples from the 'samples' memory position to
     /// the sample buffer.
     virtual void putSamples(const SAMPLETYPE *samples,  ///< Pointer to samples.
-                            uint numSamples                         ///< Number of samples to insert.
+                            uint numSamples             ///< Number of samples to insert.
                             ) = 0;
 
 
@@ -85,8 +89,8 @@ public:
         other.receiveSamples(oNumSamples);
     };
 
-    /// Output samples from beginning of the sample buffer. Copies requested samples to
-    /// output buffer and removes them from the sample buffer. If there are less than
+    /// Output samples from beginning of the sample buffer. Copies requested samples to 
+    /// output buffer and removes them from the sample buffer. If there are less than 
     /// 'numsample' samples in the buffer, returns all that available.
     ///
     /// \return Number of samples returned.
@@ -94,8 +98,8 @@ public:
                                 uint maxSamples                 ///< How many samples to receive at max.
                                 ) = 0;
 
-    /// Adjusts book-keeping so that given number of samples are removed from beginning of the
-    /// sample buffer without copying them anywhere.
+    /// Adjusts book-keeping so that given number of samples are removed from beginning of the 
+    /// sample buffer without copying them anywhere. 
     ///
     /// Used to reduce the number of samples in the buffer when accessing the sample buffer directly
     /// with 'ptrBegin' function.
@@ -110,16 +114,21 @@ public:
 
     /// Clears all the samples.
     virtual void clear() = 0;
+
+    /// allow trimming (downwards) amount of samples in pipeline.
+    /// Returns adjusted amount of samples
+    virtual uint adjustAmountOfSamples(uint numSamples) = 0;
+
 };
 
 
 
-/// Base-class for sound processing routines working in FIFO principle. With this base
+/// Base-class for sound processing routines working in FIFO principle. With this base 
 /// class it's easy to implement sound processing stages that can be chained together,
-/// so that samples that are fed into beginning of the pipe automatically go through
+/// so that samples that are fed into beginning of the pipe automatically go through 
 /// all the processing stages.
 ///
-/// When samples are input to this class, they're first processed and then put to
+/// When samples are input to this class, they're first processed and then put to 
 /// the FIFO pipe that's defined as output of this class. This output pipe can be
 /// either other processing stage or a FIFO sample buffer.
 class FIFOProcessor :public FIFOSamplePipe
@@ -137,7 +146,7 @@ protected:
     }
 
 
-    /// Constructor. Doesn't define output pipe; it has to be set be
+    /// Constructor. Doesn't define output pipe; it has to be set be 
     /// 'setOutPipe' function.
     FIFOProcessor()
     {
@@ -159,22 +168,22 @@ protected:
     }
 
 
-    /// Returns a pointer to the beginning of the output samples.
-    /// This function is provided for accessing the output samples directly.
+    /// Returns a pointer to the beginning of the output samples. 
+    /// This function is provided for accessing the output samples directly. 
     /// Please be careful for not to corrupt the book-keeping!
     ///
     /// When using this function to output samples, also remember to 'remove' the
-    /// output samples from the buffer by calling the
+    /// output samples from the buffer by calling the 
     /// 'receiveSamples(numSamples)' function
-    virtual SAMPLETYPE *ptrBegin() const
+    virtual SAMPLETYPE *ptrBegin()
     {
         return output->ptrBegin();
     }
 
 public:
 
-    /// Output samples from beginning of the sample buffer. Copies requested samples to
-    /// output buffer and removes them from the sample buffer. If there are less than
+    /// Output samples from beginning of the sample buffer. Copies requested samples to 
+    /// output buffer and removes them from the sample buffer. If there are less than 
     /// 'numsample' samples in the buffer, returns all that available.
     ///
     /// \return Number of samples returned.
@@ -186,8 +195,8 @@ public:
     }
 
 
-    /// Adjusts book-keeping so that given number of samples are removed from beginning of the
-    /// sample buffer without copying them anywhere.
+    /// Adjusts book-keeping so that given number of samples are removed from beginning of the 
+    /// sample buffer without copying them anywhere. 
     ///
     /// Used to reduce the number of samples in the buffer when accessing the sample buffer directly
     /// with 'ptrBegin' function.
@@ -210,6 +219,14 @@ public:
     {
         return output->isEmpty();
     }
+
+    /// allow trimming (downwards) amount of samples in pipeline.
+    /// Returns adjusted amount of samples
+    virtual uint adjustAmountOfSamples(uint numSamples)
+    {
+        return output->adjustAmountOfSamples(numSamples);
+    }
+
 };
 
 }

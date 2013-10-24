@@ -264,15 +264,8 @@ soundtouch
 ----------
 http://www.surina.net/soundtouch/
 Independant Pitch and Tempo changing library.
-Version in Audacity SVN: 1.3.1
+Version in Audacity SVN: 1.7.1
 Patches:
-PPC mac build changes to configure.in in several places
-correct-const-usage.patch: makes usage of const keyword consistent so it
-compiles with Sun's C++ compiler. Patch sent upstream 17/03/2008
-fix-includes.patch: needed for GCC 4.3.1 to include all the headers we use
-directly. In upstream SVN
-Argument ([-Wall foreign]) added to AM_INIT_AUTOMAKE because autoreconf fails
-otherwise
 Upstream Version: 1.7.1
 
 taglib

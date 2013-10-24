@@ -1,6 +1,6 @@
 ## Process this file with automake to create Makefile.in
 ##
-## $Id: Makefile.am,v 1.3 2006-09-27 06:19:52 llucius Exp $
+## $Id: Makefile.am 11 2008-02-10 16:26:55Z oparviai $
 ##
 ## Copyright (C) 2003 - David W. Durham
 ## 

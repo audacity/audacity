@@ -52,7 +52,7 @@ LIB32=link.exe -lib
 # ADD LIB32 /nologo
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=copy           .\Release\SoundTouch.lib           ..\..\lib\ 
+PostBuild_Cmds=copy            .\Release\SoundTouch.lib            ..\..\lib\ 
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "SoundTouch - Win32 Debug"
@@ -79,7 +79,7 @@ LIB32=link.exe -lib
 # ADD LIB32 /nologo /out:"Debug\SoundTouchD.lib"
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=copy           .\Debug\SoundTouchD.lib           ..\..\lib\ 
+PostBuild_Cmds=copy            .\Debug\SoundTouchD.lib            ..\..\lib\ 
 # End Special Build Tool
 
 !ENDIF 
@@ -91,6 +91,18 @@ PostBuild_Cmds=copy           .\Debug\SoundTouchD.lib           ..\..\lib\
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Group "bpm"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\BPMDetect.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\PeakFinder.cpp
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=.\3dnow_win.cpp

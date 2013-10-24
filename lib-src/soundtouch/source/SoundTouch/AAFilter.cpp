@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 ///
 /// FIR low-pass (anti-alias) filter with filter coefficient design routine and
-/// MMX optimization.
-///
-/// Anti-alias filter is used to prevent folding of high frequencies when
+/// MMX optimization. 
+/// 
+/// Anti-alias filter is used to prevent folding of high frequencies when 
 /// transposing the sample rate with interpolation.
 ///
 /// Author        : Copyright (c) Olli Parviainen
@@ -12,10 +12,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2006-09-18 22:29:22 $
-// File revision : $Revision: 1.4 $
+// Last changed  : $Date: 2009-01-11 13:34:24 +0200 (Sun, 11 Jan 2009) $
+// File revision : $Revision: 4 $
 //
-// $Id: AAFilter.cpp,v 1.4 2006-09-18 22:29:22 martynshaw Exp $
+// $Id: AAFilter.cpp 45 2009-01-11 11:34:24Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -58,11 +58,11 @@ using namespace soundtouch;
  *
  *****************************************************************************/
 
-AAFilter::AAFilter(const uint length)
+AAFilter::AAFilter(uint len)
 {
     pFIR = FIRFilter::newInstance();
     cutoffFreq = 0.5;
-    setLength(length);
+    setLength(len);
 }
 
 
@@ -77,7 +77,7 @@ AAFilter::~AAFilter()
 // Sets new anti-alias filter cut-off edge frequency, scaled to
 // sampling frequency (nyquist frequency = 0.5).
 // The filter will cut frequencies higher than the given frequency.
-void AAFilter::setCutoffFreq(const double newCutoffFreq)
+void AAFilter::setCutoffFreq(double newCutoffFreq)
 {
     cutoffFreq = newCutoffFreq;
     calculateCoeffs();
@@ -86,7 +86,7 @@ void AAFilter::setCutoffFreq(const double newCutoffFreq)
 
 
 // Sets number of FIR filter taps
-void AAFilter::setLength(const uint newLength)
+void AAFilter::setLength(uint newLength)
 {
     length = newLength;
     calculateCoeffs();
@@ -104,7 +104,7 @@ void AAFilter::calculateCoeffs()
     double *work;
     SAMPLETYPE *coeffs;
 
-    assert(length > 0);
+    assert(length >= 2);
     assert(length % 4 == 0);
     assert(cutoffFreq >= 0);
     assert(cutoffFreq <= 0.5);
@@ -112,21 +112,21 @@ void AAFilter::calculateCoeffs()
     work = new double[length];
     coeffs = new SAMPLETYPE[length];
 
-    fc2 = 2.0 * cutoffFreq;
+    fc2 = 2.0 * cutoffFreq; 
     wc = PI * fc2;
     tempCoeff = TWOPI / (double)length;
 
     sum = 0;
-    for (i = 0; i < length; i ++)
+    for (i = 0; i < length; i ++) 
     {
         cntTemp = (double)i - (double)(length / 2);
 
         temp = cntTemp * wc;
-        if (temp != 0)
+        if (temp != 0) 
         {
             h = fc2 * sin(temp) / temp;                     // sinc function
-        }
-        else
+        } 
+        else 
         {
             h = 1.0;
         }
@@ -135,7 +135,7 @@ void AAFilter::calculateCoeffs()
         temp = w * h;
         work[i] = temp;
 
-        // calc net sum of coefficients
+        // calc net sum of coefficients 
         sum += temp;
     }
 
@@ -151,7 +151,7 @@ void AAFilter::calculateCoeffs()
     // divided by 16384
     scaleCoeff = 16384.0f / sum;
 
-    for (i = 0; i < length; i ++)
+    for (i = 0; i < length; i ++) 
     {
         // scale & round to nearest integer
         temp = work[i] * scaleCoeff;
@@ -169,8 +169,8 @@ void AAFilter::calculateCoeffs()
 }
 
 
-// Applies the filter to the given sequence of samples.
-// Note : The amount of outputted samples is by value of 'filter length'
+// Applies the filter to the given sequence of samples. 
+// Note : The amount of outputted samples is by value of 'filter length' 
 // smaller than the amount of input samples.
 uint AAFilter::evaluate(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSamples, uint numChannels) const
 {

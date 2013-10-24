@@ -1,7 +1,0 @@
-This directory with links to the contents of ../include/ is here
-because when installed these files go into $PREFIX/include/soundtouch
-hence the #include statements have to be #include <soundtouch/SoundTouch.h>
-etc. There is then no easy way to get that code to compile against this
-(uninstalled) copy of soundtouch. Hence this dir so we can just put
--I ../lib-src/soundtouch in the CXXFLAGS and find the headers at
-lib-src/soundtouch/soundtouch/Soundtouch.h

@@ -1,6 +1,6 @@
 ## Process this file with automake to create Makefile.in
 ##
-## $Id: Makefile.am,v 1.5 2009-11-07 12:17:03 richardash1981 Exp $
+## $Id: Makefile.am 89 2010-04-03 15:30:08Z oparviai $
 ##
 ## Copyright (C) 2003 - David W. Durham
 ## 
@@ -52,7 +52,7 @@ EXTRA_DIST=                  \
        README.html
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = soundtouch-1.0.pc
+pkgconfig_DATA = soundtouch.pc
 
 ## This removes stuff from the distribution which may be present
 ## from a cvs checkout or other build reasons
@@ -67,4 +67,4 @@ dist-hook:
 
 # flag to aclocal where to find m4 macros for tests
 ACLOCAL_AMFLAGS = -I config/m4
-
+AUTOMAKE_OPTIONS = foreign

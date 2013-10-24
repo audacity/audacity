@@ -1,10 +1,8 @@
 ## vim:tw=78
 ## Process this file with automake to create Makefile.in
 ##
-## $Id: am_include.mk,v 1.3 2006-09-27 06:19:52 llucius Exp $
+## $Id: am_include.mk 130 2011-07-17 11:46:22Z oparviai $
 ##
-## Copyright (C) 2003 - David W. Durham
-## 
 ## This file is part of SoundTouch, an audio processing library for pitch/time adjustments
 ## 
 ## SoundTouch is free software; you can redistribute it and/or modify it under the
@@ -32,20 +30,5 @@
 INCLUDES=-I$(top_srcdir)/include
 
 
-## CXXFLAGS is also automatically added to the $(CXX) macro at compile time, and
-## is passed down to the children as well
-## I list these here in case there needs to always be some flags passed to the compiler
-CXXFLAGS=@CXXFLAGS@
-
-
-## LDFLAGS will be added at link time
-## note that the -l flags are set by the LIBS macro that is set by configure
-## This line doesn't need to be here, configure will add LDFLAGS on it's own,
-## but I'm leaving here as a place to add LDFLAGS if so desired
-LDFLAGS=@LDFLAGS@
-
-
 # doc directory
 pkgdocdir=$(prefix)/doc/@PACKAGE@
-
-

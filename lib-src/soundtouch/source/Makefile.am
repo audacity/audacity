@@ -1,6 +1,6 @@
 ## Process this file with automake to create Makefile.in
 ##
-## $Id: Makefile.am,v 1.3 2006-09-27 06:19:52 llucius Exp $
+## $Id: Makefile.am 38 2008-12-25 17:00:23Z oparviai $
 ##
 ## Copyright (C) 2003 - David W. Durham
 ## 
@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/config/am_include.mk
 
-SUBDIRS=SoundTouch example
+SUBDIRS=SoundTouch SoundStretch
 
 # set to something if you want other stuff to be included in the distribution tarball
 #EXTRA_DIST=

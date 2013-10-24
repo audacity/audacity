@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 ///
-/// Sampled sound tempo changer/time stretch algorithm. Changes the sound tempo
-/// while maintaining the original pitch by using a time domain WSOLA-like method
+/// Sampled sound tempo changer/time stretch algorithm. Changes the sound tempo 
+/// while maintaining the original pitch by using a time domain WSOLA-like method 
 /// with several performance-increasing tweaks.
 ///
-/// Anti-alias filter is used to prevent folding of high frequencies when
+/// Anti-alias filter is used to prevent folding of high frequencies when 
 /// transposing the sample rate with interpolation.
 ///
 /// Author        : Copyright (c) Olli Parviainen
@@ -13,10 +13,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2008-03-17 22:29:58 $
-// File revision : $Revision: 1.5 $
+// Last changed  : $Date: 2008-02-10 18:26:55 +0200 (Sun, 10 Feb 2008) $
+// File revision : $Revision: 4 $
 //
-// $Id: AAFilter.h,v 1.5 2008-03-17 22:29:58 richardash1981 Exp $
+// $Id: AAFilter.h 11 2008-02-10 16:26:55Z oparviai $
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -63,26 +63,26 @@ protected:
     /// Calculate the FIR coefficients realizing the given cutoff-frequency
     void calculateCoeffs();
 public:
-    AAFilter(const uint length);
+    AAFilter(uint length);
 
     ~AAFilter();
 
-    /// Sets new anti-alias filter cut-off edge frequency, scaled to sampling
-    /// frequency (nyquist frequency = 0.5). The filter will cut off the
+    /// Sets new anti-alias filter cut-off edge frequency, scaled to sampling 
+    /// frequency (nyquist frequency = 0.5). The filter will cut off the 
     /// frequencies than that.
-    void setCutoffFreq(const double newCutoffFreq);
+    void setCutoffFreq(double newCutoffFreq);
 
     /// Sets number of FIR filter taps, i.e. ~filter complexity
     void setLength(uint newLength);
 
     uint getLength() const;
 
-    /// Applies the filter to the given sequence of samples.
-    /// Note : The amount of outputted samples is by value of 'filter length'
+    /// Applies the filter to the given sequence of samples. 
+    /// Note : The amount of outputted samples is by value of 'filter length' 
     /// smaller than the amount of input samples.
-    uint evaluate(SAMPLETYPE *dest,
-                  const SAMPLETYPE *src,
-                  uint numSamples,
+    uint evaluate(SAMPLETYPE *dest, 
+                  const SAMPLETYPE *src, 
+                  uint numSamples, 
                   uint numChannels) const;
 };
 
