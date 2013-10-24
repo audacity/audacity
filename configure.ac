@@ -160,7 +160,7 @@ AC_ARG_ENABLE(static,
 
 AC_ARG_ENABLE(unicode,
             [AS_HELP_STRING([--enable-unicode],
-                            [enable unicode support [default=yes]])],   
+                            [enable unicode support [default=yes]])],
             unicode_preference="--unicode=$enableval",
             unicode_preference="--unicode=yes")
 
@@ -232,13 +232,13 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
 
-dnl check if alloca.h exists. If it does, we need to include it for 
+dnl check if alloca.h exists. If it does, we need to include it for
 dnl Solaris builds, by defining HAVE_ALLOCA_H
 AC_CHECK_HEADERS_ONCE(alloca.h)
 
 dnl --------------------------------------------------------------------------
 dnl We would like warnings enabled on the builds, but different compilers need
-dnl different options for these. This bit tries to work out what flags we 
+dnl different options for these. This bit tries to work out what flags we
 dnl should add to the compiler we are using.
 dnl --------------------------------------------------------------------------
 
@@ -332,7 +332,7 @@ dnl Add the library to the list of libraries that need to be compiled
 LIBSRC_BUILD="$LIBSRC_BUILD widgetextra"
 
 dnl-------------------------------------------------------------
-dnl Optional library support. Lots of things we could use, but 
+dnl Optional library support. Lots of things we could use, but
 dnl can do without if they aren't available.
 dnl-------------------------------------------------------------
 LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF PORTAUDIO LAME"
@@ -520,7 +520,7 @@ dnl--------------------------------------------------------------------------
 
 AC_ARG_ENABLE(audiounits,
    [AS_HELP_STRING([--enable-audiounits],
-      [enable audio unit plug-in support (Mac OS X only) 
+      [enable audio unit plug-in support (Mac OS X only)
        [default=auto]])], use_audiounits=$enableval,
    use_audiounits="auto")
 
@@ -563,17 +563,17 @@ case "${host_os}" in
       if [[ "$use_quicktime" = "auto" ]] ; then
          use_quicktime="yes"
       fi
-      ;;      
+      ;;
 
    cygwin*)
       dnl Windows/CygWin configuration
       LIBS="$LIBS -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwsock32 -lwinmm"
       CONFIGHEADER="configwin.h"
-    
+
       AC_DEFINE(__CYGWIN__,1,[We're using cygwin])
       dnl ' (end endless string in vim)
       AC_DEFINE(_FILE_OFFSET_BITS,32,[Placeholder for large file support])
-    
+
       AFTERBUILD=""
       ;;
 
@@ -622,7 +622,7 @@ case "${host_os}" in
       AC_CHECK_LIB(hpi, HPI_SubSysCreate, have_asihpi=yes, have_asihpi=no, -lm)
       if [[ $have_asihpi = "yes" ]] ; then
          LIBS="$LIBS -lhpi"
-      fi    
+      fi
       AC_CHECK_LIB(rt, clock_gettime, [rt_libs=" -lrt"])
       LIBS="${LIBS}${rt_libs}"
       AC_CHECK_FUNCS([clock_gettime nanosleep])
@@ -631,7 +631,7 @@ esac
 
 
 if [[ "$use_portmixer" = "yes" ]] ; then
-   AC_DEFINE(USE_PORTMIXER, 1,   
+   AC_DEFINE(USE_PORTMIXER, 1,
    [Define if PortMixer support should be enabled])
 
    CXXFLAGS="-I\$(top_srcdir)/lib-src/portmixer/include $CXXFLAGS"
@@ -726,13 +726,13 @@ done
 if [[ "$use_ladspa" = "yes" ]] ; then
    echo "ladspa: enabled"
 else
-   echo "ladspa: disabled"        
+   echo "ladspa: disabled"
 fi
 
 if [[ "$use_audiounits" = "yes" ]] ; then
    echo "audiounits: enabled"
 else
-   echo "audiounits: disabled"        
+   echo "audiounits: disabled"
 fi
 
 echo "prefix=$prefix";
