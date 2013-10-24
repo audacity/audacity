@@ -740,6 +740,3 @@ echo "prefix=$prefix";
 echo ""
 echo "Run 'configure --help' for an explanation of these options,"
 echo "otherwise run 'make' to build Audacity."
-
-dnl Indentation settings for Vim and Emacs and unique identifier for Arch, a
-dnl version control system. Please do not modify past this point.
