@@ -6593,6 +6593,7 @@ fi
       LIBVORBIS_LOCAL_CPPSYMBOLS="USE_LIBVORBIS"
 
       LIBVORBIS_LOCAL_CONFIG_SUBDIRS="lib-src/libogg lib-src/libvorbis"
+      LIBVORBIS_LOCAL_CONFIGURE_OPTS="--disable-oggtest"
       export PKG_CONFIG_PATH="${srcdir}/lib-src/libogg:${PKG_CONFIG_PATH}"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: Vorbis libraries are available in this source tree" >&5
