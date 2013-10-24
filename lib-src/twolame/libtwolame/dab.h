@@ -18,7 +18,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  $Id: dab.h,v 1.3 2008-02-01 19:44:32 richardash1981 Exp $
+ *  $Id$
  *
  */
 
@@ -26,13 +26,12 @@
 #ifndef	_DAB_H_
 #define	_DAB_H_
 
-void dab_crc_calc (twolame_options *glopts,
-			 unsigned int bit_alloc[2][SBLIMIT],
-			 unsigned int scfsi[2][SBLIMIT],
-			 unsigned int scalar[2][3][SBLIMIT],
-			 unsigned int *crc, int i);
+void dab_crc_calc(twolame_options * glopts,
+                  unsigned int bit_alloc[2][SBLIMIT],
+                  unsigned int scfsi[2][SBLIMIT],
+                  unsigned int scalar[2][3][SBLIMIT], unsigned int *crc, int i);
 
-void dab_crc_update (unsigned int, unsigned int, unsigned int *);
+void dab_crc_update(unsigned int, unsigned int, unsigned int *);
 
 #endif
 

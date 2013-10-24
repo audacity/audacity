@@ -1,6 +1,24 @@
 What is new in TwoLAME 
 ======================
 
+Version 0.3.13 (2010-01-21)
+---------------------------
+
+- Fixed documentation location (--docdir in configure)
+   * thanks to Chris Mayo for patch
+- Moved source code control to Github
+- Improvements to build system
+- Updated to autoconf 2.60, libtool 2.2, automake 1.10 and Doxygen 1.7.3
+- Fix problem with 'extern inline' by changing them to 'static inline'
+- Wrote perl script to test output of the frontend
+- Changed all debugging messages, writing to stdout to write to stderr
+- Removed calls to exit() from libtwolame.
+- Added --non-copyright option (which is enabled by default)
+- Fix for bad copy/paste of variable assignment.
+- Manpage correction
+- Changed fopen() options to wb to fix Windows
+
+
 Version 0.3.12 (2008-01-09)
 ---------------------------
 

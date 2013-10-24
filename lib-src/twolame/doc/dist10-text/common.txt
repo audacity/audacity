@@ -2,9 +2,9 @@
  * ISO MPEG Audio Subgroup Software Simulation Group (1996)
  * ISO 13818-3 MPEG-2 Audio Encoder - Lower Sampling Frequency Extension
  *
- * $Id: common.txt,v 1.3 2008-02-01 19:44:21 richardash1981 Exp $
+ * $Id$
  *
- * $Log: not supported by cvs2svn $
+ * $Log$
  * Revision 1.1  2005/11/15 16:04:26  nhumfrey
  * Changed suffix for files.
  *

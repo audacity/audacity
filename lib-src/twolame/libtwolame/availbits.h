@@ -18,14 +18,14 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  $Id: availbits.h,v 1.3 2008-02-01 19:44:27 richardash1981 Exp $
+ *  $Id$
  *
  */
 
 #ifndef	_AVAILBITS_H_
 #define	_AVAILBITS_H_
 
-int available_bits ( twolame_options * glopts );
+int available_bits(twolame_options * glopts);
 
 #endif
 

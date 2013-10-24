@@ -13,5 +13,5 @@ TwoLAME - an optimized MPEG Audio Layer 2 encoder
 - link:vbr.html[VBR Features Overview]
 - link:authors.html[The TwoLAME Authors]
 
-twolame homepage: link:http://www.twolame.org[http://www.twolame.org] +
+twolame homepage: link:http://www.twolame.org/[http://www.twolame.org/] +
 twolame mailing list: link:http://lists.sourceforge.net/lists/listinfo/twolame-discuss[twolame-discuss@lists.sourceforge.net]

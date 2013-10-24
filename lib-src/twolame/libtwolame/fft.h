@@ -18,7 +18,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  $Id: fft.h,v 1.3 2008-02-01 19:44:33 richardash1981 Exp $
+ *  $Id$
  *
  */
 
@@ -28,8 +28,8 @@
 
 //void fft (FLOAT[BLKSIZE], FLOAT[BLKSIZE], FLOAT[BLKSIZE], FLOAT[BLKSIZE], int);
 
-void psycho_2_fft (FLOAT * x_real, FLOAT * energy, FLOAT * phi);
-void psycho_1_fft (FLOAT * x_real, FLOAT * energy, int N);
+void psycho_2_fft(FLOAT * x_real, FLOAT * energy, FLOAT * phi);
+void psycho_1_fft(FLOAT * x_real, FLOAT * energy, int N);
 
 
 #endif

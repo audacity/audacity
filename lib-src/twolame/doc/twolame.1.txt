@@ -1,7 +1,7 @@
 
 TWOLAME(1)
 ==========
-Nicholas J Humfrey <njh@ecs.soton.ac.uk>
+Nicholas J Humfrey <njh@aelius.com>
 
 
 NAME
@@ -123,7 +123,7 @@ Output Options
 	Enable VBR mode. See 'vbr' documentation file for details.
 	Default VBR level is 5.0.
 
--v, --vbr-level <float>::
+-V, --vbr-level <float>::
 	Enable VBR mode and set quality level. 
 	The higher the number the better the quality.
 	Maximum range is -50 to 50 but useful range is -10 to 10.

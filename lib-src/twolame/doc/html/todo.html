@@ -2,25 +2,26 @@
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 7.1.2" />
-<link rel="stylesheet" href="./twolame.css" type="text/css" />
-<link rel="stylesheet" href="./twolame-quirks.css" type="text/css" />
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.3" />
 <title>TwoLAME TODO List</title>
+<link rel="stylesheet" href="./twolame.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./asciidoc-xhtml11.js"></script>
 </head>
-<body>
+<body class="article">
 <div id="header">
 <h1>TwoLAME TODO List</h1>
-<span id="revision">version 0.3.11</span>
+<span id="revnumber">version 0.3.13</span>
 </div>
+<div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<ul>
-<li>
-<p>
-Fix bug with Padding and framesizes with samplerate of 44.1 and 22kHz
-</p>
-</li>
+<div class="ulist"><ul>
 <li>
 <p>
 use Exact-width integer types (eg uint16_t)
@@ -28,28 +29,28 @@ use Exact-width integer types (eg uint16_t)
 </li>
 <li>
 <p>
-Add libresample support to libtoolame (toolame_set_in_samplerate etc.)
+Add libresample support to libtwolame (twolame_set_in_samplerate etc.)
 </p>
 </li>
 <li>
 <p>
-parameter checking in toolame.c using assert
+parameter checking in twolame.c using assert
 </p>
 </li>
 <li>
 <p>
-Create a new toolame.spec (be sure to include twolame.pc)
+Create a new twolame.spec (be sure to include twolame.pc)
 </p>
 </li>
 <li>
 <p>
-quite a lot of duplicated code between toolame_encode_buffer_interleaved
-  and toolame_encode_buffer
+quite a lot of duplicated code between twolame_encode_buffer_interleaved
+  and twolame_encode_buffer
 </p>
 </li>
 <li>
 <p>
-sort out changing parameter for toolame_set_VBR_q from FLOAT to int (like LAME)
+sort out changing parameter for twolame_set_VBR_q from FLOAT to int (like LAME)
 </p>
 </li>
 <li>
@@ -59,12 +60,12 @@ better use of verbosity settings
 </li>
 <li>
 <p>
-full options sanity checking/verification in toolame_init_params
+full options sanity checking/verification in twolame_init_params
 </p>
 </li>
 <li>
 <p>
-don't allow twolame_set_* after twolame_init_params() has been called
+don&#8217;t allow twolame_set_* after twolame_init_params() has been called
 </p>
 </li>
 <li>
@@ -74,7 +75,7 @@ Fix broken DAB support
 </li>
 <li>
 <p>
-with this VBR mode, we know the bits aren't going to run out, so we can
+with this VBR mode, we know the bits aren&#8217;t going to run out, so we can
   just assign them "greedily".
 </p>
 </li>
@@ -93,13 +94,15 @@ Add a layer 2 decoder ? mpglib ?
 use 32-bit floats internally where possible
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
 </div>
+</div>
+<div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Version 0.3.11<br />
-Last updated 09-Jan-2008 11:45:17 BST
+Version 0.3.13<br />
+Last updated 2011-01-21 17:09:20 GMT
 </div>
 </div>
 </body>

@@ -2,54 +2,144 @@
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 7.1.2" />
-<link rel="stylesheet" href="./twolame.css" type="text/css" />
-<link rel="stylesheet" href="./twolame-quirks.css" type="text/css" />
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.3" />
 <title>What is new in TwoLAME</title>
+<link rel="stylesheet" href="./twolame.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./asciidoc-xhtml11.js"></script>
 </head>
-<body>
+<body class="article">
 <div id="header">
 <h1>What is new in TwoLAME</h1>
-<span id="revision">version 0.3.11</span>
+<span id="revnumber">version 0.3.13</span>
 </div>
-<h2>Version 0.3.11 (2007-07-02)</h2>
+<div id="content">
+<div class="sect1">
+<h2 id="_version_0_3_13_2010_01_21">Version 0.3.13 (2010-01-21)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
-Fixed energy levels bug for mono audio
+Fixed documentation location (--docdir in configure)
 </p>
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
-thanks to Staale Helleberg for patch
+thanks to Chris Mayo for patch
 </p>
 </li>
-</ul>
+</ul></div>
 </li>
+<li>
+<p>
+Moved source code control to Github
+</p>
+</li>
+<li>
+<p>
+Improvements to build system
+</p>
+</li>
+<li>
+<p>
+Updated to autoconf 2.60, libtool 2.2, automake 1.10 and Doxygen 1.7.3
+</p>
+</li>
+<li>
+<p>
+Fix problem with <em>extern inline</em> by changing them to <em>static inline</em>
+</p>
+</li>
+<li>
+<p>
+Wrote perl script to test output of the frontend
+</p>
+</li>
+<li>
+<p>
+Changed all debugging messages, writing to stdout to write to stderr
+</p>
+</li>
+<li>
+<p>
+Removed calls to exit() from libtwolame.
+</p>
+</li>
+<li>
+<p>
+Added --non-copyright option (which is enabled by default)
+</p>
+</li>
+<li>
+<p>
+Fix for bad copy/paste of variable assignment.
+</p>
+</li>
+<li>
+<p>
+Manpage correction
+</p>
+</li>
+<li>
+<p>
+Changed fopen() options to wb to fix Windows
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_12_2008_01_09">Version 0.3.12 (2008-01-09)</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
 <li>
 <p>
 Fixed <em>inline</em> for the forthcoming gcc-4.3
 </p>
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 thanks to Martin Michlmayr for patch
 </p>
 </li>
-</ul>
+</ul></div>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_11_2007_07_02">Version 0.3.11 (2007-07-02)</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+Fixed energy levels bug for mono audio
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+thanks to Staale Helleberg for patch
+</p>
+</li>
+</ul></div>
 </li>
 <li>
 <p>
 Fixed STDIN support in twolame frontend
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.10 (2007-03-20)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_10_2007_03_20">Version 0.3.10 (2007-03-20)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added win32/winutil.h to tarball - fixes bug #1629945
@@ -57,7 +147,7 @@ Added win32/winutil.h to tarball - fixes bug #1629945
 </li>
 <li>
 <p>
-Fixed presentation of &#8212;enable-debug in configure script
+Fixed presentation of --enable-debug in configure script
 </p>
 </li>
 <li>
@@ -85,46 +175,48 @@ Added source file Ids to the top of every file
 Added -pedantic to CFLAGS for debug build
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.9 (2006-12-31)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_9_2006_12_31">Version 0.3.9 (2006-12-31)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Fix for Windows in simple frontend: open files in binary mode
 </p>
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 thanks to Kurien Mathew
 </p>
 </li>
-</ul>
+</ul></div>
 </li>
 <li>
 <p>
 (libtwolame) Fixed energy level support
 </p>
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 thanks to Staale Helleberg
 </p>
 </li>
-</ul>
+</ul></div>
 </li>
 <li>
 <p>
 Nows displays the version number of libsndfile in frontend
 </p>
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 as suggested by Elio Blanca
 </p>
 </li>
-</ul>
+</ul></div>
 </li>
 <li>
 <p>
@@ -156,7 +248,7 @@ Added TWOLAME_SAMPLES_PER_FRAME macro, clarifying that there are
 <p>
 Frontend now displays extra information
 </p>
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Duration of input file (if known)
@@ -172,18 +264,20 @@ Total number of frames to be encoded and percentage complete
 The filesize of the output file
 </p>
 </li>
-</ul>
+</ul></div>
 </li>
 <li>
 <p>
 Cleaned up source files so that it is consistent and all uses tabs (tab width 4)
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.8 (2006-06-19)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_8_2006_06_19">Version 0.3.8 (2006-06-19)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 (libtwolame) Fixed CRC protection
@@ -209,11 +303,13 @@ frontend now has the exectuable suffix appended to filename
 added -std=c99 to the compiler options
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.7 (2006-05-07)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_7_2006_05_07">Version 0.3.7 (2006-05-07)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 (libtwolame) Added twolame_encode_buffer_float32() function
@@ -229,33 +325,37 @@ added -std=c99 to the compiler options
 Checks type sizes of short and float
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.6 (2006-12-25)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_6_2006_12_25">Version 0.3.6 (2006-12-25)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Removed comma which was causing problems with -pedantic
 </p>
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Thanks to Akos Maroy
 </p>
 </li>
-</ul>
+</ul></div>
 </li>
 <li>
 <p>
 (libtwolame) Added libtool library versioning
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.5 (2005-11-29)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_5_2005_11_29">Version 0.3.5 (2005-11-29)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 (libtwolame) Added back twolame_get_VBR_q/twolame_set_VBR_q
@@ -266,11 +366,13 @@ Thanks to Akos Maroy
 More documentation is installed
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.4 (2005-11-19)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_4_2005_11_19">Version 0.3.4 (2005-11-19)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 (libtwolame) Checks parameters a bit better
@@ -341,11 +443,13 @@ Documentation improvements and corrections
 (libtwolame) made some of VBR debugging send to stderr instead of stdout
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.3 (2005-04-19)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_3_2005_04_19">Version 0.3.3 (2005-04-19)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added Debian package description
@@ -361,11 +465,13 @@ Now installs documentation
 Removed old unused tables.c and tables.h sources
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.2 (2005-04-10)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_2_2005_04_10">Version 0.3.2 (2005-04-10)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Added scaling of input samples
@@ -381,11 +487,13 @@ Added downmixing/upmixing of samples
 Applied patch from Christophe Massiot to make TwoLAME thread-safe
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.1 (2004-09-17)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_1_2004_09_17">Version 0.3.1 (2004-09-17)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Frontend displays information about the input file format
@@ -406,11 +514,13 @@ Added asciidoc documentation
 Added doxygen documentation
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
-<h2>Version 0.3.0 (2004-09-14)</h2>
+</div>
+<div class="sect1">
+<h2 id="_version_0_3_0_2004_09_14">Version 0.3.0 (2004-09-14)</h2>
 <div class="sectionbody">
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Based on tooLAME 0.2m beta 8
@@ -430,13 +540,13 @@ now builds shared library
 <p>
 restructured lots of code
 </p>
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Removed some dead code and unused files
 </p>
 </li>
-</ul>
+</ul></div>
 </li>
 <li>
 <p>
@@ -452,7 +562,7 @@ removed memory leaks / static variables
 <p>
 changed library API so that it is almost the same as LAMEs
 </p>
-<ul>
+<div class="ulist"><ul>
 <li>
 <p>
 hopefully not too many people have been using the old API
@@ -478,7 +588,7 @@ API is ready for resampling support to be added
 ready for downmixing to be added to libtoolame
 </p>
 </li>
-</ul>
+</ul></div>
 </li>
 <li>
 <p>
@@ -505,12 +615,15 @@ Added LGPL header to the top of all the files
 Added toolame_encode_buffer_interleaved
 </p>
 </li>
-</ul>
+</ul></div>
 </div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Version 0.3.11<br />
-Last updated 09-Jan-2008 11:45:16 BST
+Version 0.3.13<br />
+Last updated 2011-01-21 18:15:40 GMT
 </div>
 </div>
 </body>

@@ -1,4 +1,4 @@
-AM_CFLAGS = -I ../build/
+AM_CFLAGS = -I ../build/ $(WARNING_CFLAGS)
 
 lib_LTLIBRARIES = libtwolame.la
 include_HEADERS = twolame.h
@@ -11,6 +11,7 @@ libtwolame_la_SOURCES = \
 	availbits.h \
 	bitbuffer.c \
 	bitbuffer.h \
+	bitbuffer_inline.h \
 	common.h \
 	crc.c \
 	crc.h \

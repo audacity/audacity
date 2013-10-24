@@ -4,7 +4,7 @@
 #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
 #   Free Software Foundation, Inc.
 
-timestamp='2008-01-23'
+timestamp='2008-11-15'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -138,23 +138,6 @@ UNAME_MACHINE=`(uname -m) 2>/dev/null` || UNAME_MACHINE=unknown
 UNAME_RELEASE=`(uname -r) 2>/dev/null` || UNAME_RELEASE=unknown
 UNAME_SYSTEM=`(uname -s) 2>/dev/null`  || UNAME_SYSTEM=unknown
 UNAME_VERSION=`(uname -v) 2>/dev/null` || UNAME_VERSION=unknown
-
-if [ "${UNAME_SYSTEM}" = "Linux" ] ; then
-	eval $set_cc_for_build
-	cat << EOF > $dummy.c
-	#include <features.h>
-	#ifdef __UCLIBC__
-	# ifdef __UCLIBC_CONFIG_VERSION__
-	LIBC=uclibc __UCLIBC_CONFIG_VERSION__
-	# else
-	LIBC=uclibc
-	# endif
-	#else
-	LIBC=gnu
-	#endif
-EOF
-	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep LIBC= | sed -e 's: ::g'`
-fi
 
 # Note: order is significant - the case branches are not exclusive.
 
@@ -348,7 +331,20 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	echo sparc-sun-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
 	exit ;;
     i86pc:SunOS:5.*:* | i86xen:SunOS:5.*:*)
-	echo i386-pc-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
+	eval $set_cc_for_build
+	SUN_ARCH="i386"
+	# If there is a compiler, see if it is configured for 64-bit objects.
+	# Note that the Sun cc does not turn __LP64__ into 1 like gcc does.
+	# This test works for both compilers.
+	if [ "$CC_FOR_BUILD" != 'no_compiler_found' ]; then
+	    if echo '\n#ifdef __amd64\nIS_64BIT_ARCH\n#endif' | \
+		(CCOPTS= $CC_FOR_BUILD -E - 2>/dev/null) | \
+		grep IS_64BIT_ARCH >/dev/null
+	    then
+		SUN_ARCH="x86_64"
+	    fi
+	fi
+	echo ${SUN_ARCH}-pc-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
 	exit ;;
     sun4*:SunOS:6*:*)
 	# According to config.sub, this is the proper way to canonicalize
@@ -813,7 +809,7 @@ EOF
 	    x86)
 		echo i586-pc-interix${UNAME_RELEASE}
 		exit ;;
-	    EM64T | authenticamd)
+	    EM64T | authenticamd | genuineintel)
 		echo x86_64-unknown-interix${UNAME_RELEASE}
 		exit ;;
 	    IA64)
@@ -857,31 +853,31 @@ EOF
 	if echo __ARM_EABI__ | $CC_FOR_BUILD -E - 2>/dev/null \
 	    | grep -q __ARM_EABI__
 	then
-	    echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+	    echo ${UNAME_MACHINE}-unknown-linux-gnu
 	else
-	    echo ${UNAME_MACHINE}-unknown-linux-${LIBC}eabi
+	    echo ${UNAME_MACHINE}-unknown-linux-gnueabi
 	fi
 	exit ;;
     avr32*:Linux:*:*)
-	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
     cris:Linux:*:*)
-	echo cris-axis-linux-${LIBC}
+	echo cris-axis-linux-gnu
 	exit ;;
     crisv32:Linux:*:*)
-	echo crisv32-axis-linux-${LIBC}
+	echo crisv32-axis-linux-gnu
 	exit ;;
     frv:Linux:*:*)
-    	echo frv-unknown-linux-${LIBC}
+    	echo frv-unknown-linux-gnu
 	exit ;;
     ia64:Linux:*:*)
-	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
     m32r*:Linux:*:*)
-	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
     m68*:Linux:*:*)
-	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
     mips:Linux:*:*)
 	eval $set_cc_for_build
@@ -904,7 +900,7 @@ EOF
 		s: ::g
 		p
 	    }'`"
-	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-${LIBC}"; exit; }
+	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 	;;
     mips64:Linux:*:*)
 	eval $set_cc_for_build
@@ -927,16 +923,16 @@ EOF
 		s: ::g
 		p
 	    }'`"
-	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-${LIBC}"; exit; }
+	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 	;;
     or32:Linux:*:*)
-	echo or32-unknown-linux-${LIBC}
+	echo or32-unknown-linux-gnu
 	exit ;;
     ppc:Linux:*:*)
-	echo powerpc-unknown-linux-${LIBC}
+	echo powerpc-unknown-linux-gnu
 	exit ;;
     ppc64:Linux:*:*)
-	echo powerpc64-unknown-linux-${LIBC}
+	echo powerpc64-unknown-linux-gnu
 	exit ;;
     alpha:Linux:*:*)
 	case `sed -n '/^cpu model/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo` in
@@ -949,40 +945,43 @@ EOF
 	  EV68*) UNAME_MACHINE=alphaev68 ;;
         esac
 	objdump --private-headers /bin/sh | grep ld.so.1 >/dev/null
-	if test "$?" = 0 ; then LIBC="gnulibc1" ; fi
-	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+	if test "$?" = 0 ; then LIBC="libc1" ; else LIBC="" ; fi
+	echo ${UNAME_MACHINE}-unknown-linux-gnu${LIBC}
+	exit ;;
+    padre:Linux:*:*)
+	echo sparc-unknown-linux-gnu
 	exit ;;
     parisc:Linux:*:* | hppa:Linux:*:*)
 	# Look for CPU level
 	case `grep '^cpu[^a-z]*:' /proc/cpuinfo 2>/dev/null | cut -d' ' -f2` in
-	  PA7*) echo hppa1.1-unknown-linux-${LIBC} ;;
-	  PA8*) echo hppa2.0-unknown-linux-${LIBC} ;;
-	  *)    echo hppa-unknown-linux-${LIBC} ;;
+	  PA7*) echo hppa1.1-unknown-linux-gnu ;;
+	  PA8*) echo hppa2.0-unknown-linux-gnu ;;
+	  *)    echo hppa-unknown-linux-gnu ;;
 	esac
 	exit ;;
     parisc64:Linux:*:* | hppa64:Linux:*:*)
-	echo hppa64-unknown-linux-${LIBC}
+	echo hppa64-unknown-linux-gnu
 	exit ;;
     s390:Linux:*:* | s390x:Linux:*:*)
 	echo ${UNAME_MACHINE}-ibm-linux
 	exit ;;
     sh64*:Linux:*:*)
-    	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+    	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
     sh*:Linux:*:*)
-	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
     sparc:Linux:*:* | sparc64:Linux:*:*)
-	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
     vax:Linux:*:*)
-	echo ${UNAME_MACHINE}-dec-linux-${LIBC}
+	echo ${UNAME_MACHINE}-dec-linux-gnu
 	exit ;;
     x86_64:Linux:*:*)
-	echo x86_64-unknown-linux-${LIBC}
+	echo x86_64-unknown-linux-gnu
 	exit ;;
     xtensa*:Linux:*:*)
-    	echo ${UNAME_MACHINE}-unknown-linux-${LIBC}
+    	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
     i*86:Linux:*:*)
 	# The BFD linker knows what the default object file format is, so
@@ -997,22 +996,17 @@ EOF
 				    p'`
         case "$ld_supported_targets" in
 	  elf32-i386)
-		TENTATIVE="${UNAME_MACHINE}-pc-linux-${LIBC}"
+		TENTATIVE="${UNAME_MACHINE}-pc-linux-gnu"
 		;;
 	  a.out-i386-linux)
-		echo "${UNAME_MACHINE}-pc-linux-${LIBC}aout"
-		exit ;;
-	  coff-i386)
-		echo "${UNAME_MACHINE}-pc-linux-${LIBC}coff"
+		echo "${UNAME_MACHINE}-pc-linux-gnuaout"
 		exit ;;
 	  "")
 		# Either a pre-BFD a.out linker (linux-gnuoldld) or
 		# one that does not give us useful --help.
-		echo "${UNAME_MACHINE}-pc-linux-${LIBC}oldld"
+		echo "${UNAME_MACHINE}-pc-linux-gnuoldld"
 		exit ;;
 	esac
-	# This should get integrated into the C code below, but now we hack
-	if [ "$LIBC" != "gnu" ] ; then echo "$TENTATIVE" && exit 0 ; fi
 	# Determine whether the default compiler is a.out or elf
 	eval $set_cc_for_build
 	sed 's/^	//' << EOF >$dummy.c
@@ -1234,6 +1228,9 @@ EOF
 	exit ;;
     BePC:BeOS:*:*)	# BeOS running on Intel PC compatible.
 	echo i586-pc-beos
+	exit ;;
+    BePC:Haiku:*:*)	# Haiku running on Intel PC compatible.
+	echo i586-pc-haiku
 	exit ;;
     SX-4:SUPER-UX:*:*)
 	echo sx4-nec-superux${UNAME_RELEASE}

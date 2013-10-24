@@ -1,25 +1,20 @@
-
-dnl Require autoconf version >= 2.57
-AC_PREREQ(2.57)
+dnl Require autoconf version >= 2.60
+AC_PREREQ(2.60)
 
 
 dnl ############# Initialization
 
-AC_INIT([twolame], [0.3.12], [twolame-discuss@lists.sourceforge.net])
+AC_INIT([twolame],[0.3.13],[twolame-discuss@lists.sourceforge.net])
 
 AC_CONFIG_SRCDIR(libtwolame/twolame.h)
-AC_CONFIG_AUX_DIR(build)
-dnl we have some extra m4 macros to point at
-AC_CONFIG_MACRO_DIR([build/m4])
-AC_CANONICAL_SYSTEM
+AC_CONFIG_AUX_DIR(build-scripts)
+AC_CONFIG_MACRO_DIR(build-scripts)
+AM_INIT_AUTOMAKE([1.10])
 
-dnl Version 1.7 of automake is recommended
-AM_INIT_AUTOMAKE(1.7)
-dnl Audacity policy: don't enable automatic rebuild of configure et al if 
-dnl sources change
-AM_MAINTAINER_MODE([enabled])
+LT_PREREQ([2.2])
+LT_INIT
 
-AM_CONFIG_HEADER(build/config.h)
+AM_MAINTAINER_MODE
 
 
 
@@ -48,33 +43,22 @@ AC_SUBST(TWOLAME_SO_VERSION)
 dnl ############# Compiler and tools Checks
 
 AC_PROG_CC
+AC_PROG_CC_C99
 AC_PROG_INSTALL
 AC_PROG_LN_S
-
 AC_PROG_LIBTOOL
+
 AC_C_BIGENDIAN
 AC_C_INLINE
+AC_C_CONST
 
-
-dnl ############# Configure Arguments
-
-AC_ARG_ENABLE(debug,
-	  [  --enable-debug=[no/yes]   turn on debugging],
-	  [ Debugging="Enabled" 
-		AC_DEFINE(DEBUG, 1, [ Define if debugging is enabled. ]) ],
-	  [ Debugging="Disabled" ]
-)
-
-AC_ARG_ENABLE(programs, 
-      [AS_HELP_STRING([--enable-programs],
-		[compile front-end programs as well as libtwolame [default=yes]])],
-	  FRONTEND_ARG=$enableval,
-	  FRONTEND_ARG="yes")
-
-BUILD_FRONTEND="no"
-if test "x$FRONTEND_ARG" = "xyes" ; then
-	BUILD_FRONTEND="yes"
+if test "$USE_MAINTAINER_MODE" = yes; then
+  AC_PATH_PROG([PATH_ASCIIDOC], [asciidoc])
+  AC_PATH_PROG([PATH_DOXYGEN], [doxygen])
+  AC_PATH_PROG([PATH_XMLTO], [xmlto])
 fi
+
+
 
 dnl ############## Check that types are the right size
 
@@ -97,23 +81,21 @@ AC_CHECK_LIB([m], [sqrt])
 AC_CHECK_LIB([m], [lrintf])
 AC_CHECK_LIB([mx], [powf])
 
-dnl we only need to do this test if we are building front-ends
-if test "x$BUILD_FRONTEND" = "xyes"; then
-	PKG_CHECK_MODULES(SNDFILE, sndfile >= 1.0.0,
-		[ HAVE_SNDFILE="yes" ],
-		[ AC_CHECK_LIB( [sndfile], [sf_command],
-			[ AC_CHECK_HEADER( [sndfile.h],
-				[ HAVE_SNDFILE="yes"
-				  SNDFILE_CFLAGS="" 
-				  SNDFILE_LIBS="-lsndfile" ],
-				[ AC_MSG_WARN([Can't find sndfile.h on your system]) ] ) ],
-			[ AC_MSG_WARN([Can't find libsndfile library on your system]) ]
-		) ]
-	)
+PKG_CHECK_MODULES(SNDFILE, sndfile >= 1.0.0,
+	[ HAVE_SNDFILE="yes" ],
+	[ AC_CHECK_LIB( [sndfile], [sf_command],
+		[ AC_CHECK_HEADER( [sndfile.h],
+			[ HAVE_SNDFILE="yes"
+			  SNDFILE_CFLAGS="" 
+			  SNDFILE_LIBS="-lsndfile" ],
+			[ AC_MSG_WARN([Can't find sndfile.h on your system]) ] ) ],
+		[ AC_MSG_WARN([Can't find libsndfile library on your system]) ]
+	) ]
+)
 			
-	AC_SUBST(SNDFILE_CFLAGS)
-	AC_SUBST(SNDFILE_LIBS)
-fi
+AC_SUBST(SNDFILE_CFLAGS)
+AC_SUBST(SNDFILE_LIBS)
+
 
 
 dnl ############## Header Checks
@@ -128,52 +110,47 @@ AC_CHECK_HEADER(getopt.h,
 
 
 
+dnl ############## Only compile frontend if sndfile is available
+
+TWOLAME_BIN=""
+if test "x$HAVE_SNDFILE" = "xyes"; then
+	if test "$HAVE_GETOPT_H" = "yes"; then
+		TWOLAME_BIN="twolame${EXEEXT}"
+	else
+		AC_MSG_WARN([Not building twolame frontend because getopt.h is missing.])
+	fi
+else 
+	AC_MSG_WARN([Not building twolame frontend because libsndfile is missing.])
+fi
+AC_SUBST(TWOLAME_BIN)
+
+
+
 dnl ############## Compiler and Linker Flags
 
-CFLAGS="$CFLAGS -std=c99 -Wunused -Wall"
-LDFLAGS="$LDFLAGS"
-
-# If debugging is enabled then make warnings errors
-if test "$Debugging" = "Enabled"; then
-	CFLAGS="$CFLAGS -g -Werror -pedantic"
-else
-	# Optimize flag. 3 is about as high as you can sanely go with GCC3.2.
-	CFLAGS="$CFLAGS -O3"
+# If maintainer mode is enabled then make warnings errors
+if test "$USE_MAINTAINER_MODE" = yes; then
+	WARNING_CFLAGS="-Wall -Werror -pedantic -Wunused"
+  WARNING_CFLAGS="$WARNING_CFLAGS -Wmissing-prototypes -Wmissing-declarations"
+	AC_SUBST(WARNING_CFLAGS)
 fi
 
 
 
-dnl ############## Only compile full frontend if sndfile is available, 
-dnl only compile anything if it wasn't asked to turn it off
+dnl ############## Output files
 
-if test "x$BUILD_FRONTEND" = "xyes" ; then
-	STWOLAME_BIN="stwolame${EXEEXT}"	;dnl build simple frontend - no deps
-	TWOLAME_BIN=""	;dnl don't build full unless we have it's deps
-	if test "x$HAVE_SNDFILE" = "xyes"; then
-		if test "$HAVE_GETOPT_H" = "yes"; then
-			TWOLAME_BIN="twolame${EXEEXT}"
-		else
-			AC_MSG_WARN([Not building twolame frontend because getopt.h is missing.])
-		fi
-	else 
-		AC_MSG_WARN([Not building twolame frontend because libsndfile is missing.])
-	fi
-else
-	TWOLAME_BIN=""	;dnl don't build
-	STWOLAME_BIN="" ;dnl either binary to simplify build
-fi
+AC_CONFIG_HEADERS([libtwolame/config.h])
 
-AC_SUBST(TWOLAME_BIN)
-AC_SUBST(STWOLAME_BIN)
-
-
-dnl ############## Final Output
-
-AC_OUTPUT(
+AC_CONFIG_FILES([
 	Makefile \
 	twolame.pc \
 	doc/Makefile \
+	doc/html/Makefile \
+	doc/html/Doxyfile \
 	libtwolame/Makefile \
 	frontend/Makefile \
 	simplefrontend/Makefile \
-)
+	tests/Makefile \
+])
+
+AC_OUTPUT

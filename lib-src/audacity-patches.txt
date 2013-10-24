@@ -294,7 +294,7 @@ twolame
 -------
 http://www.twolame.org/
 MPEG I layer 2 audio encoding library used for MP2 exports
-Version in Audacity SVN: 0.3.12
+Version in Audacity SVN: 0.3.13
 Patches: None
 AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
 by default

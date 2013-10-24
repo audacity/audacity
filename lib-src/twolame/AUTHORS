@@ -2,12 +2,12 @@ TwoLAME Authors
 ===============
 
 
-.Nicholas Humfrey - <njh at ecs.soton.ac.uk>
+.Nicholas J Humfrey - <njh at aelius.com>
  -  Current Maintainer
  -	New automake build system
  -	Added libsndfile support
  -  Reference documentation for API
- -	Lots of cleaning and improving !
+ -	Lots of cleaning and improving!
  -  New frontend
 
 
@@ -15,7 +15,7 @@ TwoLAME Authors
  -  Changes to make libtwolame thread-safe
 
 
-.'Mean' - <mean@users.sourceforge.net>
+.'Mean' - <mean at users.sourceforge.net>
  -  Fix for AMD64 processors
  -  Fix for CRC protection
 

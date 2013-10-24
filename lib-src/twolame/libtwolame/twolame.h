@@ -18,7 +18,7 @@
  *	License along with this library; if not, write to the Free Software
  *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  $Id: twolame.h,v 1.3 2008-02-01 19:44:35 richardash1981 Exp $
+ *  $Id$
  *
  */
 
@@ -64,40 +64,47 @@ extern "C" {
 
 
 /** MPEG modes */
-typedef enum {
-	TWOLAME_AUTO_MODE = -1, /**< Choose Mode Automatically */
-	TWOLAME_STEREO = 0,		/**< Stereo */
-	TWOLAME_JOINT_STEREO,	/**< Joint Stereo */
-	TWOLAME_DUAL_CHANNEL,	/**< Dual Channel */
-	TWOLAME_MONO,			/**< Mono */
-	TWOLAME_NOT_SET
-} TWOLAME_MPEG_mode;
+    typedef enum {
+        TWOLAME_AUTO_MODE = -1,
+                            /**< Choose Mode Automatically */
+        TWOLAME_STEREO = 0, /**< Stereo */
+        TWOLAME_JOINT_STEREO,
+                            /**< Joint Stereo */
+        TWOLAME_DUAL_CHANNEL,
+                            /**< Dual Channel */
+        TWOLAME_MONO,       /**< Mono */
+        TWOLAME_NOT_SET
+    } TWOLAME_MPEG_mode;
 
 
 /** MPEG Version.
  *
  *	MPEG2 is for Lower Sampling Frequencies - LSF < 32000.
  */
-typedef enum {
-	TWOLAME_MPEG2 = 0,	/**< MPEG-2	 - for sample rates less than 32k */
-	TWOLAME_MPEG1		/**< MPEG-1 */
-} TWOLAME_MPEG_version;
+    typedef enum {
+        TWOLAME_MPEG2 = 0,
+                        /**< MPEG-2	 - for sample rates less than 32k */
+        TWOLAME_MPEG1   /**< MPEG-1 */
+    } TWOLAME_MPEG_version;
 
 
 /** Padding types. */
-typedef enum {
-	TWOLAME_PAD_NO = 0,		/**< No Padding */
-	TWOLAME_PAD_ALL			/**< Pad all frames */
-//	TWOLAME_PAD_ADJUST		// unsupported by twolame
-} TWOLAME_Padding;
+    typedef enum {
+        TWOLAME_PAD_NO = 0, /**< No Padding */
+        TWOLAME_PAD_ALL     /**< Pad all frames */
+//  TWOLAME_PAD_ADJUST      // unsupported by twolame
+    } TWOLAME_Padding;
 
 /** Emphasis types. */
-typedef enum {
-	TWOLAME_EMPHASIS_N = 0, /**< No Emphasis */
-	TWOLAME_EMPHASIS_5 = 1, /**< 50/15 ms */
-							// reserved
-	TWOLAME_EMPHASIS_C = 3	/**< CCIT J.17 */ 
-} TWOLAME_Emphasis;
+    typedef enum {
+        TWOLAME_EMPHASIS_N = 0,
+                            /**< No Emphasis */
+        TWOLAME_EMPHASIS_5 = 1,
+                            /**< 50/15 ms */
+        // reserved
+        TWOLAME_EMPHASIS_C = 3
+                            /**< CCIT J.17 */
+    } TWOLAME_Emphasis;
 
 
 /** Number of samples per frame of Layer 2 MPEG Audio */
@@ -105,10 +112,10 @@ typedef enum {
 
 
 /** Opaque structure for the twolame encoder options. */
-struct twolame_options_struct;
+    struct twolame_options_struct;
 
 /** Opaque data type for the twolame encoder options. */
-typedef struct twolame_options_struct twolame_options;
+    typedef struct twolame_options_struct twolame_options;
 
 
 
@@ -119,7 +126,7 @@ typedef struct twolame_options_struct twolame_options;
  *
  *	\return The version number as a C string
  */
-DLL_EXPORT const char* get_twolame_version( void );
+    DLL_EXPORT const char *get_twolame_version(void);
 
 
 /** Get the URL of the TwoLAME homepage. 
@@ -127,7 +134,7 @@ DLL_EXPORT const char* get_twolame_version( void );
  *
  *	\return The url as a C string
  */
-DLL_EXPORT const char* get_twolame_url( void );
+    DLL_EXPORT const char *get_twolame_url(void);
 
 
 /** Print the library version and 
@@ -140,7 +147,7 @@ DLL_EXPORT const char* get_twolame_url( void );
  *	\param glopts		Options pointer created by twolame_init()
  *
  */
-DLL_EXPORT void twolame_print_config(twolame_options *glopts);
+    DLL_EXPORT void twolame_print_config(twolame_options * glopts);
 
 
 /** Initialise the twolame encoder.
@@ -152,7 +159,7 @@ DLL_EXPORT void twolame_print_config(twolame_options *glopts);
  *	
  *	\return a pointer to your new options data structure
  */
-DLL_EXPORT twolame_options *twolame_init(void);
+    DLL_EXPORT twolame_options *twolame_init(void);
 
 
 /** Prepare to start encoding.
@@ -166,7 +173,7 @@ DLL_EXPORT twolame_options *twolame_init(void);
  *	\return				0 if all patameters are valid, 
  *						non-zero if something is invalid
  */
-DLL_EXPORT int twolame_init_params(twolame_options *glopts);
+    DLL_EXPORT int twolame_init_params(twolame_options * glopts);
 
 
 /** Encode some 16-bit PCM audio to MP2.
@@ -183,13 +190,11 @@ DLL_EXPORT int twolame_init_params(twolame_options *glopts);
  *	\return					The number of bytes put in output buffer
  *							or a negative value on error
  */
-DLL_EXPORT int twolame_encode_buffer(
-		twolame_options *glopts,
-		const short int leftpcm[],
-		const short int rightpcm[],
-		int num_samples,
-		unsigned char *mp2buffer,
-		int mp2buffer_size );
+    DLL_EXPORT int twolame_encode_buffer(twolame_options * glopts,
+                                         const short int leftpcm[],
+                                         const short int rightpcm[],
+                                         int num_samples,
+                                         unsigned char *mp2buffer, int mp2buffer_size);
 
 
 /** Encode some 16-bit PCM audio to MP2.
@@ -205,12 +210,10 @@ DLL_EXPORT int twolame_encode_buffer(
  *	\return					The number of bytes put in output buffer
  *							or a negative value on error
  */
-DLL_EXPORT int twolame_encode_buffer_interleaved(
-		twolame_options *glopts,
-		const short int pcm[],
-		int num_samples,
-		unsigned char *mp2buffer,
-		int mp2buffer_size );
+    DLL_EXPORT int twolame_encode_buffer_interleaved(twolame_options * glopts,
+                                                     const short int pcm[],
+                                                     int num_samples,
+                                                     unsigned char *mp2buffer, int mp2buffer_size);
 
 
 /** Encode some 32-bit PCM audio to MP2.
@@ -230,13 +233,11 @@ DLL_EXPORT int twolame_encode_buffer_interleaved(
  *	\return					The number of bytes put in output buffer
  *							or a negative value on error
  */
-DLL_EXPORT int twolame_encode_buffer_float32(
-		twolame_options *glopts,
-		const float		leftpcm [],
-		const float		rightpcm [],
-		int num_samples,
-		unsigned char *mp2buffer,
-		int mp2buffer_size );
+    DLL_EXPORT int twolame_encode_buffer_float32(twolame_options * glopts,
+                                                 const float leftpcm[],
+                                                 const float rightpcm[],
+                                                 int num_samples,
+                                                 unsigned char *mp2buffer, int mp2buffer_size);
 
 
 /** Encode some 32-bit PCM audio to MP2.
@@ -252,12 +253,10 @@ DLL_EXPORT int twolame_encode_buffer_float32(
  *	\return					The number of bytes put in output buffer
  *							or a negative value on error
  */
-int twolame_encode_buffer_float32_interleaved(
-		twolame_options *glopts,
-		const float pcm[],
-		int num_samples,
-		unsigned char *mp2buffer,
-		int mp2buffer_size );
+    int twolame_encode_buffer_float32_interleaved(twolame_options * glopts,
+                                                  const float pcm[],
+                                                  int num_samples,
+                                                  unsigned char *mp2buffer, int mp2buffer_size);
 
 
 /** Encode any remains buffered PCM audio to MP2.
@@ -272,10 +271,8 @@ int twolame_encode_buffer_float32_interleaved(
  *	\return					The number of bytes put in output buffer
  *							or a negative value on error
  */
-DLL_EXPORT int twolame_encode_flush(
-		twolame_options *glopts,
-		unsigned char *mp2buffer,
-		int mp2buffer_size);
+    DLL_EXPORT int twolame_encode_flush(twolame_options * glopts,
+                                        unsigned char *mp2buffer, int mp2buffer_size);
 
 
 /** Shut down the twolame encoder.
@@ -287,7 +284,7 @@ DLL_EXPORT int twolame_encode_flush(
  *
  *	\param glopts			pointer to twolame options pointer
  */
-DLL_EXPORT void twolame_close(twolame_options **glopts);
+    DLL_EXPORT void twolame_close(twolame_options ** glopts);
 
 
 
@@ -306,7 +303,7 @@ DLL_EXPORT void twolame_close(twolame_options **glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_verbosity(twolame_options *glopts, int verbosity);
+    DLL_EXPORT int twolame_set_verbosity(twolame_options * glopts, int verbosity);
 
 
 /** Get the verbosity of the encoder.
@@ -314,7 +311,7 @@ DLL_EXPORT int twolame_set_verbosity(twolame_options *glopts, int verbosity);
  *	\param glopts	pointer to twolame options pointer
  *	\return			integer indicating the verbosity of the encoder (0-10)
  */
-DLL_EXPORT int twolame_get_verbosity(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_verbosity(twolame_options * glopts);
 
 
 /** Set the MPEG Audio Mode (Mono, Stereo, etc) for 
@@ -327,7 +324,7 @@ DLL_EXPORT int twolame_get_verbosity(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_mode(twolame_options *glopts, TWOLAME_MPEG_mode mode);
+    DLL_EXPORT int twolame_set_mode(twolame_options * glopts, TWOLAME_MPEG_mode mode);
 
 
 /** Get the MPEG Audio mode of the output stream.
@@ -335,7 +332,7 @@ DLL_EXPORT int twolame_set_mode(twolame_options *glopts, TWOLAME_MPEG_mode mode)
  *	\param glopts	pointer to twolame options pointer
  *	\return			the MPEG audio mode
  */
-DLL_EXPORT TWOLAME_MPEG_mode twolame_get_mode(twolame_options *glopts);
+    DLL_EXPORT TWOLAME_MPEG_mode twolame_get_mode(twolame_options * glopts);
 
 
 /** Get a string name for the current MPEG Audio mode.
@@ -343,7 +340,7 @@ DLL_EXPORT TWOLAME_MPEG_mode twolame_get_mode(twolame_options *glopts);
  *	\param glopts	pointer to twolame options pointer
  *	\return			the name of the MPEG audio mode as a string
  */
-DLL_EXPORT const char *twolame_get_mode_name(twolame_options *glopts);
+    DLL_EXPORT const char *twolame_get_mode_name(twolame_options * glopts);
 
 
 /** Set the MPEG version of the MPEG audio stream. 
@@ -355,7 +352,7 @@ DLL_EXPORT const char *twolame_get_mode_name(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_version(twolame_options *glopts, TWOLAME_MPEG_version version);
+    DLL_EXPORT int twolame_set_version(twolame_options * glopts, TWOLAME_MPEG_version version);
 
 
 /** Get the MPEG version of the output stream.
@@ -363,7 +360,7 @@ DLL_EXPORT int twolame_set_version(twolame_options *glopts, TWOLAME_MPEG_version
  *	\param glopts	pointer to twolame options pointer
  *	\return			the MPEG version
  */
-DLL_EXPORT TWOLAME_MPEG_version twolame_get_version(twolame_options *glopts);
+    DLL_EXPORT TWOLAME_MPEG_version twolame_get_version(twolame_options * glopts);
 
 
 /** Get a string name for the current MPEG version.
@@ -371,7 +368,7 @@ DLL_EXPORT TWOLAME_MPEG_version twolame_get_version(twolame_options *glopts);
  *	\param glopts	pointer to twolame options pointer
  *	\return			the name of the MPEG version as a string
  */
-DLL_EXPORT const char *twolame_get_version_name( twolame_options *glopts );
+    DLL_EXPORT const char *twolame_get_version_name(twolame_options * glopts);
 
 
 /** Get the number of bytes per MPEG audio frame, for current settings.
@@ -380,7 +377,7 @@ DLL_EXPORT const char *twolame_get_version_name( twolame_options *glopts );
  *	\return					the number of bytes per frame
  *
  */
-DLL_EXPORT int twolame_get_framelength( twolame_options *glopts );
+    DLL_EXPORT int twolame_get_framelength(twolame_options * glopts);
 
 
 /** Set the Psychoacoustic Model used to encode the audio.
@@ -392,7 +389,7 @@ DLL_EXPORT int twolame_get_framelength( twolame_options *glopts );
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_psymodel(twolame_options *glopts, int psymodel);
+    DLL_EXPORT int twolame_set_psymodel(twolame_options * glopts, int psymodel);
 
 
 /** Get the Psychoacoustic Model used to encode the audio.
@@ -400,7 +397,7 @@ DLL_EXPORT int twolame_set_psymodel(twolame_options *glopts, int psymodel);
  *	\param glopts	pointer to twolame options pointer
  *	\return			the psychoacoustic model number
  */
-DLL_EXPORT int twolame_get_psymodel(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_psymodel(twolame_options * glopts);
 
 
 /** Set the number of channels in the input stream.
@@ -416,7 +413,7 @@ DLL_EXPORT int twolame_get_psymodel(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_num_channels(twolame_options* glopts, int num_channels);
+    DLL_EXPORT int twolame_set_num_channels(twolame_options * glopts, int num_channels);
 
 
 /** Get the number of channels in the input stream.
@@ -424,7 +421,7 @@ DLL_EXPORT int twolame_set_num_channels(twolame_options* glopts, int num_channel
  *	\param glopts	pointer to twolame options pointer
  *	\return			the number of channels
  */
-DLL_EXPORT int twolame_get_num_channels(twolame_options* glopts);
+    DLL_EXPORT int twolame_get_num_channels(twolame_options * glopts);
 
 
 /** Set the scaling level for audio before encoding.
@@ -438,7 +435,7 @@ DLL_EXPORT int twolame_get_num_channels(twolame_options* glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_scale(twolame_options* glopts, float scale);
+    DLL_EXPORT int twolame_set_scale(twolame_options * glopts, float scale);
 
 
 /** Get the scaling level for audio before encoding.
@@ -446,8 +443,8 @@ DLL_EXPORT int twolame_set_scale(twolame_options* glopts, float scale);
  *	\param glopts	pointer to twolame options pointer
  *	\return			the amount to scale audio sample by
  */
-DLL_EXPORT float twolame_get_scale(twolame_options* glopts);
-	
+    DLL_EXPORT float twolame_get_scale(twolame_options * glopts);
+
 /** Set the scaling level for left channel audio before encoding.
  *
  *	Set to 0 to disable.
@@ -459,7 +456,7 @@ DLL_EXPORT float twolame_get_scale(twolame_options* glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_scale_left(twolame_options* glopts, float scale);
+    DLL_EXPORT int twolame_set_scale_left(twolame_options * glopts, float scale);
 
 
 /** Get the scaling level for audio left channel before encoding.
@@ -467,7 +464,7 @@ DLL_EXPORT int twolame_set_scale_left(twolame_options* glopts, float scale);
  *	\param glopts	pointer to twolame options pointer
  *	\return			the amount to scale left channel audio samples by
  */
-DLL_EXPORT float twolame_get_scale_left(twolame_options* glopts);
+    DLL_EXPORT float twolame_get_scale_left(twolame_options * glopts);
 
 
 /** Set the scaling level for right channel audio before encoding.
@@ -481,7 +478,7 @@ DLL_EXPORT float twolame_get_scale_left(twolame_options* glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_scale_right(twolame_options* glopts, float scale);
+    DLL_EXPORT int twolame_set_scale_right(twolame_options * glopts, float scale);
 
 
 /** Get the scaling level for audio right channel before encoding.
@@ -489,7 +486,7 @@ DLL_EXPORT int twolame_set_scale_right(twolame_options* glopts, float scale);
  *	\param glopts	pointer to twolame options pointer
  *	\return			the amount to scale right channel audio samples by
  */
-DLL_EXPORT float twolame_get_scale_right(twolame_options* glopts);
+    DLL_EXPORT float twolame_get_scale_right(twolame_options * glopts);
 
 
 /** Set the samplerate of the PCM audio input.
@@ -501,7 +498,7 @@ DLL_EXPORT float twolame_get_scale_right(twolame_options* glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_in_samplerate(twolame_options *glopts, int samplerate);
+    DLL_EXPORT int twolame_set_in_samplerate(twolame_options * glopts, int samplerate);
 
 
 /** Get the samplerate of the PCM audio input.
@@ -509,7 +506,7 @@ DLL_EXPORT int twolame_set_in_samplerate(twolame_options *glopts, int samplerate
  *	\param glopts	pointer to twolame options pointer
  *	\return			the input samplerate
  */
-DLL_EXPORT int twolame_get_in_samplerate(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_in_samplerate(twolame_options * glopts);
 
 
 /** Set the samplerate of the MPEG audio output.
@@ -521,7 +518,7 @@ DLL_EXPORT int twolame_get_in_samplerate(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_out_samplerate(twolame_options *glopts, int samplerate);
+    DLL_EXPORT int twolame_set_out_samplerate(twolame_options * glopts, int samplerate);
 
 
 /** Get the samplerate of the MPEG audio output.
@@ -529,7 +526,7 @@ DLL_EXPORT int twolame_set_out_samplerate(twolame_options *glopts, int samplerat
  *	\param glopts	pointer to twolame options pointer
  *	\return			the output samplerate
  */
-DLL_EXPORT int twolame_get_out_samplerate(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_out_samplerate(twolame_options * glopts);
 
 
 /** Set the bitrate of the MPEG audio output stream.
@@ -541,7 +538,7 @@ DLL_EXPORT int twolame_get_out_samplerate(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_bitrate(twolame_options *glopts, int bitrate);
+    DLL_EXPORT int twolame_set_bitrate(twolame_options * glopts, int bitrate);
 
 
 /** Get the bitrate of the MPEG audio output.
@@ -549,21 +546,21 @@ DLL_EXPORT int twolame_set_bitrate(twolame_options *glopts, int bitrate);
  *	\param glopts	pointer to twolame options pointer
  *	\return			the output bitrate in kbps
  */
-DLL_EXPORT int twolame_get_bitrate(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_bitrate(twolame_options * glopts);
 
 
 /** Set the bitrate of the MPEG audio output stream (LAME style).
  *
  *	same as twolame_set_bitrate()
  */
-DLL_EXPORT int twolame_set_brate(twolame_options *glopts, int bitrate);
+    DLL_EXPORT int twolame_set_brate(twolame_options * glopts, int bitrate);
 
 
 /** Get the bitrate of the MPEG audio output stream (LAME style).
  *
  *	same as twolame_get_bitrate()
  */
-DLL_EXPORT int twolame_get_brate(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_brate(twolame_options * glopts);
 
 
 /** Set frame padding for the MPEG audio output stream.
@@ -577,14 +574,14 @@ DLL_EXPORT int twolame_get_brate(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_padding(twolame_options *glopts, TWOLAME_Padding padding);
+    DLL_EXPORT int twolame_set_padding(twolame_options * glopts, TWOLAME_Padding padding);
 
 /** Get the padding type of the MPEG audio output.
  *
  *	\param glopts	pointer to twolame options pointer
  *	\return			the output bitrate in kbps
  */
-DLL_EXPORT TWOLAME_Padding twolame_get_padding(twolame_options *glopts);
+    DLL_EXPORT TWOLAME_Padding twolame_get_padding(twolame_options * glopts);
 
 
 /** Enable/Disable Energy Level Extension.
@@ -604,7 +601,7 @@ DLL_EXPORT TWOLAME_Padding twolame_get_padding(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_energy_levels(twolame_options *glopts, int energylevels );
+    DLL_EXPORT int twolame_set_energy_levels(twolame_options * glopts, int energylevels);
 
 
 /** Get the Energy Level Extension state.
@@ -612,7 +609,7 @@ DLL_EXPORT int twolame_set_energy_levels(twolame_options *glopts, int energyleve
  *	\param glopts	pointer to twolame options pointer
  *	\return			state of the Energy Level Extension (TRUE/FALSE)
  */
-DLL_EXPORT int twolame_get_energy_levels(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_energy_levels(twolame_options * glopts);
 
 
 /** Set number of Ancillary Bits at end of frame.
@@ -624,7 +621,7 @@ DLL_EXPORT int twolame_get_energy_levels(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_num_ancillary_bits(twolame_options *glopts, int num);
+    DLL_EXPORT int twolame_set_num_ancillary_bits(twolame_options * glopts, int num);
 
 
 /** Get the number of Ancillary Bits at end of frame.
@@ -632,7 +629,7 @@ DLL_EXPORT int twolame_set_num_ancillary_bits(twolame_options *glopts, int num);
  *	\param glopts	pointer to twolame options pointer
  *	\return			number of Ancillary Bits at end of frame
  */
-DLL_EXPORT int twolame_get_num_ancillary_bits(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_num_ancillary_bits(twolame_options * glopts);
 
 
 
@@ -645,7 +642,7 @@ DLL_EXPORT int twolame_get_num_ancillary_bits(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_emphasis(twolame_options *glopts, TWOLAME_Emphasis emphasis);
+    DLL_EXPORT int twolame_set_emphasis(twolame_options * glopts, TWOLAME_Emphasis emphasis);
 
 
 /** Get the type of pre-emphasis to be applied to the decoded audio.
@@ -653,7 +650,7 @@ DLL_EXPORT int twolame_set_emphasis(twolame_options *glopts, TWOLAME_Emphasis em
  *	\param glopts	pointer to twolame options pointer
  *	\return			the type of pre-emphasis
  */
-DLL_EXPORT TWOLAME_Emphasis twolame_get_emphasis(twolame_options *glopts);
+    DLL_EXPORT TWOLAME_Emphasis twolame_get_emphasis(twolame_options * glopts);
 
 
 /** Enable/Disable CRC Error Protection.
@@ -665,7 +662,7 @@ DLL_EXPORT TWOLAME_Emphasis twolame_get_emphasis(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_error_protection(twolame_options *glopts, int err_protection);
+    DLL_EXPORT int twolame_set_error_protection(twolame_options * glopts, int err_protection);
 
 
 /** Get the CRC Error Protection state.
@@ -673,7 +670,7 @@ DLL_EXPORT int twolame_set_error_protection(twolame_options *glopts, int err_pro
  *	\param glopts	pointer to twolame options pointer
  *	\return			state of Error Protection (TRUE/FALSE)
  */
-DLL_EXPORT int twolame_get_error_protection(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_error_protection(twolame_options * glopts);
 
 
 /** Set the MPEG Audio Copyright flag.
@@ -687,7 +684,7 @@ DLL_EXPORT int twolame_get_error_protection(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_copyright(twolame_options *glopts, int copyright);
+    DLL_EXPORT int twolame_set_copyright(twolame_options * glopts, int copyright);
 
 
 /** Get the copright flag state
@@ -695,7 +692,7 @@ DLL_EXPORT int twolame_set_copyright(twolame_options *glopts, int copyright);
  *	\param glopts	pointer to twolame options pointer
  *	\return			state of the copyright flag (TRUE/FALSE)
  */
-DLL_EXPORT int twolame_get_copyright(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_copyright(twolame_options * glopts);
 
 
 /** Set the MPEG Audio Original flag.
@@ -707,7 +704,7 @@ DLL_EXPORT int twolame_get_copyright(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_original(twolame_options *glopts, int original);
+    DLL_EXPORT int twolame_set_original(twolame_options * glopts, int original);
 
 
 /** Get the origianl flag state.
@@ -715,7 +712,7 @@ DLL_EXPORT int twolame_set_original(twolame_options *glopts, int original);
  *	\param glopts	pointer to twolame options pointer
  *	\return			state of the original flag (TRUE/FALSE)
  */
-DLL_EXPORT int twolame_get_original(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_original(twolame_options * glopts);
 
 
 /** Enable/Disable VBR (Variable Bit Rate) mode.
@@ -727,7 +724,7 @@ DLL_EXPORT int twolame_get_original(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_VBR(twolame_options *glopts, int vbr);
+    DLL_EXPORT int twolame_set_VBR(twolame_options * glopts, int vbr);
 
 
 /** Get the VBR state.
@@ -735,7 +732,7 @@ DLL_EXPORT int twolame_set_VBR(twolame_options *glopts, int vbr);
  *	\param glopts	pointer to twolame options pointer
  *	\return			state of VBR (TRUE/FALSE)
  */
-DLL_EXPORT int twolame_get_VBR(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_VBR(twolame_options * glopts);
 
 
 /** Set the level/quality of the VBR audio.
@@ -750,7 +747,7 @@ DLL_EXPORT int twolame_get_VBR(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_VBR_level(twolame_options *glopts, float level);
+    DLL_EXPORT int twolame_set_VBR_level(twolame_options * glopts, float level);
 
 
 /** Get the level/quality of the VBR audio.
@@ -758,7 +755,7 @@ DLL_EXPORT int twolame_set_VBR_level(twolame_options *glopts, float level);
  *	\param glopts	pointer to twolame options pointer
  *	\return			quality value for VBR 
  */
-DLL_EXPORT float twolame_get_VBR_level(twolame_options *glopts);
+    DLL_EXPORT float twolame_get_VBR_level(twolame_options * glopts);
 
 
 
@@ -766,8 +763,8 @@ DLL_EXPORT float twolame_get_VBR_level(twolame_options *glopts);
    Using the twolame_set_VBR_q()/twolame_get_VBR_q functions 
    are deprecated, please use twolame_set_VBR_level() instead.
 */
-DLL_EXPORT int twolame_set_VBR_q(twolame_options *glopts, float level);
-DLL_EXPORT float twolame_get_VBR_q(twolame_options *glopts);
+    DLL_EXPORT int twolame_set_VBR_q(twolame_options * glopts, float level);
+    DLL_EXPORT float twolame_get_VBR_q(twolame_options * glopts);
 
 
 
@@ -780,7 +777,7 @@ DLL_EXPORT float twolame_get_VBR_q(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_ATH_level(twolame_options *glopts, float level);
+    DLL_EXPORT int twolame_set_ATH_level(twolame_options * glopts, float level);
 
 
 /** Get the adjustment (in dB) applied to the ATH for Psycho models 3 and 4.
@@ -788,7 +785,7 @@ DLL_EXPORT int twolame_set_ATH_level(twolame_options *glopts, float level);
  *	\param glopts	pointer to twolame options pointer
  *	\return			adjustment level in db
  */
-DLL_EXPORT float twolame_get_ATH_level(twolame_options *glopts);
+    DLL_EXPORT float twolame_get_ATH_level(twolame_options * glopts);
 
 
 /** Set the upper bitrate for VBR
@@ -800,14 +797,14 @@ DLL_EXPORT float twolame_get_ATH_level(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_VBR_max_bitrate_kbps(twolame_options *glopts, int bitrate);
+    DLL_EXPORT int twolame_set_VBR_max_bitrate_kbps(twolame_options * glopts, int bitrate);
 
 /** Get the upper bitrate for VBR.
  *
  *	\param glopts	pointer to twolame options pointer
  *	\return			the upper bitrate for VBR
  */
-DLL_EXPORT int twolame_get_VBR_max_bitrate_kbps(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_VBR_max_bitrate_kbps(twolame_options * glopts);
 
 
 /** Enable/Disable the quick mode for psycho model calculation.
@@ -819,14 +816,14 @@ DLL_EXPORT int twolame_get_VBR_max_bitrate_kbps(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_quick_mode(twolame_options *glopts, int quickmode);
+    DLL_EXPORT int twolame_set_quick_mode(twolame_options * glopts, int quickmode);
 
 /** Get the state of quick mode.
  *
  *	\param glopts	pointer to twolame options pointer
  *	\return			the state of quick mode (TRUE/FALSE)
  */
-DLL_EXPORT int twolame_get_quick_mode(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_quick_mode(twolame_options * glopts);
 
 
 /** Set how often the psy model is calculated.
@@ -838,14 +835,14 @@ DLL_EXPORT int twolame_get_quick_mode(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_quick_count(twolame_options *glopts, int quickcount );
+    DLL_EXPORT int twolame_set_quick_count(twolame_options * glopts, int quickcount);
 
 /** Get the how often the psy model is calculated.
  *
  *	\param glopts	pointer to twolame options pointer
  *	\return			number of frames between calculations
  */
-DLL_EXPORT int twolame_get_quick_count(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_quick_count(twolame_options * glopts);
 
 
 
@@ -868,14 +865,14 @@ DLL_EXPORT int twolame_get_quick_count(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_DAB(twolame_options *glopts, int dab);
+    DLL_EXPORT int twolame_set_DAB(twolame_options * glopts, int dab);
 
 /** Get the state of the DAB extensions
  *
  *	\param glopts	pointer to twolame options pointer
  *	\return			the state of DAB (TRUE/FALSE)
  */
-DLL_EXPORT int twolame_get_DAB(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_DAB(twolame_options * glopts);
 
 
 /** Set the number of bytes to reserve for DAB XPAD data.
@@ -887,7 +884,7 @@ DLL_EXPORT int twolame_get_DAB(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_DAB_xpad_length(twolame_options *glopts, int length);
+    DLL_EXPORT int twolame_set_DAB_xpad_length(twolame_options * glopts, int length);
 
 
 /** Get the number of bytes reserved for DAB XPAD data.
@@ -895,7 +892,7 @@ DLL_EXPORT int twolame_set_DAB_xpad_length(twolame_options *glopts, int length);
  *	\param glopts	pointer to twolame options pointer
  *	\return			number of XPAD bytes
  */
-DLL_EXPORT int twolame_get_DAB_xpad_length(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_DAB_xpad_length(twolame_options * glopts);
 
 
 /** Set the CRC error protection length for DAB.
@@ -907,7 +904,7 @@ DLL_EXPORT int twolame_get_DAB_xpad_length(twolame_options *glopts);
  *	\return					0 if successful, 
  *							non-zero on failure
  */
-DLL_EXPORT int twolame_set_DAB_crc_length(twolame_options *glopts, int length);
+    DLL_EXPORT int twolame_set_DAB_crc_length(twolame_options * glopts, int length);
 
 
 /** Get the CRC error protection length for DAB.
@@ -915,15 +912,12 @@ DLL_EXPORT int twolame_set_DAB_crc_length(twolame_options *glopts, int length);
  *	\param glopts	pointer to twolame options pointer
  *	\return			length of DAB CRC
  */
-DLL_EXPORT int twolame_get_DAB_crc_length(twolame_options *glopts);
+    DLL_EXPORT int twolame_get_DAB_crc_length(twolame_options * glopts);
 
 
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* _TWOLAME_H_ */
-
-
+#endif                          /* _TWOLAME_H_ */
 // vim:ts=4:sw=4:nowrap:

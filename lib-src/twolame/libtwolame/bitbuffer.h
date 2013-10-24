@@ -18,7 +18,7 @@
  *	License along with this library; if not, write to the Free Software
  *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  $Id: bitbuffer.h,v 1.3 2008-02-01 19:44:27 richardash1981 Exp $
+ *  $Id$
  *
  */
 
@@ -29,22 +29,21 @@
 
 /* bit stream structure */
 typedef struct bit_stream_struc {
-	unsigned char *buf;		  /* bit stream buffer */
-	int buf_size;		  /* size of buffer (in number of bytes) */
-	long totbit;		  /* bit counter of bit stream */
-	int buf_byte_idx;	  /* pointer to top byte in buffer */
-	int buf_bit_idx;	  /* pointer to top bit of top byte in buffer */
-	int eob;		  /* end of buffer index */
-	int eobs;		  /* end of bit stream flag */
+    unsigned char *buf;         /* bit stream buffer */
+    int buf_size;               /* size of buffer (in number of bytes) */
+    long totbit;                /* bit counter of bit stream */
+    int buf_byte_idx;           /* pointer to top byte in buffer */
+    int buf_bit_idx;            /* pointer to top bit of top byte in buffer */
+    int eob;                    /* end of buffer index */
+    int eobs;                   /* end of bit stream flag */
 } bit_stream;
 
 
-bit_stream * buffer_init( unsigned char *buffer, int buffer_size );
-void buffer_deinit( bit_stream **bs );
+bit_stream *buffer_init(unsigned char *buffer, int buffer_size);
+void buffer_deinit(bit_stream ** bs);
 
-NO_DLL_INLINE void buffer_put1bit (bit_stream *, int);
-NO_DLL_INLINE void buffer_putbits (bit_stream *, unsigned int, int);
-NO_DLL_INLINE unsigned long buffer_sstell (bit_stream *);
+/*return the current bit stream length (in bits)*/
+#define buffer_sstell(bs) (bs->totbit)
 
 #endif
 

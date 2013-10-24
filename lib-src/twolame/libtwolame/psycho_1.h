@@ -18,15 +18,16 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  $Id: psycho_1.h,v 1.3 2008-02-01 19:44:33 richardash1981 Exp $
+ *  $Id$
  *
  */
 
 #ifndef	_PSYCHO_1_H_
 #define	_PSYCHO_1_H_
 
-void psycho_1 (twolame_options *glopts, short int buffer[2][1152], FLOAT scale[2][32], FLOAT ltmin[2][32]);
-void psycho_1_deinit(psycho_1_mem **mem);
+void psycho_1(twolame_options * glopts, short int buffer[2][1152], FLOAT scale[2][32],
+              FLOAT ltmin[2][32]);
+void psycho_1_deinit(psycho_1_mem ** mem);
 
 #endif
 

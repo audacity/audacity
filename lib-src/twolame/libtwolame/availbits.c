@@ -18,7 +18,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  $Id: availbits.c,v 1.3 2008-02-01 19:44:27 richardash1981 Exp $
+ *  $Id$
  *
  */
 
@@ -31,48 +31,47 @@
 
 
 struct slotinfo {
-	FLOAT average;
-	FLOAT frac;
-	int whole;
-	FLOAT lag;
-	int extra;
+    FLOAT average;
+    FLOAT frac;
+    int whole;
+    FLOAT lag;
+    int extra;
 } slots;
 
 
 /* function returns the number of available bits */
-int available_bits ( twolame_options * glopts )
+int available_bits(twolame_options * glopts)
 {
-	frame_header *header = &glopts->header;
-	int adb;
-	
-	slots.extra = 0;		/* be default, no extra slots */
-	
-	slots.average =
-		(1152.0/ ((FLOAT)glopts->samplerate_out/1000.0) )
-		* ((FLOAT)glopts->bitrate / 8.0);
-	
-	//fprintf(stdout,"availbits says: sampling freq is %i. version %i. bitrateindex %i slots %f\n",header->sampling_frequency, header->version, header->bitrate_index, slots.average);
-	
-	slots.whole = (int) slots.average;
-	slots.frac = slots.average - (FLOAT) slots.whole;
-	
-	/* never allow padding for a VBR frame. 
-	Don't ask me why, I've forgotten why I set this */
-	if (slots.frac != 0 && glopts->padding && glopts->vbr == FALSE) {
-		if (slots.lag > (slots.frac - 1.0)) {	/* no padding for this frame */
-			slots.lag -= slots.frac;
-			slots.extra = 0;
-			header->padding = 0;
-		} else {			/* padding */
-			slots.extra = 1;
-			header->padding = 1;
-			slots.lag += (1 - slots.frac);
-		}
-	}
-	
-	adb = (slots.whole + slots.extra) * 8;
-	
-	return adb;
+    frame_header *header = &glopts->header;
+    int adb;
+
+    slots.extra = 0;            /* be default, no extra slots */
+
+    slots.average = (1152.0 / ((FLOAT) glopts->samplerate_out / 1000.0))
+        * ((FLOAT) glopts->bitrate / 8.0);
+
+    // fprintf(stderr,"availbits says: sampling freq is %i. version %i. bitrateindex %i slots
+    // %f\n",header->sampling_frequency, header->version, header->bitrate_index, slots.average);
+
+    slots.whole = (int) slots.average;
+    slots.frac = slots.average - (FLOAT) slots.whole;
+
+    /* never allow padding for a VBR frame. Don't ask me why, I've forgotten why I set this */
+    if (slots.frac != 0 && glopts->padding && glopts->vbr == FALSE) {
+        if (slots.lag > (slots.frac - 1.0)) {   /* no padding for this frame */
+            slots.lag -= slots.frac;
+            slots.extra = 0;
+            header->padding = 0;
+        } else {                /* padding */
+            slots.extra = 1;
+            header->padding = 1;
+            slots.lag += (1 - slots.frac);
+        }
+    }
+
+    adb = (slots.whole + slots.extra) * 8;
+
+    return adb;
 }
 
 

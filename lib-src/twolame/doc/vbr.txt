@@ -34,7 +34,7 @@ A level of 5 works very well for me.
 
 The level value can is a measurement of quality - the higher
 the level the higher the average bitrate of the resultant file. 
-[See TECH STUFF for a better explanation of what the value does]
+See TECH STUFF for a better explanation of what the value does.
 
 The confusing part of my implementation of LayerII VBR is that it's different from MP3 VBR.
 

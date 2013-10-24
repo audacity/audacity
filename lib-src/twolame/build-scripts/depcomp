@@ -1,9 +1,9 @@
 #! /bin/sh
 # depcomp - compile a program generating dependencies as side-effects
 
-scriptversion=2006-10-15.18
+scriptversion=2007-03-29.01
 
-# Copyright (C) 1999, 2000, 2003, 2004, 2005, 2006 Free Software
+# Copyright (C) 1999, 2000, 2003, 2004, 2005, 2006, 2007 Free Software
 # Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -215,34 +215,39 @@ aix)
   # current directory.  Also, the AIX compiler puts `$object:' at the
   # start of each line; $object doesn't have directory information.
   # Version 6 uses the directory in both cases.
-  stripped=`echo "$object" | sed 's/\(.*\)\..*$/\1/'`
-  tmpdepfile="$stripped.u"
+  dir=`echo "$object" | sed -e 's|/[^/]*$|/|'`
+  test "x$dir" = "x$object" && dir=
+  base=`echo "$object" | sed -e 's|^.*/||' -e 's/\.o$//' -e 's/\.lo$//'`
   if test "$libtool" = yes; then
+    tmpdepfile1=$dir$base.u
+    tmpdepfile2=$base.u
+    tmpdepfile3=$dir.libs/$base.u
     "$@" -Wc,-M
   else
+    tmpdepfile1=$dir$base.u
+    tmpdepfile2=$dir$base.u
+    tmpdepfile3=$dir$base.u
     "$@" -M
   fi
   stat=$?
 
-  if test -f "$tmpdepfile"; then :
-  else
-    stripped=`echo "$stripped" | sed 's,^.*/,,'`
-    tmpdepfile="$stripped.u"
-  fi
-
   if test $stat -eq 0; then :
   else
-    rm -f "$tmpdepfile"
+    rm -f "$tmpdepfile1" "$tmpdepfile2" "$tmpdepfile3"
     exit $stat
   fi
 
+  for tmpdepfile in "$tmpdepfile1" "$tmpdepfile2" "$tmpdepfile3"
+  do
+    test -f "$tmpdepfile" && break
+  done
   if test -f "$tmpdepfile"; then
-    outname="$stripped.o"
     # Each line is of the form `foo.o: dependent.h'.
     # Do two passes, one to just change these to
     # `$object: dependent.h' and one to simply `dependent.h:'.
-    sed -e "s,^$outname:,$object :," < "$tmpdepfile" > "$depfile"
-    sed -e "s,^$outname: \(.*\)$,\1:," < "$tmpdepfile" >> "$depfile"
+    sed -e "s,^.*\.[a-z]*:,$object:," < "$tmpdepfile" > "$depfile"
+    # That's a tab and a space in the [].
+    sed -e 's,^.*\.[a-z]*:[	 ]*,,' -e 's,$,:,' < "$tmpdepfile" >> "$depfile"
   else
     # The sourcefile does not contain any dependencies, so just
     # store a dummy comment line, to avoid errors with the Makefile

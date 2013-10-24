@@ -18,7 +18,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  $Id: mem.c,v 1.3 2008-02-01 19:44:33 richardash1981 Exp $
+ *  $Id$
  *
  */
 
@@ -33,18 +33,18 @@
 *
 *******************************************************************************/
 
-void *twolame_malloc (size_t size, int line, char *file)
+void *twolame_malloc(size_t size, int line, char *file)
 {
-	void *ptr = (void *)malloc(size);
-	
-	if (ptr != NULL) {
-		memset (ptr, 0, size);
-	} else {
-		fprintf (stderr, "Unable to allocate %d bytes at line %d of %s\n", (int)size, line, file);
-		return NULL;
-	}
-	
-	return (ptr);
+    void *ptr = (void *) malloc(size);
+
+    if (ptr != NULL) {
+        memset(ptr, 0, size);
+    } else {
+        fprintf(stderr, "Unable to allocate %d bytes at line %d of %s\n", (int) size, line, file);
+        return NULL;
+    }
+
+    return (ptr);
 }
 
 

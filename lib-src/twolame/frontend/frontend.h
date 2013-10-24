@@ -17,7 +17,7 @@
  *	License along with this library; if not, write to the Free Software
  *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  $Id: frontend.h,v 1.1 2008-02-01 19:44:26 richardash1981 Exp $
+ *  $Id: frontend.h 156 2007-03-20 23:57:35Z nhumfrey $
  *
  */
 
@@ -38,48 +38,47 @@
 /*
   Result codes
 */
-#define ERR_NO_ERROR		(0)		// No Error (encoded ok)
-#define ERR_NO_ENCODE		(1)		// No Error (no encoding performed)
-#define ERR_OPENING_INPUT	(2)		// Error opening input file
-#define ERR_OPENING_OUTPUT	(4)		// Error opening output file
-#define ERR_MEM_ALLOC		(6)		// Error allocating memory
-#define ERR_INVALID_PARAM	(8)		// Error in chosen encoding parameters
-#define ERR_READING_INPUT	(10)	// Error reading input
-#define ERR_ENCODING		(12)	// Error occured during encoding
-#define ERR_WRITING_OUTPUT	(14)	// Error occured writing to output file
+#define ERR_NO_ERROR		(0) // No Error (encoded ok)
+#define ERR_NO_ENCODE		(1) // No Error (no encoding performed)
+#define ERR_OPENING_INPUT	(2) // Error opening input file
+#define ERR_OPENING_OUTPUT	(4) // Error opening output file
+#define ERR_MEM_ALLOC		(6) // Error allocating memory
+#define ERR_INVALID_PARAM	(8) // Error in chosen encoding parameters
+#define ERR_READING_INPUT	(10)    // Error reading input
+#define ERR_ENCODING		(12)    // Error occured during encoding
+#define ERR_WRITING_OUTPUT	(14)    // Error occured writing to output file
 
 
 
 
 typedef struct audioin_s {
 
-	// Display information about input stream
-	void (*print_info)(struct audioin_s *);
+    // Display information about input stream
+    void (*print_info) (struct audioin_s *);
 
-	// Read in some audio
-	int (*read)(struct audioin_s *, short *buffer, int samples);
-	
-	// Return error string (if any)
-	const char* (*error_str)(struct audioin_s *);
-	
-	// Close the inout stream
-	int (*close)(struct audioin_s *);
+    // Read in some audio
+    int (*read) (struct audioin_s *, short *buffer, int samples);
+
+    // Return error string (if any)
+    const char *(*error_str) (struct audioin_s *);
+
+    // Close the inout stream
+    int (*close) (struct audioin_s *);
 
 
-	// Pointer to file / input stream
-	void* file;
-	
-	// Pointer to linsndfile info structure
-	SF_INFO* sfinfo;
-	
-	// Size of the samples (in bits)
-	int samplesize;
+    // Pointer to file / input stream
+    void *file;
+
+    // Pointer to linsndfile info structure
+    SF_INFO *sfinfo;
+
+    // Size of the samples (in bits)
+    int samplesize;
 
 } audioin_t;
 
 
 
 /* Initialisers */
-audioin_t* open_audioin_sndfile( char* filename, SF_INFO *sfinfo );
-audioin_t* open_audioin_raw( char* filename, SF_INFO *sfinfo, int samplesize);
-
+audioin_t *open_audioin_sndfile(char *filename, SF_INFO * sfinfo);
+audioin_t *open_audioin_raw(char *filename, SF_INFO * sfinfo, int samplesize);

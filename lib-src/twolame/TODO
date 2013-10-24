@@ -1,22 +1,18 @@
 TwoLAME TODO List
 =================
 
-- Fix bug with Padding and framesizes with samplerate of 44.1 and 22kHz
-
-
-
 - use Exact-width integer types (eg uint16_t)
 
-- Add libresample support to libtoolame (toolame_set_in_samplerate etc.)
-- parameter checking in toolame.c using assert
-- Create a new toolame.spec (be sure to include twolame.pc)
-- quite a lot of duplicated code between toolame_encode_buffer_interleaved
-  and toolame_encode_buffer
-- sort out changing parameter for toolame_set_VBR_q from FLOAT to int (like LAME)
+- Add libresample support to libtwolame (twolame_set_in_samplerate etc.)
+- parameter checking in twolame.c using assert
+- Create a new twolame.spec (be sure to include twolame.pc)
+- quite a lot of duplicated code between twolame_encode_buffer_interleaved
+  and twolame_encode_buffer
+- sort out changing parameter for twolame_set_VBR_q from FLOAT to int (like LAME)
 
 - better use of verbosity settings
 
-- full options sanity checking/verification in toolame_init_params
+- full options sanity checking/verification in twolame_init_params
 
 - don't allow twolame_set_* after twolame_init_params() has been called
 
