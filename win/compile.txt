@@ -565,7 +565,7 @@ Configwin.h is a file that exists in the win directory from the root of Audacity
 You have three options for getting gcc to find this file.  You can modify Audacity's Makefile to
 include -I../win (or whatever a good path is that will point at the directory).  You can copy
 or move the configwin.h file to Audacity's source directory.  Preferably, you will modify
-configure.in to generate configwin.h in exactly the same fashion and location that it already
+configure.ac to generate configwin.h in exactly the same fashion and location that it already
 generates configunix.h.
 
 A fourth option is to not use Configwin.h at all, but to modify the appropriate header files to
