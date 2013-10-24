@@ -150,52 +150,52 @@ libportmixer.a: portmixer-recursive
 
 # Utility rules
 clean:
-	-$(MAKE) -C portsmf clean
-	-$(MAKE) -C expat clean
-	-$(MAKE) -C FileDialog clean
-	-$(MAKE) -C libid3tag clean
-	-$(MAKE) -C libmad clean
-	-$(MAKE) -C libnyquist clean
-	-$(MAKE) -C liblrdf clean
-	-$(MAKE) -C libogg clean
-	-$(MAKE) -C libsoxr clean
-	-$(MAKE) -C libsamplerate clean
-	-$(MAKE) -C libresample clean
-	-$(MAKE) -C libsndfile clean
-	-$(MAKE) -C libvamp clean
-	-$(MAKE) -C libvorbis clean
-	-$(MAKE) -C lib-widget-extra clean
-	-$(MAKE) -C libflac clean
-	-$(MAKE) -C portaudio-v19 clean
-	-$(MAKE) -C portmixer clean
-	-$(MAKE) -C sbsms clean
-	-$(MAKE) -C soundtouch clean
-	-$(MAKE) -C twolame clean
-	-rm -rf @LOCAL_LIBS@
+	test ! -f portsmf/Makefile || $(MAKE) -C portsmf clean
+	test ! -f expat/Makefile || $(MAKE) -C expat clean
+	test ! -f FileDialog/Makefile || $(MAKE) -C FileDialog clean
+	test ! -f libid3tag/Makefile || $(MAKE) -C libid3tag clean
+	test ! -f libmad/Makefile || $(MAKE) -C libmad clean
+	test ! -f libnyquist/Makefile || $(MAKE) -C libnyquist clean
+	test ! -f liblrdf/Makefile || $(MAKE) -C liblrdf clean
+	test ! -f libogg/Makefile || $(MAKE) -C libogg clean
+	test ! -f libsoxr/Makefile || $(MAKE) -C libsoxr clean
+	test ! -f libsamplerate/Makefile || $(MAKE) -C libsamplerate clean
+	test ! -f libresample/Makefile || $(MAKE) -C libresample clean
+	test ! -f libsndfile/Makefile || $(MAKE) -C libsndfile clean
+	test ! -f libvamp/Makefile || $(MAKE) -C libvamp clean
+	test ! -f libvorbis/Makefile || $(MAKE) -C libvorbis clean
+	test ! -f lib-widget-extra/Makefile || $(MAKE) -C lib-widget-extra clean
+	test ! -f libflac/Makefile || $(MAKE) -C libflac clean
+	test ! -f portaudio-v19/Makefile || $(MAKE) -C portaudio-v19 clean
+	test ! -f portmixer/Makefile || $(MAKE) -C portmixer clean
+	test ! -f sbsms/Makefile || $(MAKE) -C sbsms clean
+	test ! -f soundtouch/Makefile || $(MAKE) -C soundtouch clean
+	test ! -f twolame/Makefile || $(MAKE) -C twolame clean
+	rm -f @LOCAL_LIBS@
 
 distclean:
-	-$(MAKE) -C portsmf distclean
-	-$(MAKE) -C expat distclean
-	-$(MAKE) -C FileDialog distclean
-	-$(MAKE) -C libid3tag distclean
-	-$(MAKE) -C libmad distclean
-	-$(MAKE) -C libnyquist distclean
-	-$(MAKE) -C liblrdf distclean
-	-$(MAKE) -C libogg distclean
-	-$(MAKE) -C libsoxr distclean
-	-$(MAKE) -C libsamplerate distclean
-	-$(MAKE) -C libresample distclean
-	-$(MAKE) -C libsndfile distclean
-	-$(MAKE) -C libvamp distclean
-	-$(MAKE) -C libvorbis distclean
-	-$(MAKE) -C lib-widget-extra distclean
-	-$(MAKE) -C libflac distclean
-	-$(MAKE) -C portaudio-v19 distclean
-	-$(MAKE) -C portmixer distclean
-	-$(MAKE) -C sbsms distclean
-	-$(MAKE) -C soundtouch distclean
-	-$(MAKE) -C twolame distclean
-	-rm -f @LOCAL_LIBS@
+	test ! -f portsmf/Makefile || $(MAKE) -C portsmf distclean
+	test ! -f expat/Makefile || $(MAKE) -C expat distclean
+	test ! -f FileDialog/Makefile || $(MAKE) -C FileDialog distclean
+	test ! -f libid3tag/Makefile || $(MAKE) -C libid3tag distclean
+	test ! -f libmad/Makefile || $(MAKE) -C libmad distclean
+	test ! -f libnyquist/Makefile || $(MAKE) -C libnyquist distclean
+	test ! -f liblrdf/Makefile || $(MAKE) -C liblrdf distclean
+	test ! -f libogg/Makefile || $(MAKE) -C libogg distclean
+	test ! -f libsoxr/Makefile || $(MAKE) -C libsoxr distclean
+	test ! -f libsamplerate/Makefile || $(MAKE) -C libsamplerate distclean
+	test ! -f libresample/Makefile || $(MAKE) -C libresample distclean
+	test ! -f libsndfile/Makefile || $(MAKE) -C libsndfile distclean
+	test ! -f libvamp/Makefile || $(MAKE) -C libvamp distclean
+	test ! -f libvorbis/Makefile || $(MAKE) -C libvorbis distclean
+	test ! -f lib-widget-extra/Makefile || $(MAKE) -C lib-widget-extra distclean
+	test ! -f libflac/Makefile || $(MAKE) -C libflac distclean
+	test ! -f portaudio-v19/Makefile || $(MAKE) -C portaudio-v19 distclean
+	test ! -f portmixer/Makefile || $(MAKE) -C portmixer distclean
+	test ! -f sbsms/Makefile || $(MAKE) -C sbsms distclean
+	test ! -f soundtouch/Makefile || $(MAKE) -C soundtouch distclean
+	test ! -f twolame/Makefile || $(MAKE) -C twolame distclean
+	rm -f @LOCAL_LIBS@
 
 # list here all the targets that aren't actually files to be made
 .PHONY: portsmf-recursive eexpat-recursive FileDialog-recursive \
