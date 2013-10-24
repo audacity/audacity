@@ -1,0 +1,52 @@
+GO
+
+>_44p8 noninterleaved
+haux 44p8/resaux_0.vqd _44p8_short 0,42,2 8
+haux 44p8/resaux_1.vqd _44p8_long 0,170,2 8
+haux 44p8/resaux_2.vqd _44p8_lfe 0,2,2 2
+	
+#iter 0
+
+#     0   1   2   4   7  17  31   +      
+#         1   2   4   7  17  31   +
+
+#     0   1   2   3   4   5   6   7
+# 1               .   .   .   .   .
+# 2           .   .   .   .   .   .
+# 4       .                   .   .
+# 8                               .
+ 
+:_p1_0 44p8/res_sub0_part1_pass2.vqd, 5, nonseq cull, 0 +- 1 
+:_p2_0 44p8/res_sub0_part2_pass1.vqd, 5, nonseq cull, 0 +- 1 2
+
+:_p3_0 44p8/res_sub0_part3_pass0.vqd, 5, nonseq cull, 0 +- 3
+:_p3_1 44p8/res_sub0_part3_pass1.vqd, 5, nonseq cull, 0 +- 1
+
+:_p4_0 44p8/res_sub0_part4_pass0.vqd, 5, nonseq cull, 0 +- 5
+:_p4_1 44p8/res_sub0_part4_pass1.vqd, 5, nonseq cull, 0 +- 1 2
+
+:_p5_0 44p8/res_sub0_part5_pass0.vqd, 5, nonseq cull, 0 +- 7 14
+:_p5_1 44p8/res_sub0_part5_pass1.vqd, 1, nonseq cull, 0 +- 1 2 3
+
+:_p6_0 44p8/res_sub0_part6_pass0.vqd, 5, nonseq cull, 0 +- 21
+:_p6_1 44p8/res_sub0_part6_pass1.vqd, 5, nonseq cull, 0 +- 7
+# reuse p5_1 :_p6_2 44p3/res_sub0_part6_pass2.vqd, 1, nonseq cull, 0 +- 1 2 3
+
+:_p7_0 44p8/res_sub0_part7_pass0.vqd, 5, nonseq, 0 +- 3125
+:_p7_1 44p8/res_sub0_part7_pass1.vqd, 5, nonseq, 0 +- 625 1250
+:_p7_2 44p8/res_sub0_part7_pass2.vqd, 1, nonseq, 0 +- 25 50 75 100 125 150 175 200 225 250 275 300
+:_p7_3 44p8/res_sub0_part7_pass3.vqd, 1, nonseq, 0 +- 1 2 3 4 5 6 7 8 9 10 11 12
+
+#      32   +
+#       0   0   
+#
+#       0   1 
+#   1   .   .
+#   2   .   .
+#   4       .
+
+:_l0_0 44p8/res_sub1_part0_pass0.vqd, 2, nonseq cull, 0 +- 5 10 15 20 25 30
+:_l0_1 44p8/res_sub1_part0_pass1.vqd, 2, nonseq cull, 0 +- 1 2 
+
+:_l1_0 44p8/res_sub1_part1_pass0.vqd, 2, nonseq, 0 +- 625 1350
+# reuse p6_2/3 for l1_2/3

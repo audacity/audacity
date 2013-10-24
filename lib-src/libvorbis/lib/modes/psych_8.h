@@ -5,23 +5,23 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
- function: 8kHz psychoacoustic settings 
- last mod: $Id: psych_8.h,v 1.8 2008-02-02 15:53:58 richardash1981 Exp $
+ function: 8kHz psychoacoustic settings
+ last mod: $Id: psych_8.h 16227 2009-07-08 06:58:46Z xiphmont $
 
  ********************************************************************/
 
-static att3 _psy_tone_masteratt_8[3]={
+static const att3 _psy_tone_masteratt_8[3]={
   {{ 32,  25,  12},  0,   0},  /* 0 */
   {{ 30,  25,  12},  0,   0},  /* 0 */
   {{ 20,   0, -14},  0,   0}, /* 0 */
 };
 
-static vp_adjblock _vp_tonemask_adj_8[3]={
+static const vp_adjblock _vp_tonemask_adj_8[3]={
   /* adjust for mode zero */
   /* 63     125     250     500     1     2     4     8    16 */
   {{-15,-15,-15,-15,-10,-10, -6, 0, 0, 0, 0,10, 0, 0,99,99,99}}, /* 1 */
@@ -30,7 +30,7 @@ static vp_adjblock _vp_tonemask_adj_8[3]={
 };
 
 
-static noise3 _psy_noisebias_8[3]={
+static const noise3 _psy_noisebias_8[3]={
   /*  63     125     250     500      1k       2k      4k      8k     16k*/
   {{{-10,-10,-10,-10, -5, -5, -5,  0,  4,  8,  8,  8, 10, 10, 99, 99, 99},
     {-10,-10,-10,-10, -5, -5, -5,  0,  0,  4,  4,  4,  4,  4, 99, 99, 99},
@@ -46,7 +46,7 @@ static noise3 _psy_noisebias_8[3]={
 };
 
 /* stereo mode by base quality level */
-static adj_stereo _psy_stereo_modes_8[3]={
+static const adj_stereo _psy_stereo_modes_8[3]={
   /*  0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  */
   {{  4,  4,  4,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3},
    {  6,  5,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4},
@@ -62,12 +62,12 @@ static adj_stereo _psy_stereo_modes_8[3]={
    { 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99}},
 };
 
-static noiseguard _psy_noiseguards_8[2]={
+static const noiseguard _psy_noiseguards_8[2]={
   {10,10,-1},
   {10,10,-1},
 };
 
-static compandblock _psy_compand_8[2]={
+static const compandblock _psy_compand_8[2]={
   {{
      0, 1, 2, 3, 4, 5, 6,  7,     /* 7dB */
      8, 8, 9, 9,10,10,11, 11,     /* 15dB */
@@ -84,19 +84,18 @@ static compandblock _psy_compand_8[2]={
   }},
 };
 
-static double _psy_lowpass_8[3]={3.,4.,4.};
-static int _noise_start_8[2]={
+static const double _psy_lowpass_8[3]={3.,4.,4.};
+static const int _noise_start_8[2]={
   64,64,
 };
-static int _noise_part_8[2]={
+static const int _noise_part_8[2]={
   8,8,
 };
 
-static int _psy_ath_floater_8[3]={
+static const int _psy_ath_floater_8[3]={
   -100,-100,-105,
 };
 
-static int _psy_ath_abs_8[3]={
+static const int _psy_ath_abs_8[3]={
   -130,-130,-140,
 };
-

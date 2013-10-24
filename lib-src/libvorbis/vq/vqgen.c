@@ -11,7 +11,7 @@
  ********************************************************************
 
  function: train a VQ codebook 
- last mod: $Id: vqgen.c,v 1.8 2008-02-02 15:54:09 richardash1981 Exp $
+ last mod: $Id: vqgen.c 16037 2009-05-26 21:10:58Z xiphmont $
 
  ********************************************************************/
 
@@ -106,16 +106,16 @@ void vqgen_cellmetric(vqgen *v){
 
     for(k=0;k<v->entries;k++){
       if(j!=k){
-	float this=_dist(v,_now(v,j),_now(v,k));
-	if(this>0){
-	  if(v->assigned[k] && (localmin==-1 || this<localmin))
-	    localmin=this;
-	}else{	
-	  if(k<j){
-	    dup++;
-	    break;
-	  }
-	}
+        float this=_dist(v,_now(v,j),_now(v,k));
+        if(this>0){
+          if(v->assigned[k] && (localmin==-1 || this<localmin))
+            localmin=this;
+        }else{        
+          if(k<j){
+            dup++;
+            break;
+          }
+        }
       }
     }
     if(k<v->entries)continue;
@@ -136,14 +136,14 @@ void vqgen_cellmetric(vqgen *v){
   }
 
   fprintf(stderr,"cell diameter: %.03g::%.03g::%.03g (%ld unused/%ld dup)\n",
-	  min,mean/acc,max,unused,dup);
+          min,mean/acc,max,unused,dup);
 
 #ifdef NOISY
   qsort(spacings,count,sizeof(float),directdsort);
   for(i=0;i<count;i++)
     fprintf(cells,"%g\n",spacings[i]);
   fclose(cells);
-#endif	    
+#endif            
 
 }
 
@@ -204,15 +204,15 @@ void vqgen_quantize(vqgen *v,quant_meta *q){
       
       _now(v,j)[k]=now;
       if(now<0){
-	/* be paranoid; this should be impossible */
-	fprintf(stderr,"fault; quantized value<0\n");
-	exit(1);
+        /* be paranoid; this should be impossible */
+        fprintf(stderr,"fault; quantized value<0\n");
+        exit(1);
       }
 
       if(now>maxquant){
-	/* be paranoid; this should be impossible */
-	fprintf(stderr,"fault; quantized value>max\n");
-	exit(1);
+        /* be paranoid; this should be impossible */
+        fprintf(stderr,"fault; quantized value>max\n");
+        exit(1);
       }
       if(q->sequencep)last=(now*delta)+mindel+last;
     }
@@ -238,8 +238,8 @@ void vqgen_unquantize(vqgen *v,quant_meta *q){
 }
 
 void vqgen_init(vqgen *v,int elements,int aux,int entries,float mindist,
-		float  (*metric)(vqgen *,float *, float *),
-		float *(*weight)(vqgen *,float *),int centroid){
+                float  (*metric)(vqgen *,float *, float *),
+                float *(*weight)(vqgen *,float *),int centroid){
   memset(v,0,sizeof(vqgen));
 
   v->centroid=centroid;
@@ -277,7 +277,7 @@ void vqgen_addpoint(vqgen *v, float *p,float *a){
   if(v->points>=v->allocated){
     v->allocated*=2;
     v->pointlist=_ogg_realloc(v->pointlist,v->allocated*(v->elements+v->aux)*
-			 sizeof(float));
+                         sizeof(float));
   }
 
   memcpy(_point(v,v->points),p,sizeof(float)*v->elements);
@@ -288,7 +288,7 @@ void vqgen_addpoint(vqgen *v, float *p,float *a){
     /* quantize to the mesh */
     for(k=0;k<v->elements+v->aux;k++)
       _point(v,v->points)[k]=
-	rint(_point(v,v->points)[k]/v->mindist)*v->mindist;
+        rint(_point(v,v->points)[k]/v->mindist)*v->mindist;
   }
   v->points++;
   if(!(v->points&0xff))spinnit("loading... ",v->points);
@@ -314,16 +314,16 @@ void vqgen_sortmesh(vqgen *v){
     /* now march through and eliminate dupes */
     for(i=1;i<v->points;i++){
       if(memcmp(_point(v,i),_point(v,i-1),sortsize)){
-	/* a new, unique entry.  march it down */
-	if(i>march)memcpy(_point(v,march),_point(v,i),sortsize);
-	march++;
+        /* a new, unique entry.  march it down */
+        if(i>march)memcpy(_point(v,march),_point(v,i),sortsize);
+        march++;
       }
       spinnit("eliminating density... ",v->points-i);
     }
 
     /* we're done */
     fprintf(stderr,"\r%ld training points remining out of %ld"
-	    " after density mesh (%ld%%)\n",march,v->points,march*100/v->points);
+            " after density mesh (%ld%%)\n",march,v->points,march*100/v->points);
     v->points=march;
 
   }
@@ -388,69 +388,69 @@ float vqgen_iterate(vqgen *v,int biasp){
       if(!(i&0xff))spinnit("biasing... ",v->points+v->points+v->entries-i);
       
       if(firstmetric>secondmetric){
-	float temp=firstmetric;
-	firstmetric=secondmetric;
-	secondmetric=temp;
-	firstentry=1;
-	secondentry=0;
+        float temp=firstmetric;
+        firstmetric=secondmetric;
+        secondmetric=temp;
+        firstentry=1;
+        secondentry=0;
       }
       
       for(j=2;j<v->entries;j++){
-	float thismetric=v->metric_func(v,_now(v,j),ppt)+v->bias[j];
-	if(thismetric<secondmetric){
-	  if(thismetric<firstmetric){
-	    secondmetric=firstmetric;
-	    secondentry=firstentry;
-	    firstmetric=thismetric;
-	    firstentry=j;
-	  }else{
-	    secondmetric=thismetric;
-	    secondentry=j;
-	  }
-	}
+        float thismetric=v->metric_func(v,_now(v,j),ppt)+v->bias[j];
+        if(thismetric<secondmetric){
+          if(thismetric<firstmetric){
+            secondmetric=firstmetric;
+            secondentry=firstentry;
+            firstmetric=thismetric;
+            firstentry=j;
+          }else{
+            secondmetric=thismetric;
+            secondentry=j;
+          }
+        }
       }
       
       j=firstentry;
       for(j=0;j<v->entries;j++){
-	
-	float thismetric,localmetric;
-	float *nearbiasptr=nearbias+desired2*j;
-	long k=nearcount[j];
-	
-	localmetric=v->metric_func(v,_now(v,j),ppt);
-	/* 'thismetric' is to be the bias value necessary in the current
-	   arrangement for entry j to capture point i */
-	if(firstentry==j){
-	  /* use the secondary entry as the threshhold */
-	  thismetric=secondmetric-localmetric;
-	}else{
-	  /* use the primary entry as the threshhold */
-	  thismetric=firstmetric-localmetric;
-	}
-	
-	/* support the idea of 'minimum distance'... if we want the
-	   cells in a codebook to be roughly some minimum size (as with
-	   the low resolution residue books) */
-	
-	/* a cute two-stage delayed sorting hack */
-	if(k<desired){
-	  nearbiasptr[k]=thismetric;
-	  k++;
-	  if(k==desired){
-	    spinnit("biasing... ",v->points+v->points+v->entries-i);
-	    qsort(nearbiasptr,desired,sizeof(float),directdsort);
-	  }
-	  
-	}else if(thismetric>nearbiasptr[desired-1]){
-	  nearbiasptr[k]=thismetric;
-	  k++;
-	  if(k==desired2){
-	    spinnit("biasing... ",v->points+v->points+v->entries-i);
-	    qsort(nearbiasptr,desired2,sizeof(float),directdsort);
-	    k=desired;
-	  }
-	}
-	nearcount[j]=k;
+        
+        float thismetric,localmetric;
+        float *nearbiasptr=nearbias+desired2*j;
+        long k=nearcount[j];
+        
+        localmetric=v->metric_func(v,_now(v,j),ppt);
+        /* 'thismetric' is to be the bias value necessary in the current
+           arrangement for entry j to capture point i */
+        if(firstentry==j){
+          /* use the secondary entry as the threshhold */
+          thismetric=secondmetric-localmetric;
+        }else{
+          /* use the primary entry as the threshhold */
+          thismetric=firstmetric-localmetric;
+        }
+        
+        /* support the idea of 'minimum distance'... if we want the
+           cells in a codebook to be roughly some minimum size (as with
+           the low resolution residue books) */
+        
+        /* a cute two-stage delayed sorting hack */
+        if(k<desired){
+          nearbiasptr[k]=thismetric;
+          k++;
+          if(k==desired){
+            spinnit("biasing... ",v->points+v->points+v->entries-i);
+            qsort(nearbiasptr,desired,sizeof(float),directdsort);
+          }
+          
+        }else if(thismetric>nearbiasptr[desired-1]){
+          nearbiasptr[k]=thismetric;
+          k++;
+          if(k==desired2){
+            spinnit("biasing... ",v->points+v->points+v->entries-i);
+            qsort(nearbiasptr,desired2,sizeof(float),directdsort);
+            k=desired;
+          }
+        }
+        nearcount[j]=k;
       }
     }
     
@@ -463,7 +463,7 @@ float vqgen_iterate(vqgen *v,int biasp){
       
       /* due to the delayed sorting, we likely need to finish it off....*/
       if(nearcount[i]>desired)
-	qsort(nearbiasptr,nearcount[i],sizeof(float),directdsort);
+        qsort(nearbiasptr,nearcount[i],sizeof(float),directdsort);
 
       v->bias[i]=nearbiasptr[desired-1];
 
@@ -483,8 +483,8 @@ float vqgen_iterate(vqgen *v,int biasp){
     for(j=0;j<v->entries;j++){
       float thismetric=v->metric_func(v,_now(v,j),ppt)+v->bias[j];
       if(thismetric<firstmetric){
-	firstmetric=thismetric;
-	firstentry=j;
+        firstmetric=thismetric;
+        firstentry=j;
       }
     }
 
@@ -502,28 +502,28 @@ float vqgen_iterate(vqgen *v,int biasp){
     if(v->centroid==0){
       /* set up midpoints for next iter */
       if(v->assigned[j]++){
-	for(k=0;k<v->elements;k++)
-	  vN(new,j)[k]+=ppt[k];
-	if(firstmetric>v->max[j])v->max[j]=firstmetric;
+        for(k=0;k<v->elements;k++)
+          vN(new,j)[k]+=ppt[k];
+        if(firstmetric>v->max[j])v->max[j]=firstmetric;
       }else{
-	for(k=0;k<v->elements;k++)
-	  vN(new,j)[k]=ppt[k];
-	v->max[j]=firstmetric;
+        for(k=0;k<v->elements;k++)
+          vN(new,j)[k]=ppt[k];
+        v->max[j]=firstmetric;
       }
     }else{
       /* centroid */
       if(v->assigned[j]++){
-	for(k=0;k<v->elements;k++){
-	  if(vN(new,j)[k]>ppt[k])vN(new,j)[k]=ppt[k];
-	  if(vN(new2,j)[k]<ppt[k])vN(new2,j)[k]=ppt[k];
-	}
-	if(firstmetric>v->max[firstentry])v->max[j]=firstmetric;
+        for(k=0;k<v->elements;k++){
+          if(vN(new,j)[k]>ppt[k])vN(new,j)[k]=ppt[k];
+          if(vN(new2,j)[k]<ppt[k])vN(new2,j)[k]=ppt[k];
+        }
+        if(firstmetric>v->max[firstentry])v->max[j]=firstmetric;
       }else{
-	for(k=0;k<v->elements;k++){
-	  vN(new,j)[k]=ppt[k];
-	  vN(new2,j)[k]=ppt[k];
-	}
-	v->max[firstentry]=firstmetric;
+        for(k=0;k<v->elements;k++){
+          vN(new,j)[k]=ppt[k];
+          vN(new2,j)[k]=ppt[k];
+        }
+        v->max[firstentry]=firstmetric;
       }
     }
   }
@@ -538,11 +538,11 @@ float vqgen_iterate(vqgen *v,int biasp){
     asserror+=fabs(v->assigned[j]-fdesired);
     if(v->assigned[j]){
       if(v->centroid==0){
-	for(k=0;k<v->elements;k++)
-	  _now(v,j)[k]=vN(new,j)[k]/v->assigned[j];
+        for(k=0;k<v->elements;k++)
+          _now(v,j)[k]=vN(new,j)[k]/v->assigned[j];
       }else{
-	for(k=0;k<v->elements;k++)
-	  _now(v,j)[k]=(vN(new,j)[k]+vN(new2,j)[k])/2.f;
+        for(k=0;k<v->elements;k++)
+          _now(v,j)[k]=(vN(new,j)[k]+vN(new2,j)[k])/2.f;
       }
     }
   }
@@ -551,7 +551,7 @@ float vqgen_iterate(vqgen *v,int biasp){
 
   fprintf(stderr,"Pass #%d... ",v->it);
   fprintf(stderr,": dist %g(%g) metric error=%g \n",
-	  asserror,fdesired,meterror/v->points);
+          asserror,fdesired,meterror/v->points);
   v->it++;
   
   free(new);

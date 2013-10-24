@@ -5,38 +5,38 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
  function: toplevel settings for 32kHz
- last mod: $Id: setup_32.h,v 1.7 2008-02-02 15:53:59 richardash1981 Exp $
+ last mod: $Id: setup_32.h 16894 2010-02-12 20:32:12Z xiphmont $
 
  ********************************************************************/
 
-static double rate_mapping_32[12]={
+static const double rate_mapping_32[12]={
   18000.,28000.,35000.,45000.,56000.,60000.,
   75000.,90000.,100000.,115000.,150000.,190000.,
 };
 
-static double rate_mapping_32_un[12]={
+static const double rate_mapping_32_un[12]={
   30000.,42000.,52000.,64000.,72000.,78000.,
   86000.,92000.,110000.,120000.,140000.,190000.,
 };
 
-static double _psy_lowpass_32[12]={
+static const double _psy_lowpass_32[12]={
   12.3,13.,13.,14.,15.,99.,99.,99.,99.,99.,99.,99.
 };
 
-ve_setup_data_template ve_setup_32_stereo={
+static const ve_setup_data_template ve_setup_32_stereo={
   11,
   rate_mapping_32,
   quality_mapping_44,
   2,
   26000,
   40000,
-  
+
   blocksize_short_44,
   blocksize_long_44,
 
@@ -54,7 +54,7 @@ ve_setup_data_template ve_setup_32_stereo={
   _psy_noisebias_trans,
   _psy_noisebias_long,
   _psy_noise_suppress,
-  
+
   _psy_compand_44,
   _psy_compand_short_mapping,
   _psy_compand_long_mapping,
@@ -65,7 +65,7 @@ ve_setup_data_template ve_setup_32_stereo={
 
   _psy_ath_floater,
   _psy_ath_abs,
-  
+
   _psy_lowpass_32,
 
   _psy_global_44,
@@ -74,20 +74,20 @@ ve_setup_data_template ve_setup_32_stereo={
 
   _floor_books,
   _floor,
-  _floor_short_mapping_44,
-  _floor_long_mapping_44,
+  2,
+  _floor_mapping_44,
 
   _mapres_template_44_stereo
 };
 
-ve_setup_data_template ve_setup_32_uncoupled={
+static const ve_setup_data_template ve_setup_32_uncoupled={
   11,
   rate_mapping_32_un,
   quality_mapping_44,
   -1,
   26000,
   40000,
-  
+
   blocksize_short_44,
   blocksize_long_44,
 
@@ -105,7 +105,7 @@ ve_setup_data_template ve_setup_32_uncoupled={
   _psy_noisebias_trans,
   _psy_noisebias_long,
   _psy_noise_suppress,
-  
+
   _psy_compand_44,
   _psy_compand_short_mapping,
   _psy_compand_long_mapping,
@@ -116,7 +116,7 @@ ve_setup_data_template ve_setup_32_uncoupled={
 
   _psy_ath_floater,
   _psy_ath_abs,
-  
+
   _psy_lowpass_32,
 
   _psy_global_44,
@@ -125,8 +125,8 @@ ve_setup_data_template ve_setup_32_uncoupled={
 
   _floor_books,
   _floor,
-  _floor_short_mapping_44,
-  _floor_long_mapping_44,
+  2,
+  _floor_mapping_44,
 
   _mapres_template_44_uncoupled
 };

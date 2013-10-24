@@ -15,6 +15,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -36,11 +37,13 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 EXTRA_PROGRAMS = barkmel$(EXEEXT) tone$(EXEEXT) psytune$(EXEEXT)
+noinst_PROGRAMS = $(am__EXEEXT_1)
 subdir = lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/m4/add_cflags.m4 \
+	$(top_srcdir)/m4/ogg.m4 $(top_srcdir)/m4/pkg.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -91,6 +94,8 @@ libvorbisfile_la_OBJECTS = $(am_libvorbisfile_la_OBJECTS)
 libvorbisfile_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libvorbisfile_la_LDFLAGS) $(LDFLAGS) -o $@
+am__EXEEXT_1 = test_sharedbook$(EXEEXT)
+PROGRAMS = $(noinst_PROGRAMS)
 am_barkmel_OBJECTS = barkmel.$(OBJEXT)
 barkmel_OBJECTS = $(am_barkmel_OBJECTS)
 barkmel_LDADD = $(LDADD)
@@ -100,6 +105,12 @@ psytune_DEPENDENCIES = libvorbis.la
 psytune_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(psytune_LDFLAGS) \
 	$(LDFLAGS) -o $@
+am_test_sharedbook_OBJECTS = test_sharedbook-sharedbook.$(OBJEXT)
+test_sharedbook_OBJECTS = $(am_test_sharedbook_OBJECTS)
+test_sharedbook_DEPENDENCIES =
+test_sharedbook_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_sharedbook_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_tone_OBJECTS = tone.$(OBJEXT)
 tone_OBJECTS = $(am_tone_OBJECTS)
 tone_LDADD = $(LDADD)
@@ -118,10 +129,10 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libvorbis_la_SOURCES) $(libvorbisenc_la_SOURCES) \
 	$(libvorbisfile_la_SOURCES) $(barkmel_SOURCES) \
-	$(psytune_SOURCES) $(tone_SOURCES)
+	$(psytune_SOURCES) $(test_sharedbook_SOURCES) $(tone_SOURCES)
 DIST_SOURCES = $(libvorbis_la_SOURCES) $(libvorbisenc_la_SOURCES) \
 	$(libvorbisfile_la_SOURCES) $(barkmel_SOURCES) \
-	$(psytune_SOURCES) $(tone_SOURCES)
+	$(psytune_SOURCES) $(test_sharedbook_SOURCES) $(tone_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -164,9 +175,11 @@ am__relativize = \
   done; \
   reldir="$$dir2"
 ACLOCAL = @ACLOCAL@
+ACLOCAL_AMFLAGS = @ACLOCAL_AMFLAGS@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
 AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -180,6 +193,7 @@ CYGPATH_W = @CYGPATH_W@
 DEBUG = @DEBUG@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -189,7 +203,8 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GREP = @GREP@
-HAVE_PKG_CONFIG = @HAVE_PKG_CONFIG@
+HAVE_DOXYGEN = @HAVE_DOXYGEN@
+HTLATEX = @HTLATEX@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -200,11 +215,13 @@ LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
@@ -222,7 +239,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PDFXMLTEX = @PDFXMLTEX@
+PDFLATEX = @PDFLATEX@
 PKG_CONFIG = @PKG_CONFIG@
 PROFILE = @PROFILE@
 RANLIB = @RANLIB@
@@ -241,11 +258,11 @@ VORBIS_LIBS = @VORBIS_LIBS@
 V_LIB_AGE = @V_LIB_AGE@
 V_LIB_CURRENT = @V_LIB_CURRENT@
 V_LIB_REVISION = @V_LIB_REVISION@
-XSLTPROC = @XSLTPROC@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
@@ -278,7 +295,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -313,13 +329,13 @@ libvorbis_la_SOURCES = mdct.c smallft.c block.c envelope.c window.c lsp.c \
 			codec_internal.h backends.h bitrate.h 
 
 libvorbis_la_LDFLAGS = -no-undefined -version-info @V_LIB_CURRENT@:@V_LIB_REVISION@:@V_LIB_AGE@
-libvorbis_la_LIBADD = @OGG_LIBS@ @VORBIS_LIBS@
+libvorbis_la_LIBADD = @VORBIS_LIBS@ @OGG_LIBS@
 libvorbisfile_la_SOURCES = vorbisfile.c
 libvorbisfile_la_LDFLAGS = -no-undefined -version-info @VF_LIB_CURRENT@:@VF_LIB_REVISION@:@VF_LIB_AGE@
-libvorbisfile_la_LIBADD = libvorbis.la
+libvorbisfile_la_LIBADD = libvorbis.la @OGG_LIBS@
 libvorbisenc_la_SOURCES = vorbisenc.c 
 libvorbisenc_la_LDFLAGS = -no-undefined -version-info @VE_LIB_CURRENT@:@VE_LIB_REVISION@:@VE_LIB_AGE@
-libvorbisenc_la_LIBADD = libvorbis.la
+libvorbisenc_la_LIBADD = libvorbis.la @OGG_LIBS@
 CLEANFILES = $(EXTRA_PROGRAMS)
 barkmel_SOURCES = barkmel.c
 tone_SOURCES = tone.c
@@ -327,6 +343,17 @@ psytune_SOURCES = psytune.c
 psytune_LDFLAGS = -static
 psytune_LDADD = libvorbis.la
 EXTRA_DIST = lookups.pl 
+
+# build and run the self tests on 'make check'
+
+#vorbis_selftests = test_codebook test_sharedbook
+vorbis_selftests = test_sharedbook
+
+#test_codebook_SOURCES = codebook.c
+#test_codebook_CFLAGS = -D_V_SELFTEST
+test_sharedbook_SOURCES = sharedbook.c
+test_sharedbook_CFLAGS = -D_V_SELFTEST
+test_sharedbook_LDADD = @VORBIS_LIBS@
 all: all-recursive
 
 .SUFFIXES:
@@ -398,12 +425,24 @@ libvorbisenc.la: $(libvorbisenc_la_OBJECTS) $(libvorbisenc_la_DEPENDENCIES)
 	$(libvorbisenc_la_LINK) -rpath $(libdir) $(libvorbisenc_la_OBJECTS) $(libvorbisenc_la_LIBADD) $(LIBS)
 libvorbisfile.la: $(libvorbisfile_la_OBJECTS) $(libvorbisfile_la_DEPENDENCIES) 
 	$(libvorbisfile_la_LINK) -rpath $(libdir) $(libvorbisfile_la_OBJECTS) $(libvorbisfile_la_LIBADD) $(LIBS)
+
+clean-noinstPROGRAMS:
+	@list='$(noinst_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
 barkmel$(EXEEXT): $(barkmel_OBJECTS) $(barkmel_DEPENDENCIES) 
 	@rm -f barkmel$(EXEEXT)
 	$(LINK) $(barkmel_OBJECTS) $(barkmel_LDADD) $(LIBS)
 psytune$(EXEEXT): $(psytune_OBJECTS) $(psytune_DEPENDENCIES) 
 	@rm -f psytune$(EXEEXT)
 	$(psytune_LINK) $(psytune_OBJECTS) $(psytune_LDADD) $(LIBS)
+test_sharedbook$(EXEEXT): $(test_sharedbook_OBJECTS) $(test_sharedbook_DEPENDENCIES) 
+	@rm -f test_sharedbook$(EXEEXT)
+	$(test_sharedbook_LINK) $(test_sharedbook_OBJECTS) $(test_sharedbook_LDADD) $(LIBS)
 tone$(EXEEXT): $(tone_OBJECTS) $(tone_DEPENDENCIES) 
 	@rm -f tone$(EXEEXT)
 	$(LINK) $(tone_OBJECTS) $(tone_LDADD) $(LIBS)
@@ -435,6 +474,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sharedbook.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smallft.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/synthesis.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_sharedbook-sharedbook.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tone.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vorbisenc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vorbisfile.Plo@am__quote@
@@ -460,6 +500,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+test_sharedbook-sharedbook.o: sharedbook.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_sharedbook_CFLAGS) $(CFLAGS) -MT test_sharedbook-sharedbook.o -MD -MP -MF $(DEPDIR)/test_sharedbook-sharedbook.Tpo -c -o test_sharedbook-sharedbook.o `test -f 'sharedbook.c' || echo '$(srcdir)/'`sharedbook.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/test_sharedbook-sharedbook.Tpo $(DEPDIR)/test_sharedbook-sharedbook.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sharedbook.c' object='test_sharedbook-sharedbook.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_sharedbook_CFLAGS) $(CFLAGS) -c -o test_sharedbook-sharedbook.o `test -f 'sharedbook.c' || echo '$(srcdir)/'`sharedbook.c
+
+test_sharedbook-sharedbook.obj: sharedbook.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_sharedbook_CFLAGS) $(CFLAGS) -MT test_sharedbook-sharedbook.obj -MD -MP -MF $(DEPDIR)/test_sharedbook-sharedbook.Tpo -c -o test_sharedbook-sharedbook.obj `if test -f 'sharedbook.c'; then $(CYGPATH_W) 'sharedbook.c'; else $(CYGPATH_W) '$(srcdir)/sharedbook.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/test_sharedbook-sharedbook.Tpo $(DEPDIR)/test_sharedbook-sharedbook.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sharedbook.c' object='test_sharedbook-sharedbook.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_sharedbook_CFLAGS) $(CFLAGS) -c -o test_sharedbook-sharedbook.obj `if test -f 'sharedbook.c'; then $(CYGPATH_W) 'sharedbook.c'; else $(CYGPATH_W) '$(srcdir)/sharedbook.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -662,7 +716,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS)
 installdirs: installdirs-recursive
 installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)"; do \
@@ -697,7 +751,7 @@ maintainer-clean-generic:
 clean: clean-recursive
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
-	mostlyclean-am
+	clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -rf ./$(DEPDIR)
@@ -770,8 +824,8 @@ uninstall-am: uninstall-libLTLIBRARIES
 
 .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
 	all all-am check check-am clean clean-generic \
-	clean-libLTLIBRARIES clean-libtool ctags ctags-recursive \
-	distclean distclean-compile distclean-generic \
+	clean-libLTLIBRARIES clean-libtool clean-noinstPROGRAMS ctags \
+	ctags-recursive distclean distclean-compile distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
@@ -784,6 +838,11 @@ uninstall-am: uninstall-libLTLIBRARIES
 	pdf pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
 	uninstall-libLTLIBRARIES
 
+
+check: $(noinst_PROGRAMS)
+	./test_sharedbook$(EXEEXT)
+
+# recurse for alternate targets
 
 debug:
 	$(MAKE) all CFLAGS="@DEBUG@"

@@ -5,13 +5,13 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
  function: registry for time, floor, res backends and channel mappings
- last mod: $Id: registry.c,v 1.7 2008-02-02 15:53:54 richardash1981 Exp $
+ last mod: $Id: registry.c 16227 2009-07-08 06:58:46Z xiphmont $
 
  ********************************************************************/
 
@@ -22,25 +22,24 @@
 /* seems like major overkill now; the backend numbers will grow into
    the infrastructure soon enough */
 
-extern vorbis_func_floor     floor0_exportbundle;
-extern vorbis_func_floor     floor1_exportbundle;
-extern vorbis_func_residue   residue0_exportbundle;
-extern vorbis_func_residue   residue1_exportbundle;
-extern vorbis_func_residue   residue2_exportbundle;
-extern vorbis_func_mapping   mapping0_exportbundle;
+extern const vorbis_func_floor     floor0_exportbundle;
+extern const vorbis_func_floor     floor1_exportbundle;
+extern const vorbis_func_residue   residue0_exportbundle;
+extern const vorbis_func_residue   residue1_exportbundle;
+extern const vorbis_func_residue   residue2_exportbundle;
+extern const vorbis_func_mapping   mapping0_exportbundle;
 
-vorbis_func_floor     *_floor_P[]={
+const vorbis_func_floor     *const _floor_P[]={
   &floor0_exportbundle,
   &floor1_exportbundle,
 };
 
-vorbis_func_residue   *_residue_P[]={
+const vorbis_func_residue   *const _residue_P[]={
   &residue0_exportbundle,
   &residue1_exportbundle,
   &residue2_exportbundle,
 };
 
-vorbis_func_mapping   *_mapping_P[]={
+const vorbis_func_mapping   *const _mapping_P[]={
   &mapping0_exportbundle,
 };
-

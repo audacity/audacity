@@ -12,7 +12,7 @@
 
  function: simple utility that runs audio through the psychoacoustics
            without encoding
- last mod: $Id: psytune.c,v 1.8 2008-02-02 15:53:53 richardash1981 Exp $
+ last mod: $Id: psytune.c 16037 2009-05-26 21:10:58Z xiphmont $
 
  ********************************************************************/
 
@@ -158,43 +158,43 @@ static vorbis_info_psy _psy_set0={
 };
 
 static vorbis_info_floor1 _floor_set0={1,
-					{0},
-					
-					{32},
-					{0},
-					{0},
-					{{-1}},
+                                        {0},
+                                        
+                                        {32},
+                                        {0},
+                                        {0},
+                                        {{-1}},
 
-					2,
-					{0,1024,
+                                        2,
+                                        {0,1024,
 
-					 88,31,243,
+                                         88,31,243,
 
-					 14,54,143,460,
-					 
-					 6,3,10, 22,18,26, 41,36,47, 
-					 69,61,78, 112,99,126, 185,162,211,  
-					 329,282,387, 672,553,825
-					 },
-					
-					60,30,400,
-					20,8,1,18.,
-					20,600,
-					960};
+                                         14,54,143,460,
+                                         
+                                         6,3,10, 22,18,26, 41,36,47, 
+                                         69,61,78, 112,99,126, 185,162,211,  
+                                         329,282,387, 672,553,825
+                                         },
+                                        
+                                        60,30,400,
+                                        20,8,1,18.,
+                                        20,600,
+                                        960};
 
 
 static vorbis_info_mapping0 mapping_info={1,{0,1},{0},{0},{0},0, 1, {0},{1}};
 static codec_setup_info codec_setup0={ {0,0}, 
-				       1,1,1,1,1,0,1,	
-				       {NULL},
-				       {0},{&mapping_info},
-				       {0},{NULL},
-				       {1},{&_floor_set0},
-				       {2},{NULL},
-				       {NULL},
-				       {&_psy_set0},
-				       &_psy_set0G};
-				       
+                                       1,1,1,1,1,0,1,        
+                                       {NULL},
+                                       {0},{&mapping_info},
+                                       {0},{NULL},
+                                       {1},{&_floor_set0},
+                                       {2},{NULL},
+                                       {NULL},
+                                       {&_psy_set0},
+                                       &_psy_set0G};
+                                       
 static int noisy=0;
 void analysis(char *base,int i,float *v,int n,int bark,int dB){
   if(noisy){
@@ -206,18 +206,18 @@ void analysis(char *base,int i,float *v,int n,int bark,int dB){
 
     for(j=0;j<n;j++){
       if(dB && v[j]==0)
-	  fprintf(of,"\n\n");
+          fprintf(of,"\n\n");
       else{
-	if(bark)
-	  fprintf(of,"%g ",toBARK(22050.f*j/n));
-	else
-	  fprintf(of,"%g ",(float)j);
+        if(bark)
+          fprintf(of,"%g ",toBARK(22050.f*j/n));
+        else
+          fprintf(of,"%g ",(float)j);
       
-	if(dB){
-	  fprintf(of,"%g\n",todB(v+j));
-	}else{
-	  fprintf(of,"%g\n",v[j]);
-	}
+        if(dB){
+          fprintf(of,"%g\n",todB(v+j));
+        }else{
+          fprintf(of,"%g\n",v[j]);
+        }
       }
     }
     fclose(of);
@@ -257,16 +257,16 @@ int main(int argc,char *argv[]){
     if(*argv[0]=='-'){
       /* option */
       if(argv[0][1]=='v'){
-	noisy=0;
+        noisy=0;
       }
     }else
       if(*argv[0]=='+'){
-	/* option */
-	if(argv[0][1]=='v'){
-	  noisy=1;
-	}
+        /* option */
+        if(argv[0][1]=='v'){
+          noisy=1;
+        }
       }else
-	framesize=atoi(argv[0]);
+        framesize=atoi(argv[0]);
     argv++;
   }
   
@@ -314,194 +314,194 @@ int main(int argc,char *argv[]){
         pcm[0][i]=((buffer[i*4+1]<<8)|
                       (0x00ff&(int)buffer[i*4]))/32768.f;
         pcm[1][i]=((buffer[i*4+3]<<8)|
-		   (0x00ff&(int)buffer[i*4+2]))/32768.f;
+                   (0x00ff&(int)buffer[i*4+2]))/32768.f;
       }
       
       {
-	float secs=framesize/44100.;
-	
-	ampmax+=secs*ampmax_att_per_sec;
-	if(ampmax<-9999)ampmax=-9999;
+        float secs=framesize/44100.;
+        
+        ampmax+=secs*ampmax_att_per_sec;
+        if(ampmax<-9999)ampmax=-9999;
       }
 
       for(i=0;i<2;i++){
-	float scale=4.f/framesize;
-	float *fft=work[i];
-	float *mdct=pcm[i];
-	float *logmdct=mdct+framesize/2;
+        float scale=4.f/framesize;
+        float *fft=work[i];
+        float *mdct=pcm[i];
+        float *logmdct=mdct+framesize/2;
 
-	analysis("pre",frameno+i,pcm[i],framesize,0,0);
-	
-	/* fft and mdct transforms  */
-	for(j=0;j<framesize;j++)
-	  fft[j]=pcm[i][j]*=window[j];
-	
-	drft_forward(&f_look,fft);
+        analysis("pre",frameno+i,pcm[i],framesize,0,0);
+        
+        /* fft and mdct transforms  */
+        for(j=0;j<framesize;j++)
+          fft[j]=pcm[i][j]*=window[j];
+        
+        drft_forward(&f_look,fft);
 
-	local_ampmax[i]=-9999.f;
-	fft[0]*=scale;
-	fft[0]=todB(fft);
-	for(j=1;j<framesize-1;j+=2){
-	  float temp=scale*FAST_HYPOT(fft[j],fft[j+1]);
-	  temp=fft[(j+1)>>1]=todB(&temp);
-	  if(temp>local_ampmax[i])local_ampmax[i]=temp;
-	}
-	if(local_ampmax[i]>ampmax)ampmax=local_ampmax[i];
-	
-	mdct_forward(&m_look,pcm[i],mdct);
-	for(j=0;j<framesize/2;j++)
-	  logmdct[j]=todB(mdct+j);
+        local_ampmax[i]=-9999.f;
+        fft[0]*=scale;
+        fft[0]=todB(fft);
+        for(j=1;j<framesize-1;j+=2){
+          float temp=scale*FAST_HYPOT(fft[j],fft[j+1]);
+          temp=fft[(j+1)>>1]=todB(&temp);
+          if(temp>local_ampmax[i])local_ampmax[i]=temp;
+        }
+        if(local_ampmax[i]>ampmax)ampmax=local_ampmax[i];
+        
+        mdct_forward(&m_look,pcm[i],mdct);
+        for(j=0;j<framesize/2;j++)
+          logmdct[j]=todB(mdct+j);
 
-	analysis("mdct",frameno+i,logmdct,framesize/2,1,0);
-	analysis("fft",frameno+i,fft,framesize/2,1,0);
+        analysis("mdct",frameno+i,logmdct,framesize/2,1,0);
+        analysis("fft",frameno+i,fft,framesize/2,1,0);
       }
 
       for(i=0;i<2;i++){
-	float amp;
-	float *fft=work[i];
-	float *logmax=fft;
-	float *mdct=pcm[i];
-	float *logmdct=mdct+framesize/2;
-	float *mask=fft+framesize/2;
+        float amp;
+        float *fft=work[i];
+        float *logmax=fft;
+        float *mdct=pcm[i];
+        float *logmdct=mdct+framesize/2;
+        float *mask=fft+framesize/2;
 
-	/* floor psychoacoustics */
-	_vp_compute_mask(&p_look,
-			 pg_look,
-			 i,
-			 fft,
-			 logmdct,
-			 mask,
-			 ampmax,
-			 local_ampmax[i],
-			 framesize/2);
+        /* floor psychoacoustics */
+        _vp_compute_mask(&p_look,
+                         pg_look,
+                         i,
+                         fft,
+                         logmdct,
+                         mask,
+                         ampmax,
+                         local_ampmax[i],
+                         framesize/2);
 
-	analysis("mask",frameno+i,mask,framesize/2,1,0);
+        analysis("mask",frameno+i,mask,framesize/2,1,0);
 
-	{
-	  vorbis_block vb;
-	  vorbis_dsp_state vd;
-	  memset(&vd,0,sizeof(vd));
-	  vd.vi=&vi;
-	  vb.vd=&vd;
-	  vb.pcmend=framesize;
+        {
+          vorbis_block vb;
+          vorbis_dsp_state vd;
+          memset(&vd,0,sizeof(vd));
+          vd.vi=&vi;
+          vb.vd=&vd;
+          vb.pcmend=framesize;
 
-	  /* floor quantization/application */
-	  nonzero[i]=_floor_P[1]->forward(&vb,floor_look,
-					  mdct,
-					  logmdct,
-					  mask,
-					  logmax,
-					  
-					  flr[i]);
-	}
+          /* floor quantization/application */
+          nonzero[i]=_floor_P[1]->forward(&vb,floor_look,
+                                          mdct,
+                                          logmdct,
+                                          mask,
+                                          logmax,
+                                          
+                                          flr[i]);
+        }
 
-	_vp_remove_floor(&p_look,
-			 pg_look,
-			 logmdct,
-			 mdct,
-			 flr[i],
-			 pcm[i],
-			 local_ampmax[i]);
+        _vp_remove_floor(&p_look,
+                         pg_look,
+                         logmdct,
+                         mdct,
+                         flr[i],
+                         pcm[i],
+                         local_ampmax[i]);
 
-	for(j=0;j<framesize/2;j++)
-	  if(fabs(pcm[i][j])>1500)
-	    fprintf(stderr,"%ld ",frameno+i);
-	
-	analysis("res",frameno+i,pcm[i],framesize/2,1,0);
-	analysis("codedflr",frameno+i,flr[i],framesize/2,1,1);
+        for(j=0;j<framesize/2;j++)
+          if(fabs(pcm[i][j])>1500)
+            fprintf(stderr,"%ld ",frameno+i);
+        
+        analysis("res",frameno+i,pcm[i],framesize/2,1,0);
+        analysis("codedflr",frameno+i,flr[i],framesize/2,1,1);
       }
 
       /* residue prequantization */
       _vp_partition_prequant(&p_look,
-			     &vi,
-			     pcm,
-			     nonzero);
-	
+                             &vi,
+                             pcm,
+                             nonzero);
+        
       for(i=0;i<2;i++)
-	analysis("quant",frameno+i,pcm[i],framesize/2,1,0);
+        analysis("quant",frameno+i,pcm[i],framesize/2,1,0);
 
       /* channel coupling / stereo quantization */
 
       _vp_couple(&p_look,
-		 &mapping_info,
-		 pcm,
-		 nonzero);
+                 &mapping_info,
+                 pcm,
+                 nonzero);
   
       for(i=0;i<2;i++)
-	analysis("coupled",frameno+i,pcm[i],framesize/2,1,0);
+        analysis("coupled",frameno+i,pcm[i],framesize/2,1,0);
 
       /* decoupling */
       for(i=mapping_info.coupling_steps-1;i>=0;i--){
-	float *pcmM=pcm[mapping_info.coupling_mag[i]];
-	float *pcmA=pcm[mapping_info.coupling_ang[i]];
-	
-	for(j=0;j<framesize/2;j++){
-	  float mag=pcmM[j];
-	  float ang=pcmA[j];
-	  
-	  if(mag>0)
-	    if(ang>0){
-	      pcmM[j]=mag;
-	      pcmA[j]=mag-ang;
-	    }else{
-	      pcmA[j]=mag;
-	      pcmM[j]=mag+ang;
-	    }
-	  else
-	    if(ang>0){
-	      pcmM[j]=mag;
-	      pcmA[j]=mag+ang;
-	    }else{
-	      pcmA[j]=mag;
-	      pcmM[j]=mag-ang;
-	    }
-	}
+        float *pcmM=pcm[mapping_info.coupling_mag[i]];
+        float *pcmA=pcm[mapping_info.coupling_ang[i]];
+        
+        for(j=0;j<framesize/2;j++){
+          float mag=pcmM[j];
+          float ang=pcmA[j];
+          
+          if(mag>0)
+            if(ang>0){
+              pcmM[j]=mag;
+              pcmA[j]=mag-ang;
+            }else{
+              pcmA[j]=mag;
+              pcmM[j]=mag+ang;
+            }
+          else
+            if(ang>0){
+              pcmM[j]=mag;
+              pcmA[j]=mag+ang;
+            }else{
+              pcmA[j]=mag;
+              pcmM[j]=mag-ang;
+            }
+        }
       }
     
       for(i=0;i<2;i++)
-	analysis("decoupled",frameno+i,pcm[i],framesize/2,1,0);
+        analysis("decoupled",frameno+i,pcm[i],framesize/2,1,0);
 
       for(i=0;i<2;i++){
-	float amp;
+        float amp;
 
-	for(j=0;j<framesize/2;j++)
-	  pcm[i][j]*=flr[i][j];
+        for(j=0;j<framesize/2;j++)
+          pcm[i][j]*=flr[i][j];
 
-	analysis("final",frameno+i,pcm[i],framesize/2,1,1);
+        analysis("final",frameno+i,pcm[i],framesize/2,1,1);
 
-	/* take it back to time */
-	mdct_backward(&m_look,pcm[i],pcm[i]);
+        /* take it back to time */
+        mdct_backward(&m_look,pcm[i],pcm[i]);
 
-	for(j=0;j<framesize/2;j++)
-	  out[i][j]+=pcm[i][j]*window[j];
+        for(j=0;j<framesize/2;j++)
+          out[i][j]+=pcm[i][j]*window[j];
 
-	analysis("out",frameno+i,out[i],framesize/2,0,0);
+        analysis("out",frameno+i,out[i],framesize/2,0,0);
 
 
       }
            
       /* write data.  Use the part of buffer we're about to shift out */
       for(i=0;i<2;i++){
-	char  *ptr=buffer+i*2;
-	float *mono=out[i];
-	int flag=0;
-	for(j=0;j<framesize/2;j++){
-	  int val=mono[j]*32767.;
-	  /* might as well guard against clipping */
-	  if(val>32767){
-	    if(!flag)fprintf(stderr,"clipping in frame %ld ",frameno+i);
-	    flag=1;
-	    val=32767;
-	  }
-	  if(val<-32768){
-	    if(!flag)fprintf(stderr,"clipping in frame %ld ",frameno+i);
-	    flag=1;
-	    val=-32768;
-	  }
-	  ptr[0]=val&0xff;
-	  ptr[1]=(val>>8)&0xff;
-	  ptr+=4;
-	}
+        char  *ptr=buffer+i*2;
+        float *mono=out[i];
+        int flag=0;
+        for(j=0;j<framesize/2;j++){
+          int val=mono[j]*32767.;
+          /* might as well guard against clipping */
+          if(val>32767){
+            if(!flag)fprintf(stderr,"clipping in frame %ld ",frameno+i);
+            flag=1;
+            val=32767;
+          }
+          if(val<-32768){
+            if(!flag)fprintf(stderr,"clipping in frame %ld ",frameno+i);
+            flag=1;
+            val=-32768;
+          }
+          ptr[0]=val&0xff;
+          ptr[1]=(val>>8)&0xff;
+          ptr+=4;
+        }
       }
  
       fprintf(stderr,"*");
@@ -509,8 +509,8 @@ int main(int argc,char *argv[]){
       memmove(buffer,buffer2,framesize*2);
 
       for(i=0;i<2;i++){
-	for(j=0,k=framesize/2;j<framesize/2;j++,k++)
-	  out[i][j]=pcm[i][k]*window[k];
+        for(j=0,k=framesize/2;j<framesize/2;j++,k++)
+          out[i][j]=pcm[i][k]*window[k];
       }
       frameno+=2;
     }else
@@ -518,7 +518,7 @@ int main(int argc,char *argv[]){
   }
   fprintf(stderr,"average raw bits of entropy: %.03g/sample\n",acc/tot);
   fprintf(stderr,"average nonzero samples: %.03g/%d\n",nonz/tot*framesize/2,
-	  framesize/2);
+          framesize/2);
   fprintf(stderr,"Done\n\n");
   return 0;
 }

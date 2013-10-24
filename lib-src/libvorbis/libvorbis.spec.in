@@ -7,7 +7,7 @@ Group:		System Environment/Libraries
 License:	BSD
 URL:		http://www.xiph.org/
 Vendor:		Xiph.org Foundation <team@xiph.org>
-Source:		http://www.vorbis.com/files/1.0.1/unix/%{name}-%{version}.tar.gz
+Source:		http://downloads.xiph.org/releases/vorbis/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 # We're forced to use an epoch since both Red Hat and Ximian use it in their
@@ -91,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/vorbisenc.pc
 
 %changelog
+* Sat May  3 2008 Ralph Giles <giles@xiph.org>
+- updated source location
+
 * Thu Jun 10 2004 Thomas Vander Stichele <thomas at apestaart dot org>
 - autogenerate from configure
 - fix download location

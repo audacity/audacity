@@ -10,25 +10,31 @@ AC_DEFUN([XIPH_PATH_VORBIS],
 [dnl 
 dnl Get the cflags and libraries
 dnl
-AC_ARG_WITH(vorbis,[  --with-vorbis=PFX   Prefix where libvorbis is installed (optional)], vorbis_prefix="$withval", vorbis_prefix="")
-AC_ARG_WITH(vorbis-libraries,[  --with-vorbis-libraries=DIR   Directory where libvorbis library is installed (optional)], vorbis_libraries="$withval", vorbis_libraries="")
-AC_ARG_WITH(vorbis-includes,[  --with-vorbis-includes=DIR   Directory where libvorbis header files are installed (optional)], vorbis_includes="$withval", vorbis_includes="")
-AC_ARG_ENABLE(vorbistest, [  --disable-vorbistest       Do not try to compile and run a test Vorbis program],, enable_vorbistest=yes)
+AC_ARG_WITH(vorbis,AC_HELP_STRING([--with-vorbis=PFX],[Prefix where libvorbis is installed (optional)]), vorbis_prefix="$withval", vorbis_prefix="")
+AC_ARG_WITH(vorbis-libraries,AC_HELP_STRING([--with-vorbis-libraries=DIR],[Directory where libvorbis library is installed (optional)]), vorbis_libraries="$withval", vorbis_libraries="")
+AC_ARG_WITH(vorbis-includes,AC_HELP_STRING([--with-vorbis-includes=DIR],[Directory where libvorbis header files are installed (optional)]), vorbis_includes="$withval", vorbis_includes="")
+AC_ARG_ENABLE(vorbistest,AC_HELP_STRING([--disable-vorbistest],[Do not try to compile and run a test Vorbis program]),, enable_vorbistest=yes)
 
   if test "x$vorbis_libraries" != "x" ; then
     VORBIS_LIBS="-L$vorbis_libraries"
+  elif test "x$vorbis_prefix" = "xno" || test "x$vorbis_prefix" = "xyes" ; then
+    VORBIS_LIBS=""
   elif test "x$vorbis_prefix" != "x" ; then
     VORBIS_LIBS="-L$vorbis_prefix/lib"
   elif test "x$prefix" != "xNONE"; then
     VORBIS_LIBS="-L$prefix/lib"
   fi
 
-  VORBIS_LIBS="$VORBIS_LIBS -lvorbis -lm"
+  if test "x$vorbis_prefix" != "xno" ; then
+    VORBIS_LIBS="$VORBIS_LIBS -lvorbis -lm"
+  fi
   VORBISFILE_LIBS="-lvorbisfile"
   VORBISENC_LIBS="-lvorbisenc"
 
   if test "x$vorbis_includes" != "x" ; then
     VORBIS_CFLAGS="-I$vorbis_includes"
+  elif test "x$vorbis_prefix" = "xno" || test "x$vorbis_prefix" = "xyes" ; then
+    VORBIS_CFLAGS=""
   elif test "x$vorbis_prefix" != "x" ; then
     VORBIS_CFLAGS="-I$vorbis_prefix/include"
   elif test "x$prefix" != "xNONE"; then
@@ -37,7 +43,12 @@ AC_ARG_ENABLE(vorbistest, [  --disable-vorbistest       Do not try to compile an
 
 
   AC_MSG_CHECKING(for Vorbis)
-  no_vorbis=""
+  if test "x$vorbis_prefix" = "xno" ; then
+    no_vorbis="disabled"
+    enable_vorbistest="no"
+  else
+    no_vorbis=""
+  fi
 
 
   if test "x$enable_vorbistest" = "xyes" ; then
@@ -78,9 +89,12 @@ int main ()
        LIBS="$ac_save_LIBS"
   fi
 
-  if test "x$no_vorbis" = "x" ; then
+  if test "x$no_vorbis" = "xdisabled" ; then
+     AC_MSG_RESULT(no)
+     ifelse([$2], , :, [$2])
+  elif test "x$no_vorbis" = "x" ; then
      AC_MSG_RESULT(yes)
-     ifelse([$1], , :, [$1])     
+     ifelse([$1], , :, [$1])
   else
      AC_MSG_RESULT(no)
      if test -f conf.vorbistest ; then

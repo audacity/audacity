@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="libogg"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;..\..\..\..\libogg-$(LIBOGG_VERSION)\include&quot;;..\..\..\..\ogg\include;..\..\..\..\..\..\..\core\ogg\libogg\include"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalLibraryDirectories="&quot;..\..\..\..\libogg-$(LIBOGG_VERSION)\win32\VS2005\$(PlatformName)\$(ConfigurationName)&quot;;&quot;..\..\..\..\ogg\win32\VS2005\$(PlatformName)\$(ConfigurationName)&quot;;&quot;..\..\..\..\..\..\..\core\ogg\libogg\win32\VS2005\$(PlatformName)\$(ConfigurationName)&quot;"
+	/>
+	<UserMacro
+		Name="LIBOGG_VERSION"
+		Value="1.1.4"
+	/>
+</VisualStudioPropertySheet>

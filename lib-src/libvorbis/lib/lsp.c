@@ -5,13 +5,13 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
   function: LSP (also called LSF) conversion routines
-  last mod: $Id: lsp.c,v 1.8 2008-02-02 15:53:53 richardash1981 Exp $
+  last mod: $Id: lsp.c 17538 2010-10-15 02:52:29Z tterribe $
 
   The LSP generation code is taken (with minimal modification and a
   few bugfixes) from "On the Computation of the LSP Frequencies" by
@@ -46,14 +46,15 @@
    implementation.  The float lookup is likely the optimal choice on
    any machine with an FPU.  The integer implementation is *not* fixed
    point (due to the need for a large dynamic range and thus a
-   seperately tracked exponent) and thus much more complex than the
+   separately tracked exponent) and thus much more complex than the
    relatively simple float implementations. It's mostly for future
    work on a fully fixed point implementation for processors like the
    ARM family. */
 
-/* undefine both for the 'old' but more precise implementation */
-#define   FLOAT_LOOKUP
-#undef    INT_LOOKUP
+/* define either of these (preferably FLOAT_LOOKUP) to have faster
+   but less precise implementation. */
+#undef FLOAT_LOOKUP
+#undef INT_LOOKUP
 
 #ifdef FLOAT_LOOKUP
 #include "lookup.c" /* catch this in the build system; we #include for
@@ -62,11 +63,11 @@
 
 /* side effect: changes *lsp to cosines of lsp */
 void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
-			    float amp,float ampoffset){
+                            float amp,float ampoffset){
   int i;
   float wdel=M_PI/ln;
   vorbis_fpu_control fpu;
-  
+
   vorbis_fpu_setround(&fpu);
   for(i=0;i<m;i++)lsp[i]=vorbis_coslook(lsp[i]);
 
@@ -80,11 +81,11 @@ void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
     float *ftmp=lsp;
     int c=m>>1;
 
-    do{
+    while(c--){
       q*=ftmp[0]-w;
       p*=ftmp[1]-w;
       ftmp+=2;
-    }while(--c);
+    }
 
     if(m&1){
       /* odd order filter; slightly assymetric */
@@ -99,10 +100,10 @@ void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
     }
 
     q=frexp(p+q,&qexp);
-    q=vorbis_fromdBlook(amp*             
-			vorbis_invsqlook(q)*
-			vorbis_invsq2explook(qexp+m)- 
-			ampoffset);
+    q=vorbis_fromdBlook(amp*
+                        vorbis_invsqlook(q)*
+                        vorbis_invsq2explook(qexp+m)-
+                        ampoffset);
 
     do{
       curve[i++]*=q;
@@ -118,26 +119,26 @@ void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
                        compilers (like gcc) that can't inline across
                        modules */
 
-static int MLOOP_1[64]={
+static const int MLOOP_1[64]={
    0,10,11,11, 12,12,12,12, 13,13,13,13, 13,13,13,13,
   14,14,14,14, 14,14,14,14, 14,14,14,14, 14,14,14,14,
   15,15,15,15, 15,15,15,15, 15,15,15,15, 15,15,15,15,
   15,15,15,15, 15,15,15,15, 15,15,15,15, 15,15,15,15,
 };
 
-static int MLOOP_2[64]={
+static const int MLOOP_2[64]={
   0,4,5,5, 6,6,6,6, 7,7,7,7, 7,7,7,7,
   8,8,8,8, 8,8,8,8, 8,8,8,8, 8,8,8,8,
   9,9,9,9, 9,9,9,9, 9,9,9,9, 9,9,9,9,
   9,9,9,9, 9,9,9,9, 9,9,9,9, 9,9,9,9,
 };
 
-static int MLOOP_3[8]={0,1,2,2,3,3,3,3};
+static const int MLOOP_3[8]={0,1,2,2,3,3,3,3};
 
 
 /* side effect: changes *lsp to cosines of lsp */
 void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
-			    float amp,float ampoffset){
+                            float amp,float ampoffset){
 
   /* 0 <= m < 256 */
 
@@ -161,15 +162,15 @@ void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
 
     for(j=3;j<m;j+=2){
       if(!(shift=MLOOP_1[(pi|qi)>>25]))
-	if(!(shift=MLOOP_2[(pi|qi)>>19]))
-	  shift=MLOOP_3[(pi|qi)>>16];
+        if(!(shift=MLOOP_2[(pi|qi)>>19]))
+          shift=MLOOP_3[(pi|qi)>>16];
       qi=(qi>>shift)*labs(ilsp[j-1]-wi);
       pi=(pi>>shift)*labs(ilsp[j]-wi);
       qexp+=shift;
     }
     if(!(shift=MLOOP_1[(pi|qi)>>25]))
       if(!(shift=MLOOP_2[(pi|qi)>>19]))
-	shift=MLOOP_3[(pi|qi)>>16];
+        shift=MLOOP_3[(pi|qi)>>16];
 
     /* pi,qi normalized collectively, both tracked using qexp */
 
@@ -181,9 +182,9 @@ void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
       qexp+=shift;
 
       if(!(shift=MLOOP_1[(pi|qi)>>25]))
-	if(!(shift=MLOOP_2[(pi|qi)>>19]))
-	  shift=MLOOP_3[(pi|qi)>>16];
-      
+        if(!(shift=MLOOP_2[(pi|qi)>>19]))
+          shift=MLOOP_3[(pi|qi)>>16];
+
       pi>>=shift;
       qi>>=shift;
       qexp+=shift-14*((m+1)>>1);
@@ -199,8 +200,8 @@ void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
       /* even order filter; still symmetric */
 
       /* p*=p(1-w), q*=q(1+w), let normalization drift because it isn't
-	 worth tracking step by step */
-      
+         worth tracking step by step */
+
       pi>>=shift;
       qi>>=shift;
       qexp+=shift-7*m;
@@ -208,36 +209,36 @@ void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
       pi=((pi*pi)>>16);
       qi=((qi*qi)>>16);
       qexp=qexp*2+m;
-      
+
       pi*=(1<<14)-wi;
       qi*=(1<<14)+wi;
       qi=(qi+pi)>>14;
-      
+
     }
-    
+
 
     /* we've let the normalization drift because it wasn't important;
        however, for the lookup, things must be normalized again.  We
        need at most one right shift or a number of left shifts */
 
     if(qi&0xffff0000){ /* checks for 1.xxxxxxxxxxxxxxxx */
-      qi>>=1; qexp++; 
+      qi>>=1; qexp++;
     }else
       while(qi && !(qi&0x8000)){ /* checks for 0.0xxxxxxxxxxxxxxx or less*/
-	qi<<=1; qexp--; 
+        qi<<=1; qexp--;
       }
 
     amp=vorbis_fromdBlook_i(ampi*                     /*  n.4         */
-			    vorbis_invsqlook_i(qi,qexp)- 
-			                              /*  m.8, m+n<=8 */
-			    ampoffseti);              /*  8.12[0]     */
+                            vorbis_invsqlook_i(qi,qexp)-
+                                                      /*  m.8, m+n<=8 */
+                            ampoffseti);              /*  8.12[0]     */
 
     curve[i]*=amp;
     while(map[++i]==k)curve[i]*=amp;
   }
 }
 
-#else 
+#else
 
 /* old, nonoptimized but simple version for any poor sap who needs to
    figure out what the hell this code does, or wants the other
@@ -245,7 +246,7 @@ void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
 
 /* side effect: changes *lsp to cosines of lsp */
 void vorbis_lsp_to_curve(float *curve,int *map,int n,int ln,float *lsp,int m,
-			    float amp,float ampoffset){
+                            float amp,float ampoffset){
   int i;
   float wdel=M_PI/ln;
   for(i=0;i<m;i++)lsp[i]=2.f*cos(lsp[i]);
@@ -289,7 +290,7 @@ static void cheby(float *g, int ord) {
   for(i=2; i<= ord; i++) {
     for(j=ord; j >= i; j--) {
       g[j-2] -= g[j];
-      g[j] += g[j]; 
+      g[j] += g[j];
     }
   }
 }
@@ -318,25 +319,25 @@ static int Laguerre_With_Deflation(float *a,int ord,float *r){
     /* iterate a root */
     while(1){
       double p=defl[m],pp=0.f,ppp=0.f,denom;
-      
+
       /* eval the polynomial and its first two derivatives */
       for(i=m;i>0;i--){
-	ppp = new*ppp + pp;
-	pp  = new*pp  + p;
-	p   = new*p   + defl[i-1];
+        ppp = new*ppp + pp;
+        pp  = new*pp  + p;
+        p   = new*p   + defl[i-1];
       }
-      
+
       /* Laguerre's method */
       denom=(m-1) * ((m-1)*pp*pp - m*p*ppp);
       if(denom<0)
-	return(-1);  /* complex root!  The LPC generator handed us a bad filter */
+        return(-1);  /* complex root!  The LPC generator handed us a bad filter */
 
       if(pp>0){
-	denom = pp + sqrt(denom);
-	if(denom<EPSILON)denom=EPSILON;
+        denom = pp + sqrt(denom);
+        if(denom<EPSILON)denom=EPSILON;
       }else{
-	denom = pp - sqrt(denom);
-	if(denom>-(EPSILON))denom=-(EPSILON);
+        denom = pp - sqrt(denom);
+        if(denom>-(EPSILON))denom=-(EPSILON);
       }
 
       delta  = m*p/denom;
@@ -344,14 +345,14 @@ static int Laguerre_With_Deflation(float *a,int ord,float *r){
 
       if(delta<0.f)delta*=-1;
 
-      if(fabs(delta/new)<10e-12)break; 
+      if(fabs(delta/new)<10e-12)break;
       lastdelta=delta;
     }
 
     r[m-1]=new;
 
     /* forward deflation */
-    
+
     for(i=m;i>0;i--)
       defl[i-1]+=new*defl[i];
     defl++;
@@ -368,27 +369,27 @@ static int Newton_Raphson(float *a,int ord,float *r){
   double *root=alloca(ord*sizeof(*root));
 
   for(i=0; i<ord;i++) root[i] = r[i];
-  
+
   while(error>1e-20){
     error=0;
-    
+
     for(i=0; i<ord; i++) { /* Update each point. */
       double pp=0.,delta;
       double rooti=root[i];
       double p=a[ord];
       for(k=ord-1; k>= 0; k--) {
 
-	pp= pp* rooti + p;
-	p = p * rooti + a[k];
+        pp= pp* rooti + p;
+        p = p * rooti + a[k];
       }
 
       delta = p/pp;
       root[i] -= delta;
       error+= delta*delta;
     }
-    
+
     if(count>40)return(-1);
-     
+
     count++;
   }
 
@@ -418,12 +419,12 @@ int vorbis_lpc_to_lsp(float *lpc,float *lsp,int m){
   /* Compute the first half of K & R F1 & F2 polynomials. */
   /* Compute half of the symmetric and antisymmetric polynomials. */
   /* Remove the roots at +1 and -1. */
-  
+
   g1[g1_order] = 1.f;
   for(i=1;i<=g1_order;i++) g1[g1_order-i] = lpc[i-1]+lpc[m-i];
   g2[g2_order] = 1.f;
   for(i=1;i<=g2_order;i++) g2[g2_order-i] = lpc[i-1]-lpc[m-i];
-  
+
   if(g1_order>g2_order){
     for(i=2; i<=g2_order;i++) g2[g2_order-i] += g2[g2_order-i+2];
   }else{

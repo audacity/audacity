@@ -79,22 +79,24 @@ The user website for Ogg Vorbis software and audio is http://vorbis.com/
 BUILDING FROM TRUNK:
 
 Development source is under subversion revision control at 
-http://svn.xiph.org/trunk/vorbis/. You will also need the 
-newest versions of autoconf, automake, and libtool in order
-to compile vorbis from development source. A configure script
+https://svn.xiph.org/trunk/vorbis/. You will also need the 
+newest versions of autoconf, automake, libtool and pkg-config in
+order to compile Vorbis from development source. A configure script
 is provided for you in the source tarball distributions.
 
   [update or checkout latest source]
   ./autogen.sh
-  make 
+  make
 
 and as root if desired:
 
   make install
 
-This will install the vorbis libraries (static and shared) into
+This will install the Vorbis libraries (static and shared) into
 /usr/local/lib, includes into /usr/local/include and API manpages
 (once we write some) into /usr/local/man.
+
+Documentation building requires xsltproc and pdfxmltex.
 
 BUILDING FROM TARBALL DISTRIBUTIONS:
 

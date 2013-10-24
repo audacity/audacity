@@ -1,7 +1,7 @@
 #!/bin/sh
 # install - install a program, script, or datafile
 
-scriptversion=2006-10-14.15
+scriptversion=2005-05-14.22
 
 # This originates from X11R5 (mit/util/scripts/install.sh), which was
 # later released in X11R6 (xc/config/util/install.sh) with the
@@ -39,24 +39,15 @@ scriptversion=2006-10-14.15
 # when there is no Makefile.
 #
 # This script is compatible with the BSD install script, but was written
-# from scratch.
-
-nl='
-'
-IFS=" ""	$nl"
+# from scratch.  It can only install one file at a time, a restriction
+# shared with many OS's install programs.
 
 # set DOITPROG to echo to test this script
 
 # Don't use :- since 4.3BSD and earlier shells don't like it.
 doit="${DOITPROG-}"
-if test -z "$doit"; then
-  doit_exec=exec
-else
-  doit_exec=$doit
-fi
 
-# Put in absolute file names if you don't have them in your path;
-# or use environment vars.
+# put in absolute paths if you don't have them in your path; or use env. vars.
 
 mvprog="${MVPROG-mv}"
 cpprog="${CPPROG-cp}"
@@ -67,13 +58,7 @@ stripprog="${STRIPPROG-strip}"
 rmprog="${RMPROG-rm}"
 mkdirprog="${MKDIRPROG-mkdir}"
 
-posix_glob=
-posix_mkdir=
-
-# Desired mode of installed file.
-mode=0755
-
-chmodcmd=$chmodprog
+chmodcmd="$chmodprog 0755"
 chowncmd=
 chgrpcmd=
 stripcmd=
@@ -110,7 +95,7 @@ Environment variables override the default commands:
   CHGRPPROG CHMODPROG CHOWNPROG CPPROG MKDIRPROG MVPROG RMPROG STRIPPROG
 "
 
-while test $# -ne 0; do
+while test -n "$1"; do
   case $1 in
     -c) shift
         continue;;
@@ -126,15 +111,9 @@ while test $# -ne 0; do
 
     --help) echo "$usage"; exit $?;;
 
-    -m) mode=$2
+    -m) chmodcmd="$chmodprog $2"
         shift
         shift
-	case $mode in
-	  *' '* | *'	'* | *'
-'*	  | *'*'* | *'?'* | *'['*)
-	    echo "$0: invalid mode: $mode" >&2
-	    exit 1;;
-	esac
         continue;;
 
     -o) chowncmd="$chownprog $2"
@@ -157,33 +136,25 @@ while test $# -ne 0; do
 
     --version) echo "$0 $scriptversion"; exit $?;;
 
-    --)	shift
+    *)  # When -d is used, all remaining arguments are directories to create.
+	# When -t is used, the destination is already specified.
+	test -n "$dir_arg$dstarg" && break
+        # Otherwise, the last argument is the destination.  Remove it from $@.
+	for arg
+	do
+          if test -n "$dstarg"; then
+	    # $@ is not empty: it contains at least $arg.
+	    set fnord "$@" "$dstarg"
+	    shift # fnord
+	  fi
+	  shift # arg
+	  dstarg=$arg
+	done
 	break;;
-
-    -*)	echo "$0: invalid option: $1" >&2
-	exit 1;;
-
-    *)  break;;
   esac
 done
 
-if test $# -ne 0 && test -z "$dir_arg$dstarg"; then
-  # When -d is used, all remaining arguments are directories to create.
-  # When -t is used, the destination is already specified.
-  # Otherwise, the last argument is the destination.  Remove it from $@.
-  for arg
-  do
-    if test -n "$dstarg"; then
-      # $@ is not empty: it contains at least $arg.
-      set fnord "$@" "$dstarg"
-      shift # fnord
-    fi
-    shift # arg
-    dstarg=$arg
-  done
-fi
-
-if test $# -eq 0; then
+if test -z "$1"; then
   if test -z "$dir_arg"; then
     echo "$0: no input file specified." >&2
     exit 1
@@ -191,33 +162,6 @@ if test $# -eq 0; then
   # It's OK to call `install-sh -d' without argument.
   # This can happen when creating conditional directories.
   exit 0
-fi
-
-if test -z "$dir_arg"; then
-  trap '(exit $?); exit' 1 2 13 15
-
-  # Set umask so as not to create temps with too-generous modes.
-  # However, 'strip' requires both read and write access to temps.
-  case $mode in
-    # Optimize common cases.
-    *644) cp_umask=133;;
-    *755) cp_umask=22;;
-
-    *[0-7])
-      if test -z "$stripcmd"; then
-	u_plus_rw=
-      else
-	u_plus_rw='% 200'
-      fi
-      cp_umask=`expr '(' 777 - $mode % 1000 ')' $u_plus_rw`;;
-    *)
-      if test -z "$stripcmd"; then
-	u_plus_rw=
-      else
-	u_plus_rw=,u+rw
-      fi
-      cp_umask=$mode$u_plus_rw;;
-  esac
 fi
 
 for src
@@ -229,11 +173,15 @@ do
 
   if test -n "$dir_arg"; then
     dst=$src
-    dstdir=$dst
-    test -d "$dstdir"
-    dstdir_status=$?
-  else
+    src=
 
+    if test -d "$dst"; then
+      mkdircmd=:
+      chmodcmd=
+    else
+      mkdircmd=$mkdirprog
+    fi
+  else
     # Waiting for this to be detected by the "$cpprog $src $dsttmp" command
     # might cause directories to be created, which would be especially bad
     # if $src (and thus $dsttmp) contains '*'.
@@ -260,188 +208,53 @@ do
 	echo "$0: $dstarg: Is a directory" >&2
 	exit 1
       fi
-      dstdir=$dst
-      dst=$dstdir/`basename "$src"`
-      dstdir_status=0
-    else
-      # Prefer dirname, but fall back on a substitute if dirname fails.
-      dstdir=`
-	(dirname "$dst") 2>/dev/null ||
-	expr X"$dst" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
-	     X"$dst" : 'X\(//\)[^/]' \| \
-	     X"$dst" : 'X\(//\)$' \| \
-	     X"$dst" : 'X\(/\)' \| . 2>/dev/null ||
-	echo X"$dst" |
-	    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
-		   s//\1/
-		   q
-		 }
-		 /^X\(\/\/\)[^/].*/{
-		   s//\1/
-		   q
-		 }
-		 /^X\(\/\/\)$/{
-		   s//\1/
-		   q
-		 }
-		 /^X\(\/\).*/{
-		   s//\1/
-		   q
-		 }
-		 s/.*/./; q'
-      `
-
-      test -d "$dstdir"
-      dstdir_status=$?
+      dst=$dst/`basename "$src"`
     fi
   fi
 
-  obsolete_mkdir_used=false
+  # This sed command emulates the dirname command.
+  dstdir=`echo "$dst" | sed -e 's,/*$,,;s,[^/]*$,,;s,/*$,,;s,^$,.,'`
 
-  if test $dstdir_status != 0; then
-    case $posix_mkdir in
-      '')
-	# Create intermediate dirs using mode 755 as modified by the umask.
-	# This is like FreeBSD 'install' as of 1997-10-28.
-	umask=`umask`
-	case $stripcmd.$umask in
-	  # Optimize common cases.
-	  *[2367][2367]) mkdir_umask=$umask;;
-	  .*0[02][02] | .[02][02] | .[02]) mkdir_umask=22;;
+  # Make sure that the destination directory exists.
 
-	  *[0-7])
-	    mkdir_umask=`expr $umask + 22 \
-	      - $umask % 100 % 40 + $umask % 20 \
-	      - $umask % 10 % 4 + $umask % 2
-	    `;;
-	  *) mkdir_umask=$umask,go-w;;
-	esac
+  # Skip lots of stat calls in the usual case.
+  if test ! -d "$dstdir"; then
+    defaultIFS='
+	 '
+    IFS="${IFS-$defaultIFS}"
 
-	# With -d, create the new directory with the user-specified mode.
-	# Otherwise, rely on $mkdir_umask.
-	if test -n "$dir_arg"; then
-	  mkdir_mode=-m$mode
-	else
-	  mkdir_mode=
-	fi
+    oIFS=$IFS
+    # Some sh's can't handle IFS=/ for some reason.
+    IFS='%'
+    set x `echo "$dstdir" | sed -e 's@/@%@g' -e 's@^%@/@'`
+    shift
+    IFS=$oIFS
 
-	posix_mkdir=false
-	case $umask in
-	  *[123567][0-7][0-7])
-	    # POSIX mkdir -p sets u+wx bits regardless of umask, which
-	    # is incompatible with FreeBSD 'install' when (umask & 300) != 0.
-	    ;;
-	  *)
-	    tmpdir=${TMPDIR-/tmp}/ins$RANDOM-$$
-	    trap 'ret=$?; rmdir "$tmpdir/d" "$tmpdir" 2>/dev/null; exit $ret' 0
+    pathcomp=
 
-	    if (umask $mkdir_umask &&
-		exec $mkdirprog $mkdir_mode -p -- "$tmpdir/d") >/dev/null 2>&1
-	    then
-	      if test -z "$dir_arg" || {
-		   # Check for POSIX incompatibilities with -m.
-		   # HP-UX 11.23 and IRIX 6.5 mkdir -m -p sets group- or
-		   # other-writeable bit of parent directory when it shouldn't.
-		   # FreeBSD 6.1 mkdir -m -p sets mode of existing directory.
-		   ls_ld_tmpdir=`ls -ld "$tmpdir"`
-		   case $ls_ld_tmpdir in
-		     d????-?r-*) different_mode=700;;
-		     d????-?--*) different_mode=755;;
-		     *) false;;
-		   esac &&
-		   $mkdirprog -m$different_mode -p -- "$tmpdir" && {
-		     ls_ld_tmpdir_1=`ls -ld "$tmpdir"`
-		     test "$ls_ld_tmpdir" = "$ls_ld_tmpdir_1"
-		   }
-		 }
-	      then posix_mkdir=:
-	      fi
-	      rmdir "$tmpdir/d" "$tmpdir"
-	    else
-	      # Remove any dirs left behind by ancient mkdir implementations.
-	      rmdir ./$mkdir_mode ./-p ./-- 2>/dev/null
-	    fi
-	    trap '' 0;;
-	esac;;
-    esac
-
-    if
-      $posix_mkdir && (
-	umask $mkdir_umask &&
-	$doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir"
-      )
-    then :
-    else
-
-      # The umask is ridiculous, or mkdir does not conform to POSIX,
-      # or it failed possibly due to a race condition.  Create the
-      # directory the slow way, step by step, checking for races as we go.
-
-      case $dstdir in
-	/*) prefix=/ ;;
-	-*) prefix=./ ;;
-	*)  prefix= ;;
-      esac
-
-      case $posix_glob in
-        '')
-	  if (set -f) 2>/dev/null; then
-	    posix_glob=true
-	  else
-	    posix_glob=false
-	  fi ;;
-      esac
-
-      oIFS=$IFS
-      IFS=/
-      $posix_glob && set -f
-      set fnord $dstdir
+    while test $# -ne 0 ; do
+      pathcomp=$pathcomp$1
       shift
-      $posix_glob && set +f
-      IFS=$oIFS
-
-      prefixes=
-
-      for d
-      do
-	test -z "$d" && continue
-
-	prefix=$prefix$d
-	if test -d "$prefix"; then
-	  prefixes=
-	else
-	  if $posix_mkdir; then
-	    (umask=$mkdir_umask &&
-	     $doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir") && break
-	    # Don't fail if two instances are running concurrently.
-	    test -d "$prefix" || exit 1
-	  else
-	    case $prefix in
-	      *\'*) qprefix=`echo "$prefix" | sed "s/'/'\\\\\\\\''/g"`;;
-	      *) qprefix=$prefix;;
-	    esac
-	    prefixes="$prefixes '$qprefix'"
-	  fi
-	fi
-	prefix=$prefix/
-      done
-
-      if test -n "$prefixes"; then
-	# Don't fail if two instances are running concurrently.
-	(umask $mkdir_umask &&
-	 eval "\$doit_exec \$mkdirprog $prefixes") ||
-	  test -d "$dstdir" || exit 1
-	obsolete_mkdir_used=true
+      if test ! -d "$pathcomp"; then
+        $mkdirprog "$pathcomp"
+	# mkdir can fail with a `File exist' error in case several
+	# install-sh are creating the directory concurrently.  This
+	# is OK.
+	test -d "$pathcomp" || exit
       fi
-    fi
+      pathcomp=$pathcomp/
+    done
   fi
 
   if test -n "$dir_arg"; then
-    { test -z "$chowncmd" || $doit $chowncmd "$dst"; } &&
-    { test -z "$chgrpcmd" || $doit $chgrpcmd "$dst"; } &&
-    { test "$obsolete_mkdir_used$chowncmd$chgrpcmd" = false ||
-      test -z "$chmodcmd" || $doit $chmodcmd $mode "$dst"; } || exit 1
+    $doit $mkdircmd "$dst" \
+      && { test -z "$chowncmd" || $doit $chowncmd "$dst"; } \
+      && { test -z "$chgrpcmd" || $doit $chgrpcmd "$dst"; } \
+      && { test -z "$stripcmd" || $doit $stripcmd "$dst"; } \
+      && { test -z "$chmodcmd" || $doit $chmodcmd "$dst"; }
+
   else
+    dstfile=`basename "$dst"`
 
     # Make a couple of temp file names in the proper directory.
     dsttmp=$dstdir/_inst.$$_
@@ -449,9 +262,10 @@ do
 
     # Trap to clean up those temp files at exit.
     trap 'ret=$?; rm -f "$dsttmp" "$rmtmp" && exit $ret' 0
+    trap '(exit $?); exit' 1 2 13 15
 
     # Copy the file name to the temp name.
-    (umask $cp_umask && $doit_exec $cpprog "$src" "$dsttmp") &&
+    $doit $cpprog "$src" "$dsttmp" &&
 
     # and set any options; do chmod last to preserve setuid bits.
     #
@@ -462,10 +276,10 @@ do
     { test -z "$chowncmd" || $doit $chowncmd "$dsttmp"; } \
       && { test -z "$chgrpcmd" || $doit $chgrpcmd "$dsttmp"; } \
       && { test -z "$stripcmd" || $doit $stripcmd "$dsttmp"; } \
-      && { test -z "$chmodcmd" || $doit $chmodcmd $mode "$dsttmp"; } &&
+      && { test -z "$chmodcmd" || $doit $chmodcmd "$dsttmp"; } &&
 
     # Now rename the file to the real destination.
-    { $doit $mvcmd -f "$dsttmp" "$dst" 2>/dev/null \
+    { $doit $mvcmd -f "$dsttmp" "$dstdir/$dstfile" 2>/dev/null \
       || {
 	   # The rename failed, perhaps because mv can't rename something else
 	   # to itself, or perhaps because mv is so ancient that it does not
@@ -477,12 +291,11 @@ do
 	   # reasons.  In this case, the final cleanup might fail but the new
 	   # file should still install successfully.
 	   {
-	     if test -f "$dst"; then
-	       $doit $rmcmd -f "$dst" 2>/dev/null \
-	       || { $doit $mvcmd -f "$dst" "$rmtmp" 2>/dev/null \
-		     && { $doit $rmcmd -f "$rmtmp" 2>/dev/null; :; }; }\
+	     if test -f "$dstdir/$dstfile"; then
+	       $doit $rmcmd -f "$dstdir/$dstfile" 2>/dev/null \
+	       || $doit $mvcmd -f "$dstdir/$dstfile" "$rmtmp" 2>/dev/null \
 	       || {
-		 echo "$0: cannot unlink or rename $dst" >&2
+		 echo "$0: cannot unlink or rename $dstdir/$dstfile" >&2
 		 (exit 1); exit 1
 	       }
 	     else
@@ -491,13 +304,16 @@ do
 	   } &&
 
 	   # Now rename the file to the real destination.
-	   $doit $mvcmd "$dsttmp" "$dst"
+	   $doit $mvcmd "$dsttmp" "$dstdir/$dstfile"
 	 }
-    } || exit 1
-
-    trap '' 0
-  fi
+    }
+  fi || { (exit 1); exit 1; }
 done
+
+# The final little trick to "correctly" pass the exit status to the exit trap.
+{
+  (exit 0); exit 0
+}
 
 # Local variables:
 # eval: (add-hook 'write-file-hooks 'time-stamp)

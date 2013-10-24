@@ -135,11 +135,8 @@ libvorbis
 ---------
 library for endcoding and decoding Xiph.org's high-quality compressed audio
 format.
-Version in Audacity SVN: 1.2.0
-Patches: local-libogg.patch: configure patch that lets us build against a
-local libogg if there isn't a system one.
-no-docs-examples.patch: disable building documentation and examples, so we can
-avoid shipping the files in those directories
+Version in Audacity SVN: 1.3.3
+Patches: None
 Upstream Version: 1.3.3
 
 liblrdf

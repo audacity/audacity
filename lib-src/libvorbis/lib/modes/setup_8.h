@@ -5,51 +5,55 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
- function: 8kHz settings 
- last mod: $Id: setup_8.h,v 1.7 2008-02-02 15:53:59 richardash1981 Exp $
+ function: 8kHz settings
+ last mod: $Id: setup_8.h 16894 2010-02-12 20:32:12Z xiphmont $
 
  ********************************************************************/
 
 #include "psych_8.h"
 #include "residue_8.h"
 
-static int blocksize_8[2]={
+static const int blocksize_8[2]={
   512,512
 };
 
-static int _floor_mapping_8[2]={
-  6,6,
+static const int _floor_mapping_8a[]={
+  6,6
 };
 
-static double rate_mapping_8[3]={
+static const int *_floor_mapping_8[]={
+  _floor_mapping_8a
+};
+
+static const double rate_mapping_8[3]={
   6000.,9000.,32000.,
 };
 
-static double rate_mapping_8_uncoupled[3]={
+static const double rate_mapping_8_uncoupled[3]={
   8000.,14000.,42000.,
 };
 
-static double quality_mapping_8[3]={
+static const double quality_mapping_8[3]={
   -.1,.0,1.
 };
 
-static double _psy_compand_8_mapping[3]={ 0., 1., 1.};
+static const double _psy_compand_8_mapping[3]={ 0., 1., 1.};
 
-static double _global_mapping_8[3]={ 1., 2., 3. };
+static const double _global_mapping_8[3]={ 1., 2., 3. };
 
-ve_setup_data_template ve_setup_8_stereo={
+static const ve_setup_data_template ve_setup_8_stereo={
   2,
   rate_mapping_8,
   quality_mapping_8,
   2,
   8000,
   9000,
-  
+
   blocksize_8,
   blocksize_8,
 
@@ -67,7 +71,7 @@ ve_setup_data_template ve_setup_8_stereo={
   NULL,
   NULL,
   _psy_noise_suppress,
-  
+
   _psy_compand_8,
   _psy_compand_8_mapping,
   NULL,
@@ -78,7 +82,7 @@ ve_setup_data_template ve_setup_8_stereo={
 
   _psy_ath_floater_8,
   _psy_ath_abs_8,
-  
+
   _psy_lowpass_8,
 
   _psy_global_44,
@@ -87,20 +91,20 @@ ve_setup_data_template ve_setup_8_stereo={
 
   _floor_books,
   _floor,
+  1,
   _floor_mapping_8,
-  NULL,
 
   _mapres_template_8_stereo
 };
 
-ve_setup_data_template ve_setup_8_uncoupled={
+static const ve_setup_data_template ve_setup_8_uncoupled={
   2,
   rate_mapping_8_uncoupled,
   quality_mapping_8,
   -1,
   8000,
   9000,
-  
+
   blocksize_8,
   blocksize_8,
 
@@ -118,7 +122,7 @@ ve_setup_data_template ve_setup_8_uncoupled={
   NULL,
   NULL,
   _psy_noise_suppress,
-  
+
   _psy_compand_8,
   _psy_compand_8_mapping,
   NULL,
@@ -129,7 +133,7 @@ ve_setup_data_template ve_setup_8_uncoupled={
 
   _psy_ath_floater_8,
   _psy_ath_abs_8,
-  
+
   _psy_lowpass_8,
 
   _psy_global_44,
@@ -138,9 +142,8 @@ ve_setup_data_template ve_setup_8_uncoupled={
 
   _floor_books,
   _floor,
+  1,
   _floor_mapping_8,
-  NULL,
 
   _mapres_template_8_uncoupled
 };
-

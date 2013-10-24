@@ -12,7 +12,7 @@
 
  function: utility main for setting entropy encoding parameters
            for lattice codebooks
- last mod: $Id: latticetune.c,v 1.7 2008-02-02 15:54:08 richardash1981 Exp $
+ last mod: $Id: latticetune.c 16037 2009-05-26 21:10:58Z xiphmont $
 
  ********************************************************************/
 
@@ -100,7 +100,7 @@ int main(int argc,char *argv[]){
       if(!(lines&0xfff))spinnit("codewords so far...",lines);
       
       if(sscanf(line,"%ld",&code)==1)
-	hits[code]++;
+        hits[code]++;
 
       line=setup_line(in);
     }
@@ -118,9 +118,9 @@ int main(int argc,char *argv[]){
 
       char *pos=strchr(line,':');
       if(pos){
-	long code=atol(line);
-	long val=atol(pos+1); 
-	hits[code]+=val;
+        long code=atol(line);
+        long val=atol(pos+1); 
+        hits[code]+=val;
       }
 
       line=setup_line(in);
@@ -143,22 +143,22 @@ int main(int argc,char *argv[]){
     
     for(j=0;j<entries;j++){
       if(c->lengthlist[j]){
-	int indexdiv=1;
-	fprintf(stderr,"%4ld: ",j);
-	for(k=0;k<c->dim;k++){      
-	  int index= (j/indexdiv)%bins;
-	  fprintf(stderr,"%+3.1f,", c->quantlist[index]*_float32_unpack(c->q_delta)+
-		 _float32_unpack(c->q_min));
-	  indexdiv*=bins;
-	}
-	fprintf(stderr,"\t|");
-	for(k=0;k<base-c->lengthlist[j];k++)fprintf(stderr,"*");
-	fprintf(stderr,"\n");
+        int indexdiv=1;
+        fprintf(stderr,"%4ld: ",j);
+        for(k=0;k<c->dim;k++){      
+          int index= (j/indexdiv)%bins;
+          fprintf(stderr,"%+3.1f,", c->quantlist[index]*_float32_unpack(c->q_delta)+
+                 _float32_unpack(c->q_min));
+          indexdiv*=bins;
+        }
+        fprintf(stderr,"\t|");
+        for(k=0;k<base-c->lengthlist[j];k++)fprintf(stderr,"*");
+        fprintf(stderr,"\n");
       }
     }
   }
   
   fprintf(stderr,"\r                                                     "
-	  "\nDone.\n");
+          "\nDone.\n");
   exit(0);
 }

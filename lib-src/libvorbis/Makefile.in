@@ -35,6 +35,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
+@BUILD_EXAMPLES_TRUE@am__append_1 = examples 
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -43,11 +44,12 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/vorbisenc.pc.in \
 	$(srcdir)/vorbisfile-uninstalled.pc.in \
 	$(srcdir)/vorbisfile.pc.in $(top_srcdir)/configure AUTHORS \
-	COPYING config.guess config.sub depcomp install-sh ltmain.sh \
-	missing
+	COPYING compile config.guess config.sub depcomp install-sh \
+	ltmain.sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/m4/add_cflags.m4 \
+	$(top_srcdir)/m4/ogg.m4 $(top_srcdir)/m4/pkg.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -97,7 +99,7 @@ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
 	distdir dist dist-all distcheck
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = $(SUBDIRS)
+DIST_SUBDIRS = m4 include vq lib test doc examples
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -130,14 +132,16 @@ am__relativize = \
     dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
   done; \
   reldir="$$dir2"
-DIST_ARCHIVES = $(distdir).tar.gz $(distdir).tar.bz2 $(distdir).zip
+DIST_ARCHIVES = $(distdir).tar.gz $(distdir).tar.xz $(distdir).zip
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
+ACLOCAL_AMFLAGS = @ACLOCAL_AMFLAGS@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
 AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -151,6 +155,7 @@ CYGPATH_W = @CYGPATH_W@
 DEBUG = @DEBUG@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -160,7 +165,8 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GREP = @GREP@
-HAVE_PKG_CONFIG = @HAVE_PKG_CONFIG@
+HAVE_DOXYGEN = @HAVE_DOXYGEN@
+HTLATEX = @HTLATEX@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -171,11 +177,13 @@ LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
@@ -193,7 +201,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PDFXMLTEX = @PDFXMLTEX@
+PDFLATEX = @PDFLATEX@
 PKG_CONFIG = @PKG_CONFIG@
 PROFILE = @PROFILE@
 RANLIB = @RANLIB@
@@ -212,11 +220,11 @@ VORBIS_LIBS = @VORBIS_LIBS@
 V_LIB_AGE = @V_LIB_AGE@
 V_LIB_CURRENT = @V_LIB_CURRENT@
 V_LIB_REVISION = @V_LIB_REVISION@
-XSLTPROC = @XSLTPROC@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
@@ -249,7 +257,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -270,8 +277,10 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AUTOMAKE_OPTIONS = 1.6 foreign dist-zip dist-bzip2
-SUBDIRS = lib include vq
+
+#AUTOMAKE_OPTIONS = 1.7 foreign dist-zip dist-bzip2
+AUTOMAKE_OPTIONS = foreign 1.11 dist-zip dist-xz
+SUBDIRS = m4 include vq lib test doc $(am__append_1)
 m4datadir = $(datadir)/aclocal
 m4data_DATA = vorbis.m4
 pkgconfigdir = $(libdir)/pkgconfig
@@ -285,7 +294,7 @@ EXTRA_DIST = \
 	vorbis-uninstalled.pc.in \
 	vorbisenc-uninstalled.pc.in \
 	vorbisfile-uninstalled.pc.in \
-	doc examples symbian vq \
+	symbian \
 	macos macosx win32
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-docs
@@ -616,6 +625,7 @@ distdir: $(DISTFILES)
 dist-gzip: distdir
 	tardir=$(distdir) && $(am__tar) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
 	$(am__remove_distdir)
+
 dist-bzip2: distdir
 	tardir=$(distdir) && $(am__tar) | bzip2 -9 -c >$(distdir).tar.bz2
 	$(am__remove_distdir)
@@ -623,7 +633,6 @@ dist-bzip2: distdir
 dist-lzma: distdir
 	tardir=$(distdir) && $(am__tar) | lzma -9 -c >$(distdir).tar.lzma
 	$(am__remove_distdir)
-
 dist-xz: distdir
 	tardir=$(distdir) && $(am__tar) | xz -c >$(distdir).tar.xz
 	$(am__remove_distdir)
@@ -642,7 +651,7 @@ dist-zip: distdir
 
 dist dist-all: distdir
 	tardir=$(distdir) && $(am__tar) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
-	tardir=$(distdir) && $(am__tar) | bzip2 -9 -c >$(distdir).tar.bz2
+	tardir=$(distdir) && $(am__tar) | xz -c >$(distdir).tar.xz
 	-rm -f $(distdir).zip
 	zip -rq $(distdir).zip $(distdir)
 	$(am__remove_distdir)

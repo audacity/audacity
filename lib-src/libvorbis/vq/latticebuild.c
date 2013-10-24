@@ -11,7 +11,7 @@
  ********************************************************************
 
  function: utility main for building codebooks from lattice descriptions
- last mod: $Id: latticebuild.c,v 1.7 2008-02-02 15:54:08 richardash1981 Exp $
+ last mod: $Id: latticebuild.c 16037 2009-05-26 21:10:58Z xiphmont $
 
  ********************************************************************/
 
@@ -136,14 +136,14 @@ int main(int argc,char *argv[]){
     for(j=1;j<quantvals;j++)if(quantlist[j]<min)min=quantlist[j];
     for(j=0;j<quantvals;j++)
       for(i=j+1;i<quantvals;i++)
-	if(mindel==-1 || fabs(quantlist[j]-quantlist[i])<mindel)
-	  mindel=fabs(quantlist[j]-quantlist[i]);
+        if(mindel==-1 || fabs(quantlist[j]-quantlist[i])<mindel)
+          mindel=fabs(quantlist[j]-quantlist[i]);
 
     j=0;
     while(j<quantvals){
       for(j=0;j<quantvals;j++){
-	double test=fac*(quantlist[j]-min)/mindel;
-	if( fabs(rint(test)-test)>.00001f) break;
+        double test=fac*(quantlist[j]-min)/mindel;
+        if( fabs(rint(test)-test)>.00001f) break;
       }
       if(fac>100)break;
       if(j<quantvals)fac++;
@@ -172,6 +172,6 @@ int main(int argc,char *argv[]){
   /* save the book in C header form */
   write_codebook(stdout,name,&c);
   fprintf(stderr,"\r                                                     "
-	  "\nDone.\n");
+          "\nDone.\n");
   exit(0);
 }

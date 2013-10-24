@@ -5,14 +5,14 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
- function: libvorbis backend and mapping structures; needed for 
+ function: libvorbis backend and mapping structures; needed for
            static mode headers
- last mod: $Id: backends.h,v 1.7 2008-02-02 15:53:51 richardash1981 Exp $
+ last mod: $Id: backends.h 16962 2010-03-11 07:30:34Z xiphmont $
 
  ********************************************************************/
 
@@ -35,7 +35,7 @@ typedef struct{
   void (*free_look) (vorbis_look_floor *);
   void *(*inverse1)  (struct vorbis_block *,vorbis_look_floor *);
   int   (*inverse2)  (struct vorbis_block *,vorbis_look_floor *,
-		     void *buffer,float *);
+                     void *buffer,float *);
 } vorbis_func_floor;
 
 typedef struct{
@@ -68,16 +68,16 @@ typedef struct{
   int   class_subbook[VIF_CLASS][8]; /* [VIF_CLASS][subs] */
 
 
-  int   mult;                      /* 1 2 3 or 4 */ 
-  int   postlist[VIF_POSIT+2];    /* first two implicit */ 
+  int   mult;                      /* 1 2 3 or 4 */
+  int   postlist[VIF_POSIT+2];    /* first two implicit */
 
 
   /* encode side analysis parameters */
-  float maxover;     
-  float maxunder;  
-  float maxerr;    
+  float maxover;
+  float maxunder;
+  float maxerr;
 
-  float twofitweight;  
+  float twofitweight;
   float twofitatten;
 
   int   n;
@@ -89,16 +89,16 @@ typedef struct{
   void                 (*pack)  (vorbis_info_residue *,oggpack_buffer *);
   vorbis_info_residue *(*unpack)(vorbis_info *,oggpack_buffer *);
   vorbis_look_residue *(*look)  (vorbis_dsp_state *,
-				 vorbis_info_residue *);
+                                 vorbis_info_residue *);
   void (*free_info)    (vorbis_info_residue *);
   void (*free_look)    (vorbis_look_residue *);
   long **(*class)      (struct vorbis_block *,vorbis_look_residue *,
-			float **,int *,int);
+                        int **,int *,int);
   int  (*forward)      (oggpack_buffer *,struct vorbis_block *,
-			vorbis_look_residue *,
-			float **,float **,int *,int,long **);
+                        vorbis_look_residue *,
+                        int **,int *,int,long **,int);
   int  (*inverse)      (struct vorbis_block *,vorbis_look_residue *,
-			float **,int *,int);
+                        float **,int *,int);
 } vorbis_func_residue;
 
 typedef struct vorbis_info_residue0{
@@ -109,19 +109,19 @@ typedef struct vorbis_info_residue0{
   /* first stage (lossless partitioning) */
   int    grouping;         /* group n vectors per partition */
   int    partitions;       /* possible codebooks for a partition */
+  int    partvals;         /* partitions ^ groupbook dim */
   int    groupbook;        /* huffbook for partitioning */
   int    secondstages[64]; /* expanded out to pointers in lookup */
-  int    booklist[256];    /* list of second stage books */
+  int    booklist[512];    /* list of second stage books */
 
-  float  classmetric1[64];  
-  float  classmetric2[64];  
-
+  const int classmetric1[64];
+  const int classmetric2[64];
 } vorbis_info_residue0;
 
 /* Mapping backend generic *****************************************/
 typedef struct{
   void                 (*pack)  (vorbis_info *,vorbis_info_mapping *,
-				 oggpack_buffer *);
+                                 oggpack_buffer *);
   vorbis_info_mapping *(*unpack)(vorbis_info *,oggpack_buffer *);
   void (*free_info)    (vorbis_info_mapping *);
   int  (*forward)      (struct vorbis_block *vb);
@@ -131,7 +131,7 @@ typedef struct{
 typedef struct vorbis_info_mapping0{
   int   submaps;  /* <= 16 */
   int   chmuxlist[256];   /* up to 256 channels in a Vorbis stream */
-  
+
   int   floorsubmap[16];   /* [mux] submap to floors */
   int   residuesubmap[16]; /* [mux] submap to residue */
 
@@ -142,5 +142,3 @@ typedef struct vorbis_info_mapping0{
 } vorbis_info_mapping0;
 
 #endif
-
-

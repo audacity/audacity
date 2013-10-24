@@ -11,7 +11,7 @@
  ********************************************************************
 
  function: toplevel residue templates 8/11kHz
- last mod: $Id: residue_8.h,v 1.7 2008-02-02 15:53:58 richardash1981 Exp $
+ last mod: $Id: residue_8.h 16962 2010-03-11 07:30:34Z xiphmont $
 
  ********************************************************************/
 
@@ -20,7 +20,7 @@
 
 /***** residue backends *********************************************/
 
-static static_bookblock _resbook_8s_0={
+static const static_bookblock _resbook_8s_0={
   {
     {0},
     {0,0,&_8c0_s_p1_0},
@@ -34,7 +34,7 @@ static static_bookblock _resbook_8s_0={
     {&_8c0_s_p9_0,&_8c0_s_p9_1,&_8c0_s_p9_2}
    }
 };
-static static_bookblock _resbook_8s_1={
+static const static_bookblock _resbook_8s_1={
   {
     {0},
     {0,0,&_8c1_s_p1_0},
@@ -49,23 +49,23 @@ static static_bookblock _resbook_8s_1={
    }
 };
 
-static vorbis_residue_template _res_8s_0[]={
-  {2,0,  &_residue_44_mid,
+static const vorbis_residue_template _res_8s_0[]={
+  {2,0,32,  &_residue_44_mid,
    &_huff_book__8c0_s_single,&_huff_book__8c0_s_single,
    &_resbook_8s_0,&_resbook_8s_0},
 };
-static vorbis_residue_template _res_8s_1[]={
-  {2,0,  &_residue_44_mid,
+static const vorbis_residue_template _res_8s_1[]={
+  {2,0,32,  &_residue_44_mid,
    &_huff_book__8c1_s_single,&_huff_book__8c1_s_single,
    &_resbook_8s_1,&_resbook_8s_1},
 };
 
-static vorbis_mapping_template _mapres_template_8_stereo[2]={
+static const vorbis_mapping_template _mapres_template_8_stereo[2]={
   { _map_nominal, _res_8s_0 }, /* 0 */
   { _map_nominal, _res_8s_1 }, /* 1 */
 };
 
-static static_bookblock _resbook_8u_0={
+static const static_bookblock _resbook_8u_0={
   {
     {0},
     {0,0,&_8u0__p1_0},
@@ -77,7 +77,7 @@ static static_bookblock _resbook_8u_0={
     {&_8u0__p7_0,&_8u0__p7_1,&_8u0__p7_2}
    }
 };
-static static_bookblock _resbook_8u_1={
+static const static_bookblock _resbook_8u_1={
   {
     {0},
     {0,0,&_8u1__p1_0},
@@ -92,18 +92,18 @@ static static_bookblock _resbook_8u_1={
    }
 };
 
-static vorbis_residue_template _res_8u_0[]={
-  {1,0,  &_residue_44_low_un,
+static const vorbis_residue_template _res_8u_0[]={
+  {1,0,32,  &_residue_44_low_un,
    &_huff_book__8u0__single,&_huff_book__8u0__single,
    &_resbook_8u_0,&_resbook_8u_0},
 };
-static vorbis_residue_template _res_8u_1[]={
-  {1,0,  &_residue_44_mid_un,
+static const vorbis_residue_template _res_8u_1[]={
+  {1,0,32,  &_residue_44_mid_un,
    &_huff_book__8u1__single,&_huff_book__8u1__single,
    &_resbook_8u_1,&_resbook_8u_1},
 };
 
-static vorbis_mapping_template _mapres_template_8_uncoupled[2]={
+static const vorbis_mapping_template _mapres_template_8_uncoupled[2]={
   { _map_nominal_u, _res_8u_0 }, /* 0 */
   { _map_nominal_u, _res_8u_1 }, /* 1 */
 };

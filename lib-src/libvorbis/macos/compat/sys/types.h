@@ -5,9 +5,9 @@
 #include <alloca.h>
 #include <string.h>
 
-typedef short		int16_t;
-typedef long		int32_t;
-typedef long long	int64_t;
+typedef short                int16_t;
+typedef long                int32_t;
+typedef long long        int64_t;
 
 #define vorbis_size32_t long
 

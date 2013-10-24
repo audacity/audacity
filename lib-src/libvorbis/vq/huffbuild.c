@@ -11,7 +11,7 @@
  ********************************************************************
 
  function: hufftree builder
- last mod: $Id: huffbuild.c,v 1.7 2008-02-02 15:54:08 richardash1981 Exp $
+ last mod: $Id: huffbuild.c 16959 2010-03-10 16:03:11Z xiphmont $
 
  ********************************************************************/
 
@@ -49,13 +49,13 @@ static int getval(FILE *in,int begin,int n,int group,int max){
 
 static void usage(){
   fprintf(stderr,
-	  "usage:\n" 
-	  "huffbuild <input>.vqd <begin,n,group>|<lorange-hirange> [noguard]\n"
-	  "   where begin,n,group is first scalar, \n"
-	  "                          number of scalars of each in line,\n"
-	  "                          number of scalars in a group\n"
-	  "eg: huffbuild reslongaux.vqd 0,1024,4\n"
-	  "produces reslongaux.vqh\n\n");
+          "usage:\n" 
+          "huffbuild <input>.vqd <begin,n,group>|<lorange-hirange> [noguard]\n"
+          "   where begin,n,group is first scalar, \n"
+          "                          number of scalars of each in line,\n"
+          "                          number of scalars in a group\n"
+          "eg: huffbuild reslongaux.vqd 0,1024,4\n"
+          "produces reslongaux.vqh\n\n");
   exit(1);
 }
 
@@ -86,17 +86,17 @@ int main(int argc, char *argv[]){
     }else{
       begin=atoi(argv[2]);
       if(!pos)
-	usage();
+        usage();
       else
-	n=atoi(pos+1);
+        n=atoi(pos+1);
       pos=strchr(pos+1,',');
       if(!pos)
-	usage();
+        usage();
       else
-	subn=atoi(pos+1);
+        subn=atoi(pos+1);
       if(n/subn*subn != n){
-	fprintf(stderr,"n must be divisible by group\n");
-	exit(1);
+        fprintf(stderr,"n must be divisible by group\n");
+        exit(1);
       }
     }
   }
@@ -136,10 +136,10 @@ int main(int argc, char *argv[]){
       reset_next_value();
       i/=subn;
       while(!feof(file)){
-	long val=getval(file,begin,n,subn,maxval);
-	if(val==-1 || val>=vals)break;
-	hist[val]++;
-	if(!(i--&0xff))spinnit("loading... ",i*subn);
+        long val=getval(file,begin,n,subn,maxval);
+        if(val==-1 || val>=vals)break;
+        hist[val]++;
+        if(!(i--&0xff))spinnit("loading... ",i*subn);
       }
       fclose(file);
     }
@@ -155,32 +155,29 @@ int main(int argc, char *argv[]){
       strcat(buffer,".vqh");
       file=fopen(buffer,"w");
       if(!file){
-	fprintf(stderr,"Could not open file %s\n",buffer);
-	exit(1);
+        fprintf(stderr,"Could not open file %s\n",buffer);
+        exit(1);
       }
     }
     
     /* first, the static vectors, then the book structure to tie it together. */
     /* lengthlist */
-    fprintf(file,"static long _huff_lengthlist_%s[] = {\n",base);
+    fprintf(file,"static const long _huff_lengthlist_%s[] = {\n",base);
     for(j=0;j<vals;){
       fprintf(file,"\t");
       for(k=0;k<16 && j<vals;k++,j++)
-	fprintf(file,"%2ld,",lengths[j]);
+        fprintf(file,"%2ld,",lengths[j]);
       fprintf(file,"\n");
     }
     fprintf(file,"};\n\n");
     
     /* the toplevel book */
-    fprintf(file,"static static_codebook _huff_book_%s = {\n",base);
+    fprintf(file,"static const static_codebook _huff_book_%s = {\n",base);
     fprintf(file,"\t%d, %ld,\n",subn,vals);
-    fprintf(file,"\t_huff_lengthlist_%s,\n",base);
+    fprintf(file,"\t(long *)_huff_lengthlist_%s,\n",base);
     fprintf(file,"\t0, 0, 0, 0, 0,\n");
     fprintf(file,"\tNULL,\n");
 
-    fprintf(file,"\tNULL,\n");
-    fprintf(file,"\tNULL,\n");
-    fprintf(file,"\tNULL,\n");
     fprintf(file,"\t0\n};\n\n");
     
     fclose(file);

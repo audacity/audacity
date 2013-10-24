@@ -5,14 +5,14 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
  function: normalized modified discrete cosine transform
            power of two length transform only [64 <= n ]
- last mod: $Id: mdct.c,v 1.8 2008-02-02 15:53:53 richardash1981 Exp $
+ last mod: $Id: mdct.c 16227 2009-07-08 06:58:46Z xiphmont $
 
  Original algorithm adapted long ago from _The use of multirate filter
  banks for coding of high quality digital audio_, by T. Sporer,
@@ -52,7 +52,7 @@
 void mdct_init(mdct_lookup *lookup,int n){
   int   *bitrev=_ogg_malloc(sizeof(*bitrev)*(n/4));
   DATA_TYPE *T=_ogg_malloc(sizeof(*T)*(n+n/4));
-  
+
   int i;
   int n2=n>>1;
   int log2n=lookup->log2n=rint(log((float)n)/log(2.f));
@@ -81,7 +81,7 @@ void mdct_init(mdct_lookup *lookup,int n){
     for(i=0;i<n/8;i++){
       int acc=0;
       for(j=0;msb>>j;j++)
-	if((msb>>j)&i)acc|=1<<j;
+        if((msb>>j)&i)acc|=1<<j;
       bitrev[i*2]=((~acc)&mask)-1;
       bitrev[i*2+1]=acc;
 
@@ -97,21 +97,21 @@ STIN void mdct_butterfly_8(DATA_TYPE *x){
   REG_TYPE r2   = x[4] + x[0];
   REG_TYPE r3   = x[4] - x[0];
 
-	   x[6] = r0   + r2;
-	   x[4] = r0   - r2;
-	   
-	   r0   = x[5] - x[1];
-	   r2   = x[7] - x[3];
-	   x[0] = r1   + r0;
-	   x[2] = r1   - r0;
-	   
-	   r0   = x[5] + x[1];
-	   r1   = x[7] + x[3];
-	   x[3] = r2   + r3;
-	   x[1] = r2   - r3;
-	   x[7] = r1   + r0;
-	   x[5] = r1   - r0;
-	   
+           x[6] = r0   + r2;
+           x[4] = r0   - r2;
+
+           r0   = x[5] - x[1];
+           r2   = x[7] - x[3];
+           x[0] = r1   + r0;
+           x[2] = r1   - r0;
+
+           r0   = x[5] + x[1];
+           r1   = x[7] + x[3];
+           x[3] = r2   + r3;
+           x[1] = r2   - r3;
+           x[7] = r1   + r0;
+           x[5] = r1   - r0;
+
 }
 
 /* 16 point butterfly (in place, 4 register) */
@@ -145,8 +145,8 @@ STIN void mdct_butterfly_16(DATA_TYPE *x){
            x[6]  = r0;
            x[7]  = r1;
 
-	   mdct_butterfly_8(x);
-	   mdct_butterfly_8(x+8);
+           mdct_butterfly_8(x);
+           mdct_butterfly_8(x+8);
 }
 
 /* 32 point butterfly (in place, 4 register) */
@@ -154,105 +154,105 @@ STIN void mdct_butterfly_32(DATA_TYPE *x){
   REG_TYPE r0     = x[30] - x[14];
   REG_TYPE r1     = x[31] - x[15];
 
-           x[30] +=         x[14];           
-	   x[31] +=         x[15];
-           x[14]  =         r0;              
-	   x[15]  =         r1;
+           x[30] +=         x[14];
+           x[31] +=         x[15];
+           x[14]  =         r0;
+           x[15]  =         r1;
 
-           r0     = x[28] - x[12];   
-	   r1     = x[29] - x[13];
-           x[28] +=         x[12];           
-	   x[29] +=         x[13];
+           r0     = x[28] - x[12];
+           r1     = x[29] - x[13];
+           x[28] +=         x[12];
+           x[29] +=         x[13];
            x[12]  = MULT_NORM( r0 * cPI1_8  -  r1 * cPI3_8 );
-	   x[13]  = MULT_NORM( r0 * cPI3_8  +  r1 * cPI1_8 );
+           x[13]  = MULT_NORM( r0 * cPI3_8  +  r1 * cPI1_8 );
 
            r0     = x[26] - x[10];
-	   r1     = x[27] - x[11];
-	   x[26] +=         x[10];
-	   x[27] +=         x[11];
-	   x[10]  = MULT_NORM(( r0  - r1 ) * cPI2_8);
-	   x[11]  = MULT_NORM(( r0  + r1 ) * cPI2_8);
+           r1     = x[27] - x[11];
+           x[26] +=         x[10];
+           x[27] +=         x[11];
+           x[10]  = MULT_NORM(( r0  - r1 ) * cPI2_8);
+           x[11]  = MULT_NORM(( r0  + r1 ) * cPI2_8);
 
-	   r0     = x[24] - x[8];
-	   r1     = x[25] - x[9];
-	   x[24] += x[8];
-	   x[25] += x[9];
-	   x[8]   = MULT_NORM( r0 * cPI3_8  -  r1 * cPI1_8 );
-	   x[9]   = MULT_NORM( r1 * cPI3_8  +  r0 * cPI1_8 );
+           r0     = x[24] - x[8];
+           r1     = x[25] - x[9];
+           x[24] += x[8];
+           x[25] += x[9];
+           x[8]   = MULT_NORM( r0 * cPI3_8  -  r1 * cPI1_8 );
+           x[9]   = MULT_NORM( r1 * cPI3_8  +  r0 * cPI1_8 );
 
-	   r0     = x[22] - x[6];
-	   r1     = x[7]  - x[23];
-	   x[22] += x[6];
-	   x[23] += x[7];
-	   x[6]   = r1;
-	   x[7]   = r0;
+           r0     = x[22] - x[6];
+           r1     = x[7]  - x[23];
+           x[22] += x[6];
+           x[23] += x[7];
+           x[6]   = r1;
+           x[7]   = r0;
 
-	   r0     = x[4]  - x[20];
-	   r1     = x[5]  - x[21];
-	   x[20] += x[4];
-	   x[21] += x[5];
-	   x[4]   = MULT_NORM( r1 * cPI1_8  +  r0 * cPI3_8 );
-	   x[5]   = MULT_NORM( r1 * cPI3_8  -  r0 * cPI1_8 );
+           r0     = x[4]  - x[20];
+           r1     = x[5]  - x[21];
+           x[20] += x[4];
+           x[21] += x[5];
+           x[4]   = MULT_NORM( r1 * cPI1_8  +  r0 * cPI3_8 );
+           x[5]   = MULT_NORM( r1 * cPI3_8  -  r0 * cPI1_8 );
 
-	   r0     = x[2]  - x[18];
-	   r1     = x[3]  - x[19];
-	   x[18] += x[2];
-	   x[19] += x[3];
-	   x[2]   = MULT_NORM(( r1  + r0 ) * cPI2_8);
-	   x[3]   = MULT_NORM(( r1  - r0 ) * cPI2_8);
+           r0     = x[2]  - x[18];
+           r1     = x[3]  - x[19];
+           x[18] += x[2];
+           x[19] += x[3];
+           x[2]   = MULT_NORM(( r1  + r0 ) * cPI2_8);
+           x[3]   = MULT_NORM(( r1  - r0 ) * cPI2_8);
 
-	   r0     = x[0]  - x[16];
-	   r1     = x[1]  - x[17];
-	   x[16] += x[0];
-	   x[17] += x[1];
-	   x[0]   = MULT_NORM( r1 * cPI3_8  +  r0 * cPI1_8 );
-	   x[1]   = MULT_NORM( r1 * cPI1_8  -  r0 * cPI3_8 );
+           r0     = x[0]  - x[16];
+           r1     = x[1]  - x[17];
+           x[16] += x[0];
+           x[17] += x[1];
+           x[0]   = MULT_NORM( r1 * cPI3_8  +  r0 * cPI1_8 );
+           x[1]   = MULT_NORM( r1 * cPI1_8  -  r0 * cPI3_8 );
 
-	   mdct_butterfly_16(x);
-	   mdct_butterfly_16(x+16);
+           mdct_butterfly_16(x);
+           mdct_butterfly_16(x+16);
 
 }
 
 /* N point first stage butterfly (in place, 2 register) */
 STIN void mdct_butterfly_first(DATA_TYPE *T,
-					DATA_TYPE *x,
-					int points){
-  
+                                        DATA_TYPE *x,
+                                        int points){
+
   DATA_TYPE *x1        = x          + points      - 8;
   DATA_TYPE *x2        = x          + (points>>1) - 8;
   REG_TYPE   r0;
   REG_TYPE   r1;
 
   do{
-    
+
                r0      = x1[6]      -  x2[6];
-	       r1      = x1[7]      -  x2[7];
-	       x1[6]  += x2[6];
-	       x1[7]  += x2[7];
-	       x2[6]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
-	       x2[7]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
-	       
-	       r0      = x1[4]      -  x2[4];
-	       r1      = x1[5]      -  x2[5];
-	       x1[4]  += x2[4];
-	       x1[5]  += x2[5];
-	       x2[4]   = MULT_NORM(r1 * T[5]  +  r0 * T[4]);
-	       x2[5]   = MULT_NORM(r1 * T[4]  -  r0 * T[5]);
-	       
-	       r0      = x1[2]      -  x2[2];
-	       r1      = x1[3]      -  x2[3];
-	       x1[2]  += x2[2];
-	       x1[3]  += x2[3];
-	       x2[2]   = MULT_NORM(r1 * T[9]  +  r0 * T[8]);
-	       x2[3]   = MULT_NORM(r1 * T[8]  -  r0 * T[9]);
-	       
-	       r0      = x1[0]      -  x2[0];
-	       r1      = x1[1]      -  x2[1];
-	       x1[0]  += x2[0];
-	       x1[1]  += x2[1];
-	       x2[0]   = MULT_NORM(r1 * T[13] +  r0 * T[12]);
-	       x2[1]   = MULT_NORM(r1 * T[12] -  r0 * T[13]);
-	       
+               r1      = x1[7]      -  x2[7];
+               x1[6]  += x2[6];
+               x1[7]  += x2[7];
+               x2[6]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
+               x2[7]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
+
+               r0      = x1[4]      -  x2[4];
+               r1      = x1[5]      -  x2[5];
+               x1[4]  += x2[4];
+               x1[5]  += x2[5];
+               x2[4]   = MULT_NORM(r1 * T[5]  +  r0 * T[4]);
+               x2[5]   = MULT_NORM(r1 * T[4]  -  r0 * T[5]);
+
+               r0      = x1[2]      -  x2[2];
+               r1      = x1[3]      -  x2[3];
+               x1[2]  += x2[2];
+               x1[3]  += x2[3];
+               x2[2]   = MULT_NORM(r1 * T[9]  +  r0 * T[8]);
+               x2[3]   = MULT_NORM(r1 * T[8]  -  r0 * T[9]);
+
+               r0      = x1[0]      -  x2[0];
+               r1      = x1[1]      -  x2[1];
+               x1[0]  += x2[0];
+               x1[1]  += x2[1];
+               x2[0]   = MULT_NORM(r1 * T[13] +  r0 * T[12]);
+               x2[1]   = MULT_NORM(r1 * T[12] -  r0 * T[13]);
+
     x1-=8;
     x2-=8;
     T+=16;
@@ -262,52 +262,52 @@ STIN void mdct_butterfly_first(DATA_TYPE *T,
 
 /* N/stage point generic N stage butterfly (in place, 2 register) */
 STIN void mdct_butterfly_generic(DATA_TYPE *T,
-					  DATA_TYPE *x,
-					  int points,
-					  int trigint){
-  
+                                          DATA_TYPE *x,
+                                          int points,
+                                          int trigint){
+
   DATA_TYPE *x1        = x          + points      - 8;
   DATA_TYPE *x2        = x          + (points>>1) - 8;
   REG_TYPE   r0;
   REG_TYPE   r1;
 
   do{
-    
-               r0      = x1[6]      -  x2[6];
-	       r1      = x1[7]      -  x2[7];
-	       x1[6]  += x2[6];
-	       x1[7]  += x2[7];
-	       x2[6]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
-	       x2[7]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
-	       
-	       T+=trigint;
-	       
-	       r0      = x1[4]      -  x2[4];
-	       r1      = x1[5]      -  x2[5];
-	       x1[4]  += x2[4];
-	       x1[5]  += x2[5];
-	       x2[4]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
-	       x2[5]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
-	       
-	       T+=trigint;
-	       
-	       r0      = x1[2]      -  x2[2];
-	       r1      = x1[3]      -  x2[3];
-	       x1[2]  += x2[2];
-	       x1[3]  += x2[3];
-	       x2[2]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
-	       x2[3]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
-	       
-	       T+=trigint;
-	       
-	       r0      = x1[0]      -  x2[0];
-	       r1      = x1[1]      -  x2[1];
-	       x1[0]  += x2[0];
-	       x1[1]  += x2[1];
-	       x2[0]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
-	       x2[1]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
 
-	       T+=trigint;
+               r0      = x1[6]      -  x2[6];
+               r1      = x1[7]      -  x2[7];
+               x1[6]  += x2[6];
+               x1[7]  += x2[7];
+               x2[6]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
+               x2[7]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
+
+               T+=trigint;
+
+               r0      = x1[4]      -  x2[4];
+               r1      = x1[5]      -  x2[5];
+               x1[4]  += x2[4];
+               x1[5]  += x2[5];
+               x2[4]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
+               x2[5]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
+
+               T+=trigint;
+
+               r0      = x1[2]      -  x2[2];
+               r1      = x1[3]      -  x2[3];
+               x1[2]  += x2[2];
+               x1[3]  += x2[3];
+               x2[2]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
+               x2[3]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
+
+               T+=trigint;
+
+               r0      = x1[0]      -  x2[0];
+               r1      = x1[1]      -  x2[1];
+               x1[0]  += x2[0];
+               x1[1]  += x2[1];
+               x2[0]   = MULT_NORM(r1 * T[1]  +  r0 * T[0]);
+               x2[1]   = MULT_NORM(r1 * T[0]  -  r0 * T[1]);
+
+               T+=trigint;
     x1-=8;
     x2-=8;
 
@@ -315,13 +315,13 @@ STIN void mdct_butterfly_generic(DATA_TYPE *T,
 }
 
 STIN void mdct_butterflies(mdct_lookup *init,
-			     DATA_TYPE *x,
-			     int points){
-  
+                             DATA_TYPE *x,
+                             int points){
+
   DATA_TYPE *T=init->trig;
   int stages=init->log2n-5;
   int i,j;
-  
+
   if(--stages>0){
     mdct_butterfly_first(T,x,points);
   }
@@ -344,8 +344,8 @@ void mdct_clear(mdct_lookup *l){
   }
 }
 
-STIN void mdct_bitreverse(mdct_lookup *init, 
-			    DATA_TYPE *x){
+STIN void mdct_bitreverse(mdct_lookup *init,
+                            DATA_TYPE *x){
   int        n       = init->n;
   int       *bit     = init->bitrev;
   DATA_TYPE *w0      = x;
@@ -361,15 +361,15 @@ STIN void mdct_bitreverse(mdct_lookup *init,
     REG_TYPE  r2     = MULT_NORM(r1     * T[0]   + r0 * T[1]);
     REG_TYPE  r3     = MULT_NORM(r1     * T[1]   - r0 * T[0]);
 
-	      w1    -= 4;
+              w1    -= 4;
 
               r0     = HALVE(x0[1] + x1[1]);
               r1     = HALVE(x0[0] - x1[0]);
-      
-	      w0[0]  = r0     + r2;
-	      w1[2]  = r0     - r2;
-	      w0[1]  = r1     + r3;
-	      w1[3]  = r3     - r1;
+
+              w0[0]  = r0     + r2;
+              w1[2]  = r0     - r2;
+              w0[1]  = r1     + r3;
+              w1[3]  = r3     - r1;
 
               x0     = x+bit[2];
               x1     = x+bit[3];
@@ -381,15 +381,15 @@ STIN void mdct_bitreverse(mdct_lookup *init,
 
               r0     = HALVE(x0[1] + x1[1]);
               r1     = HALVE(x0[0] - x1[0]);
-      
-	      w0[2]  = r0     + r2;
-	      w1[0]  = r0     - r2;
-	      w0[3]  = r1     + r3;
-	      w1[1]  = r3     - r1;
 
-	      T     += 4;
-	      bit   += 4;
-	      w0    += 4;
+              w0[2]  = r0     + r2;
+              w1[0]  = r0     - r2;
+              w0[3]  = r1     + r3;
+              w1[1]  = r3     - r1;
+
+              T     += 4;
+              bit   += 4;
+              w0    += 4;
 
   }while(w0<w1);
 }
@@ -439,7 +439,7 @@ void mdct_backward(mdct_lookup *init, DATA_TYPE *in, DATA_TYPE *out){
     DATA_TYPE *oX2=out+n2+n4;
     DATA_TYPE *iX =out;
     T             =init->trig+n2;
-    
+
     do{
       oX1-=4;
 
@@ -501,44 +501,44 @@ void mdct_forward(mdct_lookup *init, DATA_TYPE *in, DATA_TYPE *out){
   /* rotate */
 
   /* window + rotate + step 1 */
-  
+
   REG_TYPE r0;
   REG_TYPE r1;
   DATA_TYPE *x0=in+n2+n4;
   DATA_TYPE *x1=x0+1;
   DATA_TYPE *T=init->trig+n2;
-  
+
   int i=0;
-  
+
   for(i=0;i<n8;i+=2){
     x0 -=4;
     T-=2;
     r0= x0[2] + x1[0];
-    r1= x0[0] + x1[2];       
+    r1= x0[0] + x1[2];
     w2[i]=   MULT_NORM(r1*T[1] + r0*T[0]);
     w2[i+1]= MULT_NORM(r1*T[0] - r0*T[1]);
     x1 +=4;
   }
 
   x1=in+1;
-  
+
   for(;i<n2-n8;i+=2){
     T-=2;
     x0 -=4;
     r0= x0[2] - x1[0];
-    r1= x0[0] - x1[2];       
+    r1= x0[0] - x1[2];
     w2[i]=   MULT_NORM(r1*T[1] + r0*T[0]);
     w2[i+1]= MULT_NORM(r1*T[0] - r0*T[1]);
     x1 +=4;
   }
-    
+
   x0=in+n;
 
   for(;i<n2;i+=2){
     T-=2;
     x0 -=4;
     r0= -x0[2] - x1[0];
-    r1= -x0[0] - x1[2];       
+    r1= -x0[0] - x1[2];
     w2[i]=   MULT_NORM(r1*T[1] + r0*T[0]);
     w2[i+1]= MULT_NORM(r1*T[0] - r0*T[1]);
     x1 +=4;
@@ -561,4 +561,3 @@ void mdct_forward(mdct_lookup *init, DATA_TYPE *in, DATA_TYPE *out){
     T+=2;
   }
 }
-

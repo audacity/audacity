@@ -2,7 +2,7 @@ dnl Add audacity / vorbis license?
 dnl
 dnl Please increment the serial number below whenever you alter this macro
 dnl for the benefit of automatic macro update systems
-# audacity_checklib_libvorbis.m4 serial 1
+# audacity_checklib_libvorbis.m4 serial 2
 
 AC_DEFUN([AUDACITY_CHECKLIB_LIBVORBIS], [
 
@@ -60,6 +60,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVORBIS], [
       LIBVORBIS_LOCAL_CPPSYMBOLS="USE_LIBVORBIS"
 
       LIBVORBIS_LOCAL_CONFIG_SUBDIRS="lib-src/libogg lib-src/libvorbis"
+      LIBVORBIS_LOCAL_CONFIGURE_OPTS="--with-ogg=../libogg --with-ogg-libraries=.. --disable-oggtest"
+
       AC_MSG_NOTICE([Vorbis libraries are available in this source tree])
    else
       AC_MSG_NOTICE([Vorbis libraries are NOT available in this source tree])

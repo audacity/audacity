@@ -1,0 +1,80 @@
+<html>
+
+<head>
+<title>libvorbis - function - vorbis_bitrate_flushpacket</title>
+<link rel=stylesheet href="style.css" type="text/css">
+</head>
+
+<body bgcolor=white text=black link="#5555ff" alink="#5555ff" vlink="#5555ff">
+<table border=0 width=100%>
+<tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+<h1>vorbis_bitrate_flushpacket</h1>
+
+<p><i>declared in "vorbis/codec.h";</i></p>
+
+<p>This function returns the next available completed packet from the
+bitrate management engine. It should be called in a loop after any call
+to vorbis_bitrate_addblock() until it returns either 0 (more data needed)
+or a negative value (error).
+</p>
+
+<p>
+The data returned in the ogg_packet structure can be copied to the
+final compressed output stream.
+</p>
+
+<table border=0 color=black cellspacing=0 cellpadding=7>
+<tr bgcolor=#cccccc>
+	<td>
+<pre><b>
+extern int      vorbis_bitrate_flushpacket(vorbis_dsp_state *vd,
+                                           ogg_packet *op);
+</b></pre>
+	</td>
+</tr>
+</table>
+
+<h3>Parameters</h3>
+<dl>
+<dt><i>vd</i></dt>
+<dd>Pointer to the vorbis_dsp_state represending the encoder.</dd>
+<dt><i>op</i></dt>
+<dd>Pointer to an ogg_packet to be filled out with the compressed data.</dd>
+</dl>
+
+
+<h3>Return Values</h3>
+<ul>
+<li>1 for success when more packets are available.
+<li>0 for success when this is the last packet available from the current input.</li>
+<li>negative values for failure:
+<ul>
+<li>OV_EINVAL - Invalid parameters.</li> 
+<li>OV_EFAULT - Internal fault; indicates a bug or memory corruption.</li>
+<li>OV_EIMPL - Unimplemented; not supported by this version of the library.</li>
+</ul>
+</li>
+
+</ul>
+
+<br><br>
+<hr noshade>
+<table border=0 width=100%>
+<tr valign=top>
+<td><p class=tiny>copyright &copy; 2010 Xiph.Org</p></td>
+<td align=right><p class=tiny><a href="http://www.xiph.org/ogg/vorbis/index.html">Ogg Vorbis</a></p></td>
+</tr><tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+
+</body>
+
+</html>

@@ -5,13 +5,13 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
   function: lookup based functions
-  last mod: $Id: lookup.c,v 1.7 2008-02-02 15:53:52 richardash1981 Exp $
+  last mod: $Id: lookup.c 16227 2009-07-08 06:58:46Z xiphmont $
 
  ********************************************************************/
 
@@ -56,16 +56,16 @@ float vorbis_fromdBlook(float a){
 
 #ifdef INT_LOOKUP
 /* interpolated 1./sqrt(p) where .5 <= a < 1. (.100000... to .111111...) in
-   16.16 format 
+   16.16 format
 
    returns in m.8 format */
 long vorbis_invsqlook_i(long a,long e){
-  long i=(a&0x7fff)>>(INVSQ_LOOKUP_I_SHIFT-1); 
+  long i=(a&0x7fff)>>(INVSQ_LOOKUP_I_SHIFT-1);
   long d=(a&INVSQ_LOOKUP_I_MASK)<<(16-INVSQ_LOOKUP_I_SHIFT); /*  0.16 */
   long val=INVSQ_LOOKUP_I[i]-                                /*  1.16 */
     (((INVSQ_LOOKUP_I[i]-INVSQ_LOOKUP_I[i+1])*               /*  0.16 */
       d)>>16);                                               /* result 1.16 */
-  
+
   e+=32;
   if(e&1)val=(val*5792)>>13; /* multiply val by 1/sqrt(2) */
   e=(e>>1)-8;
@@ -88,7 +88,7 @@ long vorbis_coslook_i(long a){
   int i=a>>COS_LOOKUP_I_SHIFT;
   int d=a&COS_LOOKUP_I_MASK;
   return COS_LOOKUP_I[i]- ((d*(COS_LOOKUP_I[i]-COS_LOOKUP_I[i+1]))>>
-			   COS_LOOKUP_I_SHIFT);
+                           COS_LOOKUP_I_SHIFT);
 }
 
 #endif

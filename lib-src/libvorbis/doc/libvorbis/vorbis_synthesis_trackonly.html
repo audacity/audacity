@@ -1,0 +1,71 @@
+<html>
+
+<head>
+<title>libvorbis - function - vorbis_synthesis_trackonly</title>
+<link rel=stylesheet href="style.css" type="text/css">
+</head>
+
+<body bgcolor=white text=black link="#5555ff" alink="#5555ff" vlink="#5555ff">
+<table border=0 width=100%>
+<tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+<h1>vorbis_synthesis_trackonly</h1>
+
+<p><i>declared in "vorbis/codec.h";</i></p>
+
+<p>This function decodes a Vorbis packet similarly to
+<a href="vorbis_synthesis.html">vorbis_synthesis</a>, except that the
+<a href="vorbis_block.html">vorbis_block</a> produced does not contain
+any audio data but merely updates the decoder's state as though the
+block had been actually decoded when
+<a href="vorbis_synthesis_blockin.html">vorbis_synthesis_blockin</a>
+is called on it.</p>
+
+<table border=0 color=black cellspacing=0 cellpadding=7>
+<tr bgcolor=#cccccc>
+	<td>
+<pre><b>
+extern int      vorbis_synthesis_trackonly(vorbis_block *vb,ogg_packet *op);
+</b></pre>
+	</td>
+</tr>
+</table>
+
+<h3>Parameters</h3>
+<dl>
+<dt><i>vb</i></dt>
+<dd>The <a href="vorbis_block.html">vorbis_block</a> to decode the
+packet into.</dd>
+<dt><i>op</i></dt>
+<dd>The ogg_packet to decode.</dd>
+</dl>
+
+
+<h3>Return Values</h3>
+<blockquote>
+<li>0 on success.</li>
+<li>OV_ENOTAUDIO if the packet is not an audio packet.</li>
+<li>OV_EBADPACKET if there was an error in the packet.</li>
+</blockquote>
+<p>
+
+<br><br>
+<hr noshade>
+<table border=0 width=100%>
+<tr valign=top>
+<td><p class=tiny>copyright &copy; 2010 Xiph.Org</p></td>
+<td align=right><p class=tiny><a href="http://www.xiph.org/ogg/vorbis/index.html">Ogg Vorbis</a></p></td>
+</tr><tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+
+</body>
+
+</html>

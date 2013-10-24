@@ -5,13 +5,13 @@
  * GOVERNED BY A BSD-STYLE SOURCE LICENSE INCLUDED WITH THIS SOURCE *
  * IN 'COPYING'. PLEASE READ THESE TERMS BEFORE DISTRIBUTING.       *
  *                                                                  *
- * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2007             *
+ * THE OggVorbis SOURCE CODE IS (C) COPYRIGHT 1994-2009             *
  * by the Xiph.Org Foundation http://www.xiph.org/                  *
  *                                                                  *
  ********************************************************************
 
   function: LPC low level routines
-  last mod: $Id: lpc.c,v 1.8 2008-02-02 15:53:53 richardash1981 Exp $
+  last mod: $Id: lpc.c 16227 2009-07-08 06:58:46Z xiphmont $
 
  ********************************************************************/
 
@@ -62,6 +62,7 @@ float vorbis_lpc_from_data(float *data,float *lpci,int n,int m){
   double *aut=alloca(sizeof(*aut)*(m+1));
   double *lpc=alloca(sizeof(*lpc)*(m));
   double error;
+  double epsilon;
   int i,j;
 
   /* autocorrelation, p+1 lag coefficients */
@@ -71,17 +72,19 @@ float vorbis_lpc_from_data(float *data,float *lpci,int n,int m){
     for(i=j;i<n;i++)d+=(double)data[i]*data[i-j];
     aut[j]=d;
   }
-  
+
   /* Generate lpc coefficients from autocorr values */
 
-  error=aut[0];
-  
+  /* set our noise floor to about -100dB */
+  error=aut[0] * (1. + 1e-10);
+  epsilon=1e-9*aut[0]+1e-10;
+
   for(i=0;i<m;i++){
     double r= -aut[i+1];
 
-    if(error==0){
-      memset(lpci,0,m*sizeof(*lpci));
-      return 0;
+    if(error<epsilon){
+      memset(lpc+i,0,(m-i)*sizeof(*lpc));
+      goto done;
     }
 
     /* Sum up this iteration's reflection coefficient; note that in
@@ -90,10 +93,10 @@ float vorbis_lpc_from_data(float *data,float *lpci,int n,int m){
        each iteration. */
 
     for(j=0;j<i;j++)r-=lpc[j]*aut[i-j];
-    r/=error; 
+    r/=error;
 
     /* Update LPC coefficients and total error */
-    
+
     lpc[i]=r;
     for(j=0;j<i/2;j++){
       double tmp=lpc[j];
@@ -101,23 +104,36 @@ float vorbis_lpc_from_data(float *data,float *lpci,int n,int m){
       lpc[j]+=r*lpc[i-1-j];
       lpc[i-1-j]+=r*tmp;
     }
-    if(i%2)lpc[j]+=lpc[j]*r;
+    if(i&1)lpc[j]+=lpc[j]*r;
 
-    error*=1.f-r*r;
+    error*=1.-r*r;
+
+  }
+
+ done:
+
+  /* slightly damp the filter */
+  {
+    double g = .99;
+    double damp = g;
+    for(j=0;j<m;j++){
+      lpc[j]*=damp;
+      damp*=g;
+    }
   }
 
   for(j=0;j<m;j++)lpci[j]=(float)lpc[j];
 
   /* we need the error value to know how big an impulse to hit the
      filter with later */
-  
+
   return error;
 }
 
 void vorbis_lpc_predict(float *coeff,float *prime,int m,
                      float *data,long n){
 
-  /* in: coeff[0...m-1] LPC coefficients 
+  /* in: coeff[0...m-1] LPC coefficients
          prime[0...m-1] initial values (allocated size of n+m-1)
     out: data[0...n-1] data samples */
 
@@ -138,12 +154,7 @@ void vorbis_lpc_predict(float *coeff,float *prime,int m,
     p=m;
     for(j=0;j<m;j++)
       y-=work[o++]*coeff[--p];
-    
+
     data[i]=work[o]=y;
   }
 }
-
-
-
-
-

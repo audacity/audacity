@@ -34,14 +34,14 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-EXTRA_PROGRAMS = latticebuild$(EXEEXT) latticepare$(EXEEXT) \
-	latticehint$(EXEEXT) latticetune$(EXEEXT) huffbuild$(EXEEXT) \
-	distribution$(EXEEXT)
+EXTRA_PROGRAMS = latticebuild$(EXEEXT) latticetune$(EXEEXT) \
+	huffbuild$(EXEEXT) distribution$(EXEEXT)
 subdir = vq
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/m4/add_cflags.m4 \
+	$(top_srcdir)/m4/ogg.m4 $(top_srcdir)/m4/pkg.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -62,15 +62,6 @@ am_latticebuild_OBJECTS = latticebuild.$(OBJEXT) vqgen.$(OBJEXT) \
 latticebuild_OBJECTS = $(am_latticebuild_OBJECTS)
 latticebuild_LDADD = $(LDADD)
 latticebuild_DEPENDENCIES = ../lib/libvorbis.la
-am_latticehint_OBJECTS = latticehint.$(OBJEXT) bookutil.$(OBJEXT)
-latticehint_OBJECTS = $(am_latticehint_OBJECTS)
-latticehint_LDADD = $(LDADD)
-latticehint_DEPENDENCIES = ../lib/libvorbis.la
-am_latticepare_OBJECTS = latticepare.$(OBJEXT) vqgen.$(OBJEXT) \
-	bookutil.$(OBJEXT) vqsplit.$(OBJEXT)
-latticepare_OBJECTS = $(am_latticepare_OBJECTS)
-latticepare_LDADD = $(LDADD)
-latticepare_DEPENDENCIES = ../lib/libvorbis.la
 am_latticetune_OBJECTS = latticetune.$(OBJEXT) vqgen.$(OBJEXT) \
 	bookutil.$(OBJEXT)
 latticetune_OBJECTS = $(am_latticetune_OBJECTS)
@@ -90,18 +81,18 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(distribution_SOURCES) $(huffbuild_SOURCES) \
-	$(latticebuild_SOURCES) $(latticehint_SOURCES) \
-	$(latticepare_SOURCES) $(latticetune_SOURCES)
+	$(latticebuild_SOURCES) $(latticetune_SOURCES)
 DIST_SOURCES = $(distribution_SOURCES) $(huffbuild_SOURCES) \
-	$(latticebuild_SOURCES) $(latticehint_SOURCES) \
-	$(latticepare_SOURCES) $(latticetune_SOURCES)
+	$(latticebuild_SOURCES) $(latticetune_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
+ACLOCAL_AMFLAGS = @ACLOCAL_AMFLAGS@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
 AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -115,6 +106,7 @@ CYGPATH_W = @CYGPATH_W@
 DEBUG = @DEBUG@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -124,7 +116,8 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GREP = @GREP@
-HAVE_PKG_CONFIG = @HAVE_PKG_CONFIG@
+HAVE_DOXYGEN = @HAVE_DOXYGEN@
+HTLATEX = @HTLATEX@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -135,11 +128,13 @@ LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
@@ -157,7 +152,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PDFXMLTEX = @PDFXMLTEX@
+PDFLATEX = @PDFLATEX@
 PKG_CONFIG = @PKG_CONFIG@
 PROFILE = @PROFILE@
 RANLIB = @RANLIB@
@@ -176,11 +171,11 @@ VORBIS_LIBS = @VORBIS_LIBS@
 V_LIB_AGE = @V_LIB_AGE@
 V_LIB_CURRENT = @V_LIB_CURRENT@
 V_LIB_REVISION = @V_LIB_REVISION@
-XSLTPROC = @XSLTPROC@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
@@ -213,7 +208,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -241,12 +235,6 @@ LDADD = ../lib/libvorbis.la
 latticebuild_SOURCES = latticebuild.c vqgen.c bookutil.c\
 	vqgen.h bookutil.h localcodebook.h
 
-latticepare_SOURCES = latticepare.c vqgen.c bookutil.c vqsplit.c\
-	vqgen.h vqsplit.h bookutil.h localcodebook.h
-
-latticehint_SOURCES = latticehint.c bookutil.c\
-	vqsplit.h bookutil.h localcodebook.h
-
 latticetune_SOURCES = latticetune.c vqgen.c bookutil.c\
 	vqgen.h bookutil.h localcodebook.h
 
@@ -256,7 +244,16 @@ huffbuild_SOURCES = huffbuild.c vqgen.c bookutil.c\
 distribution_SOURCES = distribution.c bookutil.c\
 	bookutil.h localcodebook.h
 
-EXTRA_DIST = residue_entropy auxpartition.pl
+vqs_files = 16.vqs 16u.vqs 44c-1.vqs 44c0.vqs 44c1.vqs 44c2.vqs \
+	44c3.vqs 44c4.vqs 44c5.vqs 44c6.vqs 44c7.vqs 44c8.vqs 44c9.vqs \
+	44u0.vqs 44u1.vqs 44u2.vqs 44u3.vqs 44u4.vqs 44u5.vqs 44u6.vqs \
+	44u7.vqs 44u8.vqs 44u9.vqs 8.vqs 8u.vqs floor_11.vqs floor_22.vqs \
+	floor_44.vqs 44p-1.vqs 44p0.vqs 44p1.vqs 44p2.vqs 44p3.vqs 44p4.vqs \
+	44p5.vqs 44p6.vqs 44p7.vqs 44p8.vqs 44p9.vqs  
+
+EXTRA_DIST = $(vqs_files) make_floor_books.pl make_residue_books.pl \
+	metrics.c
+
 all: all-am
 
 .SUFFIXES:
@@ -300,12 +297,6 @@ huffbuild$(EXEEXT): $(huffbuild_OBJECTS) $(huffbuild_DEPENDENCIES)
 latticebuild$(EXEEXT): $(latticebuild_OBJECTS) $(latticebuild_DEPENDENCIES) 
 	@rm -f latticebuild$(EXEEXT)
 	$(LINK) $(latticebuild_OBJECTS) $(latticebuild_LDADD) $(LIBS)
-latticehint$(EXEEXT): $(latticehint_OBJECTS) $(latticehint_DEPENDENCIES) 
-	@rm -f latticehint$(EXEEXT)
-	$(LINK) $(latticehint_OBJECTS) $(latticehint_LDADD) $(LIBS)
-latticepare$(EXEEXT): $(latticepare_OBJECTS) $(latticepare_DEPENDENCIES) 
-	@rm -f latticepare$(EXEEXT)
-	$(LINK) $(latticepare_OBJECTS) $(latticepare_LDADD) $(LIBS)
 latticetune$(EXEEXT): $(latticetune_OBJECTS) $(latticetune_DEPENDENCIES) 
 	@rm -f latticetune$(EXEEXT)
 	$(LINK) $(latticetune_OBJECTS) $(latticetune_LDADD) $(LIBS)
@@ -320,11 +311,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/distribution.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/huffbuild.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/latticebuild.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/latticehint.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/latticepare.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/latticetune.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vqgen.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vqsplit.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

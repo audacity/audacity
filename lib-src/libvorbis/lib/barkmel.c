@@ -11,7 +11,7 @@
  ********************************************************************
 
  function: bark scale utility
- last mod: $Id: barkmel.c,v 1.7 2008-02-02 15:53:51 richardash1981 Exp $
+ last mod: $Id: barkmel.c 16037 2009-05-26 21:10:58Z xiphmont $
 
  ********************************************************************/
 
@@ -23,31 +23,31 @@ int main(){
   for(i=64;i<32000;i*=2){
     rate=48000.f;
     fprintf(stderr,"rate=%gHz, block=%d, f(1)=%.2gHz bark(1)=%.2g (of %.2g)\n",
-	    rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
+            rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
 
     rate=44100.f;
     fprintf(stderr,"rate=%gHz, block=%d, f(1)=%.2gHz bark(1)=%.2g (of %.2g)\n",
-	    rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
+            rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
 
     rate=32000.f;
     fprintf(stderr,"rate=%gHz, block=%d, f(1)=%.2gHz bark(1)=%.2g (of %.2g)\n",
-	    rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
+            rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
 
     rate=22050.f;
     fprintf(stderr,"rate=%gHz, block=%d, f(1)=%.2gHz bark(1)=%.2g (of %.2g)\n",
-	    rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
+            rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
 
     rate=16000.f;
     fprintf(stderr,"rate=%gHz, block=%d, f(1)=%.2gHz bark(1)=%.2g (of %.2g)\n",
-	    rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
+            rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
 
     rate=11025.f;
     fprintf(stderr,"rate=%gHz, block=%d, f(1)=%.2gHz bark(1)=%.2g (of %.2g)\n",
-	    rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
+            rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
 
     rate=8000.f;
     fprintf(stderr,"rate=%gHz, block=%d, f(1)=%.2gHz bark(1)=%.2g (of %.2g)\n\n",
-	    rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
+            rate,i,rate/2 / (i/2),toBARK(rate/2 /(i/2)),toBARK(rate/2));
 
 
   }

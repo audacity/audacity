@@ -1,0 +1,114 @@
+<html>
+
+<head>
+<title>Vorbisfile - function - ov_read_filter</title>
+<link rel=stylesheet href="style.css" type="text/css">
+</head>
+
+<body bgcolor=white text=black link="#5555ff" alink="#5555ff" vlink="#5555ff">
+<table border=0 width=100%>
+<tr>
+<td><p class=tiny>Vorbisfile documentation</p></td>
+<td align=right><p class=tiny>vorbisfile version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+<h1>ov_read_filter()</h1>
+
+<p><i>declared in "vorbis/vorbisfile.h";</i></p>
+
+<p>
+   <tt>ov_read_filter()</tt> is a variant of <a
+   href="ov_read.html">ov_read()</a>, the main function used to decode
+   a Vorbis file within a loop.  It passes the decoded floating point
+   PCM data to the filter specified in the function arguments before
+   converting the data to integer output samples. All other aspects of
+   its behavior are as with <a href="ov_read.html">ov_read()</a>.
+<p>
+
+<br><br>
+<table border=0 color=black cellspacing=0 cellpadding=7>
+<tr bgcolor=#cccccc>
+	<td>
+<pre><b>
+long ov_read_filter(<a href="OggVorbis_File.html">OggVorbis_File</a> *vf, char *buffer, int length, int bigendianp, int word, int sgned, int *bitstream, 
+                    void (*filter)(float **pcm,long channels,long samples,void *filter_param),void *filter_param);
+</b></pre>
+	</td>
+</tr>
+</table>
+
+<h3>Parameters</h3>
+<dl>
+<dt><i>vf</i></dt>
+<dd>A pointer to the OggVorbis_File structure--this is used for ALL the externally visible libvorbisfile
+functions.</dd>
+<dt><i>buffer</i></dt>
+<dd>A pointer to an output buffer.  The decoded output is inserted into this buffer.</dd>
+<dt><i>length</i></dt>
+<dd>Number of bytes to be read into the buffer. Should be the same size as the buffer.  A typical value is 4096.</dd>
+<dt><i>bigendianp</i></dt>
+<dd>Specifies big or little endian byte packing.  0 for little endian, 1 for b
+ig endian.  Typical value is 0.</dd>
+<dt><i>word</i></dt>
+<dd>Specifies word size.  Possible arguments are 1 for 8-bit samples, or 2 or 
+16-bit samples.  Typical value is 2.</dd>
+<dt><i>sgned</i></dt>
+<dd>Signed or unsigned data.  0 for unsigned, 1 for signed.  Typically 1.</dd>
+<dt><i>bitstream</i></dt>
+<dd>A pointer to the number of the current logical bitstream.</dd>
+<dt><i>filter</i></dt>
+<dd>Filter function to process float PCM data prior to conversion to interleaved integer output.</dd>
+<dt><i>filter_param</i></dt>
+<dd>Data to pass through to the filter function.</dd>
+
+</dl>
+
+
+<h3>Return Values</h3>
+<blockquote>
+<dl>
+<dt>OV_HOLE</dt>
+  <dd>indicates there was an interruption in the data.
+      <br>(one of: garbage between pages, loss of sync followed by
+           recapture, or a corrupt page)</dd>
+<dt>OV_EBADLINK</dt>
+  <dd>indicates that an invalid stream section was supplied to
+      libvorbisfile, or the requested link is corrupt.</dd>
+<dt>0</dt>
+  <dd>indicates EOF</dd>
+<dt><i>n</i></dt>
+  <dd>indicates actual number of bytes read.  <tt>ov_read()</tt> will
+      decode at most one vorbis packet per invocation, so the value
+      returned will generally be less than <tt>length</tt>.
+</dl>
+</blockquote>
+
+<h3>Notes</h3>
+<p><b>Typical usage:</b>
+<blockquote>
+<tt>bytes_read = ov_read_filter(&amp;vf,
+buffer, 4096,0,2,1,&amp;current_section, filter, (void *)filter_data_ptr)</tt>
+</blockquote>
+
+This reads up to 4096 bytes into a buffer, with signed 16-bit
+little-endian samples.  The decoded data is passed to the function <tt>filter</tt> before integer conversiona nd interleave.
+</p>
+
+
+
+<br><br>
+<hr noshade>
+<table border=0 width=100%>
+<tr valign=top>
+<td><p class=tiny>copyright &copy; 2000-2010 Xiph.Org</p></td>
+<td align=right><p class=tiny><a href="http://www.xiph.org/ogg/vorbis/">Ogg Vorbis</a></p></td>
+</tr><tr>
+<td><p class=tiny>Vorbisfile documentation</p></td>
+<td align=right><p class=tiny>vorbisfile version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+</body>
+
+</html>

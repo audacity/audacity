@@ -1,0 +1,63 @@
+<html>
+
+<head>
+<title>libvorbis - function - vorbis_synthesis_idheader</title>
+<link rel=stylesheet href="style.css" type="text/css">
+</head>
+
+<body bgcolor=white text=black link="#5555ff" alink="#5555ff" vlink="#5555ff">
+<table border=0 width=100%>
+<tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+<h1>vorbis_synthesis_idheader</h1>
+
+<p><i>declared in "vorbis/codec.h";</i></p>
+
+<p>This function checks whether a packet is a valid Vorbis identification
+header packet. This function can be used to detect whether a logical
+Ogg stream could be a Vorbis stream, given its very first packet.</p>
+
+<table border=0 color=black cellspacing=0 cellpadding=7>
+<tr bgcolor=#cccccc>
+	<td>
+<pre><b>
+extern int      vorbis_synthesis_idheader(ogg_packet *op);
+</b></pre>
+	</td>
+</tr>
+</table>
+
+<h3>Parameters</h3>
+<dl>
+<dt><i>op</i></dt>
+<dd>Pointer to the ogg_packet to check.</dd>
+</dl>
+
+
+<h3>Return Values</h3>
+<blockquote>
+<li>1 if the packet is a valid first packet for a Vorbis bitstream.</li>
+<li>0 if not.</li>
+</blockquote>
+<p>
+
+<br><br>
+<hr noshade>
+<table border=0 width=100%>
+<tr valign=top>
+<td><p class=tiny>copyright &copy; 2010 Xiph.Org</p></td>
+<td align=right><p class=tiny><a href="http://www.xiph.org/ogg/vorbis/index.html">Ogg Vorbis</a></p></td>
+</tr><tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+
+</body>
+
+</html>

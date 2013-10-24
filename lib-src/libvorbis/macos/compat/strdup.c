@@ -5,17 +5,17 @@
 
 char *strdup(const char *inStr)
 {
-	char *outStr = NULL;
-	
-	if (inStr == NULL) {
-		return NULL;
-	}
-	
-	outStr = _ogg_malloc(strlen(inStr) + 1);
-	
-	if (outStr != NULL) {
-		strcpy(outStr, inStr);
-	}
-	
-	return outStr;
+        char *outStr = NULL;
+        
+        if (inStr == NULL) {
+                return NULL;
+        }
+        
+        outStr = _ogg_malloc(strlen(inStr) + 1);
+        
+        if (outStr != NULL) {
+                strcpy(outStr, inStr);
+        }
+        
+        return outStr;
 }

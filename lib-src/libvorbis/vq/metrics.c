@@ -11,7 +11,7 @@
  ********************************************************************
 
  function: function calls to collect codebook metrics
- last mod: $Id: metrics.c,v 1.4 2008-02-02 15:54:09 richardash1981 Exp $
+ last mod: $Id: metrics.c 16037 2009-05-26 21:10:58Z xiphmont $
 
  ********************************************************************/
 
@@ -100,12 +100,12 @@ void cell_spacing(codebook *c){
     if(c->c->lengthlist[j]>0){
       float localmin=-1.;
       for(k=0;k<c->c->entries;k++){
-	if(c->c->lengthlist[k]>0){
-	  float this=_dist(c->c->dim,_now(c,j),_now(c,k));
-	  if(j!=k &&
-	     (localmin==-1 || this<localmin))
-	    localmin=this;
-	}
+        if(c->c->lengthlist[k]>0){
+          float this=_dist(c->c->dim,_now(c,j),_now(c,k));
+          if(j!=k &&
+             (localmin==-1 || this<localmin))
+            localmin=this;
+        }
       }
       
       if(min==-1 || localmin<min)min=localmin;
@@ -127,7 +127,7 @@ void process_postprocess(codebook **bs,char *basename){
   char *buffer=alloca(strlen(basename)+80);
 
   fprintf(stderr,"Done.  Processed %ld data points:\n\n",
-	  (long)count);
+          (long)count);
 
   fprintf(stderr,"Global statistics:******************\n\n");
 
@@ -136,14 +136,14 @@ void process_postprocess(codebook **bs,char *basename){
   fprintf(stderr,"\taverage bits per sample: %g\n\n",bits/count);
 
   fprintf(stderr,"\tmean sample amplitude: %g\n",
-	  meanamplitude_acc/count);
+          meanamplitude_acc/count);
   fprintf(stderr,"\tmean squared sample amplitude: %g\n\n",
-	  sqrt(meanamplitudesq_acc/count));
+          sqrt(meanamplitudesq_acc/count));
 
   fprintf(stderr,"\tmean code error: %g\n",
-	  meanerror_acc/count);
+          meanerror_acc/count);
   fprintf(stderr,"\tmean squared code error: %g\n\n",
-	  sqrt(meanerrorsq_acc/count));
+          sqrt(meanerrorsq_acc/count));
 
   for(book=0;book<books;book++){
     FILE *out;
@@ -164,9 +164,9 @@ void process_postprocess(codebook **bs,char *basename){
     
     for(i=0;i<n;i++){
       for(k=0;k<dim;k++){
-	fprintf(out,"%d, %g, %g\n",
-		i*dim+k,(b->valuelist+i*dim)[k],
-		sqrt((histogram_errorsq[book]+i*dim)[k]/histogram[book][i]));
+        fprintf(out,"%d, %g, %g\n",
+                i*dim+k,(b->valuelist+i*dim)[k],
+                sqrt((histogram_errorsq[book]+i*dim)[k]/histogram[book][i]));
       }
     }
     fclose(out);
@@ -180,9 +180,9 @@ void process_postprocess(codebook **bs,char *basename){
     
     for(i=0;i<n;i++){
       for(k=0;k<dim;k++){
-	fprintf(out,"%d, %g, %g\n",
-		i*dim+k,(b->valuelist+i*dim)[k],
-		(histogram_error[book]+i*dim)[k]/histogram[book][i]);
+        fprintf(out,"%d, %g, %g\n",
+                i*dim+k,(b->valuelist+i*dim)[k],
+                (histogram_error[book]+i*dim)[k]/histogram[book][i]);
       }
     }
     fclose(out);
@@ -196,10 +196,10 @@ void process_postprocess(codebook **bs,char *basename){
     
     for(i=0;i<n;i++){
       for(k=0;k<dim;k++){
-	fprintf(out,"%d, %g, %g, %g\n",
-		i*dim+k,(b->valuelist+i*dim)[k],
-		(b->valuelist+i*dim)[k]+(histogram_lo[book]+i*dim)[k],
-		(b->valuelist+i*dim)[k]+(histogram_hi[book]+i*dim)[k]);
+        fprintf(out,"%d, %g, %g, %g\n",
+                i*dim+k,(b->valuelist+i*dim)[k],
+                (b->valuelist+i*dim)[k]+(histogram_lo[book]+i*dim)[k],
+                (b->valuelist+i*dim)[k]+(histogram_hi[book]+i*dim)[k]);
       }
     }
     fclose(out);
@@ -207,7 +207,7 @@ void process_postprocess(codebook **bs,char *basename){
 }
 
 float process_one(codebook *b,int book,float *a,int dim,int step,int addmul,
-		   float base){
+                   float base){
   int j,entry;
   float amplitude=0.f;
 
@@ -240,7 +240,7 @@ float process_one(codebook *b,int book,float *a,int dim,int step,int addmul,
   
   histogram[book][entry]++;  
   bits+=vorbis_book_codelen(b,entry);
-	  
+          
   for(j=0;j<dim;j++){
     float error=a[j*step];
 
@@ -270,10 +270,10 @@ void process_vector(codebook **bs,int *addmul,int inter,float *a,int n){
 
     if(inter){
       for(i=0;i<n/dim;i++)
-	base=process_one(b,bi,a+i,dim,n/dim,addmul[bi],base);
+        base=process_one(b,bi,a+i,dim,n/dim,addmul[bi],base);
     }else{
       for(i=0;i<=n-dim;i+=dim)
-	base=process_one(b,bi,a+i,dim,1,addmul[bi],base);
+        base=process_one(b,bi,a+i,dim,1,addmul[bi],base);
     }
   }
   
@@ -282,14 +282,14 @@ void process_vector(codebook **bs,int *addmul,int inter,float *a,int n){
 
 void process_usage(void){
   fprintf(stderr,
-	  "usage: vqmetrics [-i] +|*<codebook>.vqh [ +|*<codebook.vqh> ]... \n"
-	  "                 datafile.vqd [datafile.vqd]...\n\n"
-	  "       data can be taken on stdin.  -i indicates interleaved coding.\n"
-	  "       Output goes to output files:\n"
-	  "       basename-me.m:       gnuplot: mean error by entry value\n"
-	  "       basename-mse.m:      gnuplot: mean square error by entry value\n"
-	  "       basename-worst.m:    gnuplot: worst error by entry value\n"
-	  "       basename-distance.m: gnuplot file showing distance probability\n"
-	  "\n");
+          "usage: vqmetrics [-i] +|*<codebook>.vqh [ +|*<codebook.vqh> ]... \n"
+          "                 datafile.vqd [datafile.vqd]...\n\n"
+          "       data can be taken on stdin.  -i indicates interleaved coding.\n"
+          "       Output goes to output files:\n"
+          "       basename-me.m:       gnuplot: mean error by entry value\n"
+          "       basename-mse.m:      gnuplot: mean square error by entry value\n"
+          "       basename-worst.m:    gnuplot: worst error by entry value\n"
+          "       basename-distance.m: gnuplot file showing distance probability\n"
+          "\n");
 
 }
