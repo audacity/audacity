@@ -1,12 +1,12 @@
 dnl
-dnl audacity configure.in script
+dnl audacity configure.ac script
 dnl
 dnl Joshua Haberman
 dnl Dominic Mazzoni
 dnl
 
 dnl
-dnl Instructions: to create "configure" from "configure.in", run:
+dnl Instructions: to create "configure" from "configure.ac", run:
 dnl
 dnl aclocal
 dnl autoconf
