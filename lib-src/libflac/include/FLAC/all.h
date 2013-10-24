@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -161,7 +162,7 @@
  * in FLAC 1.1.3 is a set of \c #defines in \c export.h of each
  * library's includes (e.g. \c include/FLAC/export.h).  The
  * \c #defines mirror the libraries'
- * <A HREF="http://www.gnu.org/software/libtool/manual.html#Libtool-versioning">libtool version numbers</A>,
+ * <A HREF="http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning">libtool version numbers</A>,
  * e.g. in libFLAC there are \c FLAC_API_VERSION_CURRENT,
  * \c FLAC_API_VERSION_REVISION, and \c FLAC_API_VERSION_AGE.
  * These can be used to support multiple versions of an API during the

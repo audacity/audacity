@@ -14,14 +14,18 @@ AC_ARG_WITH(libFLAC-includes,[  --with-libFLAC-includes=DIR   Directory where li
 AC_ARG_ENABLE(libFLACtest, [  --disable-libFLACtest       Do not try to compile and run a test libFLAC program],, enable_libFLACtest=yes)
 
   if test "x$libFLAC_libraries" != "x" ; then
-    LIBFLAC_LIBDIR="$libFLAC_libraries"
+    LIBFLAC_LIBS="-L$libFLAC_libraries"
+  elif test "x$libFLAC_prefix" = "xno" || test "x$libFLAC_prefix" = "xyes" ; then
+    LIBFLAC_LIBS=""
   elif test "x$libFLAC_prefix" != "x" ; then
-    LIBFLAC_LIBDIR="$libFLAC_prefix/lib"
-  elif test "x$prefix" != "xNONE" ; then
-    LIBFLAC_LIBDIR="$libdir"
+    LIBFLAC_LIBS="-L$libFLAC_prefix/lib"
+  elif test "x$prefix" != "xNONE"; then
+    LIBFLAC_LIBS="-L$prefix/lib"
   fi
 
-  LIBFLAC_LIBS="-L$LIBFLAC_LIBDIR -lFLAC $OGG_LIBS -lm"
+  if test "x$libFLAC_prefix" != "xno" ; then
+    LIBFLAC_LIBS="$LIBFLAC_LIBS -lFLAC $OGG_LIBS -lm"
+  fi
 
   if test "x$libFLAC_includes" != "x" ; then
     LIBFLAC_CFLAGS="-I$libFLAC_includes"

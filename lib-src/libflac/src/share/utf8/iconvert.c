@@ -1,19 +1,19 @@
 /*
  * Copyright (C) 2001 Edmund Grimley Evans <edmundo@rano.org>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #if HAVE_CONFIG_H
@@ -30,6 +30,7 @@
 
 #include "iconvert.h"
 #include "share/alloc.h"
+#include "share/safe_str.h"
 
 /*
  * Convert data from one encoding to another. Return:
@@ -76,18 +77,18 @@ int iconvert(const char *fromcode, const char *tocode,
       tocode[4] != '8' ||
       tocode[5] != '\0') {
     char *tocode1;
-
+	size_t dest_len = strlen(tocode) + 11;
     /*
      * Try using this non-standard feature of glibc and libiconv.
      * This is deliberately not a config option as people often
      * change their iconv library without rebuilding applications.
      */
-    tocode1 = (char *)safe_malloc_add_2op_(strlen(tocode), /*+*/11);
+    tocode1 = safe_malloc_(dest_len);
     if (!tocode1)
       goto fail;
 
-    strcpy(tocode1, tocode);
-    strcat(tocode1, "//TRANSLIT");
+    safe_strncpy(tocode1, tocode, dest_len);
+    safe_strncat(tocode1, "//TRANSLIT", dest_len);
     cd2 = iconv_open(tocode1, "UTF-8");
     free(tocode1);
 
@@ -101,7 +102,7 @@ int iconvert(const char *fromcode, const char *tocode,
   }
 
   utflen = 1; /*fromlen * 2 + 1; XXX */
-  utfbuf = (char *)malloc(utflen);
+  utfbuf = malloc(utflen);
   if (!utfbuf)
     goto fail;
 
@@ -123,7 +124,7 @@ int iconvert(const char *fromcode, const char *tocode,
       if(utflen*2 < utflen) /* overflow check */
 	goto fail;
       utflen *= 2;
-      newbuf = (char *)realloc(utfbuf, utflen);
+      newbuf = realloc(utfbuf, utflen);
       if (!newbuf)
 	goto fail;
       ob = (ob - utfbuf) + newbuf;
@@ -148,7 +149,7 @@ int iconvert(const char *fromcode, const char *tocode,
       iconv_close(cd1);
       return ret;
     }
-    newbuf = (char *)safe_realloc_add_2op_(utfbuf, (ob - utfbuf), /*+*/1);
+    newbuf = safe_realloc_add_2op_(utfbuf, (ob - utfbuf), /*+*/1);
     if (!newbuf)
       goto fail;
     ob = (ob - utfbuf) + newbuf;
@@ -160,7 +161,7 @@ int iconvert(const char *fromcode, const char *tocode,
 
   /* Truncate the buffer to be tidy */
   utflen = ob - utfbuf;
-  newbuf = (char *)realloc(utfbuf, utflen);
+  newbuf = realloc(utfbuf, utflen);
   if (!newbuf)
     goto fail;
   utfbuf = newbuf;
@@ -199,7 +200,7 @@ int iconvert(const char *fromcode, const char *tocode,
   outlen += ob - tbuf;
 
   /* Convert from UTF-8 for real */
-  outbuf = (char *)safe_malloc_add_2op_(outlen, /*+*/1);
+  outbuf = safe_malloc_add_2op_(outlen, /*+*/1);
   if (!outbuf)
     goto fail;
   ib = utfbuf;

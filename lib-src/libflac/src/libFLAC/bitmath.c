@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2001-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -35,46 +36,6 @@
 
 #include "private/bitmath.h"
 #include "FLAC/assert.h"
-
-/* An example of what FLAC__bitmath_ilog2() computes:
- *
- * ilog2( 0) = assertion failure
- * ilog2( 1) = 0
- * ilog2( 2) = 1
- * ilog2( 3) = 1
- * ilog2( 4) = 2
- * ilog2( 5) = 2
- * ilog2( 6) = 2
- * ilog2( 7) = 2
- * ilog2( 8) = 3
- * ilog2( 9) = 3
- * ilog2(10) = 3
- * ilog2(11) = 3
- * ilog2(12) = 3
- * ilog2(13) = 3
- * ilog2(14) = 3
- * ilog2(15) = 3
- * ilog2(16) = 4
- * ilog2(17) = 4
- * ilog2(18) = 4
- */
-unsigned FLAC__bitmath_ilog2(FLAC__uint32 v)
-{
-	unsigned l = 0;
-	FLAC__ASSERT(v > 0);
-	while(v >>= 1)
-		l++;
-	return l;
-}
-
-unsigned FLAC__bitmath_ilog2_wide(FLAC__uint64 v)
-{
-	unsigned l = 0;
-	FLAC__ASSERT(v > 0);
-	while(v >>= 1)
-		l++;
-	return l;
-}
 
 /* An example of what FLAC__bitmath_silog2() computes:
  *

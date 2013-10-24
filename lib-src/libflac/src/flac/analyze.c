@@ -1,5 +1,6 @@
 /* flac - Command-line FLAC encoder/decoder
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,9 +12,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #if HAVE_CONFIG_H
@@ -25,8 +26,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "FLAC/all.h"
 #include "analyze.h"
+
+#include "share/compat.h"
 
 typedef struct {
 	FLAC__int32 residual;
@@ -66,11 +70,7 @@ void flac__analyze_frame(const FLAC__Frame *frame, unsigned frame_number, FLAC__
 	unsigned i, channel, partitions;
 
 	/* do the human-readable part first */
-#ifdef _MSC_VER
-	fprintf(fout, "frame=%u\toffset=%I64u\tbits=%u\tblocksize=%u\tsample_rate=%u\tchannels=%u\tchannel_assignment=%s\n", frame_number, frame_offset, frame_bytes*8, frame->header.blocksize, frame->header.sample_rate, channels, FLAC__ChannelAssignmentString[frame->header.channel_assignment]);
-#else
-	fprintf(fout, "frame=%u\toffset=%llu\tbits=%u\tblocksize=%u\tsample_rate=%u\tchannels=%u\tchannel_assignment=%s\n", frame_number, (unsigned long long)frame_offset, frame_bytes*8, frame->header.blocksize, frame->header.sample_rate, channels, FLAC__ChannelAssignmentString[frame->header.channel_assignment]);
-#endif
+	fprintf(fout, "frame=%u\toffset=%" PRIu64 "\tbits=%u\tblocksize=%u\tsample_rate=%u\tchannels=%u\tchannel_assignment=%s\n", frame_number, frame_offset, frame_bytes*8, frame->header.blocksize, frame->header.sample_rate, channels, FLAC__ChannelAssignmentString[frame->header.channel_assignment]);
 	for(channel = 0; channel < channels; channel++) {
 		const FLAC__Subframe *subframe = frame->subframes+channel;
 		const FLAC__bool is_rice2 = subframe->data.fixed.entropy_coding_method.type == FLAC__ENTROPY_CODING_METHOD_PARTITIONED_RICE2;
@@ -153,7 +153,7 @@ void flac__analyze_frame(const FLAC__Frame *frame, unsigned frame_number, FLAC__
 			}
 
 			/* write the subframe */
-			sprintf(outfilename, "f%06u.s%u.gp", frame_number, channel);
+			flac_snprintf(outfilename, sizeof (outfilename), "f%06u.s%u.gp", frame_number, channel);
 			compute_stats(&stats);
 
 			(void)dump_stats(&stats, outfilename);
@@ -218,7 +218,7 @@ FLAC__bool dump_stats(const subframe_stats_t *stats, const char *filename)
 	const double s1 = stats->stddev, s2 = s1*2, s3 = s1*3, s4 = s1*4, s5 = s1*5, s6 = s1*6;
 	const double p = stats->buckets[stats->peak_index].count;
 
-	outfile = fopen(filename, "w");
+	outfile = flac_fopen(filename, "w");
 
 	if(0 == outfile) {
 		fprintf(stderr, "ERROR opening %s: %s\n", filename, strerror(errno));

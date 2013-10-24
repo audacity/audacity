@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -878,6 +879,18 @@ extern FLAC_API const unsigned FLAC__STREAM_METADATA_LENGTH_LEN; /**< == 24 (bit
  *    \c false.
  */
 FLAC_API FLAC__bool FLAC__format_sample_rate_is_valid(unsigned sample_rate);
+
+/** Tests that a blocksize at the given sample rate is valid for the FLAC
+ *  subset.
+ *
+ * \param blocksize    The blocksize to test for compliance.
+ * \param sample_rate  The sample rate is needed, since the valid subset
+ *                     blocksize depends on the sample rate.
+ * \retval FLAC__bool
+ *    \c true if the given blocksize conforms to the specification for the
+ *    subset at the given sample rate, else \c false.
+ */
+FLAC_API FLAC__bool FLAC__format_blocksize_is_subset(unsigned blocksize, unsigned sample_rate);
 
 /** Tests that a sample rate is valid for the FLAC subset.  The subset rules
  *  for valid sample rates are slightly more complex since the rate has to

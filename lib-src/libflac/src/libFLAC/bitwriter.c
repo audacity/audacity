@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,41 +34,27 @@
 #  include <config.h>
 #endif
 
-#include <stdlib.h> /* for malloc() */
-#include <string.h> /* for memcpy(), memset() */
-#ifdef _MSC_VER
-#include <winsock.h> /* for ntohl() */
-#elif defined FLAC__SYS_DARWIN
-#include <machine/endian.h> /* for ntohl() */
-#elif defined __MINGW32__
-#include <winsock.h> /* for ntohl() */
-#else
-#include <netinet/in.h> /* for ntohl() */
-#endif
-#if 0 /* UNUSED */
-#include "private/bitmath.h"
-#endif
+#include <stdlib.h>
+#include <string.h>
 #include "private/bitwriter.h"
 #include "private/crc.h"
+#include "private/macros.h"
 #include "FLAC/assert.h"
 #include "share/alloc.h"
+#include "share/compat.h"
+#include "share/endswap.h"
 
 /* Things should be fastest when this matches the machine word size */
 /* WATCHOUT: if you change this you must also change the following #defines down to SWAP_BE_WORD_TO_HOST below to match */
-/* WATCHOUT: there are a few places where the code will not work unless bwword is >= 32 bits wide */
-typedef FLAC__uint32 bwword;
+/* WATCHOUT: there are a few places where the code will not work unless uint32_t is >= 32 bits wide */
 #define FLAC__BYTES_PER_WORD 4
 #define FLAC__BITS_PER_WORD 32
 #define FLAC__WORD_ALL_ONES ((FLAC__uint32)0xffffffff)
-/* SWAP_BE_WORD_TO_HOST swaps bytes in a bwword (which is always big-endian) if necessary to match host byte order */
+/* SWAP_BE_WORD_TO_HOST swaps bytes in a uint32_t (which is always big-endian) if necessary to match host byte order */
 #if WORDS_BIGENDIAN
 #define SWAP_BE_WORD_TO_HOST(x) (x)
 #else
-#ifdef _MSC_VER
-#define SWAP_BE_WORD_TO_HOST(x) local_swap32_(x)
-#else
-#define SWAP_BE_WORD_TO_HOST(x) ntohl(x)
-#endif
+#define SWAP_BE_WORD_TO_HOST(x) ENDSWAP_32(x)
 #endif
 
 /*
@@ -76,51 +63,29 @@ typedef FLAC__uint32 bwword;
  * a frame or metadata block, then write that out and clear the buffer for the
  * next one.
  */
-static const unsigned FLAC__BITWRITER_DEFAULT_CAPACITY = 32768u / sizeof(bwword); /* size in words */
+static const unsigned FLAC__BITWRITER_DEFAULT_CAPACITY = 32768u / sizeof(uint32_t); /* size in words */
 /* When growing, increment 4K at a time */
-static const unsigned FLAC__BITWRITER_DEFAULT_INCREMENT = 4096u / sizeof(bwword); /* size in words */
+static const unsigned FLAC__BITWRITER_DEFAULT_INCREMENT = 4096u / sizeof(uint32_t); /* size in words */
 
 #define FLAC__WORDS_TO_BITS(words) ((words) * FLAC__BITS_PER_WORD)
 #define FLAC__TOTAL_BITS(bw) (FLAC__WORDS_TO_BITS((bw)->words) + (bw)->bits)
 
-#ifdef min
-#undef min
-#endif
-#define min(x,y) ((x)<(y)?(x):(y))
-
-/* adjust for compilers that can't understand using LLU suffix for uint64_t literals */
-#ifdef _MSC_VER
-#define FLAC__U64L(x) x
-#else
-#define FLAC__U64L(x) x##LLU
-#endif
-
-#ifndef FLaC__INLINE
-#define FLaC__INLINE
-#endif
-
 struct FLAC__BitWriter {
-	bwword *buffer;
-	bwword accum; /* accumulator; bits are right-justified; when full, accum is appended to buffer */
+	uint32_t *buffer;
+	uint32_t accum; /* accumulator; bits are right-justified; when full, accum is appended to buffer */
 	unsigned capacity; /* capacity of buffer in words */
 	unsigned words; /* # of complete words in buffer */
 	unsigned bits; /* # of used bits in accum */
 };
 
-#ifdef _MSC_VER
-/* OPT: an MSVC built-in would be better */
-static _inline FLAC__uint32 local_swap32_(FLAC__uint32 x)
-{
-	x = ((x<<8)&0xFF00FF00) | ((x>>8)&0x00FF00FF);
-	return (x>>16) | (x<<16);
-}
-#endif
-
 /* * WATCHOUT: The current implementation only grows the buffer. */
-static FLAC__bool bitwriter_grow_(FLAC__BitWriter *bw, unsigned bits_to_add)
+#ifndef __SUNPRO_C
+static
+#endif
+FLAC__bool bitwriter_grow_(FLAC__BitWriter *bw, unsigned bits_to_add)
 {
 	unsigned new_capacity;
-	bwword *new_buffer;
+	uint32_t *new_buffer;
 
 	FLAC__ASSERT(0 != bw);
 	FLAC__ASSERT(0 != bw->buffer);
@@ -142,7 +107,7 @@ static FLAC__bool bitwriter_grow_(FLAC__BitWriter *bw, unsigned bits_to_add)
 	FLAC__ASSERT(new_capacity > bw->capacity);
 	FLAC__ASSERT(new_capacity >= bw->words + ((bw->bits + bits_to_add + FLAC__BITS_PER_WORD - 1) / FLAC__BITS_PER_WORD));
 
-	new_buffer = (bwword*)safe_realloc_mul_2op_(bw->buffer, sizeof(bwword), /*times*/new_capacity);
+	new_buffer = safe_realloc_mul_2op_(bw->buffer, sizeof(uint32_t), /*times*/new_capacity);
 	if(new_buffer == 0)
 		return false;
 	bw->buffer = new_buffer;
@@ -159,7 +124,7 @@ static FLAC__bool bitwriter_grow_(FLAC__BitWriter *bw, unsigned bits_to_add)
 
 FLAC__BitWriter *FLAC__bitwriter_new(void)
 {
-	FLAC__BitWriter *bw = (FLAC__BitWriter*)calloc(1, sizeof(FLAC__BitWriter));
+	FLAC__BitWriter *bw = calloc(1, sizeof(FLAC__BitWriter));
 	/* note that calloc() sets all members to 0 for us */
 	return bw;
 }
@@ -184,7 +149,7 @@ FLAC__bool FLAC__bitwriter_init(FLAC__BitWriter *bw)
 
 	bw->words = bw->bits = 0;
 	bw->capacity = FLAC__BITWRITER_DEFAULT_CAPACITY;
-	bw->buffer = (bwword*)malloc(sizeof(bwword) * bw->capacity);
+	bw->buffer = malloc(sizeof(uint32_t) * bw->capacity);
 	if(bw->buffer == 0)
 		return false;
 
@@ -299,7 +264,7 @@ void FLAC__bitwriter_release_buffer(FLAC__BitWriter *bw)
 	(void)bw;
 }
 
-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_zeroes(FLAC__BitWriter *bw, unsigned bits)
+inline FLAC__bool FLAC__bitwriter_write_zeroes(FLAC__BitWriter *bw, unsigned bits)
 {
 	unsigned n;
 
@@ -313,7 +278,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_write_zeroes(FLAC__BitWriter *bw, unsign
 		return false;
 	/* first part gets to word alignment */
 	if(bw->bits) {
-		n = min(FLAC__BITS_PER_WORD - bw->bits, bits);
+		n = flac_min(FLAC__BITS_PER_WORD - bw->bits, bits);
 		bw->accum <<= n;
 		bits -= n;
 		bw->bits += n;
@@ -337,7 +302,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_write_zeroes(FLAC__BitWriter *bw, unsign
 	return true;
 }
 
-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_uint32(FLAC__BitWriter *bw, FLAC__uint32 val, unsigned bits)
+inline FLAC__bool FLAC__bitwriter_write_raw_uint32(FLAC__BitWriter *bw, FLAC__uint32 val, unsigned bits)
 {
 	register unsigned left;
 
@@ -376,7 +341,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_uint32(FLAC__BitWriter *bw, FL
 	return true;
 }
 
-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_int32(FLAC__BitWriter *bw, FLAC__int32 val, unsigned bits)
+inline FLAC__bool FLAC__bitwriter_write_raw_int32(FLAC__BitWriter *bw, FLAC__int32 val, unsigned bits)
 {
 	/* zero-out unused bits */
 	if(bits < 32)
@@ -385,7 +350,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_int32(FLAC__BitWriter *bw, FLA
 	return FLAC__bitwriter_write_raw_uint32(bw, (FLAC__uint32)val, bits);
 }
 
-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_uint64(FLAC__BitWriter *bw, FLAC__uint64 val, unsigned bits)
+inline FLAC__bool FLAC__bitwriter_write_raw_uint64(FLAC__BitWriter *bw, FLAC__uint64 val, unsigned bits)
 {
 	/* this could be a little faster but it's not used for much */
 	if(bits > 32) {
@@ -397,7 +362,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_uint64(FLAC__BitWriter *bw, FL
 		return FLAC__bitwriter_write_raw_uint32(bw, (FLAC__uint32)val, bits);
 }
 
-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_uint32_little_endian(FLAC__BitWriter *bw, FLAC__uint32 val)
+inline FLAC__bool FLAC__bitwriter_write_raw_uint32_little_endian(FLAC__BitWriter *bw, FLAC__uint32 val)
 {
 	/* this doesn't need to be that fast as currently it is only used for vorbis comments */
 
@@ -413,7 +378,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_uint32_little_endian(FLAC__Bit
 	return true;
 }
 
-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_byte_block(FLAC__BitWriter *bw, const FLAC__byte vals[], unsigned nvals)
+inline FLAC__bool FLAC__bitwriter_write_byte_block(FLAC__BitWriter *bw, const FLAC__byte vals[], unsigned nvals)
 {
 	unsigned i;
 
@@ -549,7 +514,7 @@ FLAC__bool FLAC__bitwriter_write_rice_signed_block(FLAC__BitWriter *bw, const FL
 
 	FLAC__ASSERT(0 != bw);
 	FLAC__ASSERT(0 != bw->buffer);
-	FLAC__ASSERT(parameter < 8*sizeof(bwword)-1);
+	FLAC__ASSERT(parameter < 8*sizeof(uint32_t)-1);
 	/* WATCHOUT: code does not work with <32bit words; we can make things much faster with this assertion */
 	FLAC__ASSERT(FLAC__BITS_PER_WORD >= 32);
 
@@ -560,8 +525,8 @@ FLAC__bool FLAC__bitwriter_write_rice_signed_block(FLAC__BitWriter *bw, const FL
 		msbits = uval >> parameter;
 
 #if 0 /* OPT: can remove this special case if it doesn't make up for the extra compare (doesn't make a statistically significant difference with msvc or gcc/x86) */
-		if(bw->bits && bw->bits + msbits + lsbits <= FLAC__BITS_PER_WORD) { /* i.e. if the whole thing fits in the current bwword */
-			/* ^^^ if bw->bits is 0 then we may have filled the buffer and have no free bwword to work in */
+		if(bw->bits && bw->bits + msbits + lsbits <= FLAC__BITS_PER_WORD) { /* i.e. if the whole thing fits in the current uint32_t */
+			/* ^^^ if bw->bits is 0 then we may have filled the buffer and have no free uint32_t to work in */
 			bw->bits = bw->bits + msbits + lsbits;
 			uval |= mask1; /* set stop bit */
 			uval &= mask2; /* mask off unused top bits */
@@ -581,8 +546,8 @@ FLAC__bool FLAC__bitwriter_write_rice_signed_block(FLAC__BitWriter *bw, const FL
 		}
 		else {
 #elif 1 /*@@@@@@ OPT: try this version with MSVC6 to see if better, not much difference for gcc-4 */
-		if(bw->bits && bw->bits + msbits + lsbits < FLAC__BITS_PER_WORD) { /* i.e. if the whole thing fits in the current bwword */
-			/* ^^^ if bw->bits is 0 then we may have filled the buffer and have no free bwword to work in */
+		if(bw->bits && bw->bits + msbits + lsbits < FLAC__BITS_PER_WORD) { /* i.e. if the whole thing fits in the current uint32_t */
+			/* ^^^ if bw->bits is 0 then we may have filled the buffer and have no free uint32_t to work in */
 			bw->bits = bw->bits + msbits + lsbits;
 			uval |= mask1; /* set stop bit */
 			uval &= mask2; /* mask off unused top bits */
@@ -593,7 +558,7 @@ FLAC__bool FLAC__bitwriter_write_rice_signed_block(FLAC__BitWriter *bw, const FL
 #endif
 			/* slightly pessimistic size check but faster than "<= bw->words + (bw->bits+msbits+lsbits+FLAC__BITS_PER_WORD-1)/FLAC__BITS_PER_WORD" */
 			/* OPT: pessimism may cause flurry of false calls to grow_ which eat up all savings before it */
-			if(bw->capacity <= bw->words + bw->bits + msbits + 1/*lsbits always fit in 1 bwword*/ && !bitwriter_grow_(bw, msbits+lsbits))
+			if(bw->capacity <= bw->words + bw->bits + msbits + 1/*lsbits always fit in 1 uint32_t*/ && !bitwriter_grow_(bw, msbits+lsbits))
 				return false;
 
 			if(msbits) {
@@ -887,3 +852,17 @@ FLAC__bool FLAC__bitwriter_zero_pad_to_byte_boundary(FLAC__BitWriter *bw)
 	else
 		return true;
 }
+
+/* These functions a declared inline in this file but are also callable as
+ * externs from elsewhere.
+ * According to the C99 sepc, section 6.7.4, simply providing a function
+ * prototype in a header file without 'inline' and making the function inline
+ * in this file should be sufficient.
+ * Unfortunately, the Microsoft VS compiler doesn't pick them up externally. To
+ * fix that we add extern declarations here.
+ */
+extern FLAC__bool FLAC__bitwriter_write_zeroes(FLAC__BitWriter *bw, unsigned bits);
+extern FLAC__bool FLAC__bitwriter_write_raw_int32(FLAC__BitWriter *bw, FLAC__int32 val, unsigned bits);
+extern FLAC__bool FLAC__bitwriter_write_raw_uint64(FLAC__BitWriter *bw, FLAC__uint64 val, unsigned bits);
+extern FLAC__bool FLAC__bitwriter_write_raw_uint32_little_endian(FLAC__BitWriter *bw, FLAC__uint32 val);
+extern FLAC__bool FLAC__bitwriter_write_byte_block(FLAC__BitWriter *bw, const FLAC__byte vals[], unsigned nvals);

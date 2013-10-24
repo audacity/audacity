@@ -1,5 +1,6 @@
 /* grabbag - Convenience lib for various routines common to several tools
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,35 +22,10 @@
 #endif
 
 #include "share/grabbag.h"
+#include "share/compat.h"
 #include "FLAC/assert.h"
 #include <stdlib.h> /* for atoi() */
 #include <string.h>
-
-#ifdef _MSC_VER
-/* There's no strtoll() in MSVC6 so we just write a specialized one */
-static FLAC__int64 local__strtoll(const char *src, char **endptr)
-{
-	FLAC__bool neg = false;
-	FLAC__int64 ret = 0;
-	int c;
-	FLAC__ASSERT(0 != src);
-	if(*src == '-') {
-		neg = true;
-		src++;
-	}
-	while(0 != (c = *src)) {
-		c -= '0';
-		if(c >= 0 && c <= 9)
-			ret = (ret * 10) + c;
-		else
-			break;
-		src++;
-	}
-	if(endptr)
-		*endptr = (char*)src;
-	return neg? -ret : ret;
-}
-#endif
 
 FLAC__bool grabbag__seektable_convert_specification_to_template(const char *spec, FLAC__bool only_explicit_placeholders, FLAC__uint64 total_samples_to_encode, unsigned sample_rate, FLAC__StreamMetadata *seektable_template, FLAC__bool *spec_has_real_points)
 {
@@ -107,11 +83,7 @@ FLAC__bool grabbag__seektable_convert_specification_to_template(const char *spec
 					*spec_has_real_points = true;
 				if(!only_explicit_placeholders) {
 					char *endptr;
-#ifdef _MSC_VER
-					const FLAC__int64 n = local__strtoll(pt, &endptr);
-#else
 					const FLAC__int64 n = (FLAC__int64)strtoll(pt, &endptr, 10);
-#endif
 					if(
 						(n > 0 || (endptr > pt && *endptr == ';')) && /* is a valid number (extra check needed for "0") */
 						(total_samples_to_encode == 0 || (FLAC__uint64)n < total_samples_to_encode) /* number is not >= the known total_samples_to_encode */

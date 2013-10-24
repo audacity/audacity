@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -38,11 +39,6 @@
 #include "private/stream_encoder_framing.h"
 #include "private/crc.h"
 #include "FLAC/assert.h"
-
-#ifdef max
-#undef max
-#endif
-#define max(x,y) ((x)>(y)?(x):(y))
 
 static FLAC__bool add_entropy_coding_method_(FLAC__BitWriter *bw, const FLAC__EntropyCodingMethod *method);
 static FLAC__bool add_residual_partitioned_rice_(FLAC__BitWriter *bw, const FLAC__int32 residual[], const unsigned residual_samples, const unsigned predictor_order, const unsigned rice_parameters[], const unsigned raw_bits[], const unsigned partition_order, const FLAC__bool is_extended);
@@ -166,11 +162,11 @@ FLAC__bool FLAC__add_metadata_block(const FLAC__StreamMetadata *metadata, FLAC__
 				if(!FLAC__bitwriter_write_raw_uint32(bw, track->num_indices, FLAC__STREAM_METADATA_CUESHEET_TRACK_NUM_INDICES_LEN))
 					return false;
 				for(j = 0; j < track->num_indices; j++) {
-					const FLAC__StreamMetadata_CueSheet_Index *index = track->indices + j;
+					const FLAC__StreamMetadata_CueSheet_Index *indx = track->indices + j;
 
-					if(!FLAC__bitwriter_write_raw_uint64(bw, index->offset, FLAC__STREAM_METADATA_CUESHEET_INDEX_OFFSET_LEN))
+					if(!FLAC__bitwriter_write_raw_uint64(bw, indx->offset, FLAC__STREAM_METADATA_CUESHEET_INDEX_OFFSET_LEN))
 						return false;
-					if(!FLAC__bitwriter_write_raw_uint32(bw, index->number, FLAC__STREAM_METADATA_CUESHEET_INDEX_NUMBER_LEN))
+					if(!FLAC__bitwriter_write_raw_uint32(bw, indx->number, FLAC__STREAM_METADATA_CUESHEET_INDEX_NUMBER_LEN))
 						return false;
 					if(!FLAC__bitwriter_write_zeroes(bw, FLAC__STREAM_METADATA_CUESHEET_INDEX_RESERVED_LEN))
 						return false;

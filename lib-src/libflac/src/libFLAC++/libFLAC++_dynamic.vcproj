@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\obj\debug\lib"
+			OutputDirectory="..\..\objs\debug\lib"
 			IntermediateDirectory="Debug_dynamic"
 			ConfigurationType="2"
 			>
@@ -85,15 +85,12 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\obj\release\lib"
+			OutputDirectory="..\..\objs\release\lib"
 			IntermediateDirectory="Release_dynamic"
 			ConfigurationType="2"
 			>
@@ -164,9 +161,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

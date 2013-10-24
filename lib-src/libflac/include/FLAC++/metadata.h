@@ -1,5 +1,6 @@
 /* libFLAC++ - Free Lossless Audio Codec library
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -359,6 +360,10 @@ namespace FLAC {
 			 */
 			inline Padding(::FLAC__StreamMetadata *object, bool copy): Prototype(object, copy) { }
 
+			/** Constructs an object with the given length.
+			 */
+			Padding(unsigned length);
+
 			~Padding();
 
 			//@{
@@ -387,6 +392,8 @@ namespace FLAC {
 			inline bool operator!=(const ::FLAC__StreamMetadata *object) const { return Prototype::operator!=(object); }
 			//@}
 
+			/** Sets the length in bytes of the padding block.
+			 */
 			void set_length(unsigned length);
 		};
 
@@ -502,6 +509,9 @@ namespace FLAC {
 			unsigned get_num_points() const;
 			::FLAC__StreamMetadata_SeekPoint get_point(unsigned index) const;
 
+			//! See FLAC__metadata_object_seektable_resize_points()
+			bool resize_points(unsigned new_num_points);
+
 			//! See FLAC__metadata_object_seektable_set_point()
 			void set_point(unsigned index, const ::FLAC__StreamMetadata_SeekPoint &point);
 
@@ -513,6 +523,24 @@ namespace FLAC {
 
 			//! See FLAC__metadata_object_seektable_is_legal()
 			bool is_legal() const;
+
+			//! See FLAC__metadata_object_seektable_template_append_placeholders()
+			bool template_append_placeholders(unsigned num);
+
+			//! See FLAC__metadata_object_seektable_template_append_point()
+			bool template_append_point(FLAC__uint64 sample_number);
+
+			//! See FLAC__metadata_object_seektable_template_append_points()
+			bool template_append_points(FLAC__uint64 sample_numbers[], unsigned num);
+
+			//! See FLAC__metadata_object_seektable_template_append_spaced_points()
+			bool template_append_spaced_points(unsigned num, FLAC__uint64 total_samples);
+
+			//! See FLAC__metadata_object_seektable_template_append_spaced_points_by_samples()
+			bool template_append_spaced_points_by_samples(unsigned samples, FLAC__uint64 total_samples);
+
+			//! See FLAC__metadata_object_seektable_template_sort()
+			bool template_sort(bool compact);
 		};
 
 		/** VORBIS_COMMENT metadata block.
@@ -654,6 +682,9 @@ namespace FLAC {
 			//! See FLAC__metadata_object_vorbiscomment_set_vendor_string()
 			bool set_vendor_string(const FLAC__byte *string); // NUL-terminated UTF-8 string
 
+			//! See FLAC__metadata_object_vorbiscomment_resize_comments()
+			bool resize_comments(unsigned new_num_comments);
+
 			//! See FLAC__metadata_object_vorbiscomment_set_comment()
 			bool set_comment(unsigned index, const Entry &entry);
 
@@ -663,8 +694,20 @@ namespace FLAC {
 			//! See FLAC__metadata_object_vorbiscomment_append_comment()
 			bool append_comment(const Entry &entry);
 
+			//! See FLAC__metadata_object_vorbiscomment_replace_comment()
+			bool replace_comment(const Entry &entry, bool all);
+
 			//! See FLAC__metadata_object_vorbiscomment_delete_comment()
 			bool delete_comment(unsigned index);
+
+			//! See FLAC__metadata_object_vorbiscomment_find_entry_from()
+			int find_entry_from(unsigned offset, const char *field_name);
+
+			//! See FLAC__metadata_object_vorbiscomment_remove_entry_matching()
+			int remove_entry_matching(const char *field_name);
+
+			//! See FLAC__metadata_object_vorbiscomment_remove_entries_matching()
+			int remove_entries_matching(const char *field_name);
 		};
 
 		/** CUESHEET metadata block.
@@ -772,17 +815,29 @@ namespace FLAC {
 
 			void set_index(unsigned track_num, unsigned index_num, const ::FLAC__StreamMetadata_CueSheet_Index &index);
 
+			//! See FLAC__metadata_object_cuesheet_track_resize_indices()
+			bool resize_indices(unsigned track_num, unsigned new_num_indices);
+
 			//! See FLAC__metadata_object_cuesheet_track_insert_index()
 			bool insert_index(unsigned track_num, unsigned index_num, const ::FLAC__StreamMetadata_CueSheet_Index &index);
 
+			//! See FLAC__metadata_object_cuesheet_track_insert_blank_index()
+			bool insert_blank_index(unsigned track_num, unsigned index_num);
+
 			//! See FLAC__metadata_object_cuesheet_track_delete_index()
 			bool delete_index(unsigned track_num, unsigned index_num);
+
+			//! See FLAC__metadata_object_cuesheet_resize_tracks()
+			bool resize_tracks(unsigned new_num_tracks);
 
 			//! See FLAC__metadata_object_cuesheet_set_track()
 			bool set_track(unsigned i, const Track &track);
 
 			//! See FLAC__metadata_object_cuesheet_insert_track()
 			bool insert_track(unsigned i, const Track &track);
+
+			//! See FLAC__metadata_object_cuesheet_insert_blank_track()
+			bool insert_blank_track(unsigned i);
 
 			//! See FLAC__metadata_object_cuesheet_delete_track()
 			bool delete_track(unsigned i);
@@ -869,6 +924,9 @@ namespace FLAC {
 
 			//! See FLAC__metadata_object_picture_set_data()
 			bool set_data(const FLAC__byte *data, FLAC__uint32 data_length);
+
+			//! See FLAC__metadata_object_picture_is_legal()
+			bool is_legal(const char **violation);
 		};
 
 		/** Opaque metadata block for storing unknown types.

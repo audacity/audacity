@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,25 +34,12 @@
 #  include <config.h>
 #endif
 
-#if defined _MSC_VER || defined __MINGW32__
-#include <io.h> /* for _setmode() */
-#include <fcntl.h> /* for _O_BINARY */
-#endif
-#if defined __CYGWIN__ || defined __EMX__
-#include <io.h> /* for setmode(), O_BINARY */
-#include <fcntl.h> /* for _O_BINARY */
-#endif
 #include <stdio.h>
 #include <stdlib.h> /* for malloc() */
 #include <string.h> /* for memset/memcpy() */
 #include <sys/stat.h> /* for stat() */
 #include <sys/types.h> /* for off_t */
-#if defined _MSC_VER || defined __BORLANDC__ || defined __MINGW32__
-#if _MSC_VER <= 1600 || defined __BORLANDC__ /* @@@ [2G limit] */
-#define fseeko fseek
-#define ftello ftell
-#endif
-#endif
+#include "share/compat.h"
 #include "FLAC/assert.h"
 #include "share/alloc.h"
 #include "protected/stream_decoder.h"
@@ -64,18 +52,7 @@
 #include "private/lpc.h"
 #include "private/md5.h"
 #include "private/memory.h"
-
-#ifdef max
-#undef max
-#endif
-#define max(a,b) ((a)>(b)?(a):(b))
-
-/* adjust for compilers that can't understand using LLU suffix for uint64_t literals */
-#ifdef _MSC_VER
-#define FLAC__U64L(x) x
-#else
-#define FLAC__U64L(x) x##LLU
-#endif
+#include "private/macros.h"
 
 
 /* technically this should be in an "export.c" but this is convenient enough */
@@ -281,18 +258,18 @@ FLAC_API FLAC__StreamDecoder *FLAC__stream_decoder_new(void)
 
 	FLAC__ASSERT(sizeof(int) >= 4); /* we want to die right away if this is not true */
 
-	decoder = (FLAC__StreamDecoder*)calloc(1, sizeof(FLAC__StreamDecoder));
+	decoder = calloc(1, sizeof(FLAC__StreamDecoder));
 	if(decoder == 0) {
 		return 0;
 	}
 
-	decoder->protected_ = (FLAC__StreamDecoderProtected*)calloc(1, sizeof(FLAC__StreamDecoderProtected));
+	decoder->protected_ = calloc(1, sizeof(FLAC__StreamDecoderProtected));
 	if(decoder->protected_ == 0) {
 		free(decoder);
 		return 0;
 	}
 
-	decoder->private_ = (FLAC__StreamDecoderPrivate*)calloc(1, sizeof(FLAC__StreamDecoderPrivate));
+	decoder->private_ = calloc(1, sizeof(FLAC__StreamDecoderPrivate));
 	if(decoder->private_ == 0) {
 		free(decoder->protected_);
 		free(decoder);
@@ -308,7 +285,7 @@ FLAC_API FLAC__StreamDecoder *FLAC__stream_decoder_new(void)
 	}
 
 	decoder->private_->metadata_filter_ids_capacity = 16;
-	if(0 == (decoder->private_->metadata_filter_ids = (FLAC__byte*)malloc((FLAC__STREAM_METADATA_APPLICATION_ID_LEN/8) * decoder->private_->metadata_filter_ids_capacity))) {
+	if(0 == (decoder->private_->metadata_filter_ids = malloc((FLAC__STREAM_METADATA_APPLICATION_ID_LEN/8) * decoder->private_->metadata_filter_ids_capacity))) {
 		FLAC__bitreader_delete(decoder->private_->input);
 		free(decoder->private_);
 		free(decoder->protected_);
@@ -341,7 +318,9 @@ FLAC_API void FLAC__stream_decoder_delete(FLAC__StreamDecoder *decoder)
 {
 	unsigned i;
 
-	FLAC__ASSERT(0 != decoder);
+	if (decoder == NULL)
+		return ;
+
 	FLAC__ASSERT(0 != decoder->protected_);
 	FLAC__ASSERT(0 != decoder->private_);
 	FLAC__ASSERT(0 != decoder->private_->input);
@@ -628,7 +607,7 @@ static FLAC__StreamDecoderInitStatus init_file_internal_(
 	if(0 == write_callback || 0 == error_callback)
 		return decoder->protected_->state = FLAC__STREAM_DECODER_INIT_STATUS_INVALID_CALLBACKS;
 
-	file = filename? fopen(filename, "rb") : stdin;
+	file = filename? flac_fopen(filename, "rb") : stdin;
 
 	if(0 == file)
 		return FLAC__STREAM_DECODER_INIT_STATUS_ERROR_OPENING_FILE;
@@ -785,7 +764,7 @@ FLAC_API FLAC__bool FLAC__stream_decoder_set_metadata_respond_application(FLAC__
 	FLAC__ASSERT(0 != decoder->private_->metadata_filter_ids);
 
 	if(decoder->private_->metadata_filter_ids_count == decoder->private_->metadata_filter_ids_capacity) {
-		if(0 == (decoder->private_->metadata_filter_ids = (FLAC__byte*)safe_realloc_mul_2op_(decoder->private_->metadata_filter_ids, decoder->private_->metadata_filter_ids_capacity, /*times*/2))) {
+		if(0 == (decoder->private_->metadata_filter_ids = safe_realloc_mul_2op_(decoder->private_->metadata_filter_ids, decoder->private_->metadata_filter_ids_capacity, /*times*/2))) {
 			decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 			return false;
 		}
@@ -844,7 +823,7 @@ FLAC_API FLAC__bool FLAC__stream_decoder_set_metadata_ignore_application(FLAC__S
 	FLAC__ASSERT(0 != decoder->private_->metadata_filter_ids);
 
 	if(decoder->private_->metadata_filter_ids_count == decoder->private_->metadata_filter_ids_capacity) {
-		if(0 == (decoder->private_->metadata_filter_ids = (FLAC__byte*)safe_realloc_mul_2op_(decoder->private_->metadata_filter_ids, decoder->private_->metadata_filter_ids_capacity, /*times*/2))) {
+		if(0 == (decoder->private_->metadata_filter_ids = safe_realloc_mul_2op_(decoder->private_->metadata_filter_ids, decoder->private_->metadata_filter_ids_capacity, /*times*/2))) {
 			decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 			return false;
 		}
@@ -1288,7 +1267,7 @@ FILE *get_binary_stdin_(void)
 	 */
 #if defined _MSC_VER || defined __MINGW32__
 	_setmode(_fileno(stdin), _O_BINARY);
-#elif defined __CYGWIN__ 
+#elif defined __CYGWIN__
 	/* almost certainly not needed for any modern Cygwin, but let's be safe... */
 	setmode(_fileno(stdin), _O_BINARY);
 #elif defined __EMX__
@@ -1326,7 +1305,7 @@ FLAC__bool allocate_output_(FLAC__StreamDecoder *decoder, unsigned size, unsigne
 		 * (at negative indices) for alignment purposes; we use 4
 		 * to keep the data well-aligned.
 		 */
-		tmp = (FLAC__int32*)safe_malloc_muladd2_(sizeof(FLAC__int32), /*times (*/size, /*+*/4/*)*/);
+		tmp = safe_malloc_muladd2_(sizeof(FLAC__int32), /*times (*/size, /*+*/4/*)*/);
 		if(tmp == 0) {
 			decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 			return false;
@@ -1407,7 +1386,7 @@ FLAC__bool find_metadata_(FLAC__StreamDecoder *decoder)
 				decoder->private_->lookahead = (FLAC__byte)x;
 				decoder->private_->cached = true;
 			}
-			else if(x >> 2 == 0x3e) { /* MAGIC NUMBER for the last 6 sync bits */
+			else if(x >> 1 == 0x7c) { /* MAGIC NUMBER for the last 6 sync bits and reserved 7th bit */
 				decoder->private_->header_warmup[1] = (FLAC__byte)x;
 				decoder->protected_->state = FLAC__STREAM_DECODER_READ_FRAME;
 				return true;
@@ -1497,7 +1476,7 @@ FLAC__bool read_metadata_(FLAC__StreamDecoder *decoder)
 				case FLAC__METADATA_TYPE_APPLICATION:
 					/* remember, we read the ID already */
 					if(real_length > 0) {
-						if(0 == (block.data.application.data = (FLAC__byte*)malloc(real_length))) {
+						if(0 == (block.data.application.data = malloc(real_length))) {
 							decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 							return false;
 						}
@@ -1525,7 +1504,7 @@ FLAC__bool read_metadata_(FLAC__StreamDecoder *decoder)
 					break;
 				default:
 					if(real_length > 0) {
-						if(0 == (block.data.unknown.data = (FLAC__byte*)malloc(real_length))) {
+						if(0 == (block.data.unknown.data = malloc(real_length))) {
 							decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 							return false;
 						}
@@ -1679,7 +1658,7 @@ FLAC__bool read_metadata_seektable_(FLAC__StreamDecoder *decoder, FLAC__bool is_
 	decoder->private_->seek_table.data.seek_table.num_points = length / FLAC__STREAM_METADATA_SEEKPOINT_LENGTH;
 
 	/* use realloc since we may pass through here several times (e.g. after seeking) */
-	if(0 == (decoder->private_->seek_table.data.seek_table.points = (FLAC__StreamMetadata_SeekPoint*)safe_realloc_mul_2op_(decoder->private_->seek_table.data.seek_table.points, decoder->private_->seek_table.data.seek_table.num_points, /*times*/sizeof(FLAC__StreamMetadata_SeekPoint)))) {
+	if(0 == (decoder->private_->seek_table.data.seek_table.points = safe_realloc_mul_2op_(decoder->private_->seek_table.data.seek_table.points, decoder->private_->seek_table.data.seek_table.num_points, /*times*/sizeof(FLAC__StreamMetadata_SeekPoint)))) {
 		decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 		return false;
 	}
@@ -1718,7 +1697,7 @@ FLAC__bool read_metadata_vorbiscomment_(FLAC__StreamDecoder *decoder, FLAC__Stre
 	if(!FLAC__bitreader_read_uint32_little_endian(decoder->private_->input, &obj->vendor_string.length))
 		return false; /* read_callback_ sets the state for us */
 	if(obj->vendor_string.length > 0) {
-		if(0 == (obj->vendor_string.entry = (FLAC__byte*)safe_malloc_add_2op_(obj->vendor_string.length, /*+*/1))) {
+		if(0 == (obj->vendor_string.entry = safe_malloc_add_2op_(obj->vendor_string.length, /*+*/1))) {
 			decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 			return false;
 		}
@@ -1736,7 +1715,7 @@ FLAC__bool read_metadata_vorbiscomment_(FLAC__StreamDecoder *decoder, FLAC__Stre
 
 	/* read comments */
 	if(obj->num_comments > 0) {
-		if(0 == (obj->comments = (FLAC__StreamMetadata_VorbisComment_Entry*)safe_malloc_mul_2op_(obj->num_comments, /*times*/sizeof(FLAC__StreamMetadata_VorbisComment_Entry)))) {
+		if(0 == (obj->comments = safe_malloc_mul_2op_p(obj->num_comments, /*times*/sizeof(FLAC__StreamMetadata_VorbisComment_Entry)))) {
 			decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 			return false;
 		}
@@ -1745,7 +1724,7 @@ FLAC__bool read_metadata_vorbiscomment_(FLAC__StreamDecoder *decoder, FLAC__Stre
 			if(!FLAC__bitreader_read_uint32_little_endian(decoder->private_->input, &obj->comments[i].length))
 				return false; /* read_callback_ sets the state for us */
 			if(obj->comments[i].length > 0) {
-				if(0 == (obj->comments[i].entry = (FLAC__byte*)safe_malloc_add_2op_(obj->comments[i].length, /*+*/1))) {
+				if(0 == (obj->comments[i].entry = safe_malloc_add_2op_(obj->comments[i].length, /*+*/1))) {
 					decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 					return false;
 				}
@@ -1791,7 +1770,7 @@ FLAC__bool read_metadata_cuesheet_(FLAC__StreamDecoder *decoder, FLAC__StreamMet
 	obj->num_tracks = x;
 
 	if(obj->num_tracks > 0) {
-		if(0 == (obj->tracks = (FLAC__StreamMetadata_CueSheet_Track*)safe_calloc_(obj->num_tracks, sizeof(FLAC__StreamMetadata_CueSheet_Track)))) {
+		if(0 == (obj->tracks = safe_calloc_(obj->num_tracks, sizeof(FLAC__StreamMetadata_CueSheet_Track)))) {
 			decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 			return false;
 		}
@@ -1824,18 +1803,18 @@ FLAC__bool read_metadata_cuesheet_(FLAC__StreamDecoder *decoder, FLAC__StreamMet
 			track->num_indices = (FLAC__byte)x;
 
 			if(track->num_indices > 0) {
-				if(0 == (track->indices = (FLAC__StreamMetadata_CueSheet_Index*)safe_calloc_(track->num_indices, sizeof(FLAC__StreamMetadata_CueSheet_Index)))) {
+				if(0 == (track->indices = safe_calloc_(track->num_indices, sizeof(FLAC__StreamMetadata_CueSheet_Index)))) {
 					decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 					return false;
 				}
 				for(j = 0; j < track->num_indices; j++) {
-					FLAC__StreamMetadata_CueSheet_Index *index = &track->indices[j];
-					if(!FLAC__bitreader_read_raw_uint64(decoder->private_->input, &index->offset, FLAC__STREAM_METADATA_CUESHEET_INDEX_OFFSET_LEN))
+					FLAC__StreamMetadata_CueSheet_Index *indx = &track->indices[j];
+					if(!FLAC__bitreader_read_raw_uint64(decoder->private_->input, &indx->offset, FLAC__STREAM_METADATA_CUESHEET_INDEX_OFFSET_LEN))
 						return false; /* read_callback_ sets the state for us */
 
 					if(!FLAC__bitreader_read_raw_uint32(decoder->private_->input, &x, FLAC__STREAM_METADATA_CUESHEET_INDEX_NUMBER_LEN))
 						return false; /* read_callback_ sets the state for us */
-					index->number = (FLAC__byte)x;
+					indx->number = (FLAC__byte)x;
 
 					if(!FLAC__bitreader_skip_bits_no_crc(decoder->private_->input, FLAC__STREAM_METADATA_CUESHEET_INDEX_RESERVED_LEN))
 						return false; /* read_callback_ sets the state for us */
@@ -1861,7 +1840,7 @@ FLAC__bool read_metadata_picture_(FLAC__StreamDecoder *decoder, FLAC__StreamMeta
 	/* read MIME type */
 	if(!FLAC__bitreader_read_raw_uint32(decoder->private_->input, &x, FLAC__STREAM_METADATA_PICTURE_MIME_TYPE_LENGTH_LEN))
 		return false; /* read_callback_ sets the state for us */
-	if(0 == (obj->mime_type = (char*)safe_malloc_add_2op_(x, /*+*/1))) {
+	if(0 == (obj->mime_type = safe_malloc_add_2op_(x, /*+*/1))) {
 		decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 		return false;
 	}
@@ -1874,7 +1853,7 @@ FLAC__bool read_metadata_picture_(FLAC__StreamDecoder *decoder, FLAC__StreamMeta
 	/* read description */
 	if(!FLAC__bitreader_read_raw_uint32(decoder->private_->input, &x, FLAC__STREAM_METADATA_PICTURE_DESCRIPTION_LENGTH_LEN))
 		return false; /* read_callback_ sets the state for us */
-	if(0 == (obj->description = (FLAC__byte*)safe_malloc_add_2op_(x, /*+*/1))) {
+	if(0 == (obj->description = safe_malloc_add_2op_(x, /*+*/1))) {
 		decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 		return false;
 	}
@@ -1903,7 +1882,7 @@ FLAC__bool read_metadata_picture_(FLAC__StreamDecoder *decoder, FLAC__StreamMeta
 	/* read data */
 	if(!FLAC__bitreader_read_raw_uint32(decoder->private_->input, &(obj->data_length), FLAC__STREAM_METADATA_PICTURE_DATA_LENGTH_LEN))
 		return false; /* read_callback_ sets the state for us */
-	if(0 == (obj->data = (FLAC__byte*)safe_malloc_(obj->data_length))) {
+	if(0 == (obj->data = safe_malloc_(obj->data_length))) {
 		decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 		return false;
 	}
@@ -1977,7 +1956,7 @@ FLAC__bool frame_sync_(FLAC__StreamDecoder *decoder)
 				decoder->private_->lookahead = (FLAC__byte)x;
 				decoder->private_->cached = true;
 			}
-			else if(x >> 2 == 0x3e) { /* MAGIC NUMBER for the last 6 sync bits */
+			else if(x >> 1 == 0x7c) { /* MAGIC NUMBER for the last 6 sync bits and reserved 7th bit */
 				decoder->private_->header_warmup[1] = (FLAC__byte)x;
 				decoder->protected_->state = FLAC__STREAM_DECODER_READ_FRAME;
 				return true;
@@ -2737,7 +2716,7 @@ FLAC__bool read_residual_partitioned_rice_(FLAC__StreamDecoder *decoder, unsigne
 		}
 	}
 
-	if(!FLAC__format_entropy_coding_method_partitioned_rice_contents_ensure_size(partitioned_rice_contents, max(6, partition_order))) {
+	if(!FLAC__format_entropy_coding_method_partitioned_rice_contents_ensure_size(partitioned_rice_contents, flac_max(6u, partition_order))) {
 		decoder->protected_->state = FLAC__STREAM_DECODER_MEMORY_ALLOCATION_ERROR;
 		return false;
 	}
@@ -3149,11 +3128,11 @@ FLAC__bool seek_to_absolute_sample_(FLAC__StreamDecoder *decoder, FLAC__uint64 s
 			}
 			/* our last move backwards wasn't big enough, try again */
 			approx_bytes_per_frame = approx_bytes_per_frame? approx_bytes_per_frame * 2 : 16;
-			continue;	
+			continue;
 		}
 		/* allow one seek over upper bound, so we can get a correct upper_bound_sample for streams with unknown total_samples */
 		first_seek = false;
-		
+
 		/* make sure we are not seeking in corrupted stream */
 		if (this_frame_sample < lower_bound_sample) {
 			decoder->protected_->state = FLAC__STREAM_DECODER_SEEK_ERROR;
@@ -3193,7 +3172,7 @@ FLAC__bool seek_to_absolute_sample_ogg_(FLAC__StreamDecoder *decoder, FLAC__uint
 	FLAC__bool did_a_seek;
 	unsigned iteration = 0;
 
-	/* In the first iterations, we will calculate the target byte position 
+	/* In the first iterations, we will calculate the target byte position
 	 * by the distance from the target sample to left_sample and
 	 * right_sample (let's call it "proportional search").  After that, we
 	 * will switch to binary search.
@@ -3343,7 +3322,7 @@ FLAC__StreamDecoderSeekStatus file_seek_callback_(const FLAC__StreamDecoder *dec
 
 	if(decoder->private_->file == stdin)
 		return FLAC__STREAM_DECODER_SEEK_STATUS_UNSUPPORTED;
-	else if(fseeko(decoder->private_->file, (off_t)absolute_byte_offset, SEEK_SET) < 0)
+	else if(fseeko(decoder->private_->file, (FLAC__off_t)absolute_byte_offset, SEEK_SET) < 0)
 		return FLAC__STREAM_DECODER_SEEK_STATUS_ERROR;
 	else
 		return FLAC__STREAM_DECODER_SEEK_STATUS_OK;
@@ -3351,7 +3330,7 @@ FLAC__StreamDecoderSeekStatus file_seek_callback_(const FLAC__StreamDecoder *dec
 
 FLAC__StreamDecoderTellStatus file_tell_callback_(const FLAC__StreamDecoder *decoder, FLAC__uint64 *absolute_byte_offset, void *client_data)
 {
-	off_t pos;
+	FLAC__off_t pos;
 	(void)client_data;
 
 	if(decoder->private_->file == stdin)
@@ -3366,12 +3345,12 @@ FLAC__StreamDecoderTellStatus file_tell_callback_(const FLAC__StreamDecoder *dec
 
 FLAC__StreamDecoderLengthStatus file_length_callback_(const FLAC__StreamDecoder *decoder, FLAC__uint64 *stream_length, void *client_data)
 {
-	struct stat filestats;
+	struct flac_stat_s filestats;
 	(void)client_data;
 
 	if(decoder->private_->file == stdin)
 		return FLAC__STREAM_DECODER_LENGTH_STATUS_UNSUPPORTED;
-	else if(fstat(fileno(decoder->private_->file), &filestats) != 0)
+	else if(flac_fstat(fileno(decoder->private_->file), &filestats) != 0)
 		return FLAC__STREAM_DECODER_LENGTH_STATUS_ERROR;
 	else {
 		*stream_length = (FLAC__uint64)filestats.st_size;

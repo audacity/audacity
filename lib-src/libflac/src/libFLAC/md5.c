@@ -8,10 +8,6 @@
 #include "private/md5.h"
 #include "share/alloc.h"
 
-#ifndef FLaC__INLINE
-#define FLaC__INLINE
-#endif
-
 /*
  * This code implements the MD5 message-digest algorithm.
  * The algorithm is due to Ron Rivest.  This code was
@@ -143,7 +139,7 @@ static void byteSwap(FLAC__uint32 *buf, unsigned words)
 {
 	register FLAC__uint32 x;
 	do {
-		x = *buf; 
+		x = *buf;
 		x = ((x << 8) & 0xff00ff00) | ((x >> 8) & 0x00ff00ff);
 		*buf++ = (x >> 16) | (x << 16);
 	} while (--words);
@@ -263,12 +259,12 @@ void FLAC__MD5Final(FLAC__byte digest[16], FLAC__MD5Context *ctx)
 
 	byteSwap(ctx->buf, 4);
 	memcpy(digest, ctx->buf, 16);
-	memset(ctx, 0, sizeof(ctx));	/* In case it's sensitive */
 	if(0 != ctx->internal_buf) {
 		free(ctx->internal_buf);
 		ctx->internal_buf = 0;
 		ctx->capacity = 0;
 	}
+	memset(ctx, 0, sizeof(*ctx));	/* In case it's sensitive */
 }
 
 /*
@@ -406,13 +402,14 @@ FLAC__bool FLAC__MD5Accumulate(FLAC__MD5Context *ctx, const FLAC__int32 * const 
 		return false;
 
 	if(ctx->capacity < bytes_needed) {
-		FLAC__byte *tmp = (FLAC__byte*)realloc(ctx->internal_buf, bytes_needed);
+		FLAC__byte *tmp = realloc(ctx->internal_buf, bytes_needed);
 		if(0 == tmp) {
 			free(ctx->internal_buf);
-			if(0 == (ctx->internal_buf = (FLAC__byte*)safe_malloc_(bytes_needed)))
+			if(0 == (ctx->internal_buf = safe_malloc_(bytes_needed)))
 				return false;
 		}
-		ctx->internal_buf = tmp;
+		else
+			ctx->internal_buf = tmp;
 		ctx->capacity = bytes_needed;
 	}
 

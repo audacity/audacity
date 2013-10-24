@@ -1,5 +1,6 @@
 /* grabbag - Convenience lib for various routines common to several tools
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -50,22 +51,22 @@
 
 void grabbag__file_copy_metadata(const char *srcpath, const char *destpath)
 {
-	struct stat srcstat;
+	struct flac_stat_s srcstat;
 	struct utimbuf srctime;
 
-	if(0 == stat(srcpath, &srcstat)) {
+	if(0 == flac_stat(srcpath, &srcstat)) {
 		srctime.actime = srcstat.st_atime;
 		srctime.modtime = srcstat.st_mtime;
-		(void)chmod(destpath, srcstat.st_mode);
-		(void)utime(destpath, &srctime);
+		(void)flac_chmod(destpath, srcstat.st_mode);
+		(void)flac_utime(destpath, &srctime);
 	}
 }
 
-off_t grabbag__file_get_filesize(const char *srcpath)
+FLAC__off_t grabbag__file_get_filesize(const char *srcpath)
 {
-	struct stat srcstat;
+	struct flac_stat_s srcstat;
 
-	if(0 == stat(srcpath, &srcstat))
+	if(0 == flac_stat(srcpath, &srcstat))
 		return srcstat.st_size;
 	else
 		return -1;
@@ -86,9 +87,9 @@ const char *grabbag__file_get_basename(const char *srcpath)
 
 FLAC__bool grabbag__file_change_stats(const char *filename, FLAC__bool read_only)
 {
-	struct stat stats;
+	struct flac_stat_s stats;
 
-	if(0 == stat(filename, &stats)) {
+	if(0 == flac_stat(filename, &stats)) {
 #if !defined _MSC_VER && !defined __MINGW32__
 		if(read_only) {
 			stats.st_mode &= ~S_IWUSR;
@@ -104,7 +105,7 @@ FLAC__bool grabbag__file_change_stats(const char *filename, FLAC__bool read_only
 		else
 			stats.st_mode |= S_IWRITE;
 #endif
-		if(0 != chmod(filename, stats.st_mode))
+		if(0 != flac_chmod(filename, stats.st_mode))
 			return false;
 	}
 	else
@@ -127,8 +128,8 @@ FLAC__bool grabbag__file_are_same(const char *f1, const char *f2)
 	BY_HANDLE_FILE_INFORMATION info1, info2;
 	HANDLE h1, h2;
 	BOOL ok = 1;
-	h1 = CreateFile(f1, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	h2 = CreateFile(f2, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	h1 = CreateFile_utf8(f1, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	h2 = CreateFile_utf8(f2, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if(h1 == INVALID_HANDLE_VALUE || h2 == INVALID_HANDLE_VALUE)
 		ok = 0;
 	ok &= GetFileInformationByHandle(h1, &info1);
@@ -145,14 +146,14 @@ FLAC__bool grabbag__file_are_same(const char *f1, const char *f2)
 		CloseHandle(h2);
 	return same;
 #else
-	struct stat s1, s2;
-	return f1 && f2 && stat(f1, &s1) == 0 && stat(f2, &s2) == 0 && s1.st_ino == s2.st_ino && s1.st_dev == s2.st_dev;
+	struct flac_stat_s s1, s2;
+	return f1 && f2 && flac_stat(f1, &s1) == 0 && flac_stat(f2, &s2) == 0 && s1.st_ino == s2.st_ino && s1.st_dev == s2.st_dev;
 #endif
 }
 
 FLAC__bool grabbag__file_remove_file(const char *filename)
 {
-	return grabbag__file_change_stats(filename, /*read_only=*/false) && 0 == unlink(filename);
+	return grabbag__file_change_stats(filename, /*read_only=*/false) && 0 == flac_unlink(filename);
 }
 
 FILE *grabbag__file_get_binary_stdin(void)

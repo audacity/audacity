@@ -1,5 +1,6 @@
 /* libFLAC++ - Free Lossless Audio Codec library
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -361,6 +362,12 @@ namespace FLAC {
 		Prototype(FLAC__metadata_object_new(FLAC__METADATA_TYPE_PADDING), /*copy=*/false)
 		{ }
 
+		Padding::Padding(unsigned length):
+		Prototype(FLAC__metadata_object_new(FLAC__METADATA_TYPE_PADDING), /*copy=*/false)
+		{
+			set_length(length);
+		}
+
 		Padding::~Padding()
 		{ }
 
@@ -431,38 +438,80 @@ namespace FLAC {
 			return object_->data.seek_table.num_points;
 		}
 
-		::FLAC__StreamMetadata_SeekPoint SeekTable::get_point(unsigned index) const
+		::FLAC__StreamMetadata_SeekPoint SeekTable::get_point(unsigned indx) const
 		{
 			FLAC__ASSERT(is_valid());
-			FLAC__ASSERT(index < object_->data.seek_table.num_points);
-			return object_->data.seek_table.points[index];
+			FLAC__ASSERT(indx < object_->data.seek_table.num_points);
+			return object_->data.seek_table.points[indx];
 		}
 
-		void SeekTable::set_point(unsigned index, const ::FLAC__StreamMetadata_SeekPoint &point)
+		bool SeekTable::resize_points(unsigned new_num_points)
 		{
 			FLAC__ASSERT(is_valid());
-			FLAC__ASSERT(index < object_->data.seek_table.num_points);
-			::FLAC__metadata_object_seektable_set_point(object_, index, point);
+			return (bool)::FLAC__metadata_object_seektable_resize_points(object_, new_num_points);
 		}
 
-		bool SeekTable::insert_point(unsigned index, const ::FLAC__StreamMetadata_SeekPoint &point)
+		void SeekTable::set_point(unsigned indx, const ::FLAC__StreamMetadata_SeekPoint &point)
 		{
 			FLAC__ASSERT(is_valid());
-			FLAC__ASSERT(index <= object_->data.seek_table.num_points);
-			return (bool)::FLAC__metadata_object_seektable_insert_point(object_, index, point);
+			FLAC__ASSERT(indx < object_->data.seek_table.num_points);
+			::FLAC__metadata_object_seektable_set_point(object_, indx, point);
 		}
 
-		bool SeekTable::delete_point(unsigned index)
+		bool SeekTable::insert_point(unsigned indx, const ::FLAC__StreamMetadata_SeekPoint &point)
 		{
 			FLAC__ASSERT(is_valid());
-			FLAC__ASSERT(index < object_->data.seek_table.num_points);
-			return (bool)::FLAC__metadata_object_seektable_delete_point(object_, index);
+			FLAC__ASSERT(indx <= object_->data.seek_table.num_points);
+			return (bool)::FLAC__metadata_object_seektable_insert_point(object_, indx, point);
+		}
+
+		bool SeekTable::delete_point(unsigned indx)
+		{
+			FLAC__ASSERT(is_valid());
+			FLAC__ASSERT(indx < object_->data.seek_table.num_points);
+			return (bool)::FLAC__metadata_object_seektable_delete_point(object_, indx);
 		}
 
 		bool SeekTable::is_legal() const
 		{
 			FLAC__ASSERT(is_valid());
 			return (bool)::FLAC__metadata_object_seektable_is_legal(object_);
+		}
+
+		bool SeekTable::template_append_placeholders(unsigned num)
+		{
+			FLAC__ASSERT(is_valid());
+			return (bool)::FLAC__metadata_object_seektable_template_append_placeholders(object_, num);
+		}
+
+		bool SeekTable::template_append_point(FLAC__uint64 sample_number)
+		{
+			FLAC__ASSERT(is_valid());
+			return (bool)::FLAC__metadata_object_seektable_template_append_point(object_, sample_number);
+		}
+
+		bool SeekTable::template_append_points(FLAC__uint64 sample_numbers[], unsigned num)
+		{
+			FLAC__ASSERT(is_valid());
+			return (bool)::FLAC__metadata_object_seektable_template_append_points(object_, sample_numbers, num);
+		}
+
+		bool SeekTable::template_append_spaced_points(unsigned num, FLAC__uint64 total_samples)
+		{
+			FLAC__ASSERT(is_valid());
+			return (bool)::FLAC__metadata_object_seektable_template_append_spaced_points(object_, num, total_samples);
+		}
+
+		bool SeekTable::template_append_spaced_points_by_samples(unsigned samples, FLAC__uint64 total_samples)
+		{
+			FLAC__ASSERT(is_valid());
+			return (bool)::FLAC__metadata_object_seektable_template_append_spaced_points_by_samples(object_, samples, total_samples);
+		}
+
+		bool SeekTable::template_sort(bool compact)
+		{
+			FLAC__ASSERT(is_valid());
+			return (bool)::FLAC__metadata_object_seektable_template_sort(object_, compact);
 		}
 
 
@@ -792,33 +841,39 @@ namespace FLAC {
 			return object_->data.vorbis_comment.vendor_string.entry;
 		}
 
-		VorbisComment::Entry VorbisComment::get_comment(unsigned index) const
+		VorbisComment::Entry VorbisComment::get_comment(unsigned indx) const
 		{
 			FLAC__ASSERT(is_valid());
-			FLAC__ASSERT(index < object_->data.vorbis_comment.num_comments);
-			return Entry((const char *)object_->data.vorbis_comment.comments[index].entry, object_->data.vorbis_comment.comments[index].length);
+			FLAC__ASSERT(indx < object_->data.vorbis_comment.num_comments);
+			return Entry((const char *)object_->data.vorbis_comment.comments[indx].entry, object_->data.vorbis_comment.comments[indx].length);
 		}
 
 		bool VorbisComment::set_vendor_string(const FLAC__byte *string)
 		{
 			FLAC__ASSERT(is_valid());
 			// vendor_string is a special kind of entry
-			const ::FLAC__StreamMetadata_VorbisComment_Entry vendor_string = { strlen((const char *)string), (FLAC__byte*)string }; // we can cheat on const-ness because we make a copy below:
+			const ::FLAC__StreamMetadata_VorbisComment_Entry vendor_string = { static_cast<FLAC__uint32>(strlen((const char *)string)), (FLAC__byte*)string }; // we can cheat on const-ness because we make a copy below:
 			return (bool)::FLAC__metadata_object_vorbiscomment_set_vendor_string(object_, vendor_string, /*copy=*/true);
 		}
 
-		bool VorbisComment::set_comment(unsigned index, const VorbisComment::Entry &entry)
+		bool VorbisComment::resize_comments(unsigned new_num_comments)
 		{
 			FLAC__ASSERT(is_valid());
-			FLAC__ASSERT(index < object_->data.vorbis_comment.num_comments);
-			return (bool)::FLAC__metadata_object_vorbiscomment_set_comment(object_, index, entry.get_entry(), /*copy=*/true);
+			return (bool)::FLAC__metadata_object_vorbiscomment_resize_comments(object_, new_num_comments);
 		}
 
-		bool VorbisComment::insert_comment(unsigned index, const VorbisComment::Entry &entry)
+		bool VorbisComment::set_comment(unsigned indx, const VorbisComment::Entry &entry)
 		{
 			FLAC__ASSERT(is_valid());
-			FLAC__ASSERT(index <= object_->data.vorbis_comment.num_comments);
-			return (bool)::FLAC__metadata_object_vorbiscomment_insert_comment(object_, index, entry.get_entry(), /*copy=*/true);
+			FLAC__ASSERT(indx < object_->data.vorbis_comment.num_comments);
+			return (bool)::FLAC__metadata_object_vorbiscomment_set_comment(object_, indx, entry.get_entry(), /*copy=*/true);
+		}
+
+		bool VorbisComment::insert_comment(unsigned indx, const VorbisComment::Entry &entry)
+		{
+			FLAC__ASSERT(is_valid());
+			FLAC__ASSERT(indx <= object_->data.vorbis_comment.num_comments);
+			return (bool)::FLAC__metadata_object_vorbiscomment_insert_comment(object_, indx, entry.get_entry(), /*copy=*/true);
 		}
 
 		bool VorbisComment::append_comment(const VorbisComment::Entry &entry)
@@ -827,11 +882,35 @@ namespace FLAC {
 			return (bool)::FLAC__metadata_object_vorbiscomment_append_comment(object_, entry.get_entry(), /*copy=*/true);
 		}
 
-		bool VorbisComment::delete_comment(unsigned index)
+		bool VorbisComment::replace_comment(const VorbisComment::Entry &entry, bool all)
 		{
 			FLAC__ASSERT(is_valid());
-			FLAC__ASSERT(index < object_->data.vorbis_comment.num_comments);
-			return (bool)::FLAC__metadata_object_vorbiscomment_delete_comment(object_, index);
+			return (bool)::FLAC__metadata_object_vorbiscomment_replace_comment(object_, entry.get_entry(), all, /*copy=*/true);
+		}
+
+		bool VorbisComment::delete_comment(unsigned indx)
+		{
+			FLAC__ASSERT(is_valid());
+			FLAC__ASSERT(indx < object_->data.vorbis_comment.num_comments);
+			return (bool)::FLAC__metadata_object_vorbiscomment_delete_comment(object_, indx);
+		}
+
+		int VorbisComment::find_entry_from(unsigned offset, const char *field_name)
+		{
+			FLAC__ASSERT(is_valid());
+			return ::FLAC__metadata_object_vorbiscomment_find_entry_from(object_, offset, field_name);
+		}
+
+		int VorbisComment::remove_entry_matching(const char *field_name)
+		{
+			FLAC__ASSERT(is_valid());
+			return ::FLAC__metadata_object_vorbiscomment_remove_entry_matching(object_, field_name);
+		}
+
+		int VorbisComment::remove_entries_matching(const char *field_name)
+		{
+			FLAC__ASSERT(is_valid());
+			return ::FLAC__metadata_object_vorbiscomment_remove_entries_matching(object_, field_name);
 		}
 
 
@@ -892,11 +971,11 @@ namespace FLAC {
 			object_->type = value;
 		}
 
- 		void CueSheet::Track::set_index(unsigned i, const ::FLAC__StreamMetadata_CueSheet_Index &index)
+ 		void CueSheet::Track::set_index(unsigned i, const ::FLAC__StreamMetadata_CueSheet_Index &indx)
  		{
  			FLAC__ASSERT(is_valid());
  			FLAC__ASSERT(i < object_->num_indices);
- 			object_->indices[i] = index;
+ 			object_->indices[i] = indx;
  		}
 
 
@@ -962,20 +1041,35 @@ namespace FLAC {
 			object_->data.cue_sheet.is_cd = value;
 		}
 
-		void CueSheet::set_index(unsigned track_num, unsigned index_num, const ::FLAC__StreamMetadata_CueSheet_Index &index)
+		void CueSheet::set_index(unsigned track_num, unsigned index_num, const ::FLAC__StreamMetadata_CueSheet_Index &indx)
 		{
 			FLAC__ASSERT(is_valid());
 			FLAC__ASSERT(track_num < object_->data.cue_sheet.num_tracks);
 			FLAC__ASSERT(index_num < object_->data.cue_sheet.tracks[track_num].num_indices);
-			object_->data.cue_sheet.tracks[track_num].indices[index_num] = index;
+			object_->data.cue_sheet.tracks[track_num].indices[index_num] = indx;
 		}
 
-		bool CueSheet::insert_index(unsigned track_num, unsigned index_num, const ::FLAC__StreamMetadata_CueSheet_Index &index)
+		bool CueSheet::resize_indices(unsigned track_num, unsigned new_num_indices)
+		{
+			FLAC__ASSERT(is_valid());
+			FLAC__ASSERT(track_num < object_->data.cue_sheet.num_tracks);
+			return (bool)::FLAC__metadata_object_cuesheet_track_resize_indices(object_, track_num, new_num_indices);
+		}
+
+		bool CueSheet::insert_index(unsigned track_num, unsigned index_num, const ::FLAC__StreamMetadata_CueSheet_Index &indx)
 		{
 			FLAC__ASSERT(is_valid());
 			FLAC__ASSERT(track_num < object_->data.cue_sheet.num_tracks);
 			FLAC__ASSERT(index_num <= object_->data.cue_sheet.tracks[track_num].num_indices);
-			return (bool)::FLAC__metadata_object_cuesheet_track_insert_index(object_, track_num, index_num, index);
+			return (bool)::FLAC__metadata_object_cuesheet_track_insert_index(object_, track_num, index_num, indx);
+		}
+
+		bool CueSheet::insert_blank_index(unsigned track_num, unsigned index_num)
+		{
+			FLAC__ASSERT(is_valid());
+			FLAC__ASSERT(track_num < object_->data.cue_sheet.num_tracks);
+			FLAC__ASSERT(index_num <= object_->data.cue_sheet.tracks[track_num].num_indices);
+			return (bool)::FLAC__metadata_object_cuesheet_track_insert_blank_index(object_, track_num, index_num);
 		}
 
 		bool CueSheet::delete_index(unsigned track_num, unsigned index_num)
@@ -984,6 +1078,12 @@ namespace FLAC {
 			FLAC__ASSERT(track_num < object_->data.cue_sheet.num_tracks);
 			FLAC__ASSERT(index_num < object_->data.cue_sheet.tracks[track_num].num_indices);
 			return (bool)::FLAC__metadata_object_cuesheet_track_delete_index(object_, track_num, index_num);
+		}
+
+		bool CueSheet::resize_tracks(unsigned new_num_tracks)
+		{
+			FLAC__ASSERT(is_valid());
+			return (bool)::FLAC__metadata_object_cuesheet_resize_tracks(object_, new_num_tracks);
 		}
 
 		bool CueSheet::set_track(unsigned i, const CueSheet::Track &track)
@@ -1000,6 +1100,13 @@ namespace FLAC {
 			FLAC__ASSERT(i <= object_->data.cue_sheet.num_tracks);
 			// We can safely const_cast since copy=true
 			return (bool)::FLAC__metadata_object_cuesheet_insert_track(object_, i, const_cast< ::FLAC__StreamMetadata_CueSheet_Track*>(track.get_track()), /*copy=*/true);
+		}
+
+		bool CueSheet::insert_blank_track(unsigned i)
+		{
+			FLAC__ASSERT(is_valid());
+			FLAC__ASSERT(i <= object_->data.cue_sheet.num_tracks);
+			return (bool)::FLAC__metadata_object_cuesheet_insert_blank_track(object_, i);
 		}
 
 		bool CueSheet::delete_track(unsigned i)
@@ -1136,6 +1243,12 @@ namespace FLAC {
 			FLAC__ASSERT(is_valid());
 			// We can safely const_cast since copy=true
 			return (bool)::FLAC__metadata_object_picture_set_data(object_, const_cast<FLAC__byte*>(data), data_length, /*copy=*/true);
+		}
+
+		bool Picture::is_legal(const char **violation)
+		{
+  			FLAC__ASSERT(is_valid());
+  			return (bool)::FLAC__metadata_object_picture_is_legal(object_, violation);
 		}
 
 

@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec
- * Copyright (C) 2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2004-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -113,7 +114,7 @@ FLAC__bool simple_ogg_page__get_at(FLAC__StreamEncoder *encoder, FLAC__uint64 po
 	}
 
 	/* allocate space for the page header */
-	if(0 == (page->header = (unsigned char *)safe_malloc_(OGG_MAX_HEADER_LEN))) {
+	if(0 == (page->header = safe_malloc_(OGG_MAX_HEADER_LEN))) {
 		encoder->protected_->state = FLAC__STREAM_ENCODER_MEMORY_ALLOCATION_ERROR;
 		return false;
 	}
@@ -155,7 +156,7 @@ FLAC__bool simple_ogg_page__get_at(FLAC__StreamEncoder *encoder, FLAC__uint64 po
 	}
 
 	/* allocate space for the page body */
-	if(0 == (page->body = (unsigned char *)safe_malloc_(page->body_len))) {
+	if(0 == (page->body = safe_malloc_(page->body_len))) {
 		encoder->protected_->state = FLAC__STREAM_ENCODER_MEMORY_ALLOCATION_ERROR;
 		return false;
 	}

@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -37,17 +38,13 @@
 #include <string.h>
 #include "private/bitmath.h"
 #include "private/fixed.h"
+#include "private/macros.h"
 #include "FLAC/assert.h"
 
 #ifndef M_LN2
 /* math.h in VC++ doesn't seem to have this (how Microsoft is that?) */
 #define M_LN2 0.69314718055994530942
 #endif
-
-#ifdef min
-#undef min
-#endif
-#define min(x,y) ((x) < (y)? (x) : (y))
 
 #ifdef local_abs
 #undef local_abs
@@ -242,11 +239,11 @@ unsigned FLAC__fixed_compute_best_predictor(const FLAC__int32 data[], unsigned d
 		error -= last_error_3; total_error_4 += local_abs(error); last_error_3 = save;
 	}
 
-	if(total_error_0 < min(min(min(total_error_1, total_error_2), total_error_3), total_error_4))
+	if(total_error_0 < flac_min(flac_min(flac_min(total_error_1, total_error_2), total_error_3), total_error_4))
 		order = 0;
-	else if(total_error_1 < min(min(total_error_2, total_error_3), total_error_4))
+	else if(total_error_1 < flac_min(flac_min(total_error_2, total_error_3), total_error_4))
 		order = 1;
-	else if(total_error_2 < min(total_error_3, total_error_4))
+	else if(total_error_2 < flac_min(total_error_3, total_error_4))
 		order = 2;
 	else if(total_error_3 < total_error_4)
 		order = 3;
@@ -304,11 +301,11 @@ unsigned FLAC__fixed_compute_best_predictor_wide(const FLAC__int32 data[], unsig
 		error -= last_error_3; total_error_4 += local_abs(error); last_error_3 = save;
 	}
 
-	if(total_error_0 < min(min(min(total_error_1, total_error_2), total_error_3), total_error_4))
+	if(total_error_0 < flac_min(flac_min(flac_min(total_error_1, total_error_2), total_error_3), total_error_4))
 		order = 0;
-	else if(total_error_1 < min(min(total_error_2, total_error_3), total_error_4))
+	else if(total_error_1 < flac_min(flac_min(total_error_2, total_error_3), total_error_4))
 		order = 1;
-	else if(total_error_2 < min(total_error_3, total_error_4))
+	else if(total_error_2 < flac_min(total_error_3, total_error_4))
 		order = 2;
 	else if(total_error_3 < total_error_4)
 		order = 3;

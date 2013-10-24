@@ -3,13 +3,13 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "FLAC" "1" "14 September 2007" "" ""
+.TH "FLAC" "1" "2013/04/30" "" ""
 
 .SH NAME
 flac \- Free Lossless Audio Codec
 .SH SYNOPSIS
 
-\fBflac\fR [ \fB\fIOPTIONS\fB\fR ] [ \fB\fIinfile.wav\fB\fR | \fB\fIinfile.aiff\fB\fR | \fB\fIinfile.raw\fB\fR | \fB\fIinfile.flac\fB\fR | \fB\fIinfile.oga\fB\fR | \fB\fIinfile.ogg\fB\fR | \fB-\fR\fI ...\fR ]
+\fBflac\fR [ \fB\fIOPTIONS\fB\fR ] [ \fB\fIinfile.wav\fB\fR | \fB\fIinfile.rf64\fB\fR | \fB\fIinfile.aiff\fB\fR | \fB\fIinfile.raw\fB\fR | \fB\fIinfile.flac\fB\fR | \fB\fIinfile.oga\fB\fR | \fB\fIinfile.ogg\fB\fR | \fB-\fR\fI ...\fR ]
 
 
 \fBflac\fR [ \fB-d\fR | \fB--decode\fR | \fB-t\fR | \fB--test\fR | \fB-a\fR | \fB--analyze\fR ] [ \fB\fIOPTIONS\fB\fR ] [ \fB\fIinfile.flac\fB\fR | \fB\fIinfile.oga\fB\fR | \fB\fIinfile.ogg\fB\fR | \fB-\fR\fI ...\fR ]
@@ -68,8 +68,11 @@ Prefix each output file name with the given string.  This can be useful for enco
 \fB--delete-input-file \fR
 Automatically delete the input file after a successful encode or decode.  If there was an error (including a verify error) the input file is left intact.
 .TP
+\fB--preserve-modtime \fR
+Output files have their timestamps/permissions set to match those of their inputs (this is default).  Use --no-preserve-modtime to make output files have the current time and default permissions.
+.TP
 \fB--keep-foreign-metadata \fR
-If encoding, save WAVE or AIFF non-audio chunks in FLAC metadata.  If decoding, restore any saved non-audio chunks from FLAC metadata when writing the decoded file.  Foreign metadata cannot be transcoded, e.g. WAVE chunks saved in a FLAC file cannot be restored when decoding to AIFF.  Input and output must be regular files (not stdin or stdout).
+If encoding, save WAVE, RF64, or AIFF non-audio chunks in FLAC metadata.  If decoding, restore any saved non-audio chunks from FLAC metadata when writing the decoded file.  Foreign metadata cannot be transcoded, e.g. WAVE chunks saved in a FLAC file cannot be restored when decoding to AIFF.  Input and output must be regular files (not stdin or stdout).
 .TP
 \fB--skip={\fI#\fB|\fImm:ss.ss\fB}\fR
 Skip over the first number of samples of the input.  This works for both encoding and decoding, but not testing.  The alternative form mm:ss.ss can be used to specify minutes, seconds, and fractions of a second.
@@ -98,6 +101,37 @@ Set the beginning and ending cuepoints to decode.  The optional first #.# is the
 .TP
 \fB-F, --decode-through-errors \fR
 By default flac stops decoding with an error and removes the partially decoded file if it encounters a bitstream error.  With -F, errors are still printed but flac will continue decoding to completion.  Note that errors may cause the decoded audio to be missing some samples or have silent sections.
+.TP
+\fB--apply-replaygain-which-is-not-lossless[=<specification>] \fR
+Applies ReplayGain values while decoding.
+
+WARNING: THIS IS NOT LOSSLESS.  DECODED AUDIO WILL NOT BE IDENTICAL TO THE ORIGINAL WITH THIS OPTION.
+
+The equals sign and <specification> is optional.  If omitted, the default is 0aLn1.
+
+The <specification> is a shorthand notation for describing how to apply ReplayGain.  All components are optional but order is important.  '[]' means 'optional'.  '|' means 'or'.  '{}' means required.  The format is:
+
+[<preamp>][a|t][l|L][n{0|1|2|3}]
+.RS
+.TP
+\fBpreamp\fR
+A floating point number in dB.  This is added to the existing gain value.
+.TP
+\fBa|t\fR
+Specify 'a' to use the album gain, or 't' to use the track gain.  If tags for the preferred kind (album/track) do not exist but tags for the other (track/album) do, those will be used instead.
+.TP
+\fBl|L\fR
+Specify 'l' to peak-limit the output, so that the ReplayGain peak value is full-scale.  Specify 'L' to use a 6dB hard limiter that kicks in when the signal approaches full-scale.
+.TP
+\fBn{0|1|2|3}\fR
+Specify the amount of noise shaping.  ReplayGain synthesis happens in floating point; the result is dithered before converting back to integer.  This quantization adds noise.  Noise shaping tries to move the noise where you won't hear it as much.  0 means no noise shaping, 1 means 'low', 2 means 'medium', 3 means 'high'.
+.RE
+
+For example, the default of 0aLn1 means 0dB preamp, use album gain, 6dB hard limit, low noise shaping.
+
+--apply-replaygain-which-is-not-lossless=3 means 3dB preamp, use album gain, no limiting, no noise shaping.
+
+flac uses the ReplayGain tags for the calculation.  If a stream does not have the required tags or they can't be parsed, decoding will continue with a warning, and no ReplayGain is applied to that stream.
 .SS "ENCODING OPTIONS"
 .TP
 \fB-V, --verify\fR
@@ -176,7 +210,12 @@ For example, "|image/jpeg|||../cover.jpg" will embed the JPEG file at ../cover.j
 The specification "4|-->|CD|320x300x24/173|http://blah.blah/backcover.tiff" will embed the given URL, with type 4 (back cover), description "CD", and a manually specified resolution of 320x300, 24 bits-per-pixel, and 173 colors.  The file at the URL will not be fetched; the URL itself is stored in the PICTURE metadata block.
 .TP
 \fB--sector-align\fR
-Align encoding of multiple CD format files on sector boundaries.  See the HTML documentation for more information.
+Align encoding of multiple CD format files on sector boundaries.  See the HTML documentation for more information.  This option is DEPRECATED and may not exist in future versions of flac.
+.TP
+\fB--ignore-chunk-sizes\fR
+When encoding to flac, ignore the file size headers in WAV and AIFF files to attempt to work around problems with over-sized or malformed files.
+
+WAV and AIFF files both have an unsigned 32 bit numbers in the file header which specifes the length of audio data. Since this number is unsigned 32 bits, that limits the size of a valid file to being just over 4 Gigabytes. Files larger than this are mal-formed, but should be read correctly using this option.
 .TP
 \fB-S {\fI#\fB|\fIX\fB|\fI#x\fB|\fI#s\fB}, --seekpoint={\fI#\fB|\fIX\fB|\fI#x\fB|\fI#s\fB}\fR
 Include a point or points in a SEEKTABLE.  Using #, a seek point at that sample number is added.  Using X, a placeholder point is added at the end of a the table.  Using #x, # evenly spaced seek points will be added, the first being at sample 0.  Using #s, a seekpoint will be added every # seconds (# does not have to be a whole number; it can be, for example, 9.5, meaning a seekpoint every 9.5 seconds).  You may use many -S options; the resulting SEEKTABLE will be the unique-ified union of all such values.  With no -S options, flac defaults to '-S 10s'.  Use --no-seektable for no SEEKTABLE.  Note: '-S #x' and '-S #s' will not work if the encoder can't determine the input size before starting.  Note: if you use '-S #' and # is >= samples in the input, there will be either no seek point entered (if the input size is determinable before encoding starts) or a placeholder point (if input size is not determinable).
@@ -280,22 +319,36 @@ Set sample rate (in Hz).
 Set the sign of samples (the default is signed).
 .TP
 \fB--input-size=\fI#\fB\fR
-Specify the size of the raw input in bytes.  If you are encoding raw samples from stdin, you must set this option in order to be able to use --skip, --until, --cue-sheet, or other options that need to know the size of the input beforehand.  If the size given is greater than what is found in the input stream, the encoder will complain about an unexpected end-of-file.  If the size given is less, samples will be truncated.
-.TP
-\fB--force-aiff-format\fR
-Force the decoder to output AIFF format.  This option is not needed if the output filename (as set by -o) ends with \fI\&.aiff\fR\&.  Also, this option has no effect when encoding since input AIFF is auto-detected.
+Specify the size of the raw input in bytes.  If you are encoding raw samples from stdin, you must set this option in order to be able to use --skip, --until, --cuesheet, or other options that need to know the size of the input beforehand.  If the size given is greater than what is found in the input stream, the encoder will complain about an unexpected end-of-file.  If the size given is less, samples will be truncated.
 .TP
 \fB--force-raw-format\fR
 Force input (when encoding) or output (when decoding) to be treated as raw samples (even if filename ends in \fI\&.wav\fR).
+.TP
+\fB--force-aiff-format\fR
+Force the decoder to output AIFF format.  This option is not needed if the output filename (as set by -o) ends with \fI\&.aif\fR or \fI\&.aiff\fR\&.  Also, this option has no effect when encoding since input AIFF is auto-detected.
+.TP
+\fB--force-rf64-format\fR
+Force the decoder to output RF64 format.  This option is not needed if the output filename (as set by -o) ends with \fI\&.rf64\fR\&.  Also, this option has no effect when encoding since input RF64 is auto-detected.
+.TP
+\fB--force-wave64-format\fR
+Force the decoder to output Wave64 format.  This option is not needed if the output filename (as set by -o) ends with \fI\&.w64\fR\&.  Also, this option has no effect when encoding since input Wave64 is auto-detected.
 .SS "NEGATIVE OPTIONS"
 .TP
 \fB--no-adaptive-mid-side\fR
+.TP
+\fB--no-cued-seekpoints\fR
 .TP
 \fB--no-decode-through-errors\fR
 .TP
 \fB--no-delete-input-file\fR
 .TP
+\fB--no-preserve-modtime\fR
+.TP
+\fB--no-keep-foreign-metadata\fR
+.TP
 \fB--no-exhaustive-model-search\fR
+.TP
+\fB--no-force\fR
 .TP
 \fB--no-lax\fR
 .TP
@@ -305,7 +358,9 @@ Force input (when encoding) or output (when decoding) to be treated as raw sampl
 .TP
 \fB--no-padding\fR
 .TP
-\fB--no-qlp-coeff-precision-search\fR
+\fB--no-qlp-coeff-prec-search\fR
+.TP
+\fB--no-replay-gain\fR
 .TP
 \fB--no-residual-gnuplot\fR
 .TP
@@ -325,7 +380,7 @@ These flags can be used to invert the sense of the corresponding normal option.
 .PP
 metaflac(1).
 .PP
-The programs are documented fully by HTML format documentation, available in \fI/usr/share/doc/flac/html\fR on Debian GNU/Linux systems.
+The programs are documented fully by HTML format documentation, available in \fI/usr/share/doc/libflac-doc/html\fR on Debian GNU/Linux systems.
 .SH "AUTHOR"
 .PP
 This manual page was written by Matt Zimmerman <mdz@debian.org> for the Debian GNU/Linux system (but may be used by others).

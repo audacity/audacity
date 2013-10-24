@@ -14,7 +14,7 @@
  *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  *  concept and filter values by David Robinson (David@Robinson.org)
  *    -- blame him if you think the idea is flawed
@@ -47,8 +47,8 @@ typedef float   Float_t;         /* Type used for filtering */
 extern Float_t ReplayGainReferenceLoudness; /* in dB SPL, currently == 89.0 */
 
 int     InitGainAnalysis ( long samplefreq );
+int     ValidGainFrequency ( long samplefreq );
 int     AnalyzeSamples   ( const Float_t* left_samples, const Float_t* right_samples, size_t num_samples, int num_channels );
-int		ResetSampleFrequency ( long samplefreq );
 Float_t GetTitleGain     ( void );
 Float_t GetAlbumGain     ( void );
 

@@ -1,8 +1,9 @@
 #  FLAC - Free Lossless Audio Codec
-#  Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+#  Copyright (C) 2001-2009  Josh Coalson
+#  Copyright (C) 2011-2013  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
-#  components distributed under difference licenses.  The codec libraries
+#  components distributed under different licenses.  The codec libraries
 #  are distributed under Xiph.Org's BSD-like license (see the file
 #  COPYING.Xiph in this distribution).  All other programs, libraries, and
 #  plugins are distributed under the GPL (see COPYING.GPL).  The documentation
@@ -30,7 +31,7 @@
 
 topdir = .
 
-.PHONY: all doc src examples libFLAC libFLAC++ share plugin_common plugin_xmms flac metaflac test_grabbag test_libFLAC test_libFLAC++ test_seeking test_streams
+.PHONY: all doc src examples libFLAC libFLAC++ share plugin_common plugin_xmms flac metaflac test_grabbag test_libFLAC test_libFLAC++ test_seeking test_streams utils flacdiff flactimer
 all: doc src examples
 
 DEFAULT_CONFIG = release
@@ -48,47 +49,14 @@ release : all
 doc:
 	(cd $@ && $(MAKE) -f Makefile.lite)
 
-src:
+src examples:
 	(cd $@ && $(MAKE) -f Makefile.lite $(CONFIG))
 
-examples: src
-	(cd $@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-libFLAC:
+libFLAC libFLAC++ share flac metaflac plugin_common plugin_xmms test_libs_common test_seeking test_streams test_grabbag test_libFLAC test_libFLAC++:
 	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
 
-libFLAC++: libFLAC
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-share: libFLAC
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-flac: libFLAC share
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-metaflac: libFLAC share
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-plugin_common: libFLAC
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-plugin_xmms: libFLAC plugin_common
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-test_seeking: libFLAC
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-test_streams: libFLAC
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-test_grabbag: share
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-test_libFLAC: libFLAC
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
-
-test_libFLAC++: libFLAC libFLAC++
-	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
+flacdiff flactimer:
+	(cd src/utils/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
 
 test: debug
 	(cd test && $(MAKE) -f Makefile.lite debug)
@@ -104,3 +72,6 @@ clean:
 	-(cd src && $(MAKE) -f Makefile.lite clean)
 	-(cd examples && $(MAKE) -f Makefile.lite clean)
 	-(cd test && $(MAKE) -f Makefile.lite clean)
+
+examples: libFLAC libFLAC++ share
+include $(topdir)/Makefile.deps

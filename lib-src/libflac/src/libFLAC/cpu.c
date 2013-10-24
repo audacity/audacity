@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2001-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -136,7 +137,7 @@ static const unsigned FLAC__CPUINFO_IA32_CPUID_EXTENDED_AMD_EXTMMX = 0x00400000;
 #  endif
 # elif defined(_MSC_VER)
 #  include <windows.h>
-#  undef USE_TRY_CATCH_FLAVOR /* #define this to use the try/catch method for catching illegal opcode exception */
+#  define USE_TRY_CATCH_FLAVOR /* sigill_handler flavor resulted in several crash reports on win32 */
 #  ifdef USE_TRY_CATCH_FLAVOR
 #  else
 	LONG CALLBACK sigill_handler_sse_os(EXCEPTION_POINTERS *ep)

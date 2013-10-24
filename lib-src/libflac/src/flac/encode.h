@@ -1,5 +1,6 @@
 /* flac - Command-line FLAC encoder/decoder
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,9 +12,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef flac__encode_h
@@ -26,6 +27,7 @@
 #include "FLAC/metadata.h"
 #include "foreign_metadata.h"
 #include "utils.h"
+#include "share/compat.h"
 
 extern const int FLAC_ENCODE__DEFAULT_PADDING;
 
@@ -87,6 +89,20 @@ typedef struct {
 	FLAC__StreamMetadata *pictures[64];
 	unsigned num_pictures;
 
+	FileFormat format;
+	union {
+		struct {
+			FLAC__bool is_big_endian;
+			FLAC__bool is_unsigned_samples;
+			unsigned channels;
+			unsigned bps;
+			unsigned sample_rate;
+		} raw;
+		struct {
+			foreign_metadata_t *foreign_metadata; /* NULL unless --keep-foreign-metadata requested */
+		} iff;
+	} format_options;
+
 	struct {
 		FLAC__bool disable_constant_subframes;
 		FLAC__bool disable_fixed_subframes;
@@ -95,28 +111,6 @@ typedef struct {
 	} debug;
 } encode_options_t;
 
-typedef struct {
-	encode_options_t common;
-	foreign_metadata_t *foreign_metadata; /* NULL unless --keep-foreign-metadata requested */
-} wav_encode_options_t;
-
-typedef struct {
-	encode_options_t common;
-
-	FLAC__bool is_big_endian;
-	FLAC__bool is_unsigned_samples;
-	unsigned channels;
-	unsigned bps;
-	unsigned sample_rate;
-} raw_encode_options_t;
-
-typedef struct {
-	encode_options_t common;
-} flac_encode_options_t;
-
-int flac__encode_aif(FILE *infile, off_t infilesize, const char *infilename, const char *outfilename, const FLAC__byte *lookahead, unsigned lookahead_length, wav_encode_options_t options, FLAC__bool is_aifc);
-int flac__encode_wav(FILE *infile, off_t infilesize, const char *infilename, const char *outfilename, const FLAC__byte *lookahead, unsigned lookahead_length, wav_encode_options_t options);
-int flac__encode_raw(FILE *infile, off_t infilesize, const char *infilename, const char *outfilename, const FLAC__byte *lookahead, unsigned lookahead_length, raw_encode_options_t options);
-int flac__encode_flac(FILE *infile, off_t infilesize, const char *infilename, const char *outfilename, const FLAC__byte *lookahead, unsigned lookahead_length, flac_encode_options_t options, FLAC__bool input_is_ogg);
+int flac__encode_file(FILE *infile, FLAC__off_t infilesize, const char *infilename, const char *outfilename, const FLAC__byte *lookahead, unsigned lookahead_length, encode_options_t options);
 
 #endif

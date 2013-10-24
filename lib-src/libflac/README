@@ -1,8 +1,9 @@
 /* FLAC - Free Lossless Audio Codec
- * Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2001-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * This file is part the FLAC project.  FLAC is comprised of several
- * components distributed under difference licenses.  The codec libraries
+ * components distributed under different licenses.  The codec libraries
  * are distributed under Xiph.Org's BSD-like license (see the file
  * COPYING.Xiph in this distribution).  All other programs, libraries, and
  * plugins are distributed under the LGPL or GPL (see COPYING.LGPL and
@@ -17,8 +18,11 @@
  */
 
 
-FLAC (http://flac.sourceforge.net/) is an Open Source lossless audio
-codec developed by Josh Coalson.
+FLAC is an Open Source lossless audio codec developed by Josh Coalson from 2001
+to 2009.
+
+From January 2012 FLAC is being maintained by Erik de Castro Lopo under the
+auspices of the Xiph.org Foundation.
 
 FLAC is comprised of
   * `libFLAC', a library which implements reference encoders and
@@ -38,7 +42,7 @@ Documentation License (see COPYING.FDL).
 
 
 ===============================================================================
-FLAC - 1.2.1 - Contents
+FLAC - 1.3.0 - Contents
 ===============================================================================
 
 - Introduction
@@ -89,7 +93,7 @@ Note to embedded developers
 libFLAC has grown larger over time as more functionality has been
 included, but much of it may be unnecessary for a particular embedded
 implementation.  Unused parts may be pruned by some simple editing of
-configure.in and src/libFLAC/Makefile.am; the following dependency
+configure.ac and src/libFLAC/Makefile.am; the following dependency
 graph shows which modules may be pruned without breaking things
 further down:
 
@@ -170,7 +174,7 @@ $HOME/.xmms/Plugins, instead of the global XMMS plugin area
 Use these if you have these packages but configure can't find them.
 
 If you want to build completely from scratch (i.e. starting with just
-configure.in and Makefile.am) you should be able to just run 'autogen.sh'
+configure.ac and Makefile.am) you should be able to just run 'autogen.sh'
 but make sure and read the comments in that file first.
 
 
@@ -200,55 +204,46 @@ not an x86, change -DFLAC__CPU_IA32 to -DFLAC__CPU_UNKNOWN.
 Building with MSVC
 ===============================================================================
 
-There are .dsp projects and a master FLAC.dsw workspace to build all
-the libraries and executables with MSVC6.  There are also .vcproj
-projects and a master FLAC.sln solution to build all the libraries and
-executables with VC++ 2005.
+There are .vcproj projects and a master FLAC.sln solution to build all
+the libraries and executables with MSVC 2005 or newer.
 
 Prerequisite: you must have the Ogg libraries installed as described
 later.
 
-Prerequisite: you must have nasm installed, and nasmw.exe must be in
-your PATH, or the path to nasmw.exe must be added to the list of
+Prerequisite: you must have nasm installed, and nasm.exe must be in
+your PATH, or the path to nasm.exe must be added to the list of
 directories for executable files in the MSVC global options.
-
-MSVC6:
-To build everything, run Developer Studio, do File|Open Workspace,
-and open FLAC.dsw.  Select "Build | Set active configuration..."
-from the menu, then in the dialog, select "All - Win32 Release" (or
-Debug if you prefer).  Click "Ok" then hit F7 to build.
 
 VC++ 2005:
 To build everything, run Visual Studio, do File|Open and open FLAC.sln.
 From the dropdown in the toolbar, select "Release" instead of "Debug",
 then hit F7 to build.
 
-Either way, this will build all libraries both statically (e.g.
-obj\release\lib\libFLAC_static.lib) and as DLLs (e.g.
-obj\release\lib\libFLAC.dll), and it will build all binaries, statically
-linked (e.g. obj\release\bin\flac.exe).
+This will build all libraries both statically (e.g.
+objs\release\lib\libFLAC_static.lib) and as DLLs (e.g.
+objs\release\lib\libFLAC.dll), and it will build all binaries, statically
+linked (e.g. objs\release\bin\flac.exe).
 
-Everything will end up in the "obj" directory.  DLLs and .exe files
+Everything will end up in the "objs" directory.  DLLs and .exe files
 are all that are needed and can be copied to an installation area and
-added to the PATH.  The plugins have to be copied to their appropriate
-place in the player area.  For Winamp2 this is <winamp2-dir>\Plugins.
+added to the PATH.
 
-By default the code is configured with Ogg support.  Before building FLAC
+By default the code is configured with Ogg support. Before building FLAC
 you will need to get the Ogg source distribution
-(see http://xiph.org/ogg/vorbis/download/), build ogg_static.lib (load and
-build win32\ogg_static.dsp), copy ogg_static.lib into FLAC's
-'obj\release\lib' directory, and copy the entire include\ogg tree into
-FLAC's 'include' directory (so that there is an 'ogg' directory in FLAC's
+(see http://xiph.org/downloads/), build libogg_static.lib (load
+win32\libogg_static.sln, change solution configuration to "Release" and
+code generation to "Multi-threaded (/MT)", then build), copy libogg_static.lib
+into FLAC's 'objs\release\lib' directory, and copy the entire include\ogg tree
+into FLAC's 'include' directory (so that there is an 'ogg' directory in FLAC's
 'include' directory with the files ogg.h, os_types.h and config_types.h).
 
-If you want to build without Ogg support, instead edit all .dsp or
-.vcproj files and remove any occurrences of "/D FLAC__HAS_OGG".
+If you want to build without Ogg support, instead edit all .vcproj files
+and remove any "FLAC__HAS_OGG" definitions.
 
 
 ===============================================================================
 Building on Mac OS X
 ===============================================================================
 
-If you have Fink or a recent version of OS X with the proper autotooles,
-the GNU flow above should work.  The Project Builder project has been
-deprecated but we are working on replacing it with an Xcode equivalent.
+If you have Fink or a recent version of OS X with the proper autotools,
+the GNU flow above should work.

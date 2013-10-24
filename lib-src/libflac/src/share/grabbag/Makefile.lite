@@ -3,11 +3,19 @@
 #
 
 topdir = ../../..
+libdir = $(topdir)/objs/$(BUILD)/lib
+
+ifeq ($(OS),Darwin)
+    EXPLICIT_LIBS = $(libdir)/libFLAC.a $(libdir)/libreplaygain_analysis.a $(OGG_EXPLICIT_LIBS) -lm
+else
+    LIBS = -lFLAC -lreplaygain_analysis $(OGG_LIBS) -lm
+endif
 
 LIB_NAME = libgrabbag
 INCLUDES = -I$(topdir)/include
 
 SRCS_C = \
+	alloc.c \
 	cuesheet.c \
 	file.c \
 	picture.c \

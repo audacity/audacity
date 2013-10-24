@@ -20,7 +20,7 @@ manpage.1: manpage.sgml
   <!ENTITY manfirstname "<firstname>dann</firstname>">
   <!ENTITY mansurname   "<surname>frazier</surname>">
   <!-- Please adjust the date whenever revising the manpage. -->
-  <!ENTITY mandate      "<date>2006-11-14</date>">
+  <!ENTITY mandate      "<date>2013/04/30</date>">
   <!-- SECTION should be 1-8, maybe with subsection. Other parameters are
        allowed: see man(7), man(1). -->
   <!ENTITY mansection   "<manvolnum>1</manvolnum>">
@@ -40,7 +40,7 @@ manpage.1: manpage.sgml
       &mansurname;
     </author>
     <copyright>
-      <year>2002,2003,2004,2005</year>
+      <year>2002-2005, 2011-2013</year>
       <holder>&manusername;</holder>
     </copyright>
     &mandate;
@@ -374,7 +374,8 @@ manpage.1: manpage.sgml
 	    have been completed and written to disk.  All FLAC files
 	    specified must have the same resolution, sample rate, and
 	    number of channels.  The sample rate must be one of 8, 11.025,
-	    12, 16, 22.05, 24, 32, 44.1, or 48 kHz.
+	    12, 16, 18.9, 22.05, 24, 28, 32, 37.8, 44.1, 48, 56, 64, 88.2,
+	    96, 112, 128, 144, 176.4, or 192kHz.
 	  </para>
         </listitem>
       </varlistentry>
@@ -451,8 +452,8 @@ manpage.1: manpage.sgml
 		  An optional comma-separated list of block types to be included
 		  or ignored with this option.  Use only one of --block-type or
 		  --except-block-type.  The valid block types are: STREAMINFO,
-		  PADDING, APPLICATION, SEEKTABLE, VORBIS_COMMENT.  You may
-		  narrow down the types of APPLICATION blocks displayed as
+		  PADDING, APPLICATION, SEEKTABLE, VORBIS_COMMENT, PICTURE.  You
+		  may narrow down the types of APPLICATION blocks displayed as
 		  follows:
 		</para>
 		<para>
@@ -544,7 +545,7 @@ manpage.1: manpage.sgml
       </varlistentry>
     </variablelist>
   </refsect1>
-  
+
   <refsect1>
     <title>SEE ALSO</title>
 

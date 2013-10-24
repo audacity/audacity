@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -38,32 +39,18 @@
 #include <string.h> /* for memset() */
 #include "FLAC/assert.h"
 #include "FLAC/format.h"
+#include "share/compat.h"
 #include "private/format.h"
-
-#ifndef FLaC__INLINE
-#define FLaC__INLINE
-#endif
-
-#ifdef min
-#undef min
-#endif
-#define min(a,b) ((a)<(b)?(a):(b))
-
-/* adjust for compilers that can't understand using LLU suffix for uint64_t literals */
-#ifdef _MSC_VER
-#define FLAC__U64L(x) x
-#else
-#define FLAC__U64L(x) x##LLU
-#endif
+#include "private/macros.h"
 
 /* VERSION should come from configure */
 FLAC_API const char *FLAC__VERSION_STRING = VERSION;
 
 #if defined _MSC_VER || defined __BORLANDC__ || defined __MINW32__
 /* yet one more hack because of MSVC6: */
-FLAC_API const char *FLAC__VENDOR_STRING = "reference libFLAC 1.2.1 20070917";
+FLAC_API const char *FLAC__VENDOR_STRING = "reference libFLAC 1.3.0 20130526";
 #else
-FLAC_API const char *FLAC__VENDOR_STRING = "reference libFLAC " VERSION " 20070917";
+FLAC_API const char *FLAC__VENDOR_STRING = "reference libFLAC " VERSION " 20130526";
 #endif
 
 FLAC_API const FLAC__byte FLAC__STREAM_SYNC_STRING[4] = { 'f','L','a','C' };
@@ -223,6 +210,16 @@ FLAC_API FLAC__bool FLAC__format_sample_rate_is_valid(unsigned sample_rate)
 		return true;
 }
 
+FLAC_API FLAC__bool FLAC__format_blocksize_is_subset(unsigned blocksize, unsigned sample_rate)
+{
+	if(blocksize > 16384)
+		return false;
+	else if(sample_rate <= 48000 && blocksize > 4608)
+		return false;
+	else
+		return true;
+}
+
 FLAC_API FLAC__bool FLAC__format_sample_rate_is_subset(unsigned sample_rate)
 {
 	if(
@@ -313,7 +310,7 @@ FLAC_API unsigned FLAC__format_seektable_sort(FLAC__StreamMetadata_SeekTable *se
  * and a more clear explanation at the end of this section:
  *   http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
  */
-static FLaC__INLINE unsigned utf8len_(const FLAC__byte *utf8)
+static unsigned utf8len_(const FLAC__byte *utf8)
 {
 	FLAC__ASSERT(0 != utf8);
 	if ((utf8[0] & 0x80) == 0) {
@@ -536,7 +533,7 @@ unsigned FLAC__format_get_max_rice_partition_order_from_blocksize(unsigned block
 		max_rice_partition_order++;
 		blocksize >>= 1;
 	}
-	return min(FLAC__MAX_RICE_PARTITION_ORDER, max_rice_partition_order);
+	return flac_min(FLAC__MAX_RICE_PARTITION_ORDER, max_rice_partition_order);
 }
 
 unsigned FLAC__format_get_max_rice_partition_order_from_blocksize_limited_max_and_predictor_order(unsigned limit, unsigned blocksize, unsigned predictor_order)
@@ -581,9 +578,9 @@ FLAC__bool FLAC__format_entropy_coding_method_partitioned_rice_contents_ensure_s
 	FLAC__ASSERT(object->capacity_by_order > 0 || (0 == object->parameters && 0 == object->raw_bits));
 
 	if(object->capacity_by_order < max_partition_order) {
-		if(0 == (object->parameters = (unsigned*)realloc(object->parameters, sizeof(unsigned)*(1 << max_partition_order))))
+		if(0 == (object->parameters = realloc(object->parameters, sizeof(unsigned)*(1 << max_partition_order))))
 			return false;
-		if(0 == (object->raw_bits = (unsigned*)realloc(object->raw_bits, sizeof(unsigned)*(1 << max_partition_order))))
+		if(0 == (object->raw_bits = realloc(object->raw_bits, sizeof(unsigned)*(1 << max_partition_order))))
 			return false;
 		memset(object->raw_bits, 0, sizeof(unsigned)*(1 << max_partition_order));
 		object->capacity_by_order = max_partition_order;

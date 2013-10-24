@@ -1,5 +1,6 @@
 ;  libFLAC - Free Lossless Audio Codec library
-;  Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+;  Copyright (C) 2001-2009  Josh Coalson
+;  Copyright (C) 2011-2013  Xiph.Org Foundation
 ;
 ;  Redistribution and use in source and binary forms, with or without
 ;  modification, are permitted provided that the following conditions
@@ -49,11 +50,6 @@
 	%idefine code_section section .text align=16
 	%idefine data_section section .data align=32
 	%idefine bss_section  section .bss  align=32
-%elifdef OBJ_FORMAT_macho
-	%define FLAC__PUBLIC_NEEDS_UNDERSCORE
-	%idefine code_section section .text
-	%idefine data_section section .data
-	%idefine bss_section  section .bss
 %else
 	%error unsupported object format!
 %endif
@@ -62,7 +58,11 @@
 	%ifdef FLAC__PUBLIC_NEEDS_UNDERSCORE
 		global _%1
 	%else
-		global %1
+		%if __NASM_MAJOR__ >= 2
+			global %1:function hidden
+		%else
+			global %1
+		%endif
 	%endif
 %endmacro
 
@@ -78,3 +78,8 @@
 _%1:
 %1:
 %endmacro
+
+%ifndef OBJ_FORMAT_aout
+section .note.GNU-stack progbits noalloc noexec nowrite align=1
+%endif
+

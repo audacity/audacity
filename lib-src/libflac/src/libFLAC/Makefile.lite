@@ -1,5 +1,6 @@
 #  libFLAC - Free Lossless Audio Codec library
-#  Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+#  Copyright (C) 2001-2009  Josh Coalson
+#  Copyright (C) 2011-2013  Xiph.Org Foundation
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -34,25 +35,34 @@
 
 topdir = ../..
 
+ifeq ($(OS),Darwin)
+    EXPLICIT_LIBS = $(OGG_EXPLICIT_LIBS) -lm
+else
+    LIBS = $(OGG_LIBS) -lm
+endif
+
 LIB_NAME = libFLAC
-ifeq ($(DARWIN_BUILD),yes)
-DEFINES = -DFLAC__CPU_PPC -DFLAC__USE_ALTIVEC -DFLAC__ALIGN_MALLOC_DATA
+ifeq ($(PROC),ppc)
+    DEFINES = -DFLAC__CPU_PPC -DFLAC__USE_ALTIVEC -DFLAC__ALIGN_MALLOC_DATA
 else
-ifeq ($(SOLARIS_BUILD),yes)
-DEFINES = -DFLAC__NO_ASM -DFLAC__ALIGN_MALLOC_DATA
+ifeq ($(OS),Solaris)
+    DEFINES = -DFLAC__NO_ASM -DFLAC__ALIGN_MALLOC_DATA
 else
-DEFINES = -DFLAC__CPU_IA32 -DFLAC__USE_3DNOW -DFLAC__HAS_NASM -DFLAC__ALIGN_MALLOC_DATA
+ifeq ($(PROC),i386)
+    DEFINES = -DFLAC__CPU_IA32 -DFLAC__USE_3DNOW -DFLAC__HAS_NASM -DFLAC__ALIGN_MALLOC_DATA
+else
+    DEFINES = -DFLAC__ALIGN_MALLOC_DATA
 endif
 endif
-INCLUDES = -I./include -I$(topdir)/include -I$(OGG_INCLUDE_DIR)
+endif
+INCLUDES = -I./include -I$(topdir)/include $(OGG_INCLUDES)
 DEBUG_CFLAGS = -DFLAC__OVERFLOW_DETECT
 
-ifeq ($(DARWIN_BUILD),yes)
+ifeq ($(OS),Darwin)
 SRCS_S = \
 	ppc/as/lpc_asm.s
 else
-ifeq ($(SOLARIS_BUILD),yes)
-else
+ifeq ($(PROC),i386)
 SRCS_NASM = \
 	ia32/bitreader_asm.nasm \
 	ia32/cpu_asm.nasm \
@@ -61,6 +71,12 @@ SRCS_NASM = \
 	ia32/stream_encoder_asm.nasm
 endif
 endif
+
+OGG_SRCS_C = \
+	ogg_decoder_aspect.c \
+	ogg_encoder_aspect.c \
+	ogg_helper.c \
+	ogg_mapping.c
 
 SRCS_C = \
 	bitmath.c \
@@ -76,14 +92,11 @@ SRCS_C = \
 	memory.c \
 	metadata_iterators.c \
 	metadata_object.c \
-	ogg_decoder_aspect.c \
-	ogg_encoder_aspect.c \
-	ogg_helper.c \
-	ogg_mapping.c \
 	stream_decoder.c \
 	stream_encoder.c \
 	stream_encoder_framing.c \
-	window.c
+	window.c \
+	$(OGG_SRCS)
 
 include $(topdir)/build/lib.mk
 

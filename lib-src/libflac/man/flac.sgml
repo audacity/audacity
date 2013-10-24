@@ -4,7 +4,7 @@
   <!ENTITY dhfirstname "<firstname>Matt</firstname>">
   <!ENTITY dhsurname   "<surname>Zimmerman</surname>">
   <!-- Please adjust the date whenever revising the manpage. -->
-  <!ENTITY dhdate      "<date>Nov 4, 2006</date>">
+  <!ENTITY dhdate      "<date>2013/04/30</date>">
   <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
        allowed: see man(7), man(1). -->
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
@@ -27,7 +27,7 @@
       &dhsurname;
     </author>
     <copyright>
-      <year>2002,2003,2004,2005</year>
+      <year>2002-2005, 2011-2013</year>
       <holder>&dhusername;</holder>
     </copyright>
     &dhdate;
@@ -48,6 +48,7 @@
       <arg choice=opt><replaceable>OPTIONS</replaceable></arg>
       <group rep=repeat>
 	<arg><replaceable>infile.wav</replaceable></arg>
+	<arg><replaceable>infile.rf64</replaceable></arg>
 	<arg><replaceable>infile.aiff</replaceable></arg>
 	<arg><replaceable>infile.raw</replaceable></arg>
 	<arg><replaceable>infile.flac</replaceable></arg>
@@ -206,10 +207,18 @@
 	</varlistentry>
 
 	<varlistentry>
+	  <term><option>--preserve-modtime</option>
+	  </term>
+	  <listitem>
+	    <para>Output files have their timestamps/permissions set to match those of their inputs (this is default).  Use --no-preserve-modtime to make output files have the current time and default permissions.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
 	  <term><option>--keep-foreign-metadata</option>
 	  </term>
 	  <listitem>
-	    <para>If encoding, save WAVE or AIFF non-audio chunks in FLAC metadata.  If decoding, restore any saved non-audio chunks from FLAC metadata when writing the decoded file.  Foreign metadata cannot be transcoded, e.g. WAVE chunks saved in a FLAC file cannot be restored when decoding to AIFF.  Input and output must be regular files (not stdin or stdout).</para>
+	    <para>If encoding, save WAVE, RF64, or AIFF non-audio chunks in FLAC metadata.  If decoding, restore any saved non-audio chunks from FLAC metadata when writing the decoded file.  Foreign metadata cannot be transcoded, e.g. WAVE chunks saved in a FLAC file cannot be restored when decoding to AIFF.  Input and output must be regular files (not stdin or stdout).</para>
 	  </listitem>
 	</varlistentry>
 
@@ -289,6 +298,52 @@
 	  </listitem>
 	</varlistentry>
 
+	<varlistentry>
+	  <term><option>--apply-replaygain-which-is-not-lossless[=&lt;specification&gt;]</option>
+	  </term>
+	  <listitem>
+            <para>Applies ReplayGain values while decoding.</para>
+            <para>WARNING: THIS IS NOT LOSSLESS.  DECODED AUDIO WILL NOT BE IDENTICAL TO THE ORIGINAL WITH THIS OPTION.</para>
+            <para>The equals sign and &lt;specification&gt; is optional.  If omitted, the default is 0aLn1.</para>
+            <para>The &lt;specification&gt; is a shorthand notation for describing how to apply ReplayGain.  All components are optional but order is important.  '[]' means 'optional'.  '|' means 'or'.  '{}' means required.  The format is:</para>
+            <para>[&lt;preamp&gt;][a|t][l|L][n{0|1|2|3}]</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><option>preamp</option></term>
+                <listitem>
+                  <para>A floating point number in dB.  This is added to the existing gain value.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><option>a|t</option></term>
+                <listitem>
+                  <para>Specify 'a' to use the album gain, or 't' to use the track gain.  If tags for the preferred kind (album/track) do not exist but tags for the other (track/album) do, those will be used instead.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><option>l|L</option></term>
+                <listitem>
+                  <para>Specify 'l' to peak-limit the output, so that the ReplayGain peak value is full-scale.  Specify 'L' to use a 6dB hard limiter that kicks in when the signal approaches full-scale.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><option>n{0|1|2|3}</option></term>
+                <listitem>
+                  <para>Specify the amount of noise shaping.  ReplayGain synthesis happens in floating point; the result is dithered before converting back to integer.  This quantization adds noise.  Noise shaping tries to move the noise where you won't hear it as much.  0 means no noise shaping, 1 means 'low', 2 means 'medium', 3 means 'high'.</para>
+                </listitem>
+              </varlistentry>
+
+            </variablelist>
+
+            <para>For example, the default of 0aLn1 means 0dB preamp, use album gain, 6dB hard limit, low noise shaping.</para>
+            <para>--apply-replaygain-which-is-not-lossless=3 means 3dB preamp, use album gain, no limiting, no noise shaping.</para>
+            <para>flac uses the ReplayGain tags for the calculation.  If a stream does not have the required tags or they can't be parsed, decoding will continue with a warning, and no ReplayGain is applied to that stream.</para>
+	  </listitem>
+	</varlistentry>
       </variablelist>
     </refsect2>
 
@@ -376,7 +431,16 @@
 	  <term><option>--sector-align</option></term>
 
 	  <listitem>
-	    <para>Align encoding of multiple CD format files on sector boundaries.  See the HTML documentation for more information.</para>
+	    <para>Align encoding of multiple CD format files on sector boundaries.  See the HTML documentation for more information.  This option is DEPRECATED and may not exist in future versions of flac.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--ignore-chunk-sizes</option></term>
+
+	  <listitem>
+		<para>When encoding to flac, ignore the file size headers in WAV and AIFF files to attempt to work around problems with over-sized or malformed files.</para>
+		<para>WAV and AIFF files both have an unsigned 32 bit numbers in the file header which specifes the length of audio data. Since this number is unsigned 32 bits, that limits the size of a valid file to being just over 4 Gigabytes. Files larger than this are mal-formed, but should be read correctly using this option.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -639,15 +703,7 @@
 	  <term><option>--input-size</option>=<replaceable>#</replaceable></term>
 
 	  <listitem>
-	    <para>Specify the size of the raw input in bytes.  If you are encoding raw samples from stdin, you must set this option in order to be able to use --skip, --until, --cue-sheet, or other options that need to know the size of the input beforehand.  If the size given is greater than what is found in the input stream, the encoder will complain about an unexpected end-of-file.  If the size given is less, samples will be truncated.</para>
-	  </listitem>
-	</varlistentry>
-
-	<varlistentry>
-	  <term><option>--force-aiff-format</option></term>
-
-	  <listitem>
-	    <para>Force the decoder to output AIFF format.  This option is not needed if the output filename (as set by -o) ends with <filename>.aiff</filename>.  Also, this option has no effect when encoding since input AIFF is auto-detected.</para>
+	    <para>Specify the size of the raw input in bytes.  If you are encoding raw samples from stdin, you must set this option in order to be able to use --skip, --until, --cuesheet, or other options that need to know the size of the input beforehand.  If the size given is greater than what is found in the input stream, the encoder will complain about an unexpected end-of-file.  If the size given is less, samples will be truncated.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -656,6 +712,30 @@
 
 	  <listitem>
 	    <para>Force input (when encoding) or output (when decoding) to be treated as raw samples (even if filename ends in <filename>.wav</filename>).</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--force-aiff-format</option></term>
+
+	  <listitem>
+	    <para>Force the decoder to output AIFF format.  This option is not needed if the output filename (as set by -o) ends with <filename>.aif</filename> or <filename>.aiff</filename>.  Also, this option has no effect when encoding since input AIFF is auto-detected.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--force-rf64-format</option></term>
+
+	  <listitem>
+	    <para>Force the decoder to output RF64 format.  This option is not needed if the output filename (as set by -o) ends with <filename>.rf64</filename>.  Also, this option has no effect when encoding since input RF64 is auto-detected.</para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><option>--force-wave64-format</option></term>
+
+	  <listitem>
+	    <para>Force the decoder to output Wave64 format.  This option is not needed if the output filename (as set by -o) ends with <filename>.w64</filename>.  Also, this option has no effect when encoding since input Wave64 is auto-detected.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -668,14 +748,19 @@
       <variablelist>
 	<varlistentry>
 	  <term><option>--no-adaptive-mid-side</option></term>
+	  <term><option>--no-cued-seekpoints</option></term>
 	  <term><option>--no-decode-through-errors</option></term>
 	  <term><option>--no-delete-input-file</option></term>
+	  <term><option>--no-preserve-modtime</option></term>
+	  <term><option>--no-keep-foreign-metadata</option></term>
 	  <term><option>--no-exhaustive-model-search</option></term>
+	  <term><option>--no-force</option></term>
 	  <term><option>--no-lax</option></term>
 	  <term><option>--no-mid-side</option></term>
 	  <term><option>--no-ogg</option></term>
 	  <term><option>--no-padding</option></term>
-	  <term><option>--no-qlp-coeff-precision-search</option></term>
+	  <term><option>--no-qlp-coeff-prec-search</option></term>
+	  <term><option>--no-replay-gain</option></term>
 	  <term><option>--no-residual-gnuplot</option></term>
 	  <term><option>--no-residual-text</option></term>
 	  <term><option>--no-sector-align</option></term>
@@ -697,7 +782,7 @@
 
     <para>metaflac(1).</para>
 
-    <para>The programs are documented fully by HTML format documentation, available in <filename>/usr/share/doc/flac/html</filename> on &debian; systems.</para>
+    <para>The programs are documented fully by HTML format documentation, available in <filename>/usr/share/doc/libflac-doc/html</filename> on &debian; systems.</para>
   </refsect1>
   <refsect1>
     <title>AUTHOR</title>

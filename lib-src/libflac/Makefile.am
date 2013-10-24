@@ -1,8 +1,9 @@
 #  FLAC - Free Lossless Audio Codec
-#  Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+#  Copyright (C) 2001-2009  Josh Coalson
+#  Copyright (C) 2011-2013  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
-#  components distributed under difference licenses.  The codec libraries
+#  components distributed under different licenses.  The codec libraries
 #  are distributed under Xiph.Org's BSD-like license (see the file
 #  COPYING.Xiph in this distribution).  All other programs, libraries, and
 #  plugins are distributed under the GPL (see COPYING.GPL).  The documentation
@@ -28,25 +29,24 @@
 # distclean: remove everything except what goes in the distribution
 #
 
-AUTOMAKE_OPTIONS = foreign 1.7
+ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = include m4 man src build obj
-
-DISTCLEANFILES = libtool-disable-static
+SUBDIRS = doc include m4 man src examples test build objs
 
 EXTRA_DIST = \
 	COPYING.FDL \
 	COPYING.GPL \
 	COPYING.LGPL \
 	COPYING.Xiph \
-	FLAC.dsw \
 	FLAC.sln \
 	Makefile.lite \
-	all.dsp \
-	all_dynamic.dsp \
-	all_static.dsp \
 	autogen.sh \
 	config.rpath \
 	depcomp \
 	ltmain.sh \
 	strip_non_asm_libtool_args.sh
+
+fullcheck:
+	(cd test && make fullcheck)
+
+CLEANFILES = *~

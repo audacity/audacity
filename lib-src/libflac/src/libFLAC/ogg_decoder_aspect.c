@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -37,11 +38,8 @@
 #include "FLAC/assert.h"
 #include "private/ogg_decoder_aspect.h"
 #include "private/ogg_mapping.h"
+#include "private/macros.h"
 
-#ifdef max
-#undef max
-#endif
-#define max(x,y) ((x)>(y)?(x):(y))
 
 /***********************************************************************
  *
@@ -210,7 +208,7 @@ FLAC__OggDecoderAspectReadStatus FLAC__ogg_decoder_aspect_read_callback_wrapper(
 			}
 			else if (ret == 0) {
 				/* need more data */
-				const size_t ogg_bytes_to_read = max(bytes_requested - *bytes, OGG_BYTES_CHUNK);
+				const size_t ogg_bytes_to_read = flac_max(bytes_requested - *bytes, OGG_BYTES_CHUNK);
 				char *oggbuf = ogg_sync_buffer(&aspect->sync_state, ogg_bytes_to_read);
 
 				if(0 == oggbuf) {

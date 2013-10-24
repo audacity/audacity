@@ -1,5 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2001-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -1986,7 +1987,7 @@ FLAC_API FLAC__bool FLAC__metadata_object_cuesheet_resize_tracks(FLAC__StreamMet
  *    \code object->type == FLAC__METADATA_TYPE_CUESHEET \endcode
  *    \code track_num < object->data.cue_sheet.num_tracks \endcode
  *    \code (track->indices != NULL && track->num_indices > 0) ||
- * (track->indices == NULL && track->num_indices == 0)
+ * (track->indices == NULL && track->num_indices == 0) \endcode
  * \retval FLAC__bool
  *    \c false if \a copy is \c true and malloc() fails, else \c true.
  */

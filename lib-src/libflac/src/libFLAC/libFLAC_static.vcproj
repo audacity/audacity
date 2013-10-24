@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\obj\debug\lib"
+			OutputDirectory="..\..\objs\debug\lib"
 			IntermediateDirectory="Debug_static"
 			ConfigurationType="4"
 			>
@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\include;..\..\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;FLAC__HAS_OGG;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__USE_3DNOW;VERSION=\&quot;1.2.0\&quot;;FLAC__NO_DLL;DEBUG;FLAC__OVERFLOW_DETECT"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;FLAC__HAS_OGG;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__USE_3DNOW;VERSION=\&quot;1.3.0\&quot;;FLAC__NO_DLL;DEBUG;FLAC__OVERFLOW_DETECT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\obj\debug\lib\$(ProjectName).lib"
+				OutputFile="..\..\objs\debug\lib\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -82,7 +82,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\obj\release\lib"
+			OutputDirectory="..\..\objs\release\lib"
 			IntermediateDirectory="Release_static"
 			ConfigurationType="4"
 			>
@@ -108,7 +108,7 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".\include;..\..\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FLAC__HAS_OGG;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__USE_3DNOW;VERSION=\&quot;1.2.0\&quot;;FLAC__NO_DLL"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FLAC__HAS_OGG;FLAC__CPU_IA32;FLAC__HAS_NASM;FLAC__USE_3DNOW;VERSION=\&quot;1.3.0\&quot;;FLAC__NO_DLL;FLaC__INLINE=_inline"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				UsePrecompiledHeader="0"
@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\obj\release\lib\$(ProjectName).lib"
+				OutputFile="..\..\objs\release\lib\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -387,7 +387,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/bitreader_asm.nasm -o ia32/bitreader_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/bitreader_asm.nasm -o ia32/bitreader_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/bitreader_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/bitreader_asm.obj"
 				/>
@@ -397,7 +397,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/bitreader_asm.nasm -o ia32/bitreader_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/bitreader_asm.nasm -o ia32/bitreader_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/bitreader_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/bitreader_asm.obj"
 				/>
@@ -411,7 +411,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/cpu_asm.nasm -o ia32/cpu_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/cpu_asm.nasm -o ia32/cpu_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/cpu_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/cpu_asm.obj"
 				/>
@@ -421,7 +421,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/cpu_asm.nasm -o ia32/cpu_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/cpu_asm.nasm -o ia32/cpu_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/cpu_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/cpu_asm.obj"
 				/>
@@ -435,7 +435,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/fixed_asm.nasm -o ia32/fixed_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/fixed_asm.nasm -o ia32/fixed_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/fixed_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/fixed_asm.obj"
 				/>
@@ -445,7 +445,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/fixed_asm.nasm -o ia32/fixed_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/fixed_asm.nasm -o ia32/fixed_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/fixed_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/fixed_asm.obj"
 				/>
@@ -459,7 +459,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/lpc_asm.nasm -o ia32/lpc_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/lpc_asm.nasm -o ia32/lpc_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/lpc_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/lpc_asm.obj"
 				/>
@@ -469,7 +469,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/lpc_asm.nasm -o ia32/lpc_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/lpc_asm.nasm -o ia32/lpc_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/lpc_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/lpc_asm.obj"
 				/>
@@ -483,7 +483,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/stream_encoder_asm.nasm -o ia32/stream_encoder_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/stream_encoder_asm.nasm -o ia32/stream_encoder_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/stream_encoder_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/stream_encoder_asm.obj"
 				/>
@@ -493,7 +493,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="nasmw.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/stream_encoder_asm.nasm -o ia32/stream_encoder_asm.obj&#x0D;&#x0A;"
+					CommandLine="nasm.exe -f win32 -d OBJ_FORMAT_win32 -i ia32/ ia32/stream_encoder_asm.nasm -o ia32/stream_encoder_asm.obj&#x0D;&#x0A;"
 					AdditionalDependencies="ia32/stream_encoder_asm.nasm;ia32/nasm.h"
 					Outputs="ia32/stream_encoder_asm.obj"
 				/>

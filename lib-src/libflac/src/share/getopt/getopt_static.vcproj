@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\obj\debug\lib"
+			OutputDirectory="..\..\..\objs\debug\lib"
 			IntermediateDirectory="Debug_static"
 			ConfigurationType="4"
 			>
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\obj\debug\lib\$(ProjectName).lib"
+				OutputFile="..\..\..\objs\debug\lib\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -82,7 +82,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\obj\release\lib"
+			OutputDirectory="..\..\..\objs\release\lib"
 			IntermediateDirectory="Release_static"
 			ConfigurationType="4"
 			>
@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\obj\release\lib\$(ProjectName).lib"
+				OutputFile="..\..\..\objs\release\lib\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"

@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\obj\debug\bin"
+			OutputDirectory="..\..\objs\debug\bin"
 			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			>
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\obj\release\lib\ogg_static.lib"
+				AdditionalDependencies="..\..\objs\release\lib\libogg_static.lib"
 				LinkIncremental="2"
 				IgnoreDefaultLibraryNames="uuid.lib"
 				GenerateDebugInformation="true"
@@ -88,15 +88,12 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\obj\release\bin"
+			OutputDirectory="..\..\objs\release\bin"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			>
@@ -143,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\obj\release\lib\ogg_static.lib"
+				AdditionalDependencies="..\..\objs\release\lib\libogg_static.lib"
 				LinkIncremental="1"
 				IgnoreDefaultLibraryNames="uuid.lib"
 				GenerateDebugInformation="true"
@@ -170,9 +167,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

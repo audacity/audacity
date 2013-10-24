@@ -1,5 +1,6 @@
 #  libFLAC - Free Lossless Audio Codec library
-#  Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+#  Copyright (C) 2001-2009  Josh Coalson
+#  Copyright (C) 2011-2013  Xiph.Org Foundation
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -28,10 +29,15 @@
 #  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+AM_CPPFLAGS = -I$(top_builddir) -I$(srcdir)/include -I$(top_srcdir)/include
 lib_LTLIBRARIES = libFLAC.la
+noinst_LTLIBRARIES = libFLAC-static.la
 if DEBUG
 DEBUGCFLAGS = -DFLAC__OVERFLOW_DETECT
 endif
+
+# FIXME: The following logic should be part of configure, not of Makefile.am
+
 if FLaC__CPU_PPC
 # The -force_cpusubtype_ALL is needed to insert a ppc64 instruction
 # into cpu.c with an asm().
@@ -40,8 +46,13 @@ if FLaC__SYS_DARWIN
 CPUCFLAGS = -faltivec -force_cpusubtype_ALL -DFLAC__NO_ASM
 else
 # Linux-gcc for PPC does not have -force_cpusubtype_ALL, it is Darwin-specific
+CPUCFLAGS =
+if FLaC__CPU_PPC_SPE
+else
+CPUCFLAGS += -maltivec -mabi=altivec
+endif
 #@@@ PPC optimizations temporarily disabled
-CPUCFLAGS = -maltivec -mabi=altivec -DFLAC__NO_ASM
+CPUCFLAGS += -DFLAC__NO_ASM
 endif
 endif
 
@@ -58,6 +69,8 @@ endif
 if FLaC__CPU_PPC
 ARCH_SUBDIRS = ppc
 if FLaC__HAS_AS__TEMPORARILY_DISABLED
+if FLaC__CPU_PPC_SPE
+else
 LOCAL_EXTRA_LIBADD = ppc/as/libFLAC-asm.la
 LOCAL_EXTRA_LDFLAGS = "-Wl,-read_only_relocs,warning"
 else
@@ -68,8 +81,13 @@ endif
 endif
 endif
 endif
+endif
 
-libFLAC_la_LIBADD = $(LOCAL_EXTRA_LIBADD) @OGG_LIBS@
+if OS_IS_WINDOWS
+win_utf8_lib = $(top_builddir)/src/share/win_utf8_io/libwin_utf8_io.la
+endif
+
+libFLAC_la_LIBADD = $(win_utf8_lib) $(LOCAL_EXTRA_LIBADD) @OGG_LIBS@ -lm
 
 SUBDIRS = $(ARCH_SUBDIRS) include .
 
@@ -82,9 +100,7 @@ pkgconfig_DATA = flac.pc
 EXTRA_DIST = \
 	Makefile.lite \
 	flac.pc.in \
-	libFLAC_dynamic.dsp \
 	libFLAC_dynamic.vcproj \
-	libFLAC_static.dsp \
 	libFLAC_static.vcproj \
 	libFLAC.m4
 
@@ -95,9 +111,11 @@ extra_ogg_sources = \
 	ogg_helper.c \
 	ogg_mapping.c
 endif
-# see 'http://www.gnu.org/software/libtool/manual.html#Libtool-versioning' for numbering convention
-libFLAC_la_LDFLAGS = -version-info 10:0:2 -lm $(LOCAL_EXTRA_LDFLAGS)
-libFLAC_la_SOURCES = \
+
+# see 'http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning' for numbering convention
+libFLAC_la_LDFLAGS = $(AM_LDFLAGS) -version-info 11:0:3 $(LOCAL_EXTRA_LDFLAGS) @LT_NO_UNDEFINED@
+
+libFLAC_sources = \
 	bitmath.c \
 	bitreader.c \
 	bitwriter.c \
@@ -116,3 +134,9 @@ libFLAC_la_SOURCES = \
 	stream_encoder_framing.c \
 	window.c \
 	$(extra_ogg_sources)
+
+libFLAC_la_SOURCES = $(libFLAC_sources)
+
+# needed for test_libFLAC
+libFLAC_static_la_LIBADD = $(LOCAL_EXTRA_LIBADD)
+libFLAC_static_la_SOURCES = $(libFLAC_sources)

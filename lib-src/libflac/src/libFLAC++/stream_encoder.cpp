@@ -1,5 +1,6 @@
 /* libFLAC++ - Free Lossless Audio Codec library
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -193,8 +194,8 @@ namespace FLAC {
 		bool Stream::set_metadata(FLAC::Metadata::Prototype **metadata, unsigned num_blocks)
 		{
 			FLAC__ASSERT(is_valid());
-#if (defined _MSC_VER) || (defined __BORLANDC__) || (defined __SUNPRO_CC)
-			// MSVC++ can't handle:
+#ifndef HAVE_CXX_VARARRAYS
+			// some compilers (MSVC++, Borland C, SunPro, some GCCs w/ -pedantic) can't handle:
 			// ::FLAC__StreamMetadata *m[num_blocks];
 			// so we do this ugly workaround
 			::FLAC__StreamMetadata **m = new ::FLAC__StreamMetadata*[num_blocks];
@@ -203,9 +204,9 @@ namespace FLAC {
 #endif
 			for(unsigned i = 0; i < num_blocks; i++) {
 				// we can get away with the const_cast since we know the encoder will only correct the is_last flags
-				m[i] = const_cast< ::FLAC__StreamMetadata*>((const ::FLAC__StreamMetadata*)metadata[i]);
+				m[i] = const_cast< ::FLAC__StreamMetadata*>(static_cast<const ::FLAC__StreamMetadata*>(*metadata[i]));
 			}
-#if (defined _MSC_VER) || (defined __BORLANDC__) || (defined __SUNPRO_CC)
+#ifndef HAVE_CXX_VARARRAYS
 			// complete the hack
 			const bool ok = (bool)::FLAC__stream_encoder_set_metadata(encoder_, m, num_blocks);
 			delete [] m;

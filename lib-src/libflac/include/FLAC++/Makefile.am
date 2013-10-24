@@ -1,5 +1,6 @@
 #  libFLAC++ - Free Lossless Audio Codec library
-#  Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+#  Copyright (C) 2002-2009  Josh Coalson
+#  Copyright (C) 2011-2013  Xiph.Org Foundation
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -29,7 +30,7 @@
 #  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 flaccppincludedir = $(includedir)/FLAC++
-
+AM_CPPFLAGS = -I$(top_builddir) -I$(srcdir)/include -I$(top_srcdir)/include
 flaccppinclude_HEADERS = \
 	all.h \
 	decoder.h \

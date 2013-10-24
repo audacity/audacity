@@ -1,5 +1,6 @@
 #  flac - Command-line FLAC encoder/decoder
-#  Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+#  Copyright (C) 2000-2009  Josh Coalson
+#  Copyright (C) 2011-2013  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -11,21 +12,19 @@
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#  You should have received a copy of the GNU General Public License along
+#  with this program; if not, write to the Free Software Foundation, Inc.,
+#  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 bin_PROGRAMS = flac
 
 AM_CFLAGS = @OGG_CFLAGS@
-
+AM_CPPFLAGS = -I$(top_builddir) -I$(srcdir)/include -I$(top_srcdir)/include
 EXTRA_DIST = \
 	Makefile.lite \
 	Makefile.lite.iffscan \
-	flac.dsp \
 	flac.vcproj \
 	iffscan.c \
-	iffscan.dsp \
 	iffscan.vcproj
 
 flac_SOURCES = \
@@ -46,13 +45,13 @@ flac_SOURCES = \
 	vorbiscomment.h
 
 flac_LDADD = \
+	$(top_builddir)/src/share/utf8/libutf8.la \
 	$(top_builddir)/src/share/grabbag/libgrabbag.la \
-	$(top_builddir)/src/share/getopt/libgetopt.a \
+	$(top_builddir)/src/share/getopt/libgetopt.la \
 	$(top_builddir)/src/share/replaygain_analysis/libreplaygain_analysis.la \
 	$(top_builddir)/src/share/replaygain_synthesis/libreplaygain_synthesis.la \
-	$(top_builddir)/src/share/utf8/libutf8.la \
 	$(top_builddir)/src/libFLAC/libFLAC.la \
-	@OGG_LIBS@ \
-	@LTLIBICONV@ \
-	@MINGW_WINSOCK_LIBS@ \
+	@LIBICONV@ \
 	-lm
+
+CLEANFILES = flac.exe

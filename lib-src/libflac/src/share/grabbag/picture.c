@@ -1,5 +1,6 @@
 /* grabbag - Convenience lib for various routines common to several tools
- * Copyright (C) 2006,2007  Josh Coalson
+ * Copyright (C) 2006-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,9 +12,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #if HAVE_CONFIG_H
@@ -26,11 +27,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "share/compat.h"
 
 /* slightly different that strndup(): this always copies 'size' bytes starting from s into a NUL-terminated string. */
 static char *local__strndup_(const char *s, size_t size)
 {
-	char *x = (char*)safe_malloc_add_2op_(size, /*+*/1);
+	char *x = safe_malloc_add_2op_(size, /*+*/1);
 	if(x) {
 		memcpy(x, s, size);
 		x[size] = '\0';
@@ -287,8 +289,10 @@ FLAC__StreamMetadata *grabbag__picture_parse_specification(const char *spec, con
 
 	*error_message = 0;
 
-	if(0 == (obj = FLAC__metadata_object_new(FLAC__METADATA_TYPE_PICTURE)))
+	if(0 == (obj = FLAC__metadata_object_new(FLAC__METADATA_TYPE_PICTURE))) {
 		*error_message = error_messages[0];
+		return obj;
+	}
 
 	if(strchr(spec, '|')) { /* full format */
 		const char *p;
@@ -354,17 +358,19 @@ FLAC__StreamMetadata *grabbag__picture_parse_specification(const char *spec, con
 					*error_message = error_messages[3];
 			}
 			else { /* regular picture file */
-				const off_t size = grabbag__file_get_filesize(spec);
+				const FLAC__off_t size = grabbag__file_get_filesize(spec);
 				if(size < 0)
 					*error_message = error_messages[5];
 				else {
-					FLAC__byte *buffer = (FLAC__byte*)safe_malloc_(size);
+					FLAC__byte *buffer = safe_malloc_(size);
 					if(0 == buffer)
 						*error_message = error_messages[0];
 					else {
-						FILE *f = fopen(spec, "rb");
-						if(0 == f)
+						FILE *f = flac_fopen(spec, "rb");
+						if(0 == f) {
 							*error_message = error_messages[5];
+							free(buffer);
+						}
 						else {
 							if(fread(buffer, 1, size, f) != (size_t)size)
 								*error_message = error_messages[6];
@@ -379,6 +385,9 @@ FLAC__StreamMetadata *grabbag__picture_parse_specification(const char *spec, con
 								else if((obj->data.picture.width == 0 || obj->data.picture.height == 0 || obj->data.picture.depth == 0) && !local__extract_resolution_color_info_(&obj->data.picture))
 									*error_message = error_messages[4];
 							}
+							else {
+								free(buffer);
+							}
 						}
 					}
 				}
@@ -388,7 +397,7 @@ FLAC__StreamMetadata *grabbag__picture_parse_specification(const char *spec, con
 
 	if(*error_message == 0) {
 		if(
-			obj->data.picture.type == FLAC__STREAM_METADATA_PICTURE_TYPE_FILE_ICON_STANDARD && 
+			obj->data.picture.type == FLAC__STREAM_METADATA_PICTURE_TYPE_FILE_ICON_STANDARD &&
 			(
 				(strcmp(obj->data.picture.mime_type, "image/png") && strcmp(obj->data.picture.mime_type, "-->")) ||
 				obj->data.picture.width != 32 ||

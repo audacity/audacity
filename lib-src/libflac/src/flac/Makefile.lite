@@ -1,5 +1,6 @@
 #  flac - Command-line FLAC encoder/decoder
-#  Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+#  Copyright (C) 2000-2009  Josh Coalson
+#  Copyright (C) 2011-2013  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -11,25 +12,25 @@
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#  You should have received a copy of the GNU General Public License along
+#  with this program; if not, write to the Free Software Foundation, Inc.,
+#  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #
 # GNU makefile
 #
 
 topdir = ../..
-libdir = $(topdir)/obj/$(BUILD)/lib
+libdir = $(topdir)/objs/$(BUILD)/lib
 
 PROGRAM_NAME = flac
 
-INCLUDES = -I./include -I$(topdir)/include -I$(OGG_INCLUDE_DIR)
+INCLUDES = -I./include -I$(topdir)/include $(OGG_INCLUDES)
 
-ifeq ($(DARWIN_BUILD),yes)
-EXPLICIT_LIBS = $(libdir)/libgrabbag.a $(libdir)/libFLAC.a $(libdir)/libreplaygain_analysis.a $(libdir)/libreplaygain_synthesis.a $(libdir)/libgetopt.a $(libdir)/libutf8.a $(OGG_LIB_DIR)/libogg.a -liconv -lm
+ifeq ($(OS),Darwin)
+    EXPLICIT_LIBS = $(libdir)/libgrabbag.a $(libdir)/libFLAC.a $(libdir)/libreplaygain_analysis.a $(libdir)/libreplaygain_synthesis.a $(libdir)/libgetopt.a $(libdir)/libutf8.a $(OGG_EXPLICIT_LIBS) $(ICONV_LIBS) -lm
 else
-LIBS = -lgrabbag -lFLAC -lreplaygain_analysis -lreplaygain_synthesis -lgetopt -lutf8 -L$(OGG_LIB_DIR) -logg -lm
+    LIBS = -lgrabbag -lFLAC -lreplaygain_analysis -lreplaygain_synthesis -lgetopt -lutf8 -lgrabbag $(OGG_LIBS) -lm
 endif
 
 SRCS_C = \

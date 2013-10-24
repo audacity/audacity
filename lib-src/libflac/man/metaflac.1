@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "METAFLAC" "1" "14 September 2007" "" ""
+.TH "METAFLAC" "1" "2013/04/30" "" ""
 
 .SH NAME
 metaflac \- program to list, add, remove, or edit metadata in one or more FLAC files.
@@ -196,7 +196,8 @@ passes, it is always executed last, after all other operations
 have been completed and written to disk.  All FLAC files
 specified must have the same resolution, sample rate, and
 number of channels.  The sample rate must be one of 8, 11.025,
-12, 16, 22.05, 24, 32, 44.1, or 48 kHz.
+12, 16, 18.9, 22.05, 24, 28, 32, 37.8, 44.1, 48, 56, 64, 88.2,
+96, 112, 128, 144, 176.4, or 192kHz.
 .TP
 \fB--remove-replay-gain\fR
 Removes the ReplayGain tags.
@@ -238,8 +239,8 @@ The first block, the STREAMINFO block, is block 0.
 An optional comma-separated list of block types to be included
 or ignored with this option.  Use only one of --block-type or
 --except-block-type.  The valid block types are: STREAMINFO,
-PADDING, APPLICATION, SEEKTABLE, VORBIS_COMMENT.  You may
-narrow down the types of APPLICATION blocks displayed as
+PADDING, APPLICATION, SEEKTABLE, VORBIS_COMMENT, PICTURE.  You
+may narrow down the types of APPLICATION blocks displayed as
 follows:
 
 APPLICATION:abcd        The APPLICATION block(s) whose textual repre-

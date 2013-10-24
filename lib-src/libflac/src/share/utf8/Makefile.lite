@@ -3,8 +3,16 @@
 #
 
 topdir = ../../..
+libdir = $(topdir)/objs/$(BUILD)/lib
 
 LIB_NAME = libutf8
+
+ifeq ($(OS),Darwin)
+    EXPLICIT_LIBS = $(libdir)/libgrabbag.a $(ICONV_LIBS)
+else
+    LIBS = -lgrabbag $(ICONV_LIBS)
+endif
+
 INCLUDES = -I$(topdir)/include -I$(topdir)/include/share
 
 SRCS_C = \

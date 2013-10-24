@@ -1,5 +1,6 @@
 /* flac - Command-line FLAC encoder/decoder
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,9 +12,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #if HAVE_CONFIG_H
@@ -29,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "share/compat.h"
 
 
 /*
@@ -113,7 +115,7 @@ static FLAC__bool set_vc_field(FLAC__StreamMetadata *block, const Argument_VcFie
 		/* read the file into 'data' */
 		FILE *f = 0;
 		char *data = 0;
-		const off_t size = grabbag__file_get_filesize(field->field_value);
+		const FLAC__off_t size = grabbag__file_get_filesize(field->field_value);
 		if(size < 0) {
 			*violation = "can't open file for tag value";
 			return false;
@@ -125,7 +127,7 @@ static FLAC__bool set_vc_field(FLAC__StreamMetadata *block, const Argument_VcFie
 		if(0 == (data = malloc(size+1)))
 			die("out of memory allocating tag value");
 		data[size] = '\0';
-		if(0 == (f = fopen(field->field_value, "rb")) || fread(data, 1, size, f) != (size_t)size) {
+		if(0 == (f = flac_fopen(field->field_value, "rb")) || fread(data, 1, size, f) != (size_t)size) {
 			free(data);
 			if(f)
 				fclose(f);
@@ -169,6 +171,9 @@ static FLAC__bool set_vc_field(FLAC__StreamMetadata *block, const Argument_VcFie
 	}
 	else {
 		FLAC__bool needs_free = false;
+#ifdef _WIN32 /* everything in UTF-8 already. Must not alter */
+		entry.entry = (FLAC__byte *)field->field;
+#else
 		if(raw) {
 			entry.entry = (FLAC__byte *)field->field;
 		}
@@ -180,6 +185,7 @@ static FLAC__bool set_vc_field(FLAC__StreamMetadata *block, const Argument_VcFie
 			*violation = "error converting comment to UTF-8";
 			return false;
 		}
+#endif
 		entry.length = strlen((const char *)entry.entry);
 		if(!FLAC__format_vorbiscomment_entry_is_legal(entry.entry, entry.length)) {
 			if(needs_free)

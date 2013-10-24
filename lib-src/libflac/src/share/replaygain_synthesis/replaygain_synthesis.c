@@ -1,5 +1,6 @@
 /* replaygain_synthesis - Routines for applying ReplayGain to a signal
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,10 +44,6 @@
 #include "private/fast_float_math_hack.h"
 #include "replaygain_synthesis.h"
 #include "FLAC/assert.h"
-
-#ifndef FLaC__INLINE
-#define FLaC__INLINE
-#endif
 
 /* adjust for compilers that can't understand using LL suffix for int64_t literals */
 #ifdef _MSC_VER
@@ -213,14 +210,14 @@ void FLAC__replaygain_synthesis__init_dither_context(DitherContext *d, int bits,
 	static unsigned char default_dither [] = { 92, 92, 88, 84, 81, 78, 74, 67,  0,  0 };
 	static const float*               F [] = { F44_0, F44_1, F44_2, F44_3 };
 
-	int index;
+	int indx;
 
 	if (shapingtype < 0) shapingtype = 0;
 	if (shapingtype > 3) shapingtype = 3;
 	d->ShapingType = (NoiseShaping)shapingtype;
-	index = bits - 11 - shapingtype;
-	if (index < 0) index = 0;
-	if (index > 9) index = 9;
+	indx = bits - 11 - shapingtype;
+	if (indx < 0) indx = 0;
+	if (indx > 9) indx = 9;
 
 	memset ( d->ErrorHistory , 0, sizeof (d->ErrorHistory ) );
 	memset ( d->DitherHistory, 0, sizeof (d->DitherHistory) );
@@ -228,7 +225,7 @@ void FLAC__replaygain_synthesis__init_dither_context(DitherContext *d, int bits,
 	d->FilterCoeff = F [shapingtype];
 	d->Mask   = ((FLAC__uint64)-1) << (32 - bits);
 	d->Add    = 0.5     * ((1L << (32 - bits)) - 1);
-	d->Dither = 0.01f*default_dither[index] / (((FLAC__int64)1) << bits);
+	d->Dither = 0.01f*default_dither[indx] / (((FLAC__int64)1) << bits);
 	d->LastHistoryIndex = 0;
 }
 
@@ -236,7 +233,7 @@ void FLAC__replaygain_synthesis__init_dither_context(DitherContext *d, int bits,
  * the following is based on parts of wavegain.c
  */
 
-static FLaC__INLINE FLAC__int64 dither_output_(DitherContext *d, FLAC__bool do_dithering, int shapingtype, int i, double Sum, int k)
+static FLAC__int64 dither_output_(DitherContext *d, FLAC__bool do_dithering, int shapingtype, int i, double Sum, int k)
 {
 	union {
 		double d;

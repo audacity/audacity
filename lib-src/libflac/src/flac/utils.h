@@ -1,5 +1,6 @@
 /* flac - Command-line FLAC encoder/decoder
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002-2009  Josh Coalson
+ * Copyright (C) 2011-2013  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,9 +12,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifndef flac__utils_h
@@ -26,6 +27,8 @@
 #include "FLAC/ordinals.h"
 #include "FLAC/format.h" /* for FLAC__StreamMetadata_CueSheet */
 #include <stdio.h> /* for FILE */
+
+typedef enum { FORMAT_RAW, FORMAT_WAVE, FORMAT_WAVE64, FORMAT_RF64, FORMAT_AIFF, FORMAT_AIFF_C, FORMAT_FLAC, FORMAT_OGGFLAC } FileFormat;
 
 typedef struct {
 	FLAC__bool is_relative; /* i.e. specification string started with + or - */
@@ -50,6 +53,13 @@ size_t flac__utils_fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stre
 
 extern int flac__utils_verbosity_;
 void flac__utils_printf(FILE *stream, int level, const char *format, ...);
+
+int get_console_width(void);
+size_t strlen_console(const char *text);
+void stats_new_file(void);
+void stats_clear(void);
+void stats_print_name(int level, const char *name);
+void stats_print_info(int level, const char *format, ...);
 
 FLAC__bool flac__utils_parse_skip_until_specification(const char *s, utils__SkipUntilSpecification *spec);
 void flac__utils_canonicalize_skip_until_specification(utils__SkipUntilSpecification *spec, unsigned sample_rate);

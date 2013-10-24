@@ -1,19 +1,19 @@
 /*
  * Copyright (C) 2001 Edmund Grimley Evans <edmundo@rano.org>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 /*
@@ -334,7 +334,7 @@ static struct inverse_map *make_inverse_map(const unsigned short *from)
   char used[256];
   int i, j, k;
 
-  to = (struct inverse_map *)malloc(sizeof(struct inverse_map));
+  to = malloc(sizeof(struct inverse_map));
   if (!to)
     return 0;
   for (i = 0; i < 256; i++)
@@ -359,7 +359,7 @@ static struct inverse_map *make_inverse_map(const unsigned short *from)
   return to;
 }
 
-int wctomb_8bit(void *map1, char *s, int wc1)
+static int wctomb_8bit(void *map1, char *s, int wc1)
 {
   struct map *map = map1;
   unsigned short wc = wc1;
@@ -447,9 +447,9 @@ struct charset *charset_find(const char *code)
   for (i = 0; maps[i].name; i++)
     if (!ascii_strcasecmp(code, maps[i].name)) {
       if (!maps[i].charset) {
-	maps[i].charset = (struct charset *)malloc(sizeof(struct charset));
+	maps[i].charset = malloc(sizeof(struct charset));
 	if (maps[i].charset) {
-	  struct map *map = (struct map *)malloc(sizeof(struct map));
+	  struct map *map = malloc(sizeof(struct map));
 	  if (!map) {
 	    free(maps[i].charset);
 	    maps[i].charset = 0;
@@ -493,7 +493,7 @@ int charset_convert(const char *fromcode, const char *tocode,
   if (!charset1 || !charset2 )
     return -1;
 
-  tobuf = (char *)safe_malloc_mul2add_(fromlen, /*times*/charset2->max, /*+*/1);
+  tobuf = safe_malloc_mul2add_(fromlen, /*times*/charset2->max, /*+*/1);
   if (!tobuf)
     return -2;
 
