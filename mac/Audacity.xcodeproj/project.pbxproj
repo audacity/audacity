@@ -276,7 +276,6 @@
 		170741150988F835008541CC /* window.h in Headers */ = {isa = PBXBuildFile; fileRef = 170736BD0988D6AE008541CC /* window.h */; };
 		17190D24098A3F0B004583C6 /* AColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFC909883BFD008A330A /* AColor.cpp */; };
 		17190D25098A3F15004583C6 /* AboutDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFC709883BFD008A330A /* AboutDialog.cpp */; };
-		17190D79098A439D004583C6 /* cpu_detect_x86_gcc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 17190D78098A439D004583C6 /* cpu_detect_x86_gcc.cpp */; };
 		174D9031098C78AF00D5909F /* CommandManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 174D9026098C78AF00D5909F /* CommandManager.cpp */; };
 		174D9033098C78AF00D5909F /* Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 174D902A098C78AF00D5909F /* Keyboard.cpp */; };
 		174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */ = {isa = PBXBuildFile; fileRef = 174F73C9098D516D009CD6E0 /* Audacity.icns */; };
@@ -494,6 +493,8 @@
 		28105DAA0AD09FC500BB4269 /* px_mac_coreaudio.c in Sources */ = {isa = PBXBuildFile; fileRef = 28105DA00AD09FC500BB4269 /* px_mac_coreaudio.c */; };
 		28105DAB0AD09FC500BB4269 /* px_mixer.c in Sources */ = {isa = PBXBuildFile; fileRef = 28105DA10AD09FC500BB4269 /* px_mixer.c */; };
 		28105DAC0AD09FC500BB4269 /* px_mixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 28105DA20AD09FC500BB4269 /* px_mixer.h */; };
+		2810644B1818EEB5004F678B /* cpu_detect_x86.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */; };
+		2810644D1818EED3004F678B /* cpu_detect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810644C1818EED3004F678B /* cpu_detect.h */; };
 		2816372E0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */; };
 		282D474C0B9E8D900034BC49 /* Snap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282D474A0B9E8D900034BC49 /* Snap.cpp */; };
 		283135EC0DFB9D110076D551 /* ImportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */; };
@@ -2721,7 +2722,6 @@
 		1707407A0988F1BB008541CC /* libsoundtouch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsoundtouch.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		170740960988F2F7008541CC /* libportmixer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libportmixer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		170740D40988F820008541CC /* libvorbis.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libvorbis.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		17190D78098A439D004583C6 /* cpu_detect_x86_gcc.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = cpu_detect_x86_gcc.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		174D9026098C78AF00D5909F /* CommandManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = CommandManager.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		174D9027098C78AF00D5909F /* CommandManager.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = CommandManager.h; sourceTree = "<group>"; tabWidth = 3; };
 		174D902A098C78AF00D5909F /* Keyboard.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Keyboard.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -3123,6 +3123,8 @@
 		28105DA00AD09FC500BB4269 /* px_mac_coreaudio.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = px_mac_coreaudio.c; sourceTree = "<group>"; tabWidth = 3; };
 		28105DA10AD09FC500BB4269 /* px_mixer.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = px_mixer.c; sourceTree = "<group>"; tabWidth = 3; };
 		28105DA20AD09FC500BB4269 /* px_mixer.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = px_mixer.h; sourceTree = "<group>"; tabWidth = 3; };
+		2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpu_detect_x86.cpp; sourceTree = "<group>"; };
+		2810644C1818EED3004F678B /* cpu_detect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpu_detect.h; path = "../lib-src/soundtouch/source/SoundTouch/cpu_detect.h"; sourceTree = SOURCE_ROOT; };
 		2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Shared.xcconfig; sourceTree = "<group>"; };
 		2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Static.xcconfig; sourceTree = "<group>"; };
 		2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Shared.xcconfig; sourceTree = "<group>"; };
@@ -4589,6 +4591,7 @@
 			isa = PBXGroup;
 			children = (
 				170737EB0988D6AF008541CC /* BPMDetect.h */,
+				2810644C1818EED3004F678B /* cpu_detect.h */,
 				170737ED0988D6AF008541CC /* FIFOSampleBuffer.h */,
 				170737EE0988D6AF008541CC /* FIFOSamplePipe.h */,
 				170737F20988D6AF008541CC /* SoundTouch.h */,
@@ -4610,6 +4613,7 @@
 			children = (
 				1707382D0988D6B0008541CC /* AAFilter.cpp */,
 				1707382E0988D6B0008541CC /* AAFilter.h */,
+				2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */,
 				170738330988D6B0008541CC /* FIFOSampleBuffer.cpp */,
 				170738340988D6B0008541CC /* FIRFilter.cpp */,
 				170738350988D6B0008541CC /* FIRFilter.h */,
@@ -4618,7 +4622,6 @@
 				1707383D0988D6B0008541CC /* SoundTouch.cpp */,
 				170738410988D6B0008541CC /* TDStretch.cpp */,
 				170738420988D6B0008541CC /* TDStretch.h */,
-				17190D78098A439D004583C6 /* cpu_detect_x86_gcc.cpp */,
 				28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */,
 				28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */,
 			);
@@ -6671,6 +6674,7 @@
 				170740880988F1CC008541CC /* RateTransposer.h in Headers */,
 				1707408B0988F1CC008541CC /* TDStretch.h in Headers */,
 				28FE4A3A0ABF58360056F5C4 /* soundtouch_config.h in Headers */,
+				2810644D1818EED3004F678B /* cpu_detect.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8241,9 +8245,9 @@
 				170740870988F1CC008541CC /* RateTransposer.cpp in Sources */,
 				170740890988F1CC008541CC /* SoundTouch.cpp in Sources */,
 				1707408A0988F1CC008541CC /* TDStretch.cpp in Sources */,
-				17190D79098A439D004583C6 /* cpu_detect_x86_gcc.cpp in Sources */,
 				28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */,
 				28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */,
+				2810644B1818EEB5004F678B /* cpu_detect_x86.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

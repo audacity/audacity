@@ -7474,6 +7474,7 @@ fi
       LIBSOUNDTOUCH_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/soundtouch/include'
       LIBSOUNDTOUCH_LOCAL_CPPSYMBOLS="USE_SOUNDTOUCH"
       LIBSOUNDTOUCH_LOCAL_CONFIG_SUBDIRS="lib-src/soundtouch"
+      LIBSOUNDTOUCH_LOCAL_CONFIGURE_ARGS="--enable-static=yes --enable-shared=no"
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsoundtouch libraries are available in the local tree" >&5
 $as_echo "$as_me: libsoundtouch libraries are available in the local tree" >&6;}
    else
@@ -10783,4 +10784,3 @@ echo "prefix=$prefix";
 echo ""
 echo "Run 'configure --help' for an explanation of these options,"
 echo "otherwise run 'make' to build Audacity."
-

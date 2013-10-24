@@ -279,15 +279,11 @@
 			Name="Source Files"
 			>
 			<File
-				RelativePath="..\..\..\lib-src\soundtouch\source\SoundTouch\3dnow_win.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\lib-src\soundtouch\source\SoundTouch\AAFilter.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\lib-src\soundtouch\source\SoundTouch\cpu_detect_x86_win.cpp"
+				RelativePath="..\..\..\lib-src\soundtouch\source\SoundTouch\cpu_detect_x86.cpp"
 				>
 			</File>
 			<File
