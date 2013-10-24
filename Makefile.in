@@ -164,12 +164,6 @@ clean:
 	rm -rf Audacity.app
 	rm -f src/audacity.desktop
 
-veryclean: clean
-	rm -f Makefile src/Makefile lib-src/Makefile
-	rm -f src/configunix.h
-	rm -f `find . -name "*~"`
-	rm -f `find . -name core`
-
 distclean: clean
 	$(MAKE) -C lib-src distclean
 	$(MAKE) -C locale distclean
