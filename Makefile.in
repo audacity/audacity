@@ -149,8 +149,10 @@ dep:
 
 clean:
 	$(MAKE) -C lib-src clean
-	$(MAKE) -C src clean
+	$(MAKE) -C locale clean
 	test ! -f tests/Makefile || $(MAKE) -C tests clean
+	$(MAKE) -C src clean
+
 	rm -f audacity
 	rm -f help/audacity.1.gz
 	rm -rf Audacity.app
@@ -163,8 +165,8 @@ veryclean: clean
 	rm -f `find . -name core`
 
 distclean: clean
-	$(MAKE) -C locale distclean
 	$(MAKE) -C lib-src distclean
+	$(MAKE) -C locale distclean
 	test ! -f tests/Makefile || $(MAKE) -C tests distclean
 	$(MAKE) -C src distclean
 
