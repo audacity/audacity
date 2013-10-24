@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,8 +26,8 @@
 #ifndef TAGLIB_ASFFILE_H
 #define TAGLIB_ASFFILE_H
 
-#include <tag.h>
-#include <tfile.h>
+#include "tag.h"
+#include "tfile.h"
 #include "taglib_export.h"
 #include "asfproperties.h"
 #include "asftag.h"
@@ -48,14 +48,27 @@ namespace TagLib {
     public:
 
       /*!
-       * Contructs an ASF file from \a file.  If \a readProperties is true the
-       * file's audio properties will also be read using \a propertiesStyle.  If
-       * false, \a propertiesStyle is ignored.
+       * Constructs an ASF file from \a file.
        *
        * \note In the current implementation, both \a readProperties and
-       * \a propertiesStyle are ignored.
+       * \a propertiesStyle are ignored.  The audio properties are always
+       * read.
        */
-      File(FileName file, bool readProperties = true, Properties::ReadStyle propertiesStyle = Properties::Average);
+      File(FileName file, bool readProperties = true, 
+           Properties::ReadStyle propertiesStyle = Properties::Average);
+
+      /*!
+       * Constructs an ASF file from \a stream.
+       *
+       * \note In the current implementation, both \a readProperties and
+       * \a propertiesStyle are ignored.  The audio properties are always
+       * read.
+       *
+       * \note TagLib will *not* take ownership of the stream, the caller is
+       * responsible for deleting it after the File object.
+       */
+      File(IOStream *stream, bool readProperties = true, 
+           Properties::ReadStyle propertiesStyle = Properties::Average);
 
       /*!
        * Destroys this instance of the File.
@@ -75,6 +88,22 @@ namespace TagLib {
       virtual Tag *tag() const;
 
       /*!
+       * Implements the unified property interface -- export function.
+       */
+      PropertyMap properties() const;
+
+      /*!
+       * Removes unsupported properties. Forwards to the actual Tag's
+       * removeUnsupportedProperties() function.
+       */
+      void removeUnsupportedProperties(const StringList &properties);
+
+      /*!
+       * Implements the unified property interface -- import function.
+       */
+      PropertyMap setProperties(const PropertyMap &);
+
+      /*!
        * Returns the ASF audio properties for this file.
        */
       virtual Properties *audioProperties() const;
@@ -87,16 +116,16 @@ namespace TagLib {
       virtual bool save();
 
     private:
-
-      int readBYTE();
-      int readWORD();
-      unsigned int readDWORD();
-      long long readQWORD();
+      int readBYTE(bool *ok = 0);
+      int readWORD(bool *ok = 0);
+      unsigned int readDWORD(bool *ok = 0);
+      long long readQWORD(bool *ok = 0);
       static ByteVector renderString(const String &str, bool includeLength = false);
       String readString(int len);
       void read(bool readProperties, Properties::ReadStyle propertiesStyle);
 
       friend class Attribute;
+      friend class Picture;
 
       class BaseObject;
       class UnknownObject;

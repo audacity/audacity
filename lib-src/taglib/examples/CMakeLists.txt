@@ -7,6 +7,10 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../taglib
 		     ${CMAKE_CURRENT_SOURCE_DIR}/../taglib/mpeg/id3v2
 		     ${CMAKE_CURRENT_SOURCE_DIR}/../bindings/c/  )
 
+if(ENABLE_STATIC)
+    add_definitions(-DTAGLIB_STATIC)
+endif(ENABLE_STATIC)
+
 ########### next target ###############
 
 ADD_EXECUTABLE(tagreader tagreader.cpp)

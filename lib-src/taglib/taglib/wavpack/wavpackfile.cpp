@@ -19,8 +19,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -31,6 +31,7 @@
 #include <tstring.h>
 #include <tdebug.h>
 #include <tagunion.h>
+#include <tpropertymap.h>
 
 #include "wavpackfile.h"
 #include "id3v1tag.h"
@@ -42,7 +43,7 @@ using namespace TagLib;
 
 namespace
 {
-  enum { APEIndex, ID3v1Index };
+  enum { WavAPEIndex, WavID3v1Index };
 }
 
 class WavPack::File::FilePrivate
@@ -53,7 +54,6 @@ public:
     APESize(0),
     ID3v1Location(-1),
     properties(0),
-    scanned(false),
     hasAPE(false),
     hasID3v1(false) {}
 
@@ -70,7 +70,6 @@ public:
   TagUnion tag;
 
   Properties *properties;
-  bool scanned;
 
   // These indicate whether the file *on disk* has these tags, not if
   // this data structure does.  This is used in computing offsets.
@@ -87,7 +86,16 @@ WavPack::File::File(FileName file, bool readProperties,
                 Properties::ReadStyle propertiesStyle) : TagLib::File(file)
 {
   d = new FilePrivate;
-  read(readProperties, propertiesStyle);
+  if(isOpen())
+    read(readProperties, propertiesStyle);
+}
+
+WavPack::File::File(IOStream *stream, bool readProperties,
+                Properties::ReadStyle propertiesStyle) : TagLib::File(stream)
+{
+  d = new FilePrivate;
+  if(isOpen())
+    read(readProperties, propertiesStyle);
 }
 
 WavPack::File::~File()
@@ -98,6 +106,30 @@ WavPack::File::~File()
 TagLib::Tag *WavPack::File::tag() const
 {
   return &d->tag;
+}
+
+PropertyMap WavPack::File::properties() const
+{
+  if(d->hasAPE)
+    return d->tag.access<APE::Tag>(WavAPEIndex, false)->properties();
+  if(d->hasID3v1)
+    return d->tag.access<ID3v1::Tag>(WavID3v1Index, false)->properties();
+  return PropertyMap();
+}
+
+
+void WavPack::File::removeUnsupportedProperties(const StringList &unsupported)
+{
+  if(d->hasAPE)
+    d->tag.access<APE::Tag>(WavAPEIndex, false)->removeUnsupportedProperties(unsupported);
+}
+
+
+PropertyMap WavPack::File::setProperties(const PropertyMap &properties)
+{
+  if(d->hasID3v1)
+    d->tag.access<ID3v1::Tag>(WavID3v1Index, false)->setProperties(properties);
+  return d->tag.access<APE::Tag>(WavAPEIndex, true)->setProperties(properties);
 }
 
 WavPack::Properties *WavPack::File::audioProperties() const
@@ -176,27 +208,37 @@ bool WavPack::File::save()
 
 ID3v1::Tag *WavPack::File::ID3v1Tag(bool create)
 {
-  return d->tag.access<ID3v1::Tag>(ID3v1Index, create);
+  return d->tag.access<ID3v1::Tag>(WavID3v1Index, create);
 }
 
 APE::Tag *WavPack::File::APETag(bool create)
 {
-  return d->tag.access<APE::Tag>(APEIndex, create);
+  return d->tag.access<APE::Tag>(WavAPEIndex, create);
 }
 
 void WavPack::File::strip(int tags)
 {
   if(tags & ID3v1) {
-    d->tag.set(ID3v1Index, 0);
+    d->tag.set(WavID3v1Index, 0);
     APETag(true);
   }
 
   if(tags & APE) {
-    d->tag.set(APEIndex, 0);
+    d->tag.set(WavAPEIndex, 0);
 
     if(!ID3v1Tag())
       APETag(true);
   }
+}
+
+bool WavPack::File::hasID3v1Tag() const
+{
+  return d->hasID3v1;
+}
+
+bool WavPack::File::hasAPETag() const
+{
+  return d->hasAPE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,7 +252,7 @@ void WavPack::File::read(bool readProperties, Properties::ReadStyle /* propertie
   d->ID3v1Location = findID3v1();
 
   if(d->ID3v1Location >= 0) {
-    d->tag.set(ID3v1Index, new ID3v1::Tag(this, d->ID3v1Location));
+    d->tag.set(WavID3v1Index, new ID3v1::Tag(this, d->ID3v1Location));
     d->hasID3v1 = true;
   }
 
@@ -219,7 +261,7 @@ void WavPack::File::read(bool readProperties, Properties::ReadStyle /* propertie
   d->APELocation = findAPE();
 
   if(d->APELocation >= 0) {
-    d->tag.set(APEIndex, new APE::Tag(this, d->APELocation));
+    d->tag.set(WavAPEIndex, new APE::Tag(this, d->APELocation));
     d->APESize = APETag()->footer()->completeTagSize();
     d->APELocation = d->APELocation + APETag()->footer()->size() - d->APESize;
     d->hasAPE = true;
@@ -232,8 +274,7 @@ void WavPack::File::read(bool readProperties, Properties::ReadStyle /* propertie
 
   if(readProperties) {
     seek(0);
-    d->properties = new Properties(readBlock(WavPack::HeaderSize),
-                                   length() - d->APESize);
+    d->properties = new Properties(this, length() - d->APESize);
   }
 }
 

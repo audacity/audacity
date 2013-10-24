@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -69,6 +69,14 @@ namespace TagLib {
        * invalid when the page is deleted.
        */
       const PageHeader *header() const;
+
+      /*!
+       * Returns a copy of the page with \a sequenceNumber set as sequence number.
+       *
+       * \see header()
+       * \see PageHeader::setPageSequenceNumber()
+       */
+      Page* getCopyWithNewPageSequenceNumber(int sequenceNumber);
 
       /*!
        * Returns the index of the first packet wholly or partially contained in

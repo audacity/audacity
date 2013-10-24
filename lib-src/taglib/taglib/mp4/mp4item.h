@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,7 +26,8 @@
 #ifndef TAGLIB_MP4ITEM_H
 #define TAGLIB_MP4ITEM_H
 
-#include <tstringlist.h>
+#include "tstringlist.h"
+#include "mp4coverart.h"
 #include "taglib_export.h"
 
 namespace TagLib {
@@ -46,14 +47,27 @@ namespace TagLib {
       ~Item();
 
       Item(int value);
+      Item(uchar value);
+      Item(uint value);
+      Item(long long value);
       Item(bool value);
       Item(int first, int second);
       Item(const StringList &value);
+      Item(const ByteVectorList &value);
+      Item(const CoverArtList &value);
+
+      void setAtomDataType(AtomDataType type);
+      AtomDataType atomDataType() const;
 
       int toInt() const;
+      uchar toByte() const;
+      uint toUInt() const;
+      long long toLongLong() const;
       bool toBool() const;
       IntPair toIntPair() const;
       StringList toStringList() const;
+      ByteVectorList toByteVectorList() const;
+      CoverArtList toCoverArtList() const;
 
       bool isValid() const;
 

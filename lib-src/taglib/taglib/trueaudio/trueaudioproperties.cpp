@@ -19,8 +19,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -48,7 +48,8 @@ public:
     bitrate(0),
     sampleRate(0),
     channels(0),
-    bitsPerSample(0) {}
+    bitsPerSample(0),
+    sampleFrames(0) {}
 
   ByteVector data;
   long streamLength;
@@ -59,6 +60,7 @@ public:
   int sampleRate;
   int channels;
   int bitsPerSample;
+  uint sampleFrames;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,6 +103,11 @@ int TrueAudio::Properties::channels() const
   return d->channels;
 }
 
+TagLib::uint TrueAudio::Properties::sampleFrames() const
+{
+  return d->sampleFrames;
+}
+
 int TrueAudio::Properties::ttaVersion() const
 {
   return d->version;
@@ -118,19 +125,26 @@ void TrueAudio::Properties::read()
   int pos = 3;
 
   d->version = d->data[pos] - '0';
-  pos += 1 + 2;
+  pos += 1;
 
-  d->channels = d->data.mid(pos, 2).toShort(false);
-  pos += 2;
+  // According to http://en.true-audio.com/TTA_Lossless_Audio_Codec_-_Format_Description
+  // TTA2 headers are in development, and have a different format
+  if(1 == d->version) {
+    // Skip the audio format
+    pos += 2;
 
-  d->bitsPerSample = d->data.mid(pos, 2).toShort(false);
-  pos += 2;
+    d->channels = d->data.toShort(pos, false);
+    pos += 2;
 
-  d->sampleRate = d->data.mid(pos, 4).toUInt(false);
-  pos += 4;
+    d->bitsPerSample = d->data.toShort(pos, false);
+    pos += 2;
 
-  unsigned long samples = d->data.mid(pos, 4).toUInt(false);
-  d->length = samples / d->sampleRate;
+    d->sampleRate = d->data.toUInt(pos, false);
+    pos += 4;
 
-  d->bitrate = d->length > 0 ? ((d->streamLength * 8L) / d->length) / 1000 : 0;
+    d->sampleFrames = d->data.toUInt(pos, false);
+    d->length = d->sampleRate > 0 ? d->sampleFrames / d->sampleRate : 0;
+
+    d->bitrate = d->length > 0 ? ((d->streamLength * 8L) / d->length) / 1000 : 0;
+  }
 }

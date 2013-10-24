@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -24,6 +24,7 @@
  ***************************************************************************/
 
 #include <algorithm>
+#include "trefcounter.h"
 
 namespace TagLib {
 
@@ -38,7 +39,8 @@ namespace TagLib {
 // A base for the generic and specialized private class types.  New
 // non-templatized members should be added here.
 
-class ListPrivateBase : public RefCounter
+// BIC change to RefCounter
+class ListPrivateBase : public RefCounterOld
 {
 public:
   ListPrivateBase() : autoDelete(false) {}
@@ -298,6 +300,12 @@ template <class T>
 bool List<T>::operator==(const List<T> &l) const
 {
   return d->list == l.d->list;
+}
+
+template <class T>
+bool List<T>::operator!=(const List<T> &l) const
+{
+  return d->list != l.d->list;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

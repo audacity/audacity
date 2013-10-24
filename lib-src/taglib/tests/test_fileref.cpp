@@ -1,8 +1,10 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include <string>
 #include <stdio.h>
 #include <tag.h>
 #include <fileref.h>
+#include <oggflacfile.h>
+#include <vorbisfile.h>
+#include <cppunit/extensions/HelperMacros.h>
 #include "utils.h"
 
 using namespace std;
@@ -17,17 +19,23 @@ class TestFileRef : public CppUnit::TestFixture
   CPPUNIT_TEST(testSpeex);
   CPPUNIT_TEST(testFLAC);
   CPPUNIT_TEST(testMP3);
+  CPPUNIT_TEST(testOGA_FLAC);
+  CPPUNIT_TEST(testOGA_Vorbis);
   CPPUNIT_TEST(testMP4_1);
   CPPUNIT_TEST(testMP4_2);
   CPPUNIT_TEST(testMP4_3);
   CPPUNIT_TEST(testTrueAudio);
+  CPPUNIT_TEST(testAPE);
+  CPPUNIT_TEST(testWav);
+  CPPUNIT_TEST(testUnsupported);
   CPPUNIT_TEST_SUITE_END();
 
 public:
 
   void fileRefSave(const string &filename, const string &ext)
   {
-    string newname = copyFile(filename, ext);
+    ScopedFileCopy copy(filename, ext);
+    string newname = copy.fileName();
 
     FileRef *f = new FileRef(newname.c_str());
     CPPUNIT_ASSERT(!f->isNull());
@@ -66,8 +74,6 @@ public:
     CPPUNIT_ASSERT_EQUAL(f->tag()->track(), TagLib::uint(7));
     CPPUNIT_ASSERT_EQUAL(f->tag()->year(), TagLib::uint(2080));
     delete f;
-
-    deleteFile(newname);
   }
 
   void testMusepack()
@@ -120,6 +126,38 @@ public:
     fileRefSave("no-tags", ".3g2");
   }
 
+  void testWav()
+  {
+    fileRefSave("empty", ".wav");
+  }
+
+  void testOGA_FLAC()
+  {
+      FileRef *f = new FileRef(TEST_FILE_PATH_C("empty_flac.oga"));
+      CPPUNIT_ASSERT(dynamic_cast<Ogg::Vorbis::File *>(f->file()) == NULL);
+      CPPUNIT_ASSERT(dynamic_cast<Ogg::FLAC::File *>(f->file()) != NULL);
+  }
+
+  void testOGA_Vorbis()
+  {
+      FileRef *f = new FileRef(TEST_FILE_PATH_C("empty_vorbis.oga"));
+      CPPUNIT_ASSERT(dynamic_cast<Ogg::Vorbis::File *>(f->file()) != NULL);
+      CPPUNIT_ASSERT(dynamic_cast<Ogg::FLAC::File *>(f->file()) == NULL);
+  }
+
+  void testAPE()
+  {
+    fileRefSave("mac-399", ".ape");
+  }
+
+  void testUnsupported()
+  {
+    FileRef f1(TEST_FILE_PATH_C("no-extension"));
+    CPPUNIT_ASSERT(f1.isNull());
+    
+    FileRef f2(TEST_FILE_PATH_C("unsupported-extension.xxx"));
+    CPPUNIT_ASSERT(f2.isNull());
+  }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestFileRef);

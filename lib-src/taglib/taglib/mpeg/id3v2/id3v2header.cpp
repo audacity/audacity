@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -164,7 +164,7 @@ ByteVector Header::render() const
   // add the version number -- we always render a 2.4.0 tag regardless of what
   // the tag originally was.
 
-  v.append(char(4));
+  v.append(char(majorVersion()));
   v.append(char(0));
 
   // Currently we don't actually support writing extended headers, footers or

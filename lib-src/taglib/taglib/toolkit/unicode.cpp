@@ -155,7 +155,7 @@ ConversionResult ConvertUTF16toUTF8 (
 			case 4:	*--target = (ch | byteMark) & byteMask; ch >>= 6;
 			case 3:	*--target = (ch | byteMark) & byteMask; ch >>= 6;
 			case 2:	*--target = (ch | byteMark) & byteMask; ch >>= 6;
-			case 1:	*--target =  ch | firstByteMark[bytesToWrite];
+			case 1:	*--target = (UTF8)(ch | firstByteMark[bytesToWrite]);
 		}
 		target += bytesToWrite;
 	}
@@ -253,7 +253,7 @@ ConversionResult ConvertUTF8toUTF16 (
 				result = sourceIllegal;
 				break;
 			} else {
-			    *target++ = ch;	/* normal case */
+			    *target++ = (UTF16)ch;	/* normal case */
 			}
 		} else if (ch > UNI_MAX_UTF16) {
 			if (flags == strictConversion) {
@@ -270,7 +270,7 @@ ConversionResult ConvertUTF8toUTF16 (
 				result = targetExhausted; break;
 			}
 			ch -= halfBase;
-			*target++ = (ch >> halfShift) + UNI_SUR_HIGH_START;
+			*target++ = (UTF16)((ch >> halfShift) + UNI_SUR_HIGH_START);
 			*target++ = (ch & halfMask) + UNI_SUR_LOW_START;
 		}
 	}

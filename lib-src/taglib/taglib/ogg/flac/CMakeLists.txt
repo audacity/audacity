@@ -1,2 +1,0 @@
-INSTALL( FILES  oggflacfile.h DESTINATION ${INCLUDE_INSTALL_DIR}/taglib)
-

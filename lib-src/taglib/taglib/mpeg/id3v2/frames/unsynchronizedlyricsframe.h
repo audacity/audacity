@@ -17,8 +17,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -28,7 +28,7 @@
 #ifndef TAGLIB_UNSYNCHRONIZEDLYRICSFRAME_H
 #define TAGLIB_UNSYNCHRONIZEDLYRICSFRAME_H
 
-#include <id3v2frame.h>
+#include "id3v2frame.h"
 
 namespace TagLib {
 
@@ -133,6 +133,28 @@ namespace TagLib {
        * \see render()
        */
       void setTextEncoding(String::Type encoding);
+
+
+      /*! Parses this frame as PropertyMap with a single key.
+       * - if description() is empty or "LYRICS", the key will be "LYRICS"
+       * - if description() is not a valid PropertyMap key, the frame will be
+       *   marked unsupported by an entry "USLT/<description>" in the unsupportedData()
+       *   attribute of the returned map.
+       * - otherwise, the key will be "LYRICS:<description>"
+       * - The single value will be the frame's text().
+       * Note that currently the language() field is not supported by the PropertyMap
+       * interface.
+       */
+      PropertyMap asProperties() const;
+
+      /*!
+       * LyricsFrames each have a unique description.  This searches for a lyrics
+       * frame with the decription \a d and returns a pointer to it.  If no
+       * frame is found that matches the given description null is returned.
+       *
+       * \see description()
+       */
+      static UnsynchronizedLyricsFrame *findByDescription(const Tag *tag, const String &d);
 
     protected:
       // Reimplementations.

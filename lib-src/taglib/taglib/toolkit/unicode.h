@@ -106,6 +106,11 @@
     bit mask & shift operations.
 ------------------------------------------------------------------------ */
 
+// Workaround for when MSVC doesn't have wchar_t as a built-in type.  
+#if defined(_MSC_VER) && !defined(_WCHAR_T_DEFINED)
+# include <wchar.h>
+#endif
+
 /* Some fundamental constants */
 #define UNI_REPLACEMENT_CHAR (UTF32)0x0000FFFD
 #define UNI_MAX_BMP (UTF32)0x0000FFFF
@@ -114,10 +119,10 @@
 
 namespace Unicode {
 
-typedef unsigned long	UTF32;	/* at least 32 bits */
-typedef unsigned short	UTF16;	/* at least 16 bits */
-typedef unsigned char	UTF8;	/* typically 8 bits */
-typedef unsigned char	Boolean; /* 0 or 1 */
+typedef unsigned long	UTF32;	  /* at least 32 bits */
+typedef wchar_t	        UTF16;	  /* TagLib assumes that wchar_t is sufficient for UTF-16. */
+typedef unsigned char	UTF8;	  /* typically 8 bits */
+typedef unsigned char	Boolean;  /* 0 or 1 */
 
 typedef enum {
 	conversionOK = 0,	/* conversion successful */

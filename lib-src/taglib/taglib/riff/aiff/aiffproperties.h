@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -46,32 +46,35 @@ namespace TagLib {
       class TAGLIB_EXPORT Properties : public AudioProperties
       {
       public:
-	/*!
-	 * Create an instance of AIFF::Properties with the data read from the
-	 * ByteVector \a data.
-	 */
-	Properties(const ByteVector &data, ReadStyle style);
+        /*!
+         * Create an instance of AIFF::Properties with the data read from the
+         * ByteVector \a data.
+         */
+        Properties(const ByteVector &data, ReadStyle style);
 
-	/*!
-	 * Destroys this AIFF::Properties instance.
-	 */
-	virtual ~Properties();
+        /*!
+         * Destroys this AIFF::Properties instance.
+         */
+        virtual ~Properties();
 
-	// Reimplementations.
+        // Reimplementations.
 
-	virtual int length() const;
-	virtual int bitrate() const;
-	virtual int sampleRate() const;
-	virtual int channels() const;
+        virtual int length() const;
+        virtual int bitrate() const;
+        virtual int sampleRate() const;
+        virtual int channels() const;
+
+        int sampleWidth() const;
+        uint sampleFrames() const;
 
       private:
-	Properties(const Properties &);
-	Properties &operator=(const Properties &);
+        Properties(const Properties &);
+        Properties &operator=(const Properties &);
 
-	void read(const ByteVector &data);
+        void read(const ByteVector &data);
 
-	class PropertiesPrivate;
-	PropertiesPrivate *d;
+        class PropertiesPrivate;
+        PropertiesPrivate *d;
       };
     }
   }

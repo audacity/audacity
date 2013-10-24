@@ -1,6 +1,10 @@
 /***************************************************************************
     copyright            : (C) 2002 - 2008 by Scott Wheeler
     email                : wheeler@kde.org
+
+    copyright            : (C) 2010 by Alex Novichkov
+    email                : novichko@atnet.ru
+                           (added APE file support)
  ***************************************************************************/
 
 /***************************************************************************
@@ -15,20 +19,18 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
  *   http://www.mozilla.org/MPL/                                           *
  ***************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <tfile.h>
 #include <tstring.h>
+#include <tdebug.h>
+#include "trefcounter.h"
 
 #include "fileref.h"
 #include "asffile.h"
@@ -40,9 +42,15 @@
 #include "mp4file.h"
 #include "wavpackfile.h"
 #include "speexfile.h"
+#include "opusfile.h"
 #include "trueaudiofile.h"
 #include "aifffile.h"
 #include "wavfile.h"
+#include "apefile.h"
+#include "modfile.h"
+#include "s3mfile.h"
+#include "itfile.h"
+#include "xmfile.h"
 
 using namespace TagLib;
 
@@ -93,11 +101,19 @@ FileRef::~FileRef()
 
 Tag *FileRef::tag() const
 {
+  if(isNull()) {
+    debug("FileRef::tag() - Called without a valid file.");
+    return 0;
+  }
   return d->file->tag();
 }
 
 AudioProperties *FileRef::audioProperties() const
 {
+  if(isNull()) {
+    debug("FileRef::audioProperties() - Called without a valid file.");
+    return 0;
+  }
   return d->file->audioProperties();
 }
 
@@ -108,6 +124,10 @@ File *FileRef::file() const
 
 bool FileRef::save()
 {
+  if(isNull()) {
+    debug("FileRef::save() - Called without a valid file.");
+    return false;
+  }
   return d->file->save();
 }
 
@@ -129,18 +149,25 @@ StringList FileRef::defaultFileExtensions()
   l.append("wv");
   l.append("spx");
   l.append("tta");
-#ifdef WITH_MP4
   l.append("m4a");
+  l.append("m4r");
   l.append("m4b");
   l.append("m4p");
   l.append("3g2");
-#endif
-#ifdef WITH_ASF
+  l.append("mp4");
   l.append("wma");
-#endif
+  l.append("asf");
   l.append("aif");
   l.append("aiff");
   l.append("wav");
+  l.append("ape");
+  l.append("mod");
+  l.append("module"); // alias for "mod"
+  l.append("nst"); // alias for "mod"
+  l.append("wow"); // alias for "mod"
+  l.append("s3m");
+  l.append("it");
+  l.append("xm");
 
   return l;
 }
@@ -188,54 +215,71 @@ File *FileRef::create(FileName fileName, bool readAudioProperties,
 
   // Ok, this is really dumb for now, but it works for testing.
 
-  String s;
-
+  String ext;
+  {
 #ifdef _WIN32
-  s = (wcslen((const wchar_t *) fileName) > 0) ? String((const wchar_t *) fileName) : String((const char *) fileName);
+
+    String s = fileName.toString();
+
 #else
-  s = fileName;
-#endif
+
+    String s = fileName;
+
+ #endif
+
+    const int pos = s.rfind(".");
+    if(pos != -1)
+      ext = s.substr(pos + 1).upper();
+  }
 
   // If this list is updated, the method defaultFileExtensions() should also be
   // updated.  However at some point that list should be created at the same time
   // that a default file type resolver is created.
 
-  if(s.size() > 4) {
-    if(s.substr(s.size() - 4, 4).upper() == ".OGG")
-      return new Ogg::Vorbis::File(fileName, readAudioProperties, audioPropertiesStyle);
-    if(s.substr(s.size() - 4, 4).upper() == ".MP3")
+  if(!ext.isEmpty()) {
+    if(ext == "MP3")
       return new MPEG::File(fileName, readAudioProperties, audioPropertiesStyle);
-    if(s.substr(s.size() - 4, 4).upper() == ".OGA")
-      return new Ogg::FLAC::File(fileName, readAudioProperties, audioPropertiesStyle);
-    if(s.substr(s.size() - 5, 5).upper() == ".FLAC")
+    if(ext == "OGG")
+      return new Ogg::Vorbis::File(fileName, readAudioProperties, audioPropertiesStyle);
+    if(ext == "OGA") {
+      /* .oga can be any audio in the Ogg container. First try FLAC, then Vorbis. */
+      File *file = new Ogg::FLAC::File(fileName, readAudioProperties, audioPropertiesStyle);
+      if (file->isValid())
+        return file;
+      delete file;
+      return new Ogg::Vorbis::File(fileName, readAudioProperties, audioPropertiesStyle);
+    }
+    if(ext == "FLAC")
       return new FLAC::File(fileName, readAudioProperties, audioPropertiesStyle);
-    if(s.substr(s.size() - 4, 4).upper() == ".MPC")
+    if(ext == "MPC")
       return new MPC::File(fileName, readAudioProperties, audioPropertiesStyle);
-    if(s.substr(s.size() - 3, 3).upper() == ".WV")
+    if(ext == "WV")
       return new WavPack::File(fileName, readAudioProperties, audioPropertiesStyle);
-    if(s.substr(s.size() - 4, 4).upper() == ".SPX")
+    if(ext == "SPX")
       return new Ogg::Speex::File(fileName, readAudioProperties, audioPropertiesStyle);
-    if(s.substr(s.size() - 4, 4).upper() == ".TTA")
+    if(ext == "OPUS")
+      return new Ogg::Opus::File(fileName, readAudioProperties, audioPropertiesStyle);
+    if(ext == "TTA")
       return new TrueAudio::File(fileName, readAudioProperties, audioPropertiesStyle);
-#ifdef WITH_MP4
-    if(s.substr(s.size() - 4, 4).upper() == ".M4A" ||
-       s.substr(s.size() - 4, 4).upper() == ".M4B" ||
-       s.substr(s.size() - 4, 4).upper() == ".M4P" ||
-       s.substr(s.size() - 4, 4).upper() == ".3G2")
+    if(ext == "M4A" || ext == "M4R" || ext == "M4B" || ext == "M4P" || ext == "MP4" || ext == "3G2")
       return new MP4::File(fileName, readAudioProperties, audioPropertiesStyle);
-#endif
-#ifdef WITH_ASF
-    if(s.substr(s.size() - 4, 4).upper() == ".WMA")
+    if(ext == "WMA" || ext == "ASF")
       return new ASF::File(fileName, readAudioProperties, audioPropertiesStyle);
-#endif
-    if(s.substr(s.size() - 4, 4).upper() == ".AIF")
+    if(ext == "AIF" || ext == "AIFF")
       return new RIFF::AIFF::File(fileName, readAudioProperties, audioPropertiesStyle);
-    if(s.substr(s.size() - 4, 4).upper() == ".WAV")
+    if(ext == "WAV")
       return new RIFF::WAV::File(fileName, readAudioProperties, audioPropertiesStyle);
-  }
-  if(s.size() > 5) {
-    if(s.substr(s.size() - 5, 5).upper() == ".AIFF")
-      return new RIFF::AIFF::File(fileName, readAudioProperties, audioPropertiesStyle);
+    if(ext == "APE")
+      return new APE::File(fileName, readAudioProperties, audioPropertiesStyle);
+    // module, nst and wow are possible but uncommon extensions
+    if(ext == "MOD" || ext == "MODULE" || ext == "NST" || ext == "WOW")
+      return new Mod::File(fileName, readAudioProperties, audioPropertiesStyle);
+    if(ext == "S3M")
+      return new S3M::File(fileName, readAudioProperties, audioPropertiesStyle);
+    if(ext == "IT")
+      return new IT::File(fileName, readAudioProperties, audioPropertiesStyle);
+    if(ext == "XM")
+      return new XM::File(fileName, readAudioProperties, audioPropertiesStyle);
   }
 
   return 0;

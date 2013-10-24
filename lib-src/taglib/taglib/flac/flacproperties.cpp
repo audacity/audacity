@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -42,7 +42,8 @@ public:
     bitrate(0),
     sampleRate(0),
     sampleWidth(0),
-    channels(0) {}
+    channels(0),
+    sampleFrames(0) {}
 
   ByteVector data;
   long streamLength;
@@ -52,6 +53,8 @@ public:
   int sampleRate;
   int sampleWidth;
   int channels;
+  unsigned long long sampleFrames;
+  ByteVector signature;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +103,16 @@ int FLAC::Properties::channels() const
   return d->channels;
 }
 
+unsigned long long FLAC::Properties::sampleFrames() const
+{
+  return d->sampleFrames;
+}
+
+ByteVector FLAC::Properties::signature() const
+{
+  return d->signature;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // private members
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +124,7 @@ void FLAC::Properties::read()
     return;
   }
 
-  int pos = 0;
+  uint pos = 0;
 
   // Minimum block size (in samples)
   pos += 2;
@@ -125,7 +138,9 @@ void FLAC::Properties::read()
   // Maximum frame size (in bytes)
   pos += 3;
 
-  uint flags = d->data.mid(pos, 4).toUInt(true);
+  uint flags = d->data.toUInt(pos, true);
+  pos += 4;
+
   d->sampleRate = flags >> 12;
   d->channels = ((flags >> 9) & 7) + 1;
   d->sampleWidth = ((flags >> 4) & 31) + 1;
@@ -133,12 +148,14 @@ void FLAC::Properties::read()
   // The last 4 bits are the most significant 4 bits for the 36 bit
   // stream length in samples. (Audio files measured in days)
 
-  uint highLength =d->sampleRate > 0 ? (((flags & 0xf) << 28) / d->sampleRate) << 4 : 0;
+  unsigned long long hi = flags & 0xf;
+  unsigned long long lo = d->data.toUInt(pos, true);
   pos += 4;
 
-  d->length = d->sampleRate > 0 ?
-      (d->data.mid(pos, 4).toUInt(true)) / d->sampleRate + highLength : 0;
-  pos += 4;
+  d->sampleFrames = (hi << 32) | lo;
+
+  if(d->sampleRate > 0)
+    d->length = int(d->sampleFrames / d->sampleRate);
 
   // Uncompressed bitrate:
 
@@ -147,4 +164,6 @@ void FLAC::Properties::read()
   // Real bitrate:
 
   d->bitrate = d->length > 0 ? ((d->streamLength * 8UL) / d->length) / 1000 : 0;
+
+  d->signature = d->data.mid(pos, 32);
 }

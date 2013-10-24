@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -41,6 +41,8 @@ namespace TagLib {
    * in TagLib::AudioProperties, TagLib::File and TagLib::FileRef.
    */
 
+  class PropertyMap;
+
   class TAGLIB_EXPORT Tag
   {
   public:
@@ -49,6 +51,32 @@ namespace TagLib {
      * Detroys this Tag instance.
      */
     virtual ~Tag();
+
+    /*!
+     * Exports the tags of the file as dictionary mapping (human readable) tag
+     * names (Strings) to StringLists of tag values.
+     * The default implementation in this class considers only the usual built-in
+     * tags (artist, album, ...) and only one value per key.
+     */
+    PropertyMap properties() const;
+
+    /*!
+     * Removes unsupported properties, or a subset of them, from the tag.
+     * The parameter \a properties must contain only entries from
+     * properties().unsupportedData().
+     * BIC: Will become virtual in future releases. Currently the non-virtual
+     * standard implementation of TagLib::Tag does nothing, since there are
+     * no unsupported elements.
+     */
+    void removeUnsupportedProperties(const StringList& properties);
+
+    /*!
+     * Sets the tags of this File to those specified in \a properties. This default
+     * implementation sets only the tags for which setter methods exist in this class
+     * (artist, album, ...), and only one value per key; the rest will be contained
+     * in the returned PropertyMap.
+     */
+    PropertyMap setProperties(const PropertyMap &properties);
 
     /*!
      * Returns the track name; if no track name is present in the tag

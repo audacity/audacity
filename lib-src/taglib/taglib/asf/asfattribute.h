@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,9 +26,10 @@
 #ifndef TAGLIB_ASFATTRIBUTE_H
 #define TAGLIB_ASFATTRIBUTE_H
 
-#include <tstring.h>
-#include <tbytevector.h>
+#include "tstring.h"
+#include "tbytevector.h"
 #include "taglib_export.h"
+#include "asfpicture.h"
 
 namespace TagLib
 {
@@ -37,6 +38,7 @@ namespace TagLib
   {
 
     class File;
+    class Picture;
 
     class TAGLIB_EXPORT Attribute
     {
@@ -69,6 +71,19 @@ namespace TagLib
        * Constructs an attribute with \a key and a BytesType \a value.
        */
       Attribute(const ByteVector &value);
+
+      /*!
+       * Constructs an attribute with \a key and a Picture \a value.
+       *
+       * This attribute is compatible with the ID3 frame, APIC. The ID3 specification for the APIC frame stipulates that,
+       * while there may be any number of APIC frames associated with a file,
+       * only one may be of type 1 and only one may be of type 2.
+       *
+       * The specification also states that the description of the picture can be no longer than 64 characters, but can be empty.
+       * WM/Picture attributes added with TagLib::ASF are not automatically validated to conform to ID3 specifications.
+       * You must add code in your application to perform validations if you want to maintain complete compatibility with ID3.
+       */
+      Attribute(const Picture &value);
 
       /*!
        * Constructs an attribute with \a key and a DWordType \a value.
@@ -141,6 +156,11 @@ namespace TagLib
       ByteVector toByteVector() const;
 
       /*!
+       * Returns the Picture \a value.
+       */
+      Picture toPicture() const;
+
+      /*!
        * Returns the language number, or 0 is no stream number was set.
        */
       int language() const;
@@ -165,6 +185,9 @@ namespace TagLib
       String parse(ASF::File &file, int kind = 0);
 #endif
 
+      //! Returns the size of the stored data
+      int dataSize() const;
+
     private:
       friend class File;
 
@@ -173,7 +196,6 @@ namespace TagLib
       class AttributePrivate;
       AttributePrivate *d;
     };
-
   }
 
 }

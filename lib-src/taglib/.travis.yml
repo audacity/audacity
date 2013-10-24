@@ -1,0 +1,7 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+install: sudo apt-get install libcppunit-dev zlib1g-dev
+script: cmake -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON . && make && make check
+

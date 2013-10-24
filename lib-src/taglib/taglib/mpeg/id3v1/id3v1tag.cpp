@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -51,11 +51,16 @@ public:
   static const StringHandler *stringHandler;
 };
 
-const ID3v1::StringHandler *ID3v1::Tag::TagPrivate::stringHandler = new StringHandler;
+static const StringHandler defaultStringHandler;
+const ID3v1::StringHandler *ID3v1::Tag::TagPrivate::stringHandler = &defaultStringHandler;
 
 ////////////////////////////////////////////////////////////////////////////////
 // StringHandler implementation
 ////////////////////////////////////////////////////////////////////////////////
+
+StringHandler::StringHandler()
+{
+}
 
 String ID3v1::StringHandler::parse(const ByteVector &data) const
 {
@@ -177,20 +182,32 @@ void ID3v1::Tag::setGenre(const String &s)
   d->genre = ID3v1::genreIndex(s);
 }
 
-void ID3v1::Tag::setYear(uint i)
+void ID3v1::Tag::setYear(TagLib::uint i)
 {
   d->year = i > 0 ? String::number(i) : String::null;
 }
 
-void ID3v1::Tag::setTrack(uint i)
+void ID3v1::Tag::setTrack(TagLib::uint i)
 {
   d->track = i < 256 ? i : 0;
 }
 
+TagLib::uint ID3v1::Tag::genreNumber() const
+{
+  return d->genre;
+}
+
+void ID3v1::Tag::setGenreNumber(TagLib::uint i)
+{
+  d->genre = i < 256 ? i : 255;
+}
+
 void ID3v1::Tag::setStringHandler(const StringHandler *handler)
 {
-  delete TagPrivate::stringHandler;
-  TagPrivate::stringHandler = handler;
+  if (handler)
+    TagPrivate::stringHandler = handler;
+  else
+    TagPrivate::stringHandler = &defaultStringHandler;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

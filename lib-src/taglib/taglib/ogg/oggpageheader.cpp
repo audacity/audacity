@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -255,9 +255,9 @@ void Ogg::PageHeader::read()
   d->firstPageOfStream = flags.test(1);
   d->lastPageOfStream = flags.test(2);
 
-  d->absoluteGranularPosition = data.mid(6, 8).toLongLong(false);
-  d->streamSerialNumber = data.mid(14, 4).toUInt(false);
-  d->pageSequenceNumber = data.mid(18, 4).toUInt(false);
+  d->absoluteGranularPosition = data.toLongLong(6, false);
+  d->streamSerialNumber = data.toUInt(14, false);
+  d->pageSequenceNumber = data.toUInt(18, false);
 
   // Byte number 27 is the number of page segments, which is the only variable
   // length portion of the page header.  After reading the number of page

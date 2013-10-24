@@ -1,4 +1,4 @@
-$Id: id3v2.4.0-frames.txt,v 1.1 2009-02-11 06:05:00 llucius Exp $
+$Id$
 
 Informal standard                                             M. Nilsson
 Document: id3v2.4.0-frames.txt                         1st November 2000

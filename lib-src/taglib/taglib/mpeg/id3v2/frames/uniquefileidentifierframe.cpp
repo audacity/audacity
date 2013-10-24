@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -24,8 +24,10 @@
  ***************************************************************************/
 
 #include <tbytevectorlist.h>
+#include <tpropertymap.h>
 #include <tdebug.h>
 
+#include "id3v2tag.h"
 #include "uniquefileidentifierframe.h"
 
 using namespace TagLib;
@@ -85,6 +87,34 @@ void UniqueFileIdentifierFrame::setIdentifier(const ByteVector &v)
 String UniqueFileIdentifierFrame::toString() const
 {
   return String::null;
+}
+
+PropertyMap UniqueFileIdentifierFrame::asProperties() const
+{
+  PropertyMap map;
+  if(d->owner == "http://musicbrainz.org") {
+    map.insert("MUSICBRAINZ_TRACKID", String(d->identifier));
+  }
+  else {
+    map.unsupportedData().append(frameID() + String("/") + d->owner);
+  }
+  return map;
+}
+
+UniqueFileIdentifierFrame *UniqueFileIdentifierFrame::findByOwner(const ID3v2::Tag *tag, const String &o) // static
+{
+  ID3v2::FrameList comments = tag->frameList("UFID");
+
+  for(ID3v2::FrameList::ConstIterator it = comments.begin();
+      it != comments.end();
+      ++it)
+  {
+    UniqueFileIdentifierFrame *frame = dynamic_cast<UniqueFileIdentifierFrame *>(*it);
+    if(frame && frame->owner() == o)
+      return frame;
+  }
+
+  return 0;
 }
 
 void UniqueFileIdentifierFrame::parseFields(const ByteVector &data)

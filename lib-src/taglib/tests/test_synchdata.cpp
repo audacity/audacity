@@ -22,8 +22,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
 #include <id3v2synchdata.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 using namespace std;
 using namespace TagLib;
@@ -34,6 +34,8 @@ class TestID3v2SynchData : public CppUnit::TestFixture
   CPPUNIT_TEST(test1);
   CPPUNIT_TEST(test2);
   CPPUNIT_TEST(test3);
+  CPPUNIT_TEST(testToUIntBroken);
+  CPPUNIT_TEST(testToUIntBrokenAndTooLarge);
   CPPUNIT_TEST(testDecode1);
   CPPUNIT_TEST(testDecode2);
   CPPUNIT_TEST_SUITE_END();
@@ -65,6 +67,23 @@ public:
 
     CPPUNIT_ASSERT_EQUAL(ID3v2::SynchData::toUInt(v), TagLib::uint(129));
     CPPUNIT_ASSERT_EQUAL(ID3v2::SynchData::fromUInt(129), v);
+  }
+
+  void testToUIntBroken()
+  {
+    char data[] = { 0, 0, 0, -1 };
+    char data2[] = { 0, 0, -1, -1 };
+
+    CPPUNIT_ASSERT_EQUAL(TagLib::uint(255), ID3v2::SynchData::toUInt(ByteVector(data, 4)));
+    CPPUNIT_ASSERT_EQUAL(TagLib::uint(65535), ID3v2::SynchData::toUInt(ByteVector(data2, 4)));
+  }
+
+  void testToUIntBrokenAndTooLarge()
+  {
+    char data[] = { 0, 0, 0, -1, 0 };
+    ByteVector v(data, 5);
+
+    CPPUNIT_ASSERT_EQUAL(TagLib::uint(255), ID3v2::SynchData::toUInt(v));
   }
 
   void testDecode1()

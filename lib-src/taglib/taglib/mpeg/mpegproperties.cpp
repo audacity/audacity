@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -218,8 +218,10 @@ void MPEG::Properties::read()
       double timePerFrame =
         double(firstHeader.samplesPerFrame()) / firstHeader.sampleRate();
 
-      d->length = int(timePerFrame * d->xingHeader->totalFrames());
-      d->bitrate = d->length > 0 ? d->xingHeader->totalSize() * 8 / d->length / 1000 : 0;
+      double length = timePerFrame * d->xingHeader->totalFrames();
+
+      d->length = int(length);
+      d->bitrate = d->length > 0 ? (int)(d->xingHeader->totalSize() * 8 / length / 1000) : 0;
   }
   else {
     // Since there was no valid Xing header found, we hope that we're in a constant

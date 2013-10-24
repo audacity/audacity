@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -24,6 +24,8 @@
  ***************************************************************************/
 
 #include "tag.h"
+#include "tstringlist.h"
+#include "tpropertymap.h"
 
 using namespace TagLib;
 
@@ -51,6 +53,101 @@ bool Tag::isEmpty() const
           genre().isEmpty() &&
           year() == 0 &&
           track() == 0);
+}
+
+PropertyMap Tag::properties() const
+{
+  PropertyMap map;
+  if(!(title().isNull()))
+    map["TITLE"].append(title());
+  if(!(artist().isNull()))
+    map["ARTIST"].append(artist());
+  if(!(album().isNull()))
+    map["ALBUM"].append(album());
+  if(!(comment().isNull()))
+    map["COMMENT"].append(comment());
+  if(!(genre().isNull()))
+    map["GENRE"].append(genre());
+  if(!(year() == 0))
+    map["DATE"].append(String::number(year()));
+  if(!(track() == 0))
+    map["TRACKNUMBER"].append(String::number(track()));
+  return map;
+}
+
+void Tag::removeUnsupportedProperties(const StringList&)
+{
+}
+
+PropertyMap Tag::setProperties(const PropertyMap &origProps)
+{
+  PropertyMap properties(origProps);
+  properties.removeEmpty();
+  StringList oneValueSet;
+  // can this be simplified by using some preprocessor defines / function pointers?
+  if(properties.contains("TITLE")) {
+    setTitle(properties["TITLE"].front());
+    oneValueSet.append("TITLE");
+  } else
+    setTitle(String::null);
+
+  if(properties.contains("ARTIST")) {
+    setArtist(properties["ARTIST"].front());
+    oneValueSet.append("ARTIST");
+  } else
+    setArtist(String::null);
+
+  if(properties.contains("ALBUM")) {
+    setAlbum(properties["ALBUM"].front());
+    oneValueSet.append("ALBUM");
+  } else
+    setAlbum(String::null);
+
+  if(properties.contains("COMMENT")) {
+    setComment(properties["COMMENT"].front());
+    oneValueSet.append("COMMENT");
+  } else
+    setComment(String::null);
+
+  if(properties.contains("GENRE")) {
+    setGenre(properties["GENRE"].front());
+    oneValueSet.append("GENRE");
+  } else
+    setGenre(String::null);
+
+  if(properties.contains("DATE")) {
+    bool ok;
+    int date = properties["DATE"].front().toInt(&ok);
+    if(ok) {
+      setYear(date);
+      oneValueSet.append("DATE");
+    } else
+      setYear(0);
+  }
+  else
+    setYear(0);
+
+  if(properties.contains("TRACKNUMBER")) {
+    bool ok;
+    int track = properties["TRACKNUMBER"].front().toInt(&ok);
+    if(ok) {
+      setTrack(track);
+      oneValueSet.append("TRACKNUMBER");
+    } else
+      setTrack(0);
+  }
+  else
+    setYear(0);
+
+  // for each tag that has been set above, remove the first entry in the corresponding
+  // value list. The others will be returned as unsupported by this format.
+  for(StringList::Iterator it = oneValueSet.begin(); it != oneValueSet.end(); ++it) {
+    if(properties[*it].size() == 1)
+      properties.erase(*it);
+    else
+      properties[*it].erase( properties[*it].begin() );
+  }
+  return properties;
 }
 
 void Tag::duplicate(const Tag *source, Tag *target, bool overwrite) // static

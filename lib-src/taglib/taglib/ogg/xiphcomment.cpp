@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -27,6 +27,7 @@
 #include <tdebug.h>
 
 #include <xiphcomment.h>
+#include <tpropertymap.h>
 
 using namespace TagLib;
 
@@ -103,16 +104,20 @@ String Ogg::XiphComment::genre() const
 
 TagLib::uint Ogg::XiphComment::year() const
 {
-  if(d->fieldListMap["DATE"].isEmpty())
-    return 0;
-  return d->fieldListMap["DATE"].front().toInt();
+  if(!d->fieldListMap["DATE"].isEmpty())
+    return d->fieldListMap["DATE"].front().toInt();
+  if(!d->fieldListMap["YEAR"].isEmpty())
+    return d->fieldListMap["YEAR"].front().toInt();
+  return 0;
 }
 
 TagLib::uint Ogg::XiphComment::track() const
 {
-  if(d->fieldListMap["TRACKNUMBER"].isEmpty())
-    return 0;
-  return d->fieldListMap["TRACKNUMBER"].front().toInt();
+  if(!d->fieldListMap["TRACKNUMBER"].isEmpty())
+    return d->fieldListMap["TRACKNUMBER"].front().toInt();
+  if(!d->fieldListMap["TRACKNUM"].isEmpty())
+    return d->fieldListMap["TRACKNUM"].front().toInt();
+  return 0;
 }
 
 void Ogg::XiphComment::setTitle(const String &s)
@@ -142,6 +147,7 @@ void Ogg::XiphComment::setGenre(const String &s)
 
 void Ogg::XiphComment::setYear(uint i)
 {
+  removeField("YEAR");
   if(i == 0)
     removeField("DATE");
   else
@@ -150,6 +156,7 @@ void Ogg::XiphComment::setYear(uint i)
 
 void Ogg::XiphComment::setTrack(uint i)
 {
+  removeField("TRACKNUM");
   if(i == 0)
     removeField("TRACKNUMBER");
   else
@@ -180,6 +187,58 @@ TagLib::uint Ogg::XiphComment::fieldCount() const
 const Ogg::FieldListMap &Ogg::XiphComment::fieldListMap() const
 {
   return d->fieldListMap;
+}
+
+PropertyMap Ogg::XiphComment::properties() const
+{
+  return d->fieldListMap;
+}
+
+PropertyMap Ogg::XiphComment::setProperties(const PropertyMap &properties)
+{
+  // check which keys are to be deleted
+  StringList toRemove;
+  for(FieldListMap::ConstIterator it = d->fieldListMap.begin(); it != d->fieldListMap.end(); ++it)
+    if (!properties.contains(it->first))
+      toRemove.append(it->first);
+
+  for(StringList::ConstIterator it = toRemove.begin(); it != toRemove.end(); ++it)
+      removeField(*it);
+
+  // now go through keys in \a properties and check that the values match those in the xiph comment
+  PropertyMap invalid;
+  PropertyMap::ConstIterator it = properties.begin();
+  for(; it != properties.end(); ++it)
+  {
+    if(!checkKey(it->first))
+      invalid.insert(it->first, it->second);
+    else if(!d->fieldListMap.contains(it->first) || !(it->second == d->fieldListMap[it->first])) {
+      const StringList &sl = it->second;
+      if(sl.size() == 0)
+        // zero size string list -> remove the tag with all values
+        removeField(it->first);
+      else {
+        // replace all strings in the list for the tag
+        StringList::ConstIterator valueIterator = sl.begin();
+        addField(it->first, *valueIterator, true);
+        ++valueIterator;
+        for(; valueIterator != sl.end(); ++valueIterator)
+          addField(it->first, *valueIterator, false);
+      }
+    }
+  }
+  return invalid;
+}
+
+bool Ogg::XiphComment::checkKey(const String &key)
+{
+  if(key.size() < 1)
+    return false;
+  for(String::ConstIterator it = key.begin(); it != key.end(); it++)
+      // forbid non-printable, non-ascii, '=' (#61) and '~' (#126)
+      if (*it < 32 || *it >= 128 || *it == 61 || *it == 126)
+        return false;
+  return true;
 }
 
 String Ogg::XiphComment::vendorID() const
@@ -279,9 +338,9 @@ void Ogg::XiphComment::parse(const ByteVector &data)
   // The first thing in the comment data is the vendor ID length, followed by a
   // UTF8 string with the vendor ID.
 
-  int pos = 0;
+  uint pos = 0;
 
-  int vendorLength = data.mid(0, 4).toUInt(false);
+  const uint vendorLength = data.toUInt(0, false);
   pos += 4;
 
   d->vendorID = String(data.mid(pos, vendorLength), String::UTF8);
@@ -289,21 +348,31 @@ void Ogg::XiphComment::parse(const ByteVector &data)
 
   // Next the number of fields in the comment vector.
 
-  int commentFields = data.mid(pos, 4).toUInt(false);
+  const uint commentFields = data.toUInt(pos, false);
   pos += 4;
 
-  for(int i = 0; i < commentFields; i++) {
+  if(commentFields > (data.size() - 8) / 4) {
+    return;
+  }
+
+  for(uint i = 0; i < commentFields; i++) {
 
     // Each comment field is in the format "KEY=value" in a UTF8 string and has
     // 4 bytes before the text starts that gives the length.
 
-    int commentLength = data.mid(pos, 4).toUInt(false);
+    const uint commentLength = data.toUInt(pos, false);
     pos += 4;
 
     String comment = String(data.mid(pos, commentLength), String::UTF8);
     pos += commentLength;
+    if(pos > data.size()) {
+      break;
+    }
 
     int commentSeparatorPosition = comment.find("=");
+    if(commentSeparatorPosition == -1) {
+      break;
+    }
 
     String key = comment.substr(0, commentSeparatorPosition);
     String value = comment.substr(commentSeparatorPosition + 1);

@@ -19,8 +19,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -54,8 +54,17 @@ namespace TagLib {
       /*!
        * Create an instance of WavPack::Properties with the data read from the
        * ByteVector \a data.
+       *
+       * \deprecated This constructor will be dropped in favor of the one below
+       * in a future version.
        */
       Properties(const ByteVector &data, long streamLength, ReadStyle style = Average);
+
+      /*!
+       * Create an instance of WavPack::Properties.
+       */
+      // BIC: merge with the above constructor
+      Properties(File *file, long streamLength, ReadStyle style = Average);
 
       /*!
        * Destroys this WavPack::Properties instance.
@@ -66,13 +75,19 @@ namespace TagLib {
 
       virtual int length() const;
       virtual int bitrate() const;
+
+      /*!
+       * Returns the sample rate in Hz. 0 means unknown or custom.
+       */
       virtual int sampleRate() const;
+      
       virtual int channels() const;
 
       /*!
        * Returns number of bits per sample.
        */
       int bitsPerSample() const;
+      uint sampleFrames() const;
 
       /*!
        * Returns WavPack version.
@@ -84,6 +99,7 @@ namespace TagLib {
       Properties &operator=(const Properties &);
 
       void read();
+      unsigned int seekFinalIndex();
 
       class PropertiesPrivate;
       PropertiesPrivate *d;

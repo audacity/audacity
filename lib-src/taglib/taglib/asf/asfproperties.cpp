@@ -15,19 +15,13 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
  *   http://www.mozilla.org/MPL/                                           *
  ***************************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#ifdef WITH_ASF
 
 #include <tdebug.h>
 #include <tstring.h>
@@ -38,11 +32,12 @@ using namespace TagLib;
 class ASF::Properties::PropertiesPrivate
 {
 public:
-  PropertiesPrivate(): length(0), bitrate(0), sampleRate(0), channels(0) {}
+  PropertiesPrivate(): length(0), bitrate(0), sampleRate(0), channels(0), encrypted(false) {}
   int length;
   int bitrate;
   int sampleRate;
   int channels;
+  bool encrypted;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +52,7 @@ ASF::Properties::Properties() : AudioProperties(AudioProperties::Average)
 ASF::Properties::~Properties()
 {
   if(d)
-    delete d;  
+    delete d;
 }
 
 int ASF::Properties::length() const
@@ -78,7 +73,12 @@ int ASF::Properties::sampleRate() const
 int ASF::Properties::channels() const
 {
   return d->channels;
-} 
+}
+
+bool ASF::Properties::isEncrypted() const
+{
+  return d->encrypted;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // private members
@@ -104,4 +104,8 @@ void ASF::Properties::setChannels(int length)
   d->channels = length;
 }
 
-#endif
+void ASF::Properties::setEncrypted(bool encrypted)
+{
+  d->encrypted = encrypted;
+}
+

@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -32,11 +32,11 @@ namespace TagLib {
   class ByteVector;
 
 #ifndef DO_NOT_DOCUMENT
-#ifndef NDEBUG
 
   /*!
-   * A simple function that prints debugging output to cerr if debugging is
-   * not disabled.
+   * A simple function that outputs the debug messages to the listener. 
+   * The default listener redirects the messages to \a stderr when NDEBUG is 
+   * not defined.
    *
    * \warning Do not use this outside of TagLib, it could lead to undefined
    * symbols in your build if TagLib is built with NDEBUG defined and your
@@ -45,7 +45,7 @@ namespace TagLib {
    * \internal
    */
   void debug(const String &s);
-
+  
   /*!
    * For debugging binary data.
    *
@@ -56,16 +56,7 @@ namespace TagLib {
    * \internal
    */
   void debugData(const ByteVector &v);
-
-#else
-
-  // Define these to an empty statement if debugging is disabled.
-
-#define debug(x)
-#define debugData(x)
-
-#endif
-#endif
 }
 
+#endif
 #endif

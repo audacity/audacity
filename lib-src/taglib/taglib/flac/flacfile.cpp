@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -28,20 +28,25 @@
 #include <tlist.h>
 #include <tdebug.h>
 #include <tagunion.h>
+#include <tpropertymap.h>
 
 #include <id3v2header.h>
 #include <id3v2tag.h>
 #include <id3v1tag.h>
 #include <xiphcomment.h>
 
+#include "flacpicture.h"
 #include "flacfile.h"
+#include "flacmetadatablock.h"
+#include "flacunknownmetadatablock.h"
 
 using namespace TagLib;
 
 namespace
 {
-  enum { XiphIndex = 0, ID3v2Index = 1, ID3v1Index = 2 };
-  enum { StreamInfo = 0, Padding, Application, SeekTable, VorbisComment, CueSheet };
+  enum { FlacXiphIndex = 0, FlacID3v2Index = 1, FlacID3v1Index = 2 };
+  enum { MinPaddingLength = 4096 };
+  enum { LastBlockFlag = 0x80 };
 }
 
 class FLAC::File::FilePrivate
@@ -59,10 +64,16 @@ public:
     scanned(false),
     hasXiphComment(false),
     hasID3v2(false),
-    hasID3v1(false) {}
+    hasID3v1(false)
+  {
+  }
 
   ~FilePrivate()
   {
+    uint size = blocks.size();
+    for(uint i = 0; i < size; i++) {
+      delete blocks[i];
+    }
     delete properties;
   }
 
@@ -77,6 +88,7 @@ public:
   Properties *properties;
   ByteVector streamInfoData;
   ByteVector xiphCommentData;
+  List<MetadataBlock *> blocks;
 
   long flacStart;
   long streamStart;
@@ -97,7 +109,8 @@ FLAC::File::File(FileName file, bool readProperties,
   TagLib::File(file)
 {
   d = new FilePrivate;
-  read(readProperties, propertiesStyle);
+  if(isOpen())
+    read(readProperties, propertiesStyle);
 }
 
 FLAC::File::File(FileName file, ID3v2::FrameFactory *frameFactory,
@@ -106,7 +119,18 @@ FLAC::File::File(FileName file, ID3v2::FrameFactory *frameFactory,
 {
   d = new FilePrivate;
   d->ID3v2FrameFactory = frameFactory;
-  read(readProperties, propertiesStyle);
+  if(isOpen())
+    read(readProperties, propertiesStyle);
+}
+
+FLAC::File::File(IOStream *stream, ID3v2::FrameFactory *frameFactory,
+                 bool readProperties, Properties::ReadStyle propertiesStyle) :
+  TagLib::File(stream)
+{
+  d = new FilePrivate;
+  d->ID3v2FrameFactory = frameFactory;
+  if(isOpen())
+    read(readProperties, propertiesStyle);
 }
 
 FLAC::File::~File()
@@ -117,6 +141,34 @@ FLAC::File::~File()
 TagLib::Tag *FLAC::File::tag() const
 {
   return &d->tag;
+}
+
+PropertyMap FLAC::File::properties() const
+{
+  // once Tag::properties() is virtual, this case distinction could actually be done
+  // within TagUnion.
+  if(d->hasXiphComment)
+    return d->tag.access<Ogg::XiphComment>(FlacXiphIndex, false)->properties();
+  if(d->hasID3v2)
+    return d->tag.access<ID3v2::Tag>(FlacID3v2Index, false)->properties();
+  if(d->hasID3v1)
+    return d->tag.access<ID3v1::Tag>(FlacID3v1Index, false)->properties();
+  return PropertyMap();
+}
+
+void FLAC::File::removeUnsupportedProperties(const StringList &unsupported)
+{
+  if(d->hasXiphComment)
+    d->tag.access<Ogg::XiphComment>(FlacXiphIndex, false)->removeUnsupportedProperties(unsupported);
+  if(d->hasID3v2)
+    d->tag.access<ID3v2::Tag>(FlacID3v2Index, false)->removeUnsupportedProperties(unsupported);
+  if(d->hasID3v1)
+    d->tag.access<ID3v1::Tag>(FlacID3v1Index, false)->removeUnsupportedProperties(unsupported);
+}
+
+PropertyMap FLAC::File::setProperties(const PropertyMap &properties)
+{
+  return d->tag.access<Ogg::XiphComment>(FlacXiphIndex, true)->setProperties(properties);
 }
 
 FLAC::Properties *FLAC::File::audioProperties() const
@@ -132,73 +184,69 @@ bool FLAC::File::save()
     return false;
   }
 
+  if(!isValid()) {
+    debug("FLAC::File::save() -- Trying to save invalid file.");
+    return false;
+  }
+
   // Create new vorbis comments
 
-  Tag::duplicate(&d->tag, xiphComment(true), true);
+  Tag::duplicate(&d->tag, xiphComment(true), false);
 
   d->xiphCommentData = xiphComment()->render(false);
 
-  // A Xiph comment portion of the data stream starts with a 4-byte descriptor.
-  // The first byte indicates the frame type.  The last three bytes are used
-  // to give the length of the data segment.  Here we start
+  // Replace metadata blocks
 
-  ByteVector data = ByteVector::fromUInt(d->xiphCommentData.size());
-
-  data[0] = char(VorbisComment);
-  data.append(d->xiphCommentData);
-
-
-   // If file already have comment => find and update it
-   // if not => insert one
-
-   // TODO: Search for padding and use that
-
-  if(d->hasXiphComment) {
-
-    long nextBlockOffset = d->flacStart;
-    bool isLastBlock = false;
-
-    while(!isLastBlock) {
-      seek(nextBlockOffset);
-
-      ByteVector header = readBlock(4);
-      char blockType = header[0] & 0x7f;
-      isLastBlock = (header[0] & 0x80) != 0;
-      uint blockLength = header.mid(1, 3).toUInt();
-
-      if(blockType == VorbisComment) {
-        data[0] = header[0];
-        insert(data, nextBlockOffset, blockLength + 4);
-        break;
-      }
-
-      nextBlockOffset += blockLength + 4;
+  bool foundVorbisCommentBlock = false;
+  List<MetadataBlock *> newBlocks;
+  for(uint i = 0; i < d->blocks.size(); i++) {
+    MetadataBlock *block = d->blocks[i];
+    if(block->code() == MetadataBlock::VorbisComment) {
+      // Set the new Vorbis Comment block
+      delete block;
+      block = new UnknownMetadataBlock(MetadataBlock::VorbisComment, d->xiphCommentData);
+      foundVorbisCommentBlock = true;
     }
-  }
-  else {
-
-    const long firstBlockOffset = d->flacStart;
-    seek(firstBlockOffset);
-
-    ByteVector header = readBlock(4);
-    bool isLastBlock = (header[0] & 0x80) != 0;
-    uint blockLength = header.mid(1, 3).toUInt();
-
-    if(isLastBlock) {
-
-      // If the first block was previously also the last block, then we want to
-      // mark it as no longer being the first block (the writeBlock() call) and
-      // then set the data for the block that we're about to write to mark our
-      // new block as the last block.
-
-      seek(firstBlockOffset);
-      writeBlock(static_cast<char>(header[0] & 0x7F));
-      data[0] |= 0x80;
+    if(block->code() == MetadataBlock::Padding) {
+      delete block;
+      continue;
     }
-
-    insert(data, firstBlockOffset + blockLength + 4, 0);
-    d->hasXiphComment = true;
+    newBlocks.append(block);
   }
+  if(!foundVorbisCommentBlock) {
+    newBlocks.append(new UnknownMetadataBlock(MetadataBlock::VorbisComment, d->xiphCommentData));
+    foundVorbisCommentBlock = true;
+  }
+  d->blocks = newBlocks;
+
+  // Render data for the metadata blocks
+
+  ByteVector data;
+  for(uint i = 0; i < newBlocks.size(); i++) {
+    FLAC::MetadataBlock *block = newBlocks[i];
+    ByteVector blockData = block->render();
+    ByteVector blockHeader = ByteVector::fromUInt(blockData.size());
+    blockHeader[0] = block->code();
+    data.append(blockHeader);
+    data.append(blockData);
+  }
+
+  // Adjust the padding block(s)
+
+  long originalLength = d->streamStart - d->flacStart;
+  int paddingLength = originalLength - data.size() - 4;
+  if (paddingLength < 0) {
+    paddingLength = MinPaddingLength;
+  }
+  ByteVector padding = ByteVector::fromUInt(paddingLength);
+  padding.resize(paddingLength + 4);
+  padding[0] = (char)(FLAC::MetadataBlock::Padding | LastBlockFlag);
+  data.append(padding);
+
+  // Write the data to the file
+
+  insert(data, d->flacStart, originalLength);
+  d->hasXiphComment = true;
 
   // Update ID3 tags
 
@@ -224,21 +272,21 @@ bool FLAC::File::save()
 
 ID3v2::Tag *FLAC::File::ID3v2Tag(bool create)
 {
-  if(!create || d->tag[ID3v2Index])
-    return static_cast<ID3v2::Tag *>(d->tag[ID3v2Index]);
+  if(!create || d->tag[FlacID3v2Index])
+    return static_cast<ID3v2::Tag *>(d->tag[FlacID3v2Index]);
 
-  d->tag.set(ID3v2Index, new ID3v2::Tag);
-  return static_cast<ID3v2::Tag *>(d->tag[ID3v2Index]);
+  d->tag.set(FlacID3v2Index, new ID3v2::Tag);
+  return static_cast<ID3v2::Tag *>(d->tag[FlacID3v2Index]);
 }
 
 ID3v1::Tag *FLAC::File::ID3v1Tag(bool create)
 {
-  return d->tag.access<ID3v1::Tag>(ID3v1Index, create);
+  return d->tag.access<ID3v1::Tag>(FlacID3v1Index, create);
 }
 
 Ogg::XiphComment *FLAC::File::xiphComment(bool create)
 {
-  return d->tag.access<Ogg::XiphComment>(XiphIndex, create);
+  return d->tag.access<Ogg::XiphComment>(FlacXiphIndex, create);
 }
 
 void FLAC::File::setID3v2FrameFactory(const ID3v2::FrameFactory *factory)
@@ -259,12 +307,12 @@ void FLAC::File::read(bool readProperties, Properties::ReadStyle propertiesStyle
 
   if(d->ID3v2Location >= 0) {
 
-    d->tag.set(ID3v2Index, new ID3v2::Tag(this, d->ID3v2Location, d->ID3v2FrameFactory));
+    d->tag.set(FlacID3v2Index, new ID3v2::Tag(this, d->ID3v2Location, d->ID3v2FrameFactory));
 
     d->ID3v2OriginalSize = ID3v2Tag()->header()->completeTagSize();
 
     if(ID3v2Tag()->header()->tagSize() <= 0)
-      d->tag.set(ID3v2Index, 0);
+      d->tag.set(FlacID3v2Index, 0);
     else
       d->hasID3v2 = true;
   }
@@ -274,7 +322,7 @@ void FLAC::File::read(bool readProperties, Properties::ReadStyle propertiesStyle
   d->ID3v1Location = findID3v1();
 
   if(d->ID3v1Location >= 0) {
-    d->tag.set(ID3v1Index, new ID3v1::Tag(this, d->ID3v1Location));
+    d->tag.set(FlacID3v1Index, new ID3v1::Tag(this, d->ID3v1Location));
     d->hasID3v1 = true;
   }
 
@@ -286,9 +334,9 @@ void FLAC::File::read(bool readProperties, Properties::ReadStyle propertiesStyle
     return;
 
   if(d->hasXiphComment)
-    d->tag.set(XiphIndex, new Ogg::XiphComment(xiphCommentData()));
+    d->tag.set(FlacXiphIndex, new Ogg::XiphComment(xiphCommentData()));
   else
-    d->tag.set(XiphIndex, new Ogg::XiphComment);
+    d->tag.set(FlacXiphIndex, new Ogg::XiphComment);
 
   if(readProperties)
     d->properties = new Properties(streamInfoData(), streamLength(), propertiesStyle);
@@ -351,35 +399,66 @@ void FLAC::File::scan()
 
   char blockType = header[0] & 0x7f;
   bool isLastBlock = (header[0] & 0x80) != 0;
-  uint length = header.mid(1, 3).toUInt();
+  uint length = header.toUInt(1U, 3U);
 
   // First block should be the stream_info metadata
 
-  if(blockType != StreamInfo) {
+  if(blockType != MetadataBlock::StreamInfo) {
     debug("FLAC::File::scan() -- invalid FLAC stream");
     setValid(false);
     return;
   }
 
   d->streamInfoData = readBlock(length);
+  d->blocks.append(new UnknownMetadataBlock(blockType, d->streamInfoData));
   nextBlockOffset += length + 4;
 
   // Search through the remaining metadata
-
   while(!isLastBlock) {
 
     header = readBlock(4);
     blockType = header[0] & 0x7f;
     isLastBlock = (header[0] & 0x80) != 0;
-    length = header.mid(1, 3).toUInt();
+    length = header.toUInt(1U, 3U);
 
-    if(blockType == Padding) {
-      // debug("FLAC::File::scan() -- Padding found");
+    ByteVector data = readBlock(length);
+    if(data.size() != length || length == 0) {
+      debug("FLAC::File::scan() -- FLAC stream corrupted");
+      setValid(false);
+      return;
     }
+
+    MetadataBlock *block = 0;
+
     // Found the vorbis-comment
-    else if(blockType == VorbisComment) {
-      d->xiphCommentData = readBlock(length);
-      d->hasXiphComment = true;
+    if(blockType == MetadataBlock::VorbisComment) {
+      if(!d->hasXiphComment) {
+        d->xiphCommentData = data;
+        d->hasXiphComment = true;
+      }
+      else {
+        debug("FLAC::File::scan() -- multiple Vorbis Comment blocks found, using the first one");
+      }
+    }
+    else if(blockType == MetadataBlock::Picture) {
+      FLAC::Picture *picture = new FLAC::Picture();
+      if(picture->parse(data)) {
+        block = picture;
+      }
+      else {
+        debug("FLAC::File::scan() -- invalid picture found, discarting");
+        delete picture;
+      }
+    }
+
+    if(!block) {
+      block = new UnknownMetadataBlock(blockType, data);
+    }
+    if(block->code() != MetadataBlock::Padding) {
+      d->blocks.append(block);
+    }
+    else {
+      delete block;
     }
 
     nextBlockOffset += length + 4;
@@ -428,4 +507,62 @@ long FLAC::File::findID3v2()
     return 0;
 
   return -1;
+}
+
+List<FLAC::Picture *> FLAC::File::pictureList()
+{
+  List<Picture *> pictures;
+  for(uint i = 0; i < d->blocks.size(); i++) {
+    Picture *picture = dynamic_cast<Picture *>(d->blocks[i]);
+    if(picture) {
+      pictures.append(picture);
+    }
+  }
+  return pictures;
+}
+
+void FLAC::File::addPicture(Picture *picture)
+{
+  d->blocks.append(picture);
+}
+
+void FLAC::File::removePicture(Picture *picture, bool del)
+{
+  MetadataBlock *block = picture;
+  List<MetadataBlock *>::Iterator it = d->blocks.find(block);
+  if(it != d->blocks.end())
+    d->blocks.erase(it);
+
+  if(del)
+    delete picture;
+}
+
+void FLAC::File::removePictures()
+{
+  List<MetadataBlock *> newBlocks;
+  for(uint i = 0; i < d->blocks.size(); i++) {
+    Picture *picture = dynamic_cast<Picture *>(d->blocks[i]);
+    if(picture) {
+      delete picture;
+    }
+    else {
+      newBlocks.append(d->blocks[i]);
+    }
+  }
+  d->blocks = newBlocks;
+}
+
+bool FLAC::File::hasXiphComment() const
+{
+  return d->hasXiphComment;
+}
+
+bool FLAC::File::hasID3v1Tag() const
+{
+  return d->hasID3v1;
+}
+
+bool FLAC::File::hasID3v2Tag() const
+{
+  return d->hasID3v2;
 }

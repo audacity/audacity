@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,6 +26,8 @@
 #include <tbytevector.h>
 #include <tdebug.h>
 #include <id3v2tag.h>
+#include <tstringlist.h>
+#include <tpropertymap.h>
 
 #include "aifffile.h"
 
@@ -36,7 +38,8 @@ class RIFF::AIFF::File::FilePrivate
 public:
   FilePrivate() :
     properties(0),
-    tag(0)
+    tag(0),
+    tagChunkID("ID3 ")
   {
 
   }
@@ -49,6 +52,7 @@ public:
 
   Properties *properties;
   ID3v2::Tag *tag;
+  ByteVector tagChunkID;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +61,14 @@ public:
 
 RIFF::AIFF::File::File(FileName file, bool readProperties,
                        Properties::ReadStyle propertiesStyle) : RIFF::File(file, BigEndian)
+{
+  d = new FilePrivate;
+  if(isOpen())
+    read(readProperties, propertiesStyle);
+}
+
+RIFF::AIFF::File::File(IOStream *stream, bool readProperties,
+                       Properties::ReadStyle propertiesStyle) : RIFF::File(stream, BigEndian)
 {
   d = new FilePrivate;
   if(isOpen())
@@ -73,6 +85,22 @@ ID3v2::Tag *RIFF::AIFF::File::tag() const
   return d->tag;
 }
 
+PropertyMap RIFF::AIFF::File::properties() const
+{
+  return d->tag->properties();
+}
+
+void RIFF::AIFF::File::removeUnsupportedProperties(const StringList &unsupported)
+{
+  d->tag->removeUnsupportedProperties(unsupported);
+}
+
+PropertyMap RIFF::AIFF::File::setProperties(const PropertyMap &properties)
+{
+  return d->tag->setProperties(properties);
+}
+
+
 RIFF::AIFF::Properties *RIFF::AIFF::File::audioProperties() const
 {
   return d->properties;
@@ -85,10 +113,16 @@ bool RIFF::AIFF::File::save()
     return false;
   }
 
-  setChunkData("ID3 ", d->tag->render());
+  if(!isValid()) {
+    debug("RIFF::AIFF::File::save() -- Trying to save invalid file.");
+    return false;
+  }
+
+  setChunkData(d->tagChunkID, d->tag->render());
 
   return true;
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // private members
@@ -97,8 +131,10 @@ bool RIFF::AIFF::File::save()
 void RIFF::AIFF::File::read(bool readProperties, Properties::ReadStyle propertiesStyle)
 {
   for(uint i = 0; i < chunkCount(); i++) {
-    if(chunkName(i) == "ID3 ")
+    if(chunkName(i) == "ID3 " || chunkName(i) == "id3 ") {
+      d->tagChunkID = chunkName(i);
       d->tag = new ID3v2::Tag(this, chunkOffset(i));
+    }
     else if(chunkName(i) == "COMM" && readProperties)
       d->properties = new Properties(chunkData(i), propertiesStyle);
   }

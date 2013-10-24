@@ -95,7 +95,10 @@ int main(int argc, char *argv[])
       for(APE::ItemListMap::ConstIterator it = ape->itemListMap().begin();
           it != ape->itemListMap().end(); ++it)
       {
-        cout << (*it).first << " - \"" << (*it).second.toString() << "\"" << endl;
+        if((*it).second.type() != APE::Item::Binary)
+          cout << (*it).first << " - \"" << (*it).second.toString() << "\"" << endl;
+        else
+          cout << (*it).first << " - Binary data (" << (*it).second.binaryData().size() << " bytes)" << endl;
       }
     }
     else

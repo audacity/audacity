@@ -19,8 +19,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -30,8 +30,8 @@
 #ifndef TAGLIB_SPEEXFILE_H
 #define TAGLIB_SPEEXFILE_H
 
-#include <oggfile.h>
-#include <xiphcomment.h>
+#include "oggfile.h"
+#include "xiphcomment.h"
 
 #include "speexproperties.h"
 
@@ -56,11 +56,24 @@ namespace TagLib {
       {
       public:
         /*!
-         * Contructs a Speex file from \a file.  If \a readProperties is true the
-         * file's audio properties will also be read using \a propertiesStyle.  If
-         * false, \a propertiesStyle is ignored.
+         * Constructs a Speex file from \a file.  If \a readProperties is true the
+         * file's audio properties will also be read.
+         *
+         * \note In the current implementation, \a propertiesStyle is ignored.
          */
         File(FileName file, bool readProperties = true,
+             Properties::ReadStyle propertiesStyle = Properties::Average);
+
+        /*!
+         * Constructs a Speex file from \a stream.  If \a readProperties is true the
+         * file's audio properties will also be read.
+         *
+         * \note TagLib will *not* take ownership of the stream, the caller is
+         * responsible for deleting it after the File object.
+         *
+         * \note In the current implementation, \a propertiesStyle is ignored.
+         */
+        File(IOStream *stream, bool readProperties = true,
              Properties::ReadStyle propertiesStyle = Properties::Average);
 
         /*!
@@ -76,10 +89,24 @@ namespace TagLib {
         virtual Ogg::XiphComment *tag() const;
 
         /*!
+         * Implements the unified property interface -- export function.
+         * This forwards directly to XiphComment::properties().
+         */
+        PropertyMap properties() const;
+
+        /*!
+         * Implements the unified tag dictionary interface -- import function.
+         * Like properties(), this is a forwarder to the file's XiphComment.
+         */
+        PropertyMap setProperties(const PropertyMap &);
+
+        /*!
          * Returns the Speex::Properties for this file.  If no audio properties
          * were read then this will return a null pointer.
          */
         virtual Properties *audioProperties() const;
+
+
 
         virtual bool save();
 

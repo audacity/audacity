@@ -17,8 +17,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,8 +26,10 @@
  ***************************************************************************/
 
 #include "urllinkframe.h"
+#include "id3v2tag.h"
 #include <tdebug.h>
 #include <tstringlist.h>
+#include <tpropertymap.h>
 
 using namespace TagLib;
 using namespace ID3v2;
@@ -76,6 +78,18 @@ void UrlLinkFrame::setText(const String &s)
 String UrlLinkFrame::toString() const
 {
   return url();
+}
+
+PropertyMap UrlLinkFrame::asProperties() const
+{
+  String key = frameIDToKey(frameID());
+  PropertyMap map;
+  if(key.isNull())
+    // unknown W*** frame - this normally shouldn't happen
+    map.unsupportedData().append(frameID());
+  else
+    map.insert(key, url());
+  return map;
 }
 
 void UrlLinkFrame::parseFields(const ByteVector &data)
@@ -139,6 +153,30 @@ void UserUrlLinkFrame::setDescription(const String &s)
   d->description = s;
 }
 
+PropertyMap UserUrlLinkFrame::asProperties() const
+{
+  PropertyMap map;
+  String key = description().upper();
+  if(key.isEmpty() || key.upper() == "URL")
+    map.insert("URL", url());
+  else if(key.isNull())
+    map.unsupportedData().append(L"WXXX/" + description());
+  else
+    map.insert("URL:" + key, url());
+  return map;
+}
+
+UserUrlLinkFrame *UserUrlLinkFrame::find(ID3v2::Tag *tag, const String &description) // static
+{
+  FrameList l = tag->frameList("WXXX");
+  for(FrameList::Iterator it = l.begin(); it != l.end(); ++it) {
+    UserUrlLinkFrame *f = dynamic_cast<UserUrlLinkFrame *>(*it);
+    if(f && f->description() == description)
+      return f;
+  }
+  return 0;
+}
+
 void UserUrlLinkFrame::parseFields(const ByteVector &data)
 {
   if(data.size() < 2) {
@@ -175,7 +213,7 @@ ByteVector UserUrlLinkFrame::renderFields() const
 {
   ByteVector v;
 
-  String::Type encoding = checkEncoding(d->description, d->textEncoding);
+  String::Type encoding = checkTextEncoding(d->description, d->textEncoding);
 
   v.append(char(encoding));
   v.append(d->description.data(encoding));

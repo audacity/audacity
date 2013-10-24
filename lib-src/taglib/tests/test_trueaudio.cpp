@@ -2,6 +2,7 @@
 #include <string>
 #include <stdio.h>
 #include <trueaudiofile.h>
+#include "utils.h"
 
 using namespace std;
 using namespace TagLib;
@@ -16,7 +17,7 @@ public:
 
   void testReadPropertiesWithoutID3v2()
   {
-    TrueAudio::File f("data/empty.tta");
+    TrueAudio::File f(TEST_FILE_PATH_C("empty.tta"));
     CPPUNIT_ASSERT(f.audioProperties());
     CPPUNIT_ASSERT_EQUAL(3, f.audioProperties()->length());
   }

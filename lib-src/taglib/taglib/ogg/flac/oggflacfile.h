@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -64,11 +64,24 @@ namespace TagLib {
     {
     public:
       /*!
-       * Contructs an Ogg/FLAC file from \a file.  If \a readProperties is true
-       * the file's audio properties will also be read using \a propertiesStyle.
-       * If false, \a propertiesStyle is ignored.
+       * Constructs an Ogg/FLAC file from \a file.  If \a readProperties is true 
+       * the file's audio properties will also be read.
+       *
+       * \note In the current implementation, \a propertiesStyle is ignored.
        */
       File(FileName file, bool readProperties = true,
+           Properties::ReadStyle propertiesStyle = Properties::Average);
+
+      /*!
+       * Constructs an Ogg/FLAC file from \a stream.  If \a readProperties is true 
+       * the file's audio properties will also be read.
+       *
+       * \note TagLib will *not* take ownership of the stream, the caller is
+       * responsible for deleting it after the File object.
+       *
+       * \note In the current implementation, \a propertiesStyle is ignored.
+       */
+      File(IOStream *stream, bool readProperties = true,
            Properties::ReadStyle propertiesStyle = Properties::Average);
 
       /*!
@@ -78,6 +91,16 @@ namespace TagLib {
 
       /*!
        * Returns the Tag for this file.  This will always be a XiphComment.
+       *
+       * \note This always returns a valid pointer regardless of whether or not 
+       * the file on disk has a XiphComment.  Use hasXiphComment() to check if 
+       * the file on disk actually has a XiphComment.
+       * 
+       * \note The Tag <b>is still</b> owned by the FLAC::File and should not be
+       * deleted by the user.  It will be deleted when the file (object) is
+       * destroyed.
+       *
+       * \see hasXiphComment()
        */
       virtual XiphComment *tag() const;
 
@@ -86,6 +109,20 @@ namespace TagLib {
        * were read then this will return a null pointer.
        */
       virtual Properties *audioProperties() const;
+
+
+      /*! 
+       * Implements the unified property interface -- export function.
+       * This forwards directly to XiphComment::properties().
+       */
+      PropertyMap properties() const;
+
+      /*! 
+       * Implements the unified tag dictionary interface -- import function.
+       * Like properties(), this is a forwarder to the file's XiphComment.
+       */
+      PropertyMap setProperties(const PropertyMap &); 
+
 
       /*!
        * Save the file.  This will primarily save and update the XiphComment.
@@ -98,6 +135,13 @@ namespace TagLib {
        * calculating the bitrate.
        */
       long streamLength();
+
+      /*!
+       * Returns whether or not the file on disk actually has a XiphComment.
+       *
+       * \see tag()
+       */
+      bool hasXiphComment() const;
 
     private:
       File(const File &);

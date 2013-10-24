@@ -1,1 +1,0 @@
-INSTALL( FILES  id3v1tag.h id3v1genres.h DESTINATION ${INCLUDE_INSTALL_DIR}/taglib)

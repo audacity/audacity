@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,16 +26,18 @@
 #ifndef TAGLIB_TEXTIDENTIFICATIONFRAME_H
 #define TAGLIB_TEXTIDENTIFICATIONFRAME_H
 
-#include <tstringlist.h>
+#include "tstringlist.h"
+#include "tmap.h"
 #include "taglib_export.h"
 
-#include <id3v2frame.h>
+#include "id3v2frame.h"
 
 namespace TagLib {
 
   namespace ID3v2 {
 
     class Tag;
+    typedef Map<String, String> KeyConversionMap;
 
     //! An ID3v2 text identification frame implementation
 
@@ -124,6 +126,20 @@ namespace TagLib {
       explicit TextIdentificationFrame(const ByteVector &data);
 
       /*!
+       * This is a special factory method to create a TIPL (involved people list)
+       * frame from the given \a properties. Will parse key=[list of values] data
+       * into the TIPL format as specified in the ID3 standard.
+       */
+      static TextIdentificationFrame *createTIPLFrame(const PropertyMap &properties);
+
+      /*!
+       * This is a special factory method to create a TMCL (musician credits list)
+       * frame from the given \a properties. Will parse key=[list of values] data
+       * into the TMCL format as specified in the ID3 standard, where key should be
+       * of the form instrumentPrefix:instrument.
+       */
+      static TextIdentificationFrame *createTMCLFrame(const PropertyMap &properties);
+      /*!
        * Destroys this TextIdentificationFrame instance.
        */
       virtual ~TextIdentificationFrame();
@@ -173,6 +189,14 @@ namespace TagLib {
        */
       StringList fieldList() const;
 
+      /*!
+       * Returns a KeyConversionMap mapping a role as it would be  used in a PropertyMap
+       * to the corresponding key used in a TIPL ID3 frame to describe that role.
+       */
+      static const KeyConversionMap &involvedPeopleMap();
+
+      PropertyMap asProperties() const;
+
     protected:
       // Reimplementations.
 
@@ -188,6 +212,16 @@ namespace TagLib {
       TextIdentificationFrame(const TextIdentificationFrame &);
       TextIdentificationFrame &operator=(const TextIdentificationFrame &);
 
+      /*!
+       * Parses the special structure of a TIPL frame
+       * Only the whitelisted roles "ARRANGER", "ENGINEER", "PRODUCER",
+       * "DJMIXER" (ID3: "DJ-MIX") and "MIXER" (ID3: "MIX") are allowed.
+       */
+      PropertyMap makeTIPLProperties() const;
+      /*!
+       * Parses the special structure of a TMCL frame.
+       */
+      PropertyMap makeTMCLProperties() const;
       class TextIdentificationFramePrivate;
       TextIdentificationFramePrivate *d;
     };
@@ -218,6 +252,12 @@ namespace TagLib {
        */
       explicit UserTextIdentificationFrame(const ByteVector &data);
 
+      /*!
+       * Creates a user defined text identification frame with the given \a description
+       * and \a values.
+       */
+      UserTextIdentificationFrame(const String &description, const StringList &values, String::Type encoding = String::UTF8);
+
       virtual String toString() const;
 
       /*!
@@ -235,6 +275,21 @@ namespace TagLib {
       StringList fieldList() const;
       void setText(const String &text);
       void setText(const StringList &fields);
+
+      /*!
+       * A UserTextIdentificationFrame is parsed into a PropertyMap as follows:
+       * - the key is the frame's description, uppercased
+       * - if the description contains '::', only the substring after that
+       *   separator is considered as key (compatibility with exfalso)
+       * - if the above rules don't yield a valid key (e.g. containing non-ASCII
+       *   characters), the returned map will contain an entry "TXXX/<description>"
+       *   in its unsupportedData() list.
+       * - The values will be copies of the fieldList().
+       * - If the description() appears as value in fieldList(), it will be omitted
+       *   in the value list, in order to be compatible with TagLib which copies
+       *   the description() into the fieldList().
+       */
+      PropertyMap asProperties() const;
 
       /*!
        * Searches for the user defined text frame with the description \a description

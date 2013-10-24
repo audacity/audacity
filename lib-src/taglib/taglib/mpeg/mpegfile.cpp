@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -35,6 +35,7 @@
 
 #include "mpegfile.h"
 #include "mpegheader.h"
+#include "tpropertymap.h"
 
 using namespace TagLib;
 
@@ -113,6 +114,16 @@ MPEG::File::File(FileName file, ID3v2::FrameFactory *frameFactory,
     read(readProperties, propertiesStyle);
 }
 
+MPEG::File::File(IOStream *stream, ID3v2::FrameFactory *frameFactory,
+                 bool readProperties, Properties::ReadStyle propertiesStyle) :
+  TagLib::File(stream)
+{
+  d = new FilePrivate(frameFactory);
+
+  if(isOpen())
+    read(readProperties, propertiesStyle);
+}
+
 MPEG::File::~File()
 {
   delete d;
@@ -121,6 +132,37 @@ MPEG::File::~File()
 TagLib::Tag *MPEG::File::tag() const
 {
   return &d->tag;
+}
+
+PropertyMap MPEG::File::properties() const
+{
+  // once Tag::properties() is virtual, this case distinction could actually be done
+  // within TagUnion.
+  if(d->hasID3v2)
+    return d->tag.access<ID3v2::Tag>(ID3v2Index, false)->properties();
+  if(d->hasAPE)
+    return d->tag.access<APE::Tag>(APEIndex, false)->properties();
+  if(d->hasID3v1)
+    return d->tag.access<ID3v1::Tag>(ID3v1Index, false)->properties();
+  return PropertyMap();
+}
+
+void MPEG::File::removeUnsupportedProperties(const StringList &properties)
+{
+  if(d->hasID3v2)
+    d->tag.access<ID3v2::Tag>(ID3v2Index, false)->removeUnsupportedProperties(properties);
+  else if(d->hasAPE)
+    d->tag.access<APE::Tag>(APEIndex, false)->removeUnsupportedProperties(properties);
+  else if(d->hasID3v1)
+    d->tag.access<ID3v1::Tag>(ID3v1Index, false)->removeUnsupportedProperties(properties);
+}
+
+PropertyMap MPEG::File::setProperties(const PropertyMap &properties)
+{
+  if(d->hasID3v1)
+    // update ID3v1 tag if it exists, but ignore the return value
+    d->tag.access<ID3v1::Tag>(ID3v1Index, false)->setProperties(properties);
+  return d->tag.access<ID3v2::Tag>(ID3v2Index, true)->setProperties(properties);
 }
 
 MPEG::Properties *MPEG::File::audioProperties() const
@@ -140,6 +182,16 @@ bool MPEG::File::save(int tags)
 
 bool MPEG::File::save(int tags, bool stripOthers)
 {
+  return save(tags, stripOthers, 4);
+}
+
+bool MPEG::File::save(int tags, bool stripOthers, int id3v2Version)
+{
+  return save(tags, stripOthers, id3v2Version, true);
+}
+
+bool MPEG::File::save(int tags, bool stripOthers, int id3v2Version, bool duplicateTags)
+{
   if(tags == NoTags && stripOthers)
     return strip(AllTags);
 
@@ -156,14 +208,19 @@ bool MPEG::File::save(int tags, bool stripOthers)
     return false;
   }
 
-  // Create the tags if we've been asked to.  Copy the values from the tag that
-  // does exist into the new tag.
+  // Create the tags if we've been asked to.
 
-  if((tags & ID3v2) && ID3v1Tag())
-    Tag::duplicate(ID3v1Tag(), ID3v2Tag(true), false);
+  if (duplicateTags) {
 
-  if((tags & ID3v1) && d->tag[ID3v2Index])
-    Tag::duplicate(ID3v2Tag(), ID3v1Tag(true), false);
+    // Copy the values from the tag that does exist into the new tag,
+    // except if the existing tag is to be stripped.
+
+    if((tags & ID3v2) && ID3v1Tag() && !(stripOthers && !(tags & ID3v1)))
+      Tag::duplicate(ID3v1Tag(), ID3v2Tag(true), false);
+
+    if((tags & ID3v1) && d->tag[ID3v2Index] && !(stripOthers && !(tags & ID3v2)))
+      Tag::duplicate(ID3v2Tag(), ID3v1Tag(true), false);
+  }
 
   bool success = true;
 
@@ -174,7 +231,7 @@ bool MPEG::File::save(int tags, bool stripOthers)
       if(!d->hasID3v2)
         d->ID3v2Location = 0;
 
-      insert(ID3v2Tag()->render(), d->ID3v2Location, d->ID3v2OriginalSize);
+      insert(ID3v2Tag()->render(id3v2Version), d->ID3v2Location, d->ID3v2OriginalSize);
 
       d->hasID3v2 = true;
 
@@ -186,7 +243,7 @@ bool MPEG::File::save(int tags, bool stripOthers)
       // APE tag location has changed, update if it exists
 
       if(APETag())
-	findAPE();
+        findAPE();
     }
     else if(stripOthers)
       success = strip(ID3v2, false) && success;
@@ -224,9 +281,10 @@ bool MPEG::File::save(int tags, bool stripOthers)
       else {
         seek(0, End);
         d->APELocation = tell();
-	d->APEFooterLocation = d->APELocation
-	  + d->tag.access<APE::Tag>(APEIndex, false)->footer()->completeTagSize()
-	  - APE::Footer::size();
+        APE::Tag *apeTag = d->tag.access<APE::Tag>(APEIndex, false);
+        d->APEFooterLocation = d->APELocation
+                               + apeTag->footer()->completeTagSize()
+                               - APE::Footer::size();
         writeBlock(APETag()->render());
         d->APEOriginalSize = APETag()->footer()->completeTagSize();
         d->hasAPE = true;
@@ -384,6 +442,21 @@ long MPEG::File::firstFrameOffset()
 long MPEG::File::lastFrameOffset()
 {
   return previousFrameOffset(ID3v1Tag() ? d->ID3v1Location - 1 : length());
+}
+
+bool MPEG::File::hasID3v1Tag() const
+{
+  return d->hasID3v1;
+}
+
+bool MPEG::File::hasID3v2Tag() const
+{
+  return d->hasID3v2;
+}
+
+bool MPEG::File::hasAPETag() const
+{
+  return d->hasAPE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -572,7 +645,7 @@ void MPEG::File::findAPE()
       seek(d->APEFooterLocation);
       APE::Footer footer(readBlock(APE::Footer::size()));
       d->APELocation = d->APEFooterLocation - footer.completeTagSize()
-	+ APE::Footer::size();
+                       + APE::Footer::size();
       return;
     }
   }
@@ -583,9 +656,6 @@ void MPEG::File::findAPE()
 
 bool MPEG::File::secondSynchByte(char byte)
 {
-  if(uchar(byte) == 0xff)
-    return false;
-
   std::bitset<8> b(byte);
 
   // check to see if the byte matches 111xxxxx

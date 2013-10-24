@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -139,6 +139,29 @@ namespace TagLib {
        * use addField() and removeField().
        */
       const FieldListMap &fieldListMap() const;
+
+      /*!
+       * Implements the unified property interface -- export function.
+       * The result is a one-to-one match of the Xiph comment, since it is
+       * completely compatible with the property interface (in fact, a Xiph
+       * comment is nothing more than a map from tag names to list of values,
+       * as is the dict interface).
+       */
+      PropertyMap properties() const;
+
+      /*!
+       * Implements the unified property interface -- import function.
+       * The tags from the given map will be stored one-to-one in the file,
+       * except for invalid keys (less than one character, non-ASCII, or
+       * containing '=' or '~') in which case the according values will
+       * be contained in the returned PropertyMap.
+       */
+      PropertyMap setProperties(const PropertyMap&);
+
+      /*!
+       * Check if the given String is a valid Xiph comment key.
+       */
+      static bool checkKey(const String&);
 
       /*!
        * Returns the vendor ID of the Ogg Vorbis encoder.  libvorbis 1.0 as the

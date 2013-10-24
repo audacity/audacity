@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -108,8 +108,8 @@ void MPEG::XingHeader::parse(const ByteVector &data)
     return;
   }
 
-  d->frames = data.mid(8, 4).toUInt();
-  d->size = data.mid(12, 4).toUInt();
+  d->frames = data.toUInt(8U);
+  d->size   = data.toUInt(12U);
 
   d->valid = true;
 }

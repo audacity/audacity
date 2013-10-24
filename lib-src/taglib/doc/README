@@ -1,1 +1,1 @@
-Run "doxygen taglib.doxgen" to generate the TagLib API documentation.
+Run "make docs" in the parent directory to generate the TagLib API documentation.

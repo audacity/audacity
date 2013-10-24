@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -35,7 +35,7 @@ namespace TagLib {
 
   namespace ID3v2 {
 
-    class TAGLIB_EXPORT TextIdentificationFrame;
+    class TextIdentificationFrame;
 
     //! A factory for creating ID3v2 frames during parsing
 
@@ -123,8 +123,7 @@ namespace TagLib {
       FrameFactory();
 
       /*!
-       * Destroys the frame factory.  In most cases this will never be called (as
-       * is typical of singletons).
+       * Destroys the frame factory.
        */
       virtual ~FrameFactory();
 
@@ -155,7 +154,7 @@ namespace TagLib {
 
       void updateGenre(TextIdentificationFrame *frame) const;
 
-      static FrameFactory *factory;
+      static FrameFactory factory;
 
       class FrameFactoryPrivate;
       FrameFactoryPrivate *d;

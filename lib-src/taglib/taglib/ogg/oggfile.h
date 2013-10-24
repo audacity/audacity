@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -82,15 +82,25 @@ namespace TagLib {
 
     protected:
       /*!
-       * Contructs an Ogg file from \a file.  If \a readProperties is true the
-       * file's audio properties will also be read using \a propertiesStyle.  If
-       * false, \a propertiesStyle is ignored.
+       * Constructs an Ogg file from \a file.
        *
        * \note This constructor is protected since Ogg::File shouldn't be
        * instantiated directly but rather should be used through the codec
        * specific subclasses.
        */
       File(FileName file);
+
+      /*!
+       * Constructs an Ogg file from \a stream.
+       *
+       * \note This constructor is protected since Ogg::File shouldn't be
+       * instantiated directly but rather should be used through the codec
+       * specific subclasses.
+       *
+       * \note TagLib will *not* take ownership of the stream, the caller is
+       * responsible for deleting it after the File object.
+       */
+      File(IOStream *stream);
 
     private:
       File(const File &);

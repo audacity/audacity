@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <string.h>
+#include <fstream>
 #include <stdexcept>
 #include <cppunit/TestResult.h>
 #include <cppunit/TestResultCollector.h>
@@ -5,6 +8,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/CompilerOutputter.h>
+#include <cppunit/XmlOutputter.h>
 
 int main(int argc, char* argv[])
 {
@@ -34,6 +38,13 @@ int main(int argc, char* argv[])
     // Print test in a compiler compatible format.
     CppUnit::CompilerOutputter outputter(&result, std::cerr);
     outputter.write();
+
+    char *xml = ::getenv("CPPUNIT_XML");
+    if(xml && !::strcmp(xml, "1")) {
+      std::ofstream xmlfileout("cpptestresults.xml");
+      CppUnit::XmlOutputter xmlout(&result, xmlfileout);
+      xmlout.write();
+    }
   }
   catch(std::invalid_argument &e){
     std::cerr << std::endl

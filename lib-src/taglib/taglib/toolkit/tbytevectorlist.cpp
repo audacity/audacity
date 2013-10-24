@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -52,7 +52,7 @@ ByteVectorList ByteVectorList::split(const ByteVector &v, const ByteVector &patt
       offset != -1 && (max == 0 || max > int(l.size()) + 1);
       offset = v.find(pattern, offset + pattern.size(), byteAlign))
   {
-    if(offset - previousOffset > 1)
+    if(offset - previousOffset >= 1)
       l.append(v.mid(previousOffset, offset - previousOffset));
     else
       l.append(ByteVector::null);

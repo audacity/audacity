@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -191,7 +191,7 @@ void RelativeVolumeFrame::parseFields(const ByteVector &data)
 
     ChannelData &channel = d->channels[type];
 
-    channel.volumeAdjustment = data.mid(pos, 2).toShort();
+    channel.volumeAdjustment = data.toShort(static_cast<uint>(pos));
     pos += 2;
 
     channel.peakVolume.bitsRepresentingPeak = data[pos];

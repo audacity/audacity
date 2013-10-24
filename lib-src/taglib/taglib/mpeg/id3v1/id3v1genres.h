@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -45,21 +45,21 @@ namespace TagLib {
      * A "reverse mapping" that goes from the canonical ID3v1 genre name to the
      * respective genre number.   genreMap()["Rock"] ==
      */
-    GenreMap genreMap();
+    GenreMap TAGLIB_EXPORT genreMap();
 
     /*!
      * Returns the name of the genre at \a index in the ID3v1 genre list.  If
      * \a index is out of range -- less than zero or greater than 146 -- a null
      * string will be returned.
      */
-    String genre(int index);
+    String TAGLIB_EXPORT genre(int index);
 
     /*!
      * Returns the genre index for the (case sensitive) genre \a name.  If the
      * genre is not in the list 255 (which signifies an unknown genre in ID3v1)
      * will be returned.
      */
-    int genreIndex(const String &name);
+    int TAGLIB_EXPORT genreIndex(const String &name);
   }
 }
 

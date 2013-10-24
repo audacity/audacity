@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,9 +26,23 @@
 #ifndef TAGLIB_H
 #define TAGLIB_H
 
+#include "taglib_config.h"
+
 #define TAGLIB_MAJOR_VERSION 1
-#define TAGLIB_MINOR_VERSION 5
-#define TAGLIB_PATCH_VERSION 0
+#define TAGLIB_MINOR_VERSION 9
+#define TAGLIB_PATCH_VERSION 1
+
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 1))
+#define TAGLIB_IGNORE_MISSING_DESTRUCTOR _Pragma("GCC diagnostic ignored \"-Wnon-virtual-dtor\"")
+#else
+#define TAGLIB_IGNORE_MISSING_DESTRUCTOR
+#endif
+
+#if (defined(_MSC_VER) && _MSC_VER >= 1600)
+#define TAGLIB_CONSTRUCT_BITSET(x) static_cast<unsigned long long>(x)
+#else
+#define TAGLIB_CONSTRUCT_BITSET(x) static_cast<unsigned long>(x)
+#endif
 
 #include <string>
 
@@ -36,7 +50,7 @@
 
 /*!
  * This namespace contains everything in TagLib.  For projects working with
- * TagLib extensively it may be conveniten to add a
+ * TagLib extensively it may be convenient to add a
  * \code
  * using namespace TagLib;
  * \endcode
@@ -46,38 +60,20 @@ namespace TagLib {
 
   class String;
 
-  typedef wchar_t wchar;
-  typedef unsigned char uchar;
-  typedef unsigned int  uint;
-  typedef unsigned long ulong;
+  typedef wchar_t            wchar;   // Assumed to be sufficient to store a UTF-16 char.
+  typedef unsigned char      uchar;
+  typedef unsigned short     ushort;
+  typedef unsigned int       uint;
+  typedef unsigned long long ulonglong;
+
+  // long/ulong can be either 32-bit or 64-bit wide.
+  typedef unsigned long  ulong;
 
   /*!
    * Unfortunately std::wstring isn't defined on some systems, (i.e. GCC < 3)
    * so I'm providing something here that should be constant.
    */
   typedef std::basic_string<wchar> wstring;
-
-#ifndef DO_NOT_DOCUMENT // Tell Doxygen to skip this class.
-  /*!
-   * \internal
-   * This is just used as a base class for shared classes in TagLib.
-   *
-   * \warning This <b>is not</b> part of the TagLib public API!
-   */
-
-  class RefCounter
-  {
-  public:
-    RefCounter() : refCount(1) {}
-    void ref() { refCount++; }
-    bool deref() { return ! --refCount ; }
-    int count() { return refCount; }
-  private:
-    uint refCount;
-  };
-
-#endif // DO_NOT_DOCUMENT
-
 }
 
 /*!
@@ -90,8 +86,8 @@ namespace TagLib {
  * Features:
  * - A clean, high level, C++ API to handling audio meta data.
  * - Format specific APIs for advanced API users.
- * - ID3v1, ID3v2, APE, FLAC and Xiph tag formats.
- * - MP3, MPC, FLAC, Ogg FLAC, Ogg Vorbis and Speex file formats.
+ * - ID3v1, ID3v2, APE, FLAC, Xiph, iTunes-style MP4 and WMA tag formats.
+ * - MP3, MPC, FLAC, MP4, ASF, AIFF, WAV, TrueAudio, WavPack, Ogg FLAC, Ogg Vorbis, Speex and Opus file formats.
  * - Basic audio file properties such as length, sample rate, etc.
  * - Long term binary and source compatibility.
  * - Extensible design, notably the ability to add other formats or extend current formats as a library user.
@@ -122,12 +118,9 @@ namespace TagLib {
  * Please see the <a href="http://developer.kde.org/~wheeler/taglib.html">TagLib website</a> for the latest
  * downloads.
  *
- * Instructions for installing TagLib vary per platform, but generally speaking on UNIX standard configure and
- * make commands are provided.  TagLib installs a taglib-config and package-config file to make it easier to
- * integrate into various build systems.  Note that TagLib's include install directory \e must be included in
- * the header include path.  Simply adding <taglib/tag.h> will \e not work.
- *
- * On Windows, TagLib can be built using the CMake build systems.
+ * TagLib can be built using the CMake build system. TagLib installs a taglib-config and pkg-config file to
+ * make it easier to integrate into various build systems.  Note that TagLib's include install directory \e must
+ * be included in the header include path. Simply adding <taglib/tag.h> will \e not work.
  *
  * \section start Getting Started
  *

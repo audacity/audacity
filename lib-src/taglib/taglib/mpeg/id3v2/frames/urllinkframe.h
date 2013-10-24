@@ -17,8 +17,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -28,7 +28,7 @@
 #ifndef TAGLIB_URLLINKFRAME_H
 #define TAGLIB_URLLINKFRAME_H
 
-#include <id3v2frame.h>
+#include "id3v2frame.h"
 
 namespace TagLib {
 
@@ -68,6 +68,7 @@ namespace TagLib {
 
       virtual void setText(const String &s);
       virtual String toString() const;
+      PropertyMap asProperties() const;
 
     protected:
       virtual void parseFields(const ByteVector &data);
@@ -149,6 +150,22 @@ namespace TagLib {
        * Sets the description of the frame to \a s.  \a s must be unique.
        */
       void setDescription(const String &s);
+
+      /*!
+       * Parses the UserUrlLinkFrame as PropertyMap. The description() is taken as key,
+       * and the URL as single value.
+       * - if description() is empty, the key will be "URL".
+       * - otherwise, if description() is not a valid key (e.g. containing non-ASCII
+       *   characters), the returned map will contain an entry "WXXX/<description>"
+       *   in its unsupportedData() list.
+       */
+      PropertyMap asProperties() const;
+
+      /*!
+       * Searches for the user defined url frame with the description \a description
+       * in \a tag.  This returns null if no matching frames were found.
+       */
+      static UserUrlLinkFrame *find(Tag *tag, const String &description);
 
     protected:
       virtual void parseFields(const ByteVector &data);

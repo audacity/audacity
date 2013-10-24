@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -56,6 +56,36 @@ namespace TagLib {
 
     typedef List<Frame *> FrameList;
     typedef Map<ByteVector, FrameList> FrameListMap;
+
+    //! An abstraction for the ISO-8859-1 string to data encoding in ID3v2 tags.
+
+    /*!
+     * ID3v2 tag can store strings in ISO-8859-1 (Latin1), and TagLib only 
+     * supports genuine ISO-8859-1 by default.  However, in practice, non 
+     * ISO-8859-1 encodings are often used instead of ISO-8859-1, such as 
+     * Windows-1252 for western languages, Shift_JIS for Japanese and so on.
+     *
+     * Here is an option to read such tags by subclassing this class,
+     * reimplementing parse() and setting your reimplementation as the default 
+     * with ID3v2::Tag::setStringHandler().
+     *
+     * \note Writing non-ISO-8859-1 tags is not implemented intentionally.
+     * Use UTF-16 or UTF-8 instead.
+     *
+     * \see ID3v2::Tag::setStringHandler()
+     */
+    class TAGLIB_EXPORT Latin1StringHandler
+    {
+    public:
+      Latin1StringHandler();
+      virtual ~Latin1StringHandler();
+
+      /*!
+       * Decode a string from \a data.  The default implementation assumes that
+       * \a data is an ISO-8859-1 (Latin1) character array.
+       */
+      virtual String parse(const ByteVector &data) const;
+    };
 
     //! The main class in the ID3v2 implementation
 
@@ -261,9 +291,89 @@ namespace TagLib {
       void removeFrames(const ByteVector &id);
 
       /*!
+       * Implements the unified property interface -- export function.
+       * This function does some work to translate the hard-specified ID3v2
+       * frame types into a free-form string-to-stringlist PropertyMap:
+       *  - if ID3v2 frame ID is known by Frame::frameIDToKey(), the returned
+       *    key is used
+       *  - if the frame ID is "TXXX" (user text frame), the description() is
+       *    used as key
+       *  - if the frame ID is "WXXX" (user url frame),
+       *    - if the description is empty or "URL", the key "URL" is used
+       *    - otherwise, the key "URL:<description>" is used;
+       *  - if the frame ID is "COMM" (comments frame),
+       *    - if the description is empty or "COMMENT", the key "COMMENT"
+       *      is used
+       *    - otherwise, the key "COMMENT:<description>" is used;
+       *  - if the frame ID is "USLT" (unsynchronized lyrics),
+       *    - if the description is empty or "LYRICS", the key "LYRICS" is used
+       *    - otherwise, the key "LYRICS:<description>" is used;
+       *  - if the frame ID is "TIPL" (involved peoples list), and if all the
+       *    roles defined in the frame are known in TextIdentificationFrame::involvedPeopleMap(),
+       *    then "<role>=<name>" will be contained in the returned obejct for each
+       *  - if the frame ID is "TMCL" (musician credit list), then
+       *    "PERFORMER:<instrument>=<name>" will be contained in the returned
+       *    PropertyMap for each defined musician
+       *  In any other case, the unsupportedData() of the returned object will contain
+       *  the frame's ID and, in case of a frame ID which is allowed to appear more than
+       *  once, the description, separated by a "/".
+       *
+       */
+      PropertyMap properties() const;
+
+      /*!
+       * Removes unsupported frames given by \a properties. The elements of
+       * \a properties must be taken from properties().unsupportedData(); they
+       * are of one of the following forms:
+       *  - a four-character frame ID, if the ID3 specification allows only one
+       *    frame with that ID (thus, the frame is uniquely determined)
+       *  - frameID + "/" + description(), when the ID is one of "TXXX", "WXXX",
+       *    "COMM", or "USLT",
+       *  - "UNKNOWN/" + frameID, for frames that could not be parsed by TagLib.
+       *    In that case, *all* unknown frames with the given ID will be removed.
+       */
+      void removeUnsupportedProperties(const StringList &properties);
+
+      /*!
+       * Implements the unified property interface -- import function.
+       * See the comments in properties().
+       */
+      PropertyMap setProperties(const PropertyMap &);
+
+      /*!
        * Render the tag back to binary data, suitable to be written to disk.
        */
       ByteVector render() const;
+
+      /*!
+       * Render the tag back to binary data, suitable to be written to disk.
+       *
+       * The \a version parameter specifies the version of the rendered
+       * ID3v2 tag. It can be either 4 or 3.
+       */
+      // BIC: combine with the above method
+      ByteVector render(int version) const;
+      
+      /*!
+       * Gets the current string handler that decides how the "Latin-1" data 
+       * will be converted to and from binary data.
+       *
+       * \see Latin1StringHandler
+       */
+      static Latin1StringHandler const *latin1StringHandler();
+
+      /*!
+       * Sets the string handler that decides how the "Latin-1" data will be
+       * converted to and from binary data.
+       * If the parameter \a handler is null, the previous handler is
+       * released and default ISO-8859-1 handler is restored.
+       *
+       * \note The caller is responsible for deleting the previous handler
+       * as needed after it is released. 
+       *
+       * \see Latin1StringHandler
+       */
+      static void setLatin1StringHandler(const Latin1StringHandler *handler);
 
     protected:
       /*!
@@ -285,6 +395,8 @@ namespace TagLib {
        * If the frame does not exist, it is created.
        */
       void setTextFrame(const ByteVector &id, const String &value);
+
+      void downgradeFrames(FrameList *existingFrames, FrameList *newFrames) const;
 
     private:
       Tag(const Tag &);

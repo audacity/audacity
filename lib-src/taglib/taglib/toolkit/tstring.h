@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -31,12 +31,15 @@
 #include "tbytevector.h"
 
 #include <string>
-#include <ostream>
+#include <iostream>
 
 /*!
  * \relates TagLib::String
  *
- * Converts a TagLib::String to a QString without a requirement to link to Qt.
+ * Converts a QString to a TagLib::String without a requirement to link to Qt.
+ *
+ * \note consider conversion via usual char-by-char for loop to avoid UTF16->UTF8->UTF16
+ * conversion happening in the background
  */
 #define QStringToTString(s) TagLib::String(s.utf8().data(), TagLib::String::UTF8)
 
@@ -44,18 +47,24 @@
  * \relates TagLib::String
  *
  * Converts a TagLib::String to a QString without a requirement to link to Qt.
+ *
+ * \note consider conversion via usual char-by-char for loop to avoid UTF16->UTF8->UTF16
+ * conversion happening in the background
+ *
  */
 #define TStringToQString(s) QString::fromUtf8(s.toCString(true))
 
 namespace TagLib {
+
+  class StringList;
 
   //! A \e wide string class suitable for unicode.
 
   /*!
    * This is an implicitly shared \e wide string.  For storage it uses
    * TagLib::wstring, but as this is an <i>implementation detail</i> this of
-   * course could change.  Strings are stored internally as UTF-16BE.  (Without
-   * the BOM (Byte Order Mark)
+   * course could change.  Strings are stored internally as UTF-16(without BOM/
+   * CPU byte order)
    *
    * The use of implicit sharing means that copying a string is cheap, the only
    * \e cost comes into play when the copy is modified.  Prior to that the string
@@ -126,12 +135,12 @@ namespace TagLib {
     /*!
      * Makes a deep copy of the data in \a s.
      */
-    String(const wstring &s, Type t = UTF16BE);
+    String(const wstring &s, Type t = WCharByteOrder);
 
     /*!
      * Makes a deep copy of the data in \a s.
      */
-    String(const wchar_t *s, Type t = UTF16BE);
+    String(const wchar_t *s, Type t = WCharByteOrder);
 
     /*!
      * Makes a deep copy of the data in \a c.
@@ -169,34 +178,59 @@ namespace TagLib {
     virtual ~String();
 
     /*!
-     * If \a unicode if false (the default) this will return a \e Latin1 encoded
-     * std::string.  If it is true the returned std::wstring will be UTF-8
-     * encoded.
+     * Returns a deep copy of this String as an std::string.  The returned string 
+     * is encoded in UTF8 if \a unicode is true, otherwise Latin1.
+     *
+     * \see toCString()
      */
     std::string to8Bit(bool unicode = false) const;
 
     /*!
-     * Returns a wstring version of the TagLib string as a wide string.
+     * Returns a deep copy of this String as a wstring.  The returned string is 
+     * encoded in UTF-16 (without BOM/CPU byte order).
+     *
+     * \see toCWString()
      */
     wstring toWString() const;
 
     /*!
-     * Creates and returns a C-String based on the data.  This string is still
-     * owned by the String (class) and as such should not be deleted by the user.
+     * Creates and returns a standard C-style (null-terminated) version of this 
+     * String.  The returned string is encoded in UTF8 if \a unicode is true, 
+     * otherwise Latin1.
+     * 
+     * The returned string is still owned by this String and should not be deleted 
+     * by the user.
      *
-     * If \a unicode if false (the default) this string will be encoded in
-     * \e Latin1.  If it is true the returned C-String will be UTF-8 encoded.
+     * The returned pointer remains valid until this String instance is destroyed 
+     * or toCString() is called again.
      *
-     * This string remains valid until the String instance is destroyed or
-     * another export method is called.
-     *
-     * \warning This however has the side effect that this C-String will remain
-     * in memory <b>in addition to</b> other memory that is consumed by the
+     * \warning This however has the side effect that the returned string will remain
+     * in memory <b>in addition to</b> other memory that is consumed by this 
      * String instance.  So, this method should not be used on large strings or
-     * where memory is critical.
+     * where memory is critical.  Consider using to8Bit() instead to avoid it.
+     *
+     * \see to8Bit()
      */
     const char *toCString(bool unicode = false) const;
-
+    
+    /*!
+     * Returns a standard C-style (null-terminated) wide character version of 
+     * this String.  The returned string is encoded in UTF-16 (without BOM/CPU byte 
+     * order).
+     * 
+     * The returned string is still owned by this String and should not be deleted 
+     * by the user.
+     *
+     * The returned pointer remains valid until this String instance is destroyed 
+     * or any other method of this String is called.
+     *
+     * /note This returns a pointer to the String's internal data without any 
+     * conversions.
+     *
+     * \see toWString()
+     */
+    const wchar_t *toCWString() const;
+    
     /*!
      * Returns an iterator pointing to the beginning of the string.
      */
@@ -224,6 +258,18 @@ namespace TagLib {
      * \a offset.  If the pattern is not found, -1 is returned.
      */
     int find(const String &s, int offset = 0) const;
+
+    /*!
+     * Finds the last occurrence of pattern \a s in this string, searched backwards,
+     * either from the end of the string or starting from \a offset. If the pattern
+     * is not found, -1 is returned.
+     */
+    int rfind(const String &s, int offset = -1) const;
+
+    /*!
+     * Splits the string on each occurrence of \a separator.
+     */
+    StringList split(const String &separator = " ") const;
 
     /*!
      * Returns true if the strings starts with the substring \a s.
@@ -284,8 +330,21 @@ namespace TagLib {
 
     /*!
      * Convert the string to an integer.
+     *
+     * Returns the integer if the conversion was successful or 0 if the
+     * string does not represent a number.
      */
+    // BIC: merge with the method below
     int toInt() const;
+
+    /*!
+     * Convert the string to an integer.
+     *
+     * If the conversion was successfull, it sets the value of \a *ok to
+     * true and returns the integer. Otherwise it sets \a *ok to false
+     * and the result is undefined.
+     */
+    int toInt(bool *ok) const;
 
     /*!
      * Returns a string with the leading and trailing whitespace stripped.
@@ -322,6 +381,12 @@ namespace TagLib {
      * returns true if the strings match.
      */
     bool operator==(const String &s) const;
+
+    /*!
+     * Compares each character of the String with each character of \a s and
+     * returns false if the strings match.
+     */
+    bool operator!=(const String &s) const;
 
     /*!
      * Appends \a s to the end of the String.
@@ -411,17 +476,39 @@ namespace TagLib {
 
   private:
     /*!
-     * This checks to see if the string is in \e UTF-16 (with BOM) or \e UTF-8
-     * format and if so converts it to \e UTF-16BE for internal use.  \e Latin1
-     * does not require conversion since it is a subset of \e UTF-16BE and
-     * \e UTF16-BE requires no conversion since it is used internally.
+     * Converts a \e Latin-1 string into \e UTF-16(without BOM/CPU byte order) 
+     * and copies it to the internal buffer.
      */
-    void prepare(Type t);
+    void copyFromLatin1(const char *s, size_t length);
+
+    /*!
+     * Converts a \e UTF-8 string into \e UTF-16(without BOM/CPU byte order) 
+     * and copies it to the internal buffer.
+     */
+    void copyFromUTF8(const char *s, size_t length);
+
+    /*!
+     * Converts a \e UTF-16 (with BOM), UTF-16LE or UTF16-BE string into 
+     * \e UTF-16(without BOM/CPU byte order) and copies it to the internal buffer.
+     */
+    void copyFromUTF16(const wchar_t *s, size_t length, Type t);
+
+    /*!
+     * Converts a \e UTF-16 (with BOM), UTF-16LE or UTF16-BE string into 
+     * \e UTF-16(without BOM/CPU byte order) and copies it to the internal buffer.
+     */
+    void copyFromUTF16(const char *s, size_t length, Type t);
+    
+    /*!
+     * Indicates which byte order of UTF-16 is used to store strings internally. 
+     *
+     * \note \e String::UTF16BE or \e String::UTF16LE
+     */
+    static const Type WCharByteOrder;
 
     class StringPrivate;
     StringPrivate *d;
   };
-
 }
 
 /*!

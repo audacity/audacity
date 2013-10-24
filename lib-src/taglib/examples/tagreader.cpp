@@ -23,10 +23,12 @@
  */
 
 #include <iostream>
+#include <iomanip>
 #include <stdio.h>
 
 #include <fileref.h>
 #include <tag.h>
+#include <tpropertymap.h>
 
 using namespace std;
 
@@ -49,7 +51,7 @@ int main(int argc, char *argv[])
 
       TagLib::Tag *tag = f.tag();
 
-      cout << "-- TAG --" << endl;
+      cout << "-- TAG (basic) --" << endl;
       cout << "title   - \"" << tag->title()   << "\"" << endl;
       cout << "artist  - \"" << tag->artist()  << "\"" << endl;
       cout << "album   - \"" << tag->album()   << "\"" << endl;
@@ -57,6 +59,23 @@ int main(int argc, char *argv[])
       cout << "comment - \"" << tag->comment() << "\"" << endl;
       cout << "track   - \"" << tag->track()   << "\"" << endl;
       cout << "genre   - \"" << tag->genre()   << "\"" << endl;
+
+      TagLib::PropertyMap tags = f.file()->properties();
+
+      unsigned int longest = 0;
+      for(TagLib::PropertyMap::ConstIterator i = tags.begin(); i != tags.end(); ++i) {
+        if (i->first.size() > longest) {
+          longest = i->first.size();
+        }
+      }
+
+      cout << "-- TAG (properties) --" << endl;
+      for(TagLib::PropertyMap::ConstIterator i = tags.begin(); i != tags.end(); ++i) {
+        for(TagLib::StringList::ConstIterator j = i->second.begin(); j != i->second.end(); ++j) {
+          cout << left << std::setw(longest) << i->first << " - " << '"' << *j << '"' << endl;
+        }
+      }
+
     }
 
     if(!f.isNull() && f.audioProperties()) {

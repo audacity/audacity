@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,9 +26,9 @@
 #ifndef TAGLIB_ASFTAG_H
 #define TAGLIB_ASFTAG_H
 
-#include <tag.h>
-#include <tlist.h>
-#include <tmap.h>
+#include "tag.h"
+#include "tlist.h"
+#include "tmap.h"
 #include "taglib_export.h"
 #include "asfattribute.h"
 
@@ -120,17 +120,17 @@ namespace TagLib {
       virtual void setComment(const String &s);
 
       /*!
-       * Sets the rating to \a s. 
+       * Sets the rating to \a s.
        */
       virtual void setRating(const String &s);
 
       /*!
-       * Sets the copyright to \a s. 
+       * Sets the copyright to \a s.
        */
       virtual void setCopyright(const String &s);
 
       /*!
-       * Sets the genre to \a s. 
+       * Sets the genre to \a s.
        */
       virtual void setGenre(const String &s);
 
@@ -175,6 +175,10 @@ namespace TagLib {
        * with the \a key is already present, it will be added to the list.
        */
       void addAttribute(const String &name, const Attribute &attribute);
+
+      PropertyMap properties() const;
+      void removeUnsupportedProperties(const StringList& properties);
+      PropertyMap setProperties(const PropertyMap &properties);
 
     private:
 

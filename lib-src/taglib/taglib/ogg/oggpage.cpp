@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -116,12 +116,14 @@ Ogg::Page::ContainsPacketFlags Ogg::Page::containsPacket(int index) const
     flags = ContainsPacketFlags(flags | CompletePacket);
   }
 
-  // Or if the page is (a) the first page and it's complete or (b) the last page
-  // and it's complete or (c) a page in the middle.
-
-  else if((flags & BeginsWithPacket && !d->header.firstPacketContinued()) ||
-          (flags & EndsWithPacket && d->header.lastPacketCompleted()) ||
-          (!(flags & BeginsWithPacket) && !(flags & EndsWithPacket)))
+  // Or if there is more than one page and the page is
+  // (a) the first page and it's complete or
+  // (b) the last page and it's complete or
+  // (c) a page in the middle.
+  else if(packetCount() > 1 &&
+          ((flags & BeginsWithPacket && !d->header.firstPacketContinued()) ||
+           (flags & EndsWithPacket && d->header.lastPacketCompleted()) ||
+           (!(flags & BeginsWithPacket) && !(flags & EndsWithPacket))))
   {
     flags = ContainsPacketFlags(flags | CompletePacket);
   }
@@ -208,18 +210,99 @@ List<Ogg::Page *> Ogg::Page::paginate(const ByteVectorList &packets,
   for(ByteVectorList::ConstIterator it = packets.begin(); it != packets.end(); ++it)
     totalSize += (*it).size();
 
-  if(strategy == Repaginate || totalSize + packets.size() > 255 * 256) {
-    debug("Ogg::Page::paginate() -- Sorry!  Repagination is not yet implemented.");
-    return l;
+  // Handle creation of multiple pages with appropriate pagination.
+  if(strategy == Repaginate || totalSize + packets.size() > 255 * 255) {
+
+    // SPLITSIZE must be a multiple of 255 in order to get the lacing values right
+    // create pages of about 8KB each
+#define SPLITSIZE (32*255)
+
+    int pageIndex = 0;
+
+    for(ByteVectorList::ConstIterator it = packets.begin(); it != packets.end(); ++it) {
+      bool continued = false;
+
+      // mark very first packet?
+      if(firstPacketContinued && it==packets.begin()) {
+        continued = true;
+      }
+
+      // append to buf
+      ByteVector packetBuf;
+      packetBuf.append(*it);
+
+      while(packetBuf.size() > SPLITSIZE) {
+        // output a Page
+        ByteVector packetForOnePage;
+        packetForOnePage.resize(SPLITSIZE);
+        std::copy(packetBuf.begin(), packetBuf.begin() + SPLITSIZE, packetForOnePage.begin());
+
+        ByteVectorList packetList;
+        packetList.append(packetForOnePage);
+        Page *p = new Page(packetList, streamSerialNumber, firstPage+pageIndex, continued, false, false);
+        l.append(p);
+
+        pageIndex++;
+        continued = true;
+        packetBuf = packetBuf.mid(SPLITSIZE);
+      }
+
+      ByteVectorList::ConstIterator jt = it;
+      ++jt;
+      bool lastPacketInList = (jt == packets.end());
+
+      // output a page for the rest (we output one packet per page, so this one should be completed)
+      ByteVectorList packetList;
+      packetList.append(packetBuf);
+
+      bool isVeryLastPacket = false;
+      if(containsLastPacket) {
+        // mark the very last output page as last of stream
+        ByteVectorList::ConstIterator jt = it;
+        ++jt;
+        if(jt == packets.end()) {
+          isVeryLastPacket = true;
+        }
+      }
+
+      Page *p = new Page(packetList, streamSerialNumber, firstPage+pageIndex, continued,
+                         lastPacketInList ? lastPacketCompleted : true,
+                         isVeryLastPacket);
+      pageIndex++;
+
+      l.append(p);
+    }
+  }
+  else {
+    Page *p = new Page(packets, streamSerialNumber, firstPage, firstPacketContinued,
+                       lastPacketCompleted, containsLastPacket);
+    l.append(p);
   }
 
-  // TODO: Handle creation of multiple pages here with appropriate pagination.
-
-  Page *p = new Page(packets, streamSerialNumber, firstPage, firstPacketContinued,
-                     lastPacketCompleted, containsLastPacket);
-  l.append(p);
-
   return l;
+}
+
+Ogg::Page* Ogg::Page::getCopyWithNewPageSequenceNumber(int sequenceNumber)
+{
+  Page *pResultPage = NULL;
+
+  // TODO: a copy constructor would be helpful
+
+  if(d->file == 0) {
+    pResultPage = new Page(
+        d->packets,
+        d->header.streamSerialNumber(),
+        sequenceNumber,
+        d->header.firstPacketContinued(),
+        d->header.lastPacketCompleted(),
+        d->header.lastPageOfStream());
+  }
+  else
+  {
+    pResultPage = new Page(d->file, d->fileOffset);
+    pResultPage->d->header.setPageSequenceNumber(sequenceNumber);
+  }
+  return pResultPage;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -254,3 +337,4 @@ Ogg::Page::Page(const ByteVectorList &packets,
   d->packets = packets;
   d->header.setPacketSizes(packetSizes);
 }
+

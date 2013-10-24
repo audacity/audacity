@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -30,7 +30,7 @@
 #include "taglib_export.h"
 
 #include <vector>
-#include <ostream>
+#include <iostream>
 
 namespace TagLib {
 
@@ -48,6 +48,8 @@ namespace TagLib {
 #ifndef DO_NOT_DOCUMENT
     typedef std::vector<char>::iterator Iterator;
     typedef std::vector<char>::const_iterator ConstIterator;
+    typedef std::vector<char>::reverse_iterator ReverseIterator;
+    typedef std::vector<char>::const_reverse_iterator ConstReverseIterator;
 #endif
 
     /*!
@@ -62,12 +64,17 @@ namespace TagLib {
     ByteVector(uint size, char value = 0);
 
     /*!
-     * Contructs a byte vector that is a copy of \a v.
+     * Constructs a byte vector that is a copy of \a v.
      */
     ByteVector(const ByteVector &v);
 
     /*!
-     * Contructs a byte vector that contains \a c.
+     * Constructs a byte vector that is a copy of \a v.
+     */
+    ByteVector(const ByteVector &v, uint offset, uint length);
+
+    /*!
+     * Constructs a byte vector that contains \a c.
      */
     ByteVector(char c);
 
@@ -134,6 +141,14 @@ namespace TagLib {
      * by \a byteAlign (starting from \a offset).
      */
     int find(const ByteVector &pattern, uint offset = 0, int byteAlign = 1) const;
+
+    /*!
+     * Searches the char for \a c starting at \a offset and returns
+     * the offset.  Returns \a npos if the pattern was not found.  If \a byteAlign is
+     * specified the pattern will only be matched if it starts on a byte divisible
+     * by \a byteAlign (starting from \a offset).
+     */
+    int find(char c, uint offset = 0, int byteAlign = 1) const;
 
     /*!
      * Searches the ByteVector for \a pattern starting from either the end of the
@@ -223,6 +238,26 @@ namespace TagLib {
     ConstIterator end() const;
 
     /*!
+     * Returns a ReverseIterator that points to the front of the vector.
+     */
+    ReverseIterator rbegin();
+
+    /*!
+     * Returns a ConstReverseIterator that points to the front of the vector.
+     */
+    ConstReverseIterator rbegin() const;
+
+    /*!
+     * Returns a ReverseIterator that points to the back of the vector.
+     */
+    ReverseIterator rend();
+
+    /*!
+     * Returns a ConstReverseIterator that points to the back of the vector.
+     */
+    ConstReverseIterator rend() const;
+
+    /*!
      * Returns true if the vector is null.
      *
      * \note A vector may be empty without being null.
@@ -256,7 +291,32 @@ namespace TagLib {
     uint toUInt(bool mostSignificantByteFirst = true) const;
 
     /*!
-     * Converts the first 2 bytes of the vector to a short.
+     * Converts the 4 bytes at \a offset of the vector to an unsigned integer. 
+     *
+     * If \a mostSignificantByteFirst is true this will operate left to right
+     * evaluating the integer.  For example if \a mostSignificantByteFirst is
+     * true then $00 $00 $00 $01 == 0x00000001 == 1, if false, $01 00 00 00 ==
+     * 0x01000000 == 1.
+     *
+     * \see fromUInt()
+     */
+    uint toUInt(uint offset, bool mostSignificantByteFirst = true) const;
+
+    /*!
+     * Converts the \a length bytes at \a offset of the vector to an unsigned 
+     * integer. If \a length is larger than 4, the excess is ignored. 
+     *
+     * If \a mostSignificantByteFirst is true this will operate left to right
+     * evaluating the integer.  For example if \a mostSignificantByteFirst is
+     * true then $00 $00 $00 $01 == 0x00000001 == 1, if false, $01 00 00 00 ==
+     * 0x01000000 == 1.
+     *
+     * \see fromUInt()
+     */
+    uint toUInt(uint offset, uint length, bool mostSignificantByteFirst = true) const;
+
+    /*!
+     * Converts the first 2 bytes of the vector to a (signed) short.
      *
      * If \a mostSignificantByteFirst is true this will operate left to right
      * evaluating the integer.  For example if \a mostSignificantByteFirst is
@@ -265,6 +325,39 @@ namespace TagLib {
      * \see fromShort()
      */
     short toShort(bool mostSignificantByteFirst = true) const;
+
+    /*!
+     * Converts the 2 bytes at \a offset of the vector to a (signed) short.
+     *
+     * If \a mostSignificantByteFirst is true this will operate left to right
+     * evaluating the integer.  For example if \a mostSignificantByteFirst is
+     * true then $00 $01 == 0x0001 == 1, if false, $01 00 == 0x01000000 == 1.
+     *
+     * \see fromShort()
+     */
+    short toShort(uint offset, bool mostSignificantByteFirst = true) const;
+
+    /*!
+     * Converts the first 2 bytes of the vector to a unsigned short.
+     *
+     * If \a mostSignificantByteFirst is true this will operate left to right
+     * evaluating the integer.  For example if \a mostSignificantByteFirst is
+     * true then $00 $01 == 0x0001 == 1, if false, $01 00 == 0x01000000 == 1.
+     *
+     * \see fromShort()
+     */
+    unsigned short toUShort(bool mostSignificantByteFirst = true) const;
+
+    /*!
+     * Converts the 2 bytes at \a offset of the vector to a unsigned short.
+     *
+     * If \a mostSignificantByteFirst is true this will operate left to right
+     * evaluating the integer.  For example if \a mostSignificantByteFirst is
+     * true then $00 $01 == 0x0001 == 1, if false, $01 00 == 0x01000000 == 1.
+     *
+     * \see fromShort()
+     */
+    unsigned short toUShort(uint offset, bool mostSignificantByteFirst = true) const;
 
     /*!
      * Converts the first 8 bytes of the vector to a (signed) long long.
@@ -277,6 +370,18 @@ namespace TagLib {
      * \see fromUInt()
      */
     long long toLongLong(bool mostSignificantByteFirst = true) const;
+
+    /*!
+     * Converts the 8 bytes at \a offset of the vector to a (signed) long long.
+     *
+     * If \a mostSignificantByteFirst is true this will operate left to right
+     * evaluating the integer.  For example if \a mostSignificantByteFirst is
+     * true then $00 00 00 00 00 00 00 01 == 0x0000000000000001 == 1,
+     * if false, $01 00 00 00 00 00 00 00 == 0x0100000000000000 == 1.
+     *
+     * \see fromUInt()
+     */
+    long long toLongLong(uint offset, bool mostSignificantByteFirst = true) const;
 
     /*!
      * Creates a 4 byte ByteVector based on \a value.  If
@@ -385,6 +490,11 @@ namespace TagLib {
      */
     static ByteVector null;
 
+    /*!
+     * Returns a hex-encoded copy of the byte vector.
+     */
+    ByteVector toHex() const;
+
   protected:
     /*
      * If this ByteVector is being shared via implicit sharing, do a deep copy
@@ -397,7 +507,6 @@ namespace TagLib {
     class ByteVectorPrivate;
     ByteVectorPrivate *d;
   };
-
 }
 
 /*!

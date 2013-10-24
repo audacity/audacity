@@ -19,8 +19,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -31,6 +31,7 @@
 
 #include <tstring.h>
 #include <tdebug.h>
+#include <tpropertymap.h>
 
 #include "speexfile.h"
 
@@ -62,7 +63,16 @@ Speex::File::File(FileName file, bool readProperties,
                    Properties::ReadStyle propertiesStyle) : Ogg::File(file)
 {
   d = new FilePrivate;
-  read(readProperties, propertiesStyle);
+  if(isOpen())
+    read(readProperties, propertiesStyle);
+}
+
+Speex::File::File(IOStream *stream, bool readProperties,
+                   Properties::ReadStyle propertiesStyle) : Ogg::File(stream)
+{
+  d = new FilePrivate;
+  if(isOpen())
+    read(readProperties, propertiesStyle);
 }
 
 Speex::File::~File()
@@ -73,6 +83,16 @@ Speex::File::~File()
 Ogg::XiphComment *Speex::File::tag() const
 {
   return d->comment;
+}
+
+PropertyMap Speex::File::properties() const
+{
+  return d->comment->properties();
+}
+
+PropertyMap Speex::File::setProperties(const PropertyMap &properties)
+{
+  return d->comment->setProperties(properties);
 }
 
 Speex::Properties *Speex::File::audioProperties() const

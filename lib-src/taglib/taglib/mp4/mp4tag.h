@@ -1,5 +1,5 @@
 /**************************************************************************
-    copyright            : (C) 2007 by Lukáš Lalinský
+    copyright            : (C) 2007,2011 by Lukáš Lalinský
     email                : lalinsky@gmail.com
  **************************************************************************/
 
@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,11 +26,11 @@
 #ifndef TAGLIB_MP4TAG_H
 #define TAGLIB_MP4TAG_H
 
-#include <tag.h>
-#include <tbytevectorlist.h>
-#include <tfile.h>
-#include <tmap.h>
-#include <tstringlist.h>
+#include "tag.h"
+#include "tbytevectorlist.h"
+#include "tfile.h"
+#include "tmap.h"
+#include "tstringlist.h"
 #include "taglib_export.h"
 #include "mp4atom.h"
 #include "mp4item.h"
@@ -44,7 +44,9 @@ namespace TagLib {
     class TAGLIB_EXPORT Tag: public TagLib::Tag
     {
     public:
+        Tag();
         Tag(TagLib::File *file, Atoms *atoms);
+        ~Tag();
         bool save();
 
         String title() const;
@@ -65,29 +67,45 @@ namespace TagLib {
 
         ItemListMap &itemListMap();
 
+        PropertyMap properties() const;
+        void removeUnsupportedProperties(const StringList& properties);
+        PropertyMap setProperties(const PropertyMap &properties);
+
     private:
+        AtomDataList parseData2(Atom *atom, TagLib::File *file, int expectedFlags = -1, bool freeForm = false);
         TagLib::ByteVectorList parseData(Atom *atom, TagLib::File *file, int expectedFlags = -1, bool freeForm = false);
         void parseText(Atom *atom, TagLib::File *file, int expectedFlags = 1);
         void parseFreeForm(Atom *atom, TagLib::File *file);
         void parseInt(Atom *atom, TagLib::File *file);
+        void parseByte(Atom *atom, TagLib::File *file);
+        void parseUInt(Atom *atom, TagLib::File *file);
+        void parseLongLong(Atom *atom, TagLib::File *file);
+        void parseGnre(Atom *atom, TagLib::File *file);
         void parseIntPair(Atom *atom, TagLib::File *file);
         void parseBool(Atom *atom, TagLib::File *file);
+        void parseCovr(Atom *atom, TagLib::File *file);
 
         TagLib::ByteVector padIlst(const ByteVector &data, int length = -1);
         TagLib::ByteVector renderAtom(const ByteVector &name, const TagLib::ByteVector &data);
         TagLib::ByteVector renderData(const ByteVector &name, int flags, const TagLib::ByteVectorList &data);
-        TagLib::ByteVector renderText(const ByteVector &name, Item &item, int flags = 1);
+        TagLib::ByteVector renderText(const ByteVector &name, Item &item, int flags = TypeUTF8);
         TagLib::ByteVector renderFreeForm(const String &name, Item &item);
         TagLib::ByteVector renderBool(const ByteVector &name, Item &item);
         TagLib::ByteVector renderInt(const ByteVector &name, Item &item);
+        TagLib::ByteVector renderByte(const ByteVector &name, Item &item);
+        TagLib::ByteVector renderUInt(const ByteVector &name, Item &item);
+        TagLib::ByteVector renderLongLong(const ByteVector &name, Item &item);
         TagLib::ByteVector renderIntPair(const ByteVector &name, Item &item);
         TagLib::ByteVector renderIntPairNoTrailing(const ByteVector &name, Item &item);
+        TagLib::ByteVector renderCovr(const ByteVector &name, Item &item);
 
         void updateParents(AtomList &path, long delta, int ignore = 0);
         void updateOffsets(long delta, long offset);
 
         void saveNew(TagLib::ByteVector &data);
         void saveExisting(TagLib::ByteVector &data, AtomList &path);
+
+        void addItem(const String &name, const Item &value);
 
         class TagPrivate;
         TagPrivate *d;

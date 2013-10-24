@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -26,6 +26,7 @@
 #include <tbytevector.h>
 #include <tstring.h>
 #include <tdebug.h>
+#include <tpropertymap.h>
 
 #include <xiphcomment.h>
 #include "oggflacfile.h"
@@ -72,7 +73,16 @@ Ogg::FLAC::File::File(FileName file, bool readProperties,
                       Properties::ReadStyle propertiesStyle) : Ogg::File(file)
 {
   d = new FilePrivate;
-  read(readProperties, propertiesStyle);
+  if(isOpen())
+    read(readProperties, propertiesStyle);
+}
+
+Ogg::FLAC::File::File(IOStream *stream, bool readProperties,
+                      Properties::ReadStyle propertiesStyle) : Ogg::File(stream)
+{
+  d = new FilePrivate;
+  if(isOpen())
+    read(readProperties, propertiesStyle);
 }
 
 Ogg::FLAC::File::~File()
@@ -85,6 +95,16 @@ Ogg::XiphComment *Ogg::FLAC::File::tag() const
   return d->comment;
 }
 
+PropertyMap Ogg::FLAC::File::properties() const
+{
+  return d->comment->properties();
+}
+
+PropertyMap Ogg::FLAC::File::setProperties(const PropertyMap &properties)
+{
+  return d->comment->setProperties(properties);
+}  
+
 Properties *Ogg::FLAC::File::audioProperties() const
 {
   return d->properties;
@@ -93,7 +113,7 @@ Properties *Ogg::FLAC::File::audioProperties() const
 
 bool Ogg::FLAC::File::save()
 {
-  d->xiphCommentData = d->comment->render();
+  d->xiphCommentData = d->comment->render(false);
 
   // Create FLAC metadata-block:
 
@@ -115,6 +135,11 @@ bool Ogg::FLAC::File::save()
   setPacket(d->commentPacket, v);
 
   return Ogg::File::save();
+}
+
+bool Ogg::FLAC::File::hasXiphComment() const
+{
+  return d->hasXiphComment;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +246,7 @@ void Ogg::FLAC::File::scan()
 
   char blockType = header[0] & 0x7f;
   bool lastBlock = (header[0] & 0x80) != 0;
-  uint length = header.mid(1, 3).toUInt();
+  uint length = header.toUInt(1, 3, true);
   overhead += length;
 
   // Sanity: First block should be the stream_info metadata
@@ -231,7 +256,7 @@ void Ogg::FLAC::File::scan()
     return;
   }
 
-  d->streamInfoData = metadataHeader.mid(4,length);
+  d->streamInfoData = metadataHeader.mid(4, length);
 
   // Search through the remaining metadata
 
@@ -244,7 +269,7 @@ void Ogg::FLAC::File::scan()
     header = metadataHeader.mid(0, 4);
     blockType = header[0] & 0x7f;
     lastBlock = (header[0] & 0x80) != 0;
-    length = header.mid(1, 3).toUInt();
+    length = header.toUInt(1, 3, true);
     overhead += length;
 
     if(blockType == 1) {
@@ -256,9 +281,9 @@ void Ogg::FLAC::File::scan()
       d->hasXiphComment = true;
       d->commentPacket = ipacket;
     }
-    else if(blockType > 5)
+    else if(blockType > 5) {
       debug("Ogg::FLAC::File::scan() -- Unknown metadata block");
-
+    }
   }
 
   // End of metadata, now comes the datastream

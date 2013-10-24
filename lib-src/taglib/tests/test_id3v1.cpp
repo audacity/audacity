@@ -1,7 +1,10 @@
-#include <cppunit/extensions/HelperMacros.h>
 #include <string>
 #include <stdio.h>
+#include <tstring.h>
+#include <mpegfile.h>
 #include <id3v1tag.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include "utils.h"
 
 using namespace std;
 using namespace TagLib;
@@ -16,8 +19,20 @@ public:
 
   void testStripWhiteSpace()
   {
-    ID3v1::StringHandler h;
-    CPPUNIT_ASSERT_EQUAL(String("Foo"), h.parse(ByteVector("Foo                ")));
+    ScopedFileCopy copy("xing", ".mp3");
+    string newname = copy.fileName();
+
+    {
+      MPEG::File f(newname.c_str());
+      f.ID3v1Tag(true)->setArtist("Artist     ");
+      f.save();
+    }
+    
+    {
+      MPEG::File f(newname.c_str());
+      CPPUNIT_ASSERT(f.ID3v1Tag(false));
+      CPPUNIT_ASSERT_EQUAL(String("Artist"), f.ID3v1Tag(false)->artist());
+    }
   }
 
 };

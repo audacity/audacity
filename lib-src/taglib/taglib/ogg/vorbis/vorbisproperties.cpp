@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -133,7 +133,7 @@ void Vorbis::Properties::read()
 
   ByteVector data = d->file->packet(0);
 
-  int pos = 0;
+  uint pos = 0;
 
   if(data.mid(pos, 7) != vorbisSetupHeaderID) {
     debug("Vorbis::Properties::read() -- invalid Vorbis identification header");
@@ -142,22 +142,22 @@ void Vorbis::Properties::read()
 
   pos += 7;
 
-  d->vorbisVersion = data.mid(pos, 4).toUInt(false);
+  d->vorbisVersion = data.toUInt(pos, false);
   pos += 4;
 
   d->channels = uchar(data[pos]);
   pos += 1;
 
-  d->sampleRate = data.mid(pos, 4).toUInt(false);
+  d->sampleRate = data.toUInt(pos, false);
   pos += 4;
 
-  d->bitrateMaximum = data.mid(pos, 4).toUInt(false);
+  d->bitrateMaximum = data.toUInt(pos, false);
   pos += 4;
 
-  d->bitrateNominal = data.mid(pos, 4).toUInt(false);
+  d->bitrateNominal = data.toUInt(pos, false);
   pos += 4;
 
-  d->bitrateMinimum = data.mid(pos, 4).toUInt(false);
+  d->bitrateMinimum = data.toUInt(pos, false);
 
   // TODO: Later this should be only the "fast" mode.
   d->bitrate = d->bitrateNominal;
@@ -173,7 +173,7 @@ void Vorbis::Properties::read()
     long long end = last->absoluteGranularPosition();
 
     if(start >= 0 && end >= 0 && d->sampleRate > 0)
-      d->length = (end - start) / (long long) d->sampleRate;
+      d->length = (int)((end - start) / (long long) d->sampleRate);
     else
       debug("Vorbis::Properties::read() -- Either the PCM values for the start or "
             "end of this file was incorrect or the sample rate is zero.");

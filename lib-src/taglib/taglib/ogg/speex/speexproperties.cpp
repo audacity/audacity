@@ -19,8 +19,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -113,32 +113,32 @@ void Speex::Properties::read()
 
   ByteVector data = d->file->packet(0);
 
-  int pos = 28;
+  uint pos = 28;
 
   // speex_version_id;       /**< Version for Speex (for checking compatibility) */
-  d->speexVersion = data.mid(pos, 4).toUInt(false);
+  d->speexVersion = data.toUInt(pos, false);
   pos += 4;
 
   // header_size;            /**< Total size of the header ( sizeof(SpeexHeader) ) */
   pos += 4;
 
   // rate;                   /**< Sampling rate used */
-  d->sampleRate = data.mid(pos, 4).toUInt(false);
+  d->sampleRate = data.toUInt(pos, false);
   pos += 4;
 
   // mode;                   /**< Mode used (0 for narrowband, 1 for wideband) */
-  d->mode = data.mid(pos, 4).toUInt(false);
+  d->mode = data.toUInt(pos, false);
   pos += 4;
 
   // mode_bitstream_version; /**< Version ID of the bit-stream */
   pos += 4;
 
   // nb_channels;            /**< Number of channels encoded */
-  d->channels = data.mid(pos, 4).toUInt(false);
+  d->channels = data.toUInt(pos, false);
   pos += 4;
 
   // bitrate;                /**< Bit-rate used */
-  d->bitrate = data.mid(pos, 4).toUInt(false);
+  d->bitrate = data.toUInt(pos, false);
   pos += 4;
 
   // frame_size;             /**< Size of frames */
@@ -146,7 +146,7 @@ void Speex::Properties::read()
   pos += 4;
 
   // vbr;                    /**< 1 for a VBR encoding, 0 otherwise */
-  d->vbr = data.mid(pos, 4).toUInt(false) == 1;
+  d->vbr = data.toUInt(pos, false) == 1;
   pos += 4;
 
   // frames_per_packet;      /**< Number of frames stored per Ogg packet */

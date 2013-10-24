@@ -1,167 +1,157 @@
-Basic Installation
-==================
+TagLib Installation
+===================
 
-   These are generic installation instructions.
+TagLib uses the CMake build system. As a user, you will most likely want to
+build TagLib in release mode and install it into a system-wide location.
+This can be done using the following commands:
 
-   The `configure' shell script attempts to guess correct values for
-various system-dependent variables used during compilation.  It uses
-those values to create a `Makefile' in each directory of the package.
-It may also create one or more `.h' files containing system-dependent
-definitions.  Finally, it creates a shell script `config.status' that
-you can run in the future to recreate the current configuration, a file
-`config.cache' that saves the results of its tests to speed up
-reconfiguring, and a file `config.log' containing compiler output
-(useful mainly for debugging `configure').
+  cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_RELEASE_TYPE=Release .
+  make
+  sudo make install
 
-   If you need to do unusual things to compile the package, please try
-to figure out how `configure' could check whether to do them, and mail
-diffs or instructions to the address given in the `README' so they can
-be considered for the next release.  If at some point `config.cache'
-contains results you don't want to keep, you may remove or edit it.
+In order to build the included examples, use the BUILD_EXAMPLES option:
 
-   The file `configure.in' is used to create `configure' by a program
-called `autoconf'.  You only need `configure.in' if you want to change
-it or regenerate `configure' using a newer version of `autoconf'.
+  cmake -DBUILD_EXAMPLES=ON [...]
 
-The simplest way to compile this package is:
+See http://www.cmake.org/cmake/help/runningcmake.html for generic help on
+running CMake.
 
-  1. `cd' to the directory containing the package's source code and type
-     `./configure' to configure the package for your system.  If you're
-     using `csh' on an old version of System V, you might need to type
-     `sh ./configure' instead to prevent `csh' from trying to execute
-     `configure' itself.
+Mac OS X
+--------
 
-     Running `configure' takes a while.  While running, it prints some
-     messages telling which features it is checking for.
+On Mac OS X, you might want to build a framework that can be easily integrated
+into your application. If you set the BUILD_FRAMEWORK option on, it will compile
+TagLib as a framework. For example, the following command can be used to build
+an Universal Binary framework with Mac OS X 10.4 as the deployment target:
 
-  2. Type `make' to compile the package.
+  cmake -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_FRAMEWORK=ON \
+    -DCMAKE_C_COMPILER=/usr/bin/gcc-4.0 \
+    -DCMAKE_CXX_COMPILER=/usr/bin/c++-4.0 \
+    -DCMAKE_OSX_SYSROOT=/Developer/SDKs/MacOSX10.4u.sdk/ \
+    -DCMAKE_OSX_DEPLOYMENT_TARGET=10.4 \
+    -DCMAKE_OSX_ARCHITECTURES="ppc;i386;x86_64"
 
-  3. Type `make install' to install the programs and any data files and
-     documentation.
+For a 10.6 Snow Leopard static library with both 32-bit and 64-bit code, use:
 
-  4. You can remove the program binaries and object files from the
-     source code directory by typing `make clean'.  
+  cmake -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 \
+    -DCMAKE_OSX_ARCHITECTURES="i386;x86_64" \
+    -DENABLE_STATIC=ON \
+    -DCMAKE_INSTALL_PREFIX="<folder you want to build to>"
 
-Compilers and Options
-=====================
+After 'make', and 'make install', add libtag.a to your XCode project, and add
+the include folder to the project's User Header Search Paths.
 
-   Some systems require unusual options for compilation or linking that
-the `configure' script does not know about.  You can give `configure'
-initial values for variables by setting them in the environment.  Using
-a Bourne-compatible shell, you can do that on the command line like
-this:
-     CC=c89 CFLAGS=-O2 LIBS=-lposix ./configure
+Windows
+-------
 
-Or on systems that have the `env' program, you can do it like this:
-     env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
+It's Windows ... Systems vary!
+This means you need to adjust things to suit your system, especially paths.
 
-Compiling For Multiple Architectures
-====================================
+Tested with:
+  Microsoft Visual Studio 2010
+  Gcc by mingw-w64.sf.net v4.6.3 (Strawberry Perl 32b)
+  MinGW32-4.8.0
 
-   You can compile the package for more than one kind of computer at the
-same time, by placing the object files for each architecture in their
-own directory.  To do this, you must use a version of `make' that
-supports the `VPATH' variable, such as GNU `make'.  `cd' to the
-directory where you want the object files and executables to go and run
-the `configure' script.  `configure' automatically checks for the
-source code in the directory that `configure' is in and in `..'.
+Requirements:
+  1. Tool chain, Build Environment, Whatever ya want to call it ...
+     Installed and working.
+  2. CMake program. (Available at: www.cmake.org)
+     Installed and working.
 
-   If you have to use a `make' that does not supports the `VPATH'
-variable, you have to compile the package for one architecture at a time
-in the source code directory.  After you have installed the package for
-one architecture, use `make distclean' before reconfiguring for another
-architecture.
+Optional:
+  1. Zlib library.
+     Available in some Tool Chains, Not all.
+     Search the web, Take your choice.
 
-Installation Names
-==================
+Useful configuration options used with CMake (GUI and/or Command line):
+  Any of the ZLIB_ variables may be used at the command line, ZLIB_ROOT is only
+  available on the Command line.
+  ZLIB_ROOT=            Where to find ZLib's root directory.
+                        Assumes parent of: \include and \lib.
+  ZLIB_INCLUDE_DIR=     Where to find ZLib's Include directory.
+  ZLIB_LIBRARY=         Where to find ZLib's Library.
+  CMAKE_INSTALL_PREFIX= Where to install Taglib.
+  CMAKE_BUILD_TYPE=     Release, Debug, etc ... (Not available in MSVC)
 
-   By default, `make install' will install the package's files in
-`/usr/local/bin', `/usr/local/man', etc.  You can specify an
-installation prefix other than `/usr/local' by giving `configure' the
-option `--prefix=PATH'.
+The easiest way is at the Command Prompt.
+  MSVS Command Prompt for MSVS Users.
+  (Batch file and/or Shortcuts are your friends)
 
-   You can specify separate installation prefixes for
-architecture-specific files and architecture-independent files.  If you
-give `configure' the option `--exec-prefix=PATH', the package will use
-PATH as the prefix for installing programs and libraries.
-Documentation and other data files will still use the regular prefix.
+  1. Build the Makefiles:
+       Replace "GENERATOR" with your needs.
+       For MSVS : "Visual Studio X" where X is the single or two digit version.
+       For MinGW: "MinGW Makefiles"
 
-   If the package supports it, you can cause programs to be installed
-with an extra prefix or suffix on their names by giving `configure' the
-option `--program-prefix=PREFIX' or `--program-suffix=SUFFIX'.
+       C:\GitRoot\taglib> cmake -G "GENERATOR" -DCMAKE_INSTALL_PREFIX=C:\Libraries\taglib
 
-Optional Features
-=================
+     Or use the CMake GUI:
+       1. Open CMake GUI.
+       2. Set Paths.
+          "Where is the source code" and "Where to build the binaries"
+          Example, Both would be: C:\GitRoot\taglib
+       3. Tick: Advanced
+       4. Select: Configure
+       5. Select: Generator
+       6. Tick: Use default native compilers
+       7. Select: Finish
+       Wait until done.
+       5. If using ZLib, Scroll down.
+          (to the bottom of the list of options ... should go over them all)
+          1. Edit: ZLIB_INCLUDE_DIR
+          2. Edit: ZLIB_LIBRARY
+       6. Select: Generate
 
-   Some packages pay attention to `--enable-FEATURE' options to
-`configure', where FEATURE indicates an optional part of the package.
-They may also pay attention to `--with-PACKAGE' options, where PACKAGE
-is something like `gnu-as' or `x' (for the X Window System).  The
-`README' should mention any `--enable-' and `--with-' options that the
-package recognizes.
+  2. Build the project:
+       MSVS:
+         C:\GitRoot\taglib> msbuild all_build.vcxproj /p:Configuration=Release
+           OR (Depending on MSVS version or personal choice)
+         C:\GitRoot\taglib> devenv all_build.vcxproj /build Release
+       MinGW:
+         C:\GitRoot\taglib> gmake
+           OR (Depending on MinGW install)
+         C:\GitRoot\taglib> mingw32-make
 
-   For packages that use the X Window System, `configure' can usually
-find the X include and library files automatically, but if it doesn't,
-you can use the `configure' options `--x-includes=DIR' and
-`--x-libraries=DIR' to specify their locations.
+     Or in the MSVS GUI:
+       1. Open MSVS.
+       2. Open taglib solution.
+       3. Set build type to: Release (look in the tool bars)
+       2. Hit F7 to build the solution. (project)
 
-Specifying the System Type
-==========================
+  3. Install the project:
+       (Change 'install' to 'uninstall' to uninstall the project)
+       MSVS:
+         C:\GitRoot\taglib> msbuild install.vcxproj
+           OR (Depending on MSVC version or personal choice)
+         C:\GitRoot\taglib> devenv install.vcxproj
+       MinGW:
+         C:\GitRoot\taglib> gmake install
+           OR (Depending on MinGW install)
+         C:\GitRoot\taglib> mingw32-make install
 
-   There may be some features `configure' can not figure out
-automatically, but needs to determine by the type of host the package
-will run on.  Usually `configure' can figure that out, but if it prints
-a message saying it can not guess the host type, give it the
-`--host=TYPE' option.  TYPE can either be a short name for the system
-type, such as `sun4', or a canonical name with three fields:
-     CPU-COMPANY-SYSTEM
+     Or in the MSVS GUI:
+       1. Open project.
+       2. Open Solution Explorer.
+       3. Right Click: INSTALL
+       4. Select: Project Only
+       5. Select: Build Only INSTALL
 
-See the file `config.sub' for the possible values of each field.  If
-`config.sub' isn't included in this package, then this package doesn't
-need to know the host type.
+To build a static library enable the following two options with CMake.
+  -DENABLE_STATIC=ON -DENABLE_STATIC_RUNTIME=ON
+  
+Including ENABLE_STATIC_RUNTIME=ON indicates you want TagLib built using the
+static runtime library, rather than the DLL form of the runtime.
 
-   If you are building compiler tools for cross-compiling, you can also
-use the `--target=TYPE' option to select the type of system they will
-produce code for and the `--build=TYPE' option to select the type of
-system on which you are compiling the package.
+Unit Tests
+----------
 
-Sharing Defaults
-================
+If you want to run the test suite to make sure TagLib works properly on your
+system, you need to have cppunit installed. To build the tests, include
+the option -DBUILD_TESTS=on when running cmake.
 
-   If you want to set default values for `configure' scripts to share,
-you can create a site shell script called `config.site' that gives
-default values for variables like `CC', `cache_file', and `prefix'.
-`configure' looks for `PREFIX/share/config.site' if it exists, then
-`PREFIX/etc/config.site' if it exists.  Or, you can set the
-`CONFIG_SITE' environment variable to the location of the site script.
-A warning: not all `configure' scripts look for a site script.
+The test suite has a custom target in the build system, so you can run
+the tests using make:
 
-Operation Controls
-==================
-
-   `configure' recognizes the following options to control how it
-operates.
-
-`--cache-file=FILE'
-     Use and save the results of the tests in FILE instead of
-     `./config.cache'.  Set FILE to `/dev/null' to disable caching, for
-     debugging `configure'.
-
-`--help'
-     Print a summary of the options to `configure', and exit.
-
-`--quiet'
-`--silent'
-`-q'
-     Do not print messages saying which checks are being made.
-
-`--srcdir=DIR'
-     Look for the package's source code in directory DIR.  Usually
-     `configure' can determine that directory automatically.
-
-`--version'
-     Print the version of Autoconf used to generate the `configure'
-     script, and exit.
-
-`configure' also accepts some other, not widely useful, options.
+  make check
 

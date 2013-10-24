@@ -15,8 +15,8 @@
  *                                                                         *
  *   You should have received a copy of the GNU Lesser General Public      *
  *   License along with this library; if not, write to the Free Software   *
- *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  *
- *   USA                                                                   *
+ *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA         *
+ *   02110-1301  USA                                                       *
  *                                                                         *
  *   Alternatively, this file is available under the Mozilla Public        *
  *   License Version 1.1.  You may obtain a copy of the License at         *
@@ -58,11 +58,24 @@ namespace TagLib {
       {
       public:
         /*!
-         * Contructs an AIFF file from \a file.  If \a readProperties is true the
-         * file's audio properties will also be read using \a propertiesStyle.  If
-         * false, \a propertiesStyle is ignored.
+         * Constructs an AIFF file from \a file.  If \a readProperties is true the
+         * file's audio properties will also be read.
+         *
+         * \note In the current implementation, \a propertiesStyle is ignored.
          */
         File(FileName file, bool readProperties = true,
+             Properties::ReadStyle propertiesStyle = Properties::Average);
+
+        /*!
+         * Constructs an AIFF file from \a stream.  If \a readProperties is true the
+         * file's audio properties will also be read.
+         *
+         * \note TagLib will *not* take ownership of the stream, the caller is
+         * responsible for deleting it after the File object.
+         *
+         * \note In the current implementation, \a propertiesStyle is ignored.
+         */
+        File(IOStream *stream, bool readProperties = true,
              Properties::ReadStyle propertiesStyle = Properties::Average);
 
         /*!
@@ -72,8 +85,28 @@ namespace TagLib {
 
         /*!
          * Returns the Tag for this file.
+         *
+         * \note This always returns a valid pointer regardless of whether or not 
+         * the file on disk has an ID3v2 tag.  Use hasID3v2Tag() to check if the file 
+         * on disk actually has an ID3v2 tag.
+         *
+         * \see hasID3v2Tag()
          */
         virtual ID3v2::Tag *tag() const;
+
+        /*!
+         * Implements the unified property interface -- export function.
+         * This method forwards to ID3v2::Tag::properties().
+         */
+        PropertyMap properties() const;
+
+        void removeUnsupportedProperties(const StringList &properties);
+
+        /*!
+         * Implements the unified property interface -- import function.
+         * This method forwards to ID3v2::Tag::setProperties().
+         */
+        PropertyMap setProperties(const PropertyMap &);
 
         /*!
          * Returns the AIFF::Properties for this file.  If no audio properties
@@ -85,6 +118,13 @@ namespace TagLib {
          * Saves the file.
          */
         virtual bool save();
+
+        /*!
+         * Returns whether or not the file on disk actually has an ID3v2 tag.
+         *
+         * \see ID3v2Tag()
+         */
+        bool hasID3v2Tag() const;
 
       private:
         File(const File &);
