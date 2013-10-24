@@ -60,7 +60,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVORBIS], [
       LIBVORBIS_LOCAL_CPPSYMBOLS="USE_LIBVORBIS"
 
       LIBVORBIS_LOCAL_CONFIG_SUBDIRS="lib-src/libogg lib-src/libvorbis"
-      LIBVORBIS_LOCAL_CONFIGURE_OPTS="--with-ogg=../libogg --with-ogg-libraries=.. --disable-oggtest"
+      export PKG_CONFIG_PATH="${srcdir}/lib-src/libogg:${PKG_CONFIG_PATH}"
 
       AC_MSG_NOTICE([Vorbis libraries are available in this source tree])
    else
