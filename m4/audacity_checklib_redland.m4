@@ -34,9 +34,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_REDLAND], [
       REDLAND_LOCAL_AVAILABLE="yes"
       REDLAND_LOCAL_LIBS="librdf.a libraptor.a librasqal.a"
       REDLAND_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/redland/librdf -I$(top_srcdir)/lib-src/redland/raptor/src -I$(top_srcdir)/lib-src/redland/rasqal/src'
-      if test ! -f lib-src/redland/Makefile ; then
-         REDLAND_LOCAL_CONFIG_SUBDIRS="lib-src/redland"
-      fi
       if test "x$LIBEXPAT_SYSTEM_AVAILABLE" = "xno" ; then
          # This is a horrible hack to keep from having to modify the raptor/configure.ac.  It makes
          # the raptor configure think there's a full expat source tree.  But, all we have is expat.h
@@ -51,3 +48,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_REDLAND], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_REDLAND], [
+   if test "$REDLAND_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/redland])
+   fi
+])

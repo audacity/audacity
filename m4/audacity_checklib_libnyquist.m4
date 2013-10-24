@@ -34,8 +34,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBNYQUIST], [
       LIBNYQUIST_LOCAL_OPTOBJS="effects/nyquist/Nyquist.o"
       LIBNYQUIST_LOCAL_OPTOBJS="$LIBNYQUIST_LOCAL_OPTOBJS effects/nyquist/LoadNyquist.o"
 
-      LIBNYQUIST_LOCAL_CONFIG_SUBDIRS="lib-src/libnyquist"
-
       AC_MSG_NOTICE([nyquist libraries are available in the local tree])
    else
       LIBNYQUIST_LOCAL_AVAILABLE="no"
@@ -43,3 +41,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBNYQUIST], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBNYQUIST], [
+   if test "$LIBNYQUIST_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libnyquist])
+   fi
+])

@@ -44,10 +44,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSAMPLERATE], [
       LIBSAMPLERATE_LOCAL_LIBS="libsamplerate.a"
       LIBSAMPLERATE_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libsamplerate/src'
       LIBSAMPLERATE_LOCAL_CPPSYMBOLS="USE_LIBSAMPLERATE"
-
-      if test ! -f lib-src/libsamplerate/Makefile ; then
-         LIBSAMPLERATE_LOCAL_CONFIG_SUBDIRS="lib-src/libsamplerate"
-      fi
       AC_MSG_NOTICE([libsamplerate libraries are available in the local tree])
    else
       LIBSAMPLERATE_LOCAL_AVAILABLE="no"
@@ -55,3 +51,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSAMPLERATE], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBSAMPLERATE], [
+   if test "$LIBSAMPLERATE_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libsamplerate])
+   fi
+])

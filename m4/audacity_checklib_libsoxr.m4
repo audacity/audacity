@@ -48,13 +48,9 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSOXR], [
       LIBSOXR_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libsoxr/src'
       LIBSOXR_LOCAL_CPPSYMBOLS="USE_LIBSOXR"
 
-      if test ! -f lib-src/libsoxr/Makefile ; then
-         LIBSOXR_LOCAL_CONFIG_SUBDIRS="lib-src/libsoxr"
-
-         # Breaks other other libraries in Audacity tree; but why is ./configure
-         # passing options specific to this library to other libraries?
-         #LIBSOXR_LOCAL_CONFIGURE_ARGS="\"-DBUILD_SHARED_LIBS=OFF -DWITH_OPENMP=OFF\""
-      fi
+      # Breaks other other libraries in Audacity tree; but why is ./configure
+      # passing options specific to this library to other libraries?
+      #LIBSOXR_LOCAL_CONFIGURE_ARGS="\"-DBUILD_SHARED_LIBS=OFF -DWITH_OPENMP=OFF\""
       AC_MSG_NOTICE([libsoxr libraries are available in the local tree])
    else
       LIBSOXR_LOCAL_AVAILABLE="no"
@@ -62,3 +58,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSOXR], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBSOXR], [
+   if test "$LIBSOXR_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libsoxr])
+   fi
+])

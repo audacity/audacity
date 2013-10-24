@@ -45,8 +45,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSBSMS], [
       LIBSBSMS_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/sbsms/include'
       LIBSBSMS_LOCAL_CPPSYMBOLS="USE_SBSMS"
 
-	  dnl set up configuring sbsms
-      LIBSBSMS_LOCAL_CONFIG_SUBDIRS="lib-src/sbsms"
 	  dnl do not build programs we don't need
 	   LIBSBSMS_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
@@ -58,3 +56,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSBSMS], [
 
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBSBSMS], [
+   if test "$LIBSBSMS_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/sbsms])
+   fi
+])

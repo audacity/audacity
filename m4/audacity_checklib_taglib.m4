@@ -43,9 +43,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_TAGLIB], [
       TAGLIB_LOCAL_LIBS="taglib.a"
       TAGLIB_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/taglib/taglib'
       TAGLIB_LOCAL_CPPSYMBOLS="USE_TAGLIB"
-	
-      dnl request library is configured
-      TAGLIB_LOCAL_CONFIG_SUBDIRS="lib-src/taglib"
 
       AC_MSG_NOTICE([TagLib library is available in the local tree])
    else
@@ -54,3 +51,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_TAGLIB], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_TAGLIB], [
+   if test "$TAGLIB_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/taglib])
+   fi
+])

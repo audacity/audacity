@@ -49,7 +49,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBID3TAG], [
       LIBID3TAG_LOCAL_LIBS="libid3tag.a"
       LIBID3TAG_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libid3tag'
       LIBID3TAG_LOCAL_CPPSYMBOLS="USE_LIBID3TAG"
-      LIBID3TAG_LOCAL_CONFIG_SUBDIRS="lib-src/libid3tag"
       AC_MSG_NOTICE([libid3tag libraries are available in the local tree])
    else
       LIBID3TAG_LOCAL_AVAILABLE="no"
@@ -57,3 +56,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBID3TAG], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBID3TAG], [
+   if test "$LIBID3TAG_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libid3tag])
+   fi
+])

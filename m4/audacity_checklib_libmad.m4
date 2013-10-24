@@ -53,7 +53,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBMAD], [
       LIBMAD_LOCAL_LIBS="libmad.a"
       LIBMAD_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libmad'
       LIBMAD_LOCAL_CPPSYMBOLS="USE_LIBMAD"
-      LIBMAD_LOCAL_CONFIG_SUBDIRS="lib-src/libmad"
       AC_MSG_NOTICE([libmad libraries are available in the local tree])
    else
       LIBMAD_LOCAL_AVAILABLE="no"
@@ -62,3 +61,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBMAD], [
    LIBMAD_MIMETYPES="audio/mpeg;"
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBMAD], [
+   if test "$LIBMAD_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libmad])
+   fi
+])

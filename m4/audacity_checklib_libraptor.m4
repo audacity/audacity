@@ -36,9 +36,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBRAPTOR], [
       LIBRAPTOR_LOCAL_AVAILABLE="yes"
       LIBRAPTOR_LOCAL_LIBS="libraptor.a"
       LIBRAPTOR_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libraptor/src'
-      if test ! -f lib-src/libraptor/Makefile ; then
-         LIBRAPTOR_LOCAL_CONFIG_SUBDIRS="lib-src/libraptor"
-      fi
       AC_MSG_NOTICE([libraptor is available in the local tree])
       if test "x$LIBEXPAT_SYSTEM_AVAILABLE" = "xno" ; then
          LIBRAPTOR_LOCAL_CONFIGURE_ARGS="\"--with-expat-source=${srcdir}/src/include\""
@@ -50,3 +47,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBRAPTOR], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBRAPTOR], [
+   if test "$LIBRAPTOR_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libraptor])
+   fi
+])

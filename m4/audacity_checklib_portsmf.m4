@@ -45,10 +45,15 @@ AC_DEFUN([AUDACITY_CHECKLIB_PORTSMF], [
       PORTSMF_LOCAL_LIBS="libportSMF.a"
       PORTSMF_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/portsmf'
       PORTSMF_LOCAL_CPPSYMBOLS="USE_MIDI"
-      PORTSMF_LOCAL_CONFIG_SUBDIRS="lib-src/portsmf"
       dnl extra objects we can now compile
       PORTSMF_LOCAL_OPTOBJS="NoteTrack.o import/ImportMIDI.o"
    else
       PORTSMF_LOCAL_AVAILABLE="no"
+   fi
+])
+
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_PORTSMF], [
+   if test "$PORTSMF_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/portsmf])
    fi
 ])

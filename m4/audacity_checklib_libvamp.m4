@@ -53,8 +53,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVAMP], [
 	  dnl define a pre-processor symbol to tell other code that the vamp host
 	  dnl SDK is available
       LIBVAMP_LOCAL_CPPSYMBOLS="USE_VAMP"
-	  dnl schedule the directory to be configured
-      LIBVAMP_LOCAL_CONFIG_SUBDIRS="lib-src/libvamp"
 	  dnl do not build programs we don't need
 	   LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
@@ -65,3 +63,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVAMP], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBVAMP], [
+   if test "$LIBVAMP_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libvamp])
+   fi
+])

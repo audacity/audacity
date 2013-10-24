@@ -37,7 +37,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSNDFILE], [
       LIBSNDFILE_LOCAL_AVAILABLE="yes"
       LIBSNDFILE_LOCAL_LIBS="libsndfile.a"
       LIBSNDFILE_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libsndfile/src'
-      LIBSNDFILE_LOCAL_CONFIG_SUBDIRS="lib-src/libsndfile"
       AC_MSG_NOTICE([libsndfile libraries are available in this source tree])
 
       dnl These must be visible so libvamp and sbsms can find us
@@ -53,3 +52,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSNDFILE], [
    LIBSNDFILE_MIMETYPES="audio/basic;audio/x-aiff;audio/x-wav;"
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBSNDFILE], [
+   if test "$LIBSNDFILE_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libsndfile])
+   fi
+])

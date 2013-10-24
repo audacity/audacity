@@ -62,7 +62,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBFLAC], [
       LIBFLAC_LOCAL_CPPSYMBOLS="USE_LIBFLAC"
       # this file shouldn't be built at if no libflac is available
       LIBFLAC_LOCAL_OPTOBJS="ondemand/ODDecodeFlacTask.o"
-      LIBFLAC_LOCAL_CONFIG_SUBDIRS="lib-src/libflac"
       LIBFLAC_LOCAL_CONFIGURE_ARGS="--disable-xmms-plugin --disable-doxygen-docs --disable-thorough-tests"
 
       AC_MSG_NOTICE([FLAC libraries are available in this source tree])
@@ -73,3 +72,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBFLAC], [
    LIBFLAC_MIMETYPES="audio/flac;audio/x-flac;"
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBFLAC], [
+   if test "$LIBFLAC_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libflac])
+   fi
+])

@@ -33,7 +33,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBRESAMPLE], [
       LIBRESAMPLE_LOCAL_LIBS="libresample.a"
       LIBRESAMPLE_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libresample/include'
       LIBRESAMPLE_LOCAL_CPPSYMBOLS="USE_LIBRESAMPLE"
-      LIBRESAMPLE_LOCAL_CONFIG_SUBDIRS="lib-src/libresample"
       
       AC_MSG_NOTICE([libresample libraries are available in the local tree])
    else
@@ -42,3 +41,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBRESAMPLE], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBRESAMPLE], [
+   if test "$LIBRESAMPLE_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/libresample])
+   fi
+])

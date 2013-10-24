@@ -45,8 +45,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBTWOLAME], [
       LIBTWOLAME_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/twolame/libtwolame'
       LIBTWOLAME_LOCAL_CPPSYMBOLS="USE_LIBTWOLAME"
 	
-	  dnl request library is configured
-      LIBTWOLAME_LOCAL_CONFIG_SUBDIRS="lib-src/twolame"
 	  dnl disable programs we don't need to build
 	   LIBTWOLAME_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
@@ -57,3 +55,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBTWOLAME], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBTWOLAME], [
+   if test "$LIBTWOLAME_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/twolame])
+   fi
+])

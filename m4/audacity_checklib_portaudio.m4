@@ -44,7 +44,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_PORTAUDIO], [
       PORTAUDIO_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/portaudio-v19/include'
 
       dnl set up configuring portaudio
-      PORTAUDIO_LOCAL_CONFIG_SUBDIRS="lib-src/portaudio-v19"
       PORTAUDIO_LOCAL_CONFIGURE_ARGS="--with-pa-include=../portaudio-v19/include"
 
       AC_MSG_NOTICE([portaudio19 library is available in the local tree])
@@ -53,4 +52,10 @@ AC_DEFUN([AUDACITY_CHECKLIB_PORTAUDIO], [
       AC_MSG_NOTICE([portaudio19 library is NOT available in the local tree])
    fi
 
+])
+
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_PORTAUDIO], [
+   if test "$PORTAUDIO_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/portaudio-v19])
+   fi
 ])

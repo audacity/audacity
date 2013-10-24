@@ -46,9 +46,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBLRDF], [
       LIBLRDF_LOCAL_LIBS="liblrdf.a"
       LIBLRDF_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/liblrdf'
       LIBLRDF_LOCAL_CPPSYMBOLS="USE_LIBLRDF"
-      if test ! -f lib-src/liblrdf/Makefile ; then
-         LIBLRDF_LOCAL_CONFIG_SUBDIRS="lib-src/liblrdf"
-      fi
       AC_MSG_NOTICE([liblrdf is available in the local tree])
    else
       LIBLRDF_LOCAL_AVAILABLE="no"
@@ -56,3 +53,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBLRDF], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBLRDF], [
+   if test "$LIBLRDF_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/liblrdf])
+   fi
+])

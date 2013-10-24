@@ -44,9 +44,6 @@ AC_DEFUN([AUDACITY_CHECKLIB_SLV2], [
       SLV2_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/slv2'
       SLV2_LOCAL_CPPSYMBOLS="USE_SLV2"
       SLV2_LOCAL_OPTOBJS="effects/lv2/LoadLV2.o effects/lv2/LV2Effect.o effects/lv2/LV2PortGroup.o"
-      if test ! -f lib-src/slv2/Makefile ; then
-         SLV2_LOCAL_CONFIG_SUBDIRS="lib-src/slv2"
-      fi
       AC_MSG_NOTICE([SLV2 is available in the local tree])
    else
       SLV2_LOCAL_AVAILABLE="no"
@@ -54,3 +51,8 @@ AC_DEFUN([AUDACITY_CHECKLIB_SLV2], [
    fi
 ])
 
+AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_SLV2], [
+   if test "$SLV2_USE_LOCAL" = yes; then
+      AC_CONFIG_SUBDIRS([lib-src/slv2])
+   fi
+])
