@@ -3,7 +3,7 @@
 # Copyright 2003, 2004, 2005 Dominic Mazzoni and Matt Brubeck
 # Distributed under the GNU General Public License 2.0.
 # See the file LICENSE.txt for details.
-# Re-written in Bash by Richard Ash 2006 - 2012
+# Re-written in Bash by Richard Ash 2006 - 2013
 
 function myrmrvf {
 	# a replacement for rm -rvf that has it's output controlled
@@ -362,8 +362,8 @@ cp -r . "${tardir}"
 cd "${tardir}"
 printf "Done\n"
 
-# now clean out the directory of all the things we don't need in either the full
-# or the slimmed tarball, prior to building the full source tarball
+# now clean out the directory of all the things we don't need in the
+# tarball, prior to building the source tarball
 cleanfulltree $mode;
 
 # fix line endings issues caused by this being on *nix and CVS messing with
@@ -378,13 +378,13 @@ slimtree $mode;
 # Fix up windows builds for the slimmed state of the tarball
 fixwinforslim ${mode}
 
-# Tar up that lot as the slim source tarball
+# Tar up that lot as the source tarball
 cd "${topdir}"
-printf "Creating minimal source tarball .... "
+printf "Creating source tarball .... "
 tar cf "audacity-minsrc-${version}.tar" "${tarname}" 
 printf "Done\n"
 
-printf "Compressing minimal source tarball .... "
+printf "Compressing source tarball .... "
 xz "audacity-minsrc-${version}.tar" 
 
 cd "${tardir}"
