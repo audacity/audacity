@@ -144,7 +144,10 @@ wxString AudioUnitEffect::GetEffectAction()
 
 bool AudioUnitEffect::Init()
 {
-   OpenAComponent(mComponent, &mUnit);
+   if (!mUnit) {
+      OpenAComponent(mComponent, &mUnit);
+   }
+
    if (!mUnit) {
       return false;
    }
@@ -243,8 +246,6 @@ bool AudioUnitEffect::Process()
    
 void AudioUnitEffect::End()
 {
-   CloseComponent(mUnit);
-   mUnit = NULL;
 }
 
 bool AudioUnitEffect::SetRateAndChannels(AudioUnit unit,
