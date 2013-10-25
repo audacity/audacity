@@ -11,12 +11,10 @@ AC_CONFIG_SRCDIR([lib/mdct.c])
 
 AC_CANONICAL_TARGET([])
 
-AM_INIT_AUTOMAKE($PACKAGE_NAME,$PACKAGE_VERSION)
+AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER([config.h])
-
-dnl Add parameters for aclocal
-AC_SUBST(ACLOCAL_AMFLAGS, "-I m4")
+AC_CONFIG_MACRO_DIR([m4])
 
 dnl Library versioning
 dnl - library source changed -> increment REVISION

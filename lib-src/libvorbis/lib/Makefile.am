@@ -2,7 +2,7 @@
 
 SUBDIRS = modes books
 
-INCLUDES = -I$(top_srcdir)/include @OGG_CFLAGS@
+AM_CPPFLAGS = -I$(top_srcdir)/include @OGG_CFLAGS@
 
 lib_LTLIBRARIES = libvorbis.la libvorbisfile.la libvorbisenc.la
 

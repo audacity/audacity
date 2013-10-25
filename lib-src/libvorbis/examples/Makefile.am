@@ -2,7 +2,7 @@
 
 AUTOMAKE_OPTIONS = foreign
 
-INCLUDES = -I$(top_srcdir)/include @OGG_CFLAGS@
+AM_CPPFLAGS = -I$(top_srcdir)/include @OGG_CFLAGS@
 
 noinst_PROGRAMS = decoder_example encoder_example chaining_example\
 		vorbisfile_example seeking_example

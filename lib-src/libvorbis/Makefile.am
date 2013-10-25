@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+ACLOCAL_AMFLAGS = -I m4
+
 #AUTOMAKE_OPTIONS = 1.7 foreign dist-zip dist-bzip2
 AUTOMAKE_OPTIONS = foreign 1.11 dist-zip dist-xz
 

@@ -2,7 +2,7 @@
 
 AUTOMAKE_OPTIONS = foreign
 
-INCLUDES = -I$(top_srcdir)/include @OGG_CFLAGS@
+AM_CPPFLAGS = -I$(top_srcdir)/include @OGG_CFLAGS@
 
 check_PROGRAMS = test
 

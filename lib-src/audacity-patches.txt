@@ -136,7 +136,7 @@ libvorbis
 library for endcoding and decoding Xiph.org's high-quality compressed audio
 format.
 Version in Audacity SVN: 1.3.3
-Patches: None
+Patches: autotools.patch: Fix all autotools warnings.
 Upstream Version: 1.3.3
 
 liblrdf
