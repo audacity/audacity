@@ -36,7 +36,7 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
    // Grab time-snapping prefs (unless otherwise requested)
    mSnapToTime = false;
 
-   if (gPrefs->Read(wxT("/SnapTo"), 0L) != 0L && !noTimeSnap)
+   if (GetActiveProject()->GetSnapTo() && !noTimeSnap)
    {
       // Look up the format string
       AudacityProject *p = GetActiveProject();
