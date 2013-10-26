@@ -824,6 +824,9 @@ void TimeConverter::Decrement()
 void TimeConverter::Adjust(int steps, int dir)
 {
    wxASSERT(dir == -1 || dir == 1);
+   wxASSERT(steps > 0);
+   if (steps < 0)
+      steps = -steps;
 
    while (steps != 0)
    {
@@ -939,6 +942,8 @@ TimeTextCtrl::TimeTextCtrl(wxWindow *parent,
    ValueToControls();
    //mchinen - aug 15 09 - this seems to put the mTimeValue back to zero, and do nothing else.
    //ControlsToValue(); 
+
+   mScrollRemainder = 0.0;
 
 #if wxUSE_ACCESSIBILITY
    SetLabel(wxT(""));
@@ -1281,7 +1286,7 @@ void TimeTextCtrl::OnMouse(wxMouseEvent &event)
       mScrollRemainder = steps - floor(steps);
       steps = floor(steps);
 
-      Adjust((int)steps, steps < 0.0 ? -1 : 1);
+      Adjust((int)fabs(steps), steps < 0.0 ? -1 : 1);
       Updated();
    }
 }
