@@ -6731,9 +6731,7 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
 double TrackPanel::GridMove(double t, int minPix)
 {
    TimeTextCtrl ttc(this, wxID_ANY, wxT(""), 0.0, GetProject()->GetRate());
-   wxString formatName;
-   gPrefs->Read(wxT("/SelectionFormat"), &formatName);
-   ttc.SetFormatString(ttc.GetBuiltinFormat(formatName));
+   ttc.SetFormatName(GetProject()->GetSelectionFormat());
    ttc.SetTimeValue(t);
 
    // Try incrementing/decrementing the value; if we've moved far enough we're

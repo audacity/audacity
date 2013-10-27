@@ -114,8 +114,7 @@ void SelectionBar::Populate()
     * to do some look-ups, so we'll have to create one. We can't make the 
     * look-ups static because they depend on translations which are done at
     * runtime */
-   wxString formatName;
-   gPrefs->Read(wxT("/SelectionFormat"), &formatName);
+   wxString formatName = mListener ? mListener->AS_GetSelectionFormat() : wxEmptyString;
 
    mainSizer = new wxFlexGridSizer(7, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL);
@@ -301,6 +300,7 @@ void SelectionBar::SetListener(SelectionBarListener *l)
    mListener = l;
    SetRate(mListener->AS_GetRate());
    SetSnapTo(mListener->AS_GetSnapTo());
+   SetSelectionFormat(mListener->AS_GetSelectionFormat());
 };
 
 void SelectionBar::OnSize(wxSizeEvent &evt)
@@ -368,8 +368,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    // Save format name before recreating the controls so they resize properly
    format = mLeftTime->GetBuiltinName(index);
-   gPrefs->Write(wxT("/SelectionFormat"), format);
-   gPrefs->Flush();
+   mListener->AS_SetSelectionFormat(format);
 
 #if wxUSE_TOOLTIPS
    mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), format.c_str()));
@@ -470,6 +469,15 @@ void SelectionBar::SetField(const wxChar *msg, int fieldNum)
 void SelectionBar::SetSnapTo(bool state)
 {
    mSnapTo->SetValue(state);
+}
+
+void SelectionBar::SetSelectionFormat(const wxString & format)
+{
+   mLeftTime->SetFormatString(mLeftTime->GetBuiltinFormat(format));
+
+   wxCommandEvent e;
+   e.SetInt(mLeftTime->GetFormatIndex());
+   OnUpdate(e);   
 }
 
 void SelectionBar::SetRate(double rate)

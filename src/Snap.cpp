@@ -44,9 +44,7 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
       if (p) {
          mConverter.SetSampleRate(p->GetRate());
          mSnapToTime = true;
-         wxString formatName;
-         gPrefs->Read(wxT("/SelectionFormat"), &formatName);
-         mConverter.SetFormatString(mConverter.GetBuiltinFormat(formatName));
+         mConverter.SetFormatName(GetActiveProject()->GetSelectionFormat());
       }
    }
 

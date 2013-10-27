@@ -2257,7 +2257,7 @@ void AudacityProject::OnSetLeftSelection()
    }
    else
    {
-      wxString fmt = gPrefs->Read(wxT("/SelectionFormat"), wxT(""));
+      wxString fmt = GetSelectionFormat();
       TimeDialog dlg(this, _("Set Left Selection Boundary"),
          fmt, mRate, mViewInfo.sel0, _("Position"));
 
@@ -2299,7 +2299,7 @@ void AudacityProject::OnSetRightSelection()
    }
    else
    {
-      wxString fmt = gPrefs->Read(wxT("/SelectionFormat"), wxT(""));
+      wxString fmt = GetSelectionFormat();
       TimeDialog dlg(this, _("Set Right Selection Boundary"),
          fmt, mRate, mViewInfo.sel1, _("Position"));
 
@@ -5608,8 +5608,7 @@ void AudacityProject::OnAddLabelPlaying()
 
 void AudacityProject::OnEditLabels()
 {
-   wxString format;
-   gPrefs->Read(wxT("/SelectionFormat"), &format);
+   wxString format = GetSelectionFormat();
 
    LabelDialog dlg(this, mDirManager, mTracks, mViewInfo, mRate, format);
 

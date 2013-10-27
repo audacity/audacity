@@ -730,6 +730,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mDefaultFormat((sampleFormat) gPrefs->
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
      mSnapTo((bool) gPrefs->Read(wxT("/SnapTo"), (long) false)),
+     mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
      mDirty(false),
      mTrackPanel(NULL),
      mTrackFactory(NULL),
@@ -1197,6 +1198,19 @@ void AudacityProject::AS_SetSnapTo(bool state)
    gPrefs->Flush();
 
    RedrawProject();
+}
+
+const wxString & AudacityProject::AS_GetSelectionFormat()
+{
+   return GetSelectionFormat();
+}
+
+void AudacityProject::AS_SetSelectionFormat(const wxString & format)
+{
+   mSelectionFormat = format;
+
+   gPrefs->Write(wxT("/SelectionFormat"), mSelectionFormat);
+   gPrefs->Flush();
 }
 
 void AudacityProject::AS_ModifySelection(double &start, double &end, bool done)
