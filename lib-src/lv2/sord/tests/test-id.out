@@ -1,0 +1,2 @@
+<http://example.org/base#c> <http://example.org/base#d> _:genid1 .
+_:docid1 <http://example.org/base#a> <http://example.org/base#b> .

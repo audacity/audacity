@@ -1,0 +1,5 @@
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> "apple" .
+_:genid1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:genid2 .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> "banana" .
+_:genid2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+<http://example.org/stuff/1.0/a> <http://example.org/stuff/1.0/b> _:genid1 .

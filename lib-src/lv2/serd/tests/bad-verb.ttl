@@ -1,0 +1,2 @@
+@prefix a: <http://example.org/> .
+a:thing x a:Thing .

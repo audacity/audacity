@@ -1,0 +1,3 @@
+﻿# This file starts with a UTF-8 Byte Order Mark
+
+<http://example.org/thing> a <http://example.org/Thing> .

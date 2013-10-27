@@ -1,0 +1,9 @@
+@prefix : <http://example.org/foo#> .
+
+:a :b """\nthis \ris a \U00015678long\t
+literal\uABCD
+""" .
+
+:d :e """\tThis \uABCDis\r \U00015678another\n
+one
+""" .

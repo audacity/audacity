@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+          "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>LV2 Specifications</title>
+    <meta http-equiv="Content-Type"
+          content="application/xhtml+xml;charset=utf-8" />
+    <link rel="stylesheet" type="text/css"
+          href="../aux/style.css" />
+  </head>
+  <body>
+    <div id="header">
+      <h1 id="title">LV2 @LV2_VERSION@ Specifications</h1>
+    </div>
+    <div class="content">
+      <table summary="An index of LV2 specifications">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Version</th>
+          <th>Status</th>
+        </tr>
+@ROWS@
+      </table>
+    </div>
+  </body>
+</html>

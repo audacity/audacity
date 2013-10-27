@@ -1,0 +1,5 @@
+@prefix foo: <http://example.org/foo#>  .
+@prefix foo: <http://example.org/bar#>  .
+
+foo:blah foo:blah foo:blah .
+

@@ -1,0 +1,2 @@
+@prefix : <http://example.org/stuff/1.0/> .
+:a :b ( [ :c :d ] ) .

@@ -1,0 +1,3 @@
+@prefix eg: <http://example.org> .
+
+<> eg:thing [ eg:comment "Thing"

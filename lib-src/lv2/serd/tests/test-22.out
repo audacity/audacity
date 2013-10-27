@@ -1,0 +1,3 @@
+<http://example.org#a> <http://example.org#b> "-1.0"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+<http://example.org#c> <http://example.org#d> "-1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org#e> <http://example.org#f> "-1.0e0"^^<http://www.w3.org/2001/XMLSchema#double> .

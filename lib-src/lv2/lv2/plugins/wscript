@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+import os
+
+from waflib.extras import autowaf as autowaf
+import waflib.Logs as Logs
+
+import literasc
+
+def confgure(conf):
+    pass
+
+def bld_book_src(task):
+    filenames = []
+    for i in task.inputs:
+        filenames += [i.abspath()]
+
+    literasc.gen(open(task.outputs[0].abspath(), 'w'), filenames)
+    
+def build(bld):
+    files = [bld.path.find_node('README.txt')]
+    for i in bld.path.ant_glob('*', src=False, dir=True):
+        files += bld.path.ant_glob('%s/*.txt' % i)
+        files += bld.path.ant_glob('%s/manifest.ttl*' % i)
+        files += bld.path.ant_glob('%s/*.ttl' % i)
+        files += bld.path.ant_glob('%s/*.c' % i)
+
+    bld(rule   = bld_book_src,
+        source = files,
+        target = 'book.txt')
+
+    bld(rule   = 'asciidoc -b html -o ${TGT} ${SRC}',
+        source = 'book.txt',
+        target = 'book.html')
+    

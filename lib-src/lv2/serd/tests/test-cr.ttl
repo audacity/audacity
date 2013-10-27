@@ -1,0 +1,2 @@
+#Test<http://example.org/thing> a <http://example.org/Thing> .
+

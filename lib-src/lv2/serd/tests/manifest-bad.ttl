@@ -1,0 +1,88 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mf:     <http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#> .
+@prefix qt:     <http://www.w3.org/2001/sw/DataAccess/tests/test-query#> .
+
+<>  rdf:type mf:Manifest ;
+    rdfs:comment "Turtle bad syntax test cases (must fail)" ;
+    mf:entries
+    (
+
+     [  mf:name      "bad-00" ;
+        rdfs:comment "prefix name must end in a :" ;
+        mf:action [ qt:data   <bad-00.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-01" ;
+        rdfs:comment "blank predicate forbidden" ;
+        mf:action [ qt:data   <bad-01.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-02" ;
+        rdfs:comment "blank predicate forbidden" ;
+        mf:action [ qt:data   <bad-02.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-03" ;
+        rdfs:comment "a forbidden as subject" ;
+        mf:action [ qt:data   <bad-03.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-04" ;
+        rdfs:comment ", not allowed in collections" ;
+        mf:action [ qt:data   <bad-04.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-05" ;
+        rdfs:comment "{} not allowed in Turtle" ;
+        mf:action [ qt:data   <bad-05.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-06" ;
+        rdfs:comment "is and of not allowed in Turtle" ;
+        mf:action [ qt:data   <bad-06.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-07" ;
+        rdfs:comment "paths not allowed in Turtle" ;
+        mf:action [ qt:data   <bad-07.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-08" ;
+        rdfs:comment "@keywords not allowed in Turtle" ;
+        mf:action [ qt:data   <bad-08.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-09" ;
+        rdfs:comment "=> not allowed in Turtle" ;
+        mf:action [ qt:data   <bad-09.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-10" ;
+        rdfs:comment "= not allowed in Turtle" ;
+        mf:action [ qt:data   <bad-10.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-11" ;
+        rdfs:comment "@forAll not allowed in Turtle" ;
+        mf:action [ qt:data   <bad-11.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-12" ;
+        rdfs:comment "@forSome not allowed in Turtle" ;
+        mf:action [ qt:data   <bad-12.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-13" ;
+        rdfs:comment "<= not allowed in Turtle" ;
+        mf:action [ qt:data   <bad-13.ttl> ] ;
+     ]
+
+     [  mf:name      "bad-14" ;
+        rdfs:comment "long literal with missing end" ;
+        mf:action [ qt:data   <bad-14.ttl> ] ;
+     ]
+
+
+    # End of tests
+   ).

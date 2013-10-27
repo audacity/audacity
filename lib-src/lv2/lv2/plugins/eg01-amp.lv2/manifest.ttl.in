@@ -1,0 +1,101 @@
+# LV2 Bundle Manifest
+#
+# All LV2 plugins are installed as "bundles", a directory with a particular
+# format.  Inside the bundle, the entry point is a file called "manifest.ttl".
+# This file lists what plugins are in this bundle, and which files are (.so,
+# .ttl, etc.) are associated with those plugins.
+#
+# Hosts read bundles' manifest.ttl to discover what plugins (and other
+# resources) are available.  Manifest files should be as small as possible for
+# performance reasons.
+#
+#
+# ==== Namespace Prefixes ====
+#
+# Turtle files contain many URIs.  To make this more readable, prefixes
+# can be defined.  For example, with the `lv2:` prefix below, instead of
+# <http://lv2plug.in/ns/lv2core#Plugin> the shorter form `lv2:Plugin` can be
+# used.  This is just a shorthand for URIs within a file, the prefixes are not
+# significant otherwise.
+
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# ==== Data ====
+
+<http://lv2plug.in/plugins/eg-amp>
+	a lv2:Plugin ;
+	lv2:binary <amp@LIB_EXT@>  ;
+	rdfs:seeAlso <amp.ttl> .
+
+# The token `@LIB_EXT@` above is replaced by the build system with the
+# appropriate extension for the current platform (e.g. .so, .dylib, .dll).
+# This file is called called `manifest.ttl.in` rather than `manifest.ttl`
+# to indicate that it is not the final file to be installed.
+# This is not necessary, but is a good idea for portable plugins.
+# For reability, the following text will assume `.so` is the extension used.
+#
+# In short, this declares that the resource with URI
+# "http://lv2plug.in/plugins/eg-amp" is an LV2 plugin, with executable code in
+# the file "amp.so" and a full description in "amp.ttl".  These paths are
+# relative to the bundle directory.
+#
+# There are 3 statements in this description:
+# |================================================================
+# | Subject                             | Predicate    | Object
+# | <http://lv2plug.in/plugins/eg-amp>  | a            | lv2:Plugin
+# | <http://lv2plug.in/plugins/eg-amp>  | lv2:binary   | <amp.so>
+# | <http://lv2plug.in/plugins/eg-amp>  | rdfs:seeAlso | <amp.ttl>
+# |================================================================
+#
+# The semicolon is used to continue the previous subject; an equivalent
+# but more verbose syntax for the same data is:
+
+<http://lv2plug.in/plugins/eg-amp> a lv2:Plugin .
+<http://lv2plug.in/plugins/eg-amp> lv2:binary <amp.so> .
+<http://lv2plug.in/plugins/eg-amp> rdfs:seeAlso <amp.ttl> .
+
+# (Since this data is equivalent, it is safe, if pointless, to list it twice)
+#
+# Note that the documentation for a URI can often be found by visiting that URI
+# in a web browser, e.g. the documentation for lv2:binary can be found at
+# <http://lv2plug.in/ns/lv2core#binary>.  If you encounter a URI in some data
+# which you do not understand, try this first.
+#
+# Note the URI of a plugin does NOT need to be an actual web address, it's just
+# a global identifier.  It is, however, a good idea to use an actual web
+# address if possible, since it can be used to easily access documentation,
+# downloads, etc.  Note there are compatibility rules for when the URI of a
+# plugin must be changed, see the http://lv2plug.in/ns/lv2core[LV2 specification]
+# for details.
+#
+# AUTHORS MUST NOT CREATE URIS AT DOMAINS THEY DO NOT CONTROL WITHOUT
+# PERMISSION, AND *ESPECIALLY* MUST NOT CREATE SYNTACTICALLY INVALID URIS,
+# E.G. WHERE THE PORTION FOLLOWING "http://" IS NOT AN ACTUAL DOMAIN NAME.  If
+# you need an example URI, the domain http://example.org/ is reserved for this
+# purpose.  It is best to use web URIs, e.g. at the domain where plugins are
+# hosted for download, even if no actual documents are currently hosted there.
+# If this is truly impossible, use a URN, e.g. urn:myplugs:superamp.
+#
+# A detailed explanation of each statement follows.
+
+<http://lv2plug.in/plugins/eg-amp> a lv2:Plugin .
+
+# The `a`, as in ``is a'', is a Turtle shortcut for `rdf:type`.
+# `lv2:Plugin` expands to <http://lv2plug.in/ns/lv2core#Plugin> (using the
+# `lv2:` prefix above) which is the type of all LV2 plugins.
+# This statement means ``<http://lv2plug.in/plugins/eg-amp> is an LV2 plugin''.
+
+<http://lv2plug.in/plugins/eg-amp> lv2:binary <amp@LIB_EXT@> .
+
+# This says "this plugin has executable code ("binary") in the file
+# named "amp.so", which is located in this bundle.  The LV2 specification
+# defines that all relative URIs in manifest files are relative to the bundle
+# directory, so this refers to the file amp.so in the same directory as this
+# manifest.ttl file.
+
+<http://lv2plug.in/plugins/eg-amp> rdfs:seeAlso <amp.ttl> .
+
+# This says ``there is more information about this plugin located in the file
+# `amp.ttl`''.  The host will look at all such files when it needs to actually
+# use or investigate the plugin.

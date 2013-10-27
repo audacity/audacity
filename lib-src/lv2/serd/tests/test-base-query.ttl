@@ -1,0 +1,3 @@
+@base <http://example.org/a/b/c/d;p?q> .
+
+<> a <http://example.org/Thing> .

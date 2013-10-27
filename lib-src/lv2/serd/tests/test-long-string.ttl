@@ -1,0 +1,7 @@
+@prefix : <http://example.org/> .
+
+:thing :greeting """This is a
+long string
+with
+        tabs
+and spaces.""" .

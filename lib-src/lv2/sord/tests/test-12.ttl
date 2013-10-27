@@ -1,0 +1,9 @@
+# Tests for rdf:_<numbers> and other qnames starting with _
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex:  <http://example.org/ex#> .
+@prefix :    <http://example.org/myprop#> .
+
+ex:foo rdf:_1 "1" .
+ex:foo rdf:_2 "2" .
+ex:foo :_abc "def" .
+ex:foo :_345 "678" .
