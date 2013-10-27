@@ -114,7 +114,7 @@ void SelectionBar::Populate()
     * to do some look-ups, so we'll have to create one. We can't make the 
     * look-ups static because they depend on translations which are done at
     * runtime */
-   wxString formatName = mListener ? mListener->AS_GetSelectionFormat() : wxEmptyString;
+   wxString formatName = mListener ? mListener->AS_GetSelectionFormat() : wxString(wxEmptyString);
 
    mainSizer = new wxFlexGridSizer(7, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL);
