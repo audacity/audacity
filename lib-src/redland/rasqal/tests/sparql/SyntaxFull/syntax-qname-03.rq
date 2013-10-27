@@ -1,3 +1,0 @@
-PREFIX : <http://example.org/ns#> 
-SELECT *
-WHERE { :_1 :p.rdf :z.z . }

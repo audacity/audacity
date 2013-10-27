@@ -139,12 +139,6 @@ Version in Audacity SVN: 1.3.3
 Patches: autotools.patch: Fix all autotools warnings.
 Upstream Version: 1.3.3
 
-liblrdf
--------
-Patches:
-AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
-by default
-
 
 lib-widget-extra
 ----------------
@@ -212,16 +206,6 @@ portmixer
 cross-platform audio mixer control library, hooked onto portaudio. Maintained
 by the Audacity project with some help from portaudio development.
 
-redland
--------
-http://librdf.org
-RDF parser and query engine. Consists of three separate libraries, Raptor
-(the parser), Rasqal (the query engine) and librdf (triple storage and
-wrapper API). It is needed for liblrdf and SLV2.
-Version in Audacity SVN: 1.0.8
-Patches:
-audacity_build_tweaks.patch	Patches the configure scripts to turn off parsers, storage models and query languages not used by Audacity as well as using Expat instead of libxml2 for XML parsing. No need to integrate with upstream.
-
 sbsms
 -----
 http://sbsms.sourceforge.net/
@@ -238,18 +222,6 @@ same ends by better means, replacing a hacked version from Gentoo. Patch
 linked to from upstream tracker at
 https://sourceforge.net/tracker/index.php?func=detail&aid=2561247&group_id=177794&atid=882654
 because attachements there don't seem to work.
-
-slv2
--------
-http://wiki.drobilla.net/SLV2
-Support library for LV2 hosts (like Audacity).
-Version in Audacity SVN: 0.6.0
-Patches:
-audacity_build_tweaks.patch	Patches the configure scripts to not build hosts and utility programs and to use local Redland libraries if requested. No need to integrate with upstream.
-lv2core_internal.patch		Add lv2.h as an internal header to avoid the dependency on lv2core.
-i18n.patch					Patch to support translation of some form?
-AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
-by default
 
 soundtouch
 ----------

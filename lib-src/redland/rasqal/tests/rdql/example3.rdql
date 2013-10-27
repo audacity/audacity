@@ -1,3 +1,0 @@
-SELECT ?a, ?b
-WHERE (?a, <http://somewhere/pred1>, ?c) ,
-      (?c, <http://somewhere/pred2>, ?b)

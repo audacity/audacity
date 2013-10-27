@@ -1,2 +1,0 @@
-SELECT *
-WHERE { ?s ?p ?o . FILTER REGEX(?o, "foo") }

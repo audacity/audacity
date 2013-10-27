@@ -1,3 +1,0 @@
-# Two triples : with trailing dot
-SELECT *
-WHERE { ?x ?y ?z . ?a ?b ?c . }

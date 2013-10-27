@@ -1,3 +1,0 @@
-# DOT, no triples
-SELECT * WHERE
-{ . }

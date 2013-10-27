@@ -1,4 +1,0 @@
-# use keyword UNION as a namespace prefix
-PREFIX UNION: <http://example.org/ns#> 
-SELECT *
-WHERE { ?x UNION:foo ?z }

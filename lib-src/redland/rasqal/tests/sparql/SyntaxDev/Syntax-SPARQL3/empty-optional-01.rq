@@ -1,2 +1,0 @@
-# NegativeSyntax/empty-optional.rq
-SELECT * { OPTIONAL FILTER (?x) }

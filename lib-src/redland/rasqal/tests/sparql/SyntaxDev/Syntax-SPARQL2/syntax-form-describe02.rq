@@ -1,1 +1,0 @@
-DESCRIBE <u> ?u WHERE { <x> <q> ?u . }

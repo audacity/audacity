@@ -1,4 +1,0 @@
-@prefix : <http://example.org/data/> .
-
-:x :p :v1 .
-:x :p :v2 .

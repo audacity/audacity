@@ -1,4 +1,0 @@
-# Triple, semi, operator
-PREFIX :  <http://example.org/ns#>
-SELECT *
-{ :p :q :r ; OPTIONAL { :a :b :c } }

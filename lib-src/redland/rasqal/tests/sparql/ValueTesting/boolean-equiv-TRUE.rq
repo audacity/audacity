@@ -1,8 +1,0 @@
-# TRUE = legal boolean values
-# $Id: boolean-equiv-TRUE.rq,v 1.1 2008-07-08 10:46:40 larsl Exp $
-
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?one
- WHERE { ?one rdf:value ?oneL .
-         FILTER ( ?oneL = TRUE ) }

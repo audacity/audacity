@@ -1,4 +1,0 @@
-# use keyword FILTER as a local name
-PREFIX : <http://example.org/ns#> 
-SELECT *
-WHERE { ?x :FILTER ?z FILTER (?z) }

@@ -1,4 +1,0 @@
-# use keyword FILTER as a namespace prefix
-PREFIX FILTER: <http://example.org/ns#> 
-SELECT *
-WHERE { ?x FILTER:foo ?z FILTER (?z) }

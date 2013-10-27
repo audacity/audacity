@@ -1,3 +1,0 @@
-// (c) Copyright 2002 Hewlett-Packard Development Company, LP
-// Syntactic test
-SELECT /* ?x */ * FROM <model0.nt> WHERE (?x,?y,?z) // All

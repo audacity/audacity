@@ -1,3 +1,0 @@
-BASE   <http://example.org/>
-PREFIX :  <#> 
-SELECT * WHERE { :x :p 123 }

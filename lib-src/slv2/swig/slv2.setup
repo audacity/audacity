@@ -1,2 +1,0 @@
-(run (csc -s -o slv2.so slv2.scm slv2_wrap.c -lslv2))
-(install-extension 'slv2 '("slv2.so"))

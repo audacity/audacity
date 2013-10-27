@@ -59,28 +59,6 @@ libnyquist.a: libnyquist-recursive
 vamp-sdk:
 	$(MAKE) -C libvamp sdkstatic
 
-# redland
-redland-recursive:
-	$(MAKE) -C redland
-librdf.a: redland-recursive
-	ln -sf redland/librdf/.libs/librdf.a librdf.a
-libraptor.a: redland-recursive
-	ln -sf redland/raptor/src/.libs/libraptor.a libraptor.a
-librasqal.a: redland-recursive
-	ln -sf redland/rasqal/src/.libs/librasqal.a librasqal.a
-
-# liblrdf
-liblrdf-recursive:
-	$(MAKE) -C liblrdf
-liblrdf.a: liblrdf-recursive
-	ln -sf liblrdf/src/.libs/liblrdf.a liblrdf.a
-
-# slv2
-slv2-recursive:
-	$(MAKE) -C slv2
-libslv2.a: slv2-recursive
-	ln -sf slv2/src/.libs/libslv2.a libslv2.a
-
 # libtwolame
 libtwolame-recursive:
 	$(MAKE) -C twolame
@@ -156,7 +134,6 @@ clean:
 	test ! -f libid3tag/Makefile || $(MAKE) -C libid3tag clean
 	test ! -f libmad/Makefile || $(MAKE) -C libmad clean
 	test ! -f libnyquist/Makefile || $(MAKE) -C libnyquist clean
-	test ! -f liblrdf/Makefile || $(MAKE) -C liblrdf clean
 	test ! -f libogg/Makefile || $(MAKE) -C libogg clean
 	test ! -f libsoxr/Makefile || $(MAKE) -C libsoxr clean
 	test ! -f libsamplerate/Makefile || $(MAKE) -C libsamplerate clean
@@ -180,7 +157,6 @@ distclean:
 	test ! -f libid3tag/Makefile || $(MAKE) -C libid3tag distclean
 	test ! -f libmad/Makefile || $(MAKE) -C libmad distclean
 	test ! -f libnyquist/Makefile || $(MAKE) -C libnyquist distclean
-	test ! -f liblrdf/Makefile || $(MAKE) -C liblrdf distclean
 	test ! -f libogg/Makefile || $(MAKE) -C libogg distclean
 	test ! -f libsoxr/Makefile || $(MAKE) -C libsoxr distclean
 	test ! -f libsamplerate/Makefile || $(MAKE) -C libsamplerate distclean
@@ -199,11 +175,10 @@ distclean:
 	rm -f Makefile
 
 # list here all the targets that aren't actually files to be made
-.PHONY: portsmf-recursive eexpat-recursive FileDialog-recursive \
+.PHONY: portsmf-recursive expat-recursive FileDialog-recursive \
 	widgetextra libogg-recursive \
 	libvorbis-recursive libnyquist-recursive libmad-recursive \
 	libid3tag-recursive sbsms-recursive soundtouch-recursive libsndfile-recursive \
 	libresample-recursive libsoxr-recursive libsamplerate-recursive vamp-sdk \
-	portaudio-v19-recursive portmixer-recursive libtwolame-recursive \
-	liblrdf-recursive redland-recursive slv2-recursive
+	portaudio-v19-recursive portmixer-recursive libtwolame-recursive
 

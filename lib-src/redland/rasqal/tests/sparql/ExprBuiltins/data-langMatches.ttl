@@ -1,7 +1,0 @@
-@prefix : <http://example.org/#> .
-
-:x :p1 "abc" .
-:x :p2 <abc> .
-:x :p3 "abc"@en .
-:x :p4 "abc"@en-gb .
-:x :p5 "abc"@fr .

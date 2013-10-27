@@ -1,3 +1,0 @@
-# More a test that bad syntax tests work!
-PREFIX ex:   <http://example/ns#>
-SELECT *

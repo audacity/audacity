@@ -1,3 +1,0 @@
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-describe ?p, <http://example.org/foo>
-where { ?p rdf:value "hello" }

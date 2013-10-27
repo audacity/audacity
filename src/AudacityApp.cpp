@@ -136,11 +136,6 @@ It handles initialization and termination by subclassing wxApp.
 #     pragma comment(lib, "libid3tag")
 #  endif
 
-#  if defined(USE_LIBLRDF)
-#     pragma comment(lib, "liblrdf")
-#     pragma comment(lib, "raptor")
-#  endif
-
 #  if defined(USE_LIBMAD)
 #     pragma comment(lib, "libmad")
 #  endif
@@ -184,13 +179,6 @@ It handles initialization and termination by subclassing wxApp.
 
 #  if defined(USE_PORTMIXER)
 #     pragma comment(lib, "portmixer")
-#  endif
-
-#  if defined(USE_SLV2)
-#     pragma comment(lib, "slv2")
-#     pragma comment(lib, "librdf")
-#     pragma comment(lib, "raptor")
-#     pragma comment(lib, "rasqal")
 #  endif
 
 #  if defined(USE_SBSMS)

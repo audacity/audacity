@@ -1,5 +1,0 @@
-PREFIX ex:      <http://example.org/things#> 
-
-SELECT ?address
-WHERE { ?x ex:address ?address }
-ORDER BY ASC(?address)

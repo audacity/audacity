@@ -1,4 +1,0 @@
-@prefix : <http://example.org/> .
-:x :b "mercury" .
-:y :a "venus" .
-:z :c "mars" .

@@ -1,2 +1,0 @@
-PREFIX q: <http://example.org/>
-SELECT * WHERE { FILTER (q:name( )) }

@@ -1,5 +1,0 @@
-prefix ex: <http://example.org/survey-sample/ontology/>
-SELECT ?n 
-WHERE  
-     { ?x ex:author [ ?li [ ex:name ?n] ].
-     }

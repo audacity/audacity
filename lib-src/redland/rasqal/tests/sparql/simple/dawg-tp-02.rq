@@ -1,5 +1,0 @@
-PREFIX : <http://example.org/data/>
-
-SELECT *
-WHERE { ?x :p ?q . }
-

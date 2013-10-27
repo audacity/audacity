@@ -1,3 +1,0 @@
-# DOT after non-triples
-SELECT * WHERE
-{ FILTER (?o>5) . ?s ?p ?o }

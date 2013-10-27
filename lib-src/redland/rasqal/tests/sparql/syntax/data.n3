@@ -1,3 +1,0 @@
-@prefix ex: <http://example.org/#> .
-ex:foo ex:bar ex:baz .
-ex:foo ex:bar "10" .

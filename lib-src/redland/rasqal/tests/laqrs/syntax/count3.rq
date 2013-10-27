@@ -1,2 +1,0 @@
-SELECT COUNT(*) AS x
-WHERE { ?a ?b ?c }

@@ -1,4 +1,0 @@
-BASE   <http://example.org/>
-PREFIX :  <#> 
-SELECT *
-WHERE { : : : . }

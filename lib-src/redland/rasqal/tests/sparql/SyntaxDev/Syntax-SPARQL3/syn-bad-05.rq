@@ -1,3 +1,0 @@
-# Broken ;
-SELECT * WHERE
-{ ; FILTER(?x) }

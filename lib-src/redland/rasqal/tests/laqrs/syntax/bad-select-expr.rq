@@ -1,3 +1,0 @@
-# Cannot have a select expression mentioning the AS variable
-SELECT ?a COUNT(?c) AS c
-WHERE { ?a ?b ?c }

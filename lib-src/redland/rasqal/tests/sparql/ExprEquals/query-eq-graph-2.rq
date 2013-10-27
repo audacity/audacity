@@ -1,6 +1,0 @@
-PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX  : <http://example.org/things#>
-SELECT  ?x
-WHERE
-    { ?x :p 1.0e0 .
-    }

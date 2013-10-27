@@ -1,2 +1,0 @@
-# NegativeSyntax/empty-optional-02.rq
-SELECT * { OPTIONAL GRAPH ?v OPTIONAL FILTER (?x) }

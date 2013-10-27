@@ -1,3 +1,0 @@
-# NegativeSyntax/bnodes-missing-pvalues.rq
-PREFIX :   <http://example/ns#>
-SELECT * WHERE { [,] :p [;] . }

@@ -1,1 +1,0 @@
-SELECT * WHERE { <a><b>_:x }

@@ -95,13 +95,6 @@ install-extra-data:
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/appdata
 	$(INSTALL) -m 644 help/audacity.appdata.xml $(DESTDIR)$(DATADIR)/appdata/$(AUDACITY_NAME).appdata.xml
 
-
-.PHONY: install-lrdf-data
-install-lrdf-data:
-	# install basic LRDF ontology file
-	$(INSTALL) -d $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/rdf
-	$(INSTALL) -m 644 lib-src/liblrdf/examples/ladspa.rdfs $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/rdf
-
 .PHONY: uninstall
 uninstall: $(EXTRAUNINSTALLTARGETS)
 	# remove binary
@@ -135,10 +128,6 @@ uninstall-extra-data:
 	rm -f $(DESTDIR)$(DATADIR)/applications/$(AUDACITY_NAME).desktop
 	rm -f $(DESTDIR)$(DATADIR)/mime/packages/audacity.xml
 	rm -f $(DESTDIR)$(DATADIR)/appdata/$(AUDACITY_NAME).appdata.xml
-
-.PHONY: uninstall-lrdf-data
-uninstall-lrdf-data:
-	rm -f $(DESTDIR)$(DATADIR)/$(AUDACITY_NAME)/rdf/ladspa.rdfs
 
 help/audacity.1.gz: help/audacity.1
 	cat help/audacity.1 | gzip -9 > help/audacity.1.gz

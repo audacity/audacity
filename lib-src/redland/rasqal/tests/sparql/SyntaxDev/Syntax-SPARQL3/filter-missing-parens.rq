@@ -1,2 +1,0 @@
-# NegativeSyntax/filter-missing-parens.rq
-SELECT * { ?s ?p ?o FILTER ?x }
