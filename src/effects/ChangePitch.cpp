@@ -120,6 +120,7 @@ void EffectChangePitch::DeduceFrequencies()
 
       delete [] freq;
       delete [] freqa;
+      delete [] buffer;
 
       lag = (windowSize/2 - 1) - argmax;
       m_dStartFrequency = rate / lag;
