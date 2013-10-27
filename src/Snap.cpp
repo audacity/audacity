@@ -36,15 +36,15 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
    // Grab time-snapping prefs (unless otherwise requested)
    mSnapToTime = false;
 
-   if (GetActiveProject()->GetSnapTo() && !noTimeSnap)
+   AudacityProject *p = GetActiveProject();
+   wxASSERT(p);
+   if (p)
    {
       // Look up the format string
-      AudacityProject *p = GetActiveProject();
-      wxASSERT(p);
-      if (p) {
-         mConverter.SetSampleRate(p->GetRate());
+      if (p->GetSnapTo() && !noTimeSnap) {
          mSnapToTime = true;
-         mConverter.SetFormatName(GetActiveProject()->GetSelectionFormat());
+         mConverter.SetSampleRate(p->GetRate());
+         mConverter.SetFormatName(p->GetSelectionFormat());
       }
    }
 
@@ -107,10 +107,13 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
 // Adds to mSnapPoints, filtering by TimeConverter
 void SnapManager::CondListAdd(double t, Track *tr)
 {
-   mConverter.SetTimeValue(t);
+   if (mSnapToTime) {
+      mConverter.SetTimeValue(t);
+   }
 
-   if (mConverter.GetTimeValue() == t)
+   if (!mSnapToTime || mConverter.GetTimeValue() == t) {
       mSnapPoints->Add(new SnapPoint(t, tr));
+   }
 }
 
 SnapManager::~SnapManager()
