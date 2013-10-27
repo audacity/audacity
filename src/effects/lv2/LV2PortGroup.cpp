@@ -9,33 +9,53 @@
 
 *********************************************************************/
 
+#include "../../Audacity.h"
+
+#if defined(USE_LV2)
+
+#include <wx/dynarray.h>
+
 #include "LV2PortGroup.h"
 
-#if defined(USE_SLV2)
-
-LV2PortGroup::LV2PortGroup(const wxString& name)
-  : mName(name) {
-  
-}
-   
-void LV2PortGroup::AddSubGroup(const LV2PortGroup& subgroup) {
-  mSubgroups.push_back(subgroup);
-}
-   
-const std::vector<LV2PortGroup>& LV2PortGroup::GetSubGroups() const {
-  return mSubgroups;
+LV2PortGroup::LV2PortGroup(const wxString & name)
+:  mName(name)
+{
 }
 
-void LV2PortGroup::AddParameter(uint32_t parameter) {
-  mParameters.push_back(parameter);
-}
-   
-const std::vector<uint32_t>& LV2PortGroup::GetParameters() const {
-  return mParameters;
+void LV2PortGroup::AddSubGroup(const LV2PortGroup & subgroup)
+{
+   wxString name = subgroup.GetName();
+
+   LV2PortGroupArray::iterator i;
+   for (i = mSubGroups.begin(); i != mSubGroups.end(); i++)
+   {
+      if ((*i)->GetName() == name)
+      {
+         return;
+      }
+   }
+
+   mSubGroups.push_back(&subgroup);
 }
 
-const wxString& LV2PortGroup::GetName() const {
-  return mName;
+const LV2PortGroupArray & LV2PortGroup::GetSubGroups() const
+{
+   return mSubGroups;
+}
+
+void LV2PortGroup::AddParameter(int parameter)
+{
+   mParameters.Add(parameter);
+}
+   
+const wxArrayInt & LV2PortGroup::GetParameters() const
+{
+   return mParameters;
+}
+
+const wxString & LV2PortGroup::GetName() const
+{
+   return mName;
 }
 
 #endif

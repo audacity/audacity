@@ -21,7 +21,7 @@
 #define LV2_EVENT_HELPERS_H
 
 #include <assert.h>
-#include <stdbool.h>
+//#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 

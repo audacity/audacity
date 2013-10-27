@@ -9,24 +9,28 @@
 
 *********************************************************************/
 
-#include <slv2/slv2.h>
+#include <lilv/lilv.h>
 
-extern SLV2World gWorld;
+extern LilvWorld *gWorld;
 
 // This is the LV2 Feature array. It is passed to every LV2 plugin on 
 // instantiation. So far it only contains the URI Map Feature, which is
 // needed to load synths.
-extern LV2_Feature*const gLV2Features[];
+extern LV2_Feature * const gLV2Features[];
 
 // These are needed for comparisons
-extern SLV2Value gAudioPortClass;
-extern SLV2Value gControlPortClass;
-extern SLV2Value gMidiPortClass;
-extern SLV2Value gInputPortClass;
-extern SLV2Value gOutputPortClass;
-extern SLV2Value gPortToggled;
-extern SLV2Value gPortIsInteger;
-extern SLV2Value gPortIsSampleRate;
+extern LilvNode *gAudioPortClass;
+extern LilvNode *gControlPortClass;
+extern LilvNode *gMidiPortClass;
+extern LilvNode *gInputPortClass;
+extern LilvNode *gOutputPortClass;
+extern LilvNode *gPortToggled;
+extern LilvNode *gPortIsInteger;
+extern LilvNode *gPortIsSampleRate;
+extern LilvNode *gPortIsEnumeration;
+extern LilvNode *gName;
+extern LilvNode *gPortGroup;
+extern LilvNode *gSubGroupOf;
 
 
 void LoadLV2Plugins();

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 42;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -763,6 +763,9 @@
 		284B279F0FC66864005EAC96 /* RecordingPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27980FC66863005EAC96 /* RecordingPrefs.cpp */; };
 		284B27E40FC66CCD005EAC96 /* TracksPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27E00FC66CCD005EAC96 /* TracksPrefs.cpp */; };
 		284B27E50FC66CCD005EAC96 /* WarningsPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284B27E20FC66CCD005EAC96 /* WarningsPrefs.cpp */; };
+		284B8E27181CFB1000304E49 /* liblv2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 286229B0181CE4B600E1AD1A /* liblv2.a */; };
+		284B8E29181CFB1100304E49 /* liblv2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 286229B0181CE4B600E1AD1A /* liblv2.a */; };
+		284B8E2A181CFB1200304E49 /* liblv2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 286229B0181CE4B600E1AD1A /* liblv2.a */; };
 		284FD04217FC72A50009A025 /* ScienFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284FD04017FC72A50009A025 /* ScienFilter.cpp */; };
 		284FD04517FC72EE0009A025 /* Biquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284FD04317FC72EE0009A025 /* Biquad.cpp */; };
 		28501EA10CEECEF80029ABAA /* HelpText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E9D0CEECEF80029ABAA /* HelpText.cpp */; };
@@ -787,6 +790,42 @@
 		2860BA240E0F0D8600A13878 /* SoundActivatedRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA200E0F0D8600A13878 /* SoundActivatedRecord.cpp */; };
 		2860BA250E0F0D8600A13878 /* TimerRecordDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA220E0F0D8600A13878 /* TimerRecordDialog.cpp */; };
 		2860BA280E0F0DD800A13878 /* ExportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA260E0F0DD800A13878 /* ExportFFmpeg.cpp */; };
+		286229C3181CE51800E1AD1A /* lilv.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229B1181CE51800E1AD1A /* lilv.h */; };
+		286229C4181CE51800E1AD1A /* collections.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229B2181CE51800E1AD1A /* collections.c */; };
+		286229C5181CE51800E1AD1A /* instance.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229B3181CE51800E1AD1A /* instance.c */; };
+		286229C6181CE51800E1AD1A /* lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229B4181CE51800E1AD1A /* lib.c */; };
+		286229C7181CE51800E1AD1A /* lilv_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229B5181CE51800E1AD1A /* lilv_internal.h */; };
+		286229C8181CE51800E1AD1A /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229B6181CE51800E1AD1A /* node.c */; };
+		286229C9181CE51800E1AD1A /* plugin.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229B7181CE51800E1AD1A /* plugin.c */; };
+		286229CA181CE51800E1AD1A /* pluginclass.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229B8181CE51800E1AD1A /* pluginclass.c */; };
+		286229CB181CE51800E1AD1A /* port.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229B9181CE51800E1AD1A /* port.c */; };
+		286229CC181CE51800E1AD1A /* query.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229BA181CE51800E1AD1A /* query.c */; };
+		286229CD181CE51800E1AD1A /* scalepoint.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229BB181CE51800E1AD1A /* scalepoint.c */; };
+		286229CE181CE51800E1AD1A /* state.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229BC181CE51800E1AD1A /* state.c */; };
+		286229CF181CE51800E1AD1A /* ui.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229BD181CE51800E1AD1A /* ui.c */; };
+		286229D0181CE51800E1AD1A /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229BE181CE51800E1AD1A /* util.c */; };
+		286229D1181CE51800E1AD1A /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229BF181CE51800E1AD1A /* world.c */; };
+		286229D2181CE51800E1AD1A /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229C0181CE51800E1AD1A /* common.h */; };
+		286229D3181CE51800E1AD1A /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229C1181CE51800E1AD1A /* tree.c */; };
+		286229D4181CE51800E1AD1A /* tree.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229C2181CE51800E1AD1A /* tree.h */; };
+		286229DD181CE5EC00E1AD1A /* serd.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229D5181CE5EC00E1AD1A /* serd.h */; };
+		286229DE181CE5EC00E1AD1A /* env.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229D6181CE5EC00E1AD1A /* env.c */; };
+		286229DF181CE5EC00E1AD1A /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229D7181CE5EC00E1AD1A /* node.c */; };
+		286229E0181CE5EC00E1AD1A /* reader.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229D8181CE5EC00E1AD1A /* reader.c */; };
+		286229E1181CE5EC00E1AD1A /* serd_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229D9181CE5EC00E1AD1A /* serd_internal.h */; };
+		286229E2181CE5EC00E1AD1A /* string.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229DA181CE5EC00E1AD1A /* string.c */; };
+		286229E3181CE5EC00E1AD1A /* uri.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229DB181CE5EC00E1AD1A /* uri.c */; };
+		286229E4181CE5EC00E1AD1A /* writer.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229DC181CE5EC00E1AD1A /* writer.c */; };
+		286229E9181CE62A00E1AD1A /* sord.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229E5181CE62A00E1AD1A /* sord.h */; };
+		286229EA181CE62A00E1AD1A /* sord_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229E6181CE62A00E1AD1A /* sord_internal.h */; };
+		286229EB181CE62A00E1AD1A /* sord.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229E7181CE62A00E1AD1A /* sord.c */; };
+		286229EC181CE62A00E1AD1A /* syntax.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229E8181CE62A00E1AD1A /* syntax.c */; };
+		28624C0E181CE65700E1AD1A /* sratom_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 2862439F181CE65500E1AD1A /* sratom_config.h */; };
+		28624C0F181CE65700E1AD1A /* sratom.h in Headers */ = {isa = PBXBuildFile; fileRef = 286243A0181CE65500E1AD1A /* sratom.h */; };
+		28624C10181CE65700E1AD1A /* sratom.c in Sources */ = {isa = PBXBuildFile; fileRef = 286243A1181CE65500E1AD1A /* sratom.c */; };
+		28640874181CE74100CC4E2C /* sord_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28640873181CE74100CC4E2C /* sord_config.h */; };
+		28640876181CE75800CC4E2C /* serd_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28640875181CE75800CC4E2C /* serd_config.h */; };
+		28640878181CE77200CC4E2C /* lilv_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28640877181CE77200CC4E2C /* lilv_config.h */; };
 		287DBE890F3F6B2700C5BBED /* audio_detect.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE830F3F6B2700C5BBED /* audio_detect.c */; };
 		287DBE8A0F3F6B2700C5BBED /* chunk.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE840F3F6B2700C5BBED /* chunk.c */; };
 		287DBE8B0F3F6B2700C5BBED /* ima_oki_adpcm.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE850F3F6B2700C5BBED /* ima_oki_adpcm.c */; };
@@ -2056,6 +2095,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 28501EAF0CEED1F00029ABAA;
 			remoteInfo = libvamp;
+		};
+		28640879181CE78E00CC4E2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2862299E181CE4B600E1AD1A;
+			remoteInfo = lv2;
 		};
 		28E237260E515E1300281398 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -3458,6 +3504,43 @@
 		2860BA230E0F0D8600A13878 /* TimerRecordDialog.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = TimerRecordDialog.h; sourceTree = "<group>"; tabWidth = 3; };
 		2860BA260E0F0DD800A13878 /* ExportFFmpeg.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportFFmpeg.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2860BA270E0F0DD800A13878 /* ExportFFmpeg.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportFFmpeg.h; sourceTree = "<group>"; tabWidth = 3; };
+		286229B0181CE4B600E1AD1A /* liblv2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblv2.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		286229B1181CE51800E1AD1A /* lilv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lilv.h; path = lv2/lilv/lilv/lilv.h; sourceTree = "<group>"; };
+		286229B2181CE51800E1AD1A /* collections.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = collections.c; path = lv2/lilv/src/collections.c; sourceTree = "<group>"; };
+		286229B3181CE51800E1AD1A /* instance.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = instance.c; path = lv2/lilv/src/instance.c; sourceTree = "<group>"; };
+		286229B4181CE51800E1AD1A /* lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lib.c; path = lv2/lilv/src/lib.c; sourceTree = "<group>"; };
+		286229B5181CE51800E1AD1A /* lilv_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lilv_internal.h; path = lv2/lilv/src/lilv_internal.h; sourceTree = "<group>"; };
+		286229B6181CE51800E1AD1A /* node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = node.c; path = lv2/lilv/src/node.c; sourceTree = "<group>"; };
+		286229B7181CE51800E1AD1A /* plugin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = plugin.c; path = lv2/lilv/src/plugin.c; sourceTree = "<group>"; };
+		286229B8181CE51800E1AD1A /* pluginclass.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pluginclass.c; path = lv2/lilv/src/pluginclass.c; sourceTree = "<group>"; };
+		286229B9181CE51800E1AD1A /* port.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = port.c; path = lv2/lilv/src/port.c; sourceTree = "<group>"; };
+		286229BA181CE51800E1AD1A /* query.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = query.c; path = lv2/lilv/src/query.c; sourceTree = "<group>"; };
+		286229BB181CE51800E1AD1A /* scalepoint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scalepoint.c; path = lv2/lilv/src/scalepoint.c; sourceTree = "<group>"; };
+		286229BC181CE51800E1AD1A /* state.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = state.c; path = lv2/lilv/src/state.c; sourceTree = "<group>"; };
+		286229BD181CE51800E1AD1A /* ui.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ui.c; path = lv2/lilv/src/ui.c; sourceTree = "<group>"; };
+		286229BE181CE51800E1AD1A /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = util.c; path = lv2/lilv/src/util.c; sourceTree = "<group>"; };
+		286229BF181CE51800E1AD1A /* world.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = world.c; path = lv2/lilv/src/world.c; sourceTree = "<group>"; };
+		286229C0181CE51800E1AD1A /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = lv2/lilv/src/zix/common.h; sourceTree = "<group>"; };
+		286229C1181CE51800E1AD1A /* tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree.c; path = lv2/lilv/src/zix/tree.c; sourceTree = "<group>"; };
+		286229C2181CE51800E1AD1A /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tree.h; path = lv2/lilv/src/zix/tree.h; sourceTree = "<group>"; };
+		286229D5181CE5EC00E1AD1A /* serd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serd.h; path = lv2/serd/serd/serd.h; sourceTree = "<group>"; };
+		286229D6181CE5EC00E1AD1A /* env.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = env.c; path = lv2/serd/src/env.c; sourceTree = "<group>"; };
+		286229D7181CE5EC00E1AD1A /* node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = node.c; path = lv2/serd/src/node.c; sourceTree = "<group>"; };
+		286229D8181CE5EC00E1AD1A /* reader.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = reader.c; path = lv2/serd/src/reader.c; sourceTree = "<group>"; };
+		286229D9181CE5EC00E1AD1A /* serd_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serd_internal.h; path = lv2/serd/src/serd_internal.h; sourceTree = "<group>"; };
+		286229DA181CE5EC00E1AD1A /* string.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = string.c; path = lv2/serd/src/string.c; sourceTree = "<group>"; };
+		286229DB181CE5EC00E1AD1A /* uri.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = uri.c; path = lv2/serd/src/uri.c; sourceTree = "<group>"; };
+		286229DC181CE5EC00E1AD1A /* writer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = writer.c; path = lv2/serd/src/writer.c; sourceTree = "<group>"; };
+		286229E5181CE62A00E1AD1A /* sord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sord.h; path = lv2/sord/sord/sord.h; sourceTree = "<group>"; };
+		286229E6181CE62A00E1AD1A /* sord_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sord_internal.h; path = lv2/sord/src/sord_internal.h; sourceTree = "<group>"; };
+		286229E7181CE62A00E1AD1A /* sord.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sord.c; path = lv2/sord/src/sord.c; sourceTree = "<group>"; };
+		286229E8181CE62A00E1AD1A /* syntax.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = syntax.c; path = lv2/sord/src/syntax.c; sourceTree = "<group>"; };
+		2862439F181CE65500E1AD1A /* sratom_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sratom_config.h; path = lv2/sratom/build/sratom_config.h; sourceTree = "<group>"; };
+		286243A0181CE65500E1AD1A /* sratom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sratom.h; path = lv2/sratom/sratom/sratom.h; sourceTree = "<group>"; };
+		286243A1181CE65500E1AD1A /* sratom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sratom.c; path = lv2/sratom/src/sratom.c; sourceTree = "<group>"; };
+		28640873181CE74100CC4E2C /* sord_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sord_config.h; path = lv2/sord/build/sord_config.h; sourceTree = "<group>"; };
+		28640875181CE75800CC4E2C /* serd_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serd_config.h; path = lv2/serd/build/serd_config.h; sourceTree = "<group>"; };
+		28640877181CE77200CC4E2C /* lilv_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lilv_config.h; path = lv2/lilv/build/lilv_config.h; sourceTree = "<group>"; };
 		287DBE830F3F6B2700C5BBED /* audio_detect.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = audio_detect.c; sourceTree = "<group>"; tabWidth = 3; };
 		287DBE840F3F6B2700C5BBED /* chunk.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = chunk.c; sourceTree = "<group>"; tabWidth = 3; };
 		287DBE850F3F6B2700C5BBED /* ima_oki_adpcm.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = ima_oki_adpcm.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -4046,6 +4129,7 @@
 				28E2373A0E5163A200281398 /* libscorealign.a in Frameworks */,
 				ED2707460EF9C550007D4FFD /* libsbsms.a in Frameworks */,
 				2800FE230FF32381005CA9E5 /* libportmidi.a in Frameworks */,
+				284B8E27181CFB1000304E49 /* liblv2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4092,6 +4176,7 @@
 				ED663CC916543647007F53A5 /* libscorealign.a in Frameworks */,
 				ED663CCA16543647007F53A5 /* libsbsms.a in Frameworks */,
 				ED663CCB16543647007F53A5 /* libportmidi.a in Frameworks */,
+				284B8E2A181CFB1200304E49 /* liblv2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4117,6 +4202,7 @@
 				ED85B5A316A47353006DA21D /* libscorealign.a in Frameworks */,
 				ED85B5A416A47353006DA21D /* libsbsms.a in Frameworks */,
 				ED85B5A516A47353006DA21D /* libportmidi.a in Frameworks */,
+				284B8E29181CFB1100304E49 /* liblv2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4148,6 +4234,7 @@
 				ED151F3F163BFD0400451B5F /* libsoxr */,
 				28501EAC0CEED0740029ABAA /* libvamp */,
 				1707357C0988D6AD008541CC /* libvorbis */,
+				28622998181CE35900E1AD1A /* lv2 */,
 				EDBFAD18177E5424004CC1C1 /* mod-nyq-bench */,
 				2844B48E0DEA66900087C656 /* mod-script-pipe */,
 				28E821F50A39FC1300DCE280 /* portaudio-v19 */,
@@ -4851,6 +4938,7 @@
 				ED663CDE16543647007F53A5 /* Audacity.app */,
 				ED85B5B816A47353006DA21D /* Audacity.app */,
 				EDBFAD13177E5399004CC1C1 /* mod-nyq-bench.so */,
+				286229B0181CE4B600E1AD1A /* liblv2.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -6015,6 +6103,81 @@
 			name = "vamp-hostsdk";
 			sourceTree = "<group>";
 		};
+		28622998181CE35900E1AD1A /* lv2 */ = {
+			isa = PBXGroup;
+			children = (
+				28622999181CE37800E1AD1A /* lilv */,
+				2862299A181CE3AE00E1AD1A /* serd */,
+				2862299B181CE3B400E1AD1A /* sord */,
+				2862299C181CE3BA00E1AD1A /* sratom */,
+			);
+			name = lv2;
+			sourceTree = "<group>";
+		};
+		28622999181CE37800E1AD1A /* lilv */ = {
+			isa = PBXGroup;
+			children = (
+				28640877181CE77200CC4E2C /* lilv_config.h */,
+				286229B1181CE51800E1AD1A /* lilv.h */,
+				286229B2181CE51800E1AD1A /* collections.c */,
+				286229B3181CE51800E1AD1A /* instance.c */,
+				286229B4181CE51800E1AD1A /* lib.c */,
+				286229B5181CE51800E1AD1A /* lilv_internal.h */,
+				286229B6181CE51800E1AD1A /* node.c */,
+				286229B7181CE51800E1AD1A /* plugin.c */,
+				286229B8181CE51800E1AD1A /* pluginclass.c */,
+				286229B9181CE51800E1AD1A /* port.c */,
+				286229BA181CE51800E1AD1A /* query.c */,
+				286229BB181CE51800E1AD1A /* scalepoint.c */,
+				286229BC181CE51800E1AD1A /* state.c */,
+				286229BD181CE51800E1AD1A /* ui.c */,
+				286229BE181CE51800E1AD1A /* util.c */,
+				286229BF181CE51800E1AD1A /* world.c */,
+				286229C0181CE51800E1AD1A /* common.h */,
+				286229C1181CE51800E1AD1A /* tree.c */,
+				286229C2181CE51800E1AD1A /* tree.h */,
+			);
+			name = lilv;
+			sourceTree = "<group>";
+		};
+		2862299A181CE3AE00E1AD1A /* serd */ = {
+			isa = PBXGroup;
+			children = (
+				28640875181CE75800CC4E2C /* serd_config.h */,
+				286229D5181CE5EC00E1AD1A /* serd.h */,
+				286229D6181CE5EC00E1AD1A /* env.c */,
+				286229D7181CE5EC00E1AD1A /* node.c */,
+				286229D8181CE5EC00E1AD1A /* reader.c */,
+				286229D9181CE5EC00E1AD1A /* serd_internal.h */,
+				286229DA181CE5EC00E1AD1A /* string.c */,
+				286229DB181CE5EC00E1AD1A /* uri.c */,
+				286229DC181CE5EC00E1AD1A /* writer.c */,
+			);
+			name = serd;
+			sourceTree = "<group>";
+		};
+		2862299B181CE3B400E1AD1A /* sord */ = {
+			isa = PBXGroup;
+			children = (
+				28640873181CE74100CC4E2C /* sord_config.h */,
+				286229E5181CE62A00E1AD1A /* sord.h */,
+				286229E6181CE62A00E1AD1A /* sord_internal.h */,
+				286229E7181CE62A00E1AD1A /* sord.c */,
+				286229E8181CE62A00E1AD1A /* syntax.c */,
+			);
+			name = sord;
+			sourceTree = "<group>";
+		};
+		2862299C181CE3BA00E1AD1A /* sratom */ = {
+			isa = PBXGroup;
+			children = (
+				2862439F181CE65500E1AD1A /* sratom_config.h */,
+				286243A0181CE65500E1AD1A /* sratom.h */,
+				286243A1181CE65500E1AD1A /* sratom.c */,
+			);
+			name = sratom;
+			sourceTree = "<group>";
+		};
 		286D30AC0F264B58004E6E4A /* locale */ = {
 			isa = PBXGroup;
 			children = (
@@ -6997,6 +7160,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2862299F181CE4B600E1AD1A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				286229C3181CE51800E1AD1A /* lilv.h in Headers */,
+				286229C7181CE51800E1AD1A /* lilv_internal.h in Headers */,
+				286229D2181CE51800E1AD1A /* common.h in Headers */,
+				286229D4181CE51800E1AD1A /* tree.h in Headers */,
+				286229DD181CE5EC00E1AD1A /* serd.h in Headers */,
+				286229E1181CE5EC00E1AD1A /* serd_internal.h in Headers */,
+				286229E9181CE62A00E1AD1A /* sord.h in Headers */,
+				286229EA181CE62A00E1AD1A /* sord_internal.h in Headers */,
+				28624C0E181CE65700E1AD1A /* sratom_config.h in Headers */,
+				28624C0F181CE65700E1AD1A /* sratom.h in Headers */,
+				28640874181CE74100CC4E2C /* sord_config.h in Headers */,
+				28640876181CE75800CC4E2C /* serd_config.h in Headers */,
+				28640878181CE77200CC4E2C /* lilv_config.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2880527A0DEA694100671EA4 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -7439,10 +7622,27 @@
 			buildRules = (
 			);
 			dependencies = (
+				2864087A181CE78E00CC4E2C /* PBXTargetDependency */,
 			);
 			name = libvamp;
 			productName = libsndfile;
 			productReference = 28501F060CEED1F00029ABAA /* libvamp.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		2862299E181CE4B600E1AD1A /* lv2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 286229AB181CE4B600E1AD1A /* Build configuration list for PBXNativeTarget "lv2" */;
+			buildPhases = (
+				2862299F181CE4B600E1AD1A /* Headers */,
+				286229A0181CE4B600E1AD1A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = lv2;
+			productName = libsndfile;
+			productReference = 286229B0181CE4B600E1AD1A /* liblv2.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		2880527D0DEA694100671EA4 /* mod-script-pipe */ = {
@@ -7693,6 +7893,7 @@
 				1707401D0988EEAA008541CC /* libsndfile */,
 				ED15212F163C227C00451B5F /* libsoxr */,
 				28501EAF0CEED1F00029ABAA /* libvamp */,
+				2862299E181CE4B600E1AD1A /* lv2 */,
 				EDBFAD07177E5399004CC1C1 /* mod-nyq-bench */,
 				2880527D0DEA694100671EA4 /* mod-script-pipe */,
 				28E67F510A3A160D0021D89F /* portaudio-v19 */,
@@ -8900,6 +9101,36 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		286229A0181CE4B600E1AD1A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				286229C4181CE51800E1AD1A /* collections.c in Sources */,
+				286229C5181CE51800E1AD1A /* instance.c in Sources */,
+				286229C6181CE51800E1AD1A /* lib.c in Sources */,
+				286229C8181CE51800E1AD1A /* node.c in Sources */,
+				286229C9181CE51800E1AD1A /* plugin.c in Sources */,
+				286229CA181CE51800E1AD1A /* pluginclass.c in Sources */,
+				286229CB181CE51800E1AD1A /* port.c in Sources */,
+				286229CC181CE51800E1AD1A /* query.c in Sources */,
+				286229CD181CE51800E1AD1A /* scalepoint.c in Sources */,
+				286229CE181CE51800E1AD1A /* state.c in Sources */,
+				286229CF181CE51800E1AD1A /* ui.c in Sources */,
+				286229D0181CE51800E1AD1A /* util.c in Sources */,
+				286229D1181CE51800E1AD1A /* world.c in Sources */,
+				286229D3181CE51800E1AD1A /* tree.c in Sources */,
+				286229DE181CE5EC00E1AD1A /* env.c in Sources */,
+				286229DF181CE5EC00E1AD1A /* node.c in Sources */,
+				286229E0181CE5EC00E1AD1A /* reader.c in Sources */,
+				286229E2181CE5EC00E1AD1A /* string.c in Sources */,
+				286229E3181CE5EC00E1AD1A /* uri.c in Sources */,
+				286229E4181CE5EC00E1AD1A /* writer.c in Sources */,
+				286229EB181CE62A00E1AD1A /* sord.c in Sources */,
+				286229EC181CE62A00E1AD1A /* syntax.c in Sources */,
+				28624C10181CE65700E1AD1A /* sratom.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2880527B0DEA694100671EA4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9698,6 +9929,11 @@
 			target = 28501EAF0CEED1F00029ABAA /* libvamp */;
 			targetProxy = 28501F520CEED9A80029ABAA /* PBXContainerItemProxy */;
 		};
+		2864087A181CE78E00CC4E2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2862299E181CE4B600E1AD1A /* lv2 */;
+			targetProxy = 28640879181CE78E00CC4E2C /* PBXContainerItemProxy */;
+		};
 		28E237270E515E1300281398 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 28E236F40E515D1D00281398 /* libscorealign */;
@@ -10129,7 +10365,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Static";
 		};
@@ -10260,6 +10496,74 @@
 			};
 			name = "Release Static";
 		};
+		286229AC181CE4B600E1AD1A /* Debug Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+				);
+				PRODUCT_NAME = lv2;
+			};
+			name = "Debug Static";
+		};
+		286229AD181CE4B600E1AD1A /* Debug Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+				);
+				PRODUCT_NAME = lv2;
+			};
+			name = "Debug Shared";
+		};
+		286229AE181CE4B600E1AD1A /* Release Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+				);
+				PRODUCT_NAME = lv2;
+			};
+			name = "Release Static";
+		};
+		286229AF181CE4B600E1AD1A /* Release Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
+				HEADER_SEARCH_PATHS = (
+					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+				);
+				PRODUCT_NAME = lv2;
+			};
+			name = "Release Shared";
+		};
 		288052800DEA694100671EA4 /* Debug Static */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
@@ -10337,7 +10641,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = 4.0;
-				"GCC_VERSION[sdk=macosx10.5][arch=x86_64]" = 4.2;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
@@ -10413,7 +10716,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Shared";
 		};
@@ -10738,7 +11041,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Shared";
 		};
@@ -11262,7 +11565,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Static";
 		};
@@ -12451,6 +12754,17 @@
 				288052D80DEA74F100671EA4 /* Debug Shared */,
 				28501F050CEED1F00029ABAA /* Release Static */,
 				288052ED0DEA74FD00671EA4 /* Release Shared */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Debug Static";
+		};
+		286229AB181CE4B600E1AD1A /* Build configuration list for PBXNativeTarget "lv2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				286229AC181CE4B600E1AD1A /* Debug Static */,
+				286229AD181CE4B600E1AD1A /* Debug Shared */,
+				286229AE181CE4B600E1AD1A /* Release Static */,
+				286229AF181CE4B600E1AD1A /* Release Shared */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Debug Static";

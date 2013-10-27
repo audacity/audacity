@@ -637,6 +637,8 @@ build_os
 build_vendor
 build_cpu
 build
+LV2_LIBS
+LV2_CFLAGS
 PORTAUDIO_LIBS
 PORTAUDIO_CFLAGS
 PORTSMF_LIBS
@@ -769,6 +771,7 @@ with_ffmpeg
 with_midi
 with_portaudio
 with_lame
+with_LV2
 enable_audiounits
 enable_ladspa
 enable_quicktime
@@ -815,12 +818,29 @@ PORTSMF_CFLAGS
 PORTSMF_LIBS
 PORTAUDIO_CFLAGS
 PORTAUDIO_LIBS
+LV2_CFLAGS
+LV2_LIBS
 GTK_CFLAGS
 GTK_LIBS
 JACK_CFLAGS
 JACK_LIBS'
 ac_subdirs_all='lib-src/FileDialog
-$CONFIG_SUBDIRS
+lib-src/libflac
+lib-src/libid3tag
+lib-src/libmad
+lib-src/libnyquist
+lib-src/libresample
+lib-src/libsamplerate
+lib-src/sbsms
+lib-src/libsndfile
+lib-src/soundtouch
+lib-src/libsoxr
+lib-src/twolame
+lib-src/libvamp
+lib-src/libogg lib-src/libvorbis
+lib-src/lv2
+lib-src/portaudio-v19
+lib-src/portsmf
 lib-src/portmixer'
 
 # Initialize some variables set by options.
@@ -1476,6 +1496,7 @@ Optional Packages:
   --with-midi             use portSMF for Midi support
   --with-portaudio        use portaudio19
   --with-lame             use lame for import and export support
+  --with-lv2              use for adding LV2 plug-in support
   --with-portmixer        compile with PortMixer [default=yes]
 
 Some influential environment variables:
@@ -1539,6 +1560,8 @@ Some influential environment variables:
               C compiler flags for PORTAUDIO, overriding pkg-config
   PORTAUDIO_LIBS
               linker flags for PORTAUDIO, overriding pkg-config
+  LV2_CFLAGS  C compiler flags for LV2, overriding pkg-config
+  LV2_LIBS    linker flags for LV2, overriding pkg-config
   GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
   GTK_LIBS    linker flags for GTK, overriding pkg-config
   JACK_CFLAGS C compiler flags for JACK, overriding pkg-config
@@ -5848,7 +5871,7 @@ BUILD_LDFLAGS="$BUILD_LDFLAGS $WIDGETEXTRA_LIBS"
 CXXFLAGS="$CXXFLAGS $WIDGETEXTRA_CFLAGS"
 LIBSRC_BUILD="$LIBSRC_BUILD widgetextra"
 
-LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF PORTAUDIO LAME"
+LIBRARIES="LIBVORBIS LIBMAD LIBSNDFILE LIBFLAC LIBID3TAG LIBSOXR LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSOUNDTOUCH LIBNYQUIST LIBVAMP LIBEXPAT LIBTWOLAME FFMPEG PORTSMF PORTAUDIO LAME LV2"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
@@ -5974,7 +5997,6 @@ fi
       LIBSNDFILE_LOCAL_AVAILABLE="yes"
       LIBSNDFILE_LOCAL_LIBS="libsndfile.a"
       LIBSNDFILE_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libsndfile/src'
-      LIBSNDFILE_LOCAL_CONFIG_SUBDIRS="lib-src/libsndfile"
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsndfile libraries are available in this source tree" >&5
 $as_echo "$as_me: libsndfile libraries are available in this source tree" >&6;}
 
@@ -6117,13 +6139,9 @@ fi
       LIBSOXR_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libsoxr/src'
       LIBSOXR_LOCAL_CPPSYMBOLS="USE_LIBSOXR"
 
-      if test ! -f lib-src/libsoxr/Makefile ; then
-         LIBSOXR_LOCAL_CONFIG_SUBDIRS="lib-src/libsoxr"
-
-         # Breaks other other libraries in Audacity tree; but why is ./configure
-         # passing options specific to this library to other libraries?
-         #LIBSOXR_LOCAL_CONFIGURE_ARGS="\"-DBUILD_SHARED_LIBS=OFF -DWITH_OPENMP=OFF\""
-      fi
+      # Breaks other other libraries in Audacity tree; but why is ./configure
+      # passing options specific to this library to other libraries?
+      #LIBSOXR_LOCAL_CONFIGURE_ARGS="\"-DBUILD_SHARED_LIBS=OFF -DWITH_OPENMP=OFF\""
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsoxr libraries are available in the local tree" >&5
 $as_echo "$as_me: libsoxr libraries are available in the local tree" >&6;}
    else
@@ -6183,7 +6201,6 @@ fi
       LIBRESAMPLE_LOCAL_LIBS="libresample.a"
       LIBRESAMPLE_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libresample/include'
       LIBRESAMPLE_LOCAL_CPPSYMBOLS="USE_LIBRESAMPLE"
-      LIBRESAMPLE_LOCAL_CONFIG_SUBDIRS="lib-src/libresample"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: libresample libraries are available in the local tree" >&5
 $as_echo "$as_me: libresample libraries are available in the local tree" >&6;}
@@ -6322,10 +6339,6 @@ fi
       LIBSAMPLERATE_LOCAL_LIBS="libsamplerate.a"
       LIBSAMPLERATE_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libsamplerate/src'
       LIBSAMPLERATE_LOCAL_CPPSYMBOLS="USE_LIBSAMPLERATE"
-
-      if test ! -f lib-src/libsamplerate/Makefile ; then
-         LIBSAMPLERATE_LOCAL_CONFIG_SUBDIRS="lib-src/libsamplerate"
-      fi
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsamplerate libraries are available in the local tree" >&5
 $as_echo "$as_me: libsamplerate libraries are available in the local tree" >&6;}
    else
@@ -6592,7 +6605,6 @@ fi
 
       LIBVORBIS_LOCAL_CPPSYMBOLS="USE_LIBVORBIS"
 
-      LIBVORBIS_LOCAL_CONFIG_SUBDIRS="lib-src/libogg lib-src/libvorbis"
       LIBVORBIS_LOCAL_CONFIGURE_OPTS="--disable-oggtest"
       export PKG_CONFIG_PATH="../libogg:${PKG_CONFIG_PATH}"
 
@@ -6742,7 +6754,7 @@ $as_echo "$as_me: WARNING: system installation of libmad found, but it is too ol
    if test "x$libmad_available_system" = "xyes" ; then
       LIBMAD_SYSTEM_AVAILABLE="yes"
       LIBMAD_SYSTEM_LIBS="$LIBMAD_LIBS"
-	  LIBMAD_SYSTEM_CXXFLAGS="$LIBMAD_CFLAGS"
+      LIBMAD_SYSTEM_CXXFLAGS="$LIBMAD_CFLAGS"
       LIBMAD_SYSTEM_CPPSYMBOLS="USE_LIBMAD"
       { $as_echo "$as_me:${as_lineno-$LINENO}: libmad libraries are available as system libraries" >&5
 $as_echo "$as_me: libmad libraries are available as system libraries" >&6;}
@@ -6781,7 +6793,6 @@ fi
       LIBMAD_LOCAL_LIBS="libmad.a"
       LIBMAD_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libmad'
       LIBMAD_LOCAL_CPPSYMBOLS="USE_LIBMAD"
-      LIBMAD_LOCAL_CONFIG_SUBDIRS="lib-src/libmad"
       { $as_echo "$as_me:${as_lineno-$LINENO}: libmad libraries are available in the local tree" >&5
 $as_echo "$as_me: libmad libraries are available in the local tree" >&6;}
    else
@@ -6935,7 +6946,6 @@ fi
       LIBFLAC_LOCAL_CPPSYMBOLS="USE_LIBFLAC"
       # this file shouldn't be built at if no libflac is available
       LIBFLAC_LOCAL_OPTOBJS="ondemand/ODDecodeFlacTask.o"
-      LIBFLAC_LOCAL_CONFIG_SUBDIRS="lib-src/libflac"
       LIBFLAC_LOCAL_CONFIGURE_ARGS="--disable-xmms-plugin --disable-doxygen-docs --disable-thorough-tests"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: FLAC libraries are available in this source tree" >&5
@@ -7060,7 +7070,6 @@ fi
       LIBID3TAG_LOCAL_LIBS="libid3tag.a"
       LIBID3TAG_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libid3tag'
       LIBID3TAG_LOCAL_CPPSYMBOLS="USE_LIBID3TAG"
-      LIBID3TAG_LOCAL_CONFIG_SUBDIRS="lib-src/libid3tag"
       { $as_echo "$as_me:${as_lineno-$LINENO}: libid3tag libraries are available in the local tree" >&5
 $as_echo "$as_me: libid3tag libraries are available in the local tree" >&6;}
    else
@@ -7199,8 +7208,7 @@ fi
       LIBSBSMS_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/sbsms/include'
       LIBSBSMS_LOCAL_CPPSYMBOLS="USE_SBSMS"
 
-	        LIBSBSMS_LOCAL_CONFIG_SUBDIRS="lib-src/sbsms"
-	  	   LIBSBSMS_LOCAL_CONFIGURE_ARGS="--disable-programs"
+            LIBSBSMS_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsbsms libraries are available in the local tree" >&5
 $as_echo "$as_me: libsbsms libraries are available in the local tree" >&6;}
@@ -7477,7 +7485,6 @@ fi
       LIBSOUNDTOUCH_LOCAL_LIBS="libSoundTouch.a"
       LIBSOUNDTOUCH_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/soundtouch/include'
       LIBSOUNDTOUCH_LOCAL_CPPSYMBOLS="USE_SOUNDTOUCH"
-      LIBSOUNDTOUCH_LOCAL_CONFIG_SUBDIRS="lib-src/soundtouch"
       LIBSOUNDTOUCH_LOCAL_CONFIGURE_ARGS="--enable-static=yes --enable-shared=no"
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsoundtouch libraries are available in the local tree" >&5
 $as_echo "$as_me: libsoundtouch libraries are available in the local tree" >&6;}
@@ -7537,8 +7544,6 @@ fi
       LIBNYQUIST_LOCAL_CPPSYMBOLS="USE_NYQUIST"
       LIBNYQUIST_LOCAL_OPTOBJS="effects/nyquist/Nyquist.o"
       LIBNYQUIST_LOCAL_OPTOBJS="$LIBNYQUIST_LOCAL_OPTOBJS effects/nyquist/LoadNyquist.o"
-
-      LIBNYQUIST_LOCAL_CONFIG_SUBDIRS="lib-src/libnyquist"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: nyquist libraries are available in the local tree" >&5
 $as_echo "$as_me: nyquist libraries are available in the local tree" >&6;}
@@ -7637,7 +7642,7 @@ fi
       LIBVAMP_SYSTEM_AVAILABLE="yes"
       LIBVAMP_SYSTEM_LIBS=$VAMP_LIBS
       LIBVAMP_SYSTEM_CXXFLAGS=$VAMP_CFLAGS
-	        LIBVAMP_SYSTEM_OPTOBJS="effects/vamp/VampEffect.o effects/vamp/LoadVamp.o"
+            LIBVAMP_SYSTEM_OPTOBJS="effects/vamp/VampEffect.o effects/vamp/LoadVamp.o"
       LIBVAMP_SYSTEM_CPPSYMBOLS="USE_VAMP"
       { $as_echo "$as_me:${as_lineno-$LINENO}: Vamp libraries are available as system libraries" >&5
 $as_echo "$as_me: Vamp libraries are available as system libraries" >&6;}
@@ -7674,13 +7679,12 @@ fi
 
    if test "x$vamp_h_found" = "xyes" ; then
       LIBVAMP_LOCAL_AVAILABLE="yes"
-	        LIBVAMP_LOCAL_BUILD="vamp-sdk"
-	        LIBVAMP_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libvamp'
+            LIBVAMP_LOCAL_BUILD="vamp-sdk"
+            LIBVAMP_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libvamp'
       LIBVAMP_LOCAL_LDFLAGS='-L$(top_builddir)/lib-src/libvamp/src -lvamp-hostsdk'
-	        LIBVAMP_LOCAL_OPTOBJS="effects/vamp/VampEffect.o effects/vamp/LoadVamp.o"
-	  	        LIBVAMP_LOCAL_CPPSYMBOLS="USE_VAMP"
-	        LIBVAMP_LOCAL_CONFIG_SUBDIRS="lib-src/libvamp"
-	  	   LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"
+            LIBVAMP_LOCAL_OPTOBJS="effects/vamp/VampEffect.o effects/vamp/LoadVamp.o"
+                  LIBVAMP_LOCAL_CPPSYMBOLS="USE_VAMP"
+            LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: Vamp libraries are available in the local tree" >&5
 $as_echo "$as_me: Vamp libraries are available in the local tree" >&6;}
@@ -7819,8 +7823,7 @@ fi
       LIBTWOLAME_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/twolame/libtwolame'
       LIBTWOLAME_LOCAL_CPPSYMBOLS="USE_LIBTWOLAME"
 
-	        LIBTWOLAME_LOCAL_CONFIG_SUBDIRS="lib-src/twolame"
-	  	   LIBTWOLAME_LOCAL_CONFIGURE_ARGS="--disable-programs"
+            LIBTWOLAME_LOCAL_CONFIGURE_ARGS="--disable-programs"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: libtwolame library is available in the local tree" >&5
 $as_echo "$as_me: libtwolame library is available in the local tree" >&6;}
@@ -8267,7 +8270,6 @@ fi
       PORTSMF_LOCAL_LIBS="libportSMF.a"
       PORTSMF_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/portsmf'
       PORTSMF_LOCAL_CPPSYMBOLS="USE_MIDI"
-      PORTSMF_LOCAL_CONFIG_SUBDIRS="lib-src/portsmf"
             PORTSMF_LOCAL_OPTOBJS="NoteTrack.o import/ImportMIDI.o"
    else
       PORTSMF_LOCAL_AVAILABLE="no"
@@ -8414,8 +8416,7 @@ fi
       PORTAUDIO_LOCAL_LIBS="libportaudio.a"
       PORTAUDIO_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/portaudio-v19/include'
 
-            PORTAUDIO_LOCAL_CONFIG_SUBDIRS="lib-src/portaudio-v19"
-      PORTAUDIO_LOCAL_CONFIGURE_ARGS="--with-pa-include=../portaudio-v19/include"
+            PORTAUDIO_LOCAL_CONFIGURE_ARGS="--with-pa-include=../portaudio-v19/include"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: portaudio19 library is available in the local tree" >&5
 $as_echo "$as_me: portaudio19 library is available in the local tree" >&6;}
@@ -8511,6 +8512,148 @@ $as_echo "$as_me: LAME library is NOT available as system library." >&6;}
 
 
    LAME_LOCAL_AVAILABLE="yes"
+
+
+
+# Check whether --with-LV2 was given.
+if test "${with_LV2+set}" = set; then :
+  withval=$with_LV2; LV2_ARGUMENT=$withval
+else
+  LV2_ARGUMENT="unspecified"
+fi
+
+
+   if false ; then
+
+$as_echo "#define USE_LV2 1" >>confdefs.h
+
+   fi
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for LV2" >&5
+$as_echo_n "checking for LV2... " >&6; }
+
+if test -n "$LV2_CFLAGS"; then
+    pkg_cv_LV2_CFLAGS="$LV2_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"lv2 lilv serd sord sratom\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "lv2 lilv serd sord sratom") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LV2_CFLAGS=`$PKG_CONFIG --cflags "lv2 lilv serd sord sratom" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$LV2_LIBS"; then
+    pkg_cv_LV2_LIBS="$LV2_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"lv2 lilv serd sord sratom\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "lv2 lilv serd sord sratom") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_LV2_LIBS=`$PKG_CONFIG --libs "lv2 lilv serd sord sratom" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        LV2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "lv2 lilv serd sord sratom" 2>&1`
+        else
+	        LV2_PKG_ERRORS=`$PKG_CONFIG --print-errors "lv2 lilv serd sord sratom" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$LV2_PKG_ERRORS" >&5
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                lv2_available_system="no"
+elif test $pkg_failed = untried; then
+	lv2_available_system="no"
+else
+	LV2_CFLAGS=$pkg_cv_LV2_CFLAGS
+	LV2_LIBS=$pkg_cv_LV2_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	lv2_available_system="yes"
+fi
+
+
+   if test "x$lv2_available_system" = "xyes" ; then
+      LV2_SYSTEM_AVAILABLE="yes"
+      LV2_SYSTEM_LIBS=$LV2_LIBS
+      LV2_SYSTEM_CXXFLAGS=$LV2_CFLAGS
+      LV2_SYSTEM_CPPSYMBOLS="USE_LV2"
+      LV2_SYSTEM_OPTOBJS="effects/lv2/LoadLV2.o effects/lv2/LV2Effect.o effects/lv2/LV2PortGroup.o"
+
+      { $as_echo "$as_me:${as_lineno-$LINENO}: LV2 libraries are available as system libraries" >&5
+$as_echo "$as_me: LV2 libraries are available as system libraries" >&6;}
+   else
+      LV2_SYSTEM_AVAILABLE="no"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: LV2 libraries are NOT available as system libraries" >&5
+$as_echo "$as_me: LV2 libraries are NOT available as system libraries" >&6;}
+   fi
+
+
+   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/lv2/configure" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/lv2/configure" >&5
+$as_echo_n "checking for ${srcdir}/lib-src/lv2/configure... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "${srcdir}/lib-src/lv2/configure"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  lv2_configure_found="yes"
+else
+  lv2_configure_found="no"
+fi
+
+
+   if test "x$lv2_configure_found" = "xyes" ; then
+      LV2_LOCAL_AVAILABLE="yes"
+      LV2_LOCAL_LIBS="liblv2.a"
+      LV2_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/lv2/include'
+      LV2_LOCAL_CPPSYMBOLS="USE_LV2"
+      LV2_LOCAL_OPTOBJS="effects/lv2/LoadLV2.o effects/lv2/LV2Effect.o effects/lv2/LV2PortGroup.o"
+
+      { $as_echo "$as_me:${as_lineno-$LINENO}: LV2 libraries are available in the local tree" >&5
+$as_echo "$as_me: LV2 libraries are available in the local tree" >&6;}
+   else
+      LV2_LOCAL_AVAILABLE="no"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: LV2 libraries are NOT available in the local tree" >&5
+$as_echo "$as_me: LV2 libraries are NOT available in the local tree" >&6;}
+   fi
+
 
 
 
@@ -8634,10 +8777,7 @@ for lib in $LIBRARIES ; do
       eval BUILD_LDFLAGS=\"\$BUILD_LDFLAGS \$${lib}_LOCAL_LDFLAGS\"
       eval OPTOBJS=\"$OPTOBJS \$${lib}_LOCAL_OPTOBJS\"
       eval CXXFLAGS=\"\$CXXFLAGS \$${lib}_LOCAL_CXXFLAGS\"
-      eval CONFIG_SUBDIRS=\"\$${lib}_LOCAL_CONFIG_SUBDIRS\"
       eval ac_configure_args=\"\$ac_configure_args \$${lib}_LOCAL_CONFIGURE_ARGS\"
-      subdirs="$subdirs $CONFIG_SUBDIRS"
-
 
       eval CPPSYMBOLS=\"\$${lib}_LOCAL_CPPSYMBOLS\"
       for symbol in $CPPSYMBOLS ; do
@@ -8661,6 +8801,103 @@ _ACEOF
       done
    fi
 done
+
+
+   if test "$LIBFLAC_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libflac"
+
+   fi
+
+
+   if test "$LIBID3TAG_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libid3tag"
+
+   fi
+
+
+   if test "$LIBMAD_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libmad"
+
+   fi
+
+
+   if test "$LIBNYQUIST_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libnyquist"
+
+   fi
+
+
+   if test "$LIBRESAMPLE_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libresample"
+
+   fi
+
+
+   if test "$LIBSAMPLERATE_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libsamplerate"
+
+   fi
+
+
+   if test "$LIBSBSMS_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/sbsms"
+
+   fi
+
+
+   if test "$LIBSNDFILE_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libsndfile"
+
+   fi
+
+
+   if test "$LIBSOUNDTOUCH_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/soundtouch"
+
+   fi
+
+
+   if test "$LIBSOXR_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libsoxr"
+
+   fi
+
+
+   if test "$LIBTWOLAME_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/twolame"
+
+   fi
+
+
+   if test "$LIBVAMP_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libvamp"
+
+   fi
+
+
+   if test "$LIBVORBIS_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/libogg lib-src/libvorbis"
+
+   fi
+
+
+   if test "$LV2_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/lv2"
+
+   fi
+
+
+   if test "$PORTAUDIO_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/portaudio-v19"
+
+   fi
+
+
+   if test "$PORTSMF_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/portsmf"
+
+   fi
+
 
 
 

@@ -135,6 +135,10 @@ void AboutDialog::CreateCreditsList()
    #if USE_LIBSOXR
       AddCredit(wxT("libsoxr, by Rob Sykes"), roleLibrary);
    #endif
+   #if USE_LV2
+      AddCredit(wxT("lilv, serd, sord, and sratom, by David Robillard"), roleLibrary);
+      AddCredit(wxT("msinttypes, by Alexander Chemeris"), roleLibrary);
+   #endif
    AddCredit(wxT("libsndfile"), roleLibrary);
    AddCredit(wxT("Nyquist"), roleLibrary);
    AddCredit(wxT("Ogg Vorbis"), roleLibrary);

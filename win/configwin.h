@@ -19,7 +19,7 @@
 #define USE_LADSPA 1
 #define USE_LIBFLAC 1
 #define USE_LIBID3TAG 1
-// #define USE_LIBLRDF 1
+#define USE_LV2 1
 #define USE_LIBMAD 1
 
 // Resamplers:

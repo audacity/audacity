@@ -143,6 +143,31 @@ Upstream Version: 1.3.3
 lib-widget-extra
 ----------------
 
+lv2
+---------
+A merging of the lilv, lv2, msinttypes, serd, sord, and sratom libraries to support
+LV2 plug-ins.
+Versions in Audacity SVN:
+    lilv-0.16.0
+    lv2-1.6.0
+    msinttypes-r29
+    serd-0.18.2
+    sord-0.12.0
+    sratom-0.4.2 
+Patches:
+    usegetprocaddress.patch - ticket #923 opened upstream on 10/23/2013
+    serdnode.patch - Both lilv and serd have a node.c which causes problems during build.
+                     This is just a copy of serd/node.c and is a way to work around the
+                     problem.
+Upstream Versions:
+    lilv-0.16.0
+    lv2-1.6.0
+    msinttypes-r29
+    serd-0.18.2
+    sord-0.12.0
+    sratom-0.4.2 
+
+
 mod-script-pipe
 ---------------
 

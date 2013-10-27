@@ -30,7 +30,6 @@ extern "C" {
 #    include <windows.h>
 #    define dlopen(path, flags) LoadLibrary(path)
 #    define dlclose(lib) FreeLibrary((HMODULE)lib)
-#    define dlsym GetProcAddress
 #    ifdef _MSC_VER
 #        define __func__ __FUNCTION__
 #        define INFINITY DBL_MAX + DBL_MAX
@@ -363,9 +362,13 @@ typedef void (*VoidFunc)(void);
 static inline VoidFunc
 lilv_dlfunc(void* handle, const char* symbol)
 {
+#ifdef _WIN32
+   return (VoidFunc)GetProcAddress((HMODULE)handle, symbol);
+#else
 	typedef VoidFunc (*VoidFuncGetter)(void*, const char*);
 	VoidFuncGetter dlfunc = (VoidFuncGetter)dlsym;
 	return dlfunc(handle, symbol);
+#endif
 }
 
 #ifdef LILV_DYN_MANIFEST

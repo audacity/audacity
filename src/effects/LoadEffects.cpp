@@ -70,7 +70,7 @@
 #include "ladspa/LoadLadspa.h"
 #endif
 
-#ifdef USE_SLV2
+#ifdef USE_LV2
 #include "lv2/LoadLV2.h"
 #endif
 
@@ -295,8 +295,8 @@ void LoadEffects()
    }
 #endif
 
-#ifdef USE_SLV2
-   if (gPrefs->Read(wxT("/SLV2/Enable"), true)) {
+#ifdef USE_LV2
+   if (gPrefs->Read(wxT("/LV2/Enable"), true)) {
       LoadLV2Plugins();
    }
 #endif
@@ -323,7 +323,7 @@ void UnloadEffects()
    UnloadLadspaPlugins();
 #endif
 
-#ifdef USE_SLV2
+#ifdef USE_LV2
    UnloadLV2Plugins();
 #endif
 

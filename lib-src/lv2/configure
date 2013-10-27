@@ -1,0 +1,49 @@
+#!/bin/bash
+
+function waf
+{
+   pkg="$1"
+   shift
+   pushd >/dev/null ${pkg}
+   python waf --prefix="." --include="." $@ configure || exit 1
+   popd >/dev/null
+
+   if [ "${pkg}" == "lv2" ]
+   then
+      eval $(sed -e "/^VERSION/!d;s/ //g;s/.*VERSION/version/" ${pkg}/wscript)
+      major=""
+   else
+      eval $(sed -e "/^[A-Z]*_VERSION/!d;s/ //g;s/.*VERSION/version/" ${pkg}/wscript)
+      major="-${version%%.*}"
+   fi
+
+   cat <<EOF >${pkg}/build/${pkg}${major}.pc
+prefix=$(pwd)/${pkg}
+exec_prefix=\${prefix}
+libdir=\${exec_prefix}/lib
+includedir=.
+
+Name: ${pkg}
+Version: ${version}
+Description: Temporary fake config file
+Libs: -L\${libdir} -l${pkg}${major} -ldl
+Cflags: -I\${includedir}/${pkg}${major}
+EOF
+
+   export PKG_CONFIG_PATH="$(pwd)/${pkg}/build:${PKG_CONFIG_PATH}"
+   export CFLAGS="-I$(pwd)/${pkg} ${CFLAGS}"
+   export LDFLAGS="-L$(pwd)/${pkg} -l${pkg}-${major} ${LDFLAGS}"
+
+   ln -s ../${pkg}/${pkg} include
+}
+
+rm -rf include
+mkdir -p include
+
+waf lv2 --no-plugins
+waf serd --no-utils --static --no-shared
+waf sord --no-utils --static --no-shared
+waf sratom --static --no-shared
+waf lilv --no-utils --static --no-shared
+
+exit 0

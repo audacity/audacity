@@ -123,6 +123,9 @@
 /* Define if the ogg vorbis decoding library is present */
 #undef USE_LIBVORBIS
 
+/* Define if the LV2 support is present */
+#undef USE_LV2
+
 /* Define if midi support should be enabled */
 #undef USE_MIDI
 

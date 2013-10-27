@@ -96,6 +96,12 @@ libsndfile-recursive:
 libsndfile.a: libsndfile-recursive
 	ln -sf libsndfile/src/.libs/libsndfile.a libsndfile.a
 
+# lv2
+lv2-recursive:
+	cd lv2 && bash build && cd ..
+liblv2.a: lv2-recursive
+	ln -sf lv2/liblv2.a liblv2.a
+
 # SBSMS
 sbsms-recursive:
 	$(MAKE) -C sbsms
@@ -143,6 +149,7 @@ clean:
 	test ! -f libvorbis/Makefile || $(MAKE) -C libvorbis clean
 	test ! -f lib-widget-extra/Makefile || $(MAKE) -C lib-widget-extra clean
 	test ! -f libflac/Makefile || $(MAKE) -C libflac clean
+	cd lv2 && bash clean && cd ..
 	test ! -f portaudio-v19/Makefile || $(MAKE) -C portaudio-v19 clean
 	test ! -f portmixer/Makefile || $(MAKE) -C portmixer clean
 	test ! -f sbsms/Makefile || $(MAKE) -C sbsms clean
@@ -166,6 +173,7 @@ distclean:
 	test ! -f libvorbis/Makefile || $(MAKE) -C libvorbis distclean
 	test ! -f lib-widget-extra/Makefile || $(MAKE) -C lib-widget-extra distclean
 	test ! -f libflac/Makefile || $(MAKE) -C libflac distclean
+	cd lv2 && bash clean && cd ..
 	test ! -f portaudio-v19/Makefile || $(MAKE) -C portaudio-v19 distclean
 	test ! -f portmixer/Makefile || $(MAKE) -C portmixer distclean
 	test ! -f sbsms/Makefile || $(MAKE) -C sbsms distclean
@@ -180,5 +188,5 @@ distclean:
 	libvorbis-recursive libnyquist-recursive libmad-recursive \
 	libid3tag-recursive sbsms-recursive soundtouch-recursive libsndfile-recursive \
 	libresample-recursive libsoxr-recursive libsamplerate-recursive vamp-sdk \
-	portaudio-v19-recursive portmixer-recursive libtwolame-recursive
-
+	portaudio-v19-recursive portmixer-recursive libtwolame-recursive \
+	lv2-recursive
