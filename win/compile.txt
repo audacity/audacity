@@ -3,6 +3,7 @@ copyright (c) 1999-2013 Audacity Team
 
 Authors:
   Asger Ottar Alstrup
+  Lynn Allan
   Vince Busam
   Dave Fancella
   Vaughan Johnson
@@ -10,7 +11,6 @@ Authors:
   Leland Lucius
   Markus Meyer
   Shane Mueller
-  Lynn Allan
   Martyn Shaw
 
 ========================================================================
