@@ -403,7 +403,7 @@ TimeConverter::TimeConverter(const wxString & formatName,
 
    mFocusedDigit = 0;
 
-   SetFormatString(GetBuiltinFormat(formatName));
+   SetFormatName(formatName);
    SetTimeValue(timeValue);
    SetSampleRate(sampleRate);
 }
@@ -717,6 +717,11 @@ void TimeConverter::ControlsToValue()
    mTimeValue = t;
 }
 
+void TimeConverter::SetFormatName(const wxString & formatName)
+{
+   SetFormatString(GetBuiltinFormat(formatName));
+}
+
 void TimeConverter::SetFormatString(const wxString & formatString)
 {
    mFormatString = formatString;
@@ -916,14 +921,14 @@ IMPLEMENT_CLASS(TimeTextCtrl, wxControl)
 
 TimeTextCtrl::TimeTextCtrl(wxWindow *parent,
                            wxWindowID id,
-                           wxString formatString,
+                           wxString formatName,
                            double timeValue,
                            double sampleRate,
                            const wxPoint &pos,
                            const wxSize &size,
                            bool autoPos):
    wxControl(parent, id, pos, size, wxSUNKEN_BORDER | wxWANTS_CHARS),
-   TimeConverter(formatString, timeValue, sampleRate),
+   TimeConverter(formatName, timeValue, sampleRate),
    mBackgroundBitmap(NULL),
    mDigitFont(NULL),
    mLabelFont(NULL),
@@ -981,6 +986,11 @@ void TimeTextCtrl::UpdateAutoFocus()
       }
       mFocusedDigit++;
    }
+}
+
+void TimeTextCtrl::SetFormatName(const wxString & formatName)
+{
+   SetFormatString(GetBuiltinFormat(formatName));
 }
 
 void TimeTextCtrl::SetFormatString(const wxString & formatString)

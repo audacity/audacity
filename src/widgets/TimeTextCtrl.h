@@ -57,7 +57,8 @@ public:
    virtual void ParseFormatString(const wxString & format);
 
    void PrintDebugInfo();
-   void SetFormatString(const wxString & formatName);
+   void SetFormatName(const wxString & formatName);
+   void SetFormatString(const wxString & formatString);
    void SetSampleRate(double sampleRate);
    void SetTimeValue(double newTime);
    double GetTimeValue();
@@ -113,7 +114,7 @@ class TimeTextCtrl: public wxControl, public TimeConverter
 
    TimeTextCtrl(wxWindow *parent,
                 wxWindowID id,
-                wxString formatName = wxT(""),
+                wxString formatName = wxEmptyString,
                 double timeValue = 0.0,
                 double sampleRate = 44100,
                 const wxPoint &pos = wxDefaultPosition,
@@ -128,6 +129,7 @@ class TimeTextCtrl: public wxControl, public TimeConverter
    void SetSampleRate(double sampleRate);
    void SetTimeValue(double newTime);
    void SetFormatString(const wxString & formatString);
+   void SetFormatName(const wxString & formatName);
 
    void SetFieldFocus(int digit);
 
