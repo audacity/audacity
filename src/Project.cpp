@@ -1213,6 +1213,20 @@ void AudacityProject::AS_SetSelectionFormat(const wxString & format)
    gPrefs->Flush();
 }
 
+void AudacityProject::SetSelectionFormat(const wxString & format)
+{
+   AS_SetSelectionFormat(format);
+   if (GetSelectionBar()) {
+      GetSelectionBar()->SetSelectionFormat(format);
+   }
+}
+
+const wxString & AudacityProject::GetSelectionFormat()
+{
+   return mSelectionFormat;
+}
+
+
 void AudacityProject::AS_ModifySelection(double &start, double &end, bool done)
 {
    mViewInfo.sel0 = start;
