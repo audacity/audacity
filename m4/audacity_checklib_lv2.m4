@@ -17,7 +17,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LV2], [
 
    dnl see if lv2 is installed on the system
 
-   PKG_CHECK_MODULES(LV2, [lv2 lilv serd sord sratom],
+   PKG_CHECK_MODULES(LV2, [lv2 lilv],
                      lv2_available_system="yes",
                      lv2_available_system="no")
 
