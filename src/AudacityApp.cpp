@@ -1158,6 +1158,18 @@ bool AudacityApp::OnInit()
                          wxGetUserId().c_str());
    #endif //__WXMAC__
 
+   // Locale
+   // wxWidgets 2.3 has a much nicer wxLocale API.  We can make this code much
+   // better once we move to wx 2.3/2.4.
+
+   wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
+
+   if (lang == wxT(""))
+      lang = GetSystemLanguageCode();
+
+   mLocale = NULL;
+   InitLang( lang );
+
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **) AudacityLogoWithName_xpm);
    logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
@@ -1179,18 +1191,6 @@ bool AudacityApp::OnInit()
 
    // Initialize the ModuleManager, including loading found modules
    ModuleManager::Initialize(*mCmdHandler);
-
-   // Locale
-   // wxWidgets 2.3 has a much nicer wxLocale API.  We can make this code much
-   // better once we move to wx 2.3/2.4.
-
-   wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-
-   if (lang == wxT(""))
-      lang = GetSystemLanguageCode();
-
-   mLocale = NULL;
-   InitLang( lang );
 
    // Init DirManager, which initializes the temp directory
    // If this fails, we must exit the program.
