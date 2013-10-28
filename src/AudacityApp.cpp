@@ -1222,7 +1222,7 @@ bool AudacityApp::OnInit()
    fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
 
    wxMenuBar *menuBar = new wxMenuBar();
-   menuBar->Append(fileMenu, wxT("&File"));
+   menuBar->Append(fileMenu, _("&File"));
 
    wxMenuBar::MacSetCommonMenuBar(menuBar);
 
