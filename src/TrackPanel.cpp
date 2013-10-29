@@ -7456,17 +7456,17 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
 
       mPopupMenuTarget->SetChannel(Track::LeftChannel);
       partner->SetChannel(Track::RightChannel);
-		
-		// Set new track heights and minimized state
-		bool bBothMinimizedp=((mPopupMenuTarget->GetMinimized())&&(partner->GetMinimized()));
-		mPopupMenuTarget->SetMinimized(false);
-		partner->SetMinimized(false);
-		int AverageHeight=(mPopupMenuTarget->GetHeight() + partner->GetHeight())/ 2;
-		mPopupMenuTarget->SetHeight(AverageHeight);
-		partner->SetHeight(AverageHeight);
-		mPopupMenuTarget->SetMinimized(bBothMinimizedp);
-		partner->SetMinimized(bBothMinimizedp);
-      
+
+      // Set new track heights and minimized state
+      bool bBothMinimizedp=((mPopupMenuTarget->GetMinimized())&&(partner->GetMinimized()));
+      mPopupMenuTarget->SetMinimized(false);
+      partner->SetMinimized(false);
+      int AverageHeight=(mPopupMenuTarget->GetHeight() + partner->GetHeight())/ 2;
+      mPopupMenuTarget->SetHeight(AverageHeight);
+      partner->SetHeight(AverageHeight);
+      mPopupMenuTarget->SetMinimized(bBothMinimizedp);
+      partner->SetMinimized(bBothMinimizedp);
+
       //On Demand - join the queues together.
       if(ODManager::IsInstanceCreated() && partner->GetKind() == Track::Wave && mPopupMenuTarget->GetKind() == Track::Wave )
          if(!ODManager::Instance()->MakeWaveTrackDependent((WaveTrack*)partner,(WaveTrack*)mPopupMenuTarget))
@@ -7477,7 +7477,7 @@ void TrackPanel::OnMergeStereo(wxCommandEvent & WXUNUSED(event))
             //for example it returns false when there are two different types of ODTasks on each track's queue.
             //we will need to display this to the user.
          }
-         
+
       MakeParentPushState(wxString::Format(_("Made '%s' a stereo track"),
                                            mPopupMenuTarget->GetName().
                                            c_str()),
