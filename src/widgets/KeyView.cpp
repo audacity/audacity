@@ -560,6 +560,8 @@ KeyView::RefreshBindings(const wxArrayString & names,
                          const wxArrayString & labels,
                          const wxArrayString & keys)
 {
+   bool firsttime = mNodes.GetCount() == 0;
+
    // Start clean
    mNodes.Clear();
 
@@ -750,6 +752,12 @@ KeyView::RefreshBindings(const wxArrayString & names,
 
    // Refresh the view lines
    RefreshLines();
+
+   // Set the selected node if this was the first time through
+   if (firsttime)
+   {
+      SelectNode(LineToIndex(0));
+   }
 }
 
 //
@@ -1387,7 +1395,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
          int cnt = (int) mLines.GetCount();
          bool found = false;
 
-         // Search the entire list if not is currently selected
+         // Search the entire list if none is currently selected
          if (line == wxNOT_FOUND)
          {
             line = cnt;
@@ -1742,7 +1750,7 @@ KeyView::GetLineHeight(int line)
 //
 // Returns the value to be presented to accessibility
 //
-// Current, the command and key are both provided.
+// Currently, the command and key are both provided.
 //
 wxString
 KeyView::GetValue(int line)
@@ -1753,18 +1761,20 @@ KeyView::GetValue(int line)
       wxASSERT(false);
       return wxEmptyString;
    }
+   int index = LineToIndex(line);
+   KeyNode *node = &mNodes[index];
 
    // Get the label and key values
    wxString value;
    if (mViewType == ViewByTree)
    {
-      value = GetLabel(LineToIndex(line));
+      value = GetLabel(index);
    }
    else
    {
-      value = GetFullLabel(LineToIndex(line));
+      value = GetFullLabel(index);
    }
-   wxString key = GetKey(LineToIndex(line));
+   wxString key = GetKey(index);
 
    // Add the key if it isn't empty
    if (!key.IsEmpty())
@@ -1779,7 +1789,21 @@ KeyView::GetValue(int line)
       }
    }
 
+   if (node->isparent)
+   {
+      value += wxString::Format(_(" Level %d"), node->depth).c_str();
+   }
+
    return value;
+}
+
+//
+// Returns the current view type
+//
+ViewByType
+KeyView::GetViewType()
+{
+   return mViewType;
 }
 
 // ============================================================================
@@ -2014,7 +2038,7 @@ KeyViewAx::GetRole(int childId, wxAccRole *role)
    if (childId == wxACC_SELF)
    {
 #if defined(__WXMSW__)
-      *role = wxROLE_SYSTEM_OUTLINE;
+      *role = mView->GetViewType() == ViewByTree ? wxROLE_SYSTEM_OUTLINE : wxROLE_SYSTEM_LIST;
 #endif
 
 #if defined(__WXMAC__)
@@ -2026,7 +2050,7 @@ KeyViewAx::GetRole(int childId, wxAccRole *role)
 #if defined(__WXMAC__)
       *role = wxROLE_SYSTEM_TEXT;
 #else
-      *role = wxROLE_SYSTEM_OUTLINEITEM;
+      *role = mView->GetViewType() == ViewByTree ? wxROLE_SYSTEM_OUTLINEITEM : wxROLE_SYSTEM_LISTITEM;
 #endif
    }
 

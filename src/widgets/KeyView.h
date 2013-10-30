@@ -141,6 +141,7 @@ private:
    bool IsExpanded(int line);
    wxCoord GetLineHeight(int line);
    wxString GetValue(int line);
+   ViewByType GetViewType();
 #endif
 
 private:
