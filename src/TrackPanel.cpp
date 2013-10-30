@@ -7370,12 +7370,18 @@ void TrackPanel::OnChannelChange(wxCommandEvent & event)
 void TrackPanel::OnSplitStereo(wxCommandEvent & WXUNUSED(event))
 {
    SplitStereo(true);
+   MakeParentPushState(wxString::Format(_("Split stereo track '%s'"),
+                                        mPopupMenuTarget->GetName().c_str()),
+                       _("Split"));
 }
 
 /// Split a stereo track into two mono tracks...
 void TrackPanel::OnSplitStereoMono(wxCommandEvent & WXUNUSED(event))
 {
    SplitStereo(false);
+   MakeParentPushState(wxString::Format(_("Split Stereo to Mono '%s'"),
+                                        mPopupMenuTarget->GetName().c_str()),
+                       _("Split to Mono"));
 }
 
 /// Split a stereo track into two tracks...
@@ -7422,14 +7428,6 @@ void TrackPanel::SplitStereo(bool stereo)
          partner->SetHeight(mPopupMenuTarget->GetHeight());
       }
    }
-
-   wxString msg;
-   if(stereo)
-      msg.Printf(_("Split stereo track '%s'"), mPopupMenuTarget->GetName().c_str());
-   else
-      msg.Printf(_("Split Stereo to Mono '%s'"), mPopupMenuTarget->GetName().c_str());
-
-   MakeParentPushState(msg, _("Split"));
 
    Refresh(false);
 }
