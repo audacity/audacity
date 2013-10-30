@@ -808,7 +808,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
                                  unsigned char noteKey)
 :  wxDialog(parent, wxID_ANY, 
             mEffect->GetString(lilv_plugin_get_name(data)),
-            wxDefaultPosition, wxDefaultSize,
+            wxDefaultPosition, wxSize(500, -1),
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
    mEffect(effect),
    mData(data),
