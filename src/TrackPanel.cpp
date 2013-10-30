@@ -645,12 +645,9 @@ void TrackPanel::BuildMenus(void)
    mFormatMenu->AppendCheckItem(On24BitID, GetSampleFormatStr(int24Sample));
    mFormatMenu->AppendCheckItem(OnFloatID, GetSampleFormatStr(floatSample));
 
+   /* build the pop-down menu used on wave (sampled audio) tracks */
    mWaveTrackMenu = new wxMenu();
-   mWaveTrackMenu->Append(OnSetNameID, _("N&ame..."));
-   mWaveTrackMenu->AppendSeparator();
-   mWaveTrackMenu->Append(OnMoveUpID, _("Move Track U&p"));
-   mWaveTrackMenu->Append(OnMoveDownID, _("Move Track &Down"));
-   mWaveTrackMenu->AppendSeparator();
+   BuildCommonDropMenuItems(mWaveTrackMenu);	// does name, up/down etc
    mWaveTrackMenu->Append(OnWaveformID, _("Wa&veform"));
    mWaveTrackMenu->Append(OnWaveformDBID, _("Waveform (d&B)"));
    mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrogram"));
@@ -669,29 +666,20 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->AppendSeparator();
    mWaveTrackMenu->Append(0, _("Set Rat&e"), mRateMenu);
 
+   /* build the pop-down menu used on note (MIDI) tracks */
    mNoteTrackMenu = new wxMenu();
-   mNoteTrackMenu->Append(OnSetNameID, _("N&ame..."));
-   mNoteTrackMenu->AppendSeparator();
-   mNoteTrackMenu->Append(OnMoveUpID, _("Move Track U&p"));
-   mNoteTrackMenu->Append(OnMoveDownID, _("Move Track &Down"));
-   mNoteTrackMenu->AppendSeparator();
+   BuildCommonDropMenuItems(mNoteTrackMenu);	// does name, up/down etc
    mNoteTrackMenu->Append(OnUpOctaveID, _("Up &Octave"));
    mNoteTrackMenu->Append(OnDownOctaveID, _("Down Octa&ve"));
 
+   /* build the pop-down menu used on label tracks */
    mLabelTrackMenu = new wxMenu();
-   mLabelTrackMenu->Append(OnSetNameID, _("N&ame..."));
-   mLabelTrackMenu->AppendSeparator();
+   BuildCommonDropMenuItems(mLabelTrackMenu);	// does name, up/down etc
    mLabelTrackMenu->Append(OnSetFontID, _("&Font..."));
-   mLabelTrackMenu->AppendSeparator();
-   mLabelTrackMenu->Append(OnMoveUpID, _("Move Track U&p"));
-   mLabelTrackMenu->Append(OnMoveDownID, _("Move Track &Down"));
 
+   /* build the pop-down menu used on time warping tracks */
    mTimeTrackMenu = new wxMenu();
-   mTimeTrackMenu->Append(OnSetNameID, _("N&ame..."));
-   mTimeTrackMenu->AppendSeparator();
-   mTimeTrackMenu->Append(OnMoveUpID, _("Move Track U&p"));
-   mTimeTrackMenu->Append(OnMoveDownID, _("Move Track &Down"));
-   mTimeTrackMenu->AppendSeparator();
+   BuildCommonDropMenuItems(mTimeTrackMenu);	// does name, up/down etc
    mTimeTrackMenu->Append(OnTimeTrackLinID, _("&Linear"));
    mTimeTrackMenu->Append(OnTimeTrackLogID, _("L&ogarithmic"));
    mTimeTrackMenu->AppendSeparator();
@@ -702,6 +690,16 @@ void TrackPanel::BuildMenus(void)
    mLabelTrackInfoMenu->Append(OnCutSelectedTextID, _("Cut"));
    mLabelTrackInfoMenu->Append(OnCopySelectedTextID, _("Copy"));
    mLabelTrackInfoMenu->Append(OnPasteSelectedTextID, _("Paste"));
+}
+
+void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
+{
+   menu->Append(OnSetNameID, _("N&ame..."));
+   menu->AppendSeparator();
+   menu->Append(OnMoveUpID, _("Move Track U&p"));
+   menu->Append(OnMoveDownID, _("Move Track &Down"));
+   menu->AppendSeparator();
+
 }
 
 void TrackPanel::DeleteMenus(void)
