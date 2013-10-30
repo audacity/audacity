@@ -450,6 +450,8 @@ class PluginRegistrationDialog:public wxDialog {
    wxArrayString mFiles;
    wxArrayInt miState;
 
+   bool mCancelClicked;
+
    DECLARE_EVENT_TABLE()
 };
 
@@ -659,9 +661,10 @@ void PluginRegistrationDialog::ToggleItem(int i)
 
 void PluginRegistrationDialog::OnApply(wxCommandEvent & WXUNUSED(event))
 {
+   mCancelClicked = false;
 
    size_t cnt = mFiles.GetCount();
-   for (size_t i = 0; i < cnt; i++) {
+   for (size_t i = 0; i < cnt && !mCancelClicked; i++) {
       wxString file = mFiles[i];
 
       mPlugins->EnsureVisible( i );
@@ -671,13 +674,17 @@ void PluginRegistrationDialog::OnApply(wxCommandEvent & WXUNUSED(event))
          VSTEffect::ScanOnePlugin( file );
          mPlugins->SetItemImage( i, SHOW_CHECKED );
       }
+      wxYield();
    }
-   EndModal(wxID_OK);
+
+   EndModal(mCancelClicked ? wxID_CANCEL : wxID_OK);
 }
 
 void PluginRegistrationDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
-   EndModal(wxID_CANCEL);
+   mCancelClicked = true;
+
+   EndModal(mCancelClicked ? wxID_CANCEL : wxID_OK);
 }
 
 
