@@ -771,7 +771,7 @@ with_ffmpeg
 with_midi
 with_portaudio
 with_lame
-with_LV2
+with_lv2
 enable_audiounits
 enable_ladspa
 enable_quicktime
@@ -8515,9 +8515,9 @@ $as_echo "$as_me: LAME library is NOT available as system library." >&6;}
 
 
 
-# Check whether --with-LV2 was given.
-if test "${with_LV2+set}" = set; then :
-  withval=$with_LV2; LV2_ARGUMENT=$withval
+# Check whether --with-lv2 was given.
+if test "${with_lv2+set}" = set; then :
+  withval=$with_lv2; LV2_ARGUMENT=$withval
 else
   LV2_ARGUMENT="unspecified"
 fi
@@ -8539,12 +8539,12 @@ if test -n "$LV2_CFLAGS"; then
     pkg_cv_LV2_CFLAGS="$LV2_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"lv2 lilv serd sord sratom\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "lv2 lilv serd sord sratom") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"lv2 lilv-0 >= 0.16\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "lv2 lilv-0 >= 0.16") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_LV2_CFLAGS=`$PKG_CONFIG --cflags "lv2 lilv serd sord sratom" 2>/dev/null`
+  pkg_cv_LV2_CFLAGS=`$PKG_CONFIG --cflags "lv2 lilv-0 >= 0.16" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -8555,12 +8555,12 @@ if test -n "$LV2_LIBS"; then
     pkg_cv_LV2_LIBS="$LV2_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"lv2 lilv serd sord sratom\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "lv2 lilv serd sord sratom") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"lv2 lilv-0 >= 0.16\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "lv2 lilv-0 >= 0.16") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_LV2_LIBS=`$PKG_CONFIG --libs "lv2 lilv serd sord sratom" 2>/dev/null`
+  pkg_cv_LV2_LIBS=`$PKG_CONFIG --libs "lv2 lilv-0 >= 0.16" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -8578,9 +8578,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        LV2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "lv2 lilv serd sord sratom" 2>&1`
+	        LV2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "lv2 lilv-0 >= 0.16" 2>&1`
         else
-	        LV2_PKG_ERRORS=`$PKG_CONFIG --print-errors "lv2 lilv serd sord sratom" 2>&1`
+	        LV2_PKG_ERRORS=`$PKG_CONFIG --print-errors "lv2 lilv-0 >= 0.16" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$LV2_PKG_ERRORS" >&5

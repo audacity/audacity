@@ -4,7 +4,7 @@ dnl for the benefit of automatic macro update systems
 
 
 AC_DEFUN([AUDACITY_CHECKLIB_LV2], [
-   AC_ARG_WITH(LV2,
+   AC_ARG_WITH(lv2,
                [AS_HELP_STRING([--with-lv2],
                       [use for adding LV2 plug-in support])],
                LV2_ARGUMENT=$withval,
