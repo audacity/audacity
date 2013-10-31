@@ -4,7 +4,7 @@
 
   LV2Effect.h
 
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Audacity(R) is copyright (c) 1999-2013 Audacity Team.
   License: GPL v2.  See License.txt.
 
 *********************************************************************/

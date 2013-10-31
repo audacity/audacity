@@ -123,7 +123,6 @@ void wxNumValidatorBase::OnChar(wxKeyEvent& event)
         return;
 
 #if wxUSE_UNICODE
-    wxKeyEvent & e = event;
     const int ch = event.GetUnicodeKey();
     const int c = event.GetKeyCode();
     if ( c > WXK_START )

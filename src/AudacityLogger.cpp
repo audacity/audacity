@@ -68,6 +68,7 @@ void AudacityLogger::Flush()
    }
 }
 
+// ANSWER-ME: This is unused. Can it be deleted? If not, note that t param is unused.
 void AudacityLogger::DoLogString(const wxChar *str, time_t t)
 {
    if (!wxIsMainThread()) {
@@ -257,7 +258,7 @@ void AudacityLogger::Show(bool show)
    Flush();
 }
 
-void AudacityLogger::OnCloseWindow(wxCloseEvent & e)
+void AudacityLogger::OnCloseWindow(wxCloseEvent & WXUNUSED(e))
 {
 #if defined(__WXMAC__)
    // On the Mac, destroy the window rather than hiding it since the
@@ -269,13 +270,13 @@ void AudacityLogger::OnCloseWindow(wxCloseEvent & e)
 #endif
 }
 
-void AudacityLogger::OnClose(wxCommandEvent & e)
+void AudacityLogger::OnClose(wxCommandEvent & WXUNUSED(e))
 {
    wxCloseEvent dummy;
    OnCloseWindow(dummy);
 }
 
-void AudacityLogger::OnClear(wxCommandEvent & e)
+void AudacityLogger::OnClear(wxCommandEvent & WXUNUSED(e))
 {
    mBuffer = wxEmptyString;
 
@@ -284,7 +285,7 @@ void AudacityLogger::OnClear(wxCommandEvent & e)
    Flush();
 }
 
-void AudacityLogger::OnSave(wxCommandEvent & e)
+void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
 {
    wxString fName = _("log.txt");
 

@@ -506,7 +506,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       return ConsistencyCheck(wxT("Paste branch one"));
    }
 
-   if (b >= 0 && b < numBlocks
+   if ((b >= 0 ) && (b < (int)numBlocks)
        && ((mBlock->Item(b)->f->GetLength() + addedLen) < mMaxSamples)) {
       // Special case: we can fit all of the new samples inside of
       // one block!

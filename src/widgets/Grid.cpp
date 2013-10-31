@@ -301,7 +301,7 @@ bool ChoiceEditor::EndEdit(int row, int col,
    int sel = Choice()->GetSelection();
 
    // This can happen if the wxChoice control is displayed and the list of choices get changed
-   if (sel < 0 || sel >= mChoices.GetCount())
+   if ((sel < 0) || (sel >= (int)(mChoices.GetCount())))
    {
       return false;
    }

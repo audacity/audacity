@@ -246,9 +246,6 @@ int open_ep_mixers_byid(px_mixer *Px, wchar_t *deviceIn, wchar_t *deviceOut)
    IMMDeviceEnumerator *denum = NULL;
    IMMDevice *device = NULL;
    HRESULT hr;
-   MMRESULT res;
-   LPWSTR idStr;
-   size_t idLen;
 
    if (!initialize(Px)) {
       goto fail;
