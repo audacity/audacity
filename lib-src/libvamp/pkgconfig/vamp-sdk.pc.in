@@ -4,7 +4,7 @@ libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
 Name: vamp-sdk
-Version: 2.0.0
+Version: 2.5
 Description: Development library for Vamp audio analysis plugins
 Libs: -L${libdir} -lvamp-sdk
 Cflags: -I${includedir} 

@@ -181,7 +181,7 @@ ZeroCrossing::process(const float *const *inputBuffers,
 
     Feature feature;
     feature.hasTimestamp = false;
-    feature.values.push_back(count);
+    feature.values.push_back(float(count));
 
     returnFeatures[0].push_back(feature);
     return returnFeatures;

@@ -4,7 +4,7 @@ libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
 Name: vamp-hostsdk
-Version: 2.0.0
+Version: 2.5
 Description: Development library for Vamp audio analysis plugin hosts
-Libs: -L${libdir} -lvamp-hostsdk
+Libs: -L${libdir} -lvamp-hostsdk -ldl
 Cflags: -I${includedir} 

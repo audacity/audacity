@@ -71,7 +71,7 @@ using Vamp::HostExt::PluginLoader;
 using Vamp::HostExt::PluginWrapper;
 using Vamp::HostExt::PluginInputDomainAdapter;
 
-#define HOST_VERSION "1.4"
+#define HOST_VERSION "1.5"
 
 enum Verbosity {
     PluginIds,
@@ -95,7 +95,7 @@ void usage(const char *name)
     cerr << "\n"
          << name << ": A command-line host for Vamp audio analysis plugins.\n\n"
         "Centre for Digital Music, Queen Mary, University of London.\n"
-        "Copyright 2006-2008 Chris Cannam and QMUL.\n"
+        "Copyright 2006-2009 Chris Cannam and QMUL.\n"
         "Freely redistributable; published under a BSD-style license.\n\n"
         "Usage:\n\n"
         "  " << name << " [-s] pluginlibrary[." << PLUGIN_SUFFIX << "]:plugin[:output] file.wav [-o out.txt]\n"
@@ -276,9 +276,9 @@ int runPlugin(string myname, string soname, string id,
 
     sndfile = sf_open(wavname.c_str(), SFM_READ, &sfinfo);
     if (!sndfile) {
-	cerr << myname << ": ERROR: Failed to open input file \""
+        cerr << myname << ": ERROR: Failed to open input file \""
              << wavname << "\": " << sf_strerror(sndfile) << endl;
-	return 1;
+        return 1;
     }
 
     ofstream *out = 0;
@@ -339,6 +339,9 @@ int runPlugin(string myname, string soname, string id,
         }
         cerr << blockSize << endl;
     }
+    int overlapSize = blockSize - stepSize;
+    sf_count_t currentStep = 0;
+    int finalStepsRemaining = max(1, (blockSize / stepSize) - 1); // at end of file, this many part-silent frames needed after we hit EOF
 
     int channels = sfinfo.channels;
 
@@ -369,7 +372,7 @@ int runPlugin(string myname, string soname, string id,
     RealTime adjustment = RealTime::zeroTime;
 
     if (outputs.empty()) {
-	cerr << "ERROR: Plugin has no outputs!" << endl;
+        cerr << "ERROR: Plugin has no outputs!" << endl;
         goto done;
     }
 
@@ -413,19 +416,28 @@ int runPlugin(string myname, string soname, string id,
             wrapper->getWrapper<PluginInputDomainAdapter>();
         if (ida) adjustment = ida->getTimestampAdjustment();
     }
-
-    for (size_t i = 0; i < sfinfo.frames; i += stepSize) {
+    
+    // Here we iterate over the frames, avoiding asking the numframes in case it's streaming input.
+    do {
 
         int count;
 
-        if (sf_seek(sndfile, i, SEEK_SET) < 0) {
-            cerr << "ERROR: sf_seek failed: " << sf_strerror(sndfile) << endl;
-            break;
-        }
-        
-        if ((count = sf_readf_float(sndfile, filebuf, blockSize)) < 0) {
-            cerr << "ERROR: sf_readf_float failed: " << sf_strerror(sndfile) << endl;
-            break;
+        if ((blockSize==stepSize) || (currentStep==0)) {
+            // read a full fresh block
+            if ((count = sf_readf_float(sndfile, filebuf, blockSize)) < 0) {
+                cerr << "ERROR: sf_readf_float failed: " << sf_strerror(sndfile) << endl;
+                break;
+            }
+            if (count != blockSize) --finalStepsRemaining;
+        } else {
+            //  otherwise shunt the existing data down and read the remainder.
+            memmove(filebuf, filebuf + (stepSize * channels), overlapSize * channels * sizeof(float));
+            if ((count = sf_readf_float(sndfile, filebuf + (overlapSize * channels), stepSize)) < 0) {
+                cerr << "ERROR: sf_readf_float failed: " << sf_strerror(sndfile) << endl;
+                break;
+            }
+            if (count != stepSize) --finalStepsRemaining;
+            count += overlapSize;
         }
 
         for (int c = 0; c < channels; ++c) {
@@ -440,22 +452,28 @@ int runPlugin(string myname, string soname, string id,
             }
         }
 
-        rt = RealTime::frame2RealTime(i, sfinfo.samplerate);
+        rt = RealTime::frame2RealTime(currentStep * stepSize, sfinfo.samplerate);
 
         printFeatures
             (RealTime::realTime2Frame(rt + adjustment, sfinfo.samplerate),
              sfinfo.samplerate, outputNo, plugin->process(plugbuf, rt),
              out, useFrames);
 
-        int pp = progress;
-        progress = lrintf((float(i) / sfinfo.frames) * 100.f);
-        if (progress != pp && out) {
-            cerr << "\r" << progress << "%";
+        if (sfinfo.frames > 0){
+            int pp = progress;
+            progress = lrintf((float(currentStep * stepSize) / sfinfo.frames) * 100.f);
+            if (progress != pp && out) {
+                cerr << "\r" << progress << "%";
+            }
         }
-    }
+
+        ++currentStep;
+
+    } while (finalStepsRemaining > 0);
+
     if (out) cerr << "\rDone" << endl;
 
-    rt = RealTime::frame2RealTime(sfinfo.frames, sfinfo.samplerate);
+    rt = RealTime::frame2RealTime(currentStep * stepSize, sfinfo.samplerate);
 
     printFeatures(RealTime::realTime2Frame(rt + adjustment, sfinfo.samplerate),
                   sfinfo.samplerate, outputNo,
@@ -519,6 +537,7 @@ printFeatures(int frame, int sr, int output,
         for (unsigned int j = 0; j < features[output][i].values.size(); ++j) {
             (out ? *out : cout) << " " << features[output][i].values[j];
         }
+        (out ? *out : cout) << " " << features[output][i].label;
 
         (out ? *out : cout) << endl;
     }

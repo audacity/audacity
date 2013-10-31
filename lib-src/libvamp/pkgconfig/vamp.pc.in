@@ -4,7 +4,7 @@ libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
 Name: vamp
-Version: 2.0
+Version: 2.5
 Description: An API for audio analysis and feature extraction plugins
 Libs: 
 Cflags: -I${includedir} 

@@ -43,6 +43,11 @@ using std::endl;
 
 #include <math.h>
 
+#ifdef __SUNPRO_CC
+#include <ieeefp.h>
+#define isinf(x) (!finite(x))
+#endif
+
 #ifdef WIN32
 #define isnan(x) false
 #define isinf(x) false

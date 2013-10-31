@@ -250,7 +250,7 @@ string describe_output(Plugin *plugin, Plugin::OutputDescriptor o)
             res+="    vamp:bin_count        "+to_string(o.binCount)+" ;\n";
 
             bool haveBinNames = false;
-            for (int i=0; i < o.binNames.size(); i++) {
+            for (unsigned int i=0; i < o.binNames.size(); i++) {
                 if (o.binNames[i] != "") {
                     haveBinNames = true;
                     break;
@@ -309,7 +309,7 @@ string describe_output(Plugin *plugin, Plugin::OutputDescriptor o)
             res+="    vamp:bin_count        "+to_string(o.binCount)+" ;\n";
 
             bool haveBinNames = false;
-            for (int i=0; i < o.binNames.size(); i++) {
+            for (unsigned int i=0; i < o.binNames.size(); i++) {
                 if (o.binNames[i] != "") {
                     haveBinNames = true;
                     break;

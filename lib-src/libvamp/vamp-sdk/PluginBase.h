@@ -40,10 +40,6 @@
 #include <string>
 #include <vector>
 
-#define VAMP_SDK_VERSION "2.0"
-#define VAMP_SDK_MAJOR_VERSION 2
-#define VAMP_SDK_MINOR_VERSION 0
-
 #include "plugguard.h"
 _VAMP_SDK_PLUGSPACE_BEGIN(PluginBase.h)
 

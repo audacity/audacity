@@ -152,12 +152,17 @@ public:
     enum InputDomain { TimeDomain, FrequencyDomain };
     
     /**
-     * Get the plugin's required input domain.  If this is TimeDomain,
-     * the samples provided to the process() function (below) will be
-     * in the time domain, as for a traditional audio processing
-     * plugin.  If this is FrequencyDomain, the host will carry out a
-     * windowed FFT of size equal to the negotiated block size on the
-     * data before passing the frequency bin data in to process().
+     * Get the plugin's required input domain.
+     *
+     * If this is TimeDomain, the samples provided to the process()
+     * function (below) will be in the time domain, as for a
+     * traditional audio processing plugin.
+     *
+     * If this is FrequencyDomain, the host will carry out a windowed
+     * FFT of size equal to the negotiated block size on the data
+     * before passing the frequency bin data in to process().  The
+     * input data for the FFT will be rotated so as to place the
+     * origin in the centre of the block.
      * The plugin does not get to choose the window type -- the host
      * will either let the user do so, or will use a Hanning window.
      */
@@ -316,7 +321,7 @@ public:
 
         OutputDescriptor() : // defaults for mandatory non-class-type members
             hasFixedBinCount(false), hasKnownExtents(false), isQuantized(false),
-            sampleType(OneSamplePerStep), hasDuration(false) { }
+            sampleType(OneSamplePerStep), sampleRate(0), hasDuration(false) { }
     };
 
     typedef std::vector<OutputDescriptor> OutputList;

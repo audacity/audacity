@@ -34,20 +34,22 @@ RDFGENDIR	= rdf/generator
 #   clean     -- remove binary targets
 #   distclean -- remove all targets
 #
-default: @TARGETS@
+default:	@TARGETS@
 
 # Compile flags
 #
-CXXFLAGS	:= -I. @CXXFLAGS@ @SNDFILE_CFLAGS@
+CC		= @CC@
+CXX		= @CXX@
+CXXFLAGS	= -I. @CXXFLAGS@ @SNDFILE_CFLAGS@
 
 # ar, ranlib
 #
-AR		:= ar
-RANLIB		:= ranlib
+AR		= ar
+RANLIB		= ranlib
 
 # Libraries required for the plugins.
 #
-PLUGIN_LIBS	= $(SRCDIR)/libvamp-sdk.a
+PLUGIN_LIBS	= ./libvamp-sdk.a
 
 # File extension for a dynamically loadable object
 #
@@ -57,37 +59,37 @@ PLUGIN_EXT	= .so
 
 # Libraries required for the host.
 #
-HOST_LIBS	= $(SRCDIR)/libvamp-hostsdk.a @SNDFILE_LIBS@ @LIBS@
+HOST_LIBS	= ./libvamp-hostsdk.a @SNDFILE_LIBS@ @LIBS@
 
 # Libraries required for the RDF template generator.
 #
-RDFGEN_LIBS	= $(SRCDIR)/libvamp-hostsdk.a @LIBS@
+RDFGEN_LIBS	= ./libvamp-hostsdk.a @LIBS@
 
 # Locations for "make install".  This will need quite a bit of 
 # editing for non-Linux platforms.  Of course you don't necessarily
 # have to use "make install".
 #
-INSTALL_PREFIX	 	  := @prefix@
-INSTALL_API_HEADERS	  := $(INSTALL_PREFIX)/include/vamp
-INSTALL_SDK_HEADERS	  := $(INSTALL_PREFIX)/include/vamp-sdk
-INSTALL_HOSTSDK_HEADERS	  := $(INSTALL_PREFIX)/include/vamp-hostsdk
-INSTALL_SDK_LIBS	  := $(INSTALL_PREFIX)/lib
-INSTALL_PLUGINS		  := $(INSTALL_PREFIX)/lib/vamp
-INSTALL_BINARIES	  := $(INSTALL_PREFIX)/bin 
+INSTALL_PREFIX	 	  = @prefix@
+INSTALL_API_HEADERS	  = $(INSTALL_PREFIX)/include/vamp
+INSTALL_SDK_HEADERS	  = $(INSTALL_PREFIX)/include/vamp-sdk
+INSTALL_HOSTSDK_HEADERS	  = $(INSTALL_PREFIX)/include/vamp-hostsdk
+INSTALL_SDK_LIBS	  = $(INSTALL_PREFIX)/lib
+INSTALL_PLUGINS		  = $(INSTALL_PREFIX)/lib/vamp
+INSTALL_BINARIES	  = $(INSTALL_PREFIX)/bin 
 
-INSTALL_SDK_LIBNAME	  := libvamp-sdk.so.2.0.0
-INSTALL_SDK_LINK_ABI	  := libvamp-sdk.so.2
-INSTALL_SDK_LINK_DEV	  := libvamp-sdk.so
-INSTALL_SDK_STATIC        := libvamp-sdk.a
-INSTALL_SDK_LA            := libvamp-sdk.la
+INSTALL_SDK_LIBNAME	  = libvamp-sdk.so.2.5.0
+INSTALL_SDK_LINK_ABI	  = libvamp-sdk.so.2
+INSTALL_SDK_LINK_DEV	  = libvamp-sdk.so
+INSTALL_SDK_STATIC        = libvamp-sdk.a
+INSTALL_SDK_LA            = libvamp-sdk.la
 
-INSTALL_HOSTSDK_LIBNAME   := libvamp-hostsdk.so.3.0.0
-INSTALL_HOSTSDK_LINK_ABI  := libvamp-hostsdk.so.3
-INSTALL_HOSTSDK_LINK_DEV  := libvamp-hostsdk.so
-INSTALL_HOSTSDK_STATIC    := libvamp-hostsdk.a
-INSTALL_HOSTSDK_LA        := libvamp-hostsdk.la
+INSTALL_HOSTSDK_LIBNAME   = libvamp-hostsdk.so.3.5.0
+INSTALL_HOSTSDK_LINK_ABI  = libvamp-hostsdk.so.3
+INSTALL_HOSTSDK_LINK_DEV  = libvamp-hostsdk.so
+INSTALL_HOSTSDK_STATIC    = libvamp-hostsdk.a
+INSTALL_HOSTSDK_LA        = libvamp-hostsdk.la
 
-INSTALL_PKGCONFIG	  := $(INSTALL_PREFIX)/lib/pkgconfig
+INSTALL_PKGCONFIG	  = $(INSTALL_PREFIX)/lib/pkgconfig
 
 # Flags required to tell the compiler to create a dynamically loadable object
 #
@@ -119,6 +121,7 @@ SDK_HEADERS	= \
 		$(SDKDIR)/PluginAdapter.h \
 		$(SDKDIR)/PluginBase.h \
 		$(SDKDIR)/RealTime.h \
+		$(SDKDIR)/FFT.h \
 		$(SDKDIR)/plugguard.h \
 		$(SDKDIR)/vamp-sdk.h
 
@@ -138,7 +141,9 @@ HOSTSDK_HEADERS	= \
 
 SDK_OBJECTS	= \
 		$(SDKSRCDIR)/PluginAdapter.o \
-		$(SDKSRCDIR)/RealTime.o
+		$(SDKSRCDIR)/RealTime.o \
+		$(SDKSRCDIR)/FFT.o \
+		$(SDKSRCDIR)/acsymbols.o
 
 HOSTSDK_OBJECTS	= \
 		$(HOSTSDKSRCDIR)/PluginHostAdapter.o \
@@ -148,19 +153,20 @@ HOSTSDK_OBJECTS	= \
 		$(HOSTSDKSRCDIR)/PluginInputDomainAdapter.o \
 		$(HOSTSDKSRCDIR)/PluginLoader.o \
 		$(HOSTSDKSRCDIR)/PluginSummarisingAdapter.o \
-		$(HOSTSDKSRCDIR)/PluginWrapper.o
+		$(HOSTSDKSRCDIR)/PluginWrapper.o \
+		$(HOSTSDKSRCDIR)/acsymbols.o
 
 SDK_STATIC	= \
-		$(SRCDIR)/libvamp-sdk.a
+		./libvamp-sdk.a
 
 HOSTSDK_STATIC	= \
-		$(SRCDIR)/libvamp-hostsdk.a
+		./libvamp-hostsdk.a
 
 SDK_DYNAMIC	= \
-		$(SRCDIR)/libvamp-sdk$(PLUGIN_EXT)
+		./libvamp-sdk$(PLUGIN_EXT)
 
 HOSTSDK_DYNAMIC	= \
-		$(SRCDIR)/libvamp-hostsdk$(PLUGIN_EXT)
+		./libvamp-hostsdk$(PLUGIN_EXT)
 
 SDK_LA		= \
 		$(LADIR)/libvamp-sdk.la
@@ -190,6 +196,9 @@ PLUGIN_TARGET	= \
 
 PLUGIN_CAT	= \
 		$(EXAMPLEDIR)/vamp-example-plugins.cat
+
+PLUGIN_TTL	= \
+		$(EXAMPLEDIR)/vamp-example-plugins.n3
 
 HOST_HEADERS	= \
 		$(HOSTDIR)/system.h
@@ -263,6 +272,7 @@ install:	$(SDK_STATIC) $(SDK_DYNAMIC) $(HOSTSDK_STATIC) $(HOSTSDK_DYNAMIC) $(PLU
 		cp $(RDFGEN_TARGET) $(DESTDIR)$(INSTALL_BINARIES)
 		cp $(PLUGIN_TARGET) $(DESTDIR)$(INSTALL_PLUGINS)
 		cp $(PLUGIN_CAT) $(DESTDIR)$(INSTALL_PLUGINS)
+		cp $(PLUGIN_TTL) $(DESTDIR)$(INSTALL_PLUGINS)
 		cp $(API_HEADERS) $(DESTDIR)$(INSTALL_API_HEADERS)
 		cp $(SDK_HEADERS) $(DESTDIR)$(INSTALL_SDK_HEADERS)
 		cp $(HOSTSDK_HEADERS) $(DESTDIR)$(INSTALL_HOSTSDK_HEADERS)
@@ -357,6 +367,7 @@ src/vamp-sdk/PluginAdapter.o: vamp-sdk/PluginAdapter.h vamp/vamp.h
 src/vamp-sdk/PluginAdapter.o: vamp-sdk/Plugin.h vamp-sdk/PluginBase.h
 src/vamp-sdk/PluginAdapter.o: vamp-sdk/plugguard.h vamp-sdk/RealTime.h
 src/vamp-sdk/RealTime.o: ./vamp-sdk/RealTime.h vamp-sdk/plugguard.h
+src/vamp-sdk/FFT.o: src/vamp-sdk/FFT.cpp vamp-sdk/FFT.h src/vamp-sdk/FFTimpl.cpp
 src/vamp-hostsdk/PluginBufferingAdapter.o: ./vamp-hostsdk/PluginBufferingAdapter.h
 src/vamp-hostsdk/PluginBufferingAdapter.o: ./vamp-hostsdk/PluginWrapper.h
 src/vamp-hostsdk/PluginBufferingAdapter.o: ./vamp-hostsdk/Plugin.h
@@ -381,6 +392,8 @@ src/vamp-hostsdk/PluginInputDomainAdapter.o: vamp-sdk/Plugin.h
 src/vamp-hostsdk/PluginInputDomainAdapter.o: vamp-sdk/PluginBase.h
 src/vamp-hostsdk/PluginInputDomainAdapter.o: vamp-sdk/plugguard.h
 src/vamp-hostsdk/PluginInputDomainAdapter.o: vamp-sdk/RealTime.h
+src/vamp-hostsdk/PluginInputDomainAdapter.o: vamp-sdk/FFT.h
+src/vamp-hostsdk/PluginInputDomainAdapter.o: src/vamp-sdk/FFTimpl.cpp
 src/vamp-hostsdk/PluginLoader.o: ./vamp-hostsdk/PluginHostAdapter.h
 src/vamp-hostsdk/PluginLoader.o: vamp/vamp.h vamp-sdk/Plugin.h
 src/vamp-hostsdk/PluginLoader.o: vamp-sdk/PluginBase.h

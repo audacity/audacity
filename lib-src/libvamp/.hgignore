@@ -1,0 +1,25 @@
+syntax: glob
+doc/
+*.o
+autom4te*
+*.m4
+*.a
+*.so
+*.orig
+*~
+host/vamp-simple-host
+rdf/generator/vamp-rdf-template-generator
+config.log
+config.status
+Makefile
+
+re:^build/Debug/
+re:^build/Release/
+*.zip
+build/UpgradeLog*
+*.suo
+*.user
+*.sdf
+*.filters
+re:^build/_UpgradeReport_Files/
+*.ipch

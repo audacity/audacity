@@ -6,7 +6,7 @@
     An API for audio analysis and feature extraction plugins.
 
     Centre for Digital Music, Queen Mary, University of London.
-    Copyright 2006-2007 Chris Cannam and QMUL.
+    Copyright 2006-2009 Chris Cannam and QMUL.
     This file by Mark Levy and Chris Cannam, Copyright 2007-2008 QMUL.
   
     Permission is hereby granted, free of charge, to any person

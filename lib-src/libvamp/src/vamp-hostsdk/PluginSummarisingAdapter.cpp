@@ -6,7 +6,7 @@
     An API for audio analysis and feature extraction plugins.
 
     Centre for Digital Music, Queen Mary, University of London.
-    Copyright 2006-2008 Chris Cannam and QMUL.
+    Copyright 2006-2009 Chris Cannam and QMUL.
   
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
@@ -57,6 +57,8 @@ public:
     ~Impl();
 
     bool initialise(size_t channels, size_t stepSize, size_t blockSize);
+
+    void reset();
 
     FeatureSet process(const float *const *inputBuffers, RealTime timestamp);
     FeatureSet getRemainingFeatures();
@@ -167,6 +169,12 @@ PluginSummarisingAdapter::initialise(size_t channels,
         m_impl->initialise(channels, stepSize, blockSize);
 }
 
+void
+PluginSummarisingAdapter::reset()
+{
+    m_impl->reset();
+}
+
 Plugin::FeatureSet
 PluginSummarisingAdapter::process(const float *const *inputBuffers, RealTime timestamp)
 {
@@ -218,6 +226,19 @@ PluginSummarisingAdapter::Impl::initialise(size_t channels,
     m_stepSize = stepSize;
     m_blockSize = blockSize;
     return true;
+}
+
+void
+PluginSummarisingAdapter::Impl::reset()
+{
+    m_accumulators.clear();
+    m_segmentedAccumulators.clear();
+    m_prevTimestamps.clear();
+    m_prevDurations.clear();
+    m_summaries.clear();
+    m_reduced = false;
+    m_endTime = RealTime();
+    m_plugin->reset();
 }
 
 Plugin::FeatureSet
@@ -545,8 +566,6 @@ PluginSummarisingAdapter::Impl::accumulateFinalDurations()
 
         if (acount == 0) continue;
 
-        RealTime prevTimestamp = i->second;
-
 #ifdef DEBUG_PLUGIN_SUMMARISING_ADAPTER
         std::cerr << "output " << output << ": ";
 #endif
@@ -611,8 +630,11 @@ void
 PluginSummarisingAdapter::Impl::segment()
 {
     SegmentBoundaries::iterator boundaryitr = m_boundaries.begin();
-    RealTime segmentStart = RealTime::zeroTime;
     
+#ifdef DEBUG_PLUGIN_SUMMARISING_ADAPTER_SEGMENT
+    std::cerr << "segment: starting" << std::endl;
+#endif
+
     for (OutputAccumulatorMap::iterator i = m_accumulators.begin();
          i != m_accumulators.end(); ++i) {
 
@@ -645,9 +667,24 @@ PluginSummarisingAdapter::Impl::segment()
             RealTime segmentStart = RealTime::zeroTime;
             RealTime segmentEnd = resultEnd - RealTime(1, 0);
             
+            RealTime prevSegmentStart = segmentStart - RealTime(1, 0);
+
             while (segmentEnd < resultEnd) {
 
+#ifdef DEBUG_PLUGIN_SUMMARISING_ADAPTER_SEGMENT
+                std::cerr << "segment end " << segmentEnd << " < result end "
+                          << resultEnd << " (with result start " << resultStart << ")" <<  std::endl;
+#endif
+
                 findSegmentBounds(resultStart, segmentStart, segmentEnd);
+
+                if (segmentStart == prevSegmentStart) {
+                    // This can happen when we reach the end of the
+                    // input, if a feature's end time overruns the
+                    // input audio end time
+                    break;
+                }
+                prevSegmentStart = segmentStart;
                 
                 RealTime chunkStart = resultStart;
                 if (chunkStart < segmentStart) chunkStart = segmentStart;

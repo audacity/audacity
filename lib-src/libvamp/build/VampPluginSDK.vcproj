@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".."
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_USE_MATH_DEFINES"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -102,7 +102,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories=".."
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_USE_MATH_DEFINES"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
@@ -163,6 +163,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\vamp-sdk\FFT.h"
+				>
+			</File>
+			<File
 				RelativePath="..\vamp-sdk\RealTime.h"
 				>
 			</File>
@@ -184,6 +188,10 @@
 			>
 			<File
 				RelativePath="..\src\vamp-sdk\PluginAdapter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\vamp-sdk\FFT.cpp"
 				>
 			</File>
 			<File

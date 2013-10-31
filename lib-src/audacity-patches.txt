@@ -124,12 +124,9 @@ Upstream Version: 0.0.5 (although no file downloads are available yet)
 libvamp
 -------
 Library to load and use VAMP plug-ins. http://www.vamp-plugins.org/
-Version in Audacity SVN: 2.0
-Patches: optional-progs.patch: Make building the Vamp host (and so the
-dependecy on libsndfile) optional rather than mandatory. Accepted upstream.
-		 distclean.patch: ensure that distclean actually works and takes away
-		 auto* droppings. Accepted upstream.
-Upstream Version: 2.4
+Version in Audacity SVN: 2.5
+Patches: none
+Upstream Version: 2.5
 
 libvorbis
 ---------

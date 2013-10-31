@@ -132,7 +132,7 @@ AmplitudeFollower::getOutputDescriptors() const
     OutputDescriptor sca;
     sca.identifier = "amplitude";
     sca.name = "Amplitude";
-    sca.description = "";
+    sca.description = "The peak tracked amplitude for the current processing block";
     sca.unit = "V";
     sca.hasFixedBinCount = true;
     sca.binCount = 1;
@@ -152,7 +152,7 @@ AmplitudeFollower::getParameterDescriptors() const
     ParameterDescriptor att;
     att.identifier = "attack";
     att.name = "Attack time";
-    att.description = "";
+    att.description = "The 60dB convergence time for an increase in amplitude";
     att.unit = "s";
     att.minValue = 0.0f;
     att.maxValue = 1.f;
@@ -164,7 +164,7 @@ AmplitudeFollower::getParameterDescriptors() const
     ParameterDescriptor dec;
     dec.identifier = "release";
     dec.name = "Release time";
-    dec.description = "";
+    dec.description = "The 60dB convergence time for a decrease in amplitude";
     dec.unit = "s";
     dec.minValue = 0.0f;
     dec.maxValue = 1.f;

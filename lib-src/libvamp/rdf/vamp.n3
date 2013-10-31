@@ -29,7 +29,7 @@
 	foaf:maker "Chris Sutton";
 	foaf:maker "Yves Raimond";
 	foaf:maker "David Pastor Escuredo";
-        dc:date "$Date: 2008-12-29 22:00:31 $";
+        dc:date "$Date: 2008/05/21 17:05:11 $";
 	.
 
 vs:term_status a owl:AnnotationProperty.

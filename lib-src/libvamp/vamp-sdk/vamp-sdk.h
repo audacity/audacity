@@ -40,6 +40,7 @@
 #include "PluginBase.h"
 #include "Plugin.h"
 #include "RealTime.h"
+#include "FFT.h"
 
 #endif
 

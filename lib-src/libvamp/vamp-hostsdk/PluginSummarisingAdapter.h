@@ -6,7 +6,7 @@
     An API for audio analysis and feature extraction plugins.
 
     Centre for Digital Music, Queen Mary, University of London.
-    Copyright 2006-2008 Chris Cannam and QMUL.
+    Copyright 2006-2009 Chris Cannam and QMUL.
   
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
@@ -96,6 +96,8 @@ public:
 
     bool initialise(size_t channels, size_t stepSize, size_t blockSize);
 
+    void reset();
+
     FeatureSet process(const float *const *inputBuffers, RealTime timestamp);
     FeatureSet getRemainingFeatures();
 
@@ -154,7 +156,7 @@ public:
      */
     enum AveragingMethod {
         SampleAverage         = 0,
-        ContinuousTimeAverage = 1,
+        ContinuousTimeAverage = 1
     };
 
     /**

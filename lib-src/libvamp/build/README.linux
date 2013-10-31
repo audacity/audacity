@@ -62,3 +62,13 @@ build/vamp-plugin.map.  There are other methods that will work too,
 but this one is simple and has the advantage of requiring no changes
 to the code.
 
+
+Test Your Plugins
+-----------------
+
+The Vamp Plugin Tester is a vital utility which you can use to test
+your plugins for common problems.  It can help you if you're having
+problems getting your plugin to work at all, and you're strongly
+advised to use it before you release anything.  Download it from the
+Vamp plugins site now!
+

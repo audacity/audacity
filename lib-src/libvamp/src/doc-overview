@@ -62,6 +62,9 @@ whether proprietary or open-source.
  results used in the calculation, and may be a useful example of a
  plugin having several outputs with varying feature structures.
 
+Plugin authors should also read the Programmer's Guide at
+http://vamp-plugins.org/guide.pdf .
+
 \section hosts For Hosts
 
 Hosts will normally use a Vamp::PluginHostAdapter to convert each

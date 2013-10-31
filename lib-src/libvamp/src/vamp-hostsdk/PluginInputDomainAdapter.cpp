@@ -6,7 +6,7 @@
     An API for audio analysis and feature extraction plugins.
 
     Centre for Digital Music, Queen Mary, University of London.
-    Copyright 2006-2007 Chris Cannam and QMUL.
+    Copyright 2006-2009 Chris Cannam and QMUL.
   
     This file is based in part on Don Cross's public domain FFT
     implementation.
@@ -41,6 +41,8 @@
 
 #include <cmath>
 
+#include "Window.h"
+
 
 /**
  * If you want to compile using FFTW instead of the built-in FFT
@@ -67,6 +69,9 @@
  */
 #ifdef HAVE_FFTW3
 #include <fftw3.h>
+#warning "Compiling with FFTW3 support will result in a GPL binary"
+#else
+#include "../vamp-sdk/FFTimpl.cpp"
 #endif
 
 
@@ -83,23 +88,37 @@ public:
     ~Impl();
     
     bool initialise(size_t channels, size_t stepSize, size_t blockSize);
+    void reset();
 
     size_t getPreferredStepSize() const;
     size_t getPreferredBlockSize() const;
 
     FeatureSet process(const float *const *inputBuffers, RealTime timestamp);
+
+    void setProcessTimestampMethod(ProcessTimestampMethod m);
+    ProcessTimestampMethod getProcessTimestampMethod() const;
     
     RealTime getTimestampAdjustment() const;
+
+    WindowType getWindowType() const;
+    void setWindowType(WindowType type);
 
 protected:
     Plugin *m_plugin;
     float m_inputSampleRate;
     int m_channels;
+    int m_stepSize;
     int m_blockSize;
     float **m_freqbuf;
 
     double *m_ri;
-    double *m_window;
+
+    WindowType m_windowType;
+    Window<double> *m_window;
+
+    ProcessTimestampMethod m_method;
+    int m_processCount;
+    float **m_shiftBuffers;
 
 #ifdef HAVE_FFTW3
     fftw_plan m_plan;
@@ -107,11 +126,14 @@ protected:
 #else
     double *m_ro;
     double *m_io;
-    void fft(unsigned int n, bool inverse,
-             double *ri, double *ii, double *ro, double *io);
 #endif
 
+    FeatureSet processShiftingTimestamp(const float *const *inputBuffers, RealTime timestamp);
+    FeatureSet processShiftingData(const float *const *inputBuffers, RealTime timestamp);
+
     size_t makeBlockSizeAcceptable(size_t) const;
+    
+    Window<double>::WindowType convertType(WindowType t) const;
 };
 
 PluginInputDomainAdapter::PluginInputDomainAdapter(Plugin *plugin) :
@@ -129,6 +151,12 @@ bool
 PluginInputDomainAdapter::initialise(size_t channels, size_t stepSize, size_t blockSize)
 {
     return m_impl->initialise(channels, stepSize, blockSize);
+}
+
+void
+PluginInputDomainAdapter::reset()
+{
+    m_impl->reset();
 }
 
 Plugin::InputDomain
@@ -155,10 +183,34 @@ PluginInputDomainAdapter::process(const float *const *inputBuffers, RealTime tim
     return m_impl->process(inputBuffers, timestamp);
 }
 
+void
+PluginInputDomainAdapter::setProcessTimestampMethod(ProcessTimestampMethod m)
+{
+    m_impl->setProcessTimestampMethod(m);
+}
+
+PluginInputDomainAdapter::ProcessTimestampMethod
+PluginInputDomainAdapter::getProcessTimestampMethod() const
+{
+    return m_impl->getProcessTimestampMethod();
+}
+
 RealTime
 PluginInputDomainAdapter::getTimestampAdjustment() const
 {
     return m_impl->getTimestampAdjustment();
+}
+
+PluginInputDomainAdapter::WindowType
+PluginInputDomainAdapter::getWindowType() const
+{
+    return m_impl->getWindowType();
+}
+
+void
+PluginInputDomainAdapter::setWindowType(WindowType w)
+{
+    m_impl->setWindowType(w);
 }
 
 
@@ -166,10 +218,15 @@ PluginInputDomainAdapter::Impl::Impl(Plugin *plugin, float inputSampleRate) :
     m_plugin(plugin),
     m_inputSampleRate(inputSampleRate),
     m_channels(0),
+    m_stepSize(0),
     m_blockSize(0),
     m_freqbuf(0),
     m_ri(0),
+    m_windowType(HanningWindow),
     m_window(0),
+    m_method(ShiftTimestamp),
+    m_processCount(0),
+    m_shiftBuffers(0),
 #ifdef HAVE_FFTW3
     m_plan(0),
     m_cbuf(0)
@@ -184,6 +241,13 @@ PluginInputDomainAdapter::Impl::~Impl()
 {
     // the adapter will delete the plugin
 
+    if (m_shiftBuffers) {
+        for (int c = 0; c < m_channels; ++c) {
+            delete[] m_shiftBuffers[c];
+        }
+        delete[] m_shiftBuffers;
+    }
+
     if (m_channels > 0) {
         for (int c = 0; c < m_channels; ++c) {
             delete[] m_freqbuf[c];
@@ -201,7 +265,8 @@ PluginInputDomainAdapter::Impl::~Impl()
         delete[] m_ro;
         delete[] m_io;
 #endif
-        delete[] m_window;
+
+        delete m_window;
     }
 }
 
@@ -215,6 +280,7 @@ PluginInputDomainAdapter::Impl::initialise(size_t channels, size_t stepSize, siz
 {
     if (m_plugin->getInputDomain() == TimeDomain) {
 
+        m_stepSize = int(stepSize);
         m_blockSize = int(blockSize);
         m_channels = int(channels);
 
@@ -222,12 +288,12 @@ PluginInputDomainAdapter::Impl::initialise(size_t channels, size_t stepSize, siz
     }
 
     if (blockSize < 2) {
-        std::cerr << "ERROR: Vamp::HostExt::PluginInputDomainAdapter::Impl::initialise: blocksize < 2 not supported" << std::endl;
+        std::cerr << "ERROR: PluginInputDomainAdapter::initialise: blocksize < 2 not supported" << std::endl;
         return false;
     }                
         
     if (blockSize & (blockSize-1)) {
-        std::cerr << "ERROR: Vamp::HostExt::PluginInputDomainAdapter::Impl::initialise: non-power-of-two\nblocksize " << blockSize << " not supported" << std::endl;
+        std::cerr << "ERROR: PluginInputDomainAdapter::initialise: non-power-of-two\nblocksize " << blockSize << " not supported" << std::endl;
         return false;
     }
 
@@ -248,9 +314,10 @@ PluginInputDomainAdapter::Impl::initialise(size_t channels, size_t stepSize, siz
         delete[] m_ro;
         delete[] m_io;
 #endif
-        delete[] m_window;
+        delete m_window;
     }
 
+    m_stepSize = int(stepSize);
     m_blockSize = int(blockSize);
     m_channels = int(channels);
 
@@ -258,12 +325,8 @@ PluginInputDomainAdapter::Impl::initialise(size_t channels, size_t stepSize, siz
     for (int c = 0; c < m_channels; ++c) {
         m_freqbuf[c] = new float[m_blockSize + 2];
     }
-    m_window = new double[m_blockSize];
 
-    for (int i = 0; i < m_blockSize; ++i) {
-        // Hanning window
-        m_window[i] = (0.50 - 0.50 * cos((2.0 * M_PI * i) / m_blockSize));
-    }
+    m_window = new Window<double>(convertType(m_windowType), m_blockSize);
 
 #ifdef HAVE_FFTW3
     m_ri = (double *)fftw_malloc(blockSize * sizeof(double));
@@ -275,7 +338,16 @@ PluginInputDomainAdapter::Impl::initialise(size_t channels, size_t stepSize, siz
     m_io = new double[m_blockSize];
 #endif
 
+    m_processCount = 0;
+
     return m_plugin->initialise(channels, stepSize, blockSize);
+}
+
+void
+PluginInputDomainAdapter::Impl::reset()
+{
+    m_processCount = 0;
+    m_plugin->reset();
 }
 
 size_t
@@ -311,7 +383,7 @@ PluginInputDomainAdapter::Impl::makeBlockSizeAcceptable(size_t blockSize) const
 {
     if (blockSize < 2) {
 
-        std::cerr << "WARNING: Vamp::HostExt::PluginInputDomainAdapter::Impl::initialise: blocksize < 2 not" << std::endl
+        std::cerr << "WARNING: PluginInputDomainAdapter::initialise: blocksize < 2 not" << std::endl
                   << "supported, increasing from " << blockSize << " to 2" << std::endl;
         blockSize = 2;
         
@@ -340,7 +412,7 @@ PluginInputDomainAdapter::Impl::makeBlockSizeAcceptable(size_t blockSize) const
             nearest = nearest*2;
         }
         
-        std::cerr << "WARNING: Vamp::HostExt::PluginInputDomainAdapter::Impl::initialise: non-power-of-two\nblocksize " << blockSize << " not supported, using blocksize " << nearest << " instead" << std::endl;
+        std::cerr << "WARNING: PluginInputDomainAdapter::initialise: non-power-of-two\nblocksize " << blockSize << " not supported, using blocksize " << nearest << " instead" << std::endl;
         blockSize = nearest;
 
 #endif
@@ -354,9 +426,63 @@ PluginInputDomainAdapter::Impl::getTimestampAdjustment() const
 {
     if (m_plugin->getInputDomain() == TimeDomain) {
         return RealTime::zeroTime;
+    } else if (m_method == ShiftData || m_method == NoShift) {
+        return RealTime::zeroTime;
     } else {
         return RealTime::frame2RealTime
             (m_blockSize/2, int(m_inputSampleRate + 0.5));
+    }
+}
+
+void
+PluginInputDomainAdapter::Impl::setProcessTimestampMethod(ProcessTimestampMethod m)
+{
+    m_method = m;
+}
+
+PluginInputDomainAdapter::ProcessTimestampMethod
+PluginInputDomainAdapter::Impl::getProcessTimestampMethod() const
+{
+    return m_method;
+}
+
+void
+PluginInputDomainAdapter::Impl::setWindowType(WindowType t)
+{
+    if (m_windowType == t) return;
+    m_windowType = t;
+    if (m_window) {
+        delete m_window;
+        m_window = new Window<double>(convertType(m_windowType), m_blockSize);
+    }
+}
+
+PluginInputDomainAdapter::WindowType
+PluginInputDomainAdapter::Impl::getWindowType() const
+{
+    return m_windowType;
+}
+
+Window<double>::WindowType
+PluginInputDomainAdapter::Impl::convertType(WindowType t) const
+{
+    switch (t) {
+    case RectangularWindow:
+        return Window<double>::RectangularWindow;
+    case BartlettWindow:
+        return Window<double>::BartlettWindow;
+    case HammingWindow:
+        return Window<double>::HammingWindow;
+    case HanningWindow:
+        return Window<double>::HanningWindow;
+    case BlackmanWindow:
+        return Window<double>::BlackmanWindow;
+    case NuttallWindow:
+        return Window<double>::NuttallWindow;
+    case BlackmanHarrisWindow:
+        return Window<double>::BlackmanHarrisWindow;
+    default:
+	return Window<double>::HanningWindow;
     }
 }
 
@@ -368,59 +494,24 @@ PluginInputDomainAdapter::Impl::process(const float *const *inputBuffers,
         return m_plugin->process(inputBuffers, timestamp);
     }
 
-    // The timestamp supplied should be (according to the Vamp::Plugin
-    // spec) the time of the start of the time-domain input block.
-    // However, we want to pass to the plugin an FFT output calculated
-    // from the block of samples _centred_ on that timestamp.
-    // 
-    // We have two options:
-    // 
-    // 1. Buffer the input, calculating the fft of the values at the
-    // passed-in block minus blockSize/2 rather than starting at the
-    // passed-in block.  So each time we call process on the plugin,
-    // we are passing in the same timestamp as was passed to our own
-    // process plugin, but not (the frequency domain representation
-    // of) the same set of samples.  Advantages: avoids confusion in
-    // the host by ensuring the returned values have timestamps
-    // comparable with that passed in to this function (in fact this
-    // is pretty much essential for one-value-per-block outputs);
-    // consistent with hosts such as SV that deal with the
-    // frequency-domain transform themselves.  Disadvantages: means
-    // making the not necessarily correct assumption that the samples
-    // preceding the first official block are all zero (or some other
-    // known value).
-    //
-    // 2. Increase the passed-in timestamps by half the blocksize.  So
-    // when we call process, we are passing in the frequency domain
-    // representation of the same set of samples as passed to us, but
-    // with a different timestamp.  Advantages: simplicity; avoids
-    // iffy assumption mentioned above.  Disadvantages: inconsistency
-    // with SV in cases where stepSize != blockSize/2; potential
-    // confusion arising from returned timestamps being calculated
-    // from the adjusted input timestamps rather than the original
-    // ones (and inaccuracy where the returned timestamp is implied,
-    // as in one-value-per-block).
-    //
-    // Neither way is ideal, but I don't think either is strictly
-    // incorrect either.  I think this is just a case where the same
-    // plugin can legitimately produce differing results from the same
-    // input data, depending on how that data is packaged.
-    // 
-    // We'll go for option 2, adjusting the timestamps.  Note in
-    // particular that this means some results can differ from those
-    // produced by SV.
+    if (m_method == ShiftTimestamp || m_method == NoShift) {
+        return processShiftingTimestamp(inputBuffers, timestamp);
+    } else {
+        return processShiftingData(inputBuffers, timestamp);
+    }
+}
 
-//    std::cerr << "PluginInputDomainAdapter: sampleRate " << m_inputSampleRate << ", blocksize " << m_blockSize << ", adjusting time from " << timestamp;
-
-    timestamp = timestamp + getTimestampAdjustment();
-
-//    std::cerr << " to " << timestamp << std::endl;
+Plugin::FeatureSet
+PluginInputDomainAdapter::Impl::processShiftingTimestamp(const float *const *inputBuffers,
+                                                         RealTime timestamp)
+{
+    if (m_method == ShiftTimestamp) {
+        timestamp = timestamp + getTimestampAdjustment();
+    }
 
     for (int c = 0; c < m_channels; ++c) {
 
-        for (int i = 0; i < m_blockSize; ++i) {
-            m_ri[i] = double(inputBuffers[c][i]) * m_window[i];
-        }
+        m_window->cut(inputBuffers[c], m_ri);
 
         for (int i = 0; i < m_blockSize/2; ++i) {
             // FFT shift
@@ -430,147 +521,86 @@ PluginInputDomainAdapter::Impl::process(const float *const *inputBuffers,
         }
 
 #ifdef HAVE_FFTW3
-
         fftw_execute(m_plan);
 
         for (int i = 0; i <= m_blockSize/2; ++i) {
             m_freqbuf[c][i * 2] = float(m_cbuf[i][0]);
             m_freqbuf[c][i * 2 + 1] = float(m_cbuf[i][1]);
         }
-
 #else
-
         fft(m_blockSize, false, m_ri, 0, m_ro, m_io);
 
         for (int i = 0; i <= m_blockSize/2; ++i) {
             m_freqbuf[c][i * 2] = float(m_ro[i]);
             m_freqbuf[c][i * 2 + 1] = float(m_io[i]);
         }
-
 #endif
     }
 
     return m_plugin->process(m_freqbuf, timestamp);
 }
 
-#ifndef HAVE_FFTW3
-
-void
-PluginInputDomainAdapter::Impl::fft(unsigned int n, bool inverse,
-                                    double *ri, double *ii, double *ro, double *io)
+Plugin::FeatureSet
+PluginInputDomainAdapter::Impl::processShiftingData(const float *const *inputBuffers,
+                                                    RealTime timestamp)
 {
-    if (!ri || !ro || !io) return;
-
-    unsigned int bits;
-    unsigned int i, j, k, m;
-    unsigned int blockSize, blockEnd;
-
-    double tr, ti;
-
-    if (n < 2) return;
-    if (n & (n-1)) return;
-
-    double angle = 2.0 * M_PI;
-    if (inverse) angle = -angle;
-
-    for (i = 0; ; ++i) {
-	if (n & (1 << i)) {
-	    bits = i;
-	    break;
-	}
+    if (m_processCount == 0) {
+        if (!m_shiftBuffers) {
+            m_shiftBuffers = new float *[m_channels];
+            for (int c = 0; c < m_channels; ++c) {
+                m_shiftBuffers[c] = new float[m_blockSize + m_blockSize/2];
+            }
+        }
+        for (int c = 0; c < m_channels; ++c) {
+            for (int i = 0; i < m_blockSize + m_blockSize/2; ++i) {
+                m_shiftBuffers[c][i] = 0.f;
+            }
+        }
     }
 
-    static unsigned int tableSize = 0;
-    static int *table = 0;
-
-    if (tableSize != n) {
-
-	delete[] table;
-
-	table = new int[n];
-
-	for (i = 0; i < n; ++i) {
-	
-	    m = i;
-
-	    for (j = k = 0; j < bits; ++j) {
-		k = (k << 1) | (m & 1);
-		m >>= 1;
-	    }
-
-	    table[i] = k;
-	}
-
-	tableSize = n;
+    for (int c = 0; c < m_channels; ++c) {
+        for (int i = m_stepSize; i < m_blockSize + m_blockSize/2; ++i) {
+            m_shiftBuffers[c][i - m_stepSize] = m_shiftBuffers[c][i];
+        }
+        for (int i = 0; i < m_blockSize; ++i) {
+            m_shiftBuffers[c][i + m_blockSize/2] = inputBuffers[c][i];
+        }
     }
 
-    if (ii) {
-	for (i = 0; i < n; ++i) {
-	    ro[table[i]] = ri[i];
-	    io[table[i]] = ii[i];
-	}
-    } else {
-	for (i = 0; i < n; ++i) {
-	    ro[table[i]] = ri[i];
-	    io[table[i]] = 0.0;
-	}
+    for (int c = 0; c < m_channels; ++c) {
+
+        m_window->cut(m_shiftBuffers[c], m_ri);
+
+        for (int i = 0; i < m_blockSize/2; ++i) {
+            // FFT shift
+            double value = m_ri[i];
+            m_ri[i] = m_ri[i + m_blockSize/2];
+            m_ri[i + m_blockSize/2] = value;
+        }
+
+#ifdef HAVE_FFTW3
+        fftw_execute(m_plan);
+
+        for (int i = 0; i <= m_blockSize/2; ++i) {
+            m_freqbuf[c][i * 2] = float(m_cbuf[i][0]);
+            m_freqbuf[c][i * 2 + 1] = float(m_cbuf[i][1]);
+        }
+#else
+        fft(m_blockSize, false, m_ri, 0, m_ro, m_io);
+
+        for (int i = 0; i <= m_blockSize/2; ++i) {
+            m_freqbuf[c][i * 2] = float(m_ro[i]);
+            m_freqbuf[c][i * 2 + 1] = float(m_io[i]);
+        }
+#endif
     }
 
-    blockEnd = 1;
+    ++m_processCount;
 
-    for (blockSize = 2; blockSize <= n; blockSize <<= 1) {
-
-	double delta = angle / (double)blockSize;
-	double sm2 = -sin(-2 * delta);
-	double sm1 = -sin(-delta);
-	double cm2 = cos(-2 * delta);
-	double cm1 = cos(-delta);
-	double w = 2 * cm1;
-	double ar[3], ai[3];
-
-	for (i = 0; i < n; i += blockSize) {
-
-	    ar[2] = cm2;
-	    ar[1] = cm1;
-
-	    ai[2] = sm2;
-	    ai[1] = sm1;
-
-	    for (j = i, m = 0; m < blockEnd; j++, m++) {
-
-		ar[0] = w * ar[1] - ar[2];
-		ar[2] = ar[1];
-		ar[1] = ar[0];
-
-		ai[0] = w * ai[1] - ai[2];
-		ai[2] = ai[1];
-		ai[1] = ai[0];
-
-		k = j + blockEnd;
-		tr = ar[0] * ro[k] - ai[0] * io[k];
-		ti = ar[0] * io[k] + ai[0] * ro[k];
-
-		ro[k] = ro[j] - tr;
-		io[k] = io[j] - ti;
-
-		ro[j] += tr;
-		io[j] += ti;
-	    }
-	}
-
-	blockEnd = blockSize;
-    }
-
-    if (inverse) {
-
-	double denom = (double)n;
-
-	for (i = 0; i < n; i++) {
-	    ro[i] /= denom;
-	    io[i] /= denom;
-	}
-    }
+    return m_plugin->process(m_freqbuf, timestamp);
 }
+
+#ifndef HAVE_FFTW3
 
 #endif
 
