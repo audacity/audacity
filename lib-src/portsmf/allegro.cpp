@@ -144,7 +144,8 @@ Alg_parameter::~Alg_parameter()
 }
 
 
-void Alg_parameters::insert_real(Alg_parameters **list, char *name, double r)
+void Alg_parameters::insert_real(Alg_parameters **list, const char *name, 
+                                 double r)
 {
     Alg_parameters_ptr a = new Alg_parameters(*list);
     *list = a;
@@ -154,7 +155,8 @@ void Alg_parameters::insert_real(Alg_parameters **list, char *name, double r)
 }
 
 
-void Alg_parameters::insert_string(Alg_parameters **list, char *name, char *s)
+void Alg_parameters::insert_string(Alg_parameters **list, const char *name, 
+                                   const char *s)
 {
     Alg_parameters_ptr a = new Alg_parameters(*list);
     *list = a;
@@ -165,7 +167,8 @@ void Alg_parameters::insert_string(Alg_parameters **list, char *name, char *s)
 }
 
 
-void Alg_parameters::insert_integer(Alg_parameters **list, char *name, long i)
+void Alg_parameters::insert_integer(Alg_parameters **list, const char *name, 
+                                    long i)
 {
     Alg_parameters_ptr a = new Alg_parameters(*list);
     *list = a;
@@ -175,7 +178,8 @@ void Alg_parameters::insert_integer(Alg_parameters **list, char *name, long i)
 }
 
 
-void Alg_parameters::insert_logical(Alg_parameters **list, char *name, bool l)
+void Alg_parameters::insert_logical(Alg_parameters **list, const char *name, 
+                                    bool l)
 {
     Alg_parameters_ptr a = new Alg_parameters(*list);
     *list = a;
@@ -185,7 +189,8 @@ void Alg_parameters::insert_logical(Alg_parameters **list, char *name, bool l)
 }
 
 
-void Alg_parameters::insert_atom(Alg_parameters **list, char *name, char *s)
+void Alg_parameters::insert_atom(Alg_parameters **list, const char *name, 
+                                 const char *s)
 {
     Alg_parameters_ptr a = new Alg_parameters(*list);
     *list = a;
@@ -195,7 +200,8 @@ void Alg_parameters::insert_atom(Alg_parameters **list, char *name, char *s)
 }
 
 
-Alg_parameters *Alg_parameters::remove_key(Alg_parameters **list, char *name)
+Alg_parameters *Alg_parameters::remove_key(Alg_parameters **list, 
+                                           const char *name)
 {
     while (*list) {
         if (STREQL((*list)->parm.attr_name(), name)) {
@@ -210,12 +216,12 @@ Alg_parameters *Alg_parameters::remove_key(Alg_parameters **list, char *name)
 }
 
 
-Alg_parameter_ptr Alg_parameters::find(Alg_attribute *attr)
+Alg_parameter_ptr Alg_parameters::find(Alg_attribute attr)
 {
     assert(attr);
     Alg_parameters_ptr temp = this;
     while (temp) {
-        if (temp->parm.attr == *attr) {
+        if (temp->parm.attr == attr) {
             return &(temp->parm);
         }
     }
@@ -259,7 +265,7 @@ void Alg_event::set_parameter(Alg_parameter_ptr new_parameter)
     Alg_parameter_ptr parm;
     if (is_note()) {
         Alg_note_ptr note = (Alg_note_ptr) this;
-        parm = note->parameters->find(&(new_parameter->attr));
+        parm = note->parameters->find(new_parameter->attr);
         if (!parm) {
             note->parameters = new Alg_parameters(note->parameters);
             parm = &(note->parameters->parm);
@@ -272,7 +278,7 @@ void Alg_event::set_parameter(Alg_parameter_ptr new_parameter)
 }
 
 
-void Alg_event::set_string_value(char *a, char *value)
+void Alg_event::set_string_value(const char *a, const char *value)
 {
     assert(a); // must be non-null
     Alg_attribute attr = symbol_table.insert_string(a);
@@ -285,7 +291,7 @@ void Alg_event::set_string_value(char *a, char *value)
 }
 
 
-void Alg_event::set_real_value(char *a, double value)
+void Alg_event::set_real_value(const char *a, double value)
 {
     assert(a); // must be non-null
     // attr is like a, but it has the type code prefixed for
@@ -301,7 +307,7 @@ void Alg_event::set_real_value(char *a, double value)
 }
 
 
-void Alg_event::set_logical_value(char *a, bool value)
+void Alg_event::set_logical_value(const char *a, bool value)
 {
     assert(a); // must be non-null
     Alg_attribute attr = symbol_table.insert_string(a);
@@ -314,7 +320,7 @@ void Alg_event::set_logical_value(char *a, bool value)
 }
 
 
-void Alg_event::set_integer_value(char *a, long value)
+void Alg_event::set_integer_value(const char *a, long value)
 {
     assert(a); // must be non-null
     Alg_attribute attr = symbol_table.insert_string(a);
@@ -327,7 +333,7 @@ void Alg_event::set_integer_value(char *a, long value)
 }
 
 
-void Alg_event::set_atom_value(char *a, char *value)
+void Alg_event::set_atom_value(const char *a, const char *value)
 {
     assert(a); // must be non-null
     Alg_attribute attr = symbol_table.insert_string(a);
@@ -403,18 +409,18 @@ void Alg_event::set_duration(double d)
 }
 
 
-bool Alg_event::has_attribute(char *a)
+bool Alg_event::has_attribute(const char *a)
 {
     assert(is_note());
     assert(a); // must be non-null
     Alg_note* note = (Alg_note *) this;
     Alg_attribute attr = symbol_table.insert_string(a);
-    Alg_parameter_ptr parm = note->parameters->find(&attr);
+    Alg_parameter_ptr parm = note->parameters->find(attr);
     return parm != NULL;
 }
 
 
-char Alg_event::get_attribute_type(char *a)
+char Alg_event::get_attribute_type(const char *a)
 {
     assert(is_note());
     assert(a);
@@ -422,66 +428,66 @@ char Alg_event::get_attribute_type(char *a)
 }
 
 
-const char *Alg_event::get_string_value(char *a, char *value)
+const char *Alg_event::get_string_value(const char *a, const char *value)
 {
     assert(is_note());
     assert(a); // must be non-null
     Alg_note* note = (Alg_note *) this;
     Alg_attribute attr = symbol_table.insert_string(a);
     assert(a[0] == 's'); // must be of type string
-    Alg_parameter_ptr parm = note->parameters->find(&attr);
+    Alg_parameter_ptr parm = note->parameters->find(attr);
     if (parm) return parm->s;
     return value;
 }
 
 
-double Alg_event::get_real_value(char *a, double value)
+double Alg_event::get_real_value(const char *a, double value)
 {	
     assert(is_note());
     assert(a);
     Alg_note* note = (Alg_note *) this;
     Alg_attribute attr = symbol_table.insert_string(a);
     assert(a[0] == 'r'); // must be of type real
-    Alg_parameter_ptr parm = note->parameters->find(&attr);
+    Alg_parameter_ptr parm = note->parameters->find(attr);
     if (parm) return parm->r;
     return value;
 }
 
 
-bool Alg_event::get_logical_value(char *a, bool value)
+bool Alg_event::get_logical_value(const char *a, bool value)
 {	
     assert(is_note());
     assert(a);
     Alg_note* note = (Alg_note *) this;
     Alg_attribute attr = symbol_table.insert_string(a);
     assert(a[0] == 'l'); // must be of type logical
-    Alg_parameter_ptr parm = note->parameters->find(&attr);
+    Alg_parameter_ptr parm = note->parameters->find(attr);
     if (parm) return parm->l;
     return value;
 }
 
 
-long Alg_event::get_integer_value(char *a, long value)
+long Alg_event::get_integer_value(const char *a, long value)
 {	
     assert(is_note());
     assert(a);
     Alg_note* note = (Alg_note *) this;
     Alg_attribute attr = symbol_table.insert_string(a);
     assert(a[0] == 'i'); // must be of type integer
-    Alg_parameter_ptr parm = note->parameters->find(&attr);
+    Alg_parameter_ptr parm = note->parameters->find(attr);
     if (parm) return parm->i;
     return value;
 }
 
 
-const char *Alg_event::get_atom_value(char *a, char *value)
+const char *Alg_event::get_atom_value(const char *a, const char *value)
 {	
     assert(is_note());
     assert(a);
     Alg_note* note = (Alg_note *) this;
     Alg_attribute attr = symbol_table.insert_string(a);
     assert(a[0] == 'a'); // must be of type atom
-    Alg_parameter_ptr parm = note->parameters->find(&attr);
+    Alg_parameter_ptr parm = note->parameters->find(attr);
     if (parm) return parm->a;
     // if default is a string, convert to an atom (unique
     // string in symbol table) and return it
@@ -490,7 +496,7 @@ const char *Alg_event::get_atom_value(char *a, char *value)
 }
 
 
-void Alg_event::delete_attribute(char *a)
+void Alg_event::delete_attribute(const char *a)
 {
     assert(is_note());
     Alg_note* note = (Alg_note *) this;

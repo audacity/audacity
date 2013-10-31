@@ -46,8 +46,8 @@
 // Just as serialization uses ser_buf for output, unserialization uses
 // unser_buf for reading. unser_buf is another static member of Alg_track.
 
-#ifndef __ALLEGRO__
-#define __ALLEGRO__
+#ifndef ALLEGRO_H
+#define ALLEGRO_H
 #include <assert.h>
 #include <istream>
 #include <ostream>
@@ -158,15 +158,17 @@ public:
     // attribute. If you have already done the symbol table lookup/insert
     // you can do these operations faster (in which case we should add
     // another set of functions that take attributes as arguments.)
-    static void insert_real(Alg_parameters **list, char *name, double r);
+    static void insert_real(Alg_parameters **list, const char *name, double r);
     // insert string will copy string to heap
-    static void insert_string(Alg_parameters **list, char *name, char *s);
-    static void insert_integer(Alg_parameters **list, char *name, long i);
-    static void insert_logical(Alg_parameters **list, char *name, bool l);
-    static void insert_atom(Alg_parameters **list, char *name, char *s);
-    static Alg_parameters *remove_key(Alg_parameters **list, char *name);
+    static void insert_string(Alg_parameters **list, const char *name, 
+                              const char *s);
+    static void insert_integer(Alg_parameters **list, const char *name, long i);
+    static void insert_logical(Alg_parameters **list, const char *name, bool l);
+    static void insert_atom(Alg_parameters **list, const char *name, 
+                            const char *s);
+    static Alg_parameters *remove_key(Alg_parameters **list, const char *name);
     // find an attribute/value pair
-    Alg_parameter_ptr find(Alg_attribute *attr);
+    Alg_parameter_ptr find(Alg_attribute attr);
 } *Alg_parameters_ptr;
 
 
@@ -217,11 +219,11 @@ public:
     // attribute (first argument) must agree in type with the second arg.
     // The last letter of the attribute implies the type (see below).
     void set_parameter(Alg_parameter_ptr new_parameter);
-    void set_string_value(char *attr, char *value);
-    void set_real_value(char *attr, double value);
-    void set_logical_value(char *attr, bool value);
-    void set_integer_value(char *attr, long value);
-    void set_atom_value(char *attr, char *atom);
+    void set_string_value(const char *attr, const char *value);
+    void set_real_value(const char *attr, double value);
+    void set_logical_value(const char *attr, bool value);
+    void set_integer_value(const char *attr, long value);
+    void set_atom_value(const char *attr, const char *atom);
 
     // Some note methods. These fail (via assert()) if this is not a note:
     //
@@ -241,17 +243,22 @@ public:
     // types. Attribute names end with a type designation: 's', 'r', 'l',
     // 'i', or 'a'.
     //
-    bool has_attribute(char *attr);      // test if note has attribute/value pair
-    char get_attribute_type(char *attr); // get the associated type: 
+    bool has_attribute(const char *attr);      // test if note has attribute/value pair
+    char get_attribute_type(const char *attr); // get the associated type: 
         // 's' = string, 
         // 'r' = real (double), 'l' = logical (bool), 'i' = integer (long),
         // 'a' = atom (char *), a unique string stored in Alg_seq
-    const char *get_string_value(char *attr, char *value = NULL);  // get the string value
-    double get_real_value(char *attr, double value = 0.0);   // get the real value
-    bool get_logical_value(char *attr, bool value = false);  // get the logical value
-    long get_integer_value(char *attr, long value = 0);      // get the integer value
-    const char *get_atom_value(char *attr, char *value = NULL);    // get the atom value
-    void delete_attribute(char *attr);   // delete an attribute/value pair
+    // get the string value
+    const char *get_string_value(const char *attr, const char *value = NULL);
+    // get the real value
+    double get_real_value(const char *attr, double value = 0.0);
+    // get the logical value
+    bool get_logical_value(const char *attr, bool value = false);
+    // get the integer value
+    long get_integer_value(const char *attr, long value = 0);
+    // get the atom value
+    const char *get_atom_value(const char *attr, const char *value = NULL);
+    void delete_attribute(const char *attr);   // delete an attribute/value pair
         // (ignore if no matching attribute/value pair exists)
 
     // Some attribute/value methods. These fail if this is not an update.

@@ -169,14 +169,6 @@ Upstream Versions:
 mod-script-pipe
 ---------------
 
-portaudio
----------
-http://portaudio.com/
-cross-platform audio I/O library version 18, used for 1.2.x version of
-Audacity.
-Quite heavily patched local copy to get AC-97 ALSA cards to play back
-correctly.
-
 portaudio-v19
 -------------
 http://portaudio.com/
@@ -205,20 +197,9 @@ portsmf
 -------
 http://portmedia.sourceforge.net/
 Cross-platform Midi file reader and writer (succeeded and obsoltes allegro)
-Version in Audacity SVN: SVN snapshot from ????
-Patches:
-portsmf-includes.patch	add include of <cstring> needed to compile with recent
-						GCC versions
-portsmf-string-const.patch	Add string const qualifiers as needed
-local-macros.patch		Add all the necessary 3rd party m4 macros into autotools
-						/m4/ and supporting changes.
-unsigned-const-casts.patch	Build fix for Solaris compiler, adds casts to
-						unsigned integer literals.
-AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
-by default
-All patches have been added to upstream patch tracker at
-https://sourceforge.net/tracker2/?group_id=196750&atid=958711
-
+Version in Audacity SVN: SVN snapshot from 227
+Patches: none
+Upstream Version: SVN revision 227
 
 portburn
 --------
