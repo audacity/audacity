@@ -554,6 +554,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    int iNameLen = 0;
    int iPathLen = 0;
    int x, y;
+   wxRect iconrect;
    for (int i = 0; i < (int)mFiles.GetCount(); i++)
    {
       miState.Add( SHOW_CHECKED );
@@ -565,12 +566,28 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       mPlugins->InsertItem( i, name, SHOW_CHECKED );
       mPlugins->SetItem( i, COL_PATH, path );
 
-      wxRect r;
-      mPlugins->GetItemRect( i, r, wxLIST_RECT_ICON );
+      // Only need to get the icon width once 
+      if (i == 0)
+      {
+#if defined(__WXMAC__)
+         // wxMac doesn't return the ICON rectangle.  It returns the
+         // rectangle for the first column and that even comes back
+         // with negative numbers sometimes.
+         // 
+         // So, just guess.
+         wxIcon i1(unchecked_xpm);
+         wxIcon i2(checked_xpm);
+         wxIcon i3(arrow15x15_xpm);
+         iconrect.x = 4;
+         iconrect.width = wxMax(wxMax(i1.GetWidth(), i2.GetWidth()), i3.GetWidth());
+#else
+         mPlugins->GetItemRect( i, iconrect, wxLIST_RECT_ICON );
+#endif
+      }
       mPlugins->GetTextExtent( name, &x, &y );
-      iNameLen = wxMax( iNameLen, x + r.width + (r.x * 2) );
+      iNameLen = wxMax( iNameLen, x + iconrect.width + (iconrect.x * 2) );
       mPlugins->GetTextExtent( path, &x, &y );
-      iPathLen = wxMax( iPathLen, x + r.width + (r.x * 2) );
+      iPathLen = wxMax( iPathLen, x + iconrect.width + (iconrect.x * 2) );
    }
 
    mPlugins->SetColumnWidth(COL_NAME, iNameLen + /* fudge */ 5);
