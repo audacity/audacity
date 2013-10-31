@@ -47,7 +47,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVAMP], [
       LIBVAMP_LOCAL_BUILD="vamp-sdk"
       dnl compiler and linker flags
       LIBVAMP_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libvamp'
-      LIBVAMP_LOCAL_LDFLAGS='-L$(top_builddir)/lib-src/libvamp/src -lvamp-hostsdk'
+      LIBVAMP_LOCAL_LIBS="libvamp-hostsdk.a"
       dnl add some extra object files we can build
       LIBVAMP_LOCAL_OPTOBJS="effects/vamp/VampEffect.o effects/vamp/LoadVamp.o"
       dnl define a pre-processor symbol to tell other code that the vamp host

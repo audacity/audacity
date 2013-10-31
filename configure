@@ -7681,7 +7681,7 @@ fi
       LIBVAMP_LOCAL_AVAILABLE="yes"
             LIBVAMP_LOCAL_BUILD="vamp-sdk"
             LIBVAMP_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libvamp'
-      LIBVAMP_LOCAL_LDFLAGS='-L$(top_builddir)/lib-src/libvamp/src -lvamp-hostsdk'
+      LIBVAMP_LOCAL_LIBS="libvamp-hostsdk.a"
             LIBVAMP_LOCAL_OPTOBJS="effects/vamp/VampEffect.o effects/vamp/LoadVamp.o"
                   LIBVAMP_LOCAL_CPPSYMBOLS="USE_VAMP"
             LIBVAMP_LOCAL_CONFIGURE_ARGS="--disable-programs"

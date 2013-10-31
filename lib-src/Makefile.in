@@ -58,6 +58,8 @@ libnyquist.a: libnyquist-recursive
 #
 vamp-sdk:
 	$(MAKE) -C libvamp sdkstatic
+libvamp-hostsdk.a: vamp-sdk
+	ln -sf libvamp/libvamp-hostsdk.a libvamp-hostsdk.a
 
 # libtwolame
 libtwolame-recursive:
