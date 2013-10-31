@@ -1,0 +1,1787 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{348bf572-4c97-4a76-89f3-117a94118ff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/effects">
+      <UniqueIdentifier>{eaa919b2-fa74-43bf-882e-d62b1365d884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/effects/VST">
+      <UniqueIdentifier>{99325e00-3930-4e03-a599-999f275db78e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/export">
+      <UniqueIdentifier>{45fbd203-4e13-441d-a7a2-e4614d6a67f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/import">
+      <UniqueIdentifier>{fcf0dda3-8121-4954-94ef-7cec6d1a163d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/prefs">
+      <UniqueIdentifier>{aa973747-536e-4acd-a418-f1aacd9698ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/widgets">
+      <UniqueIdentifier>{daec450f-84fa-4e72-ba52-e0733f2c5acf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67e0ccd0-e2da-46a1-80b9-b27e85475080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/xml">
+      <UniqueIdentifier>{b2dffd13-d86c-4502-833b-3fa052e447a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/effects/nyquist">
+      <UniqueIdentifier>{bcfcf79a-6a8d-4768-8ee1-cf503eaecbf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/commands">
+      <UniqueIdentifier>{045249ee-cc52-4743-a1b9-e0532f4488d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/blockfile">
+      <UniqueIdentifier>{884d4cdc-e8f1-45f3-b5a6-5b8ac56b7d91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/effects/ladspa">
+      <UniqueIdentifier>{ab8cc474-825f-462e-a5da-d2055f6235ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/toolbars">
+      <UniqueIdentifier>{03d93315-5b4c-4f40-aded-9b496497657d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/effects/vamp">
+      <UniqueIdentifier>{1cd73294-06e2-42be-b7c0-2d620f621ec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/ondemand">
+      <UniqueIdentifier>{4180976f-8b29-41b8-af53-86d2aed120ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="plug-ins">
+      <UniqueIdentifier>{cfc19d3c-fac3-4724-b677-d446d9dd10a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nyquist">
+      <UniqueIdentifier>{df132fc5-4e81-4e57-a754-f9d639179bca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nyquist\rawwaves">
+      <UniqueIdentifier>{5e31814b-dcd1-4c9a-977b-88b4a51e8226}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src/effects/lv2">
+      <UniqueIdentifier>{cfbc5496-9828-4c04-8e02-35a5e81cf092}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\AboutDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AColor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AudacityApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AudacityHeaders.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AudacityLogger.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AudioIO.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AutoRecovery.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BatchCommandDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BatchCommands.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BatchProcessDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Benchmark.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\BlockFile.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\CaptureEvents.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Dependencies.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\DeviceManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\DirManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Dither.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Envelope.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\FFmpeg.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\FFT.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\FileFormats.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\FileIO.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\FileNames.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\FreqWindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\HelpText.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\HistoryWindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ImageManipulation.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Internat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\InterpolateAudio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\LabelDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\LabelTrack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\LangChoice.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Languages.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Legacy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\LoadModules.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Lyrics.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\LyricsWindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Matrix.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Menus.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Mix.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\MixerBoard.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\NoteTrack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\PitchName.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\PlatformCompatibility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\PluginManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Prefs.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Printing.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Profiler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Project.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\RealFFTf.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Resample.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\RingBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SampleFormat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Screenshot.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Sequence.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Shuttle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ShuttleGui.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ShuttlePrefs.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Snap.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SoundActivatedRecord.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Spectrum.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\SplashDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Tags.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Theme.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TimeDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TimerRecordDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TimeTrack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Track.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackArtist.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackPanel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TrackPanelAx.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\UndoManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\UploadDialog.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\VoiceKey.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveClip.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WaveTrack.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\WrappedType.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Amplify.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\AutoDuck.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\BassTreble.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Biquad.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\ChangePitch.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\ChangeSpeed.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\ChangeTempo.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\ClickRemoval.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Compressor.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Contrast.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\DtmfGen.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Echo.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Effect.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\EffectCategory.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\EffectManager.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Equalization.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Fade.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\FindClipping.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Generator.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Invert.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Leveller.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\LoadEffects.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Noise.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\NoiseRemoval.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Normalize.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Paulstretch.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Phaser.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Repair.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Repeat.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Reverb.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Reverse.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\SBSMSEffect.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\ScienFilter.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\ScoreAlignDialog.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Silence.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\SimpleMono.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\SoundTouchEffect.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\StereoToMono.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\TimeScale.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\TimeWarper.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\ToneGen.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\TruncSilence.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\TwoPassSimpleMono.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\Wahwah.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\VST\VSTEffect.cpp">
+      <Filter>src/effects/VST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\Export.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\ExportCL.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\ExportFFmpeg.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\ExportFFmpegDialogs.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\ExportFLAC.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\ExportMP2.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\ExportMP3.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\ExportMultiple.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\ExportOGG.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\export\ExportPCM.cpp">
+      <Filter>src/export</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\Import.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\ImportFFmpeg.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\ImportFLAC.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\ImportLOF.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\ImportMIDI.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\ImportMP3.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\ImportOGG.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\ImportPCM.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\ImportRaw.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\import\RawAudioGuess.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\BatchPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\DevicePrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\DirectoriesPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\EffectsPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\ExtImportPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\GUIPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\ImportExportPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\KeyConfigPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\LibraryPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\MidiIOPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\ModulePrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\MousePrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\PlaybackPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\PrefsDialog.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\ProjectsPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\QualityPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\RecordingPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\SpectrumPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\ThemePrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\TracksPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\prefs\WarningsPrefs.cpp">
+      <Filter>src/prefs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\AButton.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\ASlider.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\AttachableScrollBar.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\ErrorDialog.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\ExpandingToolBar.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\FileHistory.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\Grabber.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\Grid.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\HtmlWindow.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\ImageRoll.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\KeyView.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\LinkingHtmlWindow.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\Meter.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\MultiDialog.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\numformatter.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\ProgressDialog.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\Ruler.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\TimeTextCtrl.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\valnum.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\Warning.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\xml\XMLFileReader.cpp">
+      <Filter>src/xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\xml\XMLTagHandler.cpp">
+      <Filter>src/xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\xml\XMLWriter.cpp">
+      <Filter>src/xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\nyquist\LoadNyquist.cpp">
+      <Filter>src/effects/nyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\nyquist\Nyquist.cpp">
+      <Filter>src/effects/nyquist</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\AppCommandEvent.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\BatchEvalCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\Command.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CommandBuilder.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CommandDirectory.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CommandHandler.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CommandManager.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CommandSignature.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CommandType.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\CompareAudioCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\ExecMenuCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\GetAllMenuCommands.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\GetProjectInfoCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\GetTrackInfoCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\HelpCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\ImportExportCommands.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\Keyboard.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\MessageCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\PreferenceCommands.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\ResponseQueue.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\ScreenshotCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\ScriptCommandRelay.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\SelectCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\SetProjectInfoCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\SetTrackInfoCommand.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\blockfile\LegacyAliasBlockFile.cpp">
+      <Filter>src/blockfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\blockfile\LegacyBlockFile.cpp">
+      <Filter>src/blockfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\blockfile\ODDecodeBlockFile.cpp">
+      <Filter>src/blockfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\blockfile\ODPCMAliasBlockFile.cpp">
+      <Filter>src/blockfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\blockfile\PCMAliasBlockFile.cpp">
+      <Filter>src/blockfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\blockfile\SilentBlockFile.cpp">
+      <Filter>src/blockfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\blockfile\SimpleBlockFile.cpp">
+      <Filter>src/blockfile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\ladspa\LadspaEffect.cpp">
+      <Filter>src/effects/ladspa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\ladspa\LoadLadspa.cpp">
+      <Filter>src/effects/ladspa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\ControlToolBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\DeviceToolBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\EditToolBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\MeterToolBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\MixerToolBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\SelectionBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\ToolBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\ToolDock.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\ToolManager.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\ToolsToolBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\TranscriptionToolBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\vamp\LoadVamp.cpp">
+      <Filter>src/effects/vamp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\vamp\VampEffect.cpp">
+      <Filter>src/effects/vamp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ondemand\ODComputeSummaryTask.cpp">
+      <Filter>src/ondemand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ondemand\ODDecodeFFmpegTask.cpp">
+      <Filter>src/ondemand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ondemand\ODDecodeFlacTask.cpp">
+      <Filter>src/ondemand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ondemand\ODDecodeTask.cpp">
+      <Filter>src/ondemand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ondemand\ODManager.cpp">
+      <Filter>src/ondemand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ondemand\ODTask.cpp">
+      <Filter>src/ondemand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ondemand\ODTaskThread.cpp">
+      <Filter>src/ondemand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ondemand\ODWaveTrackTaskQueue.cpp">
+      <Filter>src/ondemand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\lv2\LoadLV2.cpp">
+      <Filter>src/effects/lv2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\lv2\LV2Effect.cpp">
+      <Filter>src/effects/lv2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\lv2\LV2PortGroup.cpp">
+      <Filter>src/effects/lv2</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\AboutDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AColor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AllThemeResources.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Audacity.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AudacityApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AudacityLogger.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AudioIO.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AutoRecovery.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\BatchCommandDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\BatchCommands.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\BatchProcessDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Benchmark.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\BlockFile.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\CaptureEvents.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\configwin.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Dependencies.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\DeviceManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\DirManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Dither.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Envelope.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Experimental.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\FFmpeg.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\FFT.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\FileFormats.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\FileIO.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\FileNames.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\FreqWindow.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\HelpText.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\HistoryWindow.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ImageManipulation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Internat.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\InterpolateAudio.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\LabelDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\LabelTrack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\LangChoice.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Languages.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Legacy.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\LoadModules.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Lyrics.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\LyricsWindow.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MacroMagic.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Matrix.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Menus.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Mix.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\MixerBoard.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\NoteTrack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\PitchName.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\PlatformCompatibility.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\PluginManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\portaudio.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Prefs.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Printing.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Profiler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Project.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\RealFFTf.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Resample.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\RingBuffer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SampleFormat.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Screenshot.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Sequence.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Shuttle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ShuttleGui.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ShuttlePrefs.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Snap.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SoundActivatedRecord.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Spectrum.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SplashDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Tags.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Theme.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TimeDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TimerRecordDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TimeTrack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Track.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackArtist.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanel.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\TrackPanelAx.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\UndoManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\UploadDialog.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ViewInfo.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\VoiceKey.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveClip.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WaveTrack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\WrappedType.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Amplify.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\AutoDuck.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\BassTreble.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Biquad.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\ChangePitch.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\ChangeSpeed.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\ChangeTempo.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\ClickRemoval.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Compressor.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Contrast.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\DtmfGen.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Echo.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Effect.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\EffectCategory.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\EffectManager.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Equalization.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Fade.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\FindClipping.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Generator.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Invert.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Leveller.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\LoadEffects.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Noise.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\NoiseRemoval.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Normalize.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Paulstretch.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Phaser.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Repair.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Repeat.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Reverb.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Reverb_libSoX.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Reverse.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\SBSMSEffect.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\ScienFilter.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Silence.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\SimpleMono.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\SoundTouchEffect.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\StereoToMono.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\TimeScale.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\TimeWarper.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\ToneGen.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\TruncSilence.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\TwoPassSimpleMono.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\Wahwah.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\VST\VSTEffect.h">
+      <Filter>src/effects/VST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\Export.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportCL.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportFFmpeg.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportFFmpegDialogs.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportFLAC.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportMP2.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportMP3.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportMultiple.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportOGG.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\export\ExportPCM.h">
+      <Filter>src/export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\Import.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportFFmpeg.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportFLAC.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportLOF.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportMIDI.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportMP3.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportOGG.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportPCM.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportPlugin.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportRaw.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\RawAudioGuess.h">
+      <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\BatchPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\DevicePrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\DirectoriesPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\EffectsPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\ExtImportPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\GUIPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\ImportExportPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\KeyConfigPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\LibraryPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\MidiIOPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\ModulePrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\MousePrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\PlaybackPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\PrefsDialog.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\PrefsPanel.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\ProjectsPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\QualityPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\RecordingPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\SpectrumPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\ThemePrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\TracksPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\prefs\WarningsPrefs.h">
+      <Filter>src/prefs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\AButton.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\ASlider.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\AttachableScrollBar.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\ErrorDialog.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\ExpandingToolBar.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\FileHistory.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\Grabber.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\Grid.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\HtmlWindow.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\ImageRoll.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\KeyView.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\LinkingHtmlWindow.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\Meter.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\MultiDialog.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\numformatter.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\ProgressDialog.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\Ruler.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\TimeTextCtrl.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\valnum.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\Warning.h">
+      <Filter>src/widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\xml\XMLFileReader.h">
+      <Filter>src/xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\xml\XMLTagHandler.h">
+      <Filter>src/xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\xml\XMLWriter.h">
+      <Filter>src/xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\nyquist\LoadNyquist.h">
+      <Filter>src/effects/nyquist</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\nyquist\Nyquist.h">
+      <Filter>src/effects/nyquist</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\AppCommandEvent.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\BatchEvalCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\Command.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandBuilder.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandDirectory.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandHandler.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandManager.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandMisc.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandSignature.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandTargets.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CommandType.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\CompareAudioCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\ExecMenuCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\GetAllMenuCommands.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\GetProjectInfoCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\GetTrackInfoCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\HelpCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\ImportExportCommands.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\Keyboard.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\MessageCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\PreferenceCommands.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\ResponseQueue.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\ScreenshotCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\ScriptCommandRelay.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\SelectCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\SetProjectInfoCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\SetTrackInfoCommand.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\Validators.h">
+      <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\blockfile\LegacyAliasBlockFile.h">
+      <Filter>src/blockfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\blockfile\LegacyBlockFile.h">
+      <Filter>src/blockfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\blockfile\ODDecodeBlockFile.h">
+      <Filter>src/blockfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\blockfile\ODPCMAliasBlockFile.h">
+      <Filter>src/blockfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\blockfile\PCMAliasBlockFile.h">
+      <Filter>src/blockfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\blockfile\SilentBlockFile.h">
+      <Filter>src/blockfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\blockfile\SimpleBlockFile.h">
+      <Filter>src/blockfile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\ladspa\ladspa.h">
+      <Filter>src/effects/ladspa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\ladspa\LadspaEffect.h">
+      <Filter>src/effects/ladspa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\ladspa\LoadLadspa.h">
+      <Filter>src/effects/ladspa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\ControlToolBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\DeviceToolBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\EditToolBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\MeterToolBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\MixerToolBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\SelectionBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\ToolBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\ToolDock.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\ToolManager.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\ToolsToolBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\TranscriptionToolBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\vamp\LoadVamp.h">
+      <Filter>src/effects/vamp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\vamp\VampEffect.h">
+      <Filter>src/effects/vamp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ondemand\ODComputeSummaryTask.h">
+      <Filter>src/ondemand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ondemand\ODDecodeFFmpegTask.h">
+      <Filter>src/ondemand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ondemand\ODDecodeFlacTask.h">
+      <Filter>src/ondemand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ondemand\ODDecodeTask.h">
+      <Filter>src/ondemand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ondemand\ODManager.h">
+      <Filter>src/ondemand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ondemand\ODTask.h">
+      <Filter>src/ondemand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ondemand\ODTaskThread.h">
+      <Filter>src/ondemand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ondemand\ODWaveTrackTaskQueue.h">
+      <Filter>src/ondemand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\lv2\LoadLV2.h">
+      <Filter>src/effects/lv2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\lv2\LV2Effect.h">
+      <Filter>src/effects/lv2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\lv2\LV2PortGroup.h">
+      <Filter>src/effects/lv2</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\audacity.ico">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\audacity.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\ny.rules" />
+    <None Include="..\..\po.rules" />
+    <None Include="..\..\..\nyquist\bug.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\dspprims.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\envelopes.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\equalizer.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\evalenv.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\fileio.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\follow.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\init.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\misc.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\nyinit.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\nyqmisc.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\nyquist.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\printrec.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\profile.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\sal.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\sal-parse.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\seq.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\seqfnint.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\seqmidi.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\sndfnint.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\stk.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\xlinit.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\xm.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\nyquist\nyquist-plot.txt">
+      <Filter>nyquist</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand1.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand10.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand11.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand12.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand2.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand3.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand4.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand5.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand6.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand7.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand8.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand9.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mandpluk.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\marmstk1.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\sinewave.raw">
+      <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <copy Include="..\..\..\plug-ins\adjustable-fade.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\analyze.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\beat.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\clicktrack.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\clipfix.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\crossfadein.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\crossfadeout.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\delay.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\equalabel.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\highpass.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\lowpass.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\notch.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\pluck.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\rissetdrum.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\sample-data-export.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\SilenceMarker.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\SoundFinder.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\StudioFadeOut.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\tremolo.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\vocalremover.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\vocoder.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+  </ItemGroup>
+</Project>

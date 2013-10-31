@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="lilv">
+      <UniqueIdentifier>{5e4b00c9-ac04-447d-87a2-68c67533a13e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lilv\Source Files">
+      <UniqueIdentifier>{366b624b-5695-4d88-8a23-8e178b5770ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lilv\Source Files\zix">
+      <UniqueIdentifier>{09e45117-c8bf-460a-85ba-6d090797e553}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lilv\Header Files">
+      <UniqueIdentifier>{16cbb20b-57a8-4368-9903-644d7f4978bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lilv\Header Files\zix">
+      <UniqueIdentifier>{e021fa46-3aad-4d7c-8975-691a287acbe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="serd">
+      <UniqueIdentifier>{bcb2be60-a03c-4b02-8952-c0463d1c622b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="serd\Header Files">
+      <UniqueIdentifier>{c70c3b61-63f0-4bd9-86fc-acb44269e7af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="serd\Source Files">
+      <UniqueIdentifier>{cf5e0786-d983-454d-8649-276449b968c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sord">
+      <UniqueIdentifier>{abd6ecf3-4541-4ba7-a0a4-21b513e2b517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sord\Header Fiels">
+      <UniqueIdentifier>{4632c1fa-5e9a-4c23-ba4d-043f51fa53e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sord\Source Files">
+      <UniqueIdentifier>{43c5dc57-70be-4f84-bf1a-dac8a0544fb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sratom">
+      <UniqueIdentifier>{190e2422-d19d-4617-80ee-f9ed8b727fb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sratom\Header Files">
+      <UniqueIdentifier>{105f8ef2-cf87-4059-baea-3209a4782d58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sratom\Source Files">
+      <UniqueIdentifier>{c8a6b80f-2c25-4045-bf7f-f846f073dd82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="msinttypes">
+      <UniqueIdentifier>{dae06ddb-f7ed-44a9-b663-8c14266b7e5d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\collections.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\instance.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\lib.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\node.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\plugin.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\pluginclass.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\port.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\query.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\scalepoint.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\state.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\ui.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\util.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\world.c">
+      <Filter>lilv\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.c">
+      <Filter>lilv\Source Files\zix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\env.c">
+      <Filter>serd\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\reader.c">
+      <Filter>serd\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\serdnode.c">
+      <Filter>serd\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\string.c">
+      <Filter>serd\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\uri.c">
+      <Filter>serd\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\writer.c">
+      <Filter>serd\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\sord.c">
+      <Filter>sord\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\syntax.c">
+      <Filter>sord\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sratom\src\sratom.c">
+      <Filter>sratom\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\lilv\lilv.h">
+      <Filter>lilv\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\lilv_internal.h">
+      <Filter>lilv\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\common.h">
+      <Filter>lilv\Header Files\zix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.h">
+      <Filter>lilv\Header Files\zix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\serd\serd\serd.h">
+      <Filter>serd\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\serd\src\serd_internal.h">
+      <Filter>serd\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\sord\sord.h">
+      <Filter>sord\Header Fiels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\sord_internal.h">
+      <Filter>sord\Header Fiels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sratom\sratom\sratom.h">
+      <Filter>sratom\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\msinttypes\inttypes.h">
+      <Filter>msinttypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\msinttypes\stdint.h">
+      <Filter>msinttypes</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
