@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D96C7BE1-E3F1-4767-BBBB-320E082CE425}</ProjectGuid>
+    <RootNamespace>libid3tag</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(WXWIN)\src\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(WXWIN)\src\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\libid3tag\compat.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\crc.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\debug.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\field.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\file.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\frame.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\frametype.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\genre.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\latin1.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\parse.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\render.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\tag.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\ucs4.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\utf16.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\utf8.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\util.c" />
+    <ClCompile Include="..\..\..\lib-src\libid3tag\version.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\libid3tag\compat.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\crc.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\debug.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\field.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\file.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\frame.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\frametype.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\genre.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\global.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\id3tag.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\latin1.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\parse.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\render.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\tag.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\ucs4.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\utf16.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\utf8.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\util.h" />
+    <ClInclude Include="..\..\..\lib-src\libid3tag\version.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

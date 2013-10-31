@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A61E2BF1-21AA-4118-B0D8-FD3D53DB892E}</ProjectGuid>
+    <RootNamespace>libnyquist</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\libvamp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\libvamp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\hostguard.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\Plugin.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\PluginBase.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\PluginBufferingAdapter.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\PluginChannelAdapter.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\PluginHostAdapter.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\PluginInputDomainAdapter.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\PluginLoader.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\PluginSummarisingAdapter.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\PluginWrapper.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\RealTime.h" />
+    <ClInclude Include="..\..\..\lib-src\libvamp\vamp-hostsdk\vamp-hostsdk.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\libvamp\src\vamp-hostsdk\PluginBufferingAdapter.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libvamp\src\vamp-hostsdk\PluginChannelAdapter.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libvamp\src\vamp-hostsdk\PluginHostAdapter.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libvamp\src\vamp-hostsdk\PluginInputDomainAdapter.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libvamp\src\vamp-hostsdk\PluginLoader.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libvamp\src\vamp-hostsdk\PluginSummarisingAdapter.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libvamp\src\vamp-hostsdk\PluginWrapper.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libvamp\src\vamp-hostsdk\RealTime.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BE9F28C5-058A-45F5-B2C1-D077BC058AAE}</ProjectGuid>
+    <RootNamespace>locale</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="po.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PostBuildEvent>
+      <Command>for %25%25I in ("%25WXWIN%25\locale\*.po") do call :fmt %25%25~nI
+goto :EOF
+
+:fmt
+if not exist "$(OutDir)Languages\%251" mkdir "$(OutDir)Languages\%251"
+msgfmt -o "$(OutDir)Languages\%251\wxstd.mo" "%25WXWIN%25\locale\%251.po"
+goto :EOF
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PostBuildEvent>
+      <Command>for %25%25I in ("%25WXWIN%25\locale\*.po") do call :fmt %25%25~nI
+goto :EOF
+
+:fmt
+if not exist "$(OutDir)Languages\%251" mkdir "$(OutDir)Languages\%251"
+msgfmt -o "$(OutDir)Languages\%251\wxstd.mo" "%25WXWIN%25\locale\%251.po"
+goto :EOF
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <msgfmt Include="..\..\..\locale\af.po" />
+    <msgfmt Include="..\..\..\locale\ar.po" />
+    <msgfmt Include="..\..\..\locale\be.po" />
+    <msgfmt Include="..\..\..\locale\bg.po" />
+    <msgfmt Include="..\..\..\locale\bn.po" />
+    <msgfmt Include="..\..\..\locale\bs.po" />
+    <msgfmt Include="..\..\..\locale\ca.po" />
+    <msgfmt Include="..\..\..\locale\ca%40valencia.po" />
+    <msgfmt Include="..\..\..\locale\cs.po" />
+    <msgfmt Include="..\..\..\locale\cy.po" />
+    <msgfmt Include="..\..\..\locale\da.po" />
+    <msgfmt Include="..\..\..\locale\de.po" />
+    <msgfmt Include="..\..\..\locale\el.po" />
+    <msgfmt Include="..\..\..\locale\es.po" />
+    <msgfmt Include="..\..\..\locale\eu.po" />
+    <msgfmt Include="..\..\..\locale\fa.po" />
+    <msgfmt Include="..\..\..\locale\fi.po" />
+    <msgfmt Include="..\..\..\locale\fr.po" />
+    <msgfmt Include="..\..\..\locale\ga.po" />
+    <msgfmt Include="..\..\..\locale\gl.po" />
+    <msgfmt Include="..\..\..\locale\he.po" />
+    <msgfmt Include="..\..\..\locale\hi.po" />
+    <msgfmt Include="..\..\..\locale\hr.po" />
+    <msgfmt Include="..\..\..\locale\hu.po" />
+    <msgfmt Include="..\..\..\locale\id.po" />
+    <msgfmt Include="..\..\..\locale\it.po" />
+    <msgfmt Include="..\..\..\locale\ja.po" />
+    <msgfmt Include="..\..\..\locale\ka.po" />
+    <msgfmt Include="..\..\..\locale\km.po" />
+    <msgfmt Include="..\..\..\locale\ko.po" />
+    <msgfmt Include="..\..\..\locale\lt.po" />
+    <msgfmt Include="..\..\..\locale\mk.po" />
+    <msgfmt Include="..\..\..\locale\my.po" />
+    <msgfmt Include="..\..\..\locale\nb.po" />
+    <msgfmt Include="..\..\..\locale\nl.po" />
+    <msgfmt Include="..\..\..\locale\oc.po" />
+    <msgfmt Include="..\..\..\locale\pl.po" />
+    <msgfmt Include="..\..\..\locale\pt.po" />
+    <msgfmt Include="..\..\..\locale\pt_BR.po" />
+    <msgfmt Include="..\..\..\locale\ro.po" />
+    <msgfmt Include="..\..\..\locale\ru.po" />
+    <msgfmt Include="..\..\..\locale\sk.po" />
+    <msgfmt Include="..\..\..\locale\sl.po" />
+    <msgfmt Include="..\..\..\locale\sr_RS.po" />
+    <msgfmt Include="..\..\..\locale\sr_RS%40latin.po" />
+    <msgfmt Include="..\..\..\locale\sv.po" />
+    <msgfmt Include="..\..\..\locale\tg.po" />
+    <msgfmt Include="..\..\..\locale\tr.po" />
+    <msgfmt Include="..\..\..\locale\uk.po" />
+    <msgfmt Include="..\..\..\locale\vi.po" />
+    <msgfmt Include="..\..\..\locale\zh.po" />
+    <msgfmt Include="..\..\..\locale\zh_TW.po" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="po.targets" />
+  </ImportGroup>
+</Project>

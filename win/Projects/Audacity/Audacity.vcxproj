@@ -1,0 +1,867 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1D64095C-F936-4FCF-B609-56E9DDF941FA}</ProjectGuid>
+    <RootNamespace>Audacity</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\ny.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\..;..\..\..\src\include\win32;..\..\..\src\include;..\..\..\lib-src\FileDialog;..\..\..\lib-src\expat;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;NDEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\$(Configuration)/audacity.pch</PrecompiledHeaderOutputFile>
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0809</Culture>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;..\..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Link>
+      <AdditionalDependencies>filedialog.lib;libsndfile.lib;portaudio-v19.lib;wxbase28u.lib;wxbase28u_net.lib;wxmsw28u_adv.lib;wxmsw28u_core.lib;wxmsw28u_html.lib;wxexpat.lib;wxpng.lib;wxzlib.lib;wxjpeg.lib;wxtiff.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;winmm.lib;oleacc.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(WXWIN)\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>dsound.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <SubSystem>Windows</SubSystem>
+      <StackReserveSize>8388608</StackReserveSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\..;..\..\..\src\include\win32;..\..\..\src\include;..\..\..\lib-src\FileDialog;..\..\..\lib-src\expat;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;__WXDEBUG__;_DEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>AudacityHeaders.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ForcedIncludeFiles>AudacityHeaders.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0809</Culture>
+      <AdditionalIncludeDirectories>$(WXWIN)\include;..\..\..\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <Link>
+      <AdditionalDependencies>filedialog.lib;libsndfile.lib;portaudio-v19.lib;wxbase28ud.lib;wxbase28ud_net.lib;wxmsw28ud_adv.lib;wxmsw28ud_core.lib;wxmsw28ud_html.lib;wxexpatd.lib;wxpngd.lib;wxzlibd.lib;wxjpegd.lib;wxtiffd.lib;comctl32.lib;rpcrt4.lib;wsock32.lib;winmm.lib;oleacc.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(WXWIN)\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>dsound.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <StackReserveSize>8388608</StackReserveSize>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\AboutDialog.cpp" />
+    <ClCompile Include="..\..\..\src\AColor.cpp" />
+    <ClCompile Include="..\..\..\src\AudacityApp.cpp" />
+    <ClCompile Include="..\..\..\src\AudacityHeaders.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AudacityLogger.cpp" />
+    <ClCompile Include="..\..\..\src\AudioIO.cpp" />
+    <ClCompile Include="..\..\..\src\AutoRecovery.cpp" />
+    <ClCompile Include="..\..\..\src\BatchCommandDialog.cpp" />
+    <ClCompile Include="..\..\..\src\BatchCommands.cpp" />
+    <ClCompile Include="..\..\..\src\BatchProcessDialog.cpp" />
+    <ClCompile Include="..\..\..\src\Benchmark.cpp" />
+    <ClCompile Include="..\..\..\src\BlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\CaptureEvents.cpp" />
+    <ClCompile Include="..\..\..\src\Dependencies.cpp" />
+    <ClCompile Include="..\..\..\src\DeviceManager.cpp" />
+    <ClCompile Include="..\..\..\src\DirManager.cpp" />
+    <ClCompile Include="..\..\..\src\Dither.cpp" />
+    <ClCompile Include="..\..\..\src\Envelope.cpp" />
+    <ClCompile Include="..\..\..\src\FFmpeg.cpp" />
+    <ClCompile Include="..\..\..\src\FFT.cpp" />
+    <ClCompile Include="..\..\..\src\FileFormats.cpp" />
+    <ClCompile Include="..\..\..\src\FileIO.cpp" />
+    <ClCompile Include="..\..\..\src\FileNames.cpp" />
+    <ClCompile Include="..\..\..\src\FreqWindow.cpp" />
+    <ClCompile Include="..\..\..\src\HelpText.cpp" />
+    <ClCompile Include="..\..\..\src\HistoryWindow.cpp" />
+    <ClCompile Include="..\..\..\src\ImageManipulation.cpp" />
+    <ClCompile Include="..\..\..\src\Internat.cpp" />
+    <ClCompile Include="..\..\..\src\InterpolateAudio.cpp" />
+    <ClCompile Include="..\..\..\src\LabelDialog.cpp" />
+    <ClCompile Include="..\..\..\src\LabelTrack.cpp" />
+    <ClCompile Include="..\..\..\src\LangChoice.cpp" />
+    <ClCompile Include="..\..\..\src\Languages.cpp" />
+    <ClCompile Include="..\..\..\src\Legacy.cpp" />
+    <ClCompile Include="..\..\..\src\LoadModules.cpp" />
+    <ClCompile Include="..\..\..\src\Lyrics.cpp" />
+    <ClCompile Include="..\..\..\src\LyricsWindow.cpp" />
+    <ClCompile Include="..\..\..\src\Matrix.cpp" />
+    <ClCompile Include="..\..\..\src\Menus.cpp" />
+    <ClCompile Include="..\..\..\src\Mix.cpp" />
+    <ClCompile Include="..\..\..\src\MixerBoard.cpp" />
+    <ClCompile Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.cpp" />
+    <ClCompile Include="..\..\..\src\NoteTrack.cpp" />
+    <ClCompile Include="..\..\..\src\PitchName.cpp" />
+    <ClCompile Include="..\..\..\src\PlatformCompatibility.cpp" />
+    <ClCompile Include="..\..\..\src\PluginManager.cpp" />
+    <ClCompile Include="..\..\..\src\Prefs.cpp" />
+    <ClCompile Include="..\..\..\src\Printing.cpp" />
+    <ClCompile Include="..\..\..\src\Profiler.cpp" />
+    <ClCompile Include="..\..\..\src\Project.cpp" />
+    <ClCompile Include="..\..\..\src\RealFFTf.cpp" />
+    <ClCompile Include="..\..\..\src\Resample.cpp" />
+    <ClCompile Include="..\..\..\src\RingBuffer.cpp" />
+    <ClCompile Include="..\..\..\src\SampleFormat.cpp" />
+    <ClCompile Include="..\..\..\src\Screenshot.cpp" />
+    <ClCompile Include="..\..\..\src\Sequence.cpp" />
+    <ClCompile Include="..\..\..\src\Shuttle.cpp" />
+    <ClCompile Include="..\..\..\src\ShuttleGui.cpp" />
+    <ClCompile Include="..\..\..\src\ShuttlePrefs.cpp" />
+    <ClCompile Include="..\..\..\src\Snap.cpp" />
+    <ClCompile Include="..\..\..\src\SoundActivatedRecord.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Spectrum.cpp" />
+    <ClCompile Include="..\..\..\src\SplashDialog.cpp" />
+    <ClCompile Include="..\..\..\src\Tags.cpp" />
+    <ClCompile Include="..\..\..\src\Theme.cpp" />
+    <ClCompile Include="..\..\..\src\TimeDialog.cpp" />
+    <ClCompile Include="..\..\..\src\TimerRecordDialog.cpp" />
+    <ClCompile Include="..\..\..\src\TimeTrack.cpp" />
+    <ClCompile Include="..\..\..\src\Track.cpp" />
+    <ClCompile Include="..\..\..\src\TrackArtist.cpp" />
+    <ClCompile Include="..\..\..\src\TrackPanel.cpp" />
+    <ClCompile Include="..\..\..\src\TrackPanelAx.cpp" />
+    <ClCompile Include="..\..\..\src\UndoManager.cpp" />
+    <ClCompile Include="..\..\..\src\UploadDialog.cpp" />
+    <ClCompile Include="..\..\..\src\VoiceKey.cpp" />
+    <ClCompile Include="..\..\..\src\WaveClip.cpp" />
+    <ClCompile Include="..\..\..\src\WaveTrack.cpp" />
+    <ClCompile Include="..\..\..\src\WrappedType.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Amplify.cpp" />
+    <ClCompile Include="..\..\..\src\effects\AutoDuck.cpp" />
+    <ClCompile Include="..\..\..\src\effects\BassTreble.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Biquad.cpp" />
+    <ClCompile Include="..\..\..\src\effects\ChangePitch.cpp" />
+    <ClCompile Include="..\..\..\src\effects\ChangeSpeed.cpp" />
+    <ClCompile Include="..\..\..\src\effects\ChangeTempo.cpp" />
+    <ClCompile Include="..\..\..\src\effects\ClickRemoval.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Compressor.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Contrast.cpp" />
+    <ClCompile Include="..\..\..\src\effects\DtmfGen.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Echo.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Effect.cpp" />
+    <ClCompile Include="..\..\..\src\effects\EffectCategory.cpp" />
+    <ClCompile Include="..\..\..\src\effects\EffectManager.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Equalization.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Fade.cpp" />
+    <ClCompile Include="..\..\..\src\effects\FindClipping.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Generator.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Invert.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Leveller.cpp" />
+    <ClCompile Include="..\..\..\src\effects\LoadEffects.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Noise.cpp" />
+    <ClCompile Include="..\..\..\src\effects\NoiseRemoval.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Normalize.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Paulstretch.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Phaser.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Repair.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Repeat.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Reverb.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Reverse.cpp" />
+    <ClCompile Include="..\..\..\src\effects\SBSMSEffect.cpp" />
+    <ClCompile Include="..\..\..\src\effects\ScienFilter.cpp" />
+    <ClCompile Include="..\..\..\src\effects\ScoreAlignDialog.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Silence.cpp" />
+    <ClCompile Include="..\..\..\src\effects\SimpleMono.cpp" />
+    <ClCompile Include="..\..\..\src\effects\SoundTouchEffect.cpp" />
+    <ClCompile Include="..\..\..\src\effects\StereoToMono.cpp" />
+    <ClCompile Include="..\..\..\src\effects\TimeScale.cpp" />
+    <ClCompile Include="..\..\..\src\effects\TimeWarper.cpp" />
+    <ClCompile Include="..\..\..\src\effects\ToneGen.cpp" />
+    <ClCompile Include="..\..\..\src\effects\TruncSilence.cpp" />
+    <ClCompile Include="..\..\..\src\effects\TwoPassSimpleMono.cpp" />
+    <ClCompile Include="..\..\..\src\effects\Wahwah.cpp" />
+    <ClCompile Include="..\..\..\src\effects\VST\VSTEffect.cpp" />
+    <ClCompile Include="..\..\..\src\export\Export.cpp" />
+    <ClCompile Include="..\..\..\src\export\ExportCL.cpp" />
+    <ClCompile Include="..\..\..\src\export\ExportFFmpeg.cpp" />
+    <ClCompile Include="..\..\..\src\export\ExportFFmpegDialogs.cpp" />
+    <ClCompile Include="..\..\..\src\export\ExportFLAC.cpp" />
+    <ClCompile Include="..\..\..\src\export\ExportMP2.cpp" />
+    <ClCompile Include="..\..\..\src\export\ExportMP3.cpp" />
+    <ClCompile Include="..\..\..\src\export\ExportMultiple.cpp" />
+    <ClCompile Include="..\..\..\src\export\ExportOGG.cpp" />
+    <ClCompile Include="..\..\..\src\export\ExportPCM.cpp" />
+    <ClCompile Include="..\..\..\src\import\Import.cpp" />
+    <ClCompile Include="..\..\..\src\import\ImportFFmpeg.cpp" />
+    <ClCompile Include="..\..\..\src\import\ImportFLAC.cpp" />
+    <ClCompile Include="..\..\..\src\import\ImportLOF.cpp" />
+    <ClCompile Include="..\..\..\src\import\ImportMIDI.cpp" />
+    <ClCompile Include="..\..\..\src\import\ImportMP3.cpp" />
+    <ClCompile Include="..\..\..\src\import\ImportOGG.cpp" />
+    <ClCompile Include="..\..\..\src\import\ImportPCM.cpp" />
+    <ClCompile Include="..\..\..\src\import\ImportRaw.cpp" />
+    <ClCompile Include="..\..\..\src\import\RawAudioGuess.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\BatchPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\DevicePrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\DirectoriesPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\EffectsPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\ExtImportPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\GUIPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\ImportExportPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\KeyConfigPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\LibraryPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\MidiIOPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\ModulePrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\MousePrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\PlaybackPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\PrefsDialog.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\ProjectsPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\QualityPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\RecordingPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\SpectrumPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\ThemePrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\TracksPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\prefs\WarningsPrefs.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\AButton.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\ASlider.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\AttachableScrollBar.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\ErrorDialog.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\ExpandingToolBar.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\FileHistory.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\Grabber.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\Grid.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\HtmlWindow.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\ImageRoll.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\KeyView.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\LinkingHtmlWindow.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\Meter.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\MultiDialog.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\numformatter.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\ProgressDialog.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\Ruler.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\TimeTextCtrl.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\valnum.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\Warning.cpp" />
+    <ClCompile Include="..\..\..\src\xml\XMLFileReader.cpp" />
+    <ClCompile Include="..\..\..\src\xml\XMLTagHandler.cpp" />
+    <ClCompile Include="..\..\..\src\xml\XMLWriter.cpp" />
+    <ClCompile Include="..\..\..\src\effects\nyquist\LoadNyquist.cpp" />
+    <ClCompile Include="..\..\..\src\effects\nyquist\Nyquist.cpp" />
+    <ClCompile Include="..\..\..\src\commands\AppCommandEvent.cpp" />
+    <ClCompile Include="..\..\..\src\commands\BatchEvalCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\Command.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CommandBuilder.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CommandDirectory.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CommandHandler.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CommandManager.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CommandSignature.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CommandType.cpp" />
+    <ClCompile Include="..\..\..\src\commands\CompareAudioCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\ExecMenuCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\GetAllMenuCommands.cpp" />
+    <ClCompile Include="..\..\..\src\commands\GetProjectInfoCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\GetTrackInfoCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\HelpCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\ImportExportCommands.cpp" />
+    <ClCompile Include="..\..\..\src\commands\Keyboard.cpp" />
+    <ClCompile Include="..\..\..\src\commands\MessageCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\PreferenceCommands.cpp" />
+    <ClCompile Include="..\..\..\src\commands\ResponseQueue.cpp" />
+    <ClCompile Include="..\..\..\src\commands\ScreenshotCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\ScriptCommandRelay.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SelectCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SetProjectInfoCommand.cpp" />
+    <ClCompile Include="..\..\..\src\commands\SetTrackInfoCommand.cpp" />
+    <ClCompile Include="..\..\..\src\blockfile\LegacyAliasBlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\blockfile\LegacyBlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\blockfile\ODDecodeBlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\blockfile\ODPCMAliasBlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\blockfile\PCMAliasBlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\blockfile\SilentBlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\blockfile\SimpleBlockFile.cpp" />
+    <ClCompile Include="..\..\..\src\effects\ladspa\LadspaEffect.cpp" />
+    <ClCompile Include="..\..\..\src\effects\ladspa\LoadLadspa.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\ControlToolBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\DeviceToolBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\EditToolBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\MeterToolBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\MixerToolBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\SelectionBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\ToolBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\ToolDock.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\ToolManager.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\ToolsToolBar.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\TranscriptionToolBar.cpp" />
+    <ClCompile Include="..\..\..\src\effects\vamp\LoadVamp.cpp" />
+    <ClCompile Include="..\..\..\src\effects\vamp\VampEffect.cpp" />
+    <ClCompile Include="..\..\..\src\ondemand\ODComputeSummaryTask.cpp" />
+    <ClCompile Include="..\..\..\src\ondemand\ODDecodeFFmpegTask.cpp" />
+    <ClCompile Include="..\..\..\src\ondemand\ODDecodeFlacTask.cpp" />
+    <ClCompile Include="..\..\..\src\ondemand\ODDecodeTask.cpp" />
+    <ClCompile Include="..\..\..\src\ondemand\ODManager.cpp" />
+    <ClCompile Include="..\..\..\src\ondemand\ODTask.cpp" />
+    <ClCompile Include="..\..\..\src\ondemand\ODTaskThread.cpp" />
+    <ClCompile Include="..\..\..\src\ondemand\ODWaveTrackTaskQueue.cpp" />
+    <ClCompile Include="..\..\..\src\effects\lv2\LoadLV2.cpp" />
+    <ClCompile Include="..\..\..\src\effects\lv2\LV2Effect.cpp" />
+    <ClCompile Include="..\..\..\src\effects\lv2\LV2PortGroup.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\AboutDialog.h" />
+    <ClInclude Include="..\..\..\src\AColor.h" />
+    <ClInclude Include="..\..\..\src\AllThemeResources.h" />
+    <ClInclude Include="..\..\..\src\Audacity.h" />
+    <ClInclude Include="..\..\..\src\AudacityApp.h" />
+    <ClInclude Include="..\..\..\src\AudacityLogger.h" />
+    <ClInclude Include="..\..\..\src\AudioIO.h" />
+    <ClInclude Include="..\..\..\src\AutoRecovery.h" />
+    <ClInclude Include="..\..\..\src\BatchCommandDialog.h" />
+    <ClInclude Include="..\..\..\src\BatchCommands.h" />
+    <ClInclude Include="..\..\..\src\BatchProcessDialog.h" />
+    <ClInclude Include="..\..\..\src\Benchmark.h" />
+    <ClInclude Include="..\..\..\src\BlockFile.h" />
+    <ClInclude Include="..\..\..\src\CaptureEvents.h" />
+    <ClInclude Include="..\..\configwin.h" />
+    <ClInclude Include="..\..\..\src\Dependencies.h" />
+    <ClInclude Include="..\..\..\src\DeviceManager.h" />
+    <ClInclude Include="..\..\..\src\DirManager.h" />
+    <ClInclude Include="..\..\..\src\Dither.h" />
+    <ClInclude Include="..\..\..\src\Envelope.h" />
+    <ClInclude Include="..\..\..\src\Experimental.h" />
+    <ClInclude Include="..\..\..\src\FFmpeg.h" />
+    <ClInclude Include="..\..\..\src\FFT.h" />
+    <ClInclude Include="..\..\..\src\FileFormats.h" />
+    <ClInclude Include="..\..\..\src\FileIO.h" />
+    <ClInclude Include="..\..\..\src\FileNames.h" />
+    <ClInclude Include="..\..\..\src\FreqWindow.h" />
+    <ClInclude Include="..\..\..\src\HelpText.h" />
+    <ClInclude Include="..\..\..\src\HistoryWindow.h" />
+    <ClInclude Include="..\..\..\src\ImageManipulation.h" />
+    <ClInclude Include="..\..\..\src\Internat.h" />
+    <ClInclude Include="..\..\..\src\InterpolateAudio.h" />
+    <ClInclude Include="..\..\..\src\LabelDialog.h" />
+    <ClInclude Include="..\..\..\src\LabelTrack.h" />
+    <ClInclude Include="..\..\..\src\LangChoice.h" />
+    <ClInclude Include="..\..\..\src\Languages.h" />
+    <ClInclude Include="..\..\..\src\Legacy.h" />
+    <ClInclude Include="..\..\..\src\LoadModules.h" />
+    <ClInclude Include="..\..\..\src\Lyrics.h" />
+    <ClInclude Include="..\..\..\src\LyricsWindow.h" />
+    <ClInclude Include="..\..\..\src\MacroMagic.h" />
+    <ClInclude Include="..\..\..\src\Matrix.h" />
+    <ClInclude Include="..\..\..\src\Menus.h" />
+    <ClInclude Include="..\..\..\src\Mix.h" />
+    <ClInclude Include="..\..\..\src\MixerBoard.h" />
+    <ClInclude Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.h" />
+    <ClInclude Include="..\..\..\src\NoteTrack.h" />
+    <ClInclude Include="..\..\..\src\PitchName.h" />
+    <ClInclude Include="..\..\..\src\PlatformCompatibility.h" />
+    <ClInclude Include="..\..\..\src\PluginManager.h" />
+    <ClInclude Include="..\..\portaudio.h" />
+    <ClInclude Include="..\..\..\src\Prefs.h" />
+    <ClInclude Include="..\..\..\src\Printing.h" />
+    <ClInclude Include="..\..\..\src\Profiler.h" />
+    <ClInclude Include="..\..\..\src\Project.h" />
+    <ClInclude Include="..\..\..\src\RealFFTf.h" />
+    <ClInclude Include="..\..\..\src\Resample.h" />
+    <ClInclude Include="..\..\..\src\RingBuffer.h" />
+    <ClInclude Include="..\..\..\src\SampleFormat.h" />
+    <ClInclude Include="..\..\..\src\Screenshot.h" />
+    <ClInclude Include="..\..\..\src\Sequence.h" />
+    <ClInclude Include="..\..\..\src\Shuttle.h" />
+    <ClInclude Include="..\..\..\src\ShuttleGui.h" />
+    <ClInclude Include="..\..\..\src\ShuttlePrefs.h" />
+    <ClInclude Include="..\..\..\src\Snap.h" />
+    <ClInclude Include="..\..\..\src\SoundActivatedRecord.h" />
+    <ClInclude Include="..\..\..\src\Spectrum.h" />
+    <ClInclude Include="..\..\..\src\SplashDialog.h" />
+    <ClInclude Include="..\..\..\src\Tags.h" />
+    <ClInclude Include="..\..\..\src\Theme.h" />
+    <ClInclude Include="..\..\..\src\TimeDialog.h" />
+    <ClInclude Include="..\..\..\src\TimerRecordDialog.h" />
+    <ClInclude Include="..\..\..\src\TimeTrack.h" />
+    <ClInclude Include="..\..\..\src\Track.h" />
+    <ClInclude Include="..\..\..\src\TrackArtist.h" />
+    <ClInclude Include="..\..\..\src\TrackPanel.h" />
+    <ClInclude Include="..\..\..\src\TrackPanelAx.h" />
+    <ClInclude Include="..\..\..\src\UndoManager.h" />
+    <ClInclude Include="..\..\..\src\UploadDialog.h" />
+    <ClInclude Include="..\..\..\src\ViewInfo.h" />
+    <ClInclude Include="..\..\..\src\VoiceKey.h" />
+    <ClInclude Include="..\..\..\src\WaveClip.h" />
+    <ClInclude Include="..\..\..\src\WaveTrack.h" />
+    <ClInclude Include="..\..\..\src\WrappedType.h" />
+    <ClInclude Include="..\..\..\src\effects\Amplify.h" />
+    <ClInclude Include="..\..\..\src\effects\AutoDuck.h" />
+    <ClInclude Include="..\..\..\src\effects\BassTreble.h" />
+    <ClInclude Include="..\..\..\src\effects\Biquad.h" />
+    <ClInclude Include="..\..\..\src\effects\ChangePitch.h" />
+    <ClInclude Include="..\..\..\src\effects\ChangeSpeed.h" />
+    <ClInclude Include="..\..\..\src\effects\ChangeTempo.h" />
+    <ClInclude Include="..\..\..\src\effects\ClickRemoval.h" />
+    <ClInclude Include="..\..\..\src\effects\Compressor.h" />
+    <ClInclude Include="..\..\..\src\effects\Contrast.h" />
+    <ClInclude Include="..\..\..\src\effects\DtmfGen.h" />
+    <ClInclude Include="..\..\..\src\effects\Echo.h" />
+    <ClInclude Include="..\..\..\src\effects\Effect.h" />
+    <ClInclude Include="..\..\..\src\effects\EffectCategory.h" />
+    <ClInclude Include="..\..\..\src\effects\EffectManager.h" />
+    <ClInclude Include="..\..\..\src\effects\Equalization.h" />
+    <ClInclude Include="..\..\..\src\effects\Fade.h" />
+    <ClInclude Include="..\..\..\src\effects\FindClipping.h" />
+    <ClInclude Include="..\..\..\src\effects\Generator.h" />
+    <ClInclude Include="..\..\..\src\effects\Invert.h" />
+    <ClInclude Include="..\..\..\src\effects\Leveller.h" />
+    <ClInclude Include="..\..\..\src\effects\LoadEffects.h" />
+    <ClInclude Include="..\..\..\src\effects\Noise.h" />
+    <ClInclude Include="..\..\..\src\effects\NoiseRemoval.h" />
+    <ClInclude Include="..\..\..\src\effects\Normalize.h" />
+    <ClInclude Include="..\..\..\src\effects\Paulstretch.h" />
+    <ClInclude Include="..\..\..\src\effects\Phaser.h" />
+    <ClInclude Include="..\..\..\src\effects\Repair.h" />
+    <ClInclude Include="..\..\..\src\effects\Repeat.h" />
+    <ClInclude Include="..\..\..\src\effects\Reverb.h" />
+    <ClInclude Include="..\..\..\src\effects\Reverb_libSoX.h" />
+    <ClInclude Include="..\..\..\src\effects\Reverse.h" />
+    <ClInclude Include="..\..\..\src\effects\SBSMSEffect.h" />
+    <ClInclude Include="..\..\..\src\effects\ScienFilter.h" />
+    <ClInclude Include="..\..\..\src\effects\Silence.h" />
+    <ClInclude Include="..\..\..\src\effects\SimpleMono.h" />
+    <ClInclude Include="..\..\..\src\effects\SoundTouchEffect.h" />
+    <ClInclude Include="..\..\..\src\effects\StereoToMono.h" />
+    <ClInclude Include="..\..\..\src\effects\TimeScale.h" />
+    <ClInclude Include="..\..\..\src\effects\TimeWarper.h" />
+    <ClInclude Include="..\..\..\src\effects\ToneGen.h" />
+    <ClInclude Include="..\..\..\src\effects\TruncSilence.h" />
+    <ClInclude Include="..\..\..\src\effects\TwoPassSimpleMono.h" />
+    <ClInclude Include="..\..\..\src\effects\Wahwah.h" />
+    <ClInclude Include="..\..\..\src\effects\VST\VSTEffect.h" />
+    <ClInclude Include="..\..\..\src\export\Export.h" />
+    <ClInclude Include="..\..\..\src\export\ExportCL.h" />
+    <ClInclude Include="..\..\..\src\export\ExportFFmpeg.h" />
+    <ClInclude Include="..\..\..\src\export\ExportFFmpegDialogs.h" />
+    <ClInclude Include="..\..\..\src\export\ExportFLAC.h" />
+    <ClInclude Include="..\..\..\src\export\ExportMP2.h" />
+    <ClInclude Include="..\..\..\src\export\ExportMP3.h" />
+    <ClInclude Include="..\..\..\src\export\ExportMultiple.h" />
+    <ClInclude Include="..\..\..\src\export\ExportOGG.h" />
+    <ClInclude Include="..\..\..\src\export\ExportPCM.h" />
+    <ClInclude Include="..\..\..\src\import\Import.h" />
+    <ClInclude Include="..\..\..\src\import\ImportFFmpeg.h" />
+    <ClInclude Include="..\..\..\src\import\ImportFLAC.h" />
+    <ClInclude Include="..\..\..\src\import\ImportLOF.h" />
+    <ClInclude Include="..\..\..\src\import\ImportMIDI.h" />
+    <ClInclude Include="..\..\..\src\import\ImportMP3.h" />
+    <ClInclude Include="..\..\..\src\import\ImportOGG.h" />
+    <ClInclude Include="..\..\..\src\import\ImportPCM.h" />
+    <ClInclude Include="..\..\..\src\import\ImportPlugin.h" />
+    <ClInclude Include="..\..\..\src\import\ImportRaw.h" />
+    <ClInclude Include="..\..\..\src\import\RawAudioGuess.h" />
+    <ClInclude Include="..\..\..\src\prefs\BatchPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\DevicePrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\DirectoriesPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\EffectsPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\ExtImportPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\GUIPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\ImportExportPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\KeyConfigPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\LibraryPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\MidiIOPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\ModulePrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\MousePrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\PlaybackPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\PrefsDialog.h" />
+    <ClInclude Include="..\..\..\src\prefs\PrefsPanel.h" />
+    <ClInclude Include="..\..\..\src\prefs\ProjectsPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\QualityPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\RecordingPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\SpectrumPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\ThemePrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\TracksPrefs.h" />
+    <ClInclude Include="..\..\..\src\prefs\WarningsPrefs.h" />
+    <ClInclude Include="..\..\..\src\widgets\AButton.h" />
+    <ClInclude Include="..\..\..\src\widgets\ASlider.h" />
+    <ClInclude Include="..\..\..\src\widgets\AttachableScrollBar.h" />
+    <ClInclude Include="..\..\..\src\widgets\ErrorDialog.h" />
+    <ClInclude Include="..\..\..\src\widgets\ExpandingToolBar.h" />
+    <ClInclude Include="..\..\..\src\widgets\FileHistory.h" />
+    <ClInclude Include="..\..\..\src\widgets\Grabber.h" />
+    <ClInclude Include="..\..\..\src\widgets\Grid.h" />
+    <ClInclude Include="..\..\..\src\widgets\HtmlWindow.h" />
+    <ClInclude Include="..\..\..\src\widgets\ImageRoll.h" />
+    <ClInclude Include="..\..\..\src\widgets\KeyView.h" />
+    <ClInclude Include="..\..\..\src\widgets\LinkingHtmlWindow.h" />
+    <ClInclude Include="..\..\..\src\widgets\Meter.h" />
+    <ClInclude Include="..\..\..\src\widgets\MultiDialog.h" />
+    <ClInclude Include="..\..\..\src\widgets\numformatter.h" />
+    <ClInclude Include="..\..\..\src\widgets\ProgressDialog.h" />
+    <ClInclude Include="..\..\..\src\widgets\Ruler.h" />
+    <ClInclude Include="..\..\..\src\widgets\TimeTextCtrl.h" />
+    <ClInclude Include="..\..\..\src\widgets\valnum.h" />
+    <ClInclude Include="..\..\..\src\widgets\Warning.h" />
+    <ClInclude Include="..\..\..\src\xml\XMLFileReader.h" />
+    <ClInclude Include="..\..\..\src\xml\XMLTagHandler.h" />
+    <ClInclude Include="..\..\..\src\xml\XMLWriter.h" />
+    <ClInclude Include="..\..\..\src\effects\nyquist\LoadNyquist.h" />
+    <ClInclude Include="..\..\..\src\effects\nyquist\Nyquist.h" />
+    <ClInclude Include="..\..\..\src\commands\AppCommandEvent.h" />
+    <ClInclude Include="..\..\..\src\commands\BatchEvalCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\Command.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandBuilder.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandDirectory.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandHandler.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandManager.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandMisc.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandSignature.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandTargets.h" />
+    <ClInclude Include="..\..\..\src\commands\CommandType.h" />
+    <ClInclude Include="..\..\..\src\commands\CompareAudioCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\ExecMenuCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\GetAllMenuCommands.h" />
+    <ClInclude Include="..\..\..\src\commands\GetProjectInfoCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\GetTrackInfoCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\HelpCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\ImportExportCommands.h" />
+    <ClInclude Include="..\..\..\src\commands\Keyboard.h" />
+    <ClInclude Include="..\..\..\src\commands\MessageCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\PreferenceCommands.h" />
+    <ClInclude Include="..\..\..\src\commands\ResponseQueue.h" />
+    <ClInclude Include="..\..\..\src\commands\ScreenshotCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\ScriptCommandRelay.h" />
+    <ClInclude Include="..\..\..\src\commands\SelectCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\SetProjectInfoCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\SetTrackInfoCommand.h" />
+    <ClInclude Include="..\..\..\src\commands\Validators.h" />
+    <ClInclude Include="..\..\..\src\blockfile\LegacyAliasBlockFile.h" />
+    <ClInclude Include="..\..\..\src\blockfile\LegacyBlockFile.h" />
+    <ClInclude Include="..\..\..\src\blockfile\ODDecodeBlockFile.h" />
+    <ClInclude Include="..\..\..\src\blockfile\ODPCMAliasBlockFile.h" />
+    <ClInclude Include="..\..\..\src\blockfile\PCMAliasBlockFile.h" />
+    <ClInclude Include="..\..\..\src\blockfile\SilentBlockFile.h" />
+    <ClInclude Include="..\..\..\src\blockfile\SimpleBlockFile.h" />
+    <ClInclude Include="..\..\..\src\effects\ladspa\ladspa.h" />
+    <ClInclude Include="..\..\..\src\effects\ladspa\LadspaEffect.h" />
+    <ClInclude Include="..\..\..\src\effects\ladspa\LoadLadspa.h" />
+    <ClInclude Include="..\..\..\src\toolbars\ControlToolBar.h" />
+    <ClInclude Include="..\..\..\src\toolbars\DeviceToolBar.h" />
+    <ClInclude Include="..\..\..\src\toolbars\EditToolBar.h" />
+    <ClInclude Include="..\..\..\src\toolbars\MeterToolBar.h" />
+    <ClInclude Include="..\..\..\src\toolbars\MixerToolBar.h" />
+    <ClInclude Include="..\..\..\src\toolbars\SelectionBar.h" />
+    <ClInclude Include="..\..\..\src\toolbars\ToolBar.h" />
+    <ClInclude Include="..\..\..\src\toolbars\ToolDock.h" />
+    <ClInclude Include="..\..\..\src\toolbars\ToolManager.h" />
+    <ClInclude Include="..\..\..\src\toolbars\ToolsToolBar.h" />
+    <ClInclude Include="..\..\..\src\toolbars\TranscriptionToolBar.h" />
+    <ClInclude Include="..\..\..\src\effects\vamp\LoadVamp.h" />
+    <ClInclude Include="..\..\..\src\effects\vamp\VampEffect.h" />
+    <ClInclude Include="..\..\..\src\ondemand\ODComputeSummaryTask.h" />
+    <ClInclude Include="..\..\..\src\ondemand\ODDecodeFFmpegTask.h" />
+    <ClInclude Include="..\..\..\src\ondemand\ODDecodeFlacTask.h" />
+    <ClInclude Include="..\..\..\src\ondemand\ODDecodeTask.h" />
+    <ClInclude Include="..\..\..\src\ondemand\ODManager.h" />
+    <ClInclude Include="..\..\..\src\ondemand\ODTask.h" />
+    <ClInclude Include="..\..\..\src\ondemand\ODTaskThread.h" />
+    <ClInclude Include="..\..\..\src\ondemand\ODWaveTrackTaskQueue.h" />
+    <ClInclude Include="..\..\..\src\effects\lv2\LoadLV2.h" />
+    <ClInclude Include="..\..\..\src\effects\lv2\LV2Effect.h" />
+    <ClInclude Include="..\..\..\src\effects\lv2\LV2PortGroup.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\audacity.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\audacity.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <copy Include="..\..\..\plug-ins\adjustable-fade.ny" />
+    <copy Include="..\..\..\plug-ins\analyze.ny" />
+    <copy Include="..\..\..\plug-ins\beat.ny" />
+    <copy Include="..\..\..\plug-ins\clicktrack.ny" />
+    <copy Include="..\..\..\plug-ins\clipfix.ny" />
+    <copy Include="..\..\..\plug-ins\crossfadein.ny" />
+    <copy Include="..\..\..\plug-ins\crossfadeout.ny" />
+    <copy Include="..\..\..\plug-ins\delay.ny" />
+    <copy Include="..\..\..\plug-ins\equalabel.ny" />
+    <copy Include="..\..\..\plug-ins\highpass.ny" />
+    <copy Include="..\..\..\plug-ins\lowpass.ny" />
+    <copy Include="..\..\..\plug-ins\notch.ny" />
+    <copy Include="..\..\..\plug-ins\pluck.ny" />
+    <copy Include="..\..\..\plug-ins\rissetdrum.ny" />
+    <copy Include="..\..\..\plug-ins\sample-data-export.ny" />
+    <copy Include="..\..\..\plug-ins\SilenceMarker.ny" />
+    <copy Include="..\..\..\plug-ins\SoundFinder.ny" />
+    <copy Include="..\..\..\plug-ins\StudioFadeOut.ny" />
+    <copy Include="..\..\..\plug-ins\tremolo.ny" />
+    <copy Include="..\..\..\plug-ins\vocalremover.ny" />
+    <copy Include="..\..\..\plug-ins\vocoder.ny" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\nyquist\bug.lsp" />
+    <None Include="..\..\..\nyquist\dspprims.lsp" />
+    <None Include="..\..\..\nyquist\envelopes.lsp" />
+    <None Include="..\..\..\nyquist\equalizer.lsp" />
+    <None Include="..\..\..\nyquist\evalenv.lsp" />
+    <None Include="..\..\..\nyquist\fileio.lsp" />
+    <None Include="..\..\..\nyquist\follow.lsp" />
+    <None Include="..\..\..\nyquist\init.lsp" />
+    <None Include="..\..\..\nyquist\misc.lsp" />
+    <None Include="..\..\..\nyquist\nyinit.lsp" />
+    <None Include="..\..\..\nyquist\nyqmisc.lsp" />
+    <None Include="..\..\..\nyquist\nyquist.lsp" />
+    <None Include="..\..\..\nyquist\printrec.lsp" />
+    <None Include="..\..\..\nyquist\profile.lsp" />
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand1.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand10.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand11.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand12.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand2.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand3.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand4.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand5.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand6.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand7.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand8.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mand9.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\mandpluk.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\marmstk1.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\rawwaves\sinewave.raw">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <None Include="..\..\..\nyquist\sal-parse.lsp" />
+    <None Include="..\..\..\nyquist\sal.lsp" />
+    <None Include="..\..\..\nyquist\seq.lsp" />
+    <None Include="..\..\..\nyquist\seqfnint.lsp" />
+    <None Include="..\..\..\nyquist\seqmidi.lsp" />
+    <None Include="..\..\..\nyquist\sndfnint.lsp" />
+    <None Include="..\..\..\nyquist\stk.lsp" />
+    <None Include="..\..\..\nyquist\xlinit.lsp" />
+    <None Include="..\..\..\nyquist\xm.lsp" />
+    <None Include="..\..\ny.rules" />
+    <None Include="..\..\po.rules" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\expat\expat.vcxproj">
+      <Project>{38c2c6b1-fbf8-4c5c-bb90-63f996083f56}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\filedialog\filedialog.vcxproj">
+      <Project>{5284d863-3813-479f-bbf0-ac234e216bc6}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libflac++\libflac++.vcxproj">
+      <Project>{b28c9f3f-ff0e-4fec-844c-685390b8ac06}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libflac\libflac.vcxproj">
+      <Project>{6c7dc635-26fb-419a-b69a-7ecbbb068245}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libid3tag\libid3tag.vcxproj">
+      <Project>{d96c7be1-e3f1-4767-bbbb-320e082ce425}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libmad\libmad.vcxproj">
+      <Project>{a52bbea5-8b02-4147-8734-5d9bbf4d1177}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libnyquist\libnyquist.vcxproj">
+      <Project>{7aa41bed-41b0-427a-9148-dea40549d158}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libogg\libogg.vcxproj">
+      <Project>{a939aaf8-44f1-4ce7-9dd0-7a6e99814857}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libresample\libresample.vcxproj">
+      <Project>{f00717f2-67c8-44e1-af00-541dfa9cb7f2}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libscorealign\libscorealign.vcxproj">
+      <Project>{c0fe933b-4af7-4acd-95e8-acd3a73f1400}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libsndfile\libsndfile.vcxproj">
+      <Project>{f4b4a272-4ed3-4951-a6ee-b7baac1c4952}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libsoxr\libsoxr.vcxproj">
+      <Project>{af9ad75c-4785-4432-bac3-adab1e7f1192}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libvamp\libvamp.vcxproj">
+      <Project>{a61e2bf1-21aa-4118-b0d8-fd3d53db892e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libvorbis\libvorbis.vcxproj">
+      <Project>{727d6675-67ee-4d0b-9dc1-177a0af741f0}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\lv2\lv2.vcxproj">
+      <Project>{0fec8848-e24e-4fa5-9acd-e4582dc4cbbe}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\portaudio-v19\portaudio-v19.vcxproj">
+      <Project>{7aba0f80-94ae-4e82-ab89-2e1258212d59}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\portmidi\portmidi.vcxproj">
+      <Project>{d5ab2d87-51dc-4277-a9ab-2a6018d0e947}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\portmixer\portmixer.vcxproj">
+      <Project>{3a76129b-55ab-4d54-baa7-08f63ed52569}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\portsmf\portsmf.vcxproj">
+      <Project>{8a1c2514-85dd-4ae2-9cf3-3183b66c537d}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\sbsms\sbsms.vcxproj">
+      <Project>{a64ffb5d-0cf0-43ee-9de3-c72260864bff}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\soundtouch\soundtouch.vcxproj">
+      <Project>{ec3f5835-c486-4970-8a6b-a0700f4b3637}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\twolame\twolame.vcxproj">
+      <Project>{8c69f7b6-684f-48d9-9057-8912ca3daa8b}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\nyquist\nyquist-plot.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\ny.targets" />
+  </ImportGroup>
+</Project>
