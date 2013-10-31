@@ -16,7 +16,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Unicode Release|Win32"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
@@ -80,75 +80,6 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="echo on&#x0D;&#x0A;set BASE=&quot;../../../lib-src/portaudio-v19&quot;&#x0D;&#x0A;set CFG=$(ProjectDir)$(ConfigurationName)\config.h&#x0D;&#x0A;set INTDIR=$(ConfigurationName)&#x0D;&#x0A;set CFLAGS=/O2 /GL /I &quot;%BASE%/include&quot; /I &quot;%BASE%/src/common&quot; /I &quot;%BASE%/src/os/win&quot; /D &quot;WIN32&quot; /D &quot;NDEBUG&quot; /D &quot;_LIB&quot; /D &quot;_MBCS&quot; /GF /FD /EHsc /MD /Gy /Fo&quot;%INTDIR%/&quot; /Fd&quot;%INTDIR%&quot; /W3 /nologo /c /wd4996 /FI &quot;%CFG%&quot; /errorReport:prompt&#x0D;&#x0A;set LIBS=&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_DS 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoDS&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%DXSDK_DIR%/include&quot; &quot;%BASE%/src/hostapi/dsound/pa_win_ds.c&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%DXSDK_DIR%/include&quot; &quot;%BASE%/src/hostapi/dsound/pa_win_ds_dynlink.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;set LIBS=&quot;%DXSDK_DIR%/lib/x86\dxguid.lib&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoDS&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_WASAPI 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoWASAPI&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% &quot;%BASE%/src/hostapi/wasapi/pa_win_wasapi.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoWASAPI&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_WDMKS 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoWDMKS&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% &quot;%BASE%/src/hostapi/wdmks/pa_win_wdmks.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoWDMKS&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_ASIO 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoASIO&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%BASE%/src/hostapi/asio/pa_asio.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%BASE%/src/hostapi/asio/iasiothiscallresolver.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/common/asio.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/host/asiodrivers.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/host/pc/asiolist.cpp&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoASIO&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_JACK 1&quot; &quot;%CFG%&quot; &gt;NUL&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoJACK&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%JACKSDK_DIR%/includes&quot; &quot;%BASE%/src/hostapi/jack/pa_jack.c&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%JACKSDK_DIR%/includes&quot; &quot;%BASE%/src/hostapi/jack/pa_jack_dynload.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoJACK&#x0D;&#x0A;&#x0D;&#x0A;lib /OUT:&quot;$(TargetPath)&quot; &quot;%INTDIR%/*.obj&quot; %LIBS%&#x0D;&#x0A;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
-			WholeProgramOptimization="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-				CommandLine="echo on&#x0D;&#x0A;set CFG=&quot;$(ProjectDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;&#x0D;&#x0A;echo // Automatically generated file &gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_DYNAMIC_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WDMKS 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WASAPI 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;%CFG%&#x0D;&#x0A;"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\..\lib-src\portaudio-v19\include&quot;;&quot;..\..\..\lib-src\portaudio-v19\src\common&quot;;&quot;..\..\..\lib-src\portaudio-v19\src\os\win&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
-				StringPooling="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="4"
-				CompileAs="0"
-				DisableSpecificWarnings="4996"
-				ForcedIncludeFiles="$(ProjectDir)\$(ConfigurationName)\config.h"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="echo on&#x0D;&#x0A;set BASE=../../../lib-src/portaudio-v19&#x0D;&#x0A;set CFG=$(ProjectDir)$(ConfigurationName)\config.h&#x0D;&#x0A;set INTDIR=$(ConfigurationName)&#x0D;&#x0A;set CFLAGS=/Od /I &quot;%BASE%/include&quot; /I &quot;%BASE%/src/common&quot; /I &quot;%BASE%/src/os/win&quot; /D &quot;WIN32&quot; /D &quot;_DEBUG&quot; /D &quot;_LIB&quot; /D &quot;_MBCS&quot; /GF /FD /EHsc /RTC1 /MDd /Gy /W3 /nologo /c /ZI /wd4996 /Fo&quot;%INTDIR%/&quot; /FI &quot;%CFG%&quot; /errorReport:prompt&#x0D;&#x0A;set LIBS=&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_DS 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoDS&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%DXSDK_DIR%/include&quot; &quot;%BASE%/src/hostapi/dsound/pa_win_ds.c&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%DXSDK_DIR%/include&quot; &quot;%BASE%/src/hostapi/dsound/pa_win_ds_dynlink.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;set LIBS=&quot;%DXSDK_DIR%/lib/x86\dxguid.lib&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoDS&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_WASAPI 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoWASAPI&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% &quot;%BASE%/src/hostapi/wasapi/pa_win_wasapi.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoWASAPI&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_WDMKS 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoWDMKS&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% &quot;%BASE%/src/hostapi/wdmks/pa_win_wdmks.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoWDMKS&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_ASIO 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoASIO&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%BASE%/src/hostapi/asio/pa_asio.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%BASE%/src/hostapi/asio/iasiothiscallresolver.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/common/asio.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/host/asiodrivers.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/host/pc/asiolist.cpp&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoASIO&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_JACK 1&quot; &quot;%CFG%&quot; &gt;NUL&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoJACK&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%JACKSDK_DIR%/includes&quot; &quot;%BASE%/src/hostapi/jack/pa_jack.c&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%JACKSDK_DIR%/includes&quot; &quot;%BASE%/src/hostapi/jack/pa_jack_dynload.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoJACK&#x0D;&#x0A;&#x0D;&#x0A;lib /OUT:&quot;$(TargetPath)&quot; &quot;%INTDIR%/*.obj&quot; %LIBS%&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -218,73 +149,6 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="echo on&#x0D;&#x0A;set BASE=../../../lib-src/portaudio-v19&#x0D;&#x0A;set CFG=$(ProjectDir)$(ConfigurationName)\config.h&#x0D;&#x0A;set INTDIR=$(ConfigurationName)&#x0D;&#x0A;set CFLAGS=/Od /I &quot;%BASE%/include&quot; /I &quot;%BASE%/src/common&quot; /I &quot;%BASE%/src/os/win&quot; /D &quot;WIN32&quot; /D &quot;_DEBUG&quot; /D &quot;_LIB&quot; /D &quot;_MBCS&quot; /GF /FD /EHsc /RTC1 /MDd /Gy /W3 /nologo /c /ZI /wd4996 /Fo&quot;%INTDIR%/&quot; /FI &quot;%CFG%&quot; /errorReport:prompt&#x0D;&#x0A;set LIBS=&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_DS 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoDS&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%DXSDK_DIR%/include&quot; &quot;%BASE%/src/hostapi/dsound/pa_win_ds.c&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%DXSDK_DIR%/include&quot; &quot;%BASE%/src/hostapi/dsound/pa_win_ds_dynlink.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;set LIBS=&quot;%DXSDK_DIR%/lib/x86\dxguid.lib&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoDS&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_WASAPI 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoWASAPI&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% &quot;%BASE%/src/hostapi/wasapi/pa_win_wasapi.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoWASAPI&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_WDMKS 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoWDMKS&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% &quot;%BASE%/src/hostapi/wdmks/pa_win_wdmks.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoWDMKS&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_ASIO 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoASIO&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%BASE%/src/hostapi/asio/pa_asio.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%BASE%/src/hostapi/asio/iasiothiscallresolver.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/common/asio.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/host/asiodrivers.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/host/pc/asiolist.cpp&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoASIO&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_JACK 1&quot; &quot;%CFG%&quot; &gt;NUL&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoJACK&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%JACKSDK_DIR%/includes&quot; &quot;%BASE%/src/hostapi/jack/pa_jack.c&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%JACKSDK_DIR%/includes&quot; &quot;%BASE%/src/hostapi/jack/pa_jack_dynload.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoJACK&#x0D;&#x0A;&#x0D;&#x0A;lib /OUT:&quot;$(TargetPath)&quot; &quot;%INTDIR%/*.obj&quot; %LIBS%&#x0D;&#x0A;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-				CommandLine="echo on&#x0D;&#x0A;set CFG=&quot;$(ProjectDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;&#x0D;&#x0A;echo // Automatically generated file &gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_DYNAMIC_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WDMKS 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WASAPI 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;%CFG%&#x0D;&#x0A;"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				AdditionalIncludeDirectories="&quot;..\..\..\lib-src\portaudio-v19\include&quot;;&quot;..\..\..\lib-src\portaudio-v19\src\common&quot;;&quot;..\..\..\lib-src\portaudio-v19\src\os\win&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				StringPooling="true"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				CompileAs="0"
-				DisableSpecificWarnings="4996"
-				ForcedIncludeFiles="$(ProjectDir)\$(ConfigurationName)\config.h"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="echo on&#x0D;&#x0A;set BASE=&quot;../../../lib-src/portaudio-v19&quot;&#x0D;&#x0A;set CFG=$(ProjectDir)$(ConfigurationName)\config.h&#x0D;&#x0A;set INTDIR=$(ConfigurationName)&#x0D;&#x0A;set CFLAGS=/O2 /GL /I &quot;%BASE%/include&quot; /I &quot;%BASE%/src/common&quot; /I &quot;%BASE%/src/os/win&quot; /D &quot;WIN32&quot; /D &quot;NDEBUG&quot; /D &quot;_LIB&quot; /D &quot;_MBCS&quot; /GF /FD /EHsc /MD /Gy /Fo&quot;%INTDIR%/&quot; /Fd&quot;%INTDIR%&quot; /W3 /nologo /c /wd4996 /FI &quot;%CFG%&quot; /errorReport:prompt&#x0D;&#x0A;set LIBS=&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_DS 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoDS&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%DXSDK_DIR%/include&quot; &quot;%BASE%/src/hostapi/dsound/pa_win_ds.c&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%DXSDK_DIR%/include&quot; &quot;%BASE%/src/hostapi/dsound/pa_win_ds_dynlink.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;set LIBS=&quot;%DXSDK_DIR%/lib/x86\dxguid.lib&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoDS&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_WASAPI 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoWASAPI&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% &quot;%BASE%/src/hostapi/wasapi/pa_win_wasapi.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoWASAPI&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_WDMKS 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoWDMKS&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% &quot;%BASE%/src/hostapi/wdmks/pa_win_wdmks.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoWDMKS&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_ASIO 1&quot; &quot;%CFG%&quot;&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoASIO&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%BASE%/src/hostapi/asio/pa_asio.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%BASE%/src/hostapi/asio/iasiothiscallresolver.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/common/asio.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/host/asiodrivers.cpp&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%ASIOSDK_DIR%/common&quot; /I &quot;%ASIOSDK_DIR%/host&quot; /I &quot;%ASIOSDK_DIR%/host/pc&quot; &quot;%ASIOSDK_DIR%/host/pc/asiolist.cpp&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoASIO&#x0D;&#x0A;&#x0D;&#x0A;find &quot;PA_USE_JACK 1&quot; &quot;%CFG%&quot; &gt;NUL&#x0D;&#x0A;IF ERRORLEVEL 1 goto NoJACK&#x0D;&#x0A;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%JACKSDK_DIR%/includes&quot; &quot;%BASE%/src/hostapi/jack/pa_jack.c&quot;&#x0D;&#x0A;cl %CFLAGS% /I &quot;%JACKSDK_DIR%/includes&quot; &quot;%BASE%/src/hostapi/jack/pa_jack_dynload.c&quot;&#x0D;&#x0A;&#x0D;&#x0A;:NoJACK&#x0D;&#x0A;&#x0D;&#x0A;lib /OUT:&quot;$(TargetPath)&quot; &quot;%INTDIR%/*.obj&quot; %LIBS%&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -420,15 +284,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\wdmks\pa_win_wdmks.c"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -437,14 +293,6 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -460,15 +308,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\dsound\pa_win_ds.c"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -477,14 +317,6 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -496,15 +328,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\dsound\pa_win_ds_dynlink.c"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -513,14 +337,6 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -532,15 +348,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\dsound\pa_win_ds_dynlink.h"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCustomBuildTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -549,14 +357,6 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCustomBuildTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -572,15 +372,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\asio\iasiothiscallresolver.cpp"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -589,14 +381,6 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -608,15 +392,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\asio\iasiothiscallresolver.h"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCustomBuildTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -625,14 +401,6 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCustomBuildTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -644,15 +412,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\asio\pa_asio.cpp"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -661,14 +421,6 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -692,7 +444,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\jack\pa_jack.c"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -700,7 +452,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Debug|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -712,7 +464,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\jack\pa_jack_dynload.c"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -720,7 +472,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Debug|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -732,7 +484,7 @@
 						RelativePath="..\..\..\lib-src\portaudio-v19\src\hostapi\jack\pa_jack_dynload.h"
 						>
 						<FileConfiguration
-							Name="Unicode Release|Win32"
+							Name="Release|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -740,7 +492,7 @@
 							/>
 						</FileConfiguration>
 						<FileConfiguration
-							Name="Unicode Debug|Win32"
+							Name="Debug|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool

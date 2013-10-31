@@ -83,11 +83,9 @@ is to build it.
 
 
 3. Build wxWidgets for all configurations of Audacity that you want.
-    * Build "DLL Release" to use in a "Release" version of Audacity.
-    * Build "DLL Unicode Release" to use in a "Unicode Release" 
+    * Build "DLL Unicode Release" to use in a "Release" 
        version of Audacity.
-    * Build "DLL Debug" to use in a "Debug" version of Audacity.
-    * Build "DLL Unicode Debug" to use in a "Unicode Debug"
+    * Build "DLL Unicode Debug" to use in a "Debug"
        version of Audacity.
 
    See "MSVC++ STEP 6:  Build Audacity" for the differences
@@ -252,10 +250,8 @@ Run Visual C++ and load the Audacity solution,
 "audacity\win\audacity.sln".
 
 Select the configuration that you wish to build:
-* "Release" for general use 
-* "Unicode Release" for Unicode-based, general use 
-* "Debug" for a slower but debuggable executable
-* "Unicode Debug" for a Unicode-based, slower, debuggable 
+* "Release" for Unicode-based, general use 
+* "Debug" for a Unicode-based, slower, debuggable 
    executable
 
 You can select the configuration from the Solution 
@@ -301,7 +297,7 @@ So for instance, a Unicode Debug version of Audacity should have:
 	wxmsw28ud_core_vc_custom.dll
 	wxmsw28ud_html_vc_custom.dll
         
-in the "audacity\win\unicode debug" directory.
+in the "audacity\win\Debug" directory.
 
 If this procedure doesn't work, check the "Common Compilation 
 Errors" section on 
@@ -329,9 +325,9 @@ Audacity is now linked with DLL linkage.
 In VC9, select the Audacity project. Then 
    Project > Properties > C/C++ > Code Generation > Runtime Library 
 should be 
-   "Multi-threaded Debug DLL (/MDd)" for Debug or Unicode Debug builds, 
+   "Multi-threaded Debug DLL (/MDd)" for Debug builds, 
 or 
-   "Multi-threaded DLL (/MD)" for Release or Unicode Release builds. 
+   "Multi-threaded DLL (/MD)" for Release builds. 
 Make sure you set the correct library type for all corresponding build 
 configurations. 
 Also make sure you check all other libraries, like the Ogg Vorbis 

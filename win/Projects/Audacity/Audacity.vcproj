@@ -19,7 +19,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Unicode Release|Win32"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
@@ -105,7 +105,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Unicode Debug|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
@@ -195,183 +195,6 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
-		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			CharacterSet="2"
-			WholeProgramOptimization="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="copy"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\mswd&quot;;&quot;$(WXWIN)\include&quot;;..\..;..\..\..\src\include\win32;..\..\..\src\include;&quot;..\..\..\lib-src\FileDialog&quot;;&quot;..\..\..\lib-src\expat&quot;;&quot;..\..\..\lib-src\ffmpeg\win32&quot;;&quot;..\..\..\lib-src\ffmpeg&quot;;&quot;..\..\..\lib-src\lib-widget-extra&quot;;&quot;..\..\..\lib-src\libflac\include&quot;;&quot;..\..\..\lib-src\libid3tag&quot;;&quot;..\..\..\lib-src\libmad&quot;;&quot;..\..\..\lib-src\libnyquist&quot;;&quot;..\..\..\lib-src\libogg\include&quot;;&quot;..\..\..\lib-src\libresample\include&quot;;&quot;..\..\..\lib-src\libsamplerate\src&quot;;&quot;..\..\..\lib-src\libscorealign&quot;;..\\libsndfile;&quot;..\..\..\lib-src\libvamp&quot;;&quot;..\..\..\lib-src\libvorbis\include&quot;;&quot;..\..\..\lib-src\portaudio-v19\include&quot;;&quot;..\..\..\lib-src\portmixer\include&quot;;&quot;..\..\..\lib-src\portsmf&quot;;&quot;..\..\..\lib-src\sbsms\include&quot;;&quot;..\..\..\lib-src\soundtouch\include&quot;;&quot;..\..\..\lib-src\twolame\libtwolame&quot;;&quot;..\..\..\lib-src\portmidi\pm_common&quot;;&quot;..\..\..\lib-src\portmidi\pm_win&quot;;&quot;..\..\..\lib-src\portmidi\porttime&quot;;&quot;..\..\..\lib-src\lv2\lilv&quot;;&quot;..\..\..\lib-src\lv2\lv2&quot;"
-				PreprocessorDefinitions="BUILDING_AUDACITY;FLAC__NO_DLL;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;__WXDEBUG__;_DEBUG;WIN32;STRICT"
-				StringPooling="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="AudacityHeaders.h"
-				WarningLevel="3"
-				DebugInformationFormat="4"
-				CompileAs="0"
-				DisableSpecificWarnings="4996"
-				ForcedIncludeFiles="AudacityHeaders.h"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="2057"
-				AdditionalIncludeDirectories="$(WXWIN)\include;..\..\..\src"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				LinkLibraryDependencies="false"
-				AdditionalDependencies="filedialog.lib libsndfile.lib portaudio-v19.lib wxbase28d.lib wxbase28d_net.lib wxmsw28d_adv.lib wxmsw28d_core.lib wxmsw28d_html.lib wxexpatd.lib wxpngd.lib wxzlibd.lib wxjpegd.lib wxtiffd.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib oleacc.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(WXWIN)\lib\vc_dll&quot;"
-				IgnoreDefaultLibraryNames="dsound.lib"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				StackReserveSize="8388608"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			CharacterSet="2"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="copy"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\msw&quot;;&quot;$(WXWIN)\include&quot;;..\..;..\..\..\src\include\win32;..\..\..\src\include;&quot;..\..\..\lib-src\FileDialog&quot;;&quot;..\..\..\lib-src\expat&quot;;&quot;..\..\..\lib-src\ffmpeg\win32&quot;;&quot;..\..\..\lib-src\ffmpeg&quot;;&quot;..\..\..\lib-src\lib-widget-extra&quot;;&quot;..\..\..\lib-src\libflac\include&quot;;&quot;..\..\..\lib-src\libid3tag&quot;;&quot;..\..\..\lib-src\libmad&quot;;&quot;..\..\..\lib-src\libnyquist&quot;;&quot;..\..\..\lib-src\libogg\include&quot;;&quot;..\..\..\lib-src\libresample\include&quot;;&quot;..\..\..\lib-src\libsamplerate\src&quot;;&quot;..\..\..\lib-src\libscorealign&quot;;..\libsndfile;&quot;..\..\..\lib-src\libvamp&quot;;&quot;..\..\..\lib-src\libvorbis\include&quot;;&quot;..\..\..\lib-src\portaudio-v19\include&quot;;&quot;..\..\..\lib-src\portmixer\include&quot;;&quot;..\..\..\lib-src\portsmf&quot;;&quot;..\..\..\lib-src\sbsms\include&quot;;&quot;..\..\..\lib-src\soundtouch\include&quot;;&quot;..\..\..\lib-src\twolame\libtwolame&quot;;&quot;..\..\..\lib-src\portmidi\pm_common&quot;;&quot;..\..\..\lib-src\portmidi\pm_win&quot;;&quot;..\..\..\lib-src\portmidi\porttime&quot;;&quot;..\..\..\lib-src\lv2\lilv&quot;;&quot;..\..\..\lib-src\lv2\lv2&quot;"
-				PreprocessorDefinitions="BUILDING_AUDACITY;FLAC__NO_DLL;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;NDEBUG;WIN32;STRICT"
-				StringPooling="true"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\$(ConfigurationName)/audacity.pch"
-				WarningLevel="3"
-				CompileAs="0"
-				DisableSpecificWarnings="4996"
-				ForcedIncludeFiles=""
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="2057"
-				AdditionalIncludeDirectories="$(WXWIN)\include;..\..\..\src"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				LinkLibraryDependencies="false"
-				AdditionalDependencies="filedialog.lib libsndfile.lib portaudio-v19.lib wxbase28.lib wxbase28_net.lib wxmsw28_adv.lib wxmsw28_core.lib wxmsw28_html.lib wxexpat.lib wxpng.lib wxzlib.lib wxjpeg.lib wxtiff.lib comctl32.lib rpcrt4.lib wsock32.lib winmm.lib oleacc.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(WXWIN)\lib\vc_dll&quot;"
-				IgnoreDefaultLibraryNames="dsound.lib"
-				SubSystem="2"
-				StackReserveSize="8388608"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -414,14 +237,6 @@
 			<File
 				RelativePath="..\..\..\src\AudacityHeaders.cpp"
 				>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32"
 					>
@@ -899,16 +714,7 @@
 				RelativePath="..\..\..\src\SoundActivatedRecord.cpp"
 				>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -918,15 +724,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -2639,16 +2436,7 @@
 				RelativePath="..\..\..\nyquist\nyquist-plot.txt"
 				>
 				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;&#x0D;&#x0A;"
-						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -2658,15 +2446,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						CommandLine="copy /Y &quot;$(InputDir)\$(InputFileName)&quot; &quot;$(OutDir)\$(ParentName)\$(InputFileName)&quot;&#x0D;&#x0A;"
-						Outputs="$(OutDir)\$(ParentName)\$(InputFileName)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -2734,15 +2513,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand1.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2751,14 +2522,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2770,15 +2533,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand10.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2787,14 +2542,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2806,15 +2553,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand11.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2823,14 +2562,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2842,15 +2573,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand12.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2859,14 +2582,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2878,15 +2593,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand2.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2895,14 +2602,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2914,15 +2613,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand3.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2931,14 +2622,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2950,15 +2633,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand4.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2967,14 +2642,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -2986,15 +2653,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand5.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3003,14 +2662,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3022,15 +2673,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand6.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3039,14 +2682,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3058,15 +2693,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand7.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3075,14 +2702,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3094,15 +2713,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand8.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3111,14 +2722,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3130,15 +2733,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mand9.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3147,14 +2742,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3166,15 +2753,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\mandpluk.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3183,14 +2762,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3202,15 +2773,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\marmstk1.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3219,14 +2782,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3238,15 +2793,7 @@
 					RelativePath="..\..\..\nyquist\rawwaves\sinewave.raw"
 					>
 					<FileConfiguration
-						Name="Unicode Release|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Unicode Debug|Win32"
+						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"
@@ -3255,14 +2802,6 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="copy"
-							OutputName="&quot;$(OutDir)\nyquist\$(ParentName)\$(InputFileName)&quot;"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="copy"

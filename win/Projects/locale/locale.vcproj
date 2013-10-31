@@ -19,7 +19,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Unicode Release|Win32"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="10"
@@ -38,30 +38,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot; &#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="10"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="msgfmt"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot; &#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
+				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot;&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -84,30 +61,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot; &#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="10"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="msgfmt"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot; &#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
+				CommandLine="for %%I in (&quot;%WXWIN%\locale\*.po&quot;) do call :fmt %%~nI&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;&#x0D;&#x0A;:fmt&#x0D;&#x0A;if not exist &quot;$(OutDir)\Languages\%1&quot; mkdir &quot;$(OutDir)\Languages\%1&quot;&#x0D;&#x0A;msgfmt -o &quot;$(OutDir)\Languages\%1\wxstd.mo&quot; &quot;%WXWIN%\locale\%1.po&quot;&#x0D;&#x0A;goto :EOF&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -205,7 +159,7 @@
 				RelativePath="..\..\..\locale\hi.po"
 				>
 			</File>
-         <File
+			<File
 				RelativePath="..\..\..\locale\hr.po"
 				>
 			</File>

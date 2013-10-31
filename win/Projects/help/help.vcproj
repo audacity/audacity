@@ -16,27 +16,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Unicode Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="10"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-				CommandLine="set SRC=&quot;$(SolutionDir)\..\help\manual&quot;&#x0D;&#x0A;set DEST=&quot;$(OutDir)\help\manual&quot;&#x0D;&#x0A;&#x0D;&#x0A;cd ..\..\..\scripts\mw2html_audacity&#x0D;&#x0A;&#x0D;&#x0A;if EXIST %SRC% goto built&#x0D;&#x0A;&#x0D;&#x0A;wiki2htm.bat&#x0D;&#x0A;&#x0D;&#x0A;:built&#x0D;&#x0A;&#x0D;&#x0A;xcopy /I /E /C /Y /Q %SRC% %DEST%&#x0D;&#x0A;"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Unicode Debug|Win32"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="10"
@@ -57,26 +37,6 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="10"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-				CommandLine="set SRC=&quot;$(SolutionDir)\..\help\manual&quot;&#x0D;&#x0A;set DEST=&quot;$(OutDir)\help\manual&quot;&#x0D;&#x0A;&#x0D;&#x0A;cd ..\..\..\scripts\mw2html_audacity&#x0D;&#x0A;&#x0D;&#x0A;if EXIST %SRC% goto built&#x0D;&#x0A;&#x0D;&#x0A;wiki2htm.bat&#x0D;&#x0A;&#x0D;&#x0A;:built&#x0D;&#x0A;&#x0D;&#x0A;xcopy /I /E /C /Y /Q %SRC% %DEST%&#x0D;&#x0A;"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="10"

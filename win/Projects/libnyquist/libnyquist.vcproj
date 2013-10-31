@@ -16,7 +16,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Unicode Release|Win32"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
@@ -49,73 +49,6 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				CompileAs="0"
-				DisableSpecificWarnings="4996"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
-			WholeProgramOptimization="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-				CommandLine=""
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\..\lib-src\libnyquist&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\cmt&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\ffts\src&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\nyqsrc&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\nyqstk&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\nyqstk\include&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\snd&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\tran&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\sys\win\msvc&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\xlisp&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\win&quot;;..\libsndfile;&quot;..\..\..\lib-src\portaudio-v19\include&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_LIB"
-				StringPooling="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="4"
 				CompileAs="0"
 				DisableSpecificWarnings="4996"
 			/>
@@ -183,71 +116,6 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
-				CompileAs="0"
-				DisableSpecificWarnings="4996"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-				CommandLine=""
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				AdditionalIncludeDirectories="&quot;..\..\..\lib-src\libnyquist&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\cmt&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\ffts\src&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\nyqsrc&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\nyqstk&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\nyqstk\include&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\snd&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\tran&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\sys\win\msvc&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\xlisp&quot;;&quot;..\..\..\lib-src\libnyquist\nyquist\win&quot;;..\libsndfile;&quot;..\..\..\lib-src\portaudio-v19\include&quot;"
-				PreprocessorDefinitions="NDEBUG;WIN32;_LIB"
-				StringPooling="true"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
 				CompileAs="0"
 				DisableSpecificWarnings="4996"
 			/>
@@ -527,15 +395,7 @@
 							RelativePath="..\..\..\lib-src\libnyquist\nyquist\sys\win\msvc\winfun.c"
 							>
 							<FileConfiguration
-								Name="Unicode Release|Win32"
-								ExcludedFromBuild="true"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-								/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Unicode Debug|Win32"
+								Name="Release|Win32"
 								ExcludedFromBuild="true"
 								>
 								<Tool
@@ -544,14 +404,6 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Debug|Win32"
-								ExcludedFromBuild="true"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-								/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32"
 								ExcludedFromBuild="true"
 								>
 								<Tool

@@ -17,7 +17,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Unicode Release|Win32"
+			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
@@ -50,72 +50,6 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
-				CompileAs="0"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
-			WholeProgramOptimization="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\..\lib-src\taglib\taglib&quot;;&quot;..\..\..\lib-src\taglib\taglib\ape&quot;;&quot;..\..\..\lib-src\taglib\taglib\asf&quot;;&quot;..\..\..\lib-src\taglib\taglib\flac&quot;;&quot;..\..\..\lib-src\taglib\taglib\mp4&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpc&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpeg&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpeg\id3v1&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpeg\id3v2&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpeg\id3v2\frames&quot;;&quot;..\..\..\lib-src\taglib\taglib\ogg&quot;;&quot;..\..\..\lib-src\taglib\taglib\ogg\flac&quot;;&quot;..\..\..\lib-src\taglib\taglib\ogg\speex&quot;;&quot;..\..\..\lib-src\taglib\taglib\ogg\vorbis&quot;;&quot;..\..\..\lib-src\taglib\taglib\riff&quot;;&quot;..\..\..\lib-src\taglib\taglib\riff\aiff&quot;;&quot;..\..\..\lib-src\taglib\taglib\riff\wav&quot;;&quot;..\..\..\lib-src\taglib\taglib\toolkit&quot;;&quot;..\..\..\lib-src\taglib\taglib\trueaudio&quot;;&quot;..\..\..\lib-src\taglib\taglib\wavpack&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;HAVE_ZLIB=0;MAKE_TAGLIB_LIB=1;WITH_ASF=1;WITH_MP4=1"
-				StringPooling="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="4"
 				CompileAs="0"
 			/>
 			<Tool
@@ -182,70 +116,6 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
-				CompileAs="0"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
-			WholeProgramOptimization="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				AdditionalIncludeDirectories="&quot;..\..\..\lib-src\taglib\taglib&quot;;&quot;..\..\..\lib-src\taglib\taglib\ape&quot;;&quot;..\..\..\lib-src\taglib\taglib\asf&quot;;&quot;..\..\..\lib-src\taglib\taglib\flac&quot;;&quot;..\..\..\lib-src\taglib\taglib\mp4&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpc&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpeg&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpeg\id3v1&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpeg\id3v2&quot;;&quot;..\..\..\lib-src\taglib\taglib\mpeg\id3v2\frames&quot;;&quot;..\..\..\lib-src\taglib\taglib\ogg&quot;;&quot;..\..\..\lib-src\taglib\taglib\ogg\flac&quot;;&quot;..\..\..\lib-src\taglib\taglib\ogg\speex&quot;;&quot;..\..\..\lib-src\taglib\taglib\ogg\vorbis&quot;;&quot;..\..\..\lib-src\taglib\taglib\riff&quot;;&quot;..\..\..\lib-src\taglib\taglib\riff\aiff&quot;;&quot;..\..\..\lib-src\taglib\taglib\riff\wav&quot;;&quot;..\..\..\lib-src\taglib\taglib\toolkit&quot;;&quot;..\..\..\lib-src\taglib\taglib\trueaudio&quot;;&quot;..\..\..\lib-src\taglib\taglib\wavpack&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;HAVE_ZLIB=0;MAKE_TAGLIB_LIB=1;WITH_ASF=1;WITH_MP4=1"
-				StringPooling="true"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
 				CompileAs="0"
 			/>
 			<Tool
