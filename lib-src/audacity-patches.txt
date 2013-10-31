@@ -156,6 +156,7 @@ Versions in Audacity SVN:
     sratom-0.4.2 
 Patches:
     usegetprocaddress.patch - ticket #923 opened upstream on 10/23/2013
+                              fix commited (r5164) upstream on 10/30/2013
     serdnode.patch - Both lilv and serd have a node.c which causes problems during build.
                      This is just a copy of serd/node.c and is a way to work around the
                      problem.
