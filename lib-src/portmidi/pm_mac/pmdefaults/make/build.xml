@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="pmdefaults" default="jar" basedir="..">
+
+	<!-- Global Properties -->
+	<property environment="env"/>
+	
+    
+	<!-- building in Xcode -->
+	<condition property="product" value="${env.PRODUCT_NAME}">
+		<isset property="env.PRODUCT_NAME"/>
+	</condition>
+    
+	<condition property="src" value="${env.SRCROOT}/src">
+		<isset property="env.SRCROOT"/>
+	</condition>
+	
+	<condition property="obj" value="${env.OBJECT_FILE_DIR}">
+		<isset property="env.OBJECT_FILE_DIR"/>
+	</condition>
+    
+	<condition property="dst" value="${env.BUILT_PRODUCTS_DIR}">
+		<isset property="env.BUILT_PRODUCTS_DIR"/>
+	</condition>
+	
+    
+	<!-- building from the command line -->
+	<condition property="src" value="src">
+		<not>
+			<isset property="src"/>
+		</not>
+	</condition>
+    
+	<condition property="obj" value="build/obj">
+		<not>
+			<isset property="obj"/>
+		</not>
+	</condition>
+	
+	<condition property="dst" value="build">
+		<not>
+			<isset property="dst"/>
+		</not>
+	</condition>
+	
+	<condition property="product" value="pmdefaults">
+		<not>
+			<isset property="product"/>
+		</not>
+	</condition>
+	
+	
+	<!-- Targets -->
+	<target name="init" description="Create build directories">
+        <mkdir dir="${obj}/${product}"/>
+		<mkdir dir="${dst}"/>
+	</target>
+	
+	<target name="compile" depends="init" description="Compile">
+		<javac destdir="${obj}/${product}" deprecation="on" source="1.5" target="1.5" fork="true" debug="true" debuglevel="lines,source">
+			<src path="${src}/java"/>
+			<classpath path="${src}/../lib/eawt-stubs.jar"/>
+		</javac>
+	</target>
+	
+	<target name="copy" depends="init" description="Copy resources">
+		
+	</target>
+	
+	<target name="jar" depends="compile, copy" description="Assemble Jar file">
+		<jar jarfile="${dst}/${product}.jar" basedir="${obj}/${product}" manifest="resources/Manifest" index="true"/>
+	</target>
+	
+	<target name="install" depends="jar" description="Alias for 'jar'">
+		<!-- sent by Xcode -->
+	</target>
+	
+	<target name="clean" description="Removes build directories">
+		<!-- sent by Xcode -->
+		<delete dir="${obj}/${product}"/>
+		<delete file="${dst}/${product}.jar"/>
+	</target>
+	
+	<target name="installhdrs" description="">
+		<!-- sent by Xcode -->
+		<echo>"Nothing to do for install-headers phase"</echo>
+	</target>
+</project>

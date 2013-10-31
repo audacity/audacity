@@ -1,6 +1,6 @@
 README_LINUX.txt for PortMidi
 Roger Dannenberg
-14 Oct 2009
+6 Dec 2012
 
 Contents:
         To make PortMidi
@@ -136,6 +136,9 @@ Finally, run make to create
 
 
 CHANGELOG
+
+6-dec-2012 Roger B. Dannenberg
+   Copied notes on Autoconf from Audacity sources
 
 22-jan-2010 Roger B. Dannenberg
    Updated instructions about Java paths

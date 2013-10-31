@@ -420,7 +420,7 @@ PMEXPORT PmError Pm_Poll( PortMidiStream *stream )
         return pm_errmsg(err);
     }
 
-    return !Pm_QueueEmpty(midi->queue);
+    return (PmError) !Pm_QueueEmpty(midi->queue);
 }
 
 

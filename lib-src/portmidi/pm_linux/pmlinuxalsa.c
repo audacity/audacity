@@ -201,7 +201,7 @@ static PmError alsa_write_byte(PmInternal *midi, unsigned char byte,
             /* compute relative time of event = timestamp - now + latency */
             PmTimestamp now = (midi->time_proc ? 
                                midi->time_proc(midi->time_info) : 
-                               Pt_Time());
+                               Pt_Time(NULL));
             int when = timestamp;
             /* if timestamp is zero, send immediately */
             /* otherwise compute time delay and use delay if positive */
@@ -339,6 +339,7 @@ static PmError alsa_in_close(PmInternal *midi)
         pm_hosterror = snd_seq_delete_port(seq, desc->this_port);
     }
     alsa_unuse_queue();
+    midi->descriptor = NULL;
     pm_free(desc);
     if (pm_hosterror) {
         get_alsa_error_text(pm_hosterror_text, PM_HOST_ERROR_MSG_LEN, 
@@ -433,6 +434,7 @@ static PmError alsa_write(PmInternal *midi, PmEvent *buffer, int32_t length)
 static PmError alsa_write_flush(PmInternal *midi, PmTimestamp timestamp)
 {
     alsa_descriptor_type desc = (alsa_descriptor_type) midi->descriptor;
+    if (!desc) return pmBadPtr;
     VERBOSE printf("snd_seq_drain_output: 0x%x\n", (unsigned int) seq);
     desc->error = snd_seq_drain_output(seq);
     if (desc->error < 0) return pmHostError;
@@ -448,6 +450,7 @@ static PmError alsa_write_short(PmInternal *midi, PmEvent *event)
     PmMessage msg = event->message;
     int i;
     alsa_descriptor_type desc = (alsa_descriptor_type) midi->descriptor;
+    if (!desc) return pmBadPtr;
     for (i = 0; i < bytes; i++) {
         unsigned char byte = msg;
         VERBOSE printf("sending 0x%x\n", byte);
@@ -481,6 +484,12 @@ static void handle_event(snd_seq_event_t *ev)
 {
     int device_id = ev->dest.port;
     PmInternal *midi = descriptors[device_id].internalDescriptor;
+    // There is a race condition when closing a device and
+    // continuing to poll other open devices. The closed device may
+    // have outstanding events from before the close operation.
+    if (!midi) {
+        return;
+    }
     PmEvent pm_ev;
     PmTimeProcPtr time_proc = midi->time_proc;
     PmTimestamp timestamp;
@@ -650,6 +659,7 @@ static PmError alsa_poll(PmInternal *midi)
 static unsigned int alsa_has_host_error(PmInternal *midi)
 {
     alsa_descriptor_type desc = (alsa_descriptor_type) midi->descriptor;
+    if (!desc) return 0;
     return desc->error;
 }
 
@@ -657,6 +667,7 @@ static unsigned int alsa_has_host_error(PmInternal *midi)
 static void alsa_get_host_error(PmInternal *midi, char *msg, unsigned int len)
 {
     alsa_descriptor_type desc = (alsa_descriptor_type) midi->descriptor;
+    if (!desc) return;
     int err = (pm_hosterror || desc->error);
     get_alsa_error_text(msg, len, err);
 }

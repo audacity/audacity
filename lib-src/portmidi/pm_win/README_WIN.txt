@@ -52,8 +52,10 @@ TO COMPILE PORTMIDI:
 
 3)  cd to or open the portmidi directory
 
-4)  start or click on the portmidi.sln workspace (note, there is also
-    portmidi-VC9.sln for Visual C++ version 9 users).
+4)  start or click on the portmidi.sln workspace (note, all Visual Studio
+    files are built by CMake. If you need a different version or have
+    problems with paths, try rebuilding the Visual Studio project files
+    using CMake -- See "Using other versions of visual C++" below.)
 	
 5)  the following projects exist within this workspace:
     - portmidi-static, portmidi-dynamic (versions of the PortMidi library)
@@ -82,7 +84,10 @@ TO COMPILE PORTMIDI:
         - similarly, the Linker->Input->Additional Dependencies list has a
           path to the jvm.lib file, which needs to be correct(ed).
 
-6)  use Build->Batch Build ... to build everything in the project
+6)  use Build->Batch Build ... to build everything in the project. If a 
+    build fails, try building again. There seem to be some missing 
+    dependencies, so you may have to "ALL_BUILD" several times before
+    everything builds successfully.
 	
 7)  The settings for these projects were distributed in the zip file, so
     compile should just work.
@@ -115,9 +120,9 @@ TO COMPILE PORTMIDI:
               move jportmidi_JPortMidiApi pmjni\jportmidi_JPortMidiApi.h
        
 11) you might wish to move pm_java/win32 to another location; run the
-    pmdefaults.exe program from the win32 directory to use PmDefaults.
-    This program let's you select default input/output midi devices
-    for PortMidi applications.
+    pmdefaults.exe program from the (entire) win32 directory to use 
+    PmDefaults. This program let's you select default input/output 
+    midi devices for PortMidi applications.
 
 ============================================================================
 ABOUT CMAKE

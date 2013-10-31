@@ -101,6 +101,7 @@ PtError Pt_Start(int resolution, PtCallback *callback, void *userData)
 
 PtError Pt_Stop()
 {
+    /* printf("Pt_Stop called\n"); */
     pt_callback_proc_id++;
     if (pt_thread_created) {
         pthread_join(pt_thread_pid, NULL);

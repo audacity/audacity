@@ -23,12 +23,12 @@ all: $(CONFIG)/CMakeCache.txt
 	cd $(CONFIG); make
 
 $(CONFIG)/CMakeCache.txt:
-	rm -f CMakeCache.txt
+	rm -f $(CONFIG)/CMakeCache.txt
 	mkdir -p $(CONFIG)
 	cd $(CONFIG); cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$(CONFIG)
 
 
-**** For instructions: make -f pm_mac\Makefile.osx help ****\n'
+**** For instructions: make -f pm_mac/Makefile.osx help ****\n'
 
 help:
 	echo $$'\n\n\
@@ -63,6 +63,8 @@ cleaner: clean
 	rm -f pm_java/pmjni/Release/*.jnilib
 
 cleanest: cleaner
+	rm -f Debug/CMakeCache.txt Release/CMakeCache.txt
+	rm -f CMakeCache.txt
 	rm -f Debug/libportmidi_s.a Release/libportmidi_s.a
 	rm -f pm_test/Debug/test pm_test/Debug/sysex pm_test/Debug/midithread
 	rm -f pm_test/Debug/latency pm_test/Debug/midithru

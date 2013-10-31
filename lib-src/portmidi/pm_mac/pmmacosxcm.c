@@ -825,8 +825,10 @@ static CFStringRef ConnectedEndpointName(MIDIEndpointRef endpoint)
     CFRelease(connections);
   }
   if (anyStrings)
-    return result;
-  
+    return result; // caller should release result
+
+  CFRelease(result);
+
   // Here, either the endpoint had no connections, or we failed to obtain names for any of them.
   return EndpointName(endpoint, false);
 }

@@ -1,7 +1,7 @@
 README_MAC.txt for PortMidi
 Roger Dannenberg
 20 nov 2009
-revised 20 Sep 2010 for Xcode 3.2.4 and CMake 8.2-2
+revised 20 Sep 2010 for Xcode 4.3.2 and CMake 2.8.8
 
 To build PortMidi for Mac OS X, you must install Xcode and
 CMake.
@@ -69,7 +69,9 @@ you would normally expect to find it.
 
 ==== USING CMAKE TO BUILD Xcode PROJECT ====
 
-Before you can use Xcode, you need a portmidi.xcodeproj file.
+Before you can use Xcode, you need a portmidi.xcodeproj file,
+and this is created with CMake.
+
 CMake builds a location-dependent Xcode project, so unfortunately
 it is not easy to provide an Xcode project that is ready to use.
 Therefore, you should make your own. Once you have it, you can
@@ -80,7 +82,8 @@ to go back to CMake.
 
 (2) Open portmedia/portmidi/CMakeLists.txt with CMake
 
-(3) Use Configure and Generate buttons
+(3) Use Configure and Generate buttons -- for CMAKE_OSX_SYSROOT, use
+    /Developer/SDKs/MacOSX10.6.sdk (rather than 10.7)
 
 (4) This creates portmedia/portmidi/portmidi.xcodeproj.
 

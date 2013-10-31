@@ -5,10 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 #include "portmidi.h"
-#include "pmutil.h"
-#include "pminternal.h"
 
 #define STRING_MAX 256
 
@@ -30,7 +27,7 @@ int match_string(FILE *inf, char *s)
 
 
 /* 
- * Parse preference files, find default device, search devices --
+/* Parse preference files, find default device, search devices --
  */
 PmDeviceID find_default_device(char *path, int input, PmDeviceID id)
 /* path -- the name of the preference we are searching for

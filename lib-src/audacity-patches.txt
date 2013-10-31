@@ -193,6 +193,15 @@ build system break. Not suitable for upstream, what is needed is more
 powerfull autoconf features to pass the right options to portaudio's configure
 script, which suffers from the broken-ness of autoconf's subdirectory support
 
+portmidi
+-------
+http://portmedia.sourceforge.net/
+PortMidi is a library for software developers. It supports real-time input
+and output of MIDI data using a system-independent interface.
+Version in Audacity SVN: SVN snapshot from 227
+Patches:
+Upstream Version: SVN revision 227
+
 portsmf
 -------
 http://portmedia.sourceforge.net/

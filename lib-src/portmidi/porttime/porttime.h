@@ -66,17 +66,17 @@ PMEXPORT PtError Pt_Start(int resolution, PtCallback *callback, void *userData);
     return value:
     Upon success, returns ptNoError. See PtError for other values.
 */
-PMEXPORT PtError Pt_Stop(void);
+PMEXPORT PtError Pt_Stop();
 
 /*
     Pt_Started() returns true iff the timer is running.
 */
-PMEXPORT int Pt_Started(void);
+PMEXPORT int Pt_Started();
 
 /* 
     Pt_Time() returns the current time in ms.
 */
-PMEXPORT PtTimestamp Pt_Time(void);
+PMEXPORT PtTimestamp Pt_Time();
 
 /*
     Pt_Sleep() pauses, allowing other threads to run.
