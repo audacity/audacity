@@ -666,104 +666,271 @@
     <copy Include="..\..\..\plug-ins\vocoder.ny" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\nyquist\bug.lsp" />
-    <None Include="..\..\..\nyquist\dspprims.lsp" />
-    <None Include="..\..\..\nyquist\envelopes.lsp" />
-    <None Include="..\..\..\nyquist\equalizer.lsp" />
-    <None Include="..\..\..\nyquist\evalenv.lsp" />
-    <None Include="..\..\..\nyquist\fileio.lsp" />
-    <None Include="..\..\..\nyquist\follow.lsp" />
-    <None Include="..\..\..\nyquist\init.lsp" />
-    <None Include="..\..\..\nyquist\misc.lsp" />
-    <None Include="..\..\..\nyquist\nyinit.lsp" />
-    <None Include="..\..\..\nyquist\nyqmisc.lsp" />
-    <None Include="..\..\..\nyquist\nyquist.lsp" />
-    <None Include="..\..\..\nyquist\printrec.lsp" />
-    <None Include="..\..\..\nyquist\profile.lsp" />
+    <CustomBuild Include="..\..\..\nyquist\bug.lsp">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\dspprims.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\envelopes.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\equalizer.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\evalenv.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\fileio.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\follow.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\init.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\misc.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\nyinit.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\nyqmisc.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\nyquist.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\printrec.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\profile.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand1.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand10.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand11.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand12.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand2.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand3.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand4.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand5.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand6.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand7.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand8.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand9.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mandpluk.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\marmstk1.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\sinewave.raw">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\rawwaves\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
-    <None Include="..\..\..\nyquist\sal-parse.lsp" />
-    <None Include="..\..\..\nyquist\sal.lsp" />
-    <None Include="..\..\..\nyquist\seq.lsp" />
-    <None Include="..\..\..\nyquist\seqfnint.lsp" />
-    <None Include="..\..\..\nyquist\seqmidi.lsp" />
-    <None Include="..\..\..\nyquist\sndfnint.lsp" />
-    <None Include="..\..\..\nyquist\stk.lsp" />
-    <None Include="..\..\..\nyquist\xlinit.lsp" />
-    <None Include="..\..\..\nyquist\xm.lsp" />
+    <CustomBuild Include="..\..\..\nyquist\sal-parse.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\sal.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\seq.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\seqfnint.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\seqmidi.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\sndfnint.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\stk.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\xlinit.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\xm.lsp">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
     <None Include="..\..\ny.rules" />
     <None Include="..\..\po.rules" />
   </ItemGroup>
@@ -858,7 +1025,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\nyquist\nyquist-plot.txt" />
+    <CustomBuild Include="..\..\..\nyquist\nyquist-plot.txt">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

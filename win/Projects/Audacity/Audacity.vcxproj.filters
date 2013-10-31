@@ -1597,80 +1597,6 @@
   <ItemGroup>
     <None Include="..\..\ny.rules" />
     <None Include="..\..\po.rules" />
-    <None Include="..\..\..\nyquist\bug.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\dspprims.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\envelopes.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\equalizer.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\evalenv.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\fileio.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\follow.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\init.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\misc.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\nyinit.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\nyqmisc.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\nyquist.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\printrec.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\profile.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\sal.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\sal-parse.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\seq.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\seqfnint.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\seqmidi.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\sndfnint.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\stk.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\xlinit.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\xm.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\..\nyquist\nyquist-plot.txt">
-      <Filter>nyquist</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand1.raw">
@@ -1717,6 +1643,78 @@
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\sinewave.raw">
       <Filter>nyquist\rawwaves</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\bug.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\dspprims.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\envelopes.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\equalizer.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\evalenv.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\fileio.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\follow.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\init.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\misc.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\nyinit.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\nyqmisc.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\nyquist-plot.txt">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\nyquist.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\printrec.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\profile.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\sal-parse.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\sal.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\seq.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\seqfnint.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\seqmidi.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\sndfnint.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\stk.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\xlinit.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\xm.lsp">
+      <Filter>nyquist</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
