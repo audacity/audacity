@@ -27,7 +27,7 @@
 ## $(top_srcdir) macro is set by configure. It's important to use $(top_srcdir)
 ## in case a user decides to build in a separate directory from the base package
 ## directory. Using absolute, or relative paths is a bad idea.
-INCLUDES=-I$(top_srcdir)/include
+AM_CPPFLAGS=-I$(top_srcdir)/include
 
 
 # doc directory

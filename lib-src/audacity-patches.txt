@@ -244,7 +244,7 @@ soundtouch
 http://www.surina.net/soundtouch/
 Independant Pitch and Tempo changing library.
 Version in Audacity SVN: 1.7.1
-Patches:
+Patches: autotools.patch: Fix all autotools warnings.
 Upstream Version: 1.7.1
 
 taglib
