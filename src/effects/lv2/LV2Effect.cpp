@@ -9,7 +9,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "../../Audacity.h"
 
 #if defined(USE_LV2)
 
@@ -45,7 +45,7 @@
 #include "LoadLV2.h"
 #include "LV2Effect.h"
 #include "LV2PortGroup.h"
-#include "../Internat.h"
+#include "../../Internat.h"
 #include "lv2_event_helpers.h"
 
 #include "lilv/lilv.h"

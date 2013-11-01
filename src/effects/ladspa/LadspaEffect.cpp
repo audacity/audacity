@@ -22,7 +22,7 @@ effects from this one class.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+#include "../../Audacity.h"
 
 #include "ladspa.h"
 
@@ -41,7 +41,7 @@ effects from this one class.
 
 #include "../Effect.h"          // Audacity Effect base class
 #include "LadspaEffect.h"       // This class's header file
-#include "../Internat.h"
+#include "../../Internat.h"
 
 LadspaEffect::LadspaEffect(const LADSPA_Descriptor *data,
                            const std::set<wxString>& categories)
