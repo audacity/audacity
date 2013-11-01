@@ -71,6 +71,8 @@ library to handle Xiph.org's open multimedia container format
 Version in Audacity SVN: 1.3.1
 Patches: autotools.patch: Fix all autotools warnings. configure.in was renamed
                           to configure.ac after applying the patch.
+AM_MAINTAINER_MODE has been called with "disable" in configure.ac to disable
+autotools rebuilds by default.
 Upstream Version: 1.3.1
 
 libresample
