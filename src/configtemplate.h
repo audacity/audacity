@@ -1,4 +1,4 @@
-/* src/configtemplate.h.  Generated from configure.in by autoheader.  */
+/* src/configtemplate.h.  Generated from configure.ac by autoheader.  */
 
 /* define if Audacity is being installed under a name other than "audacity",
    so it can find the files it needs at runtime */
@@ -123,7 +123,7 @@
 /* Define if the ogg vorbis decoding library is present */
 #undef USE_LIBVORBIS
 
-/* Define if the LV2 support is present */
+/* Define if LV2 support should be enabled */
 #undef USE_LV2
 
 /* Define if midi support should be enabled */
