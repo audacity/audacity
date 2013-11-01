@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{4cefbc7c-c215-11db-8314-0800200c9a66}") = "example_c_decode_file", "examples\c\decode\file\example_c_decode_file.vcproj", "{4cefbd00-c215-11db-8314-0800200c9a66}"
