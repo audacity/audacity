@@ -959,8 +959,6 @@
 		28DE72AE10388583007E18EC /* PreferenceCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72AA10388583007E18EC /* PreferenceCommands.cpp */; };
 		28DE72AF10388583007E18EC /* SetTrackInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72AC10388583007E18EC /* SetTrackInfoCommand.cpp */; };
 		28DE72B2103885AA007E18EC /* TimeWarper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72B0103885AA007E18EC /* TimeWarper.cpp */; };
-		28E2370D0E515D9200281398 /* audiomixerreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED05D1000E50AD5700CC4BD3 /* audiomixerreader.cpp */; };
-		28E2370E0E515D9300281398 /* audiomixerreader.h in Headers */ = {isa = PBXBuildFile; fileRef = ED05D1010E50AD5700CC4BD3 /* audiomixerreader.h */; };
 		28E2370F0E515D9400281398 /* audioreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */; };
 		28E237100E515D9400281398 /* audioreader.h in Headers */ = {isa = PBXBuildFile; fileRef = ED05D1030E50AD5700CC4BD3 /* audioreader.h */; };
 		28E237110E515D9500281398 /* comp_chroma.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED05D1140E50AD5700CC4BD3 /* comp_chroma.cpp */; };
@@ -977,8 +975,6 @@
 		28E2371C0E515D9C00281398 /* regression.h in Headers */ = {isa = PBXBuildFile; fileRef = ED05D1240E50AD5700CC4BD3 /* regression.h */; };
 		28E2371D0E515D9D00281398 /* sautils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED05D1250E50AD5700CC4BD3 /* sautils.cpp */; };
 		28E2371E0E515D9D00281398 /* sautils.h in Headers */ = {isa = PBXBuildFile; fileRef = ED05D1260E50AD5700CC4BD3 /* sautils.h */; };
-		28E2371F0E515D9E00281398 /* scorealign-glue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED05D1270E50AD5700CC4BD3 /* scorealign-glue.cpp */; };
-		28E237200E515D9E00281398 /* scorealign-glue.h in Headers */ = {isa = PBXBuildFile; fileRef = ED05D1280E50AD5700CC4BD3 /* scorealign-glue.h */; };
 		28E237210E515D9F00281398 /* scorealign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED05D1290E50AD5700CC4BD3 /* scorealign.cpp */; };
 		28E237220E515D9F00281398 /* scorealign.h in Headers */ = {isa = PBXBuildFile; fileRef = ED05D12A0E50AD5700CC4BD3 /* scorealign.h */; };
 		28E2373A0E5163A200281398 /* libscorealign.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E237080E515D1D00281398 /* libscorealign.a */; };
@@ -1259,7 +1255,6 @@
 		ED3D7FF00DF73889000F43E3 /* EffectCategory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEC0DF73889000F43E3 /* EffectCategory.cpp */; };
 		ED3D7FF10DF73889000F43E3 /* EffectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED3D7FEE0DF73889000F43E3 /* EffectManager.cpp */; };
 		ED64C823124567ED007CF2FC /* ScoreAlignDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */; };
-		ED64C82512456831007CF2FC /* ScoreAlignParams.h in Headers */ = {isa = PBXBuildFile; fileRef = ED64C82412456831007CF2FC /* ScoreAlignParams.h */; };
 		ED663B42165435BF007F53A5 /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = ED663B2716543501007F53A5 /* common.h */; };
 		ED663B43165435BF007F53A5 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = ED663B3716543556007F53A5 /* config.h */; };
 		ED663B44165435BF007F53A5 /* fastest_coeffs.h in Headers */ = {isa = PBXBuildFile; fileRef = ED663B2916543501007F53A5 /* fastest_coeffs.h */; };
@@ -3996,8 +3991,6 @@
 		8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = EQDefaultCurves.xml; path = ../presets/EQDefaultCurves.xml; sourceTree = SOURCE_ROOT; };
 		8484F31213086237002DF7F0 /* DeviceManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceManager.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		8484F31313086237002DF7F0 /* DeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = DeviceManager.h; sourceTree = "<group>"; tabWidth = 3; };
-		ED05D1000E50AD5700CC4BD3 /* audiomixerreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = audiomixerreader.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		ED05D1010E50AD5700CC4BD3 /* audiomixerreader.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = audiomixerreader.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = audioreader.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1030E50AD5700CC4BD3 /* audioreader.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = audioreader.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1140E50AD5700CC4BD3 /* comp_chroma.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = comp_chroma.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4014,8 +4007,6 @@
 		ED05D1240E50AD5700CC4BD3 /* regression.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = regression.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1250E50AD5700CC4BD3 /* sautils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = sautils.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1260E50AD5700CC4BD3 /* sautils.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sautils.h; sourceTree = "<group>"; tabWidth = 3; };
-		ED05D1270E50AD5700CC4BD3 /* scorealign-glue.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = "scorealign-glue.cpp"; sourceTree = "<group>"; tabWidth = 3; };
-		ED05D1280E50AD5700CC4BD3 /* scorealign-glue.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = "scorealign-glue.h"; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D1290E50AD5700CC4BD3 /* scorealign.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = scorealign.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED05D12A0E50AD5700CC4BD3 /* scorealign.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = scorealign.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED152123163C220300451B5F /* lsr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lsr.c; sourceTree = "<group>"; };
@@ -4068,7 +4059,6 @@
 		ED3D7FEF0DF73889000F43E3 /* EffectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = EffectManager.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED64C821124567ED007CF2FC /* ScoreAlignDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ScoreAlignDialog.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED64C822124567ED007CF2FC /* ScoreAlignDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ScoreAlignDialog.h; sourceTree = "<group>"; tabWidth = 3; };
-		ED64C82412456831007CF2FC /* ScoreAlignParams.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ScoreAlignParams.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED663B2716543501007F53A5 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = libsamplerate/src/common.h; sourceTree = "<group>"; };
 		ED663B2916543501007F53A5 /* fastest_coeffs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fastest_coeffs.h; path = libsamplerate/src/fastest_coeffs.h; sourceTree = "<group>"; };
 		ED663B2A16543501007F53A5 /* float_cast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = float_cast.h; path = libsamplerate/src/float_cast.h; sourceTree = "<group>"; };
@@ -6548,10 +6538,7 @@
 		ED05D0FF0E50AD5600CC4BD3 /* libscorealign */ = {
 			isa = PBXGroup;
 			children = (
-				ED64C82412456831007CF2FC /* ScoreAlignParams.h */,
 				ED05D1180E50AD5700CC4BD3 /* fft3 */,
-				ED05D1000E50AD5700CC4BD3 /* audiomixerreader.cpp */,
-				ED05D1010E50AD5700CC4BD3 /* audiomixerreader.h */,
 				ED05D1020E50AD5700CC4BD3 /* audioreader.cpp */,
 				ED05D1030E50AD5700CC4BD3 /* audioreader.h */,
 				ED05D1140E50AD5700CC4BD3 /* comp_chroma.cpp */,
@@ -6566,8 +6553,6 @@
 				ED05D1240E50AD5700CC4BD3 /* regression.h */,
 				ED05D1250E50AD5700CC4BD3 /* sautils.cpp */,
 				ED05D1260E50AD5700CC4BD3 /* sautils.h */,
-				ED05D1270E50AD5700CC4BD3 /* scorealign-glue.cpp */,
-				ED05D1280E50AD5700CC4BD3 /* scorealign-glue.h */,
 				ED05D1290E50AD5700CC4BD3 /* scorealign.cpp */,
 				ED05D12A0E50AD5700CC4BD3 /* scorealign.h */,
 			);
@@ -7192,7 +7177,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				28E2370E0E515D9300281398 /* audiomixerreader.h in Headers */,
 				28E237100E515D9400281398 /* audioreader.h in Headers */,
 				28E237120E515D9500281398 /* comp_chroma.h in Headers */,
 				28E237130E515D9600281398 /* curvefit.h in Headers */,
@@ -7201,9 +7185,7 @@
 				28E2371A0E515D9B00281398 /* hillclimb.h in Headers */,
 				28E2371C0E515D9C00281398 /* regression.h in Headers */,
 				28E2371E0E515D9D00281398 /* sautils.h in Headers */,
-				28E237200E515D9E00281398 /* scorealign-glue.h in Headers */,
 				28E237220E515D9F00281398 /* scorealign.h in Headers */,
-				ED64C82512456831007CF2FC /* ScoreAlignParams.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9144,7 +9126,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				28E2370D0E515D9200281398 /* audiomixerreader.cpp in Sources */,
 				28E2370F0E515D9400281398 /* audioreader.cpp in Sources */,
 				28E237110E515D9500281398 /* comp_chroma.cpp in Sources */,
 				28E237140E515D9600281398 /* curvefit.cpp in Sources */,
@@ -9153,7 +9134,6 @@
 				28E237190E515D9A00281398 /* hillclimb.cpp in Sources */,
 				28E2371B0E515D9B00281398 /* regression.cpp in Sources */,
 				28E2371D0E515D9D00281398 /* sautils.cpp in Sources */,
-				28E2371F0E515D9E00281398 /* scorealign-glue.cpp in Sources */,
 				28E237210E515D9F00281398 /* scorealign.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10387,7 +10367,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = macosx10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
@@ -10646,7 +10626,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = macosx10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
@@ -10969,7 +10949,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = macosx10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
@@ -11591,7 +11571,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = macosx10.4;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
