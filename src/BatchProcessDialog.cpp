@@ -346,7 +346,7 @@ void BatchProcessDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 
 /////////////////////////////////////////////////////////////////////
 #include <wx/textdlg.h>
-#include "../BatchCommandDialog.h"
+#include "BatchCommandDialog.h"
 
 enum {
 // ChainsListID             7005

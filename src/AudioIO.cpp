@@ -305,14 +305,14 @@ writing audio.
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"
 
-#include "../Experimental.h"
+#include "Experimental.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    #define MIDI_SLEEP 10 /* milliseconds */
    #define ROUND(x) (int) ((x)+0.5)
    //#include <string.h>
    #include "portmidi.h"
-   #include "../src/common/pa_util.h"
+   #include "common/pa_util.h"
    #include "NoteTrack.h"
 #endif
 

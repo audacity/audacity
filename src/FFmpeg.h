@@ -74,10 +74,10 @@ extern "C" {
 #include <wx/log.h>			// for wxLogNull
 #include <wx/msgdlg.h>		// for wxMessageBox
 #include <wx/utils.h>
-#include "../widgets/LinkingHtmlWindow.h"
+#include "widgets/LinkingHtmlWindow.h"
 #include "FileDialog.h"
 #include "ShuttleGui.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
 // needed for sampleCount
