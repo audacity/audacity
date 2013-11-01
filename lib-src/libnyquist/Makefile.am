@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-# Makefile(.in) for portSMF using Autotools (but not libtool).
+# Makefile(.in) for libnyquist using Autotools (but not libtool).
 # Written by Richard Ash following Gary Vaughan's Autobook
 
 NYQUIST = nyquist

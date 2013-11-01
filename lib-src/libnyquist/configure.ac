@@ -1,5 +1,5 @@
 dnl
-dnl portSMF configure.in script - version not using libtool
+dnl libnyquist configure.in script - version not using libtool
 dnl
 dnl Joshua Haberman
 dnl Dominic Mazzoni
