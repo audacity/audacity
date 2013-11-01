@@ -1,6 +1,0 @@
-#!/bin/bash
-
-rm -rf {lv2,serd,sord,sratom,lilv}/{build,.waf*,.lock*}
-rm -rf {liblv2.a,include}
-
-exit 0
