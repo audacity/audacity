@@ -13,13 +13,12 @@ dnl
 AC_DEFUN([AC_C99_FUNC_LRINT],
 [AC_CACHE_CHECK(for lrint,
   ac_cv_c99_lrint,
-[AC_TRY_COMPILE([
+[AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #define		_ISOC9X_SOURCE	1
 #define 	_ISOC99_SOURCE	1
 #define		__USE_ISOC99	1
 #define 	__USE_ISOC9X	1
-#include	<math.h>],
-[	int value = lrint (0.432) ; ], ac_cv_c99_lrint=yes, ac_cv_c99_lrint=no)])
+#include	<math.h>]], [[	int value = lrint (0.432) ; ]])],[ac_cv_c99_lrint=yes],[ac_cv_c99_lrint=no])])
 if test "x$ac_cv_c99_lrint" = "xyes"; then
   AC_DEFINE(HAVE_LRINT, 1,
             [Define if you have C99's lrint function.])

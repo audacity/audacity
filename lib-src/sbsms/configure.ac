@@ -13,7 +13,7 @@ LIBSBSMS_RELEASE_MINOR=0
 LIBSBSMS_RELEASE_BUILD=0
 AC_CONFIG_SRCDIR([src/sbsms.cpp])
 AC_CANONICAL_TARGET([])
-AM_CONFIG_HEADER(src/config.h)
+AC_CONFIG_HEADERS([src/config.h])
 
 AC_DISABLE_SHARED dnl allows for optimizations
 
@@ -36,8 +36,8 @@ AC_DISABLE_SHARED dnl allows for optimizations
 
 SHARED_VERSION_INFO="10:0:0"
 
-AC_PROG_LIBTOOL
-AM_PROG_LIBTOOL
+AM_PROG_AR
+LT_INIT
 
 # save $CXXFLAGS etc. since AC_PROG_CXX likes to insert "-g -O2"
 # if $CXXFLAGS is blank and it finds GCC
@@ -65,7 +65,7 @@ AC_ARG_ENABLE(debug,[  --enable-debug enable debug build: (default: disable)],[e
 
 AC_ARG_ENABLE(multithreaded,[  --enable-multithreaded enable multithreaded build: (default: disable)],[enable_multithreaded=$enableval],[enable_multithreaded=no])
 
-AC_ARG_ENABLE(sse, [AC_HELP_STRING([--enable-sse],[enable SSE optimizations])], enable_sse=$enableval, enable_sse=yes)
+AC_ARG_ENABLE(sse, [AS_HELP_STRING([--enable-sse],[enable SSE optimizations])], enable_sse=$enableval, enable_sse=yes)
 
 AC_ARG_ENABLE(universal_binary,[  --enable-universal_binary enable universal binary build: (default: disable)],[enable_universal_binary=$enableval],[enable_universal_binary=no])
 
