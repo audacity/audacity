@@ -17,6 +17,7 @@
 
 class wxBitmap;
 class wxCheckBox;
+class wxChoice;
 class wxComboBox;
 class wxCommandEvent;
 class wxDC;
