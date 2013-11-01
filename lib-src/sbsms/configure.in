@@ -120,7 +120,7 @@ AC_SUBST(SBSMS_CFLAGS)
 
 AM_INIT_AUTOMAKE([no-dependencies])
 
-AM_MAINTAINER_MODE([enabled])
+AM_MAINTAINER_MODE([disable])
 
 AC_CONFIG_FILES([Makefile src/Makefile libsbsms.spec sbsms.pc])
 
