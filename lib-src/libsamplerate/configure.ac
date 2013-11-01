@@ -16,7 +16,7 @@ AC_CONFIG_MACRO_DIR([M4])
 AM_INIT_AUTOMAKE($PACKAGE_NAME,$PACKAGE_VERSION)
 dnl Audacity policy: don't enable automatic rebuild of configure et al if 
 dnl sources change
-AM_MAINTAINER_MODE([enable])
+AM_MAINTAINER_MODE([disable])
 AC_CONFIG_HEADER(src/config.h)
 
 
