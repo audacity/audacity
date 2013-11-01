@@ -597,7 +597,7 @@ msgstr ""
 msgid "Apply %s with parameter(s)\n"
 "\n"
 "%s"
-msgstr "Hyväksy %d parametr(e)illä\n"
+msgstr "Hyväksy %s parametr(e)illä\n"
 "\n"
 "%s"
 
@@ -3268,7 +3268,7 @@ msgstr ""
 #: Project.cpp:991
 #, c-format
 msgid "Welcome to Audacity version %s"
-msgstr "Tervetuloa käyttämään Audacityn versiota %d"
+msgstr "Tervetuloa käyttämään Audacityn versiota %s"
 
 #: Project.cpp:1157
 msgid "(Recovered)"

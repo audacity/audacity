@@ -7910,7 +7910,7 @@ msgstr "«%s» er et spor på en lyd-CD. \n"
 msgid "\"%s\" is a playlist file. \n"
 "Audacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
-msgstr " er en spillelistefil. \n"
+msgstr "«%s» er en spillelistefil. \n"
 "Audacity kan ikke åpne denne fila fordi den bare inneholder referanser til andre filer. \n"
 "Det kan hende at du kan åpne den i et tekstredigeringsprogram og laste ned de relevante lydfilene."
 
