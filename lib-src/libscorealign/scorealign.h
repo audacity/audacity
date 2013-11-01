@@ -195,7 +195,7 @@ class Scorealign {
     void midi_tempo_align(Alg_seq &seq);
 };
 
-//#define DEBUG_LOG 1
+// #define DEBUG_LOG 1
 #if DEBUG_LOG
 extern FILE *dbf;
 #endif

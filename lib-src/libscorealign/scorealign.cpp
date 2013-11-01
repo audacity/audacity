@@ -478,8 +478,13 @@ void Scorealign::presmooth()
 {
     int n = ROUND(presmooth_time / actual_frame_period_1);
     n = (n + 3) & ~3; // round up to multiple of 4
+	if (n < 4) {
+		SA_V(printf("presmooth time %g rounded to zero %gs frame periods.\n",
+			        presmooth_time, actual_frame_period_1););
+		return;
+	}
     int i = 0;
-    while (i < pathlen - 1 && pathx[i] + n <= last_x) {
+    while (i < pathlen - n && pathx[i] + n <= last_x) {
         /* line goes from i to i+n-1 */
         int x1 = pathx[i];
         int xmid = x1 + n/2;
@@ -495,6 +500,10 @@ void Scorealign::presmooth()
                 break;
             }
         }
+		// this should not happen, but this guarantees that we found
+		// y2 and it is within the path:
+		if (j >= pathlen) break;
+
         Regression regr;
         /* see if line fits the data */
         int k = i;

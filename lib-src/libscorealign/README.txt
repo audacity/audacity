@@ -1,6 +1,6 @@
 scorealign -- a program for audio-to-audio and audio-to-midi alignment
 
-Last updated July 17, 2008 by RBD
+Last updated 10 May 2013 by RBD
 
 Contributors include: 
              Ning Hu
@@ -32,8 +32,12 @@ install libsndfile to build scorealign.
 
 For Macintosh OS X, use Xcode to open scorealign.xcodeproj
 For Linux, use "make -f Makefile.linux"
-For Windows, open score-align.vcproj (probably out of date now -- please
-    update the project following Makefile.linux, or contact rbd at cs.cmu.edu)
+For Windows, open scorealign-vc2010.sln (This is set up to use my locally built
+copies of libsndfile, libogg, libvorbis, and libFLAC. These are such a pain on
+Windows, that I actually used a different Visual C++ solution file for Nyquist
+that includes projects to build all these libraries. You can find Nyquist on
+SourceForge, or you can build the libraries some other way. Note that my
+projects are set up to use 8-bit ASCII rather than Unicode or other.)
 
 Command line parameters:
 

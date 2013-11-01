@@ -153,10 +153,6 @@
 			Name="Source Files"
 			>
 			<File
-				RelativePath="..\..\..\lib-src\libscorealign\audiomixerreader.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\lib-src\libscorealign\audioreader.cpp"
 				>
 			</File>
@@ -186,10 +182,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\lib-src\libscorealign\sautils.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\lib-src\libscorealign\scorealign-glue.cpp"
 				>
 			</File>
 			<File

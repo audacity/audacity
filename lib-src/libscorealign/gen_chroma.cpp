@@ -206,10 +206,10 @@ int Scorealign::gen_chroma_audio(Audio_reader &reader, int hcutoff,
     // allocate some buffers for use in the loop
     int full_data_size = nextPowerOf2(reader.samples_per_frame);
     if (verbose) {
-        printf("   samples per frame is %d \n", reader.samples_per_frame);
-        printf("   total chroma frames %d\n", reader.frame_count); 
+        printf("   samples per frame is %ld \n", reader.samples_per_frame);
+        printf("   total chroma frames %ld\n", reader.frame_count); 
         // printf("   Window size  %g second \n", reader.window_size);
-        printf("   hopsize in samples %d \n", reader.hop_samples);
+        printf("   hopsize in samples %ld \n", reader.hop_samples);
         printf("   fft size %d\n", full_data_size);
     }
 
@@ -520,7 +520,7 @@ int Scorealign::gen_chroma_midi(Alg_seq &seq, float dur, int nnotes,
             float velocity = item->note->loud;
             float weight = overlap * velocity;
 #if DEBUG_LOG
-            fprintf(dbf, "%3d pitch %g starting %g key %d overlap %g velocity %g\n", 
+            fprintf(dbf, "%3d pitch %g starting %g key %ld overlap %g velocity %g\n", 
                     cv_index, item->note->pitch, item->note->time, 
                     item->note->get_identifier(), overlap, velocity);
 #endif
