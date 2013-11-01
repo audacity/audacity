@@ -207,7 +207,7 @@ portsmf
 http://portmedia.sourceforge.net/
 Cross-platform Midi file reader and writer (succeeded and obsoltes allegro)
 Version in Audacity SVN: SVN snapshot from 227
-Patches: none
+Patches: autotools.patch: Fix all autotools warnings.
 Upstream Version: SVN revision 227
 
 portburn

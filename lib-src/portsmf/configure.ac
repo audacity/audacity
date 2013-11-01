@@ -28,7 +28,7 @@ dnl set up automake
 AM_INIT_AUTOMAKE([-Wall foreign])
 dnl Audacity policy: don't enable automatic rebuild of configure et al if 
 dnl sources change
-AM_MAINTAINER_MODE([enabled])
+AM_MAINTAINER_MODE
 
 dnl -------------------------------------------------------
 dnl Checks for programs.
@@ -42,6 +42,7 @@ AC_PROG_CC
 AC_LANG([C++])
 AC_PROG_CXX
 AC_PROG_CXXCPP
+AM_PROG_AR
 CFLAGS="$cflags_save"
 CPPFLAGS="$cppflags_save"
 CXXFLAGS="$cxxflags_save"
