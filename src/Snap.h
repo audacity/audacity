@@ -23,6 +23,13 @@
 
 class TrackClipArray;
 
+enum
+{
+   SNAP_OFF,
+   SNAP_NEAREST,
+   SNAP_PRIOR
+};
+
 class SnapPoint {
  public:
    SnapPoint(double t, Track *track) {
@@ -52,6 +59,11 @@ class SnapManager {
              double *out_t,
              bool *snappedPoint,
              bool *snappedTime);
+
+   static wxArrayString GetSnapLabels();
+   static wxArrayString GetSnapValues();
+   static const wxString & GetSnapValue(int index);
+   static int GetSnapIndex(const wxString & value);
 
  private:
    void CondListAdd(double t, Track *tr);

@@ -303,8 +303,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Snap To
 
-   void SetSnapTo(bool state);
-   bool GetSnapTo();
+   void SetSnapTo(int snap);
+   int GetSnapTo();
 
    // Selection Format
 
@@ -367,8 +367,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    virtual double AS_GetRate();
    virtual void AS_SetRate(double rate);
-   virtual bool AS_GetSnapTo();
-   virtual void AS_SetSnapTo(bool state);
+   virtual int AS_GetSnapTo();
+   virtual void AS_SetSnapTo(int snap);
    virtual const wxString & AS_GetSelectionFormat();
    virtual void AS_SetSelectionFormat(const wxString & format);
    virtual void AS_ModifySelection(double &start, double &end, bool done);
@@ -445,7 +445,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // List of tracks and display info
    TrackList *mTracks;
 
-   bool mSnapTo;
+   int mSnapTo;
    wxString mSelectionFormat;
 
    TrackList *mLastSavedTracks;

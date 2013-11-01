@@ -34,8 +34,8 @@ class AUDACITY_DLL_API SelectionBarListener {
 
    virtual double AS_GetRate() = 0;
    virtual void AS_SetRate(double rate) = 0;
-   virtual bool AS_GetSnapTo() = 0;
-   virtual void AS_SetSnapTo(bool state) = 0;
+   virtual int AS_GetSnapTo() = 0;
+   virtual void AS_SetSnapTo(int snap) = 0;
    virtual const wxString & AS_GetSelectionFormat() = 0;
    virtual void AS_SetSelectionFormat(const wxString & format) = 0;
    virtual void AS_ModifySelection(double &start, double &end, bool done) = 0;
@@ -59,7 +59,7 @@ class SelectionBar:public ToolBar {
    double GetLeftTime();
    double GetRightTime();
    void SetField(const wxChar *msg, int fieldNum);
-   void SetSnapTo(bool state);
+   void SetSnapTo(int);
    void SetSelectionFormat(const wxString & format);
    void SetRate(double rate);
    void SetListener(SelectionBarListener *l);
@@ -99,7 +99,7 @@ class SelectionBar:public ToolBar {
    TimeTextCtrl   *mAudioTime;
 
    wxComboBox     *mRateBox;
-   wxCheckBox     *mSnapTo;
+   wxChoice       *mSnapTo;
 
    wxWindow       *mRateText;
 

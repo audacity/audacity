@@ -255,7 +255,7 @@ bool SnapManager::Snap(Track *currentTrack,
       }
       else {
          // Snap time to the grid
-         mConverter.ValueToControls(t, SNAP_TO_NEAREST);
+         mConverter.ValueToControls(t, GetActiveProject()->GetSnapTo() == SNAP_NEAREST);
          mConverter.ControlsToValue();
          *out_t = mConverter.GetTimeValue();
          *snappedTime = true;
@@ -263,4 +263,51 @@ bool SnapManager::Snap(Track *currentTrack,
    }
 
    return *snappedPoint || *snappedTime;
+}
+
+/* static */ wxArrayString SnapManager::GetSnapLabels()
+{
+   wxArrayString labels;
+
+   labels.Add(_("Off"));
+   labels.Add(_("Nearest"));
+   labels.Add(_("Prior"));
+
+   return labels;
+}
+
+/* static */ wxArrayString SnapManager::GetSnapValues()
+{
+   wxArrayString values;
+
+   values.Add(wxT("Off"));
+   values.Add(wxT("Nearest"));
+   values.Add(wxT("Prior"));
+
+   return values;
+}
+
+/* static */ const wxString & SnapManager::GetSnapValue(int index)
+{
+   wxArrayString values = SnapManager::GetSnapValues();
+
+   if (index >= 0 && index < (int) values.GetCount())
+   {
+      return values[index];
+   }
+
+   return values[SNAP_OFF];
+}
+
+/* static */ int SnapManager::GetSnapIndex(const wxString & value)
+{
+   wxArrayString values = SnapManager::GetSnapValues();
+   int index = values.Index(value);
+
+   if (index != wxNOT_FOUND)
+   {
+      return index;
+   }
+
+   return SNAP_OFF;
 }

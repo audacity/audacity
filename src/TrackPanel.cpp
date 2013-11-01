@@ -6516,7 +6516,7 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl, bool keyup )
    }
    mLastSelectionAdjustment = curtime;
 
-   bool snapToTime = GetActiveProject()->GetSnapTo();
+   int snapToTime = GetActiveProject()->GetSnapTo();
 
    // Contract selection from the right to the left
    if( shift && ctrl )
@@ -6630,7 +6630,7 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
    }
    mLastSelectionAdjustment = curtime;
 
-   bool snapToTime = GetActiveProject()->GetSnapTo();
+   int snapToTime = GetActiveProject()->GetSnapTo();
 
    // Contract selection from the left to the right
    if( shift && ctrl )

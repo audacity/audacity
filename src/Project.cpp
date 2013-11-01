@@ -107,6 +107,7 @@ scroll information.  It also has some status flags.
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
+#include "Snap.h"
 #include "Tags.h"
 #include "Track.h"
 #include "TrackPanel.h"
@@ -729,7 +730,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat((sampleFormat) gPrefs->
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
-     mSnapTo((bool) gPrefs->Read(wxT("/SnapTo"), (long) false)),
+     mSnapTo(gPrefs->Read(wxT("/SnapTo"), SNAP_OFF)),
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
      mDirty(false),
      mTrackPanel(NULL),
@@ -1184,16 +1185,17 @@ void AudacityProject::AS_SetRate(double rate)
    mRate = rate;
 }
 
-bool AudacityProject::AS_GetSnapTo()
+int AudacityProject::AS_GetSnapTo()
 {
    return GetSnapTo();
 }
 
-void AudacityProject::AS_SetSnapTo(bool state)
+void AudacityProject::AS_SetSnapTo(int snap)
 {
-   mSnapTo = state;
+   mSnapTo = snap;
 
-   mCommandManager.Check(wxT("Snap"), mSnapTo);
+// LLL: TODO - what should this be changed to???
+// mCommandManager.Check(wxT("Snap"), mSnapTo);
    gPrefs->Write(wxT("/SnapTo"), mSnapTo);
    gPrefs->Flush();
 
@@ -4565,15 +4567,15 @@ bool AudacityProject::GetCacheBlockFiles()
    return cacheBlockFiles;
 }
 
-void AudacityProject::SetSnapTo(bool state)
+void AudacityProject::SetSnapTo(int snap)
 {
-   AS_SetSnapTo(state);
+   AS_SetSnapTo(snap);
    if (GetSelectionBar()) {
-      GetSelectionBar()->SetSnapTo(state);
+      GetSelectionBar()->SetSnapTo(snap);
    }
 }
 
-bool AudacityProject::GetSnapTo()
+int AudacityProject::GetSnapTo()
 {
    return mSnapTo;
 }

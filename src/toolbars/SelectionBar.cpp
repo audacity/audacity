@@ -49,6 +49,7 @@ with changes in the SelectionBar.
 #include "../AudioIO.h"
 #include "../AColor.h"
 #include "../Prefs.h"
+#include "../Snap.h"
 #include "../widgets/TimeTextCtrl.h"
 
 IMPLEMENT_CLASS(SelectionBar, ToolBar);
@@ -75,7 +76,7 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_TEXT(OnRightTimeID, SelectionBar::OnRightTime)
    EVT_RADIOBUTTON(OnLengthRadioID, SelectionBar::OnLengthRadio)
    EVT_RADIOBUTTON(OnEndRadioID, SelectionBar::OnEndRadio)
-   EVT_CHECKBOX(OnSnapToID, SelectionBar::OnSnapTo)
+   EVT_CHOICE(OnSnapToID, SelectionBar::OnSnapTo)
    EVT_COMBOBOX(OnRateID, SelectionBar::OnRate)
    EVT_TEXT(OnRateID, SelectionBar::OnRate)
    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, SelectionBar::OnUpdate)
@@ -135,7 +136,8 @@ void SelectionBar::Populate()
 
    mainSizer->Add(5, 1);
 
-   mainSizer->Add(5, 1);
+   mainSizer->Add(new wxStaticText(this, -1, _("Snap To:")),
+               0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
    mainSizer->Add(new wxStaticText(this, -1, _("Selection Start:")),
                0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
@@ -223,21 +225,14 @@ void SelectionBar::Populate()
                                    wxSize(1, toolbarSingle),
                                    wxLI_VERTICAL),
                   0,  wxRIGHT, 5);
-   /* i18n-hint: The snap-to mode, when enabled, means for example that selections 
-    * are always at whole second boundaries.  You can't select a range 4.5s to 7.9s 
-    * because the boundaries 'snap to' the nearest whole number.*/
-   mSnapTo = new wxCheckBox(this, OnSnapToID, _("Snap To"),
-                            wxDefaultPosition, wxDefaultSize,
-#if defined(__WXGTK__)
-   // See bug #356 for explanation
-                            wxALIGN_LEFT);
-#else
-                            wxALIGN_RIGHT);
-#endif
+
+   mSnapTo = new wxChoice(this, OnSnapToID,
+                          wxDefaultPosition, wxDefaultSize,
+                          SnapManager::GetSnapLabels());
    mainSizer->Add(mSnapTo,
-                  0, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER | wxRIGHT, 5);
+                  0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
    mSnapTo->SetName(_("Snap To"));
-   mSnapTo->SetValue(mListener ? mListener->AS_GetSnapTo() : false);
+   mSnapTo->SetSelection(mListener ? mListener->AS_GetSnapTo() : SNAP_OFF);
    #if wxUSE_TOOLTIPS
       mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), formatName.c_str()));
    #endif
@@ -466,9 +461,9 @@ void SelectionBar::SetField(const wxChar *msg, int fieldNum)
    }
 }
 
-void SelectionBar::SetSnapTo(bool state)
+void SelectionBar::SetSnapTo(int snap)
 {
-   mSnapTo->SetValue(state);
+   mSnapTo->SetSelection(snap);
 }
 
 void SelectionBar::SetSelectionFormat(const wxString & format)
@@ -571,7 +566,7 @@ void SelectionBar::OnCaptureKey(wxCommandEvent &event)
 
 void SelectionBar::OnSnapTo(wxCommandEvent & WXUNUSED(event))
 {
-   mListener->AS_SetSnapTo(mSnapTo->GetValue());
+   mListener->AS_SetSnapTo(mSnapTo->GetSelection());
 
    return;
 }
