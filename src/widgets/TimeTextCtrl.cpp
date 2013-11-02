@@ -591,7 +591,7 @@ void TimeConverter::ValueToControls()
 void TimeConverter::ValueToControls(double RawTime, bool nearest /* = true */)
 {
    //RawTime = 4.9995f; Only for testing!
-   RawTime = (double)((sampleCount)floor(RawTime * mSampleRate + 0.5)) / mSampleRate; // put on a sample
+   RawTime = (double)((sampleCount)floor(RawTime * mSampleRate + (nearest ? 0.5f : 0.0f))) / mSampleRate; // put on a sample
    double theValue = RawTime * mScalingFactor + .000001; // what's this .000001 for?
    int t_int;
    bool round = true;
