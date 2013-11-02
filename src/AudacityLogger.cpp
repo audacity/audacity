@@ -68,8 +68,7 @@ void AudacityLogger::Flush()
    }
 }
 
-// ANSWER-ME: This is unused. Can it be deleted? If not, note that t param is unused.
-void AudacityLogger::DoLogString(const wxChar *str, time_t t)
+void AudacityLogger::DoLogString(const wxChar *str, time_t WXUNUSED(t))
 {
    if (!wxIsMainThread()) {
       wxMutexGuiEnter();
