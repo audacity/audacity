@@ -45,6 +45,7 @@ AC_PROG_CXXCPP
 CFLAGS="$cflags_save"
 CPPFLAGS="$cppflags_save"
 CXXFLAGS="$cxxflags_save"
+AM_PROG_AR
 
 dnl we will need an "install" program to be available
 AC_PROG_INSTALL
@@ -118,7 +119,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
 
-AC_CONFIG_FILES([Makefile scorealign.pc scorealign-uninstalled.pc])
+AC_CONFIG_FILES([Makefile scorealign.pc])
 
 AC_OUTPUT
 
