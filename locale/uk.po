@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-08-28 17:18+0100\n"
-"PO-Revision-Date: 2013-10-12 08:17-0000\n"
+"PO-Revision-Date: 2013-11-03 08:35-0000\n"
 "Last-Translator: Yuri Chornoivan\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "MIME-Version: 1.0\n"
@@ -263,11 +263,6 @@ msgstr ""
 msgid "Files Missing"
 msgstr "Не вистачає файлів"
 
-#: AudacityApp.cpp:1045
-#: AudacityApp.cpp:1246
-msgid "Audacity Log"
-msgstr "Журнал Audacity"
-
 #: AudacityApp.cpp:1054
 msgid "Master Gain Control"
 msgstr "Загальний регулятор гучності"
@@ -308,6 +303,10 @@ msgstr "&Про Audacity…"
 #: AudacityApp.cpp:1204
 msgid "&Preferences..."
 msgstr "&Параметри…"
+
+#: Menus.cpp:195
+msgid "&File"
+msgstr "&Файл"
 
 #: AudacityApp.cpp:1298
 #: AudacityApp.cpp:1377
@@ -425,6 +424,44 @@ msgstr ""
 #: AudacityApp.cpp:1936
 msgid "Audacity Project Files"
 msgstr "Файли проектів Audacity"
+
+#: AudacityApp.cpp:1045
+#: AudacityApp.cpp:1246
+msgid "Audacity Log"
+msgstr "Журнал Audacity"
+
+#: Tags.cpp:818
+msgid "&Save..."
+msgstr "З&берегти…"
+
+#: Tags.cpp:797
+#: prefs/KeyConfigPrefs.cpp:162
+msgid "Cl&ear"
+msgstr "Спорожн&ити"
+
+#: Menus.cpp:216
+msgid "&Close"
+msgstr "&Закрити"
+
+#: AudacityLogger.cpp:289
+msgid "log.txt"
+msgstr "log.txt"
+
+#: AudacityLogger.cpp:291
+msgid "Save log to:"
+msgstr "Зберігати журнал до:"
+
+#: AudacityLogger.cpp:304
+msgid "Couldn't save log to file: "
+msgstr "Не вдалося зберегти журнал до цього файла: "
+
+#: export/Export.cpp:600
+#: export/Export.cpp:621
+#: export/Export.cpp:665
+#: import/ImportPCM.cpp:238
+#: widgets/Warning.cpp:54
+msgid "Warning"
+msgstr "Попередження"
 
 #: AudioIO.cpp:559
 msgid "Could not find any audio devices.\n"
@@ -1937,14 +1974,6 @@ msgstr "Спробувати завантажити цей модуль?"
 msgid "Audacity Karaoke%s"
 msgstr "Audacity Караоке%s"
 
-#: Menus.cpp:195
-msgid "&File"
-msgstr "&Файл"
-
-#: Menus.cpp:216
-msgid "&Close"
-msgstr "&Закрити"
-
 #: Menus.cpp:218
 msgid "&Save Project"
 msgstr "З&берегти проект"
@@ -2973,6 +3002,10 @@ msgstr ""
 #: Menus.cpp:3035
 msgid "Export MIDI"
 msgstr "Експортувати до MIDI"
+
+#: Menus.cpp:3055
+msgid "Export Selection"
+msgstr "Експортувати позначене"
 
 #: Menus.cpp:3110
 msgid "Nothing to undo"
@@ -4183,6 +4216,18 @@ msgstr "&Типові"
 msgid "Debu&g"
 msgstr "Ді&агностика"
 
+#: Snap.cpp:272
+msgid "Off"
+msgstr "Вимкнено"
+
+#: Snap.cpp:273
+msgid "Nearest"
+msgstr "Найближчен"
+
+#: Snap.cpp:274
+msgid "Prior"
+msgstr "Попереднє"
+
 #: SoundActivatedRecord.cpp:36
 msgid "Sound Activated Record"
 msgstr "Запис, що активізується звуком"
@@ -4240,11 +4285,6 @@ msgstr "Мітка"
 msgid "Value"
 msgstr "Значення"
 
-#: Tags.cpp:797
-#: prefs/KeyConfigPrefs.cpp:162
-msgid "Cl&ear"
-msgstr "Спорожн&ити"
-
 #: Tags.cpp:803
 msgid "Genres"
 msgstr "Жанри"
@@ -4264,10 +4304,6 @@ msgstr "Шаблон"
 #: Tags.cpp:817
 msgid "&Load..."
 msgstr "&Завантажити…"
-
-#: Tags.cpp:818
-msgid "&Save..."
-msgstr "З&берегти…"
 
 #: Tags.cpp:820
 msgid "Set De&fault"
@@ -4508,27 +4544,6 @@ msgstr "Запис за таймером Audacity — Очікування по�
 msgid "&Other..."
 msgstr "&Інше…"
 
-#: TrackPanel.cpp:649
-#: TrackPanel.cpp:673
-#: TrackPanel.cpp:682
-#: TrackPanel.cpp:690
-msgid "N&ame..."
-msgstr "Н&азва…"
-
-#: TrackPanel.cpp:651
-#: TrackPanel.cpp:675
-#: TrackPanel.cpp:686
-#: TrackPanel.cpp:692
-msgid "Move Track U&p"
-msgstr "Перемістити доріжку в&гору"
-
-#: TrackPanel.cpp:652
-#: TrackPanel.cpp:676
-#: TrackPanel.cpp:687
-#: TrackPanel.cpp:693
-msgid "Move Track &Down"
-msgstr "Перемістити доріжку в&низ"
-
 #: TrackPanel.cpp:654
 msgid "Wa&veform"
 msgstr "&Хвиля"
@@ -4614,6 +4629,27 @@ msgstr "Логарифмічна &інтерполяція"
 #: toolbars/EditToolBar.cpp:196
 msgid "Copy"
 msgstr "Копіювати"
+
+#: TrackPanel.cpp:649
+#: TrackPanel.cpp:673
+#: TrackPanel.cpp:682
+#: TrackPanel.cpp:690
+msgid "N&ame..."
+msgstr "Н&азва…"
+
+#: TrackPanel.cpp:651
+#: TrackPanel.cpp:675
+#: TrackPanel.cpp:686
+#: TrackPanel.cpp:692
+msgid "Move Track U&p"
+msgstr "Перемістити доріжку в&гору"
+
+#: TrackPanel.cpp:652
+#: TrackPanel.cpp:676
+#: TrackPanel.cpp:687
+#: TrackPanel.cpp:693
+msgid "Move Track &Down"
+msgstr "Перемістити доріжку в&низ"
 
 #: TrackPanel.cpp:1524
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
@@ -4883,6 +4919,10 @@ msgstr "Розділити стереодоріжку «%s»"
 #, c-format
 msgid "Split Stereo to Mono '%s'"
 msgstr "Поділити стерео на моно «%s»"
+
+#: TrackPanel.cpp:7384
+msgid "Split to Mono"
+msgstr "Розділити на моно"
 
 #: TrackPanel.cpp:7449
 #, c-format
@@ -5690,10 +5730,6 @@ msgstr "Гучність   "
 msgid "Foreground:"
 msgstr "Передній план:"
 
-#: effects/Contrast.cpp:269
-msgid "Foreground start time"
-msgstr "Час початку переднього плану"
-
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and hundredths of a second (1/100 second)
 #: effects/Contrast.cpp:270
@@ -5703,6 +5739,10 @@ msgstr "Час початку переднього плану"
 #: widgets/TimeTextCtrl.cpp:299
 msgid "hh:mm:ss + hundredths"
 msgstr "гг:хх:сс + соті"
+
+#: effects/Contrast.cpp:269
+msgid "Foreground start time"
+msgstr "Час початку переднього плану"
 
 #: effects/Contrast.cpp:286
 msgid "Foreground end time"
@@ -6943,14 +6983,18 @@ msgstr "Відновлення пошкодженого аудіо"
 msgid "Repeated %d times"
 msgstr "Створено %d повторів"
 
-#: effects/Repeat.cpp:78
-msgid "Tracks are too long to repeat the selection."
-msgstr "Доріжки надто довгі для повторення вибору."
+#: effects/Repeat.cpp:70
+msgid "Selection is too short to repeat."
+msgstr "Позначений фрагмент є надто малим для повторення."
 
 #: effects/Repeat.cpp:79
 #: effects/Repeat.cpp:202
 msgid "Repeat"
 msgstr "Повтор…"
+
+#: effects/Repeat.cpp:78
+msgid "Tracks are too long to repeat the selection."
+msgstr "Доріжки надто довгі для повторення вибору."
 
 #: effects/Repeat.cpp:215
 msgid "Number of times to repeat:"
@@ -7213,9 +7257,9 @@ msgstr "Підтип:"
 msgid "Cutoff:"
 msgstr "Пропускання:"
 
-#: effects/ScienFilter.cpp:654
-msgid "Hz  Stopband Ripple:"
-msgstr "Гц  Пульсація смуги затримування:"
+#: effects/ScienFilter.cpp:659
+msgid "Stopband Ripple:"
+msgstr "Пульсація смуги затримування:"
 
 #: effects/ScienFilter.h:51
 msgid "Scientific Filter..."
@@ -7514,8 +7558,8 @@ msgstr "Встановити ефекти VST"
 msgid "&Select Plug-ins to Install or press ENTER to Install All"
 msgstr "Ви&беріть додатки для встановлення або натисніть Enter, щоб встановити усі"
 
-#: effects/VST/VSTEffect.cpp:534
-msgid "Plugin Name"
+#: effects/VST/VSTEffect.cpp:536
+msgid "Plug-in Name"
 msgstr "Назва додатка"
 
 #: effects/VST/VSTEffect.cpp:535
@@ -7649,6 +7693,11 @@ msgstr "Автор: "
 msgid "Length (seconds)"
 msgstr "Тривалість (секунд)"
 
+#: effects/lv2/LV2Effect.cpp:462
+#, c-format
+msgid "Unable to load plug-in %s"
+msgstr "Не вдалося завантажити додаток %s"
+
 #: effects/lv2/LV2Effect.cpp:824
 #: effects/lv2/LV2Effect.cpp:827
 msgid "Note length (seconds)"
@@ -7774,6 +7823,10 @@ msgstr "Параметри додатка"
 msgid "Program"
 msgstr "Програма"
 
+#: export/Export.cpp:545
+msgid "Export File"
+msgstr "Експорт файла"
+
 #: export/Export.cpp:493
 msgid "All selected audio is muted."
 msgstr "Всі позначені ділянки звукових доріжок замінено тишею."
@@ -7787,10 +7840,6 @@ msgstr "Всі дані звукових доріжок замінено тиш�
 msgid "Unable to export"
 msgstr "Не вдалося експортувати"
 
-#: export/Export.cpp:545
-msgid "Export File"
-msgstr "Експорт файла"
-
 #: export/Export.cpp:554
 msgid "&Options..."
 msgstr "&Параметри…"
@@ -7798,14 +7847,6 @@ msgstr "&Параметри…"
 #: export/Export.cpp:595
 msgid "Are you sure you want to export the file as \""
 msgstr "Ви справді хочете експортувати дані до файла з назвою «"
-
-#: export/Export.cpp:600
-#: export/Export.cpp:621
-#: export/Export.cpp:665
-#: import/ImportPCM.cpp:238
-#: widgets/Warning.cpp:54
-msgid "Warning"
-msgstr "Попередження"
 
 #: export/Export.cpp:615
 #, c-format
@@ -11145,6 +11186,10 @@ msgstr "Вибрана область"
 msgid "Project Rate (Hz):"
 msgstr "Частота проекту (Гц):"
 
+#: toolbars/SelectionBar.cpp:139
+msgid "Snap To:"
+msgstr "Прив’язування до:"
+
 #: toolbars/SelectionBar.cpp:144
 #: toolbars/SelectionBar.cpp:255
 msgid "Selection Start:"
@@ -11334,6 +11379,11 @@ msgstr "Порожній"
 #: widgets/KeyView.cpp:593
 msgid "Menu"
 msgstr "Меню"
+
+#: widgets/KeyView.cpp:1794
+#, c-format
+msgid " Level %d"
+msgstr " Рівень %d"
 
 #: widgets/Meter.cpp:406
 msgid "Enable Meter"
