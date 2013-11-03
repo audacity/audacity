@@ -823,8 +823,9 @@ sampleCount Sequence::GetBestBlockSize(sampleCount start) const
 
 bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   long nValue;
+   sampleCount nValue;
 
+   /* handle waveblock tag and it's attributes */
    if (!wxStrcmp(tag, wxT("waveblock"))) {
       SeqBlock *wb = new SeqBlock();
       wb->f = NULL;
@@ -839,9 +840,11 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          if (!value)
             break;
          
-         // All these attributes have non-negative integer values, so just test & convert here.
+         // Both these attributes have non-negative integer counts of samples, so
+		 // we can test & convert here, making sure that values > 2^31 are OK
+		 // because long clips will need them.
          const wxString strValue = value;
-         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) || (nValue < 0))
+         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
          {
             delete (wb);
             mErrorOpening = true;
@@ -880,6 +883,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
    
+   /* handle sequence tag and it's attributes */
    if (!wxStrcmp(tag, wxT("sequence"))) {
       while(*attrs) {
          const wxChar *attr = *attrs++;
@@ -888,16 +892,16 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          if (!value)
             break;
          
-         // All these attributes have non-negative integer values, so just test & convert here.
-         const wxString strValue = value;
-         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) || (nValue < 0))
-         {
-            mErrorOpening = true;
-            return false;
-         }
+         const wxString strValue = value;	// promote string, we need this for all
 
          if (!wxStrcmp(attr, wxT("maxsamples")))
          {
+            // This attribute is a sample count, so can be 64bit
+            if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
+            {
+               mErrorOpening = true;
+               return false;
+            }
             // Dominic, 12/10/2006:
             //    Let's check that maxsamples is >= 1024 and <= 64 * 1024 * 1024
             //    - that's a pretty wide range of reasonable values.
@@ -911,15 +915,25 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
          else if (!wxStrcmp(attr, wxT("sampleformat")))
          {
-            if (!XMLValueChecker::IsValidSampleFormat(nValue))
+            // This attribute is a sample format, normal int
+			long fValue;
+            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !XMLValueChecker::IsValidSampleFormat(fValue))
             {
                mErrorOpening = true;
                return false;
             }
-            mSampleFormat = (sampleFormat)nValue;
+            mSampleFormat = (sampleFormat)fValue;
          }
          else if (!wxStrcmp(attr, wxT("numsamples")))
+		 {
+            // This attribute is a sample count, so can be 64bit
+            if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
+            {
+               mErrorOpening = true;
+               return false;
+            }
             mNumSamples = nValue;
+		 }
       } // while
 
       //// Both mMaxSamples and mSampleFormat should have been set. 

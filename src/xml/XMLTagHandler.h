@@ -37,10 +37,27 @@ public:
    static bool IsGoodPathName(const wxString strPathName);
    static bool IsGoodPathString(wxString str);
 
-   // Note that because wxString::ToLong does additional testing, IsGoodInt doesn't duplicate 
-   // that testing, so use wxString::ToLong after IsGoodInt, not just atoi.
+   /** @brief Check that the supplied string can be converted to a long (32bit)
+	* integer.
+	*
+	* Note that because wxString::ToLong does additional testing, IsGoodInt doesn't
+	* duplicate that testing, so use wxString::ToLong after IsGoodInt, not just
+	* atoi.
+	* @param strInt The string to test
+	* @return true if the string is convertable, false if not
+	*/
    static bool IsGoodInt(const wxString strInt);
-
+   /** @brief Check that the supplied string can be converted to a 64bit
+	* integer.
+	*
+	* Note that because wxString::ToLongLong does additional testing, IsGoodInt64
+	* doesn't duplicate that testing, so use wxString::ToLongLong after IsGoodInt64
+	* not just atoll.
+	* @param strInt The string to test
+	* @return true if the string is convertable, false if not
+	*/
+   static bool IsGoodInt64(const wxString strInt);
+   
    static bool IsValidChannel(const int nValue); 
 #ifdef USE_MIDI
    static bool IsValidVisibleChannels(const int nValue);
