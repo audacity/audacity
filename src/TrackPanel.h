@@ -450,6 +450,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void OnFormatChange(wxCommandEvent &event);
 
+   virtual void OnSwapChannels(wxCommandEvent &event);
    virtual void OnSplitStereo(wxCommandEvent &event);
    virtual void OnSplitStereoMono(wxCommandEvent &event);
    virtual void SplitStereo(bool stereo);

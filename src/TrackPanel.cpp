@@ -278,6 +278,8 @@ enum {
 
    OnMoveUpID,
    OnMoveDownID,
+   OnMoveTopID,
+   OnMoveBottomID,
 
    OnUpOctaveID,
    OnDownOctaveID,
@@ -313,6 +315,7 @@ enum {
    OnSplitStereoID,
    OnSplitStereoMonoID,
    OnMergeStereoID,
+   OnSwapChannelsID,
 
    OnSetTimeTrackRangeID,
    OnCutSelectedTextID,
@@ -341,6 +344,7 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU(OnSetTimeTrackRangeID, TrackPanel::OnSetTimeTrackRange)
 
     EVT_MENU_RANGE(OnMoveUpID, OnMoveDownID, TrackPanel::OnMoveTrack)
+    EVT_MENU_RANGE(OnMoveTopID, OnMoveBottomID, TrackPanel::OnMoveTrack)
     EVT_MENU_RANGE(OnUpOctaveID, OnDownOctaveID, TrackPanel::OnChangeOctave)
     EVT_MENU_RANGE(OnChannelLeftID, OnChannelMonoID,
                TrackPanel::OnChannelChange)
@@ -348,6 +352,7 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU_RANGE(OnRate8ID, OnRate384ID, TrackPanel::OnRateChange)
     EVT_MENU_RANGE(On16BitID, OnFloatID, TrackPanel::OnFormatChange)
     EVT_MENU(OnRateOtherID, TrackPanel::OnRateOther)
+    EVT_MENU(OnSwapChannelsID, TrackPanel::OnSwapChannels)
     EVT_MENU(OnSplitStereoID, TrackPanel::OnSplitStereo)
     EVT_MENU(OnSplitStereoMonoID, TrackPanel::OnSplitStereoMono)
     EVT_MENU(OnMergeStereoID, TrackPanel::OnMergeStereo)
@@ -649,7 +654,7 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu = new wxMenu();
    BuildCommonDropMenuItems(mWaveTrackMenu);	// does name, up/down etc
    mWaveTrackMenu->Append(OnWaveformID, _("Wa&veform"));
-   mWaveTrackMenu->Append(OnWaveformDBID, _("Waveform (d&B)"));
+   mWaveTrackMenu->Append(OnWaveformDBID, _("&Waveform (dB)"));
    mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrogram"));
    /* i18n-hint: short form of 'logarithm'*/
    mWaveTrackMenu->Append(OnSpectrumLogID, _("Spectrogram l&og(f)")); 
@@ -659,7 +664,8 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->AppendCheckItem(OnChannelLeftID, _("&Left Channel"));
    mWaveTrackMenu->AppendCheckItem(OnChannelRightID, _("&Right Channel"));
    mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
-   mWaveTrackMenu->Append(OnSplitStereoID, _("Spli&t Stereo Track"));
+   mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
+   mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
    mWaveTrackMenu->Append(OnSplitStereoMonoID, _("Split Stereo to Mo&no"));
    mWaveTrackMenu->AppendSeparator();
    mWaveTrackMenu->Append(0, _("Set Sample &Format"), mFormatMenu);
@@ -696,8 +702,10 @@ void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
 {
    menu->Append(OnSetNameID, _("N&ame..."));
    menu->AppendSeparator();
-   menu->Append(OnMoveUpID, _("Move Track U&p"));
+   menu->Append(OnMoveUpID, _("Move Track &Up"));
    menu->Append(OnMoveDownID, _("Move Track &Down"));
+   menu->Append(OnMoveTopID, _("Move Track to &Top"));
+   menu->Append(OnMoveBottomID, _("Move Track to &Bottom"));
    menu->AppendSeparator();
 
 }
@@ -7054,6 +7062,7 @@ void TrackPanel::OnTrackMenu(Track *t)
             && next->GetKind() == Track::Wave)
          canMakeStereo = true;
 
+      theMenu->Enable(OnSwapChannelsID, t->GetLinked());
       theMenu->Enable(OnMergeStereoID, canMakeStereo);
       theMenu->Enable(OnSplitStereoID, t->GetLinked());
       theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
@@ -7095,6 +7104,8 @@ void TrackPanel::OnTrackMenu(Track *t)
    if (theMenu) {
       theMenu->Enable(OnMoveUpID, mTracks->CanMoveUp(t));
       theMenu->Enable(OnMoveDownID, mTracks->CanMoveDown(t));
+      theMenu->Enable(OnMoveTopID, mTracks->CanMoveUp(t));
+      theMenu->Enable(OnMoveBottomID, mTracks->CanMoveDown(t));
 
       //We need to find the location of the menu rectangle.
       wxRect r = FindTrackRect(t,true);
@@ -7364,6 +7375,28 @@ void TrackPanel::OnChannelChange(wxCommandEvent & event)
                         _("Channel"));
    mPopupMenuTarget = NULL;
    Refresh(false);
+}
+
+/// Swap the left and right channels of a stero track...
+void TrackPanel::OnSwapChannels(wxCommandEvent & WXUNUSED(event))
+{
+   Track *partner = mPopupMenuTarget->GetLink();
+   SplitStereo(true);
+   mPopupMenuTarget->SetChannel(Track::RightChannel);
+   partner->SetChannel(Track::LeftChannel);
+
+   (mTracks->MoveUp(partner));
+   partner->SetLinked(true);
+
+   MixerBoard* pMixerBoard = this->GetMixerBoard();
+   if (pMixerBoard) {
+      pMixerBoard->UpdateTrackClusters();
+   }
+
+   MakeParentPushState(wxString::Format(_("Swapped Channels in '%s'"),
+                                        mPopupMenuTarget->GetName().c_str()),
+                       _("Swap Channels"));
+   
 }
 
 /// Split a stereo track into two tracks...
@@ -7798,32 +7831,65 @@ void TrackPanel::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
    Refresh(false);
 }
 
-/// AS: Move a track up or down, depending.
+/// Move a track up, down, to top or to bottom.
 void TrackPanel::OnMoveTrack(wxCommandEvent & event)
 {
-   wxASSERT(event.GetId() == OnMoveUpID || event.GetId() == OnMoveDownID);
-   bool bUp = (OnMoveUpID == event.GetId());
-   if (mTracks->Move(mPopupMenuTarget, bUp)) {
-      MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board, too.
-      if (pMixerBoard && (mPopupMenuTarget->GetKind() == Track::Wave))
-         pMixerBoard->MoveTrackCluster((WaveTrack*)mPopupMenuTarget, bUp);
+   wxASSERT(event.GetId() == OnMoveUpID || event.GetId() == OnMoveDownID ||
+            event.GetId() == OnMoveTopID || event.GetId() == OnMoveBottomID);
 
-      MakeParentPushState(wxString::Format(
-      /* i18n-hint: the first %s is the name of a track, the second a direction as in up or down.
-       * If the word order is different in your language ask on the translators list about what 
-       * to do.*/
-         _("Moved '%s' %s"),
-                                           mPopupMenuTarget->GetName().
-                                           c_str(),
-                                           event.GetId() ==
-                                           OnMoveUpID ?
-      /* i18n-hint: a direction as in up or down.*/
-                                           _("up") :
-      /* i18n-hint: a direction as in up or down.*/
-                                           _("down")),
-                          _("Move Track"));
-      Refresh(false);
+   wxString direction;
+   
+   switch (event.GetId())
+   {
+   case OnMoveTopID :
+      /* i18n-hint: where the track is moving to.*/
+      direction = _("to Top");
+
+      while (mTracks->CanMoveUp(mPopupMenuTarget)) {
+         if (mTracks->Move(mPopupMenuTarget, true)) {
+            MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board.
+            if (pMixerBoard && (mPopupMenuTarget->GetKind() == Track::Wave))
+               pMixerBoard->MoveTrackCluster((WaveTrack*)mPopupMenuTarget, true);
+         }
+      }
+      break;
+   case OnMoveBottomID :
+      /* i18n-hint: where the track is moving to.*/
+      direction = _("to Bottom");
+
+      while (mTracks->CanMoveDown(mPopupMenuTarget)) {
+         if (mTracks->Move(mPopupMenuTarget, false)) {
+            MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board.
+            if (pMixerBoard && (mPopupMenuTarget->GetKind() == Track::Wave))
+               pMixerBoard->MoveTrackCluster((WaveTrack*)mPopupMenuTarget, false);
+         }
+      }
+      break;
+   default:
+      bool bUp = (OnMoveUpID == event.GetId());
+      /* i18n-hint: a direction.*/
+      direction = bUp ? _("Up") : _("Down");
+
+      if (mTracks->Move(mPopupMenuTarget, bUp)) {
+         MixerBoard* pMixerBoard = this->GetMixerBoard();
+         if (pMixerBoard && (mPopupMenuTarget->GetKind() == Track::Wave)) {
+            pMixerBoard->MoveTrackCluster((WaveTrack*)mPopupMenuTarget, bUp);
+         }
+      }
    }
+
+   /* i18n-hint: Past tense of 'to move', as in 'moved audio track up'.*/
+   wxString longDesc = (_("Moved"));
+   /* i18n-hint: The direction of movement will be up, down, to top or to bottom.. */
+   wxString shortDesc = (_("Move Track"));
+
+   longDesc = (wxString::Format(wxT("%s '%s' %s"), longDesc.c_str(), 
+                                mPopupMenuTarget->GetName().c_str(), direction.c_str()));
+   shortDesc = (wxString::Format(wxT("%s %s"), shortDesc.c_str(), direction.c_str()));
+
+   MakeParentPushState(longDesc, shortDesc);
+
+   Refresh(false);
 }
 
 /// This only applies to MIDI tracks.  Presumably, it shifts the
