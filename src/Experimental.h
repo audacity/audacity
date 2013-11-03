@@ -31,7 +31,7 @@
 #define __EXPERIMENTAL__
 
 
-// JKC (effect by Norm C, 02 Oct 2013)  disabled for now.
+// JKC (effect by Norm C, 02 Oct 2013)
 #define EXPERIMENTAL_SCIENCE_FILTERS
 
 // LLL, 01 Oct 2013:
