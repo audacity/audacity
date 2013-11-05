@@ -2,7 +2,7 @@
 # FileDialog
 #
 
-AC_INIT(FileDialog, 1.0, audacity.sourceforge.net, FileDialog)
+AC_INIT([FileDialog],[1.0],[audacity.sourceforge.net],[FileDialog])
 AC_CONFIG_FILES([Makefile config.h])
 AC_SUBST(EXTRADEPS)
 AC_SUBST(EXTRAOBJS)
@@ -27,33 +27,28 @@ AC_HEADER_STDC
 # Check for debug
 #
 AC_ARG_ENABLE(static,
-            [AC_HELP_STRING([--enable-static-wx],
-                            [link wx statically (default=no)])],
+            [AS_HELP_STRING([--enable-static-wx],[link wx statically (default=no)])],
             static_wx_preference="--static=$enableval",
             static_wx_preference="")
 
 
 AC_ARG_ENABLE(unicode,
-            [AC_HELP_STRING([--enable-unicode],
-                            [enable unicode support (default=no)])],
+            [AS_HELP_STRING([--enable-unicode],[enable unicode support (default=no)])],
             unicode_preference="--unicode=$enableval",
             unicode_preference="")
 
 AC_ARG_ENABLE(debug,
-            [AC_HELP_STRING([--enable-debug],
-                            [enable debug support (default=none)])],
+            [AS_HELP_STRING([--enable-debug],[enable debug support (default=none)])],
             debug_preference="--debug=$enableval",
             debug_preference="")
 
 AC_ARG_WITH(wx-version,
-            [AC_HELP_STRING([--with-wx-version],
-                            [override default wxWidgets version [2.6,2.8]])],
+            [AS_HELP_STRING([--with-wx-version],[override default wxWidgets version [2.6,2.8]])],
             wx_preference="--version=$withval",
             wx_preference="")
 
 AC_ARG_WITH(wx-config,
-            [AC_HELP_STRING([--with-wx-config],
-                            [override default wxWidgets config script])],
+            [AS_HELP_STRING([--with-wx-config],[override default wxWidgets config script])],
             wx_config="$withval",
             wx_config="")
 
