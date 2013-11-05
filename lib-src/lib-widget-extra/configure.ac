@@ -1,5 +1,5 @@
 dnl
-dnl libwidgetextra configure.in script
+dnl libwidgetextra configure.ac script
 dnl
 dnl Joshua Haberman
 dnl Dominic Mazzoni
@@ -7,7 +7,7 @@ dnl Richard Ash
 dnl
 
 dnl
-dnl Instructions: to create "configure" from "configure.in", run:
+dnl Instructions: to create "configure" from "configure.ac", run:
 dnl
 
 dnl Process this file with autoconf to produce a configure script.
