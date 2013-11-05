@@ -317,6 +317,9 @@ CXXFLAGS="$CXXFLAGS `$WX_CONFIG $wxconfigargs --cxxflags`"
 dnl-----------------------------------------------------------------
 dnl Pull in library Cflags and so on for the non-optional libraries
 
+dnl All libraries in lib-src should build static libraries, but not shared ones.
+ac_configure_args="$ac_configure_args --enable-static=yes --enable-shared=no"
+
 dnl Include FileDialog
 AC_CONFIG_SUBDIRS([lib-src/FileDialog])
 LOCAL_LIBS="$LOCAL_LIBS FileDialog.a"
