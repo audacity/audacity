@@ -94,7 +94,7 @@ STEP 4a:  Compile Audacity using command line
 
 To compile everything:
 
-./configure --enable-static
+./configure --enable-static-wx
 make
 
 --------------------------------------
