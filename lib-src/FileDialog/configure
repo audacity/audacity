@@ -1290,7 +1290,7 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --enable-static         link wx statically (default=no)
+  --enable-static-wx      link wx statically (default=no)
   --enable-unicode        enable unicode support (default=no)
   --enable-debug          enable debug support (default=none)
   --disable-gtktest       do not try to compile and run a test GTK+ program
@@ -3527,9 +3527,9 @@ fi
 #
 # Check whether --enable-static was given.
 if test "${enable_static+set}" = set; then :
-  enableval=$enable_static; static_preference="--static=$enableval"
+  enableval=$enable_static; static_wx_preference="--static=$enableval"
 else
-  static_preference=""
+  static_wx_preference=""
 fi
 
 
@@ -3615,7 +3615,7 @@ if [ "$WX_CONFIG" = "no" ] ; then
 fi
 
 
-CPPFLAGS="$CPPFLAGS `$WX_CONFIG $static_preference $unicode_preference $debug_preference $wx_preference --cxxflags`"
+CPPFLAGS="$CPPFLAGS `$WX_CONFIG $static_wx_preference $unicode_preference $debug_preference $wx_preference --cxxflags`"
 
 
 ac_aux_dir=

@@ -1457,7 +1457,7 @@ Optional Features:
   --disable-option-checking  ignore unrecognized --enable/--with options
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --enable-static         link wx statically [default=no]
+  --enable-static-wx      link wx statically [default=no]
   --enable-unicode        enable unicode support [default=yes]
   --enable-debug          enable debug support [default=no]
   --enable-sse            enable SSE optimizations
@@ -4584,9 +4584,9 @@ fi
 
 # Check whether --enable-static was given.
 if test "${enable_static+set}" = set; then :
-  enableval=$enable_static; static_preference="--static=$enableval"
+  enableval=$enable_static; static_wx_preference="--static=$enableval"
 else
-  static_preference=""
+  static_wx_preference=""
 fi
 
 
@@ -5518,7 +5518,7 @@ else
       wxconfigargs=""
 fi
 
-wxconfigargs="$static_preference $unicode_preference  $wxconfigargs $wx_preference"
+wxconfigargs="$static_wx_preference $unicode_preference  $wxconfigargs $wx_preference"
 wx_version=`${WX_CONFIG} $wxconfigargs --version`
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Checking that the chosen version of wxWidgets is 2.8.x" >&5
