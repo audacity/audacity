@@ -13,7 +13,7 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 
 dnl Require autoconf >= 2.60
-AC_PREREQ(2.59)
+AC_PREREQ([2.69])
 
 dnl Init autoconf
 AC_INIT
