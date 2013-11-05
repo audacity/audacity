@@ -31,7 +31,7 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 
 dnl Require autoconf >= 2.59
-AC_PREREQ(2.59)
+AC_PREREQ([2.69])
 
 dnl Init autoconf
 AC_INIT
@@ -176,7 +176,7 @@ AC_ARG_WITH(lib-preference,
             lib_preference=$withval,
             lib_preference="system local")
 
-AC_ARG_ENABLE(sse, [AC_HELP_STRING([--enable-sse],[enable SSE optimizations])], enable_sse=$enableval, enable_sse=yes)
+AC_ARG_ENABLE(sse, [AS_HELP_STRING([--enable-sse],[enable SSE optimizations])], enable_sse=$enableval, enable_sse=yes)
 
 AC_ARG_ENABLE(universal_binary,[  --enable-universal_binary enable universal binary build: (default: disable)],[enable_universal_binary=$enableval],[enable_universal_binary=no])
 
