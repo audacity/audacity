@@ -152,7 +152,7 @@ fi
 ### Build Options ###
 #####################
 
-AC_ARG_ENABLE(static,
+AC_ARG_ENABLE(static-wx,
             [AS_HELP_STRING([--enable-static-wx],
                             [link wx statically [default=no]])],
             static_wx_preference="--static=$enableval",
