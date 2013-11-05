@@ -88,7 +88,7 @@
 #endif
 
 #if defined(COMPILER_GCC)
-#  define ALWAYS_INLINE(return_type) return_type __attribute__ ((always_inline))
+#  define ALWAYS_INLINE(return_type) inline return_type __attribute__ ((always_inline))
 #  define NEVER_INLINE(return_type) return_type __attribute__ ((noinline))
 #  define RESTRICT __restrict
 /*#  define VLA_ARRAY_ON_STACK(type__, varname__, size__) type__ varname__[size__]; */

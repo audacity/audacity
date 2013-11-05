@@ -1,5 +1,5 @@
 @echo off
-rem SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+rem SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
 rem Licence for this file: LGPL v2.1                  See LICENCE for details.
 
 set build=%1
@@ -11,7 +11,7 @@ del/f CMakeCache.txt
 mkdir %build%
 cd %build%
 
-cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%build% -DBUILD_TESTS=ON ..
+cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=%build% ..
 if errorlevel 1 goto end
 
 nmake

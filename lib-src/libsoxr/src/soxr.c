@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 #include <math.h>
@@ -14,39 +14,25 @@
 
 char const * soxr_version(void)
 {
-  return "libsoxr-" SOXR_VERSION;
+  return "libsoxr-" SOXR_THIS_VERSION_STR;
 }
 
 
 
 typedef void sample_t; /* float or double */
+typedef void (* fn_t)(void);
+typedef fn_t control_block_t[10];
 
-typedef struct {
-  sample_t * (*  input)(void *, sample_t * samples, size_t   n);
-  void (* process)(void *, size_t);
-  sample_t const * (* output)(void *, sample_t * samples, size_t * n);
-  void (* flush)(void *);
-  void (* close)(void *);
-  double (* delay)(void *);
-  void (* sizes)(size_t * shared, size_t * channel);
-  char const * (* create)(void * channel, void * shared, double io_ratio,
-      soxr_quality_spec_t * q_spec, soxr_runtime_spec_t * r_spec, double scale);
-  void (* set_io_ratio)(void *, double io_ratio, size_t len);
-  char const * (* id)(void);
-} control_block_t;
-
-#define resampler_input (*p->control_block.input)
-#define resampler_process (*p->control_block.process)
-#define resampler_output (*p->control_block.output)
-#define resampler_flush (*p->control_block.flush)
-#define resampler_close (*p->control_block.close)
-#define resampler_delay (*p->control_block.delay)
-#define resampler_sizes (*p->control_block.sizes)
-#define resampler_create (*p->control_block.create)
-#define resampler_set_io_ratio (*p->control_block.set_io_ratio)
-#define resampler_id (*p->control_block.id)
-
-
+#define resampler_input        (*(sample_t * (*)(void *, sample_t * samples, size_t   n))p->control_block[0])
+#define resampler_process      (*(void (*)(void *, size_t))p->control_block[1])
+#define resampler_output       (*(sample_t const * (*)(void *, sample_t * samples, size_t * n))p->control_block[2])
+#define resampler_flush        (*(void (*)(void *))p->control_block[3])
+#define resampler_close        (*(void (*)(void *))p->control_block[4])
+#define resampler_delay        (*(double (*)(void *))p->control_block[5])
+#define resampler_sizes        (*(void (*)(size_t * shared, size_t * channel))p->control_block[6])
+#define resampler_create       (*(char const * (*)(void * channel, void * shared, double io_ratio, soxr_quality_spec_t * q_spec, soxr_runtime_spec_t * r_spec, double scale))p->control_block[7])
+#define resampler_set_io_ratio (*(void (*)(void *, double io_ratio, size_t len))p->control_block[8])
+#define resampler_id           (*(char const * (*)(void))p->control_block[9])
 
 typedef void * resampler_t; /* For one channel. */
 typedef void * resampler_shared_t; /* Between channels. */
@@ -83,7 +69,7 @@ struct soxr {
 
 /* TODO: these should not be here. */
 #define TO_3dB(a)       ((1.6e-6*a-7.5e-4)*a+.646)
-#define LOW_Q_BW0_PC    (67 + 5 / 8.)
+#define LOW_Q_BW0       (1385 / 2048.) /* 0.67625 rounded to be a FP exact. */
 
 soxr_quality_spec_t soxr_quality_spec(unsigned long recipe, unsigned long flags)
 {
@@ -99,24 +85,24 @@ soxr_quality_spec_t soxr_quality_spec(unsigned long recipe, unsigned long flags)
     quality = 6;
   else if (quality > 10)
     quality = 0;
-  p->phase = "\62\31\144"[(recipe & 0x30)>>8];
-  p->anti_aliasing_pc = 100;
-  p->bits = !quality? 0: quality < 3? 16 : quality < 8? 4 + quality * 4 : 55 - quality * 4;
-  rej = p->bits * linear_to_dB(2.);
+  p->phase_response = "\62\31\144"[(recipe & 0x30)>>8];
+  p->stopband_begin = 1;
+  p->precision = !quality? 0: quality < 3? 16 : quality < 8? 4 + quality * 4 : 55 - quality * 4;
+  rej = p->precision * linear_to_dB(2.);
   p->flags = flags;
   if (quality < 8) {
-    p->bw_pc = quality == 1? LOW_Q_BW0_PC : 100 - 5 / TO_3dB(rej);
+    p->passband_end = quality == 1? LOW_Q_BW0 : 1 - .05 / TO_3dB(rej);
     if (quality <= 2)
       p->flags &= ~SOXR_ROLLOFF_NONE, p->flags |= SOXR_ROLLOFF_MEDIUM;
   }
   else {
-    static float const bw[] = {93.1f, 83.2f, 66.3f};
-    p->bw_pc = bw[quality - 8];
+    static float const bw[] = {.931f, .832f, .663f};
+    p->passband_end = bw[quality - 8];
     if (quality - 8 == 2)
       p->flags &= ~SOXR_ROLLOFF_NONE, p->flags |= SOXR_ROLLOFF_MEDIUM;
   }
   if (recipe & SOXR_STEEP_FILTER)
-    p->bw_pc = 100 - 1 / TO_3dB(rej);
+    p->passband_end = 1 - .01 / TO_3dB(rej);
   return spec;
 }
 
@@ -231,6 +217,14 @@ soxr_t soxr_create(
 
   if (p) {
     p->q_spec = q_spec? *q_spec : soxr_quality_spec(SOXR_HQ, 0);
+
+    if (q_spec) { /* Backwards compatibility with original API: */
+      if (p->q_spec.passband_end > 2)
+        p->q_spec.passband_end /= 100;
+      if (p->q_spec.stopband_begin > 2)
+        p->q_spec.stopband_begin = 2 - p->q_spec.stopband_begin / 100;
+    }
+
     p->io_ratio = io_ratio;
     p->num_channels = num_channels;
     if (io_spec)
@@ -241,20 +235,15 @@ soxr_t soxr_create(
     p->runtime_spec = runtime_spec? *runtime_spec : soxr_runtime_spec(1);
     p->io_spec.scale *= datatype_full_scale[p->io_spec.otype & 3] /
                         datatype_full_scale[p->io_spec.itype & 3];
-    p->seed = (unsigned long)time(0) ^ (unsigned long)p;
+    p->seed = (unsigned long)time(0) ^ (unsigned long)(size_t)p;
 
 #if HAVE_SINGLE_PRECISION
-    if (!HAVE_DOUBLE_PRECISION || (p->q_spec.bits <= 20 && !(p->q_spec.flags & SOXR_DOUBLE_PRECISION))
-#if HAVE_VR
-        || (p->q_spec.flags & SOXR_VR)
-#endif
-        ) {
+    if (!HAVE_DOUBLE_PRECISION || (p->q_spec.precision <= 20 && !(p->q_spec.flags & SOXR_DOUBLE_PRECISION))
+        || (p->q_spec.flags & SOXR_VR)) {
       p->deinterleave = (deinterleave_t)_soxr_deinterleave_f;
       p->interleave = (interleave_t)_soxr_interleave_f;
       memcpy(&p->control_block,
-#if HAVE_VR
           (p->q_spec.flags & SOXR_VR)? &_soxr_vr32_cb :
-#endif
 #if HAVE_SIMD
           cpu_has_simd()? &_soxr_rate32s_cb :
 #endif
@@ -383,7 +372,7 @@ soxr_error_t soxr_set_io_ratio(soxr_t p, double io_ratio, size_t slew_len)
     p->io_ratio = io_ratio;
     return initialise(p);
   }
-  if (p->control_block.set_io_ratio) {
+  if (p->control_block[8]) {
     for (i = 0; !error && i < p->num_channels; ++i)
       resampler_set_io_ratio(p->resamplers[i], io_ratio, slew_len);
     return error;
@@ -414,7 +403,7 @@ soxr_error_t soxr_clear(soxr_t p) /* TODO: this, properly. */
     p->io_spec = tmp.io_spec;
     p->num_channels = tmp.num_channels;
     p->input_fn_state = tmp.input_fn_state;
-    p->control_block = tmp.control_block;
+    memcpy(p->control_block, tmp.control_block, sizeof(p->control_block));
     p->deinterleave = tmp.deinterleave;
     p->interleave = tmp.interleave;
     return 0;
@@ -474,21 +463,22 @@ static size_t soxr_output_1ch(soxr_t p, unsigned i, soxr_buf_t dest, size_t len,
 
 static size_t soxr_output_no_callback(soxr_t p, soxr_buf_t out, size_t len)
 {
-  unsigned i;
+  unsigned u;
   size_t done = 0;
   bool separated = !!(p->io_spec.otype & SOXR_SPLIT);
 #if defined _OPENMP
+  int i;
   if (!p->runtime_spec.num_threads && p->num_channels > 1)
 #pragma omp parallel for
-  for (i = 0; i < p->num_channels; ++i) {
+  for (i = 0; i < (int)p->num_channels; ++i) {
     size_t done1;
-    done1 = soxr_output_1ch(p, i, ((soxr_bufs_t)out)[i], len, separated);
+    done1 = soxr_output_1ch(p, (unsigned)i, ((soxr_bufs_t)out)[i], len, separated);
     if (!i)
       done = done1;
   } else
 #endif
-  for (i = 0; i < p->num_channels; ++i)
-    done = soxr_output_1ch(p, i, ((soxr_bufs_t)out)[i], len, separated);
+  for (u = 0; u < p->num_channels; ++u)
+    done = soxr_output_1ch(p, u, ((soxr_bufs_t)out)[u], len, separated);
 
   if (!separated)
     p->clips += (p->interleave)(p->io_spec.otype, &out, (sample_t const * const *)p->channel_ptrs,
@@ -557,7 +547,7 @@ soxr_error_t soxr_process(soxr_t p,
     void       * out, size_t olen , size_t * odone0)
 {
   size_t ilen, idone, odone = 0;
-  unsigned i;
+  unsigned u;
   bool flush_requested = false;
 
   if (!p) return "null pointer";
@@ -578,21 +568,22 @@ soxr_error_t soxr_process(soxr_t p,
     idone = ilen;
   else if (p->io_spec.itype & p->io_spec.otype & SOXR_SPLIT) { /* Both i & o */
 #if defined _OPENMP
+    int i;
     if (!p->runtime_spec.num_threads && p->num_channels > 1)
 #pragma omp parallel for
-    for (i = 0; i < p->num_channels; ++i) {
+    for (i = 0; i < (int)p->num_channels; ++i) {
       size_t done;
       if (in)
-        soxr_input_1ch(p, i, ((soxr_cbufs_t)in)[i], ilen);
-      done = soxr_output_1ch(p, i, ((soxr_bufs_t)out)[i], olen, true);
+        soxr_input_1ch(p, (unsigned)i, ((soxr_cbufs_t)in)[i], ilen);
+      done = soxr_output_1ch(p, (unsigned)i, ((soxr_bufs_t)out)[i], olen, true);
       if (!i)
         odone = done;
     } else
 #endif
-    for (i = 0; i < p->num_channels; ++i) {
+    for (u = 0; u < p->num_channels; ++u) {
       if (in)
-        soxr_input_1ch(p, i, ((soxr_cbufs_t)in)[i], ilen);
-      odone = soxr_output_1ch(p, i, ((soxr_bufs_t)out)[i], olen, true);
+        soxr_input_1ch(p, u, ((soxr_cbufs_t)in)[u], ilen);
+      odone = soxr_output_1ch(p, u, ((soxr_bufs_t)out)[u], olen, true);
     }
     idone = ilen;
   }

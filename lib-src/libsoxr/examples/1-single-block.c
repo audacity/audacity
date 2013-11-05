@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 /* Example 1: `One-shot' resample a single block of data in memory.
@@ -37,12 +37,14 @@ int main(int argc, char const * arg[])
       out, olen, &odone,                             /* Output. */
       NULL, NULL, NULL);                             /* Default configuration.*/
 
-  unsigned i = 0;                          /* Print out the resampled data... */
+  unsigned i = 0;                            /* Print out the resampled data, */
   while (i++ < odone)
     printf("%5.2f%c", out[i-1], " \n"[!(i&7) || i == odone]);
-  puts(soxr_strerror(error));                  /* ...and the reported result. */
+  printf("%-26s %s\n", arg[0], soxr_strerror(error)); /* and reported result. */
+
+  if (argc > 3)                                     /* Library version check: */
+    printf("runtime=%s API="SOXR_THIS_VERSION_STR"\n", soxr_version());
 
   free(out);                                                      /* Tidy up. */
   return !!error;
-  (void)argc, (void)arg;                         /* Not used in this example. */
 }

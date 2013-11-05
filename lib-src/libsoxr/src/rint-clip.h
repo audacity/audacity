@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 #if defined DITHER
@@ -11,7 +11,7 @@
 #define COPY_SEED unsigned long seed = *seed0;
 #define COPY_SEED1 unsigned long seed1 = seed
 #define PASS_SEED1 , &seed1
-#define PASS_SEED0 , seed0
+#define PASS_SEED  , &seed
 
 #else
 
@@ -22,7 +22,7 @@
 #define COPY_SEED
 #define COPY_SEED1
 #define PASS_SEED1
-#define PASS_SEED0
+#define PASS_SEED
 
 #endif
 
@@ -37,8 +37,8 @@ static void RINT_CLIP(RINT_T * const dest, FLOATX const * const src,
   for (; i < n; ++i) {
     double d = src[i] + DITHERING;
     dest[stride * i] = RINT(d);
-    if (fetestexcept(FE_INVALID)) {
-      feclearexcept(FE_INVALID);
+    if (fe_test_invalid()) {
+      fe_clear_invalid();
       dest[stride * i] = d > 0? RINT_MAX : -RINT_MAX - 1;
       ++*clips;
     }
@@ -57,19 +57,19 @@ static size_t LSX_RINT_CLIP(void * * const dest0, FLOATX const * const src,
   COPY_SEED
 #if defined FE_INVALID && defined FPU_RINT
 #define _ dest[i] = RINT(src[i] + DITHERING), ++i,
-  feclearexcept(FE_INVALID);
+  fe_clear_invalid();
   for (i = 0; i < (n & ~7u);) {
     COPY_SEED1;
     DITHER_VARS;
     _ _ _ _ _ _ _ _ 0;
-    if (fetestexcept(FE_INVALID)) {
-      feclearexcept(FE_INVALID);
+    if (fe_test_invalid()) {
+      fe_clear_invalid();
       RINT_CLIP(dest, src, 1, i - 8, i, &clips PASS_SEED1);
     }
   }
-  RINT_CLIP(dest, src, 1, i, n, &clips PASS_SEED0);
+  RINT_CLIP(dest, src, 1, i, n, &clips PASS_SEED);
 #else
-#define _ d = src[i] + DITHERING, dest[i++] = (RINT_T)(d > N - 1? ++clips, (RINT_T)(N - 1) : d < -N? ++clips, (RINT_T)(-N) : RINT(d)),
+#define _ d = src[i] + DITHERING, dest[i++] = (RINT_T)(d > 0? d+.5 >= N? ++clips, N-1 : d+.5 : d-.5 <= -N-1? ++clips, -N:d-.5),
   const double N = 1. + RINT_MAX;
   double d;
   for (i = 0; i < (n & ~7u);) {
@@ -98,22 +98,22 @@ static size_t LSX_RINT_CLIP_2(void * * dest0, FLOATX const * const * srcs,
   COPY_SEED
 #if defined FE_INVALID && defined FPU_RINT
 #define _ dest[stride * i] = RINT(src[i] + DITHERING), ++i,
-  feclearexcept(FE_INVALID);
+  fe_clear_invalid();
   for (j = 0; j < stride; ++j, ++dest) {
     FLOATX const * const src = srcs[j];
     for (i = 0; i < (n & ~7u);) {
       COPY_SEED1;
       DITHER_VARS;
       _ _ _ _ _ _ _ _ 0;
-      if (fetestexcept(FE_INVALID)) {
-        feclearexcept(FE_INVALID);
+      if (fe_test_invalid()) {
+        fe_clear_invalid();
         RINT_CLIP(dest, src, stride, i - 8, i, &clips PASS_SEED1);
       }
     }
-    RINT_CLIP(dest, src, stride, i, n, &clips PASS_SEED0);
+    RINT_CLIP(dest, src, stride, i, n, &clips PASS_SEED);
   }
 #else
-#define _ d = src[i] + DITHERING, dest[stride * i++] = (RINT_T)(d > N - 1? ++clips, (RINT_T)(N - 1) : d < -N? ++clips, (RINT_T)(-N) : RINT(d)),
+#define _ d = src[i] + DITHERING, dest[stride * i++] = (RINT_T)(d > 0? d+.5 >= N? ++clips, N-1 : d+.5 : d-.5 <= -N-1? ++clips, -N:d-.5),
   const double N = 1. + RINT_MAX;
   double d;
   for (j = 0; j < stride; ++j, ++dest) {
@@ -134,7 +134,7 @@ static size_t LSX_RINT_CLIP_2(void * * dest0, FLOATX const * const * srcs,
 }
 #undef _
 
-#undef PASS_SEED0
+#undef PASS_SEED
 #undef PASS_SEED1
 #undef COPY_SEED1
 #undef COPY_SEED

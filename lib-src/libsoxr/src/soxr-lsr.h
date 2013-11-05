@@ -1,4 +1,4 @@
-/* SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/* Wrapper mostly compatible with `libsamplerate'.
+/* Wrapper compatible with `libsamplerate' (constant-rate).
  * (Libsoxr's native API can be found in soxr.h).  */
 
 #if !defined SAMPLERATE_H
@@ -30,6 +30,8 @@
   #else
     #define SOXR __declspec(dllimport)
   #endif
+#elif defined SOXR_VISIBILITY && defined __GNUC__ && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ >= 1)
+  #define SOXR __attribute__ ((visibility("default")))
 #else
   #define SOXR
 #endif

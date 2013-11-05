@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 /* Down-sample by a factor of 2 using a FIR with odd length (LEN).*/

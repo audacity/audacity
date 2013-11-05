@@ -117,12 +117,10 @@ libsoxr
 The SoX Resampler library performs one-dimensional sample-rate conversion, 
 by Rob Sykes.
 http://sourceforge.net/p/soxr/wiki/Home/
-Version in Audacity SVN: 0.0.5
+Version in Audacity SVN: 0.1.1
 Patches: 
    * "libsoxr/configure" file: modified cmake params
-   * modified .vcproj file in win\Projects\libsoxr
-
-Upstream Version: 0.0.5 (although no file downloads are available yet)
+Upstream Version: 0.1.1
 
 libvamp
 -------

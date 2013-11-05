@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 /* Example 5:  Variable-rate resampling (N.B. experimental).  A test signal

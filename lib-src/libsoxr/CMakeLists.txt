@@ -1,18 +1,18 @@
-# SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
+# SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
 # Licence for this file: LGPL v2.1                  See LICENCE for details.
 
 cmake_minimum_required (VERSION 2.8 FATAL_ERROR)
 
 project (soxr C)
-set (DESCRIPTION_SUMMARY "One-dimensional sample-rate conversion library")
+set (DESCRIPTION_SUMMARY "High quality, one-dimensional sample-rate conversion library")
 
 
 
 # Release versioning:
 
 set (PROJECT_VERSION_MAJOR 0)
-set (PROJECT_VERSION_MINOR 0)
-set (PROJECT_VERSION_PATCH 5)
+set (PROJECT_VERSION_MINOR 1)
+set (PROJECT_VERSION_PATCH 1)
 
 # For shared-object; if, since the last public release:
 #  * library code changed at all: ++revision
@@ -20,9 +20,9 @@ set (PROJECT_VERSION_PATCH 5)
 #  * interfaces added:            ++age
 #  * interfaces removed:          age = 0
 
-set (SO_VERSION_CURRENT  0)
+set (SO_VERSION_CURRENT  1)
 set (SO_VERSION_REVISION 0)
-set (SO_VERSION_AGE      0)
+set (SO_VERSION_AGE      1)
 
 
 
@@ -34,7 +34,7 @@ if (NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif ()
 
-option (BUILD_TESTS "Build sanity-tests."  OFF)
+option (BUILD_TESTS "Build sanity-tests."  ON)
 option (BUILD_SHARED_LIBS "Build shared libraries." ON)
 option (BUILD_EXAMPLES "Build examples." OFF)
 option (WITH_OPENMP "Include OpenMP threading." ON)
@@ -50,8 +50,10 @@ cmake_dependent_option (WITH_AVFFT "Use libavcodec (LGPL) for SIMD DFT." OFF
 cmake_dependent_option (WITH_PFFFT "Use PFFFT (BSD-like licence) for SIMD DFT." ON
   "WITH_SIMD;NOT WITH_AVFFT" OFF)
 if (UNIX)
-  cmake_dependent_option (BUILD_LSR_TESTS "Build LSR tests." OFF
-    "WITH_LSR_BINDINGS" OFF)
+  if (EXISTS ${PROJECT_SOURCE_DIR}/lsr-tests)
+    cmake_dependent_option (BUILD_LSR_TESTS "Build LSR tests." OFF
+      "WITH_LSR_BINDINGS" OFF)
+  endif ()
 endif ()
 
 
@@ -103,10 +105,6 @@ if (WITH_AVFFT)
   endif ()
 endif ()
 
-if (EXISTS ${PROJECT_SOURCE_DIR}/src/vr32.c)
-  set (HAVE_VR 1)
-endif ()
-
 check_function_exists (lrint HAVE_LRINT)
 check_include_files (fenv.h HAVE_FENV_H)
 test_big_endian (WORDS_BIGENDIAN)
@@ -119,7 +117,7 @@ macro (make_exist)
   endforeach ()
 endmacro ()
 
-make_exist (HAVE_LRINT HAVE_FENV_H WORDS_BIGENDIAN HAVE_SIMD HAVE_VR)
+make_exist (HAVE_LRINT HAVE_FENV_H WORDS_BIGENDIAN HAVE_SIMD)
 make_exist (HAVE_SINGLE_PRECISION HAVE_DOUBLE_PRECISION HAVE_AVFFT)
 
 
@@ -130,11 +128,12 @@ if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set (PROJECT_CXX_FLAGS "-Wconversion -Wall -W -pedantic -Wundef -Wcast-align -Wpointer-arith -Wno-long-long")
   set (PROJECT_C_FLAGS "${PROJECT_CXX_FLAGS} -Wnested-externs -Wmissing-prototypes -Wstrict-prototypes")
   if (CMAKE_BUILD_TYPE STREQUAL "Release")
-    set (CMAKE_SHARED_LINKER_FLAGS "-s") # strip
+    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s") # strip
   endif ()
-  #option (VISIBILITY_HIDDEN "Build with -fvisibility=hidden." ON)
+  cmake_dependent_option (VISIBILITY_HIDDEN "Build with -fvisibility=hidden." ON
+    "BUILD_SHARED_LIBS" OFF)
   if (VISIBILITY_HIDDEN)
-    add_definitions (-fvisibility=hidden)
+    add_definitions (-fvisibility=hidden -DSOXR_VISIBILITY)
   endif ()
 endif ()
 
@@ -178,10 +177,22 @@ endif ()
 
 # Installation configuration:
 
-set (LIB_SUFFIX "" CACHE STRING "Define suffix of libraries directory name (32 or 64).")
-set (BIN_INSTALL_DIR "bin" CACHE PATH "The subdirectory to the binaries." FORCE)
-set (LIB_INSTALL_DIR "lib${LIB_SUFFIX}" CACHE PATH "The subdirectory to the libraries." FORCE)
-set (INCLUDE_INSTALL_DIR "include" CACHE PATH "The subdirectory to the headers." FORCE)
+if (NOT DEFINED BIN_INSTALL_DIR)
+  set (BIN_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/bin")
+endif ()
+if (NOT DEFINED LIB_INSTALL_DIR)
+  set (LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+endif ()
+if (NOT DEFINED INCLUDE_INSTALL_DIR)
+  set (INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include")
+endif ()
+if (NOT DEFINED DOC_INSTALL_DIR)
+  if (UNIX)
+    set (DOC_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/doc/lib${PROJECT_NAME}")
+  else ()
+    set (DOC_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/doc")
+  endif ()
+endif ()
 
 if (APPLE)
   option (BUILD_FRAMEWORK "Build an OS X framework." OFF)
@@ -206,6 +217,12 @@ include_directories (${PROJECT_BINARY_DIR})
 if (BUILD_TESTS OR BUILD_LSR_TESTS)
   enable_testing ()
 endif ()
+
+install (FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/README
+  ${CMAKE_CURRENT_SOURCE_DIR}/LICENCE
+  ${CMAKE_CURRENT_SOURCE_DIR}/NEWS
+  DESTINATION ${DOC_INSTALL_DIR})
 
 
 
@@ -269,8 +286,8 @@ if (UNIX)
   set (CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
   set (CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 
-  set (CPACK_SOURCE_GENERATOR "TBZ2")
-  set (CPACK_SOURCE_IGNORE_FILES "/Debug/;/Release/;/cpack/;\\\\.swp$;\\\\.gitignore")
+  set (CPACK_SOURCE_GENERATOR "TGZ")
+  set (CPACK_SOURCE_IGNORE_FILES "dist;/lsr-tests/;/Debug/;/Release/;/cpack/;\\\\.swp$;\\\\.gitignore;/\\\\.git/")
 
   include (CPack)
 

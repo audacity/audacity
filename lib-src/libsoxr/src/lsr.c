@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 /* Wrapper mostly compatible with `libsamplerate'. */
@@ -18,7 +18,6 @@ typedef struct  soxr SRC_STATE;
 
 #include "soxr-lsr.h"
 #include "rint.h"
-
 
 soxr_error_t src_simple(io_t * p, unsigned id, int channels)
 {
@@ -52,7 +51,8 @@ soxr_t src_callback_new(soxr_input_fn_t fn, unsigned id, int channels, SRC_ERROR
   soxr = soxr_create(0, 0, (unsigned)channels, &error, 0, &q_spec, &r_spec);
   if (soxr)
     error = soxr_set_input_fn(soxr, fn, p, 0);
-  *(int *)error0 = (int)(long)error;
+  if (error0)
+    *(int *)error0 = (int)(ptrdiff_t)error;
   return soxr;
 }
 
@@ -105,7 +105,7 @@ static char const * const names[] = {"LSR best sinc", "LSR medium sinc", "LSR fa
 char const * src_get_name(unsigned n)         {return n < 5u + !getenv("SOXR_LSR_STRICT")? names[n] : 0;}
 char const * src_get_description(unsigned id) {return src_get_name(id);}
 char const * src_get_version(void)            {return soxr_version();}
-char const * src_strerror(soxr_error_t error) {return error == (soxr_error_t)1? "Placeholder." : soxr_strerror(error);}
+char const * src_strerror(soxr_error_t error) {return error == (soxr_error_t)1? "Placeholder." : sizeof(int) >= sizeof(char *) || !error ? soxr_strerror(error) : "soxr error";}
 int src_is_valid_ratio(double oi_ratio)       {return getenv("SOXR_LSR_STRICT")? oi_ratio >= 1./256 && oi_ratio <= 256 : oi_ratio > 0;}
 soxr_error_t src_error(soxr_t p)              {return soxr_error(p);}
 soxr_error_t src_reset(soxr_t p)              {return soxr_clear(p);}

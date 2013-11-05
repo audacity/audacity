@@ -1,4 +1,4 @@
-/* SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
@@ -36,6 +36,8 @@
   #else
     #define SOXR __declspec(dllimport)
   #endif
+#elif defined SOXR_VISIBILITY && defined __GNUC__ && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ >= 1)
+  #define SOXR __attribute__ ((visibility("default")))
 #else
   #define SOXR
 #endif
@@ -58,10 +60,19 @@ input or output (e.g. ilen, olen).                                            */
 
 
 
+/* --------------------------- Version management --------------------------- */
+
+/* E.g. #if SOXR_THIS_VERSION >= SOXR_VERSION(0,1,1) ...                      */
+#define SOXR_VERSION(x,y,z)     (((x)<<16)|((y)<<8)|(z))
+#define SOXR_THIS_VERSION       SOXR_VERSION(0,1,1)
+#define SOXR_THIS_VERSION_STR               "0.1.1"
+
+
+
 /* --------------------------- Type declarations ---------------------------- */
 
-typedef struct soxr * soxr_t;        /* A resampler for 1 or more channels. */
-typedef char const * soxr_error_t;     /* 0:no-error; non-0:error. */
+typedef struct soxr * soxr_t;          /* A resampler for 1 or more channels. */
+typedef char const * soxr_error_t;                /* 0:no-error; non-0:error. */
 
 typedef void       * soxr_buf_t;  /* 1 buffer of channel-interleaved samples. */
 typedef void const * soxr_cbuf_t;                        /* Ditto; read-only. */
@@ -78,7 +89,7 @@ typedef void       * soxr_out_t;     /* Either a soxr_buf_t or soxr_bufs_t,
 
 /* --------------------------- API main functions --------------------------- */
 
-SOXR char const    * soxr_version(void);  /* Query library version: "x.y.z". */
+SOXR char const * soxr_version(void);  /* Query library version: "libsoxr-x.y.z" */
 
 #define soxr_strerror(e)               /* Soxr counterpart to strerror. */     \
     ((e)?(e):"no error")
@@ -155,11 +166,11 @@ SOXR size_t /*odone*/ soxr_output(/* Resample and output a block of data.*/
 /* Common stream resampler operations: */
 
 SOXR soxr_error_t soxr_error(soxr_t);   /* Query error status. */
-SOXR size_t     * soxr_num_clips(soxr_t); /* Query int. clip counter (for R/W). */
-SOXR double       soxr_delay(soxr_t);   /* Query current delay in output samples.*/
-SOXR char const * soxr_engine(soxr_t p);/* Query resampling engine name. */
+SOXR size_t   * soxr_num_clips(soxr_t); /* Query int. clip counter (for R/W). */
+SOXR double     soxr_delay(soxr_t);  /* Query current delay in output samples.*/
+SOXR char const * soxr_engine(soxr_t p); /* Query resampling engine name. */
 
-SOXR soxr_error_t soxr_clear(soxr_t);   /* Ready for fresh signal, same config. */
+SOXR soxr_error_t soxr_clear(soxr_t); /* Ready for fresh signal, same config. */
 SOXR void         soxr_delete(soxr_t);  /* Free resources. */
 
 
@@ -219,12 +230,12 @@ struct soxr_io_spec {                                            /* Typically */
 
 
 struct soxr_quality_spec {                                       /* Typically */
-  double bits;               /* Required bit-accuracy (pass + stop).    20    */
-  double phase;              /* Linear/minimum etc. phase. [0,100]      50    */
-  double bw_pc;              /* Pass-band % (0dB pt.) to preserve.     91.3   */
-  double anti_aliasing_pc;   /* % bandwidth without aliasing.           100   */
-  void * e;                  /* Reserved for internal use.               0    */
-  unsigned long flags;       /* Per the following #defines.              0    */
+  double precision;         /* Conversion precision (in bits).           20   */
+  double phase_response;    /* 0=minimum, ... 50=linear, ... 100=maximum 50   */
+  double passband_end;      /* 0dB pt. bandwidth to preserve; nyquist=1  0.913*/
+  double stopband_begin;    /* Aliasing/imaging control; > passband_end   1   */
+  void * e;                 /* Reserved for internal use.                 0   */
+  unsigned long flags;      /* Per the following #defines.                0   */
 };
 
 #define SOXR_ROLLOFF_SMALL     0u    /* <= 0.01 dB */
@@ -233,7 +244,7 @@ struct soxr_quality_spec {                                       /* Typically */
 
 #define SOXR_MAINTAIN_3DB_PT   4u  /* Reserved for internal use. */
 #define SOXR_HI_PREC_CLOCK     8u  /* Increase `irrational' ratio accuracy. */
-#define SOXR_DOUBLE_PRECISION 16u  /* Use double prec. even @ bitdepths <= 20.*/
+#define SOXR_DOUBLE_PRECISION 16u  /* Use D.P. calcs even if precision <= 20. */
 #define SOXR_VR               32u  /* Experimental, variable-rate resampling. */
 
 

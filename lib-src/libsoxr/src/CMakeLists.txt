@@ -1,4 +1,4 @@
-# SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
+# SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
 # Licence for this file: LGPL v2.1                  See LICENCE for details.
 
 add_definitions (${PROJECT_C_FLAGS} -DSOXR_LIB)
@@ -9,8 +9,10 @@ add_definitions (${PROJECT_C_FLAGS} -DSOXR_LIB)
 
 set (RDFT32 fft4g32)
 if (WITH_AVFFT AND AVCODEC_FOUND)
+  set (RDFT32 avfft32)
   set (RDFT32S avfft32s)
 elseif (WITH_PFFFT)
+  #set (RDFT32 pffft32)
   set (RDFT32S pffft32s)
 elseif (WITH_SIMD)
   set (RDFT32S fft4g32s)
@@ -22,10 +24,6 @@ endif ()
 
 if (WITH_SINGLE_PRECISION)
   set (SP_SOURCES rate32 ${RDFT32})
-endif ()
-
-if (HAVE_VR)
-  set (VR_SOURCES vr32)
 endif ()
 
 if (HAVE_SIMD)
@@ -40,7 +38,7 @@ endif ()
 # Libsoxr:
 
 add_library (${PROJECT_NAME} ${LIB_TYPE} ${PROJECT_NAME}.c data-io dbesi0 filter fft4g64
-  ${SP_SOURCES} ${VR_SOURCES} ${DP_SOURCES} ${SIMD_SOURCES})
+  ${SP_SOURCES} vr32 ${DP_SOURCES} ${SIMD_SOURCES})
 set_target_properties (${PROJECT_NAME} PROPERTIES
   VERSION "${SO_VERSION}"
   SOVERSION ${SO_VERSION_MAJOR}
@@ -50,9 +48,9 @@ set_target_properties (${PROJECT_NAME} PROPERTIES
 if (BUILD_FRAMEWORK)
   set_target_properties (${PROJECT_NAME} PROPERTIES FRAMEWORK TRUE)
 elseif (NOT WIN32)
-  set (TARGET_PCS ${CMAKE_CURRENT_BINARY_DIR}/lib${PROJECT_NAME}.pc)
-  configure_file (${CMAKE_CURRENT_SOURCE_DIR}/lib${PROJECT_NAME}.pc.in ${TARGET_PCS})
-  install (FILES ${CMAKE_CURRENT_BINARY_DIR}/lib${PROJECT_NAME}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+  set (TARGET_PCS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc)
+  configure_file (${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc.in ${TARGET_PCS})
+  install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
 endif ()
 
 
@@ -61,7 +59,7 @@ endif ()
 
 if (WITH_LSR_BINDINGS)
   set (LSR ${PROJECT_NAME}-lsr)
-  set (LSR_SO_VERSION 0.1.8)
+  set (LSR_SO_VERSION 0.1.9)
   set (LSR_SO_VERSION_MAJOR 0)
   add_library (${LSR} ${LIB_TYPE} lsr)
   target_link_libraries (${LSR} ${PROJECT_NAME})
@@ -74,9 +72,9 @@ if (WITH_LSR_BINDINGS)
   if (BUILD_FRAMEWORK)
     set_target_properties (${LSR} PROPERTIES FRAMEWORK TRUE)
   elseif (NOT WIN32)
-    set (TARGET_PCS "${TARGET_PCS} ${CMAKE_CURRENT_BINARY_DIR}/lib${LSR}.pc")
-    configure_file (${CMAKE_CURRENT_SOURCE_DIR}/lib${LSR}.pc.in ${CMAKE_CURRENT_BINARY_DIR}/lib${LSR}.pc)
-    install (FILES ${CMAKE_CURRENT_BINARY_DIR}/lib${LSR}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+    set (TARGET_PCS "${TARGET_PCS} ${CMAKE_CURRENT_BINARY_DIR}/${LSR}.pc")
+    configure_file (${CMAKE_CURRENT_SOURCE_DIR}/${LSR}.pc.in ${CMAKE_CURRENT_BINARY_DIR}/${LSR}.pc)
+    install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${LSR}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
   endif ()
 endif ()
 

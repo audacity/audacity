@@ -1,4 +1,4 @@
-SoX Resampler Library       Copyright (c) 2007-12 robs@users.sourceforge.net
+SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
 
 The SoX Resampler library `libsoxr' performs one-dimensional sample-rate
 conversion -- it may be used, for example, to resample PCM-encoded audio.
@@ -40,10 +40,13 @@ based over-sampling.
 Note that for real-time resampling, libsoxr may have a higher latency
 than non-FFT based resamplers.  For example, when using the `High Quality'
 configuration to resample between 44100Hz and 48000Hz, the latency is
-around 1000 output samples, i.e. roughly 20ms.
+around 1000 output samples, i.e. roughly 20ms (though passband and FFT-
+size configuration parameters may be used to reduce this figure).
 
 For build and installation instructions, see the file `INSTALL'; for
 copyright and licensing information, see the file `LICENCE'.
+
+For support and new versions, see http://soxr.sourceforge.net
 ________
 ¹ For example, multi-channel resampling can utilise multiple CPU-cores.
 ² Bit-perfect within practical occupied-bandwidth limits.

@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 #include <limits.h>
@@ -62,28 +62,31 @@ void _soxr_deinterleave_f(float * * dest, /* Round/clipping not needed here */
 
 #if HAVE_FENV_H
   #include <fenv.h>
+  #define fe_test_invalid() fetestexcept(FE_INVALID)
+  #define fe_clear_invalid() feclearexcept(FE_INVALID)
 #elif defined _MSC_VER
-  #define FE_INVALID    1
-  #define FE_DIVBYZERO  4
-  #define FE_OVERFLOW   8
-  #define FE_UNDERFLOW  16
-  #define FE_INEXACT    32
-  #define FE_ALL_EXCEPT (FE_INEXACT|FE_DIVBYZERO|FE_UNDERFLOW|FE_OVERFLOW|FE_INVALID)
-  static __inline int fetestexcept(int excepts)
+  #define FE_INVALID 1
+  #if defined _WIN64
+    #include <float.h>
+    #define fe_test_invalid() (_statusfp() & _SW_INVALID)
+    #define fe_clear_invalid _clearfp /* FIXME clears all */
+  #else
+  static __inline int fe_test_invalid()
   {
     short status_word;
     __asm fnstsw status_word
-    return status_word & excepts & FE_ALL_EXCEPT;
+    return status_word & FE_INVALID;
   }
 
-  static __inline int feclearexcept(int excepts)
+  static __inline int fe_clear_invalid()
   {
     int16_t status[14];
     __asm fnstenv status
-    status[2] &= ~(excepts & FE_ALL_EXCEPT);
+    status[2] &= ~FE_INVALID;
     __asm fldenv status
     return 0;
   }
+  #endif
 #endif
 
 

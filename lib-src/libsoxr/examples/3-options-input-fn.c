@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 /* Example 3: extends example 2 with multiple channels, multiple datatypes,
@@ -9,7 +9,7 @@
  * (illustrated in example 2) this requires that the application implements
  * less logic, but one more function.
  *
- * The eight arguments (which are optional, from last to first) are:
+ * The 11 arguments (which are optional, from last to first) are:
  *   INPUT-RATE       As example 2
  *   OUTPUT-RATE      Ditto
  *   NUM-CHANNELS     Number of interleaved channels
@@ -17,6 +17,9 @@
  *   OUT-DATATYPE#    Ditto
  *   Q-RECIPE         Quality recipe (in hex) See soxr.h
  *   Q-FLAGS          Quality flags  (in hex) See soxr.h
+ *   PASSBAND-END     %
+ *   STOPBAND-BEGIN   %
+ *   PHASE-RESPONSE   [0,100]
  *   USE-THREADS      1 to use multi-threading (where available)
  */
 
@@ -47,9 +50,12 @@ int main(int n, char const * arg[])
   soxr_datatype_t const otype = n? --n, (soxr_datatype_t)atoi(*arg++) : 0;
   unsigned long const q_recipe= n? --n, strtoul(*arg++, 0, 16) : SOXR_HQ;
   unsigned long const q_flags = n? --n, strtoul(*arg++, 0, 16) : 0;
+  double   const passband_end = n? --n, atof(*arg++) : 0;
+  double const stopband_begin = n? --n, atof(*arg++) : 0;
+  double const phase_response = n? --n, atof(*arg++) : -1;
   int       const use_threads = n? --n, atoi(*arg++) : 1;
 
-  soxr_quality_spec_t const q_spec = soxr_quality_spec(q_recipe, q_flags);
+  soxr_quality_spec_t       q_spec = soxr_quality_spec(q_recipe, q_flags);
   soxr_io_spec_t      const io_spec = soxr_io_spec(itype, otype);
   soxr_runtime_spec_t const runtime_spec = soxr_runtime_spec(!use_threads);
 
@@ -58,7 +64,8 @@ int main(int n, char const * arg[])
   #define buf_total_len 15000  /* In samples per channel. */
   size_t const osize = soxr_datatype_size(otype) * chans;
   size_t const isize = soxr_datatype_size(itype) * chans;
-  size_t const olen = (size_t)(orate * buf_total_len / (irate + orate) + .5);
+  size_t const olen0= (size_t)(orate * buf_total_len / (irate + orate) + .5);
+  size_t const olen = min(max(olen0, 1), buf_total_len - 1);
   size_t const ilen = buf_total_len - olen;
   void * const obuf = malloc(osize * olen);
   void * const ibuf = malloc(isize * ilen);
@@ -66,9 +73,15 @@ int main(int n, char const * arg[])
   input_context_t icontext;
   size_t odone, clips = 0;
   soxr_error_t error;
+  soxr_t soxr;
+
+  /* Overrides (if given): */
+  if (passband_end   > 0) q_spec.passband_end   = passband_end / 100;
+  if (stopband_begin > 0) q_spec.stopband_begin = stopband_begin / 100;
+  if (phase_response >=0) q_spec.phase_response = phase_response;
 
   /* Create a stream resampler: */
-  soxr_t soxr = soxr_create(
+  soxr = soxr_create(
       irate, orate, chans,         /* Input rate, output rate, # of channels. */
       &error,                         /* To report any error during creation. */
       &io_spec, &q_spec, &runtime_spec);

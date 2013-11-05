@@ -1,4 +1,4 @@
-/* SoX Resampler Library      Copyright (c) 2007-12 robs@users.sourceforge.net
+/* SoX Resampler Library      Copyright (c) 2007-13 robs@users.sourceforge.net
  * Licence for this file: LGPL v2.1                  See LICENCE for details. */
 
 #include <math.h>
@@ -7,35 +7,24 @@
 #include <stdlib.h>
 
 #include "filter.h"
-#include "internal.h"
 
 #if defined SOXR_LIB
+#include "internal.h"
 
-extern struct {
-  void * (* forward_setup)(int);
-  void * (* backward_setup)(int);
-  void (* delete_setup)(void *);
-  void (* forward)(int, void *, sample_t *, sample_t *);
-  void (* oforward)(int, void *, sample_t *, sample_t *);
-  void (* backward)(int, void *, sample_t *, sample_t *);
-  void (* obackward)(int, void *, sample_t *, sample_t *);
-  void (* convolve)(int, void *, sample_t *, sample_t const *);
-  void (* convolve_portion)(int, sample_t *, sample_t const *);
-  int (* multiplier)(void);
-  void (* reorder_back)(int, void *, sample_t *, sample_t *);
-} RDFT_CB;
+typedef void (* fn_t)(void);
+extern fn_t RDFT_CB[11];
 
-#define rdft_forward_setup (*RDFT_CB.forward_setup)
-#define rdft_backward_setup (*RDFT_CB.backward_setup)
-#define rdft_delete_setup (*RDFT_CB.delete_setup)
-#define rdft_forward (*RDFT_CB.forward)
-#define rdft_oforward (*RDFT_CB.oforward)
-#define rdft_backward (*RDFT_CB.backward)
-#define rdft_obackward (*RDFT_CB.obackward)
-#define rdft_convolve (*RDFT_CB.convolve)
-#define rdft_convolve_portion (*RDFT_CB.convolve_portion)
-#define rdft_multiplier (*RDFT_CB.multiplier)
-#define rdft_reorder_back (*RDFT_CB.reorder_back)
+#define rdft_forward_setup    (*(void * (*)(int))RDFT_CB[0])
+#define rdft_backward_setup   (*(void * (*)(int))RDFT_CB[1])
+#define rdft_delete_setup     (*(void (*)(void *))RDFT_CB[2])
+#define rdft_forward          (*(void (*)(int, void *, sample_t *, sample_t *))RDFT_CB[3])
+#define rdft_oforward         (*(void (*)(int, void *, sample_t *, sample_t *))RDFT_CB[4])
+#define rdft_backward         (*(void (*)(int, void *, sample_t *, sample_t *))RDFT_CB[5])
+#define rdft_obackward        (*(void (*)(int, void *, sample_t *, sample_t *))RDFT_CB[6])
+#define rdft_convolve         (*(void (*)(int, void *, sample_t *, sample_t const *))RDFT_CB[7])
+#define rdft_convolve_portion (*(void (*)(int, sample_t *, sample_t const *))RDFT_CB[8])
+#define rdft_multiplier       (*(int (*)(void))RDFT_CB[9])
+#define rdft_reorder_back     (*(void (*)(int, void *, sample_t *, sample_t *))RDFT_CB[10])
 
 #endif
 
@@ -309,6 +298,7 @@ static void dft_stage_init(
 {
   dft_filter_t * f = &p->shared->dft_filter[instance];
   int num_taps = 0, dft_length = f->dft_length, i;
+  bool f_domain_m = abs(3-M) == 1 && Fs <= 1;
 
   if (!dft_length) {
     int k = phase == 50 && lsx_is_power_of_2(L) && Fn == L? L << 1 : 4;
@@ -336,7 +326,7 @@ static void dft_stage_init(
   if (!f->dft_length) {
     void * coef_setup = rdft_forward_setup(dft_length);
     int Lp = lsx_is_power_of_2(L)? L : 1;
-    int Mp = lsx_is_power_of_2(M)? M : 1;
+    int Mp = f_domain_m? M : 1;
     f->dft_forward_setup = rdft_forward_setup(dft_length / Lp);
     f->dft_backward_setup = rdft_backward_setup(dft_length / Mp);
     if (Mp == 1)
@@ -354,9 +344,9 @@ static void dft_stage_init(
   p->type = dft_stage;
   p->fn = dft_stage_fn;
   p->preload = f->post_peak / L;
-  p->at.integer    = f->post_peak % L;
+  p->at.integer = f->post_peak % L;
   p->L = L;
-  p->step.integer = abs(3-M) == 1 && Fs == 1 && 1? -M/2 : M;
+  p->step.integer = f_domain_m? -M/2 : M;
   p->dft_filter_num = instance;
   p->block_len = f->dft_length - (f->num_taps - 1);
   p->phase0 = p->at.integer / p->L;
@@ -379,7 +369,7 @@ typedef struct {
 #define have_post_stage (postM * postL != 1)
 
 #define TO_3dB(a)       ((1.6e-6*a-7.5e-4)*a+.646)
-#define LOW_Q_BW0_PC    (67 + 5 / 8.)
+#define LOW_Q_BW0       (1385 / 2048.) /* 0.67625 rounded to be a FP exact. */
 
 typedef enum {
   rolloff_none, rolloff_small /* <= 0.01 dB */, rolloff_medium /* <= 0.35 dB */
@@ -395,9 +385,9 @@ static char const * rate_init(
   double factor,             /* Input rate divided by output rate.            */
   double bits,               /* Required bit-accuracy (pass + stop)  16|20|28 */
   double phase,              /* Linear/minimum etc. filter phase.       50    */
-  double bw_pc,              /* Pass-band % (0dB pt.) to preserve.   91.3|98.4*/
-  double anti_aliasing_pc,   /* % bandwidth without aliasing            100   */
-  rolloff_t rolloff,    /* Pass-band roll-off                    small   */
+  double passband_end,       /* 0dB pt. bandwidth to preserve; nyquist=1 0.913*/
+  double stopband_begin,     /* Aliasing/imaging control; > passband_end  1   */
+  rolloff_t rolloff,         /* Pass-band roll-off                    small   */
   bool maintain_3dB_pt,      /*                                        true   */
   double multiplier,         /* Linear gain to apply during conversion.   1   */
 
@@ -410,24 +400,25 @@ static char const * rate_init(
   int log2_large_dft_size)
 {
   double att = (bits + 1) * linear_to_dB(2.), attArb = att;    /* pass + stop */
-  double tbw0 = 1 - bw_pc / 100, Fs_a = 2 - anti_aliasing_pc / 100;
+  double tbw0 = 1 - passband_end, Fs_a = stopband_begin;
   double arbM = factor, tbw_tighten = 1;
   int n = 0, i, preL = 1, preM = 1, shift = 0, arbL = 1, postL = 1, postM = 1;
   bool upsample = false, rational = false, iOpt = !noSmallIntOpt;
-  int mode = rolloff > rolloff_small? factor > 1 || bw_pc > LOW_Q_BW0_PC:
+  int mode = rolloff > rolloff_small? factor > 1 || passband_end > LOW_Q_BW0:
     (int)ceil(2 + (bits - 17) / 4);
   stage_t * s;
 
   assert(factor > 0);
   assert(!bits || (15 <= bits && bits <= 33));
   assert(0 <= phase && phase <= 100);
-  assert(53 <= bw_pc && bw_pc <= 100);
-  assert(85 <= anti_aliasing_pc && anti_aliasing_pc <= 100);
+  assert(.53 <= passband_end);
+  assert(stopband_begin <= 1.2);
+  assert(passband_end + .005 < stopband_begin);
 
   p->factor = factor;
   if (bits) while (!n++) {                               /* Determine stages: */
     int try, L, M, x, maxL = interpolator > 0? 1 : mode? 2048 :
-      (int)ceil(DBL max_coefs_size * 1000. / (U100_l * sizeof(sample_t)));
+      (int)ceil((double)max_coefs_size * 1000. / (U100_l * sizeof(sample_t)));
     double d, epsilon = 0, frac;
     upsample = arbM < 1;
     for (i = (int)(arbM * .5), shift = 0; i >>= 1; arbM *= .5, ++shift);
@@ -545,7 +536,7 @@ static char const * rate_init(
       arb_stage.shared->poly_fir_coefs = prepare_coefs(
           coefs, num_coefs, phases, order, multiplier);
       lsx_debug("fir_len=%i phases=%i coef_interp=%i size=%.3gk",
-          num_coefs, phases, order, DBL coefs_size / 1000.);
+          num_coefs, phases, order, (double)coefs_size / 1000.);
       free(coefs);
     }
     multiplier = 1;
@@ -698,10 +689,10 @@ static char const * rate_create(
   return rate_init(
       channel, shared,
       io_ratio,
-      q_spec->bits,
-      q_spec->phase,
-      q_spec->bw_pc,
-      q_spec->anti_aliasing_pc,
+      q_spec->precision,
+      q_spec->phase_response,
+      q_spec->passband_end,
+      q_spec->stopband_begin,
       "\1\2\0"[q_spec->flags & 3],
       !!(q_spec->flags & SOXR_MAINTAIN_3DB_PT),
       scale,
@@ -718,7 +709,6 @@ static char const * id(void)
   return RATE_ID;
 }
 
-typedef void (* fn_t)(void);
 fn_t RATE_CB[] = {
   (fn_t)rate_input,
   (fn_t)rate_process,
