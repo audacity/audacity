@@ -27,10 +27,10 @@ AC_HEADER_STDC
 # Check for debug
 #
 AC_ARG_ENABLE(static,
-            [AC_HELP_STRING([--enable-static],
+            [AC_HELP_STRING([--enable-static-wx],
                             [link wx statically (default=no)])],
-            static_preference="--static=$enableval",
-            static_preference="")
+            static_wx_preference="--static=$enableval",
+            static_wx_preference="")
 
 
 AC_ARG_ENABLE(unicode,
@@ -65,7 +65,7 @@ fi
 
 dnl Gather wx arguments
 
-CPPFLAGS="$CPPFLAGS `$WX_CONFIG $static_preference $unicode_preference $debug_preference $wx_preference --cxxflags`"
+CPPFLAGS="$CPPFLAGS `$WX_CONFIG $static_wx_preference $unicode_preference $debug_preference $wx_preference --cxxflags`"
 
 dnl OS-specific configuration
 

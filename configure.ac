@@ -153,10 +153,10 @@ fi
 #####################
 
 AC_ARG_ENABLE(static,
-            [AS_HELP_STRING([--enable-static],
+            [AS_HELP_STRING([--enable-static-wx],
                             [link wx statically [default=no]])],
-            static_preference="--static=$enableval",
-            static_preference="")
+            static_wx_preference="--static=$enableval",
+            static_wx_preference="")
 
 AC_ARG_ENABLE(unicode,
             [AS_HELP_STRING([--enable-unicode],
@@ -288,7 +288,7 @@ else
 fi
 
 dnl more things we always pass to wx-config
-wxconfigargs="$static_preference $unicode_preference  $wxconfigargs $wx_preference"
+wxconfigargs="$static_wx_preference $unicode_preference  $wxconfigargs $wx_preference"
 wx_version=`${WX_CONFIG} $wxconfigargs --version`
 
 AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 2.8.x])
