@@ -35,7 +35,7 @@ AC_ARG_ENABLE(static,
 
 AC_ARG_ENABLE(unicode,
             [AC_HELP_STRING([--enable-unicode],
-                            [enable unicode support (default=no)])],   
+                            [enable unicode support (default=no)])],
             unicode_preference="--unicode=$enableval",
             unicode_preference="")
 
@@ -76,7 +76,7 @@ case "${host_os}" in
       dnl Mac OS X configuration
       EXTRADEPS="mac/FileDialogPrivate.h"
       EXTRAOBJS="mac/FileDialogPrivate.o"
-   ;;      
+   ;;
 
    cygwin*)
       dnl Windows/CygWin configuration
