@@ -682,7 +682,7 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
-enable_static
+enable_static_wx
 enable_unicode
 enable_debug
 '
@@ -3325,9 +3325,9 @@ _ACEOF
 fi
 
 
-# Check whether --enable-static was given.
-if test "${enable_static+set}" = set; then :
-  enableval=$enable_static; static_wx_preference="--static=$enableval"
+# Check whether --enable-static-wx was given.
+if test "${enable_static_wx+set}" = set; then :
+  enableval=$enable_static_wx; static_wx_preference="--static=$enableval"
 else
   static_wx_preference=""
 fi
