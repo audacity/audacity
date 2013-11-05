@@ -510,6 +510,8 @@ for lib in $LIBRARIES ; do
    fi
 done
 
+dnl " This is included purely to close an otherwise endless string in vim
+
 AUDACITY_CONFIG_SUBDIRS_LIBFLAC
 AUDACITY_CONFIG_SUBDIRS_LIBID3TAG
 AUDACITY_CONFIG_SUBDIRS_LIBMAD
@@ -526,9 +528,6 @@ AUDACITY_CONFIG_SUBDIRS_LIBVORBIS
 AUDACITY_CONFIG_SUBDIRS_LV2
 AUDACITY_CONFIG_SUBDIRS_PORTAUDIO
 AUDACITY_CONFIG_SUBDIRS_PORTSMF
-
-dnl " This is included purely to close an otherwise endless string in vim
-
 
 dnl--------------------------------------------------------------------------
 dnl Optional features (which don't use libraries - just compile-time on/off)
