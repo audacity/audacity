@@ -224,7 +224,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay(wxEXPAND, 1);
       {
          if (!mView) {
-            mView = new KeyView(S.GetParent(), CommandsListID);
+            mView = new KeyView(this, CommandsListID);
             mView->SetName(_("Bindings"));
          }
          S.Prop(true);

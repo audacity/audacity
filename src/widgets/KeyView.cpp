@@ -313,7 +313,7 @@ KeyView::SetKey(int index, const wxString & key)
    GetTextExtent(node.key, &x, &y);
    if (x > mKeyWidth || y > mLineHeight)
    {
-      // New key is wider than column to recalc extents (will refresh view)
+      // New key is wider than column so recalc extents (will refresh view)
       RecalcExtents();
       return true;
    }
@@ -1789,11 +1789,6 @@ KeyView::GetValue(int line)
       }
    }
 
-   if (node->isparent)
-   {
-      value += wxString::Format(_(" Level %d"), node->depth).c_str();
-   }
-
    return value;
 }
 
@@ -1884,6 +1879,13 @@ KeyViewAx::IdToLine(int childId, int & line)
    // Convert to line
    line = childId - 1;
 
+   // Make sure id is valid
+   if (line < 0 || line >= (int) mView->GetLineCount())
+   {
+      // Indicate the control itself in this case
+      return false;
+   }
+
    return true;
 }
 
@@ -1893,10 +1895,42 @@ KeyViewAx::IdToLine(int childId, int & line)
 bool
 KeyViewAx::LineToId(int line, int & childId)
 {
+   // Make sure line is valid
+   if (line < 0 || line >= (int) mView->GetLineCount())
+   {
+      // Indicate the control itself in this case
+      childId = wxACC_SELF;
+      return false;
+   }
+
    // Convert to line
    childId = line + 1;
 
    return true;
+}
+
+// Can return either a child object, or an integer
+// representing the child element, starting from 1.
+wxAccStatus
+KeyViewAx::HitTest(const wxPoint & pt, int *childId, wxAccessible **childObject)
+{
+   // Just to be safe
+   *childObject = NULL;
+
+   wxPoint pos = mView->ScreenToClient(pt);
+
+   // See if it's on a line within the view
+   int line = mView->HitTest(pos);
+
+   // It was on a line
+   if (line != wxNOT_FOUND)
+   {
+      LineToId(line, *childId);
+      return wxACC_OK;
+   }
+
+   // Let the base class handle it
+   return wxACC_NOT_IMPLEMENTED;
 }
 
 // Retrieves the address of an IDispatch interface for the specified child.
@@ -1976,12 +2010,17 @@ KeyViewAx::GetLocation(wxRect & rect, int elementId)
 
    if (IdToLine(elementId, line))
    {
+      if (!mView->IsVisible(line))
+      {
+         return wxACC_FAIL;
+      }
+
       wxRect rectLine;
 
       rectLine.width = mView->GetClientSize().GetWidth();
 
       // iterate over all visible lines
-      for (int i = 0; i < line; i++)
+      for (int i = (int) mView->GetVisibleBegin(); i <= line; i++)
       {
          wxCoord hLine = mView->GetLineHeight(i);
 
@@ -2004,13 +2043,22 @@ KeyViewAx::GetLocation(wxRect & rect, int elementId)
    return wxACC_OK;
 }
 
+wxAccStatus
+KeyViewAx::Navigate(wxNavDir WXUNUSED(navDir),
+                    int WXUNUSED(fromId),
+                    int *WXUNUSED(toId),
+                    wxAccessible **WXUNUSED(toObject))
+{
+   return wxACC_NOT_IMPLEMENTED;
+}
+
 // Gets the name of the specified object.
 wxAccStatus
 KeyViewAx::GetName(int childId, wxString *name)
 {
    int line;
 
-   if (childId == wxACC_SELF)
+   if (!IdToLine(childId, line))
    {
       *name = mView->GetName();
    }
@@ -2066,35 +2114,48 @@ KeyViewAx::GetRole(int childId, wxAccRole *role)
 //   or 0 if this object is selected (GetType() == wxT("long"))
 // - a "void*" pointer to a wxAccessible child object
 wxAccStatus
-KeyViewAx::GetSelections(wxVariant * WXUNUSED(selections))
+KeyViewAx::GetSelections(wxVariant *selections)
 {
-   return wxACC_NOT_IMPLEMENTED;
+   int id;
+
+   LineToId(mView->GetSelection(), id);
+
+   *selections = (long) id;
+
+   return wxACC_OK;
 }
 
 // Returns a state constant.
 wxAccStatus
 KeyViewAx::GetState(int childId, long *state)
 {
-   int flag = wxACC_STATE_SYSTEM_FOCUSABLE |
-              wxACC_STATE_SYSTEM_SELECTABLE;
+   int flag = wxACC_STATE_SYSTEM_FOCUSABLE;
    int line;
 
    if (!IdToLine(childId, line))
    {
-      *state = 0;
-      return wxACC_FAIL;
+      *state = wxACC_STATE_SYSTEM_FOCUSABLE; // |
+               //mView->FindFocus() == mView ? wxACC_STATE_SYSTEM_FOCUSED : 0;
+      return wxACC_OK;
    }
 
 #if defined(__WXMSW__)
-   flag |= wxACC_STATE_SYSTEM_FOCUSED |
-           wxACC_STATE_SYSTEM_SELECTED;
+   int selected = mView->GetSelected();
 
-      if (mView->HasChildren(line))
-      {
-         flag = mView->IsExpanded(line) ? 
-            wxACC_STATE_SYSTEM_EXPANDED :
-            wxACC_STATE_SYSTEM_COLLAPSED;
-      }
+   flag |= wxACC_STATE_SYSTEM_SELECTABLE;
+
+   if (line == selected)
+   {
+      flag |= wxACC_STATE_SYSTEM_FOCUSED |
+              wxACC_STATE_SYSTEM_SELECTED;
+   }
+
+   if (mView->HasChildren(line))
+   {
+      flag |= mView->IsExpanded(line) ? 
+         wxACC_STATE_SYSTEM_EXPANDED :
+         wxACC_STATE_SYSTEM_COLLAPSED;
+   }
 #endif
 
 #if defined(__WXMAC__1)
@@ -2124,9 +2185,18 @@ KeyViewAx::GetState(int childId, long *state)
 wxAccStatus
 KeyViewAx::GetValue(int childId, wxString *strValue)
 {
-   strValue->Clear();
+   int line;
+
+   if (!IdToLine(childId, line))
+   {
+      strValue->Clear();
+      return wxACC_FAIL;
+   }
 
 #if defined(__WXMSW__)
+   KeyNode *node = mView->mLines[line];
+   strValue->Printf(wxT("%d"), node->depth - 1);
+
    return wxACC_OK;
 #endif
 
