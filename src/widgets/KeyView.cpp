@@ -1841,7 +1841,7 @@ KeyViewAx::SetCurrentLine(int line)
                mLastId);
    }
 
-   // Nothing is now selected
+   // Nothing is selected now
    mLastId = -1;
 
    // Just clearing selection
@@ -2140,7 +2140,7 @@ KeyViewAx::GetState(int childId, long *state)
    }
 
 #if defined(__WXMSW__)
-   int selected = mView->GetSelected();
+   int selected = mView->GetSelection();
 
    flag |= wxACC_STATE_SYSTEM_SELECTABLE;
 
@@ -2187,17 +2187,22 @@ KeyViewAx::GetValue(int childId, wxString *strValue)
 {
    int line;
 
+   strValue->Clear();
+
    if (!IdToLine(childId, line))
    {
-      strValue->Clear();
-      return wxACC_FAIL;
+      return wxACC_NOT_IMPLEMENTED;
    }
 
 #if defined(__WXMSW__)
-   KeyNode *node = mView->mLines[line];
-   strValue->Printf(wxT("%d"), node->depth - 1);
+   if (mView->GetViewType() == ViewByTree)
+   {
+      KeyNode *node = mView->mLines[line];
+      strValue->Printf(wxT("%d"), node->depth - 1);
+   }
 
-   return wxACC_OK;
+   // Don't set a value for the other view types
+   return wxACC_NOT_IMPLEMENTED;
 #endif
 
 #if defined(__WXMAC__)
