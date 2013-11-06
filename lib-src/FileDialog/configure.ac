@@ -2,21 +2,21 @@
 # FileDialog
 #
 
+AC_PREREQ([2.59])
 AC_INIT([FileDialog],[1.0],[audacity.sourceforge.net],[FileDialog])
-AC_CONFIG_FILES([Makefile config.h])
-AC_SUBST(EXTRADEPS)
-AC_SUBST(EXTRAOBJS)
-AC_SUBST(HAVE_GTK)
+AC_CONFIG_AUX_DIR([autotools])
+AC_CONFIG_MACRO_DIR([m4])
+
+AM_INIT_AUTOMAKE([1.11 dist-xz foreign no-dist-gzip subdir-objects -Wall])
+AM_MAINTAINER_MODE([disable])
 
 #
 # Checks for programs.
 #
 AC_PROG_CXX
-AC_PROG_RANLIB
-AC_PATH_PROG(AR, ar, no)
-if [[ $AR = "no" ]] ; then
-    AC_MSG_ERROR("Could not find ar - needed to create a library");
-fi
+AM_PROG_AR
+
+LT_INIT
 
 #
 # Checks for libraries.
@@ -30,7 +30,6 @@ AC_ARG_ENABLE(static-wx,
             [AS_HELP_STRING([--enable-static-wx],[link wx statically (default=no)])],
             static_wx_preference="--static=$enableval",
             static_wx_preference="")
-
 
 AC_ARG_ENABLE(unicode,
             [AS_HELP_STRING([--enable-unicode],[enable unicode support (default=no)])],
@@ -60,7 +59,13 @@ fi
 
 dnl Gather wx arguments
 
-CPPFLAGS="$CPPFLAGS `$WX_CONFIG $static_wx_preference $unicode_preference $debug_preference $wx_preference --cxxflags`"
+wxconfigargs="$static_wx_preference $unicode_preference $debug_preference $wx_preference"
+WX_CXXFLAGS=$($WX_CONFIG $wxconfigargs --cxxflags)
+WX_LIBS=""
+AC_SUBST([WX_CXXFLAGS])
+AC_SUBST([WX_LIBS])
+
+PKG_CHECK_MODULES(GTK, gtk+-2.0, have_gtk="yes", have_gtk="no")
 
 dnl OS-specific configuration
 
@@ -69,34 +74,27 @@ AC_CANONICAL_HOST
 case "${host_os}" in
    darwin*)
       dnl Mac OS X configuration
-      EXTRADEPS="mac/FileDialogPrivate.h"
-      EXTRAOBJS="mac/FileDialogPrivate.o"
+      mac="yes"
    ;;
 
    cygwin*)
       dnl Windows/CygWin configuration
-      EXTRADEPS="win/FileDialogPrivate.h"
-      EXTRAOBJS="win/FileDialogPrivate.o"
+      windows="yes"
    ;;
 
    *)
-      dnl Unix configuration
-      AM_PATH_GTK_2_0(2.4.0,
-            have_gtk="yes",
-            have_gtk="no")
-      if [[ "$have_gtk" = "yes" ]]
-      then
-         CPPFLAGS="$CPPFLAGS $GTK_CFLAGS"
-         EXTRADEPS="gtk/FileDialogPrivate.h gtk/private.h"
-         EXTRAOBJS="gtk/FileDialogPrivate.o"
-         HAVE_GTK=1
-      else
-         EXTRADEPS="generic/FileDialogPrivate.h"
-         EXTRAOBJS="generic/FileDialogPrivate.o"
-         HAVE_GTK=0
+      if test "$have_gtk" = "yes"; then
+         AC_DEFINE(HAVE_GTK, 1, [Define to 1 if GTK+ is available.])
       fi
    ;;
 esac
+
+AM_CONDITIONAL([MAC], test "$mac" = "yes")
+AM_CONDITIONAL([WINDOWS], test "$windows" = "yes")
+AM_CONDITIONAL([GTK], test "$have_gtk" = "yes")
+
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_FILES([Makefile])
 
 #
 # Write it all out

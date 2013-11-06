@@ -10,7 +10,7 @@ libportSMF.a: portsmf-recursive
 FileDialog-recursive:
 	$(MAKE) -C FileDialog
 FileDialog.a: FileDialog-recursive
-	ln -sf FileDialog/FileDialog.a FileDialog.a
+	ln -sf FileDialog/.libs/libFileDialog.a FileDialog.a
 
 # libwidgetextra
 widgetextra:
