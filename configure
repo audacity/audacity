@@ -5544,6 +5544,8 @@ LIBS="$LIBS `$WX_CONFIG $wxconfigargs --libs`"
 CXXFLAGS="$CXXFLAGS `$WX_CONFIG $wxconfigargs --cxxflags`"
 
 
+ac_configure_args="$ac_configure_args --enable-static=yes --enable-shared=no"
+
 
 
 subdirs="$subdirs lib-src/FileDialog"
@@ -7644,7 +7646,6 @@ fi
       LIBSOUNDTOUCH_LOCAL_LIBS="libSoundTouch.a"
       LIBSOUNDTOUCH_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/soundtouch/include'
       LIBSOUNDTOUCH_LOCAL_CPPSYMBOLS="USE_SOUNDTOUCH"
-      LIBSOUNDTOUCH_LOCAL_CONFIGURE_ARGS="--enable-static=yes --enable-shared=no"
       { $as_echo "$as_me:${as_lineno-$LINENO}: libsoundtouch libraries are available in the local tree" >&5
 $as_echo "$as_me: libsoundtouch libraries are available in the local tree" >&6;}
    else
