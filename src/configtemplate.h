@@ -144,9 +144,6 @@
 /* Define if SoundTouch support should be enabled */
 #undef USE_SOUNDTOUCH
 
-/* Use system Expat library */
-#undef USE_SYSTEM_EXPAT
-
 /* Define if Vamp analysis plugin support should be enabled */
 #undef USE_VAMP
 

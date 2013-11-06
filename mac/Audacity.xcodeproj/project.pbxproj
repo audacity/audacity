@@ -44,19 +44,6 @@
 
 /* Begin PBXBuildFile section */
 		17048268098C0F5F00824C66 /* mad.h in Headers */ = {isa = PBXBuildFile; fileRef = 17048267098C0F5F00824C66 /* mad.h */; };
-		17073F490988E061008541CC /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 17072F580988D6A9008541CC /* xmlparse.c */; };
-		17073F4A0988E061008541CC /* xmlparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F590988D6A9008541CC /* xmlparse.h */; };
-		17073F4B0988E061008541CC /* ascii.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F5B0988D6A9008541CC /* ascii.h */; };
-		17073F4C0988E061008541CC /* asciitab.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F5C0988D6A9008541CC /* asciitab.h */; };
-		17073F4D0988E061008541CC /* iasciitab.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F5E0988D6A9008541CC /* iasciitab.h */; };
-		17073F4E0988E061008541CC /* latin1tab.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F5F0988D6A9008541CC /* latin1tab.h */; };
-		17073F4F0988E061008541CC /* nametab.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F600988D6A9008541CC /* nametab.h */; };
-		17073F500988E061008541CC /* utf8tab.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F610988D6A9008541CC /* utf8tab.h */; };
-		17073F510988E061008541CC /* xmldef.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F620988D6A9008541CC /* xmldef.h */; };
-		17073F520988E061008541CC /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = 17072F630988D6A9008541CC /* xmlrole.c */; };
-		17073F530988E061008541CC /* xmlrole.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F640988D6A9008541CC /* xmlrole.h */; };
-		17073F540988E061008541CC /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = 17072F650988D6A9008541CC /* xmltok.c */; };
-		17073F550988E061008541CC /* xmltok.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F660988D6A9008541CC /* xmltok.h */; };
 		17073F630988E13B008541CC /* compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 17072F810988D6A9008541CC /* compat.c */; };
 		17073F640988E13B008541CC /* compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F830988D6A9008541CC /* compat.h */; };
 		17073F650988E13B008541CC /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F850988D6A9008541CC /* config.h */; };
@@ -2056,13 +2043,6 @@
 			remoteGlobalIDString = 17073F610988E121008541CC;
 			remoteInfo = libid3tag;
 		};
-		17C99D50098970800041B1BC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1790ABE309883346008A330A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 17073F470988E04A008541CC;
-			remoteInfo = expat;
-		};
 		17C99D52098970800041B1BC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1790ABE309883346008A330A /* Project object */;
@@ -2125,13 +2105,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = ED2706F30EF9C3C6007D4FFD;
 			remoteInfo = libsbsms;
-		};
-		ED663B5916543647007F53A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1790ABE309883346008A330A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 17073F470988E04A008541CC;
-			remoteInfo = expat;
 		};
 		ED663B5B16543647007F53A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2265,13 +2238,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = ED663B3B16543581007F53A5;
 			remoteInfo = libsamplerate;
-		};
-		ED85B43216A47353006DA21D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1790ABE309883346008A330A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 17073F470988E04A008541CC;
-			remoteInfo = expat;
 		};
 		ED85B43416A47353006DA21D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2515,19 +2481,6 @@
 
 /* Begin PBXFileReference section */
 		17048267098C0F5F00824C66 /* mad.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = mad.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F580988D6A9008541CC /* xmlparse.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = xmlparse.c; sourceTree = "<group>"; tabWidth = 3; };
-		17072F590988D6A9008541CC /* xmlparse.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = xmlparse.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F5B0988D6A9008541CC /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F5C0988D6A9008541CC /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F5E0988D6A9008541CC /* iasciitab.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = iasciitab.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F5F0988D6A9008541CC /* latin1tab.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = latin1tab.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F600988D6A9008541CC /* nametab.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = nametab.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F610988D6A9008541CC /* utf8tab.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = utf8tab.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F620988D6A9008541CC /* xmldef.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = xmldef.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F630988D6A9008541CC /* xmlrole.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = xmlrole.c; sourceTree = "<group>"; tabWidth = 3; };
-		17072F640988D6A9008541CC /* xmlrole.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = xmlrole.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072F650988D6A9008541CC /* xmltok.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = xmltok.c; sourceTree = "<group>"; tabWidth = 3; };
-		17072F660988D6A9008541CC /* xmltok.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = xmltok.h; sourceTree = "<group>"; tabWidth = 3; };
 		17072F810988D6A9008541CC /* compat.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = compat.c; sourceTree = "<group>"; tabWidth = 3; };
 		17072F830988D6A9008541CC /* compat.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = compat.h; sourceTree = "<group>"; tabWidth = 3; };
 		17072F850988D6A9008541CC /* config.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -2754,7 +2707,6 @@
 		170738410988D6B0008541CC /* TDStretch.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = TDStretch.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		170738420988D6B0008541CC /* TDStretch.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = TDStretch.h; sourceTree = "<group>"; tabWidth = 3; };
 		17073EE80988DBDD008541CC /* libportsmf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libportsmf.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		17073F480988E04A008541CC /* libexpat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libexpat.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		17073F620988E121008541CC /* libid3tag.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libid3tag.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		17073FC40988E561008541CC /* libmad.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmad.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		17073FFE0988EA60008541CC /* libogg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libogg.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4209,7 +4161,6 @@
 		17072F220988D4F4008541CC /* lib-src */ = {
 			isa = PBXGroup;
 			children = (
-				17072F4C0988D6A9008541CC /* expat */,
 				283B3D3E0BC21EBE00FA01D5 /* FileDialog */,
 				2880529A0DEA71B000671EA4 /* lib-widget-extra */,
 				176EE9E209A2EF1000188F3B /* libflac */,
@@ -4238,42 +4189,6 @@
 			name = "lib-src";
 			path = "../lib-src";
 			sourceTree = SOURCE_ROOT;
-		};
-		17072F4C0988D6A9008541CC /* expat */ = {
-			isa = PBXGroup;
-			children = (
-				17072F560988D6A9008541CC /* xmlparse */,
-				17072F5A0988D6A9008541CC /* xmltok */,
-			);
-			path = expat;
-			sourceTree = "<group>";
-		};
-		17072F560988D6A9008541CC /* xmlparse */ = {
-			isa = PBXGroup;
-			children = (
-				17072F580988D6A9008541CC /* xmlparse.c */,
-				17072F590988D6A9008541CC /* xmlparse.h */,
-			);
-			path = xmlparse;
-			sourceTree = "<group>";
-		};
-		17072F5A0988D6A9008541CC /* xmltok */ = {
-			isa = PBXGroup;
-			children = (
-				17072F5B0988D6A9008541CC /* ascii.h */,
-				17072F5C0988D6A9008541CC /* asciitab.h */,
-				17072F5E0988D6A9008541CC /* iasciitab.h */,
-				17072F5F0988D6A9008541CC /* latin1tab.h */,
-				17072F600988D6A9008541CC /* nametab.h */,
-				17072F610988D6A9008541CC /* utf8tab.h */,
-				17072F620988D6A9008541CC /* xmldef.h */,
-				17072F630988D6A9008541CC /* xmlrole.c */,
-				17072F640988D6A9008541CC /* xmlrole.h */,
-				17072F650988D6A9008541CC /* xmltok.c */,
-				17072F660988D6A9008541CC /* xmltok.h */,
-			);
-			path = xmltok;
-			sourceTree = "<group>";
 		};
 		17072F6A0988D6A9008541CC /* libid3tag */ = {
 			isa = PBXGroup;
@@ -4904,7 +4819,6 @@
 			children = (
 				1790AFB009883B6D008A330A /* Audacity.app */,
 				17073EE80988DBDD008541CC /* libportsmf.a */,
-				17073F480988E04A008541CC /* libexpat.a */,
 				176EEBEA09A2F16200188F3B /* libFLAC.a */,
 				176EEC1E09A2F2DD00188F3B /* libFLAC++.a */,
 				17073F620988E121008541CC /* libid3tag.a */,
@@ -6700,23 +6614,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		17073F440988E04A008541CC /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				17073F4A0988E061008541CC /* xmlparse.h in Headers */,
-				17073F4B0988E061008541CC /* ascii.h in Headers */,
-				17073F4C0988E061008541CC /* asciitab.h in Headers */,
-				17073F4D0988E061008541CC /* iasciitab.h in Headers */,
-				17073F4E0988E061008541CC /* latin1tab.h in Headers */,
-				17073F4F0988E061008541CC /* nametab.h in Headers */,
-				17073F500988E061008541CC /* utf8tab.h in Headers */,
-				17073F510988E061008541CC /* xmldef.h in Headers */,
-				17073F530988E061008541CC /* xmlrole.h in Headers */,
-				17073F550988E061008541CC /* xmltok.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		17073F5E0988E121008541CC /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -7321,22 +7218,6 @@
 			productReference = 17073EE80988DBDD008541CC /* libportsmf.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		17073F470988E04A008541CC /* expat */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 17073F570988E07F008541CC /* Build configuration list for PBXNativeTarget "expat" */;
-			buildPhases = (
-				17073F440988E04A008541CC /* Headers */,
-				17073F450988E04A008541CC /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = expat;
-			productName = expat;
-			productReference = 17073F480988E04A008541CC /* libexpat.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		17073F610988E121008541CC /* libid3tag */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 17073F890988E15A008541CC /* Build configuration list for PBXNativeTarget "libid3tag" */;
@@ -7536,7 +7417,6 @@
 			);
 			dependencies = (
 				17072E940988C35B008541CC /* PBXTargetDependency */,
-				17C99D51098970800041B1BC /* PBXTargetDependency */,
 				176EEC7109A2F54D00188F3B /* PBXTargetDependency */,
 				176EEC7309A2F55100188F3B /* PBXTargetDependency */,
 				2800FE280FF323C0005CA9E5 /* PBXTargetDependency */,
@@ -7747,7 +7627,6 @@
 			);
 			dependencies = (
 				ED663CEA165436C3007F53A5 /* PBXTargetDependency */,
-				ED663B5816543647007F53A5 /* PBXTargetDependency */,
 				ED663B5A16543647007F53A5 /* PBXTargetDependency */,
 				ED663B5C16543647007F53A5 /* PBXTargetDependency */,
 				ED663B5E16543647007F53A5 /* PBXTargetDependency */,
@@ -7794,7 +7673,6 @@
 			);
 			dependencies = (
 				ED85B5BC16A4736E006DA21D /* PBXTargetDependency */,
-				ED85B43116A47353006DA21D /* PBXTargetDependency */,
 				ED85B43316A47353006DA21D /* PBXTargetDependency */,
 				ED85B43516A47353006DA21D /* PBXTargetDependency */,
 				ED85B43716A47353006DA21D /* PBXTargetDependency */,
@@ -7862,7 +7740,6 @@
 				17072E880988BD39008541CC /* Configure */,
 				ED663CE11654366F007F53A5 /* Configure-libsamplerate */,
 				ED85B42716A47329006DA21D /* Configure-libresample */,
-				17073F470988E04A008541CC /* expat */,
 				176EEBE909A2F16200188F3B /* libFLAC */,
 				176EEC1D09A2F2DD00188F3B /* libFLAC++ */,
 				17073F610988E121008541CC /* libid3tag */,
@@ -8264,16 +8141,6 @@
 				28A96DBF0E28642000F3CE01 /* allegrowr.cpp in Sources */,
 				28A96DC00E28642100F3CE01 /* mfmidi.cpp in Sources */,
 				28A96DC20E28642300F3CE01 /* strparse.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		17073F450988E04A008541CC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				17073F490988E061008541CC /* xmlparse.c in Sources */,
-				17073F520988E061008541CC /* xmlrole.c in Sources */,
-				17073F540988E061008541CC /* xmltok.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9884,11 +9751,6 @@
 			target = 17073F610988E121008541CC /* libid3tag */;
 			targetProxy = 17C99D4E098970800041B1BC /* PBXContainerItemProxy */;
 		};
-		17C99D51098970800041B1BC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 17073F470988E04A008541CC /* expat */;
-			targetProxy = 17C99D50098970800041B1BC /* PBXContainerItemProxy */;
-		};
 		17C99D53098970800041B1BC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 17073EE70988DBDD008541CC /* portsmf */;
@@ -9933,11 +9795,6 @@
 			isa = PBXTargetDependency;
 			target = ED2706F30EF9C3C6007D4FFD /* libsbsms */;
 			targetProxy = ED2707470EF9C55A007D4FFD /* PBXContainerItemProxy */;
-		};
-		ED663B5816543647007F53A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 17073F470988E04A008541CC /* expat */;
-			targetProxy = ED663B5916543647007F53A5 /* PBXContainerItemProxy */;
 		};
 		ED663B5A16543647007F53A5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10033,11 +9890,6 @@
 			isa = PBXTargetDependency;
 			target = ED663B3B16543581007F53A5 /* libsamplerate */;
 			targetProxy = ED663CED1654370C007F53A5 /* PBXContainerItemProxy */;
-		};
-		ED85B43116A47353006DA21D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 17073F470988E04A008541CC /* expat */;
-			targetProxy = ED85B43216A47353006DA21D /* PBXContainerItemProxy */;
 		};
 		ED85B43316A47353006DA21D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10179,14 +10031,6 @@
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = portsmf;
-			};
-			name = "Debug Static";
-		};
-		17CAEBA9098C9B8E00337968 /* Debug Static */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
-			buildSettings = {
-				PRODUCT_NAME = expat;
 			};
 			name = "Debug Static";
 		};
@@ -10345,7 +10189,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Static";
 		};
@@ -10696,7 +10540,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Shared";
 		};
@@ -10713,14 +10557,6 @@
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = portsmf;
-			};
-			name = "Debug Shared";
-		};
-		288052CE0DEA74F100671EA4 /* Debug Shared */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
-			buildSettings = {
-				PRODUCT_NAME = expat;
 			};
 			name = "Debug Shared";
 		};
@@ -11021,7 +10857,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Shared";
 		};
@@ -11038,14 +10874,6 @@
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = portsmf;
-			};
-			name = "Release Shared";
-		};
-		288052E30DEA74FD00671EA4 /* Release Shared */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
-			buildSettings = {
-				PRODUCT_NAME = expat;
 			};
 			name = "Release Shared";
 		};
@@ -11326,14 +11154,6 @@
 			};
 			name = "Release Static";
 		};
-		28E5DA2B0AC4CBA200E7F64C /* Release Static */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
-			buildSettings = {
-				PRODUCT_NAME = expat;
-			};
-			name = "Release Static";
-		};
 		28E5DA2C0AC4CBA200E7F64C /* Release Static */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
@@ -11545,7 +11365,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Static";
 		};
@@ -11851,7 +11671,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Static";
 		};
@@ -11913,7 +11733,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Shared";
 		};
@@ -11979,7 +11799,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Static";
 		};
@@ -12043,7 +11863,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Shared";
 		};
@@ -12171,7 +11991,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Static";
 		};
@@ -12233,7 +12053,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Shared";
 		};
@@ -12299,7 +12119,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Static";
 		};
@@ -12363,7 +12183,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/expat $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/liblrdf/src $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/redland/librdf $(TOPLEVEL)/lib-src/slv2 $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Shared";
 		};
@@ -12536,17 +12356,6 @@
 				288052CD0DEA74F100671EA4 /* Debug Shared */,
 				28E5DA2A0AC4CBA200E7F64C /* Release Static */,
 				288052E20DEA74FD00671EA4 /* Release Shared */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = "Debug Static";
-		};
-		17073F570988E07F008541CC /* Build configuration list for PBXNativeTarget "expat" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				17CAEBA9098C9B8E00337968 /* Debug Static */,
-				288052CE0DEA74F100671EA4 /* Debug Shared */,
-				28E5DA2B0AC4CBA200E7F64C /* Release Static */,
-				288052E30DEA74FD00671EA4 /* Release Shared */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Debug Static";

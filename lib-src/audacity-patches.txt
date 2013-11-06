@@ -5,15 +5,6 @@ the end for how external libraries are brought in and maintained.
 
 Libraries
 =========
-expat
------
-XML parser library used to parse project files and so on. By default the
-system copy is prefered over this one, even on OS X (where it is shipped by
-default). Build against system 2.0.1 works fine.
-Version in Audacity SVN: 1.2
-Patches: None
-Upstream version: 2.0.1
-
 FileDialog
 ----------
 The customised file saving dialogs for wxwidgets to provide the options

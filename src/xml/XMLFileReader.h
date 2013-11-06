@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"         // to pull in USE_SYSTEM_EXPAT define
+#include "../Audacity.h"
 
 #include "expat.h"
 

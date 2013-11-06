@@ -35,8 +35,8 @@ the general functionality for creating XML in UTF8 encoding.
 #include "XMLTagHandler.h"
 
 //table for xml encoding compatibility with expat decoding
-//see ../../lib-src/expat/xmltok/xmltok_impl.h
-//and  ../../lib-src/expat/xmltok/ asciitab.h
+//see wxWidgets-2.8.12/src/expat/lib/xmltok_impl.h
+//and wxWidgets-2.8.12/src/expat/lib/asciitab.h
 static int charXMLCompatiblity[] = 
   {
 
@@ -293,8 +293,8 @@ wxString XMLWriter::XMLEsc(const wxString & s)
             if (!wxIsprint(c)) {
                //ignore several characters such ase eot (0x04) and stx (0x02) because it makes expat parser bail
                //see xmltok.c in expat checkCharRefNumber() to see how expat bails on these chars.
-               //also see lib-src/expat/xmltok/asciitab.h to see which characters are nonxml compatible post decode
-               //(we can still encode '&' and '<' with this table, but it prevents us from encoding eot)
+               //also see wxWidgets-2.8.12/src/expat/lib/asciitab.h to see which characters are nonxml compatible
+               //post decode (we can still encode '&' and '<' with this table, but it prevents us from encoding eot)
                //everything is compatible past ascii 0x20, so we don't check higher than this. 
                if(c> 0x1F || charXMLCompatiblity[c]!=0)
                   result += wxString::Format(wxT("&#x%04x;"), c);

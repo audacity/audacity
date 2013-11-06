@@ -4,8 +4,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audacity", "Projects\Audaci
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soundtouch", "Projects\soundtouch\soundtouch.vcxproj", "{EC3F5835-C486-4970-8A6B-A0700F4B3637}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "expat", "Projects\expat\expat.vcxproj", "{38C2C6B1-FBF8-4C5C-BB90-63F996083F56}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libflac", "Projects\libflac\libflac.vcxproj", "{6C7DC635-26FB-419A-B69A-7ECBBB068245}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libflac++", "Projects\libflac++\libflac++.vcxproj", "{B28C9F3F-FF0E-4FEC-844C-685390B8AC06}"
@@ -66,9 +64,6 @@ Global
 		{EC3F5835-C486-4970-8A6B-A0700F4B3637}.Debug|Win32.Build.0 = Debug|Win32
 		{EC3F5835-C486-4970-8A6B-A0700F4B3637}.Release|Win32.ActiveCfg = Release|Win32
 		{EC3F5835-C486-4970-8A6B-A0700F4B3637}.Release|Win32.Build.0 = Release|Win32
-		{38C2C6B1-FBF8-4C5C-BB90-63F996083F56}.Debug|Win32.ActiveCfg = Debug|Win32
-		{38C2C6B1-FBF8-4C5C-BB90-63F996083F56}.Release|Win32.ActiveCfg = Release|Win32
-		{38C2C6B1-FBF8-4C5C-BB90-63F996083F56}.Release|Win32.Build.0 = Release|Win32
 		{6C7DC635-26FB-419A-B69A-7ECBBB068245}.Debug|Win32.ActiveCfg = Debug|Win32
 		{6C7DC635-26FB-419A-B69A-7ECBBB068245}.Debug|Win32.Build.0 = Debug|Win32
 		{6C7DC635-26FB-419A-B69A-7ECBBB068245}.Release|Win32.ActiveCfg = Release|Win32

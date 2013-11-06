@@ -338,13 +338,12 @@ dnl-------------------------------------------------------------
 dnl Optional library support. Lots of things we could use, but
 dnl can do without if they aren't available.
 dnl-------------------------------------------------------------
-LIBRARIES="FFMPEG LAME LIBEXPAT LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF"
+LIBRARIES="FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF"
 
 AC_MSG_NOTICE([Determining what libraries are available in this tree and on the system])
 
 AUDACITY_CHECKLIB_FFMPEG
 AUDACITY_CHECKLIB_LAME
-AUDACITY_CHECKLIB_LIBEXPAT
 AUDACITY_CHECKLIB_LIBFLAC
 AUDACITY_CHECKLIB_LIBID3TAG
 AUDACITY_CHECKLIB_LIBMAD
@@ -414,20 +413,11 @@ done
 
 # In some cases the choices made above might be inappropriate.
 #   * we need to have libsndfile one way or another
-#   * we need to have libexpat one way or another
 #   * we need to have portaudio way or another
 #   * we can only use one of libsoxr, libsamplerate and libresample
 
 if test "$LIBSNDFILE_USE_LOCAL" != "yes" && test "$LIBSNDFILE_USE_SYSTEM" != "yes" ; then
    AC_MSG_ERROR([Audacity requires libsndfile to be enabled])
-fi
-
-if test "$LIBEXPAT_USE_LOCAL" != "yes" && test "$LIBEXPAT_USE_SYSTEM" != "yes" ; then
-   AC_MSG_ERROR([Audacity requires expat to be enabled])
-else
-   if test "$LIBEXPAT_USE_SYSTEM" = "yes" ; then
-      AC_DEFINE(USE_SYSTEM_EXPAT, 1, [Use system Expat library])
-   fi
 fi
 
 if test "$PORTAUDIO_USE_LOCAL" != "yes" && test "$PORTAUDIO_USE_SYSTEM" != "yes" ; then
@@ -716,9 +706,6 @@ AC_CONFIG_FILES([src/audacity.desktop])
 
 dnl There are various other files we might need to process, depends on what
 dnl has been enabled previously
-if [[ "x$LIBEXPAT_USE_LOCAL" = "xyes" ]]; then
-   AC_CONFIG_FILES([lib-src/expat/Makefile])
-fi
 if [[ -e tests/Makefile.in ]]; then
    AC_CONFIG_FILES([tests/Makefile])
 fi

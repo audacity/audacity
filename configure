@@ -755,7 +755,6 @@ enable_universal_binary
 enable_dynamic_loading
 with_ffmpeg
 with_lame
-with_expat
 with_libflac
 with_libid3tag
 with_libmad
@@ -1479,8 +1478,6 @@ Optional Packages:
                           order of preference (default="system local")
   --with-ffmpeg           use ffmpeg for import and export support
   --with-lame             use lame for import and export support
-  --with-expat            which expat to use for XML file support:
-                          [system,local]
   --with-libflac          use libFLAC for FLAC support
   --with-libid3tag        use libid3tag for mp3 id3 tag support
   --with-libmad           use libmad for mp2/3 decoding support
@@ -5873,7 +5870,7 @@ BUILD_LDFLAGS="$BUILD_LDFLAGS $WIDGETEXTRA_LIBS"
 CXXFLAGS="$CXXFLAGS $WIDGETEXTRA_CFLAGS"
 LIBSRC_BUILD="$LIBSRC_BUILD widgetextra"
 
-LIBRARIES="FFMPEG LAME LIBEXPAT LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF"
+LIBRARIES="FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
@@ -6271,123 +6268,6 @@ $as_echo "$as_me: LAME library is NOT available as system library." >&6;}
 
 
    LAME_LOCAL_AVAILABLE="yes"
-
-
-
-
-# Check whether --with-expat was given.
-if test "${with_expat+set}" = set; then :
-  withval=$with_expat; LIBEXPAT_ARGUMENT=$withval
-else
-  LIBEXPAT_ARGUMENT="unspecified"
-fi
-
-
-
-   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for XML_ParserCreate in -lexpat" >&5
-$as_echo_n "checking for XML_ParserCreate in -lexpat... " >&6; }
-if ${ac_cv_lib_expat_XML_ParserCreate+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lexpat  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char XML_ParserCreate ();
-int
-main ()
-{
-return XML_ParserCreate ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_expat_XML_ParserCreate=yes
-else
-  ac_cv_lib_expat_XML_ParserCreate=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_expat_XML_ParserCreate" >&5
-$as_echo "$ac_cv_lib_expat_XML_ParserCreate" >&6; }
-if test "x$ac_cv_lib_expat_XML_ParserCreate" = xyes; then :
-  libexpat_found="yes"
-else
-  libexpat_found="no"
-fi
-
-
-   expat_h_found="no"
-
-   ac_fn_cxx_check_header_mongrel "$LINENO" "expat.h" "ac_cv_header_expat_h" "$ac_includes_default"
-if test "x$ac_cv_header_expat_h" = xyes; then :
-  expat_h_found="yes"
-else
-  expat_h_found="no"
-fi
-
-
-
-   if test "x$libexpat_found" = "xyes" && test "x$expat_h_found" = "xyes" ; then
-      LIBEXPAT_SYSTEM_AVAILABLE="yes"
-      LIBEXPAT_SYSTEM_LIBS="-lexpat"
-      LIBEXPAT_SYSTEM_CPPSYMBOLS="USE_SYSTEM_EXPAT"
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are available as system libraries" >&5
-$as_echo "$as_me: Expat libraries are available as system libraries" >&6;}
-   else
-      LIBEXPAT_SYSTEM_AVAILABLE="no"
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are NOT available as system libraries" >&5
-$as_echo "$as_me: Expat libraries are NOT available as system libraries" >&6;}
-   fi
-
-
-   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/expat/xmlparse/xmlparse.h" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/expat/xmlparse/xmlparse.h" >&5
-$as_echo_n "checking for ${srcdir}/lib-src/expat/xmlparse/xmlparse.h... " >&6; }
-if eval \${$as_ac_File+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "${srcdir}/lib-src/expat/xmlparse/xmlparse.h"; then
-  eval "$as_ac_File=yes"
-else
-  eval "$as_ac_File=no"
-fi
-fi
-eval ac_res=\$$as_ac_File
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
-  xmlparse_h_found="yes"
-else
-  xmlparse_h_found="no"
-fi
-
-
-   if test "x$xmlparse_h_found" = "xyes" ; then
-      LIBEXPAT_LOCAL_AVAILABLE="yes"
-      LIBEXPAT_LOCAL_LIBS="expat.a"
-      LIBEXPAT_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/expat'
-      LIBEXPAT_LOCAL_CPPSYMBOLS="USE_LOCAL_EXPAT"
-
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are available in the local tree" >&5
-$as_echo "$as_me: Expat libraries are available in the local tree" >&6;}
-   else
-      LIBEXPAT_LOCAL_AVAILABLE="no"
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are NOT available in the local tree" >&5
-$as_echo "$as_me: Expat libraries are NOT available in the local tree" >&6;}
-   fi
 
 
 
@@ -8712,22 +8592,11 @@ done
 
 # In some cases the choices made above might be inappropriate.
 #   * we need to have libsndfile one way or another
-#   * we need to have libexpat one way or another
 #   * we need to have portaudio way or another
 #   * we can only use one of libsoxr, libsamplerate and libresample
 
 if test "$LIBSNDFILE_USE_LOCAL" != "yes" && test "$LIBSNDFILE_USE_SYSTEM" != "yes" ; then
    as_fn_error $? "Audacity requires libsndfile to be enabled" "$LINENO" 5
-fi
-
-if test "$LIBEXPAT_USE_LOCAL" != "yes" && test "$LIBEXPAT_USE_SYSTEM" != "yes" ; then
-   as_fn_error $? "Audacity requires expat to be enabled" "$LINENO" 5
-else
-   if test "$LIBEXPAT_USE_SYSTEM" = "yes" ; then
-
-$as_echo "#define USE_SYSTEM_EXPAT 1" >>confdefs.h
-
-   fi
 fi
 
 if test "$PORTAUDIO_USE_LOCAL" != "yes" && test "$PORTAUDIO_USE_SYSTEM" != "yes" ; then
@@ -9552,10 +9421,6 @@ ac_config_files="$ac_config_files Makefile src/Makefile lib-src/Makefile locale/
 ac_config_files="$ac_config_files src/audacity.desktop"
 
 
-if [ "x$LIBEXPAT_USE_LOCAL" = "xyes" ]; then
-   ac_config_files="$ac_config_files lib-src/expat/Makefile"
-
-fi
 if [ -e tests/Makefile.in ]; then
    ac_config_files="$ac_config_files tests/Makefile"
 
@@ -10258,7 +10123,6 @@ do
     "lib-src/Makefile") CONFIG_FILES="$CONFIG_FILES lib-src/Makefile" ;;
     "locale/Makefile") CONFIG_FILES="$CONFIG_FILES locale/Makefile" ;;
     "src/audacity.desktop") CONFIG_FILES="$CONFIG_FILES src/audacity.desktop" ;;
-    "lib-src/expat/Makefile") CONFIG_FILES="$CONFIG_FILES lib-src/expat/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
