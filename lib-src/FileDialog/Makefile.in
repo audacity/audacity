@@ -398,6 +398,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
+EXTRA_DIST = FileDialog.vcproj
 lib_LTLIBRARIES = libFileDialog.la
 libFileDialog_la_CPPFLAGS = $(WX_CXXFLAGS) $(am__append_3)
 libFileDialog_la_LIBADD = $(WX_LIBS) $(am__append_4)

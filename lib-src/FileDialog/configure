@@ -15411,7 +15411,7 @@ fi
 
 wxconfigargs="$static_wx_preference $unicode_preference $debug_preference $wx_preference"
 WX_CXXFLAGS=$($WX_CONFIG $wxconfigargs --cxxflags)
-#WX_LIBS=$($WX_CONFIG $wxconfigargs --libs)
+WX_LIBS=""
 
 
 
