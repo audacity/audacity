@@ -1,5 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4
 
+EXTRA_DIST = FileDialog.vcproj
+
 lib_LTLIBRARIES = libFileDialog.la
 
 libFileDialog_la_CPPFLAGS = $(WX_CXXFLAGS)
