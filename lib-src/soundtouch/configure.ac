@@ -24,6 +24,7 @@ AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([config/m4])
 AM_CONFIG_HEADER([include/soundtouch_config.h])
 AM_INIT_AUTOMAKE
+AM_MAINTAINER_MODE([disable])
 #AC_DISABLE_SHARED	dnl This makes libtool only build static libs 
 AC_DISABLE_STATIC	dnl This makes libtool only build shared libs
 #AC_GNU_SOURCE 		dnl enable posix extensions in glibc

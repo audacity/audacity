@@ -235,6 +235,7 @@ http://www.surina.net/soundtouch/
 Independant Pitch and Tempo changing library.
 Version in Audacity SVN: 1.7.1
 Patches: autotools.patch: Fix all autotools warnings.
+AM_MAINTAINER_MODE([disable]) has been added to configure.ac to disable autotools rebuilds.
 Upstream Version: 1.7.1
 
 taglib
