@@ -359,6 +359,16 @@ pkgconfig_DATA = sbsms.pc
 
 #tell aclocal that extra macros can be found in m4/
 ACLOCAL_AMFLAGS = -I m4
+EXTRA_DIST = \
+	build/macosx.sh \
+	win/config.h \
+	win/sbsms/sbsms.ICO \
+	win/sbsms/sbsms.rc \
+	win/sbsms/sbsms.sln \
+	win/sbsms/sbsms.vcproj \
+	win/sbsms/sbsms.wxs \
+	$(NULL)
+
 all: all-recursive
 
 .SUFFIXES:
@@ -845,9 +855,6 @@ uninstall-am: uninstall-pkgconfigDATA
 	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
 	uninstall-am uninstall-pkgconfigDATA
 
-
-libtool: $(LIBTOOL_DEPS)
-	$(SHELL) ./config.status --recheck
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

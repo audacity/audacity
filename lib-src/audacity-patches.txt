@@ -228,6 +228,8 @@ same ends by better means, replacing a hacked version from Gentoo. Patch
 linked to from upstream tracker at
 https://sourceforge.net/tracker/index.php?func=detail&aid=2561247&group_id=177794&atid=882654
 because attachements there don't seem to work.
+autotools.patch: Fix all autotools warnings.
+autotools-fix-make-dist.patch: Correct file lists to make dist target work.
 
 soundtouch
 ----------
