@@ -25,6 +25,7 @@ Patches: mac-asm-fixes.patch. Fixes build on OS X Intel 10.4 by creating and
         flac-lite.diff. Remove all the things not included in Audacity SVN from
             the build system so it will build with 50% less stuff
         libflac++-static.patch.  Adds static build of libFLAC++.
+AM_MAINTAINER_MODE([disable]) has been added to configure.ac to disable autotools rebuilds
 Upstream version: 1.3.0
 
 libid3tag

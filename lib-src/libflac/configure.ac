@@ -24,6 +24,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/flac/main.c])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign 1.11 -Wall tar-pax no-dist-gzip dist-xz subdir-objects])
+AM_MAINTAINER_MODE([disable])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 user_cflags=$CFLAGS
