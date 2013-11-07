@@ -637,6 +637,8 @@ build_os
 build_vendor
 build_cpu
 build
+WIDGETEXTRA_LIBS
+WIDGETEXTRA_CFLAGS
 PORTSMF_LIBS
 PORTSMF_CFLAGS
 PORTAUDIO_LIBS
@@ -665,8 +667,6 @@ AVFORMAT_LIBS
 AVFORMAT_CFLAGS
 AVCODEC_LIBS
 AVCODEC_CFLAGS
-WIDGETEXTRA_LIBS
-WIDGETEXTRA_CFLAGS
 PKG_CONFIG
 subdirs
 WX_CONFIG
@@ -771,6 +771,7 @@ with_libvorbis
 with_lv2
 with_portaudio
 with_midi
+with_widgetextra
 enable_audiounits
 enable_ladspa
 enable_quicktime
@@ -789,8 +790,6 @@ CXXFLAGS
 CCC
 CXXCPP
 PKG_CONFIG
-WIDGETEXTRA_CFLAGS
-WIDGETEXTRA_LIBS
 AVCODEC_CFLAGS
 AVCODEC_LIBS
 AVFORMAT_CFLAGS
@@ -819,6 +818,8 @@ PORTAUDIO_CFLAGS
 PORTAUDIO_LIBS
 PORTSMF_CFLAGS
 PORTSMF_LIBS
+WIDGETEXTRA_CFLAGS
+WIDGETEXTRA_LIBS
 GTK_CFLAGS
 GTK_LIBS
 JACK_CFLAGS
@@ -840,6 +841,7 @@ lib-src/libogg lib-src/libvorbis
 lib-src/lv2
 lib-src/portaudio-v19
 lib-src/portsmf
+lib-src/lib-widget-extra
 lib-src/portmixer'
 
 # Initialize some variables set by options.
@@ -1494,6 +1496,8 @@ Optional Packages:
   --with-lv2              use for adding LV2 plug-in support
   --with-portaudio        use portaudio19
   --with-midi             use portSMF for Midi support
+  --with-widgetextra      which libwidgetextra to use (required):
+                          [system,local]
   --with-portmixer        compile with PortMixer [default=yes]
 
 Some influential environment variables:
@@ -1508,10 +1512,6 @@ Some influential environment variables:
   CXXFLAGS    C++ compiler flags
   CXXCPP      C++ preprocessor
   PKG_CONFIG  path to pkg-config utility
-  WIDGETEXTRA_CFLAGS
-              C compiler flags for WIDGETEXTRA, overriding pkg-config
-  WIDGETEXTRA_LIBS
-              linker flags for WIDGETEXTRA, overriding pkg-config
   AVCODEC_CFLAGS
               C compiler flags for AVCODEC, overriding pkg-config
   AVCODEC_LIBS
@@ -1559,6 +1559,10 @@ Some influential environment variables:
               C compiler flags for PORTSMF, overriding pkg-config
   PORTSMF_LIBS
               linker flags for PORTSMF, overriding pkg-config
+  WIDGETEXTRA_CFLAGS
+              C compiler flags for WIDGETEXTRA, overriding pkg-config
+  WIDGETEXTRA_LIBS
+              linker flags for WIDGETEXTRA, overriding pkg-config
   GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
   GTK_LIBS    linker flags for GTK, overriding pkg-config
   JACK_CFLAGS C compiler flags for JACK, overriding pkg-config
@@ -5550,6 +5554,11 @@ subdirs="$subdirs lib-src/FileDialog"
 LOCAL_LIBS="$LOCAL_LIBS FileDialog.a"
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 
+LIBRARIES="FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
+$as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
+
 
 
 if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
@@ -5666,215 +5675,6 @@ $as_echo "no" >&6; }
 	fi
 
 fi
-
-
-  # Remove --cache-file and --srcdir arguments so they do not pile up.
-  ax_sub_configure_args=
-  ax_prev=
-  eval "set x $ac_configure_args"
-  shift
-  for ax_arg
-  do
-    if test -n "$ax_prev"; then
-      ax_prev=
-      continue
-    fi
-    case $ax_arg in
-    -cache-file | --cache-file | --cache-fil | --cache-fi \
-    | --cache-f | --cache- | --cache | --cach | --cac | --ca | --c)
-      ax_prev=cache_file ;;
-    -cache-file=* | --cache-file=* | --cache-fil=* | --cache-fi=* \
-    | --cache-f=* | --cache-=* | --cache=* | --cach=* | --cac=* | --ca=* \
-    | --c=*)
-      ;;
-    --config-cache | -C)
-      ;;
-    -srcdir | --srcdir | --srcdi | --srcd | --src | --sr)
-      ax_prev=srcdir ;;
-    -srcdir=* | --srcdir=* | --srcdi=* | --srcd=* | --src=* | --sr=*)
-      ;;
-    -prefix | --prefix | --prefi | --pref | --pre | --pr | --p)
-      ax_prev=prefix ;;
-    -prefix=* | --prefix=* | --prefi=* | --pref=* | --pre=* | --pr=* | --p=*)
-      ;;
-    *)
-      case $ax_arg in
-      *\'*) ax_arg=`echo "$ax_arg" | sed "s/'/'\\\\\\\\''/g"` ;;
-      esac
-      ax_sub_configure_args="$ax_sub_configure_args '$ax_arg'" ;;
-    esac
-  done
-
-  # Always prepend --prefix to ensure using the same prefix
-  # in subdir configurations.
-  ax_arg="--prefix=$prefix"
-  case $ax_arg in
-  *\'*) ax_arg=`echo "$ax_arg" | sed "s/'/'\\\\\\\\''/g"` ;;
-  esac
-  ax_sub_configure_args="'$ax_arg' $ax_sub_configure_args"
-
-  # Pass --silent
-  if test "$silent" = yes; then
-    ax_sub_configure_args="--silent $ax_sub_configure_args"
-  fi
-
-  ax_popdir=`pwd`
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Configuring sources in \"${srcdir}/lib-src/lib-widget-extra\"" >&5
-$as_echo "$as_me: Configuring sources in \"${srcdir}/lib-src/lib-widget-extra\"" >&6;}
-      as_dir=""${srcdir}/lib-src/lib-widget-extra""; as_fn_mkdir_p
-      ac_builddir=.
-
-case ""${srcdir}/lib-src/lib-widget-extra"" in
-.) ac_dir_suffix= ac_top_builddir_sub=. ac_top_build_prefix= ;;
-*)
-  ac_dir_suffix=/`$as_echo ""${srcdir}/lib-src/lib-widget-extra"" | sed 's|^\.[\\/]||'`
-  # A ".." for each directory in $ac_dir_suffix.
-  ac_top_builddir_sub=`$as_echo "$ac_dir_suffix" | sed 's|/[^\\/]*|/..|g;s|/||'`
-  case $ac_top_builddir_sub in
-  "") ac_top_builddir_sub=. ac_top_build_prefix= ;;
-  *)  ac_top_build_prefix=$ac_top_builddir_sub/ ;;
-  esac ;;
-esac
-ac_abs_top_builddir=$ac_pwd
-ac_abs_builddir=$ac_pwd$ac_dir_suffix
-# for backward compatibility:
-ac_top_builddir=$ac_top_build_prefix
-
-case $srcdir in
-  .)  # We are building in place.
-    ac_srcdir=.
-    ac_top_srcdir=$ac_top_builddir_sub
-    ac_abs_top_srcdir=$ac_pwd ;;
-  [\\/]* | ?:[\\/]* )  # Absolute name.
-    ac_srcdir=$srcdir$ac_dir_suffix;
-    ac_top_srcdir=$srcdir
-    ac_abs_top_srcdir=$srcdir ;;
-  *) # Relative name.
-    ac_srcdir=$ac_top_build_prefix$srcdir$ac_dir_suffix
-    ac_top_srcdir=$ac_top_build_prefix$srcdir
-    ac_abs_top_srcdir=$ac_pwd/$srcdir ;;
-esac
-ac_abs_srcdir=$ac_abs_top_srcdir$ac_dir_suffix
-
-  cd ""${srcdir}/lib-src/lib-widget-extra""
-
-  # Check for guested configure; otherwise get Cygnus style configure.
-  if test -f "configure.gnu"; then
-    ax_sub_configure=$ac_srcdir/configure.gnu
-  elif test -f "$ac_srcdir/configure"; then
-    ax_sub_configure=$ac_srcdir/configure
-  elif test -f "$ac_srcdir/configure.in"; then
-    # This should be Cygnus configure.
-	ax_sub_configure=$ac_aux_dir/configure
-  else
-    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: no configuration information is in \"${srcdir}/lib-src/lib-widget-extra\"" >&5
-$as_echo "$as_me: WARNING: no configuration information is in \"${srcdir}/lib-src/lib-widget-extra\"" >&2;}
-    ax_sub_configure=
-  fi
-
-  # The recursion is here.
-  if test -n "$ax_sub_configure"; then
-    # Make the cache file name correct relative to the subdirectory.
-    case $cache_file in
-    [\\/]* | ?:[\\/]* ) ax_sub_cache_file=$cache_file ;;
-    *) # Relative name.
-	ax_sub_cache_file=$ac_top_build_prefix$cache_file ;;
-    esac
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: running $SHELL $ax_sub_configure $ax_sub_configure_args --cache-file=$ax_sub_cache_file --srcdir=$ac_srcdir" >&5
-$as_echo "$as_me: running $SHELL $ax_sub_configure $ax_sub_configure_args --cache-file=$ax_sub_cache_file --srcdir=$ac_srcdir" >&6;}
-    # The eval makes quoting arguments work.
-    eval "\$SHELL \"\$ax_sub_configure\" $ax_sub_configure_args \
-	   --cache-file=\"\$ax_sub_cache_file\" --srcdir=\"\$ax_srcdir\""
-  fi
-
-  cd "$ax_popdir"
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Done configuring in \"${srcdir}/lib-src/lib-widget-extra\"" >&5
-$as_echo "$as_me: Done configuring in \"${srcdir}/lib-src/lib-widget-extra\"" >&6;}
-
-         PKG_CONFIG_PATH="${srcdir}/lib-src/lib-widget-extra/:$PKG_CONFIG_PATH"
-   export PKG_CONFIG_PATH
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for WIDGETEXTRA" >&5
-$as_echo_n "checking for WIDGETEXTRA... " >&6; }
-
-if test -n "$WIDGETEXTRA_CFLAGS"; then
-    pkg_cv_WIDGETEXTRA_CFLAGS="$WIDGETEXTRA_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libwidgetextra\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libwidgetextra") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_WIDGETEXTRA_CFLAGS=`$PKG_CONFIG --cflags "libwidgetextra" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$WIDGETEXTRA_LIBS"; then
-    pkg_cv_WIDGETEXTRA_LIBS="$WIDGETEXTRA_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libwidgetextra\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "libwidgetextra") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_WIDGETEXTRA_LIBS=`$PKG_CONFIG --libs "libwidgetextra" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        WIDGETEXTRA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libwidgetextra" 2>&1`
-        else
-	        WIDGETEXTRA_PKG_ERRORS=`$PKG_CONFIG --print-errors "libwidgetextra" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$WIDGETEXTRA_PKG_ERRORS" >&5
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-                widgetextra_available="no"
-elif test $pkg_failed = untried; then
-	widgetextra_available="no"
-else
-	WIDGETEXTRA_CFLAGS=$pkg_cv_WIDGETEXTRA_CFLAGS
-	WIDGETEXTRA_LIBS=$pkg_cv_WIDGETEXTRA_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-	widgetextra_available="yes"
-fi
-
-   if test "x$widgetextra_available" != "xyes" ; then
-      as_fn_error $? "lib-widget-extra is required to build audacity. A copy is included in the audacity source distribution at lib-src/lib-widget-extra/." "$LINENO" 5
-   fi
-
-BUILD_LDFLAGS="$BUILD_LDFLAGS $WIDGETEXTRA_LIBS"
-CXXFLAGS="$CXXFLAGS $WIDGETEXTRA_CFLAGS"
-LIBSRC_BUILD="$LIBSRC_BUILD widgetextra"
-
-LIBRARIES="FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF"
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
-$as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
-
 
 
 # Check whether --with-ffmpeg was given.
@@ -8538,6 +8338,130 @@ fi
 
 
 
+# Check whether --with-widgetextra was given.
+if test "${with_widgetextra+set}" = set; then :
+  withval=$with_widgetextra; WIDGETEXTRA_ARGUMENT=$withval
+else
+  WIDGETEXTRA_ARGUMENT="unspecified"
+fi
+
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for WIDGETEXTRA" >&5
+$as_echo_n "checking for WIDGETEXTRA... " >&6; }
+
+if test -n "$WIDGETEXTRA_CFLAGS"; then
+    pkg_cv_WIDGETEXTRA_CFLAGS="$WIDGETEXTRA_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libwidgetextra\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libwidgetextra") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_WIDGETEXTRA_CFLAGS=`$PKG_CONFIG --cflags "libwidgetextra" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$WIDGETEXTRA_LIBS"; then
+    pkg_cv_WIDGETEXTRA_LIBS="$WIDGETEXTRA_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libwidgetextra\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libwidgetextra") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_WIDGETEXTRA_LIBS=`$PKG_CONFIG --libs "libwidgetextra" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        WIDGETEXTRA_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libwidgetextra" 2>&1`
+        else
+	        WIDGETEXTRA_PKG_ERRORS=`$PKG_CONFIG --print-errors "libwidgetextra" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$WIDGETEXTRA_PKG_ERRORS" >&5
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                WIDGETEXTRA_SYSTEM_AVAILABLE="no"
+elif test $pkg_failed = untried; then
+	WIDGETEXTRA_SYSTEM_AVAILABLE="no"
+else
+	WIDGETEXTRA_CFLAGS=$pkg_cv_WIDGETEXTRA_CFLAGS
+	WIDGETEXTRA_LIBS=$pkg_cv_WIDGETEXTRA_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	WIDGETEXTRA_SYSTEM_AVAILABLE="yes"
+fi
+
+   if test "$WIDGETEXTRA_SYSTEM_AVAILABLE" = "yes"; then
+      WIDGETEXTRA_SYSTEM_LIBS=$WIDGETEXTRA_LIBS
+      WIDGETEXTRA_SYSTEM_CXXFLAGS=$WIDGETEXTRA_CFLAGS
+      { $as_echo "$as_me:${as_lineno-$LINENO}: libwidgetextra library is available as system library." >&5
+$as_echo "$as_me: libwidgetextra library is available as system library." >&6;}
+   else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: libwidgetextra library is NOT available as system library." >&5
+$as_echo "$as_me: libwidgetextra library is NOT available as system library." >&6;}
+   fi
+
+
+   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h" >&5
+$as_echo_n "checking for ${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "${srcdir}/lib-src/lib-widget-extra/NonGuiThread.h"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  WIDGETEXTRA_LOCAL_AVAILABLE="yes"
+else
+  WIDGETEXTRA_LOCAL_AVAILABLE="no"
+fi
+
+
+   if test "$WIDGETEXTRA_LOCAL_AVAILABLE" = "yes"; then
+      WIDGETEXTRA_LOCAL_LIBS="libwidgetextra.a"
+      WIDGETEXTRA_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/lib-widget-extra'
+      { $as_echo "$as_me:${as_lineno-$LINENO}: libwidgetextra library is available in the local tree" >&5
+$as_echo "$as_me: libwidgetextra library is available in the local tree" >&6;}
+   else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: libwidgetextra library is NOT available in the local tree" >&5
+$as_echo "$as_me: libwidgetextra library is NOT available in the local tree" >&6;}
+   fi
+
+
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: Figuring out what libraries to enable" >&5
 $as_echo "$as_me: Figuring out what libraries to enable" >&6;}
 
@@ -8591,9 +8515,14 @@ $as_echo "$as_me: disabling $lib at your request" >&6;}
 done
 
 # In some cases the choices made above might be inappropriate.
+#   * we need to have libwidgetextra one way or another
 #   * we need to have libsndfile one way or another
 #   * we need to have portaudio way or another
 #   * we can only use one of libsoxr, libsamplerate and libresample
+
+if test "$WIDGETEXTRA_USE_LOCAL" != "yes" -a "$WIDGETEXTRA_USE_SYSTEM" != "yes"; then
+   as_fn_error $? "Audacity requires libwidgetextra to be enabled." "$LINENO" 5
+fi
 
 if test "$LIBSNDFILE_USE_LOCAL" != "yes" && test "$LIBSNDFILE_USE_SYSTEM" != "yes" ; then
    as_fn_error $? "Audacity requires libsndfile to be enabled" "$LINENO" 5
@@ -8766,6 +8695,12 @@ done
 
    if test "$PORTSMF_USE_LOCAL" = yes; then
       subdirs="$subdirs lib-src/portsmf"
+
+   fi
+
+
+   if test "$WIDGETEXTRA_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/lib-widget-extra"
 
    fi
 
