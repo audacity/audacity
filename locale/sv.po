@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.5\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-11 04:56+0100\n"
-"PO-Revision-Date: 2013-10-15 09:18-0000\n"
-"Last-Translator: Lars Carlsson\n"
+"PO-Revision-Date: 2013-11-07 09:41-0000\n"
+"Last-Translator: Gale Andrews\n"
 "Language-Team: swedish <musselasse@gmail.com>\n"
+"Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: sv_SE\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Generator: Poedit 1.5.7\n"
 
@@ -27,9 +27,7 @@ msgid "About Audacity..."
 msgstr "Om Audacity..."
 
 #. i18n-hint: "OK... Audacious" appears on a button at the
-#. * foot of the 'About Audacity' dialog box, after some text to read.
 #. * In English it is slightly humorous alternative to an 'OK' button.
-#. * If the humour doesn't work in your language, then just use whatever
 #. * you would use for a translation for 'OK' on a button.
 #: AboutDialog.cpp:200
 msgid "OK... Audacious!"
@@ -44,9 +42,7 @@ msgid "If you find a bug or have a suggestion for us, please write to our <a hre
 msgstr "Skulle du råka hitta en bugg i programmet eller har förslag på förbättringar, var vänlig skriv till vår <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> adress. För hjälp, läs om tips och tricks på vår <a href=\"http://wiki.audacityteam.org/\">Wiki</a> eller besök vårt <a href=\"http://forum.audacityteam.org/\">Forum</a>."
 
 #. i18n-hint: The translation of "translator_credits" will appear
-#. *  in the credits in the About Audacity window.  Use this to add
 #. *  your own name(s) to the credits.
-#. *
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: AboutDialog.cpp:231
 #: AboutDialog.cpp:233
@@ -371,7 +367,6 @@ msgid "Command-line options supported:"
 msgstr "Command-line val stöds:"
 
 #. i18n-hint: '-help' is the option and needs to stay in
-#. * English. This displays a list of available options
 #: AudacityApp.cpp:1619
 msgid "\t-help (this message)"
 msgstr "\t-help (detta meddelande)"
@@ -382,16 +377,13 @@ msgid "\t-version (display Audacity version)"
 msgstr "\t-version (visa Audacity version)"
 
 #. i18n-hint '-test' is the option and needs to stay in
-#. * English. This runs a set of automatic tests on audacity
 #. * itself
 #: AudacityApp.cpp:1625
 msgid "\t-test (run self diagnostics)"
 msgstr "\t-test (kör självtest)"
 
 #. i18n-hint '-blocksize' is the option and needs to stay in
-#. * English. 'nnn' is any integer number. This controls the
 #. * size pieces that audacity uses when writing files to the
-#. * disk
 #: AudacityApp.cpp:1630
 msgid "\t-blocksize nnn (set max disk block size in bytes)"
 msgstr "\t-blocksize nnn (set max disk block size in bytes)"
@@ -671,7 +663,6 @@ msgid "Apply Chain"
 msgstr "Lägg till kedja"
 
 #. i18n-hint: A chain is a sequence of commands that can be applied
-#. * to one or more audio files.
 #: BatchProcessDialog.cpp:95
 msgid "&Select Chain"
 msgstr "&Välj kedja"
@@ -894,7 +885,6 @@ msgid "Copy All Files (Safer)"
 msgstr "Kopiera alla filer (säkrare)"
 
 #. i18n-hint: One of the choices of what you want Audacity to do when
-#. * Audacity finds a project depends on another file.
 #: Dependencies.cpp:383
 #: Dependencies.cpp:389
 msgid "Ask me"
@@ -976,7 +966,6 @@ msgstr ""
 "Vänligen överväg att spara och starta om projektet för att göra en komplett projektkontroll."
 
 #. i18n-hint: This is the pattern for filenames that are created
-#. * when a file needs to be backed up to a different name.  For
 #. * example, mysong would become mysong-old1, mysong-old2, etc.
 #: DirManager.cpp:1207
 #, c-format
@@ -1009,9 +998,7 @@ msgid "Changed block %s to new alias name\n"
 msgstr "Ändrat block %s till nytt alias\n"
 
 #. i18n-hint: The audacity project file is XML and has 'tags' in it,
-#. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
-#. The error message is confusing to users in English, and could just say
 #. "Found problems with <sequence> when checking project file."
 #: DirManager.cpp:1379
 msgid "Project check read faulty Sequence tags."
@@ -1314,7 +1301,6 @@ msgid "Download"
 msgstr "Ladda ner"
 
 #. i18n-hint: It's asking for the location of a file, for
-#. example, "Where is lame_enc.dll?" - you could translate
 #. "Where would I find the file '%s'?" instead if you want.
 #: FFmpeg.cpp:637
 #, c-format
@@ -1377,7 +1363,6 @@ msgid "Enhanced Autocorrelation"
 msgstr "Enhanced Autocorrelation"
 
 #. i18n-hint: This is a technical term, derived from the word
-#. * "spectrum".  Do not translate it unless you are sure you
 #. * know the correct technical word in your language.
 #: FreqWindow.cpp:153
 msgid "Cepstrum"
@@ -1395,7 +1380,6 @@ msgid "Size"
 msgstr "Storlek"
 
 #. i18n-hint: This refers to a "window function", used in the
-#. * Frequency analyze dialog box.
 #: FreqWindow.cpp:192
 msgid "window"
 msgstr " fönstring"
@@ -1481,7 +1465,6 @@ msgid "dB"
 msgstr "dB"
 
 #. i18n-hint: This is the abbreviation for "Hertz", or
-#. cycles per second.
 #: FreqWindow.cpp:321
 #: FreqWindow.cpp:544
 #: effects/ChangePitch.cpp:347
@@ -1517,7 +1500,6 @@ msgid "Cursor: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"
 msgstr "Markör: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"
 
 #. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-#. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: FreqWindow.cpp:889
 #, c-format
 msgid "Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"
@@ -1837,7 +1819,6 @@ msgid "Added label"
 msgstr "Skapad etikett"
 
 #. i18n-hint: Title on a dialog indicating that this is the first
-#. * time Audacity has been run.
 #: LangChoice.cpp:60
 msgid "Audacity First Run"
 msgstr "Audacity första tur"
@@ -1847,7 +1828,6 @@ msgid "Choose Language for Audacity to use:"
 msgstr "Ändra till rätt språk för Audacity:"
 
 #. i18n-hint: The %s's are replaced by translated and untranslated
-#. * versions of language names.
 #: LangChoice.cpp:129
 #, c-format
 msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
@@ -2078,7 +2058,7 @@ msgstr "Dela och ra&dera"
 #. i18n-hint: (verb)
 #: Menus.cpp:347
 msgid "Silence Audi&o"
-msgstr "Skapa tystna&d"
+msgstr "Skapa &tystnad"
 
 #. i18n-hint: (verb)
 #: Menus.cpp:351
@@ -2087,7 +2067,7 @@ msgstr "Ta& bort ljud"
 
 #: Menus.cpp:356
 msgid "Clip Boun&daries"
-msgstr "Clip Boun&daries"
+msgstr "Klipp grän&s"
 
 #. i18n-hint: (verb) It's an item on a menu.
 #: Menus.cpp:358
@@ -2148,7 +2128,7 @@ msgstr "Del&a radera"
 
 #: Menus.cpp:413
 msgid "Silence &Audio"
-msgstr "Tystnad &Ljud"
+msgstr "Skapa &tystnad"
 
 #. i18n-hint: (verb)
 #: Menus.cpp:415
@@ -2356,16 +2336,13 @@ msgid "&Reset Toolbars"
 msgstr "&Återställ paneler"
 
 #. i18n-hint: Usually keep the ! at the start.  It means this option is hidden.
-#. * Simplified View toggles the showing and hiding of 'hidden' menu items that start
 #. * with !.  If your translation file is for a special use, that is if it is for a
-#. * simplified view with hidden menu items, then leave the ! out here, so that the
 #. * user can show/hide some of the menu items.
 #: Menus.cpp:624
 msgid "!Simplified View"
 msgstr "!Förenklad visning"
 
 #. i18n-hint: 'Transport' is the name given to the set of controls that
-#. play, record, pause etc.
 #: Menus.cpp:635
 msgid "T&ransport"
 msgstr "T&ransport"
@@ -2569,7 +2546,6 @@ msgid "Effe&ct"
 msgstr "Effe&kt"
 
 #. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
 #: Menus.cpp:891
 #: Menus.cpp:2728
 #, c-format
@@ -3172,7 +3148,6 @@ msgid "Join Labeled Audio"
 msgstr "Slå ihop ljud med etikett"
 
 #. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-#. This message appears in history and tells you about something
 #. Audacity has done.
 #: Menus.cpp:4040
 msgid "Detached labeled audio regions"
@@ -3252,7 +3227,6 @@ msgid "Rendered all audio in track '%s'"
 msgstr "Förändra allt ljud i spår  '%s'"
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
-#. * panning and amplification and write to some external file.
 #: Menus.cpp:4812
 msgid "Render"
 msgstr "Förändra"
@@ -3458,7 +3432,6 @@ msgid "Velocity"
 msgstr "Volym"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
-#. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: MixerBoard.cpp:222
 #: MixerBoard.cpp:225
 #: MixerBoard.cpp:397
@@ -3557,7 +3530,6 @@ msgid "Print"
 msgstr "Skriv ut"
 
 #. i18n-hint: This is an experimental feature where the main panel in
-#. Audacity is put on a notebook tab, and this is the name on that tab.
 #. Other tabs in that notebook may have instruments, patch panels etc.
 #: Project.cpp:875
 msgid "Main Mix"
@@ -3626,9 +3598,7 @@ msgid "Error Opening Project"
 msgstr "Fel när projekt öppnades"
 
 #. i18n-hint: This string is a label in the file type filter in the open
-#. * and save dialogues, for the option that only shows project files created
 #. * with Audacity. Do not include pipe symbols or .aup (this extension will
-#. * now be added automatically for the Save Projects dialogues).
 #: Project.cpp:2233
 #: Project.cpp:3540
 msgid "Audacity projects"
@@ -4469,11 +4439,8 @@ msgid "Audacity Timer Record Progress"
 msgstr "Audacity tidsinställd inspelning"
 
 #. i18n-hint: This string is used to configure the controls for times when the recording is
-#. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
 #. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
-#.
 #: TimerRecordDialog.cpp:333
 msgid "099 h 060 m 060 s"
 msgstr "099 h 060 m 060 s"
@@ -4495,19 +4462,14 @@ msgid "End Date"
 msgstr "Slut datum"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
-#. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The string 'days' indicates that the first number in the control will be the number of days,
 #. * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-#. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
 #. * seconds.
-#.
 #: TimerRecordDialog.cpp:382
 msgid "099 days 024 h 060 m 060 s"
 msgstr "099 days 024 h 060 m 060 s"
 
 #. i18n-hint: A time specification like "Sunday 28th October 2007 15:16:17 GMT"
-#. * but hopefully translated by wxwidgets will be inserted into this
 #: TimerRecordDialog.cpp:454
 #, c-format
 msgid "Waiting to start recording at %s.\n"
@@ -4704,16 +4666,13 @@ msgid "Label Edit"
 msgstr "Etikett redigera"
 
 #. i18n-hint: (noun) The track that is used for MIDI notes which can be
-#. dragged to change their duration.
 #: TrackPanel.cpp:2132
 #: TrackPanel.cpp:2362
 msgid "Stretch Note Track"
 msgstr "Stretcha notspår"
 
 #. i18n-hint: In the history list, indicates a MIDI note has
-#. been dragged to change its duration (stretch it). Using either past
 #. or present tense is fine here.  If unsure, go for whichever is
-#. shorter.
 #: TrackPanel.cpp:2137
 #: TrackPanel.cpp:2362
 msgid "Stretch"
@@ -4799,7 +4758,6 @@ msgid "down"
 msgstr "ner"
 
 #. i18n-hint: the first %s is the name of a track, the second a direction as in up or down.
-#. * If the word order is different in your language ask on the translators list about what
 #. * to do.
 #: TrackPanel.cpp:4441
 #: TrackPanel.cpp:7787
@@ -5028,38 +4986,31 @@ msgid "Track %d"
 msgstr "Spår %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. on this track mute is on.
 #: TrackPanelAx.cpp:310
 #: TrackPanelAx.cpp:443
 msgid " Mute On"
 msgstr "Tyst På"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. on this track solo is on.
 #: TrackPanelAx.cpp:317
 #: TrackPanelAx.cpp:448
 msgid " Solo On"
 msgstr "Solo På"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. this track is selected.
 #: TrackPanelAx.cpp:323
 #: TrackPanelAx.cpp:452
 msgid " Select On"
 msgstr "Välj På"
 
 #. i18n-hint: This is for screen reader software and indicates that
-#. this track is shown with a sync-locked icon.
 #. The absence of a dash between Sync and Locked is deliberate -
-#. if present, Jaws reads it as "dash".
 #: TrackPanelAx.cpp:331
 msgid " Sync Lock Selected"
 msgstr " Sync Lock vald"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
-#. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
-#. This error message means that you've selected too short
 #. a region of audio to be able to use this feature.
 #: VoiceKey.cpp:93
 #: VoiceKey.cpp:243
@@ -5214,7 +5165,6 @@ msgid "You selected a track which does not contain audio. AutoDuck can only proc
 msgstr "Du har valt ett spår som inte innehåller ljud. Duckning kan bara bearbeta ljudspår."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
-#. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: effects/AutoDuck.cpp:145
 #: effects/AutoDuck.cpp:157
@@ -5567,7 +5517,6 @@ msgid "Ratio"
 msgstr "Förhållande"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: effects/Compressor.cpp:653
 msgid "Attack Time:"
@@ -5617,7 +5566,6 @@ msgid "Ratio %.0f to 1"
 msgstr "Förhållande %.0f till 1"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
 #: effects/Compressor.cpp:730
 #, c-format
 msgid "%.0f:1"
@@ -5629,7 +5577,6 @@ msgid "Ratio %.1f to 1"
 msgstr "Förhållande %.1f till 1"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
 #: effects/Compressor.cpp:736
 #, c-format
 msgid "%.1f:1"
@@ -5712,7 +5659,6 @@ msgid "Foreground start time"
 msgstr "Förgrund starttid"
 
 #. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and hundredths of a second (1/100 second)
 #: effects/Contrast.cpp:270
 #: effects/Contrast.cpp:287
 #: effects/Contrast.cpp:310
@@ -5918,7 +5864,6 @@ msgid "Duration:"
 msgstr "Varaktighet:"
 
 #. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and milliseconds (1/1000 second)
 #: effects/DtmfGen.cpp:472
 #: effects/Noise.cpp:213
 #: effects/Silence.cpp:42
@@ -5929,7 +5874,6 @@ msgid "hh:mm:ss + milliseconds"
 msgstr "hh:mm:ss + millisekunder"
 
 #. i18n-hint: Name of time display format that shows time in hours,
-#. * minutes, seconds and samples (at the current project sample rate)
 #: effects/DtmfGen.cpp:472
 #: effects/Noise.cpp:213
 #: effects/Silence.cpp:38
@@ -6722,14 +6666,12 @@ msgid "Removing Noise"
 msgstr "Raderar brus"
 
 #. i18n-hint: First %s is the effect name, 2nd and 3rd are either true or
-#. * false (translated below) if those options were selected
 #: effects/Normalize.cpp:74
 #, c-format
 msgid "Applied effect: %s remove dc offset = %s, normalize amplitude = %s, stereo independent %s"
 msgstr "Tillämpad effekt: %s radera dc offset = %s, normalisera amplituden = %s stereo independent %s"
 
 #. i18n-hint: true here means that the option was
-#. * selected. Opposite false if not selected
 #: effects/Normalize.cpp:78
 #: effects/Normalize.cpp:79
 #: effects/Normalize.cpp:80
@@ -6821,8 +6763,6 @@ msgid "Applied effect: %s stretch factor = %f times, time resolution = %f second
 msgstr "Använd effekt: %s strech faktor = %f gånger, tidsupplösning = %f sekunder"
 
 #. i18n-hint: This is an effect error message, for the effect named Paulstretch.
-#. * Time Resolution is a parameter of the effect, the translation should match
-#.
 #: effects/Paulstretch.cpp:169
 msgid ""
 "Error in Paulstretch:\n"
@@ -6834,9 +6774,7 @@ msgstr ""
 "Den måste vara större än tidsupplösning."
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
-#. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
-#.
 #: effects/Paulstretch.cpp:425
 msgid "Stretch Factor:"
 msgstr "Stretch faktor:"
@@ -6846,18 +6784,13 @@ msgid "Time Resolution (seconds):"
 msgstr "Tid upplösning (sekunder):"
 
 #. i18n-hint: This is the name of the effect, i.e. a proper noun, which
-#. * wouldn't normally get translated. It's the combination of the author's
 #. * name (Paul) with what it does (stretch sound)
-#.
 #: effects/Paulstretch.h:30
 msgid "Paulstretch..."
 msgstr "Paulstretch..."
 
 #. i18n-hint: This is the text that is shown whilst the effect is being
-#. * processed. The effect stretches the input in time, making the sound
 #. * much longer and spread out whilst at the same pitch. Paulstretch is the
-#. * name of the effect (it's also translated on it's own).
-#.
 #: effects/Paulstretch.h:39
 msgid "Stretching with Paulstretch"
 msgstr "Stretching med Paulstretch"
@@ -6987,7 +6920,6 @@ msgid "New selection length: "
 msgstr "Ny markeringslängd:"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes
-#. * and seconds
 #: effects/Repeat.cpp:265
 #: widgets/TimeTextCtrl.cpp:281
 msgid "hh:mm:ss"
@@ -7193,7 +7125,6 @@ msgid "Reversing"
 msgstr "Gör baklänges"
 
 #. i18n-hint: The 'scientific filter' is an audio effect.  It's a low-pass or high-pass
-#. filter with specfic characteristics.
 #: effects/ScienFilter.cpp:156
 #: effects/ScienFilter.cpp:210
 msgid "Scientific Filter"
@@ -7279,27 +7210,21 @@ msgid "Silence Threshold"
 msgstr "Tystnad tröskel"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a new experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
-#. It is OK to leave it in English.
 #: effects/ScoreAlignDialog.cpp:143
 #: effects/ScoreAlignDialog.cpp:148
 msgid "Presmooth Time"
 msgstr "Presmooth Time"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a new experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
-#. It is OK to leave it in English.
 #: effects/ScoreAlignDialog.cpp:156
 #: effects/ScoreAlignDialog.cpp:161
 msgid "Line Time"
 msgstr "Line tid"
 
 #. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a new experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
-#. It is OK to leave it in English.
 #: effects/ScoreAlignDialog.cpp:169
 #: effects/ScoreAlignDialog.cpp:174
 msgid "Smooth Time"
@@ -7480,7 +7405,7 @@ msgstr "Skapar ton"
 
 #: effects/TruncSilence.cpp:522
 msgid "Truncate Silence"
-msgstr "Skapa tystnad"
+msgstr "Trunkera tystnad"
 
 #: effects/TruncSilence.cpp:536
 msgid "Min silence duration:"
@@ -7519,11 +7444,11 @@ msgstr ""
 
 #: effects/TruncSilence.h:37
 msgid "Truncate Silence..."
-msgstr "Skapa tystnad..."
+msgstr "Trunkera tystnad..."
 
 #: effects/TruncSilence.h:51
 msgid "Truncating Silence..."
-msgstr "Skapar tystnad..."
+msgstr "Trunkera tystnad..."
 
 #: effects/VST/VSTEffect.cpp:466
 #: effects/VST/VSTEffect.cpp:471
@@ -7532,7 +7457,6 @@ msgid "Install VST Effects"
 msgstr "Installera VST effekter"
 
 #. i18n-hint: The dialog shows a list of plugins with check-boxes
-#. beside each one.
 #: effects/VST/VSTEffect.cpp:517
 msgid "&Select Plug-ins to Install or press ENTER to Install All"
 msgstr "&Välj plugins att installlera eller tryck ENTER för att installera alla"
@@ -8451,7 +8375,6 @@ msgid "MPEG container options"
 msgstr "MPEG container options"
 
 #. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-#. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
 #. it has a hard to predict effect on the degree of compression
 #: export/ExportFFmpegDialogs.cpp:1435
 msgid "Mux Rate:"
@@ -8468,7 +8391,6 @@ msgstr ""
 "0 - default"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
 #: export/ExportFFmpegDialogs.cpp:1440
 msgid "Packet Size:"
 msgstr "Packet Size:"
@@ -8752,7 +8674,6 @@ msgid "To get a free copy of Lame, click here -->"
 msgstr "För att få en gratis kopia av Lame, klicka här -->"
 
 #. i18n-hint: It's asking for the location of a file, for
-#. * example, "Where is lame_enc.dll?" - you could translate
 #. * "Where would I find the file %s" instead if you want.
 #: export/ExportMP3.cpp:644
 #, c-format
@@ -9076,7 +8997,6 @@ msgid "Exporting the entire project as %s"
 msgstr "Exportera hela projektet som %s"
 
 #. i18n-hint: %s will be the error message from libsndfile, which
-#. * is usually something unhelpful (and untranslated) like "system
 #. * error"
 #: export/ExportPCM.cpp:548
 #, c-format
@@ -9098,9 +9018,7 @@ msgid "There are no options for this format.\n"
 msgstr "Det finns inga inställningar för detta format.\n"
 
 #. i18n-hint: This is pointing users at another possible export format in
-#. * the list. So you should translate the quoted string
 #. * 'Other uncompressed files' exactly the same as you do the same string
-#. * when it comes up on it's own.
 #: export/ExportPCM.cpp:915
 msgid "If you need more control over the export format please use the 'Other uncompressed files' format."
 msgstr "Om du behöver mer kontrll över exportformat, valj 'Andra okomprimerade filer'-format."
@@ -9490,25 +9408,21 @@ msgid "Import Raw Data"
 msgstr "Importera rådata"
 
 #. i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-#. know the correct technical word.
 #: import/ImportRaw.cpp:338
 msgid "No endianness"
 msgstr "No endianness"
 
 #. i18n-hint: Refers to byte-order.  Don't translate this if you don't
-#. know the correct technical word.
 #: import/ImportRaw.cpp:341
 msgid "Little-endian"
 msgstr "Little-endian"
 
 #. i18n-hint: Refers to byte-order.  Don't translate this if you don't
-#. know the correct technical word.
 #: import/ImportRaw.cpp:344
 msgid "Big-endian"
 msgstr "Big-endian"
 
 #. i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-#. know the correct technical word.
 #: import/ImportRaw.cpp:347
 msgid "Default endianness"
 msgstr "Standard endianness"
@@ -10852,7 +10766,6 @@ msgstr ""
 "annars samma idé."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
-#. * so keep it as is
 #: prefs/ThemePrefs.cpp:111
 msgid "Theme Cache - Images && Color"
 msgstr "tema cache - bilder && Färg"
@@ -11091,7 +11004,7 @@ msgstr "Anpassa projekt till fönster"
 
 #: toolbars/EditToolBar.cpp:199
 msgid "Silence Audio"
-msgstr "Tystnad ljud"
+msgstr "Skapa tystnad"
 
 #: toolbars/EditToolBar.cpp:207
 msgid "Fit Selection"
@@ -11107,7 +11020,6 @@ msgid "Play Meter"
 msgstr "Spela mätare"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-#. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: toolbars/MeterToolBar.cpp:91
 msgid "Meter-Play"
@@ -11119,7 +11031,6 @@ msgid "Record Meter"
 msgstr "Inspelning mätare"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
-#. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: toolbars/MeterToolBar.cpp:104
 msgid "Meter-Record"
@@ -11202,7 +11113,6 @@ msgid "Audio Position:"
 msgstr "Ljud Position:"
 
 #. i18n-hint: The snap-to mode, when enabled, means for example that selections
-#. * are always at whole second boundaries.  You can't select a range 4.5s to 7.9s
 #. * because the boundaries 'snap to' the nearest whole number.
 #: toolbars/SelectionBar.cpp:233
 #: toolbars/SelectionBar.cpp:243
@@ -11301,14 +11211,12 @@ msgid "Button"
 msgstr "Knapp"
 
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
-#. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #: widgets/ASlider.cpp:784
 #: widgets/Meter.cpp:950
 msgid "L"
 msgstr "V"
 
 #. i18n-hint: One-letter abbreviation for Right, in VU Meter
-#. i18n-hint: One-letter abbreviation for Right, in the Pan slider
 #: widgets/ASlider.cpp:787
 #: widgets/Meter.cpp:953
 msgid "R"
@@ -11355,9 +11263,7 @@ msgid "&Clear"
 msgstr "&Rensa"
 
 #. i18n-hint: A 'Grabber' is a region you can click and drag on
-#. It's used to drag a track around (when in multi-tool mode) rather
 #. than requiring that you use the drag tool.  It's shown as a series
-#. of horizontal bumps
 #: widgets/Grabber.cpp:67
 #: widgets/Grabber.cpp:68
 msgid "Grabber"
@@ -11455,198 +11361,159 @@ msgid "Vertical Ruler"
 msgstr "Vertikal linjal"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
-#. * in the middle to the 1000s separator for your locale, and the 'seconds'
 #. * on the end to the word for seconds. Don't change the numbers.
 #: widgets/TimeTextCtrl.cpp:278
 msgid "01000,01000 seconds"
 msgstr "01000,01000 sekunder"
 
 #. i18n-hint: Format string for displaying time in hours, minutes and
-#. * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds. Don't
-#. * change the numbers unless there aren't 60 seconds in a minute in your
 #. * locale
 #: widgets/TimeTextCtrl.cpp:287
 msgid "0100 h 060 m 060 s"
 msgstr "0100 h 060 m 060 s"
 
 #. i18n-hint: Name of time display format that shows time in days, hours,
-#. * minutes and seconds
 #: widgets/TimeTextCtrl.cpp:290
 msgid "dd:hh:mm:ss"
 msgstr "dd:hh:mm:ss"
 
 #. i18n-hint: Format string for displaying time in days, hours, minutes and
-#. * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes and 's' to the
-#. * abbreviation for seconds. Don't change the numbers unless there aren't
 #. * 24 hours in a day in your locale
 #: widgets/TimeTextCtrl.cpp:296
 msgid "0100 days 024 h 060 m 060 s"
 msgstr "0100 dagar 024 h 060 m 060 s"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
 #. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds (the
-#. * hundredths are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
 #: widgets/TimeTextCtrl.cpp:305
 msgid "0100 h 060 m 060.0100 s"
 msgstr "0100 h 060 m 060.0100 s"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
-#. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
 #: widgets/TimeTextCtrl.cpp:314
 msgid "0100 h 060 m 060.01000 s"
 msgstr "0100 h 060 m 060.01000 s"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes, 's' to the abbreviation for seconds and
-#. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale
 #: widgets/TimeTextCtrl.cpp:323
 msgid "0100 h 060 m 060 s+.# samples"
 msgstr "0100 h 060 m 060 s+.# samples"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
-#. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
-#.
 #: widgets/TimeTextCtrl.cpp:328
 msgid "samples"
 msgstr "samples"
 
 #. i18n-hint: Format string for displaying time in samples (lots of samples).
-#. * Change the ',' to the 1000s separator for your locale, and translate
 #. * samples. If 1000s aren't a base multiple for your number system, then you
-#. * can change the numbers to an appropriate one, and put a 0 on the front
 #: widgets/TimeTextCtrl.cpp:333
 msgid "01000,01000,01000 samples|#"
 msgstr "01000,01000,01000 samples|#"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at 24 frames per second (commonly used for films)
 #: widgets/TimeTextCtrl.cpp:336
 msgid "hh:mm:ss + film frames (24 fps)"
 msgstr "hh:mm:ss + film frames (24 fps)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames at 24 frames per second. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale
 #: widgets/TimeTextCtrl.cpp:342
 msgid "0100 h 060 m 060 s+.24 frames"
 msgstr "0100 h 060 m 060 s+.24 frames"
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
-#. * frames) at 24 frames per second (commonly used for films)
 #: widgets/TimeTextCtrl.cpp:345
 msgid "film frames (24 fps)"
 msgstr "film frames (24 fps)"
 
 #. i18n-hint: Format string for displaying time in frames at 24 frames per
-#. * second. Translate 'frames' and leave the rest alone
 #: widgets/TimeTextCtrl.cpp:348
 msgid "01000,01000 frames|24"
 msgstr "01000,01000 frames|24"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at NTSC TV drop-frame rate (used for American /
 #. * Japanese TV, and very odd)
 #: widgets/TimeTextCtrl.cpp:352
 msgid "hh:mm:ss + NTSC drop frames"
 msgstr "hh:mm:ss + NTSC drop frames"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'. Leave the |N alone, it's important!
 #: widgets/TimeTextCtrl.cpp:357
 msgid "0100 h 060 m 060 s+.30 frames|N"
 msgstr "0100 h 060 m 060 s+.30 frames|N"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
 #. * Japanese TV, and doesn't quite match wall time
 #: widgets/TimeTextCtrl.cpp:361
 msgid "hh:mm:ss + NTSC non-drop frames"
 msgstr "hh:mm:ss + NTSC non-drop frames"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
 #: widgets/TimeTextCtrl.cpp:367
 msgid "0100 h 060 m 060 s+.030 frames| .999000999"
 msgstr "0100 h 060 m 060 s+.030 frames| .999000999"
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
-#. * TV frame rate (used for American / Japanese TV
 #: widgets/TimeTextCtrl.cpp:370
 msgid "NTSC frames"
 msgstr "NTSC frames"
 
 #. i18n-hint: Format string for displaying time in frames with NTSC frames.
-#. * Translate 'frames' and leave the rest alone. That really is the frame
 #. * rate!
 #: widgets/TimeTextCtrl.cpp:374
 msgid "01000,01000 frames|29.97002997"
 msgstr "01000,01000 frames|29.97002997"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at PAL TV frame rate (used for European TV)
 #: widgets/TimeTextCtrl.cpp:377
 msgid "hh:mm:ss + PAL frames (25 fps)"
 msgstr "hh:mm:ss + PAL frames (25 fps)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with PAL TV frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'. Nice simple time code!
 #: widgets/TimeTextCtrl.cpp:382
 msgid "0100 h 060 m 060 s+.25 frames"
 msgstr "0100 h 060 m 060 s+.25 frames"
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
-#. * TV frame rate (used for European TV)
 #: widgets/TimeTextCtrl.cpp:385
 msgid "PAL frames (25 fps)"
 msgstr "PAL frames (25 fps)"
 
 #. i18n-hint: Format string for displaying time in frames with NTSC frames.
-#. * Translate 'frames' and leave the rest alone.
 #: widgets/TimeTextCtrl.cpp:388
 msgid "01000,01000 frames|25"
 msgstr "01000,01000 frames|25"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
-#. * seconds and frames at CD Audio frame rate (75 frames per second)
 #: widgets/TimeTextCtrl.cpp:391
 msgid "hh:mm:ss + CDDA frames (75 fps)"
 msgstr "hh:mm:ss + CDDA frames (75 fps)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and frames with CD Audio frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-#. * for seconds and translate 'frames'.
 #: widgets/TimeTextCtrl.cpp:396
 msgid "0100 h 060 m 060 s+.75 frames"
 msgstr "0100 h 060 m 060 s+.75 frames"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
-#. * Audio frame rate (75 frames per second)
 #: widgets/TimeTextCtrl.cpp:399
 msgid "CDDA frames (75 fps)"
 msgstr "CDDA frames (75 fps)"
 
 #. i18n-hint: Format string for displaying time in frames with CD Audio
-#. * frames. Translate 'frames' and leave the rest alone
 #: widgets/TimeTextCtrl.cpp:402
 msgid "01000,01000 frames|75"
 msgstr "01000,01000 frames|75"
@@ -11679,7 +11546,6 @@ msgid "Could not load file: \"%s\""
 msgstr "Det gick inte att öppna fil: \"%s\""
 
 #. i18n-hint: 'flushing' means writing any remaining queued up changes
-#. * to disk that have not yet been written.
 #: xml/XMLWriter.cpp:350
 msgid "Error Flushing File"
 msgstr "Error flushing file"
@@ -11692,58 +11558,3 @@ msgstr "Fel när fil stängdes"
 msgid "Error Writing to File"
 msgstr "Fel vid skrivning till fil"
 
-#~ msgid ""
-#~ "You have left blank label names.  These will be\n"
-#~ "skipped when repopulating the Label Tracks.\n"
-#~ "\n"
-#~ "Would you like to go back and provide names?"
-#~ msgstr ""
-#~ "Du har kvar etiketter utan namn.Dessa kommer inte att\n"
-#~ "användas när etikettspår skapas.\n"
-#~ "\n"
-#~ "Vill du gå tillbaka och ge dem namn?"
-
-#~ msgid "Align Tracks To&gether"
-#~ msgstr "Placera spår till&sammans"
-
-#~ msgid "Align with &Zero"
-#~ msgstr "Placera vid &noll"
-
-#~ msgid "Align with &Cursor"
-#~ msgstr "Placera vid &markör"
-
-#~ msgid "Align with Selection &Start"
-#~ msgstr "Placera vid markering &början"
-
-#~ msgid "Align with Selection &End"
-#~ msgstr "Placera vid markering &slut"
-
-#~ msgid "Align End with Cu&rsor"
-#~ msgstr "Placera slut vid mar&kör"
-
-#~ msgid "Align End with Selection Star&t"
-#~ msgstr "Placera slut vid markeringens börj&an"
-
-#~ msgid "Align End with Selection En&d"
-#~ msgstr "Placera slut vid markeringens slu&t"
-
-#~ msgid "Ali&gn and Move Cursor"
-#~ msgstr "Ri&kta och flytta markör"
-
-#~ msgid "Aligned with zero"
-#~ msgstr "Placerad vid noll"
-
-#~ msgid "Aligned end with cursor"
-#~ msgstr "Placerat slut vid markör"
-
-#~ msgid "Aligned end with selection start"
-#~ msgstr "Placerat slut vid markerings början"
-
-#~ msgid "Aligned end with selection end"
-#~ msgstr "Placerat slut vid markerings slut"
-
-#~ msgid "%s/Move"
-#~ msgstr "%s/Flytta"
-
-#~ msgid "Plugins 1 to %i"
-#~ msgstr "Plugins 1 till %i"
