@@ -15,6 +15,8 @@ FileDialog.a: FileDialog-recursive
 # libwidgetextra
 widgetextra:
 	$(MAKE) -C lib-widget-extra
+libwidgetextra.a: widgetextra
+	ln -sf lib-widget-extra/.libs/libwidgetextra.a libwidgetextra.a
 
 # libogg
 libogg-recursive:

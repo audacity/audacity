@@ -1,11 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: lib-widget-extra
+Name: @PACKAGE@
 Description: Extras for wxwidgets
-Requires: 
-Version: 1
-
-Libs: -L${libdir} -lwidgetextra 
-Libs.private: @LIBS@ 
-Cflags: -I${includedir} 
+Version: @VERSION@
+Cflags: -I${includedir}
+Libs: -L${libdir} -lwidgetextra

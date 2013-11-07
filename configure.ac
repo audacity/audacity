@@ -325,20 +325,11 @@ AC_CONFIG_SUBDIRS([lib-src/FileDialog])
 LOCAL_LIBS="$LOCAL_LIBS FileDialog.a"
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 
-dnl Include lib-widget-extra (via pkg-config). Doing this gets it configured as
-dnl well, because it has to be configured in order to be found
-AUDACITY_CHECKLIB_WIDGETEXTRA
-dnl pull in flags for the library
-BUILD_LDFLAGS="$BUILD_LDFLAGS $WIDGETEXTRA_LIBS"
-CXXFLAGS="$CXXFLAGS $WIDGETEXTRA_CFLAGS"
-dnl Add the library to the list of libraries that need to be compiled
-LIBSRC_BUILD="$LIBSRC_BUILD widgetextra"
-
 dnl-------------------------------------------------------------
 dnl Optional library support. Lots of things we could use, but
 dnl can do without if they aren't available.
 dnl-------------------------------------------------------------
-LIBRARIES="FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF"
+LIBRARIES="FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
 
 AC_MSG_NOTICE([Determining what libraries are available in this tree and on the system])
 
@@ -360,6 +351,7 @@ AUDACITY_CHECKLIB_LIBVORBIS
 AUDACITY_CHECKLIB_LV2
 AUDACITY_CHECKLIB_PORTAUDIO
 AUDACITY_CHECKLIB_PORTSMF
+AUDACITY_CHECKLIB_WIDGETEXTRA
 
 dnl Decide what libraries to build with, and whether to use system or local libraries
 dnl Set variables based on choices.
@@ -412,9 +404,14 @@ for lib in $LIBRARIES ; do
 done
 
 # In some cases the choices made above might be inappropriate.
+#   * we need to have libwidgetextra one way or another
 #   * we need to have libsndfile one way or another
 #   * we need to have portaudio way or another
 #   * we can only use one of libsoxr, libsamplerate and libresample
+
+if test "$WIDGETEXTRA_USE_LOCAL" != "yes" -a "$WIDGETEXTRA_USE_SYSTEM" != "yes"; then
+   AC_MSG_ERROR([Audacity requires libwidgetextra to be enabled.])
+fi
 
 if test "$LIBSNDFILE_USE_LOCAL" != "yes" && test "$LIBSNDFILE_USE_SYSTEM" != "yes" ; then
    AC_MSG_ERROR([Audacity requires libsndfile to be enabled])
@@ -521,6 +518,7 @@ AUDACITY_CONFIG_SUBDIRS_LIBVORBIS
 AUDACITY_CONFIG_SUBDIRS_LV2
 AUDACITY_CONFIG_SUBDIRS_PORTAUDIO
 AUDACITY_CONFIG_SUBDIRS_PORTSMF
+AUDACITY_CONFIG_SUBDIRS_WIDGETEXTRA
 
 dnl--------------------------------------------------------------------------
 dnl Optional features (which don't use libraries - just compile-time on/off)

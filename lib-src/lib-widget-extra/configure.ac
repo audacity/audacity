@@ -7,20 +7,25 @@ dnl Richard Ash
 dnl
 
 dnl
-dnl Instructions: to create "configure" from "configure.ac", run:
+dnl Instructions: to create "configure" from "configure.ac", run: autoreconf
 dnl
 
-dnl Process this file with autoconf to produce a configure script.
-
 dnl Require autoconf >= 2.60
-AC_PREREQ([2.69])
+AC_PREREQ([2.60])
 
 dnl Init autoconf
-AC_INIT
+AC_INIT([libwidgetextra], [1.0])
 dnl check we have some source (are in the right directory)
 AC_CONFIG_SRCDIR([NonGuiThread.h])
+AC_CONFIG_AUX_DIR([autotools])
 dnl we have some extra macros in m4/
 AC_CONFIG_MACRO_DIR([m4])
+
+AM_INIT_AUTOMAKE([1.11 dist-xz foreign no-dist-gzip -Wall])
+AM_MAINTAINER_MODE([disable])
+
+AM_PROG_AR
+LT_INIT
 
 dnl -------------------------------------------------------
 dnl Checks for programs.
@@ -37,22 +42,6 @@ AC_PROG_CXXCPP
 CFLAGS="$cflags_save"
 CPPFLAGS="$cppflags_save"
 CXXFLAGS="$cxxflags_save"
-
-dnl we will need an "install" program to be available
-AC_PROG_INSTALL
-
-dnl We have some extra variables which we need to subsitute into output files
-AC_SUBST(INSTALL_PREFIX)
-
-dnl Make the install prefix available to the program so that the pkg-config file
-dnl can be created correctly
-AC_PREFIX_DEFAULT(/usr/local)
-if [[ $prefix = "NONE" ]] ; then
-  AC_DEFINE(INSTALL_PREFIX, "/usr/local",
-      [define as prefix where Audacity is installed])
-else
-  AC_DEFINE_UNQUOTED(INSTALL_PREFIX, "$prefix")
-fi
 
 dnl Build Options
 
@@ -85,7 +74,7 @@ dnl ----------------------------------------------------
 dnl If user asked for debug, put debug in compiler flags
 dnl ----------------------------------------------------
 
-if test x"$debug_preference" = "xyes" ; then
+if test "$debug_preference" = "yes"; then
    dnl we want debuging on
    AC_MSG_NOTICE([Adding -g for debugging to CFLAGS and CXXFLAGS ...])
    CFLAGS="${CFLAGS} -g "
@@ -157,28 +146,19 @@ esac
 
 dnl Gather wx arguments
 
-LIBS="$LIBS `$WX_CONFIG $wxconfigargs --libs`"
-CPPFLAGS="$CPPFLAGS `$WX_CONFIG $wxconfigargs --cxxflags`"
+WX_CXXFLAGS=$($WX_CONFIG $wxconfigargs --cxxflags)
+WX_LIBS=$($WX_CONFIG $wxconfigargs --libs)
+AC_SUBST([WX_CXXFLAGS])
+AC_SUBST([WX_LIBS])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
 
-AC_CONFIG_FILES([Makefile libwidgetextra.pc libwidgetextra-uninstalled.pc])
+AC_CONFIG_FILES([libwidgetextra.pc Makefile])
 
 AC_OUTPUT
 
 echo ""
 echo "Run 'configure --help' for an explanation of the possible options,"
 echo "otherwise run 'make' to build libwidgetextra."
-
-dnl Indentation settings for Vim and Emacs and unique identifier for Arch, a
-dnl version control system. Please do not modify past this point.
-
-
-# Local Variables:
-# c-basic-offset: 3
-# indent-tabs-mode: nil
-# End:
-#
-# vim: et sts=3 sw=3
