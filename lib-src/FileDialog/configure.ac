@@ -71,30 +71,36 @@ dnl OS-specific configuration
 
 AC_CANONICAL_HOST
 
+IMPLEMENTATION="generic"
 case "${host_os}" in
    darwin*)
       dnl Mac OS X configuration
-      mac="yes"
+      IMPLEMENTATION="mac"
    ;;
 
    cygwin*)
       dnl Windows/CygWin configuration
-      windows="yes"
+      IMPLEMENTATION="win"
    ;;
 
    *)
       if test "$have_gtk" = "yes"; then
          AC_DEFINE(HAVE_GTK, 1, [Define to 1 if GTK+ is available.])
+         IMPLEMENTATION="gtk"
       fi
    ;;
 esac
 
-AM_CONDITIONAL([MAC], test "$mac" = "yes")
-AM_CONDITIONAL([WINDOWS], test "$windows" = "yes")
-AM_CONDITIONAL([GTK], test "$have_gtk" = "yes")
+AC_SUBST([IMPLEMENTATION])
+AM_CONDITIONAL([GENERIC], test "$IMPLEMENTATION" = "generic")
+AM_CONDITIONAL([GTK], test "$IMPLEMENTATION" = "gtk")
+AM_CONDITIONAL([MAC], test "$IMPLEMENTATION" = "mac")
+AM_CONDITIONAL([WINDOWS], test "$IMPLEMENTATION" = "win")
+
+echo "Implementation to use: $IMPLEMENTATION"
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([FileDialogPrivate.h Makefile])
 
 #
 # Write it all out

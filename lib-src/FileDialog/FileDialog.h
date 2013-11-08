@@ -17,24 +17,12 @@ custom controls.
 #ifndef _FILE_DIALOG_H_
 #define _FILE_DIALOG_H_
 
-#if defined(__WXGTK__)
-#include "config.h"
-#endif
-
 #include "wx/defs.h"
 #include "wx/filedlg.h"
 
 typedef void (*fdCallback)(void *, int);
 
-#if defined(__WXMAC__)
-#include "mac/FileDialogPrivate.h"
-#elif defined(__WXMSW__)
-#include "win/FileDialogPrivate.h"
-#elif defined(__WXGTK__) && defined(HAVE_GTK)
-#include "gtk/FileDialogPrivate.h"
-#else
-#include "generic/FileDialogPrivate.h"
-#endif
+#include "FileDialogPrivate.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // Name:        filedlg.h
