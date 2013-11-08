@@ -35,7 +35,9 @@ libdir=@libdir@
 override CFLAGS += @CFLAGS@
 
 # CXXFLAGS are specific to C++.
-override CXXFLAGS += @CXXFLAGS@
+# "-Wno-unused-local-typedefs" is a workaround for an issue in the wxWidgets-2.8.12 headers that causes a bunch of
+# warnings.
+override CXXFLAGS += -Wno-unused-local-typedefs @CXXFLAGS@
 
 # CPPFLAGS are for both C and C++.
 override CPPFLAGS += -fno-strict-aliasing -I$(srcdir)/include -I. -DLIBDIR=\"$(libdir)\" -D__STDC_CONSTANT_MACROS @CPPFLAGS@ 
@@ -207,27 +209,27 @@ OBJS = \
 	ondemand/ODTask.o \
 	ondemand/ODTaskThread.o \
 	ondemand/ODWaveTrackTaskQueue.o \
-   prefs/BatchPrefs.o \
-   prefs/DevicePrefs.o \
-   prefs/DirectoriesPrefs.o \
-   prefs/EffectsPrefs.o \
-   prefs/GUIPrefs.o \
-   prefs/ImportExportPrefs.o \
-   prefs/KeyConfigPrefs.o \
-   prefs/LibraryPrefs.o \
-   prefs/MidiIOPrefs.o \
-   prefs/ModulePrefs.o \
-   prefs/MousePrefs.o \
-   prefs/PlaybackPrefs.o \
-   prefs/PrefsDialog.o \
-   prefs/ProjectsPrefs.o \
-   prefs/QualityPrefs.o \
-   prefs/RecordingPrefs.o \
-   prefs/SpectrumPrefs.o \
-   prefs/ThemePrefs.o \
-   prefs/TracksPrefs.o \
-   prefs/WarningsPrefs.o \
-   prefs/ExtImportPrefs.o \
+	prefs/BatchPrefs.o \
+	prefs/DevicePrefs.o \
+	prefs/DirectoriesPrefs.o \
+	prefs/EffectsPrefs.o \
+	prefs/GUIPrefs.o \
+	prefs/ImportExportPrefs.o \
+	prefs/KeyConfigPrefs.o \
+	prefs/LibraryPrefs.o \
+	prefs/MidiIOPrefs.o \
+	prefs/ModulePrefs.o \
+	prefs/MousePrefs.o \
+	prefs/PlaybackPrefs.o \
+	prefs/PrefsDialog.o \
+	prefs/ProjectsPrefs.o \
+	prefs/QualityPrefs.o \
+	prefs/RecordingPrefs.o \
+	prefs/SpectrumPrefs.o \
+	prefs/ThemePrefs.o \
+	prefs/TracksPrefs.o \
+	prefs/WarningsPrefs.o \
+	prefs/ExtImportPrefs.o \
 	toolbars/ControlToolBar.o \
 	toolbars/DeviceToolBar.o \
 	toolbars/EditToolBar.o \
@@ -308,22 +310,6 @@ $(DIRS):
 	mkdir -p $(DIRS)
 
 #
-# Mac OS X application
-#
-
-../Audacity.app: ../audacity
-	mkdir -p ../Audacity.app/Contents/MacOS
-	mkdir -p ../Audacity.app/Contents/Resources
-	cp -f ../audacity ../Audacity.app/Contents/MacOS/Audacity
-	gcc -E -dM Audacity.h | grep AUDACITY >Info.plist.h
-	gcc -E -P -x c -Wno-trigraphs -traditional -include Info.plist.h ../mac/Info.plist >../Audacity.app/Contents/Info.plist
-	test -f "../Audacity.app/Contents/PkgInfo" || \
-	     echo "APPLauDy" > ../Audacity.app/Contents/PkgInfo
-	cp -f ../mac/Resources/*.icns ../Audacity.app/Contents/Resources
-	cp -f ../mac/Resources2/Audacity.rsrc \
-		../Audacity.app/Contents/Resources/Audacity.rsrc
-
-#
 # You can optionally "make dep" to make dependencies.
 # The sed script turns "Foo.o: bar/Foo.cpp" into "bar/Foo.o: bar/Foo.cpp".
 #
@@ -350,13 +336,6 @@ distclean: clean
 
 $(OBJS) $(LIBAUDACITY_OBJS): %.o: $(srcdir)/%.cpp configunix.h $(CDEPEND)
 	$(CCC) -c $(CXXFLAGS) $(CPPFLAGS) $(PRECOMP_CFLAGS) $< -o $@
-
-#
-# Special case: files that need to be compiled without precompiled headers.
-#
-
-import/ImportQTWrapper.o: import/ImportQTWrapper.cpp $(CONFIGHEADER) $(CDEPEND)
-	$(CCC) -c $(CXXFLAGS) $(CPPFLAGS) $< -o $@
 
 #
 # Precompiled headers:
