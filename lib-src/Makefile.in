@@ -128,7 +128,7 @@ libportaudio.a: portaudio-v19-recursive
 portmixer-recursive:
 	$(MAKE) -C portmixer
 libportmixer.a: portmixer-recursive
-	ln -sf portmixer/libportmixer.a libportmixer.a
+	ln -sf portmixer/src/.libs/libportmixer.a libportmixer.a
 
 # Utility rules
 clean:
