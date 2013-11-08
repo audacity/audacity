@@ -113,6 +113,7 @@ simplifies construction of menu items.
 #include "DeviceManager.h"
 
 #include "CaptureEvents.h"
+#include "Snap.h"
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
@@ -1157,10 +1158,11 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("TrackSolo"), _("Solo/Unsolo focused track"), FN(OnTrackSolo), wxT("Shift+S"));
    c->AddCommand(wxT("TrackClose"), _("Close focused track"), FN(OnTrackClose), wxT("Shift+C"));
 
-   c->AddCommand(wxT("SnapToOn"), _("Snap To On"), FN(OnSnapToOn));
-   c->AddCommand(wxT("SnapToOff"), _("Snap To Off"), FN(OnSnapToOff));
-
    c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
+
+   c->AddCommand(wxT("SnapToOff"), _("Snap To Off"), FN(OnSnapToOff));
+   c->AddCommand(wxT("SnapToNearest"), _("Snap To Nearest"), FN(OnSnapToNearest));
+   c->AddCommand(wxT("SnapToPrior"), _("Snap To Prior"), FN(OnSnapToPrior));
 
    c->AddCommand(wxT("FullScreenOnOff"), _("Full screen on/off"), FN(OnFullScreen), 
 #ifdef __WXMAC__      
@@ -5952,14 +5954,19 @@ void AudacityProject::OnResample()
    FinishAutoScroll();
 }
 
-void AudacityProject::OnSnapToOn()
-{
-   SetSnapTo(true);
-}
-
 void AudacityProject::OnSnapToOff()
 {
-   SetSnapTo(false);
+   SetSnapTo(SNAP_OFF);
+}
+
+void AudacityProject::OnSnapToNearest()
+{
+   SetSnapTo(SNAP_NEAREST);
+}
+
+void AudacityProject::OnSnapToPrior()
+{
+   SetSnapTo(SNAP_PRIOR);
 }
 
 void AudacityProject::OnFullScreen()

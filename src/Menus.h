@@ -165,8 +165,9 @@ double GetTime(Track *t);
 void OnSortTime();
 void OnSortName();
 
-void OnSnapToOn();
 void OnSnapToOff();
+void OnSnapToNearest();
+void OnSnapToPrior();
 void OnFullScreen();
 
         // File Menu
