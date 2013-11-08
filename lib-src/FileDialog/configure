@@ -635,12 +635,15 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
-GTK_FALSE
-GTK_TRUE
 WINDOWS_FALSE
 WINDOWS_TRUE
 MAC_FALSE
 MAC_TRUE
+GTK_FALSE
+GTK_TRUE
+GENERIC_FALSE
+GENERIC_TRUE
+IMPLEMENTATION
 GTK_LIBS
 GTK_CFLAGS
 PKG_CONFIG_LIBDIR
@@ -15610,13 +15613,14 @@ fi
 
 
 
+IMPLEMENTATION="generic"
 case "${host_os}" in
    darwin*)
-            mac="yes"
+            IMPLEMENTATION="mac"
    ;;
 
    cygwin*)
-            windows="yes"
+            IMPLEMENTATION="win"
    ;;
 
    *)
@@ -15624,27 +15628,21 @@ case "${host_os}" in
 
 $as_echo "#define HAVE_GTK 1" >>confdefs.h
 
+         IMPLEMENTATION="gtk"
       fi
    ;;
 esac
 
- if test "$mac" = "yes"; then
-  MAC_TRUE=
-  MAC_FALSE='#'
+
+ if test "$IMPLEMENTATION" = "generic"; then
+  GENERIC_TRUE=
+  GENERIC_FALSE='#'
 else
-  MAC_TRUE='#'
-  MAC_FALSE=
+  GENERIC_TRUE='#'
+  GENERIC_FALSE=
 fi
 
- if test "$windows" = "yes"; then
-  WINDOWS_TRUE=
-  WINDOWS_FALSE='#'
-else
-  WINDOWS_TRUE='#'
-  WINDOWS_FALSE=
-fi
-
- if test "$have_gtk" = "yes"; then
+ if test "$IMPLEMENTATION" = "gtk"; then
   GTK_TRUE=
   GTK_FALSE='#'
 else
@@ -15652,10 +15650,28 @@ else
   GTK_FALSE=
 fi
 
+ if test "$IMPLEMENTATION" = "mac"; then
+  MAC_TRUE=
+  MAC_FALSE='#'
+else
+  MAC_TRUE='#'
+  MAC_FALSE=
+fi
+
+ if test "$IMPLEMENTATION" = "win"; then
+  WINDOWS_TRUE=
+  WINDOWS_FALSE='#'
+else
+  WINDOWS_TRUE='#'
+  WINDOWS_FALSE=
+fi
+
+
+echo "Implementation to use: $IMPLEMENTATION"
 
 ac_config_headers="$ac_config_headers config.h"
 
-ac_config_files="$ac_config_files Makefile"
+ac_config_files="$ac_config_files FileDialogPrivate.h Makefile"
 
 
 #
@@ -15802,16 +15818,20 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
+if test -z "${GENERIC_TRUE}" && test -z "${GENERIC_FALSE}"; then
+  as_fn_error $? "conditional \"GENERIC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${GTK_TRUE}" && test -z "${GTK_FALSE}"; then
+  as_fn_error $? "conditional \"GTK\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${MAC_TRUE}" && test -z "${MAC_FALSE}"; then
   as_fn_error $? "conditional \"MAC\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${WINDOWS_TRUE}" && test -z "${WINDOWS_FALSE}"; then
   as_fn_error $? "conditional \"WINDOWS\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${GTK_TRUE}" && test -z "${GTK_FALSE}"; then
-  as_fn_error $? "conditional \"GTK\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -16784,6 +16804,7 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
+    "FileDialogPrivate.h") CONFIG_FILES="$CONFIG_FILES FileDialogPrivate.h" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
