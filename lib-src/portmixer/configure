@@ -11833,6 +11833,9 @@ fi
 # Check which APIs are available
 #
 
+cppflags_save="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $PORTAUDIO_CFLAGS"
+
 have_oss=no
 for ac_header in sys/soundcard.h linux/soundcard.h machine/soundcard.h
 do :
@@ -12045,6 +12048,8 @@ rm -f conftest*
       as_fn_error $? "Your version of portaudio does not include required Pa_GetStreamHostApiType function" "$LINENO" 5;
    fi
 fi
+
+CPPFLAGS="$cppflags_save"
 
 #
 # Set up to use the identified ones

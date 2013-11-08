@@ -56,6 +56,10 @@ AC_SUBST(PORTAUDIO_CFLAGS)
 # Check which APIs are available
 #
 
+dnl The following tests need to have the header files of portaudio available.
+cppflags_save="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $PORTAUDIO_CFLAGS"
+
 have_oss=no
 AC_CHECK_HEADERS([sys/soundcard.h linux/soundcard.h machine/soundcard.h], have_oss=yes)
 if [[ $have_oss = "yes" ]] ; then
@@ -118,6 +122,9 @@ if [[ $have_portaudio = "yes" ]] ; then
       AC_MSG_ERROR([Your version of portaudio does not include required Pa_GetStreamHostApiType function]);
    fi
 fi
+
+dnl Restore pre-processor flags
+CPPFLAGS="$cppflags_save"
 
 #
 # Set up to use the identified ones
