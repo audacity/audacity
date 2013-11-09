@@ -59,8 +59,14 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVORBIS], [
 
       LIBVORBIS_LOCAL_CPPSYMBOLS="USE_LIBVORBIS"
 
+      dnl We need to override the pkg-config check for libogg by passing
+      dnl OGG_CFLAGS and OGG_LIBS to the configure script of libvorbis.
       libogg_dir="$(pwd)/lib-src/libogg"
       LIBVORBIS_LOCAL_CONFIGURE_ARGS="--disable-oggtest OGG_CFLAGS=-I${libogg_dir}/include OGG_LIBS=${libogg_dir}/src/.libs/libogg.a"
+
+      dnl libflac needs libogg too. So we need to pass these flags to the
+      dnl configure script of libflac, because it does not use pkg-config.
+      LIBVORBIS_LOCAL_CONFIGURE_ARGS="$LIBVORBIS_LOCAL_CONFIGURE_ARGS --with-ogg-includes=${libogg_dir}/include --with-ogg-libraries=${libogg_dir}/src/.libs"
 
       AC_MSG_NOTICE([Vorbis libraries are available in this source tree])
    else

@@ -7897,8 +7897,10 @@ fi
 
       LIBVORBIS_LOCAL_CPPSYMBOLS="USE_LIBVORBIS"
 
-      libogg_dir="$(pwd)/lib-src/libogg"
+                  libogg_dir="$(pwd)/lib-src/libogg"
       LIBVORBIS_LOCAL_CONFIGURE_ARGS="--disable-oggtest OGG_CFLAGS=-I${libogg_dir}/include OGG_LIBS=${libogg_dir}/src/.libs/libogg.a"
+
+                  LIBVORBIS_LOCAL_CONFIGURE_ARGS="$LIBVORBIS_LOCAL_CONFIGURE_ARGS --with-ogg-includes=${libogg_dir}/include --with-ogg-libraries=${libogg_dir}/src/.libs"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: Vorbis libraries are available in this source tree" >&5
 $as_echo "$as_me: Vorbis libraries are available in this source tree" >&6;}
