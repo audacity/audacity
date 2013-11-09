@@ -288,8 +288,10 @@ void DeviceManager::Rescan()
 
       if (info->maxInputChannels > 0) {
 #ifdef __WXMSW__
+#if !defined(EXPERIMENTAL_FULL_WASAPI)
          if (Pa_GetHostApiInfo(info->hostApi)->type != paWASAPI ||
              PaWasapi_IsLoopback(i) > 0)
+#endif
 #endif
          AddSources(i, info->defaultSampleRate, &mInputDeviceSourceMaps, 1);
       }
