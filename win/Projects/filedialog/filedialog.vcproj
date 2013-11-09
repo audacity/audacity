@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\mswu&quot;;&quot;$(WXWIN)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\mswu&quot;;&quot;$(WXWIN)\include&quot;;&quot;..\..\..\lib-src\FileDialog&quot;;&quot;..\..\..\lib-src\FileDialog\win&quot;"
 				PreprocessorDefinitions="WXUSINGDLL;WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -106,7 +106,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\mswud&quot;;&quot;$(WXWIN)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(WXWIN)\lib\vc_dll\mswud&quot;;&quot;$(WXWIN)\include&quot;;&quot;..\..\..\lib-src\FileDialog&quot;;&quot;..\..\..\lib-src\FileDialog\win&quot;"
 				PreprocessorDefinitions="WXUSINGDLL;WIN32;_DEBUG;_LIB"
 				StringPooling="true"
 				BasicRuntimeChecks="3"
