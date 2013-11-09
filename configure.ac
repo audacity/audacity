@@ -596,6 +596,11 @@ case "${host_os}" in
          AC_MSG_ERROR(dlopen not found, required by Audacity)
       fi
 
+      AC_SEARCH_LIBS([XML_ParserCreate], [expat])
+      if [[ "$ac_cv_search_expat" = no ]]; then
+         AC_MSG_ERROR(expat not found, required by Audacity)
+      fi
+
       AC_SUBST(HAVE_GTK)
       PKG_CHECK_MODULES(GTK, gtk+-2.0, have_gtk=yes, have_gtk=no)
       if [[ "$have_gtk" = "yes" ]]

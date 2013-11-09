@@ -44,7 +44,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_PORTAUDIO], [
       PORTAUDIO_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/portaudio-v19/include'
 
       dnl set up configuring portaudio
-      PORTAUDIO_LOCAL_CONFIGURE_ARGS="--with-pa-include=../portaudio-v19/include"
+      PORTAUDIO_LOCAL_CONFIGURE_ARGS="--with-pa-include=$(pwd)/lib-src/portaudio-v19/include"
 
       AC_MSG_NOTICE([portaudio19 library is available in the local tree])
    else
