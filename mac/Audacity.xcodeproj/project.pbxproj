@@ -1915,6 +1915,10 @@
 		ED85B60316A47B80006DA21D /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707400D0988EB90008541CC /* libresample.a */; };
 		ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */; };
 		ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED920CAE15B19F61008CA12C /* ModulePrefs.cpp */; };
+		ED924BD1182EA20500319F81 /* ogg_decoder_aspect.c in Sources */ = {isa = PBXBuildFile; fileRef = ED924BCD182EA20500319F81 /* ogg_decoder_aspect.c */; };
+		ED924BD2182EA20500319F81 /* ogg_encoder_aspect.c in Sources */ = {isa = PBXBuildFile; fileRef = ED924BCE182EA20500319F81 /* ogg_encoder_aspect.c */; };
+		ED924BD3182EA20500319F81 /* ogg_helper.c in Sources */ = {isa = PBXBuildFile; fileRef = ED924BCF182EA20500319F81 /* ogg_helper.c */; };
+		ED924BD4182EA20500319F81 /* ogg_mapping.c in Sources */ = {isa = PBXBuildFile; fileRef = ED924BD0182EA20500319F81 /* ogg_mapping.c */; };
 		EDAD326B1544452E009C6220 /* sl.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325515444371009C6220 /* sl.po */; };
 		EDAD326C1544452E009C6220 /* sr_RS.po in Sources */ = {isa = PBXBuildFile; fileRef = EDAD325615444371009C6220 /* sr_RS.po */; };
 		EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888493B131B6CF600B59735 /* sr_RS@latin.po */; };
@@ -4031,6 +4035,10 @@
 		ED90976C116CAD49002F7479 /* ExtImportPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExtImportPrefs.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED920CAD15B19F61008CA12C /* ModulePrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModulePrefs.h; sourceTree = "<group>"; };
 		ED920CAE15B19F61008CA12C /* ModulePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModulePrefs.cpp; sourceTree = "<group>"; };
+		ED924BCD182EA20500319F81 /* ogg_decoder_aspect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ogg_decoder_aspect.c; sourceTree = "<group>"; };
+		ED924BCE182EA20500319F81 /* ogg_encoder_aspect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ogg_encoder_aspect.c; sourceTree = "<group>"; };
+		ED924BCF182EA20500319F81 /* ogg_helper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ogg_helper.c; sourceTree = "<group>"; };
+		ED924BD0182EA20500319F81 /* ogg_mapping.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ogg_mapping.c; sourceTree = "<group>"; };
 		EDAD325515444371009C6220 /* sl.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sl.po; path = ../locale/sl.po; sourceTree = SOURCE_ROOT; };
 		EDAD325615444371009C6220 /* sr_RS.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sr_RS.po; path = ../locale/sr_RS.po; sourceTree = SOURCE_ROOT; };
 		EDAD325715444372009C6220 /* sv.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = sv.po; path = ../locale/sv.po; sourceTree = SOURCE_ROOT; };
@@ -4766,6 +4774,10 @@
 				176EEB0B09A2EF1100188F3B /* memory.c */,
 				176EEB0E09A2EF1100188F3B /* metadata_iterators.c */,
 				176EEB1109A2EF1100188F3B /* metadata_object.c */,
+				ED924BCD182EA20500319F81 /* ogg_decoder_aspect.c */,
+				ED924BCE182EA20500319F81 /* ogg_encoder_aspect.c */,
+				ED924BCF182EA20500319F81 /* ogg_helper.c */,
+				ED924BD0182EA20500319F81 /* ogg_mapping.c */,
 				176EEB2809A2EF1100188F3B /* stream_decoder.c */,
 				176EEB2B09A2EF1100188F3B /* stream_encoder.c */,
 				176EEB2E09A2EF1100188F3B /* stream_encoder_framing.c */,
@@ -8567,6 +8579,10 @@
 				28EA56630D9753B000C8D1B6 /* bitreader.c in Sources */,
 				28EA56640D9753B000C8D1B6 /* bitwriter.c in Sources */,
 				28EA56650D9753B000C8D1B6 /* window.c in Sources */,
+				ED924BD1182EA20500319F81 /* ogg_decoder_aspect.c in Sources */,
+				ED924BD2182EA20500319F81 /* ogg_encoder_aspect.c in Sources */,
+				ED924BD3182EA20500319F81 /* ogg_helper.c in Sources */,
+				ED924BD4182EA20500319F81 /* ogg_mapping.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10000,7 +10016,7 @@
 					NDEBUG,
 				);
 				PRODUCT_NAME = FLAC;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Debug Static";
 		};
@@ -10571,7 +10587,7 @@
 					NDEBUG,
 				);
 				PRODUCT_NAME = FLAC;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Debug Shared";
 		};
@@ -10888,7 +10904,7 @@
 					NDEBUG,
 				);
 				PRODUCT_NAME = FLAC;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Release Shared";
 		};
@@ -11165,7 +11181,7 @@
 					NDEBUG,
 				);
 				PRODUCT_NAME = FLAC;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Release Static";
 		};
