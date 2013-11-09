@@ -127,9 +127,8 @@ library for endcoding and decoding Xiph.org's high-quality compressed audio
 format.
 Version in Audacity SVN: 1.3.3
 Patches: autotools.patch: Fix all autotools warnings.
-         local-libogg.patch:  configure patch that lets us build against a
-         local libogg if there isn't a system one.
 Upstream Version: 1.3.3
+
 
 lib-widget-extra
 ----------------

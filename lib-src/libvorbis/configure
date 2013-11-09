@@ -812,7 +812,9 @@ LDFLAGS
 LIBS
 CPPFLAGS
 CPP
-PKG_CONFIG'
+PKG_CONFIG
+OGG_CFLAGS
+OGG_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1458,9 +1460,12 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot=DIR Search for dependent libraries within DIR
                         (or the compiler's sysroot if not specified).
-  --with-ogg=PFX   Prefix where libogg is installed (optional)
-  --with-ogg-libraries=DIR   Directory where libogg library is installed (optional)
-  --with-ogg-includes=DIR   Directory where libogg header files are installed (optional)
+  --with-ogg=PFX          Prefix where libogg is installed (optional)
+  --with-ogg-libraries=DIR
+                          Directory where libogg library is installed
+                          (optional)
+  --with-ogg-includes=DIR Directory where libogg header files are installed
+                          (optional)
 
 Some influential environment variables:
   CC          C compiler command
@@ -1472,6 +1477,8 @@ Some influential environment variables:
               you have headers in a nonstandard directory <include dir>
   CPP         C preprocessor
   PKG_CONFIG  path to pkg-config utility
+  OGG_CFLAGS  C compiler flags for OGG, overriding pkg-config
+  OGG_LIBS    linker flags for OGG, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -12600,164 +12607,82 @@ $as_echo "no" >&6; }
 fi
 
 HAVE_OGG=no
+if test "x$PKG_CONFIG" != "x"
+then
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ../libogg/include/ogg/ogg.h" >&5
-$as_echo_n "checking for ../libogg/include/ogg/ogg.h... " >&6; }
-if ${ac_cv_file____libogg_include_ogg_ogg_h+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "../libogg/include/ogg/ogg.h"; then
-  ac_cv_file____libogg_include_ogg_ogg_h=yes
-else
-  ac_cv_file____libogg_include_ogg_ogg_h=no
-fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_file____libogg_include_ogg_ogg_h" >&5
-$as_echo "$ac_cv_file____libogg_include_ogg_ogg_h" >&6; }
-if test "x$ac_cv_file____libogg_include_ogg_ogg_h" = xyes; then :
-  ogg_h_available="yes"
-else
-  ogg_h_available="no"
-fi
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for OGG" >&5
+$as_echo_n "checking for OGG... " >&6; }
 
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ../libogg/Makefile" >&5
-$as_echo_n "checking for ../libogg/Makefile... " >&6; }
-if ${ac_cv_file____libogg_Makefile+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  test "$cross_compiling" = yes &&
-  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
-if test -r "../libogg/Makefile"; then
-  ac_cv_file____libogg_Makefile=yes
-else
-  ac_cv_file____libogg_Makefile=no
-fi
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_file____libogg_Makefile" >&5
-$as_echo "$ac_cv_file____libogg_Makefile" >&6; }
-if test "x$ac_cv_file____libogg_Makefile" = xyes; then :
-  ogg_configured="yes"
-else
-  ogg_configured="no"
-fi
-
-
-if test "x$ogg_configured" = "xyes" && test "x$ogg_h_available" = "xyes" ; then
-  echo "Using local libogg library from Audacity lib-src directory."
-
-
-
-
-  OGG_LIBS="-L../.. -logg"
-  LIBS="-L../.. -logg"
-  OGG_CFLAGS="-I../../libogg/include"
-
-else
-  if test "x$PKG_CONFIG" != "x"
-  then
-
-  succeeded=no
-
-  if test -z "$PKG_CONFIG"; then
-    # Extract the first word of "pkg-config", so it can be a program name with args.
-set dummy pkg-config; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PKG_CONFIG+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PKG_CONFIG in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PKG_CONFIG="$PKG_CONFIG" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PKG_CONFIG" && ac_cv_path_PKG_CONFIG="no"
-  ;;
-esac
-fi
-PKG_CONFIG=$ac_cv_path_PKG_CONFIG
 if test -n "$PKG_CONFIG"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PKG_CONFIG" >&5
-$as_echo "$PKG_CONFIG" >&6; }
+    if test -n "$OGG_CFLAGS"; then
+        pkg_cv_OGG_CFLAGS="$OGG_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ogg >= 1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ogg >= 1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_OGG_CFLAGS=`$PKG_CONFIG --cflags "ogg >= 1.0" 2>/dev/null`
 else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
+fi
+if test -n "$PKG_CONFIG"; then
+    if test -n "$OGG_LIBS"; then
+        pkg_cv_OGG_LIBS="$OGG_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ogg >= 1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ogg >= 1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_OGG_LIBS=`$PKG_CONFIG --libs "ogg >= 1.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+    fi
+else
+	pkg_failed=untried
 fi
 
 
-  fi
 
-  if test "$PKG_CONFIG" = "no" ; then
-     echo "*** The pkg-config script could not be found. Make sure it is"
-     echo "*** in your path, or set the PKG_CONFIG environment variable"
-     echo "*** to the full path to pkg-config."
-     echo "*** Or see http://www.freedesktop.org/software/pkgconfig to get pkg-config."
-  else
-     pkg_config_min_version=0.9.0
-     if $PKG_CONFIG --atleast-pkgconfig-version $pkg_config_min_version; then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ogg >= 1.0" >&5
-$as_echo_n "checking for ogg >= 1.0... " >&6; }
+if test $pkg_failed = yes; then
 
-        if $PKG_CONFIG --exists "ogg >= 1.0" ; then
-            { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-            succeeded=yes
-
-            { $as_echo "$as_me:${as_lineno-$LINENO}: checking OGG_CFLAGS" >&5
-$as_echo_n "checking OGG_CFLAGS... " >&6; }
-            OGG_CFLAGS=`$PKG_CONFIG --cflags "ogg >= 1.0"`
-            { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OGG_CFLAGS" >&5
-$as_echo "$OGG_CFLAGS" >&6; }
-
-            { $as_echo "$as_me:${as_lineno-$LINENO}: checking OGG_LIBS" >&5
-$as_echo_n "checking OGG_LIBS... " >&6; }
-            OGG_LIBS=`$PKG_CONFIG --libs "ogg >= 1.0"`
-            { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OGG_LIBS" >&5
-$as_echo "$OGG_LIBS" >&6; }
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        OGG_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "ogg >= 1.0"`
         else
-            OGG_CFLAGS=""
-            OGG_LIBS=""
-            ## If we have a custom action on failure, don't print errors, but
-            ## do set a variable so people can do so.
-            OGG_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "ogg >= 1.0"`
-
+	        OGG_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "ogg >= 1.0"`
         fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$OGG_PKG_ERRORS" >&5
 
-
-
-     else
-        echo "*** Your version of pkg-config is too old. You need version $pkg_config_min_version or newer."
-        echo "*** See http://www.freedesktop.org/software/pkgconfig"
-     fi
-  fi
-
-  if test $succeeded = yes; then
-     HAVE_OGG=yes
-  else
-     HAVE_OGG=no
-  fi
-
-  fi
-  if test "x$HAVE_OGG" = "xno"
-  then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                HAVE_OGG=no
+elif test $pkg_failed = untried; then
+	HAVE_OGG=no
+else
+	OGG_CFLAGS=$pkg_cv_OGG_CFLAGS
+	OGG_LIBS=$pkg_cv_OGG_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	HAVE_OGG=yes
+fi
+fi
+if test "x$HAVE_OGG" = "xno"
+then
 
 # Check whether --with-ogg was given.
 if test "${with_ogg+set}" = set; then :
@@ -12792,16 +12717,22 @@ fi
 
   if test "x$ogg_libraries" != "x" ; then
     OGG_LIBS="-L$ogg_libraries"
+  elif test "x$ogg_prefix" = "xno" || test "x$ogg_prefix" = "xyes" ; then
+    OGG_LIBS=""
   elif test "x$ogg_prefix" != "x" ; then
     OGG_LIBS="-L$ogg_prefix/lib"
   elif test "x$prefix" != "xNONE" ; then
     OGG_LIBS="-L$prefix/lib"
   fi
 
-  OGG_LIBS="$OGG_LIBS -logg"
+  if test "x$ogg_prefix" != "xno" ; then
+    OGG_LIBS="$OGG_LIBS -logg"
+  fi
 
   if test "x$ogg_includes" != "x" ; then
     OGG_CFLAGS="-I$ogg_includes"
+  elif test "x$ogg_prefix" = "xno" || test "x$ogg_prefix" = "xyes" ; then
+    OGG_CFLAGS=""
   elif test "x$ogg_prefix" != "x" ; then
     OGG_CFLAGS="-I$ogg_prefix/include"
   elif test "x$prefix" != "xNONE"; then
@@ -12810,7 +12741,12 @@ fi
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Ogg" >&5
 $as_echo_n "checking for Ogg... " >&6; }
-  no_ogg=""
+  if test "x$ogg_prefix" = "xno" ; then
+    no_ogg="disabled"
+    enable_oggtest="no"
+  else
+    no_ogg=""
+  fi
 
 
   if test "x$enable_oggtest" = "xyes" ; then
@@ -12851,7 +12787,11 @@ fi
        LIBS="$ac_save_LIBS"
   fi
 
-  if test "x$no_ogg" = "x" ; then
+  if test "x$no_ogg" = "xdisabled" ; then
+     { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+     as_fn_error $? "must have Ogg installed!" "$LINENO" 5
+  elif test "x$no_ogg" = "x" ; then
      { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
      :
@@ -12891,8 +12831,7 @@ if ac_fn_c_try_link "$LINENO"; then :
 else
    echo "*** The test program failed to compile or link. See the file config.log for the"
        echo "*** exact error that occured. This usually means Ogg was incorrectly installed"
-       echo "*** or that you have moved Ogg since it was installed. In the latter case, you"
-       echo "*** may want to edit the ogg-config script: $OGG_CONFIG"
+       echo "*** or that you have moved Ogg since it was installed."
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
@@ -12907,17 +12846,16 @@ rm -f core conftest.err conftest.$ac_objext \
 
   rm -f conf.oggtest
 
-    libs_save=$LIBS
-    LIBS="$OGG_LIBS $VORBIS_LIBS"
-    ac_fn_c_check_func "$LINENO" "oggpack_writealign" "ac_cv_func_oggpack_writealign"
+  libs_save=$LIBS
+  LIBS="$OGG_LIBS $VORBIS_LIBS"
+  ac_fn_c_check_func "$LINENO" "oggpack_writealign" "ac_cv_func_oggpack_writealign"
 if test "x$ac_cv_func_oggpack_writealign" = xyes; then :
 
 else
   as_fn_error $? "Ogg >= 1.0 required !" "$LINENO" 5
 fi
 
-    LIBS=$libs_save
-  fi
+  LIBS=$libs_save
 fi
 
 
