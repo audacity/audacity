@@ -91,11 +91,7 @@
 #include "Export.h"
 #include "ExportMP3.h"
 
-#if defined(DISABLE_DYNAMIC_LOADING_LAME)
 #include <lame/lame.h>
-#else
-#include "lame.h"
-#endif
 
 #ifdef USE_LIBID3TAG 
 #include <id3tag.h>

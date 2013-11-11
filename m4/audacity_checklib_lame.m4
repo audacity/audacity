@@ -44,5 +44,14 @@ AC_DEFUN([AUDACITY_CHECKLIB_LAME], [
 
    dnl see if LAME is available in the source dir
 
-   LAME_LOCAL_AVAILABLE="yes"
+   AC_CHECK_FILE(${srcdir}/lib-src/lame/lame/lame.h,
+                 LAME_LOCAL_AVAILABLE="yes",
+                 LAME_LOCAL_AVAILABLE="no")
+
+   if test "$LAME_LOCAL_AVAILABLE" = "yes"; then
+      LAME_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/lame'
+      AC_MSG_NOTICE([LAME headers are available in this source tree.])
+   else
+      AC_MSG_NOTICE([LAME headers are NOT available in this source tree.])
+   fi
 ])

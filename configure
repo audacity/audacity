@@ -6067,7 +6067,38 @@ $as_echo "$as_me: LAME library is NOT available as system library." >&6;}
    fi
 
 
-   LAME_LOCAL_AVAILABLE="yes"
+   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/lame/lame/lame.h" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/lame/lame/lame.h" >&5
+$as_echo_n "checking for ${srcdir}/lib-src/lame/lame/lame.h... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "${srcdir}/lib-src/lame/lame/lame.h"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  LAME_LOCAL_AVAILABLE="yes"
+else
+  LAME_LOCAL_AVAILABLE="no"
+fi
+
+
+   if test "$LAME_LOCAL_AVAILABLE" = "yes"; then
+      LAME_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/lame'
+      { $as_echo "$as_me:${as_lineno-$LINENO}: LAME headers are available in this source tree." >&5
+$as_echo "$as_me: LAME headers are available in this source tree." >&6;}
+   else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: LAME headers are NOT available in this source tree." >&5
+$as_echo "$as_me: LAME headers are NOT available in this source tree." >&6;}
+   fi
 
 
 
