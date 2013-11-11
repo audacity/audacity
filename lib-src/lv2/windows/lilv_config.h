@@ -12,4 +12,24 @@
 #define LILV_DIR_SEP "\\"
 #define LILV_DEFAULT_LV2_PATH "%APPDATA%\\LV2;%COMMONPROGRAMFILES%\\LV2"
 
+#include <windows.h>
+#undef CreateSymbolicLink
+inline BOOLEAN CreateSymbolicLink(LPCSTR lpSymlinkFileName,
+                                  LPCSTR lpTargetFileName,
+                                  DWORD dwFlags)
+{
+   typedef BOOLEAN (WINAPI *CSL)(LPCSTR lpSymlinkFileName,
+                                 LPCSTR lpTargetFileName,
+                                 DWORD dwFlags);
+   
+   CSL *symlink = (CSL *) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")),
+                                         TEXT("CreateSymbolicLinkA"));
+   if (symlink)
+   {
+      return (*symlink)(lpSymlinkFileName, lpTargetFileName, dwFlags);
+   }
+
+   return FALSE;
+}
+
 #endif /* W_LILV_CONFIG_H_WAF */
