@@ -63,20 +63,20 @@ install: audacity $(EXTRAINSTALLTARGETS)
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/pixmaps/
 	$(INSTALL) -m 644 images/AudacityLogo48x48.xpm $(DESTDIR)$(DATADIR)/pixmaps/$(AUDACITY_NAME).xpm
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/icons/hicolor/16x16/apps
-	$(INSTALL) -m 644 images/audacity16.png $(DESTDIR)$(DATADIR)/icons/hicolor/16x16/apps/$(AUDACITY_NAME).png
+	$(INSTALL) -m 644 images/icons/16x16/audacity.png $(DESTDIR)$(DATADIR)/icons/hicolor/16x16/apps/$(AUDACITY_NAME).png
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/icons/hicolor/22x22/apps
-	$(INSTALL) -m 644 images/audacity22.png $(DESTDIR)$(DATADIR)/icons/hicolor/22x22/apps/$(AUDACITY_NAME).png
+	$(INSTALL) -m 644 images/icons/22x22/audacity.png $(DESTDIR)$(DATADIR)/icons/hicolor/22x22/apps/$(AUDACITY_NAME).png
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/icons/hicolor/24x24/apps
-	$(INSTALL) -m 644 images/audacity24.png $(DESTDIR)$(DATADIR)/icons/hicolor/24x24/apps/$(AUDACITY_NAME).png
+	$(INSTALL) -m 644 images/icons/24x24/audacity.png $(DESTDIR)$(DATADIR)/icons/hicolor/24x24/apps/$(AUDACITY_NAME).png
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/icons/hicolor/32x32/apps
-	$(INSTALL) -m 644 images/audacity32.png $(DESTDIR)$(DATADIR)/icons/hicolor/32x32/apps/$(AUDACITY_NAME).png
+	$(INSTALL) -m 644 images/icons/32x32/audacity.png $(DESTDIR)$(DATADIR)/icons/hicolor/32x32/apps/$(AUDACITY_NAME).png
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/icons/hicolor/48x48/apps
-	$(INSTALL) -m 644 images/audacity48.png $(DESTDIR)$(DATADIR)/icons/hicolor/48x48/apps/$(AUDACITY_NAME).png
+	$(INSTALL) -m 644 images/icons/48x48/audacity.png $(DESTDIR)$(DATADIR)/icons/hicolor/48x48/apps/$(AUDACITY_NAME).png
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/icons/hicolor/scalable/apps
 	$(INSTALL) -m 644 images/audacity.svg $(DESTDIR)$(DATADIR)/icons/hicolor/scalable/apps/$(AUDACITY_NAME).svg
 	$(INSTALL) -d $(DESTDIR)$(DATADIR)/pixmaps
-	$(INSTALL) -m 644 images/audacity16.xpm $(DESTDIR)$(DATADIR)/pixmaps/$(AUDACITY_NAME)16.xpm
-	$(INSTALL) -m 644 images/audacity32.xpm $(DESTDIR)$(DATADIR)/pixmaps/$(AUDACITY_NAME)32.xpm
+	$(INSTALL) -m 644 images/icons/16x16/audacity16.xpm $(DESTDIR)$(DATADIR)/pixmaps/$(AUDACITY_NAME)16.xpm
+	$(INSTALL) -m 644 images/icons/32x32/audacity32.xpm $(DESTDIR)$(DATADIR)/pixmaps/$(AUDACITY_NAME)32.xpm
 	# note we don't use the AUDACITY_NAME variable here, because the mime type
 	# doesn't depend on it
 	$(INSTALL) -m 644 images/gnome-mime-application-x-audacity-project.xpm $(DESTDIR)$(DATADIR)/pixmaps/gnome-mime-application-x-audacity-project.xpm
