@@ -20,7 +20,9 @@ libwidgetextra.a: widgetextra
 
 # libogg
 libogg-recursive:
+ifneq (,$(findstring libogg.a,@LOCAL_LIBS@))
 	$(MAKE) -C libogg
+endif
 libogg.a: libogg-recursive
 	ln -sf libogg/src/.libs/libogg.a libogg.a
 
@@ -33,7 +35,7 @@ libvorbis.a libvorbisfile.a libvorbisenc.a: libogg.a libvorbis-recursive
 	ln -sf libvorbis/lib/.libs/libvorbisenc.a libvorbisenc.a
 
 # libflac
-libflac-recursive:
+libflac-recursive: libogg-recursive
 	$(MAKE)  -C libflac
 libFLAC++.a libFLAC.a: libflac-recursive
 	ln -sf libflac/src/libFLAC++/.libs/libFLAC++-static.a libFLAC++.a
