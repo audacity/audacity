@@ -276,7 +276,7 @@ dnl-------------------------------------------------------------
 dnl wxWidgets -- we assume that if wx-config is found, wxWidgets is successfully installed.
 AC_PATH_PROG(WX_CONFIG, wx-config, no, $PATH:/usr/local/bin )
 if [[ "$WX_CONFIG" = "no" ]] ; then
-   AC_MSG_ERROR("Could not find wx-config: is wxWidgets installed? is wx-config in your path?")
+   AC_MSG_ERROR([Could not find wx-config: is wxWidgets installed? is wx-config in your path?])
 fi
 
 if test "x$debug_preference" = "xyes"; then
@@ -398,7 +398,7 @@ for lib in $LIBRARIES ; do
       elif test "$LIB_ARGUMENT" = no ; then
          AC_MSG_NOTICE([disabling $lib at your request])
       else
-         AC_MSG_ERROR(I did not understand the argument $LIB_ARGUMENT for $lib)
+         AC_MSG_ERROR([I did not understand the argument $LIB_ARGUMENT for $lib])
       fi
    fi
 done
@@ -593,12 +593,12 @@ case "${host_os}" in
       dnl On Unix we always use dlopen
       AC_SEARCH_LIBS([dlopen], [dl])
       if [[ "$ac_cv_search_dlopen" = no ]]; then
-         AC_MSG_ERROR(dlopen not found, required by Audacity)
+         AC_MSG_ERROR([dlopen not found, required by Audacity])
       fi
 
       AC_SEARCH_LIBS([XML_ParserCreate], [expat])
       if [[ "$ac_cv_search_expat" = no ]]; then
-         AC_MSG_ERROR(expat not found, required by Audacity)
+         AC_MSG_ERROR([expat not found, required by Audacity])
       fi
 
       AC_SUBST(HAVE_GTK)

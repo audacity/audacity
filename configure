@@ -5510,7 +5510,7 @@ fi
 
 
 if [ "$WX_CONFIG" = "no" ] ; then
-   as_fn_error $? "\"Could not find wx-config: is wxWidgets installed? is wx-config in your path?\"" "$LINENO" 5
+   as_fn_error $? "Could not find wx-config: is wxWidgets installed? is wx-config in your path?" "$LINENO" 5
 fi
 
 if test "x$debug_preference" = "xyes"; then
@@ -8940,7 +8940,7 @@ if test "$ac_res" != no; then :
 fi
 
       if [ "$ac_cv_search_dlopen" = no ]; then
-         as_fn_error required by Audacity "dlopen not found" "$LINENO" 5
+         as_fn_error $? "dlopen not found, required by Audacity" "$LINENO" 5
       fi
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing XML_ParserCreate" >&5
@@ -9000,7 +9000,7 @@ if test "$ac_res" != no; then :
 fi
 
       if [ "$ac_cv_search_expat" = no ]; then
-         as_fn_error required by Audacity "expat not found" "$LINENO" 5
+         as_fn_error $? "expat not found, required by Audacity" "$LINENO" 5
       fi
 
 
