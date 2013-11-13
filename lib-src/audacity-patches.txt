@@ -150,6 +150,9 @@ Patches:
     serdnode.patch - Both lilv and serd have a node.c which causes problems during build.
                      This is just a copy of serd/node.c and is a way to work around the
                      problem.
+Modifications:
+    Run lib-src/lv2/unpack-waf to unpack the waf scripts.
+    See http://lintian.debian.org/tags/source-contains-waf-binary.html for details.
 Upstream Versions:
     lilv-0.16.0
     lv2-1.6.0
