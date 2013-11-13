@@ -5,7 +5,7 @@ noinst_PROGRAMS = misc_test termination_test simple_test callback_test \
 					downsample_test
 
 SAMPLRATEDIR =../src
-INCLUDES = -I$(srcdir)/$(SAMPLRATEDIR)
+AM_CPPFLAGS = -I$(srcdir)/$(SAMPLRATEDIR)
 noinst_HEADERS = util.h
 
 #===============================================================================

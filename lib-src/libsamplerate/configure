@@ -690,7 +690,6 @@ CPPFLAGS
 LDFLAGS
 CFLAGS
 CC
-ACLOCAL_AMFLAGS
 MAINT
 MAINTAINER_MODE_FALSE
 MAINTAINER_MODE_TRUE
@@ -3069,9 +3068,8 @@ fi
 
 
 # Define the identity of the package.
-
- PACKAGE=$PACKAGE_NAME
- VERSION=$PACKAGE_VERSION
+ PACKAGE='libsamplerate'
+ VERSION='0.1.7'
 
 
 cat >>confdefs.h <<_ACEOF
@@ -3146,10 +3144,6 @@ fi
 
 
 ac_config_headers="$ac_config_headers src/config.h"
-
-
-
-ACLOCAL_AMFLAGS="-I M4"
 
 
 ac_ext=c

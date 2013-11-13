@@ -1,27 +1,23 @@
 # Copyright (C) 2002-2008 Erik de Castro Lopo (erikd AT mega-nerd DOT com).
 
 dnl Require autoconf version >= 2.57)
-AC_PREREQ(2.57)
+AC_PREREQ([2.57])
 
 AC_INIT([libsamplerate],[0.1.7],[erikd@mega-nerd.com])
 
 # Put config stuff in Cfg.
-AC_CONFIG_AUX_DIR(Cfg)
+AC_CONFIG_AUX_DIR([Cfg])
 
 AC_CONFIG_SRCDIR([src/samplerate.c])
 AC_CANONICAL_TARGET([])
 
 AC_CONFIG_MACRO_DIR([M4])
 
-AM_INIT_AUTOMAKE($PACKAGE_NAME,$PACKAGE_VERSION)
+AM_INIT_AUTOMAKE
 dnl Audacity policy: don't enable automatic rebuild of configure et al if 
 dnl sources change
 AM_MAINTAINER_MODE([disable])
 AC_CONFIG_HEADER(src/config.h)
-
-
-dnl Add parameters for aclocal
-AC_SUBST(ACLOCAL_AMFLAGS, "-I M4")
 
 AC_LANG([C])
 

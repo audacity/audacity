@@ -6,7 +6,7 @@ bin_PROGRAMS = sndfile-resample
 noinst_PROGRAMS = varispeed-play timewarp-file
 
 SAMPLERATEDIR =../src
-INCLUDES = -I$(srcdir)/$(SAMPLERATEDIR) @OS_SPECIFIC_INCLUDES@
+AM_CPPFLAGS = -I$(srcdir)/$(SAMPLERATEDIR) @OS_SPECIFIC_INCLUDES@
 
 OS_SPECIFIC_LINKS = @OS_SPECIFIC_LINKS@
 
