@@ -102,7 +102,7 @@ Patches: maintainer-mode.patch: AM_MAINTAINER_MODE added to configure.ac
                     0001-Add-support-for-Album-and-Track-tags-in-RIFF-files-for-libsndfile-1.0.24.patch for libsndfile 1.0.24, and
                     0001-Add-support-for-Album-and-Track-tags-in-RIFF-files-for-libsndfile-1.0.25.patch for libsndfile 1.0.25,
                     submitted to libsndfile list on August 19 2012.
-
+         autotools.patch: Fix all autotools warnings.
 Upstream Version: 1.0.25
 
 libsoxr

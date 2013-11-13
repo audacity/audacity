@@ -2,7 +2,7 @@
 
 SUBDIRS = GSM610 G72x
 
-INCLUDES = @EXTERNAL_CFLAGS@
+AM_CPPFLAGS = @EXTERNAL_CFLAGS@
 
 lib_LTLIBRARIES = libsndfile.la
 include_HEADERS = sndfile.hh

@@ -2,7 +2,7 @@
 
 noinst_PROGRAMS = make_sine sfprocess list_formats generate sndfilehandle sndfile-to-text
 
-INCLUDES = -I$(top_srcdir)/src
+AM_CPPFLAGS = -I$(top_srcdir)/src
 
 sndfile_to_text_SOURCES = sndfile-to-text.c
 sndfile_to_text_LDADD = $(top_builddir)/src/libsndfile.la

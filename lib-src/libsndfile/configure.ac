@@ -15,15 +15,12 @@ AC_CANONICAL_TARGET([])
 AC_CONFIG_MACRO_DIR([M4])
 AC_CONFIG_HEADERS([src/config.h])
 
-AM_INIT_AUTOMAKE($PACKAGE_NAME,$PACKAGE_VERSION)
+AM_INIT_AUTOMAKE
 AM_SILENT_RULES([yes])
 
 dnl Audacity policy: don't enable automatic rebuild of configure et al if 
 dnl sources change
 AM_MAINTAINER_MODE([disable])
-
-dnl Add parameters for aclocal
-AC_SUBST(ACLOCAL_AMFLAGS, "-I M4")
 
 AC_LANG([C])
 
