@@ -753,6 +753,7 @@ with_lib_preference
 enable_sse
 enable_universal_binary
 enable_dynamic_loading
+with_expat
 with_ffmpeg
 with_lame
 with_libflac
@@ -825,6 +826,7 @@ GTK_LIBS
 JACK_CFLAGS
 JACK_LIBS'
 ac_subdirs_all='lib-src/FileDialog
+lib-src/expat
 lib-src/libflac
 lib-src/libid3tag
 lib-src/libmad
@@ -1478,6 +1480,8 @@ Optional Packages:
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-lib-preference   whether to use local and/or system libraries, in
                           order of preference (default="system local")
+  --with-expat            which expat to use for XML file support:
+                          [system,local]
   --with-ffmpeg           use ffmpeg for import and export support
   --with-lame             use lame for import and export support
   --with-libflac          use libFLAC for FLAC support
@@ -5554,10 +5558,127 @@ subdirs="$subdirs lib-src/FileDialog"
 LOCAL_LIBS="$LOCAL_LIBS FileDialog.a"
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 
-LIBRARIES="FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
+
+
+
+
+# Check whether --with-expat was given.
+if test "${with_expat+set}" = set; then :
+  withval=$with_expat; EXPAT_ARGUMENT=$withval
+else
+  EXPAT_ARGUMENT="unspecified"
+fi
+
+
+
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for XML_ParserCreate in -lexpat" >&5
+$as_echo_n "checking for XML_ParserCreate in -lexpat... " >&6; }
+if ${ac_cv_lib_expat_XML_ParserCreate+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lexpat  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char XML_ParserCreate ();
+int
+main ()
+{
+return XML_ParserCreate ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_expat_XML_ParserCreate=yes
+else
+  ac_cv_lib_expat_XML_ParserCreate=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_expat_XML_ParserCreate" >&5
+$as_echo "$ac_cv_lib_expat_XML_ParserCreate" >&6; }
+if test "x$ac_cv_lib_expat_XML_ParserCreate" = xyes; then :
+  libexpat_found="yes"
+else
+  libexpat_found="no"
+fi
+
+
+   expat_h_found="no"
+
+   ac_fn_cxx_check_header_mongrel "$LINENO" "expat.h" "ac_cv_header_expat_h" "$ac_includes_default"
+if test "x$ac_cv_header_expat_h" = xyes; then :
+  expat_h_found="yes"
+else
+  expat_h_found="no"
+fi
+
+
+
+   if test "x$libexpat_found" = "xyes" && test "x$expat_h_found" = "xyes" ; then
+      EXPAT_SYSTEM_AVAILABLE="yes"
+      EXPAT_SYSTEM_LIBS="-lexpat"
+      EXPAT_SYSTEM_CPPSYMBOLS="USE_SYSTEM_EXPAT"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are available as system libraries" >&5
+$as_echo "$as_me: Expat libraries are available as system libraries" >&6;}
+   else
+      EXPAT_SYSTEM_AVAILABLE="no"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are NOT available as system libraries" >&5
+$as_echo "$as_me: Expat libraries are NOT available as system libraries" >&6;}
+   fi
+
+
+   as_ac_File=`$as_echo "ac_cv_file_${srcdir}/lib-src/expat/lib/expat.h" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ${srcdir}/lib-src/expat/lib/expat.h" >&5
+$as_echo_n "checking for ${srcdir}/lib-src/expat/lib/expat.h... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "${srcdir}/lib-src/expat/lib/expat.h"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  xmlparse_h_found="yes"
+else
+  xmlparse_h_found="no"
+fi
+
+
+   if test "x$xmlparse_h_found" = "xyes" ; then
+      EXPAT_LOCAL_AVAILABLE="yes"
+      EXPAT_LOCAL_LIBS="libexpat.a"
+      EXPAT_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/expat'
+      EXPAT_LOCAL_CPPSYMBOLS="USE_LOCAL_EXPAT"
+
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are available in the local tree" >&5
+$as_echo "$as_me: Expat libraries are available in the local tree" >&6;}
+   else
+      EXPAT_LOCAL_AVAILABLE="no"
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are NOT available in the local tree" >&5
+$as_echo "$as_me: Expat libraries are NOT available in the local tree" >&6;}
+   fi
 
 
 
@@ -8637,6 +8758,12 @@ done
 
 
 
+   if test "$EXPAT_USE_LOCAL" = yes; then
+      subdirs="$subdirs lib-src/expat"
+
+   fi
+
+
    if test "$LIBFLAC_USE_LOCAL" = yes; then
       subdirs="$subdirs lib-src/libflac"
 
@@ -8941,66 +9068,6 @@ fi
 
       if [ "$ac_cv_search_dlopen" = no ]; then
          as_fn_error $? "dlopen not found, required by Audacity" "$LINENO" 5
-      fi
-
-      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing XML_ParserCreate" >&5
-$as_echo_n "checking for library containing XML_ParserCreate... " >&6; }
-if ${ac_cv_search_XML_ParserCreate+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_func_search_save_LIBS=$LIBS
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char XML_ParserCreate ();
-int
-main ()
-{
-return XML_ParserCreate ();
-  ;
-  return 0;
-}
-_ACEOF
-for ac_lib in '' expat; do
-  if test -z "$ac_lib"; then
-    ac_res="none required"
-  else
-    ac_res=-l$ac_lib
-    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
-  fi
-  if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_search_XML_ParserCreate=$ac_res
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext
-  if ${ac_cv_search_XML_ParserCreate+:} false; then :
-  break
-fi
-done
-if ${ac_cv_search_XML_ParserCreate+:} false; then :
-
-else
-  ac_cv_search_XML_ParserCreate=no
-fi
-rm conftest.$ac_ext
-LIBS=$ac_func_search_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_XML_ParserCreate" >&5
-$as_echo "$ac_cv_search_XML_ParserCreate" >&6; }
-ac_res=$ac_cv_search_XML_ParserCreate
-if test "$ac_res" != no; then :
-  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-
-fi
-
-      if [ "$ac_cv_search_expat" = no ]; then
-         as_fn_error $? "expat not found, required by Audacity" "$LINENO" 5
       fi
 
 

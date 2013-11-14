@@ -5,6 +5,13 @@ the end for how external libraries are brought in and maintained.
 
 Libraries
 =========
+expat
+-----
+XML parser library used to parse project files and so on.
+Version in Audacity SVN: 2.1.0
+Patches: None
+Upstream version: 2.1.0
+
 FileDialog
 ----------
 The customised file saving dialogs for wxwidgets to provide the options

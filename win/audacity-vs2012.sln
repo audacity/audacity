@@ -1,6 +1,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audacity", "Projects\Audacity\Audacity.vcxproj", "{1D64095C-F936-4FCF-B609-56E9DDF941FA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856} = {A939AAF8-44F1-4CE7-9DD0-7A6E99814856}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soundtouch", "Projects\soundtouch\soundtouch.vcxproj", "{EC3F5835-C486-4970-8A6B-A0700F4B3637}"
 EndProject
@@ -49,6 +52,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsoxr", "Projects\libsoxr\libsoxr.vcxproj", "{AF9AD75C-4785-4432-BAC3-ADAB1E7F1192}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lv2", "Projects\lv2\lv2.vcxproj", "{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "expat", "Projects\expat\expat.vcxproj", "{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -153,6 +158,12 @@ Global
 		{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}.Debug|Win32.Build.0 = Debug|Win32
 		{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}.Release|Win32.ActiveCfg = Release|Win32
 		{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}.Release|Win32.Build.0 = Release|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Debug|Win32.Build.0 = Debug|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Debug|Win32.Deploy.0 = Debug|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Release|Win32.ActiveCfg = Release|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Release|Win32.Build.0 = Release|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

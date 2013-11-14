@@ -1,0 +1,201 @@
+################################################################
+# Process this file with top-level configure script to produce Makefile
+#
+# Copyright 2000 Clark Cooper
+#
+#  This file is part of EXPAT.
+#
+#  EXPAT is free software; you can redistribute it and/or modify it
+#  under the terms of the License (based on the MIT/X license) contained
+#  in the file COPYING that comes with this distribution.
+#
+# EXPAT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN EXPAT.
+#
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+libdir = @libdir@
+includedir = @includedir@
+man1dir = @mandir@/man1
+pkgconfigdir = $(libdir)/pkgconfig
+
+top_builddir = .
+
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+mkinstalldirs = $(SHELL) $(top_srcdir)/conftools/mkinstalldirs
+
+MANFILE = $(srcdir)/doc/xmlwf.1
+APIHEADER = $(srcdir)/lib/expat.h $(srcdir)/lib/expat_external.h
+LIBRARY = libexpat.la
+
+DESTDIR = $(INSTALL_ROOT)
+
+default:  buildlib xmlwf/xmlwf@EXEEXT@
+
+buildlib: $(LIBRARY) expat.pc
+
+all: $(LIBRARY) expat.pc xmlwf/xmlwf@EXEEXT@ examples/elements examples/outline
+
+clean:
+	cd lib && rm -f $(LIBRARY) *.@OBJEXT@ *.lo && rm -rf .libs _libs
+	cd xmlwf && rm -f xmlwf *.@OBJEXT@ *.lo && rm -rf .libs _libs
+	cd examples && rm -f elements outline *.@OBJEXT@ *.lo && rm -rf .libs _libs
+	cd tests && rm -rf .libs runtests runtests.@OBJEXT@ runtestspp runtestspp.@OBJEXT@
+	cd tests && rm -f chardata.@OBJEXT@ minicheck.@OBJEXT@
+	rm -rf .libs libexpat.la
+	rm -f examples/core tests/core xmlwf/core
+
+clobber: clean
+
+distclean: clean
+	rm -f expat_config.h config.status config.log config.cache libtool
+	rm -f Makefile expat.pc
+
+extraclean: distclean
+	rm -f expat_config.h.in configure
+	rm -f aclocal.m4 m4/*
+	rm -f conftools/ltmain.sh conftools/install-sh conftools/config.guess conftools/config.sub
+
+check: tests/runtests tests/runtestspp
+	tests/runtests
+	tests/runtestspp
+
+install: xmlwf/xmlwf@EXEEXT@ installlib
+	$(mkinstalldirs) $(DESTDIR)$(bindir) $(DESTDIR)$(man1dir)
+	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) xmlwf/xmlwf@EXEEXT@ $(DESTDIR)$(bindir)/xmlwf
+	$(INSTALL_DATA) $(MANFILE) $(DESTDIR)$(man1dir)
+
+installlib: $(LIBRARY) $(APIHEADER) expat.pc
+	$(mkinstalldirs) $(DESTDIR)$(libdir) $(DESTDIR)$(includedir) $(DESTDIR)$(pkgconfigdir)
+	$(LIBTOOL) --mode=install $(INSTALL) $(LIBRARY) $(DESTDIR)$(libdir)/$(LIBRARY)
+	for FN in $(APIHEADER) ; do $(INSTALL_DATA) $$FN $(DESTDIR)$(includedir) ; done
+	$(INSTALL_DATA) expat.pc $(DESTDIR)$(pkgconfigdir)/expat.pc
+
+uninstall: uninstalllib
+	$(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(bindir)/xmlwf@EXEEXT@
+	rm -f $(DESTDIR)$(man1dir)/xmlwf.1
+
+uninstalllib:
+	$(LIBTOOL) --mode=uninstall rm -f $(DESTDIR)$(libdir)/$(LIBRARY)
+	rm -f $(DESTDIR)$(includedir)/expat.h
+	rm -f $(DESTDIR)$(includedir)/expat_external.h
+	rm -f $(DESTDIR)$(pkgconfigdir)/expat.pc
+
+# for VPATH builds (invoked by configure)
+mkdir-init:
+	@for d in lib xmlwf examples tests ; do \
+		(mkdir $$d 2> /dev/null || test 1) ; \
+	done
+
+CC = @CC@
+CXX = @CXX@
+LIBTOOL = @LIBTOOL@
+
+INCLUDES = -I$(srcdir)/lib -I.
+LDFLAGS = @LDFLAGS@
+CPPFLAGS = @CPPFLAGS@ -DHAVE_EXPAT_CONFIG_H
+CFLAGS = @CFLAGS@
+CXXFLAGS = @CXXFLAGS@
+VSNFLAG = -version-info @LIBCURRENT@:@LIBREVISION@:@LIBAGE@
+
+### autoconf this?
+LTFLAGS = --silent
+
+COMPILE = $(CC) $(INCLUDES) $(CFLAGS) $(DEFS) $(CPPFLAGS)
+CXXCOMPILE = $(CXX) $(INCLUDES) $(CXXFLAGS) $(DEFS) $(CPPFLAGS)
+LTCOMPILE = $(LIBTOOL) $(LTFLAGS) --mode=compile $(COMPILE)
+LINK_LIB = $(LIBTOOL) $(LTFLAGS) --mode=link $(COMPILE) -no-undefined $(VSNFLAG) -rpath $(libdir) $(LDFLAGS) -o $@
+LINK_EXE = $(LIBTOOL) $(LTFLAGS) --mode=link $(COMPILE) $(LDFLAGS) -o $@
+LINK_CXX_EXE = $(LIBTOOL) $(LTFLAGS) --mode=link $(CXXCOMPILE) $(LDFLAGS) -o $@
+
+LIB_OBJS = lib/xmlparse.lo lib/xmltok.lo lib/xmlrole.lo
+$(LIBRARY): $(LIB_OBJS)
+	$(LINK_LIB) $(LIB_OBJS)
+
+expat.pc: $(top_builddir)/config.status
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+
+lib/xmlparse.lo: lib/xmlparse.c lib/expat.h lib/xmlrole.h lib/xmltok.h \
+	$(top_builddir)/expat_config.h lib/expat_external.h lib/internal.h
+
+lib/xmlrole.lo: lib/xmlrole.c lib/ascii.h lib/xmlrole.h \
+	$(top_builddir)/expat_config.h lib/expat_external.h lib/internal.h
+
+lib/xmltok.lo: lib/xmltok.c lib/xmltok_impl.c lib/xmltok_ns.c \
+	lib/ascii.h lib/asciitab.h lib/iasciitab.h lib/latin1tab.h \
+	lib/nametab.h lib/utf8tab.h lib/xmltok.h lib/xmltok_impl.h \
+	$(top_builddir)/expat_config.h lib/expat_external.h lib/internal.h
+
+
+XMLWF_OBJS = xmlwf/xmlwf.@OBJEXT@ xmlwf/xmlfile.@OBJEXT@ xmlwf/codepage.@OBJEXT@ xmlwf/@FILEMAP@.@OBJEXT@
+xmlwf/xmlwf.@OBJEXT@: xmlwf/xmlwf.c
+xmlwf/xmlfile.@OBJEXT@: xmlwf/xmlfile.c
+xmlwf/codepage.@OBJEXT@: xmlwf/codepage.c
+xmlwf/@FILEMAP@.@OBJEXT@: xmlwf/@FILEMAP@.c
+xmlwf/xmlwf@EXEEXT@: $(XMLWF_OBJS) $(LIBRARY)
+	$(LINK_EXE) $(XMLWF_OBJS) $(LIBRARY)
+
+examples/elements.@OBJEXT@: examples/elements.c
+examples/elements: examples/elements.@OBJEXT@ $(LIBRARY)
+	$(LINK_EXE) $< $(LIBRARY)
+
+examples/outline.@OBJEXT@: examples/outline.c
+examples/outline: examples/outline.@OBJEXT@ $(LIBRARY)
+	$(LINK_EXE) $< $(LIBRARY)
+
+tests/chardata.@OBJEXT@: tests/chardata.c tests/chardata.h
+tests/minicheck.@OBJEXT@: tests/minicheck.c tests/minicheck.h
+tests/runtests.@OBJEXT@: tests/runtests.c tests/chardata.h
+tests/runtests: tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ $(LIBRARY)
+	$(LINK_EXE) tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ $(LIBRARY)
+tests/runtestspp.@OBJEXT@: tests/runtestspp.cpp tests/runtests.c tests/chardata.h
+tests/runtestspp: tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ $(LIBRARY)
+	$(LINK_CXX_EXE) tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ $(LIBRARY)
+
+tests/benchmark/benchmark.@OBJEXT@: tests/benchmark/benchmark.c
+tests/benchmark/benchmark: tests/benchmark/benchmark.@OBJEXT@ $(LIBRARY)
+	$(LINK_EXE) tests/benchmark/benchmark.@OBJEXT@ $(LIBRARY)
+
+run-benchmark: tests/benchmark/benchmark
+	tests/benchmark/benchmark@EXEEXT@ -n $(top_srcdir)/../testdata/largefiles/recset.xml 65535 3
+
+tests/xmlts.zip:
+	wget --output-document=tests/xmlts.zip \
+		http://www.w3.org/XML/Test/xmlts20080827.zip
+
+tests/XML-Test-Suite: tests/xmlts.zip
+	cd tests && unzip -q xmlts.zip
+
+run-xmltest: xmlwf/xmlwf@EXEEXT@ tests/XML-Test-Suite
+	tests/xmltest.sh
+
+.SUFFIXES: .c .cpp .lo .@OBJEXT@
+
+.cpp.@OBJEXT@:
+	$(CXXCOMPILE) -o $@ -c $<
+.c.@OBJEXT@:
+	$(COMPILE) -o $@ -c $<
+.c.lo:
+	$(LTCOMPILE) -o $@ -c $<
+
+.PHONY: buildlib all \
+	clean distclean extraclean maintainer-clean \
+	dist distdir \
+	install uninstall

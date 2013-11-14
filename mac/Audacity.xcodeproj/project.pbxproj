@@ -488,6 +488,7 @@
 		283135FF0DFBA2E80076D551 /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135FD0DFBA2E80076D551 /* FFmpeg.cpp */; };
 		2835062D0A3A88ED00EB1EBD /* pa_unix_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 283506280A3A88ED00EB1EBD /* pa_unix_util.c */; };
 		2835062E0A3A88ED00EB1EBD /* pa_unix_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 283506290A3A88ED00EB1EBD /* pa_unix_util.h */; };
+		2835D8D11833D54100CF5EFF /* expat_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 2835D8D01833D54100CF5EFF /* expat_config.h */; };
 		283A11A50A2C0DE7004372C4 /* broadcast.c in Sources */ = {isa = PBXBuildFile; fileRef = 283A11A40A2C0DE7004372C4 /* broadcast.c */; };
 		283A11AA0A2C0E15004372C4 /* ShuttleGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283A11A60A2C0E15004372C4 /* ShuttleGui.cpp */; };
 		283A11AB0A2C0E15004372C4 /* Theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283A11A80A2C0E15004372C4 /* Theme.cpp */; };
@@ -763,6 +764,7 @@
 		28530C4C0DF2105200555C94 /* HtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28530C480DF2105200555C94 /* HtmlWindow.cpp */; };
 		28530C4D0DF2105200555C94 /* ProgressDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28530C4A0DF2105200555C94 /* ProgressDialog.cpp */; };
 		28560C910A75E40F00A3429E /* AutoRecovery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28560C8F0A75E40F00A3429E /* AutoRecovery.cpp */; };
+		285B11861833D14D0073B36C /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FADDEF1833C3C500BA4141 /* libexpat.a */; };
 		285D3CB40F09FC8F007883FC /* PluginBufferingAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CAC0F09FC8F007883FC /* PluginBufferingAdapter.cpp */; };
 		285D3CB50F09FC8F007883FC /* PluginChannelAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CAD0F09FC8F007883FC /* PluginChannelAdapter.cpp */; };
 		285D3CB60F09FC8F007883FC /* PluginHostAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CAE0F09FC8F007883FC /* PluginHostAdapter.cpp */; };
@@ -923,6 +925,8 @@
 		28A96DC10E28642200F3CE01 /* mfmidi.h in Headers */ = {isa = PBXBuildFile; fileRef = 28F3A3FF0E28289500729866 /* mfmidi.h */; };
 		28A96DC20E28642300F3CE01 /* strparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F3A4000E28289500729866 /* strparse.cpp */; };
 		28A96DC30E28642300F3CE01 /* strparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 28F3A4010E28289500729866 /* strparse.h */; };
+		28B3C5DC1833D23E0024BE6D /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FADDEF1833C3C500BA4141 /* libexpat.a */; };
+		28B3C5DF1833D24E0024BE6D /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FADDEF1833C3C500BA4141 /* libexpat.a */; };
 		28B6ED8F0DE3D1B50046F0F3 /* LoadModules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B6ED8D0DE3D1B50046F0F3 /* LoadModules.cpp */; };
 		28B97B890FBF771A0076CF28 /* VSTEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B97B850FBF771A0076CF28 /* VSTEffect.cpp */; };
 		28BD8AB1101DF4C700686679 /* BatchEvalCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */; };
@@ -1188,6 +1192,22 @@
 		28F2CED4181867BB00573D61 /* numformatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F2CED0181867BB00573D61 /* numformatter.cpp */; };
 		28F2CED5181867BB00573D61 /* valnum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F2CED2181867BB00573D61 /* valnum.cpp */; };
 		28F5C1110BE5886A00D17341 /* FileDialogPrivate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F5C10F0BE5886A00D17341 /* FileDialogPrivate.cpp */; };
+		28FADEF71833C78C00BA4141 /* ascii.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEDC1833C78C00BA4141 /* ascii.h */; };
+		28FADEF81833C78C00BA4141 /* asciitab.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEDD1833C78C00BA4141 /* asciitab.h */; };
+		28FADEF91833C78C00BA4141 /* expat.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEDF1833C78C00BA4141 /* expat.h */; };
+		28FADEFA1833C78C00BA4141 /* expat_external.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEE01833C78C00BA4141 /* expat_external.h */; };
+		28FADEFC1833C78C00BA4141 /* internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEE51833C78C00BA4141 /* internal.h */; };
+		28FADEFD1833C78C00BA4141 /* latin1tab.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEE61833C78C00BA4141 /* latin1tab.h */; };
+		28FADEFF1833C78C00BA4141 /* nametab.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEEB1833C78C00BA4141 /* nametab.h */; };
+		28FADF001833C78C00BA4141 /* utf8tab.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEEC1833C78C00BA4141 /* utf8tab.h */; };
+		28FADF021833C78C00BA4141 /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 28FADEEE1833C78C00BA4141 /* xmlparse.c */; };
+		28FADF031833C78C00BA4141 /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = 28FADEEF1833C78C00BA4141 /* xmlrole.c */; };
+		28FADF041833C78C00BA4141 /* xmlrole.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEF01833C78C00BA4141 /* xmlrole.h */; };
+		28FADF051833C78C00BA4141 /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = 28FADEF11833C78C00BA4141 /* xmltok.c */; };
+		28FADF061833C78C00BA4141 /* xmltok.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEF21833C78C00BA4141 /* xmltok.h */; };
+		28FADF071833C78C00BA4141 /* xmltok_impl.c in Sources */ = {isa = PBXBuildFile; fileRef = 28FADEF31833C78C00BA4141 /* xmltok_impl.c */; };
+		28FADF081833C78C00BA4141 /* xmltok_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEF41833C78C00BA4141 /* xmltok_impl.h */; };
+		28FADF091833C78C00BA4141 /* xmltok_ns.c in Sources */ = {isa = PBXBuildFile; fileRef = 28FADEF51833C78C00BA4141 /* xmltok_ns.c */; };
 		28FC1AFB0A47762C00A188AE /* WrappedType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FC1AF90A47762C00A188AE /* WrappedType.cpp */; };
 		28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */; };
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
@@ -2075,12 +2095,33 @@
 			remoteGlobalIDString = 28501EAF0CEED1F00029ABAA;
 			remoteInfo = libvamp;
 		};
+		285B11841833D0F10073B36C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28FADDCA1833C3C500BA4141;
+			remoteInfo = expat;
+		};
 		28640879181CE78E00CC4E2C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1790ABE309883346008A330A /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2862299E181CE4B600E1AD1A;
 			remoteInfo = lv2;
+		};
+		28B3C5DA1833D2390024BE6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28FADDCA1833C3C500BA4141;
+			remoteInfo = expat;
+		};
+		28B3C5DD1833D2490024BE6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1790ABE309883346008A330A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28FADDCA1833C3C500BA4141;
+			remoteInfo = expat;
 		};
 		28E237260E515E1300281398 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -3137,6 +3178,7 @@
 		283135FE0DFBA2E80076D551 /* FFmpeg.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FFmpeg.h; sourceTree = "<group>"; tabWidth = 3; };
 		283506280A3A88ED00EB1EBD /* pa_unix_util.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = pa_unix_util.c; sourceTree = "<group>"; tabWidth = 3; };
 		283506290A3A88ED00EB1EBD /* pa_unix_util.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_unix_util.h; sourceTree = "<group>"; tabWidth = 3; };
+		2835D8D01833D54100CF5EFF /* expat_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = expat_config.h; path = expat/expat_config.h; sourceTree = "<group>"; };
 		283A11A40A2C0DE7004372C4 /* broadcast.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = broadcast.c; sourceTree = "<group>"; tabWidth = 3; };
 		283A11A60A2C0E15004372C4 /* ShuttleGui.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ShuttleGui.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		283A11A70A2C0E15004372C4 /* ShuttleGui.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ShuttleGui.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -3932,6 +3974,23 @@
 		28F3A4010E28289500729866 /* strparse.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = strparse.h; path = portsmf/strparse.h; sourceTree = "<group>"; tabWidth = 3; };
 		28F5C10F0BE5886A00D17341 /* FileDialogPrivate.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FileDialogPrivate.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28F5C1100BE5886A00D17341 /* FileDialogPrivate.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileDialogPrivate.h; sourceTree = "<group>"; tabWidth = 3; };
+		28FADDEF1833C3C500BA4141 /* libexpat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libexpat.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		28FADEDC1833C78C00BA4141 /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; };
+		28FADEDD1833C78C00BA4141 /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; };
+		28FADEDF1833C78C00BA4141 /* expat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expat.h; sourceTree = "<group>"; };
+		28FADEE01833C78C00BA4141 /* expat_external.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expat_external.h; sourceTree = "<group>"; };
+		28FADEE51833C78C00BA4141 /* internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = internal.h; sourceTree = "<group>"; };
+		28FADEE61833C78C00BA4141 /* latin1tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = latin1tab.h; sourceTree = "<group>"; };
+		28FADEEB1833C78C00BA4141 /* nametab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nametab.h; sourceTree = "<group>"; };
+		28FADEEC1833C78C00BA4141 /* utf8tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8tab.h; sourceTree = "<group>"; };
+		28FADEEE1833C78C00BA4141 /* xmlparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlparse.c; sourceTree = "<group>"; };
+		28FADEEF1833C78C00BA4141 /* xmlrole.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlrole.c; sourceTree = "<group>"; };
+		28FADEF01833C78C00BA4141 /* xmlrole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlrole.h; sourceTree = "<group>"; };
+		28FADEF11833C78C00BA4141 /* xmltok.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok.c; sourceTree = "<group>"; };
+		28FADEF21833C78C00BA4141 /* xmltok.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok.h; sourceTree = "<group>"; };
+		28FADEF31833C78C00BA4141 /* xmltok_impl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_impl.c; sourceTree = "<group>"; };
+		28FADEF41833C78C00BA4141 /* xmltok_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok_impl.h; sourceTree = "<group>"; };
+		28FADEF51833C78C00BA4141 /* xmltok_ns.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_ns.c; sourceTree = "<group>"; };
 		28FB121F0A3790A8006F0917 /* MacroMagic.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = MacroMagic.h; sourceTree = "<group>"; tabWidth = 3; };
 		28FB12230A3790DF006F0917 /* AllThemeResources.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = AllThemeResources.h; sourceTree = "<group>"; tabWidth = 3; };
 		28FC1AF90A47762C00A188AE /* WrappedType.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = WrappedType.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4080,6 +4139,7 @@
 				ED2707460EF9C550007D4FFD /* libsbsms.a in Frameworks */,
 				2800FE230FF32381005CA9E5 /* libportmidi.a in Frameworks */,
 				284B8E27181CFB1000304E49 /* liblv2.a in Frameworks */,
+				285B11861833D14D0073B36C /* libexpat.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4127,6 +4187,7 @@
 				ED663CCA16543647007F53A5 /* libsbsms.a in Frameworks */,
 				ED663CCB16543647007F53A5 /* libportmidi.a in Frameworks */,
 				284B8E2A181CFB1200304E49 /* liblv2.a in Frameworks */,
+				28B3C5DC1833D23E0024BE6D /* libexpat.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4153,6 +4214,7 @@
 				ED85B5A416A47353006DA21D /* libsbsms.a in Frameworks */,
 				ED85B5A516A47353006DA21D /* libportmidi.a in Frameworks */,
 				284B8E29181CFB1100304E49 /* liblv2.a in Frameworks */,
+				28B3C5DF1833D24E0024BE6D /* libexpat.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4169,8 +4231,9 @@
 		17072F220988D4F4008541CC /* lib-src */ = {
 			isa = PBXGroup;
 			children = (
-				280380FC18313AE40078452A /* lame */,
 				283B3D3E0BC21EBE00FA01D5 /* FileDialog */,
+				28FADDC71833C38F00BA4141 /* expat */,
+				280380FC18313AE40078452A /* lame */,
 				2880529A0DEA71B000671EA4 /* lib-widget-extra */,
 				176EE9E209A2EF1000188F3B /* libflac */,
 				17072F6A0988D6A9008541CC /* libid3tag */,
@@ -4856,6 +4919,7 @@
 				ED85B5B816A47353006DA21D /* Audacity.app */,
 				EDBFAD13177E5399004CC1C1 /* mod-nyq-bench.so */,
 				286229B0181CE4B600E1AD1A /* liblv2.a */,
+				28FADDEF1833C3C500BA4141 /* libexpat.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -6477,6 +6541,39 @@
 			path = mac;
 			sourceTree = "<group>";
 		};
+		28FADDC71833C38F00BA4141 /* expat */ = {
+			isa = PBXGroup;
+			children = (
+				28FADEDA1833C78C00BA4141 /* lib */,
+				2835D8D01833D54100CF5EFF /* expat_config.h */,
+			);
+			name = expat;
+			sourceTree = "<group>";
+		};
+		28FADEDA1833C78C00BA4141 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				28FADEDC1833C78C00BA4141 /* ascii.h */,
+				28FADEDD1833C78C00BA4141 /* asciitab.h */,
+				28FADEDF1833C78C00BA4141 /* expat.h */,
+				28FADEE01833C78C00BA4141 /* expat_external.h */,
+				28FADEE51833C78C00BA4141 /* internal.h */,
+				28FADEE61833C78C00BA4141 /* latin1tab.h */,
+				28FADEEB1833C78C00BA4141 /* nametab.h */,
+				28FADEEC1833C78C00BA4141 /* utf8tab.h */,
+				28FADEEE1833C78C00BA4141 /* xmlparse.c */,
+				28FADEEF1833C78C00BA4141 /* xmlrole.c */,
+				28FADEF01833C78C00BA4141 /* xmlrole.h */,
+				28FADEF11833C78C00BA4141 /* xmltok.c */,
+				28FADEF21833C78C00BA4141 /* xmltok.h */,
+				28FADEF31833C78C00BA4141 /* xmltok_impl.c */,
+				28FADEF41833C78C00BA4141 /* xmltok_impl.h */,
+				28FADEF51833C78C00BA4141 /* xmltok_ns.c */,
+			);
+			name = lib;
+			path = expat/lib;
+			sourceTree = "<group>";
+		};
 		ED05D0FF0E50AD5600CC4BD3 /* libscorealign */ = {
 			isa = PBXGroup;
 			children = (
@@ -7144,6 +7241,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		28FADDCB1833C3C500BA4141 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28FADEF71833C78C00BA4141 /* ascii.h in Headers */,
+				28FADEF81833C78C00BA4141 /* asciitab.h in Headers */,
+				28FADEF91833C78C00BA4141 /* expat.h in Headers */,
+				28FADEFA1833C78C00BA4141 /* expat_external.h in Headers */,
+				28FADEFC1833C78C00BA4141 /* internal.h in Headers */,
+				28FADEFD1833C78C00BA4141 /* latin1tab.h in Headers */,
+				28FADEFF1833C78C00BA4141 /* nametab.h in Headers */,
+				28FADF001833C78C00BA4141 /* utf8tab.h in Headers */,
+				28FADF041833C78C00BA4141 /* xmlrole.h in Headers */,
+				28FADF061833C78C00BA4141 /* xmltok.h in Headers */,
+				28FADF081833C78C00BA4141 /* xmltok_impl.h in Headers */,
+				2835D8D11833D54100CF5EFF /* expat_config.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ED15212C163C227C00451B5F /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -7445,6 +7561,7 @@
 			);
 			dependencies = (
 				17072E940988C35B008541CC /* PBXTargetDependency */,
+				285B11851833D0F10073B36C /* PBXTargetDependency */,
 				176EEC7109A2F54D00188F3B /* PBXTargetDependency */,
 				176EEC7309A2F55100188F3B /* PBXTargetDependency */,
 				2800FE280FF323C0005CA9E5 /* PBXTargetDependency */,
@@ -7584,6 +7701,22 @@
 			productReference = 28E67F5F0A3A160D0021D89F /* libportaudio.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		28FADDCA1833C3C500BA4141 /* expat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28FADDEA1833C3C500BA4141 /* Build configuration list for PBXNativeTarget "expat" */;
+			buildPhases = (
+				28FADDCB1833C3C500BA4141 /* Headers */,
+				28FADDD41833C3C500BA4141 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = expat;
+			productName = libFLAC;
+			productReference = 28FADDEF1833C3C500BA4141 /* libexpat.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		ED15212F163C227C00451B5F /* libsoxr */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = ED152148163C22A700451B5F /* Build configuration list for PBXNativeTarget "libsoxr" */;
@@ -7673,6 +7806,7 @@
 				ED663B7A16543647007F53A5 /* PBXTargetDependency */,
 				ED663B7C16543647007F53A5 /* PBXTargetDependency */,
 				ED663B7E16543647007F53A5 /* PBXTargetDependency */,
+				28B3C5DB1833D2390024BE6D /* PBXTargetDependency */,
 			);
 			name = "Audacity-libsamplerate";
 			productName = Audacity;
@@ -7719,6 +7853,7 @@
 				ED85B45316A47353006DA21D /* PBXTargetDependency */,
 				ED85B45516A47353006DA21D /* PBXTargetDependency */,
 				ED85B45716A47353006DA21D /* PBXTargetDependency */,
+				28B3C5DE1833D2490024BE6D /* PBXTargetDependency */,
 			);
 			name = "Audacity-libresample";
 			productName = Audacity;
@@ -7768,6 +7903,7 @@
 				17072E880988BD39008541CC /* Configure */,
 				ED663CE11654366F007F53A5 /* Configure-libsamplerate */,
 				ED85B42716A47329006DA21D /* Configure-libresample */,
+				28FADDCA1833C3C500BA4141 /* expat */,
 				176EEBE909A2F16200188F3B /* libFLAC */,
 				176EEC1D09A2F2DD00188F3B /* libFLAC++ */,
 				17073F610988E121008541CC /* libid3tag */,
@@ -7886,7 +8022,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp-4.0\nexport CC=gcc-4.0\nexport CXX=g++-4.0\nexport CPPFLAGS=\"-isysroot ${SDKROOT}\"\nexport CFLAGS=\"-isysroot ${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot ${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# Libsoxr's endianness detection is a bit unfriendly to universal binary\n# builds. We need to disable SIMD since we can't build UBs with it enabled.\n#\nFILE=lib-src/libsoxr/soxr-config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#if defined(__BIG_ENDIAN__)\n#undef WORDS_BIGENDIAN\n#define WORDS_BIGENDIAN 1\n#endif\n#undef HAVE_SIMD\n#define HAVE_SIMD 0\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
+			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp-4.0\nexport CC=gcc-4.0\nexport CXX=g++-4.0\nexport CPPFLAGS=\"-isysroot ${SDKROOT}\"\nexport CFLAGS=\"-isysroot ${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot ${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Libsoxr's endianness detection is a bit unfriendly to universal binary\n# builds. We need to disable SIMD since we can't build UBs with it enabled.\n#\nFILE=lib-src/libsoxr/soxr-config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#if defined(__BIG_ENDIAN__)\n#undef WORDS_BIGENDIAN\n#define WORDS_BIGENDIAN 1\n#endif\n#undef HAVE_SIMD\n#define HAVE_SIMD 0\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
 		};
 		17073FEB0988E6C9008541CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8064,7 +8200,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp-4.0\nexport CC=gcc-4.0\nexport CXX=g++-4.0\nexport CPPFLAGS=\"-isysroot ${SDKROOT}\"\nexport CFLAGS=\"-isysroot ${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot ${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-libsamplerate \\\n             --with-libsoxr \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# Libsamplerate's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsamplerate/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
+			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp-4.0\nexport CC=gcc-4.0\nexport CXX=g++-4.0\nexport CPPFLAGS=\"-isysroot ${SDKROOT}\"\nexport CFLAGS=\"-isysroot ${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot ${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-libsamplerate \\\n             --with-libsoxr \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Libsamplerate's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsamplerate/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
 		};
 		ED85B42816A47329006DA21D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8079,7 +8215,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp-4.0\nexport CC=gcc-4.0\nexport CXX=g++-4.0\nexport CPPFLAGS=\"-isysroot ${SDKROOT}\"\nexport CFLAGS=\"-isysroot ${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot ${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-libresample \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
+			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp-4.0\nexport CC=gcc-4.0\nexport CXX=g++-4.0\nexport CPPFLAGS=\"-isysroot ${SDKROOT}\"\nexport CFLAGS=\"-isysroot ${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot ${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-libresample \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
 		};
 		ED85B5A616A47353006DA21D /* Copy nyquist */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9059,6 +9195,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		28FADDD41833C3C500BA4141 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28FADF021833C78C00BA4141 /* xmlparse.c in Sources */,
+				28FADF031833C78C00BA4141 /* xmlrole.c in Sources */,
+				28FADF051833C78C00BA4141 /* xmltok.c in Sources */,
+				28FADF071833C78C00BA4141 /* xmltok_impl.c in Sources */,
+				28FADF091833C78C00BA4141 /* xmltok_ns.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ED15212D163C227C00451B5F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9803,10 +9951,25 @@
 			target = 28501EAF0CEED1F00029ABAA /* libvamp */;
 			targetProxy = 28501F520CEED9A80029ABAA /* PBXContainerItemProxy */;
 		};
+		285B11851833D0F10073B36C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28FADDCA1833C3C500BA4141 /* expat */;
+			targetProxy = 285B11841833D0F10073B36C /* PBXContainerItemProxy */;
+		};
 		2864087A181CE78E00CC4E2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2862299E181CE4B600E1AD1A /* lv2 */;
 			targetProxy = 28640879181CE78E00CC4E2C /* PBXContainerItemProxy */;
+		};
+		28B3C5DB1833D2390024BE6D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28FADDCA1833C3C500BA4141 /* expat */;
+			targetProxy = 28B3C5DA1833D2390024BE6D /* PBXContainerItemProxy */;
+		};
+		28B3C5DE1833D2490024BE6D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28FADDCA1833C3C500BA4141 /* expat */;
+			targetProxy = 28B3C5DD1833D2490024BE6D /* PBXContainerItemProxy */;
 		};
 		28E237270E515E1300281398 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -11463,6 +11626,46 @@
 			};
 			name = "Debug Static";
 		};
+		28FADDEB1833C3C500BA4141 /* Debug Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				PRODUCT_NAME = expat;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = "Debug Static";
+		};
+		28FADDEC1833C3C500BA4141 /* Debug Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				PRODUCT_NAME = expat;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = "Debug Shared";
+		};
+		28FADDED1833C3C500BA4141 /* Release Static */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				PRODUCT_NAME = expat;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = "Release Static";
+		};
+		28FADDEE1833C3C500BA4141 /* Release Shared */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				PRODUCT_NAME = expat;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/expat/lib";
+			};
+			name = "Release Shared";
+		};
 		ED152131163C227C00451B5F /* Debug Static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12630,6 +12833,17 @@
 				288052D90DEA74F100671EA4 /* Debug Shared */,
 				28E5DA360AC4CBA200E7F64C /* Release Static */,
 				288052EE0DEA74FD00671EA4 /* Release Shared */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Debug Static";
+		};
+		28FADDEA1833C3C500BA4141 /* Build configuration list for PBXNativeTarget "expat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28FADDEB1833C3C500BA4141 /* Debug Static */,
+				28FADDEC1833C3C500BA4141 /* Debug Shared */,
+				28FADDED1833C3C500BA4141 /* Release Static */,
+				28FADDEE1833C3C500BA4141 /* Release Shared */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Debug Static";

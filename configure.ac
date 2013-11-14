@@ -329,10 +329,11 @@ dnl-------------------------------------------------------------
 dnl Optional library support. Lots of things we could use, but
 dnl can do without if they aren't available.
 dnl-------------------------------------------------------------
-LIBRARIES="FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
 
 AC_MSG_NOTICE([Determining what libraries are available in this tree and on the system])
 
+AUDACITY_CHECKLIB_EXPAT
 AUDACITY_CHECKLIB_FFMPEG
 AUDACITY_CHECKLIB_LAME
 AUDACITY_CHECKLIB_LIBFLAC
@@ -502,6 +503,7 @@ done
 
 dnl " This is included purely to close an otherwise endless string in vim
 
+AUDACITY_CONFIG_SUBDIRS_EXPAT
 AUDACITY_CONFIG_SUBDIRS_LIBFLAC
 AUDACITY_CONFIG_SUBDIRS_LIBID3TAG
 AUDACITY_CONFIG_SUBDIRS_LIBMAD
@@ -594,11 +596,6 @@ case "${host_os}" in
       AC_SEARCH_LIBS([dlopen], [dl])
       if [[ "$ac_cv_search_dlopen" = no ]]; then
          AC_MSG_ERROR([dlopen not found, required by Audacity])
-      fi
-
-      AC_SEARCH_LIBS([XML_ParserCreate], [expat])
-      if [[ "$ac_cv_search_expat" = no ]]; then
-         AC_MSG_ERROR([expat not found, required by Audacity])
       fi
 
       AC_SUBST(HAVE_GTK)

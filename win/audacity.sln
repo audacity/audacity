@@ -73,6 +73,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsoxr", "Projects\libsoxr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lv2", "Projects\lv2\lv2.vcproj", "{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "expat", "Projects\expat\expat.vcproj", "{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -176,6 +178,10 @@ Global
 		{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}.Debug|Win32.Build.0 = Debug|Win32
 		{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}.Release|Win32.ActiveCfg = Release|Win32
 		{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}.Release|Win32.Build.0 = Release|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Debug|Win32.Build.0 = Debug|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Release|Win32.ActiveCfg = Release|Win32
+		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

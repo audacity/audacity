@@ -1,5 +1,11 @@
 all: @LOCAL_LIBS@ @LIBSRC_BUILD@
 
+# expat
+expat-recursive:
+	$(MAKE) -C expat
+libexpat.a: expat-recursive
+	ln -sf expat/.libs/libexpat.a libexpat.a
+
 # portSMF
 portsmf-recursive:
 	$(MAKE) -C portsmf
@@ -134,6 +140,7 @@ libportmixer.a: portmixer-recursive
 
 # Utility rules
 clean:
+	test ! -f expat/Makefile || $(MAKE) -C expat clean
 	test ! -f portsmf/Makefile || $(MAKE) -C portsmf clean
 	test ! -f FileDialog/Makefile || $(MAKE) -C FileDialog clean
 	test ! -f libid3tag/Makefile || $(MAKE) -C libid3tag clean
@@ -157,6 +164,7 @@ clean:
 	rm -f @LOCAL_LIBS@
 
 distclean:
+	test ! -f libexpat/Makefile || $(MAKE) -C libexpat distclean
 	test ! -f portsmf/Makefile || $(MAKE) -C portsmf distclean
 	test ! -f FileDialog/Makefile || $(MAKE) -C FileDialog distclean
 	test ! -f libid3tag/Makefile || $(MAKE) -C libid3tag distclean
@@ -181,7 +189,7 @@ distclean:
 	rm -f Makefile
 
 # list here all the targets that aren't actually files to be made
-.PHONY: portsmf-recursive FileDialog-recursive \
+.PHONY: expat-recursive portsmf-recursive FileDialog-recursive \
 	widgetextra libogg-recursive \
 	libvorbis-recursive libnyquist-recursive libmad-recursive \
 	libid3tag-recursive sbsms-recursive soundtouch-recursive libsndfile-recursive \
