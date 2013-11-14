@@ -14,14 +14,14 @@ dnl autoconf
 dnl Process this file with autoconf to produce a configure script.
 
 dnl Require autoconf >= 2.61
-AC_PREREQ(2.61)
+AC_PREREQ([2.61])
 
 dnl Init autoconf and automake
 AC_INIT([libnyquist],[0.1])
 dnl check that we have some source code
 AC_CONFIG_SRCDIR([nyquist/xlisp/xlisp.h])
 dnl keep autools files in a subdirectory
-AC_CONFIG_AUX_DIR(autotools)
+AC_CONFIG_AUX_DIR([autotools])
 # which also contains a subdir containing macros
 AC_CONFIG_MACRO_DIR([autotools/m4])
 dnl set up automake
