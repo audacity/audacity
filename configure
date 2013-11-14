@@ -8670,10 +8670,15 @@ $as_echo "$as_me: disabling $lib at your request" >&6;}
 done
 
 # In some cases the choices made above might be inappropriate.
+#   * we need to have expat one way or another
 #   * we need to have libwidgetextra one way or another
 #   * we need to have libsndfile one way or another
 #   * we need to have portaudio way or another
 #   * we can only use one of libsoxr, libsamplerate and libresample
+
+if test "$LIBEXPAT_USE_LOCAL" != "yes" -a "$LIBEXPAT_USE_SYSTEM" != "yes"; then
+   as_fn_error $? "Audacity requires expat to be enabled." "$LINENO" 5
+fi
 
 if test "$WIDGETEXTRA_USE_LOCAL" != "yes" -a "$WIDGETEXTRA_USE_SYSTEM" != "yes"; then
    as_fn_error $? "Audacity requires libwidgetextra to be enabled." "$LINENO" 5

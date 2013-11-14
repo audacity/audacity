@@ -405,10 +405,15 @@ for lib in $LIBRARIES ; do
 done
 
 # In some cases the choices made above might be inappropriate.
+#   * we need to have expat one way or another
 #   * we need to have libwidgetextra one way or another
 #   * we need to have libsndfile one way or another
 #   * we need to have portaudio way or another
 #   * we can only use one of libsoxr, libsamplerate and libresample
+
+if test "$LIBEXPAT_USE_LOCAL" != "yes" -a "$LIBEXPAT_USE_SYSTEM" != "yes"; then
+   AC_MSG_ERROR([Audacity requires expat to be enabled.])
+fi
 
 if test "$WIDGETEXTRA_USE_LOCAL" != "yes" -a "$WIDGETEXTRA_USE_SYSTEM" != "yes"; then
    AC_MSG_ERROR([Audacity requires libwidgetextra to be enabled.])
