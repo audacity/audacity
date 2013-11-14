@@ -139,192 +139,148 @@ am__v_AR_1 =
 libnyquist_a_AR = $(AR) $(ARFLAGS)
 libnyquist_a_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libnyquist_a_OBJECTS = $(NYQUIST)/cmt/cext.$(OBJEXT) \
-	$(NYQUIST)/cmt/cleanup.$(OBJEXT) \
-	$(NYQUIST)/cmt/cmdline.$(OBJEXT) \
-	$(NYQUIST)/cmt/cmtcmd.$(OBJEXT) $(NYQUIST)/cmt/mem.$(OBJEXT) \
-	$(NYQUIST)/cmt/midifile.$(OBJEXT) \
-	$(NYQUIST)/cmt/midifns.$(OBJEXT) $(NYQUIST)/cmt/moxc.$(OBJEXT) \
-	$(NYQUIST)/cmt/record.$(OBJEXT) $(NYQUIST)/cmt/seq.$(OBJEXT) \
-	$(NYQUIST)/cmt/seqmread.$(OBJEXT) \
-	$(NYQUIST)/cmt/seqmwrite.$(OBJEXT) \
-	$(NYQUIST)/cmt/seqread.$(OBJEXT) \
-	$(NYQUIST)/cmt/seqwrite.$(OBJEXT) \
-	$(NYQUIST)/cmt/tempomap.$(OBJEXT) \
-	$(NYQUIST)/cmt/timebase.$(OBJEXT) \
-	$(NYQUIST)/cmt/userio.$(OBJEXT) \
-	$(NYQUIST)/ffts/src/fftext.$(OBJEXT) \
-	$(NYQUIST)/ffts/src/fftlib.$(OBJEXT) \
-	$(NYQUIST)/ffts/src/matlib.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/add.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/avg.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/compose.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/convolve.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/debug.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/downsample.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/falloc.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/ffilterkit.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/fft.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/handlers.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/inverse.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/local.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/lpanal.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/multiread.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/multiseq.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/resamp.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/resampv.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/samples.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/seqext.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/seqfnint.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/seqinterf.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/sliders.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/sndfnint.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/sndmax.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/sndread.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/sndseq.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/sndwritepa.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/sound.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/stats.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/trigger.$(OBJEXT) \
-	$(NYQUIST)/nyqsrc/yin.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/instr.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/stkinit.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/stkint.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/ADSR.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/BandedWG.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/BiQuad.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Bowed.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/BowTable.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Chorus.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Clarinet.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/DelayA.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Delay.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/DelayL.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Effect.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Envelope.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/FileRead.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/FileWvIn.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Filter.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Flute.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Function.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Generator.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Instrmnt.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/JCRev.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/JetTable.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Mandolin.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/ModalBar.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Modal.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Noise.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/NRev.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/OnePole.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/OneZero.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/PitShift.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/PluckTwo.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/PoleZero.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/PRCRev.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/ReedTable.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Saxofony.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/SineWave.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Sitar.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/Stk.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/WaveLoop.$(OBJEXT) \
-	$(NYQUIST)/nyqstk/src/WvIn.$(OBJEXT) \
-	$(NYQUIST)/tran/abs.$(OBJEXT) \
-	$(NYQUIST)/tran/allpoles.$(OBJEXT) \
-	$(NYQUIST)/tran/alpass.$(OBJEXT) \
-	$(NYQUIST)/tran/alpasscv.$(OBJEXT) \
-	$(NYQUIST)/tran/alpassvv.$(OBJEXT) \
-	$(NYQUIST)/tran/amosc.$(OBJEXT) \
-	$(NYQUIST)/tran/areson.$(OBJEXT) \
-	$(NYQUIST)/tran/aresoncv.$(OBJEXT) \
-	$(NYQUIST)/tran/aresonvc.$(OBJEXT) \
-	$(NYQUIST)/tran/aresonvv.$(OBJEXT) \
-	$(NYQUIST)/tran/atone.$(OBJEXT) \
-	$(NYQUIST)/tran/atonev.$(OBJEXT) \
-	$(NYQUIST)/tran/biquadfilt.$(OBJEXT) \
-	$(NYQUIST)/tran/buzz.$(OBJEXT) $(NYQUIST)/tran/chase.$(OBJEXT) \
-	$(NYQUIST)/tran/clip.$(OBJEXT) \
-	$(NYQUIST)/tran/congen.$(OBJEXT) \
-	$(NYQUIST)/tran/const.$(OBJEXT) \
-	$(NYQUIST)/tran/coterm.$(OBJEXT) \
-	$(NYQUIST)/tran/delaycc.$(OBJEXT) \
-	$(NYQUIST)/tran/delaycv.$(OBJEXT) \
-	$(NYQUIST)/tran/eqbandvvv.$(OBJEXT) \
-	$(NYQUIST)/tran/exp.$(OBJEXT) $(NYQUIST)/tran/fmfb.$(OBJEXT) \
-	$(NYQUIST)/tran/fmfbv.$(OBJEXT) \
-	$(NYQUIST)/tran/fmosc.$(OBJEXT) \
-	$(NYQUIST)/tran/follow.$(OBJEXT) \
-	$(NYQUIST)/tran/fromarraystream.$(OBJEXT) \
-	$(NYQUIST)/tran/fromobject.$(OBJEXT) \
-	$(NYQUIST)/tran/gate.$(OBJEXT) $(NYQUIST)/tran/ifft.$(OBJEXT) \
-	$(NYQUIST)/tran/instrbanded.$(OBJEXT) \
-	$(NYQUIST)/tran/instrbow.$(OBJEXT) \
-	$(NYQUIST)/tran/instrbowedfreq.$(OBJEXT) \
-	$(NYQUIST)/tran/instrclarall.$(OBJEXT) \
-	$(NYQUIST)/tran/instrclar.$(OBJEXT) \
-	$(NYQUIST)/tran/instrclarfreq.$(OBJEXT) \
-	$(NYQUIST)/tran/instrfluteall.$(OBJEXT) \
-	$(NYQUIST)/tran/instrflute.$(OBJEXT) \
-	$(NYQUIST)/tran/instrflutefreq.$(OBJEXT) \
-	$(NYQUIST)/tran/instrmandolin.$(OBJEXT) \
-	$(NYQUIST)/tran/instrmodalbar.$(OBJEXT) \
-	$(NYQUIST)/tran/instrsaxall.$(OBJEXT) \
-	$(NYQUIST)/tran/instrsax.$(OBJEXT) \
-	$(NYQUIST)/tran/instrsaxfreq.$(OBJEXT) \
-	$(NYQUIST)/tran/instrsitar.$(OBJEXT) \
-	$(NYQUIST)/tran/integrate.$(OBJEXT) \
-	$(NYQUIST)/tran/log.$(OBJEXT) \
-	$(NYQUIST)/tran/lpreson.$(OBJEXT) \
-	$(NYQUIST)/tran/maxv.$(OBJEXT) \
-	$(NYQUIST)/tran/offset.$(OBJEXT) \
-	$(NYQUIST)/tran/oneshot.$(OBJEXT) \
-	$(NYQUIST)/tran/osc.$(OBJEXT) \
-	$(NYQUIST)/tran/partial.$(OBJEXT) \
-	$(NYQUIST)/tran/pluck.$(OBJEXT) $(NYQUIST)/tran/prod.$(OBJEXT) \
-	$(NYQUIST)/tran/pwl.$(OBJEXT) \
-	$(NYQUIST)/tran/quantize.$(OBJEXT) \
-	$(NYQUIST)/tran/recip.$(OBJEXT) \
-	$(NYQUIST)/tran/reson.$(OBJEXT) \
-	$(NYQUIST)/tran/resoncv.$(OBJEXT) \
-	$(NYQUIST)/tran/resonvc.$(OBJEXT) \
-	$(NYQUIST)/tran/resonvv.$(OBJEXT) \
-	$(NYQUIST)/tran/sampler.$(OBJEXT) \
-	$(NYQUIST)/tran/scale.$(OBJEXT) \
-	$(NYQUIST)/tran/shape.$(OBJEXT) $(NYQUIST)/tran/sine.$(OBJEXT) \
-	$(NYQUIST)/tran/siosc.$(OBJEXT) \
-	$(NYQUIST)/tran/slope.$(OBJEXT) $(NYQUIST)/tran/sqrt.$(OBJEXT) \
-	$(NYQUIST)/tran/stkchorus.$(OBJEXT) \
-	$(NYQUIST)/tran/stkpitshift.$(OBJEXT) \
-	$(NYQUIST)/tran/stkrev.$(OBJEXT) \
-	$(NYQUIST)/tran/tapf.$(OBJEXT) $(NYQUIST)/tran/tapv.$(OBJEXT) \
-	$(NYQUIST)/tran/tone.$(OBJEXT) $(NYQUIST)/tran/tonev.$(OBJEXT) \
-	$(NYQUIST)/tran/upsample.$(OBJEXT) \
-	$(NYQUIST)/tran/white.$(OBJEXT) \
-	$(NYQUIST)/xlisp/extern.$(OBJEXT) \
-	$(NYQUIST)/xlisp/path.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlbfun.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlcont.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xldbug.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xldmem.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xleval.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlfio.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlftab.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlglob.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlimage.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlinit.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlio.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlisp.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xljump.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xllist.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlmath.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlobj.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlpp.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlprin.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlread.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlstr.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlsubr.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlsym.$(OBJEXT) \
-	$(NYQUIST)/xlisp/xlsys.$(OBJEXT) nyx.$(OBJEXT)
+am_libnyquist_a_OBJECTS = nyquist/cmt/cext.$(OBJEXT) \
+	nyquist/cmt/cleanup.$(OBJEXT) nyquist/cmt/cmdline.$(OBJEXT) \
+	nyquist/cmt/cmtcmd.$(OBJEXT) nyquist/cmt/mem.$(OBJEXT) \
+	nyquist/cmt/midifile.$(OBJEXT) nyquist/cmt/midifns.$(OBJEXT) \
+	nyquist/cmt/moxc.$(OBJEXT) nyquist/cmt/record.$(OBJEXT) \
+	nyquist/cmt/seq.$(OBJEXT) nyquist/cmt/seqmread.$(OBJEXT) \
+	nyquist/cmt/seqmwrite.$(OBJEXT) nyquist/cmt/seqread.$(OBJEXT) \
+	nyquist/cmt/seqwrite.$(OBJEXT) nyquist/cmt/tempomap.$(OBJEXT) \
+	nyquist/cmt/timebase.$(OBJEXT) nyquist/cmt/userio.$(OBJEXT) \
+	nyquist/ffts/src/fftext.$(OBJEXT) \
+	nyquist/ffts/src/fftlib.$(OBJEXT) \
+	nyquist/ffts/src/matlib.$(OBJEXT) nyquist/nyqsrc/add.$(OBJEXT) \
+	nyquist/nyqsrc/avg.$(OBJEXT) nyquist/nyqsrc/compose.$(OBJEXT) \
+	nyquist/nyqsrc/convolve.$(OBJEXT) \
+	nyquist/nyqsrc/debug.$(OBJEXT) \
+	nyquist/nyqsrc/downsample.$(OBJEXT) \
+	nyquist/nyqsrc/falloc.$(OBJEXT) \
+	nyquist/nyqsrc/ffilterkit.$(OBJEXT) \
+	nyquist/nyqsrc/fft.$(OBJEXT) nyquist/nyqsrc/handlers.$(OBJEXT) \
+	nyquist/nyqsrc/inverse.$(OBJEXT) \
+	nyquist/nyqsrc/local.$(OBJEXT) nyquist/nyqsrc/lpanal.$(OBJEXT) \
+	nyquist/nyqsrc/multiread.$(OBJEXT) \
+	nyquist/nyqsrc/multiseq.$(OBJEXT) \
+	nyquist/nyqsrc/resamp.$(OBJEXT) \
+	nyquist/nyqsrc/resampv.$(OBJEXT) \
+	nyquist/nyqsrc/samples.$(OBJEXT) \
+	nyquist/nyqsrc/seqext.$(OBJEXT) \
+	nyquist/nyqsrc/seqfnint.$(OBJEXT) \
+	nyquist/nyqsrc/seqinterf.$(OBJEXT) \
+	nyquist/nyqsrc/sliders.$(OBJEXT) \
+	nyquist/nyqsrc/sndfnint.$(OBJEXT) \
+	nyquist/nyqsrc/sndmax.$(OBJEXT) \
+	nyquist/nyqsrc/sndread.$(OBJEXT) \
+	nyquist/nyqsrc/sndseq.$(OBJEXT) \
+	nyquist/nyqsrc/sndwritepa.$(OBJEXT) \
+	nyquist/nyqsrc/sound.$(OBJEXT) nyquist/nyqsrc/stats.$(OBJEXT) \
+	nyquist/nyqsrc/trigger.$(OBJEXT) nyquist/nyqsrc/yin.$(OBJEXT) \
+	nyquist/nyqstk/instr.$(OBJEXT) \
+	nyquist/nyqstk/stkinit.$(OBJEXT) \
+	nyquist/nyqstk/stkint.$(OBJEXT) \
+	nyquist/nyqstk/src/ADSR.$(OBJEXT) \
+	nyquist/nyqstk/src/BandedWG.$(OBJEXT) \
+	nyquist/nyqstk/src/BiQuad.$(OBJEXT) \
+	nyquist/nyqstk/src/Bowed.$(OBJEXT) \
+	nyquist/nyqstk/src/BowTable.$(OBJEXT) \
+	nyquist/nyqstk/src/Chorus.$(OBJEXT) \
+	nyquist/nyqstk/src/Clarinet.$(OBJEXT) \
+	nyquist/nyqstk/src/DelayA.$(OBJEXT) \
+	nyquist/nyqstk/src/Delay.$(OBJEXT) \
+	nyquist/nyqstk/src/DelayL.$(OBJEXT) \
+	nyquist/nyqstk/src/Effect.$(OBJEXT) \
+	nyquist/nyqstk/src/Envelope.$(OBJEXT) \
+	nyquist/nyqstk/src/FileRead.$(OBJEXT) \
+	nyquist/nyqstk/src/FileWvIn.$(OBJEXT) \
+	nyquist/nyqstk/src/Filter.$(OBJEXT) \
+	nyquist/nyqstk/src/Flute.$(OBJEXT) \
+	nyquist/nyqstk/src/Function.$(OBJEXT) \
+	nyquist/nyqstk/src/Generator.$(OBJEXT) \
+	nyquist/nyqstk/src/Instrmnt.$(OBJEXT) \
+	nyquist/nyqstk/src/JCRev.$(OBJEXT) \
+	nyquist/nyqstk/src/JetTable.$(OBJEXT) \
+	nyquist/nyqstk/src/Mandolin.$(OBJEXT) \
+	nyquist/nyqstk/src/ModalBar.$(OBJEXT) \
+	nyquist/nyqstk/src/Modal.$(OBJEXT) \
+	nyquist/nyqstk/src/Noise.$(OBJEXT) \
+	nyquist/nyqstk/src/NRev.$(OBJEXT) \
+	nyquist/nyqstk/src/OnePole.$(OBJEXT) \
+	nyquist/nyqstk/src/OneZero.$(OBJEXT) \
+	nyquist/nyqstk/src/PitShift.$(OBJEXT) \
+	nyquist/nyqstk/src/PluckTwo.$(OBJEXT) \
+	nyquist/nyqstk/src/PoleZero.$(OBJEXT) \
+	nyquist/nyqstk/src/PRCRev.$(OBJEXT) \
+	nyquist/nyqstk/src/ReedTable.$(OBJEXT) \
+	nyquist/nyqstk/src/Saxofony.$(OBJEXT) \
+	nyquist/nyqstk/src/SineWave.$(OBJEXT) \
+	nyquist/nyqstk/src/Sitar.$(OBJEXT) \
+	nyquist/nyqstk/src/Stk.$(OBJEXT) \
+	nyquist/nyqstk/src/WaveLoop.$(OBJEXT) \
+	nyquist/nyqstk/src/WvIn.$(OBJEXT) nyquist/tran/abs.$(OBJEXT) \
+	nyquist/tran/allpoles.$(OBJEXT) nyquist/tran/alpass.$(OBJEXT) \
+	nyquist/tran/alpasscv.$(OBJEXT) \
+	nyquist/tran/alpassvv.$(OBJEXT) nyquist/tran/amosc.$(OBJEXT) \
+	nyquist/tran/areson.$(OBJEXT) nyquist/tran/aresoncv.$(OBJEXT) \
+	nyquist/tran/aresonvc.$(OBJEXT) \
+	nyquist/tran/aresonvv.$(OBJEXT) nyquist/tran/atone.$(OBJEXT) \
+	nyquist/tran/atonev.$(OBJEXT) \
+	nyquist/tran/biquadfilt.$(OBJEXT) nyquist/tran/buzz.$(OBJEXT) \
+	nyquist/tran/chase.$(OBJEXT) nyquist/tran/clip.$(OBJEXT) \
+	nyquist/tran/congen.$(OBJEXT) nyquist/tran/const.$(OBJEXT) \
+	nyquist/tran/coterm.$(OBJEXT) nyquist/tran/delaycc.$(OBJEXT) \
+	nyquist/tran/delaycv.$(OBJEXT) \
+	nyquist/tran/eqbandvvv.$(OBJEXT) nyquist/tran/exp.$(OBJEXT) \
+	nyquist/tran/fmfb.$(OBJEXT) nyquist/tran/fmfbv.$(OBJEXT) \
+	nyquist/tran/fmosc.$(OBJEXT) nyquist/tran/follow.$(OBJEXT) \
+	nyquist/tran/fromarraystream.$(OBJEXT) \
+	nyquist/tran/fromobject.$(OBJEXT) nyquist/tran/gate.$(OBJEXT) \
+	nyquist/tran/ifft.$(OBJEXT) nyquist/tran/instrbanded.$(OBJEXT) \
+	nyquist/tran/instrbow.$(OBJEXT) \
+	nyquist/tran/instrbowedfreq.$(OBJEXT) \
+	nyquist/tran/instrclarall.$(OBJEXT) \
+	nyquist/tran/instrclar.$(OBJEXT) \
+	nyquist/tran/instrclarfreq.$(OBJEXT) \
+	nyquist/tran/instrfluteall.$(OBJEXT) \
+	nyquist/tran/instrflute.$(OBJEXT) \
+	nyquist/tran/instrflutefreq.$(OBJEXT) \
+	nyquist/tran/instrmandolin.$(OBJEXT) \
+	nyquist/tran/instrmodalbar.$(OBJEXT) \
+	nyquist/tran/instrsaxall.$(OBJEXT) \
+	nyquist/tran/instrsax.$(OBJEXT) \
+	nyquist/tran/instrsaxfreq.$(OBJEXT) \
+	nyquist/tran/instrsitar.$(OBJEXT) \
+	nyquist/tran/integrate.$(OBJEXT) nyquist/tran/log.$(OBJEXT) \
+	nyquist/tran/lpreson.$(OBJEXT) nyquist/tran/maxv.$(OBJEXT) \
+	nyquist/tran/offset.$(OBJEXT) nyquist/tran/oneshot.$(OBJEXT) \
+	nyquist/tran/osc.$(OBJEXT) nyquist/tran/partial.$(OBJEXT) \
+	nyquist/tran/pluck.$(OBJEXT) nyquist/tran/prod.$(OBJEXT) \
+	nyquist/tran/pwl.$(OBJEXT) nyquist/tran/quantize.$(OBJEXT) \
+	nyquist/tran/recip.$(OBJEXT) nyquist/tran/reson.$(OBJEXT) \
+	nyquist/tran/resoncv.$(OBJEXT) nyquist/tran/resonvc.$(OBJEXT) \
+	nyquist/tran/resonvv.$(OBJEXT) nyquist/tran/sampler.$(OBJEXT) \
+	nyquist/tran/scale.$(OBJEXT) nyquist/tran/shape.$(OBJEXT) \
+	nyquist/tran/sine.$(OBJEXT) nyquist/tran/siosc.$(OBJEXT) \
+	nyquist/tran/slope.$(OBJEXT) nyquist/tran/sqrt.$(OBJEXT) \
+	nyquist/tran/stkchorus.$(OBJEXT) \
+	nyquist/tran/stkpitshift.$(OBJEXT) \
+	nyquist/tran/stkrev.$(OBJEXT) nyquist/tran/tapf.$(OBJEXT) \
+	nyquist/tran/tapv.$(OBJEXT) nyquist/tran/tone.$(OBJEXT) \
+	nyquist/tran/tonev.$(OBJEXT) nyquist/tran/upsample.$(OBJEXT) \
+	nyquist/tran/white.$(OBJEXT) nyquist/xlisp/extern.$(OBJEXT) \
+	nyquist/xlisp/path.$(OBJEXT) nyquist/xlisp/xlbfun.$(OBJEXT) \
+	nyquist/xlisp/xlcont.$(OBJEXT) nyquist/xlisp/xldbug.$(OBJEXT) \
+	nyquist/xlisp/xldmem.$(OBJEXT) nyquist/xlisp/xleval.$(OBJEXT) \
+	nyquist/xlisp/xlfio.$(OBJEXT) nyquist/xlisp/xlftab.$(OBJEXT) \
+	nyquist/xlisp/xlglob.$(OBJEXT) nyquist/xlisp/xlimage.$(OBJEXT) \
+	nyquist/xlisp/xlinit.$(OBJEXT) nyquist/xlisp/xlio.$(OBJEXT) \
+	nyquist/xlisp/xlisp.$(OBJEXT) nyquist/xlisp/xljump.$(OBJEXT) \
+	nyquist/xlisp/xllist.$(OBJEXT) nyquist/xlisp/xlmath.$(OBJEXT) \
+	nyquist/xlisp/xlobj.$(OBJEXT) nyquist/xlisp/xlpp.$(OBJEXT) \
+	nyquist/xlisp/xlprin.$(OBJEXT) nyquist/xlisp/xlread.$(OBJEXT) \
+	nyquist/xlisp/xlstr.$(OBJEXT) nyquist/xlisp/xlsubr.$(OBJEXT) \
+	nyquist/xlisp/xlsym.$(OBJEXT) nyquist/xlisp/xlsys.$(OBJEXT) \
+	nyx.$(OBJEXT)
 libnyquist_a_OBJECTS = $(am_libnyquist_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -508,7 +464,6 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-NYQUIST = nyquist
 PORTAUDIO_CFLAGS = -I../portaudio-v19/include
 SNDFILE_CFLAGS = -I../libsndfile/src
 
@@ -516,14 +471,14 @@ SNDFILE_CFLAGS = -I../libsndfile/src
 ACLOCAL_AMFLAGS = -I autotools/m4
 INC = \
    -I. \
-   -I$(NYQUIST)/nyqsrc \
-   -I$(NYQUIST)/tran \
-   -I$(NYQUIST)/xlisp \
-   -I$(NYQUIST)/sys/unix \
-   -I$(NYQUIST)/cmt \
-   -I$(NYQUIST)/ffts/src \
-   -I$(NYQUIST)/nyqstk/include \
-   -I$(NYQUIST)/nyqstk
+   -Inyquist/nyqsrc \
+   -Inyquist/tran \
+   -Inyquist/xlisp \
+   -Inyquist/sys/unix \
+   -Inyquist/cmt \
+   -Inyquist/ffts/src \
+   -Inyquist/nyqstk/include \
+   -Inyquist/nyqstk
 
 AM_CFLAGS = $(INC) $(PORTAUDIO_CFLAGS) $(SNDFILE_CFLAGS) \
    -DCMTSTUFF -DEXT
@@ -537,399 +492,399 @@ lib_LIBRARIES = libnyquist.a
 
 # define the source files to use
 libnyquist_a_SOURCES = \
-   $(NYQUIST)/cmt/cext.c \
-   $(NYQUIST)/cmt/cext.h \
-   $(NYQUIST)/cmt/cleanup.c \
-   $(NYQUIST)/cmt/cleanup.h \
-   $(NYQUIST)/cmt/cmdline.c \
-   $(NYQUIST)/cmt/cmdline.h \
-   $(NYQUIST)/cmt/cmtcmd.c \
-   $(NYQUIST)/cmt/cmtcmd.h \
-   $(NYQUIST)/cmt/hash.h \
-   $(NYQUIST)/cmt/hashrout.h \
-   $(NYQUIST)/cmt/mem.c \
-   $(NYQUIST)/cmt/mem.h \
-   $(NYQUIST)/cmt/mfmidi.h \
-   $(NYQUIST)/cmt/midibuff.h \
-   $(NYQUIST)/cmt/midicode.h \
-   $(NYQUIST)/cmt/midierr.h \
-   $(NYQUIST)/cmt/midifile.c \
-   $(NYQUIST)/cmt/midifile.h \
-   $(NYQUIST)/cmt/midifns.c \
-   $(NYQUIST)/cmt/midifns.h \
-   $(NYQUIST)/cmt/moxc.c \
-   $(NYQUIST)/cmt/moxc.h \
-   $(NYQUIST)/cmt/musiprog.h \
-   $(NYQUIST)/cmt/pitch.h \
-   $(NYQUIST)/cmt/record.c \
-   $(NYQUIST)/cmt/record.h \
-   $(NYQUIST)/cmt/seq.c \
-   $(NYQUIST)/cmt/seq.h \
-   $(NYQUIST)/cmt/seqdecls.h \
-   $(NYQUIST)/cmt/seqmread.c \
-   $(NYQUIST)/cmt/seqmread.h \
-   $(NYQUIST)/cmt/seqmwrite.c \
-   $(NYQUIST)/cmt/seqmwrite.h \
-   $(NYQUIST)/cmt/seqread.c \
-   $(NYQUIST)/cmt/seqread.h \
-   $(NYQUIST)/cmt/seqwrite.c \
-   $(NYQUIST)/cmt/seqwrite.h \
-   $(NYQUIST)/cmt/swlogic.h \
-   $(NYQUIST)/cmt/tempomap.c \
-   $(NYQUIST)/cmt/tempomap.h \
-   $(NYQUIST)/cmt/timebase.c \
-   $(NYQUIST)/cmt/timebase.h \
-   $(NYQUIST)/cmt/userio.c \
-   $(NYQUIST)/cmt/userio.h \
-   $(NYQUIST)/ffts/src/fftext.c \
-   $(NYQUIST)/ffts/src/fftext.h \
-   $(NYQUIST)/ffts/src/fftlib.c \
-   $(NYQUIST)/ffts/src/fftlib.h \
-   $(NYQUIST)/ffts/src/matlib.c \
-   $(NYQUIST)/ffts/src/matlib.h \
-   $(NYQUIST)/nyqsrc/add.c \
-   $(NYQUIST)/nyqsrc/add.h \
-   $(NYQUIST)/nyqsrc/avg.c \
-   $(NYQUIST)/nyqsrc/avg.h \
-   $(NYQUIST)/nyqsrc/compose.c \
-   $(NYQUIST)/nyqsrc/compose.h \
-   $(NYQUIST)/nyqsrc/convolve.c \
-   $(NYQUIST)/nyqsrc/convolve.h \
-   $(NYQUIST)/nyqsrc/cque.h \
-   $(NYQUIST)/nyqsrc/debug.c \
-   $(NYQUIST)/nyqsrc/debug.h \
-   $(NYQUIST)/nyqsrc/downsample.c \
-   $(NYQUIST)/nyqsrc/downsample.h \
-   $(NYQUIST)/nyqsrc/exitpa.h \
-   $(NYQUIST)/nyqsrc/falloc.c \
-   $(NYQUIST)/nyqsrc/falloc.h \
-   $(NYQUIST)/nyqsrc/ffilterkit.c \
-   $(NYQUIST)/nyqsrc/ffilterkit.h \
-   $(NYQUIST)/nyqsrc/fft.c \
-   $(NYQUIST)/nyqsrc/fft.h \
-   $(NYQUIST)/nyqsrc/fftw.h \
-   $(NYQUIST)/nyqsrc/fresample.h \
-   $(NYQUIST)/nyqsrc/fsmallfilter.h \
-   $(NYQUIST)/nyqsrc/handlers.c \
-   $(NYQUIST)/nyqsrc/inverse.c \
-   $(NYQUIST)/nyqsrc/inverse.h \
-   $(NYQUIST)/nyqsrc/local.c \
-   $(NYQUIST)/nyqsrc/localdefs.h \
-   $(NYQUIST)/nyqsrc/localptrs.h \
-   $(NYQUIST)/nyqsrc/lpanal.c \
-   $(NYQUIST)/nyqsrc/lpanal.h \
-   $(NYQUIST)/nyqsrc/multiread.c \
-   $(NYQUIST)/nyqsrc/multiread.h \
-   $(NYQUIST)/nyqsrc/multiseq.c \
-   $(NYQUIST)/nyqsrc/multiseq.h \
-   $(NYQUIST)/nyqsrc/resamp.c \
-   $(NYQUIST)/nyqsrc/resamp.h \
-   $(NYQUIST)/nyqsrc/resampv.c \
-   $(NYQUIST)/nyqsrc/resampv.h \
-   $(NYQUIST)/nyqsrc/rfftw.h \
-   $(NYQUIST)/nyqsrc/samples.c \
-   $(NYQUIST)/nyqsrc/samples.h \
-   $(NYQUIST)/nyqsrc/seqext.c \
-   $(NYQUIST)/nyqsrc/seqext.h \
-   $(NYQUIST)/nyqsrc/seqfnint.c \
-   $(NYQUIST)/nyqsrc/seqfnintdefs.h \
-   $(NYQUIST)/nyqsrc/seqfnintptrs.h \
-   $(NYQUIST)/nyqsrc/seqinterf.c \
-   $(NYQUIST)/nyqsrc/seqinterf.h \
-   $(NYQUIST)/nyqsrc/sliders.c \
-   $(NYQUIST)/nyqsrc/sliders.h \
-   $(NYQUIST)/nyqsrc/sndfnint.c \
-   $(NYQUIST)/nyqsrc/sndfnintdefs.h \
-   $(NYQUIST)/nyqsrc/sndfnintptrs.h \
-   $(NYQUIST)/nyqsrc/sndmax.c \
-   $(NYQUIST)/nyqsrc/sndmax.h \
-   $(NYQUIST)/nyqsrc/sndread.c \
-   $(NYQUIST)/nyqsrc/sndread.h \
-   $(NYQUIST)/nyqsrc/sndseq.c \
-   $(NYQUIST)/nyqsrc/sndseq.h \
-   $(NYQUIST)/nyqsrc/sndsliders.h \
-   $(NYQUIST)/nyqsrc/sndwrite.h \
-   $(NYQUIST)/nyqsrc/sndwritepa.c \
-   $(NYQUIST)/nyqsrc/sound.c \
-   $(NYQUIST)/nyqsrc/sound.h \
-   $(NYQUIST)/nyqsrc/stats.c \
-   $(NYQUIST)/nyqsrc/stdefs.h \
-   $(NYQUIST)/nyqsrc/trigger.c \
-   $(NYQUIST)/nyqsrc/trigger.h \
-   $(NYQUIST)/nyqsrc/yin.c \
-   $(NYQUIST)/nyqsrc/yin.h \
-   $(NYQUIST)/nyqstk/instr.cpp \
-   $(NYQUIST)/nyqstk/instr.h \
-   $(NYQUIST)/nyqstk/stkinit.cpp \
-   $(NYQUIST)/nyqstk/stkinit.h \
-   $(NYQUIST)/nyqstk/stkint.cpp \
-   $(NYQUIST)/nyqstk/stkint.h \
-   $(NYQUIST)/nyqstk/include/ADSR.h \
-   $(NYQUIST)/nyqstk/include/BandedWG.h \
-   $(NYQUIST)/nyqstk/include/BiQuad.h \
-   $(NYQUIST)/nyqstk/include/Bowed.h \
-   $(NYQUIST)/nyqstk/include/BowTable.h \
-   $(NYQUIST)/nyqstk/include/Chorus.h \
-   $(NYQUIST)/nyqstk/include/Clarinet.h \
-   $(NYQUIST)/nyqstk/include/DelayA.h \
-   $(NYQUIST)/nyqstk/include/Delay.h \
-   $(NYQUIST)/nyqstk/include/DelayL.h \
-   $(NYQUIST)/nyqstk/include/Effect.h \
-   $(NYQUIST)/nyqstk/include/Envelope.h \
-   $(NYQUIST)/nyqstk/include/FileRead.h \
-   $(NYQUIST)/nyqstk/include/FileWvIn.h \
-   $(NYQUIST)/nyqstk/include/Filter.h \
-   $(NYQUIST)/nyqstk/include/Flute.h \
-   $(NYQUIST)/nyqstk/include/Function.h \
-   $(NYQUIST)/nyqstk/include/Generator.h \
-   $(NYQUIST)/nyqstk/include/Instrmnt.h \
-   $(NYQUIST)/nyqstk/include/JCRev.h \
-   $(NYQUIST)/nyqstk/include/JetTable.h \
-   $(NYQUIST)/nyqstk/include/Mandolin.h \
-   $(NYQUIST)/nyqstk/include/ModalBar.h \
-   $(NYQUIST)/nyqstk/include/Modal.h \
-   $(NYQUIST)/nyqstk/include/Noise.h \
-   $(NYQUIST)/nyqstk/include/NRev.h \
-   $(NYQUIST)/nyqstk/include/OnePole.h \
-   $(NYQUIST)/nyqstk/include/OneZero.h \
-   $(NYQUIST)/nyqstk/include/PitShift.h \
-   $(NYQUIST)/nyqstk/include/PluckTwo.h \
-   $(NYQUIST)/nyqstk/include/PoleZero.h \
-   $(NYQUIST)/nyqstk/include/PRCRev.h \
-   $(NYQUIST)/nyqstk/include/ReedTable.h \
-   $(NYQUIST)/nyqstk/include/Saxofony.h \
-   $(NYQUIST)/nyqstk/include/SineWave.h \
-   $(NYQUIST)/nyqstk/include/Sitar.h \
-   $(NYQUIST)/nyqstk/include/Stk.h \
-   $(NYQUIST)/nyqstk/include/WaveLoop.h \
-   $(NYQUIST)/nyqstk/include/WvIn.h \
-   $(NYQUIST)/nyqstk/src/ADSR.cpp \
-   $(NYQUIST)/nyqstk/src/BandedWG.cpp \
-   $(NYQUIST)/nyqstk/src/BiQuad.cpp \
-   $(NYQUIST)/nyqstk/src/Bowed.cpp \
-   $(NYQUIST)/nyqstk/src/BowTable.cpp \
-   $(NYQUIST)/nyqstk/src/Chorus.cpp \
-   $(NYQUIST)/nyqstk/src/Clarinet.cpp \
-   $(NYQUIST)/nyqstk/src/DelayA.cpp \
-   $(NYQUIST)/nyqstk/src/Delay.cpp \
-   $(NYQUIST)/nyqstk/src/DelayL.cpp \
-   $(NYQUIST)/nyqstk/src/Effect.cpp \
-   $(NYQUIST)/nyqstk/src/Envelope.cpp \
-   $(NYQUIST)/nyqstk/src/FileRead.cpp \
-   $(NYQUIST)/nyqstk/src/FileWvIn.cpp \
-   $(NYQUIST)/nyqstk/src/Filter.cpp \
-   $(NYQUIST)/nyqstk/src/Flute.cpp \
-   $(NYQUIST)/nyqstk/src/Function.cpp \
-   $(NYQUIST)/nyqstk/src/Generator.cpp \
-   $(NYQUIST)/nyqstk/src/Instrmnt.cpp \
-   $(NYQUIST)/nyqstk/src/JCRev.cpp \
-   $(NYQUIST)/nyqstk/src/JetTable.cpp \
-   $(NYQUIST)/nyqstk/src/Mandolin.cpp \
-   $(NYQUIST)/nyqstk/src/ModalBar.cpp \
-   $(NYQUIST)/nyqstk/src/Modal.cpp \
-   $(NYQUIST)/nyqstk/src/Noise.cpp \
-   $(NYQUIST)/nyqstk/src/NRev.cpp \
-   $(NYQUIST)/nyqstk/src/OnePole.cpp \
-   $(NYQUIST)/nyqstk/src/OneZero.cpp \
-   $(NYQUIST)/nyqstk/src/PitShift.cpp \
-   $(NYQUIST)/nyqstk/src/PluckTwo.cpp \
-   $(NYQUIST)/nyqstk/src/PoleZero.cpp \
-   $(NYQUIST)/nyqstk/src/PRCRev.cpp \
-   $(NYQUIST)/nyqstk/src/ReedTable.cpp \
-   $(NYQUIST)/nyqstk/src/Saxofony.cpp \
-   $(NYQUIST)/nyqstk/src/SineWave.cpp \
-   $(NYQUIST)/nyqstk/src/Sitar.cpp \
-   $(NYQUIST)/nyqstk/src/Stk.cpp \
-   $(NYQUIST)/nyqstk/src/WaveLoop.cpp \
-   $(NYQUIST)/nyqstk/src/WvIn.cpp \
-   $(NYQUIST)/tran/abs.c \
-   $(NYQUIST)/tran/abs.h \
-   $(NYQUIST)/tran/allpoles.c \
-   $(NYQUIST)/tran/allpoles.h \
-   $(NYQUIST)/tran/alpass.c \
-   $(NYQUIST)/tran/alpasscv.c \
-   $(NYQUIST)/tran/alpasscv.h \
-   $(NYQUIST)/tran/alpass.h \
-   $(NYQUIST)/tran/alpassvv.c \
-   $(NYQUIST)/tran/alpassvv.h \
-   $(NYQUIST)/tran/amosc.c \
-   $(NYQUIST)/tran/amosc.h \
-   $(NYQUIST)/tran/areson.c \
-   $(NYQUIST)/tran/aresoncv.c \
-   $(NYQUIST)/tran/aresoncv.h \
-   $(NYQUIST)/tran/areson.h \
-   $(NYQUIST)/tran/aresonvc.c \
-   $(NYQUIST)/tran/aresonvc.h \
-   $(NYQUIST)/tran/aresonvv.c \
-   $(NYQUIST)/tran/aresonvv.h \
-   $(NYQUIST)/tran/atone.c \
-   $(NYQUIST)/tran/atone.h \
-   $(NYQUIST)/tran/atonev.c \
-   $(NYQUIST)/tran/atonev.h \
-   $(NYQUIST)/tran/biquadfilt.c \
-   $(NYQUIST)/tran/biquadfilt.h \
-   $(NYQUIST)/tran/buzz.c \
-   $(NYQUIST)/tran/buzz.h \
-   $(NYQUIST)/tran/chase.c \
-   $(NYQUIST)/tran/chase.h \
-   $(NYQUIST)/tran/clip.c \
-   $(NYQUIST)/tran/clip.h \
-   $(NYQUIST)/tran/congen.c \
-   $(NYQUIST)/tran/congen.h \
-   $(NYQUIST)/tran/const.c \
-   $(NYQUIST)/tran/const.h \
-   $(NYQUIST)/tran/coterm.c \
-   $(NYQUIST)/tran/coterm.h \
-   $(NYQUIST)/tran/delaycc.c \
-   $(NYQUIST)/tran/delaycc.h \
-   $(NYQUIST)/tran/delaycv.c \
-   $(NYQUIST)/tran/delaycv.h \
-   $(NYQUIST)/tran/eqbandvvv.c \
-   $(NYQUIST)/tran/eqbandvvv.h \
-   $(NYQUIST)/tran/exp.c \
-   $(NYQUIST)/tran/exp.h \
-   $(NYQUIST)/tran/fmfb.c \
-   $(NYQUIST)/tran/fmfb.h \
-   $(NYQUIST)/tran/fmfbv.c \
-   $(NYQUIST)/tran/fmfbv.h \
-   $(NYQUIST)/tran/fmosc.c \
-   $(NYQUIST)/tran/fmosc.h \
-   $(NYQUIST)/tran/follow.c \
-   $(NYQUIST)/tran/follow.h \
-   $(NYQUIST)/tran/fromarraystream.c \
-   $(NYQUIST)/tran/fromarraystream.h \
-   $(NYQUIST)/tran/fromobject.c \
-   $(NYQUIST)/tran/fromobject.h \
-   $(NYQUIST)/tran/gate.c \
-   $(NYQUIST)/tran/gate.h \
-   $(NYQUIST)/tran/ifft.c \
-   $(NYQUIST)/tran/ifft.h \
-   $(NYQUIST)/tran/instrbanded.c \
-   $(NYQUIST)/tran/instrbanded.h \
-   $(NYQUIST)/tran/instrbow.c \
-   $(NYQUIST)/tran/instrbowedfreq.c \
-   $(NYQUIST)/tran/instrbowedfreq.h \
-   $(NYQUIST)/tran/instrbow.h \
-   $(NYQUIST)/tran/instrclarall.c \
-   $(NYQUIST)/tran/instrclarall.h \
-   $(NYQUIST)/tran/instrclar.c \
-   $(NYQUIST)/tran/instrclarfreq.c \
-   $(NYQUIST)/tran/instrclarfreq.h \
-   $(NYQUIST)/tran/instrclar.h \
-   $(NYQUIST)/tran/instrfluteall.c \
-   $(NYQUIST)/tran/instrfluteall.h \
-   $(NYQUIST)/tran/instrflute.c \
-   $(NYQUIST)/tran/instrflutefreq.c \
-   $(NYQUIST)/tran/instrflutefreq.h \
-   $(NYQUIST)/tran/instrflute.h \
-   $(NYQUIST)/tran/instrmandolin.c \
-   $(NYQUIST)/tran/instrmandolin.h \
-   $(NYQUIST)/tran/instrmodalbar.c \
-   $(NYQUIST)/tran/instrmodalbar.h \
-   $(NYQUIST)/tran/instrsaxall.c \
-   $(NYQUIST)/tran/instrsaxall.h \
-   $(NYQUIST)/tran/instrsax.c \
-   $(NYQUIST)/tran/instrsaxfreq.c \
-   $(NYQUIST)/tran/instrsaxfreq.h \
-   $(NYQUIST)/tran/instrsax.h \
-   $(NYQUIST)/tran/instrsitar.c \
-   $(NYQUIST)/tran/instrsitar.h \
-   $(NYQUIST)/tran/integrate.c \
-   $(NYQUIST)/tran/integrate.h \
-   $(NYQUIST)/tran/log.c \
-   $(NYQUIST)/tran/log.h \
-   $(NYQUIST)/tran/lpreson.c \
-   $(NYQUIST)/tran/lpreson.h \
-   $(NYQUIST)/tran/maxv.c \
-   $(NYQUIST)/tran/maxv.h \
-   $(NYQUIST)/tran/offset.c \
-   $(NYQUIST)/tran/offset.h \
-   $(NYQUIST)/tran/oneshot.c \
-   $(NYQUIST)/tran/oneshot.h \
-   $(NYQUIST)/tran/osc.c \
-   $(NYQUIST)/tran/osc.h \
-   $(NYQUIST)/tran/partial.c \
-   $(NYQUIST)/tran/partial.h \
-   $(NYQUIST)/tran/pluck.c \
-   $(NYQUIST)/tran/pluck.h \
-   $(NYQUIST)/tran/prod.c \
-   $(NYQUIST)/tran/prod.h \
-   $(NYQUIST)/tran/pwl.c \
-   $(NYQUIST)/tran/pwl.h \
-   $(NYQUIST)/tran/quantize.c \
-   $(NYQUIST)/tran/quantize.h \
-   $(NYQUIST)/tran/recip.c \
-   $(NYQUIST)/tran/recip.h \
-   $(NYQUIST)/tran/reson.c \
-   $(NYQUIST)/tran/resoncv.c \
-   $(NYQUIST)/tran/resoncv.h \
-   $(NYQUIST)/tran/reson.h \
-   $(NYQUIST)/tran/resonvc.c \
-   $(NYQUIST)/tran/resonvc.h \
-   $(NYQUIST)/tran/resonvv.c \
-   $(NYQUIST)/tran/resonvv.h \
-   $(NYQUIST)/tran/sampler.c \
-   $(NYQUIST)/tran/sampler.h \
-   $(NYQUIST)/tran/scale.c \
-   $(NYQUIST)/tran/scale.h \
-   $(NYQUIST)/tran/shape.c \
-   $(NYQUIST)/tran/shape.h \
-   $(NYQUIST)/tran/sine.c \
-   $(NYQUIST)/tran/sine.h \
-   $(NYQUIST)/tran/siosc.c \
-   $(NYQUIST)/tran/siosc.h \
-   $(NYQUIST)/tran/slope.c \
-   $(NYQUIST)/tran/slope.h \
-   $(NYQUIST)/tran/sqrt.c \
-   $(NYQUIST)/tran/sqrt.h \
-   $(NYQUIST)/tran/stkchorus.c \
-   $(NYQUIST)/tran/stkchorus.h \
-   $(NYQUIST)/tran/stkpitshift.c \
-   $(NYQUIST)/tran/stkpitshift.h \
-   $(NYQUIST)/tran/stkrev.c \
-   $(NYQUIST)/tran/stkrev.h \
-   $(NYQUIST)/tran/tapf.c \
-   $(NYQUIST)/tran/tapf.h \
-   $(NYQUIST)/tran/tapv.c \
-   $(NYQUIST)/tran/tapv.h \
-   $(NYQUIST)/tran/tone.c \
-   $(NYQUIST)/tran/tone.h \
-   $(NYQUIST)/tran/tonev.c \
-   $(NYQUIST)/tran/tonev.h \
-   $(NYQUIST)/tran/upsample.c \
-   $(NYQUIST)/tran/upsample.h \
-   $(NYQUIST)/tran/white.c \
-   $(NYQUIST)/tran/white.h \
-   $(NYQUIST)/xlisp/extern.c \
-   $(NYQUIST)/xlisp/extern.h \
-   $(NYQUIST)/xlisp/osdefs.h \
-   $(NYQUIST)/xlisp/osptrs.h \
-   $(NYQUIST)/xlisp/path.c \
-   $(NYQUIST)/xlisp/xlbfun.c \
-   $(NYQUIST)/xlisp/xlcont.c \
-   $(NYQUIST)/xlisp/xldbug.c \
-   $(NYQUIST)/xlisp/xldmem.c \
-   $(NYQUIST)/xlisp/xldmem.h \
-   $(NYQUIST)/xlisp/xleval.c \
-   $(NYQUIST)/xlisp/xlfio.c \
-   $(NYQUIST)/xlisp/xlftab.c \
-   $(NYQUIST)/xlisp/xlglob.c \
-   $(NYQUIST)/xlisp/xlimage.c \
-   $(NYQUIST)/xlisp/xlinit.c \
-   $(NYQUIST)/xlisp/xlio.c \
-   $(NYQUIST)/xlisp/xlisp.c \
-   $(NYQUIST)/xlisp/xlisp.h \
-   $(NYQUIST)/xlisp/xljump.c \
-   $(NYQUIST)/xlisp/xllist.c \
-   $(NYQUIST)/xlisp/xlmath.c \
-   $(NYQUIST)/xlisp/xlobj.c \
-   $(NYQUIST)/xlisp/xlpp.c \
-   $(NYQUIST)/xlisp/xlprin.c \
-   $(NYQUIST)/xlisp/xlread.c \
-   $(NYQUIST)/xlisp/xlstr.c \
-   $(NYQUIST)/xlisp/xlsubr.c \
-   $(NYQUIST)/xlisp/xlsym.c \
-   $(NYQUIST)/xlisp/xlsys.c \
+   nyquist/cmt/cext.c \
+   nyquist/cmt/cext.h \
+   nyquist/cmt/cleanup.c \
+   nyquist/cmt/cleanup.h \
+   nyquist/cmt/cmdline.c \
+   nyquist/cmt/cmdline.h \
+   nyquist/cmt/cmtcmd.c \
+   nyquist/cmt/cmtcmd.h \
+   nyquist/cmt/hash.h \
+   nyquist/cmt/hashrout.h \
+   nyquist/cmt/mem.c \
+   nyquist/cmt/mem.h \
+   nyquist/cmt/mfmidi.h \
+   nyquist/cmt/midibuff.h \
+   nyquist/cmt/midicode.h \
+   nyquist/cmt/midierr.h \
+   nyquist/cmt/midifile.c \
+   nyquist/cmt/midifile.h \
+   nyquist/cmt/midifns.c \
+   nyquist/cmt/midifns.h \
+   nyquist/cmt/moxc.c \
+   nyquist/cmt/moxc.h \
+   nyquist/cmt/musiprog.h \
+   nyquist/cmt/pitch.h \
+   nyquist/cmt/record.c \
+   nyquist/cmt/record.h \
+   nyquist/cmt/seq.c \
+   nyquist/cmt/seq.h \
+   nyquist/cmt/seqdecls.h \
+   nyquist/cmt/seqmread.c \
+   nyquist/cmt/seqmread.h \
+   nyquist/cmt/seqmwrite.c \
+   nyquist/cmt/seqmwrite.h \
+   nyquist/cmt/seqread.c \
+   nyquist/cmt/seqread.h \
+   nyquist/cmt/seqwrite.c \
+   nyquist/cmt/seqwrite.h \
+   nyquist/cmt/swlogic.h \
+   nyquist/cmt/tempomap.c \
+   nyquist/cmt/tempomap.h \
+   nyquist/cmt/timebase.c \
+   nyquist/cmt/timebase.h \
+   nyquist/cmt/userio.c \
+   nyquist/cmt/userio.h \
+   nyquist/ffts/src/fftext.c \
+   nyquist/ffts/src/fftext.h \
+   nyquist/ffts/src/fftlib.c \
+   nyquist/ffts/src/fftlib.h \
+   nyquist/ffts/src/matlib.c \
+   nyquist/ffts/src/matlib.h \
+   nyquist/nyqsrc/add.c \
+   nyquist/nyqsrc/add.h \
+   nyquist/nyqsrc/avg.c \
+   nyquist/nyqsrc/avg.h \
+   nyquist/nyqsrc/compose.c \
+   nyquist/nyqsrc/compose.h \
+   nyquist/nyqsrc/convolve.c \
+   nyquist/nyqsrc/convolve.h \
+   nyquist/nyqsrc/cque.h \
+   nyquist/nyqsrc/debug.c \
+   nyquist/nyqsrc/debug.h \
+   nyquist/nyqsrc/downsample.c \
+   nyquist/nyqsrc/downsample.h \
+   nyquist/nyqsrc/exitpa.h \
+   nyquist/nyqsrc/falloc.c \
+   nyquist/nyqsrc/falloc.h \
+   nyquist/nyqsrc/ffilterkit.c \
+   nyquist/nyqsrc/ffilterkit.h \
+   nyquist/nyqsrc/fft.c \
+   nyquist/nyqsrc/fft.h \
+   nyquist/nyqsrc/fftw.h \
+   nyquist/nyqsrc/fresample.h \
+   nyquist/nyqsrc/fsmallfilter.h \
+   nyquist/nyqsrc/handlers.c \
+   nyquist/nyqsrc/inverse.c \
+   nyquist/nyqsrc/inverse.h \
+   nyquist/nyqsrc/local.c \
+   nyquist/nyqsrc/localdefs.h \
+   nyquist/nyqsrc/localptrs.h \
+   nyquist/nyqsrc/lpanal.c \
+   nyquist/nyqsrc/lpanal.h \
+   nyquist/nyqsrc/multiread.c \
+   nyquist/nyqsrc/multiread.h \
+   nyquist/nyqsrc/multiseq.c \
+   nyquist/nyqsrc/multiseq.h \
+   nyquist/nyqsrc/resamp.c \
+   nyquist/nyqsrc/resamp.h \
+   nyquist/nyqsrc/resampv.c \
+   nyquist/nyqsrc/resampv.h \
+   nyquist/nyqsrc/rfftw.h \
+   nyquist/nyqsrc/samples.c \
+   nyquist/nyqsrc/samples.h \
+   nyquist/nyqsrc/seqext.c \
+   nyquist/nyqsrc/seqext.h \
+   nyquist/nyqsrc/seqfnint.c \
+   nyquist/nyqsrc/seqfnintdefs.h \
+   nyquist/nyqsrc/seqfnintptrs.h \
+   nyquist/nyqsrc/seqinterf.c \
+   nyquist/nyqsrc/seqinterf.h \
+   nyquist/nyqsrc/sliders.c \
+   nyquist/nyqsrc/sliders.h \
+   nyquist/nyqsrc/sndfnint.c \
+   nyquist/nyqsrc/sndfnintdefs.h \
+   nyquist/nyqsrc/sndfnintptrs.h \
+   nyquist/nyqsrc/sndmax.c \
+   nyquist/nyqsrc/sndmax.h \
+   nyquist/nyqsrc/sndread.c \
+   nyquist/nyqsrc/sndread.h \
+   nyquist/nyqsrc/sndseq.c \
+   nyquist/nyqsrc/sndseq.h \
+   nyquist/nyqsrc/sndsliders.h \
+   nyquist/nyqsrc/sndwrite.h \
+   nyquist/nyqsrc/sndwritepa.c \
+   nyquist/nyqsrc/sound.c \
+   nyquist/nyqsrc/sound.h \
+   nyquist/nyqsrc/stats.c \
+   nyquist/nyqsrc/stdefs.h \
+   nyquist/nyqsrc/trigger.c \
+   nyquist/nyqsrc/trigger.h \
+   nyquist/nyqsrc/yin.c \
+   nyquist/nyqsrc/yin.h \
+   nyquist/nyqstk/instr.cpp \
+   nyquist/nyqstk/instr.h \
+   nyquist/nyqstk/stkinit.cpp \
+   nyquist/nyqstk/stkinit.h \
+   nyquist/nyqstk/stkint.cpp \
+   nyquist/nyqstk/stkint.h \
+   nyquist/nyqstk/include/ADSR.h \
+   nyquist/nyqstk/include/BandedWG.h \
+   nyquist/nyqstk/include/BiQuad.h \
+   nyquist/nyqstk/include/Bowed.h \
+   nyquist/nyqstk/include/BowTable.h \
+   nyquist/nyqstk/include/Chorus.h \
+   nyquist/nyqstk/include/Clarinet.h \
+   nyquist/nyqstk/include/DelayA.h \
+   nyquist/nyqstk/include/Delay.h \
+   nyquist/nyqstk/include/DelayL.h \
+   nyquist/nyqstk/include/Effect.h \
+   nyquist/nyqstk/include/Envelope.h \
+   nyquist/nyqstk/include/FileRead.h \
+   nyquist/nyqstk/include/FileWvIn.h \
+   nyquist/nyqstk/include/Filter.h \
+   nyquist/nyqstk/include/Flute.h \
+   nyquist/nyqstk/include/Function.h \
+   nyquist/nyqstk/include/Generator.h \
+   nyquist/nyqstk/include/Instrmnt.h \
+   nyquist/nyqstk/include/JCRev.h \
+   nyquist/nyqstk/include/JetTable.h \
+   nyquist/nyqstk/include/Mandolin.h \
+   nyquist/nyqstk/include/ModalBar.h \
+   nyquist/nyqstk/include/Modal.h \
+   nyquist/nyqstk/include/Noise.h \
+   nyquist/nyqstk/include/NRev.h \
+   nyquist/nyqstk/include/OnePole.h \
+   nyquist/nyqstk/include/OneZero.h \
+   nyquist/nyqstk/include/PitShift.h \
+   nyquist/nyqstk/include/PluckTwo.h \
+   nyquist/nyqstk/include/PoleZero.h \
+   nyquist/nyqstk/include/PRCRev.h \
+   nyquist/nyqstk/include/ReedTable.h \
+   nyquist/nyqstk/include/Saxofony.h \
+   nyquist/nyqstk/include/SineWave.h \
+   nyquist/nyqstk/include/Sitar.h \
+   nyquist/nyqstk/include/Stk.h \
+   nyquist/nyqstk/include/WaveLoop.h \
+   nyquist/nyqstk/include/WvIn.h \
+   nyquist/nyqstk/src/ADSR.cpp \
+   nyquist/nyqstk/src/BandedWG.cpp \
+   nyquist/nyqstk/src/BiQuad.cpp \
+   nyquist/nyqstk/src/Bowed.cpp \
+   nyquist/nyqstk/src/BowTable.cpp \
+   nyquist/nyqstk/src/Chorus.cpp \
+   nyquist/nyqstk/src/Clarinet.cpp \
+   nyquist/nyqstk/src/DelayA.cpp \
+   nyquist/nyqstk/src/Delay.cpp \
+   nyquist/nyqstk/src/DelayL.cpp \
+   nyquist/nyqstk/src/Effect.cpp \
+   nyquist/nyqstk/src/Envelope.cpp \
+   nyquist/nyqstk/src/FileRead.cpp \
+   nyquist/nyqstk/src/FileWvIn.cpp \
+   nyquist/nyqstk/src/Filter.cpp \
+   nyquist/nyqstk/src/Flute.cpp \
+   nyquist/nyqstk/src/Function.cpp \
+   nyquist/nyqstk/src/Generator.cpp \
+   nyquist/nyqstk/src/Instrmnt.cpp \
+   nyquist/nyqstk/src/JCRev.cpp \
+   nyquist/nyqstk/src/JetTable.cpp \
+   nyquist/nyqstk/src/Mandolin.cpp \
+   nyquist/nyqstk/src/ModalBar.cpp \
+   nyquist/nyqstk/src/Modal.cpp \
+   nyquist/nyqstk/src/Noise.cpp \
+   nyquist/nyqstk/src/NRev.cpp \
+   nyquist/nyqstk/src/OnePole.cpp \
+   nyquist/nyqstk/src/OneZero.cpp \
+   nyquist/nyqstk/src/PitShift.cpp \
+   nyquist/nyqstk/src/PluckTwo.cpp \
+   nyquist/nyqstk/src/PoleZero.cpp \
+   nyquist/nyqstk/src/PRCRev.cpp \
+   nyquist/nyqstk/src/ReedTable.cpp \
+   nyquist/nyqstk/src/Saxofony.cpp \
+   nyquist/nyqstk/src/SineWave.cpp \
+   nyquist/nyqstk/src/Sitar.cpp \
+   nyquist/nyqstk/src/Stk.cpp \
+   nyquist/nyqstk/src/WaveLoop.cpp \
+   nyquist/nyqstk/src/WvIn.cpp \
+   nyquist/tran/abs.c \
+   nyquist/tran/abs.h \
+   nyquist/tran/allpoles.c \
+   nyquist/tran/allpoles.h \
+   nyquist/tran/alpass.c \
+   nyquist/tran/alpasscv.c \
+   nyquist/tran/alpasscv.h \
+   nyquist/tran/alpass.h \
+   nyquist/tran/alpassvv.c \
+   nyquist/tran/alpassvv.h \
+   nyquist/tran/amosc.c \
+   nyquist/tran/amosc.h \
+   nyquist/tran/areson.c \
+   nyquist/tran/aresoncv.c \
+   nyquist/tran/aresoncv.h \
+   nyquist/tran/areson.h \
+   nyquist/tran/aresonvc.c \
+   nyquist/tran/aresonvc.h \
+   nyquist/tran/aresonvv.c \
+   nyquist/tran/aresonvv.h \
+   nyquist/tran/atone.c \
+   nyquist/tran/atone.h \
+   nyquist/tran/atonev.c \
+   nyquist/tran/atonev.h \
+   nyquist/tran/biquadfilt.c \
+   nyquist/tran/biquadfilt.h \
+   nyquist/tran/buzz.c \
+   nyquist/tran/buzz.h \
+   nyquist/tran/chase.c \
+   nyquist/tran/chase.h \
+   nyquist/tran/clip.c \
+   nyquist/tran/clip.h \
+   nyquist/tran/congen.c \
+   nyquist/tran/congen.h \
+   nyquist/tran/const.c \
+   nyquist/tran/const.h \
+   nyquist/tran/coterm.c \
+   nyquist/tran/coterm.h \
+   nyquist/tran/delaycc.c \
+   nyquist/tran/delaycc.h \
+   nyquist/tran/delaycv.c \
+   nyquist/tran/delaycv.h \
+   nyquist/tran/eqbandvvv.c \
+   nyquist/tran/eqbandvvv.h \
+   nyquist/tran/exp.c \
+   nyquist/tran/exp.h \
+   nyquist/tran/fmfb.c \
+   nyquist/tran/fmfb.h \
+   nyquist/tran/fmfbv.c \
+   nyquist/tran/fmfbv.h \
+   nyquist/tran/fmosc.c \
+   nyquist/tran/fmosc.h \
+   nyquist/tran/follow.c \
+   nyquist/tran/follow.h \
+   nyquist/tran/fromarraystream.c \
+   nyquist/tran/fromarraystream.h \
+   nyquist/tran/fromobject.c \
+   nyquist/tran/fromobject.h \
+   nyquist/tran/gate.c \
+   nyquist/tran/gate.h \
+   nyquist/tran/ifft.c \
+   nyquist/tran/ifft.h \
+   nyquist/tran/instrbanded.c \
+   nyquist/tran/instrbanded.h \
+   nyquist/tran/instrbow.c \
+   nyquist/tran/instrbowedfreq.c \
+   nyquist/tran/instrbowedfreq.h \
+   nyquist/tran/instrbow.h \
+   nyquist/tran/instrclarall.c \
+   nyquist/tran/instrclarall.h \
+   nyquist/tran/instrclar.c \
+   nyquist/tran/instrclarfreq.c \
+   nyquist/tran/instrclarfreq.h \
+   nyquist/tran/instrclar.h \
+   nyquist/tran/instrfluteall.c \
+   nyquist/tran/instrfluteall.h \
+   nyquist/tran/instrflute.c \
+   nyquist/tran/instrflutefreq.c \
+   nyquist/tran/instrflutefreq.h \
+   nyquist/tran/instrflute.h \
+   nyquist/tran/instrmandolin.c \
+   nyquist/tran/instrmandolin.h \
+   nyquist/tran/instrmodalbar.c \
+   nyquist/tran/instrmodalbar.h \
+   nyquist/tran/instrsaxall.c \
+   nyquist/tran/instrsaxall.h \
+   nyquist/tran/instrsax.c \
+   nyquist/tran/instrsaxfreq.c \
+   nyquist/tran/instrsaxfreq.h \
+   nyquist/tran/instrsax.h \
+   nyquist/tran/instrsitar.c \
+   nyquist/tran/instrsitar.h \
+   nyquist/tran/integrate.c \
+   nyquist/tran/integrate.h \
+   nyquist/tran/log.c \
+   nyquist/tran/log.h \
+   nyquist/tran/lpreson.c \
+   nyquist/tran/lpreson.h \
+   nyquist/tran/maxv.c \
+   nyquist/tran/maxv.h \
+   nyquist/tran/offset.c \
+   nyquist/tran/offset.h \
+   nyquist/tran/oneshot.c \
+   nyquist/tran/oneshot.h \
+   nyquist/tran/osc.c \
+   nyquist/tran/osc.h \
+   nyquist/tran/partial.c \
+   nyquist/tran/partial.h \
+   nyquist/tran/pluck.c \
+   nyquist/tran/pluck.h \
+   nyquist/tran/prod.c \
+   nyquist/tran/prod.h \
+   nyquist/tran/pwl.c \
+   nyquist/tran/pwl.h \
+   nyquist/tran/quantize.c \
+   nyquist/tran/quantize.h \
+   nyquist/tran/recip.c \
+   nyquist/tran/recip.h \
+   nyquist/tran/reson.c \
+   nyquist/tran/resoncv.c \
+   nyquist/tran/resoncv.h \
+   nyquist/tran/reson.h \
+   nyquist/tran/resonvc.c \
+   nyquist/tran/resonvc.h \
+   nyquist/tran/resonvv.c \
+   nyquist/tran/resonvv.h \
+   nyquist/tran/sampler.c \
+   nyquist/tran/sampler.h \
+   nyquist/tran/scale.c \
+   nyquist/tran/scale.h \
+   nyquist/tran/shape.c \
+   nyquist/tran/shape.h \
+   nyquist/tran/sine.c \
+   nyquist/tran/sine.h \
+   nyquist/tran/siosc.c \
+   nyquist/tran/siosc.h \
+   nyquist/tran/slope.c \
+   nyquist/tran/slope.h \
+   nyquist/tran/sqrt.c \
+   nyquist/tran/sqrt.h \
+   nyquist/tran/stkchorus.c \
+   nyquist/tran/stkchorus.h \
+   nyquist/tran/stkpitshift.c \
+   nyquist/tran/stkpitshift.h \
+   nyquist/tran/stkrev.c \
+   nyquist/tran/stkrev.h \
+   nyquist/tran/tapf.c \
+   nyquist/tran/tapf.h \
+   nyquist/tran/tapv.c \
+   nyquist/tran/tapv.h \
+   nyquist/tran/tone.c \
+   nyquist/tran/tone.h \
+   nyquist/tran/tonev.c \
+   nyquist/tran/tonev.h \
+   nyquist/tran/upsample.c \
+   nyquist/tran/upsample.h \
+   nyquist/tran/white.c \
+   nyquist/tran/white.h \
+   nyquist/xlisp/extern.c \
+   nyquist/xlisp/extern.h \
+   nyquist/xlisp/osdefs.h \
+   nyquist/xlisp/osptrs.h \
+   nyquist/xlisp/path.c \
+   nyquist/xlisp/xlbfun.c \
+   nyquist/xlisp/xlcont.c \
+   nyquist/xlisp/xldbug.c \
+   nyquist/xlisp/xldmem.c \
+   nyquist/xlisp/xldmem.h \
+   nyquist/xlisp/xleval.c \
+   nyquist/xlisp/xlfio.c \
+   nyquist/xlisp/xlftab.c \
+   nyquist/xlisp/xlglob.c \
+   nyquist/xlisp/xlimage.c \
+   nyquist/xlisp/xlinit.c \
+   nyquist/xlisp/xlio.c \
+   nyquist/xlisp/xlisp.c \
+   nyquist/xlisp/xlisp.h \
+   nyquist/xlisp/xljump.c \
+   nyquist/xlisp/xllist.c \
+   nyquist/xlisp/xlmath.c \
+   nyquist/xlisp/xlobj.c \
+   nyquist/xlisp/xlpp.c \
+   nyquist/xlisp/xlprin.c \
+   nyquist/xlisp/xlread.c \
+   nyquist/xlisp/xlstr.c \
+   nyquist/xlisp/xlsubr.c \
+   nyquist/xlisp/xlsym.c \
+   nyquist/xlisp/xlsys.c \
    nyx.c \
    nyx.h \
    $(NULL)
@@ -941,159 +896,159 @@ EXTRA_DIST = \
    nyquist.patch \
    README.txt \
    xlextstart.c \
-   $(NYQUIST)/license.txt \
-   $(NYQUIST)/Readme.txt \
-   $(NYQUIST)/cmt/cmtio.c \
-   $(NYQUIST)/cmt/cmtio.h \
-   $(NYQUIST)/cmt/midimgr.c \
-   $(NYQUIST)/cmt/midimgr.h \
-   $(NYQUIST)/ffts/abstract \
-   $(NYQUIST)/ffts/README.txt \
-   $(NYQUIST)/ffts/Matlab-testing/conv2dTest.c \
-   $(NYQUIST)/ffts/Matlab-testing/conv2dtest.m \
-   $(NYQUIST)/ffts/Matlab-testing/convTest.c \
-   $(NYQUIST)/ffts/Matlab-testing/convtest.m \
-   $(NYQUIST)/ffts/Matlab-testing/rfft2dTestML.c \
-   $(NYQUIST)/ffts/Matlab-testing/rfft2dTestML.m \
-   $(NYQUIST)/ffts/Numerical-Recipes-testing/fftTest2d.c \
-   $(NYQUIST)/ffts/Numerical-Recipes-testing/fftTest3d.c \
-   $(NYQUIST)/ffts/Numerical-Recipes-testing/fftTest.c \
-   $(NYQUIST)/ffts/Numerical-Recipes-testing/rfftTest2d.c \
-   $(NYQUIST)/ffts/Numerical-Recipes-testing/rfftTest.c \
-   $(NYQUIST)/ffts/src/dxpose.c \
-   $(NYQUIST)/ffts/src/dxpose.h \
-   $(NYQUIST)/ffts/src/fft2d.c \
-   $(NYQUIST)/ffts/src/fft2d.h \
-   $(NYQUIST)/ffts/src/files \
-   $(NYQUIST)/ffts/Timing-code/fftTiming.c \
-   $(NYQUIST)/ffts/Timing-code/rfftTiming.c \
-   $(NYQUIST)/nyqsrc/f0.cpp \
-   $(NYQUIST)/nyqsrc/f0.h \
-   $(NYQUIST)/nyqsrc/fftr4.c \
-   $(NYQUIST)/nyqsrc/fft-rbd.c \
-   $(NYQUIST)/nyqsrc/nfilterkit.c \
-   $(NYQUIST)/nyqsrc/nfilterkit.h \
-   $(NYQUIST)/nyqsrc/nyq-osc-server.c \
-   $(NYQUIST)/nyqsrc/nyq-osc-server.h \
-   $(NYQUIST)/nyqsrc/nyx.c \
-   $(NYQUIST)/nyqsrc/nyx.h \
-   $(NYQUIST)/nyqsrc/oldyin.c \
-   $(NYQUIST)/nyqsrc/oldyin.h \
-   $(NYQUIST)/nyqsrc/probe.c \
-   $(NYQUIST)/nyqsrc/probe.h \
-   $(NYQUIST)/nyqsrc/seqfn.cl \
-   $(NYQUIST)/nyqsrc/seqfnint.lsp \
-   $(NYQUIST)/nyqsrc/seqfn.wcl \
-   $(NYQUIST)/nyqsrc/sndfail.c \
-   $(NYQUIST)/nyqsrc/sndfmt.h \
-   $(NYQUIST)/nyqsrc/sndfn.cl \
-   $(NYQUIST)/nyqsrc/sndfnint.lsp \
-   $(NYQUIST)/nyqsrc/sndfn.wcl \
-   $(NYQUIST)/nyqsrc/sndwrite.c \
-   $(NYQUIST)/nyqstk/globals.h \
-   $(NYQUIST)/nyqstk/include/SKINI.msg \
-   $(NYQUIST)/sys/unix/switches.h \
-   $(NYQUIST)/sys/win/msvc/sndsystem.h \
-   $(NYQUIST)/sys/win/msvc/switches.h \
-   $(NYQUIST)/sys/win/msvc/system.lsp \
-   $(NYQUIST)/sys/win/msvc/winfun.c \
-   $(NYQUIST)/sys/win/msvc/winfun.h \
-   $(NYQUIST)/sys/win/msvc/winstuff.c \
-   $(NYQUIST)/tran/abs.alg \
-   $(NYQUIST)/tran/allpoles.alg \
-   $(NYQUIST)/tran/alpass.alg \
-   $(NYQUIST)/tran/alpasscv.alg \
-   $(NYQUIST)/tran/alpassvc.alg \
-   $(NYQUIST)/tran/alpassvc.c \
-   $(NYQUIST)/tran/alpassvc.h \
-   $(NYQUIST)/tran/alpassvv.alg \
-   $(NYQUIST)/tran/amosc.alg \
-   $(NYQUIST)/tran/areson.alg \
-   $(NYQUIST)/tran/aresoncv.alg \
-   $(NYQUIST)/tran/aresonvc.alg \
-   $(NYQUIST)/tran/aresonvv.alg \
-   $(NYQUIST)/tran/atone.alg \
-   $(NYQUIST)/tran/atonev.alg \
-   $(NYQUIST)/tran/biquadfilt.alg \
-   $(NYQUIST)/tran/buzz.alg \
-   $(NYQUIST)/tran/chase.alg \
-   $(NYQUIST)/tran/clip.alg \
-   $(NYQUIST)/tran/congen.alg \
-   $(NYQUIST)/tran/const.alg \
-   $(NYQUIST)/tran/convolve.alg \
-   $(NYQUIST)/tran/coterm.alg \
-   $(NYQUIST)/tran/delay.alg \
-   $(NYQUIST)/tran/delaycc.alg \
-   $(NYQUIST)/tran/delaycv.alg \
-   $(NYQUIST)/tran/downproto.alg \
-   $(NYQUIST)/tran/eqbandv.alg \
-   $(NYQUIST)/tran/eqbandvvv.alg \
-   $(NYQUIST)/tran/exp.alg \
-   $(NYQUIST)/tran/exprel.alg \
-   $(NYQUIST)/tran/fmfb.alg \
-   $(NYQUIST)/tran/fmfbv.alg \
-   $(NYQUIST)/tran/fmosc.alg \
-   $(NYQUIST)/tran/follow.alg \
-   $(NYQUIST)/tran/fromarraystream.alg \
-   $(NYQUIST)/tran/fromobject.alg \
-   $(NYQUIST)/tran/gate.alg \
-   $(NYQUIST)/tran/ifft.alg \
-   $(NYQUIST)/tran/ifft-old.alg \
-   $(NYQUIST)/tran/init.lsp \
-   $(NYQUIST)/tran/innerloop.lsp \
-   $(NYQUIST)/tran/instrbanded.alg \
-   $(NYQUIST)/tran/instrbow.alg \
-   $(NYQUIST)/tran/instrbowedfreq.alg \
-   $(NYQUIST)/tran/instrclar.alg \
-   $(NYQUIST)/tran/instrclarall.alg \
-   $(NYQUIST)/tran/instrclarfreq.alg \
-   $(NYQUIST)/tran/instrflute.alg \
-   $(NYQUIST)/tran/instrfluteall.alg \
-   $(NYQUIST)/tran/instrflutefreq.alg \
-   $(NYQUIST)/tran/instrmandolin.alg \
-   $(NYQUIST)/tran/instrmodalbar.alg \
-   $(NYQUIST)/tran/instrsax.alg \
-   $(NYQUIST)/tran/instrsaxall.alg \
-   $(NYQUIST)/tran/instrsaxfreq.alg \
-   $(NYQUIST)/tran/instrsitar.alg \
-   $(NYQUIST)/tran/integrate.alg \
-   $(NYQUIST)/tran/log.alg \
-   $(NYQUIST)/tran/lpreson.alg \
-   $(NYQUIST)/tran/maxv.alg \
-   $(NYQUIST)/tran/offset.alg \
-   $(NYQUIST)/tran/oneshot.alg \
-   $(NYQUIST)/tran/osc.alg \
-   $(NYQUIST)/tran/partial.alg \
-   $(NYQUIST)/tran/pluck.alg \
-   $(NYQUIST)/tran/prod.alg \
-   $(NYQUIST)/tran/pwl.alg \
-   $(NYQUIST)/tran/quantize.alg \
-   $(NYQUIST)/tran/recip.alg \
-   $(NYQUIST)/tran/reson.alg \
-   $(NYQUIST)/tran/resoncv.alg \
-   $(NYQUIST)/tran/resonvc.alg \
-   $(NYQUIST)/tran/resonvv.alg \
-   $(NYQUIST)/tran/sampler.alg \
-   $(NYQUIST)/tran/scale.alg \
-   $(NYQUIST)/tran/shape.alg \
-   $(NYQUIST)/tran/sine.alg \
-   $(NYQUIST)/tran/siosc.alg \
-   $(NYQUIST)/tran/slope.alg \
-   $(NYQUIST)/tran/sqrt.alg \
-   $(NYQUIST)/tran/stkchorus.alg \
-   $(NYQUIST)/tran/stkpitshift.alg \
-   $(NYQUIST)/tran/stkrev.alg \
-   $(NYQUIST)/tran/tapf.alg \
-   $(NYQUIST)/tran/tapv.alg \
-   $(NYQUIST)/tran/tone.alg \
-   $(NYQUIST)/tran/tonev.alg \
-   $(NYQUIST)/tran/translate.lsp \
-   $(NYQUIST)/tran/translate-stk.lsp \
-   $(NYQUIST)/tran/upsample.alg \
-   $(NYQUIST)/tran/white.alg \
-   $(NYQUIST)/tran/writemake.lsp \
-   $(NYQUIST)/tran/writesusp.lsp \
-   $(NYQUIST)/tran/writetoss.lsp \
+   nyquist/license.txt \
+   nyquist/Readme.txt \
+   nyquist/cmt/cmtio.c \
+   nyquist/cmt/cmtio.h \
+   nyquist/cmt/midimgr.c \
+   nyquist/cmt/midimgr.h \
+   nyquist/ffts/abstract \
+   nyquist/ffts/README.txt \
+   nyquist/ffts/Matlab-testing/conv2dTest.c \
+   nyquist/ffts/Matlab-testing/conv2dtest.m \
+   nyquist/ffts/Matlab-testing/convTest.c \
+   nyquist/ffts/Matlab-testing/convtest.m \
+   nyquist/ffts/Matlab-testing/rfft2dTestML.c \
+   nyquist/ffts/Matlab-testing/rfft2dTestML.m \
+   nyquist/ffts/Numerical-Recipes-testing/fftTest2d.c \
+   nyquist/ffts/Numerical-Recipes-testing/fftTest3d.c \
+   nyquist/ffts/Numerical-Recipes-testing/fftTest.c \
+   nyquist/ffts/Numerical-Recipes-testing/rfftTest2d.c \
+   nyquist/ffts/Numerical-Recipes-testing/rfftTest.c \
+   nyquist/ffts/src/dxpose.c \
+   nyquist/ffts/src/dxpose.h \
+   nyquist/ffts/src/fft2d.c \
+   nyquist/ffts/src/fft2d.h \
+   nyquist/ffts/src/files \
+   nyquist/ffts/Timing-code/fftTiming.c \
+   nyquist/ffts/Timing-code/rfftTiming.c \
+   nyquist/nyqsrc/f0.cpp \
+   nyquist/nyqsrc/f0.h \
+   nyquist/nyqsrc/fftr4.c \
+   nyquist/nyqsrc/fft-rbd.c \
+   nyquist/nyqsrc/nfilterkit.c \
+   nyquist/nyqsrc/nfilterkit.h \
+   nyquist/nyqsrc/nyq-osc-server.c \
+   nyquist/nyqsrc/nyq-osc-server.h \
+   nyquist/nyqsrc/nyx.c \
+   nyquist/nyqsrc/nyx.h \
+   nyquist/nyqsrc/oldyin.c \
+   nyquist/nyqsrc/oldyin.h \
+   nyquist/nyqsrc/probe.c \
+   nyquist/nyqsrc/probe.h \
+   nyquist/nyqsrc/seqfn.cl \
+   nyquist/nyqsrc/seqfnint.lsp \
+   nyquist/nyqsrc/seqfn.wcl \
+   nyquist/nyqsrc/sndfail.c \
+   nyquist/nyqsrc/sndfmt.h \
+   nyquist/nyqsrc/sndfn.cl \
+   nyquist/nyqsrc/sndfnint.lsp \
+   nyquist/nyqsrc/sndfn.wcl \
+   nyquist/nyqsrc/sndwrite.c \
+   nyquist/nyqstk/globals.h \
+   nyquist/nyqstk/include/SKINI.msg \
+   nyquist/sys/unix/switches.h \
+   nyquist/sys/win/msvc/sndsystem.h \
+   nyquist/sys/win/msvc/switches.h \
+   nyquist/sys/win/msvc/system.lsp \
+   nyquist/sys/win/msvc/winfun.c \
+   nyquist/sys/win/msvc/winfun.h \
+   nyquist/sys/win/msvc/winstuff.c \
+   nyquist/tran/abs.alg \
+   nyquist/tran/allpoles.alg \
+   nyquist/tran/alpass.alg \
+   nyquist/tran/alpasscv.alg \
+   nyquist/tran/alpassvc.alg \
+   nyquist/tran/alpassvc.c \
+   nyquist/tran/alpassvc.h \
+   nyquist/tran/alpassvv.alg \
+   nyquist/tran/amosc.alg \
+   nyquist/tran/areson.alg \
+   nyquist/tran/aresoncv.alg \
+   nyquist/tran/aresonvc.alg \
+   nyquist/tran/aresonvv.alg \
+   nyquist/tran/atone.alg \
+   nyquist/tran/atonev.alg \
+   nyquist/tran/biquadfilt.alg \
+   nyquist/tran/buzz.alg \
+   nyquist/tran/chase.alg \
+   nyquist/tran/clip.alg \
+   nyquist/tran/congen.alg \
+   nyquist/tran/const.alg \
+   nyquist/tran/convolve.alg \
+   nyquist/tran/coterm.alg \
+   nyquist/tran/delay.alg \
+   nyquist/tran/delaycc.alg \
+   nyquist/tran/delaycv.alg \
+   nyquist/tran/downproto.alg \
+   nyquist/tran/eqbandv.alg \
+   nyquist/tran/eqbandvvv.alg \
+   nyquist/tran/exp.alg \
+   nyquist/tran/exprel.alg \
+   nyquist/tran/fmfb.alg \
+   nyquist/tran/fmfbv.alg \
+   nyquist/tran/fmosc.alg \
+   nyquist/tran/follow.alg \
+   nyquist/tran/fromarraystream.alg \
+   nyquist/tran/fromobject.alg \
+   nyquist/tran/gate.alg \
+   nyquist/tran/ifft.alg \
+   nyquist/tran/ifft-old.alg \
+   nyquist/tran/init.lsp \
+   nyquist/tran/innerloop.lsp \
+   nyquist/tran/instrbanded.alg \
+   nyquist/tran/instrbow.alg \
+   nyquist/tran/instrbowedfreq.alg \
+   nyquist/tran/instrclar.alg \
+   nyquist/tran/instrclarall.alg \
+   nyquist/tran/instrclarfreq.alg \
+   nyquist/tran/instrflute.alg \
+   nyquist/tran/instrfluteall.alg \
+   nyquist/tran/instrflutefreq.alg \
+   nyquist/tran/instrmandolin.alg \
+   nyquist/tran/instrmodalbar.alg \
+   nyquist/tran/instrsax.alg \
+   nyquist/tran/instrsaxall.alg \
+   nyquist/tran/instrsaxfreq.alg \
+   nyquist/tran/instrsitar.alg \
+   nyquist/tran/integrate.alg \
+   nyquist/tran/log.alg \
+   nyquist/tran/lpreson.alg \
+   nyquist/tran/maxv.alg \
+   nyquist/tran/offset.alg \
+   nyquist/tran/oneshot.alg \
+   nyquist/tran/osc.alg \
+   nyquist/tran/partial.alg \
+   nyquist/tran/pluck.alg \
+   nyquist/tran/prod.alg \
+   nyquist/tran/pwl.alg \
+   nyquist/tran/quantize.alg \
+   nyquist/tran/recip.alg \
+   nyquist/tran/reson.alg \
+   nyquist/tran/resoncv.alg \
+   nyquist/tran/resonvc.alg \
+   nyquist/tran/resonvv.alg \
+   nyquist/tran/sampler.alg \
+   nyquist/tran/scale.alg \
+   nyquist/tran/shape.alg \
+   nyquist/tran/sine.alg \
+   nyquist/tran/siosc.alg \
+   nyquist/tran/slope.alg \
+   nyquist/tran/sqrt.alg \
+   nyquist/tran/stkchorus.alg \
+   nyquist/tran/stkpitshift.alg \
+   nyquist/tran/stkrev.alg \
+   nyquist/tran/tapf.alg \
+   nyquist/tran/tapv.alg \
+   nyquist/tran/tone.alg \
+   nyquist/tran/tonev.alg \
+   nyquist/tran/translate.lsp \
+   nyquist/tran/translate-stk.lsp \
+   nyquist/tran/upsample.alg \
+   nyquist/tran/white.alg \
+   nyquist/tran/writemake.lsp \
+   nyquist/tran/writesusp.lsp \
+   nyquist/tran/writetoss.lsp \
    $(NULL)
 
 
@@ -1168,514 +1123,477 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-$(NYQUIST)/cmt/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/cmt
-	@: > $(NYQUIST)/cmt/$(am__dirstamp)
-$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/cmt/$(DEPDIR)
-	@: > $(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/cext.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/cleanup.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/cmdline.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/cmtcmd.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/mem.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/midifile.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/midifns.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/moxc.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/record.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/seq.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/seqmread.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/seqmwrite.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/seqread.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/seqwrite.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/tempomap.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/timebase.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/cmt/userio.$(OBJEXT): $(NYQUIST)/cmt/$(am__dirstamp) \
-	$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/ffts/src/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/ffts/src
-	@: > $(NYQUIST)/ffts/src/$(am__dirstamp)
-$(NYQUIST)/ffts/src/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/ffts/src/$(DEPDIR)
-	@: > $(NYQUIST)/ffts/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/ffts/src/fftext.$(OBJEXT):  \
-	$(NYQUIST)/ffts/src/$(am__dirstamp) \
-	$(NYQUIST)/ffts/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/ffts/src/fftlib.$(OBJEXT):  \
-	$(NYQUIST)/ffts/src/$(am__dirstamp) \
-	$(NYQUIST)/ffts/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/ffts/src/matlib.$(OBJEXT):  \
-	$(NYQUIST)/ffts/src/$(am__dirstamp) \
-	$(NYQUIST)/ffts/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/nyqsrc
-	@: > $(NYQUIST)/nyqsrc/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/nyqsrc/$(DEPDIR)
-	@: > $(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/add.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/avg.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/compose.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/convolve.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/debug.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/downsample.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/falloc.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/ffilterkit.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/fft.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/handlers.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/inverse.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/local.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/lpanal.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/multiread.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/multiseq.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/resamp.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/resampv.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/samples.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/seqext.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/seqfnint.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/seqinterf.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/sliders.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/sndfnint.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/sndmax.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/sndread.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/sndseq.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/sndwritepa.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/sound.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/stats.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/trigger.$(OBJEXT):  \
-	$(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqsrc/yin.$(OBJEXT): $(NYQUIST)/nyqsrc/$(am__dirstamp) \
-	$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/nyqstk
-	@: > $(NYQUIST)/nyqstk/$(am__dirstamp)
-$(NYQUIST)/nyqstk/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/nyqstk/$(DEPDIR)
-	@: > $(NYQUIST)/nyqstk/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/instr.$(OBJEXT): $(NYQUIST)/nyqstk/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/stkinit.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/stkint.$(OBJEXT): $(NYQUIST)/nyqstk/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/nyqstk/src
-	@: > $(NYQUIST)/nyqstk/src/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/nyqstk/src/$(DEPDIR)
-	@: > $(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/ADSR.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/BandedWG.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/BiQuad.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Bowed.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/BowTable.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Chorus.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Clarinet.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/DelayA.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Delay.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/DelayL.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Effect.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Envelope.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/FileRead.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/FileWvIn.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Filter.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Flute.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Function.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Generator.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Instrmnt.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/JCRev.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/JetTable.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Mandolin.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/ModalBar.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Modal.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Noise.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/NRev.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/OnePole.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/OneZero.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/PitShift.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/PluckTwo.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/PoleZero.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/PRCRev.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/ReedTable.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Saxofony.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/SineWave.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Sitar.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/Stk.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/WaveLoop.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/nyqstk/src/WvIn.$(OBJEXT):  \
-	$(NYQUIST)/nyqstk/src/$(am__dirstamp) \
-	$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/tran
-	@: > $(NYQUIST)/tran/$(am__dirstamp)
-$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/tran/$(DEPDIR)
-	@: > $(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/abs.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/allpoles.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/alpass.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/alpasscv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/alpassvv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/amosc.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/areson.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/aresoncv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/aresonvc.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/aresonvv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/atone.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/atonev.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/biquadfilt.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/buzz.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/chase.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/clip.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/congen.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/const.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/coterm.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/delaycc.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/delaycv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/eqbandvvv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/exp.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/fmfb.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/fmfbv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/fmosc.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/follow.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/fromarraystream.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/fromobject.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/gate.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/ifft.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrbanded.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrbow.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrbowedfreq.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrclarall.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrclar.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrclarfreq.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrfluteall.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrflute.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrflutefreq.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrmandolin.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrmodalbar.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrsaxall.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrsax.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrsaxfreq.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/instrsitar.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/integrate.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/log.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/lpreson.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/maxv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/offset.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/oneshot.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/osc.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/partial.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/pluck.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/prod.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/pwl.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/quantize.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/recip.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/reson.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/resoncv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/resonvc.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/resonvv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/sampler.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/scale.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/shape.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/sine.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/siosc.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/slope.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/sqrt.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/stkchorus.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/stkpitshift.$(OBJEXT):  \
-	$(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/stkrev.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/tapf.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/tapv.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/tone.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/tonev.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/upsample.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/tran/white.$(OBJEXT): $(NYQUIST)/tran/$(am__dirstamp) \
-	$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/xlisp
-	@: > $(NYQUIST)/xlisp/$(am__dirstamp)
-$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) $(NYQUIST)/xlisp/$(DEPDIR)
-	@: > $(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/extern.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/path.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlbfun.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlcont.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xldbug.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xldmem.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xleval.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlfio.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlftab.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlglob.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlimage.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlinit.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlio.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlisp.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xljump.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xllist.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlmath.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlobj.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlpp.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlprin.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlread.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlstr.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlsubr.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlsym.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-$(NYQUIST)/xlisp/xlsys.$(OBJEXT): $(NYQUIST)/xlisp/$(am__dirstamp) \
-	$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/cmt
+	@: > nyquist/cmt/$(am__dirstamp)
+nyquist/cmt/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/cmt/$(DEPDIR)
+	@: > nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/cext.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/cleanup.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/cmdline.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/cmtcmd.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/mem.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/midifile.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/midifns.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/moxc.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/record.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/seq.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/seqmread.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/seqmwrite.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/seqread.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/seqwrite.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/tempomap.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/timebase.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/cmt/userio.$(OBJEXT): nyquist/cmt/$(am__dirstamp) \
+	nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+nyquist/ffts/src/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/ffts/src
+	@: > nyquist/ffts/src/$(am__dirstamp)
+nyquist/ffts/src/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/ffts/src/$(DEPDIR)
+	@: > nyquist/ffts/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/ffts/src/fftext.$(OBJEXT): nyquist/ffts/src/$(am__dirstamp) \
+	nyquist/ffts/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/ffts/src/fftlib.$(OBJEXT): nyquist/ffts/src/$(am__dirstamp) \
+	nyquist/ffts/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/ffts/src/matlib.$(OBJEXT): nyquist/ffts/src/$(am__dirstamp) \
+	nyquist/ffts/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/nyqsrc
+	@: > nyquist/nyqsrc/$(am__dirstamp)
+nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/nyqsrc/$(DEPDIR)
+	@: > nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/add.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/avg.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/compose.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/convolve.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/debug.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/downsample.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/falloc.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/ffilterkit.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/fft.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/handlers.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/inverse.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/local.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/lpanal.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/multiread.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/multiseq.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/resamp.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/resampv.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/samples.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/seqext.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/seqfnint.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/seqinterf.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/sliders.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/sndfnint.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/sndmax.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/sndread.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/sndseq.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/sndwritepa.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/sound.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/stats.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/trigger.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqsrc/yin.$(OBJEXT): nyquist/nyqsrc/$(am__dirstamp) \
+	nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/nyqstk
+	@: > nyquist/nyqstk/$(am__dirstamp)
+nyquist/nyqstk/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/nyqstk/$(DEPDIR)
+	@: > nyquist/nyqstk/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/instr.$(OBJEXT): nyquist/nyqstk/$(am__dirstamp) \
+	nyquist/nyqstk/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/stkinit.$(OBJEXT): nyquist/nyqstk/$(am__dirstamp) \
+	nyquist/nyqstk/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/stkint.$(OBJEXT): nyquist/nyqstk/$(am__dirstamp) \
+	nyquist/nyqstk/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/nyqstk/src
+	@: > nyquist/nyqstk/src/$(am__dirstamp)
+nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/nyqstk/src/$(DEPDIR)
+	@: > nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/ADSR.$(OBJEXT): nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/BandedWG.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/BiQuad.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Bowed.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/BowTable.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Chorus.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Clarinet.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/DelayA.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Delay.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/DelayL.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Effect.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Envelope.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/FileRead.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/FileWvIn.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Filter.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Flute.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Function.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Generator.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Instrmnt.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/JCRev.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/JetTable.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Mandolin.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/ModalBar.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Modal.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Noise.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/NRev.$(OBJEXT): nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/OnePole.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/OneZero.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/PitShift.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/PluckTwo.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/PoleZero.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/PRCRev.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/ReedTable.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Saxofony.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/SineWave.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Sitar.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/Stk.$(OBJEXT): nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/WaveLoop.$(OBJEXT):  \
+	nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/nyqstk/src/WvIn.$(OBJEXT): nyquist/nyqstk/src/$(am__dirstamp) \
+	nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/tran
+	@: > nyquist/tran/$(am__dirstamp)
+nyquist/tran/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/tran/$(DEPDIR)
+	@: > nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/abs.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/allpoles.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/alpass.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/alpasscv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/alpassvv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/amosc.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/areson.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/aresoncv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/aresonvc.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/aresonvv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/atone.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/atonev.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/biquadfilt.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/buzz.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/chase.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/clip.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/congen.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/const.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/coterm.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/delaycc.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/delaycv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/eqbandvvv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/exp.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/fmfb.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/fmfbv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/fmosc.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/follow.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/fromarraystream.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/fromobject.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/gate.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/ifft.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrbanded.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrbow.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrbowedfreq.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrclarall.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrclar.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrclarfreq.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrfluteall.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrflute.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrflutefreq.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrmandolin.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrmodalbar.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrsaxall.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrsax.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrsaxfreq.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/instrsitar.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/integrate.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/log.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/lpreson.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/maxv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/offset.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/oneshot.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/osc.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/partial.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/pluck.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/prod.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/pwl.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/quantize.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/recip.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/reson.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/resoncv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/resonvc.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/resonvv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/sampler.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/scale.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/shape.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/sine.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/siosc.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/slope.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/sqrt.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/stkchorus.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/stkpitshift.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/stkrev.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/tapf.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/tapv.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/tone.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/tonev.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/upsample.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/tran/white.$(OBJEXT): nyquist/tran/$(am__dirstamp) \
+	nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/xlisp
+	@: > nyquist/xlisp/$(am__dirstamp)
+nyquist/xlisp/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) nyquist/xlisp/$(DEPDIR)
+	@: > nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/extern.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/path.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlbfun.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlcont.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xldbug.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xldmem.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xleval.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlfio.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlftab.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlglob.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlimage.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlinit.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlio.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlisp.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xljump.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xllist.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlmath.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlobj.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlpp.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlprin.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlread.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlstr.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlsubr.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlsym.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+nyquist/xlisp/xlsys.$(OBJEXT): nyquist/xlisp/$(am__dirstamp) \
+	nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
 
 libnyquist.a: $(libnyquist_a_OBJECTS) $(libnyquist_a_DEPENDENCIES) $(EXTRA_libnyquist_a_DEPENDENCIES) 
 	$(AM_V_at)-rm -f libnyquist.a
@@ -1684,215 +1602,215 @@ libnyquist.a: $(libnyquist_a_OBJECTS) $(libnyquist_a_DEPENDENCIES) $(EXTRA_libny
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
-	-rm -f $(NYQUIST)/cmt/*.$(OBJEXT)
-	-rm -f $(NYQUIST)/ffts/src/*.$(OBJEXT)
-	-rm -f $(NYQUIST)/nyqsrc/*.$(OBJEXT)
-	-rm -f $(NYQUIST)/nyqstk/*.$(OBJEXT)
-	-rm -f $(NYQUIST)/nyqstk/src/*.$(OBJEXT)
-	-rm -f $(NYQUIST)/tran/*.$(OBJEXT)
-	-rm -f $(NYQUIST)/xlisp/*.$(OBJEXT)
+	-rm -f nyquist/cmt/*.$(OBJEXT)
+	-rm -f nyquist/ffts/src/*.$(OBJEXT)
+	-rm -f nyquist/nyqsrc/*.$(OBJEXT)
+	-rm -f nyquist/nyqstk/*.$(OBJEXT)
+	-rm -f nyquist/nyqstk/src/*.$(OBJEXT)
+	-rm -f nyquist/tran/*.$(OBJEXT)
+	-rm -f nyquist/xlisp/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/cext.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/cleanup.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/cmdline.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/cmtcmd.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/mem.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/midifile.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/midifns.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/moxc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/record.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/seq.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/seqmread.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/seqmwrite.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/seqread.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/seqwrite.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/tempomap.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/timebase.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/cmt/$(DEPDIR)/userio.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/ffts/src/$(DEPDIR)/fftext.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/ffts/src/$(DEPDIR)/fftlib.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/ffts/src/$(DEPDIR)/matlib.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/add.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/avg.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/compose.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/convolve.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/debug.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/downsample.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/falloc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/ffilterkit.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/fft.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/handlers.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/inverse.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/local.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/lpanal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/multiread.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/multiseq.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/resamp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/resampv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/samples.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/seqext.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/seqfnint.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/seqinterf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/sliders.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/sndfnint.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/sndmax.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/sndread.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/sndseq.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/sndwritepa.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/sound.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/stats.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/trigger.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqsrc/$(DEPDIR)/yin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/$(DEPDIR)/instr.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/$(DEPDIR)/stkinit.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/$(DEPDIR)/stkint.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/ADSR.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/BandedWG.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/BiQuad.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/BowTable.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Bowed.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Chorus.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Clarinet.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Delay.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/DelayA.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/DelayL.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Effect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Envelope.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/FileRead.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/FileWvIn.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Filter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Flute.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Function.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Generator.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Instrmnt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/JCRev.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/JetTable.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Mandolin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Modal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/ModalBar.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/NRev.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Noise.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/OnePole.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/OneZero.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/PRCRev.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/PitShift.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/PluckTwo.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/PoleZero.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/ReedTable.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Saxofony.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/SineWave.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Sitar.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/Stk.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/WaveLoop.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/nyqstk/src/$(DEPDIR)/WvIn.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/abs.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/allpoles.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/alpass.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/alpasscv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/alpassvv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/amosc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/areson.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/aresoncv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/aresonvc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/aresonvv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/atone.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/atonev.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/biquadfilt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/buzz.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/chase.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/clip.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/congen.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/const.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/coterm.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/delaycc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/delaycv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/eqbandvvv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/exp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/fmfb.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/fmfbv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/fmosc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/follow.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/fromarraystream.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/fromobject.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/gate.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/ifft.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrbanded.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrbow.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrbowedfreq.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrclar.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrclarall.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrclarfreq.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrflute.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrfluteall.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrflutefreq.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrmandolin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrmodalbar.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrsax.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrsaxall.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrsaxfreq.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/instrsitar.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/integrate.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/log.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/lpreson.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/maxv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/offset.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/oneshot.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/osc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/partial.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/pluck.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/prod.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/pwl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/quantize.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/recip.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/reson.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/resoncv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/resonvc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/resonvv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/sampler.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/scale.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/shape.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/sine.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/siosc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/slope.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/sqrt.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/stkchorus.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/stkpitshift.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/stkrev.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/tapf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/tapv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/tone.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/tonev.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/upsample.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/tran/$(DEPDIR)/white.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/extern.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/path.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlbfun.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlcont.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xldbug.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xldmem.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xleval.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlfio.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlftab.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlglob.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlimage.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlinit.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlio.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlisp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xljump.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xllist.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlmath.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlobj.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlpp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlprin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlread.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlstr.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlsubr.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlsym.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(NYQUIST)/xlisp/$(DEPDIR)/xlsys.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nyx.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/cext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/cleanup.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/cmdline.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/cmtcmd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/mem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/midifile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/midifns.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/moxc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/record.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/seq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/seqmread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/seqmwrite.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/seqread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/seqwrite.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/tempomap.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/timebase.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/cmt/$(DEPDIR)/userio.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/ffts/src/$(DEPDIR)/fftext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/ffts/src/$(DEPDIR)/fftlib.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/ffts/src/$(DEPDIR)/matlib.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/add.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/avg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/compose.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/convolve.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/debug.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/downsample.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/falloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/ffilterkit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/fft.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/handlers.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/inverse.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/local.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/lpanal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/multiread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/multiseq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/resamp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/resampv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/samples.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/seqext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/seqfnint.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/seqinterf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/sliders.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/sndfnint.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/sndmax.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/sndread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/sndseq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/sndwritepa.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/sound.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/stats.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/trigger.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqsrc/$(DEPDIR)/yin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/$(DEPDIR)/instr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/$(DEPDIR)/stkinit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/$(DEPDIR)/stkint.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/ADSR.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/BandedWG.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/BiQuad.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/BowTable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Bowed.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Chorus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Clarinet.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Delay.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/DelayA.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/DelayL.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Effect.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Envelope.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/FileRead.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/FileWvIn.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Filter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Flute.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Function.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Generator.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Instrmnt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/JCRev.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/JetTable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Mandolin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Modal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/ModalBar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/NRev.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Noise.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/OnePole.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/OneZero.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/PRCRev.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/PitShift.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/PluckTwo.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/PoleZero.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/ReedTable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Saxofony.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/SineWave.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Sitar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/Stk.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/WaveLoop.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/nyqstk/src/$(DEPDIR)/WvIn.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/abs.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/allpoles.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/alpass.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/alpasscv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/alpassvv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/amosc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/areson.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/aresoncv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/aresonvc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/aresonvv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/atone.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/atonev.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/biquadfilt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/buzz.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/chase.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/clip.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/congen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/const.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/coterm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/delaycc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/delaycv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/eqbandvvv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/exp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/fmfb.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/fmfbv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/fmosc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/follow.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/fromarraystream.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/fromobject.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/gate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/ifft.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrbanded.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrbow.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrbowedfreq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrclar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrclarall.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrclarfreq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrflute.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrfluteall.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrflutefreq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrmandolin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrmodalbar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrsax.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrsaxall.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrsaxfreq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/instrsitar.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/integrate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/log.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/lpreson.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/maxv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/offset.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/oneshot.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/osc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/partial.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/pluck.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/prod.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/pwl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/quantize.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/recip.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/reson.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/resoncv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/resonvc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/resonvv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/sampler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/scale.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/shape.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/sine.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/siosc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/slope.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/sqrt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/stkchorus.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/stkpitshift.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/stkrev.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/tapf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/tapv.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/tone.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/tonev.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/upsample.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/tran/$(DEPDIR)/white.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/extern.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/path.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlbfun.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlcont.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xldbug.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xldmem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xleval.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlfio.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlftab.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlglob.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlimage.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlinit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlio.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlisp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xljump.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xllist.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlmath.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlobj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlpp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlprin.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlread.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlstr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlsubr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlsym.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@nyquist/xlisp/$(DEPDIR)/xlsys.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -2174,20 +2092,20 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
-	-test -z "$(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)" || rm -f $(NYQUIST)/cmt/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(NYQUIST)/cmt/$(am__dirstamp)" || rm -f $(NYQUIST)/cmt/$(am__dirstamp)
-	-test -z "$(NYQUIST)/ffts/src/$(DEPDIR)/$(am__dirstamp)" || rm -f $(NYQUIST)/ffts/src/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(NYQUIST)/ffts/src/$(am__dirstamp)" || rm -f $(NYQUIST)/ffts/src/$(am__dirstamp)
-	-test -z "$(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)" || rm -f $(NYQUIST)/nyqsrc/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(NYQUIST)/nyqsrc/$(am__dirstamp)" || rm -f $(NYQUIST)/nyqsrc/$(am__dirstamp)
-	-test -z "$(NYQUIST)/nyqstk/$(DEPDIR)/$(am__dirstamp)" || rm -f $(NYQUIST)/nyqstk/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(NYQUIST)/nyqstk/$(am__dirstamp)" || rm -f $(NYQUIST)/nyqstk/$(am__dirstamp)
-	-test -z "$(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)" || rm -f $(NYQUIST)/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(NYQUIST)/nyqstk/src/$(am__dirstamp)" || rm -f $(NYQUIST)/nyqstk/src/$(am__dirstamp)
-	-test -z "$(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)" || rm -f $(NYQUIST)/tran/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(NYQUIST)/tran/$(am__dirstamp)" || rm -f $(NYQUIST)/tran/$(am__dirstamp)
-	-test -z "$(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)" || rm -f $(NYQUIST)/xlisp/$(DEPDIR)/$(am__dirstamp)
-	-test -z "$(NYQUIST)/xlisp/$(am__dirstamp)" || rm -f $(NYQUIST)/xlisp/$(am__dirstamp)
+	-rm -f nyquist/cmt/$(DEPDIR)/$(am__dirstamp)
+	-rm -f nyquist/cmt/$(am__dirstamp)
+	-rm -f nyquist/ffts/src/$(DEPDIR)/$(am__dirstamp)
+	-rm -f nyquist/ffts/src/$(am__dirstamp)
+	-rm -f nyquist/nyqsrc/$(DEPDIR)/$(am__dirstamp)
+	-rm -f nyquist/nyqsrc/$(am__dirstamp)
+	-rm -f nyquist/nyqstk/$(DEPDIR)/$(am__dirstamp)
+	-rm -f nyquist/nyqstk/$(am__dirstamp)
+	-rm -f nyquist/nyqstk/src/$(DEPDIR)/$(am__dirstamp)
+	-rm -f nyquist/nyqstk/src/$(am__dirstamp)
+	-rm -f nyquist/tran/$(DEPDIR)/$(am__dirstamp)
+	-rm -f nyquist/tran/$(am__dirstamp)
+	-rm -f nyquist/xlisp/$(DEPDIR)/$(am__dirstamp)
+	-rm -f nyquist/xlisp/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -2199,7 +2117,7 @@ clean-am: clean-generic clean-libLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf $(NYQUIST)/cmt/$(DEPDIR) $(NYQUIST)/ffts/src/$(DEPDIR) $(NYQUIST)/nyqsrc/$(DEPDIR) $(NYQUIST)/nyqstk/$(DEPDIR) $(NYQUIST)/nyqstk/src/$(DEPDIR) $(NYQUIST)/tran/$(DEPDIR) $(NYQUIST)/xlisp/$(DEPDIR) ./$(DEPDIR)
+	-rm -rf ./$(DEPDIR) nyquist/cmt/$(DEPDIR) nyquist/ffts/src/$(DEPDIR) nyquist/nyqsrc/$(DEPDIR) nyquist/nyqstk/$(DEPDIR) nyquist/nyqstk/src/$(DEPDIR) nyquist/tran/$(DEPDIR) nyquist/xlisp/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -2247,7 +2165,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf $(NYQUIST)/cmt/$(DEPDIR) $(NYQUIST)/ffts/src/$(DEPDIR) $(NYQUIST)/nyqsrc/$(DEPDIR) $(NYQUIST)/nyqstk/$(DEPDIR) $(NYQUIST)/nyqstk/src/$(DEPDIR) $(NYQUIST)/tran/$(DEPDIR) $(NYQUIST)/xlisp/$(DEPDIR) ./$(DEPDIR)
+	-rm -rf ./$(DEPDIR) nyquist/cmt/$(DEPDIR) nyquist/ffts/src/$(DEPDIR) nyquist/nyqsrc/$(DEPDIR) nyquist/nyqstk/$(DEPDIR) nyquist/nyqstk/src/$(DEPDIR) nyquist/tran/$(DEPDIR) nyquist/xlisp/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
