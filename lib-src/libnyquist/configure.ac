@@ -43,6 +43,7 @@ AC_LANG([C++])
 AC_PROG_CXX
 AC_PROG_CXXCPP
 AM_PROG_AR
+AM_PROG_CC_C_O
 CFLAGS="$cflags_save"
 CPPFLAGS="$cppflags_save"
 CXXFLAGS="$cxxflags_save"
