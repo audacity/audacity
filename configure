@@ -8676,7 +8676,7 @@ done
 #   * we need to have portaudio way or another
 #   * we can only use one of libsoxr, libsamplerate and libresample
 
-if test "$LIBEXPAT_USE_LOCAL" != "yes" -a "$LIBEXPAT_USE_SYSTEM" != "yes"; then
+if test "$EXPAT_USE_LOCAL" != "yes" -a "$EXPAT_USE_SYSTEM" != "yes"; then
    as_fn_error $? "Audacity requires expat to be enabled." "$LINENO" 5
 fi
 
