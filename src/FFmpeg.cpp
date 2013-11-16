@@ -860,7 +860,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
       // If the directory, where libavformat is, is not in PATH - add it
       if (!syspath.Contains(fmtdirsc) && !syspath.Contains(scfmtdir) && !syspath.Contains(fmtdir))
       {
-         wxLogWarning(wxT("FFmpeg directory is not in PATH."), fmtdir.c_str());
+         wxLogWarning(wxT("FFmpeg directory '%s' is not in PATH."), fmtdir.c_str());
          if (syspath.Last() == wxT(';'))
          {
             wxLogMessage(wxT("Temporarily appending '%s' to PATH..."), fmtdir.c_str());
