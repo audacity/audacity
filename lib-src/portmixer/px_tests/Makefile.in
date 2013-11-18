@@ -93,7 +93,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am_px_test_OBJECTS = px_test-px_test.$(OBJEXT)
 px_test_OBJECTS = $(am_px_test_OBJECTS)
-px_test_DEPENDENCIES = $(top_builddir)/src/libportmixer.la
+am__DEPENDENCIES_1 =
+px_test_DEPENDENCIES = $(top_builddir)/src/libportmixer.la \
+	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -216,7 +218,11 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 PORTAUDIO_CFLAGS = @PORTAUDIO_CFLAGS@
+PORTAUDIO_LIBS = @PORTAUDIO_LIBS@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -276,8 +282,8 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-px_test_CPPFLAGS = -I$(top_srcdir)/include
-px_test_LDADD = $(top_builddir)/src/libportmixer.la
+px_test_CPPFLAGS = -I$(top_srcdir)/include $(PORTAUDIO_CFLAGS)
+px_test_LDADD = $(top_builddir)/src/libportmixer.la $(PORTAUDIO_LIBS)
 px_test_SOURCES = px_test.c
 all: all-am
 
