@@ -3,9 +3,10 @@
 #include "portmixer.h"
 #include "portaudio.h"
 
-static int DummyCallbackFunc(void *inputBuffer, void *outputBuffer,
-                             unsigned long framesPerBuffer,
-                             PaTimestamp outTime, void *userData)
+static int DummyCallbackFunc(const void *input, void *output,
+                             unsigned long frameCount,
+                             const PaStreamCallbackTimeInfo* timeInfo,
+                             PaStreamCallbackFlags statusFlags, void *userData)
 {
    return 0;
 }
@@ -14,19 +15,31 @@ int main(int argc, char **argv)
 {
    int num_mixers;
    int i;
-   PaError          error;
-   PortAudioStream *stream;
-   int             recDeviceNum;
-   int             playDeviceNum;
-   int             inputChannels = 2;
+   PaError error;
+   PaStream *stream;
+   PaStreamParameters inputParameters;
+   PaStreamParameters outputParameters;
+   int recDeviceNum;
+   int playDeviceNum;
+   int inputChannels = 2;
 
-   recDeviceNum = Pa_GetDefaultInputDeviceID();
-   playDeviceNum = Pa_GetDefaultOutputDeviceID();
+   recDeviceNum = Pa_GetDefaultInputDevice();
+   playDeviceNum = Pa_GetDefaultOutputDevice();
 
-   error = Pa_OpenStream(&stream, recDeviceNum, inputChannels, paFloat32, NULL,
-                         paNoDevice, 0, paFloat32, NULL,
-                         44101, 512, 1, paClipOff | paDitherOff,
-                         DummyCallbackFunc, NULL);
+   inputParameters.device = recDeviceNum;
+   inputParameters.channelCount = inputChannels;
+   inputParameters.sampleFormat = paFloat32;
+   inputParameters.suggestedLatency = 0;
+   inputParameters.hostApiSpecificStreamInfo = NULL;
+
+   outputParameters.device = paNoDevice;
+   outputParameters.channelCount = 0;
+   outputParameters.sampleFormat = paFloat32;
+   outputParameters.suggestedLatency = 0;
+   outputParameters.hostApiSpecificStreamInfo = NULL;
+
+   error = Pa_OpenStream(&stream, &inputParameters, &outputParameters, 44101,
+                         512, paClipOff | paDitherOff, DummyCallbackFunc, NULL);
 
    if (error) {
       printf("PortAudio error %d: %s\n", error,

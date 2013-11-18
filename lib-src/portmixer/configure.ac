@@ -44,13 +44,14 @@ AC_ARG_WITH([pa-include],
   [with_portaudio=$withval],
   [with_portaudio=""])
 
+PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19)
+
 #
 #
 #
 if test -n "$with_portaudio"; then
    PORTAUDIO_CFLAGS="-I$withval"
 fi
-AC_SUBST(PORTAUDIO_CFLAGS)
 
 #
 # Check which APIs are available
