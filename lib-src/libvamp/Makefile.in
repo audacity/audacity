@@ -34,7 +34,7 @@ RDFGENDIR	= rdf/generator
 #   clean     -- remove binary targets
 #   distclean -- remove all targets
 #
-default:	@TARGETS@
+all:	@TARGETS@
 
 # Compile flags
 #
@@ -230,8 +230,6 @@ plugins:	$(PLUGIN_TARGET)
 host:		$(HOST_TARGET)
 
 rdfgen:		$(RDFGEN_TARGET)
-
-all:		sdk plugins host rdfgen test
 
 $(SDK_STATIC):	$(SDK_OBJECTS) $(API_HEADERS) $(SDK_HEADERS)
 		$(AR) r $@ $(SDK_OBJECTS)
