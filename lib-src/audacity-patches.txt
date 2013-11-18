@@ -126,7 +126,7 @@ libvamp
 -------
 Library to load and use VAMP plug-ins. http://www.vamp-plugins.org/
 Version in Audacity SVN: 2.5
-Patches: none
+Patches: fix-linkage-against-dl.patch: Fix linkage against dl for hostsdk library.
 Upstream Version: 2.5
 
 libvorbis
