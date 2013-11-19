@@ -35,23 +35,7 @@ AC_ARG_ENABLE([debug],
   [AC_SUBST( cflags, ["$cflags -g"] )  AC_MSG_RESULT(yes)],
   [AC_SUBST( cflags, ["$cflags -O2"] ) AC_MSG_RESULT(no)])
 
-#
-# Check for portaudio path
-#
-AC_ARG_WITH([pa-include],
-  AC_HELP_STRING([--with-pa-include],
-                 [specify path to portaudio v2.0 include directory]),
-  [with_portaudio=$withval],
-  [with_portaudio=""])
-
-PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19)
-
-#
-#
-#
-if test -n "$with_portaudio"; then
-   PORTAUDIO_CFLAGS="-I$withval"
-fi
+PKG_CHECK_MODULES([PORTAUDIO], [portaudio-2.0 >= 19])
 
 #
 # Check which APIs are available
