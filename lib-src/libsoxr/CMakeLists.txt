@@ -201,6 +201,12 @@ endif ()
 
 
 
+# Add 'make check' target for integration into GNU Autotools.
+
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+
+
+
 # Top-level:
 
 set (PROJECT_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
