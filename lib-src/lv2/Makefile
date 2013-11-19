@@ -1,6 +1,8 @@
 all:
 	./build
 
+check:
+
 clean:
 	rm -rf include lv2/build serd/build sord/build sratom/build lilv/build
 	rm -f liblv2.a
@@ -1260,4 +1262,4 @@ distdir: $(EXTRA_DIST)
 	   cp -p $$file "$(distdir)/$$file" || exit 1; \
 	done
 
-.PHONY: all clean distclean distdir
+.PHONY: all check clean distclean distdir
