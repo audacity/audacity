@@ -8346,7 +8346,8 @@ fi
       PORTAUDIO_LOCAL_LIBS="libportaudio.a"
       PORTAUDIO_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/portaudio-v19/include'
 
-            PORTAUDIO_LOCAL_CONFIGURE_ARGS="--with-pa-include=$(pwd)/lib-src/portaudio-v19/include"
+                  portaudio_dir="$(pwd)/lib-src/portaudio-v19"
+      PORTAUDIO_LOCAL_CONFIGURE_ARGS="PORTAUDIO_CFLAGS=-I${portaudio_dir}/include PORTAUDIO_LIBS=${portaudio_dir}/lib/.libs/libportaudio.a"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: portaudio19 library is available in the local tree" >&5
 $as_echo "$as_me: portaudio19 library is available in the local tree" >&6;}
