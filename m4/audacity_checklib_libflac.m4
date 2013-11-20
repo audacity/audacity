@@ -2,15 +2,9 @@ dnl add audacity / flac license?
 dnl
 dnl Please increment the serial number below whenever you alter this macro
 dnl for the benefit of automatic macro update systems
-# audacity_checklib_libflac.m4 serial 2
+# audacity_checklib_libflac.m4 serial 3
 
 AC_DEFUN([AUDACITY_CHECKLIB_LIBFLAC], [
-
-   if false ; then
-      AC_DEFINE(USE_LIBFLAC, 1,
-                [Define if the FLAC library is present])
-   fi
-
    AC_ARG_WITH(libflac,
                [AS_HELP_STRING([--with-libflac],
                                [use libFLAC for FLAC support])],
@@ -19,25 +13,26 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBFLAC], [
 
    dnl See if FLAC is installed in the system
 
-   AC_CHECK_LIB(FLAC,
-                FLAC__stream_decoder_new,
-                lib_found="yes",
-                lib_found="no",
-                -lFLAC++ -lFLAC)
+   PKG_CHECK_MODULES([FLAC], [flac >= 1.3.0 flac++ >= 1.3.0],
+                     [LIBFLAC_SYSTEM_AVAILABLE="yes"],
+                     [LIBFLAC_SYSTEM_AVAILABLE="no"])
 
-   AC_CHECK_HEADER(FLAC/format.h,
-                   header_found="yes",
-                   header_found="no")
+   dnl Check for flac < 1.3.0
+   if test "$LIBFLAC_SYSTEM_AVAILABLE" = "no"; then
+      PKG_CHECK_MODULES([FLAC], [flac flac++],
+                        [LIBFLAC_SYSTEM_AVAILABLE="yes"],
+                        [LIBFLAC_SYSTEM_AVAILABLE="no"])
+      dnl flac < 1.3.0 adds its own FLAC and FLAC++ subdirectories to the search
+      dnl path and ships a assert.h file there. This assert.h overwrites the
+      dnl assert.h header from the C standard library. We need to strip /FLAC
+      dnl and /FLAC++ from the include paths to make the assert.h from the C
+      dnl standard library available again.
+      [FLAC_CFLAGS=$(echo "$FLAC_CFLAGS" | sed 's@-I\([^ ]*\)/FLAC\(++\)\? @-I\1 @g')]
+   fi
 
-   if test "x$lib_found" = "xyes" && test "x$header_found" = "xyes" ; then
-      LIBFLAC_SYSTEM_AVAILABLE="yes"
-      LIBFLAC_SYSTEM_LIBS="-lFLAC++ -lFLAC"
-      LIBFLAC_SYSTEM_CPPSYMBOLS="USE_LIBFLAC"
-      # this file shouldn't be built at if no libflac is available
-      LIBFLAC_SYSTEM_OPTOBJS="ondemand/ODDecodeFlacTask.o"
+   if test "$LIBFLAC_SYSTEM_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([FLAC libraries are available as system libraries])
    else
-      LIBFLAC_SYSTEM_AVAILABLE="no"
       AC_MSG_NOTICE([FLAC/FLAC++ libraries are NOT available as system libraries])
    fi
 
@@ -51,29 +46,33 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBFLAC], [
                  flacpp_h_available="yes",
                  flacpp_h_available="no")
 
-   if test "x$flac_h_available" = "xyes" && test "x$flacpp_h_available" = "xyes" ; then
+   if test "$flac_h_available" = "yes" -a "$flacpp_h_available" = "yes"; then
       LIBFLAC_LOCAL_AVAILABLE="yes"
-
-      LIBFLAC_LOCAL_LIBS="libFLAC++.a libFLAC.a"
-
-      LIBFLAC_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/libflac/include'
-      LIBFLAC_LOCAL_CXXFLAGS="$LIBFLAC_LOCAL_CXXFLAGS -I\$(top_srcdir)/lib-src/libflac/include"
-
-      LIBFLAC_LOCAL_CPPSYMBOLS="USE_LIBFLAC"
-      # this file shouldn't be built at if no libflac is available
-      LIBFLAC_LOCAL_OPTOBJS="ondemand/ODDecodeFlacTask.o"
       LIBFLAC_LOCAL_CONFIGURE_ARGS="--disable-xmms-plugin --disable-doxygen-docs --disable-thorough-tests"
-
       AC_MSG_NOTICE([FLAC libraries are available in this source tree])
    else
+      LIBFLAC_LOCAL_AVAILABLE="no"
       AC_MSG_NOTICE([FLAC libraries are NOT available in this source tree])
    fi
 
    LIBFLAC_MIMETYPES="audio/flac;audio/x-flac;"
 ])
 
-AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_LIBFLAC], [
+AC_DEFUN([AUDACITY_CONFIG_LIBFLAC], [
    if test "$LIBFLAC_USE_LOCAL" = yes; then
+      FLAC_CFLAGS='-I$(top_srcdir)/lib-src/libflac/include'
+      FLAC_LIBS='$(top_builddir)/lib-src/libflac/src/libFLAC++/libFLAC++.la $(top_builddir)/lib-src/libflac/src/libFLAC/libFLAC.la'
       AC_CONFIG_SUBDIRS([lib-src/libflac])
+   fi
+
+   AC_SUBST([FLAC_CFLAGS])
+   AC_SUBST([FLAC_LIBS])
+
+   AM_CONDITIONAL([USE_LIBFLAC], [test "$LIBFLAC_USE_LOCAL" = yes -o "$LIBFLAC_USE_SYSTEM" = yes])
+   AM_CONDITIONAL([USE_LOCAL_LIBFLAC], [test "$LIBFLAC_USE_LOCAL" = yes])
+
+   if test "$LIBFLAC_USE_LOCAL" = yes -o "$LIBFLAC_USE_SYSTEM" = yes; then
+      AC_DEFINE(USE_LIBFLAC, 1,
+                [Define if the FLAC library is present])
    fi
 ])

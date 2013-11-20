@@ -12,49 +12,40 @@ AC_DEFUN([AUDACITY_CHECKLIB_EXPAT], [
                EXPAT_ARGUMENT=$withval,
                EXPAT_ARGUMENT="unspecified")
 
-   dnl see if libexpat is installed on the system
+   dnl see if expat is installed on the system
 
-   AC_CHECK_LIB(expat, XML_ParserCreate,
-                libexpat_found="yes",
-                libexpat_found="no")
+   PKG_CHECK_MODULES(EXPAT, expat,
+                     EXPAT_SYSTEM_AVAILABLE="yes",
+                     EXPAT_SYSTEM_AVAILABLE="no")
 
-   expat_h_found="no"
-
-   AC_CHECK_HEADER(expat.h,
-                   expat_h_found="yes",
-                   expat_h_found="no")
-
-   if test "x$libexpat_found" = "xyes" && test "x$expat_h_found" = "xyes" ; then
-      EXPAT_SYSTEM_AVAILABLE="yes"
-      EXPAT_SYSTEM_LIBS="-lexpat"
-      EXPAT_SYSTEM_CPPSYMBOLS="USE_SYSTEM_EXPAT"
+   if test "$EXPAT_SYSTEM_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([Expat libraries are available as system libraries])
    else
-      EXPAT_SYSTEM_AVAILABLE="no"
       AC_MSG_NOTICE([Expat libraries are NOT available as system libraries])
    fi
 
    dnl see if expat is available in the local tree
 
    AC_CHECK_FILE(${srcdir}/lib-src/expat/lib/expat.h,
-                 xmlparse_h_found="yes",
-                 xmlparse_h_found="no")
+                 EXPAT_LOCAL_AVAILABLE="yes",
+                 EXPAT_LOCAL_AVAILABLE="no")
 
-   if test "x$xmlparse_h_found" = "xyes" ; then
-      EXPAT_LOCAL_AVAILABLE="yes"
-      EXPAT_LOCAL_LIBS="libexpat.a"
-      EXPAT_LOCAL_CXXFLAGS='-I$(top_srcdir)/lib-src/expat'
-      EXPAT_LOCAL_CPPSYMBOLS="USE_LOCAL_EXPAT"
-
+   if test "$EXPAT_LOCAL_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([Expat libraries are available in the local tree])
    else
-      EXPAT_LOCAL_AVAILABLE="no"
       AC_MSG_NOTICE([Expat libraries are NOT available in the local tree])
    fi
 ])
 
-AC_DEFUN([AUDACITY_CONFIG_SUBDIRS_EXPAT], [
+AC_DEFUN([AUDACITY_CONFIG_EXPAT], [
    if test "$EXPAT_USE_LOCAL" = yes; then
+      EXPAT_CFLAGS='-I$(top_srcdir)/lib-src/expat'
+      EXPAT_LIBS='$(top_builddir)/lib-src/expat/libexpat.la'
       AC_CONFIG_SUBDIRS([lib-src/expat])
    fi
+
+   AC_SUBST([EXPAT_CFLAGS])
+   AC_SUBST([EXPAT_LIBS])
+
+   AM_CONDITIONAL([USE_LOCAL_EXPAT], [test "$EXPAT_USE_LOCAL" = yes])
 ])

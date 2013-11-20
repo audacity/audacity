@@ -34,11 +34,17 @@ dnl Require autoconf >= 2.59
 AC_PREREQ([2.59])
 
 dnl Init autoconf
-AC_INIT
+AC_INIT([audacity], [2.0.6])
 dnl Check for existence of Audacity.h
 AC_CONFIG_SRCDIR([src/Audacity.h])
 dnl we have some extra macros in m4/
 AC_CONFIG_MACRO_DIR([m4])
+
+AM_INIT_AUTOMAKE([dist-xz foreign no-dist-gzip subdir-objects -Wall -Wno-override])
+AM_MAINTAINER_MODE([disable])
+
+AM_GNU_GETTEXT_VERSION([0.18])
+AM_GNU_GETTEXT([external])
 
 dnl -------------------------------------------------------
 dnl Checks for programs.
@@ -57,6 +63,10 @@ CFLAGS="$cflags_save"
 CPPFLAGS="$cppflags_save"
 CXXFLAGS="$cxxflags_save"
 
+AM_PROG_AR
+
+LT_INIT([disable-shared])
+
 AC_PROG_INSTALL
 dnl pkg-config is required for lots of things
 AC_CHECK_PROG(HAVE_PKG_CONFIG, pkg-config, yes, no)
@@ -65,29 +75,16 @@ if test x$HAVE_PKG_CONFIG = xno ; then
 fi
 
 dnl extra variables
-dnl list of static link libraries to link in, with paths relative to lib-src
-AC_SUBST(LOCAL_LIBS)
-dnl optional object files (from audacity itself) depending on options enabled
-AC_SUBST(EXTRAOBJS)
 dnl Extra things that need to be built during make (makefile targets)
 AC_SUBST(EXTRATARGETS)
-dnl extra things to install during make install (makefile targets)
-AC_SUBST(EXTRAINSTALLTARGETS)
-dnl extra things to remove during uninstall (makefile targets)
-AC_SUBST(EXTRAUNINSTALLTARGETS)
-AC_SUBST(OPTOBJS)
 AC_SUBST(CDEPEND)
 AC_SUBST(PRECOMP_CFLAGS)
-AC_SUBST(AFTERBUILD)
 AC_SUBST(INSTALL_PREFIX)
 dnl the header file with #defines from configure in it
 AC_SUBST(CONFIGHEADER)
 dnl LDFLAGS that will be valid for the build, but aren't yet valid so shouldn't
 dnl be used for configure script tests (they are needed for main build).
 AC_SUBST(BUILD_LDFLAGS)
-dnl List of libraries in lib-src that need to be compiled before building
-dnl audacity. Each name in the list should be a _target_ in lib-src/Makefile
-AC_SUBST(LIBSRC_BUILD)
 
 AC_SUBST(MIMETYPES)
 
@@ -311,8 +308,10 @@ dnl Pass wx config path to lower levels
 ac_configure_args="$ac_configure_args --with-wx-config=\"$WX_CONFIG\""
 
 dnl Gather wx arguments
-LIBS="$LIBS `$WX_CONFIG $wxconfigargs --libs`"
-CXXFLAGS="$CXXFLAGS `$WX_CONFIG $wxconfigargs --cxxflags`"
+WX_CXXFLAGS=$($WX_CONFIG $wxconfigargs --cxxflags)
+WX_LIBS=$($WX_CONFIG $wxconfigargs --libs)
+AC_SUBST([WX_CXXFLAGS])
+AC_SUBST([WX_LIBS])
 
 dnl-----------------------------------------------------------------
 dnl Pull in library Cflags and so on for the non-optional libraries
@@ -322,8 +321,9 @@ ac_configure_args="$ac_configure_args --enable-static=yes --enable-shared=no"
 
 dnl Include FileDialog
 AC_CONFIG_SUBDIRS([lib-src/FileDialog])
-LOCAL_LIBS="$LOCAL_LIBS FileDialog.a"
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
+FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'
+AC_SUBST([FILEDIALOG_LIBS])
 
 dnl-------------------------------------------------------------
 dnl Optional library support. Lots of things we could use, but
@@ -474,7 +474,7 @@ fi
 
 
 dnl-----------------------------------------------------------------
-dnl Based on the optional lib selections, modify LOCAL_LIBS, CXXFLAGS, etc
+dnl Based on the optional lib selections, modify CXXFLAGS, etc
 for lib in $LIBRARIES ; do
    eval LIB_USE_LOCAL=\$${lib}_USE_LOCAL
    eval LIB_USE_SYSTEM=\$${lib}_USE_SYSTEM
@@ -482,10 +482,6 @@ for lib in $LIBRARIES ; do
       eval MIMETYPES=\"${MIMETYPES}\$${lib}_MIMETYPES\"
    fi
    if test "x$LIB_USE_LOCAL" = "xyes" ; then
-      eval LIBSRC_BUILD=\"$LIBSRC_BUILD \$${lib}_LOCAL_BUILD\"
-      eval LOCAL_LIBS=\"$LOCAL_LIBS \$${lib}_LOCAL_LIBS\"
-      eval BUILD_LDFLAGS=\"\$BUILD_LDFLAGS \$${lib}_LOCAL_LDFLAGS\"
-      eval OPTOBJS=\"$OPTOBJS \$${lib}_LOCAL_OPTOBJS\"
       eval CXXFLAGS=\"\$CXXFLAGS \$${lib}_LOCAL_CXXFLAGS\"
       eval ac_configure_args=\"\$ac_configure_args \$${lib}_LOCAL_CONFIGURE_ARGS\"
 
@@ -495,7 +491,6 @@ for lib in $LIBRARIES ; do
       done
    elif test "$LIB_USE_SYSTEM" = "yes" ; then
       eval LIBS=\"$LIBS \$${lib}_SYSTEM_LIBS\"
-      eval OPTOBJS=\"$OPTOBJS \$${lib}_SYSTEM_OPTOBJS\"
       #LIBS="$LIBS $THESE_LIBS"
       eval CXXFLAGS=\"\$CXXFLAGS \$${lib}_SYSTEM_CXXFLAGS\"
 
@@ -508,24 +503,26 @@ done
 
 dnl " This is included purely to close an otherwise endless string in vim
 
-AUDACITY_CONFIG_SUBDIRS_EXPAT
-AUDACITY_CONFIG_SUBDIRS_LIBFLAC
-AUDACITY_CONFIG_SUBDIRS_LIBID3TAG
-AUDACITY_CONFIG_SUBDIRS_LIBMAD
-AUDACITY_CONFIG_SUBDIRS_LIBNYQUIST
-AUDACITY_CONFIG_SUBDIRS_LIBRESAMPLE
-AUDACITY_CONFIG_SUBDIRS_LIBSAMPLERATE
-AUDACITY_CONFIG_SUBDIRS_LIBSBSMS
-AUDACITY_CONFIG_SUBDIRS_LIBSNDFILE
-AUDACITY_CONFIG_SUBDIRS_LIBSOUNDTOUCH
-AUDACITY_CONFIG_SUBDIRS_LIBSOXR
-AUDACITY_CONFIG_SUBDIRS_LIBTWOLAME
-AUDACITY_CONFIG_SUBDIRS_LIBVAMP
-AUDACITY_CONFIG_SUBDIRS_LIBVORBIS
-AUDACITY_CONFIG_SUBDIRS_LV2
-AUDACITY_CONFIG_SUBDIRS_PORTAUDIO
-AUDACITY_CONFIG_SUBDIRS_PORTSMF
-AUDACITY_CONFIG_SUBDIRS_WIDGETEXTRA
+AUDACITY_CONFIG_EXPAT
+AUDACITY_CONFIG_FFMPEG
+AUDACITY_CONFIG_LAME
+AUDACITY_CONFIG_LIBFLAC
+AUDACITY_CONFIG_LIBID3TAG
+AUDACITY_CONFIG_LIBMAD
+AUDACITY_CONFIG_LIBNYQUIST
+AUDACITY_CONFIG_LIBRESAMPLE
+AUDACITY_CONFIG_LIBSAMPLERATE
+AUDACITY_CONFIG_LIBSBSMS
+AUDACITY_CONFIG_LIBSNDFILE
+AUDACITY_CONFIG_LIBSOUNDTOUCH
+AUDACITY_CONFIG_LIBSOXR
+AUDACITY_CONFIG_LIBTWOLAME
+AUDACITY_CONFIG_LIBVAMP
+AUDACITY_CONFIG_LIBVORBIS
+AUDACITY_CONFIG_LV2
+AUDACITY_CONFIG_PORTAUDIO
+AUDACITY_CONFIG_PORTSMF
+AUDACITY_CONFIG_WIDGETEXTRA
 
 dnl--------------------------------------------------------------------------
 dnl Optional features (which don't use libraries - just compile-time on/off)
@@ -542,6 +539,7 @@ AC_ARG_ENABLE(ladspa,
       [enable LADSPA plug-in support [default=yes]])],
    use_ladspa=$enableval,
    use_ladspa="yes")
+AM_CONDITIONAL([USE_LADSPA], [test "$use_ladspa" = yes])
 
 AC_ARG_ENABLE(quicktime,
    [AS_HELP_STRING([--enable-quicktime],
@@ -568,7 +566,6 @@ case "${host_os}" in
       PRECOMP_CFLAGS="-include AudacityHeaders.h"
       CONFIGHEADER="configunix.h"
       CXXFLAGS="-I\$(top_srcdir)/mac $CXXFLAGS"
-      AFTERBUILD=""
       EXTRATARGETS="../Audacity.app"
       if [[ "$use_audiounits" = "auto" ]] ; then
          use_audiounits="yes"
@@ -586,16 +583,11 @@ case "${host_os}" in
       AC_DEFINE(__CYGWIN__,1,[We're using cygwin])
       dnl ' (end endless string in vim)
       AC_DEFINE(_FILE_OFFSET_BITS,32,[Placeholder for large file support])
-
-      AFTERBUILD=""
       ;;
 
    *)
       dnl Unix configuration
       CONFIGHEADER="configunix.h"
-      AFTERBUILD=""
-      EXTRAINSTALLTARGETS="$EXTRAINSTALLTARGETS install-extra-data"
-      EXTRAUNINSTALLTARGETS="$EXTRAUNINSTALLTARGETS uninstall-extra-data"
 
       dnl On Unix we always use dlopen
       AC_SEARCH_LIBS([dlopen], [dl])
@@ -648,10 +640,11 @@ if [[ "$use_portmixer" = "yes" ]] ; then
    [Define if PortMixer support should be enabled])
 
    CXXFLAGS="-I\$(top_srcdir)/lib-src/portmixer/include $CXXFLAGS"
-   LOCAL_LIBS="$LOCAL_LIBS libportmixer.a"
+   PORTMIXER_LIBS='$(top_builddir)/lib-src/portmixer/src/libportmixer.la'
 
    AC_CONFIG_SUBDIRS([lib-src/portmixer])
 fi
+AC_SUBST([PORTMIXER_LIBS])
 
 dnl Check for lrint/lrintf
 AC_C99_FUNC_LRINT
@@ -659,9 +652,6 @@ AC_C99_FUNC_LRINTF
 
 
 if [[ "$use_ladspa" = "yes" ]] ; then
-   OPTOBJS="$OPTOBJS effects/ladspa/LoadLadspa.o"
-   OPTOBJS="$OPTOBJS effects/ladspa/LadspaEffect.o"
-
    AC_DEFINE(USE_LADSPA, 1,
              [Define if LADSPA plug-ins are enabled])
 
@@ -675,18 +665,14 @@ if [[ "$use_ladspa" = "yes" ]] ; then
    esac
 fi
 
+AM_CONDITIONAL([USE_AUDIO_UNITS], [test "$use_audiounits" = yes])
 if [[ "$use_audiounits" = "yes" ]] ; then
-   OPTOBJS="$OPTOBJS effects/audiounits/LoadAudioUnits.o"
-   OPTOBJS="$OPTOBJS effects/audiounits/AudioUnitEffect.o"
-
    AC_DEFINE(USE_AUDIO_UNITS, 1,
              [Define if Audio Unit plug-ins are enabled (Mac OS X only)])
 fi
 
+AM_CONDITIONAL([USE_QUICKTIME], [test "$use_quicktime" = yes])
 if [[ "$use_quicktime" = "yes" ]] ; then
-   OPTOBJS="$OPTOBJS import/ImportQT.o"
-   OPTOBJS="$OPTOBJS import/ImportQTWrapper.o"
-
    AC_DEFINE(USE_QUICKTIME, 1,
              [Define if QuickTime importing is enabled (Mac OS X only)])
 fi
@@ -703,17 +689,16 @@ case "${host_os}" in
 esac
 
 # process Makefile.in's to generate Makefiles
-AC_CONFIG_FILES([Makefile src/Makefile lib-src/Makefile \
-                 locale/Makefile])
-# Anything that depends on the name of the installed Audacity binary needs
-# to be processed to set that here
-AC_CONFIG_FILES([src/audacity.desktop])
-
-dnl There are various other files we might need to process, depends on what
-dnl has been enabled previously
-if [[ -e tests/Makefile.in ]]; then
-   AC_CONFIG_FILES([tests/Makefile])
-fi
+AC_CONFIG_FILES([
+   Makefile
+   help/Makefile
+   images/Makefile
+   lib-src/Makefile
+   po/Makefile.in
+   src/audacity.desktop
+   src/Makefile
+   tests/Makefile
+])
 
 AC_OUTPUT
 
