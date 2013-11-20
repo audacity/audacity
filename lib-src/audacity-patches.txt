@@ -267,7 +267,7 @@ twolame
 http://www.twolame.org/
 MPEG I layer 2 audio encoding library used for MP2 exports
 Version in Audacity SVN: 0.3.13
-Patches: None
+Patches: fix-tests.patch: Terminate AM_TESTS_ENVIRONMENT by a semicolon.
 AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
 by default
 Upstream Version: 0.3.13
