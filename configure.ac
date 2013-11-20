@@ -37,6 +37,7 @@ dnl Init autoconf
 AC_INIT([audacity], [2.0.6])
 dnl Check for existence of Audacity.h
 AC_CONFIG_SRCDIR([src/Audacity.h])
+AC_CONFIG_AUX_DIR([autotools])
 dnl we have some extra macros in m4/
 AC_CONFIG_MACRO_DIR([m4])
 
