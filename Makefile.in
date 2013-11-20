@@ -82,10 +82,10 @@ subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) $(dist_doc_DATA) \
 	$(dist_pkgdata_DATA) $(nobase_dist_pkgdata_DATA) ABOUT-NLS \
-	autotools/ar-lib config.guess autotools/config.guess \
-	autotools/config.rpath config.sub autotools/config.sub \
-	install-sh autotools/install-sh autotools/missing \
-	autotools/ltmain.sh $(top_srcdir)/autotools/ar-lib \
+	autotools/ar-lib autotools/config.guess autotools/config.rpath \
+	autotools/config.sub autotools/depcomp autotools/install-sh \
+	autotools/missing autotools/ltmain.sh \
+	$(top_srcdir)/autotools/ar-lib \
 	$(top_srcdir)/autotools/config.guess \
 	$(top_srcdir)/autotools/config.rpath \
 	$(top_srcdir)/autotools/config.sub \

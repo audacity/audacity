@@ -26,4 +26,5 @@ pixmap_DATA = icons/48x48/audacity.xpm
 # We could rename this file instead and adjust all locations.
 icons/48x48/audacity.xpm: AudacityLogo48x48.xpm
 	cp AudacityLogo48x48.xpm icons/48x48/audacity.xpm
+EXTRA_DIST = AudacityLogo48x48.xpm
 CLEANFILES = icons/48x48/audacity.xpm

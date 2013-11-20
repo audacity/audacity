@@ -411,6 +411,7 @@ dist_pixmap_DATA = \
    $(NULL)
 
 pixmap_DATA = icons/48x48/audacity.xpm
+EXTRA_DIST = AudacityLogo48x48.xpm
 CLEANFILES = icons/48x48/audacity.xpm
 all: all-am
 
