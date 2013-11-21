@@ -18,6 +18,22 @@ AC_DEFUN([AUDACITY_CHECKLIB_EXPAT], [
                      EXPAT_SYSTEM_AVAILABLE="yes",
                      EXPAT_SYSTEM_AVAILABLE="no")
 
+   dnl Fall back to check for -lexpat when there is not pkg-config file.
+   if test "$EXPAT_SYSTEM_AVAILABLE" = "no"; then
+      AC_CHECK_LIB(expat, XML_ParserCreate,
+                   libexpat_found="yes",
+                   libexpat_found="no")
+
+      AC_CHECK_HEADER(expat.h,
+                      expat_h_found="yes",
+                      expat_h_found="no")
+
+      if test "$libexpat_found" = "yes" -a "$expat_h_found" = "yes"; then
+         EXPAT_SYSTEM_AVAILABLE="yes"
+         EXPAT_LIBS="-lexpat"
+      fi
+   fi
+
    if test "$EXPAT_SYSTEM_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([Expat libraries are available as system libraries])
    else

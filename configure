@@ -19772,6 +19772,65 @@ $as_echo "yes" >&6; }
 	EXPAT_SYSTEM_AVAILABLE="yes"
 fi
 
+      if test "$EXPAT_SYSTEM_AVAILABLE" = "no"; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for XML_ParserCreate in -lexpat" >&5
+$as_echo_n "checking for XML_ParserCreate in -lexpat... " >&6; }
+if ${ac_cv_lib_expat_XML_ParserCreate+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lexpat  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char XML_ParserCreate ();
+int
+main ()
+{
+return XML_ParserCreate ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_expat_XML_ParserCreate=yes
+else
+  ac_cv_lib_expat_XML_ParserCreate=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_expat_XML_ParserCreate" >&5
+$as_echo "$ac_cv_lib_expat_XML_ParserCreate" >&6; }
+if test "x$ac_cv_lib_expat_XML_ParserCreate" = xyes; then :
+  libexpat_found="yes"
+else
+  libexpat_found="no"
+fi
+
+
+      ac_fn_cxx_check_header_mongrel "$LINENO" "expat.h" "ac_cv_header_expat_h" "$ac_includes_default"
+if test "x$ac_cv_header_expat_h" = xyes; then :
+  expat_h_found="yes"
+else
+  expat_h_found="no"
+fi
+
+
+
+      if test "$libexpat_found" = "yes" -a "$expat_h_found" = "yes"; then
+         EXPAT_SYSTEM_AVAILABLE="yes"
+         EXPAT_LIBS="-lexpat"
+      fi
+   fi
+
    if test "$EXPAT_SYSTEM_AVAILABLE" = "yes"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: Expat libraries are available as system libraries" >&5
 $as_echo "$as_me: Expat libraries are available as system libraries" >&6;}
