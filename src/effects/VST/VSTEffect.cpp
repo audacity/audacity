@@ -2142,7 +2142,7 @@ bool VSTEffect::Load()
    }
 
    // Convert back to path
-   UInt8 exePath[PATH_MAX];
+   UInt8 exePath[PLATFORM_MAX_PATH];
    success = CFURLGetFileSystemRepresentation(exeRef, true, exePath, sizeof(exePath));
 
    // Done with the executable reference

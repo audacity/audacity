@@ -225,10 +225,10 @@ wxString FileNames::PathFromAddr(void *addr)
 #if defined(__WXMAC__) || defined(__WXGTK__)
    Dl_info info;
    if (dladdr(addr, &info)) {
-      char realname[PATH_MAX + 1];
+      char realname[PLATFORM_MAX_PATH + 1];
       int len;
       name = LAT1CTOWX(info.dli_fname);
-      len = readlink(OSINPUT(name.GetFullPath()), realname, PATH_MAX);
+      len = readlink(OSINPUT(name.GetFullPath()), realname, PLATFORM_MAX_PATH);
       if (len > 0) {
          realname[len] = 0;
          name.SetFullName(LAT1CTOWX(realname));
