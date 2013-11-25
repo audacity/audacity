@@ -289,7 +289,7 @@ Mixer* ExportPlugin::CreateMixer(int numInputTracks, WaveTrack **inputTracks,
 Exporter::Exporter()
 {
    mMixerSpec = NULL;
-   SetFileDialogTitle( _("Export File") );
+   SetFileDialogTitle( _("Export Audio") );
 
    RegisterPlugin(New_ExportPCM());
    RegisterPlugin(New_ExportMP3());

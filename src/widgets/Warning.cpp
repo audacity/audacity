@@ -23,6 +23,7 @@ the ability to not see similar warnings again for this session.
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
+#include <wx/artprov.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
@@ -55,6 +56,7 @@ WarningDialog::WarningDialog(wxWindow *parent, wxString message, bool showCancel
             wxDefaultPosition, wxDefaultSize, 
             (showCancelButton ? wxDEFAULT_DIALOG_STYLE : wxCAPTION | wxSYSTEM_MENU)) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
 {
+   SetIcon(wxArtProvider::GetIcon(wxART_WARNING, wxART_MESSAGE_BOX));
    ShuttleGui S(this, eIsCreating);
 
    S.SetBorder(10);

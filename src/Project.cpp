@@ -3556,14 +3556,28 @@ bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
    wxString sDialogTitle;
    if (bWantSaveCompressed)
    {
-      ShowWarningDialog(this, wxT("FirstProjectSave"),
-                        _("Audacity compressed project files (.aup) save your work in a smaller, compressed (.ogg) format. \nCompressed project files are a good way to transmit your project online, because they are much smaller. \nTo open a compressed project takes longer than usual, as it imports each compressed track. \n\nMost other programs can't open Audacity project files.\nWhen you want to save a file that can be opened by other programs, select one of the\nExport commands."));
+      if (ShowWarningDialog(this, wxT("FirstProjectSave"),
+                           _("\
+'Save Compressed Project' is for an Audacity project, not an audio file.\n\
+For an audio file that will open in other apps, use 'Export'.\n\n\
+\
+Compressed project files are a good way to transmit your project online, \n\
+but they have some loss of fidelity.\n\n\
+\
+To open a compressed project takes longer than usual, as it imports \n\
+each compressed track.\n"), 
+                           true) != wxID_OK)
+         return false;
       sDialogTitle.Printf(_("Save Compressed Project \"%s\" As..."), sProjName.c_str());
    }
    else
    {
-      ShowWarningDialog(this, wxT("FirstProjectSave"),
-                        _("You are saving an Audacity project file (.aup).\n\nSaving a project creates a file that only Audacity can open.\n\nTo save an audio file for other programs, use one of the \"File > Export\" commands.\n"));
+      if (ShowWarningDialog(this, wxT("FirstProjectSave"),
+                           _("\
+'Save Project' is for an Audacity project, not an audio file.\n\
+For an audio file that will open in other apps, use 'Export'.\n"), 
+                           true) != wxID_OK)
+         return false;
       sDialogTitle.Printf(_("Save Project \"%s\" As..."), sProjName.c_str());
    }
 

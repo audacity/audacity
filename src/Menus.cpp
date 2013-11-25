@@ -263,12 +263,12 @@ void AudacityProject::CreateMenusAndCommands()
    /////////////////////////////////////////////////////////////////////////////
 
    // Enable Export audio commands only when there are audio tracks.
-   c->AddItem(wxT("Export"), _("&Export..."), FN(OnExport), wxT("Ctrl+Shift+E"),
+   c->AddItem(wxT("Export"), _("&Export Audio..."), FN(OnExport), wxT("Ctrl+Shift+E"),
               AudioIONotBusyFlag | WaveTracksExistFlag,
               AudioIONotBusyFlag | WaveTracksExistFlag);
 
    // Enable Export Selection commands only when there's a selection.
-   c->AddItem(wxT("ExportSel"), _("Expo&rt Selection..."), FN(OnExportSelection),
+   c->AddItem(wxT("ExportSel"), _("Expo&rt Selected Audio..."), FN(OnExportSelection),
               AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
               AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
    
@@ -3054,7 +3054,7 @@ void AudacityProject::OnExportSelection()
    Exporter e;
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
-   e.SetFileDialogTitle( _("Export Selection") );
+   e.SetFileDialogTitle( _("Export Selected Audio") );
    e.Process(this, true, mViewInfo.sel0, mViewInfo.sel1);
 }
 
