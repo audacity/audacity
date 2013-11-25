@@ -271,8 +271,6 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("ExportSel"), _("Expo&rt Selected Audio..."), FN(OnExportSelection),
               AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
               AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
-   
-   c->AddSeparator();
 
    c->AddItem(wxT("ExportLabels"), _("Export &Labels..."), FN(OnExportLabels),
               AudioIONotBusyFlag | LabelTracksExistFlag,
@@ -287,6 +285,7 @@ void AudacityProject::CreateMenusAndCommands()
               AudioIONotBusyFlag | NoteTracksSelectedFlag);
 #endif
 
+   c->AddSeparator();
    c->AddItem(wxT("ApplyChain"), _("Appl&y Chain..."), FN(OnApplyChain),
               AudioIONotBusyFlag,
               AudioIONotBusyFlag);
