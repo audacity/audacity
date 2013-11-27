@@ -535,6 +535,10 @@ ScienFilterDialog::~ScienFilterDialog()
 //
 void ScienFilterDialog::MakeScienFilterDialog()
 {
+   wxStaticText *st;
+   wxSizerFlags flagslabel;
+   wxSizerFlags flagsunits;
+
    mCutoffCtl = NULL;
    mRippleCtl = NULL;
    mStopbandRippleCtl = NULL;
@@ -615,9 +619,17 @@ void ScienFilterDialog::MakeScienFilterDialog()
    // -------------------------------------------------------------------
    // ROW 2 and 3: Type, Order, Ripple, Subtype, Cutoff
    // -------------------------------------------------------------------
-   szr3 = new wxFlexGridSizer (7, 0, 0);
-   szr3->Add (new wxStaticText(this, wxID_ANY, _("Filter Type:")), wxRIGHT);
+   szr3 = new wxFlexGridSizer (8, 0, 0);
+   szr3->SetHGap(2);
+   szr3->SetVGap(5);
+   flagslabel.Border(wxLEFT, 12).Align(wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL );
+   flagsunits.Align( wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL );
+
+   st = new wxStaticText(this, wxID_ANY, _("&Filter Type:"));
+   st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   szr3->Add (st, flagslabel );
    mFilterTypeCtl = new wxChoice (this, ID_FILTER_TYPE);
+   mFilterTypeCtl->SetName(wxStripMenuCodes(st->GetLabel()));
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    mFilterTypeCtl->Append (_("Butterworth"));
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
@@ -625,9 +637,13 @@ void ScienFilterDialog::MakeScienFilterDialog()
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
    mFilterTypeCtl->Append (_("Chebyshev Type II"));
    szr3->Add (mFilterTypeCtl);
+
    /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
-   szr3->Add( new wxStaticText(this, wxID_ANY, _(" Order:")), wxRIGHT );
+   st = new wxStaticText(this, wxID_ANY, _("&Order:"));
+   st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   szr3->Add(st, flagslabel );
    mFilterOrderCtl = new wxChoice (this, ID_FILTER_ORDER);
+   mFilterOrderCtl->SetName(wxStripMenuCodes(st->GetLabel()));
    mFilterOrderCtl->Append (wxT("1"));
    mFilterOrderCtl->Append (wxT("2"));
    mFilterOrderCtl->Append (wxT("3"));
@@ -639,28 +655,53 @@ void ScienFilterDialog::MakeScienFilterDialog()
    mFilterOrderCtl->Append (wxT("9"));
    mFilterOrderCtl->Append (wxT("10"));
    szr3->Add (mFilterOrderCtl);
-   szr3->Add (new wxStaticText(this, wxID_ANY, _("Passband Ripple:")), wxSizerFlags().Right());
+
+   st = new wxStaticText(this, wxID_ANY, wxT(""));
+   st->SetName(wxT(""));   // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   szr3->Add(st);    // empty field in grid to balance Hz in next row
+
+   st = new wxStaticText(this, wxID_ANY, _("&Passband Ripple:"));
+   st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   szr3->Add (st , flagslabel );
    wxSize Size(wxDefaultSize);
    Size.SetWidth (40);
    mRippleCtl = new wxTextCtrl (this, ID_RIPPLE, wxT("0.0"), wxDefaultPosition, Size);
+   mRippleCtl->SetName( _("Passband Ripple(db):"));
    szr3->Add (mRippleCtl, 0 );
-   szr3->Add( new wxStaticText(this, wxID_ANY, _("dB")), 0 );
-   szr3->Add( new wxStaticText(this, wxID_ANY, _("Subtype:")), wxRIGHT );
+   st = new wxStaticText(this, wxID_ANY, _("dB"));
+   st->SetName(st->GetLabel());  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   szr3->Add( st, flagsunits );
+
+   st = new wxStaticText(this, wxID_ANY, _("&Subtype:")); 
+   szr3->Add(st, flagslabel );
+   st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    mFilterSubTypeCtl = new wxChoice (this, ID_FILTER_SUBTYPE);
+   mFilterSubTypeCtl->SetName(wxStripMenuCodes(st->GetLabel()));
    mFilterSubTypeCtl->Append (_("Lowpass"));
    mFilterSubTypeCtl->Append (_("Highpass"));
    szr3->Add (mFilterSubTypeCtl);
-   szr3->Add( new wxStaticText(this, wxID_ANY, _("Cutoff:")), wxRIGHT );
+
+   st = new wxStaticText(this, wxID_ANY, _("&Cutoff:"));
+   st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   szr3->Add( st, flagslabel );
    Size.SetWidth (50);
    mCutoffCtl = new wxTextCtrl (this, ID_CUTOFF, wxT("0.0"), wxDefaultPosition, Size);
+   mCutoffCtl->SetName(_("Cutoff(Hz):"));
    szr3->Add (mCutoffCtl, 0 );
-   // The Hz is the units for Cutoff, and then we have a space and then the prompt.
-   // TODO: Use ShuttleGui::AddUnits() here, rather than a clever text string.
-   szr3->Add( new wxStaticText(this, wxID_ANY, wxString(_("Hz"))+ wxT("  ") + _("Stopband Ripple:")), 0 );
+   st = new wxStaticText(this, wxID_ANY, _("Hz"));
+   st->SetName(st->GetLabel());  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   szr3->Add(st,flagsunits);
+
+   st = new wxStaticText(this, wxID_ANY, _("S&topband Ripple:") );
+   st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   szr3->Add( st, flagslabel );
    Size.SetWidth (40);
    mStopbandRippleCtl = new wxTextCtrl (this, ID_STOPBAND_RIPPLE, wxT("0.0"), wxDefaultPosition, Size);
+   mStopbandRippleCtl->SetName(_("Stopband Ripple(dB):"));
    szr3->Add (mStopbandRippleCtl, 0 );
-   szr3->Add( new wxStaticText(this, wxID_ANY, _("dB")), 0 );
+   st = new wxStaticText(this, wxID_ANY, _("dB"));
+   szr3->Add( st, flagsunits );
+   st->SetName(st->GetLabel());  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    // -------------------------------------------------------------------
    // ROW 4: Subtype, Cutoff
