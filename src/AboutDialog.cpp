@@ -41,8 +41,6 @@ hold information about one contributor to Audacity.
 #include "ShuttleGui.h"
 #include "widgets/LinkingHtmlWindow.h"
 
-#include "portaudio.h"
-
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(AboutDialogCreditItemsList);
 

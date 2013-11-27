@@ -956,9 +956,6 @@
     <ClInclude Include="..\..\..\src\PluginManager.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\portaudio.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\Prefs.h">
       <Filter>src</Filter>
     </ClInclude>

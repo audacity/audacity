@@ -595,10 +595,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\portaudio.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\Prefs.cpp"
 				>
 			</File>

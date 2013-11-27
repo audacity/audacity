@@ -426,7 +426,6 @@
     <ClInclude Include="..\..\..\src\PitchName.h" />
     <ClInclude Include="..\..\..\src\PlatformCompatibility.h" />
     <ClInclude Include="..\..\..\src\PluginManager.h" />
-    <ClInclude Include="..\..\portaudio.h" />
     <ClInclude Include="..\..\..\src\Prefs.h" />
     <ClInclude Include="..\..\..\src\Printing.h" />
     <ClInclude Include="..\..\..\src\Profiler.h" />
