@@ -221,6 +221,8 @@ is time to refresh some aspect of the screen.
 
 #include <wx/arrimpl.cpp>
 
+#define ZOOMLIMIT 0.001
+
 WX_DEFINE_OBJARRAY(TrackClipArray);
 
 //This loads the appropriate set of cursors, depending on platform.
@@ -3490,10 +3492,11 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
             }
          }
          else {
-            if (max - min < 0.2) {
-               c = (min+max)/2;
-               min = c-0.1;
-               max = c+0.1;
+            // Waveform view - allow zooming down to a range of ZOOMLIMIT
+            if (max - min < ZOOMLIMIT) {     // if user attempts to go smaller...
+               c = (min+max)/2;           // ...set centre of view to centre of dragged area and top/bottom to ZOOMLIMIT/2 above/below
+               min = c - ZOOMLIMIT/2.0;
+               max = c + ZOOMLIMIT/2.0;
             }
          }
       }
@@ -3504,40 +3507,63 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       // then, if they click again, allow one more
       // zoom out.
       if(spectrum) {
-         c = 0.5*(min+max);
-         l = (c - min);
-         if(c - 2*l <= 0) {
-            min = 0.0;
-            max = wxMin( rate/2., 2. * max);
-         }
+         if (event.ShiftDown() && event.RightUp()) {
+			   // Zoom out full
+			   min = 0.0;
+			   max = rate/2.;
+		   }
          else {
-            min = wxMax( 0.0, c - 2*l);
-            max = wxMin( rate/2., c + 2*l);
+            // Zoom out
+            c = 0.5*(min+max);
+            l = (c - min);
+            if(c - 2*l <= 0) {
+               min = 0.0;
+               max = wxMin( rate/2., 2. * max);
+            }
+            else {
+               min = wxMax( 0.0, c - 2*l);
+               max = wxMin( rate/2., c + 2*l);
+            }
          }
       }
       else {
-         if(spectrumLog)
-         {
-            float p1;
-            p1 = (mZoomStart - ypos) / (float)height;
-            c = 1.0-p1;
-            double xmin = c - 1.;
-            double xmax = c + 1.;
-            double lmin = log10(min), lmax = log10(max);
-            double d = lmax-lmin;
-            min = wxMax(1,pow(10, xmin*d+lmin));
-            max = wxMin(rate/2., pow(10, xmax*d+lmin));
-         }
-         else {
-            if (min <= -1.0 && max >= 1.0) {
-               min = -2.0;
-               max = 2.0;
+         if(spectrumLog) {
+            if (event.ShiftDown() && event.RightUp()) {
+                // Zoom out full
+                min = 1.0;
+                max = rate/2.;
             }
             else {
-               c = 0.5*(min+max);
-               l = (c - min);
-               min = wxMax( -1.0, c - 2*l);
-               max = wxMin(  1.0, c + 2*l);
+               // Zoom out
+               float p1;
+               p1 = (mZoomStart - ypos) / (float)height;
+               c = 1.0-p1;
+               double xmin = c - 1.;
+               double xmax = c + 1.;
+               double lmin = log10(min), lmax = log10(max);
+               double d = lmax-lmin;
+               min = wxMax(1,pow(10, xmin*d+lmin));
+               max = wxMin(rate/2., pow(10, xmax*d+lmin));
+            }
+         }
+         else {
+            if (event.ShiftDown() && event.RightUp()) {
+				   // Zoom out full
+				   min = -1.0;
+				   max = 1.0;
+			   }
+            else {
+               // Zoom out
+               if (min <= -1.0 && max >= 1.0) {
+                  min = -2.0;
+                  max = 2.0;
+               }
+               else {
+                  c = 0.5*(min+max);
+                  l = (c - min);
+                  min = wxMax( -1.0, c - 2*l);  // limit to +/-1 range
+                  max = wxMin(  1.0, c + 2*l);
+               }
             }
          }
       }
@@ -3583,7 +3609,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
             else {
                c = 0.5*(min+max);
                // Enforce maximum vertical zoom
-               l = wxMax( 0.1, (c - min));
+               l = wxMax( ZOOMLIMIT, (c - min));
 
                p1 = (mZoomStart - ypos) / (float)height;
                c = (max * (1.0-p1) + min * p1);
