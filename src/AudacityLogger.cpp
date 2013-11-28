@@ -277,7 +277,7 @@ void AudacityLogger::OnClose(wxCommandEvent & WXUNUSED(e))
 
 void AudacityLogger::OnClear(wxCommandEvent & WXUNUSED(e))
 {
-   mBuffer = wxEmptyString;
+   mBuffer = wxT("Log Cleared.");
 
    mUpdated = true;
 
