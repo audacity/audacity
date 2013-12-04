@@ -57,9 +57,6 @@ bool EffectTruncSilence::Init()
       mTruncLongestAllowedSilentMs = 1000L;
       gPrefs->Write(wxT("/Effects/TruncateSilence/LongestAllowedSilentMs"), mTruncLongestAllowedSilentMs);
    }
-   
-   if( mTruncLongestAllowedSilentMs < mTruncInitialAllowedSilentMs )
-      mTruncInitialAllowedSilentMs = mTruncLongestAllowedSilentMs;
 
    mTruncDbChoiceIndex = gPrefs->Read(wxT("/Effects/TruncateSilence/DbChoiceIndex"), 4L);
    if ((mTruncDbChoiceIndex < 0) || (mTruncDbChoiceIndex >= Enums::NumDbChoices)) {  // corrupted Prefs?
@@ -83,6 +80,7 @@ bool EffectTruncSilence::Init()
 
 bool EffectTruncSilence::CheckWhetherSkipEffect()
 {
+   // FIXME: This misses the final (-80 dB) option.
    return ((mTruncDbChoiceIndex >= (Enums::NumDbChoices - 1))
           ||  (mTruncLongestAllowedSilentMs >= SKIP_EFFECT_MILLISECOND));
 }
@@ -529,28 +527,51 @@ void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
 
-   S.StartThreeColumn();
+   S.StartStatic(wxT("Detection"));
    {
-      wxArrayString choices(Enums::NumDbChoices, Enums::GetDbChoices());
-
-      S.Id( ID_SHORTEST_SILENCE_TEXT ).TieNumericTextBox(_("Min silence duration:"),
-                   mEffect->mTruncInitialAllowedSilentMs,
-                   10);
-      S.AddUnits( _("milliseconds") );
-      S.Id( ID_LONGEST_SILENCE_TEXT ).TieNumericTextBox(_("Max silence duration:"),
-                   mEffect->mTruncLongestAllowedSilentMs,
-                   10);
-      S.AddUnits( _("milliseconds") );
-      S.Id( ID_COMPRESS_FACTOR ).TieNumericTextBox(_("Silence compression:"),
-                   mEffect->mSilenceCompressRatio,
-                   10);
-      /* i18n-hint: Leave as is unless your language has a different way to show ratios like 5:1*/
-      S.AddUnits( _(":1") );
-      S.TieChoice(_("Threshold for silence:"),
-                  mEffect->mTruncDbChoiceIndex,
-                  &choices);
+      S.StartTwoColumn();
+      {
+         wxArrayString choices(Enums::NumDbChoices, Enums::GetDbChoices());
+         S.TieChoice(_("Threshold for silence:"),
+                     mEffect->mTruncDbChoiceIndex,
+                     &choices);
+      }
+      S.EndTwoColumn();
+      S.StartThreeColumn();
+      {
+         S.Id( ID_SHORTEST_SILENCE_TEXT ).TieNumericTextBox(_("Ignore silence less than:"),
+                     mEffect->mTruncInitialAllowedSilentMs,
+                     10);
+         S.AddUnits( _("milliseconds") );
+      }
+      S.EndThreeColumn();
    }
-   S.EndTwoColumn();
+   S.EndStatic();
+
+   S.StartStatic(wxT("Truncation"));
+   {
+      mTruncationMessage = S.AddVariableText(wxString::Format(_("For silences longer than %d milliseconds:"),
+                                                 (gPrefs->Read(wxT("/Effects/TruncateSilence/InitialAllowedSilentMs"), 200L))));
+
+      S.StartThreeColumn();
+      {         
+         S.Id( ID_COMPRESS_FACTOR ).TieNumericTextBox(_("Compress silence by:"),
+                     mEffect->mSilenceCompressRatio,
+                     10);
+         /* i18n-hint: Leave as is unless your language has a different way to show ratios like 5:1*/
+         S.AddUnits( _(":1") );
+
+         // Truncation.
+         S.Id( ID_LONGEST_SILENCE_TEXT ).TieNumericTextBox(_("and then truncate to:"),
+                     mEffect->mTruncLongestAllowedSilentMs,
+                     10);
+         S.AddUnits( _("milliseconds.") );
+
+      }
+      S.EndThreeColumn();
+   }
+   S.EndStatic();
+
    pWarning = S.AddVariableText( wxT("") );
 }
 
@@ -567,13 +588,28 @@ void TruncSilenceDialog::OnDurationChange(wxCommandEvent & WXUNUSED(event))
    if( !IsShown() )
       return;
    TransferDataFromWindow();
-   bool bOk =  (mEffect->mTruncInitialAllowedSilentMs > 0.9f) 
-            && (mEffect->mTruncLongestAllowedSilentMs > 0.9f)
-            && (mEffect->mSilenceCompressRatio >= 1.0f);
-   pWarning->SetLabel( bOk ? 
-      wxT("") : 
-   _("   Duration must be at least 1 millisecond\n   Compress ratio must be at least 1:1")
-         );
+
+   mTruncationMessage->SetLabel(wxString::Format(_("For silence longer than %d milliseconds:"),
+                                                 (mEffect->mTruncInitialAllowedSilentMs)));
+
+   bool bOk =  true;
+
+   wxString warningText;
+   if (mEffect->mTruncInitialAllowedSilentMs < 1.0f) {
+      bOk = false;
+      warningText = _("Ignored silence must be at least 1 millisecond");
+   }
+   if (mEffect->mTruncLongestAllowedSilentMs < 1.0f) {
+      bOk = false;
+      warningText = _("Cannot truncate to less than 1 millisecond");
+   }
+   if (mEffect->mSilenceCompressRatio < 1.0f) {
+      bOk = false;
+      warningText = _("Compression ratio must be at least 1:1");
+   }
+
+   pWarning->SetLabel( bOk ? wxT("") : warningText);
+
    wxWindow *pWnd;
    pWnd = FindWindowById( wxID_OK, this );
    pWnd->Enable( bOk );

@@ -92,9 +92,9 @@ private:
    EffectTruncSilence *mEffect;
    wxStaticText * pWarning;
 
+   wxStaticText * mTruncationMessage;
+
    wxStaticText *mRatioLabel;
-   wxSlider *mRatioSlider;
-   wxStaticText *mRatioText;
 
 private:
    DECLARE_EVENT_TABLE()
