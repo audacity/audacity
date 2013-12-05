@@ -285,9 +285,8 @@ bool EffectTruncSilence::Process()
       }
 
       // Intersection may create regions smaller than allowed; ignore them.
-      // FIXME: See http://bugzilla.audacityteam.org/show_bug.cgi?id=434#c10 and 
-      //    http://bugzilla.audacityteam.org/show_bug.cgi?id=434#c11 about the 0.0001 fudge factor. 
-      if ((r->end - r->start) < ((mTruncInitialAllowedSilentMs / 1000.0) - 0.0001))
+      // Allow one nanosecond extra for consistent results with exact milliseconds of allowed silence.
+      if ((r->end - r->start) < ((mTruncInitialAllowedSilentMs / 1000.0) - 0.000000001))
          continue;
 
       // Find new silence length as requested
