@@ -369,6 +369,16 @@ void Ruler::FindLinearTickSizes(double UPP)
 
    switch(mFormat) {
    case LinearDBFormat:
+      if (units < 0.001) {
+         mMinor = 0.001;
+         mMajor = 0.005;
+         return;
+      }
+      if (units < 0.01) {
+         mMinor = 0.01;
+         mMajor = 0.05;
+         return;
+      }
       if (units < 0.1) {
          mMinor = 0.1;
          mMajor = 0.5;
@@ -590,7 +600,8 @@ wxString Ruler::LabelString(double d, bool major)
       if (mMinor >= 1.0)
          s.Printf(wxT("%d"), (int)floor(d+0.5));
       else {
-         s.Printf(wxT("%.1f"), d);
+         int precision = -log10(mMinor);
+         s.Printf(wxT("%.*f"), precision, d);
       }
       break;
    case RealFormat:
