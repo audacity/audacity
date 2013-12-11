@@ -593,7 +593,7 @@ void TimeConverter::ValueToControls(double RawTime, bool nearest /* = true */)
    //RawTime = 4.9995f; Only for testing!
    RawTime = (double)((sampleCount)floor(RawTime * mSampleRate + (nearest ? 0.5f : 0.0f))) / mSampleRate; // put on a sample
    double theValue = RawTime * mScalingFactor + .000001; // what's this .000001 for?
-   int t_int;
+   sampleCount t_int;
    bool round = true;
    // We round on the last field.  If we have a fractional field we round using it.
    // Otherwise we round to nearest integer.
@@ -602,12 +602,12 @@ void TimeConverter::ValueToControls(double RawTime, bool nearest /* = true */)
          round = false;
    }
    if(round)
-      t_int = int(theValue + (nearest ? 0.5f : 0.0f));
+      t_int = sampleCount(theValue + (nearest ? 0.5f : 0.0f));
    else
    {  
       wxASSERT( mFields[mFields.GetCount()-1].frac );
       theValue += (nearest ? 0.5f : 0.0f) / mFields[mFields.GetCount()-1].base;
-      t_int = int(theValue);
+      t_int = sampleCount(theValue);
    }
    double t_frac = (theValue - t_int);
    unsigned int i;
