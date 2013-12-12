@@ -13,7 +13,6 @@
 
 #include <wx/object.h>
 #include <wx/wfstream.h>
-#include <wx/protocol/ftp.h>
 
 class FileIO
 {
@@ -43,8 +42,6 @@ class FileIO
  private:
    wxString mName;
    FileIOMode mMode;
-   wxURI mUri;
-   wxFTP *mFtp;
    wxInputStream *mInputStream;
    wxOutputStream *mOutputStream;
    bool mOpen;

@@ -74,7 +74,6 @@ simplifies construction of menu items.
 #include "LoadModules.h"
 #include "Prefs.h"
 #include "Printing.h"
-#include "UploadDialog.h"
 #ifdef USE_MIDI
 #include "NoteTrack.h"
 #endif // USE_MIDI
@@ -290,11 +289,6 @@ void AudacityProject::CreateMenusAndCommands()
               AudioIONotBusyFlag,
               AudioIONotBusyFlag);
    c->AddItem(wxT("EditChains"), _("Edit C&hains..."), FN(OnEditChains));
-
-#ifdef EXPERIMENTAL_FTP
-   c->AddSeparator();
-   c->AddItem(wxT("Upload File"), _("&Upload File..."), FN(OnUpload));
-#endif
 
    c->AddSeparator();
 
@@ -2873,17 +2867,6 @@ void AudacityProject::OnExit()
 {
    QuitAudacity();
 }
-
-#ifdef EXPERIMENTAL_FTP
-   void AudacityProject::OnUpload()
-   {
-      //if (mTags->ShowEditDialog(this, wxT("Edit ID3 Tags (for MP3 exporting)")))
-      //   PushState(wxT("Edit ID3 Tags"), wxT("Edit ID3 Tags"));
-
-      UploadDialog dlog(this);
-      dlog.ShowModal();
-   }
-#endif
 
 void AudacityProject::OnExportLabels()
 {

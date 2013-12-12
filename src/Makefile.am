@@ -200,8 +200,6 @@ audacity_SOURCES = \
 	TrackPanelAx.h \
 	UndoManager.cpp \
 	UndoManager.h \
-	UploadDialog.cpp \
-	UploadDialog.h \
 	ViewInfo.h \
 	VoiceKey.cpp \
 	VoiceKey.h \

@@ -829,14 +829,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\UploadDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\UploadDialog.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\ViewInfo.h"
 				>
 			</File>
