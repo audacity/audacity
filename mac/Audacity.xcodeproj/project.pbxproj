@@ -410,7 +410,6 @@
 		1790B19909883BFD008A330A /* TrackPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0EC09883BFD008A330A /* TrackPanel.cpp */; };
 		1790B19A09883BFD008A330A /* TrackPanelAx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */; };
 		1790B19C09883BFD008A330A /* UndoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F209883BFD008A330A /* UndoManager.cpp */; };
-		1790B19D09883BFD008A330A /* UploadDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F409883BFD008A330A /* UploadDialog.cpp */; };
 		1790B19E09883BFD008A330A /* VoiceKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F709883BFD008A330A /* VoiceKey.cpp */; };
 		1790B19F09883BFD008A330A /* WaveClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F909883BFD008A330A /* WaveClip.cpp */; };
 		1790B1A009883BFD008A330A /* WaveTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0FB09883BFD008A330A /* WaveTrack.cpp */; };
@@ -1385,7 +1384,6 @@
 		ED663BF316543647007F53A5 /* TrackPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0EC09883BFD008A330A /* TrackPanel.cpp */; };
 		ED663BF416543647007F53A5 /* TrackPanelAx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */; };
 		ED663BF516543647007F53A5 /* UndoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F209883BFD008A330A /* UndoManager.cpp */; };
-		ED663BF616543647007F53A5 /* UploadDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F409883BFD008A330A /* UploadDialog.cpp */; };
 		ED663BF716543647007F53A5 /* VoiceKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F709883BFD008A330A /* VoiceKey.cpp */; };
 		ED663BF816543647007F53A5 /* WaveClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F909883BFD008A330A /* WaveClip.cpp */; };
 		ED663BF916543647007F53A5 /* WaveTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0FB09883BFD008A330A /* WaveTrack.cpp */; };
@@ -1715,7 +1713,6 @@
 		ED85B4CB16A47353006DA21D /* TrackPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0EC09883BFD008A330A /* TrackPanel.cpp */; };
 		ED85B4CC16A47353006DA21D /* TrackPanelAx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */; };
 		ED85B4CD16A47353006DA21D /* UndoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F209883BFD008A330A /* UndoManager.cpp */; };
-		ED85B4CE16A47353006DA21D /* UploadDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F409883BFD008A330A /* UploadDialog.cpp */; };
 		ED85B4CF16A47353006DA21D /* VoiceKey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F709883BFD008A330A /* VoiceKey.cpp */; };
 		ED85B4D016A47353006DA21D /* WaveClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0F909883BFD008A330A /* WaveClip.cpp */; };
 		ED85B4D116A47353006DA21D /* WaveTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B0FB09883BFD008A330A /* WaveTrack.cpp */; };
@@ -3028,8 +3025,6 @@
 		1790B0EF09883BFD008A330A /* TrackPanelAx.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = TrackPanelAx.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B0F209883BFD008A330A /* UndoManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = UndoManager.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B0F309883BFD008A330A /* UndoManager.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = UndoManager.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B0F409883BFD008A330A /* UploadDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = UploadDialog.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B0F509883BFD008A330A /* UploadDialog.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = UploadDialog.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B0F609883BFD008A330A /* ViewInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ViewInfo.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B0F709883BFD008A330A /* VoiceKey.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = VoiceKey.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B0F809883BFD008A330A /* VoiceKey.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = VoiceKey.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -5090,8 +5085,6 @@
 				1790B0EF09883BFD008A330A /* TrackPanelAx.h */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
-				1790B0F409883BFD008A330A /* UploadDialog.cpp */,
-				1790B0F509883BFD008A330A /* UploadDialog.h */,
 				1790B0F609883BFD008A330A /* ViewInfo.h */,
 				1790B0F709883BFD008A330A /* VoiceKey.cpp */,
 				1790B0F809883BFD008A330A /* VoiceKey.h */,
@@ -8855,7 +8848,6 @@
 				1790B19909883BFD008A330A /* TrackPanel.cpp in Sources */,
 				1790B19A09883BFD008A330A /* TrackPanelAx.cpp in Sources */,
 				1790B19C09883BFD008A330A /* UndoManager.cpp in Sources */,
-				1790B19D09883BFD008A330A /* UploadDialog.cpp in Sources */,
 				1790B19E09883BFD008A330A /* VoiceKey.cpp in Sources */,
 				1790B19F09883BFD008A330A /* WaveClip.cpp in Sources */,
 				1790B1A009883BFD008A330A /* WaveTrack.cpp in Sources */,
@@ -9358,7 +9350,6 @@
 				ED663BF316543647007F53A5 /* TrackPanel.cpp in Sources */,
 				ED663BF416543647007F53A5 /* TrackPanelAx.cpp in Sources */,
 				ED663BF516543647007F53A5 /* UndoManager.cpp in Sources */,
-				ED663BF616543647007F53A5 /* UploadDialog.cpp in Sources */,
 				ED663BF716543647007F53A5 /* VoiceKey.cpp in Sources */,
 				ED663BF816543647007F53A5 /* WaveClip.cpp in Sources */,
 				ED663BF916543647007F53A5 /* WaveTrack.cpp in Sources */,
@@ -9665,7 +9656,6 @@
 				ED85B4CB16A47353006DA21D /* TrackPanel.cpp in Sources */,
 				ED85B4CC16A47353006DA21D /* TrackPanelAx.cpp in Sources */,
 				ED85B4CD16A47353006DA21D /* UndoManager.cpp in Sources */,
-				ED85B4CE16A47353006DA21D /* UploadDialog.cpp in Sources */,
 				ED85B4CF16A47353006DA21D /* VoiceKey.cpp in Sources */,
 				ED85B4D016A47353006DA21D /* WaveClip.cpp in Sources */,
 				ED85B4D116A47353006DA21D /* WaveTrack.cpp in Sources */,
