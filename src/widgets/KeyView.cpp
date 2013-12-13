@@ -1762,7 +1762,6 @@ KeyView::GetValue(int line)
       return wxEmptyString;
    }
    int index = LineToIndex(line);
-   KeyNode *node = &mNodes[index];
 
    // Get the label and key values
    wxString value;

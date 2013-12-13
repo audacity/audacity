@@ -803,9 +803,9 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
                                  const LilvPlugin *data,
                                  int sampleRate,
                                  double length,
-                                 double noteLength,
-                                 unsigned char noteVelocity,
-                                 unsigned char noteKey)
+                                 double WXUNUSED(noteLength),
+                                 unsigned char WXUNUSED(noteVelocity),
+                                 unsigned char WXUNUSED(noteKey))
 :  wxDialog(parent, wxID_ANY, 
             mEffect->GetString(lilv_plugin_get_name(data)),
             wxDefaultPosition, wxSize(500, -1),

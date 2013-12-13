@@ -553,13 +553,11 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    // it's simplest to just lump all the data together
    // into one big block along with the split block,
    // then resplit it all
-   unsigned int i;
-
    BlockArray *newBlock = new BlockArray();
    newBlock->Alloc(numBlocks + srcNumBlocks + 2);
    int newNumBlocks = 0;
 
-   for (i = 0; i < b; i++) {
+   for (int i = 0; i < b; i++) {
       newBlock->Add(mBlock->Item(i));
       newNumBlocks++;
    }
@@ -568,6 +566,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    sampleCount splitLen = mBlock->Item(b)->f->GetLength();
    int splitPoint = s - splitBlock->start;
 
+   unsigned int i;
    if (srcNumBlocks <= 4) {
 
       sampleCount sum = splitLen + addedLen;
