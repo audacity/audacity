@@ -588,13 +588,13 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    GetDefaultWindowRect(&defaultWindowRect);
 
    if (gAudacityProjects.IsEmpty()) {
-      //Read the values from the registry, or use the defaults
+      // Read the values from the registry, or use the defaults.
       // In version 1.3 and above, using the registry has been replaced
-      //    by a configuration file -- audacity.cfg. Different OSes store
-      //    this file in different locations.
+      // by a configuration file -- audacity.cfg. Different OSes store
+      // this file in different locations.
       gPrefs->Read(wxT("/Window/Maximized"), pMaximized);
       gPrefs->Read(wxT("/Window/Iconized"), pIconized);
-      if (pMaximized || pIconized) {
+      if (*pMaximized || *pIconized) {
          nextRect->SetX(gPrefs->Read(wxT("/Window/Normal_X"), defaultWindowRect.GetX()));
          nextRect->SetY(gPrefs->Read(wxT("/Window/Normal_Y"), defaultWindowRect.GetY()));
          nextRect->SetWidth(gPrefs->Read(wxT("/Window/Normal_Width"), defaultWindowRect.GetWidth()));
