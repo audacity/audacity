@@ -526,7 +526,7 @@ void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
 
-   S.StartStatic(wxT("Detection"));
+   S.StartStatic(_("Detection"));
    {
       S.StartTwoColumn();
       {
@@ -547,7 +547,7 @@ void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(wxT("Truncation"));
+   S.StartStatic(_("Truncation"));
    {
       mTruncationMessage = S.AddVariableText(wxString::Format(_("For silences longer than %d milliseconds:"),
                                                  (gPrefs->Read(wxT("/Effects/TruncateSilence/InitialAllowedSilentMs"), 200L))));

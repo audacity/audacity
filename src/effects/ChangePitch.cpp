@@ -299,7 +299,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
    S.EndVerticalLay();
 
    /* i18n-hint: (noun) Musical pitch.*/
-   S.StartStatic(wxT("Pitch"));
+   S.StartStatic(_("Pitch"));
    {
       S.StartMultiColumn(6, wxALIGN_CENTER); // 6 controls, because each AddChoice adds a wxStaticText and a wxChoice.
       {
@@ -333,7 +333,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(wxT("Frequency"));
+   S.StartStatic(_("Frequency"));
    {
       S.StartMultiColumn(5, wxALIGN_CENTER); // 5, because AddTextBox adds a wxStaticText and a wxTextCtrl.
       {
@@ -351,7 +351,7 @@ void ChangePitchDialog::PopulateOrExchange(ShuttleGui & S)
 
       S.StartHorizontalLay(wxALIGN_CENTER);
       {
-         m_pTextCtrl_PercentChange = S.Id(ID_TEXT_PERCENTCHANGE).AddTextBox(wxT("Percent Change:"), wxT(""), 12);
+         m_pTextCtrl_PercentChange = S.Id(ID_TEXT_PERCENTCHANGE).AddTextBox(_("Percent Change:"), wxT(""), 12);
          m_pTextCtrl_PercentChange->SetValidator(numvld);
       }
       S.EndHorizontalLay();
