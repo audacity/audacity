@@ -200,7 +200,6 @@
     <ClCompile Include="..\..\..\src\TrackPanel.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanelAx.cpp" />
     <ClCompile Include="..\..\..\src\UndoManager.cpp" />
-    <ClCompile Include="..\..\..\src\UploadDialog.cpp" />
     <ClCompile Include="..\..\..\src\VoiceKey.cpp" />
     <ClCompile Include="..\..\..\src\WaveClip.cpp" />
     <ClCompile Include="..\..\..\src\WaveTrack.cpp" />
@@ -453,7 +452,6 @@
     <ClInclude Include="..\..\..\src\TrackPanel.h" />
     <ClInclude Include="..\..\..\src\TrackPanelAx.h" />
     <ClInclude Include="..\..\..\src\UndoManager.h" />
-    <ClInclude Include="..\..\..\src\UploadDialog.h" />
     <ClInclude Include="..\..\..\src\ViewInfo.h" />
     <ClInclude Include="..\..\..\src\VoiceKey.h" />
     <ClInclude Include="..\..\..\src\WaveClip.h" />

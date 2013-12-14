@@ -282,9 +282,6 @@
     <ClCompile Include="..\..\..\src\UndoManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\UploadDialog.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\VoiceKey.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1035,9 +1032,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\UndoManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\UploadDialog.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ViewInfo.h">
