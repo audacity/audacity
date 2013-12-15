@@ -155,30 +155,34 @@ bool EffectClickRemoval::Process()
    return bGoodResult;
 }
 
-bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track,
-                                    sampleCount start, sampleCount len)
+bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount start, sampleCount len)
 {
-   bool rc = true;
-   sampleCount s = 0;
-   sampleCount idealBlockLen = track->GetMaxBlockSize() * 4;
+   // This is an incremental improvement. Prior to this, if (len <= windowSize/2), there was no change 
+   // in the result, but no alert to the user. 
+   if (len <= windowSize/2)
+   {
+      wxMessageBox(wxString::Format(_("Error: Selection must be larger than %d samples"), windowSize/2));
+      return false; 
+   }
 
+   sampleCount idealBlockLen = track->GetMaxBlockSize() * 4;
    if (idealBlockLen % windowSize != 0)
       idealBlockLen += (windowSize - (idealBlockLen % windowSize));
 
+   bool bResult = true;
+   sampleCount s = 0;
    float *buffer = new float[idealBlockLen];
-
    float *datawindow = new float[windowSize];
-
-   int i;
-
-   while((s < len)&&((len-s)>(windowSize/2))) {
+   while ((s < len)  &&  ((len - s) > windowSize/2)) 
+   {
       sampleCount block = idealBlockLen;
       if (s + block > len)
          block = len - s;
 
       track->Get((samplePtr) buffer, floatSample, start + s, block);
 
-      for(i=0; i<(block-windowSize/2); i+=windowSize/2) {
+      for (int i=0; i < (block-windowSize/2); i += windowSize/2) 
+      {
          int wcopy = windowSize;
          if (i + wcopy > block)
             wcopy = block - i;
@@ -200,7 +204,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track,
       s += block;
 
       if (TrackProgress(count, s / (double) len)) {
-         rc = false;
+         bResult = false;
          break;
       }
    }
@@ -208,7 +212,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track,
    delete[] buffer;
    delete[] datawindow;
 
-   return rc;
+   return bResult;
 }
 
 void EffectClickRemoval::RemoveClicks(sampleCount len, float *buffer)
@@ -265,6 +269,12 @@ void EffectClickRemoval::RemoveClicks(sampleCount len, float *buffer)
                   float lv = buffer[left];
                   float rv = buffer[i+ww+s2];
                   for(j=left; j<i+ww+s2; j++) {
+                     // FIX-ME: In many (most?) cases, this is never met, 
+                     // so it needs to be tracked and alerted if never met in any 
+                     // iterative calls to this method. 
+                     // Need this method to return a bool, 
+                     // and if no 'did something' result in iterative calls, 
+                     // fail the effect. 
                      buffer[j]= (rv*(j-left) + lv*(i+ww+s2-j))/(float)(i+ww+s2-left);
                      b2[j] = buffer[j]*buffer[j];
                   }
