@@ -161,7 +161,11 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
    // in the result, but no alert to the user. 
    if (len <= windowSize/2)
    {
-      wxMessageBox(wxString::Format(_("Error: Selection must be larger than %d samples"), windowSize/2));
+      wxMessageBox(
+         wxString::Format(_("Selection must be larger than %d samples."), windowSize/2), 
+         _("Click Removal"), 
+         wxOK | wxICON_ERROR
+         );
       return false; 
    }
 
