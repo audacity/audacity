@@ -69,8 +69,7 @@ private:
    bool ProcessOne(int count, WaveTrack * track,
                    sampleCount start, sampleCount len);
 
-   void RemoveClicks(sampleCount len,
-                    float *buffer);
+   bool RemoveClicks(sampleCount len, float *buffer);
 
    Envelope *mEnvelope;
 
