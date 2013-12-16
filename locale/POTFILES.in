@@ -142,8 +142,6 @@ src/TrackPanelAx.cpp
 src/TrackPanelAx.h
 src/UndoManager.cpp
 src/UndoManager.h
-src/UploadDialog.cpp
-src/UploadDialog.h
 src/ViewInfo.h
 src/VoiceKey.cpp
 src/VoiceKey.h
