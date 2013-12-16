@@ -5,7 +5,7 @@ function waf
    pkg="$1"
    shift
    pushd >/dev/null ${pkg}
-   python waf --prefix="." --include="." $@ configure || exit 1
+   python2 waf --prefix="." --include="." $@ configure || exit 1
    popd >/dev/null
 
    if [ "${pkg}" == "lv2" ]
