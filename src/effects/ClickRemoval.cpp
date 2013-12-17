@@ -62,9 +62,7 @@
 EffectClickRemoval::EffectClickRemoval()
 {
    windowSize = 8192;
-   //   mThresholdLevel = 200;
-   //   mClickWidth = 20;
-   sep=2049;
+   sep = 2049;
 
    Init();
 }
@@ -114,6 +112,7 @@ bool EffectClickRemoval::PromptUser()
 
    return gPrefs->Flush();
 }
+
 bool EffectClickRemoval::TransferParameters( Shuttle & shuttle )
 {  
    shuttle.TransferInt(wxT("Threshold"),mThresholdLevel,0);
@@ -163,8 +162,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
       wxMessageBox(
          wxString::Format(_("Selection must be larger than %d samples."), windowSize/2), 
          this->GetEffectName(), 
-         wxOK | wxICON_ERROR
-         );
+         wxOK | wxICON_ERROR);
       return false; 
    }
 
@@ -196,24 +194,31 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
          for(j=wcopy; j<windowSize; j++)
             datawindow[j] = 0;
 
-         bResult &= RemoveClicks(windowSize, datawindow);
+         bResult |= RemoveClicks(windowSize, datawindow);
 
          for(j=0; j<wcopy; j++)
            buffer[i+j] = datawindow[j];
       }
 
-      track->Set((samplePtr) buffer, floatSample, start + s, block);
+      if (bResult) // RemoveClicks() actually did something.
+         track->Set((samplePtr) buffer, floatSample, start + s, block);
 
       s += block;
 
       if (TrackProgress(count, s / (double) len)) {
-         bResult = false;
+         // Not necessarily a failure, as might be eProgressCancelled. // bResult = false;
          break;
       }
    }
 
    delete[] buffer;
    delete[] datawindow;
+
+   if (!bResult)
+      wxMessageBox(
+         wxString::Format(_("Algorithm not effective on these data. Nothing changed.")), 
+         this->GetEffectName(), 
+         wxOK | wxICON_ERROR);
 
    return bResult;
 }
