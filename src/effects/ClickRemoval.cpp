@@ -162,8 +162,6 @@ bool EffectClickRemoval::Process()
 
 bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount start, sampleCount len)
 {
-   // This is an incremental improvement. Prior to this, if (len <= windowSize/2), there was no change 
-   // in the result, but no alert to the user. 
    if (len <= windowSize/2)
    {
       wxMessageBox(
