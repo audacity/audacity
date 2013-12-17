@@ -73,6 +73,7 @@ private:
 
    Envelope *mEnvelope;
 
+   bool mbDidSomething; // This effect usually does nothing on real-world data. 
    int       windowSize;
    int       mThresholdLevel;
    int       mClickWidth;

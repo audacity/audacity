@@ -124,6 +124,7 @@ bool EffectClickRemoval::Process()
 {
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
+   mbDidSomething = false; 
 
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
@@ -149,8 +150,14 @@ bool EffectClickRemoval::Process()
       track = (WaveTrack *) iter.Next();
       count++;
    }
-   this->ReplaceProcessedTracks(bGoodResult); 
-   return bGoodResult;
+   if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective. 
+      wxMessageBox(
+         wxString::Format(_("Algorithm not effective on these data. Nothing changed.")), 
+         this->GetEffectName(), 
+         wxOK | wxICON_ERROR);
+
+   this->ReplaceProcessedTracks(bGoodResult && mbDidSomething); 
+   return bGoodResult && mbDidSomething;
 }
 
 bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount start, sampleCount len)
@@ -170,7 +177,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
    if (idealBlockLen % windowSize != 0)
       idealBlockLen += (windowSize - (idealBlockLen % windowSize));
 
-   bool bResult = false; // This effect usually does nothing. 
+   bool bResult = true; 
    sampleCount s = 0;
    float *buffer = new float[idealBlockLen];
    float *datawindow = new float[windowSize];
@@ -194,31 +201,25 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
          for(j=wcopy; j<windowSize; j++)
             datawindow[j] = 0;
 
-         bResult |= RemoveClicks(windowSize, datawindow);
+         mbDidSomething |= RemoveClicks(windowSize, datawindow);
 
          for(j=0; j<wcopy; j++)
            buffer[i+j] = datawindow[j];
       }
 
-      if (bResult) // RemoveClicks() actually did something.
+      if (mbDidSomething) // RemoveClicks() actually did something.
          track->Set((samplePtr) buffer, floatSample, start + s, block);
 
       s += block;
 
       if (TrackProgress(count, s / (double) len)) {
-         // Not necessarily a failure, as might be eProgressCancelled. // bResult = false;
+         bResult = false;
          break;
       }
    }
 
    delete[] buffer;
    delete[] datawindow;
-
-   if (!bResult)
-      wxMessageBox(
-         wxString::Format(_("Algorithm not effective on these data. Nothing changed.")), 
-         this->GetEffectName(), 
-         wxOK | wxICON_ERROR);
 
    return bResult;
 }
