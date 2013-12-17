@@ -152,7 +152,7 @@ bool EffectClickRemoval::Process()
    }
    if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective. 
       wxMessageBox(
-         wxString::Format(_("Algorithm not effective on these data. Nothing changed.")), 
+         wxString::Format(_("Algorithm not effective on this audio. Nothing changed.")), 
          this->GetEffectName(), 
          wxOK | wxICON_ERROR);
 
