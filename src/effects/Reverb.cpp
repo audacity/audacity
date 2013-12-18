@@ -316,7 +316,7 @@ void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
    {
       s.SetStretchyCol(2);
 
-      mRoomSizeText = s.Id(ID_RoomSize_TEXT).AddSpinCtrl(_("Room Size (%):"), 0, 100, 0); 
+      mRoomSizeText = s.Id(ID_RoomSize_TEXT).AddSpinCtrl(_("&Room Size (%):"), 0, 100, 0); 
       s.SetStyle(wxSL_HORIZONTAL);
       mRoomSizeWidget = s.Id(ID_RoomSize_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
@@ -324,35 +324,35 @@ void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
       // Then, May 11, 2013, in a thread on [Audacity-quality], subject "Reverb effect", 
       // Steve suggested and Gale seconded renaming it "Pre-delay". 
       // I've changed it only here, in the GUI, and left the rest of the code as *Delay*.
-      mDelayText = s.Id(ID_Delay_TEXT).AddSpinCtrl(_("Pre-delay (ms):"), 0, 200, 0);
+      mDelayText = s.Id(ID_Delay_TEXT).AddSpinCtrl(_("&Pre-delay (ms):"), 0, 200, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mDelayWidget = s.Id(ID_Delay_WIDGET).AddSlider(wxT(""), 0, 200, 0);
 
-      mReverberanceText = s.Id(ID_Reverberance_TEXT).AddSpinCtrl(_("Reverberance (%):"), 0, 100, 0);
+      mReverberanceText = s.Id(ID_Reverberance_TEXT).AddSpinCtrl(_("Rever&berance (%):"), 0, 100, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mReverberanceWidget = s.Id(ID_Reverberance_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
-      mHfDampingText = s.Id(ID_HfDamping_TEXT).AddSpinCtrl(_("Damping (%):"), 0, 100, 0);
+      mHfDampingText = s.Id(ID_HfDamping_TEXT).AddSpinCtrl(_("Da&mping (%):"), 0, 100, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mHfDampingWidget = s.Id(ID_HfDamping_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
-      mToneLowText = s.Id(ID_ToneLow_TEXT).AddSpinCtrl(_("Tone Low (%):"), 0, 100, 0);
+      mToneLowText = s.Id(ID_ToneLow_TEXT).AddSpinCtrl(_("Tone &Low (%):"), 0, 100, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mToneLowWidget = s.Id(ID_ToneLow_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
-      mToneHighText = s.Id(ID_ToneHigh_TEXT).AddSpinCtrl(_("Tone High (%):"), 0, 100, 0);
+      mToneHighText = s.Id(ID_ToneHigh_TEXT).AddSpinCtrl(_("Tone &High (%):"), 0, 100, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mToneHighWidget = s.Id(ID_ToneHigh_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
-      mWetGainText = s.Id(ID_WetGain_TEXT).AddSpinCtrl(_("Wet Gain (dB):"), 0, 10, -20);
+      mWetGainText = s.Id(ID_WetGain_TEXT).AddSpinCtrl(_("We&t Gain (dB):"), 0, 10, -20);
       s.SetStyle(wxSL_HORIZONTAL);
       mWetGainWidget = s.Id(ID_WetGain_WIDGET).AddSlider(wxT(""), 0, 10, -20);
 
-      mDryGainText = s.Id(ID_DryGain_TEXT).AddSpinCtrl(_("Dry Gain (dB):"), 0, 10, -20);
+      mDryGainText = s.Id(ID_DryGain_TEXT).AddSpinCtrl(_("Dry &Gain (dB):"), 0, 10, -20);
       s.SetStyle(wxSL_HORIZONTAL);
       mDryGainWidget = s.Id(ID_DryGain_WIDGET).AddSlider(wxT(""), 0, 10, -20);
 
-      mStereoWidthText = s.Id(ID_StereoWidth_TEXT).AddSpinCtrl(_("Stereo Width (%):"), 0, 100, 0);
+      mStereoWidthText = s.Id(ID_StereoWidth_TEXT).AddSpinCtrl(_("Stereo Widt&h (%):"), 0, 100, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mStereoWidthWidget = s.Id(ID_StereoWidth_WIDGET).AddSlider(wxT(""), 0, 100, 0);
    } 
@@ -360,19 +360,19 @@ void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
 
    s.StartHorizontalLay(wxCENTER, false); 
    {
-      mWetOnlyWidget = s.Id(ID_WetOnly_WIDGET).AddCheckBox(_("Wet Only"), wxT("false"));
+      mWetOnlyWidget = s.Id(ID_WetOnly_WIDGET).AddCheckBox(_("Wet O&nly"), wxT("false"));
    } 
    s.EndHorizontalLay();
 
    s.StartHorizontalLay(wxCENTER); {
       s.StartStatic(_("Presets:")); {
-      s.Id(ID_PRESETS), s.AddButton(_("Load"));
+      s.Id(ID_PRESETS), s.AddButton(_("Lo&ad"));
       } s.EndStatic();
       s.StartStatic(_("User settings:")); {
          s.StartHorizontalLay(wxCENTER); {
-            s.Id(ID_LOAD_SETTINGS), s.AddButton(_("Load"));
-            s.Id(ID_SAVE_SETTINGS), s.AddButton(_("Save"));
-            s.Id(ID_RENAME_SETTINGS), s.AddButton(_("Rename"));
+            s.Id(ID_LOAD_SETTINGS), s.AddButton(_("Loa&d"));
+            s.Id(ID_SAVE_SETTINGS), s.AddButton(_("&Save"));
+            s.Id(ID_RENAME_SETTINGS), s.AddButton(_("R&ename"));
          } s.EndHorizontalLay();
       } s.EndStatic();
    } s.EndHorizontalLay();
