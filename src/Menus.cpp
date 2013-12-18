@@ -644,20 +644,19 @@ void AudacityProject::CreateMenusAndCommands()
    c->BeginMenu(_("T&ransport"));
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
-   /* i18n-hint: (verb) Start playing audio*/
-   c->AddItem(wxT("Play"), _("Pl&ay"), FN(OnPlayStop),  wxT("Space"),
-              WaveTracksExistFlag | AudioIONotBusyFlag,
-              WaveTracksExistFlag | AudioIONotBusyFlag);
+   /* i18n-hint: (verb) Start or Stop audio playback*/
+   c->AddItem(wxT("PlayStop"), _("Pl&ay/Stop"), FN(OnPlayStop), wxT("Space"),
+              AlwaysEnabledFlag,
+              AlwaysEnabledFlag);
+   c->AddItem(wxT("PlayStopSelect"), _("Play/Stop and &Set Cursor"), FN(OnPlayStopSelect), wxT("Shift+A"),
+              AlwaysEnabledFlag,
+              AlwaysEnabledFlag);
    c->AddItem(wxT("PlayLooped"), _("&Loop Play"), FN(OnPlayLooped), wxT("Shift+Space"),
               WaveTracksExistFlag | AudioIONotBusyFlag,
               WaveTracksExistFlag | AudioIONotBusyFlag);
    c->AddItem(wxT("Pause"), _("&Pause"), FN(OnPause), wxT("P"),
               AlwaysEnabledFlag,
               AlwaysEnabledFlag);
-   /* i18n-hint: (verb) Stop playing audio*/
-   c->AddItem(wxT("Stop"), _("&Stop"), FN(OnStop), wxT("Space"),
-              AudioIOBusyFlag,
-              AudioIOBusyFlag);
    c->AddItem(wxT("SkipStart"), _("S&kip to Start"), FN(OnSkipStart), wxT("Home"),
               AudioIONotBusyFlag,
               AudioIONotBusyFlag);
@@ -1089,9 +1088,14 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddCommand(wxT("NextTool"), _("Next Tool"), FN(OnNextTool), wxT("D"));
    c->AddCommand(wxT("PrevTool"), _("Previous Tool"), FN(OnPrevTool), wxT("A"));
-
-   c->AddCommand(wxT("PlayStop"), _("Play/Stop"), FN(OnPlayStop), wxT("Space"));
-   c->AddCommand(wxT("PlayStopSelect"), _("Play/Stop and Set Cursor"), FN(OnPlayStopSelect), wxT("Shift+A"));
+   /* i18n-hint: (verb) Start playing audio*/
+   c->AddCommand(wxT("Play"), _("Play"), FN(OnPlayStop),
+                 WaveTracksExistFlag | AudioIONotBusyFlag,
+                 WaveTracksExistFlag | AudioIONotBusyFlag);
+   /* i18n-hint: (verb) Stop playing audio*/
+   c->AddCommand(wxT("Stop"), _("Stop"), FN(OnStop),
+                 AudioIOBusyFlag,
+                 AudioIOBusyFlag);
    c->AddCommand(wxT("PlayOneSec"), _("Play One Second"), FN(OnPlayOneSecond), wxT("1"));
    c->AddCommand(wxT("PlayToSelection"),_("Play To Selection"), FN(OnPlayToSelection), wxT("B"));
    c->AddCommand(wxT("PlayCutPreview"), _("Play Cut Preview"), FN(OnPlayCutPreview), wxT("C"));
