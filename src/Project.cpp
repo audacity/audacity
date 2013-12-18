@@ -2846,6 +2846,14 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          Internat::CompatibleToDouble(value, &mRate);
          GetSelectionBar()->SetRate(mRate);
       }
+
+      if (!wxStrcmp(attr, wxT("snapto"))) {
+         SetSnapTo(wxString(value) == wxT("on") ? true : false);
+      }
+
+      if (!wxStrcmp(attr, wxT("selectionformat"))) {
+         SetSelectionFormat(value);
+      }
    } // while
 
    // Specifically detect newer versions of Audacity
@@ -3020,6 +3028,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("h"), mViewInfo.h, 10);
    xmlFile.WriteAttr(wxT("zoom"), mViewInfo.zoom, 10);
    xmlFile.WriteAttr(wxT("rate"), mRate);
+   xmlFile.WriteAttr(wxT("snapto"), GetSnapTo() ? wxT("on") : wxT("off"));
+   xmlFile.WriteAttr(wxT("selectionformat"), GetSelectionFormat());
 
    mTags->WriteXML(xmlFile);
 
