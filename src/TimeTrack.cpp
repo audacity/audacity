@@ -24,7 +24,7 @@
 #include "Resample.h"
 
 //TODO-MB: are these sensible values?
-#define TIMETRACK_MIN 0.1
+#define TIMETRACK_MIN 0.01
 #define TIMETRACK_MAX 10.0
 
 TimeTrack *TrackFactory::NewTimeTrack()
