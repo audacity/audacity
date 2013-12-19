@@ -771,6 +771,11 @@ bool EffectNyquist::ProcessOne()
       }
    }
 
+   /* restore the Nyquist sixteenth note symbol for Generate plugins */
+   if (GetEffectFlags() & INSERT_EFFECT) {
+      cmd += wxT("(setf s 0.25)\n");
+   }
+
    for (unsigned int j = 0; j < mControls.GetCount(); j++) {
       if (mControls[j].type == NYQ_CTRL_REAL) {
          // We use Internat::ToString() rather than "%f" here because we
