@@ -157,10 +157,11 @@ bool EffectPhaser::ProcessSimpleMono(float *buffer, sampleCount len)
       out = (m * drywet + in * (255 - drywet)) / 255;
       
       // Prevents clipping
-      if (out < -1.0)
-         out = float(-1.0);
-      else if (out > 1.0)
-         out = float(1.0);
+      // Commented out, per http://bugzilla.audacityteam.org/show_bug.cgi?id=690.
+      //if (out < -1.0)
+      //   out = float(-1.0);
+      //else if (out > 1.0)
+      //   out = float(1.0);
       
       buffer[i] = out;
    }
