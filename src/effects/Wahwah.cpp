@@ -156,10 +156,11 @@ bool EffectWahwah::ProcessSimpleMono(float *buffer, sampleCount len)
       yn1 = out;
       
       // Prevents clipping
-      if (out < -1.0)
-         out = float(-1.0);
-      else if (out > 1.0)
-         out = float(1.0);
+      // Commented out, per http://bugzilla.audacityteam.org/show_bug.cgi?id=689.
+      //if (out < -1.0)
+      //   out = float(-1.0);
+      //else if (out > 1.0)
+      //   out = float(1.0);
       
       buffer[i] = (float) out;
    }
