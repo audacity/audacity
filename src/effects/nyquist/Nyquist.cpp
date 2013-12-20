@@ -771,7 +771,8 @@ bool EffectNyquist::ProcessOne()
       }
    }
 
-   /* restore the Nyquist sixteenth note symbol for Generate plugins */
+   // Restore the Nyquist sixteenth note symbol for Generate plugins.
+   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=490. 
    if (GetEffectFlags() & INSERT_EFFECT) {
       cmd += wxT("(setf s 0.25)\n");
    }
