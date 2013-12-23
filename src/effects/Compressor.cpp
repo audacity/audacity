@@ -102,7 +102,7 @@ bool EffectCompressor::TransferParameters( Shuttle & shuttle )
    shuttle.TransferDouble( wxT("NoiseFloor"), mNoiseFloorDB, -40.0f );
    shuttle.TransferDouble( wxT("Ratio"), mRatio, 2.0f );
    shuttle.TransferDouble( wxT("AttackTime"), mAttackTime, 0.2f );
-   shuttle.TransferDouble( wxT("DecayTime"), mDecayTime, 1.0f );
+   shuttle.TransferDouble( wxT("ReleaseTime"), mDecayTime, 1.0f );
    shuttle.TransferBool( wxT("Normalize"), mNormalize, true );
    shuttle.TransferBool( wxT("UsePeak"), mUsePeak, false );
    return true;
@@ -658,11 +658,11 @@ void CompressorDialog::PopulateOrExchange(ShuttleGui & S)
          mAttackText = S.AddVariableText(wxT("XXXX secs"), true,
                                          wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-         mDecayLabel = S.AddVariableText(_("Decay Time:"), true,
+         mDecayLabel = S.AddVariableText(_("Release Time:"), true,
                                          wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          S.SetStyle(wxSL_HORIZONTAL);
          mDecaySlider = S.Id(DecayID).AddSlider(wxT(""), 2, 30, 1);
-         mDecaySlider->SetName(_("Decay Time"));
+         mDecaySlider->SetName(_("Release Time"));
          mDecayText = S.AddVariableText(wxT("XXXX secs"), true,
                                         wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
       }
@@ -741,7 +741,7 @@ bool CompressorDialog::TransferDataFromWindow()
    mAttackText->SetLabel(wxString::Format(_("%.1f secs"), attack));
    mAttackText->SetName(mAttackText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
-   mDecayLabel->SetName(wxString::Format(_("Decay Time %.1f secs"), decay));
+   mDecayLabel->SetName(wxString::Format(_("Release Time %.1f secs"), decay));
    mDecayText->SetLabel(wxString::Format(_("%.1f secs"), decay));
    mDecayText->SetName(mDecayText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 

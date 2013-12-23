@@ -136,6 +136,9 @@ bool BatchCommands::ReadChain(const wxString & chain)
          wxString parm = tf[i].Mid(splitAt + 1).Strip(wxString::trailing);
          
          // Backward compatibility for old Chain scripts
+         // Please comment the version of audacity these are introduced in, so
+         // that old ones can easily be removed once users have had a chance to
+         // migrate
          if (cmd == wxT("SaveMP3_56k_before"))
             cmd = wxT("ExportMP3_56k_before");
          else if (cmd == wxT("SaveMP3_56k_after"))
@@ -146,6 +149,8 @@ bool BatchCommands::ReadChain(const wxString & chain)
             cmd = wxT("ExportMP3");
          else if (cmd == wxT("ExportWav"))
             cmd = wxT("ExportWAV");
+         else if (cmd == wxT("Compressor") && (parm.find(wxT("DecayTime")) != parm.npos))
+            parm.Replace(wxT("DecayTime"), wxT("ReleaseTime"), NULL);   // 2.0.6
 
          // Add to lists
          mCommandChain.Add(cmd);

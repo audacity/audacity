@@ -82,7 +82,7 @@ public:
    bool      mNormalize;	//MJS
    bool      mUsePeak;
    
-   double    mDecayTime;
+   double    mDecayTime;   // The "Release" time.
    double    mAttackFactor;
    double    mAttackInverseFactor;
    double    mDecayFactor;
@@ -144,7 +144,7 @@ public:
    double noisefloor;
    double ratio;
    double attack;
-   double decay;
+   double decay;  // "release"
    bool useGain;
    bool usePeak;
 
