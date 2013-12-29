@@ -24,8 +24,11 @@ CXXFLAGS += -Wall -O9
 # -----------------------------------------------------------------------------
 
 CXXFLAGS += -DAUDACITY_DLL_API= -I$(AUDACITY_DIR)/src 
-CXXFLAGS += ${shell set -x ; sed -e '/override CXXFLAGS/!d;s/override CXXFLAGS += //;s@$$(top_srcdir)@$(AUDACITY_DIR)@g' $(AUDACITY_DIR)/src/Makefile}
-LDFLAGS += ${shell sed -e '/^LIBS/!d;s/LIBS *=//' $(AUDACITY_DIR)/src/Makefile}
+CXXFLAGS += ${shell echo @CPPFLAGS@ | ../../config.status --file=- }
+CXXFLAGS += ${shell echo @CXXFLAGS@ | ../../config.status --file=- | sed -e 's@$$(top_srcdir)@$(AUDACITY_DIR)@g' }
+CXXFLAGS += ${shell echo @LIBNYQUIST_CFLAGS@ | ../../config.status --file=- | sed -e 's@$$(top_srcdir)@$(AUDACITY_DIR)@g' }
+CXXFLAGS += ${shell echo @WX_CXXFLAGS@ | ../../config.status --file=- }
+LDFLAGS += ${shell echo @LIBS@ | ../../config.status --file=- }
 
 SYS = $(shell uname -s)
 
