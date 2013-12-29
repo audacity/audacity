@@ -5,8 +5,9 @@
 # -----------------------------------------------------------------------------
 # NOTE: Change this to the base of the Audacity source distribution, or specify
 #       via command line or environment
+#       Default is to use the sources which this directory is part of
 #
-AUDACITY_DIR ?=
+AUDACITY_DIR ?= ../..
 
 # -----------------------------------------------------------------------------
 # NOTE: Set to the names of your objects and final module name
