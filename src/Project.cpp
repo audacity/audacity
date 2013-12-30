@@ -1235,7 +1235,7 @@ void AudacityProject::AS_ModifySelection(double &start, double &end, bool done)
    mViewInfo.sel1 = end;
    mTrackPanel->Refresh(false);
    if (done) {
-      ModifyState();
+      ModifyState(false);
    }
 }
 
@@ -3706,10 +3706,11 @@ void AudacityProject::PushState(wxString desc,
       AutoSave();
 }
 
-void AudacityProject::ModifyState()
+void AudacityProject::ModifyState(bool bWantsAutoSave)
 {
    mUndoManager.ModifyState(mTracks, mViewInfo.sel0, mViewInfo.sel1);
-   AutoSave();
+   if (bWantsAutoSave)
+      AutoSave();
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -4381,9 +4382,9 @@ void AudacityProject::TP_PushState(wxString desc, wxString shortDesc,
 }
 
 // TrackPanel callback method
-void AudacityProject::TP_ModifyState()
+void AudacityProject::TP_ModifyState(bool bWantsAutoSave)
 {
-   ModifyState();
+   ModifyState(bWantsAutoSave);
 }
 
 // TrackPanel callback method
@@ -4685,7 +4686,7 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
          }
       }
    }
-   ModifyState();
+   ModifyState(true);
 }
 
 // Type of solo (standard or simple) follows the set preference, unless
@@ -4744,6 +4745,6 @@ void AudacityProject::HandleTrackSolo(Track *t, const bool alternate)
          i = iter.Next();
       }
    }
-   ModifyState();
+   ModifyState(true);
 }
 

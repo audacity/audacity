@@ -70,7 +70,8 @@ class AUDACITY_DLL_API TrackPanelListener {
    virtual void TP_OnPlayKey() = 0;
    virtual void TP_PushState(wxString shortDesc, wxString longDesc,
                             int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE) = 0;
-   virtual void TP_ModifyState() = 0;
+   virtual void TP_ModifyState(bool bWantsAutoSave) = 0;    // if true, writes auto-save file. Should set only if you really want the state change restored after
+                                                            // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    virtual void TP_RedrawScrollbars() = 0;
    virtual void TP_ScrollLeft() = 0;
    virtual void TP_ScrollRight() = 0;
@@ -426,8 +427,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    // AS: Pushing the state preserves state for Undo operations.
    virtual void MakeParentPushState(wxString desc, wxString shortDesc,
                             int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE);
-   virtual void MakeParentModifyState();
-
+   virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
+                                                               // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    virtual void MakeParentResize();
 
    virtual void OnSetName(wxCommandEvent &event);

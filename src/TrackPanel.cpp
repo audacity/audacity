@@ -1416,9 +1416,9 @@ void TrackPanel::MakeParentPushState(wxString desc, wxString shortDesc,
    mListener->TP_PushState(desc, shortDesc, flags);
 }
 
-void TrackPanel::MakeParentModifyState()
+void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)
 {
-   mListener->TP_ModifyState();
+   mListener->TP_ModifyState(bWantsAutoSave);
 }
 
 void TrackPanel::MakeParentRedrawScrollbars()
@@ -1858,7 +1858,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
 
       SetCapturedTrack( NULL );
       //Send the new selection state to the undo/redo stack:
-      MakeParentModifyState();
+      MakeParentModifyState(false);
 
    } else if (event.LeftDClick() && !event.ShiftDown()) {
       if (!mCapturedTrack) {
@@ -1898,7 +1898,7 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
 
       Refresh(false);
       SetCapturedTrack( NULL );
-      MakeParentModifyState();
+      MakeParentModifyState(false);
    } 
  done:
    SelectionHandleDrag(event, t);
@@ -1983,7 +1983,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
       // If the shift button is down, extend the current selection.
       ExtendSelection(event.m_x, r.x, pTrack);
-      MakeParentModifyState();
+      MakeParentModifyState(false);
       return;
    }
 
@@ -2197,7 +2197,7 @@ void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
    mViewInfo->sel1 = s;
 
    SonifyBeginModifyState();
-   MakeParentModifyState();
+   MakeParentModifyState(false);
    SonifyEndModifyState();
 }
 
@@ -3392,7 +3392,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       mZoomEnd = mZoomStart = 0;
       Refresh(false);
       mCapturedTrack = NULL;
-      MakeParentModifyState();
+      MakeParentModifyState(true);
       return;
    }
 #endif
@@ -3640,7 +3640,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    UpdateVRuler(mCapturedTrack);
    Refresh(false);
    mCapturedTrack = NULL;
-   MakeParentModifyState();
+   MakeParentModifyState(true);
 }
 
 /// Determines if we can edit samples in a wave track.
@@ -4161,7 +4161,7 @@ void TrackPanel::HandleMinimizing(wxMouseEvent & event)
          if (mTracks->GetLink(t))
             mTracks->GetLink(t)->SetMinimized(t->GetMinimized());
          MakeParentRedrawScrollbars();
-         MakeParentModifyState();
+         MakeParentModifyState(true);
       }
 
       SetCapturedTrack(NULL);
@@ -4424,7 +4424,7 @@ void TrackPanel::HandleLabelClick(wxMouseEvent & event)
       pMixerBoard->RefreshTrackClusters();
 
    if (!unsafe)
-      MakeParentModifyState();
+      MakeParentModifyState(true);
 }
 
 /// The user is dragging one of the tracks: change the track order
@@ -4717,7 +4717,7 @@ void TrackPanel::HandleResizeButtonUp(wxMouseEvent & WXUNUSED(event))
 {
    SetCapturedTrack( NULL );
    MakeParentRedrawScrollbars();
-   MakeParentModifyState(); //v Probably doesn't really warrant AutoSave. Maybe add bWantAutoSave param if there are more.
+   MakeParentModifyState(false);
 }
 
 ///  Resize dragging means that the mouse button IS down and has moved
@@ -6291,7 +6291,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       t = iter.Last();
       SetFocusedTrack( t );
       EnsureVisible( t );
-      MakeParentModifyState();
+      MakeParentModifyState(false);
       return;
    }
 
@@ -6325,7 +6325,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          mTracks->Select( t, false );
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
       if( tSelected && !pSelected )
@@ -6333,7 +6333,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          mTracks->Select( p, true );
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
       if( !tSelected && pSelected )
@@ -6341,7 +6341,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          mTracks->Select( p, false );
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
       if( !tSelected && !pSelected )
@@ -6349,7 +6349,7 @@ void TrackPanel::OnPrevTrack( bool shift )
          mTracks->Select( t, true );
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
    }
@@ -6368,7 +6368,7 @@ void TrackPanel::OnPrevTrack( bool shift )
             }
             SetFocusedTrack( p );   // Wrap to the first track
             EnsureVisible( p );
-            MakeParentModifyState();
+            MakeParentModifyState(false);
             return;
          }
          else
@@ -6381,7 +6381,7 @@ void TrackPanel::OnPrevTrack( bool shift )
       {
          SetFocusedTrack( p );   // move focus to next track down
          EnsureVisible( p );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
    }
@@ -6403,7 +6403,7 @@ void TrackPanel::OnNextTrack( bool shift )
       t = iter.First();
       SetFocusedTrack( t );
       EnsureVisible( t );
-      MakeParentModifyState();
+      MakeParentModifyState(false);
       return;
    }
 
@@ -6431,7 +6431,7 @@ void TrackPanel::OnNextTrack( bool shift )
          mTracks->Select( t, false );
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
       if( tSelected && !nSelected )
@@ -6439,7 +6439,7 @@ void TrackPanel::OnNextTrack( bool shift )
          mTracks->Select( n, true );
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
       if( !tSelected && nSelected )
@@ -6447,7 +6447,7 @@ void TrackPanel::OnNextTrack( bool shift )
          mTracks->Select( n, false );
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
       if( !tSelected && !nSelected )
@@ -6455,7 +6455,7 @@ void TrackPanel::OnNextTrack( bool shift )
          mTracks->Select( t, true );
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
    }
@@ -6471,7 +6471,7 @@ void TrackPanel::OnNextTrack( bool shift )
             n = iter.First();
             SetFocusedTrack( n );   // Wrap to the first track
             EnsureVisible( n );
-            MakeParentModifyState();
+            MakeParentModifyState(false);
             return;
          }
          else
@@ -6484,7 +6484,7 @@ void TrackPanel::OnNextTrack( bool shift )
       {
          SetFocusedTrack( n );   // move focus to next track down
          EnsureVisible( n );
-         MakeParentModifyState();
+         MakeParentModifyState(false);
          return;
       }
    }
@@ -6500,7 +6500,7 @@ void TrackPanel::OnToggle()
 
    mTracks->Select( t, !t->GetSelected() );
    EnsureVisible( t );
-   MakeParentModifyState();
+   MakeParentModifyState(false);
 
    mAx->Updated();
 
@@ -6536,7 +6536,7 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl, bool keyup )
          return;
       }
 
-      MakeParentModifyState();
+      MakeParentModifyState(false);
       return;
    }
 
@@ -6650,7 +6650,7 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
          return;
       }
 
-      MakeParentModifyState();
+      MakeParentModifyState(false);
       return;
    }
 
@@ -6812,7 +6812,7 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
          mViewInfo->sel1 = indicator;
       }
 
-      MakeParentModifyState();
+      MakeParentModifyState(false);
       Refresh(false);
    }
    else
@@ -6869,7 +6869,7 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
          }
       }
       Refresh( false );
-      MakeParentModifyState();
+      MakeParentModifyState(false);
    }
 }
 
@@ -6943,7 +6943,7 @@ void TrackPanel::OnCursorMove(bool forward, bool jump, bool longjump )
       // Make sure it's visible
       ScrollIntoView( mViewInfo->sel0 );
 
-      MakeParentModifyState();
+      MakeParentModifyState(false);
    }
 }
 
@@ -7574,7 +7574,7 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
 #endif
       UpdateVRuler(wt);
    }
-   MakeParentModifyState(); //v Doesn't really warrant AutoSave. Maybe add bWantAutoSave param if there are more.
+   MakeParentModifyState(true);
    mPopupMenuTarget = NULL;
    Refresh(false);
 }
@@ -7931,7 +7931,7 @@ void TrackPanel::OnChangeOctave(wxCommandEvent & event)
    bool bDown = (OnDownOctaveID == event.GetId());
    t->SetBottomNote(t->GetBottomNote() + ((bDown) ? -12 : 12));
 
-   MakeParentModifyState();
+   MakeParentModifyState(true);
    Refresh(false);
 #endif
 }

@@ -1922,7 +1922,7 @@ void AudacityProject::OnPlayStopSelect()
       if( mViewInfo.sel1 < mViewInfo.sel0 ) {
          mViewInfo.sel1 = mViewInfo.sel0;
       }
-      ModifyState();
+      ModifyState(false);           // without bWantsAutoSave
       toolbar->OnStop(evt);
    }
    else if (!gAudioIO->IsBusy()) {
@@ -1945,7 +1945,7 @@ void AudacityProject::OnStopSelect()
          mViewInfo.sel1 = mViewInfo.sel0;
       }
       GetControlToolBar()->OnStop(evt);
-      ModifyState();
+      ModifyState(false);           // without bWantsAutoSave
    }
 }
 
@@ -2114,7 +2114,7 @@ void AudacityProject::OnSkipStart()
    wxCommandEvent evt;
 
    GetControlToolBar()->OnRewind(evt);
-   ModifyState();
+   ModifyState(false);
 }
 
 void AudacityProject::OnSkipEnd()
@@ -2122,7 +2122,7 @@ void AudacityProject::OnSkipEnd()
    wxCommandEvent evt;
 
    GetControlToolBar()->OnFF(evt);
-   ModifyState();
+   ModifyState(false);
 }
 
 void AudacityProject::OnSeekLeftShort()
@@ -2148,13 +2148,13 @@ void AudacityProject::OnSeekRightLong()
 void AudacityProject::OnSelToStart()
 {
    Rewind(true);
-   ModifyState();
+   ModifyState(false);
 }
 
 void AudacityProject::OnSelToEnd()
 {
    SkipEnd(true);
-   ModifyState();
+   ModifyState(false);
 }
 
 void AudacityProject::OnCursorUp()
@@ -2281,7 +2281,7 @@ void AudacityProject::OnSetLeftSelection()
 
    if (bSelChanged) 
    {
-      ModifyState();
+      ModifyState(false);
       mTrackPanel->Refresh(false);
    }
 }
@@ -2323,7 +2323,7 @@ void AudacityProject::OnSetRightSelection()
 
    if (bSelChanged) 
    {
-      ModifyState();
+      ModifyState(false);
       mTrackPanel->Refresh(false);
    }
 }
@@ -2642,7 +2642,7 @@ void AudacityProject::OnZeroCrossing()
          mViewInfo.sel1 = mViewInfo.sel0;
    }
 
-   ModifyState();
+   ModifyState(false);
 
    mTrackPanel->Refresh(false);
 }
@@ -4174,7 +4174,7 @@ void AudacityProject::OnSelectAll()
    mViewInfo.sel0 = mTracks->GetMinOffset();
    mViewInfo.sel1 = mTracks->GetEndTime();
 
-   ModifyState();
+   ModifyState(false);
    
    mTrackPanel->Refresh(false);
    if (mMixerBoard)
@@ -4185,7 +4185,7 @@ void AudacityProject::OnSelectNone()
 {
    this->SelectNone();
    mViewInfo.sel1 = mViewInfo.sel0;
-   ModifyState();
+   ModifyState(false);
 }
 
 void AudacityProject::OnSelectCursorEnd()
@@ -4206,7 +4206,7 @@ void AudacityProject::OnSelectCursorEnd()
 
    mViewInfo.sel1 = maxEndOffset;
 
-   ModifyState();
+   ModifyState(false);
    
    mTrackPanel->Refresh(false);
 }
@@ -4229,7 +4229,7 @@ void AudacityProject::OnSelectStartCursor()
 
    mViewInfo.sel0 = minOffset;
 
-   ModifyState();
+   ModifyState(false);
    
    mTrackPanel->Refresh(false);
 }
@@ -4247,7 +4247,7 @@ void AudacityProject::OnSelectSyncLockSel()
    }
 
    if (selected)
-      ModifyState();
+      ModifyState(false);
 
    mTrackPanel->Refresh(false);
    if (mMixerBoard)
@@ -4261,7 +4261,7 @@ void AudacityProject::OnSelectAllTracks()
       t->SetSelected(true);
    }
 
-   ModifyState();
+   ModifyState(false);
 
    mTrackPanel->Refresh(false);
    if (mMixerBoard)
@@ -4447,7 +4447,7 @@ void AudacityProject::OnZoomFitV()
 
    mVsbar->SetThumbPosition(0);
    RedrawProject();
-   ModifyState();
+   ModifyState(true);
 }
 
 void AudacityProject::OnZoomSel()
@@ -4867,7 +4867,7 @@ void AudacityProject::OnSelectionRestore()
    mViewInfo.sel0 = mSel0save;
    mViewInfo.sel1 = mSel1save;
 
-   ModifyState();
+   ModifyState(false);
    
    mTrackPanel->Refresh(false);
 }
@@ -4891,7 +4891,7 @@ void AudacityProject::OnCursorTrackStart()
    if (minOffset < 0.0) minOffset = 0.0;
    mViewInfo.sel0 = minOffset;
    mViewInfo.sel1 = minOffset;
-   ModifyState();
+   ModifyState(false);
    mTrackPanel->ScrollIntoView(mViewInfo.sel0);
    mTrackPanel->Refresh(false);
 }
@@ -4916,7 +4916,7 @@ void AudacityProject::OnCursorTrackEnd()
 
    mViewInfo.sel0 = maxEndOffset;
    mViewInfo.sel1 = maxEndOffset;
-   ModifyState();
+   ModifyState(false);
    mTrackPanel->ScrollIntoView(mViewInfo.sel1);
    mTrackPanel->Refresh(false);
 }
@@ -4924,7 +4924,7 @@ void AudacityProject::OnCursorTrackEnd()
 void AudacityProject::OnCursorSelStart()
 {
    mViewInfo.sel1 = mViewInfo.sel0;
-   ModifyState();
+   ModifyState(false);
    mTrackPanel->ScrollIntoView(mViewInfo.sel0);
    mTrackPanel->Refresh(false);
 }
@@ -4932,7 +4932,7 @@ void AudacityProject::OnCursorSelStart()
 void AudacityProject::OnCursorSelEnd()
 {
    mViewInfo.sel0 = mViewInfo.sel1;
-   ModifyState();
+   ModifyState(false);
    mTrackPanel->ScrollIntoView(mViewInfo.sel1);
    mTrackPanel->Refresh(false);
 }
@@ -5791,7 +5791,7 @@ void AudacityProject::OnCollapseAllTracks()
       t = iter.Next();
    }
 
-   ModifyState();
+   ModifyState(true);
    RedrawProject();
 }
 
@@ -5806,7 +5806,7 @@ void AudacityProject::OnExpandAllTracks()
       t = iter.Next();
    }
 
-   ModifyState();
+   ModifyState(true);
    RedrawProject();
 }
 
@@ -5822,7 +5822,7 @@ void AudacityProject::OnMuteAllTracks()
       t = iter.Next();
    }
 
-   ModifyState();
+   ModifyState(true);
    RedrawProject();
    if (mMixerBoard)
       mMixerBoard->UpdateMute();
@@ -5839,7 +5839,7 @@ void AudacityProject::OnUnMuteAllTracks()
       t = iter.Next();
    }
 
-   ModifyState();
+   ModifyState(true);
    RedrawProject();
    if (mMixerBoard)
       mMixerBoard->UpdateMute();

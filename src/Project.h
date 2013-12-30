@@ -339,7 +339,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual void TP_OnPlayKey();
    virtual void TP_PushState(wxString longDesc, wxString shortDesc,
                              int flags);
-   virtual void TP_ModifyState();
+   virtual void TP_ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
+                                                        // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    virtual void TP_RedrawScrollbars();
    virtual void TP_ScrollLeft();
    virtual void TP_ScrollRight();
@@ -410,7 +411,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void ClearClipboard();
    void InitialState();
-   void ModifyState();
+   void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
+                                             // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    void PopState(TrackList * l);
    
    void UpdateLyrics();
