@@ -26,9 +26,12 @@ public:
     // Bit masks for ToString()
     enum Style
     {
-        Style_None              = 0x00,
-        Style_WithThousandsSep  = 0x01,
-        Style_NoTrailingZeroes  = 0x02      // Only for floating point numbers
+        Style_None                = 0x00,
+        Style_WithThousandsSep    = 0x01,
+        Style_NoTrailingZeroes    = 0x02,     // Only for floating point numbers
+        Style_OneTrailingZero     = 0x04,     // Only for floating point numbers
+        Style_TwoTrailingZeroes   = 0x08,     // Only for floating point numbers
+        Style_ThreeTrailingZeroes = 0x10      // Only for floating point numbers
     };
 
     // Format a number as a string. By default, the thousands separator is
@@ -75,7 +78,7 @@ private:
     // Remove trailing zeroes and, if there is nothing left after it, the
     // decimal separator itself from a string representing a floating point
     // number. Also used by ToString().
-    static void RemoveTrailingZeroes(wxString& s);
+    static void RemoveTrailingZeroes(wxString& s, size_t retain = 0);
 
     // Remove all thousands separators from a string representing a number.
     static void RemoveThousandsSeparators(wxString& s);

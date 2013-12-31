@@ -65,6 +65,7 @@ effects from this one class.
 #include <iostream>
 #include <ostream>
 #include <sstream>
+#include <float.h>
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(NyqControlArray);
@@ -785,7 +786,7 @@ bool EffectNyquist::ProcessOne()
          // decimal separator which may be a comma in some countries.
          cmd += wxString::Format(wxT("(setf %s %s)\n"),
                                  mControls[j].var.c_str(),
-                                 Internat::ToString(mControls[j].val).c_str());
+                                 Internat::ToString(mControls[j].val, 14).c_str());
       }
       else if (mControls[j].type == NYQ_CTRL_INT || 
             mControls[j].type == NYQ_CTRL_CHOICE) {
@@ -1225,13 +1226,22 @@ NyquistDialog::NyquistDialog(wxWindow * parent, wxWindowID id,
                                wxDefaultPosition, wxSize(60, -1));
          item->SetName(ctrl->name);
          if (ctrl->type == NYQ_CTRL_REAL) {
-            wxFloatingPointValidator<double> vld(2, &ctrl->val);
-            vld.SetRange(ctrl->low, ctrl->high);
+            // > 12 decimal places can cause rounding errors in display.
+            wxFloatingPointValidator<double> vld(12, &ctrl->val);
+            vld.SetRange(-FLT_MAX, FLT_MAX);
+            // Set number of decimal places
+            if (ctrl->high - ctrl->low < 10) {
+               vld.SetStyle(wxNUM_VAL_THREE_TRAILING_ZEROES);
+            } else if (ctrl->high - ctrl->low < 100) {
+               vld.SetStyle(wxNUM_VAL_TWO_TRAILING_ZEROES);
+            } else {
+               vld.SetStyle(wxNUM_VAL_ONE_TRAILING_ZERO);
+            }
             item->SetValidator(vld);
          }
          else {
             wxIntegerValidator<double> vld(&ctrl->val);
-            vld.SetRange(ctrl->low, ctrl->high);
+            vld.SetRange(INT_MIN, INT_MAX);
             item->SetValidator(vld);
          }
 
@@ -1355,7 +1365,9 @@ void NyquistDialog::OnText(wxCommandEvent &event)
    wxTextCtrl *text = (wxTextCtrl *)FindWindow(ID_NYQ_TEXT + ctrlId);
    wxASSERT(text);
 
-   if (ctrl->type != NYQ_CTRL_STRING) {
+   if (ctrl->type == NYQ_CTRL_STRING) {
+      ctrl->valStr = text->GetValue();
+   } else {
       text->GetValidator()->TransferFromWindow();
       wxSlider *slider = (wxSlider *)FindWindow(ID_NYQ_SLIDER + ctrlId);
       wxASSERT(slider);

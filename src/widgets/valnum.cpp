@@ -52,6 +52,12 @@ int wxNumValidatorBase::GetFormatFlags() const
         flags |= wxNumberFormatter::Style_WithThousandsSep;
     if ( m_style & wxNUM_VAL_NO_TRAILING_ZEROES )
         flags |= wxNumberFormatter::Style_NoTrailingZeroes;
+    if ( m_style & wxNUM_VAL_ONE_TRAILING_ZERO )
+        flags |= wxNumberFormatter::Style_OneTrailingZero;
+    if ( m_style & wxNUM_VAL_TWO_TRAILING_ZEROES )
+        flags |= wxNumberFormatter::Style_TwoTrailingZeroes;
+    if ( m_style & wxNUM_VAL_THREE_TRAILING_ZEROES )
+        flags |= wxNumberFormatter::Style_ThreeTrailingZeroes;
 
     return flags;
 }
@@ -226,6 +232,13 @@ wxIntegerValidatorBase::IsCharOk(const wxString& val, int pos, wxChar ch) const
     LongestValueType value;
     if ( !FromString(GetValueAfterInsertingChar(val, pos, ch), &value) )
         return false;
+
+    wxString smin = ToString(m_min);
+    wxString smax = ToString(m_max);
+    if ( pos < (int) smin.Length() )
+       return true;
+    if ( pos < (int) smax.Length() - 1 )
+       return true;
 
     return IsInRange(value);
 }

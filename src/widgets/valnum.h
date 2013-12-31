@@ -27,7 +27,10 @@ enum wxNumValidatorStyle
     wxNUM_VAL_DEFAULT               = 0x0,
     wxNUM_VAL_THOUSANDS_SEPARATOR   = 0x1,
     wxNUM_VAL_ZERO_AS_BLANK         = 0x2,
-    wxNUM_VAL_NO_TRAILING_ZEROES    = 0x4
+    wxNUM_VAL_NO_TRAILING_ZEROES    = 0x4,
+    wxNUM_VAL_ONE_TRAILING_ZERO     = 0x8,
+    wxNUM_VAL_TWO_TRAILING_ZEROES   = 0x10,
+    wxNUM_VAL_THREE_TRAILING_ZEROES = 0x20
 };
 
 // ----------------------------------------------------------------------------
@@ -264,6 +267,12 @@ protected:
         : wxNumValidatorBase(style)
     {
         wxASSERT_MSG( !(style & wxNUM_VAL_NO_TRAILING_ZEROES),
+                      wxT("This style doesn't make sense for integers.") );
+        wxASSERT_MSG( !(style & wxNUM_VAL_ONE_TRAILING_ZERO),
+                      wxT("This style doesn't make sense for integers.") );
+        wxASSERT_MSG( !(style & wxNUM_VAL_TWO_TRAILING_ZEROES),
+                      wxT("This style doesn't make sense for integers.") );
+        wxASSERT_MSG( !(style & wxNUM_VAL_THREE_TRAILING_ZEROES),
                       wxT("This style doesn't make sense for integers.") );
     }
 

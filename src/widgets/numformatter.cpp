@@ -32,6 +32,7 @@
 #include "wx/intl.h"
 
 #include <locale.h> // for setlocale and LC_ALL
+#include <wx/log.h>
 
 // ----------------------------------------------------------------------------
 // local helpers
@@ -222,6 +223,12 @@ wxString wxNumberFormatter::PostProcessIntString(wxString s, int style)
 
     wxASSERT_MSG( !(style & Style_NoTrailingZeroes),
                   wxT("Style_NoTrailingZeroes can't be used with integer values") );
+    wxASSERT_MSG( !(style & Style_OneTrailingZero),
+                  wxT("Style_OneTrailingZero can't be used with integer values") );
+    wxASSERT_MSG( !(style & Style_TwoTrailingZeroes),
+                  wxT("Style_TwoTrailingZeroes can't be used with integer values") );
+    wxASSERT_MSG( !(style & Style_ThreeTrailingZeroes),
+                  wxT("Style_ThreeTrailingZeroes can't be used with integer values") );
 
     return s;
 }
@@ -258,9 +265,20 @@ wxString wxNumberFormatter::ToString(double val, int precision, int style)
     if ( style & Style_WithThousandsSep )
         AddThousandsSeparators(s);
 
-    if ( style & Style_NoTrailingZeroes )
-        RemoveTrailingZeroes(s);
+    if ( precision != -1 )
+    {
+        if ( style & Style_NoTrailingZeroes )
+            RemoveTrailingZeroes(s, 0);
 
+        if ( style & Style_OneTrailingZero )
+            RemoveTrailingZeroes(s, 1);
+
+        if ( style & Style_TwoTrailingZeroes )
+            RemoveTrailingZeroes(s, 2);
+
+        if ( style & Style_ThreeTrailingZeroes )
+            RemoveTrailingZeroes(s, 3);
+    }
     return s;
 }
 
@@ -295,21 +313,24 @@ void wxNumberFormatter::AddThousandsSeparators(wxString& s)
     }
 }
 
-void wxNumberFormatter::RemoveTrailingZeroes(wxString& s)
+void wxNumberFormatter::RemoveTrailingZeroes(wxString& s, size_t retain /* = 0 */)
 {
-    const size_t posDecSep = s.find(GetDecimalSeparator());
-    wxCHECK_RET( posDecSep != wxString::npos,
-                 wxString::Format(wxT("No decimal separator in \"%s\""), s.c_str()) );
-    wxCHECK_RET( posDecSep, wxT("Can't start with decimal separator" ));
+   const size_t posDecSep = s.find(GetDecimalSeparator());
+   wxCHECK_RET( posDecSep != wxString::npos,
+               wxString::Format(wxT("No decimal separator in \"%s\""), s.c_str()) );
+   wxCHECK_RET( posDecSep, wxT("Can't start with decimal separator" ));
 
-    // Find the last character to keep.
-    size_t posLastNonZero = s.find_last_not_of(wxT("0"));
+   // Find the last character to keep.
+   size_t posLastCharacterToKeep = s.find_last_not_of(wxT("0"));
 
-    // If it's the decimal separator itself, don't keep it neither.
-    if ( posLastNonZero == posDecSep )
-        posLastNonZero--;
+   // If it's the decimal separator itself, remove it.
+   if ((posLastCharacterToKeep == posDecSep) && (retain == 0)) {
+      posLastCharacterToKeep--;
+   } else if ((posLastCharacterToKeep - posDecSep) < retain) {
+      posLastCharacterToKeep = retain + posDecSep;
+   }
 
-    s.erase(posLastNonZero + 1);
+   s.erase(posLastCharacterToKeep + 1);
 }
 
 // ----------------------------------------------------------------------------
