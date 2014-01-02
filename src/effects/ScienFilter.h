@@ -157,7 +157,6 @@ public:
    // constructors and destructors
    ScienFilterDialog(EffectScienFilter * effect,
       double loFreq, double hiFreq,
-      //long windowSize, wxString CurveName, bool disallowCustom,
       wxWindow *parent, wxWindowID id,
       const wxString &title,
       const wxPoint& pos = wxDefaultPosition,

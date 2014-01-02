@@ -44,7 +44,6 @@ a graph for EffectScienFilter.
 #include "../AColor.h"
 #include "../ShuttleGui.h"
 #include "../PlatformCompatibility.h"
-//#include "../Envelope.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../WaveTrack.h"
@@ -55,20 +54,17 @@ a graph for EffectScienFilter.
 #include "float_cast.h"
 
 #include <wx/bitmap.h>
-//#include <wx/button.h>
 #include <wx/msgdlg.h>
 #include <wx/brush.h>
 #include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/image.h>
 #include <wx/intl.h>
-//#include <wx/choice.h>
 #include <wx/stattext.h>
 #include <wx/string.h>
 #include <wx/textdlg.h>
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
-//#include <wx/checkbox.h>
 
 #if wxUSE_TOOLTIPS
 #include <wx/tooltip.h>
@@ -81,9 +77,6 @@ a graph for EffectScienFilter.
 
 #define PI 3.1415926535
 #define square(a) ((a)*(a))
-
-#define NUM_INTERP_CHOICES 3
-static wxString interpChoiceStrings[NUM_INTERP_CHOICES];
 
 #ifndef __min
   #define __min(a,b) ((a) < (b) ? (a) : (b))
@@ -191,6 +184,7 @@ bool EffectScienFilter::PromptUser()
       gPrefs->Write(wxT("/SciFilter/Cutoff"), mCutoff);
       gPrefs->Write(wxT("/SciFilter/Ripple"), mRipple);
       gPrefs->Write(wxT("/SciFilter/StopbandRipple"), mStopbandRipple);
+      gPrefs->Flush();
    }
 
    return true;
@@ -576,7 +570,7 @@ void ScienFilterDialog::MakeScienFilterDialog()
    dBRuler = new RulerPanel(this, wxID_ANY);
    dBRuler->ruler.SetBounds(0, 0, 100, 100); // Ruler can't handle small sizes
    dBRuler->ruler.SetOrientation(wxVERTICAL);
-   dBRuler->ruler.SetRange(30.0, -90.0);
+   dBRuler->ruler.SetRange(30.0, -120.0);
    dBRuler->ruler.SetFormat(Ruler::LinearDBFormat);
    dBRuler->ruler.SetUnits(_("dB"));
    dBRuler->ruler.SetLabelEdges(true);
