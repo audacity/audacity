@@ -673,7 +673,7 @@ void CompressorDialog::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxCENTER, false);
    {
       /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
-      mGainCheckBox = S.AddCheckBox(_("Make-up gain for 0dB after compressing"),
+      mGainCheckBox = S.AddCheckBox(_("Make-up gain for 0 dB after compressing"),
                                     wxT("true"));
       mPeakCheckBox = S.AddCheckBox(_("Compress based on Peaks"),
                                     wxT("false"));
