@@ -613,7 +613,7 @@ void ScienFilterDialog::MakeScienFilterDialog()
    // -------------------------------------------------------------------
    // ROW 2 and 3: Type, Order, Ripple, Subtype, Cutoff
    // -------------------------------------------------------------------
-   szr3 = new wxFlexGridSizer (8, 0, 0);
+   szr3 = new wxFlexGridSizer (6, 0, 0);
    szr3->SetHGap(2);
    szr3->SetVGap(5);
    flagslabel.Border(wxLEFT, 12).Align(wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL );
@@ -654,17 +654,19 @@ void ScienFilterDialog::MakeScienFilterDialog()
    st->SetName(wxT(""));   // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    szr3->Add(st);    // empty field in grid to balance Hz in next row
 
-   st = new wxStaticText(this, wxID_ANY, _("&Passband Ripple:"));
+   szrPass = new wxBoxSizer( wxHORIZONTAL );
+   st = new wxStaticText(this, wxID_ANY, _("Maximum &Passband Attenuation:"));
    st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   szr3->Add (st , flagslabel );
+   szrPass->Add (st , flagslabel );
    wxSize Size(wxDefaultSize);
    Size.SetWidth (40);
    mRippleCtl = new wxTextCtrl (this, ID_RIPPLE, wxT("0.0"), wxDefaultPosition, Size);
-   mRippleCtl->SetName( _("Passband Ripple(db):"));
-   szr3->Add (mRippleCtl, 0 );
+   mRippleCtl->SetName( _("Maximum Passband Attenuation(db):"));
+   szrPass->Add (mRippleCtl, 0 );
    st = new wxStaticText(this, wxID_ANY, _("dB"));
    st->SetName(st->GetLabel());  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   szr3->Add( st, flagsunits );
+   szrPass->Add( st, flagsunits );
+   szr3->Add(szrPass);
 
    st = new wxStaticText(this, wxID_ANY, _("&Subtype:")); 
    szr3->Add(st, flagslabel );
@@ -686,16 +688,18 @@ void ScienFilterDialog::MakeScienFilterDialog()
    st->SetName(st->GetLabel());  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    szr3->Add(st,flagsunits);
 
-   st = new wxStaticText(this, wxID_ANY, _("S&topband Ripple:") );
+   szrStop = new wxBoxSizer( wxHORIZONTAL );
+   st = new wxStaticText(this, wxID_ANY, _("Minimum S&topband attenuation:") );
    st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   szr3->Add( st, flagslabel );
+   szrStop->Add( st, flagslabel );
    Size.SetWidth (40);
    mStopbandRippleCtl = new wxTextCtrl (this, ID_STOPBAND_RIPPLE, wxT("0.0"), wxDefaultPosition, Size);
-   mStopbandRippleCtl->SetName(_("Stopband Ripple(dB):"));
-   szr3->Add (mStopbandRippleCtl, 0 );
+   mStopbandRippleCtl->SetName(_("Minimum Stopband attenuation(dB):"));
+   szrStop->Add (mStopbandRippleCtl, 0 );
    st = new wxStaticText(this, wxID_ANY, _("dB"));
-   szr3->Add( st, flagsunits );
    st->SetName(st->GetLabel());  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   szrStop->Add( st, flagsunits );
+   szr3->Add(szrStop);
 
    // -------------------------------------------------------------------
    // ROW 4: Subtype, Cutoff
@@ -1258,24 +1262,30 @@ void ScienFilterDialog::EnableDisableRippleCtl (int FilterType)
 {
    if (FilterType == 0)    // Butterworth
    {
-      mRippleCtl->SetEditable (false);
+      szrPass->Show(false);
+      szrStop->Show(false);
+/*      mRippleCtl->SetEditable (false);
       mStopbandRippleCtl->SetEditable (false);
       mRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);
-      mStopbandRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);
+      mStopbandRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);*/
    }
    else if (FilterType == 1)    // Chebyshev Type1
    {
-      mRippleCtl->SetEditable (true);
+      szrPass->Show(true);
+      szrStop->Show(false);
+/*      mRippleCtl->SetEditable (true);
       mStopbandRippleCtl->SetEditable (false);
       mRippleCtl->SetBackgroundColour (*wxWHITE);
-      mStopbandRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);
+      mStopbandRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);*/
    }
    else                        // Chebyshev Type2
    {
-      mRippleCtl->SetEditable (false);
+      szrPass->Show(false);
+      szrStop->Show(true);
+/*      mRippleCtl->SetEditable (false);
       mStopbandRippleCtl->SetEditable (true);
       mRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);
-      mStopbandRippleCtl->SetBackgroundColour (*wxWHITE);
+      mStopbandRippleCtl->SetBackgroundColour (*wxWHITE);*/
    }
 }
 

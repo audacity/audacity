@@ -247,6 +247,10 @@ private:
    wxTextCtrl* mStopbandRippleCtl;
    wxTextCtrl* mCutoffCtl;
 
+   // sizers for pass and stop-band attenuations
+   wxBoxSizer *szrPass;
+   wxBoxSizer *szrStop;
+
 private:
    DECLARE_EVENT_TABLE()
 
