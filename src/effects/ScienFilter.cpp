@@ -146,7 +146,7 @@ bool EffectScienFilter::PromptUser()
    else
       hiFreq = ((float)(GetActiveProject()->GetRate())/2.);
 
-   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, mParent, -1, _("Scientific Filter"));
+   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, mParent, -1, _("Classic Filter"));
 
    dlog.dBMin = mdBMin;
    dlog.dBMax = mdBMax;
@@ -199,9 +199,9 @@ bool EffectScienFilter::DontPromptUser()
       hiFreq = ((float)(t->GetRate())/2.);
    else
       hiFreq = ((float)(GetActiveProject()->GetRate())/2.);
-   /*i18n-hint: The 'scientific filter' is an audio effect.  It's a low-pass or high-pass 
-   filter with specfic characteristics.*/
-   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, NULL, -1, _("Scientific Filter"));
+   /*i18n-hint: The 'Classic  Filter' is an audio effect.  It's a low-pass or high-pass 
+   filter with specfic characteristics. */
+   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, NULL, -1, _("Classic Filter"));
    dlog.dBMin = mdBMin;
    dlog.dBMax = mdBMax;
    dlog.Order = mOrder;
@@ -661,7 +661,7 @@ void ScienFilterDialog::MakeScienFilterDialog()
    wxSize Size(wxDefaultSize);
    Size.SetWidth (40);
    mRippleCtl = new wxTextCtrl (this, ID_RIPPLE, wxT("0.0"), wxDefaultPosition, Size);
-   mRippleCtl->SetName( _("Maximum Passband Attenuation(db):"));
+   mRippleCtl->SetName( _("Maximum passband attenuation (dB):"));
    szrPass->Add (mRippleCtl, 0 );
    st = new wxStaticText(this, wxID_ANY, _("dB"));
    st->SetName(st->GetLabel());  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
@@ -689,12 +689,12 @@ void ScienFilterDialog::MakeScienFilterDialog()
    szr3->Add(st,flagsunits);
 
    szrStop = new wxBoxSizer( wxHORIZONTAL );
-   st = new wxStaticText(this, wxID_ANY, _("Minimum S&topband attenuation:") );
+   st = new wxStaticText(this, wxID_ANY, _("Minimum S&topband Attenuation:") );
    st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    szrStop->Add( st, flagslabel );
    Size.SetWidth (40);
    mStopbandRippleCtl = new wxTextCtrl (this, ID_STOPBAND_RIPPLE, wxT("0.0"), wxDefaultPosition, Size);
-   mStopbandRippleCtl->SetName(_("Minimum Stopband attenuation(dB):"));
+   mStopbandRippleCtl->SetName(_("Minimum stopband attenuation (dB):"));
    szrStop->Add (mStopbandRippleCtl, 0 );
    st = new wxStaticText(this, wxID_ANY, _("dB"));
    st->SetName(st->GetLabel());  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
