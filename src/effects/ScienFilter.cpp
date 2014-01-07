@@ -633,7 +633,7 @@ void ScienFilterDialog::MakeScienFilterDialog()
    szr3->Add (mFilterTypeCtl);
 
    /*i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.*/
-   st = new wxStaticText(this, wxID_ANY, _("&Order:"));
+   st = new wxStaticText(this, wxID_ANY, _("O&rder:"));
    st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    szr3->Add(st, flagslabel );
    mFilterOrderCtl = new wxChoice (this, ID_FILTER_ORDER);
