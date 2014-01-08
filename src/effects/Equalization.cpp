@@ -254,6 +254,26 @@ EffectEqualization::~EffectEqualization()
 
 bool EffectEqualization::Init()
 {
+   int selcount = 0;
+   double rate;
+   TrackListIterator iter(GetActiveProject()->GetTracks());
+   Track *t = iter.First();
+   while (t) {
+      if (t->GetSelected() && t->GetKind() == Track::Wave) {
+         WaveTrack *track = (WaveTrack *)t;
+         if (selcount==0) {
+            rate = track->GetRate();
+         }
+         else {
+            if (track->GetRate() != rate) {
+               wxMessageBox(_("To apply Equalization, all selected tracks must have the same sample rate."));
+               return(false);
+            }
+         }
+         selcount++;
+      }
+      t = iter.Next();
+   }
    return(true);
 }
 
