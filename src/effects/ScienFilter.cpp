@@ -677,7 +677,7 @@ void ScienFilterDialog::MakeScienFilterDialog()
    mFilterSubTypeCtl->Append (_("Highpass"));
    szr3->Add (mFilterSubTypeCtl);
 
-   st = new wxStaticText(this, wxID_ANY, _("&Cutoff:"));
+   st = new wxStaticText(this, wxID_ANY, _("C&utoff:"));
    st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    szr3->Add( st, flagslabel );
    Size.SetWidth (50);
