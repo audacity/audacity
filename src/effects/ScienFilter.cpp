@@ -165,7 +165,7 @@ bool EffectScienFilter::PromptUser()
    else
       hiFreq = ((float)(GetActiveProject()->GetRate())/2.);
 
-   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, mParent, -1, _("Classic Filter"));
+   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, mParent, -1, _("Classic Filters"));
 
    dlog.dBMin = mdBMin;
    dlog.dBMax = mdBMax;
@@ -218,9 +218,9 @@ bool EffectScienFilter::DontPromptUser()
       hiFreq = ((float)(t->GetRate())/2.);
    else
       hiFreq = ((float)(GetActiveProject()->GetRate())/2.);
-   /*i18n-hint: The 'Classic  Filter' is an audio effect.  It's a low-pass or high-pass 
+   /*i18n-hint: 'Classic Filters' is an audio effect.  It's a low-pass or high-pass 
    filter with specfic characteristics. */
-   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, NULL, -1, _("Classic Filter"));
+   ScienFilterDialog dlog(this, ((double)loFreqI), hiFreq, NULL, -1, _("Classic Filters"));
    dlog.dBMin = mdBMin;
    dlog.dBMax = mdBMax;
    dlog.Order = mOrder;

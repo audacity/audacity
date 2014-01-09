@@ -58,7 +58,7 @@ public:
    }
 
    virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Classic Filter"));
+      return wxString(wxT("Classic Filters"));
    }
 
    virtual wxString GetEffectAction() {
