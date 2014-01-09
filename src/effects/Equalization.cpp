@@ -255,7 +255,7 @@ EffectEqualization::~EffectEqualization()
 bool EffectEqualization::Init()
 {
    int selcount = 0;
-   double rate;
+   double rate = 0.0;
    TrackListIterator iter(GetActiveProject()->GetTracks());
    Track *t = iter.First();
    while (t) {
