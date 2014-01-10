@@ -254,7 +254,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          S.AddFixedText(_("Volume    "));
 
          //Foreground
-         S.AddFixedText(_("Foreground:"), false);
+         S.AddFixedText(_("&Foreground:"), false);
          if (mForegroundStartT == NULL)
          {
             mForegroundStartT = new
@@ -287,12 +287,12 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          }
          S.AddWindow(mForegroundEndT);
 
-         m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(_("Measure selection"));
+         m_pButton_UseCurrentF = S.Id(ID_BUTTON_USECURRENTF).AddButton(_("&Measure selection"));
          mForegroundRMSText=S.Id(ID_FOREGROUNDDB_TEXT).AddTextBox(wxT(""), wxT(""), 12);
          mForegroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
 
          //Background
-         S.AddFixedText(_("Background:"));
+         S.AddFixedText(_("&Background:"));
          if (mBackgroundStartT == NULL)
          {
             mBackgroundStartT = new
@@ -325,7 +325,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          }
          S.AddWindow(mBackgroundEndT);
 
-         m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(_("Measure selection"));
+         m_pButton_UseCurrentB = S.Id(ID_BUTTON_USECURRENTB).AddButton(_("Mea&sure selection"));
          mBackgroundRMSText = S.Id(ID_BACKGROUNDDB_TEXT).AddTextBox(wxT(""), wxT(""), 12);
          mBackgroundRMSText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
       }
@@ -338,14 +338,14 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    {
       S.StartMultiColumn(3, wxCENTER);
       {
-         S.AddFixedText(_("Contrast Result:"));
+         S.AddFixedText(_("Co&ntrast Result:"));
          mPassFailText = S.Id(ID_RESULTS_TEXT).AddTextBox(wxT(""), wxT(""), 40);
          mPassFailText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
-         m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("Reset"));
-         S.AddFixedText(_("Difference:"));
+         m_pButton_Reset = S.Id(ID_BUTTON_RESET).AddButton(_("R&eset"));
+         S.AddFixedText(_("&Difference:"));
          mDiffText = S.Id(ID_RESULTSDB_TEXT).AddTextBox(wxT(""), wxT(""), 30);
          mDiffText->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(ContrastDialog::OnChar));
-         m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("Export"));
+         m_pButton_Export = S.Id(ID_BUTTON_EXPORT).AddButton(_("E&xport..."));
       }
       S.EndMultiColumn();
    }
@@ -353,9 +353,9 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol(1);
-      m_pButton_GetURL = S.Id(ID_BUTTON_GETURL).AddButton(_("WCAG 2 Help"));
+      m_pButton_GetURL = S.Id(ID_BUTTON_GETURL).AddButton(_("WCAG 2 &Help"));
       S.AddFixedText(wxT(" "));   // spacer
-      m_pButton_Close = S.Id(ID_BUTTON_CLOSE).AddButton(_("Close"));
+      m_pButton_Close = S.Id(ID_BUTTON_CLOSE).AddButton(_("&Close"));
    }
    S.EndMultiColumn();
    Layout();
