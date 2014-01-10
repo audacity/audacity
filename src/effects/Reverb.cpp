@@ -344,15 +344,15 @@ void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
       s.SetStyle(wxSL_HORIZONTAL);
       mToneHighWidget = s.Id(ID_ToneHigh_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
-      mWetGainText = s.Id(ID_WetGain_TEXT).AddSpinCtrl(_("We&t Gain (dB):"), 0, 10, -20);
+      mWetGainText = s.Id(ID_WetGain_TEXT).AddSpinCtrl(_("Wet &Gain (dB):"), 0, 10, -20);
       s.SetStyle(wxSL_HORIZONTAL);
       mWetGainWidget = s.Id(ID_WetGain_WIDGET).AddSlider(wxT(""), 0, 10, -20);
 
-      mDryGainText = s.Id(ID_DryGain_TEXT).AddSpinCtrl(_("Dry &Gain (dB):"), 0, 10, -20);
+      mDryGainText = s.Id(ID_DryGain_TEXT).AddSpinCtrl(_("Dr&y Gain (dB):"), 0, 10, -20);
       s.SetStyle(wxSL_HORIZONTAL);
       mDryGainWidget = s.Id(ID_DryGain_WIDGET).AddSlider(wxT(""), 0, 10, -20);
 
-      mStereoWidthText = s.Id(ID_StereoWidth_TEXT).AddSpinCtrl(_("Stereo Widt&h (%):"), 0, 100, 0);
+      mStereoWidthText = s.Id(ID_StereoWidth_TEXT).AddSpinCtrl(_("Stereo Wid&th (%):"), 0, 100, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mStereoWidthWidget = s.Id(ID_StereoWidth_WIDGET).AddSlider(wxT(""), 0, 100, 0);
    } 
