@@ -24,6 +24,7 @@ the general functionality for creating XML in UTF8 encoding.
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include <wx/defs.h>
 #include <wx/ffile.h>
 #include <wx/intl.h>
