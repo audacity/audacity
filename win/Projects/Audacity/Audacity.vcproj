@@ -1961,6 +1961,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\commands\OpenSaveCommands.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\commands\OpenSaveCommands.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\commands\PreferenceCommands.cpp"
 				>
 			</File>

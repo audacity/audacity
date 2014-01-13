@@ -30,6 +30,7 @@
 #include "SetProjectInfoCommand.h"
 #include "PreferenceCommands.h"
 #include "ImportExportCommands.h"
+#include "OpenSaveCommands.h"
 
 CommandDirectory *CommandDirectory::mInstance = NULL;
 
@@ -58,6 +59,8 @@ CommandDirectory::CommandDirectory()
    AddCommand(new GetPreferenceCommandType());
    AddCommand(new ImportCommandType());
    AddCommand(new ExportCommandType());
+   AddCommand(new OpenProjectCommandType());
+   AddCommand(new SaveProjectCommandType());
 }
 
 CommandDirectory::~CommandDirectory()

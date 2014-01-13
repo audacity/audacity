@@ -3551,6 +3551,41 @@ bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= 
    return true;
 }
 
+bool AudacityProject::SaveAs(const wxString newFileName, bool bWantSaveCompressed /*= false*/, bool addToHistory /*= true*/)
+{
+   wxString oldFileName = mFileName;
+
+   //check to see if the new project file already exists.  
+   //We should only overwrite it if this project already has the same name, where the user
+   //simply chose to use the save as command although the save command would have the effect.
+   if(mFileName!=newFileName && wxFileExists(newFileName)) {
+      wxMessageDialog m(
+         NULL, 
+         _("The project was not saved because the file name provided would overwrite another project.\nPlease try again and select an original name."), 
+         _("Error Saving Project"), 
+         wxOK|wxICON_ERROR);
+      m.ShowModal();
+      return false;
+   }
+   
+   mFileName = newFileName;
+   SetProjectTitle();
+
+   bool success = Save(false, true, bWantSaveCompressed);
+
+   if (success && addToHistory) {
+      wxGetApp().AddFileToHistory(mFileName);
+   } 
+   if (!success || bWantSaveCompressed) // bWantSaveCompressed doesn't actually change current project. 
+   {
+      // Reset file name on error
+      mFileName = oldFileName;
+      SetProjectTitle();
+   }
+
+   return(success);
+}
+
 bool AudacityProject::SaveAs(bool bWantSaveCompressed /*= false*/)
 {
    wxString path = wxPathOnly(mFileName);
