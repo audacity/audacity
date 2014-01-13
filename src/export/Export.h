@@ -29,7 +29,7 @@ class FileDialog;
 class TimeTrack;
 class Mixer;
 
-class FormatInfo
+class AUDACITY_DLL_API FormatInfo
 {
    public:
       FormatInfo(){};
@@ -43,12 +43,12 @@ class FormatInfo
       bool mCanMetaData;
 };
 
-WX_DECLARE_OBJARRAY(FormatInfo, FormatInfoArray);
+WX_DECLARE_USER_EXPORTED_OBJARRAY(FormatInfo, FormatInfoArray, AUDACITY_DLL_API);
 
 //----------------------------------------------------------------------------
 // ExportPlugin
 //----------------------------------------------------------------------------
-class ExportPlugin
+class AUDACITY_DLL_API ExportPlugin
 {
 public:
 
@@ -129,12 +129,12 @@ private:
    FormatInfoArray mFormatInfos;
 };
 
-WX_DECLARE_OBJARRAY(ExportPlugin *, ExportPluginArray);
+WX_DECLARE_USER_EXPORTED_OBJARRAY(ExportPlugin *, ExportPluginArray, AUDACITY_DLL_API);
 
 //----------------------------------------------------------------------------
 // Exporter
 //----------------------------------------------------------------------------
-class Exporter
+class  AUDACITY_DLL_API Exporter
 {
 public:
 

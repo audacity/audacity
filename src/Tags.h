@@ -50,7 +50,15 @@ class ShuttleGui;
 class TagsEditor;
 class ComboEditor;
 
-WX_DECLARE_STRING_HASH_MAP(wxString, TagMap);
+// We want a macro call like this:
+// WX_DECLARE_USER_EXPORTED_STRING_HASH_MAP(wxString, TagMap, AUDACITY_DLL_API);
+// Which wxWidgets does not supply!
+// So use this undocumented variant:
+WX_DECLARE_STRING_HASH_MAP_WITH_DECL( wxString, TagMap,class AUDACITY_DLL_API );
+// Doing this means we can export class Tags without any worry,
+// as every class it uses, including TagMap, is then exported.
+// It's better than using #pragma warning(disable: 4251)
+// and relying on the relevant parts of class Tags being private.
 
 #define TAG_TITLE     wxT("TITLE")
 #define TAG_ARTIST   wxT("ARTIST")
@@ -62,7 +70,7 @@ WX_DECLARE_STRING_HASH_MAP(wxString, TagMap);
 #define TAG_SOFTWARE wxT("Software")
 #define TAG_COPYRIGHT wxT("Copyright")
 
-class Tags: public XMLTagHandler {
+class AUDACITY_DLL_API Tags: public XMLTagHandler {
 
  public:
    Tags();  // constructor

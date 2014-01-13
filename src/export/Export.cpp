@@ -86,8 +86,8 @@ static void ExportCallback(void *cbdata, int index)
 //----------------------------------------------------------------------------
 #include <wx/arrimpl.cpp>
 
-WX_DEFINE_OBJARRAY(ExportPluginArray);
-WX_DEFINE_OBJARRAY(FormatInfoArray);
+WX_DEFINE_USER_EXPORTED_OBJARRAY(ExportPluginArray);
+WX_DEFINE_USER_EXPORTED_OBJARRAY(FormatInfoArray);
 
 ExportPlugin::ExportPlugin()
 {
