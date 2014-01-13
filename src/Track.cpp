@@ -788,7 +788,7 @@ void TrackList::ResizedEvent(const TrackListNode *node)
 
 void TrackList::Add(Track * t)
 {
-   TrackListNode *n = new TrackListNode();
+   TrackListNode *n = new TrackListNode;
    t->SetOwner(this, n);
 
    n->t = (Track *) t;
@@ -810,7 +810,7 @@ void TrackList::Add(Track * t)
 
 void TrackList::AddToHead(Track * t)
 {
-   TrackListNode *n = new TrackListNode();
+   TrackListNode *n = new TrackListNode;
    t->SetOwner(this, n);
 
    n->t = (Track *) t;

@@ -229,14 +229,6 @@ WX_DEFINE_OBJARRAY(TrackClipArray);
 #include "../images/Cursors.h"
 #include <iostream>
 
-#ifdef _DEBUG
-    #ifdef _MSC_VER
-        #undef THIS_FILE
-        static char*THIS_FILE= __FILE__;
-        #define new new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
-    #endif
-#endif
-
 #define kLeftInset 4
 #define kTopInset 4
 #define kTimerInterval 50 // milliseconds

@@ -65,14 +65,6 @@
 #include <wx/combobox.h>
 #include <wx/display.h>
 
-#ifdef _DEBUG
-    #ifdef _MSC_VER
-        #undef THIS_FILE
-        static char*THIS_FILE= __FILE__;
-        #define new new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
-    #endif
-#endif
-
 static const wxChar *DefaultGenres[] =
 {
    wxT("Blues"),
