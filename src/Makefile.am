@@ -247,6 +247,8 @@ audacity_SOURCES = \
 	commands/Keyboard.h \
 	commands/MessageCommand.cpp \
 	commands/MessageCommand.h \
+	commands/OpenSaveCommands.cpp \
+	commands/OpenSaveCommands.h \
 	commands/PreferenceCommands.cpp \
 	commands/PreferenceCommands.h \
 	commands/ResponseQueue.cpp \
