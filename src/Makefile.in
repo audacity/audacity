@@ -214,8 +214,16 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/ax_compiler_vendor.m4 \
 	$(top_srcdir)/m4/ax_cxx_check_flag.m4 \
 	$(top_srcdir)/m4/ax_cxxcpp_check_flag.m4 \
-	$(top_srcdir)/m4/ax_ld_check_flag.m4 $(top_srcdir)/m4/pkg.m4 \
-	$(top_srcdir)/m4/visibility.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/ax_ld_check_flag.m4 \
+	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/m4/po.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/visibility.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -315,7 +323,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	commands/HelpCommand.h commands/ImportExportCommands.cpp \
 	commands/ImportExportCommands.h commands/Keyboard.cpp \
 	commands/Keyboard.h commands/MessageCommand.cpp \
-	commands/MessageCommand.h commands/PreferenceCommands.cpp \
+	commands/MessageCommand.h commands/OpenSaveCommands.cpp \
+	commands/OpenSaveCommands.h commands/PreferenceCommands.cpp \
 	commands/PreferenceCommands.h commands/ResponseQueue.cpp \
 	commands/ResponseQueue.h commands/ScreenshotCommand.cpp \
 	commands/ScreenshotCommand.h commands/ScriptCommandRelay.cpp \
@@ -542,6 +551,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	commands/audacity-ImportExportCommands.$(OBJEXT) \
 	commands/audacity-Keyboard.$(OBJEXT) \
 	commands/audacity-MessageCommand.$(OBJEXT) \
+	commands/audacity-OpenSaveCommands.$(OBJEXT) \
 	commands/audacity-PreferenceCommands.$(OBJEXT) \
 	commands/audacity-ResponseQueue.$(OBJEXT) \
 	commands/audacity-ScreenshotCommand.$(OBJEXT) \
@@ -1129,7 +1139,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	commands/HelpCommand.h commands/ImportExportCommands.cpp \
 	commands/ImportExportCommands.h commands/Keyboard.cpp \
 	commands/Keyboard.h commands/MessageCommand.cpp \
-	commands/MessageCommand.h commands/PreferenceCommands.cpp \
+	commands/MessageCommand.h commands/OpenSaveCommands.cpp \
+	commands/OpenSaveCommands.h commands/PreferenceCommands.cpp \
 	commands/PreferenceCommands.h commands/ResponseQueue.cpp \
 	commands/ResponseQueue.h commands/ScreenshotCommand.cpp \
 	commands/ScreenshotCommand.h commands/ScriptCommandRelay.cpp \
@@ -1470,6 +1481,8 @@ commands/audacity-Keyboard.$(OBJEXT): commands/$(am__dirstamp) \
 	commands/$(DEPDIR)/$(am__dirstamp)
 commands/audacity-MessageCommand.$(OBJEXT): commands/$(am__dirstamp) \
 	commands/$(DEPDIR)/$(am__dirstamp)
+commands/audacity-OpenSaveCommands.$(OBJEXT):  \
+	commands/$(am__dirstamp) commands/$(DEPDIR)/$(am__dirstamp)
 commands/audacity-PreferenceCommands.$(OBJEXT):  \
 	commands/$(am__dirstamp) commands/$(DEPDIR)/$(am__dirstamp)
 commands/audacity-ResponseQueue.$(OBJEXT): commands/$(am__dirstamp) \
@@ -1991,6 +2004,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-ImportExportCommands.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-Keyboard.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-MessageCommand.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-OpenSaveCommands.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-PreferenceCommands.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-ResponseQueue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-ScreenshotCommand.Po@am__quote@
@@ -3674,6 +3688,20 @@ commands/audacity-MessageCommand.obj: commands/MessageCommand.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='commands/MessageCommand.cpp' object='commands/audacity-MessageCommand.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o commands/audacity-MessageCommand.obj `if test -f 'commands/MessageCommand.cpp'; then $(CYGPATH_W) 'commands/MessageCommand.cpp'; else $(CYGPATH_W) '$(srcdir)/commands/MessageCommand.cpp'; fi`
+
+commands/audacity-OpenSaveCommands.o: commands/OpenSaveCommands.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-OpenSaveCommands.o -MD -MP -MF commands/$(DEPDIR)/audacity-OpenSaveCommands.Tpo -c -o commands/audacity-OpenSaveCommands.o `test -f 'commands/OpenSaveCommands.cpp' || echo '$(srcdir)/'`commands/OpenSaveCommands.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) commands/$(DEPDIR)/audacity-OpenSaveCommands.Tpo commands/$(DEPDIR)/audacity-OpenSaveCommands.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='commands/OpenSaveCommands.cpp' object='commands/audacity-OpenSaveCommands.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o commands/audacity-OpenSaveCommands.o `test -f 'commands/OpenSaveCommands.cpp' || echo '$(srcdir)/'`commands/OpenSaveCommands.cpp
+
+commands/audacity-OpenSaveCommands.obj: commands/OpenSaveCommands.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-OpenSaveCommands.obj -MD -MP -MF commands/$(DEPDIR)/audacity-OpenSaveCommands.Tpo -c -o commands/audacity-OpenSaveCommands.obj `if test -f 'commands/OpenSaveCommands.cpp'; then $(CYGPATH_W) 'commands/OpenSaveCommands.cpp'; else $(CYGPATH_W) '$(srcdir)/commands/OpenSaveCommands.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) commands/$(DEPDIR)/audacity-OpenSaveCommands.Tpo commands/$(DEPDIR)/audacity-OpenSaveCommands.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='commands/OpenSaveCommands.cpp' object='commands/audacity-OpenSaveCommands.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o commands/audacity-OpenSaveCommands.obj `if test -f 'commands/OpenSaveCommands.cpp'; then $(CYGPATH_W) 'commands/OpenSaveCommands.cpp'; else $(CYGPATH_W) '$(srcdir)/commands/OpenSaveCommands.cpp'; fi`
 
 commands/audacity-PreferenceCommands.o: commands/PreferenceCommands.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT commands/audacity-PreferenceCommands.o -MD -MP -MF commands/$(DEPDIR)/audacity-PreferenceCommands.Tpo -c -o commands/audacity-PreferenceCommands.o `test -f 'commands/PreferenceCommands.cpp' || echo '$(srcdir)/'`commands/PreferenceCommands.cpp
