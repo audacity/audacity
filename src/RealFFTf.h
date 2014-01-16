@@ -6,6 +6,9 @@ typedef struct FFTParamType {
    int *BitReversed;
    fft_type *SinTable;
    int Points;
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   int pow2Bits;
+#endif
 } FFTParam;
 #define HFFT FFTParam *
 

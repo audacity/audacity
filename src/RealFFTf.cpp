@@ -1,54 +1,59 @@
 /*
- *     Program: REALFFTF.C
- *      Author: Philip Van Baren
- *        Date: 2 September 1993
- *
- * Description: These routines perform an FFT on real data to get a conjugate-symmetric
- *              output, and an inverse FFT on conjugate-symmetric input to get a real
- *              output sequence.
- *
- *              This code is for floating point data.
- *
- *              Modified 8/19/1998 by Philip Van Baren
- *                 - made the InitializeFFT and EndFFT routines take a structure
- *                   holding the length and pointers to the BitReversed and SinTable
- *                   tables.
- *              Modified 5/23/2009 by Philip Van Baren
- *                 - Added GetFFT and ReleaseFFT routines to retain common SinTable
- *                   and BitReversed tables so they don't need to be reallocated
- *                   and recomputed on every call.
- *                 - Added Reorder* functions to undo the bit-reversal
- *
- *  Copyright (C) 2009  Philip VanBaren
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
+*     Program: REALFFTF.C
+*      Author: Philip Van Baren
+*        Date: 2 September 1993
+*
+* Description: These routines perform an FFT on real data to get a conjugate-symmetric
+*              output, and an inverse FFT on conjugate-symmetric input to get a real
+*              output sequence.
+*
+*              This code is for floating point data.
+*
+*              Modified 8/19/1998 by Philip Van Baren
+*                 - made the InitializeFFT and EndFFT routines take a structure
+*                   holding the length and pointers to the BitReversed and SinTable
+*                   tables.
+*              Modified 5/23/2009 by Philip Van Baren
+*                 - Added GetFFT and ReleaseFFT routines to retain common SinTable
+*                   and BitReversed tables so they don't need to be reallocated
+*                   and recomputed on every call.
+*                 - Added Reorder* functions to undo the bit-reversal
+*
+*  Copyright (C) 2009  Philip VanBaren
+*
+*  This program is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software
+*  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "Experimental.h"
+
 #include "RealFFTf.h"
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+#include "RealFFTf48x.h"
+#endif
 
 #ifndef M_PI
 #define	M_PI		3.14159265358979323846  /* pi */
 #endif
 
 /*
- *  Initialize the Sine table and Twiddle pointers (bit-reversed pointers)
- *  for the FFT routine.
- */
+*  Initialize the Sine table and Twiddle pointers (bit-reversed pointers)
+*  for the FFT routine.
+*/
 HFFT InitializeFFT(int fftlen)
 {
    int i;
@@ -62,10 +67,10 @@ HFFT InitializeFFT(int fftlen)
       exit(8);
    }
    /*
-    *  FFT size is only half the number of data points
-    *  The full FFT output can be reconstructed from this FFT's output.
-    *  (This optimization can be made since the data is real.)
-    */
+   *  FFT size is only half the number of data points
+   *  The full FFT output can be reconstructed from this FFT's output.
+   *  (This optimization can be made since the data is real.)
+   */
    h->Points = fftlen/2;
 
    if((h->SinTable=(fft_type *)malloc(2*h->Points*sizeof(fft_type)))==NULL)
@@ -73,6 +78,7 @@ HFFT InitializeFFT(int fftlen)
       fprintf(stderr,"Error allocating memory for Sine table.\n");
       exit(8);
    }
+
    if((h->BitReversed=(int *)malloc(h->Points*sizeof(int)))==NULL)
    {
       fprintf(stderr,"Error allocating memory for BitReversed.\n");
@@ -86,19 +92,28 @@ HFFT InitializeFFT(int fftlen)
          temp=(temp >> 1) + (i&mask ? h->Points : 0);
 
       h->BitReversed[i]=temp;
-   }
+   } 
 
    for(i=0;i<h->Points;i++)
    {
       h->SinTable[h->BitReversed[i]  ]=(fft_type)-sin(2*M_PI*i/(2*h->Points));
       h->SinTable[h->BitReversed[i]+1]=(fft_type)-cos(2*M_PI*i/(2*h->Points));
    }
+
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   // new SSE FFT routines work on live data
+   for(i=0;i<32;i++)
+      if((1<<i)&fftlen)
+         h->pow2Bits=i;
+   InitializeFFT1x(fftlen);
+#endif
+
    return h;
 }
 
 /*
- *  Free up the memory allotted for Sin table and Twiddle Pointers
- */
+*  Free up the memory allotted for Sin table and Twiddle Pointers
+*/
 void EndFFT(HFFT h)
 {
    if(h->Points>0) {
@@ -157,23 +172,23 @@ void CleanupFFT()
 }
 
 /*
- *  Forward FFT routine.  Must call InitializeFFT(fftlen) first!
- *
- *  Note: Output is BIT-REVERSED! so you must use the BitReversed to
- *        get legible output, (i.e. Real_i = buffer[ h->BitReversed[i] ]
- *                                  Imag_i = buffer[ h->BitReversed[i]+1 ] )
- *        Input is in normal order.
- *
- * Output buffer[0] is the DC bin, and output buffer[1] is the Fs/2 bin
- * - this can be done because both values will always be real only
- * - this allows us to not have to allocate an extra complex value for the Fs/2 bin
- *
- *  Note: The scaling on this is done according to the standard FFT definition,
- *        so a unit amplitude DC signal will output an amplitude of (N)
- *        (Older revisions would progressively scale the input, so the output
- *        values would be similar in amplitude to the input values, which is
- *        good when using fixed point arithmetic)
- */
+*  Forward FFT routine.  Must call InitializeFFT(fftlen) first!
+*
+*  Note: Output is BIT-REVERSED! so you must use the BitReversed to
+*        get legible output, (i.e. Real_i = buffer[ h->BitReversed[i] ]
+*                                  Imag_i = buffer[ h->BitReversed[i]+1 ] )
+*        Input is in normal order.
+*
+* Output buffer[0] is the DC bin, and output buffer[1] is the Fs/2 bin
+* - this can be done because both values will always be real only
+* - this allows us to not have to allocate an extra complex value for the Fs/2 bin
+*
+*  Note: The scaling on this is done according to the standard FFT definition,
+*        so a unit amplitude DC signal will output an amplitude of (N)
+*        (Older revisions would progressively scale the input, so the output
+*        values would be similar in amplitude to the input values, which is
+*        good when using fixed point arithmetic)
+*/
 void RealFFTf(fft_type *buffer,HFFT h)
 {
    fft_type *A,*B;
@@ -186,12 +201,12 @@ void RealFFTf(fft_type *buffer,HFFT h)
    int ButterfliesPerGroup=h->Points/2;
 
    /*
-    *  Butterfly:
-    *     Ain-----Aout
-    *         \ /
-    *         / \
-    *     Bin-----Bout
-    */
+   *  Butterfly:
+   *     Ain-----Aout
+   *         \ /
+   *         / \
+   *     Bin-----Bout
+   */
 
    endptr1=buffer+h->Points*2;
 
@@ -258,24 +273,24 @@ void RealFFTf(fft_type *buffer,HFFT h)
 
 
 /* Description: This routine performs an inverse FFT to real data.
- *              This code is for floating point data.
- *
- *  Note: Output is BIT-REVERSED! so you must use the BitReversed to
- *        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
- *                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
- *        Input is in normal order, interleaved (real,imaginary) complex data
- *        You must call InitializeFFT(fftlen) first to initialize some buffers!
- *
- * Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
- * - this can be done because both values will always be real only
- * - this allows us to not have to allocate an extra complex value for the Fs/2 bin
- *
- *  Note: The scaling on this is done according to the standard FFT definition,
- *        so a unit amplitude DC signal will output an amplitude of (N)
- *        (Older revisions would progressively scale the input, so the output
- *        values would be similar in amplitude to the input values, which is
- *        good when using fixed point arithmetic)
- */
+*              This code is for floating point data.
+*
+*  Note: Output is BIT-REVERSED! so you must use the BitReversed to
+*        get legible output, (i.e. wave[2*i]   = buffer[ BitReversed[i] ]
+*                                  wave[2*i+1] = buffer[ BitReversed[i]+1 ] )
+*        Input is in normal order, interleaved (real,imaginary) complex data
+*        You must call InitializeFFT(fftlen) first to initialize some buffers!
+*
+* Input buffer[0] is the DC bin, and input buffer[1] is the Fs/2 bin
+* - this can be done because both values will always be real only
+* - this allows us to not have to allocate an extra complex value for the Fs/2 bin
+*
+*  Note: The scaling on this is done according to the standard FFT definition,
+*        so a unit amplitude DC signal will output an amplitude of (N)
+*        (Older revisions would progressively scale the input, so the output
+*        values would be similar in amplitude to the input values, which is
+*        good when using fixed point arithmetic)
+*/
 void InverseRealFFTf(fft_type *buffer,HFFT h)
 {
    fft_type *A,*B;
@@ -323,12 +338,12 @@ void InverseRealFFTf(fft_type *buffer,HFFT h)
    buffer[1]=v2;
 
    /*
-    *  Butterfly:
-    *     Ain-----Aout
-    *         \ /
-    *         / \
-    *     Bin-----Bout
-    */
+   *  Butterfly:
+   *     Ain-----Aout
+   *         \ /
+   *         / \
+   *     Bin-----Bout
+   */
 
    endptr1=buffer+h->Points*2;
 

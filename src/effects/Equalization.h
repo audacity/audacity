@@ -74,6 +74,10 @@ public:
 };
 WX_DECLARE_OBJARRAY( EQCurve, EQCurveArray );
 
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+class EffectEqualization48x;
+#endif
+
 class EffectEqualization: public Effect {
 
 public:
@@ -113,12 +117,15 @@ public:
    // low range of human hearing
    enum {loFreqI=20};
 
+
+
 private:
    bool ProcessOne(int count, WaveTrack * t,
                    sampleCount start, sampleCount len);
 
    void Filter(sampleCount len,
                float *buffer);
+
    void ReadPrefs();
 
    HFFT hFFT;
@@ -135,6 +142,11 @@ private:
    bool mPrompting;
    bool mDrawGrid;
    bool mEditingBatchParams;
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   bool mBench;
+   EffectEqualization48x *mEffectEqualization48x;
+friend class EffectEqualization48x;
+#endif
 
 public:
 
@@ -222,6 +234,9 @@ public:
    void EnvelopeUpdated(Envelope *env, bool lin);
    static const double thirdOct[];
    wxRadioButton *mFaderOrDraw[2];
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   wxRadioButton *mMathProcessingType[5]; // default, sse, sse threaded, AVX, AVX threaded (note AVX is not implemented yet
+#endif
    wxChoice *mInterpChoice;
    wxCheckBox *mLinFreq;
    int M;
@@ -276,6 +291,14 @@ private:
       ID_INVERT,
       drawRadioID,
       sliderRadioID,
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+      defaultMathRadioID, 
+      sSERadioID, 
+      sSEThreadedRadioID, 
+      aVXRadioID, 
+      aVXThreadedRadioID, 
+      ID_BENCH,
+#endif
       ID_INTERP,
       ID_LIN_FREQ,
       GridOnOffID,
@@ -294,6 +317,10 @@ private:
    void OnSliderDBMIN( wxCommandEvent &event );
    void OnDrawRadio(wxCommandEvent &event );
    void OnSliderRadio(wxCommandEvent &event );
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   void OnProcessingRadio(wxCommandEvent &event );
+   void OnBench( wxCommandEvent & event);
+#endif
    void OnLinFreq(wxCommandEvent &event );
    void UpdateGraphic(void);
    void EnvLogToLin(void);
@@ -339,6 +366,9 @@ private:
    wxBoxSizer *szrH;
    wxBoxSizer *szrI;
    wxBoxSizer *szrL;
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   wxBoxSizer *szrM;
+#endif
    wxFlexGridSizer *szr1;
    wxBoxSizer *szr2;
    wxBoxSizer *szr3;

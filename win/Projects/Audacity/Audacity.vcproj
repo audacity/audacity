@@ -635,6 +635,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\RealFFTf48x.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\RealFFTf48x.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Resample.cpp"
 				>
 			</File>
@@ -746,6 +754,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\SplashDialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SseMathFuncs.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SseMathFuncs.h"
 				>
 			</File>
 			<File
@@ -994,6 +1010,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\effects\Equalization.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\effects\Equalization48x.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\effects\Equalization48x.h"
 				>
 			</File>
 			<File

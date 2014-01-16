@@ -123,6 +123,17 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
+
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   S.StartStatic(_("Instruction Set"));
+   {
+      S.TieCheckBox(_("&Use SSE/SSE2/.../AVX"), 
+                    wxT("/SSE/GUI"),
+                    true);
+   }
+   S.EndStatic();
+#endif
+
 }
 
 bool EffectsPrefs::Apply()
