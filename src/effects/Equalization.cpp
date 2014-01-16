@@ -916,41 +916,41 @@ void EqualizationPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 // WDR: event table for EqualizationDialog
 
 BEGIN_EVENT_TABLE(EqualizationDialog,wxDialog)
-EVT_SIZE( EqualizationDialog::OnSize )
-EVT_PAINT( EqualizationDialog::OnPaint )
-EVT_ERASE_BACKGROUND( EqualizationDialog::OnErase )
+   EVT_SIZE( EqualizationDialog::OnSize )
+   EVT_PAINT( EqualizationDialog::OnPaint )
+   EVT_ERASE_BACKGROUND( EqualizationDialog::OnErase )
 
-EVT_SLIDER( ID_LENGTH, EqualizationDialog::OnSliderM )
-EVT_SLIDER( ID_DBMAX, EqualizationDialog::OnSliderDBMAX )
-EVT_SLIDER( ID_DBMIN, EqualizationDialog::OnSliderDBMIN )
-EVT_COMMAND_RANGE( ID_SLIDER,
-                  ID_SLIDER + NUMBER_OF_BANDS - 1,
-                  wxEVT_COMMAND_SLIDER_UPDATED,
-                  EqualizationDialog::OnSlider)
-EVT_CHOICE( ID_INTERP, EqualizationDialog::OnInterp )
+   EVT_SLIDER( ID_LENGTH, EqualizationDialog::OnSliderM )
+   EVT_SLIDER( ID_DBMAX, EqualizationDialog::OnSliderDBMAX )
+   EVT_SLIDER( ID_DBMIN, EqualizationDialog::OnSliderDBMIN )
+   EVT_COMMAND_RANGE( ID_SLIDER,
+                     ID_SLIDER + NUMBER_OF_BANDS - 1,
+                     wxEVT_COMMAND_SLIDER_UPDATED,
+                     EqualizationDialog::OnSlider)
+   EVT_CHOICE( ID_INTERP, EqualizationDialog::OnInterp )
 
-EVT_CHOICE( ID_CURVE, EqualizationDialog::OnCurve )
-EVT_BUTTON( ID_MANAGE, EqualizationDialog::OnManage )
-EVT_BUTTON( ID_CLEAR, EqualizationDialog::OnClear )
-EVT_BUTTON( ID_INVERT, EqualizationDialog::OnInvert )
+   EVT_CHOICE( ID_CURVE, EqualizationDialog::OnCurve )
+   EVT_BUTTON( ID_MANAGE, EqualizationDialog::OnManage )
+   EVT_BUTTON( ID_CLEAR, EqualizationDialog::OnClear )
+   EVT_BUTTON( ID_INVERT, EqualizationDialog::OnInvert )
 
-EVT_BUTTON( ID_EFFECT_PREVIEW, EqualizationDialog::OnPreview )
-EVT_BUTTON( wxID_OK, EqualizationDialog::OnOk )
-EVT_BUTTON( wxID_CANCEL, EqualizationDialog::OnCancel )
-EVT_RADIOBUTTON(drawRadioID, EqualizationDialog::OnDrawRadio)
-EVT_RADIOBUTTON(sliderRadioID, EqualizationDialog::OnSliderRadio)
+   EVT_BUTTON( ID_EFFECT_PREVIEW, EqualizationDialog::OnPreview )
+   EVT_BUTTON( wxID_OK, EqualizationDialog::OnOk )
+   EVT_BUTTON( wxID_CANCEL, EqualizationDialog::OnCancel )
+   EVT_RADIOBUTTON(drawRadioID, EqualizationDialog::OnDrawRadio)
+   EVT_RADIOBUTTON(sliderRadioID, EqualizationDialog::OnSliderRadio)
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
-EVT_RADIOBUTTON(defaultMathRadioID, EqualizationDialog::OnProcessingRadio)
-EVT_RADIOBUTTON(sSERadioID, EqualizationDialog::OnProcessingRadio)
-EVT_RADIOBUTTON(sSEThreadedRadioID, EqualizationDialog::OnProcessingRadio)
-EVT_RADIOBUTTON(aVXRadioID, EqualizationDialog::OnProcessingRadio)
-EVT_RADIOBUTTON(aVXThreadedRadioID, EqualizationDialog::OnProcessingRadio)
-EVT_BUTTON( ID_BENCH, EqualizationDialog::OnBench )
+   EVT_RADIOBUTTON(defaultMathRadioID, EqualizationDialog::OnProcessingRadio)
+   EVT_RADIOBUTTON(sSERadioID, EqualizationDialog::OnProcessingRadio)
+   EVT_RADIOBUTTON(sSEThreadedRadioID, EqualizationDialog::OnProcessingRadio)
+   EVT_RADIOBUTTON(aVXRadioID, EqualizationDialog::OnProcessingRadio)
+   EVT_RADIOBUTTON(aVXThreadedRadioID, EqualizationDialog::OnProcessingRadio)
+   EVT_BUTTON( ID_BENCH, EqualizationDialog::OnBench )
 #endif
 
-EVT_CHECKBOX(ID_LIN_FREQ, EqualizationDialog::OnLinFreq)
-EVT_CHECKBOX(GridOnOffID, EqualizationDialog::OnGridOnOff)
+   EVT_CHECKBOX(ID_LIN_FREQ, EqualizationDialog::OnLinFreq)
+   EVT_CHECKBOX(GridOnOffID, EqualizationDialog::OnGridOnOff)
 END_EVENT_TABLE()
 
 EqualizationDialog::EqualizationDialog(EffectEqualization * effect,
@@ -2945,15 +2945,15 @@ void EqualizationDialog::OnOk(wxCommandEvent & event)
 /// Constructor
 
 BEGIN_EVENT_TABLE(EditCurvesDialog, wxDialog)
-EVT_BUTTON(UpButtonID, EditCurvesDialog::OnUp)
-EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
-EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
-EVT_BUTTON(DeleteButtonID, EditCurvesDialog::OnDelete)
-EVT_BUTTON(ImportButtonID, EditCurvesDialog::OnImport)
-EVT_BUTTON(ExportButtonID, EditCurvesDialog::OnExport)
-EVT_BUTTON(LibraryButtonID, EditCurvesDialog::OnLibrary)
-EVT_BUTTON(DefaultsButtonID, EditCurvesDialog::OnDefaults)
-EVT_BUTTON(wxID_OK, EditCurvesDialog::OnOK)
+   EVT_BUTTON(UpButtonID, EditCurvesDialog::OnUp)
+   EVT_BUTTON(DownButtonID, EditCurvesDialog::OnDown)
+   EVT_BUTTON(RenameButtonID, EditCurvesDialog::OnRename)
+   EVT_BUTTON(DeleteButtonID, EditCurvesDialog::OnDelete)
+   EVT_BUTTON(ImportButtonID, EditCurvesDialog::OnImport)
+   EVT_BUTTON(ExportButtonID, EditCurvesDialog::OnExport)
+   EVT_BUTTON(LibraryButtonID, EditCurvesDialog::OnLibrary)
+   EVT_BUTTON(DefaultsButtonID, EditCurvesDialog::OnDefaults)
+   EVT_BUTTON(wxID_OK, EditCurvesDialog::OnOK)
 END_EVENT_TABLE()
 
 EditCurvesDialog::EditCurvesDialog(EqualizationDialog * parent, int position):
