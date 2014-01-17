@@ -1947,6 +1947,18 @@
 		EDD94EDB103CB520000873F1 /* ImportExportCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDD94ED9103CB520000873F1 /* ImportExportCommands.cpp */; };
 		EDE32600168243EF00C19E60 /* vr32.c in Sources */ = {isa = PBXBuildFile; fileRef = EDE325FF168243EF00C19E60 /* vr32.c */; };
 		EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */; };
+		EDFCEB9C18894AE600C98E51 /* OpenSaveCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEB9A18894AE600C98E51 /* OpenSaveCommands.cpp */; };
+		EDFCEB9D18894AE600C98E51 /* OpenSaveCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEB9A18894AE600C98E51 /* OpenSaveCommands.cpp */; };
+		EDFCEB9E18894AE600C98E51 /* OpenSaveCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEB9A18894AE600C98E51 /* OpenSaveCommands.cpp */; };
+		EDFCEBA618894B2A00C98E51 /* RealFFTf48x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */; };
+		EDFCEBA718894B2A00C98E51 /* SseMathFuncs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBA418894B2A00C98E51 /* SseMathFuncs.cpp */; };
+		EDFCEBA818894B2A00C98E51 /* RealFFTf48x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */; };
+		EDFCEBA918894B2A00C98E51 /* SseMathFuncs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBA418894B2A00C98E51 /* SseMathFuncs.cpp */; };
+		EDFCEBAA18894B2A00C98E51 /* RealFFTf48x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */; };
+		EDFCEBAB18894B2A00C98E51 /* SseMathFuncs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBA418894B2A00C98E51 /* SseMathFuncs.cpp */; };
+		EDFCEBB518894B9E00C98E51 /* Equalization48x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBB318894B9E00C98E51 /* Equalization48x.cpp */; };
+		EDFCEBB618894B9E00C98E51 /* Equalization48x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBB318894B9E00C98E51 /* Equalization48x.cpp */; };
+		EDFCEBB718894B9E00C98E51 /* Equalization48x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFCEBB318894B9E00C98E51 /* Equalization48x.cpp */; };
 		EEFF576E109AB4E20032EDFE /* CaptureEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */; };
 /* End PBXBuildFile section */
 
@@ -4106,6 +4118,14 @@
 		EDE325FF168243EF00C19E60 /* vr32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vr32.c; sourceTree = "<group>"; };
 		EDF3B7AE1588C0D50032D35F /* Paulstretch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Paulstretch.h; path = effects/Paulstretch.h; sourceTree = "<group>"; };
 		EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Paulstretch.cpp; path = effects/Paulstretch.cpp; sourceTree = "<group>"; };
+		EDFCEB9A18894AE600C98E51 /* OpenSaveCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenSaveCommands.cpp; sourceTree = "<group>"; };
+		EDFCEB9B18894AE600C98E51 /* OpenSaveCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSaveCommands.h; sourceTree = "<group>"; };
+		EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RealFFTf48x.cpp; sourceTree = "<group>"; };
+		EDFCEBA318894B2A00C98E51 /* RealFFTf48x.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RealFFTf48x.h; sourceTree = "<group>"; };
+		EDFCEBA418894B2A00C98E51 /* SseMathFuncs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SseMathFuncs.cpp; sourceTree = "<group>"; };
+		EDFCEBA518894B2A00C98E51 /* SseMathFuncs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SseMathFuncs.h; sourceTree = "<group>"; };
+		EDFCEBB318894B9E00C98E51 /* Equalization48x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Equalization48x.cpp; sourceTree = "<group>"; };
+		EDFCEBB418894B9E00C98E51 /* Equalization48x.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Equalization48x.h; sourceTree = "<group>"; };
 		EEFF576C109AB4E10032EDFE /* CaptureEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = CaptureEvents.cpp; path = ../src/CaptureEvents.cpp; sourceTree = SOURCE_ROOT; tabWidth = 3; };
 		EEFF576D109AB4E20032EDFE /* CaptureEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = CaptureEvents.h; path = ../src/CaptureEvents.h; sourceTree = SOURCE_ROOT; tabWidth = 3; };
 /* End PBXFileReference section */
@@ -4728,6 +4748,8 @@
 				174D902B098C78AF00D5909F /* Keyboard.h */,
 				28851FA71027F16400152EE1 /* MessageCommand.cpp */,
 				28851FA81027F16400152EE1 /* MessageCommand.h */,
+				EDFCEB9A18894AE600C98E51 /* OpenSaveCommands.cpp */,
+				EDFCEB9B18894AE600C98E51 /* OpenSaveCommands.h */,
 				28DE72AA10388583007E18EC /* PreferenceCommands.cpp */,
 				28DE72AB10388583007E18EC /* PreferenceCommands.h */,
 				28DB34770FDC2C5D0011F589 /* ResponseQueue.h */,
@@ -5040,6 +5062,8 @@
 				1790B0D109883BFD008A330A /* Project.h */,
 				28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */,
 				28DABFBD0FF19DB100AC7848 /* RealFFTf.h */,
+				EDFCEBA218894B2A00C98E51 /* RealFFTf48x.cpp */,
+				EDFCEBA318894B2A00C98E51 /* RealFFTf48x.h */,
 				1790B0D209883BFD008A330A /* Resample.cpp */,
 				1790B0D309883BFD008A330A /* Resample.h */,
 				1790B0D409883BFD008A330A /* RingBuffer.cpp */,
@@ -5064,6 +5088,8 @@
 				1790B0DF09883BFD008A330A /* Spectrum.h */,
 				28501E9F0CEECEF80029ABAA /* SplashDialog.cpp */,
 				28501EA00CEECEF80029ABAA /* SplashDialog.h */,
+				EDFCEBA418894B2A00C98E51 /* SseMathFuncs.cpp */,
+				EDFCEBA518894B2A00C98E51 /* SseMathFuncs.h */,
 				1790B0E009883BFD008A330A /* Tags.cpp */,
 				1790B0E109883BFD008A330A /* Tags.h */,
 				283A11A80A2C0E15004372C4 /* Theme.cpp */,
@@ -5161,6 +5187,8 @@
 				ED3D7FEF0DF73889000F43E3 /* EffectManager.h */,
 				1790B01B09883BFD008A330A /* Equalization.cpp */,
 				1790B01C09883BFD008A330A /* Equalization.h */,
+				EDFCEBB318894B9E00C98E51 /* Equalization48x.cpp */,
+				EDFCEBB418894B9E00C98E51 /* Equalization48x.h */,
 				1790B01D09883BFD008A330A /* Fade.cpp */,
 				1790B01E09883BFD008A330A /* Fade.h */,
 				2891B2850C531D2C0044FBE3 /* FindClipping.cpp */,
@@ -9050,6 +9078,10 @@
 				28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */,
 				28F2CED4181867BB00573D61 /* numformatter.cpp in Sources */,
 				28F2CED5181867BB00573D61 /* valnum.cpp in Sources */,
+				EDFCEB9C18894AE600C98E51 /* OpenSaveCommands.cpp in Sources */,
+				EDFCEBA618894B2A00C98E51 /* RealFFTf48x.cpp in Sources */,
+				EDFCEBA718894B2A00C98E51 /* SseMathFuncs.cpp in Sources */,
+				EDFCEBB518894B9E00C98E51 /* Equalization48x.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9546,6 +9578,10 @@
 				ED663CB716543647007F53A5 /* ModulePrefs.cpp in Sources */,
 				EDD2431516934A6100D9DEC2 /* BassTreble.cpp in Sources */,
 				ED19449B1733F92800F4F5CA /* Reverb.cpp in Sources */,
+				EDFCEB9D18894AE600C98E51 /* OpenSaveCommands.cpp in Sources */,
+				EDFCEBA818894B2A00C98E51 /* RealFFTf48x.cpp in Sources */,
+				EDFCEBA918894B2A00C98E51 /* SseMathFuncs.cpp in Sources */,
+				EDFCEBB618894B9E00C98E51 /* Equalization48x.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9852,6 +9888,10 @@
 				ED85B59016A47353006DA21D /* ModulePrefs.cpp in Sources */,
 				ED85B59116A47353006DA21D /* BassTreble.cpp in Sources */,
 				ED19449C1733F92800F4F5CA /* Reverb.cpp in Sources */,
+				EDFCEB9E18894AE600C98E51 /* OpenSaveCommands.cpp in Sources */,
+				EDFCEBAA18894B2A00C98E51 /* RealFFTf48x.cpp in Sources */,
+				EDFCEBAB18894B2A00C98E51 /* SseMathFuncs.cpp in Sources */,
+				EDFCEBB718894B9E00C98E51 /* Equalization48x.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
