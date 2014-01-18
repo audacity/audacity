@@ -461,6 +461,13 @@ bool AudioUnitEffect::ProcessStereo(int count,
    {
       printf("Setting input render callback failed.\n");
       AudioUnitUninitialize(trackUnit);
+      // free allocated memory
+      if (leftBuffer) {
+         delete[] leftBuffer;
+      }
+      if (rightBuffer) {
+         delete[] rightBuffer;
+      }
       return false;
    }
    bufferList->mNumberBuffers = numChannels;
