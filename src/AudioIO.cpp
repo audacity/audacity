@@ -561,7 +561,7 @@ AudioIO::AudioIO()
       wxString errStr = _("Could not find any audio devices.\n");
       errStr += _("You will not be able to play or record audio.\n\n");
       wxString paErrStr = LAT1CTOWX(Pa_GetErrorText(err));
-      if (paErrStr)
+      if (!paErrStr.IsEmpty())
          errStr += _("Error: ")+paErrStr;
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
