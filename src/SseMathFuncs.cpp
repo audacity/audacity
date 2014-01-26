@@ -15,6 +15,9 @@
 
 *//****************************************************************/
 
+#include "Experimental.h"
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+
 #include "SseMathFuncs.h"
 
 
@@ -696,3 +699,6 @@ void sincos_ps(v4sfu *xptr, v4sfu *sptr, v4sfu *cptr) {
    *s = _mm_xor_ps(xmm1, sign_bit_sin);
    *c = _mm_xor_ps(xmm2, sign_bit_cos);
 }
+
+#endif
+
