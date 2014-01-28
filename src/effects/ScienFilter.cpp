@@ -672,7 +672,7 @@ void ScienFilterDialog::MakeScienFilterDialog()
    szr3->Add(st);    // empty field in grid to balance Hz in next row
 
    szrPass = new wxBoxSizer( wxHORIZONTAL );
-   st = new wxStaticText(this, wxID_ANY, _("Maximum &Passband Attenuation:"));
+   st = new wxStaticText(this, wxID_ANY, _("&Passband Ripple:"));
    st->SetName(wxStripMenuCodes(st->GetLabel()));  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    szrPass->Add(st, flagslabel);
    wxSize Size(wxDefaultSize);
@@ -1286,28 +1286,18 @@ void ScienFilterDialog::EnableDisableRippleCtl (int FilterType)
    {
       szrPass->Show(false);
       szrStop->Show(false);
-/*      mRippleCtl->SetEditable (false);
-      mStopbandRippleCtl->SetEditable (false);
-      mRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);
-      mStopbandRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);*/
    }
    else if (FilterType == 1)    // Chebyshev Type1
    {
       szrPass->Show(true);
       szrStop->Show(false);
-/*      mRippleCtl->SetEditable (true);
-      mStopbandRippleCtl->SetEditable (false);
-      mRippleCtl->SetBackgroundColour (*wxWHITE);
-      mStopbandRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);*/
    }
    else                        // Chebyshev Type2
    {
       szrPass->Show(false);
       szrStop->Show(true);
-/*      mRippleCtl->SetEditable (false);
-      mStopbandRippleCtl->SetEditable (true);
-      mRippleCtl->SetBackgroundColour (*wxLIGHT_GREY);
-      mStopbandRippleCtl->SetBackgroundColour (*wxWHITE);*/
    }
+   wxSizeEvent dummy;
+   OnSize(dummy);
 }
 
