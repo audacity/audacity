@@ -132,21 +132,9 @@ There are three settings that need changing:
     2.  Resource Directory (e.g., "C:\wxWidgets-2.8.12\include")
     3.  Library Directory (e.g., "C:\wxWidgets-2.8.12\lib")
 
-Fortunately, this is parameterized, using a Windows system 
-environment variable. There are various ways to set these, so 
-look in the Windows help system. You want to create an 
-environment variable WXWIN, set to the top-level directory 
-where you installed wxWidgets. For example, 
-in your "autoexec.bat" file, you might have a line:
-
-   set WXWIN=C:\wxWidgets-2.8.12
-
-Note that you don't want a trailing backslash on that.
-
-On newer version of Windows, the settings for environment
-variables can be found in the system control panel. Click
-the "System" option, then the "Extended" or "Advanced" tab,
-then "Environment variables".
+Fortunately, this is parameterized, using a Windows 
+environment variable, WXWIN. There are various ways to set 
+these, so look in the Windows help system. 
 
 In the Audacity project file, there are declarations like 
 
