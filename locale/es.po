@@ -1,13 +1,13 @@
 # Header entry was created by Lokalize.
 #
-# Antonio Paniagua Navarro <aplist@gmail.com>, 2013.
+# Antonio Paniagua Navarro <aplist@gmail.com>, 2013, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-11 04:56+0100\n"
-"PO-Revision-Date: 2013-10-12 07:51-0000\n"
-"Last-Translator: Antonio Paniagua\n"
+"PO-Revision-Date: 2014-02-04 18:31-0000\n"
+"Last-Translator: Antonio\n"
 "Language-Team: Spanish <audacity-translation@lists.sourceforge.net>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -9439,7 +9439,7 @@ msgstr "Hacer una &copia de los archivos antes de editar (más seguro)"
 
 #: import/ImportPCM.cpp:267
 msgid "Read the files &directly from the original (faster)"
-msgstr "Leer %directamente los archivos desde el original (más rápido)"
+msgstr "Leer &directamente los archivos desde el original (más rápido)"
 
 #: import/ImportPCM.cpp:271
 msgid "Don't &warn again and always use my choice above"
