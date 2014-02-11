@@ -122,7 +122,7 @@ Source: "..\win\unicode release\languages\*"; DestDir: "{app}\Languages\"; Flags
 ; We don't currently ship any modules, so the next line is commented out
 ;Source: "..\win\unicode release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: "..\win\unicode release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
-Source: "..\win\unicode release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Excludes: "analyze.ny"; Flags: ignoreversion
+Source: "..\win\unicode release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
 
 ; File that acts as a markers to reset prefs.
 ; Needs the 'Permissions' so that Audacity can delete it
