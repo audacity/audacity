@@ -47,7 +47,6 @@ nobase_dist_pkgdata_DATA = \
    nyquist/rawwaves/marmstk1.raw \
    nyquist/rawwaves/sinewave.raw \
    plug-ins/adjustable-fade.ny \
-   plug-ins/analyze.ny \
    plug-ins/beat.ny \
    plug-ins/clicktrack.ny \
    plug-ins/clipfix.ny \
