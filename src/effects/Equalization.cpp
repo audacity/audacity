@@ -831,11 +831,21 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
       freq = lin ? step*i : pow(10., loLog + i*step);   //Hz
       if( ( lin ? step : (pow(10., loLog + (i+1)*step)-freq) ) < delta)
       {   //not enough resolution in FFT
-         freq = M_PI*freq/mHiFreq;   //radians, normalized
+         // set up for calculating cos using recurrance - faster than calculating it directly each time
+         double theta = M_PI*freq/mHiFreq;   //radians, normalized
+         double wtemp = sin(0.5 * theta);
+         double wpr = -2.0 * wtemp * wtemp;
+         double wpi = -1.0 * sin(theta);
+         double wr = cos(theta*halfM);
+         double wi = sin(theta*halfM);
+
          yF = 0.;
          for(int j=0;j<halfM;j++)
          {
-            yF += 2. * mOutr[j] * cos(freq*(halfM-j));
+            yF += 2. * mOutr[j] * wr;  // This works for me, compared to the previous version.  Compare wr to cos(theta*(halfM-j)).  Works for me.  Keep everything as doubles though.
+            // do recurrance
+            wr = (wtemp = wr) * wpr - wi * wpi + wr;
+            wi = wi * wpr + wtemp * wpi + wi;
          }
          yF += mOutr[halfM];
          yF = fabs(yF);
