@@ -2325,10 +2325,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\plug-ins\analyze.ny"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\plug-ins\beat.ny"
 				>
 			</File>
