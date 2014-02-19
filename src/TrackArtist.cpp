@@ -668,6 +668,27 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
 
          float min, max;
          wt->GetDisplayBounds(&min, &max);
+         if(wt->GetLastDisplay()==WaveTrack::WaveformDBDisplay)
+         {
+            // do a translation into the WaveTrack::WaveformDisplay space
+            wt->SetDisplay(WaveTrack::WaveformDisplay); // this makes the last display not WaveformDBDisplay
+            float sign = (min >= 0 ? 1 : -1);
+            if (min != 0.) {
+               min = pow(10., (fabs(min)*mdBrange - mdBrange)/20.0);
+               if (min < 0.0) 
+                  min = 0.0;
+               min *= sign;
+            }
+            sign = (max >= 0 ? 1 : -1);
+
+            if (max != 0.) {
+               max = pow(10., (fabs(max)*mdBrange - mdBrange)/20.0);
+               if (max < 0.0) 
+                  max = 0.0;
+               max *= sign;
+            }
+            wt->SetDisplayBounds(min, max);
+         }
 
          vruler->SetBounds(r.x, r.y+1, r.x + r.width, r.y + r.height-1);
          vruler->SetOrientation(wxVERTICAL);
@@ -684,7 +705,29 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
 
          float min, max;
          wt->GetDisplayBounds(&min, &max);
-// This assumes that wt->GetDisplayBounds(&min, &max); is in dB, and it isn't, it's linear
+
+         if(wt->GetLastDisplay()==WaveTrack::WaveformDisplay)
+         {
+            // do a translation into the WaveTrack::WaveformDBDisplay space
+            wt->SetDisplay(WaveTrack::WaveformDBDisplay); // this makes the last display not WaveformDisplay
+            float sign = (min >= 0 ? 1 : -1);
+            if (min != 0.) {
+               min = (20.0 * log10(fabs(min)) + mdBrange) / mdBrange;
+               if (min < 0.0) 
+                  min = 0.0;
+               min *= sign;
+            }
+            sign = (max >= 0 ? 1 : -1);
+
+            if (max != 0.) {
+               max = (20.0 * log10(fabs(max)) + mdBrange) / mdBrange;
+               if (max < 0.0) 
+                  max = 0.0;
+               max *= sign;
+            }
+            wt->SetDisplayBounds(min, max);
+         }
+ 
          if (max > 0) {
             int top = 0;
             float topval = 0;
@@ -701,22 +744,22 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
                max = 1;
             }
 
-            if (max < 1)
+            if (max < 1 && max > 0)
                topval = -((1-max)*mdBrange);
 
             if (min > 0) {
                botval = -((1-min)*mdBrange);
             }
 
-            if (topval > botval && bot > top+10) {
-               vruler->SetBounds(r.x, r.y+top+1, r.x + r.width, r.y + bot-1);
-               vruler->SetOrientation(wxVERTICAL);
-               vruler->SetRange(topval, botval);
-               vruler->SetFormat(Ruler::LinearDBFormat);
-               vruler->SetLabelEdges(true);
-               vruler->SetLog(false);
-            }
-         }
+            vruler->SetBounds(r.x, r.y+top+1, r.x + r.width, r.y + bot-1);
+            vruler->SetOrientation(wxVERTICAL);
+            vruler->SetRange(topval, botval);
+          }
+         else
+            vruler->SetBounds(0.0, 0.0, 0.0, 0.0); // A.C.H I couldn't find a way to just disable it?
+         vruler->SetFormat(Ruler::RealLogFormat);
+         vruler->SetLabelEdges(true);
+         vruler->SetLog(false);
       }
       else if (display == WaveTrack::SpectrumDisplay) {
          // Spectrum

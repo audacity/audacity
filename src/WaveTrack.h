@@ -396,8 +396,13 @@ class AUDACITY_DLL_API WaveTrack: public Track {
       PitchDisplay
    } WaveTrackDisplay;
 
-   void SetDisplay(int display) {mDisplay = display;}
+   void SetDisplay(int display) {
+      if(mDisplay<2)
+         mLastDisplay=mDisplay;    // remember last display mode for wave and wavedb so they can remap
+      mDisplay = display;
+   }
    int GetDisplay() {return mDisplay;}
+   int GetLastDisplay() {return mLastDisplay;}
 
    void GetDisplayBounds(float *min, float *max);
    void SetDisplayBounds(float min, float max);
@@ -423,6 +428,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    float         mDisplayMin;
    float         mDisplayMax;
    int           mDisplay; // type of display, from WaveTrackDisplay enum
+   int           mLastDisplay; // last display mode
    int           mDisplayNumLocations;
    int           mDisplayNumLocationsAllocated;
    Location*       mDisplayLocations;

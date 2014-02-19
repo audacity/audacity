@@ -104,6 +104,7 @@ WaveTrack::WaveTrack(WaveTrack &orig):
    Track(orig)
 {
    gPrefs->Read(wxT("/GUI/DefaultViewMode"), &mDisplay, 0);
+   mLastDisplay=-1;
 
    mLegacyProjectFileOffset = 0;
 
