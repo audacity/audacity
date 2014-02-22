@@ -219,10 +219,19 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 We thank <a href=\"http://code.google.com\">Google Code</a> and <a href=\"http://sourceforge.net\">SourceForge</a> for hosting our project. \
 Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
-   wxString par2Str = _(
-"If you find a bug or have a suggestion for us, please write to our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. \
+   // This trick here means that the English language version won't mention using
+   // English, whereas all translated versions will.
+   wxString par2StrUntranslated = wxT(
+"If you find a bug or have a suggestion for us, please write, in English, to our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. \
 For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">wiki</a> or \
 visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
+   wxString par2Str = _(
+"If you find a bug or have a suggestion for us, please write, in English, to our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. \
+For help, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">wiki</a> or \
+visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
+
+   if( par2Str == par2StrUntranslated )
+      par2Str.Replace( wxT(", in English,"), wxT("") );
 
    wxString translatorCredits;
    /* i18n-hint: The translation of "translator_credits" will appear
