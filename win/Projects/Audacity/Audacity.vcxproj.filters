@@ -1712,9 +1712,6 @@
     <copy Include="..\..\..\plug-ins\adjustable-fade.ny">
       <Filter>plug-ins</Filter>
     </copy>
-    <copy Include="..\..\..\plug-ins\analyze.ny">
-      <Filter>plug-ins</Filter>
-    </copy>
     <copy Include="..\..\..\plug-ins\beat.ny">
       <Filter>plug-ins</Filter>
     </copy>

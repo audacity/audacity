@@ -641,7 +641,6 @@
   </ItemGroup>
   <ItemGroup>
     <copy Include="..\..\..\plug-ins\adjustable-fade.ny" />
-    <copy Include="..\..\..\plug-ins\analyze.ny" />
     <copy Include="..\..\..\plug-ins\beat.ny" />
     <copy Include="..\..\..\plug-ins\clicktrack.ny" />
     <copy Include="..\..\..\plug-ins\clipfix.ny" />
