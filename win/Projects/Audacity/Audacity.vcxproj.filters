@@ -801,6 +801,12 @@
     <ClCompile Include="..\..\..\src\effects\lv2\LV2PortGroup.cpp">
       <Filter>src/effects/lv2</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\SseMathFuncs.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp">
+      <Filter>src/commands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1573,6 +1579,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\lv2\LV2PortGroup.h">
       <Filter>src/effects/lv2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SseMathFuncs.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h">
+      <Filter>src/commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

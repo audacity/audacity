@@ -135,6 +135,7 @@
     <ClCompile Include="..\..\..\src\Benchmark.cpp" />
     <ClCompile Include="..\..\..\src\BlockFile.cpp" />
     <ClCompile Include="..\..\..\src\CaptureEvents.cpp" />
+    <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp" />
     <ClCompile Include="..\..\..\src\Dependencies.cpp" />
     <ClCompile Include="..\..\..\src\DeviceManager.cpp" />
     <ClCompile Include="..\..\..\src\DirManager.cpp" />
@@ -190,6 +191,7 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Spectrum.cpp" />
     <ClCompile Include="..\..\..\src\SplashDialog.cpp" />
+    <ClCompile Include="..\..\..\src\SseMathFuncs.cpp" />
     <ClCompile Include="..\..\..\src\Tags.cpp" />
     <ClCompile Include="..\..\..\src\Theme.cpp" />
     <ClCompile Include="..\..\..\src\TimeDialog.cpp" />
@@ -389,6 +391,8 @@
     <ClInclude Include="..\..\..\src\Benchmark.h" />
     <ClInclude Include="..\..\..\src\BlockFile.h" />
     <ClInclude Include="..\..\..\src\CaptureEvents.h" />
+    <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />
+    <ClInclude Include="..\..\..\src\SseMathFuncs.h" />
     <ClInclude Include="..\..\configwin.h" />
     <ClInclude Include="..\..\..\src\Dependencies.h" />
     <ClInclude Include="..\..\..\src\DeviceManager.h" />
