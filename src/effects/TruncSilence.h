@@ -52,7 +52,6 @@ public:
    }
    virtual bool Init();
    virtual void End();
-   virtual bool CheckWhetherSkipEffect();
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
 
@@ -64,11 +63,12 @@ public:
    void Intersect(RegionList &dest, const RegionList &src);
 
  private:
-   sampleCount mBlendFrameCount;
-   int mTruncInitialAllowedSilentMs;
-   int mTruncLongestAllowedSilentMs;
    int mTruncDbChoiceIndex;
-   double mSilenceCompressRatio;
+   int mProcessIndex;
+   sampleCount mBlendFrameCount;
+   double mInitialAllowedSilence;
+   double mTruncLongestAllowedSilence;
+   double mSilenceCompressPercent;
 
 friend class TruncSilenceDialog;
 };
@@ -86,18 +86,16 @@ public:
 
    void PopulateOrExchange(ShuttleGui & S);
    void OnPreview(wxCommandEvent & event);
-   void OnDurationChange(wxCommandEvent & event);
+   void OnControlChange(wxCommandEvent & event);
+   void UpdateUI();
 
 private:
    EffectTruncSilence *mEffect;
    wxStaticText * pWarning;
 
-   wxStaticText * mTruncationMessage;
-
-   wxStaticText *mRatioLabel;
-
 private:
    DECLARE_EVENT_TABLE()
+
 };
 
 #endif

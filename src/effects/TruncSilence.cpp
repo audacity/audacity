@@ -47,42 +47,39 @@ EffectTruncSilence::EffectTruncSilence()
 
 bool EffectTruncSilence::Init()
 {
-   mTruncInitialAllowedSilentMs = gPrefs->Read(wxT("/Effects/TruncateSilence/InitialAllowedSilentMs"), 200L);
-   if ((mTruncInitialAllowedSilentMs < 0) || (mTruncInitialAllowedSilentMs >= 9999999)) {  // corrupted Prefs?
-      mTruncInitialAllowedSilentMs = 200L;
-      gPrefs->Write(wxT("/Effects/TruncateSilence/InitialAllowedSilentMs"), mTruncInitialAllowedSilentMs);
-   }
-   mTruncLongestAllowedSilentMs = gPrefs->Read(wxT("/Effects/TruncateSilence/LongestAllowedSilentMs"), 1000L);
-   if ((mTruncLongestAllowedSilentMs < 0) || (mTruncLongestAllowedSilentMs >= 9999999)) {  // corrupted Prefs?
-      mTruncLongestAllowedSilentMs = 1000L;
-      gPrefs->Write(wxT("/Effects/TruncateSilence/LongestAllowedSilentMs"), mTruncLongestAllowedSilentMs);
-   }
-
    mTruncDbChoiceIndex = gPrefs->Read(wxT("/Effects/TruncateSilence/DbChoiceIndex"), 4L);
    if ((mTruncDbChoiceIndex < 0) || (mTruncDbChoiceIndex >= Enums::NumDbChoices)) {  // corrupted Prefs?
-      mTruncDbChoiceIndex = Enums::NumDbChoices - 1;  // Off-Skip
-      gPrefs->Write(wxT("/Effects/TruncateSilence/DbChoiceIndex"), mTruncDbChoiceIndex);
-      mTruncLongestAllowedSilentMs = SKIP_EFFECT_MILLISECOND;
-      gPrefs->Write(wxT("/Effects/TruncateSilence/LongestAllowedSilentMs"), mTruncLongestAllowedSilentMs);
+      mTruncDbChoiceIndex = 4L;
+      gPrefs->Write(wxT("/Effects/TruncateSilence/LongestAllowedSilence"), 4L);
    }
+   mProcessIndex = gPrefs->Read(wxT("/Effects/TruncateSilence/ProcessChoice"), 0L);
+   if ((mProcessIndex < 0) || (mProcessIndex > 1)) {  // corrupted Prefs?
+      mProcessIndex = 0L;
+      gPrefs->Write(wxT("/Effects/TruncateSilence/ProcessChoice"), 0L);
+   }   
+   gPrefs->Read(wxT("/Effects/TruncateSilence/InitialAllowedSilence"), &mInitialAllowedSilence, 0.5);
+   if ((mInitialAllowedSilence < 0.001) || (mInitialAllowedSilence > 10000.0)) {  // corrupted Prefs?
+      mInitialAllowedSilence = 0.5;
+      gPrefs->Write(wxT("/Effects/TruncateSilence/InitialAllowedSilence"), 0.5);
+   }
+
+   gPrefs->Read(wxT("/Effects/TruncateSilence/LongestAllowedSilence"), &mTruncLongestAllowedSilence, 0.5);
+   if ((mTruncLongestAllowedSilence < 0.0) || (mTruncLongestAllowedSilence > 10000.0)) {  // corrupted Prefs?
+      mTruncLongestAllowedSilence = 0.5;
+      gPrefs->Write(wxT("/Effects/TruncateSilence/LongestAllowedSilence"), 0.5);
+   }
+   gPrefs->Read(wxT("/Effects/TruncateSilence/CompressPercent"), &mSilenceCompressPercent, 50.0);
+   if ((mSilenceCompressPercent < 0.0) || (mSilenceCompressPercent > 100.0)) {  // corrupted Prefs?
+      mSilenceCompressPercent = 50.0;
+      gPrefs->Write(wxT("/Effects/TruncateSilence/CompressPercent"), 50.0);
+   }
+   // mBlendFrameCount is not currently used in dialog.
    mBlendFrameCount = gPrefs->Read(wxT("/Effects/TruncateSilence/BlendFrameCount"), 100L);
    if ((mBlendFrameCount < 0) || (mBlendFrameCount >= 5000)) {  // corrupted Prefs?
       mBlendFrameCount = 100;
       gPrefs->Write(wxT("/Effects/TruncateSilence/BlendFrameCount"), 100);
    }
-   mSilenceCompressRatio = 0.1*gPrefs->Read(wxT("/Effects/TruncateSilence/CompressRatio"), 40L);
-   if ((mSilenceCompressRatio < 1.0) || (mSilenceCompressRatio > 20.0)) {  // corrupted Prefs?
-      mSilenceCompressRatio = 4.0;
-      gPrefs->Write(wxT("/Effects/TruncateSilence/CompressRatio"), 40L);
-   }
    return gPrefs->Flush();
-}
-
-bool EffectTruncSilence::CheckWhetherSkipEffect()
-{
-   // FIXME: This misses the final (-80 dB) option.
-   return ((mTruncDbChoiceIndex >= (Enums::NumDbChoices - 1))
-          ||  (mTruncLongestAllowedSilentMs >= SKIP_EFFECT_MILLISECOND));
 }
 
 void EffectTruncSilence::End()
@@ -99,21 +96,22 @@ bool EffectTruncSilence::PromptUser()
    if (dlog.GetReturnCode() == wxID_CANCEL)
       return false;
 
-   gPrefs->Write(wxT("/Effects/TruncateSilence/InitialAllowedSilentMs"), mTruncInitialAllowedSilentMs);
-   gPrefs->Write(wxT("/Effects/TruncateSilence/LongestAllowedSilentMs"), mTruncLongestAllowedSilentMs);
    gPrefs->Write(wxT("/Effects/TruncateSilence/DbChoiceIndex"), mTruncDbChoiceIndex);
-   gPrefs->Write(wxT("/Effects/TruncateSilence/CompressRatio"), (int)floor(10.0*mSilenceCompressRatio+0.5));
+   gPrefs->Write(wxT("/Effects/TruncateSilence/ProcessChoice"), mProcessIndex);
+   gPrefs->Write(wxT("/Effects/TruncateSilence/InitialAllowedSilence"), mInitialAllowedSilence);
+   gPrefs->Write(wxT("/Effects/TruncateSilence/LongestAllowedSilence"), mTruncLongestAllowedSilence);
+   gPrefs->Write(wxT("/Effects/TruncateSilence/CompressPercent"), mSilenceCompressPercent);
    gPrefs->Flush();
-
    return true;
 }
 
 bool EffectTruncSilence::TransferParameters( Shuttle & shuttle )
 {  
    shuttle.TransferEnum(wxT("Db"), mTruncDbChoiceIndex, Enums::NumDbChoices, Enums::GetDbChoices());
-   shuttle.TransferInt(wxT("Minimum"), mTruncInitialAllowedSilentMs, 200);
-   shuttle.TransferInt(wxT("Duration"), mTruncLongestAllowedSilentMs, 1000);
-   shuttle.TransferDouble(wxT("Compress"), mSilenceCompressRatio, 4.0f);
+   shuttle.TransferInt(wxT("Action"), mProcessIndex, 0);
+   shuttle.TransferDouble(wxT("Minimum"), mInitialAllowedSilence, 0.5);
+   shuttle.TransferDouble(wxT("Truncate"), mTruncLongestAllowedSilence, 0.5);
+   shuttle.TransferDouble(wxT("Compress"), mSilenceCompressPercent, 50.0);
    return true;
 }
 
@@ -127,7 +125,7 @@ bool EffectTruncSilence::Process()
 
    // Lower bound on the amount of silence to find at a time -- this avoids
    // detecting silence repeatedly in low-frequency sounds.
-   const float minTruncMs = 1.0f;
+   const double minTruncMs = 0.001;
    double truncDbSilenceThreshold = Enums::Db2Signal[mTruncDbChoiceIndex];
 
    // Master list of silent regions; it is responsible for deleting them.
@@ -150,8 +148,8 @@ bool EffectTruncSilence::Process()
 
       // Smallest silent region to detect in frames
       sampleCount minSilenceFrames = 
-         sampleCount((wxMax( mTruncInitialAllowedSilentMs, minTruncMs) *
-                  wt->GetRate()) / 1000.0);
+            sampleCount(wxMax( mInitialAllowedSilence, minTruncMs) *
+                  wt->GetRate());
 
       //
       // Scan the track for silences
@@ -286,14 +284,27 @@ bool EffectTruncSilence::Process()
 
       // Intersection may create regions smaller than allowed; ignore them.
       // Allow one nanosecond extra for consistent results with exact milliseconds of allowed silence.
-      if ((r->end - r->start) < ((mTruncInitialAllowedSilentMs / 1000.0) - 0.000000001))
+      if ((r->end - r->start) < (mInitialAllowedSilence - 0.000000001))
          continue;
 
       // Find new silence length as requested
       double inLength = r->end - r->start;
-      double outLength = wxMin(
-            mTruncInitialAllowedSilentMs / 1000.0 + (inLength - mTruncInitialAllowedSilentMs / 1000.0) / mSilenceCompressRatio,
-            mTruncLongestAllowedSilentMs / 1000.0);
+      double outLength;
+
+      switch (mProcessIndex) {
+      case 0:
+         outLength = mTruncLongestAllowedSilence;
+         break;
+      case 1:
+         outLength = mInitialAllowedSilence +
+                        (inLength - mInitialAllowedSilence) * mSilenceCompressPercent / 100.0;
+         break;
+      default:
+         outLength = wxMin(mInitialAllowedSilence +
+                              (inLength - mInitialAllowedSilence) * mSilenceCompressPercent / 100.0,
+                           mTruncLongestAllowedSilence);
+      }
+
       double cutLen = inLength - outLength;
       totalCutLen += cutLen;
 
@@ -503,15 +514,19 @@ void EffectTruncSilence::BlendFrames(float* buffer, int blendFrameCount, int lef
 // TruncSilenceDialog
 //----------------------------------------------------------------------------
 
-#define ID_SHORTEST_SILENCE_TEXT   7000
-#define ID_LONGEST_SILENCE_TEXT   7001
-#define ID_COMPRESS_FACTOR   7002
+enum {
+   ID_DETECT_SILENCE = 1001,
+   ID_TRUNCATION_DURATION,
+   ID_COMPRESS_FACTOR,
+   ID_PROCESS_CHOICE
+};
 
 BEGIN_EVENT_TABLE(TruncSilenceDialog, EffectDialog)
     EVT_BUTTON(ID_EFFECT_PREVIEW, TruncSilenceDialog::OnPreview)
-    EVT_TEXT( ID_SHORTEST_SILENCE_TEXT, TruncSilenceDialog::OnDurationChange )
-    EVT_TEXT( ID_LONGEST_SILENCE_TEXT, TruncSilenceDialog::OnDurationChange )
-    EVT_TEXT( ID_COMPRESS_FACTOR, TruncSilenceDialog::OnDurationChange )
+    EVT_CHOICE(ID_PROCESS_CHOICE, TruncSilenceDialog::OnControlChange)
+    EVT_TEXT(ID_DETECT_SILENCE, TruncSilenceDialog::OnControlChange)
+    EVT_TEXT(ID_TRUNCATION_DURATION, TruncSilenceDialog::OnControlChange)
+    EVT_TEXT(ID_COMPRESS_FACTOR, TruncSilenceDialog::OnControlChange)
 END_EVENT_TABLE()
 
 TruncSilenceDialog::TruncSilenceDialog(EffectTruncSilence * effect,
@@ -526,52 +541,61 @@ void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
 
-   S.StartStatic(_("Detection"));
+   S.StartHorizontalLay();
    {
-      S.StartTwoColumn();
+      // Action choices
+      wxArrayString processChoices;
+      processChoices.Add(_("Truncate Detected Silence"));
+      processChoices.Add(_("Compress Excess Silence"));
+
+      S.Id(ID_PROCESS_CHOICE).TieChoice(wxT(""),
+                                        mEffect->mProcessIndex,
+                                        &processChoices);
+      S.SetSizeHints(-1, -1);
+   }
+   S.EndHorizontalLay();
+
+   
+   S.StartStatic(_("Detect Silence"));
+   {
+      S.StartMultiColumn(3, wxALIGN_CENTER_HORIZONTAL);
       {
+         // Threshold
          wxArrayString choices(Enums::NumDbChoices, Enums::GetDbChoices());
-         S.TieChoice(_("Threshold for silence:"),
+         S.TieChoice(_("Level:"),
                      mEffect->mTruncDbChoiceIndex,
                      &choices);
+         S.SetSizeHints(-1, -1);
+         S.AddUnits(wxT("dB"));
+
+      // Ignored silence
+         S.Id(ID_DETECT_SILENCE).TieNumericTextBox(_("Duration:"),
+                                                          mEffect->mInitialAllowedSilence,
+                     12);
+         S.AddUnits(wxT("seconds"));
       }
-      S.EndTwoColumn();
-      S.StartThreeColumn();
-      {
-         S.Id( ID_SHORTEST_SILENCE_TEXT ).TieNumericTextBox(_("Ignore silence less than:"),
-                     mEffect->mTruncInitialAllowedSilentMs,
-                     10);
-         S.AddUnits( _("milliseconds") );
-      }
-      S.EndThreeColumn();
+      S.EndMultiColumn();
    }
    S.EndStatic();
 
-   S.StartStatic(_("Truncation"));
+   S.StartMultiColumn(3, wxALIGN_CENTER_HORIZONTAL);
    {
-      mTruncationMessage = S.AddVariableText(wxString::Format(_("For silences longer than %d milliseconds:"),
-                                                 (gPrefs->Read(wxT("/Effects/TruncateSilence/InitialAllowedSilentMs"), 200L))));
+      // Truncation / Compression factor
+      S.Id( ID_TRUNCATION_DURATION ).TieNumericTextBox(_("Truncate to:"),
+                                                            mEffect->mTruncLongestAllowedSilence,
+                                                            12);
+      S.AddUnits(wxT("seconds"));
 
-      S.StartThreeColumn();
-      {         
-         S.Id( ID_COMPRESS_FACTOR ).TieNumericTextBox(_("Compress silence by:"),
-                     mEffect->mSilenceCompressRatio,
-                     10);
-         /* i18n-hint: Leave as is unless your language has a different way to show ratios like 5:1*/
-         S.AddUnits( _(":1") );
-
-         // Truncation.
-         S.Id( ID_LONGEST_SILENCE_TEXT ).TieNumericTextBox(_("and then truncate to:"),
-                     mEffect->mTruncLongestAllowedSilentMs,
-                     10);
-         S.AddUnits( _("milliseconds.") );
-
-      }
-      S.EndThreeColumn();
+      S.Id( ID_COMPRESS_FACTOR ).TieNumericTextBox(_("Compress to:"),
+                                                   mEffect->mSilenceCompressPercent,
+                                                   12);
+      S.AddUnits(wxT("percent"));
    }
-   S.EndStatic();
+   S.EndMultiColumn();
 
+   // Warnings
    pWarning = S.AddVariableText( wxT("") );
+   UpdateUI();
 }
 
 void TruncSilenceDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
@@ -580,7 +604,27 @@ void TruncSilenceDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    mEffect->Preview();
 }
 
-void TruncSilenceDialog::OnDurationChange(wxCommandEvent & WXUNUSED(event))
+void TruncSilenceDialog::UpdateUI()
+{
+   wxWindow *pWnd;
+
+   switch (mEffect->mProcessIndex)
+   {
+   case 0:
+      pWnd = FindWindowById(ID_TRUNCATION_DURATION, this);
+      pWnd->Enable(true);
+      pWnd = FindWindowById(ID_COMPRESS_FACTOR, this);
+      pWnd->Enable(false);
+      break;
+   case 1:
+      pWnd = FindWindowById(ID_TRUNCATION_DURATION, this);
+      pWnd->Enable(false);
+      pWnd = FindWindowById(ID_COMPRESS_FACTOR, this);
+      pWnd->Enable(true);
+   }
+}
+
+void TruncSilenceDialog::OnControlChange(wxCommandEvent & WXUNUSED(event))
 {
    // We may even get called during the constructor.
    // This test saves us from calling unsafe functions.
@@ -588,23 +632,31 @@ void TruncSilenceDialog::OnDurationChange(wxCommandEvent & WXUNUSED(event))
       return;
    TransferDataFromWindow();
 
-   mTruncationMessage->SetLabel(wxString::Format(_("For silence longer than %d milliseconds:"),
-                                                 (mEffect->mTruncInitialAllowedSilentMs)));
-
    bool bOk =  true;
 
    wxString warningText;
-   if (mEffect->mTruncInitialAllowedSilentMs < 1.0f) {
+   if (mEffect->mInitialAllowedSilence < 0.001) {
       bOk = false;
-      warningText = _("Ignored silence must be at least 1 millisecond");
+      warningText = _("Minimum detection duration: 0.001 seconds.");
+   } else if (mEffect->mInitialAllowedSilence > 10000.0) {
+      bOk = false;
+      warningText = _("Maximum detection duration: 10000 seconds.");
    }
-   if (mEffect->mTruncLongestAllowedSilentMs < 1.0f) {
+
+   if ((mEffect->mTruncLongestAllowedSilence < 0.0f) && (mEffect->mProcessIndex != 1)) {
       bOk = false;
-      warningText = _("Cannot truncate to less than 1 millisecond");
+      warningText = _("Cannot truncate to less than 0 seconds.");
+   } else if ((mEffect->mTruncLongestAllowedSilence > 10000.0)  && (mEffect->mProcessIndex != 1)) {
+      bOk = false;
+      warningText = _("Maximum truncation length is 10000 seconds.");
    }
-   if (mEffect->mSilenceCompressRatio < 1.0f) {
+
+   if ((mEffect->mSilenceCompressPercent < 0.0) && (mEffect->mProcessIndex != 0)) {
       bOk = false;
-      warningText = _("Compression ratio must be at least 1:1");
+      warningText = _("Compression cannot be less than 0 percent.");
+   } else if ((mEffect->mSilenceCompressPercent >= 100.0) && (mEffect->mProcessIndex != 0)) {
+      bOk = false;
+      warningText = _("Compression must be less than 100 percent");
    }
 
    pWarning->SetLabel( bOk ? wxT("") : warningText);
@@ -615,4 +667,5 @@ void TruncSilenceDialog::OnDurationChange(wxCommandEvent & WXUNUSED(event))
    pWnd = FindWindowById( ID_EFFECT_PREVIEW, this );
    pWnd->Enable( bOk );
 
+   UpdateUI();
 }
