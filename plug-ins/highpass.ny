@@ -24,7 +24,7 @@
            be greater than ~a Hz (half of the track sample rate)."
            frequency
            (truncate (/ *sound-srate* 2.0))))
-  ((<= frequency 1)
+  ((< frequency 1)
     (format nil
            "Cutoff frequency is set at ~a Hz~%but must be at least 1 Hz."
            frequency))
