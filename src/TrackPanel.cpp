@@ -5340,7 +5340,7 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMo
       }
    } else if (event.Dragging()) {
       ;
-   } else if( event.LeftUp()) {
+   } else if (event.LeftUp() && (mCapturedTrack->GetKind() == Track::Label)) {
       SetCapturedTrack( NULL );
    }
 
