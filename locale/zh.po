@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-11 04:56+0100\n"
-"PO-Revision-Date: 2014-02-17 06:47-0000\n"
+"PO-Revision-Date: 2014-03-25 05:09-0000\n"
 "Last-Translator: min zhang\n"
 "Language-Team: Chinese (http://www.transifex.com/projects/p/audacity/language/zh/)\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "关于Audacity..."
 #. * you would use for a translation for 'OK' on a button.
 #: AboutDialog.cpp:200
 msgid "OK... Audacious!"
-msgstr "OK... Audacious!"
+msgstr "好了... 戳我!"
 
 #: AboutDialog.cpp:216
 msgid "Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. We thank <a href=\"http://code.google.com\">Google Code</a> and <a href=\"http://sourceforge.net\">SourceForge</a> for hosting our project. Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
@@ -828,7 +828,8 @@ msgstr "输入新链的名字"
 msgid "Name must not be blank"
 msgstr "名字不能为空"
 
-#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.
+#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/'
+#. and '\'.
 #: BatchProcessDialog.cpp:732
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
@@ -946,7 +947,8 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "依赖性检查"
 
-#. i18n-hint: This title appears on a dialog that indicates the progress in doing something.
+#. i18n-hint: This title appears on a dialog that indicates the progress in
+#. doing something.
 #: DirManager.cpp:209
 #: DirManager.cpp:295
 #: DirManager.cpp:446
@@ -1521,13 +1523,15 @@ msgstr "没有选择足够的数据。"
 msgid "s"
 msgstr "秒"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #: FreqWindow.cpp:878
 #, c-format
 msgid "Cursor: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"
 msgstr "光标： %d Hz (%s) = %d dB    峰： %d Hz (%s) = %.1f dB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: FreqWindow.cpp:889
 #, c-format
@@ -2299,7 +2303,8 @@ msgstr "展开所有轨道(&X)"
 msgid "&Show Clipping"
 msgstr "显示破音(&S)"
 
-#. i18n-hint: Clicking this menu item shows the various editing steps that have been taken.
+#. i18n-hint: Clicking this menu item shows the various editing steps that
+#. have been taken.
 #: Menus.cpp:580
 msgid "&History..."
 msgstr "历史记录...(&H)"
@@ -2326,7 +2331,8 @@ msgstr "设备工具栏(&D)"
 msgid "&Edit Toolbar"
 msgstr "编辑工具栏(&E)"
 
-#. i18n-hint: Clicking this menu item shows the toolbar which has sound level meters
+#. i18n-hint: Clicking this menu item shows the toolbar which has sound level
+#. meters
 #: Menus.cpp:598
 msgid "&Meter Toolbar"
 msgstr "指示器工具栏(&M)"
@@ -2341,17 +2347,20 @@ msgstr "混音器工具栏(&X)"
 msgid "&Selection Toolbar"
 msgstr "选择工具栏(&S)"
 
-#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in it
+#. i18n-hint: Clicking this menu item shows a toolbar that has some tools in
+#. it
 #: Menus.cpp:604
 msgid "T&ools Toolbar"
 msgstr "工具工具栏(&O)"
 
-#. i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)
+#. i18n-hint: Clicking this menu item shows the toolbar for transcription
+#. (currently just vary play speed)
 #: Menus.cpp:606
 msgid "Transcri&ption Toolbar"
 msgstr "转录工具栏(&P)"
 
-#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons on it (play record etc)
+#. i18n-hint: Clicking this menu item shows the toolbar with the big buttons
+#. on it (play record etc)
 #: Menus.cpp:608
 msgid "&Transport Toolbar"
 msgstr "播录工具栏(&T)"
@@ -2361,10 +2370,14 @@ msgstr "播录工具栏(&T)"
 msgid "&Reset Toolbars"
 msgstr "重设工具栏(&R)"
 
-#. i18n-hint: Usually keep the ! at the start.  It means this option is hidden.
-#. * Simplified View toggles the showing and hiding of 'hidden' menu items that start
-#. * with !.  If your translation file is for a special use, that is if it is for a
-#. * simplified view with hidden menu items, then leave the ! out here, so that the
+#. i18n-hint: Usually keep the ! at the start.  It means this option is
+#. hidden.
+#. * Simplified View toggles the showing and hiding of 'hidden' menu items
+#. that start
+#. * with !.  If your translation file is for a special use, that is if it is
+#. for a
+#. * simplified view with hidden menu items, then leave the ! out here, so
+#. that the
 #. * user can show/hide some of the menu items.
 #: Menus.cpp:624
 msgid "!Simplified View"
@@ -3098,7 +3111,8 @@ msgstr "创建副本"
 msgid "Duplicated"
 msgstr "已副本的"
 
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.
+#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. regions.
 #: Menus.cpp:3909
 msgid "Cut labeled audio regions to clipboard"
 msgstr "剪切标记的音频区域到剪贴板"
@@ -3137,7 +3151,8 @@ msgstr "删除标记的音频区域"
 msgid "Delete Labeled Audio"
 msgstr "删除标记的音频"
 
-#. i18n-hint: (verb) Audacity has just done a special kind of delete on the labeled audio regions
+#. i18n-hint: (verb) Audacity has just done a special kind of delete on the
+#. labeled audio regions
 #: Menus.cpp:3977
 msgid "Split Deleted labeled audio regions"
 msgstr "分割删除标记的音频选段"
@@ -3157,7 +3172,8 @@ msgstr "静音标记的音频选段"
 msgid "Silence Labeled Audio"
 msgstr "静音标记的音频"
 
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a point or a region)
+#. i18n-hint: (verb) past tense.  Audacity has just split the labeled audio (a
+#. point or a region)
 #: Menus.cpp:4006
 msgid "Split labeled audio (points or regions)"
 msgstr "分割标记的音频(点或者选段)"
@@ -3167,7 +3183,8 @@ msgstr "分割标记的音频(点或者选段)"
 msgid "Split Labeled Audio"
 msgstr "分割标记的音频"
 
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or regions)
+#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. regions)
 #: Menus.cpp:4022
 msgid "Joined labeled audio (points or regions)"
 msgstr "合并标记的音频(点或者选段)"
@@ -4469,12 +4486,15 @@ msgstr "录制结束"
 msgid "Audacity Timer Record Progress"
 msgstr "Audacity计时录制进度"
 
-#. i18n-hint: This string is used to configure the controls for times when the recording is
-#. * started and stopped. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls for times when the
+#. recording is
+#. * started and stopped. As such it is important that only the alphabetic
+#. parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-#. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
-#.
+#. * The 'h' indicates the first number displayed is hours, the 'm' indicates
+#. the second number
+#. * displayed is minutes, and the 's' indicates that the third number
+#. displayed is seconds.
 #: TimerRecordDialog.cpp:333
 msgid "099 h 060 m 060 s"
 msgstr "099 时 060 分 060 秒"
@@ -4495,19 +4515,24 @@ msgstr "结束日期和时间"
 msgid "End Date"
 msgstr "结束日期"
 
-#. i18n-hint: This string is used to configure the controls which shows the recording
-#. * duration. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls which shows the
+#. recording
+#. * duration. As such it is important that only the alphabetic parts of the
+#. string
 #. * are translated, with the numbers left exactly as they are.
-#. * The string 'days' indicates that the first number in the control will be the number of days,
-#. * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-#. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
+#. * The string 'days' indicates that the first number in the control will be
+#. the number of days,
+#. * then the 'h' indicates the second number displayed is hours, the 'm'
+#. indicates the third
+#. * number displayed is minutes, and the 's' indicates that the fourth number
+#. displayed is
 #. * seconds.
-#.
 #: TimerRecordDialog.cpp:382
 msgid "099 days 024 h 060 m 060 s"
 msgstr "099 天 024 时 060 分 060 秒"
 
-#. i18n-hint: A time specification like "Sunday 28th October 2007 15:16:17 GMT"
+#. i18n-hint: A time specification like "Sunday 28th October 2007 15:16:17
+#. GMT"
 #. * but hopefully translated by wxwidgets will be inserted into this
 #: TimerRecordDialog.cpp:454
 #, c-format
@@ -4657,12 +4682,14 @@ msgstr "拖动单个或多个标签边界"
 msgid "Drag label boundary"
 msgstr "拖动标签边界"
 
-#. i18n-hint: This string is for the Mac OS, which uses Command-, as the shortcut for Preferences
+#. i18n-hint: This string is for the Mac OS, which uses Command-, as the
+#. shortcut for Preferences
 #: TrackPanel.cpp:1606
 msgid "Multi-Tool Mode: Cmd-, for Mouse and Keyboard Preferences"
 msgstr "多重工具模式： Cmd-, 鼠标和键盘首选项"
 
-#. i18n-hint: This string is for Windows and Linux, which uses Control-P as the shortcut for Preferences
+#. i18n-hint: This string is for Windows and Linux, which uses Control-P as
+#. the shortcut for Preferences
 #: TrackPanel.cpp:1609
 msgid "Multi-Tool Mode: Ctrl-P for Mouse and Keyboard Preferences"
 msgstr "多重工具模式： Ctrl-P 鼠标和键盘首选项"
@@ -4799,8 +4826,10 @@ msgstr "向上"
 msgid "down"
 msgstr "向下"
 
-#. i18n-hint: the first %s is the name of a track, the second a direction as in up or down.
-#. * If the word order is different in your language ask on the translators list about what
+#. i18n-hint: the first %s is the name of a track, the second a direction as
+#. in up or down.
+#. * If the word order is different in your language ask on the translators
+#. list about what
 #. * to do.
 #: TrackPanel.cpp:4441
 #: TrackPanel.cpp:7787
@@ -5073,7 +5102,8 @@ msgstr "选段太短，无法使用语音基调。"
 msgid "Calibration Results\n"
 msgstr "校准结果\n"
 
-#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'
+#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard
+#. Deviations'
 #: VoiceKey.cpp:826
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
@@ -5214,7 +5244,8 @@ msgstr "增幅中"
 msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
 msgstr "你选择的轨道不包含音频。自动回避只能处理音轨。"
 
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
+#. volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: effects/AutoDuck.cpp:145
@@ -5586,7 +5617,8 @@ msgstr "衰减时间："
 msgid "Decay Time"
 msgstr "衰减时间"
 
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate
+#. it.
 #: effects/Compressor.cpp:676
 msgid "Make-up gain for 0dB after compressing"
 msgstr "压缩后增长到 0dB "
@@ -6821,9 +6853,10 @@ msgstr "标准化中..."
 msgid "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
 msgstr "应用效果：%s 拉伸系数 = %f 时间， 时间分辨率 = %f 秒"
 
-#. i18n-hint: This is an effect error message, for the effect named Paulstretch.
-#. * Time Resolution is a parameter of the effect, the translation should match
-#.
+#. i18n-hint: This is an effect error message, for the effect named
+#. Paulstretch.
+#. * Time Resolution is a parameter of the effect, the translation should
+#. match
 #: effects/Paulstretch.cpp:169
 msgid ""
 "Error in Paulstretch:\n"
@@ -6837,7 +6870,6 @@ msgstr ""
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
-#.
 #: effects/Paulstretch.cpp:425
 msgid "Stretch Factor:"
 msgstr "拉伸系数："
@@ -6849,7 +6881,6 @@ msgstr "时间分辨率(秒)："
 #. i18n-hint: This is the name of the effect, i.e. a proper noun, which
 #. * wouldn't normally get translated. It's the combination of the author's
 #. * name (Paul) with what it does (stretch sound)
-#.
 #: effects/Paulstretch.h:30
 msgid "Paulstretch..."
 msgstr "Paulstretch拉伸..."
@@ -6858,7 +6889,6 @@ msgstr "Paulstretch拉伸..."
 #. * processed. The effect stretches the input in time, making the sound
 #. * much longer and spread out whilst at the same pitch. Paulstretch is the
 #. * name of the effect (it's also translated on it's own).
-#.
 #: effects/Paulstretch.h:39
 msgid "Stretching with Paulstretch"
 msgstr "使用Paulstretch拉伸"
@@ -7193,7 +7223,8 @@ msgstr "前后反转"
 msgid "Reversing"
 msgstr "前后反转中"
 
-#. i18n-hint: The 'scientific filter' is an audio effect.  It's a low-pass or high-pass
+#. i18n-hint: The 'scientific filter' is an audio effect.  It's a low-pass or
+#. high-pass
 #. filter with specfic characteristics.
 #: effects/ScienFilter.cpp:156
 #: effects/ScienFilter.cpp:210
@@ -7204,22 +7235,26 @@ msgstr "科学滤波器"
 msgid "Filter Type:"
 msgstr "滤波类型："
 
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
 #: effects/ScienFilter.cpp:619
 msgid "Butterworth"
 msgstr "巴特沃斯(Butterworth)"
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
 #: effects/ScienFilter.cpp:621
 msgid "Chebyshev Type I"
 msgstr "切比雪夫(Chebyshev)滤波器 I"
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
 #: effects/ScienFilter.cpp:623
 msgid "Chebyshev Type II"
 msgstr " 切比雪夫滤波器 II"
 
-#. i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.
+#. i18n-hint: 'Order' means the complexity of the filter, and is a number
+#. between 1 and 10.
 #: effects/ScienFilter.cpp:626
 msgid " Order:"
 msgstr "阶数(复杂度)："
@@ -7279,8 +7314,10 @@ msgstr "静音阈值："
 msgid "Silence Threshold"
 msgstr "静音阈值"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a new experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a new experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: effects/ScoreAlignDialog.cpp:143
@@ -7288,8 +7325,10 @@ msgstr "静音阈值"
 msgid "Presmooth Time"
 msgstr "预平滑时间"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a new experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a new experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: effects/ScoreAlignDialog.cpp:156
@@ -7297,8 +7336,10 @@ msgstr "预平滑时间"
 msgid "Line Time"
 msgstr "行 时间"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a new experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a new experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: effects/ScoreAlignDialog.cpp:169
@@ -7419,7 +7460,7 @@ msgstr "正弦"
 
 #: effects/ToneGen.cpp:74
 msgid "Square"
-msgstr "平方"
+msgstr "方波"
 
 #: effects/ToneGen.cpp:75
 msgid "Sawtooth"
@@ -7427,7 +7468,7 @@ msgstr "锯齿"
 
 #: effects/ToneGen.cpp:76
 msgid "Square, no alias"
-msgstr "平方，无混叠"
+msgstr "方波，无混叠"
 
 #: effects/ToneGen.cpp:264
 #: prefs/TracksPrefs.cpp:58
@@ -7501,7 +7542,8 @@ msgstr "最大静音持续时间："
 msgid "Silence compression:"
 msgstr "静音压缩"
 
-#. i18n-hint: Leave as is unless your language has a different way to show ratios like 5:1
+#. i18n-hint: Leave as is unless your language has a different way to show
+#. ratios like 5:1
 #: effects/TruncSilence.cpp:548
 msgid ":1"
 msgstr ":1"
@@ -7546,7 +7588,8 @@ msgstr "插件名称"
 msgid "Path"
 msgstr "路径"
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a
+#. button.
 #: effects/VST/VSTEffect.cpp:543
 #: effects/audiounits/AudioUnitEffect.cpp:884
 #: effects/nyquist/Nyquist.cpp:1502
@@ -8444,8 +8487,10 @@ msgstr "使用线性预测编码(LPC)"
 msgid "MPEG container options"
 msgstr "MPEG容器选项"
 
-#. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-#. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
+#. i18n-hint: 'mux' is short for multiplexor, a device that selects between
+#. several inputs
+#. 'Mux Rate' is a parameter that has some bearing on compression ratio for
+#. MPEG
 #. it has a hard to predict effect on the degree of compression
 #: export/ExportFFmpegDialogs.cpp:1435
 msgid "Mux Rate:"
@@ -8461,8 +8506,10 @@ msgstr ""
 "可选\n"
 "0 - 默认"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
+#. compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one
+#. piece.
 #: export/ExportFFmpegDialogs.cpp:1440
 msgid "Packet Size:"
 msgstr "包大小："
@@ -8718,7 +8765,8 @@ msgstr "合并立体声"
 msgid "Stereo"
 msgstr "立体声"
 
-#. i18n-hint: LAME is the name of an MP3 converter and should not be translated
+#. i18n-hint: LAME is the name of an MP3 converter and should not be
+#. translated
 #: export/ExportMP3.cpp:576
 msgid "Locate Lame"
 msgstr "定位Lame"
@@ -10715,7 +10763,8 @@ msgstr "用灰度色调显示频谱(&H)"
 msgid "Show a grid along the &Y-axis"
 msgstr "显示沿Y轴的网格(&Y)"
 
-#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated
+#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be
+#. translated
 #: prefs/SpectrumPrefs.cpp:179
 msgid "FFT Find Notes"
 msgstr "FFT(快速傅立叶变换)寻找音符"
@@ -11104,12 +11153,14 @@ msgstr "播放指示"
 msgid "Meter-Play"
 msgstr "指示-播放"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #: toolbars/MeterToolBar.cpp:100
 msgid "Record Meter"
 msgstr "录制指示"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: toolbars/MeterToolBar.cpp:104
@@ -11192,8 +11243,10 @@ msgstr "隐藏"
 msgid "Audio Position:"
 msgstr "音频位置："
 
-#. i18n-hint: The snap-to mode, when enabled, means for example that selections
-#. * are always at whole second boundaries.  You can't select a range 4.5s to 7.9s
+#. i18n-hint: The snap-to mode, when enabled, means for example that
+#. selections
+#. * are always at whole second boundaries.  You can't select a range 4.5s to
+#. 7.9s
 #. * because the boundaries 'snap to' the nearest whole number.
 #: toolbars/SelectionBar.cpp:233
 #: toolbars/SelectionBar.cpp:243
@@ -11478,7 +11531,8 @@ msgstr "0100 日 024 时 060 分 060 秒"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
-#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds (the
+#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for
+#. seconds (the
 #. * hundredths are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
 #: widgets/TimeTextCtrl.cpp:305
@@ -11486,7 +11540,8 @@ msgid "0100 h 060 m 060.0100 s"
 msgstr "0100 时 060 分 060.0100 秒"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to
+#. the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
@@ -11506,7 +11561,6 @@ msgstr "0100 时 060 分 060 秒+.# 采样"
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
-#.
 #: widgets/TimeTextCtrl.cpp:328
 msgid "samples"
 msgstr "采样率"
