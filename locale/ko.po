@@ -5,20 +5,21 @@
 #
 # Translators:
 # Choi Youn-Soo <korea3d@gmail.com>, 2012.
-# Darkcircle <darkcircle.0426@gmail.com>, 2012-2014
+# Seong-ho Cho <darkcircle.0426@gmail.com>, 2012-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-11 04:56+0100\n"
-"PO-Revision-Date: 2014-03-25 04:38-0000\n"
-"Last-Translator: Gale Andrews\n"
+"PO-Revision-Date: 2014-03-29 03:23-0000\n"
+"Last-Translator: Seong-ho Cho\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/audacity/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.5.7\n"
 
 #: AboutDialog.cpp:59
 #: AboutDialog.cpp:81
@@ -1063,8 +1064,8 @@ msgid ""
 "project immediately\" on further error alerts."
 msgstr ""
 "\"%s\" 폴더에 대한 프로젝트 검사에서 \n"
-"%d빠진 외부 오디오 파일('별명 파일') \n"
-"개를 발견했습니다. Audacity가 이 파일을 자동으로 \n"
+"빠진 외부 오디오 파일('별명 파일') %d개를 \n"
+"발견했습니다. Audacity가 이 파일을 자동으로 \n"
 "복구할 방법이 없습니다. \n"
 "\n"
 "만약 아래에서 첫번째 또는 두번째 옵션을 선택하면, \n"
@@ -3347,22 +3348,22 @@ msgstr "모두"
 #: Menus.cpp:5093
 #, c-format
 msgid "Aligned/Moved %s"
-msgstr ""
+msgstr "%s 정렬함/이동함"
 
 #: Menus.cpp:5094
 #, c-format
 msgid "Align %s/Move"
-msgstr ""
+msgstr "%s 정렬/이동"
 
 #: Menus.cpp:5097
 #, c-format
 msgid "Aligned %s"
-msgstr ""
+msgstr "%s 정렬함"
 
 #: Menus.cpp:5098
 #, c-format
 msgid "Align %s"
-msgstr ""
+msgstr "%s 정렬"
 
 #: Menus.cpp:5209
 msgid "Synchronizing MIDI and Audio Tracks"
@@ -5140,7 +5141,7 @@ msgstr "명령"
 #: commands/CommandManager.cpp:577
 #, c-format
 msgid "Plug-ins %i to %i"
-msgstr ""
+msgstr "%i~%i 플러그인"
 
 #: commands/CommandManager.cpp:981
 msgid ""
@@ -7227,7 +7228,7 @@ msgstr "역방향으로"
 #: effects/ScienFilter.cpp:156
 #: effects/ScienFilter.cpp:210
 msgid "Scientific Filter"
-msgstr ""
+msgstr "사이언티픽 필터"
 
 #: effects/ScienFilter.cpp:616
 msgid "Filter Type:"
@@ -7237,19 +7238,19 @@ msgstr "필터 형식:"
 #. is named.
 #: effects/ScienFilter.cpp:619
 msgid "Butterworth"
-msgstr ""
+msgstr "버터워드"
 
 #. i18n-hint: Chebyshev is the name of the person after whom the filter type
 #. is named.
 #: effects/ScienFilter.cpp:621
 msgid "Chebyshev Type I"
-msgstr ""
+msgstr "체비쉐브 1 형식"
 
 #. i18n-hint: Chebyshev is the name of the person after whom the filter type
 #. is named.
 #: effects/ScienFilter.cpp:623
 msgid "Chebyshev Type II"
-msgstr ""
+msgstr "체비쉐브 2 형식"
 
 #. i18n-hint: 'Order' means the complexity of the filter, and is a number
 #. between 1 and 10.
@@ -7259,7 +7260,7 @@ msgstr "순서:"
 
 #: effects/ScienFilter.cpp:639
 msgid "Passband Ripple:"
-msgstr ""
+msgstr "통과 대역 리플:"
 
 #: effects/ScienFilter.cpp:645
 msgid "Subtype:"
@@ -7272,15 +7273,15 @@ msgstr "컷오프:"
 
 #: effects/ScienFilter.cpp:654
 msgid "Hz  Stopband Ripple:"
-msgstr ""
+msgstr "Hz  정지 대역 리플:"
 
 #: effects/ScienFilter.h:51
 msgid "Scientific Filter..."
-msgstr ""
+msgstr "사이언티픽 필터..."
 
 #: effects/ScienFilter.h:65
 msgid "Performing ScienFilter"
-msgstr ""
+msgstr "사이언티픽 필터 처리 중"
 
 #: effects/ScoreAlignDialog.cpp:61
 msgid "Align MIDI to Audio"
