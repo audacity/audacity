@@ -1,12 +1,12 @@
 # Header entry was created by Lokalize.
 #
-# Pavel Fric <pavelfric@seznam.cz>, 2013.
+# Pavel Fric <pavelfric@seznam.cz>, 2013, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-10-11 04:56+0100\n"
-"PO-Revision-Date: 2013-10-15 09:06-0000\n"
+"PO-Revision-Date: 2014-03-29 03:17-0000\n"
 "Last-Translator: Pavel Fric\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -2193,7 +2193,7 @@ msgstr "Ve všech &stopách"
 
 #: Menus.cpp:453
 msgid "In All S&ync-Locked Tracks"
-msgstr "Ve všech synchronizovaných-zamčených stopách"
+msgstr "Ve všech synchronizovaných-zamknutých stopách"
 
 #: Menus.cpp:463
 msgid "Find &Zero Crossings"
@@ -3213,7 +3213,7 @@ msgstr "Vybrat MIDI soubor..."
 
 #: Menus.cpp:4691
 msgid "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"
-msgstr "MIDI a Allegro soubory (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI soubory (*.mid;*.midi)|*.mid;*.midi|Allegro soubory (*.gro)|*.gro|All files (*.*)|*.*"
+msgstr "MIDI a soubory Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|Soubory MIDI (*.mid;*.midi)|*.mid;*.midi|Soubory Allegro (*.gro)|*.gro|Všechny soubory (*.*)|*.*"
 
 #: Menus.cpp:4708
 #, c-format
@@ -6396,7 +6396,7 @@ msgstr "Není dostupné dost ukládacího místa pro vytvoření zvuku"
 
 #: effects/Invert.h:27
 msgid "Invert"
-msgstr "Obrátit"
+msgstr "Obrátit fáze"
 
 #: effects/Invert.h:41
 msgid "Inverting"
@@ -7233,6 +7233,7 @@ msgid "Cutoff:"
 msgstr "Bod zkrácení:"
 
 #: effects/ScienFilter.cpp:654
+#, fuzzy
 msgid "Hz  Stopband Ripple:"
 msgstr ""
 
@@ -9008,7 +9009,7 @@ msgstr "Nastavení uložení do Ogg Vorbis"
 
 #: export/ExportOGG.cpp:157
 msgid "Ogg Vorbis Files"
-msgstr "Soubory Ogg Vorgis"
+msgstr "Soubory Ogg Vorbis"
 
 #: export/ExportOGG.cpp:258
 msgid "Exporting the selected audio as Ogg Vorbis"
@@ -9369,7 +9370,7 @@ msgstr "Soubory MP3"
 
 #: import/ImportOGG.cpp:44
 msgid "Ogg Vorbis files"
-msgstr "Soubory Ogg Vorgis"
+msgstr "Soubory Ogg Vorbis"
 
 #: import/ImportOGG.cpp:185
 msgid "Media read error"
@@ -9377,7 +9378,7 @@ msgstr "Chyba při čtení média"
 
 #: import/ImportOGG.cpp:188
 msgid "Not an Ogg Vorbis file"
-msgstr "Toto není soubor Ogg Vorgis"
+msgstr "Toto není soubor Ogg Vorbis"
 
 #: import/ImportOGG.cpp:191
 msgid "Vorbis version mismatch"
@@ -9922,7 +9923,7 @@ msgstr "Před provedením uložení zobrazit editor &popisných dat"
 
 #: prefs/ImportExportPrefs.cpp:90
 msgid "When exporting track to an Allegro (.gro) file"
-msgstr "Při ukládání stopy do souboru Allegro(.gro)"
+msgstr "Při ukládání stopy do souboru Allegro (.gro)"
 
 #: prefs/ImportExportPrefs.cpp:94
 msgid "Represent times and durations in &seconds"
