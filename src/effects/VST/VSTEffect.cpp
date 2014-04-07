@@ -1198,7 +1198,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
    wxString fn;
 
    // Ask the user for the real name
-   fn = FileSelector(_("Load VST Program:"),
+   fn = FileSelector(_("Load VST Preset:"),
                      FileNames::DataDir(),
                      wxEmptyString,
                      wxT("xml"),
@@ -1216,7 +1216,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
    if (!reader.Parse(this, fn)) {
       // Inform user of load failure
       wxMessageBox(reader.GetErrorStr(),
-                   _("Error Loading VST Program"),
+                   _("Error Loading VST Preset"),
                    wxOK | wxCENTRE,
                    this);
    }
@@ -1232,7 +1232,7 @@ void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(event))
    wxString fn;
 
    // Ask the user for the real name
-   fn = FileSelector(_("Save VST Program As:"),
+   fn = FileSelector(_("Save VST Preset As:"),
                      FileNames::DataDir(),
                      mProgram->GetValue() + wxT(".xml"),
                      wxT("xml"),
