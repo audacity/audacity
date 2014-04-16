@@ -77,10 +77,10 @@ class AUDACITY_DLL_API Effect {
    virtual std::set<wxString> GetEffectCategories() = 0;
 #endif
 
-   // Totally optional - if you need a way to identify your effect
-   // from somewhere else in the program.  This should be human-readable,
-   // but should NOT be translated.  Use wxT(""), not _("").
-   virtual wxString GetEffectIdentifier() { return wxT(""); }
+   // Previously optional. Now required to identify effects for Chain support.
+   // Each subclass of Effect should override this method.
+   // This should be human-readable, but should NOT be translated.  Use wxT(""), not _("").
+   virtual wxString GetEffectIdentifier() = 0;
    
    // Each subclass of Effect should override this method.
    // This name will go in the progress dialog, but can be used

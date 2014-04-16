@@ -30,11 +30,12 @@ public:
    EffectReverb();
    virtual ~EffectReverb() {};
 
-   // Base class:
-   wxString GetEffectName() {return _("Reverb...");}
-   wxString GetEffectAction() {return _("Applying Reverb");}
-   wxString GetEffectDescription(); // Useful only after PromptUser values have been set. 
-   bool TransferParameters(Shuttle & shuttle);
+   // Implemented from the base class 'Effect':
+   virtual wxString GetEffectName() {return _("Reverb...");}
+   virtual wxString GetEffectAction() {return _("Applying Reverb");}
+   virtual wxString GetEffectIdentifier() {return wxT("Reverb");}
+   virtual wxString GetEffectDescription(); // Useful only after PromptUser values have been set. 
+   virtual bool TransferParameters(Shuttle & shuttle);
 
  protected:
    bool PromptUser();
