@@ -9,7 +9,7 @@
 # NOTE: Change this to the base of the Audacity source distribution, or specify
 #       via command line or environment
 #
-AUDACITY_DIR = 
+AUDACITY_DIR = ../..
 
 # -----------------------------------------------------------------------------
 # NOTE: Set to the names of your objects and final module name
@@ -23,6 +23,7 @@ MOD = mod-script-pipe.so
 CXXFLAGS += -Wall -O9
 CXXFLAGS += -DCC_HASVISIBILITY # Normally provided by configure
 CXXFLAGS += -DBUILDING_SCRIPT_PIPE
+CXXFLAGS += ${shell echo @WX_CXXFLAGS@ | ../../config.status --file=- }
 CXXFLAGS += -D__WXDEBUG__ -D__WXGTK__
 
 # -----------------------------------------------------------------------------
