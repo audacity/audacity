@@ -58,6 +58,7 @@ audacity_CPPFLAGS = \
 	$(WX_CXXFLAGS) \
 	$(NULL)
 
+audacity_LDFLAGS = -rdynamic
 audacity_LDADD = \
 	$(EXPAT_LIBS) \
 	$(FILEDIALOG_LIBS) \

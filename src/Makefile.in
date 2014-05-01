@@ -710,6 +710,9 @@ audacity_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_11) $(am__DEPENDENCIES_12) \
 	$(am__DEPENDENCIES_13) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_14) $(am__DEPENDENCIES_15)
+audacity_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(audacity_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -1075,6 +1078,7 @@ audacity_CPPFLAGS = -D__STDC_CONSTANT_MACROS -DLIBDIR=\"$(libdir)\" \
 	$(am__append_22) $(am__append_24) $(am__append_26) \
 	$(am__append_28) $(am__append_30) $(am__append_33) \
 	$(am__append_36) $(am__append_39) $(am__append_41)
+audacity_LDFLAGS = -rdynamic
 audacity_LDADD = $(EXPAT_LIBS) $(FILEDIALOG_LIBS) $(PORTAUDIO_LIBS) \
 	$(PORTMIXER_LIBS) $(SNDFILE_LIBS) $(WIDGETEXTRA_LIBS) \
 	$(WX_LIBS) $(NULL) $(am__append_2) $(am__append_5) \
@@ -1863,7 +1867,7 @@ effects/vamp/audacity-VampEffect.$(OBJEXT):  \
 
 audacity$(EXEEXT): $(audacity_OBJECTS) $(audacity_DEPENDENCIES) $(EXTRA_audacity_DEPENDENCIES) 
 	@rm -f audacity$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(audacity_OBJECTS) $(audacity_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(audacity_LINK) $(audacity_OBJECTS) $(audacity_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
