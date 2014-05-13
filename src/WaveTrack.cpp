@@ -1713,10 +1713,14 @@ bool WaveTrack::GetRMS(float *rms, double t0, double t1)
       if (t1 >= clip->GetStartTime() && t0 <= clip->GetEndTime())
       {
          float cliprms;
+         sampleCount clipStart, clipEnd;
+
          if (it->GetData()->GetRMS(&cliprms, t0, t1))
          {
-            sumsq += cliprms * cliprms * clip->GetNumSamples();
-            length += clip->GetNumSamples();
+            clip->TimeToSamplesClip(wxMax(t0, clip->GetStartTime()), &clipStart);
+            clip->TimeToSamplesClip(wxMin(t1, clip->GetEndTime()), &clipEnd);
+            sumsq += cliprms * cliprms * (clipEnd - clipStart);
+            length += (clipEnd - clipStart);
          } else
          {
             result = false;
