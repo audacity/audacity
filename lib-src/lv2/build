@@ -5,7 +5,7 @@ function waf
    pkg=$1
    pushd >/dev/null ${pkg}
    shift
-   python waf --prefix="." --include="." $@ build || exit 1
+   $(which python python2 | tail -1) waf --prefix="." --include="." $@ build || exit 1
    popd >/dev/null 
 
    export PKG_CONFIG_PATH="$(pwd)/${pkg}/build:${PKG_CONFIG_PATH}"
