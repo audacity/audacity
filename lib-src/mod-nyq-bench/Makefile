@@ -24,7 +24,7 @@ CXXFLAGS += -Wall -O9
 # Hopefully the rest is generic enough to satisfy most needs
 # -----------------------------------------------------------------------------
 
-CXXFLAGS += -DAUDACITY_DLL_API= -I$(AUDACITY_DIR)/src 
+CXXFLAGS += -DAUDACITY_DLL_API= -I$(AUDACITY_DIR)/src -I$(AUDACITY_DIR)/lib-src/portaudio-v19/include
 CXXFLAGS += ${shell echo @CPPFLAGS@ | ../../config.status --file=- }
 CXXFLAGS += ${shell echo @CXXFLAGS@ | ../../config.status --file=- | sed -e 's@$$(top_srcdir)@$(AUDACITY_DIR)@g' }
 CXXFLAGS += ${shell echo @LIBNYQUIST_CFLAGS@ | ../../config.status --file=- | sed -e 's@$$(top_srcdir)@$(AUDACITY_DIR)@g' }
