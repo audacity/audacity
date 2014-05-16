@@ -13,9 +13,6 @@ LRN
 
 #include "ImportPlugin.h"
 
-class ImportPluginList;
-class UnusableImportPluginList;
-
 void GetGStreamerImportPlugin(ImportPluginList *importPluginList,
                            UnusableImportPluginList *unusableImportPluginList);
 

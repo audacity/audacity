@@ -807,6 +807,9 @@
     <ClCompile Include="..\..\..\src\commands\OpenSaveCommands.cpp">
       <Filter>src/commands</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\import\ImportGStreamer.cpp">
+      <Filter>src/import</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1585,6 +1588,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h">
       <Filter>src/commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\import\ImportGStreamer.h">
+      <Filter>src/import</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

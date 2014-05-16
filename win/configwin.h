@@ -21,6 +21,7 @@
 #define USE_LIBID3TAG 1
 #define USE_LV2 1
 #define USE_LIBMAD 1
+//#define USE_GSTREAMER 1
 
 // Resamplers:
 // Exactly one resampler should be defined.
@@ -36,7 +37,6 @@
 #define USE_LIBVORBIS 1
 #define USE_NYQUIST 1
 #define USE_PORTMIXER 1
-// #define USE_SLV2 1
 #define USE_SBSMS 1
 #define USE_SOUNDTOUCH 1
 #define USE_VAMP 1

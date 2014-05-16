@@ -71,7 +71,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "effects/VST/VSTEffect.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
-#include "GStreamerLoader.h"
 #include "Internat.h"
 #include "LangChoice.h"
 #include "Languages.h"
@@ -1262,10 +1261,6 @@ bool AudacityApp::OnInit()
 
    #ifdef USE_FFMPEG
    FFmpegStartup();
-   #endif
-
-   #ifdef USE_GSTREAMER
-   GStreamerStartup();
    #endif
 
    mImporter = new Importer;
