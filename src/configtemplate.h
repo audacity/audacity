@@ -128,6 +128,9 @@
    */
 #undef USE_FFMPEG
 
+/* Define if the gstreamer is present */
+#undef USE_GSTREAMER
+
 /* Define if LADSPA plug-ins are enabled */
 #undef USE_LADSPA
 

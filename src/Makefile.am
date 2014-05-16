@@ -537,6 +537,16 @@ audacity_SOURCES += \
 	$(NULL)
 endif
 
+if USE_GSTREAMER
+audacity_CPPFLAGS += $(GSTREAMER_CFLAGS)
+audacity_LDADD += $(GSTREAMER_LIBS)
+audacity_SOURCES += \
+	import/ImportGStreamer.cpp \
+	import/ImportGStreamer.h \
+	$(NULL)
+endif
+
+
 if USE_LADSPA
 audacity_CPPFLAGS += $(LADSPA_CFLAGS)
 audacity_LDADD += $(LADSPA_LIBS)

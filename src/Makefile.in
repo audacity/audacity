@@ -100,9 +100,16 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_FFMPEG_TRUE@	import/ImportFFmpeg.h \
 @USE_FFMPEG_TRUE@	$(NULL)
 
-@USE_LADSPA_TRUE@am__append_7 = $(LADSPA_CFLAGS)
-@USE_LADSPA_TRUE@am__append_8 = $(LADSPA_LIBS)
-@USE_LADSPA_TRUE@am__append_9 = \
+@USE_GSTREAMER_TRUE@am__append_7 = $(GSTREAMER_CFLAGS)
+@USE_GSTREAMER_TRUE@am__append_8 = $(GSTREAMER_LIBS)
+@USE_GSTREAMER_TRUE@am__append_9 = \
+@USE_GSTREAMER_TRUE@	import/ImportGStreamer.cpp \
+@USE_GSTREAMER_TRUE@	import/ImportGStreamer.h \
+@USE_GSTREAMER_TRUE@	$(NULL)
+
+@USE_LADSPA_TRUE@am__append_10 = $(LADSPA_CFLAGS)
+@USE_LADSPA_TRUE@am__append_11 = $(LADSPA_LIBS)
+@USE_LADSPA_TRUE@am__append_12 = \
 @USE_LADSPA_TRUE@	effects/ladspa/ladspa.h \
 @USE_LADSPA_TRUE@	effects/ladspa/LadspaEffect.cpp \
 @USE_LADSPA_TRUE@	effects/ladspa/LadspaEffect.h \
@@ -110,39 +117,39 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_LADSPA_TRUE@	effects/ladspa/LoadLadspa.h \
 @USE_LADSPA_TRUE@	$(NULL)
 
-@USE_LAME_TRUE@am__append_10 = $(LAME_CFLAGS)
-@USE_LAME_TRUE@am__append_11 = $(LAME_LIBS)
-@USE_LIBFLAC_TRUE@am__append_12 = $(FLAC_CFLAGS)
-@USE_LIBFLAC_TRUE@am__append_13 = $(FLAC_LIBS)
-@USE_LIBFLAC_TRUE@am__append_14 = \
+@USE_LAME_TRUE@am__append_13 = $(LAME_CFLAGS)
+@USE_LAME_TRUE@am__append_14 = $(LAME_LIBS)
+@USE_LIBFLAC_TRUE@am__append_15 = $(FLAC_CFLAGS)
+@USE_LIBFLAC_TRUE@am__append_16 = $(FLAC_LIBS)
+@USE_LIBFLAC_TRUE@am__append_17 = \
 @USE_LIBFLAC_TRUE@	ondemand/ODDecodeFlacTask.cpp \
 @USE_LIBFLAC_TRUE@	ondemand/ODDecodeFlacTask.h \
 @USE_LIBFLAC_TRUE@	$(NULL)
 
-@USE_LIBID3TAG_TRUE@am__append_15 = $(ID3TAG_CFLAGS)
-@USE_LIBID3TAG_TRUE@am__append_16 = $(ID3TAG_LIBS)
-@USE_LIBMAD_TRUE@am__append_17 = $(LIBMAD_CFLAGS)
-@USE_LIBMAD_TRUE@am__append_18 = $(LIBMAD_LIBS)
-@USE_LIBNYQUIST_TRUE@am__append_19 = $(LIBNYQUIST_CFLAGS)
-@USE_LIBNYQUIST_TRUE@am__append_20 = $(LIBNYQUIST_LIBS)
-@USE_LIBNYQUIST_TRUE@am__append_21 = \
+@USE_LIBID3TAG_TRUE@am__append_18 = $(ID3TAG_CFLAGS)
+@USE_LIBID3TAG_TRUE@am__append_19 = $(ID3TAG_LIBS)
+@USE_LIBMAD_TRUE@am__append_20 = $(LIBMAD_CFLAGS)
+@USE_LIBMAD_TRUE@am__append_21 = $(LIBMAD_LIBS)
+@USE_LIBNYQUIST_TRUE@am__append_22 = $(LIBNYQUIST_CFLAGS)
+@USE_LIBNYQUIST_TRUE@am__append_23 = $(LIBNYQUIST_LIBS)
+@USE_LIBNYQUIST_TRUE@am__append_24 = \
 @USE_LIBNYQUIST_TRUE@	effects/nyquist/LoadNyquist.cpp \
 @USE_LIBNYQUIST_TRUE@	effects/nyquist/LoadNyquist.h \
 @USE_LIBNYQUIST_TRUE@	effects/nyquist/Nyquist.cpp \
 @USE_LIBNYQUIST_TRUE@	effects/nyquist/Nyquist.h \
 @USE_LIBNYQUIST_TRUE@	$(NULL)
 
-@USE_LIBSOUNDTOUCH_TRUE@am__append_22 = $(SOUNDTOUCH_CFLAGS)
-@USE_LIBSOUNDTOUCH_TRUE@am__append_23 = $(SOUNDTOUCH_LIBS)
-@USE_LIBSOXR_TRUE@am__append_24 = $(SOXR_CFLAGS)
-@USE_LIBSOXR_TRUE@am__append_25 = $(SOXR_LIBS)
-@USE_LIBTWOLAME_TRUE@am__append_26 = $(LIBTWOLAME_CFLAGS)
-@USE_LIBTWOLAME_TRUE@am__append_27 = $(LIBTWOLAME_LIBS)
-@USE_LIBVORBIS_TRUE@am__append_28 = $(LIBVORBIS_CFLAGS)
-@USE_LIBVORBIS_TRUE@am__append_29 = $(LIBVORBIS_LIBS)
-@USE_LV2_TRUE@am__append_30 = $(LV2_CFLAGS)
-@USE_LV2_TRUE@am__append_31 = $(LV2_LIBS)
-@USE_LV2_TRUE@am__append_32 = \
+@USE_LIBSOUNDTOUCH_TRUE@am__append_25 = $(SOUNDTOUCH_CFLAGS)
+@USE_LIBSOUNDTOUCH_TRUE@am__append_26 = $(SOUNDTOUCH_LIBS)
+@USE_LIBSOXR_TRUE@am__append_27 = $(SOXR_CFLAGS)
+@USE_LIBSOXR_TRUE@am__append_28 = $(SOXR_LIBS)
+@USE_LIBTWOLAME_TRUE@am__append_29 = $(LIBTWOLAME_CFLAGS)
+@USE_LIBTWOLAME_TRUE@am__append_30 = $(LIBTWOLAME_LIBS)
+@USE_LIBVORBIS_TRUE@am__append_31 = $(LIBVORBIS_CFLAGS)
+@USE_LIBVORBIS_TRUE@am__append_32 = $(LIBVORBIS_LIBS)
+@USE_LV2_TRUE@am__append_33 = $(LV2_CFLAGS)
+@USE_LV2_TRUE@am__append_34 = $(LV2_LIBS)
+@USE_LV2_TRUE@am__append_35 = \
 @USE_LV2_TRUE@	effects/lv2/LoadLV2.cpp \
 @USE_LV2_TRUE@	effects/lv2/LoadLV2.h \
 @USE_LV2_TRUE@	effects/lv2/LV2Effect.cpp \
@@ -154,27 +161,27 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_LV2_TRUE@	effects/lv2/lv2_uri_map.h \
 @USE_LV2_TRUE@	$(NULL)
 
-@USE_PORTSMF_TRUE@am__append_33 = $(PORTSMF_CFLAGS)
-@USE_PORTSMF_TRUE@am__append_34 = $(PORTSMF_LIBS)
-@USE_PORTSMF_TRUE@am__append_35 = \
+@USE_PORTSMF_TRUE@am__append_36 = $(PORTSMF_CFLAGS)
+@USE_PORTSMF_TRUE@am__append_37 = $(PORTSMF_LIBS)
+@USE_PORTSMF_TRUE@am__append_38 = \
 @USE_PORTSMF_TRUE@	NoteTrack.cpp \
 @USE_PORTSMF_TRUE@	NoteTrack.h \
 @USE_PORTSMF_TRUE@	import/ImportMIDI.cpp \
 @USE_PORTSMF_TRUE@	import/ImportMIDI.h \
 @USE_PORTSMF_TRUE@	$(NULL)
 
-@USE_QUICKTIME_TRUE@am__append_36 = $(QUICKTIME_CFLAGS)
-@USE_QUICKTIME_TRUE@am__append_37 = $(QUICKTIME_LIBS)
-@USE_QUICKTIME_TRUE@am__append_38 = \
+@USE_QUICKTIME_TRUE@am__append_39 = $(QUICKTIME_CFLAGS)
+@USE_QUICKTIME_TRUE@am__append_40 = $(QUICKTIME_LIBS)
+@USE_QUICKTIME_TRUE@am__append_41 = \
 @USE_QUICKTIME_TRUE@	import/ImportQT.cpp \
 @USE_QUICKTIME_TRUE@	import/ImportQT.h \
 @USE_QUICKTIME_TRUE@	$(NULL)
 
-@USE_SBSMS_TRUE@am__append_39 = $(SBSMS_CFLAGS)
-@USE_SBSMS_TRUE@am__append_40 = $(SBSMS_LIBS)
-@USE_VAMP_TRUE@am__append_41 = $(VAMP_CFLAGS)
-@USE_VAMP_TRUE@am__append_42 = $(VAMP_LIBS)
-@USE_VAMP_TRUE@am__append_43 = \
+@USE_SBSMS_TRUE@am__append_42 = $(SBSMS_CFLAGS)
+@USE_SBSMS_TRUE@am__append_43 = $(SBSMS_LIBS)
+@USE_VAMP_TRUE@am__append_44 = $(VAMP_CFLAGS)
+@USE_VAMP_TRUE@am__append_45 = $(VAMP_LIBS)
+@USE_VAMP_TRUE@am__append_46 = \
 @USE_VAMP_TRUE@	effects/vamp/LoadVamp.cpp \
 @USE_VAMP_TRUE@	effects/vamp/LoadVamp.h \
 @USE_VAMP_TRUE@	effects/vamp/VampEffect.cpp \
@@ -189,6 +196,7 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/ac_c99_func_lrintf.m4 \
 	$(top_srcdir)/m4/audacity_checklib_ffmpeg.m4 \
+	$(top_srcdir)/m4/audacity_checklib_gstreamer.m4 \
 	$(top_srcdir)/m4/audacity_checklib_lame.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libexpat.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libflac.m4 \
@@ -444,7 +452,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/audiounits/AudioUnitEffect.h export/ExportFFmpeg.cpp \
 	export/ExportFFmpeg.h export/ExportFFmpegDialogs.cpp \
 	export/ExportFFmpegDialogs.h import/ImportFFmpeg.cpp \
-	import/ImportFFmpeg.h effects/ladspa/ladspa.h \
+	import/ImportFFmpeg.h import/ImportGStreamer.cpp \
+	import/ImportGStreamer.h effects/ladspa/ladspa.h \
 	effects/ladspa/LadspaEffect.cpp effects/ladspa/LadspaEffect.h \
 	effects/ladspa/LoadLadspa.cpp effects/ladspa/LoadLadspa.h \
 	ondemand/ODDecodeFlacTask.cpp ondemand/ODDecodeFlacTask.h \
@@ -478,19 +487,21 @@ am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 @USE_FFMPEG_TRUE@	export/audacity-ExportFFmpeg.$(OBJEXT) \
 @USE_FFMPEG_TRUE@	export/audacity-ExportFFmpegDialogs.$(OBJEXT) \
 @USE_FFMPEG_TRUE@	import/audacity-ImportFFmpeg.$(OBJEXT)
-@USE_LADSPA_TRUE@am__objects_4 = effects/ladspa/audacity-LadspaEffect.$(OBJEXT) \
+@USE_GSTREAMER_TRUE@am__objects_4 =  \
+@USE_GSTREAMER_TRUE@	import/audacity-ImportGStreamer.$(OBJEXT)
+@USE_LADSPA_TRUE@am__objects_5 = effects/ladspa/audacity-LadspaEffect.$(OBJEXT) \
 @USE_LADSPA_TRUE@	effects/ladspa/audacity-LoadLadspa.$(OBJEXT)
-@USE_LIBFLAC_TRUE@am__objects_5 = ondemand/audacity-ODDecodeFlacTask.$(OBJEXT)
-@USE_LIBNYQUIST_TRUE@am__objects_6 = effects/nyquist/audacity-LoadNyquist.$(OBJEXT) \
+@USE_LIBFLAC_TRUE@am__objects_6 = ondemand/audacity-ODDecodeFlacTask.$(OBJEXT)
+@USE_LIBNYQUIST_TRUE@am__objects_7 = effects/nyquist/audacity-LoadNyquist.$(OBJEXT) \
 @USE_LIBNYQUIST_TRUE@	effects/nyquist/audacity-Nyquist.$(OBJEXT)
-@USE_LV2_TRUE@am__objects_7 = effects/lv2/audacity-LoadLV2.$(OBJEXT) \
+@USE_LV2_TRUE@am__objects_8 = effects/lv2/audacity-LoadLV2.$(OBJEXT) \
 @USE_LV2_TRUE@	effects/lv2/audacity-LV2Effect.$(OBJEXT) \
 @USE_LV2_TRUE@	effects/lv2/audacity-LV2PortGroup.$(OBJEXT)
-@USE_PORTSMF_TRUE@am__objects_8 = audacity-NoteTrack.$(OBJEXT) \
+@USE_PORTSMF_TRUE@am__objects_9 = audacity-NoteTrack.$(OBJEXT) \
 @USE_PORTSMF_TRUE@	import/audacity-ImportMIDI.$(OBJEXT)
-@USE_QUICKTIME_TRUE@am__objects_9 =  \
+@USE_QUICKTIME_TRUE@am__objects_10 =  \
 @USE_QUICKTIME_TRUE@	import/audacity-ImportQT.$(OBJEXT)
-@USE_VAMP_TRUE@am__objects_10 =  \
+@USE_VAMP_TRUE@am__objects_11 =  \
 @USE_VAMP_TRUE@	effects/vamp/audacity-LoadVamp.$(OBJEXT) \
 @USE_VAMP_TRUE@	effects/vamp/audacity-VampEffect.$(OBJEXT)
 am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
@@ -682,34 +693,36 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	xml/audacity-XMLWriter.$(OBJEXT) $(am__objects_2) \
 	$(am__objects_3) $(am__objects_4) $(am__objects_5) \
 	$(am__objects_6) $(am__objects_7) $(am__objects_8) \
-	$(am__objects_9) $(am__objects_10)
+	$(am__objects_9) $(am__objects_10) $(am__objects_11)
 audacity_OBJECTS = $(am_audacity_OBJECTS)
 @USE_FFMPEG_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
-@USE_LAME_TRUE@am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
-@USE_LIBFLAC_TRUE@am__DEPENDENCIES_4 = $(am__DEPENDENCIES_1)
-@USE_LIBID3TAG_TRUE@am__DEPENDENCIES_5 = $(am__DEPENDENCIES_1)
-@USE_LIBMAD_TRUE@am__DEPENDENCIES_6 = $(am__DEPENDENCIES_1)
-@USE_LIBNYQUIST_TRUE@am__DEPENDENCIES_7 = $(am__DEPENDENCIES_1)
-@USE_LIBSOUNDTOUCH_TRUE@am__DEPENDENCIES_8 = $(am__DEPENDENCIES_1)
-@USE_LIBSOXR_TRUE@am__DEPENDENCIES_9 = $(am__DEPENDENCIES_1)
-@USE_LIBTWOLAME_TRUE@am__DEPENDENCIES_10 = $(am__DEPENDENCIES_1)
-@USE_LIBVORBIS_TRUE@am__DEPENDENCIES_11 = $(am__DEPENDENCIES_1)
-@USE_LV2_TRUE@am__DEPENDENCIES_12 = $(am__DEPENDENCIES_1)
-@USE_PORTSMF_TRUE@am__DEPENDENCIES_13 = $(am__DEPENDENCIES_1)
-@USE_SBSMS_TRUE@am__DEPENDENCIES_14 = $(am__DEPENDENCIES_1)
-@USE_VAMP_TRUE@am__DEPENDENCIES_15 = $(am__DEPENDENCIES_1)
+@USE_GSTREAMER_TRUE@am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
+@USE_LAME_TRUE@am__DEPENDENCIES_4 = $(am__DEPENDENCIES_1)
+@USE_LIBFLAC_TRUE@am__DEPENDENCIES_5 = $(am__DEPENDENCIES_1)
+@USE_LIBID3TAG_TRUE@am__DEPENDENCIES_6 = $(am__DEPENDENCIES_1)
+@USE_LIBMAD_TRUE@am__DEPENDENCIES_7 = $(am__DEPENDENCIES_1)
+@USE_LIBNYQUIST_TRUE@am__DEPENDENCIES_8 = $(am__DEPENDENCIES_1)
+@USE_LIBSOUNDTOUCH_TRUE@am__DEPENDENCIES_9 = $(am__DEPENDENCIES_1)
+@USE_LIBSOXR_TRUE@am__DEPENDENCIES_10 = $(am__DEPENDENCIES_1)
+@USE_LIBTWOLAME_TRUE@am__DEPENDENCIES_11 = $(am__DEPENDENCIES_1)
+@USE_LIBVORBIS_TRUE@am__DEPENDENCIES_12 = $(am__DEPENDENCIES_1)
+@USE_LV2_TRUE@am__DEPENDENCIES_13 = $(am__DEPENDENCIES_1)
+@USE_PORTSMF_TRUE@am__DEPENDENCIES_14 = $(am__DEPENDENCIES_1)
+@USE_SBSMS_TRUE@am__DEPENDENCIES_15 = $(am__DEPENDENCIES_1)
+@USE_VAMP_TRUE@am__DEPENDENCIES_16 = $(am__DEPENDENCIES_1)
 audacity_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_4) \
+	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_3) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_4) \
 	$(am__DEPENDENCIES_5) $(am__DEPENDENCIES_6) \
 	$(am__DEPENDENCIES_7) $(am__DEPENDENCIES_8) \
 	$(am__DEPENDENCIES_9) $(am__DEPENDENCIES_10) \
 	$(am__DEPENDENCIES_11) $(am__DEPENDENCIES_12) \
-	$(am__DEPENDENCIES_13) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_14) $(am__DEPENDENCIES_15)
+	$(am__DEPENDENCIES_13) $(am__DEPENDENCIES_14) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_15) \
+	$(am__DEPENDENCIES_16)
 audacity_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(audacity_LDFLAGS) $(LDFLAGS) -o $@
@@ -873,6 +886,8 @@ GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GREP = @GREP@
+GSTREAMER_CFLAGS = @GSTREAMER_CFLAGS@
+GSTREAMER_LIBS = @GSTREAMER_LIBS@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 HAVE_GTK = @HAVE_GTK@
@@ -1073,20 +1088,22 @@ audacity_CPPFLAGS = -D__STDC_CONSTANT_MACROS -DLIBDIR=\"$(libdir)\" \
 	$(EXPAT_CFLAGS) $(FILEDIALOG_CFLAGS) $(PORTAUDIO_CFLAGS) \
 	$(PORTMIXER_CFLAGS) $(SNDFILE_CFLAGS) $(WIDGETEXTRA_CFLAGS) \
 	$(WX_CXXFLAGS) $(NULL) $(am__append_1) $(am__append_4) \
-	$(am__append_7) $(am__append_10) $(am__append_12) \
-	$(am__append_15) $(am__append_17) $(am__append_19) \
-	$(am__append_22) $(am__append_24) $(am__append_26) \
-	$(am__append_28) $(am__append_30) $(am__append_33) \
-	$(am__append_36) $(am__append_39) $(am__append_41)
+	$(am__append_7) $(am__append_10) $(am__append_13) \
+	$(am__append_15) $(am__append_18) $(am__append_20) \
+	$(am__append_22) $(am__append_25) $(am__append_27) \
+	$(am__append_29) $(am__append_31) $(am__append_33) \
+	$(am__append_36) $(am__append_39) $(am__append_42) \
+	$(am__append_44)
 audacity_LDFLAGS = -rdynamic
 audacity_LDADD = $(EXPAT_LIBS) $(FILEDIALOG_LIBS) $(PORTAUDIO_LIBS) \
 	$(PORTMIXER_LIBS) $(SNDFILE_LIBS) $(WIDGETEXTRA_LIBS) \
 	$(WX_LIBS) $(NULL) $(am__append_2) $(am__append_5) \
-	$(am__append_8) $(am__append_11) $(am__append_13) \
-	$(am__append_16) $(am__append_18) $(am__append_20) \
-	$(am__append_23) $(am__append_25) $(am__append_27) \
-	$(am__append_29) $(am__append_31) $(am__append_34) \
-	$(am__append_37) $(am__append_40) $(am__append_42)
+	$(am__append_8) $(am__append_11) $(am__append_14) \
+	$(am__append_16) $(am__append_19) $(am__append_21) \
+	$(am__append_23) $(am__append_26) $(am__append_28) \
+	$(am__append_30) $(am__append_32) $(am__append_34) \
+	$(am__append_37) $(am__append_40) $(am__append_43) \
+	$(am__append_45)
 audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	AboutDialog.h AColor.cpp AColor.h AllThemeResources.h \
 	Audacity.h AudacityApp.cpp AudacityApp.h AudacityLogger.cpp \
@@ -1259,8 +1276,9 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	widgets/Warning.cpp widgets/Warning.h xml/XMLFileReader.cpp \
 	xml/XMLFileReader.h xml/XMLWriter.cpp xml/XMLWriter.h $(NULL) \
 	$(am__append_3) $(am__append_6) $(am__append_9) \
-	$(am__append_14) $(am__append_21) $(am__append_32) \
-	$(am__append_35) $(am__append_38) $(am__append_43)
+	$(am__append_12) $(am__append_17) $(am__append_24) \
+	$(am__append_35) $(am__append_38) $(am__append_41) \
+	$(am__append_46)
 
 # TODO: Check *.cpp and *.h files if they are needed.
 EXTRA_DIST = audacity.desktop.in xml/audacityproject.dtd \
@@ -1809,6 +1827,8 @@ export/audacity-ExportFFmpegDialogs.$(OBJEXT): export/$(am__dirstamp) \
 	export/$(DEPDIR)/$(am__dirstamp)
 import/audacity-ImportFFmpeg.$(OBJEXT): import/$(am__dirstamp) \
 	import/$(DEPDIR)/$(am__dirstamp)
+import/audacity-ImportGStreamer.$(OBJEXT): import/$(am__dirstamp) \
+	import/$(DEPDIR)/$(am__dirstamp)
 effects/ladspa/$(am__dirstamp):
 	@$(MKDIR_P) effects/ladspa
 	@: > effects/ladspa/$(am__dirstamp)
@@ -2084,6 +2104,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-Import.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportFFmpeg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportFLAC.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportGStreamer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportLOF.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportMIDI.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportMP3.Po@am__quote@
@@ -5568,6 +5589,20 @@ import/audacity-ImportFFmpeg.obj: import/ImportFFmpeg.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/ImportFFmpeg.cpp' object='import/audacity-ImportFFmpeg.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-ImportFFmpeg.obj `if test -f 'import/ImportFFmpeg.cpp'; then $(CYGPATH_W) 'import/ImportFFmpeg.cpp'; else $(CYGPATH_W) '$(srcdir)/import/ImportFFmpeg.cpp'; fi`
+
+import/audacity-ImportGStreamer.o: import/ImportGStreamer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT import/audacity-ImportGStreamer.o -MD -MP -MF import/$(DEPDIR)/audacity-ImportGStreamer.Tpo -c -o import/audacity-ImportGStreamer.o `test -f 'import/ImportGStreamer.cpp' || echo '$(srcdir)/'`import/ImportGStreamer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) import/$(DEPDIR)/audacity-ImportGStreamer.Tpo import/$(DEPDIR)/audacity-ImportGStreamer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/ImportGStreamer.cpp' object='import/audacity-ImportGStreamer.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-ImportGStreamer.o `test -f 'import/ImportGStreamer.cpp' || echo '$(srcdir)/'`import/ImportGStreamer.cpp
+
+import/audacity-ImportGStreamer.obj: import/ImportGStreamer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT import/audacity-ImportGStreamer.obj -MD -MP -MF import/$(DEPDIR)/audacity-ImportGStreamer.Tpo -c -o import/audacity-ImportGStreamer.obj `if test -f 'import/ImportGStreamer.cpp'; then $(CYGPATH_W) 'import/ImportGStreamer.cpp'; else $(CYGPATH_W) '$(srcdir)/import/ImportGStreamer.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) import/$(DEPDIR)/audacity-ImportGStreamer.Tpo import/$(DEPDIR)/audacity-ImportGStreamer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/ImportGStreamer.cpp' object='import/audacity-ImportGStreamer.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-ImportGStreamer.obj `if test -f 'import/ImportGStreamer.cpp'; then $(CYGPATH_W) 'import/ImportGStreamer.cpp'; else $(CYGPATH_W) '$(srcdir)/import/ImportGStreamer.cpp'; fi`
 
 effects/ladspa/audacity-LadspaEffect.o: effects/ladspa/LadspaEffect.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT effects/ladspa/audacity-LadspaEffect.o -MD -MP -MF effects/ladspa/$(DEPDIR)/audacity-LadspaEffect.Tpo -c -o effects/ladspa/audacity-LadspaEffect.o `test -f 'effects/ladspa/LadspaEffect.cpp' || echo '$(srcdir)/'`effects/ladspa/LadspaEffect.cpp

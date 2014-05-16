@@ -721,6 +721,8 @@ USE_LAME_FALSE
 USE_LAME_TRUE
 LAME_LIBS
 LAME_CFLAGS
+USE_GSTREAMER_FALSE
+USE_GSTREAMER_TRUE
 USE_LOCAL_FFMPEG_FALSE
 USE_LOCAL_FFMPEG_TRUE
 USE_FFMPEG_FALSE
@@ -759,6 +761,8 @@ ID3TAG_LIBS
 ID3TAG_CFLAGS
 FLAC_LIBS
 FLAC_CFLAGS
+GSTREAMER_LIBS
+GSTREAMER_CFLAGS
 AVUTIL_LIBS
 AVUTIL_CFLAGS
 AVFORMAT_LIBS
@@ -949,6 +953,7 @@ enable_universal_binary
 enable_dynamic_loading
 with_expat
 with_ffmpeg
+with_gstreamer
 with_lame
 with_libflac
 with_libid3tag
@@ -994,6 +999,8 @@ AVFORMAT_CFLAGS
 AVFORMAT_LIBS
 AVUTIL_CFLAGS
 AVUTIL_LIBS
+GSTREAMER_CFLAGS
+GSTREAMER_LIBS
 FLAC_CFLAGS
 FLAC_LIBS
 ID3TAG_CFLAGS
@@ -1714,6 +1721,7 @@ Optional Packages:
   --with-expat            which expat to use for XML file support:
                           [system,local]
   --with-ffmpeg           use ffmpeg for import and export support
+  --with-gstreamer        include gstreamer import/export support
   --with-lame             use lame for import and export support
   --with-libflac          use libFLAC for FLAC support
   --with-libid3tag        use libid3tag for mp3 id3 tag support
@@ -1762,6 +1770,10 @@ Some influential environment variables:
   AVUTIL_CFLAGS
               C compiler flags for AVUTIL, overriding pkg-config
   AVUTIL_LIBS linker flags for AVUTIL, overriding pkg-config
+  GSTREAMER_CFLAGS
+              C compiler flags for GSTREAMER, overriding pkg-config
+  GSTREAMER_LIBS
+              linker flags for GSTREAMER, overriding pkg-config
   FLAC_CFLAGS C compiler flags for FLAC, overriding pkg-config
   FLAC_LIBS   linker flags for FLAC, overriding pkg-config
   ID3TAG_CFLAGS
@@ -8890,8 +8902,7 @@ else
     ;;
   *)
     lt_cv_sys_max_cmd_len=`(getconf ARG_MAX) 2> /dev/null`
-    if test -n "$lt_cv_sys_max_cmd_len" && \
-	test undefined != "$lt_cv_sys_max_cmd_len"; then
+    if test -n "$lt_cv_sys_max_cmd_len"; then
       lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
       lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
     else
@@ -9292,6 +9303,10 @@ freebsd* | dragonfly*)
   fi
   ;;
 
+gnu*)
+  lt_cv_deplibs_check_method=pass_all
+  ;;
+
 haiku*)
   lt_cv_deplibs_check_method=pass_all
   ;;
@@ -9330,11 +9345,11 @@ irix5* | irix6* | nonstopux*)
   ;;
 
 # This must be glibc/ELF.
-linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
+linux* | k*bsd*-gnu | kopensolaris*-gnu)
   lt_cv_deplibs_check_method=pass_all
   ;;
 
-netbsd* | netbsdelf*-gnu)
+netbsd*)
   if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
     lt_cv_deplibs_check_method='match_pattern /lib[^/]+(\.so\.[0-9]+\.[0-9]+|_pic\.a)$'
   else
@@ -10411,7 +10426,7 @@ ia64-*-hpux*)
   rm -rf conftest*
   ;;
 
-x86_64-*kfreebsd*-gnu|x86_64-*linux*|ppc*-*linux*|powerpc*-*linux*| \
+x86_64-*kfreebsd*-gnu|x86_64-*linux*|powerpc*-*linux*| \
 s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
   # Find out which ABI we are using.
   echo 'int i;' > conftest.$ac_ext
@@ -10427,16 +10442,12 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
 	    LD="${LD-ld} -m elf_i386_fbsd"
 	    ;;
 	  x86_64-*linux*)
-	    case `/usr/bin/file conftest.o` in
-	      *x86-64*)
-		LD="${LD-ld} -m elf32_x86_64"
-		;;
-	      *)
-		LD="${LD-ld} -m elf_i386"
-		;;
-	    esac
+	    LD="${LD-ld} -m elf_i386"
 	    ;;
-	  ppc64-*linux*|powerpc64-*linux*)
+	  powerpc64le-*linux*)
+	    LD="${LD-ld} -m elf32lppclinux"
+	    ;;
+	  powerpc64-*linux*)
 	    LD="${LD-ld} -m elf32ppclinux"
 	    ;;
 	  s390x-*linux*)
@@ -10455,7 +10466,10 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
 	  x86_64-*linux*)
 	    LD="${LD-ld} -m elf_x86_64"
 	    ;;
-	  ppc*-*linux*|powerpc*-*linux*)
+	  powerpcle-*linux*)
+	    LD="${LD-ld} -m elf64lppc"
+	    ;;
+	  powerpc-*linux*)
 	    LD="${LD-ld} -m elf64ppc"
 	    ;;
 	  s390*-*linux*|s390*-*tpf*)
@@ -12134,7 +12148,7 @@ lt_prog_compiler_static=
       lt_prog_compiler_static='-non_shared'
       ;;
 
-    linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
+    linux* | k*bsd*-gnu | kopensolaris*-gnu)
       case $cc_basename in
       # old Intel for x86_64 which still supported -KPIC.
       ecc*)
@@ -12612,9 +12626,6 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
   openbsd*)
     with_gnu_ld=no
     ;;
-  linux* | k*bsd*-gnu | gnu*)
-    link_all_deplibs=no
-    ;;
   esac
 
   ld_shlibs=yes
@@ -12836,7 +12847,7 @@ _LT_EOF
       fi
       ;;
 
-    netbsd* | netbsdelf*-gnu)
+    netbsd*)
       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
 	archive_cmds='$LD -Bshareable $libobjs $deplibs $linker_flags -o $lib'
 	wlarc=
@@ -13013,7 +13024,6 @@ _LT_EOF
 	if test "$aix_use_runtimelinking" = yes; then
 	  shared_flag="$shared_flag "'${wl}-G'
 	fi
-	link_all_deplibs=no
       else
 	# not using gcc
 	if test "$host_cpu" = ia64; then
@@ -13467,7 +13477,7 @@ $as_echo "$lt_cv_irix_exported_symbol" >&6; }
       link_all_deplibs=yes
       ;;
 
-    netbsd* | netbsdelf*-gnu)
+    netbsd*)
       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
 	archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
       else
@@ -14304,6 +14314,17 @@ freebsd* | dragonfly*)
   esac
   ;;
 
+gnu*)
+  version_type=linux # correct to gnu/linux during the next big refactor
+  need_lib_prefix=no
+  need_version=no
+  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}${major} ${libname}${shared_ext}'
+  soname_spec='${libname}${release}${shared_ext}$major'
+  shlibpath_var=LD_LIBRARY_PATH
+  shlibpath_overrides_runpath=no
+  hardcode_into_libs=yes
+  ;;
+
 haiku*)
   version_type=linux # correct to gnu/linux during the next big refactor
   need_lib_prefix=no
@@ -14420,7 +14441,7 @@ linux*oldld* | linux*aout* | linux*coff*)
   ;;
 
 # This must be glibc/ELF.
-linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
+linux* | k*bsd*-gnu | kopensolaris*-gnu)
   version_type=linux # correct to gnu/linux during the next big refactor
   need_lib_prefix=no
   need_version=no
@@ -14469,10 +14490,14 @@ fi
   # before this can be enabled.
   hardcode_into_libs=yes
 
+  # Add ABI-specific directories to the system library path.
+  sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib"
+
   # Append ld.so.conf contents to the search path
   if test -f /etc/ld.so.conf; then
     lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s 2>/dev/null", \$2)); skip = 1; } { if (!skip) print \$0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;/^[	 ]*hwcap[	 ]/d;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;s/"//g;/^$/d' | tr '\n' ' '`
-    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
+    sys_lib_dlsearch_path_spec="$sys_lib_dlsearch_path_spec $lt_ld_extra"
+
   fi
 
   # We used to test for /lib/ld.so.1 and disable shared libraries on
@@ -14482,18 +14507,6 @@ fi
   # people can always --disable-shared, the test was removed, and we
   # assume the GNU/Linux dynamic linker is in use.
   dynamic_linker='GNU/Linux ld.so'
-  ;;
-
-netbsdelf*-gnu)
-  version_type=linux
-  need_lib_prefix=no
-  need_version=no
-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
-  soname_spec='${libname}${release}${shared_ext}$major'
-  shlibpath_var=LD_LIBRARY_PATH
-  shlibpath_overrides_runpath=no
-  hardcode_into_libs=yes
-  dynamic_linker='NetBSD ld.elf_so'
   ;;
 
 netbsd*)
@@ -16243,6 +16256,9 @@ fi
         ld_shlibs_CXX=yes
         ;;
 
+      gnu*)
+        ;;
+
       haiku*)
         archive_cmds_CXX='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname $wl$soname -o $lib'
         link_all_deplibs_CXX=yes
@@ -16404,7 +16420,7 @@ fi
         inherit_rpath_CXX=yes
         ;;
 
-      linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
+      linux* | k*bsd*-gnu | kopensolaris*-gnu)
         case $cc_basename in
           KCC*)
 	    # Kuck and Associates, Inc. (KAI) C++ Compiler
@@ -17264,7 +17280,7 @@ lt_prog_compiler_static_CXX=
 	    ;;
 	esac
 	;;
-      linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
+      linux* | k*bsd*-gnu | kopensolaris*-gnu)
 	case $cc_basename in
 	  KCC*)
 	    # KAI C++ Compiler
@@ -17328,7 +17344,7 @@ lt_prog_compiler_static_CXX=
 	    ;;
 	esac
 	;;
-      netbsd* | netbsdelf*-gnu)
+      netbsd*)
 	;;
       *qnx* | *nto*)
         # QNX uses GNU C++, but need to define -shared option too, otherwise
@@ -17698,9 +17714,6 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
       exclude_expsyms_CXX='[_]+GLOBAL_OFFSET_TABLE_|[_]+GLOBAL__[FID]_.*|[_]+head_[A-Za-z0-9_]+_dll|[A-Za-z0-9_]+_dll_iname'
       ;;
     esac
-    ;;
-  linux* | k*bsd*-gnu | gnu*)
-    link_all_deplibs_CXX=no
     ;;
   *)
     export_symbols_cmds_CXX='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
@@ -18136,6 +18149,17 @@ freebsd* | dragonfly*)
   esac
   ;;
 
+gnu*)
+  version_type=linux # correct to gnu/linux during the next big refactor
+  need_lib_prefix=no
+  need_version=no
+  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}${major} ${libname}${shared_ext}'
+  soname_spec='${libname}${release}${shared_ext}$major'
+  shlibpath_var=LD_LIBRARY_PATH
+  shlibpath_overrides_runpath=no
+  hardcode_into_libs=yes
+  ;;
+
 haiku*)
   version_type=linux # correct to gnu/linux during the next big refactor
   need_lib_prefix=no
@@ -18252,7 +18276,7 @@ linux*oldld* | linux*aout* | linux*coff*)
   ;;
 
 # This must be glibc/ELF.
-linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
+linux* | k*bsd*-gnu | kopensolaris*-gnu)
   version_type=linux # correct to gnu/linux during the next big refactor
   need_lib_prefix=no
   need_version=no
@@ -18301,10 +18325,14 @@ fi
   # before this can be enabled.
   hardcode_into_libs=yes
 
+  # Add ABI-specific directories to the system library path.
+  sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib"
+
   # Append ld.so.conf contents to the search path
   if test -f /etc/ld.so.conf; then
     lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s 2>/dev/null", \$2)); skip = 1; } { if (!skip) print \$0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;/^[	 ]*hwcap[	 ]/d;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;s/"//g;/^$/d' | tr '\n' ' '`
-    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
+    sys_lib_dlsearch_path_spec="$sys_lib_dlsearch_path_spec $lt_ld_extra"
+
   fi
 
   # We used to test for /lib/ld.so.1 and disable shared libraries on
@@ -18314,18 +18342,6 @@ fi
   # people can always --disable-shared, the test was removed, and we
   # assume the GNU/Linux dynamic linker is in use.
   dynamic_linker='GNU/Linux ld.so'
-  ;;
-
-netbsdelf*-gnu)
-  version_type=linux
-  need_lib_prefix=no
-  need_version=no
-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
-  soname_spec='${libname}${release}${shared_ext}$major'
-  shlibpath_var=LD_LIBRARY_PATH
-  shlibpath_overrides_runpath=no
-  hardcode_into_libs=yes
-  dynamic_linker='NetBSD ld.elf_so'
   ;;
 
 netbsd*)
@@ -19571,7 +19587,7 @@ CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'
 
 
-LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG GSTREAMER LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
@@ -20154,6 +20170,96 @@ $as_echo "$as_me: ffmpeg library is NOT available in the local tree" >&6;}
    fi
 
    FFMPEG_MIMETYPES="audio/aac;audio/ac3;audio/mp4;audio/x-ms-wma;video/mpeg;"
+
+
+
+
+# Check whether --with-gstreamer was given.
+if test "${with_gstreamer+set}" = set; then :
+  withval=$with_gstreamer; GSTREAMER_ARGUMENT=$withval
+else
+  GSTREAMER_ARGUMENT="unspecified"
+fi
+
+
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GSTREAMER" >&5
+$as_echo_n "checking for GSTREAMER... " >&6; }
+
+if test -n "$GSTREAMER_CFLAGS"; then
+    pkg_cv_GSTREAMER_CFLAGS="$GSTREAMER_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-1.0 gstreamer-app-1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-1.0 gstreamer-app-1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GSTREAMER_CFLAGS=`$PKG_CONFIG --cflags "gstreamer-1.0 gstreamer-app-1.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GSTREAMER_LIBS"; then
+    pkg_cv_GSTREAMER_LIBS="$GSTREAMER_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-1.0 gstreamer-app-1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-1.0 gstreamer-app-1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GSTREAMER_LIBS=`$PKG_CONFIG --libs "gstreamer-1.0 gstreamer-app-1.0" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gstreamer-1.0 gstreamer-app-1.0" 2>&1`
+        else
+	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --print-errors "gstreamer-1.0 gstreamer-app-1.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GSTREAMER_PKG_ERRORS" >&5
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+                GSTREAMER_SYSTEM_AVAILABLE="no"
+elif test $pkg_failed = untried; then
+	GSTREAMER_SYSTEM_AVAILABLE="no"
+else
+	GSTREAMER_CFLAGS=$pkg_cv_GSTREAMER_CFLAGS
+	GSTREAMER_LIBS=$pkg_cv_GSTREAMER_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	GSTREAMER_SYSTEM_AVAILABLE="yes"
+fi
+
+   if test "$GSTREAMER_SYSTEM_AVAILABLE" = "yes"; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: gstreamer libraries are available as system libraries" >&5
+$as_echo "$as_me: gstreamer libraries are available as system libraries" >&6;}
+   else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: gstreamer libraries are NOT available as system libraries" >&5
+$as_echo "$as_me: gstreamer libraries are NOT available as system libraries" >&6;}
+   fi
+
+   GSTREAMER_LOCAL_AVAILABLE="no"
 
 
 
@@ -22721,6 +22827,27 @@ $as_echo "#define USE_FFMPEG 1" >>confdefs.h
    fi
 
 
+
+
+
+
+    if test "$GSTREAMER_USE_SYSTEM" = yes; then
+  USE_GSTREAMER_TRUE=
+  USE_GSTREAMER_FALSE='#'
+else
+  USE_GSTREAMER_TRUE='#'
+  USE_GSTREAMER_FALSE=
+fi
+
+
+   if test "$GSTREAMER_USE_SYSTEM" = yes; then
+
+$as_echo "#define USE_GSTREAMER 1" >>confdefs.h
+
+   fi
+
+
+
    if test "$LAME_USE_LOCAL" = yes; then
       LAME_CFLAGS='-I$(top_srcdir)/lib-src/lame'
       LAME_LIBS=""
@@ -24036,6 +24163,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_LOCAL_FFMPEG_TRUE}" && test -z "${USE_LOCAL_FFMPEG_FALSE}"; then
   as_fn_error $? "conditional \"USE_LOCAL_FFMPEG\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${USE_GSTREAMER_TRUE}" && test -z "${USE_GSTREAMER_FALSE}"; then
+  as_fn_error $? "conditional \"USE_GSTREAMER\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${USE_LAME_TRUE}" && test -z "${USE_LAME_FALSE}"; then
