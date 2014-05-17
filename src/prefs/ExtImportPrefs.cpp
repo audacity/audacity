@@ -349,7 +349,7 @@ void ExtImportPrefs::DoOnRuleTableKeyDown (int keycode)
    wxString ts;
    if (keycode == WXK_UP)
    {
-      if (selrow == 0)
+      if (selrow <= 0)
          return;
       SwapRows (selrow - 1, selrow);
       RuleTable->MoveCursorUp (false);
