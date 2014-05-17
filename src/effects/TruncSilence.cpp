@@ -293,13 +293,13 @@ bool EffectTruncSilence::Process()
 
       switch (mProcessIndex) {
       case 0:
-         outLength = mTruncLongestAllowedSilence;
+         outLength = wxMin(mTruncLongestAllowedSilence, inLength);
          break;
       case 1:
          outLength = mInitialAllowedSilence +
                         (inLength - mInitialAllowedSilence) * mSilenceCompressPercent / 100.0;
          break;
-      default:
+      default: // Not currently used.
          outLength = wxMin(mInitialAllowedSilence +
                               (inLength - mInitialAllowedSilence) * mSilenceCompressPercent / 100.0,
                            mTruncLongestAllowedSilence);
