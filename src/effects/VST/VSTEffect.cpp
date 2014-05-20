@@ -1551,6 +1551,11 @@ bool VSTEffectDialog::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             }
 
             int ndx = mProgram->GetCurrentSelection();
+            if (ndx == wxNOT_FOUND)
+            {
+               ndx = 0;
+            }
+
             mProgram->SetString(ndx, strValue);
             mProgram->SetValue(strValue);
 
