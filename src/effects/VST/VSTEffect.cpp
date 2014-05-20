@@ -14,6 +14,10 @@
 
 **********************************************************************/
 
+// *******************************************************************
+// WARNING:  This is NOT 64-bit safe
+// *******************************************************************
+
 #include "../../Audacity.h"
 
 #if USE_VST
@@ -30,6 +34,7 @@
 #include <wx/slider.h>
 #include <wx/scrolwin.h>
 #include <wx/stattext.h>
+#include <wx/statbox.h>
 #include <wx/stopwatch.h>
 #include <wx/utils.h>
 #include <wx/dcclient.h>
@@ -59,8 +64,9 @@
 #include "../../Prefs.h"
 #include "../../xml/XMLFileReader.h"
 #include "../../xml/XMLWriter.h"
-#include "../EffectManager.h"
 #include "../../Theme.h"
+#include "../../widgets/valnum.h"
+#include "../EffectManager.h"
 #include "../images/Arrow.xpm"
 
 #include "VSTEffect.h"
@@ -679,6 +685,7 @@ void PluginRegistrationDialog::ToggleItem(int i)
 void PluginRegistrationDialog::OnApply(wxCommandEvent & WXUNUSED(event))
 {
    mCancelClicked = false;
+   Disable();
 
    size_t cnt = mFiles.GetCount();
    for (size_t i = 0; i < cnt && !mCancelClicked; i++) {
@@ -704,9 +711,126 @@ void PluginRegistrationDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
    EndModal(mCancelClicked ? wxID_CANCEL : wxID_OK);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// VSTEffectSettingsDialog
+//
+///////////////////////////////////////////////////////////////////////////////
 
+class VSTEffectSettingsDialog:public wxDialog
+{
+ public:
+   VSTEffectSettingsDialog(wxWindow * parent);
+   virtual ~VSTEffectSettingsDialog();
 
+   void PopulateOrExchange(ShuttleGui & S);
+   bool Validate();
 
+ private:
+    int mBufferSize;
+};
+
+VSTEffectSettingsDialog::VSTEffectSettingsDialog(wxWindow * parent)
+:  wxDialog(parent, wxID_ANY, wxString(_("VST Effect Settings")))
+{
+   gPrefs->Read(wxT("/VST/BufferSize"), &mBufferSize, 8192);
+
+   ShuttleGui S(this, eIsCreatingFromPrefs);
+   PopulateOrExchange(S);
+}
+
+VSTEffectSettingsDialog::~VSTEffectSettingsDialog()
+{
+}
+
+void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
+{
+   S.SetBorder(5);
+   S.StartHorizontalLay(wxEXPAND, 1);
+   {
+      S.StartVerticalLay(false);
+      {
+         S.StartStatic(_("Buffer Specification"));
+         {
+            wxIntegerValidator<int> vld(&mBufferSize);
+            vld.SetRange(8, 1048576);
+   
+            S.AddVariableText(wxString() +
+               _("The buffer size controls the number of samples sent to the effect ") +
+               _("on each iteration. Smaller values will cause slower processing and ") +
+               _("some effects require 8192 samples or less to work properly. However ") +
+               _("most effects can accept large buffers and using them will greatly ") +
+               _("reduce processing time."))->Wrap(650);
+   
+            S.StartHorizontalLay(wxALIGN_LEFT);
+            {
+               wxTextCtrl *t;
+               t = S.TieNumericTextBox(_("Buffer Size (8 to 1048576 samples)"),
+                                       wxT("/VST/BufferSize"),
+                                       wxT(""), 12);
+               t->SetMinSize(wxSize(100, -1));
+               t->SetValidator(vld);
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndStatic();
+   
+         S.StartStatic(_("Buffer Delay Compensation"));
+         {
+            S.AddVariableText(wxString() +
+               _("As part of their processing, some VST effects must delay returning ") +
+               _("audio to Audacity. When not compensating for this delay, you will ") +
+               _("notice that bits of silence have been inserted into the audio. ") +
+               _("Enabling this setting will provide that compensation, but it may ") +
+               _("not work for all VST effects."))->Wrap(650);
+   
+            S.StartHorizontalLay(wxALIGN_LEFT);
+            {
+               S.TieCheckBox(_("Enable compensation"), wxT("/VST/UseBufferDelay"), true);
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndStatic();
+   
+         S.StartStatic(_("Presentation Method"));
+         {
+            S.AddVariableText(wxString() +
+               _("Most VST effects provide a graphical interface for setting the ") +
+               _("parameter values. However, a basic text only method is also ") +
+               _("available."))->Wrap(650);
+            S.TieCheckBox(_("Enable graphical interface"), wxT("/VST/GUI"), true);
+         }
+         S.EndStatic();
+   
+         S.StartStatic(_("Effect Refresh"));
+         {
+            S.AddVariableText(wxString() +
+               _("To improve Audacity startup, a search for VST effects is performed ") +
+               _("once and relevent information is recorded. When you add VST effects ") +
+               _("to your system, you need to tell Audacity to rescan so the new ") +
+               _("information can be recorded."))->Wrap(650);
+            S.TieCheckBox(_("Rescan effects on next launch"), wxT("/VST/Rescan"), false);
+         }
+         S.EndStatic();
+      }
+      S.EndVerticalLay();
+   }
+   S.EndHorizontalLay();
+
+   S.AddStandardButtons();
+
+   Layout();
+   Fit();
+   Center();
+}
+
+bool VSTEffectSettingsDialog::Validate()
+{
+   ShuttleGui S(this, eIsSavingToPrefs);
+   PopulateOrExchange(S);
+
+   return true;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -731,6 +855,7 @@ class VSTEffectDialog:public wxDialog, XMLTagHandler
    void OnProgramText(wxCommandEvent & evt);
    void OnLoad(wxCommandEvent & evt);
    void OnSave(wxCommandEvent & evt);
+   void OnSettings(wxCommandEvent & evt);
 
    void OnSlider(wxCommandEvent &event);
 
@@ -780,7 +905,8 @@ enum
    ID_VST_PROGRAM = 11000,
    ID_VST_LOAD,
    ID_VST_SAVE,
-   ID_VST_SLIDERS
+   ID_VST_SLIDERS,
+   ID_VST_SETTINGS
 };
 
 BEGIN_EVENT_TABLE(VSTEffectDialog, wxDialog)
@@ -793,6 +919,7 @@ BEGIN_EVENT_TABLE(VSTEffectDialog, wxDialog)
    EVT_TEXT(ID_VST_PROGRAM, VSTEffectDialog::OnProgramText)
    EVT_BUTTON(ID_VST_LOAD, VSTEffectDialog::OnLoad)
    EVT_BUTTON(ID_VST_SAVE, VSTEffectDialog::OnSave)
+   EVT_BUTTON(ID_VST_SETTINGS, VSTEffectDialog::OnSettings)
 
    EVT_SLIDER(wxID_ANY, VSTEffectDialog::OnSlider)
 END_EVENT_TABLE()
@@ -926,7 +1053,7 @@ void VSTEffectDialog::BuildFancy()
    wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
    wxSizerItem *si;
 
-   vs->Add(BuildProgramBar(), 0, wxCENTER);
+   vs->Add(BuildProgramBar(), 0, wxCENTER | wxEXPAND);
 
    si = hs->Add(rect->right - rect->left, rect->bottom - rect->top);
    vs->Add(hs, 0, wxCENTER);
@@ -971,7 +1098,7 @@ void VSTEffectDialog::BuildPlain()
    mLabels = new wxStaticText *[mAEffect->numParams];
 
    wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);
-   vSizer->Add(BuildProgramBar(), 0,  wxALIGN_CENTER);
+   vSizer->Add(BuildProgramBar(), 0,  wxALIGN_CENTER | wxEXPAND);
 
    wxScrolledWindow *sw = new wxScrolledWindow(this,
                                                wxID_ANY,
@@ -1100,6 +1227,11 @@ wxSizer *VSTEffectDialog::BuildProgramBar()
 
    bt = new wxButton(this, ID_VST_SAVE, _("Save"));
    hs->Add(bt, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+
+   hs->AddStretchSpacer();
+
+   bt = new wxButton(this, ID_VST_SETTINGS, _("Settings"));
+   hs->Add(bt, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT | wxALL, 5);
 
    return hs;
 }
@@ -1296,6 +1428,12 @@ void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(event))
 
    // Close the file
    xmlFile.Close();
+}
+
+void VSTEffectDialog::OnSettings(wxCommandEvent & WXUNUSED(event))
+{
+   VSTEffectSettingsDialog dlg(this);
+   dlg.ShowModal();
 }
 
 void VSTEffectDialog::OnClose(wxCloseEvent & WXUNUSED(event))
@@ -1663,10 +1801,10 @@ int VSTEffectDialog::b64decode(wxString in, void *out)
 
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
-static long int audioMaster(AEffect * effect,
-                            long int opcode,
-                            long int index,
-                            long int value,
+static intptr_t audioMaster(AEffect * effect,
+                            int32_t opcode,
+                            int32_t index,
+                            intptr_t value,
                             void * ptr,
                             float opt)
 {
@@ -1712,6 +1850,14 @@ static long int audioMaster(AEffect * effect,
          }
          break;
 
+      // Inputs, outputs, or initial delay has changed...all we care about is initial delay.
+      case audioMasterIOChanged:
+         if (vst) {
+            vst->SetBufferDelay(effect->initialDelay);
+            return 0;
+         }
+         break;
+
       // Ignore these
       case audioMasterBeginEdit:
       case audioMasterEndEdit:
@@ -1722,6 +1868,7 @@ static long int audioMaster(AEffect * effect,
          return 0;
 
       case audioMasterCanDo:
+         wxLogDebug(wxT("VST canDo: %s\n"), wxString::FromAscii((char *)ptr).c_str());
          return 0;
    }
 
@@ -1872,6 +2019,32 @@ bool VSTEffect::Init()
    return true;
 }
 
+//
+// Some history...
+//
+// Before we ran into the Antress plugin problem with buffer size limitations,
+// (see below) we just had a plain old effect loop...get the input samples, pass
+// them to the effect, save the output samples.
+//
+// But, the hack I put in to limit the buffer size to only 8k (normally 512k or so)
+// severely impacted performance.  So, Michael C. added some intermediate buffering
+// that sped things up quite a bit and this is how things have worked for quite a
+// while.  It still didn't get the performance back to the pre-hack stage, but it
+// was a definite benefit.
+//
+// History over...
+//
+// I've recently (May 2014) tried newer versions of the Antress effects and they
+// no longer seem to have a problem with buffer size.  So, I've made a bit of a
+// compromise...I've made the buffer size user configurable.  Should have done this
+// from the beginning.  I've left the default 8k, just in case, but now the user
+// can set the buffering based on their specific setup and needs.
+//
+// And at the same time I added buffer delay compensation, which allows Audacity
+// to account for latency introduced by some effects.  This is based on information
+// provided by the effect, so it will not work with all effects since they don't
+// allow provide the information (kn0ck0ut is one).
+//
 bool VSTEffect::PromptUser()
 {
    VSTEffectDialog dlog(mParent, mName, this, mAEffect);
@@ -1888,6 +2061,21 @@ bool VSTEffect::Process()
 {
    CopyInputTracks();
    bool bGoodResult = true;
+
+   // Some VST effects (Antress Modern is an example), do not like
+   // overly large block sizes.  Unfortunately, I have not found a
+   // way to determine if the effect has a maximum it will support,
+   // so just limit to small value for now.  This will increase
+   // processing time and, it's a shame, because most plugins seem
+   // to be able to handle much larger sizes.
+   //
+   // NOTE:  This no longer seems to apply to more recent versions
+   //        of Antress plugins, but leaving comment and 8192 default
+   //        just in case.
+   gPrefs->Read(wxT("/VST/BufferSize"), &mBufferSize, 8192);
+
+   gPrefs->Read(wxT("/VST/UseBufferDelay"), &mUseBufferDelay, true);
+   mBufferDelay = 0;
 
    mInBuffer = NULL;
    mOutBuffer = NULL;
@@ -1918,14 +2106,10 @@ bool VSTEffect::Process()
       if (mBlockSize == 0) {
          mBlockSize = mWTBlockSize = left->GetMaxBlockSize() * 2;
 
-         // Some VST effects (Antress Modern is an example), do not like
-         // overly large block sizes.  Unfortunately, I have not found a
-         // way to determine if the effect has a maximum it will support,
-         // so just limit to small value for now.  This will increase
-         // processing time and, it's a shame, because most plugins seem
-         // to be able to handle much larger sizes.
-         if (mBlockSize > 8192) { // The Antress limit
-            mBlockSize = 8192;
+         // Limit the buffer size to the user specified value since they may
+         // have wanted a smaller value for a reason.
+         if (mBlockSize > mBufferSize) {
+            mBlockSize = mBufferSize;
          }
 
          mInBuffer = new float *[mInputs];
@@ -2006,7 +2190,35 @@ bool VSTEffect::ProcessStereo(int count,
    // Tell effect we're starting to process
    callDispatcher(effStartProcess, 0, 0, NULL, 0.0);
 
-   // Actually perform the effect here
+   // Get the initial latency
+   SetBufferDelay(mAEffect->initialDelay);
+
+   // LLL:
+   //
+   // Some explanation to what this mess is all about.
+   // (see history above)
+   //
+   // For each input block of samples, we pass it to the VST effect along with a
+   // variable output location.  This output location is simply a pointer into a
+   // much larger buffer.  This reduces the number of calls required to add the
+   // samples to the output track which was Michael's speed up mentioned above.
+   //
+   // The buffer delay compensation adds even more complexitity...
+   // 
+   // Upon return from the effect, the output samples are "moved to the left" by
+   // the number of samples in the current delay setting, effectively removing the
+   // delay introduced by the effect.
+   //
+   // At the same time the total number of delayed samples are gathered and when the
+   // there is no further input data to process, the loop continues to call the
+   // effect with an empty input buffer until the effect has had a chance to 
+   // return all of the remaining delayed samples.
+   //
+   // Please note, that this process has next to no documetation on how it should
+   // work, so a lot of this was from trial and error.  It appears to be correct
+   // though since it has worked with every plugin I've found that adds latency,
+   // with the exception of kn0ck0ut.  I'm sure there are other effects out there
+   // that add latency but do not provide the delay information, so be wary. :-)
    sampleCount originalLen = len;
    sampleCount ls = lstart;
    sampleCount rs = rstart;
@@ -2014,24 +2226,87 @@ bool VSTEffect::ProcessStereo(int count,
    sampleCount outrs = rstart;
    sampleCount outBufferCursor = 0;
    float **outBufSegment = new float *[mOutputs];
-   while (len) {
-      int block = mBlockSize;
-      if (block > len) {
-         block = len;
+   sampleCount delay = 0;
+   sampleCount delayed = 0;
+   bool cleared = false;
+
+   // Call the effect until we run out of input or delayed samples
+   while (len || delayed) {
+      sampleCount block = mBlockSize;
+
+      // As long as we have input samples, use those
+      if (len) {
+         // At the end if we don't have enough left for a whole block
+         if (block > len) {
+            block = len;
+         }
+
+         // Get the samples into our buffer
+         left->Get((samplePtr)mInBuffer[0], floatSample, ls, block);
+         if (right) {
+            right->Get((samplePtr)mInBuffer[1], floatSample, rs, block);
+         }
+      }
+      // We've reached the end of the input samples, so start processing
+      // delayed ones if there are any
+      else if (delayed) {
+         // At the end if we don't have enough left for a whole block
+         if (block > delayed) {
+            block = delayed;
+         }
+
+         // Clear the input buffer so that we only pass zeros to the effect.
+         if (!cleared) {
+            for (int i = 1; i < mInputs; i++) {
+               for (int j = 0; j < mBlockSize; j++) {
+                  mInBuffer[i][j] = 0.0;
+               }
+            }
+            cleared = true;
+         }
       }
 
-      left->Get((samplePtr)mInBuffer[0], floatSample, ls, block);
-      if (right) {
-         right->Get((samplePtr)mInBuffer[1], floatSample, rs, block);
+      // Set current output pointer
+      for (int i = 0; i < mOutputs; i++) {
+         outBufSegment[i] = mOutBuffer[i] + outBufferCursor;
       }
 
-      for (int i = 0; i < mOutputs; i++)
-         outBufSegment[i] = mOutBuffer[i ] + outBufferCursor;
+      // Go let the effect moleste the samples
       callProcessReplacing(mInBuffer, outBufSegment, block);
-      outBufferCursor += block;
-      //Process 2 audacity blockfiles per WaveTrack::Set independently of mBlockSize
-      //because it is extremely slow to do multiple Set()s per blockfile due to Undo History
-      //If we do more optimization we should probably align the Sets to blockfile boundries.
+
+      // Get the current number of delayed samples and accumulate
+      delay += mBufferDelay;
+      delayed += mBufferDelay;
+
+      // Reset...the effect will set this again if it has a further
+      // need to delay samples...some effects only set the value once
+      // at the start of processing.
+      mBufferDelay = 0;
+
+      // If the effect has delayed the output by more samples than our
+      // current block size, then we leave the output pointers where they
+      // are.  This will effectively remove those delayed samples from the
+      // output buffer.
+      if (delay >= block) {
+         delay -= block;
+      }
+      // We have some delayed samples, at the beginning of the output samples,
+      // so overlay them by shifting the remaining output samples.
+      else if (delay > 0) {
+         sampleCount oblock = block - delay;
+         memmove(outBufSegment[0], outBufSegment[0] + delay, SAMPLE_SIZE(floatSample) * oblock);
+         memmove(outBufSegment[1], outBufSegment[1] + delay, SAMPLE_SIZE(floatSample) * oblock);
+         delay = 0;
+         outBufferCursor += oblock;
+      }
+      // no delay, just bump to the new output location
+      else {
+         outBufferCursor += block;
+      }
+
+      // Process 2 audacity blockfiles per WaveTrack::Set independently of mBlockSize
+      // because it is extremely slow to do multiple Set()s per blockfile due to Undo History
+      // If we do more optimization we should probably align the Sets to blockfile boundries.
       if (outBufferCursor >= mWTBlockSize) {
          left->Set((samplePtr)mOutBuffer[0], floatSample, outls, mWTBlockSize);
          if (right) {
@@ -2047,7 +2322,19 @@ bool VSTEffect::ProcessStereo(int count,
          outrs += mWTBlockSize;
       }
 
-      len -= block;
+      // Still processing input samples
+      if (len) {
+         len -= block;
+      }
+      // Or maybe we're working on delayed samples
+      else if (delayed) {
+         delayed -= block;
+      }
+
+      // "ls" and "rs" serve as the input sample index for the left and
+      // right channels when processing the input samples.  If we flip
+      // over to processing delayed samples, the simply become counters
+      // for the progress display.
       ls += block;
       rs += block;
       mTimeInfo.samplePos += ((double) block / mTimeInfo.sampleRate);
@@ -2066,7 +2353,7 @@ bool VSTEffect::ProcessStereo(int count,
       }
    }
 
-   //finish taking the remainder.
+   // Finish taking the remainder
    if (outBufferCursor) {
      left->Set((samplePtr)mOutBuffer[0], floatSample, outls, outBufferCursor);
      if (right) {
@@ -2465,6 +2752,14 @@ VstTimeInfo *VSTEffect::GetTimeInfo()
 {
    mTimeInfo.nanoSeconds = wxGetLocalTimeMillis().ToDouble();
    return &mTimeInfo;
+}
+
+void VSTEffect::SetBufferDelay(int samples)
+{
+   // We do not support negative delay
+   if (samples >= 0 && mUseBufferDelay) {
+      mBufferDelay = samples;
+   }
 }
 
 wxString VSTEffect::GetString(int opcode, int index)

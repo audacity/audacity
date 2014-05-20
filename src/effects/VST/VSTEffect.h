@@ -72,12 +72,11 @@ class VSTEffect:public Effect
    static int ShowPluginListDialog( const wxArrayString & files );
    static void ShowProgressDialog( const wxString & longest, const wxArrayString & files );
 
-
-
    // Utility methods
 
    int GetChannels();
    VstTimeInfo *GetTimeInfo();
+   void SetBufferDelay(int samples);
 
    wxString GetString(int opcode, int index = 0);
    void SetString(int opcode, const wxString & str, int index = 0);
@@ -112,6 +111,11 @@ class VSTEffect:public Effect
    wxString mName;
 
    VstTimeInfo mTimeInfo;
+
+   bool mUseBufferDelay;
+   int mBufferDelay;
+
+   int mBufferSize;
 
    sampleCount mBlockSize;
    sampleCount mWTBlockSize;

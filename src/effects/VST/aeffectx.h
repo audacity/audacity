@@ -118,7 +118,7 @@ const int effGetVendorString = 47;
 const int effGetProductString = 48;
 const int effGetVendorVersion = 49;
 const int effCanDo = 51; // currently unused
-// The next one was gleaned from http://asseca.com/vst-24-specs/efIdle.html
+// The next one was gleaned from http://www.asseca.org/vst-24-specs/efIdle.html
 const int effIdle = 53;
 const int effGetVstVersion = 58; // currently unused
 // The next two were gleaned from http://www.kvraudio.com/forum/printview.php?t=143587&start=0
@@ -128,13 +128,22 @@ const int effStopProcess = 72;
 const int kEffectMagic = CCONST( 'V', 's', 't', 'P' );
 const int kVstLangEnglish = 1;
 const int kVstMidiType = 1;
-const int kVstParameterUsesFloatStep = 1 << 2;
+
 const int kVstNanosValid = 1 << 8;
+const int kVstPpqPosValid = 1 << 9;
 const int kVstTempoValid = 1 << 10;
+const int kVstBarsValid = 1 << 11;
+const int kVstCyclePosValid = 1 << 12;
+const int kVstTimeSigValid = 1 << 13;
+const int kVstSmpteValid = 1 << 14;   // from Ardour
+const int kVstClockValid = 1 << 15;   // from Ardour
+
 const int kVstTransportPlaying = 1 << 1;
+const int kVstTransportCycleActive = 1 << 2;
+const int kVstTransportChanged = 1;
 
 
-class remoteVstPlugin;
+class RemoteVstPlugin;
 
 
 class VstMidiEvent
@@ -183,9 +192,9 @@ public:
    // 00
    int numEvents;
    // 04
-   int reserved;
+   void *reserved;
    // 08
-   VstEvent * events;
+   VstEvent* events[1];
 
 } ;
 
@@ -196,7 +205,7 @@ public:
 class VstParameterProperties
 {
 public:
-   float stepFloat;
+/* float stepFloat;
    char label[64];
    int flags;
    int minInteger;
@@ -205,7 +214,24 @@ public:
    char shortLabel[8];
    int category;
    char categoryLabel[24];
-   char empty[128];
+   char empty[128];*/
+
+   float stepFloat;
+   float smallStepFloat;
+   float largeStepFloat;
+   char label[64];
+   unsigned int flags;
+   unsigned int minInteger;
+   unsigned int maxInteger;
+   unsigned int stepInteger;
+   unsigned int largeStepInteger;
+   char shortLabel[8];
+   unsigned short displayIndex;
+   unsigned short category;
+   unsigned short numParametersInCategory;
+   unsigned short reserved;
+   char categoryLabel[24];
+   char future[16];
 
 } ;
 
@@ -219,7 +245,7 @@ public:
    // 00-03
    int magic;
    // dispatcher 04-07
-   int (* dispatcher)( AEffect * , int , int , int , void * , float );
+   intptr_t (* dispatcher)( AEffect * , int , int , intptr_t, void * , float );
    // process, quite sure 08-0b
    void (* process)( AEffect * , float * * , float * * , int );
    // setParameter 0c-0f
@@ -237,15 +263,18 @@ public:
    // flags 24-27
    int flags;
    // Fill somewhere 28-2b
-   void * user;
-   // Zeroes 2c-2f 30-33 34-37 38-3b
-   char empty3[4 + 4 + 4 + 4];
+   void * ptr1;
+   void * ptr2;
+   int initialDelay;
+   // Zeroes 34-37 38-3b
+   int empty3a;
+   int empty3b;
    // 1.0f 3c-3f
    float unkown_float;
    // An object? pointer 40-43
-   char empty4[4];
+   void *ptr3;
    // Zeroes 44-47
-   char empty5[4];
+   void *user;
    // Id 48-4b
    int32_t uniqueID;
    // Don't know 4c-4f
@@ -254,6 +283,8 @@ public:
    void (* processReplacing)( AEffect * , float * * , float * * , int );
 
 } ;
+
+
 
 
 class VstTimeInfo
@@ -265,12 +296,16 @@ public:
    double sampleRate;
    // 10
    double nanoSeconds;
-   // unconfirmed 18
-   char empty1[8];
+   // 18
+   double ppqPos;
    // 20?
    double tempo;
-   // unconfirmed 28 30 38
-   char empty2[8 + 8 + 8];
+   // 28
+   double barStartPos;
+   // 30?
+   double cycleStartPos;
+   // 38?
+   double cycleEndPos;
    // 40?
    int timeSigNumerator;
    // 44?
@@ -284,13 +319,20 @@ public:
 
 
 
-
-typedef long int (* audioMasterCallback)( AEffect * , long int , long int ,
-                                          long int , void * , float );
-// we don't use it, may be noise
-#define VSTCALLBACK
+typedef intptr_t (* audioMasterCallback)( AEffect * , int32_t, int32_t, intptr_t, void * , float );
 
 
+// from http://www.asseca.org/vst-24-specs/efGetParameterProperties.html
+enum VstParameterFlags
+{
+   kVstParameterIsSwitch                = 1 << 0,  // parameter is a switch (on/off)
+   kVstParameterUsesIntegerMinMax       = 1 << 1,  // minInteger, maxInteger valid
+   kVstParameterUsesFloatStep           = 1 << 2,  // stepFloat, smallStepFloat, largeStepFloat valid
+   kVstParameterUsesIntStep             = 1 << 3,  // stepInteger, largeStepInteger valid
+   kVstParameterSupportsDisplayIndex    = 1 << 4,  // displayIndex valid
+   kVstParameterSupportsDisplayCategory = 1 << 5,  // category, etc. valid
+   kVstParameterCanRamp                 = 1 << 6   // set if parameter value can ramp up/down
+};
 
 
 #endif
