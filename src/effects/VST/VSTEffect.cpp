@@ -765,7 +765,7 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
                wxTextCtrl *t;
-               t = S.TieNumericTextBox(_("Buffer Size (8 to 1048576 samples)"),
+               t = S.TieNumericTextBox(_("&Buffer Size (8 to 1048576 samples):"),
                                        wxT("/VST/BufferSize"),
                                        wxT(""), 12);
                t->SetMinSize(wxSize(100, -1));
@@ -780,13 +780,13 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
             S.AddVariableText(wxString() +
                _("As part of their processing, some VST effects must delay returning ") +
                _("audio to Audacity. When not compensating for this delay, you will ") +
-               _("notice that bits of silence have been inserted into the audio. ") +
+               _("notice that small silences have been inserted into the audio. ") +
                _("Enabling this setting will provide that compensation, but it may ") +
                _("not work for all VST effects."))->Wrap(650);
    
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
-               S.TieCheckBox(_("Enable compensation"), wxT("/VST/UseBufferDelay"), true);
+               S.TieCheckBox(_("Enable &compensation"), wxT("/VST/UseBufferDelay"), true);
             }
             S.EndHorizontalLay();
          }
@@ -797,8 +797,8 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
             S.AddVariableText(wxString() +
                _("Most VST effects provide a graphical interface for setting the ") +
                _("parameter values. However, a basic text only method is also ") +
-               _("available."))->Wrap(650);
-            S.TieCheckBox(_("Enable graphical interface"), wxT("/VST/GUI"), true);
+               _("available.  Reopen the effect for this to take affect."))->Wrap(650);
+            S.TieCheckBox(_("Enable &graphical interface"), wxT("/VST/GUI"), true);
          }
          S.EndStatic();
    
@@ -806,10 +806,10 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddVariableText(wxString() +
                _("To improve Audacity startup, a search for VST effects is performed ") +
-               _("once and relevent information is recorded. When you add VST effects ") +
+               _("once and relevant information is recorded. When you add VST effects ") +
                _("to your system, you need to tell Audacity to rescan so the new ") +
                _("information can be recorded."))->Wrap(650);
-            S.TieCheckBox(_("Rescan effects on next launch"), wxT("/VST/Rescan"), false);
+            S.TieCheckBox(_("&Rescan effects on next launch"), wxT("/VST/Rescan"), false);
          }
          S.EndStatic();
       }
@@ -893,8 +893,19 @@ class VSTEffectDialog:public wxDialog, XMLTagHandler
    wxString mChunk;
 
 #if defined(__WXMAC__)
-   EventHandlerUPP mHandlerUPP;
-   EventHandlerRef mHandlerRef;
+   static pascal OSStatus OverlayEventHandler(EventHandlerCallRef handler, EventRef event, void *data);
+   OSStatus OnOverlayEvent(EventHandlerCallRef handler, EventRef event);
+   static pascal OSStatus WindowEventHandler(EventHandlerCallRef handler, EventRef event, void *data);
+   OSStatus OnWindowEvent(EventHandlerCallRef handler, EventRef event);
+
+   WindowRef mOverlayRef;
+   EventHandlerUPP mOverlayEventHandlerUPP;
+   EventHandlerRef mOverlayEventHandlerRef;
+   bool mOverlayEventsBlocked;
+
+   WindowRef mWindowRef;
+   EventHandlerUPP mWindowEventHandlerUPP;
+   EventHandlerRef mWindowEventHandlerRef;
 #endif
 
    DECLARE_EVENT_TABLE()
@@ -926,33 +937,318 @@ END_EVENT_TABLE()
 
 #if defined(__WXMAC__)
 
-// Event handler to capture the window close event
-static const EventTypeSpec eventList[] =
+// ----------------------------------------------------------------------------
+// Most of the following is used to deal with VST effects that create an overlay
+// window on top of ours.  This is usually done because Cocoa is being used
+// instead of Carbon.
+//
+// That works just fine...usually.  But, we display the effect in a modal dialog
+// box and, since that overlay window is just another window in the application,
+// the modality of the dialog causes the overlay to be disabled and the user
+// can't interact with the effect.
+//
+// Examples of these effects would be BlueCat's Freeware Pack and GRM Tools,
+// though I'm certain there are other's out there.  Anything JUCE based would
+// affected...that's what GRM Tools uses.
+//
+// So, to work around the problem (without moving to Cocoa or wxWidgets 3.x),
+// we install an event handler if the overlay is detected.  This handler and
+// the companion handler on our window use the kEventWindowGetClickModality
+// event to tell the system that events can be passed to our window and the
+// overlay window.
+//
+// In addition, there's some window state management that must be dealt with
+// to keep our window from becoming unhightlighted when the floater is clicked.
+// ----------------------------------------------------------------------------
+
+// Events to be captured in the overlay window
+static const EventTypeSpec OverlayEventList[] =
 {
-   {kEventClassWindow, kEventWindowClose},
+   { kEventClassWindow, kEventWindowGetClickModality },
+   { kEventClassWindow, kEventWindowHandleActivate },
+   { kEventClassWindow, kEventWindowActivated },
+   { kEventClassMouse,  kEventMouseDown },
+   { kEventClassMouse,  kEventMouseUp },
+   { kEventClassMouse,  kEventMouseMoved },
+   { kEventClassMouse,  kEventMouseDragged },
+   { kEventClassMouse,  kEventMouseEntered },
+   { kEventClassMouse,  kEventMouseExited },
+   { kEventClassMouse,  kEventMouseWheelMoved },
 };
 
-static pascal OSStatus EventHandler(EventHandlerCallRef handler, EventRef event, void *data)
+// Overlay window event handler callback thunk
+pascal OSStatus VSTEffectDialog::OverlayEventHandler(EventHandlerCallRef handler, EventRef event, void *data)
 {
-   OSStatus result = eventNotHandledErr;
-
-   VSTEffectDialog *dlg = (VSTEffectDialog *)data;
-
-   if (GetEventClass(event) == kEventClassWindow && GetEventKind(event) == kEventWindowClose) {
-      dlg->RemoveHandler();
-      dlg->Close();
-      result = noErr;
-   }
-
-   return result;
+   return ((VSTEffectDialog *)data)->OnOverlayEvent(handler, event);
 }
 
+// Overlay window event handler
+OSStatus VSTEffectDialog::OnOverlayEvent(EventHandlerCallRef handler, EventRef event)
+{
+   // Get the current window in from of all the rest non-floaters.
+   WindowRef frontwin = FrontNonFloatingWindow();
+
+   // Get the target window of the event
+   WindowRef evtwin = 0;
+   GetEventParameter(event,
+                     kEventParamDirectObject,
+                     typeWindowRef,
+                     NULL,
+                     sizeof(evtwin),
+                     NULL,
+                     &evtwin);
+
+#if defined(DEBUG_VST)
+   int cls = GetEventClass(event);
+   printf("WINDOW class %4.4s kind %d ewin %p owin %p mwin %p anf %p fnf %p\n",
+      &cls,
+      GetEventKind(event),
+      evtwin,
+      mOverlayRef,
+      mWindowRef,
+      ActiveNonFloatingWindow(),
+      frontwin);
+#endif
+
+   // We must block mouse events because plugins still act on mouse
+   // movement and drag events, even if they are supposed to be disabled
+   // due to other modal dialogs (like when Load or Settings are clicked).
+   if (GetEventClass(event) == kEventClassMouse) {
+      if (mOverlayEventsBlocked) {
+         return noErr;
+      }
+   }
+
+   // Only kEventClassWindow event at this poine
+   switch (GetEventKind(event))
+   {
+      // The system is asking if the target of an upcoming event
+      // should be passed to the overlay window or not.
+      //
+      // We allow it when the overlay window or our window is the
+      // curret top window.  Any other windows would mean that a
+      // modal dialog box has been open on top and we should block.
+      case kEventWindowGetClickModality:
+      {
+         HIModalClickResult res = kHIModalClickIsModal;
+         WindowRef ref = mWindowRef;
+
+         // Allow it to pass?
+         if (frontwin == mWindowRef | frontwin == mOverlayRef) {
+            res |= kHIModalClickAllowEvent; // | kHIModalClickRaiseWindow;
+            mOverlayEventsBlocked = false;
+         }
+         // No, block it
+         else {
+            res |= kHIModalClickAnnounce;
+            ref = frontwin;
+            mOverlayEventsBlocked = true;
+         }
+
+         // Get the kind of modal block from the modal window
+         WindowModality kind;
+         GetWindowModality(ref, &kind, NULL);
+
+         // Set the return parameters
+         SetEventParameter(event,
+                           kEventParamWindowModality,
+                           typeWindowRef,
+                           sizeof(kind),
+                           &kind);
+
+         SetEventParameter(event,
+                           kEventParamModalWindow,
+                           typeWindowRef,
+                           sizeof(ref),
+                           &ref);
+
+         SetEventParameter(event,
+                           kEventParamModalClickResult,
+                           typeModalClickResult,
+                           sizeof(res),
+                           &res);
+
+         return noErr;
+      }
+      break;
+
+      // Ignore the activate events to (sort of) keep our window as
+      // the active one
+      case kEventWindowHandleActivate:
+      case kEventWindowActivated:
+      {
+         return noErr;
+      }
+      break;
+   }
+
+   return eventNotHandledErr;
+}
+
+// Events to be captured in the our window
+static const EventTypeSpec WindowEventList[] =
+{
+   { kEventClassWindow, kEventWindowShown },
+   { kEventClassWindow, kEventWindowClose },
+   { kEventClassWindow, kEventWindowGetClickModality },
+   { kEventClassWindow, kEventWindowHandleDeactivate },
+   { kEventClassWindow, kEventWindowDeactivated },
+};
+
+// Our window event handler callback thunk
+pascal OSStatus VSTEffectDialog::WindowEventHandler(EventHandlerCallRef handler, EventRef event, void *data)
+{
+   return ((VSTEffectDialog *)data)->OnWindowEvent(handler, event);
+}
+
+// Our window event handler
+OSStatus VSTEffectDialog::OnWindowEvent(EventHandlerCallRef handler, EventRef event)
+{
+   // Get the current window in from of all the rest non-floaters.
+   WindowRef frontwin = FrontNonFloatingWindow();
+
+   // Get the target window of the event
+   WindowRef evtwin = 0;
+   GetEventParameter(event,
+                     kEventParamDirectObject,
+                     typeWindowRef,
+                     NULL,
+                     sizeof(evtwin),
+                     NULL,
+                     &evtwin);
+
+#if defined(DEBUG_VST)
+   int cls = GetEventClass(event);
+   printf("WINDOW class %4.4s kind %d ewin %p owin %p mwin %p anf %p fnf %p\n",
+      &cls,
+      GetEventKind(event),
+      evtwin,
+      mOverlayRef,
+      mWindowRef,
+      ActiveNonFloatingWindow(),
+      frontwin);
+#endif
+
+   // Only kEventClassWindow event at this poine
+   switch (GetEventKind(event))
+   {
+      // If we don't capture the close event Audacity, will crash attermination
+      // since the window is still on the wxWidgets toplevel window lists, but
+      // it's already gone.
+      case kEventWindowClose:
+      {
+         RemoveHandler();
+         Close();
+         return noErr;
+      }
+      break;
+
+      // This is where we determine if the effect has created a window above
+      // ours.  Since the overlay is created on top of our window, we look at
+      // the topmost window to see if it is different that ours.  If so, then
+      // we assume an overlay has been created and install the event handler
+      // on the overlay.
+      case kEventWindowShown:
+      {
+         // Have an overlay?
+         mOverlayRef = FrontNonFloatingWindow();
+         if (mOverlayRef != mWindowRef)
+         {
+            // Install the handler
+            mOverlayEventHandlerUPP = NewEventHandlerUPP(OverlayEventHandler);
+            InstallWindowEventHandler(mOverlayRef,
+                                      mOverlayEventHandlerUPP,
+                                      GetEventTypeCount(OverlayEventList),
+                                      OverlayEventList,
+                                      this,
+                                      &mOverlayEventHandlerRef);
+         }
+      }
+      break;
+
+      // The system is asking if the target of an upcoming event
+      // should be passed to the overlay window or not.
+      //
+      // We allow it when the overlay window or our window is the
+      // curret top window.  Any other windows would mean that a
+      // modal dialog box has been open on top and we should block.
+      case kEventWindowGetClickModality:
+      {
+         // No overlay present, so leave this up to the system
+         if (mOverlayRef == mWindowRef) {
+            break;
+         }
+
+         HIModalClickResult res = kHIModalClickIsModal;
+         WindowRef ref = mWindowRef;
+
+         // Allow it to pass?
+         if (frontwin == mWindowRef | frontwin == mOverlayRef) {
+            res |= kHIModalClickAllowEvent; // | kHIModalClickRaiseWindow;
+         }
+         // No, block it
+         else {
+            res |= kHIModalClickAnnounce;
+            ref = frontwin;
+         }
+
+         // Get the kind of modal block from the modal window
+         WindowModality kind;
+         GetWindowModality(ref, &kind, NULL);
+
+         // Set the return parameters
+         SetEventParameter(event,
+                           kEventParamWindowModality,
+                           typeWindowRef,
+                           sizeof(kind),
+                           &kind);
+
+         SetEventParameter(event,
+                           kEventParamModalWindow,
+                           typeWindowRef,
+                           sizeof(ref),
+                           &ref);
+
+         SetEventParameter(event,
+                           kEventParamModalClickResult,
+                           typeModalClickResult,
+                           sizeof(res),
+                           &res);
+
+         // The mouse click will activate the our window, but we want any
+         // control underneath the mouse to get the click instead.  Activating
+         // the main window here will allow the click to pass through to the
+         // control.
+         ActivateWindow(ref, TRUE);
+
+         return noErr;
+      }
+      break;
+
+      // Instead of deactivating our window, we actually do the opposite by
+      // activate it.  This helps to ensure it says highlighted and raised.
+      case kEventWindowHandleDeactivate:
+      case kEventWindowDeactivated:
+      {
+         // No overlay present, so leave this up to the system
+         if (mOverlayRef == mWindowRef) {
+            break;
+         }
+
+         ActivateWindow(mWindowRef, TRUE);
+         return noErr;
+      }
+      break;
+   }
+
+   return eventNotHandledErr;
+}
 #endif
 
 VSTEffectDialog::VSTEffectDialog(wxWindow *parent,
-                                       const wxString & title,
-                                       VSTEffect *effect,
-                                       AEffect *aeffect)
+                                 const wxString & title,
+                                 VSTEffect *effect,
+                                 AEffect *aeffect)
 :  wxDialog(parent, wxID_ANY, title),
    mEffect(effect),
    mAEffect(aeffect)
@@ -961,9 +1257,16 @@ VSTEffectDialog::VSTEffectDialog(wxWindow *parent,
    mSliders = NULL;
    mDisplays = NULL;
    mLabels = NULL;
+
 #if defined(__WXMAC__)
-   mHandlerUPP = NULL;
-   mHandlerRef = NULL;
+   mOverlayRef = 0;
+   mOverlayEventHandlerUPP = 0;
+   mOverlayEventHandlerRef = 0;
+   mOverlayEventsBlocked = true;
+
+   mWindowRef = 0;
+   mWindowEventHandlerUPP = 0;
+   mWindowEventHandlerRef = 0;
 #endif
 
    // Determine if the VST editor is supposed to be used or not
@@ -1003,15 +1306,25 @@ VSTEffectDialog::~VSTEffectDialog()
 void VSTEffectDialog::RemoveHandler()
 {
 #if defined(__WXMAC__)
-   if (mHandlerRef) {
-      ::RemoveEventHandler(mHandlerRef);
-      mHandlerRef = NULL;
+   if (mOverlayEventHandlerRef) {
+      ::RemoveEventHandler(mOverlayEventHandlerRef);
+      mOverlayEventHandlerRef = 0;
+   }
+
+   if (mOverlayEventHandlerUPP) {
+      DisposeEventHandlerUPP(mOverlayEventHandlerUPP);
+      mOverlayEventHandlerUPP = 0;
+   }
+
+   if (mWindowEventHandlerRef) {
+      ::RemoveEventHandler(mWindowEventHandlerRef);
+      mWindowEventHandlerRef = 0;
       MacInstallTopLevelWindowEventHandler();
    }
 
-   if (mHandlerUPP) {
-      DisposeEventHandlerUPP(mHandlerUPP);
-      mHandlerUPP = NULL;
+   if (mWindowEventHandlerUPP) {
+      DisposeEventHandlerUPP(mWindowEventHandlerUPP);
+      mWindowEventHandlerUPP = 0;
    }
 #endif
 }
@@ -1027,44 +1340,70 @@ void VSTEffectDialog::BuildFancy()
    mEffect->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
 
 #if defined(__WXMAC__)
+
+   mWindowRef = (WindowRef) MacGetTopLevelWindowRef();
+
+   // Install the event handler on our window
+   mWindowEventHandlerUPP = NewEventHandlerUPP(WindowEventHandler);
+   InstallWindowEventHandler(mWindowRef,
+                             mWindowEventHandlerUPP,
+                             GetEventTypeCount(WindowEventList),
+                             WindowEventList,
+                             this,
+                             &mWindowEventHandlerRef);
+
+   // Find the content view within our window
    HIViewRef view;
-   WindowRef win = (WindowRef) MacGetTopLevelWindowRef();
-   HIViewFindByID(HIViewGetRoot(win), kHIViewWindowContentID, &view);
+   HIViewFindByID(HIViewGetRoot(mWindowRef), kHIViewWindowContentID, &view);
 
-   mEffect->callDispatcher(effEditOpen, 0, 0, win, 0.0);
+   // And ask the effect to add it's GUI
+   mEffect->callDispatcher(effEditOpen, 0, 0, mWindowRef, 0.0);
 
+   // Get the subview it created
    HIViewRef subview = HIViewGetFirstSubview(view);
    if (subview == NULL) {
-      mEffect->callDispatcher(effEditClose, 0, 0, win, 0.0);
+      // Doesn't seem the effect created the subview, so switch
+      // to the plain dialog
+      mEffect->callDispatcher(effEditClose, 0, 0, mWindowRef, 0.0);
       mGui = false;
+      RemoveHandler();
       BuildPlain();
       return;
    }
-#elif defined(__WXMSW__)
-   wxWindow *w = new wxPanel(this, wxID_ANY);
 
+#elif defined(__WXMSW__)
+
+   wxWindow *w = new wxPanel(this, wxID_ANY);
    mEffect->callDispatcher(effEditOpen, 0, 0, w->GetHWND(), 0.0);
+
 #else
 #endif
 
+   // Get the final bounds of the effect GUI
    mEffect->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
 
+   // Build our display now
    wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
    wxSizerItem *si;
 
+   // Add the program bar at the top
    vs->Add(BuildProgramBar(), 0, wxCENTER | wxEXPAND);
 
+   // Reserve space for the effect GUI
    si = hs->Add(rect->right - rect->left, rect->bottom - rect->top);
    vs->Add(hs, 0, wxCENTER);
 
+   // Add the standard button bar at the bottom
    vs->Add(CreateStdButtonSizer(this, ePreviewButton|eCancelButton|eOkButton), 0, wxEXPAND);
-
    SetSizerAndFit(vs);
 
+   // Found out where the reserved space wound up
    wxPoint pos = si->GetPosition();
 
 #if defined(__WXMAC__)
+
+   // Reposition the subview into the reserved space
    HIViewPlaceInSuperviewAt(subview, pos.x, pos.y);
 
    // Some VST effects do not work unless the default handler is removed since
@@ -1072,20 +1411,11 @@ void VSTEffectDialog::BuildFancy()
    // done last since proper window sizing will not occur otherwise.
    ::RemoveEventHandler((EventHandlerRef)MacGetEventHandler());
 
-   // Install a bare minimum handler so we can capture the window close event.  If
-   // it's not captured, we will crash at Audacity termination since the window
-   // is still on the wxWidgets toplevel window lists, but it's already gone.
-   mHandlerUPP = NewEventHandlerUPP(EventHandler);
-   InstallWindowEventHandler(win,
-                             mHandlerUPP,
-                             GetEventTypeCount(eventList),
-                             eventList,
-                             this,
-                             &mHandlerRef);
-
 #elif defined(__WXMSW__)
+
    w->SetPosition(pos);
    w->SetSize(si->GetSize());
+
 #else
 #endif
 }
@@ -1222,15 +1552,15 @@ wxSizer *VSTEffectDialog::BuildProgramBar()
    mProgram->SetName(_("Presets"));
    hs->Add(mProgram, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
-   wxButton *bt = new wxButton(this, ID_VST_LOAD, _("Load"));
+   wxButton *bt = new wxButton(this, ID_VST_LOAD, _("&Load"));
    hs->Add(bt, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
-   bt = new wxButton(this, ID_VST_SAVE, _("Save"));
+   bt = new wxButton(this, ID_VST_SAVE, _("&Save"));
    hs->Add(bt, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
    hs->AddStretchSpacer();
 
-   bt = new wxButton(this, ID_VST_SETTINGS, _("Settings"));
+   bt = new wxButton(this, ID_VST_SETTINGS, _("S&ettings..."));
    hs->Add(bt, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT | wxALL, 5);
 
    return hs;
