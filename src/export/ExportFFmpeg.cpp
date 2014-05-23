@@ -754,7 +754,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
       pkt.stream_index = mEncAudioStream->index;
 
       // Write the encoded audio frame to the output file.
-      if ((ret = av_interleaved_write_frame(mEncFormatCtx, &pkt)) != 0)
+      if ((ret = av_interleaved_write_frame(mEncFormatCtx, &pkt)) < 0)
       {
          wxLogError(wxT("FFmpeg : ERROR - Failed to write audio frame to file."));
          return false;
