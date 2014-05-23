@@ -256,10 +256,6 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 }
 
 
-// Size of probe buffer, for guessing file type from file contents
-#define PROBE_BUF_MIN 2048
-#define PROBE_BUF_MAX (1<<20)
-
 // Detect type of input file and open it if recognized. Routine
 // based on the av_open_input_file() libavformat function.
 int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
@@ -267,87 +263,14 @@ int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
    wxFileName f(name);
    wxCharBuffer fname;
    const char *filename;
-   AVProbeData pd;
    AVIOContext *pb = NULL;
-   AVInputFormat *fmt = NULL;
-   AVInputFormat *fmt1;
-   int probe_size;
    int err;
 
    fname = f.GetFullName().mb_str();
    filename = (const char *) fname;
 
-   // Initialize probe data...go ahead and preallocate the maximum buffer size.
-   pd.filename = filename;
-   pd.buf_size = 0;
-   pd.buf = (unsigned char *) av_malloc(PROBE_BUF_MAX + AVPROBE_PADDING_SIZE);
-   if (pd.buf == NULL) {
-      err = AVERROR(ENOMEM);
-      goto fail;
-   }
-
    // Open the file to prepare for probing
    if ((err = ufile_fopen(&pb, name, AVIO_FLAG_READ)) < 0) {
-      goto fail;
-   }
-
-   for (probe_size = PROBE_BUF_MIN; probe_size <= PROBE_BUF_MAX && !fmt; probe_size <<= 1) {
-      int score_max = probe_size < PROBE_BUF_MAX ? AVPROBE_SCORE_MAX / 4 : 0;
-
-      // Read up to a "probe_size" worth of data
-      pd.buf_size = avio_read(pb, pd.buf, probe_size);
-
-      // AWD: with zero-length input files buf_size can come back negative;
-      // this causes problems so we might as well just fail
-      if (pd.buf_size < 0) {
-         err = AVERROR_INVALIDDATA;
-         goto fail;
-      }
-
-      // Clear up to a "AVPROBE_PADDING_SIZE" worth of unused buffer
-      memset(pd.buf + pd.buf_size, 0, AVPROBE_PADDING_SIZE);
-
-      // Reposition file for succeeding scan
-      if (avio_seek(pb, 0, SEEK_SET) < 0) {
-         err = AVERROR(EIO);
-         goto fail;
-      }
-
-      // Scan all input formats
-      fmt = NULL;
-      for (fmt1 = av_iformat_next(NULL); fmt1 != NULL; fmt1 = av_iformat_next(fmt1)) {
-         int score = 0;
-
-         // Ignore the ones that are not file based
-         if (fmt1->flags & AVFMT_NOFILE) {
-            continue;
-         }
-
-         // If the format can probe the file then try that first
-         if (fmt1->read_probe) {
-            score = fmt1->read_probe(&pd);
-         }
-         // Otherwize, resort to extension matching if available
-         else if (fmt1->extensions) {
-            if (av_match_ext(filename, fmt1->extensions)) {
-               score = 50;
-            }
-         }
-
-         // Remember this format if it scored higher than a previous match
-         if (score > score_max) {
-            score_max = score;
-            fmt = fmt1;
-         }
-         else if (score == score_max) {
-            fmt = NULL;
-         }
-      }
-   }
-
-   // Didn't find a suitable format, so bail
-   if (!fmt) {
-      err = AVERROR(EILSEQ);
       goto fail;
    }
 
@@ -355,20 +278,14 @@ int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
    (*ic_ptr)->pb = pb;
    
    // And finally, attempt to associate an input stream with the file
-   err = avformat_open_input(ic_ptr, filename, fmt, NULL);
+   err = avformat_open_input(ic_ptr, filename, NULL, NULL);
    if (err) {
       goto fail;
    }
 
-   // Done with the probe buffer
-   av_freep(&pd.buf);
-
    return 0;
 
 fail:
-   if (pd.buf) {
-      av_freep(&pd.buf);
-   }
 
    if (pb) {
       ufile_close(pb);
