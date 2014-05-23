@@ -337,6 +337,13 @@ bool ExportFFmpeg::CheckSampleRate(int rate, int lowrate, int highrate, const in
    return false;
 }
 
+static int set_dict_int(AVDictionary **dict, const char *key, int val)
+{
+    char val_str[256];
+    snprintf(val_str, sizeof(val_str), "%d", val);
+    return av_dict_set(dict, key, val_str, 0);
+}
+
 bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 {
    AVCodec *	codec = NULL;
@@ -403,14 +410,14 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       mEncAudioCodecCtx->compression_level = gPrefs->Read(wxT("/FileFormats/FFmpegCompLevel"),-1);
       mEncAudioCodecCtx->frame_size = gPrefs->Read(wxT("/FileFormats/FFmpegFrameSize"),(long)0);
 
-//These all should use AVDictionary & AVOptions that way audacity could display the correct list of available options for the choosen encoder
-//       mEncAudioCodecCtx->lpc_coeff_precision = gPrefs->Read(wxT("/FileFormats/FFmpegLPCCoefPrec"),(long)0);
-//       mEncAudioCodecCtx->min_prediction_order = gPrefs->Read(wxT("/FileFormats/FFmpegMinPredOrder"),(long)-1);
-//       mEncAudioCodecCtx->max_prediction_order = gPrefs->Read(wxT("/FileFormats/FFmpegMaxPredOrder"),(long)-1);
-//       mEncAudioCodecCtx->min_partition_order = gPrefs->Read(wxT("/FileFormats/FFmpegMinPartOrder"),(long)-1);
-//       mEncAudioCodecCtx->max_partition_order = gPrefs->Read(wxT("/FileFormats/FFmpegMaxPartOrder"),(long)-1);
-//       mEncAudioCodecCtx->prediction_order_method = gPrefs->Read(wxT("/FileFormats/FFmpegPredOrderMethod"),(long)0);
-//       mEncFormatCtx->mux_rate = gPrefs->Read(wxT("/FileFormats/FFmpegMuxRate"),(long)0);
+//FIXME The list of supported options for the seleced encoder should be extracted instead of a few hardcoded
+      set_dict_int(&options, "lpc_coeff_precision",     gPrefs->Read(wxT("/FileFormats/FFmpegLPCCoefPrec"),(long)0));
+      set_dict_int(&options, "min_prediction_order",    gPrefs->Read(wxT("/FileFormats/FFmpegMinPredOrder"),(long)-1));
+      set_dict_int(&options, "max_prediction_order",    gPrefs->Read(wxT("/FileFormats/FFmpegMaxPredOrder"),(long)-1));
+      set_dict_int(&options, "min_partition_order",     gPrefs->Read(wxT("/FileFormats/FFmpegMinPartOrder"),(long)-1));
+      set_dict_int(&options, "max_partition_order",     gPrefs->Read(wxT("/FileFormats/FFmpegMaxPartOrder"),(long)-1));
+      set_dict_int(&options, "prediction_order_method", gPrefs->Read(wxT("/FileFormats/FFmpegPredOrderMethod"),(long)0));
+      set_dict_int(&options, "muxrate",                 gPrefs->Read(wxT("/FileFormats/FFmpegMuxRate"),(long)0));
       mEncFormatCtx->packet_size = gPrefs->Read(wxT("/FileFormats/FFmpegPacketSize"),(long)0);
       mEncAudioCodecCtx->codec_id = (AVCodecID)gPrefs->Read(wxT("/FileFormats/FFmpegCodec"), mEncFormatDesc->audio_codec);
       break;
