@@ -286,7 +286,11 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, Tags *m
    memcpy(mEncFormatCtx->filename, OSINPUT(mName), strlen(OSINPUT(mName))+1);
    
    // At the moment Audacity can export only one audio stream
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(53, 10, 0))
    if ((mEncAudioStream = av_new_stream(mEncFormatCtx, 1)) == NULL)
+#else
+   if ((mEncAudioStream = avformat_new_stream(mEncFormatCtx, NULL)) == NULL)
+#endif
    {
       wxLogError(wxT("FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."), mName.c_str());
       return false;

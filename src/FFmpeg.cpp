@@ -377,7 +377,11 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    }
 
    sc->m_samplefmt = sc->m_codecCtx->sample_fmt;
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVUTIL_VERSION_INT < AV_VERSION_INT(51, 4, 0))
    sc->m_samplesize = av_get_bits_per_sample_fmt(sc->m_samplefmt) / 8;
+#else
+   sc->m_samplesize = av_get_bytes_per_sample(sc->m_samplefmt);
+#endif
 
    int channels = sc->m_codecCtx->channels;
    unsigned int newsize = sc->m_samplesize * frame->nb_samples * channels;
@@ -927,8 +931,8 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avutil, av_freep);
    FFMPEG_INITDYN(avutil, av_rescale_q);
    FFMPEG_INITDYN(avutil, avutil_version);
-   FFMPEG_INITDYN(avutil, av_frame_alloc);
-   FFMPEG_INITDYN(avutil, av_frame_free);
+   FFMPEG_INITALT(avutil, av_frame_alloc, avcodec_alloc_frame);
+   FFMPEG_INITALT(avutil, av_frame_free, avcodec_free_frame);
    FFMPEG_INITDYN(avutil, av_samples_get_buffer_size);
 
    wxLogMessage(wxT("All symbols loaded successfully. Initializing the library."));

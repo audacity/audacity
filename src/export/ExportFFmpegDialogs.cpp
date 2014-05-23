@@ -839,8 +839,10 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("asf"), CODEC_ID_IMC },
    { wxT("asf"), CODEC_ID_AC3 },
    { wxT("asf"), CODEC_ID_DTS },
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
    { wxT("asf"), CODEC_ID_SONIC },
    { wxT("asf"), CODEC_ID_SONIC_LS },
+#endif
    { wxT("asf"), CODEC_ID_FLAC },
    { wxT("asf"), CODEC_ID_ADPCM_SWF },
    { wxT("asf"), CODEC_ID_VORBIS },
@@ -875,8 +877,10 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("avi"), CODEC_ID_IMC },
    { wxT("avi"), CODEC_ID_AC3 },
    { wxT("avi"), CODEC_ID_DTS },
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
    { wxT("avi"), CODEC_ID_SONIC },
    { wxT("avi"), CODEC_ID_SONIC_LS },
+#endif
    { wxT("avi"), CODEC_ID_FLAC },
    { wxT("avi"), CODEC_ID_ADPCM_SWF },
    { wxT("avi"), CODEC_ID_VORBIS },
@@ -924,8 +928,10 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("matroska"), CODEC_ID_IMC },
    { wxT("matroska"), CODEC_ID_AC3 },
    { wxT("matroska"), CODEC_ID_DTS },
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
    { wxT("matroska"), CODEC_ID_SONIC },
    { wxT("matroska"), CODEC_ID_SONIC_LS },
+#endif
    { wxT("matroska"), CODEC_ID_FLAC },
    { wxT("matroska"), CODEC_ID_ADPCM_SWF },
    { wxT("matroska"), CODEC_ID_VORBIS },
@@ -1032,8 +1038,10 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("nut"), CODEC_ID_IMC },
    { wxT("nut"), CODEC_ID_AC3 },
    { wxT("nut"), CODEC_ID_DTS },
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
    { wxT("nut"), CODEC_ID_SONIC },
    { wxT("nut"), CODEC_ID_SONIC_LS },
+#endif
    { wxT("nut"), CODEC_ID_FLAC },
    { wxT("nut"), CODEC_ID_ADPCM_SWF },
    { wxT("nut"), CODEC_ID_VORBIS },
@@ -1082,8 +1090,10 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("wav"), CODEC_ID_IMC },
    { wxT("wav"), CODEC_ID_AC3 },
    { wxT("wav"), CODEC_ID_DTS },
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
    { wxT("wav"), CODEC_ID_SONIC },
    { wxT("wav"), CODEC_ID_SONIC_LS },
+#endif
    { wxT("wav"), CODEC_ID_FLAC },
    { wxT("wav"), CODEC_ID_ADPCM_SWF },
    { wxT("wav"), CODEC_ID_VORBIS },
