@@ -2112,10 +2112,10 @@ int VSTEffectDialog::b64decode(wxString in, void *out)
                case 1: //One pad character
                   *p++ = (temp >> 16) & 0x000000FF;
                   *p++ = (temp >> 8) & 0x000000FF;
-                  return (p - (unsigned char *) out) - 1;
+                  return p - (unsigned char *) out;
                case 2: //Two pad characters
                   *p++ = (temp >> 10) & 0x000000FF;
-                  return (p - (unsigned char *) out) - 1;
+                  return p - (unsigned char *) out;
             }
          }
          i++;
@@ -2125,7 +2125,7 @@ int VSTEffectDialog::b64decode(wxString in, void *out)
       *p++ = temp & 0x000000FF;
    }
 
-   return (p - (unsigned char *) out) - 1;
+   return p - (unsigned char *) out;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
