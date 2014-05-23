@@ -491,7 +491,6 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
                             frame,                                   // out
                             &got_output,                             // out
                             &avpkt);                                 // in
-   sc->m_decodedAudioSamplesValidSiz = frame->nb_samples;
    
    if (nBytesDecoded < 0)
    {
@@ -504,6 +503,7 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
 
    int channels = sc->m_codecCtx->channels;
    unsigned int newsize = sc->m_samplesize * frame->nb_samples * channels;
+   sc->m_decodedAudioSamplesValidSiz = newsize;
    // Reallocate the audio sample buffer if it's smaller than the frame size.
    if (newsize > sc->m_decodedAudioSamplesSiz )
    {
