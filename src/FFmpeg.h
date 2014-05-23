@@ -38,6 +38,7 @@ extern "C" {
 
    #include <libavcodec/avcodec.h>
    #include <libavformat/avformat.h>
+   #include <libavutil/frame.h>
    #include <libavutil/fifo.h>
    #include <libavutil/mathematics.h>
 
