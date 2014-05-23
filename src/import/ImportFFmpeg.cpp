@@ -493,6 +493,8 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       {
          case AV_SAMPLE_FMT_U8:
          case AV_SAMPLE_FMT_S16:
+         case AV_SAMPLE_FMT_U8P:
+         case AV_SAMPLE_FMT_S16P:
             mScs[s]->m_osamplesize = sizeof(int16_t);
             mScs[s]->m_osamplefmt = int16Sample;
          break;
@@ -750,22 +752,27 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
             switch (sc->m_samplefmt)
             {
                case AV_SAMPLE_FMT_U8:
+               case AV_SAMPLE_FMT_U8P:
                   ((int16_t *)tmp[chn])[index] = (int16_t) (*(uint8_t *)in - 0x80) << 8;
                break;
                
                case AV_SAMPLE_FMT_S16:
+               case AV_SAMPLE_FMT_S16P:
                   ((int16_t *)tmp[chn])[index] = (int16_t) *(int16_t *)in;
                break;
                
                case AV_SAMPLE_FMT_S32:
+               case AV_SAMPLE_FMT_S32P:
                   ((float *)tmp[chn])[index] = (float) *(int32_t *)in * (1.0 / (1 << 31));
                break;
                
                case AV_SAMPLE_FMT_FLT:
+               case AV_SAMPLE_FMT_FLTP:
                   ((float *)tmp[chn])[index] = (float) *(float *)in;
                break;
                
                case AV_SAMPLE_FMT_DBL:
+               case AV_SAMPLE_FMT_DBLP:
                   ((float *)tmp[chn])[index] = (float) *(double *)in;
                break;
 

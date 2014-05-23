@@ -543,6 +543,12 @@ extern "C" {
       (AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options),
       (avctx, codec, options);
    );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avcodec_decode_audio4,
+      (AVCodecContext *avctx, AVFrame *frame, int *got_output, const AVPacket *avpkt),
+      (avctx, frame, got_output, avpkt)
+   );
 #if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
@@ -873,6 +879,17 @@ extern "C" {
       av_codec_is_encoder,
       (const AVCodec *codec),
       (codec)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVFrame*,
+      av_frame_alloc,
+      (void),
+      ()
+   );
+   FFMPEG_FUNCTION_NO_RETURN(
+      av_frame_free,
+      (AVFrame **frame),
+      (frame)
    );
 };
 #endif

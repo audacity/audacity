@@ -478,10 +478,32 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
       }
    }
 
+   AVPacket avpkt;
+   av_init_packet(&avpkt);
+   avpkt.data = pDecode;
+   avpkt.size = nDecodeSiz;
+
+   AVFrame *frame = av_frame_alloc();
+   int got_output = 0;
+   
+   nBytesDecoded =
+      avcodec_decode_audio4(sc->m_codecCtx,
+                            frame,                                   // out
+                            &got_output,                             // out
+                            &avpkt);                                 // in
+   sc->m_decodedAudioSamplesValidSiz = frame->nb_samples;
+   
+   if (nBytesDecoded < 0)
+   {
+      // Decoding failed. Don't stop.
+      return -1;
+   }
+
    sc->m_samplefmt = sc->m_codecCtx->sample_fmt;
    sc->m_samplesize = av_get_bits_per_sample_format(sc->m_samplefmt) / 8;
 
-   unsigned int newsize = FFMAX(sc->m_pkt.size * sc->m_samplesize, 192000); //FIXME
+   int channels = sc->m_codecCtx->channels;
+   unsigned int newsize = sc->m_samplesize * frame->nb_samples * channels;
    // Reallocate the audio sample buffer if it's smaller than the frame size.
    if (newsize > sc->m_decodedAudioSamplesSiz )
    {
@@ -499,37 +521,19 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
          return -1;
       }
    }
-
-
-   sc->m_decodedAudioSamplesValidSiz = sc->m_decodedAudioSamplesSiz;
-
-#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
-   // avcodec_decode_audio3() expects the size of the output buffer as the 3rd parameter but
-   // also returns the number of bytes it decoded in the same parameter.
-   AVPacket avpkt;
-   av_init_packet(&avpkt);
-   avpkt.data = pDecode;
-   avpkt.size = nDecodeSiz;
-   nBytesDecoded =
-      avcodec_decode_audio3(sc->m_codecCtx,
-                            (int16_t *)sc->m_decodedAudioSamples,    // out
-                            &sc->m_decodedAudioSamplesValidSiz,      // in/out
-                            &avpkt);                                 // in
-#else
-   // avcodec_decode_audio2() expects the size of the output buffer as the 3rd parameter but
-   // also returns the number of bytes it decoded in the same parameter.
-   nBytesDecoded =
-      avcodec_decode_audio2(sc->m_codecCtx, 
-                            (int16_t *) sc->m_decodedAudioSamples,   // out
-                            &sc->m_decodedAudioSamplesValidSiz,      // in/out
-                            pDecode,                                 // in
-                            nDecodeSiz);                             // in
-#endif
-   if (nBytesDecoded < 0)
-   {
-      // Decoding failed. Don't stop.
-      return -1;
+   if (frame->data[1]) {
+        for (int i = 0; i<frame->nb_samples; i++) {
+            for (int ch = 0; ch<channels; ch++) {
+                memcpy(sc->m_decodedAudioSamples + sc->m_samplesize * (ch + channels*i),
+                       frame->extended_data[ch] + sc->m_samplesize*i,
+                       sc->m_samplesize);
+            }
+        }
+   } else {
+       memcpy(sc->m_decodedAudioSamples, frame->data[0], newsize);
    }
+
+   av_frame_free(&frame);
 
    // We may not have read all of the data from this packet. If so, the user can call again.
    // Whether or not they do depends on if m_pktRemainingSiz == 0 (they can check).
@@ -1015,6 +1019,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avcodec, avcodec_find_encoder_by_name);
    FFMPEG_INITDYN(avcodec, avcodec_find_decoder);
    FFMPEG_INITDYN(avcodec, avcodec_open2);
+   FFMPEG_INITDYN(avcodec, avcodec_decode_audio4);
 #if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
    FFMPEG_INITDYN(avcodec, avcodec_decode_audio3);
 #else
@@ -1047,6 +1052,8 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avutil, av_freep);
    FFMPEG_INITDYN(avutil, av_rescale_q);
    FFMPEG_INITDYN(avutil, avutil_version);
+   FFMPEG_INITDYN(avutil, av_frame_alloc);
+   FFMPEG_INITDYN(avutil, av_frame_free);
 
    wxLogMessage(wxT("All symbols loaded successfully. Initializing the library."));
 #endif
