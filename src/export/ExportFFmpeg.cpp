@@ -578,6 +578,7 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int nFifoBytes, in
       return ret;
    }
 
+   pkt->dts = pkt->pts = AV_NOPTS_VALUE; // we dont set frame.pts thus dont trust the AVPacket ts
 
    av_frame_free(&frame);
    av_freep(&samples);
