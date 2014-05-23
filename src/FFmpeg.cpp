@@ -377,7 +377,7 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    }
 
    sc->m_samplefmt = sc->m_codecCtx->sample_fmt;
-   sc->m_samplesize = av_get_bits_per_sample_format(sc->m_samplefmt) / 8;
+   sc->m_samplesize = av_get_bits_per_sample_fmt(sc->m_samplefmt) / 8;
 
    int channels = sc->m_codecCtx->channels;
    unsigned int newsize = sc->m_samplesize * frame->nb_samples * channels;
@@ -908,7 +908,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avcodec, av_codec_is_encoder);
    FFMPEG_INITDYN(avcodec, avcodec_fill_audio_frame);
 
-   FFMPEG_INITALT(avcodec, av_get_bits_per_sample_format, av_get_bits_per_sample_fmt);
+   FFMPEG_INITALT(avcodec, av_get_bits_per_sample_fmt, av_get_bits_per_sample_format);
 
    FFMPEG_INITDYN(avutil, av_free);
    FFMPEG_INITDYN(avutil, av_log_set_callback);
