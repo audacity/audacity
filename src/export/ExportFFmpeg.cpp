@@ -153,6 +153,7 @@ private:
    int			      mEncAudioEncodedBufSiz;		
    AVFifoBuffer	 * mEncAudioFifo;				// FIFO to write incoming audio samples into
    uint8_t         *	mEncAudioFifoOutBuf;		// buffer to read _out_ of the FIFO into
+   int               mEncAudioFifoOutBufSiz;
 
 #if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(50, 0, 0)
    AVFifoBuffer      mEncAudioFifoBuffer;    // FIFO to write incoming audio samples into
@@ -177,6 +178,7 @@ ExportFFmpeg::ExportFFmpeg()
    #define MAX_AUDIO_PACKET_SIZE (128 * 1024)
    mEncAudioEncodedBufSiz = 4*MAX_AUDIO_PACKET_SIZE;
    mEncAudioFifoOutBuf = NULL;	// buffer to read _out_ of the FIFO into
+   mEncAudioFifoOutBufSiz = 0;
    
 #if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(50, 0, 0)
    mEncAudioFifo = &mEncAudioFifoBuffer;
@@ -505,8 +507,9 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    av_fifo_init(mEncAudioFifo, 1024);
 #endif
 
+   mEncAudioFifoOutBufSiz = 2*MAX_AUDIO_PACKET_SIZE;
    // Allocate a buffer to read OUT of the FIFO into. The FIFO maintains its own buffer internally.
-   if ((mEncAudioFifoOutBuf = (uint8_t*)av_malloc(2*MAX_AUDIO_PACKET_SIZE)) == NULL)
+   if ((mEncAudioFifoOutBuf = (uint8_t*)av_malloc(mEncAudioFifoOutBufSiz)) == NULL)
    {
       wxLogError(wxT("FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."));
       return false;
@@ -603,6 +606,11 @@ bool ExportFFmpeg::Finalize()
       int		nAudioFrameSizeOut = mEncAudioCodecCtx->frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
       if (mEncAudioCodecCtx->frame_size == 1) nAudioFrameSizeOut = mEncAudioEncodedBufSiz;
 
+      if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz || nFifoBytes > mEncAudioFifoOutBufSiz) {
+         wxLogError(wxT("FFmpeg : ERROR - Too much remaining data."));
+         return false;
+      }
+
       // Flush the audio FIFO first if necessary. It won't contain a _full_ audio frame because
       // if it did we'd have pulled it from the FIFO during the last encodeAudioFrame() call - 
       // the encoder must support short/incomplete frames for this to work.
@@ -694,7 +702,8 @@ bool ExportFFmpeg::Finalize()
    // Free any buffers or structures we allocated.
    av_free(mEncFormatCtx);
 
-   av_free(mEncAudioFifoOutBuf);
+   av_freep(&mEncAudioFifoOutBuf);
+   mEncAudioFifoOutBufSiz = 0;
 
    av_fifo_free(mEncAudioFifo);
 
@@ -722,6 +731,11 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
    ret = av_fifo_generic_write(mEncAudioFifo, pRawSamples, nBytesToWrite,NULL);
 
    wxASSERT(ret == nBytesToWrite);
+
+   if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz) {
+      wxLogError(wxT("FFmpeg : ERROR - nAudioFrameSizeOut too large."));
+      return false;
+   }
 
    // Read raw audio samples out of the FIFO in nAudioFrameSizeOut byte-sized groups to encode.
    while ((ret = av_fifo_size(mEncAudioFifo)) >= nAudioFrameSizeOut)
