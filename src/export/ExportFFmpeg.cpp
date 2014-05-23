@@ -694,8 +694,7 @@ bool ExportFFmpeg::Finalize()
    // Free any buffers or structures we allocated.
    av_free(mEncFormatCtx);
 
-   if (mEncAudioFifoOutBuf != NULL)
-      av_free(mEncAudioFifoOutBuf);
+   av_free(mEncAudioFifoOutBuf);
 
    av_fifo_free(mEncAudioFifo);
 
