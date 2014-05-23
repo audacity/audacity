@@ -63,6 +63,7 @@ void GetOGGImportPlugin(ImportPluginList *importPluginList,
 
 #else /* USE_LIBVORBIS */
 
+#include <wx/log.h>
 #include <wx/string.h>
 #include <wx/utils.h>
 #include <wx/intl.h>
@@ -306,9 +307,20 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
                           1,    // signed
                           &bitstream);
 
-      if (bytesRead < 0) {
+      if (bytesRead == OV_HOLE) {
+         wxFileName f(mFilename);
+         wxLogError(wxT("Ogg Vorbis importer: file %s is malformed, ov_read() reported a hole"),
+                    f.GetFullName().c_str());
+         /* http://lists.xiph.org/pipermail/vorbis-dev/2001-February/003223.html
+          * is the justification for doing this - best effort for malformed file,
+          * hence the message.
+          */
+         continue;
+      } else if (bytesRead < 0) {
          /* Malformed Ogg Vorbis file. */
          /* TODO: Return some sort of meaningful error. */
+         wxLogError(wxT("Ogg Vorbis importer: ov_read() returned error %i"),
+                    bytesRead);
          break;
       }
 
