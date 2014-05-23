@@ -517,7 +517,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 
 static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int nFifoBytes, int16_t *audio_samples)
 {
-   int i, ch, buffer_size, ret, got_output, nEncodedBytes;
+   int i, ch, buffer_size, ret, got_output = 0, nEncodedBytes;
    void *samples = NULL;
    AVFrame *frame = NULL;
 
@@ -578,12 +578,11 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int nFifoBytes, in
       return ret;
    }
 
-   nEncodedBytes = pkt->size;
 
    av_frame_free(&frame);
    av_freep(&samples);
 
-   return nEncodedBytes;
+   return got_output;
 }
 
 
@@ -743,6 +742,8 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
          wxLogError(wxT("FFmpeg : ERROR - Can't encode audio frame."));
          return false;
       }
+      if (ret == 0)
+         continue;
 
       // Rescale from the codec time_base to the AVStream time_base.
       if (pkt.pts != int64_t(AV_NOPTS_VALUE))
