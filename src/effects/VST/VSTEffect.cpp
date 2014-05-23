@@ -1664,7 +1664,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
                      FileNames::DataDir(),
                      wxEmptyString,
                      wxT("xml"),
-                     wxT("VST Effect paramter files (*.fxp; *.xml)|*.fxp;*.xml"),
+                     wxT("VST preset files (*.fxp; *.xml)|*.fxp;*.xml"),
                      wxFD_OPEN | wxRESIZE_BORDER,
                      this);
 
@@ -1687,7 +1687,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
       wxFFile fxpFile(fn, wxT("rb"));
       if (!fxpFile.IsOpened()) {
          wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.c_str()),
-                      _("Error Loading VST Program"),
+                      _("Error Loading VST Presets"),
                       wxOK | wxCENTRE,
                       this);
          return;
@@ -1760,7 +1760,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
 
       if (error) {
          wxMessageBox(_("Could not load file or incompatible content."),
-                      _("Error Loading VST Program"),
+                      _("Error Loading VST Presets"),
                       wxOK | wxCENTRE,
                       this);
       }
@@ -1773,7 +1773,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
       if (!reader.Parse(this, fn)) {
          // Inform user of load failure
          wxMessageBox(reader.GetErrorStr(),
-                      _("Error Loading VST Program"),
+                      _("Error Loading VST Presets"),
                       wxOK | wxCENTRE,
                       this);
       }
@@ -1791,10 +1791,10 @@ void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(event))
 
    // Ask the user for the real name
    FileDialog fd(this,
-                 _("Save VST Program As:"),
+                 _("Save VST Preset As:"),
                  FileNames::DataDir(),
                  mProgram->GetValue(),
-                 wxT("VST Effect program (*.fxp)|*.fxp|XML paramter file (*.xml)|*.xml"),
+                 wxT("Standard VST preset file (*.fxp)|*.fxp|Audacity VST preset file (*.xml)|*.xml"),
                  wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
 
    // User canceled...
@@ -1816,7 +1816,7 @@ void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(event))
       wxFFile fxpFile(fn, wxT("wb"));
       if (!fxpFile.IsOpened()) {
          wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.c_str()),
-                      _("Error Saving VST Program"),
+                      _("Error Saving VST Presets"),
                       wxOK | wxCENTRE,
                       this);
          return;
