@@ -1664,7 +1664,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
                      FileNames::DataDir(),
                      wxEmptyString,
                      wxT("xml"),
-                     wxT("*.xml"),
+                     wxT("VST Effect paramter files (*.fxp; *.xml)|*.fxp;*.xml"),
                      wxFD_OPEN | wxRESIZE_BORDER,
                      this);
 
@@ -1673,14 +1673,110 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   // Load the program
-   XMLFileReader reader;
-   if (!reader.Parse(this, fn)) {
-      // Inform user of load failure
-      wxMessageBox(reader.GetErrorStr(),
-                   _("Error Loading VST Preset"),
-                   wxOK | wxCENTRE,
-                   this);
+   size_t len = fn.Len();
+   if (len > 4 && wxStricmp(fn.Mid(len - 4), wxT(".fxp")) == 0) {
+      //
+      // FXP specification from VST SDK 2.4 (vstfxstore.h)
+      //
+      int i;
+      wxInt32 buffer[8];
+      void *buf = NULL;
+      bool error = false;
+
+      // read VST program file (FXP)
+      wxFFile fxpFile(fn, wxT("rb"));
+      if (!fxpFile.IsOpened()) {
+         wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.c_str()),
+                      _("Error Loading VST Program"),
+                      wxOK | wxCENTRE,
+                      this);
+         return;
+      }
+      if (!error) error = !fread(buffer, 28, 1, fxpFile.fp());
+
+      // VST always uses Big Endian, convert first
+      for (i = 0; i < 7; i++)
+         buffer[i] = wxINT32_SWAP_ON_LE(buffer[i]);
+
+      if (!error) error = (buffer[0] != CCONST('C', 'c', 'n', 'K'));    ///< 'CcnK'
+      //VstInt32 byteSize;			                                    ///< size of this chunk, excl. magic + byteSize
+      if (!error) {               
+         if (mAEffect->flags & effFlagsProgramChunks)
+            error = (buffer[2] != CCONST('F', 'P', 'C', 'h'));          ///< 'FxCk' (regular) or 'FPCh' (opaque chunk)
+         else
+            error = (buffer[2] != CCONST('F', 'x', 'C', 'k'));
+      }
+      if (!error) error = (buffer[3] != 1);                             ///< format version (currently 1)
+      if (!error) error = (buffer[4] != mAEffect->uniqueID);            ///< fx unique ID    (could try to load instead, as XML does)
+      //if (!error) error = (buffer[5] !=                               ///< fx version      (currently ignored)
+      //                     mEffect->callDispatcher(effGetVendorVersion, 0, 0, NULL, 0.0));
+      if (!error) error = (buffer[6] != mAEffect->numParams);           ///< number of parameters
+
+      buffer[7] = 0; // ensure trailing NUL
+      if (!error) error = !fread(buffer, 28, 1, fxpFile.fp());          ///< program name (null-terminated ASCII string)
+      if (!error) fn = wxConvLocal.cMB2WC((char*)buffer, 29, &len);
+
+      if (mAEffect->flags & effFlagsProgramChunks) {
+         if (!error) error = !fread(buffer, 4, 1, fxpFile.fp());
+         i = wxINT32_SWAP_ON_LE(buffer[0]);
+         if (!error) error = (i < 1);
+
+         if (!error) {
+            buf = new char[i];
+            error = !buf;
+         }
+         if (!error) error = !fread(buf, i, 1, fxpFile.fp());
+         if (!error) mEffect->callDispatcher(effSetChunk, 1, i, buf, 0.0);
+
+         delete [] buf;
+      }
+      else {
+         float val;
+
+         if (!error) {
+            buf = new char[mAEffect->numParams << 2];
+            error = !buf;
+         }
+         if (!error) error = !fread(buf, mAEffect->numParams << 2, 1, fxpFile.fp());
+
+         i = -1;
+         while (!error && (++i < mAEffect->numParams)) {
+            *((wxInt32*)&val) = wxINT32_SWAP_ON_LE(((wxInt32*)buf)[i]);
+            if (!error) error = (val < 0.0 || val > 1.0);
+            if (!error) mEffect->callSetParameter(i, val);
+         }
+
+         delete [] buf;
+      }
+
+      // set program name
+      if (!error && !fn.IsEmpty()) {
+         i = mProgram->GetCurrentSelection();
+         if (i < 0) i = 0;   // default to first program
+         mProgram->SetString(i, fn);
+         mProgram->SetValue(fn);
+         mEffect->SetString(effSetProgramName, fn, i);
+      }
+
+      if (error) {
+         wxMessageBox(_("Could not load file or incompatible content."),
+                      _("Error Loading VST Program"),
+                      wxOK | wxCENTRE,
+                      this);
+      }
+      fxpFile.Close();
+   }
+   else {
+      // default to read as XML file
+      // Load the program
+      XMLFileReader reader;
+      if (!reader.Parse(this, fn)) {
+         // Inform user of load failure
+         wxMessageBox(reader.GetErrorStr(),
+                      _("Error Loading VST Program"),
+                      wxOK | wxCENTRE,
+                      this);
+      }
    }
 
    RefreshParameters();
@@ -1694,70 +1790,139 @@ void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(event))
    wxString fn;
 
    // Ask the user for the real name
-   fn = FileSelector(_("Save VST Preset As:"),
-                     FileNames::DataDir(),
-                     mProgram->GetValue() + wxT(".xml"),
-                     wxT("xml"),
-                     wxT("*.xml"),
-                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-                     this);
+   FileDialog fd(this,
+                 _("Save VST Program As:"),
+                 FileNames::DataDir(),
+                 mProgram->GetValue(),
+                 wxT("VST Effect program (*.fxp)|*.fxp|XML paramter file (*.xml)|*.xml"),
+                 wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
 
    // User canceled...
-   if (fn.IsEmpty()) {
+   if (fd.ShowModal() == wxID_CANCEL) {
       return;
    }
 
-   XMLFileWriter xmlFile;
+   fn = fd.GetPath();
+   if (fd.GetFilterIndex() == 0) {
+      //
+      // FXP specification from VST SDK 2.4 (vstfxstore.h)
+      //
+      int i;
+      wxInt32 buffer[8], chunkSize;
+      void *buf = NULL;
+      bool error = false;
 
-   // Create/Open the file
-   xmlFile.Open(fn, wxT("wb"));
-
-   xmlFile.StartTag(wxT("vstprogrampersistence"));
-   xmlFile.WriteAttr(wxT("version"), wxT("1"));
-
-   i = mEffect->callDispatcher(effGetVendorVersion, 0, 0, NULL, 0.0);
-   xmlFile.StartTag(wxT("effect"));
-   xmlFile.WriteAttr(wxT("name"), mEffect->GetEffectIdentifier());
-   xmlFile.WriteAttr(wxT("version"), i);
-
-   xmlFile.StartTag(wxT("program"));
-   xmlFile.WriteAttr(wxT("name"), mProgram->GetValue());
-
-   long clen = 0;
-   if (mAEffect->flags & effFlagsProgramChunks) {
-      void *chunk = NULL;
-
-      clen = mEffect->callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
-      if (clen != 0) {
-         xmlFile.StartTag(wxT("chunk"));
-         xmlFile.WriteSubTree(b64encode(chunk, clen) + wxT('\n'));
-         xmlFile.EndTag(wxT("chunk"));
+      // Create/Open the file
+      wxFFile fxpFile(fn, wxT("wb"));
+      if (!fxpFile.IsOpened()) {
+         wxMessageBox(wxString::Format(_("Could not open file: \"%s\""), fn.c_str()),
+                      _("Error Saving VST Program"),
+                      wxOK | wxCENTRE,
+                      this);
+         return;
       }
-   }
-
-   if (clen == 0) {
-      for (i = 0; i < mAEffect->numParams; i++) {
-         xmlFile.StartTag(wxT("param"));
-
-         xmlFile.WriteAttr(wxT("index"), i);
-         xmlFile.WriteAttr(wxT("name"),
-                           mEffect->GetString(effGetParamName, i));
-         xmlFile.WriteAttr(wxT("value"),
-                           wxString::Format(wxT("%f"),
-                           mEffect->callGetParameter(i)));
-
-         xmlFile.EndTag(wxT("param"));
+      
+      buffer[0] = CCONST('C', 'c', 'n', 'K'); // VstInt32 chunkMagic;   ///< 'CcnK'
+      buffer[1] = 48; // VstInt32 byteSize;			                    ///< size of this chunk, excl. magic + byteSize
+      if (mAEffect->flags & effFlagsProgramChunks) {                    ///< 'FxCk' (regular) or 'FPCh' (opaque chunk)
+         buffer[2] = CCONST('F', 'P', 'C', 'h');
+         chunkSize = mEffect->callDispatcher(effGetChunk, 1, 0, &buf, 0.0);
+         buffer[1] += 4;
+         buffer[1] += chunkSize;
       }
+      else {
+         buffer[2] = CCONST('F', 'x', 'C', 'k');
+         buffer[1] += (mAEffect->numParams << 2);
+      }
+      buffer[3] = 1;                                                    ///< format version (currently 1)
+      buffer[4] = mAEffect->uniqueID;                                   ///< fx unique ID
+      buffer[5] = mEffect->callDispatcher(effGetVendorVersion, 0, 0, NULL, 0.0);      ///< fx version
+      buffer[6] = mAEffect->numParams;                      
+
+      // VST always uses Big Endian, convert first
+      for (i = 0; i < 7; i++)
+         buffer[i] = wxINT32_SWAP_ON_LE(buffer[i]);
+
+      if (!error) error = !fwrite(buffer, 28, 1, fxpFile.fp());
+      memset(buffer, 0, 28);
+      wxConvLocal.FromWChar((char*)buffer, 27, mProgram->GetValue());
+      if (!error) error = (fwrite(buffer, 1, 28, fxpFile.fp()) < 28);   ///< program name (null-terminated ASCII string)
+ 
+      if (mAEffect->flags & effFlagsProgramChunks) {
+         buffer[0] = wxINT32_SWAP_ON_LE(chunkSize);
+         if (!error) error = !fwrite(buffer, 4, 1, fxpFile.fp());
+         if (!error) error = !fwrite(buf, chunkSize, 1, fxpFile.fp());
+      }
+      else {
+         float val;
+         if (!error) {
+            buf = new char[mAEffect->numParams << 2];
+            error = !buf;
+         }
+         for (i = 0; i < mAEffect->numParams; i++) {
+            val = mEffect->callGetParameter(i);
+            ((wxInt32*)buf)[i] = wxINT32_SWAP_ON_LE(*((wxInt32*)&val));
+         }
+         if (!error) error = !fwrite(buf, (mAEffect->numParams << 2), 1, fxpFile.fp());
+         delete [] buf;
+      }
+
+      fxpFile.Close();
    }
+   else {
+      XMLFileWriter xmlFile;
 
-   xmlFile.EndTag(wxT("program"));
+      // Create/Open the file
+      xmlFile.Open(fn, wxT("wb"));
 
-   xmlFile.EndTag(wxT("effect"));
+      xmlFile.StartTag(wxT("vstprogrampersistence"));
+      xmlFile.WriteAttr(wxT("version"), wxT("1"));
 
-   xmlFile.EndTag(wxT("vstprogrampersistence"));
+      i = mEffect->callDispatcher(effGetVendorVersion, 0, 0, NULL, 0.0);
+      xmlFile.StartTag(wxT("effect"));
+      xmlFile.WriteAttr(wxT("name"), mEffect->GetEffectIdentifier());
+      xmlFile.WriteAttr(wxT("version"), i);
 
-   // Close the file
-   xmlFile.Close();
+      xmlFile.StartTag(wxT("program"));
+      xmlFile.WriteAttr(wxT("name"), mProgram->GetValue());
+
+      long clen = 0;
+      if (mAEffect->flags & effFlagsProgramChunks) {
+         void *chunk = NULL;
+
+         clen = mEffect->callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+         if (clen != 0) {
+            xmlFile.StartTag(wxT("chunk"));
+            xmlFile.WriteSubTree(b64encode(chunk, clen) + wxT('\n'));
+            xmlFile.EndTag(wxT("chunk"));
+         }
+      }
+
+      if (clen == 0) {
+         for (i = 0; i < mAEffect->numParams; i++) {
+            xmlFile.StartTag(wxT("param"));
+
+            xmlFile.WriteAttr(wxT("index"), i);
+            xmlFile.WriteAttr(wxT("name"),
+                              mEffect->GetString(effGetParamName, i));
+            xmlFile.WriteAttr(wxT("value"),
+                              wxString::Format(wxT("%f"),
+                              mEffect->callGetParameter(i)));
+
+            xmlFile.EndTag(wxT("param"));
+         }
+      }
+
+      xmlFile.EndTag(wxT("program"));
+
+      xmlFile.EndTag(wxT("effect"));
+
+      xmlFile.EndTag(wxT("vstprogrampersistence"));
+
+      // Close the file
+      xmlFile.Close();
+
+   }
 }
 
 void VSTEffectDialog::OnSettings(wxCommandEvent & WXUNUSED(event))
