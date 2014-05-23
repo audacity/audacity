@@ -41,6 +41,9 @@ extern "C" {
    #include <libavutil/fifo.h>
    #include <libavutil/mathematics.h>
 
+//XXX HACK FIXME
+#include "libavformat/url.h"
+
    #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 102, 0)
    #define AVIOContext ByteIOContext
    #endif
@@ -353,7 +356,7 @@ typedef struct _streamContext
    int                  m_initialchannels;               // number of channels allocated when we begin the importing. Assumes that number of channels doesn't change on the fly.
 
    int                  m_samplesize;                    // input sample size in bytes
-   SampleFormat         m_samplefmt;                     // input sample format
+   AVSampleFormat       m_samplefmt;                     // input sample format
 
    int                  m_osamplesize;                   // output sample size in bytes
    sampleFormat         m_osamplefmt;                    // output sample format
@@ -510,15 +513,10 @@ extern "C" {
       (void),
       ()
    );
-   FFMPEG_FUNCTION_NO_RETURN(
-      avcodec_init,
-      (void),
-      ()
-   );
    FFMPEG_FUNCTION_WITH_RETURN(
       AVCodec*,
       avcodec_find_encoder,
-      (enum CodecID id),
+      (enum AVCodecID id),
       (id)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
@@ -530,25 +528,20 @@ extern "C" {
    FFMPEG_FUNCTION_WITH_RETURN(
       AVCodec*,
       avcodec_find_decoder,
-      (enum CodecID id),
+      (enum AVCodecID id),
       (id)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       unsigned int,
       av_codec_get_tag,
-      (const struct AVCodecTag * const *tags, enum CodecID id),
+      (const struct AVCodecTag * const *tags, enum AVCodecID id),
       (tags, id)
-   );
-   FFMPEG_FUNCTION_NO_RETURN(
-      avcodec_get_context_defaults,
-      (AVCodecContext *s),
-      (s)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      avcodec_open,
-      (AVCodecContext *avctx, AVCodec *codec),
-      (avctx, codec);
+      avcodec_open2,
+      (AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options),
+      (avctx, codec, options);
    );
 #if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
    FFMPEG_FUNCTION_WITH_RETURN(
@@ -585,7 +578,7 @@ extern "C" {
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       av_get_bits_per_sample_format,
-      (enum SampleFormat sample_fmt),
+      (enum AVSampleFormat sample_fmt),
       (sample_fmt)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
@@ -621,9 +614,9 @@ extern "C" {
 #endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      av_open_input_stream,
-      (AVFormatContext **ic_ptr, AVIOContext *pb, const char *filename, AVInputFormat *fmt, AVFormatParameters *ap),
-      (ic_ptr, pb, filename, fmt, ap)
+      avformat_open_input,
+      (AVFormatContext **ic_ptr, const char *filename, AVInputFormat *fmt, AVDictionary **options),
+      (ic_ptr, filename, fmt, options)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
@@ -667,9 +660,9 @@ extern "C" {
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      av_write_header,
-      (AVFormatContext *s),
-      (s)
+      avformat_write_header,
+      (AVFormatContext *s, AVDictionary **options),
+      (s, options)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       AVInputFormat*,
@@ -686,62 +679,26 @@ extern "C" {
    FFMPEG_FUNCTION_WITH_RETURN(
       AVCodec*,
       av_codec_next,
-      (AVCodec *c),
+      (const AVCodec *c),
       (c)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      av_set_parameters,
-      (AVFormatContext *s, AVFormatParameters *ap),
-      (s, ap)
+      ffurl_open,
+      (URLContext **puc, const char *filename, int flags, const AVIOInterruptCB *int_cb, AVDictionary **options),
+      (puc, filename, flags, int_cb, options)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      url_open_protocol,
-      (URLContext **puc, struct URLProtocol *up, const char *filename, int flags),
-      (puc, up, filename, flags)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      url_open,
-      (URLContext **puc, const char *filename, int flags),
-      (puc, filename, flags)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      url_fdopen,
+      ffio_fdopen,
       (AVIOContext **s, URLContext *h),
       (s, h)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      url_close,
+      ffurl_close,
       (URLContext *h),
       (h)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      url_fopen,
-      (AVIOContext **s, const char *filename, int flags),
-      (s, filename, flags)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int64_t,
-      url_fseek,
-      (AVIOContext *s, int64_t offset, int whence),
-      (s, offset, whence)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      url_fclose,
-      (AVIOContext *s),
-      (s)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int64_t,
-      url_fsize,
-      (AVIOContext *s),
-      (s)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       AVStream*,
@@ -870,21 +827,15 @@ extern "C" {
       (f, size)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
-      AVMetadataTag *,
-      av_metadata_get,
-      (AVMetadata *m, const char *key, const AVMetadataTag *prev, int flags),
+      AVDictionaryEntry *,
+      av_dict_get,
+      (AVDictionary *m, const char *key, const AVDictionaryEntry *prev, int flags),
       (m, key, prev, flags)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      av_metadata_set,
-      (AVMetadata **pm, const char *key, const char *value),
-      (pm, key, value)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      av_metadata_set2,
-      (AVMetadata **pm, const char *key, const char *value, int flags),
+      av_dict_set,
+      (AVDictionary **pm, const char *key, const char *value, int flags),
       (pm, key, value, flags)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
@@ -900,6 +851,12 @@ extern "C" {
       (s, offset, whence)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
+      int64_t,
+      avio_size,
+      (AVIOContext *s),
+      (s)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avio_close,
       (AVIOContext *s),
@@ -907,9 +864,15 @@ extern "C" {
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      av_register_protocol2,
-      (URLProtocol *protocol, int size),
-      (protocol, size)
+      ffurl_register_protocol,
+      (URLProtocol *protocol),
+      (protocol)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_codec_is_encoder,
+      (const AVCodec *codec),
+      (codec)
    );
 };
 #endif

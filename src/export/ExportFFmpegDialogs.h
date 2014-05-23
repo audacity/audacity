@@ -43,7 +43,7 @@ struct ExposedFormat
    int canmetadata;           //!< !=0 if format supports metadata, -1 any avformat version, otherwise version support added
    bool canutf8;              //!< true if format supports metadata in UTF-8, false otherwise
    const wxChar *description; //!< format description (will be shown in export dialog)
-   CodecID codecid;           //!< codec ID (see libavcodec/avcodec.h)
+   AVCodecID codecid;         //!< codec ID (see libavcodec/avcodec.h)
    bool compiledIn;           //!< support for this codec/format is compiled in (checked at runtime)
 };
 
@@ -52,7 +52,7 @@ struct ExposedFormat
 struct CompatibilityEntry
 {
    const wxChar *fmt; //!< format, recognizeable by guess_format()
-   CodecID codec;     //!< codec ID
+   AVCodecID codec;   //!< codec ID
 };
 
 
@@ -148,7 +148,7 @@ struct ApplicableFor
 {
    bool                 enable;  //!< true if this control should be enabled, false otherwise
    int                  control; //!< control ID
-   CodecID              codec;   //!< Codec ID
+   AVCodecID            codec;   //!< Codec ID
    const char          *format;  //!< Format short name
 };
 
@@ -258,7 +258,7 @@ private:
    ///\param id Codec ID
    ///\param selfmt format selected at the moment
    ///\return index of the selfmt in new format list or -1 if it is not in the list
-   int FetchCompatibleFormatList(CodecID id, wxString *selfmt);
+   int FetchCompatibleFormatList(AVCodecID id, wxString *selfmt);
 
    /// Retreives codec list from libavcodec
    void FetchCodecList();
@@ -267,7 +267,7 @@ private:
    ///\param fmt Format short name
    ///\param id id of the codec selected at the moment
    ///\return index of the id in new codec list or -1 if it is not in the list
-   int FetchCompatibleCodecList(const wxChar *fmt, CodecID id);
+   int FetchCompatibleCodecList(const wxChar *fmt, AVCodecID id);
 
    /// Retreives list of presets from configuration file
    void FetchPresetList();

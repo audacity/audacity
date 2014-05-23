@@ -186,9 +186,9 @@ static int ufile_open(URLContext *h, const char *filename, int flags)
    //
    //       Since Audacity doesn't use any other open flags (there aren't any others defined
    //       anyway), making equality tests works for older and new FFmpeg headers.
-   if (flags == URL_RDWR) {
+   if (flags == (AVIO_FLAG_READ | AVIO_FLAG_WRITE)) {
       mode = wxFile::read_write;
-   } else if (flags == URL_WRONLY) {
+   } else if (flags == AVIO_FLAG_WRITE) {
       mode = wxFile::write;
    } else {
       mode = wxFile::read;
@@ -259,6 +259,7 @@ static int ufile_close(URLContext *h)
 URLProtocol ufile_protocol = {
     UFILE_PROTOCOL,
     ufile_open,
+    NULL,
     ufile_read,
     ufile_write,
     ufile_seek,
@@ -276,15 +277,15 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
    // filename.  We convert the name to UTF8 here and it will be converted back
    // to original encoding in ufile_open().  This allows us to support Unicode
    // filenames even though FFmpeg does not.
-   err = url_open(&h, (const char *) url.ToUTF8(), flags);
+   err = ffurl_open(&h, (const char *) url.ToUTF8(), flags, NULL, NULL);
    if (err < 0) {
       return err;
    }
 
    // Associate the file with a context
-   err = url_fdopen(s, h);
+   err = ffio_fdopen(s, h);
    if (err < 0) {
-      url_close(h);
+      ffurl_close(h);
       return err;
    }
 
@@ -325,7 +326,7 @@ int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
    }
 
    // Open the file to prepare for probing
-   if ((err = ufile_fopen(&pb, name, URL_RDONLY)) < 0) {
+   if ((err = ufile_fopen(&pb, name, AVIO_FLAG_READ)) < 0) {
       goto fail;
    }
 
@@ -389,8 +390,11 @@ int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
       goto fail;
    }
 
+   *ic_ptr = avformat_alloc_context();
+   (*ic_ptr)->pb = pb;
+   
    // And finally, attempt to associate an input stream with the file
-   err = av_open_input_stream(ic_ptr, pb, filename, fmt, NULL);
+   err = avformat_open_input(ic_ptr, filename, fmt, NULL);
    if (err) {
       goto fail;
    }
@@ -477,7 +481,7 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    sc->m_samplefmt = sc->m_codecCtx->sample_fmt;
    sc->m_samplesize = av_get_bits_per_sample_format(sc->m_samplefmt) / 8;
 
-   unsigned int newsize = FFMAX(sc->m_pkt.size * sc->m_samplesize, AVCODEC_MAX_AUDIO_FRAME_SIZE);
+   unsigned int newsize = FFMAX(sc->m_pkt.size * sc->m_samplesize, 192000); //FIXME
    // Reallocate the audio sample buffer if it's smaller than the frame size.
    if (newsize > sc->m_decodedAudioSamplesSiz )
    {
@@ -973,30 +977,28 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avformat, av_read_frame);
    FFMPEG_INITDYN(avformat, av_seek_frame);
    FFMPEG_INITDYN(avformat, av_close_input_file);
-   FFMPEG_INITDYN(avformat, av_write_header);
+   FFMPEG_INITDYN(avformat, avformat_write_header);
    FFMPEG_INITDYN(avformat, av_interleaved_write_frame);
    FFMPEG_INITDYN(avformat, av_iformat_next);
    FFMPEG_INITDYN(avformat, av_oformat_next);
-   FFMPEG_INITDYN(avformat, av_set_parameters);
-   FFMPEG_INITDYN(avformat, url_open_protocol);
-   FFMPEG_INITDYN(avformat, url_open);
-   FFMPEG_INITDYN(avformat, url_fdopen);
-   FFMPEG_INITDYN(avformat, url_close);
-   FFMPEG_INITDYN(avformat, url_fseek);
-   FFMPEG_INITDYN(avformat, url_fclose);
+   FFMPEG_INITDYN(avformat, ffurl_open);
+   FFMPEG_INITDYN(avformat, ffio_fdopen);
+   FFMPEG_INITDYN(avformat, ffurl_close);
    FFMPEG_INITDYN(avformat, av_new_stream);
    FFMPEG_INITDYN(avformat, avformat_alloc_context);
    FFMPEG_INITDYN(avformat, av_write_trailer);
    FFMPEG_INITDYN(avformat, av_codec_get_tag);
    FFMPEG_INITDYN(avformat, avformat_version);
-   FFMPEG_INITDYN(avformat, av_open_input_stream);
-   FFMPEG_INITDYN(avformat, av_metadata_get);
+   FFMPEG_INITDYN(avformat, avformat_open_input);
+   FFMPEG_INITDYN(avformat, av_dict_get);
+   FFMPEG_INITDYN(avformat, av_dict_set);
+   FFMPEG_INITDYN(avformat, avio_size);
 
-   FFMPEG_INITALT(avformat, av_register_protocol2, av_register_protocol);
+   FFMPEG_INITDYN(avformat, ffurl_register_protocol);
+
    FFMPEG_INITALT(avformat, avio_read, get_buffer);
    FFMPEG_INITALT(avformat, avio_seek, url_fseek);
    FFMPEG_INITALT(avformat, avio_close, url_fclose);
-   FFMPEG_INITALT(avformat, av_metadata_set2, av_metadata_set);
    FFMPEG_INITALT(avformat, av_guess_format, guess_format);
    FFMPEG_INITALT(avformat, av_match_ext, match_ext);
 
@@ -1009,12 +1011,10 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
 #if LIBAVFORMAT_VERSION_INT > AV_VERSION_INT(52, 31, 0)
    FFMPEG_INITDYN(avcodec, av_free_packet);
 #endif
-   FFMPEG_INITDYN(avcodec, avcodec_init);
    FFMPEG_INITDYN(avcodec, avcodec_find_encoder);
    FFMPEG_INITDYN(avcodec, avcodec_find_encoder_by_name);
    FFMPEG_INITDYN(avcodec, avcodec_find_decoder);
-   FFMPEG_INITDYN(avcodec, avcodec_get_context_defaults);
-   FFMPEG_INITDYN(avcodec, avcodec_open);
+   FFMPEG_INITDYN(avcodec, avcodec_open2);
 #if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
    FFMPEG_INITDYN(avcodec, avcodec_decode_audio3);
 #else
@@ -1026,6 +1026,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avcodec, avcodec_version);
    FFMPEG_INITDYN(avcodec, av_fast_realloc);
    FFMPEG_INITDYN(avcodec, av_codec_next);
+   FFMPEG_INITDYN(avcodec, av_codec_is_encoder);
 
    FFMPEG_INITALT(avcodec, av_get_bits_per_sample_format, av_get_bits_per_sample_fmt);
 
@@ -1051,7 +1052,6 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
 #endif
 
    //FFmpeg initialization
-   avcodec_init();
    avcodec_register_all();
    av_register_all();
    
@@ -1089,11 +1089,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
       return false;
    }
 
-#if defined(DISABLE_DYNAMIC_LOADING_FFMPEG) && (LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 69, 0))
-   av_register_protocol(&ufile_protocol);
-#else
-   av_register_protocol2(&ufile_protocol, sizeof(ufile_protocol));
-#endif
+   ffurl_register_protocol(&ufile_protocol);
 
    return true;
 }

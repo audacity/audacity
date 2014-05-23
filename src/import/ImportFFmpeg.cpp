@@ -413,7 +413,7 @@ bool FFmpegImportFileHandle::InitCodecs()
             continue;
          }
 
-         if (avcodec_open(sc->m_codecCtx, codec) < 0)
+         if (avcodec_open2(sc->m_codecCtx, codec, NULL) < 0)
          {
             wxLogError(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,sc->m_codecCtx->codec_id,sc->m_codecCtx->codec_name);
             //Can't open decoder - skip this stream
@@ -434,7 +434,7 @@ bool FFmpegImportFileHandle::InitCodecs()
          else
            bitrate.Printf(wxT("?"));
 
-         AVMetadataTag *tag = av_metadata_get(sc->m_stream->metadata, "language", NULL, 0);
+         AVDictionaryEntry *tag = av_dict_get(sc->m_stream->metadata, "language", NULL, 0);
          wxString lang;
          if (tag)
          {
@@ -491,8 +491,8 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
    {
       switch (mScs[s]->m_stream->codec->sample_fmt)
       {
-         case SAMPLE_FMT_U8:
-         case SAMPLE_FMT_S16:
+         case AV_SAMPLE_FMT_U8:
+         case AV_SAMPLE_FMT_S16:
             mScs[s]->m_osamplesize = sizeof(int16_t);
             mScs[s]->m_osamplefmt = int16Sample;
          break;
@@ -749,23 +749,23 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
          {
             switch (sc->m_samplefmt)
             {
-               case SAMPLE_FMT_U8:
+               case AV_SAMPLE_FMT_U8:
                   ((int16_t *)tmp[chn])[index] = (int16_t) (*(uint8_t *)in - 0x80) << 8;
                break;
                
-               case SAMPLE_FMT_S16:
+               case AV_SAMPLE_FMT_S16:
                   ((int16_t *)tmp[chn])[index] = (int16_t) *(int16_t *)in;
                break;
                
-               case SAMPLE_FMT_S32:
+               case AV_SAMPLE_FMT_S32:
                   ((float *)tmp[chn])[index] = (float) *(int32_t *)in * (1.0 / (1 << 31));
                break;
                
-               case SAMPLE_FMT_FLT:
+               case AV_SAMPLE_FMT_FLT:
                   ((float *)tmp[chn])[index] = (float) *(float *)in;
                break;
                
-               case SAMPLE_FMT_DBL:
+               case AV_SAMPLE_FMT_DBL:
                   ((float *)tmp[chn])[index] = (float) *(double *)in;
                break;
 
@@ -792,6 +792,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    
    // Try to update the progress indicator (and see if user wants to cancel)
    int updateResult = eProgressSuccess;
+   int64_t filesize = avio_size(mFormatContext->pb);
    // PTS (presentation time) is the proper way of getting current position
    if (sc->m_pkt.pts != int64_t(AV_NOPTS_VALUE) && mFormatContext->duration != int64_t(AV_NOPTS_VALUE))
    {
@@ -805,10 +806,10 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
       mProgressLen = sc->m_stream->nb_frames;
    }
    // When number of frames is unknown, use position in file
-   else if (mFormatContext->file_size > 0 && sc->m_pkt.pos > 0 && sc->m_pkt.pos <= mFormatContext->file_size)
+   else if (filesize > 0 && sc->m_pkt.pos > 0 && sc->m_pkt.pos <= filesize)
    {
       mProgressPos = sc->m_pkt.pos;
-      mProgressLen = mFormatContext->file_size;
+      mProgressLen = filesize;
    }
    updateResult = mProgress->Update(mProgressPos, mProgressLen != 0 ? mProgressLen : 1);
 
@@ -831,9 +832,9 @@ void FFmpegImportFileHandle::WriteMetadata(Tags *tags)
 
 void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxChar *tag, const char *name)
 {
-   AVMetadataTag *meta;
+   AVDictionaryEntry *meta;
 
-   meta = av_metadata_get(mFormatContext->metadata, name, NULL, AV_METADATA_IGNORE_SUFFIX);
+   meta = av_dict_get(mFormatContext->metadata, name, NULL, AV_DICT_IGNORE_SUFFIX);
    if (meta)
    {
       tags->SetTag(tag, wxString::FromUTF8(meta->value));
