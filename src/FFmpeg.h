@@ -570,6 +570,12 @@ extern "C" {
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
+      avcodec_encode_audio2,
+      (AVCodecContext *avctx, AVPacket *pkt, const AVFrame *frame, int *got_output),
+      (avctx, pkt, frame, got_output)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
       avcodec_close,
       (AVCodecContext *avctx),
       (avctx)
@@ -590,6 +596,12 @@ extern "C" {
       av_get_bits_per_sample_fmt,
       (enum AVSampleFormat sample_fmt),
       (sample_fmt)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avcodec_fill_audio_frame,
+      (AVFrame *frame, int nb_channels, enum AVSampleFormat sample_fmt, const uint8_t *buf, int buf_size, int align),
+      (frame, nb_channels, sample_fmt, buf, buf_size, align)
    );
 
    //
@@ -864,6 +876,12 @@ extern "C" {
       av_frame_free,
       (AVFrame **frame),
       (frame)
+   );
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      av_samples_get_buffer_size,
+      (int *linesize, int nb_channels, int nb_samples, enum AVSampleFormat sample_fmt, int align),
+      (linesize, nb_channels, nb_samples, sample_fmt, align)
    );
 };
 #endif

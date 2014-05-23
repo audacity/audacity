@@ -899,12 +899,14 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avcodec, avcodec_decode_audio2);
 #endif
    FFMPEG_INITDYN(avcodec, avcodec_encode_audio);
+   FFMPEG_INITDYN(avcodec, avcodec_encode_audio2);
    FFMPEG_INITDYN(avcodec, avcodec_close);
    FFMPEG_INITDYN(avcodec, avcodec_register_all);
    FFMPEG_INITDYN(avcodec, avcodec_version);
    FFMPEG_INITDYN(avcodec, av_fast_realloc);
    FFMPEG_INITDYN(avcodec, av_codec_next);
    FFMPEG_INITDYN(avcodec, av_codec_is_encoder);
+   FFMPEG_INITDYN(avcodec, avcodec_fill_audio_frame);
 
    FFMPEG_INITALT(avcodec, av_get_bits_per_sample_format, av_get_bits_per_sample_fmt);
 
@@ -927,6 +929,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avutil, avutil_version);
    FFMPEG_INITDYN(avutil, av_frame_alloc);
    FFMPEG_INITDYN(avutil, av_frame_free);
+   FFMPEG_INITDYN(avutil, av_samples_get_buffer_size);
 
    wxLogMessage(wxT("All symbols loaded successfully. Initializing the library."));
 #endif
