@@ -25,8 +25,6 @@ License: GPL v2.  See License.txt.
 
 #include <wx/file.h>
 
-#define UFILE_PROTOCOL "ufile"
-
 #if !defined(USE_FFMPEG)
 /// FFmpeg support may or may not be compiled in,
 /// but Preferences dialog requires this function nevertheless
@@ -169,56 +167,18 @@ void av_log_wx_callback(void* ptr, int level, const char* fmt, va_list vl)
 //======================= Unicode aware uri protocol for FFmpeg
 // Code inspired from ffmpeg-users mailing list sample
 
-static int ufile_open(URLContext *h, const char *filename, int flags)
+static int ufile_read(void *opaque, uint8_t *buf, int size)
 {
-   wxString name(strchr(filename, ':') + 1, wxConvUTF8);
-   wxFile *f;
-   wxFile::OpenMode mode;
-
-   f = new wxFile;
-   if (!f) {
-      return AVERROR(ENOMEM);
-   }
-
-   // LLL:  These really should be logical AND tests, but on 2011/04/28, the URL_ open flags
-   //       changed in the FFmpeg source to values that were not compatible with previous
-   //       values.
-   //
-   //       Since Audacity doesn't use any other open flags (there aren't any others defined
-   //       anyway), making equality tests works for older and new FFmpeg headers.
-   if (flags == (AVIO_FLAG_READ | AVIO_FLAG_WRITE)) {
-      mode = wxFile::read_write;
-   } else if (flags == AVIO_FLAG_WRITE) {
-      mode = wxFile::write;
-   } else {
-      mode = wxFile::read;
-   }
-
-   if (!f->Open(name, mode)) {
-      delete f;
-      return AVERROR(ENOENT);
-   }
-
-   h->priv_data = (void *)f;
-
-   return 0;
+   int ret = (int)((wxFile *) opaque)->Read(buf, size);
+   return ret;
 }
 
-static int ufile_read(URLContext *h, unsigned char *buf, int size)
+static int ufile_write(void *opaque, uint8_t *buf, int size)
 {
-   return (int) ((wxFile *) h->priv_data)->Read(buf, size);
+   return (int) ((wxFile *) opaque)->Write(buf, size);
 }
 
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 68, 0)
-static int ufile_write(URLContext *h, unsigned char *buf, int size)
-#else
-static int ufile_write(URLContext *h, const unsigned char *buf, int size)
-#endif
-{
-   return (int) ((wxFile *) h->priv_data)->Write(buf, size);
-}
-
-static int64_t ufile_seek(URLContext *h, int64_t pos, int whence)
+static int64_t ufile_seek(void *opaque, int64_t pos, int whence)
 {
    wxSeekMode mode = wxFromStart;
 
@@ -238,15 +198,15 @@ static int64_t ufile_seek(URLContext *h, int64_t pos, int whence)
      mode = wxFromEnd;
      break;
    case (AVSEEK_SIZE):
-     return ((wxFile *) h->priv_data)->Length();
+     return ((wxFile *) opaque)->Length();
    }
 
-   return ((wxFile *) h->priv_data)->Seek(pos, mode);
+   return ((wxFile *) opaque)->Seek(pos, mode);
 }
 
-static int ufile_close(URLContext *h)
+int ufile_close(AVIOContext *pb)
 {
-   wxFile *f = (wxFile *) h->priv_data;
+   wxFile *f = (wxFile *) pb->opaque;
 
    if (f) {
       f->Close();
@@ -255,38 +215,41 @@ static int ufile_close(URLContext *h)
 
     return 0;
 }
-
-URLProtocol ufile_protocol = {
-    UFILE_PROTOCOL,
-    ufile_open,
-    NULL,
-    ufile_read,
-    ufile_write,
-    ufile_seek,
-    ufile_close,
-};
-
+ 
 // Open a file with a (possibly) Unicode filename
 int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 {
-   wxString url(wxString(wxT(UFILE_PROTOCOL)) + wxT(":") + name);
-   URLContext *h;
-   int err;
+   wxFile *f;
+   wxFile::OpenMode mode;
 
-   // Open the file using our custom protocol and passing the (possibly) Unicode
-   // filename.  We convert the name to UTF8 here and it will be converted back
-   // to original encoding in ufile_open().  This allows us to support Unicode
-   // filenames even though FFmpeg does not.
-   err = ffurl_open(&h, (const char *) url.ToUTF8(), flags, NULL, NULL);
-   if (err < 0) {
-      return err;
+   f = new wxFile;
+   if (!f) {
+      return ENOMEM;
    }
 
-   // Associate the file with a context
-   err = ffio_fdopen(s, h);
-   if (err < 0) {
-      ffurl_close(h);
-      return err;
+   if (flags == (AVIO_FLAG_READ | AVIO_FLAG_WRITE)) {
+      delete f;
+      return EINVAL;
+   } else if (flags == AVIO_FLAG_WRITE) {
+      mode = wxFile::write;
+   } else {
+      mode = wxFile::read;
+   }
+
+   if (!f->Open(name, mode)) {
+      delete f;
+      return ENOENT;
+   }
+
+   *s = avio_alloc_context((unsigned char*)av_malloc(32768), 32768,
+                           flags & AVIO_FLAG_WRITE,
+                           /*opaque*/f,
+                           ufile_read,
+                           ufile_write,
+                           ufile_seek);
+   if (!*s) {
+      delete f;
+      return ENOMEM;
    }
 
    return 0;
@@ -311,8 +274,6 @@ int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name)
    int probe_size;
    int err;
 
-   // Create a dummy file name using the extension from the original
-   f.SetName(wxT(UFILE_PROTOCOL));
    fname = f.GetFullName().mb_str();
    filename = (const char *) fname;
 
@@ -410,7 +371,7 @@ fail:
    }
 
    if (pb) {
-      avio_close(pb);
+      ufile_close(pb);
    }
 
    *ic_ptr = NULL;
@@ -985,9 +946,6 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avformat, av_interleaved_write_frame);
    FFMPEG_INITDYN(avformat, av_iformat_next);
    FFMPEG_INITDYN(avformat, av_oformat_next);
-   FFMPEG_INITDYN(avformat, ffurl_open);
-   FFMPEG_INITDYN(avformat, ffio_fdopen);
-   FFMPEG_INITDYN(avformat, ffurl_close);
    FFMPEG_INITDYN(avformat, av_new_stream);
    FFMPEG_INITDYN(avformat, avformat_alloc_context);
    FFMPEG_INITDYN(avformat, av_write_trailer);
@@ -997,12 +955,10 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avformat, av_dict_get);
    FFMPEG_INITDYN(avformat, av_dict_set);
    FFMPEG_INITDYN(avformat, avio_size);
-
-   FFMPEG_INITDYN(avformat, ffurl_register_protocol);
+   FFMPEG_INITDYN(avformat, avio_alloc_context);
 
    FFMPEG_INITALT(avformat, avio_read, get_buffer);
    FFMPEG_INITALT(avformat, avio_seek, url_fseek);
-   FFMPEG_INITALT(avformat, avio_close, url_fclose);
    FFMPEG_INITALT(avformat, av_guess_format, guess_format);
    FFMPEG_INITALT(avformat, av_match_ext, match_ext);
 
@@ -1095,8 +1051,6 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
       wxLogError(wxT("Version mismatch. FFmpeg libraries are unusable."));
       return false;
    }
-
-   ffurl_register_protocol(&ufile_protocol);
 
    return true;
 }

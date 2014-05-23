@@ -604,7 +604,7 @@ bool ExportFFmpeg::Finalize()
 
    // Close the output file if we created it.
    if (!(mEncFormatDesc->flags & AVFMT_NOFILE))
-      avio_close(mEncFormatCtx->pb);
+      ufile_close(mEncFormatCtx->pb);
 
    // Free any buffers or structures we allocated.
    av_free(mEncFormatCtx);

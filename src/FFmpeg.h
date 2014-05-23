@@ -41,9 +41,6 @@ extern "C" {
    #include <libavutil/fifo.h>
    #include <libavutil/mathematics.h>
 
-//XXX HACK FIXME
-#include "libavformat/url.h"
-
    #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 102, 0)
    #define AVIOContext ByteIOContext
    #endif
@@ -334,6 +331,7 @@ void        DropFFmpegLibs();
 
 int ufile_fopen(AVIOContext **s, const wxString & name, int flags);
 int ufile_fopen_input(AVFormatContext **ic_ptr, wxString & name);
+int ufile_close(AVIOContext *pb);
 
 typedef struct _streamContext
 {
@@ -637,12 +635,6 @@ extern "C" {
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      av_register_protocol,
-      (URLProtocol *protocol),
-      (protocol)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
       av_find_stream_info,
       (AVFormatContext *ic),
       (ic)
@@ -687,24 +679,6 @@ extern "C" {
       av_codec_next,
       (const AVCodec *c),
       (c)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      ffurl_open,
-      (URLContext **puc, const char *filename, int flags, const AVIOInterruptCB *int_cb, AVDictionary **options),
-      (puc, filename, flags, int_cb, options)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      ffio_fdopen,
-      (AVIOContext **s, URLContext *h),
-      (s, h)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      ffurl_close,
-      (URLContext *h),
-      (h)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       AVStream*,
@@ -863,16 +837,16 @@ extern "C" {
       (s)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      avio_close,
-      (AVIOContext *s),
-      (s)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      ffurl_register_protocol,
-      (URLProtocol *protocol),
-      (protocol)
+      AVIOContext *,
+      avio_alloc_context,
+      (unsigned char *buffer,
+                  int buffer_size,
+                  int write_flag,
+                  void *opaque,
+                  int (*read_packet)(void *opaque, uint8_t *buf, int buf_size),
+                  int (*write_packet)(void *opaque, uint8_t *buf, int buf_size),
+                  int64_t (*seek)(void *opaque, int64_t offset, int whence)),
+      (buffer, buffer_size, write_flag, opaque, read_packet, write_packet, seek)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
