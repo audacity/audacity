@@ -1919,7 +1919,7 @@ bool VSTEffectDialog::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                return false;
             }
 
-            if (ndx < 1 || ndx > mAEffect->numParams) {
+            if (ndx < 0 || ndx >= mAEffect->numParams) {
                // Could be a different version of the effect...probably should
                // tell the user
                return false;
