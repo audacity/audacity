@@ -48,20 +48,18 @@ include dist-portaudio.mk
 # libscorealign, mod-null, mod-nyq-bench, mod-script-pipe, mod-track-panel, portmidi
 
 SUBDIRS = FileDialog
+OPTIONAL_SUBDIRS =
 
 if USE_LOCAL_EXPAT
-# Note: This library will not be distributed in the source tarball.
-SUBDIRS += expat
+OPTIONAL_SUBDIRS += expat
 endif
 
 if USE_LOCAL_LIBID3TAG
-# Note: This library will not be distributed in the source tarball.
-SUBDIRS += libid3tag
+OPTIONAL_SUBDIRS += libid3tag
 endif
 
 if USE_LOCAL_LIBMAD
-# Note: This library will not be distributed in the source tarball.
-SUBDIRS += libmad
+OPTIONAL_SUBDIRS += libmad
 endif
 
 if USE_LOCAL_LIBNYQUIST
@@ -73,18 +71,15 @@ SUBDIRS += libresample
 endif
 
 if USE_LOCAL_LIBSAMPLERATE
-# Note: This library will not be distributed in the source tarball.
-SUBDIRS += libsamplerate
+OPTIONAL_SUBDIRS += libsamplerate
 endif
 
 if USE_LOCAL_LIBSNDFILE
-# Note: This library will not be distributed in the source tarball.
-SUBDIRS += libsndfile
+OPTIONAL_SUBDIRS += libsndfile
 endif
 
 if USE_LOCAL_LIBSOUNDTOUCH
-# Note: This library will not be distributed in the source tarball.
-SUBDIRS += soundtouch
+OPTIONAL_SUBDIRS += soundtouch
 endif
 
 if USE_LOCAL_LIBSOXR
@@ -92,19 +87,16 @@ SUBDIRS += libsoxr
 endif
 
 if USE_LOCAL_LIBTWOLAME
-# Note: This library will not be distributed in the source tarball.
-SUBDIRS += twolame
+OPTIONAL_SUBDIRS += twolame
 endif
 
 if USE_LOCAL_LIBVORBIS
-# Note: These libraries will not be distributed in the source tarball.
-SUBDIRS += libogg libvorbis
+OPTIONAL_SUBDIRS += libogg libvorbis
 endif
 
 if USE_LOCAL_LIBFLAC
 # Note: libflac needs to be linked against (the local or system) libogg.
-# Note: This library will not be distributed in the source tarball.
-SUBDIRS += libflac
+OPTIONAL_SUBDIRS += libflac
 endif
 
 if USE_LOCAL_LV2
@@ -133,6 +125,9 @@ endif
 if USE_LOCAL_WIDGETEXTRA
 SUBDIRS += lib-widget-extra
 endif
+
+# Note: These optional libraries will not be distributed in the source tarball.
+SUBDIRS += $(OPTIONAL_SUBDIRS)
 
 # Overwrite install* targets from automake. We do not want to install anything
 # from the lib-src libraries, because we statically link these libraries.
