@@ -546,7 +546,6 @@ audacity_SOURCES += \
 	$(NULL)
 endif
 
-
 if USE_LADSPA
 audacity_CPPFLAGS += $(LADSPA_CFLAGS)
 audacity_LDADD += $(LADSPA_LIBS)
@@ -674,6 +673,4 @@ EXTRA_DIST = audacity.desktop.in xml/audacityproject.dtd \
 	CrossFade.h \
 	effects/ScoreAlignDialog.cpp \
 	effects/ScoreAlignDialog.h \
-	import/ImportGStreamer.cpp \
-	import/ImportGStreamer.h \
 	$(NULL)
