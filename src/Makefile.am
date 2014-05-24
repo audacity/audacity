@@ -672,8 +672,6 @@ EXTRA_DIST = audacity.desktop.in xml/audacityproject.dtd \
 	AudacityHeaders.h \
 	CrossFade.cpp \
 	CrossFade.h \
-	GStreamerLoader.cpp \
-	GStreamerLoader.h \
 	effects/ScoreAlignDialog.cpp \
 	effects/ScoreAlignDialog.h \
 	import/ImportGStreamer.cpp \
