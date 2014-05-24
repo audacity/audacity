@@ -38,7 +38,6 @@ extern "C" {
 
    #include <libavcodec/avcodec.h>
    #include <libavformat/avformat.h>
-   #include <libavutil/frame.h>
    #include <libavutil/fifo.h>
    #include <libavutil/mathematics.h>
 
@@ -59,6 +58,11 @@ extern "C" {
    #define CODEC_TYPE_SUBTITLE   AVMEDIA_TYPE_SUBTITLE
    #define CODEC_TYPE_ATTACHMENT AVMEDIA_TYPE_ATTACHMENT
    #define CODEC_TYPE_NB         AVMEDIA_TYPE_NB
+   #endif
+
+   #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101)
+   #define av_frame_alloc avcodec_alloc_frame
+   #define av_frame_free avcodec_free_frame
    #endif
 
    #ifndef PKT_FLAG_KEY
