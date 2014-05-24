@@ -42,8 +42,6 @@ include dist-libsoxr.mk
 include dist-libvamp.mk
 include dist-portaudio.mk
 
-# TODO: Distribute these libraries that do not use Automake:
-# libresample
 # TODO: Check and distribute these directories:
 # libscorealign, mod-null, mod-nyq-bench, mod-script-pipe, mod-track-panel, portmidi
 
@@ -67,7 +65,7 @@ SUBDIRS += libnyquist
 endif
 
 if USE_LOCAL_LIBRESAMPLE
-SUBDIRS += libresample
+OPTIONAL_SUBDIRS += libresample
 endif
 
 if USE_LOCAL_LIBSAMPLERATE
