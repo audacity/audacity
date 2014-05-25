@@ -65,6 +65,10 @@ extern "C" {
    #define av_frame_free avcodec_free_frame
    #endif
 
+   #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 59, 100)
+   #define avcodec_free_frame av_free
+   #endif
+
    #ifndef PKT_FLAG_KEY
    #define PKT_FLAG_KEY          AV_PKT_FLAG_KEY
    #endif  
