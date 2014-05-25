@@ -49,6 +49,10 @@ extern "C" {
    #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 59, 100)
    #define avcodec_free_frame av_free
    #endif
+
+   #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 51, 100)
+   #define AVCodecID CodecID
+   #endif
 }
 #endif
 
