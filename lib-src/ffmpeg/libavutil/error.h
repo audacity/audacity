@@ -25,7 +25,14 @@
 #define AVUTIL_ERROR_H
 
 #include <errno.h>
-#include "avutil.h"
+#include <stddef.h>
+
+/**
+ * @addtogroup lavu_error
+ *
+ * @{
+ */
+
 
 /* error handling */
 #if EDOM > 0
@@ -37,36 +44,74 @@
 #define AVUNERROR(e) (e)
 #endif
 
-#if LIBAVUTIL_VERSION_MAJOR < 51
-#define AVERROR_INVALIDDATA AVERROR(EINVAL)  ///< Invalid data found when processing input
-#define AVERROR_IO          AVERROR(EIO)     ///< I/O error
-#define AVERROR_NOENT       AVERROR(ENOENT)  ///< No such file or directory
-#define AVERROR_NOFMT       AVERROR(EILSEQ)  ///< Unknown format
-#define AVERROR_NOMEM       AVERROR(ENOMEM)  ///< Not enough memory
-#define AVERROR_NOTSUPP     AVERROR(ENOSYS)  ///< Operation not supported
-#define AVERROR_NUMEXPECTED AVERROR(EDOM)    ///< Number syntax expected in filename
-#define AVERROR_UNKNOWN     AVERROR(EINVAL)  ///< Unknown error
-#endif
+#define FFERRTAG(a, b, c, d) (-(int)MKTAG(a, b, c, d))
 
-#define AVERROR_EOF         AVERROR(EPIPE)   ///< End of file
+#define AVERROR_BSF_NOT_FOUND      FFERRTAG(0xF8,'B','S','F') ///< Bitstream filter not found
+#define AVERROR_BUG                FFERRTAG( 'B','U','G','!') ///< Internal bug, also see AVERROR_BUG2
+#define AVERROR_BUFFER_TOO_SMALL   FFERRTAG( 'B','U','F','S') ///< Buffer too small
+#define AVERROR_DECODER_NOT_FOUND  FFERRTAG(0xF8,'D','E','C') ///< Decoder not found
+#define AVERROR_DEMUXER_NOT_FOUND  FFERRTAG(0xF8,'D','E','M') ///< Demuxer not found
+#define AVERROR_ENCODER_NOT_FOUND  FFERRTAG(0xF8,'E','N','C') ///< Encoder not found
+#define AVERROR_EOF                FFERRTAG( 'E','O','F',' ') ///< End of file
+#define AVERROR_EXIT               FFERRTAG( 'E','X','I','T') ///< Immediate exit was requested; the called function should not be restarted
+#define AVERROR_EXTERNAL           FFERRTAG( 'E','X','T',' ') ///< Generic error in an external library
+#define AVERROR_FILTER_NOT_FOUND   FFERRTAG(0xF8,'F','I','L') ///< Filter not found
+#define AVERROR_INVALIDDATA        FFERRTAG( 'I','N','D','A') ///< Invalid data found when processing input
+#define AVERROR_MUXER_NOT_FOUND    FFERRTAG(0xF8,'M','U','X') ///< Muxer not found
+#define AVERROR_OPTION_NOT_FOUND   FFERRTAG(0xF8,'O','P','T') ///< Option not found
+#define AVERROR_PATCHWELCOME       FFERRTAG( 'P','A','W','E') ///< Not yet implemented in FFmpeg, patches welcome
+#define AVERROR_PROTOCOL_NOT_FOUND FFERRTAG(0xF8,'P','R','O') ///< Protocol not found
 
-#define AVERROR_PATCHWELCOME    (-MKTAG('P','A','W','E')) ///< Not yet implemented in FFmpeg, patches welcome
+#define AVERROR_STREAM_NOT_FOUND   FFERRTAG(0xF8,'S','T','R') ///< Stream not found
+/**
+ * This is semantically identical to AVERROR_BUG
+ * it has been introduced in Libav after our AVERROR_BUG and with a modified value.
+ */
+#define AVERROR_BUG2               FFERRTAG( 'B','U','G',' ')
+#define AVERROR_UNKNOWN            FFERRTAG( 'U','N','K','N') ///< Unknown error, typically from an external library
+#define AVERROR_EXPERIMENTAL       (-0x2bb2afa8) ///< Requested feature is flagged experimental. Set strict_std_compliance if you really want to use it.
 
-#if LIBAVUTIL_VERSION_MAJOR > 50
-#define AVERROR_INVALIDDATA     (-MKTAG('I','N','D','A')) ///< Invalid data found when processing input
-#define AVERROR_NUMEXPECTED     (-MKTAG('N','U','E','X')) ///< Number syntax expected in filename
-#endif
+#define AV_ERROR_MAX_STRING_SIZE 64
 
 /**
- * Puts a description of the AVERROR code errnum in errbuf.
+ * Put a description of the AVERROR code errnum in errbuf.
  * In case of failure the global variable errno is set to indicate the
  * error. Even in case of failure av_strerror() will print a generic
  * error message indicating the errnum provided to errbuf.
  *
+ * @param errnum      error code to describe
+ * @param errbuf      buffer to which description is written
  * @param errbuf_size the size in bytes of errbuf
  * @return 0 on success, a negative value if a description for errnum
  * cannot be found
  */
 int av_strerror(int errnum, char *errbuf, size_t errbuf_size);
+
+/**
+ * Fill the provided buffer with a string containing an error string
+ * corresponding to the AVERROR code errnum.
+ *
+ * @param errbuf         a buffer
+ * @param errbuf_size    size in bytes of errbuf
+ * @param errnum         error code to describe
+ * @return the buffer in input, filled with the error description
+ * @see av_strerror()
+ */
+static inline char *av_make_error_string(char *errbuf, size_t errbuf_size, int errnum)
+{
+    av_strerror(errnum, errbuf, errbuf_size);
+    return errbuf;
+}
+
+/**
+ * Convenience macro, the return value should be used only directly in
+ * function arguments but never stand-alone.
+ */
+#define av_err2str(errnum) \
+    av_make_error_string((char[AV_ERROR_MAX_STRING_SIZE]){0}, AV_ERROR_MAX_STRING_SIZE, errnum)
+
+/**
+ * @}
+ */
 
 #endif /* AVUTIL_ERROR_H */

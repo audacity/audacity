@@ -1,5 +1,5 @@
 /*
- * copyright (c) 2005 Michael Niedermayer <michaelni@gmx.at>
+ * Copyright (c) 2000-2003 Fabrice Bellard
  *
  * This file is part of FFmpeg.
  *
@@ -18,27 +18,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_INTFLOAT_READWRITE_H
-#define AVUTIL_INTFLOAT_READWRITE_H
+#ifndef AVUTIL_TIME_H
+#define AVUTIL_TIME_H
 
 #include <stdint.h>
 
-#include "attributes.h"
-#include "version.h"
+/**
+ * Get the current time in microseconds.
+ */
+int64_t av_gettime(void);
 
-#if FF_API_INTFLOAT
-/* IEEE 80 bits extended float */
-typedef struct AVExtFloat  {
-    uint8_t exponent[2];
-    uint8_t mantissa[8];
-} AVExtFloat;
+/**
+ * Sleep for a period of time.  Although the duration is expressed in
+ * microseconds, the actual delay may be rounded to the precision of the
+ * system timer.
+ *
+ * @param  usec Number of microseconds to sleep.
+ * @return zero on success or (negative) error code.
+ */
+int av_usleep(unsigned usec);
 
-attribute_deprecated double av_int2dbl(int64_t v) av_const;
-attribute_deprecated float av_int2flt(int32_t v) av_const;
-attribute_deprecated double av_ext2dbl(const AVExtFloat ext) av_const;
-attribute_deprecated int64_t av_dbl2int(double d) av_const;
-attribute_deprecated int32_t av_flt2int(float d) av_const;
-attribute_deprecated AVExtFloat av_dbl2ext(double d) av_const;
-#endif /* FF_API_INTFLOAT */
-
-#endif /* AVUTIL_INTFLOAT_READWRITE_H */
+#endif /* AVUTIL_TIME_H */

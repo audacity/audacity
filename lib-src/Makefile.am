@@ -1,19 +1,73 @@
 EXTRA_DIST = \
 	ffmpeg/libavcodec/avcodec.h \
+	ffmpeg/libavcodec/avfft.h \
+	ffmpeg/libavcodec/dxva2.h \
+	ffmpeg/libavcodec/old_codec_ids.h \
+	ffmpeg/libavcodec/vaapi.h \
+	ffmpeg/libavcodec/vda.h \
+	ffmpeg/libavcodec/vdpau.h \
+	ffmpeg/libavcodec/version.h \
+	ffmpeg/libavcodec/xvmc.h \
 	ffmpeg/libavformat/avformat.h \
 	ffmpeg/libavformat/avio.h \
+	ffmpeg/libavformat/version.h \
+	ffmpeg/libavutil/adler32.h \
+	ffmpeg/libavutil/aes.h \
 	ffmpeg/libavutil/attributes.h \
+	ffmpeg/libavutil/audioconvert.h \
+	ffmpeg/libavutil/audio_fifo.h \
+	ffmpeg/libavutil/avassert.h \
 	ffmpeg/libavutil/avconfig.h \
+	ffmpeg/libavutil/avstring.h \
 	ffmpeg/libavutil/avutil.h \
+	ffmpeg/libavutil/base64.h \
+	ffmpeg/libavutil/blowfish.h \
+	ffmpeg/libavutil/bprint.h \
+	ffmpeg/libavutil/bswap.h \
+	ffmpeg/libavutil/buffer.h \
+	ffmpeg/libavutil/channel_layout.h \
 	ffmpeg/libavutil/common.h \
+	ffmpeg/libavutil/cpu.h \
+	ffmpeg/libavutil/crc.h \
+	ffmpeg/libavutil/dict.h \
+	ffmpeg/libavutil/downmix_info.h \
 	ffmpeg/libavutil/error.h \
+	ffmpeg/libavutil/eval.h \
+	ffmpeg/libavutil/ffversion.h \
 	ffmpeg/libavutil/fifo.h \
+	ffmpeg/libavutil/file.h \
+	ffmpeg/libavutil/frame.h \
+	ffmpeg/libavutil/hmac.h \
+	ffmpeg/libavutil/imgutils.h \
+	ffmpeg/libavutil/intfloat.h \
 	ffmpeg/libavutil/intfloat_readwrite.h \
+	ffmpeg/libavutil/intreadwrite.h \
+	ffmpeg/libavutil/lfg.h \
 	ffmpeg/libavutil/log.h \
+	ffmpeg/libavutil/lzo.h \
+	ffmpeg/libavutil/macros.h \
 	ffmpeg/libavutil/mathematics.h \
+	ffmpeg/libavutil/md5.h \
 	ffmpeg/libavutil/mem.h \
+	ffmpeg/libavutil/murmur3.h \
+	ffmpeg/libavutil/old_pix_fmts.h \
+	ffmpeg/libavutil/opencl.h \
+	ffmpeg/libavutil/opt.h \
+	ffmpeg/libavutil/parseutils.h \
+	ffmpeg/libavutil/pixdesc.h \
 	ffmpeg/libavutil/pixfmt.h \
+	ffmpeg/libavutil/random_seed.h \
 	ffmpeg/libavutil/rational.h \
+	ffmpeg/libavutil/ripemd.h \
+	ffmpeg/libavutil/samplefmt.h \
+	ffmpeg/libavutil/sha512.h \
+	ffmpeg/libavutil/sha.h \
+	ffmpeg/libavutil/stereo3d.h \
+	ffmpeg/libavutil/timecode.h \
+	ffmpeg/libavutil/time.h \
+	ffmpeg/libavutil/timestamp.h \
+	ffmpeg/libavutil/version.h \
+	ffmpeg/libavutil/xtea.h \
 	ffmpeg/win32/inttypes.h \
 	ffmpeg/win32/stdint.h \
 	lame/lame/lame.h \

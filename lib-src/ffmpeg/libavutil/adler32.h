@@ -1,5 +1,5 @@
 /*
- * copyright (c) 2005 Michael Niedermayer <michaelni@gmx.at>
+ * copyright (c) 2006 Mans Rullgard
  *
  * This file is part of FFmpeg.
  *
@@ -18,27 +18,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVUTIL_INTFLOAT_READWRITE_H
-#define AVUTIL_INTFLOAT_READWRITE_H
+#ifndef AVUTIL_ADLER32_H
+#define AVUTIL_ADLER32_H
 
 #include <stdint.h>
-
 #include "attributes.h"
-#include "version.h"
 
-#if FF_API_INTFLOAT
-/* IEEE 80 bits extended float */
-typedef struct AVExtFloat  {
-    uint8_t exponent[2];
-    uint8_t mantissa[8];
-} AVExtFloat;
+/**
+ * @file
+ * Public header for libavutil Adler32 hasher
+ *
+ * @defgroup lavu_adler32 Adler32
+ * @ingroup lavu_crypto
+ * @{
+ */
 
-attribute_deprecated double av_int2dbl(int64_t v) av_const;
-attribute_deprecated float av_int2flt(int32_t v) av_const;
-attribute_deprecated double av_ext2dbl(const AVExtFloat ext) av_const;
-attribute_deprecated int64_t av_dbl2int(double d) av_const;
-attribute_deprecated int32_t av_flt2int(float d) av_const;
-attribute_deprecated AVExtFloat av_dbl2ext(double d) av_const;
-#endif /* FF_API_INTFLOAT */
+/**
+ * Calculate the Adler32 checksum of a buffer.
+ *
+ * Passing the return value to a subsequent av_adler32_update() call
+ * allows the checksum of multiple buffers to be calculated as though
+ * they were concatenated.
+ *
+ * @param adler initial checksum value
+ * @param buf   pointer to input buffer
+ * @param len   size of input buffer
+ * @return      updated checksum
+ */
+unsigned long av_adler32_update(unsigned long adler, const uint8_t *buf,
+                                unsigned int len) av_pure;
 
-#endif /* AVUTIL_INTFLOAT_READWRITE_H */
+/**
+ * @}
+ */
+
+#endif /* AVUTIL_ADLER32_H */
