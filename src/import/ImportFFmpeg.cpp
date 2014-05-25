@@ -392,7 +392,7 @@ bool FFmpegImportFileHandle::InitCodecs()
    // Fill the stream contexts
    for (unsigned int i = 0; i < mFormatContext->nb_streams; i++)
    {
-      if (mFormatContext->streams[i]->codec->codec_type == CODEC_TYPE_AUDIO)
+      if (mFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
       {
          //Create a context
          streamContext *sc = new streamContext;

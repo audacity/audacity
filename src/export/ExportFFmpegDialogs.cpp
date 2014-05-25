@@ -1298,7 +1298,7 @@ void ExportFFmpegOptions::FetchCodecList()
    while ((codec = av_codec_next(codec)))
    {
       // We're only interested in audio and only in encoders
-      if (codec->type == CODEC_TYPE_AUDIO && av_codec_is_encoder(codec))
+      if (codec->type == AVMEDIA_TYPE_AUDIO && av_codec_is_encoder(codec))
       {
          mCodecNames.Add(wxString::FromUTF8(codec->name));
          mCodecLongNames.Add(wxString::Format(wxT("%s - %s"),mCodecNames.Last().c_str(),wxString::FromUTF8(codec->long_name).c_str()));
@@ -1543,7 +1543,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
          // Find the codec, that is claimed to be compatible
          AVCodec *codec = avcodec_find_encoder(CompatibilityList[i].codec);
          // If it exists, is audio and has encoder
-         if (codec != NULL && (codec->type == CODEC_TYPE_AUDIO) && av_codec_is_encoder(codec))
+         if (codec != NULL && (codec->type == AVMEDIA_TYPE_AUDIO) && av_codec_is_encoder(codec))
          {
             // If it was selected - remember it's new index
             if ((id >= 0) && codec->id == id) index = mShownCodecNames.GetCount();
@@ -1558,7 +1558,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
       AVCodec *codec = NULL;
       while ((codec = av_codec_next(codec)))
       {
-         if (codec->type == CODEC_TYPE_AUDIO && av_codec_is_encoder(codec))
+         if (codec->type == AVMEDIA_TYPE_AUDIO && av_codec_is_encoder(codec))
          {
             if (mShownCodecNames.Index(wxString::FromUTF8(codec->name)) < 0)
             {
@@ -1578,7 +1578,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AVCodecID i
       if (format != NULL)
       {
          AVCodec *codec = avcodec_find_encoder(format->audio_codec);
-         if (codec != NULL && (codec->type == CODEC_TYPE_AUDIO) && av_codec_is_encoder(codec))
+         if (codec != NULL && (codec->type == AVMEDIA_TYPE_AUDIO) && av_codec_is_encoder(codec))
          {
             if ((id >= 0) && codec->id == id) index = mShownCodecNames.GetCount();
             mShownCodecNames.Add(wxString::FromUTF8(codec->name));

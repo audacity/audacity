@@ -41,25 +41,6 @@ extern "C" {
    #include <libavutil/fifo.h>
    #include <libavutil/mathematics.h>
 
-   #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 102, 0)
-   #define AVIOContext ByteIOContext
-   #endif
-
-   #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(52, 94, 1)
-   #define AVSampleFormat SampleFormat
-   #endif
-
-   #if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 120, 0)
-   #define CodecType AVMediaType
-   #define CODEC_TYPE_UNKNOWN    AVMEDIA_TYPE_UNKNOWN
-   #define CODEC_TYPE_VIDEO      AVMEDIA_TYPE_VIDEO
-   #define CODEC_TYPE_AUDIO      AVMEDIA_TYPE_AUDIO
-   #define CODEC_TYPE_DATA       AVMEDIA_TYPE_DATA
-   #define CODEC_TYPE_SUBTITLE   AVMEDIA_TYPE_SUBTITLE
-   #define CODEC_TYPE_ATTACHMENT AVMEDIA_TYPE_ATTACHMENT
-   #define CODEC_TYPE_NB         AVMEDIA_TYPE_NB
-   #endif
-
    #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101)
    #define av_frame_alloc avcodec_alloc_frame
    #define av_frame_free avcodec_free_frame

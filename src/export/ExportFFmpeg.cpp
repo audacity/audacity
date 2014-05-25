@@ -357,7 +357,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    mEncAudioCodecCtx = mEncAudioStream->codec;
   
    mEncAudioCodecCtx->codec_id = ExportFFmpegOptions::fmts[mSubFormat].codecid;
-   mEncAudioCodecCtx->codec_type = CODEC_TYPE_AUDIO;
+   mEncAudioCodecCtx->codec_type = AVMEDIA_TYPE_AUDIO;
    mEncAudioCodecCtx->codec_tag = av_codec_get_tag((const AVCodecTag **)mEncFormatCtx->oformat->codec_tag,mEncAudioCodecCtx->codec_id);
    mSampleRate = (int)project->GetRate();
    mEncAudioCodecCtx->global_quality = -99999; //quality mode is off by default;

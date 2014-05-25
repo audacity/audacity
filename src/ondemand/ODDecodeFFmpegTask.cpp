@@ -44,7 +44,7 @@ typedef struct _FFmpegDecodeCache
    sampleCount start;
    sampleCount len;
    int         numChannels;
-   SampleFormat samplefmt; // input (from libav) sample format
+   AVSampleFormat samplefmt; // input (from libav) sample format
 
 } FFMpegDecodeCache;
 
@@ -167,7 +167,7 @@ bool ODFFmpegDecoder::SeekingAllowed()
    //test the audio stream(s)
    for (unsigned int i = 0; i < ic->nb_streams; i++)
    {
-      if (ic->streams[i]->codec->codec_type == CODEC_TYPE_AUDIO)
+      if (ic->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
       {  
          audioStreamExists = true;                 
          st = ic->streams[i];
