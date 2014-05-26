@@ -21,19 +21,22 @@
 
 #define audacityVSTID CCONST('a', 'u', 'D', 'y');
 
-typedef long (*dispatcherFn)(AEffect * effect, long opCode,
-                             long index, long value, void *ptr,
-                             float opt);
+typedef intptr_t (*dispatcherFn)(AEffect * effect, int opCode,
+                                 int index, intptr_t value, void *ptr,
+                                 float opt);
 
 typedef void (*processFn)(AEffect * effect, float **inputs,
-                          float **outputs, long sampleframes);
+                          float **outputs, int sampleframes);
 
-typedef void (*setParameterFn)(AEffect * effect, long index,
+typedef void (*setParameterFn)(AEffect * effect, int index,
                                float parameter);
 
-typedef float (*getParameterFn)(AEffect * effect, long index);
+typedef float (*getParameterFn)(AEffect * effect, int index);
 
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
+
+class VSTEffectTimer;
+class VSTEffectDialog;
 
 class VSTEffect:public Effect
 {
@@ -76,18 +79,25 @@ class VSTEffect:public Effect
 
    int GetChannels();
    VstTimeInfo *GetTimeInfo();
+   float GetSampleRate();
+   int GetProcessLevel();
    void SetBufferDelay(int samples);
+   int NeedIdle();
+   void UpdateDisplay();
+   void SizeWindow(int w, int h);
 
+   int GetString(wxString & outstr, int opcode, int index = 0);
    wxString GetString(int opcode, int index = 0);
    void SetString(int opcode, const wxString & str, int index = 0);
 
    // VST methods
 
-   long callDispatcher(long opcode, long index, long value, void *ptr, float opt);
-   void callProcess(float **inputs, float **outputs, long sampleframes);
-   void callProcessReplacing(float **inputs, float **outputs, long sampleframes);
-   void callSetParameter(long index, float parameter);
-   float callGetParameter(long index);
+   intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt);
+   void callProcess(float **inputs, float **outputs, int sampleframes);
+   void callProcessReplacing(float **inputs, float **outputs, int sampleframes);
+   void callSetParameter(int index, float parameter);
+   float callGetParameter(int index);
+
 
  private:
    bool ProcessStereo(int count,
@@ -107,6 +117,8 @@ class VSTEffect:public Effect
    void *mModule;
    AEffect *mAEffect;
 
+   VSTEffectDialog *mDlg;
+
    wxString mVendor;
    wxString mName;
 
@@ -124,6 +136,9 @@ class VSTEffect:public Effect
    int mInputs;
    int mOutputs;
    int mChannels;
+   int mProcessLevel;
+
+   VSTEffectTimer *mTimer;
 };
 
 void RegisterVSTEffects();
