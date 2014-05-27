@@ -523,7 +523,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 
 static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_samples, int nb_samples)
 {
-   int i, ch, buffer_size, ret, got_output = 0, nEncodedBytes;
+   int i, ch, buffer_size, ret, got_output = 0;
    void *samples = NULL;
    AVFrame *frame = NULL;
 
