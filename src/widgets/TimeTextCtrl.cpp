@@ -395,9 +395,9 @@ TimeConverter::TimeConverter(const wxString & formatName,
 
    mFocusedDigit = 0;
 
-   SetFormatName(formatName);
-   SetTimeValue(timeValue);
    SetSampleRate(sampleRate);
+   SetTimeValue(timeValue);
+   SetFormatName(formatName);
 }
 
 void TimeConverter::ParseFormatString( const wxString & format)

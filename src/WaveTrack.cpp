@@ -98,6 +98,7 @@ WaveTrack::WaveTrack(DirManager *projDirManager, sampleFormat format, double rat
    mDisplayNumLocations = 0;
    mDisplayLocations = NULL;
    mDisplayNumLocationsAllocated = 0;
+   mLastDisplay = -1;
 }
 
 WaveTrack::WaveTrack(WaveTrack &orig):

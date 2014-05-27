@@ -58,6 +58,8 @@ END_EVENT_TABLE()
 MixerToolBar::MixerToolBar()
 : ToolBar(MixerBarID, _("Mixer"), wxT("Mixer"))
 {
+   mInputSliderVolume = 0.0;
+   mOutputSliderVolume = 0.0;
 }
 
 MixerToolBar::~MixerToolBar()
