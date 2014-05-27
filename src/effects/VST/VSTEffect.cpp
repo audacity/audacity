@@ -991,7 +991,7 @@ BEGIN_EVENT_TABLE(VSTEffectDialog, wxDialog)
    EVT_BUTTON(ID_EFFECT_PREVIEW, VSTEffectDialog::OnPreview)
 
    EVT_COMBOBOX(ID_VST_PROGRAM, VSTEffectDialog::OnProgram)
-   EVT_TEXT_ENTER(ID_VST_PROGRAM, VSTEffectDialog::OnProgramText)
+   EVT_TEXT(ID_VST_PROGRAM, VSTEffectDialog::OnProgramText)
    EVT_BUTTON(ID_VST_LOAD, VSTEffectDialog::OnLoad)
    EVT_BUTTON(ID_VST_SAVE, VSTEffectDialog::OnSave)
    EVT_BUTTON(ID_VST_SETTINGS, VSTEffectDialog::OnSettings)
@@ -1633,8 +1633,7 @@ wxSizer *VSTEffectDialog::BuildProgramBar()
                              val,
                              wxDefaultPosition,
                              wxSize(200, -1),
-                             progs,
-                             wxTE_PROCESS_ENTER);
+                             progs);
    mProgram->SetName(_("Presets"));
    hs->Add(mProgram, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
