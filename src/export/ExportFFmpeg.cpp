@@ -423,7 +423,9 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       set_dict_int(&options, "prediction_order_method", gPrefs->Read(wxT("/FileFormats/FFmpegPredOrderMethod"),(long)0));
       set_dict_int(&options, "muxrate",                 gPrefs->Read(wxT("/FileFormats/FFmpegMuxRate"),(long)0));
       mEncFormatCtx->packet_size = gPrefs->Read(wxT("/FileFormats/FFmpegPacketSize"),(long)0);
-      mEncAudioCodecCtx->codec_id = (AVCodecID)gPrefs->Read(wxT("/FileFormats/FFmpegCodec"), mEncFormatDesc->audio_codec);
+      codec = avcodec_find_encoder_by_name(gPrefs->Read(wxT("/FileFormats/FFmpegCodec")).ToUTF8());
+      if (!codec)
+         mEncAudioCodecCtx->codec_id = mEncFormatDesc->audio_codec;
       break;
    default:
       return false;

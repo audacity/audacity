@@ -1261,7 +1261,7 @@ ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
       DoOnFormatList();
 
       //Select the codec that was selected last time this dialog was closed
-      AVCodec *codec = avcodec_find_encoder((AVCodecID)gPrefs->Read(wxT("/FileFormats/FFmpegCodec"),(long)CODEC_ID_NONE));
+      AVCodec *codec = avcodec_find_encoder_by_name(gPrefs->Read(wxT("/FileFormats/FFmpegCodec")).ToUTF8());
       if (codec != NULL) mCodecList->Select(mCodecList->FindString(wxString::FromUTF8(codec->name)));
       DoOnCodecList();
    }
@@ -1908,7 +1908,7 @@ void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    int selcdc = mCodecList->GetSelection();
    int selfmt = mFormatList->GetSelection();
-   if (selcdc > -1) gPrefs->Write(wxT("/FileFormats/FFmpegCodec"),(long)avcodec_find_encoder_by_name(mCodecList->GetString(selcdc).ToUTF8())->id);
+   if (selcdc > -1) gPrefs->Write(wxT("/FileFormats/FFmpegCodec"),mCodecList->GetString(selcdc));
    if (selfmt > -1) gPrefs->Write(wxT("/FileFormats/FFmpegFormat"),mFormatList->GetString(selfmt));
    gPrefs->Flush();
    ShuttleGui S(this, eIsSavingToPrefs);
