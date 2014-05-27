@@ -58,7 +58,8 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
                      const std::set<wxString> & categories)
 :  mValid(true),
    mCategories(categories),
-   mMidiInput(0)
+   mMidiInput(0),
+   mLatencyPortIndex(-1)
 {
    
    // We don't support any features at all, so if the plugin requires
@@ -85,7 +86,7 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
    float *minimumValues = new float [numPorts];
    float *maximumValues = new float [numPorts];
    float *defaultValues = new float [numPorts];
-   
+
    // Retrieve the port ranges for all ports (some values may be NaN)
    lilv_plugin_get_port_ranges_float(mData, minimumValues, 
                                      maximumValues, defaultValues);
@@ -95,10 +96,10 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
    {
       const LilvPort *port = lilv_plugin_get_port_by_index(mData, i);
       LV2Port internalPort;
-      internalPort.mIndex = lilv_port_get_index(data, port);
+      internalPort.mIndex = lilv_port_get_index(mData, port);
 
       // Get the port name
-      LilvNode *tmpName = lilv_port_get_name(data, port);
+      LilvNode *tmpName = lilv_port_get_name(mData, port);
       internalPort.mName = GetString(tmpName);
       lilv_node_free(tmpName);
 
@@ -128,7 +129,7 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
          }
          else
          {
-            // Should happen, but provide something
+            // Shouldn't happen, but provide something
             label = uri;
          }
          lilv_nodes_free(groups);
@@ -178,7 +179,7 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
          }
       }
       else if (lilv_port_is_a(mData, port, gControlPortClass) &&
-          lilv_port_is_a(mData, port, gInputPortClass))
+               lilv_port_is_a(mData, port, gInputPortClass))
       {
          internalPort.mControlBuffer = float(1.0);
          internalPort.mMin = minimumValues[i];
@@ -197,29 +198,47 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
             internalPort.mControlBuffer = maximumValues[i];
          }
 
-         if (lilv_port_has_property(data, port, gPortToggled))
+         if (lilv_port_has_property(mData, port, gPortToggled))
          {
             internalPort.mToggle = true;
          }
-         else if (lilv_port_has_property(data, port, gPortIsInteger))
+         else if (lilv_port_has_property(mData, port, gPortIsInteger))
          {
             internalPort.mInteger = true;
          }
-         else if (lilv_port_has_property(data, port, gPortIsSampleRate))
+         else if (lilv_port_has_property(mData, port, gPortIsSampleRate))
          {
             internalPort.mSampleRate = true;
          }
-         else if (lilv_port_has_property(data, port, gPortIsEnumeration))
+         else if (lilv_port_has_property(mData, port, gPortIsEnumeration))
          {
             internalPort.mEnumeration = true;
          }
 
          mControlInputs.Add(internalPort);
       }
+      else if (lilv_port_is_a(mData, port, gControlPortClass) &&
+               lilv_port_is_a(mData, port, gOutputPortClass))
+      {
+         // If there is more than one latency port, the plugin is invalid
+         if (lilv_port_has_property(mData, port, gPortIsLatency))
+         {
+            if (mLatencyPortIndex >= 0)
+            {
+               mValid = false;
+               continue;
+            }
+            mLatencyPortIndex = i;
+         }
+         else if (!lilv_port_has_property(mData, port, gPortIsOptional))
+         {
+            mControlOutputs.Add(internalPort);
+         }
+      }
       else if (lilv_port_is_a(mData, port, gMidiPortClass) &&
                lilv_port_is_a(mData, port, gInputPortClass))
       {
-         // If there are more than one MIDI input ports, the plugin is invalid
+         // If there is more than one MIDI input port, the plugin is invalid
          if (mMidiInput)
          {
             mValid = false;
@@ -502,7 +521,13 @@ bool LV2Effect::ProcessStereo(int count,
       lilv_instance_connect_port(handle, mControlOutputs[p].mIndex, 
                                  &mControlOutputs[p].mControlBuffer);
    }
-   
+
+   float latency = 0.0;
+   if (mLatencyPortIndex >= 0)
+   {
+      lilv_instance_connect_port(handle, mLatencyPortIndex, &latency);
+   }
+
    lilv_instance_activate(handle);
 
    // Actually perform the effect here
@@ -510,58 +535,129 @@ bool LV2Effect::ProcessStereo(int count,
    sampleCount originalLen = len;
    sampleCount ls = lstart;
    sampleCount rs = rstart;
+   sampleCount ols = ls;
+   sampleCount ors = rs;
    bool noteOver = false;
-   while (len)
+
+   sampleCount delayed = 0;
+   sampleCount delay = 0;
+   bool cleared = false;
+
+   while (len || delayed)
    {
       int block = mBlockSize;
-      if (block > len)
-      {
-         block = len;
-      }
 
-      if (left &&  mAudioInputs.GetCount() > 0)
+      if (len)
       {
-         left->Get((samplePtr)fInBuffer[0], floatSample, ls, block);
-      }
-
-      if (right && mAudioInputs.GetCount() > 1)
-      {
-         right->Get((samplePtr)fInBuffer[1], floatSample, rs, block);
-      }
-      
-      lilv_instance_run(handle, block);
-      
-      if (left && mAudioOutputs.GetCount() > 0)
-      {
-         left->Set((samplePtr)fOutBuffer[0], floatSample, ls, block);
-      }
-      
-      if (right && mAudioOutputs.GetCount() > 1)
-      {
-         right->Set((samplePtr)fOutBuffer[1], floatSample, rs, block);
-      }
-      
-      len -= block;
-      noteOffTime -= block;
-      ls += block;
-      rs += block;
-      
-      // Clear the event buffer and add the note off event if needed
-      if (mMidiInput)
-      {
-         lv2_event_buffer_reset(midiBuffer, 1, 
-                                (uint8_t *)midiBuffer + 
-                                sizeof(LV2_Event_Buffer));
-
-         if (!noteOver && noteOffTime < len && noteOffTime < block)
+         if (block > len)
          {
-            LV2_Event_Iterator iter;
-            lv2_event_begin(&iter, midiBuffer);
-            uint8_t noteOff[] = { 0x80, mNoteKey, 64 };
-            lv2_event_write(&iter, noteOffTime, 0, 1, 3, noteOff);
-            noteOver = true;
+            block = len;
+         }
+   
+         if (left &&  mAudioInputs.GetCount() > 0)
+         {
+            left->Get((samplePtr)fInBuffer[0], floatSample, ls, block);
+         }
+   
+         if (right && mAudioInputs.GetCount() > 1)
+         {
+            right->Get((samplePtr)fInBuffer[1], floatSample, rs, block);
          }
       }
+      else if (delayed)
+      {
+         // At the end if we don't have enough left for a whole block
+         if (block > delayed)
+         {
+            block = delayed;
+         }
+
+         // Clear the input buffer so that we only pass zeros to the effect.
+         if (!cleared)
+         {
+            for (int i = 0; i < mBlockSize; i++)
+            {
+               fInBuffer[0][i] = 0.0;
+            }
+
+            if (right)
+            {
+               memcpy(fInBuffer[1], fOutBuffer[0], mBlockSize);
+            }
+            cleared = true;
+         }
+      }
+
+      lilv_instance_run(handle, block);
+
+      if (delayed == 0 && latency != 0)
+      {
+         delayed = delay = latency;
+      }
+
+      if (delay >= block)
+      {
+         delay -= block;
+      }
+      else if (delay > 0)
+      {
+         sampleCount oblock = block - delay;
+         if (left && mAudioOutputs.GetCount() > 0)
+         {
+            left->Set((samplePtr)(fOutBuffer[0] + delay), floatSample, ols, oblock);
+         }
+         
+         if (right && mAudioOutputs.GetCount() > 1)
+         {
+            right->Set((samplePtr)(fOutBuffer[1] + delay), floatSample, ors, oblock);
+         }
+         ols += oblock;
+         ors += oblock;
+         delay = 0;
+      }
+      else
+      {
+         if (left && mAudioOutputs.GetCount() > 0)
+         {
+            left->Set((samplePtr)fOutBuffer[0], floatSample, ols, block);
+         }
+         
+         if (right && mAudioOutputs.GetCount() > 1)
+         {
+            right->Set((samplePtr)fOutBuffer[1], floatSample, ors, block);
+         }
+         ols += block;
+         ors += block;
+      }
+
+      if (len)
+      {
+         len -= block;
+         noteOffTime -= block;
+
+         // Clear the event buffer and add the note off event if needed
+         if (mMidiInput)
+         {
+            lv2_event_buffer_reset(midiBuffer, 1, 
+                                   (uint8_t *)midiBuffer + 
+                                   sizeof(LV2_Event_Buffer));
+   
+            if (!noteOver && noteOffTime < len && noteOffTime < block)
+            {
+               LV2_Event_Iterator iter;
+               lv2_event_begin(&iter, midiBuffer);
+               uint8_t noteOff[] = { 0x80, mNoteKey, 64 };
+               lv2_event_write(&iter, noteOffTime, 0, 1, 3, noteOff);
+               noteOver = true;
+            }
+         }         
+      }
+      else if (delayed)
+      {
+         delayed -= block;
+      }
+      ls += block;
+      rs += block;
       
       if (mAudioInputs.GetCount() > 1)
       {

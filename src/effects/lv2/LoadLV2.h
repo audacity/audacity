@@ -28,6 +28,8 @@ extern LilvNode *gPortToggled;
 extern LilvNode *gPortIsInteger;
 extern LilvNode *gPortIsSampleRate;
 extern LilvNode *gPortIsEnumeration;
+extern LilvNode *gPortIsLatency;
+extern LilvNode *gPortIsOptional;
 extern LilvNode *gName;
 extern LilvNode *gPortGroup;
 extern LilvNode *gSubGroupOf;

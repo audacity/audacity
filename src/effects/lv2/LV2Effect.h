@@ -124,6 +124,7 @@ private:
    LV2PortArray mAudioInputs;
    LV2PortArray mAudioOutputs;
    LV2Port *mMidiInput;
+   int mLatencyPortIndex;
    
    sampleCount mNoteLength;
    unsigned char mNoteVelocity;

@@ -90,6 +90,8 @@ LilvNode *gPortToggled;
 LilvNode *gPortIsInteger;
 LilvNode *gPortIsSampleRate;
 LilvNode *gPortIsEnumeration;
+LilvNode *gPortIsLatency;
+LilvNode *gPortIsOptional;
 LilvNode *gName;
 LilvNode *gPortGroup;
 LilvNode *gSubGroupOf;
@@ -123,6 +125,8 @@ void LoadLV2Plugins()
    gPortIsInteger = lilv_new_uri(gWorld, LV2_CORE__integer);
    gPortIsSampleRate = lilv_new_uri(gWorld, LV2_CORE__sampleRate);
    gPortIsEnumeration = lilv_new_uri(gWorld, LV2_CORE__enumeration);
+   gPortIsLatency = lilv_new_uri(gWorld, LV2_CORE__reportsLatency);
+   gPortIsOptional = lilv_new_uri(gWorld, LV2_CORE__connectionOptional);
    gName = lilv_new_uri(gWorld, LV2_CORE__name);
    gPortGroup = lilv_new_uri(gWorld, LV2_PORT_GROUPS__group);
    gSubGroupOf = lilv_new_uri(gWorld, LV2_PORT_GROUPS__subGroupOf);
@@ -199,6 +203,12 @@ void UnloadLV2Plugins()
 
    lilv_node_free(gPortIsEnumeration);
    gPortIsEnumeration = NULL;
+
+   lilv_node_free(gPortIsLatency);
+   gPortIsLatency = NULL;
+
+   lilv_node_free(gPortIsOptional);
+   gPortIsOptional = NULL;
 
    lilv_node_free(gName);
    gName = NULL;
