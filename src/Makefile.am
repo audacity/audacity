@@ -160,6 +160,8 @@ audacity_SOURCES = \
 	Project.h \
 	RealFFTf.cpp \
 	RealFFTf.h \
+	RealFFTf48x.cpp \
+	RealFFTf48x.h \
 	Resample.cpp \
 	Resample.h \
 	RingBuffer.cpp \
@@ -180,6 +182,8 @@ audacity_SOURCES = \
 	Spectrum.h \
 	SplashDialog.cpp \
 	SplashDialog.h \
+	SseMathFuncs.cpp \
+	SseMathFuncs.h \
 	Tags.cpp \
 	Tags.h \
 	Theme.cpp \
@@ -297,6 +301,8 @@ audacity_SOURCES = \
 	effects/EffectManager.h \
 	effects/Equalization.cpp \
 	effects/Equalization.h \
+	effects/Equalization48x.cpp \
+	effects/Equalization48x.h \
 	effects/Fade.cpp \
 	effects/Fade.h \
 	effects/FindClipping.cpp \
