@@ -443,7 +443,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    mEncAudioCodecCtx->time_base.num = 1;
    mEncAudioCodecCtx->time_base.den = mEncAudioCodecCtx->sample_rate;
    mEncAudioCodecCtx->sample_fmt = AV_SAMPLE_FMT_S16;
-   //mEncAudioCodecCtx->strict_std_compliance = FF_COMPLIANCE_STRICT;
+   mEncAudioCodecCtx->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
 
    if (mEncAudioCodecCtx->codec_id == CODEC_ID_AC3)
    {
