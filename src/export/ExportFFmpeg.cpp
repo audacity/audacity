@@ -12,8 +12,8 @@
 ******************************************************************//**
 
 \class ExportFFmpeg
-\brief Controlling class for FFmpeg exporting.  Creates the options 
-dialog of the appropriate type, adds tags and invokes the export 
+\brief Controlling class for FFmpeg exporting.  Creates the options
+dialog of the appropriate type, adds tags and invokes the export
 function.
 
 *//*******************************************************************/
@@ -97,14 +97,14 @@ public:
 
    /// Format intialization
    bool Init(const char *shortname, AudacityProject *project, Tags *metadata, int subformat);
-   
+
    /// Codec intialization
    bool InitCodecs(AudacityProject *project);
 
    /// Writes metadata
    bool AddTags(Tags *metadata);
 
-  /// Sets individual metadata values
+   /// Sets individual metadata values
    void SetMetadata(Tags *tags, const char *name, const wxChar *tag);
 
    /// Encodes audio
@@ -177,7 +177,7 @@ ExportFFmpeg::ExportFFmpeg()
    #define MAX_AUDIO_PACKET_SIZE (128 * 1024)
    mEncAudioFifoOutBuf = NULL;	// buffer to read _out_ of the FIFO into
    mEncAudioFifoOutBufSiz = 0;
-   
+
 #if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(50, 0, 0)
    mEncAudioFifo = &mEncAudioFifoBuffer;
 #endif
@@ -282,7 +282,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, Tags *m
    // Initialise the output format context.
    mEncFormatCtx->oformat = mEncFormatDesc;
    memcpy(mEncFormatCtx->filename, OSINPUT(mName), strlen(OSINPUT(mName))+1);
-   
+
    // At the moment Audacity can export only one audio stream
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(53, 10, 0))
    if ((mEncAudioStream = av_new_stream(mEncFormatCtx, 1)) == NULL)
@@ -341,9 +341,9 @@ bool ExportFFmpeg::CheckSampleRate(int rate, int lowrate, int highrate, const in
 
 static int set_dict_int(AVDictionary **dict, const char *key, int val)
 {
-    char val_str[256];
-    snprintf(val_str, sizeof(val_str), "%d", val);
-    return av_dict_set(dict, key, val_str, 0);
+   char val_str[256];
+   snprintf(val_str, sizeof(val_str), "%d", val);
+   return av_dict_set(dict, key, val_str, 0);
 }
 
 bool ExportFFmpeg::InitCodecs(AudacityProject *project)
@@ -353,7 +353,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 
    // Configure the audio stream's codec context.
    mEncAudioCodecCtx = mEncAudioStream->codec;
-  
+
    mEncAudioCodecCtx->codec_id = ExportFFmpegOptions::fmts[mSubFormat].codecid;
    mEncAudioCodecCtx->codec_type = AVMEDIA_TYPE_AUDIO;
    mEncAudioCodecCtx->codec_tag = av_codec_get_tag((const AVCodecTag **)mEncFormatCtx->oformat->codec_tag,mEncAudioCodecCtx->codec_id);
@@ -404,7 +404,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
       mEncAudioCodecCtx->cutoff = gPrefs->Read(wxT("/FileFormats/FFmpegCutOff"),(long)0);
       mEncAudioCodecCtx->flags2 = 0;
       if (gPrefs->Read(wxT("/FileFormats/FFmpegBitReservoir"),true))
-          av_dict_set(&options, "reservoir", "1", 0);
+         av_dict_set(&options, "reservoir", "1", 0);
       if (gPrefs->Read(wxT("/FileFormats/FFmpegVariableBlockLen"),true)) mEncAudioCodecCtx->flags2 |= 0x0004; //WMA only?
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(53, 0, 0)
       mEncAudioCodecCtx->use_lpc = gPrefs->Read(wxT("/FileFormats/FFmpegUseLPC"),true);
@@ -497,12 +497,12 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 
    default_frame_size = mEncAudioCodecCtx->frame_size;
    if (default_frame_size == 0)
-       default_frame_size = 1024; // arbitrary non zero value;
- 
+      default_frame_size = 1024; // arbitrary non zero value;
+
    wxLogDebug(wxT("FFmpeg : Audio Output Codec Frame Size: %d samples."), mEncAudioCodecCtx->frame_size);
 
    // The encoder may require a minimum number of raw audio samples for each encoding but we can't
-   // guarantee we'll get this minimum each time an audio frame is decoded from the input file so 
+   // guarantee we'll get this minimum each time an audio frame is decoded from the input file so
    // we use a FIFO to store up incoming raw samples until we have enough for one call to the codec.
 #if LIBAVUTIL_VERSION_INT > AV_VERSION_INT(49, 15, 0)
    mEncAudioFifo = av_fifo_alloc(1024);
@@ -614,7 +614,7 @@ bool ExportFFmpeg::Finalize()
       }
 
       // Flush the audio FIFO first if necessary. It won't contain a _full_ audio frame because
-      // if it did we'd have pulled it from the FIFO during the last encodeAudioFrame() call - 
+      // if it did we'd have pulled it from the FIFO during the last encodeAudioFrame() call -
       // the encoder must support short/incomplete frames for this to work.
       if (nFifoBytes > 0)
       {
@@ -640,7 +640,7 @@ bool ExportFFmpeg::Finalize()
             if (codec->capabilities & (CODEC_CAP_SMALL_LAST_FRAME|CODEC_CAP_VARIABLE_FRAME_SIZE))
                frame_size = nFifoBytes / (mEncAudioCodecCtx->channels * sizeof(int16_t));
 
-            wxLogDebug(wxT("FFmpeg : Audio FIFO still contains %d bytes, writing %d sample frame ..."), 
+            wxLogDebug(wxT("FFmpeg : Audio FIFO still contains %d bytes, writing %d sample frame ..."),
                nFifoBytes, frame_size);
 
             // Pull the bytes out from the FIFO and feed them to the encoder.
@@ -659,7 +659,7 @@ bool ExportFFmpeg::Finalize()
       if (nEncodedBytes <= 0)
          nEncodedBytes = encode_audio(mEncAudioCodecCtx, &pkt, NULL, 0);
 
-      if (nEncodedBytes <= 0)			
+      if (nEncodedBytes <= 0)
          break;
 
       pkt.stream_index = mEncAudioStream->index;
@@ -790,9 +790,9 @@ int ExportFFmpeg::Export(AudacityProject *project,
       wxLogError(wxT("Attempted to export %d channels, but max. channels = %d"),channels,ExportFFmpegOptions::fmts[mSubFormat].maxchannels);
       wxMessageBox(
          wxString::Format(
-               _("Attempted to export %d channels, but maximum number of channels for selected output format is %d"), 
-               channels, 
-               ExportFFmpegOptions::fmts[mSubFormat].maxchannels), 
+               _("Attempted to export %d channels, but maximum number of channels for selected output format is %d"),
+               channels,
+               ExportFFmpegOptions::fmts[mSubFormat].maxchannels),
             _("Error"));
       return false;
    }
@@ -801,7 +801,7 @@ int ExportFFmpeg::Export(AudacityProject *project,
    bool ret = true;
 
    if (mSubFormat >= FMT_LAST) return false;
-   
+
    wxString shortname(ExportFFmpegOptions::fmts[mSubFormat].shortname);
    if (mSubFormat == FMT_OTHER)
       shortname = gPrefs->Read(wxT("/FileFormats/FFmpegFormat"),wxT("matroska"));

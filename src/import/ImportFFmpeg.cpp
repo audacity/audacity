@@ -37,7 +37,7 @@ Licensed under the GNU General Public License v2 or later
 //TODO: remove non-audio extensions
 #if defined(USE_FFMPEG)
 static const wxChar *exts[] =
-{   
+{
    wxT("4xm"),
    wxT("MTV"),
    wxT("roq"),
@@ -171,7 +171,7 @@ public:
    FFmpegImportPlugin():
       ImportPlugin(wxArrayString(WXSIZEOF(exts),exts))
       {
-         
+
       }
 
    ~FFmpegImportPlugin() { }
@@ -210,23 +210,23 @@ public:
    ///! Reads next audio frame
    ///\return pointer to the stream context structure to which the frame belongs to or NULL on error, or 1 if stream is not to be imported.
    streamContext* ReadNextFrame();
-   
+
    ///! Decodes the frame
    ///\param sc - stream context (from ReadNextFrame)
    ///\param flushing - true if flushing (no more frames left), false otherwise
    ///\return 0 on success, -1 if it can't decode any further
    int DecodeFrame(streamContext *sc, bool flushing);
-   
+
    ///! Writes decoded data into WaveTracks. Called by DecodeFrame
    ///\param sc - stream context
    ///\return 0 on success, 1 on error or interruption
    int WriteData(streamContext *sc);
-   
+
    ///! Writes extracted metadata to tags object
    ///\param avf - file context
    ///\ tags - Audacity tags object
    void WriteMetadata(Tags *tags);
-   
+
    ///! Retrieves metadata from FFmpeg and converts to wxString
    ///\param avf - file context
    ///\ tags - Audacity tags object
@@ -240,7 +240,7 @@ public:
    {
       return mNumStreams;
    }
-   
+
    ///! Called by Import.cpp
    ///\return array of strings - descriptions of the streams
    wxArrayString *GetStreamInfo()
@@ -263,7 +263,7 @@ private:
    int                   mNumStreams;    //!< mNumstreams is less or equal to mFormatContext->nb_streams
    streamContext       **mScs;           //!< Array of pointers to stream contexts. Length is mNumStreams.
    wxArrayString        *mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
-   
+
    wxInt64               mProgressPos;   //!< Current timestamp, file position or whatever is used as first argument for Update()
    wxInt64               mProgressLen;   //!< Duration, total length or whatever is used as second argument for Update()
 
@@ -317,7 +317,7 @@ ImportFileHandle *FFmpegImportPlugin::Open(wxString filename)
             dlg = new FFmpegNotFoundDialog(NULL);
             dlg->ShowModal();
             delete dlg;
-         }         
+         }
       }
    }
    if (!FFmpegLibsInst->ValidLibsLoaded())
@@ -326,7 +326,7 @@ ImportFileHandle *FFmpegImportPlugin::Open(wxString filename)
       return NULL;
    }
 
-   // Open the file for import  
+   // Open the file for import
    bool success = handle->Init();
    if (!success) {
       delete handle;
@@ -429,14 +429,14 @@ bool FFmpegImportFileHandle::InitCodecs()
          wxString strinfo;
          int duration = 0;
          if (sc->m_stream->duration > 0)
-           duration = sc->m_stream->duration * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
+            duration = sc->m_stream->duration * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
          else
-           duration = mFormatContext->duration / AV_TIME_BASE;
+            duration = mFormatContext->duration / AV_TIME_BASE;
          wxString bitrate = wxT("");
          if (sc->m_codecCtx->bit_rate > 0)
-           bitrate.Printf(wxT("%d"),sc->m_codecCtx->bit_rate);
+            bitrate.Printf(wxT("%d"),sc->m_codecCtx->bit_rate);
          else
-           bitrate.Printf(wxT("?"));
+            bitrate.Printf(wxT("?"));
 
          AVDictionaryEntry *tag = av_dict_get(sc->m_stream->metadata, "language", NULL, 0);
          wxString lang;
@@ -580,24 +580,24 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
             sampleDuration = ((sampleCount)mFormatContext->duration *mScs[s]->m_stream->codec->sample_rate) / AV_TIME_BASE;
 
          //      printf(" OD duration samples %qi, sr %d, secs %d\n",sampleDuration, (int)mScs[s]->m_stream->codec->sample_rate,(int)sampleDuration/mScs[s]->m_stream->codec->sample_rate);
-         
+
          //for each wavetrack within the stream add coded blockfiles
          for (int c = 0; c < mScs[s]->m_stream->codec->channels; c++) {
             WaveTrack *t = mChannels[s][c];
             odTask->AddWaveTrack(t);
-         
+
             sampleCount maxBlockSize = t->GetMaxBlockSize();
             //use the maximum blockfile size to divide the sections (about 11secs per blockfile at 44.1khz)
             for (sampleCount i = 0; i < sampleDuration; i += maxBlockSize) {
                sampleCount blockLen = maxBlockSize;
                if (i + blockLen > sampleDuration)
                   blockLen = sampleDuration - i;
-            
+
                t->AppendCoded(mFilename, i, blockLen, c,ODTask::eODFFMPEG);
-            
-               // This only works well for single streams since we assume 
+
+               // This only works well for single streams since we assume
                // each stream is of the same duration and channels
-               res = mProgress->Update(i+sampleDuration*c+ sampleDuration*mScs[s]->m_stream->codec->channels*s, 
+               res = mProgress->Update(i+sampleDuration*c+ sampleDuration*mScs[s]->m_stream->codec->channels*s,
                                        sampleDuration*mScs[s]->m_stream->codec->channels*mNumStreams);
                if (res != eProgressSuccess)
                   break;
@@ -640,7 +640,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
          {
             av_free_packet(&sc->m_pkt);
             sc->m_pktValid = 0;
-         }    
+         }
       }
    }
 
@@ -657,7 +657,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
             {
                av_free_packet(&mScs[i]->m_pkt);
                mScs[i]->m_pktValid = 0;
-            }               
+            }
          }
       }
    }
@@ -759,22 +759,22 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
                case AV_SAMPLE_FMT_U8P:
                   ((int16_t *)tmp[chn])[index] = (int16_t) (*(uint8_t *)in - 0x80) << 8;
                break;
-               
+
                case AV_SAMPLE_FMT_S16:
                case AV_SAMPLE_FMT_S16P:
                   ((int16_t *)tmp[chn])[index] = (int16_t) *(int16_t *)in;
                break;
-               
+
                case AV_SAMPLE_FMT_S32:
                case AV_SAMPLE_FMT_S32P:
                   ((float *)tmp[chn])[index] = (float) *(int32_t *)in * (1.0 / (1 << 31));
                break;
-               
+
                case AV_SAMPLE_FMT_FLT:
                case AV_SAMPLE_FMT_FLTP:
                   ((float *)tmp[chn])[index] = (float) *(float *)in;
                break;
-               
+
                case AV_SAMPLE_FMT_DBL:
                case AV_SAMPLE_FMT_DBLP:
                   ((float *)tmp[chn])[index] = (float) *(double *)in;
@@ -800,7 +800,7 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
    }
 
    free(tmp);
-   
+
    // Try to update the progress indicator (and see if user wants to cancel)
    int updateResult = eProgressSuccess;
    int64_t filesize = avio_size(mFormatContext->pb);
