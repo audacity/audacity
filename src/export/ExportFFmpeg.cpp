@@ -524,7 +524,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    return true;
 }
 
-static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int nFifoBytes, int16_t *audio_samples)
+static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_samples)
 {
    int i, ch, buffer_size, ret, got_output = 0, nEncodedBytes;
    void *samples = NULL;
@@ -649,7 +649,7 @@ bool ExportFFmpeg::Finalize()
                mEncAudioCodecCtx->frame_size = nFifoBytes / (mEncAudioCodecCtx->channels * sizeof(int16_t));
 
             wxLogDebug(wxT("FFmpeg : Audio FIFO still contains %d bytes, writing %d sample frame ..."), 
-               nFifoBytes, mEncAudioCodecCtx->frame_size);
+               nFifoBytes, frame_size);
 
             // Pull the bytes out from the FIFO and feed them to the encoder.
 #if LIBAVUTIL_VERSION_INT > AV_VERSION_INT(49, 15, 0)
@@ -658,10 +658,7 @@ bool ExportFFmpeg::Finalize()
             if (av_fifo_generic_read(mEncAudioFifo, nFifoBytes, NULL, mEncAudioFifoOutBuf) == 0)
 #endif
             {
-               if (mEncAudioCodecCtx->frame_size > 1)
-                  nEncodedBytes = encode_audio(mEncAudioCodecCtx, &pkt, mEncAudioEncodedBufSiz, (int16_t*)mEncAudioFifoOutBuf);
-               else
-                  nEncodedBytes = encode_audio(mEncAudioCodecCtx, &pkt, nFifoBytes, (int16_t*)mEncAudioFifoOutBuf);
+               nEncodedBytes = encode_audio(mEncAudioCodecCtx, &pkt, (int16_t*)mEncAudioFifoOutBuf);
             }
 
             mEncAudioCodecCtx->frame_size = nFrameSizeTmp;		// restore the native frame size
@@ -670,7 +667,7 @@ bool ExportFFmpeg::Finalize()
 
       // Now flush the encoder.
       if (nEncodedBytes <= 0)
-         nEncodedBytes = encode_audio(mEncAudioCodecCtx, &pkt, mEncAudioEncodedBufSiz, NULL);
+         nEncodedBytes = encode_audio(mEncAudioCodecCtx, &pkt, NULL);
 
       if (nEncodedBytes <= 0)			
          break;
@@ -758,7 +755,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
       av_init_packet(&pkt);
 
       int ret= encode_audio(mEncAudioCodecCtx,
-         &pkt, mEncAudioEncodedBufSiz,		// out
+         &pkt,		// out
          (int16_t*)mEncAudioFifoOutBuf);				// in
       if (mEncAudioCodecCtx->frame_size == 1) { wxASSERT(pkt.size == mEncAudioEncodedBufSiz); }
       if (ret < 0)
