@@ -125,7 +125,7 @@ wxString GetFFmpegVersion(wxWindow * WXUNUSED(parent))
 void av_log_wx_callback(void* ptr, int level, const char* fmt, va_list vl)
 {
    //Most of this stuff is taken from FFmpeg tutorials and FFmpeg itself
-   int av_log_level = AV_LOG_WARNING;
+   int av_log_level = AV_LOG_INFO;
    AVClass* avc = ptr ? *(AVClass**)ptr : NULL;
    if (level > av_log_level)
       return;
