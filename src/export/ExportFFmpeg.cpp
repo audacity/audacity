@@ -628,7 +628,7 @@ bool ExportFFmpeg::Finalize()
          // Or if codec is FLAC, feed it anyway (it doesn't have CODEC_CAP_SMALL_LAST_FRAME, but it works)
          // Or if frame_size is 1, then it's some kind of PCM codec, they don't have frames and will be fine with the samples
          // Or if user configured the exporter to pad with silence, then we'll send audio + silence as a frame.
-         if ((codec->capabilities & CODEC_CAP_SMALL_LAST_FRAME)
+         if ((codec->capabilities & (CODEC_CAP_SMALL_LAST_FRAME|CODEC_CAP_VARIABLE_FRAME_SIZE))
             || mEncAudioCodecCtx->frame_size <= 1
             || gPrefs->Read(wxT("/FileFormats/OverrideSmallLastFrame"), true)
             )
@@ -637,7 +637,7 @@ bool ExportFFmpeg::Finalize()
 
             // The last frame is going to contain a smaller than usual number of samples.
             // For codecs without CODEC_CAP_SMALL_LAST_FRAME use normal frame size
-            if (codec->capabilities & CODEC_CAP_SMALL_LAST_FRAME)
+            if (codec->capabilities & (CODEC_CAP_SMALL_LAST_FRAME|CODEC_CAP_VARIABLE_FRAME_SIZE))
                frame_size = nFifoBytes / (mEncAudioCodecCtx->channels * sizeof(int16_t));
 
             wxLogDebug(wxT("FFmpeg : Audio FIFO still contains %d bytes, writing %d sample frame ..."), 
