@@ -436,7 +436,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    {
       mEncAudioCodecCtx->flags |= CODEC_FLAG_QSCALE;
    }
-   else mEncAudioCodecCtx->global_quality = -99999;
+   else mEncAudioCodecCtx->global_quality = 0;
    mEncAudioCodecCtx->global_quality = mEncAudioCodecCtx->global_quality * FF_QP2LAMBDA;
    mEncAudioCodecCtx->sample_rate = mSampleRate;
    mEncAudioCodecCtx->channels = mChannels;
