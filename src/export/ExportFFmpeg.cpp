@@ -636,7 +636,6 @@ bool ExportFFmpeg::Finalize()
          // Or if frame_size is 1, then it's some kind of PCM codec, they don't have frames and will be fine with the samples
          // Or if user configured the exporter to pad with silence, then we'll send audio + silence as a frame.
          if ((codec->capabilities & CODEC_CAP_SMALL_LAST_FRAME)
-            || codec->id == CODEC_ID_FLAC
             || mEncAudioCodecCtx->frame_size <= 1
             || gPrefs->Read(wxT("/FileFormats/OverrideSmallLastFrame"), true)
             )
