@@ -58,6 +58,24 @@ audacity_CPPFLAGS = \
 	$(WX_CXXFLAGS) \
 	$(NULL)
 
+# Until we upgrade to a newer version of wxWidgets...will get rid of hundreds of these:
+#
+#  /usr/local/include/wx-2.8/wx/buffer.h: In member function 'void wxMemoryBuffer::AppendByte(char)':
+#  /usr/local/include/wx-2.8/wx/debug.h:194:43: warning: typedef 'wxDummyCheckInt' locally defined but not used [-Wunused-local-typedefs]
+#       #define wxFORCE_SEMICOLON typedef int wxDummyCheckInt
+#                                           ^
+#  /usr/local/include/wx-2.8/wx/debug.h:224:9: note: in expansion of macro 'wxFORCE_SEMICOLON'
+#           wxFORCE_SEMICOLON /* just to force a semicolon */
+#           ^
+#  /usr/local/include/wx-2.8/wx/debug.h:233:38: note: in expansion of macro 'wxCHECK2_MSG'
+#   #define wxCHECK_RET(cond, msg)       wxCHECK2_MSG(cond, return, msg)
+#                                        ^
+#  /usr/local/include/wx-2.8/wx/buffer.h:289:9: note: in expansion of macro 'wxCHECK_RET'
+#           wxCHECK_RET( m_bufdata->m_data, wxT("invalid wxMemoryBuffer") );
+#           ^
+audacity_CXXFLAGS = \
+   -Wno-unused-local-typedefs
+
 audacity_LDFLAGS = -rdynamic
 audacity_LDADD = \
 	$(EXPAT_LIBS) \
@@ -358,9 +376,6 @@ audacity_SOURCES = \
 	effects/TwoPassSimpleMono.h \
 	effects/Wahwah.cpp \
 	effects/Wahwah.h \
-	effects/VST/aeffectx.h \
-	effects/VST/VSTEffect.cpp \
-	effects/VST/VSTEffect.h \
 	export/Export.cpp \
 	export/Export.h \
 	export/ExportCL.cpp \
@@ -668,6 +683,16 @@ audacity_SOURCES += \
 	effects/vamp/LoadVamp.h \
 	effects/vamp/VampEffect.cpp \
 	effects/vamp/VampEffect.h \
+	$(NULL)
+endif
+
+if USE_VST
+audacity_CPPFLAGS += $(VST_CFLAGS)
+audacity_LDADD += $(VST_LIBS)
+audacity_SOURCES += \
+	effects/VST/aeffectx.h \
+	effects/VST/VSTEffect.cpp \
+	effects/VST/VSTEffect.h \
 	$(NULL)
 endif
 

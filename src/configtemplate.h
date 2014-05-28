@@ -182,6 +182,9 @@
 /* Define if Vamp analysis plugin support should be enabled */
 #undef USE_VAMP
 
+/* Define if VST plugin support should be enabled */
+#undef USE_VST
+
 /* Version number of package */
 #undef VERSION
 

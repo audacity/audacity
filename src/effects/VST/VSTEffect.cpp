@@ -943,6 +943,7 @@ private:
 #elif defined(__WXMSW__)
    wxSizerItem *mContainer;
 #else
+   wxSizerItem *mContainer;
 #endif
 
    wxComboBox *mProgram;
@@ -1348,6 +1349,15 @@ VSTEffectDialog::VSTEffectDialog(wxWindow *parent,
    mGui = (gPrefs->Read(wxT("/VST/GUI"), (long) true) != 0) &&
           mAEffect->flags & effFlagsHasEditor;
 
+#if defined(__WXGTK__)
+   // Let the user know that a GUI interface is not supported in wxGTK
+   if (mGui) {
+      wxMessageBox(_("VST GUI interfaces are currently unsupported on Linux"),
+                   _("VST Effect"));
+      mGui = false;
+   }
+#endif
+
    // Build the appropriate dialog type
    if (mGui) {
       BuildFancy();
@@ -1456,6 +1466,7 @@ void VSTEffectDialog::BuildFancy()
    mEffect->callDispatcher(effEditOpen, 0, 0, w->GetHWND(), 0.0);
 
 #else
+
 #endif
 
    // Get the final bounds of the effect GUI
@@ -1479,6 +1490,7 @@ void VSTEffectDialog::BuildFancy()
    mContainer->SetMinSize(rect->right - rect->left, rect->bottom - rect->top);
 
 #else
+
 #endif
 
    vs->Add(hs, 0, wxCENTER);
@@ -2066,8 +2078,11 @@ void VSTEffectDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 
 void VSTEffectDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 {
+// In wxGTK, Show(false) calls EndModal, which produces an assertion in debug builds
+#if !defined(__WXGTK__)
    // Hide the dialog before closing the effect to prevent a brief empty dialog
    Show(false);
+#endif
 
    if (mGui) {
       mEffect->callDispatcher(effEditClose, 0, 0, NULL, 0.0);
@@ -2078,8 +2093,11 @@ void VSTEffectDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 
 void VSTEffectDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
+// In wxGTK, Show(false) calls EndModal, which produces an assertion in debug builds
+#if !defined(__WXGTK__)
    // Hide the dialog before closing the effect to prevent a brief empty dialog
    Show(false);
+#endif
 
    if (mGui) {
       mEffect->callDispatcher(effEditClose, 0, 0, NULL, 0.0);
@@ -3116,6 +3134,7 @@ bool VSTEffect::ProcessStereo(int count,
 void VSTEffect::End()
 {
 }
+#include <dlfcn.h>
 
 bool VSTEffect::Load()
 {

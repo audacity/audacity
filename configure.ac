@@ -550,6 +550,12 @@ AC_ARG_ENABLE(quicktime,
    use_quicktime=$enableval,
    use_quicktime="auto")
 
+AC_ARG_ENABLE(vst,
+   [AS_HELP_STRING([--enable-vst],
+      [enable VST plug-in support [default=yes]])],
+   use_vst=$enableval,
+   use_vst="yes")
+
 dnl In-tree libraries (ones we write, so only options are off and local)
 
 AC_ARG_WITH(portmixer,
@@ -557,6 +563,7 @@ AC_ARG_WITH(portmixer,
      [compile with PortMixer [default=yes]])],
   use_portmixer=$withval,
   use_portmixer="yes")
+
 
 AC_CANONICAL_HOST
 
@@ -680,7 +687,11 @@ if [[ "$use_quicktime" = "yes" ]] ; then
              [Define if QuickTime importing is enabled (Mac OS X only)])
 fi
 
-
+AM_CONDITIONAL([USE_VST], [test "$use_vst" = yes])
+if [[ "$use_vst" = "yes" ]] ; then
+   AC_DEFINE(USE_VST, 1,
+             [Define if VST plug-in support is enabled])
+fi
 
 case "${host_os}" in
    cygwin*)
