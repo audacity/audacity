@@ -339,19 +339,32 @@ void AudacityProject::CreateMenusAndCommands()
    ModifyUndoMenuItems();
 
    c->AddSeparator();
-   
-   c->BeginSubMenu(_("R&emove Audio or Labels"));
+
+   // Basic Edit coomands
    /* i18n-hint: (verb)*/
    c->AddItem(wxT("Cut"), _("Cu&t"), FN(OnCut), wxT("Ctrl+X"),
               AudioIONotBusyFlag | CutCopyAvailableFlag,
               AudioIONotBusyFlag | CutCopyAvailableFlag);
+   /* i18n-hint: (verb)*/
+   c->AddItem(wxT("Copy"), _("&Copy"), FN(OnCopy), wxT("Ctrl+C"),
+              AudioIONotBusyFlag | CutCopyAvailableFlag,
+              AudioIONotBusyFlag | CutCopyAvailableFlag);
+   /* i18n-hint: (verb)*/
+   c->AddItem(wxT("Paste"), _("&Paste"), FN(OnPaste), wxT("Ctrl+V"),
+              AudioIONotBusyFlag | ClipboardFlag,
+              AudioIONotBusyFlag | ClipboardFlag);
    c->AddItem(wxT("Delete"), _("&Delete"), FN(OnDelete), wxT("Ctrl+K"));
+
    c->AddSeparator();
+
+   c->BeginSubMenu(_("R&emove Special"));
    /* i18n-hint: (verb) Do a special kind of cut*/
    c->AddItem(wxT("SplitCut"), _("Spl&it Cut"), FN(OnSplitCut), wxT("Ctrl+Alt+X"));
    /* i18n-hint: (verb) Do a special kind of delete*/
    c->AddItem(wxT("SplitDelete"), _("Split D&elete"), FN(OnSplitDelete), wxT("Ctrl+Alt+K"));
+
    c->AddSeparator();
+
    /* i18n-hint: (verb)*/
    c->AddItem(wxT("Silence"), _("Silence Audi&o"), FN(OnSilence), wxT("Ctrl+L"),
       AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
@@ -360,9 +373,19 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("Trim"), _("Tri&m Audio"), FN(OnTrim), wxT("Ctrl+T"),
       AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
       AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
-    c->EndSubMenu();
-   
-   c->BeginSubMenu(_("Clip Boun&daries"));
+   c->EndSubMenu();
+
+   c->AddItem(wxT("PasteNewLabel"), _("Paste Te&xt to New Label"), FN(OnPasteNewLabel), wxT("Ctrl+Alt+V"),
+              AudioIONotBusyFlag, AudioIONotBusyFlag);
+
+   /* i18n-hint: (verb)*/
+   c->AddItem(wxT("Duplicate"), _("Duplic&ate"), FN(OnDuplicate), wxT("Ctrl+D"));
+
+   c->AddSeparator();
+
+   /////////////////////////////////////////////////////////////////////////////
+
+   c->BeginSubMenu(_("Clip B&oundaries"));
    /* i18n-hint: (verb) It's an item on a menu. */
    c->AddItem(wxT("Split"), _("Sp&lit"), FN(OnSplit), wxT("Ctrl+I"),
               AudioIONotBusyFlag | WaveTracksSelectedFlag,
@@ -375,24 +398,6 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("Join"), _("&Join"), FN(OnJoin), wxT("Ctrl+J"));
    c->AddItem(wxT("Disjoin"), _("Detac&h at Silences"), FN(OnDisjoin), wxT("Ctrl+Alt+J"));
    c->EndSubMenu();
-
-   c->AddSeparator();
-
-   /* i18n-hint: (verb)*/
-   c->AddItem(wxT("Copy"), _("&Copy"), FN(OnCopy), wxT("Ctrl+C"),
-              AudioIONotBusyFlag | CutCopyAvailableFlag,
-              AudioIONotBusyFlag | CutCopyAvailableFlag);
-   /* i18n-hint: (verb)*/
-   c->AddItem(wxT("Paste"), _("&Paste"), FN(OnPaste), wxT("Ctrl+V"),
-              AudioIONotBusyFlag | ClipboardFlag,
-              AudioIONotBusyFlag | ClipboardFlag);
-   c->AddItem(wxT("PasteNewLabel"), _("Paste Te&xt to New Label"), FN(OnPasteNewLabel), wxT("Ctrl+Alt+V"),
-              AudioIONotBusyFlag, AudioIONotBusyFlag);
-
-   c->AddSeparator();
-
-   /* i18n-hint: (verb)*/
-   c->AddItem(wxT("Duplicate"), _("Duplic&ate"), FN(OnDuplicate), wxT("Ctrl+D"));
 
    c->AddSeparator();
 
