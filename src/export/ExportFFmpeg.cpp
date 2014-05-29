@@ -445,7 +445,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    mEncAudioCodecCtx->sample_fmt = AV_SAMPLE_FMT_S16;
    mEncAudioCodecCtx->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
 
-   if (mEncAudioCodecCtx->codec_id == CODEC_ID_AC3)
+   if (mEncAudioCodecCtx->codec_id == AV_CODEC_ID_AC3)
    {
       // As of Jan 4, 2011, the default AC3 encoder only accept SAMPLE_FMT_FLT samples.
       // But, currently, Audacity only supports SAMPLE_FMT_S16.  So, for now, look for the
