@@ -470,8 +470,12 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    if (codec->sample_fmts) {
       for (int i=0; codec->sample_fmts[i] != AV_SAMPLE_FMT_NONE; i++) {
          enum AVSampleFormat fmt = codec->sample_fmts[i];
-         if (   fmt == AV_SAMPLE_FMT_S16
+         if (   fmt == AV_SAMPLE_FMT_U8
+             || fmt == AV_SAMPLE_FMT_U8P
+             || fmt == AV_SAMPLE_FMT_S16
              || fmt == AV_SAMPLE_FMT_S16P
+             || fmt == AV_SAMPLE_FMT_S32
+             || fmt == AV_SAMPLE_FMT_S32P
              || fmt == AV_SAMPLE_FMT_FLT
              || fmt == AV_SAMPLE_FMT_FLTP) {
             mEncAudioCodecCtx->sample_fmt = fmt;
@@ -558,11 +562,23 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
       for (ch = 0; ch < avctx->channels; ch++) {
          for (i = 0; i < frame->nb_samples; i++) {
             switch(avctx->sample_fmt) {
+            case AV_SAMPLE_FMT_U8:
+               ((uint8_t*)(frame->data[0]))[ch + i*avctx->channels] = audio_samples[ch + i*avctx->channels]/258 + 128;
+               break;
+            case AV_SAMPLE_FMT_U8P:
+               ((uint8_t*)(frame->data[ch]))[i] = audio_samples[ch + i*avctx->channels]/258 + 128;
+               break;
             case AV_SAMPLE_FMT_S16:
                ((int16_t*)(frame->data[0]))[ch + i*avctx->channels] = audio_samples[ch + i*avctx->channels];
                break;
             case AV_SAMPLE_FMT_S16P:
                ((int16_t*)(frame->data[ch]))[i] = audio_samples[ch + i*avctx->channels];
+               break;
+            case AV_SAMPLE_FMT_S32:
+               ((int32_t*)(frame->data[0]))[ch + i*avctx->channels] = audio_samples[ch + i*avctx->channels]<<16;
+               break;
+            case AV_SAMPLE_FMT_S32P:
+               ((int32_t*)(frame->data[ch]))[i] = audio_samples[ch + i*avctx->channels]<<16;
                break;
             case AV_SAMPLE_FMT_FLT:
                ((float*)(frame->data[0]))[ch + i*avctx->channels] = audio_samples[ch + i*avctx->channels] / 32767.0;
