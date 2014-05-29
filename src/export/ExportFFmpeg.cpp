@@ -468,7 +468,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    }
 
    if (codec->sample_fmts) {
-      for (int i=0; codec->sample_fmts[i]; i++) {
+      for (int i=0; codec->sample_fmts[i] != AV_SAMPLE_FMT_NONE; i++) {
          enum AVSampleFormat fmt = codec->sample_fmts[i];
          if (   fmt == AV_SAMPLE_FMT_S16
              || fmt == AV_SAMPLE_FMT_S16P
