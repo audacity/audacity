@@ -1376,7 +1376,7 @@ void MP3Exporter::PutInfoTag(wxFFile & f, wxFileOffset off)
          mGF = NULL;
       }
 #endif
-      else if (lame_mp3_tags_fid) {   
+      else if (lame_mp3_tags_fid != NULL) {
          lame_mp3_tags_fid(mGF, f.fp());
       }
    }
