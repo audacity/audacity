@@ -654,8 +654,8 @@ extern "C" {
       (s, stream_index, timestamp, flags)
    );
    FFMPEG_FUNCTION_NO_RETURN(
-      av_close_input_file,
-      (AVFormatContext *s),
+      avformat_close_input,
+      (AVFormatContext **s),
       (s)
    );
    FFMPEG_FUNCTION_WITH_RETURN(

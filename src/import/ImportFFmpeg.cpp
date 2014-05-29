@@ -862,7 +862,7 @@ FFmpegImportFileHandle::~FFmpegImportFileHandle()
 #endif
    if (FFmpegLibsInst->ValidLibsLoaded())
    {
-      if (mFormatContext) av_close_input_file(mFormatContext);
+      if (mFormatContext) avformat_close_input(&mFormatContext);
       av_log_set_callback(av_log_default_callback);
    }
 

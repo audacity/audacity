@@ -205,11 +205,11 @@ bool ODFFmpegDecoder::SeekingAllowed()
 
    if(av_seek_frame(tempContext, st->index, 0, 0) >= 0) {
       mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_SUCCESS;
-      if (tempContext) av_close_input_file(tempContext);
+      if (tempContext) avformat_close_input(&tempContext);
       return SeekingAllowed();
    }
 
-   if (tempContext) av_close_input_file(tempContext);
+   if (tempContext) avformat_close_input(&tempContext);
 
 test_failed:
    mSeekingAllowedStatus = ODFFMPEG_SEEKING_TEST_FAILED;
@@ -261,7 +261,7 @@ ODFFmpegDecoder::~ODFFmpegDecoder()
 {
    if (FFmpegLibsInst->ValidLibsLoaded())
    {
-      if (mFormatContext) av_close_input_file(mFormatContext);
+      if (mFormatContext) avformat_close_input(&mFormatContext);
       av_log_set_callback(av_log_default_callback);
    }
 

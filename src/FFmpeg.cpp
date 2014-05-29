@@ -862,7 +862,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avformat, av_find_stream_info);
    FFMPEG_INITDYN(avformat, av_read_frame);
    FFMPEG_INITDYN(avformat, av_seek_frame);
-   FFMPEG_INITDYN(avformat, av_close_input_file);
+   FFMPEG_INITDYN(avformat, avformat_close_input);
    FFMPEG_INITDYN(avformat, avformat_write_header);
    FFMPEG_INITDYN(avformat, av_interleaved_write_frame);
    FFMPEG_INITDYN(avformat, av_iformat_next);
