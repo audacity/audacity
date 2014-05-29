@@ -538,7 +538,9 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
 
       frame->nb_samples     = nb_samples;
       frame->format         = avctx->sample_fmt;
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(54, 13, 0))
       frame->channel_layout = avctx->channel_layout;
+#endif
 
       buffer_size = av_samples_get_buffer_size(NULL, avctx->channels, frame->nb_samples,
                                               avctx->sample_fmt, 0);

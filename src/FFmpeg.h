@@ -110,6 +110,12 @@ extern "C" {
    #define AV_CODEC_ID_WMAV2 CODEC_ID_WMAV2
    #define AV_CODEC_ID_WMAVOICE CODEC_ID_WMAVOICE
    #endif
+
+   #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 8, 100)
+   inline bool av_codec_is_encoder(AVCodec *codec) {
+      return codec != NULL && (codec->encode != NULL || codec->encode2 != NULL);
+   }
+   #endif
 }
 #endif
 
