@@ -88,9 +88,6 @@ dnl different options for these. This bit tries to work out what flags we
 dnl should add to the compiler we are using.
 dnl --------------------------------------------------------------------------
 
-dnl Strict prototypes flags for C (only C because doesn't work for C++)
-AX_CFLAGS_STRICT_PROTOTYPES(CFLAGS)
-
 dnl Sensible warnings for C
 AX_CFLAGS_WARN_ALL(wall_flags)
 CFLAGS="${CFLAGS} $wall_flags"
