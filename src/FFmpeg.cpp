@@ -861,7 +861,6 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avformat, avformat_close_input);
    FFMPEG_INITDYN(avformat, avformat_write_header);
    FFMPEG_INITDYN(avformat, av_interleaved_write_frame);
-   FFMPEG_INITDYN(avformat, av_iformat_next);
    FFMPEG_INITDYN(avformat, av_oformat_next);
    FFMPEG_INITDYN(avformat, avformat_new_stream);
    FFMPEG_INITDYN(avformat, avformat_alloc_context);
@@ -873,10 +872,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avformat, av_dict_set);
    FFMPEG_INITDYN(avformat, avio_size);
    FFMPEG_INITDYN(avformat, avio_alloc_context);
-   FFMPEG_INITALT(avformat, avio_read, get_buffer);
-   FFMPEG_INITALT(avformat, avio_seek, url_fseek);
    FFMPEG_INITALT(avformat, av_guess_format, guess_format);
-   FFMPEG_INITALT(avformat, av_match_ext, match_ext);
 
    FFMPEG_INITDYN(avcodec, av_init_packet);
    FFMPEG_INITDYN(avcodec, av_free_packet);
@@ -885,13 +881,10 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avcodec, avcodec_find_decoder);
    FFMPEG_INITDYN(avcodec, avcodec_open2);
    FFMPEG_INITDYN(avcodec, avcodec_decode_audio4);
-   FFMPEG_INITDYN(avcodec, avcodec_decode_audio3);
-   FFMPEG_INITDYN(avcodec, avcodec_encode_audio);
    FFMPEG_INITDYN(avcodec, avcodec_encode_audio2);
    FFMPEG_INITDYN(avcodec, avcodec_close);
    FFMPEG_INITDYN(avcodec, avcodec_register_all);
    FFMPEG_INITDYN(avcodec, avcodec_version);
-   FFMPEG_INITDYN(avcodec, av_fast_realloc);
    FFMPEG_INITDYN(avcodec, av_codec_next);
    FFMPEG_INITDYN(avcodec, av_codec_is_encoder);
    FFMPEG_INITDYN(avcodec, avcodec_fill_audio_frame);

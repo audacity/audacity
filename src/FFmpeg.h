@@ -591,18 +591,6 @@ extern "C" {
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      avcodec_decode_audio3,
-      (AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, AVPacket *avpkt),
-      (avctx, samples, frame_size_ptr, avpkt)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      avcodec_encode_audio,
-      (AVCodecContext *avctx, uint8_t *buf, int buf_size, const short *samples),
-      (avctx, buf, buf_size, samples)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
       avcodec_encode_audio2,
       (AVCodecContext *avctx, AVPacket *pkt, const AVFrame *frame, int *got_output),
       (avctx, pkt, frame, got_output)
@@ -641,22 +629,10 @@ extern "C" {
       ()
    );
    FFMPEG_FUNCTION_WITH_RETURN(
-      void*,
-      av_fast_realloc,
-      (void *ptr, unsigned int *size, size_t min_size),
-      (ptr, size, min_size)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avformat_open_input,
       (AVFormatContext **ic_ptr, const char *filename, AVInputFormat *fmt, AVDictionary **options),
       (ic_ptr, filename, fmt, options)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      get_buffer,
-      (AVIOContext *s, unsigned char *buf, int size),
-      (s, buf, size)
    );
    FFMPEG_FUNCTION_NO_RETURN(
       av_register_all,
@@ -693,12 +669,6 @@ extern "C" {
       (s, options)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
-      AVInputFormat*,
-      av_iformat_next,
-      (AVInputFormat *f),
-      (f)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
       AVOutputFormat*,
       av_oformat_next,
       (AVOutputFormat *f),
@@ -727,12 +697,6 @@ extern "C" {
       av_guess_format,
       (const char *short_name, const char *filename, const char *mime_type),
       (short_name, filename, mime_type)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      av_match_ext,
-      (const char *filename, const char *extensions),
-      (filename, extensions)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
@@ -819,18 +783,6 @@ extern "C" {
       av_dict_set,
       (AVDictionary **pm, const char *key, const char *value, int flags),
       (pm, key, value, flags)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      avio_read,
-      (AVIOContext *s, unsigned char *buf, int size),
-      (s, buf, size)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int64_t,
-      avio_seek,
-      (AVIOContext *s, int64_t offset, int whence),
-      (s, offset, whence)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int64_t,
