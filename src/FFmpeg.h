@@ -422,18 +422,7 @@ streamContext *import_ffmpeg_read_next_frame(AVFormatContext* formatContext,
 
 int import_ffmpeg_decode_frame(streamContext *sc, bool flushing);
 
-#if defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
-   // Use the preprocessor to rename old function names instead of checking the
-   // function names with FFMPEG_INITALT when loading the library.
-
-   #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 60, 0)
-   #define av_match_ext match_ext
-   #endif
-
-   #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(52, 64, 0)
-   #define av_guess_format guess_format
-   #endif
-#else
+#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
 extern "C" {
    // A little explanation of what's going on here.
    //
@@ -600,21 +589,12 @@ extern "C" {
       (AVCodecContext *avctx, AVFrame *frame, int *got_output, const AVPacket *avpkt),
       (avctx, frame, got_output, avpkt)
    );
-#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avcodec_decode_audio3,
       (AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, AVPacket *avpkt),
       (avctx, samples, frame_size_ptr, avpkt)
    );
-#else
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      avcodec_decode_audio2,
-      (AVCodecContext *avctx, int16_t *samples, int *frame_size_ptr, const uint8_t *buf, int buf_size),
-      (avctx, samples, frame_size_ptr, buf, buf_size)
-   );
-#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avcodec_encode_audio,
@@ -666,21 +646,12 @@ extern "C" {
       (void),
       ()
    );
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(53, 0, 0)
-   FFMPEG_FUNCTION_WITH_RETURN(
-      void*,
-      av_fast_realloc,
-      (void *ptr, unsigned int *size, unsigned int min_size),
-      (ptr, size, min_size)
-   );
-#else
    FFMPEG_FUNCTION_WITH_RETURN(
       void*,
       av_fast_realloc,
       (void *ptr, unsigned int *size, size_t min_size),
       (ptr, size, min_size)
    );
-#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avformat_open_input,
@@ -803,21 +774,12 @@ extern "C" {
       (AVFifoBuffer *f),
       (f)
    );
-#if LIBAVUTIL_VERSION_INT < AV_VERSION_INT(51, 0, 0)
-   FFMPEG_FUNCTION_WITH_RETURN(
-      void*,
-      av_malloc,
-      (unsigned int size),
-      (size)
-   );
-#else
    FFMPEG_FUNCTION_WITH_RETURN(
       void*,
       av_malloc,
       (size_t size),
       (size)
    );
-#endif
    FFMPEG_FUNCTION_NO_RETURN(
       av_freep,
       (void *ptr),
@@ -829,16 +791,11 @@ extern "C" {
       (int64_t a, AVRational bq, AVRational cq),
       (a, bq, cq)
    );
-
-#if LIBAVFORMAT_VERSION_INT > AV_VERSION_INT(52, 31, 0)
    FFMPEG_FUNCTION_NO_RETURN(
       av_free_packet,
       (AVPacket *pkt),
       (pkt)
    );
-#endif
-
-#if LIBAVUTIL_VERSION_INT > AV_VERSION_INT(49, 15, 0)
    FFMPEG_FUNCTION_WITH_RETURN(
       AVFifoBuffer*,
       av_fifo_alloc,
@@ -851,20 +808,6 @@ extern "C" {
       (AVFifoBuffer *f, void *buf, int buf_size, void (*func)(void*, void*, int)),
       (f, buf, buf_size, func)
    );
-#else
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      av_fifo_init,
-      (AVFifoBuffer *f, unsigned int size),
-      (f, size)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      av_fifo_generic_read,
-      (AVFifoBuffer *f, int buf_size, void (*func)(void*, void*, int), void* dest),
-      (f, buf_size, func, dest)
-   );
-#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       av_fifo_realloc2,

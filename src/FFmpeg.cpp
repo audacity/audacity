@@ -883,25 +883,14 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITALT(avformat, av_guess_format, guess_format);
    FFMPEG_INITALT(avformat, av_match_ext, match_ext);
 
-#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 58, 0)
    FFMPEG_INITDYN(avcodec, av_init_packet);
-#else
-   FFMPEG_INITDYN(avformat, av_init_packet);
-#endif
-
-#if LIBAVFORMAT_VERSION_INT > AV_VERSION_INT(52, 31, 0)
    FFMPEG_INITDYN(avcodec, av_free_packet);
-#endif
    FFMPEG_INITDYN(avcodec, avcodec_find_encoder);
    FFMPEG_INITDYN(avcodec, avcodec_find_encoder_by_name);
    FFMPEG_INITDYN(avcodec, avcodec_find_decoder);
    FFMPEG_INITDYN(avcodec, avcodec_open2);
    FFMPEG_INITDYN(avcodec, avcodec_decode_audio4);
-#if LIBAVCODEC_VERSION_INT > AV_VERSION_INT(52, 25, 0)
    FFMPEG_INITDYN(avcodec, avcodec_decode_audio3);
-#else
-   FFMPEG_INITDYN(avcodec, avcodec_decode_audio2);
-#endif
    FFMPEG_INITDYN(avcodec, avcodec_encode_audio);
    FFMPEG_INITDYN(avcodec, avcodec_encode_audio2);
    FFMPEG_INITDYN(avcodec, avcodec_close);
@@ -917,11 +906,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avutil, av_free);
    FFMPEG_INITDYN(avutil, av_log_set_callback);
    FFMPEG_INITDYN(avutil, av_log_default_callback);
-#if LIBAVUTIL_VERSION_INT > AV_VERSION_INT(49, 15, 0)
    FFMPEG_INITDYN(avutil, av_fifo_alloc);
-#else
-   FFMPEG_INITDYN(avutil, av_fifo_init);
-#endif
    FFMPEG_INITDYN(avutil, av_fifo_generic_read);
    FFMPEG_INITDYN(avutil, av_fifo_realloc2);
    FFMPEG_INITDYN(avutil, av_fifo_free);
