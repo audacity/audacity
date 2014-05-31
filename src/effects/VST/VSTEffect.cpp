@@ -44,8 +44,10 @@
 #if defined(__WXMAC__)
 #include <dlfcn.h>
 #include <wx/mac/private.h>
-#else
+#elif defined(__WXMSW__)
 #include <wx/dynlib.h>
+#else
+#include <dlfcn.h>
 #endif
 
 #if defined(__WXMSW__)
@@ -3134,7 +3136,6 @@ bool VSTEffect::ProcessStereo(int count,
 void VSTEffect::End()
 {
 }
-#include <dlfcn.h>
 
 bool VSTEffect::Load()
 {
