@@ -377,11 +377,7 @@ int import_ffmpeg_decode_frame(streamContext *sc, bool flushing)
    }
 
    sc->m_samplefmt = sc->m_codecCtx->sample_fmt;
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVUTIL_VERSION_INT < AV_VERSION_INT(51, 4, 0))
-   sc->m_samplesize = av_get_bits_per_sample_fmt(sc->m_samplefmt) / 8;
-#else
    sc->m_samplesize = av_get_bytes_per_sample(sc->m_samplefmt);
-#endif
 
    int channels = sc->m_codecCtx->channels;
    unsigned int newsize = sc->m_samplesize * frame->nb_samples * channels;
@@ -859,7 +855,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
 
    wxLogMessage(wxT("Importing symbols..."));
    FFMPEG_INITDYN(avformat, av_register_all);
-   FFMPEG_INITDYN(avformat, av_find_stream_info);
+   FFMPEG_INITDYN(avformat, avformat_find_stream_info);
    FFMPEG_INITDYN(avformat, av_read_frame);
    FFMPEG_INITDYN(avformat, av_seek_frame);
    FFMPEG_INITDYN(avformat, avformat_close_input);
@@ -867,7 +863,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avformat, av_interleaved_write_frame);
    FFMPEG_INITDYN(avformat, av_iformat_next);
    FFMPEG_INITDYN(avformat, av_oformat_next);
-   FFMPEG_INITDYN(avformat, av_new_stream);
+   FFMPEG_INITDYN(avformat, avformat_new_stream);
    FFMPEG_INITDYN(avformat, avformat_alloc_context);
    FFMPEG_INITDYN(avformat, av_write_trailer);
    FFMPEG_INITDYN(avformat, av_codec_get_tag);
@@ -877,7 +873,6 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avformat, av_dict_set);
    FFMPEG_INITDYN(avformat, avio_size);
    FFMPEG_INITDYN(avformat, avio_alloc_context);
-
    FFMPEG_INITALT(avformat, avio_read, get_buffer);
    FFMPEG_INITALT(avformat, avio_seek, url_fseek);
    FFMPEG_INITALT(avformat, av_guess_format, guess_format);
@@ -900,8 +895,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    FFMPEG_INITDYN(avcodec, av_codec_next);
    FFMPEG_INITDYN(avcodec, av_codec_is_encoder);
    FFMPEG_INITDYN(avcodec, avcodec_fill_audio_frame);
-
-   FFMPEG_INITALT(avcodec, av_get_bits_per_sample_fmt, av_get_bits_per_sample_format);
+   FFMPEG_INITDYN(avcodec, av_get_bytes_per_sample);
 
    FFMPEG_INITDYN(avutil, av_free);
    FFMPEG_INITDYN(avutil, av_log_set_callback);

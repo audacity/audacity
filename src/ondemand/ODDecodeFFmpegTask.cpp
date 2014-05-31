@@ -197,7 +197,7 @@ bool ODFFmpegDecoder::SeekingAllowed()
       goto test_failed;
    }
 
-   err = av_find_stream_info(tempContext);
+   err = avformat_find_stream_info(tempContext, NULL);
    if (err < 0)
    {
       goto test_failed;

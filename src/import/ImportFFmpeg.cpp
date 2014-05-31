@@ -369,14 +369,10 @@ bool FFmpegImportFileHandle::Init()
       return false;
    }
 
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(53, 3, 0))
-   err = av_find_stream_info(mFormatContext);
-#else
    err = avformat_find_stream_info(mFormatContext, NULL);
-#endif
    if (err < 0)
    {
-      wxLogError(wxT("FFmpeg : av_find_stream_info() failed for file %s"),mName.c_str());
+      wxLogError(wxT("FFmpeg: avformat_find_stream_info() failed for file %s"),mName.c_str());
       return false;
    }
 

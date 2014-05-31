@@ -620,13 +620,7 @@ extern "C" {
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      av_get_bits_per_sample_format,
-      (enum AVSampleFormat sample_fmt),
-      (sample_fmt)
-   );
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      av_get_bits_per_sample_fmt,
+      av_get_bytes_per_sample,
       (enum AVSampleFormat sample_fmt),
       (sample_fmt)
    );
@@ -671,9 +665,9 @@ extern "C" {
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
-      av_find_stream_info,
-      (AVFormatContext *ic),
-      (ic)
+      avformat_find_stream_info,
+      (AVFormatContext *ic, AVDictionary **options),
+      (ic, options)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
@@ -718,9 +712,9 @@ extern "C" {
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       AVStream*,
-      av_new_stream,
-      (AVFormatContext *s, int id),
-      (s, id)
+      avformat_new_stream,
+      (AVFormatContext *s, const AVCodec *c),
+      (s, c)
    );
    FFMPEG_FUNCTION_WITH_RETURN(
       AVFormatContext*,
