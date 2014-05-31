@@ -286,8 +286,9 @@ void LoadLadspaPlugins()
       wxGetApp().AddMultiPathsToPathList(pathVar, pathList);
 
    #ifdef __WXGTK__
-   wxGetApp().AddUniquePathToPathList(wxT(INSTALL_PREFIX) wxT("/ladspa"), pathList);
+   wxGetApp().AddUniquePathToPathList(wxT("~/.ladspa"), pathList);
    wxGetApp().AddUniquePathToPathList(wxT("/usr/local/lib/ladspa"), pathList);
+   wxGetApp().AddUniquePathToPathList(wxT("/usr/lib/ladspa"), pathList);
    wxGetApp().AddUniquePathToPathList(wxT(LIBDIR) wxT("/ladspa"), pathList);
    #endif
 
