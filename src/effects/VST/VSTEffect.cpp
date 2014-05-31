@@ -48,6 +48,7 @@
 #include <wx/dynlib.h>
 #else
 #include <dlfcn.h>
+#include <wx/dynlib.h>
 #endif
 
 #if defined(__WXMSW__)
