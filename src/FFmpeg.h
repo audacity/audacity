@@ -583,12 +583,21 @@ extern "C" {
       (AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options),
       (avctx, codec, options);
    );
+#if defined(FFMPEG_VERSION)
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avcodec_decode_audio4,
       (AVCodecContext *avctx, AVFrame *frame, int *got_output, const AVPacket *avpkt),
       (avctx, frame, got_output, avpkt)
    );
+#else
+   FFMPEG_FUNCTION_WITH_RETURN(
+      int,
+      avcodec_decode_audio4,
+      (AVCodecContext *avctx, AVFrame *frame, int *got_output, AVPacket *avpkt),
+      (avctx, frame, got_output, avpkt)
+   );
+#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avcodec_encode_audio2,
@@ -680,12 +689,21 @@ extern "C" {
       (const AVCodec *c),
       (c)
    );
+#if defined(FFMPEG_VERSION)
    FFMPEG_FUNCTION_WITH_RETURN(
       AVStream*,
       avformat_new_stream,
       (AVFormatContext *s, const AVCodec *c),
       (s, c)
    );
+#else
+   FFMPEG_FUNCTION_WITH_RETURN(
+      AVStream*,
+      avformat_new_stream,
+      (AVFormatContext *s, AVCodec *c),
+      (s, c)
+   );
+#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       AVFormatContext*,
       avformat_alloc_context,
