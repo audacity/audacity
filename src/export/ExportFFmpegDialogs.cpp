@@ -839,10 +839,6 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("asf"), AV_CODEC_ID_IMC },
    { wxT("asf"), AV_CODEC_ID_AC3 },
    { wxT("asf"), AV_CODEC_ID_DTS },
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
-   { wxT("asf"), AV_CODEC_ID_SONIC },
-   { wxT("asf"), AV_CODEC_ID_SONIC_LS },
-#endif
    { wxT("asf"), AV_CODEC_ID_FLAC },
    { wxT("asf"), AV_CODEC_ID_ADPCM_SWF },
    { wxT("asf"), AV_CODEC_ID_VORBIS },
@@ -877,10 +873,6 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("avi"), AV_CODEC_ID_IMC },
    { wxT("avi"), AV_CODEC_ID_AC3 },
    { wxT("avi"), AV_CODEC_ID_DTS },
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
-   { wxT("avi"), AV_CODEC_ID_SONIC },
-   { wxT("avi"), AV_CODEC_ID_SONIC_LS },
-#endif
    { wxT("avi"), AV_CODEC_ID_FLAC },
    { wxT("avi"), AV_CODEC_ID_ADPCM_SWF },
    { wxT("avi"), AV_CODEC_ID_VORBIS },
@@ -928,10 +920,6 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("matroska"), AV_CODEC_ID_IMC },
    { wxT("matroska"), AV_CODEC_ID_AC3 },
    { wxT("matroska"), AV_CODEC_ID_DTS },
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
-   { wxT("matroska"), AV_CODEC_ID_SONIC },
-   { wxT("matroska"), AV_CODEC_ID_SONIC_LS },
-#endif
    { wxT("matroska"), AV_CODEC_ID_FLAC },
    { wxT("matroska"), AV_CODEC_ID_ADPCM_SWF },
    { wxT("matroska"), AV_CODEC_ID_VORBIS },
@@ -1038,10 +1026,6 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("nut"), AV_CODEC_ID_IMC },
    { wxT("nut"), AV_CODEC_ID_AC3 },
    { wxT("nut"), AV_CODEC_ID_DTS },
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
-   { wxT("nut"), AV_CODEC_ID_SONIC },
-   { wxT("nut"), AV_CODEC_ID_SONIC_LS },
-#endif
    { wxT("nut"), AV_CODEC_ID_FLAC },
    { wxT("nut"), AV_CODEC_ID_ADPCM_SWF },
    { wxT("nut"), AV_CODEC_ID_VORBIS },
@@ -1090,10 +1074,6 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("wav"), AV_CODEC_ID_IMC },
    { wxT("wav"), AV_CODEC_ID_AC3 },
    { wxT("wav"), AV_CODEC_ID_DTS },
-#if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || (LIBAVCODEC_VERSION_MAJOR == 53)
-   { wxT("wav"), AV_CODEC_ID_SONIC },
-   { wxT("wav"), AV_CODEC_ID_SONIC_LS },
-#endif
    { wxT("wav"), AV_CODEC_ID_FLAC },
    { wxT("wav"), AV_CODEC_ID_ADPCM_SWF },
    { wxT("wav"), AV_CODEC_ID_VORBIS },
