@@ -566,7 +566,7 @@ void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
                      mEffect->mTruncDbChoiceIndex,
                      &choices);
          S.SetSizeHints(-1, -1);
-         S.AddUnits(wxT("dB"));
+         S.AddSpace(0); // 'choices' aleady includes units.
 
       // Ignored silence
          S.Id(ID_DETECT_SILENCE).TieNumericTextBox(_("Duration:"),
