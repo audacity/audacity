@@ -16,6 +16,10 @@ Describes shared object that is used to access FFmpeg libraries.
 #if !defined(__AUDACITY_FFMPEG__)
 #define __AUDACITY_FFMPEG__
 
+// TODO: Determine whether the libav* headers come from the FFmpeg or libav
+// project and set IS_FFMPEG_PROJECT depending on it.
+#define IS_FFMPEG_PROJECT 1
+
 /* FFmpeg is written in C99. It uses many types from stdint.h. Because we are
  * compiling this using a C++ compiler we have to put it in extern "C".
  * __STDC_CONSTANT_MACROS is defined to make <stdint.h> behave like it
@@ -585,7 +589,7 @@ extern "C" {
       (AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options),
       (avctx, codec, options);
    );
-#if defined(FFMPEG_VERSION)
+#if defined(IS_FFMPEG_PROJECT)
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avcodec_decode_audio4,
@@ -691,7 +695,7 @@ extern "C" {
       (const AVCodec *c),
       (c)
    );
-#if defined(FFMPEG_VERSION)
+#if defined(IS_FFMPEG_PROJECT)
    FFMPEG_FUNCTION_WITH_RETURN(
       AVStream*,
       avformat_new_stream,
