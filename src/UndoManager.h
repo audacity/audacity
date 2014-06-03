@@ -5,7 +5,7 @@
   UndoManager.h
 
   Dominic Mazzoni
-  
+
   After each operation, call UndoManager's PushState, pass it
   the entire track hierarchy.  The UndoManager makes a duplicate
   of every single track using its Duplicate method, which should
@@ -14,7 +14,7 @@
 
   If a minor change is made, for example changing the visual
   display of a track or changing the selection, you can call
-  ModifyState, which replaces the current state with the 
+  ModifyState, which replaces the current state with the
   one you give it, without deleting everything above it.
 
   Each action has a long description and a short description
@@ -37,10 +37,10 @@
   hierarchy.  If another PushState is called, the redo information
   is lost.
 
-  Redo() 
+  Redo()
 
   UndoAvailable()
-  
+
   RedoAvailable()
 
 **********************************************************************/
@@ -85,7 +85,7 @@ class AUDACITY_DLL_API UndoManager {
    void ModifyState(TrackList * l, double sel0, double sel1);
    void ClearStates();
    void RemoveStates(int num);  // removes the 'num' oldest states
-   void RemoveStateAt(int n);   // removes the n'th state (1 is oldest) 
+   void RemoveStateAt(int n);   // removes the n'th state (1 is oldest)
    unsigned int GetNumStates();
    unsigned int GetCurrentState();
 
@@ -119,10 +119,10 @@ class AUDACITY_DLL_API UndoManager {
 
    wxString lastAction;
    int consolidationCount;
-   
+
    bool mODChanges;
    ODLock mODChangesMutex;//mODChanges is accessed from many threads.
-   
+
 };
 
 #endif

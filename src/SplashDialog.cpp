@@ -9,12 +9,12 @@
 ********************************************************************//**
 
 \class SplashDialog
-\brief The SplashDialog shows help information for Audacity when 
+\brief The SplashDialog shows help information for Audacity when
 Audacity starts up.
 
-It was written for the benefit of new users who do not want to 
+It was written for the benefit of new users who do not want to
 read the manual.  The text of the dialog is kept short to increase the
-chance of it being read.  The content is designed to reduce the 
+chance of it being read.  The content is designed to reduce the
 most commonly asked questions about Audacity.
 
 *//********************************************************************/
@@ -46,7 +46,7 @@ most commonly asked questions about Audacity.
 
 SplashDialog * SplashDialog::pSelf=NULL;
 
-enum 
+enum
 {
    DontShowID=1000,
 };
@@ -94,10 +94,10 @@ void SplashDialog::Populate( ShuttleGui & S )
    RescaledImage.Rescale( int(LOGOWITHNAME_WIDTH * fScale), int(LOGOWITHNAME_HEIGHT *fScale) );
    wxBitmap RescaledBitmap( RescaledImage );
    m_pIcon =
-       new wxStaticBitmap(S.GetParent(), -1, 
-                          //*m_pLogo, //v theTheme.Bitmap(bmpAudacityLogoWithName), 
+       new wxStaticBitmap(S.GetParent(), -1,
+                          //*m_pLogo, //v theTheme.Bitmap(bmpAudacityLogoWithName),
                           RescaledBitmap,
-                          wxDefaultPosition, 
+                          wxDefaultPosition,
                           wxSize(int(LOGOWITHNAME_WIDTH*fScale), int(LOGOWITHNAME_HEIGHT*fScale)));
 
    S.Prop(0).AddWindow( m_pIcon );
@@ -129,7 +129,7 @@ SplashDialog::~SplashDialog()
 
 void SplashDialog::OnDontShow( wxCommandEvent & Evt )
 {
-   bool bShow = !Evt.IsChecked(); 
+   bool bShow = !Evt.IsChecked();
    gPrefs->Write(wxT("/GUI/ShowSplashScreen"), bShow );
    gPrefs->Flush();
 }

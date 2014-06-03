@@ -9,7 +9,7 @@
 *******************************************************************//*!
 
 \file Legacy.cpp
-\brief Converts old Audacity file types.  Implements 
+\brief Converts old Audacity file types.  Implements
 AutoRollbackRenamer.
 
   These routines convert Audacity project files from the
@@ -186,7 +186,7 @@ static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
          start = f->GetNextLine();
          if (f->GetNextLine() != wxT("Block len"))
             return false;
-         len = f->GetNextLine(); 
+         len = f->GetNextLine();
          if (f->GetNextLine() != wxT("Block info"))
             return false;
          name = f->GetNextLine();
@@ -225,7 +225,7 @@ static bool ConvertLegacyTrack(wxTextFile *f, XMLFileWriter &xmlFile)
 
       xmlFile.EndTag(wxT("sequence"));
       xmlFile.EndTag(wxT("wavetrack"));
-      
+
       return true;
    }
    else if (kind == wxT("LabelTrack")) {
@@ -298,7 +298,7 @@ bool ConvertLegacyProjectFile(wxFileName filename)
          wxT("_bak") + wxString::Format(wxT("%d"), index) + wxT(".") + filename.GetExt();
    } while(::wxFileExists(backupName));
 
-   // This will move the original file out of the way, but 
+   // This will move the original file out of the way, but
    // move it back if we exit from this function early.
    AutoRollbackRenamer renamer(filename.GetFullPath(), backupName);
    if (!renamer.RenameSucceeded())

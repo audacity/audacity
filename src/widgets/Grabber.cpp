@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   Grabber.cpp
-  
+
   Leland Lucius
 
 *******************************************************************//**
@@ -15,7 +15,7 @@
 *//*******************************************************************//**
 
 \class Grabber
-\brief The widget to the left of a ToolBar that allows it to be dragged 
+\brief The widget to the left of a ToolBar that allows it to be dragged
 around to new positions.
 
 *//**********************************************************************/
@@ -44,7 +44,7 @@ BEGIN_EVENT_TABLE(Grabber, wxWindow)
    EVT_LEAVE_WINDOW(Grabber::OnLeave)
    EVT_LEFT_DOWN(Grabber::OnLeftDown)
    EVT_PAINT(Grabber::OnPaint)
-END_EVENT_TABLE()  
+END_EVENT_TABLE()
 
 //
 // Constructor
@@ -60,10 +60,10 @@ Grabber::Grabber(wxWindow * parent, wxWindowID id)
    mPressed = false;
 
    /* i18n-hint: A 'Grabber' is a region you can click and drag on
-   It's used to drag a track around (when in multi-tool mode) rather 
+   It's used to drag a track around (when in multi-tool mode) rather
    than requiring that you use the drag tool.  It's shown as a series
    of horizontal bumps */
-   
+
    SetLabel(_("Grabber"));
    SetName(_("Grabber"));
 }
@@ -112,7 +112,7 @@ void Grabber::DrawGrabber( wxDC & dc )
    }
    else
    {
-      // Get colour from parent... 
+      // Get colour from parent...
       // when parent colour changes, child colour might not!
       wxBrush brush( GetParent()->GetBackgroundColour() );
       dc.SetBrush( brush );

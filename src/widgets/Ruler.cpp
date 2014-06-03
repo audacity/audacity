@@ -12,7 +12,7 @@
 \brief Used to display a Ruler.
 
   This is a generic class which can be used to display just about
-  any kind of ruler.  
+  any kind of ruler.
 
   At a minimum, the user must specify the dimensions of the
   ruler, its orientation (horizontal or vertical), and the
@@ -30,7 +30,7 @@
   two other formats for its display:
 
   Integer - never shows tick marks for fractions of an integer
-  
+
   Time - Assumes values represent seconds, and labels the tick
          marks in "HH:MM:SS" format, e.g. 4000 seconds becomes
          "1:06:40", for example.  Will display fractions of
@@ -45,7 +45,7 @@
 *//***************************************************************//**
 
 \class Ruler::Label
-\brief An array of these created by the Ruler is used to determine 
+\brief An array of these created by the Ruler is used to determine
 what and where text annotations to the numbers on the Ruler get drawn.
 
 \todo Check whether Ruler is costing too much time in malloc/free of
@@ -135,7 +135,7 @@ Ruler::Ruler()
    mBits = NULL;
    mUserBits = NULL;
    mUserBitLen = 0;
-   
+
    mValid = false;
 
    mCustom = false;
@@ -169,7 +169,7 @@ void Ruler::SetFormat(RulerFormat format)
 
    if (mFormat != format) {
       mFormat = format;
-      
+
       Invalidate();
    }
 }
@@ -180,7 +180,7 @@ void Ruler::SetLog(bool log)
 
    if (mLog != log) {
       mLog = log;
-      
+
       Invalidate();
    }
 }
@@ -192,7 +192,7 @@ void Ruler::SetUnits(wxString units)
 
    if (mUnits != units) {
       mUnits = units;
-      
+
       Invalidate();
    }
 }
@@ -203,10 +203,10 @@ void Ruler::SetOrientation(int orient)
 
    if (mOrientation != orient) {
       mOrientation = orient;
-      
+
       if (mOrientation == wxVERTICAL && !mHasSetSpacing)
          mSpacing = 2;
-      
+
       Invalidate();
    }
 }
@@ -220,7 +220,7 @@ void Ruler::SetRange(double min, double max)
    if (mMin != min || mMax != max) {
       mMin = min;
       mMax = max;
-      
+
       Invalidate();
    }
 }
@@ -244,7 +244,7 @@ void Ruler::SetLabelEdges(bool labelEdges)
 
    if (mLabelEdges != labelEdges) {
       mLabelEdges = labelEdges;
-      
+
       Invalidate();
    }
 }
@@ -257,7 +257,7 @@ void Ruler::SetFlip(bool flip)
 
    if (mFlip != flip) {
       mFlip = flip;
-      
+
       Invalidate();
    }
 }
@@ -278,7 +278,7 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
    mMinorFont->SetNoAntiAliasing(true);
    mMajorFont->SetNoAntiAliasing(true);
    #endif
-   
+
    // Won't override these fonts
    mUserFonts = true;
 
@@ -293,7 +293,7 @@ void Ruler::OfflimitsPixels(int start, int end)
       if (mOrientation == wxHORIZONTAL)
          mLength = mRight-mLeft;
       else
-         mLength = mBottom-mTop;      
+         mLength = mBottom-mTop;
       mUserBits = new int[mLength+1];
       for(i=0; i<=mLength; i++)
          mUserBits[i] = 0;
@@ -691,7 +691,7 @@ wxString Ruler::LabelString(double d, bool major)
       else {
       }
    }
-   
+
    if (mUnits != wxT(""))
       s = (s + mUnits);
 
@@ -976,7 +976,7 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
    }
 
    // If ruler is being resized, we could end up with it being too small.
-   // Values of mLength of zero or below cause bad array allocations and 
+   // Values of mLength of zero or below cause bad array allocations and
    // division by zero.  So...
    // IF too small THEN bail out and don't draw.
    if( mLength <= 0 )
@@ -994,8 +994,8 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
    }
 
    // FIXME: Surely we do not need to allocate storage for the labels?
-   // We can just recompute them as we need them?  Yes, but only if 
-   // mCustom is false!!!! 
+   // We can just recompute them as we need them?  Yes, but only if
+   // mCustom is false!!!!
 
    if(!mCustom) {
       mNumMajor = 0;
@@ -1027,38 +1027,38 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
 
    // *************** Label calculation routine **************
    if(mCustom == true) {
-      
+
       // SET PARAMETER IN MCUSTOM CASE
       // Works only with major labels
-      
+
       int numLabel = mNumMajor;
-      
+
       i = 0;
       while((i<numLabel) && (i<=mLength)) {
-         
+
          TickCustom(i, true, false);
          i++;
-      }   
+      }
 
    } else if(mLog==false) {
 
       double UPP = (mMax-mMin)/mLength;  // Units per pixel
       FindLinearTickSizes(UPP);
-      
+
       // Left and Right Edges
       if (mLabelEdges) {
          Tick(0, mMin, true, false);
          Tick(mLength, mMax, true, false);
       }
-      
+
       // Zero (if it's in the middle somewhere)
       if (mMin * mMax < 0.0) {
          int mid = (int)(mLength*(mMin/(mMin-mMax)) + 0.5);
          Tick(mid, 0.0, true, false);
       }
-      
+
       double sg = UPP > 0.0? 1.0: -1.0;
-      
+
       // Major ticks
       double d, warpedD;
       d = mMin - UPP/2;
@@ -1066,7 +1066,7 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
          warpedD = timetrack->ComputeWarpedLength(0.0, d);
       else
          warpedD = d;
-      // using ints for majorint doesn't work, as 
+      // using ints for majorint doesn't work, as
       // majorint will overflow and be negative at high zoom.
       double majorInt = floor(sg * warpedD / mMajor);
       i = -1;
@@ -1077,20 +1077,20 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
          else
             warpedD += UPP;
          d += UPP;
-         
+
          if (floor(sg * warpedD / mMajor) > majorInt) {
             majorInt = floor(sg * warpedD / mMajor);
             Tick(i, sg * majorInt * mMajor, true, false);
          }
       }
-      
+
       // Minor ticks
       d = mMin - UPP/2;
       if(timetrack)
          warpedD = timetrack->ComputeWarpedLength(0.0, d);
       else
          warpedD = d;
-      // using ints for majorint doesn't work, as 
+      // using ints for majorint doesn't work, as
       // majorint will overflow and be negative at high zoom.
       // MB: I assume the same applies to minorInt
       double minorInt = floor(sg * warpedD / mMinor);
@@ -1102,19 +1102,19 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
          else
             warpedD += UPP;
          d += UPP;
-         
+
          if (floor(sg * warpedD / mMinor) > minorInt) {
             minorInt = floor(sg * warpedD / mMinor);
             Tick(i, sg * minorInt * mMinor, false, true);
          }
       }
-      
+
       // Left and Right Edges
       if (mLabelEdges) {
          Tick(0, mMin, true, false);
          Tick(mLength, mMax, true, false);
       }
-      
+
    }
    else {
       // log case
@@ -1123,18 +1123,18 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
       double hiLog = log10(mMax);
       double scale = mLength/(hiLog - loLog);
       int loDecade = (int) floor(loLog);
-      
+
       int pos;
       double val;
       double startDecade = pow(10., (double)loDecade);
-      
+
       // Major ticks are the decades
       double decade = startDecade;
       double delta=hiLog-loLog, steps=fabs(delta);
       double step = delta>=0 ? 10 : 0.1;
       double rMin=wxMin(mMin, mMax), rMax=wxMax(mMin, mMax);
-      for(i=0; i<=steps; i++) 
-      {  // if(i!=0) 
+      for(i=0; i<=steps; i++)
+      {  // if(i!=0)
          {  val = decade;
             if(val > rMin && val < rMax) {
                pos = (int)(((log10(val) - loLog)*scale)+0.5);
@@ -1192,7 +1192,7 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
          int d=mTop+mRect.GetHeight()+5;
          mRect.Offset(0,d);
          mRect.Inflate(0,5);
-         displacementx=0; 
+         displacementx=0;
          displacementy=d;
       }
       else {
@@ -1206,7 +1206,7 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
    else {
       if (mOrientation==wxHORIZONTAL) {
          mRect.Inflate(0,5);
-         displacementx=0; 
+         displacementx=0;
          displacementy=0;
       }
    }
@@ -1316,7 +1316,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
          int pos = mMinorLabels[i].pos;
          if( mbTicksAtExtremes || ((pos!=0)&&(pos!=iMaxPos)))
          {
-            if (mOrientation == wxHORIZONTAL) 
+            if (mOrientation == wxHORIZONTAL)
             {
                if (mFlip)
                   mDC->DrawLine(mLeft + pos, mTop,
@@ -1325,7 +1325,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
                   mDC->DrawLine(mLeft + pos, mBottom - 2,
                                 mLeft + pos, mBottom);
             }
-            else 
+            else
             {
                if (mFlip)
                   mDC->DrawLine(mLeft, mTop + pos,
@@ -1351,7 +1351,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
 
          if( mbTicksAtExtremes || ((pos!=0)&&(pos!=iMaxPos)))
          {
-            if (mOrientation == wxHORIZONTAL) 
+            if (mOrientation == wxHORIZONTAL)
             {
                if (mFlip)
                   mDC->DrawLine(mLeft + pos, mTop,
@@ -1360,7 +1360,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
                   mDC->DrawLine(mLeft + pos, mBottom - 2,
                                 mLeft + pos, mBottom);
             }
-            else 
+            else
             {
                if (mFlip)
                   mDC->DrawLine(mLeft, mTop + pos,
@@ -1374,7 +1374,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
                        mMinorMinorLabels[i].lx,
                        mMinorMinorLabels[i].ly);
       }
-   }  
+   }
 }
 
 // ********** Draw grid ***************************
@@ -1420,7 +1420,7 @@ void Ruler::DrawGrid(wxDC& dc, int length, bool minor, bool major, int xOffset, 
                mDC->DrawLine(xOffset, gridPos+yOffset, mGridLineLength+xOffset, gridPos+yOffset);
          }
       }
-      
+
       int zeroPosition = GetZeroPosition();
       if(zeroPosition > 0) {
          // Draw 'zero' grid line in black
@@ -1458,7 +1458,7 @@ int Ruler::FindZero(Label * label, const int len)
       return -1;
 }
 
-int Ruler::GetZeroPosition() 
+int Ruler::GetZeroPosition()
 {
    int zero;
    if((zero = FindZero(mMajorLabels, mNumMajor)) < 0)
@@ -1668,7 +1668,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       DoDrawCursor(&dc);
    }
-   
+
    DoDrawPlayRegion(&dc);
 }
 
@@ -1711,11 +1711,11 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 {
    if (markerTime < 0)
       return false;
-      
+
    int pixelPos = Time2Pos(markerTime);
    int boundLeft = pixelPos - SELECT_TOLERANCE_PIXEL;
    int boundRight = pixelPos + SELECT_TOLERANCE_PIXEL;
-   
+
    return mousePosX >= boundLeft && mousePosX < boundRight;
 }
 
@@ -1730,12 +1730,12 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       SetCursor(wxCursor(wxCURSOR_SIZEWE));
    else
       SetCursor(wxCursor(wxCURSOR_HAND));
-      
+
    double mouseTime = Pos2Time(evt.GetX());
    if (mouseTime < 0.0) {
       mouseTime = 0.0;
    }
-   
+
    if (evt.LeftDown())
    {
       mButtonDownMousePos = evt.GetX();
@@ -1759,10 +1759,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          mPlayRegionEnd = mouseTime;
          Refresh();
       }
-         
+
       CaptureMouse();
    }
-   
+
    switch (mMouseEventState)
    {
    case mesNone:
@@ -1791,7 +1791,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       Refresh();
       break;
    }
-   
+
    if (evt.LeftUp())
    {
       if (HasCapture())
@@ -1803,7 +1803,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          mPlayRegionStart = -1;
          mPlayRegionEnd = -1;
       }
-      
+
       if (mPlayRegionEnd < mPlayRegionStart)
       {
          // Swap values to make sure mPlayRegionStart > mPlayRegionEnd
@@ -1811,13 +1811,13 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          mPlayRegionStart = mPlayRegionEnd;
          mPlayRegionEnd = tmp;
       }
-      
-      bool startPlaying = mPlayRegionStart >= 0 && 
+
+      bool startPlaying = mPlayRegionStart >= 0 &&
          (mMouseEventState == mesSelectingPlayRegionClick ||
           mMouseEventState == mesSelectingPlayRegionRange);
-          
+
       mMouseEventState = mesNone;
-      
+
       if (startPlaying)
       {
          ControlToolBar* ctb = mProject->GetControlToolBar();
@@ -1847,7 +1847,7 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
 
       bool isLocked = mProject->IsPlayRegionLocked();
       AColor::PlayRegionColor(dc, isLocked);
-   
+
       wxPoint tri[3];
       wxRect r;
 
@@ -1864,7 +1864,7 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
       r.width = PLAY_REGION_RECT_WIDTH;
       r.height = PLAY_REGION_TRIANGLE_SIZE*2 + 1;
       dc->DrawRectangle(r);
-   
+
       if (end != start)
       {
          tri[0].x = x2;
@@ -1880,7 +1880,7 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
          r.width = PLAY_REGION_RECT_WIDTH;
          r.height = PLAY_REGION_TRIANGLE_SIZE*2 + 1;
          dc->DrawRectangle(r);
-   
+
          r.x = x1 + PLAY_REGION_TRIANGLE_SIZE;
          r.y = y - PLAY_REGION_RECT_HEIGHT/2 + PLAY_REGION_GLOBAL_OFFSET_Y;
          r.width = x2-x1 - PLAY_REGION_TRIANGLE_SIZE*2;
@@ -1912,7 +1912,7 @@ void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
 {
    double min = mViewInfo->h - mLeftOffset / mViewInfo->zoom;
    double max = min + mInner.width / mViewInfo->zoom;
-   
+
    ruler.SetTickColour( theTheme.Colour( clrTrackPanelText ) );
    ruler.SetRange( min, max );
    ruler.Draw( *dc );
@@ -1966,7 +1966,7 @@ void AdornedRulerPanel::DoDrawCursor(wxDC * dc)
 }
 
 //
-//This draws the little triangular indicator on the 
+//This draws the little triangular indicator on the
 //AdornedRulerPanel.
 //
 void AdornedRulerPanel::ClearIndicator()
@@ -2021,7 +2021,7 @@ void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
    // with the mouse directly in the ruler, changes from outside are blocked.
    if (mMouseEventState != mesNone)
       return;
-      
+
    mPlayRegionStart = playRegionStart;
    mPlayRegionEnd = playRegionEnd;
    Refresh();

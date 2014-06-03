@@ -6,7 +6,7 @@
 
   Dominic Mazzoni
 
-  This class is a custom slider.  
+  This class is a custom slider.
 
 **********************************************************************/
 
@@ -38,7 +38,7 @@ class Ruler;
 #define FRAC_SLIDER 1    // 0.0...1.0
 #define DB_SLIDER 2      // -36...36 dB
 #define PAN_SLIDER 3     // -1.0...1.0
-#define SPEED_SLIDER 4  // 0.01 ..3.0 
+#define SPEED_SLIDER 4  // 0.01 ..3.0
 #ifdef EXPERIMENTAL_MIDI_OUT
 #define VEL_SLIDER 5    // -50..50
 #endif
@@ -83,9 +83,9 @@ class LWSlider
             bool canUseShift,
             int style,
             bool heavyweight=false,
-            bool popup=true, 
+            bool popup=true,
             int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
-    
+
    // Construct predefined slider
    LWSlider(wxWindow * parent,
             wxString name,
@@ -93,7 +93,7 @@ class LWSlider
             const wxSize &size,
             int style,
             bool heavyweight=false,
-            bool popup=true, 
+            bool popup=true,
             int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
 
    void Init(wxWindow * parent,
@@ -107,7 +107,7 @@ class LWSlider
              int style,
              bool heavyweight,
              bool popup,
-             float speed, 
+             float speed,
              int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
 
    virtual ~LWSlider();
@@ -148,7 +148,7 @@ class LWSlider
 
    void SetEnabled(bool enabled);
    bool GetEnabled();
-   
+
    static void DeleteSharedTipPanel();
 
  private:
@@ -165,11 +165,11 @@ class LWSlider
    int ValueToPosition(float val);
    float DragPositionToValue(int fromPos, bool shiftDown);
    float ClickPositionToValue(int fromPos, bool shiftDown);
-   
+
    wxWindow* GetToolTipParent() const;
-      
+
    wxWindow *mParent;
-   
+
    wxString maxTipLabel; //string with the max num of chars for tip
 
    int mStyle;
@@ -195,7 +195,7 @@ class LWSlider
    int mCenterX;
 
    int mTopY;
-   int mBottomY; // low values at bottom 
+   int mBottomY; // low values at bottom
    int mHeightY;
 
 
@@ -250,12 +250,12 @@ class ASlider :public wxPanel
    ASlider( wxWindow * parent,
             wxWindowID id,
             wxString name,
-            const wxPoint & pos, 
+            const wxPoint & pos,
             const wxSize & size,
             int style = FRAC_SLIDER,
             bool popup = true,
             bool canUseShift = true,
-            float stepValue = STEP_CONTINUOUS, 
+            float stepValue = STEP_CONTINUOUS,
             int orientation = wxHORIZONTAL);
    virtual ~ASlider();
 
@@ -313,15 +313,15 @@ class SliderDialog: public wxDialog
 {
  public:
    SliderDialog(wxWindow * parent, wxWindowID id,
-                const wxString & title, 
+                const wxString & title,
                 wxPoint position,
-                wxSize size, 
+                wxSize size,
                 int style,
                 float value,
                 float line,
                 float page);
    ~SliderDialog();
-   
+
    float Get();
 
  private:

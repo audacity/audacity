@@ -3,7 +3,7 @@
    Audacity: A Digital Audio Editor
    Audacity(R) is copyright (c) 1999-2008 Audacity Team.
    License: GPL v2.  See License.txt.
-  
+
    Dependencies.h
 
    Dominic Mazzoni
@@ -18,10 +18,10 @@
 
 class AudacityProject;
 
-class AliasedFile 
+class AliasedFile
 {
 public:
-   AliasedFile(wxFileName fileName, wxLongLong byteCount, bool bOriginalExists) 
+   AliasedFile(wxFileName fileName, wxLongLong byteCount, bool bOriginalExists)
    {
       mFileName = fileName;
       mByteCount = byteCount;

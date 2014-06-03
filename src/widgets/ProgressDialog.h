@@ -7,7 +7,7 @@
   Copyright
      Leland Lucius
      Vaughan Johnson
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -86,16 +86,16 @@ class AUDACITY_DLL_API ProgressDialog:public wxDialog
    wxWindow *mHadFocus;
    wxStaticText *mMessage;
    wxWindowDisabler *mDisable;
-   
+
    DECLARE_EVENT_TABLE();
 };
 
 class AUDACITY_DLL_API TimerProgressDialog : public ProgressDialog
 {
  public:
-   TimerProgressDialog(const wxLongLong_t duration, 
-                        const wxString & title, 
-                        const wxString & message = wxEmptyString, 
+   TimerProgressDialog(const wxLongLong_t duration,
+                        const wxString & title,
+                        const wxString & message = wxEmptyString,
                         ProgressDialogFlags flags = pdlgEmptyFlags);
    int Update(const wxString & message = wxEmptyString);
 

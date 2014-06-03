@@ -12,11 +12,11 @@
 \brief A wxButton with mouse-over behaviour.
 
   AButton is a custom button class for Audacity.  The main feature it
-  supports that a wxButton does not is mouseovers.  
-  
-  It uses an image for all of its states: up, over, down, and 
-  disabled, allowing any sort of customization you want.  Currently 
-  it does not support transparency effects, so the image musts be 
+  supports that a wxButton does not is mouseovers.
+
+  It uses an image for all of its states: up, over, down, and
+  disabled, allowing any sort of customization you want.  Currently
+  it does not support transparency effects, so the image musts be
   rectangular and opaque.
 
 *//*******************************************************************/
@@ -156,7 +156,7 @@ void AButton::SetAlternateImages(ImageRoll up,
 
 void AButton::SetAlternate(bool useAlternateImages)
 {
-   // If alternate-image-state is already correct then 
+   // If alternate-image-state is already correct then
    // nothing to do (saves repainting button).
    if( mAlternate == useAlternateImages )
       return;
@@ -208,7 +208,7 @@ AButton::AButtonState AButton::GetState()
          state = mButtonIsDown ? AButtonDown : AButtonUp;
       }
    }
-         
+
    return state;
 }
 
@@ -283,15 +283,15 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
                mButtonIsDown = !mButtonIsDown;
             else
                mButtonIsDown = true;
-            
+
             mWasShiftDown = event.ShiftDown();
             mWasControlDown = event.ControlDown();
-            
+
             Click();
          }
       }
    }
-   
+
    // Only redraw and change tooltips if the state has changed.
    AButtonState newState = GetState();
 

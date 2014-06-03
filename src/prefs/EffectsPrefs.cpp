@@ -42,7 +42,7 @@ void EffectsPrefs::Populate()
 {
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -99,11 +99,11 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #if USE_AUDIO_UNITS
    S.StartStatic(_("Audio Unit Effects"));
    {
-      S.TieCheckBox(_("Display Audio Unit effects in graphical mode"), 
+      S.TieCheckBox(_("Display Audio Unit effects in graphical mode"),
                     wxT("/AudioUnits/GUI"),
                     true);
 #if 0
-      S.TieCheckBox(_("Rescan VST effects next time Audacity is started"), 
+      S.TieCheckBox(_("Rescan VST effects next time Audacity is started"),
                     wxT("/VST/Rescan"),
                     false);
 #endif
@@ -114,10 +114,10 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #if USE_VST
    S.StartStatic(_("VST Effects"));
    {
-      S.TieCheckBox(_("&Display VST effects in graphical mode"), 
+      S.TieCheckBox(_("&Display VST effects in graphical mode"),
                     wxT("/VST/GUI"),
                     true);
-      S.TieCheckBox(_("&Rescan VST effects next time Audacity is started"), 
+      S.TieCheckBox(_("&Rescan VST effects next time Audacity is started"),
                     wxT("/VST/Rescan"),
                     false);
    }
@@ -127,7 +127,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    S.StartStatic(_("Instruction Set"));
    {
-      S.TieCheckBox(_("&Use SSE/SSE2/.../AVX"), 
+      S.TieCheckBox(_("&Use SSE/SSE2/.../AVX"),
                     wxT("/SSE/GUI"),
                     true);
    }

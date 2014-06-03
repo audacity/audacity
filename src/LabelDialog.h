@@ -73,7 +73,7 @@ class LabelDialog:public wxDialog
    TimeEditor *mTimeEditor;
 
    RowDataArray mData;
-   
+
    DirManager *mDirManager;
    TrackList *mTracks;
    ViewInfo *mViewInfo;

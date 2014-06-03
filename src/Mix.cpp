@@ -61,7 +61,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    TrackListIterator iter(tracks);
    SelectedTrackListOfKindIterator usefulIter(Track::Wave, tracks);
    // this only iterates tracks which are relevant to this function, i.e.
-   // selected WaveTracks. The tracklist is (confusingly) the list of all 
+   // selected WaveTracks. The tracklist is (confusingly) the list of all
    // tracks in the project
 
    t = iter.First();
@@ -168,7 +168,7 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    ::wxSafeYield();
    ProgressDialog *progress = new ProgressDialog(_("Mix and Render"),
                                                  _("Mixing and rendering tracks"));
-   
+
    int updateResult = eProgressSuccess;
    while(updateResult == eProgressSuccess) {
       sampleCount blockLen = mixer->Process(maxBlockLen);
@@ -194,16 +194,16 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    delete progress;
 
    mixLeft->Flush();
-   if (!mono) 
+   if (!mono)
       mixRight->Flush();
    if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
    {
       delete mixLeft;
-      if (!mono) 
+      if (!mono)
          delete mixRight;
    } else {
       *newLeft = mixLeft;
-      if (!mono) 
+      if (!mono)
          *newRight = mixRight;
 
 #if 0
@@ -268,7 +268,7 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
       mNumBuffers = mNumChannels;
       mInterleavedBufferSize = mBufferSize;
    }
-   
+
    mBuffer = new samplePtr[mNumBuffers];
    mTemp = new samplePtr[mNumBuffers];
    for (int c = 0; c < mNumBuffers; c++) {
@@ -350,10 +350,10 @@ void MixBuffers(int numChannels, int *channelFlags, float *gains,
    for (int c = 0; c < numChannels; c++) {
       if (!channelFlags[c])
          continue;
-      
+
       samplePtr destPtr;
       int skip;
-      
+
       if (interleaved) {
          destPtr = dests[0] + c*SAMPLE_SIZE(floatSample);
          skip = numChannels;
@@ -371,7 +371,7 @@ void MixBuffers(int numChannels, int *channelFlags, float *gains,
       }
    }
 }
-   
+
 sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
                                     sampleCount *pos, float *queue,
                                     int *queueStart, int *queueLen,
@@ -446,7 +446,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
       }
 
       double factor = initialWarp;
-      if (mTimeTrack) 
+      if (mTimeTrack)
       {
          //TODO-MB: The end time is wrong when the resampler doesn't use all input samples,
          //         as a result of this the warp factor may be slightly wrong, so AudioIO will stop too soon
@@ -511,7 +511,7 @@ sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrack *track,
    //don't process if we're at the end of the selection or track.
    if (t>=tEnd)
       return 0;
-   //if we're about to approach the end of the track or selection, figure out how much we need to grab 
+   //if we're about to approach the end of the track or selection, figure out how much we need to grab
    if (t + slen/track->GetRate() > tEnd)
       slen = (int)((tEnd - t) * track->GetRate() + 0.5);
 
@@ -522,7 +522,7 @@ sampleCount Mixer::MixSameRate(int *channelFlags, WaveTrack *track,
    track->GetEnvelopeValues(mEnvValues, slen, t, 1.0 / mRate);
    for(int i=0; i<slen; i++)
       mFloatBuffer[i] *= mEnvValues[i]; // Track gain control will go here?
-   
+
    for(c=0; c<mNumChannels; c++)
       if (mApplyTrackGains)
          mGains[c] = track->GetChannelGain(c);
@@ -590,11 +590,11 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
 
       if (out > maxOut)
          maxOut = out;
-      
+
       double t = (double)mSamplePos[i] / (double)track->GetRate();
       if(t > mTime)
          mTime = std::min(t, mT1);
-      
+
    }
    if(mInterleaved) {
       for(int c=0; c<mNumChannels; c++) {
@@ -621,7 +621,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
    // MB: this doesn't take warping into account, replaced with code based on mSamplePos
    //mT += (maxOut / mRate);
 
-   delete [] channelFlags; 
+   delete [] channelFlags;
 
    return maxOut;
 }
@@ -677,10 +677,10 @@ MixerSpec::MixerSpec( int numTracks, int maxNumChannels )
 {
    mNumTracks = mNumChannels = numTracks;
    mMaxNumChannels = maxNumChannels;
-   
+
    if( mNumChannels > mMaxNumChannels )
          mNumChannels = mMaxNumChannels;
-   
+
    Alloc();
 
    for( int i = 0; i < mNumTracks; i++ )
@@ -728,7 +728,7 @@ bool MixerSpec::SetNumChannels( int newNumChannels )
 
    if( newNumChannels > mMaxNumChannels )
       return false;
-   
+
    for( int i = 0; i < mNumTracks; i++ )
    {
       for( int j = newNumChannels; j < mNumChannels; j++ )
@@ -745,7 +745,7 @@ bool MixerSpec::SetNumChannels( int newNumChannels )
 MixerSpec& MixerSpec::operator=( const MixerSpec &mixerSpec )
 {
    Free();
-   
+
    mNumTracks = mixerSpec.mNumTracks;
    mNumChannels = mixerSpec.mNumChannels;
    mMaxNumChannels = mixerSpec.mMaxNumChannels;

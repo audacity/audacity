@@ -7,7 +7,7 @@
   Dominic Mazzoni
   Shane T. Mueller
   Leland Lucius
- 
+
   See ToolsToolBar.h for details
 
 *******************************************************************//*!
@@ -115,27 +115,27 @@ void ToolsToolBar::Create(wxWindow * parent)
       mCurrentTool = multiTool;
    else
       mCurrentTool = selectTool;
-      
+
    mTool[mCurrentTool]->PushDown();
 }
 
 void ToolsToolBar::RegenerateToolsTooltips()
 {
 
-// JKC: 
+// JKC:
 //   Under Win98 Tooltips appear to be buggy, when you have a lot of
-//   tooltip messages flying around.  I found that just creating a 
-//   twelfth tooltip caused Audacity to crash when it tried to show 
+//   tooltip messages flying around.  I found that just creating a
+//   twelfth tooltip caused Audacity to crash when it tried to show
 //   any tooltip.
 //
-//   Win98 does NOT recover from this crash - for any application which is 
+//   Win98 does NOT recover from this crash - for any application which is
 //   using tooltips will also crash thereafter...  so you must reboot.
-//   Rather weird.  
+//   Rather weird.
 //
 //   Getting windows to process more of its stacked up messages seems
 //   to workaround the problem.  The problem is not fully understood though
 //   (as of April 2003).
-   
+
    //	Vaughan, October 2003: Now we're crashing on Win2K if
    // "Quit when closing last window" is unchecked, when we come back
    // through here, on either of the wxSafeYield calls.
@@ -161,7 +161,7 @@ void ToolsToolBar::UpdatePrefs()
    RegenerateToolsTooltips();
 }
 
-AButton * ToolsToolBar::MakeTool( teBmps eTool, 
+AButton * ToolsToolBar::MakeTool( teBmps eTool,
    int id, const wxChar *label)
 {
    AButton *button = ToolBar::MakeButton(
@@ -174,7 +174,7 @@ AButton * ToolsToolBar::MakeTool( teBmps eTool,
    mToolSizer->Add( button );
    return button;
 }
-                        
+
 
 void ToolsToolBar::Populate()
 {
@@ -206,15 +206,15 @@ int ToolsToolBar::GetCurrentTool()
 /// @param show - should we update the button display?
 void ToolsToolBar::SetCurrentTool(int tool, bool show)
 {
-   //In multi-mode the current tool is shown by the 
+   //In multi-mode the current tool is shown by the
    //cursor icon.  The buttons are not updated.
-   
+
    bool leavingMulticlipMode =
       IsDown(multiTool) && show && tool != multiTool;
-      
+
    if (leavingMulticlipMode)
       mTool[multiTool]->PopUp();
-      
+
    if (tool != mCurrentTool || leavingMulticlipMode) {
       if (show)
          mTool[mCurrentTool]->PopUp();
@@ -246,9 +246,9 @@ bool ToolsToolBar::IsDown(int tool)
 int ToolsToolBar::GetDownTool()
 {
    int tool;
-   
+
    for (tool = firstTool; tool <= lastTool; tool++)
-      if (IsDown(tool)) 
+      if (IsDown(tool))
          return tool;
 
    return firstTool;  // Should never happen
@@ -266,7 +266,7 @@ void ToolsToolBar::OnTool(wxCommandEvent & evt)
 {
    mCurrentTool = evt.GetId() - firstTool;
    for (int i = 0; i < numTools; i++)
-      if (i == mCurrentTool) 
+      if (i == mCurrentTool)
          mTool[i]->PushDown();
       else
          mTool[i]->PopUp();

@@ -26,7 +26,7 @@ is my attempt to understand the complicated graphics strategy.
 
 One basic idea is that redrawing waveforms is rather slow, so Audacity
 saves waveform images in bitmaps to make redrawing faster. In particular,
-during audio playback (and recording), the vertical time indicator is 
+during audio playback (and recording), the vertical time indicator is
 drawn over the waveform about 20 times per second. To avoid unnecessary
 computation, the indicator is erased by copying a column of pixels from
 a bitmap image of the waveform. Notice that this implies a two-stage
@@ -35,7 +35,7 @@ process: first, waveforms are drawn to the bitmp; then, the bitmap
 graphics.
 
 The bitmap is for the entire track panel, i.e. multiple tracks, and
-includes things like the Gain and Pan slders to the left of the 
+includes things like the Gain and Pan slders to the left of the
 waveform images.
 
 The screen update uses a mixture of direct drawing and indirect paint
@@ -50,11 +50,11 @@ invalidate the bitmap, forcing a bitmap redraw *and* a screen redraw.
 Other changes merely update the screen using pre-existing bitmaps. In
 Audacity, the "2-level" invalidation works like this: Anything
 that invalidates the bitmap calls TrackPanel::Refresh(), which
-has an eraseBackground parameter. This flag says to redraw the 
+has an eraseBackground parameter. This flag says to redraw the
 bitmap when OnPaint() is called. If eraseBackground is false, the
 existing bitmap can be used for waveform images. Audacity also
 draws directly to the screen to update the time indicator during
-playback. To move the indicator, one column of pixels is drawn to 
+playback. To move the indicator, one column of pixels is drawn to
 the screen to remove the indicator. Then the indicator is drawn at
 a new time location.
 
@@ -104,7 +104,7 @@ TrackPanel::DoDrawCursor();
         TrackPanel::DisplaySelection();
 \endcode
 
-To move the indicator, TrackPanel::OnTimer() calls the following, using 
+To move the indicator, TrackPanel::OnTimer() calls the following, using
 a drawing context (DC) for the screen. (Refresh is not called to create
 an OnPaint event. Instead, drawing is direct to the screen.)
 \code
@@ -112,8 +112,8 @@ TrackPanel::DrawIndicator();
         TrackPanel::DoDrawIndicator();
 \endcode
 
-Notice that TrackPanel::DrawZooming(), TrackPanel::HighlightFocusedTrack(), 
-and snap guidelines could be drawn directly to the screen rather than to 
+Notice that TrackPanel::DrawZooming(), TrackPanel::HighlightFocusedTrack(),
+and snap guidelines could be drawn directly to the screen rather than to
 the bitmap, generally eliminating redraw work.
 
 One problem is slider udpates. Sliders are in the left area of the track
@@ -125,7 +125,7 @@ would require either incrementally updating the bitmap (not currently done),
 or maintaining the sliders and other track info on the screen and not in
 the bitmap.
 
-In my opinion, the bitmap should contain only the waveform, note, and 
+In my opinion, the bitmap should contain only the waveform, note, and
 label images along with gray selection highlights. The track info
 (sliders, buttons, title, etc.), track selection highlight, cursor, and
 indicator should be drawn in the normal way, and clipping regions should
@@ -137,7 +137,7 @@ surprising finding is that NoteTrack display is slow compared to WaveTrack
 display. Each note takes some time to gather attributes and select colors,
 and while audio draws two amplitudes per horizontal pixels, large MIDI
 scores can have more notes than horizontal pixels. This can make slider
-changes very sluggish, but this can also be a problem with many 
+changes very sluggish, but this can also be a problem with many
 audio tracks.
 
 *//*******************************************************************/
@@ -200,7 +200,7 @@ const int notePos[12] = { 1, 6, 11, 16, 21, 27,
                         32, 37, 42, 47, 52, 57 };
 
 // map pitch number to window coordinate of the *top* of the note
-// Note the "free" variable bottom, which is assumed to be a local 
+// Note the "free" variable bottom, which is assumed to be a local
 // variable set to the offset of pitch 0 relative to the window
 #define IPITCH_TO_Y(t, p) (bottom - ((p) / 12) * octaveHeight - \
                           notePos[(p) % 12] - (t)->GetPitchHeight())
@@ -578,7 +578,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & r)
          dc->SetPen(*wxBLACK_PEN);
          for (int white = 0; white < 7; white++) {
             int pos = track->GetWhitePos(white);
-            if (obottom - pos > r.y + marg + 1 && 
+            if (obottom - pos > r.y + marg + 1 &&
                 // don't draw too close to margin line -- it's annoying
                 obottom - pos < r.y + r.height - marg - 3)
                AColor::Line(*dc, r.x, obottom - pos,
@@ -624,7 +624,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & r)
       // you would think the -1 offset here should be -2 to match the
       // adjustment to r.y (see above), but -1 produces correct output
       AColor::Line(*dc, r.x, r.y + marg - 1, r.x + r.width, r.y + marg - 1);
-      // since the margin gives us the bottom of the line, 
+      // since the margin gives us the bottom of the line,
       // the extra -1 gets us to the top
       AColor::Line(*dc, r.x, r.y + r.height - marg - 1,
                         r.x + r.width, r.y + r.height - marg - 1);
@@ -675,7 +675,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
             float sign = (min >= 0 ? 1 : -1);
             if (min != 0.) {
                min = pow(10., (fabs(min)*mdBrange - mdBrange)/20.0);
-               if (min < 0.0) 
+               if (min < 0.0)
                   min = 0.0;
                min *= sign;
             }
@@ -683,7 +683,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
 
             if (max != 0.) {
                max = pow(10., (fabs(max)*mdBrange - mdBrange)/20.0);
-               if (max < 0.0) 
+               if (max < 0.0)
                   max = 0.0;
                max *= sign;
             }
@@ -713,7 +713,7 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
             float sign = (min >= 0 ? 1 : -1);
             if (min != 0.) {
                min = (20.0 * log10(fabs(min)) + mdBrange) / mdBrange;
-               if (min < 0.0) 
+               if (min < 0.0)
                   min = 0.0;
                min *= sign;
             }
@@ -721,13 +721,13 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
 
             if (max != 0.) {
                max = (20.0 * log10(fabs(max)) + mdBrange) / mdBrange;
-               if (max < 0.0) 
+               if (max < 0.0)
                   max = 0.0;
                max *= sign;
             }
             wt->SetDisplayBounds(min, max);
          }
- 
+
          if (max > 0) {
             int top = 0;
             float topval = 0;
@@ -857,10 +857,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
    vruler->GetMaxSize(&t->vrulerSize.x, &t->vrulerSize.y);
 }
 
-/// Takes a value between min and max and returns a value between 
-/// height and 0 
+/// Takes a value between min and max and returns a value between
+/// height and 0
 /// \todo  Should this function move int GuiWaveTrack where it can
-/// then use the zoomMin, zoomMax and height values without having 
+/// then use the zoomMin, zoomMax and height values without having
 /// to have them passed in to it??
 int GetWaveYPos(float value, float min, float max,
                 int height, bool dB, bool outer,
@@ -1083,7 +1083,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
 
    long pixAnimOffset = (long)fabs((double)(wxDateTime::Now().GetTicks() * -10)) +
       wxDateTime::Now().GetMillisecond() / 100; //10 pixels a second
-   
+
    bool drawStripes = true;
    bool drawWaveform = true;
 
@@ -1097,7 +1097,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
 #else
       v = min[x] * env[x];
 #endif
-      if (clipped && mShowClipping && (v <= -MAX_AUDIO)) 
+      if (clipped && mShowClipping && (v <= -MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
             clipped[clipcnt++] = xx;
@@ -1111,7 +1111,7 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
 #else
       v = max[x] * env[x];
 #endif
-      if (clipped && mShowClipping && (v >= MAX_AUDIO)) 
+      if (clipped && mShowClipping && (v >= MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
             clipped[clipcnt++] = xx;
@@ -1164,11 +1164,11 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                AColor::Line(dc,
                             xx,
                             r.y + 25 * y + (x /*+pixAnimOffset*/) % 25,
-                            xx, 
+                            xx,
                             r.y + 25 * y + (x /*+pixAnimOffset*/) % 25 + 6); //take the min so we don't draw past the edge
             }
          }
-         
+
          // draw a dummy waveform - some kind of sinusoid.  We want to animate it so the user knows it's a dummy.  Use the second's unit of a get time function.
          // Lets use a triangle wave for now since it's easier - I don't want to use sin() or make a wavetable just for this.
          if (drawWaveform) {
@@ -1223,8 +1223,8 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, const wxRect &r,
    double rate = clip->GetRate();
    sampleCount s0 = (sampleCount) (t0 * rate + 0.5);
    sampleCount slen = (sampleCount) (r.width * rate / pps + 0.5);
-   sampleCount snSamples = clip->GetNumSamples(); 
-   
+   sampleCount snSamples = clip->GetNumSamples();
+
    slen += 4;
 
    if (s0 > snSamples) {
@@ -1249,26 +1249,26 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, const wxRect &r,
    }
 
    dc.SetPen(muted ? muteSamplePen : samplePen);
-   
+
    for (s = 0; s < slen; s++) {
       double tt = (s / rate);
 
       // MB: (s0/rate - t0) is the distance from the left edge of the screen
       //     to the first sample.
       int xx = (int)rint((tt + s0 / rate - t0) * pps);
-      
+
       if (xx < -10000) {
          xx = -10000;
       }
       if (xx > 10000) {
          xx = 10000;
       }
-      
+
       xpos[s] = xx;
 
       // t0 + clip->GetOffset() is 'h' (the absolute time of the left edge) for 'r'.
       tt = buffer[s] * clip->GetEnvelope()->GetValueAtX(xx + r.x, r, t0 + clip->GetOffset(), pps);
-      if (clipped && mShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO))) 
+      if (clipped && mShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)))
          clipped[clipcnt++] = xx;
       ypos[s] = GetWaveYPos(tt, zoomMin, zoomMax,
                             r.height, dB, true, mdBrange, false);
@@ -1312,7 +1312,7 @@ void TrackArtist::DrawIndividualSamples(wxDC &dc, const wxRect &r,
          AColor::Line(dc, r.x + s, r.y, r.x + s, r.y + r.height);
       }
    }
-   
+
    if (mShowClipping) {
       delete [] clipped;
    }
@@ -1399,7 +1399,7 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
 
    // Update cache for locations, e.g. cutlines and merge points
    track->UpdateLocationsCache();
-   
+
    for (int i = 0; i<track->GetNumCachedLocations(); i++) {
       WaveTrack::Location loc = track->GetCachedLocation(i);
       double x = (loc.pos - viewInfo->h) * viewInfo->zoom;
@@ -1466,7 +1466,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    bool showPoints = (pps / rate > 3.0);              //zoomed in even more
 
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
-   // end of the track 
+   // end of the track
 
    double t0 = (tpre >= 0.0 ? tpre : 0.0);
    double t1 = (tpost < trackLen - sps * .99 ? tpost : trackLen - sps * .99);
@@ -1486,7 +1486,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
       t0 = t1;
    }
 
-   // Calculate sample-based offset-corrected selection 
+   // Calculate sample-based offset-corrected selection
 
    // Use the WaveTrack method to show what is selected and 'should' be copied, pasted etc.
    sampleCount ssel0 = wxMax(0, track->TimeToLongSamples(sel0 - tOffset));
@@ -1621,7 +1621,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    delete[] rms;
    delete[] where;
    delete[] bl;
-   
+
    // Draw arrows on the left side if the track extends to the left of the
    // beginning of time.  :)
    if (h == 0.0 && tOffset < 0.0) {
@@ -1924,7 +1924,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
 
    bool usePxCache = false;
 
-   if( !updated && clip->mSpecPxCache->valid && (clip->mSpecPxCache->len == mid.height * mid.width) 
+   if( !updated && clip->mSpecPxCache->valid && (clip->mSpecPxCache->len == mid.height * mid.width)
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    && mFftYGrid==fftYGridOld
 #endif //EXPERIMENTAL_FFT_Y_GRID
@@ -1956,10 +1956,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
 
    int x = 0;
    sampleCount w1 = (sampleCount) ((t0*rate + x *rate *tstep) + .5);
- 
-   const float 
-//      e=exp(1.0f), 
-      f=rate/2.0f/half, 
+
+   const float
+//      e=exp(1.0f),
+      f=rate/2.0f/half,
       lmin=logf(float(minFreq)),
       lmax=logf(float(maxFreq)),
 #ifdef EXPERIMENTAL_FIND_NOTES
@@ -1972,7 +1972,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
       lmaxs=lmax,
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
 #endif //EXPERIMENTAL_FIND_NOTES
-      scale=lmax-lmin /*, 
+      scale=lmax-lmin /*,
       expo=exp(scale)*/ ;
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
@@ -1983,8 +1983,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    bool *yGrid;
    yGrid=new bool[mid.height];
    for (int y = 0; y < mid.height; y++) {
-      float n =(float(y  )/mid.height*scale2-lmin2)*12; 
-      float n2=(float(y+1)/mid.height*scale2-lmin2)*12; 
+      float n =(float(y  )/mid.height*scale2-lmin2)*12;
+      float n2=(float(y+1)/mid.height*scale2-lmin2)*12;
       float f =float(minFreq)/(mFftSkipPoints+1)*powf(2.0f, n /12.0f+lmin2);
       float f2=float(minFreq)/(mFftSkipPoints+1)*powf(2.0f, n2/12.0f+lmin2);
       n =logf(f /440)/log2*12;
@@ -1999,7 +1999,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
 #ifdef EXPERIMENTAL_FIND_NOTES
    int maxima[128];
    float maxima0[128], maxima1[128];
-   const float 
+   const float
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
       f2bin = half/(rate/2.0f/(mFftSkipPoints+1)),
 #else //!EXPERIMENTAL_FFT_SKIP_POINTS
@@ -2014,7 +2014,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    int *indexes=new int[maxTableSize];
 #endif //EXPERIMENTAL_FIND_NOTES
 
-   while (x < mid.width) 
+   while (x < mid.width)
    {
       sampleCount w0 = w1;
       w1 = (sampleCount) ((t0*rate + (x+1) *rate *tstep) + .5);
@@ -2086,7 +2086,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
          if (!usePxCache && mFftFindNotes) {
             for (int i = maxTableSize-1; i >= 0; i--)
                indexes[i]=-1;
-            
+
             // Build a table of (most) values, put the index in it.
             for (int i = int(i0); i < int(i1); i++) {
                float freqi=freq[x0+int(i)];
@@ -2102,7 +2102,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                int index=indexes[i];
                if (index >= 0) {
                   float freqi=freq[x0+index];
-                  if (freqi < mFindNotesMinA) 
+                  if (freqi < mFindNotesMinA)
                      break;
 
                   bool ok=true;
@@ -2435,7 +2435,7 @@ int PitchToY(double p, int bottom)
 {
    int octave = (((int) (p + 0.5)) / 12);
    int n = ((int) (p + 0.5)) % 12;
-   
+
    return IPITCH_TO_Y((int) (p + 0.5));
    // was: bottom - octave * octaveHeight - notePos[n] - 4;
 }
@@ -2449,8 +2449,8 @@ int PitchToY(double p, int bottom)
    sel is equal to r, and the entire region is drawn with unselected
    background colors.
  */
-void TrackArtist::DrawNoteBackground(NoteTrack *track, wxDC &dc, 
-                                     const wxRect &r, const wxRect &sel, 
+void TrackArtist::DrawNoteBackground(NoteTrack *track, wxDC &dc,
+                                     const wxRect &r, const wxRect &sel,
                                      const ViewInfo *viewInfo,
                                      const wxBrush &wb, const wxPen &wp,
                                      const wxBrush &bb, const wxPen &bp,
@@ -2488,7 +2488,7 @@ void TrackArtist::DrawNoteBackground(NoteTrack *track, wxDC &dc,
       dc.SetPen(bp);
       // draw a black-key stripe colored line separating E and F if visible
       if (obottom - eOffset > r.y && obottom - eOffset < r.y + r.height) {
-         AColor::Line(dc, left, obottom - eOffset, 
+         AColor::Line(dc, left, obottom - eOffset,
                           right, obottom - eOffset);
       }
 
@@ -2583,8 +2583,8 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    int numPitches = (r.height) / track->GetPitchHeight();
    if (numPitches < 0) numPitches = 0; // cannot be negative
 
-   // bottom is the hypothetical location of the bottom of pitch 0 relative to 
-   // the top of the clipping region r: r.height - PITCH_HEIGHT/2 is where the 
+   // bottom is the hypothetical location of the bottom of pitch 0 relative to
+   // the top of the clipping region r: r.height - PITCH_HEIGHT/2 is where the
    // bottomNote is displayed, and to that
    // we add the height of bottomNote from the position of pitch 0
    track->PrepareIPitchToY(r);
@@ -2603,7 +2603,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    wxPen barLinePen;
    barLinePen.SetColour(170, 170, 170);
 
-   DrawNoteBackground(track, dc, r, r, viewInfo, blankBrush, blankPen, 
+   DrawNoteBackground(track, dc, r, r, viewInfo, blankBrush, blankPen,
                       blackStripeBrush, blackStripePen, barLinePen);
 
    dc.SetClippingRegion(r);
@@ -2620,7 +2620,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    wxPen selectedWhiteKeyPen;
    selectedWhiteKeyPen.SetColour(165, 165, 190);
    dc.SetPen(selectedWhiteKeyPen);
-   
+
    wxBrush selectedWhiteKeyBrush;
    selectedWhiteKeyBrush.SetColour(165, 165, 190);
    // Then, the black keys and octave stripes, as smaller rectangles
@@ -2704,7 +2704,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                          dc.SetBrush(*wxBLACK_BRUSH);
                          dc.SetPen(*wxBLACK_PEN);
                          dc.DrawRectangle(nr);
-                     } else if (nr.y >= r.y + r.height - marg - 1) { 
+                     } else if (nr.y >= r.y + r.height - marg - 1) {
                          // too low for window
                          nr.y = r.y + r.height - marg;
                          nr.height = marg;
@@ -2740,8 +2740,8 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                   }
                } else if (shape) {
                   // draw a shape according to attributes
-                  // add 0.5 to pitch because pitches are plotted with 
-                  // height = PITCH_HEIGHT; thus, the center is raised 
+                  // add 0.5 to pitch because pitches are plotted with
+                  // height = PITCH_HEIGHT; thus, the center is raised
                   // by PITCH_HEIGHT * 0.5
                   int y = track->PitchToY(note->pitch);
                   long linecolor = LookupIntAttribute(note, linecolori, -1);
@@ -2753,7 +2753,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                   AColor::MIDIChannel(&dc, note->chan+1);
                   if (shape != text) {
                      if (linecolor != -1)
-                        dc.SetPen(wxPen(wxColour(RED(linecolor), 
+                        dc.SetPen(wxPen(wxColour(RED(linecolor),
                               GREEN(linecolor),
                               BLUE(linecolor)),
                               linethick, wxSOLID));
@@ -2762,7 +2762,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                      fillcolor = LookupIntAttribute(note, fillcolori, -1);
                      fillflag = LookupLogicalAttribute(note, filll, false);
 
-                     if (fillcolor != -1) 
+                     if (fillcolor != -1)
                         dc.SetBrush(wxBrush(wxColour(RED(fillcolor),
                               GREEN(fillcolor),
                               BLUE(fillcolor)),
@@ -2838,7 +2838,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                      dc.DrawEllipse(ix, y, ix1, y1 - y + 1);
                   } else if (shape == text) {
                      if (linecolor != -1)
-                        dc.SetTextForeground(wxColour(RED(linecolor), 
+                        dc.SetTextForeground(wxColour(RED(linecolor),
                               GREEN(linecolor),
                               BLUE(linecolor)));
                      // if no color specified, copy color from brush
@@ -2846,7 +2846,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
 
                      // This seems to have no effect, so I commented it out. -RBD
                      //if (fillcolor != -1)
-                     //  dc.SetTextBackground(wxColour(RED(fillcolor), 
+                     //  dc.SetTextBackground(wxColour(RED(fillcolor),
                      //                                GREEN(fillcolor),
                      //                                BLUE(fillcolor)));
                      //// if no color specified, copy color from brush
@@ -2857,7 +2857,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                      int size = LookupIntAttribute(note, sizei, 8);
                      const char *justify = LookupStringAttribute(note, justifys, "ld");
                      wxFont wxfont;
-                     wxfont.SetFamily(font == roman ? wxROMAN : 
+                     wxfont.SetFamily(font == roman ? wxROMAN :
                         (font == swiss ? wxSWISS :
                            (font == modern ? wxMODERN : wxDEFAULT)));
                      wxfont.SetStyle(wxNORMAL);
@@ -2888,7 +2888,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
                         // It should be possible to do this with background color,
                         // but maybe because of the transfer mode, no background is
                         // drawn. To fix this, just draw a rectangle:
-                        dc.SetPen(wxPen(wxColour(RED(fillcolor), 
+                        dc.SetPen(wxPen(wxColour(RED(fillcolor),
                               GREEN(fillcolor),
                               BLUE(fillcolor)),
                               1, wxSOLID));
@@ -2906,7 +2906,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    // draw black line between top/bottom margins and the track
    dc.SetPen(*wxBLACK_PEN);
    AColor::Line(dc, r.x, r.y + marg, r.x + r.width, r.y + marg);
-   AColor::Line(dc, r.x, r.y + r.height - marg - 1, // subtract 1 to get 
+   AColor::Line(dc, r.x, r.y + r.height - marg - 1, // subtract 1 to get
                 r.x + r.width, r.y + r.height - marg - 1); // top of line
 
    if (h == 0.0 && track->GetOffset() < 0.0) {
@@ -2926,10 +2926,10 @@ void TrackArtist::DrawLabelTrack(LabelTrack *track,
 {
    double sel0 = viewInfo->sel0;
    double sel1 = viewInfo->sel1;
-   
+
    if (!track->GetSelected() && !track->IsSyncLockSelected())
       sel0 = sel1 = 0.0;
-   
+
    track->Draw(dc, r, viewInfo->h, viewInfo->zoom, sel0, sel1);
 }
 
@@ -2948,7 +2948,7 @@ void TrackArtist::DrawTimeTrack(TimeTrack *track,
       lower = 20.0 * log10(std::max(1.0e-7, lower)) / dBRange + 1.0;
       upper = 20.0 * log10(std::max(1.0e-7, upper)) / dBRange + 1.0;
    }
-   track->GetEnvelope()->DrawPoints(dc, envRect, viewInfo->h, viewInfo->zoom, 
+   track->GetEnvelope()->DrawPoints(dc, envRect, viewInfo->h, viewInfo->zoom,
                track->GetDisplayLog(), lower, upper);
 }
 
@@ -3064,7 +3064,7 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect r)
 
    // Horizontal position within the grid, modulo its period
    int blockX = (r.x / gridW) % 5;
-   
+
    // Amount to offset drawing of first column
    int xOffset = r.x % gridW;
    if (xOffset < 0) xOffset += gridW;
@@ -3079,7 +3079,7 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect r)
    }
    // Make sure blockX is non-negative
    if (blockX < 0) blockX += 5;
-   
+
    int x = 0;
    while (x < r.width) {
       int width = syncLockBitmap.GetWidth() - xOffset;
@@ -3096,7 +3096,7 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect r)
       // Amount to offset drawing of first row
       int yOffset = r.y % gridH;
       if (yOffset < 0) yOffset += gridH;
-      
+
       // Check if we're missing an extra row on top (this can happen because
       // the tiles are bigger than the grid spacing)
       bool extraRow = false;
@@ -3123,7 +3123,7 @@ void TrackArtist::DrawSyncLockTiles(wxDC *dc, wxRect r)
 
             // Do we need to get a sub-bitmap?
             if (width != syncLockBitmap.GetWidth() || height != syncLockBitmap.GetHeight()) {
-               wxBitmap subSyncLockBitmap = 
+               wxBitmap subSyncLockBitmap =
                   syncLockBitmap.GetSubBitmap(wxRect(xOffset, yOffset, width, height));
                dc->DrawBitmap(subSyncLockBitmap, r.x + x, r.y + y, true);
             }

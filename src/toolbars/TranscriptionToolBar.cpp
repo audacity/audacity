@@ -47,7 +47,7 @@ IMPLEMENT_CLASS(TranscriptionToolBar, ToolBar);
 ///////////////////////////////////////////
 ///  Methods for TranscriptionToolBar
 ///////////////////////////////////////////
- 
+
 
 BEGIN_EVENT_TABLE(TranscriptionToolBar, ToolBar)
    EVT_CHAR(TranscriptionToolBar::OnKeyEvent)
@@ -148,7 +148,7 @@ AButton *TranscriptionToolBar::AddButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
       eFore, eFore, eDisabled,
       wxWindowID(id),
-      wxDefaultPosition, 
+      wxDefaultPosition,
       false,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
 
@@ -169,12 +169,12 @@ void TranscriptionToolBar::Populate()
 
    AddButton(bmpPlay,     bmpPlayDisabled,   TTB_PlaySpeed,
       _("Play at selected speed"));
-   
+
    //Add a slider that controls the speed of playback.
    const int SliderWidth=100;
    mPlaySpeedSlider = new ASlider(this,
                                   TTB_PlaySpeedSlider,
-                                  _("Playback Speed"), 
+                                  _("Playback Speed"),
                                   wxDefaultPosition,
                                   wxSize(SliderWidth,25),
                                   SPEED_SLIDER);
@@ -193,7 +193,7 @@ void TranscriptionToolBar::Populate()
                  this);
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
-// If we need these strings translated, then search and replace  
+// If we need these strings translated, then search and replace
 // TRANSLATBLE by _ and remove this #define.
 #define TRANSLATABLE( x ) wxT( x )
    AddButton(bmpTnStartOn,     bmpTnStartOnDisabled,  TTB_StartOn,
@@ -210,11 +210,11 @@ void TranscriptionToolBar::Populate()
       TRANSLATABLE("Select region of silence around cursor"));
    AddButton(bmpTnAutomateSelection,   bmpTnAutomateSelectionDisabled,  TTB_AutomateSelection,
       TRANSLATABLE("Automatically make labels from words"));
-   AddButton(bmpTnMakeTag, bmpTnMakeTagDisabled,  TTB_MakeLabel,  
+   AddButton(bmpTnMakeTag, bmpTnMakeTagDisabled,  TTB_MakeLabel,
       TRANSLATABLE("Add label at selection"));
    AddButton(bmpTnCalibrate, bmpTnCalibrateDisabled, TTB_Calibrate,
       TRANSLATABLE("Calibrate voicekey"));
- 
+
    mSensitivitySlider = new ASlider(this,
                                     TTB_SensitivitySlider,
                                     TRANSLATABLE("Adjust Sensitivity"),
@@ -233,7 +233,7 @@ void TranscriptionToolBar::Populate()
       TRANSLATABLE("Direction Changes (Low Threshold)"),
       TRANSLATABLE("Direction Changes (High Threshold)")
    };
-   
+
    mKeyTypeChoice = new wxChoice(this, TTB_KeyType,
                                  wxDefaultPosition,
                                  wxDefaultSize,
@@ -277,7 +277,7 @@ void TranscriptionToolBar::RegenerateTooltips()
    mButtons[TTB_AutomateSelection]->SetToolTip(   TRANSLATABLE("Make Labels"));
    mButtons[TTB_MakeLabel]->SetToolTip(   TRANSLATABLE("Add Label"));
    mButtons[TTB_Calibrate]->SetToolTip(   TRANSLATABLE("Calibrate"));
- 
+
    mSensitivitySlider->SetToolTip(TRANSLATABLE("Sensitivity"));
    mKeyTypeChoice->SetToolTip(TRANSLATABLE("Key type"));
 #endif
@@ -323,7 +323,7 @@ void TranscriptionToolBar::OnKeyEvent(wxKeyEvent & event)
       event.Skip();
       return;
    }
-  
+
    if (event.GetKeyCode() == WXK_SPACE) {
       if (gAudioIO->IsBusy()) {
          /*Do Stuff Here*/
@@ -349,7 +349,7 @@ void TranscriptionToolBar::SetButton(bool down, AButton* button)
 
 void TranscriptionToolBar::GetSamples(WaveTrack *t, sampleCount *s0, sampleCount *slen)
 {
-   // GetSamples attempts to translate the start and end selection markers into sample indices 
+   // GetSamples attempts to translate the start and end selection markers into sample indices
    // These selection numbers are doubles.
 
    AudacityProject *p = GetActiveProject();
@@ -359,10 +359,10 @@ void TranscriptionToolBar::GetSamples(WaveTrack *t, sampleCount *s0, sampleCount
 
    //First, get the current selection. It is part of the mViewInfo, which is
    //part of the project
-   
+
    double start = p->GetSel0();
    double end = p->GetSel1();
-      
+
    sampleCount ss0 = sampleCount( (start - t->GetOffset()) * t->GetRate() );
    sampleCount ss1 = sampleCount( (end - t->GetOffset()) * t->GetRate() );
 
@@ -402,7 +402,7 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
    }
 
    // Pop up the button
-   SetButton(false, mButtons[TTB_PlaySpeed]); 
+   SetButton(false, mButtons[TTB_PlaySpeed]);
 
    // If IO is busy, abort immediately
    if (gAudioIO->IsBusy()) {
@@ -459,21 +459,21 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
    TrackListOfKindIterator iter(Track::Wave, tl);
 
    Track *t = iter.First();   //Make a track
-   if(t ) {		
+   if(t ) {
       sampleCount start,len;
       GetSamples((WaveTrack*)t, &start,&len);
-     
+
       //Adjust length to end if selection is null
       //if(len == 0)
       //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
-     
+
       sampleCount newstart = mVk->OnForward(*(WaveTrack*)t,start,len);
       double newpos = newstart / ((WaveTrack*)t)->GetRate();
-     
+
       p->SetSel0(newpos);
       p->RedrawProject();
 
-      SetButton(false, mButtons[TTB_StartOn]); 
+      SetButton(false, mButtons[TTB_StartOn]);
    }
 }
 
@@ -486,27 +486,27 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
    }
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = GetActiveProject();
-   
+
    TrackList *tl = p->GetTracks();
    TrackListOfKindIterator iter(Track::Wave, tl);
-   
+
    SetButton(false, mButtons[TTB_StartOff]);
    Track *t = iter.First();   //Make a track
-   if(t) {		
+   if(t) {
       sampleCount start,len;
       GetSamples((WaveTrack*)t, &start,&len);
-      
+
       //Adjust length to end if selection is null
       //if(len == 0)
       //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
-      
+
       sampleCount newstart = mVk->OffForward(*(WaveTrack*)t,start,len);
       double newpos = newstart / ((WaveTrack*)t)->GetRate();
-      
+
       p->SetSel0(newpos);
       p->RedrawProject();
-      
-      SetButton(false, mButtons[TTB_StartOn]); 
+
+      SetButton(false, mButtons[TTB_StartOn]);
    }
 }
 
@@ -518,17 +518,17 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
       SetButton(false,mButtons[TTB_EndOn]);
       return;
    }
-  
+
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = GetActiveProject();
    TrackList *tl = p->GetTracks();
    TrackListOfKindIterator iter(Track::Wave, tl);
 
    Track *t = iter.First();   //Make a track
-   if(t) {		
+   if(t) {
       sampleCount start,len;
       GetSamples((WaveTrack*)t, &start,&len);
-     
+
       //Adjust length to end if selection is null
       if(len == 0)
          {
@@ -537,11 +537,11 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
          }
       sampleCount newEnd = mVk->OnBackward(*(WaveTrack*)t,start+ len,len);
       double newpos = newEnd / ((WaveTrack*)t)->GetRate();
-     
+
       p->SetSel1(newpos);
       p->RedrawProject();
-     
-      SetButton(false, mButtons[TTB_EndOn]);		
+
+      SetButton(false, mButtons[TTB_EndOn]);
    }
 }
 
@@ -561,10 +561,10 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
    TrackListOfKindIterator iter(Track::Wave, tl);
 
    Track *t = iter.First();   //Make a track
-   if(t) {		
+   if(t) {
       sampleCount start,len;
       GetSamples((WaveTrack*)t, &start,&len);
-     
+
       //Adjust length to end if selection is null
       if(len == 0) {
          len = start;
@@ -572,10 +572,10 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
       }
       sampleCount newEnd = mVk->OffBackward(*(WaveTrack*)t,start+ len,len);
       double newpos = newEnd / ((WaveTrack*)t)->GetRate();
-     
+
       p->SetSel1(newpos);
       p->RedrawProject();
-     
+
       SetButton(false, mButtons[TTB_EndOff]);
    }
 }
@@ -594,21 +594,21 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
 
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = GetActiveProject();
-   
-   
+
+
    TrackList *tl = p->GetTracks();
    TrackListIterator iter(tl);
 
    Track *t = iter.First();   //Make a track
-   if(t) 
-      {		
+   if(t)
+      {
          sampleCount start,len;
          GetSamples((WaveTrack*)t, &start,&len);
-        
+
          //Adjust length to end if selection is null
          //if(len == 0)
          //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
-        
+
          double rate =  ((WaveTrack*)t)->GetRate();
          sampleCount newstart = mVk->OffBackward(*(WaveTrack*)t,start,start);
          sampleCount newend   = mVk->OffForward(*(WaveTrack*)t,start+len,(int)(tl->GetEndTime()*rate));
@@ -619,7 +619,7 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
          p->RedrawProject();
 
       }
-   
+
    SetButton(false,mButtons[TTB_SelectSound]);
 }
 
@@ -634,17 +634,17 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
 
    mVk->AdjustThreshold(GetSensitivity());
    AudacityProject *p = GetActiveProject();
-   
-   
+
+
    TrackList *tl = p->GetTracks();
    TrackListIterator iter(tl);
 
    Track *t = iter.First();   //Make a track
-   if(t) 
-      {		
+   if(t)
+      {
          sampleCount start,len;
          GetSamples((WaveTrack*)t, &start,&len);
-        
+
          //Adjust length to end if selection is null
          //if(len == 0)
          //len = (WaveTrack*)t->GetSequence()->GetNumSamples()-start;
@@ -658,7 +658,7 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
          p->RedrawProject();
 
       }
-   
+
    SetButton(false,mButtons[TTB_SelectSilence]);
 
 }
@@ -679,12 +679,12 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
    TrackList *tl = p->GetTracks();
    TrackListIterator iter(tl);
    Track *t = iter.First();   //Get a track
-  
-   if(t) 
-      {		
+
+   if(t)
+      {
          sampleCount start,len;
          GetSamples((WaveTrack*)t, &start,&len);
-        
+
          mVk->CalibrateNoise(*((WaveTrack*)t),start,len);
          mVk->AdjustThreshold(3);
 
@@ -694,15 +694,15 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
          mButtons[TTB_EndOff]->Enable();
          //mThresholdSensitivity->Set(3);
 
-         SetButton(false,mButtons[TTB_Calibrate]);    
+         SetButton(false,mButtons[TTB_Calibrate]);
       }
-  
+
    mButtons[TTB_StartOn]->Enable();
    mButtons[TTB_StartOff]->Enable();
    mButtons[TTB_EndOn]->Enable();
    mButtons[TTB_EndOff]->Enable();
-   mButtons[TTB_SelectSound]->Enable();  
-   mButtons[TTB_SelectSilence]->Enable();  
+   mButtons[TTB_SelectSound]->Enable();
+   mButtons[TTB_SelectSilence]->Enable();
    mButtons[TTB_AutomateSelection]->Enable();
 
    //Make the sensititivy slider set the sensitivity by processing an event.
@@ -731,13 +731,13 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
    AudacityProject *p = GetActiveProject();
    TrackList *tl = p->GetTracks();
    TrackListIterator iter(tl);
-   
+
    Track *t = iter.First();   //Make a track
-   if(t) 
-      {		
+   if(t)
+      {
          sampleCount start,len;
          GetSamples((WaveTrack*)t, &start,&len);
-         
+
          //Adjust length to end if selection is null
          if(len == 0)
             {
@@ -747,37 +747,37 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
          int lastlen = 0;
          sampleCount newStart, newEnd;
          double newStartPos, newEndPos;
-         
+
 
          //This is the minumum word size in samples (.05 is 50 ms)
          int minWordSize = (int)(((WaveTrack*)t)->GetRate() * .05);
-         
+
          //Continue until we have processed the entire
          //region, or we are making no progress.
          while(len > 0 && lastlen != len)
             {
-               
+
                lastlen = len;
-               
+
                newStart = mVk->OnForward(*(WaveTrack*)t,start,len);
 
                //JKC: If no start found then don't add any labels.
                if( newStart==start)
                   break;
-               
+
                //Adjust len by the new start position
                len -= (newStart - start);
-               
+
                //Adjust len by the minimum word size
                len -= minWordSize;
-               
-               
 
-               //OK, now we have found a new starting point.  A 'word' should be at least 
+
+
+               //OK, now we have found a new starting point.  A 'word' should be at least
                //50 ms long, so jump ahead minWordSize
-               
+
                newEnd   = mVk->OffForward(*(WaveTrack*)t,newStart+minWordSize, len);
-               
+
                //If newEnd didn't move, we should give up, because
                // there isn't another end before the end of the selection.
                if(newEnd == (newStart + minWordSize))
@@ -786,15 +786,15 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
                //Adjust len by the new word end
                len -= (newEnd - newStart);
-               
+
                //Calculate the start and end of the words, in seconds
                newStartPos = newStart / ((WaveTrack*)t)->GetRate();
                newEndPos = newEnd / ((WaveTrack*)t)->GetRate();
-               
-               
+
+
                //Increment
                start = newEnd;
-               
+
                p->DoAddLabel(newStartPos, newEndPos);
                p->RedrawProject();
             }
@@ -805,7 +805,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 void TranscriptionToolBar::OnMakeLabel(wxCommandEvent & WXUNUSED(event))
 {
    AudacityProject *p = GetActiveProject();
-   SetButton(false, mButtons[TTB_MakeLabel]);  
+   SetButton(false, mButtons[TTB_MakeLabel]);
    p->DoAddLabel(p->GetSel0(),  p->GetSel1());
 }
 

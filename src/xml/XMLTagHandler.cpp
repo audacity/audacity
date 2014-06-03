@@ -16,7 +16,7 @@
   using XML files.
 
 \class XMLValueChecker
-\brief XMLValueChecker implements static bool methods for checking 
+\brief XMLValueChecker implements static bool methods for checking
   input values from XML files.
 
 *//*******************************************************************/
@@ -52,7 +52,7 @@ bool XMLValueChecker::IsGoodString(const wxString str)
 bool XMLValueChecker::IsGoodFileName(const wxString strFileName, const wxString strDirName /* = "" */)
 {
    // Test strFileName.
-   if (!IsGoodFileString(strFileName) || 
+   if (!IsGoodFileString(strFileName) ||
          (strDirName.Length() + 1 + strFileName.Length() > PLATFORM_MAX_PATH))
       return false;
 
@@ -63,24 +63,24 @@ bool XMLValueChecker::IsGoodFileName(const wxString strFileName, const wxString 
 
 bool XMLValueChecker::IsGoodFileString(wxString str)
 {
-   return (IsGoodString(str) && 
-            !str.IsEmpty() && 
+   return (IsGoodString(str) &&
+            !str.IsEmpty() &&
 
-            // FILENAME_MAX is 260 in MSVC, but inconsistent across platforms, 
+            // FILENAME_MAX is 260 in MSVC, but inconsistent across platforms,
             // sometimes huge, but we use 260 for all platforms.
-            (str.Length() <= 260) && 
+            (str.Length() <= 260) &&
 
-            (str.Find(wxFileName::GetPathSeparator()) == -1)); // No path separator characters. 
+            (str.Find(wxFileName::GetPathSeparator()) == -1)); // No path separator characters.
 }
 
 bool XMLValueChecker::IsGoodSubdirName(const wxString strSubdirName, const wxString strDirName /* = "" */)
 {
-   // Test strSubdirName. 
-   // Note this prevents path separators, and relative path to parents (strDirName), 
-   // so fixes vulnerability #3 in the NGS report for UmixIt, 
+   // Test strSubdirName.
+   // Note this prevents path separators, and relative path to parents (strDirName),
+   // so fixes vulnerability #3 in the NGS report for UmixIt,
    // where an attacker could craft an AUP file with relative pathnames to get to system files, for example.
-   if (!IsGoodFileString(strSubdirName) || 
-         (strSubdirName == wxT(".")) || (strSubdirName == wxT("..")) || 
+   if (!IsGoodFileString(strSubdirName) ||
+         (strSubdirName == wxT(".")) || (strSubdirName == wxT("..")) ||
          (strDirName.Length() + 1 + strSubdirName.Length() > PLATFORM_MAX_PATH))
       return false;
 
@@ -98,8 +98,8 @@ bool XMLValueChecker::IsGoodPathName(const wxString strPathName)
 
 bool XMLValueChecker::IsGoodPathString(wxString str)
 {
-   return (IsGoodString(str) && 
-            !str.IsEmpty() && 
+   return (IsGoodString(str) &&
+            !str.IsEmpty() &&
             (str.Length() <= PLATFORM_MAX_PATH));
 }
 
@@ -124,7 +124,7 @@ bool XMLValueChecker::IsGoodInt(const wxString strInt)
       for (i = 0; i < lenMAXABS; i++)
          if (strInt[i+1] < '0' || strInt[i+1] > '9')
             return false; // not a digit
-            
+
       for (i = 0; i < lenMAXABS; i++)
          if (strInt[i+1] - '0' < digitsMAXABS[i])
             return true; // number is small enough
@@ -165,7 +165,7 @@ bool XMLValueChecker::IsGoodInt64(const wxString strInt)
       for (i = 0; i < lenMAXABS; i++)
          if (strInt[i+1] < '0' || strInt[i+1] > '9')
             return false; // not a digit
-            
+
       for (i = 0; i < lenMAXABS; i++)
          if (strInt[i+1] - '0' < digitsMAXABS[i])
             return true; // number is small enough
@@ -214,7 +214,7 @@ bool XMLTagHandler::ReadXMLTag(const char *tag, const char **attrs)
 
 // JKC: Previously the next line was:
 // const char **out_attrs = new char (const char *)[tmp_attrs.GetCount()+1];
-// however MSVC doesn't like the constness in this position, so this is now 
+// however MSVC doesn't like the constness in this position, so this is now
 // added by a cast after creating the array of pointers-to-non-const chars.
    const wxChar **out_attrs = (const wxChar**)new wxChar *[tmp_attrs.GetCount()+1];
    for (size_t i=0; i<tmp_attrs.GetCount(); i++) {

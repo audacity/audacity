@@ -86,7 +86,7 @@ bool VampEffect::Init()
 {
    Vamp::HostExt::PluginLoader *loader =
       Vamp::HostExt::PluginLoader::getInstance();
-   
+
    delete mPlugin;
    mPlugin = 0;
 
@@ -98,17 +98,17 @@ bool VampEffect::Init()
    while (left) {
 
       if (mRate == 0.0) mRate = left->GetRate();
-      
+
       if (left->GetLinked()) {
 
          WaveTrack *right = (WaveTrack *)iter.Next();
-         
+
          if (left->GetRate() != right->GetRate()) {
             wxMessageBox(_("Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."));
             return false;
          }
       }
-      
+
       left = (WaveTrack *)iter.Next();
    }
 
@@ -165,7 +165,7 @@ bool VampEffect::Process()
       sampleCount lstart, rstart = 0;
       sampleCount len;
       GetSamples(left, &lstart, &len);
-      
+
       WaveTrack *right = NULL;
       int channels = 1;
 
@@ -229,7 +229,7 @@ bool VampEffect::Process()
       sampleCount rs = rstart;
 
       while (len) {
-         
+
          int request = block;
          if (request > len) request = len;
 
@@ -281,7 +281,7 @@ void VampEffect::AddFeatures(LabelTrack *ltrack,
 {
    for (Vamp::Plugin::FeatureList::iterator fli = features[mOutput].begin();
         fli != features[mOutput].end(); ++fli) {
-      
+
       Vamp::RealTime ftime0 = fli->timestamp;
       double ltime0 = ftime0.sec + (double(ftime0.nsec) / 1000000000.0);
 
@@ -297,7 +297,7 @@ void VampEffect::AddFeatures(LabelTrack *ltrack,
             label = wxString::Format(LAT1CTOWX("%.3f"), *fli->values.begin());
          }
       }
-      
+
       ltrack->AddLabel(ltime0, ltime1, label);
    }
 }
@@ -335,9 +335,9 @@ VampEffectDialog::VampEffectDialog(VampEffect *effect,
 
 #ifdef __WXMSW__
    // On Windows, for some reason, wxWidgets calls OnTextCtrl during creation
-   // of the text control, and VampEffectDialog::OnTextCtrl calls HandleText, 
-   // which assumes all the fields have been initialized. 
-   // This can give us a bad pointer crash, so manipulate inSlider to 
+   // of the text control, and VampEffectDialog::OnTextCtrl calls HandleText,
+   // which assumes all the fields have been initialized.
+   // This can give us a bad pointer crash, so manipulate inSlider to
    // no-op HandleText during creation.
    inSlider = true;
 #else
@@ -345,7 +345,7 @@ VampEffectDialog::VampEffectDialog(VampEffect *effect,
 #endif
 
    inText = false;
-   
+
    int count = mParameters.size();
 
    toggles = new wxCheckBox*[count];
@@ -372,7 +372,7 @@ VampEffectDialog::VampEffectDialog(VampEffect *effect,
                            + LAT1CTOWX(plugin->getMaker().c_str()));
 
    vSizer->Add(item, 0, wxALL, 5);
-   
+
    item = new wxStaticText(this, 0,
                            LAT1CTOWX(plugin->getCopyright().c_str()));
    vSizer->Add(item, 0, wxALL, 5);
@@ -387,7 +387,7 @@ VampEffectDialog::VampEffectDialog(VampEffect *effect,
    w->SetMinSize(wxSize(
       wxMax(400, parent->GetSize().GetWidth() / 2),
       parent->GetSize().GetHeight() / 2));
-                                              
+
    w->SetScrollRate(0, 20);
    vSizer->Add(w, 1, wxEXPAND|wxALL, 5);
 
@@ -415,7 +415,7 @@ VampEffectDialog::VampEffectDialog(VampEffect *effect,
          choices.Add(choice);
       }
 
-      gridSizer->Add(new wxStaticText(w, 0, _("Program")), 
+      gridSizer->Add(new wxStaticText(w, 0, _("Program")),
                      0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
       programCombo = new wxComboBox(w, 9999, currentProgram,
@@ -524,7 +524,7 @@ VampEffectDialog::VampEffectDialog(VampEffect *effect,
    // text fields
    inSlider = false; // Now we're ready for HandleText to actually do something.
    HandleText();
-   
+
    paramSizer->Add(gridSizer, 1, wxEXPAND | wxALL, 5);
    w->SetSizer(paramSizer);
 
@@ -677,7 +677,7 @@ void VampEffectDialog::HandleText()
 
       mPlugin->setParameter(mParameters[p].identifier, val);
 
-      sliders[p]->SetValue((int)(((val-lower)/range) * 1000.0 + 0.5));      
+      sliders[p]->SetValue((int)(((val-lower)/range) * 1000.0 + 0.5));
    }
 
    inText = false;

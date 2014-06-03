@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ToolManager.cpp
-  
+
   Dominic Mazzoni
   Shane T. Mueller
   Leland Lucius
@@ -159,7 +159,7 @@ class ToolFrame:public wxFrame
       mManager->ProcessEvent( event );
    }
 
-   // 
+   //
    // Handle toolbar updates
    //
    void OnToolBarUpdate( wxCommandEvent & event )
@@ -227,7 +227,7 @@ class ToolFrame:public wxFrame
          if( rect.height < mMinSize.y )
          {
             rect.height = mMinSize.y;
-         }        
+         }
 
          SetMinSize( rect.GetSize() );
          SetSize( rect.GetSize() );
@@ -420,7 +420,7 @@ ToolManager::ToolManager( AudacityProject *parent )
 
    // Process the toolbar config settings
    ReadConfig();
-} 
+}
 
 //
 // Destructer
@@ -524,7 +524,7 @@ void ToolManager::Reset()
    // SetVUMeters(AudacityProject *p);
    LayoutToolBars();
    Updated();
-} 
+}
 
 //
 // Read the toolbar states
@@ -544,7 +544,7 @@ void ToolManager::ReadConfig()
    // Disable window animation
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
 #endif
-   
+
    // Invalidate all order entries
    for( dock = 0; dock < DockCount; dock++ )
    {
@@ -682,7 +682,7 @@ void ToolManager::ReadConfig()
             // Dock it
             d->Dock( t );
 
-            // Hide the bar 
+            // Hide the bar
             if( !show[ t->GetId() ] )
             {
                d->ShowHide( t->GetId() );
@@ -698,7 +698,7 @@ void ToolManager::ReadConfig()
          // Dock it
          d->Dock( t );
 
-         // Hide the bar 
+         // Hide the bar
          if( !show[ t->GetId() ] )
          {
             d->ShowHide( t->GetId() );
@@ -888,7 +888,7 @@ void ToolManager::LayoutToolBars()
 //
 void ToolManager::UpdatePrefs()
 {
-   for( int ndx = 0; ndx < ToolBarCount; ndx++ ) 
+   for( int ndx = 0; ndx < ToolBarCount; ndx++ )
    {
       ToolBar *bar = mBars[ ndx ];
       if( bar )
@@ -1043,7 +1043,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
          // Hide the indicator if it's still shown
          if( mBarPos.x != -1 )
          {
-            // Hide any 
+            // Hide any
             mIndicator->Hide();
             mBarPos.x = -1;
             mBarPos.y = -1;
@@ -1158,7 +1158,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
 
    // Calculate the drag offset
    wxPoint mp = event.GetPosition();
-   mDragOffset = mp - 
+   mDragOffset = mp -
                  mDragBar->GetParent()->ClientToScreen( mDragBar->GetPosition() ) +
                  wxPoint( 1, 1 );
 
@@ -1181,7 +1181,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
 
       // Make sure the ferry is visible
       mDragWindow->Show();
-   
+
       // Notify parent of change
       Updated();
 

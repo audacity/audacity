@@ -54,12 +54,12 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEY, -1);
 
 // These flags represent the majority of the states that affect
 // whether or not items in menus are enabled or disabled.
-enum 
+enum
 {
    AlwaysEnabledFlag      = 0x00000000,
 
    AudioIONotBusyFlag     = 0x00000001,
-   TimeSelectedFlag       = 0x00000002, // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too 
+   TimeSelectedFlag       = 0x00000002, // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
    TracksSelectedFlag     = 0x00000004,
    TracksExistFlag        = 0x00000008,
    LabelTracksExistFlag   = 0x00000010,
@@ -144,11 +144,11 @@ class AudacityApp:public wxApp {
    /** \brief Changes the behavior of missing aliased blockfiles warnings
      */
    void SetMissingAliasedFileWarningShouldShow(bool b);
-   
+
    /** \brief Returns true if the user should be notified of missing alias warnings
      */
    bool ShouldShowMissingAliasedFileWarning();
-   
+
    #ifdef __WXMAC__
     // In response to Apple Events
     virtual void MacOpenFile(const wxString &fileName) ;
@@ -161,7 +161,7 @@ class AudacityApp:public wxApp {
    #endif
 
    /** \brief A list of directories that should be searched for Audacity files
-    * (plug-ins, help files, etc.). 
+    * (plug-ins, help files, etc.).
     *
     * On Unix this will include the directory Audacity was installed into,
     * plus the current user's .audacity-data/Plug-Ins directory.  Additional
@@ -207,10 +207,10 @@ class AudacityApp:public wxApp {
    wxSingleInstanceChecker *mChecker;
 
    wxTimer *mTimer;
-   
+
    bool                 m_aliasMissingWarningShouldShow;
    BlockFile           *m_LastMissingBlockFile;
-   
+
    ODLock               m_LastMissingBlockFileLock;
 
    void InitCommandHandler();

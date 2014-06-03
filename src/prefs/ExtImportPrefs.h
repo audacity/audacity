@@ -64,27 +64,27 @@ class ExtImportPrefs:public PrefsPanel
    void OnFilterMoveDown(wxCommandEvent& event);
 
    void OnNavKey (wxNavigationKeyEvent& event);
-   
+
    void SwapRows (int row1, int row2);
    void SwapPluginRows (int row1, int row2);
-   
+
    Grid *GetRuleTable() { return RuleTable; }
    wxListCtrl *GetPluginList() { return PluginList; }
-   
+
    wxWindow *GetDragFocus() { return mDragFocus; }
-   
+
  private:
- 
+
    Grid *RuleTable;
    wxListCtrl *PluginList;
-   
+
    wxButton *AddRule;
    wxButton *DelRule;
    wxButton *MoveRuleUp;
    wxButton *MoveRuleDown;
    wxButton *MoveFilterUp;
    wxButton *MoveFilterDown;
-   
+
    wxTextDataObject *dragtext1;
    wxTextDataObject *dragtext2;
    ExtImportPrefsDropTarget *dragtarget1;
@@ -94,9 +94,9 @@ class ExtImportPrefs:public PrefsPanel
    wxWindow *mDragFocus;
    bool mFakeKeyEvent;
    bool mStopRecursiveSelection;
-   
+
    int last_selected;
-   
+
    void FakeOnPluginKeyDown (int keycode);
    void DoOnRuleTableKeyDown (int keycode);
    bool DoOnPluginKeyDown (int code);

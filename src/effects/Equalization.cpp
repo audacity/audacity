@@ -261,7 +261,7 @@ EffectEqualization::EffectEqualization()
 
 EffectEqualization::~EffectEqualization()
 {
-   if(hFFT) 
+   if(hFFT)
       EndFFT(hFFT);
    hFFT = NULL;
    if(mFFTBuffer)
@@ -441,7 +441,7 @@ bool EffectEqualization::Process()
       count++;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult); 
+   this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -547,7 +547,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       // 'output' starts at zero
       double startT = t->LongSamplesToTime(start);
 
-      //output has one waveclip for the total length, even though 
+      //output has one waveclip for the total length, even though
       //t might have whitespace seperating multiple clips
       //we want to maintain the original clip structure, so
       //only paste the intersections of the new clip.
@@ -570,7 +570,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
             continue;   // clip is not within selection
 
          //save the actual clip start/end so that we can rejoin them after we paste.
-         clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));            
+         clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
 
          if( clipStartT < startT )  // does selection cover the whole clip?
             clipStartT = startT; // don't copy all the new clip
@@ -586,7 +586,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          Track *toClipOutput;
          //remove the old audio and get the new
          t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
-         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);   
+         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);
          if(toClipOutput)
          {
             //put the processed audio in
@@ -594,9 +594,9 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
             wxASSERT(bResult); // TO DO: Actually handle this.
             //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
             //This is not true when the selection is fully contained within one clip (second half of conditional)
-            if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first || 
+            if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first ||
                clipRealStartEndTimes[i].second != clipStartEndTimes[i].second) &&
-               !(clipRealStartEndTimes[i].first <= startT &&  
+               !(clipRealStartEndTimes[i].first <= startT &&
                clipRealStartEndTimes[i].second >= startT+lenT) )
                t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
             delete toClipOutput;
@@ -1393,7 +1393,7 @@ void EqualizationDialog::MakeEqualizationDialog()
    // Processing routine selection
    // -------------------------------------------------------------------
    if(m_pEffect->mEffectEqualization48x) {
-      szrM = new wxBoxSizer( wxHORIZONTAL );   
+      szrM = new wxBoxSizer( wxHORIZONTAL );
       txt = new wxStaticText( this, wxID_ANY, _("&Processing: ") );
       szrM->Add( txt, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxLEFT, 4 );
 
@@ -1440,12 +1440,12 @@ void EqualizationDialog::MakeEqualizationDialog()
       int mathPath=EffectEqualization48x::GetMathPath();
       if(mathPath&MATH_FUNCTION_SSE) {
          mMathProcessingType[1]->SetValue(true);
-         if(mathPath&MATH_FUNCTION_THREADED) 
+         if(mathPath&MATH_FUNCTION_THREADED)
             mMathProcessingType[2]->SetValue(true);
       }
       if(false) { //mathPath&MATH_FUNCTION_AVX) { not implemented
          mMathProcessingType[3]->SetValue(true);
-         if(mathPath&MATH_FUNCTION_THREADED) 
+         if(mathPath&MATH_FUNCTION_THREADED)
             mMathProcessingType[4]->SetValue(true);
       }
       btn = new wxButton( this, ID_BENCH, _("&Bench"));
@@ -2198,9 +2198,9 @@ void EqualizationDialog::LayoutEQSliders()
 
 void EqualizationDialog::GraphicEQ(Envelope *env)
 {
-   // JKC: 'value' is for height of curve.  
-   // The 0.0 initial value would only get used if NUM_PTS were 0.  
-   double value = 0.0; 
+   // JKC: 'value' is for height of curve.
+   // The 0.0 initial value would only get used if NUM_PTS were 0.
+   double value = 0.0;
    double dist, span, s;
 
    env->Flatten(0.);
@@ -3198,7 +3198,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
       }
 
       // if bad, we cancelled the rename dialog, so nothing to do.
-      if( bad == true ) 
+      if( bad == true )
          ;
       else if(overwrite){
          // Overwrite another curve.
@@ -3208,7 +3208,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
          mEditCurves[ curve ].points = mEditCurves[ item ].points;
          // if renaming the unnamed item, then select it,
          // otherwise get rid of the item we've renamed.
-         if( item == (numCurves-1) ) 
+         if( item == (numCurves-1) )
             mList->SetItem(curve, 0, name);
          else
          {
@@ -3398,7 +3398,7 @@ void EditCurvesDialog::OnDefaults( wxCommandEvent & WXUNUSED(event))
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
-void EqualizationDialog::OnProcessingRadio(wxCommandEvent & event) 
+void EqualizationDialog::OnProcessingRadio(wxCommandEvent & event)
 {
    int testEvent=event.GetId();
    switch(testEvent)

@@ -3,9 +3,9 @@
   Audacity: A Digital Audio Editor
 
   DeviceToolbar.h
- 
+
   Dominic Mazzoni
- 
+
 **********************************************************************/
 
 #ifndef __AUDACITY_DEVICE_TOOLBAR__

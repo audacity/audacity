@@ -20,17 +20,17 @@ class PCMAliasBlockFile : public AliasBlockFile
  public:
    /// Constructs a PCMAliasBlockFile, writing the summary to disk
    PCMAliasBlockFile(wxFileName baseFileName,
-                     wxFileName aliasedFileName, 
+                     wxFileName aliasedFileName,
                      sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel);
    ///Constructs a PCMAliasBlockFile with the option of not writing to disk
    PCMAliasBlockFile(wxFileName fileName,
-                     wxFileName aliasedFileName, 
+                     wxFileName aliasedFileName,
                      sampleCount aliasStart,
-                     sampleCount aliasLen, int aliasChannel,bool writeSummary);                  
-                     
+                     sampleCount aliasLen, int aliasChannel,bool writeSummary);
+
    PCMAliasBlockFile(wxFileName existingSummaryFileName,
-                     wxFileName aliasedFileName, 
+                     wxFileName aliasedFileName,
                      sampleCount aliasStart,
                      sampleCount aliasLen, int aliasChannel,
                      float min, float max, float rms);
@@ -39,7 +39,7 @@ class PCMAliasBlockFile : public AliasBlockFile
    /// Reads the specified data from the aliased file using libsndfile
    virtual int ReadData(samplePtr data, sampleFormat format,
                         sampleCount start, sampleCount len);
-   
+
    virtual void SaveXML(XMLWriter &xmlFile);
    virtual BlockFile *Copy(wxFileName fileName);
    virtual void Recover();

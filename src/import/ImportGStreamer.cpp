@@ -166,7 +166,7 @@ private:
    Tags                    mTags;         //!< Tags to be passed back to Audacity
    TrackFactory           *mTrackFactory; //!< Factory to create tracks when samples arrive
 
-   gchar                  *mUri;          //!< URI of file 
+   gchar                  *mUri;          //!< URI of file
    GstElement             *mPipeline;     //!< GStreamer pipeline
    GstBus                 *mBus;          //!< Message bus
    GstElement             *mDec;          //!< uridecodebin element
@@ -583,7 +583,7 @@ GStreamerImportFileHandle::OnPadAdded(GstPad *pad)
    gst_app_sink_set_caps(GST_APP_SINK(c->mSink), caps);
    gst_caps_unref(caps);
 
-   // Do not sync to the clock...process as quickly as possible 
+   // Do not sync to the clock...process as quickly as possible
    gst_base_sink_set_sync(GST_BASE_SINK(c->mSink), FALSE);
 
    // Don't drop buffers...allow queue to build unfettered
@@ -674,7 +674,7 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
          WARN(mPipeline, ("OnNewSample: missing audio format"));
          return;
       }
-   
+
       // Determinate sample format based on negotiated format
       if (strcmp(fmt, GST_AUDIO_NE(S16)) == 0)
       {
@@ -695,7 +695,7 @@ GStreamerImportFileHandle::OnNewSample(GStreamContext *c, GstSample *sample)
          WARN(mPipeline, ("OnNewSample: unrecognized sample format %s", fmt));
          return;
       }
-   
+
       // Allocate the track array
       c->mChannels = new WaveTrack *[c->mNumChannels];
       if (!c->mChannels)
@@ -820,34 +820,34 @@ GStreamerImportFileHandle::~GStreamerImportFileHandle()
             }
             delete[] c->mChannels;
          }
-   
+
          // Remove the appsink element
          if (c->mSink)
          {
             gst_bin_remove(GST_BIN(mPipeline), c->mSink);
          }
-   
+
          // Remove the audioconvert element
          if (c->mConv)
          {
             gst_bin_remove(GST_BIN(mPipeline), c->mConv);
          }
-   
+
          // Free the audio type
          if (c->mType)
          {
             g_free(c->mType);
          }
-   
+
          // And finally get rid of the context
          g_free(c);
       }
       g_mutex_unlock(&mStreamsLock);
-   
+
       // Done with the context array
       g_ptr_array_free(mStreams, TRUE);
    }
-   
+
    // Release the decoder
    if (mDec != NULL)
    {
@@ -929,7 +929,7 @@ GStreamerImportFileHandle::Init()
    mPipeline = gst_pipeline_new("pipeline");
 
    // Get its bus
-   mBus = gst_pipeline_get_bus(GST_PIPELINE(mPipeline));   
+   mBus = gst_pipeline_get_bus(GST_PIPELINE(mPipeline));
 
    // Create uridecodebin and set up signal handlers
    mDec = gst_element_factory_make("uridecodebin", "decoder");
@@ -1063,7 +1063,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
 
          // Remove them from the bin
          gst_bin_remove_many(GST_BIN(mPipeline), c->mConv, c->mSink, NULL);
-      
+
          // All done with them
          c->mConv = NULL;
          c->mSink = NULL;

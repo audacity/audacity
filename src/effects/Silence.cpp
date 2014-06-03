@@ -16,12 +16,12 @@
 
 #include "../Audacity.h"
 
-#include <wx/defs.h> 
+#include <wx/defs.h>
 
-#include <wx/button.h> 
-#include <wx/sizer.h> 
-#include <wx/stattext.h> 
-#include <wx/textctrl.h> 
+#include <wx/button.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
 
 #include "Silence.h"
 #include "../WaveTrack.h"

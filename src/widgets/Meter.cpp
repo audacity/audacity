@@ -17,8 +17,8 @@
   This is a bunch of common code that can display many different
   forms of VU meters and other displays.
 
-  But note that a lot of later code here assumes these are 
-  MeterToolBar meters, e.g., Meter::StartMonitoring, 
+  But note that a lot of later code here assumes these are
+  MeterToolBar meters, e.g., Meter::StartMonitoring,
   so these are not as generic/common as originally intended.
 
 *//****************************************************************//**
@@ -212,8 +212,8 @@ IMPLEMENT_CLASS(Meter, wxPanel)
 Meter::Meter(wxWindow* parent, wxWindowID id,
              bool isInput,
              const wxPoint& pos /*= wxDefaultPosition*/,
-             const wxSize& size /*= wxDefaultSize*/, 
-             Style style /*= HorizontalStereo*/, 
+             const wxSize& size /*= wxDefaultSize*/,
+             Style style /*= HorizontalStereo*/,
              float fDecayRate /*= 60.0f*/)
 : wxPanel(parent, id, pos, size),
    mQueue(1024),
@@ -255,8 +255,8 @@ Meter::Meter(wxWindow* parent, wxWindowID id,
       mClipBrush = wxBrush( theTheme.Colour( clrMeterInputClipBrush   ), wxSOLID);
       mLightPen  = wxPen(   theTheme.Colour( clrMeterInputLightPen    ), 1, wxSOLID);
       mDarkPen   = wxPen(   theTheme.Colour( clrMeterInputDarkPen     ), 1, wxSOLID);
-   }   
-   else {                                                         
+   }
+   else {
       mPen       = wxPen(   theTheme.Colour( clrMeterOutputPen        ), 1, wxSOLID);
       mBrush     = wxBrush( theTheme.Colour( clrMeterOutputBrush      ), wxSOLID);
       mRMSBrush  = wxBrush( theTheme.Colour( clrMeterOutputRMSBrush   ), wxSOLID);
@@ -340,9 +340,9 @@ void Meter::UpdatePrefs()
    // MixerTrackCluster style has no menu, so disallows disabling the meter.
    if (mStyle == MixerTrackCluster)
       mMeterDisabled = 0L;
-   else if (mIsInput) 
+   else if (mIsInput)
       mMeterDisabled = gPrefs->Read(wxT("/Meter/MeterInputDisabled"), (long)0);
-   else 
+   else
       mMeterDisabled = gPrefs->Read(wxT("/Meter/MeterOutputDisabled"), (long)0);
 }
 
@@ -365,7 +365,7 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
    memDC.SelectObject(*mBitmap);
    HandlePaint(memDC);
    dc.Blit(0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE);
-  #endif 
+  #endif
 }
 
 void Meter::OnSize(wxSizeEvent & WXUNUSED(event))
@@ -398,7 +398,7 @@ void Meter::OnMouse(wxMouseEvent &evt)
   #endif
 
    if (evt.RightDown() ||
-       (evt.ButtonDown() && mMenuRect.Contains(evt.m_x, evt.m_y))) 
+       (evt.ButtonDown() && mMenuRect.Contains(evt.m_x, evt.m_y)))
    {
       wxMenu *menu = new wxMenu();
       // Note: these should be kept in the same order as the enum
@@ -580,10 +580,10 @@ void Meter::UpdateDisplay(int numChannels, int numFrames, float *sampleData)
 }
 
 // Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
-//void Meter::UpdateDisplay(int numChannels, int numFrames, 
+//void Meter::UpdateDisplay(int numChannels, int numFrames,
 //                           // Need to make these double-indexed arrays if we handle more than 2 channels.
-//                           float* maxLeft, float* rmsLeft, 
-//                           float* maxRight, float* rmsRight, 
+//                           float* maxLeft, float* rmsLeft,
+//                           float* maxRight, float* rmsRight,
 //                           const sampleCount kSampleCount)
 //{
 //   int i, j;
@@ -606,7 +606,7 @@ void Meter::UpdateDisplay(int numChannels, int numFrames, float *sampleData)
 //
 //         // In addition to looking for mNumPeakSamplesToClip peaked
 //         // samples in a row, also send the number of peaked samples
-//         // at the head and tail, in case there's a run 
+//         // at the head and tail, in case there's a run
 //         // of peaked samples that crosses block boundaries.
 //         if (fabs((j == 0) ? maxLeft[i] : maxRight[i]) >= MAX_AUDIO)
 //         {
@@ -648,8 +648,8 @@ void Meter::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
       numChanges++;
       double deltaT = msg.numFrames / mRate;
       int j;
-      
-      // <Why is this in the loop, rather than top of the method? 
+
+      // <Why is this in the loop, rather than top of the method?
       //    Or just a condition on the following, so we pop all the msgs while disabled?>
       if (mMeterDisabled)
          return;
@@ -678,16 +678,16 @@ void Meter::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
          // This smooths out the RMS signal
          float smooth = pow(0.9, (double)msg.numFrames/1024.0);
          mBar[j].rms = mBar[j].rms * smooth + msg.rms[j] * (1.0 - smooth);
-         
+
          if (mT - mBar[j].peakHoldTime > mPeakHoldDuration ||
              mBar[j].peak > mBar[j].peakHold) {
             mBar[j].peakHold = mBar[j].peak;
             mBar[j].peakHoldTime = mT;
          }
-         
+
          if (mBar[j].peak > mBar[j].peakPeakHold )
             mBar[j].peakPeakHold = mBar[j].peak;
-         
+
          if (msg.clipping[j] ||
              mBar[j].tailPeakCount+msg.headPeakCount[j] >=
              mNumPeakSamplesToClip){
@@ -863,7 +863,7 @@ void Meter::HandleLayout()
          mIconPos = wxPoint(-999, -999); // Don't display icon
          mMenuRect = wxRect(2, mHeight - menuHeight - 2,
                             menuWidth, menuHeight);
-      }         
+      }
       else {
          mIconPos = wxPoint(2, mHeight - iconHeight);
          mMenuRect = wxRect(iconWidth + 2, mHeight - menuHeight - 5,
@@ -937,7 +937,7 @@ void Meter::HandleLayout()
    }
 
    // MixerTrackCluster style has no popup, so disallows SetStyle, so never needs icon.
-   if (mStyle != MixerTrackCluster) 
+   if (mStyle != MixerTrackCluster)
       CreateIcon(mIconPos.y % 4);
 
    mLayoutValid = true;
@@ -992,7 +992,7 @@ void Meter::HandlePaint(wxDC &dc)
       dc.DrawBitmap(*mIcon, mIconPos.x, mIconPos.y, true);
 
       // Draws a beveled button and a down pointing triangle.
-      // The style and sizing matches the ones in the title 
+      // The style and sizing matches the ones in the title
       // bar of the waveform left-hand-side panels.
 
       wxRect r = mMenuRect;
@@ -1007,7 +1007,7 @@ void Meter::HandlePaint(wxDC &dc)
 
    if (mNumBars>0)
       mRuler.Draw(dc);
-   
+
    // MixerTrackCluster style has no L/R labels.
    if (mStyle != MixerTrackCluster)
    {
@@ -1021,7 +1021,7 @@ void Meter::HandlePaint(wxDC &dc)
 }
 
 void Meter::RepaintBarsNow()
-{ 
+{
    if (!mLayoutValid)
       return;
 
@@ -1044,7 +1044,7 @@ void Meter::RepaintBarsNow()
            mAllBarsRect.width, mAllBarsRect.height,
            &memDC, mAllBarsRect.x, mAllBarsRect.y,
            wxCOPY, false);
-  #endif 
+  #endif
 }
 
 void Meter::DrawMeterBar(wxDC &dc, MeterBar *meterBar)
@@ -1103,7 +1103,7 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *meterBar)
       AColor::Line(dc, r.x + wd, r.y + 1, r.x + wd, r.y + r.height - 1);
       if (wd > 1)
          AColor::Line(dc, r.x + wd - 1, r.y + 1, r.x + wd - 1, r.y + r.height - 1);
-      
+
       dc.SetPen(mPen);
       wd = (int)(meterBar->peak * r.width + 0.5);
       r = wxRect(r.x, r.y,
@@ -1312,6 +1312,6 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
       gPrefs->Write(wxT("/Meter/MeterRefreshRate"), mMeterRefreshRate);
       gPrefs->Flush();
    }
-   
+
    mTimer.Start(1000 / mMeterRefreshRate);
 }

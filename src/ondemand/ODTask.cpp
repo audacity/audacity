@@ -23,7 +23,7 @@ in a background thread.
 #include "../WaveTrack.h"
 #include "../Project.h"
 //temporarilly commented out till it is added to all projects
-//#include "../Profiler.h" 
+//#include "../Profiler.h"
 
 
 DEFINE_EVENT_TYPE(EVT_ODTASK_COMPLETE)
@@ -38,30 +38,30 @@ ODTask::ODTask()
    mTerminate = false;
    mNeedsODUpdate=false;
    mIsRunning = false;
-   
+
    mTaskNumber=sTaskNumber++;
-   
+
    mDemandSample=0;
 }
 
 //outside code must ensure this task is not scheduled again.
 void ODTask::TerminateAndBlock()
-{  
+{
    //one mutex pair for the value of mTerminate
    mTerminateMutex.Lock();
    mTerminate=true;
    //release all data the derived class may have allocated
    mTerminateMutex.Unlock();
-   
+
    //and one mutex pair for the exit of the function
    mBlockUntilTerminateMutex.Lock();
 //TODO lock mTerminate?
    mBlockUntilTerminateMutex.Unlock();
-   
-   //wait till we are out of doSome() to terminate. 
+
+   //wait till we are out of doSome() to terminate.
    Terminate();
 }
-   
+
 ///Do a modular part of the task.  For example, if the task is to load the entire file, load one BlockFile.
 ///Relies on DoSomeInternal(), which is the subclasses must implement.
 ///@param amountWork the percent amount of the total job to do.  1.0 represents the entire job.  the default of 0.0
@@ -74,11 +74,11 @@ void ODTask::DoSome(float amountWork)
 //   printf("%s %i subtask starting on new thread with priority\n", GetTaskName(),GetTaskNumber());
 
    mDoingTask=mTaskStarted=true;
-   
+
    float workUntil = amountWork+PercentComplete();
-   
-   
-   
+
+
+
    //check periodically to see if we should exit.
    mTerminateMutex.Lock();
    if(mTerminate)
@@ -87,45 +87,45 @@ void ODTask::DoSome(float amountWork)
       SetIsRunning(false);
       mBlockUntilTerminateMutex.Unlock();
       return;
-   }  
+   }
    mTerminateMutex.Unlock();
 
-   Update();   
-   
-   
+   Update();
+
+
    if(UsesCustomWorkUntilPercentage())
       workUntil = ComputeNextWorkUntilPercentageComplete();
-   
+
    if(workUntil<PercentComplete())
       workUntil = PercentComplete();
-   
+
    //Do Some of the task.
-   
+
    mTerminateMutex.Lock();
    while(PercentComplete() < workUntil && PercentComplete() < 1.0 && !mTerminate)
    {
       wxThread::This()->Yield();
       //release within the loop so we can cut the number of iterations short
-      
+
       DoSomeInternal(); //keep the terminate mutex on so we don't remo
-      mTerminateMutex.Unlock(); 
+      mTerminateMutex.Unlock();
       //check to see if ondemand has been called
       if(GetNeedsODUpdate() && PercentComplete() < 1.0)
          ODUpdate();
-         
-      
+
+
       //But add the mutex lock back before we check the value again.
       mTerminateMutex.Lock();
    }
    mTerminateMutex.Unlock();
    mDoingTask=false;
-   
+
    mTerminateMutex.Lock();
    //if it is not done, put it back onto the ODManager queue.
    if(PercentComplete() < 1.0&& !mTerminate)
    {
       ODManager::Instance()->AddTask(this);
-      
+
       //we did a bit of progress - we should allow a resave.
       AudacityProject::AllProjectsDeleteLock();
       for(unsigned i=0; i<gAudacityProjects.GetCount(); i++)
@@ -139,7 +139,7 @@ void ODTask::DoSome(float amountWork)
       }
       AudacityProject::AllProjectsDeleteUnlock();
 
-      
+
 //      printf("%s %i is %f done\n", GetTaskName(),GetTaskNumber(),PercentComplete());
    }
    else
@@ -148,16 +148,16 @@ void ODTask::DoSome(float amountWork)
       //static int tempLog =0;
       //if(++tempLog % 5==0)
          //END_TASK_PROFILING("On Demand Drag and Drop 5 80 mb files into audacity, 5 wavs per task");
-      //END_TASK_PROFILING("On Demand open an 80 mb wav stereo file");   
-   
+      //END_TASK_PROFILING("On Demand open an 80 mb wav stereo file");
+
       wxCommandEvent event( EVT_ODTASK_COMPLETE );
       AudacityProject::AllProjectsDeleteLock();
-      
+
       for(unsigned i=0; i<gAudacityProjects.GetCount(); i++)
       {
          if(IsTaskAssociatedWithProject(gAudacityProjects[i]))
          {
-            //this assumes tasks are only associated with one project.  
+            //this assumes tasks are only associated with one project.
             gAudacityProjects[i]->AddPendingEvent( event );
             //mark the changes so that the project can be resaved.
             gAudacityProjects[i]->GetUndoManager()->SetODChangesFlag();
@@ -179,10 +179,10 @@ bool ODTask::IsTaskAssociatedWithProject(AudacityProject* proj)
    TrackListIterator iter1(tracks);
    Track *tr = iter1.First();
 
-   while (tr) 
+   while (tr)
    {
       //go over all tracks in the project
-      if (tr->GetKind() == Track::Wave) 
+      if (tr->GetKind() == Track::Wave)
       {
          //look inside our task's track list for one that matches this projects one.
          mWaveTrackMutex.Lock();
@@ -199,7 +199,7 @@ bool ODTask::IsTaskAssociatedWithProject(AudacityProject* proj)
       }
       tr = iter1.Next();
    }
-   
+
    return false;
 
 }
@@ -216,7 +216,7 @@ void ODTask::SetIsRunning(bool value)
    mIsRunning=value;
    mIsRunningMutex.Unlock();
 }
-   
+
 bool ODTask::IsRunning()
 {
    bool ret;
@@ -224,8 +224,8 @@ bool ODTask::IsRunning()
    ret= mIsRunning;
    mIsRunningMutex.Unlock();
    return ret;
-}   
-   
+}
+
 sampleCount ODTask::GetDemandSample()
 {
    sampleCount retval;
@@ -234,16 +234,16 @@ sampleCount ODTask::GetDemandSample()
    mDemandSampleMutex.Unlock();
    return retval;
 }
-    
+
 void ODTask::SetDemandSample(sampleCount sample)
 {
-   
+
    mDemandSampleMutex.Lock();
    mDemandSample=sample;
    mDemandSampleMutex.Unlock();
 }
-   
-   
+
+
 ///return the amount of the task that has been completed.  0.0 to 1.0
 float ODTask::PercentComplete()
 {
@@ -252,8 +252,8 @@ float ODTask::PercentComplete()
    mPercentCompleteMutex.Unlock();
    return ret;
 }
-   
-///return 
+
+///return
 bool ODTask::IsComplete()
 {
    return PercentComplete() >= 1.0 && !IsRunning();
@@ -319,7 +319,7 @@ void ODTask::RecalculatePercentComplete()
       CalculatePercentComplete();
    }
 }
-   
+
 ///changes the tasks associated with this Waveform to process the task from a different point in the track
 ///@param track the track to update
 ///@param seconds the point in the track from which the tasks associated with track should begin processing from.
@@ -330,18 +330,18 @@ void ODTask::DemandTrackUpdate(WaveTrack* track, double seconds)
    for(size_t i=0;i<mWaveTracks.size();i++)
    {
       if(track == mWaveTracks[i])
-      {  
+      {
          sampleCount newDemandSample = (sampleCount)(seconds * track->GetRate());
          demandSampleChanged = newDemandSample != GetDemandSample();
          SetDemandSample(newDemandSample);
          break;
       }
-   }  
+   }
    mWaveTrackMutex.Unlock();
-   
+
    if(demandSampleChanged)
       SetNeedsODUpdate();
-   
+
 }
 
 
@@ -366,6 +366,6 @@ void ODTask::ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack)
       {
          mWaveTracks[i] = newTrack;
       }
-   }  
+   }
    mWaveTrackMutex.Unlock();
 }

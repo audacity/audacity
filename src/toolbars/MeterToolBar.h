@@ -1,12 +1,12 @@
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
-  
+
   MeterToolbar.h
- 
+
   Dominic Mazzoni
   Leland Lucius
- 
+
   ToolBar to hold the VU Meter
 
 **********************************************************************/
@@ -58,7 +58,7 @@ class MeterToolBar:public ToolBar {
 
    DECLARE_CLASS(MeterToolBar);
    DECLARE_EVENT_TABLE();
-      
+
 };
 
 #endif

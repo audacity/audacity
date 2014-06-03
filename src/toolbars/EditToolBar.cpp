@@ -7,14 +7,14 @@
   Dominic Mazzoni
   Shane T. Mueller
   Leland Lucius
- 
+
   See EditToolBar.h for details
 
 *******************************************************************//*!
 
 \class EditToolBar
 \brief A ToolBar that has the edit buttons on it.
- 
+
   This class, which is a child of Toolbar, creates the
   window containing interfaces to commonly-used edit
   functions that are otherwise only available through
@@ -109,7 +109,7 @@ AButton *EditToolBar::AddButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredHiliteSmall,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
-      wxDefaultPosition, 
+      wxDefaultPosition,
       toggle,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
 
@@ -150,10 +150,10 @@ void EditToolBar::Populate()
 #ifdef EXPERIMENTAL_SYNC_LOCK
    AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksDisabled, ETBSyncLockID,
                _("Sync-Lock Tracks"), true);
-   
+
    AddSeparator();
 #endif
-   
+
    AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
       _("Zoom In"));
    AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
@@ -170,7 +170,7 @@ void EditToolBar::Populate()
    mButtons[ETBZoomSelID]->SetEnabled(false);
    mButtons[ETBZoomFitID]->SetEnabled(false);
    mButtons[ETBPasteID]->SetEnabled(false);
-   
+
 #ifdef EXPERIMENTAL_SYNC_LOCK
    mButtons[ETBSyncLockID]->PushDown();
 #endif
@@ -282,7 +282,7 @@ void EditToolBar::EnableDisableButtons()
          break;
       }
    selection &= (p->GetSel0() < p->GetSel1());
-   
+
    mButtons[ETBCutID]->SetEnabled(selection);
    mButtons[ETBCopyID]->SetEnabled(selection);
    mButtons[ETBTrimID]->SetEnabled(selection);
@@ -304,7 +304,7 @@ void EditToolBar::EnableDisableButtons()
    mButtons[ETBZoomFitID]->SetEnabled(tracks);
 
    mButtons[ETBPasteID]->SetEnabled(p->Clipboard());
-   
+
 #ifdef EXPERIMENTAL_SYNC_LOCK
    bool bSyncLockTracks;
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &bSyncLockTracks, false);

@@ -18,13 +18,13 @@ void LoadAudioUnitsOfType(OSType inAUType)
 {
    ComponentDescription desc;
    Component component;
-   
+
    desc.componentType = inAUType;
    desc.componentSubType = 0;
    desc.componentManufacturer = 0;
    desc.componentFlags = 0;
    desc.componentFlagsMask = 0;
-   
+
    component = FindNextComponent(NULL, &desc);
    while (component != NULL) {
       ComponentDescription found;

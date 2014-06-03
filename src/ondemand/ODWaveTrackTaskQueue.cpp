@@ -23,7 +23,7 @@ tasks associated with a WaveTrack.
 ODWaveTrackTaskQueue::ODWaveTrackTaskQueue()
 {
 }
-   
+
 ODWaveTrackTaskQueue::~ODWaveTrackTaskQueue()
 {
    //we need to delete all ODTasks.  We will have to block or wait until block for the active ones.
@@ -34,7 +34,7 @@ ODWaveTrackTaskQueue::~ODWaveTrackTaskQueue()
       ODManager::Instance()->RemoveTaskIfInQueue(mTasks[i]);
       delete mTasks[i];
    }
-   
+
 }
 
 ///returns whether or not this queue's task list and another's can merge together, as when we make two mono tracks stereo.
@@ -43,7 +43,7 @@ bool ODWaveTrackTaskQueue::CanMergeWith(ODWaveTrackTaskQueue* otherQueue)
    //have to be very careful when dealing with two lists that need to be locked.
    if(GetNumTasks()!=otherQueue->GetNumTasks())
       return false;
-   
+
    mTasksMutex.Lock();
    for(unsigned int i=0;i<mTasks.size();i++)
    {
@@ -88,15 +88,15 @@ bool ODWaveTrackTaskQueue::ContainsWaveTrack(WaveTrack* track)
    }
    mTracksMutex.Unlock();
    return false;
-}   
+}
 ///Adds a track to the associated list.
 void ODWaveTrackTaskQueue::AddWaveTrack(WaveTrack* track)
 {
-   
+
    mTracksMutex.Lock();
    if(track)
       mTracks.push_back(track);
-   
+
    mTracksMutex.Unlock();
 }
 
@@ -105,18 +105,18 @@ void ODWaveTrackTaskQueue::AddTask(ODTask* task)
    mTasksMutex.Lock();
    mTasks.push_back(task);
    mTasksMutex.Unlock();
-   
-   //take all of the tracks in the task. 
+
+   //take all of the tracks in the task.
    mTracksMutex.Lock();
    for(int i=0;i<task->GetNumWaveTracks();i++)
    {
       //task->GetWaveTrack(i) may return NULL, but we handle it by checking before using.
-      //The other worry that the WaveTrack returned and was deleted in the meantime is also 
-      //handled since mQueuesMutex is locked one up in the stack from here, 
+      //The other worry that the WaveTrack returned and was deleted in the meantime is also
+      //handled since mQueuesMutex is locked one up in the stack from here,
       //and WaveTrack deletion is bound to that.
       mTracks.push_back(task->GetWaveTrack(i));
-   } 
-    
+   }
+
    mTracksMutex.Unlock();
 
 }
@@ -127,22 +127,22 @@ void ODWaveTrackTaskQueue::RemoveWaveTrack(WaveTrack* track)
 {
    if(track)
    {
-      
+
       mTasksMutex.Lock();
       for(unsigned int i=0;i<mTasks.size();i++)
          mTasks[i]->StopUsingWaveTrack(track);
       mTasksMutex.Unlock();
-      
+
       mTracksMutex.Lock();
       for(unsigned int i=0;i<mTracks.size();i++)
          if(mTracks[i]==track)
             mTracks.erase(mTracks.begin()+i--);//decrement i after the removal.
-            
+
       mTracksMutex.Unlock();
    }
 }
 
-//if the wavetrack is in this queue, and is not the only wavetrack, clones the tasks and schedules it. 
+//if the wavetrack is in this queue, and is not the only wavetrack, clones the tasks and schedules it.
 void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
 {
 
@@ -153,14 +153,14 @@ void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
       mTracksMutex.Unlock();
       return;
    }
-   
+
    for(unsigned int i=0;i<mTracks.size();i++)
    {
       if(mTracks[i]==track)
       {
          mTracksMutex.Unlock();//release the lock, since RemoveWaveTrack is a public threadsafe method.
          RemoveWaveTrack(mTracks[i]);
-         
+
          //clone the items in order and add them to the ODManager.
          mTasksMutex.Lock();
          ODTask* task;
@@ -170,7 +170,7 @@ void ODWaveTrackTaskQueue::MakeWaveTrackIndependent(WaveTrack* track)
             task->AddWaveTrack(track);
             //AddNewTask requires us to relinquish this lock. However, it is safe because ODManager::MakeWaveTrackIndependent
             //has already locked the m_queuesMutex.
-            mTasksMutex.Unlock(); 
+            mTasksMutex.Unlock();
             //AddNewTask locks the m_queuesMutex which is already locked by ODManager::MakeWaveTrackIndependent,
             //so we pass a boolean flag telling it not to lock again.
             ODManager::Instance()->AddNewTask(task,false);
@@ -196,7 +196,7 @@ void ODWaveTrackTaskQueue::DemandTrackUpdate(WaveTrack* track, double seconds)
       {
          mTasks[i]->DemandTrackUpdate(track,seconds);
       }
-      
+
       mTracksMutex.Unlock();
    }
 }
@@ -211,7 +211,7 @@ void ODWaveTrackTaskQueue::ReplaceWaveTrack(WaveTrack* oldTrack, WaveTrack* newT
       for(unsigned int i=0;i<mTasks.size();i++)
          mTasks[i]->ReplaceWaveTrack(oldTrack,newTrack);
       mTasksMutex.Unlock();
-      
+
       mTracksMutex.Lock();
       for(unsigned int i=0;i<mTracks.size();i++)
          if(mTracks[i]==oldTrack)
@@ -250,7 +250,7 @@ int ODWaveTrackTaskQueue::GetNumTasks()
    mTasksMutex.Unlock();
    return ret;
 }
-   
+
 ///returns a ODTask at position x
 ODTask* ODWaveTrackTaskQueue::GetTask(size_t x)
 {
@@ -261,8 +261,8 @@ ODTask* ODWaveTrackTaskQueue::GetTask(size_t x)
    mTasksMutex.Unlock();
    return ret;
 }
-   
- 
+
+
 
 //returns true if either tracks or tasks are empty
 bool ODWaveTrackTaskQueue::IsEmpty()
@@ -271,14 +271,14 @@ bool ODWaveTrackTaskQueue::IsEmpty()
    mTracksMutex.Lock();
    isEmpty = mTracks.size()<=0;
    mTracksMutex.Unlock();
-   
+
    mTasksMutex.Lock();
-   isEmpty = isEmpty || mTasks.size()<=0; 
+   isEmpty = isEmpty || mTasks.size()<=0;
    mTasksMutex.Unlock();
-   
+
    return isEmpty;
 }
-   
+
 //returns true if the foremost task exists and is empty.
 bool ODWaveTrackTaskQueue::IsFrontTaskComplete()
 {
@@ -288,16 +288,16 @@ bool ODWaveTrackTaskQueue::IsFrontTaskComplete()
       //there is a chance the task got updated and now has more to do, (like when it is joined with a new track)
       //check.
       mTasks[0]->RecalculatePercentComplete();
-      bool ret; 
+      bool ret;
       ret = mTasks[0]->IsComplete();
       mTasksMutex.Unlock();
-      
+
       return ret;
    }
    mTasksMutex.Unlock();
    return false;
 }
-   
+
 ///Removes and deletes the front task from the list.
 void ODWaveTrackTaskQueue::RemoveFrontTask()
 {
@@ -310,7 +310,7 @@ void ODWaveTrackTaskQueue::RemoveFrontTask()
    }
    mTasksMutex.Unlock();
 }
-   
+
 ///gets the front task for immediate execution
 ODTask* ODWaveTrackTaskQueue::GetFrontTask()
 {
@@ -329,13 +329,13 @@ void ODWaveTrackTaskQueue::FillTipForWaveTrack( WaveTrack * t, const wxChar ** p
 {
    if(ContainsWaveTrack(t) && GetNumTasks())
    {
-      
+
     //  if(GetNumTasks()==1)
       mTipMsg.Printf(_("%s %2.0f%% complete.  Click to change task focal point."), GetFrontTask()->GetTip(), GetFrontTask()->PercentComplete()*100.0 );
      // else
        //  msg.Printf(_("%s %n additional tasks remaining."), GetFrontTask()->GetTip().c_str(), GetNumTasks());
-       
+
       *ppTip = mTipMsg.c_str();
-   
+
    }
 }

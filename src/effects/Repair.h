@@ -19,9 +19,9 @@
 class WaveTrack;
 
 class EffectRepair: public Effect {
-   
+
 public:
-   
+
    EffectRepair();
    virtual ~EffectRepair();
 
@@ -42,12 +42,12 @@ public:
    virtual wxString GetEffectAction() {
       return wxString(_("Repairing damaged audio"));
    }
-   
+
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
-   
+
    virtual bool Process();
-   
+
 private:
    bool ProcessOne(int count, WaveTrack * track,
                    sampleCount start,

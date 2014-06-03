@@ -20,7 +20,7 @@
 
 #include "PrefsPanel.h"
 
-class BatchPrefs : public PrefsPanel 
+class BatchPrefs : public PrefsPanel
 {
 public:
    BatchPrefs(wxWindow * parent);

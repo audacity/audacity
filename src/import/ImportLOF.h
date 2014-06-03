@@ -26,7 +26,7 @@
   file "C:\folder1\sample1.wav"    # sample1.wav is displayed
   file "C:\sample2.wav" offset 5   # sample2 is displayed with a 5s offset
   File "C:\sample3.wav"            # sample3 is displayed with no offset
-  window offset 5 duration 10      # open a new window, zoom to display 
+  window offset 5 duration 10      # open a new window, zoom to display
   # 10 seconds total starting at 5 (ending at 15) seconds
   file "C:\sample3.wav" offset 2.5
 

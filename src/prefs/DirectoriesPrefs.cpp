@@ -65,7 +65,7 @@ void DirectoriesPrefs::Populate()
 {
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -100,7 +100,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-#ifdef DEPRECATED_AUDIO_CACHE 
+#ifdef DEPRECATED_AUDIO_CACHE
    // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
    S.StartStatic(_("Audio cache"));
    {
@@ -125,9 +125,9 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui & S)
 
 void DirectoriesPrefs::OnChooseTempDir(wxCommandEvent & e)
 {
-   wxDirDialog dlog(this, 
-                    _("Choose a location to place the temporary directory"), 
-                    gPrefs->Read(wxT("/Directories/TempDir"), 
+   wxDirDialog dlog(this,
+                    _("Choose a location to place the temporary directory"),
+                    gPrefs->Read(wxT("/Directories/TempDir"),
                                  wxGetApp().defaultTempDir));
    int retval = dlog.ShowModal();
    if (retval != wxID_CANCEL && dlog.GetPath() != wxT("")) {

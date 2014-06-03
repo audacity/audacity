@@ -14,7 +14,7 @@ Intrinsics (SSE/AVX) and Threaded Equalization
 #define __AUDACITY_EFFECT_EQUALIZATION48X__
 
 // bitwise function selection
-// options are 
+// options are
 #define MATH_FUNCTION_ORIGINAL 0 // 0 original path
 #define MATH_FUNCTION_BITREVERSE_TABLE 1 // 1 SSE BitReverse Table
 #define MATH_FUNCTION_SIN_COS_TABLE 2 // 2 SSE SinCos Table
@@ -71,7 +71,7 @@ static int EQWorkerCounter=0;
 
 class EQWorker : public wxThread {
 public:
-   EQWorker():wxThread(wxTHREAD_JOINABLE) {   
+   EQWorker():wxThread(wxTHREAD_JOINABLE) {
       mBufferInfoList=NULL;
       mBufferInfoCount=0;
       mMutex=NULL;

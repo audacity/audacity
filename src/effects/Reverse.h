@@ -5,7 +5,7 @@
   Reverse.h
 
   Mark Phillips
-  
+
   This class reverses the selected audio.
 
 **********************************************************************/
@@ -43,7 +43,7 @@ class EffectReverse:public Effect {
    virtual wxString GetEffectAction() {
       return wxString(_("Reversing"));
    }
-   
+
    virtual bool Process();
 
  private:

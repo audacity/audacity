@@ -91,10 +91,10 @@ class Sequence: public XMLTagHandler {
 
    bool AppendCoded(wxString fName, sampleCount start,
                             sampleCount len, int channel, int decodeType);
-                            
+
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
-   unsigned int GetODFlags();                            
-                    
+   unsigned int GetODFlags();
+
    // Append a blockfile. The blockfile pointer is then "owned" by the
    // sequence. This function is used by the recording log crash recovery
    // code, but may be useful for other purposes. The blockfile must already
@@ -124,7 +124,7 @@ class Sequence: public XMLTagHandler {
    // from being moved.  Call this if you want to copy a
    // track to a different DirManager.  See BlockFile.h
    // for details.
-   // 
+   //
 
    bool Lock();
    bool CloseLock();//similar to Lock but should be called upon project close.
@@ -161,7 +161,7 @@ class Sequence: public XMLTagHandler {
    //
 
    BlockArray *GetBlockArray() {return mBlock;}
-   
+
    ///
    void LockDeleteUpdateMutex(){mDeleteUpdateMutex.Lock();}
    void UnlockDeleteUpdateMutex(){mDeleteUpdateMutex.Unlock();}
@@ -170,7 +170,7 @@ class Sequence: public XMLTagHandler {
 
    //
    // Private static variables
-   // 
+   //
 
    static int    sMaxDiskBlockSize;
 
@@ -188,7 +188,7 @@ class Sequence: public XMLTagHandler {
    sampleCount   mMaxSamples; // max samples per block
 
    bool          mErrorOpening;
-   
+
    ///To block the Delete() method against the ODCalcSummaryTask::Update() method
    ODLock   mDeleteUpdateMutex;
 

@@ -35,7 +35,7 @@ FileHistory::~FileHistory()
 void FileHistory::AddFileToHistory(const wxString & file, bool update)
 {
    // Needed to transition from wxFileHistory to FileHistory since there
-   // can be empty history "slots". 
+   // can be empty history "slots".
    if (file.IsEmpty()) {
       return;
    }

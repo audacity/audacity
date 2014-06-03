@@ -62,7 +62,7 @@ public:
    virtual bool Init();
 
    virtual bool CheckWhetherSkipEffect();
-   
+
    virtual bool Process();
 
 private:
@@ -73,7 +73,7 @@ private:
 
    Envelope *mEnvelope;
 
-   bool mbDidSomething; // This effect usually does nothing on real-world data. 
+   bool mbDidSomething; // This effect usually does nothing on real-world data.
    int       windowSize;
    int       mThresholdLevel;
    int       mClickWidth;
@@ -115,7 +115,7 @@ class ClickRemovalDialog:public EffectDialog {
 
  public:
    EffectClickRemoval *mEffect;
-   
+
    int mThresh;
    int mWidth;
 

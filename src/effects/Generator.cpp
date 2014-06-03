@@ -5,8 +5,8 @@
   Generator.h
 
   Two Abstract classes, Generator, and BlockGenerator, that effects which
-  generate audio should derive from.  
-  
+  generate audio should derive from.
+
   Block Generator breaks the synthesis task up into smaller parts.
 
   Dominic Mazzoni
@@ -25,7 +25,7 @@ bool Generator::Process()
       return false;
 
 
-   // Set up mOutputTracks. 
+   // Set up mOutputTracks.
    // This effect needs Track::All for sync-lock grouping.
    this->CopyInputTracks(Track::All);
 
@@ -39,7 +39,7 @@ bool Generator::Process()
    {
       if (t->GetKind() == Track::Wave && t->GetSelected()) {
          WaveTrack* track = (WaveTrack*)t;
-         
+
          bool editClipCanMove;
          gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipCanMove, true);
 

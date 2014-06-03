@@ -4,13 +4,13 @@
 
   ChangeTempo.cpp
 
-  Vaughan Johnson, 
+  Vaughan Johnson,
   Dominic Mazzoni
 
 *******************************************************************//**
 
 \class EffectChangeTempo
-\brief An EffectSoundTouch provides speeding up or 
+\brief An EffectSoundTouch provides speeding up or
   slowing down tempo without changing pitch.
 
 *//****************************************************************//**
@@ -56,12 +56,12 @@ double EffectChangeTempo::CalcPreviewInputLength(double previewLength)
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
 
-wxString EffectChangeTempo::GetEffectDescription() { 
+wxString EffectChangeTempo::GetEffectDescription() {
    // Note: This is useful only after change amount has been set.
    return wxString::Format(_("Applied effect: %s %.1f%%"),
                            this->GetEffectName().c_str(),
                            m_PercentChange);
-} 
+}
 
 bool EffectChangeTempo::Init()
 {
@@ -101,7 +101,7 @@ bool EffectChangeTempo::PromptUser()
 }
 
 bool EffectChangeTempo::TransferParameters( Shuttle & shuttle )
-{  
+{
    shuttle.TransferDouble(wxT("Percentage"),m_PercentChange,0.0);
    return true;
 }
@@ -200,7 +200,7 @@ void ChangeTempoDialog::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndHorizontalLay();
 
-   // 
+   //
    S.StartMultiColumn(5, wxCENTER);
    {
       //
@@ -397,7 +397,7 @@ void ChangeTempoDialog::OnText_ToBPM(wxCommandEvent & WXUNUSED(event))
 
          this->Update_Text_ToLength();
       }
-      
+
       m_bLoopDetect = false;
    }
 }
@@ -421,7 +421,7 @@ void ChangeTempoDialog::OnText_ToLength(wxCommandEvent & WXUNUSED(event))
       this->Update_Slider_PercentChange();
 
       this->Update_Text_ToBPM();
-      
+
       m_bLoopDetect = false;
    }
 }
@@ -467,7 +467,7 @@ void ChangeTempoDialog::Update_Slider_PercentChange()
    }
 }
 
-void ChangeTempoDialog::Update_Text_ToBPM() 
+void ChangeTempoDialog::Update_Text_ToBPM()
 // Use m_FromBPM & m_PercentChange to set new m_ToBPM & control.
 {
    // Update ToBPM iff FromBPM has been set.
@@ -482,7 +482,7 @@ void ChangeTempoDialog::Update_Text_ToBPM()
    }
 }
 
-void ChangeTempoDialog::Update_Text_ToLength() 
+void ChangeTempoDialog::Update_Text_ToLength()
 // Use m_FromLength & m_PercentChange to set new m_ToLength & control.
 {
    m_ToLength = (m_FromLength * 100.0) / (100.0 + m_PercentChange);

@@ -40,7 +40,7 @@
 #include "Silence.h"
 #include "ScienFilter.h"
 #include "StereoToMono.h"
-#ifdef USE_SBSMS 
+#ifdef USE_SBSMS
 #include "TimeScale.h"
 #endif
 #include "ToneGen.h"
@@ -85,12 +85,12 @@ void LoadEffects()
    EffectManager& em = EffectManager::Get();
 
 #ifdef EFFECT_CATEGORIES
-   
+
    // Create effect category graph. These categories and relationships
-   // are taken from revision 2 of lv2.ttl, loaders for other plugin systems 
-   // (such as LADSPA/LRDF) should map their categories to these ones when 
-   // applicable. Individual LADSPA/LRDF and LV2 plugins can add new 
-   // categories and make them subcategories of the existing ones, but not 
+   // are taken from revision 2 of lv2.ttl, loaders for other plugin systems
+   // (such as LADSPA/LRDF) should map their categories to these ones when
+   // applicable. Individual LADSPA/LRDF and LV2 plugins can add new
+   // categories and make them subcategories of the existing ones, but not
    // add subcategory relationships between these categories.
    //
    // We need some persistent, global identifiers for categories - LRDF
@@ -99,9 +99,9 @@ void LoadEffects()
    // must be mapped to URIs by their loaders.
 
 #define LV2PREFIX "http://lv2plug.in/ns/lv2core#"
-   
+
    typedef EffectCategory* CatPtr;
-   
+
    CatPtr gen = em.AddCategory(wxT(LV2PREFIX) wxT("GeneratorPlugin"),
                                _("Generator"));
    CatPtr inst = em.AddCategory(wxT(LV2PREFIX) wxT("InstrumentPlugin"),
@@ -169,7 +169,7 @@ void LoadEffects()
                                _("Limiter"));
    CatPtr gate = em.AddCategory(wxT(LV2PREFIX) wxT("GatePlugin"),
                                 _("Gate"));
-   
+
    em.AddCategoryParent(inst, gen);
    em.AddCategoryParent(osc, gen);
    em.AddCategoryParent(conv, util);
@@ -194,12 +194,12 @@ void LoadEffects()
    em.AddCategoryParent(exp, dyn);
    em.AddCategoryParent(lim, dyn);
    em.AddCategoryParent(gate, dyn);
-   
+
    // We also add a couple of categories for internal use. These are not
    // in lv2.ttl.
 
 #define ATEAM "http://audacityteam.org/namespace#"
-   
+
    CatPtr nrm = em.AddCategory(wxT(ATEAM) wxT("NoiseRemoval"),
                                _("Noise Removal"));
    CatPtr pnt = em.AddCategory(wxT(ATEAM) wxT("PitchAndTempo"),
@@ -214,14 +214,14 @@ void LoadEffects()
    em.AddCategoryParent(tim, util);
    em.AddCategoryParent(aTim, anal);
    em.AddCategoryParent(onst, aTim);
-   
+
    // We freeze the internal subcategory relations between the categories
    // added so far so LADSPA/LRDF or other category systems don't ruin
    // our hierarchy.
    em.FreezeCategories();
-   
+
 #endif
-   
+
    // Generate menu
    em.RegisterEffect(new EffectNoise());
    em.RegisterEffect(new EffectSilence());
@@ -231,7 +231,7 @@ void LoadEffects()
    em.RegisterEffect(&((new EffectToneGen())->EnableForChirps()));
 
    // Effect menu
-   
+
    em.RegisterEffect(new EffectAmplify());
 
    //Commented out now that the Compressor effect works better
@@ -240,7 +240,7 @@ void LoadEffects()
    const int SIMPLE_EFFECT = BUILTIN_EFFECT | PROCESS_EFFECT;
    // In this list, designating an effect as 'SIMPLE_EFFECT' just means
    // that it should be included in even the most basic of menus.
-   
+
    em.RegisterEffect(new EffectAutoDuck());
    em.RegisterEffect(new EffectBassTreble());
    em.RegisterEffect(new EffectChangeSpeed());
@@ -269,7 +269,7 @@ void LoadEffects()
 #endif
    em.RegisterEffect(new EffectStereoToMono(), HIDDEN_EFFECT);// NOT in normal effects list.
    em.RegisterEffect(new EffectTruncSilence(), SIMPLE_EFFECT);
-#ifdef USE_SBSMS 
+#ifdef USE_SBSMS
    em.RegisterEffect(new EffectTimeScale());
 #endif
    em.RegisterEffect(new EffectWahwah());
@@ -312,7 +312,7 @@ void LoadEffects()
       LoadVampPlugins();
    }
 #endif
-   
+
 }
 
 void UnloadEffects()

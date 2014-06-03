@@ -27,19 +27,19 @@ class AudioUnitEffect:public Effect {
    virtual ~AudioUnitEffect();
 
    virtual wxString GetEffectName();
-   
+
    virtual std::set<wxString> GetEffectCategories();
-   
+
    virtual wxString GetEffectIdentifier();
-   
+
    virtual wxString GetEffectAction();
 
    virtual bool Init();
 
    virtual bool PromptUser();
-   
+
    virtual bool Process();
-   
+
    virtual void End();
 
  private:
@@ -59,15 +59,15 @@ class AudioUnitEffect:public Effect {
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
 
    static OSStatus
-      SimpleAudioRenderCallback(void *inRefCon, 
+      SimpleAudioRenderCallback(void *inRefCon,
                                 AudioUnitRenderActionFlags *inActionFlags,
-                                const AudioTimeStamp *inTimeStamp, 
+                                const AudioTimeStamp *inTimeStamp,
                                 UInt32 inBusNumber,
-                                UInt32 inNumFrames, 
+                                UInt32 inNumFrames,
                                 AudioBufferList *ioData);
 
    Component GetCarbonViewComponent(OSType subtype);
- 
+
    wxString    mName;
    Component   mComponent;
    AudioUnit   mUnit;

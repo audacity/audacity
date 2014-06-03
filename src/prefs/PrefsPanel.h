@@ -40,7 +40,7 @@ ThemePrefs.
 #define TOP_LEVEL_BORDER       5
 #define GENERIC_CONTROL_BORDER 5
 
-class PrefsPanel:public wxPanel 
+class PrefsPanel:public wxPanel
 {
  public:
    PrefsPanel(wxWindow * parent, wxString title)
@@ -49,7 +49,7 @@ class PrefsPanel:public wxPanel
       SetLabel(title);     // Provide visual label
       SetName(title);      // Provide audible label
    }
-   
+
    virtual ~PrefsPanel()
    {
    }

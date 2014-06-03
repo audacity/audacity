@@ -5,12 +5,12 @@
    License: GPL v2.  See License.txt.
 
   ChangePitch.h
-  Vaughan Johnson, Dominic Mazzoni, Steve Daulton 
+  Vaughan Johnson, Dominic Mazzoni, Steve Daulton
 
 ******************************************************************//**
 
 \file ChangePitch.h
-\brief Change Pitch effect provides raising or lowering 
+\brief Change Pitch effect provides raising or lowering
 the pitch without changing the tempo.
 
 *//*******************************************************************/
@@ -27,13 +27,13 @@ the pitch without changing the tempo.
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
 
-class EffectChangePitch : public EffectSoundTouch 
+class EffectChangePitch : public EffectSoundTouch
 {
  public:
    EffectChangePitch();
 
    virtual wxString GetEffectName() { return wxString(_("Change Pitch...")); }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;
       result.insert(wxT("http://lv2plug.in/ns/lv2core#PitchPlugin"));
@@ -48,13 +48,13 @@ class EffectChangePitch : public EffectSoundTouch
    virtual wxString GetEffectAction() {
       return wxString(_("Changing Pitch"));
    }
-   
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription(); 
+
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription();
 
    virtual bool Init();
 
-   // Deduce m_FromFrequency from the samples at the beginning of 
+   // Deduce m_FromFrequency from the samples at the beginning of
    // the selection. Then set some other params accordingly.
    virtual void DeduceFrequencies();
 
@@ -81,10 +81,10 @@ class wxRadioButton;
 class wxString;
 class wxTextCtrl;
 
-class ChangePitchDialog : public EffectDialog 
+class ChangePitchDialog : public EffectDialog
 {
  public:
-   ChangePitchDialog(EffectChangePitch * effect, wxWindow * parent, 
+   ChangePitchDialog(EffectChangePitch * effect, wxWindow * parent,
                      double dSemitonesChange, double dStartFrequency);
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -94,7 +94,7 @@ class ChangePitchDialog : public EffectDialog
  private:
    // calculations
    void Calc_ToPitch(); // Update m_nToPitch from new m_dSemitonesChange.
-   void Calc_ToOctave(); 
+   void Calc_ToOctave();
    void Calc_SemitonesChange_fromPitches();
    void Calc_SemitonesChange_fromOctaveChange();
    void Calc_SemitonesChange_fromPercentChange();
@@ -133,7 +133,7 @@ class ChangePitchDialog : public EffectDialog
 
  private:
    EffectChangePitch * mEffect;
-   bool m_bLoopDetect; // Used to avoid loops in initialization and in event handling. 
+   bool m_bLoopDetect; // Used to avoid loops in initialization and in event handling.
 
    // controls
    wxChoice *     m_pChoice_FromPitch;

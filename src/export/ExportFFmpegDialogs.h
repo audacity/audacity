@@ -22,7 +22,7 @@ LRN
 
 
 /// Identifiers for pre-set export types.
-enum FFmpegExposedFormat 
+enum FFmpegExposedFormat
 {
    FMT_M4A,
    FMT_AC3,
@@ -237,7 +237,7 @@ private:
    wxButton *mDeletePreset;
    wxButton *mImportPresets;
    wxButton *mExportPresets;
-   
+
    int mBitRateFromChoice;
    int mSampleRateFromChoice;
 
@@ -247,7 +247,7 @@ private:
 
    /// Finds the format currently selected and returns it's name and description
    void FindSelectedFormat(wxString **name, wxString **longname);
-   
+
    /// Finds the codec currently selected and returns it's name and description
    void FindSelectedCodec(wxString **name, wxString **longname);
 
@@ -275,7 +275,7 @@ private:
    // Enables/disables controls based on format/codec combination,
    // leaving only relevant controls enabled.
    // Hiding the controls may have been a better idea,
-   // but it's hard to hide their text labels too  
+   // but it's hard to hide their text labels too
    void EnableDisableControls(AVCodec *cdc, wxString *selfmt);
    DECLARE_EVENT_TABLE()
 };

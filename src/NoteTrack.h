@@ -58,8 +58,8 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    virtual ~NoteTrack();
 
    virtual Track *Duplicate();
-   
-   virtual int GetKind() const { return Note; } 
+
+   virtual int GetKind() const { return Note; }
 
    virtual double GetStartTime();
    virtual double GetEndTime();
@@ -117,7 +117,7 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    // is located at r.y + r.height - (GetNoteMargin() + 1 + mPitchHeight)
    void PrepareIPitchToY(const wxRect &r) {
        mBottom = r.y + r.height - GetNoteMargin() - 1 - mPitchHeight +
-          (mBottomNote / 12) * GetOctaveHeight() + 
+          (mBottomNote / 12) * GetOctaveHeight() +
           GetNotePos(mBottomNote % 12);
    }
    // IPitchToY returns Y coordinate of top of pitch p
@@ -137,7 +137,7 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    int YToIPitch(int y);
    // map pitch class number (0-11) to pixel offset from bottom of octave
    // (the bottom of the black line between B and C) to the top of the
-   // note. Note extra pixel separates B(11)/C(0) and E(4)/F(5). 
+   // note. Note extra pixel separates B(11)/C(0) and E(4)/F(5).
    int GetNotePos(int p) const { return 1 + mPitchHeight * (p + 1) + (p > 4); }
    // get pixel offset to top of ith black key note
    int GetBlackPos(int i) const { return GetNotePos(i * 2 + 1 + (i > 1)); }
@@ -145,16 +145,16 @@ class AUDACITY_DLL_API NoteTrack:public Track {
    // GetOctaveBottom. GetWhitePos(0) returns 1, which matches the location
    // of the line separating B and C
    int GetWhitePos(int i) const { return 1 + (i * GetOctaveHeight()) / 7; }
-   void SetBottomNote(int note) 
-   { 
+   void SetBottomNote(int note)
+   {
       if (note < 0)
          note = 0;
       else if (note > 96)
          note = 96;
 
-      mBottomNote = note; 
+      mBottomNote = note;
    }
-   // Vertical scrolling is performed by dragging the keyboard at 
+   // Vertical scrolling is performed by dragging the keyboard at
    // left of track. Protocol is call StartVScroll, then update by
    // calling VScroll with original and final mouse position.
    // These functions are not used -- instead, zooming/dragging works like

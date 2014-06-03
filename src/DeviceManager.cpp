@@ -38,12 +38,12 @@
 
 DeviceManager DeviceManager::dm;
 
-/// Gets the singleton instance 
+/// Gets the singleton instance
 DeviceManager* DeviceManager::Instance()
 {
    return &dm;
 }
-   
+
 /// Releases memory assosiated with the singleton
 void DeviceManager::Destroy()
 {
@@ -89,7 +89,7 @@ DeviceSourceMap* DeviceManager::GetDefaultDevice(int hostIndex, int isInput)
       if (maps[i].deviceIndex == targetDevice)
          return &maps[i];
    }
-   
+
    wxLogDebug(wxT("GetDefaultDevice() no default device"));
    return NULL;
 }
@@ -149,17 +149,17 @@ static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std:
    }
 
    //if there is only one source, we don't need to concatenate the source
-   //or enumerate, because it is something meaningless like 'master' 
+   //or enumerate, because it is something meaningless like 'master'
    //(as opposed to 'mic in' or 'line in'), and the user doesn't have any choice.
    //note that some devices have no input sources at all but are still valid.
    //the behavior we do is the same for 0 and 1 source cases.
    map.totalSources = Px_GetNumInputSources(portMixer);
 #endif
-    
+
    if (map.totalSources <= 1) {
       map.sourceIndex = 0;
       maps->push_back(map);
-   } 
+   }
 #ifdef USE_PORTMIXER
      else {
       //open up a stream with the device so portmixer can get the info out of it.
@@ -262,14 +262,14 @@ void DeviceManager::Rescan()
       // check to see if there is a stream open - can happen if monitoring,
       // but otherwise Rescan() should not be available to the user.
       if (gAudioIO) {
-         if (gAudioIO->IsMonitoring()) 
+         if (gAudioIO->IsMonitoring())
          {
             gAudioIO->StopStream();
             while (gAudioIO->IsBusy())
                wxMilliSleep(100);
          }
       }
-      
+
       // restart portaudio - this updates the device list
       Pa_Terminate();
       Pa_Initialize();

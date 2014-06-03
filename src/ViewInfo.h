@@ -38,7 +38,7 @@ struct ViewInfo {
    wxInt64 sbarH;
    wxInt64 sbarScreen;
    wxInt64 sbarTotal;
-   
+
    // Internal wxScrollbar positions are only int in range, so multiply
    // the above values with the following member to get the actual
    // scroll bar positions as reported by the horizontal wxScrollbar's members

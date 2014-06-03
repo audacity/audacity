@@ -15,7 +15,7 @@
 
 This is an abstract class that subclasses will have to derive the types
 from.  For any type there should only be one ODDecodeTask associated with
-a given track.  
+a given track.
 There could be the ODBlockFiles of several FLACs in one track (after copy and pasting),
 so things aren't as simple as they seem - the implementation needs to be
 robust enough to allow all the user changes such as copy/paste, delete, and so on.
@@ -49,13 +49,13 @@ class ODDecodeFlacTask:public ODDecodeTask
    /// Constructs an ODTask
    ODDecodeFlacTask(){}
    virtual ~ODDecodeFlacTask();
-   
-   
+
+
    virtual ODTask* Clone();
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
    virtual ODFileDecoder* CreateFileDecoder(const wxString & fileName);
-   
-   ///Lets other classes know that this class handles flac   
+
+   ///Lets other classes know that this class handles flac
    ///Subclasses should override to return respective type.
    virtual unsigned int GetODType(){return eODFLAC;}
 };
@@ -71,7 +71,7 @@ class ODFLACFile : public FLAC::Decoder::File
       set_metadata_respond(FLAC__METADATA_TYPE_VORBIS_COMMENT);
       set_metadata_respond(FLAC__METADATA_TYPE_STREAMINFO);
    }
-   
+
    bool get_was_error() const
    {
       return mWasError;
@@ -81,7 +81,7 @@ class ODFLACFile : public FLAC::Decoder::File
    ODFlacDecoder *mDecoder;
    bool                  mWasError;
    wxArrayString         mComments;
-   
+
  protected:
    virtual FLAC__StreamDecoderWriteStatus write_callback(const FLAC__Frame *frame,
                                                          const FLAC__int32 * const buffer[]);
@@ -98,20 +98,20 @@ public:
    ///This should handle unicode converted to UTF-8 on mac/linux, but OD TODO:check on windows
    ODFlacDecoder(const wxString & fileName):ODFileDecoder(fileName),mSamplesDone(0){mFile=NULL;}
    virtual ~ODFlacDecoder();
-      
-   ///Decodes the samples for this blockfile from the real file into a float buffer.  
+
+   ///Decodes the samples for this blockfile from the real file into a float buffer.
    ///This is file specific, so subclasses must implement this only.
    ///the buffer was defined like
    ///samplePtr sampleData = NewSamples(mLen, floatSample);
    ///this->ReadData(sampleData, floatSample, 0, mLen);
-   ///This class should call ReadHeader() first, so it knows the length, and can prepare 
-   ///the file object if it needs to. 
+   ///This class should call ReadHeader() first, so it knows the length, and can prepare
+   ///the file object if it needs to.
    virtual int Decode(samplePtr & data, sampleFormat & format, sampleCount start, sampleCount len, unsigned int channel);
 
-   
+
    ///Read header.  Subclasses must override.  Probably should save the info somewhere.
-   ///Ideally called once per decoding of a file.  This complicates the task because 
-   virtual bool ReadHeader();  
+   ///Ideally called once per decoding of a file.  This complicates the task because
+   virtual bool ReadHeader();
 
    ///FLAC specific file (inherited from FLAC::Decoder::File)
    ODFLACFile* GetFlacFile();

@@ -38,7 +38,7 @@
   file "C:\sample2.wav" offset 5   # sample2 is displayed with a 5s offset
   File "C:\sample3.wav"            # sample3 is displayed with no offset
   File "foo.aiff" # foo is loaded from the same directory as the LOF file
-  window offset 5 duration 10      # open a new window, zoom to display 
+  window offset 5 duration 10      # open a new window, zoom to display
   # 10 seconds total starting at 5 (ending at 15) seconds
   file "C:\sample3.wav" offset 2.5
 \endverbatim
@@ -194,7 +194,7 @@ ImportFileHandle *LOFImportPlugin::Open(wxString filename)
 
    for (int i = 0; i < count; i++)
    {
-      // Check if this char is below the space character, but not a 
+      // Check if this char is below the space character, but not a
       // line feed or carriage return
       if (buf[i] < 32 && buf[i] != 10 && buf[i] != 13)
       {
@@ -207,7 +207,7 @@ ImportFileHandle *LOFImportPlugin::Open(wxString filename)
    // Close it again so it can be opened as a text file
    binaryFile.Close();
 
-   // Now open the file again as text file   
+   // Now open the file again as text file
    wxTextFile *file = new wxTextFile(filename);
    file->Open();
 
@@ -246,7 +246,7 @@ int LOFImportFileHandle::Import(TrackFactory * WXUNUSED(trackFactory), Track ***
    while (!mTextFile->Eof())
    {
       lofOpenFiles(&line);
-      line = mTextFile->GetNextLine();  
+      line = mTextFile->GetNextLine();
    }
 
    // for last line
@@ -268,7 +268,7 @@ static int CountNumTracks(AudacityProject *proj)
    int count = 0;
    Track *t;
    TrackListIterator iter(proj->GetTracks());
-   
+
    t = iter.First();
 
    while(t) {
@@ -286,37 +286,37 @@ static int CountNumTracks(AudacityProject *proj)
  * caller will continue to the next line of the input file
  */
 void LOFImportFileHandle::lofOpenFiles(wxString* ln)
-{  
+{
    wxStringTokenizer tok(*ln, wxT(" "));
    wxStringTokenizer temptok1(*ln, wxT("\""));
    wxStringTokenizer temptok2(*ln, wxT(" "));
    int tokenplace = 0;
-   
+
    wxString targetfile;
    wxString tokenholder = tok.GetNextToken();
-   
+
    if (tokenholder.IsSameAs(wxT("window"), false))
    {
       // set any duration/offset factors for last window, as all files were called
       doDuration();
       doScrollOffset();
-      
+
       if (windowCalledOnce)
       {
          mProject = CreateNewAudacityProject();
       }
 
       windowCalledOnce = true;
-      
+
       while (tok.HasMoreTokens())
       {
          tokenholder = tok.GetNextToken();
-         
+
          if (tokenholder.IsSameAs(wxT("offset"), false))
          {
             if (tok.HasMoreTokens())
                tokenholder = tok.GetNextToken();
-            
+
             if (Internat::CompatibleToDouble(tokenholder, &scrollOffset))
             {
                callScrollOffset = true;
@@ -328,16 +328,16 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                             /* i18n-hint: You do not need to translate "LOF" */
                             _("LOF Error"), wxOK | wxCENTRE);
             }
-               
+
             if (tok.HasMoreTokens())
                tokenholder = tok.GetNextToken();
          }
-         
+
          if (tokenholder.IsSameAs(wxT("duration"), false))
          {
             if (tok.HasMoreTokens())
                tokenholder = tok.GetNextToken();
-            
+
             if (Internat::CompatibleToDouble(tokenholder, &durationFactor))
             {
                callDurationFactor = true;
@@ -358,7 +358,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
          }
       }     // End while loop
    }        // End if statement handling "window" lines
-   
+
    else if (tokenholder.IsSameAs(wxT("file"), false))
    {
 
@@ -374,20 +374,20 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
             targetfile = fName.GetFullPath();
          }
       }
-     
+
       #ifdef USE_MIDI
       // If file is a midi
       if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
           ||  targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
       {
          NoteTrack *nTrack = new NoteTrack(mProject->GetDirManager());
-         
+
          if (::ImportMIDI(targetfile, nTrack))
             mProject->GetTracks()->Add(nTrack);
          else
             delete nTrack;
       }
-      
+
       // If not a midi, open audio file
       else
       {
@@ -402,34 +402,34 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       // Set tok to right after filename
       temptok2.SetString(targetfile);
       tokenplace = temptok2.CountTokens();
-      
+
       for (int i = 0; i < tokenplace; i++)
          tokenholder = tok.GetNextToken();
-      
+
       if (tok.HasMoreTokens())
       {
          tokenholder = tok.GetNextToken();
-         
+
          if (tokenholder.IsSameAs(wxT("#")))
          {
             // # indicates comments; ignore line
             tok = wxStringTokenizer(wxT(""), wxT(" "));
          }
-         
+
          if (tokenholder.IsSameAs(wxT("offset"), false))
          {
             if (tok.HasMoreTokens())
                tokenholder = tok.GetNextToken();
             double offset;
-           
+
             // handle an "offset" specifier
             if (Internat::CompatibleToDouble(tokenholder, &offset))
             {
                Track *t;
                TrackListIterator iter(mProject->GetTracks());
-               
+
                t = iter.First();
-               
+
                for (int i = 1; i < CountNumTracks(mProject) - 1; i++)
                   t = iter.Next();
 
@@ -453,7 +453,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                   {
                      if (t->GetLinked())
                         t->SetOffset(offset);
-                     
+
                      t = iter.Next();
                      t->SetOffset(offset);
                   }
@@ -468,7 +468,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
          }     // End if statement for "offset" parameters
       }     // End if statement (more tokens after file name)
    }     // End if statement "file" lines
-   
+
    else if (tokenholder.IsSameAs(wxT("#")))
    {
       // # indicates comments; ignore line

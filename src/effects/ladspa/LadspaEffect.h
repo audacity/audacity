@@ -24,24 +24,24 @@ class LadspaEffect:public Effect {
 
  public:
 
-   LadspaEffect(const LADSPA_Descriptor *data, 
+   LadspaEffect(const LADSPA_Descriptor *data,
                 const std::set<wxString>& categories = std::set<wxString>());
    virtual ~LadspaEffect();
 
    virtual wxString GetEffectName();
-   
+
    virtual std::set<wxString> GetEffectCategories();
 
    virtual wxString GetEffectIdentifier();
-   
+
    virtual wxString GetEffectAction();
 
    virtual bool Init();
 
    virtual bool PromptUser();
-   
+
    virtual bool Process();
-   
+
    virtual void End();
 
  private:

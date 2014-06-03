@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class BenchmarkDialog
-\brief BenchmarkDialog is used for measuring performance and accuracy 
+\brief BenchmarkDialog is used for measuring performance and accuracy
 of the BlockFile system.
 
 *//*******************************************************************/
@@ -46,9 +46,9 @@ class BenchmarkDialog: public wxDialog
 public:
    // constructors and destructors
    BenchmarkDialog( wxWindow *parent );
-   
+
    void MakeBenchmarkDialog();
-   
+
 private:
    // WDR: handler declarations
    void OnRun( wxCommandEvent &event );
@@ -72,7 +72,7 @@ private:
    bool      mEditDetail;
 
    wxTextCtrl  *mText;
-   
+
 private:
    DECLARE_EVENT_TABLE()
 };
@@ -153,7 +153,7 @@ void BenchmarkDialog::MakeBenchmarkDialog()
 {
    ShuttleGui S(this, eIsCreating);
    wxControl *item;
-   
+
    // Strings don't need to be translated because this class doesn't
    // ever get used in a stable release.
 
@@ -293,7 +293,7 @@ void BenchmarkDialog::FlushPrint()
 void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 {
    TransferDataFromWindow();
- 
+
    if (!Validate())
       return;
 
@@ -353,7 +353,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    }
 
    // The chunks are the pieces we move around in the test.
-   // They are (and are supposed to be) a different size to 
+   // They are (and are supposed to be) a different size to
    // the blocks that make the blockfiles.  That way we get to
    // do some testing of when edit chunks cross blockfile boundaries.
    Printf(wxT("Using %d chunks of %d samples each, for a total of ")
@@ -511,7 +511,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    elapsed = timer.Time();
 
    Printf(wxT("Time to check all data (2): %ld ms\n"), elapsed);
-   
+
    Printf(wxT("At 44100 Hz, 16-bits per sample, the estimated number of\n")
           wxT("simultaneous tracks that could be played at once: %.1f\n"),
           (nChunks*chunkSize/44100.0)/(elapsed/1000.0));

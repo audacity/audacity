@@ -50,7 +50,7 @@ static const wxChar *exts[] =
 
 #ifndef USE_LIBVORBIS
 /* BPF There is no real reason to compile without LIBVORBIS, but if you do, you will needs this header */
-#include "ImportPlugin.h"  
+#include "ImportPlugin.h"
 
 void GetOGGImportPlugin(ImportPluginList *importPluginList,
                         UnusableImportPluginList *unusableImportPluginList)
@@ -113,7 +113,7 @@ public:
          mStreamInfo->Add(strinfo);
          mStreamUsage[i] = 0;
       }
-      
+
    }
    ~OggImportFileHandle();
 
@@ -297,7 +297,7 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
    // causes them to be read correctly.  Otherwise they have lots of
    // zeros inserted at the beginning
    ov_pcm_seek(mVorbisFile, 0);
-   
+
    do {
       /* get data from the decoder */
       bytesRead = ov_read(mVorbisFile, (char *) mainBuffer,
@@ -375,7 +375,7 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
    }
 
    *outTracks = new Track *[*outNumTracks];
-   
+
    int trackindex = 0;
    for (i = 0; i < mVorbisFile->links; i++)
    {
@@ -386,7 +386,7 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
             (*outTracks)[trackindex++] = mChannels[i][c];
          }
          delete[] mChannels[i];
-      }      
+      }
    }
    delete[] mChannels;
 

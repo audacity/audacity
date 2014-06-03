@@ -35,7 +35,7 @@ struct LV2Port
         mEnumeration(false)
    {
    }
-   
+
    uint32_t mIndex;
    wxString mName;
    float mMin;
@@ -55,12 +55,12 @@ struct LV2Port
 
 WX_DECLARE_OBJARRAY(LV2Port, LV2PortArray);
 
-/** The main LV2 plugin class. It handles loading and applying a 
+/** The main LV2 plugin class. It handles loading and applying a
     single plugin. */
 class LV2Effect:public Effect
 {
 public:
-   
+
    /** Create an LV2Effect from an LV2 data handle and a category set. */
    LV2Effect(const LilvPlugin *plug,
              const std::set<wxString> & categories = std::set<wxString>());
@@ -68,35 +68,35 @@ public:
 
    /** Get the name of the effect. */
    virtual wxString GetEffectName();
-   
+
    /** Get the categories of the effect. */
    virtual std::set<wxString> GetEffectCategories();
 
    /** Get the effect identifier (for internal use). */
    virtual wxString GetEffectIdentifier();
-   
+
    /** Get the action string. */
    virtual wxString GetEffectAction();
-   
+
    virtual bool Init();
 
    virtual bool PromptUser();
-   
+
    virtual bool Process();
-   
+
    virtual void End();
-   
+
    bool IsValid();
 
    /** Return a list of LV2Ports for the input parameters. */
    LV2PortArray & GetControls();
-   
+
    /** Return true if the plugin is a synth (MIDI input), false if not. */
    bool IsSynth();
 
    /** Modify the note settings for the plugin (only for synths). */
    bool SetNote(sampleCount len, unsigned char velocity, unsigned char key);
-   
+
    /** Get the port group tree for the plugin. */
    const LV2PortGroup & GetRootGroup();
 
@@ -118,18 +118,18 @@ private:
    int mainRate;
 
    std::set<wxString> mCategories;
-   
+
    LV2PortArray mControlInputs;
    LV2PortArray mControlOutputs;
    LV2PortArray mAudioInputs;
    LV2PortArray mAudioOutputs;
    LV2Port *mMidiInput;
    int mLatencyPortIndex;
-   
+
    sampleCount mNoteLength;
    unsigned char mNoteVelocity;
    unsigned char mNoteKey;
-   
+
    LV2PortGroup mRootGroup;
    std::map<wxString, LV2PortGroup> mPortGroups;
 };

@@ -27,7 +27,7 @@ class ProjectsPrefs:public PrefsPanel
    ProjectsPrefs(wxWindow * parent);
    ~ProjectsPrefs();
    virtual bool Apply();
-   
+
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);

@@ -102,7 +102,7 @@ public:
 #endif
 
 private:
-   
+
    int TrackNum( Track *track );
    Track *FindTrack( int num );
 

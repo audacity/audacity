@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class AutoRecoveryDialog
-\brief The AutoRecoveryDialog prompts the user whether to 
+\brief The AutoRecoveryDialog prompts the user whether to
 recover previous Audacity projects that were closed incorrectly.
 
 *//********************************************************************/
@@ -41,7 +41,7 @@ public:
 private:
    void PopulateList();
    void PopulateOrExchange(ShuttleGui & S);
-   
+
    void OnQuitAudacity(wxCommandEvent &evt);
    void OnRecoverNone(wxCommandEvent &evt);
    void OnRecoverAll(wxCommandEvent &evt);
@@ -75,7 +75,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
       S.AddVariableText(_("Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can automatically be recovered:"), false);
 
       S.StartStatic(_("Recoverable projects"));
-      {  
+      {
          mFileList = S.Id(ID_FILE_LIST).AddListControlReportMode();
          /*i18n-hint: (noun).  It's the name of the project to recover.*/
          mFileList->InsertColumn(0, _("Name"));
@@ -105,17 +105,17 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
 void AutoRecoveryDialog::PopulateList()
 {
    mFileList->DeleteAllItems();
-   
+
    wxDir dir(FileNames::AutoSaveDir());
    if (!dir.IsOpened())
       return;
-      
+
    wxString filename;
    int i = 0;
    for (bool c = dir.GetFirst(&filename, wxT("*.autosave"), wxDIR_FILES);
         c; c = dir.GetNext(&filename))
       mFileList->InsertItem(i++, wxFileName(filename).GetName());
-      
+
    mFileList->SetColumnWidth(0, wxLIST_AUTOSIZE);
 }
 
@@ -150,10 +150,10 @@ static bool HaveFilesToRecover()
                    _("Error"), wxICON_STOP);
       return false;
    }
-   
+
    wxString filename;
    bool c = dir.GetFirst(&filename, wxT("*.autosave"), wxDIR_FILES);
-   
+
    return c;
 }
 
@@ -174,7 +174,7 @@ static bool RemoveAllAutoSaveFiles()
          return false;
       }
    }
-   
+
    return true;
 }
 
@@ -187,11 +187,11 @@ static bool RecoverAllProjects(AudacityProject** pproj)
                    _("Error"), wxICON_STOP);
       return false;
    }
-   
+
    // Open a project window for each auto save file
    wxString filename;
    AudacityProject* proj = NULL;
-   
+
    wxArrayString files;
    wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
                       wxT("*.autosave"), wxDIR_FILES);
@@ -214,7 +214,7 @@ static bool RecoverAllProjects(AudacityProject** pproj)
       // is created.
       proj->OpenFile(files[i], false);
    }
-   
+
    return true;
 }
 
@@ -227,12 +227,12 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
    {
       AutoRecoveryDialog dlg(*pproj);
       int ret = dlg.ShowModal();
-   
+
       switch (ret)
       {
       case ID_RECOVER_NONE:
          return RemoveAllAutoSaveFiles();
-   
+
       case ID_RECOVER_ALL:
          if (didRecoverAnything)
             *didRecoverAnything = true;
@@ -284,7 +284,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
       WaveTrack* track = tracks.Item(index);
       WaveClip*  clip  = track->GetLastOrCreateClip();
       Sequence* seq = clip->GetSequence();
-      
+
       // Load the blockfile from the XML
       BlockFile* blockFile = NULL;
       DirManager* dirManager = mProject->GetDirManager();
@@ -312,7 +312,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
 
          if (!value)
             break;
-         
+
          const wxString strValue = value;
          //this channels value does not correspond to WaveTrack::Left/Right/Mono, but which channel of the recording device
          //it came from, and thus we can't use XMLValueChecker::IsValidChannel on it.  Rather we compare to the next attribute value.
@@ -324,17 +324,17 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          }
          else if (wxStrcmp(attr, wxT("numchannels")) == 0)
          {
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) || 
+            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) ||
                   (nValue < 1))
                return false;
             if(mChannel >= nValue )
-               return false;   
+               return false;
             mNumChannels = nValue;
          }
-         
+
       }
    }
-   
+
    return true;
 }
 
@@ -342,6 +342,6 @@ XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
 {
    if (wxStrcmp(tag, wxT("simpleblockfile")) == 0)
       return this; // HandleXMLTag also handles <simpleblockfile>
-   
+
    return NULL;
 }

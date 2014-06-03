@@ -11,9 +11,9 @@
 \class ImageRoll
 \brief
   An ImageRoll is an image that can be expanded to an arbitrary size;
-  it is made up of both fixed pieces and repeating pieces.  
-  
-  
+  it is made up of both fixed pieces and repeating pieces.
+
+
   A typical
   ImageRoll might be made up of two fixed ends and a repeating
   middle part:
@@ -122,7 +122,7 @@ ImageArray ImageRoll::SplitH(const wxImage &src, wxColour magicColor)
    // Sanity check...
    if (width<=0 || height<=0 || data==NULL)
       return result;
-   
+
    prev = false;
    start = 0;
    for(i=0; i<width+1; i++) {
@@ -139,7 +139,7 @@ ImageArray ImageRoll::SplitH(const wxImage &src, wxColour magicColor)
       }
       else
          cur = !prev;
-      
+
       if ((cur && !prev)) {
          wxRect subRect(start, 0, i-start, height);
          wxImage subImage;
@@ -152,7 +152,7 @@ ImageArray ImageRoll::SplitH(const wxImage &src, wxColour magicColor)
       else if (!cur && prev) {
          start = i;
       }
-      
+
       prev = cur;
       ptr += 3;
    }
@@ -177,7 +177,7 @@ ImageArray ImageRoll::SplitV(const wxImage &src, wxColour magicColor)
    // Sanity check...
    if (width<=0 || height<=0 || data==NULL)
       return result;
-   
+
    prev = false;
    start = 0;
    for(i=0; i<height+1; i++) {
@@ -207,7 +207,7 @@ ImageArray ImageRoll::SplitV(const wxImage &src, wxColour magicColor)
       else if (!cur && prev) {
          start = i;
       }
-      
+
       prev = cur;
       ptr += 3*width;
    }
@@ -317,43 +317,43 @@ void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
    int height = rect.height;
    int num = (int)mPieces.GetCount();
    int i, j;
-   
+
    switch(mType) {
    case HorizontalRoll: {
       // The pieces alternate fixed, rolling, fixed, rolling...
-      
+
       int fixedWidth = 0;
       for(i=0; i<num; i+=2)
          fixedWidth += (mPieces[i].Ok() ? mPieces[i].GetWidth() : 0);
-      
+
       int rollingSpace = width - fixedWidth;
       int numRolling = num / 2;
       int x = 0;
-      
+
       for(i=0; i<num; i++) {
          int w = (mPieces[i].Ok() ? mPieces[i].GetWidth() : 0);
-         
+
          if (i%2==0) {
             // fixed
-            
+
             if (mPieces[i].Ok())
                DrawBitmap(dc, mPieces[i], rect.x + x, rect.y);
             x += w;
          }
          else {
             // rolling
-            
+
             int space =
                ((1+(i/2))*rollingSpace / numRolling) -
                ((i/2)*rollingSpace / numRolling);
-            
+
             j = 0;
             while(j < space) {
                if (mPieces[i].Ok())
                   DrawBitmap(dc, mPieces[i], rect.x + x + j, rect.y);
                j += w;
             }
-            
+
             x += space;
          }
       }
@@ -361,39 +361,39 @@ void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
 
    case VerticalRoll: {
       // The pieces alternate fixed, rolling, fixed, rolling...
-      
+
       int fixedHeight = 0;
       for(i=0; i<num; i+=2)
          fixedHeight += (mPieces[i].Ok() ? mPieces[i].GetHeight() : 0);
-      
+
       int rollingSpace = height - fixedHeight;
       int numRolling = num / 2;
       int y = 0;
 
       for(i=0; i<num; i++) {
          int h = (mPieces[i].Ok() ? mPieces[i].GetHeight() : 0);
-         
+
          if (i%2==0) {
             // fixed
-            
+
             if (mPieces[i].Ok())
                DrawBitmap(dc, mPieces[i], rect.x, rect.y + y);
             y += h;
          }
          else {
             // rolling
-            
+
             int space =
                ((1+(i/2))*rollingSpace / numRolling) -
                ((i/2)*rollingSpace / numRolling);
-            
+
             j = 0;
             while(j < space) {
                if (mPieces[i].Ok())
                   DrawBitmap(dc, mPieces[i], rect.x, rect.y + y + j);
                j += h;
             }
-            
+
             y += space;
          }
       }
@@ -410,14 +410,14 @@ void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
    case Frame:
    break;
 
-   } // switch      
+   } // switch
 }
 
 BEGIN_EVENT_TABLE(ImageRollPanel, wxPanel)
    EVT_PAINT(ImageRollPanel::OnPaint)
    EVT_SIZE(ImageRollPanel::OnSize)
 END_EVENT_TABLE()
-   
+
 IMPLEMENT_CLASS(ImageRollPanel, wxPanel)
 
 ImageRollPanel::ImageRollPanel(wxWindow *parent,

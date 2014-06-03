@@ -87,7 +87,7 @@ bool EffectDtmf::Init()
 bool EffectDtmf::PromptUser()
 {
    DtmfDialog dlog(this, mParent,
-      /* i18n-hint: DTMF stands for 'Dial Tone Modulation Format'.  Leave as is.*/      
+      /* i18n-hint: DTMF stands for 'Dial Tone Modulation Format'.  Leave as is.*/
       _("DTMF Tone Generator"));
 
    Init();
@@ -111,7 +111,7 @@ bool EffectDtmf::PromptUser()
    dtmfDutyCycle = dlog.dDutyCycle;
    mDuration = dlog.dDuration;
    dtmfAmplitude = dlog.dAmplitude;
-   
+
    dtmfNTones = dlog.dNTones;
    dtmfTone = dlog.dTone;
    dtmfSilence = dlog.dSilence;
@@ -168,24 +168,24 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
 
    // select low tone: left column
    switch (tone) {
-      case '1':   case '2':   case '3':   case 'A': 
+      case '1':   case '2':   case '3':   case 'A':
       case 'a':   case 'b':   case 'c':
       case 'd':   case 'e':   case 'f':
          f1=697;
          break;
-      case '4':   case '5':   case '6':   case 'B':   
+      case '4':   case '5':   case '6':   case 'B':
       case 'g':   case 'h':   case 'i':
       case 'j':   case 'k':   case 'l':
       case 'm':   case 'n':   case 'o':
          f1=770;
          break;
-      case '7':   case '8':   case '9':   case 'C':   
+      case '7':   case '8':   case '9':   case 'C':
       case 'p':   case 'q':   case 'r':   case 's':
       case 't':   case 'u':   case 'v':
       case 'w':   case 'x':   case 'y':   case 'z':
          f1=852;
          break;
-      case '*':   case '0':   case '#':   case 'D':   
+      case '*':   case '0':   case '#':   case 'D':
          f1=941;
          break;
       default:
@@ -243,7 +243,7 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
       // backup 'A' samples, from 'len'
       A=(fs/FADEINOUT);
       sampleCount offset=len-(sampleCount)(fs/FADEINOUT);
-      // protect against negative offset, which can occur if too a 
+      // protect against negative offset, which can occur if too a
       // small selection is made
       if (offset>=0) {
          for(sampleCount i=0; i<A; i++) {
@@ -311,7 +311,7 @@ bool EffectDtmf::GenerateTrack(WaveTrack *tmp,
    // tweaked but gives excellent results at 44.1kHz: I haven't tried other freqs.
    // A problem might be if the tone duration is very short (<10ms)... (?)
    //
-   // One more problem is to deal with the approximations done when calculating the duration 
+   // One more problem is to deal with the approximations done when calculating the duration
    // of both tone and silence: in some cases the final sum might not be same as the initial
    // duration. So, to overcome this, we had a redistribution block up, and now we will spread
    // the remaining samples in every bin in order to achieve the full duration: test case was
@@ -447,8 +447,8 @@ void DtmfDialog::PopulateOrExchange( ShuttleGui & S )
       mDtmfStringT = S.Id(ID_DTMF_STRING_TEXT).AddTextBox(_("DTMF sequence:"), wxT(""), 10);
       mDtmfStringT->SetValidator(vldDtmf);
 
-      // The added colon to improve visual consistency was placed outside 
-      // the translatable strings to avoid breaking translations close to 2.0. 
+      // The added colon to improve visual consistency was placed outside
+      // the translatable strings to avoid breaking translations close to 2.0.
       // TODO: Make colon part of the translatable string after 2.0.
       S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")),  dAmplitude, 10);
 

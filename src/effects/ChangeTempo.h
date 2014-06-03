@@ -5,8 +5,8 @@
   ChangeTempo.h
 
   Vaughan Johnson, Dominic Mazzoni
-  
-  Change Tempo effect provides speeding up or 
+
+  Change Tempo effect provides speeding up or
   slowing down tempo without changing pitch.
 
 **********************************************************************/
@@ -48,9 +48,9 @@ class EffectChangeTempo : public EffectSoundTouch {
    virtual wxString GetEffectAction() {
       return wxString(_("Changing Tempo"));
    }
-   
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription(); 
+
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription();
 
    virtual bool Init();
 
@@ -61,7 +61,7 @@ class EffectChangeTempo : public EffectSoundTouch {
    virtual bool Process();
 
    double CalcPreviewInputLength(double previewLength);
-  
+
  private:
    double         m_PercentChange;  // percent change to apply to tempo
                                     // -100% is meaningless, but sky's the upper limit

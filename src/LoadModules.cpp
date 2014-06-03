@@ -11,7 +11,7 @@
 *******************************************************************//*!
 
 \file LoadModules.cpp
-\brief Based on LoadLadspa, this code loads pluggable Audacity 
+\brief Based on LoadLadspa, this code loads pluggable Audacity
 extension modules.  It also has the code to (a) invoke a script
 server and (b) invoke a function returning a replacement window,
 i.e. an alternative to the usual interface, for Audacity.
@@ -49,7 +49,7 @@ typedef int (*tModuleInit)(int);
 typedef wxChar * (*tVersionFn)();
 typedef pwxWindow (*tPanelFn)(int);
 
-// This variable will hold the address of a subroutine in 
+// This variable will hold the address of a subroutine in
 // a DLL that can hijack the normal panel.
 static tPanelFn pPanelHijack=NULL;
 
@@ -57,7 +57,7 @@ static tPanelFn pPanelHijack=NULL;
 // strange DLL behaviour.  Instead of dynamic linking,
 // link the library which has the replacement panel statically.
 // Give the address of the routine here.
-// This is a great help in identifying missing 
+// This is a great help in identifying missing
 // symbols which otherwise cause a dll to unload after loading
 // without an explanation as to why!
 //extern wxWindow * MainPanelFunc( int i );
@@ -222,7 +222,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
    }
 
    #if defined(__WXMSW__)
-   wxGetApp().FindFilesInPathList(wxT("*.dll"), pathList, files);   
+   wxGetApp().FindFilesInPathList(wxT("*.dll"), pathList, files);
    #else
    wxGetApp().FindFilesInPathList(wxT("*.so"), pathList, files);
    #endif

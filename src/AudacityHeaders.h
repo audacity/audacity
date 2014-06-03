@@ -76,7 +76,7 @@
 
 //#ifdef __WXMSW__
 // Enable this to diagnose memory leaks too!
-//    #include <wx/msw/msvcrt.h>      // redefines the new() operator 
+//    #include <wx/msw/msvcrt.h>      // redefines the new() operator
 //#endif
 
 #if __WXMSW__

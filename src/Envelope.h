@@ -40,7 +40,7 @@ public:
       mT = t;
       mVal = ClampValue(val);
    }
-   
+
    double ClampValue(double val); // this calls mEnvelope->ClampValue(), implementation is below the Envelope class
 
    double GetT() { return mT; }
@@ -74,12 +74,12 @@ private:
    Envelope *mEnvelope;
    double mT;
    double mVal;
-   
+
 };
 
 // TODO: Become an array of EnvPoint rather than of pointers to.
-//    Really? wxWidgets help says: 
-//    "wxArray is suitable for storing integer types and pointers which it does not 
+//    Really? wxWidgets help says:
+//    "wxArray is suitable for storing integer types and pointers which it does not
 //       treat as objects in any way..."
 //    And why is this a TODO in any case, if it works correctly?
 WX_DEFINE_ARRAY(EnvPoint *, EnvArray);
@@ -98,11 +98,11 @@ class Envelope : public XMLTagHandler {
 
    void Flatten(double value);
    int GetDragPoint(void)   {return mDragPoint;}
-   
+
    double GetMinValue() { return mMinValue; }
    double GetMaxValue() { return mMaxValue; }
    void SetRange(double minValue, double maxValue);
-   
+
    double ClampValue(double value) { return std::max(mMinValue, std::min(mMaxValue, value)); }
 
 #if LEGACY_PROJECT_FILE_SUPPORT
@@ -147,7 +147,7 @@ class Envelope : public XMLTagHandler {
    // Control
    void SetOffset(double newOffset);
    void SetTrackLen(double trackLen);
-   
+
    // Accessors
    /** \brief Get envelope value at time t */
    double GetValue(double t) const;
@@ -241,7 +241,7 @@ private:
    int mButton;
    bool mDB;
    bool mDirty;
-   
+
    double mMinValue, mMaxValue;
 
    // These are memoizing variables for Integral()

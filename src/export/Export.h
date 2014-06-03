@@ -64,7 +64,7 @@ public:
    void SetMask(const wxString & mask, int index);
    void SetMaxChannels(int maxchannels, int index);
    void SetCanMetaData(bool canmetadata, int index);
-   
+
    virtual int GetFormatCount();
    virtual wxString GetFormat(int index);
    virtual wxString GetDescription(int index);
@@ -77,7 +77,7 @@ public:
    virtual wxString GetMask(int index);
    virtual int GetMaxChannels(int index);
    virtual bool GetCanMetaData(int index);
-   
+
    virtual bool IsExtension(wxString & ext, int index);
 
    virtual bool DisplayOptions(wxWindow *parent, int format = 0);
@@ -193,7 +193,7 @@ private:
 class ExportMixerPanel: public wxPanel
 {
 public:
-   ExportMixerPanel( MixerSpec *mixerSpec, wxArrayString trackNames, 
+   ExportMixerPanel( MixerSpec *mixerSpec, wxArrayString trackNames,
          wxWindow *parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize);
    virtual ~ExportMixerPanel();
@@ -213,7 +213,7 @@ private:
    wxArrayString mTrackNames;
    int mBoxWidth, mChannelHeight, mTrackHeight;
 
-   void SetFont( wxMemoryDC &memDC, wxString text, int width, int height ); 
+   void SetFont( wxMemoryDC &memDC, wxString text, int width, int height );
    double Distance( wxPoint &a, wxPoint &b );
    bool IsOnLine( wxPoint p, wxPoint la, wxPoint lb );
 
@@ -228,9 +228,9 @@ class ExportMixerDialog : public wxDialog
 public:
    // constructors and destructors
    ExportMixerDialog( TrackList * tracks, bool selectedOnly, int maxNumChannels,
-         wxWindow *parent, wxWindowID id, const wxString &title, 
+         wxWindow *parent, wxWindowID id, const wxString &title,
          const wxPoint& pos = wxDefaultPosition,
-         const wxSize& size = wxDefaultSize, 
+         const wxSize& size = wxDefaultSize,
          long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
    virtual ~ExportMixerDialog();
 
@@ -240,7 +240,7 @@ private:
    wxStaticText *mChannelsText;
    MixerSpec *mMixerSpec;
    wxArrayString mTrackNames;
-   
+
 private:
    void OnOk( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );

@@ -11,8 +11,8 @@
 
 \class CommandManager
 \brief CommandManager implements a system for organizing all user-callable
-  commands.  
-  
+  commands.
+
   It creates and manages a menu bar with a command
   associated with each item, and managing other commands callable
   by keyboard shortcuts.
@@ -40,7 +40,7 @@
 *//****************************************************************//**
 
 \class CommandFunctor
-\brief CommandFunctor is a very small class that works with 
+\brief CommandFunctor is a very small class that works with
 CommandManager.  It holds the callback for one command.
 
 *//****************************************************************//**
@@ -96,7 +96,7 @@ CommandManager.  It holds the callback for one command.
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
 // allow for scrolling, so we build sub-menus.  If the menu gets longer than
 // MAX_MENU_LEN, we put things in submenus that have MAX_SUBMENU_LEN items in them.
-// 
+//
 #ifdef __WXGTK__
 #define MAX_MENU_LEN 20
 #define MAX_SUBMENU_LEN 15
@@ -142,7 +142,7 @@ void CommandManager::PurgeData()
    {
       CommandListEntry *tmpEntry = mCommandList[i];
       // JKC: We only want to delete each callbacks once.
-      // AddItemList() may have inserted the same callback 
+      // AddItemList() may have inserted the same callback
       // several times over.
       if( tmpEntry->callback != pCallback )
       {
@@ -193,7 +193,7 @@ wxMenuBar *CommandManager::AddMenuBar(wxString sMenu)
 
 
 ///
-/// Retrieves the menubar based on the name given in AddMenuBar(name) 
+/// Retrieves the menubar based on the name given in AddMenuBar(name)
 ///
 wxMenuBar * CommandManager::GetMenuBar(wxString sMenu)
 {
@@ -227,7 +227,7 @@ wxMenuBar * CommandManager::CurrentMenuBar()
 ///
 void CommandManager::BeginMenu(wxString tNameIn)
 {
-   
+
    wxString tName = tNameIn;
    if( ItemShouldBeHidden( tName ) )
    {
@@ -249,7 +249,7 @@ void CommandManager::BeginMenu(wxString tNameIn)
 /// to NULL.  It is still attached to the CurrentMenuBar()
 void CommandManager::EndMenu()
 {
-   if( mHidingLevel > 0 ) 
+   if( mHidingLevel > 0 )
       mHidingLevel--;
 
    mCurrentMenu = NULL;
@@ -287,7 +287,7 @@ wxMenu* CommandManager::BeginSubMenu(wxString tNameIn)
 /// after BeginSubMenu() is called but before EndSubMenu() is called.
 void CommandManager::EndSubMenu()
 {
-   if( mHidingLevel > 0 ) 
+   if( mHidingLevel > 0 )
    {
       mHidingLevel--;
       return;
@@ -469,7 +469,7 @@ void CommandManager::AddItem(const wxChar *name,
                              unsigned int mask)
 {
    AddItem(name, label, callback, wxT(""), flags, mask);
-}                  
+}
 
 void CommandManager::AddItem(const wxChar *name,
                              const wxChar *label_in,
@@ -557,7 +557,7 @@ void CommandManager::AddItemList(wxString name, wxArrayString labels,
       plugins = false;
 
    // j counts the visible menu items, i counts the actual menu items.
-   // These numbers are the same unless we are using a simplified interface 
+   // These numbers are the same unless we are using a simplified interface
    // by hiding effects with a ! before them when translated.
    int j=0;
    for(i=0; i<effLen; i++) {
@@ -599,7 +599,7 @@ void CommandManager::AddCommand(const wxChar *name,
                                 unsigned int mask)
 {
    AddCommand(name, label, callback, wxT(""), flags, mask);
-}                  
+}
 
 void CommandManager::AddCommand(const wxChar *name,
                                 const wxChar *label_in,
@@ -649,7 +649,7 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
                                   bool multi, int index, int count)
 {
    CommandListEntry *tmpEntry = new CommandListEntry;
-   
+
    wxString labelPrefix;
    if (!mSubMenuList.IsEmpty()) {
       labelPrefix = mSubMenuList[mSubMenuList.GetCount() - 1]->name;
@@ -678,7 +678,7 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
 #endif
 
    tmpEntry->defaultKey = tmpEntry->key;
-   // For key bindings for commands with a list, such as effects, 
+   // For key bindings for commands with a list, such as effects,
    // the name in prefs is the category name plus the effect name.
    if( multi )
       name= wxString::Format( wxT("%s:%s"), name.c_str(), label.c_str() );
@@ -690,7 +690,7 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
    tmpEntry->menu = menu;
    tmpEntry->callback = callback;
    tmpEntry->multi = multi;
-   tmpEntry->index = index; 
+   tmpEntry->index = index;
    tmpEntry->count = count;
    tmpEntry->flags = mDefaultFlags;
    tmpEntry->mask = mDefaultMask;
@@ -703,9 +703,9 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
       tmpEntry->key = KeyStringNormalize(gPrefs->Read(name, tmpEntry->key));
    }
    gPrefs->SetPath(wxT("/"));
-   
+
    mCommandList.Add(tmpEntry);
-   mCommandIDHash[tmpEntry->id] = tmpEntry;   
+   mCommandIDHash[tmpEntry->id] = tmpEntry;
 
 #if defined(__WXDEBUG__)
    CommandListEntry *prev = mCommandNameHash[name];
@@ -771,7 +771,7 @@ void CommandManager::Enable(CommandListEntry *entry, bool enabled)
    if (entry->multi) {
       int i;
       int ID = entry->id;
-      
+
       for(i=1; i<entry->count; i++) {
          ID = NextIdentifier(ID);
 
@@ -880,7 +880,7 @@ void CommandManager::HandleMenuOpen(wxMenuEvent &evt)
    if (!m || m->GetParent())
       return;
 
-   // Windows does not send a CLOSE event if you move from one 
+   // Windows does not send a CLOSE event if you move from one
    // top-level menu to another, so simulate it.
 #if !defined(__WXMAC__)
    if (mOpenMenu) {
@@ -904,7 +904,7 @@ void CommandManager::HandleMenuClose(wxMenuEvent &evt)
    mOpenMenu = evt.GetMenu();
 #endif
 
-   // This can happen when if the Windows system menu is used   
+   // This can happen when if the Windows system menu is used
    if (mOpenMenu == NULL)
       return;
 
@@ -922,7 +922,7 @@ void CommandManager::HandleMenuClose(wxMenuEvent &evt)
 
    return;
 }
- 
+
 void CommandManager::ToggleAccels(wxMenu *m, bool show)
 {
    // Add the top-level menu to the stack;
@@ -994,7 +994,7 @@ void CommandManager::TellUserWhyDisallowed( wxUint32 flagsGot, wxUint32 flagsReq
    else if( missingFlags == TracksExistFlag )
       return;
 
-   wxMessageBox(reason, _("Disallowed"),  wxICON_WARNING | wxOK ); 
+   wxMessageBox(reason, _("Disallowed"),  wxICON_WARNING | wxOK );
 }
 
 /// HandleCommandEntry() takes a CommandListEntry and executes it
@@ -1013,14 +1013,14 @@ bool CommandManager::HandleCommandEntry(CommandListEntry * entry, wxUint32 flags
       proj = GetActiveProject();
       wxASSERT( proj );
       if( !proj )
-         return false;     
+         return false;
 
       // NB: The call may have the side effect of changing flags.
       bool allowed = proj->TryToMakeActionAllowed( flags, entry->flags, combinedMask );
 
       if (!allowed)
       {
-         TellUserWhyDisallowed( 
+         TellUserWhyDisallowed(
             flags & combinedMask, entry->flags & combinedMask);
          return false;
       }
@@ -1096,7 +1096,7 @@ bool CommandManager::HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint
       wxString effectName = (*effects)[i]->GetEffectName();
       if( Str.IsSameAs( effectName ))
       {
-         return proj->OnEffect( effectFlags, (*effects)[i] ); 
+         return proj->OnEffect( effectFlags, (*effects)[i] );
       }
    }
    return false;
@@ -1168,7 +1168,7 @@ void CommandManager::GetAllCommandData(
    wxArrayString &labels,
    wxArrayString &categories,
 #if defined(EXPERIMENTAL_KEY_VIEW)
-   wxArrayString &prefixes,  
+   wxArrayString &prefixes,
 #endif
    bool includeMultis)
 {
@@ -1265,7 +1265,7 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       while(*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value)
             break;
 
@@ -1311,14 +1311,14 @@ void CommandManager::WriteXML(XMLWriter &xmlFile)
    for(j=0; j<mCommandList.GetCount(); j++) {
       wxString label = mCommandList[j]->label;
       label = wxMenuItem::GetLabelFromText(label.BeforeFirst(wxT('\t')));
-      
+
       xmlFile.StartTag(wxT("command"));
       xmlFile.WriteAttr(wxT("name"), mCommandList[j]->name);
       xmlFile.WriteAttr(wxT("label"), label);
       xmlFile.WriteAttr(wxT("key"), mCommandList[j]->key);
       xmlFile.EndTag(wxT("command"));
    }
-   
+
    xmlFile.EndTag(wxT("audacitykeyboard"));
 }
 
@@ -1351,7 +1351,7 @@ void CommandManager::SetCommandFlags(const wxChar **names,
 void CommandManager::SetCommandFlags(wxUint32 flags, wxUint32 mask, ...)
 {
    va_list list;
-   va_start(list, mask); 
+   va_start(list, mask);
    for(;;) {
       const wxChar *name = va_arg(list, const wxChar *);
       if (!name)

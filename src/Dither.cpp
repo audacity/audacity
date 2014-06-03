@@ -70,7 +70,7 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 // be quite fast.
 
 #if 0
-// To assist in understanding what the macros are doing, here's an example of what 
+// To assist in understanding what the macros are doing, here's an example of what
 // the result would be for Shaped dither:
 //
 // DITHER(ShapedDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);

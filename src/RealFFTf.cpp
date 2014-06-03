@@ -92,7 +92,7 @@ HFFT InitializeFFT(int fftlen)
          temp=(temp >> 1) + (i&mask ? h->Points : 0);
 
       h->BitReversed[i]=temp;
-   } 
+   }
 
    for(i=0;i<h->Points;i++)
    {

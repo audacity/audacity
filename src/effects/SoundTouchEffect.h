@@ -19,7 +19,7 @@
 
 #include "Effect.h"
 
-// Soundtouch defines these as well, so get rid of them before including 
+// Soundtouch defines these as well, so get rid of them before including
 #undef PACKAGE_NAME
 #undef PACKAGE_STRING
 #undef PACKAGE_TARNAME
@@ -52,10 +52,10 @@ class EffectSoundTouch:public Effect {
    bool ProcessNoteTrack(Track *track);
 #endif
    bool ProcessOne(WaveTrack * t, sampleCount start, sampleCount end);
-   bool ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack, 
+   bool ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack,
                         sampleCount start, sampleCount end);
-   bool ProcessStereoResults(const unsigned int outputCount, 
-                              WaveTrack* outputLeftTrack, 
+   bool ProcessStereoResults(const unsigned int outputCount,
+                              WaveTrack* outputLeftTrack,
                               WaveTrack* outputRightTrack);
 
    int    mCurTrackNum;

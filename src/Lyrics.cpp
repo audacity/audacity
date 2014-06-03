@@ -6,7 +6,7 @@
 
   Dominic Mazzoni
   Vaughan Johnson
-  
+
 **********************************************************************/
 
 #include <math.h>
@@ -23,19 +23,19 @@
 WX_DEFINE_OBJARRAY(SyllableArray);
 
 
-BEGIN_EVENT_TABLE(HighlightTextCtrl, wxTextCtrl) 
+BEGIN_EVENT_TABLE(HighlightTextCtrl, wxTextCtrl)
    EVT_MOUSE_EVENTS(HighlightTextCtrl::OnMouseEvent)
 END_EVENT_TABLE()
 
-HighlightTextCtrl::HighlightTextCtrl(Lyrics* parent, 
-                                       wxWindowID id, 
-                                       const wxString& value /*= ""*/, 
-                                       const wxPoint& pos /*= wxDefaultPosition*/, 
+HighlightTextCtrl::HighlightTextCtrl(Lyrics* parent,
+                                       wxWindowID id,
+                                       const wxString& value /*= ""*/,
+                                       const wxPoint& pos /*= wxDefaultPosition*/,
                                        const wxSize& size /*= wxDefaultSize*/)
-: wxTextCtrl(parent, id, // wxWindow* parent, wxWindowID id, 
-               value, // const wxString& value = "", 
-               pos, // const wxPoint& pos = wxDefaultPosition, 
-               size, // const wxSize& size = wxDefaultSize, 
+: wxTextCtrl(parent, id, // wxWindow* parent, wxWindowID id,
+               value, // const wxString& value = "",
+               pos, // const wxPoint& pos = wxDefaultPosition,
+               size, // const wxSize& size = wxDefaultSize,
                wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | wxTE_AUTO_URL | wxTE_NOHIDESEL), //v | wxHSCROLL)
    mLyrics(parent)
 {
@@ -43,7 +43,7 @@ HighlightTextCtrl::HighlightTextCtrl(Lyrics* parent,
 
 void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
 {
-   if (event.ButtonUp()) 
+   if (event.ButtonUp())
    {
       long from, to;
       this->GetSelection(&from, &to);
@@ -56,8 +56,8 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
          AudacityProject* pProj = GetActiveProject();
          pProj->SetSel0(pCurSyl->t);
 
-         //v Should probably select to end as in AudacityProject::OnSelectCursorEnd, 
-         // but better to generalize that in AudacityProject methods. 
+         //v Should probably select to end as in AudacityProject::OnSelectCursorEnd,
+         // but better to generalize that in AudacityProject methods.
          pProj->mViewInfo.sel1 = pCurSyl->t;
       }
    }
@@ -68,7 +68,7 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
 
 //v static const kHighlightTextCtrlID = 7654;
 
-BEGIN_EVENT_TABLE(Lyrics, wxPanel) 
+BEGIN_EVENT_TABLE(Lyrics, wxPanel)
    EVT_CHAR(Lyrics::OnKeyEvent)
    EVT_PAINT(Lyrics::OnPaint)
    EVT_SIZE(Lyrics::OnSize)
@@ -77,12 +77,12 @@ BEGIN_EVENT_TABLE(Lyrics, wxPanel)
    //    EVT_COMMAND_LEFT_CLICK(kHighlightTextCtrlID, Lyrics::OnHighlightTextCtrl)
 END_EVENT_TABLE()
 
-IMPLEMENT_CLASS(Lyrics, wxPanel) 
+IMPLEMENT_CLASS(Lyrics, wxPanel)
 
 Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
                const wxPoint& pos /*= wxDefaultPosition*/,
                const wxSize& size /*= wxDefaultSize*/):
-   wxPanel(parent, id, pos, size), 
+   wxPanel(parent, id, pos, size),
    mWidth(size.x), mHeight(size.y)
 {
    mKaraokeHeight = mHeight;
@@ -91,10 +91,10 @@ Lyrics::Lyrics(wxWindow* parent, wxWindowID id,
 
    this->SetBackgroundColour(*wxWHITE);
 
-   mHighlightTextCtrl = 
-      new HighlightTextCtrl(this, -1, // wxWindow* parent, wxWindowID id, 
-                              wxT(""), // const wxString& value = wxT(""), 
-                              wxPoint(0, 0), // const wxPoint& pos = wxDefaultPosition, 
+   mHighlightTextCtrl =
+      new HighlightTextCtrl(this, -1, // wxWindow* parent, wxWindowID id,
+                              wxT(""), // const wxString& value = wxT(""),
+                              wxPoint(0, 0), // const wxPoint& pos = wxDefaultPosition,
                               size); // const wxSize& size = wxDefaultSize
    this->SetHighlightFont();
    mHighlightTextCtrl->Show(mLyricsStyle == kHighlightLyrics); // test, in case we conditionalize the default, above
@@ -153,11 +153,11 @@ void Lyrics::Add(double t, wxString syllable)
 
    // Put a space between syllables unless the previous one
    // ended in a hyphen
-   if (i > 0 && 
+   if (i > 0 &&
          // mSyllables[i-1].text.Length() > 0 &&
-         mSyllables[i-1].text.Right(1) != wxT("-")) 
+         mSyllables[i-1].text.Right(1) != wxT("-"))
       mSyllables[i].textWithSpace = wxT(" ") + syllable;
-   else 
+   else
       mSyllables[i].textWithSpace = syllable;
 
    mText += mSyllables[i].textWithSpace;
@@ -166,7 +166,7 @@ void Lyrics::Add(double t, wxString syllable)
    int nTextLen = mSyllables[i].textWithSpace.Length();
    if ((nTextLen > 0) && (mSyllables[i].textWithSpace.Right(1) == wxT("_")))
       mHighlightTextCtrl->AppendText(mSyllables[i].textWithSpace.Left(nTextLen - 1) + wxT("\n"));
-   else 
+   else
       mHighlightTextCtrl->AppendText(mSyllables[i].textWithSpace);
 }
 
@@ -236,8 +236,8 @@ void Lyrics::SetDrawnFont(wxDC *dc)
 void Lyrics::SetHighlightFont() // for kHighlightLyrics
 {
    wxFont newFont(mKaraokeFontSize, wxSWISS, wxNORMAL, wxNORMAL);
-   mHighlightTextCtrl->SetDefaultStyle(wxTextAttr(wxNullColour, wxNullColour, newFont)); 
-   mHighlightTextCtrl->SetStyle(0, mHighlightTextCtrl->GetLastPosition(), 
+   mHighlightTextCtrl->SetDefaultStyle(wxTextAttr(wxNullColour, wxNullColour, newFont));
+   mHighlightTextCtrl->SetStyle(0, mHighlightTextCtrl->GetLastPosition(),
                                  wxTextAttr(wxNullColour, wxNullColour, newFont));
 }
 
@@ -247,7 +247,7 @@ void Lyrics::Measure(wxDC *dc) // only for drawn text
    int width = 0, height = 0;
 
    const int kIndent = 4;
-   int x = 2*kIndent; 
+   int x = 2*kIndent;
 
    unsigned int i;
    for(i=0; i<mSyllables.GetCount(); i++) {
@@ -283,13 +283,13 @@ void Lyrics::Measure(wxDC *dc) // only for drawn text
       }
       else
          extraWidth = 20;
-      
+
       mSyllables[i].width = width + extraWidth;
       mSyllables[i].leftX = x;
       mSyllables[i].x = x + width/2;
       x += mSyllables[i].width;
    }
-   
+
    mTextHeight = height;
 
    mMeasurementsDone = true;
@@ -402,10 +402,10 @@ void Lyrics::GetKaraokePosition(double t,
 
 void Lyrics::Update(double t)
 {
-   if (t < 0.0) 
+   if (t < 0.0)
    {
       // TrackPanel::OnTimer passes gAudioIO->GetStreamTime(), which is -1000000000 if !IsStreamActive().
-      // In that case, use the selection start time. 
+      // In that case, use the selection start time.
       AudacityProject* pProj = GetActiveProject();
       mT = pProj->GetSel0();
    }
@@ -422,16 +422,16 @@ void Lyrics::Update(double t)
    if (i == mCurrentSyllable)
       return;
 
-   mCurrentSyllable = i;   
+   mCurrentSyllable = i;
 
    if (mLyricsStyle == kHighlightLyrics)
    {
       mHighlightTextCtrl->SetSelection(mSyllables[i].char0, mSyllables[i].char1);
-      
+
       //v No trail for now.
       //// Leave a trail behind the selection, by highlighting.
-      //if (i == I_FIRST_REAL_SYLLABLE) 
-      //   // Reset the trail to zero. 
+      //if (i == I_FIRST_REAL_SYLLABLE)
+      //   // Reset the trail to zero.
       //   mHighlightTextCtrl->SetStyle(0, mHighlightTextCtrl->GetLastPosition(), wxTextAttr(wxNullColour, *wxWHITE));
       //// Mark the trail for mSyllables[i].
       //mHighlightTextCtrl->SetStyle(mSyllables[i].char0, mSyllables[i].char1, wxTextAttr(wxNullColour, *wxLIGHT_GREY));
@@ -450,7 +450,7 @@ void Lyrics::OnPaint(wxPaintEvent & WXUNUSED(event))
    if (!this->GetParent()->IsShown())
       return;
 
-   if (mLyricsStyle == kBouncingBallLyrics) 
+   if (mLyricsStyle == kBouncingBallLyrics)
    {
       wxPaintDC dc(this);
 
@@ -482,9 +482,9 @@ void Lyrics::OnSize(wxSizeEvent & WXUNUSED(event))
 
    mKaraokeHeight = mHeight;
 
-   mKaraokeFontSize = 
+   mKaraokeFontSize =
       (int)((float)(this->GetDefaultFontSize() * mHeight) / (float)LYRICS_DEFAULT_HEIGHT);
-   // Usually don't get the size window we want, usually less than 
+   // Usually don't get the size window we want, usually less than
    // LYRICS_DEFAULT_HEIGHT, so bump it a little.
    mKaraokeFontSize += 2;
 
@@ -518,7 +518,7 @@ void Lyrics::HandlePaint(wxDC &dc)
    dc.SetBrush(*wxWHITE_BRUSH);
    dc.DrawRectangle(0, 0, mWidth, mKaraokeHeight);
 
-   this->HandlePaint_BouncingBall(dc); 
+   this->HandlePaint_BouncingBall(dc);
 }
 
 void Lyrics::HandlePaint_BouncingBall(wxDC &dc)
@@ -527,7 +527,7 @@ void Lyrics::HandlePaint_BouncingBall(wxDC &dc)
    int x;
    double y;
    GetKaraokePosition(mT, &x, &y);
-   
+
    dc.SetTextForeground(wxColour(238, 0, 102));
    bool changedColor = false;
 

@@ -44,7 +44,7 @@ class BatchCommands {
    static bool SetCurrentParametersFor( Effect * f, const wxString command, const wxString params);
    static wxArrayString GetAllCommands();
 
-   // These commands do depend on the command list.    
+   // These commands do depend on the command list.
    void ResetChain();
 
    bool ReadChain(const wxString & chain);

@@ -64,7 +64,7 @@ BlockFile *LegacyAliasBlockFile::Copy(wxFileName newFileName)
 void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 {
    xmlFile.StartTag(wxT("legacyblockfile"));
-   
+
    xmlFile.WriteAttr(wxT("alias"), 1);
    xmlFile.WriteAttr(wxT("name"), mFileName.GetFullName());
    xmlFile.WriteAttr(wxT("aliaspath"), mAliasedFileName.GetFullPath());
@@ -78,8 +78,8 @@ void LegacyAliasBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("legacyblockfile"));
 }
 
-// BuildFromXML methods should always return a BlockFile, not NULL,  
-// even if the result is flawed (e.g., refers to nonexistent file), 
+// BuildFromXML methods should always return a BlockFile, not NULL,
+// even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 BlockFile *LegacyAliasBlockFile::BuildFromXML(wxString projDir, const wxChar **attrs)
 {
@@ -99,7 +99,7 @@ BlockFile *LegacyAliasBlockFile::BuildFromXML(wxString projDir, const wxChar **a
 
       const wxString strValue = value;
       if (!wxStricmp(attr, wxT("name")) && XMLValueChecker::IsGoodFileName(strValue, projDir))
-         //v Should this be 
+         //v Should this be
          //    dm.AssignFile(summaryFileName, strValue, false);
          // as in PCMAliasBlockFile::BuildFromXML? Test with an old project.
          summaryFileName.Assign(projDir, strValue, wxT(""));
@@ -111,12 +111,12 @@ BlockFile *LegacyAliasBlockFile::BuildFromXML(wxString projDir, const wxChar **a
             // Allow fallback of looking for the file name, located in the data directory.
             aliasFileName.Assign(projDir, strValue);
          else if (XMLValueChecker::IsGoodPathString(strValue))
-            // If the aliased file is missing, we failed XMLValueChecker::IsGoodPathName() 
-            // and XMLValueChecker::IsGoodFileName, because both do existence tests, 
+            // If the aliased file is missing, we failed XMLValueChecker::IsGoodPathName()
+            // and XMLValueChecker::IsGoodFileName, because both do existence tests,
             // but we want to keep the reference to the missing file because it's a good path string.
             aliasFileName.Assign(strValue);
       }
-      else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
+      else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
       {  // integer parameters
          if (!wxStricmp(attr, wxT("aliasstart")) && (nValue >= 0))
             aliasStart = nValue;

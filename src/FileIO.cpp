@@ -1,9 +1,9 @@
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
-  
+
   FileIO.cpp
- 
+
   Leland Lucius
 
 **********************************************************************/
@@ -72,7 +72,7 @@ void FileIO::Close()
 
 // MacOS: set the file type/creator so that the OS knows it's an MP3
 // file which was created by Audacity
-      
+
 void FileIO::SetCatalogInfo()
 {
 #ifdef __WXMAC__
@@ -124,6 +124,6 @@ wxOutputStream & FileIO::Write(const void *buf, size_t size)
    if (mOutputStream == NULL) {
       return *mOutputStream;
    }
-   
+
    return mOutputStream->Write(buf, size);
 }

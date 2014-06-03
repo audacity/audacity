@@ -58,7 +58,7 @@ wxString KeyStringDisplay(const wxString & key)
 wxString KeyEventToKeyString(const wxKeyEvent & event)
 {
    wxString newStr = wxT("");
-   
+
    long key = event.GetKeyCode();
 
    if (event.ControlDown())
@@ -69,7 +69,7 @@ wxString KeyEventToKeyString(const wxKeyEvent & event)
 #endif
    if (event.AltDown())
       newStr += wxT("Alt+");
-   
+
    if (event.ShiftDown())
       newStr += wxT("Shift+");
 

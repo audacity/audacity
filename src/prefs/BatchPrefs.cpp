@@ -45,7 +45,7 @@ void BatchPrefs::Populate( )
 {
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -60,7 +60,7 @@ void BatchPrefs::PopulateOrExchange( ShuttleGui & S )
    S.StartStatic( _("Behaviors"),1 );
    {
 #ifdef __WXDEBUG__
-      S.TieCheckBox( _("&Don't apply effects in batch mode"),  
+      S.TieCheckBox( _("&Don't apply effects in batch mode"),
          wxT("/Batch/Debug"), false);
 #endif
    }

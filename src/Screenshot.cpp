@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   Screenshot.cpp
-  
+
   Dominic Mazzoni
 
 *******************************************************************/
@@ -444,7 +444,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
       Move(displayWidth - width - 16, top + 16);
    }
    else {
-      CentreOnParent(); 
+      CentreOnParent();
    }
 
    SetIcon(mContext.proj->GetIcon());
@@ -508,7 +508,7 @@ void ScreenFrame::OnDirChoose(wxCommandEvent & WXUNUSED(event))
 {
    wxString current = mDirectoryTextBox->GetValue();
 
-   wxDirDialog dlog(this, 
+   wxDirDialog dlog(this,
                     _("Choose a location to save screenshot images"),
                     current);
 

@@ -27,9 +27,9 @@ class DirManager;
  * Takes one or more tracks as input; of all the WaveTrack s that are selected,
  * it mixes them together, applying any envelopes, amplitude gain, panning, and
  * real-time effects in the process.  The resulting pair of tracks (stereo) are
- * "rendered" and have no effects, gain, panning, or envelopes. Other sorts of 
+ * "rendered" and have no effects, gain, panning, or envelopes. Other sorts of
  * tracks are ignored.
- * If the start and end times passed are the same this is taken as meaning 
+ * If the start and end times passed are the same this is taken as meaning
  * no explicit time range to process, and the whole occupied length of the
  * input tracks is processed.
  */
@@ -45,13 +45,13 @@ void MixBuffers(int numChannels, int *channelFlags, float *gains,
 class AUDACITY_DLL_API MixerSpec
 {
    int mNumTracks, mNumChannels, mMaxNumChannels;
-  
+
    void Alloc();
    void Free();
 
    public:
    bool **mMap;
-   
+
    MixerSpec( int numTracks, int maxNumChannels );
    MixerSpec( const MixerSpec &mixerSpec );
    virtual ~MixerSpec();
@@ -67,7 +67,7 @@ class AUDACITY_DLL_API MixerSpec
 
 class AUDACITY_DLL_API Mixer {
  public:
-   // 
+   //
    // Constructor / Destructor
    //
 
@@ -135,7 +135,7 @@ class AUDACITY_DLL_API Mixer {
    float           *mGains;
    double          *mEnvValues;
    double           mT0; // Start time
-   double           mT1; // Stop time (none if mT0==mT1)   
+   double           mT1; // Stop time (none if mT0==mT1)
    double           mTime;  // Current time (renamed from mT to mTime for consistency with AudioIO - mT represented warped time there)
    Resample       **mResample;
    float          **mSampleQueue;

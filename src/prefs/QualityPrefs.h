@@ -23,7 +23,7 @@
 
 #include "PrefsPanel.h"
 
-class QualityPrefs:public PrefsPanel 
+class QualityPrefs:public PrefsPanel
 {
  public:
    QualityPrefs(wxWindow * parent);

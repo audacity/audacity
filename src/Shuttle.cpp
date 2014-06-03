@@ -18,7 +18,7 @@
 \brief Moves data from one place to another, converting it as required.
 
   Shuttle provides a base class for transfering parameter data into and
-  out of clasess into some other structure.  This is a common 
+  out of clasess into some other structure.  This is a common
   requirement and is needed for:
     - Prefs data
     - Command line parameter data
@@ -42,8 +42,8 @@ with a binary representation.
 *//****************************************************************//**
 
 \class Enums
-\brief Enums is a helper class for Shuttle.  It defines enumerations 
-which are used in effects dialogs, in the effects themselves and in 
+\brief Enums is a helper class for Shuttle.  It defines enumerations
+which are used in effects dialogs, in the effects themselves and in
 preferences.
 
 (If it grows big, we will move it out of shuttle.h).
@@ -72,14 +72,14 @@ preferences.
 
 const int Enums::NumDbChoices = 13;
 
-const wxString Enums::DbChoices[] = 
-   {wxT("-20 dB"), wxT("-25 dB"), wxT("-30 dB"), 
-    wxT("-35 dB"), wxT("-40 dB"), wxT("-45 dB"), 
+const wxString Enums::DbChoices[] =
+   {wxT("-20 dB"), wxT("-25 dB"), wxT("-30 dB"),
+    wxT("-35 dB"), wxT("-40 dB"), wxT("-45 dB"),
     wxT("-50 dB"), wxT("-55 dB"), wxT("-60 dB"),
-    wxT("-65 dB"), wxT("-70 dB"), wxT("-75 dB"), 
+    wxT("-65 dB"), wxT("-70 dB"), wxT("-75 dB"),
     wxT("-80 dB")};
 
-const double Enums::Db2Signal[] = 
+const double Enums::Db2Signal[] =
 //     -20dB    -25dB    -30dB    -35dB    -40dB    -45dB    -50dB    -55dB    -60dB    -65dB     -70dB     -75dB     -80dB    Off
    { 0.10000, 0.05620, 0.03160, 0.01780, 0.01000, 0.00562, 0.00316, 0.00178, 0.00100, 0.000562, 0.000316, 0.000178, 0.0001000, 0.0 };
 
@@ -104,7 +104,7 @@ bool Shuttle::TransferBool( const wxString & Name, bool & bValue, const bool & b
          if( !mValueString.IsEmpty() )
             bValue = mValueString.GetChar(0) == wxT('y');
       }
-   }  
+   }
    else
    {
       mValueString = (bValue==0) ? wxT("no"):wxT("yes");
@@ -123,7 +123,7 @@ bool Shuttle::TransferFloat( const wxString & Name, float & fValue, const float 
          if( !mValueString.IsEmpty() )
             fValue = wxAtof( mValueString );
       }
-   }  
+   }
    else
    {
       mValueString = wxString::Format(wxT("%f"),fValue);
@@ -142,10 +142,10 @@ bool Shuttle::TransferDouble( const wxString & Name, double & dValue, const doub
          if( !mValueString.IsEmpty() )
             dValue = wxAtof( mValueString );
       }
-   }  
+   }
    else
    {
-      //%f is format string for double 
+      //%f is format string for double
       mValueString = wxString::Format(wxT("%f"),dValue);
       return ExchangeWithMaster( Name );
    }
@@ -161,7 +161,7 @@ bool Shuttle::TransferInt( const wxString & Name, int & iValue, const int & iDef
       {
          iValue = wxAtoi( mValueString );
       }
-   }  
+   }
    else
    {
       mValueString = wxString::Format(wxT("%i"),iValue);
@@ -185,7 +185,7 @@ bool Shuttle::TransferLongLong( const wxString & Name, wxLongLong_t & iValue, co
       {
          iValue = wxAtoi( mValueString );
       }
-   }  
+   }
    else
    {
       /// \todo Fix for long long values.
@@ -196,7 +196,7 @@ bool Shuttle::TransferLongLong( const wxString & Name, wxLongLong_t & iValue, co
 }
 
 
-bool Shuttle::TransferEnum( const wxString & Name, int & iValue, 
+bool Shuttle::TransferEnum( const wxString & Name, int & iValue,
       const int nChoices, const wxString * pFirstStr)
 {
    if( mbStoreInClient )
@@ -219,7 +219,7 @@ bool Shuttle::TransferEnum( const wxString & Name, int & iValue,
             }
          }
       }
-   }  
+   }
    else
    {
       //TIDY-ME: Out of range configuration values are silently discarded...
@@ -282,7 +282,7 @@ bool Shuttle::ExchangeWithMaster(const wxString & WXUNUSED(Name))
 }
 
 // This variant uses values of the form
-// param1=value1 param2=value2 
+// param1=value1 param2=value2
 bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
 {
    if( !mbStoreInClient )

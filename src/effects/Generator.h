@@ -5,8 +5,8 @@
   Generator.h
 
   Two Abstract classes, Generator, and BlockGenerator, that effects which
-  generate audio should derive from.  
-  
+  generate audio should derive from.
+
   Block Generator breaks the synthesis task up into smaller parts.
 
   Dominic Mazzoni

@@ -114,7 +114,7 @@ class LinearOutputRateTimeWarper : public TimeWarper
 private:
    LinearTimeWarper mTimeWarper;
    double mRStart;
-   double mTStart;                              
+   double mTStart;
    double mScale;
    double mC1;
    double mC2;

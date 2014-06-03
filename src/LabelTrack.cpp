@@ -68,7 +68,7 @@ bool LabelTrack::mbGlyphsReady=false;
 
 /// We have several variants of the icons (highlighting).
 /// The icons are draggable, and you can drag one boundary
-/// or all boundaries at the same timecode depending on whether you 
+/// or all boundaries at the same timecode depending on whether you
 /// click the centre (for all) or the arrow part (for one).
 /// Currently we have twelve variants but we're only using six.
 wxBitmap LabelTrack::mBoundaryGlyphs[ NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS ];
@@ -128,7 +128,7 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
       mLabels.Add(l);
    }
    mSelIndex = orig.mSelIndex;
-   
+
    // reset flags
    ResetFlags();
 }
@@ -237,11 +237,11 @@ double LabelTrack::AdjustTimeStampOnScale(double t, double b, double e, double c
 {
 //t is the time stamp we'll be changing
 //b and e are the selection start and end
-  
+
    if (t < b){
       return t;
    }else if (t > e){
-      double shift = (e-b)*change - (e-b);  
+      double shift = (e-b)*change - (e-b);
       return t + shift;
    }else{
       double shift = (t-b)*change - (t-b);
@@ -288,7 +288,7 @@ void LabelTrack::ResetFont()
    }
 }
 
-/// ComputeTextPosition is 'smart' about where to display 
+/// ComputeTextPosition is 'smart' about where to display
 /// the label text.
 ///
 /// The text must be displayed between its endpoints x and x1
@@ -298,12 +298,12 @@ void LabelTrack::ResetFont()
 ///
 /// This function has a number of tests and adjustments to the
 /// text start position.  The tests later in the function will
-/// take priority over the ones earlier, so because centering 
-/// is the first thing we do, it's the first thing we lose if 
+/// take priority over the ones earlier, so because centering
+/// is the first thing we do, it's the first thing we lose if
 /// we can't do everything we want to.
 void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
 {
-   // xExtra is extra space 
+   // xExtra is extra space
    // between the text and the endpoints.
    const int xExtra=mIconWidth;
    int x     = mLabels[index]->x;  // left endpoint
@@ -318,10 +318,10 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
    bool bSimpleCentering = false;
 
    //TODO (possibly):
-   // Add configurable options as to when to use simple 
+   // Add configurable options as to when to use simple
    // and when complex centering.
    //
-   // Simple centering does its best to keep the text  
+   // Simple centering does its best to keep the text
    // centered between the label limits.
    //
    // Complex centering positions the text proportionally
@@ -348,7 +348,7 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
       int rx0,rx1,xText0,xText1;
 
       // Since we will be using a linear function,
-      // we should blend smoothly between left and right 
+      // we should blend smoothly between left and right
       // aligned text as r, the 'viewport' moves.
       if( bTooWideForScreen )
       {
@@ -360,9 +360,9 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
       else
       {
          // when label start + width + extra spacing at viewport end..
-         rx0=x-r.width+width+2*xExtra; 
+         rx0=x-r.width+width+2*xExtra;
          // ..text aligned left.
-         xText0=x+xExtra;  
+         xText0=x+xExtra;
          // when viewport start + width + extra spacing at label end..
          rx1=x1-(width+2*xExtra);
          // ..text aligned right.
@@ -377,7 +377,7 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
          //
          // xText = xText0 + ((xText1-xText0)*(r.x-rx0))/(rx1-rx0);
          //
-         // The problem with the above is that it integer-oveflows at 
+         // The problem with the above is that it integer-oveflows at
          // high zoom.
 
          // Instead use:
@@ -396,7 +396,7 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
       }
    }
 
-   // Is the text now appearing partly outside r? 
+   // Is the text now appearing partly outside r?
    bool bOffLeft = xText < r.x+xExtra;
    bool bOffRight = xText > r.x+r.width-width-xExtra;
 
@@ -405,7 +405,7 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
    if( bOffLeft == bOffRight )
    {
       //IF both sides on screen, THEN nothing to do.
-      //IF both sides off screen THEN don't do 
+      //IF both sides off screen THEN don't do
       //anything about it.
       //(because if we did, you'd never get to read
       //all the text by scrolling).
@@ -427,10 +427,10 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
 
    // But if we've taken the text out from its endpoints
    // we must move it back so that it's between the endpoints.
-   
+
    // We test the left end point last because the
    // text might not even fit between the endpoints (at this
-   // zoom factor), and in that case we'd like to position 
+   // zoom factor), and in that case we'd like to position
    // the text at the left end point.
    if( xText > (x1-width-xExtra))
       xText=(x1-width-xExtra);
@@ -465,7 +465,7 @@ void LabelTrack::ComputeLayout(const wxRect & r, double h, double pps)
       xUsed[i]=xStart;
    int nRowsUsed=0;
 
-   for (i = 0; i < (int)mLabels.Count(); i++) 
+   for (i = 0; i < (int)mLabels.Count(); i++)
    {
       int x  = r.x + (int) ((mLabels[i]->t  - h) * pps);
       int x1 = r.x + (int) ((mLabels[i]->t1 - h) * pps);
@@ -479,7 +479,7 @@ void LabelTrack::ComputeLayout(const wxRect & r, double h, double pps)
       // (This is to encourage merging of adjacent label boundaries).
       while( (iRow<nRowsUsed) && (xUsed[iRow] != x ))
          iRow++;
-      // IF we didn't find one THEN 
+      // IF we didn't find one THEN
       // find any row that can take a span starting at x.
       if( iRow >= nRowsUsed )
       {
@@ -533,7 +533,7 @@ void LabelStruct::DrawLines(wxDC & dc, const wxRect & r)
    const int yIconStart = y - (LabelTrack::mIconHeight /2)+1+(LabelTrack::mTextHeight+3)/2;
    const int yIconEnd   = yIconStart + LabelTrack::mIconHeight-2;
 
-   // If y is positive then it is the center line for the 
+   // If y is positive then it is the center line for the
    // Label.
    if( y >= 0 )
    {
@@ -572,21 +572,21 @@ void LabelStruct::DrawGlyphs(wxDC & dc, const wxRect & r, int GlyphLeft, int Gly
 
    if((x  >= r.x) && (x  <= (r.x+r.width)))
       dc.DrawBitmap(LabelTrack::GetGlyph(GlyphLeft), x-xHalfWidth,yStart, true);
-   // The extra test commented out here would suppress right hand markers 
+   // The extra test commented out here would suppress right hand markers
    // when they overlap the left hand marker (e.g. zoomed out) or to the left.
    if((x1 >= r.x) && (x1 <= (r.x+r.width)) /*&& (x1>x+LabelTrack::mIconWidth)*/)
       dc.DrawBitmap(LabelTrack::GetGlyph(GlyphRight), x1-xHalfWidth,yStart, true);
 }
 
 /// Draw the text of the label and also draw
-/// a long thin rectangle for its full extent 
-/// from x to x1 and a rectangular frame 
+/// a long thin rectangle for its full extent
+/// from x to x1 and a rectangular frame
 /// behind the text itself.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
 void LabelStruct::DrawText(wxDC & dc, const wxRect & r)
 {
-   //If y is positive then it is the center line for the 
+   //If y is positive then it is the center line for the
    //text we are about to draw.
    //if it isn't, nothing to draw.
 
@@ -609,9 +609,9 @@ void LabelStruct::DrawText(wxDC & dc, const wxRect & r)
 
 }
 
-void LabelStruct::DrawTextBox(wxDC & dc, const wxRect & r) 
+void LabelStruct::DrawTextBox(wxDC & dc, const wxRect & r)
 {
-   //If y is positive then it is the center line for the 
+   //If y is positive then it is the center line for the
    //text we are about to draw.
    const int yBarHeight=3;
    const int yFrameHeight = LabelTrack::mTextHeight+3;
@@ -626,8 +626,8 @@ void LabelStruct::DrawTextBox(wxDC & dc, const wxRect & r)
 
       if( (xStart < (r.x+r.width)) && (xEnd > r.x) && (xWidth>0))
       {
-         
-         wxRect bar( xStart,y-yBarHeight/2+yFrameHeight/2, 
+
+         wxRect bar( xStart,y-yBarHeight/2+yFrameHeight/2,
             xWidth,yBarHeight);
          if( x1 > x+xBarShorten )
             dc.DrawRectangle(bar);
@@ -635,13 +635,13 @@ void LabelStruct::DrawTextBox(wxDC & dc, const wxRect & r)
    }
 
    // In drawing the bar and the frame, we compute the clipping
-   // to the viewport ourselves.  Under Win98 the GDI does its 
-   // calculations in 16 bit arithmetic, and so gets it completely 
-   // wrong at higher zooms where the bar can easily be 
+   // to the viewport ourselves.  Under Win98 the GDI does its
+   // calculations in 16 bit arithmetic, and so gets it completely
+   // wrong at higher zooms where the bar can easily be
    // more than 65536 pixels wide.
 
    // Draw bar for label extent...
-   // We don't quite draw from x to x1 because we allow 
+   // We don't quite draw from x to x1 because we allow
    // half an icon width at each end.
    {
       const int xStart=wxMax(r.x,xText-LabelTrack::mIconWidth/2);
@@ -660,10 +660,10 @@ void LabelStruct::DrawTextBox(wxDC & dc, const wxRect & r)
 
 /// Draws text-selected region within the label
 void LabelStruct::DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight)
-{    
+{
    highlighted = true;
    changeInitialMouseXPos = false;
-   
+
    wxPen curPen = dc.GetPen();
    curPen.SetColour(wxString(wxT("BLUE")));
    wxBrush curBrush = dc.GetBrush();
@@ -674,7 +674,7 @@ void LabelStruct::DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight
       dc.DrawRectangle(xPos2-1, y-charHeight/2, xPos1-xPos2+1, charHeight);
 }
 
-void LabelStruct::getXPos( wxDC & dc, int * xPos1, int cursorPos) 
+void LabelStruct::getXPos( wxDC & dc, int * xPos1, int cursorPos)
 {
    *xPos1 = xText;
    if( cursorPos > 0)
@@ -730,7 +730,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
    // Get the text widths.
    // TODO: Make more efficient by only re-computing when a
    // text label title changes.
-   for (i = 0; i < (int)mLabels.Count(); i++) 
+   for (i = 0; i < (int)mLabels.Count(); i++)
    {
       dc.GetTextExtent(mLabels[i]->title, &textWidth, &textHeight);
       mLabels[i]->width = textWidth;
@@ -738,12 +738,12 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
 
    // TODO: And this only needs to be done once, but we
    // do need the dc to do it.
-   // We need to set mTextHeight to something sensible, 
+   // We need to set mTextHeight to something sensible,
    // guarding against the case where there are no
    // labels or all are empty strings, which for example
    // happens with a new label track.
    dc.GetTextExtent(wxT("Demo Text x^y"), &textWidth, &textHeight);
-   mTextHeight = (int)textHeight;   
+   mTextHeight = (int)textHeight;
    ComputeLayout( r, h , pps );
    dc.SetTextForeground(theTheme.Colour( clrLabelTrackText));
    dc.SetBackgroundMode(wxTRANSPARENT);
@@ -756,13 +756,13 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
    // so that the correct things overpaint each other.
 
    // Draw vertical lines that show where the end positions are.
-   for (i = 0; i < nLabels; i++) 
+   for (i = 0; i < nLabels; i++)
    {
       mLabels[i]->DrawLines( dc, r );
    }
 
    // Draw the end glyphs.
-   for (i = 0; i < nLabels; i++) 
+   for (i = 0; i < nLabels; i++)
    {
       GlyphLeft=0;
       GlyphRight=1;
@@ -810,9 +810,9 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
    {
       i = mSelIndex;
       int xPos = mLabels[i]->xText;
-      
+
       // if mouse is clicked in text box
-      if (mMouseXPos != -1) 
+      if (mMouseXPos != -1)
       {
          // set current cursor position
          SetCurrentCursorPosition(dc, (int) mMouseXPos);
@@ -831,7 +831,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
          dc.GetTextExtent((mLabels[i]->title).Left(mCurrentCursorPos), &partWidth, NULL);
          xPos += partWidth;
       }
-      
+
       // Draw the cursor
       wxPen currentPen = dc.GetPen();
       const int CursorWidth=2;
@@ -846,9 +846,9 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
 }
 
 /// Set the cursor position according to x position of mouse
-/// uses GetTextExtent to find the character position 
+/// uses GetTextExtent to find the character position
 /// corresponding to the x pixel position.
-void LabelTrack::SetCurrentCursorPosition(wxDC & dc, int xPos) 
+void LabelTrack::SetCurrentCursorPosition(wxDC & dc, int xPos)
 {
    // A bool indicator to see if set the cursor position or not
    bool finished = false;
@@ -857,42 +857,42 @@ void LabelTrack::SetCurrentCursorPosition(wxDC & dc, int xPos)
    int oneWidth;
    double bound;
    wxString subString;
-   while (!finished && (charIndex < (int)mLabels[mSelIndex]->title.length() + 1)) 
+   while (!finished && (charIndex < (int)mLabels[mSelIndex]->title.length() + 1))
    {
       subString = (mLabels[mSelIndex]->title).Left(charIndex);
       // Get the width of substring
       dc.GetTextExtent(subString, &partWidth, NULL);
-      if (charIndex > 1) 
+      if (charIndex > 1)
       {
          // Get the width of the last character
          dc.GetTextExtent(subString.Right(1), &oneWidth, NULL);
          bound = mLabels[mSelIndex]->xText + partWidth - oneWidth * 0.5;
       }
-      else 
+      else
       {
          bound = mLabels[mSelIndex]->xText + partWidth * 0.5;
       }
 
-      if (xPos <= bound) 
+      if (xPos <= bound)
       {
          // Found
          mCurrentCursorPos = charIndex - 1;
          finished = true;
-      } 
-      else 
+      }
+      else
       {
          // Advance
          charIndex++;
       }
    }
-   if (!finished) 
+   if (!finished)
    {
       // Cursor should be in the last position
       mCurrentCursorPos = mLabels[mSelIndex]->title.length();
    }
 }
 
-void LabelTrack::calculateFontHeight(wxDC & dc) 
+void LabelTrack::calculateFontHeight(wxDC & dc)
 {
    int charDescent;
    int charLeading;
@@ -900,7 +900,7 @@ void LabelTrack::calculateFontHeight(wxDC & dc)
    // Calculate the width of the substring and add it to Xpos
    dc.GetTextExtent(wxT("(Test String)|[yp]"), NULL, &mFontHeight, &charDescent, &charLeading);
 
-   // The cursor will have height charHeight.  We don't include the descender as 
+   // The cursor will have height charHeight.  We don't include the descender as
    // part of the height because for phonetic fonts this leads to cursors which are
    // too tall.  We don't include leading either - it is usually 0.
    // To make up for ignoring the descender height, we add one pixel above and below
@@ -923,7 +923,7 @@ bool LabelTrack::IsTextSelected()
 
 /// Cut the selected text in the text box
 ///  @return true if text is selected in text box, false otherwise
-bool LabelTrack::CutSelectedText() 
+bool LabelTrack::CutSelectedText()
 {
    if (!IsTextSelected())
       return false;
@@ -954,7 +954,7 @@ bool LabelTrack::CutSelectedText()
 
    // set title to the combination of the two remainders
    mLabels[mSelIndex]->title = left + right;
-   
+
    // copy data onto clipboard
    if (wxTheClipboard->Open()) {
 #if defined(__WXGTK__) && defined(HAVE_GTK)
@@ -963,7 +963,7 @@ bool LabelTrack::CutSelectedText()
       wxTheClipboard->SetData(new wxTextDataObject(data));
       wxTheClipboard->Close();
    }
-   
+
    // set cursor positions
    mCurrentCursorPos = left.Length();
    mInitialCursorPos = mCurrentCursorPos;
@@ -972,7 +972,7 @@ bool LabelTrack::CutSelectedText()
 
 /// Copy the selected text in the text box
 ///  @return true if text is selected in text box, false otherwise
-bool LabelTrack::CopySelectedText() 
+bool LabelTrack::CopySelectedText()
 {
    if (mSelIndex == -1)
       return false;
@@ -986,7 +986,7 @@ bool LabelTrack::CopySelectedText()
       cur = mInitialCursorPos;
       init = mCurrentCursorPos;
    }
-   
+
    // data for copying
    wxString data = mLabels[mSelIndex]->title.Mid(init, cur-init);
 
@@ -1013,7 +1013,7 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
    wxString text;
    wxString left=wxT("");
    wxString right=wxT("");
-   
+
    // if text data is available
    if (IsTextClipSupported()) {
       if (wxTheClipboard->Open()) {
@@ -1051,9 +1051,9 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
       if (mCurrentCursorPos < (int)(mLabels[mSelIndex]->title).Length()) {
          right = (mLabels[mSelIndex]->title).Mid(mCurrentCursorPos, (mLabels[mSelIndex]->title).Length()-mCurrentCursorPos);
       }
-      mLabels[mSelIndex]->title = left + text + right;            
+      mLabels[mSelIndex]->title = left + text + right;
       mCurrentCursorPos = left.Length() + text.Length();
-   } 
+   }
    else
    {
       // insert the data on the clipboard from the cursor position
@@ -1098,7 +1098,7 @@ bool LabelTrack::IsTextClipSupported()
 double LabelTrack::GetStartTime()
 {
    int len = mLabels.Count();
-   
+
    if (len == 0)
       return 0.0;
    else
@@ -1112,7 +1112,7 @@ double LabelTrack::GetEndTime()
    int len = mLabels.Count();
    if (len == 0)
       return 0.0;
- 
+
    double end = 0.0;
    for(int i = 0; i < len; i++)
    {
@@ -1121,10 +1121,10 @@ double LabelTrack::GetEndTime()
    }
    return end;
 }
- 
+
 
 /// OverGlyph returns 0 if not over a glyph,
-/// 1 if over the left-hand glyph, and 
+/// 1 if over the left-hand glyph, and
 /// 2 if over the right-hand glyph on a label.
 /// 3 if over both right and left.
 ///
@@ -1143,15 +1143,15 @@ int LabelTrack::OverGlyph(int x, int y)
    int result=0;
    const int d1=10; //distance in pixels, used for have we hit drag handle.
    const int d2=5;  //distance in pixels, used for have we hit drag handle center.
-   
+
    //If not over a label, reset it
    mMouseOverLabelLeft  = -1;
    mMouseOverLabelRight = -1;
    mbHitCenter = false;
-   for (int i = 0; i < (int)mLabels.Count(); i++) 
+   for (int i = 0; i < (int)mLabels.Count(); i++)
    {
       pLabel = mLabels[i];
-      
+
       //over left or right selection bound
       //Check right bound first, since it is drawn after left bound,
       //so give it precedence for matching/highlighting.
@@ -1173,7 +1173,7 @@ int LabelTrack::OverGlyph(int x, int y)
          result |= 2;
          mInBox = false;     // to disable the dragging for selecting the text in text box
       }
-      // Use else-if here rather than else to avoid detecting left and right 
+      // Use else-if here rather than else to avoid detecting left and right
       // of the same label.
       else if(   abs(pLabel->y - (y - (LabelTrack::mTextHeight+3)/2)) < d1 &&
             abs(pLabel->x + d2 - x) < d1 )
@@ -1196,9 +1196,9 @@ int LabelTrack::OverGlyph(int x, int y)
 }
 
 // return true if the mouse is over text box, false otherwise
-bool LabelTrack::OverTextBox(const LabelStruct *pLabel, int x, int y) 
+bool LabelTrack::OverTextBox(const LabelStruct *pLabel, int x, int y)
 {
-   if( (pLabel->xText-(mIconWidth/2) < x) && 
+   if( (pLabel->xText-(mIconWidth/2) < x) &&
             (x<pLabel->xText+pLabel->width+(mIconWidth/2)) &&
             (abs(pLabel->y-y)<mIconHeight/2))
    {
@@ -1357,7 +1357,7 @@ static int Constrain( int value, int min, int max )
 }
 
 /// HandleMouse gets called with every mouse move or click.
-/// 
+///
 bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
                              wxRect & r, double h, double pps,
                              double *newSel0, double *newSel1)
@@ -1400,14 +1400,14 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
    }
 
    if(evt.Dragging())
-   { 
+   {
       // if dragging happens in text box
       if (mInBox) {
          // end dragging x position in pixels
          // set flag to update current cursor position
          mDragXPos = evt.m_x;
          mResetCursorPos = true;
-         
+
          // if it's an invalid dragging, disable displaying
          if (mRightDragging) {
             mDragXPos = -1;
@@ -1415,7 +1415,7 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
          }
       }
 
-      //If we are currently adjusting a label, 
+      //If we are currently adjusting a label,
       //just reset its value and redraw.
       if(mIsAdjustingLabel )  // This guard is necessary but hides another bug.  && mSelIndex != -1)
       {
@@ -1458,10 +1458,10 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
 
    if( evt.ButtonDown())
    {
-      //OverGlyph sets mMouseOverLabel to be the chosen label.         
+      //OverGlyph sets mMouseOverLabel to be the chosen label.
       int iGlyph = OverGlyph(evt.m_x, evt.m_y);
       mIsAdjustingLabel = iGlyph != 0;
-      
+
       // reset mouseXPos if the mouse is pressed in the text box
       mMouseXPos = -1;
       mInBox = false;
@@ -1477,7 +1477,7 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
             highlightedRect = wxRect(mXPos2, mLabels[mSelIndex]->y - mFontHeight/2, (int) (mXPos1-mXPos2+0.5), mFontHeight);
 
          // reset when left button is down
-         if (evt.LeftDown()) 
+         if (evt.LeftDown())
             mLabels[mSelIndex]->highlighted = false;
          // reset when right button is down outside text box
          if (evt.RightDown())
@@ -1501,22 +1501,22 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
          mbIsMoving = mbHitCenter;
          // When we start dragging the label(s) we don't want them to jump.
          // so we calculate the displacement of the mouse from the drag center
-         // and use that in subsequent dragging calculations.  The mouse stays 
+         // and use that in subsequent dragging calculations.  The mouse stays
          // at the same relative displacement throughout dragging.
 
          // However, if two label's edges are being dragged
-         // then the displacement is relative to the initial average 
-         // position of them, and in that case there can be a jump of at most 
-         // a few pixels to bring the two label boundaries to exactly the same 
+         // then the displacement is relative to the initial average
+         // position of them, and in that case there can be a jump of at most
+         // a few pixels to bring the two label boundaries to exactly the same
          // position when we start dragging.
 
          // Dragging of three label edges at the same time is not supported (yet).
-         if( (mMouseOverLabelRight >=0) && 
-             (mMouseOverLabelLeft >=0) 
+         if( (mMouseOverLabelRight >=0) &&
+             (mMouseOverLabelLeft >=0)
            )
          {
             t = (mLabels[mMouseOverLabelRight]->t1+mLabels[mMouseOverLabelLeft]->t)/2.0f;
-            // If we're moving two edges, then it's a move (label size preserved) 
+            // If we're moving two edges, then it's a move (label size preserved)
             // if both edges are the same label, and it's an adjust (label sizes change)
             // if we're on a boundary between two different labels.
             mbIsMoving = (mMouseOverLabelLeft == mMouseOverLabelRight);
@@ -1531,7 +1531,7 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
          }
          mxMouseDisplacement = (int)((((t-h) * pps) + r.x )-evt.m_x);
          return false;
-      } 
+      }
 
       // disable displaying if left button is down
       if (evt.LeftDown())
@@ -1656,7 +1656,7 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
       case WXK_BACK:
          {
             int len = mLabels[mSelIndex]->title.Length();
-            
+
             //IF the label is not blank THEN get rid of a letter or letters according to cursor position
             if (len > 0)
             {
@@ -1687,7 +1687,7 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
       case WXK_NUMPAD_DELETE:
          {
             int len = mLabels[mSelIndex]->title.Length();
-            
+
             //If the label is not blank get rid of a letter according to cursor position
             if (len > 0)
             {
@@ -1796,13 +1796,13 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
          }
          break;
 
-      case WXK_RETURN: 
+      case WXK_RETURN:
       case WXK_NUMPAD_ENTER:
 
-      case WXK_ESCAPE:        
+      case WXK_ESCAPE:
          mSelIndex = -1;
          break;
-         
+
       case WXK_TAB:
       case WXK_NUMPAD_TAB:
          if (event.ShiftDown()) {
@@ -1810,7 +1810,7 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
          } else {
                mSelIndex++;
          }
-         
+
          if (mSelIndex >= 0 && mSelIndex < (int)mLabels.Count()) {
             mCurrentCursorPos = mLabels[mSelIndex]->title.Length();
             //Set the selection region to be equal to the selection bounds of the tabbed-to label.
@@ -1972,11 +1972,11 @@ bool LabelTrack::OnChar(double & WXUNUSED(newSel0), double & WXUNUSED(newSel1), 
    return updated;
 }
 
-void LabelTrack::RemoveSelectedText() 
+void LabelTrack::RemoveSelectedText()
 {
    wxString left = wxT("");
    wxString right = wxT("");
-   
+
    if (mInitialCursorPos > mCurrentCursorPos) {
       int temp = mCurrentCursorPos;
       mCurrentCursorPos = mInitialCursorPos;
@@ -2026,22 +2026,22 @@ void LabelTrack::Import(wxTextFile & in)
    wxString s,s1;
    wxString title;
    double t,t1;
-   
+
    lines = in.GetLineCount();
-   
+
    mLabels.Clear();
    mLabels.Alloc(lines);
-   
+
    //Currently, we expect a tag file to have two values and a label
    //on each line. If the second token is not a number, we treat
    //it as a single-value label.
    for (index = 0; index < lines; index++) {
       currentLine = in.GetLine(index);
-      
+
       len = currentLine.Length();
       if (len == 0)
          return;
-      
+
       //get the timepoint of the left edge of the label.
       i = 0;
       while (i < len && currentLine.GetChar(i) != wxT(' ')
@@ -2050,13 +2050,13 @@ void LabelTrack::Import(wxTextFile & in)
          i++;
       }
       s = currentLine.Left(i);
-      
+
       if (!Internat::CompatibleToDouble(s, &t))
          return;
-      
+
       //Increment one letter.
       i++;
-      
+
       //Now, go until we find the start of the get the next token
       while (i < len
          && (currentLine.GetChar(i) == wxT(' ')
@@ -2066,21 +2066,21 @@ void LabelTrack::Import(wxTextFile & in)
       }
       //Keep track of the start of the second token
       i2=i;
-      
+
       //Now, go to the end of the second token.
       while (i < len && currentLine.GetChar(i) != wxT(' ')
          && currentLine.GetChar(i) != wxT('\t'))
       {
          i++;
       }
-      
-      //We are at the end of the second token.      
+
+      //We are at the end of the second token.
       s1 = currentLine.Mid(i2,i-i2+1).Strip(wxString::stripType(0x3));
       if (!Internat::CompatibleToDouble(s1, &t1))
       {
          //s1 is not a number.
          t1 = t;  //This is a one-sided label; t1 == t.
-         
+
          //Because s1 is not a number, the label should be
          //The rest of the line, starting at i2;
          title = currentLine.Right(len - i2).Strip(wxString::stripType(0x3));  //0x3 indicates both
@@ -2088,12 +2088,12 @@ void LabelTrack::Import(wxTextFile & in)
       else
       {
          //s1 is a number, and it is stored correctly in t1.
-         //The title should be the remainder of the line, 
-         //After we eat 
-         
-         //Get rid of spaces at either end 
+         //The title should be the remainder of the line,
+         //After we eat
+
+         //Get rid of spaces at either end
          title = currentLine.Right(len - i).Strip(wxString::stripType(0x3)); //0x3 indicates both.
-         
+
       }
       LabelStruct *l = new LabelStruct();
       l->t = t;
@@ -2117,17 +2117,17 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       while(*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value)
             break;
-         
+
          const wxString strValue = value;
          if (!XMLValueChecker::IsGoodString(strValue))
          {
             delete l;
             return false;
          }
-        
+
          if (!wxStrcmp(attr, wxT("t")) && Internat::CompatibleToDouble(strValue, &dblValue))
             l->t = dblValue;
          else if (!wxStrcmp(attr, wxT("t1")) && Internat::CompatibleToDouble(strValue, &dblValue))
@@ -2154,15 +2154,15 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       while (*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value)
             return true;
 
          const wxString strValue = value;
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
             mName = strValue;
-         else if (!wxStrcmp(attr, wxT("numlabels")) && 
-                     XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
+         else if (!wxStrcmp(attr, wxT("numlabels")) &&
+                     XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
          {
             if (nValue < 0)
             {
@@ -2172,13 +2172,13 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             mLabels.Clear();
             mLabels.Alloc(nValue);
          }
-         else if (!wxStrcmp(attr, wxT("height")) && 
+         else if (!wxStrcmp(attr, wxT("height")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             SetHeight(nValue);
-         else if (!wxStrcmp(attr, wxT("minimized")) && 
+         else if (!wxStrcmp(attr, wxT("minimized")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             SetMinimized(nValue != 0);
-         else if (!wxStrcmp(attr, wxT("isSelected")) && 
+         else if (!wxStrcmp(attr, wxT("isSelected")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             this->SetSelected(nValue != 0);
       }
@@ -2281,7 +2281,7 @@ bool LabelTrack::Cut(double t0, double t1, Track **dest)
 bool LabelTrack::SplitCut(double t0, double t1, Track ** dest)
 {
    // SplitCut() == Copy() + SplitDelete()
-   
+
    if (!Copy(t0, t1, dest))
       return false;
    if (!SplitDelete(t0, t1))
@@ -2410,7 +2410,7 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
          // it, and we need to extend it through to the last repeat interval
          mLabels[i]->t1 += n * tLen;
       }
-      
+
       // Other cases have already been handled by ShiftLabelsOnInsert()
    }
 
@@ -2492,12 +2492,12 @@ int LabelTrack::GetLabelIndex(double t, double t1)
 
    int len = mLabels.Count();
    int i;
-   //We'd have liked to have times in terms of samples, 
+   //We'd have liked to have times in terms of samples,
    //because then we're doing an intrger comparison.
    //Never mind.  Instead we look for near enough.
-   //This level of (in)accuracy is only a problem if we 
+   //This level of (in)accuracy is only a problem if we
    //deal with sounds in the MHz range.
-   const double delta = 1.0e-7; 
+   const double delta = 1.0e-7;
    for( i=0;i<len;i++)
    {
       l = mLabels[i];
@@ -2611,7 +2611,7 @@ static const char *const GlyphXpmRegionSpec[] = {
 
 /// CreateCustomGlyphs() creates the mBoundaryGlyph array.
 /// It's a bit like painting by numbers!
-/// 
+///
 /// Schematically the glyphs we want will 'look like':
 ///   <O,  O>   and   <O>
 /// for a left boundary to a label, a right boundary and both.
@@ -2622,14 +2622,14 @@ static const char *const GlyphXpmRegionSpec[] = {
 /// giving 3 x 4 = 12 combinations.
 ///
 /// Two of those combinations aren't used, but
-/// treating them specially would make other code more 
+/// treating them specially would make other code more
 /// complicated.
 void LabelTrack::CreateCustomGlyphs()
 {
    int iConfig;
    int iHighlight;
    int index;
-   const int nSpecRows = 
+   const int nSpecRows =
       sizeof( GlyphXpmRegionSpec )/sizeof( GlyphXpmRegionSpec[0]);
    const char *XmpBmp[nSpecRows];
 
@@ -2701,17 +2701,17 @@ bool LabelTrack::IsGoodLabelEditKey(int keyCode)
 
 /// Sorts the labels in order of their starting times.
 /// This function is called often (whilst dragging a label)
-/// We expect them to be very nearly in order, so insertion 
-/// sort (with a linear search) is a reasonable choice.  
+/// We expect them to be very nearly in order, so insertion
+/// sort (with a linear search) is a reasonable choice.
 void LabelTrack::SortLabels()
 {
    int i,j;
    LabelStruct * pTemp;
-   for (i = 1; i < (int)mLabels.Count(); i++) 
+   for (i = 1; i < (int)mLabels.Count(); i++)
    {
       j=i-1;
       while( (j>=0) && (mLabels[j]->t > mLabels[i]->t) )
-      {  
+      {
          j--;
       }
       j++;

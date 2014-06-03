@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class MIDIParser
-\brief Unused class that might someday be used again to read MIDI files 
+\brief Unused class that might someday be used again to read MIDI files
 into a NoteTrack.
 
 *//*******************************************************************/

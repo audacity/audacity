@@ -99,7 +99,7 @@ TimeTrack::~TimeTrack()
 {
    delete mEnvelope;
    mEnvelope = NULL;
-   
+
    delete mRuler;
 }
 
@@ -141,17 +141,17 @@ bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       while(*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value)
             break;
-         
+
          const wxString strValue = value;
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
             mName = strValue;
-         else if (!wxStrcmp(attr, wxT("height")) && 
+         else if (!wxStrcmp(attr, wxT("height")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mHeight = nValue;
-         else if (!wxStrcmp(attr, wxT("minimized")) && 
+         else if (!wxStrcmp(attr, wxT("minimized")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mMinimized = (nValue != 0);
          else if (!wxStrcmp(attr, wxT("rangelower")))
@@ -164,19 +164,19 @@ bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             mRangeUpper = Internat::CompatibleToDouble(value);
             mRescaleXMLValues = false;
          }
-         else if (!wxStrcmp(attr, wxT("displaylog")) && 
+         else if (!wxStrcmp(attr, wxT("displaylog")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
          {
             SetDisplayLog(nValue != 0);
             //TODO-MB: This causes a graphical glitch, TrackPanel should probably be Refresh()ed after loading.
             //         I don't know where to do this though.
          }
-         else if (!wxStrcmp(attr, wxT("interpolatelog")) && 
+         else if (!wxStrcmp(attr, wxT("interpolatelog")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
          {
             SetInterpolateLog(nValue != 0);
          }
-         
+
       } // while
       if(mRescaleXMLValues)
          mEnvelope->SetRange(0.0, 1.0); // this will be restored to the actual range later
@@ -285,7 +285,7 @@ void TimeTrack::testMe()
    GetEnvelope()->Insert( 5.0 - 0.001, 0.2 );
    GetEnvelope()->Insert( 5.0 + 0.001, 1.3 );
    GetEnvelope()->Insert( 10.0, 1.3 );
-   
+
    double value1 = GetEnvelope()->Integral(2.0, 13.0);
    double expected1 = (5.0 - 2.0) * 0.2 + (13.0 - 5.0) * 1.3;
    double value2 = GetEnvelope()->IntegralOfInverse(2.0, 13.0);

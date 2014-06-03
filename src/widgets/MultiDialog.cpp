@@ -40,7 +40,7 @@ public:
                wxString title,
                const wxChar **buttons, wxString boxMsg, bool log);
    ~MultiDialog() {};
-   
+
 private:
    void OnOK( wxCommandEvent &event );
    void OnShowLog(wxCommandEvent& event);
@@ -56,13 +56,13 @@ BEGIN_EVENT_TABLE(MultiDialog, wxDialog)
    EVT_BUTTON( wxID_OK, MultiDialog::OnOK )
    EVT_BUTTON(ID_SHOW_LOG_BUTTON, MultiDialog::OnShowLog)
 END_EVENT_TABLE()
-   
+
 MultiDialog::MultiDialog(wxString message,
                          wxString title,
                          const wxChar **buttons, wxString boxMsg, bool log)
-   : wxDialog(NULL, (wxWindowID)-1, title, 
-               wxDefaultPosition, wxDefaultSize, 
-               wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU 
+   : wxDialog(NULL, (wxWindowID)-1, title,
+               wxDefaultPosition, wxDefaultSize,
+               wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU
 {
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);

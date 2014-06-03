@@ -67,7 +67,7 @@
 #pragma warning(disable:4305)
 #else
 
-#endif 
+#endif
 #include "SseMathFuncs.h"
 #include <xmmintrin.h>
 
@@ -89,7 +89,7 @@ void TableUsage(int iMask)
    useSinCosTable=((iMask&2)!=0);
 }
 
-// note !!! number of bits must be between 9-16 
+// note !!! number of bits must be between 9-16
 int SmallReverseBits(int bits, int numberBits)
 {
    return (smallReverseBitsTable[*((unsigned char *)&bits)]<<(numberBits-8))+(smallReverseBitsTable[*(((unsigned char *)&bits)+1)]>>(16-numberBits));
@@ -111,7 +111,7 @@ HFFT InitializeFFT1x(int WXUNUSED( fftlen ) )
    // this needs to move out but ehh... Andrew Hallendorff
    for(i=0;i<256;i++) {
       smallReverseBitsTable[i]=0;
-      for(int maskLow=1, maskHigh=128;maskLow<256;maskLow<<=1,maskHigh>>=1) 
+      for(int maskLow=1, maskHigh=128;maskLow<256;maskLow<<=1,maskHigh>>=1)
          if(i&maskLow)
             smallReverseBitsTable[i]|=maskHigh;
    }
@@ -419,7 +419,7 @@ void RealFFTf4x(fft_type *buffer,HFFT h)
    int br1Value, br2Value;
    __m128 HRplus,HRminus,HIplus,HIminus;
    __m128 v1,v2,sin,cos;
-   fft_type iToRad=2*M_PI/(2*h->Points); 
+   fft_type iToRad=2*M_PI/(2*h->Points);
 
    int ButterfliesPerGroup=h->Points/2;
 
@@ -472,7 +472,7 @@ void RealFFTf4x(fft_type *buffer,HFFT h)
             v1 = _mm_add_ps( _mm_mul_ps(*B, cos), _mm_mul_ps(*(B+1), sin));
             v2 = _mm_sub_ps( _mm_mul_ps(*B, sin), _mm_mul_ps(*(B+1), cos));
             *B=_mm_add_ps( *A, v1);
-            __m128 temp128 = _mm_set1_ps( 2.0); 
+            __m128 temp128 = _mm_set1_ps( 2.0);
             *(A++)=_mm_sub_ps(*(B++), _mm_mul_ps(temp128, v1));
             *B=_mm_sub_ps(*A,v2);
             *(A++)=_mm_add_ps(*(B++), _mm_mul_ps(temp128, v2));
@@ -538,7 +538,7 @@ void RealFFTf4x(fft_type *buffer,HFFT h)
       br2Index--;
    }
    /* Handle the center bin (just need a conjugate) */
-   if(useBitReverseTable) 
+   if(useBitReverseTable)
       A=&localBuffer[h->BitReversed[br1Index]+1];
    else
       A=&localBuffer[SmallReverseBits(br1Index,h->pow2Bits)+1];
@@ -722,7 +722,7 @@ void ReorderToFreq4x(HFFT hFFT, fft_type *buffer, fft_type *RealOut, fft_type *I
    // Copy the data into the real and imaginary outputs
    for(int i=1;i<hFFT->Points;i++) {
       int brValue;
-      if(useBitReverseTable) 
+      if(useBitReverseTable)
          brValue=hFFT->BitReversed[i];
       else
          brValue=SmallReverseBits(i,hFFT->pow2Bits);
@@ -742,7 +742,7 @@ void ReorderToTime4x(HFFT hFFT, fft_type *buffer, fft_type *TimeOut)
    // Copy the data into the real outputs
    for(int i=0;i<hFFT->Points;i++) {
       int brValue;
-      if(useBitReverseTable) 
+      if(useBitReverseTable)
          brValue=hFFT->BitReversed[i];
       else
          brValue=SmallReverseBits(i,hFFT->pow2Bits);

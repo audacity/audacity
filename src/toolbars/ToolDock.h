@@ -44,7 +44,7 @@ enum
    BotDockID,
    DockCount = 2
 };
-  
+
 class ToolDock:public wxPanel
 {
 

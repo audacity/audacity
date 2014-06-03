@@ -46,16 +46,16 @@ class EffectTimeScale : public EffectSBSMS {
    virtual wxString GetEffectAction() {
      return wxString(_("Changing Tempo/Pitch"));
    }
-   
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription(); 
+
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription();
 
    virtual bool Init();
 
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
    virtual bool Process();
-  
+
  private:
    double m_RatePercentChangeStart;
    double m_RatePercentChangeEnd;

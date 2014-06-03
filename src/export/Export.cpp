@@ -379,7 +379,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
       return false;
    }
 
-   // Let user edit MetaData 
+   // Let user edit MetaData
    if (mPlugins[mFormat]->GetCanMetaData(mSubFormat)) {
       if (!(project->GetTags()->ShowEditDialog(project, _("Edit Metadata"), mProject->GetShowId3Dialog()))) {
          return false;
@@ -466,7 +466,7 @@ bool Exporter::ExamineTracks()
             else if (tr->GetChannel() == Track::MonoChannel) {
                // It's a mono channel, but it may be panned
                float pan = ((WaveTrack*)tr)->GetPan();
-               
+
                if (pan == -1.0)
                   mNumLeft++;
                else if (pan == 1.0)
@@ -602,7 +602,7 @@ bool Exporter::GetFilename()
             wxString prompt = _("Are you sure you want to export the file as \"") +
                               mFilename.GetFullName() +
                               wxT("\"?\n");
-            
+
             int action = wxMessageBox(prompt,
                                       _("Warning"),
                                       wxYES_NO | wxICON_EXCLAMATION);
@@ -667,7 +667,7 @@ If you still wish to export, please choose a different filename or folder."));
 
          prompt.Printf(_("A file named \"%s\" already exists.  Replace?"),
                        mFilename.GetFullPath().c_str());
-         
+
          int action = wxMessageBox(prompt,
                                    _("Warning"),
                                    wxYES_NO | wxICON_EXCLAMATION);
@@ -675,7 +675,7 @@ If you still wish to export, please choose a different filename or folder."));
             continue;
          }
       }
-         
+
       break;
    }
 
@@ -774,7 +774,7 @@ bool Exporter::CheckMix()
 
       int numLeft =  mNumLeft + mNumMono;
       int numRight = mNumRight + mNumMono;
-   
+
       if (numLeft > 1 || numRight > 1 || mNumLeft + mNumRight + mNumMono > mChannels) {
          if (mChannels == 2) {
             if (ShowWarningDialog(mProject,
@@ -797,10 +797,10 @@ bool Exporter::CheckMix()
       ExportMixerDialog md(mProject->GetTracks(),
                            mSelectedOnly,
                            mPlugins[mFormat]->GetMaxChannels(mSubFormat),
-                           NULL, 
+                           NULL,
                            1,
                            _("Advanced Mixing Options"));
-      
+
       if (md.ShowModal() != wxID_OK) {
          return false;
       }
@@ -855,8 +855,8 @@ BEGIN_EVENT_TABLE(ExportMixerPanel, wxPanel)
     EVT_MOUSE_EVENTS(ExportMixerPanel::OnMouseEvent)
 END_EVENT_TABLE()
 
-ExportMixerPanel::ExportMixerPanel( MixerSpec *mixerSpec, 
-      wxArrayString trackNames,wxWindow *parent, wxWindowID id, 
+ExportMixerPanel::ExportMixerPanel( MixerSpec *mixerSpec,
+      wxArrayString trackNames,wxWindow *parent, wxWindowID id,
       const wxPoint& pos, const wxSize& size):
    wxPanel(parent, id, pos, size)
 {
@@ -910,8 +910,8 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    int width, height;
    GetSize( &width, &height );
- 
-   if( !mBitmap || mWidth != width || mHeight != height ) 
+
+   if( !mBitmap || mWidth != width || mHeight != height )
    {
       if( mBitmap )
          delete mBitmap;
@@ -923,7 +923,7 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    wxColour bkgnd = GetBackgroundColour();
    wxBrush bkgndBrush( bkgnd, wxSOLID );
-  
+
    wxMemoryDC memDC;
    memDC.SelectObject( *mBitmap );
 
@@ -940,11 +940,11 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    //box dimensions
    mBoxWidth = mWidth / 6;
-   
+
    mTrackHeight = ( mHeight * 3 ) / ( mMixerSpec->GetNumTracks() * 4 );
    if( mTrackHeight > 30 )
       mTrackHeight = 30;
-   
+
    mChannelHeight = ( mHeight * 3 ) / ( mMixerSpec->GetNumChannels() * 4 );
    if( mChannelHeight > 30 )
       mChannelHeight = 30;
@@ -957,48 +957,48 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    //draw tracks
    memDC.SetBrush( AColor::envelopeBrush );
    angle = totAngle / ( mMixerSpec->GetNumTracks() + 1 );
-  
+
    int max = 0, w, h;
    for( int i = 1; i < mMixerSpec->GetNumTracks(); i++ )
       if( mTrackNames[ i ].length() > mTrackNames[ max ].length() )
          max = i;
-   
+
    SetFont( memDC, mTrackNames[ max ], mBoxWidth, mTrackHeight );
-   
+
    for( int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
    {
-      mTrackRects[ i ].x = ( int )( mBoxWidth * 2 + radius - radius * 
+      mTrackRects[ i ].x = ( int )( mBoxWidth * 2 + radius - radius *
          cos( totAngle / 2.0 - angle * ( i + 1 ) ) - mBoxWidth + 0.5 );
-      mTrackRects[ i ].y = ( int )( mHeight * 0.5 - radius * 
-            sin( totAngle * 0.5 - angle * ( i + 1.0 ) ) - 
+      mTrackRects[ i ].y = ( int )( mHeight * 0.5 - radius *
+            sin( totAngle * 0.5 - angle * ( i + 1.0 ) ) -
             0.5 * mTrackHeight + 0.5 );
 
       mTrackRects[ i ].width = mBoxWidth;
       mTrackRects[ i ].height = mTrackHeight;
-      
+
       memDC.SetPen( mSelectedTrack == i ? *wxRED_PEN : *wxBLACK_PEN );
       memDC.DrawRectangle( mTrackRects[ i ] );
 
       memDC.GetTextExtent( mTrackNames[ i ], &w, &h );
-      memDC.DrawText( mTrackNames[ i ], 
-            mTrackRects[ i ].x + ( mBoxWidth - w ) / 2, 
+      memDC.DrawText( mTrackNames[ i ],
+            mTrackRects[ i ].x + ( mBoxWidth - w ) / 2,
             mTrackRects[ i ].y + ( mTrackHeight - h ) / 2 );
    }
 
    //draw channels
    memDC.SetBrush( AColor::playRegionBrush[ 0 ] );
-   angle = ( asin( mHeight / ( 2.0 * radius ) ) * 2.0 ) / 
+   angle = ( asin( mHeight / ( 2.0 * radius ) ) * 2.0 ) /
       ( mMixerSpec->GetNumChannels() + 1 );
 
    SetFont( memDC, wxT( "Channel: XX" ), mBoxWidth, mChannelHeight );
    memDC.GetTextExtent( wxT( "Channel: XX" ), &w, &h );
-      
+
    for( int i = 0; i < mMixerSpec->GetNumChannels(); i++ )
    {
-      mChannelRects[ i ].x = ( int )( mBoxWidth * 4 - radius  + radius * 
+      mChannelRects[ i ].x = ( int )( mBoxWidth * 4 - radius  + radius *
          cos( totAngle * 0.5 - angle * ( i + 1 ) ) + 0.5 );
-      mChannelRects[ i ].y = ( int )( mHeight * 0.5 - radius * 
-            sin( totAngle * 0.5 - angle * ( i + 1 ) ) - 
+      mChannelRects[ i ].y = ( int )( mHeight * 0.5 - radius *
+            sin( totAngle * 0.5 - angle * ( i + 1 ) ) -
             0.5 * mChannelHeight + 0.5 );
 
       mChannelRects[ i ].width = mBoxWidth;
@@ -1006,21 +1006,21 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
       memDC.SetPen( mSelectedChannel == i ? *wxRED_PEN : *wxBLACK_PEN );
       memDC.DrawRectangle( mChannelRects[ i ] );
-      
+
       memDC.DrawText( wxString::Format( _( "Channel: %2d" ), i + 1 ),
             mChannelRects[ i ].x + ( mBoxWidth - w ) / 2,
             mChannelRects[ i ].y + ( mChannelHeight - h ) / 2 );
    }
-  
+
    //draw links
    memDC.SetPen( wxPen( *wxBLACK, mHeight / 200 ) );
    for( int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
       for( int j = 0; j < mMixerSpec->GetNumChannels(); j++ )
          if( mMixerSpec->mMap[ i ][ j ] )
-            AColor::Line(memDC, mTrackRects[ i ].x + mBoxWidth, 
+            AColor::Line(memDC, mTrackRects[ i ].x + mBoxWidth,
                   mTrackRects[ i ].y + mTrackHeight / 2, mChannelRects[ j ].x,
                   mChannelRects[ j ].y + mChannelHeight / 2 );
-   
+
    dc.Blit( 0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE );
 }
 
@@ -1037,10 +1037,10 @@ bool ExportMixerPanel::IsOnLine( wxPoint p, wxPoint la, wxPoint lb )
 
 void ExportMixerPanel::OnMouseEvent(wxMouseEvent & event)
 {
-   if( event.ButtonDown() ) 
+   if( event.ButtonDown() )
    {
       bool reset = true;
-      //check tracks 
+      //check tracks
       for( int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
          if( mTrackRects[ i ].Contains( event.m_x, event.m_y ) )
          {
@@ -1051,7 +1051,7 @@ void ExportMixerPanel::OnMouseEvent(wxMouseEvent & event)
             {
                mSelectedTrack = i;
                if( mSelectedChannel != -1 )
-                  mMixerSpec->mMap[ mSelectedTrack ][ mSelectedChannel ] = 
+                  mMixerSpec->mMap[ mSelectedTrack ][ mSelectedChannel ] =
                      !mMixerSpec->mMap[ mSelectedTrack ][ mSelectedChannel ];
             }
             goto found;
@@ -1068,7 +1068,7 @@ void ExportMixerPanel::OnMouseEvent(wxMouseEvent & event)
             {
                mSelectedChannel = i;
                if( mSelectedTrack != -1 )
-                  mMixerSpec->mMap[ mSelectedTrack ][ mSelectedChannel ] = 
+                  mMixerSpec->mMap[ mSelectedTrack ][ mSelectedChannel ] =
                      !mMixerSpec->mMap[ mSelectedTrack ][ mSelectedChannel ];
             }
             goto found;
@@ -1078,9 +1078,9 @@ void ExportMixerPanel::OnMouseEvent(wxMouseEvent & event)
       for( int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
          for( int j = 0; j < mMixerSpec->GetNumChannels(); j++ )
             if( mMixerSpec->mMap[ i ][ j ]  && IsOnLine( wxPoint( event.m_x,
-                        event.m_y ), wxPoint( mTrackRects[ i ].x + mBoxWidth, 
+                        event.m_y ), wxPoint( mTrackRects[ i ].x + mBoxWidth,
                            mTrackRects[ i ].y + mTrackHeight / 2 ),
-                     wxPoint( mChannelRects[ j ].x, mChannelRects[ j ].y + 
+                     wxPoint( mChannelRects[ j ].x, mChannelRects[ j ].y +
                      mChannelHeight / 2 ) ) )
                mMixerSpec->mMap[ i ][ j ] = false;
 
@@ -1109,7 +1109,7 @@ BEGIN_EVENT_TABLE( ExportMixerDialog,wxDialog )
 END_EVENT_TABLE()
 
 ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
-      int maxNumChannels, wxWindow *parent, wxWindowID id, const wxString &title, 
+      int maxNumChannels, wxWindow *parent, wxWindowID id, const wxString &title,
       const wxPoint &position, const wxSize& size, long style ) :
    wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
 {
@@ -1145,7 +1145,7 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
 
    wxBoxSizer *vertSizer = new wxBoxSizer( wxVERTICAL );
 
-   wxWindow *mixerPanel = new ExportMixerPanel( mMixerSpec, mTrackNames, this, 
+   wxWindow *mixerPanel = new ExportMixerPanel( mMixerSpec, mTrackNames, this,
          ID_MIXERPANEL, wxDefaultPosition, wxSize( 400, -1 ) );
    mixerPanel->SetName(_("Mixer Panel"));
    vertSizer->Add( mixerPanel, 1, wxEXPAND | wxALIGN_CENTRE | wxALL, 5 );
@@ -1157,12 +1157,12 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
    mChannelsText = new wxStaticText( this, -1, label);
    horSizer->Add( mChannelsText, 0, wxALIGN_LEFT | wxALL, 5 );
 
-   wxSlider *channels = new wxSlider( this, ID_SLIDER_CHANNEL, 
+   wxSlider *channels = new wxSlider( this, ID_SLIDER_CHANNEL,
          mMixerSpec->GetNumChannels(), 1, mMixerSpec->GetMaxNumChannels(),
          wxDefaultPosition, wxSize( 300, -1 ) );
    channels->SetName(label);
    horSizer->Add( channels, 0, wxEXPAND | wxALL, 5 );
-   
+
    vertSizer->Add( horSizer, 0, wxALIGN_CENTRE | wxALL, 5 );
 
    vertSizer->Add( CreateStdButtonSizer(this, eCancelButton|eOkButton), 0, wxEXPAND );

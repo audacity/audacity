@@ -57,7 +57,7 @@ class AUDACITY_DLL_API AudioIOListener {
 public:
    AudioIOListener() {}
    virtual ~AudioIOListener() {}
-   
+
    virtual void OnAudioIORate(int rate) = 0;
    virtual void OnAudioIOStartRecording() = 0;
    virtual void OnAudioIOStopRecording() = 0;
@@ -87,11 +87,11 @@ class AUDACITY_DLL_API AudioIO {
 
    AudioIOListener* GetListener() { return mListener; }
    void SetListener(AudioIOListener* listener);
-   
+
    /** \brief Start up Portaudio for capture and recording as needed for
     * input monitoring and software playthrough only
     *
-    * This uses the Default project sample format, current sample rate, and 
+    * This uses the Default project sample format, current sample rate, and
     * selected number of input channels to open the recording device and start
     * reading input data. If software playthrough is enabled, it also opens
     * the output device in stereo to play the data through */
@@ -124,7 +124,7 @@ class AUDACITY_DLL_API AudioIO {
    /** \brief Move the playback / recording position of the current stream
     * by the specified amount from where it is now */
    void SeekStream(double seconds) { mSeek = seconds; };
-   
+
    /** \brief  Returns true if audio i/o is busy starting, stopping, playing,
     * or recording.
     *
@@ -142,7 +142,7 @@ class AUDACITY_DLL_API AudioIO {
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    /** \brief Compute the current PortMidi timestamp time.
-    * 
+    *
     * This is used by PortMidi to synchronize midi time to audio samples
     */
    PmTimestamp MidiTime();
@@ -152,14 +152,14 @@ class AUDACITY_DLL_API AudioIO {
    // We do the same for Midi, but it seems wasteful for at least two
    // threads to be frequently polling to update status. This could be
    // eliminated (also with a reduction in code I think) by updating mHasSolo
-   // each time a solo button is activated or deactivated. For now, I'm 
+   // each time a solo button is activated or deactivated. For now, I'm
    // going to do this polling in the FillMidiBuffer routine to localize
    // changes for midi to the midi code, but I'm declaring the variable
    // here so possibly in the future, Audio code can use it too. -RBD
  private:
    bool  mHasSolo; // is any playback solo button pressed?
  public:
-   bool SetHasSolo(bool hasSolo); 
+   bool SetHasSolo(bool hasSolo);
    bool GetHasSolo() { return mHasSolo; }
    void SetMidiPlaySpeed(double s) { mMidiPlaySpeed = s * 0.01; }
 #endif
@@ -171,7 +171,7 @@ class AUDACITY_DLL_API AudioIO {
     * recorded, and it's safe to flush to disk. */
    bool IsAudioTokenActive(int token);
 
-   /** \brief Returns true if we're monitoring input (but not recording or 
+   /** \brief Returns true if we're monitoring input (but not recording or
     * playing actual audio) */
    bool IsMonitoring();
 
@@ -183,7 +183,7 @@ class AUDACITY_DLL_API AudioIO {
    /* Mixer services are always available.  If no stream is running, these
     * methods use whatever device is specified by the preferences.  If a
     * stream *is* running, naturally they manipulate the mixer associated
-    * with that stream.  If no mixer is available, output is emulated and 
+    * with that stream.  If no mixer is available, output is emulated and
     * input is stuck at 1.0f (a gain is applied to output samples).
     */
    void SetMixer(int inputSource);
@@ -209,11 +209,11 @@ class AUDACITY_DLL_API AudioIO {
 
    /** \brief Get the list of inputs to the current mixer device
     *
-    * Returns an array of strings giving the names of the inputs to the 
+    * Returns an array of strings giving the names of the inputs to the
     * soundcard mixer (driven by PortMixer) */
    wxArrayString GetInputSourceNames();
 
-   /** \brief update state after changing what audio devices are selected 
+   /** \brief update state after changing what audio devices are selected
     *
     * Called when the devices stored in the preferences are changed to update
     * the audio mixer capabilities
@@ -223,10 +223,10 @@ class AUDACITY_DLL_API AudioIO {
     * GetSupported*Rate functions considerably */
    void HandleDeviceChange();
 
-   /** \brief Set the current VU meters - this should be done once after 
+   /** \brief Set the current VU meters - this should be done once after
     * each call to StartStream currently */
    void SetMeters(Meter *inputMeter, Meter *outputMeter);
-   
+
    /** \brief Get a list of sample rates the output (playback) device
     * supports.
     *
@@ -380,7 +380,7 @@ private:
    /** \brief Get the number of audio samples ready in all of the recording
     * buffers.
     *
-    * Returns the smallest of the number of samples available for storage in 
+    * Returns the smallest of the number of samples available for storage in
     * the recording buffers (i.e. the number of samples that can be read from
     * all record buffers without underflow). */
    int GetCommonlyAvailCapture();
@@ -539,7 +539,7 @@ private:
    bool                mEmulateMixerOutputVol;
    /** @brief Can we control the hardware input level?
     *
-    * This flag is set to true if using portmixer to control the 
+    * This flag is set to true if using portmixer to control the
     * input volume seems to be working (and so we offer the user the control),
     * and to false (locking the control out) otherwise. This avoids stupid
     * scaled clipping problems when trying to do software emulated input volume
@@ -550,10 +550,10 @@ private:
    bool                mPlayLooped;
    double              mCutPreviewGapStart;
    double              mCutPreviewGapLen;
-   
+
    samplePtr mSilentBuf;
    sampleCount mLastSilentBufSize;
-   
+
    AudioIOListener*    mListener;
 
    friend class AudioThread;

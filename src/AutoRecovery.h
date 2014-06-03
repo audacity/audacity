@@ -26,9 +26,9 @@
 // Returns: True, if the start of Audacity should continue as normal
 //          False if Audacity should be quit immediately
 //
-// The didRecoverAnything param is strictly for a return value. 
+// The didRecoverAnything param is strictly for a return value.
 // Any value passed in is ignored.
-// 
+//
 bool ShowAutoRecoveryDialogIfNeeded(AudacityProject** pproj,
                                     bool *didRecoverAnything);
 
@@ -41,7 +41,7 @@ public:
    RecordingRecoveryHandler(AudacityProject* proj);
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   
+
    // This class only knows reading tags
    virtual void WriteXML(XMLWriter & WXUNUSED(xmlFile)) { wxASSERT(false); }
 

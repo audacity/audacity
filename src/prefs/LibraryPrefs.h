@@ -22,7 +22,7 @@
 
 #include "PrefsPanel.h"
 
-class LibraryPrefs:public PrefsPanel 
+class LibraryPrefs:public PrefsPanel
 {
  public:
    LibraryPrefs(wxWindow * parent);

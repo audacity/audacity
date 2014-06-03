@@ -81,8 +81,8 @@ int EffectEqualization48x::GetMathPath() { return sMathPath; };
 void EffectEqualization48x::AddMathPathOption(int mathPath) { sMathPath|=mathPath; };
 void EffectEqualization48x::RemoveMathPathOption(int mathPath) { sMathPath&=~mathPath; };
 
-MathCaps *EffectEqualization48x::GetMathCaps() 
-{ 
+MathCaps *EffectEqualization48x::GetMathCaps()
+{
    if(!sMathCapsInitialized)
    {
       sMathCapsInitialized=true;
@@ -133,7 +133,7 @@ MathCaps *EffectEqualization48x::GetMathCaps()
       if(sMathCaps.SSE)
          sMathPath=MATH_FUNCTION_SSE|MATH_FUNCTION_THREADED; // we are starting on.
    }
-   return &sMathCaps; 
+   return &sMathCaps;
 };
 
 void * malloc_simd(const size_t size)
@@ -153,7 +153,7 @@ void free_simd(void* mem)
 {
 #if defined WIN32           // WIN32
     _aligned_free(mem);
-#else  
+#else
     free(mem);
 #endif
 }
@@ -173,7 +173,7 @@ EffectEqualization48x::~EffectEqualization48x()
 bool EffectEqualization48x::AllocateBuffersWorkers(bool threaded)
 {
    if(mBigBuffer)
-      FreeBuffersWorkers(); 
+      FreeBuffersWorkers();
    mFilterSize=(mEffectEqualization->mM-1)&(~15); // 4000 !!! Filter MUST BE QUAD WORD ALIGNED !!!!
    mWindowSize=mEffectEqualization->windowSize;
    mBlockSize=mWindowSize-mFilterSize; // 12,384
@@ -187,8 +187,8 @@ bool EffectEqualization48x::AllocateBuffersWorkers(bool threaded)
       // this will remove the disparity in data at the intersections of the runs
 
       // The nice magic allocation
-      // megabyte - 3 windows - 4 overlaping buffers - filter 
-      // 2^20 = 1,048,576 - 3 * 2^14 (16,384) - ((4 * 20) - 3) * 12,384 - 4000 
+      // megabyte - 3 windows - 4 overlaping buffers - filter
+      // 2^20 = 1,048,576 - 3 * 2^14 (16,384) - ((4 * 20) - 3) * 12,384 - 4000
       // 1,048,576 - 49,152 - 953,568 - 4000 = 41,856 (leftover)
 
       mScratchBufferSize=mWindowSize*3*(sizeof(__m128)/sizeof(float)); // 3 window size blocks size of __m128 but we allocate in float
@@ -239,7 +239,7 @@ bool EffectEqualization48x::FreeBuffersWorkers()
       delete[] mEQWorkers; // kill the workers ( go directly to jail)
       mEQWorkers= NULL;
       mThreadCount=0;
-      mWorkerDataCount=0; 
+      mWorkerDataCount=0;
    }
    delete [] mBufferInfo;
    mBufferInfo = NULL;
@@ -303,7 +303,7 @@ bool EffectEqualization48x::Process(EffectEqualization* effectEqualization)
    }
    FreeBuffersWorkers();
 
-   mEffectEqualization->ReplaceProcessedTracks(bGoodResult); 
+   mEffectEqualization->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -403,7 +403,7 @@ bool EffectEqualization48x::TrackCompare()
    }
    delete SecondOutputTracks;
    FreeBuffersWorkers();
-   mEffectEqualization->ReplaceProcessedTracks(bGoodResult); 
+   mEffectEqualization->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -515,7 +515,7 @@ bool EffectEqualization48x::Benchmark(EffectEqualization* effectEqualization)
    FreeBuffersWorkers();
    mBenching=false;
    bGoodResult=false;
-   mEffectEqualization->ReplaceProcessedTracks(bGoodResult); 
+   mEffectEqualization->ReplaceProcessedTracks(bGoodResult);
 
    wxTimeSpan tsSSEThreaded(0, 0, 0, times[0]);
    wxTimeSpan tsSSE(0, 0, 0, times[1]);
@@ -525,8 +525,8 @@ bool EffectEqualization48x::Benchmark(EffectEqualization* effectEqualization)
    wxTimeSpan tsSSE(0, 0, 0, times[1]);
    wxTimeSpan tsDefault(0, 0, 0, times[2]);
    wxString outputString;
-   outputString.Format(_("Benchmark times:\nDefault: %s\nSSE: %s\nSSE Threaded: %s\n"),tsDefault.Format(wxT("%M:%S.%l")),tsSSE.Format(wxT("%M:%S.%l")),tsSSEThreaded.Format(wxT("%M:%S.%l"))); 
-   wxMessageBox(outputString); */ 
+   outputString.Format(_("Benchmark times:\nDefault: %s\nSSE: %s\nSSE Threaded: %s\n"),tsDefault.Format(wxT("%M:%S.%l")),tsSSE.Format(wxT("%M:%S.%l")),tsSSEThreaded.Format(wxT("%M:%S.%l")));
+   wxMessageBox(outputString); */
 
 
    return bGoodResult;
@@ -543,9 +543,9 @@ bool EffectEqualization48x::ProcessBuffer(fft_type *sourceBuffer, fft_type *dest
 
    float *workBuffer=&sourceBuffer[bufferLength];  // all scratch buffers are at the end
 
-   for(int runx=0;runx<blockCount;runx++) 
+   for(int runx=0;runx<blockCount;runx++)
    {
-      float *currentBuffer=&workBuffer[mWindowSize*(runx&1)]; 
+      float *currentBuffer=&workBuffer[mWindowSize*(runx&1)];
       for(int i=0;i<mBlockSize;i++)
          currentBuffer[i]=sourceBuffer[i];
       sourceBuffer+=mBlockSize;
@@ -554,13 +554,13 @@ bool EffectEqualization48x::ProcessBuffer(fft_type *sourceBuffer, fft_type *dest
          currentFilter[i]=0;
       mEffectEqualization->Filter(mWindowSize, currentBuffer);
       float *writeEnd=currentBuffer+mBlockSize;
-      if(runx==blockCount) 
+      if(runx==blockCount)
          writeEnd=currentBuffer+(lastBlockSize+mFilterSize);
       if(runx) {
-         float *lastOverrun=&workBuffer[mWindowSize*((runx+1)&1)+mBlockSize]; 
+         float *lastOverrun=&workBuffer[mWindowSize*((runx+1)&1)+mBlockSize];
          for(int j=0;j<mFilterSize;j++)
             *destBuffer++= *currentBuffer++ + *lastOverrun++;
-      } else 
+      } else
          currentBuffer+=mFilterSize>>1; // this will skip the first filterSize on the first run
       while(currentBuffer<writeEnd)
          *destBuffer++ = *currentBuffer++;
@@ -571,7 +571,7 @@ bool EffectEqualization48x::ProcessBuffer(fft_type *sourceBuffer, fft_type *dest
 
 bool EffectEqualization48x::ProcessBuffer4x(BufferInfo *bufferInfo)
 {
-   // length must be a factor of window size for 4x processing. 
+   // length must be a factor of window size for 4x processing.
    if(bufferInfo->mBufferLength%mBlockSize)
       return false;
 
@@ -587,21 +587,21 @@ bool EffectEqualization48x::ProcessBuffer4x(BufferInfo *bufferInfo)
    __m128 *swizzledBuffer128=(__m128 *)bufferInfo->mScratchBuffer;
    __m128 *scratchBuffer=&swizzledBuffer128[mWindowSize*2];
 
-   for(int run4x=0;run4x<blockCount;run4x++) 
+   for(int run4x=0;run4x<blockCount;run4x++)
    {
       // swizzle the data to the swizzle buffer
-      __m128 *currentSwizzledBlock=&swizzledBuffer128[mWindowSize*(run4x&1)]; 
+      __m128 *currentSwizzledBlock=&swizzledBuffer128[mWindowSize*(run4x&1)];
       for(int i=0,j=0;j<mBlockSize;i++,j+=4) {
-         __m128 tmp0   = _mm_shuffle_ps(readBlocks[0][i], readBlocks[1][i], _MM_SHUFFLE(1,0,1,0)); 
-         __m128 tmp1   = _mm_shuffle_ps(readBlocks[0][i], readBlocks[1][i], _MM_SHUFFLE(3,2,3,2)); 
-         __m128 tmp2   = _mm_shuffle_ps(readBlocks[2][i], readBlocks[3][i], _MM_SHUFFLE(1,0,1,0)); 
-         __m128 tmp3   = _mm_shuffle_ps(readBlocks[2][i], readBlocks[3][i], _MM_SHUFFLE(3,2,3,2)); 
-         currentSwizzledBlock[j]   = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(2,0,2,0)); 
-         currentSwizzledBlock[j+1] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(3,1,3,1)); 
-         currentSwizzledBlock[j+2] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(2,0,2,0)); 
-         currentSwizzledBlock[j+3] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(3,1,3,1)); 
+         __m128 tmp0   = _mm_shuffle_ps(readBlocks[0][i], readBlocks[1][i], _MM_SHUFFLE(1,0,1,0));
+         __m128 tmp1   = _mm_shuffle_ps(readBlocks[0][i], readBlocks[1][i], _MM_SHUFFLE(3,2,3,2));
+         __m128 tmp2   = _mm_shuffle_ps(readBlocks[2][i], readBlocks[3][i], _MM_SHUFFLE(1,0,1,0));
+         __m128 tmp3   = _mm_shuffle_ps(readBlocks[2][i], readBlocks[3][i], _MM_SHUFFLE(3,2,3,2));
+         currentSwizzledBlock[j]   = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(2,0,2,0));
+         currentSwizzledBlock[j+1] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(3,1,3,1));
+         currentSwizzledBlock[j+2] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(2,0,2,0));
+         currentSwizzledBlock[j+3] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(3,1,3,1));
       }
-      __m128 *thisOverrun128=&currentSwizzledBlock[mBlockSize]; 
+      __m128 *thisOverrun128=&currentSwizzledBlock[mBlockSize];
       for(int i=0;i<mFilterSize;i++)
          thisOverrun128[i]=_mm_set1_ps(0.0);
       Filter4x(mWindowSize, (float *)currentSwizzledBlock, (float *)scratchBuffer);
@@ -609,48 +609,48 @@ bool EffectEqualization48x::ProcessBuffer4x(BufferInfo *bufferInfo)
       int writeEnd=mBlockSize;
       if(run4x) {
          // maybe later swizzle add and write in one
-         __m128 *lastOverrun128=&swizzledBuffer128[mWindowSize*((run4x+1)&1)+mBlockSize]; 
+         __m128 *lastOverrun128=&swizzledBuffer128[mWindowSize*((run4x+1)&1)+mBlockSize];
          // add and swizzle data + filter
          for(int i=0,j=0;j<mFilterSize;i++,j+=4) {
             __m128 tmps0 = _mm_add_ps(currentSwizzledBlock[j], lastOverrun128[j]);
             __m128 tmps1 = _mm_add_ps(currentSwizzledBlock[j+1], lastOverrun128[j+1]);
             __m128 tmps2 = _mm_add_ps(currentSwizzledBlock[j+2], lastOverrun128[j+2]);
             __m128 tmps3 = _mm_add_ps(currentSwizzledBlock[j+3], lastOverrun128[j+3]);
-            __m128 tmp0   = _mm_shuffle_ps(tmps1, tmps0, _MM_SHUFFLE(0,1,0,1)); 
-            __m128 tmp1   = _mm_shuffle_ps(tmps1, tmps0, _MM_SHUFFLE(2,3,2,3)); 
-            __m128 tmp2   = _mm_shuffle_ps(tmps3, tmps2, _MM_SHUFFLE(0,1,0,1)); 
-            __m128 tmp3   = _mm_shuffle_ps(tmps3, tmps2, _MM_SHUFFLE(2,3,2,3)); 
-            writeBlocks[0][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(1,3,1,3)); 
-            writeBlocks[1][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(0,2,0,2)); 
-            writeBlocks[2][i] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(1,3,1,3)); 
-            writeBlocks[3][i] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(0,2,0,2)); 
-         } 
+            __m128 tmp0   = _mm_shuffle_ps(tmps1, tmps0, _MM_SHUFFLE(0,1,0,1));
+            __m128 tmp1   = _mm_shuffle_ps(tmps1, tmps0, _MM_SHUFFLE(2,3,2,3));
+            __m128 tmp2   = _mm_shuffle_ps(tmps3, tmps2, _MM_SHUFFLE(0,1,0,1));
+            __m128 tmp3   = _mm_shuffle_ps(tmps3, tmps2, _MM_SHUFFLE(2,3,2,3));
+            writeBlocks[0][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(1,3,1,3));
+            writeBlocks[1][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(0,2,0,2));
+            writeBlocks[2][i] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(1,3,1,3));
+            writeBlocks[3][i] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(0,2,0,2));
+         }
          writeStart=mFilterSize;
          writeToStart=mFilterSize>>2;
-         // swizzle it back. 
+         // swizzle it back.
          for(int i=writeToStart,j=writeStart;j<writeEnd;i++,j+=4) {
-            __m128 tmp0   = _mm_shuffle_ps(currentSwizzledBlock[j+1], currentSwizzledBlock[j], _MM_SHUFFLE(0,1,0,1)); 
-            __m128 tmp1   = _mm_shuffle_ps(currentSwizzledBlock[j+1], currentSwizzledBlock[j], _MM_SHUFFLE(2,3,2,3)); 
-            __m128 tmp2   = _mm_shuffle_ps(currentSwizzledBlock[j+3], currentSwizzledBlock[j+2], _MM_SHUFFLE(0,1,0,1)); 
-            __m128 tmp3   = _mm_shuffle_ps(currentSwizzledBlock[j+3], currentSwizzledBlock[j+2], _MM_SHUFFLE(2,3,2,3)); 
-            writeBlocks[0][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(1,3,1,3)); 
-            writeBlocks[1][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(0,2,0,2)); 
-            writeBlocks[2][i] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(1,3,1,3)); 
-            writeBlocks[3][i] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(0,2,0,2)); 
+            __m128 tmp0   = _mm_shuffle_ps(currentSwizzledBlock[j+1], currentSwizzledBlock[j], _MM_SHUFFLE(0,1,0,1));
+            __m128 tmp1   = _mm_shuffle_ps(currentSwizzledBlock[j+1], currentSwizzledBlock[j], _MM_SHUFFLE(2,3,2,3));
+            __m128 tmp2   = _mm_shuffle_ps(currentSwizzledBlock[j+3], currentSwizzledBlock[j+2], _MM_SHUFFLE(0,1,0,1));
+            __m128 tmp3   = _mm_shuffle_ps(currentSwizzledBlock[j+3], currentSwizzledBlock[j+2], _MM_SHUFFLE(2,3,2,3));
+            writeBlocks[0][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(1,3,1,3));
+            writeBlocks[1][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(0,2,0,2));
+            writeBlocks[2][i] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(1,3,1,3));
+            writeBlocks[3][i] = _mm_shuffle_ps(tmp1, tmp3, _MM_SHUFFLE(0,2,0,2));
          }
       } else {
          // swizzle it back. We overlap one block so we only write the first block on the first run
          writeStart=0;
          writeToStart=0;
          for(int i=writeToStart,j=writeStart;j<writeEnd;i++,j+=4) {
-            __m128 tmp0   = _mm_shuffle_ps(currentSwizzledBlock[j+1], currentSwizzledBlock[j], _MM_SHUFFLE(0,1,0,1)); 
-            __m128 tmp2   = _mm_shuffle_ps(currentSwizzledBlock[j+3], currentSwizzledBlock[j+2], _MM_SHUFFLE(0,1,0,1)); 
-            writeBlocks[0][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(1,3,1,3)); 
+            __m128 tmp0   = _mm_shuffle_ps(currentSwizzledBlock[j+1], currentSwizzledBlock[j], _MM_SHUFFLE(0,1,0,1));
+            __m128 tmp2   = _mm_shuffle_ps(currentSwizzledBlock[j+3], currentSwizzledBlock[j+2], _MM_SHUFFLE(0,1,0,1));
+            writeBlocks[0][i] = _mm_shuffle_ps(tmp0, tmp2, _MM_SHUFFLE(1,3,1,3));
          }
       }
       for(int i=0;i<4;i++) { // shift each block
          readBlocks[i]+=mBlockSize>>2; // these are 128b pointers, each window is 1/4 blockSize for those
-         writeBlocks[i]+=mBlockSize>>2; 
+         writeBlocks[i]+=mBlockSize>>2;
       }
    }
    return true;
@@ -721,7 +721,7 @@ void *EQWorker::Entry()
             mEffectEqualization48x->ProcessBuffer4x(&mBufferInfoList[i]);
             mBufferInfoList[i].mBufferStatus=BufferDone; // we're done
             break;
-         } 
+         }
          if(!bufferAquired)
             mMutex->Unlock();
    }
@@ -792,7 +792,7 @@ bool EffectEqualization48x::ProcessOne4xThreaded(int count, WaveTrack * t,
             bigBlocksRead++;
          } else mBufferInfo[currentIndex].mBufferStatus=BufferEmpty; // this is completely unecessary
          currentIndex=(currentIndex+1)%mWorkerDataCount;
-      } 
+      }
       mDataMutex.Unlock(); // Get back in line for data
    }
    if(singleProcessLength) {
@@ -815,7 +815,7 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
    // 'output' starts at zero
    double startT = t->LongSamplesToTime(start);
 
-   //output has one waveclip for the total length, even though 
+   //output has one waveclip for the total length, even though
    //t might have whitespace seperating multiple clips
    //we want to maintain the original clip structure, so
    //only paste the intersections of the new clip.
@@ -838,7 +838,7 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
          continue;   // clip is not within selection
 
       //save the actual clip start/end so that we can rejoin them after we paste.
-      clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));            
+      clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
 
       if( clipStartT < startT )  // does selection cover the whole clip?
          clipStartT = startT; // don't copy all the new clip
@@ -854,8 +854,8 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
       Track *toClipOutput;
       //remove the old audio and get the new
       t->Clear(clipStartEndTimes[i].first,clipStartEndTimes[i].second);
-      //         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);   
-      output->Copy(clipStartEndTimes[i].first-startT,clipStartEndTimes[i].second-startT, &toClipOutput);   
+      //         output->Copy(clipStartEndTimes[i].first-startT+offsetT0,clipStartEndTimes[i].second-startT+offsetT0, &toClipOutput);
+      output->Copy(clipStartEndTimes[i].first-startT,clipStartEndTimes[i].second-startT, &toClipOutput);
       if(toClipOutput)
       {
          //put the processed audio in
@@ -863,9 +863,9 @@ bool EffectEqualization48x::ProcessTail(WaveTrack * t, WaveTrack * output, sampl
          wxASSERT(bResult); // TO DO: Actually handle this.
          //if the clip was only partially selected, the Paste will have created a split line.  Join is needed to take care of this
          //This is not true when the selection is fully contained within one clip (second half of conditional)
-         if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first || 
+         if( (clipRealStartEndTimes[i].first  != clipStartEndTimes[i].first ||
             clipRealStartEndTimes[i].second != clipStartEndTimes[i].second) &&
-            !(clipRealStartEndTimes[i].first <= startT &&  
+            !(clipRealStartEndTimes[i].first <= startT &&
             clipRealStartEndTimes[i].second >= startT+lenT) )
             t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
          delete toClipOutput;
@@ -892,7 +892,7 @@ void EffectEqualization48x::Filter4x(sampleCount len,
 
    __m128 filterFuncR, filterFuncI;
    filterFuncR=_mm_set1_ps(mEffectEqualization->mFilterFuncR[0]);
-   localFFTBuffer[0]=_mm_mul_ps(localBuffer[0], filterFuncR); 
+   localFFTBuffer[0]=_mm_mul_ps(localBuffer[0], filterFuncR);
    int halfLength=(len/2);
 
    bool useBitReverseTable=sMathPath&1;

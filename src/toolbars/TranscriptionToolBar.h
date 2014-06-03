@@ -61,7 +61,7 @@ enum
 class TranscriptionToolBar:public ToolBar {
 
  public:
-  
+
    TranscriptionToolBar();
    virtual ~TranscriptionToolBar();
 
@@ -106,18 +106,18 @@ class TranscriptionToolBar:public ToolBar {
    void GetSamples(WaveTrack *t, sampleCount *s0, sampleCount *slen);
    void SetButton(bool newstate, AButton *button);
    void RegenerateTooltips();
-   
+
    AButton *mButtons[TTBNumButtons];
    wxImage *upImage;
    wxImage *downImage;
    wxImage *hiliteImage;
-   
+
    ASlider *mPlaySpeedSlider;
    double mPlaySpeed;
    ASlider *mSensitivitySlider;
    double mSensitivity;
    VoiceKey *mVk;
-   
+
    wxBrush mBackgroundBrush;
    wxPen mBackgroundPen;
    int mBackgroundWidth;

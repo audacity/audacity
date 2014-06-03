@@ -2,9 +2,9 @@
 
   Audacity: A Digital Audio Editor
 
-  
+
   EditToolbar.h
- 
+
   Dominic Mazzoni
   Shane T. Mueller
   Leland Lucius
@@ -80,7 +80,7 @@ class EditToolBar:public ToolBar {
    void MakeButtons();
 
    void RegenerateTooltips();
-   
+
    AButton *mButtons[ETBNumButtons];
 
    wxImage *upImage;

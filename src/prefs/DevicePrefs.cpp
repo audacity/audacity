@@ -75,7 +75,7 @@ void DevicePrefs::Populate()
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -113,7 +113,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       {
          S.Id(HostID);
          mHost = S.TieChoice(_("&Host") + wxString(wxT(":")),
-                             wxT("/AudioIO/Host"), 
+                             wxT("/AudioIO/Host"),
                              wxT(""),
                              mHostNames,
                              mHostLabels);
@@ -123,7 +123,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
          S.AddFixedText(wxString(Pa_GetVersionText(), wxConvLocal));
       }
       S.EndMultiColumn();
-   }                              
+   }
    S.EndStatic();
 
    S.StartStatic(_("Playback"));
@@ -228,7 +228,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
          }
       }
    }
-   
+
    /* deal with not having any devices at all */
    if (mPlay->GetCount() == 0) {
       playnames.Add(_("No devices found"));
@@ -241,7 +241,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
       mRecord->SetSelection(0);
    }
 
-   /* what if we have no device selected? we should choose the default on 
+   /* what if we have no device selected? we should choose the default on
     * this API, as defined by PortAudio. We then fall back to using 0 only if
     * that fails */
    if (mPlay->GetCount() && mPlay->GetSelection() == wxNOT_FOUND) {
@@ -298,11 +298,11 @@ void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
 
    // Place an artifical limit on the number of channels to prevent an
    // outrageous number.  I don't know if this is really necessary, but
-   // it doesn't hurt. 
+   // it doesn't hurt.
    if (cnt > 256) {
       cnt = 256;
    }
-      
+
    wxArrayString channelnames;
 
    // Channel counts, mono, stereo etc...

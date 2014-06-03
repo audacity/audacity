@@ -65,14 +65,14 @@ class Matrix
    inline Vector& operator[](int i) const { return *mRowVec[i]; }
    inline int Rows() const { return mRows; }
    inline int Cols() const { return mCols; }
-  
+
    void SwapRows(int i, int j);
 
    double Sum() const;
 
  private:
    void CopyFrom(const Matrix& other);
-  
+
    int mRows;
    int mCols;
    Vector **mRowVec;

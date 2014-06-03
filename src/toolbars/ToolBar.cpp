@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ToolBar.cpp
-  
+
   Dominic Mazzoni
   Shane T. Mueller
   Leland Lucius
@@ -19,7 +19,7 @@
 *//*******************************************************************//**
 
 \class ToolBar
-\brief Works with ToolManager and ToolDock to provide a dockable window 
+\brief Works with ToolManager and ToolDock to provide a dockable window
 in which buttons can be placed.
 
 *//**********************************************************************/
@@ -80,7 +80,7 @@ BEGIN_EVENT_TABLE( ToolBar, wxPanel )
    EVT_LEFT_UP( ToolBar::OnLeftUp )
    EVT_MOTION( ToolBar::OnMotion )
    EVT_MOUSE_CAPTURE_LOST( ToolBar::OnCaptureLost )
-END_EVENT_TABLE()  
+END_EVENT_TABLE()
 
 //
 // Constructor
@@ -481,12 +481,12 @@ AButton * ToolBar::MakeButton(teBmps eUp,
                               teBmps eDisabled,
                               wxWindowID id,
                               wxPoint placement,
-                              bool processdownevents, 
-                              wxSize size) 
+                              bool processdownevents,
+                              wxSize size)
 {
    int xoff = (size.GetWidth() - theTheme.Image(eStandardUp).GetWidth())/2;
    int yoff = (size.GetHeight() - theTheme.Image(eStandardUp).GetHeight())/2;
-   
+
    wxImage * up2        = OverlayImage(eUp,     eStandardUp, xoff, yoff);
    wxImage * hilite2    = OverlayImage(eHilite, eStandardUp, xoff, yoff);
    wxImage * down2      = OverlayImage(eDown,   eStandardDown, xoff + 1, yoff + 1);
@@ -561,17 +561,17 @@ void ToolBar::OnPaint( wxPaintEvent & event )
       for(y=0;y<sz.y;y++)
       {
          int yPix = ((float)y * imSz.y - 1.0f)/(sz.y-1);
-         wxColour col( 
+         wxColour col(
             mpBackGradient->GetRed( 0, yPix),
             mpBackGradient->GetGreen( 0, yPix),
             mpBackGradient->GetBlue( 0, yPix));
 
          // Set background colour so that controls placed on this
          // toolbar such as radio buttons will draw reasonably.
-         // It's a little tacky setting the background colour 
+         // It's a little tacky setting the background colour
          // here, but we can't do it in the constructor as the gradient
          // may not be available yet.
-         // Better than this would be to set the colour when the image 
+         // Better than this would be to set the colour when the image
          // is loaded.
          // We use the colour at the half way point as a suitable 'average'.
          if( y==(sz.y/2) )
@@ -673,7 +673,7 @@ void ToolBar::OnMotion( wxMouseEvent & event )
 
    if( !HasCapture() )
    {
-      // JKC: Wrong place for this?  Surely the cursor should change on 
+      // JKC: Wrong place for this?  Surely the cursor should change on
       // mouse-down and capture-lost rather than with mouse movement?
       if( IsResizable() )
       {
@@ -707,7 +707,7 @@ void ToolBar::OnMotion( wxMouseEvent & event )
          r.SetRight( psz.x - 3 );
       }
       else
-      {         
+      {
          // Remember for next go round
          mResizeStart = pos;
       }

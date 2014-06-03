@@ -63,7 +63,7 @@ bool GetProjectInfoCommand::Apply(CommandExecutionContext context)
    {
       SendNumberOfTracks(context);
    }
-   else if (mode.IsSameAs(wxT("SelectedTracks"))) 
+   else if (mode.IsSameAs(wxT("SelectedTracks")))
    {
       SendTracksInfo(projTracks, &GetProjectInfoCommand::testSelected);
    }
@@ -92,7 +92,7 @@ bool GetProjectInfoCommand::Apply(CommandExecutionContext context)
 int GetProjectInfoCommand::SendNumberOfTracks(CommandExecutionContext context)
 {
    int returnVal=0;
-   
+
    TrackListIterator iter(context.proj->GetTracks());
    Track *t = iter.First();
    while (t)
@@ -112,7 +112,7 @@ int GetProjectInfoCommand::SendFocusedTrackIndex(CommandExecutionContext context
    int focusTrackIndex=0;
    TrackPanel *panel = context.proj->GetTrackPanel();
    Track* focusedTrack = panel->GetFocusedTrack();
-   
+
    TrackListIterator iter(context.proj->GetTracks());
    Track *t = iter.First();
    while (t)
@@ -132,7 +132,7 @@ int GetProjectInfoCommand::SendFocusedTrackIndex(CommandExecutionContext context
 }
 
 
-void GetProjectInfoCommand::SendTracksInfo(TrackList *projTracks, 
+void GetProjectInfoCommand::SendTracksInfo(TrackList *projTracks,
                                            Getter functPtrToGetter)
 {
    wxString boolValueStr;

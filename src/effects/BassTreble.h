@@ -27,7 +27,7 @@ public:
    virtual wxString GetEffectName() {
       return wxString(_("Bass and Treble..."));
    }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;
       result.insert(wxT("http://lv2plug.in/ns/lv2core#EQPlugin"));
@@ -42,8 +42,8 @@ public:
       return wxString(_("Adjusting Bass and Treble"));
    }
 
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription(); 
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription();
 
 protected:
    virtual bool PromptUser();
@@ -53,7 +53,7 @@ protected:
    virtual bool ProcessPass1(float *buffer, sampleCount len);
    virtual bool ProcessPass2(float *buffer, sampleCount len);
 
-   void Coefficents(double hz, float slope, double gain, int type, 
+   void Coefficents(double hz, float slope, double gain, int type,
                     float& a0, float& a1, float& a2, float& b0, float& b1, float& b2);
 
 private:
@@ -61,7 +61,7 @@ private:
    virtual bool InitPass1();
    virtual bool InitPass2();
    float  DoFilter(float in);
-   
+
    float xn1Bass, xn2Bass, yn1Bass, yn2Bass,
          wBass, swBass, cwBass, aBass, bBass,
          a0Bass, a1Bass, a2Bass, b0Bass, b1Bass, b2Bass;

@@ -68,25 +68,25 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
                 float(SA_DFT_FRAME_PERIOD));
    gPrefs->Read(wxT("/Tracks/Synchronize/WindowSize"), &p.mWindowSize,
                 float(SA_DFT_WINDOW_SIZE));
-   gPrefs->Read(wxT("/Tracks/Synchronize/SilenceThreshold"), 
+   gPrefs->Read(wxT("/Tracks/Synchronize/SilenceThreshold"),
                 &p.mSilenceThreshold, float(SA_DFT_SILENCE_THRESHOLD));
    gPrefs->Read(wxT("/Tracks/Synchronize/ForceFinalAlignment"),
                 &p.mForceFinalAlignment, float(SA_DFT_FORCE_FINAL_ALIGNMENT));
-   gPrefs->Read(wxT("/Tracks/Synchronize/IgnoreSilence"), 
+   gPrefs->Read(wxT("/Tracks/Synchronize/IgnoreSilence"),
                 &p.mIgnoreSilence, float(SA_DFT_IGNORE_SILENCE));
-   gPrefs->Read(wxT("/Tracks/Synchronize/PresmoothTime"), &p.mPresmoothTime, 
+   gPrefs->Read(wxT("/Tracks/Synchronize/PresmoothTime"), &p.mPresmoothTime,
                 float(SA_DFT_PRESMOOTH_TIME));
-   gPrefs->Read(wxT("/Tracks/Synchronize/LineTime"), &p.mLineTime, 
+   gPrefs->Read(wxT("/Tracks/Synchronize/LineTime"), &p.mLineTime,
                 float(SA_DFT_LINE_TIME));
-   gPrefs->Read(wxT("/Tracks/Synchronize/SmoothTime"), &p.mSmoothTime, 
+   gPrefs->Read(wxT("/Tracks/Synchronize/SmoothTime"), &p.mSmoothTime,
                 float(SA_DFT_SMOOTH_TIME));
 
    //wxButton *ok = new wxButton(this, wxID_OK, _("OK"));
    //wxButton *cancel = new wxButton(this, wxID_CANCEL, _("Cancel"));
    //wxSlider *sl = new wxSlider(this, ID_SLIDER, 0, 0, 100,
-   //                     wxDefaultPosition, wxSize(20, 124), 
+   //                     wxDefaultPosition, wxSize(20, 124),
    //                     wxSL_HORIZONTAL);
-  
+
    ShuttleGui S(this, eIsCreating);
    //ok->SetDefault();
 
@@ -99,7 +99,7 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
    mFramePeriodLabel = S.AddVariableText(_("Frame Period")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mFramePeriodSlider = S.Id(ID_FRAMEPERIOD).AddSlider(wxT(""), 
+   mFramePeriodSlider = S.Id(ID_FRAMEPERIOD).AddSlider(wxT(""),
        /*pos*/ (int) (p.mFramePeriod * 100 + 0.5), /*max*/ 50, /*min*/ 5);
    S.SetSizeHints(300, -1);
    mFramePeriodSlider->SetName(_("Frame Period"));
@@ -109,67 +109,67 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
    mWindowSizeLabel = S.AddVariableText(_("Window Size")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mWindowSizeSlider = S.Id(ID_WINDOWSIZE).AddSlider(wxT(""), 
+   mWindowSizeSlider = S.Id(ID_WINDOWSIZE).AddSlider(wxT(""),
        /*pos*/ (int) (p.mWindowSize * 100 + 0.5), /*max*/ 100, /*min*/ 5);
    mWindowSizeSlider->SetName(_("Window Size"));
    mWindowSizeText = S.AddVariableText(SA_DFT_WINDOW_SIZE_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
    mForceFinalAlignmentCheckBox = S.Id(ID_FORCEFINALALIGNMENT).AddCheckBox(
-                wxT("Force Final Alignment"), 
+                wxT("Force Final Alignment"),
                 (p.mForceFinalAlignment ? wxT("true") : wxT("false")));
    mForceFinalAlignmentCheckBox->SetName(_("Force Final Alignment"));
    mIgnoreSilenceCheckBox = S.Id(ID_IGNORESILENCE).AddCheckBox(
-                              wxT("Ignore Silence at Beginnings and Endings"), 
+                              wxT("Ignore Silence at Beginnings and Endings"),
                               (p.mIgnoreSilence ? wxT("true") : wxT("false")));
    mIgnoreSilenceCheckBox->SetName(
                      _("Ignore Silence at Beginnings and Endings"));
    // need a third column after checkboxes:
    S.AddVariableText(wxT(""), true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-   mSilenceThresholdLabel = S.AddVariableText(_("Silence Threshold:"), 
+   mSilenceThresholdLabel = S.AddVariableText(_("Silence Threshold:"),
                              true, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mSilenceThresholdSlider = S.Id(ID_SILENCETHRESHOLD).AddSlider(wxT(""), 
+   mSilenceThresholdSlider = S.Id(ID_SILENCETHRESHOLD).AddSlider(wxT(""),
          /*pos*/ (int) (p.mSilenceThreshold * 1000 + 0.5), /*max*/ 500);
    mSilenceThresholdSlider->SetName(_("Silence Threshold"));
-   mSilenceThresholdText = S.AddVariableText(SA_DFT_SILENCE_THRESHOLD_TEXT, 
+   mSilenceThresholdText = S.AddVariableText(SA_DFT_SILENCE_THRESHOLD_TEXT,
                               true, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
    /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-      This is a new experimental effect, and until we have it documented in the user 
+      This is a new experimental effect, and until we have it documented in the user
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
    mPresmoothLabel = S.AddVariableText(_("Presmooth Time")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mPresmoothSlider = S.Id(ID_PRESMOOTH).AddSlider(wxT(""), 
+   mPresmoothSlider = S.Id(ID_PRESMOOTH).AddSlider(wxT(""),
                /*pos*/ (int) (p.mPresmoothTime * 100 + 0.5), /*max*/ 500);
    mPresmoothSlider->SetName(_("Presmooth Time"));
    mPresmoothText = S.AddVariableText(SA_DFT_PRESMOOTH_TIME_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
    /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-      This is a new experimental effect, and until we have it documented in the user 
+      This is a new experimental effect, and until we have it documented in the user
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
    mLineTimeLabel = S.AddVariableText(_("Line Time")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mLineTimeSlider = S.Id(ID_LINETIME).AddSlider(wxT(""), 
+   mLineTimeSlider = S.Id(ID_LINETIME).AddSlider(wxT(""),
                     /*pos*/ (int) (p.mLineTime * 100 + 0.5), /*max*/ 500);
    mLineTimeSlider->SetName(_("Line Time"));
    mLineTimeText = S.AddVariableText(SA_DFT_LINE_TIME_TEXT, true,
                                       wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
    /* i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-      This is a new experimental effect, and until we have it documented in the user 
+      This is a new experimental effect, and until we have it documented in the user
       manual we don't have a clear description of what this parameter does.
       It is OK to leave it in English. */
    mSmoothTimeLabel = S.AddVariableText(_("Smooth Time")+wxString(wxT(":")), true,
                                       wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
    S.SetStyle(wxSL_HORIZONTAL);
-   mSmoothTimeSlider = S.Id(ID_SMOOTHTIME).AddSlider(wxT(""), 
+   mSmoothTimeSlider = S.Id(ID_SMOOTHTIME).AddSlider(wxT(""),
                   /*pos*/ (int) (p.mSmoothTime * 100 + 0.5), /*max*/ 500);
    mSmoothTimeSlider->SetName(_("Smooth Time"));
    mSmoothTimeText = S.AddVariableText(SA_DFT_SMOOTH_TIME_TEXT, true,
@@ -195,13 +195,13 @@ ScoreAlignDialog::ScoreAlignDialog(wxWindow *parent, ScoreAlignParams &params)
        // Retain the settings
        gPrefs->Write(wxT("/Tracks/Synchronize/FramePeriod"), p.mFramePeriod);
        gPrefs->Write(wxT("/Tracks/Synchronize/WindowSize"), p.mWindowSize);
-       gPrefs->Write(wxT("/Tracks/Synchronize/SilenceThreshold"), 
+       gPrefs->Write(wxT("/Tracks/Synchronize/SilenceThreshold"),
                      p.mSilenceThreshold);
-       gPrefs->Write(wxT("/Tracks/Synchronize/ForceFinalAlignment"), 
+       gPrefs->Write(wxT("/Tracks/Synchronize/ForceFinalAlignment"),
                      p.mForceFinalAlignment);
        gPrefs->Write(wxT("/Tracks/Synchronize/IgnoreSilence"),
                      p.mIgnoreSilence);
-       gPrefs->Write(wxT("/Tracks/Synchronize/PresmoothTime"), 
+       gPrefs->Write(wxT("/Tracks/Synchronize/PresmoothTime"),
                      p.mPresmoothTime);
        gPrefs->Write(wxT("/Tracks/Synchronize/LineTime"), p.mLineTime);
        gPrefs->Write(wxT("/Tracks/Synchronize/SmoothTime"), p.mSmoothTime);
@@ -259,13 +259,13 @@ bool ScoreAlignDialog::TransferDataFromWindow()
    p.mLineTime = (double) mLineTimeSlider->GetValue() / 100.0;
    p.mSmoothTime = (double) mSmoothTimeSlider->GetValue() / 100.0;
 
-   mFramePeriodText->SetLabel(wxString::Format(_("%.2f secs"), 
+   mFramePeriodText->SetLabel(wxString::Format(_("%.2f secs"),
                                                p.mFramePeriod));
    mWindowSizeText->SetLabel(wxString::Format(_("%.2f secs"), p.mWindowSize));
    mSilenceThresholdText->SetLabel(wxString::Format(_("%.3f"),
                                                     p.mSilenceThreshold));
-   mPresmoothText->SetLabel(p.mPresmoothTime > 0 ? 
-                            wxString::Format(_("%.2f secs"), 
+   mPresmoothText->SetLabel(p.mPresmoothTime > 0 ?
+                            wxString::Format(_("%.2f secs"),
                                              p.mPresmoothTime) : wxT("(off)"));
    mLineTimeText->SetLabel(p.mLineTime > 0 ?
                            wxString::Format(_("%.2f secs"), p.mLineTime) :

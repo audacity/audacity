@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ImageManipulation.cpp
-  
+
   Dominic Mazzoni
   James Crook
 
@@ -16,7 +16,7 @@
 Provides Image Manipulation functions.
 
 wxWidgets misses some important functions involving cutting and
-pasting bitmaps, and (in version 2.6.1) is patchy in support of alpha 
+pasting bitmaps, and (in version 2.6.1) is patchy in support of alpha
 channel.  This collection of functions fills that gap.
 
 *//*********************************************************************/
@@ -27,10 +27,10 @@ channel.  This collection of functions fills that gap.
 #include "ImageManipulation.h"
 
 /// This looks at the first pixel in the image, and shifts
-/// the entire image by the vector difference between that 
+/// the entire image by the vector difference between that
 /// pixel and the dstColour.  For better control, use
 /// ChangeImageColour(wxImage, wxColour*, wxColour*) below
-wxImage *ChangeImageColour(wxImage * srcImage, wxColour & dstColour) 
+wxImage *ChangeImageColour(wxImage * srcImage, wxColour & dstColour)
 {
    unsigned char *src = srcImage->GetData();
    wxColour c;
@@ -39,10 +39,10 @@ wxImage *ChangeImageColour(wxImage * srcImage, wxColour & dstColour)
 }
 
 ///This will explicitly shift the image color from
-///srcColour to dstColour. 
+///srcColour to dstColour.
 wxImage *ChangeImageColour(wxImage * srcImage,
                            wxColour & srcColour,
-                           wxColour & dstColour) 
+                           wxColour & dstColour)
 {
    // This function takes a source image, which it assumes to
    // be grayscale, and smoothly changes the overall color
@@ -99,7 +99,7 @@ wxImage *ChangeImageColour(wxImage * srcImage,
 /// overlaid onto the background using alpha-blending,
 /// at location (xoff, yoff).
 wxImage *OverlayImage(wxImage * background, wxImage * foreground,
-                      wxImage * mask, int xoff, int yoff) 
+                      wxImage * mask, int xoff, int yoff)
 {
    unsigned char *bg = background->GetData();
    unsigned char *fg = foreground->GetData();
@@ -115,7 +115,7 @@ wxImage *OverlayImage(wxImage * background, wxImage * foreground,
 
    //Now, determine the dimensions of the images to be masked together
    //on top of the background.  This should be equal to the area of the
-   //smaller of the foreground and the mask, as long as it is 
+   //smaller of the foreground and the mask, as long as it is
    //within the area of the background, given the offset.
 
    //Make sure the foreground size is no bigger than the mask
@@ -138,7 +138,7 @@ wxImage *OverlayImage(wxImage * background, wxImage * foreground,
    // Go through the foreground image bit by bit and mask it on to the
    // background, at an offset of xoff,yoff.
    // BUT...Don't go beyond the size of the background image,
-   // the foreground image, or the mask 
+   // the foreground image, or the mask
    int x, y;
    for (y = 0; y < hCutoff; y++) {
 
@@ -151,11 +151,11 @@ wxImage *OverlayImage(wxImage * background, wxImage * foreground,
          int opp = 255 - value;
 
          for (int c = 0; c < 3; c++)
-            dstp[x * 3 + c] = 
-               ((bkp[x * 3 + c] * opp) + 
+            dstp[x * 3 + c] =
+               ((bkp[x * 3 + c] * opp) +
                 (fg[3 * (y * fgWidth + x) + c] * value)) / 255;
       }
-   } 
+   }
    return dstImage;
 }
 
@@ -191,7 +191,7 @@ wxImage *OverlayImage(teBmps eBack, teBmps eForeground,
 
    //Now, determine the dimensions of the images to be masked together
    //on top of the background.  This should be equal to the area of the
-   //smaller of the foreground and the mask, as long as it is 
+   //smaller of the foreground and the mask, as long as it is
    //within the area of the background, given the offset.
 
    //Make sure the foreground size is no bigger than the mask
@@ -212,7 +212,7 @@ wxImage *OverlayImage(teBmps eBack, teBmps eForeground,
    // Go through the foreground image bit by bit and mask it on to the
    // background, at an offset of xoff,yoff.
    // BUT...Don't go beyond the size of the background image,
-   // the foreground image, or the mask 
+   // the foreground image, or the mask
    int x, y;
    for (y = 0; y < hCutoff; y++) {
 
@@ -225,11 +225,11 @@ wxImage *OverlayImage(teBmps eBack, teBmps eForeground,
          int opp = 255 - value;
 
          for (int c = 0; c < 3; c++)
-            dstp[x * 3 + c] = 
-               ((bkp[x * 3 + c] * opp) + 
+            dstp[x * 3 + c] =
+               ((bkp[x * 3 + c] * opp) +
                 (fg[3 * (y * fgWidth + x) + c] * value)) / 255;
       }
-   } 
+   }
    return dstImage;
 }
 
@@ -293,8 +293,8 @@ void PasteSubImage( wxImage * background, wxImage * foreground, int xoff, int yo
 
    unsigned char *bg = background->GetData();
    unsigned char *fg = foreground->GetData();
-   unsigned char *bgAlpha = background->HasAlpha() ? background->GetAlpha() : NULL; 
-   unsigned char *fgAlpha = foreground->HasAlpha() ? foreground->GetAlpha() : NULL; 
+   unsigned char *bgAlpha = background->HasAlpha() ? background->GetAlpha() : NULL;
+   unsigned char *fgAlpha = foreground->HasAlpha() ? foreground->GetAlpha() : NULL;
    // For testing... Set as if no alpha in foreground....
    // fgAlpha = NULL;
 
@@ -340,7 +340,7 @@ void PasteSubImage( wxImage * background, wxImage * foreground, int xoff, int yo
             memset( bgAlphap, 255, wCutoff );
          }
       }
-   } 
+   }
 }
 
 /// Gets a rectangle from within another image, INCLUDING the alpha channel

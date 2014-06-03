@@ -114,7 +114,7 @@ bool EffectClickRemoval::PromptUser()
 }
 
 bool EffectClickRemoval::TransferParameters( Shuttle & shuttle )
-{  
+{
    shuttle.TransferInt(wxT("Threshold"),mThresholdLevel,0);
    shuttle.TransferInt(wxT("Width"),mClickWidth,0);
    return true;
@@ -124,7 +124,7 @@ bool EffectClickRemoval::Process()
 {
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
-   mbDidSomething = false; 
+   mbDidSomething = false;
 
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
@@ -150,13 +150,13 @@ bool EffectClickRemoval::Process()
       track = (WaveTrack *) iter.Next();
       count++;
    }
-   if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective. 
+   if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective.
       wxMessageBox(
-         wxString::Format(_("Algorithm not effective on this audio. Nothing changed.")), 
-         this->GetEffectName(), 
+         wxString::Format(_("Algorithm not effective on this audio. Nothing changed.")),
+         this->GetEffectName(),
          wxOK | wxICON_ERROR);
 
-   this->ReplaceProcessedTracks(bGoodResult && mbDidSomething); 
+   this->ReplaceProcessedTracks(bGoodResult && mbDidSomething);
    return bGoodResult && mbDidSomething;
 }
 
@@ -165,21 +165,21 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
    if (len <= windowSize/2)
    {
       wxMessageBox(
-         wxString::Format(_("Selection must be larger than %d samples."), windowSize/2), 
-         this->GetEffectName(), 
+         wxString::Format(_("Selection must be larger than %d samples."), windowSize/2),
+         this->GetEffectName(),
          wxOK | wxICON_ERROR);
-      return false; 
+      return false;
    }
 
    sampleCount idealBlockLen = track->GetMaxBlockSize() * 4;
    if (idealBlockLen % windowSize != 0)
       idealBlockLen += (windowSize - (idealBlockLen % windowSize));
 
-   bool bResult = true; 
+   bool bResult = true;
    sampleCount s = 0;
    float *buffer = new float[idealBlockLen];
    float *datawindow = new float[windowSize];
-   while ((s < len)  &&  ((len - s) > windowSize/2)) 
+   while ((s < len)  &&  ((len - s) > windowSize/2))
    {
       sampleCount block = idealBlockLen;
       if (s + block > len)
@@ -187,7 +187,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
 
       track->Get((samplePtr) buffer, floatSample, start + s, block);
 
-      for (int i=0; i < (block-windowSize/2); i += windowSize/2) 
+      for (int i=0; i < (block-windowSize/2); i += windowSize/2)
       {
          int wcopy = windowSize;
          if (i + wcopy > block)
@@ -224,7 +224,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
 
 bool EffectClickRemoval::RemoveClicks(sampleCount len, float *buffer)
 {
-   bool bResult = false; // This effect usually does nothing. 
+   bool bResult = false; // This effect usually does nothing.
    int i;
    int j;
    int left = 0;
@@ -307,8 +307,8 @@ const static wxChar *numbers[] =
    wxT("5"), wxT("6"), wxT("7"), wxT("8"), wxT("9")
 };
 
-// Declare window functions                                                                                                         
-                                                                                                                                    
+// Declare window functions
+
 #define ID_THRESH_TEXT     10001
 #define ID_THRESH_SLIDER   10002
 #define ID_WIDTH_TEXT      10003

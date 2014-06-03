@@ -38,7 +38,7 @@
 #include "Export.h"
 #include "ExportPCM.h"
 
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
    #include <id3tag.h>
    // DM: the following functions were supposed to have been
    // included in id3tag.h - should be fixed in the next release
@@ -47,7 +47,7 @@
       struct id3_frame *id3_frame_new(char const *);
       id3_length_t id3_latin1_length(id3_latin1_t const *);
       void id3_latin1_decode(id3_latin1_t const *, id3_ucs4_t *);
-   } 
+   }
 #endif
 
 //----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow * WXUNUSED(parent), int selformat)
 :  wxDialog(NULL, wxID_ANY,
             wxString(_("Specify Uncompressed Options")))
 {
-   mOk = NULL;   
+   mOk = NULL;
    int format = 0;
    switch (selformat)
    {
@@ -163,7 +163,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow * WXUNUSED(parent), int selformat)
          mEncodingFormats.Add(enc);
          if ((format & SF_FORMAT_SUBMASK) == (int)sf_encoding_index_to_subtype(i))
             mEncodingFromChoice = sel;
-         else 
+         else
             sel++;
       }
    }
@@ -176,7 +176,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow * WXUNUSED(parent), int selformat)
    Fit();
    Center();
 }
- 
+
 void ExportPCMOptions::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, true);
@@ -315,7 +315,7 @@ public:
                double t1,
                MixerSpec *mixerSpec = NULL,
                Tags *metadata = NULL,
-               int subformat = 0); 
+               int subformat = 0);
    // optional
    wxString GetExtension(int index = 0);
 
@@ -396,9 +396,9 @@ void ExportPCM::Destroy()
 /**
  *
  * @param subformat Control whether we are doing a "preset" export to a popular
- * file type, or giving the user full control over libsndfile. Set to 0 
- * (default) gives full control, 1 gives 16-bit AIFF, 2 gives 16-bit WAV 
- * 3 gives a GSM 6.10 WAV file */ 
+ * file type, or giving the user full control over libsndfile. Set to 0
+ * (default) gives full control, 1 gives 16-bit AIFF, 2 gives 16-bit WAV
+ * 3 gives a GSM 6.10 WAV file */
 int ExportPCM::Export(AudacityProject *project,
                        int numChannels,
                        wxString fName,
@@ -407,7 +407,7 @@ int ExportPCM::Export(AudacityProject *project,
                        double t1,
                        MixerSpec *mixerSpec,
                        Tags *metadata,
-                       int subformat) 
+                       int subformat)
 {
    double       rate = project->GetRate();
    TrackList   *tracks = project->GetTracks();
@@ -438,12 +438,12 @@ int ExportPCM::Export(AudacityProject *project,
    SNDFILE     *sf = NULL;
    int          err;
 
-   //This whole operation should not occur while a file is being loaded on OD, 
+   //This whole operation should not occur while a file is being loaded on OD,
    //(we are worried about reading from a file being written to,) so we block.
    //Furthermore, we need to do this because libsndfile is not threadsafe.
    ODManager::LockLibSndFileMutex();
    formatStr = sf_header_name(sf_format & SF_FORMAT_TYPEMASK);
-   
+
    ODManager::UnlockLibSndFileMutex();
 
    // Use libsndfile to export file
@@ -490,8 +490,8 @@ int ExportPCM::Export(AudacityProject *project,
     // WAV and WAVEX formats)
     if ((sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAV &&
         (sf_format & SF_FORMAT_TYPEMASK) != SF_FORMAT_WAVEX) {
-       if (!AddStrings(project, sf, metadata, sf_format)) { 
-          sf_close(sf);                          
+       if (!AddStrings(project, sf, metadata, sf_format)) {
+          sf_close(sf);
           return false;
        }
    }
@@ -528,7 +528,7 @@ int ExportPCM::Export(AudacityProject *project,
 
       if (numSamples == 0)
          break;
-      
+
       samplePtr mixed = mixer->GetBuffer();
 
       ODManager::LockLibSndFileMutex();
@@ -558,13 +558,13 @@ int ExportPCM::Export(AudacityProject *project,
 
    delete mixer;
 
-   delete[] waveTracks;                            
+   delete[] waveTracks;
 
    // Install the WAV metata in a "LIST" chunk at the end of the file
    if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV ||
        (sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAVEX) {
-      if (!AddStrings(project, sf, metadata, sf_format)) { 
-         sf_close(sf);                          
+      if (!AddStrings(project, sf, metadata, sf_format)) {
+         sf_close(sf);
          return false;
       }
    }
@@ -591,7 +591,7 @@ int ExportPCM::Export(AudacityProject *project,
    fn.MacSetTypeAndCreator(sf_header_mactype(sf_format & SF_FORMAT_TYPEMASK),
                            AUDACITY_CREATOR);
 #endif
-   
+
    return updateResult;
 }
 
@@ -606,8 +606,8 @@ char *ExportPCM::AdjustString(const wxString wxStr, int sf_format)
    if(sz == 0)
       return NULL;
    // Size for secure malloc in case of local wide char usage
-   size_t  sr = (sz+4) * 2;   
- 
+   size_t  sr = (sz+4) * 2;
+
    char *pDest = (char *)malloc(sr);
    if (!pDest)
       return NULL;
@@ -619,7 +619,7 @@ char *ExportPCM::AdjustString(const wxString wxStr, int sf_format)
    }
    memset(pDest, 0, sr);
    memset(pSrc, 0, sr);
- 
+
    if(wxStr.mb_str(wxConvISO8859_1))
       strncpy(pSrc, wxStr.mb_str(wxConvISO8859_1), sz);
    else if(wxStr.mb_str())
@@ -667,7 +667,7 @@ char *ExportPCM::AdjustString(const wxString wxStr, int sf_format)
       0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x61, 0x63,
       0x65, 0x65, 0x65, 0x65, 0x69, 0x69, 0x69, 0x69,
       0x64, 0x6e, 0x6f, 0x6f, 0x6f, 0x6f, 0x6f, 0x2f,
-      0x6f, 0x75, 0x75, 0x75, 0x75, 0x79, 0x70, 0x79 
+      0x6f, 0x75, 0x75, 0x75, 0x75, 0x79, 0x70, 0x79
    };
 
    size_t i;
@@ -676,7 +676,7 @@ char *ExportPCM::AdjustString(const wxString wxStr, int sf_format)
       *pD++ = aASCII7Table[c];
       if(c == 0)
          break;
-   } 
+   }
    *pD = '\0';
 
    free(pSrc);
@@ -771,7 +771,7 @@ bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, Tag
 
 void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
 {
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
    struct id3_tag *tp = id3_tag_new();
 
    wxString n, v;
@@ -830,7 +830,7 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
          free(ucs4);
 
          ucs4 = id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8));
-           
+
          id3_field_setstring(id3_frame_field(frame, 1), ucs4);
       }
       else {
@@ -864,9 +864,9 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
       id3_tag_delete(tp);
       return;
    }
-   // Zero all locations, for ending odd UTF16 content 
+   // Zero all locations, for ending odd UTF16 content
    // correctly, i.e., two '\0's at the end.
-   memset(buffer, 0, len);	
+   memset(buffer, 0, len);
 
    id3_tag_render(tp, buffer);
 
@@ -876,12 +876,12 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
    if (f.IsOpened()) {
       wxUint32 sz;
 
-      sz = (wxUint32) len;  
+      sz = (wxUint32) len;
       f.SeekEnd(0);
-      if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV) 
+      if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV)
          f.Write("id3 ", 4);	// Must be lower case for foobar2000.
       else {
-         f.Write("ID3 ", 4);	
+         f.Write("ID3 ", 4);
          sz = wxUINT32_SWAP_ON_LE(sz);
       }
       f.Write(&sz, 4);
@@ -908,8 +908,8 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
 bool ExportPCM::DisplayOptions(wxWindow *parent, int format)
 {
    wxString nopt(_("There are no options for this format.\n"));
-   /* i18n-hint: This is pointing users at another possible export format in 
-    * the list. So you should translate the quoted string 
+   /* i18n-hint: This is pointing users at another possible export format in
+    * the list. So you should translate the quoted string
     * 'Other uncompressed files' exactly the same as you do the same string
     * when it comes up on it's own.*/
    wxString usepcm(_("If you need more control over the export format please use the 'Other uncompressed files' format."));

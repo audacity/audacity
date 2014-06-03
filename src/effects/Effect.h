@@ -15,7 +15,7 @@
 #include <set>
 
 #include <wx/dynarray.h>
-#include <wx/intl.h> 
+#include <wx/intl.h>
 #include <wx/string.h>
 
 class wxDialog;
@@ -58,12 +58,12 @@ class TimeWarper;
 #define SKIP_EFFECT_MILLISECOND 99999
 
 class AUDACITY_DLL_API Effect {
- // 
+ //
  // public methods
  //
  // Used by the outside program to determine properties of an effect and
  // apply the effect to one or more tracks.
- // 
+ //
  public:
    // Each subclass of Effect should override this method.
    // This name will go in the menu bar;
@@ -81,7 +81,7 @@ class AUDACITY_DLL_API Effect {
    // Each subclass of Effect should override this method.
    // This should be human-readable, but should NOT be translated.  Use wxT(""), not _("").
    virtual wxString GetEffectIdentifier() = 0;
-   
+
    // Each subclass of Effect should override this method.
    // This name will go in the progress dialog, but can be used
    // elsewhere, and it should describe what is being done.
@@ -90,20 +90,20 @@ class AUDACITY_DLL_API Effect {
    // is "Boosting Bass Frequencies".
    virtual wxString GetEffectAction() = 0;
 
-   // Each subclass of Effect should override this method. 
-   // This description will go in the History state. 
-   // Override to include effect parameters, so typically useful only after PromptUser. 
-   virtual wxString GetEffectDescription() { 
-      // Default provides effect name. 
-      return wxString::Format(_("Applied effect: %s"), 
-                              this->GetEffectName().c_str()); 
-   } 
-	 
+   // Each subclass of Effect should override this method.
+   // This description will go in the History state.
+   // Override to include effect parameters, so typically useful only after PromptUser.
+   virtual wxString GetEffectDescription() {
+      // Default provides effect name.
+      return wxString::Format(_("Applied effect: %s"),
+                              this->GetEffectName().c_str());
+   }
+
    // Return flags which tell you what kind of effect this is.
    // It will be either a built-in or a plug-in effect, and it
    // will be one of Insert, Process, or Analyze.
    virtual int GetEffectFlags() {
-      // Default of BUILTIN_EFFECT | PROCESS_EFFECT | ADVANCED_EFFECT (set in constructor) - 
+      // Default of BUILTIN_EFFECT | PROCESS_EFFECT | ADVANCED_EFFECT (set in constructor) -
       // covers most built-in effects.
       return mFlags;
    }
@@ -128,8 +128,8 @@ class AUDACITY_DLL_API Effect {
    // Only override it if you need to do preprocessing or cleanup.
    virtual void Preview(bool dryOnly = false);
 
-   // Most effects just use the previewLength, but time-stretching/compressing 
-   // effects need to use a different input length, so override this method. 
+   // Most effects just use the previewLength, but time-stretching/compressing
+   // effects need to use a different input length, so override this method.
    virtual double CalcPreviewInputLength(double previewLength);
 
    // Get an unique ID assigned to each registered effect.
@@ -147,8 +147,8 @@ class AUDACITY_DLL_API Effect {
    wxString GetPreviewName();
 
    //ANSWER-ME: Isn't this pointless?
-   //    None of the built-in functions has an ampersand in the result of 
-   //    GetEffectName(), the only strings on which this method is used. 
+   //    None of the built-in functions has an ampersand in the result of
+   //    GetEffectName(), the only strings on which this method is used.
    //    In fact, the example 'E&qualizer' does not exist in the code!
    // Strip ampersand ('&' char) from string. This effectively removes the
    // shortcut from the string ('E&qualizer' becomes 'Equalizer'). This is
@@ -167,7 +167,7 @@ class AUDACITY_DLL_API Effect {
    Effect();
 
    virtual ~Effect();
- 
+
    // Called once each time an effect is called.  Perform any initialization;
    // make sure that the effect can be performed on the selected tracks and
    // return false otherwise
@@ -185,10 +185,10 @@ class AUDACITY_DLL_API Effect {
    // Check whether effect should be skipped
    // Typically this is only useful in automation, for example
    // detecting that zero noise reduction is to be done,
-   // or that normalisation is being done without Dc bias shift 
+   // or that normalisation is being done without Dc bias shift
    // or amplitude modification
    virtual bool CheckWhetherSkipEffect() { return false; }
-      
+
    // Actually do the effect here.
    virtual bool Process() = 0;
 
@@ -225,14 +225,14 @@ class AUDACITY_DLL_API Effect {
    // The Progress methods all return true if the user has cancelled;
    // you should exit immediately if this happens (cleaning up memory
    // is okay, but don't try to undo).
- 
+
    // Pass a fraction between 0.0 and 1.0
    bool TotalProgress(double frac);
-   
+
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)
    bool TrackProgress(int whichTrack, double frac, wxString = wxT(""));
- 
+
    // Pass a fraction between 0.0 and 1.0, for the current track group
    // (when doing stereo groups at a time)
    bool TrackGroupProgress(int whichGroup, double frac);
@@ -259,16 +259,16 @@ class AUDACITY_DLL_API Effect {
 
    // type of the tracks on mOutputTracks
    int mOutputTracksType;
- 
+
  //
  // private methods
  //
-   // Use these two methods to copy the input tracks to mOutputTracks, if 
+   // Use these two methods to copy the input tracks to mOutputTracks, if
    // doing the processing on them, and replacing the originals only on success (and not cancel).
    void CopyInputTracks(int trackType = Track::Wave);
 
-   // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed 
-   // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks. 
+   // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
+   // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
    // Else clear and delete mOutputTracks copies.
    void ReplaceProcessedTracks(const bool bGoodResult);
 
@@ -279,7 +279,7 @@ class AUDACITY_DLL_API Effect {
  //
  private:
    void CountWaveTracks();
- 
+
  //
  // private data
  //
@@ -293,7 +293,7 @@ class AUDACITY_DLL_API Effect {
    int mNumGroups;
 
    int mID;
-   
+
    friend class BatchCommands;// so can call PromptUser.
    friend class EffectManager;// so it can delete effects and access mID.
 

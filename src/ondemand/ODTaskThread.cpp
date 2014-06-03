@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ODTaskThread.cpp
-  
+
   Created by Michael Chinen (mchinen) on 6/8/08
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2.  See License.txt.
@@ -28,16 +28,16 @@ ODTaskThread::ODTaskThread(ODTask* task)
 {
    mTask=task;
 #ifdef __WXMAC__
-   mDestroy = false; 
+   mDestroy = false;
    mThread = NULL;
 #endif
-   
-}   
+
+}
 
 #ifdef __WXMAC__
-   
+
 void ODTaskThread::Entry()
-#else 
+#else
 void *ODTaskThread::Entry()
 
 #endif
@@ -46,11 +46,11 @@ void *ODTaskThread::Entry()
    //wxThread::This()->SetPriority( 40);
    //Do at least 5 percent of the task
    mTask->DoSome(0.05f);
-   
+
    //release the thread count so that the ODManager knows how many active threads are alive.
    ODManager::Instance()->DecrementCurrentThreads();
-   
-   
+
+
 #ifndef __WXMAC__
    return NULL;
 #endif
@@ -65,7 +65,7 @@ ODCondition::ODCondition(ODLock *lock)
 }
 ODCondition::~ODCondition()
 {
-   pthread_cond_destroy (condition); 
+   pthread_cond_destroy (condition);
    free(condition);
 }
 
@@ -73,7 +73,7 @@ void ODCondition::Signal()
 {
    pthread_cond_signal(condition);
 }
-   
+
 void ODCondition::Broadcast()
 {
    pthread_cond_broadcast(condition);
@@ -82,7 +82,6 @@ void ODCondition::Wait()
 {
    pthread_cond_wait(condition,m_lock->mutex);
 }
-   
+
 #endif
 
-  

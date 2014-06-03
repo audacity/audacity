@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(SoundActivatedRecord, wxDialog)
 END_EVENT_TABLE()
 
 SoundActivatedRecord::SoundActivatedRecord(wxWindow* parent)
-: wxDialog(parent, -1, _("Sound Activated Record"), wxDefaultPosition, 
+: wxDialog(parent, -1, _("Sound Activated Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION )
 //           wxDefaultSize, wxCAPTION | wxTHICK_FRAME)
 {

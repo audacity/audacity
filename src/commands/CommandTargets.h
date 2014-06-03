@@ -68,7 +68,7 @@ public:
    virtual void Update(wxString message) = 0;
 };
 
-/// 
+///
 class ProgressToMessageTarget : public CommandProgressTarget
 {
 private:

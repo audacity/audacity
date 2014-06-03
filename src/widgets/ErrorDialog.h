@@ -21,21 +21,21 @@ class AudacityProject;
 /// Displays an error dialog with a button that offers help
 void ShowErrorDialog(wxWindow *parent,
                      const wxString &dlogTitle,
-                     const wxString &message, 
+                     const wxString &message,
                      const wxString &helpURL,
                      bool Close = true);
 
 /// Displays a modeless error dialog with a button that offers help
 void ShowModelessErrorDialog(wxWindow *parent,
                      const wxString &dlogTitle,
-                     const wxString &message, 
+                     const wxString &message,
                      const wxString &helpURL,
                      bool Close = true);
 
 /// Displays a custom modeless error dialog for aliased file errors
 void ShowAliasMissingDialog(AudacityProject *parent,
                      const wxString &dlogTitle,
-                     const wxString &message, 
+                     const wxString &message,
                      const wxString &helpURL,
                      const bool Close = true);
 
@@ -43,11 +43,11 @@ void ShowAliasMissingDialog(AudacityProject *parent,
 void ShowInfoDialog( wxWindow *parent,
                      const wxString &dlogTitle,
                      const wxString &shortMsg,
-                     const wxString &message, 
+                     const wxString &message,
                      const int xSize, const int ySize);
 
 /// Displays a new window with wxHTML help.
-void ShowHtmlText( wxWindow * pParent, 
+void ShowHtmlText( wxWindow * pParent,
                    const wxString &Title,
                    const wxString &HtmlText,
                    bool bIsFile, bool bModal);

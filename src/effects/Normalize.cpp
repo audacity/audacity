@@ -66,23 +66,23 @@ bool EffectNormalize::Init()
 }
 
 wxString EffectNormalize::GetEffectDescription() // useful only after parameter values have been set
-{ 
-   // Note: This is useful only after ratio has been set. 
+{
+   // Note: This is useful only after ratio has been set.
    wxString strResult =
       /* i18n-hint: First %s is the effect name, 2nd and 3rd are either true or
        * false (translated below) if those options were selected */
-      wxString::Format(_("Applied effect: %s remove dc offset = %s, normalize amplitude = %s, stereo independent %s"), 
-                        this->GetEffectName().c_str(), 
+      wxString::Format(_("Applied effect: %s remove dc offset = %s, normalize amplitude = %s, stereo independent %s"),
+                        this->GetEffectName().c_str(),
                         /* i18n-hint: true here means that the option was
                          * selected. Opposite false if not selected */
-                        mDC ? _("true") : _("false"), 
+                        mDC ? _("true") : _("false"),
                         mGain ? _("true") : _("false"),
                         mStereoInd ? _("true") : _("false"));
    if (mGain)
-      strResult += wxString::Format(_(", maximum amplitude = %.1f dB"), mLevel); 
+      strResult += wxString::Format(_(", maximum amplitude = %.1f dB"), mLevel);
 
    return strResult;
-} 
+}
 
 bool EffectNormalize::TransferParameters( Shuttle & shuttle )
 {
@@ -126,7 +126,7 @@ bool EffectNormalize::PromptUser()
 
    dlog.CentreOnParent();
    dlog.ShowModal();
-   
+
    if (dlog.GetReturnCode() == wxID_CANCEL)
       return false;
 
@@ -251,14 +251,14 @@ bool EffectNormalize::Process()
             }
          }
       }
-      
+
       //Iterate to the next track
       prevTrack = track;
       track = (WaveTrack *) iter.Next();
       mCurTrackNum++;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult); 
+   this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -303,10 +303,10 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track, wxString msg)
    //Transform the marker timepoints to samples
    sampleCount start = track->TimeToLongSamples(mCurT0);
    sampleCount end = track->TimeToLongSamples(mCurT1);
-         
+
    //Get the length of the buffer (as double). len is
    //used simply to calculate a progress meter, so it is easier
-   //to make it a double now than it is to do it later 
+   //to make it a double now than it is to do it later
    double len = (double)(end - start);
 
    //Initiate a processing buffer.  This buffer will (most likely)
@@ -322,20 +322,20 @@ bool EffectNormalize::AnalyseDC(WaveTrack * track, wxString msg)
    while (s < end) {
       //Get a block of samples (smaller than the size of the buffer)
       sampleCount block = track->GetBestBlockSize(s);
-      
+
       //Adjust the block size if it is the final block in the track
       if (s + block > end)
          block = end - s;
-      
+
       //Get the samples from the track and put them in the buffer
       track->Get((samplePtr) buffer, floatSample, s, block);
-      
+
       //Process the buffer.
       AnalyzeData(buffer, block);
-         
+
       //Increment s one blockfull of samples
       s += block;
-      
+
       //Update the Progress meter
       if (TrackProgress(mCurTrackNum,
                         ((double)(s - start) / len)/2.0, msg)) {
@@ -364,10 +364,10 @@ bool EffectNormalize::ProcessOne(WaveTrack * track, wxString msg)
    //Transform the marker timepoints to samples
    sampleCount start = track->TimeToLongSamples(mCurT0);
    sampleCount end = track->TimeToLongSamples(mCurT1);
-         
+
    //Get the length of the buffer (as double). len is
    //used simply to calculate a progress meter, so it is easier
-   //to make it a double now than it is to do it later 
+   //to make it a double now than it is to do it later
    double len = (double)(end - start);
 
    //Initiate a processing buffer.  This buffer will (most likely)
@@ -380,23 +380,23 @@ bool EffectNormalize::ProcessOne(WaveTrack * track, wxString msg)
    while (s < end) {
       //Get a block of samples (smaller than the size of the buffer)
       sampleCount block = track->GetBestBlockSize(s);
-      
+
       //Adjust the block size if it is the final block in the track
       if (s + block > end)
          block = end - s;
-      
+
       //Get the samples from the track and put them in the buffer
       track->Get((samplePtr) buffer, floatSample, s, block);
-      
+
       //Process the buffer.
       ProcessData(buffer, block);
-   
+
       //Copy the newly-changed samples back onto the track.
       track->Set((samplePtr) buffer, floatSample, s, block);
-         
+
       //Increment s one blockfull of samples
       s += block;
-      
+
       //Update the Progress meter
       if (TrackProgress(mCurTrackNum,
                         0.5+((double)(s - start) / len)/2.0, msg)) {
@@ -467,18 +467,18 @@ void NormalizeDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(false);
       {
-         mDCCheckBox = 
+         mDCCheckBox =
             S.Id(ID_DC_REMOVE).
                AddCheckBox(_("Remove DC offset (center on 0.0 vertically)"),
                            mDC ? wxT("true") : wxT("false"));
-   
+
          S.StartHorizontalLay(wxALIGN_CENTER, false);
          {
-            mGainCheckBox = 
+            mGainCheckBox =
                S.Id(ID_NORMALIZE_AMPLITUDE).
-                  AddCheckBox(_("Normalize maximum amplitude to"), 
+                  AddCheckBox(_("Normalize maximum amplitude to"),
                               mGain ? wxT("true") : wxT("false"));
-   
+
             mLevelTextCtrl = S.Id(ID_LEVEL_TEXT).AddTextBox(wxT(""), wxT(""), 10);
             mLevelTextCtrl->SetValidator(vld);
             mLevelTextCtrl->SetName(_("Maximum amplitude dB"));
@@ -502,7 +502,7 @@ bool NormalizeDialog::TransferDataToWindow()
    mDCCheckBox->SetValue(mDC);
    mLevelTextCtrl->SetValue(Internat::ToDisplayString(mLevel, 1));
    mStereoIndCheckBox->SetValue(mStereoInd);
-   
+
    UpdateUI();
 
    TransferDataFromWindow();
@@ -578,7 +578,7 @@ void NormalizeDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    mEffect->mStereoInd = mStereoInd;
 
    mEffect->Preview();
-   
+
    mEffect->mGain = oldGain;
    mEffect->mDC = oldDC;
    mEffect->mLevel = oldLevel;

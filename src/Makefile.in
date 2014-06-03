@@ -266,7 +266,7 @@ libaudacity_la_OBJECTS = $(am_libaudacity_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
-am__v_lt_1 = 
+am__v_lt_1 =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(desktopdir)" \
 	"$(DESTDIR)$(mimedir)"
 PROGRAMS = $(bin_PROGRAMS)
@@ -746,11 +746,11 @@ am__v_P_1 = :
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN     " $@;
-am__v_GEN_1 = 
+am__v_GEN_1 =
 AM_V_at = $(am__v_at_@AM_V@)
 am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
-am__v_at_1 = 
+am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/autotools/depcomp
 am__depfiles_maybe = depfiles
@@ -764,7 +764,7 @@ LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 AM_V_CXX = $(am__v_CXX_@AM_V@)
 am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
 am__v_CXX_0 = @echo "  CXX     " $@;
-am__v_CXX_1 = 
+am__v_CXX_1 =
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -772,7 +772,7 @@ CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
-am__v_CXXLD_1 = 
+am__v_CXXLD_1 =
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -782,7 +782,7 @@ LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CC = $(am__v_CC_@AM_V@)
 am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
 am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 = 
+am__v_CC_1 =
 CCLD = $(CC)
 LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -790,7 +790,7 @@ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
+am__v_CCLD_1 =
 SOURCES = $(libaudacity_la_SOURCES) $(audacity_SOURCES)
 DIST_SOURCES = $(libaudacity_la_SOURCES) $(am__audacity_SOURCES_DIST)
 am__can_run_installinfo = \
@@ -1365,7 +1365,7 @@ configwin.h: stamp-h1
 stamp-h1: $(srcdir)/configtemplate.h $(top_builddir)/config.status
 	@rm -f stamp-h1
 	cd $(top_builddir) && $(SHELL) ./config.status src/configwin.h
-$(srcdir)/configtemplate.h: @MAINTAINER_MODE_TRUE@ $(am__configure_deps) 
+$(srcdir)/configtemplate.h: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	($(am__cd) $(top_srcdir) && $(AUTOHEADER))
 	rm -f stamp-h1
 	touch $@
@@ -1422,7 +1422,7 @@ xml/$(DEPDIR)/$(am__dirstamp):
 xml/libaudacity_la-XMLTagHandler.lo: xml/$(am__dirstamp) \
 	xml/$(DEPDIR)/$(am__dirstamp)
 
-libaudacity.la: $(libaudacity_la_OBJECTS) $(libaudacity_la_DEPENDENCIES) $(EXTRA_libaudacity_la_DEPENDENCIES) 
+libaudacity.la: $(libaudacity_la_OBJECTS) $(libaudacity_la_DEPENDENCIES) $(EXTRA_libaudacity_la_DEPENDENCIES)
 	$(AM_V_CXXLD)$(CXXLINK)  $(libaudacity_la_OBJECTS) $(libaudacity_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
@@ -1915,7 +1915,7 @@ effects/VST/$(DEPDIR)/$(am__dirstamp):
 effects/VST/audacity-VSTEffect.$(OBJEXT): effects/VST/$(am__dirstamp) \
 	effects/VST/$(DEPDIR)/$(am__dirstamp)
 
-audacity$(EXEEXT): $(audacity_OBJECTS) $(audacity_DEPENDENCIES) $(EXTRA_audacity_DEPENDENCIES) 
+audacity$(EXEEXT): $(audacity_OBJECTS) $(audacity_DEPENDENCIES) $(EXTRA_audacity_DEPENDENCIES)
 	@rm -f audacity$(EXEEXT)
 	$(AM_V_CXXLD)$(audacity_LINK) $(audacity_OBJECTS) $(audacity_LDADD) $(LIBS)
 

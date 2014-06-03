@@ -186,12 +186,12 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          wxString(wxT("")) +
          _("<center><h3>How to Get Help</h3></center>") +
          _("Welcome to Audacity ") + AUDACITY_VERSION_STRING + wxT("!<p>") +
-         _("These are our support methods:") + wxT("</p>") + wxT("<ul><li>") + 
+         _("These are our support methods:") + wxT("</p>") + wxT("<ul><li>") +
          _(" [[file:quick_help.html|Quick Help]] (should be installed locally, <a href=\"http://manual.audacityteam.org/o/quick_help.html\">Internet version if it isn't</a>)") + wxT("</li><li>") +
          _(" [[file:index.html|Manual]] (should be installed locally, <a href=\"http://manual.audacityteam.org/o/\">Internet version if it isn't</a>)") + wxT("</li><li>") +
          _(" [[http://wiki.audacityteam.org/index.php|Wiki]] (the latest tips, tricks and tutorials, on the Internet)") + wxT("</li><li>") +
          _(" <a href=\"http://forum.audacityteam.org/\">Forum</a> (ask your question directly, on the Internet)") + wxT("</li></ul></p><p>") +
-         _(" For even quicker answers, all the online resources above are <b>searchable</b>.")  + wxT("</p>") 
+         _(" For even quicker answers, all the online resources above are <b>searchable</b>.")  + wxT("</p>")
       );
    }
    if(Key==wxT("wma-proprietary"))

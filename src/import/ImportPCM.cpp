@@ -53,7 +53,7 @@
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
    #include <id3tag.h>
    // DM: the following functions were supposed to have been
    // included in id3tag.h - should be fixed in the next release
@@ -62,7 +62,7 @@
       struct id3_frame *id3_frame_new(char const *);
       id3_length_t id3_latin1_length(id3_latin1_t const *);
       void id3_latin1_decode(id3_latin1_t const *, id3_ucs4_t *);
-   } 
+   }
 #endif
 
 #define DESC _("WAV, AIFF, and other uncompressed types")
@@ -194,7 +194,7 @@ PCMImportFileHandle::PCMImportFileHandle(wxString name,
    // the file is higher-quality, go with a format which preserves
    // the quality of the original file.
    //
-   
+
    mFormat = (sampleFormat)
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
 
@@ -253,9 +253,9 @@ File > Check Dependencies will show the original names and location of any files
 How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _("copy in") : _("read directly")));
       message->Wrap(500);
       message->SetName(message->GetLabel());
-                               
+
       vbox->Add(message, 1, wxALL | wxEXPAND, 10);
-      
+
       wxStaticBox *box = new wxStaticBox(&dialog, -1, _("Choose an import method"));
       box->SetName(box->GetLabel());
       wxStaticBoxSizer *boxsizer = new wxStaticBoxSizer(box, wxVERTICAL);
@@ -272,14 +272,14 @@ How do you want to import the current file(s)?"), oldCopyPref == wxT("copy") ? _
       boxsizer->Add(dontAskNextTimeBox, 0, wxALL);
       vbox->Add(boxsizer, 0, wxALL, 10);
       dontAskNextTimeBox->SetName(wxStripMenuCodes(dontAskNextTimeBox->GetLabel()));
-      
+
 
       wxRadioButton *prefsRadio = oldCopyPref == wxT("copy") ? copyRadio : aliasRadio;
       prefsRadio->SetValue(true);
 
       wxSizer *buttonSizer = dialog.CreateButtonSizer(wxOK | wxCANCEL);
       vbox->Add(buttonSizer, 0, wxALL | wxEXPAND, 10);
-      
+
       dialog.SetSize(dialog.GetBestSize());
       dialog.Layout();
       dialog.Center();
@@ -323,7 +323,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    bool doEdit = false;
    if (copyEdit.IsSameAs(wxT("edit"), false))
       doEdit = true;
-      
+
 
    CreateProgress();
 
@@ -353,7 +353,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    sampleCount fileTotalFrames = (sampleCount)mInfo.frames;
    sampleCount maxBlockSize = channels[0]->GetMaxBlockSize();
    int updateResult = false;
-   
+
    // If the format is not seekable, we must use 'copy' mode,
    // because 'edit' mode depends on the ability to seek to an
    // arbitrary location in the file.
@@ -364,7 +364,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // If this mode has been selected, we form the tracks as
       // aliases to the files we're editing, i.e. ("foo.wav", 12000-18000)
       // instead of actually making fresh copies of the samples.
-      
+
       // lets use OD only if the file is longer than 30 seconds.  Otherwise, why wake up extra threads.
       //todo: make this a user pref.
       bool useOD =fileTotalFrames>kMinimumODFileSampleSize;
@@ -387,9 +387,9 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
          }
       }
       updateResult = mProgress->Update(fileTotalFrames, fileTotalFrames);
-       
+
       if(useOD)
-      { 
+      {
          ODComputeSummaryTask* computeTask=new ODComputeSummaryTask;
          bool moreThanStereo = mInfo.channels>2;
          for (c = 0; c < mInfo.channels; c++)
@@ -411,23 +411,23 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // Otherwise, we're in the "copy" mode, where we read in the actual
       // samples from the file and store our own local copy of the
       // samples in the tracks.
-      
+
       samplePtr srcbuffer = NewSamples(maxBlockSize * mInfo.channels,
                                        mFormat);
       samplePtr buffer = NewSamples(maxBlockSize, mFormat);
 
       unsigned long framescompleted = 0;
-      
+
       long block;
       do {
          block = maxBlockSize;
-         
+
          if (mFormat == int16Sample)
             block = sf_readf_short(mFile, (short *)srcbuffer, block);
          //import 24 bit int as float and have the append function convert it.  This is how PCMAliasBlockFile works too.
          else
             block = sf_readf_float(mFile, (float *)srcbuffer, block);
-         
+
          if (block) {
             for(c=0; c<mInfo.channels; c++) {
                if (mFormat==int16Sample) {
@@ -440,7 +440,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
                      ((float *)buffer)[j] =
                         ((float *)srcbuffer)[mInfo.channels*j+c];
                }
-               
+
                channels[c]->Append(buffer, (mFormat == int16Sample)?int16Sample:floatSample, block);
             }
             framescompleted += block;
@@ -521,7 +521,7 @@ int PCMImportFileHandle::Import(TrackFactory *trackFactory,
    }
 
 #if defined(USE_LIBID3TAG)
-   if (((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) || 
+   if (((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||
        ((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV)) {
       wxFFile f(mFilename, wxT("rb"));
       if (f.IsOpened()) {

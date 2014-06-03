@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   HtmlWindow.cpp
-  
+
   Leland Lucius
 
 *******************************************************************//**
@@ -15,7 +15,7 @@
 *//*******************************************************************//**
 
 \class HtmlWindow
-\brief The widget to the left of a ToolBar that allows it to be dragged 
+\brief The widget to the left of a ToolBar that allows it to be dragged
 around to new positions.
 
 *//**********************************************************************/

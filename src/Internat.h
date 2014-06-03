@@ -64,7 +64,7 @@ public:
     * remove them */
    static wxString SanitiseFilename(const wxString &name, const wxString &sub);
 
-   /** \brief Remove accelerator charactors from strings 
+   /** \brief Remove accelerator charactors from strings
     *
     * Utility function - takes a translatable string to be used as a menu item,
     * for example _("&Splash...\tAlt+S"), and strips all of the menu

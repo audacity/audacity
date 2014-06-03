@@ -58,8 +58,8 @@ BEGIN_EVENT_TABLE(ExportCLOptions, wxDialog)
    EVT_BUTTON(ID_BROWSE, ExportCLOptions::OnBrowse)
 END_EVENT_TABLE()
 
-/// 
-/// 
+///
+///
 ExportCLOptions::ExportCLOptions(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify Command Line Encoder")))
@@ -80,8 +80,8 @@ ExportCLOptions::ExportCLOptions(wxWindow *parent)
    PopulateOrExchange(S);
 }
 
-/// 
-/// 
+///
+///
 void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
 {
    wxArrayString cmds;
@@ -127,8 +127,8 @@ void ExportCLOptions::PopulateOrExchange(ShuttleGui & S)
    return;
 }
 
-/// 
-/// 
+///
+///
 void ExportCLOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
@@ -147,8 +147,8 @@ void ExportCLOptions::OnOK(wxCommandEvent& WXUNUSED(event))
    return;
 }
 
-/// 
-/// 
+///
+///
 void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
 {
    wxString path;
@@ -243,7 +243,7 @@ struct wav_header {
    char riffID[4];            /* "RIFF" */
    wxUint32 lenAfterRiff;     /* basically the file len - 8, or samples len + 36 */
    char riffType[4];          /* "WAVE" */
-   
+
    /* format chunk */
    char fmtID[4];             /* "fmt " */
    wxUint32 formatChunkLen;   /* (format chunk len - first two fields) 16 in our case */
@@ -301,7 +301,7 @@ int ExportCL::Export(AudacityProject *project,
                       wxString fName,
                       bool selectionOnly,
                       double t0,
-                      double t1, 
+                      double t1,
                       MixerSpec *mixerSpec,
                       Tags *WXUNUSED(metadata),
                       int WXUNUSED(subformat))
@@ -443,7 +443,7 @@ int ExportCL::Export(AudacityProject *project,
          if (numSamples == 0) {
             break;
          }
-         
+
          mixed = mixer->GetBuffer();
          numBytes = numSamples * channels;
 

@@ -29,7 +29,7 @@ class EffectSimpleMono:public Effect {
  private:
    bool ProcessOne(WaveTrack * t, sampleCount start, sampleCount end);
 
- protected:  
+ protected:
 
    // Override this method if you need to do things
    // before every track (including the first one)

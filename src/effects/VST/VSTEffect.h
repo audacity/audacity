@@ -56,9 +56,9 @@ class VSTEffect:public Effect
    virtual bool Init();
 
    virtual bool PromptUser();
-   
+
    virtual bool Process();
-   
+
    virtual void End();
 
    // Plugin loading and unloading

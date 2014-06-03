@@ -35,19 +35,19 @@ public:
    LangChoiceDialog(wxWindow * parent,
                     wxWindowID id,
                     const wxString & title);
-   
+
    wxString GetLang() { return mLang; }
 
 private:
    void OnOk(wxCommandEvent & event);
-   
+
    wxChoice *mChoice;
    wxString mLang;
 
    int mNumLangs;
    wxArrayString mLangCodes;
    wxArrayString mLangNames;
- 
+
    DECLARE_EVENT_TABLE()
 };
 
@@ -55,7 +55,7 @@ wxString ChooseLanguage(wxWindow *parent)
 {
    wxString returnVal;
 
-   /* i18n-hint: Title on a dialog indicating that this is the first 
+   /* i18n-hint: Title on a dialog indicating that this is the first
     * time Audacity has been run. */
    LangChoiceDialog dlog(parent, -1, _("Audacity First Run"));
    dlog.CentreOnParent();
@@ -121,10 +121,10 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
    else {
       sname = mLangNames[sndx];
    }
-   
+
    if (mLang.Left(2) != slang.Left(2)) {
       wxString msg;
-      /* i18n-hint: The %s's are replaced by translated and untranslated 
+      /* i18n-hint: The %s's are replaced by translated and untranslated
        * versions of language names. */
       msg.Printf(_("The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."),
                  mLangNames[ndx].c_str(),

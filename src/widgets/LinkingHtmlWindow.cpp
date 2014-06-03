@@ -7,8 +7,8 @@
   Vaughan Johnson
   Dominic Mazzoni
 
-  utility fn and 
-  descendant of HtmlWindow that opens links in the user's 
+  utility fn and
+  descendant of HtmlWindow that opens links in the user's
   default browser
 
 **********************************************************************/
@@ -56,7 +56,7 @@ void BrowserFrame::OnKeyDown(wxKeyEvent & event)
    bool bSkip = true;
    if (event.GetKeyCode() == WXK_ESCAPE)
    {
-      bSkip = false; 
+      bSkip = false;
       Close(false);
    }
    event.Skip(bSkip);
@@ -81,9 +81,9 @@ void OpenInDefaultBrowser(const wxHtmlLinkInfo& link)
    wxLaunchDefaultBrowser(link.GetHref());
 }
 
-LinkingHtmlWindow::LinkingHtmlWindow(wxWindow *parent, wxWindowID id /*= -1*/, 
-                                       const wxPoint& pos /*= wxDefaultPosition*/, 
-                                       const wxSize& size /*= wxDefaultSize*/, 
+LinkingHtmlWindow::LinkingHtmlWindow(wxWindow *parent, wxWindowID id /*= -1*/,
+                                       const wxPoint& pos /*= wxDefaultPosition*/,
+                                       const wxSize& size /*= wxDefaultSize*/,
                                        long style /*= wxHW_SCROLLBAR_AUTO*/) :
    HtmlWindow(parent, id, pos, size, style)
 {
@@ -94,7 +94,7 @@ void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
    wxString href = link.GetHref();
    if( href.StartsWith(wxT("innerlink:")) )
    {
-      wxString FileName = 
+      wxString FileName =
          wxFileName( FileNames::HtmlHelpDir(), href.Mid( 10 ) + wxT(".htm") ).GetFullPath();
       if( wxFileExists( FileName ) )
       {

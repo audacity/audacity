@@ -43,9 +43,9 @@ class ErrorDialog : public wxDialog
 {
    public:
    // constructors and destructors
-   ErrorDialog(wxWindow *parent, 
-      const wxString & dlogTitle, 
-      const wxString & message, 
+   ErrorDialog(wxWindow *parent,
+      const wxString & dlogTitle,
+      const wxString & message,
       const wxString & helpURL,
       const bool Close = true, const bool modal = true);
 
@@ -66,9 +66,9 @@ private:
 class AliasedFileMissingDialog : public ErrorDialog
 {
    public:
-   AliasedFileMissingDialog(AudacityProject *parent, 
-      const wxString & dlogTitle, 
-      const wxString & message, 
+   AliasedFileMissingDialog(AudacityProject *parent,
+      const wxString & dlogTitle,
+      const wxString & message,
       const wxString & helpURL,
       const bool Close = true, const bool modal = true);
    virtual ~AliasedFileMissingDialog();
@@ -80,9 +80,9 @@ BEGIN_EVENT_TABLE(ErrorDialog, wxDialog)
 END_EVENT_TABLE()
 
 
-AliasedFileMissingDialog::AliasedFileMissingDialog(AudacityProject *parent, 
-      const wxString & dlogTitle, 
-      const wxString & message, 
+AliasedFileMissingDialog::AliasedFileMissingDialog(AudacityProject *parent,
+      const wxString & dlogTitle,
+      const wxString & message,
       const wxString & helpURL,
       const bool Close, const bool modal):
 ErrorDialog(parent, dlogTitle, message, helpURL, Close, modal)
@@ -96,9 +96,9 @@ AliasedFileMissingDialog::~AliasedFileMissingDialog()
 }
 
 ErrorDialog::ErrorDialog(
-   wxWindow *parent, 
-   const wxString & dlogTitle, 
-   const wxString & message, 
+   wxWindow *parent,
+   const wxString & dlogTitle,
+   const wxString & message,
    const wxString & helpURL,
    const bool Close, const bool modal):
    wxDialog(parent, (wxWindowID)-1, dlogTitle)
@@ -132,9 +132,9 @@ ErrorDialog::ErrorDialog(
    // Layout did not look good on Windows.
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);
-   
+
    wxBoxSizer *hSizer = new wxBoxSizer(wxHORIZONTAL);
-   
+
    wxStaticText *statText = new wxStaticText(this, -1, message);
    mainSizer->Add(statText, 0, wxALIGN_LEFT|wxALL, 5);
 
@@ -145,11 +145,11 @@ ErrorDialog::ErrorDialog(
    ok->SetDefault();
    ok->SetFocus();
    hSizer->Add(ok, 0, wxALIGN_RIGHT|wxALL, 5);
-   
+
    vSizer->Add(hSizer, 0, wxALIGN_CENTER|wxALL, 5);
-   
+
    mainSizer->Add(vSizer, 0, wxALL, 15 );
-   
+
    SetAutoLayout(true);
    SetSizer(mainSizer);
    mainSizer->Fit(this);
@@ -274,7 +274,7 @@ void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
    if( dhelpURL.StartsWith(wxT("innerlink:")) )
    {
       ShowHtmlText(
-         this, 
+         this,
          TitleText(dhelpURL.Mid( 10 ) ),
          HelpText( dhelpURL.Mid( 10 )),
          false,
@@ -306,7 +306,7 @@ void ShowModelessErrorDialog(wxWindow *parent,
    ErrorDialog *dlog = new ErrorDialog(parent, dlogTitle, message, helpURL, Close, false);
    dlog->CentreOnParent();
    dlog->Show();
-   // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak. 
+   // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak.
    // ANSWER-ME: This is unused. Delete it or are there plans for it?
 }
 
@@ -321,16 +321,16 @@ void ShowAliasMissingDialog(AudacityProject *parent,
    // instead put it just above or on the top of the project.
    wxPoint point;
    point.x = 0;
-   
+
    point.y = parent ? parent->GetPosition().y - 200 : 100;
-   
+
    if (point.y < 100)
       point.y = 100;
    dlog->SetPosition(point);
    dlog->CentreOnParent(wxHORIZONTAL);
 
    dlog->Show();
-   // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak. 
+   // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak.
    // ANSWER-ME: Why is this modeless? Shouldn't it require user action before proceeding?
 }
 
@@ -353,7 +353,7 @@ void ShowInfoDialog( wxWindow *parent,
    S.StartVerticalLay(1);
    {
       S.AddTitle( shortMsg);
-      S.SetStyle( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 | 
+      S.SetStyle( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 |
          wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL );
       S.AddTextWindow(message);
    }
@@ -418,9 +418,9 @@ void ShowHelpDialog(wxWindow *parent,
       Text.Replace( wxT("*URL*"), remoteURL );
       ShowHtmlText( parent, _("Help on the Internet"), Text );
    }
-   else if( HelpMode == wxT("Local") ) 
+   else if( HelpMode == wxT("Local") )
    {
-      // Local file, External browser 
+      // Local file, External browser
       OpenInDefaultBrowser( wxString(wxT("file:"))+localFileName );
    }
    else

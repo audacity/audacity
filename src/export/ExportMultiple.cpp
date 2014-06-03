@@ -158,7 +158,7 @@ void ExportMultiple::CountTracksAndLabels()
          // Only support one label track???
          case Track::Label:
          {
-            // Supports only one LabelTrack. 
+            // Supports only one LabelTrack.
             if (mLabels == NULL) {
                mLabels = (LabelTrack*)pTrack;
                mNumLabels = mLabels->GetNumLabels();
@@ -172,7 +172,7 @@ void ExportMultiple::CountTracksAndLabels()
 int ExportMultiple::ShowModal()
 {
    // Cannot export if all audio tracks are muted.
-   if (mNumWaveTracks == 0) 
+   if (mNumWaveTracks == 0)
    {
       ::wxMessageBox(_("All audio is muted."),
                      _("Cannot Export Multiple"),
@@ -180,7 +180,7 @@ int ExportMultiple::ShowModal()
       return wxID_CANCEL;
    }
 
-   if ((mNumWaveTracks == 1) && (mNumLabels < 1)) 
+   if ((mNumWaveTracks == 1) && (mNumLabels < 1))
    {
       ::wxMessageBox(_(
 "You have only one unmuted Audio Track and no applicable \
@@ -241,7 +241,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
    S.StartMultiColumn(4, true);
    {
       wxArrayString formats;
-      
+
       for (size_t i = 0; i < mPlugins.GetCount(); i++) {
          for (int j = 0; j < mPlugins[i]->GetFormatCount(); j++)
          {
@@ -274,7 +274,7 @@ void ExportMultiple::PopulateOrExchange(ShuttleGui& S)
       S.StartStatic(_("Split files based on:"), true);
       {
          // Row 1
-         S.SetBorder(1);            
+         S.SetBorder(1);
          mLabel = S.Id(LabelID).AddRadioButton(wxString(_("Labels")));
          mLabel->SetName(_("Labels"));
          S.SetBorder(3);
@@ -366,9 +366,9 @@ void ExportMultiple::EnableControls()
    }
 
    mFirst->Enable(mLabel->GetValue());
-   
+
    enable =  mLabel->GetValue() &&
-            (mByName->GetValue() || mByNumberAndName->GetValue()) && 
+            (mByName->GetValue() || mByNumberAndName->GetValue()) &&
              mFirst->GetValue();
    mFirstFileLabel->Enable(enable);
    mFirstFileName->Enable(enable);
@@ -537,7 +537,7 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
       msg.Printf(
          ok == eProgressSuccess ? _("Successfully exported the following %ld file(s).")
            : (ok == eProgressFailed ? _("Something went wrong after exporting the following %ld file(s).")
-             : (ok == eProgressCancelled ? _("Export canceled after exporting the following %ld file(s).") 
+             : (ok == eProgressCancelled ? _("Export canceled after exporting the following %ld file(s).")
                : (ok == eProgressStopped ? _("Export stopped after exporting the following %ld file(s).")
                  : _("Something went really wrong after exporting the following %ld file(s).")
                  )
@@ -550,10 +550,10 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
          FileList += '\n';
       }
       // This results dialog is a child of this dialog.
-      ShowInfoDialog( this, 
+      ShowInfoDialog( this,
          _("Export Multiple"),
          msg,
-         FileList, 
+         FileList,
          450,400);
    }
 
@@ -576,7 +576,7 @@ bool ExportMultiple::DirOk()
 
    prompt.Printf(_("\"%s\" doesn't exist.\n\nWould you like to create it?"),
                  fn.GetFullPath().c_str());
-            
+
    int action = wxMessageBox(prompt,
                              wxT("Warning"),
                              wxYES_NO | wxICON_EXCLAMATION);
@@ -587,7 +587,7 @@ bool ExportMultiple::DirOk()
    return fn.Mkdir(0777, wxPATH_MKDIR_FULL);
 }
 
-int ExportMultiple::ExportMultipleByLabel(bool byName, 
+int ExportMultiple::ExportMultipleByLabel(bool byName,
    wxString prefix, bool addNumber)
 {
    wxASSERT(mProject);
@@ -606,7 +606,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
 
    // Figure out how many channels we should export.
    int channels = mTracks->GetNumExportChannels(false);
-   
+
    wxArrayString otherNames;  // keep track of file names we will use, so we
                               // don't duplicate them
    ExportKit setting;   // the current batch of settings
@@ -621,10 +621,10 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
    /* Examine all labels a first time, sort out all data but don't do any
     * exporting yet (so this run is quick but interactive) */
    while (l < mNumLabels) {
-   
+
       // Get file name and starting time
       if (l < 0) {
-         // create wxFileName for output file 
+         // create wxFileName for output file
          name = (mFirstFileName->GetValue());
          setting.t0 = 0.0;
       }
@@ -704,7 +704,7 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
    return ok;
 }
 
-int ExportMultiple::ExportMultipleByTrack(bool byName, 
+int ExportMultiple::ExportMultipleByTrack(bool byName,
    wxString prefix, bool addNumber)
 {
    wxASSERT(mProject);
@@ -863,8 +863,8 @@ int ExportMultiple::ExportMultipleByTrack(bool byName,
       // increment export counter
       count++;
 
-   }   
-   
+   }
+
    // Restore the selection states
    for (size_t i = 0; i < mSelected.GetCount(); i++) {
       ((Track *) selected[i])->SetSelected(true);

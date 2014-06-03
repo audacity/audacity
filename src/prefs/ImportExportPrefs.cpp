@@ -39,7 +39,7 @@ void ImportExportPrefs::Populate()
 {
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -61,7 +61,7 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndRadioButtonGroup();
 
-      S.TieCheckBox(_("&Normalize all tracks in project"), 
+      S.TieCheckBox(_("&Normalize all tracks in project"),
                     wxT("/AudioFiles/NormalizeOnLoad"),
                     false);
    }
@@ -81,8 +81,8 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("S&how Metadata Editor prior to export step"),
                     wxT("/AudioFiles/ShowId3Dialog"),
                     true);
-      // This documentation is unlikely to help somebody who cannot figure it out by discovering the Options button in the dialog. 
-      // It's only clutter in this Prefs tab, so removed. 
+      // This documentation is unlikely to help somebody who cannot figure it out by discovering the Options button in the dialog.
+      // It's only clutter in this Prefs tab, so removed.
       //    S.AddFixedText(_("Note: Export quality options can be chosen by clicking the Options\nbutton in the Export dialog."));
    }
    S.EndStatic();
@@ -103,9 +103,9 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 }
 
 bool ImportExportPrefs::Apply()
-{  
+{
    ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);    
-   
+   PopulateOrExchange(S);
+
    return true;
 }

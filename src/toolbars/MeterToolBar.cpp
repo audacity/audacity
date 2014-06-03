@@ -6,7 +6,7 @@
 
   Dominic Mazzoni
   Leland Lucius
- 
+
   See MeterToolBar.h for details
 
 *******************************************************************//*!

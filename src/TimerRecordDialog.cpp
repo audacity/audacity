@@ -5,7 +5,7 @@
   TimerRecordDialog.cpp
 
   Copyright 2006-2009 by Vaughan Johnson
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -37,10 +37,10 @@
 #define TIMER_ID 7000
 
 enum { // control IDs
-   ID_DATEPICKER_START = 10000, 
-   ID_TIMETEXT_START, 
-   ID_DATEPICKER_END, 
-   ID_TIMETEXT_END, 
+   ID_DATEPICKER_START = 10000,
+   ID_TIMETEXT_START,
+   ID_DATEPICKER_END,
+   ID_TIMETEXT_END,
    ID_TIMETEXT_DURATION
 };
 
@@ -54,10 +54,10 @@ static double wxDateTime_to_AudacityTime(wxDateTime& dateTime)
 BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
    EVT_DATE_CHANGED(ID_DATEPICKER_START, TimerRecordDialog::OnDatePicker_Start)
    EVT_TEXT(ID_TIMETEXT_START, TimerRecordDialog::OnTimeText_Start)
-   
+
    EVT_DATE_CHANGED(ID_DATEPICKER_END, TimerRecordDialog::OnDatePicker_End)
    EVT_TEXT(ID_TIMETEXT_END, TimerRecordDialog::OnTimeText_End)
-   
+
    EVT_TEXT(ID_TIMETEXT_DURATION, TimerRecordDialog::OnTimeText_Duration)
 
    EVT_BUTTON(wxID_OK, TimerRecordDialog::OnOK)
@@ -66,13 +66,13 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialog)
 END_EVENT_TABLE()
 
 TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
-: wxDialog(parent, -1, _("Audacity Timer Record"), wxDefaultPosition, 
+: wxDialog(parent, -1, _("Audacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
 {
    m_DateTime_Start = wxDateTime::UNow();
    long seconds; // default duration is 1 hour = 3600 seconds
    gPrefs->Read(wxT("/TimerRecord/LastDuration"), &seconds, 3600);
-   m_TimeSpan_Duration = wxTimeSpan::Seconds(seconds); 
+   m_TimeSpan_Duration = wxTimeSpan::Seconds(seconds);
    m_DateTime_End = m_DateTime_Start + m_TimeSpan_Duration;
 
    m_pDatePickerCtrl_Start = NULL;
@@ -80,7 +80,7 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
 
    m_pDatePickerCtrl_End = NULL;
    m_pTimeTextCtrl_End = NULL;
-   
+
    m_pTimeTextCtrl_Duration = NULL;
 
    ShuttleGui S(this, eIsCreating);
@@ -91,7 +91,7 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
    m_pTimeTextCtrl_Duration->SetFieldFocus(3);
 
    m_timer.SetOwner(this, TIMER_ID);
-   m_timer.Start(kTimerInterval); 
+   m_timer.Start(kTimerInterval);
 }
 
 TimerRecordDialog::~TimerRecordDialog()
@@ -120,20 +120,20 @@ void TimerRecordDialog::OnDatePicker_Start(wxDateEvent& WXUNUSED(event))
    m_DateTime_Start.SetMinute(min);
    m_DateTime_Start.SetSecond(sec);
 
-   // User might have had the dialog up for a while, or 
+   // User might have had the dialog up for a while, or
    // had a future day, set hour of day less than now's, then changed day to today.
    wxTimerEvent dummyTimerEvent;
    this->OnTimer(dummyTimerEvent);
 
    // Always update End for changed Start, keeping Duration constant.
-   // Note that OnTimer sometimes calls UpdateEnd, so sometimes this is redundant, 
+   // Note that OnTimer sometimes calls UpdateEnd, so sometimes this is redundant,
    // but OnTimer doesn't need to always call UpdateEnd, but we must here.
-   this->UpdateEnd(); 
+   this->UpdateEnd();
 }
 
 void TimerRecordDialog::OnTimeText_Start(wxCommandEvent& WXUNUSED(event))
 {
-   //v TimeTextCtrl doesn't implement upper ranges, i.e., if I tell it "024 h 060 m 060 s", then 
+   //v TimeTextCtrl doesn't implement upper ranges, i.e., if I tell it "024 h 060 m 060 s", then
    // user increments the hours past 23, it rolls over to 0 (although if you increment below 0, it stays at 0).
    // So instead, set the max to 99 and just catch hours > 24 and fix the ctrls.
    double dTime = m_pTimeTextCtrl_Start->GetTimeValue();
@@ -148,7 +148,7 @@ void TimerRecordDialog::OnTimeText_Start(wxCommandEvent& WXUNUSED(event))
    wxDateEvent dummyDateEvent;
    this->OnDatePicker_Start(dummyDateEvent);
 }
- 
+
 void TimerRecordDialog::OnDatePicker_End(wxDateEvent& WXUNUSED(event))
 {
    m_DateTime_End = m_pDatePickerCtrl_End->GetValue();
@@ -160,7 +160,7 @@ void TimerRecordDialog::OnDatePicker_End(wxDateEvent& WXUNUSED(event))
    m_DateTime_End.SetMinute(min);
    m_DateTime_End.SetSecond(sec);
 
-   // DatePickerCtrls use SetRange to make sure End is never less than Start, but 
+   // DatePickerCtrls use SetRange to make sure End is never less than Start, but
    // need to implement it for the TimeTextCtrls.
    if (m_DateTime_End < m_DateTime_Start) {
       m_DateTime_End = m_DateTime_Start;
@@ -173,7 +173,7 @@ void TimerRecordDialog::OnDatePicker_End(wxDateEvent& WXUNUSED(event))
 
 void TimerRecordDialog::OnTimeText_End(wxCommandEvent& WXUNUSED(event))
 {
-   //v TimeTextCtrl doesn't implement upper ranges, i.e., if I tell it "024 h 060 m 060 s", then 
+   //v TimeTextCtrl doesn't implement upper ranges, i.e., if I tell it "024 h 060 m 060 s", then
    // user increments the hours past 23, it rolls over to 0 (although if you increment below 0, it stays at 0).
    // So instead, set the max to 99 and just catch hours > 24 and fix the ctrls.
    double dTime = m_pTimeTextCtrl_End->GetTimeValue();
@@ -205,7 +205,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    this->TransferDataFromWindow();
    if (!m_TimeSpan_Duration.IsPositive())
    {
-      wxMessageBox(_("Duration is zero. Nothing will be recorded."), 
+      wxMessageBox(_("Duration is zero. Nothing will be recorded."),
                      _("Error in Duration"), wxICON_EXCLAMATION | wxOK);
       return;
    }
@@ -223,15 +223,15 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 bool TimerRecordDialog::RunWaitDialog()
 {
    int updateResult = eProgressSuccess;
-   if (m_DateTime_Start > wxDateTime::UNow()) 
-      updateResult = this->WaitForStart(); 
+   if (m_DateTime_Start > wxDateTime::UNow())
+      updateResult = this->WaitForStart();
 
-   if (updateResult != eProgressSuccess) 
+   if (updateResult != eProgressSuccess)
    {
-      // Don't proceed, but don't treat it as canceled recording. User just canceled waiting. 
+      // Don't proceed, but don't treat it as canceled recording. User just canceled waiting.
       return true;
    }
-   else 
+   else
    {
       // Record for specified time.
       AudacityProject* pProject = GetActiveProject();
@@ -242,21 +242,21 @@ bool TimerRecordDialog::RunWaitDialog()
          _("Recording start") + (wxString)wxT(":\t\t")
          + GetDisplayDate(m_DateTime_Start) + wxT("\n") + _("Recording end")
          + wxT(":\t\t") + GetDisplayDate(m_DateTime_End) + wxT("\n")
-         + _("Duration") + wxT(":\t\t") + m_TimeSpan_Duration.Format(); 
+         + _("Duration") + wxT(":\t\t") + m_TimeSpan_Duration.Format();
 
-      TimerProgressDialog 
-         progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(), 
-                  _("Audacity Timer Record Progress"), 
-                  strMsg, 
-                  pdlgHideCancelButton); 
+      TimerProgressDialog
+         progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
+                  _("Audacity Timer Record Progress"),
+                  strMsg,
+                  pdlgHideCancelButton);
 
-      // Make sure that start and end time are updated, so we always get the full 
+      // Make sure that start and end time are updated, so we always get the full
       // duration, even if there's some delay getting here.
       wxTimerEvent dummyTimerEvent;
       this->OnTimer(dummyTimerEvent);
 
       // Loop for progress display during recording.
-      while (bIsRecording && (updateResult == eProgressSuccess)) 
+      while (bIsRecording && (updateResult == eProgressSuccess))
       {
          wxMilliSleep(kTimerInterval);
          updateResult = progress.Update();
@@ -264,7 +264,7 @@ bool TimerRecordDialog::RunWaitDialog()
       }
       pProject->OnStop();
    }
-   // Let the caller handle cancellation or failure from recording progress. 
+   // Let the caller handle cancellation or failure from recording progress.
    if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
       return false;
    return true;
@@ -292,7 +292,7 @@ wxString TimerRecordDialog::GetDisplayDate( wxDateTime & dt )
    st.wYear = (WXWORD)tm.year;
    st.wMonth = (WXWORD)(tm.mon - wxDateTime::Jan + 1);
    st.wDay = tm.mday;
-   st.wDayOfWeek = st.wMinute = st.wSecond = st.wMilliseconds = 0;                                                                                              
+   st.wDayOfWeek = st.wMinute = st.wSecond = st.wMilliseconds = 0;
 
    len = ::GetDateFormat(LOCALE_USER_DEFAULT,
                          DATE_SHORTDATE,
@@ -316,7 +316,7 @@ wxString TimerRecordDialog::GetDisplayDate( wxDateTime & dt )
 
    // Use default formatting
 wxPrintf(wxT("%s\n"), dt.Format().c_str());
-   return dt.FormatDate() + wxT(" ") + dt.FormatTime();	
+   return dt.FormatDate() + wxT(" ") + dt.FormatTime();
 }
 
 void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
@@ -333,10 +333,10 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
       wxString strFormat = _("099 h 060 m 060 s");
       S.StartStatic(_("Start Date and Time"), true);
       {
-         m_pDatePickerCtrl_Start = 
-            new wxDatePickerCtrl(this, // wxWindow *parent, 
-                                 ID_DATEPICKER_START, // wxWindowID id, 
-                                 m_DateTime_Start); // const wxDateTime& dt = wxDefaultDateTime, 
+         m_pDatePickerCtrl_Start =
+            new wxDatePickerCtrl(this, // wxWindow *parent,
+                                 ID_DATEPICKER_START, // wxWindowID id,
+                                 m_DateTime_Start); // const wxDateTime& dt = wxDefaultDateTime,
                                  // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
          m_pDatePickerCtrl_Start->SetName(_("Start Date"));
          m_pDatePickerCtrl_Start->SetRange(wxDateTime::Today(), wxInvalidDateTime); // No backdating.
@@ -353,10 +353,10 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
 
       S.StartStatic(_("End Date and Time"), true);
       {
-         m_pDatePickerCtrl_End = 
-            new wxDatePickerCtrl(this, // wxWindow *parent, 
-                                 ID_DATEPICKER_END, // wxWindowID id, 
-                                 m_DateTime_End); // const wxDateTime& dt = wxDefaultDateTime, 
+         m_pDatePickerCtrl_End =
+            new wxDatePickerCtrl(this, // wxWindow *parent,
+                                 ID_DATEPICKER_END, // wxWindowID id,
+                                 m_DateTime_End); // const wxDateTime& dt = wxDefaultDateTime,
                                  // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDP_DEFAULT | wxDP_SHOWCENTURY, const wxValidator& validator = wxDefaultValidator, const wxString& name = "datectrl")
          m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
          m_pDatePickerCtrl_End->SetName(_("End Date"));
@@ -392,7 +392,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
       S.EndStatic();
    }
    S.EndVerticalLay();
-   
+
    S.AddStandardButtons();
 
    Layout();
@@ -432,7 +432,7 @@ bool TimerRecordDialog::TransferDataFromWindow()
 }
 
 // Update m_TimeSpan_Duration and ctrl based on m_DateTime_Start and m_DateTime_End.
-void TimerRecordDialog::UpdateDuration() 
+void TimerRecordDialog::UpdateDuration()
 {
    m_TimeSpan_Duration = m_DateTime_End - m_DateTime_Start;
    m_pTimeTextCtrl_Duration->SetTimeValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
@@ -454,19 +454,19 @@ int TimerRecordDialog::WaitForStart()
    wxString strMsg;
    /* i18n-hint: A time specification like "Sunday 28th October 2007 15:16:17 GMT"
     * but hopefully translated by wxwidgets will be inserted into this */
-   strMsg.Printf(_("Waiting to start recording at %s.\n"), 
-                  GetDisplayDate(m_DateTime_Start).c_str()); 
+   strMsg.Printf(_("Waiting to start recording at %s.\n"),
+                  GetDisplayDate(m_DateTime_Start).c_str());
    wxDateTime startWait_DateTime = wxDateTime::UNow();
    wxTimeSpan waitDuration = m_DateTime_Start - startWait_DateTime;
-   TimerProgressDialog 
-      progress(waitDuration.GetMilliseconds().GetValue(), 
+   TimerProgressDialog
+      progress(waitDuration.GetMilliseconds().GetValue(),
                _("Audacity Timer Record - Waiting for Start"),
-               strMsg, 
+               strMsg,
                pdlgHideStopButton);
 
    int updateResult = eProgressSuccess;
    bool bIsRecording = false;
-   while (updateResult == eProgressSuccess && !bIsRecording) 
+   while (updateResult == eProgressSuccess && !bIsRecording)
    {
       wxMilliSleep(10);
       updateResult = progress.Update();

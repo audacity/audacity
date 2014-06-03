@@ -129,14 +129,14 @@ bool GetTrackInfoCommand::Apply(CommandExecutionContext context)
    {
       if (t->GetKind() == Track::Wave)
          SendBooleanStatus(t->GetSolo());
-      else 
+      else
          SendBooleanStatus(false);
    }
    else if (mode.IsSameAs(wxT("Mute")))
    {
       if (t->GetKind() == Track::Wave)
          SendBooleanStatus(t->GetMute());
-      else 
+      else
          SendBooleanStatus(false);
    }
    else

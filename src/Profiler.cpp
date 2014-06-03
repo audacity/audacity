@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   Profiler.cpp
-  
+
   Created by Michael Chinen (mchinen) on 8/12/08
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2.  See License.txt.
@@ -11,7 +11,7 @@
 ******************************************************************//**
 
 \class Profiler
-\brief A simple profiler to measure the average time lengths that a 
+\brief A simple profiler to measure the average time lengths that a
 particular task/function takes.  Currently not thread-safe and not thread-smart,
 but it will probably work fine if you use it on a high level.
 
@@ -30,7 +30,7 @@ Profiler::~Profiler()
       //print everything out.  append to a log.
       FILE* log = fopen("AudacityProfilerLog.txt", "a");
       time_t now;
-      
+
       time(&now);
       fprintf(log,"Audacity Profiler Run, Ended at ");
       fprintf(log,"%s",ctime(&now));
@@ -44,15 +44,15 @@ Profiler::~Profiler()
             fprintf(log,"Number of times run: %d\n",mTasks[i]->mNumHits);
             fprintf(log,"Total run time (seconds): %f\n", (double)mTasks[i]->mCumTime/CLOCKS_PER_SEC);
             fprintf(log,"Average run time (seconds): %f\n",mTasks[i]->ComputeAverageRunTime());
-            
+
             if(i < ((int)mTasks.size()) -1)
                fprintf(log,"----------------------------\n");
          }
       }
       fprintf(log,"\n****************************************\n\n\n");
-      
+
       fclose(log);
-      
+
       //delete everything.
       for(int i=0;i<(int)mTasks.size();i++)
          delete mTasks[i];
@@ -66,7 +66,7 @@ void Profiler::Begin(char* fileName, int lineNum, char* taskDescription)
    GetOrCreateTaskProfile(fileName,lineNum)->Begin(fileName,lineNum,taskDescription);
    mTasksMutex.Unlock();
 }
-  
+
 ///end the task timer.
 void Profiler::End(char* fileName, int lineNum, char* taskDescription)
 {
@@ -77,16 +77,16 @@ void Profiler::End(char* fileName, int lineNum, char* taskDescription)
       tp->End(fileName,lineNum,taskDescription);
    mTasksMutex.Unlock();
 }
-  
+
 ///Gets the singleton instance
 Profiler* Profiler::Instance()
 {
    static Profiler* pro=NULL;
    //this isn't 100% threadsafe but I think Okay for this purpose.
-   
+
    if(!pro)
       pro = new Profiler();
-   
+
    return pro;
 
 }
@@ -99,7 +99,7 @@ TaskProfile* Profiler::GetOrCreateTaskProfile(char* fileName, int lineNum)
       if(strcmp(fileName,mTasks[i]->mFileName)==0 && lineNum == mTasks[i]->mLine)
          return mTasks[i];
    }
-   
+
    TaskProfile* tp = new TaskProfile();
    mTasks.push_back(tp);
    return tp;
@@ -112,7 +112,7 @@ TaskProfile* Profiler::GetTaskProfileByDescription(char* description)
       if(strcmp(description,mTasks[i]->mDescription)==0)
          return mTasks[i];
    }
-   
+
    return NULL;
 
 }
@@ -148,7 +148,7 @@ void TaskProfile::Begin(char* fileName, int lineNum, char* taskDescription)
    }
 
    mLastTime = clock();
-   
+
 }
 
 ///end the task timer.
@@ -157,7 +157,7 @@ void TaskProfile::End(char* WXUNUSED(fileName), int WXUNUSED(lineNum), char* WXU
    mCumTime += clock() - mLastTime;
    mNumHits++;
 }
-      
+
 double TaskProfile::ComputeAverageRunTime()
 {
    if(mNumHits)
@@ -165,4 +165,3 @@ double TaskProfile::ComputeAverageRunTime()
    else
       return 0.0;
 }
-    

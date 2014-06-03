@@ -34,7 +34,7 @@ public:
    virtual wxString GetEffectName() {return _("Reverb...");}
    virtual wxString GetEffectAction() {return _("Applying Reverb");}
    virtual wxString GetEffectIdentifier() {return wxT("Reverb");}
-   virtual wxString GetEffectDescription(); // Useful only after PromptUser values have been set. 
+   virtual wxString GetEffectDescription(); // Useful only after PromptUser values have been set.
    virtual bool TransferParameters(Shuttle & shuttle);
 
  protected:
@@ -97,53 +97,53 @@ private:
 
    // event handlers and member vars
    void OnRoomSizeWidget(wxCommandEvent & event);
-   void OnRoomSizeText(wxCommandEvent & event); 
+   void OnRoomSizeText(wxCommandEvent & event);
    wxSlider * mRoomSizeWidget;
    wxSpinCtrl * mRoomSizeText;
 
    void OnDelayWidget(wxCommandEvent & event);
-   void OnDelayText(wxCommandEvent & event); 
+   void OnDelayText(wxCommandEvent & event);
    wxSlider * mDelayWidget;
    wxSpinCtrl * mDelayText;
 
    void OnReverberanceWidget(wxCommandEvent & event);
-   void OnReverberanceText(wxCommandEvent & event); 
+   void OnReverberanceText(wxCommandEvent & event);
    wxSlider *  mReverberanceWidget;
    wxSpinCtrl * mReverberanceText;
 
    void OnHfDampingWidget(wxCommandEvent & event);
-   void OnHfDampingText(wxCommandEvent & event); 
+   void OnHfDampingText(wxCommandEvent & event);
    wxSlider * mHfDampingWidget;
    wxSpinCtrl * mHfDampingText;
 
    void OnToneLowWidget(wxCommandEvent & event);
-   void OnToneLowText(wxCommandEvent & event); 
+   void OnToneLowText(wxCommandEvent & event);
    wxSlider * mToneLowWidget;
    wxSpinCtrl * mToneLowText;
 
    void OnToneHighWidget(wxCommandEvent & event);
-   void OnToneHighText(wxCommandEvent & event); 
+   void OnToneHighText(wxCommandEvent & event);
    wxSlider * mToneHighWidget;
    wxSpinCtrl * mToneHighText;
 
    void OnWetGainWidget(wxCommandEvent & event);
-   void OnWetGainText(wxCommandEvent & event); 
+   void OnWetGainText(wxCommandEvent & event);
    wxSlider * mWetGainWidget;
    wxSpinCtrl * mWetGainText;
 
    void OnDryGainWidget(wxCommandEvent & event);
-   void OnDryGainText(wxCommandEvent & event); 
+   void OnDryGainText(wxCommandEvent & event);
    wxSlider * mDryGainWidget;
    wxSpinCtrl * mDryGainText;
 
    void OnStereoWidthWidget(wxCommandEvent & event);
-   void OnStereoWidthText(wxCommandEvent & event); 
+   void OnStereoWidthText(wxCommandEvent & event);
    wxSlider * mStereoWidthWidget;
    wxSpinCtrl * mStereoWidthText;
 
    wxCheckBox * mWetOnlyWidget;
 
-   
+
    EffectReverb & mEffect;
    EffectReverb::Params & mParams;
 

@@ -41,7 +41,7 @@ void WarningsPrefs::Populate()
 {
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -57,7 +57,7 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Saving &projects"),
                     wxT("/Warnings/FirstProjectSave"),
                     true);
-      S.TieCheckBox(_("Saving &empty project"),    
+      S.TieCheckBox(_("Saving &empty project"),
                     wxT("/GUI/EmptyCanBeDirty"),
                     true);
       S.TieCheckBox(_("&Low disk space at program start up"),

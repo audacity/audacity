@@ -200,7 +200,7 @@ ImportFileHandle *QTImportPlugin::Open(wxString Filename)
    }
 
    // instantiate the movie
-   err = NewMovieFromDataRef(&theMovie, 
+   err = NewMovieFromDataRef(&theMovie,
                              newMovieActive | newMovieDontAskUnresolvedDataRefs,
                              &resID,
                              dataRef,
@@ -399,7 +399,7 @@ done:
    if (maer) {
       MovieAudioExtractionEnd(maer);
    }
-   
+
    return (res ? eProgressSuccess : eProgressFailed);
 }
 
@@ -434,7 +434,7 @@ names[] =
 void QTImportFileHandle::AddMetadata(Tags *tags)
 {
    QTMetaDataRef metaDataRef = NULL;
-   OSErr err; 
+   OSErr err;
 
    err = QTCopyMovieMetaData(mMovie, &metaDataRef);
    if (err != noErr) {
@@ -466,7 +466,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
       ByteCount outPropValueSizeUsed = 0;
       UInt32 outPropFlags;
       UInt32 dataType;
-      
+
       // Get data type
       err =  QTMetaDataGetItemProperty(metaDataRef,
                                        item,
@@ -493,7 +493,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
 
       // Alloc memory for it
       outValPtr = malloc(outPropValueSize);
-      
+
       // Retrieve the data
       err =  QTMetaDataGetItemProperty(metaDataRef,
                                        item,
@@ -527,7 +527,7 @@ void QTImportFileHandle::AddMetadata(Tags *tags)
       }
 
       free(outValPtr);
-   }      
+   }
 
    // we are done so release our metadata object
    QTMetaDataRelease(metaDataRef);

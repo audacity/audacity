@@ -35,16 +35,16 @@ class ImageRoll
    ImageRoll(RollType type, const wxImage &src, wxColour magicColor);
 
    bool Ok() const;
-   
+
    wxSize GetMinSize() const { return mMinSize; }
    wxSize GetMaxSize() const { return mMaxSize; }
-   
+
    void Draw(wxDC &dc, wxRect rect,
              int logicalFunc = wxCOPY);
 
    static ImageArray SplitH(const wxImage &src, wxColour magicColor);
    static ImageArray SplitV(const wxImage &src, wxColour magicColor);
-   
+
  protected:
 
    void DrawBitmap(wxDC &dc, wxBitmap &bitmap,
@@ -64,24 +64,24 @@ class ImageRollPanel : public wxPanel
 {
  public:
    DECLARE_DYNAMIC_CLASS(ImageRollPanel);
-   
+
    ImageRollPanel(wxWindow *parent,
                   wxWindowID id,
                   ImageRoll &imgRoll,
                   const wxPoint& pos = wxDefaultPosition,
                   const wxSize& size = wxDefaultSize,
                   long style = wxTAB_TRAVERSAL);
-   
+
    void SetLogicalFunction(int func);
 
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
-   
+
  protected:
    ImageRoll mImageRoll;
 
    int mLogicalFunction;
-   
+
    DECLARE_EVENT_TABLE();
 
 };

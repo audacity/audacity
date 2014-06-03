@@ -23,7 +23,7 @@ class EffectFadeIn: public EffectSimpleMono {
    virtual wxString GetEffectName() {
       return wxString(_("Fade In"));
    }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;
       result.insert(wxT("http://lv2plug.in/ns/lv2core#UtilityPlugin"));
@@ -43,7 +43,7 @@ class EffectFadeIn: public EffectSimpleMono {
    sampleCount mLen;
 
    virtual bool NewTrackSimpleMono();
-   
+
    virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
 };
 
@@ -53,7 +53,7 @@ class EffectFadeOut:public EffectSimpleMono {
    virtual wxString GetEffectName() {
       return wxString(_("Fade Out"));
    }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;
       result.insert(wxT("http://lv2plug.in/ns/lv2core#UtilityPlugin"));

@@ -3,9 +3,9 @@
   Audacity: A Digital Audio Editor
 
   MixerToolbar.h
- 
+
   Dominic Mazzoni
- 
+
 **********************************************************************/
 
 #ifndef __AUDACITY_MIXER_TOOLBAR__

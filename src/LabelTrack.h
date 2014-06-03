@@ -37,7 +37,7 @@ class DirManager;
 class TimeWarper;
 
 
-class LabelStruct 
+class LabelStruct
 {
 public:
    LabelStruct();
@@ -50,7 +50,7 @@ public:
    double getDuration(){return t1-t;};
    void AdjustEdge( int iEdge, double fNewTime);
    void MoveLabel( int iEdge, double fNewTime);
-   
+
    /// Relationships between selection region and labels
    enum TimeRelations
    {
@@ -68,13 +68,13 @@ public:
    /// it possible to delete capture all labels with a Select All).
    TimeRelations RegionRelation(double reg_t0, double reg_t1,
                                 LabelTrack *parent = NULL);
-   
+
 public:
    double t;  /// Time for left hand of label.
    double t1; /// Time for right hand of label.
    wxString title; /// Text of the label.
    int width; /// width of the text in pixels.
-   
+
 // Working storage for on-screen layout.
    int x;     /// Pixel position of left hand glyph
    int x1;    /// Pixel position of right hand glyph
@@ -82,7 +82,7 @@ public:
    int y;     /// Pixel position of label.
 
    bool highlighted;              /// if the text is highlighted
-   bool changeInitialMouseXPos;   /// flag to change initial mouse X pos 
+   bool changeInitialMouseXPos;   /// flag to change initial mouse X pos
    bool updated;                  /// flag to tell if the label times were updated
 };
 
@@ -95,7 +95,7 @@ const int NUM_GLYPH_HIGHLIGHTS = 4;
 const int MAX_NUM_ROWS =80;
 
 
-class AUDACITY_DLL_API LabelTrack : public Track 
+class AUDACITY_DLL_API LabelTrack : public Track
 {
    friend class LabelStruct;
 
@@ -118,7 +118,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
 
    int getSelectedIndex() const { return mSelIndex; }
 
-   virtual int GetKind() const { return Label; } 
+   virtual int GetKind() const { return Label; }
 
    virtual double GetStartTime();
    virtual double GetEndTime();
@@ -136,8 +136,8 @@ class AUDACITY_DLL_API LabelTrack : public Track
 
    virtual bool Cut  (double t0, double t1, Track ** dest);
    // JKC Do not add the const modifier to Copy(), Clear()
-   // or Paste() because then it 
-   // is no longer recognised as a virtual function matching the 
+   // or Paste() because then it
+   // is no longer recognised as a virtual function matching the
    // one in Track.
    virtual bool Copy (double t0, double t1, Track ** dest);// const;
    virtual bool Clear(double t0, double t1);
@@ -156,14 +156,14 @@ class AUDACITY_DLL_API LabelTrack : public Track
    bool CopySelectedText();
    bool PasteSelectedText(double sel0, double sel1);
    static bool IsTextClipSupported();
-   
+
    // methods to set flags
    void SetDragXPos(const int d) { mDragXPos = d; };
    void SetInBox(bool inTextBox) { mInBox = inTextBox; };
    void SetResetCursorPos(bool resetFlag) { mResetCursorPos = resetFlag; };
    void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; };
    void SetDrawCursor(bool drawCursorFlag) { mDrawCursor = drawCursorFlag; };
-   
+
    bool HandleMouse(const wxMouseEvent & evt, wxRect & r, double h, double pps,
                            double *newSel0, double *newSel1);
 
@@ -192,7 +192,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
    //get current cursor position
    bool CalcCursorX(wxWindow * parent, int * x);
    int getCurrentCursorPosition() const { return mCurrentCursorPos; };
-   
+
    void MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);
 
@@ -205,7 +205,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
    void ScaleLabels(double b, double e, double change);
    double AdjustTimeStampOnScale(double t, double b, double e, double change);
    void WarpLabels(const TimeWarper &warper);
-   
+
    // Returns tab-separated text of all labels completely within given region
    wxString GetTextOfLabels(double t0, double t1);
 
@@ -215,7 +215,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
    bool mbHitCenter;
    //The edge variable tells us what state the icon is in.
    //mOldEdge is useful for telling us when there has been a state change.
-   int mOldEdge;               
+   int mOldEdge;
  private:
 
    int mSelIndex;              /// Keeps track of the currently selected label
@@ -234,16 +234,16 @@ class AUDACITY_DLL_API LabelTrack : public Track
 
    static int mFontHeight;
    int mXPos1;                         /// left X pos of highlighted area
-   int mXPos2;                         /// right X pos of highlighted area 
+   int mXPos2;                         /// right X pos of highlighted area
    int mCurrentCursorPos;              /// current cursor position
    int mInitialCursorPos;              /// initial cursor position
    double mMouseXPos;                  /// mouse X pos
    int mDragXPos;                      /// end X pos of dragging
    bool mInBox;                        /// flag to tell if the mouse is in text box
-   bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh) 
+   bool mResetCursorPos;               /// flag to reset cursor position(used in the dragging the glygh)
    bool mRightDragging;                /// flag to tell if it's a valid dragging
    bool mDrawCursor;                   /// flag to tell if drawing the cursor or not
-   
+
    // Set in copied label tracks
    double mClipLen;
 

@@ -91,12 +91,12 @@ void AColor::Arrow(wxDC & dc, wxCoord x, wxCoord y, int width, bool down)
       pt[1].x =  half; pt[1].y = 0;
       pt[2].x = width; pt[2].y = half;
    }
-   
+
    dc.DrawPolygon(3, pt, x, y);
 }
 
 //
-// Draw a line while accounting for differences in wxWidgets versions 
+// Draw a line while accounting for differences in wxWidgets versions
 //
 void AColor::Line(wxDC & dc, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2)
 {
@@ -407,20 +407,20 @@ void AColor::Init()
 
    // These colors were modified to avoid using reserved colors red and green
    // for the buttons.
-   theTheme.SetBrushColour( muteBrush[0],      clrMuteButtonActive);      
-   theTheme.SetBrushColour( muteBrush[1],      clrMuteButtonVetoed);     
-   theTheme.SetBrushColour( soloBrush,         clrMuteButtonActive);     
-                                                                         
+   theTheme.SetBrushColour( muteBrush[0],      clrMuteButtonActive);
+   theTheme.SetBrushColour( muteBrush[1],      clrMuteButtonVetoed);
+   theTheme.SetBrushColour( soloBrush,         clrMuteButtonActive);
+
    theTheme.SetPenColour(   cursorPen,         clrCursorPen);
    theTheme.SetPenColour(   indicatorPen[0],   clrRecordingPen);
    theTheme.SetPenColour(   indicatorPen[1],   clrPlaybackPen);
-   theTheme.SetBrushColour( indicatorBrush[0], clrRecordingBrush);        
-   theTheme.SetBrushColour( indicatorBrush[1], clrPlaybackBrush);         
-                                                                         
-   theTheme.SetBrushColour( playRegionBrush[0],clrRulerRecordingBrush);   
-   theTheme.SetPenColour(   playRegionPen[0],  clrRulerRecordingPen);     
-   theTheme.SetBrushColour( playRegionBrush[1],clrRulerPlaybackBrush);     
-   theTheme.SetPenColour(   playRegionPen[1],  clrRulerPlaybackPen);      
+   theTheme.SetBrushColour( indicatorBrush[0], clrRecordingBrush);
+   theTheme.SetBrushColour( indicatorBrush[1], clrPlaybackBrush);
+
+   theTheme.SetBrushColour( playRegionBrush[0],clrRulerRecordingBrush);
+   theTheme.SetPenColour(   playRegionPen[0],  clrRulerRecordingPen);
+   theTheme.SetBrushColour( playRegionBrush[1],clrRulerPlaybackBrush);
+   theTheme.SetPenColour(   playRegionPen[1],  clrRulerPlaybackPen);
 
    //Determine tooltip color
    tooltipBrush.SetColour( wxSystemSettingsNative::GetColour(wxSYS_COLOUR_INFOBK) );
@@ -500,7 +500,7 @@ const int AColor_midicolors[16][3] = {
    {255, 102, 102},             // 1=salmon
    {204, 0, 0},                 // 2=red
    {255, 117, 23},              // 3=orange
-   {255, 255, 0},               // 4=yellow    
+   {255, 255, 0},               // 4=yellow
    {0, 204, 0},                 // 5=green
    {0, 204, 204},               // 6=turquoise
    {0, 0, 204},                 // 7=blue
@@ -595,11 +595,11 @@ void AColor::PreComputeGradient() {
                         {float(0.90), float(0.10), float(0.90)},    // violet
                         {float(1.00), float(0.00), float(0.00)},    // red
                         {float(1.00), float(1.00), float(1.00)}     // white
-                     };                        
-         
+                     };
+
                      int left = int (value * gsteps);
                      int right = (left == gsteps ? gsteps : left + 1);
-         
+
                      float rweight = (value * gsteps) - left;
                      float lweight = 1.0 - rweight;
 
@@ -607,7 +607,7 @@ void AColor::PreComputeGradient() {
                      g = (gradient[left][1] * lweight) + (gradient[right][1] * rweight);
                      b = (gradient[left][2] * lweight) + (gradient[right][2] * rweight);
                   }
-         
+
                   if (selected) {
                      r *= 0.77f;
                      g *= 0.77f;

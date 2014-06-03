@@ -48,7 +48,7 @@ EffectFindClipping::EffectFindClipping()
 wxString EffectFindClipping::GetEffectDescription()
 {
    return wxString::Format(_("Detect clipping"));
-} 
+}
 
 bool EffectFindClipping::PromptUser()
 {
@@ -63,7 +63,7 @@ bool EffectFindClipping::PromptUser()
 }
 
 bool EffectFindClipping::TransferParameters(Shuttle & shuttle)
-{  
+{
    shuttle.TransferInt(wxT("Start"), mStart, 3);
    shuttle.TransferInt(wxT("Stop"), mStop, 3);
 
@@ -86,7 +86,7 @@ bool EffectFindClipping::Process()
          break;
       }
    }
-   
+
    if (!l) {
       l = mFactory->NewLabelTrack();
       l->SetName(_("Clipping"));
@@ -135,7 +135,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * l,
    bool bGoodResult = true;
    sampleCount s = 0;
    sampleCount blockSize = (sampleCount) (mStart * 1000);
-   
+
    if (len < mStart) {
       return true;
    }
@@ -149,7 +149,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * l,
    sampleCount samps = 0;
    sampleCount block = 0;
    double startTime = -1.0;
-   
+
    while (s < len) {
       if (block == 0) {
          if (TrackProgress(count, s / (double) len)) {

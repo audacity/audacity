@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   Profiler.h
-  
+
   Created by Michael Chinen (mchinen) on 8/12/08
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2.  See License.txt.
@@ -11,7 +11,7 @@
 ******************************************************************//**
 
 \class Profiler
-\brief A simple profiler to measure the average time lengths that a 
+\brief A simple profiler to measure the average time lengths that a
 particular task/function takes.  Currently not thread-safe and not thread-smart,
 but it will probably work fine if you use it on a high level.
 
@@ -46,16 +46,16 @@ class Profiler
    void Begin(char* fileName, int lineNum, char* taskDescription);
    ///end the task timer.
    void End(char* fileName, int lineNum, char* taskDescription);
-  
+
    ///Gets the singleton instance
    static Profiler* Instance();
-     
+
   protected:
    ///private constructor - Singleton.
    Profiler(){};
-   
+
    ///find a taskProfile for the given task, otherwise create
-   TaskProfile* GetOrCreateTaskProfile(char* fileName, int lineNum); 
+   TaskProfile* GetOrCreateTaskProfile(char* fileName, int lineNum);
    TaskProfile* GetTaskProfileByDescription(char* description);
 
    //List of current Task to do.
@@ -75,9 +75,9 @@ class Profiler
       void Begin(char* fileName, int lineNum, char* taskDescription);
       ///end the task timer.
       void End(char* fileName, int lineNum, char* taskDescription);
-      
+
       double ComputeAverageRunTime();
-      
+
       char* mFileName;
       int mLine;
       char* mDescription;

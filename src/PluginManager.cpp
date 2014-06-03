@@ -90,15 +90,15 @@ void PluginManager::Close()
    // I guess we can live with that for now.
    // This function will still close the config and
    // delete it, without updating the file.
-   if( IsDirty()) 
+   if( IsDirty())
    {
       wxFile file(FileNames::PluginsCache(), wxFile::write);
-      if (!file.IsOpened()) 
+      if (!file.IsOpened())
       {
          // Might fail to open...
          wxLogDebug(wxT("Couldn't open plugins cache for write"));
       }
-      else 
+      else
       {
          wxFileOutputStream stream(file);
          // Save() might return false.
@@ -127,7 +127,7 @@ wxString PluginManager::Read(const wxString & key, const wxString & def)
    if (mConfig) {
       return mConfig->Read(key, def);
    }
-   
+
    return def;
 }
 
@@ -136,7 +136,7 @@ long PluginManager::Read(const wxString & key, long def)
    if (mConfig) {
       return mConfig->Read(key, def);
    }
-   
+
    return def;
 }
 
@@ -158,7 +158,7 @@ void PluginManager::Write(const wxString & key, long val)
 
       SetDirty();
    }
-   
+
    return;
 }
 

@@ -35,7 +35,7 @@ class RingBuffer {
 
  private:
    int Len();
-   
+
    sampleFormat  mFormat;
    int           mStart;
    int           mEnd;

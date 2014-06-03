@@ -170,7 +170,7 @@ public:
 class Grid
 : public wxGrid
 {
- 
+
  public:
 
    Grid(wxWindow *parent,
@@ -225,7 +225,7 @@ class GridAx
 {
 
  public:
-   
+
    GridAx(Grid *grid);
 
    void SetCurrentCell(int row, int col);

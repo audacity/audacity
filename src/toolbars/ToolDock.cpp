@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ToolBar.cpp
-  
+
   Dominic Mazzoni
   Shane T. Mueller
   Leland Lucius
@@ -80,7 +80,7 @@ ToolDock::ToolDock( ToolManager *manager, wxWindow *parent, int dockid ):
 
    // Use for testing gaps
    // SetOwnBackgroundColour( wxColour( 255, 0, 0 ) );
-} 
+}
 
 //
 // Destructer
@@ -189,7 +189,7 @@ void ToolDock::LayoutToolBars()
 
       // Will this one fit in remaining horizontal space?
       if( ( tw > stack[ stkcnt ].GetWidth() ) ||
-          ( th > stack[ stkcnt ].GetHeight() ) ) 
+          ( th > stack[ stkcnt ].GetHeight() ) )
       {
          // Destack entries until one is found in which this bar
          // will fit or until we run out of stacked entries
@@ -343,7 +343,7 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
 
       // Will this one fit in remaining horizontal space?
       if( ( tw > stack[ stkcnt ].GetWidth() ) ||
-          ( th > stack[ stkcnt ].GetHeight() ) ) 
+          ( th > stack[ stkcnt ].GetHeight() ) )
       {
          // Destack entries until one is found in which this bar
          // will fit or until we run out of stacked entries
@@ -475,7 +475,7 @@ void ToolDock::Updated()
    GetParent()->GetEventHandler()->AddPendingEvent( e );
 }
 
-// 
+//
 // Handle grabber clicking
 //
 void ToolDock::OnGrabber( GrabberEvent & event )

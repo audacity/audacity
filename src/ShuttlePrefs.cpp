@@ -21,7 +21,7 @@
 \verbatim
      Gui -- Data -- Prefs
 \endverbatim
-  
+
 *//*******************************************************************/
 
 #include "Audacity.h"
@@ -40,7 +40,7 @@ bool ShuttlePrefs::TransferBool( const wxString & Name, bool & bValue, const boo
    {
       bValue = bDefault;
       gPrefs->Read( Name, &bValue );
-   }  
+   }
    else
    {
       return (gPrefs->Write( Name, bValue ) && gPrefs->Flush());
@@ -54,7 +54,7 @@ bool ShuttlePrefs::TransferDouble( const wxString & Name, double & dValue, const
    {
       dValue = dDefault;
       gPrefs->Read( Name, &dValue );
-   }  
+   }
    else
    {
       return (gPrefs->Write( Name, dValue ) && gPrefs->Flush());
@@ -68,7 +68,7 @@ bool ShuttlePrefs::TransferInt( const wxString & Name, int & iValue, const int &
    {
       iValue = iDefault;
       gPrefs->Read( Name, &iValue );
-   }  
+   }
    else
    {
       return (gPrefs->Write( Name, iValue ) && gPrefs->Flush());
@@ -82,7 +82,7 @@ bool ShuttlePrefs::TransferString( const wxString & Name, wxString & strValue, c
    {
       strValue = strDefault;
       gPrefs->Read( Name, &strValue );
-   }  
+   }
    else
    {
       return (gPrefs->Write( Name, strValue ) && gPrefs->Flush());

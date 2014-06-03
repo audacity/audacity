@@ -218,7 +218,7 @@ Vector VectorConcatenate(const Vector& left, const Vector& right)
    Vector v(left.Len() + right.Len());
    int i;
    for(i=0; i<left.Len(); i++)
-      v[i] = left[i];  
+      v[i] = left[i];
    for(i=0; i<right.Len(); i++)
       v[i + left.Len()] = right[i];
    return v;

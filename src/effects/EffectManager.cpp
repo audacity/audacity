@@ -67,7 +67,7 @@ void EffectManager::RegisterEffect(Effect *f, int NewFlags)
       }
    if (i==len)
       mEffects.Add(f);
-   
+
 #ifdef EFFECT_CATEGORIES
    // Add the effect in the right categories
    std::set<wxString> catUris = f->GetEffectCategories();
@@ -82,7 +82,7 @@ void EffectManager::RegisterEffect(Effect *f, int NewFlags)
    }
    if (!oneValid)
       mUnsorted->insert(f);
-   
+
 #endif
 }
 
@@ -90,12 +90,12 @@ void EffectManager::UnregisterEffects()
 {
    for(int i=0; i<mNumEffects; i++)
       delete mEffects[i];
-   
+
    mEffects.clear();
 
 #ifdef EFFECT_CATEGORIES
    mUnsorted->clear();
-   
+
    CategoryMap::iterator iter;
    for (iter = mCategories->begin(); iter != mCategories->end(); ++iter)
       iter->second->mEffects.clear();
@@ -112,7 +112,7 @@ Effect *EffectManager::GetEffect(int ID)
    for(int i=0; i<mNumEffects; i++)
       if (mEffects[i]->mID == ID)
          return mEffects[i];
-   
+
    return NULL;
 }
 
@@ -120,7 +120,7 @@ Effect* EffectManager::GetEffectByIdentifier(const wxString strTarget, const int
 {
    if( strTarget == wxT("") ) // set GetEffectIdentifier to wxT("") to not show an effect in Batch mode
       return NULL;
-   for (unsigned int i = 0; i < mEffects.GetCount(); i++) 
+   for (unsigned int i = 0; i < mEffects.GetCount(); i++)
    {
       int nFlags = mEffects[i]->GetEffectFlags();
       if (((nFlags & kFlags) == nFlags) && strTarget.IsSameAs(mEffects[i]->GetEffectIdentifier()))
@@ -146,9 +146,9 @@ EffectArray *EffectManager::GetEffects(int flags /* = ALL_EFFECTS */)
 
 #ifdef EFFECT_CATEGORIES
 
-EffectCategory* EffectManager::AddCategory(const wxString& URI, 
+EffectCategory* EffectManager::AddCategory(const wxString& URI,
                                            const wxString& name) {
-   
+
    CategoryMap::const_iterator iter = mCategories->find(URI);
    if (iter != mCategories->end())
       return iter->second;
@@ -198,7 +198,7 @@ EffectSet EffectManager::GetUnsortedEffects(int flags) const {
       if ((flags & g) == g)
          result.insert(*iter);
    }
-   
+
    return result;
 }
 

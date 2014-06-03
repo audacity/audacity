@@ -29,7 +29,7 @@ class Shuttle {
    // constructors and destructors
    Shuttle();
    virtual ~Shuttle() {}
-      
+
  public:
    bool mbStoreInClient;
    wxString mValueString;
@@ -42,7 +42,7 @@ class Shuttle {
    virtual bool TransferInt( const wxString & Name, wxLongLong_t & iValue, const wxLongLong_t &iDefault );
    virtual bool TransferLongLong( const wxString & Name, wxLongLong_t & iValue, const wxLongLong_t &iDefault );
    virtual bool TransferString( const wxString & Name, wxString & strValue, const wxString &strDefault );
-   virtual bool TransferEnum( const wxString & Name, int & iValue, 
+   virtual bool TransferEnum( const wxString & Name, int & iValue,
       const int nChoices, const wxString * pFirstStr);
    virtual bool TransferWrappedType( const wxString & Name, WrappedType & W );
    // We expect the ExchangeWithMaster function to change from one type of

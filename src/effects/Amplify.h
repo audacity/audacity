@@ -5,7 +5,7 @@
   Amplify.h
 
   Dominic Mazzoni
-  
+
   This rewritten class supports a smart Amplify effect - it calculates
   the maximum amount of gain that can be applied to all tracks without
   causing clipping and selects this as the default parameter.
@@ -50,15 +50,15 @@ class EffectAmplify:public EffectSimpleMono
    virtual wxString GetEffectAction() {
       return wxString(_("Amplifying"));
    }
-   
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription(); 
+
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription();
 
    virtual bool Init();
 
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
-   
+
  protected:
    virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
 

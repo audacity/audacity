@@ -53,7 +53,7 @@ bool EffectBassTreble::Init()
    gPrefs->Read(wxT("/Effects/BassTreble/Treble"), &dB_treble, 0.0);
    gPrefs->Read(wxT("/Effects/BassTreble/Level"), &dB_level, -1.0);
    gPrefs->Read(wxT("/Effects/BassTreble/Normalize"), &readBool, 1 );
-   
+
    // Validate data
    dB_level = (dB_level > 0)? 0 : dB_level;
    mbNormalize = (readBool != 0);
@@ -61,10 +61,10 @@ bool EffectBassTreble::Init()
    return true;
 }
 
-wxString EffectBassTreble::GetEffectDescription() { 
-   // Note: This is useful only after values have been set. 
+wxString EffectBassTreble::GetEffectDescription() {
+   // Note: This is useful only after values have been set.
    wxString strResult =
-      wxString::Format(_("Applied effect: %s bass = %.1f dB, treble = %.1f dB"), 
+      wxString::Format(_("Applied effect: %s bass = %.1f dB, treble = %.1f dB"),
                            this->GetEffectName().c_str(),
                            dB_bass, dB_treble);
    (mbNormalize) ?
@@ -103,7 +103,7 @@ bool EffectBassTreble::PromptUser()
 }
 
 bool EffectBassTreble::TransferParameters(Shuttle & shuttle)
-{  
+{
    shuttle.TransferDouble(wxT("Bass"),dB_bass,0.0);
    shuttle.TransferDouble(wxT("Treble"),dB_treble,0.0);
    shuttle.TransferDouble(wxT("Level"),dB_level,0.0);
@@ -157,7 +157,7 @@ bool EffectBassTreble::NewTrackPass1()
                b0Bass, b1Bass, b2Bass);
 
    // Compute coefficents of the high shelf biquand IIR filter
-   Coefficents(hzTreble, slope, dB_treble, trebleType, 
+   Coefficents(hzTreble, slope, dB_treble, trebleType,
                a0Treble, a1Treble, a2Treble,
                b0Treble, b1Treble, b2Treble);
 
@@ -165,7 +165,7 @@ bool EffectBassTreble::NewTrackPass1()
 }
 
 void EffectBassTreble::Coefficents(double hz, float slope, double gain, int type,
-                                   float& a0, float& a1, float& a2, 
+                                   float& a0, float& a1, float& a2,
                                    float& b0, float& b1, float& b2)
 {
    double w = 2 * M_PI * hz / mCurRate;
@@ -186,7 +186,7 @@ void EffectBassTreble::Coefficents(double hz, float slope, double gain, int type
       b0 = a * ((a + 1) + (a - 1) * cos(w) + b * sin(w));
       b1 = -2 * a * ((a - 1) + (a + 1) * cos(w));
       b2 = a * ((a + 1) + (a - 1) * cos(w) - b * sin(w));
-      a0 = ((a + 1) - (a - 1) * cos(w) + b * sin(w));   
+      a0 = ((a + 1) - (a - 1) * cos(w) + b * sin(w));
       a1 = 2 * ((a - 1) - (a + 1) * cos(w));
       a2 = (a + 1) - (a - 1) * cos(w) - b * sin(w);
    }
@@ -262,7 +262,7 @@ float EffectBassTreble::DoFilter(float in)
 // to allow 1 decimal place resolution
 
 #define BASS_MIN -150      // Corresponds to -15 db
-#define BASS_MAX 150       // Corresponds to +15 dB   
+#define BASS_MAX 150       // Corresponds to +15 dB
 #define TREBLE_MIN -150    // Corresponds to -15 dB
 #define TREBLE_MAX 150     // Corresponds to +15 dB
 #define LEVEL_MIN -300     // Corresponds to -30 dN
@@ -314,7 +314,7 @@ void BassTrebleDialog::PopulateOrExchange(ShuttleGui & S)
          mBassS->SetName(_("Bass"));
          mBassS->SetRange(BASS_MIN, BASS_MAX);
          mBassS->SetPageSize(30);
-         
+
          // Treble control
          mTrebleT = S.Id(ID_TREBLE_TEXT).AddTextBox(_("&Treble (dB):"), wxT(""), 10);
          mTrebleT->SetValidator(vld);
@@ -324,7 +324,7 @@ void BassTrebleDialog::PopulateOrExchange(ShuttleGui & S)
          mTrebleS->SetName(_("Treble"));
          mTrebleS->SetRange(TREBLE_MIN, TREBLE_MAX);
          mTrebleS->SetPageSize(30);
-      
+
          // Level control
          mLevelT = S.Id(ID_LEVEL_TEXT).AddTextBox(_("&Level (dB):"), wxT(""), 10);
          mLevelT->SetValidator(vld);
@@ -394,7 +394,7 @@ void BassTrebleDialog::UpdateUI()
    wxString val2 = mLevelT->GetValue();
    val2.ToDouble(&v2);
 
-   // Disallow level control if disabled   
+   // Disallow level control if disabled
    mLevelT->Enable(enable);
    mLevelS->Enable(enable);
 

@@ -5,7 +5,7 @@
   DeviceToolBar.cpp
 
   Dominic Mazzoni
- 
+
 *******************************************************************//*!
 
 \class DeviceToolBar
@@ -84,7 +84,7 @@ void DeviceToolBar::DeinitChildren()
 {
    mPlayBitmap    = NULL;
    mRecordBitmap  = NULL;
-   
+
    mInput         = NULL;
    mOutput        = NULL;
    mInputChannels = NULL;
@@ -106,7 +106,7 @@ void DeviceToolBar::Populate()
    // Output device
    mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
    Add(new wxStaticBitmap(this,
-                          wxID_ANY, 
+                          wxID_ANY,
                           *mPlayBitmap), 0, wxALIGN_CENTER);
 
    mOutput = new wxChoice(this,
@@ -121,7 +121,7 @@ void DeviceToolBar::Populate()
    mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
 
    Add(new wxStaticBitmap(this,
-                          wxID_ANY, 
+                          wxID_ANY,
                           *mRecordBitmap), 0, wxALIGN_CENTER);
 
    mInput = new wxChoice(this,
@@ -244,7 +244,7 @@ void DeviceToolBar::UpdatePrefs()
    if (sourceName == wxT(""))
       desc = devName;
    else
-      desc = devName + wxString(": ", wxConvLocal) + sourceName; 
+      desc = devName + wxString(": ", wxConvLocal) + sourceName;
 
    if (mInput->GetStringSelection() != desc &&
        mInput->FindString(desc) != wxNOT_FOUND) {
@@ -274,7 +274,7 @@ void DeviceToolBar::UpdatePrefs()
    if (sourceName == wxT(""))
       desc = devName;
    else
-      desc = devName + wxString(": ", wxConvLocal) + sourceName; 
+      desc = devName + wxString(": ", wxConvLocal) + sourceName;
 
    if (mOutput->GetStringSelection() != desc &&
        mOutput->FindString(desc) != wxNOT_FOUND) {
@@ -315,7 +315,7 @@ void DeviceToolBar::UpdatePrefs()
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
-   
+
    Layout();
    Refresh();
 }
@@ -326,10 +326,10 @@ void DeviceToolBar::EnableDisableButtons()
    if (gAudioIO) {
       // we allow changes when monitoring, but not when recording
       bool audioStreamActive = gAudioIO->IsStreamActive() && !gAudioIO->IsMonitoring();
-      
+
       // Here we should relinquish focus
       if (audioStreamActive) {
-         wxWindow *focus = wxWindow::FindFocus(); 
+         wxWindow *focus = wxWindow::FindFocus();
          if (focus == mHost || focus == mInput || focus == mOutput || focus == mInputChannels) {
             AudacityProject *activeProject = GetActiveProject();
             if (activeProject) {
@@ -337,7 +337,7 @@ void DeviceToolBar::EnableDisableButtons()
             }
          }
       }
-      
+
       mHost->Enable(!audioStreamActive);
       mInput->Enable(!audioStreamActive);
       mOutput->Enable(!audioStreamActive);
@@ -374,7 +374,7 @@ static bool RepositionCombo(wxWindow *combo, int toolbarWidth, wxSize desiredSiz
    float ratioChange;
    bool constrained = false;
 
-   // push margin pixels 
+   // push margin pixels
    desiredSize.x += marginPixels;
 
    // truncate the window size if necessary
@@ -420,7 +420,7 @@ void DeviceToolBar::RepositionCombos()
    // as the toolbar's with can extend past this.
    GetClientSize(&w, &h);
 
-   // FIXME: Note that there's some bug in here, in that even if the prefs show the toolbar 
+   // FIXME: Note that there's some bug in here, in that even if the prefs show the toolbar
    // docked, on initialization, this call to IsDocked() returns false.
    if (IsDocked()) {
       // If the toolbar is docked its width can be larger than what is actually viewable
@@ -436,7 +436,7 @@ void DeviceToolBar::RepositionCombos()
    w -= grabberWidth + GetResizeGrabberWidth();
    if (w <= 0)
       return;
-   
+
    // set up initial sizes and ratios
    hostRatio     = kHostWidthRatio;
    inputRatio    = kInputWidthRatio;
@@ -464,7 +464,7 @@ void DeviceToolBar::RepositionCombos()
       i++;
       constrained = RepositionCombo(mHost,   w,   desiredHost,   hostRatio, ratioUnused, 0, true);
       constrained |= RepositionCombo(mInput,  w,  desiredInput,  inputRatio, ratioUnused, mRecordBitmap->GetWidth(), true);
-      constrained |= RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused, mPlayBitmap->GetWidth(), true);      
+      constrained |= RepositionCombo(mOutput, w, desiredOutput, outputRatio, ratioUnused, mPlayBitmap->GetWidth(), true);
       constrained |= RepositionCombo(mInputChannels, w, desiredChannels, channelsRatio, ratioUnused, 0, true);
    }
 
@@ -475,7 +475,7 @@ void DeviceToolBar::FillHosts()
 {
    wxArrayString hosts;
    size_t i;
-   
+
    const std::vector<DeviceSourceMap> &inMaps  = DeviceManager::Instance()->GetInputDeviceMaps();
    const std::vector<DeviceSourceMap> &outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
    // go over our lists add the host to the list if it isn't there yet
@@ -488,7 +488,7 @@ void DeviceToolBar::FillHosts()
 
    mHost->Clear();
    mHost->Append(hosts);
-   
+
    if (hosts.GetCount() == 0)
       mHost->Enable(false);
 }
@@ -514,14 +514,14 @@ void DeviceToolBar::FillHostDevices()
          break;
       }
    }
-   
+
    if (foundHostIndex == -1) {
       for (i = 0; i < inMaps.size(); i++) {
          if (inMaps[i].hostString == host) {
             foundHostIndex = inMaps[i].hostIndex;
             break;
          }
-      } 
+      }
    }
 
    // If no host was found based on the prefs device host, load the first available one
@@ -576,10 +576,10 @@ int DeviceToolBar::ChangeHost()
    wxString oldHost = gPrefs->Read(wxT("/AudioIO/Host"), wxT(""));
    wxString newHost = hostSelectionIndex >= 0 ? mHost->GetString(hostSelectionIndex) :
                                                 oldHost;
-   
+
    if (oldHost == newHost)
       return 0;
-   
+
    //change the host and switch to correct devices.
    gPrefs->Write(wxT("/AudioIO/Host"), newHost);
    gPrefs->Flush();
@@ -597,7 +597,7 @@ void DeviceToolBar::FillInputChannels()
    wxString device   = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
    wxString source   = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
    long oldChannels = 2, newChannels;
-   
+
    gPrefs->Read(wxT("/AudioIO/RecordChannels"), &oldChannels);
    int index = -1;
    size_t i, j;
@@ -712,20 +712,20 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
    }
 
    if (gAudioIO) {
-      // We cannot have gotten here if gAudioIO->IsAudioTokenActive(), 
-      // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in 
+      // We cannot have gotten here if gAudioIO->IsAudioTokenActive(),
+      // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in
       // AudacityProject::GetUpdateFlags().
-      // However, we can have an invalid audio token (so IsAudioTokenActive() 
-      // is false), but be monitoring. 
-      // If monitoring, have to stop the stream, so HandleDeviceChange() can work. 
-      // We could disable the Preferences command while monitoring, i.e., 
-      // set AudioIONotBusyFlag/AudioIOBusyFlag according to monitoring, as well. 
-      // Instead allow it because unlike recording, for example, monitoring 
-      // is not clearly something that should prohibit changing device. 
-      // TODO: We *could* be smarter in this method and call HandleDeviceChange()  
+      // However, we can have an invalid audio token (so IsAudioTokenActive()
+      // is false), but be monitoring.
+      // If monitoring, have to stop the stream, so HandleDeviceChange() can work.
+      // We could disable the Preferences command while monitoring, i.e.,
+      // set AudioIONotBusyFlag/AudioIOBusyFlag according to monitoring, as well.
+      // Instead allow it because unlike recording, for example, monitoring
+      // is not clearly something that should prohibit changing device.
+      // TODO: We *could* be smarter in this method and call HandleDeviceChange()
       // only when the device choices actually changed. True of lots of prefs!
       // As is, we always stop monitoring before handling the device change.
-      if (gAudioIO->IsMonitoring()) 
+      if (gAudioIO->IsMonitoring())
       {
          gAudioIO->StopStream();
          while (gAudioIO->IsBusy())

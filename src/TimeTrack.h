@@ -39,7 +39,7 @@ class TimeTrack: public Track {
    virtual ~TimeTrack();
 
    // Identifying the type of track
-   virtual int GetKind() const { return Time; } 
+   virtual int GetKind() const { return Time; }
 
    // TimeTrack parameters
 
@@ -67,7 +67,7 @@ class TimeTrack: public Track {
    // Access the track's speed envelope
 
    Envelope *GetEnvelope() { return mEnvelope; }
-   
+
    //Note: The meaning of this function has changed (December 2012)
    //Previously this function did something that was close to the opposite (but not entirely accurate).
    /** @brief Compute the integral warp factor between two non-warped time points
@@ -83,7 +83,7 @@ class TimeTrack: public Track {
    double ComputeWarpFactor(double t0, double t1);
    /** @brief Compute the duration (in seconds at playback) of the specified region of the track.
     *
-    * Takes a region of the time track (specified by the unwarped time points in the project), and 
+    * Takes a region of the time track (specified by the unwarped time points in the project), and
     * calculates how long it will actually take to play this region back, taking the time track's
     * warping effects into account.
     * @param t0 unwarped time to start calculation from

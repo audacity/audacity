@@ -20,15 +20,15 @@
 // enumerating headers
 //
 
-/** @brief Get the number of container formats supported by libsndfile 
+/** @brief Get the number of container formats supported by libsndfile
  *
  * Uses SFC_GET_FORMAT_MAJOR_COUNT in sf_command interface */
 int sf_num_headers();
 
-/** @brief Get the name of a container format from libsndfile 
+/** @brief Get the name of a container format from libsndfile
  *
  * Uses SFC_GET_FORMAT_MAJOR in the sf_command() interface. Resulting C string
- * from libsndfile is converted to a wxString 
+ * from libsndfile is converted to a wxString
  * @param format_num The libsndfile format number for the container format
  * required
  */
@@ -54,7 +54,7 @@ unsigned int sf_encoding_index_to_subtype(int encoding_num);
 /** @brief Get the string name of the specified container format
  *
  * AND format with SF_FORMAT_TYPEMASK to get only the container format and
- * then use SFC_GET_FORMAT_INFO to get the description 
+ * then use SFC_GET_FORMAT_INFO to get the description
  * @param format the libsndfile format to get the name for (only the container
  * part is used) */
 wxString sf_header_name(int format);
@@ -75,7 +75,7 @@ wxString sf_header_extension(int format);
 /** @brief Get the string name of the specified data encoding
  *
  * AND encoding_num with SF_FORMAT_SUBMASK to get only the data encoding and
- * then use SFC_GET_FORMAT_INFO to get the description 
+ * then use SFC_GET_FORMAT_INFO to get the description
  * @param encoding_num the libsndfile encoding to get the name for (only the
  * data encoding is used) */
 wxString sf_encoding_name(int encoding_num);

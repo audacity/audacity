@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ODPCMAliasBlockFile.cpp
-  
+
   Created by Michael Chinen (mchinen)
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2.  See License.txt.
@@ -15,12 +15,12 @@
 The summary is eventually computed and written to a file in a background thread.
 
 Load On-Demand implementation of the AliasBlockFile for PCM files.
-   
+
 to load large files more quickly, we take skip computing the summary data and put
-ODPCMAliasBlockFiles in the sequence as place holders.  A background thread loads and 
+ODPCMAliasBlockFiles in the sequence as place holders.  A background thread loads and
 computes the summary data into these classes.
 ODPCMAliasBlockFiles are unlike all other BlockFiles are not immutable (for the most part,) because when new
-summary data is computed for an existing ODPCMAliasBlockFile we save the buffer then and write the Summary File.  
+summary data is computed for an existing ODPCMAliasBlockFile we save the buffer then and write the Summary File.
 
 All BlockFile methods that treat the summary data as a buffer that exists in its BlockFile
 are implemented here to behave when the data is not available yet.
@@ -42,7 +42,7 @@ Some of these methods have been overridden only because they used the unsafe wxL
 #include "../DirManager.h"
 #include <wx/thread.h>
 
-/// An AliasBlockFile that references uncompressed data in an existing file 
+/// An AliasBlockFile that references uncompressed data in an existing file
 class ODPCMAliasBlockFile : public PCMAliasBlockFile
 {
  public:
@@ -55,13 +55,13 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
                         sampleCount aliasLen, int aliasChannel,
                         float min, float max, float rms, bool summaryAvailable);
    virtual ~ODPCMAliasBlockFile();
-   
+
    //checks to see if summary data has been computed and written to disk yet.  Thread safe.  Blocks if we are writing summary data.
    virtual bool IsSummaryAvailable();
-   
-   /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk 
+
+   /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk
    virtual bool IsSummaryBeingComputed(){return mSummaryBeingComputed;}
-   
+
    //Calls that rely on summary files need to be overidden
    virtual wxLongLong GetSpaceUsage();
    /// Gets extreme values for the specified region
@@ -76,7 +76,7 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
 
    ///Makes new ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
    virtual BlockFile *Copy(wxFileName fileName);
-   
+
    ///Saves as xml ODPCMAliasBlockFile or PCMAliasBlockFile depending on summary availability
    virtual void SaveXML(XMLWriter &xmlFile);
 
@@ -85,61 +85,61 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
 
    ///Writes the summary file if summary data is available
    virtual void Recover(void);
-   
+
    ///A public interface to WriteSummary
    void DoWriteSummary();
-   
+
    ///Sets the value that indicates where the first sample in this block corresponds to the global sequence/clip.  Only for display use.
    void SetStart(sampleCount startSample){mStart = startSample;}
-   
+
    ///Gets the value that indicates where the first sample in this block corresponds to the global sequence/clip.  Only for display use.
    sampleCount GetStart(){return mStart;}
-   
+
    /// Locks the blockfile only if it has a file that exists.
    void Lock();
 
    /// Unlocks the blockfile only if it has a file that exists.
    void Unlock();
-   
+
    ///sets the amount of samples the clip associated with this blockfile is offset in the wavetrack (non effecting)
    void SetClipOffset(sampleCount numSamples){mClipOffset= numSamples;}
-   
-   ///Gets the number of samples the clip associated with this blockfile is offset by.  
+
+   ///Gets the number of samples the clip associated with this blockfile is offset by.
    sampleCount GetClipOffset(){return mClipOffset;}
-   
+
    //returns the number of samples from the beginning of the track that this blockfile starts at
    sampleCount GetGlobalStart(){return mClipOffset+mStart;}
 
    //returns the number of samples from the beginning of the track that this blockfile ends at
    sampleCount GetGlobalEnd(){return mClipOffset+mStart+GetLength();}
 
-   
+
    //Below calls are overrided just so we can take wxlog calls out, which are not threadsafe.
-   
+
    /// Reads the specified data from the aliased file using libsndfile
    virtual int ReadData(samplePtr data, sampleFormat format,
                         sampleCount start, sampleCount len);
-                 
+
    /// Read the summary into a buffer
    virtual bool ReadSummary(void *data);
-          
+
    ///sets the file name the summary info will be saved in.  threadsafe.
    virtual void SetFileName(wxFileName &name);
    virtual wxFileName GetFileName();
 
    //when the file closes, it locks the blockfiles, but it calls this so we can check if it has been saved before.
    virtual void CloseLock();
-   
+
    /// Prevents a read on other threads.
    virtual void LockRead();
    /// Allows reading on other threads.
    virtual void UnlockRead();
-  
+
   protected:
    virtual void WriteSummary();
    virtual void *CalcSummary(samplePtr buffer, sampleCount len,
                              sampleFormat format);
-   
+
   private:
    //Thread-safe versions
    virtual void Ref();
@@ -169,7 +169,7 @@ class ODPCMAliasBlockFile : public PCMAliasBlockFile
    bool mSummaryAvailable;
    bool mSummaryBeingComputed;
    bool mHasBeenSaved;
-   
+
    ///for reporting after task is complete.  Only for display use.
    sampleCount mStart;
 

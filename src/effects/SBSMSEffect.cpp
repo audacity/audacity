@@ -88,14 +88,14 @@ public:
                         Slide *rateSlide, Slide *pitchSlide,
                         bool bReferenceInput,
                         long samples, long preSamples,
-                        SBSMSQuality *quality) 
+                        SBSMSQuality *quality)
       : SBSMSInterfaceSliding(rateSlide,pitchSlide,bReferenceInput,samples,preSamples,quality)
    {
       this->resampler = resampler;
    }
    virtual ~SBSMSEffectInterface() {}
 
-   long samples(audio *buf, long n) { 
+   long samples(audio *buf, long n) {
       return resampler->read(buf, n);
    }
 
@@ -103,26 +103,26 @@ protected:
    Resampler *resampler;
 };
 
-long resampleCB(void *cb_data, SBSMSFrame *data) 
+long resampleCB(void *cb_data, SBSMSFrame *data)
 {
    ResampleBuf *r = (ResampleBuf*) cb_data;
-   
+
    long blockSize = r->leftTrack->GetBestBlockSize(r->offset);
-   
+
    //Adjust the block size if it is the final block in the track
    if (r->offset + blockSize > r->end)
       blockSize = r->end - r->offset;
-   
+
    // Get the samples from the tracks and put them in the buffers.
    r->leftTrack->Get((samplePtr)(r->leftBuffer), floatSample, r->offset, blockSize);
    r->rightTrack->Get((samplePtr)(r->rightBuffer), floatSample, r->offset, blockSize);
-   
+
    // convert to sbsms audio format
    for(int i=0; i<blockSize; i++) {
       r->buf[i][0] = r->leftBuffer[i];
       r->buf[i][1] = r->rightBuffer[i];
    }
-   
+
    data->buf = r->buf;
    data->size = blockSize;
    if(r->bPitch) {
@@ -165,7 +165,7 @@ void EffectSBSMS :: setParameters(double rateStart, double rateEnd, double pitch
    this->bPitchReferenceInput = bPitchReferenceInput;
 }
 
-TimeWarper *createTimeWarper(double t0, double t1, double duration, 
+TimeWarper *createTimeWarper(double t0, double t1, double duration,
                              double rateStart, double rateEnd, SlideType rateSlideType)
 {
    TimeWarper *warper = NULL;
@@ -181,7 +181,7 @@ TimeWarper *createTimeWarper(double t0, double t1, double duration,
       warper = new LinearOutputStretchTimeWarper(t0, t1, rateStart, rateEnd);
    } else if(rateSlideType == SlideGeometricInput) {
       warper = new GeometricInputTimeWarper(t0, t1, rateStart, rateEnd);
-   } else if(rateSlideType == SlideGeometricOutput) {                
+   } else if(rateSlideType == SlideGeometricOutput) {
       warper = new GeometricOutputTimeWarper(t0, t1, rateStart, rateEnd);
    }
    return warper;
@@ -202,7 +202,7 @@ bool EffectSBSMS::ProcessLabelTrack(Track *t)
 bool EffectSBSMS::Process()
 {
    bool bGoodResult = true;
-   
+
    //Iterate over each track
    //Track::All is needed because this effect needs to introduce silence in the group tracks to keep sync
    this->CopyInputTracks(Track::All); // Set up mOutputTracks.
@@ -220,7 +220,7 @@ bool EffectSBSMS::Process()
 
    t = iter.First();
    while (t != NULL) {
-      if (t->GetKind() == Track::Label && 
+      if (t->GetKind() == Track::Label &&
             (t->GetSelected() || (mustSync && t->IsSyncLockSelected())) )
       {
          if (!ProcessLabelTrack(t)) {
@@ -235,24 +235,24 @@ bool EffectSBSMS::Process()
          //Get start and end times from track
          mCurT0 = leftTrack->GetStartTime();
          mCurT1 = leftTrack->GetEndTime();
-         
+
          //Set the current bounds to whichever left marker is
          //greater and whichever right marker is less
          mCurT0 = wxMax(mT0, mCurT0);
          mCurT1 = wxMin(mT1, mCurT1);
-         
+
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
             sampleCount start;
             sampleCount end;
             start = leftTrack->TimeToLongSamples(mCurT0);
             end = leftTrack->TimeToLongSamples(mCurT1);
-            
+
             WaveTrack* rightTrack = NULL;
             if (leftTrack->GetLinked()) {
                double t;
                rightTrack = (WaveTrack*)(iter.Next());
-               
+
                //Adjust bounds by the right tracks markers
                t = rightTrack->GetStartTime();
                t = wxMax(mT0, t);
@@ -260,12 +260,12 @@ bool EffectSBSMS::Process()
                t = rightTrack->GetEndTime();
                t = wxMin(mT1, t);
                mCurT1 = wxMax(mCurT1, t);
-               
+
                //Transform the marker timepoints to samples
                start = leftTrack->TimeToLongSamples(mCurT0);
                end = leftTrack->TimeToLongSamples(mCurT1);
-               
-               mCurTrackNum++; // Increment for rightTrack, too.	
+
+               mCurTrackNum++; // Increment for rightTrack, too.
             }
             sampleCount trackStart = leftTrack->TimeToLongSamples(leftTrack->GetStartTime());
             sampleCount trackEnd = leftTrack->TimeToLongSamples(leftTrack->GetEndTime());
@@ -283,10 +283,10 @@ bool EffectSBSMS::Process()
             rb.rightTrack = rightTrack?rightTrack:leftTrack;
             rb.leftBuffer = (float*)calloc(maxBlockSize,sizeof(float));
             rb.rightBuffer = (float*)calloc(maxBlockSize,sizeof(float));
-            
+
             // Samples in selection
             sampleCount samplesIn = end-start;
-            
+
             // Samples for SBSMS to process after resampling
             sampleCount samplesToProcess = (sampleCount) ((float)samplesIn*(srProcess/srTrack));
 
@@ -305,7 +305,7 @@ bool EffectSBSMS::Process()
               rb.iface = new SBSMSInterfaceSliding(&rateSlide,&pitchSlide,
                                                        bPitchReferenceInput,
                                                        samplesToProcess,0,
-                                                       NULL);              
+                                                       NULL);
             } else {
               rb.bPitch = false;
               outSlideType = (srProcess==srTrack?SlideIdentity:SlideConstant);
@@ -327,15 +327,15 @@ bool EffectSBSMS::Process()
                                                       &rateSlide,&pitchSlide,
                                                       bPitchReferenceInput,
                                                       samplesToProcess,processPresamples,
-                                                      rb.quality);              
+                                                      rb.quality);
             }
 
             Resampler resampler(outResampleCB,&rb,outSlideType);
-            
+
             audio outBuf[SBSMSOutBlockSize];
             float outBufLeft[2*SBSMSOutBlockSize];
             float outBufRight[2*SBSMSOutBlockSize];
-            
+
             // Samples in output after SBSMS
             sampleCount samplesToOutput = rb.iface->getSamplesToOutput();
 
@@ -377,17 +377,17 @@ bool EffectSBSMS::Process()
                rb.outputLeftTrack->Append((samplePtr)outBufLeft, floatSample, outputCount);
                if(rightTrack)
                   rb.outputRightTrack->Append((samplePtr)outBufRight, floatSample, outputCount);
-               
+
                double frac = (double)pos/(double)samplesOut;
                int nWhichTrack = mCurTrackNum;
                if(rightTrack) {
                   nWhichTrack = 2*(mCurTrackNum/2);
                   if (frac < 0.5)
-                     frac *= 2.0; // Show twice as far for each track, because we're doing 2 at once. 
+                     frac *= 2.0; // Show twice as far for each track, because we're doing 2 at once.
                   else {
                      nWhichTrack++;
                      frac -= 0.5;
-                     frac *= 2.0; // Show twice as far for each track, because we're doing 2 at once. 
+                     frac *= 2.0; // Show twice as far for each track, because we're doing 2 at once.
                   }
                }
                if (TrackProgress(nWhichTrack, frac))
@@ -397,14 +397,14 @@ bool EffectSBSMS::Process()
             if(rightTrack)
                rb.outputRightTrack->Flush();
 
-            bool bResult = 
+            bool bResult =
                leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack,
                                           true, false, GetTimeWarper());
             wxASSERT(bResult); // TO DO: Actually handle this.
 
-            if(rightTrack) 
+            if(rightTrack)
             {
-               bResult = 
+               bResult =
                   rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack,
                                              true, false, GetTimeWarper());
                wxASSERT(bResult); // TO DO: Actually handle this.
@@ -419,14 +419,14 @@ bool EffectSBSMS::Process()
       //Iterate to the next track
       t = iter.Next();
    }
-   
+
    if (bGoodResult)
-      ReplaceProcessedTracks(bGoodResult); 
+      ReplaceProcessedTracks(bGoodResult);
 
    // Update selection
    mT0 = mCurT0;
    mT1 = mCurT0 + maxDuration;
-   
+
    return bGoodResult;
 }
 

@@ -30,9 +30,9 @@ public:
    static void Show2( wxWindow * pParent );
 
    DECLARE_EVENT_TABLE()
-    
+
 private:
-   
+
    void Populate( ShuttleGui & S );
    void OnDontShow( wxCommandEvent & Evt );
 

@@ -56,7 +56,7 @@ class ExtImportItem
    * Unused filters will not be used for matching files, unless forced.
    */
   wxArrayString filters;
-  
+
   /**
    * The index of first unused filter in @filters array
    * 0 - divider is at the top of the list (in the list control
@@ -76,7 +76,7 @@ class ExtImportItem
    * i.e. "*.wav".
    */
   wxArrayString extensions;
-  
+
   /**
    * Mime-types. Each one is a string in form of "foo/bar-baz" or
    * something like that.

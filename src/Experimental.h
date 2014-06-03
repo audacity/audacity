@@ -9,7 +9,7 @@
 
   Used for #includes and #defines for experimental features.
 
-  When the features become mainstream the #include files will 
+  When the features become mainstream the #include files will
   move out of here and into the files which need them.  The
   #defines will then be retired.
 
@@ -21,8 +21,8 @@
     - Modular architecture.
   Add #defines in here for the new features, and make your code
   conditional on those #defines.
-  
-  All the #defines are positive, i.e., when defined, 
+
+  All the #defines are positive, i.e., when defined,
   they enable the feature.
 
 **********************************************************************/
@@ -50,7 +50,7 @@
 
 // experimental theming
 // Work in progress, June-2008.
-// This mostly sets up a weird color scheme currently. 
+// This mostly sets up a weird color scheme currently.
 //#define EXPERIMENTAL_THEMING
 
 //August 2009 - Theming not locked down enough for a stable release.
@@ -58,7 +58,7 @@
 //#define EXPERIMENTAL_THEME_PREFS
 
 //Next line enables Mic monitoring at times when it was previously off.
-//More work is needed as after recording or playing it results in an 
+//More work is needed as after recording or playing it results in an
 //unwanted record-cursor on the wave track.
 //#define EXPERIMENTAL_EXTRA_MONITORING
 
@@ -75,9 +75,9 @@
 // preferrably disabled until other work is done.  Martyn 22/12/2008.
 //#define EFFECT_CATEGORIES
 
-// Andreas Micheler, 20.Nov 2007: 
+// Andreas Micheler, 20.Nov 2007:
 // A spectrumLogF-like view mode with notes quantization.
-// Just select the "Find Notes" checkbox in the spectrum prefs 
+// Just select the "Find Notes" checkbox in the spectrum prefs
 // to activate it instead of the Spectrum log(f) mode.
 //#define EXPERIMENTAL_FIND_NOTES
 
@@ -85,7 +85,7 @@
 // Skip Points support in the spectrum view mode.
 //#define EXPERIMENTAL_FFT_SKIP_POINTS
 
-// AM, 22.Nov 2007: 
+// AM, 22.Nov 2007:
 // A Frequency Grid for the Spectrum Log(f) & Find Notes modes
 //#define EXPERIMENTAL_FFT_Y_GRID
 
@@ -125,7 +125,7 @@
    // a tabbed divider to the project.
    //#define EXPERIMENTAL_NOTEBOOK
    // The notebook in turn can contain:
-   // 1. The Nyquist Inspector, which is a browser for the objects in 
+   // 1. The Nyquist Inspector, which is a browser for the objects in
    // Audacity.
    //#define EXPERIMENTAL_NYQUIST_INSPECTOR
    // 2. The Vocal Studio, a screen for working with vocal sounds
@@ -133,7 +133,7 @@
    //#define EXPERIMENTAL_VOCAL_STUDIO
    // 3. The Audacity Tester is an extended version of the benchmarks
    // display.  The crucial idea is to be able to compare waveforms
-   // where effects have been applied by audacity but using different 
+   // where effects have been applied by audacity but using different
    // block-sizes.  This should give high confidence that we don't
    // suffer from end-effects on buffers, e.g. losing one sample on
    // each buffer.

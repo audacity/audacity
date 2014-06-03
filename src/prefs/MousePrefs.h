@@ -30,8 +30,8 @@ class MousePrefs:public PrefsPanel
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
    void CreateList();
-   void AddItem(wxString const & buttons, 
-                wxString const & tool, 
+   void AddItem(wxString const & buttons,
+                wxString const & tool,
                 wxString const & action,
                 wxString const & comment = wxEmptyString);
 

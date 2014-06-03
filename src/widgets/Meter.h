@@ -93,7 +93,7 @@ class Meter : public wxPanel
       VerticalStereo,
       VerticalMulti,
       Equalizer,
-      Waveform, 
+      Waveform,
       MixerTrackCluster // Doesn't show menu, icon, or L/R labels, but otherwise like VerticalStereo.
    };
 
@@ -101,8 +101,8 @@ class Meter : public wxPanel
    Meter(wxWindow* parent, wxWindowID id,
          bool isInput,
          const wxPoint& pos = wxDefaultPosition,
-         const wxSize& size = wxDefaultSize, 
-         Style style = HorizontalStereo, 
+         const wxSize& size = wxDefaultSize,
+         Style style = HorizontalStereo,
          float fDecayRate = 60.0f);
 
    ~Meter();
@@ -145,10 +145,10 @@ class Meter : public wxPanel
    void UpdateDisplay(int numChannels,
                       int numFrames, float *sampleData);
    // Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
-   //void UpdateDisplay(int numChannels, int numFrames, 
+   //void UpdateDisplay(int numChannels, int numFrames,
    //                     // Need to make these double-indexed max and min arrays if we handle more than 2 channels.
-   //                     float* maxLeft, float* rmsLeft, 
-   //                     float* maxRight, float* rmsRight, 
+   //                     float* maxLeft, float* rmsLeft,
+   //                     float* maxRight, float* rmsRight,
    //                     const sampleCount kSampleCount);
 
    /** \brief Find out if the level meter is disabled or not.
@@ -157,7 +157,7 @@ class Meter : public wxPanel
     * different thread (like from an audio I/O callback).
     */
    bool IsMeterDisabled();
-   
+
    float GetMaxPeak();
 
    double ToLinearIfDB(double value);
@@ -196,7 +196,7 @@ class Meter : public wxPanel
    void OnFloat(wxCommandEvent &evt);
    void OnPreferences(wxCommandEvent &evt);
    bool IsClipping();
-   
+
    void StartMonitoring();
 
  private:

@@ -479,7 +479,7 @@ void CompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    vRuler.SetFormat(Ruler::LinearDBFormat);
    vRuler.SetUnits(_("dB"));
    vRuler.GetMaxSize(&w, NULL);
-   
+
    Ruler hRuler;
    hRuler.SetBounds(0, 0, mWidth, mHeight);
    hRuler.SetOrientation(wxHORIZONTAL);
@@ -647,8 +647,8 @@ void CompressorDialog::PopulateOrExchange(ShuttleGui & S)
          mRatioText = S.AddVariableText(wxT("XXXX:1"), true,
                                              wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-         /* i18n-hint: Particularly in percussion, sounds can be regarded as having 
-          * an 'attack' phase where the sound builds up and a 'decay' where the 
+         /* i18n-hint: Particularly in percussion, sounds can be regarded as having
+          * an 'attack' phase where the sound builds up and a 'decay' where the
           * sound dies away.  So this means 'onset duration'.  */
          mAttackLabel = S.AddVariableText(_("Attack Time:"), true,
                                          wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -725,13 +725,13 @@ bool CompressorDialog::TransferDataFromWindow()
 
    if (mRatioSlider->GetValue()%2 == 0) {
       mRatioLabel->SetName(wxString::Format(_("Ratio %.0f to 1"), ratio));
-      /* i18n-hint: Unless your language has a different convention for ratios, 
+      /* i18n-hint: Unless your language has a different convention for ratios,
        * like 8:1, leave as is.*/
       mRatioText->SetLabel(wxString::Format(_("%.0f:1"), ratio));
    }
    else {
       mRatioLabel->SetName(wxString::Format(_("Ratio %.1f to 1"), ratio));
-      /* i18n-hint: Unless your language has a different convention for ratios, 
+      /* i18n-hint: Unless your language has a different convention for ratios,
        * like 8:1, leave as is.*/
       mRatioText->SetLabel(wxString::Format(_("%.1f:1"), ratio));
    }

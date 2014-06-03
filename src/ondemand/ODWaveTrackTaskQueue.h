@@ -36,74 +36,74 @@ class ODWaveTrackTaskQueue
 
    /// Constructs an ODWaveTrackTaskQueue
    ODWaveTrackTaskQueue();
-   
+
    virtual ~ODWaveTrackTaskQueue();
-   
-   
-   
+
+
+
    ///Adds a track to the associated list.
    void AddWaveTrack(WaveTrack* track);
    ///Removes a track from the list.  Also notifies mTasks to stop using references
    ///to the instance in a thread-safe manner (may block)
-   void RemoveWaveTrack(WaveTrack* track);      
-   
+   void RemoveWaveTrack(WaveTrack* track);
+
    ///changes the tasks associated with this Waveform to process the task from a different point in the track
    void DemandTrackUpdate(WaveTrack* track, double seconds);
-   
-   ///replaces all instances of a WaveTrack within this task with another.  
-   void ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack);      
-   
-   //if the wavetrack is in this queue, and is not the only wavetrack, clones the tasks and schedules it. 
+
+   ///replaces all instances of a WaveTrack within this task with another.
+   void ReplaceWaveTrack(WaveTrack* oldTrack,WaveTrack* newTrack);
+
+   //if the wavetrack is in this queue, and is not the only wavetrack, clones the tasks and schedules it.
    void MakeWaveTrackIndependent(WaveTrack* track);
-   
+
    ///returns whether or not this queue's task list and another's can merge together, as when we make two mono tracks stereo.
-   virtual bool CanMergeWith(ODWaveTrackTaskQueue* otherQueue);  
+   virtual bool CanMergeWith(ODWaveTrackTaskQueue* otherQueue);
    void MergeWaveTrack(WaveTrack* track);
 
-   
+
    //returns true if the agrument is in the WaveTrack list.
    bool ContainsWaveTrack(WaveTrack* track);
-   
+
    //returns the wavetrack at position x.
    WaveTrack* GetWaveTrack(size_t x);
-   
+
    ///returns the number of wavetracks in this queue.
    int GetNumWaveTracks();
-   
-   ///Add a task to the queue.  
+
+   ///Add a task to the queue.
    void AddTask(ODTask* task);
-   
+
    //returns true if either tracks or tasks are empty
    bool IsEmpty();
-   
+
    //returns true if the foremost task exists and is empty.
    bool IsFrontTaskComplete();
-   
+
    ///Removes and deletes the front task from the list.
    void RemoveFrontTask();
-   
+
    ///Schedules the front task for immediate execution
    ODTask* GetFrontTask();
-   
+
    ///returns the number of ODTasks in this queue
    int GetNumTasks();
-   
+
    ///returns a ODTask at position x
    ODTask* GetTask(size_t x);
-   
+
    ///fills in the status bar message for a given track
    void FillTipForWaveTrack( WaveTrack * t, const wxChar ** ppTip );
-   
+
  protected:
- 
+
    //because we need to save this around for the tool tip.
    wxString mTipMsg;
-   
-     
+
+
   ///the list of tracks associated with this queue.
   std::vector<WaveTrack*> mTracks;
   ODLock mTracksMutex;
-  
+
   ///the list of tasks associated with the tracks.  This class owns these tasks.
   std::vector<ODTask*> mTasks;
   ODLock    mTasksMutex;

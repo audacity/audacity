@@ -88,7 +88,7 @@
                               (int)lastFlag, inBufferUsed, outBuffer, outBufferLen);
    }
 
-#elif USE_LIBSAMPLERATE 
+#elif USE_LIBSAMPLERATE
 
    #include <samplerate.h>
 
@@ -184,7 +184,7 @@
          wxFprintf(stderr, _("Libsamplerate error: %d\n"), err);
          return 0;
       }
-      
+
       if(lastFlag) {
          mShouldReset = true;
          mSamplesLeft = inBufferLen - (int)data.input_frames_used;
@@ -202,12 +202,12 @@
    {
       this->SetMethod(useBestMethod);
       soxr_quality_spec_t q_spec;
-      if (dMinFactor == dMaxFactor) 
+      if (dMinFactor == dMaxFactor)
       {
          mbWantConstRateResampling = true; // constant rate resampling
          q_spec = soxr_quality_spec("\0\1\4\6"[mMethod], 0);
       }
-      else 
+      else
       {
          mbWantConstRateResampling = false; // variable rate resampling
          q_spec = soxr_quality_spec(SOXR_HQ, SOXR_VR);

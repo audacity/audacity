@@ -41,7 +41,7 @@
       SpectrumHighColor		- 			  much easier to parse.
    /Locale
       Language				- two-letter language code for translations
-      
+
    (*): wxGTK
    (+): wxWin
    ($): wxMac
@@ -115,7 +115,7 @@ static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase 
    wxString entryName;
    long entryIndex;
    bool entryKeepGoing;
-   
+
    entryKeepGoing = src->GetFirstEntry(entryName, entryIndex);
    while (entryKeepGoing) {
       CopyEntry(path, src, dst, entryName);
@@ -125,7 +125,7 @@ static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase 
    wxString groupName;
    long groupIndex;
    bool groupKeepGoing;
-   
+
    groupKeepGoing = src->GetFirstGroup(groupName, groupIndex);
    while (groupKeepGoing) {
       wxString subPath = path+groupName+wxT("/");
@@ -145,7 +145,7 @@ void InitPreferences()
    gPrefs = new wxFileConfig(appName, wxEmptyString,
                              configFileName.GetFullPath(),
                              wxEmptyString, wxCONFIG_USE_LOCAL_FILE);
-      
+
    wxConfigBase::Set(gPrefs);
 
    static wxString resourcesDir;
@@ -182,7 +182,7 @@ void InitPreferences()
       delete legacyConfig;
       gPrefs->Write(wxT("/NewPrefsInitialized"), true);
    }
-   
+
    gPrefs->Write(wxT("/Version"), wxString(AUDACITY_VERSION_STRING));
 
    // BG: Make sure the users prefs are up to date
@@ -199,7 +199,7 @@ void InitPreferences()
          gPrefs->DeleteGroup(wxT("/Locale"));
       gPrefs->Write(wxT("/PrefsVersion"), wxString(wxT(AUDACITY_PREFS_VERSION_STRING)));
    }
-   
+
    // Check if some prefs updates need to happen based on audacity version.
    // Unfortunately we can't use the PrefsVersion prefs key because that resets things.
    // In the future we may want to integrate that better.
@@ -208,19 +208,19 @@ void InitPreferences()
    int vMajor = gPrefs->Read(wxT("/Version/Major"), (long) 0);
    int vMinor = gPrefs->Read(wxT("/Version/Minor"), (long) 0);
    int vMicro = gPrefs->Read(wxT("/Version/Micro"), (long) 0);
-   
+
    // These integer version keys were introduced april 4 2011 for 1.3.13
    // The device toolbar needs to be enabled due to removal of source selection features in
    // the mixer toolbar.
-   if ((vMajor < 1) || 
+   if ((vMajor < 1) ||
        (vMajor == 1 && vMinor < 3) ||
        (vMajor == 1 && vMinor == 3 && vMicro < 13)) {
-       
-       
+
+
       // Do a full reset of the Device Toolbar to get it on the screen.
       if (gPrefs->Exists(wxT("/GUI/ToolBars/Device")))
          gPrefs->DeleteGroup(wxT("/GUI/ToolBars/Device"));
-      
+
       // We keep the mixer toolbar prefs (shown/not shown)
       // the width of the mixer toolbar may have shrunk, the prefs will keep the larger value
       // if the user had a device that had more than one source.
@@ -229,11 +229,11 @@ void InitPreferences()
          gPrefs->Write(wxT("/GUI/ToolBars/Mixer/W"), -1);
       }
    }
-  
+
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
-   gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE); 
+   gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
    gPrefs->Write(wxT("/Version/Micro"), AUDACITY_REVISION);
-   
+
    gPrefs->Flush();
 }
 

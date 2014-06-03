@@ -59,7 +59,7 @@
 #define LIBTWOLAME_STATIC
 #include "twolame.h"
 
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
    #include <id3tag.h>
    // DM: the following functions were supposed to have been
    // included in id3tag.h - should be fixed in the next release
@@ -68,7 +68,7 @@
       struct id3_frame *id3_frame_new(char const *);
       id3_length_t id3_latin1_length(id3_latin1_t const *);
       void id3_latin1_decode(id3_latin1_t const *, id3_ucs4_t *);
-   } 
+   }
 #endif
 
 //----------------------------------------------------------------------------
@@ -85,8 +85,8 @@ class ExportMP2Options : public wxDialog
 {
 public:
 
-   /// 
-   /// 
+   ///
+   ///
    ExportMP2Options(wxWindow *parent);
    void PopulateOrExchange(ShuttleGui & S);
    void OnOK(wxCommandEvent& event);
@@ -102,8 +102,8 @@ BEGIN_EVENT_TABLE(ExportMP2Options, wxDialog)
    EVT_BUTTON(wxID_OK, ExportMP2Options::OnOK)
 END_EVENT_TABLE()
 
-/// 
-/// 
+///
+///
 ExportMP2Options::ExportMP2Options(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify MP2 Options")))
@@ -119,8 +119,8 @@ ExportMP2Options::ExportMP2Options(wxWindow *parent)
    PopulateOrExchange(S);
 }
 
-/// 
-/// 
+///
+///
 void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, 0);
@@ -129,7 +129,7 @@ void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartTwoColumn();
          {
-            S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/MP2Bitrate"), 
+            S.TieChoice(_("Bit Rate:"), wxT("/FileFormats/MP2Bitrate"),
                160, mBitRateNames, mBitRateLabels);
          }
          S.EndTwoColumn();
@@ -148,8 +148,8 @@ void ExportMP2Options::PopulateOrExchange(ShuttleGui & S)
    return;
 }
 
-/// 
-/// 
+///
+///
 void ExportMP2Options::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
@@ -187,7 +187,7 @@ public:
 private:
 
    int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, Tags *tags);
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
 
@@ -285,7 +285,7 @@ int ExportMP2::Export(AudacityProject *project,
 
       if (pcmNumSamples == 0)
          break;
-      
+
       short *pcmBuffer = (short *)mixer->GetBuffer();
 
       int mp2BufferNumBytes = twolame_encode_buffer_interleaved(
@@ -317,7 +317,7 @@ int ExportMP2::Export(AudacityProject *project,
    delete[] mp2Buffer;
 
    /* Write ID3 tag if it was supposed to be at the end of the file */
-   
+
    if (id3len && endOfFile)
       outFile.Write(id3buffer, id3len);
 
@@ -326,7 +326,7 @@ int ExportMP2::Export(AudacityProject *project,
    }
 
    /* Close file */
-   
+
    outFile.Close();
 
    return updateResult;
@@ -344,7 +344,7 @@ bool ExportMP2::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
 // returns buffer len; caller frees
 int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool *endOfFile, Tags *tags)
 {
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
    struct id3_tag *tp = id3_tag_new();
 
    wxString n, v;
@@ -391,7 +391,7 @@ int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool 
    *endOfFile = false;
 
    id3_length_t len;
-   
+
    len = id3_tag_render(tp, 0);
    *buffer = (char *)malloc(len);
    len = id3_tag_render(tp, (id3_byte_t *)*buffer);
@@ -399,12 +399,12 @@ int ExportMP2::AddTags(AudacityProject * WXUNUSED(project), char **buffer, bool 
    id3_tag_delete(tp);
 
    return len;
-#else //ifdef USE_LIBID3TAG 
+#else //ifdef USE_LIBID3TAG
    return 0;
 #endif
 }
 
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
 void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name)
 {
    struct id3_frame *frame = id3_frame_new(name);
@@ -434,7 +434,7 @@ void ExportMP2::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
       free(ucs4);
 
       ucs4 = id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8));
-        
+
       id3_field_setstring(id3_frame_field(frame, 1), ucs4);
    }
    else {

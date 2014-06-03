@@ -10,7 +10,7 @@
 
 \file TimeWarper.cpp
 \brief Contains definitions for IdentityTimeWarper, ShiftTimeWarper,
-LinearTimeWarper, LogarithmicTimeWarper, QuadraticTimeWarper, 
+LinearTimeWarper, LogarithmicTimeWarper, QuadraticTimeWarper,
 Geometric TimeWarper classes
 
 *//*******************************************************************/
@@ -57,8 +57,8 @@ double LinearOutputRateTimeWarper::Warp(double originalTime) const
 
 LinearOutputRateTimeWarper::LinearOutputRateTimeWarper(double tStart, double tEnd,
                                                        double rStart, double rEnd)
-: mTimeWarper(tStart, 0.0, tEnd, 1.0), 
-  mRStart(rStart), mTStart(tStart), 
+: mTimeWarper(tStart, 0.0, tEnd, 1.0),
+  mRStart(rStart), mTStart(tStart),
   mScale(2.0*(tEnd-tStart)/(rEnd*rEnd-rStart*rStart)),
   mC1(rStart*rStart), mC2(rEnd*rEnd-rStart*rStart)
 {
@@ -76,7 +76,7 @@ double LinearInputStretchTimeWarper::Warp(double originalTime) const
 
 LinearInputStretchTimeWarper::LinearInputStretchTimeWarper(double tStart, double tEnd,
                                                            double rStart, double rEnd)
-: mTimeWarper(tStart, 0.0, tEnd, 1.0), mTStart(tStart), 
+: mTimeWarper(tStart, 0.0, tEnd, 1.0), mTStart(tStart),
   mC1((tEnd-tStart)/rStart), mC2(0.5*(rStart/rEnd - 1.0))
 {
    wxASSERT(rStart > 0.0);
@@ -92,7 +92,7 @@ double LinearOutputStretchTimeWarper::Warp(double originalTime) const
 
 LinearOutputStretchTimeWarper::LinearOutputStretchTimeWarper(double tStart, double tEnd,
                                                              double rStart, double rEnd)
-: mTimeWarper(tStart, 0.0, tEnd, 1.0), mTStart(tStart), 
+: mTimeWarper(tStart, 0.0, tEnd, 1.0), mTStart(tStart),
   mC1((tEnd-tStart)/(rStart*log(rStart/rEnd))), mC2(rStart/rEnd)
 {
    wxASSERT(rStart != rEnd);

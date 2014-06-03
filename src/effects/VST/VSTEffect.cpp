@@ -5,7 +5,7 @@
   VSTEffect.cpp
 
   Dominic Mazzoni
-  
+
   This class implements a VST Plug-in effect.  The plug-in must be
   loaded in a platform-specific way and passed into the constructor,
   but from here this class handles the interfacing.  VST plug-ins
@@ -114,7 +114,7 @@ void RegisterVSTEffects()
 #endif
          em.RegisterEffect(new VSTEffect(path));
       }
-      
+
       path = pm.GetNextPlugin(VSTPLUGINTYPE);
    }
 
@@ -529,7 +529,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
    S.StartVerticalLay(true);
    {
-      /*i18n-hint: The dialog shows a list of plugins with check-boxes 
+      /*i18n-hint: The dialog shows a list of plugins with check-boxes
        beside each one.*/
       S.StartStatic(_("&Select Plug-ins to Install or press ENTER to Install All"), true);
       {
@@ -595,14 +595,14 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       mPlugins->InsertItem( i, name, SHOW_CHECKED );
       mPlugins->SetItem( i, COL_PATH, path );
 
-      // Only need to get the icon width once 
+      // Only need to get the icon width once
       if (i == 0)
       {
 #if defined(__WXMAC__)
          // wxMac doesn't return the ICON rectangle.  It returns the
          // rectangle for the first column and that even comes back
          // with negative numbers sometimes.
-         // 
+         //
          // So, just guess.
          wxIcon i1(unchecked_xpm);
          wxIcon i2(checked_xpm);
@@ -803,14 +803,14 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
          {
             wxIntegerValidator<int> vld(&mBufferSize);
             vld.SetRange(8, 1048576 * 1);
-   
+
             S.AddVariableText(wxString() +
                _("The buffer size controls the number of samples sent to the effect ") +
                _("on each iteration. Smaller values will cause slower processing and ") +
                _("some effects require 8192 samples or less to work properly. However ") +
                _("most effects can accept large buffers and using them will greatly ") +
                _("reduce processing time."))->Wrap(650);
-   
+
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
                wxTextCtrl *t;
@@ -823,7 +823,7 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
             S.EndHorizontalLay();
          }
          S.EndStatic();
-   
+
          S.StartStatic(_("Buffer Delay Compensation"));
          {
             S.AddVariableText(wxString() +
@@ -832,7 +832,7 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
                _("notice that small silences have been inserted into the audio. ") +
                _("Enabling this setting will provide that compensation, but it may ") +
                _("not work for all VST effects."))->Wrap(650);
-   
+
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
                S.TieCheckBox(_("Enable &compensation"), wxT("/VST/UseBufferDelay"), true);
@@ -840,7 +840,7 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
             S.EndHorizontalLay();
          }
          S.EndStatic();
-   
+
          S.StartStatic(_("Presentation Method"));
          {
             S.AddVariableText(wxString() +
@@ -850,7 +850,7 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
             S.TieCheckBox(_("Enable &graphical interface"), wxT("/VST/GUI"), true);
          }
          S.EndStatic();
-   
+
          S.StartStatic(_("Effect Refresh"));
          {
             S.AddVariableText(wxString() +
@@ -922,7 +922,7 @@ class VSTEffectDialog:public wxDialog, XMLTagHandler
    void OnSizeWindow(wxCommandEvent & evt);
    void OnUpdateDisplay(wxCommandEvent & evt);
 
-private: 
+private:
 
    void BuildPlain();
    void BuildFancy();
@@ -1227,11 +1227,11 @@ OSStatus VSTEffectDialog::OnWindowEvent(EventHandlerCallRef handler, EventRef ev
          if (mOverlayRef == mPreviousRef) {
             mOverlayRef = mWindowRef;
          }
-            
+
          if (mOverlayRef != mWindowRef)
          {
             // Try again
-            
+
             // Install the handler
             mOverlayEventHandlerUPP = NewEventHandlerUPP(OverlayEventHandler);
             InstallWindowEventHandler(mOverlayRef,
@@ -1373,9 +1373,9 @@ VSTEffectDialog::VSTEffectDialog(wxWindow *parent,
 VSTEffectDialog::~VSTEffectDialog()
 {
    RemoveHandler();
-   
+
    if (mNames) {
-      delete [] mNames;	
+      delete [] mNames;
    }
 
    if (mSliders) {
@@ -1538,7 +1538,7 @@ void VSTEffectDialog::BuildPlain()
    // Try to give the window a sensible default/minimum size
    wxSize sz = GetParent()->GetSize();
    sw->SetMinSize(wxSize(wxMax(600, sz.GetWidth() * 2 / 3), sz.GetHeight() / 2));
-                                              
+
    sw->SetScrollRate(0, 20);
    vSizer->Add(sw, 1, wxEXPAND | wxALL, 5);
 
@@ -1789,7 +1789,7 @@ void VSTEffectDialog::OnProgramText(wxCommandEvent & WXUNUSED(event))
    if (ip >= 0) {
       mProgram->SetInsertionPoint(ip);
    }
-   
+
    RefreshParameters();
 }
 
@@ -1838,7 +1838,7 @@ void VSTEffectDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
 
       if (!error) error = (buffer[0] != CCONST('C', 'c', 'n', 'K'));    ///< 'CcnK'
       //VstInt32 byteSize;			                                    ///< size of this chunk, excl. magic + byteSize
-      if (!error) {               
+      if (!error) {
          if (mAEffect->flags & effFlagsProgramChunks)
             error = (buffer[2] != CCONST('F', 'P', 'C', 'h'));          ///< 'FxCk' (regular) or 'FPCh' (opaque chunk)
          else
@@ -1959,7 +1959,7 @@ void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(event))
                       this);
          return;
       }
-      
+
       buffer[0] = CCONST('C', 'c', 'n', 'K'); // VstInt32 chunkMagic;   ///< 'CcnK'
       buffer[1] = 48; // VstInt32 byteSize;			                    ///< size of this chunk, excl. magic + byteSize
       if (mAEffect->flags & effFlagsProgramChunks) {                    ///< 'FxCk' (regular) or 'FPCh' (opaque chunk)
@@ -1975,7 +1975,7 @@ void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(event))
       buffer[3] = 1;                                                    ///< format version (currently 1)
       buffer[4] = mAEffect->uniqueID;                                   ///< fx unique ID
       buffer[5] = mEffect->callDispatcher(effGetVendorVersion, 0, 0, NULL, 0.0);      ///< fx version
-      buffer[6] = mAEffect->numParams;                      
+      buffer[6] = mAEffect->numParams;
 
       // VST always uses Big Endian, convert first
       for (i = 0; i < 7; i++)
@@ -1985,7 +1985,7 @@ void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(event))
       memset(buffer, 0, 28);
       wxConvLocal.FromWChar((char*)buffer, 27, mProgram->GetValue());
       if (!error) error = (fwrite(buffer, 1, 28, fxpFile.fp()) < 28);   ///< program name (null-terminated ASCII string)
- 
+
       if (mAEffect->flags & effFlagsProgramChunks) {
          buffer[0] = wxINT32_SWAP_ON_LE(chunkSize);
          if (!error) error = !fwrite(buffer, 4, 1, fxpFile.fp());
@@ -2115,7 +2115,7 @@ bool VSTEffectDialog::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       while (*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value) {
             break;
          }
@@ -2140,7 +2140,7 @@ bool VSTEffectDialog::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       while (*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value) {
             break;
          }
@@ -2174,12 +2174,12 @@ bool VSTEffectDialog::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       return true;
    }
-      
+
    if (wxStrcmp(tag, wxT("program")) == 0) {
       while (*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value) {
             break;
          }
@@ -2342,7 +2342,7 @@ wxString VSTEffectDialog::b64encode(const void *in, int len)
 {
    unsigned char *p = (unsigned char *) in;
    wxString out;
-   
+
    unsigned long temp;
    for (int i = 0; i < len / 3; i++) {
       temp  = (*p++) << 16; //Convert to big endian
@@ -2535,7 +2535,7 @@ static intptr_t audioMaster(AEffect * effect,
       case audioMasterIdle:
          wxYieldIfNeeded();
          return 1;
-      
+
       case audioMasterGetCurrentProcessLevel:
          if (vst) {
             return vst->GetProcessLevel();
@@ -2746,13 +2746,13 @@ bool VSTEffect::Init()
       sampleCount llen;
 
       GetSamples(left, &lstart, &llen);
-      
+
       if (left->GetLinked()) {
          WaveTrack *right = (WaveTrack *) iter.Next();
          sampleCount rstart;
          sampleCount rlen;
 
-         GetSamples(right, &rstart, &rlen);         
+         GetSamples(right, &rstart, &rlen);
 
          if (left->GetRate() != right->GetRate()) {
             wxMessageBox(_("Both channels of a stereo track must be the same sample rate."));
@@ -2764,7 +2764,7 @@ bool VSTEffect::Init()
             return false;
          }
       }
-      
+
       left = (WaveTrack *) iter.Next();
    }
 
@@ -2853,7 +2853,7 @@ bool VSTEffect::Process()
       right = NULL;
       rstart = 0;
       if (left->GetLinked() && mInputs > 1) {
-         right = (WaveTrack *) iter.Next();         
+         right = (WaveTrack *) iter.Next();
          GetSamples(right, &rstart, &len);
          clear = false;
          mChannels = 2;
@@ -2923,7 +2923,7 @@ bool VSTEffect::Process()
       mInBuffer = NULL;
    }
 
-   ReplaceProcessedTracks(bGoodResult); 
+   ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -2960,14 +2960,14 @@ bool VSTEffect::ProcessStereo(int count,
    // samples to the output track which was Michael's speed up mentioned above.
    //
    // The buffer delay compensation adds even more complexitity...
-   // 
+   //
    // Upon return from the effect, the output samples are "moved to the left" by
    // the number of samples in the current delay setting, effectively removing the
    // delay introduced by the effect.
    //
    // At the same time the total number of delayed samples are gathered and when the
    // there is no further input data to process, the loop continues to call the
-   // effect with an empty input buffer until the effect has had a chance to 
+   // effect with an empty input buffer until the effect has had a chance to
    // return all of the remaining delayed samples.
    //
    // Please note, that this process has next to no documetation on how it should
@@ -3095,7 +3095,7 @@ bool VSTEffect::ProcessStereo(int count,
       rs += block;
       mTimeInfo.samplePos += ((double) block / mTimeInfo.sampleRate);
 
-      if (mInputs > 1) {      
+      if (mInputs > 1) {
          if (TrackGroupProgress(count, (ls - lstart) / (double)originalLen)) {
             rc = false;
             break;
@@ -3281,7 +3281,7 @@ bool VSTEffect::Load()
          mName = GetString(effGetEffectName);
          mInputs = mAEffect->numInputs;
          mOutputs = mAEffect->numOutputs;
-         
+
          // We could even go so far as to run a small test here.
 
          success = true;
@@ -3330,7 +3330,7 @@ void VSTEffect::ScanOnePlugin( const wxString & file )
    argv[1] = VSTCMDKEY;
    argv[2] = file.c_str();
    argv[3] = NULL;
-   // ToDo: do we need a try--catch around this in case a bad plug-in 
+   // ToDo: do we need a try--catch around this in case a bad plug-in
    // fails? (JKC Nov09)
    wxExecute((wxChar **) argv, wxEXEC_SYNC | wxEXEC_NODISABLE, NULL);
 }
@@ -3361,7 +3361,7 @@ void VSTEffect::ShowProgressDialog( const wxString & longest, const wxArrayStrin
       ScanOnePlugin( file );
    }
 
-   delete progress;   
+   delete progress;
 }
 
 /* static */
@@ -3407,7 +3407,7 @@ int VSTEffect::Scan()
          files.RemoveAt(i--);
       }
    }
-   
+
 #elif defined(__WXMSW__)
 
    TCHAR dpath[MAX_PATH];
@@ -3471,7 +3471,7 @@ int VSTEffect::Scan()
    size_t cnt = files.GetCount();
    wxString longest;
 
-   // JKC: Let's not show the progress dialog if there are no 
+   // JKC: Let's not show the progress dialog if there are no
    // files to test.
    if( cnt <= 0 )
       return wxID_OK;

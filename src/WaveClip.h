@@ -61,16 +61,16 @@ class AUDACITY_DLL_API WaveClip : public XMLTagHandler
 {
 private:
    // It is an error to copy a WaveClip without specifying the DirManager.
-   // We define these break-inducing single-arg methods so that 
-   // if some developer makes the mistake of calling a single-arg copy 
-   // constructor rather than the one below (that requires a DirManager*), 
-   // rather than it going to C++-generated default copy constructor, 
+   // We define these break-inducing single-arg methods so that
+   // if some developer makes the mistake of calling a single-arg copy
+   // constructor rather than the one below (that requires a DirManager*),
+   // rather than it going to C++-generated default copy constructor,
    // it goes here and the error is made clear to that developer.
    WaveClip(const WaveClip&)
    {
       wxFAIL_MSG(wxT("It is an error to copy a WaveClip without specifying the DirManager."));
    };
-   WaveClip& operator=(const WaveClip& orig) 
+   WaveClip& operator=(const WaveClip& orig)
    {
       WaveClip bogus(orig);
       return *this;
@@ -91,14 +91,14 @@ public:
 
    void TimeToSamplesClip(double t0, sampleCount *s0) const;
    int GetRate() const { return mRate; }
-   
+
    // Set rate without resampling. This will change the length of the clip
    void SetRate(int rate);
-   
+
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
    bool Resample(int rate, ProgressDialog *progress = NULL);
-   
+
    void SetOffset(double offset);
    double GetOffset() const { return mOffset; }
    void Offset(double delta) { SetOffset(GetOffset() + delta); }
@@ -119,7 +119,7 @@ public:
                    sampleCount start, sampleCount len) const;
    bool SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len);
- 
+
    Envelope* GetEnvelope() { return mEnvelope; }
    BlockArray* GetSequenceBlockArray() { return mSequence->GetBlockArray(); }
 
@@ -167,7 +167,7 @@ public:
 
    bool AppendAlias(wxString fName, sampleCount start,
                     sampleCount len, int channel,bool useOD);
-                    
+
    bool AppendCoded(wxString fName, sampleCount start,
                             sampleCount len, int channel, int decodeType);
 
@@ -187,7 +187,7 @@ public:
 
    /// Get access to cut lines list
    WaveClipList* GetCutLines() { return &mCutLines; }
-   
+
    /** Find cut line at (approximately) this position. Returns true and fills
     * in cutLineStart and cutLineEnd (if specified) if a cut line at this
     * position could be found. Return false otherwise. */
@@ -203,10 +203,10 @@ public:
    /// Remove cut line, without expanding the audio in it
    bool RemoveCutLine(double cutLinePosition);
    void RemoveAllCutLines();
-   
+
    /// Offset cutlines right to time 't0' by time amount 'len'
    void OffsetCutLines(double t0, double len);
-   
+
    /// Lock all blockfiles
    void Lock();
    void CloseLock(); //similar to Lock but should be called when the project closes.
@@ -215,14 +215,14 @@ public:
 
    ///Delete the wave cache - force redraw.  Thread-safe
    void DeleteWaveCache();
-   
+
    ///Adds an invalid region to the wavecache so it redraws that portion only.
    void AddInvalidRegion(long startSample, long endSample);
 
    //
    // XMLTagHandler callback methods for loading and saving
    //
-   
+
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    virtual void HandleXMLEndTag(const wxChar *tag);
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);

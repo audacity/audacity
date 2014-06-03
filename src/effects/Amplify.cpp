@@ -48,11 +48,11 @@ EffectAmplify::EffectAmplify()
    peak = float(0.0);
 }
 
-wxString EffectAmplify::GetEffectDescription() { 
-   // Note: This is useful only after ratio has been set. 
-   return wxString::Format(_("Applied effect: %s %.1f dB"), 
-                           this->GetEffectName().c_str(), 20*log10(ratio)); 
-} 
+wxString EffectAmplify::GetEffectDescription() {
+   // Note: This is useful only after ratio has been set.
+   return wxString::Format(_("Applied effect: %s %.1f dB"),
+                           this->GetEffectName().c_str(), 20*log10(ratio));
+}
 
 bool EffectAmplify::Init()
 {
@@ -64,7 +64,7 @@ bool EffectAmplify::Init()
       float min, max;
       ((WaveTrack *)t)->GetMinMax(&min, &max, mT0, mT1);
       float newpeak = (fabs(min) > fabs(max) ? fabs(min) : fabs(max));
-      
+
       if (newpeak > peak) {
          peak = newpeak;
       }
@@ -228,7 +228,7 @@ bool AmplifyDialog::TransferDataFromWindow()
 bool AmplifyDialog::Validate()
 {
    TransferDataFromWindow();
-   
+
    if (mClip->GetValue() == false) {
      if (ratio * peak > 1.0)
         ratio = 1.0 / peak;
@@ -265,7 +265,7 @@ void AmplifyDialog::OnAmpText(wxCommandEvent & WXUNUSED(event))
    else
       val = _("-Infinity");   // the case when the waveform is all zero
    mPeakT->ChangeValue(val);
-   
+
    CheckClip();
 }
 
@@ -276,12 +276,12 @@ void AmplifyDialog::OnPeakText(wxCommandEvent & WXUNUSED(event))
 
    val.ToDouble(&r);
    ratio = pow(10.0, r/20.0) / peak;
-   
+
    double dB = TrapDouble(200*log10(ratio), AMP_MIN, AMP_MAX)/10.0;
    ratio = pow(10.0, dB/20.0);
 
    mAmpS->SetValue((int)(10*dB+0.5));
-   
+
    val.Printf(wxT("%.1f"), dB);
    mAmpT->ChangeValue(val);
 
@@ -294,13 +294,13 @@ void AmplifyDialog::OnAmpSlider(wxCommandEvent & WXUNUSED(event))
 
    double dB = mAmpS->GetValue() / 10.0;
    ratio = pow(10.0,TrapDouble(dB, AMP_MIN, AMP_MAX)/20.0);
-   
+
    double dB2 = (mAmpS->GetValue()-1) / 10.0;
    double ratio2 = pow(10.0,TrapDouble(dB2, AMP_MIN, AMP_MAX)/20.0);
 
    if (!mClip->GetValue() && ratio * peak > 1.0 && ratio2 * peak < 1.0)
       ratio = 1.0 / peak;
-   
+
    str.Printf(wxT("%.1f"), 20*log10(ratio));
    mAmpT->ChangeValue(str);
 

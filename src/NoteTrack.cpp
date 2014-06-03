@@ -52,7 +52,7 @@ bool sonificationStarted = false;
 
 void SonifyBeginSonification()
 {
-   PmError err = Pm_OpenOutput(&sonMidiStream, Pm_GetDefaultOutputDeviceID(), 
+   PmError err = Pm_OpenOutput(&sonMidiStream, Pm_GetDefaultOutputDeviceID(),
                                NULL, 0, NULL, NULL, 0);
    if (err) sonMidiStream = NULL;
    if (sonMidiStream)
@@ -76,7 +76,7 @@ void SonifyNoteOnOff(int p, int v)
       SonifyBeginSonification();
    if (sonMidiStream)
       Pm_WriteShort(sonMidiStream, 0, Pm_Message(0x90, p, v));
-}      
+}
 
 #define SONFNS(name) \
    void SonifyBegin ## name() { SonifyNoteOnOff(SON_ ## name, SON_VEL); } \
@@ -146,7 +146,7 @@ Track *NoteTrack::Duplicate()
       SonifyBeginSerialize();
       assert(!mSerializationBuffer);
       // serialize from this to duplicate's mSerializationBuffer
-      mSeq->serialize((void**)&duplicate->mSerializationBuffer, 
+      mSeq->serialize((void**)&duplicate->mSerializationBuffer,
                       &duplicate->mSerializationLength);
       SonifyEndSerialize();
    } else if (mSerializationBuffer) {
@@ -183,8 +183,8 @@ double NoteTrack::GetEndTime()
 }
 
 
-void NoteTrack::WarpAndTransposeNotes(double t0, double t1, 
-                                      const TimeWarper &warper, 
+void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
+                                      const TimeWarper &warper,
                                       double semitones)
 {
    // Since this is a duplicate and duplicates convert mSeq to
@@ -215,7 +215,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
    iter.begin();
    Alg_event_ptr event;
    while ((event = iter.next()) && event->time < t1) {
-      if (event->is_note() && event->time >= t0 && 
+      if (event->is_note() && event->time >= t0 &&
           // Allegro data structure does not restrict channels to 16.
           // Since there is not way to select more than 16 channels,
           // map all channel numbers mod 16. This will have no effect
@@ -271,7 +271,7 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
             dc.DrawRectangle(box);
 // two choices: channel is enabled (to see and play) when button is in
 // "up" position (original Audacity style) or in "down" position
-// 
+//
 #define CHANNEL_ON_IS_DOWN 1
 #if CHANNEL_ON_IS_DOWN
             AColor::DarkMIDIChannel(&dc, chanName);
@@ -323,7 +323,7 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
 
          t.Printf(wxT("%d"), chanName);
          dc.GetTextExtent(t, &w, &h);
-   
+
          dc.DrawText(t, box.x + (box.width - w) / 2, box.y + (box.height - h) / 2);
       }
    }
@@ -371,7 +371,7 @@ void NoteTrack::SetSequence(Alg_seq_ptr seq)
    mSeq = seq;
 }
 
-Alg_seq* NoteTrack::GetSequence() 
+Alg_seq* NoteTrack::GetSequence()
 {
    return mSeq;
 }
@@ -422,7 +422,7 @@ void NoteTrack::PrintSequence()
             }
             else {}
          }
-        
+
          i++;
       }
    }
@@ -527,7 +527,7 @@ bool NoteTrack::Paste(double t, Track *src)
    //Check that src is a non-NULL NoteTrack
    if (src == NULL || src->GetKind() != Track::Note)
       return false;
-   
+
    NoteTrack* other = (NoteTrack*)src;
    if (other->mSeq == NULL)
       return false;
@@ -555,7 +555,7 @@ bool NoteTrack::Shift(double t) // t is always seconds
       // get initial tempo
       double tempo = mSeq->get_tempo(0.0);
       double beats_per_measure = mSeq->get_bar_len(0.0);
-      int m = ROUND(t * tempo / beats_per_measure); 
+      int m = ROUND(t * tempo / beats_per_measure);
       // need at least 1 measure, so if we rounded down to zero, fix it
       if (m == 0) m = 1;
       // compute new tempo so that m measures at new tempo take t seconds
@@ -633,7 +633,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
       Alg_beat_ptr bp = &(map->beats[0]);
       if (bp->time < ALG_EPS) { // tempo change at time 0
          if (map->beats.len > 1) { // compute slope to get tempo
-            bps = (map->beats[1].beat - map->beats[0].beat) / 
+            bps = (map->beats[1].beat - map->beats[0].beat) /
                   (map->beats[1].time - map->beats[0].time);
          } else if (seq->get_time_map()->last_tempo_flag) {
             bps = seq->get_time_map()->last_tempo;
@@ -648,7 +648,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
       measure_time = offset / n;
       bps = beats_per_measure / measure_time;
       // insert integer multiple of measures at beginning
-      seq->convert_to_beats();      
+      seq->convert_to_beats();
       seq->insert_silence(0, beats_per_measure * n);
       // make sure time signature at 0 is correct
       if (tsp) {
@@ -667,7 +667,7 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
       double beat = mSeq->get_time_map()->time_to_beat(start);
       // Find the time signature in mSeq in effect at start (beat):
       int i = mSeq->time_sig.find_beat(beat);
-      // i is where you would insert a new time sig at beat, 
+      // i is where you would insert a new time sig at beat,
       // Case 1: beat coincides with a time sig at i. Time signature
       // at beat means that there is a barline at beat, so when beat
       // is shifted to 0, the relative barline positions are preserved
@@ -676,10 +676,10 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
          // beat coincides with time signature change, so offset must
          // be a multiple of beats
          /* do nothing */ ;
-      // Case 2: there is no time signature before beat. 
+      // Case 2: there is no time signature before beat.
       } else if (i == 0 && (mSeq->time_sig.length() == 0 ||
                             mSeq->time_sig[i].beat > beat)) {
-         // If beat does not fall on an implied barline, we need to 
+         // If beat does not fall on an implied barline, we need to
          // insert a time signature.
          double measures = beat / 4.0;
          double imeasures = ROUND(measures);
@@ -688,12 +688,12 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
             seq->set_time_sig(bar_offset, 4, 4);
          }
       // This case should never be true because if i == 0, either there
-      // are no time signatures before beat (Case 2), 
+      // are no time signatures before beat (Case 2),
       // or there is one time signature at beat (Case 1)
       } else if (i == 0) {
          /* do nothing (might be good to assert(false)) */ ;
       // Case 3: i-1 must be the effective time sig position
-      } else { 
+      } else {
          i -= 1; // index the time signature in effect at beat
          Alg_time_sig_ptr tsp = &(mSeq->time_sig[i]);
          double beats_per_measure = (tsp->num * 4) / tsp->den;
@@ -709,14 +709,14 @@ Alg_seq_ptr NoteTrack::MakeExportableSeq()
             // It will have the same time signature, but the position will
             // force a barline to match the barlines in mSeq
             seq->set_time_sig(bar_offset, tsp->num, tsp->den);
-         } 
+         }
          // else beat coincides with a barline, so no need for an extra
          // time signature to force barline alignment
       }
    }
    return seq;
 }
-   
+
 
 bool NoteTrack::ExportMIDI(wxString f)
 {
@@ -753,29 +753,29 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          double dblValue;
          if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(strValue))
             mName = strValue;
-         else if (!wxStrcmp(attr, wxT("offset")) && 
-                  XMLValueChecker::IsGoodString(strValue) && 
+         else if (!wxStrcmp(attr, wxT("offset")) &&
+                  XMLValueChecker::IsGoodString(strValue) &&
                   Internat::CompatibleToDouble(strValue, &dblValue))
             SetOffset(dblValue);
          else if (!wxStrcmp(attr, wxT("visiblechannels"))) {
-             if (!XMLValueChecker::IsGoodInt(strValue) || 
+             if (!XMLValueChecker::IsGoodInt(strValue) ||
                  !strValue.ToLong(&nValue) ||
                  !XMLValueChecker::IsValidVisibleChannels(nValue))
                  return false;
              mVisibleChannels = nValue;
          }
-         else if (!wxStrcmp(attr, wxT("height")) && 
+         else if (!wxStrcmp(attr, wxT("height")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mHeight = nValue;
-         else if (!wxStrcmp(attr, wxT("minimized")) && 
+         else if (!wxStrcmp(attr, wxT("minimized")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             mMinimized = (nValue != 0);
-         else if (!wxStrcmp(attr, wxT("isSelected")) && 
+         else if (!wxStrcmp(attr, wxT("isSelected")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             this->SetSelected(nValue != 0);
 #ifdef EXPERIMENTAL_MIDI_OUT
-         else if (!wxStrcmp(attr, wxT("velocity")) && 
-                  XMLValueChecker::IsGoodString(strValue) && 
+         else if (!wxStrcmp(attr, wxT("velocity")) &&
+                  XMLValueChecker::IsGoodString(strValue) &&
                   Internat::CompatibleToDouble(strValue, &dblValue))
             mGain = (float) dblValue;
 #endif
@@ -808,10 +808,10 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile)
    // we combine the Duplicate with serialization or unserialization.
    // Serialization and Unserialization happen on alternate calls to
    // Duplicate and (usually) produce the right results at the right
-   // time. 
-   // It turns out that this optimized Duplicate is a little too 
+   // time.
+   // It turns out that this optimized Duplicate is a little too
    // clever. There is at least one case where a track can be duplicated
-   // and then AutoSave'd. (E.g. do an "Insert Silence" effect on a 
+   // and then AutoSave'd. (E.g. do an "Insert Silence" effect on a
    // NoteTrack.) In this case, mSeq will be NULL. To avoid a crash
    // and perform WriteXML, we may need to restore NoteTracks from binary
    // blobs to regular data structures (with an Alg_seq member).
@@ -852,7 +852,7 @@ void NoteTrack::VScroll(int start, int end)
     SetBottomNote(mStartBottomNote + delta);
 }
 
-// Zoom the note track, centering the pitch at centerY, 
+// Zoom the note track, centering the pitch at centerY,
 // amount is 1 for zoom in, and -1 for zoom out
 void NoteTrack::Zoom(int centerY, int amount)
 {

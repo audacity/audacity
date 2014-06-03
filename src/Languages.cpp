@@ -44,7 +44,7 @@ WX_DECLARE_STRING_HASH_MAP(wxString, LangHash);
 
 static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
 {
-   wxArrayString results;   
+   wxArrayString results;
    wxGetApp().FindFilesInPathList(wxString::Format(wxT("%s/audacity.mo"),
                                                    code.c_str()),
                                   audacityPathList,
@@ -60,7 +60,7 @@ static bool TranslationExists(wxArrayString &audacityPathList, wxString code)
                                                    code.c_str()),
                                   audacityPathList,
                                   results);
-   
+
    return (results.GetCount() > 0);
 }
 
@@ -72,7 +72,7 @@ wxString GetSystemLanguageCode()
    GetLanguages(langCodes, langNames);
    int sysLang = wxLocale::GetSystemLanguage();
    const wxLanguageInfo *info = wxLocale::GetLanguageInfo(sysLang);
-   
+
    if (info) {
       wxString fullCode = info->CanonicalName;
       if (fullCode.Length() < 2)

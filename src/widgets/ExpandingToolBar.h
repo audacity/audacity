@@ -82,7 +82,7 @@ class ExpandingToolBar : public wxPanel
    void ReparentExtraPanel();
    void MoveDrawer(wxSize prevSize);
    wxBitmap GetToolbarBitmap();
-   
+
    void TryAutoExpand();
    void TryAutoCollapse();
 
@@ -125,22 +125,22 @@ class ToolBarGrabber : public wxPanel
 {
  public:
    DECLARE_DYNAMIC_CLASS(ToolBarGrabber);
-   
+
    ToolBarGrabber(wxWindow *parent,
                   wxWindowID id,
                   ExpandingToolBar *ownerToolbar,
                   const wxPoint& pos = wxDefaultPosition,
                   const wxSize& size = wxDefaultSize);
-   
+
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnMouse(wxMouseEvent &evt);
- 
+
  protected:
    int               mState;
    ImageRoll         mImageRoll[2];
    ExpandingToolBar *mOwnerToolBar;
-   
+
    DECLARE_EVENT_TABLE();
 };
 

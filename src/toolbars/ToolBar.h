@@ -69,7 +69,7 @@ enum
    DeviceBarID,
    ToolBarCount
 };
-  
+
 class ToolBar:public wxPanel
 {
 
@@ -113,7 +113,7 @@ class ToolBar:public wxPanel
                        teBmps eDisabled,
                        wxWindowID id,
                        wxPoint placement,
-                       bool processdownevents, 
+                       bool processdownevents,
                        wxSize size);
 
    void SetButton(bool down, AButton *button);
@@ -170,7 +170,7 @@ class ToolBar:public wxPanel
    void Init(wxWindow *parent, int type, const wxString & title, const wxString & label);
 
    wxWindow *mParent;
-   
+
    Grabber *mGrabber;
    wxBoxSizer *mHSizer;
    wxSizerItem *mSpacer;

@@ -13,17 +13,17 @@
 *//****************************************************************//**
 
 \class Sequence
-\brief A WaveTrack contains WaveClip(s). 
-   A WaveClip contains a Sequence. A Sequence is primarily an 
-   interface to an array of SeqBlock instances, corresponding to 
+\brief A WaveTrack contains WaveClip(s).
+   A WaveClip contains a Sequence. A Sequence is primarily an
+   interface to an array of SeqBlock instances, corresponding to
    the audio BlockFiles on disk.
    Contrast with RingBuffer.
 
 *//****************************************************************//**
 
 \class SeqBlock
-\brief Data structure containing pointer to a BlockFile and 
-   a start time. Element of a BlockArray. 
+\brief Data structure containing pointer to a BlockFile and
+   a start time. Element of a BlockArray.
 
 *//*******************************************************************/
 
@@ -154,7 +154,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    if (format == mSampleFormat)
       return true;
 
-   if (mBlock->GetCount() == 0) 
+   if (mBlock->GetCount() == 0)
    {
       mSampleFormat = format;
       *pbChanged = true;
@@ -174,15 +174,15 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    pNewBlockArray->Alloc(mBlock->GetCount() * ((float)oldMaxSamples / (float)mMaxSamples));
 
    bool bSuccess = true;
-   for (size_t i = 0; (i < mBlock->GetCount() && bSuccess); i++) 
+   for (size_t i = 0; (i < mBlock->GetCount() && bSuccess); i++)
    {
       SeqBlock* pOldSeqBlock = mBlock->Item(i);
       BlockFile* pOldBlockFile = pOldSeqBlock->f;
-      
+
       sampleCount len = pOldSeqBlock->f->GetLength();
       samplePtr bufferOld = NewSamples(len, oldFormat);
       samplePtr bufferNew = NewSamples(len, mSampleFormat);
-      
+
       bSuccess = (pOldBlockFile->ReadData(bufferOld, oldFormat, 0, len) > 0);
       if (!bSuccess)
       {
@@ -190,18 +190,18 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
          DeleteSamples(bufferOld);
          break;
       }
-      
+
       CopySamples(bufferOld, oldFormat, bufferNew, mSampleFormat, len);
-      
-      // Note this fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=451, 
+
+      // Note this fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=451,
       // using Blockify, allows (len < mMinSamples).
       // This will happen consistently when going from more bytes per sample to fewer...
-      // This will create a block that's smaller than mMinSamples, which 
+      // This will create a block that's smaller than mMinSamples, which
       // shouldn't be allowed, but we agreed it's okay for now.
       //vvv ANSWER-ME: Does this cause any bugs, or failures on write, elsewhere?
-      //    If so, need to special-case (len < mMinSamples) and start combining data 
+      //    If so, need to special-case (len < mMinSamples) and start combining data
       //    from the old blocks... Oh no!
-      
+
       // Using Blockify will handle the cases where len > the new mMaxSamples. Previous code did not.
       BlockArray* pSplitBlockArray = Blockify(bufferNew, len);
       bSuccess = (pSplitBlockArray->GetCount() > 0);
@@ -215,7 +215,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
          *pbChanged = true;
       }
       delete pSplitBlockArray;
-      
+
       DeleteSamples(bufferNew);
       DeleteSamples(bufferOld);
    }
@@ -224,7 +224,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    {
       // Invalidate all the old, non-aliased block files.
       // Aliased files will be converted at save, per comment above.
-      for (size_t i = 0; (i < mBlock->GetCount() && bSuccess); i++) 
+      for (size_t i = 0; (i < mBlock->GetCount() && bSuccess); i++)
       {
          SeqBlock* pOldSeqBlock = mBlock->Item(i);
          mDirManager->Deref(pOldSeqBlock->f);
@@ -237,8 +237,8 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
    }
    else
    {
-      /* vvvvv We *should do the following, but TrackPanel::OnFormatChange() doesn't actually check the conversion results, 
-         it just assumes the conversion was successful. 
+      /* vvvvv We *should do the following, but TrackPanel::OnFormatChange() doesn't actually check the conversion results,
+         it just assumes the conversion was successful.
          TODO: Uncomment this section when TrackPanel::OnFormatChange() is upgraded to check the results.
 
          // Conversion failed. Revert these member vars.
@@ -246,12 +246,12 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format, bool* pbChanged)
          mMaxSamples = oldMaxSamples;
          */
 
-      delete pNewBlockArray; // Failed. Throw out the scratch array. 
+      delete pNewBlockArray; // Failed. Throw out the scratch array.
       *pbChanged = false;  // Revert overall change flag, in case we had some partial success in the loop.
    }
 
    bSuccess &= ConsistencyCheck(wxT("Sequence::ConvertToSampleFormat()"));
-   
+
    return bSuccess;
 }
 
@@ -445,9 +445,9 @@ bool Sequence::Copy(sampleCount s0, sampleCount s1, Sequence **dest)
       Get(buffer, mSampleFormat, mBlock->Item(b1)->start, blocklen);
       (*dest)->Append(buffer, mSampleFormat, blocklen);
    }
-   
+
    DeleteSamples(buffer);
-   
+
    return true;
 }
 
@@ -456,8 +456,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    if ((s < 0) || (s > mNumSamples))
    {
       wxLogError(
-         wxT("Sequence::Paste: sampleCount s %s is < 0 or > mNumSamples %s)."), 
-         Internat::ToString(((wxLongLong)s).ToDouble(), 0).c_str(), 
+         wxT("Sequence::Paste: sampleCount s %s is < 0 or > mNumSamples %s)."),
+         Internat::ToString(((wxLongLong)s).ToDouble(), 0).c_str(),
          Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str());
       wxASSERT(false);
       return false;
@@ -467,8 +467,8 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    if (((double)mNumSamples) + ((double)src->mNumSamples) > wxLL(9223372036854775807))
    {
       wxLogError(
-         wxT("Sequence::Paste: mNumSamples %s + src->mNumSamples %s would overflow."), 
-         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(), 
+         wxT("Sequence::Paste: mNumSamples %s + src->mNumSamples %s would overflow."),
+         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(),
          Internat::ToString(((wxLongLong)src->mNumSamples).ToDouble(), 0).c_str());
       wxASSERT(false);
       return false;
@@ -477,7 +477,7 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
    if (src->mSampleFormat != mSampleFormat)
    {
       wxLogError(
-         wxT("Sequence::Paste: Sample format to be pasted, %s, does not match destination format, %s."), 
+         wxT("Sequence::Paste: Sample format to be pasted, %s, does not match destination format, %s."),
          GetSampleFormatStr(src->mSampleFormat), GetSampleFormatStr(src->mSampleFormat));
       wxASSERT(false);
       return false;
@@ -524,11 +524,11 @@ bool Sequence::Paste(sampleCount s, const Sequence *src)
       SeqBlock *largerBlock = new SeqBlock();
       largerBlock->start = mBlock->Item(b)->start;
       sampleCount largerBlockLen = mBlock->Item(b)->f->GetLength() + addedLen;
-      if (largerBlockLen > mMaxSamples) 
+      if (largerBlockLen > mMaxSamples)
       {
          wxLogError(
-            wxT("Sequence::Paste: (largerBlockLen %s > mMaxSamples %s). largerBlockLen truncated to mMaxSamples."), 
-            Internat::ToString(((wxLongLong)largerBlockLen).ToDouble(), 0).c_str(), 
+            wxT("Sequence::Paste: (largerBlockLen %s > mMaxSamples %s). largerBlockLen truncated to mMaxSamples."),
+            Internat::ToString(((wxLongLong)largerBlockLen).ToDouble(), 0).c_str(),
             Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
          largerBlockLen = mMaxSamples; // Prevent overruns, per NGS report for UmixIt.
       }
@@ -806,17 +806,17 @@ sampleCount Sequence::GetBestBlockSize(sampleCount start) const
    // than the value of GetMaxBlockSize();
    int b = FindBlock(start);
    int numBlocks = mBlock->GetCount();
-   
+
    sampleCount result = (mBlock->Item(b)->start + mBlock->Item(b)->f->GetLength() - start);
-   
+
    while(result < mMinSamples && b+1<numBlocks &&
          (mBlock->Item(b+1)->f->GetLength()+result) <= mMaxSamples) {
       b++;
       result += mBlock->Item(b)->f->GetLength();
    }
-   
+
    wxASSERT(result > 0 && result <= mMaxSamples);
-   
+
    return result;
 }
 
@@ -835,10 +835,10 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       while(*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value)
             break;
-         
+
          // Both these attributes have non-negative integer counts of samples, so
 		 // we can test & convert here, making sure that values > 2^31 are OK
 		 // because long clips will need them.
@@ -848,25 +848,25 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             delete (wb);
             mErrorOpening = true;
             wxLogWarning(
-               wxT("   Sequence has bad %s attribute value, %s, that should be a positive integer."), 
+               wxT("   Sequence has bad %s attribute value, %s, that should be a positive integer."),
                attr, strValue.c_str());
             return false;
          }
-         
+
          if (!wxStrcmp(attr, wxT("start")))
             wb->start = nValue;
 
-         // Vaughan, 2011-10-10: I don't think we ever write a "len" attribute for "waveblock" tag, 
-         // so I think this is actually legacy code, or something intended, but not completed. 
-         // Anyway, might as well leave this code in, especially now that it has the check 
+         // Vaughan, 2011-10-10: I don't think we ever write a "len" attribute for "waveblock" tag,
+         // so I think this is actually legacy code, or something intended, but not completed.
+         // Anyway, might as well leave this code in, especially now that it has the check
          // against mMaxSamples.
          if (!wxStrcmp(attr, wxT("len")))
          {
-            // mMaxSamples should already have been set by calls to the "sequence" clause below. 
-            // The check intended here was already done in DirManager::HandleXMLTag(), where 
-            // it let the block be built, then checked against mMaxSamples, and deleted the block 
+            // mMaxSamples should already have been set by calls to the "sequence" clause below.
+            // The check intended here was already done in DirManager::HandleXMLTag(), where
+            // it let the block be built, then checked against mMaxSamples, and deleted the block
             // if the size of the block is bigger than mMaxSamples.
-            if (nValue > mMaxSamples) 
+            if (nValue > mMaxSamples)
             {
                delete (wb);
                mErrorOpening = true;
@@ -881,16 +881,16 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       return true;
    }
-   
+
    /* handle sequence tag and it's attributes */
    if (!wxStrcmp(tag, wxT("sequence"))) {
       while(*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value)
             break;
-         
+
          const wxString strValue = value;	// promote string, we need this for all
 
          if (!wxStrcmp(attr, wxT("maxsamples")))
@@ -935,9 +935,9 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 		 }
       } // while
 
-      //// Both mMaxSamples and mSampleFormat should have been set. 
+      //// Both mMaxSamples and mSampleFormat should have been set.
       //// Check that mMaxSamples is right for mSampleFormat, using the calculations from the constructor.
-      //if ((mMinSamples != sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2) || 
+      //if ((mMinSamples != sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2) ||
       //      (mMaxSamples != mMinSamples * 2))
       //{
       //   mErrorOpening = true;
@@ -946,7 +946,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       return true;
    }
-   
+
    return false;
 }
 
@@ -967,13 +967,13 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
          else
             len = mNumSamples - mBlock->Item(b)->start;
 
-         if (len > mMaxSamples) 
+         if (len > mMaxSamples)
          {
             // This could be why the blockfile failed, so limit
             // the silent replacement to mMaxSamples.
             wxLogWarning(
-               wxT("   Sequence has missing block file with length %s > mMaxSamples %s.\n      Setting length to mMaxSamples. This will likely cause some block files to be considered orphans."), 
-               Internat::ToString(((wxLongLong)len).ToDouble(), 0).c_str(), 
+               wxT("   Sequence has missing block file with length %s > mMaxSamples %s.\n      Setting length to mMaxSamples. This will likely cause some block files to be considered orphans."),
+               Internat::ToString(((wxLongLong)len).ToDouble(), 0).c_str(),
                Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
             len = mMaxSamples;
          }
@@ -991,22 +991,22 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
          wxString sFileAndExtension = mBlock->Item(b)->f->GetFileName().GetFullName();
          if (sFileAndExtension.IsEmpty())
             sFileAndExtension = wxT("(replaced with silence)");
-         else 
+         else
             sFileAndExtension = wxT("\"") + sFileAndExtension + wxT("\"");
          wxLogWarning(
-            wxT("Gap detected in project file.\n   Start (%s) for block file %s is more than one sample past end of previous block (%s).\n   Moving start back so blocks are contiguous."), 
-            Internat::ToString(((wxLongLong)(mBlock->Item(b)->start)).ToDouble(), 0).c_str(), 
-            sFileAndExtension.c_str(), 
+            wxT("Gap detected in project file.\n   Start (%s) for block file %s is more than one sample past end of previous block (%s).\n   Moving start back so blocks are contiguous."),
+            Internat::ToString(((wxLongLong)(mBlock->Item(b)->start)).ToDouble(), 0).c_str(),
+            sFileAndExtension.c_str(),
             Internat::ToString(((wxLongLong)(numSamples)).ToDouble(), 0).c_str());
          mBlock->Item(b)->start = numSamples;
-         mErrorOpening = true;         
+         mErrorOpening = true;
       }
       numSamples += mBlock->Item(b)->f->GetLength();
    }
    if (mNumSamples != numSamples) {
       wxLogWarning(
-         wxT("Gap detected in project file. Correcting sequence sample count from %s to %s."), 
-         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(), 
+         wxT("Gap detected in project file. Correcting sequence sample count from %s to %s."),
+         Internat::ToString(((wxLongLong)mNumSamples).ToDouble(), 0).c_str(),
          Internat::ToString(((wxLongLong)numSamples).ToDouble(), 0).c_str());
       mNumSamples = numSamples;
       mErrorOpening = true;
@@ -1026,7 +1026,7 @@ XMLTagHandler *Sequence::HandleXMLChild(const wxChar *tag)
 void Sequence::WriteXML(XMLWriter &xmlFile)
 {
    unsigned int b;
-   
+
    xmlFile.StartTag(wxT("sequence"));
 
    xmlFile.WriteAttr(wxT("maxsamples"), mMaxSamples);
@@ -1037,15 +1037,15 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
       SeqBlock *bb = mBlock->Item(b);
 
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451.
-      // Also, don't check against mMaxSamples for AliasBlockFiles, because if you convert sample format,  
-      // mMaxSample gets changed to match the format, but the number of samples in the aliased file 
+      // Also, don't check against mMaxSamples for AliasBlockFiles, because if you convert sample format,
+      // mMaxSample gets changed to match the format, but the number of samples in the aliased file
       // has not changed (because sample format conversion was not actually done in the aliased file.
       if (!bb->f->IsAlias() && (bb->f->GetLength() > mMaxSamples))
       {
-         wxString sMsg = 
+         wxString sMsg =
             wxString::Format(
-               _("Sequence has block file with length %s > mMaxSamples %s.\nTruncating to mMaxSamples."), 
-               Internat::ToString(((wxLongLong)(bb->f->GetLength())).ToDouble(), 0).c_str(), 
+               _("Sequence has block file with length %s > mMaxSamples %s.\nTruncating to mMaxSamples."),
+               Internat::ToString(((wxLongLong)(bb->f->GetLength())).ToDouble(), 0).c_str(),
                Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
          ::wxMessageBox(sMsg, _("Warning - Length in Writing Sequence"), wxICON_EXCLAMATION | wxOK);
          ::wxLogWarning(sMsg);
@@ -1114,7 +1114,7 @@ bool Sequence::Read(samplePtr buffer, sampleFormat format,
 
    int result = f->ReadData(buffer, format, start, len);
 
-   if (result != len) 
+   if (result != len)
    {
       wxLogWarning(wxT("Expected to read %d samples, got %d samples."), len, result);
       if (result < 0)
@@ -1270,7 +1270,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
       s1 = mNumSamples;
 
    sampleCount srcX = s0;
-   
+
    unsigned int block0 = FindBlock(s0);
 
    float *temp = new float[mMaxSamples];
@@ -1293,13 +1293,13 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
 
       if (num > (s1 - srcX + divisor - 1) / divisor)
          num = (s1 - srcX + divisor - 1) / divisor;
-      
+
       switch (divisor) {
       default:
       case 1:
          Read((samplePtr)temp, floatSample, mBlock->Item(b),
               srcX - mBlock->Item(b)->start, num);
-              
+
          blockStatus=b;
          break;
       case 256:
@@ -1330,7 +1330,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
          }
          break;
       }
-      
+
       // Get min/max/rms of samples for each pixel we can
       int x = 0;
 
@@ -1346,9 +1346,9 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
          sumsq = float(0.0);
          jcount = 0;
       }
-      
+
       while (x < num) {
-         
+
          while (pixel < len &&
                 where[pixel] / divisor == srcX / divisor + x) {
             if (pixel > 0) {
@@ -1368,13 +1368,13 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                jcount = 0;
             }
          }
-         
+
          sampleCount stop = (where[pixel] - srcX) / divisor;
          if (stop == x)
             stop++;
          if (stop > num)
             stop = num;
-         
+
          switch (divisor) {
          default:
          case 1:
@@ -1399,7 +1399,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                x++;
                jcount++;
             }
-            
+
             break;
          }
       }
@@ -1414,7 +1414,7 @@ bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
       srcX = mBlock->Item(b)->start;
 
    }
-   
+
    // Make sure that min[pixel - 1] doesn't segfault
    if (pixel <= 0)
       pixel = 1;
@@ -1493,7 +1493,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
                                          blockFileLog != NULL);
       if (blockFileLog)
          ((SimpleBlockFile*)newLastBlock->f)->SaveXML(*blockFileLog);
-         
+
       DeleteSamples(buffer2);
 
       mDirManager->Deref(lastBlock->f);
@@ -1513,7 +1513,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
       /* i18n-hint: Error message shown when Audacity was trying to allocate
          memory to hold audio, and didn't have enough.  'New Samples' is
          the name of the C++ function that failed, for use by a developer,
-         and should not be translated - though you could say 
+         and should not be translated - though you could say
          'in function "NewSamples()"' to be clearer.*/
       if (!temp) {
          wxMessageBox(_("Memory allocation failed -- NewSamples"));
@@ -1549,7 +1549,7 @@ bool Sequence::Append(samplePtr buffer, sampleFormat format,
       DeleteSamples(temp);
 
 // JKC: During generate we use Append again and again.
-// If generating a long sequence this test would give O(n^2) 
+// If generating a long sequence this test would give O(n^2)
 // performance - not good!
 #ifdef VERY_SLOW_CHECKING
    ConsistencyCheck(wxT("Append"));
@@ -1591,9 +1591,9 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
       return true;
    if (len < 0 || start < 0 || start >= mNumSamples)
       return false;
-      
+
    //TODO: add a ref-deref mechanism to SeqBlock/BlockArray so we don't have to make this a critical section.
-   //On-demand threads iterate over the mBlocks and the GUI thread deletes them, so for now put a mutex here over 
+   //On-demand threads iterate over the mBlocks and the GUI thread deletes them, so for now put a mutex here over
    //both functions,
    LockDeleteUpdateMutex();
 
@@ -1636,7 +1636,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
       mNumSamples -= len;
       UnlockDeleteUpdateMutex();
-      
+
       return ConsistencyCheck(wxT("Delete - branch one"));
    }
 
@@ -1798,7 +1798,7 @@ bool Sequence::Delete(sampleCount start, sampleCount len)
 
    // Update total number of samples and do a consistency check.
    mNumSamples -= len;
-   
+
    UnlockDeleteUpdateMutex();
    return ConsistencyCheck(wxT("Delete - branch two"));
 }
@@ -1823,13 +1823,13 @@ bool Sequence::ConsistencyCheck(const wxChar *whereStr)
    if (pos != mNumSamples)
       bError = true;
 
-   if (bError) 
+   if (bError)
    {
       wxLogError(wxT("*** Consistency check failed after %s. ***"), whereStr);
       wxString str;
       DebugPrintf(&str);
       wxLogError(wxT("%s"), str.c_str());
-      wxLogError(wxT("*** Please report this error to feedback@audacityteam.org. ***\n\nRecommended course of action:\nUndo the failed operation(s), then export or save your work and quit."));   
+      wxLogError(wxT("*** Please report this error to feedback@audacityteam.org. ***\n\nRecommended course of action:\nUndo the failed operation(s), then export or save your work and quit."));
    }
 
    return !bError;

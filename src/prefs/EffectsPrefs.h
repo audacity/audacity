@@ -22,7 +22,7 @@
 
 #include "PrefsPanel.h"
 
-class EffectsPrefs:public PrefsPanel 
+class EffectsPrefs:public PrefsPanel
 {
  public:
    EffectsPrefs(wxWindow * parent);

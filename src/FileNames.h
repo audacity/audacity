@@ -60,7 +60,7 @@ public:
 
 private:
    // Private constructors: No one is ever going to instantiate it.
-   // 
+   //
    FileNames(){;};
    ~FileNames(){;};
 };

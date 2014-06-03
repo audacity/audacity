@@ -5,7 +5,7 @@
   Theme.cpp
 
   James Crook
-   
+
   Audacity is free software.
   This file is licensed under the wxWidgets license, see License.txt
 
@@ -27,7 +27,7 @@
 \class ThemeBase
 \brief Theme management - Image loading and saving.
 
-   Base for the Theme class. ThemeBase is a generic 
+   Base for the Theme class. ThemeBase is a generic
    non-Audacity specific class.
 
 \see \ref Themability
@@ -61,7 +61,7 @@ and use it for toolbar and window layouts too.
 #include <wx/ffile.h>
 #include <wx/mstream.h>
 
-#include "Project.h" 
+#include "Project.h"
 #include "toolbars/ToolBar.h"
 #include "toolbars/ControlToolBar.h"
 #include "ImageManipulation.h"
@@ -71,7 +71,7 @@ and use it for toolbar and window layouts too.
 #include "FileNames.h"
 #include "Prefs.h"
 
-#include <wx/arrimpl.cpp> 
+#include <wx/arrimpl.cpp>
 
 WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfImages )
 WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfBitmaps )
@@ -96,7 +96,7 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 #undef USE_AQUA_THEME
 
 // This step ensures we treat the cursors as 32x32 even on Mac.
-// We're not yet creating the cursors from the theme, so 
+// We're not yet creating the cursors from the theme, so
 // all this ensures is that the sizing on PC and Mac stays in step.
 #define CURSORS_SIZE32
 
@@ -130,14 +130,14 @@ WX_DEFINE_USER_EXPORTED_OBJARRAY( ArrayOfColours )
 #include "../images/Aqua/UpButtonWhite.xpm"
 #endif
 
-#undef DownButton           
+#undef DownButton
 #undef UpButton
 #undef HiliteButton
-#undef Down          
-#undef Hilite       
-#undef Up           
-#undef Slider       
-#undef SliderThumb  
+#undef Down
+#undef Hilite
+#undef Up
+#undef Slider
+#undef SliderThumb
 
 
 
@@ -225,7 +225,7 @@ void Theme::ApplyUpdatedImages()
    AudacityProject *p = GetActiveProject();
    if( p->GetControlToolBar() )
    {
-      p->GetControlToolBar()->ReCreateButtons();     
+      p->GetControlToolBar()->ReCreateButtons();
    }
 }
 
@@ -275,12 +275,12 @@ void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
    const bool cbBinaryRead =true;
    const bool cbOkIfNotFound = true;
 
-   // IF not interested in external files, 
+   // IF not interested in external files,
    // THEN just use the internal default set.
    if( !bLookForExternalFiles )
    {
       // IF the XPMs have been retired, THEN we'd better use the built-in cache
-      // at start up.  
+      // at start up.
       // ELSE do nothing, we already have XPM based images.
 #ifdef XPMS_RETIRED
       ReadThemeInternal();
@@ -294,10 +294,10 @@ void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
       ReadThemeInternal();
 
       // JKC: Now we could go on and load the individual images
-      // on top of the default images using the commented out 
+      // on top of the default images using the commented out
       // code that follows...
       //
-      // However, I think it is better to get the user to 
+      // However, I think it is better to get the user to
       // build a new image cache, which they can do easily
       // from the Theme preferences tab.
 #if 0
@@ -306,7 +306,7 @@ void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
 
       // JKC: I'm usure about doing this next step automatically.
       // Suppose the disk is write protected?
-      // Is having the image cache created automatically 
+      // Is having the image cache created automatically
       // going to confuse users?  Do we need version specific names?
       // and now save the combined image as a cache for later use.
       // We should load the images a little faster in future as a result.
@@ -314,7 +314,7 @@ void ThemeBase::LoadThemeAtStartUp( bool bLookForExternalFiles )
 #endif
    }
 
-   // Next line is not required as we haven't yet built the GUI 
+   // Next line is not required as we haven't yet built the GUI
    // when this function is (or should be) called.
    // ApplyUpdatedImages();
 }
@@ -325,7 +325,7 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
    wxBitmap Bmp1( pXpm );
    wxBitmap Bmp2( pMask );
 
-//   wxLogDebug( wxT("Image 1: %i Image 2: %i"), 
+//   wxLogDebug( wxT("Image 1: %i Image 2: %i"),
 //      Bmp1.GetDepth(), Bmp2.GetDepth() );
 
    // We want a 24-bit-depth bitmap if all is working, but on some
@@ -574,7 +574,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          // No href in html.  Uses title not alt.
          wxRect R( mFlow.Rect() );
          wxLogDebug( wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">"),
-            mBitmapNames[i].c_str(), 
+            mBitmapNames[i].c_str(),
             R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom() );
 #endif
       }
@@ -604,7 +604,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       // No href in html.  Uses title not alt.
       wxRect R( mFlow.Rect() );
       wxLogDebug( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">"),
-         mColourNames[i].c_str(), 
+         mColourNames[i].c_str(),
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom() );
 #endif
    }
@@ -618,13 +618,13 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    {
       wxString FileName = FileNames::ThemeCachePng();
 
-      // Perhaps we should prompt the user if they are overwriting 
+      // Perhaps we should prompt the user if they are overwriting
       // an existing theme cache?
 #if 0
       if( wxFileExist( FileName ))
       {
          wxMessageBox(
-            wxString::Format( 
+            wxString::Format(
             wxT("Theme cache file:\n  %s\nalready exists.\nAre you sure you want to replace it?"),
                FileName.c_str() ));
          return;
@@ -633,13 +633,13 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       if( !ImageCache.SaveFile( FileName, wxBITMAP_TYPE_PNG ))
       {
          wxMessageBox(
-            wxString::Format( 
+            wxString::Format(
             _("Audacity could not write file:\n  %s."),
                FileName.c_str() ));
          return;
       }
       wxMessageBox(
-         wxString::Format( 
+         wxString::Format(
             wxT("Theme written to:\n  %s."),
             FileName.c_str() ));
    }
@@ -651,7 +651,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       if( !OutStream.OpenFile( FileName ))
       {
          wxMessageBox(
-            wxString::Format( 
+            wxString::Format(
             _("Audacity could not open file:\n  %s\nfor writing."),
             FileName.c_str() ));
          return;
@@ -659,13 +659,13 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       if( !ImageCache.SaveFile(OutStream, wxBITMAP_TYPE_PNG ) )
       {
          wxMessageBox(
-            wxString::Format( 
+            wxString::Format(
             _("Audacity could not write images to file:\n  %s."),
             FileName.c_str() ));
          return;
       }
       wxMessageBox(
-         wxString::Format( 
+         wxString::Format(
             wxT("Theme as Cee code written to:\n  %s."),
             FileName.c_str() ));
    }
@@ -680,7 +680,7 @@ void ThemeBase::WriteImageMap( )
 
    int i;
    mFlow.Init( ImageCacheWidth );
-   
+
    wxFFile File( FileNames::ThemeCacheHtm(), wxT("wb") );// I'll put in new lines explicitly.
    if( !File.IsOpened() )
       return;
@@ -699,9 +699,9 @@ void ThemeBase::WriteImageMap( )
          mFlow.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          // No href in html.  Uses title not alt.
          wxRect R( mFlow.Rect() );
-         File.Write( wxString::Format( 
+         File.Write( wxString::Format(
             wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-            mBitmapNames[i].c_str(), 
+            mBitmapNames[i].c_str(),
             R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
       }
    }
@@ -714,7 +714,7 @@ void ThemeBase::WriteImageMap( )
       // No href in html.  Uses title not alt.
       wxRect R( mFlow.Rect() );
       File.Write( wxString::Format( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-         mColourNames[i].c_str(), 
+         mColourNames[i].c_str(),
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
    }
    File.Write( wxT("</map>\r\n") );
@@ -753,9 +753,9 @@ void ThemeBase::WriteImageDefs( )
          File.Write( wxString::Format( wxT("\r\n   SET_THEME_FLAGS( %s );\r\n"),
             Temp.c_str() ));
       }
-      File.Write( wxString::Format( 
+      File.Write( wxString::Format(
          wxT("   DEFINE_IMAGE( bmp%s, wxImage( %i, %i ), wxT(\"%s\"));\r\n"),
-         mBitmapNames[i].c_str(), 
+         mBitmapNames[i].c_str(),
          SrcImage.GetWidth(),
          SrcImage.GetHeight(),
          mBitmapNames[i].c_str()
@@ -769,7 +769,7 @@ void ThemeBase::WriteImageDefs( )
 
 
 /// Reads an image cache including images, cursors and colours.
-/// @param bBinaryRead if true means read from an external binary file.  
+/// @param bBinaryRead if true means read from an external binary file.
 ///   otherwise the data is taken from a compiled in block of memory.
 /// @param bOkIfNotFound if true means do not report absent file.
 /// @return true iff we loaded the images.
@@ -790,11 +790,11 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
    {
       wxString FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
-      {  
+      {
          if( bOkIfNotFound )
             return false; // did not load the images, so return false.
          wxMessageBox(
-            wxString::Format( 
+            wxString::Format(
             _("Audacity could not find file:\n  %s.\nTheme not loaded."),
                FileName.c_str() ));
          return false;
@@ -803,7 +803,7 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
       {
          /* i18n-hint: Do not translate png.  It is the name of a file format.*/
          wxMessageBox(
-            wxString::Format( 
+            wxString::Format(
             _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),
                FileName.c_str() ));
          return false;
@@ -811,14 +811,14 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
    }
    // ELSE we are reading from internal storage.
    else
-   {  
+   {
       wxMemoryInputStream InternalStream(
          (char *)ImageCacheAsData, sizeof(ImageCacheAsData));
       if( !ImageCache.LoadFile( InternalStream, wxBITMAP_TYPE_PNG ))
       {
          // If we get this message, it means that the data in file
          // was not a valid png image.
-         // Most likely someone edited it by mistake, 
+         // Most likely someone edited it by mistake,
          // Or some experiment is being tried with new formats for it.
          wxMessageBox(_("Audacity could not read its default theme.\nPlease report the problem."));
          return false;
@@ -856,9 +856,9 @@ bool ThemeBase::ReadImageCache( bool bBinaryRead, bool bOkIfNotFound)
       // This allows us to add new colours more easily.
       if( ImageCache.GetAlpha(x,y ) > 128 )
       {
-         TempColour = wxColour( 
-            ImageCache.GetRed( x,y), 
-            ImageCache.GetGreen( x,y), 
+         TempColour = wxColour(
+            ImageCache.GetRed( x,y),
+            ImageCache.GetGreen( x,y),
             ImageCache.GetBlue(x,y));
          /// \todo revisit this hack which makes adding new colours easier
          /// but which prevents a colour of (1,1,1) from being added.
@@ -883,7 +883,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
    wxString FileName;
    for(i=0;i<(int)mImages.GetCount();i++)
    {
-      
+
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
          FileName = FileNames::ThemeComponent( mBitmapNames[i] );
@@ -893,12 +893,12 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
             {
                /* i18n-hint: Do not translate png.  It is the name of a file format.*/
                wxMessageBox(
-                  wxString::Format( 
+                  wxString::Format(
                   _("Audacity could not load file:\n  %s.\nBad png format perhaps?"),
                      FileName.c_str() ));
                return;
             }
-            /// JKC: \bug (wxWidgets) A png may have been saved with alpha, but when you 
+            /// JKC: \bug (wxWidgets) A png may have been saved with alpha, but when you
             /// load it, it comes back with a mask instead!  (well I guess it is more
             /// efficient).  Anyway, we want alpha and not a mask, so we call InitAlpha,
             /// and that transfers the mask into the alpha channel, and we're done.
@@ -926,7 +926,7 @@ void ThemeBase::SaveComponents()
    // IF directory doesn't exist THEN create it
    if( !wxDirExists( FileNames::ThemeComponentsDir() ))
    {
-      /// \bug 1 in wxWidgets documentation; wxMkDir returns false if 
+      /// \bug 1 in wxWidgets documentation; wxMkDir returns false if
       /// directory didn't exist, even if it successfully creates it.
       /// so we create and then test if it exists instead.
       /// \bug 2 in wxWidgets documentation; wxMkDir has only one argument
@@ -939,7 +939,7 @@ void ThemeBase::SaveComponents()
       if( !wxDirExists( FileNames::ThemeComponentsDir() ))
       {
          wxMessageBox(
-            wxString::Format( 
+            wxString::Format(
             _("Could not create directory:\n  %s"),
                FileNames::ThemeComponentsDir().c_str() ));
          return;
@@ -960,7 +960,7 @@ void ThemeBase::SaveComponents()
             if( !mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
             {
                wxMessageBox(
-                  wxString::Format( 
+                  wxString::Format(
                   _("Audacity could not save file:\n  %s"),
                      FileName.c_str() ));
                return;
@@ -972,13 +972,13 @@ void ThemeBase::SaveComponents()
    if( n==0 )
    {
       wxMessageBox(
-         wxString::Format( 
+         wxString::Format(
          _("All required files in:\n  %s\nwere already present."),
             FileNames::ThemeComponentsDir().c_str() ));
       return;
    }
    wxMessageBox(
-      wxString::Format( 
+      wxString::Format(
          wxT("Theme written to:\n  %s."),
          FileNames::ThemeComponentsDir().c_str() ));
 }
@@ -1050,7 +1050,7 @@ wxCursor & ThemeBase::Cursor( int iIndex )
    EnsureInitialised();
    // Purposeful null deref.  Function is for future use.
    // If anyone tries to use it now they will get an error.
-   return *(wxCursor*)NULL; 
+   return *(wxCursor*)NULL;
 }
 
 wxFont   & ThemeBase::Font( int iIndex )

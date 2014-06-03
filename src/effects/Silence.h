@@ -5,7 +5,7 @@
   Silence.h
 
   Dominic Mazzoni
-  
+
   An effect for the "Generator" menu to add silence.
 
 **********************************************************************/
@@ -48,10 +48,10 @@ class EffectSilence : public Generator {
       return wxString(_("Generating Silence"));
    }
 
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription() { 
-      return wxString::Format(_("Applied effect: Generate Silence, %.6lf seconds"), mDuration); 
-   } 
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription() {
+      return wxString::Format(_("Applied effect: Generate Silence, %.6lf seconds"), mDuration);
+   }
 
    virtual bool PromptUser();
  protected:

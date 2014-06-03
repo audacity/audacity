@@ -43,8 +43,8 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    Command *cmd = event.GetCommand();
 
    // JKC: In case the user changed the project, let us track that.
-   // This saves us the embarrassment (crash) of a new project 
-   // being opened, the old one closed and still trying to act 
+   // This saves us the embarrassment (crash) of a new project
+   // being opened, the old one closed and still trying to act
    // on the old one.
    SetProject( GetActiveProject() );
    // Then apply it to current application & project.  Note that the

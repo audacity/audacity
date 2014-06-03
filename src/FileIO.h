@@ -1,9 +1,9 @@
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
-  
+
   FileIO.h
- 
+
   Leland Lucius
 
 **********************************************************************/
@@ -28,7 +28,7 @@ class FileIO
    ~FileIO();
 
    bool IsOpened();
-   
+
    void Close();
 
    wxInputStream & Read(void *buffer, size_t size);

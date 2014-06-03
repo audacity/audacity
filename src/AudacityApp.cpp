@@ -9,7 +9,7 @@
 ******************************************************************//**
 
 \class AudacityApp
-\brief AudacityApp is the 'main' class for Audacity 
+\brief AudacityApp is the 'main' class for Audacity
 
 It handles initialization and termination by subclassing wxApp.
 
@@ -232,7 +232,7 @@ static bool gInited = false;
 bool gIsQuitting = false;
 
 void QuitAudacity(bool bForce)
-{                                          
+{
    if (gIsQuitting)
       return;
 
@@ -285,14 +285,14 @@ void QuitAudacity(bool bForce)
    CloseScoreAlignDialog();
 #endif
    CloseScreenshotTools();
-   
+
    //release ODManager Threads
    ODManager::Quit();
 
    //print out profile if we have one by deleting it
    //temporarilly commented out till it is added to all projects
    //delete Profiler::Instance();
-   
+
    //delete the static lock for audacity projects
    AudacityProject::DeleteAllProjectsDeleteLock();
 
@@ -306,7 +306,7 @@ void QuitAudacity(bool bForce)
 }
 
 void QuitAudacity()
-{   
+{
    QuitAudacity(false);
 }
 
@@ -397,8 +397,8 @@ void SaveWindowSize()
 // Most of this was taken from nsNativeAppSupportUnix.cpp from Mozilla.
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: May need updating.  Is this code too obsolete (relying on Gnome2 so's) to be 
-// worth keeping anymore?  
+// TODO: May need updating.  Is this code too obsolete (relying on Gnome2 so's) to be
+// worth keeping anymore?
 // CB suggests we use libSM directly ref:
 // http://www.x.org/archive/X11R7.7/doc/libSM/SMlib.html#The_Save_Yourself_Callback
 
@@ -599,7 +599,7 @@ public:
 
       wxString cmd(data);
 
-      // We queue a command event to the project responsible for 
+      // We queue a command event to the project responsible for
       // opening the file since it can be a long process and we
       // only have 5 seconds to return the Execute message to the
       // client.
@@ -696,7 +696,7 @@ void AudacityApp::MacNewFile()
 
    // This method should only be used on the Mac platform
    // when no project windows are open.
- 
+
    if (gAudacityProjects.GetCount() == 0) {
       CreateNewAudacityProject();
    }
@@ -727,7 +727,7 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_MENU(wxID_PREFERENCES, AudacityApp::OnMenuPreferences)
    EVT_MENU(wxID_EXIT, AudacityApp::OnMenuExit)
 #endif
-   // Recent file event handlers.  
+   // Recent file event handlers.
    EVT_MENU(ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
    EVT_MENU_RANGE(ID_RECENT_FIRST, ID_RECENT_LAST, AudacityApp::OnMRUFile)
 
@@ -735,32 +735,32 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_APP_COMMAND(wxID_ANY, AudacityApp::OnReceiveCommand)
 END_EVENT_TABLE()
 
-// backend for OnMRUFile 
+// backend for OnMRUFile
 // TODO: Would be nice to make this handle not opening a file with more panache.
 //  - Inform the user if DefaultOpenPath not set.
 //  - Switch focus to correct instance of project window, if already open.
 bool AudacityApp::MRUOpen(wxString fullPathStr) {
    // Most of the checks below are copied from AudacityProject::OpenFiles.
    // - some rationalisation might be possible.
-   
+
    AudacityProject *proj = GetActiveProject();
-   
-   if (!fullPathStr.IsEmpty()) 
-   {   
-      // verify that the file exists 
-      if (wxFile::Exists(fullPathStr)) 
+
+   if (!fullPathStr.IsEmpty())
+   {
+      // verify that the file exists
+      if (wxFile::Exists(fullPathStr))
       {
-         if (!gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fullPathStr)) || 
+         if (!gPrefs->Write(wxT("/DefaultOpenPath"), wxPathOnly(fullPathStr)) ||
                !gPrefs->Flush())
             return false;
-         
+
          // Make sure it isn't already open.
-         // Test here even though AudacityProject::OpenFile() also now checks, because 
-         // that method does not return the bad result. 
+         // Test here even though AudacityProject::OpenFile() also now checks, because
+         // that method does not return the bad result.
          // That itself may be a FIXME.
          if (AudacityProject::IsAlreadyOpen(fullPathStr))
             return false;
-         
+
          // DMM: If the project is dirty, that means it's been touched at
          // all, and it's not safe to open a new project directly in its
          // place.  Only if the project is brand-new clean and the user
@@ -781,7 +781,7 @@ bool AudacityApp::MRUOpen(wxString fullPathStr) {
       }
       else {
          // File doesn't exist - remove file from history
-         wxMessageBox(wxString::Format(_("%s could not be found.\n\nIt has been removed from the list of recent files."), 
+         wxMessageBox(wxString::Format(_("%s could not be found.\n\nIt has been removed from the list of recent files."),
                       fullPathStr.c_str()));
          return(false);
       }
@@ -794,18 +794,18 @@ void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
    mRecentFiles->Clear();
 }
 
-//vvv Basically, anything from Recent Files is treated as a .aup, until proven otherwise, 
-// then it tries to Import(). Very questionable handling, imo. 
+//vvv Basically, anything from Recent Files is treated as a .aup, until proven otherwise,
+// then it tries to Import(). Very questionable handling, imo.
 // Better, for example, to check the file type early on.
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
    int n = event.GetId() - ID_RECENT_FIRST;
    wxString fullPathStr = mRecentFiles->GetHistoryFile(n);
 
-   // Try to open only if not already open. 
-   // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks, 
+   // Try to open only if not already open.
+   // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks,
    // because we don't want to RemoveFileFromHistory() just because it already exists,
    // and AudacityApp::OnMacOpenFile() calls MRUOpen() directly.
-   // that method does not return the bad result. 
+   // that method does not return the bad result.
    if (!AudacityProject::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
       mRecentFiles->RemoveFileFromHistory(n);
 }
@@ -813,7 +813,7 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
 #if defined(__WXMAC__)
-   // Filenames are queued when Audacity receives the a few of the 
+   // Filenames are queued when Audacity receives the a few of the
    // AppleEvent messages (via wxWidgets).  So, open any that are
    // in the queue and clean the queue.
    if (ofqueue.GetCount()) {
@@ -833,7 +833,7 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
       }
    }
 #endif
- 
+
    // Check if a warning for missing aliased files should be displayed
    if (ShouldShowMissingAliasedFileWarning()) {
       // find which project owns the blockfile
@@ -862,7 +862,7 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
       if (offendingProject) {
          offendingProject->Iconize(false);
          offendingProject->Raise();
-        
+
          wxString errorMessage = wxString::Format(_(
 "One or more external audio files could not be found.\n\
 It is possible they were moved, deleted, or the drive they \
@@ -874,7 +874,7 @@ There may be additional missing files.\n\
 Choose File > Check Dependencies to view a list of \
 locations of the missing files."), missingFileName.c_str());
 
-         // if an old dialog exists, raise it if it is 
+         // if an old dialog exists, raise it if it is
          if (offendingProject->GetMissingAliasFileDialog()) {
             offendingProject->GetMissingAliasFileDialog()->Raise();
          } else {
@@ -965,7 +965,7 @@ void AudacityApp::InitLang( const wxString & lang )
    //      catalogs are search in LIFO order, so add wxstd first.
    mLocale->AddCatalog(wxT("wxstd"));
 
-// AUDACITY_NAME is legitimately used on some *nix configurations. 
+// AUDACITY_NAME is legitimately used on some *nix configurations.
 #ifdef AUDACITY_NAME
    mLocale->AddCatalog(wxT(AUDACITY_NAME));
 #else
@@ -998,7 +998,7 @@ int AudacityApp::FilterEvent(wxEvent & event)
    if (event.GetEventType() == wxEVT_ACTIVATE)
    {
       wxActivateEvent & e = (wxActivateEvent &) event;
-      
+
       if (e.GetEventObject() && e.GetActive() && e.GetEventObject()->IsKindOf(CLASSINFO(wxDialog)))
       {
          ((wxWindow *)e.GetEventObject())->SetFocus();
@@ -1065,7 +1065,7 @@ bool AudacityApp::OnInit()
    InitPreferences();
 
    #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
-      this->AssociateFileTypes(); 
+      this->AssociateFileTypes();
    #endif
 
    // TODO - read the number of files to store in history from preferences
@@ -1080,7 +1080,7 @@ bool AudacityApp::OnInit()
    theTheme.EnsureInitialised();
 
    // AColor depends on theTheme.
-   AColor::Init(); 
+   AColor::Init();
 
    /* Search path (for plug-ins, translations etc) is (in this order):
       * The AUDACITY_PATH environment variable
@@ -1090,7 +1090,7 @@ bool AudacityApp::OnInit()
    #ifdef __WXGTK__
    /* On Unix systems, the default temp dir is in /var/tmp. */
    defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId().c_str());
-   
+
    wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
    if (pathVar != wxT(""))
       AddMultiPathsToPathList(pathVar, audacityPathList);
@@ -1134,8 +1134,8 @@ bool AudacityApp::OnInit()
    wxString progPath = wxPathOnly(argv[0]);
    AddUniquePathToPathList(progPath, audacityPathList);
    AddUniquePathToPathList(progPath+wxT("\\Languages"), audacityPathList);
-   
-   defaultTempDir.Printf(wxT("%s\\audacity_temp"), 
+
+   defaultTempDir.Printf(wxT("%s\\audacity_temp"),
                          tmpDirLoc.c_str());
    #endif //__WXWSW__
 
@@ -1152,7 +1152,7 @@ bool AudacityApp::OnInit()
    AddUniquePathToPathList(progPath+wxT("/../"), audacityPathList);
    AddUniquePathToPathList(progPath+wxT("/../Resources"), audacityPathList);
 
-   defaultTempDir.Printf(wxT("%s/audacity-%s"), 
+   defaultTempDir.Printf(wxT("%s/audacity-%s"),
                          tmpDirLoc.c_str(),
                          wxGetUserId().c_str());
    #endif //__WXMAC__
@@ -1248,14 +1248,14 @@ bool AudacityApp::OnInit()
    }
 
    delete temporarywindow;
-   
+
    if( project->mShowSplashScreen )
       project->OnHelpWelcome();
 
    // JKC 10-Sep-2007: Enable monitoring from the start.
    // (recommended by lprod.org).
-   // Monitoring stops again after any 
-   // PLAY or RECORD completes.  
+   // Monitoring stops again after any
+   // PLAY or RECORD completes.
    // So we also call StartMonitoring when STOP is called.
    project->MayStartMonitoring();
 
@@ -1343,12 +1343,12 @@ bool AudacityApp::OnInit()
    }                            // if (argc>1)
 
 #else //__CYGWIN__
-   
+
    // Cygwin command line parser (by Dave Fancella)
    if (argc > 1 && !didRecoverAnything) {
       int optionstart = 1;
       bool startAtOffset = false;
-      
+
       // Scan command line arguments looking for trouble
       for (int option = 1; option < argc; option++) {
          if (!argv[option])
@@ -1360,14 +1360,14 @@ bool AudacityApp::OnInit()
             optionstart = option + 1;
          }
       }
-      
+
       for (int option = optionstart; option < argc; option++) {
          if (!argv[option])
             continue;
          bool handled = false;
          bool openThisFile = false;
          wxString fileToOpen;
-         
+
          if (!wxString(wxT("-help")).CmpNoCase(argv[option])) {
             PrintCommandLineHelp(); // print the help message out
             exit(0);
@@ -1397,10 +1397,10 @@ bool AudacityApp::OnInit()
             wxPrintf(_("Unknown command line option: %s\n"), argv[option]);
             exit(0);
          }
-         
+
          if(handled)
             fileToOpen.Clear();
-         
+
          if (!handled)
             fileToOpen = fileToOpen + wxT(" ") + argv[option];
          if(wxString(argv[option]).Lower().Contains(wxT(".aup")))
@@ -1422,7 +1422,7 @@ bool AudacityApp::OnInit()
 #endif // __CYGWIN__ (Cygwin command-line parser)
 
    gInited = true;
-   
+
    ModuleManager::Dispatch(AppInitialized);
 
    mWindowRectAlreadySaved = FALSE;
@@ -1588,7 +1588,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
       }
 #endif
       // There is another copy of Audacity running.  Force quit.
-      
+
       wxString prompt =
          _("The system has detected that another copy of Audacity is running.\n") +
          runningTwoCopiesStr +
@@ -1820,7 +1820,7 @@ int AudacityApp::OnExit()
 // where it's possible to have a menu bar but no windows open.
 // It doesn't hurt any other platforms, though.
 
-// ...That is, as long as you check to see if no windows are open 
+// ...That is, as long as you check to see if no windows are open
 // before executing the stuff.
 // To fix this, check to see how many project windows are open,
 // and skip the event unless none are open (which should only happen
@@ -1830,7 +1830,7 @@ void AudacityApp::OnMenuAbout(wxCommandEvent & event)
 {
    // This function shadows a similar function
    // in Menus.cpp, but should only be used on the Mac platform
-   // when no project windows are open. This check assures that 
+   // when no project windows are open. This check assures that
    // this happens, and enable the same code to be present on
    // all platforms.
    if(gAudacityProjects.GetCount() == 0) {
@@ -1845,10 +1845,10 @@ void AudacityApp::OnMenuNew(wxCommandEvent & event)
 {
    // This function shadows a similar function
    // in Menus.cpp, but should only be used on the Mac platform
-   // when no project windows are open. This check assures that 
+   // when no project windows are open. This check assures that
    // this happens, and enable the same code to be present on
    // all platforms.
- 
+
    if(gAudacityProjects.GetCount() == 0)
       CreateNewAudacityProject();
    else
@@ -1860,7 +1860,7 @@ void AudacityApp::OnMenuOpen(wxCommandEvent & event)
 {
    // This function shadows a similar function
    // in Menus.cpp, but should only be used on the Mac platform
-   // when no project windows are open. This check assures that 
+   // when no project windows are open. This check assures that
    // this happens, and enable the same code to be present on
    // all platforms.
 
@@ -1877,7 +1877,7 @@ void AudacityApp::OnMenuPreferences(wxCommandEvent & event)
 {
    // This function shadows a similar function
    // in Menus.cpp, but should only be used on the Mac platform
-   // when no project windows are open. This check assures that 
+   // when no project windows are open. This check assures that
    // this happens, and enable the same code to be present on
    // all platforms.
 
@@ -1887,33 +1887,33 @@ void AudacityApp::OnMenuPreferences(wxCommandEvent & event)
    }
    else
       event.Skip();
-   
+
 }
 
 void AudacityApp::OnMenuExit(wxCommandEvent & event)
 {
    // This function shadows a similar function
    // in Menus.cpp, but should only be used on the Mac platform
-   // when no project windows are open. This check assures that 
+   // when no project windows are open. This check assures that
    // this happens, and enable the same code to be present on
    // all platforms.
 
    // LL:  Removed "if" to allow closing based on final project count.
    // if(gAudacityProjects.GetCount() == 0)
       QuitAudacity();
-   
+
    // LL:  Veto quit if projects are still open.  This can happen
    //      if the user selected Cancel in a Save dialog.
    event.Skip(gAudacityProjects.GetCount() == 0);
-   
+
 }
 
 //BG: On Windows, associate the aup file type with Audacity
-/* We do this in the Windows installer now, 
-   to avoid issues where user doesn't have admin privileges, but 
+/* We do this in the Windows installer now,
+   to avoid issues where user doesn't have admin privileges, but
    in case that didn't work, allow the user to decide at startup.
 
-   //v Should encapsulate this & allow access from Prefs, too, 
+   //v Should encapsulate this & allow access from Prefs, too,
    //      if people want to manually change associations.
 */
 #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
@@ -1927,18 +1927,18 @@ void AudacityApp::AssociateFileTypes()
       associateFileTypes.SetName(wxT("HKCU\\Software\\Classes\\.AUP"));
       bKeyExists = associateFileTypes.Exists();
    }
-   if (!bKeyExists) {   
-      // File types are not currently associated. 
+   if (!bKeyExists) {
+      // File types are not currently associated.
       // Check pref in case user has already decided against it.
       bool bWantAssociateFiles = true;
-      if (!gPrefs->Read(wxT("/WantAssociateFiles"), &bWantAssociateFiles) || 
+      if (!gPrefs->Read(wxT("/WantAssociateFiles"), &bWantAssociateFiles) ||
             bWantAssociateFiles) {
-         // Either there's no pref or user does want associations 
+         // Either there's no pref or user does want associations
          // and they got stepped on, so ask.
-         int wantAssoc = 
+         int wantAssoc =
             wxMessageBox(
-               _("Audacity project (.AUP) files are not currently \nassociated with Audacity. \n\nAssociate them, so they open on double-click?"), 
-               _("Audacity Project Files"), 
+               _("Audacity project (.AUP) files are not currently \nassociated with Audacity. \n\nAssociate them, so they open on double-click?"),
+               _("Audacity Project Files"),
                wxYES_NO | wxICON_QUESTION);
          if (wantAssoc == wxYES) {
             gPrefs->Write(wxT("/WantAssociateFiles"), true);
@@ -1952,7 +1952,7 @@ void AudacityApp::AssociateFileTypes()
                // Not at HKEY_CLASSES_USER. Try HKEY_CURRENT_ROOT.
                root_key = wxT("HKCR\\");
                associateFileTypes.SetName(root_key + wxT(".AUP"));
-               if (!associateFileTypes.Create(true)) { 
+               if (!associateFileTypes.Create(true)) {
                   // Actually, can't create keys. Empty root_key to flag failure.
                   root_key.Empty();
                }
@@ -1984,7 +1984,7 @@ void AudacityApp::AssociateFileTypes()
                if(associateFileTypes.Exists()) {
                   tmpRegAudPath = wxString(associateFileTypes).Lower();
                }
-               if (!associateFileTypes.Exists() || 
+               if (!associateFileTypes.Exists() ||
                      (tmpRegAudPath.Find(wxT("audacity.exe")) >= 0)) {
                   associateFileTypes.Create(true);
                   associateFileTypes = (wxString)argv[0] + (wxString)wxT(" \"%1\"");

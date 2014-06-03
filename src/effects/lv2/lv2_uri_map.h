@@ -1,7 +1,7 @@
 /* lv2_uri_map.h - C header file for the LV2 URI Map extension.
- * 
+ *
  * Copyright (C) 2008 Dave Robillard <dave@drobilla.net>
- * 
+ *
  * This header is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation; either version 2 of the License, or
@@ -36,7 +36,7 @@
  * comparison.  This allows the extensibility of RDF with the performance of
  * integers (or centrally defined enumerations).
  */
-	
+
 
 /** Opaque pointer to host data. */
 typedef void* LV2_URI_Map_Callback_Data;

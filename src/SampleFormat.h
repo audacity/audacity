@@ -62,7 +62,7 @@ void      CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
                       unsigned int len,
                       unsigned int srcStride=1,
                       unsigned int dstStride=1);
-                      
+
 void      ClearSamples(samplePtr buffer, sampleFormat format,
                        int start, int len);
 

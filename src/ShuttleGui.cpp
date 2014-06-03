@@ -18,17 +18,17 @@
 
 \class ShuttleGui
 \brief
-  Derived from ShuttleGuiBase, an Audacity specific class for shuttling 
+  Derived from ShuttleGuiBase, an Audacity specific class for shuttling
   data to and from GUI.
-  
-  ShuttleGui extends the idea of the data Shuttle class to include creation 
-  of dialog controls.  As part of this it provides an interface to sizers 
-  that leads to shorter more readable code.  
+
+  ShuttleGui extends the idea of the data Shuttle class to include creation
+  of dialog controls.  As part of this it provides an interface to sizers
+  that leads to shorter more readable code.
 
   It also allows the code that is used to create dialogs to be reused
-  to shuttle information in and out.  
+  to shuttle information in and out.
 
-  Most of the ShuttleGui functions are actually defined in 
+  Most of the ShuttleGui functions are actually defined in
   ShuttleGuiBase.
      - wxWidgets widgets are dealt with by ShuttleGuiBase.
      - Audacity specific widgets are dealt with by ShuttleGui
@@ -52,37 +52,37 @@ The code in this file is fairly repetitive.  We are dealing with
   - Creation / Reading / Writing / Exporting / Importing
   - int, float, string variants (for example of TextCtrl contents).
 
-A technique used to reduce the size of the \p Tie functions is to 
+A technique used to reduce the size of the \p Tie functions is to
 have one generic \p Tie function that uses WrappedType for its
 data type.  Type specific \p Tie functions themselves call the generic
 variant.
 
-A second technique used to reduce the size of \p Tie functions 
+A second technique used to reduce the size of \p Tie functions
 only comes into play for two-step \p Tie functions.  (A two step
-\p Tie function is one that transfers data between the registry 
-and the GUI via an intermediate temporary variable). In the two 
-step style, a function ShuttleGuiBase::DoStep() determines which 
-transfers in the function are to be done, reducing repetitive 
+\p Tie function is one that transfers data between the registry
+and the GUI via an intermediate temporary variable). In the two
+step style, a function ShuttleGuiBase::DoStep() determines which
+transfers in the function are to be done, reducing repetitive
 if-then-else's.
 
 Although unusual, these two techniques make the code easier to
-add to and much easier to check for correctness.  The alternative 
-'more obvious' code that just repeats code as needed is 
+add to and much easier to check for correctness.  The alternative
+'more obvious' code that just repeats code as needed is
 considerably longer.
 
-You would rarely use ShuttleGuiBase directly, instead you'd use 
-ShuttleGui.  
+You would rarely use ShuttleGuiBase directly, instead you'd use
+ShuttleGui.
 
-There is DOxygen documentation on how to use the ShuttleGui 
-class in \ref ShuttleSystem .  
+There is DOxygen documentation on how to use the ShuttleGui
+class in \ref ShuttleSystem .
 
 *//***************************************************************//**
 
 \class InvisiblePanel
-\brief An InvisiblePanel is a panel which does not repaint its 
+\brief An InvisiblePanel is a panel which does not repaint its
 own background.
 
-It is used (a) To group together widgets which need to be refreshed 
+It is used (a) To group together widgets which need to be refreshed
 together.  A single refresh of the panel causes all the subwindows to
 refresh.  (b) as a base class for some flicker-free classes for which
 the backgorund is never repainted.
@@ -216,7 +216,7 @@ void ShuttleGuiBase::AddPrompt(const wxString &Prompt)
    if( mShuttleMode != eIsCreating )
       return;
    miProp=1;
-   mpWind = new wxStaticText(mpParent, -1, Prompt, wxDefaultPosition, wxDefaultSize, 
+   mpWind = new wxStaticText(mpParent, -1, Prompt, wxDefaultPosition, wxDefaultSize,
       Style( wxALIGN_RIGHT ));
    mpWind->SetName(wxStripMenuCodes(Prompt)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizersCore( false, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL );
@@ -230,7 +230,7 @@ void ShuttleGuiBase::AddUnits(const wxString &Prompt)
    if( mShuttleMode != eIsCreating )
       return;
    miProp=1;
-   mpWind = new wxStaticText(mpParent, -1, Prompt, wxDefaultPosition, wxDefaultSize, 
+   mpWind = new wxStaticText(mpParent, -1, Prompt, wxDefaultPosition, wxDefaultSize,
       Style( wxALIGN_LEFT ));
    mpWind->SetName(Prompt); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizersCore( false, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL );
@@ -243,7 +243,7 @@ void ShuttleGuiBase::AddTitle(const wxString &Prompt)
       return;
    if( mShuttleMode != eIsCreating )
       return;
-   mpWind = new wxStaticText(mpParent, -1, Prompt, wxDefaultPosition, wxDefaultSize, 
+   mpWind = new wxStaticText(mpParent, -1, Prompt, wxDefaultPosition, wxDefaultSize,
       Style( wxALIGN_CENTRE ));
    mpWind->SetName(Prompt); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    UpdateSizers();
@@ -315,9 +315,9 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(const wxBitmap &Bitmap, int Pos
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxBitmapButton);
    wxBitmapButton * pBtn;
-   mpWind = pBtn = new wxBitmapButton( mpParent, miId, Bitmap, 
+   mpWind = pBtn = new wxBitmapButton( mpParent, miId, Bitmap,
       wxDefaultPosition, wxDefaultSize, Style( wxNO_BORDER ) );
-   pBtn->SetBackgroundColour( 
+   pBtn->SetBackgroundColour(
       wxColour( 246,246,243));
 //      wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
    miProp=0;
@@ -337,7 +337,7 @@ wxChoice * ShuttleGuiBase::AddChoice( const wxString &Prompt, const wxString &Se
    mpWind = pChoice = new wxChoice(
       mpParent,
       miId,
-      wxDefaultPosition, 
+      wxDefaultPosition,
       wxDefaultSize,
       *pChoices,
       Style( 0 ) );
@@ -355,7 +355,7 @@ void ShuttleGuiBase::AddFixedText(const wxString &Str, bool bCenter)
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return;
-   mpWind = new wxStaticText(mpParent, miId, Str, wxDefaultPosition, wxDefaultSize, 
+   mpWind = new wxStaticText(mpParent, miId, Str, wxDefaultPosition, wxDefaultSize,
       Style( wxALIGN_LEFT ));
    mpWind->SetName(wxStripMenuCodes(Str)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    if( bCenter )
@@ -374,7 +374,7 @@ wxStaticText * ShuttleGuiBase::AddVariableText(const wxString &Str, bool bCenter
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxStaticText);
 
    wxStaticText *pStatic;
-   mpWind = pStatic = new wxStaticText(mpParent, miId, Str, wxDefaultPosition, wxDefaultSize, 
+   mpWind = pStatic = new wxStaticText(mpParent, miId, Str, wxDefaultPosition, wxDefaultSize,
       Style( wxALIGN_LEFT ));
    mpWind->SetName(wxStripMenuCodes(Str)); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    if( bCenter )
@@ -412,7 +412,7 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
 
    AddPrompt( Prompt );
 
-   mpWind = pCombo = new wxComboBox(mpParent, miId, Selected, wxDefaultPosition, wxDefaultSize, 
+   mpWind = pCombo = new wxComboBox(mpParent, miId, Selected, wxDefaultPosition, wxDefaultSize,
       n, Choices, Style( style ));
    mpWind->SetName(wxStripMenuCodes(Prompt));
 
@@ -423,7 +423,7 @@ wxComboBox * ShuttleGuiBase::AddCombo( const wxString &Prompt, const wxString &S
 
 wxRadioButton * ShuttleGuiBase::AddRadioButton(const wxString &Prompt)
 {
-   /// \todo This function and the next one, suitably adapted, could be 
+   /// \todo This function and the next one, suitably adapted, could be
    /// used by TieRadioButton.
    UseUpId();
    if( mShuttleMode != eIsCreating )
@@ -457,8 +457,8 @@ wxSlider * ShuttleGuiBase::AddSlider(const wxString &Prompt, int pos, int Max, i
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSlider);
    AddPrompt( Prompt );
    wxSlider * pSlider;
-   mpWind = pSlider = new wxSlider( mpParent, miId, 
-      pos, Min, Max, 
+   mpWind = pSlider = new wxSlider( mpParent, miId,
+      pos, Min, Max,
       wxDefaultPosition, wxDefaultSize,
       Style( wxSL_HORIZONTAL | wxSL_LABELS | wxSL_AUTOTICKS )
       );
@@ -475,8 +475,8 @@ wxSpinCtrl * ShuttleGuiBase::AddSpinCtrl(const wxString &Prompt, int Value, int 
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxSpinCtrl);
    AddPrompt( Prompt );
    wxSpinCtrl * pSpinCtrl;
-   mpWind = pSpinCtrl = new wxSpinCtrl( mpParent, miId, 
-      wxEmptyString,  
+   mpWind = pSpinCtrl = new wxSpinCtrl( mpParent, miId,
+      wxEmptyString,
       wxDefaultPosition, wxDefaultSize,
       Style( wxSP_VERTICAL | wxSP_ARROW_KEYS ),
       Min, Max, Value
@@ -615,7 +615,7 @@ wxGrid * ShuttleGuiBase::AddGrid()
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxGrid);
    wxGrid * pGrid;
    SetProportions( 1 );
-   mpWind = pGrid = new wxGrid(mpParent, miId, wxDefaultPosition, 
+   mpWind = pGrid = new wxGrid(mpParent, miId, wxDefaultPosition,
       wxDefaultSize, Style( wxWANTS_CHARS ));
    pGrid->SetMinSize( wxSize( 120, 150 ));
    UpdateSizers();
@@ -679,11 +679,11 @@ wxMenuBar * ShuttleGuiBase::AddMenuBar( )
    mpMenuBar->SetThemeEnabled( true );
    pFrame->SetMenuBar(mpMenuBar);
 
-   return mpMenuBar; 
+   return mpMenuBar;
 }
 
 wxMenu * ShuttleGuiBase::AddMenu( const wxString & Title )
-{  
+{
    mpMenu = new wxMenu;
    mpMenuBar->Append( mpMenu, Title );
    return mpMenu;
@@ -693,7 +693,7 @@ wxMenu * ShuttleGuiBase::AddMenu( const wxString & Title )
 
 /// Starts a static box around a number of controls.
 ///  @param Str   The text of the title for the box.
-///  @param iProp The resizing proportion value.  
+///  @param iProp The resizing proportion value.
 /// Use iProp == 0 for a minimum sized static box.
 /// Use iProp == 1 for a box that grows if there is space to spare.
 wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
@@ -702,11 +702,11 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const wxString &Str, int iProp)
    mBoxName = Str;
    if( mShuttleMode != eIsCreating )
       return NULL;
-   wxStaticBox * pBox = new wxStaticBox(mpParent, miId, 
+   wxStaticBox * pBox = new wxStaticBox(mpParent, miId,
       Str );
    pBox->SetLabel( Str );
    pBox->SetName(wxStripMenuCodes(Str));
-   mpSubSizer = new wxStaticBoxSizer( 
+   mpSubSizer = new wxStaticBoxSizer(
       pBox,
       wxVERTICAL );
    miSizerProp = iProp;
@@ -721,29 +721,29 @@ void ShuttleGuiBase::EndStatic()
    PopSizer();
 }
 
-/// This allows subsequent controls and static boxes to be in 
+/// This allows subsequent controls and static boxes to be in
 /// a scrolled panel.  Very handy if you are running out of space
 /// on a dialog.
 ///
 /// The iStyle parameter is used in some very hacky code that
-/// dynamically repopulates a dialog.  It also controls the 
+/// dynamically repopulates a dialog.  It also controls the
 /// background colour.  Look at the code for details.
-///  @param istyle deprecated parameter, but has been used for hacking. 
+///  @param istyle deprecated parameter, but has been used for hacking.
 wxScrolledWindow * ShuttleGuiBase::StartScroller(int iStyle)
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxScrolledWindow);
-      
+
    wxScrolledWindow * pScroller;
    mpWind = pScroller = new wxScrolledWindow( mpParent, miId, wxDefaultPosition, wxDefaultSize,
       Style( wxSUNKEN_BORDER ) );
    pScroller->SetScrollRate( 20,20 );
 
-   mpWind->SetBackgroundColour( 
-      iStyle==0 
+   mpWind->SetBackgroundColour(
+      iStyle==0
       ? wxColour( 245,244,240) :
-      wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) 
+      wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)
       );
    SetProportions( 1 );
    if( iStyle==2 )
@@ -779,7 +779,7 @@ void ShuttleGuiBase::EndScroller()
    mpParent->SetMinSize( wxSize(xMin, yMin) );
 
    PopSizer();
-   mpParent = mpParent->GetParent(); 
+   mpParent = mpParent->GetParent();
 }
 
 wxPanel * ShuttleGuiBase::StartPanel(int iStyle)
@@ -793,10 +793,10 @@ wxPanel * ShuttleGuiBase::StartPanel(int iStyle)
 
    if( iStyle != 0 )
    {
-      mpWind->SetBackgroundColour( 
-         iStyle==1 
+      mpWind->SetBackgroundColour(
+         iStyle==1
          ? wxColour( 190,200,230) :
-         wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW) 
+         wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)
          );
    }
    SetProportions(0);
@@ -816,7 +816,7 @@ void ShuttleGuiBase::EndPanel()
    if( mShuttleMode != eIsCreating )
       return;
    PopSizer();
-   mpParent = mpParent->GetParent(); 
+   mpParent = mpParent->GetParent();
 }
 
 wxNotebook * ShuttleGuiBase::StartNotebook()
@@ -825,7 +825,7 @@ wxNotebook * ShuttleGuiBase::StartNotebook()
    if( mShuttleMode != eIsCreating )
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxNotebook);
    wxNotebook * pNotebook;
-   mpWind = pNotebook = new wxNotebook(mpParent, 
+   mpWind = pNotebook = new wxNotebook(mpParent,
       miId, wxDefaultPosition, wxDefaultSize, Style( 0 ));
    SetProportions( 1 );
    UpdateSizers();
@@ -836,7 +836,7 @@ wxNotebook * ShuttleGuiBase::StartNotebook()
 void ShuttleGuiBase::EndNotebook()
 {
    //PopSizer();
-   mpParent = mpParent->GetParent(); 
+   mpParent = mpParent->GetParent();
 }
 
 
@@ -849,8 +849,8 @@ wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString Name )
    wxNotebookPage * pPage = new wxPanel(mpParent );
    pPage->SetName(Name);
 
-   pNotebook->AddPage( 
-      pPage, 
+   pNotebook->AddPage(
+      pPage,
       Name);
    PushSizer();
 
@@ -869,12 +869,12 @@ void ShuttleGuiBase::StartNotebookPage( const wxString Name, wxNotebookPage * pP
       return;
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
    wxNotebook * pNotebook = (wxNotebook*)mpParent;
-//   wxNotebookPage * pPage = new wxPanel(mpParent ); 
+//   wxNotebookPage * pPage = new wxPanel(mpParent );
    pPage->Create( mpParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxT("panel"));
    pPage->SetName(Name);
 
-   pNotebook->AddPage( 
-      pPage, 
+   pNotebook->AddPage(
+      pPage,
       Name);
    PushSizer();
 
@@ -891,19 +891,19 @@ void ShuttleGuiBase::EndNotebookPage()
    if( mShuttleMode != eIsCreating )
       return;
    PopSizer();
-   mpParent = mpParent->GetParent(); 
+   mpParent = mpParent->GetParent();
 }
 
-// Doxygen description is at the start of the file 
+// Doxygen description is at the start of the file
 // this is a wxPanel with erase background disabled.
 class InvisiblePanel : public wxPanel
 {
 public:
-   InvisiblePanel( 
-      wxWindow* parent, 
-      wxWindowID id = -1, 
-      const wxPoint& pos = wxDefaultPosition, 
-      const wxSize& size = wxDefaultSize, 
+   InvisiblePanel(
+      wxWindow* parent,
+      wxWindowID id = -1,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize,
       long style = wxTAB_TRAVERSAL ) :
       wxPanel( parent, id, pos, size, style )
    {
@@ -911,7 +911,7 @@ public:
    ~InvisiblePanel(){;};
    void OnPaint( wxPaintEvent &event );
    void OnErase(wxEraseEvent &/*evt*/){;};
-   DECLARE_EVENT_TABLE()  
+   DECLARE_EVENT_TABLE()
 };
 
 
@@ -936,8 +936,8 @@ wxPanel * ShuttleGuiBase::StartInvisiblePanel()
    mpWind = pPanel = new wxPanel( mpParent, miId, wxDefaultPosition, wxDefaultSize,
       wxNO_BORDER);
 
-   mpWind->SetBackgroundColour( 
-      wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE) 
+   mpWind->SetBackgroundColour(
+      wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE)
       );
    SetProportions( 1 );
    miBorder=0;
@@ -962,7 +962,7 @@ void ShuttleGuiBase::EndInvisiblePanel()
 ///  - Use wxEXPAND and 1 to expand horizontally and vertically.
 ///  - Use wxCENTRE and 1 for no expansion.
 /// @param PositionFlag  Typically wxEXPAND or wxALIGN_CENTER.
-/// @param iProp         Proportionality for resizing.  
+/// @param iProp         Proportionality for resizing.
 void ShuttleGuiBase::StartHorizontalLay( int PositionFlags, int iProp)
 {
    if( mShuttleMode != eIsCreating )
@@ -1021,7 +1021,7 @@ void ShuttleGuiBase::DoDataShuttle( const wxString &Name, WrappedType & WrappedR
 //-----------------------------------------------------------------------//
 
 // We now have a group of tie functions which are generic in the type
-// they bind to (i.e. WrappedType).  
+// they bind to (i.e. WrappedType).
 // The type specific versions are much shorter and are later
 // in this file.
 wxCheckBox * ShuttleGuiBase::TieCheckBox(const wxString &Prompt, WrappedType & WrappedRef)
@@ -1266,8 +1266,8 @@ wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, WrappedType & Wrap
 }
 
 
-wxChoice * ShuttleGuiBase::TieChoice( 
-   const wxString &Prompt, 
+wxChoice * ShuttleGuiBase::TieChoice(
+   const wxString &Prompt,
    WrappedType &WrappedRef,
    const wxArrayString * pChoices )
 {
@@ -1340,7 +1340,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
    case eIsCreating:
       {
          mpWind = pRadioButton = new wxRadioButton( mpParent, miId, Prompt,
-            wxDefaultPosition, wxDefaultSize, 
+            wxDefaultPosition, wxDefaultSize,
             (mRadioCount==1)?wxRB_GROUP:0);
          pRadioButton->SetValue(WrappedRef.ValuesMatch( mRadioValue ));
          pRadioButton->SetName(wxStripMenuCodes(Prompt));
@@ -1365,7 +1365,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(const wxString &Prompt, WrappedTy
    return pRadioButton;
 }
 
-/// Call this before any TieRadioButton calls.  
+/// Call this before any TieRadioButton calls.
 /// This is the generic version and requires mRadioValue already initialised.
 /// Versions for specific types must do that initialisation.
 void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName )
@@ -1400,7 +1400,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBox(const wxString &Prompt, bool &Var)
 
 // See comment in AddCheckBoxOnRight() for why we have this variant.
 wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(const wxString &Prompt, bool &Var)
-{  
+{
    // Only odes anything different if it's creating.
    WrappedType WrappedRef( Var );
    if( mShuttleMode == eIsCreating )
@@ -1415,7 +1415,7 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl( const wxString &Prompt, int &Value, co
 }
 
 wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, wxString &Selected, const int nChars)
-{  
+{
    WrappedType WrappedRef(Selected);
    return TieTextBox( Prompt, WrappedRef, nChars );
 }
@@ -1433,7 +1433,7 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox( const wxString &Prompt, double &Value, 
 }
 
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox( const wxString &Prompt, wxString &Selected, const int nChars)
-{  
+{
    WrappedType WrappedRef(Selected);
    return TieNumericTextBox( Prompt, WrappedRef, nChars );
 }
@@ -1461,7 +1461,7 @@ wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, float &pos, const 
    const float RoundFix=0.0000001f;
    int iVal=(pos-fMin+RoundFix)*100.0/(fMax-fMin);
    wxSlider * pWnd = TieSlider( Prompt, iVal, 100 );
-   pos = iVal*(fMax-fMin)*0.01+fMin; 
+   pos = iVal*(fMax-fMin)*0.01+fMin;
    return pWnd;
 }
 
@@ -1473,22 +1473,22 @@ wxSlider * ShuttleGuiBase::TieVSlider( const wxString &Prompt, float &pos, const
 //      return AddVSlider( Prompt, iVal, 100 );
 //   }
    wxSlider * pWnd = TieSlider( Prompt, iVal, 100 );
-   pos = iVal*(fMax-fMin)*0.01+fMin; 
+   pos = iVal*(fMax-fMin)*0.01+fMin;
    return pWnd;
 }
 
-wxChoice * ShuttleGuiBase::TieChoice( 
-   const wxString &Prompt, 
-   wxString &Selected, 
+wxChoice * ShuttleGuiBase::TieChoice(
+   const wxString &Prompt,
+   wxString &Selected,
    const wxArrayString * pChoices )
 {
    WrappedType WrappedRef( Selected );
    return TieChoice( Prompt, WrappedRef, pChoices );
 }
 
-wxChoice * ShuttleGuiBase::TieChoice( 
-   const wxString &Prompt, 
-   int &Selected, 
+wxChoice * ShuttleGuiBase::TieChoice(
+   const wxString &Prompt,
+   int &Selected,
    const wxArrayString * pChoices )
 {
    WrappedType WrappedRef( Selected );
@@ -1528,7 +1528,7 @@ wxString ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayString 
 
 /// Int-to-Index (choices can be items like e.g 0x400120 )
 int ShuttleGuiBase::TranslateToIndex( const int Value, const wxArrayInt &Choices )
-{  
+{
    int n = Choices.Index( Value );
    if( n== wxNOT_FOUND )
       n=miNoMatchSelector;
@@ -1563,7 +1563,7 @@ int ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayInt &Choices
 //----------------------------------------------------------------------//
 
 
-/** 
+/**
  Code-Condenser function.
 
 We have functions which need to do:
@@ -1588,7 +1588,7 @@ like this:
   if( DoStep(3) ) DoThirdThing();
 \endcode
 
-The repeated choice logic can then be taken out of those 
+The repeated choice logic can then be taken out of those
 functions.
 
 JKC: This paves the way for doing data validation too,
@@ -1616,11 +1616,11 @@ bool ShuttleGuiBase::DoStep( int iStep )
 }
 
 
-/// Variant of the standard TieCheckBox which does the two step exchange 
+/// Variant of the standard TieCheckBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 wxCheckBox * ShuttleGuiBase::TieCheckBox(
-   const wxString &Prompt, 
-   const wxString &SettingName, 
+   const wxString &Prompt,
+   const wxString &SettingName,
    const bool bDefault)
 {
    wxCheckBox * pCheck=NULL;
@@ -1634,11 +1634,11 @@ wxCheckBox * ShuttleGuiBase::TieCheckBox(
    return pCheck;
 }
 
-/// Variant of the standard TieCheckBox which does the two step exchange 
+/// Variant of the standard TieCheckBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(
-   const wxString &Prompt, 
-   const wxString &SettingName, 
+   const wxString &Prompt,
+   const wxString &SettingName,
    const bool bDefault)
 {
    wxCheckBox * pCheck=NULL;
@@ -1652,11 +1652,11 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(
    return pCheck;
 }
 
-/// Variant of the standard TieSlider which does the two step exchange 
+/// Variant of the standard TieSlider which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 wxSlider * ShuttleGuiBase::TieSlider(
-   const wxString &Prompt, 
-   const wxString &SettingName, 
+   const wxString &Prompt,
+   const wxString &SettingName,
    const int iDefault,
    const int max,
    const int min)
@@ -1672,11 +1672,11 @@ wxSlider * ShuttleGuiBase::TieSlider(
    return pSlider;
 }
 
-/// Variant of the standard TieSpinCtrl which does the two step exchange 
+/// Variant of the standard TieSpinCtrl which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
-                                     const wxString &Prompt, 
-                                     const wxString &SettingName, 
+                                     const wxString &Prompt,
+                                     const wxString &SettingName,
                                      const int Value,
                                      const int max,
                                      const int min)
@@ -1692,11 +1692,11 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
    return pSpinCtrl;
 }
 
-/// Variant of the standard TieTextBox which does the two step exchange 
+/// Variant of the standard TieTextBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 wxTextCtrl * ShuttleGuiBase::TieTextBox(
-   const wxString & Prompt, 
-   const wxString & SettingName, 
+   const wxString & Prompt,
+   const wxString & SettingName,
    const wxString & Default,
    const int nChars)
 {
@@ -1710,11 +1710,11 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
    return pText;
 }
 
-/// Variant of the standard TieTextBox which does the two step exchange 
+/// Variant of the standard TieTextBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
-   const wxString & Prompt, 
-   const wxString & SettingName, 
+   const wxString & Prompt,
+   const wxString & SettingName,
    const wxString & Default,
    const int nChars)
 {
@@ -1727,12 +1727,12 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
    if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef );
    return pText;
 }
-/// Variant of the standard TieTextBox which does the two step exchange 
+/// Variant of the standard TieTextBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 /// This one does it for double values...
 wxTextCtrl * ShuttleGuiBase::TieTextBox(
-   const wxString & Prompt, 
-   const wxString & SettingName, 
+   const wxString & Prompt,
+   const wxString & SettingName,
    const double & Default,
    const int nChars)
 {
@@ -1746,12 +1746,12 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
    return pText;
 }
 
-/// Variant of the standard TieTextBox which does the two step exchange 
+/// Variant of the standard TieTextBox which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 /// This one does it for double values...
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
-   const wxString & Prompt, 
-   const wxString & SettingName, 
+   const wxString & Prompt,
+   const wxString & SettingName,
    const double & Default,
    const int nChars)
 {
@@ -1765,22 +1765,22 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
    return pText;
 }
 
-/// Variant of the standard TieChoice which does the two step exchange 
+/// Variant of the standard TieChoice which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 ///   @param Prompt             The prompt shown beside the control.
 ///   @param SettingName        The setting name as stored in gPrefs
 ///   @param Default            The default value for this control (translated)
 ///   @param Choices            An array of choices that appear on screen.
 ///   @param TranslatedChoices  The corresponding values (as a string array)
-wxChoice * ShuttleGuiBase::TieChoice( 
-   const wxString &Prompt, 
-   const wxString &SettingName, 
-   const wxString &Default, 
+wxChoice * ShuttleGuiBase::TieChoice(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const wxString &Default,
    const wxArrayString & Choices,
    const wxArrayString & TranslatedChoices)
 {
    wxChoice * pChoice=(wxChoice*)NULL;
- 
+
    int TempIndex=0;
 //   int TempIndex = TranslateToIndex( Default, TranslatedChoices );
    wxString TempStr = Default;
@@ -1795,7 +1795,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
    return pChoice;
 }
 
-/// Variant of the standard TieChoice which does the two step exchange 
+/// Variant of the standard TieChoice which does the two step exchange
 /// between gui and stack variable and stack variable and shuttle.
 /// Difference to previous one is that the Translated choices and default
 /// are integers, not Strings.
@@ -1804,15 +1804,15 @@ wxChoice * ShuttleGuiBase::TieChoice(
 ///   @param Default            The default value for this control (translated)
 ///   @param Choices            An array of choices that appear on screen.
 ///   @param TranslatedChoices  The correcponding values (as an integer array)
-wxChoice * ShuttleGuiBase::TieChoice( 
-   const wxString &Prompt, 
-   const wxString &SettingName, 
-   const int Default, 
+wxChoice * ShuttleGuiBase::TieChoice(
+   const wxString &Prompt,
+   const wxString &SettingName,
+   const int Default,
    const wxArrayString & Choices,
    const wxArrayInt & TranslatedChoices)
 {
    wxChoice * pChoice=(wxChoice*)NULL;
- 
+
    int TempIndex=0;
    int TranslatedInt = Default;
    WrappedType WrappedRef( TranslatedInt );
@@ -1850,8 +1850,8 @@ void ShuttleGuiBase::StartRadioButtonGroup( const wxString & SettingName, const 
 
 
 /// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
-wxRadioButton * ShuttleGuiBase::TieRadioButton( 
-   const wxString &Prompt, 
+wxRadioButton * ShuttleGuiBase::TieRadioButton(
+   const wxString &Prompt,
    const int iValue)
 {
    int iTemp = iValue;
@@ -1860,14 +1860,14 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(
 }
 
 /// This function must be within a StartRadioButtonGroup - EndRadioButtonGroup pair.
-wxRadioButton * ShuttleGuiBase::TieRadioButton( 
-   const wxString &Prompt, 
+wxRadioButton * ShuttleGuiBase::TieRadioButton(
+   const wxString &Prompt,
    const wxString &Value)
 {
    // In what follows, WrappedRef is used in read only mode, but we
    // don't have a 'read-only' version, so we copy to deal with the constness.
    wxString Temp = Value;
-   WrappedType WrappedRef( Temp ); 
+   WrappedType WrappedRef( Temp );
    return TieRadioButton( Prompt, WrappedRef );
 }
 
@@ -1879,7 +1879,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton(
 /// However, the user can force the id manually, for example
 /// if they need a specific Id for a button, and then let it
 /// resume normal numbering later.
-/// UseUpId() sets miId to the next Id, either using the 
+/// UseUpId() sets miId to the next Id, either using the
 /// user specicfied one, or resuming the sequence.
 void ShuttleGuiBase::UseUpId()
 {
@@ -2067,8 +2067,8 @@ AdornedRulerPanel * ShuttleGui::AddAdornedRuler( ViewInfo *pViewInfo )
    AdornedRulerPanel * pAdornedRuler;
    miProp=0;
    mpWind = pAdornedRuler = new AdornedRulerPanel(
-      mpParent, 
-      miId, 
+      mpParent,
+      miId,
       wxDefaultPosition,
       wxDefaultSize,
       pViewInfo
@@ -2089,7 +2089,7 @@ RulerPanel * ShuttleGui::AddRulerVertical(float low, float hi, const wxString & 
    RulerPanel * pRulerPanel;
    miProp=0;
    mpWind = pRulerPanel = new RulerPanel(
-      mpParent, 
+      mpParent,
       miId,
       wxDefaultPosition,
       wxDefaultSize
@@ -2101,7 +2101,7 @@ RulerPanel * ShuttleGui::AddRulerVertical(float low, float hi, const wxString & 
    Ruler.SetFormat(Ruler::RealFormat);
    Ruler.SetUnits(Units);
    Ruler.SetLabelEdges(true);
-   
+
    mpWind->SetMinSize(wxSize(38,50));
    UpdateSizers();
    return pRulerPanel;
@@ -2220,7 +2220,7 @@ void ShuttleGui::AddStandardButtons(long buttons, wxButton *extra)
       return;
 
    StartVerticalLay( false );
-   
+
    miSizerProp = false;
    mpSubSizer = CreateStdButtonSizer( mpParent, buttons, extra );
    UpdateSizers();
@@ -2245,7 +2245,7 @@ void ShuttleGui::SetSizeHints( wxWindow *window, const wxArrayString & items )
    {
       int x;
       int y;
-      
+
       window->GetTextExtent(items[i], &x, &y );
       if( x > maxw )
       {

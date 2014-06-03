@@ -5,8 +5,8 @@
   AttachableScrollBar.h
 
   James Crook
- 
-  A scroll bar that can be attached to multiple items and so control 
+
+  A scroll bar that can be attached to multiple items and so control
   their scrolling.
 
   Audacity is free software.

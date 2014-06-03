@@ -13,7 +13,7 @@
 
 extern LilvWorld *gWorld;
 
-// This is the LV2 Feature array. It is passed to every LV2 plugin on 
+// This is the LV2 Feature array. It is passed to every LV2 plugin on
 // instantiation. So far it only contains the URI Map Feature, which is
 // needed to load synths.
 extern LV2_Feature * const gLV2Features[];

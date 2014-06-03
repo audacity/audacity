@@ -27,16 +27,16 @@ class WaveTrack;
 #include "../RealFFTf.h"
 
 class EffectNoiseRemoval: public Effect {
-   
+
 public:
-   
+
    EffectNoiseRemoval();
    virtual ~EffectNoiseRemoval();
 
    virtual wxString GetEffectName() {
       return wxString(_("Noise Removal..."));
    }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;
       result.insert(wxT("http://audacityteam.org/namespace#NoiseRemoval"));
@@ -53,14 +53,14 @@ public:
       else
          return wxString(_("Removing Noise"));
    }
-   
+
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
-   
+
    virtual bool Init();
    virtual bool CheckWhetherSkipEffect();
    virtual bool Process();
-   
+
 private:
 
    bool      mDoProfile;
@@ -148,7 +148,7 @@ public:
    void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow();
    bool TransferDataFromWindow();
-   
+
 private:
    // handlers
    void OnGetProfile( wxCommandEvent &event );
@@ -156,7 +156,7 @@ private:
    void OnPreview(wxCommandEvent &event);
    void OnRemoveNoise( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
-  
+
    void OnSensitivityText(wxCommandEvent & event);
    void OnGainText(wxCommandEvent & event);
    void OnFreqText(wxCommandEvent & event);

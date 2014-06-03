@@ -9,25 +9,25 @@
 ********************************************************************//*!
 
 \class MousePrefs
-\brief A PrefsPanel that presents an interface for user to view the 
+\brief A PrefsPanel that presents an interface for user to view the
    default bindings of mouse buttons to commands.
 
-  April/2003: These are default bindings and are not yet configurable.  
+  April/2003: These are default bindings and are not yet configurable.
   They are provided to give information about what the bindings are.
 
-  Configuration when available will be mostly used by power users 
-  who are unlikely to change the default bindings, but will add 
-  bindings (e.g. for cut, play, and their own nyquist filters) 
+  Configuration when available will be mostly used by power users
+  who are unlikely to change the default bindings, but will add
+  bindings (e.g. for cut, play, and their own nyquist filters)
   using currently unused combinations.
 
-  Unlike key-bindings which are parameterless, mouse bindings 
+  Unlike key-bindings which are parameterless, mouse bindings
   provide parameters:
 
-    - a single point for a click, and 
-    - a stream of points or a start and end point for a drag.  
+    - a single point for a click, and
+    - a stream of points or a start and end point for a drag.
 
-  If we allow a nyquist filter to be bound to the mouse, instead of 
-  being applied to the current selection it would be applied to the 
+  If we allow a nyquist filter to be bound to the mouse, instead of
+  being applied to the current selection it would be applied to the
   start and end points of the drag.
 
 *//********************************************************************/
@@ -68,7 +68,7 @@ void MousePrefs::Populate()
 {
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -91,7 +91,7 @@ void MousePrefs::PopulateOrExchange(ShuttleGui & S)
 /// Creates the contents of mList
 void MousePrefs::CreateList()
 {
-   //An empty first column is a workaround - under Win98 the first column 
+   //An empty first column is a workaround - under Win98 the first column
    //can't be right aligned.
    mList->InsertColumn(BlankColumn,   wxT(""),              wxLIST_FORMAT_LEFT);
    mList->InsertColumn(ToolColumn,    _("Tool"),            wxLIST_FORMAT_RIGHT);
@@ -115,10 +115,10 @@ void MousePrefs::CreateList()
    AddItem(_("Left-Drag"),        _("Time-Shift"),_("Time shift clip or move up/down between tracks"));
    AddItem(_("Shift-Left-Drag"),  _("Time-Shift"),_("Time shift all clips in track"));
    AddItem(_("Ctrl-Left-Drag"),   _("Time-Shift"),_("Move clip up/down between tracks"));
-   
-   AddItem(_("Left-Drag"),       
+
+   AddItem(_("Left-Drag"),
    /* i18n-hint: The envelope is a curve that controls the audio loudness.*/
-      _("Envelope"),  
+      _("Envelope"),
       _("Change Amplification Envelope"));
 
    AddItem(_("Left-Click"),       _("Pencil"),    _("Change Sample"));
@@ -144,7 +144,7 @@ void MousePrefs::CreateList()
    // Anyway, 5 pixels wide is wide enough that some people who are curious will drag it
    // wider to see what's there (the comments show that the duplication of functions
    // is for a reason, and not just random).
-   mList->SetColumnWidth(CommentColumn, 5); 
+   mList->SetColumnWidth(CommentColumn, 5);
 }
 
 /// Adds an item to mList
@@ -157,7 +157,7 @@ void MousePrefs::AddItem(wxString const & buttons, wxString const & tool,
    mList->SetItem(i, ActionColumn, action);
    mList->SetItem(i, ButtonsColumn, buttons);
 
-   // Add a space before the text to work around a minor bug in the 
+   // Add a space before the text to work around a minor bug in the
    // list control when showing narrow columns.
    mList->SetItem(i, CommentColumn, wxT(" ") + comment);
 }

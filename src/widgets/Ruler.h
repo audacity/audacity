@@ -101,7 +101,7 @@ class AUDACITY_DLL_API Ruler {
 
    // The following functions should allow a custom ruler setup:
    // autosize is a GREAT thing, but for some applications it's
-   // useful the definition of a label array and label step by 
+   // useful the definition of a label array and label step by
    // the user.
    void SetCustomMode(bool value);
    // If this is the case, you should provide a wxString array of labels, start
@@ -109,7 +109,7 @@ class AUDACITY_DLL_API Ruler {
    // ignored.
    void SetCustomMajorLabels(wxArrayString *label, int numLabel, int start, int step);
    void SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, int step);
-   
+
    //
    // Drawing
    //
@@ -147,7 +147,7 @@ public:
 private:
    wxColour mTickColour;
    wxPen mPen;
- 
+
    int          mMaxWidth, mMaxHeight;
    int          mLeft, mTop, mRight, mBottom, mLead;
    int          mLength;
@@ -177,17 +177,17 @@ private:
       int lx, ly;
       wxString text;
    };
-   
+
    int          mNumMajor;
    Label       *mMajorLabels;
    int          mNumMinor;
-   Label       *mMinorLabels;   
+   Label       *mMinorLabels;
    int          mNumMinorMinor;
-   Label       *mMinorMinorLabels;   
+   Label       *mMinorMinorLabels;
 
    // Returns 'zero' label coordinate (for grid drawing)
    int FindZero(Label * label, int len);
-   
+
    public:
    int GetZeroPosition();
 
@@ -238,7 +238,7 @@ private:
 
 // This is an Audacity Specific ruler panel which additionally
 // has border, selection markers, play marker.
-// Once TrackPanel uses wxSizers, we will derive it from some 
+// Once TrackPanel uses wxSizers, we will derive it from some
 // wxWindow and the GetSize and SetSize functions
 // will then be wxWidgets functions instead.
 class AUDACITY_DLL_API AdornedRulerPanel : public wxPanel
@@ -264,7 +264,7 @@ public:
    void SetPlayRegion(double playRegionStart, double playRegionEnd);
    void ClearPlayRegion();
    void GetPlayRegion(double* playRegionStart, double* playRegionEnd);
-   
+
    void SetProject(AudacityProject* project) {mProject = project;};
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
@@ -305,7 +305,7 @@ private:
 
    double mPlayRegionStart;
    double mPlayRegionEnd;
-   
+
    enum MouseEventState {
       mesNone,
       mesDraggingPlayRegionStart,
@@ -313,7 +313,7 @@ private:
       mesSelectingPlayRegionClick,
       mesSelectingPlayRegionRange
    };
-   
+
    MouseEventState mMouseEventState;
    int mButtonDownMousePos;
    int mLastMouseX;

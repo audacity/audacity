@@ -14,7 +14,7 @@
 
 #include "Audacity.h"
 
-enum teWrappedType 
+enum teWrappedType
 {
    eWrappedNotSet,
    eWrappedString,
@@ -56,9 +56,9 @@ public:
    void WriteToAsBool( const bool InBool);
 
    bool ValuesMatch( const WrappedType & W );
-   void WriteToAsWrappedType( const WrappedType & W ); 
+   void WriteToAsWrappedType( const WrappedType & W );
 
-public : 
+public :
    void Init();
 
    teWrappedType eWrappedType;

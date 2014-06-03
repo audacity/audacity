@@ -26,23 +26,23 @@ class LV2PortGroup
 {
 public:
    LV2PortGroup(const wxString & name = wxEmptyString);
-   
+
    /** Add a subgroup of this group. */
    void AddSubGroup(const LV2PortGroup & subgroup);
-   
+
    /** Return a list of all subgroups. */
    const LV2PortGroupArray & GetSubGroups() const;
-   
+
    /** Add a parameter number (not port number). */
    void AddParameter(int parameter);
-   
+
    /** Return a list of all parameters in this group. */
    const wxArrayInt & GetParameters() const;
-   
+
    const wxString & GetName() const;
 
  private:
-   
+
    wxString mName;
    LV2PortGroupArray mSubGroups;
    wxArrayInt mParameters;

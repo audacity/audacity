@@ -11,8 +11,8 @@
 \brief An abstract Effect class that simplifies the implementation of a basic
   monaural effect.  Inherit from it if your effect just modifies
   a single track in place and doesn't care how many samples
-  it gets at a time.  
-  
+  it gets at a time.
+
   Your derived class only needs to implement
   GetEffectName, GetEffectAction, and ProcessSimpleMono.
 
@@ -52,7 +52,7 @@ bool EffectSimpleMono::Process()
          //Transform the marker timepoints to samples
          sampleCount start = pOutWaveTrack->TimeToLongSamples(mCurT0);
          sampleCount end = pOutWaveTrack->TimeToLongSamples(mCurT1);
-         
+
          //Get the track rate and samples
          mCurRate = pOutWaveTrack->GetRate();
          mCurChannel = pOutWaveTrack->GetChannel();
@@ -65,13 +65,13 @@ bool EffectSimpleMono::Process()
             break;
          }
       }
-      
+
       //Iterate to the next track
       pOutWaveTrack = (WaveTrack*)(iter.Next());
       mCurTrackNum++;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult); 
+   this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -84,7 +84,7 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
    sampleCount s;
    //Get the length of the buffer (as double). len is
    //used simple to calculate a progress meter, so it is easier
-   //to make it a double now than it is to do it later 
+   //to make it a double now than it is to do it later
    double len = (double)(end - start);
 
    //Initiate a processing buffer.  This buffer will (most likely)
@@ -113,7 +113,7 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
          return false;
       }
 
-      //Processing succeeded. copy the newly-changed samples back 
+      //Processing succeeded. copy the newly-changed samples back
       //onto the track.
       track->Set((samplePtr) buffer, floatSample, s, block);
 

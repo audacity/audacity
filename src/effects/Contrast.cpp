@@ -68,7 +68,7 @@ void InitContrastDialog(wxWindow * parent)
       gContrastDialog->bBGset = false;
    }
 
-   // Zero dialog boxes.  Do we need to do this here? 
+   // Zero dialog boxes.  Do we need to do this here?
    if( !gContrastDialog->bFGset )
    {
       gContrastDialog->mForegroundStartT->SetTimeValue(0.0);
@@ -123,7 +123,7 @@ float ContrastDialog::GetDB()
       return 1234.0;
    }
    bool mSelected = false;
-   while(t) {  
+   while(t) {
       if( ((WaveTrack *)t)->GetSelected() )
       {
          if( mSelected == true ) // already measured one track
@@ -234,7 +234,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    mProjectRate = p->GetRate();
 
    ShuttleGui S(this, eIsCreating);
-   
+
    S.SetBorder(5);
    S.StartHorizontalLay(wxCENTER, false);
    {
@@ -581,7 +581,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    int hour = now.GetHour();
    int minute = now.GetMinute();
    int second = now.GetSecond();
-   sNow = wxString::Format(wxT("%d %s %02d %02dh %02dm %02ds"), 
+   sNow = wxString::Format(wxT("%d %s %02d %02dh %02dm %02ds"),
         dom, monthName.c_str(), year, hour, minute, second);
    f.AddLine(sNow);
 

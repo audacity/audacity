@@ -14,11 +14,11 @@
 
 
 // These are all member functions of class AudacityProject.
-// Vaughan, 2010-08-05: 
+// Vaughan, 2010-08-05:
 //    Note that this file is included in a "public" section of Project.h.
-//    Most of these methods do not need to be public, and because 
+//    Most of these methods do not need to be public, and because
 //    we do not subclass AudacityProject, they should be "private."
-//    Because the ones that need to be public are intermixed, 
+//    Because the ones that need to be public are intermixed,
 //    I've added "private" in just a few cases.
 
 private:
@@ -29,7 +29,7 @@ void CreateMenusAndCommands();
 /** Generate submenus for the categories that contain more than one effect
     and return the effects from the categories that do not contain more than
     submenuThreshold effects so the caller can add them to the current menu. */
-EffectSet CreateEffectSubmenus(CommandManager* c, 
+EffectSet CreateEffectSubmenus(CommandManager* c,
                                const CategorySet& categories, int flags,
                                unsigned submenuThreshold = 1);
 

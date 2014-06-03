@@ -5,7 +5,7 @@
   ChangeSpeed.h
 
   Vaughan Johnson, Dominic Mazzoni
-  
+
   Change Speed effect, that affects both pitch & tempo.
 
 **********************************************************************/
@@ -23,7 +23,7 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 
-class EffectChangeSpeed : public Effect 
+class EffectChangeSpeed : public Effect
 {
  public:
    EffectChangeSpeed();
@@ -45,11 +45,11 @@ class EffectChangeSpeed : public Effect
    virtual wxString GetEffectAction() {
       return wxString(_("Changing Speed"));
    }
-   
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription(); 
 
-   double CalcPreviewInputLength(double previewLength); 
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription();
+
+   double CalcPreviewInputLength(double previewLength);
 
  protected:
    virtual bool PromptUser();
@@ -81,7 +81,7 @@ friend class ChangeSpeedDialog;
 };
 
 
-class ChangeSpeedDialog : public EffectDialog 
+class ChangeSpeedDialog : public EffectDialog
 {
  public:
    ChangeSpeedDialog(EffectChangeSpeed * effect,

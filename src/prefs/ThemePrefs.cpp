@@ -73,7 +73,7 @@ void ThemePrefs::Populate()
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -125,10 +125,10 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
          S.Id(idReadThemeInternal).AddButton(_("&Defaults"));
       }
       S.EndHorizontalLay();
-      
+
       S.StartHorizontalLay(wxALIGN_LEFT);
       {
-         S.TieCheckBox(_("Load Theme Cache At Startup"),  
+         S.TieCheckBox(_("Load Theme Cache At Startup"),
                        wxT("/Theme/LoadAtStart"),
                        false);
       }
@@ -137,11 +137,11 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
    // JKC: 'Ergonomic' details:
-   // Theme components are used much less frequently than 
+   // Theme components are used much less frequently than
    // the ImageCache.  Yet it's easy to click them 'by mistake'.
    //
-   // To reduce that risk, we use a separate box to separate them off.  
-   // And choose text on the buttons that is shorter, making the 
+   // To reduce that risk, we use a separate box to separate them off.
+   // And choose text on the buttons that is shorter, making the
    // buttons smaller and less tempting to click.
    S.StartStatic( _("Individual Theme Files"),1);
    {

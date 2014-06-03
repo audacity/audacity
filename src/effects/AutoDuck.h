@@ -31,9 +31,9 @@ private:
    void OnOk(wxCommandEvent& evt);
    void OnCancel(wxCommandEvent& evt);
    void OnValueChanged(wxCommandEvent& evt);
-   
+
    EffectAutoDuck* mEffect;
-   
+
    wxTextCtrl* mDuckAmountDbBox;
    wxTextCtrl* mInnerFadeDownLenBox;
    wxTextCtrl* mInnerFadeUpLenBox;
@@ -42,7 +42,7 @@ private:
    wxTextCtrl* mThresholdDbBox;
    wxTextCtrl* mMaximumPauseBox;
    EffectAutoDuckPanel* mPanel;
-   
+
    DECLARE_EVENT_TABLE()
 };
 
@@ -53,7 +53,7 @@ class EffectAutoDuckPanel: public wxPanel
 public:
    EffectAutoDuckPanel(EffectAutoDuckDialog* parent, wxWindowID id);
    virtual ~EffectAutoDuckPanel();
-   
+
 private:
    enum EControlPoint
    {
@@ -75,10 +75,10 @@ private:
    void OnLeftDown(wxMouseEvent &evt);
    void OnLeftUp(wxMouseEvent &evt);
    void OnMotion(wxMouseEvent &evt);
-   
+
    void ResetControlPoints();
    EControlPoint GetNearestControlPoint(const wxPoint& pt);
-   
+
    EffectAutoDuckDialog* mParent;
    wxBitmap* mBackgroundBitmap;
    EControlPoint mCurrentControlPoint;
@@ -86,7 +86,7 @@ private:
    wxPoint mMoveStartControlPoints[AUTO_DUCK_PANEL_NUM_CONTROL_POINTS];
    wxPoint mMouseDownPoint;
    bool mControlPointMoveActivated;
-   
+
    DECLARE_EVENT_TABLE()
 };
 
@@ -96,12 +96,12 @@ class EffectAutoDuck: public Effect
 
 public:
    EffectAutoDuck();
-   
+
    virtual wxString GetEffectName()
    {
       return wxString(_("Auto Duck..."));
    }
-   
+
    virtual std::set<wxString> GetEffectCategories()
    {
      std::set<wxString> result;
@@ -118,7 +118,7 @@ public:
    {
       return wxString(_("Processing Auto Duck..."));
    }
-   
+
    virtual bool PromptUser();
    virtual bool TransferParameters(Shuttle & shuttle);
 
@@ -126,10 +126,10 @@ public:
    virtual void End();
    virtual bool CheckWhetherSkipEffect();
    virtual bool Process();
-   
+
 private:
    bool ApplyDuckFade(int trackNumber, WaveTrack* t, double t0, double t1);
-   
+
    double mDuckAmountDb;
    double mInnerFadeDownLen;
    double mInnerFadeUpLen;

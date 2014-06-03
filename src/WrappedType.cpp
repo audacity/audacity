@@ -11,12 +11,12 @@
 
 \class WrappedType
 \brief
-  Used in type conversions, this wrapper for ints, strings, doubles and 
-  enums provides conversions between all the types.  Functions that 
-  work on wrapped types can quickly be reused to work on any of 
+  Used in type conversions, this wrapper for ints, strings, doubles and
+  enums provides conversions between all the types.  Functions that
+  work on wrapped types can quickly be reused to work on any of
   these types.  This cuts out a lot of repetitive code.
 
-  JKC: This class grows in size with the square of the number of 
+  JKC: This class grows in size with the square of the number of
   types it supports.  It has to do all conversions between all pairs,
   so try to re-use existing types if you can.
 

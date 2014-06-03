@@ -5,13 +5,13 @@
   LadspaEffect.cpp
 
   Dominic Mazzoni
-  
+
   This class implements a Ladspa Plug-in effect.
 
 *******************************************************************//**
 
 \class LadspaEffect
-\brief An Effect that calls up a LADSPA plug in, i.e. many possible 
+\brief An Effect that calls up a LADSPA plug in, i.e. many possible
 effects from this one class.
 
 *//****************************************************************//**
@@ -46,7 +46,7 @@ effects from this one class.
 LadspaEffect::LadspaEffect(const LADSPA_Descriptor *data,
                            const std::set<wxString>& categories)
    : mCategories(categories) {
-   
+
    mData = data;
    pluginName = LAT1CTOWX(mData->Name);
 
@@ -132,7 +132,7 @@ LadspaEffect::LadspaEffect(const LADSPA_Descriptor *data,
    else if (outputs == 0)
       flags |= ANALYZE_EFFECT;
    else
-      flags |= PROCESS_EFFECT;   
+      flags |= PROCESS_EFFECT;
 
    SetEffectFlags(flags);
 }
@@ -175,7 +175,7 @@ wxString LadspaEffect::GetEffectIdentifier()
 
 wxString LadspaEffect::GetEffectAction()
 {
-   return wxString::Format(_("Performing Effect: %s"), 
+   return wxString::Format(_("Performing Effect: %s"),
                            pluginName.c_str());
 }
 
@@ -189,17 +189,17 @@ bool LadspaEffect::Init()
    while(left) {
       if (mainRate == 0)
          mainRate = (int)(((WaveTrack *)left)->GetRate() + 0.5);
-      
+
       if (left->GetLinked()) {
          Track *right = iter.Next();
-         
+
          if (((WaveTrack *)left)->GetRate() !=
              ((WaveTrack *)right)->GetRate()) {
             wxMessageBox(_("Sorry, Plug-in Effects cannot be performed on stereo tracks where the individual channels of the track do not match."));
             return false;
          }
       }
-      
+
       left = iter.Next();
    }
 
@@ -217,7 +217,7 @@ bool LadspaEffect::PromptUser()
       LadspaEffectDialog dlog(this, mParent, mData, inputControls, mainRate, length);
       dlog.CentreOnParent();
       dlog.ShowModal();
-      
+
       if (!dlog.GetReturnCode())
          return false;
 
@@ -239,10 +239,10 @@ bool LadspaEffect::Process()
       sampleCount lstart = 0, rstart = 0;
       sampleCount len;
       GetSamples((WaveTrack *)left, &lstart, &len);
-      
+
       right = NULL;
       if (left->GetLinked() && inputs>1) {
-         right = iter.Next();         
+         right = iter.Next();
          GetSamples((WaveTrack *)right, &rstart, &len);
       }
 
@@ -250,7 +250,7 @@ bool LadspaEffect::Process()
          // If the effect is mono, apply to each channel separately
 
          bGoodResult = ProcessStereo(count, (WaveTrack *)left, NULL,
-                                 lstart, 0, len) && 
+                                 lstart, 0, len) &&
                         ProcessStereo(count, (WaveTrack *)right, NULL,
                                     rstart, 0, len);
       }
@@ -259,17 +259,17 @@ bool LadspaEffect::Process()
                                    lstart, rstart, len);
       if (!bGoodResult)
          break;
-   
+
       left = iter.Next();
       count++;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult); 
+   this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
 bool LadspaEffect::ProcessStereo(int count, WaveTrack *left, WaveTrack *right,
-                                 sampleCount lstart, 
+                                 sampleCount lstart,
                                  sampleCount rstart,
                                  sampleCount len)
 {
@@ -309,7 +309,7 @@ bool LadspaEffect::ProcessStereo(int count, WaveTrack *left, WaveTrack *right,
             mData->connect_port(handle, p, &outputControls[p]);
       }
    }
-   
+
    if (mData->activate)
       mData->activate(handle);
 
@@ -334,16 +334,16 @@ bool LadspaEffect::ProcessStereo(int count, WaveTrack *left, WaveTrack *right,
 
       if (left && outputs > 0) {
          left->Set((samplePtr)fOutBuffer[0], floatSample, ls, block);
-      }      
-      
+      }
+
       if (right && outputs > 1) {
          right->Set((samplePtr)fOutBuffer[1], floatSample, rs, block);
-      }      
+      }
 
       len -= block;
       ls += block;
       rs += block;
-      
+
       if (inputs > 1) {
          if (TrackGroupProgress(count, (ls-lstart)/(double)originalLen))
             return false;
@@ -551,17 +551,17 @@ LadspaEffectDialog::LadspaEffectDialog(LadspaEffect *eff,
    wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);
 
    if (mData->Maker &&
-       mData->Maker[0] && 
-       LAT1CTOWX(mData->Maker) != wxString(_("None"))) {       
+       mData->Maker[0] &&
+       LAT1CTOWX(mData->Maker) != wxString(_("None"))) {
       item = new wxStaticText(this, 0,
                               wxString(_("Author: "))+LAT1CTOWX(mData->Maker));
       vSizer->Add(item, 0, wxALL, 5);
    }
-   
+
    if (mData->Copyright &&
-       mData->Copyright[0] && 
+       mData->Copyright[0] &&
        LAT1CTOWX(mData->Copyright) != wxString(_("None"))) {
-      
+
       item = new wxStaticText(this, 0,
                               LAT1CTOWX(mData->Copyright));
       vSizer->Add(item, 0, wxALL, 5);
@@ -577,7 +577,7 @@ LadspaEffectDialog::LadspaEffectDialog(LadspaEffect *eff,
    w->SetMinSize(wxSize(
       wxMax(600, parent->GetSize().GetWidth() * 2/3),
       parent->GetSize().GetHeight() / 2));
-                                              
+
    w->SetScrollRate(0, 20);
    vSizer->Add(w, 1, wxEXPAND|wxALL, 5);
 
@@ -697,7 +697,7 @@ LadspaEffectDialog::LadspaEffectDialog(LadspaEffect *eff,
    // text fields
    inSlider = false; // Now we're ready for HandleText to actually do something.
    HandleText();
-   
+
    paramSizer->Add(gridSizer, 1, wxEXPAND | wxALL, 5);
    w->SetSizer(paramSizer);
 
@@ -801,11 +801,11 @@ void LadspaEffectDialog::HandleText()
       if (LADSPA_IS_HINT_BOUNDED_BELOW(hint.HintDescriptor))
          lower = hint.LowerBound;
       if (LADSPA_IS_HINT_BOUNDED_ABOVE(hint.HintDescriptor))
-         upper = hint.UpperBound;      
+         upper = hint.UpperBound;
       if (LADSPA_IS_HINT_SAMPLE_RATE(hint.HintDescriptor)) {
          lower *= sampleRate;
          upper *= sampleRate;
-      }         
+      }
       range = upper - lower;
 
       if (val < lower)
@@ -815,7 +815,7 @@ void LadspaEffectDialog::HandleText()
 
       inputControls[ports[p]] = val;
 
-      sliders[p]->SetValue((int)(((val-lower)/range) * 1000.0 + 0.5));      
+      sliders[p]->SetValue((int)(((val-lower)/range) * 1000.0 + 0.5));
    }
 
    inText = false;

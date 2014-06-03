@@ -63,7 +63,7 @@ void TracksPrefs::Populate()
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -79,7 +79,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("&Update display while playing"),
                     wxT("/GUI/AutoScroll"),
                     true);
-      S.TieCheckBox(_("Automatically &fit tracks vertically zoomed"), 
+      S.TieCheckBox(_("Automatically &fit tracks vertically zoomed"),
                     wxT("/GUI/TracksFitVerticallyZoomed"),
                     false);
 
@@ -100,7 +100,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_("Behaviors"));
    {
-      S.TieCheckBox(_("&Select all audio in project, if none selected"),    
+      S.TieCheckBox(_("&Select all audio in project, if none selected"),
                     wxT("/GUI/SelectAllOnNone"),
                     true);
       /* i18n-hint: cut-lines are a lines indicating where to cut.*/
@@ -110,7 +110,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Enable &dragging of left and right selection edges"),
                     wxT("/GUI/AdjustSelectionEdges"),
                     true);
-      S.TieCheckBox(_("\"Move track focus\" c&ycles repeatedly through tracks"), 
+      S.TieCheckBox(_("\"Move track focus\" c&ycles repeatedly through tracks"),
                     wxT("/GUI/CircularTrackNavigation"),
                     false);
       S.TieCheckBox(_("Editing a clip can &move other clips"),

@@ -27,7 +27,7 @@ class ImportExportPrefs:public PrefsPanel
    ImportExportPrefs(wxWindow * parent);
    ~ImportExportPrefs();
    virtual bool Apply();
-   
+
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);

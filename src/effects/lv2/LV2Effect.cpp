@@ -61,7 +61,7 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
    mMidiInput(0),
    mLatencyPortIndex(-1)
 {
-   
+
    // We don't support any features at all, so if the plugin requires
    // any we skip it.
    LilvNodes *req = lilv_plugin_get_required_features(data);
@@ -78,7 +78,7 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
 
    fInBuffer = NULL;
    fOutBuffer = NULL;
-   
+
    mLength = 0;
 
    // Allocate buffers for the port indices and the default control values
@@ -88,7 +88,7 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
    float *defaultValues = new float [numPorts];
 
    // Retrieve the port ranges for all ports (some values may be NaN)
-   lilv_plugin_get_port_ranges_float(mData, minimumValues, 
+   lilv_plugin_get_port_ranges_float(mData, minimumValues,
                                      maximumValues, defaultValues);
 
    // Get info about all ports
@@ -252,18 +252,18 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
  //        mValid = false;
       }
    }
-   
+
    delete [] minimumValues;
    delete [] maximumValues;
    delete [] defaultValues;
-   
+
    // MIDI synths may not have any audio inputs.
    if (mMidiInput && mAudioInputs.GetCount() > 0)
    {
       mValid = false;
    }
-   
-   // Determine whether the plugin is a generator, effect or analyser 
+
+   // Determine whether the plugin is a generator, effect or analyser
    // depending on the number of ports of each type (not completely accurate,
    // but works most of the time)
    int flags = PLUGIN_EFFECT;
@@ -326,7 +326,7 @@ wxString LV2Effect::GetEffectIdentifier()
 
 wxString LV2Effect::GetEffectAction()
 {
-   return wxString::Format(_("Performing Effect: %s"), 
+   return wxString::Format(_("Performing Effect: %s"),
                            pluginName.c_str());
 }
 
@@ -343,11 +343,11 @@ bool LV2Effect::Init()
       {
          mainRate = (int)(((WaveTrack *)left)->GetRate() + 0.5);
       }
-      
+
       if (left->GetLinked())
       {
          Track *right = iter.Next();
-         
+
          if (((WaveTrack *)left)->GetRate() !=
              ((WaveTrack *)right)->GetRate())
          {
@@ -355,7 +355,7 @@ bool LV2Effect::Init()
             return false;
          }
       }
-      
+
       left = iter.Next();
    }
 
@@ -380,7 +380,7 @@ bool LV2Effect::PromptUser()
                            noteLength, noteVelocity, noteKey);
       dlog.CentreOnParent();
       dlog.ShowModal();
-      
+
       if (!dlog.GetReturnCode())
       {
          return false;
@@ -409,11 +409,11 @@ bool LV2Effect::Process()
       sampleCount lstart = 0, rstart = 0;
       sampleCount len;
       GetSamples((WaveTrack *)left, &lstart, &len);
-      
+
       right = NULL;
       if (left->GetLinked() && mAudioInputs.GetCount() > 1)
       {
-         right = iter.Next();         
+         right = iter.Next();
          GetSamples((WaveTrack *)right, &rstart, &len);
       }
 
@@ -422,7 +422,7 @@ bool LV2Effect::Process()
          // If the effect is mono, apply to each channel separately
 
          bGoodResult = ProcessStereo(count, (WaveTrack *)left, NULL,
-                                     lstart, 0, len) && 
+                                     lstart, 0, len) &&
             ProcessStereo(count, (WaveTrack *)right, NULL,
                           rstart, 0, len);
       }
@@ -437,7 +437,7 @@ bool LV2Effect::Process()
       {
          break;
       }
-   
+
       left = iter.Next();
       count++;
    }
@@ -450,7 +450,7 @@ bool LV2Effect::Process()
 bool LV2Effect::ProcessStereo(int count,
                               WaveTrack *left,
                               WaveTrack *right,
-                              sampleCount lstart, 
+                              sampleCount lstart,
                               sampleCount rstart,
                               sampleCount len)
 {
@@ -474,7 +474,7 @@ bool LV2Effect::ProcessStereo(int count,
 
    /* Instantiate the plugin */
    LilvInstance *handle = lilv_plugin_instantiate(mData,
-                                                  left->GetRate(), 
+                                                  left->GetRate(),
                                                   gLV2Features);
    if (!handle)
    {
@@ -518,7 +518,7 @@ bool LV2Effect::ProcessStereo(int count,
 
    for (size_t p = 0; p < mControlOutputs.GetCount(); p++)
    {
-      lilv_instance_connect_port(handle, mControlOutputs[p].mIndex, 
+      lilv_instance_connect_port(handle, mControlOutputs[p].mIndex,
                                  &mControlOutputs[p].mControlBuffer);
    }
 
@@ -553,12 +553,12 @@ bool LV2Effect::ProcessStereo(int count,
          {
             block = len;
          }
-   
+
          if (left &&  mAudioInputs.GetCount() > 0)
          {
             left->Get((samplePtr)fInBuffer[0], floatSample, ls, block);
          }
-   
+
          if (right && mAudioInputs.GetCount() > 1)
          {
             right->Get((samplePtr)fInBuffer[1], floatSample, rs, block);
@@ -606,7 +606,7 @@ bool LV2Effect::ProcessStereo(int count,
          {
             left->Set((samplePtr)(fOutBuffer[0] + delay), floatSample, ols, oblock);
          }
-         
+
          if (right && mAudioOutputs.GetCount() > 1)
          {
             right->Set((samplePtr)(fOutBuffer[1] + delay), floatSample, ors, oblock);
@@ -621,7 +621,7 @@ bool LV2Effect::ProcessStereo(int count,
          {
             left->Set((samplePtr)fOutBuffer[0], floatSample, ols, block);
          }
-         
+
          if (right && mAudioOutputs.GetCount() > 1)
          {
             right->Set((samplePtr)fOutBuffer[1], floatSample, ors, block);
@@ -638,10 +638,10 @@ bool LV2Effect::ProcessStereo(int count,
          // Clear the event buffer and add the note off event if needed
          if (mMidiInput)
          {
-            lv2_event_buffer_reset(midiBuffer, 1, 
-                                   (uint8_t *)midiBuffer + 
+            lv2_event_buffer_reset(midiBuffer, 1,
+                                   (uint8_t *)midiBuffer +
                                    sizeof(LV2_Event_Buffer));
-   
+
             if (!noteOver && noteOffTime < len && noteOffTime < block)
             {
                LV2_Event_Iterator iter;
@@ -650,7 +650,7 @@ bool LV2Effect::ProcessStereo(int count,
                lv2_event_write(&iter, noteOffTime, 0, 1, 3, noteOff);
                noteOver = true;
             }
-         }         
+         }
       }
       else if (delayed)
       {
@@ -658,7 +658,7 @@ bool LV2Effect::ProcessStereo(int count,
       }
       ls += block;
       rs += block;
-      
+
       if (mAudioInputs.GetCount() > 1)
       {
          if (TrackGroupProgress(count, (ls-lstart)/(double)originalLen))
@@ -673,12 +673,12 @@ bool LV2Effect::ProcessStereo(int count,
             return false;
          }
       }
-      
+
    }
-   
+
    lilv_instance_deactivate(handle);
    lilv_instance_free(handle);
-   
+
    return true;
 }
 
@@ -720,7 +720,7 @@ bool LV2Effect::IsValid()
 }
 
 
-LV2PortArray & LV2Effect::GetControls() 
+LV2PortArray & LV2Effect::GetControls()
 {
    return mControlInputs;
 }
@@ -732,7 +732,7 @@ bool LV2Effect::IsSynth()
 }
 
 
-bool LV2Effect::SetNote(sampleCount len, 
+bool LV2Effect::SetNote(sampleCount len,
                         unsigned char velocity, unsigned char key)
 {
    if (velocity == 0 || velocity > 127 || key > 127)
@@ -768,7 +768,7 @@ wxString LV2Effect::GetString(LilvNode *node, bool free)
    return str;
 }
 
-// This should be moved to its own source file, it's in LadspaEffect.cpp 
+// This should be moved to its own source file, it's in LadspaEffect.cpp
 // as well
 class LV2Slider:public wxSlider
 {
@@ -902,7 +902,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
                                  double WXUNUSED(noteLength),
                                  unsigned char WXUNUSED(noteVelocity),
                                  unsigned char WXUNUSED(noteKey))
-:  wxDialog(parent, wxID_ANY, 
+:  wxDialog(parent, wxID_ANY,
             mEffect->GetString(lilv_plugin_get_name(data)),
             wxDefaultPosition, wxSize(500, -1),
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
@@ -925,7 +925,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
 #endif
    inText = false;
    inText = true;
-   
+
    // Allocate memory for the user parameter controls
    int ctrlcnt = (int) mControls.GetCount();
    mToggles = new wxCheckBox*[ctrlcnt];
@@ -933,11 +933,11 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
    mFields = new wxTextCtrl*[ctrlcnt];
    mLabels = new wxStaticText*[ctrlcnt];
    mEnums = new wxChoice*[ctrlcnt];
-   
+
    wxControl *item;
 
    wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);
-   
+
    // Add information about the plugin
    LilvNode *tmpValue = lilv_plugin_get_author_name(data);
    if (tmpValue)
@@ -947,7 +947,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
       vSizer->Add(item, 0, wxALL, 5);
       lilv_node_free(tmpValue);
    }
-   
+
    wxScrolledWindow *w = new wxScrolledWindow(this,
                                               wxID_ANY,
                                               wxDefaultPosition,
@@ -958,7 +958,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
    w->SetMinSize(wxSize(
       wxMax(600, parent->GetSize().GetWidth() * 2/3),
       parent->GetSize().GetHeight() / 2));
-                                              
+
    w->SetScrollRate(0, 20);
    vSizer->Add(w, 1, wxEXPAND|wxALL, 5);
 
@@ -973,7 +973,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
    wxFlexGridSizer *gridSizer =
       new wxFlexGridSizer(5, 0, 0);
    gridSizer->AddGrowableCol(3);
-   
+
    // Now add the length control
    if (mEffect->GetEffectFlags() & INSERT_EFFECT)
    {
@@ -987,7 +987,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
       gridSizer->Add(1, 1, 0);
       ConnectFocus(mSeconds);
    }
-   
+
    // The note controls if the plugin is a synth
    if (mEffect->IsSynth())
    {
@@ -1001,7 +1001,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
       gridSizer->Add(1, 1, 0);
       gridSizer->Add(1, 1, 0);
       ConnectFocus(mNoteSeconds);
-      
+
       // Note velocity control
       item = new wxStaticText(w, wxID_ANY, _("Note velocity"));
       gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
@@ -1030,7 +1030,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
    // Create user parameter controls
    std::queue<const LV2PortGroup *> groups;
    groups.push(&mEffect->GetRootGroup());
-   
+
    while (!groups.empty())
    {
       const LV2PortGroup* pg = groups.front();
@@ -1055,7 +1055,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
             groups.push(*si);
          }
       }
-      
+
       const wxArrayInt & params = pg->GetParameters();
       for (size_t pi = 0; pi < params.GetCount(); pi++)
       {
@@ -1069,7 +1069,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
          wxString labelText = port.mName;
          item = new wxStaticText(w, 0, labelText + wxT(":"));
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-         
+
          wxString fieldText;
 
          if (port.mToggle)
@@ -1079,7 +1079,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
             mToggles[p]->SetValue(port.mControlBuffer > 0);
             gridSizer->Add(mToggles[p], 0, wxALL, 5);
             ConnectFocus(mToggles[p]);
-            
+
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);
@@ -1104,7 +1104,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
             mEnums[p]->SetSelection(s);
             gridSizer->Add(mEnums[p], 0, wxALL | wxEXPAND, 5);
             ConnectFocus(mEnums[p]);
-            
+
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);
@@ -1119,7 +1119,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
             {
                fieldText = Internat::ToDisplayString(port.mControlBuffer);
             }
-            
+
             mFields[p] = new wxTextCtrl(w, p, fieldText);
             mFields[p]->SetName(labelText);
             gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
@@ -1134,9 +1134,9 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
             wxString loLabel;
             wxString hiLabel;
 #if 0
-            ScalePointMap::const_iterator iter = 
+            ScalePointMap::const_iterator iter =
                scalePoints.find(port.mIndex);
-            
+
             if (!wxNaN(port.mMin))
             {
                lower = port.mMin;
@@ -1151,7 +1151,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
                   }
                }
             }
-            
+
             if (!isnan(port.mMax))
             {
                upper = port.mMax;
@@ -1173,7 +1173,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
                upper *= mSampleRate;
                forceint = true;
             }
-            
+
             wxString str;
             if (haslo)
             {
@@ -1205,7 +1205,7 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
             mSliders[p]->SetName(labelText);
             gridSizer->Add(mSliders[p], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
             ConnectFocus(mSliders[p]);
-            
+
             if (hashi)
             {
                str = hiLabel;
@@ -1230,12 +1230,12 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
          }
       }
    }
-   
+
    // Set all of the mSliders based on the value in the
    // text mFields
    inSlider = false; // Now we're ready for HandleText to actually do something.
    HandleText();
-   
+
    w->SetSizer(paramSizer);
 
    Layout();
@@ -1274,7 +1274,7 @@ void LV2EffectDialog::OnSlider(wxCommandEvent &event)
    float upper = float(10.0);
    float range;
    bool forceint = false;
-   
+
    if (isfinite(mControls[p].mMin))
    {
       lower = mControls[p].mMin;
@@ -1291,7 +1291,7 @@ void LV2EffectDialog::OnSlider(wxCommandEvent &event)
       upper *= mSampleRate;
       forceint = true;
    }
-   
+
    range = upper - lower;
 
    val = (mSliders[p]->GetValue() / 1000.0) * range + lower;
@@ -1318,7 +1318,7 @@ void LV2EffectDialog::OnChoiceCtrl(wxCommandEvent & WXUNUSED(event))
 {
 //   HandleText();
 }
- 
+
 void LV2EffectDialog::OnTextCtrl(wxCommandEvent & WXUNUSED(event))
 {
    HandleText();
@@ -1336,7 +1336,7 @@ void LV2EffectDialog::HandleText()
       return;
    }
    inText = true;
-   
+
    for (uint32_t p = 0; p < mControls.GetCount(); p++)
    {
       double dval;
@@ -1357,7 +1357,7 @@ void LV2EffectDialog::HandleText()
 
       dval = Internat::CompatibleToDouble(mFields[p]->GetValue());
       val = dval;
-      
+
       if (!isnan(mControls[p].mMin))
       {
          lower = mControls[p].mMin;
@@ -1372,7 +1372,7 @@ void LV2EffectDialog::HandleText()
       {
          lower *= mSampleRate;
          upper *= mSampleRate;
-      }         
+      }
       range = upper - lower;
 
       if (val < lower)
@@ -1387,7 +1387,7 @@ void LV2EffectDialog::HandleText()
 
       mControls[p].mControlBuffer = val;
 
-      mSliders[p]->SetValue((int)(((val-lower)/range) * 1000.0 + 0.5));      
+      mSliders[p]->SetValue((int)(((val-lower)/range) * 1000.0 + 0.5));
    }
 
    inText = false;
@@ -1478,7 +1478,7 @@ unsigned char LV2EffectDialog::GetNoteVelocity()
 {
    if (mEffect->IsSynth())
    {
-      double velocity = 
+      double velocity =
          Internat::CompatibleToDouble(mNoteVelocity->GetValue());
 
       if (velocity < 1)
@@ -1500,7 +1500,7 @@ unsigned char LV2EffectDialog::GetNoteKey()
 {
    if (mEffect->IsSynth())
    {
-      double key = 
+      double key =
          Internat::CompatibleToDouble(mNoteKey->GetValue());
 
       if (key < 1)

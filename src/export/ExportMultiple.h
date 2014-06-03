@@ -46,7 +46,7 @@ private:
    bool DirOk();
    /** \brief Export multiple labeled regions of the project to separate files
     *
-    * Uses a single label track in the project to split up the audio into a 
+    * Uses a single label track in the project to split up the audio into a
     * series of sections, each of which is exported to a separate file.
     * @param byName Controls whether files are named after the text in the
     * labels that define them (true), or just numbered (false).
@@ -56,7 +56,7 @@ private:
 
    /** \brief Export each track in the project to a separate file
     *
-    * @param byName Controls whether files are named after the track names 
+    * @param byName Controls whether files are named after the track names
     * (true), or just numbered (false).
     * @param prefix The string used to prefix the file number if files are being
     * numbered rather than named */
@@ -83,7 +83,7 @@ private:
     * name produced */
    wxString MakeFileName(wxString input);
    // Dialog
-   void PopulateOrExchange(ShuttleGui& S); 
+   void PopulateOrExchange(ShuttleGui& S);
    void EnableControls();
 
    void OnFormat(wxCommandEvent& event);
@@ -113,7 +113,7 @@ private:
    int mNumLabels;
    int mNumWaveTracks;
    wxArrayPtrVoid mSelected;
-   int mFilterIndex;          /**< The index in the drop-down list of export 
+   int mFilterIndex;          /**< The index in the drop-down list of export
                                 formats (mFormat) of the selected export format.
                                 This list includes all possible
                                 plug-in - subformat combinations. */
@@ -123,13 +123,13 @@ private:
                                 selected export plug-in set by mPluginIndex */
    bool mInitialized;
 
-   // List of file actually exported 
+   // List of file actually exported
    wxArrayString mExported;
 
    /** Array of characters not allowed to be in file names on this platform */
    wxArrayString exclude;
 
-   wxChoice      *mFormat;    /**< Drop-down list of export formats 
+   wxChoice      *mFormat;    /**< Drop-down list of export formats
                                 (combinations of plug-in and subformat) */
    wxButton      *mOptions;
 
@@ -137,7 +137,7 @@ private:
                              up in */
    wxButton      *mCreate;
    wxButton      *mChoose;
-   
+
    wxRadioButton *mLabel;  /**< button to choose export based on Labels */
    wxStaticText  *mLabelLabel;   /**< description text for mLabel */
 
@@ -148,7 +148,7 @@ private:
 
    wxRadioButton *mTrack;  /**< button to choose export based on tracks */
    wxStaticText  *mTrackLabel;
-   
+
    wxRadioButton *mByNumberAndName; /**< button to choose number AND name for exported files */
    wxRadioButton *mByName;    /**< button to choose naming exported file from label text */
    wxRadioButton *mByNumber;  /**< button to choose numbering exported files */
@@ -162,13 +162,13 @@ private:
    wxButton      *mExport;
 
    DECLARE_EVENT_TABLE()
-      
+
 };
 
 class SuccessDialog : public wxDialog
 {
 public:
-   SuccessDialog(wxWindow *parent, wxWindowID id, const wxString &title) : 
+   SuccessDialog(wxWindow *parent, wxWindowID id, const wxString &title) :
       wxDialog(parent, id, title, wxDefaultPosition,
          wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER) {};
    void OnKeyDown(wxListEvent& event); // dismisses dialog when <enter> is pressed with list control having focus

@@ -13,7 +13,7 @@
 
 \file MacroMagic.h
 
-This file allows the same macros to do multiple duty by undefining 
+This file allows the same macros to do multiple duty by undefining
 and redefining the macros.
 
 For example DEFINE_IMAGE will generate:

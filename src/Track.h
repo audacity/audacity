@@ -71,7 +71,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
 
  public:
    wxSize vrulerSize;
- 
+
    // This just returns a constant and can be overriden by subclasses
    // to specify a different height for the case that the track is minimized.
    virtual int GetMinimizedHeight() const;
@@ -141,7 +141,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    Track(const Track &orig);
 
    virtual ~ Track();
-   
+
    void Init(const Track &orig);
    virtual Track *Duplicate() = 0;
 
@@ -231,7 +231,7 @@ class AUDACITY_DLL_API TrackListIterator
 
    Track *ReplaceCurrent(Track *t);                // returns original
    Track *RemoveCurrent(bool deletetrack = false); // returns next
-  
+
  protected:
    TrackList *l;
    TrackListNode *cur;
@@ -310,7 +310,7 @@ class AUDACITY_DLL_API VisibleTrackIterator: public TrackListCondIterator
 };
 
 
-// SyncLockedTracksIterator returns only tracks belonging to the sync-locked tracks 
+// SyncLockedTracksIterator returns only tracks belonging to the sync-locked tracks
 // in which the starting track is a member.
 class AUDACITY_DLL_API SyncLockedTracksIterator : public TrackListIterator
 {
@@ -356,14 +356,14 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
    friend class Track;
    friend class TrackListIterator;
 
-   /// Add this Track or all children of this TrackList. 
+   /// Add this Track or all children of this TrackList.
    void Add(Track * t);
    void AddToHead(Track * t);
 
    /// Replace first track with second track
    void Replace(Track * t, Track * with, bool deletetrack = false);
 
-   /// Remove this Track or all children of this TrackList. 
+   /// Remove this Track or all children of this TrackList.
    void Remove(Track * t, bool deletetrack = false);
 
    /// Make the list empty
@@ -377,7 +377,7 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
    Track *GetLink(Track * t) const;
 
    Track *GetPrev(Track * t, bool linked = false) const;
-   
+
    /** Return a track in the list that comes after Track t
      * @param t a track in the list
      * @param linked if true, skips over linked tracks, if false returns the next track even if it is a linked track
@@ -396,7 +396,7 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
 
    /** \brief Find out how many channels this track list mixes to
    *
-   * This is used in exports of the tracks to work out whether to export in 
+   * This is used in exports of the tracks to work out whether to export in
    * Mono, Stereo etc. @param selectionOnly Whether to consider the entire track
    * list or only the selected members of it
    */
@@ -422,7 +422,7 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
    double GetMinOffset() const;
    int GetHeight() const;
 
-#if LEGACY_PROJECT_FILE_SUPPORT  
+#if LEGACY_PROJECT_FILE_SUPPORT
    // File I/O
    virtual bool Load(wxTextFile * in, DirManager * dirManager);
    virtual bool Save(wxTextFile * out, bool overwrite);

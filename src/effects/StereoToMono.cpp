@@ -154,7 +154,7 @@ bool EffectStereoToMono::Process()
             refreshIter = true;
          }
       }
-            
+
       if (refreshIter) {
          mLeftTrack = (WaveTrack *)iter.First();
          refreshIter = false;
@@ -167,6 +167,6 @@ bool EffectStereoToMono::Process()
 
    if(mOutTrack)
       delete mOutTrack;
-   this->ReplaceProcessedTracks(bGoodResult); 
+   this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }

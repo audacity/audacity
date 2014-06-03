@@ -41,7 +41,7 @@ void ModulePrefs::Populate()
 {
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -58,7 +58,7 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("mod-&script-pipe"),
                     wxT("/Module/mod-script-pipe"),
                     false);
-      S.TieCheckBox(_("mod-&nyq-bench"),    
+      S.TieCheckBox(_("mod-&nyq-bench"),
                     wxT("/Module/mod-nyq-bench"),
                     false);
       S.TieCheckBox(_("mod-&track-panel"),

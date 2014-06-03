@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ODPCMAliasBlockFile.cpp
-   
+
   Created by Michael Chinen (mchinen)
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2.  See License.txt.
@@ -44,10 +44,10 @@ char aheaderTag[aheaderTagLen + 1] = "AudacityBlockFile112";
 
 ODPCMAliasBlockFile::ODPCMAliasBlockFile(
       wxFileName fileName,
-      wxFileName aliasedFileName, 
+      wxFileName aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel)
-: PCMAliasBlockFile(fileName, aliasedFileName, 
+: PCMAliasBlockFile(fileName, aliasedFileName,
                     aliasStart, aliasLen, aliasChannel,false)
 {
    mSummaryAvailable = mSummaryBeingComputed = mHasBeenSaved = false;
@@ -56,16 +56,16 @@ ODPCMAliasBlockFile::ODPCMAliasBlockFile(
 ///summaryAvailable should be true if the file has been written already.
 ODPCMAliasBlockFile::ODPCMAliasBlockFile(
       wxFileName existingSummaryFileName,
-      wxFileName aliasedFileName, 
+      wxFileName aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,
       float min, float max, float rms, bool summaryAvailable)
-: PCMAliasBlockFile(existingSummaryFileName, aliasedFileName, 
+: PCMAliasBlockFile(existingSummaryFileName, aliasedFileName,
                     aliasStart, aliasLen,
                     aliasChannel, min, max, rms)
 {
    mSummaryAvailable=summaryAvailable;
-   mSummaryBeingComputed=mHasBeenSaved=false;      
+   mSummaryBeingComputed=mHasBeenSaved=false;
  }
 
 ODPCMAliasBlockFile::~ODPCMAliasBlockFile()
@@ -103,7 +103,7 @@ bool ODPCMAliasBlockFile::Deref()
 
 //Check to see if we have the file for these calls.
 wxLongLong ODPCMAliasBlockFile::GetSpaceUsage()
-{ 
+{
    if(IsSummaryAvailable())
    {
       wxLongLong ret;
@@ -120,7 +120,7 @@ wxLongLong ODPCMAliasBlockFile::GetSpaceUsage()
 }
 
 /// Locks the blockfile only if it has a file that exists.  This needs to be done
-/// so that the unsaved ODPCMAliasBlockfiles are deleted upon exit 
+/// so that the unsaved ODPCMAliasBlockfiles are deleted upon exit
 void ODPCMAliasBlockFile::Lock()
 {
    if(IsSummaryAvailable()&&mHasBeenSaved)
@@ -131,12 +131,12 @@ void ODPCMAliasBlockFile::Lock()
 void ODPCMAliasBlockFile::CloseLock()
 {
    if(mHasBeenSaved)
-      PCMAliasBlockFile::Lock(); 
+      PCMAliasBlockFile::Lock();
 }
 
 
 /// unlocks the blockfile only if it has a file that exists.  This needs to be done
-/// so that the unsaved ODPCMAliasBlockfiles are deleted upon exit 
+/// so that the unsaved ODPCMAliasBlockfiles are deleted upon exit
 void ODPCMAliasBlockFile::Unlock()
 {
    if(IsSummaryAvailable() && IsLocked())
@@ -154,7 +154,7 @@ void ODPCMAliasBlockFile::GetMinMax(sampleCount start, sampleCount len,
    }
    else
    {
-      //fake values.  These values are used usually for normalization and amplifying, so we want 
+      //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
       *outMin = -1.0*JUST_BELOW_MAX_AUDIO;
       *outMax = 1.0*JUST_BELOW_MAX_AUDIO;
@@ -171,7 +171,7 @@ void ODPCMAliasBlockFile::GetMinMax(float *outMin, float *outMax, float *outRMS)
    }
    else
    {
-      //fake values.  These values are used usually for normalization and amplifying, so we want 
+      //fake values.  These values are used usually for normalization and amplifying, so we want
       //the max to be maximal and the min to be minimal
       *outMin = -1.0*JUST_BELOW_MAX_AUDIO;
       *outMax = 1.0*JUST_BELOW_MAX_AUDIO;
@@ -188,7 +188,7 @@ bool ODPCMAliasBlockFile::Read256(float *buffer, sampleCount start, sampleCount 
    }
    else
    {
-      //return nothing.  
+      //return nothing.
       buffer = NULL;
       return true;
    }
@@ -216,11 +216,11 @@ bool ODPCMAliasBlockFile::Read64K(float *buffer, sampleCount start, sampleCount 
 BlockFile *ODPCMAliasBlockFile::Copy(wxFileName newFileName)
 {
    BlockFile *newBlockFile;
-   
+
    //mAliasedFile can change so we lock readdatamutex, which is responsible for it.
    LockRead();
    //If the file has been written AND it has been saved, we create a PCM alias blockfile because for
-   //all intents and purposes, it is the same.  
+   //all intents and purposes, it is the same.
    //However, if it hasn't been saved yet, we shouldn't create one because the default behavior of the
    //PCMAliasBlockFile is to lock on exit, and this will cause orphaned blockfiles..
    if(IsSummaryAvailable() && mHasBeenSaved)
@@ -240,9 +240,9 @@ BlockFile *ODPCMAliasBlockFile::Copy(wxFileName newFileName)
                                                    mMin, mMax, mRMS,IsSummaryAvailable());
       //The client code will need to schedule this blockfile for OD summarizing if it is going to a new track.
    }
-   
+
    UnlockRead();
-   
+
    return newBlockFile;
 }
 
@@ -270,7 +270,7 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
       xmlFile.WriteAttr(wxT("summaryfile"), mFileName.GetFullName());
       mFileNameMutex.Unlock();
       LockRead();
-      
+
       xmlFile.WriteAttr(wxT("aliasfile"), mAliasedFileName.GetFullPath());
       xmlFile.WriteAttr(wxT("aliasstart"), mAliasStart);
       xmlFile.WriteAttr(wxT("aliaslen"), mLen);
@@ -278,14 +278,14 @@ void ODPCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
 
       xmlFile.EndTag(wxT("odpcmaliasblockfile"));
    }
-   
+
    UnlockRead();
 }
 
 /// Constructs a ODPCMAliasBlockFile from the xml output of WriteXML.
 /// Does not schedule the ODPCMAliasBlockFile for OD loading.  Client code must do this.
-// BuildFromXML methods should always return a BlockFile, not NULL,  
-// even if the result is flawed (e.g., refers to nonexistent file), 
+// BuildFromXML methods should always return a BlockFile, not NULL,
+// even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
@@ -299,13 +299,13 @@ BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
    {
       const wxChar *attr =  *attrs++;
       const wxChar *value = *attrs++;
-      if (!value) 
+      if (!value)
          break;
 
       const wxString strValue = value;
-      if (!wxStricmp(attr, wxT("summaryfile")) && 
+      if (!wxStricmp(attr, wxT("summaryfile")) &&
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
-            XMLValueChecker::IsGoodFileString(strValue) && 
+            XMLValueChecker::IsGoodFileString(strValue) &&
             (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= PLATFORM_MAX_PATH))
       {
          if (!dm.AssignFile(summaryFileName, strValue, false))
@@ -320,12 +320,12 @@ BlockFile *ODPCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attr
             // Allow fallback of looking for the file name, located in the data directory.
             aliasFileName.Assign(dm.GetProjectDataDir(), strValue);
          else if (XMLValueChecker::IsGoodPathString(strValue))
-            // If the aliased file is missing, we failed XMLValueChecker::IsGoodPathName() 
-            // and XMLValueChecker::IsGoodFileName, because both do existence tests, 
+            // If the aliased file is missing, we failed XMLValueChecker::IsGoodPathName()
+            // and XMLValueChecker::IsGoodFileName, because both do existence tests,
             // but we want to keep the reference to the missing file because it's a good path string.
             aliasFileName.Assign(strValue);
       }
-      else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
+      else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
       {  // integer parameters
          if (!wxStricmp(attr, wxT("aliasstart")) && (nValue >= 0))
             aliasStart = nValue;
@@ -394,9 +394,9 @@ void ODPCMAliasBlockFile::WriteSummary()
    //(it moves from /tmp/ to wherever it is saved to.
    mFileNameMutex.Lock();
 
-   //wxFFile is not thread-safe - if any error occurs in opening the file, 
+   //wxFFile is not thread-safe - if any error occurs in opening the file,
    // it posts a wxlog message which WILL crash
-   // Audacity because it goes into the wx GUI.  
+   // Audacity because it goes into the wx GUI.
    // For this reason I left the wxFFile method commented out. (mchinen)
    //    wxFFile summaryFile(mFileName.GetFullPath(), wxT("wb"));
 
@@ -409,7 +409,7 @@ void ODPCMAliasBlockFile::WriteSummary()
    mFileNameMutex.Unlock();
 
    if( !summaryFile){//.IsOpened() ){
-      
+
       // Never silence the Log w.r.t write errors; they always count
       //however, this is going to be called from a non-main thread,
       //and wxLog calls are not thread safe.
@@ -426,14 +426,14 @@ void ODPCMAliasBlockFile::WriteSummary()
 
    void *summaryData = CalcSummary(sampleData, mLen,
                                             floatSample);
-                                            
+
    //summaryFile.Write(summaryData, mSummaryInfo.totalSummaryBytes);
    fwrite(summaryData, 1, mSummaryInfo.totalSummaryBytes, summaryFile);
    fclose(summaryFile);
    DeleteSamples(sampleData);
    delete [] (char *) summaryData;
-   
-   
+
+
     //     printf("write successful. filename: %s\n", fileNameChar);
 
    mSummaryAvailableMutex.Lock();
@@ -471,7 +471,7 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
    float *summary256 = (float *)(localFullSummary + mSummaryInfo.offset256);
 
    float *fbuffer;
-   
+
    //mchinen: think we can hack this - don't allocate and copy if we don't need to.,
    if(format==floatSample)
    {
@@ -492,7 +492,7 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
    // Recalc 256 summaries
    sumLen = (len + 255) / 256;
 
-   
+
    for (i = 0; i < sumLen; i++) {
       min = fbuffer[i * 256];
       max = fbuffer[i * 256];
@@ -515,7 +515,7 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
       summary256[i * 3 + 1] = max;
       summary256[i * 3 + 2] = rms;
    }
-   
+
    for (i = sumLen; i < mSummaryInfo.frames256; i++) {
       // filling in the remaining bits with non-harming/contributing values
       summary256[i * 3] = FLT_MAX;  // min
@@ -571,7 +571,7 @@ void *ODPCMAliasBlockFile::CalcSummary(samplePtr buffer, sampleCount len,
    mMin = min;
    mMax = max;
    mRMS = sqrt(sumsq / sumLen);
-   
+
 
    //if we've used the float sample..
    if(format!=floatSample)
@@ -600,7 +600,7 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 
    SF_INFO info;
 
-   if(!mAliasedFileName.IsOk()){ // intentionally silenced 
+   if(!mAliasedFileName.IsOk()){ // intentionally silenced
       memset(data,0,SAMPLE_SIZE(format)*len);
       UnlockRead();
 
@@ -611,7 +611,7 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 
    wxString aliasPath = mAliasedFileName.GetFullPath();
    //there are thread-unsafe crashes here - not sure why.  sf_open may be called on the same file
-   //from different threads, but this seems okay, unless it is implemented strangely..  
+   //from different threads, but this seems okay, unless it is implemented strangely..
    static ODLock sfMutex;
 
    wxFile f;   // will be closed when it goes out of scope
@@ -625,9 +625,9 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
       ODManager::UnlockLibSndFileMutex();
    }
-   
+
    if (!sf){
-      
+
       memset(data,0,SAMPLE_SIZE(format)*len);
 
       mSilentAliasLog=TRUE;
@@ -681,7 +681,7 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
    ODManager::LockLibSndFileMutex();
    sf_close(sf);
    ODManager::UnlockLibSndFileMutex();
-   
+
    UnlockRead();
    return framesRead;
 }
@@ -693,31 +693,31 @@ int ODPCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 ///              be at least mSummaryInfo.totalSummaryBytes long.
 bool ODPCMAliasBlockFile::ReadSummary(void *data)
 {
-   
+
    mFileNameMutex.Lock();
    wxFFile summaryFile(mFileName.GetFullPath(), wxT("rb"));
-   
+
    if( !summaryFile.IsOpened() ){
 
       // new model; we need to return valid data
       memset(data,0,(size_t)mSummaryInfo.totalSummaryBytes);
-   
+
       // we silence the logging for this operation in this object
       // after first occurrence of error; it's already reported and
       // spewing at the user will complicate the user's ability to
       // deal
       mSilentLog=TRUE;
-      
+
       mFileNameMutex.Unlock();
       return true;
 
-   }else mSilentLog=FALSE; // worked properly, any future error is new 
+   }else mSilentLog=FALSE; // worked properly, any future error is new
 
    int read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
 
    FixSummary(data);
 
-   
+
    mFileNameMutex.Unlock();
    return (read == mSummaryInfo.totalSummaryBytes);
 }

@@ -1,9 +1,9 @@
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
-  
+
   Snap.h
- 
+
   Dominic Mazzoni
 
   Create one of these objects at the beginning of a click/drag.

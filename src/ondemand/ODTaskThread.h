@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ODTaskThread.h
-  
+
   Created by Michael Chinen (mchinen) on 6/8/08
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
   License: GPL v2.  See License.txt.
@@ -64,7 +64,7 @@ class ODTaskThread {
    void Run() {
       pthread_create(&mThread, NULL, callback, this);
    }
-   
+
    ///Specifies the priority the thread will run at.  Currently doesn't work.
    ///@param priority value from 0 (min priority) to 100 (max priority)
    void SetPriority(int priority)
@@ -86,7 +86,7 @@ class ODLock {
       mutex = (pthread_mutex_t *) malloc (sizeof (pthread_mutex_t));
       pthread_mutex_init (mutex, NULL);
    }
- 
+
    void Lock()
    {
       pthread_mutex_lock (mutex);
@@ -96,19 +96,19 @@ class ODLock {
    {
       pthread_mutex_unlock (mutex);
    }
-   
+
    virtual ~ODLock()
    {
-      pthread_mutex_destroy (mutex); 
+      pthread_mutex_destroy (mutex);
       free(mutex);
    }
-  
+
 private:
    friend class ODCondition; //needs friendship for wait()
    pthread_mutex_t *mutex ;
 };
 
-class ODCondition 
+class ODCondition
 {
 public:
    ODCondition(ODLock *lock);
@@ -116,7 +116,7 @@ public:
    void Signal();
    void Broadcast();
    void Wait();
-   
+
 protected:
    pthread_cond_t *condition;
    ODLock* m_lock;
@@ -160,7 +160,7 @@ public:
    //void Signal();
    //void Broadcast();
    //void Wait();
-   
+
 protected:
 };
 

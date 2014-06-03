@@ -8,7 +8,7 @@
 
 *******************************************************************//**
 \class EffectTwoPassSimpleMono
-\brief An Effect base class that implements a two pass process by using 
+\brief An Effect base class that implements a two pass process by using
 EffectSimpleMono.
 
 Inherit from it if your effect needs to pass twice over the data.
@@ -26,19 +26,19 @@ bool EffectTwoPassSimpleMono::Process()
 {
     mPass = 0;
     mSecondPassDisabled = false;
-    
+
     InitPass1();
     this->CopyInputTracks(); // Set up mOutputTracks.
     bool bGoodResult = ProcessPass();
-        
+
     if (bGoodResult && !mSecondPassDisabled)
     {
         mPass = 1;
         if (InitPass2())
             bGoodResult = ProcessPass();
     }
-    
-    this->ReplaceProcessedTracks(bGoodResult); 
+
+    this->ReplaceProcessedTracks(bGoodResult);
     return bGoodResult;
 }
 
@@ -64,7 +64,7 @@ bool EffectTwoPassSimpleMono::ProcessPass()
          //Transform the marker timepoints to samples
          sampleCount start = track->TimeToLongSamples(mCurT0);
          sampleCount end = track->TimeToLongSamples(mCurT1);
-         
+
          //Get the track rate and samples
          mCurRate = track->GetRate();
          mCurChannel = track->GetChannel();
@@ -82,7 +82,7 @@ bool EffectTwoPassSimpleMono::ProcessPass()
          if (!ProcessOne(track, start, end))
             return false;
       }
-      
+
       //Iterate to the next track
       track = (WaveTrack *) iter.Next();
       mCurTrackNum++;

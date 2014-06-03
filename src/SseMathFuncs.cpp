@@ -27,9 +27,9 @@
  * solo functions), or both in the more useful for us for FFTs sincos
  * function.
  * The constants minus_cephes_DP1 to minus_cephes_DP3 are used in the
- * angle reduction modulo function.  
- * 4 sincos are done at a time.  
- * If we wanted to do just sin or just cos, we could speed things up 
+ * angle reduction modulo function.
+ * 4 sincos are done at a time.
+ * If we wanted to do just sin or just cos, we could speed things up
  * by queuing up the Sines and Cosines into batches of 4 separately.*/
 
 
@@ -93,7 +93,7 @@ typedef union xmm_mm_union {
 
 #endif // USE_SSE2
 
-/* natural logarithm computed for 4 simultaneous float 
+/* natural logarithm computed for 4 simultaneous float
 return NaN for x <= 0
 */
 __m128 log_ps(v4sfu *xPtr) {
@@ -134,7 +134,7 @@ __m128 log_ps(v4sfu *xPtr) {
 
    e = _mm_add_ps(e, one);
 
-   /* part2: 
+   /* part2:
    if( x < SQRTHF ) {
    e -= 1;
    x = x + x - 1.0;
@@ -229,7 +229,7 @@ __m128 exp_ps(v4sfu *xPtr) {
    tmp  = _mm_cvtepi32_ps(emm0);
 #endif
    /* if greater, substract 1 */
-   __m128 mask = _mm_cmpgt_ps(tmp, fx);    
+   __m128 mask = _mm_cmpgt_ps(tmp, fx);
    mask = _mm_and_ps(mask, one);
    fx = _mm_sub_ps(tmp, mask);
 
@@ -262,10 +262,10 @@ __m128 exp_ps(v4sfu *xPtr) {
    mm1 = _mm_cvttps_pi32(z);
    mm0 = _mm_add_pi32(mm0, *(__m64*)_pi32_0x7f);
    mm1 = _mm_add_pi32(mm1, *(__m64*)_pi32_0x7f);
-   mm0 = _mm_slli_pi32(mm0, 23); 
+   mm0 = _mm_slli_pi32(mm0, 23);
    mm1 = _mm_slli_pi32(mm1, 23);
 
-   __m128 pow2n; 
+   __m128 pow2n;
    COPY_MM_TO_XMM(mm0, mm1, pow2n);
    _mm_empty();
 #else
@@ -347,7 +347,7 @@ __m128 sin_ps(v4sfu *xPtr) { // any x
    /* get the swap sign flag */
    emm0 = _mm_and_si128(emm2, *(__m128i*)_pi32_4);
    emm0 = _mm_slli_epi32(emm0, 29);
-   /* get the polynom selection mask 
+   /* get the polynom selection mask
    there is one polynom for 0 <= x <= Pi/4
    and another one for Pi/4<x<=Pi/2
 
@@ -388,7 +388,7 @@ __m128 sin_ps(v4sfu *xPtr) { // any x
    _mm_empty(); /* good-bye mmx */
 #endif
 
-   /* The magic pass: "Extended precision modular arithmetic" 
+   /* The magic pass: "Extended precision modular arithmetic"
    x = ((x - y * DP1) - y * DP2) - y * DP3; */
    xmm1 = *(__m128*)_ps_minus_cephes_DP1;
    xmm2 = *(__m128*)_ps_minus_cephes_DP2;
@@ -425,7 +425,7 @@ __m128 sin_ps(v4sfu *xPtr) { // any x
    y2 = _mm_mul_ps(y2, x);
    y2 = _mm_add_ps(y2, x);
 
-   /* select the correct result from the two polynoms */  
+   /* select the correct result from the two polynoms */
    xmm3 = poly_mask;
    y2 = _mm_and_ps(xmm3, y2); //, xmm3);
    y = _mm_andnot_ps(xmm3, y);
@@ -487,7 +487,7 @@ __m128 cos_ps(v4sfu *xPtr) { // any x
    mm2 = _mm_sub_pi32(mm2, *(__m64*)_pi32_2);
    mm3 = _mm_sub_pi32(mm3, *(__m64*)_pi32_2);
 
-   /* get the swap sign flag in mm0:mm1 and the 
+   /* get the swap sign flag in mm0:mm1 and the
    polynom selection mask in mm2:mm3 */
 
    mm0 = _mm_andnot_si64(mm2, *(__m64*)_pi32_4);
@@ -506,7 +506,7 @@ __m128 cos_ps(v4sfu *xPtr) { // any x
    COPY_MM_TO_XMM(mm2, mm3, poly_mask);
    _mm_empty(); /* good-bye mmx */
 #endif
-   /* The magic pass: "Extended precision modular arithmetic" 
+   /* The magic pass: "Extended precision modular arithmetic"
    x = ((x - y * DP1) - y * DP2) - y * DP3; */
    xmm1 = *(__m128*)_ps_minus_cephes_DP1;
    xmm2 = *(__m128*)_ps_minus_cephes_DP2;
@@ -543,7 +543,7 @@ __m128 cos_ps(v4sfu *xPtr) { // any x
    y2 = _mm_mul_ps(y2, x);
    y2 = _mm_add_ps(y2, x);
 
-   /* select the correct result from the two polynoms */  
+   /* select the correct result from the two polynoms */
    xmm3 = poly_mask;
    y2 = _mm_and_ps(xmm3, y2); //, xmm3);
    y = _mm_andnot_ps(xmm3, y);
@@ -627,7 +627,7 @@ void sincos_ps(v4sfu *xptr, v4sfu *sptr, v4sfu *cptr) {
    COPY_MM_TO_XMM(mm2, mm3, poly_mask);
 #endif
 
-   /* The magic pass: "Extended precision modular arithmetic" 
+   /* The magic pass: "Extended precision modular arithmetic"
    x = ((x - y * DP1) - y * DP2) - y * DP3; */
    xmm1 = *(__m128*)_ps_minus_cephes_DP1;
    xmm2 = *(__m128*)_ps_minus_cephes_DP2;
@@ -685,7 +685,7 @@ void sincos_ps(v4sfu *xptr, v4sfu *sptr, v4sfu *cptr) {
    y2 = _mm_mul_ps(y2, x);
    y2 = _mm_add_ps(y2, x);
 
-   /* select the correct result from the two polynoms */  
+   /* select the correct result from the two polynoms */
    xmm3 = poly_mask;
    __m128 ysin2 = _mm_and_ps(xmm3, y2);
    __m128 ysin1 = _mm_andnot_ps(xmm3, y);

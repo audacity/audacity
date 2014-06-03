@@ -72,7 +72,7 @@ int RingBuffer::Put(samplePtr buffer, sampleFormat format,
       block = samplesToCopy;
       if (block > mBufferSize - pos)
          block = mBufferSize - pos;
-      
+
       CopySamples(src, format,
                   mBuffer + pos * SAMPLE_SIZE(mFormat), mFormat,
                   block);

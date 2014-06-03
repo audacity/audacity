@@ -106,7 +106,7 @@ LabelDialog::LabelDialog(wxWindow *parent,
    wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
 
    // A little instruction
-   wxStaticText *instruct = 
+   wxStaticText *instruct =
       new wxStaticText(this,
                        wxID_ANY,
                        _("Press F2 or double click to edit cell contents."));
@@ -538,7 +538,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
          // into it
          LabelTrack *lt = new LabelTrack(mDirManager);
          lt->Import(f);
- 
+
          // Add the labesls to our collection
          AddLabels(lt);
 

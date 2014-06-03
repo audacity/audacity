@@ -5,7 +5,7 @@
   ChangeSpeed.cpp
 
   Vaughan Johnson, Dominic Mazzoni
-  
+
 *******************************************************************//**
 
 \class EffectChangeSpeed
@@ -53,16 +53,16 @@ EffectChangeSpeed::EffectChangeSpeed()
 {
    // control values
    m_PercentChange = 0.0;
-   mFromVinyl = kVinyl_33AndAThird; 
-   mToVinyl = kVinyl_33AndAThird; 
+   mFromVinyl = kVinyl_33AndAThird;
+   mToVinyl = kVinyl_33AndAThird;
 }
 
-wxString EffectChangeSpeed::GetEffectDescription() { 
-   // Note: This is useful only after change amount has been set. 
-   return wxString::Format(_("Applied effect: %s %.1f%%"), 
-                           this->GetEffectName().c_str(), 
-                           m_PercentChange); 
-} 
+wxString EffectChangeSpeed::GetEffectDescription() {
+   // Note: This is useful only after change amount has been set.
+   return wxString::Format(_("Applied effect: %s %.1f%%"),
+                           this->GetEffectName().c_str(),
+                           m_PercentChange);
+}
 
 double EffectChangeSpeed::CalcPreviewInputLength(double previewLength)
 {
@@ -75,9 +75,9 @@ bool EffectChangeSpeed::PromptUser()
    dlog.m_PercentChange = m_PercentChange;
    dlog.mFromVinyl = mFromVinyl;
    dlog.mToVinyl = mToVinyl;
-   // Don't need to call TransferDataToWindow, although other 
-   // Audacity dialogs (from which I derived this one) do it, because 
-   // ShowModal calls stuff that eventually calls wxWindowBase::OnInitDialog, 
+   // Don't need to call TransferDataToWindow, although other
+   // Audacity dialogs (from which I derived this one) do it, because
+   // ShowModal calls stuff that eventually calls wxWindowBase::OnInitDialog,
    // which calls dlog.TransferDataToWindow();
    dlog.CentreOnParent();
    dlog.ShowModal();
@@ -93,7 +93,7 @@ bool EffectChangeSpeed::PromptUser()
 }
 
 bool EffectChangeSpeed::TransferParameters(Shuttle& shuttle)
-{  
+{
    shuttle.TransferDouble(wxT("Percentage"), m_PercentChange, 0.0);
    return true;
 }
@@ -116,7 +116,7 @@ bool EffectChangeSpeed::Process()
    // Similar to EffectSoundTouch::Process()
 
    // Iterate over each track.
-   // Track::All is needed because this effect needs to introduce 
+   // Track::All is needed because this effect needs to introduce
    // silence in the sync-lock group tracks to keep sync
    this->CopyInputTracks(Track::All); // Set up mOutputTracks.
    bool bGoodResult = true;
@@ -200,18 +200,18 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
 
    //Get the length of the selection (as double). len is
    //used simple to calculate a progress meter, so it is easier
-   //to make it a double now than it is to do it later 
+   //to make it a double now than it is to do it later
    double len = (double)(end - start);
 
-   // Initiate processing buffers, most likely shorter than 
+   // Initiate processing buffers, most likely shorter than
    // the length of the selection being processed.
    sampleCount inBufferSize = track->GetMaxBlockSize();
 
    float * inBuffer = new float[inBufferSize];
 
-   sampleCount outBufferSize = 
+   sampleCount outBufferSize =
       (sampleCount)((mFactor * inBufferSize) + 10);
-   float * outBuffer = new float[outBufferSize]; 
+   float * outBuffer = new float[outBufferSize];
 
    // Set up the resampling stuff for this track.
    Resample resample(true, mFactor, mFactor); // constant rate resampling
@@ -246,7 +246,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
       }
 
       if (outgen > 0)
-         outputTrack->Append((samplePtr)outBuffer, floatSample, 
+         outputTrack->Append((samplePtr)outBuffer, floatSample,
                              outgen);
 
       // Increment samplePos
@@ -268,15 +268,15 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
 
    // Take the output track and insert it in place of the original
    // sample data
-   double newLength = outputTrack->GetEndTime(); 
-   if (bResult) 
+   double newLength = outputTrack->GetEndTime();
+   if (bResult)
    {
       SetTimeWarper(new LinearTimeWarper(mCurT0, mCurT0, mCurT1, mCurT0 + newLength));
       bResult = track->ClearAndPaste(mCurT0, mCurT1, outputTrack, true, false, GetTimeWarper());
    }
 
-   if (newLength > mMaxNewLength) 
-      mMaxNewLength = newLength; 
+   if (newLength > mMaxNewLength)
+      mMaxNewLength = newLength;
 
    // Delete the outputTrack now that its data is inserted in place
    delete outputTrack;
@@ -315,16 +315,16 @@ BEGIN_EVENT_TABLE(ChangeSpeedDialog, EffectDialog)
 END_EVENT_TABLE()
 
 ChangeSpeedDialog::ChangeSpeedDialog(EffectChangeSpeed *effect, wxWindow *parent)
-:  EffectDialog(parent, 
+:  EffectDialog(parent,
    /* i18n-hint: Audacity's change speed effect changes the speed and pitch.*/
-   _("Change Speed"), 
+   _("Change Speed"),
    PROCESS_EFFECT),
    mEffect(effect)
 {
    mbLoopDetect = false;
 
-   // NULL out these control members because there are some cases where the 
-   // event table handlers get called during this method, and those handlers that 
+   // NULL out these control members because there are some cases where the
+   // event table handlers get called during this method, and those handlers that
    // can cause trouble check for NULL.
    mpTextCtrl_PercentChange = NULL;
    mpSlider_PercentChange = NULL;
@@ -333,8 +333,8 @@ ChangeSpeedDialog::ChangeSpeedDialog(EffectChangeSpeed *effect, wxWindow *parent
 
    // effect parameters
    m_PercentChange = 0.0;
-   mFromVinyl = kVinyl_33AndAThird; 
-   mToVinyl = kVinyl_33AndAThird; 
+   mFromVinyl = kVinyl_33AndAThird;
+   mToVinyl = kVinyl_33AndAThird;
 
    Init();
 }
@@ -349,7 +349,7 @@ void ChangeSpeedDialog::PopulateOrExchange(ShuttleGui & S)
    //
    S.StartMultiColumn(2, wxCENTER);
    {
-      mpTextCtrl_PercentChange = 
+      mpTextCtrl_PercentChange =
          S.Id(ID_TEXT_PERCENTCHANGE).AddTextBox(_("Percent Change:"), wxT(""), 12);
       wxTextValidator validator(wxFILTER_NUMERIC);
       mpTextCtrl_PercentChange->SetValidator(validator);
@@ -360,13 +360,13 @@ void ChangeSpeedDialog::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxEXPAND);
    {
       S.SetStyle(wxSL_HORIZONTAL);
-      mpSlider_PercentChange = 
+      mpSlider_PercentChange =
          S.Id(ID_SLIDER_PERCENTCHANGE).AddSlider(wxT(""), 0, (int)PERCENTCHANGE_MAX, (int)PERCENTCHANGE_MIN);
       mpSlider_PercentChange->SetName(_("Percent Change"));
    }
    S.EndHorizontalLay();
 
-   // 
+   //
    S.StartMultiColumn(5, wxCENTER);
    {
       S.AddUnits(_("Standard Vinyl RPM:"));
@@ -378,12 +378,12 @@ void ChangeSpeedDialog::PopulateOrExchange(ShuttleGui & S)
       /* i18n-hint: n/a is an English abbreviation meaning "not applicable". */
       rpmStrings.Add(_("n/a"));
 
-      mpChoice_FromVinyl = 
+      mpChoice_FromVinyl =
          S.Id(ID_CHOICE_FROMVINYL).AddChoice(_("from"), wxT(""), &rpmStrings);
       mpChoice_FromVinyl->SetName(_("From RPM"));
       mpChoice_FromVinyl->SetSizeHints(100, -1);
 
-      mpChoice_ToVinyl = 
+      mpChoice_ToVinyl =
          S.Id(ID_CHOICE_TOVINYL).AddChoice(_("to"), wxT(""), &rpmStrings);
       mpChoice_ToVinyl->SetName(_("To RPM"));
       mpChoice_ToVinyl->SetSizeHints(100, -1);
@@ -400,10 +400,10 @@ bool ChangeSpeedDialog::TransferDataToWindow()
    this->Update_Slider_PercentChange();
 
    // from/to Vinyl controls
-   if (mpChoice_FromVinyl) 
+   if (mpChoice_FromVinyl)
       mpChoice_FromVinyl->SetSelection(mFromVinyl);
 
-   if (mpChoice_ToVinyl) 
+   if (mpChoice_ToVinyl)
       mpChoice_ToVinyl->SetSelection(mToVinyl);
 
    mbLoopDetect = false;
@@ -413,10 +413,10 @@ bool ChangeSpeedDialog::TransferDataToWindow()
 
 bool ChangeSpeedDialog::TransferDataFromWindow()
 {
-   // percent change 
-   // Ignore mpSlider_PercentChange because mpTextCtrl_PercentChange 
+   // percent change
+   // Ignore mpSlider_PercentChange because mpTextCtrl_PercentChange
    // always tracks it & is more precise (decimal points).
-   if (mpTextCtrl_PercentChange) 
+   if (mpTextCtrl_PercentChange)
    {
       double newValue = 0;
       wxString str = mpTextCtrl_PercentChange->GetValue();
@@ -425,10 +425,10 @@ bool ChangeSpeedDialog::TransferDataFromWindow()
    }
 
    // from/to Vinyl controls
-   if (mpChoice_FromVinyl) 
+   if (mpChoice_FromVinyl)
       mFromVinyl = mpChoice_FromVinyl->GetSelection();
 
-   if (mpChoice_ToVinyl) 
+   if (mpChoice_ToVinyl)
       mToVinyl = mpChoice_ToVinyl->GetSelection();
 
    return true;
@@ -463,7 +463,7 @@ void ChangeSpeedDialog::OnSlider_PercentChange(wxCommandEvent & WXUNUSED(event))
       return;
 
    if (mpSlider_PercentChange) {
-      m_PercentChange = (double)(mpSlider_PercentChange->GetValue()); 
+      m_PercentChange = (double)(mpSlider_PercentChange->GetValue());
       // Warp positive values to actually go up faster & further than negatives.
       if (m_PercentChange > 0.0)
          m_PercentChange = pow(m_PercentChange, PERCENTCHANGE_SLIDER_WARP);
@@ -516,7 +516,7 @@ void ChangeSpeedDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    }
    mEffect->m_PercentChange = m_PercentChange;
    mEffect->Preview();
-   mEffect->m_PercentChange = oldPercentChange; 
+   mEffect->m_PercentChange = oldPercentChange;
 }
 
 // helper fns
@@ -540,16 +540,16 @@ void ChangeSpeedDialog::Update_Slider_PercentChange()
          unwarped = pow(m_PercentChange, (1.0 / PERCENTCHANGE_SLIDER_WARP));
 
       // Add 0.5 to unwarped so trunc -> round.
-      mpSlider_PercentChange->SetValue((int)(unwarped + 0.5)); 
+      mpSlider_PercentChange->SetValue((int)(unwarped + 0.5));
    }
 }
 
-void ChangeSpeedDialog::Update_Vinyl() 
+void ChangeSpeedDialog::Update_Vinyl()
 // Update Vinyl controls for new percent change.
 {
-   if (mpChoice_ToVinyl) 
+   if (mpChoice_ToVinyl)
    {
-      // Chances are so low that the slider will exactly match a 
+      // Chances are so low that the slider will exactly match a
       // standard ratio, just turn it "n/a" unless it's 0.0.
       if ((m_PercentChange == 0.0) && mpChoice_FromVinyl)
          mpChoice_ToVinyl->SetSelection(mpChoice_FromVinyl->GetSelection());
@@ -558,11 +558,11 @@ void ChangeSpeedDialog::Update_Vinyl()
    }
 }
 
-void ChangeSpeedDialog::Update_PercentChange() 
+void ChangeSpeedDialog::Update_PercentChange()
 // Update percent change controls for new Vinyl values.
 {
    // If mFromVinyl & mToVinyl are set, then there's a new percent change.
-   if ((mFromVinyl != kVinyl_NA) && (mToVinyl != kVinyl_NA)) 
+   if ((mFromVinyl != kVinyl_NA) && (mToVinyl != kVinyl_NA))
    {
       double fromRPM;
       double toRPM;

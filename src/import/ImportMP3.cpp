@@ -78,7 +78,7 @@ void GetMP3ImportPlugin(ImportPluginList *importPluginList,
 extern "C" {
 #include "mad.h"
 
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
 #include <id3tag.h>
 #endif
 }
@@ -286,7 +286,7 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
       // file with a Unicode name and id3_file_open() can't (under Windows).
       fp = id3_file_fdopen(f.fd(), ID3_FILE_MODE_READONLY);
    }
-      
+
    if (!fp) {
       return;
    }
@@ -399,7 +399,7 @@ void MP3ImportFileHandle::ImportID3(Tags *tags)
 }
 
    id3_file_close(fp);
-#endif // ifdef USE_LIBID3TAG 
+#endif // ifdef USE_LIBID3TAG
 }
 
 //
@@ -422,7 +422,7 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
       return MAD_FLOW_STOP;
    }
 
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
    if (!data->id3checked) {
       data->file->Read(data->inputBuffer, ID3_TAG_QUERYSIZE);
       int len = id3_tag_query(data->inputBuffer, ID3_TAG_QUERYSIZE);
@@ -432,7 +432,7 @@ enum mad_flow input_cb(void *_data, struct mad_stream *stream)
       else {
          data->file->Seek(0);
       }
-      
+
       data->id3checked = true;
    }
 #endif
@@ -501,7 +501,7 @@ enum mad_flow output_cb(void *_data,
       }
       data->numChannels = channels;
    }
-   else {  
+   else {
       // This is not the first run, protect us from libmad glitching
       // on the number of channels
       channels = data->numChannels;
@@ -532,7 +532,7 @@ enum mad_flow output_cb(void *_data,
    return MAD_FLOW_CONTINUE;
 }
 
-enum mad_flow error_cb(void * WXUNUSED(_data), struct mad_stream * WXUNUSED(stream), 
+enum mad_flow error_cb(void * WXUNUSED(_data), struct mad_stream * WXUNUSED(stream),
                        struct mad_frame * WXUNUSED(frame))
 {
 /* enum mad_flow {

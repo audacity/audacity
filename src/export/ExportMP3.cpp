@@ -93,7 +93,7 @@
 
 #include <lame/lame.h>
 
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
 #include <id3tag.h>
 #endif
 
@@ -303,8 +303,8 @@ BEGIN_EVENT_TABLE(ExportMP3Options, wxDialog)
    EVT_BUTTON(wxID_OK,        ExportMP3Options::OnOK)
 END_EVENT_TABLE()
 
-/// 
-/// 
+///
+///
 ExportMP3Options::ExportMP3Options(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify MP3 Options")))
@@ -321,8 +321,8 @@ ExportMP3Options::ExportMP3Options(wxWindow *parent)
    PopulateOrExchange(S);
 }
 
-/// 
-/// 
+///
+///
 void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, 0);
@@ -380,13 +380,13 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                }
 
                mRate = S.Id(ID_QUALITY).TieChoice(_("Quality"),
-                                                  wxT("/FileFormats/MP3Bitrate"), 
+                                                  wxT("/FileFormats/MP3Bitrate"),
                                                   defrate,
                                                   GetNames(choices, cnt),
                                                   GetLabels(choices, cnt));
 
                mMode = S.TieChoice(_("Variable Speed:"),
-                                   wxT("/FileFormats/MP3VarMode"), 
+                                   wxT("/FileFormats/MP3VarMode"),
                                    ROUTINE_FAST,
                                    GetNames(varModes, WXSIZEOF(varModes)),
                                    GetLabels(varModes, WXSIZEOF(varModes)));
@@ -422,8 +422,8 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
    return;
 }
 
-/// 
-/// 
+///
+///
 void ExportMP3Options::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
@@ -440,8 +440,8 @@ void ExportMP3Options::OnOK(wxCommandEvent& WXUNUSED(event))
    return;
 }
 
-/// 
-/// 
+///
+///
 void ExportMP3Options::OnSET(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(setRates, WXSIZEOF(setRates));
@@ -451,8 +451,8 @@ void ExportMP3Options::OnSET(wxCommandEvent& WXUNUSED(event))
    mMode->Enable(true);
 }
 
-/// 
-/// 
+///
+///
 void ExportMP3Options::OnVBR(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(varRates, WXSIZEOF(varRates));
@@ -462,8 +462,8 @@ void ExportMP3Options::OnVBR(wxCommandEvent& WXUNUSED(event))
    mMode->Enable(true);
 }
 
-/// 
-/// 
+///
+///
 void ExportMP3Options::OnABR(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(fixRates, WXSIZEOF(fixRates));
@@ -473,8 +473,8 @@ void ExportMP3Options::OnABR(wxCommandEvent& WXUNUSED(event))
    mMode->Enable(false);
 }
 
-/// 
-/// 
+///
+///
 void ExportMP3Options::OnCBR(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(fixRates, WXSIZEOF(fixRates));
@@ -559,7 +559,7 @@ public:
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
 
    FindDialog(wxWindow *parent, wxString path, wxString name, wxString type)
-   :  wxDialog(parent, wxID_ANY, 
+   :  wxDialog(parent, wxID_ANY,
    /* i18n-hint: LAME is the name of an MP3 converter and should not be translated*/
    wxString(_("Locate Lame")))
    {
@@ -631,7 +631,7 @@ public:
        * "Where would I find the file %s" instead if you want. */
       question.Printf(_("Where is %s?"), mName.c_str());
 
-      wxString path = FileSelector(question, 
+      wxString path = FileSelector(question,
                                    mLibPath.GetPath(),
                                    mLibPath.GetName(),
                                    wxT(""),
@@ -854,7 +854,7 @@ private:
    lame_encode_flush_t* lame_encode_flush;
    lame_close_t* lame_close;
    get_lame_version_t* get_lame_version;
-   
+
    lame_set_in_samplerate_t* lame_set_in_samplerate;
    lame_set_out_samplerate_t* lame_set_out_samplerate;
    lame_set_num_channels_t* lame_set_num_channels;
@@ -882,7 +882,7 @@ private:
    static const int mSamplesPerChunk = 220500;
    // See lame.h/lame_encode_buffer() for further explanation
    // As coded here, this should be the worst case.
-   static const int mOutBufferSize = 
+   static const int mOutBufferSize =
       mSamplesPerChunk * (320 / 8) / 8 + 4 * 1152 * (320 / 8) / 8 + 512;
 
    // See MAXFRAMESIZE in libmp3lame/VbrTag.c for explanation of 2880.
@@ -943,7 +943,7 @@ bool MP3Exporter::FindLibrary(wxWindow *parent)
    }
 
    path = fd.GetLibPath();
-   
+
    if (!::wxFileExists(path)) {
       return false;
    }
@@ -1082,7 +1082,7 @@ bool MP3Exporter::InitLibrary(wxString libpath)
        lame_lib.GetSymbol(wxT("lame_set_VBR_q"));
    lame_set_VBR_min_bitrate_kbps = (lame_set_VBR_min_bitrate_kbps_t *)
        lame_lib.GetSymbol(wxT("lame_set_VBR_min_bitrate_kbps"));
-   lame_set_mode = (lame_set_mode_t *) 
+   lame_set_mode = (lame_set_mode_t *)
        lame_lib.GetSymbol(wxT("lame_set_mode"));
    lame_set_preset = (lame_set_preset_t *)
        lame_lib.GetSymbol(wxT("lame_set_preset"));
@@ -1572,7 +1572,7 @@ private:
    wxString FindName(CHOICES *choices, int cnt, int needle);
    int AskResample(int bitrate, int rate, int lowrate, int highrate);
    int AddTags(AudacityProject *project, char **buffer, bool *endOfFile, Tags *tags);
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
 };
@@ -1629,10 +1629,10 @@ int ExportMP3::Export(AudacityProject *project,
    }
 
    if (!exporter.ValidLibraryLoaded()) {
-      wxMessageBox(_("Not a valid or supported MP3 encoding library!"));      
+      wxMessageBox(_("Not a valid or supported MP3 encoding library!"));
       gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
       gPrefs->Flush();
-      
+
       return false;
    }
 #endif // DISABLE_DYNAMIC_LOADING_LAME
@@ -1777,7 +1777,7 @@ int ExportMP3::Export(AudacityProject *project,
       if (blockLen == 0) {
          break;
       }
-      
+
       short *mixed = (short *)mixer->GetBuffer();
 
       if (blockLen < inSamples) {
@@ -1840,7 +1840,7 @@ int ExportMP3::Export(AudacityProject *project,
    outFile.Close();
 
    delete [] buffer;
-   
+
    return updateResult;
 }
 
@@ -1946,7 +1946,7 @@ int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
 // returns buffer len; caller frees
 int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), char **buffer, bool *endOfFile, Tags *tags)
 {
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
    struct id3_tag *tp = id3_tag_new();
 
    wxString n, v;
@@ -1993,7 +1993,7 @@ int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), char **buffer, bool *
    *endOfFile = false;
 
    id3_length_t len;
-   
+
    len = id3_tag_render(tp, 0);
    *buffer = (char *)malloc(len);
    len = id3_tag_render(tp, (id3_byte_t *)*buffer);
@@ -2001,12 +2001,12 @@ int ExportMP3::AddTags(AudacityProject *WXUNUSED(project), char **buffer, bool *
    id3_tag_delete(tp);
 
    return len;
-#else //ifdef USE_LIBID3TAG 
+#else //ifdef USE_LIBID3TAG
    return 0;
 #endif
 }
 
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
 void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name)
 {
    struct id3_frame *frame = id3_frame_new(name);
@@ -2040,7 +2040,7 @@ void ExportMP3::AddFrame(struct id3_tag *tp, const wxString & n, const wxString 
       free(ucs4);
 
       ucs4 = id3_utf8_ucs4duplicate((id3_utf8_t *) (const char *) n.mb_str(wxConvUTF8));
-        
+
       id3_field_setstring(id3_frame_field(frame, 1), ucs4);
    }
    else {

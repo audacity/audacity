@@ -62,7 +62,7 @@ public:
       delete[] rms;
       delete[] bl;
       delete[] where;
-      
+
       ClearInvalidRegions();
    }
 
@@ -77,17 +77,17 @@ public:
    float       *rms;
    int         *bl;
    int         numODPixels;
-   
+
    class InvalidRegion
    {
    public:
      InvalidRegion(int s, int e):start(s),end(e){}
      //start and end pixel count.  (not samples)
-     int start;  
-     int end; 
+     int start;
+     int end;
    };
-   
-   
+
+
    //Thread safe call to add a new region to invalidate.  If it overlaps with other regions, it unions the them.
    void AddInvalidRegion(sampleCount sampleStart, sampleCount sampleEnd)
    {
@@ -95,31 +95,31 @@ public:
       if(pps ==0)
          return;
       double samplesPerPixel = rate/pps;
-      //rate is SR, start is first time of the waveform (in second) on cache 
+      //rate is SR, start is first time of the waveform (in second) on cache
       long invalStart = (sampleStart - start*rate)/samplesPerPixel ;
-      
+
       long invalEnd = (sampleEnd - start*rate)/samplesPerPixel +1; //we should cover the end..
-      
+
       //if they are both off the cache boundary in the same direction, the cache is missed,
       //so we are safe, and don't need to track this one.
       if((invalStart<0 && invalEnd <0) || (invalStart>=len && invalEnd >= len))
          return;
-      
+
       //in all other cases, we need to clip the boundries so they make sense with the cache.
       //for some reason, the cache is set up to access up to array[len], not array[len-1]
       if(invalStart <0)
          invalStart =0;
       else if(invalStart > len)
          invalStart = len;
-      
+
       if(invalEnd <0)
          invalEnd =0;
       else if(invalEnd > len)
          invalEnd = len;
-      
-      
+
+
       mRegionsMutex.Lock();
-      
+
       //look thru the region array for a place to insert.  We could make this more spiffy than a linear search
       //but right now it is not needed since there will usually only be one region (which grows) for OD loading.
       bool added=false;
@@ -128,8 +128,8 @@ public:
          for(size_t i=0;i<mRegions.size();i++)
          {
             //if the regions intersect OR are pixel adjacent
-            if(mRegions[i]->start <= invalEnd+1 
-               && mRegions[i]->end >= invalStart-1) 
+            if(mRegions[i]->start <= invalEnd+1
+               && mRegions[i]->end >= invalStart-1)
             {
                //take the union region
                if(mRegions[i]->start > invalStart)
@@ -139,7 +139,7 @@ public:
                added=true;
                break;
             }
-            
+
             //this bit doesn't make sense because it assumes we add in order - now we go backwards after the initial OD finishes
 //            //this array is sorted by start/end points and has no overlaps.   If we've passed all possible intersections, insert.  The array will remain sorted.
 //            if(mRegions[i]->end < invalStart)
@@ -150,53 +150,53 @@ public:
 //            }
          }
       }
-      
+
       if(!added)
       {
          InvalidRegion* newRegion = new InvalidRegion(invalStart,invalEnd);
          mRegions.insert(mRegions.begin(),newRegion);
       }
-      
-      
+
+
       //now we must go and patch up all the regions that overlap.  Overlapping regions will be adjacent.
       for(size_t i=1;i<mRegions.size();i++)
       {
          //if the regions intersect OR are pixel adjacent
-         if(mRegions[i]->start <= mRegions[i-1]->end+1 
-            && mRegions[i]->end >= mRegions[i-1]->start-1) 
+         if(mRegions[i]->start <= mRegions[i-1]->end+1
+            && mRegions[i]->end >= mRegions[i-1]->start-1)
          {
             //take the union region
             if(mRegions[i]->start > mRegions[i-1]->start)
                mRegions[i]->start = mRegions[i-1]->start;
             if(mRegions[i]->end < mRegions[i-1]->end)
                mRegions[i]->end = mRegions[i-1]->end;
-            
+
             //now we must delete the previous region
             delete mRegions[i-1];
             mRegions.erase(mRegions.begin()+i-1);
                //musn't forget to reset cursor
                i--;
          }
-         
+
          //if we are past the end of the region we added, we are past the area of regions that might be oversecting.
          if(mRegions[i]->start > invalEnd)
          {
             break;
          }
       }
-      
-      
+
+
       mRegionsMutex.Unlock();
    }
-   
+
    //lock before calling these in a section.  unlock after finished.
    int GetNumInvalidRegions(){return mRegions.size();}
    int GetInvalidRegionStart(int i){return mRegions[i]->start;}
    int GetInvalidRegionEnd(int i){return mRegions[i]->end;}
-   
+
    void LockInvalidRegions(){mRegionsMutex.Lock();}
    void UnlockInvalidRegions(){mRegionsMutex.Unlock();}
-   
+
    void ClearInvalidRegions()
    {
       for(size_t i =0;i<mRegions.size();i++)
@@ -205,12 +205,12 @@ public:
       }
       mRegions.clear();
    }
-   
-   
+
+
 protected:
    std::vector<InvalidRegion*> mRegions;
       ODLock mRegionsMutex;
-   
+
 };
 
 class SpecCache {
@@ -336,7 +336,7 @@ WaveClip::WaveClip(WaveClip& orig, DirManager *projDirManager)
 
    for (WaveClipList::compatibility_iterator it=orig.mCutLines.GetFirst(); it; it=it->GetNext())
       mCutLines.Append(new WaveClip(*it->GetData(), projDirManager));
- 
+
    mAppendBuffer = NULL;
    mAppendBufferLen = 0;
    mDirty = 0;
@@ -346,7 +346,7 @@ WaveClip::WaveClip(WaveClip& orig, DirManager *projDirManager)
 WaveClip::~WaveClip()
 {
    delete mSequence;
-   
+
    delete mEnvelope;
    mEnvelope = NULL;
 
@@ -396,11 +396,11 @@ double WaveClip::GetStartTime() const
 double WaveClip::GetEndTime() const
 {
    sampleCount numSamples = mSequence->GetNumSamples();
-   
+
    double maxLen = mOffset + double(numSamples+mAppendBufferLen)/mRate;
    // JS: calculated value is not the length;
    // it is a maximum value and can be negative; no clipping to 0
-   
+
    return maxLen;
 }
 
@@ -448,7 +448,7 @@ void WaveClip::AddInvalidRegion(long startSample, long endSample)
    mWaveCacheMutex.Lock();
    if(mWaveCache!=NULL)
       mWaveCache->AddInvalidRegion(startSample,endSample);
-   mWaveCacheMutex.Unlock();  
+   mWaveCacheMutex.Unlock();
 }
 
 //
@@ -462,28 +462,28 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                                double pixelsPerSecond, bool &isLoadingOD)
 {
    mWaveCacheMutex.Lock();
-   
-   
+
+
    if (mWaveCache &&
        mWaveCache->dirty == mDirty &&
        mWaveCache->start == t0 &&
        mWaveCache->len >= numPixels &&
        mWaveCache->pps == pixelsPerSecond) {
-       
+
       //check for invalid regions, and make the bottom if an else if.
-      //invalid regions are kept in a sorted array. 
+      //invalid regions are kept in a sorted array.
       for(int i=0;i<mWaveCache->GetNumInvalidRegions();i++)
-      {  
+      {
          int invStart;
          invStart = mWaveCache->GetInvalidRegionStart(i);
          int invEnd;
          invEnd = mWaveCache->GetInvalidRegionEnd(i);
-         
+
          int regionODPixels;
          regionODPixels =0;
          int regionODPixelsAfter;
          regionODPixelsAfter =0;
-         //before check number of ODPixels 
+         //before check number of ODPixels
          for(int j=invStart;j<invEnd;j++)
          {
             if(mWaveCache->bl[j]<0)
@@ -496,7 +496,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                                         invEnd-invStart,
                                         &mWaveCache->where[invStart],
                                         mRate / pixelsPerSecond);
-         //after check number of ODPixels 
+         //after check number of ODPixels
          for(int j=invStart;j<invEnd;j++)
          {
             if(mWaveCache->bl[j]<0)
@@ -506,7 +506,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
          mWaveCache->numODPixels -= (regionODPixels - regionODPixelsAfter);
       }
       mWaveCache->ClearInvalidRegions();
-       
+
 
       memcpy(min, mWaveCache->min, numPixels*sizeof(float));
       memcpy(max, mWaveCache->max, numPixels*sizeof(float));
@@ -550,17 +550,17 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
 
       //now we are assuming the entire range is covered by the old cache and reducing s1/s0 as we find out otherwise.
       s0 = mWaveCache->where[mWaveCache->len];  //mchinen:s0 is the min sample covered up to by the wave cache.  will shrink if old doen't overlap
-      s1 = mWaveCache->where[0];  //mchinen - same, but the maximum sample covered.  
+      s1 = mWaveCache->where[0];  //mchinen - same, but the maximum sample covered.
       p0 = mWaveCache->len;
       p1 = 0;
 
       //check for invalid regions, and make the bottom if an else if.
-      //invalid regions are keep in a sorted array. 
-      //TODO:integrate into below for loop so that we only load inval regions if 
-      //necessary.  (usually is the case, so no rush.)   
+      //invalid regions are keep in a sorted array.
+      //TODO:integrate into below for loop so that we only load inval regions if
+      //necessary.  (usually is the case, so no rush.)
       //also, we should be updating the NEW cache, but here we are patching the old one up.
       for(int i=0;i<oldCache->GetNumInvalidRegions();i++)
-      {  
+      {
          int invStart;
          invStart = oldCache->GetInvalidRegionStart(i);
          int invEnd;
@@ -574,16 +574,16 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                                         mRate / pixelsPerSecond);
       }
       oldCache->ClearInvalidRegions();
-      
+
       for (x = 0; x < mWaveCache->len; x++)
       {
-          
-         
-         
-         //below is regular cache access.  
+
+
+
+         //below is regular cache access.
          if (mWaveCache->where[x] >= oldCache->where[0] &&
              mWaveCache->where[x] <= oldCache->where[oldCache->len - 1]) {
-             
+
              //if we hit an invalid region, load it up.
 
             int ox =
@@ -620,7 +620,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
          if (mWaveCache->where[a+1] > numSamples)
             break;
 
-      //compute the values that are outside the overlap from scratch.  
+      //compute the values that are outside the overlap from scratch.
       if (a < p1) {
          int i;
 
@@ -668,7 +668,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                mWaveCache->min[i] = min;
                mWaveCache->max[i] = max;
                mWaveCache->rms[i] = (float)sqrt(sumsq / len);
-               mWaveCache->bl[i] = 1; //for now just fake it.  
+               mWaveCache->bl[i] = 1; //for now just fake it.
 
                if (seqFormat != floatSample)
                   delete[] b;
@@ -708,7 +708,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
    memcpy(rms, mWaveCache->rms, numPixels*sizeof(float));
    memcpy(bl, mWaveCache->bl, numPixels*sizeof(int));
    memcpy(where, mWaveCache->where, (numPixels+1)*sizeof(sampleCount));
-   
+
    //find the number of OD pixels - the only way to do this is by recounting since we've lost some old cache.
    mWaveCache->numODPixels = 0;
    for(int j=0;j<mWaveCache->len;j++)
@@ -1039,7 +1039,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
                       XMLWriter* blockFileLog /*=NULL*/)
 {
    //wxLogDebug(wxT("Append: len=%i"), len);
-   
+
    sampleCount maxBlockSize = mSequence->GetMaxBlockSize();
    sampleCount blockSize = mSequence->GetIdealAppendLen();
    sampleFormat seqFormat = mSequence->GetSampleFormat();
@@ -1140,14 +1140,14 @@ bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
-         
+
          if (!value)
             break;
-         
+
          const wxString strValue = value;
          if (!wxStrcmp(attr, wxT("offset")))
          {
-            if (!XMLValueChecker::IsGoodString(strValue) || 
+            if (!XMLValueChecker::IsGoodString(strValue) ||
                   !Internat::CompatibleToDouble(strValue, &dblValue))
                return false;
             SetOffset(dblValue);
@@ -1256,7 +1256,7 @@ bool WaveClip::Paste(double t0, WaveClip* other)
       mEnvelope->Paste((double)s0/mRate + mOffset, pastedClip->mEnvelope);
       mEnvelope->RemoveUnneededPoints();
       OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
-      
+
       // Paste cut lines contained in pasted clip
       for (WaveClipList::compatibility_iterator it = pastedClip->mCutLines.GetFirst(); it; it=it->GetNext())
       {
@@ -1266,10 +1266,10 @@ bool WaveClip::Paste(double t0, WaveClip* other)
          newCutLine->Offset(t0 - mOffset);
          mCutLines.Append(newCutLine);
       }
-      
+
       result = true;
    }
-   
+
    if (clipNeedsResampling)
    {
       // Clip was constructed as a copy, so delete it
@@ -1284,7 +1284,7 @@ bool WaveClip::InsertSilence(double t, double len)
    sampleCount s0;
    TimeToSamplesClip(t, &s0);
    sampleCount slen = (sampleCount)floor(len * mRate + 0.5);
-   
+
    if (!GetSequence()->InsertSilence(s0, slen))
    {
       wxASSERT(false);
@@ -1293,7 +1293,7 @@ bool WaveClip::InsertSilence(double t, double len)
    OffsetCutLines(t, len);
    GetEnvelope()->InsertSpace(t, len);
    MarkChanged();
-   
+
    return true;
 }
 
@@ -1360,7 +1360,7 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
 {
    if (t0 > GetEndTime() || t1 < GetStartTime())
       return true; // time out of bounds
-      
+
    WaveClip *newClip = new WaveClip(mSequence->GetDirManager(),
                                     mSequence->GetSampleFormat(),
                                     mRate);
@@ -1394,13 +1394,13 @@ bool WaveClip::ClearAndAddCutLine(double t0, double t1)
          clip->Offset(clip_t0-clip_t1);
       }
    }
-   
+
    // Clear actual audio data
    sampleCount s0, s1;
 
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
-   
+
    if (GetSequence()->Delete(s0, s1-s0))
    {
       // Collapse envelope
@@ -1435,7 +1435,7 @@ bool WaveClip::FindCutLine(double cutLinePosition,
          return true;
       }
    }
-   
+
    return false;
 }
 
@@ -1527,7 +1527,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
    double factor = (double)rate / (double)mRate;
    ::Resample* resample = new ::Resample(true, factor, factor); // constant rate resampling
-   
+
    int bufsize = 65536;
    float* inBuffer = new float[bufsize];
    float* outBuffer = new float[bufsize];
@@ -1538,7 +1538,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
 
    Sequence* newSequence =
       new Sequence(mSequence->GetDirManager(), mSequence->GetSampleFormat());
-   
+
    /**
     * We want to keep going as long as we have something to feed the resampler
     * with OR as long as the resampler spews out samples (which could continue
@@ -1549,21 +1549,21 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
       int inLen = numSamples - pos;
       if (inLen > bufsize)
          inLen = bufsize;
-         
+
       bool isLast = ((pos + inLen) == numSamples);
-      
+
       if (!mSequence->Get((samplePtr)inBuffer, floatSample, pos, inLen))
       {
          error = true;
          break;
       }
-      
+
       int inBufferUsed = 0;
       outGenerated = resample->Process(factor, inBuffer, inLen, isLast,
                                            &inBufferUsed, outBuffer, bufsize);
-                                           
+
       pos += inBufferUsed;
-      
+
       if (outGenerated < 0)
       {
          error = true;
@@ -1587,11 +1587,11 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
          }
       }
    }
-   
+
    delete[] inBuffer;
    delete[] outBuffer;
    delete resample;
-   
+
    if (error)
    {
       delete newSequence;

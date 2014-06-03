@@ -163,10 +163,10 @@ static void LoadLadspaEffect(wxSortedArrayString &uniq, wxString fname,
             LadspaEffect *effect = new LadspaEffect(data, categories);
             EffectManager::Get().RegisterEffect(effect);
          }
-            
+
          // Get next plugin
          index++;
-         data = mainFn(index);            
+         data = mainFn(index);
       }
    }
 
@@ -183,7 +183,7 @@ void LoadLadspaPlugins()
    unsigned int i;
 
 #if defined(USE_LIBLRDF) && defined(EFFECT_CATEGORIES)
-   
+
    EffectManager& em = EffectManager::Get();
    wxArrayString rdfPathList;
    wxString rdfPathVar;
@@ -197,24 +197,24 @@ void LoadLadspaPlugins()
       wxGetApp().AddMultiPathsToPathList(rdfPathVar, rdfPathList);
 
 #ifdef __WXGTK__
-   wxGetApp().AddUniquePathToPathList(wxT("/usr/share/ladspa/rdf"), 
+   wxGetApp().AddUniquePathToPathList(wxT("/usr/share/ladspa/rdf"),
                                       rdfPathList);
-   wxGetApp().AddUniquePathToPathList(wxT("/usr/local/share/ladspa/rdf"), 
+   wxGetApp().AddUniquePathToPathList(wxT("/usr/local/share/ladspa/rdf"),
                                       rdfPathList);
 #endif
 
 #ifdef __WXMAC__
-   wxGetApp().AddUniquePathToPathList(wxT("/usr/share/ladspa/rdf"), 
+   wxGetApp().AddUniquePathToPathList(wxT("/usr/share/ladspa/rdf"),
                                       rdfPathList);
    // XXX Maybe other Mac paths here?
 #endif
 
 #ifdef __WXMSW__
-   //wxGetApp().AddUniquePathToPathList(wxT("WINDOWS LRDF PATH"), 
+   //wxGetApp().AddUniquePathToPathList(wxT("WINDOWS LRDF PATH"),
    //                                   rdfPathList);
    // XXX Other Windows paths here.
 #endif
-   
+
    // Add the Audacity paths so we get ladspa.rdfs if we are using a local
    // liblrdf
    for(i=0; i<audacityPathList.GetCount(); i++) {
@@ -230,13 +230,13 @@ void LoadLadspaPlugins()
       fileUri += rdfFiles[i];
       lrdf_read_file(fileUri.mb_str(wxConvUTF8));
    }
-   
-   
+
+
    // Add all plugin categories found by LRDF
-   lrdf_uris* cats = 
+   lrdf_uris* cats =
       lrdf_get_all_subclasses("http://ladspa.org/ontology#Plugin");
    if (cats) {
-    
+
       // Add the categories and find the plugins belonging to them
       for (size_t i = 0; i < cats->count; ++i) {
          char* label = lrdf_get_label(cats->items[i]);
@@ -255,10 +255,10 @@ void LoadLadspaPlugins()
             lrdf_free_uris(plugs);
          }
       }
-      
+
       // And their relationships
       for (size_t i = 0; i < cats->count; ++i) {
-         EffectCategory* p = 
+         EffectCategory* p =
             em.LookupCategory(MapCategoryUri(wxString::FromAscii(cats->
                                                                  items[i])));
          if (!p)
@@ -266,7 +266,7 @@ void LoadLadspaPlugins()
          lrdf_uris* subs = lrdf_get_subclasses(cats->items[i]);
          if (subs) {
             for (size_t j = 0; j < subs->count; ++j) {
-               EffectCategory* c = 
+               EffectCategory* c =
                   em.LookupCategory(MapCategoryUri(wxString::FromAscii(subs->items[j])));
                if (c)
                   em.AddCategoryParent(c, p);
@@ -274,11 +274,11 @@ void LoadLadspaPlugins()
             lrdf_free_uris(subs);
          }
       }
-      
+
       lrdf_free_uris(cats);
-      
+
    }
-   
+
 #endif
 
    pathVar = wxGetenv(wxT("LADSPA_PATH"));
@@ -308,7 +308,7 @@ void LoadLadspaPlugins()
    }
 
    #ifdef __WXMSW__
-   wxGetApp().FindFilesInPathList(wxT("*.dll"), pathList, files);   
+   wxGetApp().FindFilesInPathList(wxT("*.dll"), pathList, files);
    #else
    wxGetApp().FindFilesInPathList(wxT("*.so"), pathList, files);
    #endif
@@ -320,7 +320,7 @@ void LoadLadspaPlugins()
 void UnloadLadspaPlugins()
 {
    int count=ladspa_dls.GetCount();
-   for (int i=0; i<count; i++) 
+   for (int i=0; i<count; i++)
    {
       delete ladspa_dls[i];
    }

@@ -35,7 +35,7 @@ Describes shared object that is used to access FFmpeg libraries.
 
 #if defined(USE_FFMPEG)
 extern "C" {
-   // Include errno.h before the ffmpeg includes since they depend on 
+   // Include errno.h before the ffmpeg includes since they depend on
    // knowing the value of EINVAL...see bottom of avcodec.h.  Not doing
    // so will produce positive error returns when they should be < 0.
    #include <errno.h>
@@ -369,7 +369,7 @@ private:
    wxString mAVCodecVersion;
    wxString mAVFormatVersion;
    wxString mAVUtilVersion;
-   
+
    ///! wx interfaces for dynamic libraries
    wxDynamicLibrary *avformat;
    wxDynamicLibrary *avcodec;
@@ -401,7 +401,7 @@ typedef struct _streamContext
    AVPacket             m_pkt;                           // the last AVPacket we read for this stream
    int                  m_pktValid;                      // is m_pkt valid?
    uint8_t             *m_pktDataPtr;                    // pointer into m_pkt.data
-   int                  m_pktRemainingSiz;  
+   int                  m_pktRemainingSiz;
 
    int64_t              m_pts;                           // the current presentation time of the input stream
    int64_t              m_ptsOffset;                     // packets associated with stream are relative to this
@@ -450,7 +450,7 @@ extern "C" {
    // make sure that the definitions are the same.  If not, it will complain.  For this to occur,
    // the functions MUST be defined in an extern "C" block otherwise the compiler just thinks the
    // functions are being overloaded.
-   // 
+   //
    // The compiler should optimize away the inline function since it just passes control to the real
    // function and we should wind up with about the same function call we had before, only now it is
    // safer due to the validation.
@@ -525,7 +525,7 @@ extern "C" {
       }                                                                 \
    }
 
-   // 
+   //
    // libavutil
    //
    FFMPEG_FUNCTION_WITH_RETURN(
@@ -535,7 +535,7 @@ extern "C" {
       ()
    );
    FFMPEG_FUNCTION_NO_RETURN(
-      av_log_set_callback,           
+      av_log_set_callback,
       (void (*cb)(void*, int, const char*, va_list)),
       (cb)
    );

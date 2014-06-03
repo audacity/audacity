@@ -38,7 +38,7 @@ the general functionality for creating XML in UTF8 encoding.
 //table for xml encoding compatibility with expat decoding
 //see wxWidgets-2.8.12/src/expat/lib/xmltok_impl.h
 //and wxWidgets-2.8.12/src/expat/lib/asciitab.h
-static int charXMLCompatiblity[] = 
+static int charXMLCompatiblity[] =
   {
 
 /* 0x00 */ 0, 0, 0, 0,
@@ -74,7 +74,7 @@ void XMLWriter::StartTag(const wxString &name)
       Write(wxT(">\n"));
       mInTag = false;
    }
-   
+
    for (i = 0; i < mDepth; i++) {
       Write(wxT("\t"));
    }
@@ -98,7 +98,7 @@ void XMLWriter::EndTag(const wxString &name)
             if (mInTag) {
                Write(wxT("/>\n"));
             }
-            else {               
+            else {
                for (i = 0; i < mDepth - 1; i++) {
                   Write(wxT("\t"));
                }
@@ -296,7 +296,7 @@ wxString XMLWriter::XMLEsc(const wxString & s)
                //see xmltok.c in expat checkCharRefNumber() to see how expat bails on these chars.
                //also see wxWidgets-2.8.12/src/expat/lib/asciitab.h to see which characters are nonxml compatible
                //post decode (we can still encode '&' and '<' with this table, but it prevents us from encoding eot)
-               //everything is compatible past ascii 0x20, so we don't check higher than this. 
+               //everything is compatible past ascii 0x20, so we don't check higher than this.
                if(c> 0x1F || charXMLCompatiblity[c]!=0)
                   result += wxString::Format(wxT("&#x%04x;"), c);
             }
@@ -346,7 +346,7 @@ void XMLFileWriter::CloseWithoutEndingTags()
    if (!wxFFile::Flush())
    {
       wxFFile::Close();
-      /* i18n-hint: 'flushing' means writing any remaining queued up changes 
+      /* i18n-hint: 'flushing' means writing any remaining queued up changes
        * to disk that have not yet been written.*/
       throw new XMLFileWriterException(_("Error Flushing File"));
    }

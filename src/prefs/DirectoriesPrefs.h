@@ -18,7 +18,7 @@
 
 #include "PrefsPanel.h"
 
-class DirectoriesPrefs:public PrefsPanel 
+class DirectoriesPrefs:public PrefsPanel
 {
  public:
    DirectoriesPrefs(wxWindow * parent);

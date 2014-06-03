@@ -41,19 +41,19 @@ CommandBuilder::CommandBuilder(const wxString &cmdName, const wxString &params)
    BuildCommand(cmdName, params);
 }
 
-CommandBuilder::~CommandBuilder() 
-{ 
+CommandBuilder::~CommandBuilder()
+{
    Cleanup();
 }
 
-bool CommandBuilder::WasValid() 
+bool CommandBuilder::WasValid()
 {
-   return mValid; 
+   return mValid;
 }
 
-const wxString &CommandBuilder::GetErrorMessage() 
+const wxString &CommandBuilder::GetErrorMessage()
 {
-   return mError; 
+   return mError;
 }
 
 Command *CommandBuilder::GetCommand()

@@ -78,7 +78,7 @@ void MidiIOPrefs::Populate()
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -121,7 +121,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
          S.Id(HostID);
          /* i18n-hint: (noun) */
          mHost = S.TieChoice(_("Host") + wxString(wxT(":")),
-                             wxT("/MidiIO/Host"), 
+                             wxT("/MidiIO/Host"),
                              wxT(""),
                              mHostNames,
                              mHostLabels);
@@ -130,7 +130,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
          S.AddPrompt(_("Using: PortMidi"));
       }
       S.EndMultiColumn();
-   }                              
+   }
    S.EndStatic();
 
    S.StartStatic(_("Playback"));
@@ -141,7 +141,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
          mPlay = S.AddChoice(_("Device") + wxString(wxT(":")),
                              wxEmptyString,
                              &empty);
-         int latency = gPrefs->Read(wxT("/MidiIO/OutputLatency"), 
+         int latency = gPrefs->Read(wxT("/MidiIO/OutputLatency"),
                                     DEFAULT_SYNTH_LATENCY);
          mLatency = S.TieNumericTextBox(_("MIDI Synthesizer Latency (ms):"),
                                         wxT("/MidiIO/SynthLatency"),

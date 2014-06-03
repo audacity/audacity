@@ -35,7 +35,7 @@ class CommandBuilder
       void BuildCommand(wxString cmdString);
    public:
       CommandBuilder(const wxString &cmdString);
-      CommandBuilder(const wxString &cmdName, 
+      CommandBuilder(const wxString &cmdName,
                      const wxString &cmdParams);
       ~CommandBuilder();
       bool WasValid();

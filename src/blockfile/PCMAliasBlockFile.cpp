@@ -26,10 +26,10 @@ extern AudioIO *gAudioIO;
 
 PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileName fileName,
-      wxFileName aliasedFileName, 
+      wxFileName aliasedFileName,
       sampleCount aliasStart,
-      sampleCount aliasLen, int aliasChannel) 
-: AliasBlockFile(fileName, aliasedFileName, 
+      sampleCount aliasLen, int aliasChannel)
+: AliasBlockFile(fileName, aliasedFileName,
                  aliasStart, aliasLen, aliasChannel)
 {
    AliasBlockFile::WriteSummary();
@@ -37,10 +37,10 @@ PCMAliasBlockFile::PCMAliasBlockFile(
 
 PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileName fileName,
-      wxFileName aliasedFileName, 
+      wxFileName aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,bool writeSummary)
-: AliasBlockFile(fileName, aliasedFileName, 
+: AliasBlockFile(fileName, aliasedFileName,
                  aliasStart, aliasLen, aliasChannel)
 {
    if(writeSummary)
@@ -49,11 +49,11 @@ PCMAliasBlockFile::PCMAliasBlockFile(
 
 PCMAliasBlockFile::PCMAliasBlockFile(
       wxFileName existingSummaryFileName,
-      wxFileName aliasedFileName, 
+      wxFileName aliasedFileName,
       sampleCount aliasStart,
       sampleCount aliasLen, int aliasChannel,
       float min, float max, float rms)
-: AliasBlockFile(existingSummaryFileName, aliasedFileName, 
+: AliasBlockFile(existingSummaryFileName, aliasedFileName,
                  aliasStart, aliasLen,
                  aliasChannel, min, max, rms)
 {
@@ -75,7 +75,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
 {
    SF_INFO info;
 
-   if(!mAliasedFileName.IsOk()){ // intentionally silenced 
+   if(!mAliasedFileName.IsOk()){ // intentionally silenced
       memset(data,0,SAMPLE_SIZE(format)*len);
       return len;
    }
@@ -103,7 +103,7 @@ int PCMAliasBlockFile::ReadData(samplePtr data, sampleFormat format,
       memset(data,0,SAMPLE_SIZE(format)*len);
       if(silence) delete silence;
       mSilentAliasLog=TRUE;
-      
+
       // Set a marker to display an error message for the silence
       if (!wxGetApp().ShouldShowMissingAliasedFileWarning())
          wxGetApp().MarkAliasedFilesMissingWarning(this);
@@ -183,8 +183,8 @@ void PCMAliasBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("pcmaliasblockfile"));
 }
 
-// BuildFromXML methods should always return a BlockFile, not NULL,  
-// even if the result is flawed (e.g., refers to nonexistent file), 
+// BuildFromXML methods should always return a BlockFile, not NULL,
+// even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
 {
@@ -199,13 +199,13 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
    {
       const wxChar *attr =  *attrs++;
       const wxChar *value = *attrs++;
-      if (!value) 
+      if (!value)
          break;
 
       const wxString strValue = value;
-      if (!wxStricmp(attr, wxT("summaryfile")) && 
+      if (!wxStricmp(attr, wxT("summaryfile")) &&
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
-            XMLValueChecker::IsGoodFileString(strValue) && 
+            XMLValueChecker::IsGoodFileString(strValue) &&
             (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= PLATFORM_MAX_PATH))
       {
          if (!dm.AssignFile(summaryFileName, strValue, false))
@@ -220,12 +220,12 @@ BlockFile *PCMAliasBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
             // Allow fallback of looking for the file name, located in the data directory.
             aliasFileName.Assign(dm.GetProjectDataDir(), strValue);
          else if (XMLValueChecker::IsGoodPathString(strValue))
-            // If the aliased file is missing, we failed XMLValueChecker::IsGoodPathName() 
-            // and XMLValueChecker::IsGoodFileName, because both do existence tests, 
+            // If the aliased file is missing, we failed XMLValueChecker::IsGoodPathName()
+            // and XMLValueChecker::IsGoodFileName, because both do existence tests,
             // but we want to keep the reference to the missing file because it's a good path string.
             aliasFileName.Assign(strValue);
       }
-      else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
+      else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
       {  // integer parameters
          if (!wxStricmp(attr, wxT("aliasstart")) && (nValue >= 0))
             aliasStart = nValue;

@@ -22,7 +22,7 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
                               SummaryInfo *info,
                               bool noRMS,bool Silent,
                               float *min, float *max, float *rms);
-                        
+
 
 //
 // This class supports loading BlockFiles in one of the old

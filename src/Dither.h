@@ -18,7 +18,7 @@ class Dither
 public:
     /// Default constructor
     Dither();
-    
+
     /// These ditherers are currently available:
     enum DitherType { none = 0, rectangle = 1, triangle = 2, shaped = 3};
 
@@ -47,7 +47,7 @@ private:
     static const int BUF_SIZE; /* = 8 */
     static const int BUF_MASK; /* = 7 */
     static const float SHAPED_BS[];
-    
+
     // Dither state
     int mPhase;
     float mTriangleState;

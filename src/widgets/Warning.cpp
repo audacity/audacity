@@ -35,10 +35,10 @@ class WarningDialog : public wxDialog
 {
  public:
    // constructors and destructors
-   WarningDialog(wxWindow *parent, 
+   WarningDialog(wxWindow *parent,
                  wxString message,
                  bool showCancelButton);
-   
+
  private:
    void OnOK(wxCommandEvent& event);
 
@@ -52,8 +52,8 @@ BEGIN_EVENT_TABLE(WarningDialog, wxDialog)
 END_EVENT_TABLE()
 
 WarningDialog::WarningDialog(wxWindow *parent, wxString message, bool showCancelButton)
-:  wxDialog(parent, wxID_ANY, (wxString)_("Warning"), 
-            wxDefaultPosition, wxDefaultSize, 
+:  wxDialog(parent, wxID_ANY, (wxString)_("Warning"),
+            wxDefaultPosition, wxDefaultSize,
             (showCancelButton ? wxDEFAULT_DIALOG_STYLE : wxCAPTION | wxSYSTEM_MENU)) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
 {
    SetIcon(wxArtProvider::GetIcon(wxART_WARNING, wxART_MESSAGE_BOX));

@@ -43,11 +43,11 @@ EffectEcho::EffectEcho()
    decay = float(0.5);
 }
 
-wxString EffectEcho::GetEffectDescription() { 
-   // Note: This is useful only after values have been set. 
-   return wxString::Format(_("Applied effect: %s delay = %f seconds, decay factor = %f"), 
-                           this->GetEffectName().c_str(), delay, decay); 
-} 
+wxString EffectEcho::GetEffectDescription() {
+   // Note: This is useful only after values have been set.
+   return wxString::Format(_("Applied effect: %s delay = %f seconds, decay factor = %f"),
+                           this->GetEffectName().c_str(), delay, decay);
+}
 
 bool EffectEcho::PromptUser()
 {
@@ -67,7 +67,7 @@ bool EffectEcho::PromptUser()
 }
 
 bool EffectEcho::TransferParameters( Shuttle & shuttle )
-{  
+{
    shuttle.TransferFloat(wxT("Delay"),delay,1.0);
    shuttle.TransferFloat(wxT("Decay"),decay,0.5);
    return true;
@@ -103,7 +103,7 @@ bool EffectEcho::Process()
       count++;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult); 
+   this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -112,7 +112,7 @@ bool EffectEcho::ProcessOne(int count, WaveTrack * track,
 {
    sampleCount s = 0;
    sampleCount blockSize = (sampleCount) (track->GetRate() * delay);
-   
+
    //do nothing if the delay is less than 1 sample or greater than
    //the length of the selection
    if (blockSize < 1 || blockSize > len)
@@ -145,7 +145,7 @@ bool EffectEcho::ProcessOne(int count, WaveTrack * track,
       first = false;
 
       s += block;
-      
+
       if (TrackProgress(count, s / (double) len)) {
          delete[]buffer0;
          delete[]buffer1;
@@ -185,14 +185,14 @@ EchoDialog::EchoDialog(EffectEcho * effect, wxWindow * parent)
    // effect parameters
    delay = float(1.0);
    decay = float(0.5);
-   
+
    // Initialize dialog
    Init();
 }
 
 void EchoDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   S.AddSpace(0, 5); 
+   S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
@@ -258,7 +258,7 @@ void EchoDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    m_pEffect->decay = decay;
 
    m_pEffect->Preview();
-   
+
    m_pEffect->delay = oldDelay;
    m_pEffect->decay = oldDecay;
 }

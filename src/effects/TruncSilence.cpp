@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \class EffectTruncSilence
-\brief Truncate Silence automatically reduces the length of passages 
+\brief Truncate Silence automatically reduces the length of passages
        where the volume is below a set threshold level.
 
   \todo mBlendFrameCount only retrieved from prefs ... not using dialog
@@ -56,7 +56,7 @@ bool EffectTruncSilence::Init()
    if ((mProcessIndex < 0) || (mProcessIndex > 1)) {  // corrupted Prefs?
       mProcessIndex = 0L;
       gPrefs->Write(wxT("/Effects/TruncateSilence/ProcessChoice"), 0L);
-   }   
+   }
    gPrefs->Read(wxT("/Effects/TruncateSilence/InitialAllowedSilence"), &mInitialAllowedSilence, 0.5);
    if ((mInitialAllowedSilence < 0.001) || (mInitialAllowedSilence > 10000.0)) {  // corrupted Prefs?
       mInitialAllowedSilence = 0.5;
@@ -106,7 +106,7 @@ bool EffectTruncSilence::PromptUser()
 }
 
 bool EffectTruncSilence::TransferParameters( Shuttle & shuttle )
-{  
+{
    shuttle.TransferEnum(wxT("Db"), mTruncDbChoiceIndex, Enums::NumDbChoices, Enums::GetDbChoices());
    shuttle.TransferInt(wxT("Action"), mProcessIndex, 0);
    shuttle.TransferDouble(wxT("Minimum"), mInitialAllowedSilence, 0.5);
@@ -147,7 +147,7 @@ bool EffectTruncSilence::Process()
       WaveTrack *wt = (WaveTrack *)t;
 
       // Smallest silent region to detect in frames
-      sampleCount minSilenceFrames = 
+      sampleCount minSilenceFrames =
             sampleCount(wxMax( mInitialAllowedSilence, minTruncMs) *
                   wt->GetRate());
 
@@ -173,7 +173,7 @@ bool EffectTruncSilence::Process()
       while (index < end) {
          // Show progress dialog, test for cancellation
          cancelled = TotalProgress(
-               detectFrac * (whichTrack + index / (double)end) / 
+               detectFrac * (whichTrack + index / (double)end) /
                (double)GetNumWaveTracks());
          if (cancelled)
             break;
@@ -243,7 +243,7 @@ bool EffectTruncSilence::Process()
       delete [] buffer;
 
       // Buffer has been freed, so we're OK to return if cancelled
-      if (cancelled) 
+      if (cancelled)
       {
          ReplaceProcessedTracks(false);
          return false;
@@ -389,7 +389,7 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
    bool lastRun = false; // must run the loop one extra time
 
    RegionList::const_iterator srcIter = src.begin();
-   
+
    // This logic, causing the loop to run once after end of src, must occur
    // each time srcIter is updated
    if (srcIter == src.end()) {
@@ -436,7 +436,7 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
             // Insert second region after first
             RegionList::iterator nextIt(destIter);
             ++nextIt;
-            
+
             // This should just read: destIter = dest.insert(nextIt, r); but we
             // work around two two wxList::insert() bugs. First, in some
             // versions it returns the wrong value. Second, in some versions,
@@ -555,7 +555,7 @@ void TruncSilenceDialog::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndHorizontalLay();
 
-   
+
    S.StartStatic(_("Detect Silence"));
    {
       S.StartMultiColumn(3, wxALIGN_CENTER_HORIZONTAL);

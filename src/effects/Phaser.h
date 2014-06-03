@@ -44,7 +44,7 @@ class EffectPhaser:public EffectSimpleMono {
    virtual wxString GetEffectName() {
       return wxString(_("Phaser..."));
    }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;
       result.insert(wxT("http://lv2plug.in/ns/lv2core#PhaserPlugin"));
@@ -58,9 +58,9 @@ class EffectPhaser:public EffectSimpleMono {
    virtual wxString GetEffectAction() {
       return wxString(_("Applying Phaser"));
    }
-   
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription(); 
+
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription();
 
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
@@ -69,9 +69,9 @@ class EffectPhaser:public EffectSimpleMono {
    virtual bool NewTrackSimpleMono();
 
    virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
-   
+
 /*
-    Phaser Parameters        
+    Phaser Parameters
 
  freq       - Phaser's LFO frequency
  startphase - Phaser's LFO startphase (radians), needed for stereo Phasers
@@ -83,7 +83,7 @@ class EffectPhaser:public EffectSimpleMono {
 */
 
  private:
- 
+
    // parameters
    float freq;
    float startphase;

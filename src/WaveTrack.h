@@ -40,11 +40,11 @@ class TimeWarper;
 typedef struct REGION
 {
    double start, end;
-   
+
    //used for sorting
    static int cmp( REGION **a, REGION **b )
-   { 
-      return ( ( *a )->start < ( *b )->start ) ? -1 : 1; 
+   {
+      return ( ( *a )->start < ( *b )->start ) ? -1 : 1;
    }
 }Region;
 WX_DEFINE_ARRAY( Region*, Regions );
@@ -61,7 +61,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // Private since only factories are allowed to construct WaveTracks
    //
 
-   WaveTrack(DirManager * projDirManager, 
+   WaveTrack(DirManager * projDirManager,
              sampleFormat format = (sampleFormat)0,
              double rate = 0);
    WaveTrack(WaveTrack &orig);
@@ -85,15 +85,15 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    struct Location {
       // Position of track location
       double pos;
-      
+
       // Type of track location
       LocationType typ;
-      
+
       // Only for typ==locationMergePoint
       int clipidx1; // first clip (left one)
       int clipidx2; // second clip (right one)
    };
-      
+
    virtual ~WaveTrack();
    virtual double GetOffset();
    virtual void SetOffset (double o);
@@ -115,7 +115,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // Identifying the type of track
    //
 
-   virtual int GetKind() const { return Wave; } 
+   virtual int GetKind() const { return Wave; }
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    virtual int GetMinimizedHeight() const;
 #endif
@@ -203,23 +203,23 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    bool AppendAlias(wxString fName, sampleCount start,
                     sampleCount len, int channel,bool useOD);
-   
+
    ///for use with On-Demand decoding of compressed files.
    ///decodeType should be an enum from ODDecodeTask that specifies what
    ///Type of encoded file this is, such as eODFLAC
    //vvv Why not use the ODTypeEnum typedef to enforce that for the parameter?
    bool AppendCoded(wxString fName, sampleCount start,
                             sampleCount len, int channel, int decodeType);
-                            
+
    ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
    unsigned int GetODFlags();
-                    
+
    ///Deletes all clips' wavecaches.  Careful, This may not be threadsafe.
    void DeleteWaveCaches();
-   
+
    ///Adds an invalid region to the wavecache so it redraws that portion only.
    void  AddInvalidRegion(sampleCount startSample, sampleCount endSample);
-                    
+
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
    /// have a continous space of samples anymore, but we simulate it,
@@ -250,7 +250,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    Sequence* GetSequenceAtX(int xcoord);
    Envelope* GetEnvelopeAtX(int xcoord);
    Envelope* GetActiveEnvelope(void);
-   
+
    WaveClip* GetClipAtSample(sampleCount sample);
 
    //
@@ -285,7 +285,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    /** @brief Convert correctly between an (absolute) time in seconds and a number of samples.
     *
-    * This method will not give the correct results if used on a relative time (difference of two 
+    * This method will not give the correct results if used on a relative time (difference of two
     * times). Each absolute time must be converted and the numbers of samples differenced:
     *    sampleCount start = track->TimeToLongSamples(t0);
     *    sampleCount end = track->TimeToLongSamples(t1);
@@ -330,7 +330,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    // Get number of clips in this WaveTrack
    int GetNumClips() const;
-   
+
    // Add all wave clips to the given array 'clips' and sort the array by
    // clip start time. The array is emptied prior to adding the clips.
    void FillSortedClipArray(WaveClipArray& clips);
@@ -341,7 +341,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // in this direction maximally.
    bool CanOffsetClip(WaveClip* clip, double amount, double *allowedAmount=NULL);
 
-   // Before moving a clip into a track (or inserting a clip), use this 
+   // Before moving a clip into a track (or inserting a clip), use this
    // function to see if the times are valid (i.e. don't overlap with
    // existing clips).
    bool CanInsertClip(WaveClip* clip);
@@ -351,13 +351,13 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // other clip. No fancy additional stuff is done.
    // unused   void MoveClipToTrack(int clipIndex, WaveTrack* dest);
    void MoveClipToTrack(WaveClip *clip, WaveTrack* dest);
-   
+
    // Remove the clip from the track and return a pointer to it.
    WaveClip* RemoveAndReturnClip(WaveClip* clip);
-   
+
    // Append a clip to the track
    void AddClip(WaveClip* clip);
-   
+
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.
    // clipidx1 and clipidx2 are indices into the clip list.
@@ -379,7 +379,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // This track has been merged into a stereo track.  Copy shared parameters
    // from the new partner.
    virtual void Merge(const Track &orig);
-   
+
    // Resample track (i.e. all clips in the track)
    bool Resample(int rate, ProgressDialog *progress = NULL);
 
@@ -387,7 +387,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // The following code will eventually become part of a GUIWaveTrack
    // and will be taken out of the WaveTrack class:
    //
-   
+
    enum {
       WaveformDisplay,
       WaveformDBDisplay,
@@ -406,7 +406,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    void GetDisplayBounds(float *min, float *max);
    void SetDisplayBounds(float min, float max);
-   
+
 
  protected:
    //

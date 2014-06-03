@@ -24,14 +24,14 @@ class Resample
 {
  public:
    /// Resamplers may have more than one method, offering a
-   /// tradeoff between speed and quality.  
+   /// tradeoff between speed and quality.
    /// Audacity identifies two methods out of all of the choices:
    /// a Fast method intended for real-time audio I/O, and a Best
-   /// method intended for mixing and exporting. 
+   /// method intended for mixing and exporting.
    //
    /// The first parameter lets you select either the best method or
-   /// the fast method. 
-   // dMinFactor and dMaxFactor specify the range of factors for variable-rate resampling. 
+   /// the fast method.
+   // dMinFactor and dMaxFactor specify the range of factors for variable-rate resampling.
    // For constant-rate, pass the same value for both.
    Resample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor);
    virtual ~Resample();
@@ -44,14 +44,14 @@ class Resample
    static int GetFastMethodDefault();
    static int GetBestMethodDefault();
 
-   /** @brief Main processing function. Resamples from the input buffer to the 
+   /** @brief Main processing function. Resamples from the input buffer to the
     * output buffer.
     *
     * Reads samples from the input buffer, and writes samples to the output
     * buffer. Stops when either is exhaughsted, or we reach a convenient block
     * end, unless lastFlag is set to force emptying the input buffer.
     * The number of input samples used is returned in inBufferUsed, and the
-    * number of output samples generated is the return value of the function. 
+    * number of output samples generated is the return value of the function.
     * This function may do nothing if you don't pass a large enough output
     * buffer (i.e. there is no where to put a full block of output data)
     @param factor The scaling factor to resample by.
@@ -59,7 +59,7 @@ class Resample
     @param inBufferLen Length of the input buffer, in samples.
     @param lastFlag Flag to indicate this is the last lot of input samples and
     the buffer needs to be emptied out into the rate converter.
-    @param inBufferUsed Number of samples from inBuffer that have been used 
+    @param inBufferUsed Number of samples from inBuffer that have been used
     (unless lastFlag is true, we don't garuntee to process all the samples in
     the input this time, we may leave some for next time)
     @param outBuffer Buffer to write output (converted) samples to.
@@ -86,11 +86,11 @@ class Resample
  protected:
    int   mMethod; // resampler-specific enum for resampling method
    void* mHandle; // constant-rate or variable-rate resampler (XOR per instance)
-#if USE_LIBSAMPLERATE 
+#if USE_LIBSAMPLERATE
    bool mShouldReset; // whether the resampler should be reset because lastFlag has been set previously
    int  mSamplesLeft; // number of samples left before a reset is needed
 #elif USE_LIBSOXR
-   bool mbWantConstRateResampling; 
+   bool mbWantConstRateResampling;
 #endif
 };
 

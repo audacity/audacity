@@ -54,14 +54,14 @@ EffectToneGen::EffectToneGen()
    interpolation = 0;
 }
 
-wxString EffectToneGen::GetEffectDescription() { 
-   // Note: This is useful only after values have been set. 
+wxString EffectToneGen::GetEffectDescription() {
+   // Note: This is useful only after values have been set.
    /// \todo update to include *all* chirp parameters??
    const wxChar* waveformNames[] = {wxT("sine"), wxT("square"), wxT("sawtooth"), wxT("square, no alias")};
    //const wxChar* interpolationNames[] = {wxT("linear"), wxT("logarithmic")};
-   return wxString::Format(_("Applied effect: Generate %s wave %s, frequency = %.2f Hz, amplitude = %.2f, %.6lf seconds"), 
+   return wxString::Format(_("Applied effect: Generate %s wave %s, frequency = %.2f Hz, amplitude = %.2f, %.6lf seconds"),
       waveformNames[waveform], mbChirp ? wxT("chirp") : wxT("tone"), frequency[0], amplitude[0], mDuration);
-} 
+}
 
 bool EffectToneGen::PromptUser()
 {
@@ -124,7 +124,7 @@ bool EffectToneGen::PromptUser()
       when user explicitly set up a value */
    if (mT1 == mT0) // ANSWER ME: Only if end time equals start time?
    {
-      return (gPrefs->Write(wxT("/Effects/ToneGen/Duration"), mDuration) && 
+      return (gPrefs->Write(wxT("/Effects/ToneGen/Duration"), mDuration) &&
                gPrefs->Flush());
    }
    return true;
@@ -264,15 +264,15 @@ void ToneGenDialog::PopulateOrExchangeStandard( ShuttleGui & S )
       S.TieChoice(_("Waveform") + wxString(wxT(":")), waveform,  waveforms);
       S.SetSizeHints(-1, -1);
 
-      // The added colon to improve visual consistency was placed outside 
-      // the translatable strings to avoid breaking translations close to 2.0. 
+      // The added colon to improve visual consistency was placed outside
+      // the translatable strings to avoid breaking translations close to 2.0.
       // TODO: Make colon part of the translatable string after 2.0.
       S.TieNumericTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 5);
       S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), amplitude[0], 5);
       S.AddPrompt(_("Duration") + wxString(wxT(":")));
       if (mToneDurationT == NULL)
       {
-         mToneDurationT = 
+         mToneDurationT =
             new TimeTextCtrl(this,
                               wxID_ANY,
                               isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
@@ -304,8 +304,8 @@ void ToneGenDialog::PopulateOrExchangeExtended( ShuttleGui & S )
       S.AddTitle(_("Start"));
       S.AddTitle(_("End"));
 
-      // The added colon to improve visual consistency was placed outside 
-      // the translatable strings to avoid breaking translations close to 2.0. 
+      // The added colon to improve visual consistency was placed outside
+      // the translatable strings to avoid breaking translations close to 2.0.
       // TODO: Make colon part of the translatable string after 2.0.
       S.TieNumericTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 10)->SetName(_("Frequency Hertz Start"));
       S.TieNumericTextBox(wxT(""), frequency[1], 10)->SetName(_("Frequency Hertz End"));

@@ -49,9 +49,9 @@ static wxString VampHierarchyToUri(const PluginLoader::PluginCategoryHierarchy& 
 {
    // Else, generate URIs and add them to the EffectManager
    EffectManager& em = EffectManager::Get();
-   wxString vampCategory = 
+   wxString vampCategory =
       wxString::FromAscii("http://audacityteam.org/namespace#VampCategories");
-   EffectCategory* parent = 
+   EffectCategory* parent =
       em.LookupCategory(wxT("http://lv2plug.in/ns/lv2core#AnalyserPlugin"));
    if (parent) {
       for (size_t c = 0; c < h.size(); ++c) {
@@ -77,9 +77,9 @@ void LoadVampPlugins()
 #endif
 
    PluginLoader *loader = PluginLoader::getInstance();
-   
+
    EffectManager& em = EffectManager::Get();
-   
+
    PluginLoader::PluginKeyList keys = loader->listPlugins();
 
    for (PluginLoader::PluginKeyList::iterator i = keys.begin();
@@ -87,15 +87,15 @@ void LoadVampPlugins()
 
       Plugin *vp = loader->loadPlugin(*i, 48000); // rate doesn't matter here
       if (!vp) continue;
-      
+
 #ifdef EFFECT_CATEGORIES
 
-      PluginLoader::PluginCategoryHierarchy category = 
+      PluginLoader::PluginCategoryHierarchy category =
          loader->getPluginCategory(*i);
       wxString vampCategory = VampHierarchyToUri(category);
 
 #endif
-      
+
       // We limit the listed plugin outputs to those whose results can
       // readily be displayed in an Audacity label track.
       //
@@ -104,7 +104,7 @@ void LoadVampPlugins()
       //
       // - Any output whose features have more than one value, or an
       //   unknown or variable number of values, is right out
-      // 
+      //
       // - Any output whose features have exactly one value, with
       //   variable sample rate or with duration, should be OK --
       //   this implies a sparse feature, of which the time and/or
@@ -120,7 +120,7 @@ void LoadVampPlugins()
       int n = 0;
 
       bool hasParameters = !vp->getParameterDescriptors().empty();
-      
+
       for (Plugin::OutputList::iterator j = outputs.begin();
            j != outputs.end(); ++j) {
 
@@ -134,7 +134,7 @@ void LoadVampPlugins()
             ++n;
             continue;
          }
-         
+
          wxString name = LAT1CTOWX(vp->getName().c_str());
 
          if (outputs.size() > 1) {

@@ -20,7 +20,7 @@
   Integer formats use the full signed range of their data type,
   for example 16-bit samples use the range -32768...32767.
   This means that reading in a wav file and writing it out again
-  ('round tripping'), via floats, is lossless; -32768 equates to -1.0f 
+  ('round tripping'), via floats, is lossless; -32768 equates to -1.0f
   and 32767 equates to +1.0f - (a little bit).
   It also means (unfortunatly) that writing out +1.0f leads to
   clipping by 1 LSB.  This creates some distortion, but I (MJS) have

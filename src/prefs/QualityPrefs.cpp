@@ -54,7 +54,7 @@ void QualityPrefs::Populate()
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -70,7 +70,7 @@ void QualityPrefs::Populate()
 /// The corresponding labels are what gets stored.
 void QualityPrefs::GetNamesAndLabels()
 {
-   //------------ Dither Names 
+   //------------ Dither Names
    mDitherNames.Add(_("None"));        mDitherLabels.Add(Dither::none);
    mDitherNames.Add(_("Rectangle"));   mDitherLabels.Add(Dither::rectangle);
    mDitherNames.Add(_("Triangle"));    mDitherLabels.Add(Dither::triangle);

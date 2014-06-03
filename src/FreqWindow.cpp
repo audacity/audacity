@@ -432,7 +432,7 @@ void FreqWindow::GetAudio()
       }
       t = iter.Next();
    }
-   
+
    if (selcount == 0)
       return;
 
@@ -477,7 +477,7 @@ void FreqWindow::DrawPlot()
    }
 
    mBitmap = new wxBitmap(mUpdateRect.width, mUpdateRect.height);
-   
+
    wxMemoryDC memDC;
    memDC.SelectObject(*mBitmap);
 

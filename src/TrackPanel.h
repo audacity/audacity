@@ -80,7 +80,7 @@ class AUDACITY_DLL_API TrackPanelListener {
    virtual void TP_HandleResize() = 0;
 };
 
-// 
+//
 // TrackInfo sliders: we keep a pool of sliders, and attach them to tracks as
 // they come on screen (this helps deal with very large numbers of tracks, esp.
 // on MSW).
@@ -97,9 +97,9 @@ const unsigned int kSliderPageFlip = 80;
 // and only a worry when there are DLLs using the structures.
 // LWSliderArray and TrackClipArray are private in TrackInfo, so we will not
 // access them directly from the DLL.
-// TrackClipArray in TrackPanel needs to be handled with care in the derived 
+// TrackClipArray in TrackPanel needs to be handled with care in the derived
 // class, but the C4251 warning is no worry in core Audacity.
-// wxWidgets doesn't cater to the exact details we need in 
+// wxWidgets doesn't cater to the exact details we need in
 // WX_DECLARE_EXPORTED_OBJARRAY to be able to use that for these two arrays.
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -306,7 +306,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    // Stretching can drag the left boundary (the right stays fixed),
    // the right boundary (the left stays fixed), or the center (splits
    // the selection into two parts: when left part grows, the right
-   // part shrinks, keeping the leftmost and rightmost boundaries 
+   // part shrinks, keeping the leftmost and rightmost boundaries
    // fixed.
    enum StretchEnum {
       stretchLeft,
@@ -403,15 +403,15 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void HandleSliders(wxMouseEvent &event, bool pan);
 
 
-   // These *Func methods are used in TrackPanel::HandleLabelClick to set up 
-   // for actual handling in methods called by TrackPanel::OnMouseEvent, and 
+   // These *Func methods are used in TrackPanel::HandleLabelClick to set up
+   // for actual handling in methods called by TrackPanel::OnMouseEvent, and
    // to draw button-down states, etc.
    virtual bool CloseFunc(Track * t, wxRect r, int x, int y);
    virtual bool PopupFunc(Track * t, wxRect r, int x, int y);
 
-   // TrackSelFunc, unlike the other *Func methods, returns true if the click is not 
-   // set up to be handled, but click is on the sync-lock icon or the blank area to 
-   // the left of the minimize button, and we want to pass it forward to be a track select. 
+   // TrackSelFunc, unlike the other *Func methods, returns true if the click is not
+   // set up to be handled, but click is on the sync-lock icon or the blank area to
+   // the left of the minimize button, and we want to pass it forward to be a track select.
    virtual bool TrackSelFunc(Track * t, wxRect r, int x, int y);
 
    virtual bool MuteSoloFunc(Track *t, wxRect r, int x, int f, bool solo);
@@ -423,7 +423,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
 
    virtual void MakeParentRedrawScrollbars();
-   
+
    // AS: Pushing the state preserves state for Undo operations.
    virtual void MakeParentPushState(wxString desc, wxString shortDesc,
                             int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE);
@@ -519,7 +519,7 @@ protected:
    //JKC: These two belong in the label track.
    int mLabelTrackStartXPos;
    int mLabelTrackStartYPos;
-   
+
    virtual wxString TrackSubText(Track *t);
 
    virtual bool MoveClipToTrack(WaveClip *clip, WaveTrack* dst);
@@ -543,7 +543,7 @@ protected:
      virtual void Notify() { parent->OnTimer(); }
      TrackPanel *parent;
    } mTimer;
-   
+
 
    // This stores the parts of the screen that get overwritten by the indicator
    // and cursor
@@ -621,7 +621,7 @@ protected:
    float mDrawingStartSampleValue;    // value of last click-down
    sampleCount mDrawingLastDragSample; // sample of last drag-over
    float mDrawingLastDragSampleValue;  // value of last drag-over
- 
+
    double PositionToTime(wxInt64 mouseXCoordinate,
                          wxInt64 trackLeftEdge) const;
    wxInt64 TimeToPosition(double time,

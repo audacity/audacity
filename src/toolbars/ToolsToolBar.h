@@ -2,9 +2,9 @@
 
   Audacity: A Digital Audio Editor
 
-  
+
   ToolsToolBar.h
- 
+
   Dominic Mazzoni
   Shane T. Mueller
   Leland Lucius

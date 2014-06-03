@@ -40,7 +40,7 @@ class EffectWahwah:public EffectSimpleMono {
    virtual wxString GetEffectName() {
       return wxString(_("Wahwah..."));
    }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;
       result.insert(wxT("http://lv2plug.in/ns/lv2core#ModulatorPlugin"));
@@ -54,13 +54,13 @@ class EffectWahwah:public EffectSimpleMono {
    virtual wxString GetEffectAction() {
       return wxString(_("Applying Wahwah"));
    }
-   
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription(); 
+
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription();
 
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
-   
+
  protected:
    virtual bool NewTrackSimpleMono();
 
@@ -73,7 +73,7 @@ class EffectWahwah:public EffectSimpleMono {
    float b0, b1, b2, a0, a1, a2;
 
 /* Parameters:
-   freq - LFO frequency 
+   freq - LFO frequency
    startphase - LFO startphase in RADIANS - usefull for stereo WahWah
    depth - Wah depth
    freqofs - Wah frequency offset

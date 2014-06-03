@@ -81,7 +81,7 @@ class AUDACITY_DLL_API XMLFileWriter:public wxFFile, public XMLWriter {
 
    /// Open the file. Might throw XMLFileWriterException.
    void Open(const wxString &name, const wxString &mode);
-   
+
    /// Close file. Might throw XMLFileWriterException.
    void Close();
 

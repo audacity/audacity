@@ -57,16 +57,16 @@ EffectWahwah::EffectWahwah()
    res = float(2.5);
 }
 
-wxString EffectWahwah::GetEffectDescription() { 
-   // Note: This is useful only after values have been set. 
+wxString EffectWahwah::GetEffectDescription() {
+   // Note: This is useful only after values have been set.
    return wxString::Format(_("Applied effect: %s frequency = %.1f Hz, start phase = %.0f deg, depth = %.0f%%, resonance = %.1f, frequency offset = %.0f%%"),
-                           this->GetEffectName().c_str(), 
-                           freq, 
-                           (startphase * 180 / M_PI), 
-                           (depth * 100), 
-                           res, 
-                           (freqofs * 100)); 
-} 
+                           this->GetEffectName().c_str(),
+                           freq,
+                           (startphase * 180 / M_PI),
+                           (depth * 100),
+                           res,
+                           (freqofs * 100));
+}
 
 bool EffectWahwah::PromptUser()
 {
@@ -95,7 +95,7 @@ bool EffectWahwah::PromptUser()
 }
 
 bool EffectWahwah::TransferParameters( Shuttle & shuttle )
-{  
+{
    shuttle.TransferFloat(wxT("Freq"),freq,1.5f);
    shuttle.TransferFloat(wxT("Phase"),startphase,0.0f);
    shuttle.TransferFloat(wxT("Depth"),depth,0.7f);
@@ -133,7 +133,7 @@ bool EffectWahwah::ProcessSimpleMono(float *buffer, sampleCount len)
 
    for (int i = 0; i < len; i++) {
       in = buffer[i];
-      
+
       if ((skipcount++) % lfoskipsamples == 0) {
          frequency = (1 + cos(skipcount * lfoskip + phase)) / 2;
          frequency = frequency * depth * (1 - freqofs) + freqofs;
@@ -154,14 +154,14 @@ bool EffectWahwah::ProcessSimpleMono(float *buffer, sampleCount len)
       xn1 = in;
       yn2 = yn1;
       yn1 = out;
-      
+
       // Prevents clipping
       // Commented out, per http://bugzilla.audacityteam.org/show_bug.cgi?id=689.
       //if (out < -1.0)
       //   out = float(-1.0);
       //else if (out > 1.0)
       //   out = float(1.0);
-      
+
       buffer[i] = (float) out;
    }
 
@@ -501,7 +501,7 @@ void WahwahDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    float old_startphase = mEffect->startphase;
    float old_res = mEffect->res;
    float old_depth = mEffect->depth;
-   
+
    mEffect->freq = freq;
    mEffect->freqofs = freqoff / 100;
    mEffect->startphase = startphase * M_PI / 180;

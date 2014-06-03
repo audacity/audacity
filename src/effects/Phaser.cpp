@@ -61,17 +61,17 @@ EffectPhaser::EffectPhaser()
    fb = float(0.0);
 }
 
-wxString EffectPhaser::GetEffectDescription() { 
-   // Note: This is useful only after values have been set. 
-   return wxString::Format(_("Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start phase = %.0f deg, depth = %d, feedback = %.0f%%"), 
-                           this->GetEffectName().c_str(), 
-                           stages, 
-                           float(drywet*100/255), 
-                           freq, 
-                           (startphase * 180 / M_PI), 
-                           depth, 
-                           fb); 
-} 
+wxString EffectPhaser::GetEffectDescription() {
+   // Note: This is useful only after values have been set.
+   return wxString::Format(_("Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start phase = %.0f deg, depth = %d, feedback = %.0f%%"),
+                           this->GetEffectName().c_str(),
+                           stages,
+                           float(drywet*100/255),
+                           freq,
+                           (startphase * 180 / M_PI),
+                           depth,
+                           fb);
+}
 
 bool EffectPhaser::PromptUser()
 {
@@ -102,7 +102,7 @@ bool EffectPhaser::PromptUser()
 }
 
 bool EffectPhaser::TransferParameters( Shuttle & shuttle )
-{  
+{
    shuttle.TransferInt(wxT("Stages"),stages,2);
    shuttle.TransferInt(wxT("Wet"),drywet,128);
    shuttle.TransferFloat(wxT("Freq"),freq,0.4f);
@@ -114,7 +114,7 @@ bool EffectPhaser::TransferParameters( Shuttle & shuttle )
 bool EffectPhaser::NewTrackSimpleMono()
 {
    for (int j = 0; j < stages; j++)
-      old[j] = 0;   
+      old[j] = 0;
 
    skipcount = 0;
    gain = 0;
@@ -132,19 +132,19 @@ bool EffectPhaser::ProcessSimpleMono(float *buffer, sampleCount len)
 {
    float m, tmp, in, out;
    int i, j;
-   
+
    for (i = 0; i < len; i++) {
       in = buffer[i];
-      
+
       m = in + fbout * fb / 100;
       if (((skipcount++) % lfoskipsamples) == 0) {
          //compute sine between 0 and 1
          gain = (1 + cos(skipcount * lfoskip + phase)) / 2;
-         
+
          // change lfo shape
          gain =
             (exp(gain * phaserlfoshape) - 1) / (exp(phaserlfoshape)-1);
-         
+
          gain = 1 - gain / 255 * depth;      // attenuate the lfo
       }
       // phasing routine
@@ -155,17 +155,17 @@ bool EffectPhaser::ProcessSimpleMono(float *buffer, sampleCount len)
       }
       fbout = m;
       out = (m * drywet + in * (255 - drywet)) / 255;
-      
+
       // Prevents clipping
       // Commented out, per http://bugzilla.audacityteam.org/show_bug.cgi?id=690.
       //if (out < -1.0)
       //   out = float(-1.0);
       //else if (out > 1.0)
       //   out = float(1.0);
-      
+
       buffer[i] = out;
    }
-   
+
    return true;
 }
 

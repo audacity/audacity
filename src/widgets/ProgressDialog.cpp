@@ -7,7 +7,7 @@
   Copyright
      Leland Lucius
      Vaughan Johnson
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -993,7 +993,7 @@ BEGIN_EVENT_TABLE(ProgressDialog, wxDialog)
    EVT_BUTTON(wxID_CANCEL, ProgressDialog::OnCancel)
    EVT_BUTTON(wxID_OK, ProgressDialog::OnStop)
    EVT_CLOSE(ProgressDialog::OnCloseWindow)
-END_EVENT_TABLE()  
+END_EVENT_TABLE()
 
 //
 // Constructor
@@ -1044,7 +1044,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                                wxID_ANY,
                                message,
                                wxDefaultPosition,
-                               wxDefaultSize,                                  
+                               wxDefaultSize,
                                wxALIGN_LEFT);
    mMessage->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    v->Add(mMessage, 0, wxEXPAND | wxALL, 10);
@@ -1071,7 +1071,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                         wxID_ANY,
                         _("Elapsed Time:"),
                         wxDefaultPosition,
-                        wxDefaultSize,                                  
+                        wxDefaultSize,
                         wxALIGN_RIGHT);
    w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(w, 0, wxALIGN_RIGHT);
@@ -1080,12 +1080,12 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                                wxID_ANY,
                                wxT("00:00:00"),
                                wxDefaultPosition,
-                               wxDefaultSize,                                  
+                               wxDefaultSize,
                                wxALIGN_LEFT);
    mElapsed->SetName(mElapsed->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(mElapsed, 0, wxALIGN_LEFT);
    ds.y += mElapsed->GetSize().y + 10;
-   
+
    //
    //
    //
@@ -1093,7 +1093,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                         wxID_ANY,
                         _("Remaining Time:"),
                         wxDefaultPosition,
-                        wxDefaultSize,                                  
+                        wxDefaultSize,
                         wxALIGN_RIGHT);
    w->SetName(w->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(w, 0, wxALIGN_RIGHT);
@@ -1102,7 +1102,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                                  wxID_ANY,
                                  wxT("00:00:00"),
                                  wxDefaultPosition,
-                                 wxDefaultSize,                                  
+                                 wxDefaultSize,
                                  wxALIGN_LEFT);
    mRemaining->SetName(mRemaining->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
    g->Add(mRemaining, 0, wxALIGN_LEFT);
@@ -1118,7 +1118,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
       h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);
       ds.x += w->GetSize().x + 10;
    }
- 
+
    if (!(flags & pdlgHideCancelButton))
    {
       w = new wxButton(this, wxID_CANCEL, _("Cancel"));
@@ -1185,7 +1185,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    // See Bug #334
    // LL:  On Windows, the application message loop is still active even though
    //      all of the windows have been disabled.  So, keyboard shortcuts still
-   //      work in windows not related to the progress diawhich allows interaction 
+   //      work in windows not related to the progress diawhich allows interaction
    //      when it should be blocked.
    //      This disabled the application message loop so keyboard shortcuts will
    //      no longer be processed.
@@ -1307,7 +1307,7 @@ ProgressDialog::Update(int value, const wxString & message)
    if (mCancel)
    {
       // for compatibility with old Update, that returned false on cancel
-      return eProgressCancelled; 
+      return eProgressCancelled;
    }
    else if (mStop)
    {
@@ -1520,9 +1520,9 @@ ProgressDialog::Beep()
    }
 }
 
-TimerProgressDialog::TimerProgressDialog(const wxLongLong_t duration, 
-                                          const wxString & title, 
-                                          const wxString & message /*= wxEmptyString*/, 
+TimerProgressDialog::TimerProgressDialog(const wxLongLong_t duration,
+                                          const wxString & title,
+                                          const wxString & message /*= wxEmptyString*/,
                                           ProgressDialogFlags flags /*= pdlgEmptyFlags*/)
 : ProgressDialog(title, message, flags)
 {
@@ -1534,7 +1534,7 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
    if (mCancel)
    {
       // for compatibility with old Update, that returned false on cancel
-      return eProgressCancelled; 
+      return eProgressCancelled;
    }
    else if (mStop)
    {

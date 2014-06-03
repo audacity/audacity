@@ -5,7 +5,7 @@
   MixerToolBar.cpp
 
   Dominic Mazzoni
- 
+
 *******************************************************************//*!
 
 \class MixerToolBar
@@ -85,7 +85,7 @@ void MixerToolBar::Populate()
    mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
 
    Add(new wxStaticBitmap(this,
-                          wxID_ANY, 
+                          wxID_ANY,
                           *mPlayBitmap), 0, wxALIGN_CENTER);
 
    mOutputSlider = new ASlider(this, wxID_ANY, _("Output Volume"),
@@ -97,7 +97,7 @@ void MixerToolBar::Populate()
    mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
 
    Add(new wxStaticBitmap(this,
-                          wxID_ANY, 
+                          wxID_ANY,
                           *mRecordBitmap), 0, wxALIGN_CENTER);
 
    mInputSlider = new ASlider(this, wxID_ANY, _("Input Volume"),

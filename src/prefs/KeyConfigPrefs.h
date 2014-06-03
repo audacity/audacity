@@ -29,7 +29,7 @@
 
 #include "PrefsPanel.h"
 
-class KeyConfigPrefs:public PrefsPanel 
+class KeyConfigPrefs:public PrefsPanel
 {
 public:
    KeyConfigPrefs(wxWindow * parent);
@@ -98,7 +98,7 @@ private:
 
 #include "PrefsPanel.h"
 
-class KeyConfigPrefs:public PrefsPanel 
+class KeyConfigPrefs:public PrefsPanel
 {
  public:
    KeyConfigPrefs(wxWindow * parent);

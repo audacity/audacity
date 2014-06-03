@@ -309,7 +309,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                on this track mute is on.*/
             *name->Append( _( " Mute On" ) );
          }
-         
+
          if( t->GetSolo() )
          {
             /* i18n-hint: This is for screen reader software and indicates that
@@ -442,7 +442,7 @@ wxAccStatus TrackPanelAx::GetValue( int childId, wxString* strValue )
          {
             strValue->Append( _( " Mute On" ) );
          }
-         
+
          if( t->GetSolo() )
          {
             strValue->Append( _( " Solo On" ) );

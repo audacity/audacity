@@ -7,10 +7,10 @@
   Vaughan Johnson
   Dominic Mazzoni
 
-  utility fn and 
-  descendant of HtmlWindow that opens links in the user's 
+  utility fn and
+  descendant of HtmlWindow that opens links in the user's
   default browser
-  
+
 **********************************************************************/
 
 #ifndef __AUDACITY_LINKINGHTMLWINDOW__
@@ -24,12 +24,12 @@
 
 void OpenInDefaultBrowser(const wxHtmlLinkInfo& link);
 
-class AUDACITY_DLL_API LinkingHtmlWindow : public HtmlWindow 
+class AUDACITY_DLL_API LinkingHtmlWindow : public HtmlWindow
 {
  public:
-   LinkingHtmlWindow(wxWindow *parent, wxWindowID id = -1, 
-                     const wxPoint& pos = wxDefaultPosition, 
-                     const wxSize& size = wxDefaultSize, 
+   LinkingHtmlWindow(wxWindow *parent, wxWindowID id = -1,
+                     const wxPoint& pos = wxDefaultPosition,
+                     const wxSize& size = wxDefaultSize,
                      long style = wxHW_SCROLLBAR_AUTO);
    virtual void OnLinkClicked(const wxHtmlLinkInfo& link);
    //virtual void OnSetTitle(const wxString& title);

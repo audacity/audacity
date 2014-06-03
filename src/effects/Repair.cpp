@@ -46,7 +46,7 @@ bool EffectRepair::PromptUser()
 }
 
 bool EffectRepair::TransferParameters( Shuttle & WXUNUSED(shuttle) )
-{ 
+{
    //TODO: pop-click values.
 //   shuttle.TransferInt("",,0);
    return true;
@@ -80,7 +80,7 @@ bool EffectRepair::Process()
 
          double t0 = repair_t0 - spacing;
          double t1 = repair_t1 + spacing;
-         
+
          t0 = t0 < trackStart? trackStart: t0;
          t1 = t1 > trackEnd? trackEnd: t1;
 
@@ -101,14 +101,14 @@ bool EffectRepair::Process()
             bGoodResult = false;
             break;
          }
-         
+
          if (s0 == repair0 && s1 == repair1) {
             ::wxMessageBox(_("Repair works by using audio data outside the selection region.\n\nPlease select a region that has audio touching at least one side of it.\n\nThe more surrounding audio, the better it performs."));
    ///            The Repair effect needs some data to go on.\n\nPlease select an area to repair with some audio on at least one side (the more the better)."));
             bGoodResult = false;
             break;
          }
-         
+
          if (!ProcessOne(count, track,
                          s0, len, repairStart, repairLen)) {
             bGoodResult = false;
@@ -120,7 +120,7 @@ bool EffectRepair::Process()
       count++;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult); 
+   this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 

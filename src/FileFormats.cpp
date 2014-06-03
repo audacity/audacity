@@ -72,7 +72,7 @@ unsigned int sf_header_index_to_type(int i)
 int sf_num_encodings()
 {
    int count ;
-   
+
    sf_command (NULL, SFC_GET_FORMAT_SUBTYPE_COUNT, &count, sizeof (int)) ;
 
    return count;
@@ -108,7 +108,7 @@ unsigned int sf_encoding_index_to_subtype(int i)
 wxString sf_header_name(int format)
 {
    SF_FORMAT_INFO	format_info;
-   
+
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = (format & SF_FORMAT_TYPEMASK);
    sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
@@ -122,7 +122,7 @@ wxString sf_header_shortname(int format)
    char *tmp;
    int i;
    wxString s;
-   
+
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = (format & SF_FORMAT_TYPEMASK);
    sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
@@ -147,7 +147,7 @@ wxString sf_header_shortname(int format)
 wxString sf_header_extension(int format)
 {
    SF_FORMAT_INFO	format_info;
-   
+
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = (format & SF_FORMAT_TYPEMASK);
    sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
@@ -158,7 +158,7 @@ wxString sf_header_extension(int format)
 wxString sf_encoding_name(int encoding)
 {
    SF_FORMAT_INFO	format_info;
-   
+
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = (encoding & SF_FORMAT_SUBMASK);
    sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
@@ -169,7 +169,7 @@ wxString sf_encoding_name(int encoding)
 int sf_num_simple_formats()
 {
    int count ;
-   
+
    sf_command (NULL, SFC_GET_SIMPLE_FORMAT_COUNT, &count, sizeof (int)) ;
 
    return count;
@@ -204,7 +204,7 @@ bool sf_subtype_is_integer(unsigned int format)
            subtype == SF_FORMAT_PCM_24 ||
            subtype == SF_FORMAT_PCM_32);
 }
-      
+
 wxArrayString sf_get_all_extensions()
 {
    wxArrayString exts;
@@ -212,7 +212,7 @@ wxArrayString sf_get_all_extensions()
    int count, k;
 
    memset(&format_info, 0, sizeof(format_info));
-   
+
    sf_command(NULL, SFC_GET_FORMAT_MAJOR_COUNT,
               &count, sizeof(count));
 
@@ -220,7 +220,7 @@ wxArrayString sf_get_all_extensions()
       format_info.format = k;
       sf_command(NULL, SFC_GET_FORMAT_MAJOR,
                  &format_info, sizeof (format_info)) ;
-      
+
       exts.Add(LAT1CTOWX(format_info.extension));
    }
 

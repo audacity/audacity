@@ -27,7 +27,7 @@
 typedef int teBmps; /// The index of a bitmap resource in Theme Resources.
 
 enum teResourceType
-{ 
+{
    resTypeColour,
    resTypeBitmap,
    resTypeImage = resTypeBitmap,
@@ -52,7 +52,7 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(wxColour, ArrayOfColours, AUDACITY_DLL_API);
 //WX_DECLARE_OBJARRAY(wxBitmap, ArrayOfBitmaps);
 //WX_DECLARE_OBJARRAY(wxColour, ArrayOfColours);
 
-class AUDACITY_DLL_API FlowPacker 
+class AUDACITY_DLL_API FlowPacker
 {
 public:
    FlowPacker(){;};
@@ -70,7 +70,7 @@ public:
    int myHeight;
 
 private:
-   int iImageGroupSize; 
+   int iImageGroupSize;
    int iImageGroupIndex;
    int mOldFlags;
    int myPosBase;
@@ -108,7 +108,7 @@ public:
 
    wxColour & Colour( int iIndex );
    wxBitmap & Bitmap( int iIndex );
-   wxImage  & Image( int iIndex ); 
+   wxImage  & Image( int iIndex );
    wxCursor & Cursor( int iIndex );
    wxFont   & Font( int iIndex );
    wxSize ImageSize( int iIndex );

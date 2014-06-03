@@ -55,7 +55,7 @@ class EffectToneGen : public BlockGenerator {
    }
 
    // Useful only after PromptUser values have been set.
-   virtual wxString GetEffectDescription(); 
+   virtual wxString GetEffectDescription();
 
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
@@ -74,7 +74,7 @@ class EffectToneGen : public BlockGenerator {
 
    double mPositionInCycles;
 
-   // If we made these static variables, 
+   // If we made these static variables,
    // Tone and Chirp would share the same parameters.
    int waveform;
    float frequency[2];

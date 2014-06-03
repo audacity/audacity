@@ -15,7 +15,7 @@ unknown sample audio data.  Implements ImportRawDialog.
 *//****************************************************************//**
 
 \class ImportRawDialog
-\brief ImportRawDialog prompts you with options such as endianness 
+\brief ImportRawDialog prompts you with options such as endianness
 and sample size to help you importing data of an unknown format.
 
 *//*******************************************************************/
@@ -156,7 +156,7 @@ int ImportRaw(wxWindow *parent, wxString fileName,
    }
 
    sf_seek(sndFile, 0, SEEK_SET);
-   
+
    totalFrames = (sampleCount)(sndInfo.frames * percent / 100.0);
 
    //
@@ -166,7 +166,7 @@ int ImportRaw(wxWindow *parent, wxString fileName,
    // the file is higher-quality, go with a format which preserves
    // the quality of the original file.
    //
-   
+
    format = (sampleFormat)
       gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
 
@@ -202,7 +202,7 @@ int ImportRaw(wxWindow *parent, wxString fileName,
 
    samplePtr srcbuffer = NewSamples(maxBlockSize * numChannels, format);
    samplePtr buffer = NewSamples(maxBlockSize, format);
-   
+
    sampleCount framescompleted = 0;
 
    wxString msg;
@@ -218,7 +218,7 @@ int ImportRaw(wxWindow *parent, wxString fileName,
 
       if (block + framescompleted > totalFrames)
          block = totalFrames - framescompleted;
-      
+
       if (format == int16Sample)
          block = sf_readf_short(sndFile, (short *)srcbuffer, block);
       else
@@ -236,7 +236,7 @@ int ImportRaw(wxWindow *parent, wxString fileName,
                   ((float *)buffer)[j] =
                      ((float *)srcbuffer)[numChannels*j+c];
             }
-            
+
             channels[c]->Append(buffer, format, block);
          }
          framescompleted += block;
@@ -246,7 +246,7 @@ int ImportRaw(wxWindow *parent, wxString fileName,
                                    (wxULongLong_t)totalFrames);
       if (updateResult != eProgressSuccess)
          break;
-      
+
    } while (block > 0 && framescompleted < totalFrames);
 
    sf_close(sndFile);
@@ -401,7 +401,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
                                      wxT("100"),
                                      12);
          S.AddUnits(wxT("%"));
-         
+
          // Rate text
          /* i18n-hint: (noun)*/
          mRateText = S.AddTextBox(_("Sample rate:"),
@@ -439,7 +439,7 @@ ImportRawDialog::~ImportRawDialog()
 void ImportRawDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    long l;
-   
+
    mEncoding = mEncodingSubtype[mEncodingChoice->GetSelection()];
    mEncoding += (mEndianChoice->GetSelection() * 0x10000000);
    mChannels = mChannelChoice->GetSelection() + 1;

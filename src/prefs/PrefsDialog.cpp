@@ -87,14 +87,14 @@ public:
 };
 
 
-int wxTreebookExt::ChangeSelection(size_t n) { 
+int wxTreebookExt::ChangeSelection(size_t n) {
    int i = wxTreebook::ChangeSelection(n);
    wxString Temp = GetPageText( n );
    ((wxDialog*)GetParent())->SetTitle( Temp );
    return i;
 };
 
-int wxTreebookExt::SetSelection(size_t n) 
+int wxTreebookExt::SetSelection(size_t n)
 {
    int i = wxTreebook::SetSelection(n);
    wxString Temp = wxString(_("Preferences: ")) + GetPageText( n );
@@ -195,9 +195,9 @@ PrefsDialog::PrefsDialog(wxWindow * parent)
       sz.y = 600;
    }
 
-   // Set the minimum height to be slightly bigger than default, as fix for bug 161. 
-   // The magic number 7 was determined by Ed's experimentation. 
-   // Frankly, this is a hack to work around a bug in wxTreebook, and 
+   // Set the minimum height to be slightly bigger than default, as fix for bug 161.
+   // The magic number 7 was determined by Ed's experimentation.
+   // Frankly, this is a hack to work around a bug in wxTreebook, and
    // will have to be revisited if we add another category to mCategories.
    // JKC later added a category and 20 onto the 7.
    SetSizeHints(sz.x, sz.y + 7 + 20, 800, 600);
@@ -253,20 +253,20 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
 #if USE_PORTMIXER
    if (gAudioIO) {
-      // We cannot have opened this dialog if gAudioIO->IsAudioTokenActive(), 
-      // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in 
+      // We cannot have opened this dialog if gAudioIO->IsAudioTokenActive(),
+      // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in
       // AudacityProject::GetUpdateFlags().
-      // However, we can have an invalid audio token (so IsAudioTokenActive() 
-      // is false), but be monitoring. 
-      // If monitoring, have to stop the stream, so HandleDeviceChange() can work. 
-      // We could disable the Preferences command while monitoring, i.e., 
-      // set AudioIONotBusyFlag/AudioIOBusyFlag according to monitoring, as well. 
-      // Instead allow it because unlike recording, for example, monitoring 
-      // is not clearly something that should prohibit opening prefs. 
-      // TODO: We *could* be smarter in this method and call HandleDeviceChange()  
+      // However, we can have an invalid audio token (so IsAudioTokenActive()
+      // is false), but be monitoring.
+      // If monitoring, have to stop the stream, so HandleDeviceChange() can work.
+      // We could disable the Preferences command while monitoring, i.e.,
+      // set AudioIONotBusyFlag/AudioIOBusyFlag according to monitoring, as well.
+      // Instead allow it because unlike recording, for example, monitoring
+      // is not clearly something that should prohibit opening prefs.
+      // TODO: We *could* be smarter in this method and call HandleDeviceChange()
       // only when the device choices actually changed. True of lots of prefs!
       // As is, we always stop monitoring before handling the device change.
-      if (gAudioIO->IsMonitoring()) 
+      if (gAudioIO->IsMonitoring())
       {
          gAudioIO->StopStream();
          while (gAudioIO->IsBusy())
@@ -301,5 +301,5 @@ void PrefsDialog::SelectPageByName(wxString pageName)
 
 void PrefsDialog::ShowTempDirPage()
 {
-   SelectPageByName(_("Directories"));   
+   SelectPageByName(_("Directories"));
 }

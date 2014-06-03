@@ -47,10 +47,10 @@ EffectRepeat::EffectRepeat()
    repeatCount = 10;
 }
 
-wxString EffectRepeat::GetEffectDescription() { 
-   // Note: This is useful only after values have been set. 
+wxString EffectRepeat::GetEffectDescription() {
+   // Note: This is useful only after values have been set.
    return wxString::Format(_("Repeated %d times"), repeatCount);
-} 
+}
 
 bool EffectRepeat::PromptUser()
 {
@@ -62,15 +62,15 @@ bool EffectRepeat::PromptUser()
    TrackListOfKindIterator iter(Track::Wave, mTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
    while (track) {
-      sampleCount trackLen = 
-         (sampleCount)((track->GetEndTime() - track->GetStartTime()) * 
+      sampleCount trackLen =
+         (sampleCount)((track->GetEndTime() - track->GetStartTime()) *
                        track->GetRate());
       sampleCount selectionLen = (sampleCount)((mT1 - mT0) * track->GetRate());
       if (selectionLen == 0) {
          wxMessageBox(_("Selection is too short to repeat."),
                       _("Repeat"), wxOK | wxCENTRE, mParent);
          return false;
-      }      
+      }
       int availSamples = 2147483647 - trackLen;
       int count = availSamples / selectionLen;
       if (maxCount == -1 || count < maxCount)
@@ -78,7 +78,7 @@ bool EffectRepeat::PromptUser()
 
       track = (WaveTrack *) iter.Next();
    }
-   
+
    if (maxCount <= 1) {
       // TO DO: Not really true now that SampleCount is 64-bit int, but while bug 416
       // is open, do we want to encourage repeating hugely long tracks?
@@ -110,21 +110,21 @@ bool EffectRepeat::PromptUser()
 }
 
 bool EffectRepeat::TransferParameters( Shuttle & shuttle )
-{  
+{
    shuttle.TransferInt(wxT("Count"),repeatCount,1);
    return true;
 }
 
 bool EffectRepeat::Process()
 {
-   // Set up mOutputTracks. 
+   // Set up mOutputTracks.
    // This effect needs Track::All for sync-lock grouping.
    this->CopyInputTracks(Track::All);
 
    int nTrack = 0;
    bool bGoodResult = true;
    double maxDestLen = 0.0; // used to change selection to generated bit
-   
+
    TrackListIterator iter(mOutputTracks);
 
    for (Track *t = iter.First(); t && bGoodResult; t = iter.Next()) {
@@ -158,7 +158,7 @@ bool EffectRepeat::Process()
          track->Copy(mT0, mT1, &dest);
          for(int j=0; j<repeatCount; j++)
          {
-            if (!track->Paste(tc, dest) || 
+            if (!track->Paste(tc, dest) ||
                   TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
             {
                bGoodResult = false;

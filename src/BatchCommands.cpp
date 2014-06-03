@@ -48,7 +48,7 @@ See also BatchCommandDialog and BatchProcessDialog.
 //    - Specials (which we deal with specially here)
 enum eCommandType { CtEffect, CtMenu, CtSpecial };
 
-// TIDY-ME: Not currently translated, 
+// TIDY-ME: Not currently translated,
 // but there are issues to address if we do.
 // CLEANSPEECH remnant
 static wxString SpecialCommands[] = {
@@ -134,7 +134,7 @@ bool BatchCommands::ReadChain(const wxString & chain)
          // Parse and clean
          wxString cmd = tf[i].Left(splitAt).Strip(wxString::both);
          wxString parm = tf[i].Mid(splitAt + 1).Strip(wxString::trailing);
-         
+
          // Backward compatibility for old Chain scripts
          // Please comment the version of audacity these are introduced in, so
          // that old ones can easily be removed once users have had a chance to
@@ -250,7 +250,7 @@ bool BatchCommands::RenameChain(const wxString & oldchain, const wxString & newc
 void BatchCommands::SetWavToMp3Chain() // a function per default chain?  This is flawed design!  MJS
 {
    ResetChain();
- 
+
    AddToChain( wxT("Normalize") );
    AddToChain( wxT("ExportMP3") );
 }
@@ -275,7 +275,7 @@ wxArrayString BatchCommands::GetAllCommands()
       commands.Add( SpecialCommands[i] );
    }
    // end CLEANSPEECH remnant
-   
+
    int additionalEffects=ADVANCED_EFFECT;
 
    effects = EffectManager::Get().GetEffects(PROCESS_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT | additionalEffects);
@@ -419,7 +419,7 @@ bool BatchCommands::WriteMp3File( const wxString Name, int bitrate )
 // commands take a selection as their parameter.
 //
 // If you find yourself adding lots of existing commands from the menus here, STOP
-// and think again.  
+// and think again.
 // ======= IMPORTANT ========
 // CLEANSPEECH remnant
 bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString command,const wxString params)
@@ -446,7 +446,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString c
       extension = wxT(".flac");
    else extension = wxT(".mp3");
 
-   if (mFileName.IsEmpty()) {   
+   if (mFileName.IsEmpty()) {
       filename = project->BuildCleanFileName(project->GetFileName(), extension);
    }
    else {
@@ -508,7 +508,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString c
       wxMessageBox(_("FLAC support is not included in this build of Audacity"));
       return false;
 #endif
-   } 
+   }
    wxMessageBox(wxString::Format(_("Command %s not implemented yet"),command.c_str()));
    return false;
 }
@@ -542,7 +542,7 @@ bool BatchCommands::ApplyEffectCommand(   Effect * f, const wxString command, co
    AudacityProject *project = GetActiveProject();
 
    //FIXME: for later versions may want to not select-all in batch mode.
-   //IF nothing selected, THEN select everything 
+   //IF nothing selected, THEN select everything
    // (most effects require that you have something selected).
    project->SelectAllIfNone();
 
@@ -562,7 +562,7 @@ bool BatchCommands::ApplyCommand(const wxString command, const wxString params)
          return ApplySpecialCommand( i, command, params );
    }
    // end CLEANSPEECH remnant
-   
+
    // Test for an effect.
    Effect * f = EffectManager::Get().GetEffectByIdentifier( command );
    if( f!=NULL )

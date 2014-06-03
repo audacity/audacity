@@ -51,8 +51,8 @@ bool EffectNoise::PromptUser()
    // dialog will be passed values from effect
    // Effect retrieves values from saved config
    // Dialog will take care of using them to initialize controls
-   // If there is a selection, use that duration, otherwise use 
-   // value from saved config: this is useful is user wants to 
+   // If there is a selection, use that duration, otherwise use
+   // value from saved config: this is useful is user wants to
    // replace selection with noise
    //
    if (mT1 > mT0) {
@@ -121,9 +121,9 @@ bool EffectNoise::MakeNoise(float *buffer, sampleCount len, float fs, float ampl
       buf3=0.86650f * buf3 + 0.3104856f * white;
       buf4=0.55000f * buf4 + 0.5329522f * white;
       buf5=-0.7616f * buf5 - 0.0168980f * white;
-      buffer[i] = amplitude * 
+      buffer[i] = amplitude *
          (buf0 + buf1 + buf2 + buf3 + buf4 + buf5 + buf6 + white * 0.5362);
-      buf6 = white * 0.115926; 
+      buf6 = white * 0.115926;
       }
       break;
 
@@ -176,7 +176,7 @@ BEGIN_EVENT_TABLE(NoiseDialog, EffectDialog)
 END_EVENT_TABLE()
 
 NoiseDialog::NoiseDialog(EffectNoise * effect, wxWindow * parent, const wxString & title)
-:  EffectDialog(parent, title, INSERT_EFFECT), 
+:  EffectDialog(parent, title, INSERT_EFFECT),
    mEffect(effect)
 {
    mNoiseDurationT = NULL;

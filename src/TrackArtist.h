@@ -50,11 +50,11 @@ class AUDACITY_DLL_API TrackArtist {
    void SetColours();
    void DrawTracks(TrackList *tracks, Track *start,
                    wxDC & dc, wxRegion & reg,
-                   wxRect & r, wxRect & clip, ViewInfo *viewInfo, 
+                   wxRect & r, wxRect & clip, ViewInfo *viewInfo,
                    bool drawEnvelope, bool drawSamples, bool drawSliders);
 
    void DrawTrack(const Track *t,
-                  wxDC & dc, const wxRect & r, const ViewInfo *viewInfo, 
+                  wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
                   bool drawEnvelope, bool drawSamples, bool drawSliders,
                   bool hasSolo);
 
@@ -103,10 +103,10 @@ class AUDACITY_DLL_API TrackArtist {
 
    //
    // Lower-level drawing functions
-   // 
+   //
 
    void DrawWaveform(WaveTrack *track,
-                     wxDC & dc, const wxRect & r, const ViewInfo *viewInfo, 
+                     wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
                      bool drawEnvelope, bool drawSamples, bool drawSliders,
                      bool dB, bool muted);
 
@@ -115,7 +115,7 @@ class AUDACITY_DLL_API TrackArtist {
                      bool autocorrelation, bool logF);
 #ifdef USE_MIDI
    int GetBottom(NoteTrack *t, const wxRect &r);
-   void DrawNoteBackground(NoteTrack *track, wxDC &dc, 
+   void DrawNoteBackground(NoteTrack *track, wxDC &dc,
                            const wxRect &r, const wxRect &sel,
                            const ViewInfo *viewInfo,
                            const wxBrush &wb, const wxPen &wp,
@@ -200,7 +200,7 @@ class AUDACITY_DLL_API TrackArtist {
    int mNumberOfMaxima;       // "/Spectrum/FindNotesN"
    bool mFindNotesQuantize;   // "/Spectrum/FindNotesQuantize")
 #endif //EXPERIMENTAL_FIND_NOTES
-   
+
    int mInsetLeft;
    int mInsetTop;
    int mInsetRight;

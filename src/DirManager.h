@@ -60,13 +60,13 @@ class DirManager: public XMLTagHandler {
                                  sampleCount sampleLen,
                                  sampleFormat format,
                                  bool allowDeferredWrite = false);
-                                 
+
    BlockFile *NewAliasBlockFile( wxString aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel);
-                                 
+
    BlockFile *NewODAliasBlockFile( wxString aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel);
-                                 
+
    BlockFile *NewODDecodeBlockFile( wxString aliasedFile, sampleCount aliasStart,
                                  sampleCount aliasLen, int aliasChannel, int decodeType);
 
@@ -114,21 +114,21 @@ class DirManager: public XMLTagHandler {
    static void CleanTempDir();
 
    // Check the project for errors and possibly prompt user
-   // bForceError: Always show log error alert even if no errors are found here. 
+   // bForceError: Always show log error alert even if no errors are found here.
    //    Important when you know that there are already errors in the log.
-   // bAutoRecoverMode: Do not show any option dialogs for how to deal with errors found here. 
+   // bAutoRecoverMode: Do not show any option dialogs for how to deal with errors found here.
    //    Too complicated during auto-recover. Just correct problems the "safest" way.
    int ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode);
-   
+
    void FindMissingAliasedFiles(
          BlockHash& missingAliasedFileAUFHash,     // output: (.auf) AliasBlockFiles whose aliased files are missing
          BlockHash& missingAliasedFilePathHash);   // output: full paths of missing aliased files
    void FindMissingAUFs(
-         BlockHash& missingAUFHash);               // output: missing (.auf) AliasBlockFiles 
+         BlockHash& missingAUFHash);               // output: missing (.auf) AliasBlockFiles
    void FindMissingAUs(
          BlockHash& missingAUHash);                // missing data (.au) blockfiles
    // Find .au and .auf files that are not in the project.
-   void FindOrphanBlockFiles( 
+   void FindOrphanBlockFiles(
          const wxArrayString& filePathArray,       // input: all files in project directory
          wxArrayString& orphanFilePathArray);      // output: orphan files
 
@@ -142,14 +142,14 @@ class DirManager: public XMLTagHandler {
    // not interested in this information, but it is important for the
    // auto-save functionality
    wxString GetDataFilesDir() const;
-   
+
    // This should only be used by the auto save functionality
    void SetLocalTempDir(wxString path);
-   
+
    // Do not delete any temporary files on exit. This is only called if
    // auto recovery is cancelled and should be retried later
    static void SetDontDeleteTempFiles() { dontDeleteTempFiles = true; }
-   
+
    // Write all write-cached block files to disc, if any
    void WriteCacheToDisk();
 

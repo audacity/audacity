@@ -27,14 +27,14 @@ class EffectTwoPassSimpleMono:public Effect {
                    sampleCount start, sampleCount end);
    bool ProcessPass();
 
- protected:  
+ protected:
 
    // Override these methods if you need to initialize something
    // before each pass. Return None if processing should stop.
    // These should not depend on mOutputTracks having been set up via CopyInputTracks().
    virtual bool InitPass1();
    virtual bool InitPass2();
-   
+
    // Override these methods if you need to do things
    // before every track (including the first one)
    virtual bool NewTrackPass1();
@@ -43,7 +43,7 @@ class EffectTwoPassSimpleMono:public Effect {
    // Override this method to actually process audio
    virtual bool ProcessPass1(float * WXUNUSED(buffer), sampleCount WXUNUSED(len)) { return false; }
    virtual bool ProcessPass2(float * WXUNUSED(buffer), sampleCount WXUNUSED(len)) { return false; }
-   
+
    // Override this method to actually process audio with access to 2 sequential buffers at a time
    // Either buffer1 or buffer2 may be modified as needed
    // This allows implementation of processing with delays

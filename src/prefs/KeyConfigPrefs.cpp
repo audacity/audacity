@@ -14,7 +14,7 @@
 \brief A PrefsPanel for keybindings.
 
 The code for displaying keybindings is similar to code in MousePrefs.
-It would be nice to create a new 'Bindings' class which both 
+It would be nice to create a new 'Bindings' class which both
 KeyConfigPrefs and MousePrefs use.
 
 *//*********************************************************************/
@@ -153,7 +153,7 @@ void KeyConfigPrefs::Populate()
    }
 }
 
-/// Normally in classes derived from PrefsPanel this function 
+/// Normally in classes derived from PrefsPanel this function
 /// is used both to populate the panel and to exchange data with it.
 /// With KeyConfigPrefs all the exchanges are handled specially,
 /// so this is only used in populating the panel.
@@ -198,7 +198,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                         FilterID,
                                         wxT(""),
                                         wxDefaultPosition,
-#if defined(__WXMAC__)                                  
+#if defined(__WXMAC__)
                                         wxSize(300, -1),
 #else
                                         wxSize(210, -1),
@@ -239,7 +239,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                   CurrentComboID,
                                   wxT(""),
                                   wxDefaultPosition,
-#if defined(__WXMAC__)                                  
+#if defined(__WXMAC__)
                                   wxSize(300, -1),
 #else
                                   wxSize(210, -1),
@@ -301,10 +301,10 @@ void KeyConfigPrefs::RefreshBindings()
    mKeys.Clear();
    mDefaultKeys.Clear();
    mManager->GetAllCommandData(
-      mNames, 
-      mKeys, 
+      mNames,
+      mKeys,
       mDefaultKeys,
-      Labels, 
+      Labels,
       Categories,
       Prefixes,
       true); // True to include effects (list items), false otherwise.
@@ -374,7 +374,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    gPrefs->Flush();
 
    XMLFileWriter prefFile;
-   
+
    try
    {
       prefFile.Open(file, wxT("wb"));
@@ -446,7 +446,7 @@ void KeyConfigPrefs::OnFilterTimer(wxTimerEvent & WXUNUSED(e))
    // The filter timer has expired, so set the filter
    if (mFilterPending)
    {
-      // Do not reset mFilterPending here...possible race 
+      // Do not reset mFilterPending here...possible race
       mView->SetFilter(mFilter->GetValue());
    }
 }
@@ -501,7 +501,7 @@ void KeyConfigPrefs::OnFilterChar(wxKeyEvent & e)
    }
 }
 
-// Given a hotkey combination, returns the name (description) of the 
+// Given a hotkey combination, returns the name (description) of the
 // corresponding command, or the empty string if none is found.
 wxString KeyConfigPrefs::NameFromKey(const wxString & key)
 {
@@ -564,7 +564,7 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
       mView->SetKeyByName(oldname, wxEmptyString);
       mManager->SetKeyFromName(oldname, wxEmptyString);
       mNewKeys[mNames.Index(oldname)].Empty();
-      
+
    }
 
    SetKeyForSelected(key);
@@ -745,7 +745,7 @@ void KeyConfigPrefs::Populate()
    mCommandSelected = -1;
 }
 
-/// Normally in classes derived from PrefsPanel this function 
+/// Normally in classes derived from PrefsPanel this function
 /// is used both to populate the panel and to exchange data with it.
 /// With KeyConfigPrefs all the exchanges are handled specially,
 /// so this is only used in populating the panel.
@@ -763,7 +763,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                             &mCats);
       }
       S.EndHorizontalLay();
-                                    
+
       mList = S.Id(CommandsListID).AddListControlReportMode();
       mList->SetName(_("Key Bindings"));
 
@@ -774,7 +774,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                   CurrentComboID,
                                   wxT(""),
                                   wxDefaultPosition,
-#if defined(__WXMAC__)                                  
+#if defined(__WXMAC__)
                                   wxSize(300, -1));
 #else
                                   wxSize(210, -1));
@@ -845,13 +845,13 @@ void KeyConfigPrefs::RepopulateBindingsList()
    wxArrayString Keys,Labels,Categories;
 
    mManager->GetAllCommandData(
-      mNames, 
-      Keys, 
+      mNames,
+      Keys,
       mDefaultKeys,
-      Labels, 
+      Labels,
       Categories,
 // True to include effects (list items), false otherwise.
-      true 
+      true
       );
 
    bool save = (mKeys.GetCount() == 0);
@@ -868,7 +868,7 @@ void KeyConfigPrefs::RepopulateBindingsList()
          // mNewKeys is what mKeys will change to.
          mNewKeys.Add(key);
       }
-      else 
+      else
          mNewKeys[i] = key; // Make sure mNewKeys is updated.
 
 //      if (cat != _("All") && ! Categories[i].StartsWith(cat)) {
@@ -959,7 +959,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
    gPrefs->Flush();
 
    XMLFileWriter prefFile;
-   
+
    try
    {
       prefFile.Open(file, wxT("wb"));
@@ -1009,7 +1009,7 @@ void KeyConfigPrefs::OnCaptureChar(wxKeyEvent & WXUNUSED(event))
 {
 }
 
-// Given a hotkey combination, returns the name (description) of the 
+// Given a hotkey combination, returns the name (description) of the
 // corresponding command, or the empty string if none is found.
 wxString KeyConfigPrefs::NameFromKey( const wxString & key )
 {
@@ -1032,7 +1032,7 @@ void KeyConfigPrefs::SetKeyForSelected( const wxString & key )
 
 #if 0
    int i=mNames.Index( name );
-   if( i!=wxNOT_FOUND ) 
+   if( i!=wxNOT_FOUND )
       mNewKeys[i]=key;
 #endif
 
@@ -1088,7 +1088,7 @@ void KeyConfigPrefs::OnKeyDown(wxListEvent & e)
    // and does not need the following code
    return;
 
-#else 
+#else
    // The following code seems to work well on at least some versions of Linux
    int keycode = e.GetKeyCode();
    int selected = mList->GetNextItem(-1, wxLIST_NEXT_ALL,  wxLIST_STATE_SELECTED);

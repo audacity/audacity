@@ -52,13 +52,13 @@ modeless presentation.
 
 \class ToolBarArea
 \brief An alterantive to ToolBarFrame which can contain an
-ExpandingToolBar.  ToolBarArea is used for a 'docked' ToolBar, 
+ExpandingToolBar.  ToolBarArea is used for a 'docked' ToolBar,
 ToolBarFrame for a floating one.
 
 *//****************************************************************//**
 
 \class ToolBarArrangement
-\brief Small class that holds some layout information for an 
+\brief Small class that holds some layout information for an
 ExpandingToolBar.
 
 *//*******************************************************************/
@@ -84,7 +84,7 @@ ExpandingToolBar.
 #include "../Experimental.h"
 
 const int kToggleButtonHeight = 8;
-const int kTimerInterval = 50; // every 50 ms -> ~20 updates per second   
+const int kTimerInterval = 50; // every 50 ms -> ~20 updates per second
 const wxRect kDummyRect = wxRect(-9999, -9999, 0, 0);
 
 enum {
@@ -181,7 +181,7 @@ void ExpandingToolBar::OnSize(wxSizeEvent & WXUNUSED(event))
    // our parent that we've just joined the window, so we check
    // for it during our first OnSize event.
 
-   if (!mFrameParent) {   
+   if (!mFrameParent) {
       ToolBarFrame *toolBarParent =
          dynamic_cast<ToolBarFrame *>(GetParent());
       if (toolBarParent) {
@@ -191,7 +191,7 @@ void ExpandingToolBar::OnSize(wxSizeEvent & WXUNUSED(event))
       }
    }
 
-   if (!mDialogParent) {   
+   if (!mDialogParent) {
       ToolBarDialog *toolBarParent =
          dynamic_cast<ToolBarDialog *>(GetParent());
       if (toolBarParent) {
@@ -310,7 +310,7 @@ void ExpandingToolBar::RecursivelyPushEventHandlers(wxWindow *win)
       win->PushEventHandler(evtHandler);
       mWindowHash[win] = 1;
    }
- 
+
    wxWindowList children = win->GetChildren();
 
    typedef wxWindowList::compatibility_iterator Node;
@@ -435,7 +435,7 @@ void ExpandingToolBar::MoveDrawer(wxSize prevSize)
 
       SetSizeHints(mCurrentTotalSize, mCurrentTotalSize);
       SetSize(mCurrentTotalSize);
-      
+
       GetParent()->Fit();
    }
 
@@ -444,7 +444,7 @@ void ExpandingToolBar::MoveDrawer(wxSize prevSize)
 
       SetSizeHints(mCurrentTotalSize, mCurrentTotalSize);
       SetSize(mCurrentTotalSize);
-      
+
       GetParent()->Fit();
    }
 
@@ -477,7 +477,7 @@ void ExpandingToolBar::OnTimer(wxTimerEvent & WXUNUSED(event))
 
    // This accelerates the current size towards the target size;
    // it's a neat way for the window to roll open, but in such a
-   // way that it 
+   // way that it
 
    wxSize prevSize = mCurrentDrawerSize;
    mCurrentDrawerSize = (mCurrentDrawerSize*2 + mTargetDrawerSize) / 3;
@@ -535,7 +535,7 @@ void ExpandingToolBar::StartMoving()
 
    mDropTargets = mAreaParent->GetDropTargets();
    mDropTarget = kDummyRect;
-   
+
    wxColour magicColor = wxColour(0, 255, 255);
    wxImage tgtImage = theTheme.Image(bmpToolBarTarget);
    ImageRoll tgtImageRoll = ImageRoll(ImageRoll::VerticalRoll,
@@ -579,7 +579,7 @@ void ExpandingToolBar::UpdateMoving()
       if (dist_sq < best_dist_sq) {
          best_dist_sq = dist_sq;
          mDropTarget = mDropTargets[i];
-      }         
+      }
    }
 
    if (!mAreaParent->GetRect().Contains(cursorPos))
@@ -603,7 +603,7 @@ void ExpandingToolBar::UpdateMoving()
       r.Inflate(4, 4);
       dc.DrawRectangle(r);
       #endif
-      
+
       // This gives time for wx to finish redrawing the window that way.
       // HACK: why do we need to do it so many times???
       for(i=0; i<500; i++)
@@ -659,7 +659,7 @@ BEGIN_EVENT_TABLE(ToolBarGrabber, wxPanel)
    EVT_SIZE(ToolBarGrabber::OnSize)
    EVT_MOUSE_EVENTS(ToolBarGrabber::OnMouse)
 END_EVENT_TABLE()
-   
+
 IMPLEMENT_CLASS(ToolBarGrabber, wxPanel)
 
 ToolBarGrabber::ToolBarGrabber(wxWindow *parent,
@@ -739,12 +739,12 @@ ToolBarDialog::ToolBarDialog(wxWindow* parent,
                            wxWindowID id,
                            const wxString& name,
                            const wxPoint& pos):
-   wxDialog(parent, id, name, pos, wxSize(1, 1), 
+   wxDialog(parent, id, name, pos, wxSize(1, 1),
 // Workaround for bug in __WXMSW__.  No close box on a wxDialog unless wxSYSTEM_MENU is used.
 #ifdef __WXMSW__
       wxSYSTEM_MENU |
 #endif
-      wxCAPTION|wxCLOSE_BOX),      
+      wxCAPTION|wxCLOSE_BOX),
    mChild(NULL)
 {
 }
@@ -849,7 +849,7 @@ ToolBarArea::ToolBarArea(wxWindow* parent,
    mInOnSize(false),
    mCapturedChild(NULL)
 {
-   
+
 }
 
 ToolBarArea::~ToolBarArea()
@@ -889,7 +889,7 @@ bool ToolBarArea::ExpandRow(int rowIndex)
    int leftoverSpace = 0;
    int expandableCount = 0;
    int toolbarCount = 0;
-   
+
    for(i=0; i<(int)mChildArray.GetCount(); i++)
       if (mRowArray[i] == rowIndex) {
          ExpandingToolBar *child = mChildArray[i];
@@ -966,7 +966,7 @@ void ToolBarArea::LayoutOne(int childIndex)
    ContractRow(prevRow);
    wxPoint prevPos = mChildArray[childIndex-1]->GetPosition();
    wxSize prevSize = mChildArray[childIndex-1]->GetSize();
-   
+
    int prevX = prevPos.x + prevSize.x;
    int availableWidth = area.x - prevX;
 
@@ -1047,7 +1047,7 @@ void ToolBarArea::AdjustLayout()
             return;
          }
       }
-   }   
+   }
 }
 
 void ToolBarArea::Fit()
@@ -1146,7 +1146,7 @@ void ToolBarArea::OnMouse(wxMouseEvent &evt)
 void ToolBarArea::CollapseAll(bool now)
 {
    int i;
-   
+
    for(i=0; i<(int)mChildArray.GetCount(); i++)
       mChildArray[i]->Collapse(now);
 }
@@ -1275,7 +1275,7 @@ void ToolBarArea::MoveChild(ExpandingToolBar *toolBar, wxRect dropTarget)
          return;
       }
    }
-}                                             
+}
 
 void ToolBarArea::SetCapturedChild(ExpandingToolBar *child)
 {

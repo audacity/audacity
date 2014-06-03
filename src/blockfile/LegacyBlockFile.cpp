@@ -112,7 +112,7 @@ void ComputeLegacySummaryInfo(wxFileName fileName,
       (*rms) = 0;
 
    DeleteSamples(data);
-   delete[] summary;   
+   delete[] summary;
 }
 
 /// Construct a LegacyBlockFile memory structure that will point to an
@@ -166,7 +166,7 @@ bool LegacyBlockFile::ReadSummary(void *data)
    }
 
    int read = summaryFile.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
-   
+
    if(silence) delete silence;
    mSilentLog=FALSE;
 
@@ -205,7 +205,7 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
    info.channels = 1;
    info.frames = mLen + (mSummaryInfo.totalSummaryBytes /
                          SAMPLE_SIZE(mFormat));
-   
+
    wxFile f;   // will be closed when it goes out of scope
    SNDFILE *sf = NULL;
 
@@ -220,7 +220,7 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
    if(mSilentLog)silence= new wxLogNull();
 
    if (!sf){
-       
+
       memset(data,0,SAMPLE_SIZE(format)*len);
 
       if(silence) delete silence;
@@ -234,10 +234,10 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
    sf_count_t seekstart = start +
          (mSummaryInfo.totalSummaryBytes / SAMPLE_SIZE(mFormat));
    sf_seek(sf, seekstart , SEEK_SET);
-   
+
    samplePtr buffer = NewSamples(len, floatSample);
    int framesRead = 0;
-   
+
    // If both the src and dest formats are integer formats,
    // read integers from the file (otherwise we would be
    // converting to float and back, which is unneccesary)
@@ -247,7 +247,7 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
    }else if (format == int24Sample &&
              sf_subtype_is_integer(info.format)) {
       framesRead = sf_readf_int(sf, (int *)data, len);
-      
+
          // libsndfile gave us the 3 byte sample in the 3 most
       // significant bytes -- we want it in the 3 least
       // significant bytes.
@@ -262,9 +262,9 @@ int LegacyBlockFile::ReadData(samplePtr data, sampleFormat format,
       CopySamples(buffer, floatSample,
                   (samplePtr)data, format, framesRead);
    }
-   
+
    sf_close(sf);
-   
+
    DeleteSamples(buffer);
 
    return framesRead;
@@ -283,8 +283,8 @@ void LegacyBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("legacyblockfile"));
 }
 
-// BuildFromXML methods should always return a BlockFile, not NULL,  
-// even if the result is flawed (e.g., refers to nonexistent file), 
+// BuildFromXML methods should always return a BlockFile, not NULL,
+// even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
 BlockFile *LegacyBlockFile::BuildFromXML(wxString projDir, const wxChar **attrs,
@@ -304,11 +304,11 @@ BlockFile *LegacyBlockFile::BuildFromXML(wxString projDir, const wxChar **attrs,
 
       const wxString strValue = value;
       if (!wxStricmp(attr, wxT("name")) && XMLValueChecker::IsGoodFileName(strValue, projDir))
-         //v Should this be 
+         //v Should this be
          //    dm.AssignFile(fileName, strValue, false);
          // as in PCMAliasBlockFile::BuildFromXML? Test with an old project.
          fileName.Assign(projDir, strValue);
-      else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) 
+      else if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
       {  // integer parameters
          if (!wxStrcmp(attr, wxT("len")) && (nValue >= 0))
             len = nValue;

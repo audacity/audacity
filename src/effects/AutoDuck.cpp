@@ -60,7 +60,7 @@ struct AutoDuckRegion
       this->t0 = t0;
       this->t1 = t1;
    }
-   
+
    double t0;
    double t1;
 };
@@ -75,7 +75,7 @@ WX_DEFINE_OBJARRAY(AutoDuckRegionArray);
 EffectAutoDuck::EffectAutoDuck()
 {
    SetEffectFlags(BUILTIN_EFFECT | PROCESS_EFFECT | ADVANCED_EFFECT);
-   
+
    gPrefs->Read(wxT("/Effects/AutoDuck/DuckAmountDb"),
       &mDuckAmountDb, PARAM_DEFAULT_DUCK_AMOUNT_DB);
    gPrefs->Read(wxT("/Effects/AutoDuck/InnerFadeDownLen"),
@@ -112,13 +112,13 @@ bool EffectAutoDuck::Init()
       &mMaximumPause, PARAM_DEFAULT_MAXIMUM_PAUSE);
 
    mControlTrack = NULL;
-   
+
    TrackListIterator iter(mTracks);
    Track *t = iter.First();
-   
+
    bool lastWasSelectedWaveTrack = false;
    WaveTrack *controlTrackCandidate = NULL;
-   
+
    while(t)
    {
       if (lastWasSelectedWaveTrack && !t->GetSelected() &&
@@ -129,7 +129,7 @@ bool EffectAutoDuck::Init()
       }
 
       lastWasSelectedWaveTrack = false;
-      
+
       if (t->GetSelected())
       {
          if (t->GetKind() == Track::Wave)
@@ -139,8 +139,8 @@ bool EffectAutoDuck::Init()
          {
             wxMessageBox(
                _("You selected a track which does not contain audio. AutoDuck can only process audio tracks."),
-               /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume) 
-                * of the audio automatically when there is sound on another track.  Not as 
+               /* i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
+                * of the audio automatically when there is sound on another track.  Not as
                 * in 'Donald-Duck'!*/
                _("Auto Duck"), wxICON_ERROR, mParent);
             return false;
@@ -149,7 +149,7 @@ bool EffectAutoDuck::Init()
 
       t = iter.Next();
    }
-   
+
    if (!controlTrackCandidate)
    {
       wxMessageBox(
@@ -157,7 +157,7 @@ bool EffectAutoDuck::Init()
          _("Auto Duck"), wxICON_ERROR, mParent);
       return false;
    }
-   
+
    mControlTrack = controlTrackCandidate;
 
    return true;
@@ -196,10 +196,10 @@ void EffectAutoDuck::End()
 bool EffectAutoDuck::PromptUser()
 {
    EffectAutoDuckDialog dlog(this, mParent);
-   
+
    if (dlog.ShowModal() != wxID_OK)
       return false; // user cancelled dialog
-      
+
    gPrefs->Write(wxT("/Effects/AutoDuck/DuckAmountDb"), mDuckAmountDb);
    gPrefs->Write(wxT("/Effects/AutoDuck/OuterFadeDownLen"), mOuterFadeDownLen);
    gPrefs->Write(wxT("/Effects/AutoDuck/OuterFadeUpLen"), mOuterFadeUpLen);
@@ -215,7 +215,7 @@ bool EffectAutoDuck::PromptUser()
 bool EffectAutoDuck::Process()
 {
    sampleCount i;
-   
+
    if (GetNumWaveTracks() == 0 || !mControlTrack)
       return false;
 
@@ -225,23 +225,23 @@ bool EffectAutoDuck::Process()
       mControlTrack->TimeToLongSamples(mT0 + mOuterFadeDownLen);
    sampleCount end =
       mControlTrack->TimeToLongSamples(mT1 - mOuterFadeUpLen);
-   
+
    if (end <= start)
       return false;
 
    // the minimum number of samples we have to wait until the maximum
    // pause has been exceeded
    double maxPause = mMaximumPause;
-   
+
    // We don't fade in until we have time enough to actually fade out again
    if (maxPause < mOuterFadeDownLen + mOuterFadeUpLen)
       maxPause = mOuterFadeDownLen + mOuterFadeUpLen;
-      
+
    sampleCount minSamplesPause =
       mControlTrack->TimeToLongSamples(maxPause);
 
    double threshold = pow(10.0, mThresholdDb/20);
-      
+
    // adjust the threshold so we can compare it to the rmsSum value
    threshold = threshold * threshold * RMS_WINDOW_SIZE;
 
@@ -250,28 +250,28 @@ bool EffectAutoDuck::Process()
    float *rmsWindow = new float[RMS_WINDOW_SIZE];
    for (i = 0; i < RMS_WINDOW_SIZE; i++)
       rmsWindow[i] = 0;
-   
+
    float *buf = new float[BUF_SIZE];
-   
+
    bool inDuckRegion = false;
 
    // initialize the following two variables to prevent compiler warning
    double duckRegionStart = 0;
    sampleCount curSamplesPause = 0;
-   
+
    // to make the progress bar appear more natural, we first look for all
    // duck regions and apply them all at once afterwards
    AutoDuckRegionArray regions;
    sampleCount pos = start;
-   
+
    while (pos < end)
    {
       sampleCount len = end - pos;
       if (len > BUF_SIZE)
          len = BUF_SIZE;
-      
+
       mControlTrack->Get((samplePtr)buf, floatSample, pos, (sampleCount)len);
-      
+
       for (i = pos; i < pos + len; i++)
       {
          rmsSum -= rmsWindow[rmsPos];
@@ -280,13 +280,13 @@ bool EffectAutoDuck::Process()
          rmsPos = (rmsPos + 1) % RMS_WINDOW_SIZE;
 
          bool thresholdExceeded = rmsSum > threshold;
-         
+
          if (thresholdExceeded)
          {
             // everytime the threshold is exceeded, reset our count for
             // the number of pause samples
             curSamplesPause = 0;
-            
+
             if (!inDuckRegion)
             {
                // the threshold has been exceeded for the first time, so
@@ -295,20 +295,20 @@ bool EffectAutoDuck::Process()
                duckRegionStart = mControlTrack->LongSamplesToTime(i);
             }
          }
-         
+
          if (!thresholdExceeded && inDuckRegion)
          {
             // the threshold has not been exceeded and we are in a duck
             // region, but only fade in if the maximum pause has been
             // exceeded
             curSamplesPause += 1;
-            
+
             if (curSamplesPause >= minSamplesPause)
             {
                // do the actual duck fade and reset all values
                double duckRegionEnd =
                   mControlTrack->LongSamplesToTime(i - curSamplesPause);
-                  
+
                regions.Add(AutoDuckRegion(
                               duckRegionStart - mOuterFadeDownLen,
                               duckRegionEnd + mOuterFadeUpLen));
@@ -317,7 +317,7 @@ bool EffectAutoDuck::Process()
             }
          }
       }
-      
+
       pos += len;
 
       if (TotalProgress( ((double)(pos-start)) / (end-start) /
@@ -327,7 +327,7 @@ bool EffectAutoDuck::Process()
          break;
       }
    }
-   
+
    // apply last duck fade, if any
    if (inDuckRegion)
    {
@@ -337,7 +337,7 @@ bool EffectAutoDuck::Process()
                      duckRegionStart - mOuterFadeDownLen,
                      duckRegionEnd + mOuterFadeUpLen));
    }
-   
+
    delete[] buf;
    delete[] rmsWindow;
 
@@ -346,15 +346,15 @@ bool EffectAutoDuck::Process()
       this->CopyInputTracks(); // Set up mOutputTracks.
       SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
       Track *iterTrack = iter.First();
-      
+
       int trackNumber = 0;
-      
+
       while (iterTrack)
       {
          wxASSERT(iterTrack->GetKind() == Track::Wave);
-         
+
          WaveTrack* t = (WaveTrack*)iterTrack;
-      
+
          for (i = 0; i < (int)regions.GetCount(); i++)
          {
             const AutoDuckRegion& region = regions[i];
@@ -364,7 +364,7 @@ bool EffectAutoDuck::Process()
                break;
             }
          }
-         
+
          if (cancel)
             break;
 
@@ -372,8 +372,8 @@ bool EffectAutoDuck::Process()
          trackNumber++;
       }
    }
-   
-   this->ReplaceProcessedTracks(!cancel); 
+
+   this->ReplaceProcessedTracks(!cancel);
    return !cancel;
 }
 
@@ -382,13 +382,13 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
                                    double t0, double t1)
 {
    bool cancel = false;
-   
+
    sampleCount start = t->TimeToLongSamples(t0);
    sampleCount end = t->TimeToLongSamples(t1);
-   
+
    float *buf = new float[BUF_SIZE];
    sampleCount pos = start;
-   
+
    int fadeDownSamples = t->TimeToLongSamples(
       mOuterFadeDownLen + mInnerFadeDownLen);
    if (fadeDownSamples < 1)
@@ -398,7 +398,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
       mOuterFadeUpLen + mInnerFadeUpLen);
    if (fadeUpSamples < 1)
       fadeUpSamples = 1;
-      
+
    float fadeDownStep = mDuckAmountDb / fadeDownSamples;
    float fadeUpStep = mDuckAmountDb / fadeUpSamples;
 
@@ -409,12 +409,12 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
          len = BUF_SIZE;
 
       t->Get((samplePtr)buf, floatSample, pos, len);
-      
+
       for (sampleCount i = pos; i < pos + len; i++)
       {
          float gainDown = fadeDownStep * (i - start);
          float gainUp = fadeUpStep * (end - i);;
-         
+
          float gain;
          if (gainDown > gainUp)
             gain = gainDown;
@@ -425,11 +425,11 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
 
          buf[i - pos] *= pow(10.0, gain / 20.0);
       }
-      
+
       t->Set((samplePtr)buf, floatSample, pos, len);
 
       pos += len;
-      
+
       float curTime = t->LongSamplesToTime(pos);
       float fractionFinished = (curTime - mT0) / (mT1 - mT0);
       if (TotalProgress( (trackNumber + 1 + fractionFinished) /
@@ -447,7 +447,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNumber, WaveTrack* t,
 /*
  * Effect dialog implementation
  */
- 
+
 #define ID_DUCK_AMOUNT_DB        10001
 #define ID_THRESHOLD_DB          10002
 #define ID_INNER_FADE_DOWN_LEN   10003
@@ -477,7 +477,7 @@ EffectAutoDuckDialog::EffectAutoDuckDialog(EffectAutoDuck* effect,
    wxTextValidator vld(wxFILTER_NUMERIC);
 
    ShuttleGui S(this, eIsCreating);
-   
+
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
@@ -495,7 +495,7 @@ EffectAutoDuckDialog::EffectAutoDuckDialog(EffectAutoDuck* effect,
             Internat::ToDisplayString(mEffect->mDuckAmountDb), 10);
          S.AddUnits(_("dB"));
          mDuckAmountDbBox->SetValidator(vld);
-        
+
          mMaximumPauseBox = S.Id(ID_MAXIMUM_PAUSE).AddTextBox(
             _("Maximum pause:"),
             Internat::ToDisplayString(mEffect->mMaximumPause), 10);
@@ -507,7 +507,7 @@ EffectAutoDuckDialog::EffectAutoDuckDialog(EffectAutoDuck* effect,
             Internat::ToDisplayString(mEffect->mOuterFadeDownLen), 10);
          S.AddUnits(_("seconds"));
          mOuterFadeDownLenBox->SetValidator(vld);
-         
+
          mOuterFadeUpLenBox = S.Id(ID_OUTER_FADE_UP_LEN).AddTextBox(
             _("Outer fade up length:"),
             Internat::ToDisplayString(mEffect->mOuterFadeUpLen), 10);
@@ -519,7 +519,7 @@ EffectAutoDuckDialog::EffectAutoDuckDialog(EffectAutoDuck* effect,
             Internat::ToDisplayString(mEffect->mInnerFadeDownLen), 10);
          S.AddUnits(_("seconds"));
          mInnerFadeDownLenBox->SetValidator(vld);
-         
+
          mInnerFadeUpLenBox = S.Id(ID_INNER_FADE_UP_LEN).AddTextBox(
             _("Inner fade up length:"),
             Internat::ToDisplayString(mEffect->mInnerFadeUpLen), 10);
@@ -527,7 +527,7 @@ EffectAutoDuckDialog::EffectAutoDuckDialog(EffectAutoDuck* effect,
          mInnerFadeUpLenBox->SetValidator(vld);
       }
       S.EndMultiColumn();
-      
+
       S.StartMultiColumn(3, wxCENTER);
       {
          mThresholdDbBox = S.Id(ID_THRESHOLD_DB).AddTextBox(
@@ -556,7 +556,7 @@ void EffectAutoDuckDialog::OnOk(wxCommandEvent& WXUNUSED(event))
    double outerFadeDownLen = 0, outerFadeUpLen = 0;
    double maximumPause = 0;
 
-   bool success = 
+   bool success =
       mDuckAmountDbBox->GetValue().ToDouble(&duckAmountDb) &&
       duckAmountDb > -100 &&
       duckAmountDb < 0 &&
@@ -578,14 +578,14 @@ void EffectAutoDuckDialog::OnOk(wxCommandEvent& WXUNUSED(event))
       mMaximumPauseBox->GetValue().ToDouble(&maximumPause) &&
       maximumPause >= 0 &&
       maximumPause < 1000;
-      
+
    if (!success)
    {
       wxMessageBox(_("Please enter valid values."), _("Auto Duck"),
          wxICON_ERROR, this);
       return;
    }
-   
+
    mEffect->mDuckAmountDb = duckAmountDb;
    mEffect->mThresholdDb = thresholdDb;
    mEffect->mInnerFadeDownLen = innerFadeDownLen;
@@ -654,7 +654,7 @@ EffectAutoDuckPanel::EffectAutoDuckPanel(EffectAutoDuckDialog* parent,
    mParent = parent;
    mCurrentControlPoint = none;
    mBackgroundBitmap = NULL;
-   
+
    ResetControlPoints();
 }
 
@@ -677,7 +677,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
    int clientWidth, clientHeight;
    GetSize(&clientWidth, &clientHeight);
-   
+
    if (!mBackgroundBitmap || mBackgroundBitmap->GetWidth() != clientWidth ||
        mBackgroundBitmap->GetHeight() != clientHeight)
    {
@@ -685,14 +685,14 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent& WXUNUSED(event))
          delete mBackgroundBitmap;
       mBackgroundBitmap = new wxBitmap(clientWidth, clientHeight);
    }
-   
+
    wxMemoryDC dc;
    dc.SelectObject(*mBackgroundBitmap);
 
    dc.SetBrush(*wxWHITE_BRUSH);
    dc.SetPen(*wxBLACK_PEN);
    dc.DrawRectangle(0, 0, clientWidth, clientHeight);
-   
+
    dc.SetFont(wxFont(10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
                      wxFONTWEIGHT_NORMAL));
    dc.SetTextForeground(*wxBLACK);
@@ -708,7 +708,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent& WXUNUSED(event))
    mParent->mInnerFadeUpLenBox->GetValue().ToDouble(&innerFadeUpLen);
    mParent->mOuterFadeDownLenBox->GetValue().ToDouble(&outerFadeDownLen);
    mParent->mOuterFadeUpLenBox->GetValue().ToDouble(&outerFadeUpLen);
-   
+
    if (innerFadeDownLen < MIN_FADE || innerFadeDownLen > MAX_FADE ||
        innerFadeUpLen < MIN_FADE || innerFadeUpLen > MAX_FADE ||
        outerFadeDownLen < MIN_FADE || outerFadeDownLen > MAX_FADE ||
@@ -728,23 +728,23 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent& WXUNUSED(event))
       // draw preview
       dc.SetBrush(*wxTRANSPARENT_BRUSH);
       dc.SetPen(wxPen(theTheme.Colour(clrGraphLines), 3, wxSOLID));
-      
+
       wxPoint points[6];
-      
+
       points[0].x = 10;
       points[0].y = DUCK_AMOUNT_START;
-      
+
       points[1].x = FADE_DOWN_START - (int)(outerFadeDownLen * FADE_SCALE);
       points[1].y = DUCK_AMOUNT_START;
-      
+
       points[2].x = FADE_DOWN_START + (int)(innerFadeDownLen * FADE_SCALE);
       points[2].y = DUCK_AMOUNT_START -
          (int)(duckAmountDb * DUCK_AMOUNT_SCALE);
-      
+
       points[3].x = FADE_UP_START - (int)(innerFadeUpLen * FADE_SCALE);
       points[3].y = DUCK_AMOUNT_START -
          (int)(duckAmountDb * DUCK_AMOUNT_SCALE);
-      
+
       points[4].x = FADE_UP_START + (int)(outerFadeUpLen * FADE_SCALE);
       points[4].y = DUCK_AMOUNT_START;
 
@@ -752,28 +752,28 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent& WXUNUSED(event))
       points[5].y = DUCK_AMOUNT_START;
 
       dc.DrawLines(6, points);
-      
+
       dc.SetPen(wxPen(*wxBLACK, 1, wxDOT));
-      
+
       AColor::Line(dc, FADE_DOWN_START, 10, FADE_DOWN_START, clientHeight - 10);
       AColor::Line(dc, FADE_UP_START, 10, FADE_UP_START, clientHeight - 10);
-      
+
       dc.SetPen(AColor::envelopePen);
       dc.SetBrush(*wxWHITE_BRUSH);
-      
+
       mControlPoints[outerFadeDown] = points[1];
       mControlPoints[innerFadeDown] = points[2];
       mControlPoints[innerFadeUp] = points[3];
       mControlPoints[outerFadeUp] = points[4];
       mControlPoints[duckAmount] = wxPoint(
          (points[2].x + points[3].x) / 2, points[2].y);
-         
+
       for (int i = 0; i < AUTO_DUCK_PANEL_NUM_CONTROL_POINTS; i++)
       {
          EControlPoint cp = (EControlPoint)i;
          int digits;
          float value;
-         
+
          if (cp == innerFadeDown)
          {
             value = innerFadeDownLen;
@@ -801,25 +801,25 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent& WXUNUSED(event))
 
          wxString valueStr = Internat::ToDisplayString(value, digits);
          valueStr += wxT(" ");
-         
+
          if (cp == duckAmount)
             /* i18n-hint: short form of 'decibels'.*/
-            valueStr += _("dB"); 
+            valueStr += _("dB");
          else
             /* i18n-hint: short form of 'seconds'.*/
-            valueStr += _("s"); 
-   
+            valueStr += _("s");
+
          int textWidth = 0, textHeight = 0;
          GetTextExtent(valueStr, &textWidth, &textHeight);
-         
+
          int textPosX = mControlPoints[i].x - textWidth / 2;
          int textPosY = mControlPoints[i].y;
-         
+
          if (cp == duckAmount || cp == outerFadeDown || cp == outerFadeUp)
             textPosY -= TEXT_DISTANCE + textHeight;
          else
             textPosY += TEXT_DISTANCE;
-            
+
          dc.DrawText(valueStr, textPosX, textPosY);
 
          dc.DrawEllipse(mControlPoints[i].x - 3,
@@ -861,15 +861,15 @@ EffectAutoDuckPanel::EControlPoint
 {
    int dist[AUTO_DUCK_PANEL_NUM_CONTROL_POINTS];
    int i;
-   
+
    for (i = 0; i < AUTO_DUCK_PANEL_NUM_CONTROL_POINTS; i++)
       dist[i] = GetDistance(pt, mControlPoints[i]);
-      
+
    int curMinimum = 0;
    for (i = 0; i < AUTO_DUCK_PANEL_NUM_CONTROL_POINTS; i++)
       if (dist[i] < dist[curMinimum])
          curMinimum = i;
-   
+
    if (dist[curMinimum] <= CONTROL_POINT_REGION)
       return (EControlPoint)curMinimum;
    else
@@ -879,18 +879,18 @@ EffectAutoDuckPanel::EControlPoint
 void EffectAutoDuckPanel::OnLeftDown(wxMouseEvent &evt)
 {
    EControlPoint nearest = GetNearestControlPoint(evt.GetPosition());
-   
+
    if (nearest != none)
    {
       // this control point has been clicked
       mMouseDownPoint = evt.GetPosition();
-      
+
       mCurrentControlPoint = nearest;
       mControlPointMoveActivated = false;
-      
+
       for (int i = 0; i < AUTO_DUCK_PANEL_NUM_CONTROL_POINTS; i++)
          mMoveStartControlPoints[i] = mControlPoints[i];
-         
+
       CaptureMouse();
    }
 }
@@ -921,13 +921,13 @@ void EffectAutoDuckPanel::OnMotion(wxMouseEvent &evt)
       SetCursor(wxCursor(wxCURSOR_SIZENS));
       break;
    }
-   
+
    if (mCurrentControlPoint != none)
    {
       if (!mControlPointMoveActivated)
       {
          int dist;
-         
+
          if (mCurrentControlPoint == duckAmount)
             dist = abs(evt.GetY() - mMouseDownPoint.y);
          else
@@ -940,7 +940,7 @@ void EffectAutoDuckPanel::OnMotion(wxMouseEvent &evt)
       if (mControlPointMoveActivated)
       {
          float newValue;
-         
+
          switch (mCurrentControlPoint)
          {
          case outerFadeDown:
@@ -992,7 +992,7 @@ void EffectAutoDuckPanel::OnMotion(wxMouseEvent &evt)
          case none:
             wxASSERT(false); // should not happen
          }
-         
+
          Refresh(false);
       }
    }

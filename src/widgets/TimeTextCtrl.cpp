@@ -9,7 +9,7 @@
 
 ********************************************************************//**
 
-\class TimeTextCtrl 
+\class TimeTextCtrl
 \brief TimeTextCtrl provides the advanced time formatting control used
 in the status bar of Audacity.
 
@@ -95,7 +95,7 @@ in the status bar of Audacity.
 
     3758.5 seconds, "*.01000 frames|29.97002997" -> "112642.358 frames"
 
-  Finally there is a further special character that can be used after a "|" 
+  Finally there is a further special character that can be used after a "|"
   and that is "N".  This applies special rule for NTSC drop-frame timecode.
 
   Summary of format string rules:
@@ -132,17 +132,17 @@ in the status bar of Audacity.
 *******************************************************************//**
 
 \class TimeConverter
-\brief TimeConverter has all the time conversion and snapping 
-functionality that used to live in TimeTextCtrl.  The idea is to have 
-a GUI-less class which can do the conversions, so that we can use it 
+\brief TimeConverter has all the time conversion and snapping
+functionality that used to live in TimeTextCtrl.  The idea is to have
+a GUI-less class which can do the conversions, so that we can use it
 in sanpping without having a window created each time.
 
 *//****************************************************************//**
 
 \class BuiltinFormatString
-\brief BuiltinFormatString is a structure used in the TimeTextCtrl 
-and holds both a descriptive name for the string format and a 
-printf inspired style format string, optimised for displaying time in 
+\brief BuiltinFormatString is a structure used in the TimeTextCtrl
+and holds both a descriptive name for the string format and a
+printf inspired style format string, optimised for displaying time in
 different formats.
 
 *//****************************************************************//**
@@ -305,7 +305,7 @@ TimeConverter::TimeConverter(const wxString & formatName,
     * unless there aren't 60 seconds in a minute in your locale */
    BuiltinFormatStrings[5].formatStr = _("0100 h 060 m 060 s+.# samples");
    /* i18n-hint: Name of time display format that shows time in samples (at the
-    * current project sample rate).  For example the number of a sample at 1 
+    * current project sample rate).  For example the number of a sample at 1
     * second into a recording at 44.1KHz would be 44,100.
     */
    BuiltinFormatStrings[6].name = _("samples");
@@ -345,7 +345,7 @@ TimeConverter::TimeConverter(const wxString & formatName,
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with NTSC drop frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-    * for seconds and translate 'frames'. Leave the | .999000999 alone, 
+    * for seconds and translate 'frames'. Leave the | .999000999 alone,
     * the whole things really is slightly off-speed! */
    BuiltinFormatStrings[10].formatStr = _("0100 h 060 m 060 s+.030 frames| .999000999");
    /* i18n-hint: Name of time display format that shows time in frames at NTSC
@@ -469,7 +469,7 @@ void TimeConverter::ParseFormatString( const wxString & format)
 
          // Hack: always zeropad
          zeropad = true;
-         
+
          if (inFrac) {
             int base = fracMult * range;
             mFields.Add(TimeField(inFrac, base, range, zeropad));
@@ -596,7 +596,7 @@ void TimeConverter::ValueToControls(double RawTime, bool nearest /* = true */)
    if(round)
       t_int = sampleCount(theValue + (nearest ? 0.5f : 0.0f));
    else
-   {  
+   {
       wxASSERT( mFields[mFields.GetCount()-1].frac );
       theValue += (nearest ? 0.5f : 0.0f) / mFields[mFields.GetCount()-1].base;
       t_int = sampleCount(theValue);
@@ -646,7 +646,7 @@ void TimeConverter::ValueToControls(double RawTime, bool nearest /* = true */)
          // The rounding is not propogating to earlier fields in the frac case.
          //value = (int)(t_frac * mFields[i].base + 0.5);  // +0.5 as rounding required
          // I did the rounding earlier.
-         value = (int)(t_frac * mFields[i].base); 
+         value = (int)(t_frac * mFields[i].base);
          // JKC: TODO: Find out what the range is supposed to do.
          // It looks bogus too.
          //if (mFields[i].range > 0)
@@ -762,7 +762,7 @@ int TimeConverter::GetFormatIndex()
 
    return ndx;
 }
-   
+
 int TimeConverter::GetNumBuiltins()
 {
    return (sizeof(BuiltinFormatStrings) / sizeof(BuiltinFormatStrings[0]));
@@ -938,7 +938,7 @@ TimeTextCtrl::TimeTextCtrl(wxWindow *parent,
    Fit();
    ValueToControls();
    //mchinen - aug 15 09 - this seems to put the mTimeValue back to zero, and do nothing else.
-   //ControlsToValue(); 
+   //ControlsToValue();
 
    mScrollRemainder = 0.0;
 
@@ -1283,7 +1283,7 @@ void TimeTextCtrl::OnMouse(wxMouseEvent &event)
    }
    else if( event.m_wheelRotation != 0 ) {
       double steps = event.m_wheelRotation /
-         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0) + 
+         (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0) +
          mScrollRemainder;
       mScrollRemainder = steps - floor(steps);
       steps = floor(steps);
@@ -1343,7 +1343,7 @@ void TimeTextCtrl::OnKeyUp(wxKeyEvent &event)
    int keyCode = event.GetKeyCode();
 
    event.Skip(true);
-   
+
    if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9))
       keyCode -= WXK_NUMPAD0 - '0';
 
@@ -1407,12 +1407,12 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
       mFocusedDigit %= mDigits.GetCount();
       Refresh();
    }
-   
+
    else if (keyCode == WXK_HOME) {
       mFocusedDigit = 0;
       Refresh();
    }
-   
+
    else if (keyCode == WXK_END) {
       mFocusedDigit = mDigits.GetCount() - 1;
       Refresh();
@@ -1428,7 +1428,7 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
       Updated();
    }
 
-   else if (keyCode == WXK_TAB) {   
+   else if (keyCode == WXK_TAB) {
       wxWindow *parent = GetParent();
       wxNavigationKeyEvent nevent;
       nevent.SetWindowChange(event.ControlDown());
@@ -1437,7 +1437,7 @@ void TimeTextCtrl::OnKeyDown(wxKeyEvent &event)
       nevent.SetCurrentFocus(parent);
       GetParent()->ProcessEvent(nevent);
       event.Skip(false);
-   } 
+   }
 
    else if (keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER) {
       wxTopLevelWindow *tlw = wxDynamicCast(wxGetTopLevelParent(this), wxTopLevelWindow);
@@ -1633,9 +1633,9 @@ wxAccStatus TimeTextCtrlAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString 
 // rect is in screen coordinates.
 wxAccStatus TimeTextCtrlAx::GetLocation(wxRect & rect, int elementId)
 {
-   if ((elementId != wxACC_SELF) && 
+   if ((elementId != wxACC_SELF) &&
          // We subtract 1, below, and need to avoid neg index to mDigits.
-         (elementId > 0)) 
+         (elementId > 0))
    {
 //      rect.x += mCtrl->mFields[elementId - 1].fieldX;
 //      rect.width =  mCtrl->mFields[elementId - 1].fieldW;
@@ -1656,17 +1656,17 @@ wxAccStatus TimeTextCtrlAx::GetName(int childId, wxString *name)
 {
    // Slightly messy trick to save us some prefixing.
    TimeFieldArray & mFields = mCtrl->mFields;
-      
+
    wxString value = mCtrl->GetTimeString();
    int field = mCtrl->GetFocusedField();
 
    // Return the entire time string including the control label
    // when the requested child ID is wxACC_SELF.  (Mainly when
    // the control gets the focus.)
-   if ((childId == wxACC_SELF) || 
-         // We subtract 1 from childId in the other cases below, and 
+   if ((childId == wxACC_SELF) ||
+         // We subtract 1 from childId in the other cases below, and
          // need to avoid neg index to mDigits, so funnel into this clause.
-         (childId < 1)) 
+         (childId < 1))
    {
       *name = mCtrl->GetName();
       if (name->IsEmpty()) {

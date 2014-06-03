@@ -129,7 +129,7 @@ bool EffectReverb::Process()
          else success = ProcessOneTrack(n, track, 0, msg);
       }
    }
-   ReplaceProcessedTracks(success); 
+   ReplaceProcessedTracks(success);
    return success;
 }
 
@@ -168,7 +168,7 @@ void EffectReverb::SaveSettings(int settingsNumber, EffectReverb::Params const *
    wxString sSettingsPath(SettingsPath(settingsNumber));
    if (name)
       gPrefs->Write(sSettingsPath + wxT("name"), *name);
-   if (params) 
+   if (params)
    {
       gPrefs->Write(sSettingsPath + wxT("RoomSize"), params->mRoomSize);
       gPrefs->Write(sSettingsPath + wxT("Delay"), params->mDelay);
@@ -189,9 +189,9 @@ EffectReverb::EffectReverb()
    LoadSettings(-1, mParams);
 }
 
-wxString EffectReverb::GetEffectDescription() 
+wxString EffectReverb::GetEffectDescription()
 {
-   wxString strResult = 
+   wxString strResult =
       wxString::Format(_("Applied effect: %s"), GetEffectName().c_str());
    strResult += wxString::Format(_(", Room Size = %.0f"), mParams.mRoomSize);
    strResult += wxString::Format(_(", Delay = %.0fms"), mParams.mDelay);
@@ -204,7 +204,7 @@ wxString EffectReverb::GetEffectDescription()
    strResult += wxString::Format(_(", Stereo Width = %.0f%%"), mParams.mStereoWidth);
    strResult += wxString::Format(_(", Wet Only = %s"), mParams.mWetOnly ? _("true") : _("false"));
    return strResult;
-} 
+}
 
 bool EffectReverb::PromptUser()
 {
@@ -271,25 +271,25 @@ BEGIN_EVENT_TABLE(ReverbDialogue, EffectDialog)
 
    EVT_SLIDER(ID_Delay_WIDGET, ReverbDialogue::OnDelayWidget)
    EVT_TEXT(ID_Delay_TEXT, ReverbDialogue::OnDelayText)
-   
+
    EVT_SLIDER(ID_Reverberance_WIDGET, ReverbDialogue::OnReverberanceWidget)
    EVT_TEXT(ID_Reverberance_TEXT, ReverbDialogue::OnReverberanceText)
-   
+
    EVT_SLIDER(ID_HfDamping_WIDGET, ReverbDialogue::OnHfDampingWidget)
    EVT_TEXT(ID_HfDamping_TEXT, ReverbDialogue::OnHfDampingText)
-   
+
    EVT_SLIDER(ID_ToneLow_WIDGET, ReverbDialogue::OnToneLowWidget)
    EVT_TEXT(ID_ToneLow_TEXT, ReverbDialogue::OnToneLowText)
-   
+
    EVT_SLIDER(ID_ToneHigh_WIDGET, ReverbDialogue::OnToneHighWidget)
    EVT_TEXT(ID_ToneHigh_TEXT, ReverbDialogue::OnToneHighText)
-   
+
    EVT_SLIDER(ID_WetGain_WIDGET, ReverbDialogue::OnWetGainWidget)
    EVT_TEXT(ID_WetGain_TEXT, ReverbDialogue::OnWetGainText)
-   
+
    EVT_SLIDER(ID_DryGain_WIDGET, ReverbDialogue::OnDryGainWidget)
    EVT_TEXT(ID_DryGain_TEXT, ReverbDialogue::OnDryGainText)
-   
+
    EVT_SLIDER(ID_StereoWidth_WIDGET, ReverbDialogue::OnStereoWidthWidget)
    EVT_TEXT(ID_StereoWidth_TEXT, ReverbDialogue::OnStereoWidthText)
 
@@ -312,17 +312,17 @@ void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
 {
    s.AddSpace(0, 5);
 
-   s.StartMultiColumn(3, wxEXPAND); 
+   s.StartMultiColumn(3, wxEXPAND);
    {
       s.SetStretchyCol(2);
 
-      mRoomSizeText = s.Id(ID_RoomSize_TEXT).AddSpinCtrl(_("&Room Size (%):"), 0, 100, 0); 
+      mRoomSizeText = s.Id(ID_RoomSize_TEXT).AddSpinCtrl(_("&Room Size (%):"), 0, 100, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mRoomSizeWidget = s.Id(ID_RoomSize_WIDGET).AddSlider(wxT(""), 0, 100, 0);
 
-      // Rob's original code referred to this param as "Delay". 
-      // Then, May 11, 2013, in a thread on [Audacity-quality], subject "Reverb effect", 
-      // Steve suggested and Gale seconded renaming it "Pre-delay". 
+      // Rob's original code referred to this param as "Delay".
+      // Then, May 11, 2013, in a thread on [Audacity-quality], subject "Reverb effect",
+      // Steve suggested and Gale seconded renaming it "Pre-delay".
       // I've changed it only here, in the GUI, and left the rest of the code as *Delay*.
       mDelayText = s.Id(ID_Delay_TEXT).AddSpinCtrl(_("&Pre-delay (ms):"), 0, 200, 0);
       s.SetStyle(wxSL_HORIZONTAL);
@@ -355,13 +355,13 @@ void ReverbDialogue::PopulateOrExchange(ShuttleGui & s)
       mStereoWidthText = s.Id(ID_StereoWidth_TEXT).AddSpinCtrl(_("Stereo Wid&th (%):"), 0, 100, 0);
       s.SetStyle(wxSL_HORIZONTAL);
       mStereoWidthWidget = s.Id(ID_StereoWidth_WIDGET).AddSlider(wxT(""), 0, 100, 0);
-   } 
+   }
    s.EndMultiColumn();
 
-   s.StartHorizontalLay(wxCENTER, false); 
+   s.StartHorizontalLay(wxCENTER, false);
    {
       mWetOnlyWidget = s.Id(ID_WetOnly_WIDGET).AddCheckBox(_("Wet O&nly"), wxT("false"));
-   } 
+   }
    s.EndHorizontalLay();
 
    s.StartHorizontalLay(wxCENTER); {
@@ -428,47 +428,47 @@ bool ReverbDialogue::TransferDataFromWindow()
    return true;
 }
 
-void ReverbDialogue::OnRoomSizeText(wxCommandEvent & WXUNUSED(event)) 
+void ReverbDialogue::OnRoomSizeText(wxCommandEvent & WXUNUSED(event))
 { int val = mRoomSizeText->GetValue(); mRoomSizeWidget->SetValue(TrapLong(val, 0, 100)); }
 void ReverbDialogue::OnRoomSizeWidget(wxCommandEvent & WXUNUSED(event))
 { mRoomSizeText->SetValue(wxString::Format(wxT("%d"), mRoomSizeWidget->GetValue())); }
 
-void ReverbDialogue::OnDelayText(wxCommandEvent & WXUNUSED(event)) 
+void ReverbDialogue::OnDelayText(wxCommandEvent & WXUNUSED(event))
 { int val = mDelayText->GetValue(); mDelayWidget->SetValue(TrapLong(val, 0, 200)); }
 void ReverbDialogue::OnDelayWidget(wxCommandEvent & WXUNUSED(event))
 { mDelayText->SetValue(wxString::Format(wxT("%d"), mDelayWidget->GetValue())); }
 
-void ReverbDialogue::OnReverberanceText(wxCommandEvent & WXUNUSED(event)) 
+void ReverbDialogue::OnReverberanceText(wxCommandEvent & WXUNUSED(event))
 { int val = mReverberanceText->GetValue(); mReverberanceWidget->SetValue(TrapLong(val, 0, 100)); }
 void ReverbDialogue::OnReverberanceWidget(wxCommandEvent & WXUNUSED(event))
 { mReverberanceText->SetValue(wxString::Format(wxT("%d"), mReverberanceWidget->GetValue())); }
 
-void ReverbDialogue::OnHfDampingText(wxCommandEvent & WXUNUSED(event)) 
+void ReverbDialogue::OnHfDampingText(wxCommandEvent & WXUNUSED(event))
 { int val = mHfDampingText->GetValue(); mHfDampingWidget->SetValue(TrapLong(val, 0, 100)); }
 void ReverbDialogue::OnHfDampingWidget(wxCommandEvent & WXUNUSED(event))
 { mHfDampingText->SetValue(wxString::Format(wxT("%d"), mHfDampingWidget->GetValue())); }
 
-void ReverbDialogue::OnToneLowText(wxCommandEvent & WXUNUSED(event)) 
+void ReverbDialogue::OnToneLowText(wxCommandEvent & WXUNUSED(event))
 { int val = mToneLowText->GetValue(); mToneLowWidget->SetValue(TrapLong(val, 0, 100)); }
 void ReverbDialogue::OnToneLowWidget(wxCommandEvent & WXUNUSED(event))
 { mToneLowText->SetValue(wxString::Format(wxT("%d"), mToneLowWidget->GetValue())); }
 
-void ReverbDialogue::OnToneHighText(wxCommandEvent & WXUNUSED(event)) 
+void ReverbDialogue::OnToneHighText(wxCommandEvent & WXUNUSED(event))
 { int val = mToneHighText->GetValue(); mToneHighWidget->SetValue(TrapLong(val, 0, 100)); }
 void ReverbDialogue::OnToneHighWidget(wxCommandEvent & WXUNUSED(event))
 { mToneHighText->SetValue(wxString::Format(wxT("%d"), mToneHighWidget->GetValue())); }
 
-void ReverbDialogue::OnWetGainText(wxCommandEvent & WXUNUSED(event)) 
+void ReverbDialogue::OnWetGainText(wxCommandEvent & WXUNUSED(event))
 { int val = mWetGainText->GetValue(); mWetGainWidget->SetValue(TrapLong(val, -20, 10)); }
 void ReverbDialogue::OnWetGainWidget(wxCommandEvent & WXUNUSED(event))
 { mWetGainText->SetValue(wxString::Format(wxT("%d"), mWetGainWidget->GetValue())); }
 
-void ReverbDialogue::OnDryGainText(wxCommandEvent & WXUNUSED(event)) 
+void ReverbDialogue::OnDryGainText(wxCommandEvent & WXUNUSED(event))
 { int val = mDryGainText->GetValue(); mDryGainWidget->SetValue(TrapLong(val, -20, 10)); }
 void ReverbDialogue::OnDryGainWidget(wxCommandEvent & WXUNUSED(event))
 { mDryGainText->SetValue(wxString::Format(wxT("%d"), mDryGainWidget->GetValue())); }
 
-void ReverbDialogue::OnStereoWidthText(wxCommandEvent & WXUNUSED(event)) 
+void ReverbDialogue::OnStereoWidthText(wxCommandEvent & WXUNUSED(event))
 { int val = mStereoWidthText->GetValue(); mStereoWidthWidget->SetValue(TrapLong(val, 0, 100)); }
 void ReverbDialogue::OnStereoWidthWidget(wxCommandEvent & WXUNUSED(event))
 { mStereoWidthText->SetValue(wxString::Format(wxT("%d"), mStereoWidthWidget->GetValue())); }
@@ -501,14 +501,14 @@ void ReverbDialogue::LoadPreset(wxCommandEvent & WXUNUSED(event))
    choices.Add(_("Cathedral"));
    int i(wxGetChoiceFromUser(this, message, caption, choices));
    switch (i) {
-      case 0: p.mRoomSize=70; p.mHfDamping=99; p.mDelay=20; p.mReverberance=40; p.mToneLow=100; p.mToneHigh=50 ; p.mWetGain=-12; p.mDryGain=0  ; p.mStereoWidth=70 ; break; 
-      case 1: p.mRoomSize=50; p.mHfDamping=99; p.mDelay=0 ; p.mReverberance=50; p.mToneLow=50 ; p.mToneHigh=100; p.mWetGain=-1 ; p.mDryGain=-1 ; p.mStereoWidth=70 ; break; 
-      case 2: p.mRoomSize=16; p.mHfDamping=0 ; p.mDelay=8 ; p.mReverberance=80; p.mToneLow=0  ; p.mToneHigh=100; p.mWetGain=-6 ; p.mDryGain=0  ; p.mStereoWidth=100; break; 
-      case 3: p.mRoomSize=30; p.mHfDamping=50; p.mDelay=10; p.mReverberance=50; p.mToneLow=50 ; p.mToneHigh=100; p.mWetGain=-1 ; p.mDryGain=-1 ; p.mStereoWidth=100; break; 
-      case 4: p.mRoomSize=30; p.mHfDamping=50; p.mDelay=10; p.mReverberance=50; p.mToneLow=100; p.mToneHigh=0  ; p.mWetGain=-1 ; p.mDryGain=-1 ; p.mStereoWidth=100; break; 
-      case 5: p.mRoomSize=75; p.mHfDamping=50; p.mDelay=10; p.mReverberance=40; p.mToneLow=100; p.mToneHigh=70 ; p.mWetGain=-1 ; p.mDryGain=-1 ; p.mStereoWidth=70 ; break; 
-      case 6: p.mRoomSize=85; p.mHfDamping=50; p.mDelay=10; p.mReverberance=40; p.mToneLow=100; p.mToneHigh=80 ; p.mWetGain=0  ; p.mDryGain=-6 ; p.mStereoWidth=90 ; break; 
-      case 7: p.mRoomSize=90; p.mHfDamping=50; p.mDelay=32; p.mReverberance=60; p.mToneLow=100; p.mToneHigh=50 ; p.mWetGain=0  ; p.mDryGain=-12; p.mStereoWidth=100; break; 
+      case 0: p.mRoomSize=70; p.mHfDamping=99; p.mDelay=20; p.mReverberance=40; p.mToneLow=100; p.mToneHigh=50 ; p.mWetGain=-12; p.mDryGain=0  ; p.mStereoWidth=70 ; break;
+      case 1: p.mRoomSize=50; p.mHfDamping=99; p.mDelay=0 ; p.mReverberance=50; p.mToneLow=50 ; p.mToneHigh=100; p.mWetGain=-1 ; p.mDryGain=-1 ; p.mStereoWidth=70 ; break;
+      case 2: p.mRoomSize=16; p.mHfDamping=0 ; p.mDelay=8 ; p.mReverberance=80; p.mToneLow=0  ; p.mToneHigh=100; p.mWetGain=-6 ; p.mDryGain=0  ; p.mStereoWidth=100; break;
+      case 3: p.mRoomSize=30; p.mHfDamping=50; p.mDelay=10; p.mReverberance=50; p.mToneLow=50 ; p.mToneHigh=100; p.mWetGain=-1 ; p.mDryGain=-1 ; p.mStereoWidth=100; break;
+      case 4: p.mRoomSize=30; p.mHfDamping=50; p.mDelay=10; p.mReverberance=50; p.mToneLow=100; p.mToneHigh=0  ; p.mWetGain=-1 ; p.mDryGain=-1 ; p.mStereoWidth=100; break;
+      case 5: p.mRoomSize=75; p.mHfDamping=50; p.mDelay=10; p.mReverberance=40; p.mToneLow=100; p.mToneHigh=70 ; p.mWetGain=-1 ; p.mDryGain=-1 ; p.mStereoWidth=70 ; break;
+      case 6: p.mRoomSize=85; p.mHfDamping=50; p.mDelay=10; p.mReverberance=40; p.mToneLow=100; p.mToneHigh=80 ; p.mWetGain=0  ; p.mDryGain=-6 ; p.mStereoWidth=90 ; break;
+      case 7: p.mRoomSize=90; p.mHfDamping=50; p.mDelay=32; p.mReverberance=60; p.mToneLow=100; p.mToneHigh=50 ; p.mWetGain=0  ; p.mDryGain=-12; p.mStereoWidth=100; break;
       case 8: p.mRoomSize=90; p.mHfDamping=50; p.mDelay=16; p.mReverberance=90; p.mToneLow=100; p.mToneHigh=0  ; p.mWetGain=0  ; p.mDryGain=-20; p.mStereoWidth=100; break;
       default: return;
    }
@@ -537,7 +537,7 @@ void ReverbDialogue::SaveSettings(wxCommandEvent & WXUNUSED(event))
    }
 }
 
-void ReverbDialogue::SetTitle(wxString const & name)  
+void ReverbDialogue::SetTitle(wxString const & name)
 {
    wxString title(_("Reverb"));
    if (name != wxT(""))

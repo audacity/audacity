@@ -90,7 +90,7 @@ void BatchProcessDialog::PopulateOrExchange(ShuttleGui &S)
 {
    S.StartVerticalLay(true);
    {
-      /*i18n-hint: A chain is a sequence of commands that can be applied 
+      /*i18n-hint: A chain is a sequence of commands that can be applied
        * to one or more audio files.*/
       S.StartStatic(_("&Select Chain"), true);
       {
@@ -205,7 +205,7 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"), ::wxGetCwd());
    wxString prompt =  _("Select file(s) for batch processing...");
-   
+
    FormatList l;
    wxString filter;
    wxString all;
@@ -387,9 +387,9 @@ BEGIN_EVENT_TABLE(EditChainsDialog, wxDialog)
 END_EVENT_TABLE()
 
 enum {
-   BlankColumn,   
-   ItemNumberColumn,    
-   ActionColumn, 
+   BlankColumn,
+   ItemNumberColumn,
+   ActionColumn,
    ParamsColumn,
 };
 
@@ -457,12 +457,12 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
          // JKC: Experimenting with an alternative way to get multiline
          // translated strings to work correctly without very long lines.
          // My appologies Alexandre if this way didn't work either.
-         // 
+         //
          // With this method:
          //   1) it compiles fine under windows unicode and normal mode.
          //   2) xgettext source code has handling for the trailing '\'
          //
-         // It remains to see if linux and mac can cope and if xgettext 
+         // It remains to see if linux and mac can cope and if xgettext
          // actually does do fine with strings presented like this.
          // If it doesn't work out, revert to all-on-one-line.
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_SINGLE_SEL |
@@ -485,7 +485,7 @@ void EditChainsDialog::PopulateOrExchange(ShuttleGui & S)
                     wxLC_SINGLE_SEL);
          mList = S.Id(CommandsListID).AddListControlReportMode();
 
-         //An empty first column is a workaround - under Win98 the first column 
+         //An empty first column is a workaround - under Win98 the first column
          //can't be right aligned.
          mList->InsertColumn(BlankColumn, wxT(""), wxLIST_FORMAT_LEFT);
          /* i18n-hint: This is the number of the command in the list */
@@ -663,7 +663,7 @@ void EditChainsDialog::FitColumns()
    mList->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
    mList->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
    mList->SetColumnWidth(3, wxLIST_AUTOSIZE);
-#endif	
+#endif
 
    int bestfit = mList->GetColumnWidth(3);
    int clientsize = mList->GetClientSize().GetWidth();
@@ -703,7 +703,7 @@ void EditChainsDialog::OnChainsEndEdit(wxListEvent &event)
    PopulateChains();
 }
 
-/// 
+///
 void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
 {
    while (true) {

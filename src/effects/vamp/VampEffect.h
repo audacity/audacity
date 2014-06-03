@@ -27,7 +27,7 @@ class wxComboBox;
 void LoadVampPlugins();
 
 class VampEffect : public Effect {
-   
+
  public:
 
    VampEffect(Vamp::HostExt::PluginLoader::PluginKey key,
@@ -38,7 +38,7 @@ class VampEffect : public Effect {
    virtual ~VampEffect();
 
    virtual wxString GetEffectName();
-   
+
    virtual std::set<wxString> GetEffectCategories();
 
    virtual wxString GetEffectIdentifier();
@@ -64,7 +64,7 @@ class VampEffect : public Effect {
    wxString mName;
    double mRate;
    wxString mCategory;
-   
+
    Vamp::Plugin *mPlugin;
 
    void AddFeatures(LabelTrack *track,

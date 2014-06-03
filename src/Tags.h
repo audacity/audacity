@@ -20,10 +20,10 @@
   since we're not supporting any v2 fields, is that ID3v2 tags are
   inserted at the BEGINNING of an mp3 file, which is far more
   useful for streaming.
-  
+
   Use of this functionality requires that libid3tag be compiled in
   with Audacity.
-  
+
 **********************************************************************/
 
 #ifndef __AUDACITY_TAGS__
@@ -158,7 +158,7 @@ class TagsEditor: public wxDialog
 
    void OnOk(wxCommandEvent & event);
    void OnCancel(wxCommandEvent & event);
-   
+
    bool IsWindowRectValid(const wxRect *windowRect) const;
 
  private:

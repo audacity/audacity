@@ -10,8 +10,8 @@
 *******************************************************************//*!
 
 \class HistoryWindow
-\brief Works with UndoManager to allow user to see descriptions of 
-and undo previous commands.  Also allows you to selectively clear the 
+\brief Works with UndoManager to allow user to see descriptions of
+and undo previous commands.  Also allows you to selectively clear the
 undo memory so as to free up space.
 
 *//*******************************************************************/
@@ -116,10 +116,10 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
 
-   // Vaughan, 2010-07-30: AudacityProject::OnHistory always calls Show() 
+   // Vaughan, 2010-07-30: AudacityProject::OnHistory always calls Show()
    //    then HistoryWindow::UpdateDisplay, so no need to do it here.
-   // Vaughan, 2010-10-16: Not on Windows, anyway. 
-   //    But Steve reported that on Ubuntu, View > History now crashes, 
+   // Vaughan, 2010-10-16: Not on Windows, anyway.
+   //    But Steve reported that on Ubuntu, View > History now crashes,
    //    so restore it for non-Windows.
    #ifdef __WXGTK__
       DoUpdate();
@@ -151,7 +151,7 @@ void HistoryWindow::DoUpdate()
    mSelected = mManager->GetCurrentState() - 1;
    for (i = 0; i < (int)mManager->GetNumStates(); i++) {
       wxString desc, size;
-      
+
       mManager->GetLongDescription(i + 1, &desc, &size);
       mList->InsertItem(i, desc, i == mSelected ? 1 : 0);
       mList->SetItem(i, 1, size);

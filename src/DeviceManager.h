@@ -37,9 +37,9 @@ wxString MakeDeviceSourceString(const DeviceSourceMap *map);
 class DeviceManager
 {
  public:
-   /// Gets the singleton instance 
+   /// Gets the singleton instance
    static DeviceManager* Instance();
-   
+
    /// Releases memory assosiated with the singleton
    static void Destroy();
 
@@ -64,7 +64,7 @@ class DeviceManager
    DeviceSourceMap* GetDefaultDevice(int hostIndex, int isInput);
 
    bool m_inited;
-   
+
    std::vector<DeviceSourceMap> mInputDeviceSourceMaps;
    std::vector<DeviceSourceMap> mOutputDeviceSourceMaps;
 

@@ -57,7 +57,7 @@ void LibraryPrefs::Populate()
 {
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -68,11 +68,11 @@ void LibraryPrefs::Populate()
    SetFFmpegVersionText();
 }
 
-/// This PopulateOrExchange function is a good example of mixing the fully 
+/// This PopulateOrExchange function is a good example of mixing the fully
 /// automatic style of reading/writing from GUI to prefs with the partial form.
-/// 
+///
 /// You'll notice that some of the Tie functions have Prefs identifiers in them
-/// and others don't.  
+/// and others don't.
 void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -128,7 +128,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
                            true,
                            wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          S.Id(ID_FFMPEG_FIND_BUTTON);
-         wxButton *bfnd = S.AddButton(_("Loca&te..."), 
+         wxButton *bfnd = S.AddButton(_("Loca&te..."),
                                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
          S.AddVariableText(_("FFmpeg Library:"),
                            true,
@@ -227,9 +227,9 @@ void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & WXUNUSED(event))
 }
 
 bool LibraryPrefs::Apply()
-{  
+{
    ShuttleGui S(this, eIsSavingToPrefs);
-   PopulateOrExchange(S);    
-   
+   PopulateOrExchange(S);
+
    return true;
 }

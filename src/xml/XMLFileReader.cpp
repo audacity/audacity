@@ -27,7 +27,7 @@ XMLFileReader::XMLFileReader()
    mParser = XML_ParserCreate(NULL);
    XML_SetUserData(mParser, (void *)this);
    XML_SetElementHandler(mParser, startElement, endElement);
-   XML_SetCharacterDataHandler(mParser, charHandler); 
+   XML_SetCharacterDataHandler(mParser, charHandler);
    mBaseHandler = NULL;
    mMaxDepth = 128;
    mHandler = new XMLTagHandler*[mMaxDepth];

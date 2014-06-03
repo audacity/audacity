@@ -80,7 +80,7 @@ void GetFLACImportPlugin(ImportPluginList *importPluginList,
 #include "../ondemand/ODDecodeFlacTask.h"
 #include "../ondemand/ODManager.h"
 
-#ifdef USE_LIBID3TAG 
+#ifdef USE_LIBID3TAG
 extern "C" {
 #include <id3tag.h>
 }
@@ -108,7 +108,7 @@ class MyFLACFile : public FLAC::Decoder::File
       set_metadata_respond(FLAC__METADATA_TYPE_VORBIS_COMMENT);
       set_metadata_respond(FLAC__METADATA_TYPE_STREAMINFO);
    }
-   
+
    bool get_was_error() const
    {
       return mWasError;
@@ -221,7 +221,7 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
 void MyFLACFile::error_callback(FLAC__StreamDecoderErrorStatus WXUNUSED(status))
 {
    mWasError = true;
-   
+
    /*
    switch (status)
    {
@@ -305,7 +305,7 @@ ImportFileHandle *FLACImportPlugin::Open(wxString filename)
    cnt = binaryFile.Read(query, sizeof(query));
    cnt = id3_tag_query(query, cnt);
    binaryFile.Seek(cnt);
-#endif   
+#endif
 
    char buf[5];
    cnt = binaryFile.Read(buf, 4);
@@ -313,9 +313,9 @@ ImportFileHandle *FLACImportPlugin::Open(wxString filename)
 
    if (cnt == wxInvalidOffset || strncmp(buf, FLAC_HEADER, 4) != 0) {
       // File is not a FLAC file
-      return false; 
+      return false;
    }
-   
+
    // Open the file for import
    FLACImportFileHandle *handle = new FLACImportFileHandle(filename);
 
@@ -342,9 +342,9 @@ FLACImportFileHandle::FLACImportFileHandle(const wxString & name)
 
 bool FLACImportFileHandle::Init()
 {
-#ifdef EXPERIMENTAL_OD_FLAC 
+#ifdef EXPERIMENTAL_OD_FLAC
    mDecoderTask=new ODDecodeFlacTask;
-   
+
    ODFlacDecoder* odDecoder = (ODFlacDecoder*)mDecoderTask->CreateFileDecoder(mFilename);
    if(!odDecoder || !odDecoder->ReadHeader())
    {
@@ -353,19 +353,19 @@ bool FLACImportFileHandle::Init()
       return false;
    }
    //copy the meta data over to the class
-   
+
    mSampleRate=odDecoder->mSampleRate;
    mNumChannels=odDecoder->mNumChannels;
    mBitsPerSample=odDecoder->mBitsPerSample;
-   
+
    mNumSamples=odDecoder->mNumSamples;
    mBitsPerSample=odDecoder->mBitsPerSample;
    mFormat=odDecoder->mFormat;
    mStreamInfoDone=true;
 
-   
+
    return true;
-#endif 
+#endif
 #ifdef LEGACY_FLAC
    bool success = mFile->set_filename(OSINPUT(mFilename));
    if (!success) {
@@ -443,7 +443,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
    unsigned long c;
    for (c = 0; c < mNumChannels; c++) {
       mChannels[c] = trackFactory->NewWaveTrack(mFormat, mSampleRate);
-      
+
       if (mNumChannels == 2) {
          switch (c) {
          case 0:
@@ -479,22 +479,22 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
    //add the task to the ODManager
    if(useOD)
-   { 
+   {
       sampleCount fileTotalFrames = mNumSamples;
       sampleCount maxBlockSize = mChannels[0]->GetMaxBlockSize();
       for (sampleCount i = 0; i < fileTotalFrames; i += maxBlockSize) {
          sampleCount blockLen = maxBlockSize;
          if (i + blockLen > fileTotalFrames)
             blockLen = fileTotalFrames - i;
-         
+
          for (c = 0; c < mNumChannels; c++)
             mChannels[c]->AppendCoded(mFilename, i, blockLen, c,ODTask::eODFLAC);
-         
+
          mUpdateResult = mProgress->Update(i, fileTotalFrames);
          if (mUpdateResult != eProgressSuccess)
             break;
       }
-   
+
       bool moreThanStereo = mNumChannels>2;
       for (c = 0; c < mNumChannels; c++)
       {
@@ -521,7 +521,7 @@ int FLACImportFileHandle::Import(TrackFactory *trackFactory,
 
       return mUpdateResult;
    }
-   
+
    *outNumTracks = mNumChannels;
    *outTracks = new Track *[mNumChannels];
    for (c = 0; c < mNumChannels; c++) {

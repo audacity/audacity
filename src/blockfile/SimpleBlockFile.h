@@ -76,7 +76,7 @@ class SimpleBlockFile : public BlockFile {
    virtual void Recover();
 
    static BlockFile *BuildFromXML(DirManager &dm, const wxChar **attrs);
-   
+
    virtual bool GetNeedWriteCacheToDisk();
    virtual void WriteCacheToDisk();
 
@@ -89,7 +89,7 @@ class SimpleBlockFile : public BlockFile {
                              sampleFormat format, void* summaryData);
    static bool GetCache();
    void ReadIntoCache();
-   
+
    SimpleBlockFileCache mCache;
 };
 

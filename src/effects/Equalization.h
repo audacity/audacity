@@ -292,11 +292,11 @@ private:
       drawRadioID,
       sliderRadioID,
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
-      defaultMathRadioID, 
-      sSERadioID, 
-      sSEThreadedRadioID, 
-      aVXRadioID, 
-      aVXThreadedRadioID, 
+      defaultMathRadioID,
+      sSERadioID,
+      sSEThreadedRadioID,
+      aVXRadioID,
+      aVXThreadedRadioID,
       ID_BENCH,
 #endif
       ID_INTERP,

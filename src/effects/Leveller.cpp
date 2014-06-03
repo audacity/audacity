@@ -62,7 +62,7 @@ bool EffectLeveller::Init()
    mLevellerDbSilenceThreshold = Enums::Db2Signal[mLevellerDbChoiceIndex];
 
    CalcLevellerFactors();
-   
+
    return true;
 }
 
@@ -107,7 +107,7 @@ void EffectLeveller::CalcLevellerFactors()
       prevAdjLimit  = gAdjLimit[prev];
       addOnValue    = prevAdjLimit - (adjFactor * prevLimit);
       upperAdjLimit = (adjFactor * limit) + addOnValue;
-         
+
       gAddOnValue[f] = addOnValue;
       gAdjLimit[f]   = (adjFactor * limit) + addOnValue;
    }
@@ -141,7 +141,7 @@ bool EffectLeveller::PromptUser()
 }
 
 bool EffectLeveller::TransferParameters( Shuttle & shuttle )
-{  
+{
    shuttle.TransferEnum(wxT("dB"),mLevellerDbChoiceIndex,Enums::NumDbChoices,Enums::GetDbChoices());
    shuttle.TransferInt(wxT("Passes"),mLevellerNumPasses,1);
    return true;
@@ -195,7 +195,7 @@ LevellerDialog::LevellerDialog(EffectLeveller *effect, wxWindow *parent)
 :  EffectDialog(parent, _("Leveler"), PROCESS_EFFECT), // Lynn called it "Leveller", but preferred spelling is "Leveler".
    mEffect(effect)
 {
-   mLevellerNumPassesChoiceIndex = 0;// 
+   mLevellerNumPassesChoiceIndex = 0;//
    mLevellerDbChoiceIndex = 0;
    Init();
 }
@@ -240,7 +240,7 @@ void LevellerDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    mEffect->mLevellerNumPasses = mLevellerNumPassesChoiceIndex+1;
 
    mEffect->Preview();
-   
+
    mEffect->mLevellerDbChoiceIndex = oldLevellerDbChoiceIndex;
    mEffect->mLevellerNumPasses = oldLevellerNumPasses;
 }

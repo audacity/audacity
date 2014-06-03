@@ -22,14 +22,14 @@
 
 \class ImportFileHandle
 \brief Base class for FlacImportFileHandle, LOFImportFileHandle,
-MP3ImportFileHandle, OggImportFileHandle and PCMImportFileHandle.  
+MP3ImportFileHandle, OggImportFileHandle and PCMImportFileHandle.
 Gives API for sound file import.
 
 *//****************************************************************//**
 
 \class ImportPlugin
 \brief Base class for FlacImportPlugin, LOFImportPlugin,
-MP3ImportPlugin, OggImportPlugin and PCMImportPlugin.  
+MP3ImportPlugin, OggImportPlugin and PCMImportPlugin.
 Gives API for sound file import.
 
 *//****************************************************************//**
@@ -37,7 +37,7 @@ Gives API for sound file import.
 \class UnusableImportPlugin
 \brief Used in place of a real plug in for plug ins that have not
 been compiled or are not available in this version of Audacity.  Has
-enough information to identify the file extensions that would be used, 
+enough information to identify the file extensions that would be used,
 but little else.
 
 *//****************************************************************//**

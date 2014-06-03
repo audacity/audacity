@@ -304,7 +304,7 @@ KeyView::SetKey(int index, const wxString & key)
    {
       return false;
    }
-   
+
    // Set the new key
    node.key = key;
 
@@ -698,7 +698,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
          // Strip any menu codes from label
          node.label = wxMenuItem::GetLabelFromText(labels[i].BeforeFirst(wxT('\t')));
       }
-      
+
       // Fill in remaining info
       node.name = name;
       node.key = KeyStringDisplay(keys[i]);
@@ -830,7 +830,7 @@ KeyView::RefreshLines()
             // Examine siblings until a parent is found.
             for (int j = node.index - 1; j >= 0 && depth > 0; j--)
             {
-               // Found a parent               
+               // Found a parent
                if (mNodes[j].depth < depth)
                {
                   // Examine all previously added nodes to see if this nodes
@@ -978,7 +978,7 @@ KeyView::RefreshLines()
    // Tell listbox the new count and refresh the entire view
    SetItemCount(mLines.GetCount());
    RefreshAll();
-   
+
 #if wxUSE_ACCESSIBILITY
    // Let accessibility know that the list has changed
    mAx->ListUpdated();
@@ -1066,7 +1066,7 @@ KeyView::OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const
 
    // If the line width is less than the client width, then we want to
    // extend the background to the right edge of the client view.  Otherwise,
-   // go all the way to the end of the line width...this will draw past the 
+   // go all the way to the end of the line width...this will draw past the
    // right edge, but that's what we want.
    r.width = wxMax(mWidth, r.width);
 
@@ -1177,7 +1177,7 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
 // Provide the height of the given line
 //
 // This is called by the listbox when it needs to redraw the view.
-// 
+//
 wxCoord
 KeyView::OnMeasureItem(size_t WXUNUSED(line)) const
 {
@@ -1537,7 +1537,7 @@ KeyView::OnLeftDown(wxMouseEvent & event)
 // "command" nodes.
 //
 // To accomplish this, we prepend each label with it's line number
-// (in hex) for "menu" nodes.  This ensures they will remain in 
+// (in hex) for "menu" nodes.  This ensures they will remain in
 // their original order.
 //
 // We prefix all "command" nodes with "ffffffff" (highest hex value)
@@ -1551,7 +1551,7 @@ KeyView::CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2)
    wxString k1 = t1->label;
    wxString k2 = t2->label;
 
-   // This is a "command" node if its category is "Command" 
+   // This is a "command" node if its category is "Command"
    // and it is a child of the "Command" category.  This latter
    // test ensures that the "Command" parent will be handled
    // as a "menu" node and remain at the bottom of the list.
@@ -2151,7 +2151,7 @@ KeyViewAx::GetState(int childId, long *state)
 
    if (mView->HasChildren(line))
    {
-      flag |= mView->IsExpanded(line) ? 
+      flag |= mView->IsExpanded(line) ?
          wxACC_STATE_SYSTEM_EXPANDED :
          wxACC_STATE_SYSTEM_COLLAPSED;
    }

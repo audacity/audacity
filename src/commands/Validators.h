@@ -146,9 +146,9 @@ public:
    virtual bool Validate(const wxVariant &v)
    {
       wxString val;         // Validate a string of chars containing only 0, 1 and x.
-      if (!v.Convert(&val)) 
+      if (!v.Convert(&val))
          return false;
-      SetConverted(val);   
+      SetConverted(val);
       for(size_t i=0; i != val.Len(); i++)
          if( val[i] != '0' && val[i] != '1' && val[i] != 'x' && val[i] != 'X')
             return false;

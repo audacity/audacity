@@ -11,7 +11,7 @@
   classes which wish to be able to load and save themselves
   using XML files.
 
-  The XMLValueChecker class implements static bool methods for checking 
+  The XMLValueChecker class implements static bool methods for checking
   input values from XML files.
 
 **********************************************************************/
@@ -27,7 +27,7 @@ class XMLValueChecker
 {
 public:
    // "Good" means well-formed and for the file-related functions, names an existing file or folder.
-   // These are used in HandleXMLTag and BuildFomXML methods to check the input for 
+   // These are used in HandleXMLTag and BuildFomXML methods to check the input for
    // security vulnerabilites, per the NGS report for UmixIt.
    static bool IsGoodString(const wxString str);
 
@@ -57,8 +57,8 @@ public:
 	* @return true if the string is convertable, false if not
 	*/
    static bool IsGoodInt64(const wxString strInt);
-   
-   static bool IsValidChannel(const int nValue); 
+
+   static bool IsValidChannel(const int nValue);
 #ifdef USE_MIDI
    static bool IsValidVisibleChannels(const int nValue);
 #endif

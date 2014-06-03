@@ -3,10 +3,10 @@
   Audacity: A Digital Audio Editor
 
   ImageManipulation.h
-  
+
   Dominic Mazzoni
 
-**********************************************************************/  
+**********************************************************************/
 
 #include <wx/defs.h>
 #include <wx/colour.h>
@@ -15,10 +15,10 @@
 class wxImage;
 
 // This looks at the first pixel in the image, and shifts
-// the entire image by the vector difference between that 
+// the entire image by the vector difference between that
 // pixel and the dstColour.  For better control, use
 // ChangeImageColour(wxImage, wxColour*, wxColour*) below
-wxImage *ChangeImageColour(wxImage * srcImage, wxColour & dstColour); 
+wxImage *ChangeImageColour(wxImage * srcImage, wxColour & dstColour);
 
 // This function takes a source image, which it assumes to
 // be grayscale, and smoothly changes the overall color
@@ -30,7 +30,7 @@ wxImage *ChangeImageColour(wxImage * srcImage, wxColour & dstColour);
 wxImage *ChangeImageColour(wxImage * srcImage,
                            wxColour & srcColour,
                            wxColour & dstColour);
-     
+
 // Takes a background image, foreground image, and mask
 // (i.e. the alpha channel for the foreground), and
 // returns an new image where the foreground has been

@@ -5,13 +5,13 @@
    License: GPL v2.  See License.txt.
 
   PitchName.cpp
-  Vaughan Johnson and Dominic Mazzoni. 
+  Vaughan Johnson and Dominic Mazzoni.
 
 ******************************************************************//**
 
 \file PitchName.cpp
-\brief   Utilities for converting from frequency to pitch  
-  and from pitch to absolute (e.g., C4 for middle C) 
+\brief   Utilities for converting from frequency to pitch
+  and from pitch to absolute (e.g., C4 for middle C)
   or nominal (A through G#) pitch name.
 
 *//*******************************************************************/
@@ -25,7 +25,7 @@
 
 double FreqToMIDInote(const double freq)
 {
-   // Make the calculation relative to A440 (A4), note number 69. 
+   // Make the calculation relative to A440 (A4), note number 69.
    return (69.0 + (12.0 * (log(freq / 440.0) / log(2.0))));
 }
 
@@ -40,7 +40,7 @@ unsigned int PitchIndex(const double dMIDInote)
    double dRound = (dMIDInote < 0.0) ? -0.5 : 0.5;
    int nPitchIndex = ((int)(dMIDInote + dRound) % 12);
 
-   // Because of the modulo, we know we're within 12 of positive, if dMIDInote is negative. 
+   // Because of the modulo, we know we're within 12 of positive, if dMIDInote is negative.
    if (nPitchIndex < 0)
       nPitchIndex += 12;
 

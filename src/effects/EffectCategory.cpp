@@ -21,19 +21,19 @@ EffectCategory::EffectCategory(const wxString& uri, const wxString& name)
 
 }
 
-   
+
 const wxString& EffectCategory::GetUri() const {
    return mUri;
 }
-   
+
 const wxString& EffectCategory::GetName() const {
    return mName;
 }
-   
+
 const CategorySet& EffectCategory::GetParents() const {
    return mParents;
 }
-   
+
 const CategorySet& EffectCategory::GetSubCategories() const {
    return mSubCategories;
 }
@@ -48,7 +48,7 @@ EffectSet EffectCategory::GetEffects(int type) const {
    }
    return result;
 }
-   
+
    // Return all the effects that belong to this immediate category or any
    // of its subcategories), filtered by effect type.
 EffectSet EffectCategory::GetAllEffects(int type) const {
@@ -73,7 +73,7 @@ bool EffectCategory::AddParent(EffectCategory* parent) {
    parent->mSubCategories.insert(this);
    return true;
 }
-   
+
 bool EffectCategory::AddEffect(Effect* effect) {
    mEffects.insert(effect);
    return true;

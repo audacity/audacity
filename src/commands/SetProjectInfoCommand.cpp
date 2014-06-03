@@ -57,19 +57,19 @@ bool SetProjectInfoCommand::Apply(CommandExecutionContext context)
    wxString settingsString = GetString(wxT(kSetOfTracksStr));
 
    if (mode.IsSameAs(wxT("SelectedTracks")))
-      SetAllTracksParam( context.proj->GetTracks(), settingsString, 
+      SetAllTracksParam( context.proj->GetTracks(), settingsString,
 &SetProjectInfoCommand::setSelected);
 
    else if (mode.IsSameAs(wxT("SoloTracks")))
       SetAllTracksParam( context.proj->GetTracks(), settingsString, &SetProjectInfoCommand::setSolo);
-   
+
    else if (mode.IsSameAs(wxT("MuteTracks")))
       SetAllTracksParam( context.proj->GetTracks(), settingsString, &SetProjectInfoCommand::setMute);
    else
    {
       Error(wxT("Invalid info type!"));
       return false;
-   } 
+   }
    return true;
 }
 
@@ -83,7 +83,7 @@ void SetProjectInfoCommand::SetAllTracksParam(TrackList *projTracks, wxString bo
    Track *t = iter.First();
    while (t && i<boolValueStr.Len())
    {
-      if(boolValueStr[i] == '1') 
+      if(boolValueStr[i] == '1')
          (this->*functPtrToSetter)(t, true);
       if(boolValueStr[i] == '0')
          (this->*functPtrToSetter)(t, false);
@@ -94,7 +94,7 @@ void SetProjectInfoCommand::SetAllTracksParam(TrackList *projTracks, wxString bo
 
 void SetProjectInfoCommand::setSelected(Track * trk, bool param) const
 {
-   trk->SetSelected(param); 
+   trk->SetSelected(param);
 }
 
 void SetProjectInfoCommand::setSolo(Track * trk, bool param) const

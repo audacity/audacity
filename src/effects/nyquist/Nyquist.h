@@ -53,8 +53,8 @@ WX_DECLARE_USER_EXPORTED_OBJARRAY(NyqControl,  NyqControlArray, AUDACITY_DLL_API
 class AUDACITY_DLL_API EffectNyquist:public Effect
 {
  public:
-   
-   /** @param fName File name of the Nyquist script defining this effect. If 
+
+   /** @param fName File name of the Nyquist script defining this effect. If
     * an empty string, then prompt the user for the Nyquist code to interpret.
     */
    EffectNyquist(wxString fName);
@@ -80,7 +80,7 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    virtual wxString GetEffectName() {
       return mName;
    }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> cats;
       for (size_t i = 0; i < mCategories.GetCount(); i++) {
@@ -94,7 +94,7 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
          // Disabled for now...
          return wxT("");
       }
-      
+
       wxStringTokenizer st(mName, wxT(" "));
       wxString id;
 
@@ -107,19 +107,19 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
 
       return id;
    }
-   
+
    virtual wxString GetEffectAction() {
       return mAction;
    }
 
    virtual bool PromptUser();
-   
+
    virtual bool Process();
 
    // Batch chain support
-   virtual bool SupportsChains();  
+   virtual bool SupportsChains();
    virtual bool TransferParameters( Shuttle & shuttle );
-   
+
  private:
 
    static wxString NyquistToWxString(const char *nyqString);
@@ -165,7 +165,7 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
     * the "Nyquist Prompt", false for all other effects (lisp code read from
     * files)
     */
-   bool              mInteractive;  
+   bool              mInteractive;
    bool              mOK;
    wxString          mInputCmd; // history: exactly what the user typed
    wxString          mCmd;      // the command to be processed

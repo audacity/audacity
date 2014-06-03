@@ -27,16 +27,16 @@ class wxString;
 class WaveTrack;
 
 class EffectCompressor: public EffectTwoPassSimpleMono {
-   
+
 public:
-   
+
    EffectCompressor();
    virtual ~EffectCompressor();
-   
+
    virtual wxString GetEffectName() {
       return wxString(_("Compressor..."));
    }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
      std::set<wxString> result;
      result.insert(wxT("http://lv2plug.in/ns/lv2core#CompressorPlugin"));
@@ -50,7 +50,7 @@ public:
    virtual wxString GetEffectAction() {
       return wxString(_("Applying Dynamic Range Compression..."));
    }
-   
+
    virtual bool Init();
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
@@ -74,14 +74,14 @@ public:
 
    void Follow(float *buffer, float *env, int len, float *previous, int previous_len);
    float DoCompression(float x, double env);
-   
+
    double    mAttackTime;
    double    mThresholdDB;
    double    mNoiseFloorDB;
    double    mRatio;
    bool      mNormalize;	//MJS
    bool      mUsePeak;
-   
+
    double    mDecayTime;   // The "Release" time.
    double    mAttackFactor;
    double    mAttackInverseFactor;
@@ -104,7 +104,7 @@ public:
 class CompressorPanel: public wxPanel
 {
 public:
-   CompressorPanel( wxWindow *parent, wxWindowID id, 
+   CompressorPanel( wxWindow *parent, wxWindowID id,
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxDefaultSize);
 
@@ -178,7 +178,7 @@ private:
 
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mPeakCheckBox;
-   
+
 private:
    DECLARE_EVENT_TABLE()
 };

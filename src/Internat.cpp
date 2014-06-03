@@ -20,7 +20,7 @@ and on Mac OS X for the filesystem.
 
 *//*******************************************************************/
 
-#include <wx/msgdlg.h> 
+#include <wx/msgdlg.h>
 #include <wx/log.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
@@ -97,17 +97,17 @@ wxString Internat::ToDisplayString(double numberToConvert,
    if (digitsAfterDecimalPoint == -1)
    {
       result.Printf(wxT("%f"), numberToConvert);
-      
+
       // Not all libcs respect the decimal separator, so always convert
       // any dots found to the decimal separator.
       result.Replace(wxT("."), decSep);
-      
+
       if (result.Find(decSep) != -1)
       {
-         // Strip trailing zeros, but leave one, and decimal separator. 
+         // Strip trailing zeros, but leave one, and decimal separator.
          int pos = result.Length() - 1;
-         while ((pos > 1) && 
-                  (result.GetChar(pos) == wxT('0')) && 
+         while ((pos > 1) &&
+                  (result.GetChar(pos) == wxT('0')) &&
                   (result.GetChar(pos - 1) != decSep))
             pos--;
          // (Previous code removed all of them and decimal separator.)
@@ -115,13 +115,13 @@ wxString Internat::ToDisplayString(double numberToConvert,
          //       pos--; // strip point before empty fractional part
          result = result.Left(pos+1);
       }
-   } 
+   }
    else
    {
       wxString format;
       format.Printf(wxT("%%.%if"), digitsAfterDecimalPoint);
       result.Printf(format, numberToConvert);
-      
+
       // Not all libcs respect the decimal separator, so always convert
       // any dots found to the decimal separator
       result.Replace(wxT("."), decSep);

@@ -5,7 +5,7 @@
   Invert.h
 
   Mark Phillips
-  
+
   This class inverts the selected audio.
 
 **********************************************************************/
@@ -26,7 +26,7 @@ class EffectInvert:public EffectSimpleMono {
    virtual wxString GetEffectName() {
       return wxString(_("Invert"));
    }
-   
+
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;
       result.insert(wxT("http://lv2plug.in/ns/lv2core#UtilityPlugin"));
@@ -40,7 +40,7 @@ class EffectInvert:public EffectSimpleMono {
    virtual wxString GetEffectAction() {
       return wxString(_("Inverting"));
    }
-   
+
  protected:
    virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
 };

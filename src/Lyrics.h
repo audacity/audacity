@@ -6,7 +6,7 @@
 
   Dominic Mazzoni
   Vaughan Johnson
-  
+
 **********************************************************************/
 
 #ifndef __AUDACITY_LYRICS__
@@ -16,7 +16,7 @@
 
 #include <wx/dynarray.h>
 #include <wx/panel.h>
-#include <wx/textctrl.h> 
+#include <wx/textctrl.h>
 
 
 #define LYRICS_DEFAULT_WIDTH 608
@@ -41,10 +41,10 @@ class Lyrics;
 class HighlightTextCtrl : public wxTextCtrl
 {
 public:
-   HighlightTextCtrl(Lyrics* parent, 
-                     wxWindowID id, 
-                     const wxString& value = wxT(""), 
-                     const wxPoint& pos = wxDefaultPosition, 
+   HighlightTextCtrl(Lyrics* parent,
+                     wxWindowID id,
+                     const wxString& value = wxT(""),
+                     const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
    virtual ~HighlightTextCtrl() {};
 
@@ -56,7 +56,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-class Lyrics : public wxPanel 
+class Lyrics : public wxPanel
 {
    DECLARE_DYNAMIC_CLASS(Lyrics)
 
@@ -95,7 +95,7 @@ class Lyrics : public wxPanel
 
    // Doesn't seem to be a way to capture a selection event in a read-only wxTextCtrl.
    // Thus the HighlightTextCtrl class.
-   //    void OnHighlightTextCtrl(wxCommandEvent & event); 
+   //    void OnHighlightTextCtrl(wxCommandEvent & event);
 
    void HandlePaint(wxDC &dc);
    void HandlePaint_BouncingBall(wxDC &dc);
@@ -104,7 +104,7 @@ class Lyrics : public wxPanel
 
 private:
    unsigned int GetDefaultFontSize() const; // Depends on mLyricsStyle. Call only after mLyricsStyle is set.
-   
+
    void SetDrawnFont(wxDC *dc); // for kBouncingBallLyrics
    void SetHighlightFont(); // for kHighlightLyrics
 
@@ -126,7 +126,7 @@ private:
 
    int            mCurrentSyllable;
    SyllableArray  mSyllables;
-   wxString       mText; 
+   wxString       mText;
 
    int            mTextHeight; // only for drawn text
    bool           mMeasurementsDone; // only for drawn text

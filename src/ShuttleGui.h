@@ -19,7 +19,7 @@
 #include <wx/grid.h>
 #include <wx/string.h>
 
-#include "WrappedType.h" 
+#include "WrappedType.h"
 
 const int nMaxNestedSizers = 20;
 
@@ -173,7 +173,7 @@ public:
    wxChoice * TieChoice( const wxString &Prompt, WrappedType & WrappedRef, const wxArrayString * pChoices );
    wxChoice * TieChoice( const wxString &Prompt, wxString &Selected, const wxArrayString * pChoices );
    wxChoice * TieChoice( const wxString &Prompt, int &Selected, const wxArrayString * pChoices );
-   
+
    wxSlider * TieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
    wxSlider * TieSlider( const wxString &Prompt, int &pos, const int max, const int min = 0);
    wxSlider * TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
@@ -191,55 +191,55 @@ public:
 // Note that unlike the other Tie functions, ALL the arguments are const.
 // That's because the data is being exchanged between the dialog and mpShuttle
 // so it doesn't need an argument that is writeable.
-   wxCheckBox * TieCheckBox( 
+   wxCheckBox * TieCheckBox(
       const wxString &Prompt,
       const wxString &SettingName,
       const bool bDefault);
-   wxCheckBox * TieCheckBoxOnRight( 
+   wxCheckBox * TieCheckBoxOnRight(
       const wxString &Prompt,
       const wxString &SettingName,
       const bool bDefault);
-   wxChoice * TieChoice( 
-      const wxString &Prompt, 
-      const wxString &SettingName, 
-      const wxString &Default, 
+   wxChoice * TieChoice(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const wxString &Default,
       const wxArrayString &Choices,
       const wxArrayString & TranslatedChoices );
-   wxChoice * TieChoice( 
-      const wxString &Prompt, 
-      const wxString &SettingName, 
-      const int Default, 
+   wxChoice * TieChoice(
+      const wxString &Prompt,
+      const wxString &SettingName,
+      const int Default,
       const wxArrayString & Choices,
       const wxArrayInt & TranslatedChoices);
    wxTextCtrl * TieTextBox(
-      const wxString &Prompt, 
-      const wxString &SettingName, 
+      const wxString &Prompt,
+      const wxString &SettingName,
       const wxString &Default,
       const int nChars);
    wxTextCtrl * TieTextBox(
-      const wxString & Prompt, 
-      const wxString & SettingName, 
+      const wxString & Prompt,
+      const wxString & SettingName,
       const double & Default,
       const int nChars);
    wxTextCtrl * TieNumericTextBox(
-      const wxString &Prompt, 
-      const wxString &SettingName, 
+      const wxString &Prompt,
+      const wxString &SettingName,
       const wxString &Default,
       const int nChars);
    wxTextCtrl * TieNumericTextBox(
-      const wxString & Prompt, 
-      const wxString & SettingName, 
+      const wxString & Prompt,
+      const wxString & SettingName,
       const double & Default,
       const int nChars);
    wxSlider * TieSlider(
-      const wxString & Prompt, 
-      const wxString & SettingName, 
+      const wxString & Prompt,
+      const wxString & SettingName,
       const int iDefault,
       const int max,
       const int min = 0);
    wxSpinCtrl * TieSpinCtrl(
-      const wxString &Prompt, 
-      const wxString &SettingName, 
+      const wxString &Prompt,
+      const wxString &SettingName,
       const int Value,
       const int max,
       const int min);
@@ -276,7 +276,7 @@ protected:
    wxSizer * pSizerStack[ nMaxNestedSizers ];
    wxString mBoxName;
 
-   Shuttle * mpShuttle; /*! Controls source/destination of shuttled data.  You can 
+   Shuttle * mpShuttle; /*! Controls source/destination of shuttled data.  You can
    leave this NULL if you are shuttling to variables */
    int miNoMatchSelector; //! Used in choices to determine which item to use on no match.
 

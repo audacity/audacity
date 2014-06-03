@@ -12,7 +12,7 @@ Some GUI code was taken from the Echo effect
 /**
 
   \class EffectPaulstretch
-  \brief An Extreme Time Stretch and Time Smear effect 
+  \brief An Extreme Time Stretch and Time Smear effect
 
 *//****************************************************************/
 
@@ -51,9 +51,9 @@ EffectPaulstretch::EffectPaulstretch(){
 };
 
 wxString EffectPaulstretch::GetEffectDescription(){
-   // Note: This is useful only after values have been set. 
-   return wxString::Format(_("Applied effect: %s stretch factor = %f times, time resolution = %f seconds"), 
-         this->GetEffectName().c_str(), amount,time_resolution); 
+   // Note: This is useful only after values have been set.
+   return wxString::Format(_("Applied effect: %s stretch factor = %f times, time resolution = %f seconds"),
+         this->GetEffectName().c_str(), amount,time_resolution);
 
 };
 
@@ -82,7 +82,7 @@ bool EffectPaulstretch::TransferParameters(Shuttle &shuttle){
 
 
 bool EffectPaulstretch::Process(){
-   CopyInputTracks(); 
+   CopyInputTracks();
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
    m_t1=mT1;
@@ -229,7 +229,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
       };
    };
 
-   delete [] fade_track_smps; 
+   delete [] fade_track_smps;
    outputTrack->Flush();
 
 
@@ -314,7 +314,7 @@ void PaulStretch::process(float *smps,int nsmps){
       for (int i=0;i<nleft;i++) in_pool[i]=in_pool[i+nsmps];
 
       //add new samples to the pool
-      for (int i=0;i<nsmps;i++) in_pool[i+nleft]=smps[i];   
+      for (int i=0;i<nsmps;i++) in_pool[i+nleft]=smps[i];
    };
 
    //get the samples from the pool
@@ -414,11 +414,11 @@ END_EVENT_TABLE()
    };
 
 
-void PaulstretchDialog::PopulateOrExchange(ShuttleGui & S) 
+void PaulstretchDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      /* i18n-hint: This is how many times longer the sound will be, e.g. applying 
+      /* i18n-hint: This is how many times longer the sound will be, e.g. applying
        * the effect to a 1-second sample, with the default Stretch Factor of 10.0
        * will give an (approximately) 10 second sound
        */

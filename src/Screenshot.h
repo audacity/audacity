@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   Screenshot.h
-  
+
   Dominic Mazzoni
 
 *******************************************************************//**

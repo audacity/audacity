@@ -56,7 +56,7 @@ class BlockFile {
                         sampleCount start, sampleCount len) = 0;
 
    // Other Properties
-   
+
    // Write cache to disk, if it has any
    virtual bool GetNeedWriteCacheToDisk() { return false; }
    virtual void WriteCacheToDisk() { /* no cache by default */ }
@@ -96,16 +96,16 @@ class BlockFile {
 
    /// Returns TRUE if this block references another disk file
    virtual bool IsAlias() { return false; }
-   
+
    /// Returns TRUE if this block's complete summary has been computed and is ready (for OD)
    virtual bool IsSummaryAvailable(){return true;}
 
    /// Returns TRUE if this block's complete data is ready to be accessed by Read()
    virtual bool IsDataAvailable(){return true;}
-   
-   /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk 
+
+   /// Returns TRUE if the summary has not yet been written, but is actively being computed and written to disk
    virtual bool IsSummaryBeingComputed(){return false;}
-   
+
    /// Create a new BlockFile identical to this, using the given filename
    virtual BlockFile *Copy(wxFileName newFileName) = 0;
 
@@ -125,7 +125,7 @@ class BlockFile {
    ///when the project closes, it locks the blockfiles.
    ///Override this in case it needs special treatment
    virtual void CloseLock(){Lock();}
-   
+
    /// Prevents a read on other threads.  The basic blockfile runs on only one thread, so does nothing.
    virtual void LockRead(){}
    /// Allows reading on other threads.

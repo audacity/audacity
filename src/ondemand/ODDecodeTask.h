@@ -15,7 +15,7 @@
 
 This is an abstract class that subclasses will have to derive the types
 from.  For any type there should only be one ODDecodeTask associated with
-a given track.  
+a given track.
 There could be the ODBlockFiles of several FLACs in one track (after copy and pasting),
 so things aren't as simple as they seem - the implementation needs to be
 robust enough to allow all the user changes such as copy/paste, delete, and so on.
@@ -42,26 +42,26 @@ class ODDecodeTask:public ODTask
  public:
    ODDecodeTask();
    virtual ~ODDecodeTask(){};
-   
+
    virtual ODTask* Clone()=0;
-   
+
    virtual bool SeekingAllowed();
-   
+
    ///changes the tasks associated with this Waveform to process the task from a different point in the track
    ///this is overridden from ODTask because certain classes don't allow users to seek sometimes, or not at all.
    virtual void DemandTrackUpdate(WaveTrack* track, double seconds);
-   
+
    ///Return the task name
    virtual const char* GetTaskName(){return "ODDecodeTask";}
-   
+
    virtual const wxChar* GetTip(){return _("Decoding Waveform");}
-   
+
    ///Subclasses should override to return respective type.
    virtual unsigned int GetODType(){return eODNone;}
-   
+
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
    virtual ODFileDecoder* CreateFileDecoder(const wxString & fileName)=0;
-   
+
    ///there could be the ODBlockFiles of several FLACs in one track (after copy and pasting)
    ///so we keep a list of decoders that keep track of the file names, etc, and check the blocks against them.
    ///Blocks that have IsDataAvailable()==false are blockfiles to be decoded.  if BlockFile::GetDecodeType()==ODDecodeTask::GetODType() then
@@ -69,27 +69,27 @@ class ODDecodeTask:public ODTask
    ///be called from the decoding thread.
    virtual ODFileDecoder* GetOrCreateMatchingFileDecoder(ODDecodeBlockFile* blockFile);
    virtual int GetNumFileDecoders();
-   
-   
+
+
 protected:
 
    ///recalculates the percentage complete.
    virtual void CalculatePercentComplete();
-     
-   ///Computes and writes the data for one BlockFile if it still has a refcount. 
+
+   ///Computes and writes the data for one BlockFile if it still has a refcount.
    virtual void DoSomeInternal();
-   
+
    ///Readjusts the blockfile order in the default manner.  If we have had an ODRequest
    ///Then it updates in the OD manner.
    virtual void Update();
-   
+
    ///Orders the input as either On-Demand or default layered order.
    void OrderBlockFiles(std::vector<ODDecodeBlockFile*> &unorderedBlocks);
 
-   
+
    std::vector<ODDecodeBlockFile*> mBlockFiles;
    std::vector<ODFileDecoder*> mDecoders;
-      
+
    int mMaxBlockFiles;
    int mComputedBlockFiles;
 

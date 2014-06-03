@@ -28,7 +28,7 @@ class EffectNormalize: public Effect
 
  public:
    EffectNormalize();
-   
+
    virtual wxString GetEffectName() {
       return wxString(_("Normalize..."));
    }
@@ -44,11 +44,11 @@ class EffectNormalize: public Effect
    virtual wxString GetEffectIdentifier() {
       return wxT("Normalize");
    }
-   
+
    virtual wxString GetEffectAction() {
       return wxString(_("Normalizing..."));
    }
-   
+
    virtual wxString GetEffectDescription(); // useful only after parameter values have been set
 
    virtual bool PromptUser();
@@ -58,7 +58,7 @@ class EffectNormalize: public Effect
    virtual void End();
    virtual bool CheckWhetherSkipEffect();
    virtual bool Process();
-   
+
  private:
    bool ProcessOne(WaveTrack * t, wxString msg);
    virtual void AnalyseTrack(WaveTrack * track, wxString msg);
@@ -115,7 +115,7 @@ class NormalizeDialog: public EffectDialog
 
    DECLARE_EVENT_TABLE()
 
- public:   
+ public:
    bool mGain;
    bool mDC;
    double mLevel;

@@ -34,8 +34,8 @@ class ODDecodeFFmpegTask:public ODDecodeTask
    virtual ODTask* Clone();
    ///Creates an ODFileDecoder that decodes a file of filetype the subclass handles.
    virtual ODFileDecoder* CreateFileDecoder(const wxString & fileName);
-   
-   ///Lets other classes know that this class handles the ffmpeg type   
+
+   ///Lets other classes know that this class handles the ffmpeg type
    ///Subclasses should override to return respective type.
    virtual unsigned int GetODType(){return eODFFMPEG;}
 

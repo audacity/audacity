@@ -170,7 +170,7 @@ void TimeRenderer::Draw(wxGrid &grid,
    }
 
    dc.SetBackgroundMode(wxTRANSPARENT);
-   
+
    if (grid.IsEnabled())
    {
       if (isSelected)
@@ -189,7 +189,7 @@ void TimeRenderer::Draw(wxGrid &grid,
       dc.SetTextBackground(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
       dc.SetTextForeground(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
    }
-   
+
    dc.SetFont(attr.GetFont());
 
    int hAlign, vAlign;
@@ -533,7 +533,7 @@ bool Grid::InsertRows(int pos, int numRows, bool updateLabels)
 bool Grid::AppendRows(int numRows, bool updateLabels)
 {
    bool res = wxGrid::AppendRows(numRows, updateLabels);
-   
+
    mAx->TableUpdated();
 
    return res;
@@ -542,7 +542,7 @@ bool Grid::AppendRows(int numRows, bool updateLabels)
 bool Grid::DeleteRows(int pos, int numRows, bool updateLabels)
 {
    bool res = wxGrid::DeleteRows(pos, numRows, updateLabels);
-   
+
    mAx->TableUpdated();
 
    return res;

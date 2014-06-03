@@ -3,9 +3,9 @@
   Audacity: A Digital Audio Editor
 
   Reverb_libSoX.h
-  Stereo reverberation effect from libSoX, 
+  Stereo reverberation effect from libSoX,
   adapted for Audacity (audacity.sourceforge.net)
-  
+
   Copyright (c) 2007-2013 robs@users.sourceforge.net
   Licence: LGPL v2.1
   Filter configuration based on freeverb by Jezar Wakefield.

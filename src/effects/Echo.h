@@ -47,19 +47,19 @@ class EffectEcho:public Effect {
    virtual wxString GetEffectAction() {
       return wxString(_("Performing Echo"));
    }
-   
-   // Useful only after PromptUser values have been set. 
-   virtual wxString GetEffectDescription(); 
+
+   // Useful only after PromptUser values have been set.
+   virtual wxString GetEffectDescription();
 
    virtual bool PromptUser();
    virtual bool TransferParameters( Shuttle & shuttle );
-   
+
    virtual bool Process();
 
  private:
    bool ProcessOne(int count, WaveTrack * t,
                    sampleCount start, sampleCount len);
- 
+
    float delay;
    float decay;
 

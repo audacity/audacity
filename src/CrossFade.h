@@ -5,15 +5,15 @@
   CrossFade.h
 
  (c) 2005 The Audacity Team
-  Licensed under the GPL version 2.0 
+  Licensed under the GPL version 2.0
 
 **********************************************************************/
 #ifndef __AUDACITY_CROSSFADE__
 #define __AUDACITY_CROSSFADE__
 
-/// This defines a crossfader class that 
+/// This defines a crossfader class that
 /// accepts a list of WaveClips and can do a mini-mixing
-/// to produce the desired crossfading 
+/// to produce the desired crossfading
 
 #include "SampleFormat.h"
 #include "Resample.h"
@@ -39,18 +39,18 @@ class CrossFader
   void SetMixCrossFade(){mType = FT_MIX;};
   void SetTriangularCrossFade(){mType = FT_TRIANGULAR;};
   void SetExponentialCrossFade(){mType = FT_EXPONENTIAL;};
-  
+
   void AddClip( WaveClip * clip);
   void ClearClips();
   //Produces samples according to crossfading rules.
-  bool  GetSamples(samplePtr buffer, sampleFormat format, 
+  bool  GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len);
-  
+
  protected:
   WaveClipList mClips;
 
  private:
-  
+
   bool CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, sampleCount len);
 
   FadeType mType;

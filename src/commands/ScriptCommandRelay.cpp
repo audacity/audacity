@@ -33,12 +33,12 @@ tpRegScriptServerFunc ScriptCommandRelay::sScriptFn;
 ResponseQueue ScriptCommandRelay::sResponseQueue;
 
 void ScriptCommandRelay::SetRegScriptServerFunc(tpRegScriptServerFunc scriptFn)
-{ 
+{
    sScriptFn = scriptFn;
 }
 
 void ScriptCommandRelay::SetCommandHandler(CommandHandler &ch)
-{ 
+{
    sCmdHandler = &ch;
 }
 

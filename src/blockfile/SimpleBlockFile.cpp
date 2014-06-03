@@ -15,7 +15,7 @@
 *//****************************************************************//**
 
 \class SimpleBlockFile
-\brief A BlockFile that reads and writes uncompressed data using 
+\brief A BlockFile that reads and writes uncompressed data using
 libsndfile
 
 A block file that writes the audio data to an .au file and reads
@@ -42,7 +42,7 @@ default is to disable caching.
   will be called on all block files and they will be written to disk. During
   normal editing, no write cache is active, that is, any block files will be
   written to disk instantly.
-  
+
   Even with write cache, auto recovery during normal editing will work as
   expected. However, auto recovery during recording will not work (not even
   manual auto recovery, because the files are never written physically to
@@ -51,8 +51,8 @@ default is to disable caching.
 *//****************************************************************//**
 
 \class auHeader
-\brief The auHeader is a structure used by SimpleBlockFile for .au file 
-format.  There probably is an 'official' header file we should include 
+\brief The auHeader is a structure used by SimpleBlockFile for .au file
+format.  There probably is an 'official' header file we should include
 to get its definition, rather than rolling our own.
 
 *//*******************************************************************/
@@ -102,15 +102,15 @@ SimpleBlockFile::SimpleBlockFile(wxFileName baseFileName,
    BlockFile(wxFileName(baseFileName.GetFullPath() + wxT(".au")), sampleLen)
 {
    mCache.active = false;
-   
+
    bool useCache = GetCache() && (!bypassCache);
 
    if (!(allowDeferredWrite && useCache) && !bypassCache)
    {
       bool bSuccess = WriteSimpleBlockFile(sampleData, sampleLen, format, NULL);
-      wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op. 
+      wxASSERT(bSuccess); // TODO: Handle failure here by alert to user and undo partial op.
    }
-      
+
    if (useCache) {
       //wxLogDebug("SimpleBlockFile::SimpleBlockFile(): Caching block file data.");
       mCache.active = true;
@@ -202,7 +202,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    // Write the file
    if (!summaryData)
       summaryData = /*BlockFile::*/CalcSummary(sampleData, sampleLen, format); //mchinen:allowing virtual override of calc summary for ODDecodeBlockFile.
-   
+
    size_t nBytesToWrite = sizeof(header);
    size_t nBytesWritten = file.Write(&header, nBytesToWrite);
    if (nBytesWritten != nBytesToWrite)
@@ -229,7 +229,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
       for( int i = 0; i < sampleLen; i++ )
       {
          nBytesToWrite = 3;
-         nBytesWritten = 
+         nBytesWritten =
             #if wxBYTE_ORDER == wxBIG_ENDIAN
                file.Write((char*)&int24sampleData[i] + 1, nBytesToWrite);
             #else
@@ -254,7 +254,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
          return false;
       }
    }
-    
+
     return true;
 }
 
@@ -278,9 +278,9 @@ void SimpleBlockFile::FillCache()
       // Corrupt file
       return;
    }
-   
+
    wxUint32 encoding;
-   
+
    if (header.magic == 0x2e736e64)
       encoding = header.encoding; // correct endianness
    else
@@ -299,9 +299,9 @@ void SimpleBlockFile::FillCache()
       mCache.format = floatSample;
       break;
    }
-   
+
    file.Close();
-   
+
    // Read samples into cache
    mCache.sampleData = new char[mLen * SAMPLE_SIZE(mCache.format)];
    if (ReadData(mCache.sampleData, mCache.format, 0, mLen) != mLen)
@@ -319,7 +319,7 @@ void SimpleBlockFile::FillCache()
    // Cache is active but already on disk
    mCache.active = true;
    mCache.needWrite = false;
-   
+
    //wxLogDebug("SimpleBlockFile::FillCache(): Succesfully read simple block file into cache.");
 }
 
@@ -337,30 +337,30 @@ bool SimpleBlockFile::ReadSummary(void *data)
    } else
    {
       //wxLogDebug("SimpleBlockFile::ReadSummary(): Reading summary from disk.");
-      
+
       wxFFile file(mFileName.GetFullPath(), wxT("rb"));
 
       wxLogNull *silence=0;
       if(mSilentLog)silence= new wxLogNull();
-   
+
       if(!file.IsOpened() ){
-      
+
          memset(data,0,(size_t)mSummaryInfo.totalSummaryBytes);
 
          if(silence) delete silence;
          mSilentLog=TRUE;
 
          return true;
-      
+
       }
 
       if(silence) delete silence;
       mSilentLog=FALSE;
-   
+
       // The offset is just past the au header
       if( !file.Seek(sizeof(auHeader)) )
          return false;
-   
+
       int read = (int)file.Read(data, (size_t)mSummaryInfo.totalSummaryBytes);
 
       FixSummary(data);
@@ -382,7 +382,7 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
    if (mCache.active)
    {
       //wxLogDebug("SimpleBlockFile::ReadData(): Data are already in cache.");
-      
+
       if (len > mLen - start)
          len = mLen - start;
       CopySamples(
@@ -393,11 +393,11 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
    } else
    {
       //wxLogDebug("SimpleBlockFile::ReadData(): Reading data from disk.");
-      
+
       SF_INFO info;
       wxLogNull *silence=0;
       if(mSilentLog)silence= new wxLogNull();
-   
+
       memset(&info, 0, sizeof(info));
 
       wxFile f;   // will be closed when it goes out of scope
@@ -411,7 +411,7 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
       }
 
       if (!sf) {
-      
+
          memset(data,0,SAMPLE_SIZE(format)*len);
 
          if(silence) delete silence;
@@ -421,7 +421,7 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
       }
       if(silence) delete silence;
       mSilentLog=FALSE;
-   
+
       sf_seek(sf, start, SEEK_SET);
       samplePtr buffer = NewSamples(len, floatSample);
 
@@ -457,7 +457,7 @@ int SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
       }
 
       DeleteSamples(buffer);
-   
+
       sf_close(sf);
 
       return framesRead;
@@ -477,8 +477,8 @@ void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)
    xmlFile.EndTag(wxT("simpleblockfile"));
 }
 
-// BuildFromXML methods should always return a BlockFile, not NULL,  
-// even if the result is flawed (e.g., refers to nonexistent file), 
+// BuildFromXML methods should always return a BlockFile, not NULL,
+// even if the result is flawed (e.g., refers to nonexistent file),
 // as testing will be done in DirManager::ProjectFSCK().
 /// static
 BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
@@ -497,18 +497,18 @@ BlockFile *SimpleBlockFile::BuildFromXML(DirManager &dm, const wxChar **attrs)
          break;
 
       const wxString strValue = value;
-      if (!wxStricmp(attr, wxT("filename")) && 
+      if (!wxStricmp(attr, wxT("filename")) &&
             // Can't use XMLValueChecker::IsGoodFileName here, but do part of its test.
-            XMLValueChecker::IsGoodFileString(strValue) && 
+            XMLValueChecker::IsGoodFileString(strValue) &&
             (strValue.Length() + 1 + dm.GetProjectDataDir().Length() <= PLATFORM_MAX_PATH))
       {
          if (!dm.AssignFile(fileName, strValue, false))
             // Make sure fileName is back to uninitialized state so we can detect problem later.
             fileName.Clear();
       }
-      else if (!wxStrcmp(attr, wxT("len")) && 
-               XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue) && 
-               nValue > 0) 
+      else if (!wxStrcmp(attr, wxT("len")) &&
+               XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue) &&
+               nValue > 0)
          len = nValue;
       else if (XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
       {  // double parameters
@@ -580,7 +580,7 @@ void SimpleBlockFile::WriteCacheToDisk()
 {
    if (!GetNeedWriteCacheToDisk())
       return;
-   
+
    if (WriteSimpleBlockFile(mCache.sampleData, mLen, mCache.format,
                             mCache.summaryData))
       mCache.needWrite = false;
@@ -592,12 +592,12 @@ bool SimpleBlockFile::GetNeedWriteCacheToDisk()
 }
 
 bool SimpleBlockFile::GetCache()
-{  
-#ifdef DEPRECATED_AUDIO_CACHE 
+{
+#ifdef DEPRECATED_AUDIO_CACHE
    // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
    bool cacheBlockFiles = false;
    gPrefs->Read(wxT("/Directories/CacheBlockFiles"), &cacheBlockFiles);
-   if (!cacheBlockFiles) 
+   if (!cacheBlockFiles)
       return false;
 
    int lowMem = gPrefs->Read(wxT("/Directories/CacheLowMem"), 16l);

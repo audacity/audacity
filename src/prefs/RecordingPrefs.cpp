@@ -47,7 +47,7 @@ void RecordingPrefs::Populate()
 {
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
-   // Use 'eIsCreatingFromPrefs' so that the GUI is 
+   // Use 'eIsCreatingFromPrefs' so that the GUI is
    // initialised with values from gPrefs.
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -185,7 +185,7 @@ bool RecordingPrefs::Apply()
       double targetpeak, deltapeak;
       gPrefs->Read(wxT("/AudioIO/TargetPeak"),  &targetpeak);
       gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"), &deltapeak);
-      if (targetpeak + deltapeak > 100.0 || targetpeak - deltapeak < 0.0) 
+      if (targetpeak + deltapeak > 100.0 || targetpeak - deltapeak < 0.0)
       {
          gPrefs->Write(wxT("/AudioIO/DeltaPeakVolume"), min(100.0 - targetpeak, targetpeak));
          gPrefs->Flush();

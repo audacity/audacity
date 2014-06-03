@@ -61,8 +61,8 @@ BEGIN_EVENT_TABLE(ExportFLACOptions, wxDialog)
    EVT_BUTTON(wxID_OK, ExportFLACOptions::OnOK)
 END_EVENT_TABLE()
 
-/// 
-/// 
+///
+///
 ExportFLACOptions::ExportFLACOptions(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify FLAC Options")))
@@ -72,8 +72,8 @@ ExportFLACOptions::ExportFLACOptions(wxWindow *parent)
    PopulateOrExchange(S);
 }
 
-/// 
-/// 
+///
+///
 void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
 {
    wxArrayString flacLevelNames, flacLevelLabels;
@@ -118,8 +118,8 @@ void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
    return;
 }
 
-/// 
-/// 
+///
+///
 void ExportFLACOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
@@ -225,8 +225,8 @@ int ExportFLAC::Export(AudacityProject *project,
 {
    double    rate    = project->GetRate();
    TrackList *tracks = project->GetTracks();
-   
-   wxLogNull logNo;            // temporarily disable wxWidgets error messages 
+
+   wxLogNull logNo;            // temporarily disable wxWidgets error messages
    int updateResult = eProgressSuccess;
 
    int levelPref;
@@ -251,7 +251,7 @@ int ExportFLAC::Export(AudacityProject *project,
    if (mMetadata) {
       encoder.set_metadata(&mMetadata, 1);
    }
-   
+
    sampleFormat format;
    if (bitDepthPref == wxT("24")) {
       format = int24Sample;
@@ -357,9 +357,9 @@ int ExportFLAC::Export(AudacityProject *project,
       free(tmpsmplbuf[i]);
    }
    delete mixer;
-   
+
    delete[] tmpsmplbuf;
-   
+
    return updateResult;
 }
 
@@ -372,11 +372,11 @@ bool ExportFLAC::DisplayOptions(wxWindow *parent, int WXUNUSED(format))
    return true;
 }
 
-// LL:  There's a bug in libflac++ 1.1.2 that prevents us from using 
+// LL:  There's a bug in libflac++ 1.1.2 that prevents us from using
 //      FLAC::Metadata::VorbisComment directly.  The set_metadata()
 //      function allocates an array on the stack, but the base library
 //      expects that array to be valid until the stream is initialized.
-//      
+//
 //      This has been fixed in 1.1.4.
 bool ExportFLAC::GetMetadata(AudacityProject *project, Tags *tags)
 {

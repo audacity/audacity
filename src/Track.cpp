@@ -10,7 +10,7 @@
 
 \class Track
 \brief Fundamental data object of Audacity, placed in the TrackPanel.
-Classes derived form it include the WaveTrack, NoteTrack, LabelTrack 
+Classes derived form it include the WaveTrack, NoteTrack, LabelTrack
 and TimeTrack.
 
 *//*******************************************************************/
@@ -39,7 +39,7 @@ and TimeTrack.
 //   #define DEBUG_TLI
 #endif
 
-Track::Track(DirManager * projDirManager) 
+Track::Track(DirManager * projDirManager)
 :  vrulerSize(36,0),
    mDirManager(projDirManager)
 {
@@ -381,7 +381,7 @@ Track *TrackListIterator::Last(bool skiplinked)
    {
       cur = cur->prev;
    }
-   
+
    if (cur) {
       return cur->t;
    }
@@ -434,7 +434,7 @@ Track *TrackListIterator::RemoveCurrent(bool deletetrack)
    TrackListNode *next = cur->next;
 
    l->Remove(cur->t, deletetrack);
-   
+
    cur = next;
 
    #ifdef DEBUG_TLI // if we are debugging this bit
@@ -939,7 +939,7 @@ Track *TrackList::GetNext(Track * t, bool linked) const
          if (node) {
             node = node->next;
          }
-         
+
          if (node) {
             return node->t;
          }
@@ -1044,7 +1044,7 @@ void TrackList::Swap(TrackListNode * s1, TrackListNode * s2)
    if (source[0]->GetLinked()) {
       target[1] = target[0]->next;
       source[1] = target[1]->t;
-   } 
+   }
    else {
       target[1] = NULL;
       source[1] = NULL;
@@ -1306,7 +1306,7 @@ double TrackList::GetMinOffset() const
          len = l;
       }
    }
-   
+
    return len;
 }
 
@@ -1325,7 +1325,7 @@ double TrackList::GetStartTime() const
          min = l;
       }
    }
-   
+
    return min;
 }
 

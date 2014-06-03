@@ -36,8 +36,8 @@ counts.
 *//****************************************************************//**
 
 \class SummaryInfo
-\brief Works with BlockFile to hold info about max and min and RMS 
-over multiple samples, which in turn allows rapid drawing when zoomed 
+\brief Works with BlockFile to hold info about max and min and RMS
+over multiple samples, which in turn allows rapid drawing when zoomed
 out.
 
 *//*******************************************************************/
@@ -367,7 +367,7 @@ void BlockFile::FixSummary(void *data)
 
       for(i=0; i<len; i++)
          buffer[i] = wxUINT32_SWAP_ALWAYS(buffer[i]);
-   }   
+   }
 }
 
 /// Retrieves the minimum, maximum, and maximum RMS of the
@@ -486,7 +486,7 @@ bool BlockFile::Read64K(float *buffer,
    if (start+len > mSummaryInfo.frames64K)
       len = mSummaryInfo.frames64K - start;
 
-   CopySamples(summary + mSummaryInfo.offset64K + 
+   CopySamples(summary + mSummaryInfo.offset64K +
                (start * mSummaryInfo.bytesPerFrame),
                mSummaryInfo.format,
                (samplePtr)buffer, floatSample, len*mSummaryInfo.fields);
@@ -538,9 +538,9 @@ AliasBlockFile::AliasBlockFile(wxFileName baseFileName,
 }
 
 AliasBlockFile::AliasBlockFile(wxFileName existingSummaryFileName,
-                               wxFileName aliasedFileName, 
+                               wxFileName aliasedFileName,
                                sampleCount aliasStart,
-                               sampleCount aliasLen, 
+                               sampleCount aliasLen,
                                int aliasChannel,
                                float min, float max, float rms):
    BlockFile(existingSummaryFileName, aliasLen),
@@ -616,7 +616,7 @@ bool AliasBlockFile::ReadSummary(void *data)
       mSilentLog=TRUE;
       return true;
 
-   }else mSilentLog=FALSE; // worked properly, any future error is new 
+   }else mSilentLog=FALSE; // worked properly, any future error is new
 
    if(silence) delete silence;
 

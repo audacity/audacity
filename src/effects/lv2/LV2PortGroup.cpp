@@ -47,7 +47,7 @@ void LV2PortGroup::AddParameter(int parameter)
 {
    mParameters.Add(parameter);
 }
-   
+
 const wxArrayInt & LV2PortGroup::GetParameters() const
 {
    return mParameters;

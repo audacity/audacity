@@ -5,7 +5,7 @@
   SelectionBar.cpp
 
   Copyright 2005 Dominic Mazzoni
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -14,13 +14,13 @@
 *******************************************************************//**
 
 \class SelectionBar
-\brief (not quite a Toolbar) at foot of screen for setting and viewing the 
+\brief (not quite a Toolbar) at foot of screen for setting and viewing the
 selection range.
 
 *//****************************************************************//**
 
 \class SelectionBarListener
-\brief A parent class of SelectionBar, used to forward events to do 
+\brief A parent class of SelectionBar, used to forward events to do
 with changes in the SelectionBar.
 
 *//*******************************************************************/
@@ -112,7 +112,7 @@ void SelectionBar::Populate()
    wxBoxSizer *hSizer;
 
    /* we don't actually need a control yet, but we want to use it's methods
-    * to do some look-ups, so we'll have to create one. We can't make the 
+    * to do some look-ups, so we'll have to create one. We can't make the
     * look-ups static because they depend on translations which are done at
     * runtime */
    wxString formatName = mListener ? mListener->AS_GetSelectionFormat() : wxString(wxEmptyString);
@@ -144,7 +144,7 @@ void SelectionBar::Populate()
 
    bool showSelectionLength = false;
    gPrefs->Read(wxT("/ShowSelectionLength"), &showSelectionLength);
-   
+
    hSizer = new wxBoxSizer(wxHORIZONTAL);
    mRightEndButton = new wxRadioButton(this, OnEndRadioID, _("End"),
                                        wxDefaultPosition, wxDefaultSize,
@@ -163,7 +163,7 @@ void SelectionBar::Populate()
       // to why this is needed.  We've only experienced it under Win2k
       // so it's probably been fixed.  But, it doesn't hurt to have this
       // in for all versions.
-      wxRadioButton* dummyButton = 
+      wxRadioButton* dummyButton =
          new wxRadioButton(this, wxID_ANY, _("hidden"),
                            wxDefaultPosition, wxDefaultSize,
                            wxRB_GROUP);
@@ -245,7 +245,7 @@ void SelectionBar::Populate()
                     wxFocusEventHandler(SelectionBar::OnFocus),
                     NULL,
                     this);
-   
+
    mLeftTime = new TimeTextCtrl(this, OnLeftTimeID, formatName, 0.0, mRate);
    mLeftTime->SetName(_("Selection Start:"));
    mLeftTime->EnableMenu();
@@ -356,9 +356,9 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    bool leftFocus = (w == mLeftTime);
    bool rightFocus = (w == mRightTime);
    bool audioFocus = (w == mAudioTime);
-   
+
    evt.Skip(false);
-   
+
    wxString format;
 
    // Save format name before recreating the controls so they resize properly
@@ -368,7 +368,7 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 #if wxUSE_TOOLTIPS
    mSnapTo->SetToolTip(wxString::Format(_("Snap Clicks/Selections to %s"), format.c_str()));
 #endif
-   
+
    // ToolBar::ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
    mLeftTime =
@@ -472,7 +472,7 @@ void SelectionBar::SetSelectionFormat(const wxString & format)
 
    wxCommandEvent e;
    e.SetInt(mLeftTime->GetFormatIndex());
-   OnUpdate(e);   
+   OnUpdate(e);
 }
 
 void SelectionBar::SetRate(double rate)
@@ -558,7 +558,7 @@ void SelectionBar::OnCaptureKey(wxCommandEvent &event)
             return;
       }
    }
-   
+
    event.Skip();
 
    return;

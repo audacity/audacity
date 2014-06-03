@@ -100,19 +100,19 @@ enum PlayMode {
 };
 
 // XML handler for <import> tag
-class ImportXMLTagHandler : public XMLTagHandler 
+class ImportXMLTagHandler : public XMLTagHandler
 {
  public:
    ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; };
 
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    virtual XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; };
-   
-   // Don't want a WriteXML method because ImportXMLTagHandler is not a WaveTrack. 
-   // <import> tags are instead written by AudacityProject::WriteXML.
-   //    virtual void WriteXML(XMLWriter &xmlFile) { wxASSERT(false); } 
 
- private: 
+   // Don't want a WriteXML method because ImportXMLTagHandler is not a WaveTrack.
+   // <import> tags are instead written by AudacityProject::WriteXML.
+   //    virtual void WriteXML(XMLWriter &xmlFile) { wxASSERT(false); }
+
+ private:
    AudacityProject* mProject;
 };
 
@@ -142,9 +142,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void GetPlayRegion(double* playRegionStart, double *playRegionEnd);
    bool IsPlayRegionLocked() { return mLockPlayRegion; }
-   
-   void SetSel0(double);        //Added by STM 
-   void SetSel1(double);        //Added by STM 
+
+   void SetSel0(double);        //Added by STM
+   void SetSel1(double);        //Added by STM
 
    bool Clipboard() { return (msClipT1 - msClipT0) > 0.0; }
 
@@ -180,7 +180,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
     * enough to fit in the file dialogue filter drop-down. It should be
     * translated.
     * @param extrafilter Specify the file extension(s) for the additional format
-    * specified by extraformat. The patterns must include the wildcard (e.g. 
+    * specified by extraformat. The patterns must include the wildcard (e.g.
     * "*.aup" not "aup" or ".aup"), separate multiple patters with a semicolon,
     * e.g. "*.aup;*.AUP" because patterns are case-sensitive. Do not add a
     * trailing semicolon to the string. This string should not be translated
@@ -195,7 +195,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool WarnOfLegacyFile( );
 
    // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to new tracks.
-   bool Import(wxString fileName, WaveTrackArray *pTrackArray = NULL); 
+   bool Import(wxString fileName, WaveTrackArray *pTrackArray = NULL);
 
    void AddImportedTracks(wxString fileName,
                           Track **newTracks, int numTracks);
@@ -226,11 +226,11 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool GetNormalizeOnLoad() { return mNormalizeOnLoad; } //lda
    void SetNormalizeOnLoad(bool flag) { mNormalizeOnLoad = flag; } //lda
 
-   /** \brief Sets the wxDialog that is being displayed 
+   /** \brief Sets the wxDialog that is being displayed
      * Used by the custom dialog warning constructor and destructor
      */
    void SetMissingAliasFileDialog(wxDialog *dialog);
-   
+
    /** \brief returns a pointer to the wxDialog if it is displayed, NULL otherwise.
      */
    wxDialog *GetMissingAliasFileDialog();
@@ -290,13 +290,13 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void Rewind(bool shift);
    void SkipEnd(bool shift);
    void SetStop(bool bStopped);
-   void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks ); 
+   void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks );
    void EditClipboardByLabel( WaveTrack::EditDestFunction action );
    bool IsSyncLocked();
    void SetSyncLock(bool flag);
 
    // "exclusive" mute means mute the chosen track and unmute all others.
-   void HandleTrackMute(Track *t, const bool exclusive); 
+   void HandleTrackMute(Track *t, const bool exclusive);
 
    // Type of solo (standard or simple) follows the set preference, unless
    // alternate == true, which causes the opposite behavior.
@@ -328,7 +328,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // TrackPanel access
    virtual wxSize GetTPTracksUsableArea();
    virtual void RefreshTPTrack(Track* pTrk, bool refreshbacking = true);
-   
+
    // TrackPanel callback methods, overrides of TrackPanelListener
    virtual void TP_DisplaySelection();
    virtual void TP_DisplayStatusMessage(wxString msg);
@@ -352,7 +352,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // ToolBar
 
    // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
-   ControlToolBar *GetControlToolBar(); 
+   ControlToolBar *GetControlToolBar();
 
    DeviceToolBar *GetDeviceToolBar();
    EditToolBar *GetEditToolBar();
@@ -391,7 +391,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    wxWindow *HasKeyboardCapture();
    void CaptureKeyboard(wxWindow *h);
    void ReleaseKeyboard(wxWindow *h);
-   
+
    // Audio IO callback methods
    virtual void OnAudioIORate(int rate);
    virtual void OnAudioIOStartRecording();
@@ -401,10 +401,10 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Command Handling
    bool TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask );
 
-   ///Prevents delete from external thread - for e.g. use of GetActiveProject 
+   ///Prevents delete from external thread - for e.g. use of GetActiveProject
    static void AllProjectsDeleteLock();
    static void AllProjectsDeleteUnlock();
-   
+
    void PushState(wxString desc, wxString shortDesc,
                   int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE);
 
@@ -415,15 +415,15 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                              // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    void PopState(TrackList * l);
-   
+
    void UpdateLyrics();
    void UpdateMixerBoard();
-   
+
    void GetRegionsByLabel( Regions &regions );
-   
+
    void AutoSave();
    void DeleteCurrentAutoSaveFile();
-   
+
    static bool GetCacheBlockFiles();
 
  public:
@@ -527,7 +527,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mShowId3Dialog; //lda
    bool mEmptyCanBeDirty;
    bool mSelectAllOnNone;
-   
+
    bool mIsSyncLocked;
 
    bool mLockPlayRegion;
@@ -541,16 +541,16 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Last auto-save file name and path (empty if none)
    wxString mAutoSaveFileName;
-   
+
    // Are we currently auto-saving or not?
    bool mAutoSaving;
 
    // Has this project been recovered from an auto-saved version
    bool mIsRecovered;
-   
+
    // The auto-save data dir the project has been recovered from
    wxString mRecoveryAutoSaveDataDir;
-   
+
    // The handler that handles recovery of <recordingrecovery> tags
    RecordingRecoveryHandler* mRecordingRecoveryHandler;
 
@@ -559,7 +559,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    bool mWantSaveCompressed;
    wxArrayString mStrOtherNamesArray; // used to make sure compressed file names are unique
-   
+
    // Last effect applied to this project
    Effect *mLastEffect;
    int mLastEffectType;
@@ -568,7 +568,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    friend class ScreenshotCommand;
 
    wxRect mNormalizedWindowState;
-   
+
    //flag for cancellation of timer record.
    bool mTimerRecordCanceled;
 

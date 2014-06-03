@@ -16,7 +16,7 @@
 *//****************************************************************//**
 
 \class EffectDialog
-\brief New (Jun-2006) base class for effects dialogs.  Likely to get 
+\brief New (Jun-2006) base class for effects dialogs.  Likely to get
 greater use in future.
 
 *//*******************************************************************/
@@ -128,7 +128,7 @@ bool Effect::DoEffect(wxWindow *parent, int flags,
       }
    }
 
-   // Don't prompt user if we are dealing with a 
+   // Don't prompt user if we are dealing with a
    // effect that is already configured, e.g. repeating
    // the last effect on a different selection.
    if( (flags & CONFIGURED_EFFECT) == 0)
@@ -141,7 +141,7 @@ bool Effect::DoEffect(wxWindow *parent, int flags,
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false) {
       mProgress = new ProgressDialog(StripAmpersand(GetEffectName()),
-                                     GetEffectAction(), 
+                                     GetEffectAction(),
                                      pdlgHideStopButton);
       returnVal = Process();
       delete mProgress;
@@ -158,7 +158,7 @@ bool Effect::DoEffect(wxWindow *parent, int flags,
       *t0 = mT0;
       *t1 = mT1;
    }
-   
+
    return returnVal;
 }
 
@@ -228,7 +228,7 @@ TimeWarper *Effect::GetTimeWarper()
 //
 // private methods
 //
-// Use these two methods to copy the input tracks to mOutputTracks, if 
+// Use these two methods to copy the input tracks to mOutputTracks, if
 // doing the processing on them, and replacing the originals only on success (and not cancel).
 // Copy the group tracks that have tracks selected
 void Effect::CopyInputTracks(int trackType)
@@ -274,7 +274,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    if (!bGoodResult) {
       // Processing failed or was cancelled so throw away the processed tracks.
       mOutputTracks->Clear(true); // true => delete the tracks
-      
+
       // Reset map
       mIMap.Clear();
       mOMap.Clear();
@@ -345,7 +345,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
 
    // Make sure we processed everything
    wxASSERT(iterOut.First() == NULL);
-   
+
    // The output list is no longer needed
    delete mOutputTracks;
    mOutputTracks = NULL;
@@ -365,7 +365,7 @@ void Effect::CountWaveTracks()
          t = iter.Next();
          continue;
       }
-      
+
       if (t->GetKind() == Track::Wave) {
          mNumTracks++;
          if (!t->GetLinked())
@@ -452,10 +452,10 @@ void Effect::Preview(bool dryOnly)
 
    // Build new tracklist from rendering tracks
    mTracks = new TrackList();
-   mixLeft->SetSelected(true);   
+   mixLeft->SetSelected(true);
    mTracks->Add(mixLeft);
    if (mixRight) {
-      mixRight->SetSelected(true);   
+      mixRight->SetSelected(true);
       mTracks->Add(mixRight);
    }
 
@@ -479,7 +479,7 @@ void Effect::Preview(bool dryOnly)
       // again, so the state is exactly the way it was before Preview
       // was called.
       mProgress = new ProgressDialog(StripAmpersand(GetEffectName()),
-            _("Preparing preview"), 
+            _("Preparing preview"),
             pdlgHideCancelButton); // Have only "Stop" button.
       bSuccess = Process();
       delete mProgress;
@@ -494,7 +494,7 @@ void Effect::Preview(bool dryOnly)
       WaveTrackArray playbackTracks;
       WaveTrackArray recordingTracks;
       // Probably not the same tracks post-processing, so can't rely on previous values of mixLeft & mixRight.
-      TrackListOfKindIterator iter(Track::Wave, mTracks); 
+      TrackListOfKindIterator iter(Track::Wave, mTracks);
       mixLeft = (WaveTrack*)(iter.First());
       mixRight = (WaveTrack*)(iter.Next());
       playbackTracks.Add(mixLeft);
@@ -508,7 +508,7 @@ void Effect::Preview(bool dryOnly)
 #endif
       // Start audio playing
       int token =
-         gAudioIO->StartStream(playbackTracks, recordingTracks, 
+         gAudioIO->StartStream(playbackTracks, recordingTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                                empty,
 #endif
@@ -565,7 +565,7 @@ EffectDialog::EffectDialog(wxWindow * parent,
 void EffectDialog::Init()
 {
    ShuttleGui S(this, eIsCreating);
-   
+
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {

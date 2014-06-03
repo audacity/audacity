@@ -80,14 +80,14 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.TieChoice(_("Window &size") + wxString(wxT(":")),
-                     wxT("/Spectrum/FFTSize"), 
+                     wxT("/Spectrum/FFTSize"),
                      256,
                      mSizeChoices,
                      mSizeCodes);
          S.SetSizeHints(mSizeChoices);
 
          S.TieChoice(_("Window &type") + wxString(wxT(":")),
-                     wxT("/Spectrum/WindowType"), 
+                     wxT("/Spectrum/WindowType"),
                      3,
                      mTypeChoices,
                      mTypeCodes);

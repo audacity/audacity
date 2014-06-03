@@ -39,7 +39,7 @@ class AboutDialog:public wxDialog {
    wxBitmap *logo; //v
 
     DECLARE_EVENT_TABLE()
-    
+
  private:
    enum Role {
       roleTeamDeveloper,
@@ -50,7 +50,7 @@ class AboutDialog:public wxDialog {
       roleLibrary,
       roleThanks
    };
-   
+
    AboutDialogCreditItemsList creditItems;
    void PopulateAudacityPage( ShuttleGui & S );
    void PopulateLicensePage( ShuttleGui & S );

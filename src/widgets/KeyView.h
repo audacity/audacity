@@ -156,7 +156,7 @@ private:
 
    wxCoord mScrollX;
    wxCoord mWidth;
-   
+
    size_t mLineCount;
    wxCoord mLineHeight;
    wxCoord mKeyX;

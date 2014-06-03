@@ -20,7 +20,7 @@ public:
    // constructors and destructors
    ShuttlePrefs(){;};
    virtual ~ShuttlePrefs() {;};
-      
+
 public:
    virtual bool TransferBool( const wxString & Name, bool & bValue, const bool & bDefault );
 //   virtual bool TransferFloat( const wxString & Name, float & fValue, const float &fDefault );

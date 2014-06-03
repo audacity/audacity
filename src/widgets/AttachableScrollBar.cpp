@@ -5,18 +5,18 @@
   AttachableScrollBar.cpp
 
   James Crook
- 
+
   Audacity is free software.
   This file is licensed under the wxWidgets license, see License.txt
 
 *****************************************************************//**
 
 \class AttachableScrollBar
-\brief An AttachableScrollBar is a scroll bar that can be attached 
-to multiple items and so control their scrolling.  Uses floats 
+\brief An AttachableScrollBar is a scroll bar that can be attached
+to multiple items and so control their scrolling.  Uses floats
 internally, not ints, allowing for (external) control of zooming.
-  
-  Limitations: 
+
+  Limitations:
 
   - Currently horizontal only.
   - Attached item repainting not yet supported.  Instead for now place the

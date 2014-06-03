@@ -67,7 +67,7 @@ static LV2_Feature gURIMapFeature = { "http://lv2plug.in/ns/ext/uri-map",
                                       &gURIMap };
 
 // This is the event refcounter object. We don't actually implement it
-// since we only ever send flat MIDI events to the plugins, but it is 
+// since we only ever send flat MIDI events to the plugins, but it is
 // still required.
 uint32_t event_ref(LV2_Event_Callback_Data WXUNUSED(callback_data),
                    LV2_Event *WXUNUSED(event))
@@ -98,16 +98,16 @@ LilvNode *gSubGroupOf;
 
 void LoadLV2Plugins()
 {
-   
+
    EffectManager& em = EffectManager::Get();
-   
+
    // If gWorld isn't 0 we have already initialised Lilv - unload all plugins
    // and initialise again.
    if (gWorld)
    {
       UnloadLV2Plugins();
    }
-   
+
    // Try to initialise Lilv, or return.
    gWorld = lilv_world_new();
    if (!gWorld)
@@ -115,7 +115,7 @@ void LoadLV2Plugins()
       wxLogMessage(wxT("Could not initialise lilv!"));
       return;
    }
-   
+
    gAudioPortClass = lilv_new_uri(gWorld, LV2_CORE__AudioPort);
    gControlPortClass = lilv_new_uri(gWorld, LV2_CORE__ControlPort);
    gMidiPortClass = lilv_new_uri(gWorld, LV2_EVENT__EventPort);
@@ -132,14 +132,14 @@ void LoadLV2Plugins()
    gSubGroupOf = lilv_new_uri(gWorld, LV2_PORT_GROUPS__subGroupOf);
 
    lilv_world_load_all(gWorld);
-   
+
 #ifdef EFFECT_CATEGORIES
-   
+
    // Add all LV2 categories and their relationships
    LilvPluginClasses classes = Lilv_world_get_plugin_classes(gWorld);
    for (unsigned index = 0; index < Lilv_plugin_classes_size(classes);++index){
       LilvPluginClass c = Lilv_plugin_classes_get_at(classes, index);
-      em.AddCategory(wxString::FromUTF8(lilv_node_as_uri(Lilv_plugin_class_get_uri(c))), 
+      em.AddCategory(wxString::FromUTF8(lilv_node_as_uri(Lilv_plugin_class_get_uri(c))),
                      wxString::FromUTF8(lilv_node_as_string(Lilv_plugin_class_get_label(c))));
    }
    for (unsigned index = 0; index < Lilv_plugin_classes_size(classes);++index){
@@ -155,7 +155,7 @@ void LoadLV2Plugins()
    }
 
 #endif
-   
+
    // Retrieve data about all plugins
    const LilvPlugins *plugs = lilv_world_get_all_plugins(gWorld);
 
@@ -172,7 +172,7 @@ void LoadLV2Plugins()
          delete effect;
       //std::cerr<<"Loaded LV2 \""<<lilv_node_as_string(Lilv_plugin_get_name(plug))<<"\""<<std::endl;
    }
-  
+
 }
 
 void UnloadLV2Plugins()

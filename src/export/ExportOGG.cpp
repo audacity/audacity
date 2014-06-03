@@ -58,8 +58,8 @@ BEGIN_EVENT_TABLE(ExportOGGOptions, wxDialog)
    EVT_BUTTON(wxID_OK, ExportOGGOptions::OnOK)
 END_EVENT_TABLE()
 
-/// 
-/// 
+///
+///
 ExportOGGOptions::ExportOGGOptions(wxWindow *parent, int WXUNUSED(format))
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify Ogg Vorbis Options")))
@@ -71,8 +71,8 @@ ExportOGGOptions::ExportOGGOptions(wxWindow *parent, int WXUNUSED(format))
    PopulateOrExchange(S);
 }
 
-/// 
-/// 
+///
+///
 void ExportOGGOptions::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartHorizontalLay(wxEXPAND, 0);
@@ -100,8 +100,8 @@ void ExportOGGOptions::PopulateOrExchange(ShuttleGui & S)
    return;
 }
 
-/// 
-/// 
+///
+///
 void ExportOGGOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 {
    ShuttleGui S(this, eIsSavingToPrefs);
@@ -176,7 +176,7 @@ int ExportOGG::Export(AudacityProject *project,
    TrackList *tracks = project->GetTracks();
    double    quality = (gPrefs->Read(wxT("/FileFormats/OggExportQuality"), 50)/(float)100.0);
 
-   wxLogNull logNo;            // temporarily disable wxWidgets error messages 
+   wxLogNull logNo;            // temporarily disable wxWidgets error messages
    int updateResult = eProgressSuccess;
    int       eos = 0;
 
@@ -267,7 +267,7 @@ int ExportOGG::Export(AudacityProject *project,
          vorbis_analysis_wrote(&dsp, 0);
       }
       else {
-         
+
          for (int i = 0; i < numChannels; i++) {
             float *temp = (float *)mixer->GetBuffer(i);
             memcpy(vorbis_buffer[i], temp, sizeof(float)*SAMPLES_PER_RUN);
