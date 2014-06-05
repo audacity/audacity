@@ -132,8 +132,8 @@ extern "C" {
  * we need for the next bit */
 #include <wx/string.h>
 #include <wx/dynlib.h>
-#include <wx/log.h>			// for wxLogNull
-#include <wx/msgdlg.h>		// for wxMessageBox
+#include <wx/log.h>      // for wxLogNull
+#include <wx/msgdlg.h>   // for wxMessageBox
 #include <wx/utils.h>
 #include "widgets/LinkingHtmlWindow.h"
 #include "FileDialog.h"

@@ -149,13 +149,13 @@ public:
 
 private:
 
-   AVFormatContext *	mEncFormatCtx;			   // libavformat's context for our output file
-   AVOutputFormat  *	mEncFormatDesc;			// describes our output file to libavformat
+   AVFormatContext *   mEncFormatCtx;        // libavformat's context for our output file
+   AVOutputFormat  *   mEncFormatDesc;       // describes our output file to libavformat
    int               default_frame_size;
-   AVStream        *	mEncAudioStream;			// the output audio stream (may remain NULL)
-   AVCodecContext  *	mEncAudioCodecCtx;		// the encoder for the output audio stream
-   AVFifoBuffer	 * mEncAudioFifo;				// FIFO to write incoming audio samples into
-   uint8_t         *	mEncAudioFifoOutBuf;		// buffer to read _out_ of the FIFO into
+   AVStream        *   mEncAudioStream;      // the output audio stream (may remain NULL)
+   AVCodecContext  *   mEncAudioCodecCtx;    // the encoder for the output audio stream
+   AVFifoBuffer    * mEncAudioFifo;          // FIFO to write incoming audio samples into
+   uint8_t         *   mEncAudioFifoOutBuf;  // buffer to read _out_ of the FIFO into
    int               mEncAudioFifoOutBufSiz;
 
    wxString          mName;
@@ -170,12 +170,12 @@ private:
 ExportFFmpeg::ExportFFmpeg()
 :  ExportPlugin()
 {
-   mEncFormatCtx = NULL;			// libavformat's context for our output file
-   mEncFormatDesc = NULL;			// describes our output file to libavformat
-   mEncAudioStream = NULL;			// the output audio stream (may remain NULL)
-   mEncAudioCodecCtx = NULL;		// the encoder for the output audio stream
+   mEncFormatCtx = NULL;       // libavformat's context for our output file
+   mEncFormatDesc = NULL;      // describes our output file to libavformat
+   mEncAudioStream = NULL;     // the output audio stream (may remain NULL)
+   mEncAudioCodecCtx = NULL;   // the encoder for the output audio stream
    #define MAX_AUDIO_PACKET_SIZE (128 * 1024)
-   mEncAudioFifoOutBuf = NULL;	// buffer to read _out_ of the FIFO into
+   mEncAudioFifoOutBuf = NULL; // buffer to read _out_ of the FIFO into
    mEncAudioFifoOutBufSiz = 0;
 
    mSampleRate = 0;
@@ -340,7 +340,7 @@ static int set_dict_int(AVDictionary **dict, const char *key, int val)
 
 bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 {
-   AVCodec *	codec = NULL;
+   AVCodec *codec = NULL;
    AVDictionary *options = NULL;
 
    // Configure the audio stream's codec context.
@@ -603,13 +603,13 @@ bool ExportFFmpeg::Finalize()
    // Flush the audio FIFO and encoder.
    for (;;)
    {
-      AVPacket	pkt;
-      int		nFifoBytes = av_fifo_size(mEncAudioFifo);	// any bytes left in audio FIFO?
+      AVPacket pkt;
+      int nFifoBytes = av_fifo_size(mEncAudioFifo); // any bytes left in audio FIFO?
 
       av_init_packet(&pkt);
 
       nEncodedBytes = 0;
-      int		nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
+      int nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
 
       if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz || nFifoBytes > mEncAudioFifoOutBufSiz) {
          wxLogError(wxT("FFmpeg : ERROR - Too much remaining data."));
@@ -709,11 +709,11 @@ bool ExportFFmpeg::Finalize()
 
 bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
 {
-   AVPacket	pkt;
-   int		nBytesToWrite = 0;
-   uint8_t *	pRawSamples = NULL;
-   int		nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
-   int      ret;
+   AVPacket pkt;
+   int nBytesToWrite = 0;
+   uint8_t *pRawSamples = NULL;
+   int nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
+   int ret;
 
    nBytesToWrite = frameSize;
    pRawSamples  = (uint8_t*)pFrame;
@@ -737,8 +737,8 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, int frameSize)
       av_init_packet(&pkt);
 
       int ret= encode_audio(mEncAudioCodecCtx,
-         &pkt,		// out
-         (int16_t*)mEncAudioFifoOutBuf,                         // in
+         &pkt,                          // out
+         (int16_t*)mEncAudioFifoOutBuf, // in
          default_frame_size);
       if (ret < 0)
       {

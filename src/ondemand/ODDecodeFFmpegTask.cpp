@@ -9,7 +9,7 @@
 
 ******************************************************************/
 
-#include "../Audacity.h"	// needed before FFmpeg.h
+#include "../Audacity.h"   // needed before FFmpeg.h
 
 #include <wx/wxprec.h>
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -23,7 +23,7 @@
 #ifdef USE_FFMPEG
 #ifdef EXPERIMENTAL_OD_FFMPEG
 
-#include "../FFmpeg.h"		// which brings in avcodec.h, avformat.h
+#include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
 #include "../import/ImportFFmpeg.h"
 
 
@@ -660,5 +660,5 @@ void ODFFmpegDecoder::InsertCache(FFMpegDecodeCache* cache) {
    }
 }
 
-#endif	//EXPERIMENTAL_OD_FFMPEG
+#endif //EXPERIMENTAL_OD_FFMPEG
 #endif //USE_FFMPEG
