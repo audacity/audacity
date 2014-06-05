@@ -52,7 +52,9 @@ extern "C" {
       #endif
 
       #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 59, 100)
-      #define avcodec_free_frame av_free
+      inline void avcodec_free_frame(AVFrame **frame) {
+         av_free(*frame);
+      }
       #endif
 
       #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 51, 100)
