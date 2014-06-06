@@ -108,7 +108,7 @@ simplifies construction of menu items.
 
 #include "FileDialog.h"
 #include "SplashDialog.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/HelpSystem.h"
 #include "DeviceManager.h"
 
 #include "CaptureEvents.h"

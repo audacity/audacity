@@ -115,6 +115,7 @@ scroll information.  It also has some status flags.
 #include "DirManager.h"
 #include "effects/Effect.h"
 #include "prefs/PrefsDialog.h"
+#include "widgets/LinkingHtmlWindow.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Meter.h"
 #include "widgets/Ruler.h"

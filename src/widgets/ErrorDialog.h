@@ -18,6 +18,45 @@
 
 class AudacityProject;
 
+class ErrorDialog : public wxDialog
+{
+public:
+   // constructors and destructors
+   ErrorDialog(wxWindow *parent,
+      const wxString & dlogTitle,
+      const wxString & message,
+      const wxString & helpURL,
+      const bool Close = true, const bool modal = true);
+
+   virtual ~ErrorDialog(){}
+
+private:
+   wxString dhelpURL;
+   bool dClose;
+   bool dModal;
+
+   void OnOk( wxCommandEvent &event );
+   void OnHelp( wxCommandEvent &event );
+   DECLARE_EVENT_TABLE()
+};
+
+// Helper class to make browser "simulate" a modal dialog
+class HtmlTextHelpDialog : public BrowserFrame
+{
+public:
+   HtmlTextHelpDialog() : BrowserFrame()
+   {
+      MakeModal( true );
+   }
+   virtual ~HtmlTextHelpDialog()
+   {
+      MakeModal( false );
+      // On Windows, for some odd reason, the Audacity window will be sent to
+      // the back.  So, make sure that doesn't happen.
+      GetParent()->Raise();
+   }
+};
+
 /// Displays an error dialog with a button that offers help
 void ShowErrorDialog(wxWindow *parent,
                      const wxString &dlogTitle,
@@ -38,26 +77,5 @@ void ShowAliasMissingDialog(AudacityProject *parent,
                      const wxString &message,
                      const wxString &helpURL,
                      const bool Close = true);
-
-/// Displays cutable information in a text ctrl, with an OK button.
-void ShowInfoDialog( wxWindow *parent,
-                     const wxString &dlogTitle,
-                     const wxString &shortMsg,
-                     const wxString &message,
-                     const int xSize, const int ySize);
-
-/// Displays a new window with wxHTML help.
-void ShowHtmlText( wxWindow * pParent,
-                   const wxString &Title,
-                   const wxString &HtmlText,
-                   bool bIsFile, bool bModal);
-
-/// Displays a file in your browser, if it's available locally,
-/// OR else links to the internet.
-void ShowHelpDialog(wxWindow *parent,
-                     const wxString &localFileName,
-                     const wxString &remoteURL);
-
-
 
 #endif // __AUDACITY_ERRORDIALOG__

@@ -25,6 +25,7 @@
 #include "../HelpText.h"
 #include "../FileNames.h"
 #include "ErrorDialog.h"
+#include "HelpSystem.h"
 
 BEGIN_EVENT_TABLE(BrowserFrame, wxFrame)
    EVT_BUTTON(wxID_FORWARD,  BrowserFrame::OnForward)
