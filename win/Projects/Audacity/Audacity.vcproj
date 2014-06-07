@@ -1681,6 +1681,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\widgets\HelpSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\widgets\HelpSystem.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\widgets\HtmlWindow.cpp"
 				>
 			</File>
