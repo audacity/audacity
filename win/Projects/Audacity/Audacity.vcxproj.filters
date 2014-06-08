@@ -810,6 +810,9 @@
     <ClCompile Include="..\..\..\src\import\ImportGStreamer.cpp">
       <Filter>src/import</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\HelpSystem.cpp">
+      <Filter>src/widgets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1591,6 +1594,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\import\ImportGStreamer.h">
       <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\HelpSystem.h">
+      <Filter>src/widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
