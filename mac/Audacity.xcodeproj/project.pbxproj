@@ -471,6 +471,7 @@
 		2800FE1A0FF32308005CA9E5 /* ptmacosx_mach.c in Sources */ = {isa = PBXBuildFile; fileRef = 2800FE010FF322A1005CA9E5 /* ptmacosx_mach.c */; };
 		2800FE230FF32381005CA9E5 /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2800FE070FF322D4005CA9E5 /* libportmidi.a */; };
 		2800FE370FF32566005CA9E5 /* MidiIOPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2800FE350FF32566005CA9E5 /* MidiIOPrefs.cpp */; };
+		2801127B1943EE0E00D98A16 /* HelpSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280112791943EE0E00D98A16 /* HelpSystem.cpp */; };
 		2801A6460BF9268700648258 /* ImportQT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2801A6430BF9268700648258 /* ImportQT.cpp */; };
 		280828550A75E0D0000002EF /* LabelDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828530A75E0D0000002EF /* LabelDialog.cpp */; };
 		2808285A0A75E0EA000002EF /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828580A75E0EA000002EF /* Grid.cpp */; };
@@ -3115,6 +3116,8 @@
 		2800FE070FF322D4005CA9E5 /* libportmidi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libportmidi.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2800FE350FF32566005CA9E5 /* MidiIOPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = MidiIOPrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2800FE360FF32566005CA9E5 /* MidiIOPrefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = MidiIOPrefs.h; sourceTree = "<group>"; tabWidth = 3; };
+		280112791943EE0E00D98A16 /* HelpSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelpSystem.cpp; sourceTree = "<group>"; };
+		2801127A1943EE0E00D98A16 /* HelpSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpSystem.h; sourceTree = "<group>"; };
 		2801A6430BF9268700648258 /* ImportQT.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportQT.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2801A6440BF9268700648258 /* ImportQT.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ImportQT.h; sourceTree = "<group>"; tabWidth = 3; };
 		2803810018313B070078452A /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lame.h; path = lame/lame/lame.h; sourceTree = "<group>"; };
@@ -3178,7 +3181,6 @@
 		2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LinkingHtmlWindow.h; sourceTree = "<group>"; tabWidth = 3; };
 		282D474A0B9E8D900034BC49 /* Snap.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Snap.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		282D474B0B9E8D900034BC49 /* Snap.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Snap.h; sourceTree = "<group>"; tabWidth = 3; };
-		28307AA60E163AF800A553C7 /* expat.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = expat.h; sourceTree = "<group>"; tabWidth = 3; };
 		283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportFFmpeg.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		283135EB0DFB9D110076D551 /* ImportFFmpeg.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ImportFFmpeg.h; sourceTree = "<group>"; tabWidth = 3; };
 		283135FD0DFBA2E80076D551 /* FFmpeg.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FFmpeg.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4949,7 +4951,6 @@
 				1790AFFD09883BFD008A330A /* effects */,
 				1790B06209883BFD008A330A /* export */,
 				1790B07D09883BFD008A330A /* import */,
-				1790B09209883BFD008A330A /* include */,
 				1841B4FD0E00AD3D00F386E9 /* ondemand */,
 				1790B0B509883BFD008A330A /* prefs */,
 				2897F6DB0AB3DB5A003C20C5 /* toolbars */,
@@ -5338,14 +5339,6 @@
 			path = import;
 			sourceTree = "<group>";
 		};
-		1790B09209883BFD008A330A /* include */ = {
-			isa = PBXGroup;
-			children = (
-				28307AA60E163AF800A553C7 /* expat.h */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
 		1790B0B509883BFD008A330A /* prefs */ = {
 			isa = PBXGroup;
 			children = (
@@ -5401,6 +5394,8 @@
 		1790B0FD09883BFD008A330A /* widgets */ = {
 			isa = PBXGroup;
 			children = (
+				280112791943EE0E00D98A16 /* HelpSystem.cpp */,
+				2801127A1943EE0E00D98A16 /* HelpSystem.h */,
 				1790B0FE09883BFD008A330A /* AButton.cpp */,
 				1790B0FF09883BFD008A330A /* AButton.h */,
 				1790B10009883BFD008A330A /* ASlider.cpp */,
@@ -9082,6 +9077,7 @@
 				EDFCEBA618894B2A00C98E51 /* RealFFTf48x.cpp in Sources */,
 				EDFCEBA718894B2A00C98E51 /* SseMathFuncs.cpp in Sources */,
 				EDFCEBB518894B9E00C98E51 /* Equalization48x.cpp in Sources */,
+				2801127B1943EE0E00D98A16 /* HelpSystem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
