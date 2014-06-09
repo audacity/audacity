@@ -99,7 +99,7 @@ void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
          wxFileName( FileNames::HtmlHelpDir(), href.Mid( 10 ) + wxT(".htm") ).GetFullPath();
       if( wxFileExists( FileName ) )
       {
-         ShowHelpDialog(NULL, FileName, wxT(""));
+         HelpSystem::ShowHelpDialog(NULL, FileName, wxT(""));
          return;
       }
       else

@@ -37,7 +37,7 @@
 /// Mostly we use this so that we have the code for resizability
 /// in one place.  Other considerations like screen readers are also
 /// handled by having the code in one place.
-void ShowInfoDialog( wxWindow *parent,
+void HelpSystem::ShowInfoDialog( wxWindow *parent,
                      const wxString &dlogTitle,
                      const wxString &shortMsg,
                      const wxString &message,
@@ -77,7 +77,7 @@ void ShowInfoDialog( wxWindow *parent,
    dlog.ShowModal();
 }
 
-void ShowHtmlText(wxWindow *pParent,
+void HelpSystem::ShowHtmlText(wxWindow *pParent,
                   const wxString &Title,
                   const wxString &HtmlText,
                   bool bIsFile = false, bool bModal = false)
@@ -164,7 +164,7 @@ void ShowHtmlText(wxWindow *pParent,
    return;
 }
 
-void ShowHelpDialog(wxWindow *parent,
+void HelpSystem::ShowHelpDialog(wxWindow *parent,
                     const wxString &localFileName,
                     const wxString &remoteURL)
 {

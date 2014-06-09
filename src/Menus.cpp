@@ -5738,7 +5738,7 @@ void AudacityProject::OnHelpWelcome()
 
 void AudacityProject::OnQuickHelp()
 {
-   ShowHelpDialog(
+   HelpSystem::ShowHelpDialog(
       this,
       FileNames::HtmlHelpIndexFile(true),
       wxT("http://manual.audacityteam.org/o/quick_help.html" ));
@@ -5746,7 +5746,7 @@ void AudacityProject::OnQuickHelp()
 
 void AudacityProject::OnManual()
 {
-   ShowHelpDialog(
+   HelpSystem::ShowHelpDialog(
       this,
       FileNames::HtmlHelpIndexFile(false),
       wxT("http://manual.audacityteam.org/o/" ));
@@ -5773,7 +5773,7 @@ void AudacityProject::OnScreenshot()
 void AudacityProject::OnAudioDeviceInfo()
 {
    wxString info = gAudioIO->GetDeviceInfo();
-   ShowInfoDialog( this,
+   HelpSystem::ShowInfoDialog( this,
       _("Audio Device Info"),
       wxT(""),
       info,
