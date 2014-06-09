@@ -21,6 +21,7 @@
 #include "../Project.h"
 #include "../FileNames.h"
 #include "../widgets/LinkingHtmlWindow.h"
+#include "../widgets/HelpSystem.h"
 #include "FileDialog.h"
 
 #include <math.h>
@@ -353,7 +354,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol(1);
-      m_pButton_GetURL = S.Id(ID_BUTTON_GETURL).AddButton(_("WCAG 2 &Help"));
+      m_pButton_GetURL = S.Id(ID_BUTTON_GETURL).AddButton(_("&Help"));
       S.AddFixedText(wxT(" "));   // spacer
       m_pButton_Close = S.Id(ID_BUTTON_CLOSE).AddButton(_("&Close"));
    }
@@ -392,8 +393,9 @@ void ContrastDialog::OnGetBackgroundDB( wxCommandEvent & WXUNUSED(event))
 
 void ContrastDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
-   wxString page = wxT("http://www.eramp.com/WCAG_2_audio_contrast_tool_help.htm");
-   ::OpenInDefaultBrowser(page);
+   // Original help page now a dead link.
+   // http://www.eramp.com/WCAG_2_audio_contrast_tool_help.htm
+   HelpSystem::ShowHelpDialog(this, wxT("Contrast"));
 }
 
 void ContrastDialog::OnClose(wxCommandEvent & WXUNUSED(event))
