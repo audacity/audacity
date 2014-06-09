@@ -23,6 +23,7 @@
 #include <wx/settings.h>
 #include <wx/statusbr.h>
 
+#include "../FileNames.h"
 #include "LinkingHtmlWindow.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
@@ -33,6 +34,11 @@
 
 #include "ErrorDialog.h"
 #include "HelpSystem.h"
+
+const wxString HelpSystem::HelpHostname = wxT("manual.audacityteam.org");
+const wxString HelpSystem::HelpServerDir = wxT("/o/man/");
+const wxString HelpSystem::HelpAlphaDir = wxT("/man/");
+const wxString HelpSystem::ReleaseSuffix = wxT(".html");
 
 /// Mostly we use this so that we have the code for resizability
 /// in one place.  Other considerations like screen readers are also
@@ -214,4 +220,35 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       // Local file, Built-in browser
       ShowHtmlText( parent, wxT(""), localFileName, true );
    }
+}
+
+void HelpSystem::ShowHelpDialog(wxWindow *parent, const wxString &PageName)
+{
+   wxString releasePageName(PageName);
+   wxString localHelpPage;
+   wxString webHelpPage;
+   // This bit of code replicates the name transformations performed by the
+   // clean_filename routine in scripts/mw2html_audacity/mw2html.py:
+   releasePageName.Replace(wxT("%%"), wxT("_"), true);
+   releasePageName.Replace(wxT("%25"), wxT("_"), true);
+   releasePageName.Replace(wxT("%"), wxT("_"), true);
+   releasePageName.Replace(wxT("-"), wxT("_"), true);
+   releasePageName.Replace(wxT("__"), wxT("_"), true);
+   releasePageName.Replace(wxT("_."), wxT("."), true);
+   releasePageName = releasePageName.Lower()+HelpSystem::ReleaseSuffix;
+
+   localHelpPage = wxFileName(FileNames::HtmlHelpDir()+wxT("/man/"), releasePageName).GetFullPath();
+#if IS_ALPHA
+   webHelpPage = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpAlphaDir+PageName;
+#else
+   webHelpPage = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerDir+releasePageName;
+#endif
+   wxLogMessage(wxT("Help button pressed: PageName %s, releasePageName %s"),
+              PageName.c_str(), releasePageName.c_str());
+   wxLogMessage(wxT("webHelpPage %s, localHelpPage %s"),
+              webHelpPage.c_str(), localHelpPage.c_str());
+   HelpSystem::ShowHelpDialog(
+      parent, 
+      localHelpPage,
+      webHelpPage);
 }
