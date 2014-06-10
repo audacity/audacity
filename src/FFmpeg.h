@@ -509,7 +509,7 @@ extern "C" {
       return false;                                                     \
    }
 
-#define FFMPEG_INITALT(w, f, a)                                         \
+#define FFMPEG_INITALT(w, f, x, a)                                      \
    {                                                                    \
       wxLogNull off;                                                    \
       *(void**)&f ## _fp = (void*)w->GetSymbol(wxT(#f));                \
@@ -518,7 +518,7 @@ extern "C" {
    {                                                                    \
       {                                                                 \
          wxLogNull off;                                                 \
-         *(void**)&f ## _fp = (void*)w->GetSymbol(wxT(#a));             \
+         *(void**)&f ## _fp = (void*)x->GetSymbol(wxT(#a));             \
       }                                                                 \
       if (f ## _fp == NULL)                                             \
       {                                                                 \
