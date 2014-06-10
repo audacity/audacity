@@ -1084,22 +1084,25 @@ bool CommandManager::HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint
    // Not one of the singleton commands.
    // We could/should try all the list-style commands.
    // instead we only try the effects.
-   EffectArray *effects;
-   AudacityProject * proj;
-   proj = GetActiveProject();
+   AudacityProject * proj = GetActiveProject();
    if( !proj )
       return false;
 
+   bool result = false;
    int effectFlags = ALL_EFFECTS | CONFIGURED_EFFECT;
-   effects = EffectManager::Get().GetEffects(effectFlags);
-   for(i=0; i<effects->GetCount(); i++) {
-      wxString effectName = (*effects)[i]->GetEffectName();
-      if( Str.IsSameAs( effectName ))
-      {
-         return proj->OnEffect( effectFlags, (*effects)[i] );
+   EffectArray *effects = EffectManager::Get().GetEffects(effectFlags);
+   if (effects) {
+      for(i=0; i<effects->GetCount(); i++) {
+         wxString effectName = (*effects)[i]->GetEffectName();
+         if( Str.IsSameAs( effectName ))
+         {
+            result = proj->OnEffect( effectFlags, (*effects)[i] );
+            break;
+         }
       }
+      delete effects;
    }
-   return false;
+   return result;
 }
 
 void CommandManager::GetCategories(wxArrayString &cats)
