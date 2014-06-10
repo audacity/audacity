@@ -771,6 +771,8 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    // Initially we don't know where are the avcodec and avutl libs
    wxDynamicLibrary *codec = NULL;
    wxDynamicLibrary *util = NULL;
+   wxFileName avcodec_filename;
+   wxFileName avutil_filename;
    wxFileName name(libpath_format);
    bool gotError = false;
 
@@ -781,12 +783,10 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
 
    // Verify it really is monolithic
    if (!gotError) {
-      wxFileName actual;
-
-      actual = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avutil_version")));
-      if (actual.GetFullPath().IsSameAs(name.GetFullPath())) {
-         actual = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avcodec_version")));
-         if (actual.GetFullPath().IsSameAs(name.GetFullPath())) {
+      avutil_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avutil_version")));
+      avcodec_filename = FileNames::PathFromAddr(avformat->GetSymbol(wxT("avcodec_version")));
+      if (avutil_filename.GetFullPath().IsSameAs(name.GetFullPath())) {
+         if (avcodec_filename.GetFullPath().IsSameAs(name.GetFullPath())) {
             util = avformat;
             codec = avformat;
          }
@@ -804,17 +804,15 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    }
 
    if (!util) {
-      name.SetFullName(GetLibAVUtilName());
       avutil = util = new wxDynamicLibrary();
-      wxLogMessage(wxT("Loading avutil from '%s'."), name.GetFullPath().c_str());
-      util->Load(name.GetFullPath(), wxDL_LAZY);
+      wxLogMessage(wxT("Loading avutil from '%s'."), avutil_filename.GetFullPath().c_str());
+      util->Load(avutil_filename.GetFullPath(), wxDL_LAZY);
    }
 
    if (!codec) {
-      name.SetFullName(GetLibAVCodecName());
       avcodec = codec = new wxDynamicLibrary();
-      wxLogMessage(wxT("Loading avcodec from '%s'."), name.GetFullPath().c_str());
-      codec->Load(name.GetFullPath(), wxDL_LAZY);
+      wxLogMessage(wxT("Loading avcodec from '%s'."), avcodec_filename.GetFullPath().c_str());
+      codec->Load(avcodec_filename.GetFullPath(), wxDL_LAZY);
    }
 
    if (!avformat->IsLoaded()) {
