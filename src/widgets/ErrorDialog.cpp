@@ -203,7 +203,8 @@ void ShowAliasMissingDialog(AudacityProject *parent,
    dlog->SetPosition(point);
    dlog->CentreOnParent(wxHORIZONTAL);
 
+   // This needs to be modeless because user may need to
+   // stop playback AND read dialog's instructions.
    dlog->Show();
    // ANSWER-ME: Vigilant Sentry flags this method as not deleting dlog, so a mem leak.
-   // ANSWER-ME: Why is this modeless? Shouldn't it require user action before proceeding?
 }
