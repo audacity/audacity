@@ -34,7 +34,9 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
 #include "Prefs.h"
+#include "./prefs/ModulePrefs.h"
 #endif
+
 #include "LoadModules.h"
 #include "widgets/MultiDialog.h"
 
@@ -76,27 +78,6 @@ wxWindow * MakeHijackPanel()
 // This variable will hold the address of a subroutine in a DLL that
 // starts a thread and reads script commands.
 static tpRegScriptServerFunc scriptFn;
-
-#ifdef EXPERIMENTAL_MODULE_PREFS
-bool IsAllowedModule( wxString fname )
-{
-   bool bLoad = false;
-   wxString ShortName = wxFileName( fname ).GetName();
-   if( (ShortName.CmpNoCase( wxT("mod-script-pipe")) == 0 ))
-   {
-      gPrefs->Read(wxT("/Module/mod-script-pipe"), &bLoad, false);
-   }
-   else if( (ShortName.CmpNoCase( wxT("mod-nyq-bench")) == 0 ))
-   {
-      gPrefs->Read(wxT("/Module/mod-nyq-bench"), &bLoad, false);
-   }
-   else if( (ShortName.CmpNoCase( wxT("mod-track-panel")) == 0 ))
-   {
-      gPrefs->Read(wxT("/Module/mod-track-panel"), &bLoad, false);
-   }
-   return bLoad;
-}
-#endif  // EXPERIMENTAL_MODULE_PREFS
 
 Module::Module(const wxString & name)
 {
@@ -236,8 +217,19 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       ::wxSetWorkingDirectory(prefix);
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
-      if( !IsAllowedModule( files[i] ) )  // don't try and check the in-date-ness before this as that means loading the module to call it's GetVersionString, which could do anything.
+      int iModuleStatus = ModulePrefs::GetModuleStatus( files[i] );
+      if( iModuleStatus == kModuleDisabled )
+         continue;
+      if( iModuleStatus == kModuleFailed )
+         continue;
+
+      if( (iModuleStatus == kModuleAsk ) || 
+          (iModuleStatus == kModuleNew ) 
+        )
 #endif
+      // JKC: I don't like prompting for the plug-ins individually
+      // I think it would be better to show the module prefs page,
+      // and let the user decide for each one.
       {
          wxString ShortName = wxFileName( files[i] ).GetName();
          wxString msg;
@@ -246,9 +238,22 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
          const wxChar *buttons[] = {_("Yes"), _("No"), NULL};  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
          int action;
          action = ShowMultiDialog(msg, _("Module Loader"), buttons, _("Try and load this module?"), false);
-         if(action == 1)   // "No"
+#ifdef EXPERIMENTAL_MODULE_PREFS
+         // If we're not prompting always, accept the answer permanantly
+         if( iModuleStatus == kModuleNew ){
+            iModuleStatus = (action==1)?kModuleDisabled : kModuleEnabled;
+            ModulePrefs::SetModuleStatus( files[i], iModuleStatus );
+         }
+#endif
+         if(action == 1){   // "No"
             continue;
+         }
       }
+#ifdef EXPERIMENTAL_MODULE_PREFS
+      // Before attempting to load, we set the state to bad.
+      // That way, if we crash, we won't try again.
+      ModulePrefs::SetModuleStatus( files[i], kModuleFailed );
+#endif
 
       Module *module = new Module(files[i]);
       if (module->Load())   // it will get rejected if there  are version problems
@@ -265,8 +270,13 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
          {
             pPanelHijack = (tPanelFn)(module->GetSymbol(wxT(mainPanelFnName)));
          }
+#ifdef EXPERIMENTAL_MODULE_PREFS
+         // Loaded successfully, restore the status.
+         ModulePrefs::SetModuleStatus( files[i], iModuleStatus);
+#endif
       }
       else {
+         // No need to save status, as we already set kModuleFailed.
          delete module;
       }
       ::wxSetWorkingDirectory(saveOldCWD);
