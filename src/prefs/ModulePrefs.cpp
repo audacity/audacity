@@ -20,6 +20,7 @@
 #include "../Audacity.h"
 
 #include <wx/defs.h>
+#include <wx/filename.h>
 
 #include "../ShuttleGui.h"
 
