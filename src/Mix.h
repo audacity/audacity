@@ -99,7 +99,6 @@ class AUDACITY_DLL_API Mixer {
    /// Restart processing at beginning of buffer next time
    /// Process() is called.
    void Restart();
-   void Restart( double NewStart ){ mT0 = NewStart; Restart();}
 
    /// Reposition processing to absolute time next time
    /// Process() is called.
