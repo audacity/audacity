@@ -33,7 +33,7 @@ class CommandHandler
       // This should only be used during initialization
       void SetProject(AudacityProject *proj);
 
-      // Whenever a command is recieved, process it.
+      // Whenever a command is received, process it.
       void OnReceiveCommand(AppCommandEvent &event);
 };
 
