@@ -231,7 +231,7 @@ sbsms
 http://sbsms.sourceforge.net/
 An audio stretching library for changing pitch or tempo without changing the
 other. Alternative to SoundTouch, better on large changes but slower.
-Version in Audacity SVN: ??
+Version in Audacity SVN: 2.0.2
 Patches:
 Misc fixes to configure.in/Makefile.am for autoconf macros and libtool. More
 files added to m4/ directory by libtoolizing commited to Audacity SVN.
