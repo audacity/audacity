@@ -292,6 +292,16 @@ public:
    {
       return (wxT("avformat-") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)) wxT(".dll"));
    }
+
+   wxString GetLibAVCodecName()
+   {
+      return (wxT("avcodec-") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)) wxT(".dll"));
+   }
+
+   wxString GetLibAVUtilName()
+   {
+      return (wxT("avutil-") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)) wxT(".dll"));
+   }
 #elif defined(__WXMAC__)
    /* Library names and file filters for Mac OS only */
    wxString GetLibraryTypeString()
@@ -307,6 +317,16 @@ public:
    wxString GetLibAVFormatName()
    {
       return (wxT("libavformat.") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)) wxT(".dylib"));
+   }
+
+   wxString GetLibAVCodecName()
+   {
+      return (wxT("libavcodec.") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)) wxT(".dylib"));
+   }
+
+   wxString GetLibAVUtilName()
+   {
+      return (wxT("libavutil.") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)) wxT(".dylib"));
    }
 #else
    /* Library names and file filters for other platforms, basically Linux and
@@ -324,6 +344,16 @@ public:
    wxString GetLibAVFormatName()
    {
       return (wxT("libavformat.so.") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)));
+   }
+
+   wxString GetLibAVCodecName()
+   {
+      return (wxT("libavcodec.so.") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)));
+   }
+
+   wxString GetLibAVUtilName()
+   {
+      return (wxT("libavutil.so.") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)));
    }
 #endif // (__WXMAC__) || (__WXMSW__)
 

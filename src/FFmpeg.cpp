@@ -791,6 +791,12 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
             codec = avformat;
          }
       }
+      if (!avcodec_filename.FileExists()) {
+         avcodec_filename = GetLibAVCodecName();
+      }
+      if (!avutil_filename.FileExists()) {
+         avutil_filename = GetLibAVUtilName();
+      }
 
       if (util == NULL || codec == NULL) {
          wxLogMessage(wxT("avformat not monolithic"));
