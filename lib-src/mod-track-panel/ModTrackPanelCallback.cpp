@@ -83,7 +83,7 @@ class ModTrackPanelCommandFunctor:public CommandFunctor
 public:
    ModTrackPanelCommandFunctor(ModTrackPanelCallback *pData,
       ModTrackPanelCommandFunction pFunction);
-   virtual void operator()(int index = 0);
+   virtual void operator()(int index = 0, const wxEvent * evt=NULL);
 public:
    ModTrackPanelCallback * mpData;
    ModTrackPanelCommandFunction mpFunction;
@@ -100,7 +100,7 @@ ModTrackPanelCommandFunctor::ModTrackPanelCommandFunctor(ModTrackPanelCallback *
 }
 
 // The dispatching function in the command functor.
-void ModTrackPanelCommandFunctor::operator()(int index )
+void ModTrackPanelCommandFunctor::operator()(int index, const wxEvent * WXUNUSED(evt) )
 {
    (mpData->*(mpFunction))();
 }
@@ -194,7 +194,7 @@ MOD_TRACK_PANEL_DLL_API int ModuleDispatch(ModuleDispatchTypes type)
 }
 
 //Example code commented out.
-#if 0
+#if 1
 // This is an example function to hijack the main panel
 int MOD_TRACK_PANEL_DLL_API MainPanelFunc(int ix)
 {
