@@ -126,9 +126,12 @@ bool Module::Load()
    mDispatch = (fnModuleDispatch) mLib->GetSymbol(wxT(ModuleDispatchName));
    if (!mDispatch) {
       // Module does not provide a dispatch function...
-      return false;
+      // That can be OK, as long as we never try to call it.
+      return true;
    }
 
+   // However if we do have it and it does not work, 
+   // then the module is bad.
    bool res = ((mDispatch(ModuleInitialize))!=0);
    if (res) {
       return true;
@@ -149,9 +152,9 @@ void Module::Unload()
 
 int Module::Dispatch(ModuleDispatchTypes type)
 {
-   if (mLib->IsLoaded()) {
-      return mDispatch(type);
-   }
+   if (mLib->IsLoaded())
+      if( mDispatch != NULL )
+         return mDispatch(type);
 
    return 0;
 }
