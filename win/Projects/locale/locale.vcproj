@@ -256,6 +256,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\locale\ta.po"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\locale\tg.po"
 				>
 			</File>
