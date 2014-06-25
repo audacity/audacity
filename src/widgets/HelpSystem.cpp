@@ -224,18 +224,38 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
 
 void HelpSystem::ShowHelpDialog(wxWindow *parent, const wxString &PageName)
 {
-   wxString releasePageName(PageName);
    wxString localHelpPage;
    wxString webHelpPage;
+   wxString releasePageName;
+   wxString anchor;
+   if (PageName.Find('#', true) != wxNOT_FOUND)
+   {	// need to split anchor off into separate variable
+      releasePageName= PageName.BeforeLast('#');
+      anchor= PageName.AfterLast('#');
+   }
+   else
+   {
+      releasePageName = PageName;
+	  anchor = wxT("");
+   }
    // This bit of code replicates the name transformations performed by the
-   // clean_filename routine in scripts/mw2html_audacity/mw2html.py:
+   // clean_filename routine in scripts/mw2html_audacity/mw2html.py
+   // there is a special case for transforming the front page
+   // (Main_Page => index.html)
+   if (releasePageName == wxT("Main_Page"))
+   {
+      releasePageName = wxT("index") + HelpSystem::ReleaseSuffix + anchor;
+   }
+   else
+   {	// for any other name
    releasePageName.Replace(wxT("%%"), wxT("_"), true);
    releasePageName.Replace(wxT("%25"), wxT("_"), true);
    releasePageName.Replace(wxT("%"), wxT("_"), true);
    releasePageName.Replace(wxT("-"), wxT("_"), true);
    releasePageName.Replace(wxT("__"), wxT("_"), true);
    releasePageName.Replace(wxT("_."), wxT("."), true);
-   releasePageName = releasePageName.Lower()+HelpSystem::ReleaseSuffix;
+   releasePageName = releasePageName.Lower()+HelpSystem::ReleaseSuffix + anchor;
+   }
 
    localHelpPage = wxFileName(FileNames::HtmlHelpDir()+wxT("/man/"), releasePageName).GetFullPath();
 #if IS_ALPHA
