@@ -529,8 +529,7 @@ public:
 
    void OnDownload(wxCommandEvent & WXUNUSED(event))
    {
-      wxString page = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#ffdown");
-      ::OpenInDefaultBrowser(page);
+      HelpSystem::ShowHelpDialog(this, wxT("FAQ_Installation_and_Plug-ins#ffdown"));
    }
 
    wxString GetLibPath()

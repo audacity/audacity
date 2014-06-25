@@ -25,6 +25,7 @@ MP3 and FFmpeg encoding libraries.
 #include "../ShuttleGui.h"
 #include "../export/ExportMP3.h"
 #include "../widgets/LinkingHtmlWindow.h"
+#include "../widgets/HelpSystem.h"
 
 #include "LibraryPrefs.h"
 
@@ -169,12 +170,10 @@ void LibraryPrefs::OnMP3FindButton(wxCommandEvent & WXUNUSED(event))
    SetMP3VersionText(true);
 }
 
-/// Opens a file-finder dialog so that the user can
-/// tell us where the MP3 library is.
+/// Opens help on downloading a suitable MP3 library is.
 void LibraryPrefs::OnMP3DownButton(wxCommandEvent & WXUNUSED(event))
 {
-   wxString url = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#lame");
-   ::OpenInDefaultBrowser(url);
+   HelpSystem::ShowHelpDialog(this, wxT("FAQ_Installation_and_Plug-ins#lame"));
 }
 
 void LibraryPrefs::SetFFmpegVersionText()
@@ -222,8 +221,7 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 
 void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & WXUNUSED(event))
 {
-   wxString url = wxT("http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#ffdown");
-   ::OpenInDefaultBrowser(url);
+   HelpSystem::ShowHelpDialog(this, wxT("FAQ_Installation_and_Plug-ins#ffdown"));
 }
 
 bool LibraryPrefs::Apply()
