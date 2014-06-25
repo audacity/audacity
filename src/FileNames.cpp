@@ -145,16 +145,6 @@ wxString FileNames::HtmlHelpDir()
 #endif
 }
 
-wxString FileNames::HtmlHelpIndexFile(bool quick)
-{
-   wxString htmlHelpIndex;
-   if(quick)
-      htmlHelpIndex = wxFileName( HtmlHelpDir(), wxT("quick_help.html") ).GetFullPath();
-   else
-      htmlHelpIndex = wxFileName( HtmlHelpDir(), wxT("index.html") ).GetFullPath();
-   return htmlHelpIndex;
-}
-
 wxString FileNames::ChainDir()
 {
    return FileNames::MkDir( wxFileName( DataDir(), wxT("Chains") ).GetFullPath() );

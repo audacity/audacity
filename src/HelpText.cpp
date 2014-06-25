@@ -181,6 +181,8 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 {
    if(Key==wxT("welcome"))
    {
+      /// TO-DO: Make the links to help here use the widgets/HelpSystem mechanism
+	  /// so that they are consistent
       /* i18n-hint: Preserve [[file:quick_help.html as it's the name of a file.*/
       return WrapText(
          wxString(wxT("")) +
