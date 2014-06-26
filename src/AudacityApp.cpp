@@ -1243,6 +1243,7 @@ bool AudacityApp::OnInit()
    if( pWnd )
    {
       project->Show( false );
+      pWnd->SetParent( project );
       SetTopWindow(pWnd);
       pWnd->Show( true );
    }
