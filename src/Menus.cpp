@@ -345,6 +345,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("Cut"), _("Cu&t"), FN(OnCut), wxT("Ctrl+X"),
               AudioIONotBusyFlag | CutCopyAvailableFlag,
               AudioIONotBusyFlag | CutCopyAvailableFlag);
+   c->AddItem(wxT("Delete"), _("&Delete"), FN(OnDelete), wxT("Ctrl+K"));
    /* i18n-hint: (verb)*/
    c->AddItem(wxT("Copy"), _("&Copy"), FN(OnCopy), wxT("Ctrl+C"),
               AudioIONotBusyFlag | CutCopyAvailableFlag,
@@ -353,7 +354,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("Paste"), _("&Paste"), FN(OnPaste), wxT("Ctrl+V"),
               AudioIONotBusyFlag | ClipboardFlag,
               AudioIONotBusyFlag | ClipboardFlag);
-   c->AddItem(wxT("Delete"), _("&Delete"), FN(OnDelete), wxT("Ctrl+K"));
+   /* i18n-hint: (verb)*/
+   c->AddItem(wxT("Duplicate"), _("Duplic&ate"), FN(OnDuplicate), wxT("Ctrl+D"));
 
    c->AddSeparator();
 
@@ -378,8 +380,6 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("PasteNewLabel"), _("Paste Te&xt to New Label"), FN(OnPasteNewLabel), wxT("Ctrl+Alt+V"),
               AudioIONotBusyFlag, AudioIONotBusyFlag);
 
-   /* i18n-hint: (verb)*/
-   c->AddItem(wxT("Duplicate"), _("Duplic&ate"), FN(OnDuplicate), wxT("Ctrl+D"));
 
    c->AddSeparator();
 
