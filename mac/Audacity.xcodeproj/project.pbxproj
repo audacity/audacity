@@ -2551,25 +2551,25 @@
 		};
 		ED95528A195DBC3C0027176E /* Install background image */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
 				ED955289195DBC1E0027176E /* Audacity-DMG-background.png in Install background image */,
 			);
 			name = "Install background image";
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 		ED95528B195DBC3C0027176E /* Install background image */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
 				ED955288195DBC080027176E /* Audacity-DMG-background.png in Install background image */,
 			);
 			name = "Install background image";
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
