@@ -1,5 +1,5 @@
 Compiling Audacity(R) for Microsoft Windows(TM)
-copyright (c) 1999-2013 Audacity Team
+copyright (c) 1999-2014 Audacity Team
 
 Authors:
   Asger Ottar Alstrup
@@ -19,7 +19,7 @@ If you find the advice here inaccurate or incomplete, please
 e-mail feedback@audacityteam.org .
 ========================================================================
 
-Audacity releases are now built with Microsoft Visual C++ 9 
+Audacity releases are currently built with Microsoft Visual C++ 9 
 (a.k.a Visual C++ 2008) generically known as "VC9".
 
 For instructions on compiling Audacity under the Cygwin 
@@ -57,7 +57,6 @@ MSVC++ STEP 2:  Build wxWidgets
 When you have downloaded and installed wxWidgets, the next step
 is to build it. 
 
-
 1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
    Visual Studio 2008 (for VC9). 
    Make sure to use wx_dll.dsw, not wx.dsw, because wx.dsw
@@ -68,10 +67,11 @@ is to build it.
    "C\wxWidgets-2.8.12\build\msw\wx_dll.sln" instead of wx_dll.dsw.
 
 
-2. If you want to use the accessibility features, we have modified 
-   one of the wxWidgets files. Rather than provide a patch, we 
-   store any modified files in the Audacity code repository, and you 
-   can replace the corresponding wxWidgets files. 
+2. If you want to use the wxWidgets accessibility features, we have 
+   modified one of the wxWidgets files. Rather than provide a patch, 
+   we store the modified file in the Audacity code repository, and you 
+   can replace the corresponding wxWidgets file. You will need to 
+   download Audacity (next step) to get these. 
 
    In "audacity\win\wxWidgets_additions" is one .h file. 
    You may want to make backups of the wxWidgets original of it, 
@@ -116,7 +116,7 @@ is to build it.
 MSVC++ STEP 3:  Download Audacity
 --------------------------
 
-Now you can compile Audacity.  To check out the latest 
+To check out the latest 
 source code from SVN, see the instructions at 
 "http://audacity.sourceforge.net/community/developers". 
 
@@ -142,12 +142,16 @@ In the Audacity project file, there are declarations like
 
 that get interpreted as, e.g., "C:\wxWidgets-2.8.12\include".
 
+The typical setting for WXWIN is "C:\wxWidgets-2.8.12". 
+
 Once you have set the WXWIN environment variable correctly, 
 the Audacity project file's declarations will do the rest.
 
-Note that you have at least to restart the IDE so it picks up
-changes in the environment variables. It is safer to reboot
-the computer to ensure the variables are read correctly. 
+Note that you must restart the Audacity solution (sln) 
+file so it picks up changes in the environment variables. 
+
+In some cases, you may need to reboot the computer to ensure 
+the variables are read correctly. 
 
 
 -----------------------
@@ -179,20 +183,20 @@ Alternatively, put msgfmt.exe somewhere already in the Path,
 e.g., C:\Windows.
 
 
-3. Some functionality in Audacity is currently turned on its default
+3. Some functionality in Audacity is currently turned on in its default
 configuration, but requires that extra libraries be downloaded
 separately to use it. 
 
-* To allow export of MP3 files, download LAME:
+* To allow export of MP3 files, install LAME:
   http://manual.audacityteam.org/index.php?title=FAQ:Installation_and_Plug-Ins#lame
 
 * To allow import and export of a much wider range of audio formats
   (including WMA, M4A and AC3), and to import audio from video files,
-  download FFmpeg:
+  install FFmpeg:
   http://www.audacityteam.org/manual/index.php?title=FAQ:Installation_and_Plug-Ins#installffmpeg
 
-To change the libraries that are enabled in Audacity, open the file 
-"win\configwin.h" and comment or uncomment the libraries as desired.
+To change the libraries enabled in Audacity, edit  
+"win\configwin.h" and comment or uncomment the entries.
 
 
 4. DirectSound (Microsoft) and ASIO (Steinberg) are sound card interface 
@@ -234,8 +238,8 @@ the full path to the base directory of the ASIO SDK, e.g.,
 MSVC++ STEP 6:  Build Audacity
 -----------------------
 
-Run Visual C++ and load the Audacity solution, 
-"audacity\win\audacity.sln".
+Now you can compile Audacity. Run Visual C++ and load the Audacity 
+solution, "audacity\win\audacity.sln".
 
 Select the configuration that you wish to build:
 * "Release" for Unicode-based, general use 
