@@ -276,12 +276,10 @@ The "*" in the file names above is replaced in the actual files by
 a suffix specific to its Widgets configuration. You can identify the
 DLLs needed for each Audacity version as follows: 
 
-	"" (no suffix) for "Release" versions
 	"u" for "Unicode Release" versions 
-	"d" for "Debug" versions
 	"ud" for "Unicode Debug" versions
 
-So for instance, a Unicode Debug version of Audacity should have:  
+So for instance, a Debug version of Audacity should have:  
 
 	wxbase28ud_net_vc_custom.dll
 	wxbase28ud_vc_custom.dll
