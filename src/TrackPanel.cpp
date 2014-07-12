@@ -315,6 +315,7 @@ enum {
    OnCutSelectedTextID,
    OnCopySelectedTextID,
    OnPasteSelectedTextID,
+   OnDeleteSelectedLabelID,
 
    OnTimeTrackLinID,
    OnTimeTrackLogID,
@@ -354,6 +355,7 @@ BEGIN_EVENT_TABLE(TrackPanel, wxWindow)
     EVT_MENU(OnCutSelectedTextID, TrackPanel::OnCutSelectedText)
     EVT_MENU(OnCopySelectedTextID, TrackPanel::OnCopySelectedText)
     EVT_MENU(OnPasteSelectedTextID, TrackPanel::OnPasteSelectedText)
+    EVT_MENU(OnDeleteSelectedLabelID, TrackPanel::OnDeleteSelectedLabel)
 
     EVT_MENU(OnTimeTrackLinID, TrackPanel::OnTimeTrackLin)
     EVT_MENU(OnTimeTrackLogID, TrackPanel::OnTimeTrackLog)
@@ -687,9 +689,10 @@ void TrackPanel::BuildMenus(void)
    mTimeTrackMenu->AppendCheckItem(OnTimeTrackLogIntID, _("Logarithmic &Interpolation"));
 
    mLabelTrackInfoMenu = new wxMenu();
-   mLabelTrackInfoMenu->Append(OnCutSelectedTextID, _("Cut"));
-   mLabelTrackInfoMenu->Append(OnCopySelectedTextID, _("Copy"));
-   mLabelTrackInfoMenu->Append(OnPasteSelectedTextID, _("Paste"));
+   mLabelTrackInfoMenu->Append(OnCutSelectedTextID, _("Cu&t"));
+   mLabelTrackInfoMenu->Append(OnCopySelectedTextID, _("&Copy"));
+   mLabelTrackInfoMenu->Append(OnPasteSelectedTextID, _("&Paste"));
+   mLabelTrackInfoMenu->Append(OnDeleteSelectedLabelID, _("&Delete Label"));
 }
 
 void TrackPanel::BuildCommonDropMenuItems(wxMenu * menu)
@@ -5362,6 +5365,7 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMo
          mLabelTrackInfoMenu->Enable(OnCutSelectedTextID, lTrack->IsTextSelected());
          mLabelTrackInfoMenu->Enable(OnCopySelectedTextID, lTrack->IsTextSelected());
          mLabelTrackInfoMenu->Enable(OnPasteSelectedTextID, lTrack->IsTextClipSupported());
+         mLabelTrackInfoMenu->Enable(OnDeleteSelectedLabelID, true);
          PopupMenu(mLabelTrackInfoMenu, event.m_x + 1, event.m_y + 1);
          // it's an invalid dragging event
          lTrack->SetWrongDragging(true);
@@ -7985,6 +7989,20 @@ void TrackPanel::OnPasteSelectedText(wxCommandEvent & WXUNUSED(event))
    LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
    if (lt->PasteSelectedText(mViewInfo->sel0, mViewInfo->sel1)) {
       MakeParentPushState(_("Modified Label"),
+                          _("Label Edit"),
+                          true /* consolidate */);
+   }
+   RefreshTrack(lt);
+}
+
+/// delete selected label
+void TrackPanel::OnDeleteSelectedLabel(wxCommandEvent & WXUNUSED(event))
+{
+   LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
+   int ndx = lt->GetLabelIndex(mViewInfo->sel0, mViewInfo->sel1);
+   if (ndx != -1) {
+      lt->DeleteLabel(ndx);
+      MakeParentPushState(_("Deleted Label"),
                           _("Label Edit"),
                           true /* consolidate */);
    }
