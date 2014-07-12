@@ -1129,7 +1129,14 @@ void EffectNyquist::OSCallback()
       nyx_continue();
    }
 
-   wxYieldIfNeeded();
+   // LLL:  STF figured out that yielding while the effect is being applied
+   //       produces an EXTREME slowdown.  It appears that yielding it not
+   //       really necessary, so commenting out for now.
+   //
+   //       Possible issues that may result is the ProgressDialog may
+   //       not get refreshed or may not respond to button clicks...
+   //       just something to watch for.
+   //wxYieldIfNeeded();
 }
 
 /**********************************************************/
