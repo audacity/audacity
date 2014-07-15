@@ -1130,13 +1130,18 @@ void EffectNyquist::OSCallback()
    }
 
    // LLL:  STF figured out that yielding while the effect is being applied
-   //       produces an EXTREME slowdown.  It appears that yielding it not
-   //       really necessary, so commenting out for now.
+   //       produces an EXTREME slowdown.  It appears that yielding is not
+   //       really necessary on Linux and Windows.
    //
-   //       Possible issues that may result is the ProgressDialog may
-   //       not get refreshed or may not respond to button clicks...
-   //       just something to watch for.
-   //wxYieldIfNeeded();
+   //       However, on the Mac, the spinning cursor appears during longer
+   //       Nyquist processing and that may cause the user to think Audacity
+   //       has crashed or hung.  In addition, yielding or not on the Mac
+   //       doesn't seem to make much of a difference in execution time.
+   //
+   //       So, yielding on the Mac only...
+#if defined(__WXMAC__)
+   wxYieldIfNeeded();
+#endif
 }
 
 /**********************************************************/
