@@ -18,7 +18,23 @@ HISTORY
     - RBD 16apr04 */
 #include <stdio.h>
 #include <ctype.h>
+
+/* On the Mac, using _setjmp()/_longjmp() can speed up execution
+   quite a bit. */
+#if defined(__APPLE__)
+
+#define setjmp slow_setjmp
+#define longjmp slow_longjmp
 #include <setjmp.h>
+#undef setjmp
+#undef longjmp
+#define setjmp _setjmp
+#define longjmp _longjmp
+
+#else
+#include <setjmp.h>
+#endif
+
 
 /* NNODES	number of nodes to allocate in each request (1000) */
 /* EDEPTH	evaluation stack depth (2000) */
