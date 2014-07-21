@@ -125,9 +125,9 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
    #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      S.StartStatic(_("Automated Input Level Adjustment"));
+      S.StartStatic(_("Automated Recording Level Adjustment"));
       {
-         S.TieCheckBox(_("Enable Automated Input Level Adjustment."),
+         S.TieCheckBox(_("Enable Automated Recording Level Adjustment."),
                        wxT("/AudioIO/AutomatedInputLevelAdjustment"),
                        false);
 

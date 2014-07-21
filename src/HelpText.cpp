@@ -133,17 +133,17 @@ wxString TitleText( const wxString & Key )
    if(Key ==wxT("inputdevice") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Recording - Choosing the Input Device");
+      return _("Recording - Choosing the Recording Device");
    }
    if(Key ==wxT("inputsource") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Recording - Choosing the Input Source");
+      return _("Recording - Choosing the Recording Source");
    }
    if(Key ==wxT("inputlevel") )
    {
       /* i18n-hint: Title for a topic.*/
-      return _("Recording - Setting the Input Level");
+      return _("Recording - Setting the Recording Level");
    }
    if((Key ==wxT("edit") ) || (Key==wxT("grey")))
    {

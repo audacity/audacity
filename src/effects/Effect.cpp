@@ -533,7 +533,7 @@ void Effect::Preview(bool dryOnly)
          delete mProgress;
       }
       else {
-         wxMessageBox(_("Error while opening sound device. Please check the output device settings and the project sample rate."),
+         wxMessageBox(_("Error while opening sound device. Please check the playback device settings and the project sample rate."),
                       _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
       }
    }

@@ -925,7 +925,7 @@ void AudioIO::HandleDeviceChange()
 
 
    #if 0
-   printf("PortMixer: Output: %s Input: %s\n",
+   printf("PortMixer: Playback: %s Recording: %s\n",
           mEmulateMixerOutputVol? "emulated": "native",
           mInputMixerWorks? "hardware": "no control");
    #endif
@@ -2439,7 +2439,7 @@ wxString AudioIO::GetDeviceInfo()
    wxLogDebug(wxT("Portaudio reports %d audio devices"),cnt);
 
    s << wxT("==============================") << e;
-   s << wxT("Default capture device number: ") << recDeviceNum << e;
+   s << wxT("Default recording device number: ") << recDeviceNum << e;
    s << wxT("Default playback device number: ") << playDeviceNum << e;
 
    wxString recDevice = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
@@ -2467,12 +2467,12 @@ wxString AudioIO::GetDeviceInfo()
       s << wxT("Device ID: ") << j << e;
       s << wxT("Device name: ") << name << e;
       s << wxT("Host name: ") << HostName(info) << e;
-      s << wxT("Input channels: ") << info->maxInputChannels << e;
-      s << wxT("Output channels: ") << info->maxOutputChannels << e;
-      s << wxT("Low Input Latency: ") << info->defaultLowInputLatency << e;
-      s << wxT("Low Output Latency: ") << info->defaultLowOutputLatency << e;
-      s << wxT("High Input Latency: ") << info->defaultHighInputLatency << e;
-      s << wxT("High Output Latency: ") << info->defaultHighOutputLatency << e;
+      s << wxT("Recording channels: ") << info->maxInputChannels << e;
+      s << wxT("Playback channels: ") << info->maxOutputChannels << e;
+      s << wxT("Low Recording Latency: ") << info->defaultLowInputLatency << e;
+      s << wxT("Low Playback Latency: ") << info->defaultLowOutputLatency << e;
+      s << wxT("High Recording Latency: ") << info->defaultHighInputLatency << e;
+      s << wxT("High Playback Latency: ") << info->defaultHighOutputLatency << e;
 
       wxArrayLong rates = GetSupportedPlaybackRates(j, 0.0);
 
@@ -2502,9 +2502,9 @@ wxString AudioIO::GetDeviceInfo()
 
    s << wxT("==============================") << e;
    if(haveRecDevice){
-      s << wxT("Selected capture device: ") << recDeviceNum << wxT(" - ") << recDevice << e;
+      s << wxT("Selected recording device: ") << recDeviceNum << wxT(" - ") << recDevice << e;
    }else{
-      s << wxT("No capture device found.") << e;
+      s << wxT("No recording device found.") << e;
    }
    if(havePlayDevice){
       s << wxT("Selected playback device: ") << playDeviceNum << wxT(" - ") << playDevice << e;
@@ -2603,7 +2603,7 @@ wxString AudioIO::GetDeviceInfo()
       }
 
       s << wxT("==============================") << e;
-      s << wxT("Available capture sources:") << e;
+      s << wxT("Available recording sources:") << e;
       cnt = Px_GetNumInputSources(PortMixer);
       for (int i = 0; i < cnt; i++) {
          wxString name(Px_GetInputSourceName(PortMixer, i), wxConvLocal);
@@ -2647,7 +2647,7 @@ wxString AudioIO::GetDeviceInfo()
       Pa_CloseStream(stream);
 
       s << wxT("==============================") << e;
-      s << wxT("Capture volume is ") << (EmulateMixerInputVol? wxT("emulated"): wxT("native")) << e;
+      s << wxT("Recording volume is ") << (EmulateMixerInputVol? wxT("emulated"): wxT("native")) << e;
       s << wxT("Playback volume is ") << (EmulateMixerOutputVol? wxT("emulated"): wxT("native")) << e;
 
       Px_CloseMixer(PortMixer);
@@ -3166,7 +3166,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                //we can't improve it more now
                if (mAILATotalAnalysis != 0) {
                   mAILAActive = false;
-                  proj->TP_DisplayStatusMessage(_("Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too high."));
+                  proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."));
                }
                printf("\talready min vol:%f\n", iv);
             }
@@ -3174,7 +3174,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                float vol = (float) max(LOWER_BOUND, iv+(mAILAGoalPoint-mAILAMax)*mAILAChangeFactor);
                Px_SetInputVolume(mPortMixer, vol);
                wxString msg;
-               msg.Printf(_("Automated Input Level Adjustment decreased the volume to %f."), vol);
+               msg.Printf(_("Automated Recording Level Adjustment decreased the volume to %f."), vol);
                proj->TP_DisplayStatusMessage(msg);
                changetype = 1;
                printf("\tnew vol:%f\n", vol);
@@ -3189,7 +3189,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                //we can't improve it more
                if (mAILATotalAnalysis != 0) {
                   mAILAActive = false;
-                  proj->TP_DisplayStatusMessage(_("Automated Input Level Adjustment stopped. It was not possible to optimize it more. Still too low."));
+                  proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."));
                }
                printf("\talready max vol:%f\n", iv);
             }
@@ -3201,7 +3201,7 @@ void AudioIO::AILAProcess(double maxPeak) {
                }
                Px_SetInputVolume(mPortMixer, vol);
                wxString msg;
-               msg.Printf(_("Automated Input Level Adjustment increased the volume to %.2f."), vol);
+               msg.Printf(_("Automated Recording Level Adjustment increased the volume to %.2f."), vol);
                proj->TP_DisplayStatusMessage(msg);
                changetype = 2;
                printf("\tnew vol:%f\n", vol);
@@ -3235,12 +3235,12 @@ void AudioIO::AILAProcess(double maxPeak) {
       if (mAILAActive && mAILATotalAnalysis != 0 && mAILAAnalysisCounter >= mAILATotalAnalysis) {
          mAILAActive = false;
          if (mAILAMax > mAILAGoalPoint + mAILAGoalDelta)
-            proj->TP_DisplayStatusMessage(_("Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too high."));
+            proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."));
          else if (mAILAMax < mAILAGoalPoint - mAILAGoalDelta)
-            proj->TP_DisplayStatusMessage(_("Automated Input Level Adjustment stopped. The total number of analysis has been exceeded without finding an acceptable volume. Still too low."));
+            proj->TP_DisplayStatusMessage(_("Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."));
          else {
             wxString msg;
-            msg.Printf(_("Automated Input Level Adjustment stopped. %.2f seems an acceptable volume."), Px_GetInputVolume(mPortMixer));
+            msg.Printf(_("Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."), Px_GetInputVolume(mPortMixer));
             proj->TP_DisplayStatusMessage(msg);
          }
       }

@@ -686,7 +686,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("SoundActivationLevel"), _("Sound Activation Le&vel..."), FN(OnSoundActivated));
 
 #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Input Level Adjustment (on/off)"), FN(OnToogleAutomatedInputLevelAdjustment), 0);
+   c->AddCheck(wxT("AutomatedInputLevelAdjustmentOnOff"), _("A&utomated Recording Level Adjustment (on/off)"), FN(OnToogleAutomatedInputLevelAdjustment), 0);
 #endif
    c->AddItem(wxT("RescanDevices"), _("R&escan Audio Devices"), FN(OnRescanDevices));
 
@@ -1173,25 +1173,25 @@ void AudacityProject::CreateMenusAndCommands()
       wxT("F11"));
 #endif
 
-   c->AddCommand(wxT("InputDevice"), _("Change input device"), FN(OnInputDevice), wxT("Shift+I"),
+   c->AddCommand(wxT("InputDevice"), _("Change recording device"), FN(OnInputDevice), wxT("Shift+I"),
                  AudioIONotBusyFlag,
                  AudioIONotBusyFlag);
-   c->AddCommand(wxT("OutputDevice"), _("Change output device"), FN(OnOutputDevice), wxT("Shift+O"),
+   c->AddCommand(wxT("OutputDevice"), _("Change playback device"), FN(OnOutputDevice), wxT("Shift+O"),
                  AudioIONotBusyFlag,
                  AudioIONotBusyFlag);
    c->AddCommand(wxT("AudioHost"), _("Change audio host"), FN(OnAudioHost), wxT("Shift+H"),
                  AudioIONotBusyFlag,
                  AudioIONotBusyFlag);
-   c->AddCommand(wxT("InputChannels"), _("Change input channels"), FN(OnInputChannels), wxT("Shift+N"),
+   c->AddCommand(wxT("InputChannels"), _("Change recording channels"), FN(OnInputChannels), wxT("Shift+N"),
                  AudioIONotBusyFlag,
                  AudioIONotBusyFlag);
 
-   c->AddCommand(wxT("OutputGain"), _("Adjust output gain"), FN(OnOutputGain));
-   c->AddCommand(wxT("OutputGainInc"), _("Increase output gain"), FN(OnOutputGainInc));
-   c->AddCommand(wxT("OutputGainDec"), _("Decrease output gain"), FN(OnOutputGainDec));
-   c->AddCommand(wxT("InputGain"), _("Adjust input gain"), FN(OnInputGain));
-   c->AddCommand(wxT("InputGainInc"), _("Increase input gain"), FN(OnInputGainInc));
-   c->AddCommand(wxT("InputGainDec"), _("Decrease input gain"), FN(OnInputGainDec));
+   c->AddCommand(wxT("OutputGain"), _("Adjust playback volume"), FN(OnOutputGain));
+   c->AddCommand(wxT("OutputGainInc"), _("Increase playback volume"), FN(OnOutputGainInc));
+   c->AddCommand(wxT("OutputGainDec"), _("Decrease playback volume"), FN(OnOutputGainDec));
+   c->AddCommand(wxT("InputGain"), _("Adjust recording volume"), FN(OnInputGain));
+   c->AddCommand(wxT("InputGainInc"), _("Increase recording volume"), FN(OnInputGainInc));
+   c->AddCommand(wxT("InputGainDec"), _("Decrease recording volume"), FN(OnInputGainDec));
 
    c->AddCommand(wxT("PlayAtSpeed"), _("Play at speed"), FN(OnPlayAtSpeed));
    c->AddCommand(wxT("SetPlaySpeed"), _("Adjust playback speed"), FN(OnSetPlaySpeed));

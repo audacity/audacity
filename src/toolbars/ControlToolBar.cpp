@@ -608,7 +608,7 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
          // msmeyer: Show error message if stream could not be opened
          wxMessageBox(_(
             "Error while opening sound device. "
-            wxT("Please check the output device settings and the project sample rate.")),
+            wxT("Please check the playback device settings and the project sample rate.")),
             _("Error"), wxOK | wxICON_EXCLAMATION, this);
       }
    }
@@ -940,8 +940,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
 
          // msmeyer: Show error message if stream could not be opened
-         wxMessageBox(_("Error while opening sound device. "
-            wxT("Please check the input device settings and the project sample rate.")),
+         wxMessageBox(_("Error while opening sound device. Please check the recording device settings and the project sample rate."),
                       _("Error"), wxOK | wxICON_EXCLAMATION, this);
 
          SetPlay(false);
