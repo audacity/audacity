@@ -398,7 +398,10 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	import/ImportOGG.cpp import/ImportOGG.h import/ImportPCM.cpp \
 	import/ImportPCM.h import/ImportPlugin.h import/ImportRaw.cpp \
 	import/ImportRaw.h import/RawAudioGuess.cpp \
-	import/RawAudioGuess.h ondemand/ODComputeSummaryTask.cpp \
+	import/RawAudioGuess.h import/FormatClassifier.cpp \
+	import/FormatClassifier.h import/MultiFormatReader.cpp \
+	import/MultiFormatReader.h import/SpecPowerMeter.cpp \
+	import/SpecPowerMeter.h ondemand/ODComputeSummaryTask.cpp \
 	ondemand/ODComputeSummaryTask.h \
 	ondemand/ODDecodeFFmpegTask.cpp ondemand/ODDecodeFFmpegTask.h \
 	ondemand/ODDecodeTask.cpp ondemand/ODDecodeTask.h \
@@ -643,6 +646,9 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	import/audacity-ImportPCM.$(OBJEXT) \
 	import/audacity-ImportRaw.$(OBJEXT) \
 	import/audacity-RawAudioGuess.$(OBJEXT) \
+	import/audacity-FormatClassifier.$(OBJEXT) \
+	import/audacity-MultiFormatReader.$(OBJEXT) \
+	import/audacity-SpecPowerMeter.$(OBJEXT) \
 	ondemand/audacity-ODComputeSummaryTask.$(OBJEXT) \
 	ondemand/audacity-ODDecodeFFmpegTask.$(OBJEXT) \
 	ondemand/audacity-ODDecodeTask.$(OBJEXT) \
@@ -1253,7 +1259,10 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	import/ImportOGG.cpp import/ImportOGG.h import/ImportPCM.cpp \
 	import/ImportPCM.h import/ImportPlugin.h import/ImportRaw.cpp \
 	import/ImportRaw.h import/RawAudioGuess.cpp \
-	import/RawAudioGuess.h ondemand/ODComputeSummaryTask.cpp \
+	import/RawAudioGuess.h import/FormatClassifier.cpp \
+	import/FormatClassifier.h import/MultiFormatReader.cpp \
+	import/MultiFormatReader.h import/SpecPowerMeter.cpp \
+	import/SpecPowerMeter.h ondemand/ODComputeSummaryTask.cpp \
 	ondemand/ODComputeSummaryTask.h \
 	ondemand/ODDecodeFFmpegTask.cpp ondemand/ODDecodeFFmpegTask.h \
 	ondemand/ODDecodeTask.cpp ondemand/ODDecodeTask.h \
@@ -1687,6 +1696,12 @@ import/audacity-ImportPCM.$(OBJEXT): import/$(am__dirstamp) \
 import/audacity-ImportRaw.$(OBJEXT): import/$(am__dirstamp) \
 	import/$(DEPDIR)/$(am__dirstamp)
 import/audacity-RawAudioGuess.$(OBJEXT): import/$(am__dirstamp) \
+	import/$(DEPDIR)/$(am__dirstamp)
+import/audacity-FormatClassifier.$(OBJEXT): import/$(am__dirstamp) \
+	import/$(DEPDIR)/$(am__dirstamp)
+import/audacity-MultiFormatReader.$(OBJEXT): import/$(am__dirstamp) \
+	import/$(DEPDIR)/$(am__dirstamp)
+import/audacity-SpecPowerMeter.$(OBJEXT): import/$(am__dirstamp) \
 	import/$(DEPDIR)/$(am__dirstamp)
 ondemand/$(am__dirstamp):
 	@$(MKDIR_P) ondemand
@@ -2139,6 +2154,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@export/$(DEPDIR)/audacity-ExportMultiple.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@export/$(DEPDIR)/audacity-ExportOGG.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@export/$(DEPDIR)/audacity-ExportPCM.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-FormatClassifier.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-Import.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportFFmpeg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportFLAC.Po@am__quote@
@@ -2150,7 +2166,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportPCM.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportQT.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-ImportRaw.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-MultiFormatReader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-RawAudioGuess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@import/$(DEPDIR)/audacity-SpecPowerMeter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ondemand/$(DEPDIR)/audacity-ODComputeSummaryTask.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ondemand/$(DEPDIR)/audacity-ODDecodeFFmpegTask.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ondemand/$(DEPDIR)/audacity-ODDecodeFlacTask.Po@am__quote@
@@ -4732,6 +4750,48 @@ import/audacity-RawAudioGuess.obj: import/RawAudioGuess.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/RawAudioGuess.cpp' object='import/audacity-RawAudioGuess.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-RawAudioGuess.obj `if test -f 'import/RawAudioGuess.cpp'; then $(CYGPATH_W) 'import/RawAudioGuess.cpp'; else $(CYGPATH_W) '$(srcdir)/import/RawAudioGuess.cpp'; fi`
+
+import/audacity-FormatClassifier.o: import/FormatClassifier.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT import/audacity-FormatClassifier.o -MD -MP -MF import/$(DEPDIR)/audacity-FormatClassifier.Tpo -c -o import/audacity-FormatClassifier.o `test -f 'import/FormatClassifier.cpp' || echo '$(srcdir)/'`import/FormatClassifier.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) import/$(DEPDIR)/audacity-FormatClassifier.Tpo import/$(DEPDIR)/audacity-FormatClassifier.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/FormatClassifier.cpp' object='import/audacity-FormatClassifier.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-FormatClassifier.o `test -f 'import/FormatClassifier.cpp' || echo '$(srcdir)/'`import/FormatClassifier.cpp
+
+import/audacity-FormatClassifier.obj: import/FormatClassifier.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT import/audacity-FormatClassifier.obj -MD -MP -MF import/$(DEPDIR)/audacity-FormatClassifier.Tpo -c -o import/audacity-FormatClassifier.obj `if test -f 'import/FormatClassifier.cpp'; then $(CYGPATH_W) 'import/FormatClassifier.cpp'; else $(CYGPATH_W) '$(srcdir)/import/FormatClassifier.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) import/$(DEPDIR)/audacity-FormatClassifier.Tpo import/$(DEPDIR)/audacity-FormatClassifier.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/FormatClassifier.cpp' object='import/audacity-FormatClassifier.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-FormatClassifier.obj `if test -f 'import/FormatClassifier.cpp'; then $(CYGPATH_W) 'import/FormatClassifier.cpp'; else $(CYGPATH_W) '$(srcdir)/import/FormatClassifier.cpp'; fi`
+
+import/audacity-MultiFormatReader.o: import/MultiFormatReader.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT import/audacity-MultiFormatReader.o -MD -MP -MF import/$(DEPDIR)/audacity-MultiFormatReader.Tpo -c -o import/audacity-MultiFormatReader.o `test -f 'import/MultiFormatReader.cpp' || echo '$(srcdir)/'`import/MultiFormatReader.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) import/$(DEPDIR)/audacity-MultiFormatReader.Tpo import/$(DEPDIR)/audacity-MultiFormatReader.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/MultiFormatReader.cpp' object='import/audacity-MultiFormatReader.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-MultiFormatReader.o `test -f 'import/MultiFormatReader.cpp' || echo '$(srcdir)/'`import/MultiFormatReader.cpp
+
+import/audacity-MultiFormatReader.obj: import/MultiFormatReader.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT import/audacity-MultiFormatReader.obj -MD -MP -MF import/$(DEPDIR)/audacity-MultiFormatReader.Tpo -c -o import/audacity-MultiFormatReader.obj `if test -f 'import/MultiFormatReader.cpp'; then $(CYGPATH_W) 'import/MultiFormatReader.cpp'; else $(CYGPATH_W) '$(srcdir)/import/MultiFormatReader.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) import/$(DEPDIR)/audacity-MultiFormatReader.Tpo import/$(DEPDIR)/audacity-MultiFormatReader.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/MultiFormatReader.cpp' object='import/audacity-MultiFormatReader.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-MultiFormatReader.obj `if test -f 'import/MultiFormatReader.cpp'; then $(CYGPATH_W) 'import/MultiFormatReader.cpp'; else $(CYGPATH_W) '$(srcdir)/import/MultiFormatReader.cpp'; fi`
+
+import/audacity-SpecPowerMeter.o: import/SpecPowerMeter.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT import/audacity-SpecPowerMeter.o -MD -MP -MF import/$(DEPDIR)/audacity-SpecPowerMeter.Tpo -c -o import/audacity-SpecPowerMeter.o `test -f 'import/SpecPowerMeter.cpp' || echo '$(srcdir)/'`import/SpecPowerMeter.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) import/$(DEPDIR)/audacity-SpecPowerMeter.Tpo import/$(DEPDIR)/audacity-SpecPowerMeter.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/SpecPowerMeter.cpp' object='import/audacity-SpecPowerMeter.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-SpecPowerMeter.o `test -f 'import/SpecPowerMeter.cpp' || echo '$(srcdir)/'`import/SpecPowerMeter.cpp
+
+import/audacity-SpecPowerMeter.obj: import/SpecPowerMeter.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT import/audacity-SpecPowerMeter.obj -MD -MP -MF import/$(DEPDIR)/audacity-SpecPowerMeter.Tpo -c -o import/audacity-SpecPowerMeter.obj `if test -f 'import/SpecPowerMeter.cpp'; then $(CYGPATH_W) 'import/SpecPowerMeter.cpp'; else $(CYGPATH_W) '$(srcdir)/import/SpecPowerMeter.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) import/$(DEPDIR)/audacity-SpecPowerMeter.Tpo import/$(DEPDIR)/audacity-SpecPowerMeter.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='import/SpecPowerMeter.cpp' object='import/audacity-SpecPowerMeter.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o import/audacity-SpecPowerMeter.obj `if test -f 'import/SpecPowerMeter.cpp'; then $(CYGPATH_W) 'import/SpecPowerMeter.cpp'; else $(CYGPATH_W) '$(srcdir)/import/SpecPowerMeter.cpp'; fi`
 
 ondemand/audacity-ODComputeSummaryTask.o: ondemand/ODComputeSummaryTask.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT ondemand/audacity-ODComputeSummaryTask.o -MD -MP -MF ondemand/$(DEPDIR)/audacity-ODComputeSummaryTask.Tpo -c -o ondemand/audacity-ODComputeSummaryTask.o `test -f 'ondemand/ODComputeSummaryTask.cpp' || echo '$(srcdir)/'`ondemand/ODComputeSummaryTask.cpp

@@ -409,6 +409,12 @@ audacity_SOURCES = \
 	import/ImportRaw.h \
 	import/RawAudioGuess.cpp \
 	import/RawAudioGuess.h \
+	import/FormatClassifier.cpp \
+	import/FormatClassifier.h \
+	import/MultiFormatReader.cpp \
+	import/MultiFormatReader.h \
+	import/SpecPowerMeter.cpp \
+	import/SpecPowerMeter.h \
 	ondemand/ODComputeSummaryTask.cpp \
 	ondemand/ODComputeSummaryTask.h \
 	ondemand/ODDecodeFFmpegTask.cpp \

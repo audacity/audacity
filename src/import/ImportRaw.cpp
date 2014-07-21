@@ -26,8 +26,6 @@ and sample size to help you importing data of an unknown format.
 #include "ImportRaw.h"
 #include "Import.h"
 
-#include "RawAudioGuess.h"
-
 #include "../DirManager.h"
 #include "../FileFormats.h"
 #include "../Internat.h"
@@ -35,7 +33,10 @@ and sample size to help you importing data of an unknown format.
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 
-#include <math.h>
+#include <cmath>
+#include <cstdio>
+#include <stdint.h>
+#include <vector>
 
 #include <wx/defs.h>
 #include <wx/button.h>
@@ -48,6 +49,11 @@ and sample size to help you importing data of an unknown format.
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/timer.h>
+
+#include "RawAudioGuess.h"
+#include "MultiFormatReader.h"
+#include "SpecPowerMeter.h"
+#include "FormatClassifier.h"
 
 #include "sndfile.h"
 
@@ -94,7 +100,6 @@ int ImportRaw(wxWindow *parent, wxString fileName,
    int numChannels = 0;
    sampleFormat format;
    sf_count_t offset = 0;
-   int int_offset = 0;
    sampleCount totalFrames;
    double rate = 44100.0;
    double percent = 100.0;
@@ -102,9 +107,17 @@ int ImportRaw(wxWindow *parent, wxString fileName,
    SF_INFO sndInfo;
    int result;
 
-   encoding = RawAudioGuess(fileName,
-                            &int_offset, &numChannels);
-   offset = (sf_count_t)int_offset;
+   try {
+      // Yes, FormatClassifier currently handles filenames in UTF8 format only, that's
+      // a TODO ...
+      FormatClassifier theClassifier(fileName.utf8_str());
+      encoding = theClassifier.GetResultFormatLibSndfile();
+      numChannels = theClassifier.GetResultChannels();
+      offset = 0;
+   } catch (...) {
+      // Something went wrong in FormatClassifier, use defaults instead.
+      encoding = 0;
+   }
 
    if (encoding <= 0) {
       // Unable to guess.  Use mono, 16-bit samples with CPU endianness
