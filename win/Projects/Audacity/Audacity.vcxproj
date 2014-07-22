@@ -150,7 +150,10 @@
     <ClCompile Include="..\..\..\src\HelpText.cpp" />
     <ClCompile Include="..\..\..\src\HistoryWindow.cpp" />
     <ClCompile Include="..\..\..\src\ImageManipulation.cpp" />
+    <ClCompile Include="..\..\..\src\import\FormatClassifier.cpp" />
     <ClCompile Include="..\..\..\src\import\ImportGStreamer.cpp" />
+    <ClCompile Include="..\..\..\src\import\MultiFormatReader.cpp" />
+    <ClCompile Include="..\..\..\src\import\SpecPowerMeter.cpp" />
     <ClCompile Include="..\..\..\src\Internat.cpp" />
     <ClCompile Include="..\..\..\src\InterpolateAudio.cpp" />
     <ClCompile Include="..\..\..\src\LabelDialog.cpp" />
@@ -394,7 +397,10 @@
     <ClInclude Include="..\..\..\src\BlockFile.h" />
     <ClInclude Include="..\..\..\src\CaptureEvents.h" />
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />
+    <ClInclude Include="..\..\..\src\import\FormatClassifier.h" />
     <ClInclude Include="..\..\..\src\import\ImportGStreamer.h" />
+    <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
+    <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
     <ClInclude Include="..\..\..\src\SseMathFuncs.h" />
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h" />
     <ClInclude Include="..\..\configwin.h" />

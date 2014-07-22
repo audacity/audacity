@@ -1345,6 +1345,14 @@
 			Name="src/import"
 			>
 			<File
+				RelativePath="..\..\..\src\import\FormatClassifier.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\import\FormatClassifier.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\import\Import.cpp"
 				>
 			</File>
@@ -1429,11 +1437,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\import\MultiFormatReader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\import\MultiFormatReader.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\import\RawAudioGuess.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\import\RawAudioGuess.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\import\SpecPowerMeter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\import\SpecPowerMeter.h"
 				>
 			</File>
 		</Filter>
