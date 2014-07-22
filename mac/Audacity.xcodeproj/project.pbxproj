@@ -1192,6 +1192,9 @@
 		28F2CED4181867BB00573D61 /* numformatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F2CED0181867BB00573D61 /* numformatter.cpp */; };
 		28F2CED5181867BB00573D61 /* valnum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F2CED2181867BB00573D61 /* valnum.cpp */; };
 		28F5C1110BE5886A00D17341 /* FileDialogPrivate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F5C10F0BE5886A00D17341 /* FileDialogPrivate.cpp */; };
+		28F67179197DFA1C00075C32 /* FormatClassifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F67173197DFA1C00075C32 /* FormatClassifier.cpp */; };
+		28F6717A197DFA1C00075C32 /* MultiFormatReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F67175197DFA1C00075C32 /* MultiFormatReader.cpp */; };
+		28F6717B197DFA1C00075C32 /* SpecPowerMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F67177197DFA1C00075C32 /* SpecPowerMeter.cpp */; };
 		28FADEF71833C78C00BA4141 /* ascii.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEDC1833C78C00BA4141 /* ascii.h */; };
 		28FADEF81833C78C00BA4141 /* asciitab.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEDD1833C78C00BA4141 /* asciitab.h */; };
 		28FADEF91833C78C00BA4141 /* expat.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FADEDF1833C78C00BA4141 /* expat.h */; };
@@ -4022,6 +4025,12 @@
 		28F3A4010E28289500729866 /* strparse.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = strparse.h; path = portsmf/strparse.h; sourceTree = "<group>"; tabWidth = 3; };
 		28F5C10F0BE5886A00D17341 /* FileDialogPrivate.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FileDialogPrivate.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28F5C1100BE5886A00D17341 /* FileDialogPrivate.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileDialogPrivate.h; sourceTree = "<group>"; tabWidth = 3; };
+		28F67173197DFA1C00075C32 /* FormatClassifier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FormatClassifier.cpp; sourceTree = "<group>"; };
+		28F67174197DFA1C00075C32 /* FormatClassifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FormatClassifier.h; sourceTree = "<group>"; };
+		28F67175197DFA1C00075C32 /* MultiFormatReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultiFormatReader.cpp; sourceTree = "<group>"; };
+		28F67176197DFA1C00075C32 /* MultiFormatReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiFormatReader.h; sourceTree = "<group>"; };
+		28F67177197DFA1C00075C32 /* SpecPowerMeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpecPowerMeter.cpp; sourceTree = "<group>"; };
+		28F67178197DFA1C00075C32 /* SpecPowerMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpecPowerMeter.h; sourceTree = "<group>"; };
 		28FADDEF1833C3C500BA4141 /* libexpat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libexpat.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		28FADEDC1833C78C00BA4141 /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; };
 		28FADEDD1833C78C00BA4141 /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; };
@@ -5353,6 +5362,12 @@
 		1790B07D09883BFD008A330A /* import */ = {
 			isa = PBXGroup;
 			children = (
+				28F67173197DFA1C00075C32 /* FormatClassifier.cpp */,
+				28F67174197DFA1C00075C32 /* FormatClassifier.h */,
+				28F67175197DFA1C00075C32 /* MultiFormatReader.cpp */,
+				28F67176197DFA1C00075C32 /* MultiFormatReader.h */,
+				28F67177197DFA1C00075C32 /* SpecPowerMeter.cpp */,
+				28F67178197DFA1C00075C32 /* SpecPowerMeter.h */,
 				1790B07F09883BFD008A330A /* Import.cpp */,
 				1790B08009883BFD008A330A /* Import.h */,
 				283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */,
@@ -9125,6 +9140,9 @@
 				EDFCEBA718894B2A00C98E51 /* SseMathFuncs.cpp in Sources */,
 				EDFCEBB518894B9E00C98E51 /* Equalization48x.cpp in Sources */,
 				2801127B1943EE0E00D98A16 /* HelpSystem.cpp in Sources */,
+				28F67179197DFA1C00075C32 /* FormatClassifier.cpp in Sources */,
+				28F6717A197DFA1C00075C32 /* MultiFormatReader.cpp in Sources */,
+				28F6717B197DFA1C00075C32 /* SpecPowerMeter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
