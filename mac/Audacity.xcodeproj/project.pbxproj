@@ -454,7 +454,7 @@
 		18CE3C951145511200282C50 /* ODDecodeFFmpegTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CE3C941145511200282C50 /* ODDecodeFFmpegTask.cpp */; };
 		18D8314E0ED0F56300FD870D /* Contrast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18D8314C0ED0F56200FD870D /* Contrast.cpp */; };
 		28006FFB132C167600BD34D7 /* Install.txt in Resources */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
-		28006FFC132C169700BD34D7 /* Install.txt in Install instructions */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
+		28006FFC132C169700BD34D7 /* Install.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
 		2800FE0D0FF32308005CA9E5 /* pminternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2800FDF40FF3225B005CA9E5 /* pminternal.h */; };
 		2800FE0E0FF32308005CA9E5 /* pmutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 2800FDF50FF3225B005CA9E5 /* pmutil.c */; };
 		2800FE0F0FF32308005CA9E5 /* pmutil.h in Headers */ = {isa = PBXBuildFile; fileRef = 2800FDF60FF3225B005CA9E5 /* pmutil.h */; };
@@ -1601,7 +1601,7 @@
 		ED663CD116543647007F53A5 /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		ED663CD316543647007F53A5 /* LICENSE.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F0977131A3EE00008E860 /* LICENSE.txt */; };
 		ED663CD416543647007F53A5 /* README.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F097A131A3F130008E860 /* README.txt */; };
-		ED663CD616543647007F53A5 /* Install.txt in Install instructions */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
+		ED663CD616543647007F53A5 /* Install.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
 		ED663D0016543835007F53A5 /* libsamplerate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED663B3C16543581007F53A5 /* libsamplerate.a */; };
 		ED85B3DA16A46FC9006DA21D /* hr.po in Sources */ = {isa = PBXBuildFile; fileRef = ED85B3CF16A46DDA006DA21D /* hr.po */; };
 		ED85B3DB16A4702F006DA21D /* hr.po in Sources */ = {isa = PBXBuildFile; fileRef = ED85B3CF16A46DDA006DA21D /* hr.po */; };
@@ -1932,8 +1932,12 @@
 		ED85B5AB16A47353006DA21D /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		ED85B5AD16A47353006DA21D /* LICENSE.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F0977131A3EE00008E860 /* LICENSE.txt */; };
 		ED85B5AE16A47353006DA21D /* README.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F097A131A3F130008E860 /* README.txt */; };
-		ED85B5B016A47353006DA21D /* Install.txt in Install instructions */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
+		ED85B5B016A47353006DA21D /* Install.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
 		ED85B60316A47B80006DA21D /* libresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707400D0988EB90008541CC /* libresample.a */; };
+		ED87F50A1986424100AC520B /* ta.po in Sources */ = {isa = PBXBuildFile; fileRef = ED87F4F619863DF500AC520B /* ta.po */; };
+		ED87F50C1986427500AC520B /* ta.po in Resources */ = {isa = PBXBuildFile; fileRef = ED87F4F619863DF500AC520B /* ta.po */; };
+		ED87F50D198642DE00AC520B /* ta.po in Sources */ = {isa = PBXBuildFile; fileRef = ED87F4F619863DF500AC520B /* ta.po */; };
+		ED87F50E1986430500AC520B /* ta.po in Sources */ = {isa = PBXBuildFile; fileRef = ED87F4F619863DF500AC520B /* ta.po */; };
 		ED90976D116CAD49002F7479 /* ExtImportPrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */; };
 		ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED920CAE15B19F61008CA12C /* ModulePrefs.cpp */; };
 		ED924BD1182EA20500319F81 /* ogg_decoder_aspect.c in Sources */ = {isa = PBXBuildFile; fileRef = ED924BCD182EA20500319F81 /* ogg_decoder_aspect.c */; };
@@ -2439,23 +2443,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		28006FF9132C15E800BD34D7 /* Install instructions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = "";
-			dstSubfolderSpec = 0;
-			files = (
-				28006FFC132C169700BD34D7 /* Install.txt in Install instructions */,
-			);
-			name = "Install instructions";
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		2892CE28131AFB1900E1E17D /* Install miscellany */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 8;
 			dstPath = /Audacity;
 			dstSubfolderSpec = 0;
 			files = (
+				28006FFC132C169700BD34D7 /* Install.txt in Install miscellany */,
 				2892CE24131AFAE200E1E17D /* LICENSE.txt in Install miscellany */,
 				2892CE25131AFAEF00E1E17D /* README.txt in Install miscellany */,
 			);
@@ -2490,21 +2484,11 @@
 			dstPath = /Audacity;
 			dstSubfolderSpec = 0;
 			files = (
+				ED663CD616543647007F53A5 /* Install.txt in Install miscellany */,
 				ED663CD316543647007F53A5 /* LICENSE.txt in Install miscellany */,
 				ED663CD416543647007F53A5 /* README.txt in Install miscellany */,
 			);
 			name = "Install miscellany";
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		ED663CD516543647007F53A5 /* Install instructions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = "";
-			dstSubfolderSpec = 0;
-			files = (
-				ED663CD616543647007F53A5 /* Install.txt in Install instructions */,
-			);
-			name = "Install instructions";
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 		ED85B5AA16A47353006DA21D /* Install wrapper */ = {
@@ -2524,21 +2508,11 @@
 			dstPath = /Audacity;
 			dstSubfolderSpec = 0;
 			files = (
+				ED85B5B016A47353006DA21D /* Install.txt in Install miscellany */,
 				ED85B5AD16A47353006DA21D /* LICENSE.txt in Install miscellany */,
 				ED85B5AE16A47353006DA21D /* README.txt in Install miscellany */,
 			);
 			name = "Install miscellany";
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		ED85B5AF16A47353006DA21D /* Install instructions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = "";
-			dstSubfolderSpec = 0;
-			files = (
-				ED85B5B016A47353006DA21D /* Install.txt in Install instructions */,
-			);
-			name = "Install instructions";
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 		ED95519E195D956F0027176E /* Install background image */ = {
@@ -4147,6 +4121,7 @@
 		ED85B3CF16A46DDA006DA21D /* hr.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = hr.po; path = ../locale/hr.po; sourceTree = SOURCE_ROOT; };
 		ED85B5B816A47353006DA21D /* Audacity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Audacity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED85B5BA16A47353006DA21D /* Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info copy.plist"; path = "mac/Info copy.plist"; sourceTree = "<group>"; };
+		ED87F4F619863DF500AC520B /* ta.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = ta.po; path = ../locale/ta.po; sourceTree = SOURCE_ROOT; };
 		ED90976B116CAD49002F7479 /* ExtImportPrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExtImportPrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		ED90976C116CAD49002F7479 /* ExtImportPrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExtImportPrefs.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED920CAD15B19F61008CA12C /* ModulePrefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModulePrefs.h; sourceTree = "<group>"; };
@@ -6295,6 +6270,7 @@
 				EDAD325615444371009C6220 /* sr_RS.po */,
 				2888493B131B6CF600B59735 /* sr_RS@latin.po */,
 				EDAD325715444372009C6220 /* sv.po */,
+				ED87F4F619863DF500AC520B /* ta.po */,
 				2888493D131B6CF600B59735 /* tg.po */,
 				2888493E131B6CF600B59735 /* tr.po */,
 				2888493F131B6CF600B59735 /* uk.po */,
@@ -7625,7 +7601,6 @@
 				282413DA131D52CE009FD931 /* Install plugins */,
 				28C816B7131255550035BB10 /* Install wrapper */,
 				2892CE28131AFB1900E1E17D /* Install miscellany */,
-				28006FF9132C15E800BD34D7 /* Install instructions */,
 				ED95519E195D956F0027176E /* Install background image */,
 				282413D8131D51FC009FD931 /* Create dist */,
 			);
@@ -7853,7 +7828,6 @@
 				ED663CCF16543647007F53A5 /* Install plugins */,
 				ED663CD016543647007F53A5 /* Install wrapper */,
 				ED663CD216543647007F53A5 /* Install miscellany */,
-				ED663CD516543647007F53A5 /* Install instructions */,
 				ED95528A195DBC3C0027176E /* Install background image */,
 				ED663CD716543647007F53A5 /* Create dist */,
 			);
@@ -7901,7 +7875,6 @@
 				ED85B5A916A47353006DA21D /* Install plugins */,
 				ED85B5AA16A47353006DA21D /* Install wrapper */,
 				ED85B5AC16A47353006DA21D /* Install miscellany */,
-				ED85B5AF16A47353006DA21D /* Install instructions */,
 				ED95528B195DBC3C0027176E /* Install background image */,
 				ED85B5B116A47353006DA21D /* Create dist */,
 			);
@@ -8040,6 +8013,7 @@
 				ED663B8916543647007F53A5 /* EQDefaultCurves.xml in Resources */,
 				ED663B8A16543647007F53A5 /* Install.txt in Resources */,
 				ED9551A2195D95FC0027176E /* Audacity-DMG-background.png in Resources */,
+				ED87F50C1986427500AC520B /* ta.po in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8161,7 +8135,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nrm \"${DMG}/install.txt\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
+			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
 		};
 		282413DA131D52CE009FD931 /* Install plugins */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8263,7 +8237,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nrm \"${DMG}/install.txt\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
+			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
 		};
 		ED663CE21654366F007F53A5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8367,7 +8341,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nrm \"${DMG}/install.txt\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
+			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -9117,6 +9091,7 @@
 				EDAD326C1544452E009C6220 /* sr_RS.po in Sources */,
 				EDAD326D1544452E009C6220 /* sr_RS@latin.po in Sources */,
 				EDAD326E1544452E009C6220 /* sv.po in Sources */,
+				ED87F50A1986424100AC520B /* ta.po in Sources */,
 				2888496E131B6CF600B59735 /* tg.po in Sources */,
 				2888496F131B6CF600B59735 /* tr.po in Sources */,
 				28884970131B6CF600B59735 /* uk.po in Sources */,
@@ -9627,6 +9602,7 @@
 				ED663CAB16543647007F53A5 /* sr_RS.po in Sources */,
 				ED663CAC16543647007F53A5 /* sr_RS@latin.po in Sources */,
 				ED663CAD16543647007F53A5 /* sv.po in Sources */,
+				ED87F50D198642DE00AC520B /* ta.po in Sources */,
 				ED663CAE16543647007F53A5 /* tg.po in Sources */,
 				ED663CAF16543647007F53A5 /* tr.po in Sources */,
 				ED663CB016543647007F53A5 /* uk.po in Sources */,
@@ -9937,6 +9913,7 @@
 				ED85B58416A47353006DA21D /* sr_RS.po in Sources */,
 				ED85B58516A47353006DA21D /* sr_RS@latin.po in Sources */,
 				ED85B58616A47353006DA21D /* sv.po in Sources */,
+				ED87F50E1986430500AC520B /* ta.po in Sources */,
 				ED85B58716A47353006DA21D /* tg.po in Sources */,
 				ED85B58816A47353006DA21D /* tr.po in Sources */,
 				ED85B58916A47353006DA21D /* uk.po in Sources */,
