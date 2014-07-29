@@ -84,25 +84,30 @@ function cleanfulltree {
 		exit ${status}
 	fi
 
+	echo -n "Checking SVN status... ";
+	revision="$(svnversion)"
+	regex="[[:digit:]]*"
+	if [[ ${revision} =~ ${regex} ]] ; then
+		echo "Unmodified working copy at revision ${revision}"
+	else
+		echo "Modified working copy! Release tarballs must be built from an unmodified working copy! Exiting"
+		exit
+	fi
+
 	printf "removing SVN directories... ";
 	find . -depth -name '.svn' -execdir rm -rf '{}' ';'
 	# -depth is needed to avoid find trying to examine directories it has just
 	# deleted.
 	# The sort of quotes used is critical!
-	myfindrm $1 ".cvsignore"
 	printf "Done\n"
 
 	printf "removing vim / emacs temp files... ";
 	myfindrm $1 "*~"
-	printf "\nremoving SVN conflict files... ";
-	myfindrm $1 "*.mine"
-	myfindrm $1 "?*.r[0-9]*"
-	# I wonder if we should throw some sort of error if these are found,
-	# because we shouldn't be releasing from a working copy with conflicts?
 	printf "Done\n"
 
+
 	printf "removing executable and other intermediate files... ";
-	myrmvf $1 audacity src/.depend src/.gchdepend
+	myrmvf $1 src/audacity src/.depend src/.gchdepend
 	myfindrm $1 config.status
 	myfindrm $1 config.log
 	myfindrm $1 Makefile
@@ -133,8 +138,9 @@ function slimtree {
 	myrmvf $1 todo.txt
 	printf "Done\n"
 
+	# we cannot remove tests/ because subsequent builds fail ...
 	printf "removing scripts and tests ... ";
-	myrmrvf $1 scripts tests
+	myrmrvf $1 scripts tests/ProjectCheckTests/
 	printf "Done\n"
 
 	printf "removing libraries that should be installed locally..."
@@ -170,23 +176,6 @@ function slimtree {
 	
 	printf "Removing developer scripts not needed to build audacity ..."
 	myrmrvf $1 scripts/mw2html_audacity 
-	printf "Done\n"
-}
-
-# fix Windows being fussy about line endings
-function fixendings {
-	printf "Giving VC++ project/workspace files DOS line endings ... "
-	if [ $1 -eq 1 ]; then
-		for file in `find . \( -name '*.ds?' -print \) -or  \( -name '*.vcproj' -print \) -or \( -name '*.sln' -print \)`
-		do
-			unix2dos "$file" 
-		done
-	else
-		for file in `find . \( -name '*.ds?' -print \) -or  \( -name '*.vcproj' -print \) -or \( -name '*.sln' -print \)`
-		do
-			unix2dos "$file" > /dev/null 2>/dev/null
-		done
-	fi
 	printf "Done\n"
 }
 
@@ -286,7 +275,7 @@ else
 fi
 
 # these are the arguments we will pass to configure when it is run
-configargs="--enable-maintainer-mode --with-lib-preference=\"system\""
+configargs="--enable-maintainer-mode"
 
 if [[ x"$reconf" = x1 ]] ; then
 	echo "Your Makefiles are out of date or missing. (Re)running configure to"
@@ -299,6 +288,10 @@ if [[ x"$reconf" = x1 ]] ; then
    else
       $SHELL -c "./configure ${configargs}" > /dev/null 2>&1
    fi
+   if [[ ${?} -ne 0 ]] ; then
+      echo "Error - configure exited with non-zero status!"
+	  exit 1
+   fi
 fi
 
 # The version number is stored in a C++ header as a set of #defines. Trying to 
@@ -309,6 +302,10 @@ fi
 # through the pre-processor to get the version string components where we can
 # find them.
 
+if [[ ! -x "config.status" ]] ; then
+   echo "config.status is not present or executable - cannot proceed"
+   exit 1
+fi
 echo -n "Getting program version... "
 # first off, find out what C++ pre-processor configure has found for us to use
 # (because we want the same one that will be used to build Audacity). This is a
@@ -365,10 +362,6 @@ printf "Done\n"
 # now clean out the directory of all the things we don't need in the
 # tarball, prior to building the source tarball
 cleanfulltree $mode;
-
-# fix line endings issues caused by this being on *nix and CVS messing with
-# line endings on the fly
-fixendings $mode;
 
 # now we have the full source tree, lets slim it down to the bits that 
 # you actually need to build audacity on a shared library system with the
