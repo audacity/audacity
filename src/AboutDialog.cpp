@@ -51,7 +51,7 @@ WX_DEFINE_LIST(AboutDialogCreditItemsList);
 
 void AboutDialog::CreateCreditsList()
 {
-   // The Audacity 1.3.x and 2.0.x team: developers and support
+   // The Audacity Team: developers and support
    AddCredit(wxT("Richard Ash"), roleTeamDeveloper);
    AddCredit(wxT("James Crook"), roleTeamDeveloper);
    AddCredit(wxString(wxT("Roger Dannenberg - ")) + _("co-founder"), roleTeamDeveloper);
@@ -70,7 +70,6 @@ void AboutDialog::CreateCreditsList()
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
-
    AddCredit(wxT("Matt Brubeck"), roleEmeritusDeveloper);
    AddCredit(wxT("Michael Chinen"), roleEmeritusDeveloper);
    AddCredit(wxT("Al Dimond"), roleEmeritusDeveloper);
@@ -84,7 +83,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Alexandre Prokoudine"), roleEmeritusSupport);
 
    // All other contributors
-
    AddCredit(wxT("Lynn Allan"), roleContributor);
    AddCredit(wxT("David Bailes"), roleContributor);
    AddCredit(wxT("William Bland"), roleContributor);
