@@ -809,8 +809,21 @@ KeyView::RefreshLines()
             continue;
          }
 
+         // For the Key View, if the filter is a single character,
+         // then it has to be the last character in the searchit string,
+         // and be preceded by nothing or +.
+         if ((mViewType == ViewByKey) && 
+               (mFilter.Len() == 1) && 
+               (!mFilter.IsSameAs(searchit.Last()) ||
+                  ((searchit.Len() > 1) && 
+                     ((wxString)(searchit.GetChar(searchit.Len() - 2)) != wxT("+")))))
+         {
+            // Not suitable so continue to next node
+            continue;
+         }
+
          // For tree view, we must make sure all parent nodes are included
-         // whether they match the filter or not
+         // whether they match the filter or not.
          if (mViewType == ViewByTree)
          {
             KeyNodeArrayPtr queue;
