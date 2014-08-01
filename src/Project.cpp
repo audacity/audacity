@@ -4697,7 +4697,7 @@ void AudacityProject::HandleTrackMute(Track *t, const bool exclusive)
          i->SetMute(muted);   // and mute it as well
       }
 
-      if( IsSoloSimple() )
+      if (IsSoloSimple() || IsSoloNone())
       {
          TrackListIterator iter(mTracks);
          Track *i = iter.First();
