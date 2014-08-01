@@ -1111,6 +1111,22 @@ void EqualizationDialog::LoadCurves(wxString fileName, bool append)
       mCurves.Add( _("unnamed") );  // we always need a default curve to use
       return;
    }
+
+   // Move "unnamed" to end, if it exists in current language.
+   int numCurves = mCurves.GetCount();
+   int curve;
+   EQCurve tempUnnamed(wxT("tempUnnamed"));
+   for( curve = 0; curve < numCurves-1; curve++ )
+   {
+      if( mCurves[curve].Name == _("unnamed") )
+      {
+         tempUnnamed.points = mCurves[curve].points;
+         mCurves.RemoveAt(curve);
+         mCurves.Add( _("unnamed") );   // add 'unnamed' back at the end
+         mCurves.Last().points = tempUnnamed.points;
+      }
+   }
+
    if( mCurves.Last().Name != _("unnamed") )
       mCurves.Add( _("unnamed") );   // we always need a default curve to use
    if( append == true )
