@@ -72,7 +72,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(5);
    S.StartVerticalLay();
    {
-      S.AddVariableText(_("Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can automatically be recovered:"), false);
+      S.AddVariableText(_("Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"), false);
 
       S.StartStatic(_("Recoverable projects"));
       {
@@ -84,12 +84,12 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui& S)
       }
       S.EndStatic();
 
-      S.AddVariableText(_("Recovering a project will not change any files on disk before you save it."), false);
+      S.AddVariableText(_("After recovery, save the project to save the changes to disk."), false);
 
       S.StartHorizontalLay(true);
       {
          S.Id(ID_QUIT_AUDACITY).AddButton(_("Quit Audacity"));
-         S.Id(ID_RECOVER_NONE).AddButton(_("Do Not Recover"));
+         S.Id(ID_RECOVER_NONE).AddButton(_("Discard Projects"));
          S.Id(ID_RECOVER_ALL).AddButton(_("Recover Projects"));
       }
       S.EndHorizontalLay();
@@ -127,8 +127,8 @@ void AutoRecoveryDialog::OnQuitAudacity(wxCommandEvent & WXUNUSED(event))
 void AutoRecoveryDialog::OnRecoverNone(wxCommandEvent & WXUNUSED(event))
 {
    int ret = wxMessageBox(
-      _("Are you sure you don't want to recover any projects?\nThey can't be recovered later."),
-      _("Confirm?"), wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
+      _("Are you sure you want to discard all projects?\n\nChoosing \"Yes\" discards all projects immediately."),
+      _("Confirm Discard Projects"), wxICON_QUESTION | wxYES_NO | wxNO_DEFAULT, this);
 
    if (ret == wxYES)
       EndModal(ID_RECOVER_NONE);
