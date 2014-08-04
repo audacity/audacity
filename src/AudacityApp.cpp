@@ -1246,6 +1246,7 @@ bool AudacityApp::OnInit()
       pWnd->Show( true );
    }
 
+   temporarywindow->Show( false );
    delete temporarywindow;
 
    if( project->mShowSplashScreen )
