@@ -1352,6 +1352,12 @@ VSTEffectDialog::VSTEffectDialog(wxWindow *parent,
    mGui = (gPrefs->Read(wxT("/VST/GUI"), (long) true) != 0) &&
           mAEffect->flags & effFlagsHasEditor;
 
+   // Must use the GUI editor if parameters aren't provided
+   if (mAEffect->numParams == 0 && mAEffect->flags & effFlagsHasEditor)
+   {
+      mGui = true;
+   }
+
 #if defined(__WXGTK__)
    // Let the user know that a GUI interface is not supported in wxGTK
    if (mGui) {
@@ -2801,6 +2807,22 @@ bool VSTEffect::PromptUser()
 {
    mProcessLevel = 1;      // in GUI thread
 
+   // I can't believe we haven't run into this before, but a terrible assumption has
+   // been made all along...effects do NOT have to provide textual parameters.  Examples
+   // of effects that do not support parameters are some from BBE Sound.  These effects
+   // are NOT broken.  They just weren't written to support textual parameters.
+   long gui = (gPrefs->Read(wxT("/VST/GUI"), (long) true) != 0);
+   if (!gui && mAEffect->numParams == 0)
+   {
+#if defined(__WXGTK__)
+      wxMessageBox(_("This effect does not support a textual interface. At this time, you may not use this effect on Linux."),
+                   _("VST Effect"));
+#else
+      wxMessageBox(_("This effect does not support a textual interface.  Falling back to graphical display."),
+                   _("VST Effect"));
+#endif
+   }
+
    mDlg = new VSTEffectDialog(mParent, mName, this, mAEffect);
    mDlg->CentreOnParent();
    mDlg->ShowModal();
@@ -3584,12 +3606,11 @@ int VSTEffect::GetString(wxString & outstr, int opcode, int index)
 
    memset(buf, 0, sizeof(buf));
 
-   int ret = callDispatcher(opcode, index, 0, buf, 0.0);
-   if (ret) {
-      outstr = LAT1CTOWX(buf);
-   }
+   callDispatcher(opcode, index, 0, buf, 0.0);
 
-   return ret;
+   outstr = LAT1CTOWX(buf);
+
+   return 0;
 }
 
 wxString VSTEffect::GetString(int opcode, int index)
