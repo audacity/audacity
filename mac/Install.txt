@@ -1,5 +1,10 @@
-* To install Audacity, copy the Audacity folder to /Applications or 
-   any other location of your choosing.
+* To install or reinstall Audacity, drag the "Audacity" folder icon in the
+   DMG window to the /Applications folder icon on the right. Alternatively,
+   drag the "Audacity" folder to any other location of your choosing. 
+
+* Do not double-click the "Audacity" folder in the DMG then launch Audacity 
+   from there. Do not move the Audacity application or its support folders
+   outside the "Audacity" folder.
 
 * If you are a first-time user of Audacity, security settings on 
    OS X 10.7 or later may block Audacity being launched. To permanently
