@@ -117,7 +117,6 @@ private:
    int       mMinSignalBlocks;
    int       mHistoryLen;
    float    *mInWaveBuffer;     // mWindowSize
-   float    *mOutImagBuffer;    // mWindowSize
    float    *mOutOverlapBuffer; // mWindowSize
    float   **mSpectrums;        // mHistoryLen x mSpectrumSize
    float   **mGains;            // mHistoryLen x mSpectrumSize

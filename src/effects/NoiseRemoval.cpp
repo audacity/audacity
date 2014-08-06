@@ -255,8 +255,11 @@ void EffectNoiseRemoval::Initialize()
    mFreqSmoothingBins = (int)(mFreqSmoothingHz * mWindowSize / mSampleRate);
    mAttackDecayBlocks = 1 +
       (int)(mAttackDecayTime * mSampleRate / (mWindowSize / 2));
+   // Applies to amplitudes, divide by 20:
    mNoiseAttenFactor = pow(10.0, mNoiseGain/20.0);
-   mOneBlockAttackDecay = pow(10.0, (mNoiseGain / (10.0 * mAttackDecayBlocks)));
+   // Applies to gain factors which apply to amplitudes, divide by 20:
+   mOneBlockAttackDecay = pow(10.0, (mNoiseGain / (20.0 * mAttackDecayBlocks)));
+   // Applies to power, divide by 10:
    mSensitivityFactor = pow(10.0, mSensitivity/10.0);
    mMinSignalBlocks =
       (int)(mMinSignalTime * mSampleRate / (mWindowSize / 2));
@@ -284,7 +287,6 @@ void EffectNoiseRemoval::Initialize()
    mFFTBuffer = new float[mWindowSize];
    mInWaveBuffer = new float[mWindowSize];
    mWindow = new float[mWindowSize];
-   mOutImagBuffer = new float[mWindowSize];
    mOutOverlapBuffer = new float[mWindowSize];
 
    // Create a Hanning window function
@@ -321,7 +323,6 @@ void EffectNoiseRemoval::Cleanup()
    delete[] mFFTBuffer;
    delete[] mInWaveBuffer;
    delete[] mWindow;
-   delete[] mOutImagBuffer;
    delete[] mOutOverlapBuffer;
 }
 
