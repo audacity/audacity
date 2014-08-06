@@ -362,6 +362,7 @@ float FormatClassifier::Max(float* in, size_t len)
 float FormatClassifier::Max(float* in, size_t len, size_t* maxidx)
 {
    float max = -FLT_MAX;
+   *maxidx = 0;
    
    for (unsigned int n = 0; n < len; n++)
    {
