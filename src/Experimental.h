@@ -36,7 +36,7 @@
 
 // LLL, 09 Nov 2013:
 // Allow all WASAPI devices, not just loopback
-#define EXPERIMENTAL_FULL_WASAPI
+// Not in for Audacity 2.0.6:   #define EXPERIMENTAL_FULL_WASAPI
 
 // JKC (effect by Norm C, 02 Oct 2013)
 //#define EXPERIMENTAL_SCIENCE_FILTERS
