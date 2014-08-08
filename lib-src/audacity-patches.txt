@@ -211,7 +211,7 @@ Upstream Version: SVN revision 227
 portsmf
 -------
 http://portmedia.sourceforge.net/
-Cross-platform Midi file reader and writer (succeeded and obsoltes allegro)
+Cross-platform Midi file reader and writer (succeeded and obsoletes allegro)
 Version in Audacity SVN: SVN snapshot from 227
 Patches: autotools.patch: Fix all autotools warnings.
 autotools-fix-make-dist.patch: Correct file lists to make dist target work.
@@ -294,7 +294,7 @@ vendor/<library>/current/ with the audacity changes added in.
 
 1. We will update the vendor branch copy with the new upstream source first,
 then merge into the working copy. As always we need a new set of clean source
-to import. If pulling from upstream version control, do an export to loose
+to import. If pulling from upstream version control, do an export to lose
 version control files first.
    svn export -r HEAD https://www.portaudio.com/repos/portaudio/trunk export
 
