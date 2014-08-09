@@ -2,7 +2,7 @@ dnl add license?
 dnl
 dnl Please increment the serial number below whenever you alter this macro
 dnl for the benefit of automatic macro update systems
-# audacity_checklib_gstreamer.m4 serial 3
+# audacity_checklib_gstreamer.m4 serial 4
 
 AC_DEFUN([AUDACITY_CHECKLIB_GSTREAMER], [
 
@@ -36,6 +36,6 @@ AC_DEFUN([AUDACITY_CONFIG_GSTREAMER], [
 
    if test "$GSTREAMER_USE_SYSTEM" = yes; then
       AC_DEFINE(USE_GSTREAMER, 1,
-                [Define if the GStreamer is present])
+                [Define if GStreamer 1 is present])
    fi
 ])
