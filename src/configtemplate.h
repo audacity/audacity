@@ -128,7 +128,7 @@
    */
 #undef USE_FFMPEG
 
-/* Define if the gstreamer is present */
+/* Define if GStreamer 1 is present */
 #undef USE_GSTREAMER
 
 /* Define if LADSPA plug-ins are enabled */
@@ -182,7 +182,7 @@
 /* Define if Vamp analysis plugin support should be enabled */
 #undef USE_VAMP
 
-/* Define if VST plugin support should be enabled */
+/* Define if VST plug-in support is enabled */
 #undef USE_VST
 
 /* Version number of package */

@@ -614,6 +614,10 @@ case "${host_os}" in
          CPPFLAGS="$CPPFLAGS $GTK_CFLAGS"
          LIBS="$LIBS $GTK_LIBS"
       fi
+
+	  dnl VST support on platforms other than Mac OS and Windows not enabled for
+	  dnl 2.0.6 release
+	  use_vst="no"
    ;;
 esac
 
