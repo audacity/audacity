@@ -492,8 +492,9 @@ for lib in $LIBRARIES ; do
          AC_DEFINE_UNQUOTED($symbol, 1)
       done
    elif test "$LIB_USE_SYSTEM" = "yes" ; then
+      eval LIB_LIBS=\"\$${lib}_SYSTEM_LIBS\"
+      AC_MSG_NOTICE([${lib}: adding ${LIB_LIBS} to libraries])
       eval LIBS=\"$LIBS \$${lib}_SYSTEM_LIBS\"
-      #LIBS="$LIBS $THESE_LIBS"
       eval CXXFLAGS=\"\$CXXFLAGS \$${lib}_SYSTEM_CXXFLAGS\"
 
       eval CPPSYMBOLS=\"\$${lib}_SYSTEM_CPPSYMBOLS\"
@@ -733,15 +734,21 @@ for lib in $LIBRARIES ; do
 done
 
 if [[ "$use_ladspa" = "yes" ]] ; then
-   echo "ladspa: enabled"
+   echo "ladspa plugin support: enabled"
 else
-   echo "ladspa: disabled"
+   echo "ladspa plugin support: disabled"
 fi
 
 if [[ "$use_audiounits" = "yes" ]] ; then
-   echo "audiounits: enabled"
+   echo "audiounit plugin support: enabled"
 else
-   echo "audiounits: disabled"
+   echo "audiounit plugin support: disabled"
+fi
+
+if [[ "$use_vst" = "yes" ]] ; then
+   echo "VST plugin support: enabled"
+else
+   echo "VST plugin support: disabled"
 fi
 
 echo "prefix=$prefix";
