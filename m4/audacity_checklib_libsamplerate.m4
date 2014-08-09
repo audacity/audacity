@@ -7,16 +7,17 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSAMPLERATE], [
 
    AC_ARG_WITH(libsamplerate,
                [AS_HELP_STRING([--with-libsamplerate],
-                               [use libsamplerate for sample rate conversion. Do not use in conjunction with VST plug-in support!])],
+                               [use libsamplerate for sample rate conversion])],
                LIBSAMPLERATE_ARGUMENT=$withval,
                LIBSAMPLERATE_ARGUMENT="unspecified")
 
    dnl see if libsamplerate is installed on the system
-
-   PKG_CHECK_MODULES(SAMPLERATE, samplerate >= 0.1.2,
+   PKG_CHECK_MODULES(LIBSAMPLERATE_SYSTEM, samplerate >= 0.1.2,
                      LIBSAMPLERATE_SYSTEM_AVAILABLE="yes",
                      LIBSAMPLERATE_SYSTEM_AVAILABLE="no")
-
+   dnl the unusual choice of prefix above avoids having to re-assign the variables
+   dnl generates by PKG_CHECK_MODULES, which will be LIBSAMPLERATE_SYSTEML_LIBS and
+   dnl so on.
    if test "$LIBSAMPLERATE_SYSTEM_AVAILABLE" = "yes" ; then
       AC_MSG_NOTICE([Libsamplerate libraries are available as system libraries])
    else
