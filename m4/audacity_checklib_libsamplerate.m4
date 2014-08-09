@@ -1,7 +1,7 @@
 dnl Add Audacity / libsamplerate license?
 dnl Please increment the serial number below whenever you alter this macro
 dnl for the benefit of automatic macro update systems
-# audacity_checklib_libsamplerate.m4 serial 3
+# audacity_checklib_libsamplerate.m4 serial 4
 
 AC_DEFUN([AUDACITY_CHECKLIB_LIBSAMPLERATE], [
 
