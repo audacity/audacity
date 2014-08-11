@@ -25,7 +25,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo on&#x0D;&#x0A;set CFG=&quot;$(ProjectDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;&#x0D;&#x0A;echo // Automatically generated file &gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_DYNAMIC_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;rem echo #define PA_USE_WDMKS 1 &gt;&gt;%CFG%&#x0D;&#x0A;rem echo #define PA_USE_WASAPI 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;%CFG%&#x0D;&#x0A;"
+				CommandLine="echo on&#x0D;&#x0A;set CFG=&quot;$(ProjectDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;&#x0D;&#x0A;echo // Automatically generated file &gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_DYNAMIC_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;rem echo #define PA_USE_WDMKS 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WASAPI 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;%CFG%&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -92,7 +92,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="echo on&#x0D;&#x0A;set CFG=&quot;$(ProjectDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;&#x0D;&#x0A;echo // Automatically generated file &gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_DYNAMIC_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;rem echo #define PA_USE_WDMKS 1 &gt;&gt;%CFG%&#x0D;&#x0A;rem echo #define PA_USE_WASAPI 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;%CFG%&#x0D;&#x0A;"
+				CommandLine="echo on&#x0D;&#x0A;set CFG=&quot;$(ProjectDir)/$(ConfigurationName)/config.h&quot;&#x0D;&#x0A;&#x0D;&#x0A;echo // Automatically generated file &gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%DXSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_DS 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%ASIOSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_ASIO 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_USE_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;IF NOT &quot;%JACKSDK_DIR%&quot; == &quot;&quot; echo #define PA_DYNAMIC_JACK 1 &gt;&gt;%CFG%&#x0D;&#x0A;rem echo #define PA_USE_WDMKS 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WASAPI 1 &gt;&gt;%CFG%&#x0D;&#x0A;echo #define PA_USE_WMME 1 &gt;&gt;%CFG%&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
