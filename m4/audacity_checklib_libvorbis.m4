@@ -13,9 +13,14 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVORBIS], [
 
    dnl See if Vorbis is installed in the system
 
-   PKG_CHECK_MODULES(LIBVORBIS, vorbisenc vorbisfile,
+   PKG_CHECK_MODULES(LIBVORBIS, vorbisenc vorbisfile vorbis ogg,
                      LIBVORBIS_SYSTEM_AVAILABLE="yes",
                      LIBVORBIS_SYSTEM_AVAILABLE="no")
+   dnl Have to list the dependent libraries (vorbis and ogg) here because their
+   dnl symbols are used from Audacity directly, and (in a minimally linked system,
+   dnl e.g. with LDFLAGS including -Wl,--as-needed and with libtool patched to not
+   dnl break this) pulling in libraries that use libvorbis does not automagically
+   dnl cause the libvorbis symbols to be linkable.
 
    if test "$LIBVORBIS_SYSTEM_AVAILABLE" = "yes"; then
       AC_MSG_NOTICE([Vorbis libraries are available as system libraries])
