@@ -143,14 +143,17 @@ void KeyConfigPrefs::Populate()
    RefreshBindings();
 
    if (mViewByTree->GetValue()) {
-      mView->SetView(ViewByTree);
+      mViewType = ViewByTree;
    }
    else if (mViewByName->GetValue()) {
-      mView->SetView(ViewByName);
+      mViewType = ViewByName;
    }
    else if (mViewByKey->GetValue()) {
-      mView->SetView(ViewByKey);
+      mViewType = ViewByKey;
+      mFilterLabel->SetLabel(_("&Hotkey:"));
    }
+
+   mView->SetView(mViewType);
 }
 
 /// Normally in classes derived from PrefsPanel this function
