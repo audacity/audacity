@@ -285,9 +285,6 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   if (mViewType == ViewByKey) {
-      mFilterLabel->SetLabel(_("&Hotkey:"));
-   }
 
    // Need to layout so that the KeyView is properly sized before populating.
    // Otherwise, the initial selection is not scrolled into view.
