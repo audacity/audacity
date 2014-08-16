@@ -727,6 +727,8 @@ LAME_LIBS
 LAME_CFLAGS
 USE_GSTREAMER_FALSE
 USE_GSTREAMER_TRUE
+GSTREAMER_LIBS
+GSTREAMER_CFLAGS
 USE_LOCAL_FFMPEG_FALSE
 USE_LOCAL_FFMPEG_TRUE
 USE_FFMPEG_FALSE
@@ -765,8 +767,6 @@ ID3TAG_LIBS
 ID3TAG_CFLAGS
 FLAC_LIBS
 FLAC_CFLAGS
-GSTREAMER_LIBS
-GSTREAMER_CFLAGS
 AVUTIL_LIBS
 AVUTIL_CFLAGS
 AVFORMAT_LIBS
@@ -957,7 +957,6 @@ enable_universal_binary
 enable_dynamic_loading
 with_expat
 with_ffmpeg
-with_gstreamer
 with_lame
 with_libflac
 with_libid3tag
@@ -1004,8 +1003,6 @@ AVFORMAT_CFLAGS
 AVFORMAT_LIBS
 AVUTIL_CFLAGS
 AVUTIL_LIBS
-GSTREAMER_CFLAGS
-GSTREAMER_LIBS
 FLAC_CFLAGS
 FLAC_LIBS
 ID3TAG_CFLAGS
@@ -1727,7 +1724,6 @@ Optional Packages:
   --with-expat            which expat to use for XML file support:
                           [system,local]
   --with-ffmpeg           use ffmpeg for import and export support
-  --with-gstreamer        include GStreamer import/export support
   --with-lame             use lame for import and export support
   --with-libflac          use libFLAC for FLAC support
   --with-libid3tag        use libid3tag for mp3 id3 tag support
@@ -1775,10 +1771,6 @@ Some influential environment variables:
   AVUTIL_CFLAGS
               C compiler flags for AVUTIL, overriding pkg-config
   AVUTIL_LIBS linker flags for AVUTIL, overriding pkg-config
-  GSTREAMER_CFLAGS
-              C compiler flags for GSTREAMER, overriding pkg-config
-  GSTREAMER_LIBS
-              linker flags for GSTREAMER, overriding pkg-config
   FLAC_CFLAGS C compiler flags for FLAC, overriding pkg-config
   FLAC_LIBS   linker flags for FLAC, overriding pkg-config
   ID3TAG_CFLAGS
@@ -19762,7 +19754,7 @@ CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'
 
 
-LIBRARIES="EXPAT FFMPEG GSTREAMER LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: Determining what libraries are available in this tree and on the system" >&5
 $as_echo "$as_me: Determining what libraries are available in this tree and on the system" >&6;}
@@ -20345,96 +20337,6 @@ $as_echo "$as_me: ffmpeg library is NOT available in the local tree" >&6;}
    fi
 
    FFMPEG_MIMETYPES="audio/aac;audio/ac3;audio/mp4;audio/x-ms-wma;video/mpeg;"
-
-
-
-
-# Check whether --with-gstreamer was given.
-if test "${with_gstreamer+set}" = set; then :
-  withval=$with_gstreamer; GSTREAMER_ARGUMENT=$withval
-else
-  GSTREAMER_ARGUMENT="unspecified"
-fi
-
-
-
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GSTREAMER" >&5
-$as_echo_n "checking for GSTREAMER... " >&6; }
-
-if test -n "$GSTREAMER_CFLAGS"; then
-    pkg_cv_GSTREAMER_CFLAGS="$GSTREAMER_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-1.0 gstreamer-app-1.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gstreamer-1.0 gstreamer-app-1.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GSTREAMER_CFLAGS=`$PKG_CONFIG --cflags "gstreamer-1.0 gstreamer-app-1.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GSTREAMER_LIBS"; then
-    pkg_cv_GSTREAMER_LIBS="$GSTREAMER_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-1.0 gstreamer-app-1.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gstreamer-1.0 gstreamer-app-1.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GSTREAMER_LIBS=`$PKG_CONFIG --libs "gstreamer-1.0 gstreamer-app-1.0" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gstreamer-1.0 gstreamer-app-1.0" 2>&1`
-        else
-	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --print-errors "gstreamer-1.0 gstreamer-app-1.0" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GSTREAMER_PKG_ERRORS" >&5
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-                GSTREAMER_SYSTEM_AVAILABLE="no"
-elif test $pkg_failed = untried; then
-	GSTREAMER_SYSTEM_AVAILABLE="no"
-else
-	GSTREAMER_CFLAGS=$pkg_cv_GSTREAMER_CFLAGS
-	GSTREAMER_LIBS=$pkg_cv_GSTREAMER_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-	GSTREAMER_SYSTEM_AVAILABLE="yes"
-fi
-
-   if test "$GSTREAMER_SYSTEM_AVAILABLE" = "yes"; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: GStreamer libraries are available as system libraries" >&5
-$as_echo "$as_me: GStreamer libraries are available as system libraries" >&6;}
-   else
-      { $as_echo "$as_me:${as_lineno-$LINENO}: GStreamer libraries are NOT available as system libraries" >&5
-$as_echo "$as_me: GStreamer libraries are NOT available as system libraries" >&6;}
-   fi
-
-   GSTREAMER_LOCAL_AVAILABLE="no"
 
 
 
