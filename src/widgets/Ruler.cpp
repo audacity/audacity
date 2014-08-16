@@ -1822,7 +1822,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       {
          ControlToolBar* ctb = mProject->GetControlToolBar();
          ctb->StopPlaying();
-         ctb->PlayDefault();
+         ctb->PlayCurrentRegion(evt.ShiftDown(), evt.ControlDown() );
       }
    }
 }

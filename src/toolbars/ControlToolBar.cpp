@@ -742,8 +742,6 @@ void ControlToolBar::PlayDefault()
       PlayCurrentRegion(true); /* play looped */
    else
       PlayCurrentRegion(false); /* play normal */
-
-   mPlay->PopUp();
 }
 
 void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
