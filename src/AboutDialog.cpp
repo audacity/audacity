@@ -328,6 +328,7 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
 }
 
 /** \brief: Fills out the "Information" tab of the preferences dialogue
+ *
  * Provides as much information as possible about build-time options and
  * the libraries used, to try and make Linux support easier. Basically anything
  * about the build we might wish to know should be visible here */
@@ -410,6 +411,18 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          disabled);
    # endif
 
+   #ifdef USE_FFMPEG
+   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), _("FFmpeg Import/Export"), enabled);
+   #else
+   AddBuildinfoRow(&informationStr, wxT("ffmpeg"), _("FFmpeg Import/Export"), disabled);
+   #endif
+
+   #ifdef USE_GSTREAMER
+   AddBuildinfoRow(&informationStr, wxT("gstreamer"), _("Import via GStreamer"), enabled);
+   #else
+   AddBuildinfoRow(&informationStr, wxT("gstreamer"), _("Import via GStreamer"), disabled);
+   #endif
+
    informationStr += wxT("</table>\n");  //end table of file format libraries
    informationStr += wxT("<h3>");
    /* i18n-hint: Libraries that are essential to audacity */
@@ -484,6 +497,22 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          disabled);
    # endif
 
+   # if USE_VST
+   AddBuildinfoRow(&informationStr, wxT("VST"), _("Plug-in support"),
+         enabled);
+   # else
+   AddBuildinfoRow(&informationStr, wxT("VST"), _("Plug-in support"),
+         disabled);
+   # endif
+
+   # if USE_LV2
+   AddBuildinfoRow(&informationStr, wxT("LV2"), _("Plug-in support"),
+         enabled);
+   # else
+   AddBuildinfoRow(&informationStr, wxT("LV2"), _("Plug-in support"),
+         disabled);
+   # endif
+
    # if USE_PORTMIXER
    AddBuildinfoRow(&informationStr, wxT("PortMixer"), _("Sound card mixer support"),
          enabled);
@@ -497,6 +526,14 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          enabled);
    # else
    AddBuildinfoRow(&informationStr, wxT("SoundTouch"), _("Pitch and Tempo Change support"),
+         disabled);
+   # endif
+
+   # if USE_SBSMS
+   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme Pitch and Tempo Change support"),
+         enabled);
+   # else
+   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme and Tempo Change support"),
          disabled);
    # endif
 
