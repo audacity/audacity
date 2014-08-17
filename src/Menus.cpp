@@ -1200,9 +1200,6 @@ void AudacityProject::CreateMenusAndCommands()
 
    mLastFlags = 0;
 
-   mSel0save = 0;
-   mSel1save = 0;
-
 #if defined(__WXDEBUG__)
 //   c->CheckDups();
 #endif
@@ -3671,7 +3668,7 @@ void AudacityProject::OnPasteNewLabel()
       for (Track *t1 = iter1.First(); t1; t1 = iter1.Next()) {
          if (t1->GetSelected()) {
             // Look for a label track
-            while ((t1 = iter1.Next())) {
+            while (0 != (t1 = iter1.Next())) {
                if (t1->GetKind() == Track::Label) {
                   t = t1;
                   break;
