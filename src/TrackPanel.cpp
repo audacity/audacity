@@ -2005,7 +2005,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                //If we aren't currently playing back, start playing back at
                //the clicked point
                ControlToolBar * ctb = p->GetControlToolBar();
-               ctb->SetPlay(true);
+               //ctb->SetPlay(true);// Not needed as done in PlayPlayRegion
                ctb->PlayPlayRegion(clicktime, endtime,false) ;
 
             }
