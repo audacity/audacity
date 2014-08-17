@@ -533,7 +533,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme Pitch and Tempo Change support"),
          enabled);
    # else
-   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme and Tempo Change support"),
+   AddBuildinfoRow(&informationStr, wxT("SBSMS"), _("Extreme Pitch and Tempo Change support"),
          disabled);
    # endif
 
