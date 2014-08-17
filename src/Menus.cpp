@@ -1865,7 +1865,7 @@ void AudacityProject::OnPlayStop()
          //update the playing area
          TP_DisplaySelection();
          //Otherwise, start playing (assuming audio I/O isn't busy)
-         toolbar->SetPlay(true);
+         //toolbar->SetPlay(true); // Not needed as done in PlayPlayRegion.
          toolbar->SetStop(false);
 
          // Will automatically set mLastPlayMode
@@ -1874,7 +1874,7 @@ void AudacityProject::OnPlayStop()
    }
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
-      toolbar->SetPlay(true);
+      //toolbar->SetPlay(true); // Not needed as done in PlayPlayRegion.
       toolbar->SetStop(false);
 
       // Will automatically set mLastPlayMode
@@ -1932,7 +1932,7 @@ void AudacityProject::OnPlayStopSelect()
    }
    else if (!gAudioIO->IsBusy()) {
       //Otherwise, start playing (assuming audio I/O isn't busy)
-      toolbar->SetPlay(true);
+      //toolbar->SetPlay(true); // Not needed as set in PlayPlayRegion()
       toolbar->SetStop(false);
 
       // Will automatically set mLastPlayMode

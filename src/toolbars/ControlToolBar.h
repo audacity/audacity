@@ -60,7 +60,7 @@ class ControlToolBar:public ToolBar {
    void OnPause(wxCommandEvent & evt);
 
    //These allow buttons to be controlled externally:
-   void SetPlay(bool down);
+   void SetPlay(bool down, bool looped=false);
    void SetStop(bool down);
    void SetRecord(bool down);
 
