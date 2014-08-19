@@ -196,7 +196,7 @@ AButton::AButtonState AButton::GetState()
             state = mButtonIsDown ? AButtonOver : AButtonDown;
          }
          else {
-            state = mButtonIsDown ? AButtonDown : AButtonUp;
+            state = mButtonIsDown ? AButtonDown : AButtonOver;
          }
       }
    }
