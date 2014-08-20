@@ -799,7 +799,7 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(false);
       {
-         S.StartStatic(_("Buffer Specification"));
+         S.StartStatic(_("Buffer Size"));
          {
             wxIntegerValidator<int> vld(&mBufferSize);
             vld.SetRange(8, 1048576 * 1);
@@ -841,17 +841,18 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Presentation Method"));
+         S.StartStatic(_("Graphical Mode"));
          {
-            S.AddVariableText(wxString() +
-               _("Most VST effects provide a graphical interface for setting the ") +
-               _("parameter values. However, a basic text only method is also ") +
-               _("available.  Reopen the effect for this to take affect."))->Wrap(650);
-            S.TieCheckBox(_("Enable &graphical interface"), wxT("/VST/GUI"), true);
+            S.AddVariableText(
+               wxString() +
+               _("Most VST effects have a graphical interface for setting parameter values.") +
+               _(" A basic text-only method is also available. ") +
+               _(" Reopen the effect for this to take effect."))->Wrap(650);
+            S.TieCheckBox(_("Enable &Graphical Mode"), wxT("/VST/GUI"), true);
          }
          S.EndStatic();
 
-         S.StartStatic(_("Effect Refresh"));
+         S.StartStatic(_("Rescan Effects"));
          {
             S.AddVariableText(wxString() +
                _("To improve Audacity startup, a search for VST effects is performed ") +
