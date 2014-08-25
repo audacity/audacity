@@ -190,6 +190,13 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       }
    }
 
+   // Obtain the local file system file name, without the anchor if present.
+   wxString localfile;
+   if (localFileName.Find('#', true) != wxNOT_FOUND)
+      localfile = localFileName.BeforeLast('#');
+   else
+      localfile = localFileName;
+
    if( localFileName.Contains(wxT("Quick_Help")) )
       // 'Quick_Help' is installed locally
       OpenInDefaultBrowser( localFileName );
@@ -198,7 +205,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       // Always go to remote URL.  Use External browser.
       OpenInDefaultBrowser( remoteURL );
    }
-   else if( !wxFileExists( localFileName ))
+   else if( !wxFileExists( localfile ))
    {
       // If you give an empty remote URL, you should have already ensured
       // that the file exists!

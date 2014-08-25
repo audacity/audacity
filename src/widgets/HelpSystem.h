@@ -42,7 +42,12 @@ public:
                    bool bIsFile, bool bModal);
 
    /// Displays a file in your browser, if it's available locally,
-   /// OR else links to the internet.
+   /// OR else links to the internet. Generally using this outside this class
+   /// is depreciated in favour of the "smarter" overload below, unless there
+   /// is a good reason for using this form.
+   /// @param localFileName Name and path of the file on the local machine
+   /// file system to be opened. file.name#anchor syntax is allowed, and therefore
+   /// file names containing a '#' are not (on any platform).
    static void ShowHelpDialog(wxWindow *parent,
                      const wxString &localFileName,
                      const wxString &remoteURL);
