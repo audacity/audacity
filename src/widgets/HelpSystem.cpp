@@ -227,16 +227,16 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent, const wxString &PageName)
    wxString localHelpPage;
    wxString webHelpPage;
    wxString releasePageName;
-   wxString anchor;
+   wxString anchor;	// optional part of URL after (and including) the '#'
    if (PageName.Find('#', true) != wxNOT_FOUND)
    {	// need to split anchor off into separate variable
       releasePageName= PageName.BeforeLast('#');
-      anchor= PageName.AfterLast('#');
+      anchor = wxT("#") + PageName.AfterLast('#');
    }
    else
    {
       releasePageName = PageName;
-	  anchor = wxT("");
+      anchor = wxT("");
    }
    // This bit of code replicates the name transformations performed by the
    // clean_filename routine in scripts/mw2html_audacity/mw2html.py
