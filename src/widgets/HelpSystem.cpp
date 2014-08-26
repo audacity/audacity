@@ -86,7 +86,8 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
 void HelpSystem::ShowHtmlText(wxWindow *pParent,
                   const wxString &Title,
                   const wxString &HtmlText,
-                  bool bIsFile = false, bool bModal = false)
+                  bool bIsFile,
+                  bool bModal)
 {
    LinkingHtmlWindow *html;
 
@@ -172,7 +173,8 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
 
 void HelpSystem::ShowHelpDialog(wxWindow *parent,
                     const wxString &localFileName,
-                    const wxString &remoteURL)
+                    const wxString &remoteURL,
+                    bool bModal)
 {
    AudacityProject * pProj = GetActiveProject();
    wxString HelpMode = wxT("Local");
@@ -209,10 +211,9 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       wxASSERT( !remoteURL.IsEmpty() );
       // I can't find it'.
       // Use Built-in browser to suggest you use the remote url.
-//use the remote link
       wxString Text = HelpText( wxT("remotehelp") );
       Text.Replace( wxT("*URL*"), remoteURL );
-      ShowHtmlText( parent, _("Help on the Internet"), Text );
+      ShowHtmlText( parent, _("Help on the Internet"), Text, false, bModal );
    }
    else if( HelpMode == wxT("Local") )
    {
@@ -222,11 +223,13 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    else
    {
       // Local file, Built-in browser
-      ShowHtmlText( parent, wxT(""), localFileName, true );
+      ShowHtmlText( parent, wxT(""), localFileName, true, bModal );
    }
 }
 
-void HelpSystem::ShowHelpDialog(wxWindow *parent, const wxString &PageName)
+void HelpSystem::ShowHelpDialog(wxWindow *parent,
+                                const wxString &PageName,
+                                bool bModal)
 {
    wxString localHelpPage;
    wxString webHelpPage;
@@ -274,5 +277,6 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent, const wxString &PageName)
    HelpSystem::ShowHelpDialog(
       parent, 
       localHelpPage,
-      webHelpPage);
+      webHelpPage,
+      bModal);
 }
