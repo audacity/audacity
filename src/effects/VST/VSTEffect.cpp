@@ -3073,8 +3073,9 @@ bool VSTEffect::ProcessStereo(int count,
       // so overlay them by shifting the remaining output samples.
       else if (delay > 0) {
          sampleCount oblock = block - delay;
-         memmove(outBufSegment[0], outBufSegment[0] + delay, SAMPLE_SIZE(floatSample) * oblock);
-         memmove(outBufSegment[1], outBufSegment[1] + delay, SAMPLE_SIZE(floatSample) * oblock);
+         for (int i = 0; i < mOutputs; i++) {
+            memmove(outBufSegment[i], outBufSegment[i] + delay, SAMPLE_SIZE(floatSample) * oblock);
+         }
          delay = 0;
          outBufferCursor += oblock;
       }
