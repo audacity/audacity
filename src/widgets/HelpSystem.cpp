@@ -197,10 +197,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    else
       localfile = localFileName;
 
-   if( localFileName.Contains(wxT("Quick_Help")) )
-      // 'Quick_Help' is installed locally
-      OpenInDefaultBrowser( localFileName );
-   else if( (HelpMode == wxT("FromInternet")) && !remoteURL.IsEmpty() )
+   if( (HelpMode == wxT("FromInternet")) && !remoteURL.IsEmpty() )
    {
       // Always go to remote URL.  Use External browser.
       OpenInDefaultBrowser( remoteURL );
