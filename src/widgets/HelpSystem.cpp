@@ -22,6 +22,7 @@
 #include <wx/html/htmlwin.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>
+#include <wx/regex.h>
 
 #include "../FileNames.h"
 #include "LinkingHtmlWindow.h"
@@ -245,23 +246,47 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       releasePageName = PageName;
       anchor = wxT("");
    }
-   // This bit of code replicates the name transformations performed by the
-   // clean_filename routine in scripts/mw2html_audacity/mw2html.py
-   // there is a special case for transforming the front page
-   // (Main_Page => index.html)
+   // The wiki pages are transformed to static HTML by
+   // scripts/mw2html_audacity/mw2html.py
+   // The name is first transformed to lower case, then all
+   // 'special characters' are replaced by underscores. Spaces are
+   // transformed to "+".
+   //
+   // The transformations are handled in mw2html by first applying
+   // 'urllib.parse.quote_plus' (escape chars that are not in "always safe" list)
+   // then replacing escape characters (%xx and %25xx) with underscores,
+   // and finally removing duplicate / redundant underscores.
+   //
+   // The front page and 'quick_help' are treated as special cases and placed in
+   // the root of the help directory rather than the "/man/" sub-directory.
    if (releasePageName == wxT("Main_Page"))
    {
+      // FIXME: Needs to be outside /man/ directory for release manual.
       releasePageName = wxT("index") + HelpSystem::ReleaseSuffix + anchor;
    }
+   else if (releasePageName == wxT("Quick_Help"))
+   {
+      // FIXME: Needs to be outside /man/ directory for release manual.
+      releasePageName = wxT("quick_help") + HelpSystem::ReleaseSuffix + anchor;
+   }
    else
-   {	// for any other name
-   releasePageName.Replace(wxT("%%"), wxT("_"), true);
-   releasePageName.Replace(wxT("%25"), wxT("_"), true);
-   releasePageName.Replace(wxT("%"), wxT("_"), true);
-   releasePageName.Replace(wxT("-"), wxT("_"), true);
-   releasePageName.Replace(wxT("__"), wxT("_"), true);
-   releasePageName.Replace(wxT("_."), wxT("."), true);
-   releasePageName = releasePageName.Lower()+HelpSystem::ReleaseSuffix + anchor;
+   {
+      // Change to lower case.
+      releasePageName = releasePageName.Lower();
+      wxRegEx re;
+      // replace 'special characters' with underscores.
+      // RFC 2396 defines the characters a-z, A-Z, 0-9 and ".-_" as "always safe"
+      // mw2html also replaces "-" with "_" so replace that too.
+      re.Compile(wxT("[^[:alnum:] . [:space:]]"));
+      re.ReplaceAll(&releasePageName, (wxT("_")));
+      // Replace spaces with "+"
+      releasePageName.Replace(wxT(" "), wxT("+"), true);
+      // Reduce multiple underscores to single underscores
+      releasePageName.Replace(wxT("__"), wxT("_"), true);
+      // Replace "_." with "."
+      releasePageName.Replace(wxT("_."), wxT("."), true);
+      // Concatenate file name with file extension and anchor.
+      releasePageName = releasePageName + HelpSystem::ReleaseSuffix + anchor;
    }
 
    localHelpPage = wxFileName(FileNames::HtmlHelpDir()+wxT("/man/"), releasePageName).GetFullPath();
