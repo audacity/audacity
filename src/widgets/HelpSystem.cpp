@@ -298,7 +298,8 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       // Replace spaces with "+"
       releasePageName.Replace(wxT(" "), wxT("+"), true);
       // Reduce multiple underscores to single underscores
-      releasePageName.Replace(wxT("__"), wxT("_"), true);
+      re.Compile(wxT("__+"));
+      re.ReplaceAll(&releasePageName, (wxT("_")));
       // Replace "_." with "."
       releasePageName.Replace(wxT("_."), wxT("."), true);
       // Concatenate file name with file extension and anchor.
