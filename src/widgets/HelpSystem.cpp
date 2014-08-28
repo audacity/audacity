@@ -37,8 +37,14 @@
 #include "HelpSystem.h"
 
 const wxString HelpSystem::HelpHostname = wxT("manual.audacityteam.org");
-const wxString HelpSystem::HelpServerDir = wxT("/o/man/");
-const wxString HelpSystem::HelpAlphaDir = wxT("/man/");
+#if IS_ALPHA
+const wxString HelpSystem::HelpServerHomeDir = wxT("/man/");
+const wxString HelpSystem::HelpServerManDir = wxT("/man/");
+#else
+const wxString HelpSystem::HelpServerHomeDir = wxT("/o/");
+const wxString HelpSystem::HelpServerManDir = wxT("/o/man/");
+#endif
+const wxString HelpSystem::LocalHelpManDir = wxT("/man/");
 const wxString HelpSystem::ReleaseSuffix = wxT(".html");
 
 /// Mostly we use this so that we have the code for resizability
@@ -233,6 +239,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
                                 bool bModal)
 {
    wxString localHelpPage;
+   wxString webHelpPath;
    wxString webHelpPage;
    wxString releasePageName;
    wxString anchor;	// optional part of URL after (and including) the '#'
@@ -261,16 +268,19 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    // the root of the help directory rather than the "/man/" sub-directory.
    if (releasePageName == wxT("Main_Page"))
    {
-      // FIXME: Needs to be outside /man/ directory for release manual.
       releasePageName = wxT("index") + HelpSystem::ReleaseSuffix + anchor;
+      localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
+      webHelpPath = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerHomeDir;
    }
    else if (releasePageName == wxT("Quick_Help"))
    {
-      // FIXME: Needs to be outside /man/ directory for release manual.
       releasePageName = wxT("quick_help") + HelpSystem::ReleaseSuffix + anchor;
+      localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
+      webHelpPath = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerHomeDir;
    }
    else
    {
+      // Handle all other pages.
       // Change to lower case.
       releasePageName = releasePageName.Lower();
       wxRegEx re;
@@ -287,18 +297,23 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       releasePageName.Replace(wxT("_."), wxT("."), true);
       // Concatenate file name with file extension and anchor.
       releasePageName = releasePageName + HelpSystem::ReleaseSuffix + anchor;
+      // Other than index and quick_help, all local pages are in subdirectory 'LocalHelpManDir'.
+      localHelpPage = wxFileName(FileNames::HtmlHelpDir() + LocalHelpManDir, releasePageName).GetFullPath();
+      // Other than index and quick_help, all on-line pages are in subdirectory 'HelpServerManDir'.
+      webHelpPath = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerManDir;
    }
-
-   localHelpPage = wxFileName(FileNames::HtmlHelpDir()+wxT("/man/"), releasePageName).GetFullPath();
+   
 #if IS_ALPHA
-   webHelpPage = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpAlphaDir+PageName;
+   webHelpPage = webHelpPath + PageName;
 #else
-   webHelpPage = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerDir+releasePageName;
+   webHelpPage = webHelpPath + releasePageName;
 #endif
+
    wxLogMessage(wxT("Help button pressed: PageName %s, releasePageName %s"),
               PageName.c_str(), releasePageName.c_str());
    wxLogMessage(wxT("webHelpPage %s, localHelpPage %s"),
               webHelpPage.c_str(), localHelpPage.c_str());
+
    HelpSystem::ShowHelpDialog(
       parent, 
       localHelpPage,

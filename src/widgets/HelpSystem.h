@@ -76,12 +76,22 @@ public:
    /// Hostname (domain name including subdomain) of the server on which the
    /// online help is available
    static const wxString HelpHostname;
-   /// URL path on the help server under which the help pages are located. Must
-   /// both start and end with '/' characters.
-   static const wxString HelpServerDir;
-   /// URL path on the help server under which the development help pages are
-   /// located. Must both start and end with '/' characters.
-   static const wxString HelpAlphaDir;
+
+   /// URL path on the help server to the root directory of the manual.
+   /// index and quick_help are here in the on-line release manual.
+   /// Must both start and end with '/' characters.
+   static const wxString HelpServerHomeDir;
+
+   /// Path to sub-directory where the manual pages are located.
+   /// index and quick_help are here only in the alpha manual.
+   /// Must both start and end with '/' characters.
+   static const wxString HelpServerManDir;
+
+   /// Sub-directory for local help pages (but not index.html
+   /// or quick_help.html)
+   /// Must both start and end with '/' characters.
+   static const wxString LocalHelpManDir;
+
    /// The string which is appended to the development manual page name in order
    /// obtain the file name in the local and release web copies of the manual
    static const wxString ReleaseSuffix;
