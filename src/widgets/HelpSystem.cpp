@@ -261,7 +261,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
    //
    // The transformations are handled in mw2html by first applying
    // 'urllib.parse.quote_plus' (escape chars that are not in "always safe" list)
-   // then replacing escape characters (%xx and %25xx) with underscores,
+   // then replacing escape characters (%xx) with underscores,
    // and finally removing duplicate / redundant underscores.
    //
    // The front page and 'quick_help' are treated as special cases and placed in
@@ -287,6 +287,12 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       // replace 'special characters' with underscores.
       // RFC 2396 defines the characters a-z, A-Z, 0-9 and ".-_" as "always safe"
       // mw2html also replaces "-" with "_" so replace that too.
+      
+      // If PageName contains a %xx code, mw2html will transform it:
+      // '%xx' => '%25xx' => '_'
+      re.Compile(wxT("%.."));
+      re.ReplaceAll(&releasePageName, (wxT("_")));
+      // Now replace all other 'not-safe' characters.
       re.Compile(wxT("[^[:alnum:] . [:space:]]"));
       re.ReplaceAll(&releasePageName, (wxT("_")));
       // Replace spaces with "+"
@@ -302,7 +308,7 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       // Other than index and quick_help, all on-line pages are in subdirectory 'HelpServerManDir'.
       webHelpPath = wxT("http://")+HelpSystem::HelpHostname+HelpSystem::HelpServerManDir;
    }
-   
+
 #if IS_ALPHA
    webHelpPage = webHelpPath + PageName;
 #else
