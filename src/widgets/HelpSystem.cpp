@@ -199,6 +199,14 @@ void HelpSystem::ShowHelpDialog(wxWindow *parent,
       }
    }
 
+   // Anchors (URLs with a '#' in them) are not supported by many OSs for local file names
+   // See, for example, https://groups.google.com/forum/#!topic/wx-users/pC0uOZJalRQ
+   // Problems have been reported on Win, Mac and some versions of Linux.
+   // So we set HelpMode to use the internet if an anchor is found.
+   if (localFileName.Find('#', true) != wxNOT_FOUND)
+      HelpMode = wxT("FromInternet");
+   // Until a solution is found for this, the next few lines are irrelevant.
+
    // Obtain the local file system file name, without the anchor if present.
    wxString localfile;
    if (localFileName.Find('#', true) != wxNOT_FOUND)
