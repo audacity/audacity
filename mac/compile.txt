@@ -1,17 +1,21 @@
-Compiling Audacity under Mac OS X using gcc
+Building Audacity(R) for Apple Mac OS X (R) using gcc
+Copyright (c) 2014 Audacity Team
 
 Authors:
   Dominic Mazzoni
+  Gale Andrews
+  Leland Lucius
+  Vaughan Johnson
+  Benjamin Drung
 
-================================================================
-This file was last updated October 13, 2013. 
-Audacity 2.0.5 requires wxMac 2.8.12.  
+========================================================================
+This document is for Audacity version 2.0.6.
 
-If the advice here is inaccurate or incomplete, please
+If the advice here is inaccurate or incomplete, 
 email audacity-devel@lists.sourceforge.net.
-================================================================
+========================================================================
 
-Note: Audacity is no longer supported at all for Mac OS 9.
+Audacity is no longer supported at all for Mac OS 9.
 
 This document assumes you are using Mac OS X 10.4 or newer with
 Xcode 1.5 or newer.  If you type "gcc --version" at your prompt,
@@ -29,22 +33,21 @@ Audacity using the automated command-line build process first,
 and only then consider using an IDE.
 
 ---------------------------
-STEP 1:  Download wxWindows
+STEP 1:  Download wxWidgets
 ---------------------------
+
 To simplify the implementation of a near-identical user
 interface across platforms, Audacity uses classes and
-resources from wxWindows, a portable GUI framework for C++
-(and Python).  You must download and build wxWindows before
+resources from wxWidgets, a portable GUI framework for C++
+(and Python).  You must download and build wxWidgets before
 attempting to compile Audacity, or nothing will work!
 
-wxWindows is available from http://www.wxwindows.org.
-Similar to the Linux kernel, wxWindows is available as
-stable and development branches.  
+wxWidgets is available at "http://www.wxwidgets.org/".
 
-The best way to compile Audacity is to download wxMac 2.8.12.
+Audacity 2.0.6 requires wxMac 2.8.12.  
 
 For step 1, just download wxMac 2.8.12 from:
-  http://www.wxwindows.org/downloads/ 
+  http://www.wxWidgets.org/downloads/ 
 
 Uncompress wxMac from the command line by typing:
 

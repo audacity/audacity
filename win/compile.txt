@@ -1,5 +1,5 @@
-Compiling Audacity(R) for Microsoft Windows(TM)
-copyright (c) 1999-2014 Audacity Team
+Building Audacity(R) for Microsoft Windows(R)
+Copyright (c) 1999-2014 Audacity Team
 
 Authors:
   Asger Ottar Alstrup
@@ -14,9 +14,10 @@ Authors:
   Martyn Shaw
 
 ========================================================================
-This version is currently accurate for Audacity version 2.0.5.
-If you find the advice here inaccurate or incomplete, please
-e-mail feedback@audacityteam.org .
+This document is for Audacity version 2.0.6.
+
+If the advice here is inaccurate or incomplete, 
+email audacity-devel@lists.sourceforge.net.
 ========================================================================
 
 Audacity releases are currently built with Microsoft Visual C++ 9 
@@ -42,10 +43,6 @@ resources from wxWidgets, a portable GUI framework for C++
 (and Python).  You must download and build wxWidgets before
 attempting to compile Audacity, or nothing will work!
 
-wxWidgets is available at "http://www.wxwidgets.org/".
-
-Audacity 2.0.5 requires wxWidgets 2.8.12.
-
 To build on Windows only, download the wxMSW package
 (installer or zip).
 
@@ -54,8 +51,11 @@ To build on Windows only, download the wxMSW package
 MSVC++ STEP 2:  Build wxWidgets
 ------------------------
 
-When you have downloaded and installed wxWidgets, the next step
-is to build it. 
+wxWidgets is available at "http://www.wxwidgets.org/".
+
+Audacity 2.0.6 requires wxWidgets 2.8.12.
+
+Download and install wxWidgets, then follow these steps to build it. 
 
 1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
    Visual Studio 2008 (for VC9). 
