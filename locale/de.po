@@ -2,14 +2,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # Heiko Abler <dj@audacity.de>, 2003
-# Daniel Winzen <d@winzen4.de>, 2012, 2013.
-#: src/prefs/ModulePrefs.cpp:96
+# Daniel Winzen <d@winzen4.de>, 2012-2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity 1.3.3\n"
+"Project-Id-Version: audacity 2.0.6\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-09-04 16:38+0100\n"
-"PO-Revision-Date: 2013-10-15 09:23-0000\n"
+"PO-Revision-Date: 2014-09-04 21:21-0000\n"
 "Last-Translator: Daniel Winzen\n"
 "Language-Team: Andreas Klug, Edgar M. Franke, Pennywize, Heiko Abler "
 "<andreas.klug@mediensyndikat.de>, Daniel Winzen <d@winzen4.de>\n"
@@ -18,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"X-Generator: Poedit 1.6.5\n"
 
 #: src/AboutDialog.cpp:57 src/AboutDialog.cpp:78
 msgid "co-founder"
@@ -29,9 +28,8 @@ msgid "quality assurance"
 msgstr "Qualitätssicherung"
 
 #: src/AboutDialog.cpp:181
-#, fuzzy
 msgid "About Audacity"
-msgstr "Über Audacity..."
+msgstr "Über Audacity"
 
 #: src/AboutDialog.cpp:200
 msgid "OK... Audacious!"
@@ -55,7 +53,6 @@ msgstr ""
 "(und andere Unix-ähnliche Systeme)."
 
 #: src/AboutDialog.cpp:227
-#, fuzzy
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our <a href=\"mailto:feedback@audacityteam.org\">feedback address</a>. For "
@@ -63,11 +60,11 @@ msgid ""
 "\">wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">forum</"
 "a>."
 msgstr ""
-"Wenn Sie einen Fehler finden oder Vorschläge haben, geben Sie uns bitte <a "
-"href=\"mailto:feedback@audacityteam.org\">Feedback</a>. Hilfe gibt es bei "
-"den Tipps und Tricks in unserem <a href=\"http://wiki.audacityteam.org/"
-"\">Wiki</a> sowie in unserem <a href=\"http://forum.audacityteam.org/"
-"\">Forum</a>."
+"Wenn Sie einen Fehler finden oder Vorschläge haben, geben Sie uns bitte in "
+"englisch <a href=\"mailto:feedback@audacityteam.org\">Feedback</a>. Hilfe "
+"gibt es bei den Tipps und Tricks in unserem <a href=\"http://wiki."
+"audacityteam.org/\">Wiki</a> sowie in unserem <a href=\"http://forum."
+"audacityteam.org/\">Forum</a>."
 
 #: src/AboutDialog.cpp:240 src/AboutDialog.cpp:242
 msgid "translator_credits"
@@ -167,14 +164,12 @@ msgid "Import via QuickTime"
 msgstr "Import über QuickTime"
 
 #: src/AboutDialog.cpp:415 src/AboutDialog.cpp:417
-#, fuzzy
 msgid "FFmpeg Import/Export"
-msgstr "FFmpeg-Import/Export-Bibliothek"
+msgstr "FFmpeg-Import/Export"
 
 #: src/AboutDialog.cpp:421 src/AboutDialog.cpp:423
-#, fuzzy
 msgid "Import via GStreamer"
-msgstr "Import über QuickTime"
+msgstr "Import mit GStreamer"
 
 #: src/AboutDialog.cpp:429
 msgid "Core Libraries"
@@ -209,9 +204,8 @@ msgid "Pitch and Tempo Change support"
 msgstr "Unterstützung der Änderung von Tonhöhe und Tempo"
 
 #: src/AboutDialog.cpp:533 src/AboutDialog.cpp:536
-#, fuzzy
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "Unterstützung der Änderung von Tonhöhe und Tempo"
+msgstr "Unterstützung für extreme Änderungen von Tonhöhe und Tempo"
 
 #: src/AboutDialog.cpp:548
 msgid "Program build date: "
@@ -447,17 +441,15 @@ msgstr "Schlie&ßen"
 
 #: src/AudacityLogger.cpp:286
 msgid "log.txt"
-msgstr ""
+msgstr "log.txt"
 
 #: src/AudacityLogger.cpp:288
-#, fuzzy
 msgid "Save log to:"
-msgstr "Bilder speichern in:"
+msgstr "Protokoll speichern unter:"
 
 #: src/AudacityLogger.cpp:301
-#, fuzzy
 msgid "Couldn't save log to file: "
-msgstr "Konnte nicht in Datei schreiben: "
+msgstr "Konnte Protokoll nicht in Datei schreiben: "
 
 #: src/AudacityLogger.cpp:302 src/export/Export.cpp:607
 #: src/export/Export.cpp:628 src/export/Export.cpp:672
@@ -524,74 +516,70 @@ msgid "Latency problem"
 msgstr "Latenz-Problem"
 
 #: src/AudioIO.cpp:3169
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
 msgstr ""
-"Die automatische Pegelanpassung konnte nicht besser eingestellt werden und "
-"wurde angehalten. Der Eingangspegel ist zu hoch."
+"Die automatische Pegelanpassung wurde angehalten. Es konnte nicht besser "
+"eingestellt werden. Immer noch zu hoch."
 
 #: src/AudioIO.cpp:3177
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "Die automatische Pegelanpassung verringerte den Eingangswert auf %f."
+msgstr "Die automatische Pegelanpassung verringerte die Lautstärke auf %f."
 
 #: src/AudioIO.cpp:3192
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too low."
 msgstr ""
-"Die automatische Pegelanpassung konnte nicht besser eingestellt werden und "
-"wurde angehalten. Der Eingangspegel ist zu niedrig."
+"Die automatische Pegelanpassung wurde angehalten. Es konnte nicht besser "
+"eingestellt werden. Immer noch zu niedrig."
 
 #: src/AudioIO.cpp:3204
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr "Die automatische Pegelanpassung erhöhte den Eingangswert auf %.2f."
+msgstr "Die automatische Pegelanpassung erhöhte die Lautstärke auf %.2f."
 
 #: src/AudioIO.cpp:3238
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too high."
 msgstr ""
 "Die automatische Pegelanpassung wurde angehalten weil die maximale Anzahl "
 "von Messpunkten erreicht wurde ohne dass eine sinnvolle Einstellung gefunden "
-"wurde. Der Eingangspegel ist zu hoch."
+"wurde. Immer noch zu hoch."
 
 #: src/AudioIO.cpp:3240
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too low."
 msgstr ""
 "Die automatische Pegelanpassung wurde angehalten weil die maximale Anzahl "
 "von Messpunkten erreicht wurde ohne dass eine sinnvolle Einstellung gefunden "
-"wurde. Der Eingangspegel ist zu niedrig."
+"wurde. Immer noch zu niedrig."
 
 #: src/AudioIO.cpp:3243
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
 "volume."
 msgstr ""
-"Die automatische Pegelanpassung wurde angehalten, %.2f scheint ein "
-"akzeptabler Wert zu sein."
+"Die automatische Pegelanpassung wurde angehalten, %.2f scheint eine "
+"akzeptable Lautstärke zu sein."
 
 #: src/AutoRecovery.cpp:56
 msgid "Automatic Crash Recovery"
 msgstr "Automatische Wiederherstellung nach Programmabsturz"
 
 #: src/AutoRecovery.cpp:75
-#, fuzzy
 msgid ""
 "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can be automatically recovered:"
 msgstr ""
 "Einige Projekte wurden nicht korrekt gespeichert, als Audacity zuletzt\n"
-"lief. Die folgenden Projekte können automatisch wiederhergestellt werden:"
+"lief. Glücklicherweise können die folgenden Projekte automatisch "
+"wiederhergestellt werden:"
 
 #: src/AutoRecovery.cpp:77
 msgid "Recoverable projects"
@@ -604,34 +592,33 @@ msgstr "Name"
 #: src/AutoRecovery.cpp:87
 msgid "After recovery, save the project to save the changes to disk."
 msgstr ""
+"Speichern Sie das Projekt nach der Wiederherstellung, um die Änderungen auf "
+"die Festplatte zu schreiben."
 
 #: src/AutoRecovery.cpp:91
 msgid "Quit Audacity"
 msgstr "Audacity beenden"
 
 #: src/AutoRecovery.cpp:92
-#, fuzzy
 msgid "Discard Projects"
-msgstr "Wiederherstellen"
+msgstr "Projekte verwerfen"
 
 #: src/AutoRecovery.cpp:93
 msgid "Recover Projects"
 msgstr "Wiederherstellen"
 
 #: src/AutoRecovery.cpp:130
-#, fuzzy
 msgid ""
 "Are you sure you want to discard all projects?\n"
 "\n"
 "Choosing \"Yes\" discards all projects immediately."
 msgstr ""
-"Sind Sie sicher, dass Sie wirklich auf die Projektwiederherstellung "
-"verzichten möchten?\n"
-"(Später ist das unmöglich.)"
+"Sind Sie sicher, dass Sie alle Projekte verwerfen möchten?\n"
+"Wenn Sie »Ja« auswählen, werden alle Projekte sofort verworfen."
 
 #: src/AutoRecovery.cpp:131
 msgid "Confirm Discard Projects"
-msgstr ""
+msgstr "Verwerfen bestätigen"
 
 #: src/AutoRecovery.cpp:149 src/AutoRecovery.cpp:186
 msgid "Could not enumerate files in auto save directory."
@@ -1397,13 +1384,12 @@ msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
 msgstr "Dynamic Libraries (*.dylib)|*.dylib|Alle Dateien (*)|*"
 
 #: src/FFmpeg.h:336
-#, fuzzy
 msgid ""
 "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
 "so*|All Files (*)|*"
 msgstr ""
-"Nur libavformat.so|libavformat.so*|Dynamically Linked Libraries (*.so*)|*."
-"so*|Alle Dateien (*)|*"
+"Nur libavformat.so|libavformat*.so*|Dynamisch verknüpfte Bibliotheken (*."
+"so*)|*.so*|Alle Dateien (*)|*"
 
 #: src/FFT.cpp:495
 msgid "Rectangular"
@@ -1584,19 +1570,16 @@ msgid "Recording Audio"
 msgstr "Aufnahme"
 
 #: src/HelpText.cpp:136
-#, fuzzy
 msgid "Recording - Choosing the Recording Device"
-msgstr "Aufnahme - Aufnahmegerät auswählen"
+msgstr "Aufnahme - Das Aufnahmegerät auswählen"
 
 #: src/HelpText.cpp:141
-#, fuzzy
 msgid "Recording - Choosing the Recording Source"
-msgstr "Aufnahme - Quelle auswählen"
+msgstr "Aufnahme - Die Aufnahmequelle auswählen"
 
 #: src/HelpText.cpp:146
-#, fuzzy
 msgid "Recording - Setting the Recording Level"
-msgstr "Aufnahme - Eingangspegel einstellen"
+msgstr "Aufnahme - Den Eingangspegel einstellen"
 
 #: src/HelpText.cpp:151
 msgid "Editing and greyed out Menus"
@@ -1981,7 +1964,6 @@ msgstr "Abhängigkeiten &überprüfen..."
 msgid "Edit Me&tadata..."
 msgstr "&Metadaten bearbeiten ..."
 
-# &
 #: src/Menus.cpp:249 src/import/ImportRaw.cpp:437
 msgid "&Import"
 msgstr "&Importieren"
@@ -2003,14 +1985,12 @@ msgid "&Raw Data..."
 msgstr "&Rohdaten..."
 
 #: src/Menus.cpp:265
-#, fuzzy
 msgid "&Export Audio..."
-msgstr "&Exportieren..."
+msgstr "Audio &Exportieren..."
 
 #: src/Menus.cpp:270
-#, fuzzy
 msgid "Expo&rt Selected Audio..."
-msgstr "Auswahl exportieren..."
+msgstr "Ausgewähltes Audio expo&rtieren..."
 
 #: src/Menus.cpp:274
 msgid "Export &Labels..."
@@ -2078,7 +2058,7 @@ msgstr "In neue T&onspur kopieren"
 
 #: src/Menus.cpp:362
 msgid "R&emove Special"
-msgstr ""
+msgstr "B&esonderes Entfernen"
 
 #: src/Menus.cpp:364
 msgid "Spl&it Cut"
@@ -2101,9 +2081,8 @@ msgid "Paste Te&xt to New Label"
 msgstr "Text in neues Textfeld einfügen"
 
 #: src/Menus.cpp:388
-#, fuzzy
 msgid "Clip B&oundaries"
-msgstr "Clip bearbeiten"
+msgstr "Clip &Grenzen"
 
 #: src/Menus.cpp:390
 msgid "Sp&lit"
@@ -2342,14 +2321,12 @@ msgid "T&ransport"
 msgstr "&Transport"
 
 #: src/Menus.cpp:653
-#, fuzzy
 msgid "Pl&ay/Stop"
-msgstr "Wiedergabe/Stopp"
+msgstr "Wiederg&abe/Stopp"
 
 #: src/Menus.cpp:656
-#, fuzzy
 msgid "Play/Stop and &Set Cursor"
-msgstr "Wiedergabe/Stopp und Cursorsetzen"
+msgstr "Wiedergabe/&Stopp und Cursor setzen"
 
 #: src/Menus.cpp:659
 msgid "&Loop Play"
@@ -2396,9 +2373,8 @@ msgid "Sound Activation Le&vel..."
 msgstr "Schwellwert &Pegelsteuerung..."
 
 #: src/Menus.cpp:689
-#, fuzzy
 msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "A&utomatische Pegelanpassung (an/aus)"
+msgstr "A&utomatische Aufnahme-Pegelanpassung (an/aus)"
 
 #: src/Menus.cpp:691
 msgid "R&escan Audio Devices"
@@ -2795,67 +2771,56 @@ msgid "Snap To Off"
 msgstr "Einrasten aus"
 
 #: src/Menus.cpp:1166
-#, fuzzy
 msgid "Snap To Nearest"
-msgstr "Einrasten an"
+msgstr "An nächstes Einrasten"
 
 #: src/Menus.cpp:1167
-#, fuzzy
 msgid "Snap To Prior"
-msgstr "Einrasten"
+msgstr "Ans vorherige Einrasten"
 
 #: src/Menus.cpp:1169
 msgid "Full screen on/off"
 msgstr "Vollbild an/aus"
 
 #: src/Menus.cpp:1176
-#, fuzzy
 msgid "Change recording device"
 msgstr "Aufnahmegerät wechseln"
 
 #: src/Menus.cpp:1179
-#, fuzzy
 msgid "Change playback device"
-msgstr "Aufnahmegerät wechseln"
+msgstr "Wiedergabegerät wechseln"
 
 #: src/Menus.cpp:1182
 msgid "Change audio host"
 msgstr "Sound-Architektur umstellen"
 
 #: src/Menus.cpp:1185
-#, fuzzy
 msgid "Change recording channels"
-msgstr "Aufnahmegerät wechseln"
+msgstr "Aufnahmekanäle wechseln"
 
 #: src/Menus.cpp:1189
-#, fuzzy
 msgid "Adjust playback volume"
-msgstr "Wiedergabegeschwindigkeit einstellen"
+msgstr "Wiedergabegelautstärke einstellen"
 
 #: src/Menus.cpp:1190
-#, fuzzy
 msgid "Increase playback volume"
-msgstr "Wiedergabegeschwindigkeit erhöhen"
+msgstr "Wiedergabegelautstärke erhöhen"
 
 #: src/Menus.cpp:1191
-#, fuzzy
 msgid "Decrease playback volume"
-msgstr "Wiedergabegeschwindigkeit reduzieren"
+msgstr "Wiedergabegelautstärke reduzieren"
 
 #: src/Menus.cpp:1192
-#, fuzzy
 msgid "Adjust recording volume"
-msgstr "Aufnahmeende"
+msgstr "Aufnahmelautstärke anpassen"
 
 #: src/Menus.cpp:1193
-#, fuzzy
 msgid "Increase recording volume"
-msgstr "Wiedergabegeschwindigkeit erhöhen"
+msgstr "Aufnahmelautstärke erhöhen"
 
 #: src/Menus.cpp:1194
-#, fuzzy
 msgid "Decrease recording volume"
-msgstr "Wiedergabegeschwindigkeit reduzieren"
+msgstr "Aufnahmelautstärke reduzieren"
 
 #: src/Menus.cpp:1196
 msgid "Play at speed"
@@ -2952,9 +2917,8 @@ msgid "Export MIDI"
 msgstr "MIDI exportieren"
 
 #: src/Menus.cpp:3045
-#, fuzzy
 msgid "Export Selected Audio"
-msgstr "Ausgewähltes Audio wird als %s exportiert"
+msgstr "Ausgewähltes Audio exportieren"
 
 #: src/Menus.cpp:3104
 msgid "Nothing to undo"
@@ -3744,6 +3708,18 @@ msgid ""
 "To open a compressed project takes longer than usual, as it imports \n"
 "each compressed track.\n"
 msgstr ""
+"»Projekt komprimiert speichern« ist für ein Audacityprojekt, nicht für eine "
+"Audiodatei.\n"
+"Für eine Audiodatei, die in anderen Anwendungen geöffnet werden kann, "
+"benutzen Sie »Exportieren«.\n"
+"\n"
+"Komprimierte Projektdateien sind eine gute Möglichkeit Ihre Projekte online "
+"zu übertragen, \n"
+"aber sie haben etwas Genauigkeitsverlust.\n"
+"\n"
+"Ein komprimiertes Projekt zu öffnen dauert länger als normalerweise, da  "
+"jede komprimierte \n"
+"Spur importiert wird.\n"
 
 #: src/Project.cpp:3619
 #, c-format
@@ -3755,6 +3731,9 @@ msgid ""
 "'Save Project' is for an Audacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 msgstr ""
+"»Projekt speichern« ist für ein Audacityprojekt, nicht für eine Audiodatei.\n"
+"Für eine Audiodatei, die in anderen Anwendungen geöffnet werden kann, "
+"benutzen Sie »Exportieren«.\n"
 
 #: src/Project.cpp:3629
 #, c-format
@@ -4073,15 +4052,15 @@ msgstr "Dia&gnose"
 
 #: src/Snap.cpp:272
 msgid "Off"
-msgstr ""
+msgstr "Aus"
 
 #: src/Snap.cpp:273
 msgid "Nearest"
-msgstr ""
+msgstr "Nächstes"
 
 #: src/Snap.cpp:274
 msgid "Prior"
-msgstr ""
+msgstr "Vorheriges"
 
 #: src/SoundActivatedRecord.cpp:36
 msgid "Sound Activated Record"
@@ -4379,9 +4358,8 @@ msgid "Wa&veform"
 msgstr "We&llenform"
 
 #: src/TrackPanel.cpp:653
-#, fuzzy
 msgid "&Waveform (dB)"
-msgstr "Wellenform (dB)"
+msgstr "&Wellenform (dB)"
 
 #: src/TrackPanel.cpp:654
 msgid "&Spectrogram"
@@ -4412,14 +4390,12 @@ msgid "Ma&ke Stereo Track"
 msgstr "&Stereotonspur erstellen"
 
 #: src/TrackPanel.cpp:663
-#, fuzzy
 msgid "Swap Stereo &Channels"
-msgstr "Stereo"
+msgstr "Stereo &Kanäle tauschen"
 
 #: src/TrackPanel.cpp:664
-#, fuzzy
 msgid "Spl&it Stereo Track"
-msgstr "Stereotonspur &trennen"
+msgstr "Stereospur &trennen"
 
 #: src/TrackPanel.cpp:665
 msgid "Split Stereo to Mo&no"
@@ -4462,16 +4438,14 @@ msgid "Logarithmic &Interpolation"
 msgstr "Logarithmische &Interpolation"
 
 #: src/TrackPanel.cpp:695
-#, fuzzy
 msgid "&Delete Label"
-msgstr "Markiertes Audio löschen"
+msgstr "&Markierung löschen"
 
 #: src/TrackPanel.cpp:700
 msgid "N&ame..."
 msgstr "&Name..."
 
 #: src/TrackPanel.cpp:702
-#, fuzzy
 msgid "Move Track &Up"
 msgstr "Spur nach &oben verschieben"
 
@@ -4480,14 +4454,12 @@ msgid "Move Track &Down"
 msgstr "Spur nach &unten verschieben"
 
 #: src/TrackPanel.cpp:704
-#, fuzzy
 msgid "Move Track to &Top"
-msgstr "Spur nach &oben verschieben"
+msgstr "Spur an den &Anfang verschieben"
 
 #: src/TrackPanel.cpp:705
-#, fuzzy
 msgid "Move Track to &Bottom"
-msgstr "Spur nach &unten verschieben"
+msgstr "Spur ans &Ende verschieben"
 
 #: src/TrackPanel.cpp:1527
 msgid ""
@@ -4727,12 +4699,11 @@ msgstr "Kanal"
 #: src/TrackPanel.cpp:7418
 #, c-format
 msgid "Swapped Channels in '%s'"
-msgstr ""
+msgstr "Kanäle in »%s« getauscht"
 
 #: src/TrackPanel.cpp:7420
-#, fuzzy
 msgid "Swap Channels"
-msgstr "%d Kanäle"
+msgstr "Kanäle tauschen"
 
 #: src/TrackPanel.cpp:7428
 #, c-format
@@ -4745,9 +4716,8 @@ msgid "Split Stereo to Mono '%s'"
 msgstr "Stereo in Mono trennen '%s'"
 
 #: src/TrackPanel.cpp:7439
-#, fuzzy
 msgid "Split to Mono"
-msgstr "Stereo in Mo&nospuren"
+msgstr "In Mono trennen"
 
 #: src/TrackPanel.cpp:7532
 #, c-format
@@ -4826,25 +4796,23 @@ msgstr "Zeitspur-Interpolation auf logarithmisch einstellen"
 
 #: src/TrackPanel.cpp:7868
 msgid "to Top"
-msgstr ""
+msgstr "An den Anfang"
 
 #: src/TrackPanel.cpp:7880
 msgid "to Bottom"
-msgstr ""
+msgstr "Ans Ende"
 
 #: src/TrackPanel.cpp:7893
 msgid "Up"
-msgstr ""
+msgstr "Hoch"
 
 #: src/TrackPanel.cpp:7893
-#, fuzzy
 msgid "Down"
-msgstr "Herunterladen"
+msgstr "Herunter"
 
 #: src/TrackPanel.cpp:7904
-#, fuzzy
 msgid "Moved"
-msgstr "Nach &oben"
+msgstr "Verschoben"
 
 #: src/TrackPanel.cpp:7942
 msgid "Change track name to:"
@@ -4864,9 +4832,8 @@ msgid "Name Change"
 msgstr "Name ändern"
 
 #: src/TrackPanel.cpp:8005
-#, fuzzy
 msgid "Deleted Label"
-msgstr "Markiertes Audio löschen"
+msgstr "Markierung gelöscht"
 
 #: src/TrackPanel.cpp:8041
 msgid "Label Track Font"
@@ -5066,8 +5033,8 @@ msgstr "Auto-Duck"
 
 #: src/effects/AutoDuck.cpp:156
 msgid ""
-"Auto Duck needs a control track which must be placed below the selected track"
-"(s)."
+"Auto Duck needs a control track which must be placed below the selected "
+"track(s)."
 msgstr ""
 "Auto-Duck benötigt eine Steuerspur, die direkt unter der/den ausgewählten "
 "Spur/en liegen muss."
@@ -5212,9 +5179,8 @@ msgid "Estimated Start Pitch: %s%d (%.3f Hz)"
 msgstr "Geschätzte Start-Tonhöhe: %s%d (%.3f Hz)"
 
 #: src/effects/ChangePitch.cpp:302
-#, fuzzy
 msgid "Pitch"
-msgstr "Tonhöhe (EAC)"
+msgstr "Tonhöhe"
 
 #: src/effects/ChangePitch.cpp:306 src/effects/ChangePitch.cpp:307
 #: src/effects/ChangePitch.cpp:340 src/effects/ChangeSpeed.cpp:382
@@ -5245,9 +5211,8 @@ msgid "Semitones (half-steps)"
 msgstr "Halbtonschritte"
 
 #: src/effects/ChangePitch.cpp:336
-#, fuzzy
 msgid "Frequency"
-msgstr "Frequenz (Hz)"
+msgstr "Frequenz"
 
 #: src/effects/ChangePitch.cpp:341
 msgid "from (Hz)"
@@ -5354,12 +5319,12 @@ msgstr "Ändere Tempo"
 
 #: src/effects/ClickRemoval.cpp:155
 msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr ""
+msgstr "Algorithmus nicht effektive für dieses Audio. Nichts geändert."
 
 #: src/effects/ClickRemoval.cpp:168
 #, c-format
 msgid "Selection must be larger than %d samples."
-msgstr ""
+msgstr "Auswahl muss größer als %d Samples sein."
 
 #: src/effects/ClickRemoval.cpp:329
 msgid "Click Removal"
@@ -5418,19 +5383,16 @@ msgid "Attack Time"
 msgstr "Ansprechzeit"
 
 #: src/effects/Compressor.cpp:661
-#, fuzzy
 msgid "Release Time:"
-msgstr "Verstrichene Zeit:"
+msgstr "Abklingzeit:"
 
 #: src/effects/Compressor.cpp:665
-#, fuzzy
 msgid "Release Time"
-msgstr "Software-Version"
+msgstr "Abklingzeit"
 
 #: src/effects/Compressor.cpp:676
-#, fuzzy
 msgid "Make-up gain for 0 dB after compressing"
-msgstr "Anhebung auf 0dB nach komprimieren"
+msgstr "Anhebung auf 0 dB nach komprimieren"
 
 #: src/effects/Compressor.cpp:678
 msgid "Compress based on Peaks"
@@ -5482,9 +5444,9 @@ msgid "%.1f secs"
 msgstr "%.1f Sek."
 
 #: src/effects/Compressor.cpp:744
-#, fuzzy, c-format
+#, c-format
 msgid "Release Time %.1f secs"
-msgstr "Abklingzeit: %.1f Sekunden"
+msgstr "Abklingzeit %.1f Sekunden"
 
 #: src/effects/Compressor.h:37
 msgid "Compressor..."
@@ -5545,9 +5507,8 @@ msgid "Volume    "
 msgstr "Lautstärke    "
 
 #: src/effects/Contrast.cpp:258
-#, fuzzy
 msgid "&Foreground:"
-msgstr "Vordergrund:"
+msgstr "&Vordergrund:"
 
 #: src/effects/Contrast.cpp:264 src/effects/Contrast.cpp:280
 #: src/effects/Contrast.cpp:302 src/effects/Contrast.cpp:318
@@ -5564,14 +5525,12 @@ msgid "Foreground end time"
 msgstr "Endzeit Vordergrund"
 
 #: src/effects/Contrast.cpp:291
-#, fuzzy
 msgid "&Measure selection"
-msgstr "Auswahl berechnen"
+msgstr "&Auswahl berechnen"
 
 #: src/effects/Contrast.cpp:296
-#, fuzzy
 msgid "&Background:"
-msgstr "Hintergrund:"
+msgstr "&Hintergrund:"
 
 #: src/effects/Contrast.cpp:308
 msgid "Background start time"
@@ -5582,28 +5541,24 @@ msgid "Background end time"
 msgstr "Endzeit Hintergrund"
 
 #: src/effects/Contrast.cpp:329
-#, fuzzy
 msgid "Mea&sure selection"
-msgstr "Auswahl berechnen"
+msgstr "A&uswahl berechnen"
 
 #: src/effects/Contrast.cpp:338
 msgid "Result"
 msgstr "Ergebnis"
 
 #: src/effects/Contrast.cpp:342
-#, fuzzy
 msgid "Co&ntrast Result:"
-msgstr "Ergebnis:"
+msgstr "Ko&ntrast-Ergebnis:"
 
 #: src/effects/Contrast.cpp:345
-#, fuzzy
 msgid "R&eset"
-msgstr "Zurücksetzen"
+msgstr "Zurücks&etzen"
 
 #: src/effects/Contrast.cpp:346
-#, fuzzy
 msgid "&Difference:"
-msgstr "Unterschied:"
+msgstr "Unterschie&d:"
 
 #: src/effects/Contrast.cpp:349 src/effects/Equalization.cpp:3038
 msgid "E&xport..."
@@ -5833,13 +5788,12 @@ msgid "Previewing"
 msgstr "Vorhören"
 
 #: src/effects/Effect.cpp:536
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the playback device settings "
 "and the project sample rate."
 msgstr ""
-"Fehler beim Öffnen des Audiogeräts. Bitte prüfen sie die Einstellungen für "
-"das Audiogerät und die im Projekt eingestellte Abtastrate (Samplefrequenz)."
+"Fehler beim Öffnen des Audiogeräts. Bitte prüfen Sie die Einstellungen für "
+"das Audiogerät und die Projekt-Samplefrequenz."
 
 #: src/effects/Effect.h:98 src/effects/Reverb.cpp:195
 #: src/effects/TimeScale.cpp:55
@@ -5860,11 +5814,10 @@ msgid "Cubic"
 msgstr "Kubisch"
 
 #: src/effects/Equalization.cpp:297
-#, fuzzy
 msgid ""
 "To apply Equalization, all selected tracks must have the same sample rate."
 msgstr ""
-"Um das Spektrum zeichnen zu können, müssen alle Spuren die gleiche "
+"Um den Equalizer anwenden zu können, müssen alle Spuren die gleiche "
 "Samplefrequenz haben."
 
 #: src/effects/Equalization.cpp:327 src/effects/Equalization.cpp:382
@@ -5985,47 +5938,44 @@ msgid "G&rids"
 msgstr "&Gitter"
 
 #: src/effects/Equalization.cpp:1414
-#, fuzzy
 msgid "&Processing: "
-msgstr "Verarbeiten: "
+msgstr "&Verarbeiten: "
 
 #: src/effects/Equalization.cpp:1418
-#, fuzzy
 msgid "D&efault"
-msgstr "Alle zurücksetzen"
+msgstr "S&tandard"
 
 #: src/effects/Equalization.cpp:1420
-#, fuzzy
 msgid "Default"
-msgstr "Alle zurücksetzen"
+msgstr "Standard"
 
 #: src/effects/Equalization.cpp:1424
 msgid "&SSE"
-msgstr ""
+msgstr "&SSE"
 
 #: src/effects/Equalization.cpp:1426 src/effects/Equalization.cpp:1432
 msgid "SSE"
-msgstr ""
+msgstr "SSE"
 
 #: src/effects/Equalization.cpp:1430
 msgid "SSE &Threaded"
-msgstr ""
+msgstr "SSE &Threaded"
 
 #: src/effects/Equalization.cpp:1436
 msgid "A&VX"
-msgstr ""
+msgstr "A&VX"
 
 #: src/effects/Equalization.cpp:1438
 msgid "AVX"
-msgstr ""
+msgstr "AVX"
 
 #: src/effects/Equalization.cpp:1442
 msgid "AV&X Threaded"
-msgstr ""
+msgstr "AV&X Threaded"
 
 #: src/effects/Equalization.cpp:1444
 msgid "AVX Threaded"
-msgstr ""
+msgstr "AVX Threaded"
 
 #: src/effects/Equalization.cpp:1468
 msgid "&Bench"
@@ -6828,9 +6778,8 @@ msgid "Repeated %d times"
 msgstr "%d mal wiederholt"
 
 #: src/effects/Repeat.cpp:70
-#, fuzzy
 msgid "Selection is too short to repeat."
-msgstr "Die Auswahl ist zu klein für den \"Voice-Key\"."
+msgstr "Die Auswahl ist zu klein zum Wiederholen."
 
 #: src/effects/Repeat.cpp:71 src/effects/Repeat.cpp:86
 #: src/effects/Repeat.cpp:209
@@ -6916,54 +6865,44 @@ msgid ", Wet Only = %s"
 msgstr ", Nur nass = %s"
 
 #: src/effects/Reverb.cpp:319
-#, fuzzy
 msgid "&Room Size (%):"
-msgstr "Raumgröße (%):"
+msgstr "&Raumgröße (%):"
 
 #: src/effects/Reverb.cpp:327
-#, fuzzy
 msgid "&Pre-delay (ms):"
-msgstr "Vor-Verzögerung (ms):"
+msgstr "&Vor-Verzögerung (ms):"
 
 #: src/effects/Reverb.cpp:331
-#, fuzzy
 msgid "Rever&berance (%):"
-msgstr "Halligkeit (%):"
+msgstr "&Halligkeit (%):"
 
 #: src/effects/Reverb.cpp:335
-#, fuzzy
 msgid "Da&mping (%):"
-msgstr "Dämpfung (%):"
+msgstr "&Dämpfung (%):"
 
 #: src/effects/Reverb.cpp:339
-#, fuzzy
 msgid "Tone &Low (%):"
-msgstr "Niedrige Töne (%):"
+msgstr "&Niedrige Töne (%):"
 
 #: src/effects/Reverb.cpp:343
-#, fuzzy
 msgid "Tone &High (%):"
-msgstr "Hohe Töne (%):"
+msgstr "H&ohe Töne (%):"
 
 #: src/effects/Reverb.cpp:347
-#, fuzzy
 msgid "Wet &Gain (dB):"
-msgstr "Nass-Verstärkung (dB):"
+msgstr "N&ass-Verstärkung (dB):"
 
 #: src/effects/Reverb.cpp:351
-#, fuzzy
 msgid "Dr&y Gain (dB):"
-msgstr "Trocken-Verstärkung (dB):"
+msgstr "Tro&cken-Verstärkung (dB):"
 
 #: src/effects/Reverb.cpp:355
-#, fuzzy
 msgid "Stereo Wid&th (%):"
-msgstr "Stereo-Breite (%):"
+msgstr "Stereo-&Breite (%):"
 
 #: src/effects/Reverb.cpp:363
-#, fuzzy
 msgid "Wet O&nly"
-msgstr "Nur nass"
+msgstr "N&ur nass"
 
 #: src/effects/Reverb.cpp:368 src/effects/VST/VSTEffect.cpp:1650
 msgid "Presets:"
@@ -6971,7 +6910,7 @@ msgstr "Voreinstellungen:"
 
 #: src/effects/Reverb.cpp:369
 msgid "Lo&ad"
-msgstr ""
+msgstr "L&aden"
 
 #: src/effects/Reverb.cpp:371
 msgid "User settings:"
@@ -6979,17 +6918,15 @@ msgstr "Benutzereinstellungen:"
 
 #: src/effects/Reverb.cpp:373
 msgid "Loa&d"
-msgstr ""
+msgstr "La&den"
 
 #: src/effects/Reverb.cpp:374 src/effects/VST/VSTEffect.cpp:1665
-#, fuzzy
 msgid "&Save"
-msgstr "Speichern"
+msgstr "&Speichern"
 
 #: src/effects/Reverb.cpp:375
-#, fuzzy
 msgid "R&ename"
-msgstr "Umbenennen"
+msgstr "Umb&enennen"
 
 #: src/effects/Reverb.cpp:490 src/effects/Reverb.cpp:522
 msgid "Reverb settings"
@@ -7068,20 +7005,18 @@ msgid "Reversing"
 msgstr "Rückwärts..."
 
 #: src/effects/ScienFilter.cpp:141
-#, fuzzy
 msgid "To apply a filter, all selected tracks must have the same sample rate."
 msgstr ""
-"Um das Spektrum zeichnen zu können, müssen alle Spuren die gleiche "
+"Um einen Filter anwenden zu können, müssen alle Spuren die gleiche "
 "Samplefrequenz haben."
 
 #: src/effects/ScienFilter.cpp:168 src/effects/ScienFilter.cpp:223
 msgid "Classic Filters"
-msgstr ""
+msgstr "Klassische Filter"
 
 #: src/effects/ScienFilter.cpp:639
-#, fuzzy
 msgid "&Filter Type:"
-msgstr "Filtertyp:"
+msgstr "&Filtertyp:"
 
 #: src/effects/ScienFilter.cpp:645
 msgid "Butterworth"
@@ -7097,7 +7032,7 @@ msgstr "Tschebyscheff-Filter Typ II"
 
 #: src/effects/ScienFilter.cpp:653
 msgid "O&rder:"
-msgstr ""
+msgstr "So&rtieren:"
 
 #: src/effects/ScienFilter.cpp:675
 msgid "&Passband Ripple:"
@@ -7108,19 +7043,16 @@ msgid "Maximum passband attenuation (dB):"
 msgstr ""
 
 #: src/effects/ScienFilter.cpp:688
-#, fuzzy
 msgid "&Subtype:"
-msgstr "Untertyp:"
+msgstr "&Untertyp:"
 
 #: src/effects/ScienFilter.cpp:697
-#, fuzzy
 msgid "C&utoff:"
-msgstr "Kürzungspunkt:"
+msgstr "Kürz&ungspunkt:"
 
 #: src/effects/ScienFilter.cpp:702
-#, fuzzy
 msgid "Cutoff(Hz):"
-msgstr "Kürzungspunkt:"
+msgstr "Kürzungspunkt(Hz):"
 
 #: src/effects/ScienFilter.cpp:709
 msgid "Minimum S&topband Attenuation:"
@@ -7131,14 +7063,12 @@ msgid "Minimum stopband attenuation (dB):"
 msgstr ""
 
 #: src/effects/ScienFilter.h:51
-#, fuzzy
 msgid "Classic Filters..."
-msgstr "Wissenschaftlicher Filter…"
+msgstr "Klassische Filter…"
 
 #: src/effects/ScienFilter.h:65
-#, fuzzy
 msgid "Performing Classic Filtering"
-msgstr "Führe ScienFilter aus"
+msgstr "Klassisches Filtern durchführen"
 
 #: src/effects/Silence.cpp:45
 msgid "Silence Generator"
@@ -7295,56 +7225,52 @@ msgid "Truncate Silence"
 msgstr "Stille entfernen"
 
 #: src/effects/TruncSilence.cpp:548
-#, fuzzy
 msgid "Truncate Detected Silence"
-msgstr "Stille entfernen"
+msgstr "Erkannte Stille entfernen"
 
 #: src/effects/TruncSilence.cpp:549
 msgid "Compress Excess Silence"
-msgstr ""
+msgstr "Überschüssige Stille komprimieren"
 
 #: src/effects/TruncSilence.cpp:559
-#, fuzzy
 msgid "Detect Silence"
-msgstr "&Bei Stille trennen"
+msgstr "Stille erkennen"
 
 #: src/effects/TruncSilence.cpp:565 src/export/ExportFLAC.cpp:100
 msgid "Level:"
 msgstr "Pegel:"
 
 #: src/effects/TruncSilence.cpp:584
-#, fuzzy
 msgid "Truncate to:"
-msgstr "Stille entfernen"
+msgstr "Kürzen auf:"
 
 #: src/effects/TruncSilence.cpp:589
-#, fuzzy
 msgid "Compress to:"
-msgstr "Kompression:"
+msgstr "Komprimieren auf:"
 
 #: src/effects/TruncSilence.cpp:640
 msgid "Minimum detection duration: 0.001 seconds."
-msgstr ""
+msgstr "Minimale Erkennungslänge: 0.001 Sekunden."
 
 #: src/effects/TruncSilence.cpp:643
 msgid "Maximum detection duration: 10000 seconds."
-msgstr ""
+msgstr "Maximale Erkennungslänge: 10000 Sekunden."
 
 #: src/effects/TruncSilence.cpp:648
 msgid "Cannot truncate to less than 0 seconds."
-msgstr ""
+msgstr "Kann nicht auf weniger als 0 Sekunden kürzen."
 
 #: src/effects/TruncSilence.cpp:651
 msgid "Maximum truncation length is 10000 seconds."
-msgstr ""
+msgstr "Maximale Kürzungsläne beträgt 10000 Sekunden."
 
 #: src/effects/TruncSilence.cpp:656
 msgid "Compression cannot be less than 0 percent."
-msgstr ""
+msgstr "Kompression kann nicht weniger als 0 Prozent sein."
 
 #: src/effects/TruncSilence.cpp:659
 msgid "Compression must be less than 100 percent"
-msgstr ""
+msgstr "Kompression muss kleiner als 100 Prozent sein"
 
 #: src/effects/TruncSilence.h:37
 msgid "Truncate Silence..."
@@ -7439,9 +7365,9 @@ msgid "Length (seconds)"
 msgstr "Länge (Sek):"
 
 #: src/effects/lv2/LV2Effect.cpp:481
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to load plug-in %s"
-msgstr "Entschuldigung: Vamp Plugin konnte nicht geladen werden."
+msgstr "Plugin %s kann nicht geladen werden"
 
 #: src/effects/lv2/LV2Effect.cpp:995 src/effects/lv2/LV2Effect.cpp:998
 msgid "Note length (seconds)"
@@ -7587,163 +7513,168 @@ msgstr ""
 "Eingabe, um alle zu installieren"
 
 #: src/effects/VST/VSTEffect.cpp:551
-#, fuzzy
 msgid "Plug-in Name"
-msgstr "Plugin-Name"
+msgstr "Plugin Name"
 
 #: src/effects/VST/VSTEffect.cpp:552
 msgid "Path"
 msgstr "Pfad"
 
 #: src/effects/VST/VSTEffect.cpp:563
-#, fuzzy
 msgid "Select &All"
-msgstr "Auswählen"
+msgstr "&Alle Auswählen"
 
 #: src/effects/VST/VSTEffect.cpp:564
-#, fuzzy
 msgid "Clea&r All"
-msgstr "Zurücksetzen"
+msgstr "Alle Lee&ren"
 
 #: src/effects/VST/VSTEffect.cpp:783
-#, fuzzy
 msgid "VST Effect Settings"
-msgstr "Effekteinstellungen"
+msgstr "VST-Effekteinstellungen"
 
 #: src/effects/VST/VSTEffect.cpp:802
 msgid "Buffer Size"
-msgstr ""
+msgstr "Puffergröße"
 
 #: src/effects/VST/VSTEffect.cpp:808
 msgid "The buffer size controls the number of samples sent to the effect "
 msgstr ""
+"Die Puffergröße gibt an, wie viele Samples in jedem Durchlauf zum Effekt "
+"gesendet werden. "
 
 #: src/effects/VST/VSTEffect.cpp:809
 msgid "on each iteration. Smaller values will cause slower processing and "
-msgstr ""
+msgstr "Kleinere Werte verursachen langsamere Verarbeitung und "
 
 #: src/effects/VST/VSTEffect.cpp:810
 msgid "some effects require 8192 samples or less to work properly. However "
 msgstr ""
+"einige Effekte brauchen 8192 oder weniger Samples um korrekt zu "
+"funktionieren. "
 
 #: src/effects/VST/VSTEffect.cpp:811
 msgid "most effects can accept large buffers and using them will greatly "
 msgstr ""
+"Trotzdem können die meisten Effekte große Puffer annehmen und dadurch wird "
+"die  "
 
 #: src/effects/VST/VSTEffect.cpp:812
 msgid "reduce processing time."
-msgstr ""
+msgstr "Verarbeitungszeit stark reduziert."
 
 #: src/effects/VST/VSTEffect.cpp:817
 msgid "&Buffer Size (8 to 1048576 samples):"
-msgstr ""
+msgstr "&Puffergröße (8 bis 1048576 Samples):"
 
 #: src/effects/VST/VSTEffect.cpp:827
-#, fuzzy
 msgid "Buffer Delay Compensation"
-msgstr "Taste"
+msgstr "Pufferverzögerungskompensation"
 
 #: src/effects/VST/VSTEffect.cpp:830
 msgid "As part of their processing, some VST effects must delay returning "
 msgstr ""
+"Als Teil der Verarbeitung müssen einige VST Effekte das Zurückgeben des "
 
 #: src/effects/VST/VSTEffect.cpp:831
 msgid "audio to Audacity. When not compensating for this delay, you will "
 msgstr ""
+"Audios an Audacity verzögern. Wenn diese Verzögerung nicht ausgeglichen "
+"wird, werden Sie "
 
 #: src/effects/VST/VSTEffect.cpp:832
 msgid "notice that small silences have been inserted into the audio. "
-msgstr ""
+msgstr "merken, dass kurze Stillen ins Audio eingefügt wurden. "
 
 #: src/effects/VST/VSTEffect.cpp:833
 msgid "Enabling this setting will provide that compensation, but it may "
 msgstr ""
+"Aktivieren dieser Einstellung stellt diesen Ausgleich bereit, funktioniert "
+"aber "
 
 #: src/effects/VST/VSTEffect.cpp:834
-#, fuzzy
 msgid "not work for all VST effects."
-msgstr "VST-Effekte installieren"
+msgstr "möglicherweise nicht für alle VST-Effekte."
 
 #: src/effects/VST/VSTEffect.cpp:838
-#, fuzzy
 msgid "Enable &compensation"
-msgstr "Komprimierung der Stille:"
+msgstr "Ausglei&ch aktivieren"
 
 #: src/effects/VST/VSTEffect.cpp:844
-#, fuzzy
 msgid "Graphical Mode"
-msgstr "Grafischer Equalizer"
+msgstr "Grafischer Modus"
 
 #: src/effects/VST/VSTEffect.cpp:848
 msgid ""
 "Most VST effects have a graphical interface for setting parameter values."
 msgstr ""
+"Die meisten VST-Effekte heben eine Grafische Oberfläche zum Einstellen von "
+"Parametern."
 
 #: src/effects/VST/VSTEffect.cpp:849
 msgid " A basic text-only method is also available. "
-msgstr ""
+msgstr "Eine einfache nur-Text Methode ist auch verfügbar."
 
 #: src/effects/VST/VSTEffect.cpp:850
 msgid " Reopen the effect for this to take effect."
-msgstr ""
+msgstr " Öffnen Sie den Effekt erneut, um diese Option anzuwenden."
 
 #: src/effects/VST/VSTEffect.cpp:851
 msgid "Enable &Graphical Mode"
-msgstr ""
+msgstr "&Grafischen Modus aktivieren"
 
 #: src/effects/VST/VSTEffect.cpp:855
-#, fuzzy
 msgid "Rescan Effects"
-msgstr "Effekte"
+msgstr "Effekte erneut durchsuchen"
 
 #: src/effects/VST/VSTEffect.cpp:858
 msgid "To improve Audacity startup, a search for VST effects is performed "
 msgstr ""
+"Um den Start von Audacity zu verbessern, wird eine Suche nach VST-Effekten "
 
 #: src/effects/VST/VSTEffect.cpp:859
 msgid "once and relevant information is recorded. When you add VST effects "
 msgstr ""
+"einmal durchgeführt und relevante Informationen gespeichert. Wenn Sie VST-"
+"Effekte "
 
 #: src/effects/VST/VSTEffect.cpp:860
 msgid "to your system, you need to tell Audacity to rescan so the new "
 msgstr ""
+"zu Ihrem System hinzufügen, müssen Sie Audacity sagen, dass erneut "
+"durchsucht werden soll"
 
 #: src/effects/VST/VSTEffect.cpp:861
 msgid "information can be recorded."
-msgstr ""
+msgstr ", damit die Informationen gespeichert werden können."
 
 #: src/effects/VST/VSTEffect.cpp:862
 msgid "&Rescan effects on next launch"
-msgstr ""
+msgstr "Effekte beim nächsten Start E&rneut durchsuchen"
 
 #: src/effects/VST/VSTEffect.cpp:1365
 msgid "VST GUI interfaces are currently unsupported on Linux"
-msgstr ""
+msgstr "VST GUI Oberflächen sind momentan in Linux nicht unterstützt"
 
 #: src/effects/VST/VSTEffect.cpp:1366 src/effects/VST/VSTEffect.cpp:2820
 #: src/effects/VST/VSTEffect.cpp:2823
-#, fuzzy
 msgid "VST Effect"
-msgstr "VST-Effekte"
+msgstr "VST-Effekt"
 
 #: src/effects/VST/VSTEffect.cpp:1659
 msgid "Presets"
 msgstr "Voreinstellungen"
 
 #: src/effects/VST/VSTEffect.cpp:1662
-#, fuzzy
 msgid "&Load"
-msgstr "Laden"
+msgstr "&Laden"
 
 #: src/effects/VST/VSTEffect.cpp:1670
-#, fuzzy
 msgid "S&ettings..."
-msgstr "&Optionen..."
+msgstr "&Einstellungen..."
 
 #: src/effects/VST/VSTEffect.cpp:1808
-#, fuzzy
 msgid "Load VST Preset:"
-msgstr "Voreinstellung laden"
+msgstr "VST-Voreinstellung laden:"
 
 #: src/effects/VST/VSTEffect.cpp:1834 src/effects/VST/VSTEffect.cpp:1963
 #: src/xml/XMLFileReader.cpp:49
@@ -7753,23 +7684,20 @@ msgstr "Konnte Datei nicht öffnen: \"%s\""
 
 #: src/effects/VST/VSTEffect.cpp:1835 src/effects/VST/VSTEffect.cpp:1908
 #: src/effects/VST/VSTEffect.cpp:1921
-#, fuzzy
 msgid "Error Loading VST Presets"
-msgstr "Fehler beim Laden des VST-Programms"
+msgstr "Fehler beim Laden der VST-Voreinstellungen"
 
 #: src/effects/VST/VSTEffect.cpp:1907
 msgid "Could not load file or incompatible content."
-msgstr ""
+msgstr "Datei konnte nicht geladen werden oder der Inhalt ist nicht kompatibel"
 
 #: src/effects/VST/VSTEffect.cpp:1939
-#, fuzzy
 msgid "Save VST Preset As:"
-msgstr "VST-Programm speichern als:"
+msgstr "VST-Voreinstellung speichern als:"
 
 #: src/effects/VST/VSTEffect.cpp:1964
-#, fuzzy
 msgid "Error Saving VST Presets"
-msgstr "Fehler beim Speichern des Projekts"
+msgstr "Fehler beim Speichern der VST-Voreinstellung"
 
 #: src/effects/VST/VSTEffect.cpp:2164
 #, c-format
@@ -7795,12 +7723,16 @@ msgid ""
 "This effect does not support a textual interface. At this time, you may not "
 "use this effect on Linux."
 msgstr ""
+"Dieser Effekt unterstützt keine Text-Schnittstelle. Zur Zeit können Sie ihn "
+"nicht in Linux benutzen."
 
 #: src/effects/VST/VSTEffect.cpp:2822
 msgid ""
 "This effect does not support a textual interface.  Falling back to graphical "
 "display."
 msgstr ""
+"Dieser Effekt unterstützt keine Text-Schnittstelle. Falle zurück zur "
+"grafischen Anzeige."
 
 #: src/effects/VST/VSTEffect.cpp:3370
 msgid "Scanning VST Plugins"
@@ -7812,9 +7744,8 @@ msgid "Checking %s"
 msgstr "%s überprüfen"
 
 #: src/export/Export.cpp:292
-#, fuzzy
 msgid "Export Audio"
-msgstr "Export-Datei"
+msgstr "Audio exportieren"
 
 #: src/export/Export.cpp:500
 msgid "All selected audio is muted."
@@ -9745,9 +9676,8 @@ msgid "Audio Unit Effects"
 msgstr "Audio-Unit-Effekte"
 
 #: src/prefs/EffectsPrefs.cpp:102
-#, fuzzy
 msgid "Display Audio Unit effects in Graphical Mode"
-msgstr "Audio-Unit-Effekte grafisch anzeigen"
+msgstr "Audio-Unit-Effekte im Grafikmodus anzeigen"
 
 #: src/prefs/EffectsPrefs.cpp:106
 msgid "Rescan VST effects next time Audacity is started"
@@ -9758,7 +9688,6 @@ msgid "VST Effects"
 msgstr "VST-Effekte"
 
 #: src/prefs/EffectsPrefs.cpp:117
-#, fuzzy
 msgid "&Display VST effects in Graphical Mode"
 msgstr "&VST-Effekte im Grafikmodus anzeigen"
 
@@ -9767,13 +9696,12 @@ msgid "&Rescan VST effects next time Audacity is started"
 msgstr "&VST-Effekte erneut durchsuchen beim nächsten Starten von Audacity"
 
 #: src/prefs/EffectsPrefs.cpp:128
-#, fuzzy
 msgid "Instruction Set"
-msgstr "Instrument"
+msgstr "Anweisungssatz"
 
 #: src/prefs/EffectsPrefs.cpp:130
 msgid "&Use SSE/SSE2/.../AVX"
-msgstr ""
+msgstr "&SSE/SSE2/.../AVX benutzen"
 
 #: src/prefs/ExtImportPrefs.cpp:59
 msgid "Extended Import"
@@ -10227,42 +10155,43 @@ msgid "Modules"
 msgstr "Module"
 
 #: src/prefs/ModulePrefs.cpp:91
-#, fuzzy
 msgid "Ask"
-msgstr "Benutzer fragen"
+msgstr "Nachfragen"
 
 #: src/prefs/ModulePrefs.cpp:92
-#, fuzzy
 msgid "Failed"
-msgstr "Fehlgeschlagen!"
+msgstr "Fehlgeschlagen"
 
 #: src/prefs/ModulePrefs.cpp:93
-#, fuzzy
 msgid "New"
-msgstr "&Neu"
+msgstr "Neu"
 
 #: src/prefs/ModulePrefs.cpp:98
-#, fuzzy
 msgid ""
 "These are experimental Modules. Enable them only if you've read the manual\n"
 "and know what you are doing."
 msgstr ""
-"Diese sind experimentell. Aktivieren Sie diese nur, wenn Sie die Anleitung\n"
-"gelesen haben und Sie wissen, was Sie tun."
+"Diese Module sind experimentell. Aktivieren Sie diese nur, wenn Sie die "
+"Anleitung\n"
+"gelesen haben und wissen, was Sie tun."
 
 #: src/prefs/ModulePrefs.cpp:99
 msgid ""
 "'Ask' means Audacity will ask if you want to load the plug-each time it "
 "starts."
 msgstr ""
+"»Nachfragen« bedeutet, dass Audacity Sie jedes Mal beim Start fragt, ob Sie "
+"das Plugin laden möchten."
 
 #: src/prefs/ModulePrefs.cpp:100
 msgid "'Failed' means Audacity thinks the plug-in is broken and won't run it."
 msgstr ""
+"»Fehlgeschlagen« bedeutet, dass Audacity denkt, dass das Plugin defekt ist "
+"und es wird nicht ausgeführt."
 
 #: src/prefs/ModulePrefs.cpp:101
 msgid "'New' is like 'Ask', but asks just once."
-msgstr ""
+msgstr "»Neu« ist wie »Nachfragen«, aber fragt nur einmal."
 
 #: src/prefs/MousePrefs.cpp:57
 msgid "Mouse"
@@ -10645,14 +10574,12 @@ msgid "Sound Activation Le&vel (dB):"
 msgstr "Schwellwert (dB):"
 
 #: src/prefs/RecordingPrefs.cpp:128
-#, fuzzy
 msgid "Automated Recording Level Adjustment"
-msgstr "Automatische Pegeleinstellung"
+msgstr "Automatische Aufnahme-Pegeleinstellung"
 
 #: src/prefs/RecordingPrefs.cpp:130
-#, fuzzy
 msgid "Enable Automated Recording Level Adjustment."
-msgstr "Automatische Pegelanpassung einschalten."
+msgstr "Automatische Aufnahme-Pegelanpassung einschalten."
 
 #: src/prefs/RecordingPrefs.cpp:139
 msgid "Target Peak:"
@@ -11019,61 +10946,52 @@ msgid "Error while opening sound device. "
 msgstr "Fehler beim Öffnen der Soundkarte. "
 
 #: src/toolbars/ControlToolBar.cpp:940
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the recording device settings "
 "and the project sample rate."
 msgstr ""
-"Fehler beim Öffnen des Audiogeräts. Bitte prüfen sie die Einstellungen für "
-"das Audiogerät und die im Projekt eingestellte Abtastrate (Samplefrequenz)."
+"Fehler beim Öffnen des Audiogeräts. Bitte prüfen Sie die Einstellungen für "
+"das Audiogerät und Projekt-Samplefrequenz."
 
 #: src/toolbars/DeviceToolBar.cpp:102
 msgid "Audio Host"
 msgstr "Soundarchitektur"
 
 #: src/toolbars/DeviceToolBar.cpp:117
-#, fuzzy
 msgid "Playback Device"
-msgstr "Wiedergabe-Geschwindigkeit"
+msgstr "Wiedergabegerät"
 
 #: src/toolbars/DeviceToolBar.cpp:132
-#, fuzzy
 msgid "Recording Device"
-msgstr "Aufnahmeende"
+msgstr "Aufnahmegerät"
 
 #: src/toolbars/DeviceToolBar.cpp:139
-#, fuzzy
 msgid "Recording Channels"
-msgstr "Aufnahmeende"
+msgstr "Aufnahmekanäle"
 
 #: src/toolbars/DeviceToolBar.cpp:615
-#, fuzzy
 msgid "1 (Mono) Recording Channel"
-msgstr "Aufnahmeende"
+msgstr "1 (Mono) Aufnahmekanal"
 
 #: src/toolbars/DeviceToolBar.cpp:618
-#, fuzzy
 msgid "2 (Stereo) Recording Channels"
-msgstr "Eingangskanäle auswählen"
+msgstr "2 (Stereo) Aufnahmekanäle"
 
 #: src/toolbars/DeviceToolBar.cpp:745
-#, fuzzy
 msgid "Select Recording Device"
-msgstr "Eingangsgerät auswählen"
+msgstr "Aufnahmegerät auswählen"
 
 #: src/toolbars/DeviceToolBar.cpp:749
-#, fuzzy
 msgid "Select Playback Device"
-msgstr "Eingangsgerät auswählen"
+msgstr "Wiedergabegerät auswählen"
 
 #: src/toolbars/DeviceToolBar.cpp:753
 msgid "Select Audio Host"
 msgstr "Soundarchitektur wählen"
 
 #: src/toolbars/DeviceToolBar.cpp:757
-#, fuzzy
 msgid "Select Recording Channels"
-msgstr "Eingangskanäle auswählen"
+msgstr "Aufnahmekanäle auswählen"
 
 #: src/toolbars/DeviceToolBar.cpp:763
 msgid "Device information is not available."
@@ -11148,58 +11066,50 @@ msgid "Meter-Record"
 msgstr "Aufnahme-Aussteuerung"
 
 #: src/toolbars/MeterToolBar.cpp:129
-#, fuzzy
 msgid "Playback Level"
-msgstr "Wiedergabe-Geschwindigkeit"
+msgstr "Wiedergabepegel"
 
 #: src/toolbars/MeterToolBar.cpp:130
-#, fuzzy
 msgid "Recording Level (Click to monitor.)"
-msgstr "Eingangspegel (Klicken, um zu überwachen)"
+msgstr "Aufnahmepegel (Zum überwachen klicken.)"
 
 #: src/toolbars/MixerToolBar.cpp:91
-#, fuzzy
 msgid "Playback Volume"
-msgstr "Wiedergabe"
+msgstr "Wiedergabelautstärke"
 
 #: src/toolbars/MixerToolBar.cpp:94
-#, fuzzy
 msgid "Slider Playback"
-msgstr "Wiedergabe"
+msgstr "Wiedergabe-Schieberegler"
 
 #: src/toolbars/MixerToolBar.cpp:103
-#, fuzzy
 msgid "Recording Volume"
-msgstr "Aufnahmeende"
+msgstr "Aufnahmelautstärke"
 
 #: src/toolbars/MixerToolBar.cpp:106
-#, fuzzy
 msgid "Slider Recording"
-msgstr "Aufnahme"
+msgstr "Aufnahme-Schieberegler"
 
 #: src/toolbars/MixerToolBar.cpp:296
-#, fuzzy, c-format
+#, c-format
 msgid "Recording Volume: %.2f"
-msgstr "Eingabelautstärke: %.2f"
+msgstr "Aufnahmelautstärke: %.2f"
 
 #: src/toolbars/MixerToolBar.cpp:300
-#, fuzzy
 msgid "Recording Volume (Unavailable; use system mixer.)"
 msgstr "Aufnahmelautstärke (Nicht verfügbar; benutzen Sie den Systemmixer.)"
 
 #: src/toolbars/MixerToolBar.cpp:305
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f%s"
-msgstr "Ausgabelautstärke: %.2f%s"
+msgstr "Wiedergabelautstärke: %.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp:305
 msgid " (emulated)"
 msgstr " (emuliert)"
 
 #: src/toolbars/MixerToolBar.cpp:309
-#, fuzzy
 msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "Aufnahmelautstärke (Nicht verfügbar; benutzen Sie den Systemmixer.)"
+msgstr "Wiedergabelautstärke (Nicht verfügbar; benutzen Sie den Systemmixer.)"
 
 #: src/toolbars/SelectionBar.cpp:87 src/toolbars/SelectionBar.cpp:287
 msgid "Selection"
@@ -11210,9 +11120,8 @@ msgid "Project Rate (Hz):"
 msgstr "Projektfrequenz (Hz):"
 
 #: src/toolbars/SelectionBar.cpp:139
-#, fuzzy
 msgid "Snap To:"
-msgstr "Einrasten"
+msgstr "Einrasten An:"
 
 #: src/toolbars/SelectionBar.cpp:142 src/toolbars/SelectionBar.cpp:250
 msgid "Selection Start:"
@@ -11353,14 +11262,12 @@ msgid "Start Monitoring"
 msgstr "Aussteuerungsanzeige aktivieren"
 
 #: src/widgets/Meter.cpp:417
-#, fuzzy
 msgid "Stop Automated Recording Level Adjustment"
-msgstr "Automatisch Pegelanpassung anhalten"
+msgstr "Automatisch Aufnahmepegelanpassung anhalten"
 
 #: src/widgets/Meter.cpp:419
-#, fuzzy
 msgid "Start Automated Recording Level Adjustment"
-msgstr "Automatische Pegelanpassung starten"
+msgstr "Automatische Aufnahmepegelanpassung starten"
 
 #: src/widgets/Meter.cpp:430
 msgid "Horizontal Stereo"
@@ -11375,9 +11282,8 @@ msgid "Preferences..."
 msgstr "Ein&stellungen..."
 
 #: src/widgets/Meter.cpp:1276
-#, fuzzy
 msgid "Automated Recording Level Adjustment stopped as requested by user."
-msgstr "Automatische Pegelanpassung wie gewünscht angehalten."
+msgstr "Automatische Aufnahmepegelanpassung wie gewünscht angehalten."
 
 #: src/widgets/Meter.cpp:1291
 msgid ""
@@ -11586,113 +11492,6 @@ msgstr "Fehler beim Speichern"
 #~ msgid "Confirm?"
 #~ msgstr "Bestätigen?"
 
-#, fuzzy
-#~ msgid "Change input device"
-#~ msgstr "Wiedergabegerät wechseln"
-
-#~ msgid "Change output device"
-#~ msgstr "Wiedergabegerät wechseln"
-
-#, fuzzy
-#~ msgid "Change input channels"
-#~ msgstr "Eingangskanäle wechseln"
-
-#~ msgid "Adjust output gain"
-#~ msgstr "Ausgangspegel einstellen"
-
-#~ msgid "Increase output gain"
-#~ msgstr "Ausgangspegel erhöhen"
-
-#~ msgid "Decrease output gain"
-#~ msgstr "Ausgangspegel reduzieren"
-
-#~ msgid "Adjust input gain"
-#~ msgstr "Eingangspegel einstellen"
-
-#~ msgid "Increase input gain"
-#~ msgstr "Eingangspegel erhöhen"
-
-#~ msgid "Decrease input gain"
-#~ msgstr "Eingangspegel reduzieren"
-
-#, fuzzy
-#~ msgid "Effect Refresh"
-#~ msgstr "Effekte"
-
-#~ msgid "Output Device"
-#~ msgstr "Gerät für Wiedergabe"
-
-#~ msgid "Input Device"
-#~ msgstr "Gerät für Aufnahme"
-
-#~ msgid "Input Channels"
-#~ msgstr "Eingangskanäle"
-
-#, fuzzy
-#~ msgid "1 (Mono) Input Channel"
-#~ msgstr "Mono"
-
-#, fuzzy
-#~ msgid "2 (Stereo) Input Channels"
-#~ msgstr "Stereo"
-
-#, fuzzy
-#~ msgid "Select Input Device"
-#~ msgstr "Wiedergabegerät auswählen"
-
-#~ msgid "Select Output Device"
-#~ msgstr "Wiedergabegerät auswählen"
-
-#, fuzzy
-#~ msgid "Select Input Channels"
-#~ msgstr "Eingangskanäle"
-
-#~ msgid "Output Level"
-#~ msgstr "Ausgangspegel"
-
-#~ msgid "Output Volume"
-#~ msgstr "Ausgabelautstärke"
-
-#~ msgid "Slider Output"
-#~ msgstr "Ausgabeschieberegler"
-
-#~ msgid "Input Volume"
-#~ msgstr "Aufnahmelautstärke"
-
-#~ msgid "Slider Input"
-#~ msgstr "Aufnahmeschieberegler"
-
-#, fuzzy
-#~ msgid "Input Volume: %.2f"
-#~ msgstr "Aufnahmelautstärke"
-
-#, fuzzy
-#~ msgid "Input Volume (Unavailable; use system mixer.)"
-#~ msgstr "Ausgabelautstärke (Nicht verfügbar; benutzen Sie den Systemmixer.)"
-
-#, fuzzy
-#~ msgid "Output Volume: %.2f%s"
-#~ msgstr "Ausgabelautstärke"
-
-#~ msgid "Output Volume (Unavailable; use system mixer.)"
-#~ msgstr "Ausgabelautstärke (Nicht verfügbar; benutzen Sie den Systemmixer.)"
-
-#, fuzzy
-#~ msgid "Recording Meter"
-#~ msgstr "Aufnahmepegel"
-
-#, fuzzy
-#~ msgid "Playback Meter"
-#~ msgstr "Wiedergabepegel"
-
-#, fuzzy
-#~ msgid "Playback Level Slider"
-#~ msgstr "Wiedergabe-Geschwindigkeit"
-
-#, fuzzy
-#~ msgid "Recording Level Slider "
-#~ msgstr "Aufnahmeende"
-
 #~ msgid "GStreamer %s: %s"
 #~ msgstr "GStreamer %s: %s"
 
@@ -11723,6 +11522,27 @@ msgstr "Fehler beim Speichern"
 
 #~ msgid "&Stop"
 #~ msgstr "&Stopp"
+
+#~ msgid "Change output device"
+#~ msgstr "Wiedergabegerät wechseln"
+
+#~ msgid "Adjust output gain"
+#~ msgstr "Ausgangspegel einstellen"
+
+#~ msgid "Increase output gain"
+#~ msgstr "Ausgangspegel erhöhen"
+
+#~ msgid "Decrease output gain"
+#~ msgstr "Ausgangspegel reduzieren"
+
+#~ msgid "Adjust input gain"
+#~ msgstr "Eingangspegel einstellen"
+
+#~ msgid "Increase input gain"
+#~ msgstr "Eingangspegel erhöhen"
+
+#~ msgid "Decrease input gain"
+#~ msgstr "Eingangspegel reduzieren"
 
 #~ msgid ""
 #~ "Audacity compressed project files (.aup) save your work in a smaller, "
@@ -11848,6 +11668,36 @@ msgstr "Fehler beim Speichern"
 
 #~ msgid "mod-&track-panel"
 #~ msgstr "mod-&track-panel"
+
+#~ msgid "Output Device"
+#~ msgstr "Gerät für Wiedergabe"
+
+#~ msgid "Input Device"
+#~ msgstr "Gerät für Aufnahme"
+
+#~ msgid "Input Channels"
+#~ msgstr "Eingangskanäle"
+
+#~ msgid "Select Output Device"
+#~ msgstr "Wiedergabegerät auswählen"
+
+#~ msgid "Output Level"
+#~ msgstr "Ausgangspegel"
+
+#~ msgid "Output Volume"
+#~ msgstr "Ausgabelautstärke"
+
+#~ msgid "Slider Output"
+#~ msgstr "Ausgabeschieberegler"
+
+#~ msgid "Input Volume"
+#~ msgstr "Aufnahmelautstärke"
+
+#~ msgid "Slider Input"
+#~ msgstr "Aufnahmeschieberegler"
+
+#~ msgid "Output Volume (Unavailable; use system mixer.)"
+#~ msgstr "Ausgabelautstärke (Nicht verfügbar; benutzen Sie den Systemmixer.)"
 
 #~ msgid "Click and drag to select audio"
 #~ msgstr "Klicken und ziehen, um Audiodaten auszuwählen"
