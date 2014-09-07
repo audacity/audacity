@@ -3,20 +3,18 @@
 # This file is distributed under the same license as Audacity.
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 #
-#: src/prefs/ModulePrefs.cpp:96
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-09-04 16:38+0100\n"
-"PO-Revision-Date: 2014-06-27 17:05-0000\n"
-"Last-Translator: Thomas Breinstrup\n"
+"PO-Revision-Date: 2014-09-07 19:13+0100\n"
+"Last-Translator: Thomas Breinstrup <info@interlingua.dk>\n"
 "Language-Team: \n"
-"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.5.3\n"
 
 #: src/AboutDialog.cpp:57 src/AboutDialog.cpp:78
 msgid "co-founder"
@@ -160,14 +158,12 @@ msgid "Import via QuickTime"
 msgstr "Import gennem QuickTime"
 
 #: src/AboutDialog.cpp:415 src/AboutDialog.cpp:417
-#, fuzzy
 msgid "FFmpeg Import/Export"
-msgstr "FFmpeg-import-/eksportbibliotek"
+msgstr "FFmpeg-import/-eksport"
 
 #: src/AboutDialog.cpp:421 src/AboutDialog.cpp:423
-#, fuzzy
 msgid "Import via GStreamer"
-msgstr "Import gennem QuickTime"
+msgstr "Import gennem GStreamer"
 
 #: src/AboutDialog.cpp:429
 msgid "Core Libraries"
@@ -202,9 +198,8 @@ msgid "Pitch and Tempo Change support"
 msgstr "Understøttelse af tonehøjde- og temposkift"
 
 #: src/AboutDialog.cpp:533 src/AboutDialog.cpp:536
-#, fuzzy
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "Understøttelse af tonehøjde- og temposkift"
+msgstr "Understøttelse af ekstrem tonehøjde- og temposkift"
 
 #: src/AboutDialog.cpp:548
 msgid "Program build date: "
@@ -509,7 +504,6 @@ msgid "Latency problem"
 msgstr "Problem med forsinkelse"
 
 #: src/AudioIO.cpp:3169
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
@@ -518,27 +512,25 @@ msgstr ""
 "muligt at optimere det yderligere. Det er stadig for højt."
 
 #: src/AudioIO.cpp:3177
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr ""
 "Den automatiske justering af indgangsniveauet satte styrken ned til %f."
 
 #: src/AudioIO.cpp:3192
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too low."
 msgstr ""
 "Den automatiske justering af indgangsniveauet standsede. Det var ikke muligt "
-"at optimere det yderligere. Det er stadig for lavt."
+"at optimere det yderligere. Det er stadig for lavt,"
 
 #: src/AudioIO.cpp:3204
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
 msgstr "Den automatiske justering af indgangsniveauet øgede styrken til %.2f."
 
 #: src/AudioIO.cpp:3238
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too high."
@@ -548,7 +540,6 @@ msgstr ""
 "stadig for høj."
 
 #: src/AudioIO.cpp:3240
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too low."
@@ -558,7 +549,7 @@ msgstr ""
 "stadig for lav."
 
 #: src/AudioIO.cpp:3243
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
 "volume."
@@ -571,7 +562,6 @@ msgid "Automatic Crash Recovery"
 msgstr "Automatisk gendannelse efter nedbrud"
 
 #: src/AutoRecovery.cpp:75
-#, fuzzy
 msgid ""
 "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can be automatically recovered:"
@@ -589,34 +579,33 @@ msgstr "Navn"
 
 #: src/AutoRecovery.cpp:87
 msgid "After recovery, save the project to save the changes to disk."
-msgstr ""
+msgstr "Gem projektet for at gemme ændringer på harddisken efter gendannelse."
 
 #: src/AutoRecovery.cpp:91
 msgid "Quit Audacity"
 msgstr "Afslut Audacity"
 
 #: src/AutoRecovery.cpp:92
-#, fuzzy
 msgid "Discard Projects"
-msgstr "Gendan projekter"
+msgstr "Forkast projekter"
 
 #: src/AutoRecovery.cpp:93
 msgid "Recover Projects"
 msgstr "Gendan projekter"
 
 #: src/AutoRecovery.cpp:130
-#, fuzzy
 msgid ""
 "Are you sure you want to discard all projects?\n"
 "\n"
 "Choosing \"Yes\" discards all projects immediately."
 msgstr ""
-"Er du sikker på, at du ikke ønsker at gendanne nogen projekter?\n"
-"De kan ikke gendannes senere."
+"Er du sikker på, at du ønsker at forkaste alle projekter?\n"
+"\n"
+"De slettes straks, når der vælges \"Ja\"."
 
 #: src/AutoRecovery.cpp:131
 msgid "Confirm Discard Projects"
-msgstr ""
+msgstr "Bekræft, at projekter skal kasseres"
 
 #: src/AutoRecovery.cpp:149 src/AutoRecovery.cpp:186
 msgid "Could not enumerate files in auto save directory."
@@ -1573,17 +1562,14 @@ msgid "Recording Audio"
 msgstr "Optager lyd"
 
 #: src/HelpText.cpp:136
-#, fuzzy
 msgid "Recording - Choosing the Recording Device"
 msgstr "Optager - vælg indspilningsudstyr"
 
 #: src/HelpText.cpp:141
-#, fuzzy
 msgid "Recording - Choosing the Recording Source"
 msgstr "Optager - vælg indspilningskilde"
 
 #: src/HelpText.cpp:146
-#, fuzzy
 msgid "Recording - Setting the Recording Level"
 msgstr "Optager - fastlæg indspilningsniveau"
 
@@ -2373,7 +2359,6 @@ msgid "Sound Activation Le&vel..."
 msgstr "Lydakti&veringsniveau..."
 
 #: src/Menus.cpp:689
-#, fuzzy
 msgid "A&utomated Recording Level Adjustment (on/off)"
 msgstr "A&utomatisk justering af indspilningsniveau (til/fra)"
 
@@ -2784,12 +2769,10 @@ msgid "Full screen on/off"
 msgstr "Fuldskærm til/fra"
 
 #: src/Menus.cpp:1176
-#, fuzzy
 msgid "Change recording device"
 msgstr "Ændr indspilningsudstyr"
 
 #: src/Menus.cpp:1179
-#, fuzzy
 msgid "Change playback device"
 msgstr "Ændr indspilningsudstyr"
 
@@ -2798,39 +2781,32 @@ msgid "Change audio host"
 msgstr "Vælg lydudgang"
 
 #: src/Menus.cpp:1185
-#, fuzzy
 msgid "Change recording channels"
-msgstr "Ændr indspilningsudstyr"
+msgstr "Ændr indspilningskanaler"
 
 #: src/Menus.cpp:1189
-#, fuzzy
 msgid "Adjust playback volume"
-msgstr "Justér afspilningshastighed"
+msgstr "Justér lydstyrke ved afspilning"
 
 #: src/Menus.cpp:1190
-#, fuzzy
 msgid "Increase playback volume"
-msgstr "Forøg afspilningshastighed"
+msgstr "Forøg lydstyrke ved afspilning"
 
 #: src/Menus.cpp:1191
-#, fuzzy
 msgid "Decrease playback volume"
-msgstr "Sænk afspilningshastighed"
+msgstr "Sænk lydstyrke ved afspilning"
 
 #: src/Menus.cpp:1192
-#, fuzzy
 msgid "Adjust recording volume"
-msgstr "Justér indspilningskilde"
+msgstr "Justér lydstyrke ved indspilning"
 
 #: src/Menus.cpp:1193
-#, fuzzy
 msgid "Increase recording volume"
-msgstr "Justér indspilningskilde"
+msgstr "Forøg indspilningsvolumen"
 
 #: src/Menus.cpp:1194
-#, fuzzy
 msgid "Decrease recording volume"
-msgstr "Justér indspilningskilde"
+msgstr "Sænk indspilningsniveau"
 
 #: src/Menus.cpp:1196
 msgid "Play at speed"
@@ -4439,9 +4415,8 @@ msgid "Logarithmic &Interpolation"
 msgstr "Logarismisk &interpolation"
 
 #: src/TrackPanel.cpp:695
-#, fuzzy
 msgid "&Delete Label"
-msgstr "Slet etiketter"
+msgstr "&Slet etiketter"
 
 #: src/TrackPanel.cpp:700
 msgid "N&ame..."
@@ -4831,9 +4806,8 @@ msgid "Name Change"
 msgstr "Navneændring"
 
 #: src/TrackPanel.cpp:8005
-#, fuzzy
 msgid "Deleted Label"
-msgstr "Slet etiketter"
+msgstr "Slettede etiketter"
 
 #: src/TrackPanel.cpp:8041
 msgid "Label Track Font"
@@ -5785,13 +5759,12 @@ msgid "Previewing"
 msgstr "Forhåndsvisning"
 
 #: src/effects/Effect.cpp:536
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the playback device settings "
 "and the project sample rate."
 msgstr ""
-"Fejl ved åbning af lydenheden. Tjek venligst valg af enhed og samplerate for "
-"projektet."
+"Fejl ved åbning af lydenheden. Tjek venligst valg af afspilningsenhed og "
+"samplerate for projektet."
 
 #: src/effects/Effect.h:98 src/effects/Reverb.cpp:195
 #: src/effects/TimeScale.cpp:55
@@ -5976,7 +5949,7 @@ msgstr "Trådet AVX"
 
 #: src/effects/Equalization.cpp:1468
 msgid "&Bench"
-msgstr ""
+msgstr "&Mål og sammenlign"
 
 #: src/effects/Equalization.cpp:1529
 msgid "Select Curve"
@@ -7516,7 +7489,7 @@ msgstr "VST-effektindstillinger"
 
 #: src/effects/VST/VSTEffect.cpp:802
 msgid "Buffer Size"
-msgstr ""
+msgstr "Størrelse af midlertidig lagerplads"
 
 #: src/effects/VST/VSTEffect.cpp:808
 msgid "The buffer size controls the number of samples sent to the effect "
@@ -7572,35 +7545,31 @@ msgid "Enable &compensation"
 msgstr "Slå &kompensering til"
 
 #: src/effects/VST/VSTEffect.cpp:844
-#, fuzzy
 msgid "Graphical Mode"
-msgstr "Grafisk modforvrænger (EQ)"
+msgstr "Grafisk brugerflade"
 
 #: src/effects/VST/VSTEffect.cpp:848
-#, fuzzy
 msgid ""
 "Most VST effects have a graphical interface for setting parameter values."
-msgstr "De fleste VST-effekter har en grafisk brugerflade, så man kan"
+msgstr ""
+"De fleste VST-effekter har en grafisk brugerflade, så man kan fastsætte "
+"værdier."
 
 #: src/effects/VST/VSTEffect.cpp:849
-#, fuzzy
 msgid " A basic text-only method is also available. "
-msgstr "vælge parametrene. En grundlæggende, tekstbaseret måde at"
+msgstr "En grundlæggende, tekstbaseret måde er også tilgængelig."
 
 #: src/effects/VST/VSTEffect.cpp:850
-#, fuzzy
 msgid " Reopen the effect for this to take effect."
-msgstr "gøre det på findes dog også. Genåbn effekten for at bruge denne."
+msgstr " Genåbn effekten for at bruge denne."
 
 #: src/effects/VST/VSTEffect.cpp:851
-#, fuzzy
 msgid "Enable &Graphical Mode"
 msgstr "Slå &grafisk brugerflade til"
 
 #: src/effects/VST/VSTEffect.cpp:855
-#, fuzzy
 msgid "Rescan Effects"
-msgstr " Effekter"
+msgstr "Genindlæs effekter"
 
 #: src/effects/VST/VSTEffect.cpp:858
 msgid "To improve Audacity startup, a search for VST effects is performed "
@@ -7694,12 +7663,16 @@ msgid ""
 "This effect does not support a textual interface. At this time, you may not "
 "use this effect on Linux."
 msgstr ""
+"Denne effekt understøtter ikke en tekstbaseret brugerflade. På nuværende "
+"tidspunkt kan denne effekt ikke bruges i Linux."
 
 #: src/effects/VST/VSTEffect.cpp:2822
 msgid ""
 "This effect does not support a textual interface.  Falling back to graphical "
 "display."
 msgstr ""
+"Denne effekt understøtter ikke en tekstbaseret brugerflade. Grafisk "
+"brugerflade vil blive brugt."
 
 #: src/effects/VST/VSTEffect.cpp:3370
 msgid "Scanning VST Plugins"
@@ -9630,9 +9603,8 @@ msgid "Audio Unit Effects"
 msgstr "Lydenhedseffekter"
 
 #: src/prefs/EffectsPrefs.cpp:102
-#, fuzzy
 msgid "Display Audio Unit effects in Graphical Mode"
-msgstr "Vis lydenhedseffekter grafisk"
+msgstr "Vis lydenhedseffekter i den grafiske brugerflade"
 
 #: src/prefs/EffectsPrefs.cpp:106
 msgid "Rescan VST effects next time Audacity is started"
@@ -9643,7 +9615,6 @@ msgid "VST Effects"
 msgstr "VST-effekter"
 
 #: src/prefs/EffectsPrefs.cpp:117
-#, fuzzy
 msgid "&Display VST effects in Graphical Mode"
 msgstr "&Vis VST-effekter i grafisk visning"
 
@@ -10522,14 +10493,12 @@ msgid "Sound Activation Le&vel (dB):"
 msgstr "Lydaktiveringsniveau (dB):"
 
 #: src/prefs/RecordingPrefs.cpp:128
-#, fuzzy
 msgid "Automated Recording Level Adjustment"
 msgstr "Automatisk justering af indspilningsniveau"
 
 #: src/prefs/RecordingPrefs.cpp:130
-#, fuzzy
 msgid "Enable Automated Recording Level Adjustment."
-msgstr "Aktivér automatisk justering af indspilningsniveau"
+msgstr "Aktivér automatisk justering af indspilningsniveau."
 
 #: src/prefs/RecordingPrefs.cpp:139
 msgid "Target Peak:"
@@ -10895,61 +10864,52 @@ msgid "Error while opening sound device. "
 msgstr "Fejl ved åbning af lydenheden. "
 
 #: src/toolbars/ControlToolBar.cpp:940
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the recording device settings "
 "and the project sample rate."
 msgstr ""
-"Fejl ved åbning af lydenheden. Tjek venligst valg af enhed og samplerate for "
-"projektet."
+"Fejl ved åbning af lydenheden. Check venligst valg af enhed og "
+"lydsamplingshastighed for projektet."
 
 #: src/toolbars/DeviceToolBar.cpp:102
 msgid "Audio Host"
 msgstr "Lydudgang"
 
 #: src/toolbars/DeviceToolBar.cpp:117
-#, fuzzy
 msgid "Playback Device"
-msgstr "Afspilningshastighed"
+msgstr "Afspilningsudstyr"
 
 #: src/toolbars/DeviceToolBar.cpp:132
-#, fuzzy
 msgid "Recording Device"
-msgstr "Slut optagelse"
+msgstr "Indspilningsudstyr"
 
 #: src/toolbars/DeviceToolBar.cpp:139
-#, fuzzy
 msgid "Recording Channels"
-msgstr "Slut optagelse"
+msgstr "Indspilningskanaler"
 
 #: src/toolbars/DeviceToolBar.cpp:615
-#, fuzzy
 msgid "1 (Mono) Recording Channel"
-msgstr "Slut optagelse"
+msgstr "1 (mono) indspilningskanal"
 
 #: src/toolbars/DeviceToolBar.cpp:618
-#, fuzzy
 msgid "2 (Stereo) Recording Channels"
-msgstr "Vælg indspilningskanal"
+msgstr "2 (stereo) indspilningskanaler"
 
 #: src/toolbars/DeviceToolBar.cpp:745
-#, fuzzy
 msgid "Select Recording Device"
-msgstr "Vælg indspilningskilde"
+msgstr "Vælg indspilningsudstyr"
 
 #: src/toolbars/DeviceToolBar.cpp:749
-#, fuzzy
 msgid "Select Playback Device"
-msgstr "Vælg indspilningskilde"
+msgstr "Vælg afspilningsudstyr"
 
 #: src/toolbars/DeviceToolBar.cpp:753
 msgid "Select Audio Host"
 msgstr "Vælg lydudgang"
 
 #: src/toolbars/DeviceToolBar.cpp:757
-#, fuzzy
 msgid "Select Recording Channels"
-msgstr "Vælg indspilningskanal"
+msgstr "Vælg indspilningskanaler"
 
 #: src/toolbars/DeviceToolBar.cpp:763
 msgid "Device information is not available."
@@ -11024,47 +10984,40 @@ msgid "Meter-Record"
 msgstr "Lydstyrke ved optagelse"
 
 #: src/toolbars/MeterToolBar.cpp:129
-#, fuzzy
 msgid "Playback Level"
-msgstr "Afspilningshastighed"
+msgstr "Afspilningsniveau"
 
 #: src/toolbars/MeterToolBar.cpp:130
-#, fuzzy
 msgid "Recording Level (Click to monitor.)"
 msgstr "Indgangsniveau (klik for at overvåge indspilning)"
 
 #: src/toolbars/MixerToolBar.cpp:91
-#, fuzzy
 msgid "Playback Volume"
-msgstr " Afspilning"
+msgstr " Afspilningsstyrke"
 
 #: src/toolbars/MixerToolBar.cpp:94
-#, fuzzy
 msgid "Slider Playback"
-msgstr " Afspilning"
+msgstr "Skyder til afspilning"
 
 #: src/toolbars/MixerToolBar.cpp:103
-#, fuzzy
 msgid "Recording Volume"
-msgstr "Slut optagelse"
+msgstr "Indspilningsstyrke"
 
 #: src/toolbars/MixerToolBar.cpp:106
-#, fuzzy
 msgid "Slider Recording"
-msgstr " Indspilning"
+msgstr "Skyder til indspilning"
 
 #: src/toolbars/MixerToolBar.cpp:296
-#, fuzzy, c-format
+#, c-format
 msgid "Recording Volume: %.2f"
-msgstr "Indgangsvolumen: %.2f"
+msgstr "Indspilningsvolumen: %.2f"
 
 #: src/toolbars/MixerToolBar.cpp:300
-#, fuzzy
 msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "Indgangsniveau (Ikke tilgængeligt. Brug mixerpulten.)"
+msgstr "Indspilningsniveau (Ikke tilgængeligt. Brug mixerpulten.)"
 
 #: src/toolbars/MixerToolBar.cpp:305
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f%s"
 msgstr "Udgangsvolumen: %.2f%s"
 
@@ -11073,9 +11026,8 @@ msgid " (emulated)"
 msgstr "(emuleret)"
 
 #: src/toolbars/MixerToolBar.cpp:309
-#, fuzzy
 msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "Indgangsniveau (Ikke tilgængeligt. Brug mixerpulten.)"
+msgstr "Udgangsvolumen (Ikke tilgængelig. Brug mixerpulten.)"
 
 #: src/toolbars/SelectionBar.cpp:87 src/toolbars/SelectionBar.cpp:287
 msgid "Selection"
@@ -11227,12 +11179,10 @@ msgid "Start Monitoring"
 msgstr "Start overvågning"
 
 #: src/widgets/Meter.cpp:417
-#, fuzzy
 msgid "Stop Automated Recording Level Adjustment"
 msgstr "Stands automatisk justering af indgangsniveau"
 
 #: src/widgets/Meter.cpp:419
-#, fuzzy
 msgid "Start Automated Recording Level Adjustment"
 msgstr "Start automatisk justering af indgangsniveau"
 
@@ -11249,7 +11199,6 @@ msgid "Preferences..."
 msgstr "Indstillinger..."
 
 #: src/widgets/Meter.cpp:1276
-#, fuzzy
 msgid "Automated Recording Level Adjustment stopped as requested by user."
 msgstr "Automatisk justering af indgangsniveau blev standset af brugeren."
 
@@ -11461,16 +11410,8 @@ msgstr "Fejl under skrivning til fil"
 #~ msgid "Confirm?"
 #~ msgstr "Bekræft?"
 
-#, fuzzy
-#~ msgid "Change input device"
-#~ msgstr "Ændr afspilningsudstyr"
-
 #~ msgid "Change output device"
 #~ msgstr "Ændr afspilningsudstyr"
-
-#, fuzzy
-#~ msgid "Change input channels"
-#~ msgstr "Ændr indspilningskanaler"
 
 #~ msgid "Adjust output gain"
 #~ msgstr "Justér forstærkning ved afspilning"
@@ -11508,24 +11449,8 @@ msgstr "Fejl under skrivning til fil"
 #~ msgid "Input Channels"
 #~ msgstr "Indspilningskanaler"
 
-#, fuzzy
-#~ msgid "1 (Mono) Input Channel"
-#~ msgstr "1 (mono) indspilningskanal"
-
-#, fuzzy
-#~ msgid "2 (Stereo) Input Channels"
-#~ msgstr "2 (stereo) indspilningskanaler"
-
-#, fuzzy
-#~ msgid "Select Input Device"
-#~ msgstr "Vælg afspilningsudstyr"
-
 #~ msgid "Select Output Device"
 #~ msgstr "Vælg afspilningsudstyr"
-
-#, fuzzy
-#~ msgid "Select Input Channels"
-#~ msgstr "Indspilningskanaler"
 
 #~ msgid "Output Level"
 #~ msgstr "Afspilningsniveau"
@@ -11542,36 +11467,8 @@ msgstr "Fejl under skrivning til fil"
 #~ msgid "Slider Input"
 #~ msgstr "Justering af indspilning"
 
-#, fuzzy
-#~ msgid "Input Volume: %.2f"
-#~ msgstr "Indgangsvolumen"
-
-#, fuzzy
-#~ msgid "Input Volume (Unavailable; use system mixer.)"
-#~ msgstr "Afspilningsniveau (Ikke tilgængeligt. Brug mixerpulten.)"
-
-#, fuzzy
-#~ msgid "Output Volume: %.2f%s"
-#~ msgstr "Udgangsvolumen"
-
 #~ msgid "Output Volume (Unavailable; use system mixer.)"
 #~ msgstr "Afspilningsniveau (Ikke tilgængeligt. Brug mixerpulten.)"
-
-#, fuzzy
-#~ msgid "Recording Meter"
-#~ msgstr "Lydstyrke ved optagelse"
-
-#, fuzzy
-#~ msgid "Playback Meter"
-#~ msgstr "Lydstyrke ved afspilning"
-
-#, fuzzy
-#~ msgid "Playback Level Slider"
-#~ msgstr "Afspilningshastighed"
-
-#, fuzzy
-#~ msgid "Recording Level Slider "
-#~ msgstr "Skyder til indspilningsniveau"
 
 #~ msgid "GStreamer %s: %s"
 #~ msgstr "GStreamer %s: %s"
@@ -12444,6 +12341,9 @@ msgstr "Fejl under skrivning til fil"
 
 #~ msgid "Input Source:"
 #~ msgstr "Indspilningskilde:"
+
+#~ msgid "Input Level Slider"
+#~ msgstr "Skyder til indspilningsniveau"
 
 #~ msgid "Output Level Slider"
 #~ msgstr "Skyder til afspilningsniveau"
