@@ -2,20 +2,19 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-#: src/prefs/ModulePrefs.cpp:96
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity.eu\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-09-04 16:38+0100\n"
-"PO-Revision-Date: 2014-06-28 17:23-0000\n"
-"Last-Translator: Xabier Aramendi\n"
+"PO-Revision-Date: 2014-09-04 20:08+0100\n"
+"Last-Translator: Xabier Aramendi <azpidatziak@gmail.com>\n"
 "Language-Team: (EUS_Xabier Aramendi) <azpidatziak@gmail.com>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.6.8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/AboutDialog.cpp:57 src/AboutDialog.cpp:78
@@ -160,14 +159,12 @@ msgid "Import via QuickTime"
 msgstr "Inportazioa Quick Time bidez"
 
 #: src/AboutDialog.cpp:415 src/AboutDialog.cpp:417
-#, fuzzy
 msgid "FFmpeg Import/Export"
-msgstr "FFmpeg Inportazio/Esportazio Liburutegia"
+msgstr "FFmpeg Inportazio/Esportazioa"
 
 #: src/AboutDialog.cpp:421 src/AboutDialog.cpp:423
-#, fuzzy
 msgid "Import via GStreamer"
-msgstr "Inportazioa Quick Time bidez"
+msgstr "Inportatu GStreamer bidez"
 
 #: src/AboutDialog.cpp:429
 msgid "Core Libraries"
@@ -202,9 +199,8 @@ msgid "Pitch and Tempo Change support"
 msgstr "Doinu eta Tenpo Aldaketa sostengua"
 
 #: src/AboutDialog.cpp:533 src/AboutDialog.cpp:536
-#, fuzzy
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "Doinu eta Tenpo Aldaketa sostengua"
+msgstr "Hertzeko Doinu eta Tenpo Aldaketa sostengua"
 
 #: src/AboutDialog.cpp:548
 msgid "Program build date: "
@@ -259,7 +255,7 @@ msgid ""
 "files."
 msgstr ""
 "Kanpoko audio agiri bat edo gehiago ezin izan dira aurkitu.\n"
-"Badaiteke mugutiak, ezabatuak, edo zeuden gidagailua kendua izana.\n"
+"Badaiteke mugituak, ezabatuak, edo zeuden gidagailua kendua izana.\n"
 "Isiltasuna eragindako audioagaitik ordeztua izaten ari da.\n"
 "Lehen atzemandako ez dagoen agiria da:\n"
 "%s\n"
@@ -293,7 +289,7 @@ msgstr "Ireki &Berrikikoa..."
 
 #: src/AudacityApp.cpp:1218 src/Menus.cpp:1054
 msgid "&About Audacity..."
-msgstr "&Audacityri buruz..."
+msgstr "&Audacity-ri buruz..."
 
 #: src/AudacityApp.cpp:1219
 msgid "&Preferences..."
@@ -318,7 +314,7 @@ msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
-"Audacityk ezin izan du aldibaterako agiriak biltegiratzeko tokia aurkitu.\n"
+"Audacity-k ezin izan du aldibaterako agiriak biltegiratzeko tokia aurkitu.\n"
 "Mesedez sartu zuzenbide egokia hobespen elkarrizketan."
 
 #: src/AudacityApp.cpp:1512
@@ -335,7 +331,7 @@ msgid ""
 "data loss or cause your system to crash.\n"
 "\n"
 msgstr ""
-"Audacityren bi kopia aldiberean abiarazteak datuen galera\n"
+"Audacity-ren bi kopia aldiberean abiarazteak datuen galera\n"
 "edo sistemaren matxura eragin dezake.\n"
 "\n"
 
@@ -344,8 +340,8 @@ msgid ""
 "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
 msgstr ""
-"Audacityk ezin du lotu aldibaterako agiri zuzenbidea.\n"
-"Agiritegia badaiteke Audacityren beste kopia batek erabiltzea.\n"
+"Audacity-k ezin du lotu aldibaterako agiri zuzenbidea.\n"
+"Agiritegia badaiteke Audacity-ren beste kopia batek erabiltzea.\n"
 
 #: src/AudacityApp.cpp:1553
 msgid "Do you still want to start Audacity?"
@@ -357,14 +353,14 @@ msgstr "Akatsa Aldibaterako Agiritegia Lotzerakoan"
 
 #: src/AudacityApp.cpp:1593
 msgid "The system has detected that another copy of Audacity is running.\n"
-msgstr "Sistemak Audacityren beste kopia bat ekinean dagoela atzeman du.\n"
+msgstr "Sistemak Audacity-ren beste kopia bat ekinean dagoela atzeman du.\n"
 
 #: src/AudacityApp.cpp:1595
 msgid ""
 "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
 msgstr ""
-"Erabili Berria edo Ireki aginduak orain abiarazitako Audacityn\n"
+"Erabili Berria edo Ireki aginduak orain abiarazitako Audacity-n\n"
 "egitasmo anitz aldiberean irekitzeko.\n"
 
 #: src/AudacityApp.cpp:1596
@@ -407,7 +403,7 @@ msgid ""
 "Associate them, so they open on double-click?"
 msgstr ""
 "Audacity egitasmo (.AUP) agiriak orain ez daude\n"
-"Audacityrekin elkartuta. \n"
+"Audacity-rekin elkartuta. \n"
 "\n"
 "Elkartu, klik bikoitza egitean ireki daitezen?"
 
@@ -417,7 +413,7 @@ msgstr "Audacity Egitasmoko Agiriak"
 
 #: src/AudacityLogger.cpp:167
 msgid "Audacity Log"
-msgstr "Audacityren Oharra"
+msgstr "Audacity-ren Oharra"
 
 #: src/AudacityLogger.cpp:198 src/Tags.cpp:811
 msgid "&Save..."
@@ -509,67 +505,65 @@ msgid "Latency problem"
 msgstr "Atzerapen arazoa"
 
 #: src/AudioIO.cpp:3169
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
 msgstr ""
-"Berezgaitasunezko Sarrera Maila Zehaztapena geldituta. Ezin izan da gehiago "
-"hobetu. Oraindik handiegia."
+"Berezgaitasunezko Grabaketa Maila Zehaztapena geldituta. Ezin izan da "
+"gehiago hobetu. Handiegia oraindik."
 
 #: src/AudioIO.cpp:3177
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr ""
-"Berezgaitasunezko Sarrera Maila Zehaztapenak gutxitu du bolumena %2f-ra"
+"Berezgaitasunezko Grabaketa Maila Zehaztapenak bolumena %2f-ra gutxitu du."
 
 #: src/AudioIO.cpp:3192
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too low."
 msgstr ""
-"Berezgaitasunezko Sarrera Maila Zehaztapena geldituta. Ezin da gehiago "
-"hobetu. Apalegi oraindik."
+"Berezgaitasunezko Grabaketa Maila Zehaztapena geldituta. Ezin da gehiago "
+"hobetu. Apalegia oraindik."
 
 #: src/AudioIO.cpp:3204
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr "Berezgaitasunezko Sarrera Maila Zehaztapenak gehitu du bolumena %2f-ra"
+msgstr ""
+"Berezgaitasunezko Grabaketa Maila Zehaztapenak bolumena %2f-ra gehitu du."
 
 #: src/AudioIO.cpp:3238
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too high."
 msgstr ""
-"Berezgaitasunezko Sarrera Maila Zehaztapena geldituta. Azterketa zenbateko "
-"osoa gainditu da bolumen onargarri bat aurkitu gabe. Oraindik handiegia."
+"Berezgaitasunezko Grabaketa Maila Zehaztapena geldituta. Azterketa "
+"zenbatekoa guztira gainditu da bolumen onargarri bat aurkitu gabe. Handiegia "
+"oraindik."
 
 #: src/AudioIO.cpp:3240
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too low."
 msgstr ""
-"Berezgaitasunezko Sarrera Maila Zehaztapena geldituta. Azterketa zenbateko "
-"guztira gainditu da bolumen onargarri bat aurkitu gabe. Oraindik apalegia."
+"Berezgaitasunezko Grabaketa Maila Zehaztapena geldituta. Azterketa "
+"zenbatekoa guztira gainditu da bolumen onargarri bat aurkitu gabe. Apalegia "
+"oraindik."
 
 #: src/AudioIO.cpp:3243
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
 "volume."
 msgstr ""
-"Berezgaitasunezko Sarrera Maila Zehaztapena geldituta. %.2f bolumen "
-"onargarri ikusten da."
+"Berezgaitasunezko Grabaketa Maila Zehaztapena geldituta. %.2f bolumen "
+"onargarri bezala ikusten da."
 
 #: src/AutoRecovery.cpp:56
 msgid "Automatic Crash Recovery"
 msgstr "Berezgaitasunezko Matxura Berreskurapena"
 
 #: src/AutoRecovery.cpp:75
-#, fuzzy
 msgid ""
 "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can be automatically recovered:"
@@ -587,34 +581,33 @@ msgstr "Izena"
 
 #: src/AutoRecovery.cpp:87
 msgid "After recovery, save the project to save the changes to disk."
-msgstr ""
+msgstr "Berreskuratu ondoren, gorde egitasmoa aldaketak diskan gordetzeko."
 
 #: src/AutoRecovery.cpp:91
 msgid "Quit Audacity"
 msgstr "Utzi Audacity"
 
 #: src/AutoRecovery.cpp:92
-#, fuzzy
 msgid "Discard Projects"
-msgstr "Berreskuratu Egitasmoak"
+msgstr "Baztertu Egitasmoak"
 
 #: src/AutoRecovery.cpp:93
 msgid "Recover Projects"
 msgstr "Berreskuratu Egitasmoak"
 
 #: src/AutoRecovery.cpp:130
-#, fuzzy
 msgid ""
 "Are you sure you want to discard all projects?\n"
 "\n"
 "Choosing \"Yes\" discards all projects immediately."
 msgstr ""
-"Zihur zaude ez duzula egitasmorik berreskuratzerik nahi?\n"
-"Geroago ezingo dira berreskuratu."
+"Zihur zaude egitasmo guztiak baztertzea nahi dituzula?\n"
+"\n"
+"\"Bai\" hautatuz gero egitasmo guztiak baztertuko dira berehala."
 
 #: src/AutoRecovery.cpp:131
 msgid "Confirm Discard Projects"
-msgstr ""
+msgstr "Baieztatu Egitasmoen Bazterketa"
 
 #: src/AutoRecovery.cpp:149 src/AutoRecovery.cpp:186
 msgid "Could not enumerate files in auto save directory."
@@ -662,7 +655,7 @@ msgstr "Estereotik Monorako Eragina ez da aurkitu"
 
 #: src/BatchCommands.cpp:496
 msgid "Ogg Vorbis support is not included in this build of Audacity"
-msgstr "Ogg Vorbis sostengua ez dago Audacityren eraiketaren barne"
+msgstr "Ogg Vorbis sostengua ez dago Audacity-ren eraiketaren barne"
 
 #: src/BatchCommands.cpp:508
 msgid "FLAC support is not included in this build of Audacity"
@@ -957,7 +950,7 @@ msgstr ""
 "\n"
 "Egitasmoa elkartokiak edo inportaturiko agiriak dituen egoera batera "
 "aldatzen baduzu, ez da gehiago bere-edukiduna izango. Agiri hauek kopiatu "
-"gabe gordetzen baduzu, datuak galdu ditzakezu"
+"gabe gordetzen badituzu, datuak galdu ditzakezu"
 
 #: src/Dependencies.cpp:557
 msgid "Dependency Check"
@@ -999,7 +992,7 @@ msgid ""
 "Please consider saving and reloading the project to perform a complete "
 "project check."
 msgstr ""
-"Audacityk bloke umezurtz agiri bat aurkitu du: %s. \n"
+"Audacity-k bloke umezurtz agiri bat aurkitu du: %s. \n"
 "Mesedez egitasmoa gorde eta birgertatu egitasmoaren egiaztapen oso bat "
 "egiteko."
 
@@ -1079,14 +1072,14 @@ msgid ""
 msgstr ""
 " \"%s\" agiritegiaren egitasmo egiaztapenak \n"
 "ez dauden %d kanpoko audio agiri atzeman ditu \n"
-"('izenordekoturiko agiriak'). Ez dago biderik Audacityk \n"
+"('izenordekoturiko agiriak'). Ez dago biderik Audacity-k \n"
 "agiri hauek berezgaitasunez berreskuratzeko. \n"
 "\n"
 "Beheko lehen edo bigarren aukera hautatzen baduzu, \n"
 "saiatu zaitezke ez dauden agiriak bilatzen eta beren \n"
 "aurreko kokalekura leheneratzen. \n"
 "\n"
-"Ohartu bigarren aukeran, uhinerak badaitekela \n"
+"Ohartu bigarren aukeran, uhinerak badaitekeela \n"
 "isiltasuna ez erakustea. \n"
 "\n"
 "Hirugarren aukera hautatzen baduzu, honek egitasmoa \n"
@@ -1121,7 +1114,7 @@ msgid ""
 msgstr ""
 "\"%s\" agiritegiaren egitasmo egiaztapenak\n"
 "atzeman ditu %d izenorde (.auf) bloke-agiri galduta. \n"
-"Audacityk agiri hauek osoki birsortu ditzake \n"
+"Audacity-k agiri hauek osoki birsortu ditzake \n"
 "oraingo egitasmoaren audiotik."
 
 #: src/DirManager.cpp:1495
@@ -1164,7 +1157,7 @@ msgstr ""
 " \"%s\" agiritegiaren egitasmo egiaztapenak \n"
 "ez dauden %d  audio datu (.au) blokeagiri atzeman ditu, \n"
 "zihurrenik akats, sistemaren matxura, edo istripuzko \n"
-"ezabaketa bategaitik. Ez dago biderik Audacityk \n"
+"ezabaketa bategaitik. Ez dago biderik Audacity-k \n"
 "agiri hauek berezgaitasunez berreskuratzeko. \n"
 "\n"
 "Beheko lehen edo bigarren aukera hautatzen baduzu, \n"
@@ -1195,7 +1188,7 @@ msgid ""
 "project is saved."
 msgstr ""
 "   Egitasmo egiaztapenak bloke umezurtz agira ezikusi ditu. Ezabatu egingo "
-"dira egitasmoa gordetzarakoan."
+"dira egitasmoa gordetzerakoan."
 
 #: src/DirManager.cpp:1602
 #, c-format
@@ -1274,7 +1267,7 @@ msgstr "Audio katxeatzea"
 
 #: src/DirManager.cpp:1846
 msgid "Caching audio into memory"
-msgstr "Audio oroimenean katxeratzen"
+msgstr "Audioa oroimenean katxeratzen"
 
 #: src/DirManager.cpp:1882
 msgid "Saving recorded audio"
@@ -1299,7 +1292,7 @@ msgid ""
 msgstr ""
 "FFmpeg Hobespenetan itxuratu da eta ongi gertatu da "
 "lehenago,                         \n"
-"baina orain Audacityk huts egin du hura abiatzean "
+"baina orain Audacity-k huts egin du hura abiatzean "
 "gertatzerakoan.                         \n"
 "\n"
 "Itzuli beharko zara Hobespenak > Liburutegiak eta ber-itxuratu."
@@ -1320,7 +1313,7 @@ msgstr "Kokatu FFmpeg"
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr ""
-"Audacityk '%s' agiria behar du audioa FFmpeg bidez inportatzeko eta "
+"Audacity-k '%s' agiria behar du audioa FFmpeg bidez inportatzeko eta "
 "esportatzeko."
 
 #: src/FFmpeg.cpp:477
@@ -1575,19 +1568,16 @@ msgid "Recording Audio"
 msgstr "Audio Grabaketa"
 
 #: src/HelpText.cpp:136
-#, fuzzy
 msgid "Recording - Choosing the Recording Device"
-msgstr "Grabaketa - Sarrera Gailu Hautapena"
+msgstr "Grabaketa - Grabaketa Gailu Hautapena"
 
 #: src/HelpText.cpp:141
-#, fuzzy
 msgid "Recording - Choosing the Recording Source"
-msgstr "Grabaketa - Iturburu Gailu Hautapena"
+msgstr "Grabaketa - Grabaketa Iturburu Hautapena"
 
 #: src/HelpText.cpp:146
-#, fuzzy
 msgid "Recording - Setting the Recording Level"
-msgstr "Grabaketa - Sarrera Maila Hautapena"
+msgstr "Grabaketa - Grabaketa Maila Ezarpena"
 
 #: src/HelpText.cpp:151
 msgid "Editing and greyed out Menus"
@@ -1619,7 +1609,7 @@ msgstr "<center><h3>Nola Lortu Laguntza</h3></center>"
 
 #: src/HelpText.cpp:190
 msgid "Welcome to Audacity "
-msgstr "Ongi etorri Audacityra "
+msgstr "Ongi etorri Audacity-ra "
 
 #: src/HelpText.cpp:191
 msgid "These are our support methods:"
@@ -1675,11 +1665,11 @@ msgid ""
 "audacityteam.org/o/man/faq_opening_and_saving_files.html#foreign\"> FFmpeg "
 "library</a> to your computer."
 msgstr ""
-"Audacityk agiri babestugabeak inportatu ditzake beste heuskarri askotan (M4A "
-"eta WMA, konprimituriko WAV agiriak grabagailu eramangarrietatik eta audioa "
-"bideo agirietatik bezala) aukerazko <a href=\"http://manual.audacityteam.org/"
-"o/man/faq_opening_and_saving_files.html#foreign\"> FFmpeg liburutegia</a> "
-"zure ordenagailura jeitsi eta ezartzen baduzu."
+"Audacity-k agiri babestugabeak inportatu ditzake beste heuskarri askotan "
+"(M4A eta WMA, konprimituriko WAV agiriak grabagailu eramangarrietatik eta "
+"audioa bideo agirietatik bezala) aukerazko <a href=\"http://manual."
+"audacityteam.org/o/man/faq_opening_and_saving_files.html#foreign\"> FFmpeg "
+"liburutegia</a> zure ordenagailura jeitsi eta ezartzen baduzu."
 
 #: src/HelpText.cpp:207
 msgid ""
@@ -1844,11 +1834,11 @@ msgstr "Gehitutako etiketa"
 
 #: src/LangChoice.cpp:60
 msgid "Audacity First Run"
-msgstr "Audacityren Lehen Abiaraztea"
+msgstr "Audacity-ren Lehen Abiaraztea"
 
 #: src/LangChoice.cpp:92
 msgid "Choose Language for Audacity to use:"
-msgstr "Hautatu Audacityk Erabilitzeko Hizkuntza:"
+msgstr "Hautatu Audacity-k Erabilitzeko Hizkuntza:"
 
 #: src/LangChoice.cpp:129
 #, c-format
@@ -2376,9 +2366,8 @@ msgid "Sound Activation Le&vel..."
 msgstr "Soinu Gaitze &Maila..."
 
 #: src/Menus.cpp:689
-#, fuzzy
 msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "Berezgaitasunezko Sarrera Maila Zehaztapena (bai/ez)"
+msgstr "&Berezgaitasunezko Grabaketa Maila Zehaztapena (bai/ez)"
 
 #: src/Menus.cpp:691
 msgid "R&escan Audio Devices"
@@ -2531,7 +2520,7 @@ msgstr "A&ztertu"
 
 #: src/Menus.cpp:979
 msgid "Contrast..."
-msgstr "Gainbarrentasuna..."
+msgstr "Gain-barrentasuna..."
 
 #: src/Menus.cpp:982
 msgid "Plot Spectrum..."
@@ -2787,53 +2776,44 @@ msgid "Full screen on/off"
 msgstr "Ikusleiho osoa bai/ez"
 
 #: src/Menus.cpp:1176
-#, fuzzy
 msgid "Change recording device"
-msgstr "Aldatu sarrera gailua"
+msgstr "Aldatu grabaketa gailua"
 
 #: src/Menus.cpp:1179
-#, fuzzy
 msgid "Change playback device"
-msgstr "Aldatu sarrera gailua"
+msgstr "Aldatu irakurketa gailua"
 
 #: src/Menus.cpp:1182
 msgid "Change audio host"
 msgstr "Aldatu audio hostalaria"
 
 #: src/Menus.cpp:1185
-#, fuzzy
 msgid "Change recording channels"
-msgstr "Aldatu sarrera gailua"
+msgstr "Aldatu grabaketa bideak"
 
 #: src/Menus.cpp:1189
-#, fuzzy
 msgid "Adjust playback volume"
-msgstr "Zehaztu irakurketa abiadura"
+msgstr "Zehaztu irakurketa bolumena"
 
 #: src/Menus.cpp:1190
-#, fuzzy
 msgid "Increase playback volume"
-msgstr "Handitu irakurketa abiadura"
+msgstr "Handitu irakurketa bolumena"
 
 #: src/Menus.cpp:1191
-#, fuzzy
 msgid "Decrease playback volume"
-msgstr "Gutxitu irakurketa abiadura"
+msgstr "Gutxitu irakurketa bolumena"
 
 #: src/Menus.cpp:1192
-#, fuzzy
 msgid "Adjust recording volume"
-msgstr "Grabaketa amaiera"
+msgstr "Zehaztu grabaketa bolumena"
 
 #: src/Menus.cpp:1193
-#, fuzzy
 msgid "Increase recording volume"
-msgstr "Handitu irakurketa abiadura"
+msgstr "Handitu grabaketa bolumena"
 
 #: src/Menus.cpp:1194
-#, fuzzy
 msgid "Decrease recording volume"
-msgstr "Gutxitu irakurketa abiadura"
+msgstr "Gutxitu grabaketa bolumena"
 
 #: src/Menus.cpp:1196
 msgid "Play at speed"
@@ -3053,7 +3033,7 @@ msgstr "Banandu Ebaki Etiketaturiko Audioa"
 
 #: src/Menus.cpp:3952
 msgid "Copied labeled audio regions to clipboard"
-msgstr "Kopitatuta gakora etiketaturiko audio eremuak"
+msgstr "Kopiatuta gakora etiketaturiko audio eremuak"
 
 #: src/Menus.cpp:3954
 msgid "Copy Labeled Audio"
@@ -3061,7 +3041,7 @@ msgstr "Kopiatu Etiketaturiko Audioa"
 
 #: src/Menus.cpp:3970
 msgid "Deleted labeled audio regions"
-msgstr "Ezabatutata etiketaturiko audio eremuak"
+msgstr "Ezabatuta etiketaturiko audio eremuak"
 
 #: src/Menus.cpp:3972
 msgid "Delete Labeled Audio"
@@ -3311,7 +3291,7 @@ msgstr "Etiketa bide berria sortuta"
 msgid ""
 "This version of Audacity only allows one time track for each project window."
 msgstr ""
-"Audacityren bertsio honek denbora bide bakarra ahalbidetzen du egitasmo "
+"Audacity-ren bertsio honek denbora bide bakarra ahalbidetzen du egitasmo "
 "leiho bakoitzeko."
 
 #: src/Menus.cpp:5481
@@ -3404,11 +3384,11 @@ msgstr "Seinale Maila Neurgailua"
 
 #: src/MixerBoard.cpp:397 src/TrackPanel.cpp:4243
 msgid "Moved gain slider"
-msgstr "Irabazi irriskaria mugituta"
+msgstr "Irabazi irristaria mugituta"
 
 #: src/MixerBoard.cpp:416 src/TrackPanel.cpp:4243
 msgid "Moved pan slider"
-msgstr "Panel irriskaria mugituta"
+msgstr "Panel irristaria mugituta"
 
 #: src/MixerBoard.cpp:1704
 #, c-format
@@ -3590,7 +3570,7 @@ msgid ""
 "Audacity was unable to convert an Audacity 1.0 project to the new project "
 "format."
 msgstr ""
-"Audacityk ezin izan du bihurtu Audacity 1.0 egitasmoa egitasmo berriaren "
+"Audacity-k ezin izan du bihurtu Audacity 1.0 egitasmoa egitasmo berriaren "
 "heuskarrira."
 
 #: src/Project.cpp:2577
@@ -3824,11 +3804,11 @@ msgstr "Akatsa Berezgordetze Agiria Idazterakoan"
 
 #: src/Project.cpp:4530
 msgid "Could not create autosave file: "
-msgstr "Ezinezko berezgordetzea agiria sortzea"
+msgstr "Ezinezko berez-gordetzea agiria sortzea"
 
 #: src/Project.cpp:4549
 msgid "Could not remove old autosave file: "
-msgstr "Ezinezko berezgordetze agiri zaharra kentzea:"
+msgstr "Ezinezko berez-gordetze agiri zaharra kentzea:"
 
 #: src/Project.cpp:4578
 #, c-format
@@ -4087,7 +4067,7 @@ msgstr "Gaitze maila (dB):"
 
 #: src/SplashDialog.cpp:62
 msgid "Welcome to Audacity!"
-msgstr "Ongi etorri Audacityra!"
+msgstr "Ongi etorri Audacity-ra!"
 
 #: src/SplashDialog.cpp:115
 msgid "Don't show this again at start up"
@@ -4200,7 +4180,7 @@ msgid ""
 "Audacity could not write file:\n"
 "  %s."
 msgstr ""
-"Audacityk ezin dut idatzi agiria:\n"
+"Audacity-k ezin dut idatzi agiria:\n"
 "  %s."
 
 #: src/Theme.cpp:655
@@ -4210,7 +4190,7 @@ msgid ""
 "  %s\n"
 "for writing."
 msgstr ""
-"Audacityk ezin du agiria ireki:\n"
+"Audacity-k ezin du agiria ireki:\n"
 "  %s\n"
 "idazteko."
 
@@ -4220,7 +4200,7 @@ msgid ""
 "Audacity could not write images to file:\n"
 "  %s."
 msgstr ""
-"Audacityk ezin ditu irudiak agirira idatzi:\n"
+"Audacity-k ezin ditu irudiak agirira idatzi:\n"
 "  %s"
 
 #: src/Theme.cpp:798
@@ -4230,7 +4210,7 @@ msgid ""
 "  %s.\n"
 "Theme not loaded."
 msgstr ""
-"Audacityk ezin du agiria aukittu:\n"
+"Audacity-k ezin du agiria aukittu:\n"
 "  %s.\n"
 "Azalgaia ez dago gertaturik."
 
@@ -4241,7 +4221,7 @@ msgid ""
 "  %s.\n"
 "Bad png format perhaps?"
 msgstr ""
-"Audacityk ezin du agiria gertatu:\n"
+"Audacity-k ezin du agiria gertatu:\n"
 "  %s.\n"
 "png heuskarri okerra agian?"
 
@@ -4250,7 +4230,7 @@ msgid ""
 "Audacity could not read its default theme.\n"
 "Please report the problem."
 msgstr ""
-"Audacityk ezin du berezko azalgaia irakurri.\n"
+"Audacity-k ezin du berezko azalgaia irakurri.\n"
 "Mesedez jakinarazi arazoa."
 
 #: src/Theme.cpp:919
@@ -4279,7 +4259,7 @@ msgid ""
 "Audacity could not save file:\n"
 "  %s"
 msgstr ""
-"Audacityk ezin du agiria gorde:\n"
+"Audacity-k ezin du agiria gorde:\n"
 "  %s"
 
 #: src/Theme.cpp:976
@@ -4452,9 +4432,8 @@ msgid "Logarithmic &Interpolation"
 msgstr "Interpolazio &Logaritmikoa"
 
 #: src/TrackPanel.cpp:695
-#, fuzzy
 msgid "&Delete Label"
-msgstr "Ezabapen Etiketak"
+msgstr "E&zabtu Etiketa"
 
 #: src/TrackPanel.cpp:700
 msgid "N&ame..."
@@ -4527,11 +4506,11 @@ msgstr "Klikatu eta arrastatu luzatzeko hautaturiko eremua."
 
 #: src/TrackPanel.cpp:1665
 msgid "Click and drag to move left selection boundary."
-msgstr "Klikaltu eta arrastatu ezker hautapen muga mugitzeko."
+msgstr "Klikatu eta arrastatu ezker hautapen muga mugitzeko."
 
 #: src/TrackPanel.cpp:1677
 msgid "Click and drag to move right selection boundary."
-msgstr "Klikaltu eta arrastatu eskuin hautapen muga mugitzeko."
+msgstr "Klikatu eta arrastatu eskuin hautapen muga mugitzeko."
 
 #: src/TrackPanel.cpp:1682
 msgid "Click and drag to stretch within selected region."
@@ -4614,7 +4593,7 @@ msgstr "Bide Kentzea"
 
 #: src/TrackPanel.cpp:4248
 msgid "Moved velocity slider"
-msgstr "Mugituta abiadrua irriskaria"
+msgstr "Mugituta abiadrua irristaria"
 
 #: src/TrackPanel.cpp:4440
 msgid "up"
@@ -4723,7 +4702,7 @@ msgstr "Banandu '%s' bide estereoa"
 #: src/TrackPanel.cpp:7437
 #, c-format
 msgid "Split Stereo to Mono '%s'"
-msgstr "Banandut Estereoa Monora '%s'"
+msgstr "Banandu Estereoa Monora '%s'"
 
 #: src/TrackPanel.cpp:7439
 msgid "Split to Mono"
@@ -4842,9 +4821,8 @@ msgid "Name Change"
 msgstr "Izen Aldaketa"
 
 #: src/TrackPanel.cpp:8005
-#, fuzzy
 msgid "Deleted Label"
-msgstr "Ezabapen Etiketak"
+msgstr "Ezabatutako Etiketa"
 
 #: src/TrackPanel.cpp:8041
 msgid "Label Track Font"
@@ -5043,8 +5021,8 @@ msgstr "Berez Uztartu"
 
 #: src/effects/AutoDuck.cpp:156
 msgid ""
-"Auto Duck needs a control track which must be placed below the selected track"
-"(s)."
+"Auto Duck needs a control track which must be placed below the selected "
+"track(s)."
 msgstr ""
 "Berez Uztartzeak aginte bide bat behar du hautaturiko bideen azpian jarri "
 "behar dena."
@@ -5468,7 +5446,7 @@ msgstr "Maila Dinamiko Konprimitzailea Ezartzen..."
 
 #: src/effects/Contrast.cpp:66
 msgid "Contrast Analysis (WCAG 2 compliance)"
-msgstr "Gainbarrentasun Azterketa (WCAG 2 betekizuna)"
+msgstr "Gain-barrentasun Azterketa (WCAG 2 betekizuna)"
 
 #: src/effects/Contrast.cpp:106
 msgid ""
@@ -5507,7 +5485,7 @@ msgid ""
 "Contrast Analyzer, for measuring rms volume differences between two "
 "selections of audio."
 msgstr ""
-"Gainbarrentasun Aztertzailea, rms bolumen aldeak neurtzeko hautaturiko bi "
+"Gain-barrentasun Aztertzailea, rms bolumen aldeak neurtzeko hautaturiko bi "
 "audio artean."
 
 #: src/effects/Contrast.cpp:255
@@ -5558,7 +5536,7 @@ msgstr "Emaitza"
 
 #: src/effects/Contrast.cpp:342
 msgid "Co&ntrast Result:"
-msgstr "Gain&barrentasun Emaitza:"
+msgstr "Gain-&barrentasun Emaitza:"
 
 #: src/effects/Contrast.cpp:345
 msgid "R&eset"
@@ -5628,11 +5606,11 @@ msgstr "Mesedez sartu baliozko denborak."
 
 #: src/effects/Contrast.cpp:498
 msgid "Export Contrast Result As:"
-msgstr "Esportatu Gainbarrentasun Emaitza Honela:"
+msgstr "Esportatu Gain-barrentasun Emaitza Honela:"
 
 #: src/effects/Contrast.cpp:519
 msgid "WCAG 2.0 Success Criteria 1.4.7 Contrast Results"
-msgstr "WCAG 2.0 Ongi Irizpideak  1.4.7 Gainbarrentasun Emaitzak."
+msgstr "WCAG 2.0 Ongi Irizpideak  1.4.7 Gain-barrentasun Emaitzak."
 
 #: src/effects/Contrast.cpp:521
 #, c-format
@@ -5797,12 +5775,11 @@ msgid "Previewing"
 msgstr "Aurreikusten"
 
 #: src/effects/Effect.cpp:536
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the playback device settings "
 "and the project sample rate."
 msgstr ""
-"Akatsa soinu gailua irekitzerakon. Mesedez egiaztatu irteera gailuaren "
+"Akatsa soinu gailua irekitzerakon. Mesedez egiaztatu irakurketa gailuaren "
 "ezarpenak eta egitasmoaren lagin neurria."
 
 #: src/effects/Effect.h:98 src/effects/Reverb.cpp:195
@@ -5817,7 +5794,7 @@ msgstr "B-zirrikitua"
 
 #: src/effects/Equalization.cpp:258
 msgid "Cosine"
-msgstr "Kosenoa"
+msgstr "Kosinoa"
 
 #: src/effects/Equalization.cpp:259
 msgid "Cubic"
@@ -6466,7 +6443,7 @@ msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
 msgstr ""
-"Hautatu zarata segundu batzuk Audacityk zer iragazi jakin dezan,\n"
+"Hautatu zarata segundu batzuk Audacity-k zer iragazi jakin dezan,\n"
 "orduan klikatu Lortu Zarata Profila:"
 
 #: src/effects/NoiseRemoval.cpp:738
@@ -7092,7 +7069,7 @@ msgstr "Estereotik Monora Ezartzen"
 
 #: src/effects/TimeScale.cpp:172
 msgid "Sliding Time Scale/Pitch Shift"
-msgstr "Denbora Eskala Irriskatzen/Doinu Aldaketa"
+msgstr "Denbora Eskala Irristatzen/Doinu Aldaketa"
 
 #: src/effects/TimeScale.cpp:214
 msgid "Initial Tempo Change (%)"
@@ -7120,7 +7097,7 @@ msgstr "Amaiera Doinu Aldaketa"
 
 #: src/effects/TimeScale.h:33
 msgid "Sliding Time Scale/Pitch Shift..."
-msgstr "Denbora Eskala Irriskatzen/Doinu Aldaketa..."
+msgstr "Denbora Eskala Irristatzen/Doinu Aldaketa..."
 
 #: src/effects/TimeScale.h:47
 msgid "Changing Tempo/Pitch"
@@ -7524,7 +7501,7 @@ msgstr "VST Eragin Ezarpenak"
 
 #: src/effects/VST/VSTEffect.cpp:802
 msgid "Buffer Size"
-msgstr ""
+msgstr "Buffer Neurria"
 
 #: src/effects/VST/VSTEffect.cpp:808
 msgid "The buffer size controls the number of samples sent to the effect "
@@ -7587,35 +7564,30 @@ msgid "Enable &compensation"
 msgstr "Gaitu &ordaina"
 
 #: src/effects/VST/VSTEffect.cpp:844
-#, fuzzy
 msgid "Graphical Mode"
-msgstr "EK Grafikoa"
+msgstr "Grafika Modua"
 
 #: src/effects/VST/VSTEffect.cpp:848
-#, fuzzy
 msgid ""
 "Most VST effects have a graphical interface for setting parameter values."
-msgstr "VST eragin gehienek interfaze grafiko bat dute parametroen"
+msgstr ""
+"VST eragin gehienek interfaze grafiko bat dute parametroen balioak ezartzeko."
 
 #: src/effects/VST/VSTEffect.cpp:849
-#, fuzzy
 msgid " A basic text-only method is also available. "
-msgstr "balioak ezartzeko. Edonola, ohinarrizko idazki soileko metodoa ere"
+msgstr " Ohinarrizko idazkia-bakarrik metodoa ere eskuragarri dago."
 
 #: src/effects/VST/VSTEffect.cpp:850
-#, fuzzy
 msgid " Reopen the effect for this to take effect."
-msgstr "eskuragarri dago. Berrireki eragina hau gaitzeko."
+msgstr " Berrireki eragina honek eragina izateko."
 
 #: src/effects/VST/VSTEffect.cpp:851
-#, fuzzy
 msgid "Enable &Graphical Mode"
-msgstr "&Gaitu interfaze grafikoa"
+msgstr "&Gaitu Grafika Modua"
 
 #: src/effects/VST/VSTEffect.cpp:855
-#, fuzzy
 msgid "Rescan Effects"
-msgstr "Eraginak"
+msgstr "Bermihatu Eraginak"
 
 #: src/effects/VST/VSTEffect.cpp:858
 msgid "To improve Audacity startup, a search for VST effects is performed "
@@ -7709,12 +7681,16 @@ msgid ""
 "This effect does not support a textual interface. At this time, you may not "
 "use this effect on Linux."
 msgstr ""
+"Eragin honek ez du idazki interfazerik sostengatzen. Oraingoz, ezin duzu "
+"eragin hau erabili Linux-en."
 
 #: src/effects/VST/VSTEffect.cpp:2822
 msgid ""
 "This effect does not support a textual interface.  Falling back to graphical "
 "display."
 msgstr ""
+"Eragin honek ez du idazki interfazerik sostengatzen. Erakuspen grafikora "
+"itzultzen."
 
 #: src/effects/VST/VSTEffect.cpp:3370
 msgid "Scanning VST Plugins"
@@ -7873,7 +7849,7 @@ msgstr "Ezin da audioa %s-ra esportatu"
 
 #: src/export/ExportCL.cpp:431
 msgid "Exporting the selected audio using command-line encoder"
-msgstr "Hautaturiko audioa agindu-lerro kodetzailea erabiliz esportatzea"
+msgstr "Hautaturiko audioa agindu-lerro kodeatzailea erabiliz esportatzea"
 
 #: src/export/ExportCL.cpp:432
 msgid "Exporting the entire project using command-line encoder"
@@ -8444,7 +8420,7 @@ msgstr "Hautatu xml agiria aurrezarpenak inportatzeko"
 #: src/prefs/KeyConfigPrefs.cpp:364 src/prefs/KeyConfigPrefs.cpp:917
 #: src/prefs/KeyConfigPrefs.cpp:949
 msgid "XML files (*.xml)|*.xml|All files (*.*)|*.*"
-msgstr "XML agiriak (*.xml)|*.xml|Agirii guztiak(*.*)|*.*"
+msgstr "XML agiriak (*.xml)|*.xml|Agiri guztiak(*.*)|*.*"
 
 #: src/export/ExportFFmpegDialogs.cpp:1731
 msgid "Select xml file to export presets into"
@@ -8660,7 +8636,7 @@ msgstr "Kokatu Lame"
 #: src/export/ExportMP3.cpp:584
 #, c-format
 msgid "Audacity needs the file %s to create MP3s."
-msgstr "Audacityk %s agiria behar du MP3-ak sortzeko."
+msgstr "Audacity-k %s agiria behar du MP3-ak sortzeko."
 
 #: src/export/ExportMP3.cpp:590
 #, c-format
@@ -8808,7 +8784,7 @@ msgid ""
 "labels, so you cannot export to separate audio files."
 msgstr ""
 "Audio Bide mututugabe bakarra eta ezarri ezinezko etiketak \n"
-"dituzu, hortaz ezin duzu audio agiri banaduetan esportatu."
+"dituzu, hortaz ezin duzu audio agiri bananduetan esportatu."
 
 #: src/export/ExportMultiple.cpp:253
 msgid "Export format:"
@@ -9065,7 +9041,7 @@ msgid ""
 msgstr ""
 "\"%s\" \n"
 "MIDI agiri bat da, ez da audio agiri bat. \n"
-"Audacityk ezin du honelako agiri motarik ireki irakurtzeko, baiina, \n"
+"Audacity-k ezin du honelako agiri motarik ireki irakurtzeko, baiina, \n"
 "editatu dezakezu Agiria > Inportatu > MIDI klikatuz."
 
 #: src/import/Import.cpp:598
@@ -9077,7 +9053,7 @@ msgid ""
 "Audacity can import, such as WAV or AIFF."
 msgstr ""
 "\"%s\" audio CD bide bat da. \n"
-"Audacityk ezin du audio CD-rik zuzenean ireki. \n"
+"Audacity-k ezin du audio CD-rik zuzenean ireki. \n"
 "Atera (rip) CD bideak Audacityk inportatu dezakeen \n"
 "heuskarri batera, WAV edo AIFF bezalakoak."
 
@@ -9091,7 +9067,7 @@ msgid ""
 "files."
 msgstr ""
 "\"%s\" irakur-zerrenda agiri bat da. \n"
-"Audacityk ezin du agiri mota hau ireki beste agiri batzuetarako loturak "
+"Audacity-k ezin du agiri mota hau ireki beste agiri batzuetarako loturak "
 "bakarrik dituelako. \n"
 "Ireki ahalko duzu idazki editatzaile batean eta jeitsi uneko audio agiriak."
 
@@ -9103,7 +9079,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" Windows Media Audio agiri bat da. \n"
-"Audacityk ezin du honelako agiri motarik ireki patente mugengaitik. \n"
+"Audacity-k ezin du honelako agiri motarik ireki patente mugengaitik. \n"
 "Audio heuskarri sostengatu batera bihurtu behar duzu, WAV edo AIFF "
 "bezalakoak."
 
@@ -9115,7 +9091,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" Audio Kodeaketa Aurreratuko agiri bat da. \n"
-"Audacityk ezin du honelako agiri motarik ireki. \n"
+"Audacity-k ezin du honelako agiri motarik ireki. \n"
 "Audio heuskarri sostengatu batera bihurtu behar duzu, WAV edo AIFF "
 "bezalakoak."
 
@@ -9130,7 +9106,7 @@ msgid ""
 msgstr ""
 "\"%s\" enkriptaturiko audio agiri bat da. \n"
 "Hau arrunt onlineko musika biltegi batekikoa izaten da. \n"
-"Audacityk ezin du honelako agiri motarik ireki enkriptazioagaitik. \n"
+"Audacity-k ezin du honelako agiri motarik ireki enkriptazioagaitik. \n"
 "Saiatu agiria Audacityn grabatzen, edo erre audio CD batera eta atera \n"
 "CD bidea audio heuskarri sostengatu batera, WAV edo AIFF bezalakoak."
 
@@ -9142,7 +9118,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" RealPlayer audio agiri bat da. \n"
-"Audacityk ezin du honelako agiri motarik ireki. \n"
+"Audacity-k ezin du honelako agiri motarik ireki. \n"
 "Audio heuskarri sostengatu batera bihurtu behar duzu, WAV edo AIFF "
 "bezalakoak."
 
@@ -9155,9 +9131,9 @@ msgid ""
 "then import it, or record it into Audacity."
 msgstr ""
 "\"%s\" ohar-ohinarrik agiri bat da. \n"
-"Audacityk ezin du honelako agiri motarik ireki. \n"
+"Audacity-k ezin du honelako agiri motarik ireki. \n"
 "Saiatu bihurtzen audio heuskarri sostengatu batera, \n"
-"WAV edo AIFF bezalakoak eta orduan inportatu, edo grabatu Audacityn."
+"WAV edo AIFF bezalakoak eta orduan inportatu, edo grabatu Audacity-n."
 
 #: src/import/Import.cpp:643
 #, c-format
@@ -9170,7 +9146,7 @@ msgid ""
 "format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" Musepack audio agiri bat da. \n"
-"Audacityk ezin du honelako agiri motarik ireki. \n"
+"Audacity-k ezin du honelako agiri motarik ireki. \n"
 "Uste baduzu mp3 agiri bat izan daitekeela, berrizendatu amaieran \".mp3\" \n"
 "eta saiatu berriro inportatzen. Bestela audio heuskarri sostengatu batera \n"
 "bihurtu behar duzu, WAV edo AIFF bezalakoak."
@@ -9183,7 +9159,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" Wavpack audio agiri bat da. \n"
-"Audacityk ezin du honelako agiri motarik ireki. \n"
+"Audacity-k ezin du honelako agiri motarik ireki. \n"
 "Audio heuskarri sostengatu batera bihurtu behar duzu, WAV edo AIFF "
 "bezalakoak."
 
@@ -9195,7 +9171,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" Dolby Digital audio agiri bat da. \n"
-"Audacityk ezin du honelako agiri motarik ireki. \n"
+"Audacity-k ezin du honelako agiri motarik ireki. \n"
 "Audio heuskarri sostengatu batera bihurtu behar duzu, WAV edo AIFF "
 "bezalakoak."
 
@@ -9207,7 +9183,7 @@ msgid ""
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" Ogg Speex audio agiri bat da. \n"
-"Audacityk ezin du honelako agiri motarik ireki. \n"
+"Audacity-k ezin du honelako agiri motarik ireki. \n"
 "Audio heuskarri sostengatu batera bihurtu behar duzu, WAV edo AIFF "
 "bezalakoak."
 
@@ -9219,7 +9195,7 @@ msgid ""
 "You need to extract the audio to a supported format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" bideo agiri bat da. \n"
-"Audacityk ezin du honelako agiri motarik ireki. \n"
+"Audacity-k ezin du honelako agiri motarik ireki. \n"
 "Audio heuskarri sostengatu batera bihurtu behar duzu, WAV edo AIFF "
 "bezalakoak."
 
@@ -9229,7 +9205,7 @@ msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
 "If it is uncompressed, try importing it using \"Import Raw\"."
 msgstr ""
-"Audacityk ezin dut '%s' agiriaren mota ezagutu.\n"
+"Audacity-k ezin dut '%s' agiriaren mota ezagutu.\n"
 "Konprimitu gabea bada, saiatu inportatzen  \"Inportatu Raw\" erabiliz."
 
 #: src/import/Import.cpp:695
@@ -9240,7 +9216,7 @@ msgid ""
 "%s,\n"
 "but none of them understood this file format."
 msgstr ""
-"Audacityk ezagutu du '%s' agiriaren mota.\n"
+"Audacity-k ezagutu du '%s' agiriaren mota.\n"
 "Ustez agiri hauek sostengatzen dituzten inportatzaileak dira:\n"
 "%s,\n"
 "baina beraietako batek ere ezdu agiri heuskarri hau ulertzen."
@@ -9475,7 +9451,7 @@ msgstr "Esportatu beharreko kopurua:"
 
 #: src/import/ImportRaw.cpp:420
 msgid "Sample rate:"
-msgstr "Lagintze-maiztasuna:"
+msgstr "Laginketa neurria:"
 
 #: src/ondemand/ODComputeSummaryTask.h:47
 msgid "Import complete. Calculating waveform"
@@ -9655,9 +9631,8 @@ msgid "Audio Unit Effects"
 msgstr "Audio Unitate Eraginak"
 
 #: src/prefs/EffectsPrefs.cpp:102
-#, fuzzy
 msgid "Display Audio Unit effects in Graphical Mode"
-msgstr "Erakutsi Audio Unitate eraginak grafika moduan"
+msgstr "Erakutsi Audio Unitate eraginak Grafika Moduan"
 
 #: src/prefs/EffectsPrefs.cpp:106
 msgid "Rescan VST effects next time Audacity is started"
@@ -9668,9 +9643,8 @@ msgid "VST Effects"
 msgstr "VST Eraginak"
 
 #: src/prefs/EffectsPrefs.cpp:117
-#, fuzzy
 msgid "&Display VST effects in Graphical Mode"
-msgstr "&Erakutsi VST eraginak grafika moduan"
+msgstr "&Erakutsi VST eraginak Grafika Moduan"
 
 #: src/prefs/EffectsPrefs.cpp:120
 msgid "&Rescan VST effects next time Audacity is started"
@@ -9745,8 +9719,8 @@ msgid ""
 msgstr ""
 "Tarte hizkiak daude (tarteak, lerroberriak, tabulazioak edo lerrojauziak) "
 "gaietako batean. Zihurrenik multzo eredua hautsiko da. Zer egiten ari zaren "
-"izan ezik, tarteak moztea gomendatzen da. Nahi duzu Audacityk tarteak moztea "
-"zure ordez?"
+"izan ezik, tarteak moztea gomendatzen da. Nahi duzu Audacity-k tarteak "
+"moztea zure ordez?"
 
 #: src/prefs/ExtImportPrefs.cpp:488
 msgid "Spaces detected"
@@ -9957,7 +9931,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp:328 src/prefs/KeyConfigPrefs.cpp:913
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr "Hautatu Audacityren Lasterteklak dituen XML agiri bat..."
+msgstr "Hautatu Audacity-ren Lasterteklak dituen XML agiri bat..."
 
 #: src/prefs/KeyConfigPrefs.cpp:347 src/prefs/KeyConfigPrefs.cpp:932
 msgid "Error Importing Keyboard Shortcuts"
@@ -10100,7 +10074,7 @@ msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
 msgstr ""
-"Audacityk berezgaitasunez atzeman ditu baliozko FFmpeg liburutegiak.\n"
+"Audacity-k berezgaitasunez atzeman ditu baliozko FFmpeg liburutegiak.\n"
 "Oraindik eskuz kokatzea nahi dituzu?"
 
 #: src/prefs/MidiIOPrefs.cpp:58
@@ -10362,7 +10336,7 @@ msgstr "Edozein"
 
 #: src/prefs/MousePrefs.cpp:134
 msgid "Scroll up or down"
-msgstr "Irriskatu gore edo behera"
+msgstr "Irristatu gora edo behera"
 
 #: src/prefs/MousePrefs.cpp:135
 msgid "Shift-Wheel-Rotate"
@@ -10370,7 +10344,7 @@ msgstr "Aldatu-Gurpila-Itzulikatu"
 
 #: src/prefs/MousePrefs.cpp:135
 msgid "Scroll left or right"
-msgstr "Irriskatu ezker edo eskuin"
+msgstr "Irristatu ezker edo eskuin"
 
 #: src/prefs/MousePrefs.cpp:136
 msgid "Ctrl-Wheel-Rotate"
@@ -10549,14 +10523,12 @@ msgid "Sound Activation Le&vel (dB):"
 msgstr "Sinur Gaitze &Maila (dB):"
 
 #: src/prefs/RecordingPrefs.cpp:128
-#, fuzzy
 msgid "Automated Recording Level Adjustment"
-msgstr "Berezgaitasunezko Sarrera Maila Zehaztapena"
+msgstr "Berezgaitasunezko Grabaketa Maila Zehaztapena"
 
 #: src/prefs/RecordingPrefs.cpp:130
-#, fuzzy
 msgid "Enable Automated Recording Level Adjustment."
-msgstr "Gaitu Berezgaitasunezko Sarrera Maila Zehaztapena."
+msgstr "Gaitu Berezgaitasunezko Grabaketa Maila Zehaztapena."
 
 #: src/prefs/RecordingPrefs.cpp:139
 msgid "Target Peak:"
@@ -10745,7 +10717,7 @@ msgstr ""
 "ImageCacheVxx.png-an Gimp bezalako irudi editatzaile bat erabilitz.\n"
 "\n"
 "Klikatu \"Gertatu Azalgai Katxea\" aldatutako irudiak eta margoak berriro "
-"Audacityn gertatzeko.\n"
+"Audacity-n gertatzeko.\n"
 "\n"
 "(Garraio Tresnabarran eta uhinbideko margoetan bakarrik eragiten du, baita\n"
 "irudi agiriak beste ikur batzuk erakusten baditu ere.)"
@@ -10920,12 +10892,11 @@ msgid "Error while opening sound device. "
 msgstr "Akatsa soinu gailua irekitzerakoan."
 
 #: src/toolbars/ControlToolBar.cpp:940
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the recording device settings "
 "and the project sample rate."
 msgstr ""
-"Akatsa soinu gailua irekitzerakon. Mesedez egiaztatu irteera gailuaren "
+"Akatsa soinu gailua irekitzerakon. Mesedez egiaztatu grabaketa gailuaren "
 "ezarpenak eta egitasmoaren lagin neurria."
 
 #: src/toolbars/DeviceToolBar.cpp:102
@@ -10933,48 +10904,40 @@ msgid "Audio Host"
 msgstr "Audio Hostalaria"
 
 #: src/toolbars/DeviceToolBar.cpp:117
-#, fuzzy
 msgid "Playback Device"
-msgstr "Irakurketa Abiadura"
+msgstr "Irakurketa Gailua"
 
 #: src/toolbars/DeviceToolBar.cpp:132
-#, fuzzy
 msgid "Recording Device"
-msgstr "Grabaketa amaiera"
+msgstr "Grabaketa Gailua"
 
 #: src/toolbars/DeviceToolBar.cpp:139
-#, fuzzy
 msgid "Recording Channels"
-msgstr "Grabaketa amaiera"
+msgstr "Grabaketa Bideak"
 
 #: src/toolbars/DeviceToolBar.cpp:615
-#, fuzzy
 msgid "1 (Mono) Recording Channel"
-msgstr "Grabaketa amaiera"
+msgstr "1 (Monoa) Grabaketa Bide"
 
 #: src/toolbars/DeviceToolBar.cpp:618
-#, fuzzy
 msgid "2 (Stereo) Recording Channels"
-msgstr "Hautatu Sarrera Bideak"
+msgstr "2 (Estereoa) Grabaketa Bide"
 
 #: src/toolbars/DeviceToolBar.cpp:745
-#, fuzzy
 msgid "Select Recording Device"
-msgstr "Hautatu Sarrera Gailua"
+msgstr "Hautatu Grabaketa Gailua"
 
 #: src/toolbars/DeviceToolBar.cpp:749
-#, fuzzy
 msgid "Select Playback Device"
-msgstr "Hautatu Sarrera Gailua"
+msgstr "Hautatu Irakurketa Gailua"
 
 #: src/toolbars/DeviceToolBar.cpp:753
 msgid "Select Audio Host"
 msgstr "Hautatu Audio Hostalaria"
 
 #: src/toolbars/DeviceToolBar.cpp:757
-#, fuzzy
 msgid "Select Recording Channels"
-msgstr "Hautatu Sarrera Bideak"
+msgstr "Hautatu Grabaketa Bideak"
 
 #: src/toolbars/DeviceToolBar.cpp:763
 msgid "Device information is not available."
@@ -11049,58 +11012,50 @@ msgid "Meter-Record"
 msgstr "Neurgailu-Grabaketa"
 
 #: src/toolbars/MeterToolBar.cpp:129
-#, fuzzy
 msgid "Playback Level"
-msgstr "Irakurketa Abiadura"
+msgstr "Irakurketa Maila"
 
 #: src/toolbars/MeterToolBar.cpp:130
-#, fuzzy
 msgid "Recording Level (Click to monitor.)"
-msgstr "Sarrera Maila (Klikatu monitorean ikusteko)"
+msgstr "Grabaketa Maila (Klikatu monitorean ikusteko)"
 
 #: src/toolbars/MixerToolBar.cpp:91
-#, fuzzy
 msgid "Playback Volume"
-msgstr "Irakurketa"
+msgstr "Irakurketa Bolumena"
 
 #: src/toolbars/MixerToolBar.cpp:94
-#, fuzzy
 msgid "Slider Playback"
-msgstr "Irakurketa"
+msgstr "Irakurketa Irristaria"
 
 #: src/toolbars/MixerToolBar.cpp:103
-#, fuzzy
 msgid "Recording Volume"
-msgstr "Grabaketa amaiera"
+msgstr "Grabaketa Bolumena"
 
 #: src/toolbars/MixerToolBar.cpp:106
-#, fuzzy
 msgid "Slider Recording"
-msgstr "Grabaketa"
+msgstr "Grabaketa Irristaria"
 
 #: src/toolbars/MixerToolBar.cpp:296
-#, fuzzy, c-format
+#, c-format
 msgid "Recording Volume: %.2f"
-msgstr "Sarrera Bolumena: %.2f"
+msgstr "Grabaketa Bolumena: %.2f"
 
 #: src/toolbars/MixerToolBar.cpp:300
-#, fuzzy
 msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "Sarrera Bolumena (Eskuraezina; erabili sistemaren nahasgailua)"
+msgstr "Grabaketa Bolumena (Eskuraezina; erabili sistemaren nahasgailua)."
 
 #: src/toolbars/MixerToolBar.cpp:305
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f%s"
-msgstr "Irteera Bolumena: %.2f%s"
+msgstr "Irakurketa Bolumena: %.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp:305
 msgid " (emulated)"
 msgstr " (irudizkoa)"
 
 #: src/toolbars/MixerToolBar.cpp:309
-#, fuzzy
 msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "Sarrera Bolumena (Eskuraezina; erabili sistemaren nahasgailua)"
+msgstr "Irakurketa Bolumena (Eskuraezina; erabili sistemaren nahasgailua)"
 
 #: src/toolbars/SelectionBar.cpp:87 src/toolbars/SelectionBar.cpp:287
 msgid "Selection"
@@ -11167,7 +11122,7 @@ msgstr "Tresna-Anitzeko Modua"
 
 #: src/toolbars/ToolsToolBar.cpp:190
 msgid "Slide Tool"
-msgstr "Irriskari Tresna"
+msgstr "Irristari Tresna"
 
 #: src/toolbars/TranscriptionToolBar.cpp:171
 msgid "Play at selected speed"
@@ -11252,14 +11207,12 @@ msgid "Start Monitoring"
 msgstr "Gelditu Monitorizazioa"
 
 #: src/widgets/Meter.cpp:417
-#, fuzzy
 msgid "Stop Automated Recording Level Adjustment"
-msgstr "Gelditu Berezgaitasunezko Sarrera Maila Zehaztapena"
+msgstr "Gelditu Berezgaitasunezko Grabaketa Maila Zehaztapena"
 
 #: src/widgets/Meter.cpp:419
-#, fuzzy
 msgid "Start Automated Recording Level Adjustment"
-msgstr "Hasi Berezgaitasunezko Sarrera Maila Zehaztapena"
+msgstr "Hasi Berezgaitasunezko Grabaketa Maila Zehaztapena"
 
 #: src/widgets/Meter.cpp:430
 msgid "Horizontal Stereo"
@@ -11274,11 +11227,10 @@ msgid "Preferences..."
 msgstr "Hobespenak..."
 
 #: src/widgets/Meter.cpp:1276
-#, fuzzy
 msgid "Automated Recording Level Adjustment stopped as requested by user."
 msgstr ""
-"Berezgaitasunezko Sarrera Maila Zehaztapena geldituta erabiltzaileak eskatu "
-"bezala."
+"Berezgaitasunezko Grabaketa Maila Zehaztapena geldituta erabiltzaileak "
+"eskatu bezala."
 
 #: src/widgets/Meter.cpp:1291
 msgid ""
@@ -11486,16 +11438,8 @@ msgstr "Akatsa Agirian Idazterakoan"
 #~ msgid "Confirm?"
 #~ msgstr "Baieztatu?"
 
-#, fuzzy
-#~ msgid "Change input device"
-#~ msgstr "Aldatu irteera gailua"
-
 #~ msgid "Change output device"
 #~ msgstr "Aldatu irteera gailua"
-
-#, fuzzy
-#~ msgid "Change input channels"
-#~ msgstr "Aldatu sarrera bideak"
 
 #~ msgid "Adjust output gain"
 #~ msgstr "Zehaztu irteera irabazia"
@@ -11533,24 +11477,8 @@ msgstr "Akatsa Agirian Idazterakoan"
 #~ msgid "Input Channels"
 #~ msgstr "Sarrera Bideak"
 
-#, fuzzy
-#~ msgid "1 (Mono) Input Channel"
-#~ msgstr "1 (Monoa) Sarrera Bide"
-
-#, fuzzy
-#~ msgid "2 (Stereo) Input Channels"
-#~ msgstr "2 (Estereoa) Sarrera Bide"
-
-#, fuzzy
-#~ msgid "Select Input Device"
-#~ msgstr "Hautatu Irteera Gailua"
-
 #~ msgid "Select Output Device"
 #~ msgstr "Hautatu Irteera Gailua"
-
-#, fuzzy
-#~ msgid "Select Input Channels"
-#~ msgstr "Sarrera Bideak"
 
 #~ msgid "Output Level"
 #~ msgstr "Irteera Maila"
@@ -11567,36 +11495,8 @@ msgstr "Akatsa Agirian Idazterakoan"
 #~ msgid "Slider Input"
 #~ msgstr "Irriskari Sarrera"
 
-#, fuzzy
-#~ msgid "Input Volume: %.2f"
-#~ msgstr "Sarrera Bolumena"
-
-#, fuzzy
-#~ msgid "Input Volume (Unavailable; use system mixer.)"
-#~ msgstr "Irteera Bolumena (Eskuraezina; erabili sistemaren nahasgailua)"
-
-#, fuzzy
-#~ msgid "Output Volume: %.2f%s"
-#~ msgstr "Irteera Bolumena"
-
 #~ msgid "Output Volume (Unavailable; use system mixer.)"
 #~ msgstr "Irteera Bolumena (Eskuraezina; erabili sistemaren nahasgailua)"
-
-#, fuzzy
-#~ msgid "Recording Meter"
-#~ msgstr "Grabaketa Neurgailua"
-
-#, fuzzy
-#~ msgid "Playback Meter"
-#~ msgstr "Irakur Neurgailua"
-
-#, fuzzy
-#~ msgid "Playback Level Slider"
-#~ msgstr "Irakurketa Abiadura"
-
-#, fuzzy
-#~ msgid "Recording Level Slider "
-#~ msgstr "Grabaketa amaiera"
 
 #~ msgid "GStreamer %s: %s"
 #~ msgstr "GStreamer %s: %s"
