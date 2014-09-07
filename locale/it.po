@@ -1,17 +1,16 @@
-#: src/prefs/ModulePrefs.cpp:96
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-09-04 16:38+0100\n"
-"PO-Revision-Date: 2014-06-27 16:56-0000\n"
-"Last-Translator: Carmelo Battaglia\n"
+"PO-Revision-Date: 2014-09-05 06:23+0100\n"
+"Last-Translator: Carmelo battaglia <battaglia.carmelo@fastwebnet.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.6.9\n"
 "X-Poedit-Bookmarks: 1308,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: src/AboutDialog.cpp:57 src/AboutDialog.cpp:78
@@ -156,14 +155,12 @@ msgid "Import via QuickTime"
 msgstr "Importazione attraverso QuickTime"
 
 #: src/AboutDialog.cpp:415 src/AboutDialog.cpp:417
-#, fuzzy
 msgid "FFmpeg Import/Export"
-msgstr "Libreria importazione/esportazione FFmpeg"
+msgstr "Importazione/Esportazione FFmpeg"
 
 #: src/AboutDialog.cpp:421 src/AboutDialog.cpp:423
-#, fuzzy
 msgid "Import via GStreamer"
-msgstr "Importazione attraverso QuickTime"
+msgstr "Importazione attraverso GStreamer"
 
 #: src/AboutDialog.cpp:429
 msgid "Core Libraries"
@@ -198,9 +195,8 @@ msgid "Pitch and Tempo Change support"
 msgstr "Supporto intonazione e cambio tempo"
 
 #: src/AboutDialog.cpp:533 src/AboutDialog.cpp:536
-#, fuzzy
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "Supporto intonazione e cambio tempo"
+msgstr "Supporto intonazione estrema e cambio tempo"
 
 #: src/AboutDialog.cpp:548
 msgid "Program build date: "
@@ -508,65 +504,63 @@ msgid "Latency problem"
 msgstr "Problema di latenza"
 
 #: src/AudioIO.cpp:3169
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
 msgstr ""
-"Il volume automatico è stato interrotto. Non è possibile ottimizzarlo di "
-"più. È ancora troppo alto."
+"La regolazione automatica del volume è stato interrotta. Non è possibile "
+"ottimizzarlo di più. È ancora troppo alto."
 
 #: src/AudioIO.cpp:3177
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "Il volume automatico ha diminuito il volume a %f."
+msgstr "La regolazione automatica del volume ha diminuito il volume a %f."
 
 #: src/AudioIO.cpp:3192
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too low."
 msgstr ""
-"Il volume automatico è stato interrotto. Non è possibile ottimizzarlo di "
-"più. È ancora troppo basso. "
+"La regolazione automatica del volume è stato interrotta. Non è possibile "
+"ottimizzarlo di più. È ancora troppo basso. "
 
 #: src/AudioIO.cpp:3204
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr "Il volume automatico ha aumentato il volume a %2f."
+msgstr "La regolazione automatica del volume ha aumentato il volume a %2f."
 
 #: src/AudioIO.cpp:3238
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too high."
 msgstr ""
-"Il volume automatco è stato disabilitato. Il numero totale di analisi è "
-"stato superato senza trovare un volume accettabile. È ancora troppo alto."
+"La regolazione automatica del volume è stato disabilitata. Il numero totale "
+"di analisi è stato superato senza trovare un volume accettabile. È ancora "
+"troppo alto."
 
 #: src/AudioIO.cpp:3240
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too low."
 msgstr ""
-"Il volume automatico è stato disabilitato. Il numero toale di analisi è "
-"stato superato senza trovare un volume accettabile. È ancora troppo basso."
+"La regolazione automatica del volume è stato disabilitata. Il numero totale "
+"di analisi è stato superato senza trovare un volume accettabile. È ancora "
+"troppo basso."
 
 #: src/AudioIO.cpp:3243
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
 "volume."
 msgstr ""
-"Il volume automatico è stato fermato. %2f sembra un volume accettabile."
+"La regolazione automatica del volume è stato fermata. %2f sembra un volume "
+"accettabile."
 
 #: src/AutoRecovery.cpp:56
 msgid "Automatic Crash Recovery"
 msgstr "Ripristino automatico da crash"
 
 #: src/AutoRecovery.cpp:75
-#, fuzzy
 msgid ""
 "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can be automatically recovered:"
@@ -585,34 +579,33 @@ msgstr "Nome"
 
 #: src/AutoRecovery.cpp:87
 msgid "After recovery, save the project to save the changes to disk."
-msgstr ""
+msgstr "Dopo il recupero, salva il progetto per salvare le modifiche su disco."
 
 #: src/AutoRecovery.cpp:91
 msgid "Quit Audacity"
 msgstr "Esci da Audacity"
 
 #: src/AutoRecovery.cpp:92
-#, fuzzy
 msgid "Discard Projects"
-msgstr "Recupera i progetti"
+msgstr "Elimina i progetti"
 
 #: src/AutoRecovery.cpp:93
 msgid "Recover Projects"
 msgstr "Recupera i progetti"
 
 #: src/AutoRecovery.cpp:130
-#, fuzzy
 msgid ""
 "Are you sure you want to discard all projects?\n"
 "\n"
 "Choosing \"Yes\" discards all projects immediately."
 msgstr ""
-"Sei sicuro di non volere recuperare i progetti?\n"
-"Dopo non sarà più possibile recuperarli."
+"Sei sicuro di volere eliminare tutti i progetti?\n"
+"\n"
+"Scegliendo \"Si\" elimini immediatamente tutti i progetti."
 
 #: src/AutoRecovery.cpp:131
 msgid "Confirm Discard Projects"
-msgstr ""
+msgstr "Conferma eliminazione progetti"
 
 #: src/AutoRecovery.cpp:149 src/AutoRecovery.cpp:186
 msgid "Could not enumerate files in auto save directory."
@@ -1578,19 +1571,16 @@ msgid "Recording Audio"
 msgstr "Registrazione audio"
 
 #: src/HelpText.cpp:136
-#, fuzzy
 msgid "Recording - Choosing the Recording Device"
-msgstr "Registrazione - Scelta del dispositivo di ingresso"
+msgstr "Registrazione - Scelta del dispositivo di registrazione"
 
 #: src/HelpText.cpp:141
-#, fuzzy
 msgid "Recording - Choosing the Recording Source"
-msgstr "Registrazione - Scelta della sorgente di ingresso"
+msgstr "Registrazione - Scelta della sorgente di registrazione"
 
 #: src/HelpText.cpp:146
-#, fuzzy
 msgid "Recording - Setting the Recording Level"
-msgstr "Registrazione - Impostazione del livello di ingresso"
+msgstr "Registrazione - Impostazione del livello di registrazione"
 
 #: src/HelpText.cpp:151
 msgid "Editing and greyed out Menus"
@@ -2383,9 +2373,8 @@ msgid "Sound Activation Le&vel..."
 msgstr "Li&vello attivazione audio..."
 
 #: src/Menus.cpp:689
-#, fuzzy
 msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "Volume a&utomatico (Attivo/Non attivo)"
+msgstr "Regolazione a&utomatica del livello registrazione (Attivo/Non attivo)"
 
 #: src/Menus.cpp:691
 msgid "R&escan Audio Devices"
@@ -2794,53 +2783,44 @@ msgid "Full screen on/off"
 msgstr "Schermo pieno (Attivoi/Non attivo)"
 
 #: src/Menus.cpp:1176
-#, fuzzy
 msgid "Change recording device"
-msgstr "Cambia dispositivo di ingresso"
+msgstr "Cambia dispositivo di registrazione"
 
 #: src/Menus.cpp:1179
-#, fuzzy
 msgid "Change playback device"
-msgstr "Cambia dispositivo di ingresso"
+msgstr "Cambia dispositivo di riproduzione"
 
 #: src/Menus.cpp:1182
 msgid "Change audio host"
 msgstr "Cambia sistema audio"
 
 #: src/Menus.cpp:1185
-#, fuzzy
 msgid "Change recording channels"
-msgstr "Cambia dispositivo di ingresso"
+msgstr "Cambia canali di registrazione"
 
 #: src/Menus.cpp:1189
-#, fuzzy
 msgid "Adjust playback volume"
-msgstr "Regola velocità di riproduzione"
+msgstr "Regola volume di riproduzione"
 
 #: src/Menus.cpp:1190
-#, fuzzy
 msgid "Increase playback volume"
-msgstr "Aumenta velocità di riproduzione"
+msgstr "Aumenta volume di riproduzione"
 
 #: src/Menus.cpp:1191
-#, fuzzy
 msgid "Decrease playback volume"
-msgstr "Diminuisci velocità di riproduzione"
+msgstr "Diminuisci volume di riproduzione"
 
 #: src/Menus.cpp:1192
-#, fuzzy
 msgid "Adjust recording volume"
-msgstr "Fine registrazione"
+msgstr "Regola volume registrazione"
 
 #: src/Menus.cpp:1193
-#, fuzzy
 msgid "Increase recording volume"
-msgstr "Aumenta velocità di riproduzione"
+msgstr "Aumenta volume registrazione "
 
 #: src/Menus.cpp:1194
-#, fuzzy
 msgid "Decrease recording volume"
-msgstr "Diminuisci velocità di riproduzione"
+msgstr "Riduci volume registrazione"
 
 #: src/Menus.cpp:1196
 msgid "Play at speed"
@@ -4460,9 +4440,8 @@ msgid "Logarithmic &Interpolation"
 msgstr "&Interpolazione logaritmica"
 
 #: src/TrackPanel.cpp:695
-#, fuzzy
 msgid "&Delete Label"
-msgstr "Elimina etichette"
+msgstr "&Elimina etichetta"
 
 #: src/TrackPanel.cpp:700
 msgid "N&ame..."
@@ -4852,9 +4831,8 @@ msgid "Name Change"
 msgstr "Cambio nome"
 
 #: src/TrackPanel.cpp:8005
-#, fuzzy
 msgid "Deleted Label"
-msgstr "Elimina etichette"
+msgstr "Etichetta eliminata"
 
 #: src/TrackPanel.cpp:8041
 msgid "Label Track Font"
@@ -5054,8 +5032,8 @@ msgstr "Riduci volume automaticamente"
 
 #: src/effects/AutoDuck.cpp:156
 msgid ""
-"Auto Duck needs a control track which must be placed below the selected track"
-"(s)."
+"Auto Duck needs a control track which must be placed below the selected "
+"track(s)."
 msgstr ""
 "Riduci volume automaticamente necessita di una traccia di controllo che deve "
 "essere posizionata al di sotto delle tracce selezionate."
@@ -5808,13 +5786,12 @@ msgid "Previewing"
 msgstr "Anteprima"
 
 #: src/effects/Effect.cpp:536
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the playback device settings "
 "and the project sample rate."
 msgstr ""
-"Errore durante l'apertura del dispositivo audio. Controlla le opzioni del "
-"dispositivo di riproduzione e la frequenza di campionamento del progetto."
+"Errore durante l'apertura del dispositivo audio. Controlla le impostazioni "
+"del dispositivo di riproduzione e la frequenza di campionamento del progetto."
 
 #: src/effects/Effect.h:98 src/effects/Reverb.cpp:195
 #: src/effects/TimeScale.cpp:55
@@ -7541,7 +7518,7 @@ msgstr "Impostazioni effetto VST"
 
 #: src/effects/VST/VSTEffect.cpp:802
 msgid "Buffer Size"
-msgstr ""
+msgstr "Dimensione buffer"
 
 #: src/effects/VST/VSTEffect.cpp:808
 msgid "The buffer size controls the number of samples sent to the effect "
@@ -7606,37 +7583,31 @@ msgid "Enable &compensation"
 msgstr "Abilita &compensazione"
 
 #: src/effects/VST/VSTEffect.cpp:844
-#, fuzzy
 msgid "Graphical Mode"
-msgstr "EQ grafico"
+msgstr "Modo grafico"
 
 #: src/effects/VST/VSTEffect.cpp:848
-#, fuzzy
 msgid ""
 "Most VST effects have a graphical interface for setting parameter values."
 msgstr ""
-"La maggior parte degli effetti VST fornisce un'interfaccia grafica per "
-"impostare i"
+"La maggior parte degli effetti VST dispone di un'interfaccia grafica per "
+"impostare i valori dei parametri."
 
 #: src/effects/VST/VSTEffect.cpp:849
-#, fuzzy
 msgid " A basic text-only method is also available. "
-msgstr "valori dei parametri. Tuttavia, è disponibile un metodo con "
+msgstr "È disponibile tuttavia un metodo con solo testo."
 
 #: src/effects/VST/VSTEffect.cpp:850
-#, fuzzy
 msgid " Reopen the effect for this to take effect."
-msgstr "solo testo.  Riapri l'effetto affinché abbia effetto."
+msgstr "Riapri l'effetto affinché questo abbia effetto."
 
 #: src/effects/VST/VSTEffect.cpp:851
-#, fuzzy
 msgid "Enable &Graphical Mode"
-msgstr "Abilita interfaccia &grafica"
+msgstr "Abilita modo &grafico"
 
 #: src/effects/VST/VSTEffect.cpp:855
-#, fuzzy
 msgid "Rescan Effects"
-msgstr "Effetti"
+msgstr "Riesamina gli effetti"
 
 #: src/effects/VST/VSTEffect.cpp:858
 msgid "To improve Audacity startup, a search for VST effects is performed "
@@ -7736,12 +7707,16 @@ msgid ""
 "This effect does not support a textual interface. At this time, you may not "
 "use this effect on Linux."
 msgstr ""
+"Questo effetto non supporta un'interfaccia testuale. Per ora, non è "
+"possibile utilizzare questo effetto su Linux."
 
 #: src/effects/VST/VSTEffect.cpp:2822
 msgid ""
 "This effect does not support a textual interface.  Falling back to graphical "
 "display."
 msgstr ""
+"Questo effetto non supporta un'interfaccia testuale.  Ritorna alla "
+"visualizzazione grafica."
 
 #: src/effects/VST/VSTEffect.cpp:3370
 msgid "Scanning VST Plugins"
@@ -9680,9 +9655,8 @@ msgid "Audio Unit Effects"
 msgstr "Effetti unità audio"
 
 #: src/prefs/EffectsPrefs.cpp:102
-#, fuzzy
 msgid "Display Audio Unit effects in Graphical Mode"
-msgstr "Visualizza effetti unità audio in modalità grafica"
+msgstr "Visualizza effetti unità audio in modo grafico"
 
 #: src/prefs/EffectsPrefs.cpp:106
 msgid "Rescan VST effects next time Audacity is started"
@@ -9693,9 +9667,8 @@ msgid "VST Effects"
 msgstr "Effetti VST"
 
 #: src/prefs/EffectsPrefs.cpp:117
-#, fuzzy
 msgid "&Display VST effects in Graphical Mode"
-msgstr "&Visualizza effetti VST in modalità grafica"
+msgstr "&Visualizza effetti VST in modo grafico"
 
 #: src/prefs/EffectsPrefs.cpp:120
 msgid "&Rescan VST effects next time Audacity is started"
@@ -10578,14 +10551,12 @@ msgid "Sound Activation Le&vel (dB):"
 msgstr "Li&vello attivazione audio (dB):"
 
 #: src/prefs/RecordingPrefs.cpp:128
-#, fuzzy
 msgid "Automated Recording Level Adjustment"
-msgstr "Regolazione automatica del livello di ingresso"
+msgstr "Regolazione automatica del livello di registrazione"
 
 #: src/prefs/RecordingPrefs.cpp:130
-#, fuzzy
 msgid "Enable Automated Recording Level Adjustment."
-msgstr "Abilita Regolazione automatica del livello di ingresso"
+msgstr "Abilita regolazione automatica del livello di registrazione"
 
 #: src/prefs/RecordingPrefs.cpp:139
 msgid "Target Peak:"
@@ -10952,61 +10923,53 @@ msgid "Error while opening sound device. "
 msgstr "Errore nell'apertura di un dispositivo audio"
 
 #: src/toolbars/ControlToolBar.cpp:940
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the recording device settings "
 "and the project sample rate."
 msgstr ""
-"Errore durante l'apertura del dispositivo audio. Controlla le opzioni del "
-"dispositivo di riproduzione e la frequenza di campionamento del progetto."
+"Errore durante l'apertura del dispositivo audio. Controlla le impostazioni "
+"del dispositivo di registrazione e la frequenza di campionamento del "
+"progetto."
 
 #: src/toolbars/DeviceToolBar.cpp:102
 msgid "Audio Host"
 msgstr "Sistema audio"
 
 #: src/toolbars/DeviceToolBar.cpp:117
-#, fuzzy
 msgid "Playback Device"
-msgstr "Velocità di riproduzione"
+msgstr "Dispositivo di riproduzione"
 
 #: src/toolbars/DeviceToolBar.cpp:132
-#, fuzzy
 msgid "Recording Device"
-msgstr "Fine registrazione"
+msgstr "Dispositivo di registrazione"
 
 #: src/toolbars/DeviceToolBar.cpp:139
-#, fuzzy
 msgid "Recording Channels"
-msgstr "Fine registrazione"
+msgstr "Canali di registrazione"
 
 #: src/toolbars/DeviceToolBar.cpp:615
-#, fuzzy
 msgid "1 (Mono) Recording Channel"
-msgstr "Fine registrazione"
+msgstr "1 canale di registrazione (Mono)"
 
 #: src/toolbars/DeviceToolBar.cpp:618
-#, fuzzy
 msgid "2 (Stereo) Recording Channels"
-msgstr "Seleizona canali di ingresso"
+msgstr "2 canali di registrazione (Stereo)"
 
 #: src/toolbars/DeviceToolBar.cpp:745
-#, fuzzy
 msgid "Select Recording Device"
-msgstr "Seleziona dispositvo di ingresso"
+msgstr "Seleziona dispositivo di registrazione"
 
 #: src/toolbars/DeviceToolBar.cpp:749
-#, fuzzy
 msgid "Select Playback Device"
-msgstr "Seleziona dispositvo di ingresso"
+msgstr "Seleziona dispositivo di riproduzione"
 
 #: src/toolbars/DeviceToolBar.cpp:753
 msgid "Select Audio Host"
 msgstr "Seleziona sistema audio"
 
 #: src/toolbars/DeviceToolBar.cpp:757
-#, fuzzy
 msgid "Select Recording Channels"
-msgstr "Seleizona canali di ingresso"
+msgstr "Seleziona canali di registrazione"
 
 #: src/toolbars/DeviceToolBar.cpp:763
 msgid "Device information is not available."
@@ -11081,58 +11044,50 @@ msgid "Meter-Record"
 msgstr "Monitor-Registrazione"
 
 #: src/toolbars/MeterToolBar.cpp:129
-#, fuzzy
 msgid "Playback Level"
-msgstr "Velocità di riproduzione"
+msgstr "Livello di riproduzione"
 
 #: src/toolbars/MeterToolBar.cpp:130
-#, fuzzy
 msgid "Recording Level (Click to monitor.)"
-msgstr "Livello di ingresso (fare clic per monitorare)"
+msgstr "Livello di registrazione (fare clic per monitorare)"
 
 #: src/toolbars/MixerToolBar.cpp:91
-#, fuzzy
 msgid "Playback Volume"
-msgstr "Riproduzione"
+msgstr "Volume di riproduzione"
 
 #: src/toolbars/MixerToolBar.cpp:94
-#, fuzzy
 msgid "Slider Playback"
-msgstr "Riproduzione"
+msgstr "Cursore di riproduzione"
 
 #: src/toolbars/MixerToolBar.cpp:103
-#, fuzzy
 msgid "Recording Volume"
-msgstr "Fine registrazione"
+msgstr "Volume di registrazione"
 
 #: src/toolbars/MixerToolBar.cpp:106
-#, fuzzy
 msgid "Slider Recording"
-msgstr "Registrazione"
+msgstr "Cursore di registrazione"
 
 #: src/toolbars/MixerToolBar.cpp:296
-#, fuzzy, c-format
+#, c-format
 msgid "Recording Volume: %.2f"
-msgstr "Volume di ingresso: %2f"
+msgstr "Volume di registrazione: %2f"
 
 #: src/toolbars/MixerToolBar.cpp:300
-#, fuzzy
 msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "Volume di ingresso (Non disponibile; usa il mixer di sistema)."
+msgstr "Volume di registrazione (Non disponibile; usa il mixer di sistema)."
 
 #: src/toolbars/MixerToolBar.cpp:305
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f%s"
-msgstr "Volume di uscita: %.2f%s"
+msgstr "Volume di di riproduzione: %.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp:305
 msgid " (emulated)"
 msgstr " (emulato)"
 
 #: src/toolbars/MixerToolBar.cpp:309
-#, fuzzy
 msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "Volume di ingresso (Non disponibile; usa il mixer di sistema)."
+msgstr "Volume di riproduzione (Non disponibile; usa il mixer di sistema)."
 
 #: src/toolbars/SelectionBar.cpp:87 src/toolbars/SelectionBar.cpp:287
 msgid "Selection"
@@ -11284,14 +11239,12 @@ msgid "Start Monitoring"
 msgstr "Avvia monitoraggio"
 
 #: src/widgets/Meter.cpp:417
-#, fuzzy
 msgid "Stop Automated Recording Level Adjustment"
-msgstr "Arresta Regolazione automatica del livello di ingresso"
+msgstr "Ferma regolazione automatica del livello di registrazione"
 
 #: src/widgets/Meter.cpp:419
-#, fuzzy
 msgid "Start Automated Recording Level Adjustment"
-msgstr "Avvia volume automatico"
+msgstr "Avvia regolazione automatica del volume di registrazione"
 
 #: src/widgets/Meter.cpp:430
 msgid "Horizontal Stereo"
@@ -11306,9 +11259,10 @@ msgid "Preferences..."
 msgstr "Preferenze..."
 
 #: src/widgets/Meter.cpp:1276
-#, fuzzy
 msgid "Automated Recording Level Adjustment stopped as requested by user."
-msgstr "Volume automatico fermato come richiesto dall'utente."
+msgstr ""
+"Regolazione automatica del volume di registrazione fermata come richiesto "
+"dall'utente."
 
 #: src/widgets/Meter.cpp:1291
 msgid ""
@@ -11516,16 +11470,8 @@ msgstr "Errore nella scrittura del file"
 #~ msgid "Confirm?"
 #~ msgstr "Confermi?"
 
-#, fuzzy
-#~ msgid "Change input device"
-#~ msgstr "Cambia dispositivo di uscita"
-
 #~ msgid "Change output device"
 #~ msgstr "Cambia dispositivo di uscita"
-
-#, fuzzy
-#~ msgid "Change input channels"
-#~ msgstr "Cambia canali di ingresso"
 
 #~ msgid "Adjust output gain"
 #~ msgstr "Regola guadagno uscita"
@@ -11563,24 +11509,8 @@ msgstr "Errore nella scrittura del file"
 #~ msgid "Input Channels"
 #~ msgstr "Canali ingresso"
 
-#, fuzzy
-#~ msgid "1 (Mono) Input Channel"
-#~ msgstr "1 (Mono) Canale di ingresso"
-
-#, fuzzy
-#~ msgid "2 (Stereo) Input Channels"
-#~ msgstr "2 (Stereo) Canali di ingresso"
-
-#, fuzzy
-#~ msgid "Select Input Device"
-#~ msgstr "Seleziona dispositivo di uscita"
-
 #~ msgid "Select Output Device"
 #~ msgstr "Seleziona dispositivo di uscita"
-
-#, fuzzy
-#~ msgid "Select Input Channels"
-#~ msgstr "Canali ingresso"
 
 #~ msgid "Output Level"
 #~ msgstr "Livello di uscita"
@@ -11597,36 +11527,8 @@ msgstr "Errore nella scrittura del file"
 #~ msgid "Slider Input"
 #~ msgstr "Cursore di ingresso"
 
-#, fuzzy
-#~ msgid "Input Volume: %.2f"
-#~ msgstr "Volume di ingresso"
-
-#, fuzzy
-#~ msgid "Input Volume (Unavailable; use system mixer.)"
-#~ msgstr "Volume di uscita (Non disponibile; usa il mixer di sistema)."
-
-#, fuzzy
-#~ msgid "Output Volume: %.2f%s"
-#~ msgstr "Volume di uscita"
-
 #~ msgid "Output Volume (Unavailable; use system mixer.)"
 #~ msgstr "Volume di uscita (Non disponibile; usa il mixer di sistema)."
-
-#, fuzzy
-#~ msgid "Recording Meter"
-#~ msgstr "Monitor registrazione"
-
-#, fuzzy
-#~ msgid "Playback Meter"
-#~ msgstr "Monitor riproduzione"
-
-#, fuzzy
-#~ msgid "Playback Level Slider"
-#~ msgstr "Velocità di riproduzione"
-
-#, fuzzy
-#~ msgid "Recording Level Slider "
-#~ msgstr "Fine registrazione"
 
 #~ msgid "GStreamer %s: %s"
 #~ msgstr "GStreamer %s: %s"
