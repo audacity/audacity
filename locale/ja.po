@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#: src/prefs/ModulePrefs.cpp:96
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-09-04 16:38+0100\n"
-"PO-Revision-Date: 2014-07-02 19:40-0000\n"
+"PO-Revision-Date: 2014-09-08 07:30-0000\n"
 "Last-Translator: Atsushi YOSHIDA\n"
 "Language-Team: Atsushi YOSHIDA\n"
 "Language: ja\n"
@@ -174,14 +173,12 @@ msgid "Import via QuickTime"
 msgstr "QuickTime を通じて取り込み"
 
 #: src/AboutDialog.cpp:415 src/AboutDialog.cpp:417
-#, fuzzy
 msgid "FFmpeg Import/Export"
-msgstr "FFmpeg 取り込み/書き出しライブラリ"
+msgstr "FFmpeg 取り込み/書き出し"
 
 #: src/AboutDialog.cpp:421 src/AboutDialog.cpp:423
-#, fuzzy
 msgid "Import via GStreamer"
-msgstr "QuickTime を通じて取り込み"
+msgstr "GStreamerを通じて取り込み"
 
 #: src/AboutDialog.cpp:429
 msgid "Core Libraries"
@@ -216,9 +213,8 @@ msgid "Pitch and Tempo Change support"
 msgstr "ピッチとテンポの変化のサポート"
 
 #: src/AboutDialog.cpp:533 src/AboutDialog.cpp:536
-#, fuzzy
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "ピッチとテンポの変化のサポート"
+msgstr "急激なピッチとテンポの変化のサポート"
 
 #: src/AboutDialog.cpp:548
 msgid "Program build date: "
@@ -528,60 +524,58 @@ msgid "Latency problem"
 msgstr "レイテンシー(潜時)の問題"
 
 #: src/AudioIO.cpp:3169
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
-msgstr "自動音量機能は停止しました. 音量が大きすぎるため調整できませんでした."
+msgstr ""
+"録音レベル自動調整機能は停止しました. 音量が大きすぎるため調整できませんでし"
+"た."
 
 #: src/AudioIO.cpp:3177
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "自動音量機能により音量が %f まで下がりました."
+msgstr "録音レベル自動調整機能により音量が %f まで下がりました."
 
 #: src/AudioIO.cpp:3192
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too low."
-msgstr "自動音量機能は停止しました. 音量が小さすぎ調整できませんでした."
+msgstr ""
+"録音レベル自動調整機能は停止しました. 音量が小さすぎ調整できませんでした."
 
 #: src/AudioIO.cpp:3204
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr "自動音量機能により音量が %.2f まで上がりました."
+msgstr "録音レベル自動調整機能により音量が %.2f まで上がりました."
 
 #: src/AudioIO.cpp:3238
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too high."
 msgstr ""
-"自動音量機能は停止しました. 解析を繰り返しましたが適切な音量を見つけることが"
-"できませんでした. 音量がまだ大きすぎます."
+"録音レベル自動調整機能は停止しました. 解析を繰り返しましたが適切な音量を見つ"
+"けることができませんでした. 音量がまだ大きすぎます."
 
 #: src/AudioIO.cpp:3240
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too low."
 msgstr ""
-"自動音量機能は停止しました. 解析を繰り返しましたが適切な音量を見つけることが"
-"できませんでした. 音量がまだ低すぎます."
+"録音レベル自動調整機能は停止しました. 解析を繰り返しましたが適切な音量を見つ"
+"けることができませんでした. 音量がまだ低すぎます."
 
 #: src/AudioIO.cpp:3243
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
 "volume."
-msgstr "自動音量機能は停止しました. %.2f が適切な音量と推定されます."
+msgstr "録音レベル自動調整機能は停止しました. %.2f が適切な音量と推定されます."
 
 #: src/AutoRecovery.cpp:56
 msgid "Automatic Crash Recovery"
 msgstr "クラッシュからの自動回復"
 
 #: src/AutoRecovery.cpp:75
-#, fuzzy
 msgid ""
 "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can be automatically recovered:"
@@ -600,34 +594,33 @@ msgstr "名前"
 
 #: src/AutoRecovery.cpp:87
 msgid "After recovery, save the project to save the changes to disk."
-msgstr ""
+msgstr "リカバリー後、変更点を保存するためにプロジェクト保存を行ってください."
 
 #: src/AutoRecovery.cpp:91
 msgid "Quit Audacity"
 msgstr "Audacity を終了"
 
 #: src/AutoRecovery.cpp:92
-#, fuzzy
 msgid "Discard Projects"
-msgstr "プロジェクトを回復"
+msgstr "プロジェクトを廃棄"
 
 #: src/AutoRecovery.cpp:93
 msgid "Recover Projects"
 msgstr "プロジェクトを回復"
 
 #: src/AutoRecovery.cpp:130
-#, fuzzy
 msgid ""
 "Are you sure you want to discard all projects?\n"
 "\n"
 "Choosing \"Yes\" discards all projects immediately."
 msgstr ""
-"どのプロジェクトも回復することを望まない, でよろしいですか?\n"
-"それらは後で回復させることはできません. "
+"すべてのプロジェクトを廃棄してもよろしいですか?\n"
+"\n"
+"\"はい\" を選ぶとすべてのプロジェクトが即座に廃棄されます. "
 
 #: src/AutoRecovery.cpp:131
 msgid "Confirm Discard Projects"
-msgstr ""
+msgstr "プロジェクト廃棄の確認"
 
 #: src/AutoRecovery.cpp:149 src/AutoRecovery.cpp:186
 msgid "Could not enumerate files in auto save directory."
@@ -1601,19 +1594,16 @@ msgid "Recording Audio"
 msgstr "オーディオを録音"
 
 #: src/HelpText.cpp:136
-#, fuzzy
 msgid "Recording - Choosing the Recording Device"
-msgstr "録音 - 入力デバイスの選択"
+msgstr "録音 - 録音デバイスの選択"
 
 #: src/HelpText.cpp:141
-#, fuzzy
 msgid "Recording - Choosing the Recording Source"
-msgstr "録音 - 入力ソースの選択"
+msgstr "録音 - 録音ソースの選択"
 
 #: src/HelpText.cpp:146
-#, fuzzy
 msgid "Recording - Setting the Recording Level"
-msgstr "録音 - 入力レベルの設定"
+msgstr "録音 - 録音レベルの設定"
 
 #: src/HelpText.cpp:151
 msgid "Editing and greyed out Menus"
@@ -2402,9 +2392,8 @@ msgid "Sound Activation Le&vel..."
 msgstr "録音起動レベル (&v)..."
 
 #: src/Menus.cpp:689
-#, fuzzy
 msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "自動音量機能 (オン/オフ) (&u)"
+msgstr "録音レベル自動調整機能 (オン/オフ) (&u)"
 
 #: src/Menus.cpp:691
 msgid "R&escan Audio Devices"
@@ -2820,53 +2809,44 @@ msgid "Full screen on/off"
 msgstr "フルスクリーン表示on/off"
 
 #: src/Menus.cpp:1176
-#, fuzzy
 msgid "Change recording device"
-msgstr "入力デバイスの変更"
+msgstr "録音デバイスの変更"
 
 #: src/Menus.cpp:1179
-#, fuzzy
 msgid "Change playback device"
-msgstr "入力デバイスの変更"
+msgstr "再生デバイスの変更"
 
 #: src/Menus.cpp:1182
 msgid "Change audio host"
 msgstr "オーディオホストの変更"
 
 #: src/Menus.cpp:1185
-#, fuzzy
 msgid "Change recording channels"
-msgstr "入力デバイスの変更"
+msgstr "録音チャンネルの変更"
 
 #: src/Menus.cpp:1189
-#, fuzzy
 msgid "Adjust playback volume"
-msgstr "再生スピード調整"
+msgstr "再生音量調整"
 
 #: src/Menus.cpp:1190
-#, fuzzy
 msgid "Increase playback volume"
-msgstr "再生スピード増加"
+msgstr "再生音量増加"
 
 #: src/Menus.cpp:1191
-#, fuzzy
 msgid "Decrease playback volume"
-msgstr "再生スピード減少"
+msgstr "再生音量低下"
 
 #: src/Menus.cpp:1192
-#, fuzzy
 msgid "Adjust recording volume"
-msgstr "録音の終了"
+msgstr "録音音量調整"
 
 #: src/Menus.cpp:1193
-#, fuzzy
 msgid "Increase recording volume"
-msgstr "再生スピード増加"
+msgstr "録音音量増加"
 
 #: src/Menus.cpp:1194
-#, fuzzy
 msgid "Decrease recording volume"
-msgstr "再生スピード減少"
+msgstr "録音音量低下"
 
 #: src/Menus.cpp:1196
 msgid "Play at speed"
@@ -4479,9 +4459,8 @@ msgid "Logarithmic &Interpolation"
 msgstr "対数補完(&I)"
 
 #: src/TrackPanel.cpp:695
-#, fuzzy
 msgid "&Delete Label"
-msgstr "消去ラベル"
+msgstr "ラベル消去(&D)"
 
 #: src/TrackPanel.cpp:700
 msgid "N&ame..."
@@ -4872,9 +4851,8 @@ msgid "Name Change"
 msgstr "名前の変更"
 
 #: src/TrackPanel.cpp:8005
-#, fuzzy
 msgid "Deleted Label"
-msgstr "消去ラベル"
+msgstr "消去されたラベル"
 
 #: src/TrackPanel.cpp:8041
 msgid "Label Track Font"
@@ -5073,8 +5051,8 @@ msgstr "オートドック"
 
 #: src/effects/AutoDuck.cpp:156
 msgid ""
-"Auto Duck needs a control track which must be placed below the selected track"
-"(s)."
+"Auto Duck needs a control track which must be placed below the selected "
+"track(s)."
 msgstr ""
 "オートドックは, 選択したトラックの下にコントロールトラックを必要とします. "
 
@@ -5831,12 +5809,11 @@ msgid "Previewing"
 msgstr "プレビュー"
 
 #: src/effects/Effect.cpp:536
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the playback device settings "
 "and the project sample rate."
 msgstr ""
-"サウンドデバイスの取得時に時にエラーが発生しました. 出力デバイス設定と, プロ"
+"サウンドデバイスのオープン時にエラーが発生しました. 再生デバイス設定と, プロ"
 "ジェクトのサンプリング周波数のチェックをして下さい."
 
 #: src/effects/Effect.h:98 src/effects/Reverb.cpp:195
@@ -7556,7 +7533,7 @@ msgstr "VSTエフェクトセッティング"
 
 #: src/effects/VST/VSTEffect.cpp:802
 msgid "Buffer Size"
-msgstr ""
+msgstr "バッファーサイズ"
 
 #: src/effects/VST/VSTEffect.cpp:808
 msgid "The buffer size controls the number of samples sent to the effect "
@@ -7611,35 +7588,31 @@ msgid "Enable &compensation"
 msgstr "補正の有効化(&c)"
 
 #: src/effects/VST/VSTEffect.cpp:844
-#, fuzzy
 msgid "Graphical Mode"
-msgstr "グラフィックイコライザ"
+msgstr "グラフィックモード"
 
 #: src/effects/VST/VSTEffect.cpp:848
-#, fuzzy
 msgid ""
 "Most VST effects have a graphical interface for setting parameter values."
-msgstr "Most VST effects provide a graphical interface for setting the "
+msgstr ""
+"ほとんどのVSTエフェクトはパラメータ値設定用のグラフィカルインタフェースを持っ"
+"ています."
 
 #: src/effects/VST/VSTEffect.cpp:849
-#, fuzzy
 msgid " A basic text-only method is also available. "
-msgstr "parameter values. However, a basic text only method is also "
+msgstr "基本的なテキストのみによる方法も可能です."
 
 #: src/effects/VST/VSTEffect.cpp:850
-#, fuzzy
 msgid " Reopen the effect for this to take effect."
-msgstr "available.  Reopen the effect for this to take affect."
+msgstr "このエフェクトを有効にするために再度オープンしてください."
 
 #: src/effects/VST/VSTEffect.cpp:851
-#, fuzzy
 msgid "Enable &Graphical Mode"
-msgstr "グラフィカルインタフェース有効化 (&g)"
+msgstr "グラフィカルインタフェース有効化 (&G)"
 
 #: src/effects/VST/VSTEffect.cpp:855
-#, fuzzy
 msgid "Rescan Effects"
-msgstr "エフェクト"
+msgstr "エフェクトの再スキャン"
 
 #: src/effects/VST/VSTEffect.cpp:858
 msgid "To improve Audacity startup, a search for VST effects is performed "
@@ -7732,12 +7705,16 @@ msgid ""
 "This effect does not support a textual interface. At this time, you may not "
 "use this effect on Linux."
 msgstr ""
+"このエフェクトはテキストインタフェースをサポートしていません. 現時点ではこの"
+"エフェクトはLinuxでは使えません."
 
 #: src/effects/VST/VSTEffect.cpp:2822
 msgid ""
 "This effect does not support a textual interface.  Falling back to graphical "
 "display."
 msgstr ""
+"このエフェクトはテキストインタフェースをサポートしていません. グラフィカルイ"
+"ンタフェースに戻します. "
 
 #: src/effects/VST/VSTEffect.cpp:3370
 msgid "Scanning VST Plugins"
@@ -9700,9 +9677,8 @@ msgid "Audio Unit Effects"
 msgstr "オーディオユニットエフェクト"
 
 #: src/prefs/EffectsPrefs.cpp:102
-#, fuzzy
 msgid "Display Audio Unit effects in Graphical Mode"
-msgstr "オーディオユニットエフェクトをGUIモードで表示"
+msgstr "オーディオユニットエフェクトをグラフィカルモードで表示"
 
 #: src/prefs/EffectsPrefs.cpp:106
 msgid "Rescan VST effects next time Audacity is started"
@@ -9713,9 +9689,8 @@ msgid "VST Effects"
 msgstr "VSTエフェクト"
 
 #: src/prefs/EffectsPrefs.cpp:117
-#, fuzzy
 msgid "&Display VST effects in Graphical Mode"
-msgstr "VSTエフェクトをGUIモードで表示(&D)"
+msgstr "VSTエフェクトをグラフィカルモードで表示(&D)"
 
 #: src/prefs/EffectsPrefs.cpp:120
 msgid "&Rescan VST effects next time Audacity is started"
@@ -10588,14 +10563,12 @@ msgid "Sound Activation Le&vel (dB):"
 msgstr "録音起動のレベル (dB)(&v):"
 
 #: src/prefs/RecordingPrefs.cpp:128
-#, fuzzy
 msgid "Automated Recording Level Adjustment"
-msgstr "自動音量機能"
+msgstr "録音レベル自動調整機能"
 
 #: src/prefs/RecordingPrefs.cpp:130
-#, fuzzy
 msgid "Enable Automated Recording Level Adjustment."
-msgstr "自動音量機能を有効"
+msgstr "録音レベル自動調整機能を有効"
 
 #: src/prefs/RecordingPrefs.cpp:139
 msgid "Target Peak:"
@@ -10961,12 +10934,11 @@ msgid "Error while opening sound device. "
 msgstr "サウンドデバイスを開く際にエラーが発生しました"
 
 #: src/toolbars/ControlToolBar.cpp:940
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the recording device settings "
 "and the project sample rate."
 msgstr ""
-"サウンドデバイスの取得時に時にエラーが発生しました. 出力デバイス設定と, プロ"
+"サウンドデバイスのオープン時にエラーが発生しました. 録音デバイス設定と, プロ"
 "ジェクトのサンプリング周波数のチェックをして下さい."
 
 #: src/toolbars/DeviceToolBar.cpp:102
@@ -10974,48 +10946,40 @@ msgid "Audio Host"
 msgstr "オーディオホスト"
 
 #: src/toolbars/DeviceToolBar.cpp:117
-#, fuzzy
 msgid "Playback Device"
-msgstr "再生速度"
+msgstr "再生デバイス"
 
 #: src/toolbars/DeviceToolBar.cpp:132
-#, fuzzy
 msgid "Recording Device"
-msgstr "録音の終了"
+msgstr "録音デバイス"
 
 #: src/toolbars/DeviceToolBar.cpp:139
-#, fuzzy
 msgid "Recording Channels"
-msgstr "録音の終了"
+msgstr "録音チャンネル"
 
 #: src/toolbars/DeviceToolBar.cpp:615
-#, fuzzy
 msgid "1 (Mono) Recording Channel"
-msgstr "録音の終了"
+msgstr "1(モノ)録音チャンネル"
 
 #: src/toolbars/DeviceToolBar.cpp:618
-#, fuzzy
 msgid "2 (Stereo) Recording Channels"
-msgstr "入力チャンネルの選択"
+msgstr "2(ステレオ)録音チャンネル"
 
 #: src/toolbars/DeviceToolBar.cpp:745
-#, fuzzy
 msgid "Select Recording Device"
-msgstr "入力デバイスの選択"
+msgstr "録音デバイスの選択"
 
 #: src/toolbars/DeviceToolBar.cpp:749
-#, fuzzy
 msgid "Select Playback Device"
-msgstr "入力デバイスの選択"
+msgstr "再生デバイスの選択"
 
 #: src/toolbars/DeviceToolBar.cpp:753
 msgid "Select Audio Host"
 msgstr "オーディオホストの選択"
 
 #: src/toolbars/DeviceToolBar.cpp:757
-#, fuzzy
 msgid "Select Recording Channels"
-msgstr "入力チャンネルの選択"
+msgstr "録音チャンネルの選択"
 
 #: src/toolbars/DeviceToolBar.cpp:763
 msgid "Device information is not available."
@@ -11090,58 +11054,50 @@ msgid "Meter-Record"
 msgstr "メーター　録音"
 
 #: src/toolbars/MeterToolBar.cpp:129
-#, fuzzy
 msgid "Playback Level"
-msgstr "再生速度"
+msgstr "再生レベル"
 
 #: src/toolbars/MeterToolBar.cpp:130
-#, fuzzy
 msgid "Recording Level (Click to monitor.)"
-msgstr "入力レベル (モニターするにはクリック)"
+msgstr "録音レベル (モニターするにはクリック)"
 
 #: src/toolbars/MixerToolBar.cpp:91
-#, fuzzy
 msgid "Playback Volume"
-msgstr "再生"
+msgstr "再生ボリューム"
 
 #: src/toolbars/MixerToolBar.cpp:94
-#, fuzzy
 msgid "Slider Playback"
-msgstr "再生"
+msgstr "スライダー再生"
 
 #: src/toolbars/MixerToolBar.cpp:103
-#, fuzzy
 msgid "Recording Volume"
-msgstr "録音の終了"
+msgstr "録音ボリューム"
 
 #: src/toolbars/MixerToolBar.cpp:106
-#, fuzzy
 msgid "Slider Recording"
-msgstr "録音"
+msgstr "スライダー録音"
 
 #: src/toolbars/MixerToolBar.cpp:296
-#, fuzzy, c-format
+#, c-format
 msgid "Recording Volume: %.2f"
-msgstr "入力ボリューム: %.2f"
+msgstr "録音ボリューム: %.2f"
 
 #: src/toolbars/MixerToolBar.cpp:300
-#, fuzzy
 msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "入力ボリューム (使用不可; システムミキサーをお使いください.)"
+msgstr "録音ボリューム (使用不可; システムミキサーをお使いください.)"
 
 #: src/toolbars/MixerToolBar.cpp:305
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f%s"
-msgstr "出力ボリューム: %.2f%s"
+msgstr "再生ボリューム: %.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp:305
 msgid " (emulated)"
 msgstr "(エミュレーテッド)"
 
 #: src/toolbars/MixerToolBar.cpp:309
-#, fuzzy
 msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "入力ボリューム (使用不可; システムミキサーをお使いください.)"
+msgstr "再生ボリューム (使用不可; システムミキサーをお使いください.)"
 
 #: src/toolbars/SelectionBar.cpp:87 src/toolbars/SelectionBar.cpp:287
 msgid "Selection"
@@ -11303,14 +11259,12 @@ msgid "Start Monitoring"
 msgstr "モニターを開始"
 
 #: src/widgets/Meter.cpp:417
-#, fuzzy
 msgid "Stop Automated Recording Level Adjustment"
-msgstr "自動音量機能を停止"
+msgstr "録音レベル自動調整機能を停止"
 
 #: src/widgets/Meter.cpp:419
-#, fuzzy
 msgid "Start Automated Recording Level Adjustment"
-msgstr "自動音量機能の開始"
+msgstr "録音レベル自動調整機能の開始"
 
 #: src/widgets/Meter.cpp:430
 msgid "Horizontal Stereo"
@@ -11325,9 +11279,8 @@ msgid "Preferences..."
 msgstr "設定... "
 
 #: src/widgets/Meter.cpp:1276
-#, fuzzy
 msgid "Automated Recording Level Adjustment stopped as requested by user."
-msgstr "ユーザーの要請により自動音量機能が停止しました."
+msgstr "ユーザーの要請により録音レベル自動調整機能が停止しました."
 
 #: src/widgets/Meter.cpp:1291
 msgid ""
