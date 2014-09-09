@@ -9,7 +9,7 @@ bug reports and patches at:
 Personal support with Audacity is not provided by e-mail, but on our Forum:
   http://audacityteam.org/forum/ .
 
-Audacity is copyright (c) 1999-2013 by Audacity Team. This copyright notice
+Audacity is copyright (c) 1999-2014 by Audacity Team. This copyright notice
 applies to all documents in the Audacity source code archive, except as
 otherwise noted (mostly in the lib-src subdirectories).
 
@@ -20,12 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.0.5 
+Version 2.0.6 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.0.4 
+2.  Changes since version 2.0.5 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -57,76 +57,69 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.0.4: 
+2. Changes since version 2.0.5: 
 
 Bug fixes for:
 
- * Shaped dither was corrupted and too loud on all stereo exports except FLAC. 
+ * Interface:
+   * Region Restore did not restore the region after using Preferences. 
+   * Dragging selections with the keyboard or Selection Toolbar digits 
+      was very slow.  
+   * (Windows) Help > About Audacity crashed when run in Magyar language.  
+   * (OS X) Some full and reduced Menu Bar items were not translated.  
+   * (OS X and Linux) Fixed various interface crashes.
 
- * Keyboard Preferences: some Edit and Align commands for different sub-menus
-    showed the same name.   
+ * Effects:
+   * Reverb and Paulstretch were missing from Chains.
+   * Analyze > Contrast could report very inaccurate rms levels.
+   * Noise Removal: Attack and decay times were half as long as set.  
+   * (OS X and Linux) Nyquist effects ran much more slowly than on Windows. 
 
- * Recordings stopped with "Stop and Set Cursor" shortcut could not be undone.
-
- * In locales that use comma for decimal separator:
-    * Text boxes with slider in Nyquist effects only produced whole numbers 
-       when using comma to enter a fractional number. Text boxes without 
-       slider still have this problem.   
-    * Built-in generators produced silence after running a Nyquist effect.  
-
- * (Windows) When first changing to Windows WASAPI host, the input volume slider
-    in Mixer Toolbar was enabled when it should have been permanently disabled. 
-
- * (Windows) On some machines, launching Audacity then recording from the current
-    Device Toolbar input would not record until the input was reselected. 
-
- * (OS X) Frequent crashes occurred on importing audio files on some machines.
-
- * (OS X) Files did not open using Finder "Open with", double-clicking the 
-    file or dragging the file to the Audacity icon.    
-
- * (Linux 64-bit) Fixed a crash when using Equalization.
-
- * (Linux) It was not possible to open an effect or other dialog then navigate
-    through the dialog using TAB.
-
- * (Linux) The Play shortcut did not play a read-directly WAV, AIFF or FLAC 
-    import if the warning for importing uncompressed files appeared. 
+ * Click or drag on the Timeline after Loop Play continued to loop.
+ * Transcription Toolbar did not play slower than 0.1x speed.
+ * (Linux) Audacity did not build if python 2 was not available.  
 
 
 Changes and Improvements:
 
- * Tracks Menu:
-   * The separate commands that aligned track start or end with the cursor or
-      with selection start are combined into "Cursor/Selection Start" commands.
-   * "Align and Move Cursor" renamed to "Move Selection when Aligning".   
+ * Interface:
+   * Edit Menu: "Cut" and "Delete" are now in the top level of the menu.  
+   * Transport Menu now includes "Play/Stop" and "Play/Stop and Set Cursor" 
+      (use Keyboard Preferences to create shortcuts for "Play" and "Stop").
+   * Tracks Menu now includes "Mix and Render to New Track". 
+   * Track Drop-Down Menu now has Move Track To Top and Move Track To Bottom. 
+   * New right-click menu choice "Delete Label" to remove single labels.
+   * "Snap To" now offers choice of snap to the "closest" or "prior" position.
+      Note: the previous "Snap To On" keyboard shortcut will no longer work.   
+   * "Snap To" settings are now independent for each project.
 
- * Label Tracks:
-   * Labels Editor now allows empty labels to be saved on closing the editor.
-   * TAB and SHIFT+TAB when the label track has focus now always move forwards
-      or backwards respectively to the nearest label.
+ * Effects:
+   * Truncate Silence: redesigned with simpler option "Truncate Detected 
+      Silence" to shorten to the specified length without compressing silence.
+   * VST effects: New "Settings" dialog lets you specify buffer size (for 
+      faster processing) and enable buffer delay compensation (to prevent
+      inserted silence). Compensation may cause a crash in a few plug-ins. 
+   * VST effects now support standard FXP presets.  
+   * LV2 effects are now supported on all platforms (textual interface only).    
 
- * (Windows) On a very few machines, the Windows WDM-KS low latency audio host
-    introduced in Audacity 2.0.4 caused Audacity to hang or the computer to 
-    crash. WDM-KS has been removed from 2.0.5 until it can be safely enabled.
-
- * (Windows and OS X) Screen reader improvements for Install VST Effects dialog.  
-
- * (OS X) Audio Unit plug-ins detected by Audacity on launch are now not loaded
-    until chosen from the Effect menu. This should speed up launch and avoid
-    crashes at launch due to misbehaving Audio Units.  
-
- * (Linux) Update to PortAudio r1910 fixes memory and other bugs under ALSA.
-
- * (Linux) Applied fix for wxGTK 2.8.12 bug which resulted in loss of Audacity's
-    menu bar (or visual corruption under Unity) on Debian-based systems.
+ * Import or export using FFmpeg now requires FFmpeg 1.2 or later (or libav
+    0.8 or later). For recommended downloads of recent FFmpeg please visit:
+    http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#ffdown .
+ * New Tamil translation (largely complete). 
+ * (Windows) FLAC exports can now exceed 2 GB in size. 
+ * (OS X) Easier Audacity installation using the DMG: drag the Audacity folder
+    to the /Applications shortcut, 
+ * (OS X) Audacity 2.0.6 will not officially support OS X 10.10 Yosemite when 
+    released (in particular, Apple Audio Units may not open in Audacity).
+ * (Linux) Self-compiled builds of Audacity now search for system LADSPA 
+    effects in /usr/lib/ladspa,  .  
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.0.5:
+3. Known Issues in 2.0.6:
 
-For known issues at release of 2.0.5, please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.5#known
+For known issues at release of 2.0.6, please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.6#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -189,6 +182,9 @@ GPL-compatible license.  Specifically:
   libvorbis: BSD-like license.
     Decodes and encodes Ogg Vorbis files.  Optional
     separate download.
+
+  lv2: a merging of the lilv (ISC license), lv2 (LGPL), msinttypes, serd (ISC), 
+    sord and sratom libraries to support LV2 plug-ins. 
 
   portsmf: BSD-like license.
     library for reading and writing midi files. Included with Audacity
@@ -282,7 +278,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.0.5 requires wxWidgets 2.8.12
+First you must download wxWidgets. Audacity 2.0.6 requires wxWidgets 2.8.12
 from:
 
    http://www.wxWidgets.org/ .
@@ -332,6 +328,72 @@ or ask at:
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+
+Changes in version 2.0.5:
+
+Bug fixes for:
+
+ * Shaped dither was corrupted and too loud on all stereo exports except FLAC. 
+
+ * Keyboard Preferences: some Edit and Align commands for different sub-menus
+    showed the same name.   
+
+ * Recordings stopped with "Stop and Set Cursor" shortcut could not be undone.
+
+ * In locales that use comma for decimal separator:
+    * Text boxes with slider in Nyquist effects only produced whole numbers 
+       when using comma to enter a fractional number. Text boxes without 
+       slider still have this problem.   
+    * Built-in generators produced silence after running a Nyquist effect.  
+
+ * (Windows) When first changing to Windows WASAPI host, the input volume slider
+    in Mixer Toolbar was enabled when it should have been permanently disabled. 
+
+ * (Windows) On some machines, launching Audacity then recording from the current
+    Device Toolbar input would not record until the input was reselected. 
+
+ * (OS X) Frequent crashes occurred on importing audio files on some machines.
+
+ * (OS X) Files did not open using Finder "Open with", double-clicking the 
+    file or dragging the file to the Audacity icon.    
+
+ * (Linux 64-bit) Fixed a crash when using Equalization.
+
+ * (Linux) It was not possible to open an effect or other dialog then navigate
+    through the dialog using TAB.
+
+ * (Linux) The Play shortcut did not play a read-directly WAV, AIFF or FLAC 
+    import if the warning for importing uncompressed files appeared. 
+
+
+Changes and Improvements:
+
+ * Tracks Menu:
+   * The separate commands that aligned track start or end with the cursor or
+      with selection start are combined into "Cursor/Selection Start" commands.
+   * "Align and Move Cursor" renamed to "Move Selection when Aligning".   
+
+ * Label Tracks:
+   * Labels Editor now allows empty labels to be saved on closing the editor.
+   * TAB and SHIFT+TAB when the label track has focus now always move forwards
+      or backwards respectively to the nearest label.
+
+ * (Windows) On a very few machines, the Windows WDM-KS low latency audio host
+    introduced in Audacity 2.0.4 caused Audacity to hang or the computer to 
+    crash. WDM-KS has been removed from 2.0.5 until it can be safely enabled.
+
+ * (Windows and OS X) Screen reader improvements for Install VST Effects dialog.  
+
+ * (OS X) Audio Unit plug-ins detected by Audacity on launch are now not loaded
+    until chosen from the Effect menu. This should speed up launch and avoid
+    crashes at launch due to misbehaving Audio Units.  
+
+ * (Linux) Update to PortAudio r1910 fixes memory and other bugs under ALSA.
+
+ * (Linux) Applied fix for wxGTK 2.8.12 bug which resulted in loss of Audacity's
+    menu bar (or visual corruption under Unity) on Debian-based systems.
+
 
 Changes in version 2.0.4:
 
