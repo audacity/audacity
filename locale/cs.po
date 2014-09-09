@@ -1,21 +1,21 @@
 # Header entry was created by Lokalize.
 #
-# Pavel Fric <pavelfric@seznam.cz>, 2013, 2014.
 #: src/prefs/ModulePrefs.cpp:96
+# Pavel Fric <pavelfric@seznam.cz>, 2013, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.x\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-09-04 16:38+0100\n"
-"PO-Revision-Date: 2014-07-02 18:28-0000\n"
-"Last-Translator: Pavel Fric\n"
-"Language-Team: Czech <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2014-09-04 23:37+0200\n"
+"Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
+"Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: src/AboutDialog.cpp:57 src/AboutDialog.cpp:78
 msgid "co-founder"
@@ -161,14 +161,12 @@ msgid "Import via QuickTime"
 msgstr "Nahrát přes QuickTime"
 
 #: src/AboutDialog.cpp:415 src/AboutDialog.cpp:417
-#, fuzzy
 msgid "FFmpeg Import/Export"
-msgstr "Knihovna pro nahrávání/ukládání FFmpeg"
+msgstr "Nahrávání/ukládání FFmpeg"
 
 #: src/AboutDialog.cpp:421 src/AboutDialog.cpp:423
-#, fuzzy
 msgid "Import via GStreamer"
-msgstr "Nahrát přes QuickTime"
+msgstr "Nahrát přes GStreamer"
 
 #: src/AboutDialog.cpp:429
 msgid "Core Libraries"
@@ -203,9 +201,8 @@ msgid "Pitch and Tempo Change support"
 msgstr "Podpora změny výšky tónu a tempa"
 
 #: src/AboutDialog.cpp:533 src/AboutDialog.cpp:536
-#, fuzzy
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "Podpora změny výšky tónu a tempa"
+msgstr "Podpora změny krajní výšky tónu a tempa"
 
 #: src/AboutDialog.cpp:548
 msgid "Program build date: "
@@ -509,58 +506,54 @@ msgid "Latency problem"
 msgstr "Problém s prodlevou"
 
 #: src/AudioIO.cpp:3169
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
 msgstr ""
-"Automatizované nastavení vstupní úrovně nefunguje. Nebylo možno ji více "
+"Automatizované nastavení úrovně nahrávání nefunguje. Nebylo možno ji více "
 "optimalizovat. Stále je příliš vysoká."
 
 #: src/AudioIO.cpp:3177
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "Automatizované nastavení vstupní úrovně snížilo hlasitost na %f."
+msgstr "Automatizované nastavení úrovně nahrávání snížilo hlasitost na %f."
 
 #: src/AudioIO.cpp:3192
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too low."
 msgstr ""
-"Automatizované nastavení vstupní úrovně zastavilo. Nebylo možno ji více "
+"Automatizované nastavení úrovně nahrávání zastavilo. Nebylo možno ji více "
 "optimalizovat. Stále je ještě nízká."
 
 #: src/AudioIO.cpp:3204
-#, fuzzy, c-format
+#, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr "Automatizované nastavení vstupní úrovně snížilo hlasitost na %.2f."
+msgstr "Automatizované nastavení úrovně nahrávání snížilo hlasitost na %.2f."
 
 #: src/AudioIO.cpp:3238
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too high."
 msgstr ""
-"Automatizované nastavení vstupní úrovně nefunguje. Celkový počet analýz byl "
+"Automatizované nastavení úrovně nahrávání nefunguje. Celkový počet analýz byl "
 "překročen bez nalezení přijatelného objemu. Stále je příliš vysoká."
 
 #: src/AudioIO.cpp:3240
-#, fuzzy
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too low."
 msgstr ""
-"Automatizované nastavení vstupní úrovně nefunguje. Celkový počet analýz byl "
+"Automatizované nastavení úrovně nahrávání nefunguje. Celkový počet analýz byl "
 "překročen bez nalezení přijatelného objemu. Stále je příliš nízká."
 
 #: src/AudioIO.cpp:3243
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
 "volume."
 msgstr ""
-"Automatizované nastavení vstupní úrovně nefunguje. %.2f se zdá jako "
+"Automatizované nastavení úrovně nahrávání nefunguje. %.2f se zdá jako "
 "akceptovatelná hlasitost."
 
 #: src/AutoRecovery.cpp:56
@@ -568,7 +561,6 @@ msgid "Automatic Crash Recovery"
 msgstr "Automatické zotavení po chybě"
 
 #: src/AutoRecovery.cpp:75
-#, fuzzy
 msgid ""
 "Some projects were not saved properly the last time Audacity was run.\n"
 "Fortunately, the following projects can be automatically recovered:"
@@ -586,34 +578,33 @@ msgstr "Název"
 
 #: src/AutoRecovery.cpp:87
 msgid "After recovery, save the project to save the changes to disk."
-msgstr ""
+msgstr "Po obnovení projekt uložit pro uložení změn na disk."
 
 #: src/AutoRecovery.cpp:91
 msgid "Quit Audacity"
 msgstr "Zavřít Audacity"
 
 #: src/AutoRecovery.cpp:92
-#, fuzzy
 msgid "Discard Projects"
-msgstr "Obnovit projekty"
+msgstr "Zahodit projekty"
 
 #: src/AutoRecovery.cpp:93
 msgid "Recover Projects"
 msgstr "Obnovit projekty"
 
 #: src/AutoRecovery.cpp:130
-#, fuzzy
 msgid ""
 "Are you sure you want to discard all projects?\n"
 "\n"
 "Choosing \"Yes\" discards all projects immediately."
 msgstr ""
-"Opravdu nechcete obnovit nějaké projekty?\n"
-"Později nebude možné je obnovit."
+"Opravdu chcete zahodit všechny projekty?\n"
+"\n"
+"Volba Ano okamžitě zahodí všechny projekty."
 
 #: src/AutoRecovery.cpp:131
 msgid "Confirm Discard Projects"
-msgstr ""
+msgstr "Potvrdit zahození projektů"
 
 #: src/AutoRecovery.cpp:149 src/AutoRecovery.cpp:186
 msgid "Could not enumerate files in auto save directory."
@@ -1567,19 +1558,16 @@ msgid "Recording Audio"
 msgstr "Nahrávání zvuku"
 
 #: src/HelpText.cpp:136
-#, fuzzy
 msgid "Recording - Choosing the Recording Device"
-msgstr "Nahrávání - výběr vstupního zařízení"
+msgstr "Nahrávání - výběr nahrávacího zařízení"
 
 #: src/HelpText.cpp:141
-#, fuzzy
 msgid "Recording - Choosing the Recording Source"
-msgstr "Nahrávání - výběr vstupního zdroje"
+msgstr "Nahrávání - výběr nahrávacího zdroje"
 
 #: src/HelpText.cpp:146
-#, fuzzy
 msgid "Recording - Setting the Recording Level"
-msgstr "Nahrávání - nastavení vstupní úrovně"
+msgstr "Nahrávání - nastavení úrovně nahrávání"
 
 #: src/HelpText.cpp:151
 msgid "Editing and greyed out Menus"
@@ -2366,9 +2354,8 @@ msgid "Sound Activation Le&vel..."
 msgstr "Ú&roveň aktivace zvukem..."
 
 #: src/Menus.cpp:689
-#, fuzzy
 msgid "A&utomated Recording Level Adjustment (on/off)"
-msgstr "A&utomatické přizpůsobení vstupní úrovně zvuku (zapnuto/vypnuto)"
+msgstr "A&utomatické přizpůsobení úrovně nahrávání zvuku (zapnuto/vypnuto)"
 
 #: src/Menus.cpp:691
 msgid "R&escan Audio Devices"
@@ -2777,53 +2764,44 @@ msgid "Full screen on/off"
 msgstr "Zobrazení na celou obrazovku zapnout/vypnout"
 
 #: src/Menus.cpp:1176
-#, fuzzy
 msgid "Change recording device"
-msgstr "Změnit vstupní zařízení"
+msgstr "Změnit nahrávací zařízení"
 
 #: src/Menus.cpp:1179
-#, fuzzy
 msgid "Change playback device"
-msgstr "Změnit vstupní zařízení"
+msgstr "Změnit přehrávací zařízení"
 
 #: src/Menus.cpp:1182
 msgid "Change audio host"
 msgstr "Změnit zvukovou architekturu"
 
 #: src/Menus.cpp:1185
-#, fuzzy
 msgid "Change recording channels"
-msgstr "Změnit vstupní zařízení"
+msgstr "Změnit nahrávací kanály"
 
 #: src/Menus.cpp:1189
-#, fuzzy
 msgid "Adjust playback volume"
-msgstr "Nastavit rychlost přehrávání"
+msgstr "Přizpůsobit hlasitost přehrávání"
 
 #: src/Menus.cpp:1190
-#, fuzzy
 msgid "Increase playback volume"
-msgstr "Zrychlit přehrávání"
+msgstr "Zvýšit hlasitost přehrávání"
 
 #: src/Menus.cpp:1191
-#, fuzzy
 msgid "Decrease playback volume"
-msgstr "Zpomalit přehrávání"
+msgstr "Snížit hlasitost přehrávání"
 
 #: src/Menus.cpp:1192
-#, fuzzy
 msgid "Adjust recording volume"
-msgstr "Konec nahrávání"
+msgstr "Přizpůsobit hlasitost nahrávání"
 
 #: src/Menus.cpp:1193
-#, fuzzy
 msgid "Increase recording volume"
-msgstr "Zrychlit přehrávání"
+msgstr "Zvýšit hlasitost nahrávání"
 
 #: src/Menus.cpp:1194
-#, fuzzy
 msgid "Decrease recording volume"
-msgstr "Zpomalit přehrávání"
+msgstr "Snížit hlasitost nahrávání"
 
 #: src/Menus.cpp:1196
 msgid "Play at speed"
@@ -4438,9 +4416,8 @@ msgid "Logarithmic &Interpolation"
 msgstr "Logaritmická &interpolace"
 
 #: src/TrackPanel.cpp:695
-#, fuzzy
 msgid "&Delete Label"
-msgstr "Smazat štítky"
+msgstr "&Smazat štítek"
 
 #: src/TrackPanel.cpp:700
 msgid "N&ame..."
@@ -4832,9 +4809,8 @@ msgid "Name Change"
 msgstr "Změnit název"
 
 #: src/TrackPanel.cpp:8005
-#, fuzzy
 msgid "Deleted Label"
-msgstr "Smazat štítky"
+msgstr "Smazaný štítek"
 
 #: src/TrackPanel.cpp:8041
 msgid "Label Track Font"
@@ -5786,13 +5762,12 @@ msgid "Previewing"
 msgstr "Náhled"
 
 #: src/effects/Effect.cpp:536
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the playback device settings "
 "and the project sample rate."
 msgstr ""
 "Chyba při otevírání zvukového zařízení. Prověřte, prosím, nastavení "
-"výstupního zařízení a vzorkovací kmitočet projektu."
+"přehrávacího zařízení a vzorkovací kmitočet projektu."
 
 #: src/effects/Effect.h:98 src/effects/Reverb.cpp:195
 #: src/effects/TimeScale.cpp:55
@@ -5977,7 +5952,7 @@ msgstr "AVX závitový"
 
 #: src/effects/Equalization.cpp:1468
 msgid "&Bench"
-msgstr ""
+msgstr "&Zkouška"
 
 #: src/effects/Equalization.cpp:1529
 msgid "Select Curve"
@@ -7514,7 +7489,7 @@ msgstr "Nastavení efektu VST"
 
 #: src/effects/VST/VSTEffect.cpp:802
 msgid "Buffer Size"
-msgstr ""
+msgstr "Velikost vyrovnávací paměti"
 
 #: src/effects/VST/VSTEffect.cpp:808
 msgid "The buffer size controls the number of samples sent to the effect "
@@ -7573,35 +7548,30 @@ msgid "Enable &compensation"
 msgstr "Povolit &vyrovnávání"
 
 #: src/effects/VST/VSTEffect.cpp:844
-#, fuzzy
 msgid "Graphical Mode"
-msgstr "Grafický ekvalizér"
+msgstr "Obrazový režim"
 
 #: src/effects/VST/VSTEffect.cpp:848
-#, fuzzy
 msgid ""
 "Most VST effects have a graphical interface for setting parameter values."
-msgstr "Většina efektů VST poskytuje grafické rozhraní pro nastavení "
+msgstr ""
+"Většina efektů VST poskytuje grafické rozhraní pro nastavení hodnot parametrů."
 
 #: src/effects/VST/VSTEffect.cpp:849
-#, fuzzy
 msgid " A basic text-only method is also available. "
-msgstr "hodnot parametrů. Nicméně je dostupná i základní pouze textová metoda "
+msgstr " Nicméně je dostupná i základní pouze textová metoda zadávání. "
 
 #: src/effects/VST/VSTEffect.cpp:850
-#, fuzzy
 msgid " Reopen the effect for this to take effect."
-msgstr "zadávání. Efekt znovu otevřete, aby se toto projevilo."
+msgstr " Efekt znovu otevřete, aby se toto projevilo."
 
 #: src/effects/VST/VSTEffect.cpp:851
-#, fuzzy
 msgid "Enable &Graphical Mode"
-msgstr "Povolit &grafické rozhraní"
+msgstr "Povolit &obrazový režim"
 
 #: src/effects/VST/VSTEffect.cpp:855
-#, fuzzy
 msgid "Rescan Effects"
-msgstr "Efekty"
+msgstr "Prohledat efekty znovu"
 
 #: src/effects/VST/VSTEffect.cpp:858
 msgid "To improve Audacity startup, a search for VST effects is performed "
@@ -7696,12 +7666,15 @@ msgid ""
 "This effect does not support a textual interface. At this time, you may not "
 "use this effect on Linux."
 msgstr ""
+"Tento efekt nepodporuje textové rozhraní. V současnosti tento efekt na Linuxu "
+"nelze použít."
 
 #: src/effects/VST/VSTEffect.cpp:2822
 msgid ""
 "This effect does not support a textual interface.  Falling back to graphical "
 "display."
 msgstr ""
+"Tento efekt nepodporuje textové rozhraní. Návrat do grafického zobrazení."
 
 #: src/effects/VST/VSTEffect.cpp:3370
 msgid "Scanning VST Plugins"
@@ -9633,7 +9606,6 @@ msgid "Audio Unit Effects"
 msgstr "Efekty Audio Unit"
 
 #: src/prefs/EffectsPrefs.cpp:102
-#, fuzzy
 msgid "Display Audio Unit effects in Graphical Mode"
 msgstr "Zobrazit efekty Audio Unit v obrazovém režimu"
 
@@ -9646,7 +9618,6 @@ msgid "VST Effects"
 msgstr "Efekty VST"
 
 #: src/prefs/EffectsPrefs.cpp:117
-#, fuzzy
 msgid "&Display VST effects in Graphical Mode"
 msgstr "&Zobrazit efekty VST v obrazovém režimu"
 
@@ -10529,14 +10500,12 @@ msgid "Sound Activation Le&vel (dB):"
 msgstr "Prahová hodnota (dB):"
 
 #: src/prefs/RecordingPrefs.cpp:128
-#, fuzzy
 msgid "Automated Recording Level Adjustment"
-msgstr "Automatické přizpůsobení vstupní úrovně zvuku"
+msgstr "Automatické přizpůsobení nahrávací úrovně zvuku"
 
 #: src/prefs/RecordingPrefs.cpp:130
-#, fuzzy
 msgid "Enable Automated Recording Level Adjustment."
-msgstr "Povolit automatické přizpůsobení vstupní úrovně zvuku."
+msgstr "Povolit automatické přizpůsobení nahrávací úrovně zvuku."
 
 #: src/prefs/RecordingPrefs.cpp:139
 msgid "Target Peak:"
@@ -10898,61 +10867,52 @@ msgid "Error while opening sound device. "
 msgstr "Chyba při otevírání zvukového zařízení"
 
 #: src/toolbars/ControlToolBar.cpp:940
-#, fuzzy
 msgid ""
 "Error while opening sound device. Please check the recording device settings "
 "and the project sample rate."
 msgstr ""
 "Chyba při otevírání zvukového zařízení. Prověřte, prosím, nastavení "
-"výstupního zařízení a vzorkovací kmitočet projektu."
+"nahrávacího zařízení a vzorkovací kmitočet projektu."
 
 #: src/toolbars/DeviceToolBar.cpp:102
 msgid "Audio Host"
 msgstr "Zvuková architektura"
 
 #: src/toolbars/DeviceToolBar.cpp:117
-#, fuzzy
 msgid "Playback Device"
-msgstr "Rychlost přehrávání"
+msgstr "Přehrávací zařízení"
 
 #: src/toolbars/DeviceToolBar.cpp:132
-#, fuzzy
 msgid "Recording Device"
-msgstr "Konec nahrávání"
+msgstr "Nahrávací zařízení"
 
 #: src/toolbars/DeviceToolBar.cpp:139
-#, fuzzy
 msgid "Recording Channels"
-msgstr "Konec nahrávání"
+msgstr "Nahrávací kanály"
 
 #: src/toolbars/DeviceToolBar.cpp:615
-#, fuzzy
 msgid "1 (Mono) Recording Channel"
-msgstr "Konec nahrávání"
+msgstr "1 (mono) nahrávací kanál"
 
 #: src/toolbars/DeviceToolBar.cpp:618
-#, fuzzy
 msgid "2 (Stereo) Recording Channels"
-msgstr "Vybrat vstupní kanály"
+msgstr "2 (stereo) nahrávací kanály"
 
 #: src/toolbars/DeviceToolBar.cpp:745
-#, fuzzy
 msgid "Select Recording Device"
-msgstr "Vybrat vstupní zařízení"
+msgstr "Vybrat nahrávací zařízení"
 
 #: src/toolbars/DeviceToolBar.cpp:749
-#, fuzzy
 msgid "Select Playback Device"
-msgstr "Vybrat vstupní zařízení"
+msgstr "Vybrat přehrávací zařízení"
 
 #: src/toolbars/DeviceToolBar.cpp:753
 msgid "Select Audio Host"
 msgstr "Vybrat zvukovou architekturu"
 
 #: src/toolbars/DeviceToolBar.cpp:757
-#, fuzzy
 msgid "Select Recording Channels"
-msgstr "Vybrat vstupní kanály"
+msgstr "Vybrat nahrávací kanály"
 
 #: src/toolbars/DeviceToolBar.cpp:763
 msgid "Device information is not available."
@@ -11027,58 +10987,50 @@ msgid "Meter-Record"
 msgstr "Nastavení nahrávání"
 
 #: src/toolbars/MeterToolBar.cpp:129
-#, fuzzy
 msgid "Playback Level"
-msgstr "Rychlost přehrávání"
+msgstr "Úroveň přehrávání"
 
 #: src/toolbars/MeterToolBar.cpp:130
-#, fuzzy
 msgid "Recording Level (Click to monitor.)"
-msgstr "Vstupní úroveň (klepněte pro sledování)"
+msgstr "Nahrávací úroveň (klepněte pro sledování)"
 
 #: src/toolbars/MixerToolBar.cpp:91
-#, fuzzy
 msgid "Playback Volume"
-msgstr "Přehrávání"
+msgstr "Hlasitost přehrávání"
 
 #: src/toolbars/MixerToolBar.cpp:94
-#, fuzzy
 msgid "Slider Playback"
-msgstr "Přehrávání"
+msgstr "Posuvník přehrávání"
 
 #: src/toolbars/MixerToolBar.cpp:103
-#, fuzzy
 msgid "Recording Volume"
-msgstr "Konec nahrávání"
+msgstr "Hlasitost nahrávání"
 
 #: src/toolbars/MixerToolBar.cpp:106
-#, fuzzy
 msgid "Slider Recording"
-msgstr "Nahrávání"
+msgstr "Posuvník nahrávání"
 
 #: src/toolbars/MixerToolBar.cpp:296
-#, fuzzy, c-format
+#, c-format
 msgid "Recording Volume: %.2f"
-msgstr "Vstupní hlasitost: %.2f"
+msgstr "Nahrávací hlasitost: %.2f"
 
 #: src/toolbars/MixerToolBar.cpp:300
-#, fuzzy
 msgid "Recording Volume (Unavailable; use system mixer.)"
-msgstr "Vstupní hlasitost (není dostupná; použijte systémový směšovač)"
+msgstr "Nahrávací hlasitost (není dostupná; použijte systémový směšovač)"
 
 #: src/toolbars/MixerToolBar.cpp:305
-#, fuzzy, c-format
+#, c-format
 msgid "Playback Volume: %.2f%s"
-msgstr "Výstupní hlasitost: %.2f%s"
+msgstr "Hlasitost přehrávání: %.2f%s"
 
 #: src/toolbars/MixerToolBar.cpp:305
 msgid " (emulated)"
 msgstr " (napodobeno)"
 
 #: src/toolbars/MixerToolBar.cpp:309
-#, fuzzy
 msgid "Playback Volume (Unavailable; use system mixer.)"
-msgstr "Vstupní hlasitost (není dostupná; použijte systémový směšovač)"
+msgstr "Hlasitost přehrávání (není dostupná; použijte systémový směšovač)"
 
 #: src/toolbars/SelectionBar.cpp:87 src/toolbars/SelectionBar.cpp:287
 msgid "Selection"
@@ -11230,14 +11182,12 @@ msgid "Start Monitoring"
 msgstr "Spustit sledování"
 
 #: src/widgets/Meter.cpp:417
-#, fuzzy
 msgid "Stop Automated Recording Level Adjustment"
-msgstr "Zastavit automatické přizpůsobení vstupní úrovně zvuku"
+msgstr "Zastavit automatické přizpůsobení nahrávací úrovně zvuku"
 
 #: src/widgets/Meter.cpp:419
-#, fuzzy
 msgid "Start Automated Recording Level Adjustment"
-msgstr "Spustit automatické přizpůsobení vstupní úrovně zvuku"
+msgstr "Spustit automatické přizpůsobení nahrávací úrovně zvuku"
 
 #: src/widgets/Meter.cpp:430
 msgid "Horizontal Stereo"
@@ -11252,10 +11202,9 @@ msgid "Preferences..."
 msgstr "Nastavení..."
 
 #: src/widgets/Meter.cpp:1276
-#, fuzzy
 msgid "Automated Recording Level Adjustment stopped as requested by user."
 msgstr ""
-"Automatické přizpůsobení vstupní úrovně zvuku zastaveno, jak si přál "
+"Automatické přizpůsobení nahrávací úrovně zvuku zastaveno, jak si přál "
 "uživatel."
 
 #: src/widgets/Meter.cpp:1291
