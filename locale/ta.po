@@ -2,22 +2,21 @@
 # Copyright (C) YEAR Audacity Development Team
 # This file is distributed under the same license as the audacity package.
 # Audacity Team <EMAIL@ADDRESS>, YEAR.
-#
-#: src/prefs/ModulePrefs.cpp:96
+# அருண் குமார் - Arun Kumar <thangam.arunx@gmail.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.0.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-09-04 16:38+0100\n"
-"PO-Revision-Date: 2014-06-16 13:34-0000\n"
-"Last-Translator: Kenthira Ponnampala\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2014-09-16 07:40-0000\n"
+"Last-Translator: Arun Kumar\n"
+"Language-Team: தமிழா!-ThamiZha!(www.thamizha.org)\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.6.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.9\n"
 
 #: src/AboutDialog.cpp:57 src/AboutDialog.cpp:78
 msgid "co-founder"
@@ -25,7 +24,7 @@ msgstr "இணை  நிறுவுனர்"
 
 #: src/AboutDialog.cpp:63
 msgid "quality assurance"
-msgstr "தர  உறுதி"
+msgstr "தர உறுதி"
 
 #: src/AboutDialog.cpp:181
 #, fuzzy
@@ -34,7 +33,7 @@ msgstr "Audacity பற்றி"
 
 #: src/AboutDialog.cpp:200
 msgid "OK... Audacious!"
-msgstr "நன்று  Audacious"
+msgstr "நன்று... Audacious!"
 
 #: src/AboutDialog.cpp:216
 msgid ""
@@ -45,13 +44,13 @@ msgid ""
 "is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"ஆனது  உலகளாவிய ஒரு அணியினால் உருவாக்கப்பட்ட இலவச  மென்பொருள் ஆகும் <a href=\"http://"
-"audacity.sourceforge.net/community/developers\">உருவாக்குனர்கள்</a>. நாங்கள் எமது "
-"செயத்திட்டதை செய்தற்காக <a href=\"http://code.google.com\">Google Code</a> மற்றும் "
-"<a href=\"http://sourceforge.net\">SourceForge</a> இற்கும் நன்றி செலுத்துகிறோம். "
-"Audacity ஆனது  <a href=\"http://audacity.sourceforge.net/download/\">இங்கே  "
-"கிடைக்கும்</a> for Windows, Mac, மற்றும் GNU/Linux (மற்றும் ஏனைய Unix-like "
-"systems)."
+"Audacity ஆனது உலகளாவிய ஒரு <a href=\"http://audacity.sourceforge.net/"
+"community/developers\">அணியினால்</a> உருவாக்கப்பட்ட இலவச  மென்பொருள் ஆகும். நாங்கள் "
+"எமது செயத்திட்டதை செய்தற்காக <a href=\"http://code.google.com\">Google Code</a> "
+"மற்றும் <a href=\"http://sourceforge.net\">SourceForge</a> இற்கும் நன்றி "
+"செலுத்துகிறோம். Audacity ஆனது Windows, Mac, மற்றும் GNU/Linux (ஏனைய Unix சார்ந்த "
+"கணினிகளுக்கும்) <a href=\"http://audacity.sourceforge.net/download/\">இங்கே  "
+"கிடைக்கும்</a>."
 
 #: src/AboutDialog.cpp:227
 #, fuzzy
@@ -62,28 +61,29 @@ msgid ""
 "\">wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">forum</"
 "a>."
 msgstr ""
-"வழுக்கள் மற்றும் பரிந்துரைகள் தெரிவிக்க, பின்வரும் முகவரிக்கு மின்னஞ்சல் அனுப்பவும் <a href="
-"\":feedback@audacityteam.org\">பரிந்துரை முகவரி</a>. மேலும் உதவிகளுக்கு,  the "
-"tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">wiki</a> or "
-"visit our <a href=\"http://forum.audacityteam.org/\">forum</a>."
+"வழுக்களையும் பரிந்துரைகளையும் தெரிவிக்க, பின்வரும் முகவரிக்கு மின்னஞ்சல் அனுப்பவும் <a "
+"href=\"mailto:feedback@audacityteam.org\">முகவரி</a>. மேலும் உதவிகளுக்கு, "
+"குறிப்புகளயும் உதவிகளையும் பெற பின்வரும் தளங்களில் <a href=\"http://wiki."
+"audacityteam.org/\">விக்கி</a> பர்க்கவும் அல்லது <a href=\"http://forum."
+"audacityteam.org/\">மன்றத்தை பார்க்கவும்</a>."
 
 #: src/AboutDialog.cpp:240 src/AboutDialog.cpp:242
 msgid "translator_credits"
-msgstr "மொழி மாற்றியவர்கள்"
+msgstr "தமிழ் மொழிமாற்றத்திற்கு பங்களித்தவர்கள்"
 
 #: src/AboutDialog.cpp:252
 msgid ""
 "free, open source, cross-platform software for recording and editing "
 "sounds<br>"
-msgstr "அனைத்து இயங்குதளங்களிலும் பாவிக்க கூடிய இலவச மென்பொருள்"
+msgstr "அனைத்து இயங்குதளங்களிலும் பாவிக்க கூடிய கட்டற்ற திறமூல மென்பொருள் <br>"
 
 #: src/AboutDialog.cpp:256
 msgid "Credits"
-msgstr "நன்றி"
+msgstr "நன்றிகள்"
 
 #: src/AboutDialog.cpp:259
 msgid "Audacity Developers"
-msgstr "Audacity உருவாக்குனர்கள்"
+msgstr "Audacity உருவாக்குநர்கள்"
 
 #: src/AboutDialog.cpp:262
 msgid "Audacity Support Team"
@@ -137,7 +137,7 @@ msgstr "கோப்பு வகை உதவிகளுக்கு"
 
 #: src/AboutDialog.cpp:365 src/AboutDialog.cpp:367
 msgid "MP3 Importing"
-msgstr "Mp3 இறக்குமதிக்கு"
+msgstr "MP3 இறக்குமதி"
 
 #: src/AboutDialog.cpp:374 src/AboutDialog.cpp:377
 msgid "Ogg Vorbis Import and Export"
@@ -145,7 +145,7 @@ msgstr "Ogg Vorbis இறக்குமதியும் ஏற்றுமத
 
 #: src/AboutDialog.cpp:381 src/AboutDialog.cpp:384
 msgid "ID3 tag support"
-msgstr "ID3 குறியிடும் உதவிகளுக்கு"
+msgstr "ID3 ஒட்டு ஆதரவு"
 
 #: src/AboutDialog.cpp:391 src/AboutDialog.cpp:394
 msgid "FLAC import and export"
@@ -157,78 +157,78 @@ msgstr "MP2 ஏற்றுமதிக்கு"
 
 #: src/AboutDialog.cpp:407 src/AboutDialog.cpp:410
 msgid "Import via QuickTime"
-msgstr "QuickTime ஊடாக இறக்குமதிக்கு"
+msgstr "QuickTime ஊடாக இறக்குமதிச் செய்"
 
 #: src/AboutDialog.cpp:415 src/AboutDialog.cpp:417
 #, fuzzy
 msgid "FFmpeg Import/Export"
-msgstr "FFmpeg இறக்கு/ஏற்று நூலகம்"
+msgstr "FFmpeg இறக்கு/ஏற்று"
 
 #: src/AboutDialog.cpp:421 src/AboutDialog.cpp:423
 #, fuzzy
 msgid "Import via GStreamer"
-msgstr "QuickTime ஊடாக இறக்குமதிக்கு"
+msgstr "GStreamer ஊடாக இறக்குமதிச் செய்"
 
 #: src/AboutDialog.cpp:429
 msgid "Core Libraries"
-msgstr "மைய நூலகங்கள்"
+msgstr "முக்கிய நூலகங்கள்"
 
 #: src/AboutDialog.cpp:435 src/AboutDialog.cpp:438 src/AboutDialog.cpp:441
 #: src/AboutDialog.cpp:443 src/AboutDialog.cpp:448 src/AboutDialog.cpp:451
 msgid "Sample rate conversion"
-msgstr "மாற்றலிட்க்கான மாதிரி வீச்சு"
+msgstr "மாற்றலிற்க்கான மாதிரி வீதம்"
 
 #: src/AboutDialog.cpp:455
 msgid "Audio playback and recording"
-msgstr "ஒலி பின்னணி மற்றும் பதிவுகளிற்கு"
+msgstr "ஒலி பின்னணிக்கும் பதிவிற்கும்"
 
 #: src/AboutDialog.cpp:465
 msgid "Features"
-msgstr "வசதிகள்"
+msgstr "அம்சங்கள்"
 
 #: src/AboutDialog.cpp:469 src/AboutDialog.cpp:472 src/AboutDialog.cpp:477
 #: src/AboutDialog.cpp:480 src/AboutDialog.cpp:485 src/AboutDialog.cpp:488
 #: src/AboutDialog.cpp:493 src/AboutDialog.cpp:496 src/AboutDialog.cpp:501
 #: src/AboutDialog.cpp:504 src/AboutDialog.cpp:509 src/AboutDialog.cpp:512
 msgid "Plug-in support"
-msgstr "Plug-in உதவிகளுக்கு"
+msgstr "Plug-in ஆதரவிற்கு"
 
 #: src/AboutDialog.cpp:517 src/AboutDialog.cpp:520
 msgid "Sound card mixer support"
-msgstr "ஒலி அட்டை கலவை உதவிகளுக்கு"
+msgstr "ஒலி அட்டை கலப்பு ஆதரவு"
 
 #: src/AboutDialog.cpp:525 src/AboutDialog.cpp:528
 msgid "Pitch and Tempo Change support"
-msgstr "சுருதி மற்றும் போக்கு மாற்றும் உதவிகளுக்கு"
+msgstr "சுருதியையும் போக்கையும் மாற்றும் ஆதரவு"
 
 #: src/AboutDialog.cpp:533 src/AboutDialog.cpp:536
 #, fuzzy
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "சுருதி மற்றும் போக்கு மாற்றும் உதவிகளுக்கு"
+msgstr "உட்சக்கட்ட சுருதியையும் போக்கையும் மாற்றும் ஆதரவு"
 
 #: src/AboutDialog.cpp:548
 msgid "Program build date: "
-msgstr "Program உருவாகிய திகதி"
+msgstr "மென்பொருள் கட்டிய தேதி:"
 
 #: src/AboutDialog.cpp:551 src/AboutDialog.cpp:553
 msgid "Build type:"
-msgstr "உருவாக்கபட்ட முறை"
+msgstr "கட்டிய வகை:"
 
 #: src/AboutDialog.cpp:551
 msgid "Debug build"
-msgstr "வழு நீக்கி உருவாக்கு"
+msgstr "வழுநீக்க கட்டல்"
 
 #: src/AboutDialog.cpp:553
 msgid "Release build"
-msgstr "உருவாக்க வெளியீடு"
+msgstr "வெளியீடு கட்டல்"
 
 #: src/AboutDialog.cpp:558
 msgid "Installation Prefix: "
-msgstr "நிறுவப்பட்டுள்ள கோப்பகம்"
+msgstr "நிறுவப்பட்டும் கோப்பகம்:"
 
 #: src/AboutDialog.cpp:562
 msgid "Settings folder: "
-msgstr "கோப்புறை அமைப்புக்கள்"
+msgstr "அடைவு அமைவுகள்"
 
 #: src/AboutDialog.cpp:577
 msgid "GPL License"
@@ -277,27 +277,27 @@ msgstr "தலைமை கட்டுபாட்டை பெற"
 
 #: src/AudacityApp.cpp:1183
 msgid "Audacity is starting up..."
-msgstr "Audacity ஆனது ஆரம்பிக்குறது"
+msgstr "Audacity துவங்குகிறது..."
 
 #: src/AudacityApp.cpp:1215 src/Menus.cpp:212
 msgid "&New"
-msgstr "&புதியது"
+msgstr "&புதிய"
 
 #: src/AudacityApp.cpp:1216 src/Menus.cpp:217
 msgid "&Open..."
-msgstr "&திறக்க...."
+msgstr "&திற...."
 
 #: src/AudacityApp.cpp:1217
 msgid "Open &Recent..."
-msgstr "&அண்மைய திறக்க..."
+msgstr "&அண்மையில் திறந்த..."
 
 #: src/AudacityApp.cpp:1218 src/Menus.cpp:1054
 msgid "&About Audacity..."
-msgstr "Audacity &பற்றி"
+msgstr "Audacity &பற்றி..."
 
 #: src/AudacityApp.cpp:1219
 msgid "&Preferences..."
-msgstr "&விருப்பங்கள்"
+msgstr "&முன்னுரிமைகள்..."
 
 #: src/AudacityApp.cpp:1222 src/Menus.cpp:208
 msgid "&File"
@@ -311,7 +311,7 @@ msgstr "தொகுதி அளவாக %ld ஐ பாவிக்கிற�
 #: src/AudacityApp.cpp:1324 src/AudacityApp.cpp:1397
 #, c-format
 msgid "Unknown command line option: %s\n"
-msgstr "முன் தெரிந்திராத  கட்டளை வரிசை தெரிவு : %s\n"
+msgstr "தெரியாத கட்டளை வரித் தெரிவு : %s\n"
 
 #: src/AudacityApp.cpp:1506
 msgid ""
@@ -336,7 +336,7 @@ msgid ""
 "\n"
 msgstr ""
 "இரண்டு Audacity பிரதிகளை ஒரே நேரத்தில் இயக்குவதால்\n"
-"தகவல் இழப்பு அல்லது அமைப்பு செயற்படாமையை தோற்றுவிக்கலாம்.\n"
+"தகவல் இழப்பு அல்லது கட்டகத்தைக் நிலைகுழைய வைக்கலாம்.\n"
 "\n"
 
 #: src/AudacityApp.cpp:1551
@@ -344,8 +344,8 @@ msgid ""
 "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
 msgstr ""
-"Audacity இனால் தற்காலிக கோப்புகளின் கோப்பகத்தை பூட்ட இயலவில்லை.\n"
-"Audacity இன் இன்னுமொரு பிரதியால் இக்கோப்பகம் பாவனையில் இருக்கலாம்.\n"
+"தற்காலிக கோப்புகளின் கோப்பகத்தை Audacity இனாலபூட்ட இயலவில்லை.\n"
+"Audacity இன் இன்னொரு பிரதியால் பாவிக்கப்படலாம்.\n"
 
 #: src/AudacityApp.cpp:1553
 msgid "Do you still want to start Audacity?"
@@ -377,15 +377,15 @@ msgstr "கட்டளை வரிசை விருப்புகள் ஆ
 
 #: src/AudacityApp.cpp:1616
 msgid "\t-help (this message)"
-msgstr "\t-help (this message)"
+msgstr "\t-help (இச்செய்தி)"
 
 #: src/AudacityApp.cpp:1618
 msgid "\t-version (display Audacity version)"
-msgstr "\t-version (display Audacity version)"
+msgstr "\t-version (Audacity பதிப்பை பாண்பி)"
 
 #: src/AudacityApp.cpp:1622
 msgid "\t-test (run self diagnostics)"
-msgstr "\t-test (run self diagnostics)"
+msgstr "\t-test (சுய பரிசோதனைச் செய்)"
 
 #: src/AudacityApp.cpp:1627
 msgid "\t-blocksize nnn (set max disk block size in bytes)"
@@ -407,7 +407,7 @@ msgstr ""
 "Audacity செயற்திட்டம் (.AUP) கோப்புகள் ஆனது தற்போது \n"
 "Audacity உடன் தொடர்புடையதாக இல்லை. \n"
 "\n"
-"தொடர்புடையதாக்குவதன் மூலம் சுட்டியை இரண்டு தரம் அழுத்துவதன் மூலம் திறக்கலாம்"
+"தொடர்புடையதாக்குவதன் மூலம் இரட்டை சொடுக்கில் திறக்கலாம்"
 
 #: src/AudacityApp.cpp:1941
 msgid "Audacity Project Files"
@@ -420,12 +420,12 @@ msgstr "Audacity பதிவுகள்"
 #: src/AudacityLogger.cpp:198 src/Tags.cpp:811
 #, fuzzy
 msgid "&Save..."
-msgstr "&amp;சேமிக்க..."
+msgstr "&சேமி..."
 
 #: src/AudacityLogger.cpp:199 src/Tags.cpp:790
 #: src/prefs/KeyConfigPrefs.cpp:270 src/prefs/KeyConfigPrefs.cpp:791
 msgid "Cl&ear"
-msgstr ""
+msgstr "துடை"
 
 #: src/AudacityLogger.cpp:200 src/Menus.cpp:229 src/effects/Contrast.cpp:359
 msgid "&Close"
@@ -433,17 +433,17 @@ msgstr "&மூடு"
 
 #: src/AudacityLogger.cpp:286
 msgid "log.txt"
-msgstr ""
+msgstr "log.txt"
 
 #: src/AudacityLogger.cpp:288
 #, fuzzy
 msgid "Save log to:"
-msgstr "படங்களை சேமிக்க"
+msgstr "பதிவுகளைச் சேமிக்க:"
 
 #: src/AudacityLogger.cpp:301
 #, fuzzy
 msgid "Couldn't save log to file: "
-msgstr "கோப்பில் எழுத முடியவில்லை: "
+msgstr "பதிவை கோப்பில் சேமிக்க முடியவில்லை:"
 
 #: src/AudacityLogger.cpp:302 src/export/Export.cpp:607
 #: src/export/Export.cpp:628 src/export/Export.cpp:672
@@ -465,15 +465,15 @@ msgstr ""
 
 #: src/AudioIO.cpp:565 src/AudioIO.cpp:585
 msgid "Error: "
-msgstr "வழு:  "
+msgstr "பிழை:"
 
 #: src/AudioIO.cpp:568
 msgid "Error Initializing Audio"
-msgstr "ஒலியை தொடக்குவதில் வழு"
+msgstr "ஒலியை தொடக்குவதில் பிழை"
 
 #: src/AudioIO.cpp:581
 msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "மிடி i/o அடுக்கினை தொடக்குவதில் வழு.\n"
+msgstr "மிடி i/o அடுக்கினை தொடக்குவதில் பிழை.\n"
 
 #: src/AudioIO.cpp:582
 msgid ""
@@ -583,11 +583,11 @@ msgstr "மீட்கக்கூடிய  செயற்திட்டங�
 
 #: src/AutoRecovery.cpp:81
 msgid "Name"
-msgstr "மீட்கக்கூடிய செயற்திட்ட பெயர்."
+msgstr "செயற்திட்ட பெயர"
 
 #: src/AutoRecovery.cpp:87
 msgid "After recovery, save the project to save the changes to disk."
-msgstr ""
+msgstr "மீட்டலுக்குப் பிறகு, செயற்திட்டத்தை சேமித்து மாற்றங்களை சேமிப்பகத்தில் சேமிக்கவும்."
 
 #: src/AutoRecovery.cpp:91
 msgid "Quit Audacity"
@@ -603,18 +603,18 @@ msgid "Recover Projects"
 msgstr "செயத்திட்டங்ளை மீள்"
 
 #: src/AutoRecovery.cpp:130
-#, fuzzy
 msgid ""
 "Are you sure you want to discard all projects?\n"
 "\n"
 "Choosing \"Yes\" discards all projects immediately."
 msgstr ""
-"எந்த செயற்திட்டங்களையும் மீட்க வேண்டாம் என்பதில் உறுதியாக உள்ளீர்களா?\n"
-"அவை பின்பு மீட்க முடியாதவை"
+"அனைத்து செயற்திட்டங்களும் வேண்டாம் என்பதில் உறுதியா?\n"
+"\n"
+"\"ஆம்\" என்பதை தேர்வுச்செய்தால் அனைத்தும் தவர்க்கப்படும்."
 
 #: src/AutoRecovery.cpp:131
 msgid "Confirm Discard Projects"
-msgstr ""
+msgstr "செயற்திட்டத்தை தவிர்க்க உறுதிச்செய்யவும"
 
 #: src/AutoRecovery.cpp:149 src/AutoRecovery.cpp:186
 msgid "Could not enumerate files in auto save directory."
@@ -1177,12 +1177,16 @@ msgstr "எச்சரிக்கை - ஒலி தரவு தொகு�
 msgid ""
 "   Project check replaced missing audio data block file(s) with silence."
 msgstr ""
+"   பரிசீலனை செயற்திட்டம் தவறிய ஒலித்தரவுப்பகுதி கோப்புகளுக்கு பதில் நிசப்தம் மூலம் "
+"நிரப்பியது."
 
 #: src/DirManager.cpp:1596
 msgid ""
 "   Project check ignored orphan block file(s). They will be deleted when "
 "project is saved."
 msgstr ""
+"   ஒதுக்கிய செயற்திட்டப் பகுதி கோப்பு(களை) சரிபார். செயற்திட்டம் சேமிக்கப்படும்பொது "
+"அவைகள் அழிக்கப்படும்."
 
 #: src/DirManager.cpp:1602
 #, c-format
@@ -1356,16 +1360,20 @@ msgid ""
 "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
 "All Files (*.*)|*"
 msgstr ""
+"avformat.dll|*avformat*.dll மட்டும்|இயங்கு நிலை நூலகங்கள் (*.dll)|*.dll|அனைத்தும் "
+"(*.*)|*"
 
 #: src/FFmpeg.h:309
 msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "இயங்கு நிலை நூலகங்கள் (*.dylib)|*.dylib|அனைத்து கோப்புகள் (*)|*"
+msgstr "இயங்கு நிலை நூலகங்கள் (*.dylib)|*.dylib|அனைத்தும் (*)|*"
 
 #: src/FFmpeg.h:336
 msgid ""
 "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*."
 "so*|All Files (*)|*"
 msgstr ""
+"libavformat.so|libavformat*.so* மட்டும் |இயங்கு நிலை நூலகங்கள் (*.so*)|*.so*|"
+"அனைத்தும் (*)|*"
 
 #: src/FFT.cpp:495
 msgid "Rectangular"
@@ -1409,11 +1417,11 @@ msgstr "நிரல்செயலாற்றி"
 
 #: src/FreqWindow.cpp:205
 msgid "Linear frequency"
-msgstr "நேரியல் மீடிறன்"
+msgstr "நேரியல் நிகழ்வெண்"
 
 #: src/FreqWindow.cpp:206
 msgid "Log frequency"
-msgstr ""
+msgstr "பதிவு நிகழ்வெண்"
 
 #: src/FreqWindow.cpp:210 src/FreqWindow.cpp:214
 msgid "Axis"
@@ -1431,11 +1439,11 @@ msgstr "ஏற்றுமதி"
 
 #: src/FreqWindow.cpp:230
 msgid "&Replot"
-msgstr ""
+msgstr "&மீள்வரை"
 
 #: src/FreqWindow.cpp:231
 msgid "Replot"
-msgstr ""
+msgstr "மீள்வரை"
 
 #: src/FreqWindow.cpp:235 src/FreqWindow.cpp:236
 msgid "Close"
@@ -1492,13 +1500,14 @@ msgstr "s"
 #: src/FreqWindow.cpp:883
 #, c-format
 msgid "Cursor: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"
-msgstr ""
+msgstr "சுட்டி: %d Hz (%s) = %d dB    உச்சம்: %d Hz (%s) = %.1f dB"
 
 #: src/FreqWindow.cpp:894
 #, c-format
 msgid ""
 "Cursor: %.4f sec (%d Hz) (%s) = %f,    Peak: %.4f sec (%d Hz) (%s) = %.3f"
 msgstr ""
+"சுட்டி: %.4f நொடி (%d Hz) (%s) = %f,    உச்சம்: %.4f நொடி (%d Hz) (%s) = %.3f"
 
 #: src/FreqWindow.cpp:1007
 msgid "Plot Spectrum"
@@ -1514,7 +1523,7 @@ msgstr "spectrum.txt"
 
 #: src/FreqWindow.cpp:1225
 msgid "Export Spectral Data As:"
-msgstr ""
+msgstr "வர்ணபட்டை தரவாக ஏற்மதிச்செய்:"
 
 #: src/FreqWindow.cpp:1241 src/LabelDialog.cpp:604 src/Menus.cpp:2931
 #: src/effects/Contrast.cpp:514 src/prefs/KeyConfigPrefs.cpp:386
@@ -1559,7 +1568,7 @@ msgstr "பதிவு செய்தல் - உள்ளீடு மட்�
 
 #: src/HelpText.cpp:151
 msgid "Editing and greyed out Menus"
-msgstr ""
+msgstr "தொகுக்கும் சாம்பலாக்கும் பட்டியல்கள்"
 
 #: src/HelpText.cpp:156
 msgid "Exporting an Audio File"
@@ -1746,7 +1755,7 @@ msgstr "முடிவு நேரம்"
 
 #: src/LabelDialog.cpp:160
 msgid "New..."
-msgstr "புதிது..."
+msgstr "புதிய..."
 
 #: src/LabelDialog.cpp:515 src/Menus.cpp:4658
 msgid "Select a text file containing labels..."
@@ -1920,7 +1929,7 @@ msgstr "MIDI..."
 
 #: src/Menus.cpp:256
 msgid "&Raw Data..."
-msgstr ""
+msgstr "&அசல் தரவு..."
 
 #: src/Menus.cpp:265
 #, fuzzy
@@ -1946,31 +1955,31 @@ msgstr "MIDI ஏற்றுமதி..."
 
 #: src/Menus.cpp:288
 msgid "Appl&y Chain..."
-msgstr ""
+msgstr "சங்கிலி கட்டளை &நிறைவேற்று..."
 
 #: src/Menus.cpp:291
 msgid "Edit C&hains..."
-msgstr ""
+msgstr "&சங்கிலிகளை தொகு..."
 
 #: src/Menus.cpp:295
 msgid "Pa&ge Setup..."
-msgstr "பக்க அமைப்பு..."
+msgstr "&பக்க அமைப்பு..."
 
 #: src/Menus.cpp:299
 msgid "&Print..."
-msgstr "அச்சடி..."
+msgstr "&அச்சடி..."
 
 #: src/Menus.cpp:308
 msgid "E&xit"
-msgstr "வெளியேறு"
+msgstr "&வெளியேறு"
 
 #: src/Menus.cpp:318
 msgid "&Edit"
-msgstr "தொகு"
+msgstr "&தொகு"
 
 #: src/Menus.cpp:323 src/Menus.cpp:1328
 msgid "&Undo"
-msgstr "மீளமை"
+msgstr "&மீளமை"
 
 #: src/Menus.cpp:335 src/Menus.cpp:1343
 msgid "&Redo"
@@ -1998,7 +2007,7 @@ msgstr "நகல்"
 
 #: src/Menus.cpp:362
 msgid "R&emove Special"
-msgstr ""
+msgstr "சிறப்பு நீக்கம்"
 
 #: src/Menus.cpp:364
 msgid "Spl&it Cut"
@@ -2022,7 +2031,7 @@ msgstr "உரையை புதிய சிட்டையில் ஒட்
 
 #: src/Menus.cpp:388
 msgid "Clip B&oundaries"
-msgstr ""
+msgstr "பகுதி ஓரங்கள்"
 
 #: src/Menus.cpp:390
 msgid "Sp&lit"
@@ -2038,7 +2047,7 @@ msgstr "ஒன்றுசேர்"
 
 #: src/Menus.cpp:399 src/Menus.cpp:439
 msgid "Detac&h at Silences"
-msgstr ""
+msgstr "சத்தமற்ற பிரிப்பு"
 
 #: src/Menus.cpp:406
 msgid "La&beled Audio"
@@ -2725,7 +2734,7 @@ msgstr "மாறு"
 
 #: src/Menus.cpp:1169
 msgid "Full screen on/off"
-msgstr ""
+msgstr "முழுத்திரை செயல்படுத்து/முடக்கு"
 
 #: src/Menus.cpp:1176
 #, fuzzy
@@ -2739,7 +2748,7 @@ msgstr "பின்னணி வேகத்தை கூட்டவும்"
 
 #: src/Menus.cpp:1182
 msgid "Change audio host"
-msgstr ""
+msgstr "ஒலி புரவலனை மாற்று"
 
 #: src/Menus.cpp:1185
 #, fuzzy
@@ -3677,7 +3686,7 @@ msgstr ""
 #: src/Project.cpp:3629
 #, c-format
 msgid "Save Project \"%s\" As..."
-msgstr ""
+msgstr "செயற்திட்டத்தை \"%s\" ஆக சேமி..."
 
 #: src/Project.cpp:3700
 msgid "Created new project"
@@ -3686,31 +3695,31 @@ msgstr "புதிய திட்டம் உருவாக்கப்ப�
 #: src/Project.cpp:3917
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "%.2f செக்கன்கள் t=%.2f இல் நீக்கப்பட்டுள்ளது"
+msgstr "%.2f வினாடிகள் t=%.2f இல் நீக்கப்பட்டுள்ளது"
 
 #: src/Project.cpp:3920
 msgid "Delete"
-msgstr "நீக்கு"
+msgstr "அழி"
 
 #: src/Project.cpp:4104
 #, c-format
 msgid "Disk space remains for recording %d hours and %d minutes."
-msgstr "%d மணித்தியாலம் %d நிமிடமும் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது"
+msgstr "%d மணித்தியாலம் %d நிமிடமும் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது."
 
 #: src/Project.cpp:4107
 #, c-format
 msgid "Disk space remains for recording 1 hour and %d minutes."
-msgstr "1 மணித்தியாலம் %d நிமிடமும் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது"
+msgstr "1 மணித்தியாலம் %d நிமிடமும் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது."
 
 #: src/Project.cpp:4110
 #, c-format
 msgid "Disk space remains for recording %d minutes."
-msgstr "%d நிமிடங்கள் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது"
+msgstr "%d நிமிடங்கள் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது."
 
 #: src/Project.cpp:4113
 #, c-format
 msgid "Disk space remains for recording %d seconds."
-msgstr "%d செக்கன்கள் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது"
+msgstr "%d செக்கன்கள் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது."
 
 #: src/Project.cpp:4116
 msgid "Out of disk space"
@@ -3718,7 +3727,7 @@ msgstr "வன்தட்டில் இடமில்லை"
 
 #: src/Project.cpp:4138
 msgid "On-demand import and waveform calculation complete."
-msgstr "கேட்கப்பட்டால் கணிப்பு பூர்த்தியை  இறக்குக"
+msgstr "கேட்கப்பட்டால் கணிப்பு பூர்த்தியை இறக்குக."
 
 #: src/Project.cpp:4143
 #, c-format
@@ -3745,11 +3754,11 @@ msgstr "தானாக சேமிக்கும் கோப்பை எழ
 
 #: src/Project.cpp:4530
 msgid "Could not create autosave file: "
-msgstr "தானாக சேமிக்கும் கோப்பை உருவாக்க முடியவில்லை"
+msgstr "தானாக சேமிக்கும் கோப்பை உருவாக்க முடியவில்லை:"
 
 #: src/Project.cpp:4549
 msgid "Could not remove old autosave file: "
-msgstr "பழைய தானாக சேமிக்கும் கோப்பை நீக்க முடியவில்லை"
+msgstr "பழைய தானாக சேமிக்கும் கோப்பை நீக்க முடியவில்லை:"
 
 #: src/Project.cpp:4578
 #, c-format
@@ -3990,15 +3999,15 @@ msgstr "வழு நீக்&amp;கு"
 
 #: src/Snap.cpp:272
 msgid "Off"
-msgstr ""
+msgstr "முடக்கு"
 
 #: src/Snap.cpp:273
 msgid "Nearest"
-msgstr ""
+msgstr "அருகேயுள்ள"
 
 #: src/Snap.cpp:274
 msgid "Prior"
-msgstr ""
+msgstr "முன்னரே"
 
 #: src/SoundActivatedRecord.cpp:36
 msgid "Sound Activated Record"
@@ -4277,11 +4286,11 @@ msgstr "Audacity நேர பதியி - தொடங்க காத்த�
 
 #: src/TimeTrack.cpp:52
 msgid "Time Track"
-msgstr ""
+msgstr "நேரத் தடம்"
 
 #: src/TrackPanel.cpp:642
 msgid "&Other..."
-msgstr "வேறு..."
+msgstr "பிற..."
 
 #: src/TrackPanel.cpp:652
 msgid "Wa&veform"
@@ -4552,7 +4561,7 @@ msgstr "ஒலித்துண்டை அசை"
 
 #: src/TrackPanel.cpp:5250
 msgid "Expanded Cut Line"
-msgstr ""
+msgstr "வெட்டும் வரி விரிவாக்கப்பட்டது"
 
 #: src/TrackPanel.cpp:5250
 msgid "Expand"
@@ -4568,11 +4577,11 @@ msgstr "இணை"
 
 #: src/TrackPanel.cpp:5274
 msgid "Removed Cut Line"
-msgstr ""
+msgstr "வெட்டும் வரி நீக்கப்பட்டது"
 
 #: src/TrackPanel.cpp:5274
 msgid "Remove"
-msgstr "அகற்று"
+msgstr "நீக்கு"
 
 #: src/TrackPanel.cpp:6997
 msgid "Adjusted Pan"
@@ -4958,8 +4967,8 @@ msgstr "Auto Duck"
 
 #: src/effects/AutoDuck.cpp:156
 msgid ""
-"Auto Duck needs a control track which must be placed below the selected track"
-"(s)."
+"Auto Duck needs a control track which must be placed below the selected "
+"track(s)."
 msgstr ""
 
 #: src/effects/AutoDuck.cpp:494
