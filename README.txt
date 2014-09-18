@@ -83,6 +83,7 @@ Bug fixes for:
 Changes and Improvements:
 
  * Interface:
+   * Redesigned, searchable Keyboard Preferences with Tree, Name and Key views.  
    * Edit Menu: "Cut" and "Delete" are now in the top level of the menu.  
    * Transport Menu now includes "Play/Stop" and "Play/Stop and Set Cursor" 
       (use Keyboard Preferences to create shortcuts for "Play" and "Stop").
