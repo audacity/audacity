@@ -934,7 +934,6 @@
 		28BD8AB3101DF4C700686679 /* ExecMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */; };
 		28BD8AB4101DF4C700686679 /* GetAllMenuCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAE101DF4C600686679 /* GetAllMenuCommands.cpp */; };
 		28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */; };
-		28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		28CCDD000F939FD70081F2FC /* FileHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */; };
 		28D540050FD1912A00FA7C75 /* AppCommandEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D53FFA0FD1912A00FA7C75 /* AppCommandEvent.cpp */; };
 		28D540060FD1912A00FA7C75 /* CommandBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D53FFE0FD1912A00FA7C75 /* CommandBuilder.cpp */; };
@@ -1598,7 +1597,6 @@
 		ED663CC916543647007F53A5 /* libscorealign.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E237080E515D1D00281398 /* libscorealign.a */; };
 		ED663CCA16543647007F53A5 /* libsbsms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2706F40EF9C3C6007D4FFD /* libsbsms.a */; };
 		ED663CCB16543647007F53A5 /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2800FE070FF322D4005CA9E5 /* libportmidi.a */; };
-		ED663CD116543647007F53A5 /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		ED663CD316543647007F53A5 /* LICENSE.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F0977131A3EE00008E860 /* LICENSE.txt */; };
 		ED663CD416543647007F53A5 /* README.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F097A131A3F130008E860 /* README.txt */; };
 		ED663CD616543647007F53A5 /* Install.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
@@ -1929,7 +1927,6 @@
 		ED85B5A316A47353006DA21D /* libscorealign.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E237080E515D1D00281398 /* libscorealign.a */; };
 		ED85B5A416A47353006DA21D /* libsbsms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2706F40EF9C3C6007D4FFD /* libsbsms.a */; };
 		ED85B5A516A47353006DA21D /* libportmidi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2800FE070FF322D4005CA9E5 /* libportmidi.a */; };
-		ED85B5AB16A47353006DA21D /* Audacity.sh in Install wrapper */ = {isa = PBXBuildFile; fileRef = 28C816B81312555B0035BB10 /* Audacity.sh */; };
 		ED85B5AD16A47353006DA21D /* LICENSE.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F0977131A3EE00008E860 /* LICENSE.txt */; };
 		ED85B5AE16A47353006DA21D /* README.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 288F097A131A3F130008E860 /* README.txt */; };
 		ED85B5B016A47353006DA21D /* Install.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
@@ -2456,28 +2453,6 @@
 			name = "Install miscellany";
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		28C816B7131255550035BB10 /* Install wrapper */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = "";
-			dstSubfolderSpec = 6;
-			files = (
-				28C816BA131255790035BB10 /* Audacity.sh in Install wrapper */,
-			);
-			name = "Install wrapper";
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		ED663CD016543647007F53A5 /* Install wrapper */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = "";
-			dstSubfolderSpec = 6;
-			files = (
-				ED663CD116543647007F53A5 /* Audacity.sh in Install wrapper */,
-			);
-			name = "Install wrapper";
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		ED663CD216543647007F53A5 /* Install miscellany */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 8;
@@ -2489,17 +2464,6 @@
 				ED663CD416543647007F53A5 /* README.txt in Install miscellany */,
 			);
 			name = "Install miscellany";
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		ED85B5AA16A47353006DA21D /* Install wrapper */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = "";
-			dstSubfolderSpec = 6;
-			files = (
-				ED85B5AB16A47353006DA21D /* Audacity.sh in Install wrapper */,
-			);
-			name = "Install wrapper";
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 		ED85B5AC16A47353006DA21D /* Install miscellany */ = {
@@ -3715,7 +3679,6 @@
 		28BD8AB0101DF4C600686679 /* Validators.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Validators.h; sourceTree = "<group>"; tabWidth = 3; };
 		28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityLogger.cpp; sourceTree = "<group>"; };
 		28C3946C1818356800FDDAC9 /* AudacityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityLogger.h; sourceTree = "<group>"; };
-		28C816B81312555B0035BB10 /* Audacity.sh */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text.script.sh; name = Audacity.sh; path = mac/Audacity.sh; sourceTree = "<group>"; };
 		28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FileHistory.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28CCDD040F93A0B20081F2FC /* FileHistory.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileHistory.h; sourceTree = "<group>"; tabWidth = 3; };
 		28D53FFA0FD1912A00FA7C75 /* AppCommandEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = AppCommandEvent.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4907,7 +4870,6 @@
 			isa = PBXGroup;
 			children = (
 				174F73C8098D516D009CD6E0 /* Resources */,
-				28C816B81312555B0035BB10 /* Audacity.sh */,
 				28006FFA132C167600BD34D7 /* Install.txt */,
 				178CF4FF0989541C0056CE58 /* configmac.h */,
 				174F73D7098D51AA009CD6E0 /* Info.plist */,
@@ -7599,7 +7561,6 @@
 				28032580131DB4960059D002 /* Copy plug-ins */,
 				288F0980131A400F0008E860 /* Install manual */,
 				282413DA131D52CE009FD931 /* Install plugins */,
-				28C816B7131255550035BB10 /* Install wrapper */,
 				2892CE28131AFB1900E1E17D /* Install miscellany */,
 				ED95519E195D956F0027176E /* Install background image */,
 				282413D8131D51FC009FD931 /* Create dist */,
@@ -7826,7 +7787,6 @@
 				ED663CCD16543647007F53A5 /* Copy plug-ins */,
 				ED663CCE16543647007F53A5 /* Install manual */,
 				ED663CCF16543647007F53A5 /* Install plugins */,
-				ED663CD016543647007F53A5 /* Install wrapper */,
 				ED663CD216543647007F53A5 /* Install miscellany */,
 				ED95528A195DBC3C0027176E /* Install background image */,
 				ED663CD716543647007F53A5 /* Create dist */,
@@ -7873,7 +7833,6 @@
 				ED85B5A716A47353006DA21D /* Copy plug-ins */,
 				ED85B5A816A47353006DA21D /* Install manual */,
 				ED85B5A916A47353006DA21D /* Install plugins */,
-				ED85B5AA16A47353006DA21D /* Install wrapper */,
 				ED85B5AC16A47353006DA21D /* Install miscellany */,
 				ED95528B195DBC3C0027176E /* Install background image */,
 				ED85B5B116A47353006DA21D /* Create dist */,
