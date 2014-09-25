@@ -13,7 +13,7 @@ Filename: "{app}\unins*.*";
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-2.0.5
+OutputBaseFilename=audacity-win-2.0.6
 
 WizardImageFile=audacity_InnoWizardImage.bmp
 WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
@@ -22,9 +22,9 @@ SolidCompression=yes
 
 ; installer-related directives
 AppName=Audacity
-AppVerName=Audacity 2.0.5
+AppVerName=Audacity 2.0.6
 ; Specify AppVersion as well, so it appears in the Add/Remove Programs entry. 
-AppVersion=2.0.5
+AppVersion=2.0.6
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
 AppSupportURL=http://audacity.sourceforge.net
@@ -53,7 +53,7 @@ SetupIconFile=audacity.ico
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
-Name: "basque"; MessagesFile: "compiler:Languages\Basque.isl"
+; Name: "basque"; MessagesFile: "compiler:Languages\Basque.isl"
 Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "catalan"; MessagesFile: "compiler:Languages\Catalan.isl"
 Name: "Corsican"; MessagesFile: "compiler:Languages\Corsican.isl"
@@ -75,7 +75,7 @@ Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "SerbianCyrillic"; MessagesFile: "compiler:Languages\SerbianCyrillic.isl"
 Name: "SerbianLatin"; MessagesFile: "compiler:Languages\SerbianLatin.isl"
-Name: "slovak"; MessagesFile: "compiler:Languages\Slovak.isl"
+; Name: "slovak"; MessagesFile: "compiler:Languages\Slovak.isl"
 Name: "slovenian"; MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
@@ -91,7 +91,7 @@ Name: resetPrefs; Description:  "Reset Preferences"; Flags: unchecked
 Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\unicode release\audacity.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\audacity.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
 Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
@@ -102,11 +102,11 @@ Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; Don't use the WXWIN environment variable, because...
 ; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
 ; 2) Need the DLL's in the release dir for testing, anyway.
-Source: "..\win\unicode release\wxbase28u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\unicode release\wxbase28u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\unicode release\wxmsw28u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\unicode release\wxmsw28u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\unicode release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxbase28u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxbase28u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxmsw28u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxmsw28u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; MSVC runtime DLLs. Some users can't put these in the system dir, so just put them in the EXE dir.
 ; It's legal, per http://www.fsf.org/licensing/licenses/gpl-faq.html#WindowsRuntimeAndGPL .
@@ -114,19 +114,19 @@ Source: "..\win\unicode release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; 
 ; We'll know we have the right version, don't step on anybody else's older version, and
 ; it's easy to make the zip (and they match better).
 ; These are for compiling on 64-bit Windows systems.
-; Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; These are for compiling on 32-bit Windows systems.
-Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
+; Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
+; Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
+; Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "..\win\unicode release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
+Source: "..\win\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 ; We don't currently ship any modules, so the next line is commented out
-;Source: "..\win\unicode release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
-Source: "..\win\unicode release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
-Source: "..\win\unicode release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
+;Source: "..\win\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: "..\win\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
+Source: "..\win\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
 
 ; File that acts as a markers to reset prefs.
 ; Needs the 'Permissions' so that Audacity can delete it
