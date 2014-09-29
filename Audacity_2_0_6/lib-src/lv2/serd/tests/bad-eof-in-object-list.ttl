@@ -1,0 +1,2 @@
+@prefix eg: <http://example.org/> .
+<> eg:p eg:o ,

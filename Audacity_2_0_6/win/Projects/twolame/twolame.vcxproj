@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8C69F7B6-684F-48D9-9057-8912CA3DAA8B}</ProjectGuid>
+    <RootNamespace>twolame</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;LIBTWOLAME_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;LIBTWOLAME_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\ath.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\availbits.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\bitbuffer.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\common.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\crc.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\dab.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\encode.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\energy.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\enwindow.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\fft.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\mem.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\psycho_0.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\psycho_1.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\psycho_1_critband.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\psycho_1_freqtable.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\psycho_2.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\psycho_2_absthr.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\psycho_3.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\psycho_4.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\psycho_n1.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\subband.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\twolame.h" />
+    <ClInclude Include="..\..\..\lib-src\twolame\libtwolame\util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\ath.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\availbits.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\bitbuffer.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\crc.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\dab.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\encode.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\energy.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\fft.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\get_set.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\mem.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\psycho_0.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\psycho_1.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\psycho_2.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\psycho_3.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\psycho_4.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\psycho_n1.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\subband.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\twolame.c" />
+    <ClCompile Include="..\..\..\lib-src\twolame\libtwolame\util.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

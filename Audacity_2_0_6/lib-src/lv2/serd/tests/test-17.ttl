@@ -1,0 +1,6 @@
+# Test long literal
+@prefix :  <http://example.org/ex#> .
+:a :b """a long
+	literal
+with
+newlines""" .

@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.3" />
+<title>TwoLAME</title>
+<link rel="stylesheet" href="./twolame.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./asciidoc-xhtml11.js"></script>
+</head>
+<body class="article">
+<div id="header">
+<h1>TwoLAME</h1>
+<span id="revnumber">version 0.3.13</span>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Based on tooLAME by Michael Cheng</p></div>
+<div class="paragraph"><p>All changes to the ISO source are licensed under the LGPL
+(see COPYING for details)</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>TwoLAME is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>TwoLAME is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>You should have received a copy of the GNU Lesser General Public
+License along with TwoLAME; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA</tt></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction">INTRODUCTION</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>TwoLAME is an optimized MPEG Audio Layer 2 (MP2) encoder.
+It is based heavily on:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+tooLAME by Michael Cheng
+</p>
+</li>
+<li>
+<p>
+the ISO dist10 code
+</p>
+</li>
+<li>
+<p>
+improvement to algorithms as part of the LAME project (lame.sf.net)
+</p>
+</li>
+<li>
+<p>
+other contributors (see AUTHORS)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>TwoLAME should be able to be used as a drop-in replacement for
+LAME (a MPEG Layer 3 encoder). The frontend takes very similar
+command line options to LAME, and the backend library has a very
+similar API to LAME.</p></div>
+<div class="paragraph"><p>For the latest version of TwoLAME, visit the project homepage:
+<a href="http://www.twolame.org/">http://www.twolame.org/</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mpeg_audio_layer_2_mp2">MPEG Audio Layer 2 (MP2)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>(taken from Wikipedia article on MP2)</p></div>
+<div class="paragraph"><p>MP2 (sometimes incorrectly named Musicam) is a short form of MPEG Audio Layer II,
+and it is also used as a file extension for files containing audio data of this
+type. While it has largely been superseded by MP3 for PC and Internet applications,
+it remains a dominant standard for audio broadcasting as part of the DAB digital
+radio and DVB digital television standards. It is also used internally within the
+radio industry, for example in NPR&#8217;s PRSS Content Depot programming distribution
+system.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation">INSTALLATION</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Standard automake process:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>./configure
+make
+make install</tt></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reference_papers">REFERENCE PAPERS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>(Specifically Layer II Papers)</p></div>
+<div class="paragraph"><p>Kumar, M &amp; Zubair, M., A high performance software implementation of mpeg audio
+encoder, 1996, ICASSP Conf Proceedings (I think)</p></div>
+<div class="paragraph"><p>Fischer, K.A., Calculation of the psychoacoustic simultaneous masked threshold
+based on MPEG/Audio Encoder Model One, ICSI Technical Report, 1997
+<a href="ftp://ftp.icsi.berkeley.edu/pub/real/kyrill/PsychoMpegOne.tar.Z">ftp://ftp.icsi.berkeley.edu/pub/real/kyrill/PsychoMpegOne.tar.Z</a></p></div>
+<div class="paragraph"><p>Hyen-O et al, New Implementation techniques of a real-time mpeg-2 audio encoding
+system. p2287, ICASSP 99.</p></div>
+<div class="paragraph"><p>Imai, T., et al, MPEG-1 Audio real-time encoding system, IEEE Trans on Consumer
+Electronics, v44, n3 1998. p888</p></div>
+<div class="paragraph"><p>Teh, D., et al, Efficient bit allocation algorithm for ISO/MPEG audio encoder,
+Electronics Letters, v34, n8, p721</p></div>
+<div class="paragraph"><p>Murphy, C &amp; Anandakumar, K, Real-time MPEG-1 audio coding and decoding on a DSP
+Chip, IEEE Trans on Consumer Electronics, v43, n1, 1997 p40</p></div>
+<div class="paragraph"><p>Hans, M &amp; Bhaskaran, V., A compliant MPEG-1 layer II audio decoder with 16-B
+arithmetic operations, IEEE Signal Proc Letters v4 n5 1997 p121</p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Version 0.3.13<br />
+Last updated 2011-01-01 19:15:01 GMT
+</div>
+</div>
+</body>
+</html>

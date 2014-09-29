@@ -1,0 +1,80 @@
+sord (0.12.0) stable;
+
+  * Update to waf 1.7.9 and autowaf r90 (install docs to versioned directory)
+  * Add sord_get() for easily getting single property values
+  * sord_validate: Pass type check when range is xsd:anyURI and value is a URI
+  * sord_validate: Support any subClassOf rdf:Property, not just baked-in ones
+  * sordmm.hpp: Add convenient constructors for decimal and integer literals
+  * sordmm.hpp: Add Node::to_serd_node()
+  * sordmm.hpp: Don't automatically add RDF namespace prefix to world
+
+ -- David Robillard <d@drobilla.net>  Mon, 18 Feb 2013 11:05:59 -0500
+
+sord (0.10.4) stable;
+
+  * Implement better data type validation in sord_validate conformant with
+    the XSD and OWL specifications
+  * Fix memory leaks in sord_validate
+  * Install sord_validate man page
+  * Disable timestamps in HTML documentation for reproducible build
+
+ -- David Robillard <d@drobilla.net>  Sun, 14 Oct 2012 18:23:55 -0400
+
+sord (0.10.0) stable;
+
+  * Add error callback to world for custom error reporting
+  * Performance and space (per node) improvements
+  * SSE4.2 accelerated hashing for node interning, where available
+  * Make all 'zix' symbols private to avoid symbol clashes in static builds
+  * Remove problematic "Loaded n statements" output from serdi
+  * Strip down API documentation to a single clean page
+  * Fix various hyper-strict warnings
+  * Do not require a C++ compiler to build
+  * Add option to build utilities as static binaries
+  * Upgrade to waf 1.7.2
+  * sordmm.hpp: Add indices and graphs parameters to Model constructor
+  * sordmm.hpp: Remove overzealous URI scheme assertion
+  * sordmm.hpp: Correctly handle Sord::Node self-assignment
+
+ -- David Robillard <d@drobilla.net>  Thu, 23 Aug 2012 00:19:51 -0400
+
+sord (0.8.0) stable;
+
+  * Use path variables in pkgconfig files
+  * Install man page to DATADIR (e.g. PREFIX/share/man, not PREFIX/man)
+  * Tolerate serd passing NULL nodes to reader callback (serd 0.6.0)
+  * Fix comparison of typed literals
+  * Take advantage of interning in sord_node_equals()
+  * Support compilation as C++ under MSVC++.
+  * Add sord_iter_get_node()
+  * Refuse to intern relative URIs in sord_new_uri*()
+  * Add sord_new_relative_uri()
+  * Add SordInserter for writing to a model via Serd sink functions.
+  * Add convenient sord_search(), sord_ask(), and sord_count()
+  * Add sord_validate tool for validating data against RDF/OWL schemas
+
+ -- David Robillard <d@drobilla.net>  Tue, 17 Apr 2012 18:24:53 -0400
+
+sord (0.5.0) stable;
+
+  * Remove glib dependency
+  * Add function sord_contains for checking for a triple pattern
+  * Add function sord_write_iter for writing a queried range
+  * Fix Sord::Namespaces::qualify to no longer chop prefixes
+  * Add ability to build static library
+
+ -- David Robillard <d@drobilla.net>  Thu, 29 Sep 2011 00:00:00 -0400
+
+sord (0.4.2) stable;
+
+  * Fix compilation issues on some systems
+  * Fix build system Python 3 compatibility
+  * Bump Serd dependency to 0.4.0
+
+ -- David Robillard <d@drobilla.net>  Wed, 25 May 2011 19:00:00 -0400
+
+sord (0.4.0) stable;
+
+  * Initial release
+
+ -- David Robillard <d@drobilla.net>  Tue, 24 May 2011 23:00:00 -0400

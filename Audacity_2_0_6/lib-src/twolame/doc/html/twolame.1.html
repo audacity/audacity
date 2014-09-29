@@ -1,0 +1,514 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.3" />
+<title>TWOLAME(1)</title>
+<link rel="stylesheet" href="./twolame.css" type="text/css" />
+<link rel="stylesheet" href="./twolame-manpage.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./asciidoc-xhtml11.js"></script>
+</head>
+<body class="manpage">
+<div id="header">
+<h1>
+TWOLAME(1) Manual Page
+</h1>
+<h2>NAME</h2>
+<div class="sectionbody">
+<p>twolame -
+   an optimised MPEG Audio Layer 2 (MP2) encoder
+</p>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_synopsis">SYNOPSIS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><em>twolame</em> [options] &lt;infile&gt; [outfile]</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_description">DESCRIPTION</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>TwoLAME is an optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME by
+Mike Cheng, which in turn is based upon the ISO dist10 code and portions of
+LAME. Encoding is performed by the libtwolame library backend.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_options">OPTIONS</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_input_file">Input File</h3>
+<div class="paragraph"><p>twolame uses libsndfile for reading the input sound file, so
+the input file can be in any format supported by libsndfile.
+To read raw PCM audio from STDIN, then use - as the input filename.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_output_file">Output File</h3>
+<div class="paragraph"><p>If no output filename is specified, then suffix of the input filename
+is automatically changed to .mp2. To write the encoded audio to STDOUT
+then use - as the output filename.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_input_options">Input Options</h3>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-r, --raw-input
+</dt>
+<dd>
+<p>
+        Specifies that input is raw signed PCM audio.
+        If audio is stereo, than audio samples are interleaved
+        between the two channels.
+</p>
+</dd>
+<dt class="hdlist1">
+-x, --byte-swap
+</dt>
+<dd>
+<p>
+        Force byte-swapping of the input. Endian detection is performed
+        automatically by libsndfile, so this option shouldn&#8217;t
+        normally be needed.
+</p>
+</dd>
+<dt class="hdlist1">
+-s, --samplerate &lt;int&gt;
+</dt>
+<dd>
+<p>
+        If inputting raw PCM sound, you must specify the sample rate of
+        the audio in Hz.
+        Valid sample rates: 16000, 22050, 24000, 32000, 44100, 48000Hz.
+        Default sample rate is 44100Hz.
+</p>
+</dd>
+<dt class="hdlist1">
+--samplesize &lt;int&gt;
+</dt>
+<dd>
+<p>
+        Specifies the sample size (in bits) of the raw PCM audio.
+        Valid sample sizes: 8, 16, 24, 32.
+        Default sample size is 16-bit.
+</p>
+</dd>
+<dt class="hdlist1">
+-N, --channels &lt;int&gt;
+</dt>
+<dd>
+<p>
+        If inputting raw PCM sound, you must specify the number of channels
+        in the input audio. Default number of channels is 2.
+</p>
+</dd>
+<dt class="hdlist1">
+-g, --swap-channels
+</dt>
+<dd>
+<p>
+        Swap the Left and Right channels of a stereo input file.
+</p>
+</dd>
+<dt class="hdlist1">
+--scale &lt;float&gt;
+</dt>
+<dd>
+<p>
+        Scale the input audio prior to encoding.
+        All of the input audio is multiplied by specified value.
+        Value between 0 and 1 will reduce the audio gain, and a value
+        above 1 will increase the gain of the audio.
+</p>
+</dd>
+<dt class="hdlist1">
+--scale-l &lt;float&gt;
+</dt>
+<dd>
+<p>
+        Same as --scale, but only affects the left channel.
+</p>
+</dd>
+<dt class="hdlist1">
+--scale-r &lt;float&gt;
+</dt>
+<dd>
+<p>
+        Same as --scale, but only affects the right channel.
+</p>
+</dd>
+</dl></div>
+</div>
+<div class="sect2">
+<h3 id="_output_options">Output Options</h3>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-m, --mode &lt;char&gt;
+</dt>
+<dd>
+<p>
+        Choose the mode of the resulting audio. Default is auto.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+"a" auto - choose mode automatically based on the input
+</p>
+</li>
+<li>
+<p>
+"s" stereo
+</p>
+</li>
+<li>
+<p>
+"d" dual channel
+</p>
+</li>
+<li>
+<p>
+"j" joint stereo
+</p>
+</li>
+<li>
+<p>
+"m" mono
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+-a, --downmix
+</dt>
+<dd>
+<p>
+        If the input file is stereo then, downmix the left and right
+        input channels into a single mono channel.
+</p>
+</dd>
+<dt class="hdlist1">
+-b, --bitrate &lt;int&gt;
+</dt>
+<dd>
+<p>
+        Sets the total bitrate (in kbps) for the output file.
+        The default bitrate  depends on the number of
+        input channels and samplerate.
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>------------------------------
+Sample Rate   Mono    Stereo
+------------------------------
+48000         96      192
+44100         96      192
+32000         80      160
+24000         48      96
+22050         48      96
+16000         32      64
+------------------------------</tt></pre>
+</div></div>
+</dd>
+<dt class="hdlist1">
+-P, --psyc-mode &lt;int&gt;
+</dt>
+<dd>
+<p>
+        Choose the psycho-acoustic model to use (-1 to 4).
+        Model number -1 is turns off psycho-acoustic modelling and
+        uses fixed default values instead.
+        Please see the file <em>psycho</em> for a full description of
+        each of the models available.
+        Default model is 3.
+</p>
+</dd>
+<dt class="hdlist1">
+-v, --vbr
+</dt>
+<dd>
+<p>
+        Enable VBR mode. See <em>vbr</em> documentation file for details.
+        Default VBR level is 5.0.
+</p>
+</dd>
+<dt class="hdlist1">
+-V, --vbr-level &lt;float&gt;
+</dt>
+<dd>
+<p>
+        Enable VBR mode and set quality level.
+        The higher the number the better the quality.
+        Maximum range is -50 to 50 but useful range is -10 to 10.
+        See <em>vbr</em> documentation file for details.
+</p>
+</dd>
+<dt class="hdlist1">
+-l, --ath &lt;float&gt;
+</dt>
+<dd>
+<p>
+        Set the ATH level. Default level is 0.0.
+</p>
+</dd>
+<dt class="hdlist1">
+-q, --quick &lt;int&gt;
+</dt>
+<dd>
+<p>
+        Enable quick mode. Only re-calculate psycho-acoustic
+        model every specified number of frames.
+</p>
+</dd>
+<dt class="hdlist1">
+-S, --single-frame
+</dt>
+<dd>
+<p>
+        Enables single frame mode: only a single frame of MPEG audio
+        is output and then the program terminates.
+</p>
+</dd>
+</dl></div>
+</div>
+<div class="sect2">
+<h3 id="_miscellaneous_options">Miscellaneous Options</h3>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-c, --copyright
+</dt>
+<dd>
+<p>
+        Turn on Copyright flag in output bitstream.
+</p>
+</dd>
+<dt class="hdlist1">
+-o, --non-original
+</dt>
+<dd>
+<p>
+        Turn off Original flag in output bitstream.
+</p>
+</dd>
+<dt class="hdlist1">
+--original
+</dt>
+<dd>
+<p>
+        Turn on Original flag in output bitstream.
+</p>
+</dd>
+<dt class="hdlist1">
+-p, --protect
+</dt>
+<dd>
+<p>
+        Enable CRC error protection in output bitstream.
+        An extra 16-bit checksum is added to frames.
+</p>
+</dd>
+<dt class="hdlist1">
+-d, --padding
+</dt>
+<dd>
+<p>
+        Turn on padding in output bitstream.
+</p>
+</dd>
+<dt class="hdlist1">
+-R, --reserve &lt;int&gt;
+</dt>
+<dd>
+<p>
+        Reserve specified number of bits in the each from of the
+        output bitstream.
+</p>
+</dd>
+<dt class="hdlist1">
+-e, --deemphasis &lt;char&gt;
+</dt>
+<dd>
+<p>
+        Set the de-emphasis type (n/c/5). Default is none.
+</p>
+</dd>
+<dt class="hdlist1">
+-E, --energy
+</dt>
+<dd>
+<p>
+        Turn on energy level extensions.
+</p>
+</dd>
+</dl></div>
+</div>
+<div class="sect2">
+<h3 id="_verbosity_options">Verbosity Options</h3>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-t, --talkativity &lt;int&gt;
+</dt>
+<dd>
+<p>
+        Set the amount of information to be displayed on stderr (0 to 10).
+        Default is 2.
+</p>
+</dd>
+<dt class="hdlist1">
+--quiet
+</dt>
+<dd>
+<p>
+        Don&#8217;t send any messages to stderr, unless there is an error.
+        (Same as --talkativity=0)
+</p>
+</dd>
+<dt class="hdlist1">
+--brief
+</dt>
+<dd>
+<p>
+        Only display a minimal number of messages while encoding.
+        This setting is quieter than the default talkativity setting.
+        (Same as --talkativity=1)
+</p>
+</dd>
+<dt class="hdlist1">
+--verbose
+</dt>
+<dd>
+<p>
+        Display an increased number of messages on stderr.
+        This setting is useful to diagnose problems.
+        (Same as --talkativity=4)
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_return_codes">Return Codes</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>If encoding completes successfully, then twolame will return 0.
+However if encoding is not successful, then it will return one of the following codes.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+1 (No encoding performed)
+</p>
+</li>
+<li>
+<p>
+2 (Error opening input file)
+</p>
+</li>
+<li>
+<p>
+4 (Error opening output file)
+</p>
+</li>
+<li>
+<p>
+6 (Error allocating memory)
+</p>
+</li>
+<li>
+<p>
+8 (Error in chosen encoding parameters)
+</p>
+</li>
+<li>
+<p>
+10 (Error reading input audio)
+</p>
+</li>
+<li>
+<p>
+12 (Error occured while encoding)
+</p>
+</li>
+<li>
+<p>
+14 (Error writing output audio)
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples">EXAMPLES</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This will encode sound.wav to sound.mp2 using the default constant bitrate of 192 kbps
+and using the default psycho-acoustic model (model 3):</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>twolame sound.wav</tt></pre>
+</div></div>
+<div class="paragraph"><p>Constant bitrate of 160kbps and joint stereo encoding, saved to file sound_160.mp2:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>twolame -b 160 -m j sound.aiff sound_160.mp2</tt></pre>
+</div></div>
+<div class="paragraph"><p>Encode sound.wav to newfile.mp2 using psycho-acoustic model 2 and encoding
+with variable bitrate:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>twolame -P 2 -v sound.wav newfile.mp2</tt></pre>
+</div></div>
+<div class="paragraph"><p>Same as example above, except that the negative value of the "-V" argument
+means that the lower bitrates will be favoured over the higher ones:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>twolame -P 2 -V -5 sound.wav newfile.mp2</tt></pre>
+</div></div>
+<div class="paragraph"><p>Resample audio file using sox and pipe straight through twolame:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>sox sound_11025.aiff -t raw -r 16000 | twolame -r -s 16000 - - &gt; out.mp2</tt></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_authors">AUTHORS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The twolame frontend was (re)written by Nicholas J Humfrey.
+The libtwolame library is based on toolame by Mike Cheng.
+For a full list of authors, please see the AUTHORS file.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">RESOURCES</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>TwoLAME web site: <a href="http://www.twolame.org/">http://www.twolame.org/</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_see_also">SEE ALSO</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>lame(1), mpg123(1), madplay(1), sox(1)</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_copying">COPYING</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Copyright &#169; 2004-2006 The TwoLAME Project. Free use of this software is
+granted under the terms of the GNU Lesser General Public License (LGPL).</p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Version 0.3.13<br />
+Last updated 2011-01-02 12:18:34 GMT
+</div>
+</div>
+</body>
+</html>

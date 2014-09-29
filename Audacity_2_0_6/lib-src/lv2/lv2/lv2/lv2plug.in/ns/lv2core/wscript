@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+import os
+
+from waflib.extras import autowaf as autowaf
+import waflib.Options as Options
+import glob
+
+# Version of this package (even if built as a child)
+LV2CORE_VERSION = '6.7'
+
+# Variables for 'waf dist'
+APPNAME = 'lv2core'
+VERSION = LV2CORE_VERSION
+
+# Mandatory variables
+top = '.'
+out = 'build'
+
+def options(opt):
+    opt.load('compiler_c')
+    autowaf.set_options(opt)
+    opt.add_option('--bundle-only', action='store_true', default=False,
+                   dest='bundle_only',
+                   help="Only install bundle (not header or pkg-config file)")
+    opt.add_option('--copy-headers', action='store_true', default=False,
+                   dest='copy_headers',
+                   help='Copy headers instead of linking to bundle')
+
+def configure(conf):
+    if not hasattr(os.path, 'relpath') and not Options.options.copy_headers:
+        conf.fatal(
+            'os.path.relpath missing, get Python 2.6 or use --copy-headers')
+
+    conf.load('compiler_c')
+    autowaf.configure(conf)
+
+    autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
+    print('')
+
+def build(bld):
+    # Header "library"
+    bld(export_includes = ['.'],
+        name            = 'liblv2core',
+        target          = 'lv2core')
+
+    # Bundle (data)
+    bld.install_files('${LV2DIR}/lv2core.lv2', bld.path.ant_glob('*.ttl'))
+
+    if not Options.options.bundle_only:
+        # Header
+        bld.install_files('${INCLUDEDIR}', 'lv2.h')
+        bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.h')
+
+        # Pkgconfig file
+        autowaf.build_pc(bld, 'LV2CORE', LV2CORE_VERSION, '', [])
+
+        # URI-like header include
+        include_dir = os.path.join(bld.env['INCLUDEDIR'], 'lv2/lv2plug.in/ns')
+        bundle_dir  = os.path.join(bld.env['LV2DIR'], 'lv2core.lv2')
+        if bld.env['COPY_HEADERS']:
+            bld.install_files(os.path.join(include_dir, 'lv2core'),
+                              bld.path.ant_glob('*.h'))
+        else:
+            bld.symlink_as(os.path.join(include_dir, 'lv2core'),
+                           os.path.relpath(bundle_dir, include_dir))
+
+def news(ctx):
+    path = ctx.path.abspath()
+    autowaf.write_news(APPNAME,
+                       glob.glob(os.path.join(path, '*.ttl')),
+                       os.path.join(path, 'NEWS'))
+
+def pre_dist(ctx):
+    # Write NEWS file in source directory
+    news(ctx)
+
+def post_dist(ctx):
+    # Delete generated NEWS file
+    try:
+        os.remove(os.path.join(ctx.path.abspath(), 'NEWS'))
+    except:
+        pass
+

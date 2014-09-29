@@ -1,0 +1,22 @@
+autogen definitions header_test.tpl;
+
+data_type = {
+	name	= "short" ;
+	format	= "SF_FORMAT_PCM_16" ;
+	} ;
+
+data_type = {
+	name	= "int" ;
+	format	= "SF_FORMAT_PCM_32" ;
+	} ;
+
+data_type = {
+	name	= "float" ;
+	format	= "SF_FORMAT_FLOAT" ;
+	} ;
+
+data_type = {
+	name	= "double" ;
+	format	= "SF_FORMAT_DOUBLE" ;
+	} ;
+

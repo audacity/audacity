@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.3" />
+<title>The libtwolame API</title>
+<link rel="stylesheet" href="./twolame.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./asciidoc-xhtml11.js"></script>
+</head>
+<body class="article">
+<div id="header">
+<h1>The libtwolame API</h1>
+<span id="revnumber">version 0.3.13</span>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>This is the interface for encoding PCM audio to MPEG Audio Layer 2.</p></div>
+<div class="paragraph"><p>It is <em>very</em> similar to the libmp3lame API.</p></div>
+<div class="paragraph"><p>See simplefrontend/simplefrontend.c for a very simple application
+using the API.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_steps_to_encode_pcm_to_mp2">Steps to encode PCM to MP2</h2>
+<div class="sectionbody">
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Grab a set of default options by calling:
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>twolame_options *encodeOptions;
+encodeOptions = twolame_init();</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Adjust those options to suit your requirements.
+   See twolame.h for a full list of options. eg.
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>twolame_set_out_samplerate(encodeOptions, 32000);
+twolame_set_bitrate(encodeOptions, 160);</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Initialise twolame library with these options by calling:
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>twolame_init_params(encodeOptions);</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>NOTE: The return value should be checked to see if the options were valid.
+Currently only ever returns 0</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Encode PCM audio to MP2 by calling:
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>int twolame_encode_buffer(
+ twolame_options *glopts,   // the set of options you're using
+ const short int leftpcm[], // the left and right audio channels
+ const short int rightpcm[],
+ int num_samples,           // the number of samples in each channel
+ unsigned char *mp2buffer,  // a pointer to a buffer for the MP2 audio data
+                            // NB User must allocate space!
+ int mp2buffer_size);       // The size of the mp2buffer that the user allocated
+ int *mp2fill_size);</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>This function returns the number of bytes written into mp2buffer by the library MPEG.
+One frame of MPEG audio will be returned for every 1152 samples of PCM audio.
+Multiple calls can be made to this function.
+It is the users responsibility to:</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+allocate the mp2buffer
+</p>
+</li>
+<li>
+<p>
+read the pcmaudio from somewhere with new samples always staring from
+           the beginning of the buffer
+</p>
+</li>
+<li>
+<p>
+write the mp2buffer contents to somewhere (it is overwritten with each call)
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Flush the encoder by calling:
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>int twolame_encode_flush(
+    twolame_options *glopts,
+    unsigned char *mp2buffer,
+    int mp2buffer_size);</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>When encoding is finished, unless there was exactly a multiple of 1152 samples/channel
+sent to the encoder, there will be some remaining audio that is not encoded. This function
+encodes this last bit of audio by padding out with zeros until there is 1152 samples per channel
+in the PCM audio buffers and then encoding this.</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>This function returns the number of bytes written into mp2buffer by the library MPEG.</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+The user must "de-initialise" the encoder at the end by calling:
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>void twolame_close(twolame_options **glopts);</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>This function must be called to free all the memory and structures
+associated with this set of encoding parameters.
+POST: glopts = NULL</tt></pre>
+</div></div>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Version 0.3.13<br />
+Last updated 2011-01-01 19:15:01 GMT
+</div>
+</div>
+</body>
+</html>

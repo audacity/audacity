@@ -1,0 +1,28 @@
+TwoLAME TODO List
+=================
+
+- use Exact-width integer types (eg uint16_t)
+
+- Add libresample support to libtwolame (twolame_set_in_samplerate etc.)
+- parameter checking in twolame.c using assert
+- Create a new twolame.spec (be sure to include twolame.pc)
+- quite a lot of duplicated code between twolame_encode_buffer_interleaved
+  and twolame_encode_buffer
+- sort out changing parameter for twolame_set_VBR_q from FLOAT to int (like LAME)
+
+- better use of verbosity settings
+
+- full options sanity checking/verification in twolame_init_params
+
+- don't allow twolame_set_* after twolame_init_params() has been called
+
+- Fix broken DAB support
+
+- with this VBR mode, we know the bits aren't going to run out, so we can 
+  just assign them "greedily".
+
+- VBR_a_bit_allocation() is yet to be written :)
+
+- Add a layer 2 decoder ? mpglib ?
+
+- use 32-bit floats internally where possible

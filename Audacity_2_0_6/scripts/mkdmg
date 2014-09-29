@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# Prepare a disk image
+#
+
+#
+SUFFIX=$1
+TYPE=$2
+DEBUG=$3
+
+# Setup
+VERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' src/Audacity.h`
+RELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' src/Audacity.h`
+REVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' src/Audacity.h`
+
+if [ -z "$SUFFIX" ]
+then
+   SUFFIX=`grep '^#define AUDACITY_SUFFIX ' src/Audacity.h | cut -d '"' -f 2`
+fi
+
+if [ ! -z "$TYPE" ]
+then
+   TYPE="-$TYPE"
+fi
+
+VERSION=$VERSION.$RELEASE.$REVISION$SUFFIX
+
+VOL="Audacity $VERSION"
+DMG="audacity-macosx$TYPE-$VERSION"
+
+# Preclean
+rm -rf "$DMG" "$DMG.dmg" TMP.dmg
+
+# Create structure
+mkdir "$DMG"
+
+# Copy directories
+SUBDIRS="Audacity.app Languages nyquist plug-ins"
+for SUBDIR in $SUBDIRS
+do
+   if [ -z "$DEBUG" ]
+   then
+      cp -pR "mac/build/Release Static/$SUBDIR" "$DMG"
+   else
+      cp -pR "mac/build/Debug Static/$SUBDIR" "$DMG"
+   fi
+done
+
+# Strip binary
+strip "$DMG/Audacity.app/Contents/MacOS/"*
+
+# Install misc files
+cp -pR README.txt LICENSE.txt "$DMG"
+
+# Create and mount the image
+hdiutil create -ov -srcdir "$DMG" -fs HFS+ -volname "$VOL" TMP.dmg
+
+# Compress and prepare for Internet delivery
+hdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o "$DMG.dmg"
+hdiutil internet-enable -yes "$DMG.dmg"
+
+# Cleanup
+rm TMP.dmg
+
+exit

@@ -1,0 +1,73 @@
+/**********************************************************************
+ * ISO MPEG Audio Subgroup Software Simulation Group (1996)
+ * ISO 13818-3 MPEG-2 Audio Encoder - Lower Sampling Frequency Extension
+ *
+ * $Id$
+ *
+ * $Log$
+ * Revision 1.1  2005/11/15 16:04:26  nhumfrey
+ * Changed suffix for files.
+ *
+ * Revision 1.1.1.1  2005/04/15 01:10:20  nhumfrey
+ * Initial import.
+ *
+ * Revision 1.1  1996/02/14 04:04:23  rowlands
+ * Initial revision
+ *
+ * Received from Mike Coleman
+ **********************************************************************/
+/**********************************************************************
+ *   date   programmers         comment                               *
+ * 2/25/91  Douglas Wong        start of version 1.1 records          *
+ * 3/06/91  Douglas Wong        rename: setup.h to endef.h            *
+ *                              updated I_psycho_one and II_psycho_one*
+ * 3/11/91  W. J. Carter        Added Douglas Wong's updates dated    *
+ *                              3/9/91 for I_Psycho_One() and for     *
+ *                              II_Psycho_One().                      *
+ * 5/10/91  W. Joseph Carter    Ported to Macintosh and Unix.         *
+ *                              Located and fixed numerous software   *
+ *                              bugs and table data errors.           *
+ * 6/11/91  Davis Pan           corrected several bugs                *
+ *                              based on comments from H. Fuchs       *
+ * 01jul91  dpwe (Aware Inc.)   Made pow() args float                 *
+ *                              Removed logical bug in I_tonal_label: *
+ *                              Sometimes *tone returned == STOP      *
+ * 7/10/91  Earle Jennings      no change necessary in port to MsDos  *
+ * 11sep91  dpwe@aware.com      Subtracted 90.3dB from II_f_f_t peaks *
+ * 10/1/91  Peter W. Farrett    Updated II_Psycho_One(),I_Psycho_One()*
+ *                              to include comments.                  *
+ *11/29/91  Masahiro Iwadare    Bug fix regarding POWERNORM           *
+ *                              fixed several other miscellaneous bugs*
+ * 2/11/92  W. Joseph Carter    Ported new code to Macintosh.  Most   *
+ *                              important fixes involved changing     *
+ *                              16-bit ints to long or unsigned in    *
+ *                              bit alloc routines for quant of 65535 *
+ *                              and passing proper function args.     *
+ *                              Removed "Other Joint Stereo" option   *
+ *                              and made bitrate be total channel     *
+ *                              bitrate, irrespective of the mode.    *
+ *                              Fixed many small bugs & reorganized.  *
+ * 2/12/92  Masahiro Iwadare    Fixed some potential bugs in          *
+ *          Davis Pan           subsampling()                         *
+ * 2/25/92  Masahiro Iwadare    Fixed some more potential bugs        *
+ * 6/24/92  Tan Ah Peng         Modified window for FFT               * 
+ *                              (denominator N-1 to N)                *
+ *                              Updated all critical band rate &      *
+ *                              absolute threshold tables and critical*
+ *                              boundaries for use with Layer I & II  *  
+ *                              Corrected boundary limits for tonal   *
+ *                              component computation                 *
+ *                              Placement of non-tonal component at   *
+ *                              geometric mean of critical band       *
+ *                              (previous placement method commented  *
+ *                               out - can be used if desired)        *
+ * 3/01/93  Mike Li             Infinite looping fix in noise_label() *
+ * 3/19/93  Jens Spille         fixed integer overflow problem in     *
+ *                              psychoacoutic model 1                 *
+ * 3/19/93  Giorgio Dimino      modifications to better account for   *
+ *                              tonal and non-tonal components        *
+ * 5/28/93 Sriram Jayasimha     "London" mod. to psychoacoustic model1*
+ * 8/05/93 Masahiro Iwadare     noise_label modification "option"     *
+ * 1/21/94 Seymore Shlien       fixed another infinite looping problem*
+ * 7/12/95 Soeren H. Nielsen    Changes for LSF, new tables           *
+ **********************************************************************/

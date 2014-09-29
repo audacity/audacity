@@ -1,0 +1,369 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.3" />
+<title>TwoLAME: MPEG Audio Layer II VBR</title>
+<link rel="stylesheet" href="./twolame.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes();}
+/*]]>*/
+</script>
+<script type="text/javascript" src="./asciidoc-xhtml11.js"></script>
+</head>
+<body class="article">
+<div id="header">
+<h1>TwoLAME: MPEG Audio Layer II VBR</h1>
+<span id="revnumber">version 0.3.13</span>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_contents">Contents</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+Introduction
+</p>
+</li>
+<li>
+<p>
+Usage
+</p>
+</li>
+<li>
+<p>
+Bitrate Ranges for various Sampling frequencies
+</p>
+</li>
+<li>
+<p>
+Why can&#8217;t the bitrate vary from 32kbps to 384kbps for every  file?
+</p>
+</li>
+<li>
+<p>
+Short Answer
+</p>
+</li>
+<li>
+<p>
+Long Answer
+</p>
+</li>
+<li>
+<p>
+Tech Stuff
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>VBR mode works by selecting a different bitrate for each frame.  Frames
+which are harder to encode will be allocated more bits i.e. a higher bitrate.</p></div>
+<div class="paragraph"><p>LayerII VBR is a complete hack - the ISO standard actually says that decoders are not
+required to support it. As a hack, its implementation is a pain to try and understand.
+If you&#8217;re mega-keen to get full range VBR working, either (a) send me money (b) grab the
+ISO standard and a C compiler and email me.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usage">Usage</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><tt>twolame -v [level] inputfile outputfile.</tt></pre>
+</div></div>
+<div class="paragraph"><p>A level of 5 works very well for me.</p></div>
+<div class="paragraph"><p>The level value can is a measurement of quality - the higher
+the level the higher the average bitrate of the resultant file.
+See TECH STUFF for a better explanation of what the value does.</p></div>
+<div class="paragraph"><p>The confusing part of my implementation of LayerII VBR is that it&#8217;s different from MP3 VBR.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The range of bitrates used is controlled by the input sampling frequency. (See below "Bitrate ranges")
+</p>
+</li>
+<li>
+<p>
+The tendency to use higher bitrates is governed by the &lt;level&gt;.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>E.g. Say you have a 44.1kHz Stereo file. In VBR mode, the bitrate can range from 192 to 384 kbps.</p></div>
+<div class="paragraph"><p>Using "-v -5" will force the encoder to favour the lower bitrate.</p></div>
+<div class="paragraph"><p>Using "-v 5" will force the encoder to favour the upper bitrate.</p></div>
+<div class="paragraph"><p>The value can actually be <strong>any</strong> int. -27, 233, 47. The larger the number, the greater
+the bitrate bias.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bitrate_ranges">Bitrate Ranges</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>When making a VBR stream, the bitrate is only allowed to vary within
+set limits</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>48kHz
+Stereo: 112-384kbps  Mono: 56-192kbps</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>44.1kHz &amp; 32kHz
+Stereo: 192-384kbps  Mono: 96-192kbps</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>24kHz, 22.05kHz &amp; 16kHz
+Stereo/Mono: 8-160kbps</tt></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_doesn_8217_t_the_vbr_mode_work_the_same_as_mp3vbr_the_short_answer">Why doesn&#8217;t the VBR mode work the same as MP3VBR? The Short Answer</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><strong>Why can&#8217;t the bitrate vary from 32kbps to 384kbps for every file?</strong></p></div>
+<div class="paragraph"><p>According to the standard (ISO/IEC 11172-3:1993) Section 2.4.2.3</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>"In order to provide the smallest possible delay and complexity, the
+ decoder is not required to support a continuously variable bitrate when
+ in layer I or II.  Layer III supports variable bitrate by switching the
+ bitrate index."</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>and</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>"For Layer II, not all combinations of total bitrate and mode are allowed."</tt></pre>
+</div></div>
+<div class="paragraph"><p>Hence, most LayerII coders would not have been written with VBR in mind, and
+LayerII VBR is a hack. It works for limited cases. Getting it to work to
+the same extent as MP3-style VBR will be a major hack.</p></div>
+<div class="paragraph"><p>(If you <strong>really</strong> want better bitrate ranges, read "The Long Answer" and submit your mega-patch.)</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_doesn_8217_t_the_vbr_mode_work_the_same_as_mp3vbr_the_long_answer">Why doesn&#8217;t the VBR mode work the same as MP3VBR? The Long Answer</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><strong>Why can&#8217;t the bitrate vary from 32kbps to 384kbps for every file?</strong></p></div>
+<div class="sect2">
+<h3 id="_reason_1_the_standard_limits_the_range">Reason 1: The standard limits the range</h3>
+<div class="paragraph"><p>As quoted above from the standard for 48/44.1/32kHz:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>"For Layer II, not all combinations of total bitrate and mode are allowed. See
+ the following table."</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Bitrate         Allowed Modes
+(kbps)
+32              mono only
+48              mono only
+56              mono only
+64              all modes
+80              mono only
+96              all modes
+112             all modes
+128             all modes
+160             all modes
+192             all modes
+224             stereo only
+256             stereo only
+320             stereo only
+384             stereo only</tt></pre>
+</div></div>
+<div class="paragraph"><p>So based upon this table alone, you <strong>could</strong> have VBR stereo encoding which varies
+smoothly from 96 to 384kbps. Or you could have have VBR mono encoding which varies from
+32 to 192kbps.  But since the top and bottom bitrates don&#8217;t apply to all modes, it would
+be impossible to have a stereo file encoded from 32 to 384 kbps.</p></div>
+<div class="paragraph"><p>But this isn&#8217;t what is really limiting the allowable bitrate range - the bit allocation
+tables are the major hurdle.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_reason_2_the_bit_allocation_tables_don_8217_t_allow_it">Reason 2: The bit allocation tables don&#8217;t allow it</h3>
+<div class="paragraph"><p>From the standard, Section 2.4.3.3.1 "Bit allocation decoding"</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>"For different combinations of bitrate and sampling frequency, different bit
+ allocation tables exist.</tt></pre>
+</div></div>
+<div class="paragraph"><p>These bit allocation tables are pre-determined tables (in Annex B of the standard) which
+indicate</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+how many bits to read for the initial data (2,3 or 4)
+</p>
+</li>
+<li>
+<p>
+these bits are then used as an index back into the table to
+          find the number of quantize levels for the samples in this subband
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>But the table used (and hence the number of bits and the calculated index) are different
+for different combinations of bitrate and sampling frequency.</p></div>
+<div class="paragraph"><p>I will use TableB.2a as an example.</p></div>
+<div class="paragraph"><p>Table B.2a Applies for the following combinations.</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Sampling Freq           Bitrates in (kbps/channel) [emphasis: this is a PER CHANNEL bitrate]
+48                      56, 64, 80, 96, 112, 128, 160, 192
+44.1                    56, 64, 80
+32                      56, 64, 80</tt></pre>
+</div></div>
+<div class="paragraph"><p>If we have a STEREO 48kHz input file, and we use this table, then the bitrates
+we could calculate from this would be 112, 128, 160, 192, 224, 256, 320 and 384 kbps.</p></div>
+<div class="paragraph"><p>This table contains no information on how to encode stuff at bitrates less than 112kbps
+(for a stereo file). You would have to load allocation table B.2c to encode stereo at
+64kbps and 128kbps.</p></div>
+<div class="paragraph"><p>Since it would be a MAJOR piece of hacking to get the different tables shifted in and out
+during the encoding process, once an allocation table is loaded <strong>IT IS NOT CHANGED</strong>.</p></div>
+<div class="paragraph"><p>Hence, the best table is picked at the start of the encoding process, and the encoder
+is stuck with it for the rest of the encode.</p></div>
+<div class="paragraph"><p>For twolame-02j, I have picked the table it loads for different
+sampling frequencies in order to optimize the range of bitrates possible.</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>48 kHz - Table B.2a
+         Stereo Bitrate Range: 112 - 384
+         Mono Bitrate Range : 56 - 192</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>44.1/32 kHz - Table B.2b
+        Stereo Bitrate Range: 192 - 384
+        Mono Bitrate Range: 96 - 192</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>24/22.05/16 kHz - LSF Table (Standard ISO/IEC 13818.3:1995 Annex B, Table B.1)
+        There is only 1 table for the Lower Sampling Frequencies
+        All modes (mono and stereo) are allowable at all bitrates
+        So at the Lower Sampling Frequencies you *can* have a completely variable
+        bitrate over the entire range.</tt></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tech_stuff">Tech Stuff</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The VBR mode is mainly centered around the main_bit_allocation() and
+a_bit_allocation() routines in encode.c.</p></div>
+<div class="paragraph"><p>The limited range of VBR is due to my particular implementation which restricts
+ranges to within one alloc table (see tables B.2a, B.2b, B.2c and B.2d in ISO 11172).
+The VBR range for 32/44.1khz lies within B.2b, and the 48khz VBR lies within table B.2a.</p></div>
+<div class="paragraph"><p>I&#8217;m not sure whether it is worth extending these ranges down to lower bitrates.
+The work required to switch alloc tables <strong>during</strong> the encoding is major.</p></div>
+<div class="paragraph"><p>In the case of silence, it might be worth doing a quick check for very low signals
+and writing a pre-calculated <strong>blank</strong> 32kpbs frame. [probably also a lot of work].</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_cbr_works">How CBR works</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+Use the psycho model to determine the MNRs for each subband
+          [MNR = the ratio of "masking" to "noise"]
+          (From an encoding perspective, a bigger MNR in a subband means that
+           it sounds better since the noise is more masked))
+</p>
+</li>
+<li>
+<p>
+calculate the available data bits (adb) for this bitrate.
+</p>
+</li>
+<li>
+<p>
+Based upon the MNR (Masking:Noise Ratio) values, allocate bits to each
+          subband
+</p>
+</li>
+<li>
+<p>
+Keep increasing the bits to whichever subband currently has the min MNR
+          value until we have no bits left.
+</p>
+</li>
+<li>
+<p>
+This mode does not guarentee that all the subbands are without noise
+          ie there may still be subbands with MNR less than  0.0  (noisy!)
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_vbr_works">How VBR works</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+pretend we have lots of bits to spare, and work out the bits which would
+          raise the MNR in each subband to the level given by the argument on the
+          command line "-v [int]"
+</p>
+</li>
+<li>
+<p>
+Pick the bitrate which has more bits than the  required_bits we just calculated
+</p>
+</li>
+<li>
+<p>
+calculate a_bit_allocation()
+</p>
+</li>
+<li>
+<p>
+VBR "guarantees" that all subbands have MNR &gt; VBRLEVEL or that we have
+          reached the maximum bitrate.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_future">FUTURE</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+with this VBR mode, we know the bits aren&#8217;t going to run out, so we can
+          just assign them "greedily".
+</p>
+</li>
+<li>
+<p>
+VBR_a_bit_allocation() is yet to be written :)
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Version 0.3.13<br />
+Last updated 2011-01-01 22:51:38 GMT
+</div>
+</div>
+</body>
+</html>

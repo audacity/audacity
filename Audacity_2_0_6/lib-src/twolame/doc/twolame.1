@@ -1,0 +1,439 @@
+'\" t
+.\"     Title: twolame
+.\"    Author: Nicholas J Humfrey <njh@aelius.com>
+.\" Generator: DocBook XSL Stylesheets v1.74.3 <http://docbook.sf.net/>
+.\"      Date: 01/21/2011
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "TWOLAME" "1" "01/21/2011" "\ \&" "\ \&"
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+twolame \- an optimised MPEG Audio Layer 2 (MP2) encoder
+.SH "SYNOPSIS"
+.sp
+\fItwolame\fR [options] <infile> [outfile]
+.SH "DESCRIPTION"
+.sp
+TwoLAME is an optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME by Mike Cheng, which in turn is based upon the ISO dist10 code and portions of LAME\&. Encoding is performed by the libtwolame library backend\&.
+.SH "OPTIONS"
+.SS "Input File"
+.sp
+twolame uses libsndfile for reading the input sound file, so the input file can be in any format supported by libsndfile\&. To read raw PCM audio from STDIN, then use \- as the input filename\&.
+.SS "Output File"
+.sp
+If no output filename is specified, then suffix of the input filename is automatically changed to \&.mp2\&. To write the encoded audio to STDOUT then use \- as the output filename\&.
+.SS "Input Options"
+.PP
+\-r, \-\-raw\-input
+.RS 4
+Specifies that input is raw signed PCM audio\&. If audio is stereo, than audio samples are interleaved between the two channels\&.
+.RE
+.PP
+\-x, \-\-byte\-swap
+.RS 4
+Force byte\-swapping of the input\&. Endian detection is performed automatically by libsndfile, so this option shouldn\(cqt normally be needed\&.
+.RE
+.PP
+\-s, \-\-samplerate <int>
+.RS 4
+If inputting raw PCM sound, you must specify the sample rate of the audio in Hz\&. Valid sample rates: 16000, 22050, 24000, 32000, 44100, 48000Hz\&. Default sample rate is 44100Hz\&.
+.RE
+.PP
+\-\-samplesize <int>
+.RS 4
+Specifies the sample size (in bits) of the raw PCM audio\&. Valid sample sizes: 8, 16, 24, 32\&. Default sample size is 16\-bit\&.
+.RE
+.PP
+\-N, \-\-channels <int>
+.RS 4
+If inputting raw PCM sound, you must specify the number of channels in the input audio\&. Default number of channels is 2\&.
+.RE
+.PP
+\-g, \-\-swap\-channels
+.RS 4
+Swap the Left and Right channels of a stereo input file\&.
+.RE
+.PP
+\-\-scale <float>
+.RS 4
+Scale the input audio prior to encoding\&. All of the input audio is multiplied by specified value\&. Value between 0 and 1 will reduce the audio gain, and a value above 1 will increase the gain of the audio\&.
+.RE
+.PP
+\-\-scale\-l <float>
+.RS 4
+Same as \-\-scale, but only affects the left channel\&.
+.RE
+.PP
+\-\-scale\-r <float>
+.RS 4
+Same as \-\-scale, but only affects the right channel\&.
+.RE
+.SS "Output Options"
+.PP
+\-m, \-\-mode <char>
+.RS 4
+Choose the mode of the resulting audio\&. Default is auto\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+"a" auto \- choose mode automatically based on the input
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+"s" stereo
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+"d" dual channel
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+"j" joint stereo
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+"m" mono
+.RE
+.RE
+.PP
+\-a, \-\-downmix
+.RS 4
+If the input file is stereo then, downmix the left and right input channels into a single mono channel\&.
+.RE
+.PP
+\-b, \-\-bitrate <int>
+.RS 4
+Sets the total bitrate (in kbps) for the output file\&. The default bitrate depends on the number of input channels and samplerate\&.
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+Sample Rate   Mono    Stereo
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+48000         96      192
+44100         96      192
+32000         80      160
+24000         48      96
+22050         48      96
+16000         32      64
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+.fi
+.if n \{\
+.RE
+.\}
+.RE
+.PP
+\-P, \-\-psyc\-mode <int>
+.RS 4
+Choose the psycho\-acoustic model to use (\-1 to 4)\&. Model number \-1 is turns off psycho\-acoustic modelling and uses fixed default values instead\&. Please see the file
+\fIpsycho\fR
+for a full description of each of the models available\&. Default model is 3\&.
+.RE
+.PP
+\-v, \-\-vbr
+.RS 4
+Enable VBR mode\&. See
+\fIvbr\fR
+documentation file for details\&. Default VBR level is 5\&.0\&.
+.RE
+.PP
+\-V, \-\-vbr\-level <float>
+.RS 4
+Enable VBR mode and set quality level\&. The higher the number the better the quality\&. Maximum range is \-50 to 50 but useful range is \-10 to 10\&. See
+\fIvbr\fR
+documentation file for details\&.
+.RE
+.PP
+\-l, \-\-ath <float>
+.RS 4
+Set the ATH level\&. Default level is 0\&.0\&.
+.RE
+.PP
+\-q, \-\-quick <int>
+.RS 4
+Enable quick mode\&. Only re\-calculate psycho\-acoustic model every specified number of frames\&.
+.RE
+.PP
+\-S, \-\-single\-frame
+.RS 4
+Enables single frame mode: only a single frame of MPEG audio is output and then the program terminates\&.
+.RE
+.SS "Miscellaneous Options"
+.PP
+\-c, \-\-copyright
+.RS 4
+Turn on Copyright flag in output bitstream\&.
+.RE
+.PP
+\-o, \-\-non\-original
+.RS 4
+Turn off Original flag in output bitstream\&.
+.RE
+.PP
+\-\-original
+.RS 4
+Turn on Original flag in output bitstream\&.
+.RE
+.PP
+\-p, \-\-protect
+.RS 4
+Enable CRC error protection in output bitstream\&. An extra 16\-bit checksum is added to frames\&.
+.RE
+.PP
+\-d, \-\-padding
+.RS 4
+Turn on padding in output bitstream\&.
+.RE
+.PP
+\-R, \-\-reserve <int>
+.RS 4
+Reserve specified number of bits in the each from of the output bitstream\&.
+.RE
+.PP
+\-e, \-\-deemphasis <char>
+.RS 4
+Set the de\-emphasis type (n/c/5)\&. Default is none\&.
+.RE
+.PP
+\-E, \-\-energy
+.RS 4
+Turn on energy level extensions\&.
+.RE
+.SS "Verbosity Options"
+.PP
+\-t, \-\-talkativity <int>
+.RS 4
+Set the amount of information to be displayed on stderr (0 to 10)\&. Default is 2\&.
+.RE
+.PP
+\-\-quiet
+.RS 4
+Don\(cqt send any messages to stderr, unless there is an error\&. (Same as \-\-talkativity=0)
+.RE
+.PP
+\-\-brief
+.RS 4
+Only display a minimal number of messages while encoding\&. This setting is quieter than the default talkativity setting\&. (Same as \-\-talkativity=1)
+.RE
+.PP
+\-\-verbose
+.RS 4
+Display an increased number of messages on stderr\&. This setting is useful to diagnose problems\&. (Same as \-\-talkativity=4)
+.RE
+.SH "RETURN CODES"
+.sp
+If encoding completes successfully, then twolame will return 0\&. However if encoding is not successful, then it will return one of the following codes\&.
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+1 (No encoding performed)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+2 (Error opening input file)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+4 (Error opening output file)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+6 (Error allocating memory)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+8 (Error in chosen encoding parameters)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+10 (Error reading input audio)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+12 (Error occured while encoding)
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+14 (Error writing output audio)
+.RE
+.SH "EXAMPLES"
+.sp
+This will encode sound\&.wav to sound\&.mp2 using the default constant bitrate of 192 kbps and using the default psycho\-acoustic model (model 3):
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+twolame sound\&.wav
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Constant bitrate of 160kbps and joint stereo encoding, saved to file sound_160\&.mp2:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+twolame \-b 160 \-m j sound\&.aiff sound_160\&.mp2
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Encode sound\&.wav to newfile\&.mp2 using psycho\-acoustic model 2 and encoding with variable bitrate:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+twolame \-P 2 \-v sound\&.wav newfile\&.mp2
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Same as example above, except that the negative value of the "\-V" argument means that the lower bitrates will be favoured over the higher ones:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+twolame \-P 2 \-V \-5 sound\&.wav newfile\&.mp2
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Resample audio file using sox and pipe straight through twolame:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+sox sound_11025\&.aiff \-t raw \-r 16000 | twolame \-r \-s 16000 \- \- > out\&.mp2
+.fi
+.if n \{\
+.RE
+.\}
+.SH "AUTHORS"
+.sp
+The twolame frontend was (re)written by Nicholas J Humfrey\&. The libtwolame library is based on toolame by Mike Cheng\&. For a full list of authors, please see the AUTHORS file\&.
+.SH "RESOURCES"
+.sp
+TwoLAME web site: \m[blue]\fBhttp://www\&.twolame\&.org/\fR\m[]
+.SH "SEE ALSO"
+.sp
+lame(1), mpg123(1), madplay(1), sox(1)
+.SH "COPYING"
+.sp
+Copyright \(co 2004\-2006 The TwoLAME Project\&. Free use of this software is granted under the terms of the GNU Lesser General Public License (LGPL)\&.
+.SH "AUTHOR"
+.PP
+\fBNicholas J Humfrey\fR <\&njh@aelius\&.com\&>
+.RS 4
+Author.
+.RE

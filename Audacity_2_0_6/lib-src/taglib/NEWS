@@ -1,0 +1,189 @@
+TagLib 1.9.1 (Oct 8, 2013)
+==========================
+
+ * Fixed binary incompatible change in TagLib::Map and TagLib::List.
+ * Fixed constructing String from ByteVector.
+ * Fixed compilation on MSVC with the /Zc:wchar_t- option.
+ * Fixed detecting of RIFF files with invalid chunk sizes.
+ * Added TagLib::MP4::PropertyMap::codec().
+
+TagLib 1.9 (Oct 6, 2013)
+========================
+
+ * Added support for the Ogg Opus file format.
+ * Added support for INFO tags in WAV files.
+ * Changed FileStream to use Windows file API.
+ * Included taglib-config.cmd script for Windows.
+ * New ID3v1::Tag methods for working directly with genre numbers.
+ * New MPEG::File methods for checking which tags are saved in the file.
+ * Added support for the PropertyMap API to ASF and MP4 files.
+ * Added MusicBrainz identifiers to the PropertyMap API.
+ * Allowed reading of MP4 cover art without an explicitly specified format.
+ * Better parsing of corrupted FLAC files.
+ * Fixed saving of PropertyMap comments without description into ID3v2 tags.
+ * Fixed crash when parsing certain XM files.
+ * Fixed compilation of unit test with clang.
+ * Better handling of files that can't be open or have read-only permissions.
+ * Improved atomic reference counting.
+ * New hookable API for debug messages.
+ * More complete Windows install instructions.
+ * Many smaller bug fixes and performance improvements.
+
+TagLib 1.8 (Sep 6, 2012)
+========================
+
+1.8:
+
+ * Added support for OWNE ID3 frames.
+ * Changed key validation in the new PropertyMap API.
+ * ID3v1::Tag::setStringHandler will no londer delete the previous handler,
+   the caller is responsible for this.
+ * File objects will also no longer delete the passed IOStream objects. It
+   should be done in the caller code after the File object is no longer
+   used.
+ * Added ID3v2::Tag::setLatin1StringHandler for custom handling of
+   latin1-encoded text in ID3v2 frames.
+ * Fixed validation of ID3v2 frame IDs (IDs with '0' were ignored).
+
+1.8 BETA:
+
+ * New API for accessing tags by name.
+ * New abstract I/O stream layer to allow custom I/O handlers.
+ * Support for writing ID3v2.3 tags.
+ * Support for various module file formats (MOD, S3M, IT, XM).
+ * Support for MP4 and ASF is now enabled by default.
+ * Started using atomic int operations for reference counting.
+ * Added methods for checking if WMA and MP4 files are DRM-protected.
+ * Added taglib_free to the C bindings.
+ * New method to allow removing pictures from FLAC files.
+ * Support for reading audio properties from ALAC and Musepack SV8 files.
+ * Added replay-gain information to Musepack audio properties.
+ * Support for APEv2 binary tags.
+ * Many AudioProperties subclasses now provide information about the total number of samples.
+ * Various small bug fixes.
+
+TagLib 1.7.2 (Apr 20, 2012)
+===========================
+
+ * Fixed division by zero while parsing corrupted MP4 files (CVE-2012-2396).
+ * Fixed compilation on Haiku.
+
+TagLib 1.7.1 (Mar 17, 2012)
+===========================
+
+ * Improved parsing of corrupted WMA, RIFF and OGG files.
+ * Fixed a memory leak in the WMA parser.
+ * Fixed a memory leak in the FLAC parser.
+ * Fixed a possible division by zero in the APE parser.
+ * Added detection of TTA2 files.
+ * Fixed saving of multiple identically named tags to Vorbis Comments.
+
+TagLib 1.7 (Mar 11, 2011)
+=========================
+
+1.7:
+
+ * Fixed memory leaks in the FLAC file format parser.
+ * Fixed bitrate calculation for WAV files.
+
+1.7 RC1:
+
+ * Support for reading/writing tags from Monkey's Audio files. (BUG:210404)
+ * Support for reading/writing embedded pictures from WMA files.
+ * Support for reading/writing embedded pictures from FLAC files (BUG:218696).
+ * Implemented APE::Tag::isEmpty() to check for all APE tags, not just the
+   basic ones.
+ * Added reading of WAV audio length. (BUG:116033)
+ * Exposed FLAC MD5 signature of the uncompressed audio stream via
+   FLAC::Properties::signature(). (BUG:160172)
+ * Added function ByteVector::toHex() for hex-encoding of byte vectors.
+ * WavPack reader now tries to get the audio length by finding the final
+   block, if the header doesn't have the information. (BUG:258016)
+ * Fixed a memory leak in the ID3v2.2 PIC frame parser. (BUG:257007)
+ * Fixed writing of RIFF files with even chunk sizes. (BUG:243954)
+ * Fixed compilation on MSVC 2010.
+ * Removed support for building using autoconf/automake.
+ * API docs can be now built using "make docs".
+
+TagLib 1.6.3 (Apr 17, 2010)
+===========================
+
+ * Fixed definitions of the TAGLIB_WITH_MP4 and TAGLIB_WITH_ASF macros.
+ * Fixed upgrading of ID3v2.3 genre frame with ID3v1 code 0 (Blues).
+ * New method `int String::toInt(bool *ok)` which can return whether the
+   conversion to a number was successfull.
+ * Fixed parsing of incorrectly written lengths in ID3v2 (affects mainly
+   compressed frames). (BUG:231075)
+
+TagLib 1.6.2 (Apr 9, 2010)
+==========================
+
+ * Read Vorbis Comments from the first FLAC metadata block, if there are
+   multipe ones. (BUG:211089)
+ * Fixed a memory leak in FileRef's OGA format detection.
+ * Fixed compilation with the Sun Studio compiler. (BUG:215225)
+ * Handle WM/TrackNumber attributes with DWORD content in WMA files.
+   (BUG:218526)
+ * More strict check if something is a valid MP4 file. (BUG:216819)
+ * Correctly save MP4 int-pair atoms with flags set to 0.
+ * Fixed compilation of the test runner on Windows.
+ * Store ASF attributes larger than 64k in the metadata library object.
+ * Ignore trailing non-data atoms when parsing MP4 covr atoms.
+ * Don't upgrade ID3v2.2 frame TDA to TDRC. (BUG:228968)
+
+TagLib 1.6.1 (Oct 31, 2009)
+===========================
+
+ * Better detection of the audio codec of .oga files in FileRef.
+ * Fixed saving of Vorbis comments to Ogg FLAC files. TagLib tried to
+   include the Vorbis framing bit, which is only correct for Ogg Vorbis.
+ * Public symbols now have explicitly set visibility to "default" on GCC.
+ * Added missing exports for static ID3v1 functions.
+ * Fixed a typo in taglib_c.pc
+ * Fixed a failing test on ppc64.
+ * Support for binary 'covr' atom in MP4 files. TagLib 1.6 treated them
+   as text atoms, which corrupted them in some cases.
+ * Fixed ID3v1-style genre to string conversion in MP4 files.
+
+TagLib 1.6 (Sep 13, 2009)
+=========================
+
+1.6:
+
+ * New CMake option to build a static version - ENABLE_STATIC.
+ * Added support for disabling dllimport/dllexport on Windows using the
+   TAGLIB_STATIC macro.
+ * Support for parsing the obsolete 'gnre' MP4 atom.
+ * New cpp macros TAGLIB_WITH_MP4 and TAGLIB_WITH_ASF to determin if
+   TagLib was built with MP4/ASF support.
+
+1.6 RC1:
+
+ * Split Ogg packets larger than 64k into multiple pages. (BUG:171957)
+ * TagLib can now use FLAC padding block. (BUG:107659)
+ * ID3v2.2 frames are now not incorrectly saved. (BUG:176373)
+ * Support for ID3v2.2 PIC frames. (BUG:167786)
+ * Fixed a bug in ByteVectorList::split().
+ * XiphComment::year() now falls back to YEAR if DATE doesn't exist
+   and XiphComment::year() falls back to TRACKNUM if TRACKNUMBER doesn't
+   exist. (BUG:144396)
+ * Improved ID3v2.3 genre parsing. (BUG:188578)
+ * Better checking of corrupted ID3v2 APIC data. (BUG:168382)
+ * Bitrate calculating using the Xing header now uses floating point
+   numbers. (BUG:172556)
+ * New TagLib::String method rfind().
+ * Added support for MP4 file format with iTunes-style metadata [optional].
+ * Added support for ASF (WMA) file format [optional].
+ * Fixed crash when saving a Locator APEv2 tag. (BUG:169810)
+ * Fixed a possible crash in the non-const version of String::operator[]
+   and in String::operator+=. (BUG:169389)
+ * Added support for PRIV ID3v2 frames.
+ * Empty ID3v2 genres are no longer treated as numeric ID3v1 genres.
+ * Added support for the POPM (rating/playcount) ID3v2 frame.
+ * Generic RIFF file format support:
+   * Support for AIFF files with ID3v2 tags.
+   * Support for WAV files with ID3v2 tags.
+ * Fixed crash on handling unsupported ID3v2 frames, e.g. on encrypted
+   frames. (BUG:161721)
+ * Fixed overflow while calculating bitrate of FLAC files with a very
+   high bitrate.

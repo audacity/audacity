@@ -1,0 +1,5 @@
+Name: ${LSR}
+Description: ${DESCRIPTION_SUMMARY} (with libsamplerate-like bindings)
+Version: ${PROJECT_VERSION}
+Libs: -L${LIB_INSTALL_DIR} -l${LSR}
+Cflags: -I${INCLUDE_INSTALL_DIR}

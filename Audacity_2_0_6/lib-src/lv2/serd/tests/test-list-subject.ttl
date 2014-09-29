@@ -1,0 +1,2 @@
+() a <http://example.org/List> .
+("apple" "banana") a <http://example.org/List> .

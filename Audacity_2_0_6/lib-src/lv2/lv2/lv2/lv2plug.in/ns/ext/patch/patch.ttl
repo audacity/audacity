@@ -1,0 +1,367 @@
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix patch: <http://lv2plug.in/ns/ext/patch#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+<http://lv2plug.in/ns/ext/patch>
+	a owl:Ontology ;
+	rdfs:seeAlso <patch.h> ,
+		<lv2-patch.doap.ttl> ;
+	lv2:documentation """
+<p>This vocabulary defines messages which can be used to access and manipulate
+properties.  It is designed to provide a dynamic control interface for LV2
+plugins, but is useful in many contexts.</p>
+
+<p>The main feature of this design is that the messages themselves are
+described in the same format as the data they work with.  In particular,
+messages can be serialised as a binary <a
+href="../atom/atom.html#Object">Object</a> or in Turtle (or any other RDF
+serialisation).</p>
+
+<p>The idea behind using a property-based interface for control is to prevent
+an an explosion of message types.  Instead of a custom message for each action,
+control is achieved via manipulating properties (which are likely already
+defined for other reasons).  Note, however, that this is purely conceptual;
+there is no requirement that the receiver actually implement a store of
+resources with properties.</p>
+
+<p>For example, consider an object that can blink.  Rather than define a
+specific interface to control this (e.g. <code>obj.start_blinking();
+obj.stop_blinking()</code>), set a <q>blinking</q> property to true or false
+(e.g. <code>obj.set(blinking, true)</code>) to achieve the desired behaviour.
+One benefit of this approach is that a persistent state model is available
+<q>for free</q>: simply serialise the <q>blinking</q> property.</p>
+
+<p>This specification is strictly metadata and does not define any binary
+mechanism, though it can be completely expressed by standard types in the <a
+href="../atom/atom.html">LV2 Atom</a> extension.  Thus, hosts can be expected
+to be capable of transmitting it between plugins, or between a plugin and its
+UI, making it a good choice for advanced plugin control.</p>
+""" .
+
+patch:Ack
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Response ;
+	rdfs:label "Ack" ;
+	lv2:documentation """
+<p>An acknowledgement that a request has been successfully processed.  This is
+returned as a reply when a specific reply type is not necessary or
+appropriate.</p>
+""" .
+
+patch:Delete
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Request ;
+	rdfs:label "Delete" ;
+	lv2:documentation """
+<p>Request the subject(s) be deleted.</p>
+""" .
+
+patch:Error
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Response ;
+	rdfs:label "Error" ;
+	lv2:documentation """
+<p>A response indicating an error processing a request.</p>
+""" .
+
+patch:Get
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Request ;
+	rdfs:label "Get" ;
+	lv2:documentation """
+<p>Request a description of the subject.</p>
+
+<p>The detail of the response is not specified, it may be a flat description of
+all the properties of the subject, or a more expressive description with
+several subjects.  A good choice is a <q><a
+href="http://www.w3.org/Submission/CBD/">concise bounded description</a></q>,
+i.e. a description which recursively includes all properties with blank node
+values.</p>
+
+<p>The response should have the same patch:subject property as the request, and
+a patch:body that is a description of that subject.  For example:</p>
+<pre class="turtle-code">
+&lt;get-request&gt;
+    a patch:Get ;
+    patch:subject &lt;something&gt; .
+</pre>
+
+<p>Could result in:</p>
+<pre class="turtle-code">
+[]
+    a patch:Response ;
+    patch:request &lt;get-request&gt; ;
+    patch:subject &lt;something&gt; ;
+    patch:body [
+        eg:name "Something" ;
+        eg:ratio 1.6180339887 ;
+    ] .
+</pre>
+
+<p>Note the use of blank nodes is not required; the value of patch:body may be
+the actual resource node.  Depending on the transport and syntax used this may
+be preferable.  However, the patch:subject property is required regardless.  For
+example, the same response could be written:</p>
+
+<pre class="turtle-code">
+&lt;something&gt;
+    eg:name "Something" ;
+    eg:ratio 1.6180339887 .
+
+[]
+    a patch:Response ;
+    patch:request &lt;get-request&gt; ;
+    patch:subject &lt;something&gt; ;
+    patch:body &lt;something&gt; .
+</pre>
+""" .
+
+patch:Insert
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Request ;
+	rdfs:label "Insert" ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:cardinality 1 ;
+		owl:onProperty patch:subject
+	] ;
+	lv2:documentation """
+<p>Insert the patch:body at patch:subject.  If the subject does not exist, it is
+created.  If the subject does already exist, it is added to.  This request only
+adds properties, it never removes them.  The user must take care that multiple
+values are not set for properties which should only have one value.</p>
+""" .
+
+patch:Message
+	a rdfs:Class ;
+	rdfs:label "Message" .
+
+patch:Move
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Request ;
+	rdfs:label "Move" ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:cardinality 1 ;
+		owl:onProperty patch:subject
+	] , [
+		a owl:Restriction ;
+		owl:cardinality 1 ;
+		owl:onProperty patch:destination
+	] ;
+	lv2:documentation """
+<p>Move the patch:subject to patch:destination.  After this, patch:destination has
+the description patch:subject had prior to this request's execution, and
+patch:subject does not exist any more.It is an error if the subject does not
+exist or the destination already exists.</p>
+""" .
+
+patch:Patch
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Request ,
+	[
+		a owl:Restriction ;
+		owl:minCardinality 1 ;
+		owl:onProperty patch:subject
+	] ;
+	lv2:documentation """
+<p>A method for modifying the properties of an object.</p>
+
+<p>This method always has at least one patch:subject, and exactly one patch:add
+and patch:remove property.  The value of patch:add and patch:remove are nodes
+which have the properties to add or remove from the subject(s), respectively.
+The special value patch:wildcard may be used as the value of a remove property
+to remove all properties with the given predicate.  For example:</p>
+
+<pre class="turtle-code">
+[]
+    a patch:Patch ;
+    patch:subject &lt;something&gt; ;
+    patch:add [
+        eg:name "New name" ;
+        eg:age 42 ;
+    ] ;
+    patch:remove [
+        eg:name "Old name" ;
+        eg:age patch:wildcard ;  # Remove all old eg:age properties
+    ] .
+</pre>
+""" .
+
+patch:Put
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Request ;
+	rdfs:label "Put" ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:cardinality 1 ;
+		owl:onProperty patch:subject
+	] ;
+	lv2:documentation """
+<p>Put the patch:body as the patch:subject.  If the subject does not already exist,
+it is created.  If the subject does already exist, the patch:body is considered
+an updated version of it, and the previous version is replaced.</p>
+""" .
+
+patch:Request
+	a rdfs:Class ;
+	rdfs:label "Request" ;
+	rdfs:subClassOf patch:Message ;
+	lv2:documentation """
+<p>A request.  A request may have a patch:subject property, which indicates which
+resource the request applies to.  The subject may be omitted in contexts where
+it is implicit (e.g. the recipient is the subject).</p>
+""" .
+
+patch:Response
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Message ;
+	rdfs:label "Response" ;
+	lv2:documentation """
+<p>A response to a method.</p>
+""" .
+
+patch:Set
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Request ,
+	[
+		a owl:Restriction ;
+		owl:cardinality 1 ;
+		owl:onProperty patch:property
+	] , [
+		a owl:Restriction ;
+		owl:cardinality 1 ;
+		owl:onProperty patch:value
+	] ;
+	lv2:documentation """
+<p>A compact message for setting one property to a specific value.</p>
+
+<p>This is equivalent to a patch:Patch which removes <em>all</em> pre-existing
+values for the property before setting the new value.  For example:</p>
+
+<pre class="turtle-code">
+[]
+    a patch:Set ;
+    patch:subject &lt;something&gt; ;
+    patch:property eg:name ;
+    patch:value "New name" .
+</pre>
+
+<p>Which is equivalent to:</p>
+<pre class="turtle-code">
+[]
+    a patch:Patch ;
+    patch:subject &lt;something&gt; ;
+    patch:add [
+        eg:name "New name" ;
+    ] ;
+    patch:remove [
+        eg:name patch:wildcard ;
+    ] .
+</pre>
+""" .
+
+patch:add
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:domain patch:Message .
+
+patch:body
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:domain patch:Message ;
+	lv2:documentation """
+<p>The body of a message.</p>
+
+<p>The details of this property's value depend on the type of message it is a
+part of.</p>
+""" .
+
+patch:destination
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:domain patch:Message .
+
+patch:property
+	a rdf:Property ;
+	rdfs:label "property" ;
+	rdfs:range rdf:Property ;
+	lv2:documentation """
+<p>The property this message applies to.</p>
+""" .
+
+patch:readable
+	a rdf:Property ;
+	rdfs:label "readable" ;
+	rdfs:range rdf:Property ;
+	lv2:documentation """
+<p>Indicates that the subject may have a property that can be read via a
+patch:Get message.  See the similar property patch:writable for details.</p>
+""" .
+
+patch:remove
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:domain patch:Message .
+
+patch:request
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:domain patch:Response ;
+	rdfs:range patch:Request ;
+	lv2:documentation """
+<p>The request this is a response to.</p>
+""" .
+
+patch:subject
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:domain patch:Message .
+
+patch:value
+	a rdf:Property ;
+	rdfs:label "value" ;
+	rdfs:range rdf:Property ;
+	lv2:documentation """
+<p>The value of a property in a patch:Set message.</p>
+""" .
+
+patch:wildcard
+	a rdfs:Resource ;
+	rdfs:comment """
+A wildcard which matches any resource.  This makes it possible to describe the removal of all values for a given property.
+""" .
+
+patch:writable
+	a rdf:Property ;
+	rdfs:label "writable" ;
+	rdfs:range rdf:Property ;
+	lv2:documentation """
+<p>Indicates that subject may have a property that can be written via a patch
+message.  This is used to list supported properties, e.g. so user interfaces
+can present appropriate controls.  For example:</p>
+
+<pre class="turtle-code">
+@prefix eg:   &lt;http://example.org/&gt; .
+@prefix rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+
+eg:title
+    a rdf:Property ;
+    rdfs:label "title" ;
+    rdfs:range xsd:string .
+
+eg:plugin
+    patch:writable eg:title .
+</pre>
+""" .

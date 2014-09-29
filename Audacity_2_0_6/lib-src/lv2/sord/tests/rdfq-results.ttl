@@ -1,0 +1,39 @@
+# from http://www.w3.org/2003/03/rdfqr-tests/recording-query-results.html
+
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rs:     <http://jena.hpl.hp.com/2003/03/result-set#> .
+
+
+<>  rdf:type rs:ResultSet ;
+    rs:size 4 ;
+    rs:resultVariable "x" ; rs:resultVariable "y" ;
+    rs:solution
+        [ rdf:type rs:ResultSolution ;
+          rs:binding [ rs:variable "x" ; rs:value 123 ] ;
+          rs:binding [ rs:variable "y" ; rs:value <http://example.com/resource1> ]
+        ] ;
+
+    rs:solution
+        [ rdf:type rs:ResultSolution ;
+          rs:binding [ rs:variable "x" ;
+                      rs:value "2003-01-21" ] ;
+          rs:binding [ rs:variable "y" ;
+                      rs:value <http://example.com/resource2> ]
+        ] ;
+
+    rs:solution
+        [ rdf:type rs:ResultSolution ;
+          rs:binding [ rs:variable "x" ;
+                      rs:value "anon1" ] ;
+          rs:binding [ rs:variable "y" ;
+                      rs:value _:a ]
+        ] ;
+
+    rs:solution
+        [ rdf:type rs:ResultSolution ;
+          rs:binding [ rs:variable "x" ;
+                      rs:value "anon2" ] ;
+          rs:binding [ rs:variable "y" ;
+                      rs:value _:a ]
+        ] ;
+    .

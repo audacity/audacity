@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6C7DC635-26FB-419A-B69A-7ECBBB068245}</ProjectGuid>
+    <RootNamespace>libflac</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\libflac\src\libFLAC\include;..\..\..\lib-src\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FLAC__NO_DLL;NDEBUG;WIN32;_LIB;VERSION="1.0.4";FLAC__CPU_IA32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\libflac\src\libFLAC\include;..\..\..\lib-src\libflac\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FLAC__NO_DLL;_DEBUG;WIN32;_LIB;VERSION="1.0.4";FLAC__CPU_IA32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\bitmath.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\bitreader.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\bitwriter.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\cpu.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\crc.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\fixed.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\float.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\format.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\lpc.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\md5.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\memory.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\metadata_iterators.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\metadata_object.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\stream_decoder.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\stream_encoder.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\stream_encoder_framing.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\share\win_utf8_io\win_utf8_io.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\window.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\libflac\include\FLAC\all.h" />
+    <ClInclude Include="..\..\..\lib-src\libflac\include\FLAC\assert.h" />
+    <ClInclude Include="..\..\..\lib-src\libflac\include\FLAC\callback.h" />
+    <ClInclude Include="..\..\..\lib-src\libflac\include\FLAC\export.h" />
+    <ClInclude Include="..\..\..\lib-src\libflac\include\FLAC\format.h" />
+    <ClInclude Include="..\..\..\lib-src\libflac\include\FLAC\metadata.h" />
+    <ClInclude Include="..\..\..\lib-src\libflac\include\FLAC\ordinals.h" />
+    <ClInclude Include="..\..\..\lib-src\libflac\include\FLAC\stream_decoder.h" />
+    <ClInclude Include="..\..\..\lib-src\libflac\include\FLAC\stream_encoder.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

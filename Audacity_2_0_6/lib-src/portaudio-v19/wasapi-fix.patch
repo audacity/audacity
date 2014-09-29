@@ -1,0 +1,39 @@
+diff -wruN portaudio/src/hostapi/wasapi/pa_win_wasapi.c portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c
+--- portaudio/src/hostapi/wasapi/pa_win_wasapi.c	2012-06-29 06:44:12.000000000 -0500
++++ portaudio-v19/src/hostapi/wasapi/pa_win_wasapi.c	2012-12-31 14:46:16.533923600 -0600
+@@ -481,6 +481,9 @@
+ 	// thread is being started
+     volatile BOOL running;
+ 
++	// stream has not or is no longer started
++	BOOL stopped;
++
+     PA_THREAD_ID dwThreadId;
+     HANDLE hThread;
+ 	HANDLE hCloseRequest;
+@@ -2687,6 +2742,9 @@
+ 	if (framesPerBuffer == 0)
+ 		framesPerBuffer = ((UINT32)sampleRate / 100) * 2;
+ 
++	stream->stopped = TRUE;
++	stream->running = FALSE;
++
+ 	// Try create device: Input
+ 	if (inputParameters != NULL)
+     {
+@@ -3337,6 +3398,7 @@
+ 		// Signal: stream running.
+ 		stream->running = TRUE;
+ 	}
++	stream->stopped = FALSE;
+ 
+     return result;
+ 
+@@ -3378,6 +3440,7 @@
+ 	_StreamCleanup(stream);
+ 
+     stream->running = FALSE;
++	stream->stopped = TRUE;
+ }
+ 
+ // ------------------------------------------------------------------------------------------

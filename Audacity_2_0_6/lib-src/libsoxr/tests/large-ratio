@@ -1,0 +1,22 @@
+#!/bin/sh
+# SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
+# Licence for this file: LGPL v2.1                  See LICENCE for details.
+
+# Warning: the intermediate signal (piped) is 3.2 Gbytes so may slug the
+# system somewhat.
+
+ex=../examples/3-options-input-fn
+q=6
+r=1e5
+
+rm lr.png
+
+../tests/vector-gen 1000 0 8 500 .9375 1.s32
+
+$ex 1 $r 1 2 1 $q < 1.s32 | $ex $r 1 1 1 2 $q > 2.s32
+
+sox -M -r 1k 1.s32 -r 1k 2.s32 -n spectrogram -hwk -z180 -o lr.png
+
+display lr.png &
+
+rm [12].s32

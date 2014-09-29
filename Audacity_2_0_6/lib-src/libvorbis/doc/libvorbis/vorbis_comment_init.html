@@ -1,0 +1,72 @@
+<html>
+
+<head>
+<title>libvorbis - function - vorbis_comment_init</title>
+<link rel=stylesheet href="style.css" type="text/css">
+</head>
+
+<body bgcolor=white text=black link="#5555ff" alink="#5555ff" vlink="#5555ff">
+<table border=0 width=100%>
+<tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+<h1>vorbis_comment_init</h1>
+
+<p><i>declared in "vorbis/codec.h";</i></p>
+
+<p>This function initializes a <a href="vorbis_comment.html">vorbis_comment</a>
+structure for use. After calling this function, the vorbis_comment
+structure contains no comments.</p>
+
+<p><i>Note:</i> No internal storage is allocated by this function;
+internal storage is allocated as needed by other libvorbis functions that
+modify the vorbis_comment structure. If you modify the vorbis_comment
+structure directly, without using libvorbis, you should <i>not</i>
+call <a href="vorbis_comment_clear.html">vorbis_comment_clear</a> when
+you are finished but instead clean up after it yourself. See the note
+on the <a href="vorbis_comment_clear.html">vorbis_comment_clear</a>
+page for more information.</p>
+
+<table border=0 color=black cellspacing=0 cellpadding=7>
+<tr bgcolor=#cccccc>
+	<td>
+<pre><b>
+extern void     vorbis_comment_init(vorbis_comment *vc);
+</b></pre>
+	</td>
+</tr>
+</table>
+
+<h3>Parameters</h3>
+<dl>
+<dt><i>vc</i></dt>
+<dd>Pointer to the <a href="vorbis_comment.html">vorbis_comment</a>
+structure to initialize.</dd>
+</dl>
+
+
+<h3>Return Values</h3>
+<blockquote>
+<li>None.</li>
+</blockquote>
+<p>
+
+<br><br>
+<hr noshade>
+<table border=0 width=100%>
+<tr valign=top>
+<td><p class=tiny>copyright &copy; 2010 Xiph.Org</p></td>
+<td align=right><p class=tiny><a href="http://www.xiph.org/ogg/vorbis/index.html">Ogg Vorbis</a></p></td>
+</tr><tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+
+</body>
+
+</html>

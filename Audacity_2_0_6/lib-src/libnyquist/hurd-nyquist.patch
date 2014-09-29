@@ -1,0 +1,102 @@
+Index: nyquist/cmt/midifns.c
+===================================================================
+RCS file: /cvsroot/audacity/lib-src/libnyquist/nyquist/cmt/midifns.c,v
+retrieving revision 1.1
+diff -u -r1.1 midifns.c
+--- nyquist/cmt/midifns.c	29 Jan 2009 18:04:20 -0000	1.1
++++ nyquist/cmt/midifns.c	8 Dec 2009 01:19:17 -0000
+@@ -24,6 +24,7 @@
+ #include "switches.h"
+ 
+ #ifdef UNIX
++#include <sys/resource.h>
+ #include <sys/param.h>
+ #ifndef OPEN_MAX
+ /* this is here for compiling the UNIX version under AIX. This is a BSDism */
+@@ -376,6 +377,7 @@
+     struct timeval unix_timeout;
+     struct timeval *waitspec = NULL;
+     fd_set readfds;
++    struct rlimit file_limit;
+ 
+     FD_ZERO(&readfds);
+     FD_SET(MI_CONNECTION(midiconn), &readfds);
+@@ -387,7 +389,8 @@
+     unix_timeout.tv_usec = (timeout - (unix_timeout.tv_sec * 1000)) * 1000;
+     waitspec = &unix_timeout;
+     }
+-    select(NOFILE+1, &readfds, 0, 0, waitspec);
++    getrlimit(RLIMIT_NOFILE, &file_limit);
++    select(file_limit.rlim_max+1, &readfds, 0, 0, waitspec);
+     return;
+ }
+ #else /* !UNIX_ITC */
+@@ -424,6 +427,7 @@
+ {
+     struct timeval unix_timeout;
+     struct timeval *waitspec = NULL;
++    struct rlimit file_limit;
+ 
+     if (timeout >= 0) {
+     timeout -= gettime();   /* convert to millisecond delay */
+@@ -431,7 +435,8 @@
+     /* remainder become microsecs: */
+     unix_timeout.tv_usec = (timeout - (unix_timeout.tv_sec * 1000)) * 1000;
+     waitspec = &unix_timeout;
+-    select(NOFILE+1, 0, 0, 0, waitspec);
++    getrlimit(RLIMIT_NOFILE, &file_limit);
++    select(file_limit.rlim_max+1, 0, 0, 0, waitspec);
+     } else {
+     int c = getc(stdin);
+     ungetc(c, stdin);
+@@ -445,6 +450,7 @@
+     struct timeval unix_timeout;
+     struct timeval *waitspec = NULL;
+     int readfds = 1 << IOinputfd;
++    struct rlimit file_limit;
+ 
+     if (timeout >= 0) {
+     timeout -= gettime();   /* convert to millisecond delay */
+@@ -453,7 +459,8 @@
+     unix_timeout.tv_usec = (timeout - (unix_timeout.tv_sec * 1000)) * 1000;
+     waitspec = &unix_timeout;
+     }
+-    select(NOFILE+1, &readfds, 0, 0, waitspec);
++    getrlimit(RLIMIT_NOFILE, &file_limit);
++    select(file_limit.rlim_max+1, &readfds, 0, 0, waitspec);
+     return;
+ }
+ #endif /* BUFFERED_SYNCHRONOUS_INPUT */
+Index: nyquist/cmt/userio.c
+===================================================================
+RCS file: /cvsroot/audacity/lib-src/libnyquist/nyquist/cmt/userio.c,v
+retrieving revision 1.1
+diff -u -r1.1 userio.c
+--- nyquist/cmt/userio.c	29 Jan 2009 18:04:21 -0000	1.1
++++ nyquist/cmt/userio.c	8 Dec 2009 01:19:17 -0000
+@@ -133,6 +133,7 @@
+ 
+ #ifdef UNIX
+ #include <sys/param.h>
++#include <sys/resource.h>
+ #include "cmtio.h"
+ #ifdef _IBMR2
+ #define NBBY 8
+@@ -1205,6 +1206,7 @@
+ #endif /* !UNIX_MACH */
+ #endif
+     char c;
++    struct rlimit file_limit;
+ 
+     if (abort_flag == ABORT_LEVEL) return ABORT_CHAR;
+     if (abort_flag == BREAK_LEVEL) return BREAK_CHAR;
+@@ -1233,7 +1235,8 @@
+         FD_ZERO(&readfds);
+         FD_SET(IOinputfd, &readfds);
+         gflush();
+-        select(NOFILE+1, &readfds, 0, 0, NULL);
++        getrlimit(RLIMIT_NOFILE, &file_limit);
++        select(file_limit.rlim_max+1, &readfds, 0, 0, NULL);
+ #endif /* !UNIX_MACH */
+ #endif /* ifdef UNIX */
+     }

@@ -1,0 +1,10 @@
+prefix=@PREFIX@
+exec_prefix=@EXEC_PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: lv2core
+Version: @LV2CORE_VERSION@
+Description: An audio plugin interface specification.
+Libs:
+Cflags: -I${includedir}

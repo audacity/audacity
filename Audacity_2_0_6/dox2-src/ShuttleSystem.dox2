@@ -1,0 +1,179 @@
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  ShuttleSystem.dox2
+
+  James Crook
+
+********************************************************************//**
+
+\page ShuttleSystem The Shuttle System
+
+\section ShuttleIntro Introduction
+
+The classes ShuttleGui, ShuttleCli, ShuttleGuiBase and Shuttle were 
+designed to simplify repetitive code that moves data around.  Common
+repetitive tasks in Audacity are creating dialogs, moving data in and 
+out of dialogs and converting from binary to text formats.
+
+\section ShuttleSplit ShuttleGui Vs ShuttleGuiBase
+
+ShuttleGuiBase is slated for \ref WidgetMigration . It contains functions
+that work with widgets that are in wxWidgets.  The derived class, 
+ShuttleGui, contains extensions that are specific to Audacity widgets.  
+It isn't slated for widget migration.
+
+\section ShuttleGuiInit Initialising ShuttleGui
+
+A common idiom in using the ShuttleGui is as follows  - this example 
+comes from AudioIOPrefs::Populate() :
+
+\code
+   // Code is from a dialog class, so 'this' is a pointer to the dialog
+   ShuttleGui S(this, eIsCreatingFromPrefs); // Create the shuttle.
+   PopulateOrExchange(S); // Use it.
+\endcode
+
+\p S is a temporary object, only kept for as long as needed to actually do
+the one exchange.
+
+The first line creates and initialises the ShuttleGui object, setting it 
+up for creating a dialog's contents using information about initial values 
+from the global preferences.
+
+The \p PopulateOrExchange() function is here being used to populate the dialog.
+The same function can be called from elsewhere, later, with a different \p S to 
+exchange data.  
+
+The instance of ShuttleGui, \p S, shown in the example above isn't needed 
+after returning from \p PopulateOrExchange().
+
+\section ShuttleGuiMethods ShuttleGui Methods
+
+ShuttleGui has several kinds of methods.
+
+ - Layout methods like ShuttleGui::StartHorizontalLay(), used to start 
+ a piece of GUI that is to be laid out horizontally.  Use 
+ ShuttleGui::EndHorizontalLay() to end such a section.  This is a simple 
+ wrapper for the wxWidgets wxBoxSizer.  It has the advantage that the 
+ Shuttle keeps track of the sizer.  You do not need to.  You do not need
+ to provide a name for the sizer.  This shortens the code.  
+
+\code
+   // Example of using a Start/End pair
+   S.StartHorizontalLay()
+   {
+   ... Add controls that you want in the horizontal layout
+   }
+   S.EndHorizontalLay()
+\endcode
+
+The \p { \p } braces are optional, just add them where they improve
+readability.
+
+
+ - \p Add methods, like ShuttleGui::AddCheckBox().  This adds the check box 
+ and returns a pointer to it.  You use \p Add methods when you don't want
+ ShuttleGui to handle the data exchange.  It just creates the control and
+ adds it into the current sizer.
+
+\code
+  // Example of calling an Add method
+      S.AddChoice( _("Script:"),_("(a) Basic Operation"), &mScripts );
+\endcode
+
+ - \p Tie methods, like ShuttleGui::TieCheckBox().  This creates the check 
+ box as above, returning a pointer to it.  It also facilitates 
+ exchange of data with the control.
+
+\code
+  // Example of calling a Tie method
+      S.TieChoice( _("Device:"), mDevice,
+         wxT(""), mmPlayNames, mmPlayLabels );
+\endcode
+
+So \p Tie methods and \p Add methods are very similar.  The \p Tie 
+methods have more parameters to them.  You have to specify what you 
+are exchanging with.  There are many name overloaded variants on \p Tie 
+methods to suit different circumstances.  Exchanging an integer with 
+a text box uses a different overload to exchanging a string with the text box.
+
+In the example above, \p mDevice is a \p wxString variable passed by reference
+to the function.  This allows ShuttleGui both to read and write to it.  Which
+happens depends on how \p S has been configured.
+
+With both \p Add and \p Tie you can optionally specify a windows Id.  Use code
+like the following:
+
+\code
+   // Example of using a windows Id that we chose.  
+   S.Id( idSplashScreen ).TieCheckBox( _("Show Splash Screen"),
+      wxT("\Inits\Splash"), true );
+\endcode
+
+Where you don't specify an Id, ShuttleGui will assign the Id's sequentially.  
+
+\section ShuttleGuiLayoutTips ShuttleGui Layout Tips
+
+ShuttleGui wraps wxWidget sizers, and the wxWidgets sizer system can sometimes 
+itself be confusing.  The most common problem is finding that controls don't
+resize at all for some reason.
+
+Resizing requires that 'stretchiness' propogate all the way down from the 
+ultimate parent window.  Any sizers that is not using \p wxEXPAND will cause
+everything within in it to retain the size it had when the GUI was created,
+i.e. it will not resize when the window does.  A very common idiom is to
+use \p wxEXPAND but with an expand proportion of '0'.  That still allows 
+expansion but <b>not</b> in the main direction.  By contrast using 
+\p wxALIGN_LEFT prevents expansion in either direction.
+
+Many of the \p Add and \p Tie functions are designed with a two column layout in 
+mind.  So use an idiom like this:
+
+\code
+   // The '1' in the next line indicates a resizable wxStaticBox.
+   S.StartStatic( _("Recording"), 1 );
+   {
+      S.StartTwoColumn();
+      S.TieChoice( _("Device:"), wxT("RecordingDevice"), 
+         wxT(""), mmPlayNames, mmPlayLabels );
+      S.TieChoice( _("Channels:"), wxT("RecordChannels"), 
+         wxT("2"), mmChannelNames, mmChannelLabels );
+      S.EndTwoColumn();
+   }
+\endcode
+
+The prompts \p 'Device:' and \p 'Channels:' will land in the first column and the
+actual choice controls will land in the second column.  All of this is 
+inside a \p wxStaticBox with the name \p 'Recording' on it.
+
+To make the choice controls stretch when the \p wxStaticBox grows or shrinks, 
+adjust the code to read:
+
+\code
+
+   // This idiom may be simplified when new functions are added to ShuttleGui
+   S.StartStatic( _("Recording"), 1 );
+   {
+      S.StartMultiColumn(2, wxEXPAND);
+      S.SetStretchyCol(1);
+      S.TieChoice( _("Device:"), wxT("RecordingDevice"), 
+         wxT(""), mmPlayNames, mmPlayLabels );
+      S.TieChoice( _("Channels:"), wxT("RecordChannels"), 
+         wxT("2"), mmChannelNames, mmChannelLabels );
+      S.EndMultiColumn();
+   }
+\endcode
+
+
+\section ShuttleGuiInternals ShuttleGui Internals
+
+ShuttleGui cleans up the classes which use it.  Parts of its own internal
+code are quite repetitive, doing the same thing for different widgets with
+slightly different options - e.g. a wxTextCtrl with an integer value or with
+a string.  To make the internals of ShuttleGui cleaner, it uses class 
+WrappedType.  Also compound functions are formed by chaining
+together shorter functions.  This makes it much easier to add new options.
+
+*//********************************************************************/

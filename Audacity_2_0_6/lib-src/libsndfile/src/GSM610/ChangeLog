@@ -1,0 +1,56 @@
+2004-05-12  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * gsm610_priv.h
+    Replace ugly macros with inline functions.
+
+    * *.c
+    Remove temporary variables used by macros and other minor fixes required by
+    above change.
+
+2003-06-02  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * rpe.c
+	Renamed variables "exp" to "expon" to avoid shadowed parameter warnigns.
+
+2002-06-08  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * long_term.c
+	Changes tp removed compiler warnings about shadowed parameters.
+
+2002-06-08  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * private.h
+	Made declarations of gsm_A, gsm_B, gsm_MIC etc extern. This fixed a compile
+	problem on MacOSX.
+
+2002-05-10  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+	* *.[ch]
+	Removed all pre-ANSI prototype kludges. Removed proto.h and unproto.h. 
+	Started work on making GSM 6.10 files seekable. Currently they are not.
+
+    * code.c private.h
+	Function Gsm_Coder () used a statically defined array. This was obviously
+	not re-entrant so moved it to struct gsm_state.
+
+2001-09-16  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * code.c
+    Added #includes for string.h and stdlib.h.
+
+2000-10-27  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * config.h
+    Removed some commented out #defines (ie //*efine) which were causing problems on
+	the Sun cc compiler.
+
+2000-02-29  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * private.h
+    Added #defines to emulate normal compile time options.
+
+2000-02-28  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
+
+    * everthing
+    Created this directory and copied files from libgsm.
+    http://kbs.cs.tu-berlin.de/~jutta/toast.html

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9.00"
+	Name="help"
+	ProjectGUID="{02F94A40-586A-4403-8464-13B50801FFEC}"
+	RootNamespace="help"
+	TargetFrameworkVersion="131072"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="10"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				CommandLine="set SRC=&quot;$(SolutionDir)\..\help\manual&quot;&#x0D;&#x0A;set DEST=&quot;$(OutDir)\help\manual&quot;&#x0D;&#x0A;&#x0D;&#x0A;cd ..\..\..\scripts\mw2html_audacity&#x0D;&#x0A;&#x0D;&#x0A;if EXIST %SRC% goto built&#x0D;&#x0A;&#x0D;&#x0A;wiki2htm.bat&#x0D;&#x0A;&#x0D;&#x0A;:built&#x0D;&#x0A;&#x0D;&#x0A;xcopy /I /E /C /Y /Q %SRC% %DEST%&#x0D;&#x0A;"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="10"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				CommandLine="set SRC=&quot;$(SolutionDir)\..\help\manual&quot;&#x0D;&#x0A;set DEST=&quot;$(OutDir)\help\manual&quot;&#x0D;&#x0A;&#x0D;&#x0A;cd ..\..\..\scripts\mw2html_audacity&#x0D;&#x0A;&#x0D;&#x0A;if EXIST %SRC% goto built&#x0D;&#x0A;&#x0D;&#x0A;wiki2htm.bat&#x0D;&#x0A;&#x0D;&#x0A;:built&#x0D;&#x0A;&#x0D;&#x0A;xcopy /I /E /C /Y /Q %SRC% %DEST%&#x0D;&#x0A;"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

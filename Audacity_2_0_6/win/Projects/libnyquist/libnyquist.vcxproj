@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7AA41BED-41B0-427A-9148-DEA40549D158}</ProjectGuid>
+    <RootNamespace>libnyquist</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command />
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\libnyquist;..\..\..\lib-src\libnyquist\nyquist;..\..\..\lib-src\libnyquist\nyquist\cmt;..\..\..\lib-src\libnyquist\nyquist\ffts\src;..\..\..\lib-src\libnyquist\nyquist\nyqsrc;..\..\..\lib-src\libnyquist\nyquist\nyqstk;..\..\..\lib-src\libnyquist\nyquist\nyqstk\include;..\..\..\lib-src\libnyquist\nyquist\snd;..\..\..\lib-src\libnyquist\nyquist\tran;..\..\..\lib-src\libnyquist\nyquist\sys\win\msvc;..\..\..\lib-src\libnyquist\nyquist\xlisp;..\..\..\lib-src\libnyquist\nyquist\win;..\libsndfile;..\..\..\lib-src\portaudio-v19\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command />
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\libnyquist;..\..\..\lib-src\libnyquist\nyquist;..\..\..\lib-src\libnyquist\nyquist\cmt;..\..\..\lib-src\libnyquist\nyquist\ffts\src;..\..\..\lib-src\libnyquist\nyquist\nyqsrc;..\..\..\lib-src\libnyquist\nyquist\nyqstk;..\..\..\lib-src\libnyquist\nyquist\nyqstk\include;..\..\..\lib-src\libnyquist\nyquist\snd;..\..\..\lib-src\libnyquist\nyquist\tran;..\..\..\lib-src\libnyquist\nyquist\sys\win\msvc;..\..\..\lib-src\libnyquist\nyquist\xlisp;..\..\..\lib-src\libnyquist\nyquist\win;..\libsndfile;..\..\..\lib-src\portaudio-v19\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\cext.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\cleanup.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\cmdline.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\cmtcmd.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\mem.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\midifile.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\midifns.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\moxc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\record.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\seq.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\seqmread.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\seqmwrite.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\seqread.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\seqwrite.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\tempomap.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\timebase.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\cmt\userio.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftext.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftlib.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\matlib.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\add.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\avg.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\compose.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\convolve.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\debug.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\downsample.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\falloc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\ffilterkit.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\fft.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\handlers.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\inverse.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\local.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\lpanal.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\multiread.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\multiseq.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\resamp.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\resampv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\samples.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\seqext.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\seqfnint.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\seqinterf.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sliders.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndfnint.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndmax.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndread.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndseq.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndwritepa.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sound.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\stats.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\trigger.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\yin.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\sys\win\msvc\winfun.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\abs.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\allpoles.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\alpass.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\alpasscv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\alpassvc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\alpassvv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\amosc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\areson.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\aresoncv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\aresonvc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\aresonvv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\atone.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\atonev.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\biquadfilt.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\buzz.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\chase.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\clip.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\congen.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\const.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\coterm.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\delaycc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\delaycv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\eqbandvvv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\exp.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\fmfb.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\fmfbv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\fmosc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\follow.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\fromarraystream.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\fromobject.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\gate.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\ifft.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrbanded.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrbow.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrbowedfreq.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrclar.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrclarall.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrclarfreq.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrflute.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrfluteall.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrflutefreq.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrmandolin.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrmodalbar.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrsax.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrsaxall.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrsaxfreq.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\instrsitar.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\integrate.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\log.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\lpreson.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\maxv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\offset.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\oneshot.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\osc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\partial.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\pluck.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\prod.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\pwl.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\quantize.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\recip.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\reson.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\resoncv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\resonvc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\resonvv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\sampler.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\scale.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\shape.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\sine.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\siosc.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\slope.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\sqrt.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\stkchorus.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\stkpitshift.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\stkrev.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\tapf.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\tapv.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\tone.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\tonev.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\upsample.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\white.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\extern.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\path.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlbfun.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlcont.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xldbug.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xldmem.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xleval.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlfio.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlftab.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlglob.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlimage.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlinit.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlio.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlisp.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xljump.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xllist.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlmath.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlobj.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlpp.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlprin.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlread.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlstr.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlsubr.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlsym.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlsys.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\instr.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\stkinit.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\stkint.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\ADSR.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\BandedWG.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\BiQuad.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Bowed.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\BowTable.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Chorus.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Clarinet.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Delay.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\DelayA.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\DelayL.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Effect.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Envelope.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\FileRead.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\FileWvIn.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Filter.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Flute.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Function.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Generator.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Instrmnt.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\JCRev.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\JetTable.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Mandolin.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Modal.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\ModalBar.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Noise.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\NRev.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\OnePole.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\OneZero.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\PitShift.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\PluckTwo.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\PoleZero.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\PRCRev.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\ReedTable.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Saxofony.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\SineWave.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Sitar.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\Stk.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\WaveLoop.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqstk\src\WvIn.cpp" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyx.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\xlextstart.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftext.h" />
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftlib.h" />
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\matlib.h" />
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyx.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

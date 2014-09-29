@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+
+<HEAD>
+	<TITLE>
+	libsndfile : Embedded Sound Files.
+	</TITLE>
+	<META NAME="Author"      CONTENT="Erik de Castro Lopo (erikd AT mega-nerd DOT com)">
+	<META NAME="Description" CONTENT="The libsndfile API.">
+	<META NAME="Keywords"    CONTENT="WAV AIFF AU libsndfile sound audio dsp Linux">
+	<LINK REL="stylesheet" HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+	<LINK REL="stylesheet" HREF="print.css" TYPE="text/css" MEDIA="print">
+</HEAD>
+<!-- pepper -->
+<BODY>
+<!-- pepper -->
+<H1><B>Embedded Sound Files.</B></H1>
+
+<P>
+By using the open SNDFILE with a file descriptor function:
+</P>
+<!-- pepper -->
+<PRE>
+      SNDFILE*  sf_open_fd (int fd, int mode, SF_INFO *sfinfo, int close_desc) ;
+</PRE>
+<!-- pepper -->
+<P>
+it is possible to open sound files embedded within larger files.
+There are however a couple of caveats:
+<P>
+<!-- pepper -->
+<UL>
+	<LI> Read/Write mode (SFM_RDWR) is not supported.
+	<LI> Writing of embedded files is only supported at the end of the file.
+	<LI> Reading of embedded files is only supported at file offsets greater
+			than zero.
+	<LI> Not all file formats are supported (currently only WAV, AIFF and AU).
+</UL>
+<!-- pepper -->
+<P>
+The test program <B>multi_file_test.c</B> in the <B>tests/</B> directory of the
+source code tarball shows how this functionality is used to read and write
+embedded files.
+</P>
+<!-- pepper -->
+</BODY>
+</HTML>

@@ -1,0 +1,4 @@
+resetPrefs.txt
+
+
+The contents of this file are not used, but its existence is checked and if it exists, the prefs are reset.

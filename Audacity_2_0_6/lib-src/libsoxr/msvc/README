@@ -1,0 +1,9 @@
+SoX Resampler Library       Copyright (c) 2007-13 robs@users.sourceforge.net
+
+Cmake is able to configure, build (as either a DLL or a static library),
+and install libsoxr for general use on MS-Windows as on other OSs.
+However, for projects that prefer to maintain a more monolithic build
+structure using the MSVC compiler, the accompanying files may be useful.
+
+ * libsoxr.vcproj      Builds a static lib for MSVC ver >= 9 (2008).
+ * soxr-config.h       Pre-configured for a typical Win32 system.

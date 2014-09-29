@@ -1,0 +1,4 @@
+TODO:
+
+continue translating serpent code (in comments in allegro_test.cpp)
+to C++ and running tests.

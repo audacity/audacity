@@ -1,0 +1,112 @@
+lilv (0.16.0) stable;
+
+  * Add lilv_world_ask() for easily checking if a statement exists
+  * Add lilv_world_get() and lilv_port_get() for easily getting one value
+  * Add lilv_nodes_merge()
+  * Make lilv_plugin_get_port_by_designation() return a const pointer
+  * Require a URI for lilv_state_to_string() and fail gracefully otherwise
+  * Fail gracefully when lilv_state_new_from_string() is called on NULL
+  * Make state loading functions fall back to lv2:default for port values,
+    so a plugin description can be loaded as default state
+  * Ignore state ports with no value instead of printing an error
+  * Support atom:supports in lilv_port_supports_event()
+  * Add va_list variant of lilv_plugin_get_num_ports_of_class()
+  * Fix several plugin functions that failed to load data if called first
+  * Correctly depend on serd at build time (fix compilation in odd cases)
+  * Disable timestamps in HTML documentation for reproducible build
+  * lilvmm.hpp: Support varargs for Plugin::get_num_ports_of_class()
+  * lilvmm.hpp: Add several missing methods
+  * Update to waf 1.7.8 and autowaf r90 (install docs to versioned directory)
+
+ -- David Robillard <d@drobilla.net>  Mon, 18 Feb 2013 16:43:10 -0500
+
+lilv (0.14.4) stable;
+
+  * Deprecate old flawed Lilv::Instance constructors
+  * Fix documentation for ui_type parameter of lilv_ui_is_supported()
+  * Fix crash when lv2info is run with an invalid URI argument
+  * Gracefully handle failure to save plugin state and print error message
+  * Reduce memory usage (per node)
+  * Simpler node implementation always backed by a SordNode
+  * Make all 'zix' symbols private to avoid symbol clashes in static builds
+  * Add lv2bench utility
+  * Fix various hyper-strict warnings
+  * Do not require a C++ compiler to build
+  * Add option to build utilities as static binaries
+  * Upgrade to waf 1.7.2
+  * lilvmm.hpp: Make Lilv::Instance handle features and failed instantiations
+  * lilvmm.hpp: Add Lilv::Instance::get_handle()
+  * lilvmm.hpp: Add Lilv::Instance::get_extension_data()
+
+ -- David Robillard <d@drobilla.net>  Thu, 23 Aug 2012 01:38:29 -0400
+
+lilv (0.14.2) stable;
+
+  * Fix dynmanifest support
+
+ -- David Robillard <d@drobilla.net>  Thu, 19 Apr 2012 16:11:31 -0400
+
+lilv (0.14.0) stable;
+
+  * Add lilv_plugin_get_extension_data
+  * Use path variables in pkgconfig files
+  * Install man page to DATADIR (e.g. PREFIX/share/man, not PREFIX/man)
+  * Make Lilv::uri_to_path static inline (fix linking errors)
+  * Use correct URI for dcterms:replaces (for hiding old plugins):
+    "http://purl.org/dc/terms/replaces"
+  * Fix compilation on BSD
+  * Only load dynmanifest libraries once per bundle, not once per plugin
+  * Fix lilv_world_find_nodes to work with wildcard subjects
+  * Add lilv_plugin_get_related to get resources related to plugins that
+    are not directly rdfs:seeAlso linked (e.g. presets)
+  * Add lilv_world_load_resource for related resources (e.g. presets)
+  * Print presets in lv2info
+  * Remove locale smashing kludges and use new serd functions for converting
+    nodes to/from numbers.
+  * Add LilvState API for handling plugin state.  This makes it simple to
+    save and restore plugin state both in memory and on disk, as well as
+    save presets in a host-sharable way since the disk format is identical
+    to the LV2 presets format.
+  * Update old references to lv2_list (now lv2ls)
+  * Support compilation as C++ under MSVC++.
+  * Remove use of wordexp.
+  * Add lilv_plugin_get_port_by_designation() and lilv_port_get_index() as an
+    improved generic alternative to lilv_plugin_get_latency_port_index().
+  * Add lilv_plugin_get_project() and get author information from project if
+    it is not given directly on the plugin.
+
+ -- David Robillard <d@drobilla.net>  Wed, 18 Apr 2012 20:06:28 -0400
+
+lilv (0.5.0) stable;
+
+  * Remove glib dependency
+  * Add lv2core as a pkg-config dependency (for lv2.h header include)
+  * Obey prefix when installing bash completion script
+  * Support integer minimum, maximum, and default port values in
+    lilv_plugin_get_port_ranges_float
+  * Add ability to build static library
+
+ -- David Robillard <d@drobilla.net>  Thu, 29 Sep 2011 00:00:00 -0400
+
+lilv (0.4.4) stable;
+
+  * Fix building python bindings
+  * Make free methods tolerate being called on NULL
+  * Remove lv2jack (replaced by jalv)
+  * Fix parsing extra plugin data files in other bundles
+  * Fix lilv_ui_is_supported when Lilv is built independently
+
+ -- David Robillard <d@drobilla.net>  Sat, 11 Jun 2011 11:20:11 -0400
+
+lilv (0.4.2) stable;
+
+  * Fix compilation issues on some systems
+  * Fix build system Python 3 compatibility
+
+ -- David Robillard <d@drobilla.net>  Wed, 25 May 2011 19:00:00 -0400
+
+lilv (0.4.0) stable;
+
+  * Initial version (forked from SLV2)
+
+ -- David Robillard <d@drobilla.net>  Tue, 24 May 2011 23:00:00 -0400

@@ -1,0 +1,192 @@
+/* CHANGELOG FOR PORTMIDI
+ *
+ * 19Oct09 Roger Dannenberg
+ * - Changes dynamic library names from portmidi_d to portmidi to
+ *   be backward-compatible with programs expecting a library by
+ *   the old name.
+ *
+ * 04Oct09 Roger Dannenberg
+ * - Converted to using Cmake.
+ * - Renamed static and dynamic library files to portmidi_s and portmidi_d
+ * - Eliminated VC9 and VC8 files (went back to simply test.vcproj, etc.,
+ *   use Cmake to switch from the provided VC9 files to VC8 or other)
+ * - Many small changes to prepare for 64-bit architectures (but only 
+ *   tested on 32-bit machines)
+ *
+ * 16Jun09 Roger Dannenberg
+ * - Started using Microsoft Visual C++ Version 9 (Express). Converted
+ * all *-VC9.vcproj file to *.vcproj and renamed old project files to 
+ * *-VC8.proj. Previously, output from VC9 went to special VC9 files,
+ * that breaks any program or script looking for output in release or
+ * debug files, so now both compiler version output to the same folders.
+ * Now, debug version uses static linking with debug DLL runtime, and 
+ * release version uses static linking with statically linked runtime.
+ * Converted to Inno Setup and worked on scripts to make things build
+ * properly, especially pmdefaults.
+ *
+ * 02Jan09 Roger Dannenberg
+ * - Created Java interface and wrote PmDefaults application to set
+ *   values for Pm_GetDefaultInputDeviceID() and 
+ *   Pm_GetDefaultOutputDeviceID(). Other fixes.
+ *
+ * 19Jun08 Roger Dannenberg and Austin Sung
+ * - Removed USE_DLL_FOR_CLEANUP -- Windows 2000 through Vista seem to be
+ *   fixed now, and can recover if MIDI ports are left open
+ * - Various other minor patches
+ *
+ * 17Jan07 Roger Dannenberg
+ * - Lots more help for Common Lisp user in pm_cl
+ * - Minor fix to eliminate a compiler warning
+ * - Went back to single library in OS X for both portmidi and porttime
+ *
+ * 16Jan07 Roger Dannenberg
+ * - OOPS! fixed bug where short messages all had zero data
+ * - Makefile.osx static library build now makes universal (i386 + ppc)
+ *    binaries
+ *
+ * 15Jan07 Roger Dannenberg
+ *  - multiple rewrites of sysex handling code to take care of 
+ *     error-handling, embedded messages, message filtering,
+ *     driver bugs, and host limitations.
+ *  - fixed windows to use dwBufferLength rather than 
+ *     dwBytesRecorded for long buffer output (fix by Nigel Brown)
+ *  - Win32 MME code always appends an extra zero to long buffer
+ *     output to work around a problem with earlier versions of Midi Yoke
+ *  - Added mm, a command line Midi Monitor to pm_test suite
+ *  - Revised copyright notice to match PortAudio/MIT license (requests 
+ *     are moved out of the license proper and into a separate paragraph)
+ *
+ * 18Oct06 Roger Dannenberg
+ *  - replace FIFO in pmutil with Light Pipe-based multiprocessor-safe alg.
+ *  - replace FIFO in portmidi.c with PmQueue from pmutil
+ *
+ * 07Oct06 cpr & Roger Dannenberg
+ *  - overhaul of CoreMIDI input to handle running status and multiple
+ *  -    messages per packet, with additional error detection
+ *  - added Leigh Smith and Rick Taube support for Common Lisp and
+ *  -    dynamic link libraries in OSX
+ *  - initialize static global seq = NULL in pmlinuxalsa.c
+ *
+ * 05Sep06 Sebastien Frippiat
+ *  - check if (ALSA) seq exists before closing it in pm_linuxalsa_term()
+ *
+ * 05Sep06 Andreas Micheler and Cecilio
+ *  - fixed memory leak by freeing someo objects in pm_winmm_term()
+ *  - and another leak by freeing descriptors in Pm_Terminate()
+ *
+ * 23Aug06 RBD
+ *  - various minor fixes
+ *
+ * 04Nov05 Olivier Tristan
+ *  - changes to OS X to properly retrieve real device name on CoreMidi
+ *
+ * 19Jul05 Roger Dannenberg
+ *  - included pmBufferMaxSize in Pm_GetErrorText()
+ *
+ * 23Mar05 Torgier Strand Henriksen
+ *  - cleaner termination of porttime thread under Linux
+ *
+ * 15Nov04 Ben Allison
+ *  - sysex output now uses one buffer/message and reallocates buffer
+ *  -    if needed
+ *  - filters expanded for many message types and channels
+ *  - detailed changes are as follows:
+ *  ------------- in pmwinmm.c --------------
+ *  - new #define symbol: OUTPUT_BYTES_PER_BUFFER
+ *  - change SYSEX_BYTES_PER_BUFFER to 1024
+ *  - added MIDIHDR_BUFFER_LENGTH(x) to correctly count midihdr buffer length
+ *  - change MIDIHDR_SIZE(x) to (MIDIHDR_BUFFER_LENGTH(x) + sizeof(MIDIHDR))
+ *  - change allocate_buffer to use new MIDIHDR_BUFFER_LENGTH macro
+ *  - new macros for MIDIHDR_SYSEX_SIZE and MIDIHDR_SYSEX_BUFFER_LENGTH 
+ *  -    similar to above, but counts appropriately for sysex messages
+ *  - added the following members to midiwinmm_struct for sysex data:
+ *  -    LPMIDIHDR *sysex_buffers;   ** pool of buffers for sysex data **
+ *  -    int num_sysex_buffers;      ** how many sysex buffers **
+ *  -    int next_sysex_buffer;      ** index of next sysexbuffer to send **
+ *  -    HANDLE sysex_buffer_signal; ** to wait for free sysex buffer **
+ *  - duplicated allocate_buffer, alocate_buffers and get_free_output_buffer 
+ *  -    into equivalent sysex_buffer form
+ *  - changed winmm_in_open to initialize new midiwinmm_struct members and 
+ *  -    to use the new allocate_sysex_buffer() function instead of 
+ *  -    allocate_buffer()
+ *  - changed winmm_out_open to initialize new members, create sysex buffer 
+ *  -    signal, and allocate 2 sysex buffers
+ *  - changed winmm_out_delete to free sysex buffers and shut down the sysex
+ *  -    buffer signal
+ *  - create new function resize_sysex_buffer which resizes m->hdr to the 
+ *  -    passed size, and corrects the midiwinmm_struct accordingly.
+ *  - changed winmm_write_byte to use new resize_sysex_buffer function,
+ *  -    if resize fails, write current buffer to output and continue
+ *  - changed winmm_out_callback to use buffer_signal or sysex_buffer_signal
+ *  -    depending on which buffer was finished
+ *  ------------- in portmidi.h --------------
+ *  - added pmBufferMaxSize to PmError to indicate that the buffer would be
+ *  -    too large for the underlying API
+ *  - added additional filters
+ *  - added prototype, documentation, and helper macro for Pm_SetChannelMask
+ *  ------------- in portmidi.c --------------
+ *  - added pm_status_filtered() and pm_realtime_filtered() functions to
+ *       separate filtering logic from buffer logic in pm_read_short
+ *  - added Pm_SetChannelMask function
+ *  - added pm_channel_filtered() function
+ *  ------------- in pminternal.h --------------
+ *  - added member to PortMidiStream for channel mask
+ *
+ * 25May04 RBD
+ *  - removed support for MIDI THRU
+ *  - moved filtering from Pm_Read to pm_enqueue to avoid buffer ovfl
+ *  - extensive work on Mac OS X port, especially sysex and error handling
+ *
+ * 18May04 RBD
+ *  - removed side-effects from assert() calls. Now you can disable assert().
+ *  - no longer check pm_hosterror everywhere, fixing a bug where an open
+ *    failure could cause a write not to work on a previously opened port
+ *    until you call Pm_GetHostErrorText().
+ * 16May04 RBD and Chris Roberts
+ *  - Some documentation wordsmithing in portmidi.h
+ *  - Dynamically allocate port descriptor structures
+ *  - Fixed parameter error in midiInPrepareBuffer and midiInAddBuffer.
+ *
+ * 09Oct03 RBD
+ *  - Changed Thru handling. Now the client does all the work and the client
+ *    must poll or read to keep thru messages flowing.
+ *
+ * 31May03 RBD
+ *  - Fixed various bugs.
+ *  - Added linux ALSA support with help from Clemens Ladisch
+ *  - Added Mac OS X support, implemented by Jon Parise, updated and 
+ *       integrated by Andrew Zeldis and Zico Kolter
+ *  - Added latency program to build histogram of system latency using PortTime.
+ *
+ * 30Jun02 RBD Extensive rewrite of sysex handling. It works now.
+ *             Extensive reworking of error reporting and error text -- no
+ *             longer use dictionary call to delete data; instead, Pm_Open
+ *             and Pm_Close clean up before returning an error code, and 
+ *             error text is saved in a system-independent location.
+ *             Wrote sysex.c to test sysex message handling.
+ *
+ * 15Jun02 BCT changes:
+ *  - Added pmHostError text handling.
+ *  - For robustness, check PortMidi stream args not NULL.
+ *  - Re-C-ANSI-fied code (changed many C++ comments to C style)
+ *  - Reorganized code in pmwinmm according to input/output functionality (made
+ *    cleanup handling easier to reason about)
+ *  - Fixed Pm_Write calls (portmidi.h says these should not return length but Pm_Error)
+ *  - Cleaned up memory handling (now system specific data deleted via dictionary
+ *    call in PortMidi, allows client to query host errors).
+ *  - Added explicit asserts to verify various aspects of pmwinmm implementation behaves as
+ *    logic implies it should. Specifically: verified callback routines not reentrant and
+ *    all verified status for all unchecked Win32 MMedia API calls perform successfully
+ *  - Moved portmidi initialization and clean-up routines into DLL to fix Win32 MMedia API 
+ *    bug (i.e. if devices not explicitly closed, must reboot to debug application further).
+ *    With this change, clients no longer need explicitly call Pm_Initialize, Pm_Terminate, or
+ *    explicitly Pm_Close open devices when using WinMM version of PortMidi.
+ *
+ * 23Jan02 RBD Fixed bug in pmwinmm.c thru handling
+ *
+ * 21Jan02 RBD Added tests in Pm_OpenInput() and Pm_OpenOutput() to prevent 
+ *               opening an input as output and vice versa.
+ *             Added comments and documentation.
+ *             Implemented Pm_Terminate().
+ *
+ */

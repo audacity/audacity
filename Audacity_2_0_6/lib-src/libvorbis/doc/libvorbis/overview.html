@@ -1,0 +1,136 @@
+<html>
+
+<head>
+<title>libvorbis - API Overview</title>
+<link rel=stylesheet href="style.css" type="text/css">
+</head>
+
+<body bgcolor=white text=black link="#5555ff" alink="#5555ff" vlink="#5555ff">
+<table border=0 width=100%>
+<tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+<h1>Libvorbis API Overview</h1>
+
+<p>Libvorbis is the reference implementation of the Vorbis codec. It is
+the lowest-level interface to the Vorbis encoder and decoder, working
+with packets directly.</p>
+
+<p>All libvorbis routines and structures are declared in "vorbis/codec.h".</p>
+
+<h2>Encoding workflow</h2>
+
+<ol>
+<li>Initialize a <a href="vorbis_info.html">vorbis_info</a> structure
+by calling <a href="vorbis_info_init.html">vorbis_info_init</a> and
+then functions from <a href="../vorbisenc/index.html">libvorbisenc</a>
+on it.</li>
+<li>Initialize a <a href="vorbis_dsp_state.html">vorbis_dsp_state</a>
+for encoding based on the parameters in the vorbis_info by using <a
+href="vorbis_analysis_init.html">vorbis_analysis_init</a>.</li>
+<li>Initialize a <a href="vorbis_comment.html">vorbis_comment</a>
+structure using <a href="vorbis_comment_init.html">vorbis_comment_init</a>,
+populate it with any comments you wish to store in the stream, and call
+<a href="vorbis_analysis_headerout.html">vorbis_analysis_headerout</a> to
+get the three Vorbis stream header packets. Output the packets.</li>
+<li>Initialize a <a href="vorbis_block.html">vorbis_block</a> structure
+using <a href="vorbis_block_init.html">vorbis_block_init</a>.</li>
+<li>While there is more audio to encode:<ol>
+<li>Submit a chunk of audio data using <a
+href="vorbis_analysis_buffer.html">vorbis_analysis_buffer</a> and <a
+href="vorbis_analysis_wrote.html">vorbis_analysis_wrote</a>.</li>
+<li>Obtain all available blocks using <a
+href="vorbis_analysis_blockout.html">vorbis_analysis_blockout</a>
+in a loop. For each block obtained:<ol>
+<li>Encode the block into a packet (or prepare it for bitrate management)
+using <a href="vorbis_analysis.html">vorbis_analysis</a>. (It's a good
+idea to always pass the blocks through the bitrate
+management mechanism; more information is on the <a
+href="vorbis_analysis.html">vorbis_analysis</a> page. It does not affect
+the resulting packets unless you are actually using a bitrate-managed
+mode.)</li>
+<li>If you are using bitrate management, submit the block using <a
+href="vorbis_bitrate_addblock.html">vorbis_bitrate_addblock</a> and obtain
+packets using <a
+href="vorbis_bitrate_flushpacket.html">vorbis_bitrate_flushpacket</a>.</li>
+<li>Output any obtained packets.</li>
+</ol></li>
+</ol></li>
+<li>Submit an empty buffer to indicate the end of input; this will result
+in an end-of-stream packet after all encoding steps are done to it.</li>
+<li>Destroy the structures using the appropriate vorbis_*_clear routines.</li>
+</ol>
+
+<h2>Decoding workflow</h2>
+
+<em>Note: if you do not need to do anything more involved than just
+decoding the audio from an Ogg Vorbis file, you can use the far simpler
+<a href="../vorbisfile/index.html">libvorbisfile</a> interface, which
+will take care of all of the demuxing and low-level decoding operations
+(and even the I/O, if you want) for you.</em>
+
+<ol>
+<li>When reading the header packets of an Ogg stream, you can use <a
+href="vorbis_synthesis_idheader.html">vorbis_synthesis_idheader</a> to
+check whether a stream might be Vorbis.</li>
+<li>Initialize a <a href="vorbis_info.html">vorbis_info</a> and a <a
+href="vorbis_comment.html">vorbis_comment</a> structure using the
+appropriate vorbis_*_init routines, then pass the first three packets
+from the stream (the Vorbis stream header packets) to <a
+href="vorbis_synthesis_headerin.html">vorbis_synthesis_headerin</a> in
+order. At this point, you can see the comments and basic parameters of
+the Vorbis stream.</li>
+<li>Initialize a <a href="vorbis_dsp_state.html">vorbis_dsp_state</a>
+for decoding based on the parameters in the vorbis_info by using <a
+href="vorbis_synthesis_init.html">vorbis_synthesis_init</a>.</li>
+<li>Initialize a <a href="vorbis_block.html">vorbis_block</a> structure
+using <a href="vorbis_block_init.html">vorbis_block_init</a>.</li>
+<li>While there are more packets to decode:<ol>
+<li>Decode the next packet into a block using <a
+href="vorbis_synthesis.html">vorbis_synthesis</a>.</li>
+<li>Submit the block to the reassembly layer using <a
+href="vorbis_synthesis_blockin.html">vorbis_synthesis_blockin</a>.</li>
+<li>Obtain some decoded audio using <a
+href="vorbis_synthesis_pcmout.html">vorbis_synthesis_pcmout</a> and <a
+href="vorbis_synthesis_read.html">vorbis_synthesis_read</a>. Any audio data
+returned but not marked as consumed using vorbis_synthesis_read carries
+over to the next call to vorbis_synthesis_pcmout.</li>
+</ol></li>
+<li>Destroy the structures using the appropriate vorbis_*_clear routines.</li>
+</ol>
+
+<h2>Metadata workflow</h2>
+
+<em>Note: if you do not need to do anything more involved than just
+reading the metadata from an Ogg Vorbis file, <a
+href="../vorbisfile/index.html">libvorbisfile</a> can do this for you.</em>
+
+<ol>
+<li>Follow the decoding workflow above until you have access to the comments
+and basic parameters of the Vorbis stream.</li>
+<li>If you want to alter the comments, copy the first packet to the output
+file, then create a packet for the modified comments using <a
+href="vorbis_commentheader_out.html">vorbis_commentheader_out</a> and output
+it, then copy the third packet and all subsequent packets into the output
+file.</li>
+</ol>
+
+<br><br>
+<hr noshade>
+<table border=0 width=100%>
+<tr valign=top>
+<td><p class=tiny>copyright &copy; 2010 Xiph.Org</p></td>
+<td align=right><p class=tiny><a href="http://www.xiph.org/ogg/vorbis/index.html">Ogg Vorbis</a></p></td>
+</tr><tr>
+<td><p class=tiny>libvorbis documentation</p></td>
+<td align=right><p class=tiny>libvorbis version 1.3.2 - 20101101</p></td>
+</tr>
+</table>
+
+</body>
+
+</html>
+

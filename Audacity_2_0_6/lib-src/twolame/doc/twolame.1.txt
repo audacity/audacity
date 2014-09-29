@@ -1,0 +1,264 @@
+
+TWOLAME(1)
+==========
+Nicholas J Humfrey <njh@aelius.com>
+
+
+NAME
+----
+twolame - an optimised MPEG Audio Layer 2 (MP2) encoder
+
+
+SYNOPSIS
+--------
+'twolame' [options] <infile> [outfile]
+
+
+DESCRIPTION
+-----------
+TwoLAME is an optimised MPEG Audio Layer 2 (MP2) encoder based on tooLAME by 
+Mike Cheng, which in turn is based upon the ISO dist10 code and portions of 
+LAME. Encoding is performed by the libtwolame library backend. 
+
+
+OPTIONS
+-------
+Input File
+~~~~~~~~~~
+twolame uses libsndfile for reading the input sound file, so
+the input file can be in any format supported by libsndfile. 
+To read raw PCM audio from STDIN, then use - as the input filename.
+
+
+Output File
+~~~~~~~~~~~
+If no output filename is specified, then suffix of the input filename 
+is automatically changed to .mp2. To write the encoded audio to STDOUT 
+then use - as the output filename.
+
+
+Input Options
+~~~~~~~~~~~~~
+-r, --raw-input::
+	Specifies that input is raw signed PCM audio.
+	If audio is stereo, than audio samples are interleaved 
+	between the two channels.
+
+-x, --byte-swap::
+	Force byte-swapping of the input. Endian detection is performed 
+	automatically by libsndfile, so this option shouldn't 
+	normally be needed.
+
+-s, --samplerate <int>::
+	If inputting raw PCM sound, you must specify the sample rate of 
+	the audio in Hz.
+	Valid sample rates: 16000, 22050, 24000, 32000, 44100, 48000Hz.
+	Default sample rate is 44100Hz. 
+
+--samplesize <int>::
+	Specifies the sample size (in bits) of the raw PCM audio.
+	Valid sample sizes: 8, 16, 24, 32.
+	Default sample size is 16-bit. 
+
+-N, --channels <int>::
+	If inputting raw PCM sound, you must specify the number of channels 
+	in the input audio. Default number of channels is 2.
+
+-g, --swap-channels::
+	Swap the Left and Right channels of a stereo input file.
+
+--scale <float>::
+	Scale the input audio prior to encoding.
+	All of the input audio is multiplied by specified value.
+	Value between 0 and 1 will reduce the audio gain, and a value 
+	above 1 will increase the gain of the audio.
+
+--scale-l <float>::
+	Same as --scale, but only affects the left channel. 
+
+--scale-r <float>::
+	Same as --scale, but only affects the right channel. 
+
+
+Output Options
+~~~~~~~~~~~~~~
+
+-m, --mode <char>::
+	Choose the mode of the resulting audio. Default is auto.
+	- "a" auto - choose mode automatically based on the input
+	- "s" stereo
+	- "d" dual channel
+	- "j" joint stereo
+	- "m" mono
+
+-a, --downmix::
+	If the input file is stereo then, downmix the left and right 
+	input channels into a single mono channel.
+
+-b, --bitrate <int>::
+	Sets the total bitrate (in kbps) for the output file. 
+	The default bitrate  depends on the number of 
+	input channels and samplerate.
+	
+	------------------------------
+	Sample Rate   Mono    Stereo
+	------------------------------
+	48000         96      192
+	44100         96      192
+	32000         80      160
+	24000         48      96 
+	22050         48      96 
+	16000         32      64 
+	------------------------------
+
+-P, --psyc-mode <int>::
+	Choose the psycho-acoustic model to use (-1 to 4).
+	Model number -1 is turns off psycho-acoustic modelling and 
+	uses fixed default values instead.
+	Please see the file 'psycho' for a full description of 
+	each of the models available.
+	Default model is 3.
+
+-v, --vbr::
+	Enable VBR mode. See 'vbr' documentation file for details.
+	Default VBR level is 5.0.
+
+-V, --vbr-level <float>::
+	Enable VBR mode and set quality level. 
+	The higher the number the better the quality.
+	Maximum range is -50 to 50 but useful range is -10 to 10.
+	See 'vbr' documentation file for details.
+	
+-l, --ath <float>::
+	Set the ATH level. Default level is 0.0.
+	
+-q, --quick <int>::
+	Enable quick mode. Only re-calculate psycho-acoustic
+	model every specified number of frames.
+
+-S, --single-frame::
+	Enables single frame mode: only a single frame of MPEG audio 
+	is output and then the program terminates.
+
+
+
+Miscellaneous Options
+~~~~~~~~~~~~~~~~~~~~~
+
+-c, --copyright::
+	Turn on Copyright flag in output bitstream.
+
+-o, --non-original::
+	Turn off Original flag in output bitstream.
+	
+--original::
+	Turn on Original flag in output bitstream.
+
+-p, --protect::
+	Enable CRC error protection in output bitstream.
+	An extra 16-bit checksum is added to frames.
+	
+-d, --padding::
+	Turn on padding in output bitstream.
+
+-R, --reserve <int>::
+	Reserve specified number of bits in the each from of the
+	output bitstream.
+
+-e, --deemphasis <char>::
+	Set the de-emphasis type (n/c/5). Default is none.
+
+-E, --energy::
+	Turn on energy level extensions.
+
+
+Verbosity Options
+~~~~~~~~~~~~~~~~~
+
+-t, --talkativity <int>::
+	Set the amount of information to be displayed on stderr (0 to 10).
+	Default is 2.
+	
+--quiet::
+	Don't send any messages to stderr, unless there is an error.
+	(Same as --talkativity=0)
+
+--brief::
+	Only display a minimal number of messages while encoding.
+	This setting is quieter than the default talkativity setting.
+	(Same as --talkativity=1)
+
+--verbose::
+	Display an increased number of messages on stderr.
+	This setting is useful to diagnose problems.
+	(Same as --talkativity=4)
+
+
+
+Return Codes
+------------
+
+If encoding completes successfully, then twolame will return 0.
+However if encoding is not successful, then it will return one of the following codes.
+	
+	- 1 (No encoding performed)
+	- 2 (Error opening input file)
+	- 4 (Error opening output file)
+	- 6 (Error allocating memory)
+	- 8 (Error in chosen encoding parameters)
+	- 10 (Error reading input audio)
+	- 12 (Error occured while encoding)
+	- 14 (Error writing output audio)
+
+
+EXAMPLES
+--------
+
+This will encode sound.wav to sound.mp2 using the default constant bitrate of 192 kbps 
+and using the default psycho-acoustic model (model 3):
+
+	twolame sound.wav
+
+Constant bitrate of 160kbps and joint stereo encoding, saved to file sound_160.mp2:
+
+	twolame -b 160 -m j sound.aiff sound_160.mp2
+
+
+Encode sound.wav to newfile.mp2 using psycho-acoustic model 2 and encoding
+with variable bitrate:
+
+	twolame -P 2 -v sound.wav newfile.mp2
+
+
+Same as example above, except that the negative value of the "-V" argument
+means that the lower bitrates will be favoured over the higher ones:
+
+	twolame -P 2 -V -5 sound.wav newfile.mp2
+
+Resample audio file using sox and pipe straight through twolame:
+
+	sox sound_11025.aiff -t raw -r 16000 | twolame -r -s 16000 - - > out.mp2 
+
+
+AUTHORS
+-------
+The twolame frontend was (re)written by Nicholas J Humfrey.
+The libtwolame library is based on toolame by Mike Cheng.
+For a full list of authors, please see the AUTHORS file.
+
+
+RESOURCES
+---------
+TwoLAME web site: http://www.twolame.org/
+
+
+SEE ALSO
+--------
+lame(1), mpg123(1), madplay(1), sox(1)
+
+
+COPYING
+-------
+Copyright (C) 2004-2006 The TwoLAME Project. Free use of this software is
+granted under the terms of the GNU Lesser General Public License (LGPL).
+

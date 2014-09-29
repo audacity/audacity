@@ -1,0 +1,17 @@
+Scott Wheeler <wheeler@kde.org>
+ Author, maintainer
+Lukas Lalinsky <lalinsky@gmail.com>
+ Implementation of multiple new file formats, many bug fixes, maintainer
+Ismael Orenstein <orenstein@kde.org>
+ Xing header implementation
+Allan Sandfeld Jensen <kde@carewolf.org>
+ FLAC metadata implementation
+Teemu Tervo <teemu.tervo@gmx.net>
+ Numerous bug reports and fixes
+Mathias Panzenböck <grosser.meister.morti@gmx.net>
+ Mod, S3M, IT and XM metadata implementations
+Tsuda Kageyu <tsuda.kageyu@gmail.com>
+ A lot of fixes and improvements, i.e. memory copy reduction etc.
+
+Please send all patches and questions to taglib-devel@kde.org rather than to
+individual developers!

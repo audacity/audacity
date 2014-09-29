@@ -1,0 +1,137 @@
+libvorbis 1.3.3 (2012-02-03) -- "Xiph.Org libVorbis I 20120203 (Omnipresent)"
+
+* vorbis: additional proofing against invalid/malicious 
+  streams in decode (see SVN for details).  
+* vorbis: fix a memory leak in vorbis_commentheader_out().
+* updates, corrections and clarifications in the Vorbis I specification 
+  document
+* win32: fixed project configuration which referenced two CRT versions 
+  in output binaries.
+* build warning fixes
+
+libvorbis 1.3.2 (2010-11-01) -- "Xiph.Org libVorbis I 20101101 (Schaufenugget)"
+
+ * vorbis: additional proofing against invalid/malicious 
+   streams in floor, residue, and bos/eos packet trimming 
+   code (see SVN for details). 
+ * vorbis: Added programming documentation tree for the 
+   low-level calls
+ * vorbisfile: Correct handling of serial numbers array 
+   element [0] on non-seekable streams
+ * vorbisenc: Back out an [old] AoTuV HF weighting that was 
+   first enabled in 1.3.0; there are a few samples where I 
+   really don't like the effect it causes.
+ * vorbis: return correct timestamp for granule positions 
+   with high bit set.
+ * vorbisfile: the [undocumented] half-rate decode api made no 
+   attempt to keep the pcm offset tracking consistent in seeks. 
+   Fix and add a testing mode to seeking_example.c to torture 
+   test seeking in halfrate mode.  Also remove requirement that 
+   halfrate mode only work with seekable files.
+ * vorbisfile:  Fix a chaining bug in raw_seeks where seeking 
+   out of the current link would fail due to not 
+   reinitializing the decode machinery.  
+ * vorbisfile: improve seeking strategy. Reduces the 
+   necessary number of seek callbacks in an open or seek 
+   operation by well over 2/3.
+
+libvorbis 1.3.1 (2010-02-26) -- "Xiph.Org libVorbis I 20100325 (Everywhere)"
+
+ * tweak + minor arithmetic fix in floor1 fit
+ * revert noise norm to conservative 1.2.3 behavior pending 
+   more listening testing
+
+libvorbis 1.3.0 (2010-02-25) -- unreleased staging snapshot
+
+ * Optimized surround support for 5.1 encoding at 44.1/48kHz
+ * Added encoder control call to disable channel coupling
+ * Correct an overflow bug in very low-bitrate encoding on 32 bit 
+   machines that caused inflated bitrates
+ * Numerous API hardening, leak and build fixes 
+ * Correct bug in 22kHz compand setup that could cause a crash
+ * Correct bug in 16kHz codebooks that could cause unstable pure 
+   tones at high bitrates
+
+libvorbis 1.2.3 (2009-07-09) -- "Xiph.Org libVorbis I 20090709"
+
+ * correct a vorbisfile bug that prevented proper playback of
+   Vorbis files where all audio in a logical stream is in a
+   single page
+ * Additional decode setup hardening against malicious streams
+ * Add 'OV_EXCLUDE_STATIC_CALLBACKS' define for developers who 
+   wish to avoid unused symbol warnings from the static callbacks 
+   defined in vorbisfile.h
+
+libvorbis 1.2.2 (2009-06-24) -- "Xiph.Org libVorbis I 20090624"
+
+ * define VENDOR and ENCODER strings
+ * seek correctly in files bigger than 2 GB (Windows)
+ * fix regression from CVE-2008-1420; 1.0b1 files work again
+ * mark all tables as constant to reduce memory occupation
+ * additional decoder hardening against malicious streams
+ * substantially reduce amount of seeking performed by Vorbisfile
+ * Multichannel decode bugfix 
+ * build system updates
+ * minor specification clarifications/fixes
+
+libvorbis 1.2.1 (unreleased) -- "Xiph.Org libVorbis I 20080501"
+
+ * Improved robustness with corrupt streams.
+ * New ov_read_filter() vorbisfile call allows filtering decoded
+   audio as floats before converting to integer samples.
+ * Fix an encoder bug with multichannel streams.
+ * Replaced RTP payload format draft with RFC 5215.
+ * Bare bones self test under 'make check'.
+ * Fix a problem encoding some streams between 14 and 28 kHz.
+ * Fix a numerical instability in the edge extrapolation filter.
+ * Build system improvements.
+ * Specification correction.
+
+libvorbis 1.2.0 (2007-07-25) -- "Xiph.Org libVorbis I 20070622"
+
+ * new ov_fopen() convenience call that avoids the common
+   stdio conflicts with ov_open() and MSVC runtimes.
+ * libvorbisfile now handles multiplexed streams
+ * improve robustness to corrupt input streams
+ * fix a minor encoder bug
+ * updated RTP draft
+ * build system updates
+ * minor corrections to the specification
+
+libvorbis 1.1.2 (2005-11-27) -- "Xiph.Org libVorbis I 20050304"
+
+ * fix a serious encoder bug with gcc 4 optimized builds
+ * documentation and spec fixes
+ * updated VS2003 and XCode builds
+ * new draft RTP encapsulation spec
+
+libvorbis 1.1.1 (2005-06-27) -- "Xiph.Org libVorbis I 20050304"
+
+ * bug fix to the bitrate management encoder interface
+ * bug fix to properly set packetno field in the encoder
+ * new draft RTP encapsulation spec
+ * library API documentation improvements
+
+libvorbis 1.1.0 (2004-09-22) -- "Xiph.Org libVorbis I 20040629"
+
+ * merges tuning improvements from Aoyumi's aoTuV with fixups
+ * new managed bitrate (CBR) mode support
+ * new vorbis_encoder_ctl() interface
+ * extensive documentation updates
+ * application/ogg mimetype is now official
+ * autotools cleanup from Thomas Vander Stichele
+ * SymbianOS build support from Colin Ward at CSIRO
+ * various bugfixes
+ * various packaging improvements
+
+libvorbis 1.0.1 (2003-11-17) -- "Xiph.Org libVorbis I 20030909"
+
+ * numerous bug fixes
+ * specification corrections
+ * new crosslap and halfrate APIs for game use
+ * packaging and build updates
+
+libvorbis 1.0.0 (2002-07-19) -- "Xiph.Org libVorbis I 20020717"
+
+ * first stable release
+

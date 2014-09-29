@@ -1,0 +1,3 @@
+# Forbidden by RDF - predicate cannot be blank
+@prefix : <http://example.org/base#> .
+:a [ :b :c ] :d .

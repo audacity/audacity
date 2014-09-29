@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F4B4A272-4ED3-4951-A6EE-B7BAAC1C4952}</ProjectGuid>
+    <RootNamespace>libsndfile</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>.;..\..\..\lib-src\libsndfile\include;..\..\..\lib-src\libsndfile\src;..\..\..\lib-src\ffmpeg\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;inline=__inline;LIBSNDFILE_PRIVATE_CONFIG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;..\..\..\lib-src\libsndfile\include;..\..\..\lib-src\libsndfile\src;..\..\..\lib-src\ffmpeg\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;inline=__inline;LIBSNDFILE_PRIVATE_CONFIG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\aiff.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\alaw.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\au.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\audio_detect.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\avr.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\broadcast.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\caf.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\chanmap.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\chunk.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\command.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\common.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\dither.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\double64.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\dwd.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\dwvw.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\file_io.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\flac.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\float32.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\g72x.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\gsm610.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\htk.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\id3.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ima_adpcm.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ima_oki_adpcm.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\interleave.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ircam.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\macbinary3.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\macos.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\mat4.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\mat5.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\mpc2k.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ms_adpcm.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\nist.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ogg.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\paf.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\pcm.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\pvf.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\raw.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\rf64.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\rx2.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\sd2.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\sds.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\sndfile.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\strings.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\svx.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\txw.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\ulaw.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\voc.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\vox_adpcm.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\w64.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\wav.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\wav_w64.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\wve.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\xi.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\G72x\g721.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\G72x\g723_16.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\G72x\g723_24.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\G72x\g723_40.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\G72x\g72x.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)g72x_g72x.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)g72x_g72x.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\add.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\code.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\decode.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\gsm_create.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\gsm_decode.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\gsm_destroy.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\gsm_encode.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\gsm_option.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\long_term.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\lpc.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\preprocess.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\rpe.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\short_term.c" />
+    <ClCompile Include="..\..\..\lib-src\libsndfile\src\GSM610\table.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\chanmap.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\common.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\ima_oki_adpcm.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\sf_unistd.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\sfconfig.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\sfendian.h" />
+    <ClInclude Include="sndfile.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\wav_w64.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\G72x\g72x.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\G72x\g72x_priv.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\GSM610\config.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\GSM610\gsm.h" />
+    <ClInclude Include="..\..\..\lib-src\libsndfile\src\GSM610\gsm610_priv.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

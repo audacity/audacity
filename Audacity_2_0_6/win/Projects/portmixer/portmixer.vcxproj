@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3A76129B-55AB-4D54-BAA7-08F63ED52569}</ProjectGuid>
+    <RootNamespace>portmixer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>setlocal EnableDelayedExpansion
+set CFG="$(ProjectDir)/$(IntDir)config.h"
+
+echo // Automatically generated file &gt;"!CFG!"
+IF NOT "!DXSDK_DIR!" == "" echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;"!CFG!"
+echo #define PX_USE_WIN_MME 1 &gt;&gt;"!CFG!"
+echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;"!CFG!"
+</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portaudio-v19\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ForcedIncludeFiles>$(ProjectDir)\$(Configuration)\config.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>setlocal EnableDelayedExpansion
+set BASE="../../../lib-src/portmixer"
+set INTDIR=$(Configuration)
+set CFLAGS=/O2 /GL /I "!BASE!/../portaudio-v19/include" /I "!BASE!/include" /D "WIN32" /D "NDEBUG" /D "_LIB" /D "PX_USE_WIN_MME" /D "_MBCS" /GF /FD /EHsc /MD /Gy /Fo"!INTDIR!/" /Fd"!INTDIR!/" /W3 /nologo /c /wd4996 /FI "$(ProjectDir)/$(Configuration)/config.h" /errorReport:prompt
+set LIBS=
+
+if "!DXSDK_DIR!"=="" goto NoDX
+
+cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/px_win_ds.c"
+
+set LIBS="!DXSDK_DIR!/lib/x86/dxguid.lib"
+
+:NoDX
+
+lib /OUT:"$(TargetPath)" "$(IntDir)*.obj" !LIBS!
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command>setlocal EnableDelayedExpansion
+set CFG="$(ProjectDir)/$(IntDir)config.h"
+
+echo // Automatically generated file &gt;"!CFG!"
+IF NOT "!DXSDK_DIR!" == "" echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;"!CFG!"
+echo #define PX_USE_WIN_MME 1 &gt;&gt;"!CFG!"
+echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;"!CFG!"
+</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portaudio-v19\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ForcedIncludeFiles>$(ProjectDir)\$(Configuration)\config.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>setlocal EnableDelayedExpansion
+set BASE="../../../lib-src/portmixer"
+set INTDIR=$(Configuration)
+set CFLAGS=/Od /I "!BASE!/../portaudio-v19/include" /I "!BASE!/include" /D "WIN32" /D "_DEBUG" /D "_LIB" /D "PX_USE_WIN_MME" /D "_MBCS" /GF /FD /EHsc /RTC1 /MDd /Gy /Fo"!INTDIR!/" /Fd"!INTDIR!/" /W3 /nologo /c /ZI /wd4996 /FI "$(ProjectDir)/$(Configuration)/config.h" /errorReport:prompt
+set LIBS=
+
+if "!DXSDK_DIR!"=="" goto NoDX
+
+cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/px_win_ds.c"
+
+set LIBS="!DXSDK_DIR!/lib/x86/dxguid.lib"
+
+:NoDX
+
+lib /OUT:"$(TargetPath)" "$(IntDir)*.obj" !LIBS!
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\portmixer\src\px_mixer.c" />
+    <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_common.c" />
+    <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_ds.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_endpoint.c" />
+    <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_wasapi.c" />
+    <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_wmme.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\portmixer\src\px_mixer.h" />
+    <ClInclude Include="..\..\..\lib-src\portmixer\src\px_win_common.h" />
+    <ClInclude Include="..\..\..\lib-src\portmixer\src\px_win_endpoint.h" />
+    <ClInclude Include="..\..\..\lib-src\portmixer\include\portmixer.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+
+<HEAD>
+	<TITLE>
+	sndfile-info
+	</TITLE>
+	<META NAME="Author"      CONTENT="Erik de Castro Lopo (erikd AT mega-nerd DOT com)">
+	<LINK REL="stylesheet" HREF="libsndfile.css" TYPE="text/css" MEDIA="all">
+	<LINK REL="stylesheet" HREF="print.css" TYPE="text/css" MEDIA="print">
+</HEAD>
+
+<BODY>
+
+<P>
+	Here is an example of the output from the <B>sndfile-info</B> program distributed with 
+	libsndfile.
+</P>
+
+<P>
+	This file was opened and parsed correctly but had been truncated so that the values
+	in the <B>FORM</B> and <B>SSND</B> chunks were incorrect.
+</P>
+<PRE>
+        <B>erikd@hendrix ></B> examples/sndfile-info truncated.aiff 
+        truncated.aiff
+        size : 200000
+        FORM : 307474 (should be 199992)
+         AIFF
+         COMM : 18
+          Sample Rate : 16000
+          Samples     : 76857
+          Channels    : 2
+          Sample Size : 16
+         SSND : 307436 (should be 199946)
+          Offset     : 0
+          Block Size : 0
+        
+        --------------------------------
+        Sample Rate : 16000
+        Frames      : 76857
+        Channels    : 2
+        Bit Width   : 16
+        Format      : 0x00020001
+        Sections    : 1
+        Seekable    : TRUE
+        Signal Max  : 32766
+        	
+</PRE>
+
+
+</BODY>
+</HTML>

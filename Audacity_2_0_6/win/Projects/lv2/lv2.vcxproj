@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0FEC8848-E24E-4FA5-9ACD-E4582DC4CBBE}</ProjectGuid>
+    <RootNamespace>lv2</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.60610.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\sord\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;snprintf=_snprintf;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\sord\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;snprintf=_snprintf;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\collections.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\instance.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\lib.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\node.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)lilv-node.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)lilv-node.obj</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\plugin.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\pluginclass.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\port.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\query.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\scalepoint.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\state.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\ui.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\util.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\world.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\env.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\reader.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\serdnode.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\string.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\uri.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\serd\src\writer.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\sord.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\syntax.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\sratom\src\sratom.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\lilv\lilv.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\lilv_internal.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\common.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\serd\serd\serd.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\serd\src\serd_internal.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\sord\sord.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\sord_internal.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\sratom\sratom\sratom.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\msinttypes\inttypes.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\msinttypes\stdint.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

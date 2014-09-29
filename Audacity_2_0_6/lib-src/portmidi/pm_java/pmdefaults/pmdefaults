@@ -1,0 +1,1 @@
+java -jar /usr/share/java/pmdefaults.jar > /dev/null

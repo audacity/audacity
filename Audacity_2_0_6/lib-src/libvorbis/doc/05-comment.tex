@@ -1,0 +1,240 @@
+% -*- mode: latex; TeX-master: "Vorbis_I_spec"; -*-
+%!TEX root = Vorbis_I_spec.tex
+% $Id$
+\section{comment field and header specification} \label{vorbis:spec:comment}
+
+\subsection{Overview}
+
+The Vorbis text comment header is the second (of three) header
+packets that begin a Vorbis bitstream. It is meant for short text
+comments, not arbitrary metadata; arbitrary metadata belongs in a
+separate logical bitstream (usually an XML stream type) that provides
+greater structure and machine parseability.
+
+The comment field is meant to be used much like someone jotting a
+quick note on the bottom of a CDR. It should be a little information to
+remember the disc by and explain it to others; a short, to-the-point
+text note that need not only be a couple words, but isn't going to be
+more than a short paragraph.  The essentials, in other words, whatever
+they turn out to be, eg:
+
+\begin{quote}
+Honest Bob and the Factory-to-Dealer-Incentives, \textit{``I'm Still
+Around''}, opening for Moxy Fr\"{u}vous, 1997.
+\end{quote}
+
+
+
+
+\subsection{Comment encoding}
+
+\subsubsection{Structure}
+
+The comment header is logically a list of eight-bit-clean vectors; the
+number of vectors is bounded to $2^{32}-1$ and the length of each vector
+is limited to $2^{32}-1$ bytes. The vector length is encoded; the vector
+contents themselves are not null terminated. In addition to the vector
+list, there is a single vector for vendor name (also 8 bit clean,
+length encoded in 32 bits). For example, the 1.0 release of libvorbis
+set the vendor string to ``Xiph.Org libVorbis I 20020717''.
+
+The vector lengths and number of vectors are stored lsb first, according
+to the bit packing conventions of the vorbis codec. However, since data
+in the comment header is octet-aligned, they can simply be read as
+unaligned 32 bit little endian unsigned integers.
+
+The comment header is decoded as follows:
+
+\begin{programlisting}
+  1) [vendor\_length] = read an unsigned integer of 32 bits
+  2) [vendor\_string] = read a UTF-8 vector as [vendor\_length] octets
+  3) [user\_comment\_list\_length] = read an unsigned integer of 32 bits
+  4) iterate [user\_comment\_list\_length] times {
+       5) [length] = read an unsigned integer of 32 bits
+       6) this iteration's user comment = read a UTF-8 vector as [length] octets
+     }
+  7) [framing\_bit] = read a single bit as boolean
+  8) if ( [framing\_bit] unset or end-of-packet ) then ERROR
+  9) done.
+\end{programlisting}
+
+
+
+
+\subsubsection{Content vector format}
+
+The comment vectors are structured similarly to a UNIX environment variable.
+That is, comment fields consist of a field name and a corresponding value and
+look like:
+
+\begin{quote}
+\begin{programlisting}
+comment[0]="ARTIST=me";
+comment[1]="TITLE=the sound of Vorbis";
+\end{programlisting}
+\end{quote}
+
+The field name is case-insensitive and may consist of ASCII 0x20
+through 0x7D, 0x3D ('=') excluded. ASCII 0x41 through 0x5A inclusive
+(characters A-Z) is to be considered equivalent to ASCII 0x61 through
+0x7A inclusive (characters a-z).
+
+
+The field name is immediately followed by ASCII 0x3D ('=');
+this equals sign is used to terminate the field name.
+
+
+0x3D is followed by 8 bit clean UTF-8 encoded value of the
+field contents to the end of the field.
+
+
+\paragraph{Field names}
+
+Below is a proposed, minimal list of standard field names with a
+description of intended use.  No single or group of field names is
+mandatory; a comment header may contain one, all or none of the names
+in this list.
+
+\begin{description} %[style=nextline]
+\item[TITLE]
+	Track/Work name
+
+\item[VERSION]
+	The version field may be used to differentiate multiple
+versions of the same track title in a single collection. (e.g. remix
+info)
+
+\item[ALBUM]
+	The collection name to which this track belongs
+
+\item[TRACKNUMBER]
+	The track number of this piece if part of a specific larger collection or album
+
+\item[ARTIST]
+	The artist generally considered responsible for the work. In popular music this is usually the performing band or singer. For classical music it would be the composer. For an audio book it would be the author of the original text.
+
+\item[PERFORMER]
+	The artist(s) who performed the work. In classical music this would be the conductor, orchestra, soloists. In an audio book it would be the actor who did the reading. In popular music this is typically the same as the ARTIST and is omitted.
+
+\item[COPYRIGHT]
+	Copyright attribution, e.g., '2001 Nobody's Band' or '1999 Jack Moffitt'
+
+\item[LICENSE]
+	License information, eg, 'All Rights Reserved', 'Any
+Use Permitted', a URL to a license such as a Creative Commons license
+("www.creativecommons.org/blahblah/license.html") or the EFF Open
+Audio License ('distributed under the terms of the Open Audio
+License. see http://www.eff.org/IP/Open\_licenses/eff\_oal.html for
+details'), etc.
+
+\item[ORGANIZATION]
+	Name of the organization producing the track (i.e.
+the 'record label')
+
+\item[DESCRIPTION]
+	A short text description of the contents
+
+\item[GENRE]
+	A short text indication of music genre
+
+\item[DATE]
+	Date the track was recorded
+
+\item[LOCATION]
+	Location where track was recorded
+
+\item[CONTACT]
+	Contact information for the creators or distributors of the track. This could be a URL, an email address, the physical address of the producing label.
+
+\item[ISRC]
+	International Standard Recording Code for the
+track; see \href{http://www.ifpi.org/isrc/}{the ISRC
+intro page} for more information on ISRC numbers.
+
+\end{description}
+
+
+
+\paragraph{Implications}
+
+Field names should not be 'internationalized'; this is a
+concession to simplicity not an attempt to exclude the majority of
+the world that doesn't speak English. Field \emph{contents},
+however, use the UTF-8 character encoding to allow easy representation
+of any language.
+
+We have the length of the entirety of the field and restrictions on
+the field name so that the field name is bounded in a known way. Thus
+we also have the length of the field contents.
+
+Individual 'vendors' may use non-standard field names within
+reason. The proper use of comment fields should be clear through
+context at this point.  Abuse will be discouraged.
+
+There is no vendor-specific prefix to 'nonstandard' field names.
+Vendors should make some effort to avoid arbitrarily polluting the
+common namespace. We will generally collect the more useful tags
+here to help with standardization.
+
+Field names are not required to be unique (occur once) within a
+comment header.  As an example, assume a track was recorded by three
+well know artists; the following is permissible, and encouraged:
+
+\begin{quote}
+\begin{programlisting}
+ARTIST=Dizzy Gillespie
+ARTIST=Sonny Rollins
+ARTIST=Sonny Stitt
+\end{programlisting}
+\end{quote}
+
+
+
+
+
+
+
+\subsubsection{Encoding}
+
+The comment header comprises the entirety of the second bitstream
+header packet.  Unlike the first bitstream header packet, it is not
+generally the only packet on the second page and may not be restricted
+to within the second bitstream page.  The length of the comment header
+packet is (practically) unbounded.  The comment header packet is not
+optional; it must be present in the bitstream even if it is
+effectively empty.
+
+The comment header is encoded as follows (as per Ogg's standard
+bitstream mapping which renders least-significant-bit of the word to be
+coded into the least significant available bit of the current
+bitstream octet first):
+
+\begin{enumerate}
+ \item
+  Vendor string length (32 bit unsigned quantity specifying number of octets)
+
+ \item
+  Vendor string ([vendor string length] octets coded from beginning of string to end of string, not null terminated)
+
+ \item
+  Number of comment fields (32 bit unsigned quantity specifying number of fields)
+
+ \item
+  Comment field 0 length (if [Number of comment fields] $>0$; 32 bit unsigned quantity specifying number of octets)
+
+ \item
+  Comment field 0 ([Comment field 0 length] octets coded from beginning of string to end of string, not null terminated)
+
+ \item
+  Comment field 1 length (if [Number of comment fields] $>1$...)...
+
+\end{enumerate}
+
+
+This is actually somewhat easier to describe in code; implementation of the above can be found in \filename{vorbis/lib/info.c}, \function{\_vorbis\_pack\_comment()} and \function{\_vorbis\_unpack\_comment()}.
+
+
+
+
+
+

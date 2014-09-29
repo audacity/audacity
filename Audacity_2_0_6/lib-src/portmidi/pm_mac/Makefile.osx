@@ -1,0 +1,131 @@
+# MAKEFILE FOR PORTMIDI
+
+# Roger B. Dannenberg
+# Sep 2009
+
+# NOTE: you can use
+#     make -f pm_osx/Makefile.osx configuration=Release
+# to override the default Debug configuration
+configuration=Release
+
+PF=/usr/local
+
+# For debugging, define PM_CHECK_ERRORS
+ifeq ($(configuration),Release)
+    CONFIG = Release
+else
+    CONFIG = Debug
+endif
+
+current: all
+
+all: $(CONFIG)/CMakeCache.txt
+	cd $(CONFIG); make
+
+$(CONFIG)/CMakeCache.txt:
+	rm -f $(CONFIG)/CMakeCache.txt
+	mkdir -p $(CONFIG)
+	cd $(CONFIG); cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$(CONFIG)
+
+
+**** For instructions: make -f pm_mac/Makefile.osx help ****\n'
+
+help:
+	echo $$'\n\n\
+This is help for portmidi/pm_mac/Makefile.osx\n\n\
+Installation path for dylib is $(PF)\n\
+To build Release version libraries and test applications,\n        \
+make -f pm_mac/Makefile.osx\n\
+To build Debug version libraries and test applications,\n        \
+make -f pm_mac/Makefile.osx configuration=Debug\n\
+To install universal dynamic library,\n        \
+sudo make -f pm_mac/Makefile.osx install\n\
+To install universal dynamic library with xcode,\n        \
+make -f pm_mac/Makefile.osx install-with-xcode\n\
+To make PmDefaults Java application,\n        \
+make -f pm_mac/Makefile.osx pmdefaults\n\n        \
+configuration = $(configuration)\n'
+
+
+clean:
+	rm -f *.o *~ core* */*.o */*/*.o */*~ */core* pm_test/*/pm_dll.dll 
+	rm -f *.opt *.ncb *.plg pm_win/Debug/pm_dll.lib pm_win/Release/pm_dll.lib
+	rm -f pm_test/*.opt pm_test/*.ncb
+	rm -f pm_java/pmjni/*.o pm_java/pmjni/*~ pm_java/*.h
+	rm -rf Release/CMakeFiles Debug/CMakeFiles
+	rm -rf pm_mac/pmdefaults/lib pm_mac/pmdefaults/src
+
+cleaner: clean
+	rm -rf pm_mac/build
+	rm -rf pm_mac/Debug pm_mac/Release pm_test/Debug pm_test/Release
+	rm -f Debug/*.dylib Release/*.dylib
+	rm -f pm_java/pmjni/Debug/*.jnilib
+	rm -f pm_java/pmjni/Release/*.jnilib
+
+cleanest: cleaner
+	rm -f Debug/CMakeCache.txt Release/CMakeCache.txt
+	rm -f CMakeCache.txt
+	rm -f Debug/libportmidi_s.a Release/libportmidi_s.a
+	rm -f pm_test/Debug/test pm_test/Debug/sysex pm_test/Debug/midithread
+	rm -f pm_test/Debug/latency pm_test/Debug/midithru
+	rm -f pm_test/Debug/qtest pm_test/Debug/mm
+	rm -f pm_test/Release/test pm_test/Release/sysex pm_test/Release/midithread
+	rm -f pm_test/Release/latency pm_test/Release/midithru
+	rm -f pm_test/Release/qtest pm_test/Release/mm
+	rm -f pm_java/*/*.class
+	rm -f pm_java/pmjni/jportmidi_JPortMidiApi_PortMidiStream.h
+
+backup: cleanest
+	cd ..; zip -r portmidi.zip portmidi
+
+install: porttime/porttime.h pm_common/portmidi.h \
+	   $(CONFIG)/libportmidi.dylib
+	install porttime/porttime.h  $(PF)/include/
+	install pm_common/portmidi.h $(PF)/include
+	install $(CONFIG)/libportmidi.dylib $(PF)/lib/
+
+# note - this uses xcode to build and install portmidi universal binaries
+install-with-xcode:
+	sudo xcodebuild -project pm_mac/pm_mac.xcodeproj \
+		-configuration Release install DSTROOT=/
+
+##### build pmdefault ######
+
+pm_java/pmjni/jportmidi_JPortMidiApi.h: pm_java/jportmidi/JPortMidiApi.class
+	cd pm_java; javah jportmidi.JPortMidiApi
+	mv pm_java/jportmidi_JportMidiApi.h pm_java/pmjni
+
+JAVASRC = pmdefaults/PmDefaultsFrame.java \
+	    pmdefaults/PmDefaults.java \
+	    jportmidi/JPortMidiApi.java jportmidi/JPortMidi.java \
+	    jportmidi/JPortMidiException.java
+
+# this compiles ALL of the java code
+pm_java/jportmidi/JPortMidiApi.class: $(JAVASRC:%=pm_java/%)
+	cd pm_java; javac $(JAVASRC)
+
+$(CONFIG)/libpmjni.dylib:
+	mkdir -p $(CONFIG)
+	cd $(CONFIG); make -f ../pm_mac/$(MAKEFILE)
+
+pmdefaults: $(CONFIG)/libpmjni.dylib pm_java/jportmidi/JPortMidiApi.class
+ifeq ($(CONFIG),Debug)
+	echo "Error: you cannot build pmdefaults in a Debug configuration \n\
+    You should use configuration=Release in the Makefile command line. "
+	@exit 2
+endif
+	xcodebuild -project pm_mac/pm_mac.xcodeproj \
+            -configuration Release -target PmDefaults
+	echo "pmdefaults java application is made"
+
+###### test plist reader #######
+PLHDR = pm_mac/readbinaryplist.h
+PLSRC = pm_mac/plisttest.c pm_mac/readbinaryplist.c
+pm_mac/plisttest: $(PLHDR) $(PLSRC)
+	cc $(VFLAGS) -Ipm_mac \
+	    -I/Developer/Headers/FlatCarbon \
+	    -I/System/Library/Frameworks/CoreFoundation.framework/Headers \
+	    -I/System/Library/Frameworks/CoreServices.framework/Headers \
+	    $(PLSRC) -o pm_mac/$(CONFIG)/plisttest \
+	    -framework CoreFoundation -framework CoreServices
+

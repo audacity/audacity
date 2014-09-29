@@ -1,0 +1,315 @@
+$Id: HISTORY,v 1.1 2001-08-27 00:12:17 dmazzoni Exp $
+
+ID3Lib History
+
+The following is a history of id3lib up to version 3.05a.  Please see the
+NEWS file for changes since then.
+
+23 Nov 1998     3.05a   - Released 3.05a in which the only change was the 
+                          inclusion of a C header file for using the DLL
+                          (how forgetful I am!).
+
+22 Nov 1998     3.05    - Released 3.05 and the DLL.
+
+ 8 Nov 1998     3.05    - Finished the first revision of the DLL.  Interesting
+                          stuff.  Contains both C++ class and C functions (the
+                          C++ classes that are exported to the DLL are Tag,
+                          Frame, Field and Error).
+                        - Took out the SetVersion function from the ID3_Tag 
+                          class.  This is because I no longer wish ID3Lib to be
+                          able to create the old ID3v2-2.0 tags.  ID3Lib will
+                          always create the latest version tags it is capable
+                          of creating.
+
+ 1 Nov 1998     3.05    - Removed the encryption and grouping stuff.  I have a
+                          lot to do before I finish that section and I might 
+                          end up implementing it differently, so I thought it
+                          best to remove it before people started using it 
+                          (no-one should since it wasn't fully functional
+                          anyway).
+
+13 Oct 1998     3.05    - Work has begun on the Windows DLL.
+
+ 9 Oct 1998     3.04    - Added the text list handling functions from 2.16, but
+                          they are slightly different under 3.xx.
+                        - Also added a Size() function for fields which
+                          applications can use to allocate buffers and so on.
+                        - Work has progressed on the encryption and grouping
+                          side of things, but nothing usable by an application
+                          just yet.
+
+ 5 Oct 1998     3.04    - Changed the ID3_AddHandler() function to include a
+                          parameter which specifies the factor by which the 
+                          size of the frame may increase as a result of
+                          encryption or encoding.  This is used for buffer and
+                          size estimates.
+
+ 3 Oct 1998     3.03a   - Fixed a small Unicode BOM bug.
+
+ 2 Oct 1998     3.03    - Added very minimal and not-totally-functional support
+                          for the automatic handling of encryption and
+                          grouping.
+                        - Added a function to ID3_Tag which makes attaching
+                          arrays of ID3_Frame objects easy.
+
+ 1 Oct 1998     3.03    - Yesterday, ID3v2-3.0 became an informal standard.  
+                          Due to this, ID3Lib now does not create ID3v2-3.0
+                          tags with the EXPERIMENTAL bit set.
+
+30 Sep 1998     3.02    - Expanded the error handling class to include
+                          functions which return the ID3Lib source file and
+                          line number of the exception. This is useful for
+                          debugging and generating bug reports (hint, hint).
+
+28 Sep 1998     3.02    - Added the grouping registration and encryption
+                          registration frames.  Also added support for parsing
+                          and rendering frames with the grouping and encryption
+                          symbols, although currently this data is ignored.  I
+                          plan to implement call backs to handle the encryption
+                          and decryption of data.  Also, there is currently no
+                          checking at render-time that all frames which have
+                          these symbols also have a corresponding rego frame.
+
+26 Sep 1998     3.02    - Changed the 'tag changed' stuff so that calls to
+                          ID3_Tag::SetVersion(), ID3_Tag::SetCompression() etc
+                          now constitute a change in the tag.  This is because
+                          of the relaxed restrictions on the calls to these
+                          functions before rendering/updating.  - Fixed a bug
+                          in the ID3_Tag::Link() command.
+
+25 Sep 1998     3.01    - Added the ID3_Tag::RemoveFrame() function.
+                        - Added the ID3_Tag::SetExtendedHeader() function, even
+                          though this setting is currently ignored.
+                        - Added luint return type to the Field::Get() functions
+                          for ASCII and Unicode strings.  These functions now
+                          return how many characters (not bytes necessarily) of
+                          the supplied buffer were used, not including the
+                          NULL-termination.
+                        - Added the 'unique file identifier' frame which I
+                          omitted from 3.00 but was present in 2.xx.
+                        - Added code that allows ID3Lib and applications to
+                          track whether a tag has been altered since the last
+                          parse or render.
+                        - Slightly altered the padding strategy when a tag 
+                          shrinks in size.
+                        - No more requirements on when ID3_Tag::SetVersion()
+                          etc must be called, except that they should be called
+                          prior to an update or render if you plan to use
+                          different settings than the defaults.
+
+21 Sep 1998     3.00    - Released 3.00
+
+15 Sep 1998     3.00    - Added support for parsing and converting ID3v1/1.1
+                          and Lyrics3 v2.0 tags and CDM frames from 2.01
+                          experimental tags.  Also parses Unicode now.
+
+ 9 Sep 1998     3.00    - Work almost done on 3.00.  A little bit to fix up in
+                          the parsing department (doesn't parse Unicode yet, or
+                          CDMs from the old 2.01 draft).  Then just add
+                          validity checking and support for most of the frames.
+
+ 2 Sep 1998     2.16    - Small Unicode string parsing bug fixed.
+
+25 Aug 1998     2.15    - Small bug fixes in the tag parsing routines.
+                        - Completely removed support for creating extended
+                          headers, and ID3Lib will now ignore tags which have
+                          the EXTENDEDHEADER bit set (as under 2.00, this bit
+                          isn't defined).
+
+24 Aug 1998     2.14    - Small bug fixes in the example file 'convert.cpp'.
+                        - ID3Lib now sets the EXPERIMENTAL bit in the tag
+                          header.
+
+13 Aug 1998     2.13    - As of 2.13, ID3Lib now comes in two flavours.  The
+                          first is the normal distribution as we have come to
+                          know and love.  The second is a machine-specific
+                          archive which contains the static link libraries.
+                          Currently, you can get Win32 link libraries.
+
+12 Aug 1998     2.12    - As of 2.12, the ID3Lib distribution will contain
+                          precompiled static libraries for Visual C++ and
+                          eventually for Linux i386.  The MSVC static libs are
+                          be compiled for the multi-threaded run-time library
+                          and there will be one for debugging and one normal
+                          one for release-quality applications.
+
+                        - Fixed a small exclusion in the 'id3_support.h' file.
+                          It now contains a #include for the 'wchar.h' header
+                          file.  The absence of this line resulted in some
+                          applications producing compilation errors if they
+                          didn't already include it or 'stdio.h'.
+
+11 Aug 1998     2.12    - I created a small problem in 2.11 where the name of
+                          the URL field in the 'ID3FID_WWWUSER' frame ('WXX')
+                          was changed from ID3FN_URL to ID3FN_TEXT.  This has
+                          been fixed (is back to ID3FN_URL).
+                        - When reading a binary tag, previous versions of
+                          ID3Lib ignored the fact that some of the frames in
+                          the tag may have been compressed, so when writing the
+                          tag back out, those old frames were written without
+                          compression.  This is fixed so that all old frames
+                          are written back out as they were read in, unless of
+                          course you explicitly change the compression status
+                          before rendering the new tag.
+                        - Added the ID3C_SetSongSize and ID3C_GetSongSize
+                          commands to the ID3_Tag class.  These allow you to
+                          tell ID3Lib how big (in bytes) the song file is to
+                          which you intend attaching the tag.  ID3Lib can then
+                          work out how much padding the tag requires to
+                          correctly make the entire resulting file fill an even
+                          multiple of 2Kb.
+                        - If the tag we are manipulating was read in as a
+                          binary tag before we started playing with it, then
+                          ID3Lib will record the size of tag before we started
+                          fooling around with it.  This way, the padding system
+                          can pad the new tag out to the old size if the new
+                          tag will still fit inside the old one.  This makes
+                          file manipulation much easier when writing tags to
+                          existing song files.  If it won't fit, then the new
+                          tag will receive padding as per the 2K cluster
+                          method.  All this talk of padding only applies if the
+                          tag's padding property is set to ID3PD_AUTOMATIC,
+                          which it is by default.
+
+10 Aug 1998     2.11    - Replaced ID3C_SetID and GetID with proper field
+                          names, and the same with ID3C_SetComp and GetComp.
+                          This requires a change in source code for the
+                          application.  Without quotes, do a search and
+                          replace...
+
+                     "ID3C_SetID,"   replace with "ID3C_Set, ID3FN_ID,"
+                     "ID3C_GetID,"   replace with "ID3C_Get, ID3FN_ID,"
+                     "ID3C_SetComp," replace with "ID3C_Set, ID3FN_COMPRESSED,"
+                     "ID3C_GetComp," replace with "ID3C_Get, ID3FN_COMPRESSED,"
+
+                        - Thanks to a suggestion by Ilana Rudnik, I added a
+                          generic frame type called 'ID3FID_UNSUPPORTED' which
+                          is only to be used by applications as a
+                          'place-holder' in lists and arrays while waiting for
+                          ID3Lib to support all the frames.
+
+ 6 Aug 1998     2.11    - Created the ID3C_Locate and ID3C_GetNumFrames
+                          commands.
+                        - Made the documentation an HTML file instead of boring
+                          text.
+
+ 5 Aug 1998     2.11    - Thanks to Eng-Keong Lee, I have located and fixed a
+                          bug which most-of-the-time caused a crash when
+                          performing an ID3C_SetID on a frame for the first
+                          time.
+
+ 3 Aug 1998     2.10    - Fixed a few things to make ID3Lib compile completely
+                          cleanly under Linux - thanks to Carlos Puchol for
+                          finding the remaining hassles.
+                        - Added two commands to adjust the unsync facility -
+                          ID3C_SetUnsync and ID3C_GetUnsync.  The default is
+                          ID3SY_AUTOMATIC.
+                        - Add support for the 2.01 extended tag header.  By
+                          default, ID3Lib will NOT write an extended header to
+                          tags it creates.  This can be adjusted by the
+                          ID3C_SetExtHeader command.
+                        - Changed the directory structure so that the required
+                          zlib source is now in the same directory as the
+                          ID3Lib source.
+
+ 2 Aug 1998     2.10    - Fixed a small memory leak which occurred when
+                          clearing a tag of frames which were read in from an
+                          external binary tag.
+                        - Added a 'bugreport.txt' file to the documentation to
+                          improve effectiveness of bug reporting.
+
+ 1 Aug 1998     2.10    - Adding support for tag padding.  This results in two
+                          new commands which operate on ID3_Tag objects:
+                          ID3C_SetPadding and ID3C_GetPadding.
+
+ 1 Aug 1998     2.09    - Fixed some bugs in the ID3C_ToFile and ID3C_FromFile
+                          commands.
+                        - Fixed a bug which prevented empty strings which were
+                          supposed to be NULL-terminated from doing so.
+
+31 Jul 1998     2.09    - Changed the functionality of the error handling
+                          mechanism.  The function interface to the error
+                          handler has changed - see the example source file
+                          'main.cpp' for details.
+                        - Improved frame verification somewhat.
+
+28 July 1998    2.08    - Added ID3C_ToFile command to binary fields.
+                        - Changed the format of the ID3C_Size command when
+                          applied to frames.  There is now a required second
+                          parameter which specifies which field you require the
+                          size of.  If you request ID3FN_ALL, you will get the
+                          size of the frame itself.
+                        - The above change for ID3C_Size now also applies to
+                          the ID3C_Clear command (again, only when applied to
+                          frames).
+                        - Enhanced the ID3C_Find command so as to allow
+                          searches based on the ID3FN_LANGUAGE field and the
+                          ID3FN_DESCRIPTION field.
+
+27 July 1998    2.07    - Fixed a bug which had the WXX and TXX frames
+                          including a language field which they shouldn't.
+                        - Fixed a bug in the string's ID3C_Get command which
+                          wrongly interpreted the presence of a '/' symbol in 
+                          the string as meaning that the string was a textlist.
+
+21 July 1998    2.06    - Added support for frame compression via zlib.  This 
+                          means that all frames have an extra attribute which
+                          specifies whether the frame should be compressed.
+                        - Changed some typedefs and macro names so as not to
+                          clash with some of Windows' pre-defined
+                          datatypes/names.  Thanks to Chuck Zenkus for finding
+                          this.
+
+14 July 1998    2.05    - Finished up Unicode support.  All internal string
+                          handling is done with Unicode strings.  Strings are
+                          converted as needed during rendering of the tag.
+
+ 6 July 1998    2.05    - BINARY fields now support an 'ID3C_FromFile' command
+                          which fills the field with data from the specified
+                          file.  The file is read and the contents placed in
+                          the field immediately on the field encountering this
+                          command.
+
+ 2 July 1998    2.04    - Improved support for frame validation.
+                        - Repaired a cool bug in the error handling which
+                          prevented an application from finding further
+                          information about the error.  This fix resulted in a
+                          new format for the application error handler
+                          function.
+
+                2.03    - Added support for the ID3C_Add, ID3C_Remove,
+                          ID3C_GetElement, ID3C_GetNumElements commands in the
+                          STRING field type.  This allows easy use of the text
+                          lists as used in the 'TP1' frame.
+
+                        - Improved error handling once more.
+                        - Added support for the ID3C_Increment command in the
+                          INT field type.
+                        - Added support for the CNT, POP, GEO, TCO, TCR and UFI
+                          frames.
+                        - Added preliminary validation checking for frames to
+                          ensure they meet the ID3v2 standard requirements.
+                          Not fully implemented.
+
+                2.02    - Adjusted the '::Do()' function slightly - you can now
+                          chain commands together.  The last parameter to this
+                          call must now always be 'ID3C_DONE'.
+                
+ 1 July 1998    2.01    - Added the 'ID3_IsTagHeader()' function and an
+                          appropriately adjusted ID3C_Parse command.
+
+30 June 1998    2.00    - First preliminary release of ID3Lib v2.00.  Supports
+                          lots of frames (even PIC).  Lots of work still
+                          needed.
+
+25 June 1998    2.00    - Abandoned the v1.xx framework in favour of a more
+                          versatile and expandable one.  This required a major
+                          re-write of most of the internals of the library as
+                          well as changes to any applications using the
+                          previous framework.  The new framework is part of all
+                          ID3Libs which are 2.xx.
+
+23 June 1998    1.01    - Released v1.01 which added support for four new
+                          frames.  TXX, WXX, COM, ULT
+
+21 June 1998    1.00    - Initial Release (v1.0)

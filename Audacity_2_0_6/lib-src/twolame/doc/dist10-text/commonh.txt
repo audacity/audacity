@@ -1,0 +1,74 @@
+/**********************************************************************
+ * ISO MPEG Audio Subgroup Software Simulation Group (1996)
+ * ISO 13818-3 MPEG-2 Audio Encoder - Lower Sampling Frequency Extension
+ *
+ * $Id$
+ *
+ * $Log$
+ * Revision 1.1  2005/11/15 16:04:26  nhumfrey
+ * Changed suffix for files.
+ *
+ * Revision 1.1.1.1  2005/04/15 01:10:19  nhumfrey
+ * Initial import.
+ *
+ * Revision 1.1  1996/02/14 04:04:23  rowlands
+ * Initial revision
+ *
+ * Received from Mike Coleman
+ **********************************************************************/
+/**********************************************************************
+ *   date   programmers         comment                               *
+ * 2/25/91  Doulas Wong,        start of version 1.0 records          *
+ *          Davis Pan                                                 *
+ * 5/10/91  W. Joseph Carter    Reorganized & renamed all ".h" files  *
+ *                              into "common.h" and "encoder.h".      *
+ *                              Ported to Macintosh and Unix.         *
+ *                              Added additional type definitions for *
+ *                              AIFF, double/SANE and "bitstream.c".  *
+ *                              Added function prototypes for more    *
+ *                              rigorous type checking.               *
+ * 27jun91  dpwe (Aware)        Added "alloc_*" defs & prototypes     *
+ *                              Defined new struct 'frame_params'.    *
+ *                              Changed info.stereo to info.mode_ext  *
+ *                              #define constants for mode types      *
+ *                              Prototype arguments if PROTO_ARGS     *
+ * 5/28/91  Earle Jennings      added MS_DOS definition               *
+ *                              MsDos function prototype declarations *
+ * 7/10/91  Earle Jennings      added FLOAT definition as double      *
+ *10/ 3/91  Don H. Lee          implemented CRC-16 error protection   *
+ * 2/11/92  W. Joseph Carter    Ported new code to Macintosh.  Most   *
+ *                              important fixes involved changing     *
+ *                              16-bit ints to long or unsigned in    *
+ *                              bit alloc routines for quant of 65535 *
+ *                              and passing proper function args.     *
+ *                              Removed "Other Joint Stereo" option   *
+ *                              and made bitrate be total channel     *
+ *                              bitrate, irrespective of the mode.    *
+ *                              Fixed many small bugs & reorganized.  *
+ *                              Modified some function prototypes.    *
+ *                              Changed BUFFER_SIZE back to 4096.     *
+ * 7/27/92  Michael Li          (re-)Ported to MS-DOS                 *
+ * 7/27/92  Masahiro Iwadare    Ported to Convex                      *
+ * 8/07/92  mc@tv.tek.com                                             *
+ * 8/10/92  Amit Gulati         Ported to the AIX Platform (RS6000)   *
+ *                              AIFF string constants redefined       *
+ * 8/27/93 Seymour Shlien,      Fixes in Unix and MSDOS ports,        *
+ *         Daniel Lauzon, and                                         *
+ *         Bill Truerniet                                             *
+ *--------------------------------------------------------------------*
+ * 4/23/92  J. Pineda           Added code for Layer III.             *
+ * 11/9/92  Amit Gulati         Added defines for layerIII stereo     *
+ *                              modes.                                *
+ *  8/24/93 Masahiro Iwadare    Included IS modification in Layer III.*
+ *                              Changed for 1 pass decoding.          *
+ *  9/07/93 Toshiyuki Ishino    Integrated Layer III with Ver 3.9.    *
+ *--------------------------------------------------------------------*
+ * 11/20/93 Masahiro Iwadare    Integrated Layer III with Ver 4.0.    *
+ *--------------------------------------------------------------------*
+ *  7/14/94 Juergen Koller      Fix for HPUX an IRIX in AIFF-Strings  *
+ *  6/12/95 Soeren H. Nielsen   Bug fix in new_ext().                 *
+ *  7/11/95 Soeren H. Nielsen   Added defs. for MPEG-2 LSF            *
+ *--------------------------------------------------------------------*
+ * 8/02/95  mc@fivebats.com     Changes to AIFF stuff for portability *
+ *                              to little-endian machines             *
+ **********************************************************************/

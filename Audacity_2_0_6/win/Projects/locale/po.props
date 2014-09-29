@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(msgfmtBeforeTargets)' == '' and '$(msgfmtAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <msgfmtBeforeTargets>Midl</msgfmtBeforeTargets>
+    <msgfmtAfterTargets>CustomBuild</msgfmtAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <msgfmtDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(msgfmtDependsOn)</msgfmtDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <msgfmt>
+      <Verbose>False</Verbose>
+      <OutputName>$(OutDir)Languages\%(Filename)\Audacity.mo</OutputName>
+      <CommandLineTemplate>msgfmt [AllOptions] [AdditionalOptions] [inputs]</CommandLineTemplate>
+      <Outputs>%(OutputName)</Outputs>
+      <ExecutionDescription>Compiling %(Filename) locale</ExecutionDescription>
+    </msgfmt>
+  </ItemDefinitionGroup>
+</Project>

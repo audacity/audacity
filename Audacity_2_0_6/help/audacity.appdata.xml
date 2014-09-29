@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+  <id type="desktop">audacity.desktop</id>
+  <licence>CC-BY</licence>
+  <description>
+    <p>
+	Audacity® is a free, easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. The interface is translated into many languages.
+    </p>
+    <p>
+	You can use Audacity to:
+    </p>
+	<ul>
+	<li>Record live audio</li>
+	<li>Convert tapes and records into digital recordings or CDs</li>
+	<li>Edit WAV, AIFF, FLAC, MP2, MP3 or Ogg Vorbis sound files</li>
+	<li>Cut, copy, splice or mix sounds together</li>
+	<li>Change the speed or pitch of a recording</li>
+	<li>Apply a wide range of other effects to audio recordings</li>
+	</ul>
+  </description>
+  <url type="homepage">http://audacity.sourceforge.net/</url>
+  <screenshots>
+    <screenshot type="default">http://audacity.sourceforge.net/about/images/audacity-linux.png</screenshot>
+    <screenshot>http://audacity.sourceforge.net/about/images/recording.png</screenshot>
+  </screenshots>
+  <updatecontact>audacity-devel@lists.sourceforge.net</updatecontact>
+</application>

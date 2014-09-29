@@ -1,0 +1,11 @@
+prefix=@PREFIX@
+exec_prefix=@EXEC_PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: Sratom
+Version: @SRATOM_VERSION@
+Description: LV2 Atom RDF serialisation library
+Requires: lv2 @PKG_serd_0@ @PKG_sord_0@
+Libs: -L${libdir} -l@LIB_SRATOM@
+Cflags: -I${includedir}/sratom-@SRATOM_MAJOR_VERSION@

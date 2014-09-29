@@ -1,0 +1,5 @@
+# Test , operator
+@prefix : <http://example.org/base#> .
+:a :b :c,
+      :d,
+      :e .

@@ -1,0 +1,6 @@
+<http://www.w3.org/2001/sw/DataAccess/df1/tests/a/b/c> a <http://example.org/Thing> .
+<http://www.w3.org/2001/sw/DataAccess/df1> a <http://example.org/Thing> .
+<http://www.w3.org/2001/sw/DataAccess/df1/tests/test-rel.ttl> a <http://example.org/Thing> .
+<http://www.w3.org/2001/sw/DataAccess/df1/tests/test-not.ttl> a <http://example.org/Thing> .
+<a/b/c> a <http://example.org/Thing> .
+<http://www.w3.org/> a <http://example.org/Thing> .

@@ -1,0 +1,172 @@
+What is new in TwoLAME 
+======================
+
+Version 0.3.13 (2010-01-21)
+---------------------------
+
+- Fixed documentation location (--docdir in configure)
+   * thanks to Chris Mayo for patch
+- Moved source code control to Github
+- Improvements to build system
+- Updated to autoconf 2.60, libtool 2.2, automake 1.10 and Doxygen 1.7.3
+- Fix problem with 'extern inline' by changing them to 'static inline'
+- Wrote perl script to test output of the frontend
+- Changed all debugging messages, writing to stdout to write to stderr
+- Removed calls to exit() from libtwolame.
+- Added --non-copyright option (which is enabled by default)
+- Fix for bad copy/paste of variable assignment.
+- Manpage correction
+- Changed fopen() options to wb to fix Windows
+
+
+Version 0.3.12 (2008-01-09)
+---------------------------
+
+- Fixed 'inline' for the forthcoming gcc-4.3
+   * thanks to Martin Michlmayr for patch
+
+
+Version 0.3.11 (2007-07-02)
+---------------------------
+
+- Fixed energy levels bug for mono audio
+   * thanks to Staale Helleberg for patch
+- Fixed STDIN support in twolame frontend
+
+
+Version 0.3.10 (2007-03-20)
+---------------------------
+
+- Added win32/winutil.h to tarball - fixes bug #1629945
+- Fixed presentation of --enable-debug in configure script
+- Added twolame_encode_buffer_float32_interleaved()
+- Fixed bug that was loosing stereo in twolame_encode_buffer_float32()
+- Fixed twolame_set_mode() to accept TWOLAME_AUTO_MODE
+- Added source file Ids to the top of every file
+- Added -pedantic to CFLAGS for debug build
+
+
+
+Version 0.3.9 (2006-12-31)
+--------------------------
+
+- Fix for Windows in simple frontend: open files in binary mode
+   * thanks to Kurien Mathew
+- (libtwolame) Fixed energy level support
+   * thanks to Staale Helleberg
+- Nows displays the version number of libsndfile in frontend
+   * as suggested by Elio Blanca
+- Changed documentation build system, so you have to run it manually
+- Buffer overrun fix in new_extension()
+- (libtwolame) Added warning that DAB support is still broken
+- (libtwolame) Added twolame_get_framelength() to return number of bytes per frame
+- Added TWOLAME_SAMPLES_PER_FRAME macro, clarifying that there are 
+  always 1152 samples per frame in Layer 2
+- Frontend now displays extra information
+   * Duration of input file (if known)
+   * Total number of frames to be encoded and percentage complete
+   * The filesize of the output file
+ - Cleaned up source files so that it is consistent and all uses tabs (tab width 4)  
+
+
+
+Version 0.3.8 (2006-06-19)
+--------------------------
+
+- (libtwolame) Fixed CRC protection
+- More code tidying
+- pkg-config is no-longer required (but is recommended)
+- frontend now has the exectuable suffix appended to filename
+- added -std=c99 to the compiler options
+
+
+Version 0.3.7 (2006-05-07)
+--------------------------
+
+- (libtwolame) Added twolame_encode_buffer_float32() function
+- (libtwolame) Fix NAN bug for AMD64 processors
+- Checks type sizes of short and float
+
+
+Version 0.3.6 (2006-12-25)
+--------------------------
+
+- Removed comma which was causing problems with -pedantic
+   * Thanks to Akos Maroy
+- (libtwolame) Added libtool library versioning
+
+
+Version 0.3.5 (2005-11-29)
+--------------------------
+
+- (libtwolame) Added back twolame_get_VBR_q/twolame_set_VBR_q
+- More documentation is installed
+
+
+Version 0.3.4 (2005-11-19)
+--------------------------
+
+- (libtwolame) Checks parameters a bit better
+- (libtwolame) Removed lots of exit() calls
+- (libtwolame) added twolame_print_config() API call
+- (libtwolame) Fixed twolame.h so that it works with C++ code
+- Rewrote frontend and now (only) uses libsndfile
+- Changed behavior in frontend and backend for verbosity setting
+- Rewrote manpage for frontend
+- (libtwolame) Fixed bug with setting MPEG version
+- (libtwolame) Removed default samplerate - must choose one
+- (libtwolame) 'Original' flag is now turned on by default
+- (libtwolame) Default bitrate is automatically chosen based on the samplerate/channels
+- (libtwolame) Default mode is automatically chosen based on the number of channels
+- Documentation improvements and corrections
+- (libtwolame) made some of VBR debugging send to stderr instead of stdout
+
+
+Version 0.3.3 (2005-04-19)
+--------------------------
+
+- Added Debian package description
+- Now installs documentation
+- Removed old unused tables.c and tables.h sources
+
+
+Version 0.3.2 (2005-04-10)
+--------------------------
+
+- Added scaling of input samples
+- Added downmixing/upmixing of samples
+- Applied patch from Christophe Massiot to make TwoLAME thread-safe
+
+
+Version 0.3.1 (2004-09-17)
+--------------------------
+
+- Frontend displays information about the input file format
+- Fixed bug with audio_get_samples reading more than buffer size
+- Added asciidoc documentation
+- Added doxygen documentation
+
+
+Version 0.3.0 (2004-09-14)
+--------------------------
+
+- Based on tooLAME 0.2m beta 8
+- changed build system to use automake/libtool
+- now builds shared library
+- restructured lots of code
+   * Removed some dead code and unused files
+- should now be close to being thread safe
+- removed memory leaks / static variables
+- changed library API so that it is almost the same as LAMEs
+   * hopefully not too many people have been using the old API
+   * not too many big differences
+   * will hopefully add resampling support to next release
+   * API is ready for resampling support to be added
+   * ready for downmixing to be added to libtoolame
+- Added libsndfile support to toolame frontend (if you have it)
+- moved set/get functions into get_set.c
+- I have broken energy levels support (sorry !) - will try and fix
+- Added LGPL header to the top of all the files
+- Added toolame_encode_buffer_interleaved
+
+
