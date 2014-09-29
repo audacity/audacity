@@ -1,3 +1,0 @@
-@prefix eg: <http://example.org> .
-
-<> eg:comment "That ain't no language"@a

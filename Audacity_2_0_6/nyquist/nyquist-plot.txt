@@ -1,3 +1,0 @@
-set nokey
-plot "points.dat" with lines
-

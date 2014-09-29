@@ -1,3 +1,0 @@
-# is and of are not in turtle
-@prefix : <http://example.org/stuff/1.0/> .
-:a is :b of :c .

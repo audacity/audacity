@@ -1,3 +1,0 @@
-# 'a' only allowed as a predicate
-@prefix : <http://example.org/base#> .
-a :a :b .

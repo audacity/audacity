@@ -1,9 +1,0 @@
-dlname='%LINK_ABI%'
-library_names='%LIBNAME% %LINK_ABI% %LINK_DEV%'
-old_library='%STATIC%'
-dependency_libs=''
-current=3
-age=5
-revision=0
-installed=yes
-libdir='%LIBS%'

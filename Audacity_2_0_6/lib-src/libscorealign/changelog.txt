@@ -1,5 +1,0 @@
-Change Log for scorealign
-
-03-Jul-2008 RBD modified to use latest changes to portsmf
-                added this file and license.txt
-

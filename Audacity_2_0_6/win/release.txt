@@ -1,7 +1,0 @@
-How to Build Audacity(R) Releases for Microsoft Windows(R)
-Copyright 2007-2009, Vaughan Johnson, Martyn Shaw (MJS).
-
-========================================================================
-This file is no longer in use.  Its contents have been moved to:
-http://wiki.audacityteam.org/index.php?title=Release_Process_Win
-========================================================================
