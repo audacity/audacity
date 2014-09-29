@@ -57,7 +57,7 @@ Audacity 2.0.6 requires wxWidgets 2.8.12.
 
 Download and install wxWidgets, then follow these steps to build it. 
 
-1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
+2.1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
    Visual Studio 2008 (for VC9). 
    Make sure to use wx_dll.dsw, not wx.dsw, because wx.dsw
    does not have the correct dependencies for the DLL builds.
@@ -67,7 +67,7 @@ Download and install wxWidgets, then follow these steps to build it.
    "C\wxWidgets-2.8.12\build\msw\wx_dll.sln" instead of wx_dll.dsw.
 
 
-2. If you want to use the wxWidgets accessibility features, we have 
+2.2. If you want to use the wxWidgets accessibility features, we have 
    modified one of the wxWidgets files. Rather than provide a patch, 
    we store the modified file in the Audacity code repository, and you 
    can replace the corresponding wxWidgets file. You will need to 
@@ -82,7 +82,7 @@ Download and install wxWidgets, then follow these steps to build it.
    Audacity releases are built with these accessibility features.
 
 
-3. Build wxWidgets for all configurations of Audacity that you want.
+2.3. Build wxWidgets for all configurations of Audacity that you want.
     * Build "DLL Unicode Release" to use in a "Release" 
        version of Audacity.
     * Build "DLL Unicode Debug" to use in a "Debug"
@@ -128,9 +128,9 @@ MSVC++ STEP 4:  Set wxWidgets location for Audacity
 Before you can start the build process, you must update the
 project settings to tell Visual C++ where to find wxWidgets.
 There are three settings that need changing:
-    1.  Include Directory (e.g., "C:\wxWidgets-2.8.12\include")
-    2.  Resource Directory (e.g., "C:\wxWidgets-2.8.12\include")
-    3.  Library Directory (e.g., "C:\wxWidgets-2.8.12\lib")
+    4.1. Include Directory (e.g., "C:\wxWidgets-2.8.12\include")
+    4.2. Resource Directory (e.g., "C:\wxWidgets-2.8.12\include")
+    4.3. Library Directory (e.g., "C:\wxWidgets-2.8.12\lib")
 
 Fortunately, this is parameterized, using a Windows 
 environment variable, WXWIN. There are various ways to set 
@@ -158,7 +158,7 @@ the variables are read correctly.
 MSVC++ STEP 5:  Consider and Configure Optional Features
 -----------------------
 
-1. Locally installed help is optional, but required for a full Release 
+5.1. Locally installed help is optional, but required for a full Release 
 build. (The "help" folder is included in the installer, but removed from 
 the zip distribution.) The Python library is required, obtainable from
 http://www.python.org/download/ . Add the location of the top-level
@@ -174,7 +174,7 @@ audacity\scripts\mw2html_audacity\wiki2htm.bat
 and re-build the "help" project.
 
 
-2. To support languages other than English in your build of Audacity,
+5.2. To support languages other than English in your build of Audacity,
 you must enable and build the optional "locale" project. This is 
 required for a full release. You will need to obtain msgfmt.exe from
 http://audacity.sourceforge.net/files/msgfmt.zip. Add the location of 
@@ -183,7 +183,7 @@ Alternatively, put msgfmt.exe somewhere already in the Path,
 e.g., C:\Windows.
 
 
-3. Some functionality in Audacity is currently turned on in its default
+5.3. Some functionality in Audacity is currently turned on in its default
 configuration, but requires that extra libraries be downloaded
 separately to use it. 
 
@@ -199,20 +199,24 @@ To change the libraries enabled in Audacity, edit
 "win\configwin.h" and comment or uncomment the entries.
 
 
-4. DirectSound (Microsoft) and ASIO (Steinberg) are sound card interface 
-protocols that are more efficient than the standard WMME. Unlike WMME,
+5.4. DirectSound (Microsoft) and ASIO (Steinberg) are sound card interface 
+protocols that are more efficient than standard WMME. Unlike WMME,
 not all sound card drivers support them. 
 
-TO ADD SUPPORT FOR DIRECTSOUND: 
+5.4.1. TO ADD SUPPORT FOR DIRECTSOUND: 
 Install the DirectX SDK from Microsoft (http://msdn.microsoft.com/directx).  
+
+For Audacity 2.0.6, we use http://www.microsoft.com/en-us/download/details.aspx?id=6812. 
+
 The installation will automatically define the DXSDK_DIR
 environment variable and its presence will cause DirectSound
 support to be automatically included when Audacity is built.
 
-Audacity releases from 1.3.7 onwards include DirectSound support. 
+Audacity releases from 1.3.7 on include DirectSound support. 
 
-TO ADD SUPPORT FOR ASIO:
-Because ASIO is a PROPRIETARY, closed standard, 
+
+5.4.2 TO ADD SUPPORT FOR ASIO:
+Because ASIO is a proprietary, closed standard, 
 we (or any third party) cannot distribute its SDK. 
 That means we cannot distribute builds of Audacity that support 
 ASIO, because Audacity is licensed under the 
@@ -224,13 +228,13 @@ ASIO support, for personal use, you cannot distribute them without
 violating the Audacity license and the ASIO license. 
 If you build ASIO support into Audacity, do not distribute that build. 
 
-If you would like ASIO support, install the ASIO SDK from Steinberg 
-(http://www.steinberg.net ... select Company, then Developer), 
+For ASIO support, get the ASIO SDK from Steinberg 
+(http://www.steinberg.net/en/company/developers.html), 
 install at C:\ASIOSDK, then define an environment variable called
 ASIOSDK_DIR, as for WXWIN, above. The value should be 
 the full path to the base directory of the ASIO SDK, e.g., 
 
-         set ASIOSDK_DIR=C:\ASIOSDK2
+   set ASIOSDK_DIR=C:\ASIOSDK2
 
 
 
