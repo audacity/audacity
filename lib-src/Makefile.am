@@ -82,6 +82,10 @@ EXTRA_DIST += \
 	sbsms/dont-mangle-cflags.patch \
 	$(NULL)
 
+# Distribute library schedule
+EXTRA_DIST += audacity-patches.txt \
+	$(NULL)
+
 DIST_SUBDIRS = \
 	FileDialog \
 	libnyquist \
