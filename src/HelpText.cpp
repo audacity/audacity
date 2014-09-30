@@ -220,7 +220,9 @@ audio CDs</a>.") + wxT("</p>")
       return WrapText(_("You do not appear to have the 'help' folder installed.<br> \
 Please <a href=\"*URL*\">view the content online</a> or \
 <a href=\"http://manual.audacityteam.org/o/man/unzipping_the_manual.html\"> \
-download the full Manual</a>.")
+download the current Manual</a>.<br><br>\
+To always view the manual online, change \"Location of Manual\" in<br> \
+Interface Preferences to \"From Internet\".")
          );
    }
    return wxT("");
