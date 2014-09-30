@@ -103,7 +103,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Abe Milde"), roleContributor);
    AddCredit(wxT("<a href=\"http://www.paulnasca.com/\">Paul Nasca</a>"), roleContributor);
    AddCredit(wxT("Clayton Otey"), roleContributor);
-   AddCredit(wxT("Andr\u00e9 Pinto"), roleContributor);
+   AddCredit(wxT("Andr\x00e9 Pinto"), roleContributor);
    AddCredit(wxT("Mark Phillips"), roleContributor);
    AddCredit(wxT("Jean Claude Risset"), roleContributor);
    AddCredit(wxT("Edgar-RFT"), roleContributor);
