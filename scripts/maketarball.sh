@@ -105,12 +105,14 @@ function cleanfulltree {
 	myfindrm $1 "*~"
 	printf "Done\n"
 
+	printf "removing Python droppings... ";
+	myfindrm $1 "*.pyc"
+	printf "Done\n"
 
 	printf "removing executable and other intermediate files... ";
 	myrmvf $1 src/audacity src/.depend src/.gchdepend
 	myfindrm $1 config.status
 	myfindrm $1 config.log
-	myfindrm $1 Makefile
 	myfindrm $1 config.cache
 	find . -depth -name 'autom4te.cache' -execdir rm -rf '{}' ';'
 	myfindrm $1 aclocal.m4
@@ -127,7 +129,10 @@ function cleanfulltree {
 	printf "removing unused libraries from SVN tree ..."
 	myrmrvf $1 lib-src/id3lib ;
 	myrmrvf $1 lib-src/portburn; 
+	myrmrvf $1 lib-src/portmidi; 
 	myrmrvf $1 lib-src/taglib;
+	myrmrvf $1 lib-src/libresample;
+	myrmrvf $1 lib-src/libscorealign;
 	printf "Done\n"
 }
 
@@ -145,9 +150,9 @@ function slimtree {
 
 	printf "removing libraries that should be installed locally..."
 	myrmrvf $1 lib-src/expat lib-src/libflac lib-src/libid3tag; 
-	myrmrvf $1 lib-src/liblrdf lib-src/libmad lib-src/libogg lib-src/libraptor;
+	myrmrvf $1 lib-src/libmad lib-src/libogg;
 	myrmrvf $1 lib-src/libsamplerate lib-src/libsndfile;
-	myrmrvf $1 lib-src/libvorbis lib-src/redland lib-src/slv2 lib-src/soundtouch;
+	myrmrvf $1 lib-src/libvorbis lib-src/soundtouch;
 	myrmrvf $1 lib-src/twolame;
 	# these bindings aren't built by default, we don't need them
 	myrmrvf $1 lib-src/portaudio-v19/bindings/;
