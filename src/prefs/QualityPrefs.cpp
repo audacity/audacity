@@ -168,7 +168,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      Resample::GetFastMethodKey(),
                      Resample::GetFastMethodDefault(),
                      mConverterNames,
-                     mConverterLabels),
+                     mConverterLabels);
          S.SetSizeHints(mConverterNames);
 
          S.TieChoice(_("&Dither:"),
@@ -190,7 +190,7 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
                      Resample::GetBestMethodKey(),
                      Resample::GetBestMethodDefault(),
                      mConverterNames,
-                     mConverterLabels),
+                     mConverterLabels);
          S.SetSizeHints(mConverterNames);
 
          S.TieChoice(_("Dit&her:"),
