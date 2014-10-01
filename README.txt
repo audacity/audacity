@@ -109,11 +109,11 @@ Changes and Improvements:
  * New Tamil translation (largely complete). 
  * (Windows) FLAC exports can now exceed 2 GB in size. 
  * (OS X) Easier Audacity installation using the DMG: drag the Audacity folder
-    to the /Applications shortcut, 
+    to the /Applications shortcut. 
  * (OS X) Audacity 2.0.6 will not officially support OS X 10.10 Yosemite when 
     released (in particular, Apple Audio Units may not open in Audacity).
  * (Linux) Self-compiled builds of Audacity now search for system LADSPA 
-    effects in /usr/lib/ladspa,  .  
+    effects in /usr/lib/ladspa.  
 
 -------------------------------------------------------------------------------
 
