@@ -98,13 +98,20 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
       S.AddFixedText(_("These are experimental Modules. Enable them only if you've read the manual\nand know what you are doing.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'Ask' means Audacity will ask if you want to load the plug-each time it starts.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'Failed' means Audacity thinks the plug-in is broken and won't run it.") );
-      S.AddFixedText(wxString(wxT("  ")) + _("'New' is like 'Ask', but asks just once.") );
-      S.StartMultiColumn( 2 );
-      int i;
-      for(i=0;i<(int)mModules.GetCount();i++)
-         S.TieChoice( mModules[i], mStatuses[i], &StatusChoices );
-      S.EndMultiColumn();
-
+      S.AddFixedText(wxString(wxT("  ")) + _("'New' means no choice has been made yet.") );
+      S.StartScroller();
+      {
+        S.StartMultiColumn( 2 );
+        int i;
+        for(i=0;i<(int)mModules.GetCount();i++)
+           S.TieChoice( mModules[i], mStatuses[i], &StatusChoices );
+        S.EndMultiColumn();
+      }
+      if( mModules.GetCount() < 1 )
+      {
+        S.AddFixedText( _("No Modules were found") );
+      }
+      S.EndScroller();
    }
    S.EndStatic();
 }

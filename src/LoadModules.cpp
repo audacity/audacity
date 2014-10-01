@@ -225,10 +225,15 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
          continue;
       if( iModuleStatus == kModuleFailed )
          continue;
+      // New module?  You have to go and explicitly enable it.
+      if( iModuleStatus == kModuleNew ){
+         // To ensure it is noted in config file and so
+         // appears on modules page.
+         ModulePrefs::SetModuleStatus( files[i], kModuleNew);
+         continue;
+      }
 
-      if( (iModuleStatus == kModuleAsk ) || 
-          (iModuleStatus == kModuleNew ) 
-        )
+      if( iModuleStatus == kModuleAsk )
 #endif
       // JKC: I don't like prompting for the plug-ins individually
       // I think it would be better to show the module prefs page,

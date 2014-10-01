@@ -169,6 +169,7 @@
 // First committed by Martyn, 30th May 2013.
 //#define EXPERIMENTAL_OUTPUT_DISPLAY
 
-// Module prefs may be used to treat 'official' modules differently to 3rd party ones
-//#define EXPERIMENTAL_MODULE_PREFS
+// Module prefs provides a panel in prefs where users can choose which modules
+// to enable.
+#define EXPERIMENTAL_MODULE_PREFS
 #endif
