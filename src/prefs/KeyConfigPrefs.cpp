@@ -329,7 +329,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
                        path,
                        file,
                        wxT(""),
-                       _("XML files (*.xml)|*.xml|All files (*.*)|*.*"),
+                       _("XML files (*.xml)|*.xml|All files|*"),
                        wxRESIZE_BORDER,
                        this);
 
@@ -361,7 +361,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
                        path,
                        file,
                        wxT("xml"),
-                       _("XML files (*.xml)|*.xml|All files (*.*)|*.*"),
+                       _("XML files (*.xml)|*.xml|All files|*"),
                        wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
                        this);
 
@@ -914,7 +914,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
                        path,
                        file,
                        wxT(""),
-                       _("XML files (*.xml)|*.xml|All files (*.*)|*.*"),
+                       _("XML files (*.xml)|*.xml|All files|*"),
                        wxRESIZE_BORDER,
                        this);
 
@@ -946,7 +946,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
                        path,
                        file,
                        wxT("xml"),
-                       _("XML files (*.xml)|*.xml|All files (*.*)|*.*"),
+                       _("XML files (*.xml)|*.xml|All files|*"),
                        wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
                        this);
 

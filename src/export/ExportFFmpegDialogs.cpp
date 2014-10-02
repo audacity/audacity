@@ -1711,7 +1711,7 @@ void ExportFFmpegOptions::OnImportPresets(wxCommandEvent& WXUNUSED(event))
                   _("Select xml file with presets to import"),
                   gPrefs->Read(wxT("/FileFormats/FFmpegPresetDir")),
                   wxEmptyString,
-                  wxString(_("XML files (*.xml)|*.xml|All files (*.*)|*.*")),
+                  wxString(_("XML files (*.xml)|*.xml|All files|*")),
                   wxFD_OPEN);
    if (dlg.ShowModal() == wxID_CANCEL) return;
    path = dlg.GetPath();
@@ -1731,7 +1731,7 @@ void ExportFFmpegOptions::OnExportPresets(wxCommandEvent& WXUNUSED(event))
                   _("Select xml file to export presets into"),
                   gPrefs->Read(wxT("/FileFormats/FFmpegPresetDir")),
                   wxEmptyString,
-                  wxString(_("XML files (*.xml)|*.xml|All files (*.*)|*.*")),
+                  wxString(_("XML files (*.xml)|*.xml|All files|*")),
                   wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
    if (dlg.ShowModal() == wxID_CANCEL) return;
    path = dlg.GetPath();

@@ -516,7 +516,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
                     path,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
-                    _("Text files (*.txt)|*.txt|All files (*.*)|*.*"),
+                    _("Text files (*.txt)|*.txt|All files|*"),
                     wxRESIZE_BORDER, // Flags
                     this);    // Parent
 

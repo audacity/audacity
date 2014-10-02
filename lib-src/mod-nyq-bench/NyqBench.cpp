@@ -1029,7 +1029,7 @@ void NyqBench::OnOpen(wxCommandEvent & e)
                      _("Load Nyquist script"),
                      mPath.GetPath(),
                      wxEmptyString,
-                     _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*.*"),
+                     _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"),
                      wxFD_OPEN | wxRESIZE_BORDER);
  
    if (dlog.ShowModal() != wxID_OK) {
@@ -1075,7 +1075,7 @@ void NyqBench::OnSaveAs(wxCommandEvent & e)
                      _("Save Nyquist script"),
                      mPath.GetFullPath(),
                      wxEmptyString,
-                     _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*.*"),
+                     _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"),
                      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
  
    if (dlog.ShowModal() != wxID_OK) {

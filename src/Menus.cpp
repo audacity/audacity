@@ -4659,7 +4659,7 @@ void AudacityProject::OnImportLabels()
                     path,     // Path
                     wxT(""),       // Name
                     wxT(".txt"),   // Extension
-                    _("Text files (*.txt)|*.txt|All files (*.*)|*.*"),
+                    _("Text files (*.txt)|*.txt|All files|*"),
                     wxRESIZE_BORDER,        // Flags
                     this);    // Parent
 
@@ -4704,7 +4704,7 @@ void AudacityProject::OnImportMIDI()
                                     path,     // Path
                                     wxT(""),       // Name
                                     wxT(""),       // Extension
-                                    _("MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"),
+                                    _("MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"),
                                     wxRESIZE_BORDER,        // Flags
                                     this);    // Parent
 
@@ -4740,7 +4740,7 @@ void AudacityProject::OnImportRaw()
                     path,     // Path
                     wxT(""),       // Name
                     wxT(""),       // Extension
-                    _("All files (*)|*"),
+                    _("All files|*"),
                     wxRESIZE_BORDER,        // Flags
                     this);    // Parent
 

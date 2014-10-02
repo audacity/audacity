@@ -1412,7 +1412,7 @@ wxString MP3Exporter::GetLibraryName()
 
 wxString MP3Exporter::GetLibraryTypeString()
 {
-   return _("Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files (*.*)|*");
+   return _("Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files|*");
 }
 
 #elif defined(__WXMAC__)
