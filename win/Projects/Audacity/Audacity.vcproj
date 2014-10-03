@@ -833,10 +833,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TrackPanelAx.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TrackPanelListener.h"
 				>
 			</File>
@@ -2230,10 +2226,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\toolbars\SelectionBar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\toolbars\SelectionBarListener.h"
 				>
 			</File>
 			<File
