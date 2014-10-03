@@ -10,6 +10,8 @@
 ; Uninstall prior installations.
 Filename: "{app}\unins*.*"; 
 
+[Messages]
+BeveledLabel=Share your Audacity thoughts on Twitter, #Audacity
 
 [Setup]
 ; compiler-related directives
