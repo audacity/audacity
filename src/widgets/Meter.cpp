@@ -42,6 +42,7 @@
 #include "../AudacityApp.h"
 
 #include <wx/defs.h>
+#include <wx/dialog.h>
 #include <wx/dcmemory.h>
 #include <wx/image.h>
 #include <wx/intl.h>
@@ -49,6 +50,7 @@
 #include <wx/settings.h>
 #include <wx/textdlg.h>
 #include <wx/numdlg.h>
+#include <wx/radiobut.h>
 #include <wx/tooltip.h>
 #include <wx/msgdlg.h>
 
@@ -72,7 +74,10 @@
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../Experimental.h"
+#include "../widgets/valnum.h"
 
+// Event used to notify all meters of preference changes
+DEFINE_EVENT_TYPE(EVT_METER_PREFERENCES_CHANGED);
 
 /* Updates to the meter are passed accross via meter updates, each contained in
  * a MeterUpdateMsg object */
@@ -95,12 +100,12 @@ return output;
 
 wxString MeterUpdateMsg::toStringIfClipped()
 {
-for (int i = 0; i<kMaxMeterBars; i++)
+   for (int i = 0; i<kMaxMeterBars; i++)
    {
-   if (clipping[i] || (headPeakCount[i] > 0) || (tailPeakCount[i] > 0))
-      return toString();
+      if (clipping[i] || (headPeakCount[i] > 0) || (tailPeakCount[i] > 0))
+         return toString();
    }
-return wxT("");
+   return wxT("");
 }
 
 //
@@ -236,9 +241,9 @@ Meter::Meter(wxWindow* parent, wxWindowID id,
 {
    int i;
 
-    wxColour backgroundColour =
+   wxColour backgroundColour =
       wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
-    mBkgndBrush = wxBrush(backgroundColour, wxSOLID);
+   mBkgndBrush = wxBrush(backgroundColour, wxSOLID);
 
    UpdatePrefs();
 
@@ -327,7 +332,8 @@ Meter::~Meter()
    //       is active.
    if (gAudioIO->IsMonitoring())
       gAudioIO->StopStream();
-   delete mIcon;
+   if (mIcon)
+      delete mIcon;
    if (mBitmap)
       delete mBitmap;
 }
@@ -339,11 +345,30 @@ void Meter::UpdatePrefs()
 
    // MixerTrackCluster style has no menu, so disallows disabling the meter.
    if (mStyle == MixerTrackCluster)
+   {
       mMeterDisabled = 0L;
-   else if (mIsInput)
-      mMeterDisabled = gPrefs->Read(wxT("/Meter/MeterInputDisabled"), (long)0);
+   }
    else
-      mMeterDisabled = gPrefs->Read(wxT("/Meter/MeterOutputDisabled"), (long)0);
+   {
+      mStyle = gPrefs->Read(wxT("/Meter/MeterStyle"), wxT("HorizontalStereo")) == wxT("HorizontalStereo") ?
+               HorizontalStereo :
+               VerticalStereo;
+      mDB = gPrefs->Read(wxT("/Meter/MeterType"), wxT("dB")) == wxT("dB");
+
+      if (mIsInput)
+      {
+         mMeterDisabled = gPrefs->Read(wxT("/Meter/MeterInputDisabled"), (long)0);
+      }
+      else
+      {
+         mMeterDisabled = gPrefs->Read(wxT("/Meter/MeterOutputDisabled"), (long)0);
+      }
+   }
+
+   mTimer.Start(1000 / mMeterRefreshRate);
+
+   mLayoutValid = false;
+   Refresh(true);
 }
 
 void Meter::OnErase(wxEraseEvent & WXUNUSED(event))
@@ -353,28 +378,16 @@ void Meter::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
+   mLayoutValid = false;
+
    wxPaintDC dc(this);
-  #ifdef __WXMAC__
-   // Mac OS X automatically double-buffers the screen for you,
-   // so our bitmap is unneccessary
    HandlePaint(dc);
-  #else
-   if (!mBitmap)
-      mBitmap = new wxBitmap(mWidth, mHeight);
-   wxMemoryDC memDC;
-   memDC.SelectObject(*mBitmap);
-   HandlePaint(memDC);
-   dc.Blit(0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE);
-  #endif
 }
 
 void Meter::OnSize(wxSizeEvent & WXUNUSED(event))
 {
-   delete mBitmap;
-   mBitmap = NULL;
    GetClientSize(&mWidth, &mHeight);
 
-//::wxMessageBox(wxString::Format(" mHeight=%d, mWidth=%d", mHeight,mWidth));
    mLayoutValid = false;
 }
 
@@ -427,24 +440,24 @@ void Meter::OnMouse(wxMouseEvent &evt)
       }
       menu->AppendSeparator();
 
-      menu->Append(OnHorizontalID, _("Horizontal Stereo"));
-      menu->Append(OnVerticalID, _("Vertical Stereo"));
+      //menu->Append(OnHorizontalID, _("Horizontal Stereo"));
+      //menu->Append(OnVerticalID, _("Vertical Stereo"));
       //menu->Append(OnMultiID, _("Vertical Multichannel"));
       //menu->Append(OnEqualizerID, _("Equalizer"));
       //menu->Append(OnWaveformID, _("Waveform"));
       //menu->Enable(OnHorizontalID + mStyle, false);
-      menu->Enable(mStyle==VerticalStereo? OnVerticalID: OnHorizontalID, false);
-      menu->AppendSeparator();
+      //menu->Enable(mStyle==VerticalStereo? OnVerticalID: OnHorizontalID, false);
+      //menu->AppendSeparator();
 
-      menu->Append(OnLinearID, _("Linear"));
-      menu->Append(OnDBID, _("dB"));
-      menu->Enable(mDB? OnDBID: OnLinearID, false);
+      //menu->Append(OnLinearID, _("Linear"));
+      //menu->Append(OnDBID, _("dB"));
+      //menu->Enable(mDB? OnDBID: OnLinearID, false);
       //menu->AppendSeparator();
       //menu->Append(OnClipID, _("Turn on clipping"));
       //menu->AppendSeparator();
       //menu->Append(OnFloatID, _("Float Window"));
+      //menu->AppendSeparator();
 
-      menu->AppendSeparator();
       menu->Append(OnPreferencesID, _("Preferences..."));
 
 
@@ -457,6 +470,9 @@ void Meter::OnMouse(wxMouseEvent &evt)
    else if (evt.ButtonDown()) {
       if (mIsInput)
          StartMonitoring();
+      else {
+         Reset(mRate, true);
+      }
    }
 }
 
@@ -484,13 +500,12 @@ void Meter::Reset(double sampleRate, bool resetClipping)
    mTimer.Stop();
 
    // While it's stopped, empty the queue
-   MeterUpdateMsg msg;
-   while(mQueue.Get(msg)) {
-   }
+   mQueue.Clear();
+
+   mLayoutValid = false;
 
    mTimer.Start(1000 / mMeterRefreshRate);
 
-   mLayoutValid = false;
    Refresh(false);
 }
 
@@ -569,13 +584,6 @@ void Meter::UpdateDisplay(int numChannels, int numFrames, float *sampleData)
    for(j=0; j<mNumBars; j++)
       msg.rms[j] = sqrt(msg.rms[j]/numFrames);
 
-   if (mDB) {
-      for(j=0; j<mNumBars; j++) {
-         msg.peak[j] = ToDB(msg.peak[j], mDBRange);
-         msg.rms[j] = ToDB(msg.rms[j], mDBRange);
-      }
-   }
-
    mQueue.Put(msg);
 }
 
@@ -621,13 +629,6 @@ void Meter::UpdateDisplay(int numChannels, int numFrames, float *sampleData)
 //      }
 //   }
 //
-//   if (mDB) {
-//      for(j=0; j<mNumBars; j++) {
-//         msg.peak[j] = ToDB(msg.peak[j], mDBRange);
-//         msg.rms[j] = ToDB(msg.rms[j], mDBRange);
-//      }
-//   }
-//
 //   mQueue.Put(msg);
 //}
 
@@ -658,6 +659,12 @@ void Meter::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
       mT += deltaT;
       for(j=0; j<mNumBars; j++) {
          mBar[j].isclipping = false;
+
+         //
+         if (mDB) {
+            msg.peak[j] = ToDB(msg.peak[j], mDBRange);
+            msg.rms[j] = ToDB(msg.rms[j], mDBRange);
+         }
 
          if (mDecay) {
             if (mDB) {
@@ -772,8 +779,32 @@ bool Meter::IsClipping()
    return false;
 }
 
-void Meter::HandleLayout()
+void Meter::HandleLayout(wxDC &dc)
 {
+   // Refresh to reflect any language changes
+   /* i18n-hint: One-letter abbreviation for Left, in VU Meter */
+   mLeftText = _("L");  // used in a couple of places in this method.
+   /* i18n-hint: One-letter abbreviation for Right, in VU Meter */
+   mRightText = _("R");
+
+   dc.SetFont(GetFont());
+   if (mLeftSize.x == 0) { // Not yet initialized to dc.
+      if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no L/R labels.
+      {
+         dc.GetTextExtent(mLeftText, &mLeftSize.x, &mLeftSize.y);
+         dc.GetTextExtent(mRightText, &mRightSize.x, &mRightSize.y);
+      }
+      if ((mStyle == VerticalStereo) || (mStyle == MixerTrackCluster)) // VerticalMulti?
+      {
+         // For any vertical style, also need mRightSize big enough for Ruler width.
+         int rulerWidth;
+         int rulerHeight;
+         dc.GetTextExtent(wxT("-888"), &rulerWidth, &rulerHeight); // -888 is nice and wide.
+         if (mRightSize.x < rulerWidth)
+            mRightSize.x = rulerWidth;
+      }
+   }
+
    int iconWidth = 0;
    int iconHeight = 0;
    int menuWidth = 0;
@@ -943,202 +974,255 @@ void Meter::HandleLayout()
    mLayoutValid = true;
 }
 
-void Meter::HandlePaint(wxDC &dc)
+void Meter::HandlePaint(wxDC &destDC)
 {
-   int i;
-   /* i18n-hint: One-letter abbreviation for Left, in VU Meter */
-   wxString mLeftText = _("L");  // used in a couple of places in this method.
-   // not a class member so it changes when the UI language is changed.
-   /* i18n-hint: One-letter abbreviation for Right, in VU Meter */
-   wxString mRightText = _("R");
-
-   dc.SetFont(GetFont());
-   if (mLeftSize.x == 0) { // Not yet initialized to dc.
-      if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no L/R labels.
-      {
-         dc.GetTextExtent(mLeftText, &mLeftSize.x, &mLeftSize.y);
-         dc.GetTextExtent(mRightText, &mRightSize.x, &mRightSize.y);
-      }
-      if ((mStyle == VerticalStereo) || (mStyle == MixerTrackCluster)) // VerticalMulti?
-      {
-         // For any vertical style, also need mRightSize big enough for Ruler width.
-         int rulerWidth;
-         int rulerHeight;
-         dc.GetTextExtent(wxT("-888"), &rulerWidth, &rulerHeight); // -888 is nice and wide.
-         if (mRightSize.x < rulerWidth)
-            mRightSize.x = rulerWidth;
-      }
-   }
-
    if (!mLayoutValid)
-      HandleLayout();
+   {
+      // Get rid of previous predrawn bitmap
+      if (mBitmap)
+      {
+         delete mBitmap;
+      }
 
+      // Create a new one using current size and select into the DC
+      mBitmap = new wxBitmap(mWidth, mHeight);
+      wxMemoryDC dc;
+      dc.SelectObject(*mBitmap);
+
+      // Go calculate all of the layout metrics
+      HandleLayout(dc);
+
+      // Start with a clean background
+      // LLL:  Should research USE_AQUA_THEME usefulness...
 #ifndef USE_AQUA_THEME
 #ifdef EXPERIMENTAL_THEMING
-   if( !mMeterDisabled )
-   {
-      mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
-   }
+      if( !mMeterDisabled )
+      {
+         mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
+      }
 #endif
 
-   dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(mBkgndBrush);
-   dc.DrawRectangle(0, 0, mWidth, mHeight);
+      dc.SetPen(*wxTRANSPARENT_PEN);
+      dc.SetBrush(mBkgndBrush);
+      dc.DrawRectangle(0, 0, mWidth, mHeight);
 #endif
 
-   // MixerTrackCluster style has no icon or menu.
-   if (mStyle != MixerTrackCluster)
-   {
-      dc.DrawBitmap(*mIcon, mIconPos.x, mIconPos.y, true);
+      // MixerTrackCluster style has no icon or menu.
+      if (mStyle != MixerTrackCluster)
+      {
+         dc.DrawBitmap(*mIcon, mIconPos.x, mIconPos.y, true);
 
-      // Draws a beveled button and a down pointing triangle.
-      // The style and sizing matches the ones in the title
-      // bar of the waveform left-hand-side panels.
+         // Draws a beveled button and a down pointing triangle.
+         // The style and sizing matches the ones in the title
+         // bar of the waveform left-hand-side panels.
+         wxRect r = mMenuRect;
+         AColor::Bevel(dc, true, r);
+         dc.SetBrush(*wxBLACK_BRUSH);
+         dc.SetPen(*wxBLACK_PEN);
+         AColor::Arrow(dc,
+                       r.x + 3,
+                       r.y + 5,
+                       10);
+      }
 
-      wxRect r = mMenuRect;
-      AColor::Bevel(dc, true, r);
-      dc.SetBrush(*wxBLACK_BRUSH);
-      dc.SetPen(*wxBLACK_PEN);
-      AColor::Arrow(dc,
-                    r.x + 3,
-                    r.y + 5,
-                    10);
+      // Draw the ruler
+      // LLL:  Why test the number of bars?  Not a very good meter without bars...
+      if (mNumBars > 0)
+      {
+         mRuler.Draw(dc);
+      }
+
+      // MixerTrackCluster style has no L/R labels.
+      if (mStyle != MixerTrackCluster)
+      {
+         dc.SetFont(GetFont());
+         dc.DrawText(mLeftText, mLeftTextPos.x, mLeftTextPos.y);
+         dc.DrawText(mRightText, mRightTextPos.x, mRightTextPos.y);
+      }
+
+      // Setup the colors for the 3 sections of the meter bars
+      wxColor green(117, 215, 112);
+      wxColor yellow(255, 255, 0);
+      wxColor red(255, 0, 0);
+
+      // Draw the meter bars at maximum levels
+      for (int i = 0; i < mNumBars; i++)
+      {
+         // Cache bar rect
+         wxRect r = mBar[i].r;
+
+         // Calculate the size of the two gradiant segments of the meter
+         double gradw;
+         double gradh;
+         if (mDB)
+         {
+            gradw = (double) r.GetWidth() / mDBRange * 6.0;
+            gradh = (double) r.GetHeight() / mDBRange * 6.0;
+         }
+         else
+         {
+            gradw = (double) r.GetWidth() / 100 * 25;
+            gradh = (double) r.GetHeight() / 100 * 25;
+         }
+
+         if (mBar[i].vert)
+         {
+            // Draw the "critical" segment (starts at top of meter and works down)
+            r.SetHeight(gradh);
+            dc.GradientFillLinear(r, red, yellow, wxSOUTH);
+
+            // Draw the "warning" segment
+            r.SetTop(r.GetBottom());
+            dc.GradientFillLinear(r, yellow, green, wxSOUTH);
+
+            // Draw the "safe" segment
+            r.SetTop(r.GetBottom());
+            r.SetBottom(mBar[i].r.GetBottom());
+            dc.SetPen(*wxTRANSPARENT_PEN);
+            dc.SetBrush(green);
+            dc.DrawRectangle(r);
+         }
+         else
+         {
+            // Draw the "safe" segment
+            r.SetWidth(r.GetWidth() - (int) (gradw + gradw + 0.5));
+            dc.SetPen(*wxTRANSPARENT_PEN);
+            dc.SetBrush(green);
+            dc.DrawRectangle(r);
+
+            // Draw the "warning"  segment
+            r.SetLeft(r.GetRight() + 1);
+            r.SetWidth(floor(gradw));
+            dc.GradientFillLinear(r, green, yellow);
+
+            // Draw the "critical" segment
+            r.SetLeft(r.GetRight() + 1);
+            r.SetRight(mBar[i].r.GetRight());
+            dc.GradientFillLinear(r, yellow, red);
+         }
+
+         // Give it a recessed look
+         AColor::Bevel(dc, false, mBar[i].r);
+      }
+
+      // Copy predrawn bitmap to the dest DC
+      destDC.Blit(0, 0, mWidth, mHeight, &dc, 0, 0);
+
+      // And unselect it from the source DC
+      dc.SelectObject(wxNullBitmap);
    }
 
-   if (mNumBars>0)
-      mRuler.Draw(dc);
-
-   // MixerTrackCluster style has no L/R labels.
-   if (mStyle != MixerTrackCluster)
+   // Go draw the meter bars using current levels
+   for (int i = 0; i < mNumBars; i++)
    {
-      dc.SetFont(GetFont());
-      dc.DrawText(mLeftText, mLeftTextPos.x, mLeftTextPos.y);
-      dc.DrawText(mRightText, mRightTextPos.x, mRightTextPos.y);
+      DrawMeterBar(destDC, &mBar[i]);
    }
-
-   for(i=0; i<mNumBars; i++)
-      DrawMeterBar(dc, &mBar[i]);
 }
 
 void Meter::RepaintBarsNow()
 {
-   if (!mLayoutValid)
-      return;
-
-   wxClientDC dc(this);
-   int i;
-
-  #ifdef __WXMAC__
-   // Mac OS X automatically double-buffers the screen for you,
-   // so our bitmap is unneccessary
-   for(i=0; i<mNumBars; i++)
-      DrawMeterBar(dc, &mBar[i]);
-  #else
-   if (!mBitmap)
-      mBitmap = new wxBitmap(mWidth, mHeight);
-   wxMemoryDC memDC;
-   memDC.SelectObject(*mBitmap);
-   for(i=0; i<mNumBars; i++)
-      DrawMeterBar(memDC, &mBar[i]);
-   dc.Blit(mAllBarsRect.x, mAllBarsRect.y,
-           mAllBarsRect.width, mAllBarsRect.height,
-           &memDC, mAllBarsRect.x, mAllBarsRect.y,
-           wxCOPY, false);
-  #endif
+   if (mLayoutValid)
+   {
+      wxClientDC dc(this);
+      for (int i = 0; i < mNumBars; i++)
+      {
+         DrawMeterBar(dc, &mBar[i]);
+      }
+   }
 }
 
 void Meter::DrawMeterBar(wxDC &dc, MeterBar *meterBar)
 {
+   // Cache some metrics
    wxRect r = meterBar->r;
-   wxRect rRMS = meterBar->r;
+   wxCoord x = r.GetLeft();
+   wxCoord y = r.GetTop();
+   wxCoord w = r.GetWidth();
+   wxCoord h = r.GetHeight();
+
+   // Map the predrawn bitmap into the source DC
+   wxMemoryDC srcDC;
+   srcDC.SelectObject(*mBitmap);
+
+   // Setup for erasing the background
    dc.SetPen(*wxTRANSPARENT_PEN);
    dc.SetBrush(mBkgndBrush);
-   dc.DrawRectangle(r);
-   AColor::Bevel(dc, false, r);
 
-   /*
-   AColor::Dark(&dc, false);
-   for(i=0; i<mNumTicks; i++)
-      if (meterBar->vert)
-         AColor::Line(dc, r.x+r.width/2-1, mTick[i], r.x+r.width/2+1, mTick[i]);
-      else
-         AColor::Line(dc, mTick[i], r.y+r.height/2-1, mTick[i], r.y+r.height/2+1);
-   */
+   if (meterBar->vert)
+   {
+      // Copy as much of the predrawn meter bar as is required for the
+      // current peak.
+      int ht = (int)(meterBar->peak * h + 0.5);
+      dc.Blit(x, y + h - ht, w, ht, &srcDC, x, y + h - ht);
 
-   dc.SetBrush(*wxTRANSPARENT_BRUSH);
-   dc.SetPen(mPen);
+      // Blank out the rest
+      dc.DrawRectangle(x + 1, y, w - 1, y + h - ht);
 
-   if (meterBar->vert) {
-      int ht = (int)(meterBar->peakHold * r.height + 0.5);
-      AColor::Line(dc, r.x+1, r.y + r.height - ht,
-                   r.x+r.width-1, r.y + r.height - ht);
-      if (ht > 1)
-         AColor::Line(dc, r.x+1, r.y + r.height - ht + 1,
-                      r.x+r.width-1, r.y + r.height - ht + 1);
+      // Draw the "recent" peak hold line using the predrawn meter bar so that
+      // it will be the same color as the original level.
+      ht = (int)(meterBar->peakHold * h + 0.5);
+      dc.Blit(x, y + h - ht, w, 2, &srcDC, x, y + h - ht);
+
+      // Draw the "maximum" peak hold line using a themed color.
       dc.SetPen(mPeakPeakPen);
       ht = (int)(meterBar->peakPeakHold * r.height + 0.5);
-      AColor::Line(dc, r.x+1, r.y + r.height - ht,
-                   r.x+r.width-1, r.y + r.height - ht);
+      AColor::Line(dc, x + 1, y + h - ht, x + w - 1, y + h - ht);
       if (ht > 1)
-         AColor::Line(dc, r.x+1, r.y + r.height - ht + 1,
-                      r.x+r.width-1, r.y + r.height - ht + 1);
-
-      dc.SetPen(mPen);
-      ht = (int)(meterBar->peak * r.height + 0.5);
-      r = wxRect(r.x, r.y + r.height - ht,
-                 r.width, ht);
-      ht = (int)(meterBar->rms * rRMS.height + 0.5);
-      rRMS = wxRect(rRMS.x, rRMS.y + rRMS.height - ht,
-                    rRMS.width, ht);
-
+      {
+         AColor::Line(dc, x + 1, y + h - ht + 1, x + w - 1, y + h - ht + 1);
+      }
    }
    else {
-      int wd = (int)(meterBar->peakHold * r.width + 0.5);
-      AColor::Line(dc, r.x + wd, r.y + 1, r.x + wd, r.y + r.height - 1);
-      if (wd > 1)
-         AColor::Line(dc, r.x + wd - 1, r.y + 1, r.x + wd - 1, r.y + r.height - 1);
+      // Copy as much of the predrawn meter bar as is required for the
+      // current peak.
+      int wd = (int)(meterBar->peak * w + 0.5);
+      dc.Blit(x, y, wd, h, &srcDC, x, y);
 
+      // Blank out the rest
+      dc.DrawRectangle(x + wd, y + 1, w - wd, h - 1);
+
+      // Draw the "recent" peak hold line using the predrawn meter bar so that
+      // it will be the same color as the original level.
+      wd = (int)(meterBar->peakHold * w + 0.5);
+      dc.Blit(wd, y + 1, 2, h, &srcDC, wd, y + 1);
+
+      // Draw the "maximum" peak hold line using a themed color.
       dc.SetPen(mPeakPeakPen);
-      wd = (int)(meterBar->peakPeakHold * r.width + 0.5);
-      AColor::Line(dc, r.x + wd, r.y + 1, r.x + wd, r.y + r.height - 1);
+      wd = (int)(meterBar->peakPeakHold * w + 0.5);
+      AColor::Line(dc, x + wd, y + 1, x + wd, y + h - 1);
       if (wd > 1)
-         AColor::Line(dc, r.x + wd - 1, r.y + 1, r.x + wd - 1, r.y + r.height - 1);
-
-      dc.SetPen(mPen);
-      wd = (int)(meterBar->peak * r.width + 0.5);
-      r = wxRect(r.x, r.y,
-                 wd, r.height);
-      wd = (int)(meterBar->rms * rRMS.width + 0.5);
-      rRMS = wxRect(rRMS.x, rRMS.y,
-                    wd, rRMS.height);
+      {
+         AColor::Line(dc, x + wd - 1, y + 1, x + wd - 1, y + h - 1);
+      }
    }
-   dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(mBrush);
-   dc.DrawRectangle(r);
-   dc.SetBrush(mRMSBrush);
-   dc.DrawRectangle(rRMS);
 
-   dc.SetBrush(*wxTRANSPARENT_BRUSH);
-   dc.SetPen(mLightPen);
-   AColor::Line(dc, r.x, r.y, r.x + r.width, r.y);
-   AColor::Line(dc, r.x, r.y, r.x, r.y + r.height);
-   dc.SetPen(mDarkPen);
-   AColor::Line(dc, r.x + r.width, r.y, r.x + r.width, r.y + r.height);
-   AColor::Line(dc, r.x, r.y + r.height, r.x + r.width, r.y + r.height);
-
-   if (mClip) {
+   // If meter had a clipping indicator, draw or erase it
+   // LLL:  At least I assume that's what "mClip" is supposed to be for as
+   //       it is always "true".
+   if (mClip)
+   {
       if (meterBar->clipping)
+      {
          dc.SetBrush(mClipBrush);
+      }
       else
+      {
          dc.SetBrush(mBkgndBrush);
+      }
       dc.SetPen(*wxTRANSPARENT_PEN);
       dc.DrawRectangle(meterBar->rClip);
       dc.SetBrush(*wxTRANSPARENT_BRUSH);
       AColor::Bevel(dc, false, meterBar->rClip);
    }
+
+   // No longer need the source DC, so unselect the predrawn bitmap
+   srcDC.SelectObject(wxNullBitmap);
 }
 
-bool Meter::IsMeterDisabled() {return mMeterDisabled!=0;}
+bool Meter::IsMeterDisabled()
+{
+   return mMeterDisabled != 0;
+}
 
 void Meter::StartMonitoring()
 {
@@ -1173,7 +1257,7 @@ void Meter::StartMonitoring()
 void Meter::OnDisableMeter(wxCommandEvent & WXUNUSED(event))
 {
    if (mMeterDisabled) //Enable
-      {
+   {
       mLightPen = mSavedLightPen;
       mDarkPen = mSavedDarkPen;
       mBkgndBrush = mSavedBkgndBrush;
@@ -1185,12 +1269,15 @@ void Meter::OnDisableMeter(wxCommandEvent & WXUNUSED(event))
       Refresh(false);
 
       mMeterDisabled = false;
-      }
+   }
    else
+   {
+      if (mIsInput)
       {
-      if (mIsInput) {
          if (gAudioIO->IsMonitoring())
+         {
             gAudioIO->StopStream();
+         }
       }
       mSavedLightPen = mLightPen;
       mSavedDarkPen = mDarkPen;
@@ -1207,15 +1294,15 @@ void Meter::OnDisableMeter(wxCommandEvent & WXUNUSED(event))
       Refresh(false);
 
       mMeterDisabled = true;
-      }
+   }
    if (mIsInput)
-      {
+   {
       gPrefs->Write(wxT("/Meter/MeterInputDisabled"), mMeterDisabled);
-      }
+   }
    else
-      {
+   {
       gPrefs->Write(wxT("/Meter/MeterOutputDisabled"), mMeterDisabled);
-      }
+   }
    gPrefs->Flush();
 }
 
@@ -1286,32 +1373,81 @@ void Meter::OnFloat(wxCommandEvent & WXUNUSED(event))
 
 void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
 {
-   wxNumberEntryDialog
-      d(this,
-        _("Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."),
-        _("Meter refresh rate per second [1-100]: "),
-        _("Meter Preferences"),
-        mMeterRefreshRate,
-       1,
-       100);
+   wxTextCtrl *rate;
+   wxRadioButton *db;
+   wxRadioButton *linear;
+   wxRadioButton *horizontal;
+   wxRadioButton *vertical;
 
-   //#if defined(__WXMAC__)
-      // WXMAC doesn't support wxFRAME_FLOAT_ON_PARENT, so we do
-      //
-      // LL:  I've commented this out because if you have, for instance, the meter
-      //      toolbar undocked and large and then you open a dialog like an effect,
-      //      the dialog may appear behind the dialog and you can't move either one.
-      //
-      //      However, I'm leaving it here because I don't remember why I'd included
-      //      it in the first place.
-      // SetWindowClass((WindowRef)d.MacGetWindowRef(), kFloatingWindowClass);
-   //#endif
+   wxDialog dlg(GetParent(), wxID_ANY, wxString(_("Meter Preferences")));
+   ShuttleGui S(&dlg, eIsCreating);
+   S.StartVerticalLay();
+   {
+      S.StartStatic(_("Refresh Rate"), 1);
+      {
+         S.AddFixedText(_("Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."));
+         S.StartHorizontalLay();
+         {
+            rate = S.AddTextBox(_("Meter refresh rate per second [1-100]: "),
+                                wxString::Format(wxT("%d"), mMeterRefreshRate),
+                                10);
+            rate->SetName(_("Meter refresh rate per second [1-100]"));
+            wxIntegerValidator<long> vld(&mMeterRefreshRate);
+            vld.SetRange(0, 100);
+            rate->SetValidator(vld);
+         }
+         S.EndHorizontalLay();
+      }
+      S.EndStatic();
 
-   if (d.ShowModal() == wxID_OK) {
-      mMeterRefreshRate = d.GetValue();
-      gPrefs->Write(wxT("/Meter/MeterRefreshRate"), mMeterRefreshRate);
-      gPrefs->Flush();
+      S.StartStatic(_("Meter Style"), 1);
+      {
+         S.StartVerticalLay();
+         {
+            db = S.AddRadioButton(_("dB"));
+            db->SetName(_("dB"));
+            db->SetValue(mDB);
+
+            linear = S.AddRadioButtonToGroup(_("Linear"));
+            linear->SetName(_("Linear"));
+            linear->SetValue(!mDB);
+         }
+         S.EndVerticalLay();
+      }
+      S.EndStatic();
+
+      S.StartStatic(_("Orientation"), 1);
+      {
+         S.StartVerticalLay();
+         {
+            horizontal = S.AddRadioButton(_("Horizontal"));
+            horizontal->SetName(_("Horizontal"));
+            horizontal->SetValue(mStyle == HorizontalStereo);
+
+            vertical = S.AddRadioButtonToGroup(_("Vertical"));
+            vertical->SetName(_("Vertical"));
+            vertical->SetValue(mStyle == VerticalStereo);
+         }
+         S.EndVerticalLay();
+      }
+      S.EndStatic();
+
+      S.AddStandardButtons();
    }
+   S.EndVerticalLay();
+   dlg.Layout();
+   dlg.Fit();
 
-   mTimer.Start(1000 / mMeterRefreshRate);
+   if (dlg.ShowModal() == wxID_OK)
+   {
+      gPrefs->Write(wxT("/Meter/MeterRefreshRate"), mMeterRefreshRate);
+      gPrefs->Write(wxT("/Meter/MeterStyle"), horizontal->GetValue() ? wxT("HorizontalStereo") : wxT("VerticalStereo"));
+      gPrefs->Write(wxT("/Meter/MeterType"), db->GetValue() ? wxT("dB") : wxT("Linear"));
+
+      gPrefs->Flush();
+
+      wxCommandEvent e(EVT_METER_PREFERENCES_CHANGED);
+      e.SetEventObject(this);
+      GetParent()->GetEventHandler()->ProcessEvent(e);
+   }
 }

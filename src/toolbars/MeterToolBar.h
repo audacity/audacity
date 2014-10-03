@@ -48,6 +48,7 @@ class MeterToolBar:public ToolBar {
    int GetMinToolbarWidth() { return 255; }
 
  private:
+   void OnMeterPrefsUpdated(wxCommandEvent & evt);
    void RegenerateTooltips();
 
    wxGridBagSizer *mSizer;

@@ -1,4 +1,4 @@
-   /**********************************************************************
+/**********************************************************************
 
   Audacity: A Digital Audio Editor
 
@@ -24,6 +24,9 @@
 #include "../Sequence.h"
 #include "Ruler.h"
 
+// Event used to notify all meters of preference changes
+DECLARE_EVENT_TYPE(EVT_METER_PREFERENCES_CHANGED, -1);
+
 // Increase this when we add support for multichannel meters
 // (most of the code is already there)
 const int kMaxMeterBars = 2;
@@ -40,6 +43,7 @@ struct MeterBar {
    bool   isclipping; //ANSWER-ME: What's the diff between these bools?! "clipping" vs "isclipping" is not clear.
    int    tailPeakCount;
    float  peakPeakHold;
+   wxBitmap bitmap;
 };
 
 class MeterUpdateMsg
@@ -162,10 +166,14 @@ class Meter : public wxPanel
 
    double ToLinearIfDB(double value);
 
+   bool IsClipping();
+
+   void StartMonitoring();
+
+ private:
    //
    // Event handlers
    //
-
    void OnErase(wxEraseEvent &evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
@@ -174,7 +182,7 @@ class Meter : public wxPanel
    void OnMeterUpdate(wxTimerEvent &evt);
 
    void HandlePaint(wxDC &dc);
-   void HandleLayout();
+   void HandleLayout(wxDC &dc);
 
    //
    // Pop-up menu handlers
@@ -195,11 +203,7 @@ class Meter : public wxPanel
 #endif
    void OnFloat(wxCommandEvent &evt);
    void OnPreferences(wxCommandEvent &evt);
-   bool IsClipping();
 
-   void StartMonitoring();
-
- private:
    void DrawMeterBar(wxDC &dc, MeterBar *meterBar);
    void ResetBar(MeterBar *bar, bool resetClipping);
    void RepaintBarsNow();
@@ -257,6 +261,8 @@ class Meter : public wxPanel
    wxBrush   mDisabledBkgndBrush;
    wxRect    mAllBarsRect;
    Ruler     mRuler;
+   wxString  mLeftText;
+   wxString  mRightText;
 
    DECLARE_EVENT_TABLE()
 };
