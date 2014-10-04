@@ -25,7 +25,7 @@
 #include "Ruler.h"
 
 // Event used to notify all meters of preference changes
-DECLARE_EVENT_TYPE(EVT_METER_PREFERENCES_CHANGED, -1);
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_METER_PREFERENCES_CHANGED, -1);
 
 // Increase this when we add support for multichannel meters
 // (most of the code is already there)
@@ -43,7 +43,6 @@ struct MeterBar {
    bool   isclipping; //ANSWER-ME: What's the diff between these bools?! "clipping" vs "isclipping" is not clear.
    int    tailPeakCount;
    float  peakPeakHold;
-   wxBitmap bitmap;
 };
 
 class MeterUpdateMsg
