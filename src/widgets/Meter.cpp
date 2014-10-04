@@ -225,6 +225,7 @@ Meter::Meter(wxWindow* parent, wxWindowID id,
    mWidth(size.x), mHeight(size.y),
    mIsInput(isInput),
    mStyle(style),
+   mGradient(true),
    mDB(true),
    mDBRange(ENV_DB_RANGE),
    mDecay(true),
@@ -353,6 +354,7 @@ void Meter::UpdatePrefs()
       mStyle = gPrefs->Read(wxT("/Meter/MeterStyle"), wxT("HorizontalStereo")) == wxT("HorizontalStereo") ?
                HorizontalStereo :
                VerticalStereo;
+      mGradient = gPrefs->Read(wxT("/Meter/MeterBars"), wxT("Gradient")) == wxT("Gradient");
       mDB = gPrefs->Read(wxT("/Meter/MeterType"), wxT("dB")) == wxT("dB");
 
       if (mIsInput)
@@ -875,9 +877,9 @@ void Meter::HandleLayout(wxDC &dc)
       }
       mRuler.SetOrientation(wxVERTICAL);
       mRuler.SetBounds(mBar[1].r.x + mBar[1].r.width + 1,
-                       mBar[1].r.y,
+                       mBar[1].r.y + 1,
                        mBar[1].r.x + width,
-                       mBar[1].r.y + mBar[1].r.height);
+                       mBar[1].r.y + mBar[1].r.height - 1);
       if (mDB) {
          mRuler.SetRange(0, -mDBRange);
          mRuler.SetFormat(Ruler::LinearDBFormat);
@@ -1051,54 +1053,57 @@ void Meter::HandlePaint(wxDC &destDC)
          // Cache bar rect
          wxRect r = mBar[i].r;
 
-         // Calculate the size of the two gradiant segments of the meter
-         double gradw;
-         double gradh;
-         if (mDB)
+         if (mGradient)
          {
-            gradw = (double) r.GetWidth() / mDBRange * 6.0;
-            gradh = (double) r.GetHeight() / mDBRange * 6.0;
-         }
-         else
-         {
-            gradw = (double) r.GetWidth() / 100 * 25;
-            gradh = (double) r.GetHeight() / 100 * 25;
-         }
+            // Calculate the size of the two gradiant segments of the meter
+            double gradw;
+            double gradh;
+            if (mDB)
+            {
+               gradw = (double) r.GetWidth() / mDBRange * 6.0;
+               gradh = (double) r.GetHeight() / mDBRange * 6.0;
+            }
+            else
+            {
+               gradw = (double) r.GetWidth() / 100 * 25;
+               gradh = (double) r.GetHeight() / 100 * 25;
+            }
 
-         if (mBar[i].vert)
-         {
-            // Draw the "critical" segment (starts at top of meter and works down)
-            r.SetHeight(gradh);
-            dc.GradientFillLinear(r, red, yellow, wxSOUTH);
+            if (mBar[i].vert)
+            {
+               // Draw the "critical" segment (starts at top of meter and works down)
+               r.SetHeight(gradh);
+               dc.GradientFillLinear(r, red, yellow, wxSOUTH);
 
-            // Draw the "warning" segment
-            r.SetTop(r.GetBottom());
-            dc.GradientFillLinear(r, yellow, green, wxSOUTH);
+               // Draw the "warning" segment
+               r.SetTop(r.GetBottom());
+               dc.GradientFillLinear(r, yellow, green, wxSOUTH);
 
-            // Draw the "safe" segment
-            r.SetTop(r.GetBottom());
-            r.SetBottom(mBar[i].r.GetBottom());
-            dc.SetPen(*wxTRANSPARENT_PEN);
-            dc.SetBrush(green);
-            dc.DrawRectangle(r);
-         }
-         else
-         {
-            // Draw the "safe" segment
-            r.SetWidth(r.GetWidth() - (int) (gradw + gradw + 0.5));
-            dc.SetPen(*wxTRANSPARENT_PEN);
-            dc.SetBrush(green);
-            dc.DrawRectangle(r);
+               // Draw the "safe" segment
+               r.SetTop(r.GetBottom());
+               r.SetBottom(mBar[i].r.GetBottom());
+               dc.SetPen(*wxTRANSPARENT_PEN);
+               dc.SetBrush(green);
+               dc.DrawRectangle(r);
+            }
+            else
+            {
+               // Draw the "safe" segment
+               r.SetWidth(r.GetWidth() - (int) (gradw + gradw + 0.5));
+               dc.SetPen(*wxTRANSPARENT_PEN);
+               dc.SetBrush(green);
+               dc.DrawRectangle(r);
 
-            // Draw the "warning"  segment
-            r.SetLeft(r.GetRight() + 1);
-            r.SetWidth(floor(gradw));
-            dc.GradientFillLinear(r, green, yellow);
+               // Draw the "warning"  segment
+               r.SetLeft(r.GetRight() + 1);
+               r.SetWidth(floor(gradw));
+               dc.GradientFillLinear(r, green, yellow);
 
-            // Draw the "critical" segment
-            r.SetLeft(r.GetRight() + 1);
-            r.SetRight(mBar[i].r.GetRight());
-            dc.GradientFillLinear(r, yellow, red);
+               // Draw the "critical" segment
+               r.SetLeft(r.GetRight() + 1);
+               r.SetRight(mBar[i].r.GetRight());
+               dc.GradientFillLinear(r, yellow, red);
+            }
          }
 
          // Give it a recessed look
@@ -1133,12 +1138,12 @@ void Meter::RepaintBarsNow()
 
 void Meter::DrawMeterBar(wxDC &dc, MeterBar *meterBar)
 {
-   // Cache some metrics
+   // Cache some metrics (and adjust to be inside the bevel)
    wxRect r = meterBar->r;
-   wxCoord x = r.GetLeft();
-   wxCoord y = r.GetTop();
-   wxCoord w = r.GetWidth();
-   wxCoord h = r.GetHeight();
+   wxCoord x = r.GetLeft() + 1;
+   wxCoord y = r.GetTop() + 1;
+   wxCoord w = r.GetWidth() - 1;
+   wxCoord h = r.GetHeight() - 1;
 
    // Map the predrawn bitmap into the source DC
    wxMemoryDC srcDC;
@@ -1148,52 +1153,135 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *meterBar)
    dc.SetPen(*wxTRANSPARENT_PEN);
    dc.SetBrush(mBkgndBrush);
 
-   if (meterBar->vert)
+   int ht;
+   int wd;
+   if (mGradient)
    {
-      // Copy as much of the predrawn meter bar as is required for the
-      // current peak.
-      int ht = (int)(meterBar->peak * h + 0.5);
-      dc.Blit(x, y + h - ht, w, ht, &srcDC, x, y + h - ht);
-
-      // Blank out the rest
-      dc.DrawRectangle(x + 1, y, w - 1, y + h - ht);
-
-      // Draw the "recent" peak hold line using the predrawn meter bar so that
-      // it will be the same color as the original level.
-      ht = (int)(meterBar->peakHold * h + 0.5);
-      dc.Blit(x, y + h - ht, w, 2, &srcDC, x, y + h - ht);
-
-      // Draw the "maximum" peak hold line using a themed color.
-      dc.SetPen(mPeakPeakPen);
-      ht = (int)(meterBar->peakPeakHold * r.height + 0.5);
-      AColor::Line(dc, x + 1, y + h - ht, x + w - 1, y + h - ht);
-      if (ht > 1)
+      if (meterBar->vert)
       {
-         AColor::Line(dc, x + 1, y + h - ht + 1, x + w - 1, y + h - ht + 1);
+         // Copy as much of the predrawn meter bar as is required for the
+         // current peak.
+         ht = (int)(meterBar->peak * h + 0.5);
+         dc.Blit(x, y + h - ht, w, ht, &srcDC, x, y + h - ht);
+
+         // Blank out the rest
+         dc.DrawRectangle(x, y, w, y + h - ht);
+
+         // Draw the "recent" peak hold line using the predrawn meter bar so that
+         // it will be the same color as the original level.
+         ht = (int)(meterBar->peakHold * h + 0.5);
+         dc.Blit(x, y + h - ht - 1, w, 2, &srcDC, x, y + h - ht - 1);
+
+         // Draw the "maximum" peak hold line
+         dc.SetPen(mPeakPeakPen);
+         ht = (int)(meterBar->peakPeakHold * h + 0.5);
+         AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
+         if (ht > 1)
+         {
+            AColor::Line(dc, x, y + h - ht, x + w - 1, y + h - ht);
+         }
+      }
+      else
+      {
+         // Copy as much of the predrawn meter bar as is required for the
+         // current peak.
+         wd = (int)(meterBar->peak * w + 0.5);
+         dc.Blit(x, y, wd, h, &srcDC, x, y);
+
+         // Blank out the rest
+         dc.DrawRectangle(x + wd, y, w - wd, h);
+
+         // Draw the "recent" peak hold line using the predrawn meter bar so that
+         // it will be the same color as the original level.
+         wd = (int)(meterBar->peakHold * w + 0.5);
+         dc.Blit(wd, y, 2, h, &srcDC, wd, y);
+
+         // Draw the "maximum" peak hold line using a themed color.
+         dc.SetPen(mPeakPeakPen);
+         wd = (int)(meterBar->peakPeakHold * w + 0.5);
+         AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
+         if (wd > 1)
+         {
+            AColor::Line(dc, x + wd - 1, y, x + wd - 1, y + h - 1);
+         }
       }
    }
-   else {
-      // Copy as much of the predrawn meter bar as is required for the
-      // current peak.
-      int wd = (int)(meterBar->peak * w + 0.5);
-      dc.Blit(x, y, wd, h, &srcDC, x, y);
+   else
+   {
+      wxRect rRMS;
 
-      // Blank out the rest
-      dc.DrawRectangle(x + wd, y + 1, w - wd, h - 1);
-
-      // Draw the "recent" peak hold line using the predrawn meter bar so that
-      // it will be the same color as the original level.
-      wd = (int)(meterBar->peakHold * w + 0.5);
-      dc.Blit(wd, y + 1, 2, h, &srcDC, wd, y + 1);
-
-      // Draw the "maximum" peak hold line using a themed color.
-      dc.SetPen(mPeakPeakPen);
-      wd = (int)(meterBar->peakPeakHold * w + 0.5);
-      AColor::Line(dc, x + wd, y + 1, x + wd, y + h - 1);
-      if (wd > 1)
+      if (meterBar->vert)
       {
-         AColor::Line(dc, x + wd - 1, y + 1, x + wd - 1, y + h - 1);
+         // Calculate the peak and rms rectangles
+         // (+1 and -1 to not overlay the bevel)
+         ht = (int)(meterBar->peak * h + 0.5);
+         r = wxRect(x, y + h - ht, w, ht);
+         ht = (int)(meterBar->rms * h + 0.5);
+         rRMS = wxRect(x, y + h - ht, w, ht);
+
+         // Blank out the rest
+         dc.DrawRectangle(x, y, w, y + h - ht);
+
+         // Reset the colors
+         dc.SetBrush(*wxTRANSPARENT_BRUSH);
+         dc.SetPen(mPen);
+
+         // Draw the "recent" peak hold line
+         int ht = (int)(meterBar->peakHold * h + 0.5);
+         AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
+         if (ht > 1)
+         {
+            AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht);
+         }
+
+         // Draw the "maximum" peak hold line
+         dc.SetPen(mPeakPeakPen);
+         ht = (int)(meterBar->peakPeakHold * h + 0.5);
+         AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
+         if (ht > 1)
+         {
+            AColor::Line(dc, x, y + h - ht, x + w - 1, y + h - ht);
+         }
       }
+      else
+      {
+         // Calculate the peak and rms rectangles
+         wd = (int)(meterBar->peak * w + 0.5);
+         r = wxRect(x, y, wd, h);
+         wd = (int)(meterBar->rms * w + 0.5);
+         rRMS = wxRect(x, y, wd, h);
+
+         // Blank out the rest
+         dc.DrawRectangle(x + wd, y, w, h);
+
+         // Reset the colors
+         dc.SetBrush(*wxTRANSPARENT_BRUSH);
+         dc.SetPen(mPen);
+
+         // Draw the "recent" peak hold line
+         wd = (int)(meterBar->peakHold * w + 0.5);
+         AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
+         if (wd > 1)
+         {
+            AColor::Line(dc, x + wd - 1, y, x + wd - 1, y + h - 1);
+         }
+
+         // Draw the "maximum" peak hold line using a themed color
+         dc.SetPen(mPeakPeakPen);
+         wd = (int)(meterBar->peakPeakHold * w + 0.5);
+         AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
+         if (wd > 1)
+         {
+            AColor::Line(dc, x + wd - 1, y, x + wd - 1, y + h - 1);
+         }
+      }
+
+      // Draw the peak and rms levels
+      dc.SetPen(*wxTRANSPARENT_PEN);
+      dc.SetBrush(mBrush);
+      dc.DrawRectangle(r);
+      dc.SetBrush(mRMSBrush);
+      dc.DrawRectangle(rRMS);
    }
 
    // If meter had a clipping indicator, draw or erase it
@@ -1374,6 +1462,8 @@ void Meter::OnFloat(wxCommandEvent & WXUNUSED(event))
 void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
 {
    wxTextCtrl *rate;
+   wxRadioButton *gradient;
+   wxRadioButton *rms;
    wxRadioButton *db;
    wxRadioButton *linear;
    wxRadioButton *horizontal;
@@ -1383,7 +1473,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();
    {
-      S.StartStatic(_("Refresh Rate"), 1);
+      S.StartStatic(_("Refresh Rate"), 0);
       {
          S.AddFixedText(_("Higher refresh rates make the meter show more frequent\nchanges. A rate of 30 per second or less should prevent\nthe meter affecting audio quality on slower machines."));
          S.StartHorizontalLay();
@@ -1400,7 +1490,23 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
       }
       S.EndStatic();
 
-      S.StartStatic(_("Meter Style"), 1);
+      S.StartStatic(_("Meter Style"), 0);
+      {
+         S.StartVerticalLay();
+         {
+            gradient = S.AddRadioButton(_("Gradient"));
+            gradient->SetName(_("Gradient"));
+            gradient->SetValue(mGradient);
+
+            rms = S.AddRadioButtonToGroup(_("RMS"));
+            rms->SetName(_("RMS"));
+            rms->SetValue(!mGradient);
+         }
+         S.EndVerticalLay();
+      }
+      S.EndStatic();
+
+      S.StartStatic(_("Meter Type"), 0);
       {
          S.StartVerticalLay();
          {
@@ -1442,6 +1548,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    {
       gPrefs->Write(wxT("/Meter/MeterRefreshRate"), mMeterRefreshRate);
       gPrefs->Write(wxT("/Meter/MeterStyle"), horizontal->GetValue() ? wxT("HorizontalStereo") : wxT("VerticalStereo"));
+      gPrefs->Write(wxT("/Meter/MeterBars"), gradient->GetValue() ? wxT("Gradient") : wxT("RMS"));
       gPrefs->Write(wxT("/Meter/MeterType"), db->GetValue() ? wxT("dB") : wxT("Linear"));
 
       gPrefs->Flush();
