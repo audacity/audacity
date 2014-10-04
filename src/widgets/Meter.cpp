@@ -1490,54 +1490,57 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
       }
       S.EndStatic();
 
-      S.StartStatic(_("Meter Style"), 0);
+      S.StartHorizontalLay();
       {
-         S.StartVerticalLay();
-         {
-            gradient = S.AddRadioButton(_("Gradient"));
-            gradient->SetName(_("Gradient"));
-            gradient->SetValue(mGradient);
+        S.StartStatic(_("Meter Style"), 0);
+        {
+           S.StartVerticalLay();
+           {
+              gradient = S.AddRadioButton(_("Gradient"));
+              gradient->SetName(_("Gradient"));
+              gradient->SetValue(mGradient);
 
-            rms = S.AddRadioButtonToGroup(_("RMS"));
-            rms->SetName(_("RMS"));
-            rms->SetValue(!mGradient);
-         }
-         S.EndVerticalLay();
+              rms = S.AddRadioButtonToGroup(_("RMS"));
+              rms->SetName(_("RMS"));
+              rms->SetValue(!mGradient);
+           }
+           S.EndVerticalLay();
+        }
+        S.EndStatic();
+
+        S.StartStatic(_("Meter Type"), 0);
+        {
+           S.StartVerticalLay();
+           {
+              db = S.AddRadioButton(_("dB"));
+              db->SetName(_("dB"));
+              db->SetValue(mDB);
+
+              linear = S.AddRadioButtonToGroup(_("Linear"));
+              linear->SetName(_("Linear"));
+              linear->SetValue(!mDB);
+           }
+           S.EndVerticalLay();
+        }
+        S.EndStatic();
+
+        S.StartStatic(_("Orientation"), 1);
+        {
+           S.StartVerticalLay();
+           {
+              horizontal = S.AddRadioButton(_("Horizontal"));
+              horizontal->SetName(_("Horizontal"));
+              horizontal->SetValue(mStyle == HorizontalStereo);
+
+              vertical = S.AddRadioButtonToGroup(_("Vertical"));
+              vertical->SetName(_("Vertical"));
+              vertical->SetValue(mStyle == VerticalStereo);
+           }
+           S.EndVerticalLay();
+        }
+        S.EndStatic();
       }
-      S.EndStatic();
-
-      S.StartStatic(_("Meter Type"), 0);
-      {
-         S.StartVerticalLay();
-         {
-            db = S.AddRadioButton(_("dB"));
-            db->SetName(_("dB"));
-            db->SetValue(mDB);
-
-            linear = S.AddRadioButtonToGroup(_("Linear"));
-            linear->SetName(_("Linear"));
-            linear->SetValue(!mDB);
-         }
-         S.EndVerticalLay();
-      }
-      S.EndStatic();
-
-      S.StartStatic(_("Orientation"), 1);
-      {
-         S.StartVerticalLay();
-         {
-            horizontal = S.AddRadioButton(_("Horizontal"));
-            horizontal->SetName(_("Horizontal"));
-            horizontal->SetValue(mStyle == HorizontalStereo);
-
-            vertical = S.AddRadioButtonToGroup(_("Vertical"));
-            vertical->SetName(_("Vertical"));
-            vertical->SetValue(mStyle == VerticalStereo);
-         }
-         S.EndVerticalLay();
-      }
-      S.EndStatic();
-
+      S.EndHorizontalLay();
       S.AddStandardButtons();
    }
    S.EndVerticalLay();
