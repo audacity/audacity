@@ -631,16 +631,17 @@ int ExportMultiple::ExportMultipleByLabel(bool byName,
       else {
          info = mLabels->GetLabel(l);
          name = (info->title);
-         setting.t0 = info->t;
+         setting.t0 = info->selectedRegion.t0();
       }
 
       // Figure out the ending time
-      if (info && info->t < info->t1) {
-         setting.t1 = info->t1;
+      if (info && !info->selectedRegion.isPoint()) {
+         setting.t1 = info->selectedRegion.t1();
       }
       else if (l < mNumLabels-1) {
+         // Use start of next label as end
          const LabelStruct *info1 = mLabels->GetLabel(l+1);
-         setting.t1 = info1->t;
+         setting.t1 = info1->selectedRegion.t0();
       }
       else {
          setting.t1 = mTracks->GetEndTime();

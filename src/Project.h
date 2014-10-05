@@ -134,8 +134,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    double GetRate() { return mRate; }
    double GetZoom() { return mViewInfo.zoom; }
-   double GetSel0() { return mViewInfo.sel0; }
-   double GetSel1() { return mViewInfo.sel1; }
+   double GetSel0() { return mViewInfo.selectedRegion.t0(); }
+   double GetSel1() { return mViewInfo.selectedRegion.t1(); }
 
    Track *GetFirstVisible();
    void UpdateFirstVisible();

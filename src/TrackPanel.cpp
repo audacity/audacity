@@ -892,8 +892,9 @@ void TrackPanel::SelectTrackLength(Track *t)
       }
    }
 
-   mViewInfo->sel0 = minOffset;
-   mViewInfo->sel1 = maxEnd;
+   // PRL: double click or click on track control.
+   // should this select all frequencies too?  I think not.
+   mViewInfo->selectedRegion.setTimes(minOffset, maxEnd);
 }
 
 void TrackPanel::GetTracksUsableArea(int *width, int *height) const
@@ -1256,7 +1257,7 @@ void TrackPanel::DoDrawCursor(wxDC & dc)
       mLastCursor = -1;
    }
 
-   mLastCursor = mViewInfo->sel0;
+   mLastCursor = mViewInfo->selectedRegion.t0();
 
    onScreen = between_inclusive( mViewInfo->h,
                                  mLastCursor,
@@ -1393,7 +1394,7 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    }
 
    // Draw the cursor
-   if( mViewInfo->sel0 == mViewInfo->sel1)
+   if( mViewInfo->selectedRegion.isPoint())
       DoDrawCursor( cdc );
 
 #if DEBUG_DRAW_TIMING
@@ -1632,8 +1633,8 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       }
       return;
    }
-   wxInt64 leftSel = TimeToPosition(mViewInfo->sel0, r.x);
-   wxInt64 rightSel = TimeToPosition(mViewInfo->sel1, r.x);
+   wxInt64 leftSel = TimeToPosition(mViewInfo->selectedRegion.t0(), r.x);
+   wxInt64 rightSel = TimeToPosition(mViewInfo->selectedRegion.t1(), r.x);
 
    // Something is wrong if right edge comes before left edge
    wxASSERT(!(rightSel < leftSel));
@@ -1878,8 +1879,8 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
          WaveTrack *w = (WaveTrack *)mCapturedTrack;
          WaveClip *selectedClip = w->GetClipAtX(event.m_x);
          if (selectedClip) {
-            mViewInfo->sel0 = selectedClip->GetOffset();
-            mViewInfo->sel1 = selectedClip->GetEndTime();
+            mViewInfo->selectedRegion.setTimes(
+               selectedClip->GetOffset(), selectedClip->GetEndTime());
          }
          //Also, capture this track for dragging until we up-click.
          mCapturedClipArray.Add(TrackClip(w, selectedClip));
@@ -1971,10 +1972,11 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       }
 
       // Edit the selection boundary nearest the mouse click.
-      if (fabs(selend - mViewInfo->sel0) < fabs(selend - mViewInfo->sel1))
-         mSelStart = mViewInfo->sel1;
+      if (fabs(selend - mViewInfo->selectedRegion.t0()) <
+          fabs(selend - mViewInfo->selectedRegion.t1()))
+         mSelStart = mViewInfo->selectedRegion.t1();
       else
-         mSelStart = mViewInfo->sel0;
+         mSelStart = mViewInfo->selectedRegion.t0();
 
       // If the shift button is down, extend the current selection.
       ExtendSelection(event.m_x, r.x, pTrack);
@@ -1994,7 +1996,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          if (p) {
 
             double clicktime = PositionToTime(event.m_x, GetLeftOffset());
-            double endtime = clicktime < mViewInfo->sel1? mViewInfo->sel1: mViewInfo->total ;
+            const double t1 = mViewInfo->selectedRegion.t1();
+            double endtime = clicktime <  t1 ? t1 : mViewInfo->total;
 
          //Behavior should differ depending upon whether we are
          //currently in playback mode or not.
@@ -2027,8 +2030,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       }
    //Make sure you are within the selected track
    if (pTrack && pTrack->GetSelected()) {
-      wxInt64 leftSel = TimeToPosition(mViewInfo->sel0, r.x);
-      wxInt64 rightSel = TimeToPosition(mViewInfo->sel1, r.x);
+      wxInt64 leftSel = TimeToPosition(mViewInfo->selectedRegion.t0(), r.x);
+      wxInt64 rightSel = TimeToPosition(mViewInfo->selectedRegion.t1(), r.x);
       wxASSERT(leftSel <= rightSel);
       // Adjusting selection edges can be turned off in the
       // preferences now
@@ -2037,13 +2040,13 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       // Is the cursor over the left selection boundary?
       else if (within(event.m_x, leftSel, SELECTION_RESIZE_REGION)) {
          // Pin the right selection boundary
-         mSelStart = mViewInfo->sel1;
+         mSelStart = mViewInfo->selectedRegion.t1();
          startNewSelection = false;
       }
       // Is the cursor over the right selection boundary?
       else if (within(event.m_x, rightSel, SELECTION_RESIZE_REGION)) {
          // Pin the left selection boundary
-         mSelStart = mViewInfo->sel0;
+         mSelStart = mViewInfo->selectedRegion.t0();
          startNewSelection = false;
       }
    }
@@ -2054,7 +2057,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       LabelTrack *lt = (LabelTrack *) pTrack;
       if (lt->HandleMouse(event, r,//mCapturedRect,
                           mViewInfo->h, mViewInfo->zoom,
-                          &mViewInfo->sel0, &mViewInfo->sel1)) {
+                          &mViewInfo->selectedRegion)) {
          MakeParentPushState(_("Modified Label"),
                              _("Label Edit"),
                              PUSH_CONSOLIDATE);
@@ -2076,8 +2079,8 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       double minPeriod = 0.05; // minimum beat period
       double qBeat0, qBeat1;
       double centerBeat = 0.0f;
-      mStretchSel0 = nt->NearestBeatTime(mViewInfo->sel0, &qBeat0);
-      mStretchSel1 = nt->NearestBeatTime(mViewInfo->sel1, &qBeat1);
+      mStretchSel0 = nt->NearestBeatTime(mViewInfo->selectedRegion.t0(), &qBeat0);
+      mStretchSel1 = nt->NearestBeatTime(mViewInfo->selectedRegion.t1(), &qBeat1);
 
       // If there is not (almost) a beat to stretch that is slower
       // than 20 beats per second, don't stretch
@@ -2093,14 +2096,16 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                     _("Click and drag to stretch selected region."));
             SetCursor(*mStretchLeftCursor);
             // mStretchMode = stretchLeft;
-            mSelStart = mViewInfo->sel1; // condition that implies stretchLeft
+            mSelStart = mViewInfo->selectedRegion.t1();
+            // condition that implies stretchLeft
             startNewSelection = false;
          } else if (within(qBeat1, centerBeat, 0.1)) {
             mListener->TP_DisplayStatusMessage(
                     _("Click and drag to stretch selected region."));
             SetCursor(*mStretchRightCursor);
             // mStretchMode = stretchRight;
-            mSelStart = mViewInfo->sel0; // condition that implies stretchRight
+            mSelStart = mViewInfo->selectedRegion.t0();
+            // condition that implies stretchRight
             startNewSelection = false;
          }
       }
@@ -2109,7 +2114,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          mStretchMode = stretchCenter;
          mStretchLeftBeats = qBeat1 - centerBeat;
          mStretchRightBeats = centerBeat - qBeat0;
-      } else if (mViewInfo->sel1 == mSelStart) {
+      } else if (mViewInfo->selectedRegion.t1() == mSelStart) {
          // note that at this point, mSelStart is at the opposite
          // end of the selection from the cursor. If the cursor is
          // over sel0, then mSelStart is at sel1.
@@ -2125,8 +2130,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          mStretchLeftBeats = qBeat1 - qBeat0;
          mStretchRightBeats = 0;
       }
-      mViewInfo->sel0 = mStretchSel0;
-      mViewInfo->sel1 = mStretchSel1;
+      mViewInfo->selectedRegion.setTimes(mStretchSel0, mStretchSel1);
       mStretching = true;
       mStretched = false;
 
@@ -2188,8 +2192,7 @@ void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
       }
    }
 
-   mViewInfo->sel0 = s;
-   mViewInfo->sel1 = s;
+   mViewInfo->selectedRegion.setTimes(s, s);
 
    SonifyBeginModifyState();
    MakeParentModifyState(false);
@@ -2247,8 +2250,7 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
       }
    }
 
-   mViewInfo->sel0 = sel0;
-   mViewInfo->sel1 = sel1;
+   mViewInfo->selectedRegion.setTimes(sel0, sel1);
 
    //On-Demand: check to see if there is an OD thing associated with this track.  If so we want to update the focal point for the task.
    if (pTrack && (pTrack->GetKind() == Track::Wave) && ODManager::IsInstanceCreated())
@@ -2284,8 +2286,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
       // Undo brings us back to the pre-click state, but we want to
       // quantize selected region to integer beat boundaries. These
       // were saved in mStretchSel[12] variables:
-      mViewInfo->sel0 = mStretchSel0;
-      mViewInfo->sel1 = mStretchSel1;
+      mViewInfo->selectedRegion.setTimes(mStretchSel0, mStretchSel1);
 
       mStretched = false;
       int index = 0;
@@ -2310,40 +2311,40 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
    // (In principle, tempo can be higher, but not infinity.)
    double minPeriod = 0.05; // minimum beat period
    double qBeat0, qBeat1;
-   pNt->NearestBeatTime(mViewInfo->sel0, &qBeat0); // get beat
-   pNt->NearestBeatTime(mViewInfo->sel1, &qBeat1);
+   pNt->NearestBeatTime(mViewInfo->selectedRegion.t0(), &qBeat0); // get beat
+   pNt->NearestBeatTime(mViewInfo->selectedRegion.t1(), &qBeat1);
 
    // We could be moving 3 things: left edge, right edge, a point between
    switch (mStretchMode) {
    case stretchLeft: {
       // make sure target duration is not too short
-      double dur = mViewInfo->sel1 - moveto;
+      double dur = mViewInfo->selectedRegion.t1() - moveto;
       if (dur < mStretchRightBeats * minPeriod) {
          dur = mStretchRightBeats * minPeriod;
-         moveto = mViewInfo->sel1 - dur;
+         moveto = mViewInfo->selectedRegion.t1() - dur;
       }
       if (pNt->StretchRegion(mStretchSel0, mStretchSel1, dur)) {
          pNt->SetOffset(pNt->GetOffset() + moveto - mStretchSel0);
-         mViewInfo->sel0 = moveto;
+         mViewInfo->selectedRegion.setT0(moveto);
       }
       break;
    }
    case stretchRight: {
       // make sure target duration is not too short
-      double dur = moveto - mViewInfo->sel0;
+      double dur = moveto - mViewInfo->selectedRegion.t0();
       if (dur < mStretchLeftBeats * minPeriod) {
          dur = mStretchLeftBeats * minPeriod;
          moveto = mStretchSel0 + dur;
       }
       if (pNt->StretchRegion(mStretchSel0, mStretchSel1, dur)) {
-         mViewInfo->sel1 = moveto;
+         mViewInfo->selectedRegion.setT1(moveto);
       }
       break;
    }
    case stretchCenter: {
       // make sure both left and right target durations are not too short
-      double left_dur = moveto - mViewInfo->sel0;
-      double right_dur = mViewInfo->sel1 - moveto;
+      double left_dur = moveto - mViewInfo->selectedRegion.t0();
+      double right_dur = mViewInfo->selectedRegion.t1() - moveto;
       double centerBeat;
       pNt->NearestBeatTime(mSelStart, &centerBeat);
       if (left_dur < mStretchLeftBeats * minPeriod) {
@@ -2735,8 +2736,8 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
          PositionToTime(event.m_x, GetLeftOffset());
       bool clickedInSelection =
          (vt->GetSelected() &&
-          clickTime > mViewInfo->sel0 &&
-          clickTime < mViewInfo->sel1);
+          clickTime > mViewInfo->selectedRegion.t0() &&
+          clickTime < mViewInfo->selectedRegion.t1());
 
       // First, if click was in selection, capture selected clips; otherwise
       // just the clicked-on clip
@@ -2849,7 +2850,8 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
 void TrackPanel::AddClipsToCaptured(Track *t, bool withinSelection)
 {
    if (withinSelection)
-      AddClipsToCaptured(t, mViewInfo->sel0, mViewInfo->sel1);
+      AddClipsToCaptured(t, mViewInfo->selectedRegion.t0(),
+                         mViewInfo->selectedRegion.t1());
    else
       AddClipsToCaptured(t, t->GetStartTime(), t->GetEndTime());
 }
@@ -2956,8 +2958,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
    if (mCapturedClipIsSelection) {
       // Slide the selection, too
-      mViewInfo->sel0 -= mHSlideAmount;
-      mViewInfo->sel1 -= mHSlideAmount;
+      mViewInfo->selectedRegion.move(-mHSlideAmount);
    }
    mHSlideAmount = 0.0;
 
@@ -3054,8 +3055,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
 
          if (mCapturedClipIsSelection) {
             // Slide the selection, too
-            mViewInfo->sel0 += desiredSlideAmount;
-            mViewInfo->sel1 += desiredSlideAmount;
+            mViewInfo->selectedRegion.move(desiredSlideAmount);
          }
 
          // Make the offset permanent; start from a "clean slate"
@@ -3150,8 +3150,7 @@ void TrackPanel::DoSlide(wxMouseEvent & event)
    }
    if (mCapturedClipIsSelection) {
       // Slide the selection, too
-      mViewInfo->sel0 += mHSlideAmount;
-      mViewInfo->sel1 += mHSlideAmount;
+      mViewInfo->selectedRegion.move(mHSlideAmount);
    }
 
    Refresh(false);
@@ -4015,8 +4014,8 @@ void TrackPanel::UpdateViewIfNoTracks()
       mViewInfo->zoom = 44100.0 / 512.0;
 
       //STM: Set selection to 0,0
-      mViewInfo->sel0 = 0.0;
-      mViewInfo->sel1 = 0.0;
+      //PRL: and default the rest of the selection information
+      mViewInfo->selectedRegion = SelectedRegion();
 
       mListener->TP_RedrawScrollbars();
       mListener->TP_DisplayStatusMessage(wxT("")); //STM: Clear message if all tracks are removed
@@ -5034,11 +5033,12 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    }
 
    LabelTrack *lt = (LabelTrack *)t;
-   double bkpSel0 = mViewInfo->sel0, bkpSel1 = mViewInfo->sel1;
+   double bkpSel0 = mViewInfo->selectedRegion.t0(),
+      bkpSel1 = mViewInfo->selectedRegion.t1();
 
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
-   if (lt->OnKeyDown(mViewInfo->sel0, mViewInfo->sel1, event))
+   if (lt->OnKeyDown(mViewInfo->selectedRegion, event))
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
                           PUSH_CONSOLIDATE);
@@ -5051,7 +5051,8 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 
    // If selection modified, refresh
    // Otherwise, refresh track display if the keystroke was handled
-   if( bkpSel0 != mViewInfo->sel0 || bkpSel1 != mViewInfo->sel1 )
+   if( bkpSel0 != mViewInfo->selectedRegion.t0() ||
+       bkpSel1 != mViewInfo->selectedRegion.t1() )
       Refresh( false );
    else if (!event.GetSkipped())
       RefreshTrack(t);
@@ -5073,17 +5074,19 @@ void TrackPanel::OnChar(wxKeyEvent & event)
       return;
    }
 
-   double bkpSel0 = mViewInfo->sel0, bkpSel1 = mViewInfo->sel1;
+   double bkpSel0 = mViewInfo->selectedRegion.t0(),
+      bkpSel1 = mViewInfo->selectedRegion.t1();
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
-   if (((LabelTrack *)t)->OnChar(mViewInfo->sel0, mViewInfo->sel1, event))
+   if (((LabelTrack *)t)->OnChar(mViewInfo->selectedRegion, event))
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
                           PUSH_CONSOLIDATE);
 
    // If selection modified, refresh
    // Otherwise, refresh track display if the keystroke was handled
-   if( bkpSel0 != mViewInfo->sel0 || bkpSel1 != mViewInfo->sel1 )
+   if( bkpSel0 != mViewInfo->selectedRegion.t0() ||
+       bkpSel1 != mViewInfo->selectedRegion.t1() )
       Refresh( false );
    else if (!event.GetSkipped())
       RefreshTrack(t);
@@ -5244,8 +5247,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
                      !linked->ExpandCutLine(mCapturedTrackLocation.pos))
                         return false;
 
-               mViewInfo->sel0 = cutlineStart;
-               mViewInfo->sel1 = cutlineEnd;
+               mViewInfo->selectedRegion.setTimes(cutlineStart, cutlineEnd);
                DisplaySelection();
                MakeParentPushState(_("Expanded Cut Line"), _("Expand"));
                handled = true;
@@ -5348,7 +5350,7 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMo
    }
 
    if (lTrack->HandleMouse(event, mCapturedRect,
-      mViewInfo->h, mViewInfo->zoom, &mViewInfo->sel0, &mViewInfo->sel1)) {
+      mViewInfo->h, mViewInfo->zoom, &mViewInfo->selectedRegion)) {
 
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
@@ -5607,8 +5609,8 @@ bool TrackPanel::HitTestStretch(Track *track, wxRect &r, wxMouseEvent & event)
    int center = r.y + r.height / 2;
    int distance = abs(event.m_y - center);
    const int yTolerance = 10;
-   wxInt64 leftSel = TimeToPosition(mViewInfo->sel0, r.x);
-   wxInt64 rightSel = TimeToPosition(mViewInfo->sel1, r.x);
+   wxInt64 leftSel = TimeToPosition(mViewInfo->selectedRegion.t0(), r.x);
+   wxInt64 rightSel = TimeToPosition(mViewInfo->selectedRegion.t1(), r.x);
    // Something is wrong if right edge comes before left edge
    wxASSERT(!(rightSel < leftSel));
    return (leftSel <= event.m_x && event.m_x <= rightSel &&
@@ -6552,19 +6554,15 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl, bool keyup )
    if( shift && ctrl )
    {
       // Reduce and constrain (counter-intuitive)
-      if (snapToTime) {
-         mViewInfo->sel1 = GridMove(mViewInfo->sel1, -multiplier);
-      }
-      else {
-         mViewInfo->sel1 -= multiplier / mViewInfo->zoom;
-      }
-      if( mViewInfo->sel1 < mViewInfo->sel0 )
-      {
-         mViewInfo->sel1 = mViewInfo->sel0;
-      }
+      mViewInfo->selectedRegion.setT1(
+         std::max(mViewInfo->selectedRegion.t0(),
+                  snapToTime
+                  ? GridMove(mViewInfo->selectedRegion.t1(), -multiplier)
+                  : mViewInfo->selectedRegion.t1() -
+                      multiplier / mViewInfo->zoom));
 
       // Make sure it's visible.
-      ScrollIntoView( mViewInfo->sel1 );
+      ScrollIntoView( mViewInfo->selectedRegion.t1() );
       Refresh( false );
    }
    // Extend selection toward the left
@@ -6579,19 +6577,15 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl, bool keyup )
       }
 
       // Expand and constrain
-      if (snapToTime) {
-         mViewInfo->sel0 = GridMove(mViewInfo->sel0, -multiplier);
-      }
-      else {
-         mViewInfo->sel0 -= multiplier / mViewInfo->zoom;
-      }
-      if( mViewInfo->sel0 < 0.0 )
-      {
-         mViewInfo->sel0 = 0.0;
-      }
+      mViewInfo->selectedRegion.setT0(
+         std::max(0.0,
+                  snapToTime
+                  ? GridMove(mViewInfo->selectedRegion.t0(), -multiplier)
+                  : mViewInfo->selectedRegion.t0() -
+                      multiplier / mViewInfo->zoom));
 
       // Make sure it's visible.
-      ScrollIntoView( mViewInfo->sel0 );
+      ScrollIntoView( mViewInfo->selectedRegion.t0() );
       Refresh( false );
    }
    // Move the cursor toward the left
@@ -6606,20 +6600,17 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl, bool keyup )
       }
 
       // Already in cursor mode?
-      if( mViewInfo->sel0 == mViewInfo->sel1 )
+      if( mViewInfo->selectedRegion.isPoint() )
       {
          // Move and constrain
-         if (snapToTime) {
-            mViewInfo->sel0 = GridMove(mViewInfo->sel0, -multiplier);
-         }
-         else {
-            mViewInfo->sel0 -= multiplier / mViewInfo->zoom;
-         }
-         if( mViewInfo->sel0 < 0.0 )
-         {
-            mViewInfo->sel0 = 0.0;
-         }
-         mViewInfo->sel1 = mViewInfo->sel0;
+         mViewInfo->selectedRegion.setT0(
+            std::max(0.0,
+                     snapToTime
+                     ? GridMove(mViewInfo->selectedRegion.t0(), -multiplier)
+                     : mViewInfo->selectedRegion.t0() -
+                        multiplier / mViewInfo->zoom),
+            false);
+         mViewInfo->selectedRegion.collapseToT0();
 
          // Move the visual cursor
          DrawCursor();
@@ -6627,12 +6618,12 @@ void TrackPanel::OnCursorLeft( bool shift, bool ctrl, bool keyup )
       else
       {
          // Transition to cursor mode.
-         mViewInfo->sel1 = mViewInfo->sel0;
+         mViewInfo->selectedRegion.collapseToT0();
          Refresh( false );
       }
 
       // Make sure it's visible
-      ScrollIntoView( mViewInfo->sel0 );
+      ScrollIntoView( mViewInfo->selectedRegion.t0() );
    }
 }
 
@@ -6666,19 +6657,15 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
    if( shift && ctrl )
    {
       // Reduce and constrain (counter-intuitive)
-      if (snapToTime) {
-         mViewInfo->sel0 = GridMove(mViewInfo->sel0, multiplier);
-      }
-      else {
-         mViewInfo->sel0 += multiplier / mViewInfo->zoom;
-      }
-      if( mViewInfo->sel0 > mViewInfo->sel1 )
-      {
-         mViewInfo->sel0 = mViewInfo->sel1;
-      }
+      mViewInfo->selectedRegion.setT0(
+         std::min(mViewInfo->selectedRegion.t1(),
+                  snapToTime
+                  ? GridMove(mViewInfo->selectedRegion.t0(), multiplier)
+                  : mViewInfo->selectedRegion.t0() +
+                     multiplier / mViewInfo->zoom));
 
       // Make sure new position is in view.
-      ScrollIntoView( mViewInfo->sel0 );
+      ScrollIntoView( mViewInfo->selectedRegion.t0() );
       Refresh( false );
    }
    // Extend selection toward the right
@@ -6693,20 +6680,15 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
       }
 
       // Expand and constrain
-      if (snapToTime) {
-         mViewInfo->sel1 = GridMove(mViewInfo->sel1, multiplier);
-      }
-      else {
-         mViewInfo->sel1 += multiplier/mViewInfo->zoom;
-      }
       double end = mTracks->GetEndTime();
-      if( mViewInfo->sel1 > end )
-      {
-         mViewInfo->sel1 = end;
-      }
+      mViewInfo->selectedRegion.setT1(
+         std::min(end,
+                  snapToTime
+                  ?  GridMove(mViewInfo->selectedRegion.t1(), multiplier)
+                  : mViewInfo->selectedRegion.t1() + multiplier/mViewInfo->zoom));
 
       // Make sure new position is in view.
-      ScrollIntoView( mViewInfo->sel1 );
+      ScrollIntoView( mViewInfo->selectedRegion.t1() );
       Refresh( false );
    }
    // Move the cursor toward the right
@@ -6721,21 +6703,18 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
       }
 
       // Already in cursor mode?
-      if (mViewInfo->sel0 == mViewInfo->sel1)
+      if (mViewInfo->selectedRegion.isPoint())
       {
          // Move and constrain
-         if (snapToTime) {
-            mViewInfo->sel1 = GridMove(mViewInfo->sel1, multiplier);
-         }
-         else {
-            mViewInfo->sel1 += multiplier / mViewInfo->zoom;
-         }
          double end = mTracks->GetEndTime();
-         if( mViewInfo->sel1 > end )
-         {
-            mViewInfo->sel1 = end;
-         }
-         mViewInfo->sel0 = mViewInfo->sel1;
+         mViewInfo->selectedRegion.setT1(
+            std::min(end,
+                     snapToTime
+                     ? GridMove(mViewInfo->selectedRegion.t1(), multiplier)
+                     : mViewInfo->selectedRegion.t1() +
+                        multiplier / mViewInfo->zoom),
+            false);
+         mViewInfo->selectedRegion.collapseToT1();
 
          // Move the visual cursor
          DrawCursor();
@@ -6743,12 +6722,12 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
       else
       {
          // Transition to cursor mode.
-         mViewInfo->sel0 = mViewInfo->sel1;
+         mViewInfo->selectedRegion.collapseToT1();
          Refresh( false );
       }
 
       // Make sure new position is in view
-      ScrollIntoView( mViewInfo->sel1 );
+      ScrollIntoView( mViewInfo->selectedRegion.t1() );
    }
 }
 
@@ -6799,13 +6778,11 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
    {
       double indicator = gAudioIO->GetStreamTime();
       if (left) {
-         mViewInfo->sel0 = indicator;
-         if(mViewInfo->sel1 < mViewInfo->sel0)
-            mViewInfo->sel1 = mViewInfo->sel0;
+         mViewInfo->selectedRegion.setT0(indicator, false);
       }
       else
       {
-         mViewInfo->sel1 = indicator;
+         mViewInfo->selectedRegion.setT1(indicator);
       }
 
       MakeParentModifyState(false);
@@ -6819,24 +6796,23 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
       {
          if (left) {
             // Reduce and constrain left boundary (counter-intuitive)
-            mViewInfo->sel0 += multiplier / mViewInfo->zoom;
-            if( mViewInfo->sel0 > mViewInfo->sel1 )
-            {
-               mViewInfo->sel0 = mViewInfo->sel1;
-            }
+            mViewInfo->selectedRegion.setT0(
+               std::min(mViewInfo->selectedRegion.t1(),
+                        mViewInfo->selectedRegion.t0() +
+                           multiplier / mViewInfo->zoom));
+
             // Make sure it's visible
-            ScrollIntoView( mViewInfo->sel0 );
+            ScrollIntoView( mViewInfo->selectedRegion.t0() );
          }
          else
          {
             // Reduce and constrain right boundary (counter-intuitive)
-            mViewInfo->sel1 -= multiplier / mViewInfo->zoom;
-            if( mViewInfo->sel1 < mViewInfo->sel0 )
-            {
-               mViewInfo->sel1 = mViewInfo->sel0;
-            }
+            mViewInfo->selectedRegion.setT1(
+               std::max(mViewInfo->selectedRegion.t0(),
+                        mViewInfo->selectedRegion.t1() -
+                           multiplier / mViewInfo->zoom));
             // Make sure it's visible
-            ScrollIntoView( mViewInfo->sel1 );
+            ScrollIntoView( mViewInfo->selectedRegion.t1() );
          }
       }
       // BOUNDARY MOVEMENT
@@ -6845,23 +6821,21 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
       {
          if (left) {
             // Expand and constrain left boundary
-            mViewInfo->sel0 -= multiplier / mViewInfo->zoom;
-            if( mViewInfo->sel0 < 0.0 )
-            {
-               mViewInfo->sel0 = 0.0;
-            }
+            mViewInfo->selectedRegion.setT0(
+               std::max(0.0,
+                        mViewInfo->selectedRegion.t0() -
+                           multiplier / mViewInfo->zoom));
             // Make sure it's visible
-            ScrollIntoView( mViewInfo->sel0 );
+            ScrollIntoView( mViewInfo->selectedRegion.t0() );
          }
          else
          {
             // Expand and constrain right boundary
-            mViewInfo->sel1 += multiplier/mViewInfo->zoom;
             double end = mTracks->GetEndTime();
-            if( mViewInfo->sel1 > end )
-            {
-               mViewInfo->sel1 = end;
-            }
+            mViewInfo->selectedRegion.setT1(
+               std::min(end,
+                        mViewInfo->selectedRegion.t1() +
+                           multiplier/mViewInfo->zoom));
          }
       }
       Refresh( false );
@@ -6911,20 +6885,22 @@ void TrackPanel::OnCursorMove(bool forward, bool jump, bool longjump )
    else
    {
       // Already in cursor mode?
-      if( mViewInfo->sel0 == mViewInfo->sel1 )
+      if( mViewInfo->selectedRegion.isPoint() )
       {
          // Move and constrain
-         mViewInfo->sel0 += mSeek;
-         if( !forward && mViewInfo->sel0 < 0.0 )
+
+         double t0 = mViewInfo->selectedRegion.t0() + mSeek;
+         if( !forward && t0 < 0.0 )
          {
-            mViewInfo->sel0 = 0.0;
+            t0 = 0.0;
          }
          double end = mTracks->GetEndTime();
-         if( forward && mViewInfo->sel0 > end)
+         if( forward && t0 > end)
          {
-            mViewInfo->sel0 = end;
+            t0 = end;
          }
-         mViewInfo->sel1 = mViewInfo->sel0;
+         mViewInfo->selectedRegion.setT0(t0, false);
+         mViewInfo->selectedRegion.collapseToT0();
 
          // Move the visual cursor
          DrawCursor();
@@ -6932,12 +6908,12 @@ void TrackPanel::OnCursorMove(bool forward, bool jump, bool longjump )
       else
       {
          // Transition to cursor mode.
-         mViewInfo->sel1 = mViewInfo->sel0;
+         mViewInfo->selectedRegion.collapseToT0();
          Refresh( false );
       }
 
       // Make sure it's visible
-      ScrollIntoView( mViewInfo->sel0 );
+      ScrollIntoView( mViewInfo->selectedRegion.t0() );
 
       MakeParentModifyState(false);
    }
@@ -7210,8 +7186,8 @@ void TrackPanel::OnTrackClose()
       mViewInfo->zoom = 44100.0 / 512.0;
 
       //STM: Set selection to 0,0
-      mViewInfo->sel0 = 0.0;
-      mViewInfo->sel1 = 0.0;
+      //PRL: and default the rest of the selection information
+      mViewInfo->selectedRegion = SelectedRegion();
 
       mListener->TP_RedrawScrollbars();
       mListener->TP_DisplayStatusMessage( wxT( "" ) ); //STM: Clear message if all tracks are removed
@@ -7983,11 +7959,12 @@ void TrackPanel::OnCopySelectedText(wxCommandEvent & WXUNUSED(event))
    RefreshTrack(lt);
 }
 
-/// paste selected text if p`aste menu item is selected
+/// paste selected text if paste menu item is selected
 void TrackPanel::OnPasteSelectedText(wxCommandEvent & WXUNUSED(event))
 {
    LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
-   if (lt->PasteSelectedText(mViewInfo->sel0, mViewInfo->sel1)) {
+   if (lt->PasteSelectedText(mViewInfo->selectedRegion.t0(),
+       mViewInfo->selectedRegion.t1())) {
       MakeParentPushState(_("Modified Label"),
                           _("Label Edit"),
                           true /* consolidate */);
@@ -7999,7 +7976,8 @@ void TrackPanel::OnPasteSelectedText(wxCommandEvent & WXUNUSED(event))
 void TrackPanel::OnDeleteSelectedLabel(wxCommandEvent & WXUNUSED(event))
 {
    LabelTrack *lt = (LabelTrack *)mPopupMenuTarget;
-   int ndx = lt->GetLabelIndex(mViewInfo->sel0, mViewInfo->sel1);
+   int ndx = lt->GetLabelIndex(mViewInfo->selectedRegion.t0(),
+                               mViewInfo->selectedRegion.t1());
    if (ndx != -1) {
       lt->DeleteLabel(ndx);
       MakeParentPushState(_("Deleted Label"),

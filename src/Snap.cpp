@@ -69,9 +69,11 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
          LabelTrack *labelTrack = (LabelTrack *)track;
          for(i = 0; i < labelTrack->GetNumLabels(); i++) {
             const LabelStruct *label = labelTrack->GetLabel(i);
-            CondListAdd(label->t, labelTrack);
-            if (label->t1 != label->t) {
-               CondListAdd(label->t1, labelTrack);
+            const double t0 = label->getT0();
+            const double t1 = label->getT1();
+            CondListAdd(t0, labelTrack);
+            if (t1 != t0) {
+               CondListAdd(t1, labelTrack);
             }
          }
       }

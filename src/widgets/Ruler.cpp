@@ -1652,7 +1652,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    DoDrawBorder(&dc);
 
-   if (mViewInfo->sel0 < mViewInfo->sel1)
+   if (!mViewInfo->selectedRegion.isPoint())
    {
       DoDrawSelection(&dc);
    }
@@ -1664,7 +1664,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    DoDrawMarks(&dc, true);
 
-   if (mViewInfo->sel0 == mViewInfo->sel1)
+   if (mViewInfo->selectedRegion.isPoint())
    {
       DoDrawCursor(&dc);
    }
@@ -1927,8 +1927,10 @@ void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
 {
    // Draw selection
    double zoom = mViewInfo->zoom;
-   double sel0 = mViewInfo->sel0 - mViewInfo->h + mLeftOffset / zoom;
-   double sel1 = mViewInfo->sel1 - mViewInfo->h + mLeftOffset / zoom;
+   double sel0 =
+      mViewInfo->selectedRegion.t0() - mViewInfo->h + mLeftOffset / zoom;
+   double sel1 =
+      mViewInfo->selectedRegion.t1() - mViewInfo->h + mLeftOffset / zoom;
 
    if( sel0 < 0.0 )
       sel0 = 0.0;

@@ -51,7 +51,7 @@ double NearestZeroCrossing(double t0);
 
 public:
 //Adds label and returns index of label in labeltrack.
-int DoAddLabel(double left, double right);
+int DoAddLabel(const SelectedRegion& region);
 
 private:
 
@@ -307,8 +307,7 @@ void OnMixAndRenderToNewTrack();
 void HandleMixAndRender(bool toNewTrack);
 
 private:
-double mSel0save;
-double mSel1save;
+SelectedRegion mRegionSave;
 public:
 void OnSelectionSave();
 void OnSelectionRestore();

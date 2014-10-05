@@ -51,6 +51,7 @@
 #include <wx/dynarray.h>
 #include <wx/string.h>
 #include "ondemand/ODTaskThread.h"
+#include "SelectedRegion.h"
 
 class Track;
 class TrackList;
@@ -59,8 +60,7 @@ struct UndoStackElem {
    TrackList *tracks;
    wxString description;
    wxString shortDescription;
-   double sel0;
-   double sel1;
+   SelectedRegion selectedRegion;
    wxLongLong spaceUsage;
 };
 
@@ -79,10 +79,12 @@ class AUDACITY_DLL_API UndoManager {
    UndoManager();
    ~UndoManager();
 
-   void PushState(TrackList * l, double sel0, double sel1,
+   void PushState(TrackList * l,
+                  const SelectedRegion &selectedRegion,
                   wxString longDescription, wxString shortDescription,
                   int flags = PUSH_CALC_SPACE|PUSH_AUTOSAVE );
-   void ModifyState(TrackList * l, double sel0, double sel1);
+   void ModifyState(TrackList * l,
+                    const SelectedRegion &selectedRegion);
    void ClearStates();
    void RemoveStates(int num);  // removes the 'num' oldest states
    void RemoveStateAt(int n);   // removes the n'th state (1 is oldest)
@@ -93,9 +95,9 @@ class AUDACITY_DLL_API UndoManager {
    void GetLongDescription(unsigned int n, wxString *desc, wxString *size);
    void SetLongDescription(unsigned int n, wxString desc);
 
-   TrackList *SetStateTo(unsigned int n, double *sel0, double *sel1);
-   TrackList *Undo(double *sel0, double *sel1);
-   TrackList *Redo(double *sel0, double *sel1);
+   TrackList *SetStateTo(unsigned int n, SelectedRegion *selectedRegion);
+   TrackList *Undo(SelectedRegion *selectedRegion);
+   TrackList *Redo(SelectedRegion *selectedRegion);
 
    bool UndoAvailable();
    bool RedoAvailable();

@@ -400,8 +400,8 @@ void FreqWindow::GetAudio()
          if (selcount==0) {
             mRate = track->GetRate();
             sampleCount start, end;
-            start = track->TimeToLongSamples(p->mViewInfo.sel0);
-            end = track->TimeToLongSamples(p->mViewInfo.sel1);
+            start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());
+            end = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t1());
             mDataLen = (sampleCount)(end - start);
             if (mDataLen > 10485760) {
                warning = true;
@@ -421,7 +421,7 @@ void FreqWindow::GetAudio()
                return;
             }
             sampleCount start;
-            start = track->TimeToLongSamples(p->mViewInfo.sel0);
+            start = track->TimeToLongSamples(p->mViewInfo.selectedRegion.t0());
             float *buffer2 = new float[mDataLen];
             track->Get((samplePtr)buffer2, floatSample, start, mDataLen);
             for(i=0; i<mDataLen; i++)

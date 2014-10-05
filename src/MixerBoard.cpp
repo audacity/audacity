@@ -730,11 +730,11 @@ void MixerTrackCluster::HandleSelect(const bool bShiftDown)
       {
          // No range previously selected, so use the range of this track.
 #ifdef EXPERIMENTAL_MIDI_OUT
-         mProject->mViewInfo.sel0 = mTrack->GetOffset();
-         mProject->mViewInfo.sel1 = mTrack->GetEndTime();
+         mProject->mViewInfo.selectedRegion.setTimes(
+            mTrack->GetOffset(), mTrack->GetEndTime());
 #else
-         mProject->mViewInfo.sel0 = mLeftTrack->GetOffset();
-         mProject->mViewInfo.sel1 = mLeftTrack->GetEndTime();
+         mProject->mViewInfo.selectedRegion.setTimes(
+            mLeftTrack->GetOffset(), mLeftTrack->GetEndTime());
 #endif
       }
 
@@ -1213,7 +1213,7 @@ void MixerBoard::RemoveTrackCluster(const WaveTrack* pTrack)
 
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const wxString name)
+wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(wxString name)
 #else
 wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const WaveTrack* pLeftTrack)
 #endif

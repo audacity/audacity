@@ -58,7 +58,7 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
 
          //v Should probably select to end as in AudacityProject::OnSelectCursorEnd,
          // but better to generalize that in AudacityProject methods.
-         pProj->mViewInfo.sel1 = pCurSyl->t;
+         pProj->mViewInfo.selectedRegion.setT1(pCurSyl->t);
       }
    }
 

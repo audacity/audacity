@@ -410,8 +410,8 @@ void ContrastDialog::OnUseSelectionF(wxCommandEvent & event)
    Track *t = iter.First();
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         mForegroundStartT->SetTimeValue(p->mViewInfo.sel0);
-         mForegroundEndT->SetTimeValue(p->mViewInfo.sel1);
+         mForegroundStartT->SetTimeValue(p->mViewInfo.selectedRegion.t0());
+         mForegroundEndT->SetTimeValue(p->mViewInfo.selectedRegion.t1());
          break;
       }
       t = iter.Next();
@@ -427,8 +427,8 @@ void ContrastDialog::OnUseSelectionB(wxCommandEvent & event)
    Track *t = iter.First();
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         mBackgroundStartT->SetTimeValue(p->mViewInfo.sel0);
-         mBackgroundEndT->SetTimeValue(p->mViewInfo.sel1);
+         mBackgroundStartT->SetTimeValue(p->mViewInfo.selectedRegion.t0());
+         mBackgroundEndT->SetTimeValue(p->mViewInfo.selectedRegion.t1());
          break;
       }
       t = iter.Next();

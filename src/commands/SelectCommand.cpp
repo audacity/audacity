@@ -84,8 +84,16 @@ bool SelectCommand::Apply(CommandExecutionContext context)
          Error(wxT("End time is after end of track!"));
          return false;
       }
-      context.proj->mViewInfo.sel0 = t0;
-      context.proj->mViewInfo.sel1 = t1;
+
+      // PRL: to do: only setting time boundaries of current selection.
+      // Should other fields be left alone, or rather
+      // defaulted, as in the second branch?
+      // Or should this command take more parameters?
+#if 1
+      context.proj->mViewInfo.selectedRegion.setTimes(t0, t1);
+#else
+      context.proj->mViewInfo.selectedRegion = SelectedRegion(t0, t1);
+#endif
 
       // select specified tracks
       long firstTrack = GetLong(wxT("FirstTrack"));

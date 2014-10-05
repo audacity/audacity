@@ -81,8 +81,8 @@ bool ExportCommand::Apply(CommandExecutionContext context)
    double t0, t1;
    if (selection)
    {
-      t0 = context.proj->mViewInfo.sel0;
-      t1 = context.proj->mViewInfo.sel1;
+      t0 = context.proj->mViewInfo.selectedRegion.t0();
+      t1 = context.proj->mViewInfo.selectedRegion.t1();
    }
    else
    {

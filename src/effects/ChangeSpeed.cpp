@@ -27,6 +27,7 @@
 
 #include "../Audacity.h"
 #include "../Envelope.h"
+#include "../LabelTrack.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"

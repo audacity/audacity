@@ -675,6 +675,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\SelectedRegion.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\Sequence.cpp"
 				>
 			</File>

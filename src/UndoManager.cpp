@@ -184,7 +184,8 @@ bool UndoManager::RedoAvailable()
    return (current < (int)stack.Count() - 1);
 }
 
-void UndoManager::ModifyState(TrackList * l, double sel0, double sel1)
+void UndoManager::ModifyState(TrackList * l,
+                              const SelectedRegion &selectedRegion)
 {
    if (current == wxNOT_FOUND) {
       return;
@@ -206,12 +207,12 @@ void UndoManager::ModifyState(TrackList * l, double sel0, double sel1)
 
    // Replace
    stack[current]->tracks = tracksCopy;
-   stack[current]->sel0 = sel0;
-   stack[current]->sel1 = sel1;
+   stack[current]->selectedRegion = selectedRegion;
    SonifyEndModifyState();
 }
 
-void UndoManager::PushState(TrackList * l, double sel0, double sel1,
+void UndoManager::PushState(TrackList * l,
+                            const SelectedRegion &selectedRegion,
                             wxString longDescription,
                             wxString shortDescription,
                             int flags)
@@ -222,7 +223,7 @@ void UndoManager::PushState(TrackList * l, double sel0, double sel1,
    if (((flags&PUSH_CONSOLIDATE)!=0) && lastAction == longDescription &&
        consolidationCount < 2) {
       consolidationCount++;
-      ModifyState(l, sel0, sel1);
+      ModifyState(l, selectedRegion);
       // MB: If the "saved" state was modified by ModifyState, reset
       //  it so that UnsavedChanges returns true.
       if (current == saved) {
@@ -248,8 +249,7 @@ void UndoManager::PushState(TrackList * l, double sel0, double sel1,
 
    UndoStackElem *push = new UndoStackElem();
    push->tracks = tracksCopy;
-   push->sel0 = sel0;
-   push->sel1 = sel1;
+   push->selectedRegion = selectedRegion;
    push->description = longDescription;
    push->shortDescription = shortDescription;
    push->spaceUsage = 0; // Calculate actual value after it's on the stack.
@@ -266,7 +266,8 @@ void UndoManager::PushState(TrackList * l, double sel0, double sel1,
    lastAction = longDescription;
 }
 
-TrackList *UndoManager::SetStateTo(unsigned int n, double *sel0, double *sel1)
+TrackList *UndoManager::SetStateTo(unsigned int n,
+                                   SelectedRegion *selectedRegion)
 {
    n -= 1;
 
@@ -275,14 +276,10 @@ TrackList *UndoManager::SetStateTo(unsigned int n, double *sel0, double *sel1)
    current = n;
 
    if (current == int(stack.Count()-1)) {
-      *sel0 = stack[current]->sel0;
-      *sel1 = stack[current]->sel1;
+      *selectedRegion = stack[current]->selectedRegion;
    }
    else {
-      current++;
-      *sel0 = stack[current]->sel0;
-      *sel1 = stack[current]->sel1;
-      current--;
+      *selectedRegion = stack[current + 1]->selectedRegion;
    }
 
    lastAction = wxT("");
@@ -291,14 +288,13 @@ TrackList *UndoManager::SetStateTo(unsigned int n, double *sel0, double *sel1)
    return stack[current]->tracks;
 }
 
-TrackList *UndoManager::Undo(double *sel0, double *sel1)
+TrackList *UndoManager::Undo(SelectedRegion *selectedRegion)
 {
    wxASSERT(UndoAvailable());
 
    current--;
 
-   *sel0 = stack[current]->sel0;
-   *sel1 = stack[current]->sel1;
+   *selectedRegion = stack[current]->selectedRegion;
 
    lastAction = wxT("");
    consolidationCount = 0;
@@ -306,14 +302,13 @@ TrackList *UndoManager::Undo(double *sel0, double *sel1)
    return stack[current]->tracks;
 }
 
-TrackList *UndoManager::Redo(double *sel0, double *sel1)
+TrackList *UndoManager::Redo(SelectedRegion *selectedRegion)
 {
    wxASSERT(RedoAvailable());
 
    current++;
 
-   *sel0 = stack[current]->sel0;
-   *sel1 = stack[current]->sel1;
+   *selectedRegion = stack[current]->selectedRegion;
 
    /*
    if (!RedoAvailable()) {

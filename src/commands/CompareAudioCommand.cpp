@@ -41,8 +41,8 @@ Command *CompareAudioCommandType::Create(CommandOutputTarget *target)
 bool CompareAudioCommand::GetSelection(AudacityProject &proj)
 {
    // Get the selected time interval
-   mT0 = proj.mViewInfo.sel0;
-   mT1 = proj.mViewInfo.sel1;
+   mT0 = proj.mViewInfo.selectedRegion.t0();
+   mT1 = proj.mViewInfo.selectedRegion.t1();
    if (mT0 >= mT1)
    {
       Error(wxT("There is no selection!"));

@@ -99,7 +99,7 @@ TrackPanel::DoDrawIndicator();
         AdornedRulerPanel::DrawIndicator(); [not part of TrackPanel graphics]
         draw indicator on each track
 TrackPanel::DoDrawCursor();
-        draw cursor on each track  [at mViewInfo->sel0]
+        draw cursor on each track  [at mviewInfo->selectedRegion.t0()]
         AdornedRulerPanel::DrawCursor(); [not part of TrackPanel graphics]
         TrackPanel::DisplaySelection();
 \endcode
@@ -1390,7 +1390,8 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
                                bool muted)
 {
    DrawBackgroundWithSelection(&dc, r, track, blankSelectedBrush, blankBrush,
-         viewInfo->sel0, viewInfo->sel1, viewInfo->h, viewInfo->zoom);
+         viewInfo->selectedRegion.t0(), viewInfo->selectedRegion.t1(),
+         viewInfo->h, viewInfo->zoom);
 
    for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext())
       DrawClipWaveform(track, it->GetData(), dc, r, viewInfo,
@@ -1441,8 +1442,8 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
 #endif
    double h = viewInfo->h;          //The horizontal position in seconds
    double pps = viewInfo->zoom;     //points-per-second--the zoom level
-   double sel0 = viewInfo->sel0;    //left selection bound
-   double sel1 = viewInfo->sel1;    //right selection bound
+   double sel0 = viewInfo->selectedRegion.t0();    //left selection bound
+   double sel1 = viewInfo->selectedRegion.t1();    //right selection bound
    double trackLen = clip->GetEndTime() - clip->GetStartTime();
    double tOffset = clip->GetOffset();
    double rate = clip->GetRate();
@@ -1731,7 +1732,8 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
                                bool logF)
 {
    DrawBackgroundWithSelection(&dc, r, track, blankSelectedBrush, blankBrush,
-         viewInfo->sel0, viewInfo->sel1, viewInfo->h, viewInfo->zoom);
+         viewInfo->selectedRegion.t0(), viewInfo->selectedRegion.t1(), 
+         viewInfo->h, viewInfo->zoom);
 
    if(!viewInfo->bUpdateTrackIndicator && viewInfo->bIsPlaying) {
       // BG: Draw (undecorated) waveform instead of spectrum
@@ -1789,8 +1791,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
 #endif
    double h = viewInfo->h;
    double pps = viewInfo->zoom;
-   double sel0 = viewInfo->sel0;
-   double sel1 = viewInfo->sel1;
+   double sel0 = viewInfo->selectedRegion.t0();
+   double sel1 = viewInfo->selectedRegion.t1();
 
    double tOffset = clip->GetOffset();
    double rate = clip->GetRate();
@@ -2554,8 +2556,8 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    SonifyBeginNoteBackground();
    double h = viewInfo->h;
    double pps = viewInfo->zoom;
-   double sel0 = viewInfo->sel0;
-   double sel1 = viewInfo->sel1;
+   double sel0 = viewInfo->selectedRegion.t0();
+   double sel1 = viewInfo->selectedRegion.t1();
 
    double h1 = X_TO_TIME(r.x + r.width);
 
@@ -2672,7 +2674,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
    iterator.begin();
    //for every event
    Alg_event_ptr evt;
-   while ((evt = iterator.next())) {
+   while (0 != (evt = iterator.next())) {
       if (evt->get_type() == 'n') { // 'n' means a note
          Alg_note_ptr note = (Alg_note_ptr) evt;
          // if the note's channel is visible
@@ -2681,7 +2683,7 @@ void TrackArtist::DrawNoteTrack(NoteTrack *track,
             double x1 = x + note->dur;
             if (x < h1 && x1 > h) { // omit if outside box
                const char *shape = NULL;
-               if (note->loud > 0.0 || !(shape = IsShape(note))) {
+               if (note->loud > 0.0 || 0 == (shape = IsShape(note))) {
                   wxRect nr; // "note rectangle"
                   nr.y = track->PitchToY(note->pitch);
                   nr.height = track->GetPitchHeight();
@@ -2924,8 +2926,8 @@ void TrackArtist::DrawLabelTrack(LabelTrack *track,
                                  const wxRect & r,
                                  const ViewInfo *viewInfo)
 {
-   double sel0 = viewInfo->sel0;
-   double sel1 = viewInfo->sel1;
+   double sel0 = viewInfo->selectedRegion.t0();
+   double sel1 = viewInfo->selectedRegion.t1();
 
    if (!track->GetSelected() && !track->IsSyncLockSelected())
       sel0 = sel1 = 0.0;

@@ -900,9 +900,11 @@ bool EffectNyquist::ProcessOne()
          double t0, t1;
          const char *str;
 
+         // PRL:  to do:
+         // let Nyquist analyzers define more complicated selections
          nyx_get_label(l, &t0, &t1, &str);
 
-         ltrack->AddLabel(t0 + mT0, t1 + mT0, UTF8CTOWX(str));
+         ltrack->AddLabel(SelectedRegion(t0 + mT0, t1 + mT0), UTF8CTOWX(str));
       }
       return true;
    }

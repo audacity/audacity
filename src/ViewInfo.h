@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_VIEWINFO__
 #define __AUDACITY_VIEWINFO__
 
+#include "SelectedRegion.h"
+
 const double gMaxZoom = 6000000,
              gMinZoom = 0.001;
 
@@ -18,10 +20,9 @@ class Track;
 
 struct ViewInfo {
 
-   // Current selection (in seconds)
+   // Current selection
 
-   double sel0;
-   double sel1;
+   SelectedRegion selectedRegion;
 
    // Scroll info
 

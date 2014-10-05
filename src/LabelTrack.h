@@ -13,6 +13,7 @@
 #ifndef _LABELTRACK_
 #define _LABELTRACK_
 
+#include "SelectedRegion.h"
 #include "Track.h"
 
 #include <wx/brush.h>
@@ -39,16 +40,27 @@ class TimeWarper;
 
 class LabelStruct
 {
+   // disallow copy
+private:
+   LabelStruct(const LabelStruct&);
+   LabelStruct& operator= (const LabelStruct&);
 public:
-   LabelStruct();
+   // Copies region
+   LabelStruct(const SelectedRegion& region, const wxString &aTitle);
+   // Copies region but then overwrites other times
+   LabelStruct(const SelectedRegion& region, double t0, double t1,
+               const wxString &aTitle);
    void DrawLines( wxDC & dc, const wxRect & r);
    void DrawGlyphs( wxDC & dc, const wxRect & r, int GlyphLeft, int GlyphRight);
    void DrawText( wxDC & dc, const wxRect & r);
    void DrawTextBox( wxDC & dc, const wxRect & r);
    void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight);
    void getXPos( wxDC & dc, int * xPos1, int cursorPos);
-   double getDuration(){return t1-t;};
-   void AdjustEdge( int iEdge, double fNewTime);
+   double getDuration() const { return selectedRegion.duration(); }
+   double getT0() const { return selectedRegion.t0(); }
+   double getT1() const { return selectedRegion.t1(); }
+   // Returns true iff the label got inverted:
+   bool AdjustEdge( int iEdge, double fNewTime);
    void MoveLabel( int iEdge, double fNewTime);
 
    /// Relationships between selection region and labels
@@ -70,8 +82,7 @@ public:
                                 LabelTrack *parent = NULL);
 
 public:
-   double t;  /// Time for left hand of label.
-   double t1; /// Time for right hand of label.
+   SelectedRegion selectedRegion;
    wxString title; /// Text of the label.
    int width; /// width of the text in pixels.
 
@@ -165,11 +176,11 @@ class AUDACITY_DLL_API LabelTrack : public Track
    void SetDrawCursor(bool drawCursorFlag) { mDrawCursor = drawCursorFlag; };
 
    bool HandleMouse(const wxMouseEvent & evt, wxRect & r, double h, double pps,
-                           double *newSel0, double *newSel1);
+                           SelectedRegion *newSel);
 
    bool CaptureKey(wxKeyEvent & event);
-   bool OnKeyDown(double & sel0, double & sel1, wxKeyEvent & event);
-   bool OnChar(double & sel0, double & sel1, wxKeyEvent & event);
+   bool OnKeyDown(SelectedRegion &sel, wxKeyEvent & event);
+   bool OnChar(SelectedRegion &sel, wxKeyEvent & event);
 
    void Import(wxTextFile & f);
    void Export(wxTextFile & f);
@@ -182,7 +193,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
    const LabelStruct *GetLabel(int index) const;
 
    //This returns the index of the label we just added.
-   int AddLabel(double t, double t1, const wxString &title = wxT(""));
+   int AddLabel(const SelectedRegion &region, const wxString &title = wxT(""));
    //And this tells us the index, if there is a label already there.
    int GetLabelIndex(double t, double t1);
 

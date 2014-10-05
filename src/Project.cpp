@@ -727,8 +727,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size)
    : wxFrame(parent, id, wxT("Audacity"), pos, size),
-     mSel0save(0.0),
-     mSel1save(0.0),
+     mRegionSave(),
      mLastPlayMode(normalPlay),
      mRate((double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate())),
      mDefaultFormat((sampleFormat) gPrefs->
@@ -790,8 +789,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
 
    // Selection
-   mViewInfo.sel0 = 0.0;
-   mViewInfo.sel1 = 0.0;
+   mViewInfo.selectedRegion = SelectedRegion();
 
    // Horizontal scrollbar
    mViewInfo.total = 1.0;
@@ -1105,14 +1103,14 @@ void AudacityProject::SetSel0(double newSel0)
 {
    //Bound checking should go on here
 
-   mViewInfo.sel0 = newSel0;
+   mViewInfo.selectedRegion.setT0(newSel0);
 }
 
 void AudacityProject::SetSel1(double newSel1)
 {
    //Bound checking should go on here
 
-   mViewInfo.sel1 = newSel1;
+   mViewInfo.selectedRegion.setT1(newSel1);
 }
 
 
@@ -1234,8 +1232,7 @@ const wxString & AudacityProject::GetSelectionFormat()
 
 void AudacityProject::AS_ModifySelection(double &start, double &end, bool done)
 {
-   mViewInfo.sel0 = start;
-   mViewInfo.sel1 = end;
+   mViewInfo.selectedRegion.setTimes(start, end);
    mTrackPanel->Refresh(false);
    if (done) {
       ModifyState(false);
@@ -1395,7 +1392,8 @@ void AudacityProject::FixScrollbars()
 
    // Add 1/4 of a screen of blank space to the end of the longest track
    mViewInfo.screen = ((double) panelWidth) / mViewInfo.zoom;
-   double LastTime = wxMax( mTracks->GetEndTime(), mViewInfo.sel1 );
+   double LastTime =
+      wxMax( mTracks->GetEndTime(), mViewInfo.selectedRegion.t1() );
    mViewInfo.total = LastTime + mViewInfo.screen / 4;
 
    // Don't remove time from total that's still on the screen
@@ -2827,11 +2825,19 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          requiredTags++;
       }
 
-      if (!wxStrcmp(attr, wxT("sel0")))
-         Internat::CompatibleToDouble(value, &mViewInfo.sel0);
+      if (!wxStrcmp(attr, wxT("sel0"))) {
+         double t0;
+         Internat::CompatibleToDouble(value, &t0);
+         mViewInfo.selectedRegion.setT0(t0, false);
+      }
 
-      if (!wxStrcmp(attr, wxT("sel1")))
-         Internat::CompatibleToDouble(value, &mViewInfo.sel1);
+      if (!wxStrcmp(attr, wxT("sel1"))) {
+         double t1;
+         Internat::CompatibleToDouble(value, &t1);
+         mViewInfo.selectedRegion.setT1(t1, false);
+      }
+
+      // PRL: to do: persistence of other fields of the selection
 
       long longVpos = 0;
       if (!wxStrcmp(attr, wxT("vpos")))
@@ -3025,8 +3031,9 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("projname"), projName);
    xmlFile.WriteAttr(wxT("version"), wxT(AUDACITY_FILE_FORMAT_VERSION));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
-   xmlFile.WriteAttr(wxT("sel0"), mViewInfo.sel0, 10);
-   xmlFile.WriteAttr(wxT("sel1"), mViewInfo.sel1, 10);
+   xmlFile.WriteAttr(wxT("sel0"), mViewInfo.selectedRegion.t0(), 10);
+   xmlFile.WriteAttr(wxT("sel1"), mViewInfo.selectedRegion.t1(), 10);
+   // PRL: to do: persistence of other fields of the selection
    xmlFile.WriteAttr(wxT("vpos"), mViewInfo.vpos);
    xmlFile.WriteAttr(wxT("h"), mViewInfo.h, 10);
    xmlFile.WriteAttr(wxT("zoom"), mViewInfo.zoom, 10);
@@ -3696,7 +3703,7 @@ void AudacityProject::InitialState()
 
    mUndoManager.ClearStates();
 
-   mUndoManager.PushState(mTracks, mViewInfo.sel0, mViewInfo.sel1,
+   mUndoManager.PushState(mTracks, mViewInfo.selectedRegion,
                           _("Created new project"), wxT(""));
 
    mUndoManager.StateSaved();
@@ -3715,7 +3722,7 @@ void AudacityProject::PushState(wxString desc,
                                 wxString shortDesc,
                                 int flags )
 {
-   mUndoManager.PushState(mTracks, mViewInfo.sel0, mViewInfo.sel1,
+   mUndoManager.PushState(mTracks, mViewInfo.selectedRegion,
                           desc, shortDesc, flags);
 
    mDirty = true;
@@ -3746,7 +3753,7 @@ void AudacityProject::PushState(wxString desc,
 
 void AudacityProject::ModifyState(bool bWantsAutoSave)
 {
-   mUndoManager.ModifyState(mTracks, mViewInfo.sel0, mViewInfo.sel1);
+   mUndoManager.ModifyState(mTracks, mViewInfo.selectedRegion);
    if (bWantsAutoSave)
       AutoSave();
 }
@@ -3807,7 +3814,7 @@ void AudacityProject::PopState(TrackList * l)
 void AudacityProject::SetStateTo(unsigned int n)
 {
    TrackList *l =
-       mUndoManager.SetStateTo(n, &mViewInfo.sel0, &mViewInfo.sel1);
+       mUndoManager.SetStateTo(n, &mViewInfo.selectedRegion);
    PopState(l);
 
    HandleResize();
@@ -3840,7 +3847,7 @@ void AudacityProject::UpdateLyrics()
    Lyrics* pLyricsPanel = mLyricsWindow->GetLyricsPanel();
    pLyricsPanel->Clear();
    for (int i = 0; i < pLabelTrack->GetNumLabels(); i++)
-      pLyricsPanel->Add(pLabelTrack->GetLabel(i)->t,
+      pLyricsPanel->Add(pLabelTrack->GetLabel(i)->getT0(),
                         pLabelTrack->GetLabel(i)->title);
    pLyricsPanel->Finish(pLabelTrack->GetEndTime());
    pLyricsPanel->Update(this->GetSel0());
@@ -3905,18 +3912,18 @@ void AudacityProject::Clear()
 
    while (n) {
       if (n->GetSelected() || n->IsSyncLockSelected()) {
-         n->Clear(mViewInfo.sel0, mViewInfo.sel1);
+         n->Clear(mViewInfo.selectedRegion.t0(), mViewInfo.selectedRegion.t1());
       }
       n = iter.Next();
    }
 
-   double seconds = mViewInfo.sel1 - mViewInfo.sel0;
+   double seconds = mViewInfo.selectedRegion.duration();
 
-   mViewInfo.sel1 = mViewInfo.sel0;
+   mViewInfo.selectedRegion.collapseToT0();
 
    PushState(wxString::Format(_("Deleted %.2f seconds at t=%.2f"),
                               seconds,
-                              mViewInfo.sel0),
+                              mViewInfo.selectedRegion.t0()),
              _("Delete"));
 
    RedrawProject();
@@ -3957,9 +3964,9 @@ void AudacityProject::Zoom(double level)
 ///////////////////////////////////////////////////////////////////
 void AudacityProject::Rewind(bool shift)
 {
-   mViewInfo.sel0 = 0;
-   if (!shift || mViewInfo.sel1 < mViewInfo.sel0)
-      mViewInfo.sel1 = 0;
+   mViewInfo.selectedRegion.setT0(0, false);
+   if (!shift)
+      mViewInfo.selectedRegion.setT1(0);
 
    TP_ScrollWindow(0);
 }
@@ -3977,9 +3984,9 @@ void AudacityProject::SkipEnd(bool shift)
 {
    double len = mTracks->GetEndTime();
 
-   mViewInfo.sel1 = len;
-   if (!shift || mViewInfo.sel0 > mViewInfo.sel1)
-      mViewInfo.sel0 = len;
+   mViewInfo.selectedRegion.setT1(len, false);
+   if (!shift)
+      mViewInfo.selectedRegion.setT0(len);
 
    // Make sure the end of the track is visible
    mTrackPanel->ScrollIntoView(len);
@@ -4168,11 +4175,12 @@ void AudacityProject::GetRegionsByLabel( Regions &regions )
          for( int i = 0; i < lt->GetNumLabels(); i++ )
          {
             const LabelStruct *ls = lt->GetLabel( i );
-            if( ls->t >= mViewInfo.sel0 && ls->t1 <= mViewInfo.sel1 )
+            if( ls->selectedRegion.t0() >= mViewInfo.selectedRegion.t0() &&
+                ls->selectedRegion.t1() <= mViewInfo.selectedRegion.t1() )
             {
                Region *region = new Region;
-               region->start = ls->t;
-               region->end = ls->t1;
+               region->start = ls->getT0();
+               region->end = ls->getT1();
                regions.Add( region );
             }
          }
@@ -4368,10 +4376,12 @@ void AudacityProject::TP_DisplaySelection()
       audioTime = 0;
    }
 
-   GetSelectionBar()->SetTimes(mViewInfo.sel0, mViewInfo.sel1, audioTime);
+   GetSelectionBar()->SetTimes(mViewInfo.selectedRegion.t0(),
+                               mViewInfo.selectedRegion.t1(), audioTime);
 
    if (!gAudioIO->IsBusy() && !mLockPlayRegion)
-      mRuler->SetPlayRegion(mViewInfo.sel0, mViewInfo.sel1);
+      mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
+                            mViewInfo.selectedRegion.t1());
 }
 
 

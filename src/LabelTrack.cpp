@@ -121,10 +121,9 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
    int len = orig.mLabels.Count();
 
    for (int i = 0; i < len; i++) {
-      LabelStruct *l = new LabelStruct();
-      l->t = orig.mLabels[i]->t;
-      l->t1 = orig.mLabels[i]->t1;
-      l->title = orig.mLabels[i]->title;
+      const LabelStruct& original = *orig.mLabels[i];
+      LabelStruct *l =
+         new LabelStruct(original.selectedRegion, original.title);
       mLabels.Add(l);
    }
    mSelIndex = orig.mSelIndex;
@@ -146,8 +145,7 @@ void LabelTrack::SetOffset(double dOffset)
    int len = mLabels.Count();
    for (int i = 0; i < len; i++)
    {
-      mLabels[i]->t += dOffset;
-      mLabels[i]->t1 += dOffset;
+      mLabels[i]->selectedRegion.move(dOffset);
    }
 }
 
@@ -157,18 +155,18 @@ bool LabelTrack::Clear(double b, double e)
       LabelStruct::TimeRelations relation =
                         mLabels[i]->RegionRelation(b, e, this);
       if (relation == LabelStruct::BEFORE_LABEL) {
-         mLabels[i]->t  = mLabels[i]->t  - (e-b);
-         mLabels[i]->t1 = mLabels[i]->t1 - (e-b);
+         mLabels[i]->selectedRegion.move(- (e-b));
       } else if (relation == LabelStruct::SURROUNDS_LABEL) {
          DeleteLabel( i );
          i--;
       } else if (relation == LabelStruct::ENDS_IN_LABEL) {
-         mLabels[i]->t  = b;
-         mLabels[i]->t1 = mLabels[i]->t1 - (e - mLabels[i]->t);
+         mLabels[i]->selectedRegion.setTimes(
+            b,
+            mLabels[i]->getT1() - (e - mLabels[i]->getT0()));
       } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
-         mLabels[i]->t1 = b;
+         mLabels[i]->selectedRegion.setT1(b);
       } else if (relation == LabelStruct::WITHIN_LABEL) {
-         mLabels[i]->t1 = mLabels[i]->t1 - (e-b);
+         mLabels[i]->selectedRegion.moveT1( - (e-b));
       }
    }
 
@@ -185,11 +183,11 @@ bool LabelTrack::SplitDelete(double b, double e)
          DeleteLabel(i);
          i--;
       } else if (relation == LabelStruct::WITHIN_LABEL) {
-         mLabels[i]->t1 = mLabels[i]->t1 - (e-b);
+         mLabels[i]->selectedRegion.moveT1( - (e-b));
       } else if (relation == LabelStruct::ENDS_IN_LABEL) {
-         mLabels[i]->t  = e;
+         mLabels[i]->selectedRegion.setT0(e);
       } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
-         mLabels[i]->t1 = b;
+         mLabels[i]->selectedRegion.setT1(b);
       }
    }
 
@@ -202,11 +200,10 @@ void LabelTrack::ShiftLabelsOnInsert(double length, double pt)
                         mLabels[i]->RegionRelation(pt, pt, this);
 
       if (relation == LabelStruct::BEFORE_LABEL) {
-         mLabels[i]->t = mLabels[i]->t + length;
-         mLabels[i]->t1 = mLabels[i]->t1 + length;
+         mLabels[i]->selectedRegion.move(length);
       }
       else if (relation == LabelStruct::WITHIN_LABEL) {
-         mLabels[i]->t1 = mLabels[i]->t1 + length;
+         mLabels[i]->selectedRegion.moveT1(length);
       }
    }
 }
@@ -217,9 +214,10 @@ void LabelTrack::ChangeLabelsOnReverse(double b, double e)
       if (mLabels[i]->RegionRelation(b, e, this) ==
                                     LabelStruct::SURROUNDS_LABEL)
       {
-         double aux     = b + (e - mLabels[i]->t1);
-         mLabels[i]->t1 = e - (mLabels[i]->t - b);
-         mLabels[i]->t  = aux;
+         double aux     = b + (e - mLabels[i]->getT1());
+         mLabels[i]->selectedRegion.setTimes(
+            aux,
+            e - (mLabels[i]->getT0() - b));
       }
    }
    SortLabels();
@@ -228,8 +226,9 @@ void LabelTrack::ChangeLabelsOnReverse(double b, double e)
 void LabelTrack::ScaleLabels(double b, double e, double change)
 {
    for (unsigned int i=0;i<mLabels.GetCount();i++){
-      mLabels[i]->t = AdjustTimeStampOnScale(mLabels[i]->t, b, e, change);
-      mLabels[i]->t1 = AdjustTimeStampOnScale(mLabels[i]->t1, b, e, change);
+      mLabels[i]->selectedRegion.setTimes(
+         AdjustTimeStampOnScale(mLabels[i]->getT0(), b, e, change),
+         AdjustTimeStampOnScale(mLabels[i]->getT1(), b, e, change));
    }
 }
 
@@ -254,8 +253,9 @@ double LabelTrack::AdjustTimeStampOnScale(double t, double b, double e, double c
 // specified time, as in most cases they don't need to move.)
 void LabelTrack::WarpLabels(const TimeWarper &warper) {
    for (int i = 0; i < (int)mLabels.GetCount(); ++i) {
-      double &labelT0 = mLabels[i]->t; labelT0 = warper.Warp(labelT0);
-      double &labelT1 = mLabels[i]->t1; labelT1 = warper.Warp(labelT1);
+      mLabels[i]->selectedRegion.setTimes(
+         warper.Warp(mLabels[i]->getT0()),
+         warper.Warp(mLabels[i]->getT1()));
    }
 }
 
@@ -467,8 +467,8 @@ void LabelTrack::ComputeLayout(const wxRect & r, double h, double pps)
 
    for (i = 0; i < (int)mLabels.Count(); i++)
    {
-      int x  = r.x + (int) ((mLabels[i]->t  - h) * pps);
-      int x1 = r.x + (int) ((mLabels[i]->t1 - h) * pps);
+      int x  = r.x + (int) ((mLabels[i]->getT0()  - h) * pps);
+      int x1 = r.x + (int) ((mLabels[i]->getT1() - h) * pps);
       int y = r.y;
 
       mLabels[i]->x=x;
@@ -506,13 +506,33 @@ void LabelTrack::ComputeLayout(const wxRect & r, double h, double pps)
    }
 }
 
-LabelStruct::LabelStruct()
+LabelStruct::LabelStruct(const SelectedRegion &region,
+                         const wxString& aTitle)
+: selectedRegion(region)
+, title(aTitle)
 {
    changeInitialMouseXPos = true;
    highlighted = false;
    updated = false;
-   t = 0.0;
-   t1 = 0.0;
+   width = 0;
+   x = 0;
+   x1 = 0;
+   xText = 0;
+   y = 0;
+}
+
+LabelStruct::LabelStruct(const SelectedRegion &region,
+                         double t0, double t1,
+                         const wxString& aTitle)
+: selectedRegion(region)
+, title(aTitle)
+{
+   // Overwrite the times
+   selectedRegion.setTimes(t0, t1);
+
+   changeInitialMouseXPos = true;
+   highlighted = false;
+   updated = false;
    width = 0;
    x = 0;
    x1 = 0;
@@ -1002,12 +1022,13 @@ bool LabelTrack::CopySelectedText()
    return true;
 }
 
+// PRL:  should this set other fields of the label selection?
 /// Paste the text on the clipboard to text box
 ///  @return true if mouse is clicked in text box, false otherwise
 bool LabelTrack::PasteSelectedText(double sel0, double sel1)
 {
    if (mSelIndex == -1) {
-      AddLabel(sel0, sel1, wxT(""));
+      AddLabel(SelectedRegion(sel0, sel1), wxT(""));
    }
 
    wxString text;
@@ -1102,7 +1123,7 @@ double LabelTrack::GetStartTime()
    if (len == 0)
       return 0.0;
    else
-      return mLabels[0]->t;
+      return mLabels[0]->getT0();
 }
 
 double LabelTrack::GetEndTime()
@@ -1116,8 +1137,9 @@ double LabelTrack::GetEndTime()
    double end = 0.0;
    for(int i = 0; i < len; i++)
    {
-      if(mLabels[i]->t1 > end)
-         end = mLabels[i]->t1;
+      const double t1 = mLabels[i]->getT1();
+      if(t1 > end)
+         end = t1;
    }
    return end;
 }
@@ -1208,13 +1230,14 @@ bool LabelTrack::OverTextBox(const LabelStruct *pLabel, int x, int y)
 }
 
 // Adjust label's left or right boundary, depending which is requested.
-void LabelStruct::AdjustEdge( int iEdge, double fNewTime)
+// Return true iff the label flipped.
+bool LabelStruct::AdjustEdge( int iEdge, double fNewTime)
 {
-   if( iEdge < 0 )
-      t = fNewTime;
-   else
-      t1 = fNewTime;
    updated = true;
+   if( iEdge < 0 )
+      return selectedRegion.setT0(fNewTime);
+   else
+      return selectedRegion.setT1(fNewTime);
 }
 
 // We're moving the label.  Adjust both left and right edge.
@@ -1224,13 +1247,11 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
 
    if( iEdge < 0 )
    {
-      t  = fNewTime;
-      t1 = fNewTime+fTimeSpan;
+      selectedRegion.setTimes(fNewTime, fNewTime+fTimeSpan);
    }
    else
    {
-      t  = fNewTime-fTimeSpan;
-      t1 = fNewTime;
+      selectedRegion.setTimes(fNewTime-fTimeSpan, fNewTime);
    }
    updated = true;
 }
@@ -1249,17 +1270,18 @@ LabelStruct::TimeRelations LabelStruct::RegionRelation(
       // than the length of the label if the selection is within the label or
       // matching exactly a (region) label.
 
-      if (reg_t0 < t && reg_t1 > t1)
+      if (reg_t0 < getT0() && reg_t1 > getT1())
          return SURROUNDS_LABEL;
-      else if (reg_t1 < t)
+      else if (reg_t1 < getT0())
          return BEFORE_LABEL;
-      else if (reg_t0 > t1)
+      else if (reg_t0 > getT1())
          return AFTER_LABEL;
 
-      else if (reg_t0 >= t && reg_t0 <= t1 && reg_t1 >= t && reg_t1 <= t1)
+      else if (reg_t0 >= getT0() && reg_t0 <= getT1() &&
+               reg_t1 >= getT0() && reg_t1 <= getT1())
          return WITHIN_LABEL;
 
-      else if (reg_t0 >= t && reg_t0 <= t1)
+      else if (reg_t0 >= getT0() && reg_t0 <= getT1())
          return BEGINS_IN_LABEL;
       else
          return ENDS_IN_LABEL;
@@ -1276,21 +1298,22 @@ LabelStruct::TimeRelations LabelStruct::RegionRelation(
       // The first test catches bordered point-labels and selected-through
       // region-labels; move it to third and selection edges become inclusive
       // WRT point-labels.
-      if (reg_t0 <= t && reg_t1 >= t1)
+      if (reg_t0 <= getT0() && reg_t1 >= getT1())
          return SURROUNDS_LABEL;
-      else if (reg_t1 <= t)
+      else if (reg_t1 <= getT0())
          return BEFORE_LABEL;
-      else if (reg_t0 >= t1)
+      else if (reg_t0 >= getT1())
          return AFTER_LABEL;
 
       // At this point, all point labels should have returned.
 
-      else if (reg_t0 > t && reg_t0 < t1 && reg_t1 > t && reg_t1 < t1)
+      else if (reg_t0 > getT0() && reg_t0 < getT1() &&
+               reg_t1 > getT0() && reg_t1 < getT1())
          return WITHIN_LABEL;
 
       // Knowing that none of the other relations match simplifies remaining
       // tests
-      else if (reg_t0 > t && reg_t0 < t1)
+      else if (reg_t0 > getT0() && reg_t0 < getT1())
          return BEGINS_IN_LABEL;
       else
          return ENDS_IN_LABEL;
@@ -1310,9 +1333,9 @@ void LabelTrack::MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, dou
    LabelStruct * pLabel = mLabels[ iLabel ];
 
    // Adjust the requested edge.
-   pLabel->AdjustEdge( iEdge, fNewTime );
-   // If the label is not inverted, then we are done.
-   if( pLabel->t <= pLabel->t1 )
+   bool flipped = pLabel->AdjustEdge( iEdge, fNewTime );
+   // If the edges did not swap, then we are done.
+   if( ! flipped )
       return;
 
    // If swapping's not allowed we must also move the edge
@@ -1322,12 +1345,6 @@ void LabelTrack::MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, dou
       pLabel->AdjustEdge( -iEdge, fNewTime );
       return;
    }
-
-   // Swapping's allowed and we moved the 'wrong' edge.
-   // Swap the edges.
-   double fTemp = pLabel->t;
-   pLabel->t = pLabel->t1;
-   pLabel->t1 = fTemp;
 
    // Swap our record of what we are dragging.
    int Temp = mMouseOverLabelLeft;
@@ -1360,7 +1377,7 @@ static int Constrain( int value, int min, int max )
 ///
 bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
                              wxRect & r, double h, double pps,
-                             double *newSel0, double *newSel1)
+                             SelectedRegion *newSel)
 {
    if(evt.LeftUp())
    {
@@ -1447,8 +1464,7 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
          {
             //Set the selection region to be equal to
             //the new size of the label.
-            *newSel0 = mLabels[mSelIndex]->t;
-            *newSel1 = mLabels[mSelIndex]->t1;
+            *newSel = mLabels[mSelIndex]->selectedRegion;
          }
          SortLabels();
       }
@@ -1515,7 +1531,8 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
              (mMouseOverLabelLeft >=0)
            )
          {
-            t = (mLabels[mMouseOverLabelRight]->t1+mLabels[mMouseOverLabelLeft]->t)/2.0f;
+            t = (mLabels[mMouseOverLabelRight]->getT1() +
+                 mLabels[mMouseOverLabelLeft]->getT0()) / 2.0f;
             // If we're moving two edges, then it's a move (label size preserved)
             // if both edges are the same label, and it's an adjust (label sizes change)
             // if we're on a boundary between two different labels.
@@ -1523,11 +1540,11 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
          }
          else if(mMouseOverLabelRight >=0)
          {
-            t = mLabels[mMouseOverLabelRight]->t1;
+            t = mLabels[mMouseOverLabelRight]->getT1();
          }
          else if(mMouseOverLabelLeft >=0)
          {
-            t = mLabels[mMouseOverLabelLeft]->t;
+            t = mLabels[mMouseOverLabelLeft]->getT0();
          }
          mxMouseDisplacement = (int)((((t-h) * pps) + r.x )-evt.m_x);
          return false;
@@ -1581,8 +1598,7 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
          if(OverTextBox(pLabel, evt.m_x, evt.m_y))
          {
             mSelIndex = i;
-            *newSel0 = mLabels[i]->t;
-            *newSel1 = mLabels[i]->t1;
+            *newSel = mLabels[i]->selectedRegion;
             // set mouseXPos to set current cursor position
             if (changeCursor)
                mMouseXPos = evt.m_x;
@@ -1624,12 +1640,14 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
          {
             double t0, t1;
             pProj->GetPlayRegion(&t0, &t1);
-            if (pProj->mViewInfo.sel0 == t0 && pProj->mViewInfo.sel1 == t1)
+            if (pProj->mViewInfo.selectedRegion.t0() == t0 &&
+                pProj->mViewInfo.selectedRegion.t1() == t1)
                return false;
          }
 
          // If there's a label there already don't capture
-         if( GetLabelIndex( pProj->mViewInfo.sel0,  pProj->mViewInfo.sel1) != wxNOT_FOUND )
+         if( GetLabelIndex(pProj->mViewInfo.selectedRegion.t0(),
+                           pProj->mViewInfo.selectedRegion.t1()) != wxNOT_FOUND )
             return false;
 
          return true;
@@ -1640,7 +1658,7 @@ bool LabelTrack::CaptureKey(wxKeyEvent & event)
 }
 
 /// KeyEvent is called for every keypress when over the label track.
-bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & event)
+bool LabelTrack::OnKeyDown(SelectedRegion &newSel, wxKeyEvent & event)
 {
    // Only track true changes to the label
    bool updated = false;
@@ -1814,8 +1832,7 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
          if (mSelIndex >= 0 && mSelIndex < (int)mLabels.Count()) {
             mCurrentCursorPos = mLabels[mSelIndex]->title.Length();
             //Set the selection region to be equal to the selection bounds of the tabbed-to label.
-            newSel0 = mLabels[mSelIndex]->t;
-            newSel1 = mLabels[mSelIndex]->t1;
+            newSel = mLabels[mSelIndex]->selectedRegion;
          }
          else {
             mSelIndex = -1;
@@ -1837,15 +1854,17 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
             int len = (int) mLabels.Count();
             if (event.ShiftDown()) {
                mSelIndex = len - 1;
-               if (newSel0 > mLabels[0]->t) {
-                  while (mSelIndex >= 0 && mLabels[mSelIndex]->t >= newSel0) {
+               if (newSel.t0() > mLabels[0]->getT0()) {
+                  while (mSelIndex >= 0 &&
+                         mLabels[mSelIndex]->getT0() >= newSel.t0()) {
                      mSelIndex--;
                   }
                }
             } else {
                mSelIndex = 0;
-               if (newSel0 < mLabels[len - 1]->t) {
-                  while (mSelIndex < len && mLabels[mSelIndex]->t <= newSel0) {
+               if (newSel.t0() < mLabels[len - 1]->getT0()) {
+                  while (mSelIndex < len &&
+                         mLabels[mSelIndex]->getT0() <= newSel.t0()) {
                      mSelIndex++;
                   }
                }
@@ -1854,8 +1873,7 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
             if (mSelIndex >= 0 && mSelIndex < len) {
                mCurrentCursorPos = mLabels[mSelIndex]->title.Length();
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
-               newSel0 = mLabels[mSelIndex]->t;
-               newSel1 = mLabels[mSelIndex]->t1;
+               newSel = mLabels[mSelIndex]->selectedRegion;
             }
             else {
                mSelIndex = -1;
@@ -1877,7 +1895,7 @@ bool LabelTrack::OnKeyDown(double & newSel0, double & newSel1, wxKeyEvent & even
 
 /// OnChar is called for incoming characters -- that's any keypress not handled
 /// by OnKeyDown.
-bool LabelTrack::OnChar(double & WXUNUSED(newSel0), double & WXUNUSED(newSel1), wxKeyEvent & event)
+bool LabelTrack::OnChar(SelectedRegion &WXUNUSED(newSel), wxKeyEvent & event)
 {
    // Only track true changes to the label
    bool updated = false;
@@ -1933,7 +1951,7 @@ bool LabelTrack::OnChar(double & WXUNUSED(newSel0), double & WXUNUSED(newSel1), 
       }
       SetSelected(true);
       AudacityProject *p = GetActiveProject();
-      AddLabel(p->mViewInfo.sel0, p->mViewInfo.sel1);
+      AddLabel(p->mViewInfo.selectedRegion);
       p->PushState(_("Added label"), _("Label"));
    }
 
@@ -2009,10 +2027,11 @@ bool LabelTrack::IsSelected() const
 /// Export labels including label start and end-times.
 void LabelTrack::Export(wxTextFile & f)
 {
+   // PRL: to do: export other selection fields
    for (int i = 0; i < (int)mLabels.Count(); i++) {
       f.AddLine(wxString::Format(wxT("%f\t%f\t%s"),
-                                 (double)mLabels[i]->t,
-                                 (double)mLabels[i]->t1,
+                                 (double)mLabels[i]->getT0(),
+                                 (double)mLabels[i]->getT1(),
                                  mLabels[i]->title.c_str()));
    }
 }
@@ -2025,7 +2044,7 @@ void LabelTrack::Import(wxTextFile & in)
    int index, lines;
    wxString s,s1;
    wxString title;
-   double t,t1;
+   double t0,t1;
 
    lines = in.GetLineCount();
 
@@ -2051,7 +2070,7 @@ void LabelTrack::Import(wxTextFile & in)
       }
       s = currentLine.Left(i);
 
-      if (!Internat::CompatibleToDouble(s, &t))
+      if (!Internat::CompatibleToDouble(s, &t0))
          return;
 
       //Increment one letter.
@@ -2079,7 +2098,7 @@ void LabelTrack::Import(wxTextFile & in)
       if (!Internat::CompatibleToDouble(s1, &t1))
       {
          //s1 is not a number.
-         t1 = t;  //This is a one-sided label; t1 == t.
+         t1 = t0;  //This is a one-sided label; t1 == t0.
 
          //Because s1 is not a number, the label should be
          //The rest of the line, starting at i2;
@@ -2095,10 +2114,8 @@ void LabelTrack::Import(wxTextFile & in)
          title = currentLine.Right(len - i).Strip(wxString::stripType(0x3)); //0x3 indicates both.
 
       }
-      LabelStruct *l = new LabelStruct();
-      l->t = t;
-      l->t1 = t1;
-      l->title = title;
+      // PRL: to do: import other selection fields
+      LabelStruct *l = new LabelStruct(SelectedRegion(t0, t1), title);
       mLabels.Add(l);
    }
    SortLabels();
@@ -2108,7 +2125,8 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    if (!wxStrcmp(tag, wxT("label"))) {
 
-      LabelStruct *l = new LabelStruct();
+      SelectedRegion selectedRegion;
+      wxString title;
 
       // loop through attrs, which is a null-terminated list of
       // attribute-value pairs
@@ -2124,27 +2142,28 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          const wxString strValue = value;
          if (!XMLValueChecker::IsGoodString(strValue))
          {
-            delete l;
             return false;
          }
 
          if (!wxStrcmp(attr, wxT("t")) && Internat::CompatibleToDouble(strValue, &dblValue))
-            l->t = dblValue;
+            selectedRegion.setT0(dblValue, false);
          else if (!wxStrcmp(attr, wxT("t1")) && Internat::CompatibleToDouble(strValue, &dblValue))
          {
             has_t1 = true;
-            l->t1 = dblValue;
+            selectedRegion.setT1(dblValue, false);
          }
+         // PRL: to do: read other selection fields
          else if (!wxStrcmp(attr, wxT("title")))
-            l->title = strValue;
+            title = strValue;
 
       } // while
 
       // Handle files created by Audacity 1.1.   Labels in Audacity 1.1
       // did not have separate start- and end-times.
       if (!has_t1)
-         l->t1 = l->t;
+         selectedRegion.collapseToT0();
 
+      LabelStruct *l = new LabelStruct(selectedRegion, title);
       mLabels.Add(l);
 
       return true;
@@ -2211,8 +2230,10 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile)
 
    for (i = 0; i < len; i++) {
       xmlFile.StartTag(wxT("label"));
-      xmlFile.WriteAttr(wxT("t"), mLabels[i]->t, 8);
-      xmlFile.WriteAttr(wxT("t1"), mLabels[i]->t1, 8);
+      // PRL: mismatch of attribute name and structure field name, historical
+      xmlFile.WriteAttr(wxT("t"), mLabels[i]->getT0(), 8);
+      xmlFile.WriteAttr(wxT("t1"), mLabels[i]->getT1(), 8);
+      // PRL: to do: write other selection fields
       xmlFile.WriteAttr(wxT("title"), mLabels[i]->title);
       xmlFile.EndTag(wxT("label"));
    }
@@ -2238,10 +2259,13 @@ bool LabelTrack::Load(wxTextFile * in, DirManager * dirManager)
 
    for (i = 0; i < len; i++) {
       LabelStruct *l = new LabelStruct();
-      if (!Internat::CompatibleToDouble(in->GetNextLine(), &l->t))
+      double t0;
+      if (!Internat::CompatibleToDouble(in->GetNextLine(), &t0))
          return false;
+      l->selectedRegion.setT0(t0, false);
       // Legacy file format does not include label end-times.
-      l->t1 = l->t;
+      l->selectedRegion.collapseToT0();
+      // PRL: nothing new to do, legacy file support
       l->title = in->GetNextLine();
       mLabels.Add(l);
    }
@@ -2259,7 +2283,7 @@ bool LabelTrack::Save(wxTextFile * out, bool overwrite)
    out->AddLine(wxString::Format(wxT("%d"), len));
 
    for (int i = 0; i < len; i++) {
-      out->AddLine(wxString::Format(wxT("%lf"), mLabels[i]->t));
+      out->AddLine(wxString::Format(wxT("%lf"), mLabels[i]->selectedRegion.mT0));
       out->AddLine(mLabels[i]->title);
    }
    out->AddLine(wxT("MLabelsEnd"));
@@ -2299,31 +2323,37 @@ bool LabelTrack::Copy(double t0, double t1, Track ** dest)
       LabelStruct::TimeRelations relation =
                         mLabels[i]->RegionRelation(t0, t1, this);
       if (relation == LabelStruct::SURROUNDS_LABEL) {
-         LabelStruct *l = new LabelStruct();
-         l->t = mLabels[i]->t - t0;
-         l->t1 = mLabels[i]->t1 - t0;
-         l->title = mLabels[i]->title;
+         const LabelStruct &label = *mLabels[i];
+         LabelStruct *l =
+            new LabelStruct(label.selectedRegion,
+                            label.getT0() - t0,
+                            label.getT1() - t0,
+                            label.title);
          ((LabelTrack *) (*dest))->mLabels.Add(l);
       }
       else if (relation == LabelStruct::WITHIN_LABEL) {
-         LabelStruct *l = new LabelStruct();
-         l->t = 0;
-         l->t1 = t1 - t0;
-         l->title = mLabels[i]->title;
+         const LabelStruct &label = *mLabels[i];
+         LabelStruct *l =
+            new LabelStruct(label.selectedRegion, 0, t1-t0,
+                            label.title);
          ((LabelTrack *) (*dest))->mLabels.Add(l);
       }
       else if (relation == LabelStruct::BEGINS_IN_LABEL) {
-         LabelStruct *l = new LabelStruct();
-         l->t = 0;
-         l->t1 = mLabels[i]->t1 - t0;
-         l->title = mLabels[i]->title;
+         const LabelStruct &label = *mLabels[i];
+         LabelStruct *l =
+            new LabelStruct(label.selectedRegion,
+                            0,
+                            label.getT1() - t0,
+                            label.title);
          ((LabelTrack *) (*dest))->mLabels.Add(l);
       }
       else if (relation == LabelStruct::ENDS_IN_LABEL) {
-         LabelStruct *l = new LabelStruct();
-         l->t = mLabels[i]->t - t0;
-         l->t1 = t1 - t0;
-         l->title = mLabels[i]->title;
+         const LabelStruct &label = *mLabels[i];
+         LabelStruct *l =
+            new LabelStruct(label.selectedRegion,
+                            label.getT0() - t0,
+                            t1 - t0,
+                            label.title);
          ((LabelTrack *) (*dest))->mLabels.Add(l);
       }
    }
@@ -2341,15 +2371,17 @@ bool LabelTrack::PasteOver(double t, Track * src)
    int len = mLabels.Count();
    int pos = 0;
 
-   while (pos < len && mLabels[pos]->t < t)
+   while (pos < len && mLabels[pos]->getT0() < t)
       pos++;
 
    LabelTrack *sl = (LabelTrack *) src;
    for (unsigned int j = 0; j < sl->mLabels.Count(); j++) {
-      LabelStruct *l = new LabelStruct();
-      l->t = sl->mLabels[j]->t + t;
-      l->t1 = sl->mLabels[j]->t1 + t;
-      l->title = sl->mLabels[j]->title;
+      const LabelStruct &label = *sl->mLabels[j];
+      LabelStruct *l =
+         new LabelStruct(label.selectedRegion,
+                         label.getT0() + t,
+                         label.getT1() + t,
+                         label.title);
       mLabels.Insert(l, pos++);
       len++;
    }
@@ -2393,13 +2425,16 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
 
          for (int j = 1; j <= n; j++)
          {
-            LabelStruct *l = new LabelStruct();
-            l->t = mLabels[i]->t + j * tLen;
-            l->t1 = mLabels[i]->t1 + j * tLen;
-            l->title = mLabels[i]->title;
+            const LabelStruct &label = *mLabels[i];
+            LabelStruct *l =
+               new LabelStruct(label.selectedRegion,
+                               label.getT0() + j * tLen,
+                               label.getT1() + j * tLen,
+                               label.title);
 
             // Figure out where to insert
-            while (pos < mLabels.Count() && mLabels[pos]->t < l->t)
+            while (pos < mLabels.Count() &&
+                   mLabels[pos]->getT0() < l->getT0())
                pos++;
             mLabels.Insert(l, pos);
          }
@@ -2408,7 +2443,7 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
       {
          // Label ends inside the selection; ShiftLabelsOnInsert() hasn't touched
          // it, and we need to extend it through to the last repeat interval
-         mLabels[i]->t1 += n * tLen;
+         mLabels[i]->selectedRegion.moveT1(n * tLen);
       }
 
       // Other cases have already been handled by ShiftLabelsOnInsert()
@@ -2427,12 +2462,12 @@ bool LabelTrack::Silence(double t0, double t1)
       if (relation == LabelStruct::WITHIN_LABEL)
       {
          // Split label around the selection
-         LabelStruct *l = new LabelStruct();
-         l->t = t1;
-         l->t1 = mLabels[i]->t1;
-         l->title = mLabels[i]->title;
+         const LabelStruct &label = *mLabels[i];
+         LabelStruct *l =
+            new LabelStruct(label.selectedRegion, t1, label.getT1(),
+                            label.title);
 
-         mLabels[i]->t1 = t0;
+         mLabels[i]->selectedRegion.setT1(t0);
 
          // This might not be the right place to insert, but we sort at the end
          ++i;
@@ -2441,12 +2476,12 @@ bool LabelTrack::Silence(double t0, double t1)
       else if (relation == LabelStruct::ENDS_IN_LABEL)
       {
          // Beginning of label to selection end
-         mLabels[i]->t = t1;
+         mLabels[i]->selectedRegion.setT0(t1);
       }
       else if (relation == LabelStruct::BEGINS_IN_LABEL)
       {
          // End of label to selection beginning
-         mLabels[i]->t1 = t0;
+         mLabels[i]->selectedRegion.setT1(t0);
       }
       else if (relation == LabelStruct::SURROUNDS_LABEL)
       {
@@ -2466,11 +2501,14 @@ bool LabelTrack::InsertSilence(double t, double len)
    int numLabels = mLabels.Count();
 
    for (int i = 0; i < numLabels; i++) {
-      if (mLabels[i]->t >= t)
-         mLabels[i]->t += len;
+      double t0 = mLabels[i]->getT0();
+      double t1 = mLabels[i]->getT1();
+      if (t0 >= t)
+         t0 += len;
 
-      if (mLabels[i]->t1 >= t)
-         mLabels[i]->t1 += len;
+      if (t1 >= t)
+         t1 += len;
+      mLabels[i]->selectedRegion.setTimes(t0, t1);
    }
 
    return true;
@@ -2501,9 +2539,9 @@ int LabelTrack::GetLabelIndex(double t, double t1)
    for( i=0;i<len;i++)
    {
       l = mLabels[i];
-      if( fabs( l->t - t ) > delta )
+      if( fabs( l->getT0() - t ) > delta )
          continue;
-      if( fabs( l->t1 - t1 ) > delta )
+      if( fabs( l->getT1() - t1 ) > delta )
          continue;
       return i;
    }
@@ -2511,19 +2549,17 @@ int LabelTrack::GetLabelIndex(double t, double t1)
    return wxNOT_FOUND;
 }
 
-int LabelTrack::AddLabel(double t, double t1, const wxString &title)
+int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
+                         const wxString &title)
 {
-   LabelStruct *l = new LabelStruct();
-   l->t = t;
-   l->t1 = t1;
-   l->title = title;
+   LabelStruct *l = new LabelStruct(selectedRegion, title);
    mCurrentCursorPos = title.length();
    mInitialCursorPos = mCurrentCursorPos;
 
    int len = mLabels.Count();
    int pos = 0;
 
-   while (pos < len && mLabels[pos]->t < t)
+   while (pos < len && mLabels[pos]->getT0() < selectedRegion.t0())
       pos++;
 
    mLabels.Insert(l, pos);
@@ -2710,7 +2746,8 @@ void LabelTrack::SortLabels()
    for (i = 1; i < (int)mLabels.Count(); i++)
    {
       j=i-1;
-      while( (j>=0) && (mLabels[j]->t > mLabels[i]->t) )
+      while( (j>=0) && (mLabels[j]->getT0() >
+                        mLabels[i]->getT0()) )
       {
          j--;
       }
@@ -2756,7 +2793,8 @@ wxString LabelTrack::GetTextOfLabels(double t0, double t1)
 
    for (unsigned int i=0; i < mLabels.GetCount(); ++i)
    {
-      if (mLabels[i]->t >= t0 && mLabels[i]->t1 <= t1)
+      if (mLabels[i]->getT0() >= t0 &&
+          mLabels[i]->getT1() <= t1)
       {
          if (!firstLabel)
             retVal += '\t';

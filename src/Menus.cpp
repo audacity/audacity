@@ -1416,7 +1416,7 @@ wxUint32 AudacityProject::GetUpdateFlags()
    else
       flags |= AudioIOBusyFlag;
 
-   if (mViewInfo.sel1 > mViewInfo.sel0)
+   if (!mViewInfo.selectedRegion.isPoint())
       flags |= TimeSelectedFlag;
 
    TrackListIterator iter(mTracks);
@@ -1432,7 +1432,8 @@ wxUint32 AudacityProject::GetUpdateFlags()
             flags |= TracksSelectedFlag;
             for (int i = 0; i < lt->GetNumLabels(); i++) {
                const LabelStruct *ls = lt->GetLabel(i);
-               if (ls->t >= mViewInfo.sel0 && ls->t1 <= mViewInfo.sel1) {
+               if (ls->getT0() >= mViewInfo.selectedRegion.t0() &&
+                   ls->getT1() <= mViewInfo.selectedRegion.t1()) {
                   flags |= LabelsSelectedFlag;
                   break;
                }
@@ -1523,7 +1524,8 @@ wxUint32 AudacityProject::GetUpdateFlags()
 void AudacityProject::SelectAllIfNone()
 {
    wxUint32 flags = GetUpdateFlags();
-   if(((flags & TracksSelectedFlag) ==0) || (mViewInfo.sel0 >= mViewInfo.sel1))
+   if(((flags & TracksSelectedFlag) ==0) ||
+      (mViewInfo.selectedRegion.isPoint()))
       OnSelectAll();
 }
 
@@ -1783,10 +1785,11 @@ void AudacityProject::OnPlayToSelection()
 
    double t0,t1;
    // check region between pointer and the nearest selection edge
-   if (fabs(pos - mViewInfo.sel0) < fabs(pos - mViewInfo.sel1)) {
-      t0 = t1 = mViewInfo.sel0;
+   if (fabs(pos - mViewInfo.selectedRegion.t0()) <
+       fabs(pos - mViewInfo.selectedRegion.t1())) {
+      t0 = t1 = mViewInfo.selectedRegion.t0();
    } else {
-      t0 = t1 = mViewInfo.sel1;
+      t0 = t1 = mViewInfo.selectedRegion.t1();
    }
    if( pos < t1)
       t0=pos;
@@ -1920,10 +1923,7 @@ void AudacityProject::OnPlayStopSelect()
    if (gAudioIO->IsStreamActive(GetAudioIOToken())) {
       toolbar->SetPlay(false);        //Pops
       toolbar->SetStop(true);         //Pushes stop down
-      mViewInfo.sel0 = gAudioIO->GetStreamTime();
-      if( mViewInfo.sel1 < mViewInfo.sel0 ) {
-         mViewInfo.sel1 = mViewInfo.sel0;
-      }
+      mViewInfo.selectedRegion.setT0(gAudioIO->GetStreamTime(), false);
       ModifyState(false);           // without bWantsAutoSave
       toolbar->OnStop(evt);
    }
@@ -1942,10 +1942,7 @@ void AudacityProject::OnStopSelect()
    wxCommandEvent evt;
 
    if (gAudioIO->IsStreamActive()) {
-      mViewInfo.sel0 = gAudioIO->GetStreamTime();
-      if( mViewInfo.sel1 < mViewInfo.sel0 ) {
-         mViewInfo.sel1 = mViewInfo.sel0;
-      }
+      mViewInfo.selectedRegion.setT0(gAudioIO->GetStreamTime(), false);
       GetControlToolBar()->OnStop(evt);
       ModifyState(false);           // without bWantsAutoSave
    }
@@ -2253,32 +2250,22 @@ void AudacityProject::OnSetLeftSelection()
    if ((GetAudioIOToken() > 0) && gAudioIO->IsStreamActive(GetAudioIOToken()))
    {
       double indicator = gAudioIO->GetStreamTime();
-      mViewInfo.sel0 = indicator;
+      mViewInfo.selectedRegion.setT0(indicator, false);
       bSelChanged = true;
    }
    else
    {
       wxString fmt = GetSelectionFormat();
       TimeDialog dlg(this, _("Set Left Selection Boundary"),
-         fmt, mRate, mViewInfo.sel0, _("Position"));
+         fmt, mRate, mViewInfo.selectedRegion.t0(), _("Position"));
 
       if (wxID_OK == dlg.ShowModal())
       {
          //Get the value from the dialog
-         mViewInfo.sel0 = dlg.GetTimeValue();
-
-         //Make sure it is 'legal'
-         if (mViewInfo.sel0 < 0.0)
-            mViewInfo.sel0 = 0.0;
-
+         mViewInfo.selectedRegion.setT0(
+            std::max(0.0, dlg.GetTimeValue()), false);
          bSelChanged = true;
       }
-   }
-
-   if (mViewInfo.sel1 < mViewInfo.sel0)
-   {
-      mViewInfo.sel1 = mViewInfo.sel0;
-      bSelChanged = true;
    }
 
    if (bSelChanged)
@@ -2295,32 +2282,22 @@ void AudacityProject::OnSetRightSelection()
    if ((GetAudioIOToken() > 0) && gAudioIO->IsStreamActive(GetAudioIOToken()))
    {
       double indicator = gAudioIO->GetStreamTime();
-      mViewInfo.sel1 = indicator;
+      mViewInfo.selectedRegion.setT1(indicator, false);
       bSelChanged = true;
    }
    else
    {
       wxString fmt = GetSelectionFormat();
       TimeDialog dlg(this, _("Set Right Selection Boundary"),
-         fmt, mRate, mViewInfo.sel1, _("Position"));
+         fmt, mRate, mViewInfo.selectedRegion.t1(), _("Position"));
 
       if (wxID_OK == dlg.ShowModal())
       {
          //Get the value from the dialog
-         mViewInfo.sel1 = dlg.GetTimeValue();
-
-         //Make sure it is 'legal'
-         if(mViewInfo.sel1 < 0)
-            mViewInfo.sel1 = 0;
-
+         mViewInfo.selectedRegion.setT1(
+            std::max(0.0, dlg.GetTimeValue()), false);
          bSelChanged = true;
       }
-   }
-
-   if (mViewInfo.sel0 >  mViewInfo.sel1)
-   {
-      mViewInfo.sel0 = mViewInfo.sel1;
-      bSelChanged = true;
    }
 
    if (bSelChanged)
@@ -2633,15 +2610,12 @@ double AudacityProject::NearestZeroCrossing(double t0)
 
 void AudacityProject::OnZeroCrossing()
 {
-   if (mViewInfo.sel0 == mViewInfo.sel1)
-      mViewInfo.sel0 = mViewInfo.sel1 =
-         NearestZeroCrossing(mViewInfo.sel0);
+   const double t0 = NearestZeroCrossing(mViewInfo.selectedRegion.t0());
+   if (mViewInfo.selectedRegion.isPoint())
+      mViewInfo.selectedRegion.setTimes(t0, t0);
    else {
-      mViewInfo.sel0 = NearestZeroCrossing(mViewInfo.sel0);
-      mViewInfo.sel1 = NearestZeroCrossing(mViewInfo.sel1);
-
-      if (mViewInfo.sel1 < mViewInfo.sel0)
-         mViewInfo.sel1 = mViewInfo.sel0;
+      const double t1 = NearestZeroCrossing(mViewInfo.selectedRegion.t1());
+      mViewInfo.selectedRegion.setTimes(t0, t1);
    }
 
    ModifyState(false);
@@ -2725,7 +2699,7 @@ bool AudacityProject::OnEffect(int type,
    }
 
    if (f->DoEffect(this, type, mRate, mTracks, mTrackFactory,
-                   &mViewInfo.sel0, &mViewInfo.sel1, params)) {
+                   &mViewInfo.selectedRegion, params)) {
       if (saveState)
       {
          wxString longDesc = f->GetEffectDescription();
@@ -2754,7 +2728,8 @@ bool AudacityProject::OnEffect(int type,
       //mchinen:12/14/08 reapplying for generate effects
       if ( f->GetEffectFlags() & INSERT_EFFECT)
       {
-            if (count == 0 || (clean && mViewInfo.sel0 == 0.0)) OnZoomFit();
+         if (count == 0 || (clean && mViewInfo.selectedRegion.t0() == 0.0))
+            OnZoomFit();
           //  mTrackPanel->Refresh(false);
       }
       RedrawProject();
@@ -3043,7 +3018,8 @@ void AudacityProject::OnExportSelection()
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
    e.SetFileDialogTitle( _("Export Selected Audio") );
-   e.Process(this, true, mViewInfo.sel0, mViewInfo.sel1);
+   e.Process(this, true, mViewInfo.selectedRegion.t0(),
+      mViewInfo.selectedRegion.t1());
 }
 
 void AudacityProject::OnExportMultiple()
@@ -3110,7 +3086,7 @@ void AudacityProject::OnUndo()
       return;
    }
 
-   TrackList *l = mUndoManager.Undo(&mViewInfo.sel0, &mViewInfo.sel1);
+   TrackList *l = mUndoManager.Undo(&mViewInfo.selectedRegion);
    PopState(l);
 
    mTrackPanel->SetFocusedTrack(NULL);
@@ -3131,7 +3107,7 @@ void AudacityProject::OnRedo()
       return;
    }
 
-   TrackList *l = mUndoManager.Redo(&mViewInfo.sel0, &mViewInfo.sel1);
+   TrackList *l = mUndoManager.Redo(&mViewInfo.selectedRegion);
    PopState(l);
 
    mTrackPanel->SetFocusedTrack(NULL);
@@ -3175,10 +3151,12 @@ void AudacityProject::OnCut()
 #if defined(USE_MIDI)
          if (n->GetKind() == Track::Note)
             // Since portsmf has a built-in cut operator, we use that instead
-            n->Cut(mViewInfo.sel0, mViewInfo.sel1, &dest);
+            n->Cut(mViewInfo.selectedRegion.t0(),
+                   mViewInfo.selectedRegion.t1(), &dest);
          else
 #endif
-            n->Copy(mViewInfo.sel0, mViewInfo.sel1, &dest);
+            n->Copy(mViewInfo.selectedRegion.t0(),
+                    mViewInfo.selectedRegion.t1(), &dest);
 
          if (dest) {
             dest->SetChannel(n->GetChannel());
@@ -3203,30 +3181,32 @@ void AudacityProject::OnCut()
 #endif
             case Track::Wave:
                if (gPrefs->Read(wxT("/GUI/EnableCutLines"), (long)0)) {
-                  ((WaveTrack*)n)->ClearAndAddCutLine(mViewInfo.sel0,
-                                                      mViewInfo.sel1);
+                  ((WaveTrack*)n)->ClearAndAddCutLine(
+                     mViewInfo.selectedRegion.t0(),
+                     mViewInfo.selectedRegion.t1());
                   break;
                }
 
                // Fall through
 
             default:
-               n->Clear(mViewInfo.sel0, mViewInfo.sel1);
+               n->Clear(mViewInfo.selectedRegion.t0(),
+                        mViewInfo.selectedRegion.t1());
             break;
          }
       }
       n = iter.Next();
    }
 
-   msClipT0 = mViewInfo.sel0;
-   msClipT1 = mViewInfo.sel1;
+   msClipT0 = mViewInfo.selectedRegion.t0();
+   msClipT1 = mViewInfo.selectedRegion.t1();
    msClipProject = this;
 
    PushState(_("Cut to the clipboard"), _("Cut"));
 
    RedrawProject();
 
-   mViewInfo.sel1 = mViewInfo.sel0;
+   mViewInfo.selectedRegion.collapseToT0();
 }
 
 
@@ -3243,11 +3223,15 @@ void AudacityProject::OnSplitCut()
          dest = NULL;
          if (n->GetKind() == Track::Wave)
          {
-            ((WaveTrack*)n)->SplitCut(mViewInfo.sel0, mViewInfo.sel1, &dest);
+            ((WaveTrack*)n)->SplitCut(
+               mViewInfo.selectedRegion.t0(),
+               mViewInfo.selectedRegion.t1(), &dest);
          } else
          {
-            n->Copy(mViewInfo.sel0, mViewInfo.sel1, &dest);
-            n->Silence(mViewInfo.sel0, mViewInfo.sel1);
+            n->Copy(mViewInfo.selectedRegion.t0(),
+                    mViewInfo.selectedRegion.t1(), &dest);
+            n->Silence(mViewInfo.selectedRegion.t0(),
+                       mViewInfo.selectedRegion.t1());
          }
          if (dest) {
             dest->SetChannel(n->GetChannel());
@@ -3259,8 +3243,8 @@ void AudacityProject::OnSplitCut()
       n = iter.Next();
    }
 
-   msClipT0 = mViewInfo.sel0;
-   msClipT1 = mViewInfo.sel1;
+   msClipT0 = mViewInfo.selectedRegion.t0();
+   msClipT1 = mViewInfo.selectedRegion.t1();
    msClipProject = this;
 
    PushState(_("Split-cut to the clipboard"), _("Split Cut"));
@@ -3294,7 +3278,8 @@ void AudacityProject::OnCopy()
    while (n) {
       if (n->GetSelected()) {
          dest = NULL;
-         n->Copy(mViewInfo.sel0, mViewInfo.sel1, &dest);
+         n->Copy(mViewInfo.selectedRegion.t0(),
+                 mViewInfo.selectedRegion.t1(), &dest);
          if (dest) {
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
@@ -3305,8 +3290,8 @@ void AudacityProject::OnCopy()
       n = iter.Next();
    }
 
-   msClipT0 = mViewInfo.sel0;
-   msClipT1 = mViewInfo.sel1;
+   msClipT0 = mViewInfo.selectedRegion.t0();
+   msClipT1 = mViewInfo.selectedRegion.t1();
    msClipProject = this;
 
    //Make sure the menus/toolbar states get updated
@@ -3324,8 +3309,8 @@ void AudacityProject::OnPaste()
       return;
 
    // Otherwise, paste into the selected tracks.
-   double t0 = mViewInfo.sel0;
-   double t1 = mViewInfo.sel1;
+   double t0 = mViewInfo.selectedRegion.t0();
+   double t1 = mViewInfo.selectedRegion.t1();
 
    TrackListIterator iter(mTracks);
    TrackListIterator clipIter(msClipboard);
@@ -3512,7 +3497,7 @@ void AudacityProject::OnPaste()
 
    if (bPastedSomething)
    {
-      mViewInfo.sel1 = t0 + msClipT1 - msClipT0;
+      mViewInfo.selectedRegion.setT1(t0 + msClipT1 - msClipT0);
 
       PushState(_("Pasted from the clipboard"), _("Paste"));
 
@@ -3535,7 +3520,8 @@ bool AudacityProject::HandlePasteText()
       if (pLabelTrack->IsSelected()) {
 
          // Yes, so try pasting into it
-         if (pLabelTrack->PasteSelectedText(mViewInfo.sel0, mViewInfo.sel1))
+         if (pLabelTrack->PasteSelectedText(mViewInfo.selectedRegion.t0(),
+                                            mViewInfo.selectedRegion.t1()))
          {
             PushState(_("Pasted text from the clipboard"), _("Paste"));
 
@@ -3637,8 +3623,10 @@ bool AudacityProject::HandlePasteNothingSelected()
       double projRate = p->GetRate();
       double quantT0 = QUANTIZED_TIME(msClipT0, projRate);
       double quantT1 = QUANTIZED_TIME(msClipT1, projRate);
-      mViewInfo.sel0 = 0.0;   // anywhere else and this should be half a sample earlier
-      mViewInfo.sel1 = quantT1 - quantT0;
+      mViewInfo.selectedRegion.setTimes(
+         0.0,   // anywhere else and this should be
+                // half a sample earlier
+         quantT1 - quantT0);
 
       PushState(_("Pasted from the clipboard"), _("Paste"));
 
@@ -3699,8 +3687,10 @@ void AudacityProject::OnPasteNewLabel()
          plt->Unselect();
 
       // Add a new label, paste into it
-      lt->AddLabel(mViewInfo.sel0, mViewInfo.sel1);
-      if (lt->PasteSelectedText(mViewInfo.sel0, mViewInfo.sel1))
+      // Paul L:  copy whatever defines the selected region, not just times
+      lt->AddLabel(mViewInfo.selectedRegion);
+      if (lt->PasteSelectedText(mViewInfo.selectedRegion.t0(),
+                                mViewInfo.selectedRegion.t1()))
          bPastedSomething = true;
 
       // Set previous track
@@ -3726,7 +3716,9 @@ void AudacityProject::OnPasteOver() // not currently in use it appears
 {
    if((msClipT1 - msClipT0) > 0.0)
    {
-      mViewInfo.sel1 = mViewInfo.sel0 + (msClipT1 - msClipT0); // MJS: pointless, given what we do in OnPaste?
+      mViewInfo.selectedRegion.setT1(
+         mViewInfo.selectedRegion.t0() + (msClipT1 - msClipT0));
+         // MJS: pointless, given what we do in OnPaste?
    }
    OnPaste();
 
@@ -3735,7 +3727,7 @@ void AudacityProject::OnPasteOver() // not currently in use it appears
 
 void AudacityProject::OnTrim()
 {
-   if (mViewInfo.sel0 >= mViewInfo.sel1)
+   if (mViewInfo.selectedRegion.isPoint())
       return;
 
    TrackListIterator iter(mTracks);
@@ -3747,13 +3739,15 @@ void AudacityProject::OnTrim()
          {
 #if defined(USE_MIDI)
             case Track::Note:
-               ((NoteTrack*)n)->Trim(mViewInfo.sel0, mViewInfo.sel1);
+               ((NoteTrack*)n)->Trim(mViewInfo.selectedRegion.t0(),
+                                     mViewInfo.selectedRegion.t1());
             break;
 #endif
 
             case Track::Wave:
                //Delete the section before the left selector
-               ((WaveTrack*)n)->Trim(mViewInfo.sel0, mViewInfo.sel1);
+               ((WaveTrack*)n)->Trim(mViewInfo.selectedRegion.t0(),
+                                     mViewInfo.selectedRegion.t1());
             break;
 
             default:
@@ -3764,7 +3758,7 @@ void AudacityProject::OnTrim()
    }
 
    PushState(wxString::Format(_("Trim selected audio tracks from %.2f seconds to %.2f seconds"),
-       mViewInfo.sel0, mViewInfo.sel1),
+       mViewInfo.selectedRegion.t0(), mViewInfo.selectedRegion.t1()),
        _("Trim Audio"));
 
    RedrawProject();
@@ -3785,18 +3779,20 @@ void AudacityProject::OnSplitDelete()
       if (n->GetSelected()) {
          if (n->GetKind() == Track::Wave)
          {
-            ((WaveTrack*)n)->SplitDelete(mViewInfo.sel0, mViewInfo.sel1);
+            ((WaveTrack*)n)->SplitDelete(mViewInfo.selectedRegion.t0(),
+                                         mViewInfo.selectedRegion.t1());
          }
          else {
-            n->Silence(mViewInfo.sel0, mViewInfo.sel1);
+            n->Silence(mViewInfo.selectedRegion.t0(),
+                       mViewInfo.selectedRegion.t1());
          }
       }
       n = iter.Next();
    }
 
    PushState(wxString::Format(_("Split-deleted %.2f seconds at t=%.2f"),
-                              mViewInfo.sel1 - mViewInfo.sel0,
-                              mViewInfo.sel0),
+                              mViewInfo.selectedRegion.duration(),
+                              mViewInfo.selectedRegion.t0()),
              _("Split Delete"));
 
    RedrawProject();
@@ -3812,15 +3808,16 @@ void AudacityProject::OnDisjoin()
       if (n->GetSelected()) {
          if (n->GetKind() == Track::Wave)
          {
-            ((WaveTrack*)n)->Disjoin(mViewInfo.sel0, mViewInfo.sel1);
+            ((WaveTrack*)n)->Disjoin(mViewInfo.selectedRegion.t0(),
+                                     mViewInfo.selectedRegion.t1());
          }
       }
       n = iter.Next();
    }
 
    PushState(wxString::Format(_("Detached %.2f seconds at t=%.2f"),
-                              mViewInfo.sel1 - mViewInfo.sel0,
-                              mViewInfo.sel0),
+                              mViewInfo.selectedRegion.duration(),
+                              mViewInfo.selectedRegion.t0()),
              _("Detach"));
 
    RedrawProject();
@@ -3836,15 +3833,16 @@ void AudacityProject::OnJoin()
       if (n->GetSelected()) {
          if (n->GetKind() == Track::Wave)
          {
-            ((WaveTrack*)n)->Join(mViewInfo.sel0, mViewInfo.sel1);
+            ((WaveTrack*)n)->Join(mViewInfo.selectedRegion.t0(),
+                                  mViewInfo.selectedRegion.t1());
          }
       }
       n = iter.Next();
    }
 
    PushState(wxString::Format(_("Joined %.2f seconds at t=%.2f"),
-                              mViewInfo.sel1 - mViewInfo.sel0,
-                              mViewInfo.sel0),
+                              mViewInfo.selectedRegion.duration(),
+                              mViewInfo.selectedRegion.t0()),
              _("Join"));
 
    RedrawProject();
@@ -3855,11 +3853,12 @@ void AudacityProject::OnSilence()
    SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
 
    for (Track *n = iter.First(); n; n = iter.Next())
-      n->Silence(mViewInfo.sel0, mViewInfo.sel1);
+      n->Silence(mViewInfo.selectedRegion.t0(), mViewInfo.selectedRegion.t1());
 
    PushState(wxString::
              Format(_("Silenced selected tracks for %.2f seconds at %.2f"),
-                    mViewInfo.sel1 - mViewInfo.sel0, mViewInfo.sel0),
+                    mViewInfo.selectedRegion.duration(),
+                    mViewInfo.selectedRegion.t0()),
              _("Silence"));
 
    mTrackPanel->Refresh(false);
@@ -3875,10 +3874,11 @@ void AudacityProject::OnDuplicate()
    while (n) {
       if (n->GetSelected()) {
          Track *dest = NULL;
-         n->Copy(mViewInfo.sel0, mViewInfo.sel1, &dest);
+         n->Copy(mViewInfo.selectedRegion.t0(),
+                 mViewInfo.selectedRegion.t1(), &dest);
          if (dest) {
             dest->Init(*n);
-            dest->SetOffset(wxMax(mViewInfo.sel0, n->GetOffset()));
+            dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), n->GetOffset()));
             mTracks->Add(dest);
          }
       }
@@ -3897,7 +3897,7 @@ void AudacityProject::OnDuplicate()
 
 void AudacityProject::OnCutLabels()
 {
-  if( mViewInfo.sel0 >= mViewInfo.sel1 )
+  if( mViewInfo.selectedRegion.isPoint() )
      return;
 
   // Because of grouping the copy may need to operate on different tracks than
@@ -3911,7 +3911,7 @@ void AudacityProject::OnCutLabels()
 
   msClipProject = this;
 
-  mViewInfo.sel1 = mViewInfo.sel0;
+  mViewInfo.selectedRegion.collapseToT0();
 
   PushState(
    /* i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio regions.*/
@@ -3924,7 +3924,7 @@ void AudacityProject::OnCutLabels()
 
 void AudacityProject::OnSplitCutLabels()
 {
-  if( mViewInfo.sel0 >= mViewInfo.sel1 )
+  if( mViewInfo.selectedRegion.isPoint() )
      return;
 
   EditClipboardByLabel( &WaveTrack::SplitCut );
@@ -3942,7 +3942,7 @@ void AudacityProject::OnSplitCutLabels()
 
 void AudacityProject::OnCopyLabels()
 {
-  if( mViewInfo.sel0 >= mViewInfo.sel1 )
+  if( mViewInfo.selectedRegion.isPoint() )
      return;
 
   EditClipboardByLabel( &WaveTrack::Copy );
@@ -3958,12 +3958,12 @@ void AudacityProject::OnCopyLabels()
 
 void AudacityProject::OnDeleteLabels()
 {
-  if( mViewInfo.sel0 >= mViewInfo.sel1 )
+  if( mViewInfo.selectedRegion.isPoint() )
      return;
 
   EditByLabel( &WaveTrack::Clear, true );
 
-  mViewInfo.sel1 = mViewInfo.sel0;
+  mViewInfo.selectedRegion.collapseToT0();
 
   PushState(
    /* i18n-hint: (verb) Audacity has just deleted the labeled audio regions*/
@@ -3976,7 +3976,7 @@ void AudacityProject::OnDeleteLabels()
 
 void AudacityProject::OnSplitDeleteLabels()
 {
-  if( mViewInfo.sel0 >= mViewInfo.sel1 )
+  if( mViewInfo.selectedRegion.isPoint() )
      return;
 
   EditByLabel( &WaveTrack::SplitDelete, false );
@@ -3992,7 +3992,7 @@ void AudacityProject::OnSplitDeleteLabels()
 
 void AudacityProject::OnSilenceLabels()
 {
-  if( mViewInfo.sel0 >= mViewInfo.sel1 )
+  if( mViewInfo.selectedRegion.isPoint() )
      return;
 
   EditByLabel( &WaveTrack::Silence, false );
@@ -4021,7 +4021,7 @@ void AudacityProject::OnSplitLabels()
 
 void AudacityProject::OnJoinLabels()
 {
-  if( mViewInfo.sel0 >= mViewInfo.sel1 )
+  if( mViewInfo.selectedRegion.isPoint() )
      return;
 
   EditByLabel( &WaveTrack::Join, false );
@@ -4037,7 +4037,7 @@ void AudacityProject::OnJoinLabels()
 
 void AudacityProject::OnDisjoinLabels()
 {
-  if( mViewInfo.sel0 >= mViewInfo.sel1 )
+  if( mViewInfo.selectedRegion.isPoint() )
      return;
 
   EditByLabel( &WaveTrack::Disjoin, false );
@@ -4057,8 +4057,8 @@ void AudacityProject::OnSplit()
 {
    TrackListIterator iter(mTracks);
 
-   double sel0 = mViewInfo.sel0;
-   double sel1 = mViewInfo.sel1;
+   double sel0 = mViewInfo.selectedRegion.t0();
+   double sel1 = mViewInfo.selectedRegion.t1();
 
    for (Track* n=iter.First(); n; n = iter.Next())
    {
@@ -4088,8 +4088,8 @@ void AudacityProject::OnSplit()
 
    while (n) {
       if (n->GetSelected()) {
-         double sel0 = mViewInfo.sel0;
-         double sel1 = mViewInfo.sel1;
+         double sel0 = mViewInfo.selectedRegion.t0();
+         double sel1 = mViewInfo.selectedRegion.t1();
 
          dest = NULL;
          n->Copy(sel0, sel1, &dest);
@@ -4136,20 +4136,22 @@ void AudacityProject::OnSplitNew()
          Track *dest = NULL;
          double offset = n->GetOffset();
          if (n->GetKind() == Track::Wave) {
-            ((WaveTrack*)n)->SplitCut(mViewInfo.sel0, mViewInfo.sel1, &dest);
+            ((WaveTrack*)n)->SplitCut(mViewInfo.selectedRegion.t0(),
+                                      mViewInfo.selectedRegion.t1(), &dest);
          }
 #if 0
          // LL:  For now, just skip all non-wave tracks since the other do not
          //      yet support proper splitting.
          else {
-            n->Cut(mViewInfo.sel0, mViewInfo.sel1, &dest);
+            n->Cut(mViewInfo.selectedRegion.t0(),
+                   mViewInfo.selectedRegion.t1(), &dest);
          }
 #endif
          if (dest) {
             dest->SetChannel(n->GetChannel());
             dest->SetLinked(n->GetLinked());
             dest->SetName(n->GetName());
-            dest->SetOffset(wxMax(mViewInfo.sel0, offset));
+            dest->SetOffset(wxMax(mViewInfo.selectedRegion.t0(), offset));
             mTracks->Add(dest);
          }
       }
@@ -4173,8 +4175,8 @@ void AudacityProject::OnSelectAll()
       t->SetSelected(true);
       t = iter.Next();
    }
-   mViewInfo.sel0 = mTracks->GetMinOffset();
-   mViewInfo.sel1 = mTracks->GetEndTime();
+   mViewInfo.selectedRegion.setTimes(
+      mTracks->GetMinOffset(), mTracks->GetEndTime());
 
    ModifyState(false);
 
@@ -4186,7 +4188,7 @@ void AudacityProject::OnSelectAll()
 void AudacityProject::OnSelectNone()
 {
    this->SelectNone();
-   mViewInfo.sel1 = mViewInfo.sel0;
+   mViewInfo.selectedRegion.collapseToT0();
    ModifyState(false);
 }
 
@@ -4206,7 +4208,7 @@ void AudacityProject::OnSelectCursorEnd()
       t = iter.Next();
    }
 
-   mViewInfo.sel1 = maxEndOffset;
+   mViewInfo.selectedRegion.setT1(maxEndOffset);
 
    ModifyState(false);
 
@@ -4229,7 +4231,7 @@ void AudacityProject::OnSelectStartCursor()
       t = iter.Next();
    }
 
-   mViewInfo.sel0 = minOffset;
+   mViewInfo.selectedRegion.setT0(minOffset);
 
    ModifyState(false);
 
@@ -4294,24 +4296,26 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    // partially on-screen
 
    bool selectionIsOnscreen =
-      (mViewInfo.sel0 < mViewInfo.h + mViewInfo.screen) &&
-      (mViewInfo.sel1 >= mViewInfo.h);
+      (mViewInfo.selectedRegion.t0() < mViewInfo.h + mViewInfo.screen) &&
+      (mViewInfo.selectedRegion.t1() >= mViewInfo.h);
 
    bool selectionFillsScreen =
-      (mViewInfo.sel0 < mViewInfo.h) &&
-      (mViewInfo.sel1 > mViewInfo.h + mViewInfo.screen);
+      (mViewInfo.selectedRegion.t0() < mViewInfo.h) &&
+      (mViewInfo.selectedRegion.t1() > mViewInfo.h + mViewInfo.screen);
 
    if (selectionIsOnscreen && !selectionFillsScreen) {
       // Start with the center of the selection
-      double selCenter = (mViewInfo.sel0 + mViewInfo.sel1) / 2;
+      double selCenter = (mViewInfo.selectedRegion.t0() +
+                          mViewInfo.selectedRegion.t1()) / 2;
 
       // If the selection center is off-screen, pick the
       // center of the part that is on-screen.
       if (selCenter < mViewInfo.h)
-         selCenter = mViewInfo.h + (mViewInfo.sel1 - mViewInfo.h) / 2;
+         selCenter = mViewInfo.h +
+                     (mViewInfo.selectedRegion.t1() - mViewInfo.h) / 2;
       if (selCenter > mViewInfo.h + mViewInfo.screen)
          selCenter = mViewInfo.h + mViewInfo.screen -
-            (mViewInfo.h + mViewInfo.screen - mViewInfo.sel0) / 2;
+            (mViewInfo.h + mViewInfo.screen - mViewInfo.selectedRegion.t0()) / 2;
 
       // Zoom in
       Zoom(mViewInfo.zoom *= ZoomFactor);
@@ -4332,13 +4336,13 @@ void AudacityProject::ZoomInByFactor( double ZoomFactor )
    /*
    // make sure that the *right-hand* end of the selection is
    // no further *left* than 1/3 of the way across the screen
-   if (mViewInfo.sel1 < newh + mViewInfo.screen / 3)
-      newh = mViewInfo.sel1 - mViewInfo.screen / 3;
+   if (mViewInfo.selectedRegion.t1() < newh + mViewInfo.screen / 3)
+      newh = mViewInfo.selectedRegion.t1() - mViewInfo.screen / 3;
 
    // make sure that the *left-hand* end of the selection is
    // no further *right* than 2/3 of the way across the screen
-   if (mViewInfo.sel0 > newh + mViewInfo.screen * 2 / 3)
-      newh = mViewInfo.sel0 - mViewInfo.screen * 2 / 3;
+   if (mViewInfo.selectedRegion.t0() > newh + mViewInfo.screen * 2 / 3)
+      newh = mViewInfo.selectedRegion.t0() - mViewInfo.screen * 2 / 3;
    */
 
    TP_ScrollWindow(newh);
@@ -4454,7 +4458,7 @@ void AudacityProject::OnZoomFitV()
 
 void AudacityProject::OnZoomSel()
 {
-   if (mViewInfo.sel1 <= mViewInfo.sel0)
+   if (mViewInfo.selectedRegion.isPoint())
       return;
 
    // LL:  The "-1" is just a hack to get around an issue where zooming to
@@ -4463,24 +4467,25 @@ void AudacityProject::OnZoomSel()
    //      where the selected region may be scrolled off the left of the screen.
    //      I know this isn't right, but until the real rounding or 1-off issue is
    //      found, this will have to work.
-   Zoom(((mViewInfo.zoom * mViewInfo.screen) - 1) / (mViewInfo.sel1 - mViewInfo.sel0));
-   TP_ScrollWindow(mViewInfo.sel0);
+   Zoom(((mViewInfo.zoom * mViewInfo.screen) - 1) /
+        (mViewInfo.selectedRegion.t1() - mViewInfo.selectedRegion.t0()));
+   TP_ScrollWindow(mViewInfo.selectedRegion.t0());
 }
 
 void AudacityProject::OnGoSelStart()
 {
-   if (mViewInfo.sel1 <= mViewInfo.sel0)
+   if (mViewInfo.selectedRegion.isPoint())
       return;
 
-   TP_ScrollWindow(mViewInfo.sel0 - (mViewInfo.screen / 2));
+   TP_ScrollWindow(mViewInfo.selectedRegion.t0() - (mViewInfo.screen / 2));
 }
 
 void AudacityProject::OnGoSelEnd()
 {
-   if (mViewInfo.sel1 <= mViewInfo.sel0)
+   if (mViewInfo.selectedRegion.isPoint())
       return;
 
-   TP_ScrollWindow(mViewInfo.sel1 - (mViewInfo.screen / 2));
+   TP_ScrollWindow(mViewInfo.selectedRegion.t1() - (mViewInfo.screen / 2));
 }
 
 void AudacityProject::OnShowClipping()
@@ -4857,17 +4862,16 @@ void AudacityProject::OnMixAndRenderToNewTrack()
 
 void AudacityProject::OnSelectionSave()
 {
-   mSel0save = mViewInfo.sel0;
-   mSel1save = mViewInfo.sel1;
+   mRegionSave =  mViewInfo.selectedRegion;
 }
 
 void AudacityProject::OnSelectionRestore()
 {
-   if ((mSel0save == 0.0) && (mSel1save == 0.0))
+   if ((mRegionSave.t0() == 0.0) &&
+       (mRegionSave.t1() == 0.0))
       return;
 
-   mViewInfo.sel0 = mSel0save;
-   mViewInfo.sel1 = mSel1save;
+   mViewInfo.selectedRegion = mRegionSave;
 
    ModifyState(false);
 
@@ -4891,10 +4895,9 @@ void AudacityProject::OnCursorTrackStart()
    }
 
    if (minOffset < 0.0) minOffset = 0.0;
-   mViewInfo.sel0 = minOffset;
-   mViewInfo.sel1 = minOffset;
+   mViewInfo.selectedRegion.setTimes(minOffset, minOffset);
    ModifyState(false);
-   mTrackPanel->ScrollIntoView(mViewInfo.sel0);
+   mTrackPanel->ScrollIntoView(mViewInfo.selectedRegion.t0());
    mTrackPanel->Refresh(false);
 }
 
@@ -4916,26 +4919,25 @@ void AudacityProject::OnCursorTrackEnd()
       t = iter.Next();
    }
 
-   mViewInfo.sel0 = maxEndOffset;
-   mViewInfo.sel1 = maxEndOffset;
+   mViewInfo.selectedRegion.setTimes(maxEndOffset, maxEndOffset);
    ModifyState(false);
-   mTrackPanel->ScrollIntoView(mViewInfo.sel1);
+   mTrackPanel->ScrollIntoView(mViewInfo.selectedRegion.t1());
    mTrackPanel->Refresh(false);
 }
 
 void AudacityProject::OnCursorSelStart()
 {
-   mViewInfo.sel1 = mViewInfo.sel0;
+   mViewInfo.selectedRegion.collapseToT0();
    ModifyState(false);
-   mTrackPanel->ScrollIntoView(mViewInfo.sel0);
+   mTrackPanel->ScrollIntoView(mViewInfo.selectedRegion.t0());
    mTrackPanel->Refresh(false);
 }
 
 void AudacityProject::OnCursorSelEnd()
 {
-   mViewInfo.sel0 = mViewInfo.sel1;
+   mViewInfo.selectedRegion.collapseToT1();
    ModifyState(false);
-   mTrackPanel->ScrollIntoView(mViewInfo.sel1);
+   mTrackPanel->ScrollIntoView(mViewInfo.selectedRegion.t1());
    mTrackPanel->Refresh(false);
 }
 
@@ -5003,22 +5005,22 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
       shortAction = _("Start");
       break;
    case kAlignStartSelStart:
-      delta = mViewInfo.sel0 - minOffset;
+      delta = mViewInfo.selectedRegion.t0() - minOffset;
       action = _("start to cursor/selection start");
       shortAction = _("Start");
       break;
    case kAlignStartSelEnd:
-      delta = mViewInfo.sel1 - minOffset;
+      delta = mViewInfo.selectedRegion.t1() - minOffset;
       action = _("start to selection end");
       shortAction = _("Start");
       break;
    case kAlignEndSelStart:
-      delta = mViewInfo.sel0 - maxEndOffset;
+      delta = mViewInfo.selectedRegion.t0() - maxEndOffset;
       action = _("end to cursor/selection start");
       shortAction = _("End");
       break;
    case kAlignEndSelEnd:
-      delta = mViewInfo.sel1 - maxEndOffset;
+      delta = mViewInfo.selectedRegion.t1() - maxEndOffset;
       action = _("end to selection end");
       shortAction = _("End");
       break;
@@ -5105,8 +5107,7 @@ void AudacityProject::HandleAlign(int index, bool moveSel)
    }
 
    if (moveSel) {
-      mViewInfo.sel0 += delta;
-      mViewInfo.sel1 += delta;
+      mViewInfo.selectedRegion.move(delta);
       action = wxString::Format(_("Aligned/Moved %s"), action.c_str());
       shortAction = wxString::Format(_("Align %s/Move"),shortAction.c_str());
       PushState(action, shortAction);
@@ -5518,7 +5519,7 @@ void AudacityProject::OnRescanDevices()
    DeviceManager::Instance()->Rescan();
 }
 
-int AudacityProject::DoAddLabel(double left, double right)
+int AudacityProject::DoAddLabel(const SelectedRegion &region)
 {
    LabelTrack *lt = NULL;
 
@@ -5558,7 +5559,7 @@ int AudacityProject::DoAddLabel(double left, double right)
 //   SelectNone();
    lt->SetSelected(true);
 
-   int index = lt->AddLabel(left, right);
+   int index = lt->AddLabel(region);
 
    PushState(_("Added label"), _("Label"));
 
@@ -5584,7 +5585,7 @@ void AudacityProject::OnSyncLock()
 
 void AudacityProject::OnAddLabel()
 {
-   DoAddLabel(mViewInfo.sel0, mViewInfo.sel1);
+   DoAddLabel(mViewInfo.selectedRegion);
 }
 
 void AudacityProject::OnAddLabelPlaying()
@@ -5592,7 +5593,7 @@ void AudacityProject::OnAddLabelPlaying()
    if (GetAudioIOToken()>0 &&
        gAudioIO->IsStreamActive(GetAudioIOToken())) {
       double indicator = gAudioIO->GetStreamTime();
-      DoAddLabel(indicator, indicator);
+      DoAddLabel(SelectedRegion(indicator, indicator));
    }
 }
 

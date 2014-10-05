@@ -81,7 +81,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    artist.SetBackgroundBrushes(*wxWHITE_BRUSH, *wxWHITE_BRUSH,
                                *wxWHITE_PEN, *wxWHITE_PEN);
    ViewInfo viewInfo;
-   viewInfo.sel0 = viewInfo.sel1 = 0;
+   viewInfo.selectedRegion = SelectedRegion();
    viewInfo.vpos = 0;
    viewInfo.h = 0.0;
    viewInfo.screen = mTracks->GetEndTime() - viewInfo.h;

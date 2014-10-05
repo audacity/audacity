@@ -74,6 +74,11 @@
 #include "widgets/ProgressDialog.h"
 #include "widgets/Ruler.h"
 
+// PRL:  These lines allow you to remove Project.h above.
+// They must be included before the definition of macro new below.
+#include <set>
+#include <map>
+
 //#ifdef __WXMSW__
 // Enable this to diagnose memory leaks too!
 //    #include <wx/msw/msvcrt.h>      // redefines the new() operator

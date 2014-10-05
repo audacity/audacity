@@ -17,7 +17,6 @@
 #include <wx/timer.h>
 #include <wx/window.h>
 
-#include "LabelTrack.h"
 #include "Sequence.h"  //Stm: included for the sampleCount declaration
 #include "WaveClip.h"
 #include "WaveTrack.h"
@@ -27,6 +26,7 @@
 class wxMenu;
 class wxRect;
 
+class LabelTrack;
 class TrackPanel;
 class TrackArtist;
 class Ruler;

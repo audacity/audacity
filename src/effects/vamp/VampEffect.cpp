@@ -298,7 +298,7 @@ void VampEffect::AddFeatures(LabelTrack *ltrack,
          }
       }
 
-      ltrack->AddLabel(ltime0, ltime1, label);
+      ltrack->AddLabel(SelectedRegion(ltime0, ltime1), label);
    }
 }
 
