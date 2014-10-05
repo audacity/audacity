@@ -282,6 +282,13 @@ void EffectNyquist::Parse(wxString line)
       return;
    }
 
+   if (len >= 2 && tokens[0] == wxT("preview")) {
+      if (tokens[1] == wxT("enabled") || tokens[1] == wxT("true")) {
+         mEnablePreview = true;
+      }
+      return;
+   }
+
    if (len >= 6 && tokens[0] == wxT("control")) {
       NyqControl ctrl;
 
@@ -346,6 +353,7 @@ void EffectNyquist::ParseFile()
    mCmd = wxT("");
    SetEffectFlags(PROCESS_EFFECT | PLUGIN_EFFECT);
    mOK = false;
+   mEnablePreview = false;
    mIsSal = false;
    mControls.Clear();
    mDebug = false;
@@ -499,7 +507,7 @@ bool EffectNyquist::TransferParameters( Shuttle & shuttle )
 
 bool EffectNyquist::PromptUser()
 {
-   if (mInteractive) {
+   while (mInteractive) {
       NyquistInputDialog dlog(wxGetTopLevelParent(NULL), -1,
                               _("Nyquist Prompt"),
                               _("Enter Nyquist Command: "),
@@ -563,7 +571,12 @@ bool EffectNyquist::PromptUser()
          }
       }
 
-      return true;
+      if (result != ePreviewID)
+      {
+         return true;
+      }
+
+      Preview();
    }
 
    if (!mExternal) {
@@ -614,7 +627,7 @@ bool EffectNyquist::PromptUser()
       }
    }
 
-   NyquistDialog dlog(mParent, -1, mName, mInfo, &mControls);
+   NyquistDialog dlog(mParent, -1, mName, mInfo, mEnablePreview, this);
    dlog.CentreOnParent();
    int result = dlog.ShowModal();
 
@@ -1156,6 +1169,7 @@ BEGIN_EVENT_TABLE(NyquistDialog, wxDialog)
    EVT_BUTTON(wxID_OK, NyquistDialog::OnOk)
    EVT_BUTTON(wxID_CANCEL, NyquistDialog::OnCancel)
    EVT_BUTTON(eDebugID, NyquistDialog::OnDebug)
+   EVT_BUTTON(ePreviewID, NyquistDialog::OnPreview)
    EVT_COMMAND_RANGE(ID_NYQ_SLIDER, ID_NYQ_SLIDER+99,
                      wxEVT_COMMAND_SLIDER_UPDATED, NyquistDialog::OnSlider)
    EVT_COMMAND_RANGE(ID_NYQ_TEXT, ID_NYQ_TEXT+99,
@@ -1167,10 +1181,12 @@ END_EVENT_TABLE()
 NyquistDialog::NyquistDialog(wxWindow * parent, wxWindowID id,
                              const wxString & title,
                              wxString info,
-                             NyqControlArray *controlArray)
+                             bool preview,
+                             EffectNyquist *effect)
 :   wxDialog(parent, id, title)
 {
-   mControls = controlArray;
+   mEffect = effect;
+   mControls = &mEffect->mControls;
    mInHandler = true; // prevents race condition on MSW
 
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -1279,9 +1295,15 @@ NyquistDialog::NyquistDialog(wxWindow * parent, wxWindowID id,
    }
    mainSizer->Add(grid, 0, wxALIGN_CENTRE | wxALL, 5);
 
-   mainSizer->Add(CreateStdButtonSizer(this, eDebugButton | eCancelButton | eOkButton),
-                  0,
-                  wxEXPAND);
+   if (preview) {
+      mainSizer->Add(CreateStdButtonSizer(this, ePreviewButton | eDebugButton | eCancelButton | eOkButton),
+                     0,
+                     wxEXPAND);
+   } else {
+      mainSizer->Add(CreateStdButtonSizer(this, eDebugButton | eCancelButton | eOkButton),
+                     0,
+                     wxEXPAND);
+   }
 
    mInHandler = false;
 
@@ -1420,39 +1442,49 @@ void NyquistDialog::OnDebug(wxCommandEvent & /* event */)
    EndModal(eDebugID);
 }
 
+void NyquistDialog::OnPreview(wxCommandEvent & /* event */)
+{
+   mEffect->Preview();
+}
+
 /**********************************************************/
 
 BEGIN_EVENT_TABLE(NyquistInputDialog, wxDialog)
    EVT_BUTTON(wxID_OK, NyquistInputDialog::OnOk)
    EVT_BUTTON(wxID_CANCEL, NyquistInputDialog::OnCancel)
    EVT_BUTTON(eDebugID, NyquistInputDialog::OnDebug)
+   EVT_BUTTON(ePreviewID, NyquistInputDialog::OnPreview)
 END_EVENT_TABLE()
 
 NyquistInputDialog::NyquistInputDialog(wxWindow * parent, wxWindowID id,
                                        const wxString & title,
                                        const wxString & prompt,
                                        wxString initialCommand)
-:  wxDialog(parent, id, title)
+:  wxDialog(parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
-   wxControl  *item;
+   ShuttleGui S(this, eIsCreating);
 
-   item = new wxStaticText(this, -1, prompt);
-   item->SetName(prompt);  // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   mainSizer->Add(item, 0, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT, 10);
+   S.StartVerticalLay();
+   {
+      S.StartHorizontalLay(wxEXPAND, 0);
+      {
+          S.AddVariableText(prompt);
+      }
+      S.EndHorizontalLay();
 
-   mCommandText = new wxTextCtrl(this, -1, initialCommand,
-                                 wxDefaultPosition, wxSize(400, 200),
-                                 wxTE_MULTILINE);
-   mainSizer->Add(mCommandText, 0, wxALIGN_LEFT | wxALL, 10);
+      S.StartHorizontalLay(wxEXPAND, 1);
+      {
+          mCommandText = S.AddTextWindow(initialCommand);
+          mCommandText->SetMinSize(wxSize(500, 200));
+      }
+      S.EndHorizontalLay();
+   }
+   S.EndVerticalLay();
 
    // Debug, OK, & Cancel buttons
-   mainSizer->Add(CreateStdButtonSizer(this, eDebugButton|eCancelButton|eOkButton), 0, wxEXPAND);
+   S.AddStandardButtons(ePreviewButton|eDebugButton|eCancelButton|eOkButton);
 
-   SetAutoLayout(true);
-   SetSizer(mainSizer);
-   mainSizer->Fit(this);
-   mainSizer->SetSizeHints(this);
+   GetSizer()->SetSizeHints(this);
 
    mCommandText->SetFocus();
 }
@@ -1477,6 +1509,11 @@ void NyquistInputDialog::OnDebug(wxCommandEvent & /* event */)
    // Transfer data
 
    EndModal(eDebugID);
+}
+
+void NyquistInputDialog::OnPreview(wxCommandEvent & /* event */)
+{
+   EndModal(ePreviewID);
 }
 
 

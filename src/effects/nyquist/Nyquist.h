@@ -172,6 +172,7 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    wxString          mName;   ///< Name of the Effect
    wxString          mAction;
    wxString          mInfo;
+   bool              mEnablePreview;
    bool              mDebug;
    std::string       mDebugOutput;
 
@@ -196,6 +197,8 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    WaveTrack         *mOutputTrack[2];
 
    wxArrayString     mCategories;
+
+   friend class NyquistDialog;
 };
 
 class NyquistDialog:public wxDialog
@@ -205,17 +208,20 @@ class NyquistDialog:public wxDialog
    NyquistDialog(wxWindow * parent, wxWindowID id,
                  const wxString & title,
                  wxString info,
-                 NyqControlArray *controlArray);
+                 bool preview,
+                 EffectNyquist *effect);
 
  private:
+   EffectNyquist    *mEffect;
    NyqControlArray  *mControls;
    bool              mInHandler;
 
    void OnText(wxCommandEvent & event);
    void OnSlider(wxCommandEvent & event);
    void OnChoice( wxCommandEvent &event );
-   void OnOk(wxCommandEvent & event);
+   void OnPreview(wxCommandEvent & event);
    void OnDebug(wxCommandEvent & event);
+   void OnOk(wxCommandEvent & event);
    void OnCancel(wxCommandEvent & event);
 
  private:
@@ -237,8 +243,9 @@ class NyquistInputDialog:public wxDialog
    wxTextCtrl *mCommandText;
 
    void OnOk(wxCommandEvent & event);
-   void OnDebug(wxCommandEvent & event);
    void OnCancel(wxCommandEvent & event);
+   void OnDebug(wxCommandEvent & event);
+   void OnPreview(wxCommandEvent & event);
 
  private:
    DECLARE_EVENT_TABLE()
