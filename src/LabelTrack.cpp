@@ -1579,12 +1579,12 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
             if (!OverTextBox(mLabels[mSelIndex], evt.m_x, evt.m_y))
                mSelIndex = -1;
             double t = h + (evt.m_x - r.x) / pps;
-            *newSel0 = t;
-            *newSel1 = t;
+            newSel->setT0(t);
+            newSel->setT1(t);
          }
 
          wxTheClipboard->UsePrimarySelection(true);
-         PasteSelectedText(*newSel0, *newSel1);
+         PasteSelectedText(newSel->t0(), newSel->t1());
          wxTheClipboard->UsePrimarySelection(false);
 
          return false;
