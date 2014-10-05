@@ -1579,8 +1579,7 @@ bool LabelTrack::HandleMouse(const wxMouseEvent & evt,
             if (!OverTextBox(mLabels[mSelIndex], evt.m_x, evt.m_y))
                mSelIndex = -1;
             double t = h + (evt.m_x - r.x) / pps;
-            newSel->setT0(t);
-            newSel->setT1(t);
+            *newSel = SelectedRegion(t, t);
          }
 
          wxTheClipboard->UsePrimarySelection(true);
