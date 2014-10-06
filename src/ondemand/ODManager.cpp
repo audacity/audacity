@@ -311,7 +311,7 @@ void ODManager::Start()
          AudacityProject::AllProjectsDeleteLock();
          AudacityProject* proj = GetActiveProject();
          if(proj)
-            proj->AddPendingEvent( event );
+            proj->GetEventHandler()->AddPendingEvent(event);
          AudacityProject::AllProjectsDeleteUnlock();
       }
       mTerminateMutex.Lock();

@@ -242,8 +242,13 @@ wxString wxNumberFormatter::ToString(long val, int style)
 
 wxString wxNumberFormatter::ToString(wxLongLong_t val, int style)
 {
-    return PostProcessIntString(wxString::Format(wxT("%") wxLongLongFmtSpec wxT("d"), val),
+#if wxCHECK_VERSION(3,0,0)
+   return PostProcessIntString(wxString::Format("%" wxLongLongFmtSpec "d", val),
                                 style);
+#else
+   return PostProcessIntString(wxString::Format(wxT("%") wxLongLongFmtSpec wxT("d"), val),
+      style);
+#endif
 }
 
 #endif // wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG

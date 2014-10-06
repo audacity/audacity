@@ -49,16 +49,16 @@ void FileDialog::ClickButton(int index)
 // FileDialog convenience functions
 //----------------------------------------------------------------------------
 
-wxString FileSelector(const wxChar *title,
-                      const wxChar *defaultDir,
-                      const wxChar *defaultFileName,
-                      const wxChar *defaultExtension,
-                      const wxChar *filter,
+wxString FileSelector(const wxString & title,
+                      const wxString & defaultDir,
+                      const wxString & defaultFileName,
+                      const wxString & defaultExtension,
+                      const wxString & filter,
                       int flags,
                       wxWindow *parent,
                       wxString label, fdCallback cb, void *cbdata)
 {
-   // The defaultExtension, if non-NULL, is
+   // The defaultExtension, if non-empty, is
    // appended to the filename if the user fails to type an extension. The new
    // implementation (taken from wxFileSelectorEx) appends the extension
    // automatically, by looking at the filter specification. In fact this
@@ -70,21 +70,13 @@ wxString FileSelector(const wxChar *title,
    // suitable filter.
 
    wxString filter2;
-   if (defaultExtension && !filter)
+   if (!defaultExtension.empty() && filter.empty())
       filter2 = wxString(wxT("*.")) + defaultExtension;
-   else if (filter)
+   else if (!filter.empty())
       filter2 = filter;
 
-   wxString defaultDirString;
-   if (defaultDir)
-      defaultDirString = defaultDir;
-
-   wxString defaultFilenameString;
-   if (defaultFileName)
-      defaultFilenameString = defaultFileName;
-
-   FileDialog fileDialog(parent, title, defaultDirString,
-                         defaultFilenameString, filter2,
+   FileDialog fileDialog(parent, title, defaultDir,
+                         defaultFileName, filter2,
                          flags);
 
    // Enable the extra button if desired
@@ -94,7 +86,7 @@ wxString FileSelector(const wxChar *title,
    }
 
    // if filter is of form "All files (*)|*|..." set correct filter index
-   if ((wxStrlen(defaultExtension) != 0) && (filter2.Find(wxT('|')) != wxNOT_FOUND))
+   if (!defaultExtension.empty() && filter2.find(wxT('|')) != wxString::npos)
    {
       int filterIndex = 0;
       

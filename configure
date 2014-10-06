@@ -19723,7 +19723,7 @@ wx_version=`${WX_CONFIG} $wxconfigargs --version`
 $as_echo "$as_me: Checking that the chosen version of wxWidgets is 2.8.x" >&6;}
 
 case "${wx_version}" in
-  2.8.*)
+  2.8.* | 3.0.*)
     echo "Great, you're using wxWidgets ${wx_version}!"
     ;;
   *)

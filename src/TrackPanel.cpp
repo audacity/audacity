@@ -5127,7 +5127,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       // The activate event is used to make the
       // parent window 'come alive' if it didn't have focus.
       wxActivateEvent e;
-      GetParent()->ProcessEvent(e);
+      GetParent()->GetEventHandler()->ProcessEvent(e);
 
       // wxTimers seem to be a little unreliable, so this
       // "primes" it to make sure it keeps going for a while...
@@ -5564,7 +5564,7 @@ int TrackPanel::DetermineToolToUse( ToolsToolBar * pTtb, wxMouseEvent & event)
    int trackKind = pTrack->GetKind();
    currentTool = selectTool; // the default.
 
-   if( event.ButtonIsDown(3) || event.RightUp()){
+   if (event.ButtonIsDown(wxMOUSE_BTN_RIGHT) || event.RightUp()){
       currentTool = zoomTool;
    } else if( trackKind == Track::Time ){
       currentTool = envelopeTool;
@@ -8360,7 +8360,7 @@ TrackInfo::TrackInfo(wxWindow * pParentIn)
    mSliderOffset = 0;
 
    int fontSize = 10;
-   mFont.Create(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
+   mFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
    int allowableWidth = GetTrackInfoWidth() - 2; // 2 to allow for left/right borders
    int textWidth, textHeight;

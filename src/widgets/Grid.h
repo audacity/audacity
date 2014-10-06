@@ -52,7 +52,14 @@ class TimeEditor:public wxGridCellEditor
    void SetSize(const wxRect &rect);
 
    void BeginEdit(int row, int col, wxGrid *grid);
+
+#if wxCHECK_VERSION(3,0,0)
+   bool EndEdit(int row, int col, const wxGrid *grid,
+      const wxString & oldval, wxString *newval);
+   void ApplyEdit(int, int, wxGrid *);
+#else
    bool EndEdit(int row, int col, wxGrid *grid);
+#endif
 
    void Reset();
 
@@ -71,6 +78,7 @@ class TimeEditor:public wxGridCellEditor
    wxString mFormat;
    double mRate;
    double mOld;
+   double mNew;
 };
 
 // ----------------------------------------------------------------------------
@@ -124,7 +132,14 @@ public:
    void SetSize(const wxRect &rect);
 
    void BeginEdit(int row, int col, wxGrid *grid);
+
+#if wxCHECK_VERSION(3,0,0)
+   bool EndEdit(int row, int col, const wxGrid *grid,
+      const wxString & oldval, wxString *newval);
+   void ApplyEdit(int, int, wxGrid *);
+#else
    bool EndEdit(int row, int col, wxGrid *grid);
+#endif
 
    void Reset();
 
@@ -159,6 +174,7 @@ public:
 
    wxArrayString mChoices;
    wxString mOld;
+   wxString mNew;
 };
 
 // ----------------------------------------------------------------------------

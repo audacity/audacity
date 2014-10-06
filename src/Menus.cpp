@@ -2399,7 +2399,7 @@ void AudacityProject::OnTrackMenu()
    //       The workaround is to queue a context menu event, allowing the key press
    //       event to complete.
    wxContextMenuEvent e(wxEVT_CONTEXT_MENU, GetId());
-   mTrackPanel->AddPendingEvent(e);
+   mTrackPanel->GetEventHandler()->AddPendingEvent(e);
 }
 
 void AudacityProject::OnTrackMute()
@@ -2873,7 +2873,7 @@ void AudacityProject::OnExportLabels()
    }
 
    fName = FileSelector(_("Export Labels As:"),
-                        NULL,
+                        wxEmptyString,
                         fName,
                         wxT("txt"),
                         wxT("*.txt"),
@@ -2954,7 +2954,7 @@ void AudacityProject::OnExportMIDI(){
       wxString fName = wxT("");
 
       fName = FileSelector(_("Export MIDI As:"),
-         NULL,
+         wxEmptyString,
          fName,
          wxT(".mid|.gro"),
          _("MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"),

@@ -606,7 +606,7 @@ public:
       if (!cmd.IsEmpty()) {
          wxCommandEvent e(EVT_OPEN_AUDIO_FILE);
          e.SetString(data);
-         project->AddPendingEvent(e);
+         project->GetEventHandler()->AddPendingEvent(e);
       }
 
       return true;
@@ -1295,7 +1295,11 @@ bool AudacityApp::OnInit()
          }
 
          if (option < argc - 1 &&
-             argv[option + 1] &&
+#if wxCHECK_VERSION(3,0,0)
+            !argv[option + 1].IsEmpty() &&
+#else
+            argv[option + 1] &&
+#endif
              !wxString(wxT("-blocksize")).CmpNoCase(argv[option])) {
             long theBlockSize;
             if (wxString(argv[option + 1]).ToLong(&theBlockSize)) {

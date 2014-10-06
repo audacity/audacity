@@ -72,6 +72,7 @@ ExpandingToolBar.
 #include <wx/window.h>
 #endif
 
+#include <wx/wx.h>
 #include <wx/dcmemory.h>
 #include <wx/log.h>
 #include <wx/dragimag.h>

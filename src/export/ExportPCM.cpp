@@ -587,9 +587,11 @@ int ExportPCM::Export(AudacityProject *project,
       AddID3Chunk(fName, metadata, sf_format);
 
 #ifdef __WXMAC__
+#if !wxCHECK_VERSION(3, 0, 0)
    wxFileName fn(fName);
    fn.MacSetTypeAndCreator(sf_header_mactype(sf_format & SF_FORMAT_TYPEMASK),
                            AUDACITY_CREATOR);
+#endif
 #endif
 
    return updateResult;

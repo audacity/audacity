@@ -37,9 +37,7 @@ wxString PlatformCompatibility::GetExecutablePath()
    static wxString path;
 
    if (!found) {
-      wxStandardPaths std;
-
-      path = std.GetExecutablePath();
+      path = wxStandardPaths::Get().GetExecutablePath();
 
       found = true;
    }

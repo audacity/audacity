@@ -35,6 +35,7 @@
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 #include <wx/sizer.h>
+#include <wx/textctrl.h>
 
 // Used to communicate the type of the filter.
 static const int bassType = 0; //Low Shelf

@@ -79,6 +79,8 @@ class ToolsToolBar:public ToolBar {
    wxGridSizer *mToolSizer;
    int mCurrentTool;
 
+   const wxChar *mMessageOfTool[numTools];
+
  public:
 
    DECLARE_CLASS(ToolsToolBar);

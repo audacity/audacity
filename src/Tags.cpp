@@ -474,7 +474,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       while (*attrs) {
          wxString attr = *attrs++;
-         if (!*attr)
+         if (attr.IsEmpty())
             break;
          wxString value = *attrs++;
 

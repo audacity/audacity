@@ -116,9 +116,9 @@ Ruler::Ruler()
    fontSize = 8;
 #endif
 
-   mMinorMinorFont = new wxFont(fontSize-1, wxSWISS, wxNORMAL, wxNORMAL);
-   mMinorFont = new wxFont(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
-   mMajorFont = new wxFont(fontSize, wxSWISS, wxNORMAL, wxBOLD);
+   mMinorMinorFont = new wxFont(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mMinorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+   mMajorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
    mUserFonts = false;
 
    #ifdef __WXMAC__
@@ -934,45 +934,45 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
    int j;
 
    if (!mUserFonts) {
-     int fontSize = 4;
-     wxCoord strW, strH, strD, strL;
-     wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
-     int desiredPixelHeight;
+      int fontSize = 4;
+      wxCoord strW, strH, strD, strL;
+      wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
+      int desiredPixelHeight;
 
-     if (mOrientation == wxHORIZONTAL)
-       desiredPixelHeight = mBottom-mTop-5; // height less ticks and 1px gap
-     else
+      if (mOrientation == wxHORIZONTAL)
+         desiredPixelHeight = mBottom - mTop - 5; // height less ticks and 1px gap
+      else
          desiredPixelHeight = 12;   // why 12?  10 -> 12 seems to be max/min
 
-     if (desiredPixelHeight < 10)//8)
-       desiredPixelHeight = 10;//8;
-     if (desiredPixelHeight > 12)
-       desiredPixelHeight = 12;
+      if (desiredPixelHeight < 10)//8)
+         desiredPixelHeight = 10;//8;
+      if (desiredPixelHeight > 12)
+         desiredPixelHeight = 12;
 
       // Keep making the font bigger until it's too big, then subtract one.
-      mDC->SetFont(wxFont(fontSize, wxSWISS, wxNORMAL, wxBOLD));
+      mDC->SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
       mDC->GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
-      while( (strH-strD-strL) <= desiredPixelHeight && fontSize < 40) {
+      while ((strH - strD - strL) <= desiredPixelHeight && fontSize < 40) {
          fontSize++;
-         mDC->SetFont(wxFont(fontSize, wxSWISS, wxNORMAL, wxBOLD));
-         mDC->GetTextExtent(exampleText, &strW, &strH, &strD, & strL);
+         mDC->SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
+         mDC->GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
       }
       fontSize--;
-      mDC->SetFont(wxFont(fontSize, wxSWISS, wxNORMAL, wxNORMAL));
+      mDC->SetFont(wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
       mDC->GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
       mLead = strL;
 
-     if (mMajorFont)
-        delete mMajorFont;
-     mMajorFont = new wxFont(fontSize, wxSWISS, wxNORMAL, wxBOLD);
+      if (mMajorFont)
+         delete mMajorFont;
+      mMajorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 
-     if (mMinorFont)
-        delete mMinorFont;
-     mMinorFont = new wxFont(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
+      if (mMinorFont)
+         delete mMinorFont;
+      mMinorFont = new wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-     if (mMinorMinorFont)
-        delete mMinorMinorFont;
-     mMinorMinorFont = new wxFont(fontSize-1, wxSWISS, wxNORMAL, wxNORMAL);
+      if (mMinorMinorFont)
+         delete mMinorMinorFont;
+      mMinorMinorFont = new wxFont(fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    }
 
    // If ruler is being resized, we could end up with it being too small.

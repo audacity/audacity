@@ -307,20 +307,20 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
          {
             /* i18n-hint: This is for screen reader software and indicates that
                on this track mute is on.*/
-            *name->Append( _( " Mute On" ) );
+            name->Append( _( " Mute On" ) );
          }
 
          if( t->GetSolo() )
          {
             /* i18n-hint: This is for screen reader software and indicates that
                on this track solo is on.*/
-            *name->Append( _( " Solo On" ) );
+            name->Append( _( " Solo On" ) );
          }
          if( t->GetSelected() )
          {
             /* i18n-hint: This is for screen reader software and indicates that
                this track is selected.*/
-            *name->Append( _( " Select On" ) );
+            name->Append( _( " Select On" ) );
          }
          if( t->IsSyncLockSelected() )
          {
@@ -328,7 +328,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                this track is shown with a sync-locked icon.*/
             // The absence of a dash between Sync and Locked is deliberate -
             // if present, Jaws reads it as "dash".
-            *name->Append( _( " Sync Lock Selected" ) );
+            name->Append( _( " Sync Lock Selected" ) );
          }
       }
    }

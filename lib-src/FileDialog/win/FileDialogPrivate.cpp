@@ -209,7 +209,7 @@ FileDialogHookFunction(HWND      hDlg,
             {
                CommDlg_OpenSave_SetControlText( hwndDialog,
                                                pshHelp,
-                                               (LPTSTR)me->m_buttonlabel.c_str());
+                                               (LPCTSTR)me->m_buttonlabel.c_str());
             }
          }
          else if (CDN_HELP == (pNotifyCode->hdr).code)
@@ -515,7 +515,7 @@ void FileDialog::GetFilenames(wxArrayString& files) const
 void FileDialog::SetPath(const wxString& path)
 {
    wxString ext;
-   wxSplitPath(path, &m_dir, &m_fileName, &ext);
+   wxFileName::SplitPath(path, &m_dir, &m_fileName, &ext);
    if ( !ext.empty() )
       m_fileName << wxT('.') << ext;
 }
@@ -717,7 +717,7 @@ int FileDialog::ShowModal()
       }
    }
    
-   of.lpstrFilter  = (LPTSTR)filterBuffer.c_str();
+   of.lpstrFilter  = (LPCTSTR)filterBuffer.c_str();
    of.nFilterIndex = m_filterIndex + 1;
    
    ParseFilter(of.nFilterIndex);

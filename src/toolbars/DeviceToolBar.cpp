@@ -72,8 +72,14 @@ void DeviceToolBar::Create(wxWindow *parent)
    ToolBar::Create(parent);
 
    // Simulate a size event to set initial meter placement/size
+#if wxCHECK_VERSION(3, 0, 0)
+   wxSizeEvent event(GetSize(), GetId());
+   event.SetEventObject(this);
+   GetEventHandler()->ProcessEvent(event);
+#else
    wxSizeEvent dummy;
    OnSize(dummy);
+#endif
 }
 
 void DeviceToolBar::RecreateTipWindows()

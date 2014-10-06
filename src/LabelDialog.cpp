@@ -567,7 +567,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = mTrackNames[mTrackNames.GetCount() - 1].AfterFirst(wxT('-')).Mid(1);
 
    fName = FileSelector(_("Export Labels As:"),
-                        NULL,
+                        wxEmptyString,
                         fName.c_str(),
                         wxT("txt"),
                         wxT("*.txt"),

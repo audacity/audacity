@@ -12,9 +12,14 @@
 #ifndef __AUDACITY_IMAGE_ROLL__
 #define __AUDACITY_IMAGE_ROLL__
 
+#include <wx/dc.h>
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/panel.h>
+
+#if !wxCHECK_VERSION(3,0,0)
+#define wxRasterOperationMode int
+#endif
 
 WX_DECLARE_OBJARRAY(wxBitmap, BitmapArray);
 WX_DECLARE_OBJARRAY(wxImage, ImageArray);
@@ -48,7 +53,7 @@ class ImageRoll
  protected:
 
    void DrawBitmap(wxDC &dc, wxBitmap &bitmap,
-                   int x, int y, int logicalFunc = wxCOPY);
+                   int x, int y, wxRasterOperationMode logicalFunc = wxCOPY);
 
    void Init(RollType type, const wxImage &src, wxColour magicColor);
 

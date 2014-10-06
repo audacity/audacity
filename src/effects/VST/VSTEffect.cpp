@@ -3579,7 +3579,7 @@ void VSTEffect::SizeWindow(int w, int h)
       wxCommandEvent sw(EVT_SIZEWINDOW);
       sw.SetInt(w);
       sw.SetExtraLong(h);
-      mDlg->AddPendingEvent(sw);
+      mDlg->GetEventHandler()->AddPendingEvent(sw);
    }
 
    return;
@@ -3590,7 +3590,7 @@ void VSTEffect::UpdateDisplay()
    // Tell the dialog to refresh effect information
    if (mDlg) {
       wxCommandEvent ud(EVT_UPDATEDISPLAY);
-      mDlg->AddPendingEvent(ud);
+      mDlg->GetEventHandler()->AddPendingEvent(ud);
    }
 }
 

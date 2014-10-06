@@ -85,8 +85,10 @@ scroll information.  It also has some status flags.
 #include <wx/arrimpl.cpp>       // this allows for creation of wxObjArray
 
 #if defined(__WXMAC__)
+#if !wxCHECK_VERSION(3, 0, 0)
 #include <CoreServices/CoreServices.h>
 #include <wx/mac/private.h>
+#endif
 #endif
 
 #include "Project.h"
@@ -278,9 +280,11 @@ public:
       }
 
 #if defined(__WXMAC__)
+#if !wxCHECK_VERSION(3, 0, 0)
       if (format.GetFormatId() == kDragPromisedFlavorFindFile) {
          return true;
       }
+#endif
 #endif
 
       return false;
@@ -305,6 +309,7 @@ public:
    bool GetData()
    {
       bool foundSupported = false;
+#if !wxCHECK_VERSION(3, 0, 0)
       bool firstFileAdded = false;
       OSErr result;
 
@@ -356,13 +361,14 @@ public:
             break;
          }
       }
-
+#endif
       return foundSupported;
    }
 
    bool OnDrop(wxCoord x, wxCoord y)
    {
       bool foundSupported = false;
+#if !wxCHECK_VERSION(3, 0, 0)
       bool firstFileAdded = false;
       OSErr result;
 
@@ -387,7 +393,7 @@ public:
             return true;
          }
       }
-
+#endif
       return CurrentDragHasSupportedFormat();
    }
 
@@ -1715,7 +1721,7 @@ bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
       wxCommandEvent e(EVT_CAPTURE_KEY);
       e.SetEventObject(&event);
 
-      if (w->ProcessEvent(e)) {
+      if (w->GetEventHandler()->ProcessEvent(e)) {
          return false;
       }
    }
@@ -3268,8 +3274,10 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
    }
 
 #ifdef __WXMAC__
+#if !wxCHECK_VERSION(3, 0, 0)
    wxFileName fn(mFileName);
    fn.MacSetTypeAndCreator(AUDACITY_PROJECT_TYPE, AUDACITY_CREATOR);
+#endif
 #endif
 
    if (bWantSaveCompressed)

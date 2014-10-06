@@ -124,19 +124,9 @@ void XMLWriter::WriteAttr(const wxString &name, const wxString &value)
       XMLEsc(value).c_str()));
 }
 
-void XMLWriter::WriteAttr(const wxChar *name, const wxChar *value)
-{
-   WriteAttr(wxString(name), wxString(value));
-}
-
 void XMLWriter::WriteAttr(const wxString &name, const wxChar *value)
 {
    WriteAttr(name, wxString(value));
-}
-
-void XMLWriter::WriteAttr(const wxChar *name, const wxString &value)
-{
-   WriteAttr(wxString(name), value);
 }
 
 void XMLWriter::WriteAttr(const wxString &name, int value)
@@ -146,21 +136,11 @@ void XMLWriter::WriteAttr(const wxString &name, int value)
       value));
 }
 
-void XMLWriter::WriteAttr(const wxChar *name, int value)
-{
-   WriteAttr(wxString(name), value);
-}
-
 void XMLWriter::WriteAttr(const wxString &name, bool value)
 {
    Write(wxString::Format(wxT(" %s=\"%d\""),
       name.c_str(),
       value));
-}
-
-void XMLWriter::WriteAttr(const wxChar *name, bool value)
-{
-   WriteAttr(wxString(name), value);
 }
 
 void XMLWriter::WriteAttr(const wxString &name, long value)
@@ -170,21 +150,11 @@ void XMLWriter::WriteAttr(const wxString &name, long value)
       value));
 }
 
-void XMLWriter::WriteAttr(const wxChar *name, long value)
-{
-   WriteAttr(wxString(name), value);
-}
-
 void XMLWriter::WriteAttr(const wxString &name, long long value)
 {
    Write(wxString::Format(wxT(" %s=\"%lld\""),
       name.c_str(),
       value));
-}
-
-void XMLWriter::WriteAttr(const wxChar *name, long long value)
-{
-   WriteAttr(wxString(name), value);
 }
 
 void XMLWriter::WriteAttr(const wxString &name, size_t value)
@@ -194,11 +164,6 @@ void XMLWriter::WriteAttr(const wxString &name, size_t value)
       value));
 }
 
-void XMLWriter::WriteAttr(const wxChar *name, size_t value)
-{
-   WriteAttr(wxString(name), value);
-}
-
 void XMLWriter::WriteAttr(const wxString &name, float value, int digits)
 {
    Write(wxString::Format(wxT(" %s=\"%s\""),
@@ -206,21 +171,11 @@ void XMLWriter::WriteAttr(const wxString &name, float value, int digits)
       Internat::ToString(value, digits).c_str()));
 }
 
-void XMLWriter::WriteAttr(const wxChar *name, float value, int digits)
-{
-   WriteAttr(wxString(name), value, digits);
-}
-
 void XMLWriter::WriteAttr(const wxString &name, double value, int digits)
 {
    Write(wxString::Format(wxT(" %s=\"%s\""),
       name.c_str(),
       Internat::ToString(value, digits).c_str()));
-}
-
-void XMLWriter::WriteAttr(const wxChar *name, double value, int digits)
-{
-   WriteAttr(wxString(name), value, digits);
 }
 
 void XMLWriter::WriteData(const wxString &value)
@@ -234,11 +189,6 @@ void XMLWriter::WriteData(const wxString &value)
    Write(XMLEsc(value));
 }
 
-void XMLWriter::WriteData(const wxChar *value)
-{
-   WriteData(wxString(value));
-}
-
 void XMLWriter::WriteSubTree(const wxString &value)
 {
    if (mInTag) {
@@ -248,16 +198,6 @@ void XMLWriter::WriteSubTree(const wxString &value)
    }
 
    Write(value.c_str());
-}
-
-void XMLWriter::WriteSubTree(const wxChar *value)
-{
-   WriteSubTree(wxString(value));
-}
-
-void XMLWriter::Write(const wxChar *value)
-{
-   Write(wxString(value));
 }
 
 // See http://www.w3.org/TR/REC-xml for reference

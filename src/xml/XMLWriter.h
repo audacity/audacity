@@ -27,32 +27,19 @@ class AUDACITY_DLL_API XMLWriter {
    void EndTag(const wxString &name);
 
    void WriteAttr(const wxString &name, const wxString &value);
-   void WriteAttr(const wxChar *name, const wxChar *value);
    void WriteAttr(const wxString &name, const wxChar *value);
-   void WriteAttr(const wxChar *name, const wxString &value);
 
    void WriteAttr(const wxString &name, int value);
-   void WriteAttr(const wxChar *name, int value);
    void WriteAttr(const wxString &name, bool value);
-   void WriteAttr(const wxChar *name, bool value);
    void WriteAttr(const wxString &name, long value);
-   void WriteAttr(const wxChar *name, long value);
    void WriteAttr(const wxString &name, long long value);
-   void WriteAttr(const wxChar *name, long long value);
    void WriteAttr(const wxString &name, size_t value);
-   void WriteAttr(const wxChar *name, size_t value);
    void WriteAttr(const wxString &name, float value, int digits = -1);
-   void WriteAttr(const wxChar *name, float value, int digits = -1);
    void WriteAttr(const wxString &name, double value, int digits = -1);
-   void WriteAttr(const wxChar *name, double value, int digits = -1);
 
    void WriteData(const wxString &value);
-   void WriteData(const wxChar *value);
 
    void WriteSubTree(const wxString &value);
-   void WriteSubTree(const wxChar *value);
-
-   void Write(const wxChar *data);
 
    virtual void Write(const wxString &data) = 0;
 

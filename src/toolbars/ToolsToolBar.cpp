@@ -57,23 +57,6 @@
 
 IMPLEMENT_CLASS(ToolsToolBar, ToolBar);
 
-// Strings to convert a tool number into a status message
-// These MUST be in the same order as the ids above.
-static const wxChar * MessageOfTool[numTools] = {
-   wxTRANSLATE("Click and drag to select audio"),
-   wxTRANSLATE("Click and drag to edit the amplitude envelope"),
-   wxTRANSLATE("Click and drag to edit the samples"),
-#if defined( __WXMAC__ )
-   wxTRANSLATE("Click to Zoom In, Shift-Click to Zoom Out"),
-#elif defined( __WXMSW__ )
-   wxTRANSLATE("Drag to Zoom Into Region, Right-Click to Zoom Out"),
-#elif defined( __WXGTK__ )
-   wxTRANSLATE("Left=Zoom In, Right=Zoom Out, Middle=Normal"),
-#endif
-   wxTRANSLATE("Click and drag to move a track in time"),
-   wxT("") // multi-mode tool
-};
-
 ////////////////////////////////////////////////////////////
 /// Methods for ToolsToolBar
 ////////////////////////////////////////////////////////////
@@ -96,6 +79,19 @@ ToolsToolBar::ToolsToolBar()
    wxASSERT( zoomTool     == zoomTool     - firstTool );
    wxASSERT( drawTool     == drawTool     - firstTool );
    wxASSERT( multiTool    == multiTool    - firstTool );
+
+   mMessageOfTool[selectTool] = _("Click and drag to select audio");
+   mMessageOfTool[envelopeTool] = _("Click and drag to edit the amplitude envelope");
+   mMessageOfTool[slideTool] = _("Click and drag to edit the samples");
+#if defined( __WXMAC__ )
+   mMessageOfTool[zoomTool] = _("Click to Zoom In, Shift-Click to Zoom Out");
+#elif defined( __WXMSW__ )
+   mMessageOfTool[zoomTool] = _("Drag to Zoom Into Region, Right-Click to Zoom Out");
+#elif defined( __WXGTK__ )
+   mMessageOfTool[zoomTool] = _("Left=Zoom In, Right=Zoom Out, Middle=Normal");
+#endif
+   mMessageOfTool[drawTool] = _("Click and drag to move a track in time");
+   mMessageOfTool[multiTool] = wxT(""); // multi-mode tool
 }
 
 ToolsToolBar::~ToolsToolBar()
@@ -258,7 +254,8 @@ const wxChar * ToolsToolBar::GetMessageForTool( int ToolNumber )
 {
    wxASSERT( ToolNumber >= 0 );
    wxASSERT( ToolNumber < numTools );
-   return wxGetTranslation(MessageOfTool[ ToolNumber ]);
+
+   return mMessageOfTool[ToolNumber];
 }
 
 

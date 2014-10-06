@@ -43,10 +43,10 @@ the mouse around.
 #pragma hdrstop
 #endif
 
-#ifndef WX_PRECOMP
 #include <wx/brush.h>
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/font.h>
 #include <wx/image.h>
 #include <wx/dcmemory.h>
 #include <wx/msgdlg.h>
@@ -56,7 +56,6 @@ the mouse around.
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/statusbr.h>
-#endif
 
 #include <wx/textfile.h>
 
@@ -124,7 +123,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    if (!p)
       return;
 
-   mFreqFont = wxFont(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
+   mFreqFont = wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
    mArrowCursor = new wxCursor(wxCURSOR_ARROW);
    mCrossCursor = new wxCursor(wxCURSOR_CROSS);
 
@@ -1223,7 +1222,7 @@ void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
    wxString fName = _("spectrum.txt");
 
    fName = FileSelector(_("Export Spectral Data As:"),
-                        NULL, fName, wxT("txt"), wxT("*.txt"), wxFD_SAVE | wxRESIZE_BORDER, this);
+                        wxEmptyString, fName, wxT("txt"), wxT("*.txt"), wxFD_SAVE | wxRESIZE_BORDER, this);
 
    if (fName == wxT(""))
       return;

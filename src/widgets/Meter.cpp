@@ -55,10 +55,6 @@
 #include <wx/tooltip.h>
 #include <wx/msgdlg.h>
 
-#if defined(__WXMAC__)
-#include <wx/mac/uma.h>
-#endif
-
 #include <math.h>
 
 #include "Meter.h"
@@ -756,7 +752,7 @@ wxFont Meter::GetFont()
    fontSize = 8;
 #endif
 
-   return wxFont(fontSize, wxSWISS, wxNORMAL, wxNORMAL);
+   return wxFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 }
 
 void Meter::ResetBar(MeterBar *b, bool resetClipping)

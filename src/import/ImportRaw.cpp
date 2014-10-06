@@ -337,7 +337,7 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
 
       if (sf_format_check(&info)) {
          mEncodingSubtype[mNumEncodings] = subtype;
-         encodings.Add(LAT1CTOWX(sf_encoding_index_name(i)));
+         encodings.Add(sf_encoding_index_name(i));
 
          if ((mEncoding & SF_FORMAT_SUBMASK) == subtype)
             selection = mNumEncodings;

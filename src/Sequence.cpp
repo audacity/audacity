@@ -1047,8 +1047,8 @@ void Sequence::WriteXML(XMLWriter &xmlFile)
                _("Sequence has block file with length %s > mMaxSamples %s.\nTruncating to mMaxSamples."),
                Internat::ToString(((wxLongLong)(bb->f->GetLength())).ToDouble(), 0).c_str(),
                Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0).c_str());
-         ::wxMessageBox(sMsg, _("Warning - Length in Writing Sequence"), wxICON_EXCLAMATION | wxOK);
-         ::wxLogWarning(sMsg);
+         wxMessageBox(sMsg, _("Warning - Length in Writing Sequence"), wxICON_EXCLAMATION | wxOK);
+         wxLogWarning(sMsg);
          bb->f->SetLength(mMaxSamples);
       }
 

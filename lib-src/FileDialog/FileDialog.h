@@ -43,11 +43,11 @@ typedef void (*fdCallback)(void *, int);
 //----------------------------------------------------------------------------
 
 wxString 
-FileSelector(const wxChar *message = wxFileSelectorPromptStr,
-             const wxChar *default_path = NULL,
-             const wxChar *default_filename = NULL,
-             const wxChar *default_extension = NULL,
-             const wxChar *wildcard = wxFileSelectorDefaultWildcardStr,
+FileSelector(const wxString & message = wxFileSelectorPromptStr,
+             const wxString & default_path = wxEmptyString,
+             const wxString & default_filename = wxEmptyString,
+             const wxString & default_extension = wxEmptyString,
+             const wxString & wildcard = wxFileSelectorDefaultWildcardStr,
              int flags = 0,
              wxWindow *parent = NULL,
              wxString label = wxEmptyString,

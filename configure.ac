@@ -292,7 +292,7 @@ wx_version=`${WX_CONFIG} $wxconfigargs --version`
 AC_MSG_NOTICE([Checking that the chosen version of wxWidgets is 2.8.x])
 
 case "${wx_version}" in
-  2.8.*)
+  2.8.* | 3.0.*)
     echo "Great, you're using wxWidgets ${wx_version}!"
     ;;
   *)

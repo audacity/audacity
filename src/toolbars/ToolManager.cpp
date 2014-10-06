@@ -47,10 +47,6 @@
 #include <wx/minifram.h>
 #include <wx/popupwin.h>
 
-#if defined(__WXMAC__)
-#include <wx/mac/uma.h>
-#endif
-
 #include "ToolManager.h"
 #include "ControlToolBar.h"
 #include "DeviceToolBar.h"
@@ -744,7 +740,7 @@ void ToolManager::WriteConfig()
       int bo = mBotDock->GetOrder( bar );
 
       // Save
-      gPrefs->Write( wxT("Dock"), to ? TopDockID : bo ? BotDockID : NoDockID );
+      gPrefs->Write( wxT("Dock"), (int) (to ? TopDockID : bo ? BotDockID : NoDockID ));
       gPrefs->Write( wxT("Order"), to + bo );
       gPrefs->Write( wxT("Show"), IsVisible( ndx ) );
 

@@ -716,7 +716,7 @@ bool EffectNyquist::Process()
          // See also http://bugzilla.audacityteam.org/show_bug.cgi?id=642#c9
          // for further info about this thread safety question.
          wxString prevlocale = wxSetlocale(LC_NUMERIC, NULL);
-         wxSetlocale(LC_NUMERIC, wxT("C"));
+         wxSetlocale(LC_NUMERIC, wxString(wxT("C")));
 
          nyx_init();
          nyx_set_os_callback(StaticOSCallback, (void *)this);

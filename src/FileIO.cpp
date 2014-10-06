@@ -76,6 +76,7 @@ void FileIO::Close()
 void FileIO::SetCatalogInfo()
 {
 #ifdef __WXMAC__
+#if !wxCHECK_VERSION(3, 0, 0)
    if (!mOpen ) {
       return;
    }
@@ -91,6 +92,7 @@ void FileIO::SetCatalogInfo()
 
    SetCatalogInfo(type);
 #endif
+#endif
 
    return;
 }
@@ -98,6 +100,7 @@ void FileIO::SetCatalogInfo()
 void FileIO::SetCatalogInfo(wxUint32 type)
 {
 #ifdef __WXMAC__
+#if !wxCHECK_VERSION(3, 0, 0)
    if (!mOpen ) {
       return;
    }
@@ -105,6 +108,7 @@ void FileIO::SetCatalogInfo(wxUint32 type)
    wxFileName fn(mName);
 
    fn.MacSetTypeAndCreator(type, AUDACITY_CREATOR);
+#endif
 #endif
 
    return;

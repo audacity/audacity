@@ -158,7 +158,7 @@ void ODTask::DoSome(float amountWork)
          if(IsTaskAssociatedWithProject(gAudacityProjects[i]))
          {
             //this assumes tasks are only associated with one project.
-            gAudacityProjects[i]->AddPendingEvent( event );
+            gAudacityProjects[i]->GetEventHandler()->AddPendingEvent(event);
             //mark the changes so that the project can be resaved.
             gAudacityProjects[i]->GetUndoManager()->SetODChangesFlag();
             break;

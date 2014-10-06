@@ -188,7 +188,7 @@ char *Internat::VerifyFilename(const wxString &s, bool input)
          wxMessageBox(_("The specified filename could not be converted due to Unicode character use."));
 
          name = FileSelector(_("Specify New Filename:"),
-                             NULL,
+                             wxEmptyString,
                              name,
                              f.GetExt(),
                              wxT("*.") + f.GetExt(),

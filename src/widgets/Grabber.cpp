@@ -89,7 +89,7 @@ void Grabber::SendEvent(wxEventType type, const wxPoint & pos)
    e.SetEventObject(parent);
 
    // Queue the event
-   parent->AddPendingEvent(e);
+   parent->GetEventHandler()->AddPendingEvent(e);
 }
 
 //
