@@ -1,6 +1,7 @@
 ;nyquist plug-in
 ;version 1
 ;type process
+;preview enabled
 ;categories "http://lv2plug.in/ns/lv2core/#FilterPlugin"
 ;name "Notch Filter..."
 ;action "Performing Notch Filter..."

@@ -1,6 +1,7 @@
 ;nyquist plug-in
 ;version 3
 ;type process
+;preview enabled
 ;categories "http://lv2plug.in/ns/lv2core#LowpassPlugin"
 ;name "Low Pass Filter..."
 ;action "Performing Low Pass Filter..."

@@ -1,6 +1,7 @@
 ;nyquist plug-in
 ;version 1
 ;type process
+;preview enabled
 ;categories "http://audacityteam.org/namespace#NoiseRemoval"
 ;name "Clip Fix..."
 ;action "Reconstructing clips..."
