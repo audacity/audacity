@@ -27,6 +27,11 @@ using namespace std;
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define ROUND(x) ((int) ((x) + 0.5))
 
+#ifdef max
+#undef max
+#endif
+#define max(x,y) ((x)>(y)?(x):(y))
+
 // 4311 is type cast ponter to long warning
 // 4996 is warning against strcpy
 // 4267 is size_t to long warning

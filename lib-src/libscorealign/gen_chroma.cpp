@@ -21,6 +21,16 @@
 #endif
 using namespace std;
 
+#ifdef min
+#undef min
+#endif
+#define min(x,y) ((x)<(y)?(x):(y))
+
+#ifdef max
+#undef max
+#endif
+#define max(x,y) ((x)>(y)?(x):(y))
+
 //if 1, causes printing internally
 #define PRINT_BIN_ENERGY 1
 

@@ -45,7 +45,9 @@
 
 #define INSTALL_PREFIX "."
 
+#if (_MSC_VER == 1500)
 #define rint(x)   (floor((x)+0.5f)) 
+#endif
 
 #ifdef _DEBUG
     #ifdef _MSC_VER

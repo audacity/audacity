@@ -26,6 +26,7 @@ typedef unsigned __int64  uint64_t;
 /*	Win32 doesn't seem to have these functions. 
 **	Therefore implement inline versions of these functions here.
 */
+#if (_MSC_VER == 1500)
 __inline long int 
 lrint (double flt)
 {	int intgr;
@@ -73,6 +74,7 @@ llrintf (float flt)
 		
 	return intgr ;
 }
+#endif
 
 /* Nor does it have the snprintf function */
 #define snprintf _snprintf
