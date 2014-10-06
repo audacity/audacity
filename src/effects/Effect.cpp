@@ -487,11 +487,13 @@ void Effect::Preview(bool dryOnly)
       End();
       Init();
    }
+
+   // Restore original selection
+   mT0 = t0save;
+   mT1 = t1save;
+
    if (bSuccess)
    {
-      mT0 = t0save;
-      mT1 = t1save;
-
       WaveTrackArray playbackTracks;
       WaveTrackArray recordingTracks;
       // Probably not the same tracks post-processing, so can't rely on previous values of mixLeft & mixRight.
