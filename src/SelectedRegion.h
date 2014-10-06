@@ -28,7 +28,12 @@ public:
       , mT1(t1)
    { ensureOrdering(); }
 
-   explicit
+
+   // LLL: 2014/10/6
+   // Removed "explicit" until we drop OSX PPC support and upgrade to a newer
+   // compiler.
+   //
+   // explicit
    SelectedRegion(const SelectedRegion &x)
       : mT0(x.mT0)
       , mT1(x.mT1)
