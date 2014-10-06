@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity 2.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2014-08-29 21:35+0300\n"
-"PO-Revision-Date: 2014-08-31 07:26-0000\n"
+"POT-Creation-Date: 2014-10-05 11:02+0300\n"
+"PO-Revision-Date: 2014-10-06 05:18-0000\n"
 "Last-Translator: Yuri Chornoivan\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
 "Language: uk\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.6.5\n"
+"X-Generator: Poedit 1.6.9\n"
 
 #: src/AboutDialog.cpp:57 src/AboutDialog.cpp:78
 msgid "co-founder"
@@ -754,7 +754,7 @@ msgstr "Оберіть файл(и) для пакетної обробки…"
 
 #: src/BatchProcessDialog.cpp:232 src/Project.cpp:2182
 msgid "All files|*|All supported files|"
-msgstr "Всі файли|*|Всі файли, що підтримуються|"
+msgstr "Усі файли|*|Усі файли, що підтримуються|"
 
 #: src/BatchProcessDialog.cpp:271
 msgid "Applying..."
@@ -917,7 +917,7 @@ msgstr "Не копіювати"
 
 #: src/Dependencies.cpp:368
 msgid "Copy All Files (Safer)"
-msgstr "Копіювати всі файли (безпечніше)"
+msgstr "Копіювати усі файли (безпечніше)"
 
 #: src/Dependencies.cpp:383 src/Dependencies.cpp:389
 msgid "Ask me"
@@ -925,7 +925,7 @@ msgstr "Перепитувати"
 
 #: src/Dependencies.cpp:384
 msgid "Always copy all files (safest)"
-msgstr "Завжди копіювати всі файли (найбезпечніше)"
+msgstr "Завжди копіювати усі файли (найбезпечніше)"
 
 #: src/Dependencies.cpp:385
 msgid "Never copy any files"
@@ -1385,14 +1385,14 @@ msgstr "Більше не показувати це попередження"
 #: src/FFmpeg.h:276
 msgid ""
 "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files (*.*)|*"
+"All Files|*"
 msgstr ""
 "Лише avformat.dll|*avformat*.dll|Динамічно з’єднані бібліотеки (*.dll)|*.dll|"
-"Всі файли (*.*)|*"
+"Усі файли|*"
 
 #: src/FFmpeg.h:309
 msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-msgstr "Динамічні бібліотеки (*.dylib)|*.dylib|Всі файли (*)|*"
+msgstr "Динамічні бібліотеки (*.dylib)|*.dylib|Усі файли (*)|*"
 
 #: src/FFmpeg.h:336
 msgid ""
@@ -1400,7 +1400,7 @@ msgid ""
 "so*|All Files (*)|*"
 msgstr ""
 "Лише libavformat.so|libavformat*.so*|Динамічно з’єднані бібліотеки (*.so*)|*."
-"so*|Всі файли (*)|*"
+"so*|Усі файли (*)|*"
 
 #: src/FFT.cpp:495
 msgid "Rectangular"
@@ -1491,7 +1491,7 @@ msgstr "Сітки"
 #: src/effects/ScienFilter.cpp:586 src/effects/ScienFilter.cpp:594
 #: src/effects/ScienFilter.cpp:683 src/effects/ScienFilter.cpp:716
 #: src/effects/ScienFilter.cpp:795 src/effects/ScienFilter.cpp:806
-#: src/widgets/Meter.cpp:440
+#: src/widgets/Meter.cpp:1516 src/widgets/Meter.cpp:1517
 msgid "dB"
 msgstr "дБ"
 
@@ -1700,13 +1700,16 @@ msgstr ""
 msgid ""
 "You do not appear to have the 'help' folder installed.<br> Please <a href="
 "\"*URL*\">view the content online</a> or <a href=\"http://manual."
-"audacityteam.org/o/man/unzipping_the_manual.html\"> download the full "
-"Manual</a>."
+"audacityteam.org/o/man/unzipping_the_manual.html\"> download the current "
+"Manual</a>.<br><br>To always view the manual online, change \"Location of "
+"Manual\" in<br> Interface Preferences to \"From Internet\"."
 msgstr ""
-"У вашій системі не встановлено дані до каталогу «help».<br>Ви можете або <a "
-"href=\"*URL*\">переглянути довідку у інтернеті</a>, або <a href=\"http://"
-"manual.audacityteam.org/o/man/unzipping_the_manual.html\">отримати і "
-"встановити підручник локально</a>."
+"У вашій системі не встановлено дані до каталогу «help».<br>Будь ласка, <a "
+"href=\"*URL*\">ознайомтеся з підручником у інтернеті</a> або <a href="
+"\"http://manual.audacityteam.org/o/man/unzipping_the_manual.html\">отримайте "
+"локальну копію поточної версії підручника</a>.<br><br>Щоб завжди звертатися "
+"до підручника у інтернеті, змініть «Розташування підручника» "
+"у<br>налаштуваннях інтерфейс на «У інтернеті»."
 
 #: src/HistoryWindow.cpp:52
 msgid "Undo History"
@@ -1814,8 +1817,8 @@ msgid "Select a text file containing labels..."
 msgstr "Виберіть тестовий файл, що містить позначки…"
 
 #: src/LabelDialog.cpp:519 src/Menus.cpp:4662
-msgid "Text files (*.txt)|*.txt|All files (*.*)|*.*"
-msgstr "Текстові файли (*.txt)|*.txt|Усі файли (*.*)|*.*"
+msgid "Text files (*.txt)|*.txt|All files|*"
+msgstr "Текстові файли (*.txt)|*.txt|Усі файли|*.*"
 
 #: src/LabelDialog.cpp:534 src/Menus.cpp:4675 src/Project.cpp:2385
 #: src/Project.cpp:2393
@@ -1918,12 +1921,12 @@ msgid ""
 "The module %s is matched with Audacity version %s.  It will not be loaded."
 msgstr "Модуль %s призначено для Audacity версії %s. Його не буде завантажено."
 
-#: src/LoadModules.cpp:239
+#: src/LoadModules.cpp:244
 #, c-format
 msgid "Module \"%s\" found."
 msgstr "Знайдено модуль «%s»"
 
-#: src/LoadModules.cpp:240
+#: src/LoadModules.cpp:245
 msgid ""
 "\n"
 "\n"
@@ -1933,19 +1936,19 @@ msgstr ""
 "\n"
 "Використовуйте лише модулі з надійних джерел"
 
-#: src/LoadModules.cpp:241
+#: src/LoadModules.cpp:246
 msgid "Yes"
 msgstr "Так"
 
-#: src/LoadModules.cpp:241
+#: src/LoadModules.cpp:246
 msgid "No"
 msgstr "Ні"
 
-#: src/LoadModules.cpp:243
+#: src/LoadModules.cpp:248
 msgid "Module Loader"
 msgstr "Завантажувач модулів"
 
-#: src/LoadModules.cpp:243
+#: src/LoadModules.cpp:248
 msgid "Try and load this module?"
 msgstr "Спробувати завантажити цей модуль?"
 
@@ -3139,10 +3142,10 @@ msgstr "Вибрати MIDI-файл…"
 #: src/Menus.cpp:4707
 msgid ""
 "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*."
-"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files (*.*)|*.*"
+"mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
 msgstr ""
 "Файли MIDI і Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|Файли MIDI (*."
-"mid;*.midi)|*.mid;*.midi|Файл Allegro (*.gro)|*.gro|Всі файли (*.*)|*.*"
+"mid;*.midi)|*.mid;*.midi|Файли Allegro (*.gro)|*.gro|Усі файли|*"
 
 #: src/Menus.cpp:4724
 #, c-format
@@ -3158,8 +3161,8 @@ msgid "Select any uncompressed audio file..."
 msgstr "Виберіть будь-який нестиснений звуковий файл…"
 
 #: src/Menus.cpp:4743
-msgid "All files (*)|*"
-msgstr "Усі файли (*)|*"
+msgid "All files|*"
+msgstr "Усі файли|*"
 
 #: src/Menus.cpp:4768 src/Menus.cpp:4769
 msgid "Edit Metadata Tags"
@@ -3953,8 +3956,8 @@ msgstr "Перенесення"
 msgid "Mixer"
 msgstr "Мікшер"
 
-#: src/Screenshot.cpp:385 src/toolbars/MeterToolBar.cpp:50
-#: src/toolbars/MeterToolBar.cpp:120
+#: src/Screenshot.cpp:385 src/toolbars/MeterToolBar.cpp:51
+#: src/toolbars/MeterToolBar.cpp:119
 msgid "Meter"
 msgstr "Індикатор"
 
@@ -7152,7 +7155,8 @@ msgstr ""
 "Застосовано ефект: Генерувати %s хвилю %s, частоти = %.2f Гц, амплітуди = "
 "%.2f, %.6lf секунд"
 
-#: src/effects/ToneGen.cpp:70 src/widgets/Meter.cpp:439
+#: src/effects/ToneGen.cpp:70 src/widgets/Meter.cpp:1520
+#: src/widgets/Meter.cpp:1521
 msgid "Linear"
 msgstr "Лінійна"
 
@@ -8460,8 +8464,8 @@ msgstr "Оберіть файл xml з шаблонами для імпорту�
 #: src/export/ExportFFmpegDialogs.cpp:1734 src/prefs/KeyConfigPrefs.cpp:332
 #: src/prefs/KeyConfigPrefs.cpp:364 src/prefs/KeyConfigPrefs.cpp:917
 #: src/prefs/KeyConfigPrefs.cpp:949
-msgid "XML files (*.xml)|*.xml|All files (*.*)|*.*"
-msgstr "XML файли (*.xml)|*.xml|Усі файли (*.*)|*.*"
+msgid "XML files (*.xml)|*.xml|All files|*"
+msgstr "Файли XML (*.xml)|*.xml|Усі файли|*.*"
 
 #: src/export/ExportFFmpegDialogs.cpp:1731
 msgid "Select xml file to export presets into"
@@ -8713,10 +8717,9 @@ msgstr ""
 #: src/export/ExportMP3.cpp:1415
 msgid ""
 "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-"All Files (*.*)|*"
+"All Files|*"
 msgstr ""
-"Лише lame_enc.dll|lame_enc.dll|Динамічні бібліотеки (*.dll)|*.dll|Усі файли "
-"(*.*)|*"
+"Лише lame_enc.dll|lame_enc.dll|Динамічні бібліотеки (*.dll)|*.dll|Усі файли|*"
 
 #: src/export/ExportMP3.cpp:1433
 msgid ""
@@ -10196,10 +10199,12 @@ msgstr ""
 "завантажуватиме його."
 
 #: src/prefs/ModulePrefs.cpp:101
-msgid "'New' is like 'Ask', but asks just once."
-msgstr ""
-"«Новий» — подібне до «Запитувати», але запитання буде поставлено лише один "
-"раз."
+msgid "'New' means no choice has been made yet."
+msgstr "«Новий» означає, що вибору ще не було зроблено."
+
+#: src/prefs/ModulePrefs.cpp:112
+msgid "No Modules were found"
+msgstr "Модулів не знайдено"
 
 #: src/prefs/MousePrefs.cpp:57
 msgid "Mouse"
@@ -11051,27 +11056,27 @@ msgstr "Розмістити вибрану область"
 msgid "Fit Project"
 msgstr "Розмістити проект"
 
-#: src/toolbars/MeterToolBar.cpp:87
+#: src/toolbars/MeterToolBar.cpp:88
 msgid "Play Meter"
 msgstr "Індикатор програвання"
 
-#: src/toolbars/MeterToolBar.cpp:91
+#: src/toolbars/MeterToolBar.cpp:92
 msgid "Meter-Play"
 msgstr "Індикатор програвання"
 
-#: src/toolbars/MeterToolBar.cpp:100
+#: src/toolbars/MeterToolBar.cpp:101
 msgid "Record Meter"
 msgstr "Індикатор запису"
 
-#: src/toolbars/MeterToolBar.cpp:104
+#: src/toolbars/MeterToolBar.cpp:105
 msgid "Meter-Record"
 msgstr "Індикатор запису"
 
-#: src/toolbars/MeterToolBar.cpp:129
+#: src/toolbars/MeterToolBar.cpp:128
 msgid "Playback Level"
 msgstr "Рівень відтворення"
 
-#: src/toolbars/MeterToolBar.cpp:130
+#: src/toolbars/MeterToolBar.cpp:129
 msgid "Recording Level (Click to monitor.)"
 msgstr "Рівень запису (натисніть, щоб спостерігати)"
 
@@ -11206,11 +11211,11 @@ msgstr "Натисніть"
 msgid "Button"
 msgstr "Кнопка"
 
-#: src/widgets/ASlider.cpp:784 src/widgets/Meter.cpp:950
+#: src/widgets/ASlider.cpp:784 src/widgets/Meter.cpp:789
 msgid "L"
 msgstr "Л"
 
-#: src/widgets/ASlider.cpp:787 src/widgets/Meter.cpp:953
+#: src/widgets/ASlider.cpp:787 src/widgets/Meter.cpp:791
 msgid "R"
 msgstr "П"
 
@@ -11246,63 +11251,91 @@ msgstr "Порожній"
 msgid "Menu"
 msgstr "Меню"
 
-#: src/widgets/Meter.cpp:406
+#: src/widgets/Meter.cpp:422
 msgid "Enable Meter"
 msgstr "Увімкнути індикацію"
 
-#: src/widgets/Meter.cpp:408
+#: src/widgets/Meter.cpp:424
 msgid "Disable Meter"
 msgstr "Вимкнути індикацію"
 
-#: src/widgets/Meter.cpp:411
+#: src/widgets/Meter.cpp:427
 msgid "Stop Monitoring"
 msgstr "Припинити спостереження"
 
-#: src/widgets/Meter.cpp:413
+#: src/widgets/Meter.cpp:429
 msgid "Start Monitoring"
 msgstr "Почати спостереження"
 
-#: src/widgets/Meter.cpp:417
+#: src/widgets/Meter.cpp:433
 msgid "Stop Automated Recording Level Adjustment"
 msgstr "Припинити автоматичне виправлення рівня запису"
 
-#: src/widgets/Meter.cpp:419
+#: src/widgets/Meter.cpp:435
 msgid "Start Automated Recording Level Adjustment"
 msgstr "Почати автоматичне виправлення рівня запису"
 
-#: src/widgets/Meter.cpp:430
-msgid "Horizontal Stereo"
-msgstr "Горизонтально стерео"
-
-#: src/widgets/Meter.cpp:431
-msgid "Vertical Stereo"
-msgstr "Вертикально стерео"
-
-#: src/widgets/Meter.cpp:448
+#: src/widgets/Meter.cpp:464
 msgid "Preferences..."
 msgstr "Параметри…"
 
-#: src/widgets/Meter.cpp:1276
+#: src/widgets/Meter.cpp:1452
 msgid "Automated Recording Level Adjustment stopped as requested by user."
 msgstr "Автоматичне виправлення рівня запису вимкнено користувачем."
 
-#: src/widgets/Meter.cpp:1291
+#: src/widgets/Meter.cpp:1473
+msgid "Meter Preferences"
+msgstr "Параметри індикатора"
+
+#: src/widgets/Meter.cpp:1477
+msgid "Refresh Rate"
+msgstr "Частота оновлення"
+
+#: src/widgets/Meter.cpp:1479
 msgid ""
 "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
 "the meter affecting audio quality on slower machines."
 msgstr ""
 "Вищі значення частоти оновлення призведуть до частішої зміни значень на\n"
-"індикаторі рівня. Значення частоти 30 на секунду або менше має запобігти\n"
+"індикаторі рівня. Значення частоти 30 за секунду або менше має запобігти\n"
 "розривам у відтворенні звуку на повільних комп’ютерах."
 
-#: src/widgets/Meter.cpp:1292
+#: src/widgets/Meter.cpp:1482
 msgid "Meter refresh rate per second [1-100]: "
-msgstr "Частота оновлення індикатора (разів на секунду) [1-100]: "
+msgstr "Частота оновлення індикатора (разів за секунду) [1-100]: "
 
-#: src/widgets/Meter.cpp:1293
-msgid "Meter Preferences"
-msgstr "Параметри індикатора"
+#: src/widgets/Meter.cpp:1485
+msgid "Meter refresh rate per second [1-100]"
+msgstr "Частота оновлення індикатора (разів за секунду) [1-100]"
+
+#: src/widgets/Meter.cpp:1496
+msgid "Meter Style"
+msgstr "Стиль"
+
+#: src/widgets/Meter.cpp:1500 src/widgets/Meter.cpp:1501
+msgid "Gradient"
+msgstr "Градієнт"
+
+#: src/widgets/Meter.cpp:1504 src/widgets/Meter.cpp:1505
+msgid "RMS"
+msgstr "СКВ"
+
+#: src/widgets/Meter.cpp:1512
+msgid "Meter Type"
+msgstr "Тип"
+
+#: src/widgets/Meter.cpp:1528
+msgid "Orientation"
+msgstr "Орієнтація"
+
+#: src/widgets/Meter.cpp:1532 src/widgets/Meter.cpp:1533
+msgid "Horizontal"
+msgstr "Горизонтальна"
+
+#: src/widgets/Meter.cpp:1536 src/widgets/Meter.cpp:1537
+msgid "Vertical"
+msgstr "Вертикальна"
 
 #: src/widgets/MultiDialog.cpp:108
 msgid "Show Log for Details"
