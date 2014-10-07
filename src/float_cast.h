@@ -64,7 +64,7 @@
 	/*	Win32 doesn't seem to have these functions.
 	**	Therefore implement inline versions of these functions here.
 	*/
-
+#if (_MSC_VER == 1500)
 	__inline long int
 	lrint (double flt)
 	{	int intgr;
@@ -112,7 +112,7 @@
 
 		return intgr ;
 	}
-
+#endif
 #else
 
    /* dmazzoni: modified these to do a proper rounding, even though
