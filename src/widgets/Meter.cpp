@@ -1125,11 +1125,19 @@ void Meter::RepaintBarsNow()
 {
    if (mLayoutValid)
    {
-      wxClientDC dc(this);
-      wxBufferedDC bufDC(&dc, *mBitmap);
+      wxDC *dc;
+      wxClientDC clientDC(this);
+#if defined(__WXMAC__)
+      // OSX is already double buffered and using our own buffer
+      // will cause text to be rendered incorrectly.
+      dc = &clientDC;
+#else
+      wxBufferedDC bufDC(&clientDC, *mBitmap);
+      dc = &bufDC
+#endif
       for (int i = 0; i < mNumBars; i++)
       {
-         DrawMeterBar(bufDC, &mBar[i]);
+         DrawMeterBar(*dc, &mBar[i]);
       }
    }
 }
