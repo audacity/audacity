@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Audacity 2.0.x\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-09-04 16:38+0100\n"
-"PO-Revision-Date: 2014-09-06 10:12+0200\n"
+"PO-Revision-Date: 2014-09-06 14:47+0100\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist@gmail.com>\n"
 "Language-Team: Spanish <audacity-translation@lists.sourceforge.net>\n"
 "Language: es\n"
@@ -5145,7 +5145,7 @@ msgstr "Agudos"
 
 #: src/effects/BassTreble.cpp:329
 msgid "&Level (dB):"
-msgstr "&Agudos (dB):"
+msgstr "&Nivel (dB):"
 
 #: src/effects/BassTreble.cpp:334
 msgid "Level"
