@@ -4422,7 +4422,8 @@ void AudacityProject::DoZoomFitV()
    TrackListIterator iter(mTracks);
    Track *t = iter.First();
    while (t) {
-      if (t->GetKind() == Track::Wave)
+      if ((t->GetKind() == Track::Wave) &&
+          !t->GetMinimized())
          count++;
       else
          height -= t->GetHeight();
