@@ -54,7 +54,7 @@
 set CFG="$(ProjectDir)/$(IntDir)config.h"
 
 echo // Automatically generated file &gt;"!CFG!"
-IF NOT "!DXSDK_DIR!" == "" echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;"!CFG!"
+echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;"!CFG!"
 echo #define PX_USE_WIN_MME 1 &gt;&gt;"!CFG!"
 echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;"!CFG!"
 </Command>
@@ -73,19 +73,24 @@ echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;"!CFG!"
       <ForcedIncludeFiles>$(ProjectDir)\$(Configuration)\config.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <PostBuildEvent>
-      <Command>setlocal EnableDelayedExpansion
+      <Command>rem
+rem With the upgrade to VS2013, this not longer really needed,
+rem but leaving here for possible future use
+rem
+
+setlocal EnableDelayedExpansion
 set BASE="../../../lib-src/portmixer"
 set INTDIR=$(Configuration)
 set CFLAGS=/O2 /GL /I "!BASE!/../portaudio-v19/include" /I "!BASE!/include" /D "WIN32" /D "NDEBUG" /D "_LIB" /D "PX_USE_WIN_MME" /D "_MBCS" /GF /FD /EHsc /MD /Gy /Fo"!INTDIR!/" /Fd"!INTDIR!/" /W3 /nologo /c /wd4996 /FI "$(ProjectDir)/$(Configuration)/config.h" /errorReport:prompt
 set LIBS=
 
-if "!DXSDK_DIR!"=="" goto NoDX
+rem if "!DXSDK_DIR!"=="" goto NoDX
 
-cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/px_win_ds.c"
+rem cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/px_win_ds.c"
 
-set LIBS="!DXSDK_DIR!/lib/x86/dxguid.lib"
+rem set LIBS="!DXSDK_DIR!/lib/x86/dxguid.lib"
 
-:NoDX
+rem :NoDX
 
 lib /OUT:"$(TargetPath)" "$(IntDir)*.obj" !LIBS!
 </Command>
@@ -97,7 +102,7 @@ lib /OUT:"$(TargetPath)" "$(IntDir)*.obj" !LIBS!
 set CFG="$(ProjectDir)/$(IntDir)config.h"
 
 echo // Automatically generated file &gt;"!CFG!"
-IF NOT "!DXSDK_DIR!" == "" echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;"!CFG!"
+echo #define PX_USE_WIN_DSOUND 1 &gt;&gt;"!CFG!"
 echo #define PX_USE_WIN_MME 1 &gt;&gt;"!CFG!"
 echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;"!CFG!"
 </Command>
@@ -118,19 +123,24 @@ echo #define PX_USE_WIN_WASAPI 1 &gt;&gt;"!CFG!"
       <ForcedIncludeFiles>$(ProjectDir)\$(Configuration)\config.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <PostBuildEvent>
-      <Command>setlocal EnableDelayedExpansion
+      <Command>rem
+rem With the upgrade to VS2013, this not longer really needed,
+rem but leaving here for possible future use
+rem
+
+setlocal EnableDelayedExpansion
 set BASE="../../../lib-src/portmixer"
 set INTDIR=$(Configuration)
 set CFLAGS=/Od /I "!BASE!/../portaudio-v19/include" /I "!BASE!/include" /D "WIN32" /D "_DEBUG" /D "_LIB" /D "PX_USE_WIN_MME" /D "_MBCS" /GF /FD /EHsc /RTC1 /MDd /Gy /Fo"!INTDIR!/" /Fd"!INTDIR!/" /W3 /nologo /c /ZI /wd4996 /FI "$(ProjectDir)/$(Configuration)/config.h" /errorReport:prompt
 set LIBS=
 
-if "!DXSDK_DIR!"=="" goto NoDX
+rem if "!DXSDK_DIR!"=="" goto NoDX
 
-cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/px_win_ds.c"
+rem cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/px_win_ds.c"
 
-set LIBS="!DXSDK_DIR!/lib/x86/dxguid.lib"
+rem set LIBS="!DXSDK_DIR!/lib/x86/dxguid.lib"
 
-:NoDX
+rem :NoDX
 
 lib /OUT:"$(TargetPath)" "$(IntDir)*.obj" !LIBS!
 </Command>
@@ -139,10 +149,7 @@ lib /OUT:"$(TargetPath)" "$(IntDir)*.obj" !LIBS!
   <ItemGroup>
     <ClCompile Include="..\..\..\lib-src\portmixer\src\px_mixer.c" />
     <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_common.c" />
-    <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_ds.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_ds.c" />
     <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_endpoint.c" />
     <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_wasapi.c" />
     <ClCompile Include="..\..\..\lib-src\portmixer\src\px_win_wmme.c" />

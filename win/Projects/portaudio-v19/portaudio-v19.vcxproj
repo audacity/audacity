@@ -55,13 +55,13 @@ setlocal EnableDelayedExpansion
 set CFG="$(ProjectDir)/$(IntDir)config.h"
 
 echo // Automatically generated file &gt;!CFG!
-IF NOT "!DXSDK_DIR!" == "" echo #define PA_USE_DS 1 &gt;&gt;!CFG!
 IF NOT "!ASIOSDK_DIR!" == "" echo #define PA_USE_ASIO 1 &gt;&gt;!CFG!
 IF NOT "!JACKSDK_DIR!" == "" echo #define PA_USE_JACK 1 &gt;&gt;!CFG!
 IF NOT "!JACKSDK_DIR!" == "" echo #define PA_DYNAMIC_JACK 1 &gt;&gt;!CFG!
 echo #define PA_USE_WDMKS 1 &gt;&gt;!CFG!
 echo #define PA_USE_WASAPI 1 &gt;&gt;!CFG!
 echo #define PA_USE_WMME 1 &gt;&gt;!CFG!
+echo #define PA_USE_DS 1 &gt;&gt;!CFG!
 </Command>
     </PreBuildEvent>
     <ClCompile>
@@ -85,16 +85,6 @@ set CFG=$(ProjectDir)$(Configuration)\config.h
 set INTDIR=$(Configuration)
 set CFLAGS=/O2 /GL /I "!BASE!/include" /I "!BASE!/src/common" /I "!BASE!/src/os/win" /D "WIN32" /D "NDEBUG" /D "_LIB" /D "_MBCS" /GF /FD /EHsc /MD /Gy /Fo"!INTDIR!/" /Fd"!INTDIR!/" /W3 /nologo /c /wd4996 /FI "!CFG!" /errorReport:prompt
 set LIBS=
-
-find "PA_USE_DS 1" "!CFG!"
-IF ERRORLEVEL 1 goto NoDS
-
-cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/hostapi/dsound/pa_win_ds.c"
-cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/hostapi/dsound/pa_win_ds_dynlink.c"
-
-set LIBS="!DXSDK_DIR!/lib/x86\dxguid.lib"
-
-:NoDS
 
 find "PA_USE_WASAPI 1" "!CFG!"
 IF ERRORLEVEL 1 goto NoWASAPI
@@ -140,13 +130,13 @@ setlocal EnableDelayedExpansion
 set CFG="$(ProjectDir)/$(IntDir)config.h"
 
 echo // Automatically generated file &gt;!CFG!
-IF NOT "!DXSDK_DIR!" == "" echo #define PA_USE_DS 1 &gt;&gt;!CFG!
 IF NOT "!ASIOSDK_DIR!" == "" echo #define PA_USE_ASIO 1 &gt;&gt;!CFG!
 IF NOT "!JACKSDK_DIR!" == "" echo #define PA_USE_JACK 1 &gt;&gt;!CFG!
 IF NOT "!JACKSDK_DIR!" == "" echo #define PA_DYNAMIC_JACK 1 &gt;&gt;!CFG!
 echo #define PA_USE_WDMKS 1 &gt;&gt;!CFG!
 echo #define PA_USE_WASAPI 1 &gt;&gt;!CFG!
 echo #define PA_USE_WMME 1 &gt;&gt;!CFG!
+echo #define PA_USE_DS 1 &gt;&gt;!CFG!
 </Command>
     </PreBuildEvent>
     <ClCompile>
@@ -172,16 +162,6 @@ set CFG=$(ProjectDir)$(Configuration)\config.h
 set INTDIR=$(Configuration)
 set CFLAGS=/Od /I "!BASE!/include" /I "!BASE!/src/common" /I "!BASE!/src/os/win" /D "WIN32" /D "_DEBUG" /D "_LIB" /D "_MBCS" /GF /FD /EHsc /RTC1 /MDd /Gy /W3 /nologo /c /ZI /wd4996 /Fo"!INTDIR!/" /FI "!CFG!" /errorReport:prompt
 set LIBS=
-
-find "PA_USE_DS 1" "!CFG!"
-IF ERRORLEVEL 1 goto NoDS
-
-cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/hostapi/dsound/pa_win_ds.c"
-cl !CFLAGS! /I "!DXSDK_DIR!/include" "!BASE!/src/hostapi/dsound/pa_win_ds_dynlink.c"
-
-set LIBS="!DXSDK_DIR!/lib/x86\dxguid.lib"
-
-:NoDS
 
 find "PA_USE_WASAPI 1" "!CFG!"
 IF ERRORLEVEL 1 goto NoWASAPI
@@ -237,14 +217,8 @@ lib /OUT:"$(TargetPath)" "!INTDIR!/*.obj" !LIBS!
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\portaudio-v19\src\hostapi\dsound\pa_win_ds.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\portaudio-v19\src\hostapi\dsound\pa_win_ds_dynlink.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\portaudio-v19\src\hostapi\dsound\pa_win_ds.c" />
+    <ClCompile Include="..\..\..\lib-src\portaudio-v19\src\hostapi\dsound\pa_win_ds_dynlink.c" />
     <ClCompile Include="..\..\..\lib-src\portaudio-v19\src\hostapi\asio\iasiothiscallresolver.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -285,10 +259,7 @@ lib /OUT:"$(TargetPath)" "!INTDIR!/*.obj" !LIBS!
     <ClInclude Include="..\..\..\lib-src\portaudio-v19\src\common\pa_trace.h" />
     <ClInclude Include="..\..\..\lib-src\portaudio-v19\src\common\pa_types.h" />
     <ClInclude Include="..\..\..\lib-src\portaudio-v19\src\common\pa_util.h" />
-    <CustomBuild Include="..\..\..\lib-src\portaudio-v19\src\hostapi\dsound\pa_win_ds_dynlink.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </CustomBuild>
+    <CustomBuild Include="..\..\..\lib-src\portaudio-v19\src\hostapi\dsound\pa_win_ds_dynlink.h" />
     <CustomBuild Include="..\..\..\lib-src\portaudio-v19\src\hostapi\asio\iasiothiscallresolver.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
