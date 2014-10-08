@@ -1133,7 +1133,7 @@ void Meter::RepaintBarsNow()
       dc = &clientDC;
 #else
       wxBufferedDC bufDC(&clientDC, *mBitmap);
-      dc = &bufDC
+      dc = &bufDC;
 #endif
       for (int i = 0; i < mNumBars; i++)
       {
