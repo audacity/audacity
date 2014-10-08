@@ -114,5 +114,6 @@
   (cond ((= mst 1) (vector (aref s 0) (setf (aref s 1)
                                         (scale (/ 1.0 peakamp) (aref s 1)))))
         ((= mst 0) (setf s (scale (/ 1.0 peakamp) s))))
-s))
+  s)
+  "Error.\nStereo track required.")
 
