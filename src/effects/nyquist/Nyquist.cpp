@@ -756,7 +756,7 @@ bool EffectNyquist::Process()
 
    this->ReplaceProcessedTracks(success);
 
-   //mDebug = false;
+   mDebug = false;
 
    return success;
 }
@@ -867,10 +867,14 @@ bool EffectNyquist::ProcessOne()
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
 
    if (rval == nyx_string) {
-       wxMessageBox(NyquistToWxString(nyx_get_string()),
-                    wxT("Nyquist"),
-                    wxOK | wxCENTRE, mParent);
-      return true;
+      wxMessageBox(NyquistToWxString(nyx_get_string()),
+                   wxT("Nyquist"),
+                   wxOK | wxCENTRE, mParent);
+
+      // True if not process type.
+      // If not returning audio from process effect,
+      // return first reult then stop (disables preview).
+      return (!(GetEffectFlags() & PROCESS_EFFECT));
    }
 
    if (rval == nyx_double) {
@@ -879,7 +883,7 @@ bool EffectNyquist::ProcessOne()
                  nyx_get_double());
       wxMessageBox(str, wxT("Nyquist"),
                    wxOK | wxCENTRE, mParent);
-      return true;
+      return (!(GetEffectFlags() & PROCESS_EFFECT));
    }
 
    if (rval == nyx_int) {
@@ -888,7 +892,7 @@ bool EffectNyquist::ProcessOne()
                  nyx_get_int());
       wxMessageBox(str, wxT("Nyquist"),
                    wxOK | wxCENTRE, mParent);
-      return true;
+      return (!(GetEffectFlags() & PROCESS_EFFECT));
    }
 
    if (rval == nyx_labels) {
@@ -919,7 +923,7 @@ bool EffectNyquist::ProcessOne()
 
          ltrack->AddLabel(SelectedRegion(t0 + mT0, t1 + mT0), UTF8CTOWX(str));
       }
-      return true;
+      return (!(GetEffectFlags() & PROCESS_EFFECT));
    }
 
    if (rval != nyx_audio) {
