@@ -3157,6 +3157,7 @@
 		2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Static.xcconfig; sourceTree = "<group>"; };
 		2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Shared.xcconfig; sourceTree = "<group>"; };
 		2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Static.xcconfig; sourceTree = "<group>"; };
+		2813897919E6163C004111ED /* SelectedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectedRegion.h; sourceTree = "<group>"; };
 		2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LinkingHtmlWindow.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LinkingHtmlWindow.h; sourceTree = "<group>"; tabWidth = 3; };
 		282D474A0B9E8D900034BC49 /* Snap.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Snap.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5060,6 +5061,7 @@
 				1790B0D709883BFD008A330A /* SampleFormat.h */,
 				285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */,
 				285DE1F90BF03C7800A20DF0 /* Screenshot.h */,
+				2813897919E6163C004111ED /* SelectedRegion.h */,
 				1790B0DA09883BFD008A330A /* Sequence.cpp */,
 				1790B0DB09883BFD008A330A /* Sequence.h */,
 				1790B0DC09883BFD008A330A /* Shuttle.cpp */,
