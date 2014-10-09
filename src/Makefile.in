@@ -308,10 +308,11 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
 	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h Resample.cpp \
 	Resample.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
-	Screenshot.h Shuttle.cpp Shuttle.h ShuttleGui.cpp ShuttleGui.h \
-	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
-	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
-	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
+	Screenshot.h SelectedRegion.h Shuttle.cpp Shuttle.h \
+	ShuttleGui.cpp ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h \
+	Snap.cpp Snap.h SoundActivatedRecord.cpp \
+	SoundActivatedRecord.h Spectrum.cpp Spectrum.h \
+	SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
 	ThemeAsCeeCode.h TimeDialog.cpp TimeDialog.h \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
@@ -940,6 +941,8 @@ LIBOBJS = @LIBOBJS@
 LIBRESAMPLE_CFLAGS = @LIBRESAMPLE_CFLAGS@
 LIBRESAMPLE_LIBS = @LIBRESAMPLE_LIBS@
 LIBS = @LIBS@
+LIBSAMPLERATE_SYSTEM_CFLAGS = @LIBSAMPLERATE_SYSTEM_CFLAGS@
+LIBSAMPLERATE_SYSTEM_LIBS = @LIBSAMPLERATE_SYSTEM_LIBS@
 LIBTOOL = @LIBTOOL@
 LIBTWOLAME_CFLAGS = @LIBTWOLAME_CFLAGS@
 LIBTWOLAME_LIBS = @LIBTWOLAME_LIBS@
@@ -1169,10 +1172,11 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
 	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h Resample.cpp \
 	Resample.h RingBuffer.cpp RingBuffer.h Screenshot.cpp \
-	Screenshot.h Shuttle.cpp Shuttle.h ShuttleGui.cpp ShuttleGui.h \
-	ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
-	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
-	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
+	Screenshot.h SelectedRegion.h Shuttle.cpp Shuttle.h \
+	ShuttleGui.cpp ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h \
+	Snap.cpp Snap.h SoundActivatedRecord.cpp \
+	SoundActivatedRecord.h Spectrum.cpp Spectrum.h \
+	SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
 	ThemeAsCeeCode.h TimeDialog.cpp TimeDialog.h \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \

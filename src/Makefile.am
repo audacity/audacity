@@ -186,6 +186,7 @@ audacity_SOURCES = \
 	RingBuffer.h \
 	Screenshot.cpp \
 	Screenshot.h \
+	SelectedRegion.h \
 	Shuttle.cpp \
 	Shuttle.h \
 	ShuttleGui.cpp \
