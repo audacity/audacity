@@ -394,9 +394,9 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    else if (captureMode.IsSameAs(wxT("trackpanel")))
    {
       TrackPanel *panel = context.proj->mTrackPanel;
-      AdornedRulerPanel *ruler = panel->mRuler;
+      //AdornedRulerPanel *ruler = panel->mRuler;
 
-      int h = ruler->GetRulerHeight();
+      int h = panel->mRuler->GetRulerHeight();
       int x = 0, y = -h;
       int width, height;
 

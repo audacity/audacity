@@ -64,7 +64,7 @@ size_t MultiFormatReader::ReadSamples(void* buffer, size_t len, size_t stride,
                     MachineEndianness::EndiannessT end)
 {
    bool swapflag = (mEnd.Which() != end);
-   size_t actRead;
+   size_t actRead=0;
    
    switch(format)
    {
