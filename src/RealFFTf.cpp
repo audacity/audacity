@@ -105,7 +105,6 @@ HFFT InitializeFFT(int fftlen)
    for(i=0;i<32;i++)
       if((1<<i)&fftlen)
          h->pow2Bits=i;
-   InitializeFFT1x(fftlen);
 #endif
 
    return h;
