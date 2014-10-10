@@ -1167,10 +1167,24 @@ bool AudacityApp::OnInit()
    mLocale = NULL;
    InitLang( lang );
 
+
+
+   //JKC We'd like to initialise the module manager WHILE showing the splash screen.
+   //Can't as MultiDialog interacts poorly with the splash screen.  So we do it before.
+   //TODO: Find out why opening a multidialog wrecks the splash screen.
+   //best current guess is that it's something to do with doing a DoModal this early
+   //in the program.
+
+   // Initialize the CommandHandler
+   InitCommandHandler();
+   // Initialize the ModuleManager, including loading found modules
+   ModuleManager::Initialize(*mCmdHandler);
+
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **) AudacityLogoWithName_xpm);
    logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
    wxBitmap logo(logoimage);
+
    wxSplashScreen *temporarywindow =
       new wxSplashScreen(logo,
                          wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT,
@@ -1183,11 +1197,8 @@ bool AudacityApp::OnInit()
    temporarywindow->SetTitle(_("Audacity is starting up..."));
    SetTopWindow(temporarywindow);
 
-   // Initialize the CommandHandler
-   InitCommandHandler();
 
-   // Initialize the ModuleManager, including loading found modules
-   ModuleManager::Initialize(*mCmdHandler);
+
 
    // Init DirManager, which initializes the temp directory
    // If this fails, we must exit the program.
@@ -1234,9 +1245,9 @@ bool AudacityApp::OnInit()
 
    SetExitOnFrameDelete(true);
 
+
    AudacityProject *project = CreateNewAudacityProject();
    mCmdHandler->SetProject(project);
-
    wxWindow * pWnd = MakeHijackPanel() ;
    if( pWnd )
    {
@@ -1246,8 +1257,10 @@ bool AudacityApp::OnInit()
       pWnd->Show( true );
    }
 
-   temporarywindow->Show( false );
+
+   temporarywindow->Show(false);
    delete temporarywindow;
+
 
    if( project->mShowSplashScreen )
       project->OnHelpWelcome();

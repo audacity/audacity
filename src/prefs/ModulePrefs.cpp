@@ -47,6 +47,8 @@ void ModulePrefs::GetAllModuleStatuses(){
    //    mod-script-pipe
    //    mod-nyq-bench
    //    mod-track-panel
+   //    mod-menu-munger
+   //    mod-theming
 
    // TODO: On an Audacity upgrade we should (?) actually untick modules.
    // The old modules might be still around, and we do not want to use them.
