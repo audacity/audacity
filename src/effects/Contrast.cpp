@@ -239,7 +239,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    S.SetBorder(5);
    S.StartHorizontalLay(wxCENTER, false);
    {
-      S.AddTitle(_("Contrast Analyzer, for measuring rms volume differences between two selections of audio."));
+      S.AddTitle(_("Contrast Analyzer, for measuring RMS volume differences between two selections of audio."));
    }
    S.EndHorizontalLay();
    S.StartStatic( _("Parameters") );
@@ -478,7 +478,7 @@ void ContrastDialog::results()
          mDiffText->ChangeValue(wxString::Format(_("indeterminate")));
       else
          if( fabs(diffdB) != std::numeric_limits<float>::infinity() )
-            mDiffText->ChangeValue(wxString::Format(_("%.1f dB Average rms"), diffdB));
+            mDiffText->ChangeValue(wxString::Format(_("%.1f dB Average RMS"), diffdB));
          else
             mDiffText->ChangeValue(wxString::Format(_("infinite dB difference")));
    }
@@ -533,11 +533,11 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.AddLine(wxString::Format(_("Time ended = %2d hour(s), %2d minute(s), %.2f seconds."), h, m, s ));
    if(foregrounddB != 1234.0) // see other instances of '1234.0' in here
       if( fabs(foregrounddB) != std::numeric_limits<float>::infinity() )
-         f.AddLine(wxString::Format(_("Average rms = %.1f dB."), foregrounddB ));
+         f.AddLine(wxString::Format(_("Average RMS = %.1f dB."), foregrounddB ));
       else
-         f.AddLine(wxString::Format(_("Average rms = zero.") ));
+         f.AddLine(wxString::Format(_("Average RMS = zero.") ));
    else
-      f.AddLine(wxString::Format(_("Average rms =  dB.")));
+      f.AddLine(wxString::Format(_("Average RMS =  dB.")));
    f.AddLine(wxT(""));
    f.AddLine(_("Background"));
    t = (float)mBackgroundStartT->GetTimeValue();
@@ -552,11 +552,11 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.AddLine(wxString::Format(_("Time ended = %2d hour(s), %2d minute(s), %.2f seconds."), h, m, s ));
    if(backgrounddB != 1234.0)
       if( fabs(backgrounddB) != std::numeric_limits<float>::infinity() )
-         f.AddLine(wxString::Format(_("Average rms = %.1f dB."), backgrounddB ));
+         f.AddLine(wxString::Format(_("Average RMS = %.1f dB."), backgrounddB ));
       else
-         f.AddLine(wxString::Format(_("Average rms = zero.") ));
+         f.AddLine(wxString::Format(_("Average RMS = zero.") ));
    else
-      f.AddLine(wxString::Format(_("Average rms =  dB.")));
+      f.AddLine(wxString::Format(_("Average RMS =  dB.")));
    f.AddLine(wxT(""));
    f.AddLine(_("Results"));
    float diffdB = foregrounddB - backgrounddB;
@@ -564,9 +564,9 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
       f.AddLine(wxString::Format(_("Difference is indeterminate.") ));
    else
       if( fabs(diffdB) != std::numeric_limits<float>::infinity() )
-         f.AddLine(wxString::Format(_("Difference = %.1f Average rms dB."), diffdB ));
+         f.AddLine(wxString::Format(_("Difference = %.1f Average RMS dB."), diffdB ));
       else
-         f.AddLine(wxString::Format(_("Difference = infinite Average rms dB.")));
+         f.AddLine(wxString::Format(_("Difference = infinite Average RMS dB.")));
    if( diffdB > 20. )
       f.AddLine(_("Success Criteria 1.4.7 of WCAG 2.0: Pass"));
    else
