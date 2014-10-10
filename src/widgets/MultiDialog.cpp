@@ -146,6 +146,9 @@ int ShowMultiDialog(wxString message,
    const wxChar **buttons, wxString boxMsg, bool log)
 {
    wxWindow * pParent = wxGetApp().GetTopWindow();
+
+   // We want a parent we can display over, so don't make it a parent if top
+   // window is a STAY_ON_TOP.
    if (pParent) {
       if ((pParent->GetWindowStyle() & wxSTAY_ON_TOP) == wxSTAY_ON_TOP)
          pParent = NULL;
@@ -157,9 +160,14 @@ int ShowMultiDialog(wxString message,
       dlog.CentreOnParent();
    else {
       dlog.CenterOnScreen();
-      wxPoint Pos = dlog.GetPosition() + wxPoint(-300, -10);
+      // and after centring move the dialog left by the size of the dialog.
+      // Likely to help if we have the splash screen visible, or if
+      // we're spanning two equally sized monitors.
+      // Unlikely to make things worse.
+      wxSize Size = dlog.GetSize();
+      Size.SetHeight( 10 );
+      wxPoint Pos = dlog.GetPosition() -Size;
       dlog.Move(Pos);
-      dlog;
    }
    return dlog.ShowModal();
 }
