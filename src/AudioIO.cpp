@@ -2413,6 +2413,9 @@ int AudioIO::getRecordDevIndex(wxString devName)
    //      And I can't imagine how far we'll get specifying an "invalid" index later
    //      on...are we certain "0" even exists?
    if (deviceNum < 0) {
+      // JKC: This ASSERT will happen if you run with no config file
+      // This happens once.  Config file will exist on the next run.
+      // TODO: Look into this a bit more.  Could be relevant to blank Device Toolbar.
       wxASSERT(false);
       deviceNum = 0;
    }
