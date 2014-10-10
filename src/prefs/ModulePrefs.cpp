@@ -48,6 +48,8 @@ void ModulePrefs::GetAllModuleStatuses(){
    //    mod-nyq-bench
    //    mod-track-panel
 
+   // TODO: On an Audacity upgrade we should (?) actually untick modules.
+   // The old modules might be still around, and we do not want to use them.
    mModules.Clear();
    mStatuses.Clear();
 
@@ -96,9 +98,10 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(_(""));
    {
       S.AddFixedText(_("These are experimental Modules. Enable them only if you've read the manual\nand know what you are doing.") );
-      S.AddFixedText(wxString(wxT("  ")) + _("'Ask' means Audacity will ask if you want to load the plug-each time it starts.") );
+      S.AddFixedText(wxString(wxT("  ")) + _("'Ask' means Audacity will ask if you want to load the plug-in each time it starts.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'Failed' means Audacity thinks the plug-in is broken and won't run it.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'New' means no choice has been made yet.") );
+      S.AddFixedText(_("Changes to these settings only take effect when Audacity starts up."));
       S.StartScroller();
       {
         S.StartMultiColumn( 2 );
