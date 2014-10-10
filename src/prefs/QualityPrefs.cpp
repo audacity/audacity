@@ -162,8 +162,6 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2, wxEXPAND);
       {
-         S.SetStretchyCol(2);
-
          S.TieChoice(_("Sample Rate Con&verter:"),
                      Resample::GetFastMethodKey(),
                      Resample::GetFastMethodDefault(),
