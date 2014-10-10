@@ -16,7 +16,7 @@
 
 #include "wx/string.h"
 
-#define wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG 1
+#define wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
 
 // Helper class for formatting numbers with thousands separators which also
 // supports parsing the numbers formatted by it.
