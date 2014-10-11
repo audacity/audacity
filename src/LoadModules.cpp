@@ -108,8 +108,8 @@ bool Module::Load()
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
       wxString ShortName = wxFileName( mName ).GetName();
-      wxMessageBox(wxString::Format(_("The module %s does not provide a version string.\nIt will not be loaded."), ShortName.c_str()), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s does not provide a version string.  It will not be loaded."), mName.c_str()));
+      wxMessageBox(wxString::Format(_("The mod %s does not provide a version string.\nIt will not be loaded."), ShortName.c_str()), _("Module Unsuitable"));
+      wxLogMessage(wxString::Format(_("The mod %s does not provide a version string.  It will not be loaded."), mName.c_str()));
       mLib->Unload();
       return false;
    }
@@ -117,8 +117,8 @@ bool Module::Load()
    wxString moduleVersion = versionFn();
    if( !moduleVersion.IsSameAs(AUDACITY_VERSION_STRING)) {
       wxString ShortName = wxFileName( mName ).GetName();
-      wxMessageBox(wxString::Format(_("The module %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName.c_str(), moduleVersion.c_str()), _("Module Unsuitable"));
-      wxLogMessage(wxString::Format(_("The module %s is matched with Audacity version %s.  It will not be loaded."), mName.c_str(), moduleVersion.c_str()));
+      wxMessageBox(wxString::Format(_("The mod %s is matched with Audacity version %s.\n\nIt will not be loaded."), ShortName.c_str(), moduleVersion.c_str()), _("Module Unsuitable"));
+      wxLogMessage(wxString::Format(_("The mod %s is matched with Audacity version %s.  It will not be loaded."), mName.c_str(), moduleVersion.c_str()));
       mLib->Unload();
       return false;
    }
@@ -201,7 +201,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
 
    for (i = 0; i < audacityPathList.GetCount(); i++) {
       wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
-      wxGetApp().AddUniquePathToPathList(prefix + wxT("modules"),
+      wxGetApp().AddUniquePathToPathList(prefix + wxT("mods"),
                                          pathList);
    }
 
@@ -241,11 +241,11 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
       {
          wxString ShortName = wxFileName( files[i] ).GetName();
          wxString msg;
-         msg.Printf(_("Module \"%s\" found."), ShortName.c_str());
-         msg += _("\n\nOnly use modules from trusted sources");
+         msg.Printf(_("Found \"%s\"."), ShortName.c_str());
+         msg += _("\n\nOnly use mods from trusted sources");
          const wxChar *buttons[] = {_("Yes"), _("No"), NULL};  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
          int action;
-         action = ShowMultiDialog(msg, _("Audacity Module Loader"), buttons, _("Try and load this module?"), false);
+         action = ShowMultiDialog(msg, _("Audacity Mod Loader"), buttons, _("Try and load this mod"), false);
 #ifdef EXPERIMENTAL_MODULE_PREFS
          // If we're not prompting always, accept the answer permanantly
          if( iModuleStatus == kModuleNew ){
