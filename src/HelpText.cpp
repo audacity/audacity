@@ -221,7 +221,7 @@ audio CDs</a>.") + wxT("</p>")
 Please <a href=\"*URL*\">view the content online</a> or \
 <a href=\"http://manual.audacityteam.org/o/man/unzipping_the_manual.html\"> \
 download the current Manual</a>.<br><br>\
-To always view the manual online, change \"Location of Manual\" in<br> \
+To always view the Manual online, change \"Location of Manual\" in<br> \
 Interface Preferences to \"From Internet\".")
          );
    }
