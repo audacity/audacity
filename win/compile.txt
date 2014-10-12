@@ -88,6 +88,8 @@ Download and install wxWidgets, then follow these steps to build it.
     * Build "DLL Unicode Debug" to use in a "Debug"
        version of Audacity.
 
+With VS2013 you will get an error for missing pbt.h header, you can (apparently safely) comment that out.
+
    See "MSVC++ STEP 6:  Build Audacity" for the differences
    between these versions of Audacity.
 
@@ -100,7 +102,8 @@ Download and install wxWidgets, then follow these steps to build it.
       * html
       * net
 
-   Because of dependencies, this should also build these projects: 
+   Because of dependencies, this should also build these projects:
+   But it may not on VS2013 so you will have to make sure to build these as well:
       * wxexpat
       * wxjpeg
       * wxpng
