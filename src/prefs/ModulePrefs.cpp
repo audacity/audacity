@@ -102,7 +102,7 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(_(""));
    {
-      S.AddFixedText(_("These are experimental mods. Enable them only if you've read The Audacity Manual\nand know what you are doing.") );
+      S.AddFixedText(_("These are experimental mods. Enable them only if you've read the Audacity Manual\nand know what you are doing.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'Ask' means Audacity will ask if you want to load the mod each time it starts.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'Failed' means Audacity thinks the mod is broken and won't run it.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'New' means no choice has been made yet.") );
