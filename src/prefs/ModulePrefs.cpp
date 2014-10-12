@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class ModulePrefs
-\brief A PrefsPanel to enable/disable certain mods.  'Modules' are 
+\brief A PrefsPanel to enable/disable certain modules.  'Modules' are 
 dynamically linked libraries that modify Audacity.  They are plug-ins 
 with names like mnod-script-pipe that add new features.
 
