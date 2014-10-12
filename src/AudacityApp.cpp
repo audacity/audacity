@@ -1175,6 +1175,18 @@ bool AudacityApp::OnInit()
       return false;
    }
 
+   //JKC We'd like to initialise the module manager WHILE showing the splash screen.
+   //Can't in wx3.0.1 as MultiDialog interacts poorly with the splash screen.  So we do it before.
+   //TODO: Find out why opening a multidialog wrecks the splash screen.
+   //best current guess is that it's something to do with doing a DoModal this early
+   //in the program.
+
+   // Initialize the CommandHandler
+   InitCommandHandler();
+   // Initialize the ModuleManager, including loading found modules
+   ModuleManager::Initialize(*mCmdHandler);
+
+
 #if !wxCHECK_VERSION(3, 0, 0)
    FinishInits();
 #endif
@@ -1182,10 +1194,15 @@ bool AudacityApp::OnInit()
 }
 
 #if wxCHECK_VERSION(3, 0, 0)
+#include <wx/evtloop.h>
+static bool bInitsDone = false;
 void AudacityApp::OnEventLoopEnter(wxEventLoopBase * pLoop)
 {
    if( !pLoop->IsMain() )
       return;
+   if (bInitsDone)
+      return;
+   bInitsDone = true;
    FinishInits();
 }
 #endif
@@ -1196,8 +1213,11 @@ void AudacityApp::OnEventLoopEnter(wxEventLoopBase * pLoop)
 // This change was to support wxWidgets 3.0.0 and allow us
 // to show a dialog (for module loading) during initialisation.
 // without it messing up the splash screen.
+// Hasn't actually fixed that yet, but is addressing the point
+// they make in thei rrelease notes.
 void AudacityApp::FinishInits()
 {
+
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **) AudacityLogoWithName_xpm);
    logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
@@ -1216,19 +1236,7 @@ void AudacityApp::FinishInits()
    SetTopWindow(temporarywindow);
 
 
-
-   //JKC We'd like to initialise the module manager WHILE showing the splash screen.
-   //Can't as MultiDialog interacts poorly with the splash screen.  So we do it before.
-   //TODO: Find out why opening a multidialog wrecks the splash screen.
-   //best current guess is that it's something to do with doing a DoModal this early
-   //in the program.
-
-   // Initialize the CommandHandler
-   InitCommandHandler();
-   // Initialize the ModuleManager, including loading found modules
-   ModuleManager::Initialize(*mCmdHandler);
-
-
+   //JKC: Would like to put module loading here.
 
    // More initialization
 
