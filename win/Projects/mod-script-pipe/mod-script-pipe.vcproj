@@ -136,7 +136,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmsw28ud_core.lib wxbase28ud.lib odbc32.lib odbccp32.lib oldnames.lib comctl32.lib rpcrt4.lib wsock32.lib netapi32.lib"
-				OutputFile="$(OutDir)\mods\$(ProjectName).dll"
+				OutputFile="$(OutDir)\modules\$(ProjectName).dll"
 				AdditionalLibraryDirectories="&quot;$(WXWIN)\lib\vc_dll&quot;"
 				GenerateDebugInformation="true"
 				RandomizedBaseAddress="1"
