@@ -1167,19 +1167,37 @@ bool AudacityApp::OnInit()
    mLocale = NULL;
    InitLang( lang );
 
+   // Init DirManager, which initializes the temp directory
+   // If this fails, we must exit the program.
 
+   if (!InitTempDir()) {
+      FinishPreferences();
+      return false;
+   }
 
-   //JKC We'd like to initialise the module manager WHILE showing the splash screen.
-   //Can't as MultiDialog interacts poorly with the splash screen.  So we do it before.
-   //TODO: Find out why opening a multidialog wrecks the splash screen.
-   //best current guess is that it's something to do with doing a DoModal this early
-   //in the program.
+#if !wxCHECK_VERSION(3, 0, 0)
+   FinishInits();
+#endif
+   return TRUE;
+}
 
-   // Initialize the CommandHandler
-   InitCommandHandler();
-   // Initialize the ModuleManager, including loading found modules
-   ModuleManager::Initialize(*mCmdHandler);
+#if wxCHECK_VERSION(3, 0, 0)
+void AudacityApp::OnEventLoopEnter(wxEventLoopBase * pLoop)
+{
+   if( !pLoop->IsMain() )
+      return;
+   FinishInits();
+}
+#endif
 
+// JKC: I've split 'FinishInits()' from 'OnInit()', so that 
+// we can have a real event loop running.  We could (I think) 
+// put everything that is in OnInit() in here.
+// This change was to support wxWidgets 3.0.0 and allow us
+// to show a dialog (for module loading) during initialisation.
+// without it messing up the splash screen.
+void AudacityApp::FinishInits()
+{
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **) AudacityLogoWithName_xpm);
    logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
@@ -1199,14 +1217,18 @@ bool AudacityApp::OnInit()
 
 
 
+   //JKC We'd like to initialise the module manager WHILE showing the splash screen.
+   //Can't as MultiDialog interacts poorly with the splash screen.  So we do it before.
+   //TODO: Find out why opening a multidialog wrecks the splash screen.
+   //best current guess is that it's something to do with doing a DoModal this early
+   //in the program.
 
-   // Init DirManager, which initializes the temp directory
-   // If this fails, we must exit the program.
+   // Initialize the CommandHandler
+   InitCommandHandler();
+   // Initialize the ModuleManager, including loading found modules
+   ModuleManager::Initialize(*mCmdHandler);
 
-   if (!InitTempDir()) {
-      FinishPreferences();
-      return false;
-   }
+
 
    // More initialization
 
@@ -1446,7 +1468,6 @@ bool AudacityApp::OnInit()
 
    mTimer = new wxTimer(this, kAudacityAppTimerID);
    mTimer->Start(200);
-   return TRUE;
 }
 
 void AudacityApp::InitCommandHandler()
