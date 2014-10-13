@@ -28,6 +28,7 @@
 
 #ifdef _WIN32
    #include <windows.h>
+   #include <wx/msw/winundef.h>
 #endif
 
 #include <wx/defs.h>
