@@ -1921,6 +1921,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    else {
       minFreq = GetSpectrumLogMinFreq(ifreq/1000.0);
       if(minFreq < 1)
+         // Paul L:  I suspect this line is now unreachable
          minFreq = ifreq/1000.0;
    }
 
@@ -2967,6 +2968,8 @@ void TrackArtist::UpdatePrefs()
    mLogMinFreq = gPrefs->Read(wxT("/SpectrumLog/MinFreq"), -1);
    if( mLogMinFreq < 0 )
       mLogMinFreq = mMinFreq;
+   if (mLogMinFreq < 1)
+      mLogMinFreq = 1;
 
    mWindowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
    mIsGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
