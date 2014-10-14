@@ -312,7 +312,7 @@ writing audio.
    #define ROUND(x) (int) ((x)+0.5)
    //#include <string.h>
    #include "portmidi.h"
-   #include "common/pa_util.h"
+   #include "../lib-src/portaudio-v19/src/common/pa_util.h"
    #include "NoteTrack.h"
 #endif
 
@@ -3282,7 +3282,14 @@ static void DoSoftwarePlaythrough(const void *inputBuffer,
 
 int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                           unsigned long framesPerBuffer,
+// If there were more of these conditionally used arguments, it 
+// could make sense to make a new macro that looks like this:
+// USEDIF( EXPERIMENTAL_MIDI_OUT, timeInfo )
+#ifdef EXPERIMENTAL_MIDI_OUT
+                          const PaStreamCallbackTimeInfo *timeInfo,
+#else
                           const PaStreamCallbackTimeInfo * WXUNUSED(timeInfo),
+#endif
                           const PaStreamCallbackFlags WXUNUSED(statusFlags), void * WXUNUSED(userData) )
 {
    int numPlaybackChannels = gAudioIO->mNumPlaybackChannels;
