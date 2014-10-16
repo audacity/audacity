@@ -1214,10 +1214,13 @@ void AudacityApp::OnEventLoopEnter(wxEventLoopBase * pLoop)
 // to show a dialog (for module loading) during initialisation.
 // without it messing up the splash screen.
 // Hasn't actually fixed that yet, but is addressing the point
-// they make in thei rrelease notes.
+// they make in their release notes.
 void AudacityApp::FinishInits()
 {
 
+// No Splash screen on wx3 whislt we sort out the problem
+// with showing a dialog AND a splash screen during inits.
+#if !wxCHECK_VERSION(3, 0, 0)
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **) AudacityLogoWithName_xpm);
    logoimage.Rescale(logoimage.GetWidth() / 2, logoimage.GetHeight() / 2);
@@ -1234,7 +1237,7 @@ void AudacityApp::FinishInits()
                          wxSTAY_ON_TOP);
    temporarywindow->SetTitle(_("Audacity is starting up..."));
    SetTopWindow(temporarywindow);
-
+#endif
 
    //JKC: Would like to put module loading here.
 
@@ -1288,10 +1291,11 @@ void AudacityApp::FinishInits()
    }
 
 
+#if !wxCHECK_VERSION(3, 0, 0)
    temporarywindow->Show(false);
    delete temporarywindow;
-
-
+#endif
+   
    if( project->mShowSplashScreen )
       project->OnHelpWelcome();
 
