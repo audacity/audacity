@@ -184,6 +184,8 @@ AC_ARG_ENABLE(dynamic-loading,
             [dynamic_loading="$enableval"],
             [dynamic_loading="yes"])
 
+AC_ARG_ENABLE(gtk3, [AS_HELP_STRING([--enable-gtk3],[enable use of GTK+-3.0 (default: use GTK+-2.0)])], enable_gtk3=$enableval, enable_gtk3=no)
+
 dnl AC_ARG_WITH(wx-version,
 dnl            [AS_HELP_STRING([--with-wx-version],
 dnl                            [select wxWidgets version (if both installed) [2.8,]])],
@@ -608,17 +610,22 @@ case "${host_os}" in
       fi
 
       AC_SUBST(HAVE_GTK)
-      PKG_CHECK_MODULES(GTK, gtk+-2.0, have_gtk=yes, have_gtk=no)
+      if [[ "$enable_gtk3" = yes ]]; then
+         PKG_CHECK_MODULES(GTK, gtk+-3.0, have_gtk=yes, have_gtk=no)
+      else
+         PKG_CHECK_MODULES(GTK, gtk+-2.0, have_gtk=yes, have_gtk=no)
+      fi
+      PKG_CHECK_MODULES(GTK, $gtk_version, have_gtk=yes, have_gtk=no)
       if [[ "$have_gtk" = "yes" ]]
       then
          AC_DEFINE(HAVE_GTK, 1, [Define if GTK is available])
          CPPFLAGS="$CPPFLAGS $GTK_CFLAGS"
          LIBS="$LIBS $GTK_LIBS"
       fi
-
-	  dnl VST support on platforms other than Mac OS and Windows not enabled for
-	  dnl 2.0.6 release
-	  use_vst="no"
+      
+      dnl VST support on platforms other than Mac OS and Windows not enabled for
+      dnl 2.0.6 release
+	   use_vst="no"
    ;;
 esac
 

@@ -377,7 +377,7 @@ static wxCursor * MakeCursor( int WXUNUSED(CursorId), const char * pXpm[36],  in
    Image.SetMaskColour(255,0,0);
    Image.SetMask();// Enable mask.
 
-#ifdef __WXGTK__
+#if defined(__WXGTK__) && !wxCHECK_VERSION(3, 0, 0)
    //
    // Kludge: the wxCursor Image constructor is broken in wxGTK.
    // This code, based loosely on the broken code from the wxGTK source,

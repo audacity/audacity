@@ -977,7 +977,7 @@ bool LabelTrack::CutSelectedText()
 
    // copy data onto clipboard
    if (wxTheClipboard->Open()) {
-#if defined(__WXGTK__) && defined(HAVE_GTK)
+#if defined(__WXGTK__) && defined(HAVE_GTK) && !wxCHECK_VERSION(3, 0, 0)
       CaptureEvents capture;
 #endif
       wxTheClipboard->SetData(new wxTextDataObject(data));
@@ -1012,7 +1012,7 @@ bool LabelTrack::CopySelectedText()
 
    // copy the data on clipboard
    if (wxTheClipboard->Open()) {
-#if defined(__WXGTK__) && defined(HAVE_GTK)
+#if defined(__WXGTK__) && defined(HAVE_GTK) && !wxCHECK_VERSION(3, 0, 0)
       CaptureEvents capture;
 #endif
       wxTheClipboard->SetData(new wxTextDataObject(data));
@@ -1038,7 +1038,7 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
    // if text data is available
    if (IsTextClipSupported()) {
       if (wxTheClipboard->Open()) {
-#if defined(__WXGTK__) && HAVE_GTK
+#if defined(__WXGTK__) && defined(HAVE_GTK) && !wxCHECK_VERSION(3, 0, 0)
          CaptureEvents capture;
 #endif
          wxTextDataObject data;
@@ -1095,7 +1095,7 @@ bool LabelTrack::PasteSelectedText(double sel0, double sel1)
 /// @return true if the text data is available in the clipboard, false otherwise
 bool LabelTrack::IsTextClipSupported()
 {
-#if defined(__WXGTK__) && defined(HAVE_GTK)
+#if defined(__WXGTK__) && defined(HAVE_GTK) && !wxCHECK_VERSION(3, 0, 0)
    CaptureEvents capture;
 #endif
 

@@ -17,7 +17,7 @@
 #include "Audacity.h"
 #include "CaptureEvents.h"
 
-#if defined(__WXGTK__) && defined(HAVE_GTK)
+#if defined(__WXGTK__) && defined(HAVE_GTK) && !wxCHECK_VERSION(3, 0, 0)
 // As of wxGTK 2.8.9, there is a problem in the wxClipboard class that
 // allows recursive event processing.  This problem has been corrected
 // by wxWidgets 2.9+.  However, this han't made it into a release yet,
@@ -102,4 +102,3 @@ CaptureEvents::~CaptureEvents()
 
 
 #endif
-

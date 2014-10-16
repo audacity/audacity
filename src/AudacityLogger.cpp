@@ -169,15 +169,16 @@ void AudacityLogger::Show(bool show)
 
    // loads either the XPM or the windows resource, depending on the platform
 #if !defined(__WXMAC__) && !defined(__WXX11__)
+   wxIcon *ic;
    #if defined(__WXMSW__)
-      wxIcon ic(wxICON(AudacityLogo));
+      ic = new wxIcon(wxICON(AudacityLogo));
    #elif defined(__WXGTK__)
-      wxIcon ic(wxICON(AudacityLogoAlpha));
+      ic = new wxIcon(wxICON(AudacityLogoAlpha));
    #else
-      wxIcon ic;
+      ic = new wxIcon();
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
    #endif
-   frame->SetIcon(ic);
+   frame->SetIcon(*ic);
 #endif
 
    // Log text

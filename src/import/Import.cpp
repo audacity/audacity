@@ -279,7 +279,7 @@ void Importer::WriteImportItems()
                val.Append (wxT(":"));
          }
       }
-      name.Printf (wxT("/ExtImportItems/Item%d"), i);
+      name.Printf (wxT("/ExtImportItems/Item%d"), (int)i);
       gPrefs->Write (name, val);
       gPrefs->Flush();
    }
@@ -288,7 +288,7 @@ void Importer::WriteImportItems()
    more to delete.*/
    i = this->mExtImportItems->Count();
    do {
-     name.Printf (wxT("/ExtImportItems/Item%d"), i);
+     name.Printf (wxT("/ExtImportItems/Item%d"), (int)i);
      // No item to delete?  Then it's time to finish.
      if (!gPrefs->Read(name, &val))
         break;

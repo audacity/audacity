@@ -38,6 +38,10 @@ typedef void (*fdCallback)(void *, int);
 //
 /////////////////////////////////////////////////////////////////////////////
 
+DECLARE_EVENT_TYPE(EVT_FILEDIALOG_SELECTION_CHANGED, -1);
+DECLARE_EVENT_TYPE(EVT_FILEDIALOG_FILTER_CHANGED, -1);
+DECLARE_EVENT_TYPE(EVT_FILEDIALOG_ADD_CONTROLS, -1);
+
 //----------------------------------------------------------------------------
 // wxFileDialog convenience functions
 //----------------------------------------------------------------------------
@@ -49,10 +53,7 @@ FileSelector(const wxString & message = wxFileSelectorPromptStr,
              const wxString & default_extension = wxEmptyString,
              const wxString & wildcard = wxFileSelectorDefaultWildcardStr,
              int flags = 0,
-             wxWindow *parent = NULL,
-             wxString label = wxEmptyString,
-             fdCallback cb = NULL,
-             void *cbdata = NULL);
+             wxWindow *parent = NULL);
 
 #endif
 

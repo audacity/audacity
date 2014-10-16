@@ -67,12 +67,13 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
 
    // loads either the XPM or the windows resource, depending on the platform
    #if !defined(__WXMAC__) && !defined(__WXX11__)
+      wxIcon *ic;
       #ifdef __WXMSW__
-         wxIcon ic(wxICON(AudacityLogo));
+         ic = new wxIcon(wxICON(AudacityLogo));
       #else
-         wxIcon ic(wxICON(AudacityLogo48x48));
+         ic = new wxIcon(wxICON(AudacityLogo48x48));
       #endif
-      SetIcon(ic);
+      SetIcon(*ic);
    #endif
 
    wxPoint panelPos(0, 0);

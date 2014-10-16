@@ -16,6 +16,7 @@
 #define _FILEDIALOGMSW_H_
 
 #include <windows.h>
+#include <wx/msw/winundef.h>
 
 //-------------------------------------------------------------------------
 // wxFileDialog

@@ -41,6 +41,11 @@ AC_ARG_ENABLE(debug,
             debug_preference="--debug=$enableval",
             debug_preference="")
 
+AC_ARG_ENABLE(gtk3,
+            [AS_HELP_STRING([--enable-gtk3],[enable use of GTK+-3.0 (default: use GTK+-2.0)])],
+            enable_gtk3=$enableval,
+            enable_gtk3=no)
+
 AC_ARG_WITH(wx-version,
             [AS_HELP_STRING([--with-wx-version],[override default wxWidgets version [2.6,2.8]])],
             wx_preference="--version=$withval",
@@ -65,7 +70,13 @@ WX_LIBS=""
 AC_SUBST([WX_CXXFLAGS])
 AC_SUBST([WX_LIBS])
 
-PKG_CHECK_MODULES(GTK, gtk+-2.0, have_gtk="yes", have_gtk="no")
+AC_SUBST(HAVE_GTK)
+if [[ "$enable_gtk3" = yes ]]; then
+   PKG_CHECK_MODULES(GTK, gtk+-3.0, have_gtk=yes, have_gtk=no)
+else
+   PKG_CHECK_MODULES(GTK, gtk+-2.0, have_gtk=yes, have_gtk=no)
+fi
+PKG_CHECK_MODULES(GTK, $gtk_version, have_gtk=yes, have_gtk=no)
 
 dnl OS-specific configuration
 
@@ -84,8 +95,11 @@ case "${host_os}" in
    ;;
 
    *)
-      if test "$have_gtk" = "yes"; then
-         AC_DEFINE(HAVE_GTK, 1, [Define to 1 if GTK+ is available.])
+      if [[ "$have_gtk" = "yes" ]]
+      then
+         AC_DEFINE(HAVE_GTK, 1, [Define if GTK is available])
+         CPPFLAGS="$CPPFLAGS $GTK_CFLAGS"
+         LIBS="$LIBS $GTK_LIBS"
          IMPLEMENTATION="gtk"
       fi
    ;;

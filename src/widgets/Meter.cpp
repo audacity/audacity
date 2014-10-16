@@ -1190,12 +1190,15 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *meterBar)
       else
       {
          // Copy as much of the predrawn meter bar as is required for the
-         // current peak.
+         // current peak.  But, only blit() if there's something to copy
+         // to prevent display corruption.
          wd = (int)(meterBar->peak * w + 0.5);
-         dc.Blit(x, y, wd, h, &srcDC, x, y);
+         if (wd)
+            dc.Blit(x, y, wd, h, &srcDC, x, y);
 
          // Blank out the rest
-         dc.DrawRectangle(x + wd, y, w - wd, h);
+         if (w - wd)
+            dc.DrawRectangle(x + wd, y, w - wd, h);
 
          // Draw the "recent" peak hold line using the predrawn meter bar so that
          // it will be the same color as the original level.

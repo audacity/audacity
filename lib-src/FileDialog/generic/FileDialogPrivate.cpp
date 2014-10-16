@@ -20,6 +20,7 @@
 #endif
 
 #include "../FileDialog.h"
+#include "FileDialogPrivate.h"
 
 #include "wx/checkbox.h"
 #include "wx/textctrl.h"
@@ -40,8 +41,7 @@
 #include "wx/settings.h"
 #include "wx/filefn.h"
 #include "wx/file.h"        // for wxS_IXXX constants only
-#include "wx/filedlg.h"     // wxOPEN, wxSAVE...
-#include "wx/generic/filedlgg.h"
+#include "wx/filedlg.h"     // wxFD_OPEN, wxFD_SAVE...
 #include "wx/generic/dirctrlg.h" // for wxFileIconsTable
 
 #if wxUSE_TOOLTIPS
@@ -906,28 +906,28 @@ FileCtrl::~FileCtrl()
 #define  ID_CHECK         (ID_FILEDIALOG + 12)
 #define  ID_EXTRABUTTON   (ID_FILEDIALOG + 13)
 
-IMPLEMENT_DYNAMIC_CLASS(FileDialog, wxFileDialogBase)
+IMPLEMENT_DYNAMIC_CLASS(FILEDIALOG, wxFileDialogBase)
 
-BEGIN_EVENT_TABLE(FileDialog,wxDialog)
-EVT_BUTTON(ID_LIST_MODE, FileDialog::OnList)
-EVT_BUTTON(ID_REPORT_MODE, FileDialog::OnReport)
-EVT_BUTTON(ID_UP_DIR, FileDialog::OnUp)
-EVT_BUTTON(ID_PARENT_DIR, FileDialog::OnHome)
-EVT_BUTTON(ID_NEW_DIR, FileDialog::OnNew)
-EVT_BUTTON(ID_EXTRABUTTON, FileDialog::OnExtra)
-EVT_BUTTON(wxID_OK, FileDialog::OnListOk)
-EVT_LIST_ITEM_SELECTED(ID_LIST_CTRL, FileDialog::OnSelected)
-EVT_LIST_ITEM_ACTIVATED(ID_LIST_CTRL, FileDialog::OnActivated)
-EVT_CHOICE(ID_CHOICE,FileDialog::OnChoiceFilter)
-EVT_TEXT_ENTER(ID_TEXT,FileDialog::OnTextEnter)
-EVT_TEXT(ID_TEXT,FileDialog::OnTextChange)
-EVT_CHECKBOX(ID_CHECK,FileDialog::OnCheck)
+BEGIN_EVENT_TABLE(FILEDIALOG,wxDialog)
+EVT_BUTTON(ID_LIST_MODE, FILEDIALOG::OnList)
+EVT_BUTTON(ID_REPORT_MODE, FILEDIALOG::OnReport)
+EVT_BUTTON(ID_UP_DIR, FILEDIALOG::OnUp)
+EVT_BUTTON(ID_PARENT_DIR, FILEDIALOG::OnHome)
+EVT_BUTTON(ID_NEW_DIR, FILEDIALOG::OnNew)
+EVT_BUTTON(ID_EXTRABUTTON, FILEDIALOG::OnExtra)
+EVT_BUTTON(wxID_OK, FILEDIALOG::OnListOk)
+EVT_LIST_ITEM_SELECTED(ID_LIST_CTRL, FILEDIALOG::OnSelected)
+EVT_LIST_ITEM_ACTIVATED(ID_LIST_CTRL, FILEDIALOG::OnActivated)
+EVT_CHOICE(ID_CHOICE,FILEDIALOG::OnChoiceFilter)
+EVT_TEXT_ENTER(ID_TEXT,FILEDIALOG::OnTextEnter)
+EVT_TEXT(ID_TEXT,FILEDIALOG::OnTextChange)
+EVT_CHECKBOX(ID_CHECK,FILEDIALOG::OnCheck)
 END_EVENT_TABLE()
 
-long FileDialog::ms_lastViewStyle = wxLC_LIST;
-bool FileDialog::ms_lastShowHidden = false;
+long FILEDIALOG::ms_lastViewStyle = wxLC_LIST;
+bool FILEDIALOG::ms_lastShowHidden = false;
 
-void FileDialog::Init()
+void FILEDIALOG::Init()
 {
    m_bypassGenericImpl = false;
    
@@ -940,33 +940,37 @@ void FileDialog::Init()
    m_newDirButton = NULL;
 }
 
-FileDialog::FileDialog(wxWindow *parent,
+FILEDIALOG::FILEDIALOG(wxWindow *parent,
                        const wxString& message,
                        const wxString& defaultDir,
                        const wxString& defaultFile,
                        const wxString& wildCard,
                        long  style,
                        const wxPoint& pos,
+                       const wxSize& sz,
+                       const wxString& name,
                        bool  bypassGenericImpl ) : wxFileDialogBase()
 {
    Init();
-   Create( parent, message, defaultDir, defaultFile, wildCard, style, pos, bypassGenericImpl );
+   Create( parent, message, defaultDir, defaultFile, wildCard, style, pos, sz, name,bypassGenericImpl );
 }
 
-bool FileDialog::Create( wxWindow *parent,
+bool FILEDIALOG::Create( wxWindow *parent,
                         const wxString& message,
                         const wxString& defaultDir,
                         const wxString& defaultFile,
                         const wxString& wildCard,
                         long  style,
                         const wxPoint& pos,
+                        const wxSize& sz,
+                        const wxString& name,
                         bool  bypassGenericImpl )
 {
    m_dialogStyle = style;
    m_bypassGenericImpl = bypassGenericImpl;
    
    if (!wxFileDialogBase::Create(parent, message, defaultDir, defaultFile,
-                                 wildCard, style, pos))
+                                 wildCard, style, pos, sz, name))
    {
       return false;
    }
@@ -991,9 +995,9 @@ bool FileDialog::Create( wxWindow *parent,
    }
    
    if (m_dialogStyle == 0)
-      m_dialogStyle = wxOPEN;
-   if ((m_dialogStyle & wxMULTIPLE ) && !(m_dialogStyle & wxOPEN))
-      m_dialogStyle |= wxOPEN;
+      m_dialogStyle = wxFD_OPEN;
+   if ((m_dialogStyle & wxFD_MULTIPLE ) && !(m_dialogStyle & wxFD_OPEN))
+      m_dialogStyle |= wxFD_OPEN;
    
    if ((m_dir.empty()) || (m_dir == wxT(".")))
    {
@@ -1075,7 +1079,7 @@ bool FileDialog::Create( wxWindow *parent,
    mainsizer->Add( staticsizer, 0, wxEXPAND | wxLEFT|wxRIGHT|wxBOTTOM, 10 );
    
    long style2 = ms_lastViewStyle;
-   if ( !(m_dialogStyle & wxMULTIPLE) )
+   if ( !(m_dialogStyle & wxFD_MULTIPLE) )
       style2 |= wxLC_SINGLE_SEL;
    
 #ifdef __WXWINCE__
@@ -1098,7 +1102,7 @@ bool FileDialog::Create( wxWindow *parent,
       mainsizer->Add( m_list, 1, wxEXPAND|wxSHRINK | wxLEFT|wxRIGHT, 5 );
       
       wxBoxSizer *textsizer = new wxBoxSizer( wxHORIZONTAL );
-      m_text = new wxTextCtrl( this, ID_TEXT, m_fileName, wxDefaultPosition, wxDefaultSize, wxPROCESS_ENTER );
+      m_text = new wxTextCtrl( this, ID_TEXT, m_fileName, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
       textsizer->Add( m_text, 1, wxCENTER | wxALL, 5 );
       mainsizer->Add( textsizer, 0, wxEXPAND );
       
@@ -1116,7 +1120,7 @@ bool FileDialog::Create( wxWindow *parent,
       mainsizer->Add( m_list, 1, wxEXPAND | wxLEFT|wxRIGHT, 10 );
       
       wxBoxSizer *textsizer = new wxBoxSizer( wxHORIZONTAL );
-      m_text = new wxTextCtrl( this, ID_TEXT, m_fileName, wxDefaultPosition, wxDefaultSize, wxPROCESS_ENTER );
+      m_text = new wxTextCtrl( this, ID_TEXT, m_fileName, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
       textsizer->Add( m_text, 1, wxCENTER | wxLEFT|wxRIGHT|wxTOP, 10 );
       textsizer->Add( new wxButton( this, wxID_OK ), 0, wxCENTER | wxLEFT|wxRIGHT|wxTOP, 10 );
       mainsizer->Add( textsizer, 0, wxEXPAND );
@@ -1151,7 +1155,7 @@ bool FileDialog::Create( wxWindow *parent,
    return true;
 }
 
-FileDialog::~FileDialog()
+FILEDIALOG::~FILEDIALOG()
 {
    ignoreChanges = true;
    
@@ -1173,7 +1177,7 @@ FileDialog::~FileDialog()
    }
 }
 
-int FileDialog::ShowModal()
+int FILEDIALOG::ShowModal()
 {
    if (!m_buttonlabel.IsEmpty())
    {
@@ -1192,7 +1196,7 @@ int FileDialog::ShowModal()
    return wxDialog::ShowModal();
 }
 
-bool FileDialog::Show( bool show )
+bool FILEDIALOG::Show( bool show )
 {
    // Called by ShowModal, so don't repeate the update
 #ifndef __WIN32__
@@ -1207,7 +1211,7 @@ bool FileDialog::Show( bool show )
    return wxDialog::Show( show );
 }
 
-void FileDialog::DoSetFilterIndex(int filterindex)
+void FILEDIALOG::DoSetFilterIndex(int filterindex)
 {
    wxString *str = (wxString*) m_choice->GetClientData( filterindex );
    m_list->SetWild( *str );
@@ -1224,7 +1228,7 @@ void FileDialog::DoSetFilterIndex(int filterindex)
    }
 }
 
-void FileDialog::SetWildcard(const wxString& wildCard)
+void FILEDIALOG::SetWildcard(const wxString& wildCard)
 {
    wxFileDialogBase::SetWildcard(wildCard);
    
@@ -1232,7 +1236,7 @@ void FileDialog::SetWildcard(const wxString& wildCard)
    const size_t count = wxParseCommonDialogsFilter(m_wildCard,
                                                    wildDescriptions,
                                                    wildFilters);
-   wxCHECK_RET( count, wxT("wxFileDialog: bad wildcard string") );
+   wxCHECK_RET( count, wxT("wxFILEDIALOG: bad wildcard string") );
    
    const size_t countOld = m_choice->GetCount();
    size_t n;
@@ -1249,36 +1253,36 @@ void FileDialog::SetWildcard(const wxString& wildCard)
    SetFilterIndex( 0 );
 }
 
-void FileDialog::SetFilterIndex( int filterindex )
+void FILEDIALOG::SetFilterIndex( int filterindex )
 {
    m_choice->SetSelection( filterindex );
    
    DoSetFilterIndex(filterindex);
 }
 
-void FileDialog::OnChoiceFilter( wxCommandEvent &event )
+void FILEDIALOG::OnChoiceFilter( wxCommandEvent &event )
 {
    DoSetFilterIndex((int)event.GetInt());
 }
 
-void FileDialog::OnCheck( wxCommandEvent &event )
+void FILEDIALOG::OnCheck( wxCommandEvent &event )
 {
    m_list->ShowHidden( (ms_lastShowHidden = event.GetInt() != 0) );
 }
 
-void FileDialog::OnActivated( wxListEvent &event )
+void FILEDIALOG::OnActivated( wxListEvent &event )
 {
    HandleAction( event.m_item.m_text );
 }
 
-void FileDialog::OnTextEnter( wxCommandEvent &WXUNUSED(event) )
+void FILEDIALOG::OnTextEnter( wxCommandEvent &WXUNUSED(event) )
 {
    wxCommandEvent cevent(wxEVT_COMMAND_BUTTON_CLICKED, wxID_OK);
    cevent.SetEventObject( this );
    GetEventHandler()->ProcessEvent( cevent );
 }
 
-void FileDialog::OnTextChange( wxCommandEvent &WXUNUSED(event) )
+void FILEDIALOG::OnTextChange( wxCommandEvent &WXUNUSED(event) )
 {
    if (!ignoreChanges)
    {
@@ -1297,7 +1301,7 @@ void FileDialog::OnTextChange( wxCommandEvent &WXUNUSED(event) )
    }
 }
 
-void FileDialog::OnSelected( wxListEvent &event )
+void FILEDIALOG::OnSelected( wxListEvent &event )
 {
    static bool inSelected = false;
    
@@ -1326,7 +1330,7 @@ void FileDialog::OnSelected( wxListEvent &event )
    inSelected = false;
 }
 
-void FileDialog::HandleAction( const wxString &fn )
+void FILEDIALOG::HandleAction( const wxString &fn )
 {
    if (ignoreChanges)
       return;
@@ -1368,7 +1372,7 @@ void FileDialog::HandleAction( const wxString &fn )
    }
 #endif // __UNIX__
    
-   if (!(m_dialogStyle & wxSAVE))
+   if (!(m_dialogStyle & wxFD_SAVE))
    {
       if ((filename.Find(wxT('*')) != wxNOT_FOUND) ||
           (filename.Find(wxT('?')) != wxNOT_FOUND))
@@ -1413,14 +1417,14 @@ void FileDialog::HandleAction( const wxString &fn )
    // VZ: the logic of testing for !wxFileExists() only for the open file
    //     dialog is not entirely clear to me, why don't we allow saving to a
    //     file without extension as well?
-   if ( !(m_dialogStyle & wxOPEN) || !wxFileExists(filename) )
+   if ( !(m_dialogStyle & wxFD_OPEN) || !wxFileExists(filename) )
    {
       filename = AppendExtension(filename, m_filterExtension);
    }
    
    // check that the file [doesn't] exist if necessary
-   if ( (m_dialogStyle & wxSAVE) &&
-       (m_dialogStyle & wxOVERWRITE_PROMPT) &&
+   if ( (m_dialogStyle & wxFD_SAVE) &&
+       (m_dialogStyle & wxFD_OVERWRITE_PROMPT) &&
        wxFileExists( filename ) )
    {
       wxString msg;
@@ -1429,8 +1433,8 @@ void FileDialog::HandleAction( const wxString &fn )
       if (wxMessageBox(msg, _("Confirm"), wxYES_NO) != wxYES)
          return;
    }
-   else if ( (m_dialogStyle & wxOPEN) &&
-            (m_dialogStyle & wxFILE_MUST_EXIST) &&
+   else if ( (m_dialogStyle & wxFD_OPEN) &&
+            (m_dialogStyle & wxFD_FILE_MUST_EXIST) &&
             !wxFileExists(filename) )
    {
       wxMessageBox(_("Please choose an existing file."), _("Error"),
@@ -1440,7 +1444,7 @@ void FileDialog::HandleAction( const wxString &fn )
    SetPath( filename );
    
    // change to the directory where the user went if asked
-   if ( m_dialogStyle & wxCHANGE_DIR )
+   if ( m_dialogStyle & wxFD_CHANGE_DIR )
    {
       wxString cwd;
       wxSplitPath(filename, &cwd, NULL, NULL);
@@ -1455,12 +1459,12 @@ void FileDialog::HandleAction( const wxString &fn )
       EndModal(wxID_OK);
 }
 
-void FileDialog::OnListOk( wxCommandEvent &WXUNUSED(event) )
+void FILEDIALOG::OnListOk( wxCommandEvent &WXUNUSED(event) )
 {
    HandleAction( m_text->GetValue() );
 }
 
-void FileDialog::OnList( wxCommandEvent &WXUNUSED(event) )
+void FILEDIALOG::OnList( wxCommandEvent &WXUNUSED(event) )
 {
    ignoreChanges = true;
    m_list->ChangeToListMode();
@@ -1469,7 +1473,7 @@ void FileDialog::OnList( wxCommandEvent &WXUNUSED(event) )
    ignoreChanges = false;
 }
 
-void FileDialog::OnReport( wxCommandEvent &WXUNUSED(event) )
+void FILEDIALOG::OnReport( wxCommandEvent &WXUNUSED(event) )
 {
    ignoreChanges = true;
    m_list->ChangeToReportMode();
@@ -1478,7 +1482,7 @@ void FileDialog::OnReport( wxCommandEvent &WXUNUSED(event) )
    ignoreChanges = false;
 }
 
-void FileDialog::OnUp( wxCommandEvent &WXUNUSED(event) )
+void FILEDIALOG::OnUp( wxCommandEvent &WXUNUSED(event) )
 {
    ignoreChanges = true;
    m_list->GoToParentDir();
@@ -1487,7 +1491,7 @@ void FileDialog::OnUp( wxCommandEvent &WXUNUSED(event) )
    ignoreChanges = false;
 }
 
-void FileDialog::OnHome( wxCommandEvent &WXUNUSED(event) )
+void FILEDIALOG::OnHome( wxCommandEvent &WXUNUSED(event) )
 {
    ignoreChanges = true;
    m_list->GoToHomeDir();
@@ -1496,7 +1500,7 @@ void FileDialog::OnHome( wxCommandEvent &WXUNUSED(event) )
    ignoreChanges = false;
 }
 
-void FileDialog::OnNew( wxCommandEvent &WXUNUSED(event) )
+void FILEDIALOG::OnNew( wxCommandEvent &WXUNUSED(event) )
 {
    ignoreChanges = true;
    
@@ -1505,12 +1509,14 @@ void FileDialog::OnNew( wxCommandEvent &WXUNUSED(event) )
    ignoreChanges = false;
 }
 
-void FileDialog::OnExtra( wxCommandEvent &WXUNUSED(event) )
+void FILEDIALOG::OnExtra( wxCommandEvent &WXUNUSED(event) )
 {
+#if !defined(GENERIC_FILEDIALOG)
    ClickButton(m_choice->GetSelection());
+#endif
 }
 
-void FileDialog::SetPath( const wxString& path )
+void FILEDIALOG::SetPath( const wxString& path )
 {
    // not only set the full path but also update filename and dir
    m_path = path;
@@ -1532,7 +1538,7 @@ void FileDialog::SetPath( const wxString& path )
    }
 }
 
-void FileDialog::GetPaths( wxArrayString& paths ) const
+void FILEDIALOG::GetPaths( wxArrayString& paths ) const
 {
    paths.Empty();
    if (m_list->GetSelectedItemCount() == 0)
@@ -1565,7 +1571,7 @@ void FileDialog::GetPaths( wxArrayString& paths ) const
    }
 }
 
-void FileDialog::GetFilenames(wxArrayString& files) const
+void FILEDIALOG::GetFilenames(wxArrayString& files) const
 {
    files.Empty();
    if (m_list->GetSelectedItemCount() == 0)
@@ -1588,7 +1594,7 @@ void FileDialog::GetFilenames(wxArrayString& files) const
    }
 }
 
-void FileDialog::UpdateControls()
+void FILEDIALOG::UpdateControls()
 {
    wxString dir = m_list->GetDir();
    m_static->SetLabel(dir);

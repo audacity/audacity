@@ -402,7 +402,6 @@ static bool RepositionCombo(wxWindow *combo, int toolbarWidth, wxSize desiredSiz
    desiredSize.x -= marginPixels;
 
    combo->SetMinSize(desiredSize);
-   combo->SetMaxSize(desiredSize);
 
    return constrained;
 }
@@ -497,6 +496,9 @@ void DeviceToolBar::FillHosts()
 
    if (hosts.GetCount() == 0)
       mHost->Enable(false);
+
+   mHost->InvalidateBestSize();
+   mHost->SetMaxSize(mHost->GetBestSize());
 }
 
 void DeviceToolBar::FillHostDevices()
@@ -556,6 +558,9 @@ void DeviceToolBar::FillHostDevices()
    }
    mInput->Enable(mInput->GetCount() ? true : false);
 
+   mInput->InvalidateBestSize();
+   mInput->SetMaxSize(mInput->GetBestSize());
+
    mOutput->Clear();
    for (i = 0; i < outMaps.size(); i++) {
       if (foundHostIndex == outMaps[i].hostIndex) {
@@ -569,6 +574,9 @@ void DeviceToolBar::FillHostDevices()
       }
    }
    mOutput->Enable(mOutput->GetCount() ? true : false);
+
+   mOutput->InvalidateBestSize();
+   mOutput->SetMaxSize(mOutput->GetBestSize());
 
    // The setting of the Device is left up to OnChoice
 }
@@ -624,7 +632,7 @@ void DeviceToolBar::FillInputChannels()
                name = _("2 (Stereo) Recording Channels");
             }
             else {
-               name = wxString::Format(wxT("%d"), j + 1);
+               name = wxString::Format(wxT("%d"), (int) j + 1);
             }
             mInputChannels->Append(name);
          }
@@ -641,7 +649,11 @@ void DeviceToolBar::FillInputChannels()
    }
    if (index == -1)
       mInputChannels->Enable(false);
+
+   mInputChannels->InvalidateBestSize();
+   mInputChannels->SetMaxSize(mInputChannels->GetBestSize());
 }
+
 void DeviceToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out)
 {
    if (in) {

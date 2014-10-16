@@ -79,7 +79,6 @@ scroll information.  It also has some status flags.
 #include <wx/string.h>
 #include <wx/textfile.h>
 #include <wx/timer.h>
-#include <wx/generic/filedlgg.h>
 #include <wx/display.h>
 
 #include <wx/arrimpl.cpp>       // this allows for creation of wxObjArray
@@ -988,15 +987,16 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    // loads either the XPM or the windows resource, depending on the platform
 #if !defined(__WXMAC__) && !defined(__WXX11__)
+   wxIcon *ic;
    #if defined(__WXMSW__)
-      wxIcon ic(wxICON(AudacityLogo));
+      ic = new wxIcon(wxICON(AudacityLogo));
    #elif defined(__WXGTK__)
-      wxIcon ic(wxICON(AudacityLogoAlpha));
+      ic = new wxIcon(wxICON(AudacityLogoAlpha));
    #else
-      wxIcon ic;
+      ic = new wxIcon();
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
    #endif
-   SetIcon(ic);
+   SetIcon(*ic);
 #endif
    mIconized = false;
 

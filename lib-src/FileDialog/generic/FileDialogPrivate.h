@@ -28,7 +28,6 @@ class wxCheckBox;
 class wxChoice;
 class wxFileData;
 class FileCtrl;
-class wxGenericFileDialog;
 class wxListEvent;
 class wxListItem;
 class wxStaticText;
@@ -38,18 +37,27 @@ class wxTextCtrl;
 // FileDialog
 //-------------------------------------------------------------------------
 
-class FileDialog: public wxFileDialogBase
+#if defined(GENERIC_FILEDIALOG)
+#define FILEDIALOG GenericFileDialog
+#else
+#define FILEDIALOG FileDialog
+#endif
+
+
+class FILEDIALOG: public wxFileDialogBase
 {
 public:
-   FileDialog() : wxFileDialogBase() { Init(); }
+   FILEDIALOG() : wxFileDialogBase() { Init(); }
    
-   FileDialog(wxWindow *parent,
+   FILEDIALOG(wxWindow *parent,
               const wxString& message = wxFileSelectorPromptStr,
               const wxString& defaultDir = wxEmptyString,
               const wxString& defaultFile = wxEmptyString,
               const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
               long style = 0,
               const wxPoint& pos = wxDefaultPosition,
+              const wxSize& sz = wxDefaultSize,
+              const wxString& name = wxFileDialogNameStr,                        
               bool bypassGenericImpl = false );
    
    bool Create( wxWindow *parent,
@@ -59,9 +67,11 @@ public:
                const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
                long style = 0,
                const wxPoint& pos = wxDefaultPosition,
+               const wxSize& sz = wxDefaultSize,
+               const wxString& name = wxFileDialogNameStr,                        
                bool bypassGenericImpl = false );
    
-   virtual ~FileDialog();
+   virtual ~FILEDIALOG();
    
    virtual void SetMessage(const wxString& message) { SetTitle(message); }
    virtual void SetPath(const wxString& path);
@@ -71,9 +81,11 @@ public:
    // for multiple file selection
    virtual void GetPaths(wxArrayString& paths) const;
    virtual void GetFilenames(wxArrayString& files) const;
-   
+
+#if !defined(GENERIC_FILEDIALOG)   
    virtual void EnableButton(wxString label, fdCallback cb, void *cbdata);
    virtual void ClickButton(int index);
+#endif
    
    // implementation only from now on
    // -------------------------------
@@ -118,7 +130,7 @@ protected:
    
 private:
    void Init();
-   DECLARE_DYNAMIC_CLASS(FileDialog)
+   DECLARE_DYNAMIC_CLASS(FILEDIALOG)
    DECLARE_EVENT_TABLE()
    
    // these variables are preserved between FileDialog calls
