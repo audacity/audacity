@@ -77,48 +77,48 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PostBuildEvent>
-      <Command>for %25%25I in ("%25WXWIN%25\locale\*.po") do call :fmt %25%25~nI
+      <Command>for %%I in ("%WXWIN%\locale\*.po") do call :fmt %%~nI
 goto :EOF
 
 :fmt
-if not exist "$(OutDir)Languages\%251" mkdir "$(OutDir)Languages\%251"
-msgfmt -o "$(OutDir)Languages\%251\wxstd.mo" "%25WXWIN%25\locale\%251.po"
+if not exist "$(OutDir)Languages\%1" mkdir "$(OutDir)Languages\%1"
+msgfmt -o "$(OutDir)Languages\%1\wxstd.mo" "%WXWIN%\locale\%1.po"
 goto :EOF
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='wx3-Release|Win32'">
     <PostBuildEvent>
-      <Command>for %25%25I in ("%25WXWIN%25\locale\*.po") do call :fmt %25%25~nI
+      <Command>for %%I in ("%WXWIN3%\locale\*.po") do call :fmt %%~nI
 goto :EOF
 
 :fmt
-if not exist "$(OutDir)Languages\%251" mkdir "$(OutDir)Languages\%251"
-msgfmt -o "$(OutDir)Languages\%251\wxstd.mo" "%25WXWIN%25\locale\%251.po"
+if not exist "$(OutDir)Languages\%1" mkdir "$(OutDir)Languages\%1"
+msgfmt -o "$(OutDir)Languages\%1\wxstd.mo" "%WXWIN3%\locale\%1.po"
 goto :EOF
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PostBuildEvent>
-      <Command>for %25%25I in ("%25WXWIN%25\locale\*.po") do call :fmt %25%25~nI
+      <Command>for %%I in ("%WXWIN%\locale\*.po") do call :fmt %%~nI
 goto :EOF
 
 :fmt
-if not exist "$(OutDir)Languages\%251" mkdir "$(OutDir)Languages\%251"
-msgfmt -o "$(OutDir)Languages\%251\wxstd.mo" "%25WXWIN%25\locale\%251.po"
+if not exist "$(OutDir)Languages\%1" mkdir "$(OutDir)Languages\%1"
+msgfmt -o "$(OutDir)Languages\%1\wxstd.mo" "%WXWIN%\locale\%1.po"
 goto :EOF
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='wx3-Debug|Win32'">
     <PostBuildEvent>
-      <Command>for %25%25I in ("%25WXWIN%25\locale\*.po") do call :fmt %25%25~nI
+      <Command>for %%I in ("%WXWIN3%\locale\*.po") do call :fmt %%~nI
 goto :EOF
 
 :fmt
-if not exist "$(OutDir)Languages\%251" mkdir "$(OutDir)Languages\%251"
-msgfmt -o "$(OutDir)Languages\%251\wxstd.mo" "%25WXWIN%25\locale\%251.po"
+if not exist "$(OutDir)Languages\%1" mkdir "$(OutDir)Languages\%1"
+msgfmt -o "$(OutDir)Languages\%1\wxstd.mo" "%WXWIN3%\locale\%1.po"
 goto :EOF
 </Command>
     </PostBuildEvent>
