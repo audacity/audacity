@@ -571,7 +571,7 @@ protected:
    const WaveTrack *mFreqSelTrack;
    std::auto_ptr<SpectrumAnalyst> mFrequencySnapper;
 
-   bool TrackPanel::MayAdjustBoundary( eFreqSelMode SelMode, wxCoord y, const wxRect & r, 
+   bool MayAdjustBoundary( eFreqSelMode SelMode, wxCoord y, const wxRect & r, 
       const WaveTrack* wt, bool logF);
 #endif
 
