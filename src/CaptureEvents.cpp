@@ -14,6 +14,7 @@
 
 *//*******************************************************************/
 
+#include <wx/version.h>
 #include "Audacity.h"
 #include "CaptureEvents.h"
 
