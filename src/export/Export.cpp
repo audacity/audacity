@@ -46,6 +46,7 @@
 #include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/timer.h>
+#include <wx/dcmemory.h>
 
 #include "Export.h"
 #include "ExportPCM.h"
