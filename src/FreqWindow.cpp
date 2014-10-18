@@ -24,6 +24,14 @@ This class actually does the graph display.
 Has a feature that finds peaks and reports their value as you move
 the mouse around.
 
+*//****************************************************************//**
+
+\class SpectrumAnalyst
+\brief Used for finding the peaks, for snapping to peaks.
+
+This class is used to do the 'find peaks' snapping both in FreqPlot
+and in the spectrogram spectral selection.
+
 *//*******************************************************************/
 
 /*

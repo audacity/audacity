@@ -558,7 +558,7 @@ protected:
    double mSelStart;
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   enum {
+   enum eFreqSelMode {
       FREQ_SEL_INVALID,
       FREQ_SEL_SNAPPING_CENTER,
       FREQ_SEL_TOP_FREE,
@@ -570,6 +570,9 @@ protected:
    double mFreqSelCenter; // Used when dragging the width about fixed center
    const WaveTrack *mFreqSelTrack;
    std::auto_ptr<SpectrumAnalyst> mFrequencySnapper;
+
+   bool TrackPanel::MayAdjustBoundary( eFreqSelMode SelMode, wxCoord y, const wxRect & r, 
+      const WaveTrack* wt, bool logF);
 #endif
 
    Track *mCapturedTrack;

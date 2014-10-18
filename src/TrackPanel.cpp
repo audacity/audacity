@@ -2034,6 +2034,79 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
    }
 }
 
+
+// returns true, if we have found a boundary to sdjust.
+bool TrackPanel::MayAdjustBoundary( eFreqSelMode SelMode, wxCoord y, const wxRect & r, 
+   const WaveTrack* wt, bool logF)
+{
+   // Is the cursor over the bottom selection boundary?
+   bool adjust_boundary = false;
+   double freq = (SelMode==FREQ_SEL_BOTTOM_FREE)? 
+      mViewInfo->selectedRegion.f0() :
+      mViewInfo->selectedRegion.f1();
+
+   if (freq < 0){
+      int edge = (SelMode==FREQ_SEL_BOTTOM_FREE)? 
+         (r.y+r.height) :
+         (r.y);
+      // Should we un-snap the bottom from "all"?
+      adjust_boundary =
+         within(y, edge, FREQ_SNAP_DISTANCE);
+   } else {
+      const wxInt64 Sel =
+         FrequencyToPosition(freq,
+                             r.y, r.height,
+                             wt->GetRate(), logF);
+      adjust_boundary =
+         within(y, Sel, SELECTION_RESIZE_REGION);
+   }
+   if (!adjust_boundary) 
+      return false;
+
+   double freqOther = (SelMode==FREQ_SEL_BOTTOM_FREE)? 
+      mViewInfo->selectedRegion.f1() :
+      mViewInfo->selectedRegion.f0();
+   // Pin other edge
+   // Disable extension of time selection, unless also near
+   // left or right boundary as tested later
+   mSelStart = -1;
+   mFreqSelMode = SelMode;
+   mFreqSelTrack = wt;
+   mFreqSelStart = freqOther;
+   return true;
+}
+
+#if 0
+   if (startNewSelection) {
+      // Is the cursor over the bottom selection boundary?
+      bool adjust_top = false;
+      if (mViewInfo->selectedRegion.f1() < 0)
+         // Should we un-snap the top from "all"?
+         adjust_top =
+            within(event.m_y, r.y, FREQ_SNAP_DISTANCE);
+      else {
+         const wxInt64 topSel =
+            FrequencyToPosition(mViewInfo->selectedRegion.f1(),
+                                r.y, r.height,
+                                wt->GetRate(), logF);
+         adjust_top =
+            within(event.m_y, topSel, SELECTION_RESIZE_REGION);
+      }
+      if (adjust_top) {
+         // Pin bottom edge
+         // Disable extension of time selection, unless also near
+         // left or right boundary as tested later
+         mSelStart = -1;
+         mFreqSelMode = FREQ_SEL_TOP_FREE;
+         mFreqSelTrack = wt;
+         mFreqSelStart = mViewInfo->selectedRegion.f0();
+         startNewSelection = false;
+      }
+   }
+
+#endif
+
+
 /// This method gets called when we're handling selection
 /// and the mouse was just clicked.
 void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
@@ -2231,6 +2304,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
             if (logF || display == WaveTrack::SpectrumDisplay) {
                // Adjust frequency selection, no modifier keys
 
+               // TODO: Put this into MayAdjustBoundary too.
                // Is the cursor over the geometric mean frequency?
                bool adjustCenter = false;
                mFreqSelCenter = mViewInfo->selectedRegion.fc();
@@ -2255,59 +2329,13 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                   startNewSelection = false;
                }
 
-               if (startNewSelection) {
-                  // Is the cursor over the bottom selection boundary?
-                  bool adjust_bottom = false;
-                  if (mViewInfo->selectedRegion.f0() < 0)
-                     // Should we un-snap the bottom from "all"?
-                     adjust_bottom =
-                        within(event.m_y, r.y + r.height, FREQ_SNAP_DISTANCE);
-                  else {
-                     const wxInt64 bottomSel =
-                        FrequencyToPosition(mViewInfo->selectedRegion.f0(),
-                                            r.y, r.height,
-                                            wt->GetRate(), logF);
-                     adjust_bottom =
-                        within(event.m_y, bottomSel, SELECTION_RESIZE_REGION);
-                  }
-                  if (adjust_bottom) {
-                     // Pin top edge
-                     // Disable extension of time selection, unless also near
-                     // left or right boundary as tested later
-                     mSelStart = -1;
-                     mFreqSelMode = FREQ_SEL_BOTTOM_FREE;
-                     mFreqSelTrack = wt;
-                     mFreqSelStart = mViewInfo->selectedRegion.f1();
-                     startNewSelection = false;
-                  }
-               }
-
-               if (startNewSelection) {
-                  // Is the cursor over the bottom selection boundary?
-                  bool adjust_top = false;
-                  if (mViewInfo->selectedRegion.f1() < 0)
-                     // Should we un-snap the top from "all"?
-                     adjust_top =
-                        within(event.m_y, r.y, FREQ_SNAP_DISTANCE);
-                  else {
-                     const wxInt64 topSel =
-                        FrequencyToPosition(mViewInfo->selectedRegion.f1(),
-                                            r.y, r.height,
-                                            wt->GetRate(), logF);
-                     adjust_top =
-                        within(event.m_y, topSel, SELECTION_RESIZE_REGION);
-                  }
-                  if (adjust_top) {
-                     // Pin bottom edge
-                     // Disable extension of time selection, unless also near
-                     // left or right boundary as tested later
-                     mSelStart = -1;
-                     mFreqSelMode = FREQ_SEL_TOP_FREE;
-                     mFreqSelTrack = wt;
-                     mFreqSelStart = mViewInfo->selectedRegion.f0();
-                     startNewSelection = false;
-                  }
-               }
+               // Tests for dragging an upper/lower boundary.
+               if( startNewSelection )
+                  startNewSelection = !MayAdjustBoundary( 
+                     FREQ_SEL_BOTTOM_FREE, event.m_y, r, wt, logF );
+               if( startNewSelection )
+                  startNewSelection = !MayAdjustBoundary( 
+                     FREQ_SEL_TOP_FREE, event.m_y, r, wt, logF );
             } // spectrum type
          } // wave track
 #endif
@@ -2714,6 +2742,8 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
    const double frequency =
       PositionToFrequency(true, mouseYCoordinate,
          trackTopEdge, trackHeight, rate, logF);
+
+   // Dragging center?
    if (mFreqSelMode == FREQ_SEL_DRAG_CENTER) {
       if (frequency == rate || frequency < 1.0)
          // snapped to top or bottom
@@ -2728,6 +2758,8 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
             frequency / ratio, frequency * ratio);
       }
    }
+   // Dragging with Alt down, 
+   // Changes both upper and lower edges leaving centre where it is.
    else if (dragWidth && mFreqSelCenter >= 0) {
       if (frequency == rate || frequency < 1.0)
          // snapped to top or bottom
@@ -2737,6 +2769,7 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
       else {
          const double maxRatio = findMaxRatio(mFreqSelCenter, rate);
          double ratio = frequency / mFreqSelCenter;
+         // fix for dragging an edge through the centre line.
          if (ratio < 1.0)
             ratio = 1.0 / ratio;
          ratio = std::min(maxRatio, ratio);
@@ -2744,6 +2777,7 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
             mFreqSelCenter / ratio, mFreqSelCenter * ratio);
       }
    }
+   // Dragging of upper or lower.
    else {
       const bool bottomDefined =
          !(mFreqSelMode == FREQ_SEL_TOP_FREE && mFreqSelStart < 0);

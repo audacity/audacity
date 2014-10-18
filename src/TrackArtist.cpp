@@ -2036,15 +2036,23 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    {
       sampleCount w0 = w1;
       w1 = (sampleCount) ((t0*rate + (x+1) *rate *tstep) + .5);
+
+      // TODO: The logF and non-logF case are very similar.
+      // They should be merged and simplified.
       if (!logF)
       {
          for (int yy = 0; yy < mid.height; yy++) {
             float bin0 = float (yy) * binPerPx + minSamples;
             float bin1 = float (yy + 1) * binPerPx + minSamples;
 
+            // For spectral selection, determine whether we
+            // are drawing a centre line, and what colour
+            // set to use.  We use a darker selection if
+            // in both spectral range and time range.
             bool centerLine = false;
             AColor::ColorGradientChoice selected =
                AColor::ColorGradientUnselected;
+
             if (ssel0 <= w0 && w1 < ssel1)
             {
                if (selBinCenter >= 0 &&
