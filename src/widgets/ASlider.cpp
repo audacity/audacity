@@ -78,6 +78,7 @@ of an LWSlider or ASlider.
 
 #include "../Experimental.h"
 #include "ASlider.h"
+#include "Ruler.h"
 
 #include "../AColor.h"
 #include "../ImageManipulation.h"
