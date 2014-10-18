@@ -782,17 +782,17 @@ bool EffectNyquist::ProcessOne()
    {
       static const wxString varName(wxT("*F0*"));
       if (mF0 < 0)
-         cmd += wxString::Format(wxT("(setf %s nil)\n"), varName);
+         cmd += wxString::Format(wxT("(setf %s nil)\n"), varName.c_str());
       else
-         cmd += wxString::Format(wxT("(setf %s (float %g))\n"), varName, mF0);
+         cmd += wxString::Format(wxT("(setf %s (float %g))\n"), varName.c_str(), mF0);
    }
 
    {
       static const wxString varName(wxT("*F1*"));
       if (mF1 < 0)
-         cmd += wxString::Format(wxT("(setf %s nil)\n"), varName);
+         cmd += wxString::Format(wxT("(setf %s nil)\n"), varName.c_str());
       else
-         cmd += wxString::Format(wxT("(setf %s (float %g))\n"), varName, mF1);
+         cmd += wxString::Format(wxT("(setf %s (float %g))\n"), varName.c_str(), mF1);
    }
 #endif
 
