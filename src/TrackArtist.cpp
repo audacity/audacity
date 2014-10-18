@@ -1780,6 +1780,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                                    bool autocorrelation,
                                    bool logF)
 {
+   enum { MONOCHROME_LINE = 230, COLORED_LINE  = 0 };
+
 #if PROFILE_WAVEFORM
 #  ifdef __WXMSW__
    __time64_t tv0, tv1;
@@ -1793,6 +1795,13 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    double pps = viewInfo->zoom;
    double sel0 = viewInfo->selectedRegion.t0();
    double sel1 = viewInfo->selectedRegion.t1();
+
+   double freqLo = SelectedRegion::UndefinedFrequency;
+   double freqHi = SelectedRegion::UndefinedFrequency;
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   freqLo = viewInfo->selectedRegion.f0();
+   freqHi = viewInfo->selectedRegion.f1();
+#endif
 
    double tOffset = clip->GetOffset();
    double rate = clip->GetRate();
@@ -1922,7 +1931,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
       minFreq = GetSpectrumLogMinFreq(ifreq/1000.0);
       if(minFreq < 1)
          // Paul L:  I suspect this line is now unreachable
-         minFreq = ifreq/1000.0;
+         minFreq = 1.0;
    }
 
    bool usePxCache = false;
@@ -1953,9 +1962,15 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
 #endif
    }
 
+   // PRL:  Must the following two be integers?
    int minSamples = int ((double)minFreq * (double)windowSize / rate + 0.5);   // units are fft bins
    int maxSamples = int ((double)maxFreq * (double)windowSize / rate + 0.5);
    float binPerPx = float(maxSamples - minSamples) / float(mid.height);
+   float selBinLo = freqLo * (double)windowSize / rate;
+   float selBinHi = freqHi * (double)windowSize / rate;
+   float selBinCenter =
+      ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi))
+       * (double)windowSize / rate;
 
    int x = 0;
    sampleCount w1 = (sampleCount) ((t0*rate + x *rate *tstep) + .5);
@@ -2024,15 +2039,31 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
       if (!logF)
       {
          for (int yy = 0; yy < mid.height; yy++) {
-            bool selflag = (ssel0 <= w0 && w1 < ssel1);
+            float bin0 = float (yy) * binPerPx + minSamples;
+            float bin1 = float (yy + 1) * binPerPx + minSamples;
+
+            bool centerLine = false;
+            AColor::ColorGradientChoice selected =
+               AColor::ColorGradientUnselected;
+            if (ssel0 <= w0 && w1 < ssel1)
+            {
+               if (selBinCenter >= 0 &&
+                   bin0 <= selBinCenter &&
+                   selBinCenter < bin1)
+                   centerLine = true;
+               else if((selBinLo < 0 || selBinLo < bin1) && 
+                  (selBinHi < 0 || selBinHi > bin0))
+                  selected =
+                  AColor::ColorGradientTimeAndFrequencySelected;
+               else
+                  selected =
+                  AColor::ColorGradientTimeSelected;
+            }
+
             unsigned char rv, gv, bv;
             float value;
 
             if(!usePxCache) {
-               float bin0 = float (yy) * binPerPx + minSamples;
-               float bin1 = float (yy + 1) * binPerPx + minSamples;
-
-
                if (int (bin1) == int (bin0))
                   value = freq[half * x + int (bin0)];
                else {
@@ -2069,7 +2100,11 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
             else
                value = clip->mSpecPxCache->values[x * mid.height + yy];
 
-            GetColorGradient(value, selflag, mIsGrayscale, &rv, &gv, &bv);
+            if(centerLine)
+               // Draw center frequency line
+               rv = gv = bv = (mIsGrayscale ? MONOCHROME_LINE : COLORED_LINE);
+            else
+               GetColorGradient(value, selected, mIsGrayscale, &rv, &gv, &bv);
 
             int px = ((mid.height - 1 - yy) * mid.width + x) * 3;
             data[px++] = rv;
@@ -2079,7 +2114,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
       }
       else //logF
       {
-         bool selflag = (ssel0 <= w0 && w1 < ssel1);
          unsigned char rv, gv, bv;
          float value;
          int x0=x*half;
@@ -2151,19 +2185,38 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
          float yy2 = yy2_base;
          double exp_scale_per_height = exp(scale/mid.height);
          for (int yy = 0; yy < mid.height; yy++) {
+            if (int(yy2)>=half)
+               yy2=half-1;
+            if (yy2<0)
+               yy2=0;
+            float bin0 = float(yy2);
+            yy2_base *= exp_scale_per_height;
+            float yy3 = yy2_base;
+            if (int(yy3)>=half)
+               yy3=half-1;
+            if (yy3<0)
+               yy3=0;
+            float bin1 = float(yy3);
+
+            bool centerLine = false;
+            AColor::ColorGradientChoice selected =
+               AColor::ColorGradientUnselected;
+            if (ssel0 <= w0 && w1 < ssel1)
+            {
+               if (selBinCenter >= 0 &&
+                   bin0 <= selBinCenter &&
+                   selBinCenter < bin1)
+                   centerLine = true;
+               else if((selBinLo < 0 || selBinLo < bin1) && 
+                  (selBinHi < 0 || selBinHi > bin0))
+                  selected =
+                  AColor::ColorGradientTimeAndFrequencySelected;
+               else
+                  selected =
+                  AColor::ColorGradientTimeSelected;
+            }
+
             if(!usePxCache) {
-               if (int(yy2)>=half)
-                  yy2=half-1;
-               if (yy2<0)
-                  yy2=0;
-               float bin0 = float(yy2);
-               yy2_base *= exp_scale_per_height;
-               float yy3 = yy2_base;
-               if (int(yy3)>=half)
-                  yy3=half-1;
-               if (yy3<0)
-                  yy3=0;
-               float bin1 = float(yy3);
 
 #ifdef EXPERIMENTAL_FIND_NOTES
                if (mFftFindNotes) {
@@ -2204,12 +2257,16 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                if (value < 0.0)
                   value = float(0.0);
                clip->mSpecPxCache->values[x * mid.height + yy] = value;
-               yy2 = yy2_base;
             }
             else
                value = clip->mSpecPxCache->values[x * mid.height + yy];
+            yy2 = yy2_base;
 
-            GetColorGradient(value, selflag, mIsGrayscale, &rv, &gv, &bv);
+            if(centerLine)
+               // Draw center frequency line
+               rv = gv = bv = (mIsGrayscale ? MONOCHROME_LINE : COLORED_LINE);
+            else
+               GetColorGradient(value, selected, mIsGrayscale, &rv, &gv, &bv);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
             if (mFftYGrid && yGrid[yy]) {

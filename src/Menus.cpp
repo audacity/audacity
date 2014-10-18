@@ -48,6 +48,9 @@ simplifies construction of menu items.
 #include <wx/statusbr.h>
 #include <wx/utils.h>
 
+#include "FreqWindow.h"
+#include "TrackPanel.h"
+
 #include "Project.h"
 #include "effects/EffectManager.h"
 

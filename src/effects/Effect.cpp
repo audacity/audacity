@@ -104,6 +104,10 @@ bool Effect::DoEffect(wxWindow *parent, int flags,
    mTracks = list;
    mT0 = t0;
    mT1 = t1;
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   mF0 = selectedRegion->f0();
+   mF1 = selectedRegion->f1();
+#endif
    CountWaveTracks();
 
    // Note: Init may read parameters from preferences

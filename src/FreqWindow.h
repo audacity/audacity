@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_FREQ_WINDOW__
 #define __AUDACITY_FREQ_WINDOW__
 
+#include <memory>
+#include <vector>
 #include <wx/brush.h>
 #include <wx/frame.h>
 #include <wx/panel.h>
@@ -32,7 +34,7 @@ class FreqWindow;
 
 class TrackList;
 
-class FreqWindow;
+class ProgressDialog;
 
 class FreqPlot:public wxWindow {
  public:
@@ -48,6 +50,45 @@ class FreqPlot:public wxWindow {
     FreqWindow * freqWindow;
 
     DECLARE_EVENT_TABLE()
+};
+
+class SpectrumAnalyst
+{
+public:
+
+   enum Algorithm {
+      Spectrum,
+      Autocorrelation,
+      CubeRootAutocorrelation,
+      EnhancedAutocorrelation,
+      Cepstrum,
+
+      NumAlgorithms
+   };
+
+   SpectrumAnalyst();
+   ~SpectrumAnalyst();
+
+   // Return true iff successful
+   bool Calculate(Algorithm alg,
+      int windowFunc, // see FFT.h for values
+      int windowSize, double rate,
+      const float *data, int dataLen,
+      float *pYMin = 0, float *pYMax = 0, // outputs
+      ProgressDialog *progress = 0);
+
+   const float *GetProcessed() const { return &mProcessed[0]; }
+   int GetProcessedSize() const { return mProcessed.size() / 2; }
+
+   float GetProcessedValue(float freq0, float freq1) const;
+   float FindPeak(float xPos, float *pY) const;
+
+private:
+
+   Algorithm mAlg;
+   double mRate;
+   int mWindowSize;
+   std::vector<float> mProcessed;
 };
 
 class FreqWindow:public wxDialog {
@@ -81,7 +122,7 @@ class FreqWindow:public wxDialog {
    float *mBuffer;
    bool mDrawGrid;
    int mSize;
-   int mAlg;
+   SpectrumAnalyst::Algorithm mAlg;
    int mFunc;
    int mAxis;
    int dBRange;
@@ -126,8 +167,6 @@ class FreqWindow:public wxDialog {
    int mDataLen;
    float *mData;
    int mWindowSize;
-   float *mProcessed;
-   int mProcessedSize;
 
    bool mLogAxis;
    float mYMin;
@@ -139,7 +178,7 @@ class FreqWindow:public wxDialog {
    int mMouseX;
    int mMouseY;
 
-   float GetProcessedValue(float freq0, float freq1);
+   std::auto_ptr<SpectrumAnalyst> mAnalyst;
 
    DECLARE_EVENT_TABLE()
 };

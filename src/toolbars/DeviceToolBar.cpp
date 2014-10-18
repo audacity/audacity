@@ -33,6 +33,7 @@
 
 #include "DeviceToolBar.h"
 #include "ToolDock.h"
+#include "../TrackPanel.h"
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"

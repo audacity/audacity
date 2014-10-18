@@ -27,6 +27,7 @@
 #include <wx/intl.h>
 #endif // WX_PRECOMP
 
+#include "../Envelope.h"
 #include "TranscriptionToolBar.h"
 
 #include "ControlToolBar.h"

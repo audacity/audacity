@@ -43,6 +43,7 @@ with changes in the SelectionBar.
 #endif
 #include <wx/statline.h>
 
+#include "SelectionBarListener.h"
 #include "SelectionBar.h"
 
 #include "../AudacityApp.h"

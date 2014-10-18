@@ -22,6 +22,15 @@ class wxRect;
 
 class AColor {
  public:
+
+    enum ColorGradientChoice {
+      ColorGradientUnselected = 0,
+      ColorGradientTimeSelected,
+      ColorGradientTimeAndFrequencySelected,
+
+      ColorGradientTotal // keep me last
+   };
+
    static void Init();
    static void ReInit();
 
@@ -97,7 +106,7 @@ class AColor {
 
    static bool gradient_inited;
    static const int gradientSteps = 512;
-   static unsigned char gradient_pre[2][2][gradientSteps][3];
+   static unsigned char gradient_pre[ColorGradientTotal][2][gradientSteps][3];
 
  private:
    static wxPen sparePen;
@@ -107,7 +116,7 @@ class AColor {
 };
 
 inline void GetColorGradient(float value,
-                             bool selected,
+                             AColor::ColorGradientChoice selected,
                              bool grayscale,
                              unsigned char *red,
                              unsigned char *green, unsigned char *blue) {

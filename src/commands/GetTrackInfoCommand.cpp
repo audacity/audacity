@@ -17,6 +17,7 @@
 *//*******************************************************************/
 
 #include "GetTrackInfoCommand.h"
+#include "../TrackPanel.h"
 #include "../Project.h"
 #include "../Track.h"
 #include "../WaveTrack.h"

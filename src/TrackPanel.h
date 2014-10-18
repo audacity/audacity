@@ -11,12 +11,15 @@
 #ifndef __AUDACITY_TRACK_PANEL__
 #define __AUDACITY_TRACK_PANEL__
 
+#include <memory>
+
 #include <wx/dcmemory.h>
 #include <wx/dynarray.h>
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <wx/window.h>
 
+#include "Experimental.h"
 #include "Sequence.h"  //Stm: included for the sampleCount declaration
 #include "WaveClip.h"
 #include "WaveTrack.h"
@@ -27,6 +30,7 @@ class wxMenu;
 class wxRect;
 
 class LabelTrack;
+class SpectrumAnalyst;
 class TrackPanel;
 class TrackArtist;
 class Ruler;
@@ -54,31 +58,8 @@ class AUDACITY_DLL_API TrackClip
 
 WX_DECLARE_OBJARRAY(TrackClip, TrackClipArray);
 
-class AUDACITY_DLL_API TrackPanelListener {
-
- public:
-   TrackPanelListener(){};
-   virtual ~TrackPanelListener(){};
-
-   virtual void TP_DisplaySelection() = 0;
-   virtual void TP_DisplayStatusMessage(wxString msg) = 0;
-
-   virtual int TP_GetCurrentTool() = 0;
-   virtual ToolsToolBar * TP_GetToolsToolBar() = 0;
-   virtual ControlToolBar * TP_GetControlToolBar() = 0;
-
-   virtual void TP_OnPlayKey() = 0;
-   virtual void TP_PushState(wxString shortDesc, wxString longDesc,
-                            int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE) = 0;
-   virtual void TP_ModifyState(bool bWantsAutoSave) = 0;    // if true, writes auto-save file. Should set only if you really want the state change restored after
-                                                            // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-   virtual void TP_RedrawScrollbars() = 0;
-   virtual void TP_ScrollLeft() = 0;
-   virtual void TP_ScrollRight() = 0;
-   virtual void TP_ScrollWindow(double scrollto) = 0;
-   virtual void TP_ScrollUpDown(int delta) = 0;
-   virtual void TP_HandleResize() = 0;
-};
+// Declared elsewhere, to reduce compilation dependencies
+class TrackPanelListener;
 
 //
 // TrackInfo sliders: we keep a pool of sliders, and attach them to tracks as
@@ -334,6 +315,19 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
    virtual void ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
                         Track *pTrack);
+   virtual void UpdateSelectionDisplay();
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   virtual void StartSnappingFreqSelection (WaveTrack *pTrack);
+   virtual void MoveSnappingFreqSelection (int mouseYCoordinate,
+                                           int trackTopEdge,
+                                           int trackHeight, Track *pTrack);
+   virtual void StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
+                                    int trackHeight, Track *pTrack);
+   virtual void ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
+                                    int trackHeight, bool dragWidth);
+#endif
+
    virtual void SelectTracksByLabel( LabelTrack *t );
    virtual void SelectTrackLength(Track *t);
 
@@ -563,6 +557,21 @@ protected:
 
    double mSelStart;
 
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   enum {
+      FREQ_SEL_INVALID,
+      FREQ_SEL_SNAPPING_CENTER,
+      FREQ_SEL_TOP_FREE,
+      FREQ_SEL_BOTTOM_FREE,
+      FREQ_SEL_DRAG_CENTER,
+      FREQ_SEL_FREE
+   }  mFreqSelMode;
+   double mFreqSelStart;
+   double mFreqSelCenter; // Used when dragging the width about fixed center
+   const WaveTrack *mFreqSelTrack;
+   std::auto_ptr<SpectrumAnalyst> mFrequencySnapper;
+#endif
+
    Track *mCapturedTrack;
    Envelope *mCapturedEnvelope;
    WaveClip *mCapturedClip;
@@ -627,6 +636,20 @@ protected:
                          wxInt64 trackLeftEdge) const;
    wxInt64 TimeToPosition(double time,
                           wxInt64 trackLeftEdge) const;
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   double PositionToFrequency(bool maySnap,
+                              wxInt64 mouseYCoordinate,
+                              wxInt64 trackTopEdge,
+                              int trackHeight,
+                              double rate,
+                              bool logF) const;
+   wxInt64 FrequencyToPosition(double frequency,
+                               wxInt64 trackTopEdge,
+                               int trackHeight,
+                               double rate,
+                               bool logF) const;
+#endif
 
    int mInitialTrackHeight;
    int mInitialUpperTrackHeight;
@@ -734,6 +757,8 @@ protected:
 
 //This constant determines the size of the horizontal region (in pixels) around
 //the right and left selection bounds that can be used for horizontal selection adjusting
+//(or, vertical distance around top and bottom bounds in spectrograms,
+// for vertical selection adjusting)
 #define SELECTION_RESIZE_REGION 3
 
 #define SMOOTHING_KERNEL_RADIUS 3

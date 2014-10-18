@@ -570,14 +570,14 @@ void AColor::DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 
 bool AColor::gradient_inited = 0;
 
-unsigned char AColor::gradient_pre[2][2][gradientSteps][3];
+unsigned char AColor::gradient_pre[ColorGradientTotal][2][gradientSteps][3];
 
 void AColor::PreComputeGradient() {
    {
       if (!gradient_inited) {
          gradient_inited = 1;
 
-         for (int selected = 0; selected <= 1; selected++)
+         for (int selected = 0; selected < ColorGradientTotal; selected++)
             for (int grayscale = 0; grayscale <= 1; grayscale++) {
                float r, g, b;
 
@@ -608,10 +608,24 @@ void AColor::PreComputeGradient() {
                      b = (gradient[left][2] * lweight) + (gradient[right][2] * rweight);
                   }
 
-                  if (selected) {
+                  switch (selected) {
+                  case ColorGradientUnselected:
+                     // not dimmed
+                     break;
+
+                  case ColorGradientTimeSelected:
+                     // partly dimmed
+                     r *= 0.88f;
+                     g *= 0.88f;
+                     b *= 0.992f;
+                     break;
+
+                  case ColorGradientTimeAndFrequencySelected:
+                     // fully dimmed
                      r *= 0.77f;
                      g *= 0.77f;
                      b *= 0.885f;
+                     break;
                   }
                   gradient_pre[selected][grayscale][i][0] = (unsigned char) (255 * r);
                   gradient_pre[selected][grayscale][i][1] = (unsigned char) (255 * g);

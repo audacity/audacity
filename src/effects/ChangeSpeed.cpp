@@ -26,6 +26,7 @@
 #include <wx/valtext.h>
 
 #include "../Audacity.h"
+#include "../LabelTrack.h"
 #include "../Envelope.h"
 #include "../LabelTrack.h"
 #include "../Prefs.h"

@@ -401,7 +401,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
          mLastDisplay=mDisplay;    // remember last display mode for wave and wavedb so they can remap
       mDisplay = display;
    }
-   int GetDisplay() {return mDisplay;}
+   int GetDisplay() const {return mDisplay;}
    int GetLastDisplay() {return mLastDisplay;}
 
    void GetDisplayBounds(float *min, float *max);

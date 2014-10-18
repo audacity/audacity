@@ -102,6 +102,9 @@
 // Won't build on Fedora 17 or Windows VC++, per http://bugzilla.audacityteam.org/show_bug.cgi?id=539.
 //#define EXPERIMENTAL_OD_FFMPEG 1
 
+// Paul Licameli (PRL) 5 Oct 2014
+#define EXPERIMENTAL_SPECTRAL_EDITING
+
 // Philip Van Baren 01 July 2009
 // Replace RealFFT() and PowerSpectrum function to use (faster) RealFFTf function
 #define EXPERIMENTAL_USE_REALFFTF

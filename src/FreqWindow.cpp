@@ -107,12 +107,23 @@ BEGIN_EVENT_TABLE(FreqWindow, wxDialog)
     EVT_CHECKBOX(GridOnOffID, FreqWindow::OnGridOnOff)
 END_EVENT_TABLE()
 
+SpectrumAnalyst::SpectrumAnalyst()
+: mAlg(Spectrum)
+, mRate(0.0)
+, mWindowSize(0)
+{
+}
+
+SpectrumAnalyst::~SpectrumAnalyst()
+{
+}
+
 FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
                            const wxString & title,
                            const wxPoint & pos):
   wxDialog(parent, id, title, pos, wxDefaultSize,
-     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
-  mData(NULL), mProcessed(NULL), mBitmap(NULL)
+           wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
+  mData(NULL), mBitmap(NULL), mAnalyst(new SpectrumAnalyst())
 {
    mMouseX = 0;
    mMouseY = 0;
@@ -132,7 +143,11 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    gPrefs->Read(wxT("/FreqWindow/DrawGrid"), &mDrawGrid, true);
    gPrefs->Read(wxT("/FreqWindow/SizeChoice"), &mSize, 2);
-   gPrefs->Read(wxT("/FreqWindow/AlgChoice"), &mAlg, 0);
+
+   int alg;
+   gPrefs->Read(wxT("/FreqWindow/AlgChoice"), (&alg), 0);
+   mAlg = static_cast<SpectrumAnalyst::Algorithm>(alg);
+
    gPrefs->Read(wxT("/FreqWindow/FuncChoice"), &mFunc, 3);
    gPrefs->Read(wxT("/FreqWindow/AxisChoice"), &mAxis, 0);
    gPrefs->Read(wxT("/GUI/EnvdBRange"), &dBRange, ENV_DB_RANGE);
@@ -214,7 +229,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
 
    mAxisChoice->SetSelection(mAxis);
    // Log-frequency axis works for spectrum plots only.
-   if (mAlg != 0) {
+   if (mAlg != SpectrumAnalyst::Spectrum) {
       mAxis = 0;
       mAxisChoice->Disable();
    }
@@ -381,8 +396,6 @@ FreqWindow::~FreqWindow()
       delete[] mData;
    if (mBuffer)
       delete[] mBuffer;
-   if (mProcessed)
-      delete[] mProcessed;
 }
 
 void FreqWindow::GetAudio()
@@ -489,7 +502,7 @@ void FreqWindow::DrawPlot()
    memDC.SetBrush(*wxWHITE_BRUSH);
    memDC.DrawRectangle(r);
 
-   if (!mProcessed) {
+   if (0 == mAnalyst->GetProcessedSize()) {
       if (mData && mDataLen < mWindowSize)
          memDC.DrawText(_("Not enough data selected."), r.x + 5, r.y + 5);
 
@@ -498,7 +511,8 @@ void FreqWindow::DrawPlot()
 
    float yTotal = (mYMax - mYMin);
 
-   int alg = mAlgChoice->GetSelection();
+   SpectrumAnalyst::Algorithm alg =
+      SpectrumAnalyst::Algorithm(mAlgChoice->GetSelection());
 
    int i;
 
@@ -506,7 +520,7 @@ void FreqWindow::DrawPlot()
 
    // Set up y axis ruler
 
-   if (alg == 0) {
+   if (alg == SpectrumAnalyst::Spectrum) {
       vRuler->ruler.SetUnits(_("dB"));
       vRuler->ruler.SetFormat(Ruler::LinearDBFormat);
    } else {
@@ -531,7 +545,7 @@ void FreqWindow::DrawPlot()
 
    float xMin, xMax, xRatio, xStep;
 
-   if (alg == 0) {
+   if (alg == SpectrumAnalyst::Spectrum) {
       xMin = mRate / mWindowSize;
       xMax = mRate / 2;
       xRatio = xMax / xMin;
@@ -548,7 +562,7 @@ void FreqWindow::DrawPlot()
       hRuler->ruler.SetUnits(_("Hz"));
    } else {
       xMin = 0;
-      xMax = mProcessedSize / mRate;
+      xMax = mAnalyst->GetProcessedSize() / mRate;
       xStep = (xMax - xMin) / width;
       hRuler->ruler.SetLog(false);
       hRuler->ruler.SetUnits(_("s"));
@@ -557,7 +571,7 @@ void FreqWindow::DrawPlot()
    hRuler->Refresh(false);
 
    // Draw the plot
-   if (alg == 0)
+   if (alg == SpectrumAnalyst::Spectrum)
       memDC.SetPen(wxPen(theTheme.Colour( clrHzPlot ), 1, wxSOLID));
    else
       memDC.SetPen(wxPen(theTheme.Colour( clrWavelengthPlot), 1, wxSOLID));
@@ -568,9 +582,9 @@ void FreqWindow::DrawPlot()
       float y;
 
       if (mLogAxis)
-         y = GetProcessedValue(xPos, xPos * xStep);
+         y = mAnalyst->GetProcessedValue(xPos, xPos * xStep);
       else
-         y = GetProcessedValue(xPos, xPos + xStep);
+         y = mAnalyst->GetProcessedValue(xPos, xPos + xStep);
 
       float ynorm = (y - mYMin) / yTotal;
 
@@ -725,13 +739,11 @@ float CubicMaximize(float y0, float y1, float y2, float y3, float * max)
    }
 }
 
-float FreqWindow::GetProcessedValue(float freq0, float freq1)
+float SpectrumAnalyst::GetProcessedValue(float freq0, float freq1) const
 {
-   int alg = mAlgChoice->GetSelection();
-
    float bin0, bin1, binwidth;
 
-   if (alg == 0) {
+   if (mAlg == Spectrum) {
       bin0 = freq0 * mWindowSize / mRate;
       bin1 = freq1 * mWindowSize / mRate;
    } else {
@@ -747,8 +759,8 @@ float FreqWindow::GetProcessedValue(float freq0, float freq1)
       int ibin = int (binmid) - 1;
       if (ibin < 1)
          ibin = 1;
-      if (ibin >= mProcessedSize - 3)
-         ibin = mProcessedSize - 4;
+      if (ibin >= GetProcessedSize() - 3)
+         ibin = std::max(0, GetProcessedSize() - 4);
 
       value = CubicInterpolate(mProcessed[ibin],
                                mProcessed[ibin + 1],
@@ -756,6 +768,11 @@ float FreqWindow::GetProcessedValue(float freq0, float freq1)
                                mProcessed[ibin + 3], binmid - ibin);
 
    } else {
+      if (bin0 < 0)
+         bin0 = 0;
+      if (bin1 >= GetProcessedSize())
+         bin1 = GetProcessedSize() - 1;
+
       if (int (bin1) > int (bin0))
          value += mProcessed[int (bin0)] * (int (bin0) + 1 - bin0);
       bin0 = 1 + int (bin0);
@@ -771,15 +788,63 @@ float FreqWindow::GetProcessedValue(float freq0, float freq1)
    return value;
 }
 
+float SpectrumAnalyst::FindPeak(float xPos, float *pY) const
+{
+   float bestpeak = 0.0f;
+   float bestValue = 0.0;
+   if (GetProcessedSize() > 1) {
+      bool up = (mProcessed[1] > mProcessed[0]);
+      float bestdist = 1000000;
+      for (int bin = 3; bin < GetProcessedSize() - 1; bin++) {
+         bool nowUp = mProcessed[bin] > mProcessed[bin - 1];
+         if (!nowUp && up) {
+            // Local maximum.  Find actual value by cubic interpolation
+            int leftbin = bin - 2;
+            /*
+            if (leftbin < 1)
+               leftbin = 1;
+               */
+            float valueAtMax = 0.0;
+            float max = leftbin + CubicMaximize(mProcessed[leftbin],
+                                                mProcessed[leftbin + 1],
+                                                mProcessed[leftbin + 2],
+                                                mProcessed[leftbin + 3],
+                                                &valueAtMax);
+
+            float thispeak;
+            if (mAlg == Spectrum)
+               thispeak = max * mRate / mWindowSize;
+            else
+               thispeak = max / mRate;
+
+            if (fabs(thispeak - xPos) < bestdist) {
+               bestpeak = thispeak;
+               bestdist = fabs(thispeak - xPos);
+               bestValue = valueAtMax;
+               // Should this test come after the enclosing if?
+               if (thispeak > xPos)
+                  break;
+            }
+         }
+         up = nowUp;
+      }
+   }
+
+   if (pY)
+      *pY = bestValue;
+   return bestpeak;
+}
+
 void FreqWindow::PlotPaint(wxPaintEvent & evt)
 {
    wxPaintDC dc( (wxWindow *) evt.GetEventObject() );
 
    dc.DrawBitmap( *mBitmap, 0, 0, true );
-   if( mProcessed == NULL )
+   if( 0 == mAnalyst->GetProcessedSize() )
       return;
 
-   int alg = mAlgChoice->GetSelection();
+   SpectrumAnalyst::Algorithm alg =
+      SpectrumAnalyst::Algorithm(mAlgChoice->GetSelection());
 
    dc.SetFont(mFreqFont);
 
@@ -789,7 +854,7 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
 
    float xMin, xMax, xRatio, xStep;
 
-   if (alg == 0) {
+   if (alg == SpectrumAnalyst::Spectrum) {
       xMin = mRate / mWindowSize;
       xMax = mRate / 2;
       xRatio = xMax / xMin;
@@ -799,52 +864,21 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
          xStep = (xMax - xMin) / width;
    } else {
       xMin = 0;
-      xMax = mProcessedSize / mRate;
+      xMax = mAnalyst->GetProcessedSize() / mRate;
       xStep = (xMax - xMin) / width;
    }
 
    float xPos = xMin;
 
    // Find the peak nearest the cursor and plot it
-   float bestpeak = float(0.0);
    if ( r.Contains(mMouseX, mMouseY) & (mMouseX!=0) & (mMouseX!=r.width-1) ) {
       if (mLogAxis)
          xPos = xMin * pow(xStep, mMouseX - (r.x + 1));
       else
          xPos = xMin + xStep * (mMouseX - (r.x + 1));
 
-      bool up = (mProcessed[1] > mProcessed[0]);
-      float bestdist = 1000000;
-      float bestValue = 0.0;
-      for (int bin = 2; bin < mProcessedSize; bin++) {
-         bool nowUp = mProcessed[bin] > mProcessed[bin - 1];
-         if (!nowUp && up) {
-            // Local maximum.  Find actual value by cubic interpolation
-            int leftbin = bin - 2;
-            if (leftbin < 1)
-               leftbin = 1;
-            float valueAtMax = 0.0;
-            float max = leftbin + CubicMaximize(mProcessed[leftbin],
-                                                mProcessed[leftbin + 1],
-                                                mProcessed[leftbin + 2],
-                                                mProcessed[leftbin + 3], &valueAtMax);
-
-            float thispeak;
-            if (alg == 0)
-               thispeak = max * mRate / mWindowSize;
-            else
-               thispeak = max / mRate;
-
-            if (fabs(thispeak - xPos) < bestdist) {
-               bestpeak = thispeak;
-               bestdist = fabs(thispeak - xPos);
-               bestValue = valueAtMax;
-               if (thispeak > xPos)
-                  break;
-            }
-         }
-         up = nowUp;
-      }
+      float bestValue = 0;
+      float bestpeak = mAnalyst->FindPeak(xPos, &bestValue);
 
       int px;
       if (mLogAxis)
@@ -861,10 +895,10 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
 
       if (mLogAxis) {
          xPos = xMin * pow(xStep, mMouseX - (r.x + 1));
-         value = GetProcessedValue(xPos, xPos * xStep);
+         value = mAnalyst->GetProcessedValue(xPos, xPos * xStep);
       } else {
          xPos = xMin + xStep * (mMouseX - (r.x + 1));
-         value = GetProcessedValue(xPos, xPos + xStep);
+         value = mAnalyst->GetProcessedValue(xPos, xPos + xStep);
       }
 
       wxString info;
@@ -873,7 +907,7 @@ void FreqWindow::PlotPaint(wxPaintEvent & evt)
       const wxChar *xp;
       const wxChar *pp;
 
-      if (alg == 0) {
+      if (alg == SpectrumAnalyst::Spectrum) {
          xpitch = PitchName_Absolute(FreqToMIDInote(xPos));
          peakpitch = PitchName_Absolute(FreqToMIDInote(bestpeak));
          xp = xpitch.c_str();
@@ -946,41 +980,80 @@ void FreqWindow::Plot()
 void FreqWindow::Recalc()
 {
    //wxLogDebug(wxT("Starting FreqWindow::Recalc()"));
-   if (mProcessed)
-      delete[] mProcessed;
-   mProcessed = NULL;
 
    if (!mData) {
       mFreqPlot->Refresh(true);
       return;
    }
 
-   int alg = mAlgChoice->GetSelection();
+   SpectrumAnalyst::Algorithm alg =
+      SpectrumAnalyst::Algorithm(mAlgChoice->GetSelection());
    int windowFunc = mFuncChoice->GetSelection();
    long windowSize = 0;
    (mSizeChoice->GetStringSelection()).ToLong(&windowSize);
+   mWindowSize = windowSize;
 
+   //Progress dialog over FFT operation
+   std::auto_ptr<ProgressDialog> progress
+      (new ProgressDialog(_("Plot Spectrum"),_("Drawing Spectrum")));
+
+   if(!mAnalyst->Calculate(alg, windowFunc, mWindowSize, mRate,
+                           mData, mDataLen,
+                           &mYMin, &mYMax, progress.get())) {
+      mFreqPlot->Refresh(true);
+      return;
+   }
+
+   if (alg == SpectrumAnalyst::Spectrum) {
+      if(mYMin < -dBRange)
+         mYMin = -dBRange;
+      if(mYMax <= -dBRange)
+         mYMax = -dBRange + 10.; // it's all out of range, but show a scale.
+      else
+         mYMax += .5;
+   }
+
+   //wxLogDebug(wxT("About to draw plot in FreqWindow::Recalc()"));
+   DrawPlot();
+   mFreqPlot->Refresh(true);
+}
+
+bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
+                                int windowSize, double rate,
+                                const float *data, int dataLen,
+                                float *pYMin, float *pYMax,
+                                ProgressDialog *progress)
+{
+   // Wipe old data
+   mProcessed.resize(0);
+   mRate = 0.0;
+   mWindowSize = 0;
+
+   // Validate inputs
    int f = NumWindowFuncs();
 
    if (!(windowSize >= 32 && windowSize <= 65536 &&
-         alg >= 0 && alg <= 4 && windowFunc >= 0 && windowFunc < f)) {
-      mFreqPlot->Refresh(true);
-      return;
+         alg >= SpectrumAnalyst::Spectrum &&
+         alg < SpectrumAnalyst::NumAlgorithms &&
+         windowFunc >= 0 && windowFunc < f)) {
+      return false;
    }
 
+   if (dataLen < windowSize) {
+      return false;
+   }
+
+   // Now repopulate
+   mRate = rate;
    mWindowSize = windowSize;
+   mAlg = alg;
 
-   if (mDataLen < mWindowSize) {
-      mFreqPlot->Refresh(true);
-      return;
-   }
-
-   mProcessed = new float[mWindowSize];
+   int half = mWindowSize / 2;
+   mProcessed.resize(mWindowSize);
 
    int i;
    for (i = 0; i < mWindowSize; i++)
       mProcessed[i] = float(0.0);
-   int half = mWindowSize / 2;
 
    float *in = new float[mWindowSize];
    float *in2 = new float[mWindowSize];
@@ -1002,26 +1075,23 @@ void FreqWindow::Recalc()
    else
       wss = 1.0;
 
-   //Progress dialog over FFT operation
-   ProgressDialog *mProgress = new ProgressDialog(_("Plot Spectrum"),_("Drawing Spectrum"));
-
    int start = 0;
    int windows = 0;
-   while (start + mWindowSize <= mDataLen) {
+   while (start + mWindowSize <= dataLen) {
       for (i = 0; i < mWindowSize; i++)
-         in[i] = win[i] * mData[start + i];
+         in[i] = win[i] * data[start + i];
 
-      switch (alg) {
-      case 0:                  // Spectrum
+   switch (alg) {
+      case Spectrum:
          PowerSpectrum(mWindowSize, in, out);
 
          for (i = 0; i < half; i++)
             mProcessed[i] += out[i];
          break;
 
-      case 1:
-      case 2:
-      case 3:   // Autocorrelation, Cuberoot AC or Enhanced AC
+      case Autocorrelation:
+      case CubeRootAutocorrelation:
+      case EnhancedAutocorrelation:
 
          // Take FFT
 #ifdef EXPERIMENTAL_USE_REALFFTF
@@ -1033,11 +1103,12 @@ void FreqWindow::Recalc()
          for (i = 0; i < mWindowSize; i++)
             in[i] = (out[i] * out[i]) + (out2[i] * out2[i]);
 
-         if (alg == 1) {
+         if (alg == Autocorrelation) {
             for (i = 0; i < mWindowSize; i++)
                in[i] = sqrt(in[i]);
          }
-         if (alg == 2 || alg == 3) {
+         if (alg == CubeRootAutocorrelation ||
+             alg == EnhancedAutocorrelation) {
             // Tolonen and Karjalainen recommend taking the cube root
             // of the power, instead of the square root
 
@@ -1056,7 +1127,7 @@ void FreqWindow::Recalc()
             mProcessed[i] += out[i];
          break;
 
-      case 4:                  // Cepstrum
+      case Cepstrum:
 #ifdef EXPERIMENTAL_USE_REALFFTF
          RealFFT(mWindowSize, in, out, out2);
 #else
@@ -1065,44 +1136,51 @@ void FreqWindow::Recalc()
 
          // Compute log power
          // Set a sane lower limit assuming maximum time amplitude of 1.0
-         float power;
-         float minpower = 1e-20*mWindowSize*mWindowSize;
-         for (i = 0; i < mWindowSize; i++)
          {
-            power = (out[i] * out[i]) + (out2[i] * out2[i]);
-            if(power < minpower)
-               in[i] = log(minpower);
-            else
-               in[i] = log(power);
-         }
-         // Take IFFT
+            float power;
+            float minpower = 1e-20*mWindowSize*mWindowSize;
+            for (i = 0; i < mWindowSize; i++)
+            {
+               power = (out[i] * out[i]) + (out2[i] * out2[i]);
+               if(power < minpower)
+                  in[i] = log(minpower);
+               else
+                  in[i] = log(power);
+            }
+            // Take IFFT
 #ifdef EXPERIMENTAL_USE_REALFFTF
-         InverseRealFFT(mWindowSize, in, NULL, out);
+            InverseRealFFT(mWindowSize, in, NULL, out);
 #else
-         FFT(mWindowSize, true, in, NULL, out, out2);
+            FFT(mWindowSize, true, in, NULL, out, out2);
 #endif
 
-         // Take real part of result
-         for (i = 0; i < half; i++)
-            mProcessed[i] += out[i];
+            // Take real part of result
+            for (i = 0; i < half; i++)
+               mProcessed[i] += out[i];
+         }
 
+         break;
+
+      default:
+         wxASSERT(false);
          break;
       }                         //switch
 
       start += half;
       windows++;
-      // only update the progress dialogue infrequently to reduce it's overhead
+      // only update the progress dialogue infrequently to reduce its overhead
       // If we do it every time, it spends as much time updating X11 as doing
       // the calculations. 10 seems a reasonable compromise on Linux that
       // doesn't make it unresponsive, but avoids the slowdown.
-      if ((windows % 10) == 0)
-         mProgress->Update(1 - static_cast<float>(mDataLen - start) / mDataLen);
+      if (progress && (windows % 10) == 0)
+         progress->Update(1 - static_cast<float>(dataLen - start) / dataLen);
    }
 
-   //wxLogDebug(wxT("Finished updating progress dialogue in FreqWindow::Recalc()"));
+   //wxLogDebug(wxT("Finished updating progress dialogue in SpectrumAnalyst::Recalc()"));
+   float mYMin = 1000000, mYMax = -1000000;
    switch (alg) {
    double scale;
-   case 0:                     // Spectrum
+   case Spectrum:
       // Convert to decibels
       mYMin = 1000000.;
       mYMax = -1000000.;
@@ -1115,19 +1193,10 @@ void FreqWindow::Recalc()
          else if(mProcessed[i] < mYMin)
             mYMin = mProcessed[i];
       }
-      if(mYMin < -dBRange)
-         mYMin = -dBRange;
-      if(mYMax <= -dBRange)
-         mYMax = -dBRange + 10.; // it's all out of range, but show a scale.
-      else
-         mYMax += .5;
-
-      mProcessedSize = half;
-      mYStep = 10;
       break;
 
-   case 1:                     // Standard Autocorrelation
-   case 2:                     // Cuberoot Autocorrelation
+   case Autocorrelation:
+   case CubeRootAutocorrelation:
       for (i = 0; i < half; i++)
          mProcessed[i] = mProcessed[i] / windows;
 
@@ -1139,13 +1208,9 @@ void FreqWindow::Recalc()
             mYMax = mProcessed[i];
          else if (mProcessed[i] < mYMin)
             mYMin = mProcessed[i];
-
-      mYStep = 1;
-
-      mProcessedSize = half;
       break;
 
-   case 3:                     // Enhanced Autocorrelation
+   case EnhancedAutocorrelation:
       for (i = 0; i < half; i++)
          mProcessed[i] = mProcessed[i] / windows;
 
@@ -1179,29 +1244,27 @@ void FreqWindow::Recalc()
             mYMax = mProcessed[i];
          else if (mProcessed[i] < mYMin)
             mYMin = mProcessed[i];
-
-      mYStep = 1;
-
-      mProcessedSize = half;
       break;
 
-   case 4:                     // Cepstrum
+   case Cepstrum:
       for (i = 0; i < half; i++)
          mProcessed[i] = mProcessed[i] / windows;
 
       // Find min/max, ignoring first and last few values
-      int ignore = 4;
-      mYMin = mProcessed[ignore];
-      mYMax = mProcessed[ignore];
-      for (i = ignore + 1; i < half - ignore; i++)
-         if (mProcessed[i] > mYMax)
-            mYMax = mProcessed[i];
-         else if (mProcessed[i] < mYMin)
-            mYMin = mProcessed[i];
+      {
+         int ignore = 4;
+         mYMin = mProcessed[ignore];
+         mYMax = mProcessed[ignore];
+         for (i = ignore + 1; i < half - ignore; i++)
+            if (mProcessed[i] > mYMax)
+               mYMax = mProcessed[i];
+            else if (mProcessed[i] < mYMin)
+               mYMin = mProcessed[i];
+      }
+      break;
 
-      mYStep = 1;
-
-      mProcessedSize = half;
+   default:
+      wxASSERT(false);
       break;
    }
 
@@ -1211,10 +1274,12 @@ void FreqWindow::Recalc()
    delete[]out2;
    delete[]win;
 
-   //wxLogDebug(wxT("About to draw plot in FreqWindow::Recalc()"));
-   DrawPlot();
-   mFreqPlot->Refresh(true);
-   delete mProgress;
+   if (pYMin)
+      *pYMin = mYMin;
+   if (pYMax)
+      *pYMax = mYMax;
+
+   return true;
 }
 
 void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
@@ -1241,17 +1306,19 @@ void FreqWindow::OnExport(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
+   const int processedSize = mAnalyst->GetProcessedSize();
+   const float *const processed = mAnalyst->GetProcessed();
    if (mAlgChoice->GetSelection() == 0) {
       f.AddLine(_("Frequency (Hz)\tLevel (dB)"));
-      for (int i = 1; i < mProcessedSize; i++)
+      for (int i = 1; i < processedSize; i++)
          f.AddLine(wxString::
                    Format(wxT("%f\t%f"), i * mRate / mWindowSize,
-                          mProcessed[i]));
+                          processed[i]));
    } else {
       f.AddLine(_("Lag (seconds)\tFrequency (Hz)\tLevel"));
-      for (int i = 1; i < mProcessedSize; i++)
+      for (int i = 1; i < processedSize; i++)
          f.AddLine(wxString::Format(wxT("%f\t%f\t%f"),
-                                    i / mRate, mRate / i, mProcessed[i]));
+                                    i / mRate, mRate / i, processed[i]));
    }
 
 #ifdef __WXMAC__

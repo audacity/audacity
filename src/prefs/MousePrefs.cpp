@@ -33,6 +33,7 @@
 *//********************************************************************/
 
 #include "../Audacity.h"
+#include "../Experimental.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
@@ -105,6 +106,14 @@ void MousePrefs::CreateList()
    AddItem(_("Left-Double-Click"), _("Select"),   _("Select Clip or Entire Track"));
    AddItem(_("Ctrl-Left-Click"),   _("Select"),   _("Set Selection Point and Play"));
 
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   // Spectral selection
+   AddItem(_("Alt-Shift-Left-Click"), _("Select"), _("Adjust high or low frequency"));
+   AddItem(_("Alt-Left-Drag"),    _("Select"),    _("Adjust bandwidth"));
+   AddItem(_("Alt-Ctrl"),         _("Select"),    _("Unpin center frequency"));
+   AddItem(_("Alt-Move"),         _("Select"),    _("Snap center frequency to peaks"));
+#endif
+
    AddItem(_("Left-Click"),       _("Zoom"),      _("Zoom in on Point"));
    AddItem(_("Left-Drag"),        _("Zoom"),      _("Zoom in on a Range"), _("same as right-drag"));
    AddItem(_("Right-Click"),      _("Zoom"),      _("Zoom out one step"));
@@ -130,6 +139,14 @@ void MousePrefs::CreateList()
    AddItem(_("Left-Drag"),        _("Multi"),     _("Set Selection Range"), _("same as select tool"));
    AddItem(_("Right-Click"),      _("Multi"),     _("Zoom out one step"),   _("same as zoom tool"));
    AddItem(_("Right-Drag"),       _("Multi"),     _("Zoom in on a Range"),  _("same as zoom tool"));
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   // Spectral selection
+   AddItem(_("Alt-Shift-Left-Click"), _("Multi"), _("Adjust high or low frequency"),   _("same as select tool"));
+   AddItem(_("Alt-Left-Drag"),    _("Multi"),     _("Adjust bandwidth"),               _("same as select tool"));
+   AddItem(_("Alt-Ctrl"),         _("Multi"),     _("Unpin center frequency"),         _("same as select tool"));
+   AddItem(_("Alt-Move"),         _("Multi"),     _("Snap center frequency to peaks"), _("same as select tool"));
+#endif
 
    AddItem(_("Wheel-Rotate"),      _("Any"),      _("Scroll up or down"));
    AddItem(_("Shift-Wheel-Rotate"),_("Any"),      _("Scroll left or right"));

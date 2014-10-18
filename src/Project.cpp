@@ -92,6 +92,7 @@ scroll information.  It also has some status flags.
 
 #include "Project.h"
 
+#include "FreqWindow.h"
 #include "AutoRecovery.h"
 #include "AudacityApp.h"
 #include "AColor.h"

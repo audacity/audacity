@@ -23,13 +23,12 @@
 #include "DirManager.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "TrackPanel.h"
+#include "TrackPanelListener.h"
 #include "AudioIO.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "xml/XMLTagHandler.h"
-#include "toolbars/SelectionBar.h"
-#include "FreqWindow.h"
+#include "toolbars/SelectionBarListener.h"
 
 #include <wx/defs.h>
 #include <wx/event.h>
@@ -56,13 +55,16 @@ class RecordingRecoveryHandler;
 class TrackList;
 class Tags;
 
+class TrackPanel;
+class FreqWindow;
+
 // toolbar classes
 class ControlToolBar;
 class DeviceToolBar;
 class EditToolBar;
 class MeterToolBar;
 class MixerToolBar;
-class SelectionToolBar;
+class SelectionBar;
 class Toolbar;
 class ToolManager;
 class ToolsToolBar;
@@ -365,7 +367,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    LyricsWindow* GetLyricsWindow() { return mLyricsWindow; };
    MixerBoard* GetMixerBoard() { return mMixerBoard; };
 
-   // SelectionBar callback methods
+   // SelectionBarListener callback methods
 
    virtual double AS_GetRate();
    virtual void AS_SetRate(double rate);
