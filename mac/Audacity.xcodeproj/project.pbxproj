@@ -3101,6 +3101,9 @@
 		2801A6430BF9268700648258 /* ImportQT.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportQT.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2801A6440BF9268700648258 /* ImportQT.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ImportQT.h; sourceTree = "<group>"; tabWidth = 3; };
 		2803810018313B070078452A /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lame.h; path = lame/lame/lame.h; sourceTree = "<group>"; };
+		2803C8B519F35AA000278526 /* PluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginManager.h; sourceTree = "<group>"; };
+		2803C8B619F35AA000278526 /* TrackPanelListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelListener.h; sourceTree = "<group>"; };
+		2803C8BB19F35B4900278526 /* SelectionBarListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionBarListener.h; sourceTree = "<group>"; };
 		2808025B0F32C11F0021001D /* bug.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = bug.lsp; path = ../nyquist/bug.lsp; sourceTree = SOURCE_ROOT; };
 		2808025C0F32C11F0021001D /* dspprims.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = dspprims.lsp; path = ../nyquist/dspprims.lsp; sourceTree = SOURCE_ROOT; };
 		2808025D0F32C11F0021001D /* envelopes.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = envelopes.lsp; path = ../nyquist/envelopes.lsp; sourceTree = SOURCE_ROOT; };
@@ -5041,6 +5044,7 @@
 				1790B0B309883BFD008A330A /* PlatformCompatibility.cpp */,
 				1790B0B409883BFD008A330A /* PlatformCompatibility.h */,
 				287E207E102561F300BF47A2 /* PluginManager.cpp */,
+				2803C8B519F35AA000278526 /* PluginManager.h */,
 				1790B0CC09883BFD008A330A /* Prefs.cpp */,
 				1790B0CD09883BFD008A330A /* Prefs.h */,
 				1790B0CE09883BFD008A330A /* Printing.cpp */,
@@ -5099,6 +5103,7 @@
 				1790B0ED09883BFD008A330A /* TrackPanel.h */,
 				1790B0EE09883BFD008A330A /* TrackPanelAx.cpp */,
 				1790B0EF09883BFD008A330A /* TrackPanelAx.h */,
+				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
 				1790B0F609883BFD008A330A /* ViewInfo.h */,
@@ -6281,6 +6286,7 @@
 				2897F6E30AB3DB5A003C20C5 /* MixerToolBar.h */,
 				2897F6E40AB3DB5A003C20C5 /* SelectionBar.cpp */,
 				2897F6E50AB3DB5A003C20C5 /* SelectionBar.h */,
+				2803C8BB19F35B4900278526 /* SelectionBarListener.h */,
 				2897F6E60AB3DB5A003C20C5 /* ToolBar.cpp */,
 				2897F6E70AB3DB5A003C20C5 /* ToolBar.h */,
 				2897F6E80AB3DB5A003C20C5 /* ToolDock.cpp */,
