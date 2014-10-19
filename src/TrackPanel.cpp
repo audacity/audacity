@@ -1606,7 +1606,7 @@ void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 // Seems 4 is too small to work at the top.  Why?
-enum { FREQ_SNAP_DISTANCE = 10 };
+#define FREQ_SNAP_DISTANCE 10
 #endif
 
 // The select tool can have different cursors and prompts depending on what
