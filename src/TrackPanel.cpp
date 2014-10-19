@@ -8431,8 +8431,8 @@ void TrackPanel::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
          t->SetRangeLower((double)lower / 100.0);
          t->SetRangeUpper((double)upper / 100.0);
          MakeParentPushState(wxString::Format(_("Set range to '%d' - '%d'"),
-                                              lower,
-                                              upper),
+                                              (int) lower,
+                                              (int) upper),
       /* i18n-hint: (verb)*/
 
                              _("Set Range"));
@@ -8687,7 +8687,7 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
          /* i18n-hint: (noun) The size of the typeface*/
          S.AddPrompt(_("Face size"));
          sc = new wxSpinCtrl(&dlg, wxID_ANY,
-                             wxString::Format(wxT("%d"), fontsize),
+                             wxString::Format(wxT("%d"), (int) fontsize),
                              wxDefaultPosition,
                              wxDefaultSize,
                              wxSP_ARROW_KEYS,

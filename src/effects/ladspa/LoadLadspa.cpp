@@ -147,7 +147,7 @@ static void LoadLadspaEffect(wxSortedArrayString &uniq, wxString fname,
       data = mainFn(index);
       while(data) {
 
-         wxString uniqid = wxString::Format(wxT("%08x-%s"), data->UniqueID, LAT1CTOWX(data->Label).c_str());
+         wxString uniqid = wxString::Format(wxT("%08x-%s"), (int)data->UniqueID, LAT1CTOWX(data->Label).c_str());
          if (uniq.Index(uniqid) == wxNOT_FOUND) {
             uniq.Add(uniqid);
             std::set<wxString> categories;

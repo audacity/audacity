@@ -1487,7 +1487,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
          S.StartHorizontalLay();
          {
             rate = S.AddTextBox(_("Meter refresh rate per second [1-100]: "),
-                                wxString::Format(wxT("%d"), mMeterRefreshRate),
+                                wxString::Format(wxT("%d"), (int) mMeterRefreshRate),
                                 10);
             rate->SetName(_("Meter refresh rate per second [1-100]"));
             wxIntegerValidator<long> vld(&mMeterRefreshRate);
