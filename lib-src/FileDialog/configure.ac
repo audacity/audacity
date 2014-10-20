@@ -72,11 +72,11 @@ AC_SUBST([WX_LIBS])
 
 AC_SUBST(HAVE_GTK)
 if [[ "$enable_gtk3" = yes ]]; then
-   PKG_CHECK_MODULES(GTK, gtk+-3.0, have_gtk=yes, have_gtk=no)
+   gtk_version=gtk+-3.0
 else
-   PKG_CHECK_MODULES(GTK, gtk+-2.0, have_gtk=yes, have_gtk=no)
+   gtk_version=gtk+-2.0
 fi
-PKG_CHECK_MODULES(GTK, $gtk_version, have_gtk=yes, have_gtk=no)
+PKG_CHECK_MODULES(GTK, $gtk_version, have_gtk="yes", have_gtk="no")
 
 dnl OS-specific configuration
 
