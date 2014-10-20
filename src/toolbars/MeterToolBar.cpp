@@ -79,19 +79,8 @@ void MeterToolBar::Populate()
    mSizer = new wxGridBagSizer();
    Add( mSizer, 1, wxEXPAND );
 
-   mPlayMeter = new Meter( this,
-                           wxID_ANY,
-                           false,
-                           wxDefaultPosition,
-                           wxSize( 130, 55 ) );
-   /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.*/
-   mPlayMeter->SetName( _("Play Meter"));
-   /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-    This is the name used in screen reader software, where having 'Meter' first
-    apparently is helpful to partially sighted people.  */
-   mPlayMeter->SetLabel( _("Meter-Play"));
-   mSizer->Add( mPlayMeter, wxGBPosition( 0, 0 ), wxDefaultSpan, wxEXPAND );
-
+   //JKC: Record on left, playback on right.  Left to right flow
+   //(maybe we should do it differently for Arabic language :-)  )
    mRecordMeter = new Meter( this,
                              wxID_ANY,
                              true,
@@ -103,7 +92,21 @@ void MeterToolBar::Populate()
     This is the name used in screen reader software, where having 'Meter' first
     apparently is helpful to partially sighted people.  */
    mRecordMeter->SetLabel( _("Meter-Record") );
-   mSizer->Add( mRecordMeter, wxGBPosition( 0, 1 ), wxDefaultSpan, wxEXPAND );
+   mSizer->Add( mRecordMeter, wxGBPosition( 0, 0 ), wxDefaultSpan, wxEXPAND );
+
+
+   mPlayMeter = new Meter( this,
+                           wxID_ANY,
+                           false,
+                           wxDefaultPosition,
+                           wxSize( 130, 55 ) );
+   /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.*/
+   mPlayMeter->SetName( _("Play Meter"));
+   /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.
+    This is the name used in screen reader software, where having 'Meter' first
+    apparently is helpful to partially sighted people.  */
+   mPlayMeter->SetLabel( _("Meter-Play"));
+   mSizer->Add( mPlayMeter, wxGBPosition( 0, 1 ), wxDefaultSpan, wxEXPAND );
 
    RegenerateTooltips();
 }
@@ -162,7 +165,7 @@ void MeterToolBar::OnSize( wxSizeEvent & WXUNUSED(event) )
    wxSize sz = GetSizer()->GetSize();
    width = sz.x; height = sz.y;
 
-   // Default location for record meter
+   // Default location for play meter
    wxGBPosition pos( 0, 1 );
 
    // Two horizontal
@@ -171,32 +174,32 @@ void MeterToolBar::OnSize( wxSizeEvent & WXUNUSED(event) )
       if( height > 120 )
       {
          // Stacked
-         mPlayMeter->SetMinSize( wxSize( width, ( height / 2 ) ) );
          mRecordMeter->SetMinSize( wxSize( width, ( height / 2 ) ) );
+         mPlayMeter->SetMinSize( wxSize( width, ( height / 2 ) ) );
          pos.SetCol( 0 );
          pos.SetRow( 1 );
       }
       else
       {
          // Side-by-side
-         mPlayMeter->SetMinSize( wxSize( ( width / 2 ), height ) );
          mRecordMeter->SetMinSize( wxSize( ( width / 2 ), height ) );
+         mPlayMeter->SetMinSize( wxSize( ( width / 2 ), height ) );
       }
 
-      mPlayMeter->SetStyle(Meter::HorizontalStereo);
       mRecordMeter->SetStyle(Meter::HorizontalStereo);
+      mPlayMeter->SetStyle(Meter::HorizontalStereo);
    }
    else
    {
       // Two vertical, side-by-side
-      mPlayMeter->SetMinSize( wxSize( ( width / 2 ), height ) );
       mRecordMeter->SetMinSize( wxSize( ( width / 2 ), height ) );
-      mPlayMeter->SetStyle(Meter::VerticalStereo);
+      mPlayMeter->SetMinSize( wxSize( ( width / 2 ), height ) );
       mRecordMeter->SetStyle(Meter::VerticalStereo);
+      mPlayMeter->SetStyle(Meter::VerticalStereo);
    }
 
-   // Position the record meter
-   mSizer->SetItemPosition( mRecordMeter, pos );
+   // Position the play meter
+   mSizer->SetItemPosition( mPlayMeter, pos );
 
    // And make it happen
    Layout();
