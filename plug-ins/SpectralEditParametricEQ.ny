@@ -1,7 +1,7 @@
 ;nyquist plug-in
 ;version 3
 ;type process
-;name "Spectral edit parametric EQ"
+;name "Spectral edit parametric EQ..."
 ;action "Calculating..."
 
 ;control control-gain "Gain (dB)" real "" 0 -24 24

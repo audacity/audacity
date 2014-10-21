@@ -1,7 +1,7 @@
 ;nyquist plug-in
 ;version 3
 ;type process
-;name "Spectral edit shelves"
+;name "Spectral edit shelves..."
 ;action "Calculating..."
 
 ;control control-gain "Gain (dB)" real "" 0 -24 24
