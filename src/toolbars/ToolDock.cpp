@@ -283,6 +283,7 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
    // Set initial stack entry to maximum size
    stack[ 0 ].SetX( toolbarGap );
    stack[ 0 ].SetY( toolbarGap );
+   // The stack width and height are the remaining width and height.
    stack[ 0 ].SetWidth( width );
    stack[ 0 ].SetHeight( height );
 
@@ -341,9 +342,14 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
       int tw = sz.GetWidth() + toolbarGap;
       int th = sz.GetHeight() + toolbarGap;
 
-      // Will this one fit in remaining horizontal space?
-      if( ( tw > stack[ stkcnt ].GetWidth() ) ||
-          ( th > stack[ stkcnt ].GetHeight() ) )
+
+      // Will this one fit in remaining space?
+      bool bTooWide = tw > stack[stkcnt].GetWidth();
+      // We'd like to be able to add a tall toolbar in at the start of a row,
+      // even if there isn't enough height for it.
+      // If so, we'd have to at least change how we calculate 'bTooHigh'.
+      bool bTooHigh = th > stack[stkcnt].GetHeight();
+      if( bTooWide || bTooHigh )
       {
          // Destack entries until one is found in which this bar
          // will fit or until we run out of stacked entries
@@ -351,9 +357,12 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
          {
             stkcnt--;
 
+
             // Get out if it will fit
-            if( ( tw <= stack[ stkcnt ].GetWidth() ) &&
-                ( th <= stack[ stkcnt ].GetHeight() ) )
+            bTooWide = tw > stack[stkcnt].GetWidth();
+            bTooHigh = th > stack[stkcnt].GetHeight();
+
+            if( !bTooWide && !bTooHigh )
             {
                break;
             }
@@ -367,7 +376,8 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
       // We'll be using at least a portion of this stack entry, so
       // adjust the location and size.  It is possible that these
       // will become zero if this entry and the toolbar have the
-      // same height.  This is what we want as it will be destacked
+      // same height, or negative if we've added a taller toolbar at the
+      // start of a row.  This is (?) what we want as it will be destacked
       // in the next iteration.
       stack[ stkcnt ].SetY(      stack[ stkcnt ].GetY()      + th );
       stack[ stkcnt ].SetHeight( stack[ stkcnt ].GetHeight() - th );
