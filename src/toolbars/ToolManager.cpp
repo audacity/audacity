@@ -1003,7 +1003,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
             mIndicator->Hide();
 
             // Decide which direction the arrow should point
-            if( r.GetBottom() >= dr.GetHeight() )
+            if( r.GetTop() >= dr.GetHeight() )
             {
                p.x = dr.GetLeft() + ( dr.GetWidth() / 2 );
                p.y = dr.GetBottom() - mDown->GetBox().GetHeight();

@@ -291,46 +291,47 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
    //
    // Careful...slightly different from above in that we expect to
    // process one more bar than is currently docked (<= in for)
-   for( ndx = 0, ct = 0; ndx <= cnt; ndx++, ct++ )
+   for (ndx = 0, ct = 0; ndx <= cnt; ndx++, ct++)
    {
-      // We're on the last entry...
-      if( ndx == cnt )
+      // If last entry, then it is the 
+      if (ndx == cnt)
       {
          // ...so check to see if the new bar has been placed yet
-         if( tindx == -1 )
+         if (tindx == -1)
          {
             // Add the new bars' dimensions to the mix
-            tinfo[ ct ].rect = t->GetRect();
-            tinfo[ ct ].min = t->GetMinSize();
+            tinfo[ct].rect = t->GetRect();
+            tinfo[ct].min = t->GetMinSize();
             tindx = ct;
          }
       }
       else
       {
          // Cache toolbar pointer
-         ToolBar *b = (ToolBar *) mDockedBars[ ndx ];
+         ToolBar *b = (ToolBar *)mDockedBars[ndx];
 
          // Remember current bars' dimensions
-         tinfo[ ct ].rect = b->GetRect();
-         tinfo[ ct ].min = b->GetSize();
+         tinfo[ct].rect = b->GetRect();
+         tinfo[ct].min = b->GetSize();
 
-         // Insert the new bar if it hasn't already been done
-         if( tindx == -1 )
+         // Maybe insert the new bar if it hasn't already been done
+         // and is in the right place.
+         if (tindx == -1)
          {
             wxRect r;
 
             // Get bar rect and make gap part of it
-            r.SetPosition( b->GetParent()->ClientToScreen( b->GetPosition() ) );
-            r.SetSize( b->IsResizable() ? b->GetSize() : b->GetSize() );
+            r.SetPosition(b->GetParent()->ClientToScreen(b->GetPosition()));
+            r.SetSize(b->IsResizable() ? b->GetSize() : b->GetSize());
             r.width += toolbarGap;
             r.height += toolbarGap;
 
             // Does the location fall within this bar?
-            if( r.Contains( pos ) || pos.y <= r.y )
+            if (r.Contains(pos) || pos.y <= r.y)
             {
                // Add the new bars' dimensions to the mix
-               tinfo[ ct ].rect = t->GetRect();
-               tinfo[ ct ].min = t->GetSize();
+               tinfo[ct].rect = t->GetRect();
+               tinfo[ct].min = t->GetSize();
                tindx = ct;
                ndx--;
             }
@@ -338,78 +339,69 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
       }
 
       // Get and cache the toolbar sizes
-      wxSize sz = tinfo[ ct ].min;
+      wxSize sz = tinfo[ct].min;
       int tw = sz.GetWidth() + toolbarGap;
       int th = sz.GetHeight() + toolbarGap;
 
-
-      // Will this one fit in remaining space?
-      bool bTooWide = tw > stack[stkcnt].GetWidth();
-      // We'd like to be able to add a tall toolbar in at the start of a row,
-      // even if there isn't enough height for it.
-      // If so, we'd have to at least change how we calculate 'bTooHigh'.
-      bool bTooHigh = th > stack[stkcnt].GetHeight();
-      if( bTooWide || bTooHigh )
+      // This loop reduces stkcnt until it gives a box
+      // that we fit in.
+      while (stkcnt > 0)
       {
-         // Destack entries until one is found in which this bar
-         // will fit or until we run out of stacked entries
-         while( stkcnt > 0 )
-         {
-            stkcnt--;
+         // Get out if it will fit
+         bool bTooWide = tw > stack[stkcnt].GetWidth();
+         // We'd like to be able to add a tall toolbar in at the start of a row,
+         // even if there isn't enough height for it.
+         // If so, we'd have to at least change how we calculate 'bTooHigh'.
+         bool bTooHigh = th > stack[stkcnt].GetHeight();
+         //bTooHigh &= stack[stkcnt].GetWidth() < (width - toolbarGap);
+         //bTooHigh = false;
 
-
-            // Get out if it will fit
-            bTooWide = tw > stack[stkcnt].GetWidth();
-            bTooHigh = th > stack[stkcnt].GetHeight();
-
-            if( !bTooWide && !bTooHigh )
-            {
-               break;
-            }
-         }
+         if (!bTooWide && !bTooHigh)
+            break;
+         stkcnt--;
       }
 
       // The current stack entry position is where the bar
       // will be placed.
-      cpos = stack[ stkcnt ].GetPosition();
+      cpos = stack[stkcnt].GetPosition();
 
       // We'll be using at least a portion of this stack entry, so
       // adjust the location and size.  It is possible that these
       // will become zero if this entry and the toolbar have the
-      // same height, or negative if we've added a taller toolbar at the
-      // start of a row.  This is (?) what we want as it will be destacked
+      // same height.  This is (?) what we want as it will be destacked
       // in the next iteration.
-      stack[ stkcnt ].SetY(      stack[ stkcnt ].GetY()      + th );
-      stack[ stkcnt ].SetHeight( stack[ stkcnt ].GetHeight() - th );
+      stack[stkcnt].SetY(stack[stkcnt].GetY() + th);
+      stack[stkcnt].SetHeight(stack[stkcnt].GetHeight() - th);
 
       // Calc the next possible horizontal location.
       int x = cpos.x + tw;
 
       // Add a new stack entry
       stkcnt++;
-      stack[ stkcnt ].SetX( x );
-      stack[ stkcnt ].SetY( cpos.y );
-      stack[ stkcnt ].SetWidth( width - x );
-      stack[ stkcnt ].SetHeight( th );
+      stack[stkcnt].SetX(x);
+      stack[stkcnt].SetY(cpos.y);
+      stack[stkcnt].SetWidth(width - x);
+      stack[stkcnt].SetHeight(th);
 
       // Position the previous toolbar
-      if( ndx > 0 )
+      if (ndx > 0)
       {
          // Place the unstretched toolbar
-         tinfo[ lt ].rect.x = lpos.x;
-         tinfo[ lt ].rect.y = lpos.y;
-      }
-
-      // Place and stretch the final toolbar
-      if( ndx == cnt )
-      {
-         tinfo[ ct ].rect.x = cpos.x;
-         tinfo[ ct ].rect.y = cpos.y;
+         tinfo[lt].rect.x = lpos.x;
+         tinfo[lt].rect.y = lpos.y;
       }
 
       // Remember for next iteration
       lt = ct;
       lpos = cpos;
+
+      // If we've placed it, we're done.
+      if (tindx != -1)
+      {      
+         tinfo[tindx].rect.x = cpos.x;
+         tinfo[tindx].rect.y = cpos.y;
+         break;
+      }
    }
 
    // Fill in the final position
