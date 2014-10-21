@@ -82,18 +82,6 @@ void MixerToolBar::RecreateTipWindows()
 
 void MixerToolBar::Populate()
 {
-   mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
-
-   Add(new wxStaticBitmap(this,
-                          wxID_ANY,
-                          *mPlayBitmap), 0, wxALIGN_CENTER);
-
-   mOutputSlider = new ASlider(this, wxID_ANY, _("Playback Volume"),
-                               wxDefaultPosition, wxSize(130, 25));
-   mOutputSlider->SetScroll(0.1f, 2.0f);
-   mOutputSlider->SetName(_("Slider Playback"));
-   Add(mOutputSlider, 0, wxALIGN_CENTER);
-
    mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
 
    Add(new wxStaticBitmap(this,
@@ -106,20 +94,32 @@ void MixerToolBar::Populate()
    mInputSlider->SetName(_("Slider Recording"));
    Add(mInputSlider, 0, wxALIGN_CENTER);
 
+   mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
+
+   Add(new wxStaticBitmap(this,
+                          wxID_ANY,
+                          *mPlayBitmap), 0, wxALIGN_CENTER);
+
+   mOutputSlider = new ASlider(this, wxID_ANY, _("Playback Volume"),
+                               wxDefaultPosition, wxSize(130, 25));
+   mOutputSlider->SetScroll(0.1f, 2.0f);
+   mOutputSlider->SetName(_("Slider Playback"));
+   Add(mOutputSlider, 0, wxALIGN_CENTER);
+
    // this bit taken from SelectionBar::Populate()
-   mOutputSlider->Connect(wxEVT_SET_FOCUS,
-                 wxFocusEventHandler(MixerToolBar::OnFocus),
-                 NULL,
-                 this);
-   mOutputSlider->Connect(wxEVT_KILL_FOCUS,
-                 wxFocusEventHandler(MixerToolBar::OnFocus),
-                 NULL,
-                 this);
    mInputSlider->Connect(wxEVT_SET_FOCUS,
                  wxFocusEventHandler(MixerToolBar::OnFocus),
                  NULL,
                  this);
    mInputSlider->Connect(wxEVT_KILL_FOCUS,
+                 wxFocusEventHandler(MixerToolBar::OnFocus),
+                 NULL,
+                 this);
+   mOutputSlider->Connect(wxEVT_SET_FOCUS,
+                 wxFocusEventHandler(MixerToolBar::OnFocus),
+                 NULL,
+                 this);
+   mOutputSlider->Connect(wxEVT_KILL_FOCUS,
                  wxFocusEventHandler(MixerToolBar::OnFocus),
                  NULL,
                  this);
@@ -154,12 +154,12 @@ void MixerToolBar::OnCaptureKey(wxCommandEvent &event)
    int keyCode = kevent->GetKeyCode();
 
    // Pass LEFT/RIGHT/UP/DOWN/PAGEUP/PAGEDOWN through for input/output sliders
-   if (FindFocus() == mOutputSlider && (keyCode == WXK_LEFT || keyCode == WXK_RIGHT
+   if (FindFocus() == mInputSlider && (keyCode == WXK_LEFT || keyCode == WXK_RIGHT
                                     || keyCode == WXK_UP || keyCode == WXK_DOWN
                                     || keyCode == WXK_PAGEUP || keyCode == WXK_PAGEDOWN)) {
       return;
    }
-   if (FindFocus() == mInputSlider && (keyCode == WXK_LEFT || keyCode == WXK_RIGHT
+   if (FindFocus() == mOutputSlider && (keyCode == WXK_LEFT || keyCode == WXK_RIGHT
                                     || keyCode == WXK_UP || keyCode == WXK_DOWN
                                     || keyCode == WXK_PAGEUP || keyCode == WXK_PAGEDOWN)) {
       return;
