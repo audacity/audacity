@@ -1772,6 +1772,29 @@ static float sumFreqValues(float *freq, int x0, float bin0, float bin1)
    return value;
 }
 
+
+// Helper function to decide on which color set to use.
+// dashCount counts both dashes and the spaces between them. 
+AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBinLo, 
+   float selBinCenter, float selBinHi, int dashCount )
+{
+   if ( (selBinCenter >= 0) && (bin0 <= selBinCenter) && (selBinCenter < bin1) )
+      return AColor::ColorGradientEdge;
+   else if (
+      (0 == dashCount % 2)    &&
+      (((selBinLo >= 0) && (bin0 <= selBinLo) && ( selBinLo < bin1))  ||
+       ((selBinHi >= 0) && (bin0 <= selBinHi) && ( selBinHi < bin1)) ) )
+      return AColor::ColorGradientEdge;
+   else if (
+      (selBinLo < 0 || selBinLo < bin1) && 
+      (selBinHi < 0 || selBinHi > bin0) )
+      return  AColor::ColorGradientTimeAndFrequencySelected;
+   else
+      return  AColor::ColorGradientTimeSelected;
+}
+
+
+
 void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                                    WaveClip *clip,
                                    wxDC & dc,
@@ -1781,6 +1804,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                                    bool logF)
 {
    enum { MONOCHROME_LINE = 230, COLORED_LINE  = 0 };
+   enum { DASH_LENGTH = 10 /* pixels */ };
 
 #if PROFILE_WAVEFORM
 #  ifdef __WXMSW__
@@ -2045,28 +2069,18 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
             float bin0 = float (yy) * binPerPx + minSamples;
             float bin1 = float (yy + 1) * binPerPx + minSamples;
 
-            // For spectral selection, determine whether we
-            // are drawing a centre line, and what colour
+            // For spectral selection, determine what colour
             // set to use.  We use a darker selection if
             // in both spectral range and time range.
-            bool centerLine = false;
+
             AColor::ColorGradientChoice selected =
                AColor::ColorGradientUnselected;
-
+            // If we are in the time selected range, then we may use a differnt color set.
             if (ssel0 <= w0 && w1 < ssel1)
             {
-               if (selBinCenter >= 0 &&
-                   bin0 <= selBinCenter &&
-                   selBinCenter < bin1)
-                   centerLine = true;
-               else if((selBinLo < 0 || selBinLo < bin1) && 
-                  (selBinHi < 0 || selBinHi > bin0))
-                  selected =
-                  AColor::ColorGradientTimeAndFrequencySelected;
-               else
-                  selected =
-                  AColor::ColorGradientTimeSelected;
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH );
             }
+
 
             unsigned char rv, gv, bv;
             float value;
@@ -2108,11 +2122,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
             else
                value = clip->mSpecPxCache->values[x * mid.height + yy];
 
-            if(centerLine)
-               // Draw center frequency line
-               rv = gv = bv = (mIsGrayscale ? MONOCHROME_LINE : COLORED_LINE);
-            else
-               GetColorGradient(value, selected, mIsGrayscale, &rv, &gv, &bv);
+            GetColorGradient(value, selected, mIsGrayscale, &rv, &gv, &bv);
 
             int px = ((mid.height - 1 - yy) * mid.width + x) * 3;
             data[px++] = rv;
@@ -2206,22 +2216,12 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                yy3=0;
             float bin1 = float(yy3);
 
-            bool centerLine = false;
             AColor::ColorGradientChoice selected =
                AColor::ColorGradientUnselected;
+            // If we are in the time selected range, then we may use a differnt color set.
             if (ssel0 <= w0 && w1 < ssel1)
             {
-               if (selBinCenter >= 0 &&
-                   bin0 <= selBinCenter &&
-                   selBinCenter < bin1)
-                   centerLine = true;
-               else if((selBinLo < 0 || selBinLo < bin1) && 
-                  (selBinHi < 0 || selBinHi > bin0))
-                  selected =
-                  AColor::ColorGradientTimeAndFrequencySelected;
-               else
-                  selected =
-                  AColor::ColorGradientTimeSelected;
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH );
             }
 
             if(!usePxCache) {
@@ -2270,11 +2270,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                value = clip->mSpecPxCache->values[x * mid.height + yy];
             yy2 = yy2_base;
 
-            if(centerLine)
-               // Draw center frequency line
-               rv = gv = bv = (mIsGrayscale ? MONOCHROME_LINE : COLORED_LINE);
-            else
-               GetColorGradient(value, selected, mIsGrayscale, &rv, &gv, &bv);
+            GetColorGradient(value, selected, mIsGrayscale, &rv, &gv, &bv);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
             if (mFftYGrid && yGrid[yy]) {

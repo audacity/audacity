@@ -627,6 +627,14 @@ void AColor::PreComputeGradient() {
                      b *= 0.5f;
                      break;
 
+                  // For now edge colour is just black.
+                  // Later we might invert or something else funky.
+                  case ColorGradientEdge:
+                     // fully dimmed
+                     r = 0.0f;
+                     g = 0.0f;
+                     b = 0.0f;
+                     break;
                   }
                   gradient_pre[selected][grayscale][i][0] = (unsigned char) (255 * r);
                   gradient_pre[selected][grayscale][i][1] = (unsigned char) (255 * g);

@@ -27,6 +27,7 @@ class AColor {
       ColorGradientUnselected = 0,
       ColorGradientTimeSelected,
       ColorGradientTimeAndFrequencySelected,
+      ColorGradientEdge,
 
       ColorGradientTotal // keep me last
    };
