@@ -615,17 +615,18 @@ void AColor::PreComputeGradient() {
 
                   case ColorGradientTimeSelected:
                      // partly dimmed
-                     r *= 0.88f;
-                     g *= 0.88f;
-                     b *= 0.992f;
+                     r *= 0.75f;
+                     g *= 0.75f;
+                     b *= 0.75f;
                      break;
 
                   case ColorGradientTimeAndFrequencySelected:
                      // fully dimmed
-                     r *= 0.77f;
-                     g *= 0.77f;
-                     b *= 0.885f;
+                     r *= 0.5f;
+                     g *= 0.5f;
+                     b *= 0.5f;
                      break;
+
                   }
                   gradient_pre[selected][grayscale][i][0] = (unsigned char) (255 * r);
                   gradient_pre[selected][grayscale][i][1] = (unsigned char) (255 * g);
