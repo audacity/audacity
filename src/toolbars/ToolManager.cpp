@@ -949,7 +949,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
 
    // Retrieve the event position
    wxPoint pos =
-      ( (wxWindow *)event.GetEventObject() )->ClientToScreen( event.GetPosition() );
+      ( (wxWindow *)event.GetEventObject() )->ClientToScreen( event.GetPosition() ) - mDragOffset;
 
    // Button was released...finish the drag
    if( !event.LeftIsDown() )
@@ -990,7 +990,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
    else if( event.Dragging() && pos != mLastPos )
    {
       // Make toolbar follow the mouse
-      mDragWindow->Move( pos - mDragOffset );
+      mDragWindow->Move( pos  );
 
       // Remember to prevent excessive movement
       mLastPos = pos;
@@ -1044,8 +1044,8 @@ void ToolManager::OnMouse( wxMouseEvent & event )
             else
             {
                p.x = dr.GetLeft() + r.GetLeft();
-               p.y = dr.GetTop() + r.GetTop() +
-                     ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
+               p.y = dr.GetTop() + r.GetTop() + mLeft->GetBox().GetHeight() / 2;
+                     //JKC ( ( r.GetHeight() - mLeft->GetBox().GetHeight() ) / 2 );
                mCurrent = mLeft;
             }
 
