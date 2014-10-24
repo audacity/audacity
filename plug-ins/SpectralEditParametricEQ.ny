@@ -5,7 +5,8 @@
 ;action "Calculating..."
 
 ;control control-gain "Gain (dB)" real "" 0 -24 24
-
+;control control-f0 "Low Frequency" real "" 4000 0 20000
+;control control-f1 "High Frequency" real "" 4000 0 20000
 
 (defun wet (sig gain)
   (cond

@@ -4,6 +4,9 @@
 ;name "Spectral edit multi tool"
 ;action "Calculating..."
 
+;control control-f0 "Low Frequency" real "" 4000 0 20000
+;control control-f1 "High Frequency" real "" 4000 0 20000
+
 (defun wet (sig)
   (cond
    ((not (or *f0* *f1*)) (throw 'error-message "Please select frequencies"))

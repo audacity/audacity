@@ -334,7 +334,10 @@ void EffectNyquist::Parse(wxString line)
 
       ctrl.val = UNINITIALIZED_CONTROL;
 
-      mControls.Add(ctrl);
+      if( mPresetNames.Index( ctrl.var ) == wxNOT_FOUND )
+      {
+         mControls.Add(ctrl);
+      }
    }
 
    if (len >= 2 && tokens[0] == wxT("categories")) {
@@ -580,7 +583,12 @@ bool EffectNyquist::PromptUser()
    }
 
    if (!mExternal) {
-      if (mFileName.GetModificationTime().IsLaterThan(mFileModified)) {
+      //TODO: re-instate the caching of the lisp parsing so it is only done once.
+      //small efficiency gain.
+      //Disabled for now in order to allow number of controls to be varied easily
+      //depending on whether time or time-and-frequency were selected.
+      //if (mFileName.GetModificationTime().IsLaterThan(mFileModified)) 
+      {
          ParseFile();
          mFileModified = mFileName.GetModificationTime();
       }

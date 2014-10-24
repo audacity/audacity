@@ -121,6 +121,11 @@ class AUDACITY_DLL_API Effect {
       return true;
    }
 
+   void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ){
+      if( Names ) mPresetNames = *Names;
+      if( Values ) mPresetValues = *Values;
+   }
+
    void SetEffectFlags( int NewFlags )
    {
       mFlags = NewFlags;
@@ -221,6 +226,9 @@ class AUDACITY_DLL_API Effect {
    double         mF1;
 #endif
    TimeWarper     *mWarper;
+   wxArrayString  mPresetNames;
+   wxArrayString  mPresetValues;
+
 
  //
  // protected methods
