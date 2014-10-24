@@ -177,6 +177,11 @@ bool ToolBar::IsVisible()
    return mVisible;
 }
 
+void ToolBar::SetVisible( bool bVisible )
+{
+   mVisible = bVisible;
+}
+
 //
 // Show or hide the toolbar
 //
@@ -185,7 +190,7 @@ bool ToolBar::Expose( bool show )
    bool was = mVisible;
 
    mVisible = show;
-
+   
    if( IsDocked() )
    {
       Show( show );

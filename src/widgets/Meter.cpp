@@ -1334,13 +1334,9 @@ void Meter::StartMonitoring()
       AudacityProject *p = GetActiveProject();
       if (p) {
          gAudioIO->StartMonitoring(p->GetRate());
-
-         MeterToolBar *bar = p->GetMeterToolBar();
-         if (bar) {
-            Meter *play, *record;
-            bar->GetMeters(&play, &record);
-            gAudioIO->SetMeters(record, play);
-         }
+         Meter *play, *record;
+         MeterToolBars::GetMeters( &play, &record );
+         gAudioIO->SetMeters(record, play);
       }
    }
 

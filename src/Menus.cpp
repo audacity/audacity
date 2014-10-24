@@ -612,7 +612,11 @@ void AudacityProject::CreateMenusAndCommands()
    /* i18n-hint: Clicking this menu item shows the toolbar for editing*/
    c->AddCheck(wxT("ShowEditTB"), _("&Edit Toolbar"), FN(OnShowEditToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
    /* i18n-hint: Clicking this menu item shows the toolbar which has sound level meters*/
-   c->AddCheck(wxT("ShowMeterTB"), _("&Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+   c->AddCheck(wxT("ShowMeterTB"), _("&Combined Meter Toolbar"), FN(OnShowMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+   /* i18n-hint: Clicking this menu item shows the toolbar with the mixer*/
+   c->AddCheck(wxT("ShowRecordMeterTB"), _("&Record Meter Toolbar"), FN(OnShowRecordMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+   /* i18n-hint: Clicking this menu item shows the toolbar with the mixer*/
+   c->AddCheck(wxT("ShowPlayMeterTB"), _("&Play Meter Toolbar"), FN(OnShowPlayMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
    /* i18n-hint: Clicking this menu item shows the toolbar with the mixer*/
    c->AddCheck(wxT("ShowMixerTB"), _("Mi&xer Toolbar"), FN(OnShowMixerToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
    /* i18n-hint: Clicking this menu item shows the toolbar for selecting audio*/
@@ -1556,6 +1560,10 @@ void AudacityProject::ModifyToolbarMenus()
                          mToolManager->IsVisible(EditBarID));
    mCommandManager.Check(wxT("ShowMeterTB"),
                          mToolManager->IsVisible(MeterBarID));
+   mCommandManager.Check(wxT("ShowRecordMeterTB"),
+                         mToolManager->IsVisible(RecordMeterBarID));
+   mCommandManager.Check(wxT("ShowPlayMeterTB"),
+                         mToolManager->IsVisible(PlayMeterBarID));
    mCommandManager.Check(wxT("ShowMixerTB"),
                          mToolManager->IsVisible(MixerBarID));
    mCommandManager.Check(wxT("ShowSelectionTB"),
@@ -4577,7 +4585,32 @@ void AudacityProject::OnShowEditToolBar()
 
 void AudacityProject::OnShowMeterToolBar()
 {
+   if( !mToolManager->IsVisible( MeterBarID ) )
+   {
+      mToolManager->Hide( PlayMeterBarID ); 
+      mToolManager->Hide( RecordMeterBarID ); 
+   }
    mToolManager->ShowHide( MeterBarID );
+   ModifyToolbarMenus();
+}
+
+void AudacityProject::OnShowRecordMeterToolBar()
+{
+   if( !mToolManager->IsVisible( RecordMeterBarID ) )
+   {
+      mToolManager->Hide( MeterBarID ); 
+   }
+   mToolManager->ShowHide( RecordMeterBarID );
+   ModifyToolbarMenus();
+}
+
+void AudacityProject::OnShowPlayMeterToolBar()
+{
+   if( !mToolManager->IsVisible( PlayMeterBarID ) )
+   {
+      mToolManager->Hide( MeterBarID ); 
+   }
+   mToolManager->ShowHide( PlayMeterBarID );
    ModifyToolbarMenus();
 }
 

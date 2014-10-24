@@ -23,11 +23,16 @@ class wxWindow;
 
 class Meter;
 
+
+// Constants used as bit pattern
+const int kWithRecordMeter = 1;
+const int kWithPlayMeter = 2;
+
 class MeterToolBar:public ToolBar {
 
  public:
 
-   MeterToolBar();
+   MeterToolBar(int WhichMeters);
    virtual ~MeterToolBar();
 
    void Create(wxWindow *parent);
@@ -38,19 +43,17 @@ class MeterToolBar:public ToolBar {
    virtual void EnableDisableButtons() {};
    virtual void UpdatePrefs();
 
-   void GetMeters(Meter **playMeter, Meter **recordMeter);
-   void StartMonitoring();
-   void Clear();
-
    virtual void OnSize(wxSizeEvent & event);
+   virtual bool Expose( bool show );
 
    int GetInitialWidth() {return 338;}
-   int GetMinToolbarWidth() { return 255; }
+   int GetMinToolbarWidth() { return 100; }
 
  private:
    void OnMeterPrefsUpdated(wxCommandEvent & evt);
    void RegenerateTooltips();
 
+   int mWhichMeters;
    wxGridBagSizer *mSizer;
    Meter *mPlayMeter;
    Meter *mRecordMeter;
@@ -60,6 +63,16 @@ class MeterToolBar:public ToolBar {
    DECLARE_CLASS(MeterToolBar);
    DECLARE_EVENT_TABLE();
 
+};
+
+namespace MeterToolBars {
+   void AddMeters(Meter *playMeter, Meter *recordMeter);
+   void RemoveMeters(Meter *playMeter, Meter *recordMeter);
+   void GetMeters(Meter **playMeter, Meter **recordMeter);
+   void StartMonitoring();
+   void Clear();
+   //Meter *mPlayMeter;
+   //Meter *mRecordMeter;
 };
 
 #endif

@@ -276,6 +276,8 @@ void OnShowTransportToolBar();
 void OnShowDeviceToolBar();
 void OnShowEditToolBar();
 void OnShowMeterToolBar();
+void OnShowRecordMeterToolBar();
+void OnShowPlayMeterToolBar();
 void OnShowMixerToolBar();
 void OnShowSelectionToolBar();
 void OnShowToolsToolBar();
