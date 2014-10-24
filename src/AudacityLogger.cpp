@@ -179,6 +179,7 @@ void AudacityLogger::Show(bool show)
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
    #endif
    frame->SetIcon(*ic);
+   delete ic;
 #endif
 
    // Log text

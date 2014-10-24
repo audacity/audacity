@@ -1736,6 +1736,7 @@ MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
          ic = new wxIcon(wxICON(AudacityLogo48x48));
       #endif
       SetIcon(*ic);
+      delete ic;
    #endif
 }
 

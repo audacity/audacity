@@ -74,6 +74,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent):
          ic = new wxIcon(wxICON(AudacityLogo48x48));
       #endif
       SetIcon(*ic);
+      delete ic;
    #endif
 
    wxPoint panelPos(0, 0);

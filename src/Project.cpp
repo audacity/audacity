@@ -998,6 +998,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
       ic.CopyFromBitmap(theTheme.Bitmap(bmpAudacityLogo48x48));
    #endif
    SetIcon(*ic);
+   delete ic;
 #endif
    mIconized = false;
 
