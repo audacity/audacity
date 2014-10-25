@@ -101,7 +101,9 @@ class ToolBar:public wxPanel
    bool IsResizable();
    bool IsVisible();
    bool IsDocked();
+   bool IsPositioned(){ return mPositioned; };
    void SetVisible( bool bVisible );
+   void SetPositioned(){ mPositioned = true;};
 
 
    /// Resizable toolbars should implement this.
@@ -188,6 +190,7 @@ class ToolBar:public wxPanel
 
    bool mVisible;
    bool mResizable;
+   bool mPositioned; // true if position floating determined.
 
  public:
 

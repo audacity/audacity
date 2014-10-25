@@ -471,7 +471,7 @@ void ToolManager::Reset()
    // Disconnect all docked bars
    for( ndx = 0; ndx < ToolBarCount; ndx++ ) 
    {
-      wxWindow *parent;
+      wxWindow *floater;
       ToolDock *dock;
       ToolBar *bar = mBars[ ndx ];
 
@@ -479,11 +479,11 @@ void ToolManager::Reset()
       if( bar->IsDocked() )
       {
          bar->GetDock()->Undock( bar );
-         parent = NULL;
+         floater = NULL;
       }
       else
       {
-         parent = bar->GetParent();
+         floater = bar->GetParent();
       }
 
       if( ndx == SelectionBarID )
@@ -513,25 +513,33 @@ void ToolManager::Reset()
 
       if( dock != NULL )
       {
+         // when we dock, we reparent, so bar is no longer a child of floater.
          dock->Dock( bar );
          Expose( ndx, true );
-         if( parent )
-            parent->Destroy();
+         //OK (and good) to delete floater, as bar is no longer in it.
+         if( floater )
+            floater->Destroy();
       }
       else
       {
+         // The (tool)bar has a dragger window round it, the floater.
+         // in turn floater will have mParent (the entire App) as its
+         // parent.
+
          // Maybe construct a new floater
-         // this happens if we are bouncing it out of a dock.
-         if( parent == NULL ) {
-            wxPoint pt = wxPoint( 10, 10 );
-            wxWindow * pWnd = new ToolFrame( mParent, this, bar, pt );
-            bar->Reparent( pWnd );
-            // Put it near center of screen/window.
-            // The adjustments help prevent it straddling two screens, 
-            // and if there multiple toobars the ndx means they won't overlap too much.
-            pWnd->Centre( wxCENTER_ON_SCREEN );
-            pWnd->Move( pWnd->GetPosition() + wxSize( ndx * 10 - 200, ndx * 10 ));
+         // this happens if we have just been bounced out of a dock.
+         if( floater == NULL ) {
+            floater = new ToolFrame( mParent, this, bar, wxPoint(-1,-1) );
+            bar->Reparent( floater );
          }
+
+         // This bar is undocked and invisible.
+         // We are doing a reset toolbars, so even the invisible undocked bars should
+         // be moved somewhere sensible. Put bar near center of window.
+         // If there were multiple hidden toobars the ndx * 10 adjustment means 
+         // they won't overlap too much.
+         floater->CentreOnParent( );
+         floater->Move( floater->GetPosition() + wxSize( ndx * 10 - 200, ndx * 10 ));
          bar->SetDocked( NULL, false );
          bar->Expose( false );
       }
@@ -581,14 +589,22 @@ void ToolManager::ReadConfig()
    for( ndx = 0; ndx < ToolBarCount; ndx++ )
    {
       ToolBar *bar = mBars[ ndx ];
+      //wxPoint Center = mParent->GetPosition() + (mParent->GetSize() * 0.33);
+      //wxPoint Center( 
+      //   wxSystemSettings::GetMetric( wxSYS_SCREEN_X ) /2 ,
+      //   wxSystemSettings::GetMetric( wxSYS_SCREEN_Y ) /2 );
 
       // Change to the bar subkey
       gPrefs->SetPath( bar->GetSection() );
 
+
+      int defaultDock = ndx == SelectionBarID ? BotDockID : TopDockID;
+      if( ndx == MeterBarID )
+         defaultDock = 0;
       // Read in all the settings
-      gPrefs->Read( wxT("Dock"), &dock, ndx == SelectionBarID ? BotDockID : TopDockID );
+      gPrefs->Read( wxT("Dock"), &dock,  defaultDock );
       gPrefs->Read( wxT("Order"), &ord, NoBarID );
-      gPrefs->Read( wxT("Show"), &show[ ndx ], ndx != MeterBarID);
+      gPrefs->Read( wxT("Show"), &show[ ndx ], defaultDock != 0);
 
       gPrefs->Read( wxT("X"), &x, -1 );
       gPrefs->Read( wxT("Y"), &y, -1 );
@@ -658,6 +674,8 @@ void ToolManager::ReadConfig()
       {
          // Create the bar (with the top dock being temporary parent)
          bar->Create( mTopDock );
+         
+
 
          // Construct a new floater
          ToolFrame *f = new ToolFrame( mParent, this, bar, wxPoint( x, y ) );
@@ -669,6 +687,8 @@ void ToolManager::ReadConfig()
             f->SetSizeHints( sz );
             f->SetSize( sz );
             f->Layout();
+            if( (x!=-1) && (y!=-1) )
+               bar->SetPositioned();
          }
 
          // Show or hide it
@@ -771,7 +791,7 @@ void ToolManager::WriteConfig()
 
       wxPoint pos( -1, -1 );
       wxSize sz = bar->GetSize();
-      if( !bar->IsDocked() )
+      if( !bar->IsDocked() && bar->IsPositioned() )
       {
          pos = bar->GetParent()->GetPosition();
          sz = bar->GetParent()->GetSize();
@@ -1203,6 +1223,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
 
       // Inform toolbar of change
       mDragBar->SetDocked( NULL, true );
+      mDragBar->SetPositioned();
 
       // Construct a new floater
       mDragWindow = new ToolFrame( mParent, this, mDragBar, mp );

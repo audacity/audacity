@@ -103,6 +103,7 @@ ToolBar::ToolBar( int type,
    mSpacer = NULL;
    mDock = NULL;
    mVisible = false;
+   mPositioned = false;
 }
 
 //
@@ -197,7 +198,13 @@ bool ToolBar::Expose( bool show )
    }
    else
    {
-      GetParent()->Show( show );
+      wxWindow * pParent = GetParent();
+      if( !IsPositioned() && show ){
+         SetPositioned();
+         pParent->CentreOnParent();
+         pParent->Move( pParent->GetPosition() + wxSize( mType*10, mType*10 ));
+      }
+      pParent->Show( show );
    }
 
    return was;
