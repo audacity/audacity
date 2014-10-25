@@ -318,14 +318,16 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdateSelectionDisplay();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   virtual void StartSnappingFreqSelection (WaveTrack *pTrack);
-   virtual void MoveSnappingFreqSelection (int mouseYCoordinate,
-                                           int trackTopEdge,
-                                           int trackHeight, Track *pTrack);
-   virtual void StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
-                                    int trackHeight, Track *pTrack);
-   virtual void ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
-                                    int trackHeight, bool dragWidth);
+   void StartSnappingFreqSelection (WaveTrack *pTrack);
+   void MoveSnappingFreqSelection (int mouseYCoordinate,
+                                   int trackTopEdge,
+                                   int trackHeight, Track *pTrack);
+   void StartFreqSelection (int mouseYCoordinate, int trackTopEdge,
+                            int trackHeight, Track *pTrack);
+   void ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
+                            int trackHeight);
+   void ResetFreqSelectionPin(double hintFrequency, bool logF);
+
 #endif
 
    virtual void SelectTracksByLabel( LabelTrack *t );
@@ -560,19 +562,24 @@ protected:
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    enum eFreqSelMode {
       FREQ_SEL_INVALID,
+
       FREQ_SEL_SNAPPING_CENTER,
+      FREQ_SEL_PINNED_CENTER,
+      FREQ_SEL_DRAG_CENTER,
+
+      FREQ_SEL_FREE,
       FREQ_SEL_TOP_FREE,
       FREQ_SEL_BOTTOM_FREE,
-      FREQ_SEL_DRAG_CENTER,
-      FREQ_SEL_FREE
    }  mFreqSelMode;
-   double mFreqSelStart;
-   double mFreqSelCenter; // Used when dragging the width about fixed center
+   // Following holds:
+   // the center for FREQ_SEL_PINNED_CENTER,
+   // the ratio of top to center (== center to bottom) for FREQ_SEL_DRAG_CENTER,
+   // a frequency boundary for FREQ_SEL_FREE, FREQ_SEL_TOP_FREE, or
+   // FREQ_SEL_BOTTOM_FREE,
+   // and is ignored otherwise.
+   double mFreqSelPin;
    const WaveTrack *mFreqSelTrack;
    std::auto_ptr<SpectrumAnalyst> mFrequencySnapper;
-
-   bool MayAdjustBoundary( eFreqSelMode SelMode, wxCoord y, const wxRect & r, 
-      const WaveTrack* wt, bool logF);
 #endif
 
    Track *mCapturedTrack;
@@ -653,6 +660,20 @@ protected:
                                double rate,
                                bool logF) const;
 #endif
+
+   enum SelectionBoundary {
+      SBNone,
+      SBLeft, SBRight,
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+      SBBottom, SBTop, SBCenter,
+#endif
+   };
+   SelectionBoundary ChooseBoundary
+      (wxMouseEvent & event, const Track *pTrack,
+       const wxRect &rect,
+       bool mayChooseCenter,
+       bool onlyWithinSnapDistance,
+       double *pPinValue = NULL) const;
 
    int mInitialTrackHeight;
    int mInitialUpperTrackHeight;
