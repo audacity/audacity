@@ -164,13 +164,13 @@ bool EffectNormalize::Process()
    prevTrack = track;
    mCurTrackNum = 0;
    wxString topMsg;
-   if(mDC & mGain)
+   if(mDC && mGain)
       topMsg = _("Removing DC offset and Normalizing...\n");
-   else if(mDC & !mGain)
+   else if(mDC && !mGain)
       topMsg = _("Removing DC offset...\n");
-   else if(!mDC & mGain)
+   else if(!mDC && mGain)
       topMsg = _("Normalizing without removing DC offset...\n");
-   else if(!mDC & !mGain)
+   else if(!mDC && !mGain)
       topMsg = wxT("Not doing anything)...\n");   // shouldn't get here
 
    while (track) {
