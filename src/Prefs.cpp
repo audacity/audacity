@@ -161,7 +161,6 @@ void InitPreferences()
       if(action == wxYES)   // reset
       {
          gPrefs->DeleteAll();
-         gPrefs->Write(wxT("/NewPrefsInitialized"), true);
       }
       bool gone = wxRemoveFile(fn.GetFullPath());  // remove resetPrefs.txt
       if(!gone)
