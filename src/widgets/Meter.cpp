@@ -1551,7 +1551,13 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    dlg.Layout();
    dlg.Fit();
 
-   dlg.CenterOnParent();
+   //Old code to center on meter.
+   //dlg.CenterOnParent();
+   //New code to center on app.
+   wxRect r = GetActiveProject()->GetRect();
+   wxSize size_difference = r.GetSize()- dlg.GetSize();
+   wxPoint pt = r.GetTopLeft() + size_difference / 2; 
+   dlg.Move( pt );
 
    if (dlg.ShowModal() == wxID_OK)
    {
