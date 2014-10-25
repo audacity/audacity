@@ -1473,7 +1473,9 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    wxRadioButton *horizontal;
    wxRadioButton *vertical;
 
-   wxDialog dlg(GetParent(), wxID_ANY, wxString(_("Meter Preferences")));
+   // Dialog is a child of the project, rather than of the toolbar.
+   // This determines where it pops up.
+   wxDialog dlg(GetActiveProject(), wxID_ANY, wxString(_("Meter Preferences")));
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();
    {
@@ -1551,13 +1553,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    dlg.Layout();
    dlg.Fit();
 
-   //Old code to center on meter.
-   //dlg.CenterOnParent();
-   //New code to center on app.
-   wxRect r = GetActiveProject()->GetRect();
-   wxSize size_difference = r.GetSize()- dlg.GetSize();
-   wxPoint pt = r.GetTopLeft() + size_difference / 2; 
-   dlg.Move( pt );
+   dlg.CenterOnParent();
 
    if (dlg.ShowModal() == wxID_OK)
    {
