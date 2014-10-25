@@ -180,22 +180,9 @@ void InitPreferences()
       gPrefs->DeleteEntry(wxT("/NewPrefsInitialized"), true);  // take group as well if empty
    }
 
-   gPrefs->Write(wxT("/Version"), wxString(AUDACITY_VERSION_STRING));
-
-   // BG: Make sure the users prefs are up to date
-   // BG: Otherwise reset some of them to their defaults
-   wxString prefsversion;
-   prefsversion = gPrefs->Read(wxT("/PrefsVersion"), wxT(""));
-
-   if(prefsversion.CmpNoCase(wxString(wxT(AUDACITY_PREFS_VERSION_STRING))))
-   {
-      // BG: Reset the prefs by removing them
-      if(gPrefs->Exists(wxT("/Keyboard")))
-         gPrefs->DeleteGroup(wxT("/Keyboard"));
-      if(gPrefs->Exists(wxT("/Locale")))
-         gPrefs->DeleteGroup(wxT("/Locale"));
-      gPrefs->Write(wxT("/PrefsVersion"), wxString(wxT(AUDACITY_PREFS_VERSION_STRING)));
-   }
+   // record the Prefs version for future checking (this has not been used for a very
+   // long time).
+   gPrefs->Write(wxT("/PrefsVersion"), wxString(wxT(AUDACITY_PREFS_VERSION_STRING)));
 
    // Check if some prefs updates need to happen based on audacity version.
    // Unfortunately we can't use the PrefsVersion prefs key because that resets things.
@@ -227,6 +214,7 @@ void InitPreferences()
       }
    }
 
+   // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
    gPrefs->Write(wxT("/Version/Micro"), AUDACITY_REVISION);
