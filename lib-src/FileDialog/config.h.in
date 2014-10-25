@@ -3,7 +3,7 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
-/* Define to 1 if GTK+ is available. */
+/* Define if GTK is available */
 #undef HAVE_GTK
 
 /* Define to 1 if you have the <inttypes.h> header file. */
