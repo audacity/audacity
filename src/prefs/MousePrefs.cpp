@@ -107,8 +107,10 @@ void MousePrefs::CreateList()
    AddItem(_("Ctrl-Left-Click"),   _("Select"),   _("Set Selection Point and Play"));
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   // JKC: Prompt is disabled for now.  It's a toggle rather than a drag modifier.
+   // more like Snap-to than anything else.
    // Spectral selection
-   AddItem(_("ESC"),              _("Select"),    _("Toggle center snapping in spectrogram"));
+   // AddItem(_("ESC"),              _("Select"),    _("Toggle center snapping in spectrogram"));
 #endif
 
    AddItem(_("Left-Click"),       _("Zoom"),      _("Zoom in on Point"));
