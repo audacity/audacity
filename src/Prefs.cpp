@@ -171,16 +171,14 @@ void InitPreferences()
       }
    }
 
-   // We introduced new file-based preferences in version 1.3.1; the
+   // In AUdacity 2.1.0 support for the legacy 1.2.x preferences (depreciated since Audacity
+   // 1.3.1) is dropped. As a result we can drop the import flag
    // first time this version of Audacity is run we try to migrate
    // old preferences.
    bool newPrefsInitialized = false;
    gPrefs->Read(wxT("/NewPrefsInitialized"), &newPrefsInitialized, false);
-   if (!newPrefsInitialized) {
-      wxConfigBase *legacyConfig = new wxConfig(appName);
-      CopyEntriesRecursive(wxT("/"), legacyConfig, gPrefs);
-      delete legacyConfig;
-      gPrefs->Write(wxT("/NewPrefsInitialized"), true);
+   if (newPrefsInitialized) {
+      gPrefs->DeleteEntry(wxT("/NewPrefsInitialized"), true);  // take group as well if empty
    }
 
    gPrefs->Write(wxT("/Version"), wxString(AUDACITY_VERSION_STRING));
