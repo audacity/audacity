@@ -344,6 +344,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void SetCursorAndTipWhenSelectTool( Track * t, wxMouseEvent & event, wxRect &r, bool bMultiToolMode, const wxChar ** ppTip );
    virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, const wxChar **ppTip );
    virtual void HandleCursor(wxMouseEvent & event);
+   virtual void MaySetOnDemandTip( Track * t, const wxChar ** ppTip );
 
    // AS: Envelope editing handlers
    virtual void HandleEnvelope(wxMouseEvent & event);

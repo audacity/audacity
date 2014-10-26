@@ -1625,6 +1625,22 @@ inline bool isSpectrogramTrack(const Track *pTrack, bool *pLogf = NULL) {
 
 } // namespace
 
+// If we're in OnDemand mode, we may change the tip.
+void TrackPanel::MaySetOnDemandTip( Track * t, const wxChar ** ppTip )
+{
+   wxASSERT( t );
+   //For OD regions, we need to override and display the percent complete for this task.
+   //first, make sure it's a wavetrack.
+   if(t->GetKind() != Track::Wave)
+      return;
+   //see if the wavetrack exists in the ODManager (if the ODManager exists)
+   if(!ODManager::IsInstanceCreated())
+      return;
+   //ask the wavetrack for the corresponding tip - it may not change **pptip, but that's fine.
+   ODManager::Instance()->FillTipForWaveTrack((WaveTrack*)t,ppTip);
+   return;
+}
+
 // The select tool can have different cursors and prompts depending on what
 // we hover over, most notably when hovering over the selction boundaries.
 // Determine and set the cursor and tip accordingly.
@@ -1639,31 +1655,26 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       // (Don't assume it's the default!)
       wxString keyStr
          (GetProject()->GetCommandManager()->GetKeyFromName(wxT("Preferences")));
-      // Must compose a string that survives the function call, hence static
+      // Must compose a string that survives the function call, hence static.
       static wxString result;
+      /* i18n-hint: %s is usually replaced by "Ctrl+P" */
       result = wxString::Format(
          _("Multi-Tool Mode: %s for Mouse and Keyboard Preferences."),
          keyStr.c_str());
       *ppTip = result;
+      // Later in this function we may point to some other string instead.
    }
 
+   // Not over a track?  Get out of here.
+   if(!t)
+      return;
+
    //Make sure we are within the selected track
-   if (!t || !t->GetSelected())
+   // Adjusting the selection edges can be turned off in
+   // the preferences...
+   if ( !t->GetSelected() || !mAdjustSelectionEdges)
    {
-      if(t)
-      {
-         //For OD regions, we need to override and display the percent complete for this task.
-         //first, make sure it's a wavetrack.
-         if(t->GetKind() == Track::Wave)
-         {
-            //see if the wavetrack exists in the ODManager (if the ODManager exists)
-            if(ODManager::IsInstanceCreated())
-            {
-               //ask the wavetrack for the corresponding tip - it may not change **pptip, but that's fine.
-               ODManager::Instance()->FillTipForWaveTrack((WaveTrack*)t,ppTip);
-            }
-         }
-      }
+      MaySetOnDemandTip( t, ppTip );
       return;
    }
    wxInt64 leftSel = TimeToPosition(mViewInfo->selectedRegion.t0(), r.x);
@@ -1672,49 +1683,11 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    // Something is wrong if right edge comes before left edge
    wxASSERT(!(rightSel < leftSel));
 
-   // Adjusting the selection edges can be turned off in
-   // the preferences...
-   if (!mAdjustSelectionEdges) {
-      //For OD regions, we need to override and display the percent complete for this task.
-      //first, make sure it's a wavetrack.
-      if(t->GetKind() == Track::Wave)
-      {
-         //see if the wavetrack exists in the ODManager (if the ODManager exists)
-         if(ODManager::IsInstanceCreated())
-         {
-            //ask the wavetrack for the corresponding tip - it may not change **pptip, but that's fine.
-            ODManager::Instance()->FillTipForWaveTrack((WaveTrack*)t,ppTip);
-         }
-      }
-   }
-   else if (event.ShiftDown()) {
-      SelectionBoundary boundary = ChooseBoundary(event, t, r, false, false);
-      switch (boundary) {
-         case SBLeft:
-            *ppTip = _("Click and drag to move left selection boundary.");
-            SetCursor(*mAdjustLeftSelectionCursor);
-            return;
-         case SBRight:
-            *ppTip = _("Click and drag to move right selection boundary.");
-            SetCursor(*mAdjustRightSelectionCursor);
-            return;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         case SBBottom:
-            *ppTip = _("Click and drag to move bottom selection frequency.");
-            SetCursor(*mEnvelopeCursor); // For want of a better...
-            return;
-         case SBTop:
-            *ppTip = _("Click and drag to move top selection frequency.");
-            SetCursor(*mEnvelopeCursor); // For want of a better...
-            return;
-#endif
-         default:
-            wxASSERT(false);
-      }
-   }
+   const bool bShiftDown = event.ShiftDown();
+
 #if 1
    // Should we make a distinct status message for the ctrl-click case?
-   else if (event.CmdDown()
+   if (!bShiftDown && event.CmdDown()
 #ifdef USE_MIDI
                            && !HitTestStretch(t, r, event)
 #endif
@@ -1724,98 +1697,85 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       return;
    }
 #endif
-   else {
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      bool logF;
-      if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
-          isSpectrogramTrack(t, &logF)) {
-         // Not shift-down, but center frequency snapping toggle is on
-         *ppTip = _("Click and drag to set frequency band width.");
-         // need new distinct cursor?
-         return;
-      }
-      else
-#endif
-      {
-         // Not shift-down, not snapping center,
-         // choose boundaries only in snapping tolerance,
-         // may choose center
-         SelectionBoundary boundary = ChooseBoundary(event, t, r, true, true);
-         switch (boundary) {
-         case SBNone:
-            break;
-         case SBLeft:
-#ifdef USE_MIDI
-            if (HitTestStretch(t, r, event)) {
-               *ppTip = _("Click and drag to stretch selected region.");
-               SetCursor(*mStretchLeftCursor);
-               return;
-            }
-#endif
-            *ppTip = _("Click and drag to move left selection boundary.");
-            SetCursor(*mAdjustLeftSelectionCursor);
-            return;
-         case SBRight:
-#ifdef USE_MIDI
-            if (HitTestStretch(t, r, event)) {
-               *ppTip = _("Click and drag to stretch selected region.");
-               SetCursor(*mStretchRightCursor);
-               return;
-            }
-#endif
-            *ppTip = _("Click and drag to move right selection boundary.");
-            SetCursor(*mAdjustRightSelectionCursor);
-            return;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         case SBBottom:
-            *ppTip =
-               _("Click and drag to adjust frequency band width.");
-            SetCursor(*mEnvelopeCursor); // For want of a better...
-            return;
-         case SBTop:
-            // With Shift NOT down, this is no different from dragging
-            // the bottom.
-            *ppTip =
-               _("Click and drag to adjust frequency band width.");
-            SetCursor(*mEnvelopeCursor); // For want of a better...
-            return;
-         case SBCenter:
-            *ppTip =
-               _("Click and drag to move center selection frequency.");
-            SetCursor(*mEnvelopeCursor); // For want of a better...
-            return;
-#endif
-         default:
-            wxASSERT(false);
-         } // switch
-      } // not center snapping
 
-      // Fallthrough cases when not near a boundary:
-
-#ifdef USE_MIDI
-      if (HitTestStretch(t, r, event)) {
-         *ppTip = _("Click and drag to stretch within selected region.");
-         SetCursor(*mStretchCursor);
-      }
-      else
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   bool logF;
+   if ( !bShiftDown && 
+        (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
+         isSpectrogramTrack(t, &logF) ) {
+      // Not shift-down, but center frequency snapping toggle is on
+      *ppTip = _("Click and drag to set frequency band width.  Use ESC to enter/leave this mode.");
+      // need new distinct cursor?
+      return;
+   }
 #endif
-      {
-         //For OD regions, we need to override and display the percent complete for this task.
-         //first, make sure it's a wavetrack.
-         if(t->GetKind() == Track::Wave)
-         {
-            //see if the wavetrack exists in the ODManager (if the ODManager exists)
-            if(ODManager::IsInstanceCreated())
-            {
-               //ask the wavetrack for the corresponding tip - it may not change **pptip, but that's fine.
-               ODManager::Instance()->FillTipForWaveTrack((WaveTrack*)t,ppTip);
-            }
+   // Not shift-down, not snapping center,
+   // choose boundaries only in snapping tolerance,
+   // may choose center
+   SelectionBoundary boundary = ChooseBoundary(event, t, r, true, true);
+#ifdef USE_MIDI
+   // The MIDI HitTest will only succeed if we are on a midi track, so 
+   // typically we will fall through.
+   switch( boundary) {
+      case SBNone:
+      case SBLeft:
+      case SBRight:
+         if ( HitTestStretch(t, r, event)) {
+            *ppTip = _("Click and drag to stretch within selected region.");
+            SetCursor(*mStretchCursor);
+            return;
          }
-      }
-   } // not shift (or ctrl) down
+         break;
+      default:
+         break;
+   }
+#endif
 
-   // It's possible we didn't set the tip and cursor.
-   // Subsequently called methods can detect this.
+   switch (boundary) {
+      case SBNone:
+         if( bShiftDown ){
+            // Same message is used for moving left right top or bottom edge.
+            *ppTip = _("Click to move selection boundary to cursor.");
+            // No cursor change.
+            return;
+         }
+         break;
+      case SBLeft:
+         *ppTip = _("Click and drag to move left selection boundary.");
+         SetCursor(*mAdjustLeftSelectionCursor);
+         return;
+      case SBRight:
+         *ppTip = _("Click and drag to move right selection boundary.");
+         SetCursor(*mAdjustRightSelectionCursor);
+         return;
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+      case SBBottom:
+         *ppTip = bShiftDown ? 
+            _("Click and drag to move bottom selection frequency.") :
+            _("Click and drag to adjust frequency band width.");
+         SetCursor(*mEnvelopeCursor); // For want of a better...
+         return;
+      case SBTop:
+         // With Shift NOT down, this is no different from dragging
+         // the bottom.
+         *ppTip = bShiftDown ?
+            _("Click and drag to move top selection frequency.") :
+            _("Click and drag to adjust frequency band width.");
+         SetCursor(*mEnvelopeCursor); // For want of a better...
+         return;
+      case SBCenter:
+         // Don't need to assert, can just ignore shift down
+         // wxASSERT( !bShiftDown );
+         *ppTip = _("Click and drag to move center selection frequency.");
+         SetCursor(*mEnvelopeCursor); // For want of a better...
+         return;
+#endif
+      default:
+         wxASSERT(false);
+   } // switch
+   // Falls through the switch if there was no boundary found.
+
+   MaySetOnDemandTip( t, ppTip );
 }
 
 /// In this method we know what tool we are using,
