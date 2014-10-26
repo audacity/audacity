@@ -181,6 +181,12 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
       return (mFlags & BUILTIN_EFFECT) != 0;
    }
 
+   // Preview normally requires a selection, but INSERT_EFFECTs do not.
+   // Return true to override the need for a selection.
+   virtual bool GeneratorPreview(){
+      return false;
+   }
+
    // Called to set or retrieve parameter values.  Return true if successful.
    virtual bool TransferParameters( Shuttle & WXUNUSED(shuttle) ) {
       return true;

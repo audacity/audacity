@@ -508,6 +508,12 @@ bool EffectNyquist::TransferParameters( Shuttle & shuttle )
    return true;
 }
 
+bool EffectNyquist::GeneratorPreview()
+{
+   // Enable Nyquist generator plug-ins to create preview without a selection
+   return (mEnablePreview && (GetEffectFlags() & INSERT_EFFECT));
+}
+
 bool EffectNyquist::PromptUser()
 {
    while (mInteractive) {

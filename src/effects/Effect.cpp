@@ -1409,7 +1409,8 @@ void Effect::Preview(bool dryOnly)
    if (t1 > mT1)
       t1 = mT1;
 
-   if (t1 <= t0)
+   // Generators can run without a selection.
+   if (!GeneratorPreview() && (t1 <= t0))
       return;
 
    bool success = ::MixAndRender(mTracks, mFactory, rate, floatSample, t0, t1,
