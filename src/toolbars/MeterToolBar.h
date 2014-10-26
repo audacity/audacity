@@ -46,7 +46,8 @@ class MeterToolBar:public ToolBar {
    virtual void OnSize(wxSizeEvent & event);
    virtual bool Expose( bool show );
 
-   int GetInitialWidth() {return 338;}
+   int GetInitialWidth() {return (mWhichMeters == 
+      (kWithRecordMeter + kWithPlayMeter)) ? 338 : 165;}
    int GetMinToolbarWidth() { return 100; }
 
  private:
