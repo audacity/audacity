@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "audacity/ModuleInterface.h"
+#include "PluginManager.h"
 
 class CommandHandler;
 
