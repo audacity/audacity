@@ -30,7 +30,7 @@ click from the menu into the actual function to be called.
 #include "Audacity.h"
 #include "ShuttleGui.h"
 #include "Project.h"
-#include "LoadModules.h"
+#include "ModuleManager.h"
 #include "Registrar.h"
 #include "TrackPanel2.h"
 

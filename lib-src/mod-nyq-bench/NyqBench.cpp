@@ -23,7 +23,7 @@
 
 #include "AudacityApp.h"
 #include "LabelTrack.h"
-#include "LoadModules.h"
+#include "ModuleManager.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ShuttleGui.h"
@@ -1364,7 +1364,7 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      p->OnEffect(ALL_EFFECTS, mEffect);
+      p->OnEffect(ALL_EFFECTS, mEffect->GetID());
 
       mRunning = false;
       UpdateWindowUI();

@@ -30,18 +30,20 @@ CXXFLAGS += -D__WXDEBUG__ -D__WXGTK__
 # Hopefully the rest is generic enough to satisfy most needs
 # -----------------------------------------------------------------------------
 
-CXXFLAGS += -DAUDACITY_DLL_API= -I$(AUDACITY_DIR)/src
-CXXFLAGS += ${shell set -x ; sed -e '/override CXXFLAGS/!d;s/override CXXFLAGS += //;s@$$(top_srcdir)@$(AUDACITY_DIR)@g' $(AUDACITY_DIR)/src/Makefile}
-
-LDFLAGS += ${shell sed -e '/^LIBS/!d;s/LIBS *=//' $(AUDACITY_DIR)/src/Makefile}
+CXXFLAGS += -DAUDACITY_DLL_API= -I$(AUDACITY_DIR)/include -I$(AUDACITY_DIR)/src -I$(AUDACITY_DIR)/lib-src/portaudio-v19/include
+CXXFLAGS += ${shell echo @CPPFLAGS@ | ../../config.status --file=- }
+CXXFLAGS += ${shell echo @CXXFLAGS@ | ../../config.status --file=- | sed -e 's@$$(top_srcdir)@$(AUDACITY_DIR)@g' }
+CXXFLAGS += ${shell echo @LIBNYQUIST_CFLAGS@ | ../../config.status --file=- | sed -e 's@$$(top_srcdir)@$(AUDACITY_DIR)@g' }
+CXXFLAGS += ${shell echo @WX_CXXFLAGS@ | ../../config.status --file=- }
+LDFLAGS += ${shell echo @LIBS@ | ../../config.status --file=- }
 
 SYS = $(shell uname -s)
 
 ifeq ($(SYS),Darwin)
-   CXXFLAGS += -arch i386 -arch ppc -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4
+   CXXFLAGS += -arch i386 -arch ppc -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4 
    LDFLAGS += $(CXXFLAGS) -dynamiclib -undefined suppress
 else
-   CXXFLAGS += -fPIC -fvisibility=hidden
+   CXXFLAGS += -fPIC
    LDFLAGS += -shared
 endif
 
@@ -74,9 +76,8 @@ $(MOD): $(OBJS)
 	@echo "$(MOD) has been copied to $(AUDACITY_DIR)/modules"
 	@echo
 
-
 # -----------------------------------------------------------------------------
 # Cleanup
 #
-clean:
+clean: 
 	-rm $(MOD) $(OBJS)
