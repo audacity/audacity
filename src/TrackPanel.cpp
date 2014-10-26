@@ -1709,10 +1709,12 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       return;
    }
 #endif
-   // Not shift-down, not snapping center,
+
+   // If not shift-down and not snapping center, then
    // choose boundaries only in snapping tolerance,
-   // may choose center
-   SelectionBoundary boundary = ChooseBoundary(event, t, r, true, true);
+   // and may choose center
+   SelectionBoundary boundary = ChooseBoundary(event, t, r, !bShiftDown, !bShiftDown);
+
 #ifdef USE_MIDI
    // The MIDI HitTest will only succeed if we are on a midi track, so 
    // typically we will fall through.
@@ -1734,6 +1736,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    switch (boundary) {
       case SBNone:
          if( bShiftDown ){
+            // wxASSERT( false );
             // Same message is used for moving left right top or bottom edge.
             *ppTip = _("Click to move selection boundary to cursor.");
             // No cursor change.
