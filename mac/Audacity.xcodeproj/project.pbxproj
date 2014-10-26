@@ -476,6 +476,8 @@
 		280828550A75E0D0000002EF /* LabelDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828530A75E0D0000002EF /* LabelDialog.cpp */; };
 		2808285A0A75E0EA000002EF /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280828580A75E0EA000002EF /* Grid.cpp */; };
 		2809C4B80BCB7E560006010F /* FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2809C4B60BCB7E560006010F /* FileIO.cpp */; };
+		280A8B4719F4403B0091DE70 /* ModuleManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280A8B4519F4403B0091DE70 /* ModuleManager.cpp */; };
+		280A8B4A19F440880091DE70 /* EffectRack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 280A8B4819F440880091DE70 /* EffectRack.cpp */; };
 		28105D9C0AD09FB200BB4269 /* portmixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 28105D9B0AD09FB200BB4269 /* portmixer.h */; };
 		28105DAA0AD09FC500BB4269 /* px_mac_coreaudio.c in Sources */ = {isa = PBXBuildFile; fileRef = 28105DA00AD09FC500BB4269 /* px_mac_coreaudio.c */; };
 		28105DAB0AD09FC500BB4269 /* px_mixer.c in Sources */ = {isa = PBXBuildFile; fileRef = 28105DA10AD09FC500BB4269 /* px_mixer.c */; };
@@ -927,7 +929,6 @@
 		28A96DC30E28642300F3CE01 /* strparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 28F3A4010E28289500729866 /* strparse.h */; };
 		28B3C5DC1833D23E0024BE6D /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FADDEF1833C3C500BA4141 /* libexpat.a */; };
 		28B3C5DF1833D24E0024BE6D /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FADDEF1833C3C500BA4141 /* libexpat.a */; };
-		28B6ED8F0DE3D1B50046F0F3 /* LoadModules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B6ED8D0DE3D1B50046F0F3 /* LoadModules.cpp */; };
 		28B97B890FBF771A0076CF28 /* VSTEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B97B850FBF771A0076CF28 /* VSTEffect.cpp */; };
 		28BD8AB1101DF4C700686679 /* BatchEvalCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */; };
 		28BD8AB2101DF4C700686679 /* CommandDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAA101DF4C600686679 /* CommandDirectory.cpp */; };
@@ -1450,7 +1451,6 @@
 		ED663C3316543647007F53A5 /* SplashDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E9F0CEECEF80029ABAA /* SplashDialog.cpp */; };
 		ED663C3416543647007F53A5 /* LoadVamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E970CEECE910029ABAA /* LoadVamp.cpp */; };
 		ED663C3516543647007F53A5 /* VampEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E990CEECE920029ABAA /* VampEffect.cpp */; };
-		ED663C3616543647007F53A5 /* LoadModules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B6ED8D0DE3D1B50046F0F3 /* LoadModules.cpp */; };
 		ED663C3716543647007F53A5 /* NonGuiThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 288052BC0DEA72F300671EA4 /* NonGuiThread.cpp */; };
 		ED663C3816543647007F53A5 /* HtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28530C480DF2105200555C94 /* HtmlWindow.cpp */; };
 		ED663C3916543647007F53A5 /* ProgressDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28530C4A0DF2105200555C94 /* ProgressDialog.cpp */; };
@@ -1778,7 +1778,6 @@
 		ED85B50B16A47353006DA21D /* SplashDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E9F0CEECEF80029ABAA /* SplashDialog.cpp */; };
 		ED85B50C16A47353006DA21D /* LoadVamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E970CEECE910029ABAA /* LoadVamp.cpp */; };
 		ED85B50D16A47353006DA21D /* VampEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28501E990CEECE920029ABAA /* VampEffect.cpp */; };
-		ED85B50E16A47353006DA21D /* LoadModules.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B6ED8D0DE3D1B50046F0F3 /* LoadModules.cpp */; };
 		ED85B50F16A47353006DA21D /* NonGuiThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 288052BC0DEA72F300671EA4 /* NonGuiThread.cpp */; };
 		ED85B51016A47353006DA21D /* HtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28530C480DF2105200555C94 /* HtmlWindow.cpp */; };
 		ED85B51116A47353006DA21D /* ProgressDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28530C4A0DF2105200555C94 /* ProgressDialog.cpp */; };
@@ -3150,6 +3149,17 @@
 		280828590A75E0EA000002EF /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Grid.h; sourceTree = "<group>"; tabWidth = 3; };
 		2809C4B60BCB7E560006010F /* FileIO.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FileIO.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2809C4B70BCB7E560006010F /* FileIO.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileIO.h; sourceTree = "<group>"; tabWidth = 3; };
+		280A8B3E19F440160091DE70 /* ConfigInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigInterface.h; path = ../include/audacity/ConfigInterface.h; sourceTree = SOURCE_ROOT; };
+		280A8B3F19F440160091DE70 /* EffectInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectInterface.h; path = ../include/audacity/EffectInterface.h; sourceTree = SOURCE_ROOT; };
+		280A8B4019F440160091DE70 /* IdentInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IdentInterface.h; path = ../include/audacity/IdentInterface.h; sourceTree = SOURCE_ROOT; };
+		280A8B4119F440160091DE70 /* ImporterInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImporterInterface.h; path = ../include/audacity/ImporterInterface.h; sourceTree = SOURCE_ROOT; };
+		280A8B4219F440160091DE70 /* ModuleInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModuleInterface.h; path = ../include/audacity/ModuleInterface.h; sourceTree = SOURCE_ROOT; };
+		280A8B4319F440160091DE70 /* PluginInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PluginInterface.h; path = ../include/audacity/PluginInterface.h; sourceTree = SOURCE_ROOT; };
+		280A8B4419F440160091DE70 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = ../include/audacity/Types.h; sourceTree = SOURCE_ROOT; };
+		280A8B4519F4403B0091DE70 /* ModuleManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModuleManager.cpp; sourceTree = "<group>"; };
+		280A8B4619F4403B0091DE70 /* ModuleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleManager.h; sourceTree = "<group>"; };
+		280A8B4819F440880091DE70 /* EffectRack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectRack.cpp; sourceTree = "<group>"; };
+		280A8B4919F440880091DE70 /* EffectRack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectRack.h; sourceTree = "<group>"; };
 		28105D9B0AD09FB200BB4269 /* portmixer.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = portmixer.h; sourceTree = "<group>"; tabWidth = 3; };
 		28105DA00AD09FC500BB4269 /* px_mac_coreaudio.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = px_mac_coreaudio.c; sourceTree = "<group>"; tabWidth = 3; };
 		28105DA10AD09FC500BB4269 /* px_mixer.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = px_mixer.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -3669,8 +3679,6 @@
 		28AA281F0F267A2D008AED9E /* tremolo.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = tremolo.ny; path = "../plug-ins/tremolo.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28200F267A2D008AED9E /* vocalremover.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = vocalremover.ny; path = "../plug-ins/vocalremover.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28210F267A2D008AED9E /* vocoder.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = vocoder.ny; path = "../plug-ins/vocoder.ny"; sourceTree = SOURCE_ROOT; };
-		28B6ED8D0DE3D1B50046F0F3 /* LoadModules.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LoadModules.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		28B6ED8E0DE3D1B50046F0F3 /* LoadModules.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LoadModules.h; sourceTree = "<group>"; tabWidth = 3; };
 		28B97B850FBF771A0076CF28 /* VSTEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = VSTEffect.cpp; path = VST/VSTEffect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28B97B860FBF771A0076CF28 /* VSTEffect.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = VSTEffect.h; path = VST/VSTEffect.h; sourceTree = "<group>"; tabWidth = 3; };
 		28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = BatchEvalCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4891,6 +4899,7 @@
 				17FC86F30994637C0061DC94 /* compile.txt */,
 				1790AFB109883B6D008A330A /* Products */,
 				287179EE0DF6383000E171DF /* Xcode Settings */,
+				280A8B3A19F43FE30091DE70 /* includes */,
 				17072F220988D4F4008541CC /* lib-src */,
 				286D30AC0F264B58004E6E4A /* locale */,
 				178CF4FE098953FB0056CE58 /* mac */,
@@ -5020,8 +5029,6 @@
 				1790B0A209883BFD008A330A /* Languages.h */,
 				1790B0A309883BFD008A330A /* Legacy.cpp */,
 				1790B0A409883BFD008A330A /* Legacy.h */,
-				28B6ED8D0DE3D1B50046F0F3 /* LoadModules.cpp */,
-				28B6ED8E0DE3D1B50046F0F3 /* LoadModules.h */,
 				1865A9B41004490400946EE6 /* Lyrics.cpp */,
 				1865A9B51004490400946EE6 /* Lyrics.h */,
 				1865A9B61004490500946EE6 /* LyricsWindow.cpp */,
@@ -5035,6 +5042,8 @@
 				1790B0AC09883BFD008A330A /* Mix.h */,
 				289E75081006D0BD00CEF79B /* MixerBoard.cpp */,
 				289E75091006D0BD00CEF79B /* MixerBoard.h */,
+				280A8B4519F4403B0091DE70 /* ModuleManager.cpp */,
+				280A8B4619F4403B0091DE70 /* ModuleManager.h */,
 				1790B0AF09883BFD008A330A /* NoteTrack.cpp */,
 				1790B0B009883BFD008A330A /* NoteTrack.h */,
 				EDF3B7AF1588C0D50032D35F /* Paulstretch.cpp */,
@@ -5180,6 +5189,8 @@
 				ED3D7FED0DF73889000F43E3 /* EffectCategory.h */,
 				ED3D7FEE0DF73889000F43E3 /* EffectManager.cpp */,
 				ED3D7FEF0DF73889000F43E3 /* EffectManager.h */,
+				280A8B4819F440880091DE70 /* EffectRack.cpp */,
+				280A8B4919F440880091DE70 /* EffectRack.h */,
 				1790B01B09883BFD008A330A /* Equalization.cpp */,
 				1790B01C09883BFD008A330A /* Equalization.h */,
 				EDFCEBB318894B9E00C98E51 /* Equalization48x.cpp */,
@@ -5570,6 +5581,28 @@
 			name = rawwaves;
 			path = ../nyquist/rawwaves;
 			sourceTree = SOURCE_ROOT;
+		};
+		280A8B3A19F43FE30091DE70 /* includes */ = {
+			isa = PBXGroup;
+			children = (
+				280A8B3D19F440010091DE70 /* audacity */,
+			);
+			name = includes;
+			sourceTree = "<group>";
+		};
+		280A8B3D19F440010091DE70 /* audacity */ = {
+			isa = PBXGroup;
+			children = (
+				280A8B3E19F440160091DE70 /* ConfigInterface.h */,
+				280A8B3F19F440160091DE70 /* EffectInterface.h */,
+				280A8B4019F440160091DE70 /* IdentInterface.h */,
+				280A8B4119F440160091DE70 /* ImporterInterface.h */,
+				280A8B4219F440160091DE70 /* ModuleInterface.h */,
+				280A8B4319F440160091DE70 /* PluginInterface.h */,
+				280A8B4419F440160091DE70 /* Types.h */,
+			);
+			name = audacity;
+			sourceTree = "<group>";
 		};
 		28105D9A0AD09FB200BB4269 /* include */ = {
 			isa = PBXGroup;
@@ -8937,7 +8970,6 @@
 				28501EA20CEECEF80029ABAA /* SplashDialog.cpp in Sources */,
 				28501EAA0CEED0670029ABAA /* LoadVamp.cpp in Sources */,
 				28501EAB0CEED0680029ABAA /* VampEffect.cpp in Sources */,
-				28B6ED8F0DE3D1B50046F0F3 /* LoadModules.cpp in Sources */,
 				288052C20DEA73F500671EA4 /* NonGuiThread.cpp in Sources */,
 				28530C4C0DF2105200555C94 /* HtmlWindow.cpp in Sources */,
 				28530C4D0DF2105200555C94 /* ProgressDialog.cpp in Sources */,
@@ -9085,6 +9117,8 @@
 				28F67179197DFA1C00075C32 /* FormatClassifier.cpp in Sources */,
 				28F6717A197DFA1C00075C32 /* MultiFormatReader.cpp in Sources */,
 				28F6717B197DFA1C00075C32 /* SpecPowerMeter.cpp in Sources */,
+				280A8B4719F4403B0091DE70 /* ModuleManager.cpp in Sources */,
+				280A8B4A19F440880091DE70 /* EffectRack.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9448,7 +9482,6 @@
 				ED663C3316543647007F53A5 /* SplashDialog.cpp in Sources */,
 				ED663C3416543647007F53A5 /* LoadVamp.cpp in Sources */,
 				ED663C3516543647007F53A5 /* VampEffect.cpp in Sources */,
-				ED663C3616543647007F53A5 /* LoadModules.cpp in Sources */,
 				ED663C3716543647007F53A5 /* NonGuiThread.cpp in Sources */,
 				ED663C3816543647007F53A5 /* HtmlWindow.cpp in Sources */,
 				ED663C3916543647007F53A5 /* ProgressDialog.cpp in Sources */,
@@ -9759,7 +9792,6 @@
 				ED85B50B16A47353006DA21D /* SplashDialog.cpp in Sources */,
 				ED85B50C16A47353006DA21D /* LoadVamp.cpp in Sources */,
 				ED85B50D16A47353006DA21D /* VampEffect.cpp in Sources */,
-				ED85B50E16A47353006DA21D /* LoadModules.cpp in Sources */,
 				ED85B50F16A47353006DA21D /* NonGuiThread.cpp in Sources */,
 				ED85B51016A47353006DA21D /* HtmlWindow.cpp in Sources */,
 				ED85B51116A47353006DA21D /* ProgressDialog.cpp in Sources */,
@@ -10419,7 +10451,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Static";
 		};
@@ -10441,7 +10473,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
@@ -10700,7 +10732,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
@@ -10770,7 +10802,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Debug Shared";
 		};
@@ -11015,7 +11047,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
@@ -11087,7 +11119,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Shared";
 		};
@@ -11595,7 +11627,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libresample/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
 			};
 			name = "Release Static";
 		};
@@ -11621,7 +11653,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";

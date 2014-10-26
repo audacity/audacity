@@ -175,4 +175,11 @@
 // Module prefs provides a panel in prefs where users can choose which modules
 // to enable.
 #define EXPERIMENTAL_MODULE_PREFS
+
+// Define to include realtime effects processing.
+#define EXPERIMENTAL_REALTIME_EFFECTS
+
+// Define to include the effects rack (such as it is).
+#define EXPERIMENTAL_EFFECTS_RACK
+
 #endif

@@ -15,6 +15,7 @@
 
 #include "portaudio.h"
 #include "Audacity.h"
+#include "effects/Effect.h"
 #include "Experimental.h"
 
 #ifdef USE_MIDI

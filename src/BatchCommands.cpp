@@ -30,6 +30,7 @@ See also BatchCommandDialog and BatchProcessDialog.
 #include "effects/EffectManager.h"
 #include "FileNames.h"
 #include "Internat.h"
+#include "PluginManager.h"
 #include "Prefs.h"
 #include "Shuttle.h"
 #include "export/ExportFLAC.h"
@@ -264,9 +265,10 @@ wxArrayString BatchCommands::GetAllCommands()
 
    AudacityProject *project = GetActiveProject();
    if (!project)
+   {
       return commands;
+   }
 
-   EffectArray * effects;
    unsigned int i;
 
    // CLEANSPEECH remnant
@@ -276,18 +278,18 @@ wxArrayString BatchCommands::GetAllCommands()
    }
    // end CLEANSPEECH remnant
 
-   int additionalEffects=ADVANCED_EFFECT;
-
-   effects = EffectManager::Get().GetEffects(PROCESS_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT | additionalEffects);
-   for(i=0; i<effects->GetCount(); i++) {
-      if ((*effects)[i]->SupportsChains()) {
-         command=(*effects)[i]->GetEffectIdentifier();
-         if (!command.IsEmpty()) {
+   PluginManager & pm = PluginManager::Get();
+   EffectManager & em = EffectManager::Get();
+   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
+   while (plug)
+   {
+      command = em.GetEffectIdentifier(plug->GetID());
+      if (!command.IsEmpty())
+      {
             commands.Add( command);
-         }
       }
+      plug = pm.GetNextPlugin(PluginTypeEffect);
    }
-   delete effects;
 
    /* This is for later in development: include the menu commands.
          CommandManager * mManager = project->GetCommandManager();
@@ -304,29 +306,25 @@ wxArrayString BatchCommands::GetAllCommands()
 
 wxString BatchCommands::GetCurrentParamsFor(wxString command)
 {
-   Effect * f = EffectManager::Get().GetEffectByIdentifier( command );
-   if( f==NULL )
-      return wxT("");// effect not found.
-   ShuttleCli shuttle;
-   shuttle.mbStoreInClient=false;
-   f->TransferParameters( shuttle );
-   if( shuttle.mParams.IsEmpty() )
-      return wxT("");// effect had no parameters.
+   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
+   if( ID.empty() )
+   {
+      return wxEmptyString;   // effect not found.
+   }
 
-   return shuttle.mParams;
+   return EffectManager::Get().GetEffectParameters(ID);
 }
 
 bool BatchCommands::PromptForParamsFor(wxString command, wxWindow *parent)
 {
-   Effect * f = EffectManager::Get().GetEffectByIdentifier(command);
-   if( f==NULL )
-      return false;
+   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
 
-   //mFactory = factory;
-   //mProjectRate = projectRate;
-   f->mParent = parent;
-   //mTracks = list;
-   return f->PromptUser();
+   if (ID.empty())
+   {
+      return false;
+   }
+
+   return EffectManager::Get().PromptUser(ID, parent);
 }
 
 double BatchCommands::GetEndTime()
@@ -469,9 +467,9 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString c
       return WriteMp3File(filename, 56);
    } else if (command == wxT("StereoToMono")) {
       // StereoToMono is an effect masquerading as a menu item.
-      Effect * f = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
-      if (f != NULL) {
-         return ApplyEffectCommand(f, command, params);
+      const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
+      if (!ID.empty()) {
+         return ApplyEffectCommand(ID, command, params);
       }
       wxMessageBox(_("Stereo to Mono Effect not found"));
       return false;
@@ -514,15 +512,17 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString c
 }
 // end CLEANSPEECH remnant
 
-bool BatchCommands::SetCurrentParametersFor( Effect * f, const wxString command, const wxString params)
+bool BatchCommands::SetCurrentParametersFor(const wxString command, const wxString params)
 {
    // transfer the parameters to the effect...
    if( !params.IsEmpty() )
    {
-      ShuttleCli shuttle;
-      shuttle.mParams = params;
-      shuttle.mbStoreInClient=true;
-      if( !f->TransferParameters( shuttle ))
+      const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
+      if (ID.empty())
+      {
+         return false;
+      }
+      if (!EffectManager::Get().SetEffectParameters(ID, params))
       {
          wxMessageBox(
             wxString::Format(
@@ -533,7 +533,7 @@ bool BatchCommands::SetCurrentParametersFor( Effect * f, const wxString command,
    return true;
 }
 
-bool BatchCommands::ApplyEffectCommand(   Effect * f, const wxString command, const wxString params)
+bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString command, const wxString params)
 {
    //Possibly end processing here, if in batch-debug
    if( ReportAndSkip(command, params))
@@ -547,7 +547,7 @@ bool BatchCommands::ApplyEffectCommand(   Effect * f, const wxString command, co
    project->SelectAllIfNone();
 
    // NOW actually apply the effect.
-   return project->OnEffect(ALL_EFFECTS | CONFIGURED_EFFECT , f, params, false);
+   return project->OnEffect(ALL_EFFECTS | CONFIGURED_EFFECT , ID, params, false);
 }
 
 bool BatchCommands::ApplyCommand(const wxString command, const wxString params)
@@ -564,13 +564,16 @@ bool BatchCommands::ApplyCommand(const wxString command, const wxString params)
    // end CLEANSPEECH remnant
 
    // Test for an effect.
-   Effect * f = EffectManager::Get().GetEffectByIdentifier( command );
-   if( f!=NULL )
-      return ApplyEffectCommand( f, command, params );
+   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier( command );
+   if (!ID.empty())
+   {
+      return ApplyEffectCommand(ID, command, params);
+   }
 
    wxMessageBox(
       wxString::Format(
       _("Your batch command of %s was not recognized."), command.c_str() ));
+
    return false;
 }
 

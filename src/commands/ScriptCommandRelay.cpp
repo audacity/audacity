@@ -15,7 +15,7 @@
 
 \class ScriptCommandRelay
 \brief ScriptCommandRelay is just a way to move some of the scripting-specific
-code out of LoadModules.
+code out of ModuleManager.
 
 *//*******************************************************************/
 

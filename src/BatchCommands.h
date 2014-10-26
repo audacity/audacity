@@ -28,7 +28,7 @@ class BatchCommands {
    bool ApplyCommand( const wxString command, const wxString params );
    bool ApplyCommandInBatchMode(const wxString & command, const wxString &params);
    bool ApplySpecialCommand(int iCommand, const wxString command,const wxString params);
-   bool ApplyEffectCommand(Effect * f, const wxString command, const wxString params);
+   bool ApplyEffectCommand(const PluginID & ID, const wxString command, const wxString params);
    bool ReportAndSkip( const wxString command, const wxString params );
    void AbortBatch();
 
@@ -41,7 +41,7 @@ class BatchCommands {
    wxArrayString GetNames();
    static bool PromptForParamsFor( wxString command, wxWindow *parent );
    static wxString GetCurrentParamsFor( wxString command );
-   static bool SetCurrentParametersFor( Effect * f, const wxString command, const wxString params);
+   static bool SetCurrentParametersFor(const wxString command, const wxString params);
    static wxArrayString GetAllCommands();
 
    // These commands do depend on the command list.

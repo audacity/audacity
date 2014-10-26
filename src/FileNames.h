@@ -12,6 +12,7 @@
 #define __AUDACITY_FILE_NAMES__
 
 #include <wx/string.h>
+#include "Audacity.h"
 
 class wxFileName;
 class wxArrayString;
@@ -40,6 +41,9 @@ public:
    static wxString NRPDir();
    static wxString NRPFile();
    static wxString PluginsCache();
+
+   static wxString BaseDir();
+   static wxString ModulesDir();
 
    /** \brief The user plug-in directory (not a system one)
     *

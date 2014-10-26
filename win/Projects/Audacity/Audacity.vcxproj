@@ -92,7 +92,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\..;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lame;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswu;$(WXWIN)\include;..\..;..\..\..\include;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lame;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;XML_STATIC;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;NDEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -123,7 +123,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='wx3-Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(WXWIN3)\lib\vc_dll\mswu;$(WXWIN3)\include;..\..;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lame;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WXWIN3)\lib\vc_dll\mswu;$(WXWIN3)\include;..\..;..\..\..\include;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lame;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;XML_STATIC;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;NDEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -155,7 +155,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\..;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lame;&amp;quot;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WXWIN)\lib\vc_dll\mswud;$(WXWIN)\include;..\..;..\..\..\include;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lame;&amp;quot;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;XML_STATIC;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;__WXDEBUG__;_DEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -191,7 +191,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='wx3-Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(WXWIN3)\lib\vc_dll\mswud;$(WXWIN3)\include;..\..;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lame;&amp;quot;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WXWIN3)\lib\vc_dll\mswud;$(WXWIN3)\include;..\..;..\..\..\include;..\..\..\lib-src\expat\lib;..\..\..\lib-src\FileDialog;..\..\..\lib-src\FileDialog\win;..\..\..\lib-src\lib-widget-extra;..\..\..\lib-src\libflac\include;..\..\..\lib-src\libid3tag;..\..\..\lib-src\libmad\msvc++;..\..\..\lib-src\libmad;..\..\..\lib-src\libnyquist;..\..\..\lib-src\libogg\include;..\..\..\lib-src\libresample\include;..\..\..\lib-src\libsamplerate\src;..\..\..\lib-src\libscorealign;..\libsndfile;..\..\..\lib-src\libsoxr\src;..\..\..\lib-src\libvamp;..\..\..\lib-src\libvorbis\include;..\..\..\lib-src\portaudio-v19\include;..\..\..\lib-src\portmixer\include;..\..\..\lib-src\portsmf;..\..\..\lib-src\sbsms\include;..\..\..\lib-src\soundtouch\include;..\..\..\lib-src\twolame\libtwolame;..\..\..\lib-src\portmidi\pm_common;..\..\..\lib-src\portmidi\pm_win;..\..\..\lib-src\portmidi\porttime;..\..\..\lib-src\ffmpeg\win32;..\..\..\lib-src\ffmpeg;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lame;&amp;quot;$(GSTREAMER_SDK)\include\gstreamer-1.0;$(GSTREAMER_SDK)\include\glib-2.0;$(GSTREAMER_SDK)\lib\glib-2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILDING_AUDACITY;FLAC__NO_DLL;XML_STATIC;__STDC_CONSTANT_MACROS;WXUSINGDLL;__WXMSW__;__WXDEBUG__;_DEBUG;WIN32;STRICT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -247,6 +247,7 @@
     <ClCompile Include="..\..\..\src\DeviceManager.cpp" />
     <ClCompile Include="..\..\..\src\DirManager.cpp" />
     <ClCompile Include="..\..\..\src\Dither.cpp" />
+    <ClCompile Include="..\..\..\src\effects\EffectRack.cpp" />
     <ClCompile Include="..\..\..\src\Envelope.cpp" />
     <ClCompile Include="..\..\..\src\FFmpeg.cpp" />
     <ClCompile Include="..\..\..\src\FFT.cpp" />
@@ -268,7 +269,6 @@
     <ClCompile Include="..\..\..\src\LangChoice.cpp" />
     <ClCompile Include="..\..\..\src\Languages.cpp" />
     <ClCompile Include="..\..\..\src\Legacy.cpp" />
-    <ClCompile Include="..\..\..\src\LoadModules.cpp" />
     <ClCompile Include="..\..\..\src\Lyrics.cpp" />
     <ClCompile Include="..\..\..\src\LyricsWindow.cpp" />
     <ClCompile Include="..\..\..\src\Matrix.cpp" />
@@ -276,6 +276,7 @@
     <ClCompile Include="..\..\..\src\Mix.cpp" />
     <ClCompile Include="..\..\..\src\MixerBoard.cpp" />
     <ClCompile Include="..\..\..\lib-src\lib-widget-extra\NonGuiThread.cpp" />
+    <ClCompile Include="..\..\..\src\ModuleManager.cpp" />
     <ClCompile Include="..\..\..\src\NoteTrack.cpp" />
     <ClCompile Include="..\..\..\src\PitchName.cpp" />
     <ClCompile Include="..\..\..\src\PlatformCompatibility.cpp" />
@@ -493,6 +494,13 @@
     <ClCompile Include="..\..\..\src\effects\lv2\LV2PortGroup.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\audacity\ConfigInterface.h" />
+    <ClInclude Include="..\..\..\include\audacity\EffectInterface.h" />
+    <ClInclude Include="..\..\..\include\audacity\IdentInterface.h" />
+    <ClInclude Include="..\..\..\include\audacity\ImporterInterface.h" />
+    <ClInclude Include="..\..\..\include\audacity\ModuleInterface.h" />
+    <ClInclude Include="..\..\..\include\audacity\PluginInterface.h" />
+    <ClInclude Include="..\..\..\include\audacity\Types.h" />
     <ClInclude Include="..\..\..\src\AboutDialog.h" />
     <ClInclude Include="..\..\..\src\AColor.h" />
     <ClInclude Include="..\..\..\src\AllThemeResources.h" />
@@ -508,10 +516,12 @@
     <ClInclude Include="..\..\..\src\BlockFile.h" />
     <ClInclude Include="..\..\..\src\CaptureEvents.h" />
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />
+    <ClInclude Include="..\..\..\src\effects\EffectRack.h" />
     <ClInclude Include="..\..\..\src\import\FormatClassifier.h" />
     <ClInclude Include="..\..\..\src\import\ImportGStreamer.h" />
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
+    <ClInclude Include="..\..\..\src\ModuleManager.h" />
     <ClInclude Include="..\..\..\src\SseMathFuncs.h" />
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h" />
     <ClInclude Include="..\..\configwin.h" />
@@ -537,7 +547,6 @@
     <ClInclude Include="..\..\..\src\LangChoice.h" />
     <ClInclude Include="..\..\..\src\Languages.h" />
     <ClInclude Include="..\..\..\src\Legacy.h" />
-    <ClInclude Include="..\..\..\src\LoadModules.h" />
     <ClInclude Include="..\..\..\src\Lyrics.h" />
     <ClInclude Include="..\..\..\src\LyricsWindow.h" />
     <ClInclude Include="..\..\..\src\MacroMagic.h" />

@@ -149,8 +149,6 @@ audacity_SOURCES = \
 	Languages.h \
 	Legacy.cpp \
 	Legacy.h \
-	LoadModules.cpp \
-	LoadModules.h \
 	Lyrics.cpp \
 	Lyrics.h \
 	LyricsWindow.cpp \
@@ -164,6 +162,8 @@ audacity_SOURCES = \
 	Mix.h \
 	MixerBoard.cpp \
 	MixerBoard.h \
+	ModuleManager.cpp \
+	ModuleManager.h \
 	PitchName.cpp \
 	PitchName.h \
 	PlatformCompatibility.cpp \
@@ -318,6 +318,8 @@ audacity_SOURCES = \
 	effects/EffectCategory.h \
 	effects/EffectManager.cpp \
 	effects/EffectManager.h \
+	effects/EffectRack.cpp \
+	effects/EffectRack.h \
 	effects/Equalization.cpp \
 	effects/Equalization.h \
 	effects/Equalization48x.cpp \

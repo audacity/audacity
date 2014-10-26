@@ -335,7 +335,8 @@ enum
    ePreviewButton = 0x0020,
    eDebugButton   = 0x0040,
    eDefaultsButton= 0x0080,
-   ePreviewDryButton  = 0x0100
+   ePreviewDryButton  = 0x0100,
+   eApplyButton   = 0x0200,
 };
 
 enum

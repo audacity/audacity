@@ -66,7 +66,33 @@ WX_DEFINE_LIST(UnusableImportPluginList);
 WX_DEFINE_LIST(FormatList);
 WX_DEFINE_OBJARRAY(ExtImportItems);
 
+// ============================================================================
+//
+// Return reference to singleton
+//
+// (Thread-safe...no active threading during construction or after destruction)
+// ============================================================================
+Importer Importer::mInstance;
+Importer & Importer::Get()
+{
+   return mInstance;
+}
+
 Importer::Importer()
+{
+   mExtImportItems = NULL;
+}
+
+Importer::~Importer()
+{
+   if (mExtImportItems != NULL)
+   {
+      delete mExtImportItems;
+      mExtImportItems = NULL;
+   }
+}
+
+bool Importer::Initialize()
 {
    mImportPluginList = new ImportPluginList;
    mUnusableImportPluginList = new UnusableImportPluginList;
@@ -92,17 +118,19 @@ Importer::Importer()
    #endif
 
    ReadImportItems();
+
+   return true;
 }
 
-Importer::~Importer()
+bool Importer::Terminate()
 {
    WriteImportItems();
    mImportPluginList->DeleteContents(true);
    delete mImportPluginList;
    mUnusableImportPluginList->DeleteContents(true);//JKC
    delete mUnusableImportPluginList;
-   if (this->mExtImportItems != NULL)
-      delete this->mExtImportItems;
+
+   return true;
 }
 
 void Importer::GetSupportedImportFormats(FormatList *formatList)

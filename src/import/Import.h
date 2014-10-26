@@ -93,6 +93,17 @@ public:
    ~Importer();
 
    /**
+    * Return instance reference
+    */
+   static Importer & Get();
+
+   /**
+    * Initialization/Termination
+    */
+   bool Initialize();
+   bool Terminate();
+
+   /**
     * Fills @formatList with a list of supported import formats
     */
    void GetSupportedImportFormats(FormatList *formatList);
@@ -136,6 +147,7 @@ public:
               wxString &errorMessage);
 
 private:
+   static Importer mInstance;
 
    ExtImportItems *mExtImportItems;
    ImportPluginList *mImportPluginList;

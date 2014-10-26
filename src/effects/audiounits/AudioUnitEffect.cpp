@@ -113,7 +113,7 @@ AudioUnitEffect::~AudioUnitEffect()
 
 wxString AudioUnitEffect::GetEffectName()
 {
-   return mName;
+   return mName + wxT("...");
 }
 
 std::set<wxString> AudioUnitEffect::GetEffectCategories()

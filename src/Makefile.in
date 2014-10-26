@@ -299,10 +299,10 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	ImageManipulation.h InterpolateAudio.cpp InterpolateAudio.h \
 	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
 	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
-	Legacy.cpp Legacy.h LoadModules.cpp LoadModules.h Lyrics.cpp \
-	Lyrics.h LyricsWindow.cpp LyricsWindow.h MacroMagic.h \
-	Matrix.cpp Matrix.h Menus.cpp Menus.h Mix.cpp Mix.h \
-	MixerBoard.cpp MixerBoard.h PitchName.cpp PitchName.h \
+	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
+	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h Menus.cpp \
+	Menus.h Mix.cpp Mix.h MixerBoard.cpp MixerBoard.h \
+	ModuleManager.cpp ModuleManager.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
 	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
@@ -363,6 +363,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/Echo.h effects/Effect.cpp effects/Effect.h \
 	effects/EffectCategory.cpp effects/EffectCategory.h \
 	effects/EffectManager.cpp effects/EffectManager.h \
+	effects/EffectRack.cpp effects/EffectRack.h \
 	effects/Equalization.cpp effects/Equalization.h \
 	effects/Equalization48x.cpp effects/Equalization48x.h \
 	effects/Fade.cpp effects/Fade.h effects/FindClipping.cpp \
@@ -538,10 +539,10 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-InterpolateAudio.$(OBJEXT) \
 	audacity-LabelDialog.$(OBJEXT) audacity-LabelTrack.$(OBJEXT) \
 	audacity-LangChoice.$(OBJEXT) audacity-Languages.$(OBJEXT) \
-	audacity-Legacy.$(OBJEXT) audacity-LoadModules.$(OBJEXT) \
-	audacity-Lyrics.$(OBJEXT) audacity-LyricsWindow.$(OBJEXT) \
-	audacity-Matrix.$(OBJEXT) audacity-Menus.$(OBJEXT) \
-	audacity-Mix.$(OBJEXT) audacity-MixerBoard.$(OBJEXT) \
+	audacity-Legacy.$(OBJEXT) audacity-Lyrics.$(OBJEXT) \
+	audacity-LyricsWindow.$(OBJEXT) audacity-Matrix.$(OBJEXT) \
+	audacity-Menus.$(OBJEXT) audacity-Mix.$(OBJEXT) \
+	audacity-MixerBoard.$(OBJEXT) audacity-ModuleManager.$(OBJEXT) \
 	audacity-PitchName.$(OBJEXT) \
 	audacity-PlatformCompatibility.$(OBJEXT) \
 	audacity-PluginManager.$(OBJEXT) audacity-Printing.$(OBJEXT) \
@@ -602,6 +603,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	effects/audacity-Effect.$(OBJEXT) \
 	effects/audacity-EffectCategory.$(OBJEXT) \
 	effects/audacity-EffectManager.$(OBJEXT) \
+	effects/audacity-EffectRack.$(OBJEXT) \
 	effects/audacity-Equalization.$(OBJEXT) \
 	effects/audacity-Equalization48x.$(OBJEXT) \
 	effects/audacity-Fade.$(OBJEXT) \
@@ -1163,10 +1165,10 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	ImageManipulation.h InterpolateAudio.cpp InterpolateAudio.h \
 	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
 	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
-	Legacy.cpp Legacy.h LoadModules.cpp LoadModules.h Lyrics.cpp \
-	Lyrics.h LyricsWindow.cpp LyricsWindow.h MacroMagic.h \
-	Matrix.cpp Matrix.h Menus.cpp Menus.h Mix.cpp Mix.h \
-	MixerBoard.cpp MixerBoard.h PitchName.cpp PitchName.h \
+	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
+	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h Menus.cpp \
+	Menus.h Mix.cpp Mix.h MixerBoard.cpp MixerBoard.h \
+	ModuleManager.cpp ModuleManager.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
 	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
@@ -1227,6 +1229,7 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	effects/Echo.h effects/Effect.cpp effects/Effect.h \
 	effects/EffectCategory.cpp effects/EffectCategory.h \
 	effects/EffectManager.cpp effects/EffectManager.h \
+	effects/EffectRack.cpp effects/EffectRack.h \
 	effects/Equalization.cpp effects/Equalization.h \
 	effects/Equalization48x.cpp effects/Equalization48x.h \
 	effects/Fade.cpp effects/Fade.h effects/FindClipping.cpp \
@@ -1598,6 +1601,8 @@ effects/audacity-Effect.$(OBJEXT): effects/$(am__dirstamp) \
 effects/audacity-EffectCategory.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-EffectManager.$(OBJEXT): effects/$(am__dirstamp) \
+	effects/$(DEPDIR)/$(am__dirstamp)
+effects/audacity-EffectRack.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-Equalization.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
@@ -2000,13 +2005,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-LangChoice.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Languages.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Legacy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-LoadModules.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Lyrics.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-LyricsWindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Matrix.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Menus.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Mix.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-MixerBoard.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ModuleManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-NoteTrack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-PitchName.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-PlatformCompatibility.Po@am__quote@
@@ -2107,6 +2112,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Effect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-EffectCategory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-EffectManager.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-EffectRack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Equalization.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Equalization48x.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Fade.Po@am__quote@
@@ -2991,20 +2997,6 @@ audacity-Legacy.obj: Legacy.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Legacy.obj `if test -f 'Legacy.cpp'; then $(CYGPATH_W) 'Legacy.cpp'; else $(CYGPATH_W) '$(srcdir)/Legacy.cpp'; fi`
 
-audacity-LoadModules.o: LoadModules.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-LoadModules.o -MD -MP -MF $(DEPDIR)/audacity-LoadModules.Tpo -c -o audacity-LoadModules.o `test -f 'LoadModules.cpp' || echo '$(srcdir)/'`LoadModules.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-LoadModules.Tpo $(DEPDIR)/audacity-LoadModules.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='LoadModules.cpp' object='audacity-LoadModules.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-LoadModules.o `test -f 'LoadModules.cpp' || echo '$(srcdir)/'`LoadModules.cpp
-
-audacity-LoadModules.obj: LoadModules.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-LoadModules.obj -MD -MP -MF $(DEPDIR)/audacity-LoadModules.Tpo -c -o audacity-LoadModules.obj `if test -f 'LoadModules.cpp'; then $(CYGPATH_W) 'LoadModules.cpp'; else $(CYGPATH_W) '$(srcdir)/LoadModules.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-LoadModules.Tpo $(DEPDIR)/audacity-LoadModules.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='LoadModules.cpp' object='audacity-LoadModules.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-LoadModules.obj `if test -f 'LoadModules.cpp'; then $(CYGPATH_W) 'LoadModules.cpp'; else $(CYGPATH_W) '$(srcdir)/LoadModules.cpp'; fi`
-
 audacity-Lyrics.o: Lyrics.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Lyrics.o -MD -MP -MF $(DEPDIR)/audacity-Lyrics.Tpo -c -o audacity-Lyrics.o `test -f 'Lyrics.cpp' || echo '$(srcdir)/'`Lyrics.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-Lyrics.Tpo $(DEPDIR)/audacity-Lyrics.Po
@@ -3088,6 +3080,20 @@ audacity-MixerBoard.obj: MixerBoard.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='MixerBoard.cpp' object='audacity-MixerBoard.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-MixerBoard.obj `if test -f 'MixerBoard.cpp'; then $(CYGPATH_W) 'MixerBoard.cpp'; else $(CYGPATH_W) '$(srcdir)/MixerBoard.cpp'; fi`
+
+audacity-ModuleManager.o: ModuleManager.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ModuleManager.o -MD -MP -MF $(DEPDIR)/audacity-ModuleManager.Tpo -c -o audacity-ModuleManager.o `test -f 'ModuleManager.cpp' || echo '$(srcdir)/'`ModuleManager.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ModuleManager.Tpo $(DEPDIR)/audacity-ModuleManager.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ModuleManager.cpp' object='audacity-ModuleManager.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ModuleManager.o `test -f 'ModuleManager.cpp' || echo '$(srcdir)/'`ModuleManager.cpp
+
+audacity-ModuleManager.obj: ModuleManager.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ModuleManager.obj -MD -MP -MF $(DEPDIR)/audacity-ModuleManager.Tpo -c -o audacity-ModuleManager.obj `if test -f 'ModuleManager.cpp'; then $(CYGPATH_W) 'ModuleManager.cpp'; else $(CYGPATH_W) '$(srcdir)/ModuleManager.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ModuleManager.Tpo $(DEPDIR)/audacity-ModuleManager.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ModuleManager.cpp' object='audacity-ModuleManager.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ModuleManager.obj `if test -f 'ModuleManager.cpp'; then $(CYGPATH_W) 'ModuleManager.cpp'; else $(CYGPATH_W) '$(srcdir)/ModuleManager.cpp'; fi`
 
 audacity-PitchName.o: PitchName.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-PitchName.o -MD -MP -MF $(DEPDIR)/audacity-PitchName.Tpo -c -o audacity-PitchName.o `test -f 'PitchName.cpp' || echo '$(srcdir)/'`PitchName.cpp
@@ -4124,6 +4130,20 @@ effects/audacity-EffectManager.obj: effects/EffectManager.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/EffectManager.cpp' object='effects/audacity-EffectManager.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-EffectManager.obj `if test -f 'effects/EffectManager.cpp'; then $(CYGPATH_W) 'effects/EffectManager.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/EffectManager.cpp'; fi`
+
+effects/audacity-EffectRack.o: effects/EffectRack.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-EffectRack.o -MD -MP -MF effects/$(DEPDIR)/audacity-EffectRack.Tpo -c -o effects/audacity-EffectRack.o `test -f 'effects/EffectRack.cpp' || echo '$(srcdir)/'`effects/EffectRack.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-EffectRack.Tpo effects/$(DEPDIR)/audacity-EffectRack.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/EffectRack.cpp' object='effects/audacity-EffectRack.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-EffectRack.o `test -f 'effects/EffectRack.cpp' || echo '$(srcdir)/'`effects/EffectRack.cpp
+
+effects/audacity-EffectRack.obj: effects/EffectRack.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-EffectRack.obj -MD -MP -MF effects/$(DEPDIR)/audacity-EffectRack.Tpo -c -o effects/audacity-EffectRack.obj `if test -f 'effects/EffectRack.cpp'; then $(CYGPATH_W) 'effects/EffectRack.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/EffectRack.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-EffectRack.Tpo effects/$(DEPDIR)/audacity-EffectRack.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/EffectRack.cpp' object='effects/audacity-EffectRack.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-EffectRack.obj `if test -f 'effects/EffectRack.cpp'; then $(CYGPATH_W) 'effects/EffectRack.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/EffectRack.cpp'; fi`
 
 effects/audacity-Equalization.o: effects/Equalization.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-Equalization.o -MD -MP -MF effects/$(DEPDIR)/audacity-Equalization.Tpo -c -o effects/audacity-Equalization.o `test -f 'effects/Equalization.cpp' || echo '$(srcdir)/'`effects/Equalization.cpp

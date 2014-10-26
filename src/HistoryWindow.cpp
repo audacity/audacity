@@ -30,6 +30,7 @@ undo memory so as to free up space.
 #include <wx/textctrl.h>
 
 #include "../images/Arrow.xpm"
+#include "../images/Empty9x16.xpm"
 #include "HistoryWindow.h"
 #include "UndoManager.h"
 #include "Project.h"
@@ -58,7 +59,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    mSelected = 0;
 
    wxImageList *imageList = new wxImageList(9, 16);
-   imageList->Add(wxIcon(empty_9x16_xpm));
+   imageList->Add(wxIcon(empty9x16_xpm));
    imageList->Add(wxIcon(arrow_xpm));
 
    //------------------------- Main section --------------------

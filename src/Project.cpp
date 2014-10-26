@@ -134,7 +134,7 @@ scroll information.  It also has some status flags.
 #ifdef EXPERIMENTAL_OD_FLAC
 #include "ondemand/ODDecodeFlacTask.h"
 #endif
-#include "LoadModules.h"
+#include "ModuleManager.h"
 
 #include "Theme.h"
 #include "AllThemeResources.h"
@@ -509,7 +509,7 @@ AudacityProject *CreateNewAudacityProject()
    // and add the shortcut keys to the tooltips.
    p->GetControlToolBar()->RegenerateToolsTooltips();
 
-   ModuleManager::Dispatch(ProjectInitialized);
+   ModuleManager::Get().Dispatch(ProjectInitialized);
 
    p->Show(true);
 
@@ -765,7 +765,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mRecordingRecoveryHandler(NULL),
      mImportedDependencies(false),
      mWantSaveCompressed(false),
-     mLastEffect(NULL),
+     mLastEffect(wxEmptyString),
      mLastEffectType(0),
      mTimerRecordCanceled(false),
      mMenuClose(false)
@@ -1960,7 +1960,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       }
    }
 
-   ModuleManager::Dispatch(ProjectClosing);
+   ModuleManager::Get().Dispatch(ProjectClosing);
 
    // Stop the timer since there's no need to update anything anymore
    delete mTimer;
@@ -2152,7 +2152,7 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
 
    // Construct the filter
    l.DeleteContents(true);
-   wxGetApp().mImporter->GetSupportedImportFormats(&l);
+   Importer::Get().GetSupportedImportFormats(&l);
 
    for (FormatList::compatibility_iterator n = l.GetFirst(); n; n = n->GetNext()) {
       /* this loop runs once per supported _format_ */
@@ -2160,7 +2160,7 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
 
       wxString newfilter = f->formatName + wxT("|");
       // bung format name into string plus | separator
-      for (size_t i = 0; i < f->formatExtensions.GetCount(); i++) {
+      for (size_t i = 0; i < f->formatExtensions.size(); i++) {
          /* this loop runs once per valid _file extension_ for file containing
           * the current _format_ */
          if (!newfilter.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
@@ -3521,7 +3521,7 @@ bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= 
    int numTracks;
    wxString errorMessage=wxT("");
 
-   numTracks = wxGetApp().mImporter->Import(fileName,
+   numTracks = Importer::Get().Import(fileName,
                                             mTrackFactory,
                                             &newTracks,
                                             mTags,

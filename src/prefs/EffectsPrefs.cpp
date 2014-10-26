@@ -23,6 +23,7 @@
 
 #include "../AudacityApp.h"
 #include "../Languages.h"
+#include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -133,13 +134,45 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 #endif
+}
 
+void EffectsPrefs::SetState(const wxString & family, const wxString & key)
+{
+   PluginManager & pm = PluginManager::Get();
+   bool state = gPrefs->Read(wxT("/Nyquist/Enable"), true);
+
+   const PluginDescriptor *plug = pm.GetFirstPluginForEffectFamily(family);
+   while (plug)
+   {
+      pm.EnablePlugin(plug->GetID(), state);
+      plug = pm.GetNextPluginForEffectFamily(family);
+   }
 }
 
 bool EffectsPrefs::Apply()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+
+#ifdef USE_NYQUIST
+   SetState(wxT("Nyquist"), wxT("/Nyquist/Enable"));
+#endif
+
+#ifdef USE_LADSPA
+   SetState(wxT("Ladspa"), wxT("/Ladspa/Enable"));
+#endif
+
+#ifdef USE_LV2
+   SetState(wxT("LV2"), wxT("/LV2/Enable"));
+#endif
+
+#ifdef USE_AUDIO_UNITS
+   SetState(wxT("AudioUnit"), wxT("/AudioUnits/Enable"));
+#endif
+
+#ifdef USE_VAMP
+   SetState(wxT("VAMP"), wxT("/VAMP/Enable"));
+#endif
 
    return true;
 }

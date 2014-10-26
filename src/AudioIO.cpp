@@ -1371,6 +1371,13 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    while( mAudioThreadShouldCallFillBuffersOnce == true )
       wxMilliSleep( 50 );
 
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+   if (mNumPlaybackChannels > 0)
+   {
+      EffectManager::Get().RealtimeInitialize(1, sampleRate);
+   }
+#endif
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    // if no playback, reset the midi time to zero to roughly sync
    // with recording (or if recording is not going to happen, just
@@ -1419,6 +1426,10 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 
 void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 {
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+   EffectManager::Get().RealtimeFinalize();
+#endif
+
    if(mPlaybackBuffers)
    {
       for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
@@ -1599,6 +1610,11 @@ void AudioIO::StopStream()
                        // a race condition -RBD
    if (mStopStreamCount != 1)
       return;
+
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+   // No longer need effects processing
+   EffectManager::Get().RealtimeFinalize();
+#endif
 
    //
    // We got here in one of two ways:
@@ -1827,6 +1843,20 @@ void AudioIO::StopStream()
 
 void AudioIO::SetPaused(bool state)
 {
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+   if (state != mPaused)
+   {
+      if (state)
+      {
+         EffectManager::Get().RealtimeSuspend();
+      }
+      else
+      {
+         EffectManager::Get().RealtimeResume();
+      }
+   }
+#endif
+
    mPaused = state;
 }
 
@@ -3535,6 +3565,10 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #ifndef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
             if (cut) // no samples to process, they've been discarded
                continue;
+#endif
+            
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+            EffectManager::Get().RealtimeProcessMono(tempFloats, len);
 #endif
 
             if (vt->GetChannel() == Track::LeftChannel ||

@@ -322,6 +322,9 @@ dnl Pull in library Cflags and so on for the non-optional libraries
 dnl All libraries in lib-src should build static libraries, but not shared ones.
 ac_configure_args="$ac_configure_args --enable-static=yes --enable-shared=no"
 
+dnl Include "external" headers
+CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/include"
+
 dnl Include FileDialog
 AC_CONFIG_SUBDIRS([lib-src/FileDialog])
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
@@ -625,7 +628,7 @@ case "${host_os}" in
       
       dnl VST support on platforms other than Mac OS and Windows not enabled for
       dnl 2.0.6 release
-	   use_vst="no"
+	   dnl use_vst="no"
    ;;
 esac
 

@@ -43,6 +43,8 @@
 #include <wx/mac/private.h>
 #endif
 
+#include "audacity/Types.h"
+
 #include "AColor.h"
 #include "AudacityApp.h"
 #include "AudioIO.h"
@@ -68,11 +70,9 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/ASlider.h"
-#include "widgets/Ruler.h"
-#include "xml/XMLTagHandler.h"
-#include "widgets/ASlider.h"
 #include "widgets/ProgressDialog.h"
 #include "widgets/Ruler.h"
+#include "xml/XMLTagHandler.h"
 
 // PRL:  These lines allow you to remove Project.h above.
 // They must be included before the definition of macro new below.

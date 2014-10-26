@@ -2170,6 +2170,12 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
       bs->AddButton( new wxButton( parent, wxID_NO ) );
    }
 
+   if( buttons & eApplyButton )
+   {
+      b = new wxButton( parent, wxID_APPLY );
+      bs->AddButton( b );
+   }
+
    if( buttons & eHelpButton )
    {
       bs->AddButton( new wxButton( parent, wxID_HELP ) );
@@ -2187,7 +2193,7 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
 
    if( buttons & eDefaultsButton )
    {
-      bs->Add(new wxButton( parent, eDefaultsID, _("&Defaults") ) );
+      bs->Add(new wxButton( parent, eDefaultsID, _("&Defaults") ), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
       bs->Add( 20, 0 );
    }
 

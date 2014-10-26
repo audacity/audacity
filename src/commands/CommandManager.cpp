@@ -91,6 +91,7 @@ CommandManager.  It holds the callback for one command.
 #include "CommandManager.h"
 
 #include "Keyboard.h"
+#include "../PluginManager.h"
 #include "../effects/EffectManager.h"
 
 // On wxGTK, there may be many many many plugins, but the menus don't automatically
@@ -1072,7 +1073,8 @@ bool CommandManager::HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint
    unsigned int i;
 
    // Linear search for now...
-   for(i=0; i<mCommandList.GetCount(); i++) {
+   for (i = 0; i < mCommandList.GetCount(); i++)
+   {
       if (!mCommandList[i]->multi)
       {
          if( Str.IsSameAs( mCommandList[i]->name ))
@@ -1086,23 +1088,23 @@ bool CommandManager::HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint
    // instead we only try the effects.
    AudacityProject * proj = GetActiveProject();
    if( !proj )
+   {
       return false;
-
-   bool result = false;
-   int effectFlags = ALL_EFFECTS | CONFIGURED_EFFECT;
-   EffectArray *effects = EffectManager::Get().GetEffects(effectFlags);
-   if (effects) {
-      for(i=0; i<effects->GetCount(); i++) {
-         wxString effectName = (*effects)[i]->GetEffectName();
-         if( Str.IsSameAs( effectName ))
-         {
-            result = proj->OnEffect( effectFlags, (*effects)[i] );
-            break;
-         }
-      }
-      delete effects;
    }
-   return result;
+
+   PluginManager & pm = PluginManager::Get();
+   EffectManager & em = EffectManager::Get();
+   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
+   while (plug)
+         {
+      if (em.GetEffectName(plug->GetID()).IsSameAs(Str))
+      {
+         return proj->OnEffect( ALL_EFFECTS | CONFIGURED_EFFECT, plug->GetID()); 
+      }
+      plug = pm.GetNextPlugin(PluginTypeEffect);
+   }
+
+   return false;
 }
 
 void CommandManager::GetCategories(wxArrayString &cats)

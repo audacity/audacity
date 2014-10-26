@@ -107,6 +107,7 @@ const int effEditOpen = 14;
 const int effEditClose = 15;
 const int effEditIdle = 19;
 const int effEditTop = 20;
+const int effIdentify = 22; // from http://www.asseca.org/vst-24-specs/efIdentify.html
 const int effGetChunk = 23; // from Ardour
 const int effSetChunk = 24; // from Ardour
 const int effProcessEvents = 25;
@@ -277,8 +278,7 @@ public:
    void *user;
    // Id 48-4b
    int32_t uniqueID;
-   // Don't know 4c-4f
-   char unknown1[4];
+   int32_t version;
    // processReplacing 50-53
    void (* processReplacing)( AEffect * , float * * , float * * , int );
 

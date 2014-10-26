@@ -68,12 +68,12 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/AppCommandEvent.h"
 #include "effects/LoadEffects.h"
 #include "effects/Contrast.h"
-#include "effects/VST/VSTEffect.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
 #include "Internat.h"
 #include "LangChoice.h"
 #include "Languages.h"
+#include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "Screenshot.h"
@@ -95,7 +95,7 @@ It handles initialization and termination by subclassing wxApp.
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
 
-#include "LoadModules.h"
+#include "ModuleManager.h"
 
 #include "import/Import.h"
 
@@ -274,7 +274,7 @@ void QuitAudacity(bool bForce)
 
    LWSlider::DeleteSharedTipPanel();
 
-   ModuleManager::Dispatch(AppQuiting);
+   ModuleManager::Get().Dispatch(AppQuiting);
 
    if (gParentFrame)
       gParentFrame->Destroy();
@@ -1008,6 +1008,7 @@ int AudacityApp::FilterEvent(wxEvent & event)
    return -1;
 }
 #endif
+#include "effects/VST/VSTEffect.h"
 
 // The `main program' equivalent, creating the windows and returning the
 // main frame
@@ -1041,16 +1042,6 @@ bool AudacityApp::OnInit()
 
    wxTheApp->SetVendorName(vendorName);
    wxTheApp->SetAppName(appName);
-
-#ifdef USE_VST // if no VST support, answer is always no
-   // Have we been started to check a plugin?
-   if (argc == 3 && wxStrcmp(argv[1], VSTCMDKEY) == 0) {
-      wxHandleFatalExceptions();
-
-      VSTEffect::Check(argv[2]);
-      return false;
-   }
-#endif
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...
@@ -1183,9 +1174,12 @@ bool AudacityApp::OnInit()
 
    // Initialize the CommandHandler
    InitCommandHandler();
-   // Initialize the ModuleManager, including loading found modules
-   ModuleManager::Initialize(*mCmdHandler);
 
+   // Initialize the PluginManager
+   PluginManager::Get().Initialize();
+
+   // Initialize the ModuleManager, including loading found modules
+   ModuleManager::Get().Initialize(*mCmdHandler);
 
 #if !wxCHECK_VERSION(3, 0, 0)
    FinishInits();
@@ -1248,7 +1242,6 @@ void AudacityApp::FinishInits()
 
    LoadEffects();
 
-
 #ifdef __WXMAC__
 
    // On the Mac, users don't expect a program to quit when you close the last window.
@@ -1310,7 +1303,7 @@ void AudacityApp::FinishInits()
    FFmpegStartup();
    #endif
 
-   mImporter = new Importer;
+   Importer::Get().Initialize();
 
    //
    // Auto-recovery
@@ -1474,7 +1467,7 @@ void AudacityApp::FinishInits()
 
    gInited = true;
 
-   ModuleManager::Dispatch(AppInitialized);
+   ModuleManager::Get().Dispatch(AppInitialized);
 
    mWindowRectAlreadySaved = FALSE;
 }
@@ -1823,8 +1816,7 @@ int AudacityApp::OnExit()
    delete mIPCServ;
 #endif
 
-   if (mImporter)
-      delete mImporter;
+   Importer::Get().Terminate();
 
    if(gPrefs)
    {
@@ -1855,6 +1847,9 @@ int AudacityApp::OnExit()
    BlockFile::Deinit();
 
    DeinitAudioIO();
+
+   // Terminate the PluginManager (must be done before deleting the locale)
+   PluginManager::Get().Terminate();
 
    if (mLocale)
       delete mLocale;

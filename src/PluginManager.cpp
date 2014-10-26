@@ -13,18 +13,34 @@
 
 *//*******************************************************************/
 
+#include <algorithm>
+
 #include "Audacity.h"
 
 #include <wx/defs.h>
+#include <wx/dialog.h>
+#include <wx/dir.h>
 #include <wx/dynarray.h>
 #include <wx/dynlib.h>
 #include <wx/filename.h>
+#include <wx/icon.h>
+#include <wx/imaglist.h>
 #include <wx/list.h>
+#include <wx/listctrl.h>
 #include <wx/log.h>
 #include <wx/string.h>
+#include <wx/tokenzr.h>
 #include <wx/wfstream.h>
 
+#include "audacity/EffectInterface.h"
+
+#include "AudacityApp.h"
+#include "effects/EffectManager.h"
 #include "FileNames.h"
+#include "ModuleManager.h"
+#include "PlatformCompatibility.h"
+#include "Prefs.h"
+#include "ShuttleGui.h"
 #include "xml/XMLFileReader.h"
 #include "xml/XMLWriter.h"
 
@@ -32,259 +48,1697 @@
 
 #include <wx/arrimpl.cpp>
 
+// ============================================================================
+//
+//
+//
+// ============================================================================
+#if wxUSE_ACCESSIBILITY
+
+class CheckListAx: public wxWindowAccessible
+{
+public:
+   CheckListAx(wxListCtrl * window);
+
+   virtual ~ CheckListAx();
+
+   // Retrieves the address of an IDispatch interface for the specified child.
+   // All objects must support this property.
+   virtual wxAccStatus GetChild( int childId, wxAccessible **child );
+
+   // Gets the number of children.
+   virtual wxAccStatus GetChildCount( int *childCount );
+
+   // Gets the default action for this object (0) or > 0 (the action for a child).
+   // Return wxACC_OK even if there is no action. actionName is the action, or the empty
+   // string if there is no action.
+   // The retrieved string describes the action that is performed on an object,
+   // not what the object does as a result. For example, a toolbar button that prints
+   // a document has a default action of "Press" rather than "Prints the current document."
+   virtual wxAccStatus GetDefaultAction( int childId, wxString *actionName );
+
+   // Returns the description for this object or a child.
+   virtual wxAccStatus GetDescription( int childId, wxString *description );
+
+   // Gets the window with the keyboard focus.
+   // If childId is 0 and child is NULL, no object in
+   // this subhierarchy has the focus.
+   // If this object has the focus, child should be 'this'.
+   virtual wxAccStatus GetFocus( int *childId, wxAccessible **child );
+
+   // Returns help text for this object or a child, similar to tooltip text.
+   virtual wxAccStatus GetHelpText( int childId, wxString *helpText );
+
+   // Returns the keyboard shortcut for this object or child.
+   // Return e.g. ALT+K
+   virtual wxAccStatus GetKeyboardShortcut( int childId, wxString *shortcut );
+
+   // Returns the rectangle for this object (id = 0) or a child element (id > 0).
+   // rect is in screen coordinates.
+   virtual wxAccStatus GetLocation( wxRect& rect, int elementId );
+
+   // Gets the name of the specified object.
+   virtual wxAccStatus GetName( int childId, wxString *name );
+
+   // Returns a role constant.
+   virtual wxAccStatus GetRole( int childId, wxAccRole *role );
+
+   // Gets a variant representing the selected children
+   // of this object.
+   // Acceptable values:
+   // - a null variant (IsNull() returns TRUE)
+   // - a list variant (GetType() == wxT("list"))
+   // - an integer representing the selected child element,
+   //   or 0 if this object is selected (GetType() == wxT("long"))
+   // - a "void*" pointer to a wxAccessible child object
+   virtual wxAccStatus GetSelections( wxVariant *selections );
+
+   // Returns a state constant.
+   virtual wxAccStatus GetState( int childId, long* state );
+
+   // Returns a localized string representing the value for the object
+   // or child.
+   virtual wxAccStatus GetValue( int childId, wxString *strValue );
+
+   void SetSelected( int item );
+
+private:
+   wxListCtrl *mParent;
+   int mLastId;
+};
+
+CheckListAx::CheckListAx( wxListCtrl * window ):
+   wxWindowAccessible( window )
+{
+   mParent = window;
+   mLastId = -1;
+}
+
+CheckListAx::~CheckListAx()
+{
+   }
+
+void CheckListAx::SetSelected( int item )
+{
+   if (mLastId != -1) {
+      NotifyEvent( wxACC_EVENT_OBJECT_SELECTIONREMOVE,
+               mParent,
+               wxOBJID_CLIENT,
+               mLastId );
+      mLastId = -1;
+}
+
+   if (item != -1)
+{
+      NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
+                  mParent,
+                  wxOBJID_CLIENT,
+                  item + 1 );
+
+      NotifyEvent( wxACC_EVENT_OBJECT_SELECTION,
+                  mParent,
+                  wxOBJID_CLIENT,
+                  item + 1 );
+
+      mLastId = item + 1;
+   }
+}
+
+// Retrieves the address of an IDispatch interface for the specified child.
+// All objects must support this property.
+wxAccStatus CheckListAx::GetChild( int childId, wxAccessible** child )
+{
+   if( childId == wxACC_SELF )
+   {
+      *child = this;
+   }
+   else
+   {
+      *child = NULL;
+   }
+
+   return wxACC_OK;
+}
+
+// Gets the number of children.
+wxAccStatus CheckListAx::GetChildCount( int *childCount )
+{
+   *childCount = mParent->GetItemCount();
+
+   return wxACC_OK;
+}
+
+// Gets the default action for this object (0) or > 0 (the action for a child).
+// Return wxACC_OK even if there is no action. actionName is the action, or the empty
+// string if there is no action.
+// The retrieved string describes the action that is performed on an object,
+// not what the object does as a result. For example, a toolbar button that prints
+// a document has a default action of "Press" rather than "Prints the current document."
+wxAccStatus CheckListAx::GetDefaultAction( int WXUNUSED(childId), wxString *actionName )
+{
+   actionName->Clear();
+
+   return wxACC_OK;
+}
+
+// Returns the description for this object or a child.
+wxAccStatus CheckListAx::GetDescription( int WXUNUSED(childId), wxString *description )
+{
+   description->Clear();
+
+   return wxACC_OK;
+}
+
+// Gets the window with the keyboard focus.
+// If childId is 0 and child is NULL, no object in
+// this subhierarchy has the focus.
+// If this object has the focus, child should be 'this'.
+wxAccStatus CheckListAx::GetFocus( int *childId, wxAccessible **child )
+{
+   *childId = 0;
+   *child = this;
+
+   return wxACC_OK;
+}
+
+// Returns help text for this object or a child, similar to tooltip text.
+wxAccStatus CheckListAx::GetHelpText( int WXUNUSED(childId), wxString *helpText )
+{
+   helpText->Clear();
+
+   return wxACC_OK;
+}
+
+// Returns the keyboard shortcut for this object or child.
+// Return e.g. ALT+K
+wxAccStatus CheckListAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *shortcut )
+{
+   shortcut->Clear();
+
+   return wxACC_OK;
+}
+
+// Returns the rectangle for this object (id = 0) or a child element (id > 0).
+// rect is in screen coordinates.
+wxAccStatus CheckListAx::GetLocation( wxRect& rect, int elementId )
+   {
+   if( elementId == wxACC_SELF )
+      {
+      rect = mParent->GetRect();
+      rect.SetPosition( mParent->GetParent()->ClientToScreen( rect.GetPosition() ) );
+      }
+      else
+      {
+      if( elementId <= mParent->GetItemCount() )
+      {
+         mParent->GetItemRect( elementId - 1, rect, wxLIST_RECT_LABEL );
+         rect.SetPosition( mParent->ClientToScreen( rect.GetPosition() ) );
+      }
+   }
+
+   return wxACC_OK;
+}
+
+// Gets the name of the specified object.
+wxAccStatus CheckListAx::GetName( int WXUNUSED(childId), wxString *name )
+{
+   *name = mParent->GetName();
+
+   return wxACC_OK;
+}
+
+// Returns a role constant.
+wxAccStatus CheckListAx::GetRole( int childId, wxAccRole *role )
+{
+   if( childId == wxACC_SELF )
+   {
+      *role = wxROLE_SYSTEM_LIST;
+   }
+   else
+   {
+      *role = wxROLE_SYSTEM_LISTITEM;
+   }
+
+   return wxACC_OK;
+}
+
+// Gets a variant representing the selected children
+// of this object.
+// Acceptable values:
+// - a null variant (IsNull() returns TRUE)
+// - a list variant (GetType() == wxT("list"))
+// - an integer representing the selected child element,
+//   or 0 if this object is selected (GetType() == wxT("long"))
+// - a "void*" pointer to a wxAccessible child object
+wxAccStatus CheckListAx::GetSelections( wxVariant * WXUNUSED(selections) )
+{
+   return wxACC_NOT_IMPLEMENTED;
+}
+
+// Returns a state constant.
+wxAccStatus CheckListAx::GetState( int childId, long *state )
+{
+   int flag = wxACC_STATE_SYSTEM_FOCUSABLE;
+
+   if( childId == wxACC_SELF )
+   {
+      flag |= wxACC_STATE_SYSTEM_FOCUSED;
+   }
+   else
+   {
+      wxListItem item;
+
+      item.SetId( childId - 1 );
+      item.SetState( wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED );
+      item.SetMask( wxLIST_MASK_IMAGE | wxLIST_MASK_STATE );
+
+      if( mParent->GetItem( item ) )
+      {
+         flag |= wxACC_STATE_SYSTEM_SELECTABLE;
+
+         long state = item.GetState();
+
+         if( state & wxLIST_STATE_FOCUSED )
+         {
+            flag |= wxACC_STATE_SYSTEM_FOCUSED;
+         }
+
+         if( state & wxLIST_STATE_SELECTED )
+         {
+            flag |= wxACC_STATE_SYSTEM_SELECTED;
+         }
+
+         if( item.GetImage() != 0 )
+         {
+            flag |= wxACC_STATE_SYSTEM_CHECKED;
+         }
+      }
+   }
+
+   *state = flag;
+
+   return wxACC_OK;
+}
+
+// Returns a localized string representing the value for the object
+// or child.
+wxAccStatus CheckListAx::GetValue( int childId, wxString *strValue )
+{
+   if( childId == 0 )
+   {
+      return wxACC_OK;
+   }
+   else
+   {
+      *strValue = mParent->GetItemText( childId - 1 );
+   }
+
+   return wxACC_OK;
+}
+
+#endif
+
+// ============================================================================
+//
+//
+//
+// ============================================================================
+
+#include "../images/Unchecked.xpm"
+#include "../images/Checked.xpm"
+#include "../images/Arrow15x15.xpm"
+
+#define EffectListID       7001
+#define EffectClearAllID   7002
+#define EffectSelectAllID  7003
+
+class PluginRegistrationDialog : public wxDialog
+{
+public:
+   // constructors and destructors
+   PluginRegistrationDialog();
+   virtual ~PluginRegistrationDialog();
+
+private:
+   void Populate();
+   void PopulateOrExchange(ShuttleGui & S);
+
+   void OnOK(wxCommandEvent & evt);
+   void OnCancel(wxCommandEvent & evt);
+   void OnListChar(wxKeyEvent & evt);
+   void OnListMouseDown(wxMouseEvent & evt);
+   void OnSelectAll(wxCommandEvent & evt);
+   void OnClearAll(wxCommandEvent & evt);
+
+   void SetBoldOrRegular(int i);
+   void SetState(int i, int state);
+   void ToggleItem(int i);
+
+private:
+   ModuleInterface *mMod;
+
+#if wxUSE_ACCESSIBILITY
+   CheckListAx *mAx;
+#endif
+
+   wxListCtrl *mEffects;
+   PluginIDList mProvs;
+   wxArrayString mPaths;
+   std::vector<int> miState;
+
+   bool mCancelClicked;
+
+   DECLARE_EVENT_TABLE()
+};
+
+BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialog)
+   EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnOK)
+   EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
+   EVT_BUTTON(EffectClearAllID, PluginRegistrationDialog::OnClearAll)
+   EVT_BUTTON(EffectSelectAllID, PluginRegistrationDialog::OnSelectAll)
+END_EVENT_TABLE()
+
+PluginRegistrationDialog::PluginRegistrationDialog()
+:  wxDialog(wxGetApp().GetTopWindow(),
+            wxID_ANY,
+            _("Register Effects"),
+            wxDefaultPosition, wxDefaultSize,
+            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+{
+   mEffects = NULL;
+   SetLabel(_("Register Effects"));         // Provide visual label
+   SetName(_("Register Effects"));          // Provide audible label
+   Populate();
+   SetReturnCode(wxID_OK);
+}
+
+PluginRegistrationDialog::~PluginRegistrationDialog()
+{
+   mEffects->Disconnect(wxEVT_LEFT_DOWN,
+                        wxMouseEventHandler(PluginRegistrationDialog::OnListMouseDown),
+                        NULL,
+                        this);
+   mEffects->Disconnect(wxEVT_KEY_DOWN,
+                        wxKeyEventHandler(PluginRegistrationDialog::OnListChar),
+                        NULL,
+                        this);
+}
+
+void PluginRegistrationDialog::Populate()
+{
+   //------------------------- Main section --------------------
+   ShuttleGui S(this, eIsCreating);
+   PopulateOrExchange(S);
+   // ----------------------- End of main section --------------
+}
+
+WX_DECLARE_STRING_HASH_MAP(wxString, ProviderMap);
+
+/// Defines the dialog and does data exchange with it.
+void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
+{
+   wxImageList * pImageList = new wxImageList( 15, 15 );
+
+#define SHOW_UNCHECKED (0)
+#define SHOW_CHECKED (1)
+#define SHOW_ARROW (2)
+
+#define COL_NAME (0)
+#define COL_PATH (1)
+
+   pImageList->Add(wxBitmap(unchecked_xpm));
+   pImageList->Add(wxBitmap(checked_xpm));
+   pImageList->Add(wxBitmap(arrow15x15_xpm));
+
+   S.StartVerticalLay(true);
+   {
+      /*i18n-hint: The dialog shows a list of plugins with check-boxes 
+       beside each one.*/
+      S.StartStatic(_("&Select Plug-ins to Install or press ENTER to Install All"), true);
+      {
+         S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES );
+         mEffects = S.Id(EffectListID).AddListControlReportMode();
+         mEffects->Connect(wxEVT_LEFT_DOWN,
+                           wxMouseEventHandler(PluginRegistrationDialog::OnListMouseDown),
+                           NULL,
+                           this);
+         mEffects->Connect(wxEVT_KEY_DOWN,
+                           wxKeyEventHandler(PluginRegistrationDialog::OnListChar),
+                           NULL,
+                           this);
+#if wxUSE_ACCESSIBILITY
+         mAx = new CheckListAx(mEffects);
+         mEffects->SetAccessible(mAx);
+#endif
+         mEffects->AssignImageList( pImageList, wxIMAGE_LIST_SMALL );
+         mEffects->InsertColumn(COL_NAME, _("Plug-in Name"));
+         mEffects->InsertColumn(COL_PATH, _("Path"));
+      }
+      S.EndStatic();
+
+      S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, false);
+      {
+         S.SetBorder(10);
+         S.StartHorizontalLay(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+         {
+            S.AddSpace(12);
+            S.SetBorder(6);
+            S.Id(EffectSelectAllID).AddButton(_("Select &All"));
+            S.Id(EffectClearAllID).AddButton(_("Clea&r All"));
+         }
+         S.EndHorizontalLay();
+
+         S.StartHorizontalLay(wxALIGN_CENTER | wxEXPAND);
+         {
+            S.AddSpace(1);
+         }
+         S.EndHorizontalLay();
+
+         S.AddStandardButtons(eOkButton | eCancelButton);
+      }
+      S.EndHorizontalLay();
+   }
+   S.EndVerticalLay();
+
+   PluginManager & pm = PluginManager::Get();
+   ModuleManager & mm = ModuleManager::Get();
+
+   // Capture all of the module IDs and paths so the iterate stays valid
+   ProviderMap provs;
+   wxArrayString keys;
+   wxArrayString paths;
+   wxString padding = L"0000000000";
+   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeModule);
+   while (plug)
+   {
+      wxString key = wxString::Format(wxT("%d"), (int) provs.size());
+      key.insert(0, padding.substr(0, padding.length() - key.length()));
+      provs[key] = plug->GetID();
+      keys.push_back(key);
+      paths.push_back(plug->GetPath());
+
+      plug = pm.GetNextPlugin(PluginTypeModule);
+   }
+
+   wxArrayString sortable;
+   for (size_t i = 0, icnt = paths.size(); i < icnt; i++)
+   {
+      wxString key = keys[i];
+      PluginID provID = provs[key];
+      wxString provPath = paths[i];
+
+      wxArrayString newPaths = mm.FindPluginsForProvider(provID, provPath);
+
+      for (size_t j = 0, jcnt = newPaths.size(); j < jcnt; j++)
+      {
+         sortable.push_back(key + L" " + newPaths[j]);
+      }
+   }
+
+   // With the index 
+   sortable.Sort();
+
+   // The dc is used to compute the text width in pixels.
+   // FIXME: That works fine for PC, but apparently comes out too small for wxMAC.
+   // iLen is minimum width in pixels shown for the file names.  200 is reasonable.
+   int iNameLen = 0;
+   int iPathLen = 0;
+   int x, y;
+   wxRect iconrect;
+   for (int i = 0, cnt = sortable.size(); i < cnt; i++)
+   {
+      miState.push_back( SHOW_CHECKED );
+
+      wxString item = sortable[i];
+      int split = item.find(L" ");
+      mProvs.push_back(provs[item.substr(0, split)]);
+      mPaths.push_back(item.substr(split + 1, wxString::npos));
+
+      wxFileName fn(mPaths.back());
+      wxString name(fn.GetName());
+      wxString path(fn.GetFullPath());
+
+      mEffects->InsertItem(i, name, SHOW_CHECKED);
+      mEffects->SetItem(i, COL_PATH, path);
+
+      // Only need to get the icon width once 
+      if (i == 0)
+      {
+#if defined(__WXMAC__)
+         // wxMac doesn't return the ICON rectangle.  It returns the
+         // rectangle for the first column and that even comes back
+         // with negative numbers sometimes.
+         // 
+         // So, just guess.
+         wxIcon i1(unchecked_xpm);
+         wxIcon i2(checked_xpm);
+         wxIcon i3(arrow15x15_xpm);
+         iconrect.x = 4;
+         iconrect.width = wxMax(wxMax(i1.GetWidth(), i2.GetWidth()), i3.GetWidth());
+#else
+         mEffects->GetItemRect( i, iconrect, wxLIST_RECT_ICON );
+#endif
+      }
+      mEffects->GetTextExtent(name, &x, &y);
+      iNameLen = wxMax(iNameLen, x + iconrect.width + (iconrect.x * 2));
+      mEffects->GetTextExtent(path, &x, &y );
+      iPathLen = wxMax(iPathLen, x + iconrect.width + (iconrect.x * 2));
+   }
+
+   mEffects->SetColumnWidth(COL_NAME, iNameLen + /* fudge */ 5);
+   mEffects->SetColumnWidth(COL_PATH, iPathLen + /* fudge */ 5);
+
+   mEffects->SetSizeHints(iNameLen + iPathLen + /* fudge */ 15, 200);
+   if (mPaths.size() > 0)
+   {
+      // Make sure first item is selected/focused.
+      mEffects->SetFocus();
+      mEffects->SetItemState(0, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
+#if wxUSE_ACCESSIBILITY
+      mAx->SetSelected(0);
+#endif
+   }
+   Layout();
+   Fit();
+   SetSizeHints(GetSize());
+   // Parent window is usually not there yet, so centre on screen rather than on parent.
+   CenterOnScreen();
+
+}
+
+void PluginRegistrationDialog::OnListMouseDown(wxMouseEvent & evt)
+{
+   wxPoint p = evt.GetPosition();
+   int flags = wxLIST_HITTEST_ONITEM;
+   int item = mEffects->HitTest(p, flags);
+
+   if (item != wxNOT_FOUND)
+   {
+      ToggleItem(item);
+   }
+
+   evt.Skip();
+}
+
+void PluginRegistrationDialog::OnListChar(wxKeyEvent & evt)
+{
+   switch (evt.GetKeyCode())
+   {
+      case WXK_SPACE:
+      {
+         int iItem = mEffects->GetNextItem( -1, wxLIST_NEXT_ALL, wxLIST_STATE_FOCUSED);
+
+         if (iItem != wxNOT_FOUND)
+         {
+            ToggleItem(iItem);
+         }
+      }
+      break;
+
+      case WXK_RETURN:
+         // Don't know why wxListCtrls prevent default dialog action,
+         // but they do, so handle it.
+         EmulateButtonClickIfPresent(GetAffirmativeId());
+      break;
+
+      default:
+         evt.Skip();
+      break;
+   }
+}
+
+void PluginRegistrationDialog::SetBoldOrRegular(int i)
+{
+   wxFont Font = mEffects->GetItemFont(i);
+   Font.SetWeight( (miState[i] == SHOW_CHECKED) ? wxFONTWEIGHT_BOLD : wxFONTWEIGHT_NORMAL);
+   mEffects->SetItemFont(i, Font);
+}
+
+// We can't capture mouse clicks, only selected and deselected.
+// Clicking on a selected item does not generate any event.
+// Therefore our workaround solution is to NEVER actually select.
+// So whenever the code tries to , we cancel the selection.
+// That way we continue to get events.
+void PluginRegistrationDialog::SetState(int i, int state)
+{
+   miState[i] = state;
+   mEffects->SetItemImage(i, miState[i]);
+#if wxUSE_ACCESSIBILITY
+   mAx->SetSelected(i);
+#endif
+}
+
+void PluginRegistrationDialog::ToggleItem(int i)
+{
+   SetState(i, miState[i] == SHOW_CHECKED ? SHOW_UNCHECKED : SHOW_CHECKED);
+}
+
+void PluginRegistrationDialog::OnSelectAll(wxCommandEvent & WXUNUSED(evt))
+{
+   for (size_t i = 0, cnt = miState.size(); i < cnt; i++)
+   {
+      SetState(i, SHOW_CHECKED);
+   }
+}
+
+void PluginRegistrationDialog::OnClearAll(wxCommandEvent & WXUNUSED(evt))
+{
+   for (size_t i = 0, cnt = miState.size(); i < cnt; i++)
+   {
+      SetState(i, SHOW_UNCHECKED);
+   }
+}
+
+void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
+{
+   mCancelClicked = false;
+   FindWindowById(wxID_OK)->Disable();
+   FindWindowById(EffectListID)->Disable();
+   FindWindowById(EffectClearAllID)->Disable();
+   FindWindowById(EffectSelectAllID)->Disable();
+
+   for (size_t i = 0, cnt = mPaths.size(); i < cnt && !mCancelClicked; i++)
+   {
+      mEffects->EnsureVisible(i);
+      if (miState[i] == SHOW_CHECKED)
+      {
+         mEffects->SetItemImage(i, SHOW_ARROW);
+         ModuleManager::Get().RegisterPlugin(mProvs[i], wxString(mPaths[i]));
+         mEffects->SetItemImage(i, SHOW_CHECKED);
+      }
+      wxYield();
+   }
+
+   EndModal(mCancelClicked ? wxID_CANCEL : wxID_OK);
+}
+
+void PluginRegistrationDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
+{
+   mCancelClicked = true;
+
+   EndModal(mCancelClicked ? wxID_CANCEL : wxID_OK);
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Plugindescriptor
+//
+///////////////////////////////////////////////////////////////////////////////
+
+PluginDescriptor::PluginDescriptor()
+{
+   mPluginType = PluginTypeNone;
+   mEnabled = false;
+   mInstance = NULL;
+
+   mEffectType = EffectTypeNone;
+   mEffectInteractive = false;
+   mEffectDefault = false;
+   mEffectLegacy = false;
+}
+
+PluginDescriptor::~PluginDescriptor()
+{
+   if (mInstance)
+   {
+      switch (mPluginType)
+      {
+         case PluginTypeEffect:
+            EffectHostInterface *e = reinterpret_cast<EffectHostInterface *>(mInstance);
+            delete e;
+         break;
+      }
+   }
+}
+
+void *PluginDescriptor::GetInstance()
+{
+   if (!mInstance)
+   {
+      if (GetPluginType() == PluginTypeModule)
+      {
+         mInstance = ModuleManager::Get().CreateProviderInstance(GetID(), GetPath());
+      }
+      else
+      {
+         mInstance = ModuleManager::Get().CreateInstance(GetProviderID(), GetID(), GetPath());
+      }
+   }
+
+   return mInstance;
+}
+
+void PluginDescriptor::SetInstance(void *instance)
+{
+   mInstance = instance;
+
+   return;
+}
+
+PluginType PluginDescriptor::GetPluginType() const
+{
+   return mPluginType;
+}
+
+const wxString & PluginDescriptor::GetPath() const
+{
+   return mPath;
+}
+
+const wxString & PluginDescriptor::GetName() const
+{
+   return mName;
+}
+
+const wxString & PluginDescriptor::GetVersion() const
+{
+   return mVersion;
+}
+
+const wxString & PluginDescriptor::GetVendor() const
+{
+   return mVendor;
+}
+
+const wxString & PluginDescriptor::GetDescription() const
+{
+   return mDescription;
+}
+
+const PluginID & PluginDescriptor::GetID() const
+{
+   return mID;
+}
+
+const PluginID & PluginDescriptor::GetProviderID() const
+{
+   return mProviderID;
+}
+
+const wxString & PluginDescriptor::GetDateTime() const
+{
+   return mDateTime;
+}
+
+bool PluginDescriptor::IsEnabled() const
+{
+   return mEnabled;
+}
+
+wxString PluginDescriptor::GetMenuName() const
+{
+   // This probably shouldn't be here...but it was easy
+   wxString name;
+   mName.EndsWith(wxT("..."), &name);
+
+   return (mVendor.IsEmpty() ? wxT("") : mVendor + wxT(": ")) +
+          (name.IsEmpty() ? mName : name) +
+          (mEffectInteractive ? wxT("...") : wxT(""));
+}
+
+void PluginDescriptor::SetPluginType(PluginType type)
+{
+   mPluginType = type;
+}
+
+void PluginDescriptor::SetPath(const wxString & path)
+{
+   mPath = path;
+}
+
+void PluginDescriptor::SetName(const wxString & name)
+{
+   mName = name;
+}
+
+void PluginDescriptor::SetVersion(const wxString & version)
+{
+   mVersion = version;
+}
+
+void PluginDescriptor::SetVendor(const wxString & vendor)
+{
+   mVendor = vendor;
+}
+
+void PluginDescriptor::SetDescription(const wxString & description)
+{
+   mDescription = description;
+}
+
+void PluginDescriptor::SetID(const PluginID & ID)
+{
+   mID = ID;
+}
+
+void PluginDescriptor::SetProviderID(const PluginID & providerID)
+{
+   mProviderID = providerID;
+}
+
+void PluginDescriptor::SetDateTime(const wxString & dateTime)
+{
+   mDateTime = dateTime;
+}
+
+void PluginDescriptor::SetEnabled(bool enable)
+{
+   mEnabled = enable;
+}
+
+// Effects
+
+const wxString & PluginDescriptor::GetEffectFamily() const
+{
+   return mEffectFamily;
+}
+
+EffectType PluginDescriptor::GetEffectType() const
+{
+   return mEffectType;
+}
+
+bool PluginDescriptor::IsEffectInteractive() const
+{
+   return mEffectInteractive;
+}
+
+bool PluginDescriptor::IsEffectDefault() const
+{
+   return mEffectDefault;
+}
+
+bool PluginDescriptor::IsEffectLegacy() const
+{
+   return mEffectLegacy;
+}
+
+bool PluginDescriptor::IsEffectRealtimeCapable() const
+{
+   return mEffectRealtimeCapable;
+}
+
+void PluginDescriptor::SetEffectFamily(const wxString & family)
+{
+   mEffectFamily = family;
+}
+
+void PluginDescriptor::SetEffectType(EffectType type)
+{
+   mEffectType = type;
+}
+
+void PluginDescriptor::SetEffectInteractive(bool interactive)
+{
+   mEffectInteractive = interactive;
+}
+
+void PluginDescriptor::SetEffectDefault(bool dflt)
+{
+   mEffectDefault = dflt;
+}
+
+void PluginDescriptor::SetEffectLegacy(bool legacy)
+{
+   mEffectLegacy = legacy;
+}
+
+void PluginDescriptor::SetEffectRealtimeCapable(bool realtime)
+{
+   mEffectRealtimeCapable = realtime;
+}
+
+// Importer
+
+const wxString & PluginDescriptor::GetImporterIdentifier() const
+{
+   return mImporterIdentifier;
+}
+
+void PluginDescriptor::SetImporterIdentifier(const wxString & identifier)
+{
+   mImporterIdentifier = identifier;
+}
+
+const wxString & PluginDescriptor::GetImporterFilterDescription() const
+{
+   return mImporterFilterDesc;
+}
+
+void PluginDescriptor::SetImporterFilterDescription(const wxString & filterDesc)
+{
+   mImporterFilterDesc = filterDesc;
+}
+
+const wxArrayString & PluginDescriptor::GetImporterExtensions() const
+{
+   return mImporterExtensions;
+}
+
+void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
+{
+   mImporterExtensions = extensions;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // PluginManager
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-static PluginManager mInstance;
+#define CACHEROOT wxString(wxT("/plugincache/"))
+
+#define KEY_ID                         wxT("ID")
+#define KEY_NAME                       wxT("Name")
+#define KEY_PATH                       wxT("Path")
+#define KEY_VENDOR                     wxT("Vendor")
+#define KEY_VERSION                    wxT("Version")
+#define KEY_DESCRIPTION                wxT("Description")
+#define KEY_LASTUPDATED                wxT("LastUpdated")
+#define KEY_ENABLED                    wxT("Enabled")
+#define KEY_PROVIDERID                 wxT("ProviderID")
+#define KEY_EFFECTTYPE                 wxT("EffectType")
+#define KEY_EFFECTFAMILY               wxT("EffectFamily")
+#define KEY_EFFECTDEFAULT              wxT("EffectDefault")
+#define KEY_EFFECTINTERACTIVE          wxT("EffectInteractive")
+#define KEY_EFFECTREALTIMECAPABLE      wxT("EffectRealtimeCapable")
+#define KEY_EFFECTTYPE_ANALYZE         wxT("Analyze")
+#define KEY_EFFECTTYPE_GENERATE        wxT("Generate")
+#define KEY_EFFECTTYPE_PROCESS         wxT("Process")
+#define KEY_IMPORTERIDENT              wxT("ImporterIdent")
+#define KEY_IMPORTERFILTER             wxT("ImporterFilter")
+#define KEY_IMPORTEREXTENSIONS         wxT("ImporterExtensions")
+
+// ============================================================================
+//
+// PluginManagerInterface implementation
+//
+// ============================================================================
+
+void PluginManager::RegisterModulePlugin(IdentInterface *module)
+{
+   CreatePlugin(module, PluginTypeModule);
+}
+
+void PluginManager::RegisterEffectPlugin(IdentInterface *provider, EffectIdentInterface *effect)
+{
+   PluginDescriptor & plug = CreatePlugin(effect, PluginTypeEffect);
+
+   plug.SetProviderID(provider->GetID());
+
+   plug.SetEffectType(effect->GetType());
+   plug.SetEffectFamily(effect->GetFamily());
+   plug.SetEffectInteractive(effect->IsInteractive());
+   plug.SetEffectDefault(effect->IsDefault());
+   plug.SetEffectRealtimeCapable(effect->IsRealtimeCapable());
+
+   plug.SetEnabled(true);
+}
+
+void PluginManager::RegisterImporterPlugin(IdentInterface *provider, ImporterInterface *importer)
+{
+   PluginDescriptor & plug = CreatePlugin(importer, PluginTypeImporter);
+
+   plug.SetProviderID(provider->GetID());
+
+   plug.SetImporterIdentifier(importer->GetPluginStringID());
+   plug.SetImporterFilterDescription(importer->GetPluginFormatDescription());
+   plug.SetImporterExtensions(importer->GetSupportedExtensions());
+}
+
+void PluginManager::FindFilesInPathList(const wxString & pattern,
+                                        const wxArrayString & pathList,
+                                        wxArrayString & files,
+                                        bool directories)
+{
+   
+   wxLogNull nolog;
+
+   // Why bother...
+   if (pattern.empty())
+   {
+      return;
+   }
+
+   // TODO:  We REALLY need to figure out the "Audacity" plug-in path(s)
+
+   wxFileName f;
+   wxArrayString paths;
+
+   // Add the "per-user" plug-ins directory
+   f = FileNames::PlugInDir();
+   paths.Add(f.GetFullPath());
+ 
+   // Add the "Audacity" plug-ins directory
+   f = PlatformCompatibility::GetExecutablePath();
+#if defined(__WXMAC__)
+   f.RemoveLastDir();
+   f.RemoveLastDir();
+   f.RemoveLastDir();
+#endif
+   f.AppendDir(wxT("plug-ins"));
+   paths.Add(f.GetPath());
+
+   // Weed out duplicates
+   for (size_t i = 0, cnt = pathList.size(); i < cnt; i++)
+   {
+      f = pathList[i];
+      wxString path = f.GetFullPath();
+      if (paths.Index(path, wxFileName::IsCaseSensitive()) == wxNOT_FOUND)
+      {
+         paths.Add(path);
+      }
+   }
+
+   // Find all matching files in each path
+   for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++)
+   {
+      f = paths[i] + wxFILE_SEP_PATH + pattern;
+      wxString a = f.GetFullPath();
+      wxDir::GetAllFiles(f.GetPath(), &files, f.GetFullName(), directories ? wxDIR_DEFAULT : wxDIR_FILES);
+   }
+
+   return;
+}
+
+bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval)
+{
+   return GetConfig(SharedKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval)
+{
+   return GetConfig(SharedKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval)
+{
+   return GetConfig(SharedKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval)
+{
+   return GetConfig(SharedKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval)
+{
+   return GetConfig(SharedKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, sampleCount & value, sampleCount defval)
+{
+   return GetConfig(SharedKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value)
+{
+   return SetConfig(SharedKey(ID, group, key), value);
+}
+
+bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) 
+{
+   return SetConfig(SharedKey(ID, group, key), value);
+}
+
+bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value)
+{
+   return SetConfig(SharedKey(ID, group, key), value);
+}
+
+bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value)
+{
+   return SetConfig(SharedKey(ID, group, key), value);
+}
+
+bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value)
+{
+   return SetConfig(SharedKey(ID, group, key), value);
+}
+
+bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value)
+{
+   return SetConfig(SharedKey(ID, group, key), value);
+}
+
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval)
+{
+   return GetConfig(PrivateKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval)
+{
+   return GetConfig(PrivateKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval)
+{
+   return GetConfig(PrivateKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, float & value, float defval)
+{
+   return GetConfig(PrivateKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, double & value, double defval)
+{
+   return GetConfig(PrivateKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, sampleCount & value, sampleCount defval)
+{
+   return GetConfig(PrivateKey(ID, group, key), value, defval);
+}
+
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const wxString & value)
+{
+   return SetConfig(PrivateKey(ID, group, key), value);
+}
+
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const int & value) 
+{
+   return SetConfig(PrivateKey(ID, group, key), value);
+}
+
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const bool & value)
+{
+   return SetConfig(PrivateKey(ID, group, key), value);
+}
+
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value)
+{
+   return SetConfig(PrivateKey(ID, group, key), value);
+}
+
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value)
+{
+   return SetConfig(PrivateKey(ID, group, key), value);
+}
+
+bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value)
+{
+   return SetConfig(PrivateKey(ID, group, key), value);
+}
+
+// ============================================================================
+//
+// PluginManager
+//
+// ============================================================================
+
+// The one and only PluginManager
+PluginManager PluginManager::mInstance;
+
+// ----------------------------------------------------------------------------
+// Creation/Destruction
+// ----------------------------------------------------------------------------
 
 PluginManager::PluginManager()
 {
    mConfig = NULL;
-   mDirty = false;
 }
 
 PluginManager::~PluginManager()
 {
-   if (mConfig) {
-      Close();
+   if (mConfig)
+   {
+      delete mConfig;
    }
 }
 
-PluginManager & PluginManager::Get(bool WXUNUSED(refresh))
+// ----------------------------------------------------------------------------
+// PluginManager implementation
+// ----------------------------------------------------------------------------
+
+// ============================================================================
+//
+// Return reference to singleton
+//
+// (Thread-safe...no active threading during construction or after destruction)
+// ============================================================================
+
+PluginManager & PluginManager::Get()
 {
    return mInstance;
 }
 
-void PluginManager::Open()
+void PluginManager::Initialize()
 {
-   // Writes out any pending changes and
-   // sets mConfig == NULL.
-   Close();
+   Load();
+   ModuleManager::Get().EarlyInit();
 
-   wxFileName name(FileNames::PluginsCache());
+   CheckForUpdates();
 
-   if (!::wxFileExists(FileNames::PluginsCache())) {
-      wxFile file;
-      file.Create(FileNames::PluginsCache());
-      file.Close();
+   bool doRescan;
+   gPrefs->Read(wxT("/VST/Rescan"), &doRescan, true);
+   if (doRescan)
+   {
+      gPrefs->Write(wxT("/VST/Rescan"), false);
+      PluginRegistrationDialog dlg;
+      dlg.ShowModal();
    }
-
-   wxFileInputStream stream(FileNames::PluginsCache());
-
-   // mConfig is NULL because of the PlugInManager::Close() earlier.
-   // create it and fill it from the stream.
-   mConfig = new wxFileConfig(stream);
 }
 
-void PluginManager::Close()
+void PluginManager::Terminate()
+{
+   if (mConfig)
+   {
+      Save();
+      delete mConfig;
+      mConfig = NULL;
+   }
+
+   // Get rid of all non-module plugins first
+   PluginMap::iterator iter = mPlugins.begin();
+   while (iter != mPlugins.end())
+   {
+      PluginDescriptor & plug = iter->second;
+      if (plug.GetPluginType() == PluginTypeEffect)
+      {
+         mPlugins.erase(iter++);
+         continue;
+      }
+
+      ++iter;
+   }
+
+   // Now get rid of the modules
+   iter = mPlugins.begin();
+   while (iter != mPlugins.end())
+   {
+      mPlugins.erase(iter++);
+   }
+}
+
+void PluginManager::Load()
+{
+   // IF already open THEN nothing to do.
+   if (mConfig != NULL)
+   {
+      return;
+   }
+
+   // Create the config
+   //
+   // TODO:  I'd like to switch to XML using the TinyXML2 lib
+   mConfig = new wxFileConfig(wxEmptyString, wxEmptyString, FileNames::PluginsCache());
+
+   // If this group doesn't exist then we have the original format and we
+   // can't use it or even attempt a conversion, so just start with a fresh
+   // config.
+   if (!mConfig->HasGroup(CACHEROOT))
+   {
+      // Must start over
+      mConfig->DeleteAll();
+      return;
+   }
+
+   // Load all provider plugins first
+   LoadGroup(wxT("modules"), PluginTypeModule);
+
+   // Now the rest
+   LoadGroup(wxT("effects"), PluginTypeEffect);
+   LoadGroup(wxT("exporters"), PluginTypeExporter);
+   LoadGroup(wxT("importers"), PluginTypeImporter);
+}
+
+void PluginManager::LoadGroup(const wxChar * group, PluginType type)
+{
+   wxString strVal;
+   bool boolVal;
+   wxString groupName;
+   long groupIndex;
+   wxString cfgPath = CACHEROOT + group + wxCONFIG_PATH_SEPARATOR;
+
+   mConfig->SetPath(cfgPath);
+   for (bool cont = mConfig->GetFirstGroup(groupName, groupIndex);
+        cont;
+        mConfig->SetPath(cfgPath),
+        cont = mConfig->GetNextGroup(groupName, groupIndex))
+   {
+      PluginDescriptor plug;
+
+      // Bypass group if the ID is already in use
+      if (mPlugins.find(wxString(groupName)) != mPlugins.end())
+      {
+         continue;
+      }
+
+      mConfig->SetPath(groupName);
+
+      // Set the ID and type
+      plug.SetID(wxString(groupName));
+      plug.SetPluginType(type);
+
+      // Get the provider ID and bypass group if not found
+      if (!mConfig->Read(KEY_PROVIDERID, &strVal, wxEmptyString))
+      {
+         // Bypass group if the provider isn't valid
+         if (!strVal.IsEmpty() && mPlugins.find(wxString(strVal)) == mPlugins.end())
+         {
+            continue;
+         }
+      }
+      plug.SetProviderID(PluginID(strVal));
+
+      // Get the path (optional)
+      mConfig->Read(KEY_PATH, &strVal, wxEmptyString);
+      plug.SetPath(wxString(strVal));
+
+      // Get the name and bypass group if not found
+      if (!mConfig->Read(KEY_NAME, &strVal))
+      {
+         continue;
+      }
+      plug.SetName(wxString(strVal));
+
+      // Get the version and bypass group if not found
+      if (!mConfig->Read(KEY_VERSION, &strVal))
+      {
+         continue;
+      }
+      plug.SetVersion(wxString(strVal));
+
+      // Get the vendor and bypass group if not found
+      if (!mConfig->Read(KEY_VENDOR, &strVal))
+      {
+         continue;
+      }
+      plug.SetVendor(wxString(strVal));
+
+      // Get the description and bypass group if not found
+      if (!mConfig->Read(KEY_DESCRIPTION, &strVal))
+      {
+         continue;
+      }
+      plug.SetDescription(wxString(strVal));
+
+      // Get the last update time and bypass group if not found
+      if (!plug.GetPath().empty())
+      {
+         if (!mConfig->Read(KEY_LASTUPDATED, &strVal))
+         {
+            continue;
+         }
+         plug.SetDateTime(wxString(strVal));
+      }
+
+      // Is it enabled...default to no if not found
+      mConfig->Read(KEY_ENABLED, &boolVal, false);
+      plug.SetEnabled(boolVal);
+
+      switch (type)
+      {
+         case PluginTypeModule:
+         break;
+
+         case PluginTypeEffect:
+            // Get the effect type and bypass group if not found
+            if (!mConfig->Read(KEY_EFFECTTYPE, &strVal))
+            {
+               continue;
+            }
+
+            if (strVal.IsSameAs(KEY_EFFECTTYPE_ANALYZE))
+            {
+               plug.SetEffectType(EffectTypeAnalyze);
+            }
+            else if (strVal.IsSameAs(KEY_EFFECTTYPE_GENERATE))
+            {
+               plug.SetEffectType(EffectTypeGenerate);
+            }
+            else if (strVal.IsSameAs(KEY_EFFECTTYPE_PROCESS))
+            {
+               plug.SetEffectType(EffectTypeProcess);
+            }
+            else
+            {
+               continue;
+            }
+
+            // Get the effect family and bypass group if not found
+            if (!mConfig->Read(KEY_EFFECTFAMILY, &strVal))
+            {
+               continue;
+            }
+            plug.SetEffectFamily(wxString(strVal));
+
+            // Is it a default (above the line) effect and bypass group if not found
+            if (!mConfig->Read(KEY_EFFECTDEFAULT, &boolVal))
+            {
+               continue;
+            }
+            plug.SetEffectDefault(boolVal);
+
+            // Is it an interactive effect and bypass group if not found
+            if (!mConfig->Read(KEY_EFFECTINTERACTIVE, &boolVal))
+            {
+               continue;
+            }
+            plug.SetEffectInteractive(boolVal);
+
+            // Is it an realtime capable effect and bypass group if not found
+            if (!mConfig->Read(KEY_EFFECTREALTIMECAPABLE, &boolVal))
+            {
+               continue;
+            }
+            plug.SetEffectRealtimeCapable(boolVal);
+
+         break;
+
+         case PluginTypeImporter:
+         {
+            // Get the importer identifier and bypass group if not found
+            if (!mConfig->Read(KEY_IMPORTERIDENT, &strVal))
+            {
+               continue;
+            }
+            plug.SetImporterIdentifier(wxString(strVal));
+
+            // Get the importer filter description and bypass group if not found
+            if (!mConfig->Read(KEY_IMPORTERFILTER, &strVal))
+            {
+               continue;
+            }
+            plug.SetImporterFilterDescription(wxString(strVal));
+
+            // Get the importer extensions and bypass group if not found
+            if (!mConfig->Read(KEY_IMPORTEREXTENSIONS, &strVal))
+            {
+               continue;
+            }
+            wxArrayString extensions;
+            wxStringTokenizer tkr(strVal, wxT(":"));
+            while (tkr.HasMoreTokens())
+            {
+               extensions.push_back(wxString(tkr.GetNextToken()));
+            }
+            plug.SetImporterExtensions(extensions);
+         }
+         break;
+
+         default:
+            continue;
+      }
+
+      // Everything checked out...accept the plugin
+      mPlugins[groupName] = plug;
+   }
+
+   return;
+}
+
+void PluginManager::Save()
 {
    // IF already closed THEN nothing to do.
-   if( mConfig == NULL )
-      return;
-
-   // JKC: There is no recovery action here if writing the
-   // config out fails (e.g. due to write protected media).
-   // I guess we can live with that for now.
-   // This function will still close the config and
-   // delete it, without updating the file.
-   if( IsDirty())
+   if (mConfig == NULL)
    {
-      wxFile file(FileNames::PluginsCache(), wxFile::write);
-      if (!file.IsOpened())
-      {
-         // Might fail to open...
-         wxLogDebug(wxT("Couldn't open plugins cache for write"));
-      }
-      else
-      {
-         wxFileOutputStream stream(file);
-         // Save() might return false.
-         mConfig->Save(stream);
-         file.Close();
-      }
-   }
-
-   SetDirty( false );
-   delete mConfig;
-   mConfig = NULL;
-}
-
-bool PluginManager::IsDirty()
-{
-   return mDirty;
-}
-
-void PluginManager::SetDirty(bool dirty)
-{
-   mDirty = dirty;
-}
-
-wxString PluginManager::Read(const wxString & key, const wxString & def)
-{
-   if (mConfig) {
-      return mConfig->Read(key, def);
-   }
-
-   return def;
-}
-
-long PluginManager::Read(const wxString & key, long def)
-{
-   if (mConfig) {
-      return mConfig->Read(key, def);
-   }
-
-   return def;
-}
-
-void PluginManager::Write(const wxString & key, const wxString & val)
-{
-   if (mConfig) {
-      mConfig->Write(key, val);
-
-      SetDirty();
-   }
-
-   return;
-}
-
-void PluginManager::Write(const wxString & key, long val)
-{
-   if (mConfig) {
-      mConfig->Write(key, val);
-
-      SetDirty();
-   }
-
-   return;
-}
-
-bool PluginManager::HasType(const wxString & type)
-{
-   if (!mConfig) {
-      return false;;
-   }
-
-   wxString path;
-
-   path.Printf(wxT("/%s"), type.c_str());
-
-   return mConfig->HasGroup(path);
-}
-
-void PluginManager::PurgeType(const wxString & type)
-{
-   if (!mConfig) {
       return;
    }
 
-   wxString path;
+   // TODO:  This is a bit drastic...only save groups when new plugins are registerd
 
-   path.Printf(wxT("/%s"), type.c_str());
+   // Save the individual groups
+   SaveGroup(wxT("effects"), PluginTypeEffect);
+   SaveGroup(wxT("exporters"), PluginTypeExporter);
+   SaveGroup(wxT("importers"), PluginTypeImporter);
 
-   SetDirty();
-   mConfig->DeleteGroup(path);
+   // And now the providers
+   SaveGroup(wxT("modules"), PluginTypeModule);
+
+   mConfig->Flush();
 }
 
-int PluginManager::GetPluginCount(const wxString & type)
+void PluginManager::SaveGroup(const wxChar *group, PluginType type)
 {
-   if (!mConfig) {
-      return 0;
-   }
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+   {
+      PluginDescriptor & plug = iter->second;
 
-   wxString path = mConfig->GetPath();
-
-   mConfig->SetPath(wxString::Format(wxT("/%s"), type.c_str()));
-
-   int cnt = mConfig->GetNumberOfGroups();
-
-   mConfig->SetPath(path);
-
-   return cnt;
-}
-
-wxString PluginManager::GetPlugin(const wxString & type, int index)
-{
-   if (!mConfig) {
-      return wxEmptyString;
-   }
-
-   wxString path;
-
-   path.Printf(wxT("/%s/%d"), type.c_str(), index);
-   if (!mConfig->HasGroup(path)) {
-      return wxEmptyString;
-   }
-
-   mConfig->SetPath(path);
-
-   path = mConfig->Read(wxT("PluginPath"), wxEmptyString);
-
-   mConfig->SetPath(wxT("private"));
-
-   return path;
-}
-
-wxString PluginManager::GetFirstPlugin(const wxString & type)
-{
-   if (!mConfig) {
-      return wxEmptyString;
-   }
-
-   wxString path;
-
-   mCurrentIndex = -1;
-
-   do {
-      path.Printf(wxT("/%s/%d"), type.c_str(), ++mCurrentIndex);
-      if (!mConfig->HasGroup(path)) {
-         return wxEmptyString;
+      if (plug.GetPluginType() != type)
+      {
+         continue;
       }
 
-      mConfig->SetPath(path);
-   } while (!mConfig->Read(wxT("Enabled"), (bool) true));
+      mConfig->SetPath(CACHEROOT + group + wxCONFIG_PATH_SEPARATOR + plug.GetID());
 
-   path = mConfig->Read(wxT("PluginPath"), wxEmptyString);
+      mConfig->Write(KEY_PATH, plug.GetPath());
+      mConfig->Write(KEY_NAME, plug.GetName());
+      mConfig->Write(KEY_VERSION, plug.GetVersion());
+      mConfig->Write(KEY_VENDOR, plug.GetVendor());
+      mConfig->Write(KEY_DESCRIPTION, plug.GetDescription());
+      mConfig->Write(KEY_PROVIDERID, plug.GetProviderID());
+      mConfig->Write(KEY_LASTUPDATED, plug.GetDateTime());
+      mConfig->Write(KEY_ENABLED, plug.IsEnabled());
 
-   mConfig->SetPath(wxT("private"));
+      switch (type)
+      {
+         case PluginTypeModule:
+         break;
 
-   return path;
-}
+         case PluginTypeEffect:
+         {
+            EffectType etype = plug.GetEffectType();
+            wxString stype;
+            if (etype == EffectTypeAnalyze)
+            {
+               stype = KEY_EFFECTTYPE_ANALYZE;
+            }
+            else if (etype == EffectTypeGenerate)
+            {
+               stype = KEY_EFFECTTYPE_GENERATE;
+            }
+            else if (etype == EffectTypeProcess)
+            {
+               stype = KEY_EFFECTTYPE_PROCESS;
+            }
+            mConfig->Write(KEY_EFFECTTYPE, stype);
+            mConfig->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily());
+            mConfig->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());
+            mConfig->Write(KEY_EFFECTINTERACTIVE, plug.IsEffectInteractive());
+            mConfig->Write(KEY_EFFECTREALTIMECAPABLE, plug.IsEffectRealtimeCapable());
+         }
+         break;
 
-wxString PluginManager::GetNextPlugin(const wxString & type)
-{
-   if (!mConfig) {
-      return wxEmptyString;
+         case PluginTypeImporter:
+         {
+            mConfig->Write(KEY_IMPORTERIDENT, plug.GetImporterIdentifier());
+            mConfig->Write(KEY_IMPORTERFILTER, plug.GetImporterFilterDescription());
+            const wxArrayString & extensions = plug.GetImporterExtensions();
+            wxString strExt;
+            for (size_t i = 0, cnt = extensions.size(); i < cnt; i++)
+            {
+               strExt += extensions[i] + wxT(":");
+            }
+            strExt.RemoveLast(1);
+            mConfig->Write(KEY_IMPORTEREXTENSIONS, strExt);
+         }
+         break;
+
+         default:
+         break;
+      }
    }
 
-   wxString path;
-
-   do {
-      path.Printf(wxT("/%s/%d"), type.c_str(), ++mCurrentIndex);
-      if (!mConfig->HasGroup(path)) {
-         return wxEmptyString;
-      }
-
-      mConfig->SetPath(path);
-   } while (!mConfig->Read(wxT("Enabled"), (bool) true));
-
-   path = mConfig->Read(wxT("PluginPath"), wxEmptyString);
-
-   mConfig->SetPath(wxT("private"));
-
-   return path;
+   return;
 }
 
-bool PluginManager::IsRegistered(const wxString & type, const wxString & path)
+void PluginManager::CheckForUpdates()
 {
-   int cnt = GetPluginCount(type);
+   // Always check for and remove missing plugins
+   RemoveMissing();
 
-   for (int i = 0; i < cnt; i++) {
-      wxString registered = GetPlugin(type, i);
-      if (registered == path) {
+   // Get ModuleManager reference
+   ModuleManager & mm = ModuleManager::Get();
+
+   wxArrayString providers;
+   wxArrayString paths;
+
+   // Always check for new or updated modules
+   if (mm.DiscoverProviders(paths))
+   {
+      paths = IsNewOrUpdated(paths);
+      for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
+      {
+         mm.DiscoverProvider(paths[i]);
+      }
+   }
+
+   bool doCheck;
+   gPrefs->Read(wxT("/Plugins/CheckForUpdates"), &doCheck, true);
+   if (doCheck && paths.size() > 0)
+   {
+      PluginRegistrationDialog dlg;
+      dlg.ShowModal();
+   }
+
+   return;
+}
+
+void PluginManager::RemoveMissing()
+{
+   // Check for plugins that no longer exist
+   PluginMap::iterator iter = mPlugins.begin();
+   while (iter != mPlugins.end())
+   {
+      PluginDescriptor & plug = iter->second;
+
+      if (!plug.GetPath().empty())
+      {
+         wxFileName plugPath = plug.GetPath();
+
+         if (!(plugPath.FileExists() || plugPath.DirExists()))
+         {
+            mPlugins.erase(iter++);
+            continue;
+         }
+      }
+
+      ++iter;
+   }
+}
+
+wxArrayString PluginManager::IsNewOrUpdated(const wxArrayString & paths)
+{
+   wxArrayString plugsToAddOrUpdate;
+
+   // Create a map of plugins indexed by their path
+   std::map<wxString, PluginDescriptor *> pathPlugs;
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+   {
+      PluginDescriptor & plug = iter->second;
+      pathPlugs[plug.GetPath()] = &plug;
+   }
+
+   // Now check for new or updated paths
+   for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
+   {
+      wxFileName scanPath = paths[i];
+      wxString scanFull = scanPath.GetFullPath();
+
+      if (pathPlugs.find(scanFull) != pathPlugs.end())
+      {
+         if (GetDateTime(scanFull) <= pathPlugs[scanFull]->GetDateTime())
+         {
+            continue;
+         }
+      }
+
+      plugsToAddOrUpdate.push_back(scanFull);
+   }
+
+   return plugsToAddOrUpdate;
+}
+
+bool PluginManager::HasType(PluginType type)
+{
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+   {
+      if (iter->second.GetPluginType() == type)
+      {
          return true;
       }
    }
@@ -292,51 +1746,477 @@ bool PluginManager::IsRegistered(const wxString & type, const wxString & path)
    return false;
 }
 
-void PluginManager::RegisterPlugin(const wxString & type, const wxString & path)
+void PluginManager::PurgeType(PluginType type)
 {
-   if (IsRegistered(type, path)) {
-      return;
+#if 0
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+   {
+      if (iter->second.GetPluginType() == type)
+      {
+         mPlugins.erase(iter->first);
+         mConfig->DeleteGroup(CACHEROOT + iter->second.GetID()
+      }
    }
-
-   mConfig->SetPath(wxString::Format(wxT("/%s/%d"), type.c_str(), GetPluginCount(type)));
-
-   mConfig->Write(wxT("PluginPath"), path);
-   SetDirty();
-
-   mConfig->SetPath(wxT("private"));
-
-   return;
+#endif
 }
 
-bool PluginManager::IsPluginEnabled(const wxString & type, const wxString & path)
+int PluginManager::GetPluginCount(PluginType type)
 {
-   int cnt = GetPluginCount(type);
+   int num = 0;
 
-   for (int i = 0; i < cnt; i++) {
-      wxString registered = GetPlugin(type, i);
-      if (registered == path) {
-         mConfig->SetPath(wxT(".."));
-         bool enabled = mConfig->Read(wxT("Enabled"), true) != false;
-         mConfig->SetPath(wxT("private"));
-         return enabled;
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+   {
+      if (iter->second.GetPluginType() == type)
+      {
+         num++;
       }
+   }
+
+   return num;
+}
+
+const PluginDescriptor *PluginManager::GetPlugin(const PluginID & ID)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      return NULL;
+   }
+
+   return &mPlugins[ID];
+}
+
+const PluginDescriptor *PluginManager::GetFirstPlugin(PluginType type)
+{
+   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
+   {
+      if (mPluginsIter->second.GetPluginType() == type)
+      {
+         return &mPluginsIter->second;
+      }
+   }
+
+   return NULL;
+}
+
+const PluginDescriptor *PluginManager::GetNextPlugin(PluginType type)
+{
+   while (++mPluginsIter != mPlugins.end())
+   {
+      if (mPluginsIter->second.GetPluginType() == type)
+      {
+         return &mPluginsIter->second;
+      }
+   }
+
+   return NULL;
+}
+
+const PluginDescriptor *PluginManager::GetFirstPluginForProvider(const PluginID & ID)
+{
+   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
+   {
+      if (mPluginsIter->second.GetProviderID() == ID)
+      {
+         return &mPluginsIter->second;
+      }
+   }
+
+   return NULL;
+}
+
+const PluginDescriptor *PluginManager::GetNextPluginForProvider(const PluginID & ID)
+{
+   while (++mPluginsIter != mPlugins.end())
+   {
+      if (mPluginsIter->second.GetProviderID() == ID)
+      {
+         return &mPluginsIter->second;
+      }
+   }
+
+   return NULL;
+}
+
+const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType type)
+{
+   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
+   {
+      PluginDescriptor & plug = mPluginsIter->second;
+      if (plug.IsEnabled() && plug.GetEffectType() == type)
+      {
+         return &plug;
+      }
+   }
+
+   return NULL;
+}
+
+const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType type)
+{
+   while (++mPluginsIter != mPlugins.end())
+   {
+      PluginDescriptor & plug = mPluginsIter->second;
+      if (plug.IsEnabled() && plug.GetEffectType() == type)
+      {
+         return &plug;
+      }
+   }
+
+   return NULL;
+}
+
+
+const PluginDescriptor *PluginManager::GetFirstPluginForEffectFamily(const wxString & family)
+{
+   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
+   {
+      if (mPluginsIter->second.GetEffectFamily() == family)
+      {
+         return &mPluginsIter->second;
+      }
+   }
+
+   return NULL;
+}
+
+const PluginDescriptor *PluginManager::GetNextPluginForEffectFamily(const wxString & family)
+{
+   while (++mPluginsIter != mPlugins.end())
+   {
+      if (mPluginsIter->second.GetEffectFamily() == family)
+      {
+         return &mPluginsIter->second;
+      }
+   }
+
+   return NULL;
+}
+
+bool PluginManager::IsRegistered(const PluginID & ID)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      return false;
    }
 
    return true;
 }
 
-void PluginManager::EnablePlugin(const wxString & type, const wxString & path, bool enable)
+const PluginID & PluginManager::RegisterLegacyEffectPlugin(EffectIdentInterface *effect)
 {
-   int cnt = GetPluginCount(type);
+   PluginDescriptor & plug = CreatePlugin(effect, PluginTypeEffect);
 
-   for (int i = 0; i < cnt; i++) {
-      wxString registered = GetPlugin(type, i);
-      if (registered == path) {
-         mConfig->SetPath(wxT(".."));
-         mConfig->Write(wxT("Enabled"), enable);
-         SetDirty(true);
-         mConfig->SetPath(wxT("private"));
-         break;
-      }
-   }
+   plug.SetEffectType(effect->GetType());
+   plug.SetEffectFamily(effect->GetFamily());
+   plug.SetEffectInteractive(effect->IsInteractive());
+   plug.SetEffectDefault(effect->IsDefault());
+   plug.SetEffectRealtimeCapable(effect->IsRealtimeCapable());
+
+   plug.SetInstance(effect);
+   plug.SetEffectLegacy(true);
+   plug.SetEnabled(true);
+
+   return plug.GetID();
 }
+
+bool PluginManager::IsPluginEnabled(const PluginID & ID)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      return false;
+   }
+
+   return mPlugins[ID].IsEnabled();
+}
+
+void PluginManager::EnablePlugin(const PluginID & ID, bool enable)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      return;
+   }
+
+   return mPlugins[ID].SetEnabled(enable);
+}
+
+const wxString & PluginManager::GetName(const PluginID & ID)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      static wxString empty;
+      return empty;
+   }
+
+   return mPlugins[ID].GetName();
+}
+
+void *PluginManager::GetInstance(const PluginID & ID)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      return NULL;
+   }
+
+   PluginDescriptor & plug = mPlugins[ID];
+
+   // If not dealing with legacy effects, make sure the provider is loaded 
+   if (!plug.IsEffectLegacy())
+   {
+      const PluginID & prov = plug.GetProviderID();
+      if (mPlugins.find(prov) == mPlugins.end())
+      {
+         return NULL;
+      }
+      mPlugins[prov].GetInstance();
+   }
+
+   return plug.GetInstance();
+}
+
+// TODO:  This goes away when all effects have been converted
+void PluginManager::SetInstance(const PluginID & ID, void *instance)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      return;
+   }
+
+   return mPlugins[ID].SetInstance(instance);
+}
+
+PluginDescriptor & PluginManager::CreatePlugin(IdentInterface *ident, PluginType type)
+{
+   PluginDescriptor plug;
+
+   plug.SetPluginType(type);
+
+   plug.SetID(ident->GetID());
+   plug.SetPath(ident->GetPath());
+   plug.SetName(ident->GetName());
+   plug.SetVendor(ident->GetVendor());
+   plug.SetVersion(ident->GetVersion());
+   plug.SetDescription(ident->GetDescription());
+   plug.SetEnabled(false);
+   plug.SetDateTime(GetDateTime(ident->GetPath()));
+
+   // This will either create a new entry or replace an existing entry
+   mPlugins[plug.GetID()] = plug;
+   PluginDescriptor &p = mPlugins[plug.GetID()];
+   return mPlugins[plug.GetID()];
+}
+
+wxString PluginManager::GetDateTime(const wxString & path)
+{
+   wxFileName fn(path);
+   if (fn.FileExists())
+   {
+      wxDateTime mod = fn.GetModificationTime();
+      return wxString(mod.FormatISODate() + wxT(' ') + mod.FormatISOTime());
+   }
+
+   return L"";
+}
+
+bool PluginManager::GetConfig(const wxString & key, wxString & value, const wxString & defval)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      wxString wxval = wxEmptyString;
+
+      result = mConfig->Read(key, &wxval, defval);
+
+      value = wxval;
+   }
+
+   return result;
+}
+
+bool PluginManager::GetConfig(const wxString & key, int & value, int defval)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      result = mConfig->Read(key, &value, defval);
+   }
+
+   return result;
+}
+
+bool PluginManager::GetConfig(const wxString & key, bool & value, bool defval)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      result = mConfig->Read(key, &value, defval);
+   }
+
+   return result;
+}
+
+bool PluginManager::GetConfig(const wxString & key, float & value, float defval)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      double dval = 0.0;
+
+      result = mConfig->Read(key, &dval, (double) defval);
+
+      value = (float) dval;
+   }
+
+   return result;
+}
+
+bool PluginManager::GetConfig(const wxString & key, double & value, double defval)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      result = mConfig->Read(key, &value, defval);
+   }
+
+   return result;
+}
+
+bool PluginManager::GetConfig(const wxString & key, sampleCount & value, sampleCount defval)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      wxString wxval = wxEmptyString;
+      wxString wxdef;
+      wchar_t *endptr;
+      wxdef.Printf(wxT("%Ld"), defval);
+
+      result = mConfig->Read(key, &wxval, wxdef);
+      value = wxStrtoll(wxval.c_str(), &endptr, 10);
+   }
+   
+   return result;
+}
+
+bool PluginManager::SetConfig(const wxString & key, const wxString & value)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      wxString wxval = value.c_str();
+      result = mConfig->Write(key, wxval);
+   }
+
+   return result;
+}
+
+bool PluginManager::SetConfig(const wxString & key, const int & value) 
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      result = mConfig->Write(key, value);
+   }
+
+   return result;
+}
+
+bool PluginManager::SetConfig(const wxString & key, const bool & value)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      result = mConfig->Write(key, value);
+   }
+
+   return result;
+}
+
+bool PluginManager::SetConfig(const wxString & key, const float & value)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      result = mConfig->Write(key, value);
+   }
+
+   return result;
+}
+
+bool PluginManager::SetConfig(const wxString & key, const double & value)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      result = mConfig->Write(key, value);
+   }
+
+   return result;
+}
+
+bool PluginManager::SetConfig(const wxString & key, const sampleCount & value)
+{
+   bool result = false;
+
+   if (mConfig && !key.empty())
+   {
+      result = mConfig->Write(key, wxString::Format(wxT("%d"), (int) value));
+   }
+
+   return result;
+}
+
+wxString PluginManager::SharedKey(const PluginID & ID, const wxString & group, const wxString & key)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      L"";
+   }
+
+   wxString path = CACHEROOT +
+                   mPlugins[ID].GetProviderID() +
+                   wxCONFIG_PATH_SEPARATOR +
+                   wxT("private") +
+                   wxCONFIG_PATH_SEPARATOR;
+
+   wxFileName f(group);
+   if (!f.GetName().IsEmpty())
+   {
+      path += f.GetName() + wxCONFIG_PATH_SEPARATOR;
+   }
+
+   return path + key;
+}
+
+wxString PluginManager::PrivateKey(const PluginID & ID, const wxString & group, const wxString & key)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      L"";
+   }
+
+   wxString path = CACHEROOT +
+                  ID +
+                  wxCONFIG_PATH_SEPARATOR +
+                  wxT("private") +
+                  wxCONFIG_PATH_SEPARATOR;
+
+   wxFileName f(group);
+   if (!f.GetName().IsEmpty())
+   {
+      path += f.GetName() + wxCONFIG_PATH_SEPARATOR;
+   }
+
+   return path + key;
+}
+

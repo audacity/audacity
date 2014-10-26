@@ -21,6 +21,9 @@
 class wxDialog;
 class wxWindow;
 
+#include "audacity/ConfigInterface.h"
+#include "audacity/EffectInterface.h"
+
 #include "../Experimental.h"
 #include "../WaveTrack.h"
 #include "../Shuttle.h"
@@ -59,7 +62,8 @@ class TimeWarper;
 //and so can just drop the steps we don't want?
 #define SKIP_EFFECT_MILLISECOND 99999
 
-class AUDACITY_DLL_API Effect {
+class AUDACITY_DLL_API Effect : public EffectHostInterface
+{
  //
  // public methods
  //
@@ -67,10 +71,71 @@ class AUDACITY_DLL_API Effect {
  // apply the effect to one or more tracks.
  //
  public:
+   // The constructor is called once by each subclass at the beginning of the program.
+   // Avoid allocating memory or doing time-consuming processing here.
+   Effect();
+   Effect(EffectClientInterface *client);
+   virtual ~Effect();
+
+   // IdentInterface implementation
+
+   virtual PluginID GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
+
+   // EffectIdentInterface implementation
+
+   virtual EffectType GetType();
+   virtual wxString GetFamily();
+   virtual bool IsInteractive();
+   virtual bool IsDefault();
+   virtual bool IsLegacy();
+   virtual bool IsRealtimeCapable();
+
+   // EffectHostInterface implementation
+
+   virtual bool Apply();
+   virtual void Preview();
+
+   // ConfigClientInterface implementation
+
+   virtual bool GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString);
+   virtual bool GetSharedConfig(const wxString & group, const wxString & key, int & value, int defval = 0);
+   virtual bool GetSharedConfig(const wxString & group, const wxString & key, bool & value, bool defval = false);
+   virtual bool GetSharedConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0);
+   virtual bool GetSharedConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0);
+   virtual bool GetSharedConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0);
+
+   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const wxString & value);
+   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const int & value);
+   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const bool & value);
+   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const float & value);
+   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const double & value);
+   virtual bool SetSharedConfig(const wxString & group, const wxString & key, const sampleCount & value);
+
+   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString);
+   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, int & value, int defval = 0);
+   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, bool & value, bool defval = false);
+   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, float & value, float defval = 0.0);
+   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, double & value, double defval = 0.0);
+   virtual bool GetPrivateConfig(const wxString & group, const wxString & key, sampleCount & value, sampleCount defval = 0);
+
+   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const wxString & value);
+   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const int & value);
+   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const bool & value);
+   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const float & value);
+   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const double & value);
+   virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const sampleCount & value);
+
+   // Effect implementation
+
    // Each subclass of Effect should override this method.
    // This name will go in the menu bar;
    // append "..." if your effect pops up a dialog
-   virtual wxString GetEffectName() = 0;
+   virtual wxString GetEffectName();
 
    // Each subclass of Effect should override this method.
    // This should return the category of this effect, which
@@ -82,7 +147,7 @@ class AUDACITY_DLL_API Effect {
    // Previously optional. Now required to identify effects for Chain support.
    // Each subclass of Effect should override this method.
    // This should be human-readable, but should NOT be translated.  Use wxT(""), not _("").
-   virtual wxString GetEffectIdentifier() = 0;
+   virtual wxString GetEffectIdentifier();
 
    // Each subclass of Effect should override this method.
    // This name will go in the progress dialog, but can be used
@@ -90,7 +155,7 @@ class AUDACITY_DLL_API Effect {
    // For example, if the effect is "Filter", the action is
    // "Filtering", or if the effect is "Bass Boost", the action
    // is "Boosting Bass Frequencies".
-   virtual wxString GetEffectAction() = 0;
+   virtual wxString GetEffectAction();
 
    // Each subclass of Effect should override this method.
    // This description will go in the History state.
@@ -133,7 +198,7 @@ class AUDACITY_DLL_API Effect {
 
    // The Effect class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
-   virtual void Preview(bool dryOnly = false);
+   virtual void Preview(bool dryOnly);
 
    // Most effects just use the previewLength, but time-stretching/compressing
    // effects need to use a different input length, so override this method.
@@ -141,8 +206,13 @@ class AUDACITY_DLL_API Effect {
 
    // Get an unique ID assigned to each registered effect.
    // The first effect will have ID zero.
-   int GetID() {
-      return mID;
+   int GetEffectID() {
+      return mEffectID;
+   }
+
+   // Set an unique ID assigned to each registered effect.
+   void SetEffectID(int id) {
+      mEffectID = id;
    }
 
    // Returns true on success.  Will only operate on tracks that
@@ -163,6 +233,13 @@ class AUDACITY_DLL_API Effect {
    // important for sorting.
    static wxString StripAmpersand(const wxString& str);
 
+   // Realtime Effect Processing
+   bool RealtimeInitialize(int numChannels, float sampleRate);
+   bool RealtimeFinalize();
+   bool RealtimeSuspend();
+   bool RealtimeResume();
+   sampleCount RealtimeProcess(float **inbuf, float **outbuf, sampleCount size);
+
  //
  // protected virtual methods
  //
@@ -170,26 +247,18 @@ class AUDACITY_DLL_API Effect {
  // do its processing.
  //
  protected:
-   // The constructor is called once by each subclass at the beginning of the program.
-   // Avoid allocating memory or doing time-consuming processing here.
-   Effect();
-
-   virtual ~Effect();
-
    // Called once each time an effect is called.  Perform any initialization;
    // make sure that the effect can be performed on the selected tracks and
    // return false otherwise
-   virtual bool Init() {
-      return true;
-   }
+   virtual bool Init();
 
    // If necessary, open a dialog to get parameters from the user.
    // This method will not always be called (for example if a user
    // repeats an effect) but if it is called, it will be called
    // after Init.
-   virtual bool PromptUser() {
-      return true;
-   }
+   virtual bool PromptUser();
+   virtual bool PromptUser(wxWindow *parent);
+
    // Check whether effect should be skipped
    // Typically this is only useful in automation, for example
    // detecting that zero noise reduction is to be done,
@@ -198,12 +267,10 @@ class AUDACITY_DLL_API Effect {
    virtual bool CheckWhetherSkipEffect() { return false; }
 
    // Actually do the effect here.
-   virtual bool Process() = 0;
+   virtual bool Process();
 
    // clean up any temporary memory
-   virtual void End() {
-   }
-
+   virtual void End();
 
  //
  // protected data
@@ -293,8 +360,17 @@ class AUDACITY_DLL_API Effect {
  // Used only by the base Effect class
  //
  private:
+   void CommonInit();
    void CountWaveTracks();
 
+   // Driver for client effects
+   bool ProcessTrack(int count,
+                     WaveTrack *left,
+                     WaveTrack *right,
+                     sampleCount leftStart,
+                     sampleCount rightStart,
+                     sampleCount len);
+ 
  //
  // private data
  //
@@ -307,13 +383,25 @@ class AUDACITY_DLL_API Effect {
    int mNumTracks; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
    int mNumGroups;
 
-   int mID;
+   int mEffectID;
 
-   friend class BatchCommands;// so can call PromptUser.
-   friend class EffectManager;// so it can delete effects and access mID.
+   // For client driver
+   EffectClientInterface *mClient;
+   int mNumAudioIn;
+   int mNumAudioOut;
 
+   float **mInBuffer;
+   float **mOutBuffer;
+   float **mInBufPos;
+   float **mOutBufPos;
+
+   sampleCount mBufferSize;
+   sampleCount mBlockSize;
+   int mNumChannels;
+
+   friend class EffectManager;// so it can call PromptUser in support of batch commands.
+   friend class EffectRack;
 };
-
 
 // Base dialog for generate effect
 
@@ -350,4 +438,3 @@ double TrapDouble(double x, double min, double max);
 long TrapLong(long x, long min, long max);
 
 #endif
-

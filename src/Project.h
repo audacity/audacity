@@ -563,7 +563,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    wxArrayString mStrOtherNamesArray; // used to make sure compressed file names are unique
 
    // Last effect applied to this project
-   Effect *mLastEffect;
+   PluginID mLastEffect;
    int mLastEffectType;
 
    // The screenshot class needs to access internals
@@ -577,13 +577,13 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Are we currently closing as the result of a menu command?
    bool mMenuClose;
 
- public:
     DECLARE_EVENT_TABLE()
 };
 
 typedef void (AudacityProject::*audCommandFunction)();
 typedef void (AudacityProject::*audCommandKeyFunction)(const wxEvent *);
 typedef void (AudacityProject::*audCommandListFunction)(int);
+typedef void (AudacityProject::*audCommandPluginFunction)(const PluginID &);
 
 // Previously this was in menus.cpp, and the declaration of the
 // command functor was not visible anywhere else.
@@ -597,15 +597,26 @@ public:
    AudacityProjectCommandFunctor(AudacityProject *project,
       audCommandListFunction commandFunction);
    AudacityProjectCommandFunctor(AudacityProject *project,
+      audCommandPluginFunction commandFunction,
+      const PluginID & pluginID);
+#if defined(EFFECT_CATEGORIES)
+   AudacityProjectCommandFunctor(AudacityProject *project,
       audCommandListFunction commandFunction,
       wxArrayInt explicitIndices);
+#endif
+
    virtual void operator()(int index = 0, const wxEvent *evt = NULL);
+
 private:
    AudacityProject *mProject;
    audCommandFunction mCommandFunction;
    audCommandKeyFunction mCommandKeyFunction;
    audCommandListFunction mCommandListFunction;
+   audCommandPluginFunction mCommandPluginFunction;
+   PluginID mPluginID;
+#if defined(EFFECT_CATEGORIES)
    wxArrayInt mExplicitIndices;
+#endif
 };
 
 #endif

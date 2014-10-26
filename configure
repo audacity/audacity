@@ -19702,6 +19702,8 @@ WX_LIBS=$($WX_CONFIG $wxconfigargs --libs)
 
 ac_configure_args="$ac_configure_args --enable-static=yes --enable-shared=no"
 
+CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/include"
+
 
 
 subdirs="$subdirs lib-src/FileDialog"
@@ -23812,8 +23814,7 @@ $as_echo "#define HAVE_GTK 1" >>confdefs.h
          LIBS="$LIBS $GTK_LIBS"
       fi
 
-            	   use_vst="no"
-   ;;
+            	      ;;
 esac
 
 

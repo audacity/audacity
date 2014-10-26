@@ -8,83 +8,133 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h"
-
 #if USE_VST
 
-#include "../Effect.h"
+#include "audacity/EffectInterface.h"
+#include "audacity/ModuleInterface.h"
+#include "audacity/PluginInterface.h"
 
 #include "aeffectx.h"
 
-#define VSTCMDKEY wxT("-checkvst")
-#define VSTPLUGINTYPE wxT("VST")
+#define VSTCMDKEY L"-checkvst"
+#define VSTPLUGINTYPE L"VST"
 
 #define audacityVSTID CCONST('a', 'u', 'D', 'y');
 
-typedef intptr_t (*dispatcherFn)(AEffect * effect, int opCode,
-                                 int index, intptr_t value, void *ptr,
+typedef intptr_t (*dispatcherFn)(AEffect * effect,
+                                 int opCode,
+                                 int index,
+                                 intptr_t value,
+                                 void *ptr,
                                  float opt);
 
-typedef void (*processFn)(AEffect * effect, float **inputs,
-                          float **outputs, int sampleframes);
+typedef void (*processFn)(AEffect * effect,
+                          float **inputs,
+                          float **outputs,
+                          int sampleframes);
 
-typedef void (*setParameterFn)(AEffect * effect, int index,
+typedef void (*setParameterFn)(AEffect * effect,
+                               int index,
                                float parameter);
 
-typedef float (*getParameterFn)(AEffect * effect, int index);
+typedef float (*getParameterFn)(AEffect * effect,
+                                int index);
 
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
 class VSTEffectTimer;
 class VSTEffectDialog;
 
-class VSTEffect:public Effect
+class VSTEffect : public EffectClientInterface
 {
  public:
-
    VSTEffect(const wxString & path);
    virtual ~VSTEffect();
 
-   virtual wxString GetEffectName();
+   // IdentInterface implementation
+   virtual PluginID GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier();
+   // EffectIdentInterface implementation
+   virtual EffectType GetType();
+   virtual wxString GetFamily();
+   virtual bool IsInteractive();
+   virtual bool IsDefault();
+   virtual bool IsLegacy();
+   virtual bool IsRealtimeCapable();
 
-   virtual std::set<wxString> GetEffectCategories();
+   // EffectClientInterface implementation
+   virtual void SetHost(EffectHostInterface *host);
+   virtual bool Startup();
+   virtual bool Shutdown();
 
-   virtual wxString GetEffectAction();
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
 
-   virtual bool Init();
+   virtual int GetMidiInCount();
+   virtual int GetMidiOutCount();
 
-   virtual bool PromptUser();
+   virtual sampleCount GetLatency();
+   virtual sampleCount GetTailSize();
 
-   virtual bool Process();
+   virtual void SetSampleRate(sampleCount rate);
+   virtual sampleCount GetBlockSize(sampleCount maxBlockSize);
 
-   virtual void End();
+   virtual bool IsReady();
+   virtual bool ProcessInitialize();
+   virtual bool ProcessFinalize();
+   virtual sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size);
 
+   virtual bool RealtimeInitialize(int numChannels, float sampleRate);
+   virtual bool RealtimeFinalize();
+   virtual bool RealtimeSuspend();
+   virtual bool RealtimeResume();
+   virtual sampleCount RealtimeProcess(float **inbuf, float **outbuf, sampleCount size);
+
+   virtual bool ShowInterface(void *parent);
+
+   // VSTEffect implementation
+
+   // VST plugin -> host callback
+   static intptr_t AudioMaster(AEffect *effect,
+                               int32_t opcode,
+                               int32_t index,
+                               intptr_t value,
+                               void * ptr,
+                               float opt);
+
+   void OnTimer();
+
+private:
    // Plugin loading and unloading
-
    bool Load();
    void Unload();
 
-   // Plugin probing
+   // Parameter loading and saving
+   void LoadParameters(const wxString & group);
+   void SaveParameters(const wxString & group);
 
-   static int Scan();
-   static void Check(const wxChar *fname);
-
-   static void ScanOnePlugin( const wxString & file );
-   static int ShowPluginListDialog( const wxArrayString & files );
-   static void ShowProgressDialog( const wxString & longest, const wxArrayString & files );
+   // Base64 encoding and decoding
+   static wxString b64encode(const void *in, int len);
+   static int b64decode(wxString in, void *out);
 
    // Utility methods
 
-   int GetChannels();
    VstTimeInfo *GetTimeInfo();
    float GetSampleRate();
    int GetProcessLevel();
    void SetBufferDelay(int samples);
-   int NeedIdle();
+   void NeedIdle();
+   void NeedEditIdle(bool state);
    void UpdateDisplay();
    void SizeWindow(int w, int h);
+   void PowerOn();
+   void PowerOff();
+   void InterfaceClosed();
 
    int GetString(wxString & outstr, int opcode, int index = 0);
    wxString GetString(int opcode, int index = 0);
@@ -93,54 +143,93 @@ class VSTEffect:public Effect
    // VST methods
 
    intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt);
-   void callProcess(float **inputs, float **outputs, int sampleframes);
    void callProcessReplacing(float **inputs, float **outputs, int sampleframes);
    void callSetParameter(int index, float parameter);
    float callGetParameter(int index);
 
-
  private:
-   bool ProcessStereo(int count,
-                      WaveTrack *left,
-                      WaveTrack *right,
-                      sampleCount lstart,
-                      sampleCount rstart,
-                      sampleCount len);
-
+   EffectHostInterface *mHost;
+   PluginID mID;
    wxString mPath;
+   int mAudioIns;
+   int mAudioOuts;
+   int mMidiIns;
+   int mMidiOuts;
+   float mSampleRate;
+   sampleCount mUserBlockSize;
+   wxString mName;
+   wxString mVendor;
+   wxString mDescription;
+   int mVersion;
+   bool mInteractive;
+
+   bool mReady;
+
 #if defined(__WXMAC__)
-   // Cheating a little ... type is really CFBundle
-   void *mBundleRef;
-   // Cheating a little ... type is really CFBundleRefNum
-   int mResource;
+   void *mBundleRef;       // Cheating a little ... type is really CFBundle
+   int mResource;          // Cheating a little ... type is really CFBundle
 #endif
    void *mModule;
    AEffect *mAEffect;
 
    VSTEffectDialog *mDlg;
 
-   wxString mVendor;
-   wxString mName;
-
    VstTimeInfo mTimeInfo;
 
    bool mUseBufferDelay;
    int mBufferDelay;
 
-   int mBufferSize;
-
    sampleCount mBlockSize;
-   sampleCount mWTBlockSize;
-   float **mInBuffer;
-   float **mOutBuffer;
-   int mInputs;
-   int mOutputs;
-   int mChannels;
+
    int mProcessLevel;
+   bool mHasPower;
+   bool mWantsIdle;
+   bool mWantsEditIdle;
+
+   wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
 
    VSTEffectTimer *mTimer;
+   int mTimerGuard;
+
+   friend class VSTEffectDialog;
+   friend class VSTEffectsModule;
 };
 
 void RegisterVSTEffects();
+
+class VSTEffectsModule : public ModuleInterface
+{
+public:
+   VSTEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
+   virtual ~VSTEffectsModule();
+
+   // IdentInterface implementatino
+
+   virtual wxString GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
+
+   // ModuleInterface implementation
+
+   virtual bool Initialize();
+   virtual void Terminate();
+
+   virtual bool AutoRegisterPlugins(PluginManagerInterface & pm);
+   virtual wxArrayString FindPlugins(PluginManagerInterface & pm);
+   virtual bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path);
+
+   virtual void *CreateInstance(const PluginID & ID, const wxString & path);
+
+   // VSTEffectModule implementation
+
+   static void Check(const wxChar *path);
+
+private:
+   ModuleManagerInterface *mModMan;
+   wxString mPath;
+};
 
 #endif // USE_VST

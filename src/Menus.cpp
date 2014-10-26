@@ -74,7 +74,8 @@ simplifies construction of menu items.
 #include "MixerBoard.h"
 #include "Internat.h"
 #include "FileFormats.h"
-#include "LoadModules.h"
+#include "ModuleManager.h"
+#include "PluginManager.h"
 #include "Prefs.h"
 #include "Printing.h"
 #ifdef USE_MIDI
@@ -143,6 +144,7 @@ AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *pr
    mCommandFunction = commandFunction;
    mCommandKeyFunction = NULL;
    mCommandListFunction = NULL;
+   mCommandPluginFunction = NULL;
 }
 
 AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *project,
@@ -152,6 +154,7 @@ AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *pr
    mCommandFunction = NULL;
    mCommandKeyFunction = commandFunction;
    mCommandListFunction = NULL;
+   mCommandPluginFunction = NULL;
 }
 
 AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *project,
@@ -161,8 +164,22 @@ AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *pr
    mCommandFunction = NULL;
    mCommandKeyFunction = NULL;
    mCommandListFunction = commandFunction;
+   mCommandPluginFunction = NULL;
 }
 
+AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *project,
+                              audCommandPluginFunction commandFunction,
+                              const PluginID & pluginID)
+{
+   mProject = project;
+   mCommandFunction = NULL;
+   mCommandKeyFunction = NULL;
+   mCommandListFunction = NULL;
+   mCommandPluginFunction = commandFunction;
+   mPluginID = pluginID;
+}
+
+#if defined(EFFECT_CATEGORIES)
 AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *project,
                               audCommandListFunction commandFunction,
                               wxArrayInt explicitIndices)
@@ -171,13 +188,19 @@ AudacityProjectCommandFunctor::AudacityProjectCommandFunctor(AudacityProject *pr
    mCommandFunction = NULL;
    mCommandKeyFunction = NULL;
    mCommandListFunction = commandFunction;
+   mCommandPluginFunction = NULL;
    mExplicitIndices = explicitIndices;
 }
+#endif
 
 void AudacityProjectCommandFunctor::operator()(int index, const wxEvent * evt)
 {
-   if (mCommandListFunction && mExplicitIndices.GetCount() > 0)
+   if (mCommandPluginFunction)
+      (mProject->*(mCommandPluginFunction)) (mPluginID);
+#if defined(EFFECT_CATEGORIES)
+   else if (mCommandListFunction && mExplicitIndices.GetCount() > 0)
       (mProject->*(mCommandListFunction)) (mExplicitIndices[index]);
+#endif
    else if (mCommandListFunction)
       (mProject->*(mCommandListFunction)) (index);
    else if (mCommandKeyFunction)
@@ -186,9 +209,14 @@ void AudacityProjectCommandFunctor::operator()(int index, const wxEvent * evt)
       (mProject->*(mCommandFunction)) ();
 }
 
-
 #define FN(X) new AudacityProjectCommandFunctor(this, &AudacityProject:: X )
 #define FNI(X, I) new AudacityProjectCommandFunctor(this, &AudacityProject:: X, I)
+#define FNS(X, S) new AudacityProjectCommandFunctor(this, &AudacityProject:: X, S)
+
+static bool SortPlugs(const PluginDescriptor *a, const PluginDescriptor *b)
+{
+   return a->GetMenuName() < b->GetMenuName();
+}
 
 /// CreateMenusAndCommands builds the menus, and also rebuilds them after
 /// changes in configured preferences - for example changes in key-bindings
@@ -832,6 +860,15 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->EndMenu();
 
+   // All of this is a bit hacky until we can get more things connected into
+   // the plugin manager...sorry! :-(
+
+   wxArrayString defaults;
+   PluginManager & pm = PluginManager::Get();
+   const PluginDescriptor *plug;
+   bool needsep;
+
+
    //////////////////////////////////////////////////////////////////////////
    // Generate Menu
    //////////////////////////////////////////////////////////////////////////
@@ -839,29 +876,49 @@ void AudacityProject::CreateMenusAndCommands()
    c->BeginMenu(_("&Generate"));
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
+   typedef std::set<const PluginDescriptor *, bool (*)(const PluginDescriptor *, const PluginDescriptor *)> SortedPlugs;
+   SortedPlugs defaultplugs(SortPlugs);
+   SortedPlugs extraplugs(SortPlugs);
+
 #ifndef EFFECT_CATEGORIES
-
-   effects = em.GetEffects(INSERT_EFFECT | BUILTIN_EFFECT);
-   if (effects->GetCount()) {
-      names.Clear();
-      for (size_t i = 0; i < effects->GetCount(); i++) {
-         names.Add((*effects)[i]->GetEffectName());
+   plug = pm.GetFirstPluginForEffectType(EffectTypeGenerate);
+   while (plug) {
+      if (plug->IsEffectDefault()) {
+         defaultplugs.insert(plug);
       }
-      c->AddItemList(wxT("Generate"), names, FN(OnGenerateEffect));
-   }
-   delete effects;
-
-   effects = em.GetEffects(INSERT_EFFECT | PLUGIN_EFFECT);
-   if (effects->GetCount()) {
-      c->AddSeparator();
-      names.Clear();
-      for (size_t i = 0; i < effects->GetCount(); i++) {
-         names.Add((*effects)[i]->GetEffectName());
+      else {
+         extraplugs.insert(plug);
       }
-      c->AddItemList(wxT("GeneratePlugin"), names, FN(OnGeneratePlugin), true);
+      plug = pm.GetNextPluginForEffectType(EffectTypeGenerate);
    }
-   delete effects;
 
+   for (SortedPlugs::iterator iter = defaultplugs.begin(); iter != defaultplugs.end(); iter++)
+   {
+      const PluginDescriptor *plug = *iter;
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+      int flags = plug->IsEffectRealtimeCapable() ?
+                  AudioIONotBusyFlag :
+                  TracksExistFlag;
+#else
+      int flags = TracksExistFlag;
+#endif
+      c->AddItem(plug->GetName(),
+                 plug->GetMenuName(),
+                 FNS(OnEffect, plug->GetID()));
+   }
+
+   needsep = true;
+   for (SortedPlugs::iterator iter = extraplugs.begin(); iter != extraplugs.end(); iter++)
+   {
+      const PluginDescriptor *plug = *iter;
+      if (needsep) {
+         c->AddSeparator();
+         needsep = false;
+      }
+      c->AddItem(plug->GetName(),
+                 plug->GetMenuName(),
+                 FNS(OnEffect, plug->GetID()));
+   }
 #else
 
    int flags;
@@ -887,7 +944,7 @@ void AudacityProject::CreateMenusAndCommands()
       EffectSet::const_iterator iter;
       for (iter = unsorted.begin(); iter != unsorted.end(); ++iter) {
          names.Add((*iter)->GetEffectName());
-         indices.Add((*iter)->GetID());
+         indices.Add((*iter)->GetEffectID());
       }
       c->AddItemList(wxT("Generate"), names,
                      FNI(OnProcessAny, indices), true);
@@ -903,12 +960,11 @@ void AudacityProject::CreateMenusAndCommands()
    /////////////////////////////////////////////////////////////////////////////
 
    c->BeginMenu(_("Effe&ct"));
-   c->SetDefaultFlags(AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                      AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag);
 
    wxString buildMenuLabel;
    if (mLastEffectType != 0) {
-      buildMenuLabel.Printf(_("Repeat %s"), mLastEffect->GetEffectName().c_str());
+      buildMenuLabel.Printf(_("Repeat %s"),
+                            EffectManager::Get().GetEffectName(mLastEffect).c_str());
    }
    else
       buildMenuLabel.Printf(_("Repeat Last Effect"));
@@ -925,30 +981,57 @@ void AudacityProject::CreateMenusAndCommands()
    // effects at all in the menu when EFFECT_CATEGORIES is undefined
 
 #ifndef EFFECT_CATEGORIES
-
-   effects = em.GetEffects(PROCESS_EFFECT | BUILTIN_EFFECT | additionalEffects);
-   if (effects->GetCount()) {
-      names.Clear();
-      for (size_t i = 0; i < effects->GetCount(); i++) {
-         names.Add((*effects)[i]->GetEffectName());
+   defaultplugs.clear();
+   extraplugs.clear();
+   plug = pm.GetFirstPluginForEffectType(EffectTypeProcess);
+   while (plug) {
+      if (plug->IsEffectDefault()) {
+         defaultplugs.insert(plug);
       }
-      c->AddItemList(wxT("Effect"), names, FN(OnProcessEffect));
-   }
-   delete effects;
-
-   effects = em.GetEffects(PROCESS_EFFECT | PLUGIN_EFFECT);
-   if (effects->GetCount()) {
-      c->AddSeparator();
-      names.Clear();
-      for (size_t i = 0; i < effects->GetCount(); i++) {
-         names.Add((*effects)[i]->GetEffectName());
+      else {
+         extraplugs.insert(plug);
       }
-      c->AddItemList(wxT("EffectPlugin"), names, FN(OnProcessPlugin), true);
+      plug = pm.GetNextPluginForEffectType(EffectTypeProcess);
    }
-   delete effects;
 
-   c->EndMenu();
+   for (SortedPlugs::iterator iter = defaultplugs.begin(); iter != defaultplugs.end(); iter++)
+   {
+      const PluginDescriptor *plug = *iter;
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+      int flags = plug->IsEffectRealtimeCapable() ?
+                  TracksExistFlag :
+                  AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
+#else
+      int flags = AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
+#endif
+      c->AddItem(plug->GetName(),
+                 plug->GetMenuName(),
+                 FNS(OnEffect, plug->GetID()),
+                 flags,
+                 flags);
+   }
 
+   needsep = true;
+   for (SortedPlugs::iterator iter = extraplugs.begin(); iter != extraplugs.end(); iter++)
+   {
+      const PluginDescriptor *plug = *iter;
+      if (needsep) {
+         c->AddSeparator();
+         needsep = false;
+      }
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+      int flags = plug->IsEffectRealtimeCapable() ?
+                  TracksExistFlag :
+                  AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
+#else
+      int flags = AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
+#endif
+      c->AddItem(plug->GetName(),
+                  plug->GetMenuName(),
+                  FNS(OnEffect, plug->GetID()),
+                  flags,
+                  flags);
+   }
 #else
    int flags = PROCESS_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT | ADVANCED_EFFECT;
    // The categories form a DAG, so we start at the roots (the categories
@@ -968,14 +1051,15 @@ void AudacityProject::CreateMenusAndCommands()
       EffectSet::const_iterator iter;
       for (iter = unsorted.begin(); iter != unsorted.end(); ++iter) {
          names.Add((*iter)->GetEffectName());
-         indices.Add((*iter)->GetID());
+         indices.Add((*iter)->GetEffectID());
       }
       c->AddItemList(wxT("Effect"), names, FNI(OnProcessAny, indices), true);
       c->EndSubMenu();
    }
-   c->EndMenu();
 
 #endif
+
+   c->EndMenu();
 
    //////////////////////////////////////////////////////////////////////////
    // Analyze Menu
@@ -991,28 +1075,57 @@ void AudacityProject::CreateMenusAndCommands()
               AudioIONotBusyFlag | WaveTracksSelectedFlag | TimeSelectedFlag);
 
 #ifndef EFFECT_CATEGORIES
-
-   effects = em.GetEffects(ANALYZE_EFFECT | BUILTIN_EFFECT);
-   if (effects->GetCount()) {
-      names.Clear();
-      for (size_t i = 0; i < effects->GetCount(); i++) {
-         names.Add((*effects)[i]->GetEffectName());
+   defaultplugs.clear();
+   extraplugs.clear();
+   plug = pm.GetFirstPluginForEffectType(EffectTypeAnalyze);
+   while (plug) {
+      if (plug->IsEffectDefault()) {
+         defaultplugs.insert(plug);
       }
-      c->AddItemList(wxT("Analyze"), names, FN(OnAnalyzeEffect));
-   }
-   delete effects;
-
-   effects = em.GetEffects(ANALYZE_EFFECT | PLUGIN_EFFECT);
-   if (effects->GetCount()) {
-      c->AddSeparator();
-      names.Clear();
-      for (size_t i = 0; i < effects->GetCount(); i++) {
-         names.Add((*effects)[i]->GetEffectName());
+      else {
+         extraplugs.insert(plug);
       }
-      c->AddItemList(wxT("AnalyzePlugin"), names, FN(OnAnalyzePlugin), true);
+      plug = pm.GetNextPluginForEffectType(EffectTypeAnalyze);
    }
-   delete effects;
 
+   for (SortedPlugs::iterator iter = defaultplugs.begin(); iter != defaultplugs.end(); iter++)
+   {
+      const PluginDescriptor *plug = *iter;
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+      int flags = plug->IsEffectRealtimeCapable() ?
+                  TracksExistFlag :
+                  AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
+#else
+      int flags = AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
+#endif
+      c->AddItem(plug->GetName(),
+                  plug->GetMenuName(),
+                  FNS(OnEffect, plug->GetID()),
+                  flags,
+                  flags);
+   }
+
+   needsep = true;
+   for (SortedPlugs::iterator iter = extraplugs.begin(); iter != extraplugs.end(); iter++)
+   {
+      const PluginDescriptor *plug = *iter;
+      if (needsep) {
+         c->AddSeparator();
+         needsep = false;
+      }
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+      int flags = plug->IsEffectRealtimeCapable() ?
+                  TracksExistFlag :
+                  AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
+#else
+      int flags = AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
+#endif
+      c->AddItem(plug->GetName(),
+                  plug->GetMenuName(),
+                  FNS(OnEffect, plug->GetID()),
+                  flags,
+                  flags);
+   }
 #else
 
    flags = ANALYZE_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT;
@@ -1036,7 +1149,7 @@ void AudacityProject::CreateMenusAndCommands()
       EffectSet::const_iterator iter;
       for (iter = unsorted.begin(); iter != unsorted.end(); ++iter) {
          names.Add((*iter)->GetEffectName());
-         indices.Add((*iter)->GetID());
+         indices.Add((*iter)->GetEffectID());
       }
       c->AddItemList(wxT("Analyze"), names,
                      FNI(OnProcessAny, indices), true);
@@ -1272,7 +1385,7 @@ void AudacityProject::AddEffectsToMenu(CommandManager* c,
    EffectSet::const_iterator iter;
    for (iter = effects.begin(); iter != effects.end(); ++iter) {
       names.Add((*iter)->GetEffectName());
-      indices.Add((*iter)->GetID());
+      indices.Add((*iter)->GetEffectID());
    }
    c->AddItemList(wxT("Effects"), names, FNI(OnProcessAny, indices), true);
 }
@@ -1377,7 +1490,7 @@ void AudacityProject::RebuildMenuBar()
 
    CreateMenusAndCommands();
 
-   ModuleManager::Dispatch(MenusRebuilt);
+   ModuleManager::Get().Dispatch(MenusRebuilt);
 }
 
 void AudacityProject::RebuildOtherMenus()
@@ -1484,7 +1597,7 @@ wxUint32 AudacityProject::GetUpdateFlags()
    if (mUndoManager.UnsavedChanges())
       flags |= UnsavedChangesFlag;
 
-   if (mLastEffect != NULL)
+   if (!mLastEffect.empty())
       flags |= HasLastEffectFlag;
 
    if (mUndoManager.UndoAvailable())
@@ -2638,27 +2751,7 @@ void AudacityProject::OnZeroCrossing()
 // Effect Menus
 //
 
-void AudacityProject::OnEffect(int type, int index)
-{
-   EffectArray *effects;
-   Effect *f = NULL;
-
-   effects = EffectManager::Get().GetEffects(type);
-
-   f = (*effects)[index];
-   delete effects;
-
-   if (!f)
-      return;
-   //TIDY-ME: Effect Type parameters serve double duty.
-   // The type parameter is over used.
-   // It is being used:
-   //  (a) to filter the list of effects
-   //  (b) to specify whether to prompt for parameters.
-   OnEffect( type, f );
-}
-
-/// OnEffect() takes an Effect and executes it.
+/// OnEffect() takes a PluginID and has the EffectManager execute the assocated effect.
 ///
 /// At the moment flags are used only to indicate
 /// whether to prompt for parameters or whether to
@@ -2673,7 +2766,7 @@ void AudacityProject::OnEffect(int type, int index)
 /// DanH: I've added the third option as a temporary measure. I think this
 ///       should eventually be done by having effects as Command objects.
 bool AudacityProject::OnEffect(int type,
-                               Effect * f,
+                               const PluginID & ID,
                                wxString params,
                                bool saveState)
 {
@@ -2697,7 +2790,7 @@ bool AudacityProject::OnEffect(int type,
 
    if (count == 0) {
       // No tracks were selected...
-      if (f->GetEffectFlags() & INSERT_EFFECT) {
+      if (type & INSERT_EFFECT) {
          // Create a new track for the generated audio...
          newTrack = mTrackFactory->NewWaveTrack();
          mTracks->Add(newTrack);
@@ -2709,12 +2802,15 @@ bool AudacityProject::OnEffect(int type,
       }
    }
 
-   if (f->DoEffect(this, type, mRate, mTracks, mTrackFactory,
-                   &mViewInfo.selectedRegion, params)) {
+   EffectManager & em = EffectManager::Get();
+
+   if (em.DoEffect(ID, this, type, mRate, mTracks, mTrackFactory,
+                    &mViewInfo.selectedRegion, params))
+   {
       if (saveState)
       {
-         wxString longDesc = f->GetEffectDescription();
-         wxString shortDesc = f->GetEffectName();
+         wxString longDesc = em.GetEffectDescription(ID);
+         wxString shortDesc = em.GetEffectName(ID);
 
          if (shortDesc.Length() > 3 && shortDesc.Right(3)==wxT("..."))
             shortDesc = shortDesc.Left(shortDesc.Length()-3);
@@ -2723,8 +2819,8 @@ bool AudacityProject::OnEffect(int type,
 
          // Only remember a successful effect, don't rmemeber insert,
          // or analyze effects.
-         if ((f->GetEffectFlags() & (INSERT_EFFECT | ANALYZE_EFFECT))==0) {
-            mLastEffect = f;
+         if ((type & (INSERT_EFFECT | ANALYZE_EFFECT))==0) {
+            mLastEffect = ID;
             mLastEffectType = type;
             wxString lastEffectDesc;
             /* i18n-hint: %s will be the name of the effect which will be
@@ -2737,7 +2833,7 @@ bool AudacityProject::OnEffect(int type,
       //The following automatically re-zooms after sound was generated.
       // IMO, it was disorienting, removing to try out without re-fitting
       //mchinen:12/14/08 reapplying for generate effects
-      if ( f->GetEffectFlags() & INSERT_EFFECT)
+      if ( type & INSERT_EFFECT)
       {
          if (count == 0 || (clean && mViewInfo.selectedRegion.t0() == 0.0))
             OnZoomFit();
@@ -2761,56 +2857,84 @@ bool AudacityProject::OnEffect(int type,
    return true;
 }
 
-void AudacityProject::OnGenerateEffect(int index)
+void AudacityProject::OnEffect(const PluginID & pluginID)
 {
-   OnEffect(BUILTIN_EFFECT | INSERT_EFFECT, index);
+   PluginManager & pm = PluginManager::Get();
+   const PluginDescriptor *plug = pm.GetPlugin(pluginID);
+
+   int type;
+   switch (plug->GetEffectType())
+   {
+      case EffectTypeGenerate:
+         type = INSERT_EFFECT;
+      break;
+
+      case EffectTypeProcess:
+         type = PROCESS_EFFECT;
+      break;
+
+      case EffectTypeAnalyze:
+         type = ANALYZE_EFFECT;
+      break;
+   }
+
+   type |= plug->IsEffectDefault() ? BUILTIN_EFFECT : PLUGIN_EFFECT;
+
+   OnEffect(type, pluginID);
 }
 
-void AudacityProject::OnGeneratePlugin(int index)
+// Warning...complete hackage ahead
+void AudacityProject::OnEffect(const PluginID & pluginID, bool configured)
 {
-   OnEffect(PLUGIN_EFFECT | INSERT_EFFECT, index);
+   PluginManager & pm = PluginManager::Get();
+   const PluginDescriptor *plug = pm.GetPlugin(pluginID);
+
+   int type;
+   switch (plug->GetEffectType())
+   {
+      case EffectTypeGenerate:
+         type = INSERT_EFFECT;
+      break;
+
+      case EffectTypeProcess:
+         type = PROCESS_EFFECT;
+      break;
+
+      case EffectTypeAnalyze:
+         type = ANALYZE_EFFECT;
+      break;
+   }
+
+   type |= plug->IsEffectDefault() ? BUILTIN_EFFECT : PLUGIN_EFFECT;
+   type |= configured ? CONFIGURED_EFFECT : 0;
+
+   OnStop();
+   SelectAllIfNone();
+
+   OnEffect(type, pluginID);
 }
 
 void AudacityProject::OnRepeatLastEffect(int WXUNUSED(index))
 {
-   if (mLastEffect != NULL) {
+   if (!mLastEffect.empty()) {
       // Setting the CONFIGURED_EFFECT bit prevents
       // prompting for parameters.
       OnEffect(mLastEffectType | CONFIGURED_EFFECT, mLastEffect);
    }
 }
 
+#ifdef EFFECT_CATEGORIES
 void AudacityProject::OnProcessAny(int index)
 {
    Effect* e = EffectManager::Get().GetEffect(index);
    OnEffect(ALL_EFFECTS, e);
 }
-
-void AudacityProject::OnProcessEffect(int index)
-{
-   int additionalEffects=ADVANCED_EFFECT;
-   OnEffect(BUILTIN_EFFECT | PROCESS_EFFECT | additionalEffects, index);
-}
+#endif
 
 void AudacityProject::OnStereoToMono(int WXUNUSED(index))
 {
    OnEffect(ALL_EFFECTS,
             EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")));
-}
-
-void AudacityProject::OnProcessPlugin(int index)
-{
-   OnEffect(PLUGIN_EFFECT | PROCESS_EFFECT, index);
-}
-
-void AudacityProject::OnAnalyzeEffect(int index)
-{
-   OnEffect(BUILTIN_EFFECT | ANALYZE_EFFECT, index);
-}
-
-void AudacityProject::OnAnalyzePlugin(int index)
-{
-   OnEffect(PLUGIN_EFFECT | ANALYZE_EFFECT, index);
 }
 
 //

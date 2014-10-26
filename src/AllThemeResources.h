@@ -214,6 +214,9 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpSyncLockSelTile, wxImage(20, 22), wxT("SyncLockSelTile"));
    DEFINE_IMAGE( bmpSyncLockIcon, wxImage(12, 12), wxT("SyncLockIcon"));
 
+   SET_THEME_FLAGS(  resFlagNone  );
+   DEFINE_IMAGE( bmpEditEffects, wxImage(21, 20), wxT("EditEffects"));
+
 #if defined(EXPERIMENTAL_THEMING)
    DEFINE_COLOUR( clrBlank,      wxColour( 64,  64,  64), wxT("Blank"));
    DEFINE_COLOUR( clrUnselected, wxColour( 30,  30,  30), wxT("Unselected"));

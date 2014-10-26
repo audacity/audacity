@@ -343,16 +343,13 @@ void OnEditLabels();
 
         // Effect Menu
 
-bool OnEffect(int type, Effect * f, wxString params = wxEmptyString, bool saveState = true);
-void OnEffect(int type, int index);
-void OnGenerateEffect(int index);
-void OnGeneratePlugin(int index);
+bool OnEffect(int type, const PluginID & ID, wxString params = wxEmptyString, bool saveState = true);
+void OnEffect(const PluginID & pluginID);
+void OnEffect(const PluginID & pluginID, bool configured = false);
 void OnRepeatLastEffect(int index);
+#ifdef EFFECT_CATEGORIES
 void OnProcessAny(int index);
-void OnProcessEffect(int index);
-void OnProcessPlugin(int index);
-void OnAnalyzeEffect(int index);
-void OnAnalyzePlugin(int index);
+#endif
 void OnApplyChain();
 void OnEditChains();
 void OnStereoToMono(int index);

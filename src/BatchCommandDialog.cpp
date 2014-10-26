@@ -169,25 +169,24 @@ void BatchCommandDialog::OnItemSelected(wxListEvent &event)
    mCommand->SetValue( command );
    wxString params = BatchCommands::GetCurrentParamsFor( command );
    mParameters->SetValue( params );
-   Effect * f = EffectManager::Get().GetEffectByIdentifier( command );
-   mEditParams->Enable( f != NULL );
+   PluginID ID = EffectManager::Get().GetEffectByIdentifier( command );
+   mEditParams->Enable( !ID.empty() );
 }
 
 void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 {
    wxString command = mCommand->GetValue();
    wxString params  = mParameters->GetValue();
-   Effect * f = EffectManager::Get().GetEffectByIdentifier( command );
-   if( f==NULL )
-      return;
-   BatchCommands::SetCurrentParametersFor( f, command, params );
-   if( BatchCommands::PromptForParamsFor( command, this ))
+   if (BatchCommands::SetCurrentParametersFor( command, params ))
    {
-      // we've just prompted for the parameters, so the values
-      // that are current have changed.
-      params = BatchCommands::GetCurrentParamsFor( command );
-      mParameters->SetValue( params.Strip(wxString::trailing) );
-      mParameters->Refresh();
+      if( BatchCommands::PromptForParamsFor( command, this ))
+      {
+         // we've just prompted for the parameters, so the values
+         // that are current have changed.
+         params = BatchCommands::GetCurrentParamsFor( command );
+         mParameters->SetValue( params.Strip(wxString::trailing) );
+         mParameters->Refresh();
+      }
    }
 }
 

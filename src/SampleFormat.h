@@ -14,15 +14,23 @@
 #include "Audacity.h"
 #include <wx/defs.h>
 
+#include "audacity/Types.h"
+
 //
 // Definitions / Meta-Information
 //
 
+#if 0
+// Moved to audacity/types.h
 typedef enum {
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
    floatSample = 0x0004000F
 } sampleFormat;
+
+/** \brief Return the size (in memory) of one sample (bytes) */
+#define SAMPLE_SIZE(SampleFormat) (SampleFormat >> 16)
+#endif
 
 // Used to determine how to fill in empty areas of audio.
 typedef enum {
@@ -30,13 +38,9 @@ typedef enum {
    fillTwo = 2
 }fillFormat;
 
-/** \brief Return the size (in memory) of one sample (bytes) */
-#define SAMPLE_SIZE(SampleFormat) (SampleFormat >> 16)
 /** \brief Return the size on disk of one uncompressed sample (bytes) */
 #define SAMPLE_SIZE_DISK(SampleFormat) ((SampleFormat == int24Sample) ? \
    3 : SAMPLE_SIZE(SampleFormat) )
-
-typedef char *samplePtr;
 
 const wxChar *GetSampleFormatStr(sampleFormat format);
 

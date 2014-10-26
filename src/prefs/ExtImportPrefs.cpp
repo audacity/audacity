@@ -134,7 +134,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
             PluginList->InsertColumn (0, _("Importer order"));
             PluginList->SetDropTarget (dragtarget2);
 
-            ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+            ExtImportItems *items = Importer::Get().GetImportItems();
             for (unsigned int i = 0; i < items->Count(); i++)
                AddItemToTable (i, &(*items)[i]);
             if (items->Count() > 0)
@@ -200,7 +200,7 @@ void ExtImportPrefs::SwapPluginRows (int row1, int row2)
    long d, d2;
    ImportPlugin *ip1, *ip2;
 
-   ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+   ExtImportItems *items = Importer::Get().GetImportItems();
    ExtImportItem *item = &(*items)[last_selected];
 
    t = PluginList->GetItemText (row1);
@@ -249,7 +249,7 @@ bool ExtImportPrefs::DoOnPluginKeyDown (int code)
    if (last_selected == -1)
          return false;
 
-   ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+   ExtImportItems *items = Importer::Get().GetImportItems();
    ExtImportItem *item = &(*items)[last_selected];
 
    if (code == WXK_UP && itemIndex == 0)
@@ -296,7 +296,7 @@ void ExtImportPrefs::SwapRows (int row1, int row2)
       row1 = row2;
       row2 = t;
    }
-   ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+   ExtImportItems *items = Importer::Get().GetImportItems();
    t1 = items->Detach(row1);
    t2 = items->Detach(row1);
    items->Insert (t1, row1);
@@ -399,7 +399,7 @@ void ExtImportPrefs::OnRuleTableSelectRange (wxGridRangeSelectEvent& event)
 
 void ExtImportPrefs::DoOnRuleTableSelect (int toprow)
 {
-   ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+   ExtImportItems *items = Importer::Get().GetImportItems();
 
    if (toprow < 0 || toprow > (int)items->GetCount())
    {
@@ -451,7 +451,7 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
 {
    int row = event.GetRow();
    int col = event.GetCol();
-   ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+   ExtImportItems *items = Importer::Get().GetImportItems();
    ExtImportItem *item = &(*items)[row];
    RuleTable->SaveEditControlValue();
 
@@ -460,7 +460,7 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
    bool askedAboutSpaces = false;
    wxArrayString vals;
    wxString delims(wxT(":"));
-   wxGetApp().mImporter->StringToList (val, delims, vals);
+   Importer::Get().StringToList (val, delims, vals);
    switch (col)
    {
    case 0:
@@ -554,8 +554,8 @@ void ExtImportPrefs::AddItemToTable (int index, ExtImportItem *item)
 
 void ExtImportPrefs::OnAddRule(wxCommandEvent& WXUNUSED(event))
 {
-   ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
-   ExtImportItem *item = wxGetApp().mImporter->CreateDefaultImportItem();
+   ExtImportItems *items = Importer::Get().GetImportItems();
+   ExtImportItem *item = Importer::Get().CreateDefaultImportItem();
    items->Add (item);
 
    AddItemToTable (RuleTable->GetNumberRows (), item);
@@ -568,7 +568,7 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& WXUNUSED(event))
 {
    if (last_selected < 0)
       return;
-   ExtImportItems *items = wxGetApp().mImporter->GetImportItems();
+   ExtImportItems *items = Importer::Get().GetImportItems();
 
    int msgres = wxMessageBox (_("Do you really want to delete selected rule?"),
       _("Rule deletion confirmation"), wxYES_NO, RuleTable);

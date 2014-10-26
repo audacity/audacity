@@ -1030,7 +1030,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
 
 #if defined(__WXGTK__)
    // Under GTK, when applying any effect that prompts the user, it's more than
-   // like that FindFocus() will return NULL.  So, make sure something has focus.
+   // likely that FindFocus() will return NULL.  So, make sure something has focus.
    if (GetParent()) {
       GetParent()->SetFocus();
    }
@@ -1245,9 +1245,32 @@ ProgressDialog::~ProgressDialog()
    }
 #endif
 
-   if (mHadFocus) {
+   // Restore saved focus, but only if the window still exists.
+   //
+   // It is possible that it was a deferred deletion and it was deleted since
+   // we captured the focused window.  So, we need to verify that the window
+   // still exists by searching all of the wxWidgets windows.  It's the only
+   // sure way.
+   if (mHadFocus && SearchForWindow(wxTopLevelWindows, mHadFocus)) {
       mHadFocus->SetFocus();
    }
+}
+
+//
+// Recursivaly search the window list for the given window.
+//
+bool ProgressDialog::SearchForWindow(const wxWindowList & list, const wxWindow *searchfor)
+{
+   wxWindowList::compatibility_iterator node = list.GetFirst();
+   while (node) {
+      wxWindow *win = node->GetData();
+      if (win == searchfor || SearchForWindow(win->GetChildren(), searchfor)) {
+         return true;
+      }
+      node = node->GetNext();
+   }
+
+   return false;
 }
 
 //

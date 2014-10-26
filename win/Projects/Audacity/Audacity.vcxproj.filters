@@ -61,6 +61,12 @@
     <Filter Include="src/effects/lv2">
       <UniqueIdentifier>{cfbc5496-9828-4c04-8e02-35a5e81cf092}</UniqueIdentifier>
     </Filter>
+    <Filter Include="includes">
+      <UniqueIdentifier>{ce332b42-4385-473c-ad9c-f385ea2e6c73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="includes\audacity">
+      <UniqueIdentifier>{2bfa6793-371a-4d2e-b3f4-fb033a0c5729}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp">
@@ -163,9 +169,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Legacy.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\LoadModules.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Lyrics.cpp">
@@ -822,6 +825,12 @@
     <ClCompile Include="..\..\..\src\import\MultiFormatReader.cpp">
       <Filter>src/import</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ModuleManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\EffectRack.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -933,9 +942,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Legacy.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\LoadModules.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Lyrics.h">
@@ -1615,6 +1621,33 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h">
       <Filter>src/import</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\audacity\ConfigInterface.h">
+      <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\audacity\EffectInterface.h">
+      <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\audacity\IdentInterface.h">
+      <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\audacity\ImporterInterface.h">
+      <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\audacity\ModuleInterface.h">
+      <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\audacity\PluginInterface.h">
+      <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\audacity\Types.h">
+      <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ModuleManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\EffectRack.h">
+      <Filter>src/effects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

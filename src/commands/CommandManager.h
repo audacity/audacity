@@ -20,6 +20,8 @@
 #include "../AudacityApp.h"
 #include "../xml/XMLTagHandler.h"
 
+#include "audacity/Types.h"
+
 class AUDACITY_DLL_API CommandFunctor
 {
 public:
