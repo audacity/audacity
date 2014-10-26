@@ -178,19 +178,13 @@ void * Module::GetSymbol(wxString name)
 ModuleManager ModuleManager::mInstance;
 
 // Provide builtin modules a means to identify themselves
-static wxArrayPtrVoid *Builtins = NULL;
+static wxArrayPtrVoid *pBuiltinModuleList = NULL;
 void RegisterBuiltinModule(ModuleMain moduleMain)
 {
-   static bool allocated = false;
+   if (pBuiltinModuleList == NULL)
+      pBuiltinModuleList = new wxArrayPtrVoid;
 
-   if (!allocated)
-   {
-      Builtins = new wxArrayPtrVoid;
-      allocated = true;
-   }
-
-   Builtins->Add((void *)moduleMain);
-
+   pBuiltinModuleList->Add((void *)moduleMain);
    return;
 }
 
@@ -217,6 +211,8 @@ ModuleManager::~ModuleManager()
       delete mod;
    }
    mDynModules.clear();
+   if( pBuiltinModuleList != NULL )
+      delete pBuiltinModuleList;
 }
 
 // static 
@@ -360,14 +356,12 @@ void ModuleManager::InitializeBuiltins()
 {
    PluginManager & pm = PluginManager::Get();
 
-   if (!Builtins)
-   {
+   if (pBuiltinModuleList==NULL)
       return;
-   }
 
-   for (size_t i = 0, cnt = Builtins->GetCount(); i < cnt; i++)
+   for (size_t i = 0, cnt = pBuiltinModuleList->GetCount(); i < cnt; i++)
    {
-      ModuleMain audacityMain = (ModuleMain) (*Builtins)[i];
+      ModuleMain audacityMain = (ModuleMain) (*pBuiltinModuleList)[i];
       ModuleInterface *module = audacityMain(this, NULL);
 
       mDynModules[module->GetID()] = module;
