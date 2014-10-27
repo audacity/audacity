@@ -12,6 +12,8 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
+
 #if USE_SOUNDTOUCH
 
 #ifndef __AUDACITY_EFFECT_SOUNDTOUCH__

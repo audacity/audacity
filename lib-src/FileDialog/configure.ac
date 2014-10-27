@@ -105,7 +105,6 @@ case "${host_os}" in
    ;;
 esac
 
-AC_SUBST([IMPLEMENTATION])
 AM_CONDITIONAL([GENERIC], test "$IMPLEMENTATION" = "generic")
 AM_CONDITIONAL([GTK], test "$IMPLEMENTATION" = "gtk")
 AM_CONDITIONAL([MAC], test "$IMPLEMENTATION" = "mac")
@@ -113,8 +112,7 @@ AM_CONDITIONAL([WINDOWS], test "$IMPLEMENTATION" = "win")
 
 echo "Implementation to use: $IMPLEMENTATION"
 
-AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([FileDialogPrivate.h Makefile])
+AC_CONFIG_FILES([Makefile])
 
 #
 # Write it all out

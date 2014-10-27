@@ -121,6 +121,7 @@ Version in Audacity SVN: 0.1.1
 Patches: 
    * "libsoxr/configure" file: modified cmake params
    * add-make-check-support.patch: Add a check target for GNU Autotools integration.
+   * libsoxr-srcdir.patch: Adds srcdir handling
 Upstream Version: 0.1.1
 
 libvamp
@@ -129,6 +130,7 @@ Library to load and use VAMP plug-ins. http://www.vamp-plugins.org/
 Version in Audacity SVN: 2.5
 Patches: fix-linkage-against-dl.patch: Fix linkage against dl for hostsdk library.
          fix-all-target.patch: Fix all target to not build disabled targets.
+         libvamp-srcdir.patch: Adds srcdir handling
 Upstream Version: 2.5
 
 libvorbis
@@ -244,6 +246,7 @@ https://sourceforge.net/tracker/index.php?func=detail&aid=2561247&group_id=17779
 because attachements there don't seem to work.
 autotools.patch: Fix all autotools warnings.
 autotools-fix-make-dist.patch: Correct file lists to make dist target work.
+sbsms-srcdir.patch: Adds srcdir handling
 
 soundtouch
 ----------

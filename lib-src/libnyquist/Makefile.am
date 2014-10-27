@@ -2,22 +2,23 @@
 # Makefile(.in) for libnyquist using Autotools (but not libtool).
 # Written by Richard Ash following Gary Vaughan's Autobook
 
-PORTAUDIO_CFLAGS = -I../portaudio-v19/include
-SNDFILE_CFLAGS = -I../libsndfile/src
+PORTAUDIO_CFLAGS = -I${srcdir}/../portaudio-v19/include
+SNDFILE_CFLAGS = -I${srcdir}/../libsndfile/src
 
 # tell aclocal that extra macros can be found in autotools/m4/
 ACLOCAL_AMFLAGS = -I autotools/m4
 
 INC = \
    -I. \
-   -Inyquist/nyqsrc \
-   -Inyquist/tran \
-   -Inyquist/xlisp \
-   -Inyquist/sys/unix \
-   -Inyquist/cmt \
-   -Inyquist/ffts/src \
-   -Inyquist/nyqstk/include \
-   -Inyquist/nyqstk
+   -I${srcdir} \
+   -I${srcdir}/nyquist/nyqsrc \
+   -I${srcdir}/nyquist/tran \
+   -I${srcdir}/nyquist/xlisp \
+   -I${srcdir}/nyquist/sys/unix \
+   -I${srcdir}/nyquist/cmt \
+   -I${srcdir}/nyquist/ffts/src \
+   -I${srcdir}/nyquist/nyqstk/include \
+   -I${srcdir}/nyquist/nyqstk
 
 AM_CFLAGS = $(INC) $(PORTAUDIO_CFLAGS) $(SNDFILE_CFLAGS) \
    -DCMTSTUFF -DEXT

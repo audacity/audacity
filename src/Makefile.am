@@ -1,4 +1,5 @@
 bin_PROGRAMS = audacity
+bin_SCRIPTS = ../audacity$(EXEEXT)
 
 desktopdir = $(datadir)/applications
 desktop_DATA = audacity.desktop
@@ -716,3 +717,7 @@ EXTRA_DIST = audacity.desktop.in xml/audacityproject.dtd \
 	effects/ScoreAlignDialog.cpp \
 	effects/ScoreAlignDialog.h \
 	$(NULL)
+
+../audacity$(EXEEXT): audacity$(EXEEXT)
+	cp audacity$(EXEEXT) ../audacity$(EXEEXT)
+CLEANFILES = ../audacity$(EXEEXT)

@@ -54,7 +54,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSOUNDTOUCH], [
 
 AC_DEFUN([AUDACITY_CONFIG_LIBSOUNDTOUCH], [
    if test "$LIBSOUNDTOUCH_USE_LOCAL" = yes; then
-      SOUNDTOUCH_CFLAGS='-I$(top_srcdir)/lib-src/soundtouch/include'
+      SOUNDTOUCH_CFLAGS='-I$(top_srcdir)/lib-src/soundtouch/include -I../lib-src/soundtouch/include'
       SOUNDTOUCH_LIBS='$(top_builddir)/lib-src/soundtouch/source/SoundTouch/.libs/libSoundTouch.a'
       AC_CONFIG_SUBDIRS([lib-src/soundtouch])
    fi

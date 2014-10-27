@@ -22,7 +22,15 @@ custom controls.
 
 typedef void (*fdCallback)(void *, int);
 
-#include "FileDialogPrivate.h"
+#if defined(__WXGTK__)
+#include "gtk/FileDialogPrivate.h"
+#elif defined(__WXMAC__)
+#include "mac/FileDialogPrivate.h"
+#elif defined(__WXMSW__)
+#include "win/FileDialogPrivate.h"
+#else
+#error Unknown implementation
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // Name:        filedlg.h

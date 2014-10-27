@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -I../include @SBSMS_CFLAGS@
+AM_CXXFLAGS = -I$(srcdir)/../include @SBSMS_CFLAGS@
 
 libsbsmsincludedir = $(includedir)
 libsbsmsinclude_HEADERS = ../include/sbsms.h

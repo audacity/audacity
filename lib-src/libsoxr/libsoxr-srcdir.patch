@@ -1,0 +1,14 @@
+Index: lib-src/libsoxr/configure
+===================================================================
+--- lib-src/libsoxr/configure	(revision 13509)
++++ lib-src/libsoxr/configure	(working copy)
+@@ -10,4 +10,8 @@
+ 
+ # Autotools options should not be passed to this script.
+ 
+-cmake -DBUILD_SHARED_LIBS=OFF -DWITH_OPENMP=OFF .
++srcdir="$@"
++srcdir="${srcdir#*--srcdir=}"
++srcdir="./${srcdir/ */}"
++
++cmake -DBUILD_SHARED_LIBS=OFF -DWITH_OPENMP=OFF "${srcdir}"
