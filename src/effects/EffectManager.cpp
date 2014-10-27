@@ -379,6 +379,7 @@ EffectRack *EffectManager::GetRack()
    if (!mRack)
    {
       mRack = new EffectRack();
+      mRack->CenterOnParent();
    }
 
    return mRack;
