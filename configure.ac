@@ -735,6 +735,8 @@ AC_OUTPUT
 echo ""
 echo "Finished configure:"
 
+# Copy the contents of the locale directory to the build directory
+[ ! -e "${ac_abs+top_builddir}/po/LINGUAS" ] && cp -a "${ac_abs_top_srcdir}/po/"* "${ac_abs_top_builddir}/po/"
 
 for lib in $LIBRARIES ; do
    eval LIB_USE_LOCAL=\$${lib}_USE_LOCAL

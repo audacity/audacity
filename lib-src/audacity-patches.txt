@@ -42,6 +42,7 @@ arguments ([-Wall foreign]) added to AM_INIT_AUTOMAKE to avoid autoreconf
 failures
 arguments (--no-verify) removed from ltconfig execution to prevent configure
 failures
+Patches: libid3tag-srcdir.patch  Adds srcdir handling
 
 libmad
 ------
@@ -90,6 +91,7 @@ Patches: endian.m4, lrint.m4, llrint.m4, lrintf.m4, clip_mode.m4 copied from
 		 signal.m4 created out of the tail of acinclude.m4 with the remaining
 		 	necessary macro
          autotools.patch: Fix autotools warnings.
+         libsndfile-srcdir.patch: Add srcdir handling
 AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
 by default
 Upstream Version: 0.1.8
@@ -186,7 +188,7 @@ Patches:
 ../portmixer/portaudio.patch	add features needed to make portmixer work
 		Integration by upstream in progress. Will need updating as upstream
 		portaudio moves
-
+portaudio-srcdir.patch  Adds srcdir handling
 portaudio-v19/wasapi-fix.patch  Patch to WASAPI hostapi that corrects incorrect
 reporting of stream open/running/closed state.
 

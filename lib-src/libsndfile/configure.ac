@@ -457,10 +457,10 @@ if test $ac_cv_sizeof_double != 8 ; then
 	AC_MSG_WARN([[******************************************************************]])
 	fi
 
-if test x"$ac_cv_prog_HAVE_AUTOGEN" = "xno" ; then
-	AC_MSG_WARN([[Touching files in directory tests/.]])
-	touch tests/*.c tests/*.h
-	fi
+#if test x"$ac_cv_prog_HAVE_AUTOGEN" = "xno" ; then
+#	AC_MSG_WARN([[Touching files in directory tests/.]])
+#	touch tests/*.c tests/*.h
+#	fi
 
 #====================================================================================
 # Settings for the HTML documentation.
@@ -691,5 +691,5 @@ if test x$prefix != "x/usr" ; then
 	echo
 	fi
 
-(cd src && make genfiles)
-(cd tests && make genfiles)
+#(cd src && make genfiles)
+#(cd tests && make genfiles)

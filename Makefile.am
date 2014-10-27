@@ -2,6 +2,8 @@ SUBDIRS = help images lib-src po src tests
 
 ACLOCAL_AMFLAGS = -I m4
 
+bin_SCRIPTS = audacity$(EXEEXT)
+
 dist_doc_DATA = LICENSE.txt README.txt
 dist_pkgdata_DATA = presets/EQDefaultCurves.xml
 
@@ -67,3 +69,10 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/vocalremover.ny \
    plug-ins/vocoder.ny \
    $(NULL)
+
+audacity$(EXEEXT): src/audacity$(EXEEXT)
+	cp src/audacity$(EXEEXT) audacity$(EXEEXT)
+	[ -e plug-ins ] || ln -s $(srcdir)/plug-ins
+	[ -e nyquist ] || ln -s $(srcdir)/nyquist
+	[ -e locale ] || ln -s po locale
+CLEANFILES = audacity$(EXEEXT) plug-ins nyquist locale

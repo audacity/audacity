@@ -1,10 +1,31 @@
 #!/bin/bash
 
+srcdir=.
+while [ $# -gt 0 ]
+do
+   if [[ "$1" =~ --srcdir=.* ]]
+   then
+      srcdir=${1#*=}
+      break
+   fi
+   shift
+done
+
 function waf
 {
    pkg="$1"
    shift
+   mkdir -p ${pkg}
    pushd >/dev/null ${pkg}
+
+   for f in "../${srcdir}/${pkg}"/*
+   do
+      if [ ! -e "${f##*/}" ]
+      then
+         ln -s "${f}"
+      fi
+   done
+
    $(which python python2 | tail -1) waf --prefix="." --include="." $@ configure || exit 1
    popd >/dev/null
 
@@ -39,6 +60,10 @@ EOF
 
 rm -rf include
 mkdir -p include
+
+[ ! -e Makefile ] && ln -s "${srcdir}/Makefile"
+[ ! -e build ] && ln -s "${srcdir}/build"
+echo >srcdir.mk "srcdir = ${srcdir}"
 
 waf lv2 --no-plugins
 waf serd --no-utils --static --no-shared

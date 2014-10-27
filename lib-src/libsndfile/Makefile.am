@@ -8,7 +8,7 @@ if BUILD_OCTAVE_MOD
 octave_dir = Octave
 endif
 
-SUBDIRS = M4 man doc Win32 src $(octave_dir) examples regtest tests programs
+SUBDIRS = M4 man doc Win32 src #$(octave_dir) examples regtest tests programs
 DIST_SUBDIRS = M4 man doc Win32 src Octave examples regtest tests programs
 
 EXTRA_DIST = libsndfile.spec.in sndfile.pc.in

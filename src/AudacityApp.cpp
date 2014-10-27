@@ -1110,6 +1110,9 @@ bool AudacityApp::OnInit()
                                             wxT(INSTALL_PREFIX)),
                            audacityPathList);
 
+   AddUniquePathToPathList(wxString::Format(wxT("./locale")),
+                           audacityPathList);
+
    #endif //__WXGTK__
 
    wxFileName tmpFile;

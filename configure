@@ -22988,7 +22988,7 @@ $as_echo "#define USE_LIBID3TAG 1" >>confdefs.h
 
 
    if test "$LIBMAD_USE_LOCAL" = yes; then
-      LIBMAD_CFLAGS='-I$(top_srcdir)/lib-src/libmad -I../lib-src/libmad'
+      LIBMAD_CFLAGS='-I$(top_srcdir)/lib-src/libmad -I$(top_builddir)/lib-src/libmad'
       LIBMAD_LIBS='$(top_builddir)/lib-src/libmad/libmad.la'
       subdirs="$subdirs lib-src/libmad"
 
@@ -23178,7 +23178,7 @@ fi
 
 
    if test "$LIBSOUNDTOUCH_USE_LOCAL" = yes; then
-      SOUNDTOUCH_CFLAGS='-I$(top_srcdir)/lib-src/soundtouch/include -I../lib-src/soundtouch/include'
+      SOUNDTOUCH_CFLAGS='-I$(top_srcdir)/lib-src/soundtouch/include -I$(top_builddir)/lib-src/soundtouch/include'
       SOUNDTOUCH_LIBS='$(top_builddir)/lib-src/soundtouch/source/SoundTouch/.libs/libSoundTouch.a'
       subdirs="$subdirs lib-src/soundtouch"
 
@@ -23348,7 +23348,7 @@ $as_echo "#define USE_LIBVORBIS 1" >>confdefs.h
 
 
    if test "$LV2_USE_LOCAL" = yes; then
-      LV2_CFLAGS='-I$(top_srcdir)/lib-src/lv2/include'
+      LV2_CFLAGS='-I$(top_srcdir)/lib-src/lv2/include -I$(top_builddir)/lib-src/lv2/include'
       LV2_LIBS='$(top_builddir)/lib-src/lv2/liblv2.a'
       subdirs="$subdirs lib-src/lv2"
 
@@ -27282,6 +27282,8 @@ fi
 echo ""
 echo "Finished configure:"
 
+# Copy the contents of the locale directory to the build directory
+ ! -e "${ac_abs+top_builddir}/po/LINGUAS"  && cp -a "${ac_abs_top_srcdir}/po/"* "${ac_abs_top_builddir}/po/"
 
 for lib in $LIBRARIES ; do
    eval LIB_USE_LOCAL=\$${lib}_USE_LOCAL

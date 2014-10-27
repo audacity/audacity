@@ -48,7 +48,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBMAD], [
 
 AC_DEFUN([AUDACITY_CONFIG_LIBMAD], [
    if test "$LIBMAD_USE_LOCAL" = yes; then
-      LIBMAD_CFLAGS='-I$(top_srcdir)/lib-src/libmad -I../lib-src/libmad'
+      LIBMAD_CFLAGS='-I$(top_srcdir)/lib-src/libmad -I$(top_builddir)/lib-src/libmad'
       LIBMAD_LIBS='$(top_builddir)/lib-src/libmad/libmad.la'
       AC_CONFIG_SUBDIRS([lib-src/libmad])
    fi

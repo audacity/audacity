@@ -1,5 +1,7 @@
+include srcdir.mk
+
 all:
-	./build
+	./build --srcdir=$(srcdir)
 
 check:
 

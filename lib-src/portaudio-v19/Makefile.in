@@ -156,7 +156,10 @@ SRC_DIRS = \
 SUBDIRS =
 @ENABLE_CXX_TRUE@SUBDIRS += bindings/cpp
 
-all: lib/$(PALIB) all-recursive tests examples selftests
+prep:
+	mkdir -p qa/loopback/src/ src/hostapi/skeleton/ $(SRC_DIRS)
+
+all: prep lib/$(PALIB) all-recursive tests examples selftests
 
 tests: bin-stamp $(TESTS)
 

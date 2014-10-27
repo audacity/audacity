@@ -95,26 +95,26 @@ EXTRA_libid3tag_la_SOURCES =  \
 
 libid3tag_la_LDFLAGS =	-version-info $(version_info)
 
-BUILT_SOURCES =		frametype.c compat.c genre.dat
-
-$(srcdir)/frametype.c: $(srcdir)/frametype.gperf Makefile.am
-	cd $(srcdir) &&  \
-	gperf -tCcTonD -K id -N id3_frametype_lookup -s -3 -k '*'  \
-		frametype.gperf |  \
-	sed -e 's/\(struct id3_frametype\);/\1/' |  \
-	sed -e '/\$$''Id: /s/\$$//g' >frametype.c
-
-$(srcdir)/compat.c: $(srcdir)/compat.gperf Makefile.am
-	cd $(srcdir) &&  \
-	gperf -tCcTonD -K id -N id3_compat_lookup -s -3 -k '*'  \
-		compat.gperf |  \
-	sed -e 's/\(struct id3_compat\);/\1/' |  \
-	sed -e '/\$$''Id: /s/\$$//g' >compat.c
-
-$(srcdir)/genre.dat: $(srcdir)/genre.dat.in $(srcdir)/genre.dat.sed Makefile.am
-	cd $(srcdir) &&  \
-	sed -n -f genre.dat.sed genre.dat.in |  \
-	sed -e '/\$$''Id: /s/\$$//g' >genre.dat
+#BUILT_SOURCES =		frametype.c compat.c genre.dat
+#
+#$(srcdir)/frametype.c: $(srcdir)/frametype.gperf Makefile.am
+#	cd $(srcdir) &&  \
+#	gperf -tCcTonD -K id -N id3_frametype_lookup -s -3 -k '*'  \
+#		frametype.gperf |  \
+#	sed -e 's/\(struct id3_frametype\);/\1/' |  \
+#	sed -e '/\$$''Id: /s/\$$//g' >frametype.c
+#
+#$(srcdir)/compat.c: $(srcdir)/compat.gperf Makefile.am
+#	cd $(srcdir) &&  \
+#	gperf -tCcTonD -K id -N id3_compat_lookup -s -3 -k '*'  \
+#		compat.gperf |  \
+#	sed -e 's/\(struct id3_compat\);/\1/' |  \
+#	sed -e '/\$$''Id: /s/\$$//g' >compat.c
+#
+#$(srcdir)/genre.dat: $(srcdir)/genre.dat.in $(srcdir)/genre.dat.sed Makefile.am
+#	cd $(srcdir) &&  \
+#	sed -n -f genre.dat.sed genre.dat.in |  \
+#	sed -e '/\$$''Id: /s/\$$//g' >genre.dat
 
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck

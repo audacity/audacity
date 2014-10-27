@@ -39,7 +39,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LV2], [
 
 AC_DEFUN([AUDACITY_CONFIG_LV2], [
    if test "$LV2_USE_LOCAL" = yes; then
-      LV2_CFLAGS='-I$(top_srcdir)/lib-src/lv2/include'
+      LV2_CFLAGS='-I$(top_srcdir)/lib-src/lv2/include -I$(top_builddir)/lib-src/lv2/include'
       LV2_LIBS='$(top_builddir)/lib-src/lv2/liblv2.a'
       AC_CONFIG_SUBDIRS([lib-src/lv2])
    fi

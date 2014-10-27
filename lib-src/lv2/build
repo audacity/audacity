@@ -1,5 +1,16 @@
 #!/bin/bash
 
+srcdir=.
+while [ $# -gt 0 ]
+do
+   if [[ "$1" =~ --srcdir=.* ]]
+   then
+      srcdir=${1#*=}
+      break
+   fi
+   shift
+done
+
 function waf
 {
    pkg=$1
