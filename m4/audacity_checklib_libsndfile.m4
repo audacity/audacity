@@ -46,7 +46,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBSNDFILE], [
 
 AC_DEFUN([AUDACITY_CONFIG_LIBSNDFILE], [
    if test "$LIBSNDFILE_USE_LOCAL" = yes; then
-      SNDFILE_CFLAGS='-I$(top_srcdir)/lib-src/libsndfile/src'
+      SNDFILE_CFLAGS='-I$(top_builddir)/lib-src/libsndfile/src -I$(top_srcdir)/lib-src/libsndfile/src'
       SNDFILE_LIBS='$(top_builddir)/lib-src/libsndfile/src/.libs/libsndfile.a'
       AC_CONFIG_SUBDIRS([lib-src/libsndfile])
    fi

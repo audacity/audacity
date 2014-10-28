@@ -43,12 +43,13 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVORBIS], [
 
       dnl We need to override the pkg-config check for libogg by passing
       dnl OGG_CFLAGS and OGG_LIBS to the configure script of libvorbis.
-      libogg_dir="$(pwd)/lib-src/libogg"
-      LIBVORBIS_LOCAL_CONFIGURE_ARGS="--disable-oggtest OGG_CFLAGS=-I${libogg_dir}/include OGG_LIBS=${libogg_dir}/src/libogg.la"
+      ogg_srcdir="$(pwd)/${srcdir}/lib-src/libogg"
+      ogg_blddir="$(pwd)/lib-src/libogg"
+      LIBVORBIS_LOCAL_CONFIGURE_ARGS="--disable-oggtest OGG_CFLAGS='-I${ogg_blddir}/include -I${ogg_srcdir}/include' OGG_LIBS=${ogg_blddir}/src/libogg.la"
 
       dnl libflac needs libogg too. So we need to pass these flags to the
       dnl configure script of libflac, because it does not use pkg-config.
-      LIBVORBIS_LOCAL_CONFIGURE_ARGS="$LIBVORBIS_LOCAL_CONFIGURE_ARGS --with-ogg-includes=${libogg_dir}/include --with-ogg-libraries=${libogg_dir}/src/.libs"
+      LIBVORBIS_LOCAL_CONFIGURE_ARGS="$LIBVORBIS_LOCAL_CONFIGURE_ARGS --with-ogg-includes='${ogg_blddir}/include -I${ogg_srcdir}/include' --with-ogg-libraries=${ogg_blddir}/src/.libs"
 
       AC_MSG_NOTICE([Vorbis libraries are available in this source tree])
    else
@@ -59,7 +60,7 @@ AC_DEFUN([AUDACITY_CHECKLIB_LIBVORBIS], [
 
 AC_DEFUN([AUDACITY_CONFIG_LIBVORBIS], [
    if test "$LIBVORBIS_USE_LOCAL" = yes; then
-      LIBVORBIS_CFLAGS='-I$(top_srcdir)/lib-src/libogg/include -I$(top_srcdir)/lib-src/libvorbis/include'
+      LIBVORBIS_CFLAGS='-I$(top_builddir)/lib-src/libogg/include -I$(top_srcdir)/lib-src/libogg/include -I$(top_srcdir)/lib-src/libvorbis/include'
       LIBVORBIS_LIBS='$(top_builddir)/lib-src/libvorbis/lib/libvorbisenc.la $(top_builddir)/lib-src/libvorbis/lib/libvorbisfile.la'
       AC_CONFIG_SUBDIRS([lib-src/libogg lib-src/libvorbis])
    fi

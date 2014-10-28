@@ -3,7 +3,7 @@
 # Written by Richard Ash following Gary Vaughan's Autobook
 
 PORTAUDIO_CFLAGS = -I${srcdir}/../portaudio-v19/include
-SNDFILE_CFLAGS = -I${srcdir}/../libsndfile/src
+SNDFILE_CFLAGS = -I${builddir}/../libsndfile/src
 
 # tell aclocal that extra macros can be found in autotools/m4/
 ACLOCAL_AMFLAGS = -I autotools/m4

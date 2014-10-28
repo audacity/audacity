@@ -22135,10 +22135,11 @@ fi
    if test "$vorbisenc_h_available" = "yes" -a "$ogg_h_available" = "yes"; then
       LIBVORBIS_LOCAL_AVAILABLE="yes"
 
-                  libogg_dir="$(pwd)/lib-src/libogg"
-      LIBVORBIS_LOCAL_CONFIGURE_ARGS="--disable-oggtest OGG_CFLAGS=-I${libogg_dir}/include OGG_LIBS=${libogg_dir}/src/libogg.la"
+                  ogg_srcdir="$(pwd)/${srcdir}/lib-src/libogg"
+      ogg_blddir="$(pwd)/lib-src/libogg"
+      LIBVORBIS_LOCAL_CONFIGURE_ARGS="--disable-oggtest OGG_CFLAGS='-I${ogg_blddir}/include -I${ogg_srcdir}/include' OGG_LIBS=${ogg_blddir}/src/libogg.la"
 
-                  LIBVORBIS_LOCAL_CONFIGURE_ARGS="$LIBVORBIS_LOCAL_CONFIGURE_ARGS --with-ogg-includes=${libogg_dir}/include --with-ogg-libraries=${libogg_dir}/src/.libs"
+                  LIBVORBIS_LOCAL_CONFIGURE_ARGS="$LIBVORBIS_LOCAL_CONFIGURE_ARGS --with-ogg-includes='${ogg_blddir}/include -I${ogg_srcdir}/include' --with-ogg-libraries=${ogg_blddir}/src/.libs"
 
       { $as_echo "$as_me:${as_lineno-$LINENO}: Vorbis libraries are available in this source tree" >&5
 $as_echo "$as_me: Vorbis libraries are available in this source tree" >&6;}
@@ -22404,8 +22405,8 @@ fi
 
 
    if test "$PORTAUDIO_LOCAL_AVAILABLE" = "yes"; then
-                  portaudio_dir="$(pwd)/lib-src/portaudio-v19"
-      PORTAUDIO_LOCAL_CONFIGURE_ARGS="PORTAUDIO_CFLAGS=-I${portaudio_dir}/include PORTAUDIO_LIBS=${portaudio_dir}/lib/libportaudio.la"
+                  pa_dir="$(pwd)/${srcdir}/lib-src/portaudio-v19"
+      PORTAUDIO_LOCAL_CONFIGURE_ARGS="PORTAUDIO_CFLAGS=-I${pa_dir}/include PORTAUDIO_LIBS=${pa_dir}/lib/libportaudio.la"
       { $as_echo "$as_me:${as_lineno-$LINENO}: portaudio19 library is available in the local tree" >&5
 $as_echo "$as_me: portaudio19 library is available in the local tree" >&6;}
    else
@@ -22988,7 +22989,7 @@ $as_echo "#define USE_LIBID3TAG 1" >>confdefs.h
 
 
    if test "$LIBMAD_USE_LOCAL" = yes; then
-      LIBMAD_CFLAGS='-I$(top_srcdir)/lib-src/libmad -I$(top_builddir)/lib-src/libmad'
+      LIBMAD_CFLAGS='-I$(top_builddir)/lib-src/libmad -I$(top_srcdir)/lib-src/libmad'
       LIBMAD_LIBS='$(top_builddir)/lib-src/libmad/libmad.la'
       subdirs="$subdirs lib-src/libmad"
 
@@ -23158,7 +23159,7 @@ $as_echo "#define USE_SBSMS 1" >>confdefs.h
 
 
    if test "$LIBSNDFILE_USE_LOCAL" = yes; then
-      SNDFILE_CFLAGS='-I$(top_srcdir)/lib-src/libsndfile/src'
+      SNDFILE_CFLAGS='-I$(top_builddir)/lib-src/libsndfile/src -I$(top_srcdir)/lib-src/libsndfile/src'
       SNDFILE_LIBS='$(top_builddir)/lib-src/libsndfile/src/.libs/libsndfile.a'
       subdirs="$subdirs lib-src/libsndfile"
 
@@ -23178,7 +23179,7 @@ fi
 
 
    if test "$LIBSOUNDTOUCH_USE_LOCAL" = yes; then
-      SOUNDTOUCH_CFLAGS='-I$(top_srcdir)/lib-src/soundtouch/include -I$(top_builddir)/lib-src/soundtouch/include'
+      SOUNDTOUCH_CFLAGS='-I$(top_builddir)/lib-src/soundtouch/include -I$(top_srcdir)/lib-src/soundtouch/include'
       SOUNDTOUCH_LIBS='$(top_builddir)/lib-src/soundtouch/source/SoundTouch/.libs/libSoundTouch.a'
       subdirs="$subdirs lib-src/soundtouch"
 
@@ -23314,7 +23315,7 @@ $as_echo "#define USE_VAMP 1" >>confdefs.h
 
 
    if test "$LIBVORBIS_USE_LOCAL" = yes; then
-      LIBVORBIS_CFLAGS='-I$(top_srcdir)/lib-src/libogg/include -I$(top_srcdir)/lib-src/libvorbis/include'
+      LIBVORBIS_CFLAGS='-I$(top_builddir)/lib-src/libogg/include -I$(top_srcdir)/lib-src/libogg/include -I$(top_srcdir)/lib-src/libvorbis/include'
       LIBVORBIS_LIBS='$(top_builddir)/lib-src/libvorbis/lib/libvorbisenc.la $(top_builddir)/lib-src/libvorbis/lib/libvorbisfile.la'
       subdirs="$subdirs lib-src/libogg lib-src/libvorbis"
 
@@ -27283,7 +27284,7 @@ echo ""
 echo "Finished configure:"
 
 # Copy the contents of the locale directory to the build directory
- ! -e "${ac_abs+top_builddir}/po/LINGUAS"  && cp -a "${ac_abs_top_srcdir}/po/"* "${ac_abs_top_builddir}/po/"
+[ ! -e "${ac_abs_top_builddir}/po/LINGUAS" ] && cp -a "${ac_abs_top_srcdir}/po/"* "${ac_abs_top_builddir}/po/"
 
 for lib in $LIBRARIES ; do
    eval LIB_USE_LOCAL=\$${lib}_USE_LOCAL
