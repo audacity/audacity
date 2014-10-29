@@ -35,7 +35,7 @@ public:
    EffectRack();
    virtual ~EffectRack();
 
-   void Add(Effect *effect, bool active = true, bool favorite = false);
+   void Add(Effect *effect, bool active = false, bool favorite = false);
 
 private:
 

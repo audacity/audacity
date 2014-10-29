@@ -420,7 +420,7 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
    pathList.push_back(dpath);
 
    // Recursively scan for all DLLs
-   pm.FindFilesInPathList(wxT("*.dll"), pathList, files);
+   pm.FindFilesInPathList(wxT("*.dll"), pathList, files, true);
 
 #else
 
@@ -437,7 +437,7 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
    }
 
    // Recursively scan for all shared objects
-   pm.FindFilesInPathList(wxT("*.so"), pathList, files);
+   pm.FindFilesInPathList(wxT("*.so"), pathList, files, true);
 
 #endif
 

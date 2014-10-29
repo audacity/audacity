@@ -774,10 +774,10 @@ bool Effect::ProcessTrack(int count,
    // samples to the output track.
    //
    // Upon return from the effect, the output samples are "moved to the left" by
-   // the number of samples in the current latency setting, effectively removing the
+   // the number of samples in the current latency setting, effectively removing any
    // delay introduced by the effect.
    //
-   // At the same time the total number of delayed samples are gathered and when the
+   // At the same time the total number of delayed samples are gathered and when
    // there is no further input data to process, the loop continues to call the
    // effect with an empty input buffer until the effect has had a chance to 
    // return all of the remaining delayed samples.
@@ -968,7 +968,7 @@ bool Effect::ProcessTrack(int count,
 
       // "ls" and "rs" serve as the input sample index for the left and
       // right channels when processing the input samples.  If we flip
-      // over to processing delayed samples, the simply become counters
+      // over to processing delayed samples, they simply become counters
       // for the progress display.
       inLeftPos += curBlockSize;
       inRightPos += curBlockSize;

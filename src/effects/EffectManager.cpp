@@ -454,6 +454,8 @@ void EffectManager::RealtimeProcessMono(float *buffer, sampleCount numSamples)
       return;
    }
 
+   // We only ever have a single input channel
+
    wxMilliClock_t start = wxGetLocalTimeMillis();
 
    float *ib = (float *) alloca(sizeof(float) * numSamples);
@@ -461,21 +463,21 @@ void EffectManager::RealtimeProcessMono(float *buffer, sampleCount numSamples)
 
    memcpy(ib, buffer, sizeof(float) * numSamples);
 
-   float *ibuf[1] = {ib};
-   float *obuf[1] = {ob};
+   float *ibuf = ib;
+   float *obuf = ob;
 
    mRealtimeMutex.Lock();
    for (int i = 0; i < mRealtimeCount; i++)
    {
-      mRealtimeEffects[i]->RealtimeProcess(ibuf, obuf, numSamples);
+      mRealtimeEffects[i]->RealtimeProcess(&ibuf, &obuf, numSamples);
 
-      float *tbuf[1] = {ibuf[0]};
-      ibuf[0] = obuf[0];
-      obuf[0] = tbuf[0];
+      float *tbuf = ibuf;
+      ibuf = obuf;
+      obuf = tbuf;
    }
    mRealtimeMutex.Unlock();
 
-   memcpy(buffer, ibuf[0], sizeof(float) * numSamples);
+   memcpy(buffer, ibuf, sizeof(float) * numSamples);
 
    mRealtimeLatency = (int) (wxGetLocalTimeMillis() - start).GetValue();
 }
