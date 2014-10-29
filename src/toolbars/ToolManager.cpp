@@ -1026,6 +1026,11 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       br.SetBottom( br.GetBottom() + 20 );
       br.SetPosition( mBotDock->GetParent()->ClientToScreen( br.GetPosition() ) );
 
+
+      // Add half the bar height.  We could use the actual bar height, but that would be confusing as a 
+      // bar removed at a place might not dock back there if just let go.
+      pos +=  wxPoint( 0, 20 ); 
+
       // Is mouse pointer within either dock?
       ToolDock *dock = NULL;
       if( tr.Contains( pos ) )
@@ -1042,6 +1047,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       {
          wxPoint p;
          wxRect r;
+
 
          // Calculate where the bar would be placed
          mDragBefore = dock->PositionBar( mDragBar, pos, r );
