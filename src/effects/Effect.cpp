@@ -1286,13 +1286,25 @@ bool Effect::IsRealtimeCapable()
    return false;
 }
 
-bool Effect::RealtimeInitialize(int numChannels, float sampleRate)
+bool Effect::RealtimeInitialize()
+{
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+   if (mClient)
+   {
+      mNumChannels = 0;
+      return mClient->RealtimeInitialize();
+   }
+#endif
+
+   return false;
+}
+bool Effect::RealtimeAddProcessor(int numChannels, float sampleRate)
 {
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    if (mClient)
    {
       mNumChannels = numChannels;
-      return mClient->RealtimeInitialize(numChannels, sampleRate);
+      return mClient->RealtimeAddProcessor(numChannels, sampleRate);
    }
 #endif
 
@@ -1335,7 +1347,7 @@ bool Effect::RealtimeResume()
    return false;
 }
 
-sampleCount Effect::RealtimeProcess(float **inbuf, float **outbuf, sampleCount size)
+sampleCount Effect::RealtimeProcess(int index, float **inbuf, float **outbuf, sampleCount size)
 {
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    float **tin = inbuf;
@@ -1381,7 +1393,7 @@ sampleCount Effect::RealtimeProcess(float **inbuf, float **outbuf, sampleCount s
    // If the number of channels is greater than the number of in/out the effect
    // can handle, then call RealtimeProcess for each "set" of tracks over its
    // capabilities.
-   return mClient->RealtimeProcess(tin, tout, size);
+   return mClient->RealtimeProcess(index, tin, tout, size);
 #else
    return 0;
 #endif

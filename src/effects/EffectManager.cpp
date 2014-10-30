@@ -392,16 +392,32 @@ void EffectManager::ShowRack()
 #endif
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-void EffectManager::RealtimeInitialize(int numChannels, float sampleRate)
+void EffectManager::RealtimeInitialize(const WaveTrackArray *tracks)
 {
    mRealtimeMutex.Lock();
-   for (int i = 0; i < mRealtimeCount; i++)
+   mRealtimeTracks = tracks;
+   for (int e = 0; e < mRealtimeCount; e++)
    {
-      mRealtimeEffects[i]->RealtimeInitialize(numChannels, sampleRate);
+      mRealtimeEffects[e]->RealtimeInitialize();
+
+      for (size_t i = 0, cnt = tracks->GetCount(); i < cnt; i++)
+      {
+         WaveTrack *t = (*tracks)[i];
+         if (t->GetLinked())
+         {
+            mRealtimeEffects[e]->RealtimeAddProcessor(2, t->GetRate());
+            i++;
+         }
+         else
+         {
+            mRealtimeEffects[e]->RealtimeAddProcessor(1, t->GetRate());
+         }
+      }
    }
-   mRealtimeMutex.Unlock();
 
    mRealtimeActive = true;
+
+   mRealtimeMutex.Unlock();
 
    RealtimeResume();
 }
@@ -412,6 +428,7 @@ void EffectManager::RealtimeFinalize()
 
    mRealtimeActive = false;
    mRealtimeLatency = 0;
+   mRealtimeTracks = NULL;
 
    mRealtimeMutex.Lock();
    for (int i = 0; i < mRealtimeCount; i++)
@@ -445,72 +462,27 @@ void EffectManager::RealtimeResume()
    mRealtimeSuspended = false;
 }
 
-void EffectManager::RealtimeProcessMono(float *buffer, sampleCount numSamples)
+sampleCount EffectManager::RealtimeProcess(int index, float **buffers, sampleCount numSamples)
 {
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
    if (mRealtimeSuspended)
    {
-      return;
-   }
-
-   // We only ever have a single input channel
-
-   wxMilliClock_t start = wxGetLocalTimeMillis();
-
-   float *ib = (float *) alloca(sizeof(float) * numSamples);
-   float *ob = (float *) alloca(sizeof(float) * numSamples);
-
-   memcpy(ib, buffer, sizeof(float) * numSamples);
-
-   float *ibuf = ib;
-   float *obuf = ob;
-
-   mRealtimeMutex.Lock();
-   for (int i = 0; i < mRealtimeCount; i++)
-   {
-      mRealtimeEffects[i]->RealtimeProcess(&ibuf, &obuf, numSamples);
-
-      float *tbuf = ibuf;
-      ibuf = obuf;
-      obuf = tbuf;
-   }
-   mRealtimeMutex.Unlock();
-
-   memcpy(buffer, ibuf, sizeof(float) * numSamples);
-
-   mRealtimeLatency = (int) (wxGetLocalTimeMillis() - start).GetValue();
-}
-
-void EffectManager::RealtimeProcessStereo(float *buffer, sampleCount numSamples)
-{
-   // Can be suspended because of the audio stream being paused or because effects
-   // have been suspended.
-   if (mRealtimeSuspended)
-   {
-      return;
+      return 0;
    }
 
    wxMilliClock_t start = wxGetLocalTimeMillis();
 
-   float *ilc = (float *) alloca(sizeof(float) * numSamples);
-   float *irc = (float *) alloca(sizeof(float) * numSamples);
    float *olc = (float *) alloca(sizeof(float) * numSamples);
    float *orc = (float *) alloca(sizeof(float) * numSamples);
 
-   for (int opos = 0, ipos = 0; opos < numSamples; opos++, ipos += 2)
-   {
-      ilc[opos] = buffer[ipos];
-      irc[opos] = buffer[ipos+1];
-   }
-
-   float *ibuf[2] = {ilc, irc};
+   float *ibuf[2] = {buffers[0], buffers[1]};
    float *obuf[2] = {olc, orc};
 
    mRealtimeMutex.Lock();
    for (int i = 0; i < mRealtimeCount; i++)
    {
-      mRealtimeEffects[i]->RealtimeProcess(ibuf, obuf, numSamples);
+      mRealtimeEffects[i]->RealtimeProcess(index, ibuf, obuf, numSamples);
 
       float *tbuf[2] = {ibuf[0], ibuf[1]};
       ibuf[0] = obuf[0];
@@ -520,13 +492,18 @@ void EffectManager::RealtimeProcessStereo(float *buffer, sampleCount numSamples)
    }
    mRealtimeMutex.Unlock();
 
-   for (int opos = 0, ipos = 0; ipos < numSamples; ipos++, opos += 2)
+   if (obuf[0] == buffers[0])
    {
-      buffer[opos] = ibuf[0][ipos] > 1.0 ? 1.0 : ibuf[0][ipos];
-      buffer[opos+1] = ibuf[1][ipos] > 1.0 ? 1.0 : ibuf[1][ipos];
+      memcpy(buffers[1], ibuf[1], sizeof(float) * numSamples);
+      memcpy(buffers[0], ibuf[0], sizeof(float) * numSamples);
    }
 
    mRealtimeLatency = (int) (wxGetLocalTimeMillis() - start).GetValue();
+
+   //
+   // This is wrong...needs to handle tails
+   //
+   return numSamples;
 }
 
 int EffectManager::GetRealtimeLatency()
@@ -548,11 +525,21 @@ void EffectManager::SetRealtime(const EffectArray & effects)
       Effect **rtold = mRealtimeEffects;
       mRealtimeEffects = rteffects;
       mRealtimeCount = effects.GetCount();
+
+      if (mRealtimeActive)
+      {
+         const WaveTrackArray *tracks = mRealtimeTracks;
+         RealtimeFinalize();
+         RealtimeInitialize(tracks);
+      }
+
       mRealtimeMutex.Unlock();
+
       if (rtold)
       {
          delete [] rtold;
       }
+
    }
 }
 #endif

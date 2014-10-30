@@ -122,11 +122,12 @@ public:
    virtual bool ProcessFinalize() = 0;
    virtual sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size) = 0;
 
-   virtual bool RealtimeInitialize(int numChannels, float sampleRate) = 0;
+   virtual bool RealtimeInitialize() = 0;
+   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate) = 0;
    virtual bool RealtimeFinalize() = 0;
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() = 0;
-   virtual sampleCount RealtimeProcess(float **inbuf, float **outbuf, sampleCount size) = 0;
+   virtual sampleCount RealtimeProcess(int index, float **inbuf, float **outbuf, sampleCount size) = 0;
 
    virtual bool ShowInterface(void *parent) = 0;
 };

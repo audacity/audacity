@@ -94,12 +94,11 @@ class AUDACITY_DLL_API EffectManager
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    // Realtime effect processing
-   void RealtimeInitialize(int numChannels, float sampleRate);
+   void RealtimeInitialize(const WaveTrackArray *tracks);
    void RealtimeFinalize();
    void RealtimeSuspend();
    void RealtimeResume();
-   void RealtimeProcessMono(float *buffer, sampleCount numSamples);
-   void RealtimeProcessStereo(float *buffer, sampleCount numSamples);
+   sampleCount RealtimeProcess(int index, float **buffers, sampleCount numSamples);
    void SetRealtime(const EffectArray & mActive);
    int GetRealtimeLatency();
 #endif
@@ -164,6 +163,11 @@ private:
    int mRealtimeLatency;
    bool mRealtimeActive;
    bool mRealtimeSuspended;
+   const WaveTrackArray *mRealtimeTracks;
+
+   float **inbuffers;
+   float **outbuffers;
+
 #endif
 
 #ifdef EFFECT_CATEGORIES

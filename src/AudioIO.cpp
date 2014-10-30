@@ -1358,6 +1358,13 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
        }
    } while(!bDone);
 
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+   if (mNumPlaybackChannels > 0)
+   {
+      EffectManager::Get().RealtimeInitialize(&mPlaybackTracks);
+   }
+#endif
+
 #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
 #endif
@@ -1370,13 +1377,6 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 
    while( mAudioThreadShouldCallFillBuffersOnce == true )
       wxMilliSleep( 50 );
-
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-   if (mNumPlaybackChannels > 0)
-   {
-      EffectManager::Get().RealtimeInitialize(1, sampleRate);
-   }
-#endif
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    // if no playback, reset the midi time to zero to roughly sync
@@ -3497,9 +3497,21 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             if( gAudioIO->mMidiPlaybackTracks[t]->GetSolo() )
                numSolo++;
 #endif
-         for( t = 0; t < numPlaybackTracks; t++)
+
+         int logicalCnt = 0;
+         int chanCnt = 0;
+         WaveTrack **chans = (WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
+         float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
+         for (int c = 0; c < numPlaybackChannels; c++)
+         {
+            tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
+         }
+
+         for (t = 0; t < numPlaybackTracks; t++)
          {
             WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
+
+            chans[chanCnt] = vt;
 
             if (linkFlag)
                linkFlag = false;
@@ -3521,15 +3533,21 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #ifdef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
             // this is original code prior to r10680 -RBD
             if (cut)
-               {
-                  gAudioIO->mPlaybackBuffers[t]->Discard(framesPerBuffer);
-                  continue;
-               }
+            {
+               gAudioIO->mPlaybackBuffers[t]->Discard(framesPerBuffer);
+               continue;
+            }
 
-            unsigned int len = (unsigned int)
-               gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempFloats,
-                                                  floatSample,
-                                                  (int)framesPerBuffer);
+            int len = gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
+                                                         floatSample,
+                                                         (int)framesPerBuffer);
+
+            chanCnt++;
+
+            if (linkFlag)
+            {
+               continue;
+            }
 #else
             // This code was reorganized so that if all audio tracks
             // are muted, we still return paComplete when the end of
@@ -3553,6 +3571,10 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                                                      (int)framesPerBuffer);
             }
 #endif
+
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+            len = EffectManager::Get().RealtimeProcess(logicalCnt++, tempBufs, len);
+#endif
             // If our buffer is empty and the time indicator is past
             // the end, then we've actually finished playing the entire
             // selection.
@@ -3566,47 +3588,49 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             if (cut) // no samples to process, they've been discarded
                continue;
 #endif
-            
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-            EffectManager::Get().RealtimeProcessMono(tempFloats, len);
-#endif
-
-            if (vt->GetChannel() == Track::LeftChannel ||
-                vt->GetChannel() == Track::MonoChannel)
+            for (int c = 0; c < chanCnt; c++)
             {
-               float gain = vt->GetChannelGain(0);
+               vt = chans[c];
 
-               // Output volume emulation: possibly copy meter samples, then
-               // apply volume, then copy to the output buffer
-               if (outputMeterFloats != outputFloats)
-                  for (i = 0; i < len; ++i)
-                     outputMeterFloats[numPlaybackChannels*i] +=
-                        gain*tempFloats[i];
+               if (vt->GetChannel() == Track::LeftChannel ||
+                   vt->GetChannel() == Track::MonoChannel)
+               {
+                  float gain = vt->GetChannelGain(0);
 
-               if (gAudioIO->mEmulateMixerOutputVol)
-                  gain *= gAudioIO->mMixerOutputVol;
+                  // Output volume emulation: possibly copy meter samples, then
+                  // apply volume, then copy to the output buffer
+                  if (outputMeterFloats != outputFloats)
+                     for (int i = 0; i < len; ++i)
+                        outputMeterFloats[numPlaybackChannels*i] +=
+                           gain*tempFloats[i];
 
-               for(i=0; i<len; i++)
-                  outputFloats[numPlaybackChannels*i] += gain*tempFloats[i];
+                  if (gAudioIO->mEmulateMixerOutputVol)
+                     gain *= gAudioIO->mMixerOutputVol;
+
+                  for(int i=0; i<len; i++)
+                     outputFloats[numPlaybackChannels*i] += gain*tempBufs[c][i];
+               }
+
+               if (vt->GetChannel() == Track::RightChannel ||
+                   vt->GetChannel() == Track::MonoChannel)
+               {
+                  float gain = vt->GetChannelGain(1);
+
+                  // Output volume emulation (as above)
+                  if (outputMeterFloats != outputFloats)
+                     for (int i = 0; i < len; ++i)
+                        outputMeterFloats[numPlaybackChannels*i+1] +=
+                           gain*tempFloats[i];
+
+                  if (gAudioIO->mEmulateMixerOutputVol)
+                     gain *= gAudioIO->mMixerOutputVol;
+
+                  for(int i=0; i<len; i++)
+                     outputFloats[numPlaybackChannels*i+1] += gain*tempBufs[c][i];
+               }
             }
 
-            if (vt->GetChannel() == Track::RightChannel ||
-                vt->GetChannel() == Track::MonoChannel)
-            {
-               float gain = vt->GetChannelGain(1);
-
-               // Output volume emulation (as above)
-               if (outputMeterFloats != outputFloats)
-                  for (i = 0; i < len; ++i)
-                     outputMeterFloats[numPlaybackChannels*i+1] +=
-                        gain*tempFloats[i];
-
-               if (gAudioIO->mEmulateMixerOutputVol)
-                  gain *= gAudioIO->mMixerOutputVol;
-
-               for(i=0; i<len; i++)
-                  outputFloats[numPlaybackChannels*i+1] += gain*tempFloats[i];
-            }
+            chanCnt = 0;
          }
 
          //

@@ -14,6 +14,8 @@
 #include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
 
+#include <wx/wx.h>
+
 #include "aeffectx.h"
 
 #define VSTCMDKEY L"-checkvst"
@@ -44,11 +46,14 @@ typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
 class VSTEffectTimer;
 class VSTEffectDialog;
+class VSTEffect;
+
+WX_DEFINE_ARRAY_PTR(VSTEffect *, VSTEffectArray);
 
 class VSTEffect : public EffectClientInterface
 {
  public:
-   VSTEffect(const wxString & path);
+   VSTEffect(const wxString & path, VSTEffect *master = NULL);
    virtual ~VSTEffect();
 
    // IdentInterface implementation
@@ -89,11 +94,12 @@ class VSTEffect : public EffectClientInterface
    virtual bool ProcessFinalize();
    virtual sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size);
 
-   virtual bool RealtimeInitialize(int numChannels, float sampleRate);
+   virtual bool RealtimeInitialize();
+   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
    virtual bool RealtimeFinalize();
    virtual bool RealtimeSuspend();
    virtual bool RealtimeResume();
-   virtual sampleCount RealtimeProcess(float **inbuf, float **outbuf, sampleCount size);
+   virtual sampleCount RealtimeProcess(int index, float **inbuf, float **outbuf, sampleCount size);
 
    virtual bool ShowInterface(void *parent);
 
@@ -122,6 +128,10 @@ private:
    static wxString b64encode(const void *in, int len);
    static int b64decode(wxString in, void *out);
 
+   // Realtime
+   bool IsSlave();
+
+
    // Utility methods
 
    VstTimeInfo *GetTimeInfo();
@@ -130,8 +140,9 @@ private:
    void SetBufferDelay(int samples);
    void NeedIdle();
    void NeedEditIdle(bool state);
-   void UpdateDisplay();
    void SizeWindow(int w, int h);
+   void UpdateDisplay();
+   void Automate(int index, float value);
    void PowerOn();
    void PowerOff();
    void InterfaceClosed();
@@ -144,8 +155,9 @@ private:
 
    intptr_t callDispatcher(int opcode, int index, intptr_t value, void *ptr, float opt);
    void callProcessReplacing(float **inputs, float **outputs, int sampleframes);
-   void callSetParameter(int index, float parameter);
+   void callSetParameter(int index, float value);
    float callGetParameter(int index);
+   void callSetProgram(int index);
 
  private:
    EffectHostInterface *mHost;
@@ -190,6 +202,10 @@ private:
 
    VSTEffectTimer *mTimer;
    int mTimerGuard;
+
+   // Realtime processing
+   VSTEffect *mMaster;     // non-NULL if a slave
+   VSTEffectArray mSlaves;
 
    friend class VSTEffectDialog;
    friend class VSTEffectsModule;

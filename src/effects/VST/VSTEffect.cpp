@@ -3068,12 +3068,19 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
          return 0;
       }
 
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+      case audioMasterAutomate:
+         if (vst)
+            vst->Automate(index, opt);
+         return 0;
+
+#else
       // These are not needed since we don't need the parameter values until after the editor
       // has already been closed.  If we did realtime effects, then we'd need these.
       case audioMasterBeginEdit:
       case audioMasterEndEdit:
       case audioMasterAutomate:
-
+#endif
       // We're always connected (sort of)
       case audioMasterPinConnected:
 
@@ -3098,10 +3105,11 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
    return 0;
 }
 
-VSTEffect::VSTEffect(const wxString & path)
-:  mHost(NULL),
-   mPath(path)
+VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
+:  mPath(path),
+   mMaster(master)
 {
+   mHost = NULL;
    mModule = NULL;
    mAEffect = NULL;
    mDlg = NULL;
@@ -3132,6 +3140,12 @@ VSTEffect::VSTEffect(const wxString & path)
    mTimeInfo.timeSigNumerator = 4;
    mTimeInfo.timeSigDenominator = 4;
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid;
+
+   // If we're a slave then go ahead a load immediately
+   if (mMaster)
+   {
+      Load();
+   }
 }
 
 VSTEffect::~VSTEffect()
@@ -3389,15 +3403,33 @@ sampleCount VSTEffect::ProcessBlock(float **inbuf, float **outbuf, sampleCount s
    return size;
 }
 
-bool VSTEffect::RealtimeInitialize(int numChannels, float sampleRate)
+bool VSTEffect::RealtimeInitialize()
 {
-   SetSampleRate(sampleRate);
+   // This is really just a dummy value and one to make the dialog happy since
+   // all processing is handled by slaves.
+   SetSampleRate(44100);
+
+   return ProcessInitialize();
+}
+
+bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
+{
+   VSTEffect *slave = new VSTEffect(mPath, this);
+   mSlaves.Add(slave);
+
+   slave->SetSampleRate(sampleRate);
 
    return ProcessInitialize();
 }
 
 bool VSTEffect::RealtimeFinalize()
 {
+   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   {
+      delete mSlaves[i];
+   }
+   mSlaves.Clear();
+
    return ProcessFinalize();
 }
 
@@ -3415,9 +3447,14 @@ bool VSTEffect::RealtimeResume()
    return true;
 }
 
-sampleCount VSTEffect::RealtimeProcess(float **inbuf, float **outbuf, sampleCount size)
+sampleCount VSTEffect::RealtimeProcess(int index, float **inbuf, float **outbuf, sampleCount size)
 {
-   return ProcessBlock(inbuf, outbuf, size);
+   if (index < 0 || index >= mSlaves.GetCount())
+   {
+      return 0;
+   }
+
+   return mSlaves[index]->ProcessBlock(inbuf, outbuf, size);
 }
 
 //
@@ -3971,6 +4008,22 @@ void VSTEffect::UpdateDisplay()
    return;
 }
 
+void VSTEffect::Automate(int index, float value)
+{
+   // Just ignore it if we're a slave
+   if (mMaster)
+   {
+      return;
+   }
+
+   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   {
+      mSlaves[i]->callSetParameter(index, value);
+   }
+
+   return;
+}
+
 void VSTEffect::SetBufferDelay(int samples)
 {
    // We do not support negative delay
@@ -4026,14 +4079,29 @@ void VSTEffect::callProcessReplacing(float **inputs,
    mAEffect->processReplacing(mAEffect, inputs, outputs, sampleframes);
 }
 
-void VSTEffect::callSetParameter(int index, float parameter)
-{
-   mAEffect->setParameter(mAEffect, index, parameter);
-}
-
 float VSTEffect::callGetParameter(int index)
 {
    return mAEffect->getParameter(mAEffect, index);
+}
+
+void VSTEffect::callSetParameter(int index, float value)
+{
+   mAEffect->setParameter(mAEffect, index, value);
+
+   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   {
+      mSlaves[i]->callSetParameter(index, value);
+   }
+}
+
+void VSTEffect::callSetProgram(int index)
+{
+   callDispatcher(effSetProgram, 0, index, NULL, 0.0);
+
+   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   {
+      mSlaves[i]->callSetProgram(index);
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
