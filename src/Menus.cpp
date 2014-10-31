@@ -1173,8 +1173,8 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddItem(wxT("About"), _("&About Audacity..."), FN(OnAbout));
 
-   c->AddItem(wxT("QuickHelp"), _("&Quick Help (in web browser)"), FN(OnQuickHelp));
-   c->AddItem(wxT("Manual"), _("&Manual (in web browser)"), FN(OnManual));
+   c->AddItem(wxT("QuickHelp"), _("&Quick Help"), FN(OnQuickHelp));
+   c->AddItem(wxT("Manual"), _("&Manual"), FN(OnManual));
 
    c->AddSeparator();
 
