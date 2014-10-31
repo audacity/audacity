@@ -37,7 +37,7 @@
 #include "TimeWarper.h"
 
 
-// the standard vinyl RPM choices
+// the standard vinyl rpm choices
 // If the percent change is not one of these ratios, the choice control gets "n/a".
 enum {
    kVinyl_33AndAThird = 0,
@@ -371,7 +371,7 @@ void ChangeSpeedDialog::PopulateOrExchange(ShuttleGui & S)
    //
    S.StartMultiColumn(5, wxCENTER);
    {
-      S.AddUnits(_("Standard Vinyl RPM:"));
+      S.AddUnits(_("Standard Vinyl rpm:"));
 
       wxArrayString rpmStrings;
       rpmStrings.Add(wxT("33 1/3"));
@@ -382,12 +382,12 @@ void ChangeSpeedDialog::PopulateOrExchange(ShuttleGui & S)
 
       mpChoice_FromVinyl =
          S.Id(ID_CHOICE_FROMVINYL).AddChoice(_("from"), wxT(""), &rpmStrings);
-      mpChoice_FromVinyl->SetName(_("From RPM"));
+      mpChoice_FromVinyl->SetName(_("From rpm"));
       mpChoice_FromVinyl->SetSizeHints(100, -1);
 
       mpChoice_ToVinyl =
          S.Id(ID_CHOICE_TOVINYL).AddChoice(_("to"), wxT(""), &rpmStrings);
-      mpChoice_ToVinyl->SetName(_("To RPM"));
+      mpChoice_ToVinyl->SetName(_("To rpm"));
       mpChoice_ToVinyl->SetSizeHints(100, -1);
    }
    S.EndMultiColumn();
