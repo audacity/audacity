@@ -626,6 +626,7 @@ AudioIO::~AudioIO()
 #ifdef EXPERIMENTAL_MIDI_OUT
    Pm_Terminate();
    mMidiThread->Delete();
+   delete mMidiThread;
 #endif
 
    /* Delete is a "graceful" way to stop the thread.
