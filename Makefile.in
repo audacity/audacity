@@ -1128,7 +1128,7 @@ audacity$(EXEEXT): src/audacity$(EXEEXT)
 
 modules:
 	mkdir -p modules
-	(cd lib-src/mod-nyq-bench && make) && cp -a .libs/mod-nyq-bench.so ../../modules
+	(cd lib-src/mod-nyq-bench && make && cp .libs/mod-nyq-bench.so ../../modules
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
