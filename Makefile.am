@@ -71,8 +71,14 @@ nobase_dist_pkgdata_DATA = \
    $(NULL)
 
 audacity$(EXEEXT): src/audacity$(EXEEXT)
+	rm -f audacity$(EXEEXT)
 	cp src/audacity$(EXEEXT) audacity$(EXEEXT)
 	[ -e plug-ins ] || ln -s $(srcdir)/plug-ins
 	[ -e nyquist ] || ln -s $(srcdir)/nyquist
 	[ -e locale ] || ln -s po locale
-CLEANFILES = audacity$(EXEEXT) plug-ins nyquist locale
+
+modules:
+	mkdir -p modules
+	(cd lib-src/mod-nyq-bench && make && cp .libs/mod-nyq-bench.so ../../modules
+
+CLEANFILES = audacity$(EXEEXT) plug-ins nyquist locale modules

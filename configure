@@ -1038,7 +1038,7 @@ GTK_CFLAGS
 GTK_LIBS
 JACK_CFLAGS
 JACK_LIBS'
-ac_subdirs_all='lib-src/FileDialog
+ac_subdirs_all='lib-src/FileDialog lib-src/mod-nyq-bench
 lib-src/expat
 lib-src/libflac
 lib-src/libid3tag
@@ -19706,7 +19706,7 @@ CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/include"
 
 
 
-subdirs="$subdirs lib-src/FileDialog"
+subdirs="$subdirs lib-src/FileDialog lib-src/mod-nyq-bench"
 
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'

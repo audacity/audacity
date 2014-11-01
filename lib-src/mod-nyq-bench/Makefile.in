@@ -14,7 +14,6 @@
 
 @SET_MAKE@
 
-
 VPATH = @srcdir@
 am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'
 am__make_running_with_option = \
@@ -81,65 +80,26 @@ build_triplet = @build@
 host_triplet = @host@
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
-	$(top_srcdir)/configure $(am__configure_deps) $(dist_doc_DATA) \
-	$(dist_pkgdata_DATA) $(nobase_dist_pkgdata_DATA) ABOUT-NLS \
-	autotools/ar-lib autotools/compile autotools/config.guess \
-	autotools/config.rpath autotools/config.sub autotools/depcomp \
+	$(top_srcdir)/configure $(am__configure_deps) \
+	$(top_srcdir)/autotools/depcomp autotools/ar-lib \
+	autotools/config.guess autotools/config.sub autotools/depcomp \
 	autotools/install-sh autotools/missing autotools/ltmain.sh \
 	$(top_srcdir)/autotools/ar-lib \
 	$(top_srcdir)/autotools/config.guess \
-	$(top_srcdir)/autotools/config.rpath \
 	$(top_srcdir)/autotools/config.sub \
 	$(top_srcdir)/autotools/install-sh \
 	$(top_srcdir)/autotools/ltmain.sh \
 	$(top_srcdir)/autotools/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
-	$(top_srcdir)/m4/ac_c99_func_lrintf.m4 \
-	$(top_srcdir)/m4/audacity_checklib_ffmpeg.m4 \
-	$(top_srcdir)/m4/audacity_checklib_gstreamer.m4 \
-	$(top_srcdir)/m4/audacity_checklib_lame.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libexpat.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libflac.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libid3tag.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libmad.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libnyquist.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libresample.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libsamplerate.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libsbsms.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libsndfile.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libsoundtouch.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libsoxr.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libtwolame.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libvamp.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libvorbis.m4 \
-	$(top_srcdir)/m4/audacity_checklib_lv2.m4 \
-	$(top_srcdir)/m4/audacity_checklib_portaudio.m4 \
-	$(top_srcdir)/m4/audacity_checklib_portsmf.m4 \
-	$(top_srcdir)/m4/audacity_checklib_widgetextra.m4 \
-	$(top_srcdir)/m4/ax_cflags_strict_prototypes.m4 \
-	$(top_srcdir)/m4/ax_cflags_warn_all.m4 \
-	$(top_srcdir)/m4/ax_check_compiler_flags.m4 \
-	$(top_srcdir)/m4/ax_compiler_vendor.m4 \
-	$(top_srcdir)/m4/ax_cxx_check_flag.m4 \
-	$(top_srcdir)/m4/ax_cxxcpp_check_flag.m4 \
-	$(top_srcdir)/m4/ax_ld_check_flag.m4 \
-	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/iconv.m4 \
-	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
-	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
-	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
-	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
-	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/visibility.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_HEADER = $(top_builddir)/src/configwin.h \
-	$(top_builddir)/src/configunix.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -169,9 +129,20 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(docdir)" \
-	"$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(pkgdatadir)"
-SCRIPTS = $(bin_SCRIPTS)
+am__installdirs = "$(DESTDIR)$(pkglibdir)"
+LTLIBRARIES = $(pkglib_LTLIBRARIES)
+am__DEPENDENCIES_1 =
+mod_nyq_bench_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+am_mod_nyq_bench_la_OBJECTS = mod_nyq_bench_la-NyqBench.lo
+mod_nyq_bench_la_OBJECTS = $(am_mod_nyq_bench_la_OBJECTS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
+mod_nyq_bench_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) $(mod_nyq_bench_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -184,31 +155,53 @@ AM_V_at = $(am__v_at_@AM_V@)
 am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
 am__v_at_1 = 
-SOURCES =
-DIST_SOURCES =
-RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
-	ctags-recursive dvi-recursive html-recursive info-recursive \
-	install-data-recursive install-dvi-recursive \
-	install-exec-recursive install-html-recursive \
-	install-info-recursive install-pdf-recursive \
-	install-ps-recursive install-recursive installcheck-recursive \
-	installdirs-recursive pdf-recursive ps-recursive \
-	tags-recursive uninstall-recursive
+DEFAULT_INCLUDES = -I.@am__isrc@
+depcomp = $(SHELL) $(top_srcdir)/autotools/depcomp
+am__depfiles_maybe = depfiles
+am__mv = mv -f
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+AM_V_CXX = $(am__v_CXX_@AM_V@)
+am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
+am__v_CXX_0 = @echo "  CXX     " $@;
+am__v_CXX_1 = 
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
+am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
+am__v_CXXLD_0 = @echo "  CXXLD   " $@;
+am__v_CXXLD_1 = 
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+AM_V_CC = $(am__v_CC_@AM_V@)
+am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
+am__v_CC_0 = @echo "  CC      " $@;
+am__v_CC_1 = 
+CCLD = $(CC)
+LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+am__v_CCLD_0 = @echo "  CCLD    " $@;
+am__v_CCLD_1 = 
+SOURCES = $(mod_nyq_bench_la_SOURCES)
+DIST_SOURCES = $(mod_nyq_bench_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(dist_doc_DATA) $(dist_pkgdata_DATA) \
-	$(nobase_dist_pkgdata_DATA)
-RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
-  distclean-recursive maintainer-clean-recursive
-am__recursive_targets = \
-  $(RECURSIVE_TARGETS) \
-  $(RECURSIVE_CLEAN_TARGETS) \
-  $(am__extra_recursive_targets)
-AM_RECURSIVE_TARGETS = $(am__recursive_targets:-recursive=) TAGS CTAGS \
-	cscope distdir dist dist-all distcheck
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -229,7 +222,7 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
-DIST_SUBDIRS = $(SUBDIRS)
+AM_RECURSIVE_TARGETS = cscope
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -240,31 +233,6 @@ am__remove_distdir = \
       || { sleep 5 && rm -rf "$(distdir)"; }; \
   else :; fi
 am__post_remove_distdir = $(am__remove_distdir)
-am__relativize = \
-  dir0=`pwd`; \
-  sed_first='s,^\([^/]*\)/.*$$,\1,'; \
-  sed_rest='s,^[^/]*/*,,'; \
-  sed_last='s,^.*/\([^/]*\)$$,\1,'; \
-  sed_butlast='s,/*[^/]*$$,,'; \
-  while test -n "$$dir1"; do \
-    first=`echo "$$dir1" | sed -e "$$sed_first"`; \
-    if test "$$first" != "."; then \
-      if test "$$first" = ".."; then \
-        dir2=`echo "$$dir0" | sed -e "$$sed_last"`/"$$dir2"; \
-        dir0=`echo "$$dir0" | sed -e "$$sed_butlast"`; \
-      else \
-        first2=`echo "$$dir2" | sed -e "$$sed_first"`; \
-        if test "$$first2" = "$$first"; then \
-          dir2=`echo "$$dir2" | sed -e "$$sed_rest"`; \
-        else \
-          dir2="../$$dir2"; \
-        fi; \
-        dir0="$$dir0"/"$$first"; \
-      fi; \
-    fi; \
-    dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
-  done; \
-  reldir="$$dir2"
 GZIP_ENV = --best
 DIST_ARCHIVES = $(distdir).tar.xz
 DIST_TARGETS = dist-xz
@@ -276,24 +244,13 @@ ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
-AUDACITY_NAME = @AUDACITY_NAME@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
-AVCODEC_CFLAGS = @AVCODEC_CFLAGS@
-AVCODEC_LIBS = @AVCODEC_LIBS@
-AVFORMAT_CFLAGS = @AVFORMAT_CFLAGS@
-AVFORMAT_LIBS = @AVFORMAT_LIBS@
-AVUTIL_CFLAGS = @AVUTIL_CFLAGS@
-AVUTIL_LIBS = @AVUTIL_LIBS@
 AWK = @AWK@
-BUILD_LDFLAGS = @BUILD_LDFLAGS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
-CDEPEND = @CDEPEND@
 CFLAGS = @CFLAGS@
-CFLAG_VISIBILITY = @CFLAG_VISIBILITY@
-CONFIGHEADER = @CONFIGHEADER@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -311,74 +268,25 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-EXPAT_CFLAGS = @EXPAT_CFLAGS@
-EXPAT_LIBS = @EXPAT_LIBS@
-EXTRATARGETS = @EXTRATARGETS@
-FFMPEG_CFLAGS = @FFMPEG_CFLAGS@
-FFMPEG_LIBS = @FFMPEG_LIBS@
 FGREP = @FGREP@
-FILEDIALOG_LIBS = @FILEDIALOG_LIBS@
-FLAC_CFLAGS = @FLAC_CFLAGS@
-FLAC_LIBS = @FLAC_LIBS@
-GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
-GMSGFMT = @GMSGFMT@
-GMSGFMT_015 = @GMSGFMT_015@
 GREP = @GREP@
-GSTREAMER_CFLAGS = @GSTREAMER_CFLAGS@
-GSTREAMER_LIBS = @GSTREAMER_LIBS@
-GTK_CFLAGS = @GTK_CFLAGS@
-GTK_LIBS = @GTK_LIBS@
-HAVE_GTK = @HAVE_GTK@
-HAVE_PKG_CONFIG = @HAVE_PKG_CONFIG@
-HAVE_VISIBILITY = @HAVE_VISIBILITY@
-ID3TAG_CFLAGS = @ID3TAG_CFLAGS@
-ID3TAG_LIBS = @ID3TAG_LIBS@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
-INSTALL_PREFIX = @INSTALL_PREFIX@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-INTLLIBS = @INTLLIBS@
-INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
-JACK_CFLAGS = @JACK_CFLAGS@
-JACK_LIBS = @JACK_LIBS@
-LAME_CFLAGS = @LAME_CFLAGS@
-LAME_LIBS = @LAME_LIBS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
-LIBICONV = @LIBICONV@
-LIBINTL = @LIBINTL@
-LIBMAD_CFLAGS = @LIBMAD_CFLAGS@
-LIBMAD_LIBS = @LIBMAD_LIBS@
-LIBNYQUIST_CFLAGS = @LIBNYQUIST_CFLAGS@
-LIBNYQUIST_LIBS = @LIBNYQUIST_LIBS@
 LIBOBJS = @LIBOBJS@
-LIBRESAMPLE_CFLAGS = @LIBRESAMPLE_CFLAGS@
-LIBRESAMPLE_LIBS = @LIBRESAMPLE_LIBS@
 LIBS = @LIBS@
-LIBSAMPLERATE_SYSTEM_CFLAGS = @LIBSAMPLERATE_SYSTEM_CFLAGS@
-LIBSAMPLERATE_SYSTEM_LIBS = @LIBSAMPLERATE_SYSTEM_LIBS@
 LIBTOOL = @LIBTOOL@
-LIBTWOLAME_CFLAGS = @LIBTWOLAME_CFLAGS@
-LIBTWOLAME_LIBS = @LIBTWOLAME_LIBS@
-LIBVORBIS_CFLAGS = @LIBVORBIS_CFLAGS@
-LIBVORBIS_LIBS = @LIBVORBIS_LIBS@
 LIPO = @LIPO@
 LN_S = @LN_S@
-LTLIBICONV = @LTLIBICONV@
-LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
-LV2_CFLAGS = @LV2_CFLAGS@
-LV2_LIBS = @LV2_LIBS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
-MIMETYPES = @MIMETYPES@
 MKDIR_P = @MKDIR_P@
-MSGFMT = @MSGFMT@
-MSGFMT_015 = @MSGFMT_015@
-MSGMERGE = @MSGMERGE@
 NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
@@ -393,41 +301,15 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PKG_CONFIG = @PKG_CONFIG@
-PORTAUDIO_CFLAGS = @PORTAUDIO_CFLAGS@
-PORTAUDIO_LIBS = @PORTAUDIO_LIBS@
-PORTMIXER_LIBS = @PORTMIXER_LIBS@
-PORTSMF_CFLAGS = @PORTSMF_CFLAGS@
-PORTSMF_LIBS = @PORTSMF_LIBS@
-POSUB = @POSUB@
-PRECOMP_CFLAGS = @PRECOMP_CFLAGS@
 RANLIB = @RANLIB@
-SAMPLERATE_CFLAGS = @SAMPLERATE_CFLAGS@
-SAMPLERATE_LIBS = @SAMPLERATE_LIBS@
-SBSMS_CFLAGS = @SBSMS_CFLAGS@
-SBSMS_LIBS = @SBSMS_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
-SNDFILE_CFLAGS = @SNDFILE_CFLAGS@
-SNDFILE_LIBS = @SNDFILE_LIBS@
-SOUNDTOUCH_CFLAGS = @SOUNDTOUCH_CFLAGS@
-SOUNDTOUCH_LIBS = @SOUNDTOUCH_LIBS@
-SOXR_CFLAGS = @SOXR_CFLAGS@
-SOXR_LIBS = @SOXR_LIBS@
 STRIP = @STRIP@
-USE_NLS = @USE_NLS@
-VAMP_CFLAGS = @VAMP_CFLAGS@
-VAMP_LIBS = @VAMP_LIBS@
 VERSION = @VERSION@
-WIDGETEXTRA_CFLAGS = @WIDGETEXTRA_CFLAGS@
-WIDGETEXTRA_LIBS = @WIDGETEXTRA_LIBS@
 WX_CONFIG = @WX_CONFIG@
 WX_CXXFLAGS = @WX_CXXFLAGS@
 WX_LIBS = @WX_LIBS@
-XGETTEXT = @XGETTEXT@
-XGETTEXT_015 = @XGETTEXT_015@
-XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -476,84 +358,23 @@ psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
-subdirs = @subdirs@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = help images lib-src po src tests
-ACLOCAL_AMFLAGS = -I m4
-bin_SCRIPTS = audacity$(EXEEXT)
-dist_doc_DATA = LICENSE.txt README.txt
-dist_pkgdata_DATA = presets/EQDefaultCurves.xml
-nobase_dist_pkgdata_DATA = \
-   nyquist/bug.lsp \
-   nyquist/dspprims.lsp \
-   nyquist/envelopes.lsp \
-   nyquist/equalizer.lsp \
-   nyquist/evalenv.lsp \
-   nyquist/fileio.lsp \
-   nyquist/follow.lsp \
-   nyquist/init.lsp \
-   nyquist/misc.lsp \
-   nyquist/nyinit.lsp \
-   nyquist/nyqmisc.lsp \
-   nyquist/nyquist.lsp \
-   nyquist/nyquist-plot.txt \
-   nyquist/printrec.lsp \
-   nyquist/profile.lsp \
-   nyquist/sal.lsp \
-   nyquist/sal-parse.lsp \
-   nyquist/seqfnint.lsp \
-   nyquist/seq.lsp \
-   nyquist/seqmidi.lsp \
-   nyquist/sndfnint.lsp \
-   nyquist/stk.lsp \
-   nyquist/system.lsp \
-   nyquist/xlinit.lsp \
-   nyquist/xm.lsp \
-   nyquist/rawwaves/mand1.raw \
-   nyquist/rawwaves/mand2.raw \
-   nyquist/rawwaves/mand3.raw \
-   nyquist/rawwaves/mand4.raw \
-   nyquist/rawwaves/mand5.raw \
-   nyquist/rawwaves/mand6.raw \
-   nyquist/rawwaves/mand7.raw \
-   nyquist/rawwaves/mand8.raw \
-   nyquist/rawwaves/mand9.raw \
-   nyquist/rawwaves/mand10.raw \
-   nyquist/rawwaves/mand11.raw \
-   nyquist/rawwaves/mand12.raw \
-   nyquist/rawwaves/mandpluk.raw \
-   nyquist/rawwaves/marmstk1.raw \
-   nyquist/rawwaves/sinewave.raw \
-   plug-ins/adjustable-fade.ny \
-   plug-ins/beat.ny \
-   plug-ins/clicktrack.ny \
-   plug-ins/clipfix.ny \
-   plug-ins/crossfadein.ny \
-   plug-ins/crossfadeout.ny \
-   plug-ins/delay.ny \
-   plug-ins/equalabel.ny \
-   plug-ins/highpass.ny \
-   plug-ins/lowpass.ny \
-   plug-ins/notch.ny \
-   plug-ins/pluck.ny \
-   plug-ins/rissetdrum.ny \
-   plug-ins/sample-data-export.ny \
-   plug-ins/SilenceMarker.ny \
-   plug-ins/SoundFinder.ny \
-   plug-ins/StudioFadeOut.ny \
-   plug-ins/tremolo.ny \
-   plug-ins/vocalremover.ny \
-   plug-ins/vocoder.ny \
-   $(NULL)
+pkglib_LTLIBRARIES = mod-nyq-bench.la
+mod_nyq_bench_la_CPPFLAGS = $(WX_CXXFLAGS) -I$(top_srcdir)/../../include -I$(top_srcdir)/../../src -I$(top_builddir)/../../src -I$(top_srcdir)/../portaudio-v19/include -I$(top_srcdir)/../portmixer/include -I$(top_srcdir)/../libnyquist
+mod_nyq_bench_la_LIBADD = $(WX_LIBS)
+mod_nyq_bench_la_LDFLAGS = -module
+mod_nyq_bench_la_SOURCES = \
+	NyqBench.cpp \
+	NyqBench.h
 
-CLEANFILES = audacity$(EXEEXT) plug-ins nyquist locale modules
-all: all-recursive
+all: all-am
 
 .SUFFIXES:
+.SUFFIXES: .cpp .lo .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -588,41 +409,83 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
-install-binSCRIPTS: $(bin_SCRIPTS)
-	@$(NORMAL_INSTALL)
-	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
-	done | \
-	sed -e 'p;s,.*/,,;n' \
-	    -e 'h;s|.*|.|' \
-	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
-	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
-	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
-	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
-	      if (++n[d] == $(am__install_max)) { \
-		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
-	    else { print "f", d "/" $$4, $$1 } } \
-	  END { for (d in files) print "f", d, files[d] }' | \
-	while read type dir files; do \
-	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
-	     test -z "$$files" || { \
-	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(bindir)$$dir'"; \
-	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
-	     } \
-	; done
 
-uninstall-binSCRIPTS:
+install-pkglibLTLIBRARIES: $(pkglib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	@list='$(pkglib_LTLIBRARIES)'; test -n "$(pkglibdir)" || list=; \
+	list2=; for p in $$list; do \
+	  if test -f $$p; then \
+	    list2="$$list2 $$p"; \
+	  else :; fi; \
+	done; \
+	test -z "$$list2" || { \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(pkglibdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(pkglibdir)" || exit 1; \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(pkglibdir)'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(pkglibdir)"; \
+	}
+
+uninstall-pkglibLTLIBRARIES:
 	@$(NORMAL_UNINSTALL)
-	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || exit 0; \
-	files=`for p in $$list; do echo "$$p"; done | \
-	       sed -e 's,.*/,,;$(transform)'`; \
-	dir='$(DESTDIR)$(bindir)'; $(am__uninstall_files_from_dir)
+	@list='$(pkglib_LTLIBRARIES)'; test -n "$(pkglibdir)" || list=; \
+	for p in $$list; do \
+	  $(am__strip_dir) \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(pkglibdir)/$$f'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(pkglibdir)/$$f"; \
+	done
+
+clean-pkglibLTLIBRARIES:
+	-test -z "$(pkglib_LTLIBRARIES)" || rm -f $(pkglib_LTLIBRARIES)
+	@list='$(pkglib_LTLIBRARIES)'; \
+	locs=`for p in $$list; do echo $$p; done | \
+	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
+	      sort -u`; \
+	test -z "$$locs" || { \
+	  echo rm -f $${locs}; \
+	  rm -f $${locs}; \
+	}
+
+mod-nyq-bench.la: $(mod_nyq_bench_la_OBJECTS) $(mod_nyq_bench_la_DEPENDENCIES) $(EXTRA_mod_nyq_bench_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(mod_nyq_bench_la_LINK) -rpath $(pkglibdir) $(mod_nyq_bench_la_OBJECTS) $(mod_nyq_bench_la_LIBADD) $(LIBS)
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT)
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mod_nyq_bench_la-NyqBench.Plo@am__quote@
+
+.cpp.o:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
+
+.cpp.obj:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.cpp.lo:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
+@am__fastdepCXX_TRUE@	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
+
+mod_nyq_bench_la-NyqBench.lo: NyqBench.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mod_nyq_bench_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT mod_nyq_bench_la-NyqBench.lo -MD -MP -MF $(DEPDIR)/mod_nyq_bench_la-NyqBench.Tpo -c -o mod_nyq_bench_la-NyqBench.lo `test -f 'NyqBench.cpp' || echo '$(srcdir)/'`NyqBench.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mod_nyq_bench_la-NyqBench.Tpo $(DEPDIR)/mod_nyq_bench_la-NyqBench.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='NyqBench.cpp' object='mod_nyq_bench_la-NyqBench.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mod_nyq_bench_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mod_nyq_bench_la-NyqBench.lo `test -f 'NyqBench.cpp' || echo '$(srcdir)/'`NyqBench.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -632,128 +495,15 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool config.lt
-install-dist_docDATA: $(dist_doc_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(dist_doc_DATA)'; test -n "$(docdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(docdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(docdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(docdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(docdir)" || exit $$?; \
-	done
-
-uninstall-dist_docDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_doc_DATA)'; test -n "$(docdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(docdir)'; $(am__uninstall_files_from_dir)
-install-dist_pkgdataDATA: $(dist_pkgdata_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(dist_pkgdata_DATA)'; test -n "$(pkgdatadir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(pkgdatadir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(pkgdatadir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(pkgdatadir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pkgdatadir)" || exit $$?; \
-	done
-
-uninstall-dist_pkgdataDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_pkgdata_DATA)'; test -n "$(pkgdatadir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(pkgdatadir)'; $(am__uninstall_files_from_dir)
-install-nobase_dist_pkgdataDATA: $(nobase_dist_pkgdata_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(nobase_dist_pkgdata_DATA)'; test -n "$(pkgdatadir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(pkgdatadir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(pkgdatadir)" || exit 1; \
-	fi; \
-	$(am__nobase_list) | while read dir files; do \
-	  xfiles=; for file in $$files; do \
-	    if test -f "$$file"; then xfiles="$$xfiles $$file"; \
-	    else xfiles="$$xfiles $(srcdir)/$$file"; fi; done; \
-	  test -z "$$xfiles" || { \
-	    test "x$$dir" = x. || { \
-	      echo " $(MKDIR_P) '$(DESTDIR)$(pkgdatadir)/$$dir'"; \
-	      $(MKDIR_P) "$(DESTDIR)$(pkgdatadir)/$$dir"; }; \
-	    echo " $(INSTALL_DATA) $$xfiles '$(DESTDIR)$(pkgdatadir)/$$dir'"; \
-	    $(INSTALL_DATA) $$xfiles "$(DESTDIR)$(pkgdatadir)/$$dir" || exit $$?; }; \
-	done
-
-uninstall-nobase_dist_pkgdataDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(nobase_dist_pkgdata_DATA)'; test -n "$(pkgdatadir)" || list=; \
-	$(am__nobase_strip_setup); files=`$(am__nobase_strip)`; \
-	dir='$(DESTDIR)$(pkgdatadir)'; $(am__uninstall_files_from_dir)
-
-# This directory's subdirectories are mostly independent; you can cd
-# into them and run 'make' without going through this Makefile.
-# To change the values of 'make' variables: instead of editing Makefiles,
-# (1) if the variable is set in 'config.status', edit 'config.status'
-#     (which will cause the Makefiles to be regenerated when you run 'make');
-# (2) otherwise, pass the desired values on the 'make' command line.
-$(am__recursive_targets):
-	@fail=; \
-	if $(am__make_keepgoing); then \
-	  failcom='fail=yes'; \
-	else \
-	  failcom='exit 1'; \
-	fi; \
-	dot_seen=no; \
-	target=`echo $@ | sed s/-recursive//`; \
-	case "$@" in \
-	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
-	  *) list='$(SUBDIRS)' ;; \
-	esac; \
-	for subdir in $$list; do \
-	  echo "Making $$target in $$subdir"; \
-	  if test "$$subdir" = "."; then \
-	    dot_seen=yes; \
-	    local_target="$$target-am"; \
-	  else \
-	    local_target="$$target"; \
-	  fi; \
-	  ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
-	  || eval $$failcom; \
-	done; \
-	if test "$$dot_seen" = "no"; then \
-	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
-	fi; test -z "$$fail"
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
-tags: tags-recursive
+tags: tags-am
 TAGS: tags
 
 tags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
 	set x; \
 	here=`pwd`; \
-	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
-	  include_option=--etags-include; \
-	  empty_fix=.; \
-	else \
-	  include_option=--include; \
-	  empty_fix=; \
-	fi; \
-	list='$(SUBDIRS)'; for subdir in $$list; do \
-	  if test "$$subdir" = .; then :; else \
-	    test ! -f $$subdir/TAGS || \
-	      set "$$@" "$$include_option=$$here/$$subdir/TAGS"; \
-	  fi; \
-	done; \
 	$(am__define_uniq_tagged_files); \
 	shift; \
 	if test -z "$(ETAGS_ARGS)$$*$$unique"; then :; else \
@@ -766,7 +516,7 @@ tags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
 	      $$unique; \
 	  fi; \
 	fi
-ctags: ctags-recursive
+ctags: ctags-am
 
 CTAGS: ctags
 ctags-am: $(TAGS_DEPENDENCIES) $(am__tagged_files)
@@ -785,7 +535,7 @@ cscope: cscope.files
 clean-cscope:
 	-rm -f cscope.files
 cscope.files: clean-cscope cscopelist
-cscopelist: cscopelist-recursive
+cscopelist: cscopelist-am
 
 cscopelist-am: $(am__tagged_files)
 	list='$(am__tagged_files)'; \
@@ -835,31 +585,6 @@ distdir: $(DISTFILES)
 	    test -f "$(distdir)/$$file" \
 	    || cp -p $$d/$$file "$(distdir)/$$file" \
 	    || exit 1; \
-	  fi; \
-	done
-	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
-	  if test "$$subdir" = .; then :; else \
-	    $(am__make_dryrun) \
-	      || test -d "$(distdir)/$$subdir" \
-	      || $(MKDIR_P) "$(distdir)/$$subdir" \
-	      || exit 1; \
-	    dir1=$$subdir; dir2="$(distdir)/$$subdir"; \
-	    $(am__relativize); \
-	    new_distdir=$$reldir; \
-	    dir1=$$subdir; dir2="$(top_distdir)"; \
-	    $(am__relativize); \
-	    new_top_distdir=$$reldir; \
-	    echo " (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir="$$new_top_distdir" distdir="$$new_distdir" \\"; \
-	    echo "     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)"; \
-	    ($(am__cd) $$subdir && \
-	      $(MAKE) $(AM_MAKEFLAGS) \
-	        top_distdir="$$new_top_distdir" \
-	        distdir="$$new_distdir" \
-		am__remove_distdir=: \
-		am__skip_length_check=: \
-		am__skip_mode_fix=: \
-	        distdir) \
-	      || exit 1; \
 	  fi; \
 	done
 	-test -n "$(am__skip_mode_fix)" \
@@ -986,22 +711,21 @@ distcleancheck: distclean
 	       $(distcleancheck_listfiles) ; \
 	       exit 1; } >&2
 check-am: all-am
-check: check-recursive
-all-am: Makefile $(SCRIPTS) $(DATA)
-installdirs: installdirs-recursive
-installdirs-am:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(pkgdatadir)" "$(DESTDIR)$(pkgdatadir)"; do \
+check: check-am
+all-am: Makefile $(LTLIBRARIES)
+installdirs:
+	for dir in "$(DESTDIR)$(pkglibdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-recursive
-install-exec: install-exec-recursive
-install-data: install-data-recursive
-uninstall: uninstall-recursive
+install: install-am
+install-exec: install-exec-am
+install-data: install-data-am
+uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-recursive
+installcheck: installcheck-am
 install-strip:
 	if test -z '$(STRIP)'; then \
 	  $(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
@@ -1015,7 +739,6 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -1024,111 +747,101 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-recursive
+clean: clean-am
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libtool clean-pkglibLTLIBRARIES \
+	mostlyclean-am
 
-distclean: distclean-recursive
+distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-libtool \
-	distclean-tags
+distclean-am: clean-am distclean-compile distclean-generic \
+	distclean-libtool distclean-tags
 
-dvi: dvi-recursive
+dvi: dvi-am
 
 dvi-am:
 
-html: html-recursive
+html: html-am
 
 html-am:
 
-info: info-recursive
+info: info-am
 
 info-am:
 
-install-data-am: install-dist_docDATA install-dist_pkgdataDATA \
-	install-nobase_dist_pkgdataDATA
+install-data-am:
 
-install-dvi: install-dvi-recursive
+install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binSCRIPTS
+install-exec-am: install-pkglibLTLIBRARIES
 
-install-html: install-html-recursive
+install-html: install-html-am
 
 install-html-am:
 
-install-info: install-info-recursive
+install-info: install-info-am
 
 install-info-am:
 
 install-man:
 
-install-pdf: install-pdf-recursive
+install-pdf: install-pdf-am
 
 install-pdf-am:
 
-install-ps: install-ps-recursive
+install-ps: install-ps-am
 
 install-ps-am:
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-recursive
+maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-recursive
+mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-generic mostlyclean-libtool
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
 
-pdf: pdf-recursive
+pdf: pdf-am
 
 pdf-am:
 
-ps: ps-recursive
+ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binSCRIPTS uninstall-dist_docDATA \
-	uninstall-dist_pkgdataDATA uninstall-nobase_dist_pkgdataDATA
+uninstall-am: uninstall-pkglibLTLIBRARIES
 
-.MAKE: $(am__recursive_targets) install-am install-strip
+.MAKE: install-am install-strip
 
-.PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
-	am--refresh check check-am clean clean-cscope clean-generic \
-	clean-libtool cscope cscopelist-am ctags ctags-am dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-generic \
-	distclean-libtool distclean-tags distcleancheck distdir \
-	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-binSCRIPTS install-data \
-	install-data-am install-dist_docDATA install-dist_pkgdataDATA \
-	install-dvi install-dvi-am install-exec install-exec-am \
-	install-html install-html-am install-info install-info-am \
-	install-man install-nobase_dist_pkgdataDATA install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-binSCRIPTS \
-	uninstall-dist_docDATA uninstall-dist_pkgdataDATA \
-	uninstall-nobase_dist_pkgdataDATA
+.PHONY: CTAGS GTAGS TAGS all all-am am--refresh check check-am clean \
+	clean-cscope clean-generic clean-libtool \
+	clean-pkglibLTLIBRARIES cscope cscopelist-am ctags ctags-am \
+	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-shar \
+	dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distcleancheck distdir distuninstallcheck dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-pkglibLTLIBRARIES install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
+	uninstall-am uninstall-pkglibLTLIBRARIES
 
-
-audacity$(EXEEXT): src/audacity$(EXEEXT)
-	rm -f audacity$(EXEEXT)
-	cp src/audacity$(EXEEXT) audacity$(EXEEXT)
-	[ -e plug-ins ] || ln -s $(srcdir)/plug-ins
-	[ -e nyquist ] || ln -s $(srcdir)/nyquist
-	[ -e locale ] || ln -s po locale
-
-modules:
-	mkdir -p modules
-	(cd lib-src/mod-nyq-bench && make) && cp -a .libs/mod-nyq-bench.so ../../modules
+	$(NULL)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -326,7 +326,7 @@ dnl Include "external" headers
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/include"
 
 dnl Include FileDialog
-AC_CONFIG_SUBDIRS([lib-src/FileDialog])
+AC_CONFIG_SUBDIRS([lib-src/FileDialog lib-src/mod-nyq-bench])
 CXXFLAGS="$CXXFLAGS -I\$(top_srcdir)/lib-src/FileDialog"
 FILEDIALOG_LIBS='$(top_builddir)/lib-src/FileDialog/libFileDialog.la'
 AC_SUBST([FILEDIALOG_LIBS])
