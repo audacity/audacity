@@ -207,6 +207,7 @@ def monobook_fix_html(doc, page_url):
 
         # Remove noexport
         doc = remove_tag(doc, '<div class="noexport"', '</div>', '<div')
+        doc = remove_tag(doc, '<span class="noexport"', '</span>', '<span')
 
         # Remove editornote
         doc = remove_tag(doc, '<div class="editornote"', '</div>', '<div')
