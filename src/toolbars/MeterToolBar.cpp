@@ -53,12 +53,12 @@ MeterToolBar::MeterToolBar(int WhichMeters)
    mWhichMeters = WhichMeters;
    if( mWhichMeters == kWithRecordMeter ){
       mType = RecordMeterBarID;
-      mLabel = _("Record Meter");
+      mLabel = _("Recording Meter");
       mSection = wxT("RecordMeter");
    }
    if( mWhichMeters == kWithPlayMeter ){
       mType = PlayMeterBarID;
-      mLabel = _("Play Meter");
+      mLabel = _("Playback Meter");
       mSection = wxT("PlayMeter");
    }
    mSizer = NULL;

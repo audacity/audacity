@@ -119,7 +119,7 @@ ToolBar::~ToolBar()
 wxString ToolBar::GetTitle()
 {
    /* i18n-hint: %s will be replaced by the name of the kind of toolbar.*/
-   return wxString::Format( _("Audacity %s ToolBar"), GetLabel().c_str() );
+   return wxString::Format( _("Audacity %s Toolbar"), GetLabel().c_str() );
 }
 
 //
