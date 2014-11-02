@@ -1033,23 +1033,21 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       // lands back where we started.
       pos +=  wxPoint( 5, 20 ); 
 
-      // Is mouse pointer within either dock?
+
+      // To find which dock, rather than test against pos, test against the whole dragger rect.
+      // This means it is enough to overlap the dock to dock with it.
+      wxRect barRect = mDragWindow->GetRect();
       ToolDock *dock = NULL;
-      if( tr.Contains( pos ) )
-      {
+      if( tr.Intersects( barRect ) )
          dock = mTopDock;
-      }
-      else if( br.Contains( pos ) )
-      {
+      else if( br.Intersects( barRect ) )
          dock = mBotDock;
-      }
 
       // Looks like we have a winner...
       if( dock )
       {
          wxPoint p;
          wxRect r;
-
 
          // Calculate where the bar would be placed
          mDragBefore = dock->PositionBar( mDragBar, pos, r );

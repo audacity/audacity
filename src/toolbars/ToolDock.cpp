@@ -115,6 +115,11 @@ void ToolDock::Undock( ToolBar *bar )
    }
 }
 
+int ToolDock::GetBarCount()
+{
+   return mDockedBars.GetCount();
+}
+
 //
 // Handle ToolDock events
 //
