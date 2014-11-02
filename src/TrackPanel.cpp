@@ -1704,7 +1704,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
         (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
          isSpectrogramTrack(t, &logF) ) {
       // Not shift-down, but center frequency snapping toggle is on
-      *ppTip = _("Click and drag to set frequency band width.  Use ESC to enter/leave this mode.");
+      *ppTip = _("Click and drag to set frequency band width.");
       // need new distinct cursor?
       return;
    }
