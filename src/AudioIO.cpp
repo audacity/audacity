@@ -3540,18 +3540,22 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 #define ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
 #ifdef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
+            int len = 0;
             // this is original code prior to r10680 -RBD
             if (cut)
             {
                gAudioIO->mPlaybackBuffers[t]->Discard(framesPerBuffer);
-               continue;
+               // keep going here.  
+               // we may still need to issue a paComplete.
             }
-
-            int len = gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
+            else
+            {
+               len = gAudioIO->mPlaybackBuffers[t]->Get((samplePtr)tempBufs[chanCnt],
                                                          floatSample,
                                                          (int)framesPerBuffer);
+               chanCnt++;
+            }
 
-            chanCnt++;
 
             if (linkFlag)
             {
@@ -3582,7 +3586,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-            len = EffectManager::Get().RealtimeProcess(group++, chanCnt, rate, tempBufs, len);
+            if( !cut )
+               len = EffectManager::Get().RealtimeProcess(group++, chanCnt, rate, tempBufs, len);
 #endif
             // If our buffer is empty and the time indicator is past
             // the end, then we've actually finished playing the entire
@@ -3593,10 +3598,10 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             {
                callbackReturn = paComplete;
             }
-#ifndef ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
+
             if (cut) // no samples to process, they've been discarded
                continue;
-#endif
+
             for (int c = 0; c < chanCnt; c++)
             {
                vt = chans[c];
