@@ -14,15 +14,14 @@ Authors:
   Martyn Shaw
 
 ========================================================================
-This document is for Audacity version 2.0.6.
+This document is for Audacity version 2.1.0-alpha.
 
 If the advice here is inaccurate or incomplete, 
 email audacity-devel@lists.sourceforge.net.
 ========================================================================
 
-Audacity releases are currently built with Microsoft Visual C++ 9 
-(a.k.a Visual C++ 2008) generically known as "VC9".
-
+Audacity releases for Windows are currently built with Microsoft Visual 
+Studio 2013 C++. Most of us use the Express edition, which is free. 
 For instructions on compiling Audacity under the Cygwin 
 UNIX Emulation Layer, see the "Compiling Audacity under 
 Cygwin" section below. This is not maintained.
@@ -32,33 +31,35 @@ If you have MSVC installed, these are in your PATH, but users to
 whom you distribute your builds may not have them, so you may have 
 to distribute them, as described for the wxWidgets DLLs, below.
 
+For instructions on compiling Audacity under the Cygwin 
+UNIX Emulation Layer, see the "Compiling Audacity under 
+Cygwin" section below. This is not maintained (for a very long time!).
+
 
 ---------------------------
 MSVC++ STEP 1:  Download wxWidgets
 ---------------------------
 
 To simplify the implementation of a near-identical user
-interface across platforms, Audacity uses classes and
-resources from wxWidgets, a portable GUI framework for C++
-(and Python).  You must download and build wxWidgets before
-attempting to compile Audacity, or nothing will work!
+interface across platforms, Audacity uses wxWidgets, a  
+GUI framework. (https://www.wxwidgets.org/).
 
-To build on Windows only, download the wxMSW package
-(installer or zip).
+Audacity 2.1.0 requires wxWidgets 2.8.12.
+
+To be able to build Audacity for Windows, download wxWidgets: 
+
+* installer: https://sourceforge.net/projects/wxwindows/files/2.8.12/wxMSW-2.8.12-Setup.exe
+
+* .zip file: https://sourceforge.net/projects/wxwindows/files/2.8.12/wxMSW-2.8.12.zip
+
 
 
 ------------------------
 MSVC++ STEP 2:  Build wxWidgets
 ------------------------
 
-wxWidgets is available at "http://www.wxwidgets.org/".
-
-Audacity 2.0.6 requires wxWidgets 2.8.12.
-
-Download and install wxWidgets, then follow these steps to build it. 
-
 2.1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
-   Visual Studio 2008 (for VC9). 
+   Microsoft Visual Studio. 
    Make sure to use wx_dll.dsw, not wx.dsw, because wx.dsw
    does not have the correct dependencies for the DLL builds.
    When you open wx_dll.dsw, Visual Studio will prompt whether
@@ -74,10 +75,13 @@ Download and install wxWidgets, then follow these steps to build it.
    download Audacity (next step) to get these. 
 
    In "audacity\win\wxWidgets_additions" is one .h file. 
-   You may want to make backups of the wxWidgets original of it, 
+   You may want to make a backup of the wxWidgets original of it, 
+   in "C:\wxWidgets-2.8.12\include\wx\msw\setup.h", 
+   e.g., by renaming it "setup.h.bak" before copying the replacement, 
    in case you also build without these accessibility features. 
 
-   * Copy setup.h to "C:\wxWidgets-2.8.12\include\wx\msw\".
+   Copy "audacity\win\wxWidgets_additions\setup.h" to 
+   "C:\wxWidgets-3.0.2\include\wx\msw\setup.h".
 
    Audacity releases are built with these accessibility features.
 
@@ -92,15 +96,6 @@ With VS2013 you will get an error for missing pbt.h header, you can (apparently 
 
    See "MSVC++ STEP 6:  Build Audacity" for the differences
    between these versions of Audacity.
-
-   If you use "Batch Build" under the "Build" menu, you need select
-   only the following five projects to build (not the whole solution)
-   for each configuration:
-      * adv
-      * base
-      * core
-      * html
-      * net
 
    Because of dependencies, this should also build these projects:
    But it may not on VS2013 so you will have to make sure to build these as well:
