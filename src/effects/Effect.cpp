@@ -1291,20 +1291,8 @@ bool Effect::RealtimeInitialize()
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    if (mClient)
    {
-      mNumChannels = 0;
+      mNumGroups = -1;
       return mClient->RealtimeInitialize();
-   }
-#endif
-
-   return false;
-}
-bool Effect::RealtimeAddProcessor(int numChannels, float sampleRate)
-{
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-   if (mClient)
-   {
-      mNumChannels = numChannels;
-      return mClient->RealtimeAddProcessor(numChannels, sampleRate);
    }
 #endif
 
@@ -1347,53 +1335,111 @@ bool Effect::RealtimeResume()
    return false;
 }
 
-sampleCount Effect::RealtimeProcess(int index, float **inbuf, float **outbuf, sampleCount size)
+sampleCount Effect::RealtimeProcess(int group,
+                                    int chans,
+                                    float rate,
+                                    float **inbuf,
+                                    float **outbuf,
+                                    sampleCount numSamples)
 {
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-   float **tin = inbuf;
-   if (mNumAudioIn > mNumChannels)
+   //
+   // The caller passes the number of channels to process and specifies
+   // the number of input and output buffers.  There will always be the
+   // same number of output buffers as there are input buffers.
+   //
+   // Effects always require a certain number of input and output buffers,
+   // so if the number of channels we're curently processing are different
+   // that was the effect expects, then we use a few methods of satisfying
+   // the effects requirements.
+   float **clientIn = (float **) alloca(mNumAudioIn * sizeof(float *));
+   float **clientOut = (float **) alloca(mNumAudioOut * sizeof(float *));
+   float *dummybuf = (float *) alloca(numSamples * sizeof(float));
+   sampleCount len = 0;
+   int ichans = chans;
+   int ochans = chans;
+   int gchans = chans;
+   int indx = 0;
+   int ondx = 0;
+
+   // Call the client until we run out of input or output channels
+   while (ichans > 0 && ochans > 0)
    {
-      float *dummybuf = (float *) alloca(size * sizeof(float));
-      tin = (float **) alloca(mNumAudioIn * sizeof(float *));
-      for (int i = 0; i < mNumChannels; i++)
+      // If we don't have enough input channels to accomodate the client's
+      // requirements, then we replicate the input channels until the
+      // client's needs are met.
+      if (ichans < mNumAudioIn)
       {
-         tin[i] = inbuf[i];
+         for (int i = 0; i < mNumAudioIn; i++)
+         {
+            if (indx == ichans)
+            {
+               indx = 0;
+            }
+            clientIn[i] = inbuf[indx++];
+         }
+
+         // All input channels have been consumed
+         ichans = 0;
       }
-      for (int i = mNumChannels; i < mNumAudioIn; i++)
+      // Otherwise fullfil the client's needs with as many input channels as possible.
+      // After calling the client with this set, we will loop back up to process more
+      // of the input/output channels.
+      else if (ichans >= mNumAudioIn)
       {
-         tin[i] = dummybuf;
+         gchans = 0;
+         for (int i = 0; i < mNumAudioIn; i++, ichans--, gchans++)
+         {
+            clientIn[i] = inbuf[indx++];
+         }
       }
-      for (int i = 0; i < size; i++)
+
+      // If we don't have enough output channels to accomodate the client's
+      // requirements, then we provide all of the output channels and fulfill
+      // the client's needs with dummy buffers.  These will just get tossed.
+      if (ochans < mNumAudioOut)
       {
-         dummybuf[i] = 0.0;
+         for (int i = 0; i < mNumAudioOut; i++)
+         {
+            if (i < ochans)
+            {
+               clientOut[i] = outbuf[i];
+            }
+            else
+            {
+               clientOut[i] = dummybuf;
+            }
+         }
+
+         // All output channels have been consumed
+         ochans = 0;
       }
+      // Otherwise fullfil the client's needs with as many output channels as possible.
+      // After calling the client with this set, we will loop back up to process more
+      // of the input/output channels.
+      else if (ochans >= mNumAudioOut)
+      {
+         for (int i = 0; i < mNumAudioOut; i++, ochans--)
+         {
+            clientOut[i] = outbuf[ondx++];
+         }
+      }
+
+      // If the current group hasn't yet been seen, then we must
+      // add a new processor to handle this channel (sub)group
+      if (group >= mNumGroups)
+      {
+         mClient->RealtimeAddProcessor(gchans, rate);
+      }
+
+      // Finally call the plugin to process the block
+      len = mClient->RealtimeProcess(group++, clientIn, clientOut, numSamples);
    }
 
-   float **tout = outbuf;
-   if (mNumAudioOut > mNumChannels)
-   {
-      float *dummybuf = (float *) alloca(size * sizeof(float));
-      tout = (float **) alloca(mNumAudioOut * sizeof(float *));
-      for (int i = 0; i < mNumChannels; i++)
-      {
-         tout[i] = outbuf[i];
-      }
-      for (int i = mNumChannels; i < mNumAudioOut; i++)
-      {
-         tout[i] = dummybuf;
-      }
-      for (int i = 0; i < size; i++)
-      {
-         dummybuf[i] = 0.0;
-      }
-   }
+   // Remember the number of channel groups we've seen
+   mNumGroups++;
 
-   // Finally call the plugin to process the block
-   // LLL FIXME
-   // If the number of channels is greater than the number of in/out the effect
-   // can handle, then call RealtimeProcess for each "set" of tracks over its
-   // capabilities.
-   return mClient->RealtimeProcess(index, tin, tout, size);
+   return len;
 #else
    return 0;
 #endif
@@ -1538,6 +1584,26 @@ void Effect::Preview(bool dryOnly)
    delete mTracks;
 
    mTracks = saveTracks;
+}
+
+int Effect::GetAudioInCount()
+{
+   if (mClient)
+   {
+      return mClient->GetAudioInCount();
+   }
+
+   return 0;
+}
+
+int Effect::GetAudioOutCount()
+{
+   if (mClient)
+   {
+      return mClient->GetAudioInCount();
+   }
+
+   return 0;
 }
 
 EffectDialog::EffectDialog(wxWindow * parent,

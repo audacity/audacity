@@ -175,13 +175,12 @@ EffectManager::EffectManager()
 #endif
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-   mRealtimeMutex.Lock();
+   mRealtimeLock.Enter();
    mRealtimeEffects = NULL;
    mRealtimeCount = 0;
-   mRealtimeActive = false;
-   mRealtimeSuspended = false;
-   mRealtimeMutex.Unlock();
+   mRealtimeSuspended = true;
    mRealtimeLatency = 0;
+   mRealtimeLock.Leave();
 #endif
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
@@ -387,118 +386,227 @@ EffectRack *EffectManager::GetRack()
 
 void EffectManager::ShowRack()
 {
-   GetRack()->Show();
+   GetRack()->Show(!GetRack()->IsShown());
 }
 #endif
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-void EffectManager::RealtimeInitialize(const WaveTrackArray *tracks)
+void EffectManager::RealtimeSetEffects(const EffectArray & effects)
 {
-   mRealtimeMutex.Lock();
-   mRealtimeTracks = tracks;
-   for (int e = 0; e < mRealtimeCount; e++)
+   int newCount = (int) effects.GetCount();
+   Effect **newEffects = new Effect *[newCount];
+   for (int i = 0; i < newCount; i++)
    {
-      mRealtimeEffects[e]->RealtimeInitialize();
+      newEffects[i] = effects[i];
+   }
 
-      for (size_t i = 0, cnt = tracks->GetCount(); i < cnt; i++)
+   // Block RealtimeProcess()
+   RealtimeSuspend();
+
+   // Tell any effects no longer in the chain to clean up
+   for (int i = 0; i < mRealtimeCount; i++)
+   {
+      Effect *e = mRealtimeEffects[i];
+
+      // Scan the new chain for the effect
+      for (int j = 0; j < newCount; j++)
       {
-         WaveTrack *t = (*tracks)[i];
-         if (t->GetLinked())
+         // Found it so we're done
+         if (e == newEffects[j])
          {
-            mRealtimeEffects[e]->RealtimeAddProcessor(2, t->GetRate());
-            i++;
+            e = NULL;
+            break;
          }
-         else
+      }
+
+      // Must not have been in the new chain, so tell it to cleanup
+      if (e)
+      {
+         e->RealtimeFinalize();
+      }
+   }
+      
+   // Tell any new effects to get ready
+   for (int i = 0; i < newCount; i++)
+   {
+      Effect *e = newEffects[i];
+
+      // Scan the old chain for the effect
+      for (int j = 0; j < mRealtimeCount; j++)
+      {
+         // Found it so tell effect to get ready
+         if (e == mRealtimeEffects[j])
          {
-            mRealtimeEffects[e]->RealtimeAddProcessor(1, t->GetRate());
+            e = NULL;
          }
+      }
+
+      // Must not have been in the old chain, so tell it to initialize
+      if (e)
+      {
+         e->RealtimeInitialize();
       }
    }
 
-   mRealtimeActive = true;
+   // Get rid of the old chain
+   if (mRealtimeEffects)
+   {
+      delete [] mRealtimeEffects;
+   }
 
-   mRealtimeMutex.Unlock();
+   // And install the new one
+   mRealtimeEffects = newEffects;
+   mRealtimeCount = newCount;
 
+   // Allow RealtimeProcess() to, well, process 
+   RealtimeResume();
+}
+#endif
+
+void EffectManager::RealtimeInitialize()
+{
+   // No need to do anything if there are no effects
+   if (!mRealtimeCount)
+   {
+      return;
+   }
+
+   // The audio thread should not be running yet, but protect anyway
+   RealtimeSuspend();
+
+   // Tell each effect to get ready for action
+   for (int i = 0; i < mRealtimeCount; i++)
+   {
+      mRealtimeEffects[i]->RealtimeInitialize();
+   }
+
+   // Get things moving
    RealtimeResume();
 }
 
 void EffectManager::RealtimeFinalize()
 {
+   // Make sure nothing is going on
    RealtimeSuspend();
 
-   mRealtimeActive = false;
+   // It is now safe to clean up
    mRealtimeLatency = 0;
-   mRealtimeTracks = NULL;
 
-   mRealtimeMutex.Lock();
+   // Tell each effect to clean up as well
    for (int i = 0; i < mRealtimeCount; i++)
    {
       mRealtimeEffects[i]->RealtimeFinalize();
    }
-   mRealtimeMutex.Unlock();
 }
 
 void EffectManager::RealtimeSuspend()
 {
+   mRealtimeLock.Enter();
+
+   // Already suspended...bail
+   if (mRealtimeSuspended)
+   {
+      mRealtimeLock.Leave();
+      return;
+   }
+
+   // Show that we aren't going to be doing anything
    mRealtimeSuspended = true;
 
-   mRealtimeMutex.Lock();
+   // And make sure the effects don't either
    for (int i = 0; i < mRealtimeCount; i++)
    {
       mRealtimeEffects[i]->RealtimeSuspend();
    }
-   mRealtimeMutex.Unlock();
+
+   mRealtimeLock.Leave();
 }
 
 void EffectManager::RealtimeResume()
 {
-   mRealtimeMutex.Lock();
+   mRealtimeLock.Enter();
+
+   // Already running...bail
+   if (!mRealtimeSuspended)
+   {
+      mRealtimeLock.Leave();
+      return;
+   }
+
+   // Tell the effects to get ready for more action
    for (int i = 0; i < mRealtimeCount; i++)
    {
       mRealtimeEffects[i]->RealtimeResume();
    }
-   mRealtimeMutex.Unlock();
 
+   // And we should too
    mRealtimeSuspended = false;
+
+   mRealtimeLock.Leave();
 }
 
-sampleCount EffectManager::RealtimeProcess(int index, float **buffers, sampleCount numSamples)
+//
+// This will be called in a different thread than the main GUI thread.
+//
+sampleCount EffectManager::RealtimeProcess(int group, int chans, float rate, float **buffers, sampleCount numSamples)
 {
+   // Protect ourselves from the main thread
+   mRealtimeLock.Enter();
+
    // Can be suspended because of the audio stream being paused or because effects
-   // have been suspended.
-   if (mRealtimeSuspended)
+   // have been suspended, so allow the samples to pass as-is.
+   if (mRealtimeSuspended || mRealtimeCount == 0)
    {
-      return 0;
+      mRealtimeLock.Leave();
+      return numSamples;
    }
 
+   // Remember when we started so we can calculate the amount of latency we
+   // are introducing
    wxMilliClock_t start = wxGetLocalTimeMillis();
 
-   float *olc = (float *) alloca(sizeof(float) * numSamples);
-   float *orc = (float *) alloca(sizeof(float) * numSamples);
+   // Allocate the in/out buffer arrays
+   float **ibuf = (float **) alloca(chans * sizeof(float *));
+   float **obuf = (float **) alloca(chans * sizeof(float *));
 
-   float *ibuf[2] = {buffers[0], buffers[1]};
-   float *obuf[2] = {olc, orc};
+   // And populate the input with the buffers we've been given while allocating
+   // new output buffers
+   for (int i = 0; i < chans; i++)
+   {
+      ibuf[i] = buffers[i];
+      obuf[i] = (float *) alloca(numSamples * sizeof(float));
+   }
 
-   mRealtimeMutex.Lock();
+   // Now call each effect in the chain while swapping buffer pointers to feed the
+   // output of one effect as the input to the next effect
    for (int i = 0; i < mRealtimeCount; i++)
    {
-      mRealtimeEffects[i]->RealtimeProcess(index, ibuf, obuf, numSamples);
+      mRealtimeEffects[i]->RealtimeProcess(group, chans, rate, ibuf, obuf, numSamples);
 
-      float *tbuf[2] = {ibuf[0], ibuf[1]};
-      ibuf[0] = obuf[0];
-      ibuf[1] = obuf[1];
-      obuf[0] = tbuf[0];
-      obuf[1] = tbuf[1];
+      for (int j = 0; j < chans; j++)
+      {
+         float *temp;
+         temp = ibuf[j];
+         ibuf[j] = obuf[j];
+         obuf[j] = temp;
+      }
    }
-   mRealtimeMutex.Unlock();
 
-   if (obuf[0] == buffers[0])
+   // Once we're done, we might wind up with the last effect storing its results
+   // in the temporary buffers.  If that's the case, we need to copy it over to
+   // the caller's buffers.  This happens when the number of effects is odd.
+   if (mRealtimeCount & 1)
    {
-      memcpy(buffers[1], ibuf[1], sizeof(float) * numSamples);
-      memcpy(buffers[0], ibuf[0], sizeof(float) * numSamples);
+      for (int i = 0; i < chans; i++)
+      {
+         memcpy(buffers[i], ibuf[i], numSamples * sizeof(float));
+      }
    }
 
+   // Remember the latency
    mRealtimeLatency = (int) (wxGetLocalTimeMillis() - start).GetValue();
+
+   mRealtimeLock.Leave();
 
    //
    // This is wrong...needs to handle tails
@@ -510,39 +618,6 @@ int EffectManager::GetRealtimeLatency()
 {
    return mRealtimeLatency;
 }
-
-void EffectManager::SetRealtime(const EffectArray & effects)
-{
-   Effect **rteffects = new Effect *[effects.GetCount()];
-   if (rteffects)
-   {
-      for (int i = 0, cnt = effects.GetCount(); i < cnt; i++)
-      {
-         rteffects[i] = effects[i];
-      }
-
-      mRealtimeMutex.Lock();
-      Effect **rtold = mRealtimeEffects;
-      mRealtimeEffects = rteffects;
-      mRealtimeCount = effects.GetCount();
-
-      if (mRealtimeActive)
-      {
-         const WaveTrackArray *tracks = mRealtimeTracks;
-         RealtimeFinalize();
-         RealtimeInitialize(tracks);
-      }
-
-      mRealtimeMutex.Unlock();
-
-      if (rtold)
-      {
-         delete [] rtold;
-      }
-
-   }
-}
-#endif
 
 Effect *EffectManager::GetEffect(const PluginID & ID)
 {
@@ -575,7 +650,7 @@ const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget
 {
    if (strTarget == wxEmptyString) // set GetEffectIdentifier to wxT("") to not show an effect in Batch mode
    {
-      return PluginID(wxEmptyString);
+      return PluginID(wxString(wxEmptyString));
    }
 
    PluginManager & pm = PluginManager::Get();
@@ -589,7 +664,7 @@ const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }
 
-   return PluginID(wxEmptyString);
+   return PluginID(wxString(wxEmptyString));
 }
 
 #ifdef EFFECT_CATEGORIES

@@ -17,6 +17,7 @@
 
 #include <wx/access.h>
 #include <wx/defs.h>
+#include <wx/bmpbuttn.h>
 #include <wx/button.h>
 #include <wx/dcmemory.h>
 #include <wx/frame.h>
@@ -33,7 +34,6 @@
 #include "EffectRack.h"
 #include "../Prefs.h"
 #include "../Project.h"
-#include "../widgets/AButton.h"
 
 #include "../../images/EffectRack/EffectRack.h"
 
@@ -80,7 +80,6 @@ EffectRack::EffectRack()
       wxSYSTEM_MENU |
       wxCLOSE_BOX |
       wxCAPTION |
-//      wxSIMPLE_BORDER |
       wxFRAME_NO_TASKBAR |
       wxFRAME_FLOAT_ON_PARENT)
 {
@@ -89,20 +88,20 @@ EffectRack::EffectRack()
    mLastLatency = 0;
    mTimer.SetOwner(this);
 
-   mRemovePushed = CreateImage(remove_16x16_xpm, false, true);
-   mRemoveRaised = CreateImage(remove_16x16_xpm, true, true);
-   mPowerPushed = CreateImage(power_on_16x16_xpm, false, false);
-   mPowerRaised = CreateImage(power_off_16x16_xpm, true, false);
-   mFavPushed = CreateImage(fav_down_16x16_xpm, false, false);
-   mFavRaised = CreateImage(fav_up_16x16_xpm, true, false);
-   mSettingsPushed = CreateImage(settings_up_16x16_xpm, false, true);
-   mSettingsRaised = CreateImage(settings_down_16x16_xpm, true, true);
-   mUpDisabled = CreateImage(up_9x16_xpm, true, true);
-   mUpPushed = CreateImage(up_9x16_xpm, false, true);
-   mUpRaised = CreateImage(up_9x16_xpm, true, true);
-   mDownDisabled = CreateImage(down_9x16_xpm, true, true);
-   mDownPushed = CreateImage(down_9x16_xpm, false, true);
-   mDownRaised = CreateImage(down_9x16_xpm, true, true);
+   mPowerPushed = CreateBitmap(power_on_16x16_xpm, false, false);
+   mPowerRaised = CreateBitmap(power_off_16x16_xpm, true, false);
+   mSettingsPushed = CreateBitmap(settings_up_16x16_xpm, false, true);
+   mSettingsRaised = CreateBitmap(settings_down_16x16_xpm, true, true);
+   mUpDisabled = CreateBitmap(up_9x16_xpm, true, true);
+   mUpPushed = CreateBitmap(up_9x16_xpm, false, true);
+   mUpRaised = CreateBitmap(up_9x16_xpm, true, true);
+   mDownDisabled = CreateBitmap(down_9x16_xpm, true, true);
+   mDownPushed = CreateBitmap(down_9x16_xpm, false, true);
+   mDownRaised = CreateBitmap(down_9x16_xpm, true, true);
+   mFavPushed = CreateBitmap(fav_down_16x16_xpm, false, false);
+   mFavRaised = CreateBitmap(fav_up_16x16_xpm, true, false);
+   mRemovePushed = CreateBitmap(remove_16x16_xpm, false, true);
+   mRemoveRaised = CreateBitmap(remove_16x16_xpm, true, true);
 
    wxBoxSizer *bs = new wxBoxSizer(wxVERTICAL);
    mPanel = new wxPanel(this, wxID_ANY);
@@ -110,12 +109,12 @@ EffectRack::EffectRack()
    SetSizer(bs);
 
    wxBoxSizer *hs = new wxBoxSizer(wxHORIZONTAL);
-   hs->Add(new wxButton(mPanel, wxID_APPLY, _("&Apply")), 0, wxALIGN_LEFT);
+   hs->Add(new wxButton(mPanel, wxID_APPLY, _("&Apply")), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
    hs->AddStretchSpacer();
    mLatency = new wxStaticText(mPanel, wxID_ANY, _("Latency: 0"));
    hs->Add(mLatency, 0, wxALIGN_CENTER);
    hs->AddStretchSpacer();
-   hs->Add(new wxToggleButton(mPanel, wxID_CLEAR, _("&Bypass")), 0, wxALIGN_RIGHT);
+   hs->Add(new wxToggleButton(mPanel, wxID_CLEAR, _("&Bypass")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
    bs = new wxBoxSizer(wxVERTICAL);
    bs->Add(hs, 0, wxEXPAND);
@@ -156,20 +155,12 @@ EffectRack::~EffectRack()
 
    for (size_t i = 0, cnt = mEffects.GetCount(); i < cnt; i++)
    {
-      wxSizerItem *si;
-
-      si = mMainSizer->GetItem(i * NUMCOLS + COL_FAV);
-      AButton *fav = static_cast<AButton *>(si->GetWindow());
-
-      if (fav && fav->IsDown())
+      if (mFavState[i])
       {
-         si = mMainSizer->GetItem(i * NUMCOLS + COL_POWER);
-         AButton *power = static_cast<AButton *>(si->GetWindow());
-
          Effect *effect = mEffects[i];
          gPrefs->Write(wxString::Format(wxT("/EffectsRack/Slot%02d"), i),
                        wxString::Format(wxT("%d,%s"),
-                                        power->IsDown(),
+                                        mPowerState[i],
                                         effect->GetID().c_str()));
       }
    }
@@ -182,99 +173,67 @@ void EffectRack::Add(Effect *effect, bool active, bool favorite)
       return;
    }
 
-   AButton *ab;
+   wxBitmapButton *bb;
  
-   ab = new AButton(mPanel,
-                    ID_POWER + mNumEffects,
-                    wxDefaultPosition,
-                    wxDefaultSize,
-                    mPowerRaised,
-                    mPowerRaised,
-                    mPowerPushed,
-                    mPowerPushed,
-                    true);
-   ab->SetToolTip(_("Set effect active state"));
+   bb = new wxBitmapButton(mPanel, ID_POWER + mNumEffects, mPowerRaised);
+   bb->SetBitmapSelected(mPowerRaised);
+   bb->SetName(_("Active State"));
+   bb->SetToolTip(_("Set effect active state"));
+   mPowerState.Add(active);
    if (active)
    {
-      ab->PushDown();
+      bb->SetBitmapLabel(mPowerPushed);
+      bb->SetBitmapSelected(mPowerPushed);
    }
    else
    {
-      ab->PopUp();
+      bb->SetBitmapLabel(mPowerRaised);
+      bb->SetBitmapSelected(mPowerRaised);
    }
-   mMainSizer->Add(ab, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+   mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   ab = new AButton(mPanel,
-                    ID_EDITOR + mNumEffects,
-                    wxDefaultPosition,
-                    wxDefaultSize,
-                    mSettingsRaised,
-                    mSettingsRaised,
-                    mSettingsPushed,
-                    mSettingsPushed,
-                    false);
-   ab->SetToolTip(_("Open/close effect editor"));
-   ab->PopUp();
-   mMainSizer->Add(ab, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+   bb = new wxBitmapButton(mPanel, ID_EDITOR + mNumEffects, mSettingsRaised);
+   bb->SetBitmapSelected(mSettingsPushed);
+   bb->SetName(_("Show/Hide Editor"));
+   bb->SetToolTip(_("Open/close effect editor"));
+   mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   ab = new AButton(mPanel,
-                    ID_UP + mNumEffects,
-                    wxDefaultPosition,
-                    wxDefaultSize,
-                    mUpRaised,
-                    mUpRaised,
-                    mUpPushed,
-                    mUpDisabled,
-                    false);
-   ab->SetToolTip(_("Move effect up in the rack"));
-   ab->PopUp();
-   mMainSizer->Add(ab, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+   bb = new wxBitmapButton(mPanel, ID_UP + mNumEffects, mUpRaised);
+   bb->SetBitmapSelected(mUpPushed);
+   bb->SetBitmapDisabled(mUpDisabled);
+   bb->SetName(_("Move Up"));
+   bb->SetToolTip(_("Move effect up in the rack"));
+   mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   ab = new AButton(mPanel,
-                    ID_DOWN + mNumEffects,
-                    wxDefaultPosition,
-                    wxDefaultSize,
-                    mDownRaised,
-                    mDownRaised,
-                    mDownPushed,
-                    mDownDisabled,
-                    false);
-   ab->SetToolTip(_("Move effect down in the rack"));
-   ab->PopUp();
-   mMainSizer->Add(ab, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+   bb = new wxBitmapButton(mPanel, ID_DOWN + mNumEffects, mDownRaised);
+   bb->SetBitmapSelected(mDownPushed);
+   bb->SetBitmapDisabled(mDownDisabled);
+   bb->SetName(_("Move Down"));
+   bb->SetToolTip(_("Move effect down in the rack"));
+   mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   ab = new AButton(mPanel,
-                    ID_FAV + mNumEffects,
-                    wxDefaultPosition,
-                    wxDefaultSize,
-                    mFavRaised,
-                    mFavRaised,
-                    mFavPushed,
-                    mFavPushed,
-                    true);
-   ab->SetToolTip(_("Mark effect as a favorite"));
+   bb = new wxBitmapButton(mPanel, ID_FAV + mNumEffects, mFavRaised);
+   bb->SetBitmapSelected(mFavPushed);
+   bb->SetName(_("Favorite"));
+   bb->SetToolTip(_("Mark effect as a favorite"));
+   mFavState.Add(favorite);
    if (favorite)
    {
-      ab->PushDown();
+      bb->SetBitmapLabel(mFavPushed);
+      bb->SetBitmapSelected(mFavPushed);
    }
    else
    {
-      ab->PopUp();
+      bb->SetBitmapLabel(mFavRaised);
+      bb->SetBitmapSelected(mFavRaised);
    }
-   mMainSizer->Add(ab, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+   mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-   ab = new AButton(mPanel,
-                    ID_REMOVE + mNumEffects,
-                    wxDefaultPosition,
-                    wxDefaultSize,
-                    mRemoveRaised,
-                    mRemoveRaised,
-                    mRemovePushed,
-                    mRemovePushed,
-                    false);
-   ab->SetToolTip(_("Remove effect from the rack"));
-   ab->PopUp();
-   mMainSizer->Add(ab, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+   bb = new wxBitmapButton(mPanel, ID_REMOVE + mNumEffects, mRemoveRaised);
+   bb->SetBitmapSelected(mRemovePushed);
+   bb->SetName(_("Remove"));
+   bb->SetToolTip(_("Remove effect from the rack"));
+   mMainSizer->Add(bb, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
    wxStaticText *text = new wxStaticText(mPanel, ID_NAME + mNumEffects, effect->GetName());
    text->SetToolTip(_("Name of the effect"));
@@ -322,13 +281,15 @@ void EffectRack::OnApply(wxCommandEvent & AUNUSED(evt))
    
    for (size_t i = 0, cnt = mEffects.GetCount(); i < cnt; i++)
    {
-      AButton *btn = static_cast<AButton *>(FindWindowById(ID_POWER + i));
-      if (btn->IsDown())
+      if (mPowerState[i])
       {
          project->OnEffect(mEffects[i]->GetID(), true);
 
-         btn->PopUp();
-         btn->Refresh();
+         mPowerState[i] = false;
+
+         wxBitmapButton *btn = static_cast<wxBitmapButton *>(FindWindowById(ID_POWER + i));
+         btn->SetBitmapLabel(mPowerRaised);
+         btn->SetBitmapSelected(mPowerRaised);
       }
    }
 
@@ -343,16 +304,28 @@ void EffectRack::OnBypass(wxCommandEvent & evt)
 
 void EffectRack::OnPower(wxCommandEvent & evt)
 {
-   evt.Skip();
+   wxBitmapButton *btn =  static_cast<wxBitmapButton *>(evt.GetEventObject());
+
+   int index = GetEffectIndex(btn);
+   mPowerState[index] = !mPowerState[index];
+   if (mPowerState[index])
+   {
+      btn->SetBitmapLabel(mPowerPushed);
+      btn->SetBitmapSelected(mPowerPushed);
+   }
+   else
+   {
+      btn->SetBitmapLabel(mPowerRaised);
+      btn->SetBitmapSelected(mPowerRaised);
+   }
 
    UpdateActive();
 }
 
 void EffectRack::OnEditor(wxCommandEvent & evt)
 {
-   AButton *btn =  static_cast<AButton *>(evt.GetEventObject());
+   wxBitmapButton *btn =  static_cast<wxBitmapButton *>(evt.GetEventObject());
 
-   btn->PopUp();
    evt.Skip();
 
    int index = GetEffectIndex(btn);
@@ -366,9 +339,8 @@ void EffectRack::OnEditor(wxCommandEvent & evt)
 
 void EffectRack::OnUp(wxCommandEvent & evt)
 {
-   AButton *btn =  static_cast<AButton *>(evt.GetEventObject());
+   wxBitmapButton *btn =  static_cast<wxBitmapButton *>(evt.GetEventObject());
 
-   btn->PopUp();
    evt.Skip();
 
    int index = GetEffectIndex(btn);
@@ -382,9 +354,8 @@ void EffectRack::OnUp(wxCommandEvent & evt)
 
 void EffectRack::OnDown(wxCommandEvent & evt)
 {
-   AButton *btn =  static_cast<AButton *>(evt.GetEventObject());
+   wxBitmapButton *btn =  static_cast<wxBitmapButton *>(evt.GetEventObject());
 
-   btn->PopUp();
    evt.Skip();
 
    size_t index = GetEffectIndex(btn);
@@ -398,14 +369,26 @@ void EffectRack::OnDown(wxCommandEvent & evt)
 
 void EffectRack::OnFav(wxCommandEvent & evt)
 {
-   evt.Skip();
+   wxBitmapButton *btn =  static_cast<wxBitmapButton *>(evt.GetEventObject());
+
+   int index = GetEffectIndex(btn);
+   mFavState[index] = !mFavState[index];
+   if (mFavState[index])
+   {
+      btn->SetBitmapLabel(mFavPushed);
+      btn->SetBitmapSelected(mFavPushed);
+   }
+   else
+   {
+      btn->SetBitmapLabel(mFavRaised);
+      btn->SetBitmapSelected(mFavRaised);
+   }
 }
 
 void EffectRack::OnRemove(wxCommandEvent & evt)
 {
-   AButton *btn =  static_cast<AButton *>(evt.GetEventObject());
+   wxBitmapButton *btn =  static_cast<wxBitmapButton *>(evt.GetEventObject());
 
-   btn->PopUp();
    evt.Skip();
 
    int index = GetEffectIndex(btn);
@@ -415,6 +398,8 @@ void EffectRack::OnRemove(wxCommandEvent & evt)
    }
 
    mEffects.RemoveAt(index);
+   mPowerState.RemoveAt(index);
+   mFavState.RemoveAt(index);
 
    if (mEffects.GetCount() == 0)
    {
@@ -428,7 +413,9 @@ void EffectRack::OnRemove(wxCommandEvent & evt)
 
    for (int i = 0; i < NUMCOLS; i++)
    {
-      delete mMainSizer->GetItem(index)->GetWindow();
+      wxWindow *w = mMainSizer->GetItem(index)->GetWindow();
+      mMainSizer->Detach(index);
+      delete w;
    }
 
    mMainSizer->Layout();
@@ -437,7 +424,7 @@ void EffectRack::OnRemove(wxCommandEvent & evt)
    UpdateActive();
 }
 
-wxImage EffectRack::CreateImage(const char *xpm[], bool up, bool pusher)
+wxBitmap EffectRack::CreateBitmap(const char *xpm[], bool up, bool pusher)
 {
    wxMemoryDC dc;
    wxBitmap pic(xpm);
@@ -464,7 +451,7 @@ wxImage EffectRack::CreateImage(const char *xpm[], bool up, bool pusher)
 
    dc.SelectObject(wxNullBitmap);
 
-   return mod.ConvertToImage();
+   return mod;
 }
 
 int EffectRack::GetEffectIndex(wxWindow *win)
@@ -495,6 +482,14 @@ void EffectRack::MoveRowUp(int row)
    mEffects.RemoveAt(row);
    mEffects.Insert(effect, row - 1);
 
+   int state = mPowerState[row];
+   mPowerState.RemoveAt(row);
+   mPowerState.Insert(state, row - 1);
+
+   state = mFavState[row];
+   mFavState.RemoveAt(row);
+   mFavState.Insert(state, row - 1);
+
    row *= NUMCOLS;
 
    for (int i = 0; i < NUMCOLS; i++)
@@ -522,16 +517,14 @@ void EffectRack::UpdateActive()
    {
       for (size_t i = 0, cnt = mEffects.GetCount(); i < cnt; i++)
       {
-         wxSizerItem *si = mMainSizer->GetItem(i * NUMCOLS + COL_POWER);
-         AButton *power = static_cast<AButton *>(si->GetWindow());
-         if (power && power->IsDown())
+         if (mPowerState[i])
          {
             mActive.Add(mEffects[i]);
          }
       }
    }
 
-   EffectManager::Get().SetRealtime(mActive);
+   EffectManager::Get().RealtimeSetEffects(mActive);
 }
 
 #endif

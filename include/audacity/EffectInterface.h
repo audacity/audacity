@@ -127,7 +127,7 @@ public:
    virtual bool RealtimeFinalize() = 0;
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() = 0;
-   virtual sampleCount RealtimeProcess(int index, float **inbuf, float **outbuf, sampleCount size) = 0;
+   virtual sampleCount RealtimeProcess(int group, float **inbuf, float **outbuf, sampleCount size) = 0;
 
    virtual bool ShowInterface(void *parent) = 0;
 };

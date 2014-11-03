@@ -239,13 +239,20 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
    // important for sorting.
    static wxString StripAmpersand(const wxString& str);
 
+   int GetAudioInCount();
+   int GetAudioOutCount();
+
    // Realtime Effect Processing
    bool RealtimeInitialize();
-   bool RealtimeAddProcessor(int numChannels, float sampleRate);
    bool RealtimeFinalize();
    bool RealtimeSuspend();
    bool RealtimeResume();
-   sampleCount RealtimeProcess(int index, float **inbuf, float **outbuf, sampleCount size);
+   sampleCount RealtimeProcess(int group,
+                               int chans,
+                               float rate,
+                               float **inbuf,
+                               float **outbuf,
+                               sampleCount numSamples);
 
  //
  // protected virtual methods

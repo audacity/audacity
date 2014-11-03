@@ -242,7 +242,8 @@ public:
 
    bool IsRealtimeCapable()
    {
-      return false;
+      // TODO:  This should check to see if setting parameters can be
+      //        automated.  If so, then realtime is supported.
       return mType == EffectTypeProcess;
    }
 
@@ -329,7 +330,7 @@ void VSTEffectsModule::Terminate()
    return;
 }
 
-bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
 {
    // We don't auto-register
    return true;
@@ -849,6 +850,7 @@ private:
 enum
 {
    ID_VST_PROGRAM = 11000,
+   ID_VST_PROGRAMTEXT,
    ID_VST_LOAD,
    ID_VST_SAVE,
    ID_VST_SLIDERS,
@@ -949,7 +951,7 @@ OSStatus VSTEffectDialog::OnOverlayEvent(EventHandlerCallRef handler, EventRef e
                      sizeof(evtwin),
                      NULL,
                      &evtwin);
-#define DEBUG_VST
+
 #if defined(DEBUG_VST)
    int cls = GetEventClass(event);
    printf("OVERLAY class %4.4s kind %d ewin %p owin %p mwin %p anf %p fnf %p\n",
@@ -1662,7 +1664,7 @@ wxSizer *VSTEffectDialog::BuildProgramBar()
    int progn = mEffect->callDispatcher(effGetProgram, 0, 0, NULL, 0.0);
 
    // An unset program is perfectly valid, do not force a default.
-   if (progn >= 0 && progn < progs.GetCount())
+   if (progn >= 0 && progn < (int) progs.GetCount())
    {
       val = progs[progn];
    }
@@ -1743,7 +1745,7 @@ void VSTEffectDialog::RefreshParameters(int skip)
    }
 }
 
-void VSTEffectDialog::OnUpdateDisplay(wxCommandEvent & evt)
+void VSTEffectDialog::OnUpdateDisplay(wxCommandEvent & WXUNUSED(evt))
 {
    int i;
 
@@ -1793,6 +1795,7 @@ void VSTEffectDialog::OnSlider(wxCommandEvent & evt)
 void VSTEffectDialog::OnProgram(wxCommandEvent & evt)
 {
    mEffect->callDispatcher(effSetProgram, 0, evt.GetInt(), NULL, 0.0);
+
    RefreshParameters();
 }
 
@@ -1818,14 +1821,16 @@ void VSTEffectDialog::OnProgramText(wxCommandEvent & WXUNUSED(evt))
    mEffect->SetString(effSetProgramName, name, i);
 
    // Some effects do not allow you to change the name and you can't always trust the
-   // return value, so just get ask for the name again.
+   // return value, so just ask for the name again.
    name = mEffect->GetString(effGetProgramNameIndexed, i);
 
    mProgram->SetString(i, name);
 
-   // On Windows, must reselect after doing a SetString()...at least that's
+   // On Windows, you must reselect after doing a SetString()...at least that's
    // what seems to be required.
+#if defined(__WXMSW__)
    mProgram->SetStringSelection(name);
+#endif
 
    // Which also means we have to reposition the caret.
    if (ip >= 0)
@@ -2276,7 +2281,6 @@ bool VSTEffectDialog::LoadXML(const wxFileName & fn)
 
 void VSTEffectDialog::OnSave(wxCommandEvent & WXUNUSED(evt))
 {
-   int i = mProgram->GetCurrentSelection();
    wxString path;
 
    // Ask the user for the real name
@@ -2942,13 +2946,12 @@ private:
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
 intptr_t VSTEffect::AudioMaster(AEffect * effect,
-                            int32_t opcode,
-                            int32_t index,
-                            intptr_t value,
-                            void * ptr,
-                            float opt)
+                                int32_t opcode,
+                                int32_t index,
+                                intptr_t value,
+                                void * ptr,
+                                float opt)
 {
-
    VSTEffect *vst = (effect ? (VSTEffect *) effect->user : NULL);
 
    // Handles operations during initialization...before VSTEffect has had a
@@ -3052,6 +3055,8 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
       {
          char *s = (char *) ptr;
          if (strcmp(s, "acceptIOChanges") == 0 ||
+            strcmp(s, "sendVstTimeInfo") == 0 ||
+            strcmp(s, "startStopProcess") == 0 ||
             strcmp(s, "sizeWindow") == 0)
          {
             return 1;
@@ -3069,9 +3074,15 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
       }
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+      case audioMasterBeginEdit:
+      case audioMasterEndEdit:
+         return 0;
+
       case audioMasterAutomate:
          if (vst)
+         {
             vst->Automate(index, opt);
+         }
          return 0;
 
 #else
@@ -3132,6 +3143,11 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    mUseBufferDelay = true;
    mReady = false;
 
+   mMasterIn = NULL;
+   mMasterInLen = 0;
+   mMasterOut = NULL;
+   mMasterOutLen = 0;
+
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
    mTimeInfo.samplePos = 0.0;
    mTimeInfo.sampleRate = 44100.0;  // this is a bogus value, but it's only for the display
@@ -3153,70 +3169,9 @@ VSTEffect::~VSTEffect()
    Unload();
 }
 
-//
-// EffectClientInterface Implementation
-//
-void VSTEffect::SetHost(EffectHostInterface *host)
-{
-   mHost = host;
-   Startup();
-}
-
-bool VSTEffect::Startup()
-{
-   if (!mAEffect)
-   {
-      Load();
-   }
-
-   if (!mAEffect)
-   {
-      return false;
-   }
-
-   // mHost will be null when running in the subprocess
-   if (mHost)
-   {
-      mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), mUserBlockSize, 8192);
-      mHost->GetSharedConfig(wxT("Settings"), wxT("UseBufferDelay"), mUseBufferDelay, true);
-
-      mBlockSize = mUserBlockSize;
-
-      bool haveDefaults;
-      mHost->GetPrivateConfig(wxT("Default"), wxT("Initialized"), haveDefaults, false);
-      if (!haveDefaults)
-      {
-         SaveParameters(wxT("Default"));
-         mHost->SetPrivateConfig(wxT("Default"), wxT("Initialized"), true);
-      }
-
-      LoadParameters(wxT("Current"));
-   }
-
-   return true;
-}
-
-bool VSTEffect::Shutdown()
-{
-   SaveParameters(wxT("Current"));
-
-   return true;
-}
-
-EffectType VSTEffect::GetType()
-{
-   if (mAudioIns == 0 && mMidiIns == 0)
-   {
-      return EffectTypeGenerate;
-   }
-
-   if (mAudioOuts == 0 && mMidiOuts == 0)
-   {
-      return EffectTypeAnalyze;
-   }
-
-   return EffectTypeProcess;
-}
+// ============================================================================
+// IdentInterface Implementation
+// ============================================================================
 
 wxString VSTEffect::GetID()
 {
@@ -3270,6 +3225,26 @@ wxString VSTEffect::GetDescription()
    return mDescription;
 }
 
+// ============================================================================
+// EffectIdentInterface Implementation
+// ============================================================================
+
+EffectType VSTEffect::GetType()
+{
+   if (mAudioIns == 0 && mMidiIns == 0)
+   {
+      return EffectTypeGenerate;
+   }
+
+   if (mAudioOuts == 0 && mMidiOuts == 0)
+   {
+      return EffectTypeAnalyze;
+   }
+
+   return EffectTypeProcess;
+}
+
+
 wxString VSTEffect::GetFamily()
 {
    return VSTPLUGINTYPE;
@@ -3295,6 +3270,57 @@ bool VSTEffect::IsRealtimeCapable()
    return true;
 }
 
+// ============================================================================
+// EffectClientInterface Implementation
+// ============================================================================
+
+void VSTEffect::SetHost(EffectHostInterface *host)
+{
+   mHost = host;
+   Startup();
+}
+
+bool VSTEffect::Startup()
+{
+   if (!mAEffect)
+   {
+      Load();
+   }
+
+   if (!mAEffect)
+   {
+      return false;
+   }
+
+   // mHost will be null when running in the subprocess
+   if (mHost)
+   {
+      mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), mUserBlockSize, 8192);
+      mHost->GetSharedConfig(wxT("Settings"), wxT("UseBufferDelay"), mUseBufferDelay, true);
+
+      mBlockSize = mUserBlockSize;
+
+      bool haveDefaults;
+      mHost->GetPrivateConfig(wxT("Default"), wxT("Initialized"), haveDefaults, false);
+      if (!haveDefaults)
+      {
+         SaveParameters(wxT("Default"));
+         mHost->SetPrivateConfig(wxT("Default"), wxT("Initialized"), true);
+      }
+
+      LoadParameters(wxT("Current"));
+   }
+
+   return true;
+}
+
+bool VSTEffect::Shutdown()
+{
+   SaveParameters(wxT("Current"));
+
+   return true;
+}
+
 int VSTEffect::GetAudioInCount()
 {
    return mAudioIns;
@@ -3317,8 +3343,6 @@ int VSTEffect::GetMidiOutCount()
 
 sampleCount VSTEffect::GetBlockSize(sampleCount maxBlockSize)
 {
-   sampleCount prevSize = mBlockSize;
-
    if (mUserBlockSize > maxBlockSize)
    {
       mBlockSize = maxBlockSize;
@@ -3398,9 +3422,21 @@ sampleCount VSTEffect::ProcessBlock(float **inbuf, float **outbuf, sampleCount s
 {
    // Go let the plugin moleste the samples
    callProcessReplacing(inbuf, outbuf, size);
+
+   // And track the position
    mTimeInfo.samplePos += ((double) size / mTimeInfo.sampleRate);
 
    return size;
+}
+
+int VSTEffect::GetChannelCount()
+{
+   return mNumChannels;
+}
+
+void VSTEffect::SetChannelCount(int numChannels)
+{
+   mNumChannels = numChannels;
 }
 
 bool VSTEffect::RealtimeInitialize()
@@ -3408,6 +3444,10 @@ bool VSTEffect::RealtimeInitialize()
    // This is really just a dummy value and one to make the dialog happy since
    // all processing is handled by slaves.
    SetSampleRate(44100);
+   mMasterIn = NULL;
+   mMasterInLen = 0;
+   mMasterOut = NULL;
+   mMasterOutLen = 0;
 
    return ProcessInitialize();
 }
@@ -3418,17 +3458,60 @@ bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
    mSlaves.Add(slave);
 
    slave->SetSampleRate(sampleRate);
+   slave->SetChannelCount(numChannels);
+
+   int clen = 0;
+   if (mAEffect->flags & effFlagsProgramChunks)
+   {
+      void *chunk = NULL;
+
+      clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      if (clen != 0)
+      {
+         slave->callDispatcher(effSetChunk, 1, clen, chunk, 0.0);
+      }
+   }
+
+   if (clen == 0)
+   {
+      for (int i = 0; i < mAEffect->numParams; i++)
+      {
+         slave->callSetParameter(i, callGetParameter(i));
+      }
+   }
 
    return ProcessInitialize();
 }
 
+static int asdf=0;
 bool VSTEffect::RealtimeFinalize()
 {
+   asdf=1;
    for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
    {
       delete mSlaves[i];
    }
    mSlaves.Clear();
+
+   if (mMasterIn)
+   {
+      for (int i = 0; i < mAudioIns; i++)
+      {
+         delete [] mMasterIn[i];
+      }
+      delete [] mMasterIn;
+      mMasterIn = NULL;
+   }
+
+   if (mMasterOut)
+   {
+      for (int i = 0; i < mAudioOuts; i++)
+      {
+         delete [] mMasterOut[i];
+      }
+      delete [] mMasterOut;
+      mMasterOut = NULL;
+   }
 
    return ProcessFinalize();
 }
@@ -3447,14 +3530,75 @@ bool VSTEffect::RealtimeResume()
    return true;
 }
 
-sampleCount VSTEffect::RealtimeProcess(int index, float **inbuf, float **outbuf, sampleCount size)
+sampleCount VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, sampleCount size)
 {
-   if (index < 0 || index >= mSlaves.GetCount())
+   if (group < 0 || group >= (int) mSlaves.GetCount())
    {
       return 0;
    }
 
-   return mSlaves[index]->ProcessBlock(inbuf, outbuf, size);
+   if (group == 0)
+   {
+      if (mMasterIn == NULL || mMasterInLen < size)
+      {
+         if (mMasterIn)
+         {
+            for (int i = 0; i < mAudioIns; i++)
+            {
+               delete [] mMasterIn[i];
+            }
+            delete [] mMasterIn;
+         }
+
+         mMasterIn = new float *[mAudioIns];
+         for (int i = 0; i < mAudioIns; i++)
+         {
+            mMasterIn[i] = new float[size];
+         }
+         mMasterInLen = size;
+      }
+
+      for (int i = 0; i < mAudioIns; i++)
+      {
+         memset(mMasterIn[i], 0, size * sizeof(float));
+      }
+   }
+
+   int chanCnt = wxMin(mSlaves[group]->GetChannelCount(), mAudioIns);
+   for (int c = 0; c < chanCnt; c++)
+   {
+      for (int i = 0; i < size; i++)
+      {
+         mMasterIn[c][i] += inbuf[c][i];
+      }
+   }
+      
+   if (group == (int) mSlaves.GetCount() - 1)
+   {
+      if (mMasterOut == NULL || mMasterOutLen < size)
+      {
+         if (mMasterOut)
+         {
+            for (int i = 0; i < mAudioOuts; i++)
+            {
+               delete [] mMasterOut[i];
+            }
+            delete [] mMasterOut;
+            mMasterOut = NULL;
+         }
+      
+         mMasterOut = new float *[mAudioOuts];
+         for (int i = 0; i < mAudioOuts; i++)
+         {
+            mMasterOut[i] = new float[size];
+         }
+         mMasterOutLen = size;
+      }
+
+      ProcessBlock(mMasterIn, mMasterOut, size);
+   }
+
+   return mSlaves[group]->ProcessBlock(inbuf, outbuf, size);
 }
 
 //
@@ -3531,6 +3675,10 @@ bool VSTEffect::ShowInterface(void *parent)
    return ret;
 #endif
 }
+
+// ============================================================================
+// VSTEffect implementation
+// ============================================================================
 
 void VSTEffect::InterfaceClosed()
 {
@@ -3667,7 +3815,7 @@ bool VSTEffect::Load()
       // Save the library reference
       mModule = lib;
    }
-
+wxLogDebug(wxT("Loaded"));
 #else
 
    // Attempt to load it
@@ -3802,11 +3950,12 @@ void VSTEffect::Unload()
 
    if (mAEffect)
    {
-      // Turn the power off
+     // Turn the power off
       PowerOff();
 
       // Finally, close the plugin
       callDispatcher(effClose, 0, 0, NULL, 0.0);
+      mAEffect = NULL;
    }
 
    if (mModule)
@@ -4086,11 +4235,17 @@ float VSTEffect::callGetParameter(int index)
 
 void VSTEffect::callSetParameter(int index, float value)
 {
-   mAEffect->setParameter(mAEffect, index, value);
-
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   if (callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
    {
-      mSlaves[i]->callSetParameter(index, value);
+      mAEffect->setParameter(mAEffect, index, value);
+
+      for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+      {
+         if (mSlaves[i]->callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
+         {
+            mSlaves[i]->callSetParameter(index, value);
+         }
+      }
    }
 }
 

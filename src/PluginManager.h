@@ -223,7 +223,7 @@ public:
    void CheckForUpdates();
 
 private:
-   void Load();
+   bool Load();
    void LoadGroup(const wxChar *group, PluginType type);
    void Save();
    void SaveGroup(const wxChar *group, PluginType type);

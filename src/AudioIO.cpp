@@ -1362,7 +1362,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    if (mNumPlaybackChannels > 0)
    {
-      EffectManager::Get().RealtimeInitialize(&mPlaybackTracks);
+      EffectManager::Get().RealtimeInitialize();
    }
 #endif
 
@@ -3499,8 +3499,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                numSolo++;
 #endif
 
-         int logicalCnt = 0;
-         int chanCnt = 0;
          WaveTrack **chans = (WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
          float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
          for (int c = 0; c < numPlaybackChannels; c++)
@@ -3508,6 +3506,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
          }
 
+         int group = 0;
+         int chanCnt = 0;
+         float rate = 0.0;
          for (t = 0; t < numPlaybackTracks; t++)
          {
             WaveTrack *vt = gAudioIO->mPlaybackTracks[t];
@@ -3527,7 +3528,14 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                if (vt->GetMute() && !vt->GetSolo())
                   cut = true;
 
+               rate = vt->GetRate();
                linkFlag = vt->GetLinked();
+
+               // If we have a mono track, clear the right channel
+               if (!linkFlag)
+               {
+                  memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
+               }
             }
 
 #define ORIGINAL_DO_NOT_PLAY_ALL_MUTED_TRACKS_TO_END
@@ -3574,7 +3582,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-            len = EffectManager::Get().RealtimeProcess(logicalCnt++, tempBufs, len);
+            len = EffectManager::Get().RealtimeProcess(group++, chanCnt, rate, tempBufs, len);
 #endif
             // If our buffer is empty and the time indicator is past
             // the end, then we've actually finished playing the entire

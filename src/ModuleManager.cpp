@@ -409,7 +409,6 @@ bool ModuleManager::DiscoverProviders(wxArrayString & providers)
 
    for (int i = 0, cnt = provList.GetCount(); i < cnt; i++)
    {
-   wxPrintf(wxT("provider %s\n"), provList[i].c_str());
       providers.push_back(provList[i]);
    }
 

@@ -136,20 +136,21 @@ CheckListAx::CheckListAx( wxListCtrl * window ):
 
 CheckListAx::~CheckListAx()
 {
-   }
+}
 
 void CheckListAx::SetSelected( int item )
 {
-   if (mLastId != -1) {
+   if (mLastId != -1)
+   {
       NotifyEvent( wxACC_EVENT_OBJECT_SELECTIONREMOVE,
                mParent,
                wxOBJID_CLIENT,
                mLastId );
       mLastId = -1;
-}
+   }
 
    if (item != -1)
-{
+   {
       NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
                   mParent,
                   wxOBJID_CLIENT,
@@ -241,14 +242,14 @@ wxAccStatus CheckListAx::GetKeyboardShortcut( int WXUNUSED(childId), wxString *s
 // Returns the rectangle for this object (id = 0) or a child element (id > 0).
 // rect is in screen coordinates.
 wxAccStatus CheckListAx::GetLocation( wxRect& rect, int elementId )
-   {
+{
    if( elementId == wxACC_SELF )
-      {
+   {
       rect = mParent->GetRect();
       rect.SetPosition( mParent->GetParent()->ClientToScreen( rect.GetPosition() ) );
-      }
-      else
-      {
+   }
+   else
+   {
       if( elementId <= mParent->GetItemCount() )
       {
          mParent->GetItemRect( elementId - 1, rect, wxLIST_RECT_LABEL );
@@ -1287,8 +1288,14 @@ PluginManager & PluginManager::Get()
 
 void PluginManager::Initialize()
 {
-   Load();
+   bool loaded = Load();
    ModuleManager::Get().EarlyInit();
+
+   if (!loaded)
+   {
+      PluginRegistrationDialog dlg;
+      dlg.ShowModal();
+   }
 
    CheckForUpdates();
 
@@ -1333,12 +1340,12 @@ void PluginManager::Terminate()
    }
 }
 
-void PluginManager::Load()
+bool PluginManager::Load()
 {
    // IF already open THEN nothing to do.
    if (mConfig != NULL)
    {
-      return;
+      return true;
    }
 
    // Create the config
@@ -1353,7 +1360,7 @@ void PluginManager::Load()
    {
       // Must start over
       mConfig->DeleteAll();
-      return;
+      return false;
    }
 
    // Load all provider plugins first
@@ -1363,6 +1370,8 @@ void PluginManager::Load()
    LoadGroup(wxT("effects"), PluginTypeEffect);
    LoadGroup(wxT("exporters"), PluginTypeExporter);
    LoadGroup(wxT("importers"), PluginTypeImporter);
+
+   return true;
 }
 
 void PluginManager::LoadGroup(const wxChar * group, PluginType type)

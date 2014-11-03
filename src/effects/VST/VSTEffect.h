@@ -99,7 +99,10 @@ class VSTEffect : public EffectClientInterface
    virtual bool RealtimeFinalize();
    virtual bool RealtimeSuspend();
    virtual bool RealtimeResume();
-   virtual sampleCount RealtimeProcess(int index, float **inbuf, float **outbuf, sampleCount size);
+   virtual sampleCount RealtimeProcess(int group,
+                                       float **inbuf,
+                                       float **outbuf,
+                                       sampleCount numSamples);
 
    virtual bool ShowInterface(void *parent);
 
@@ -129,8 +132,8 @@ private:
    static int b64decode(wxString in, void *out);
 
    // Realtime
-   bool IsSlave();
-
+   int GetChannelCount();
+   void SetChannelCount(int numChannels);
 
    // Utility methods
 
@@ -206,6 +209,11 @@ private:
    // Realtime processing
    VSTEffect *mMaster;     // non-NULL if a slave
    VSTEffectArray mSlaves;
+   int mNumChannels;
+   float **mMasterIn;
+   int mMasterInLen;
+   float **mMasterOut;
+   int mMasterOutLen;
 
    friend class VSTEffectDialog;
    friend class VSTEffectsModule;

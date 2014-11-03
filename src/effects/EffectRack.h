@@ -19,6 +19,7 @@
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
 #include <wx/access.h>
+#include <wx/bmpbuttn.h>
 #include <wx/defs.h>
 #include <wx/frame.h>
 #include <wx/image.h>
@@ -39,7 +40,7 @@ public:
 
 private:
 
-   wxImage CreateImage(const char *xpm[], bool up, bool pusher);
+   wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
    int GetEffectIndex(wxWindow *win);
    void MoveRowUp(int row);
    void UpdateActive();
@@ -60,20 +61,23 @@ private:
    wxStaticText *mLatency;
    int mLastLatency;
 
-   wxImage mRemovePushed;
-   wxImage mRemoveRaised;
-   wxImage mPowerPushed;
-   wxImage mPowerRaised;
-   wxImage mFavPushed;
-   wxImage mFavRaised;
-   wxImage mSettingsPushed;
-   wxImage mSettingsRaised;
-   wxImage mUpPushed;
-   wxImage mUpRaised;
-   wxImage mUpDisabled;
-   wxImage mDownPushed;
-   wxImage mDownRaised;
-   wxImage mDownDisabled;
+   wxBitmap mPowerPushed;
+   wxBitmap mPowerRaised;
+   wxBitmap mSettingsPushed;
+   wxBitmap mSettingsRaised;
+   wxBitmap mUpPushed;
+   wxBitmap mUpRaised;
+   wxBitmap mUpDisabled;
+   wxBitmap mDownPushed;
+   wxBitmap mDownRaised;
+   wxBitmap mDownDisabled;
+   wxBitmap mFavPushed;
+   wxBitmap mFavRaised;
+   wxBitmap mRemovePushed;
+   wxBitmap mRemoveRaised;
+
+   wxArrayInt mPowerState;
+   wxArrayInt mFavState;
 
    int mNumEffects;
 

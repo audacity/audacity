@@ -111,6 +111,8 @@ const int effIdentify = 22; // from http://www.asseca.org/vst-24-specs/efIdentif
 const int effGetChunk = 23; // from Ardour
 const int effSetChunk = 24; // from Ardour
 const int effProcessEvents = 25;
+// The next one was gleaned from http://www.asseca.org/vst-24-specs/efCanBeAutomated.html
+const int effCanBeAutomated = 26;
 // The next one was gleaned from http://www.kvraudio.com/forum/viewtopic.php?p=1905347
 const int effGetProgramNameIndexed = 29;
 const int effGetEffectName = 45;
@@ -122,6 +124,15 @@ const int effCanDo = 51; // currently unused
 // The next one was gleaned from http://www.asseca.org/vst-24-specs/efIdle.html
 const int effIdle = 53;
 const int effGetVstVersion = 58; // currently unused
+// The next one was gleaned from http://www.asseca.org/vst-24-specs/efBeginSetProgram.html
+const int effBeginSetProgram = 67;
+// The next one was gleaned from http://www.asseca.org/vst-24-specs/efEndSetProgram.html
+const int effEndSetProgram = 68;
+// The next one was gleaned from http://www.asseca.org/vst-24-specs/efBeginLoadBank.html
+const int effBeginLoadBank = 75;
+// The next one was gleaned from http://www.asseca.org/vst-24-specs/efBeginLoadProgram.html
+const int  effBeginLoadProgram = 76;
+
 // The next two were gleaned from http://www.kvraudio.com/forum/printview.php?t=143587&start=0
 const int effStartProcess = 71;
 const int effStopProcess = 72;
