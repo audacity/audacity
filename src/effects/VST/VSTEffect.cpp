@@ -55,8 +55,6 @@
 #include <wx/tokenzr.h>
 #include <wx/utils.h>
 
-#include <vector>
-
 #if defined(__WXMAC__)
 #include <dlfcn.h>
 #include <wx/mac/private.h>
@@ -348,7 +346,7 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
       wxStringTokenizer tok(vstpath);
       while (tok.HasMoreTokens())
       {
-         pathList.push_back(wxString(tok.GetNextToken()));
+         pathList.Add(tok.GetNextToken());
       }
    }
 
@@ -356,8 +354,8 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
 #define VSTPATH wxT("/Library/Audio/Plug-Ins/VST")
 
    // Look in /Library/Audio/Plug-Ins/VST and $HOME/Library/Audio/Plug-Ins/VST
-   pathList.push_back(VSTPATH);
-   pathList.push_back(wxString::FromUTF8(getenv("HOME")) + VSTPATH);
+   pathList.Add(VSTPATH);
+   pathList.Add(wxString::FromUTF8(getenv("HOME")) + VSTPATH);
 
    // Recursively search all paths for Info.plist files.  This will identify all
    // bundles.
@@ -393,7 +391,7 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
       tpath[len] = 0;
       dpath[0] = 0;
       ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
-      pathList.push_back(dpath);
+      pathList.Add(dpath);
    }
 
    // Then try HKEY_LOCAL_MACHINE registry key
@@ -410,7 +408,7 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
       tpath[len] = 0;
       dpath[0] = 0;
       ExpandEnvironmentStrings(tpath, dpath, WXSIZEOF(dpath));
-      pathList.push_back(dpath);
+      pathList.Add(dpath);
    }
 
    // Add the default path last
@@ -418,7 +416,7 @@ wxArrayString VSTEffectsModule::FindPlugins(PluginManagerInterface & pm)
    ExpandEnvironmentStrings(wxT("%ProgramFiles%\\Steinberg\\VSTPlugins"),
                             dpath,
                             WXSIZEOF(dpath));
-   pathList.push_back(dpath);
+   pathList.Add(dpath);
 
    // Recursively scan for all DLLs
    pm.FindFilesInPathList(wxT("*.dll"), pathList, files, true);
@@ -3251,7 +3249,7 @@ wxString VSTEffect::GetFamily()
 }
 
 bool VSTEffect::IsInteractive()
-   {
+{
    return mInteractive;
 }
 
@@ -3457,8 +3455,8 @@ bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
    VSTEffect *slave = new VSTEffect(mPath, this);
    mSlaves.Add(slave);
 
-   slave->SetSampleRate(sampleRate);
    slave->SetChannelCount(numChannels);
+   slave->SetSampleRate(sampleRate);
 
    int clen = 0;
    if (mAEffect->flags & effFlagsProgramChunks)
@@ -3480,15 +3478,14 @@ bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
       }
    }
 
-   return ProcessInitialize();
+   return slave->RealtimeInitialize();
 }
 
-static int asdf=0;
 bool VSTEffect::RealtimeFinalize()
 {
-   asdf=1;
    for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
    {
+      mSlaves[i]->RealtimeFinalize();
       delete mSlaves[i];
    }
    mSlaves.Clear();

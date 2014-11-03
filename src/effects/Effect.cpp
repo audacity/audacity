@@ -1291,7 +1291,7 @@ bool Effect::RealtimeInitialize()
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    if (mClient)
    {
-      mNumGroups = -1;
+      mHighGroup = -1;
       return mClient->RealtimeInitialize();
    }
 #endif
@@ -1362,6 +1362,11 @@ sampleCount Effect::RealtimeProcess(int group,
    int indx = 0;
    int ondx = 0;
 
+   if (group == 0)
+   {
+      mCurrentGroup = 0;
+   }
+
    // Call the client until we run out of input or output channels
    while (ichans > 0 && ochans > 0)
    {
@@ -1427,17 +1432,15 @@ sampleCount Effect::RealtimeProcess(int group,
 
       // If the current group hasn't yet been seen, then we must
       // add a new processor to handle this channel (sub)group
-      if (group >= mNumGroups)
+      if (group > mHighGroup)
       {
          mClient->RealtimeAddProcessor(gchans, rate);
+         mHighGroup = group;
       }
 
       // Finally call the plugin to process the block
-      len = mClient->RealtimeProcess(group++, clientIn, clientOut, numSamples);
+      len = mClient->RealtimeProcess(mCurrentGroup++, clientIn, clientOut, numSamples);
    }
-
-   // Remember the number of channel groups we've seen
-   mNumGroups++;
 
    return len;
 #else

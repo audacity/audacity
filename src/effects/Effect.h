@@ -413,6 +413,9 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
    sampleCount mBlockSize;
    int mNumChannels;
 
+   int mCurrentGroup;
+   int mHighGroup;
+
    friend class EffectManager;// so it can call PromptUser in support of batch commands.
    friend class EffectRack;
 };
