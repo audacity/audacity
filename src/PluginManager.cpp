@@ -1289,21 +1289,17 @@ PluginManager & PluginManager::Get()
 void PluginManager::Initialize()
 {
    bool loaded = Load();
-   ModuleManager::Get().EarlyInit();
 
-   if (!loaded)
-   {
-      PluginRegistrationDialog dlg;
-      dlg.ShowModal();
-   }
+   ModuleManager::Get().EarlyInit();
 
    CheckForUpdates();
 
    bool doRescan;
-   gPrefs->Read(wxT("/VST/Rescan"), &doRescan, true);
-   if (doRescan)
+   gPrefs->Read(wxT("/Plugins/Rescan"), &doRescan, true);
+
+   if (!loaded || doRescan)
    {
-      gPrefs->Write(wxT("/VST/Rescan"), false);
+      gPrefs->Write(wxT("/Plugins/Rescan"), false);
       PluginRegistrationDialog dlg;
       dlg.ShowModal();
    }

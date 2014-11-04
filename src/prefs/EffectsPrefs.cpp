@@ -97,33 +97,53 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-#if USE_AUDIO_UNITS
-   S.StartStatic(_("Audio Unit Effects"));
+   S.StartStatic(_("Effect Options"));
    {
-      S.TieCheckBox(_("Display Audio Unit effects in Graphical Mode"),
-                    wxT("/AudioUnits/GUI"),
-                    true);
-#if 0
-      S.TieCheckBox(_("Rescan VST effects next time Audacity is started"),
-                    wxT("/VST/Rescan"),
-                    false);
-#endif
-   }
-   S.EndStatic();
-#endif
+      S.StartMultiColumn(2);
+      {
+         wxArrayString visualgroups;
+         wxArrayString prefsgroups;
+      
+         visualgroups.Add(_("Publisher: Effect Name"));
+         visualgroups.Add(_("Name"));
+         visualgroups.Add(_("Publisher"));
+         visualgroups.Add(_("Type (Internal, Ladspa, VST, etc.)"));
+      
+         prefsgroups.Add(wxT("default"));
+         prefsgroups.Add(wxT("name"));
+         prefsgroups.Add(wxT("publisher"));
+         prefsgroups.Add(wxT("family"));
 
-#if USE_VST
-   S.StartStatic(_("VST Effects"));
-   {
-      S.TieCheckBox(_("&Display VST effects in Graphical Mode"),
-                    wxT("/VST/GUI"),
-                    true);
-      S.TieCheckBox(_("&Rescan VST effects next time Audacity is started"),
-                    wxT("/VST/Rescan"),
-                    false);
+         S.TieChoice(_("Group effects in menus by:"),
+                     wxT("/Effects/GroupBy"),
+                     wxT("default"),
+                     visualgroups,
+                     prefsgroups);
+         S.TieNumericTextBox(_("Maximum effects per group (0 to disable):"),
+                             wxT("/Effects/MaxPerGroup"),
+                             0,
+                             5);
+      }
+      S.EndMultiColumn();
+
+      S.AddSpace(5);
+
+      S.TieCheckBox(_("Display effects in graphical mode when supported"),
+                     wxT("/Effects/GUI"),
+                     true);
    }
    S.EndStatic();
-#endif
+
+   S.StartStatic(_("Plugin Options"));
+   {
+      S.TieCheckBox(_("Check for updated plugins when Audacity starts"),
+                     wxT("/Plugins/CheckForUpdates"),
+                     true);
+      S.TieCheckBox(_("Rescan plugins next time Audacity is started"),
+                     wxT("/Plugins/Rescan"),
+                     false);
+   }
+   S.EndStatic();
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    S.StartStatic(_("Instruction Set"));

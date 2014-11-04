@@ -215,7 +215,7 @@ wxString Effect::GetVendor()
       return mClient->GetVendor();
    }
 
-   return wxEmptyString;
+   return _("Audacity");
 }
 
 wxString Effect::GetVersion()
@@ -245,7 +245,7 @@ wxString Effect::GetFamily()
       return mClient->GetFamily();
    }
 
-   return wxT("Legacy");
+   return _("Audacity");
 }
 
 bool Effect::IsDefault()

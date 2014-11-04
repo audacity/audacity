@@ -54,6 +54,7 @@ class ODLock;
 class RecordingRecoveryHandler;
 class TrackList;
 class Tags;
+class EffectPlugs;
 
 class TrackPanel;
 class FreqWindow;

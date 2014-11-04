@@ -213,9 +213,76 @@ void AudacityProjectCommandFunctor::operator()(int index, const wxEvent * evt)
 #define FNI(X, I) new AudacityProjectCommandFunctor(this, &AudacityProject:: X, I)
 #define FNS(X, S) new AudacityProjectCommandFunctor(this, &AudacityProject:: X, S)
 
-static bool SortPlugs(const PluginDescriptor *a, const PluginDescriptor *b)
+//
+// Effects menu arrays
+//
+WX_DEFINE_ARRAY_PTR(const PluginDescriptor *, EffectPlugs);
+static int SortPlugsByDefault(const PluginDescriptor **a, const PluginDescriptor **b)
 {
-   return a->GetMenuName() < b->GetMenuName();
+   wxString akey = (*a)->GetVendor();
+   wxString bkey = (*b)->GetVendor();
+
+   if ((*a)->IsEffectDefault())
+   {
+      akey = wxEmptyString;
+   }
+   if ((*b)->IsEffectDefault())
+   {
+      bkey = wxEmptyString;
+   }
+
+   akey += (*a)->GetName();
+   bkey += (*b)->GetName();
+
+   return akey.CmpNoCase(bkey);
+}
+
+static int SortPlugsByName(const PluginDescriptor **a, const PluginDescriptor **b)
+{
+   wxString akey = (*a)->GetName();
+   wxString bkey = (*b)->GetName();
+
+   return akey.CmpNoCase(bkey);
+}
+
+static int SortPlugsByPublisher(const PluginDescriptor **a, const PluginDescriptor **b)
+{
+   wxString akey = (*a)->GetVendor();
+   wxString bkey = (*b)->GetVendor();
+
+   if (akey.IsEmpty())
+   {
+      akey = _("Uncategorized");
+   }
+   if (bkey.IsEmpty())
+   {
+      bkey = _("Uncategorized");
+   }
+
+   akey += (*a)->GetName();
+   bkey += (*b)->GetName();
+
+   return akey.CmpNoCase(bkey);
+}
+
+static int SortPlugsByFamily(const PluginDescriptor **a, const PluginDescriptor **b)
+{
+   wxString akey = (*a)->GetEffectFamily();
+   wxString bkey = (*b)->GetEffectFamily();
+
+   if (akey.IsEmpty())
+   {
+      akey = _("Uncategorized");
+   }
+   if (bkey.IsEmpty())
+   {
+      bkey = _("Uncategorized");
+   }
+
+   akey += (*a)->GetName();
+   bkey += (*b)->GetName();
+
+   return akey.CmpNoCase(bkey);
 }
 
 /// CreateMenusAndCommands builds the menus, and also rebuilds them after
@@ -866,8 +933,6 @@ void AudacityProject::CreateMenusAndCommands()
    wxArrayString defaults;
    PluginManager & pm = PluginManager::Get();
    const PluginDescriptor *plug;
-   bool needsep;
-
 
    //////////////////////////////////////////////////////////////////////////
    // Generate Menu
@@ -876,49 +941,11 @@ void AudacityProject::CreateMenusAndCommands()
    c->BeginMenu(_("&Generate"));
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
-   typedef std::set<const PluginDescriptor *, bool (*)(const PluginDescriptor *, const PluginDescriptor *)> SortedPlugs;
-   SortedPlugs defaultplugs(SortPlugs);
-   SortedPlugs extraplugs(SortPlugs);
-
 #ifndef EFFECT_CATEGORIES
-   plug = pm.GetFirstPluginForEffectType(EffectTypeGenerate);
-   while (plug) {
-      if (plug->IsEffectDefault()) {
-         defaultplugs.insert(plug);
-      }
-      else {
-         extraplugs.insert(plug);
-      }
-      plug = pm.GetNextPluginForEffectType(EffectTypeGenerate);
-   }
-
-   for (SortedPlugs::iterator iter = defaultplugs.begin(); iter != defaultplugs.end(); iter++)
-   {
-      const PluginDescriptor *plug = *iter;
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-      int flags = plug->IsEffectRealtimeCapable() ?
-                  AudioIONotBusyFlag :
-                  TracksExistFlag;
-#else
-      int flags = TracksExistFlag;
-#endif
-      c->AddItem(plug->GetName(),
-                 plug->GetMenuName(),
-                 FNS(OnEffect, plug->GetID()));
-   }
-
-   needsep = true;
-   for (SortedPlugs::iterator iter = extraplugs.begin(); iter != extraplugs.end(); iter++)
-   {
-      const PluginDescriptor *plug = *iter;
-      if (needsep) {
-         c->AddSeparator();
-         needsep = false;
-      }
-      c->AddItem(plug->GetName(),
-                 plug->GetMenuName(),
-                 FNS(OnEffect, plug->GetID()));
-   }
+   PopulateEffectsMenu(c,
+                       EffectTypeGenerate,
+                       AudioIONotBusyFlag,
+                       AudioIONotBusyFlag);
 #else
 
    int flags;
@@ -981,57 +1008,10 @@ void AudacityProject::CreateMenusAndCommands()
    // effects at all in the menu when EFFECT_CATEGORIES is undefined
 
 #ifndef EFFECT_CATEGORIES
-   defaultplugs.clear();
-   extraplugs.clear();
-   plug = pm.GetFirstPluginForEffectType(EffectTypeProcess);
-   while (plug) {
-      if (plug->IsEffectDefault()) {
-         defaultplugs.insert(plug);
-      }
-      else {
-         extraplugs.insert(plug);
-      }
-      plug = pm.GetNextPluginForEffectType(EffectTypeProcess);
-   }
-
-   for (SortedPlugs::iterator iter = defaultplugs.begin(); iter != defaultplugs.end(); iter++)
-   {
-      const PluginDescriptor *plug = *iter;
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-      int flags = plug->IsEffectRealtimeCapable() ?
-                  TracksExistFlag :
-                  AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
-#else
-      int flags = AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
-#endif
-      c->AddItem(plug->GetName(),
-                 plug->GetMenuName(),
-                 FNS(OnEffect, plug->GetID()),
-                 flags,
-                 flags);
-   }
-
-   needsep = true;
-   for (SortedPlugs::iterator iter = extraplugs.begin(); iter != extraplugs.end(); iter++)
-   {
-      const PluginDescriptor *plug = *iter;
-      if (needsep) {
-         c->AddSeparator();
-         needsep = false;
-      }
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-      int flags = plug->IsEffectRealtimeCapable() ?
-                  TracksExistFlag :
-                  AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
-#else
-      int flags = AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
-#endif
-      c->AddItem(plug->GetName(),
-                  plug->GetMenuName(),
-                  FNS(OnEffect, plug->GetID()),
-                  flags,
-                  flags);
-   }
+   PopulateEffectsMenu(c,
+                       EffectTypeProcess,
+                       AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
+                       TracksExistFlag);
 #else
    int flags = PROCESS_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT | ADVANCED_EFFECT;
    // The categories form a DAG, so we start at the roots (the categories
@@ -1075,57 +1055,10 @@ void AudacityProject::CreateMenusAndCommands()
               AudioIONotBusyFlag | WaveTracksSelectedFlag | TimeSelectedFlag);
 
 #ifndef EFFECT_CATEGORIES
-   defaultplugs.clear();
-   extraplugs.clear();
-   plug = pm.GetFirstPluginForEffectType(EffectTypeAnalyze);
-   while (plug) {
-      if (plug->IsEffectDefault()) {
-         defaultplugs.insert(plug);
-      }
-      else {
-         extraplugs.insert(plug);
-      }
-      plug = pm.GetNextPluginForEffectType(EffectTypeAnalyze);
-   }
-
-   for (SortedPlugs::iterator iter = defaultplugs.begin(); iter != defaultplugs.end(); iter++)
-   {
-      const PluginDescriptor *plug = *iter;
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-      int flags = plug->IsEffectRealtimeCapable() ?
-                  TracksExistFlag :
-                  AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
-#else
-      int flags = AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
-#endif
-      c->AddItem(plug->GetName(),
-                  plug->GetMenuName(),
-                  FNS(OnEffect, plug->GetID()),
-                  flags,
-                  flags);
-   }
-
-   needsep = true;
-   for (SortedPlugs::iterator iter = extraplugs.begin(); iter != extraplugs.end(); iter++)
-   {
-      const PluginDescriptor *plug = *iter;
-      if (needsep) {
-         c->AddSeparator();
-         needsep = false;
-      }
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-      int flags = plug->IsEffectRealtimeCapable() ?
-                  TracksExistFlag :
-                  AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
-#else
-      int flags = AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag;
-#endif
-      c->AddItem(plug->GetName(),
-                  plug->GetMenuName(),
-                  FNS(OnEffect, plug->GetID()),
-                  flags,
-                  flags);
-   }
+   PopulateEffectsMenu(c,
+                       EffectTypeAnalyze,
+                       AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
+                       TracksExistFlag);
 #else
 
    flags = ANALYZE_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT;
@@ -1324,6 +1257,231 @@ void AudacityProject::CreateMenusAndCommands()
 #if defined(__WXDEBUG__)
 //   c->CheckDups();
 #endif
+}
+
+void AudacityProject::PopulateEffectsMenu(CommandManager* c,
+                                          EffectType type,
+                                          int batchflags,
+                                          int realflags)
+{
+   PluginManager & pm = PluginManager::Get();
+
+   EffectPlugs defplugs;
+   EffectPlugs optplugs;
+
+   const PluginDescriptor *plug = pm.GetFirstPluginForEffectType(type);
+   while (plug)
+   {
+      if (plug->IsEffectDefault())
+      {
+         defplugs.Add(plug);
+      }
+      else
+      {
+         optplugs.Add(plug);
+      }
+      plug = pm.GetNextPluginForEffectType(type);
+   }
+
+   wxString groupby = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("default"));
+
+   if (groupby == wxT("default"))
+   {
+      defplugs.Sort(SortPlugsByDefault);
+      optplugs.Sort(SortPlugsByDefault);
+   }
+   else if (groupby == wxT("publisher"))
+   {
+      defplugs.Sort(SortPlugsByPublisher);
+      optplugs.Sort(SortPlugsByPublisher);
+   }
+   else if (groupby == wxT("family"))
+   {
+      defplugs.Sort(SortPlugsByFamily);
+      optplugs.Sort(SortPlugsByFamily);
+   }      
+   else // name
+   {
+      defplugs.Sort(SortPlugsByName);
+      optplugs.Sort(SortPlugsByName);
+   }
+
+   AddEffectMenuItems(c, defplugs, batchflags, realflags);
+
+   if (optplugs.GetCount())
+   {
+      c->AddSeparator();
+   }
+
+   AddEffectMenuItems(c, optplugs, batchflags, realflags);
+
+   return;
+}
+
+void AudacityProject::AddEffectMenuItems(CommandManager *c,
+                                         EffectPlugs & plugs,
+                                         int batchflags,
+                                         int realflags)
+{
+   size_t pluginCnt = plugs.GetCount();
+   int perGroup;
+
+#if defined(__WXGTK__)
+   gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 15);
+#else
+   gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 0);
+#endif
+
+   wxString groupBy = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("default"));
+
+   bool grouped = true;
+   if (groupBy == wxT("default") || groupBy == wxT("name"))
+   {
+      grouped = false;
+   }
+
+   wxString last;
+   wxArrayString groupNames;
+   PluginIDList groupPlugs;
+   for (size_t i = 0; i < pluginCnt; i++)
+   {
+      const PluginDescriptor *plug = plugs[i];
+
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+      if (plug->GetName() == wxT("Cross Fade In"))
+      {
+         int f = 1;
+      }
+      int flags = plug->IsEffectRealtimeCapable() ? realflags : batchflags;
+#else
+      int flags = batchflags;
+#endif
+
+      wxString name = plug->GetName();
+
+      wxString stripped;
+      if (name.EndsWith(wxT("..."), &stripped))
+      {
+         name = stripped;
+      }
+
+      if (plug->IsEffectInteractive())
+      {
+         name += wxT("...");
+      }
+
+      wxString current;
+      if (groupBy == wxT("default"))
+      {
+         current = plug->GetVendor();
+         if (plug->IsEffectDefault())
+         {
+            current = wxEmptyString;
+         }
+
+         if (!current.IsEmpty())
+         {
+            current += wxT(": ");
+         }
+
+         current += name;
+         name = current;
+      }
+      else if (groupBy == wxT("publisher"))
+      {
+         current = plug->GetVendor();
+         if (current.IsEmpty())
+         {
+            current = wxT("unknown");
+         }
+      }
+      else if (groupBy == wxT("family"))
+      {
+         current = plug->GetEffectFamily();
+         if (current.IsEmpty())
+         {
+            current = wxT("unknown");
+         }
+      }
+      else // name
+      {
+         current = plug->GetName();
+         name = current;
+      }
+
+      if (current != last || i + 1 == pluginCnt)
+      {
+         if (i + 1 == pluginCnt)
+         {
+            groupNames.Add(name);
+            groupPlugs.Add(plug->GetID());
+         }
+
+         size_t groupCnt = groupPlugs.GetCount();
+
+         if (grouped && groupCnt > 0 && i > 0)
+         {
+            c->BeginSubMenu(last);
+         }
+
+         if (grouped || i + 1 == pluginCnt)
+         {
+            int max = perGroup;
+            int items = perGroup;
+
+            if (max > groupCnt)
+            {
+               max = 0;
+            }
+
+            for (size_t j = 0; j < groupCnt; j++)
+            {
+               if (max > 0 && items == max)
+               {
+                  int end = j + 1 + max;
+                  if (end > groupCnt)
+                  {
+                     end = groupCnt;
+                  }
+                  c->BeginSubMenu(wxString::Format(_("Plug-ins %d to %d"),
+                                                   j + 1,
+                                                   end));
+               }
+
+               c->AddItem(groupNames[j],
+                          groupNames[j],
+                          FNS(OnEffect, groupPlugs[j]),
+                          flags,
+                          flags);
+
+               if (max > 0)
+               {
+                  items--;
+                  if (items == 0 || j + 1 == groupCnt)
+                  {
+                     c->EndSubMenu();
+                     items = max;
+                  }
+               }
+            }
+         }
+
+         if (grouped && groupCnt > 0 && i > 0)
+         {
+            c->EndSubMenu();
+
+            groupNames.Clear();
+            groupPlugs.Clear();
+         }
+
+         last = current;
+      }
+
+      groupNames.Add(name);
+      groupPlugs.Add(plug->GetID());
+   }
+
+   return;
 }
 
 #ifdef EFFECT_CATEGORIES

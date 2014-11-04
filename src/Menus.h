@@ -38,6 +38,8 @@ void AddEffectsToMenu(CommandManager* c, const EffectSet& effects);
 
 #endif
 
+void PopulateEffectsMenu(CommandManager *c, EffectType type, int batchflags, int realflags);
+void AddEffectMenuItems(CommandManager *c, EffectPlugs & plugs, int batchflags, int realflags);
 void CreateRecentFilesMenu(CommandManager *c);
 void ModifyUndoMenuItems();
 void ModifyToolbarMenus();
