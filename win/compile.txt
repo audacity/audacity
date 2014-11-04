@@ -54,64 +54,8 @@ To be able to build Audacity for Windows, download wxWidgets:
 
 
 
-------------------------
-MSVC++ STEP 2:  Build wxWidgets
-------------------------
-
-2.1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
-   Microsoft Visual Studio. 
-   Make sure to use wx_dll.dsw, not wx.dsw, because wx.dsw
-   does not have the correct dependencies for the DLL builds.
-   When you open wx_dll.dsw, Visual Studio will prompt whether
-   to convert. Click "Yes To All". Next time you open a Visual
-   Studio session, you can avoid this prompt by opening 
-   "C\wxWidgets-2.8.12\build\msw\wx_dll.sln" instead of wx_dll.dsw.
-
-
-2.2. If you want to use the wxWidgets accessibility features, we have 
-   modified one of the wxWidgets files. Rather than provide a patch, 
-   we store the modified file in the Audacity code repository, and you 
-   can replace the corresponding wxWidgets file. You will need to 
-   download Audacity (next step) to get these. 
-
-   In "audacity\win\wxWidgets_additions" is one .h file. 
-   You may want to make a backup of the wxWidgets original of it, 
-   in "C:\wxWidgets-2.8.12\include\wx\msw\setup.h", 
-   e.g., by renaming it "setup.h.bak" before copying the replacement, 
-   in case you also build without these accessibility features. 
-
-   Copy "audacity\win\wxWidgets_additions\setup.h" to 
-   "C:\wxWidgets-3.0.2\include\wx\msw\setup.h".
-
-   Audacity releases are built with these accessibility features.
-
-
-2.3. Build wxWidgets for all configurations of Audacity that you want.
-    * Build "DLL Unicode Release" to use in a "Release" 
-       version of Audacity.
-    * Build "DLL Unicode Debug" to use in a "Debug"
-       version of Audacity.
-
-With VS2013 you will get an error for missing pbt.h header, you can (apparently safely) comment that out.
-
-   See "MSVC++ STEP 6:  Build Audacity" for the differences
-   between these versions of Audacity.
-
-   Because of dependencies, this should also build these projects:
-   But it may not on VS2013 so you will have to make sure to build these as well:
-      * wxexpat
-      * wxjpeg
-      * wxpng
-      * wxregex
-      * wxtiff
-      * wxzlib
-
-   If you build the whole solution, ignore the linker errors for 
-   wxbase28*_odbc*.* dbgrid.
-
-
 --------------------------
-MSVC++ STEP 3:  Download Audacity
+MSVC++ STEP 2:  Download Audacity
 --------------------------
 
 To check out the latest 
@@ -119,16 +63,17 @@ source code from SVN, see the instructions at
 "http://audacity.sourceforge.net/community/developers". 
 
 
+
 --------------------------------------------
-MSVC++ STEP 4:  Set wxWidgets location for Audacity
+MSVC++ STEP 3:  Set wxWidgets location for Audacity
 --------------------------------------------
 
 Before you can start the build process, you must update the
 project settings to tell Visual C++ where to find wxWidgets.
 There are three settings that need changing:
-    4.1. Include Directory (e.g., "C:\wxWidgets-2.8.12\include")
-    4.2. Resource Directory (e.g., "C:\wxWidgets-2.8.12\include")
-    4.3. Library Directory (e.g., "C:\wxWidgets-2.8.12\lib")
+    3.1. Include Directory (e.g., "C:\wxWidgets-2.8.12\include")
+    3.2. Resource Directory (e.g., "C:\wxWidgets-2.8.12\include")
+    3.3. Library Directory (e.g., "C:\wxWidgets-2.8.12\lib")
 
 Fortunately, this is parameterized, using a Windows 
 environment variable, WXWIN. There are various ways to set 
@@ -152,17 +97,18 @@ In some cases, you may need to reboot the computer to ensure
 the variables are read correctly. 
 
 
+
 -----------------------
-MSVC++ STEP 5:  Consider and Configure Optional Features
+MSVC++ STEP 4:  Consider and Configure Optional Features
 -----------------------
 
-5.1. Locally installed help is optional, but required for a full Release 
+4.1. Locally installed help is optional, but required for a full Release 
 build. (The "help" folder is included in the installer, but removed from 
 the zip distribution.) The Python library is required, obtainable from
 http://www.python.org/download/ . Add the location of the top-level
 directory where you installed Python to your Path environment 
 variable. For instructions on setting environment variables, see the 
-previous section, "MSVC++ STEP 4:  Set wxWidgets location for Audacity".
+previous section, "MSVC++ STEP 3:  Set wxWidgets location for Audacity".
 
 Build the "help" project by enabling it in the MS Visual Studio 
 Configuration Manager (Build menu). This will download a copy of the 
@@ -172,7 +118,7 @@ audacity\scripts\mw2html_audacity\wiki2htm.bat
 and re-build the "help" project.
 
 
-5.2. To support languages other than English in your build of Audacity,
+4.2. To support languages other than English in your build of Audacity,
 you must enable and build the optional "locale" project. This is 
 required for a full release. You will need to obtain msgfmt.exe from
 http://audacity.sourceforge.net/files/msgfmt.zip. Add the location of 
@@ -181,7 +127,7 @@ Alternatively, put msgfmt.exe somewhere already in the Path,
 e.g., C:\Windows.
 
 
-5.3. Some functionality in Audacity is currently turned on in its default
+4.3. Some functionality in Audacity is currently turned on in its default
 configuration, but requires that extra libraries be downloaded
 separately to use it. 
 
@@ -197,23 +143,18 @@ To change the libraries enabled in Audacity, edit
 "win\configwin.h" and comment or uncomment the entries.
 
 
-5.4. DirectSound (Microsoft) and ASIO (Steinberg) are sound card interface 
+4.4. DirectSound (Microsoft) and ASIO (Steinberg) are sound card interface 
 protocols that are more efficient than standard WMME. Unlike WMME,
 not all sound card drivers support them. 
 
-5.4.1. TO ADD SUPPORT FOR DIRECTSOUND: 
-Install the DirectX SDK from Microsoft (http://msdn.microsoft.com/directx).  
 
-For Audacity 2.0.6, we use http://www.microsoft.com/en-us/download/details.aspx?id=6812. 
-
-The installation will automatically define the DXSDK_DIR
-environment variable and its presence will cause DirectSound
-support to be automatically included when Audacity is built.
+4.4.1. TO ADD SUPPORT FOR DIRECTSOUND: 
+When using Visual Studio 2013, you do not have to install a DirectSound SDK.
 
 Audacity releases from 1.3.7 on include DirectSound support. 
 
 
-5.4.2 TO ADD SUPPORT FOR ASIO:
+4.4.2 TO ADD SUPPORT FOR ASIO:
 Because ASIO is a proprietary, closed standard, 
 we (or any third party) cannot distribute its SDK. 
 That means we cannot distribute builds of Audacity that support 
@@ -233,6 +174,24 @@ ASIOSDK_DIR, as for WXWIN, above. The value should be
 the full path to the base directory of the ASIO SDK, e.g., 
 
    set ASIOSDK_DIR=C:\ASIOSDK2
+
+
+
+------------------------
+MSVC++ STEP 5:  Build wxWidgets
+------------------------
+
+You can now build wxWidgets.  This only has to be done once.
+
+5.1. Run Visual C++ and load the Audacity solution, "audacity\win\audacity.sln".
+
+5.2. In the Solution Explorer, right click the "wxWidgets-2.8.12" project and
+   select "Build".
+
+   This will add the Audacity specific configuration to wxWidgets and correct
+   a minor incompatibility between wxWidgets 2.8.12 and Visual Studio 2013.
+   
+   It will then build both the Debug AND Release versions of wxWidgets.
 
 
 
