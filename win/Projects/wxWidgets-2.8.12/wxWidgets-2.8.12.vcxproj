@@ -39,12 +39,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>echo  copy "$(SolutionDir)\wxWidgets_additions\setup.h" "$(WXWINT)\include\wx\msw\setup.h"
-copy "$(SolutionDir)\wxWidgets_additions\setup.h" "$(WXWINT)\include\wx\msw\setup.h"
-echo copy "$(SolutionDir)\wxWidgets_additions\window.cpp" "$(WXWINT)\src/msw/window.cpp"
-copy "$(SolutionDir)\wxWidgets_additions\window.cpp" "$(WXWINT)\src/msw/window.cpp"
-echo cd /D "$(WXWINT)\build\msw"
-cd /D "$(WXWINT)\build\msw"
+    <NMakeBuildCommandLine>echo  copy "$(SolutionDir)\wxWidgets_additions\setup.h" "$(WXWIN)\include\wx\msw\setup.h"
+copy "$(SolutionDir)\wxWidgets_additions\setup.h" "$(WXWIN)\include\wx\msw\setup.h"
+echo copy "$(SolutionDir)\wxWidgets_additions\window.cpp" "$(WXWIN)\src/msw/window.cpp"
+copy "$(SolutionDir)\wxWidgets_additions\window.cpp" "$(WXWIN)\src/msw/window.cpp"
+echo cd /D "$(WXWIN)\build\msw"
+cd /D "$(WXWIN)\build\msw"
 nmake -f makefile.vc SHARED=1 UNICODE=1 BUILD=debug
 nmake -f makefile.vc SHARED=1 UNICODE=1 BUILD=release</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>cd /D "$(WXWIN)\build\msw"
@@ -59,12 +59,12 @@ nmake -f makefile.vc SHARED=1 UNICODE=1 BUILD=release clean</NMakeCleanCommandLi
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakePreprocessorDefinitions>
     </NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>echo  copy "$(SolutionDir)\wxWidgets_additions\setup.h" "$(WXWINT)\include\wx\msw\setup.h"
-copy "$(SolutionDir)\wxWidgets_additions\setup.h" "$(WXWINT)\include\wx\msw\setup.h"
-echo copy "$(SolutionDir)\wxWidgets_additions\window.cpp" "$(WXWINT)\src/msw/window.cpp"
-copy "$(SolutionDir)\wxWidgets_additions\window.cpp" "$(WXWINT)\src/msw/window.cpp"
-echo cd /D "$(WXWINT)\build\msw"
-cd /D "$(WXWINT)\build\msw"
+    <NMakeBuildCommandLine>echo  copy "$(SolutionDir)\wxWidgets_additions\setup.h" "$(WXWIN)\include\wx\msw\setup.h"
+copy "$(SolutionDir)\wxWidgets_additions\setup.h" "$(WXWIN)\include\wx\msw\setup.h"
+echo copy "$(SolutionDir)\wxWidgets_additions\window.cpp" "$(WXWIN)\src/msw/window.cpp"
+copy "$(SolutionDir)\wxWidgets_additions\window.cpp" "$(WXWIN)\src/msw/window.cpp"
+echo cd /D "$(WXWIN)\build\msw"
+cd /D "$(WXWIN)\build\msw"
 nmake -f makefile.vc SHARED=1 UNICODE=1 BUILD=debug
 nmake -f makefile.vc SHARED=1 UNICODE=1 BUILD=release</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>cd /D "$(WXWIN)\build\msw"
