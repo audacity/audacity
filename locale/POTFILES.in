@@ -311,8 +311,6 @@ src/effects/audiounits/AudioUnitEffect.cpp
 src/effects/audiounits/AudioUnitEffect.h
 src/effects/ladspa/LadspaEffect.cpp
 src/effects/ladspa/LadspaEffect.h
-src/effects/ladspa/LoadLadspa.cpp
-src/effects/ladspa/LoadLadspa.h
 src/effects/lv2/LoadLV2.cpp
 src/effects/lv2/LoadLV2.h
 src/effects/lv2/LV2Effect.cpp
