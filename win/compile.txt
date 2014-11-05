@@ -86,6 +86,10 @@ In the Audacity project file, there are declarations like
 that get interpreted as, e.g., "C:\wxWidgets-2.8.12\include".
 
 The typical setting for WXWIN is "C:\wxWidgets-2.8.12". 
+For example, 
+
+   set WXWIN =C:\wxWidgets-2.8.12
+
 
 Once you have set the WXWIN environment variable correctly, 
 the Audacity project file's declarations will do the rest.
@@ -164,8 +168,10 @@ If you build ASIO support into Audacity, do not distribute that build.
 For ASIO support, get the ASIO SDK from Steinberg 
 (http://www.steinberg.net/en/company/developers.html), 
 install at C:\ASIOSDK, then define an environment variable called
-ASIOSDK_DIR, as for WXWIN, above. The value should be 
-the full path to the base directory of the ASIO SDK, e.g., 
+ASIOSDK_DIR. 
+
+The value should be the full path to the base directory of the 
+ASIO SDK, e.g., 
 
    set ASIOSDK_DIR=C:\ASIOSDK2
 
