@@ -37,7 +37,7 @@ Cygwin" section below. This is not maintained (for a very long time!).
 
 
 ---------------------------
-MSVC++ STEP 1:  Download wxWidgets
+MSVC++ STEP 1:  Download and Install wxWidgets
 ---------------------------
 
 To simplify the implementation of a near-identical user
@@ -46,7 +46,7 @@ GUI framework. (https://www.wxwidgets.org/).
 
 Audacity 2.1.0 requires wxWidgets 2.8.12.
 
-To be able to build Audacity for Windows, download wxWidgets: 
+To be able to build Audacity for Windows, download and install wxWidgets: 
 
 * installer: https://sourceforge.net/projects/wxwindows/files/2.8.12/wxMSW-2.8.12-Setup.exe
 
@@ -55,7 +55,7 @@ To be able to build Audacity for Windows, download wxWidgets:
 
 
 --------------------------
-MSVC++ STEP 2:  Download Audacity
+MSVC++ STEP 2:  Download and Install Audacity
 --------------------------
 
 To check out the latest 
@@ -143,18 +143,12 @@ To change the libraries enabled in Audacity, edit
 "win\configwin.h" and comment or uncomment the entries.
 
 
-4.4. DirectSound (Microsoft) and ASIO (Steinberg) are sound card interface 
-protocols that are more efficient than standard WMME. Unlike WMME,
-not all sound card drivers support them. 
+4.4. TO ADD SUPPORT FOR ASIO:
 
+ASIO (from Steinberg) isa a sound card interface protocol that 
+is faster than standard WMME. Unlike WMME, not all soundcard 
+drivers support it.
 
-4.4.1. TO ADD SUPPORT FOR DIRECTSOUND: 
-When using Visual Studio 2013, you do not have to install a DirectSound SDK.
-
-Audacity releases from 1.3.7 on include DirectSound support. 
-
-
-4.4.2 TO ADD SUPPORT FOR ASIO:
 Because ASIO is a proprietary, closed standard, 
 we (or any third party) cannot distribute its SDK. 
 That means we cannot distribute builds of Audacity that support 
@@ -181,7 +175,7 @@ the full path to the base directory of the ASIO SDK, e.g.,
 MSVC++ STEP 5:  Build wxWidgets
 ------------------------
 
-You can now build wxWidgets.  This only has to be done once.
+This typically has to be done only once.
 
 5.1. Run Visual C++ and load the Audacity solution, "audacity\win\audacity.sln".
 
@@ -191,7 +185,7 @@ You can now build wxWidgets.  This only has to be done once.
    This will add the Audacity specific configuration to wxWidgets and correct
    a minor incompatibility between wxWidgets 2.8.12 and Visual Studio 2013.
    
-   It will then build both the Debug AND Release versions of wxWidgets.
+   It will then build both the Debug and Release versions of wxWidgets.
 
 
 
