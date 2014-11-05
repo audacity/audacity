@@ -9,6 +9,7 @@
 
 **********************************************************************/
 
+#include <wx/msgdlg.h>
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>
 
@@ -633,20 +634,26 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
    // TODO: This is temporary and should be redone when all effects are converted
    if (mEffectPlugins.Index(wxString(ID)) == wxNOT_FOUND)
    {
-      // This will instantiate the effect client if it hasn't already been done
-      EffectClientInterface *client = static_cast<EffectClientInterface *>(PluginManager::Get().GetInstance(ID));
-      if (client)
+      effect = new Effect();
+      if (effect)
       {
-         effect = new Effect(client);
-         if (effect)
+         // This will instantiate the effect client if it hasn't already been done
+         EffectClientInterface *client = static_cast<EffectClientInterface *>(PluginManager::Get().GetInstance(ID));
+         if (client && effect->Startup(client))
          {
             effect->SetEffectID(mNumEffects++);
             PluginManager::Get().SetInstance(ID, effect);
             mEffectPlugins.Add(ID);
+            return effect;
          }
 
-         return effect;
+         delete effect;
       }
+
+      wxMessageBox(wxString::Format(_("Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in Help->Show Log"),
+                                    PluginManager::Get().GetName(ID)),
+                   _("Effect failed to initialize"));
+
       return NULL;
    }
 

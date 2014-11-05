@@ -68,65 +68,6 @@ wxString Effect::StripAmpersand(const wxString& str)
 // Legacy (or full blown effect)
 Effect::Effect()
 {
-   CommonInit();
-}
-
-// Effect hosting an effect client
-Effect::Effect(EffectClientInterface *client)
-{
-   CommonInit();
-
-   mClient = client;
-   mClient->SetHost(this);
-   mClient->Startup();
-
-   mNumAudioIn = mClient->GetAudioInCount();
-   mNumAudioOut = mClient->GetAudioOutCount();
-
-   mInBuffer = NULL;
-   mOutBuffer = NULL;
-   mInBufPos = NULL;
-   mOutBufPos = NULL;
-
-   mBufferSize = 0;
-   mBlockSize = 0;
-   mNumChannels = 0;
-
-   int flags = PLUGIN_EFFECT;
-   switch (mClient->GetType())
-   {
-      case EffectTypeGenerate:
-         flags |= INSERT_EFFECT;
-      break;
-
-      case EffectTypeProcess:
-         flags |= PROCESS_EFFECT;
-      break;
-
-      case EffectTypeAnalyze:
-         flags |= INSERT_EFFECT;
-      break;
-   }
-
-   SetEffectFlags(flags);
-}
-
-Effect::~Effect()
-{
-   if (mClient)
-   {
-      mClient->Shutdown();
-      delete mClient;
-   }
-
-   if (mWarper != NULL)
-   {
-      delete mWarper;
-   }
-}
-
-void Effect::CommonInit()
-{
    mClient = NULL;
 
    mWarper = NULL;
@@ -142,6 +83,31 @@ void Effect::CommonInit()
    // Can change effect flags later (this is the new way)
    // OR using the old way, over-ride GetEffectFlags().
    mFlags = BUILTIN_EFFECT | PROCESS_EFFECT | ADVANCED_EFFECT;
+
+   mNumAudioIn = 0;
+   mNumAudioOut = 0;
+
+   mInBuffer = NULL;
+   mOutBuffer = NULL;
+   mInBufPos = NULL;
+   mOutBufPos = NULL;
+
+   mBufferSize = 0;
+   mBlockSize = 0;
+   mNumChannels = 0;
+}
+
+Effect::~Effect()
+{
+   if (mClient)
+   {
+      mClient->Shutdown();
+   }
+
+   if (mWarper != NULL)
+   {
+      delete mWarper;
+   }
 }
 
 // EffectIdentInterface implementation
@@ -415,6 +381,42 @@ bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, cons
 }
 
 // Effect implementation
+
+bool Effect::Startup(EffectClientInterface *client)
+{
+   // Need to set host now so client startup can use our services
+   client->SetHost(this);
+   
+   // Bail if the client startup fails
+   if (!client->Startup())
+   {
+      return false;
+   }
+
+   // Let destructor know we need to be shutdown
+   mClient = client;
+
+   mNumAudioIn = mClient->GetAudioInCount();
+   mNumAudioOut = mClient->GetAudioOutCount();
+
+   int flags = PLUGIN_EFFECT;
+   switch (mClient->GetType())
+   {
+      case EffectTypeGenerate:
+         flags |= INSERT_EFFECT;
+      break;
+
+      case EffectTypeProcess:
+         flags |= PROCESS_EFFECT;
+      break;
+
+      case EffectTypeAnalyze:
+         flags |= INSERT_EFFECT;
+      break;
+   }
+
+   SetEffectFlags(flags);
+}
 
 // All legacy effects should have this overridden
 wxString Effect::GetEffectName()
