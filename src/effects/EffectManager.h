@@ -162,6 +162,7 @@ private:
    int mRealtimeCount;
    int mRealtimeLatency;
    bool mRealtimeSuspended;
+   bool mRealtimeActive;
 #endif
 
 #ifdef EFFECT_CATEGORIES

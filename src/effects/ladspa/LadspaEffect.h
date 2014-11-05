@@ -15,59 +15,164 @@ class wxCheckBox;
 
 #include <wx/dialog.h>
 
-#include "../Effect.h"
+#include "audacity/EffectInterface.h"
+#include "audacity/ModuleInterface.h"
+#include "audacity/PluginInterface.h"
+
 #include "ladspa.h"
 
-void LoadLadspaPlugins();
+#define LADSPAEFFECTS_VERSION wxT("1.0.0.0");
+#define LADSPAEFFECTS_FAMILY L"Ladspa"
 
-class LadspaEffect:public Effect {
+WX_DEFINE_ARRAY_PTR(LADSPA_Handle, LadspaSlaveArray);
 
- public:
+class LadspaEffectDialog;
 
-   LadspaEffect(const LADSPA_Descriptor *data,
-                const std::set<wxString>& categories = std::set<wxString>());
+class LadspaEffect : public EffectClientInterface
+{
+public:
+   LadspaEffect(const wxString & path, int index);
    virtual ~LadspaEffect();
 
-   virtual wxString GetEffectName();
+   // IdentInterface implementation
+   virtual PluginID GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
 
-   virtual std::set<wxString> GetEffectCategories();
+   // EffectIdentInterface implementation
+   virtual EffectType GetType();
+   virtual wxString GetFamily();
+   virtual bool IsInteractive();
+   virtual bool IsDefault();
+   virtual bool IsLegacy();
+   virtual bool IsRealtimeCapable();
 
-   virtual wxString GetEffectIdentifier();
+   // EffectClientInterface implementation
+   virtual void SetHost(EffectHostInterface *host);
+   virtual bool Startup();
+   virtual bool Shutdown();
 
-   virtual wxString GetEffectAction();
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
 
-   virtual bool Init();
+   virtual int GetMidiInCount();
+   virtual int GetMidiOutCount();
 
-   virtual bool PromptUser();
+   virtual void SetSampleRate(sampleCount rate);
+   virtual sampleCount GetBlockSize(sampleCount maxBlockSize);
 
-   virtual bool Process();
+   virtual sampleCount GetLatency();
+   virtual sampleCount GetTailSize();
 
-   virtual void End();
+   virtual bool IsReady();
+   virtual bool ProcessInitialize();
+   virtual bool ProcessFinalize();
+   virtual sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size);
 
- private:
-   bool ProcessStereo(int count, WaveTrack * left, WaveTrack *right,
-                      sampleCount lstart, sampleCount rstart,
-                      sampleCount len);
+   virtual bool RealtimeInitialize();
+   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
+   virtual bool RealtimeFinalize();
+   virtual bool RealtimeSuspend();
+   virtual bool RealtimeResume();
+   virtual sampleCount RealtimeProcess(int group,
+                                       float **inbuf,
+                                       float **outbuf,
+                                       sampleCount numSamples);
+
+   virtual bool ShowInterface(void *parent);
+
+private:
+   // LadspaEffect implementation
+   bool Load();
+   void Unload();
+
+   void LoadParameters(const wxString & group);
+   void SaveParameters(const wxString & group);
+
+   LADSPA_Handle InitInstance(float sampleRate);
+   void FreeInstance(LADSPA_Handle handle);
+
+private:
+
+   wxString mPath;
+   int mIndex;
+   EffectHostInterface *mHost;
+
+   wxDynamicLibrary mLib;
+   const LADSPA_Descriptor *mData;
 
    wxString pluginName;
 
-   const LADSPA_Descriptor *mData;
-   sampleCount mBlockSize;
-   float **fInBuffer;
-   float **fOutBuffer;
-   unsigned long inputs;
-   unsigned long outputs;
-   unsigned long numInputControls;
-   unsigned long *inputPorts;
-   unsigned long *outputPorts;
-   float *inputControls;
-   float *outputControls;
-   int mainRate;
+   bool mReady;
 
-   std::set<wxString> mCategories;
+   LADSPA_Handle mMaster;
+
+   sampleCount mSampleRate;
+   sampleCount mBlockSize;
+   sampleCount mUserBlockSize;
+
+   bool mInteractive;
+
+   int mAudioIns;
+   unsigned long *mInputPorts;
+
+   int mAudioOuts;
+   unsigned long *mOutputPorts;
+
+   int mNumInputControls;
+   float *mInputControls;
+   float *mOutputControls;
+
+   // Realtime processing
+   LadspaSlaveArray mSlaves;
+   wxArrayInt mSlaveChannels;
+
+   LadspaEffectDialog *mDlg;
+
+   friend class LadspaEffectDialog;
+   friend class LadspaEffectsModule;
 };
 
-class LadspaEffectDialog:public wxDialog {
+class LadspaEffectsModule : public ModuleInterface
+{
+public:
+   LadspaEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
+   virtual ~LadspaEffectsModule();
+
+   // IdentInterface implementatino
+
+   virtual wxString GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
+
+   // ModuleInterface implementation
+
+   virtual bool Initialize();
+   virtual void Terminate();
+
+   virtual bool AutoRegisterPlugins(PluginManagerInterface & pm);
+   virtual wxArrayString FindPlugins(PluginManagerInterface & pm);
+   virtual bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path);
+
+   virtual void *CreateInstance(const PluginID & ID, const wxString & path);
+
+   // LadspaEffectModule implementation
+
+   static void Check(const wchar_t *path);
+
+private:
+   ModuleManagerInterface *mModMan;
+   wxString mPath;
+};
+
+class LadspaEffectDialog : public wxDialog
+{
    DECLARE_DYNAMIC_CLASS(LadspaEffectDialog)
 
  public:
@@ -75,7 +180,7 @@ class LadspaEffectDialog:public wxDialog {
                       wxWindow * parent,
                       const LADSPA_Descriptor *data,
                       float *inputControls,
-                      int sampleRate,
+                      sampleCount sampleRate,
                       double length);
 
    ~LadspaEffectDialog();
@@ -83,16 +188,20 @@ class LadspaEffectDialog:public wxDialog {
    void OnCheckBox(wxCommandEvent & event);
    void OnSlider(wxCommandEvent & event);
    void OnTextCtrl(wxCommandEvent & event);
-   void OnOK(wxCommandEvent & event);
-   void OnCancel(wxCommandEvent & event);
-   void OnPreview(wxCommandEvent & event);
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+   void OnApply(wxCommandEvent & evt);
+#else
+   void OnOk(wxCommandEvent & evt);
+   void OnCancel(wxCommandEvent & evt);
+   void OnPreview(wxCommandEvent & evt);
+#endif   
    void ControlSetFocus(wxFocusEvent & event);
 
    double GetLength();
 
    DECLARE_EVENT_TABLE()
 
- private:
+private:
    void HandleText();
    void ConnectFocus(wxControl *c);
    void DisconnectFocus(wxControl *c);
@@ -108,7 +217,7 @@ class LadspaEffectDialog:public wxDialog {
    wxCheckBox **toggles;
    unsigned long *ports;
    unsigned long numParams;
-   float *inputControls;
+   float *mInputControls;
    LadspaEffect *effect;
    wxTextCtrl *mSeconds;
 };

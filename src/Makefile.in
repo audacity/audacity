@@ -113,8 +113,6 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_LADSPA_TRUE@	effects/ladspa/ladspa.h \
 @USE_LADSPA_TRUE@	effects/ladspa/LadspaEffect.cpp \
 @USE_LADSPA_TRUE@	effects/ladspa/LadspaEffect.h \
-@USE_LADSPA_TRUE@	effects/ladspa/LoadLadspa.cpp \
-@USE_LADSPA_TRUE@	effects/ladspa/LoadLadspa.h \
 @USE_LADSPA_TRUE@	$(NULL)
 
 @USE_LAME_TRUE@am__append_13 = $(LAME_CFLAGS)
@@ -469,7 +467,6 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	import/ImportFFmpeg.h import/ImportGStreamer.cpp \
 	import/ImportGStreamer.h effects/ladspa/ladspa.h \
 	effects/ladspa/LadspaEffect.cpp effects/ladspa/LadspaEffect.h \
-	effects/ladspa/LoadLadspa.cpp effects/ladspa/LoadLadspa.h \
 	ondemand/ODDecodeFlacTask.cpp ondemand/ODDecodeFlacTask.h \
 	effects/nyquist/LoadNyquist.cpp effects/nyquist/LoadNyquist.h \
 	effects/nyquist/Nyquist.cpp effects/nyquist/Nyquist.h \
@@ -504,8 +501,7 @@ am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 @USE_FFMPEG_TRUE@	import/audacity-ImportFFmpeg.$(OBJEXT)
 @USE_GSTREAMER_TRUE@am__objects_4 =  \
 @USE_GSTREAMER_TRUE@	import/audacity-ImportGStreamer.$(OBJEXT)
-@USE_LADSPA_TRUE@am__objects_5 = effects/ladspa/audacity-LadspaEffect.$(OBJEXT) \
-@USE_LADSPA_TRUE@	effects/ladspa/audacity-LoadLadspa.$(OBJEXT)
+@USE_LADSPA_TRUE@am__objects_5 = effects/ladspa/audacity-LadspaEffect.$(OBJEXT)
 @USE_LIBFLAC_TRUE@am__objects_6 = ondemand/audacity-ODDecodeFlacTask.$(OBJEXT)
 @USE_LIBNYQUIST_TRUE@am__objects_7 = effects/nyquist/audacity-LoadNyquist.$(OBJEXT) \
 @USE_LIBNYQUIST_TRUE@	effects/nyquist/audacity-Nyquist.$(OBJEXT)
@@ -1889,9 +1885,6 @@ effects/ladspa/$(DEPDIR)/$(am__dirstamp):
 effects/ladspa/audacity-LadspaEffect.$(OBJEXT):  \
 	effects/ladspa/$(am__dirstamp) \
 	effects/ladspa/$(DEPDIR)/$(am__dirstamp)
-effects/ladspa/audacity-LoadLadspa.$(OBJEXT):  \
-	effects/ladspa/$(am__dirstamp) \
-	effects/ladspa/$(DEPDIR)/$(am__dirstamp)
 ondemand/audacity-ODDecodeFlacTask.$(OBJEXT):  \
 	ondemand/$(am__dirstamp) ondemand/$(DEPDIR)/$(am__dirstamp)
 effects/nyquist/$(am__dirstamp):
@@ -2146,7 +2139,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/audiounits/$(DEPDIR)/audacity-AudioUnitEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/audiounits/$(DEPDIR)/audacity-LoadAudioUnits.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/ladspa/$(DEPDIR)/audacity-LadspaEffect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@effects/ladspa/$(DEPDIR)/audacity-LoadLadspa.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LV2Effect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LoadLV2.Po@am__quote@
@@ -5782,20 +5774,6 @@ effects/ladspa/audacity-LadspaEffect.obj: effects/ladspa/LadspaEffect.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/ladspa/LadspaEffect.cpp' object='effects/ladspa/audacity-LadspaEffect.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/ladspa/audacity-LadspaEffect.obj `if test -f 'effects/ladspa/LadspaEffect.cpp'; then $(CYGPATH_W) 'effects/ladspa/LadspaEffect.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/ladspa/LadspaEffect.cpp'; fi`
-
-effects/ladspa/audacity-LoadLadspa.o: effects/ladspa/LoadLadspa.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/ladspa/audacity-LoadLadspa.o -MD -MP -MF effects/ladspa/$(DEPDIR)/audacity-LoadLadspa.Tpo -c -o effects/ladspa/audacity-LoadLadspa.o `test -f 'effects/ladspa/LoadLadspa.cpp' || echo '$(srcdir)/'`effects/ladspa/LoadLadspa.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/ladspa/$(DEPDIR)/audacity-LoadLadspa.Tpo effects/ladspa/$(DEPDIR)/audacity-LoadLadspa.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/ladspa/LoadLadspa.cpp' object='effects/ladspa/audacity-LoadLadspa.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/ladspa/audacity-LoadLadspa.o `test -f 'effects/ladspa/LoadLadspa.cpp' || echo '$(srcdir)/'`effects/ladspa/LoadLadspa.cpp
-
-effects/ladspa/audacity-LoadLadspa.obj: effects/ladspa/LoadLadspa.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/ladspa/audacity-LoadLadspa.obj -MD -MP -MF effects/ladspa/$(DEPDIR)/audacity-LoadLadspa.Tpo -c -o effects/ladspa/audacity-LoadLadspa.obj `if test -f 'effects/ladspa/LoadLadspa.cpp'; then $(CYGPATH_W) 'effects/ladspa/LoadLadspa.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/ladspa/LoadLadspa.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/ladspa/$(DEPDIR)/audacity-LoadLadspa.Tpo effects/ladspa/$(DEPDIR)/audacity-LoadLadspa.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/ladspa/LoadLadspa.cpp' object='effects/ladspa/audacity-LoadLadspa.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/ladspa/audacity-LoadLadspa.obj `if test -f 'effects/ladspa/LoadLadspa.cpp'; then $(CYGPATH_W) 'effects/ladspa/LoadLadspa.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/ladspa/LoadLadspa.cpp'; fi`
 
 ondemand/audacity-ODDecodeFlacTask.o: ondemand/ODDecodeFlacTask.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT ondemand/audacity-ODDecodeFlacTask.o -MD -MP -MF ondemand/$(DEPDIR)/audacity-ODDecodeFlacTask.Tpo -c -o ondemand/audacity-ODDecodeFlacTask.o `test -f 'ondemand/ODDecodeFlacTask.cpp' || echo '$(srcdir)/'`ondemand/ODDecodeFlacTask.cpp

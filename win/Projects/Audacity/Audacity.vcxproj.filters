@@ -729,9 +729,6 @@
     <ClCompile Include="..\..\..\src\effects\ladspa\LadspaEffect.cpp">
       <Filter>src/effects/ladspa</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\effects\ladspa\LoadLadspa.cpp">
-      <Filter>src/effects/ladspa</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\toolbars\ControlToolBar.cpp">
       <Filter>src/toolbars</Filter>
     </ClCompile>
@@ -1524,9 +1521,6 @@
       <Filter>src/effects/ladspa</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\ladspa\LadspaEffect.h">
-      <Filter>src/effects/ladspa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\effects\ladspa\LoadLadspa.h">
       <Filter>src/effects/ladspa</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\toolbars\ControlToolBar.h">

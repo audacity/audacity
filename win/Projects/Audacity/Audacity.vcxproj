@@ -467,7 +467,6 @@
     <ClCompile Include="..\..\..\src\blockfile\SilentBlockFile.cpp" />
     <ClCompile Include="..\..\..\src\blockfile\SimpleBlockFile.cpp" />
     <ClCompile Include="..\..\..\src\effects\ladspa\LadspaEffect.cpp" />
-    <ClCompile Include="..\..\..\src\effects\ladspa\LoadLadspa.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\ControlToolBar.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\DeviceToolBar.cpp" />
     <ClCompile Include="..\..\..\src\toolbars\EditToolBar.cpp" />
@@ -741,7 +740,6 @@
     <ClInclude Include="..\..\..\src\blockfile\SimpleBlockFile.h" />
     <ClInclude Include="..\..\..\src\effects\ladspa\ladspa.h" />
     <ClInclude Include="..\..\..\src\effects\ladspa\LadspaEffect.h" />
-    <ClInclude Include="..\..\..\src\effects\ladspa\LoadLadspa.h" />
     <ClInclude Include="..\..\..\src\toolbars\ControlToolBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\DeviceToolBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\EditToolBar.h" />

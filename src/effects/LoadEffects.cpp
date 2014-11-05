@@ -62,10 +62,6 @@
 #include "audiounits/LoadAudioUnits.h"
 #endif
 
-#ifdef USE_LADSPA
-#include "ladspa/LoadLadspa.h"
-#endif
-
 #ifdef USE_LV2
 #include "lv2/LoadLV2.h"
 #endif
@@ -279,12 +275,6 @@ void LoadEffects()
    }
 #endif
 
-#ifdef USE_LADSPA
-   if (gPrefs->Read(wxT("/Ladspa/Enable"), true)) {
-      LoadLadspaPlugins();
-   }
-#endif
-
 #ifdef USE_LV2
    if (gPrefs->Read(wxT("/LV2/Enable"), true)) {
       LoadLV2Plugins();
@@ -308,10 +298,6 @@ void LoadEffects()
 void UnloadEffects()
 {
    EffectManager::Get().UnregisterEffects();
-
-#ifdef USE_LADSPA
-   UnloadLadspaPlugins();
-#endif
 
 #ifdef USE_LV2
    UnloadLV2Plugins();

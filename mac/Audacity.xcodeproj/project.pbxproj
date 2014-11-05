@@ -336,7 +336,6 @@
 		1790B13C09883BFD008A330A /* Fade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01D09883BFD008A330A /* Fade.cpp */; };
 		1790B13E09883BFD008A330A /* Invert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02109883BFD008A330A /* Invert.cpp */; };
 		1790B13F09883BFD008A330A /* LadspaEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02609883BFD008A330A /* LadspaEffect.cpp */; };
-		1790B14009883BFD008A330A /* LoadLadspa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02809883BFD008A330A /* LoadLadspa.cpp */; };
 		1790B14109883BFD008A330A /* Leveller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02A09883BFD008A330A /* Leveller.cpp */; };
 		1790B14209883BFD008A330A /* LoadEffects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02C09883BFD008A330A /* LoadEffects.cpp */; };
 		1790B14309883BFD008A330A /* Noise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02E09883BFD008A330A /* Noise.cpp */; };
@@ -1314,7 +1313,6 @@
 		ED663BA816543647007F53A5 /* Fade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01D09883BFD008A330A /* Fade.cpp */; };
 		ED663BA916543647007F53A5 /* Invert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02109883BFD008A330A /* Invert.cpp */; };
 		ED663BAA16543647007F53A5 /* LadspaEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02609883BFD008A330A /* LadspaEffect.cpp */; };
-		ED663BAB16543647007F53A5 /* LoadLadspa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02809883BFD008A330A /* LoadLadspa.cpp */; };
 		ED663BAC16543647007F53A5 /* Leveller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02A09883BFD008A330A /* Leveller.cpp */; };
 		ED663BAD16543647007F53A5 /* LoadEffects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02C09883BFD008A330A /* LoadEffects.cpp */; };
 		ED663BAE16543647007F53A5 /* Noise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02E09883BFD008A330A /* Noise.cpp */; };
@@ -1641,7 +1639,6 @@
 		ED85B48016A47353006DA21D /* Fade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01D09883BFD008A330A /* Fade.cpp */; };
 		ED85B48116A47353006DA21D /* Invert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02109883BFD008A330A /* Invert.cpp */; };
 		ED85B48216A47353006DA21D /* LadspaEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02609883BFD008A330A /* LadspaEffect.cpp */; };
-		ED85B48316A47353006DA21D /* LoadLadspa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02809883BFD008A330A /* LoadLadspa.cpp */; };
 		ED85B48416A47353006DA21D /* Leveller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02A09883BFD008A330A /* Leveller.cpp */; };
 		ED85B48516A47353006DA21D /* LoadEffects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02C09883BFD008A330A /* LoadEffects.cpp */; };
 		ED85B48616A47353006DA21D /* Noise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B02E09883BFD008A330A /* Noise.cpp */; };
@@ -2865,8 +2862,6 @@
 		1790B02509883BFD008A330A /* ladspa.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ladspa.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B02609883BFD008A330A /* LadspaEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LadspaEffect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B02709883BFD008A330A /* LadspaEffect.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LadspaEffect.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B02809883BFD008A330A /* LoadLadspa.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LoadLadspa.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B02909883BFD008A330A /* LoadLadspa.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LoadLadspa.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B02A09883BFD008A330A /* Leveller.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Leveller.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B02B09883BFD008A330A /* Leveller.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Leveller.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B02C09883BFD008A330A /* LoadEffects.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LoadEffects.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5270,8 +5265,6 @@
 				1790B02509883BFD008A330A /* ladspa.h */,
 				1790B02609883BFD008A330A /* LadspaEffect.cpp */,
 				1790B02709883BFD008A330A /* LadspaEffect.h */,
-				1790B02809883BFD008A330A /* LoadLadspa.cpp */,
-				1790B02909883BFD008A330A /* LoadLadspa.h */,
 			);
 			path = ladspa;
 			sourceTree = "<group>";
@@ -8833,7 +8826,6 @@
 				1790B13C09883BFD008A330A /* Fade.cpp in Sources */,
 				1790B13E09883BFD008A330A /* Invert.cpp in Sources */,
 				1790B13F09883BFD008A330A /* LadspaEffect.cpp in Sources */,
-				1790B14009883BFD008A330A /* LoadLadspa.cpp in Sources */,
 				1790B14109883BFD008A330A /* Leveller.cpp in Sources */,
 				1790B14209883BFD008A330A /* LoadEffects.cpp in Sources */,
 				1790B14309883BFD008A330A /* Noise.cpp in Sources */,
@@ -9345,7 +9337,6 @@
 				ED663BA816543647007F53A5 /* Fade.cpp in Sources */,
 				ED663BA916543647007F53A5 /* Invert.cpp in Sources */,
 				ED663BAA16543647007F53A5 /* LadspaEffect.cpp in Sources */,
-				ED663BAB16543647007F53A5 /* LoadLadspa.cpp in Sources */,
 				ED663BAC16543647007F53A5 /* Leveller.cpp in Sources */,
 				ED663BAD16543647007F53A5 /* LoadEffects.cpp in Sources */,
 				ED663BAE16543647007F53A5 /* Noise.cpp in Sources */,
@@ -9655,7 +9646,6 @@
 				ED85B48016A47353006DA21D /* Fade.cpp in Sources */,
 				ED85B48116A47353006DA21D /* Invert.cpp in Sources */,
 				ED85B48216A47353006DA21D /* LadspaEffect.cpp in Sources */,
-				ED85B48316A47353006DA21D /* LoadLadspa.cpp in Sources */,
 				ED85B48416A47353006DA21D /* Leveller.cpp in Sources */,
 				ED85B48516A47353006DA21D /* LoadEffects.cpp in Sources */,
 				ED85B48616A47353006DA21D /* Noise.cpp in Sources */,

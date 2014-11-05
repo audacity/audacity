@@ -585,8 +585,6 @@ audacity_SOURCES += \
 	effects/ladspa/ladspa.h \
 	effects/ladspa/LadspaEffect.cpp \
 	effects/ladspa/LadspaEffect.h \
-	effects/ladspa/LoadLadspa.cpp \
-	effects/ladspa/LoadLadspa.h \
 	$(NULL)
 endif
 
