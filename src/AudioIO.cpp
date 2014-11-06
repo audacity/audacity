@@ -542,7 +542,6 @@ AudioIO::AudioIO()
    mLastSilentBufSize = 0;
 
    mStreamToken = 0;
-   mStopStreamCount = 0;
 
    mLastPaError = paNoError;
 
@@ -1605,12 +1604,7 @@ void AudioIO::StopStream()
      )
       return;
 
-   // Avoid race condition by making sure this function only
-   // gets called once at a time
-   mStopStreamCount++; // <- note that this is not atomic, therefore has
-                       // a race condition -RBD
-   if (mStopStreamCount != 1)
-      return;
+   wxMutexLocker locker(mSuspendAudioThread);
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    // No longer need effects processing
@@ -1839,7 +1833,6 @@ void AudioIO::StopStream()
    // Only set token to 0 after we're totally finished with everything
    //
    mStreamToken = 0;
-   mStopStreamCount = 0;
 }
 
 void AudioIO::SetPaused(bool state)
@@ -3449,6 +3442,12 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
          if (gAudioIO->mSeek)
          {
+            int token = gAudioIO->mStreamToken;
+            wxMutexLocker locker(gAudioIO->mSuspendAudioThread);
+            if (token != gAudioIO->mStreamToken)
+               // This stream got destroyed while we waited for it
+               return paAbort;
+
             // Pause audio thread and wait for it to finish
             gAudioIO->mAudioThreadFillBuffersLoopRunning = false;
             while( gAudioIO->mAudioThreadFillBuffersLoopActive == true )

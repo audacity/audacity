@@ -490,8 +490,7 @@ private:
    WaveTrackArray      mPlaybackTracks;
 
    Mixer             **mPlaybackMixers;
-   int                 mStreamToken;
-   int                 mStopStreamCount;
+   volatile int        mStreamToken;
    static int          mNextStreamToken;
    double              mFactor;
    double              mRate;
@@ -602,6 +601,10 @@ private:
                 unsigned long framesPerBuffer,
                 const PaStreamCallbackTimeInfo *timeInfo,
                 PaStreamCallbackFlags statusFlags, void *userData );
+
+   // Serialize main thread and PortAudio thread's attempts to pause and change
+   // the state used by the third, Audio thread.
+   wxMutex mSuspendAudioThread;
 };
 
 #endif
