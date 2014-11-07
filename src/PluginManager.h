@@ -250,6 +250,7 @@ private:
 
    wxString SharedKey(const PluginID & ID, const wxString & group, const wxString & key);
    wxString PrivateKey(const PluginID & ID, const wxString & group, const wxString & key);
+   wxString ConvertID(const PluginID & ID);
 
 private:
    static PluginManager mInstance;

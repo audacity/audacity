@@ -1386,16 +1386,20 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
    {
       PluginDescriptor plug;
 
+      mConfig->SetPath(groupName);
+
+      groupName = ConvertID(groupName);
+
       // Bypass group if the ID is already in use
-      if (mPlugins.find(wxString(groupName)) != mPlugins.end())
+      if (mPlugins.find(groupName) != mPlugins.end())
       {
+         mConfig->SetPath(wxT(".."));
+
          continue;
       }
 
-      mConfig->SetPath(groupName);
-
       // Set the ID and type
-      plug.SetID(wxString(groupName));
+      plug.SetID(groupName);
       plug.SetPluginType(type);
 
       // Get the provider ID and bypass group if not found
@@ -1588,7 +1592,7 @@ void PluginManager::SaveGroup(const wxChar *group, PluginType type)
          continue;
       }
 
-      mConfig->SetPath(CACHEROOT + group + wxCONFIG_PATH_SEPARATOR + plug.GetID());
+      mConfig->SetPath(CACHEROOT + group + wxCONFIG_PATH_SEPARATOR + ConvertID(plug.GetID()));
 
       mConfig->Write(KEY_PATH, plug.GetPath());
       mConfig->Write(KEY_NAME, plug.GetName());
@@ -2212,7 +2216,7 @@ wxString PluginManager::SharedKey(const PluginID & ID, const wxString & group, c
    }
 
    wxString path = CACHEROOT +
-                   mPlugins[ID].GetProviderID() +
+                   ConvertID(mPlugins[ID].GetProviderID()) +
                    wxCONFIG_PATH_SEPARATOR +
                    wxT("private") +
                    wxCONFIG_PATH_SEPARATOR;
@@ -2234,7 +2238,7 @@ wxString PluginManager::PrivateKey(const PluginID & ID, const wxString & group, 
    }
 
    wxString path = CACHEROOT +
-                  ID +
+                  ConvertID(ID) +
                   wxCONFIG_PATH_SEPARATOR +
                   wxT("private") +
                   wxCONFIG_PATH_SEPARATOR;
@@ -2248,3 +2252,25 @@ wxString PluginManager::PrivateKey(const PluginID & ID, const wxString & group, 
    return path + key;
 }
 
+// Sanitize the ID...not the best solution, but will suffice until this
+// is converted to XML
+wxString PluginManager::ConvertID(const PluginID & ID)
+{
+   wxString id = ID;
+   size_t cnt = 0;
+
+   cnt += id.Replace(wxT("\x01"), wxT(":"));
+   cnt += id.Replace(wxT("\x02"), wxT("/"));
+   cnt += id.Replace(wxT("\x03"), wxT("\\"));
+
+   if (cnt > 0)
+   {
+      return id;
+   }
+
+   id.Replace(wxT(":"), wxT("\x01"));
+   id.Replace(wxT("/"), wxT("\x02"));
+   id.Replace(wxT("\\"), wxT("\x03"));
+
+   return id;
+}
