@@ -79,7 +79,7 @@ LV2Effect::LV2Effect(const LilvPlugin *data,
    fInBuffer = NULL;
    fOutBuffer = NULL;
 
-   mLength = 0;
+   mDuration = 0;
 
    // Allocate buffers for the port indices and the default control values
    int numPorts = lilv_plugin_get_num_ports(mData);
@@ -386,7 +386,7 @@ bool LV2Effect::PromptUser()
          return false;
       }
 
-      mLength = dlog.GetLength();
+      mDuration = dlog.GetLength();
       mNoteLength = dlog.GetNoteLength();
       mNoteVelocity = dlog.GetNoteVelocity();
       mNoteKey = dlog.GetNoteKey();

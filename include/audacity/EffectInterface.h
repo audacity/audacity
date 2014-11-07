@@ -86,9 +86,9 @@ class EffectHostInterface : public EffectIdentInterface,
 public:
    virtual ~EffectHostInterface() {};
 
-   // Both of these are pretty much hacks until everything has been converted and
-   // it's decided if the client will display the interface or if that'll be done
-   // by the host.
+   virtual double GetDuration() = 0;
+   virtual bool SetDuration(double seconds) = 0;
+
    virtual bool Apply() = 0;
    virtual void Preview() = 0;
 };

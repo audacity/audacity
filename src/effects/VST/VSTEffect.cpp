@@ -764,14 +764,10 @@ private:
 
    void OnSlider(wxCommandEvent & evt);
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    void OnApply(wxCommandEvent & evt);
-#else
    void OnOk(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
    void OnPreview(wxCommandEvent & evt);
-#endif   
-
    void OnDefaults(wxCommandEvent & evt);
    void OnClose(wxCloseEvent & evt);
 
@@ -858,14 +854,10 @@ enum
 BEGIN_EVENT_TABLE(VSTEffectDialog, wxDialog)
    EVT_CLOSE(VSTEffectDialog::OnClose)
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    EVT_BUTTON(wxID_APPLY, VSTEffectDialog::OnApply)
-#else
    EVT_BUTTON(wxID_OK, VSTEffectDialog::OnOk)
    EVT_BUTTON(wxID_CANCEL, VSTEffectDialog::OnCancel)
-   EVT_BUTTON(ID_EFFECT_PREVIEW, VSTEffectDialog::OnPreview)
-#endif
-
+   EVT_BUTTON(ePreviewID, VSTEffectDialog::OnPreview)
    EVT_BUTTON(eDefaultsID, VSTEffectDialog::OnDefaults)
 
    EVT_COMBOBOX(ID_VST_PROGRAM, VSTEffectDialog::OnProgram)
@@ -1511,7 +1503,7 @@ void VSTEffectDialog::BuildFancy()
 
    // Add the standard button bar at the bottom
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-   vs->Add(CreateStdButtonSizer(this, eApplyButton | eDefaultsButton), 0, wxEXPAND);
+   vs->Add(CreateStdButtonSizer(this, eApplyButton | eCancelButton | eDefaultsButton), 0, wxEXPAND);
 #else
    vs->Add(CreateStdButtonSizer(this, ePreviewButton | eDefaultsButton |eCancelButton | eOkButton), 0, wxEXPAND);
 #endif
@@ -1561,11 +1553,14 @@ void VSTEffectDialog::BuildPlain()
    vSizer->Add(sw, 1, wxEXPAND | wxALL, 5);
 
    // Add the standard button bar at the bottom
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-   vSizer->Add(CreateStdButtonSizer(this, eApplyButton | eDefaultsButton), 0, wxEXPAND);
-#else
-   vSizer->Add(CreateStdButtonSizer(this, ePreviewButton|eDefaultsButton|eCancelButton|eOkButton), 0, wxEXPAND);
-#endif
+   if (mEffect->IsRealtimeCapable())
+   {
+      vSizer->Add(CreateStdButtonSizer(this, eDefaultsButton | eCancelButton | eApplyButton), 0, wxEXPAND);
+   }
+   else
+   {
+      vSizer->Add(CreateStdButtonSizer(this, ePreviewButton | eDefaultsButton | eCancelButton | eOkButton), 0, wxEXPAND);
+   }
 
    SetSizer(vSizer);
 
@@ -2586,7 +2581,6 @@ void VSTEffectDialog::OnClose(wxCloseEvent & evt)
 #endif
 }
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
 void VSTEffectDialog::OnApply(wxCommandEvent & WXUNUSED(evt))
 {
 #if defined(__WXMAC__)
@@ -2595,9 +2589,11 @@ void VSTEffectDialog::OnApply(wxCommandEvent & WXUNUSED(evt))
    Show(false);
 #endif
 
+   mEffect->SaveParameters(wxT("Current"));
+
    mEffect->mHost->Apply();
 }
-#else
+
 void VSTEffectDialog::OnPreview(wxCommandEvent & WXUNUSED(evt))
 {
    mEffect->mHost->Preview();
@@ -2610,6 +2606,8 @@ void VSTEffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    // Hide the dialog before closing the effect to prevent a brief empty dialog
    Show(false);
 #endif
+
+   mEffect->SaveParameters(wxT("Current"));
 
    if (mGui)
    {
@@ -2636,9 +2634,11 @@ void VSTEffectDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
 //      mEffect->callDispatcher(effEditClose, 0, 0, NULL, 0.0);
    }
 
-   EndModal(false);
+   if (IsModal())
+   {
+      EndModal(false);
+   }
 }
-#endif
 
 void VSTEffectDialog::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
@@ -3229,6 +3229,11 @@ wxString VSTEffect::GetDescription()
 
 EffectType VSTEffect::GetType()
 {
+   if (mAudioIns == 0 && mAudioOuts == 0 && mMidiIns == 0 && mMidiOuts == 0)
+   {
+      return EffectTypeNone;
+   }
+
    if (mAudioIns == 0 && mMidiIns == 0)
    {
       return EffectTypeGenerate;

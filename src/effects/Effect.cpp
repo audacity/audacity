@@ -75,7 +75,7 @@ Effect::Effect()
    mTracks = NULL;
    mOutputTracks = NULL;
    mOutputTracksType = Track::None;
-   mLength = 0;
+   mDuration = 0.0;
    mNumTracks = 0;
    mNumGroups = 0;
    mProgress = NULL;
@@ -246,8 +246,33 @@ bool Effect::IsInteractive()
 
 // EffectHostInterface implementation
 
+double Effect::GetDuration()
+{
+   if (mT1 > mT0)
+   {
+      return mT1 - mT0;
+   }
+
+   if (mClient->GetType() == EffectTypeGenerate)
+   {
+      return sDefaultGenerateLen;
+   }
+
+   return 0;
+}
+
+bool Effect::SetDuration(double seconds)
+{
+   mDuration = seconds;
+
+   return true;
+}
+
 bool Effect::Apply()
 {
+   // This is absolute hackage...but easy
+   //
+   // It should callback to the EffectManager to kick off the processing
    GetActiveProject()->OnEffect(GetID(), true);
 
    return true;
@@ -384,17 +409,19 @@ bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, cons
 
 bool Effect::Startup(EffectClientInterface *client)
 {
-   // Need to set host now so client startup can use our services
-   client->SetHost(this);
-   
-   // Bail if the client startup fails
-   if (!client->Startup())
-   {
-      return false;
-   }
-
    // Let destructor know we need to be shutdown
    mClient = client;
+
+   // Need to set host now so client startup can use our services
+   mClient->SetHost(this);
+   
+   // Bail if the client startup fails
+   if (!mClient->Startup())
+   {
+      mClient = NULL;
+
+      return false;
+   }
 
    mNumAudioIn = mClient->GetAudioInCount();
    mNumAudioOut = mClient->GetAudioOutCount();
@@ -416,6 +443,8 @@ bool Effect::Startup(EffectClientInterface *client)
    }
 
    SetEffectFlags(flags);
+
+   return true;
 }
 
 // All legacy effects should have this overridden
@@ -588,7 +617,9 @@ bool Effect::Process()
       return false;
    }
 
-   CopyInputTracks();
+   bool isGenerator = mClient->GetType() == EffectTypeGenerate;
+
+   CopyInputTracks(Track::All);
    bool bGoodResult = true;
 
    mInBuffer = NULL;
@@ -601,15 +632,34 @@ bool Effect::Process()
    TrackListIterator iter(mOutputTracks);
    int count = 0;
    bool clear = false;
-   WaveTrack *left = (WaveTrack *) iter.First();
-   while (left)
+   Track* t = iter.First();
+
+   for (t = iter.First(); t; t = iter.Next())
    {
+      if (t->GetKind() != Track::Wave || !t->GetSelected())
+      {
+         if (t->IsSyncLockSelected())
+         {
+            t->SyncLockAdjust(mT1, mT0 + mDuration);
+         }
+         continue;
+      }
+
+      WaveTrack *left = (WaveTrack *)t;
       WaveTrack *right;
       sampleCount len;
       sampleCount leftStart;
       sampleCount rightStart;
 
-      GetSamples(left, &leftStart, &len);
+      if (!isGenerator)
+      {
+         GetSamples(left, &leftStart, &len);
+      }
+      else
+      {
+         len = 0;
+         leftStart = 0;
+      }
 
       mNumChannels = 1;
 
@@ -618,7 +668,10 @@ bool Effect::Process()
       if (left->GetLinked() && mNumAudioIn > 1)
       {
          right = (WaveTrack *) iter.Next();
-         GetSamples(right, &rightStart, &len);
+         if (!isGenerator)
+         {
+            GetSamples(right, &rightStart, &len);
+         }
          clear = false;
          mNumChannels = 2;
       }
@@ -725,7 +778,6 @@ bool Effect::Process()
          break;
       }
 
-      left = (WaveTrack *) iter.Next();
       count++;
    }
 
@@ -796,6 +848,24 @@ bool Effect::ProcessTrack(int count,
    sampleCount inputBufferCnt = 0;
    sampleCount outputBufferCnt = 0;
    bool cleared = false;
+
+   WaveTrack *genLeft = NULL;
+   WaveTrack *genRight = NULL;
+   sampleCount genLength = 0;
+   bool isGenerator = mClient->GetType() == EffectTypeGenerate;
+   if (isGenerator)
+   {
+      genLength = left->GetRate() * mDuration;
+      delayRemaining = genLength;
+      cleared = true;
+
+      // Create temporary tracks
+      genLeft = mFactory->NewWaveTrack(left->GetSampleFormat(), left->GetRate());
+      if (right)
+      {
+         genRight = mFactory->NewWaveTrack(right->GetSampleFormat(), right->GetRate());
+      }
+   }
 
    // Call the effect until we run out of input or delayed samples
    while (inputRemaining || delayRemaining)
@@ -910,28 +980,31 @@ bool Effect::ProcessTrack(int count,
       }
 
       // Get the current number of delayed samples and accumulate
-      sampleCount delay = mClient->GetLatency();
-      curDelay += delay;
-      delayRemaining += delay;
+      if (!isGenerator)
+      {
+         sampleCount delay = mClient->GetLatency();
+         curDelay += delay;
+         delayRemaining += delay;
 
-      // If the plugin has delayed the output by more samples than our current
-      // block size, then we leave the output pointers alone.  This effectively
-      // removes those delayed samples from the output buffer.
-      if (curDelay >= curBlockSize)
-      {
-         curDelay -= curBlockSize;
-         curBlockSize = 0;
-      }
-      // We have some delayed samples, at the beginning of the output samples,
-      // so overlay them by shifting the remaining output samples.
-      else if (curDelay > 0)
-      {
-         curBlockSize -= curDelay;
-         for (int i = 0; i < mNumChannels; i++)
+         // If the plugin has delayed the output by more samples than our current
+         // block size, then we leave the output pointers alone.  This effectively
+         // removes those delayed samples from the output buffer.
+         if (curDelay >= curBlockSize)
          {
-            memmove(mOutBufPos[i], mOutBufPos[i] + curDelay, SAMPLE_SIZE(floatSample) * curBlockSize);
+            curDelay -= curBlockSize;
+            curBlockSize = 0;
          }
-         curDelay = 0;
+         // We have some delayed samples, at the beginning of the output samples,
+         // so overlay them by shifting the remaining output samples.
+         else if (curDelay > 0)
+         {
+            curBlockSize -= curDelay;
+            for (int i = 0; i < mNumChannels; i++)
+            {
+               memmove(mOutBufPos[i], mOutBufPos[i] + curDelay, SAMPLE_SIZE(floatSample) * curBlockSize);
+            }
+            curDelay = 0;
+         }
       }
 
       //
@@ -949,11 +1022,22 @@ bool Effect::ProcessTrack(int count,
       // Output buffers have filled
       else
       {
-         // Write them out
-         left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
-         if (right)
+         if (!isGenerator)
          {
-            right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+            // Write them out
+            left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
+            if (right)
+            {
+               right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+            }
+         }
+         else
+         {
+            genLeft->Append((samplePtr) mOutBuffer[0], floatSample, outputBufferCnt);
+            if (genRight)
+            {
+               genRight->Append((samplePtr) mOutBuffer[1], floatSample, outputBufferCnt);
+            }
          }
 
          // Reset the output buffer positions
@@ -996,10 +1080,37 @@ bool Effect::ProcessTrack(int count,
    // Put any remaining output
    if (outputBufferCnt)
    {
-      left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
-      if (right)
+      if (!isGenerator)
       {
-         right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+         left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
+         if (right)
+         {
+            right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+         }
+      }
+      else
+      {
+         genLeft->Append((samplePtr) mOutBuffer[0], floatSample, outputBufferCnt);
+         if (genRight)
+         {
+            genRight->Append((samplePtr) mOutBuffer[1], floatSample, outputBufferCnt);
+         }
+      }
+   }
+
+   if (isGenerator)
+   {
+      // Transfer the data from the temporary tracks to the actual ones
+      genLeft->Flush();
+      SetTimeWarper(new StepTimeWarper(mT0 + genLength, genLength - (mT1 - mT0)));
+      left->ClearAndPaste(mT0, mT1, genLeft, true, true, GetTimeWarper());
+      delete genLeft;
+
+      if (genRight)
+      {
+         genRight->Flush();
+         right->ClearAndPaste(mT0, mT1, genRight, true, true, GetTimeWarper());
+         delete genRight;
       }
    }
 
@@ -1044,14 +1155,16 @@ void Effect::GetSamples(WaveTrack *track, sampleCount *start, sampleCount *len)
    double t0 = mT0 < trackStart ? trackStart : mT0;
    double t1 = mT1 > trackEnd ? trackEnd : mT1;
 
+#if 0
    if (GetType() & INSERT_EFFECT) {
-      t1 = t0 + mLength;
+      t1 = t0 + mDuration;
       if (mT0 == mT1) {
          // Not really part of the calculation, but convenient to put here
          bool bResult = track->InsertSilence(t0, t1);
          wxASSERT(bResult); // TO DO: Actually handle this.
       }
    }
+#endif
 
    if (t1 > t0) {
       *start = track->TimeToLongSamples(t0);

@@ -96,6 +96,9 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
 
    // EffectHostInterface implementation
 
+   virtual double GetDuration();
+   virtual bool SetDuration(double duration);
+
    virtual bool Apply();
    virtual void Preview();
 
@@ -351,7 +354,7 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
  protected:
    static double sDefaultGenerateLen;
    int mFlags;
-   double mLength;
+   double mDuration;
 
    // type of the tracks on mOutputTracks
    int mOutputTracksType;

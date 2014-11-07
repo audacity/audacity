@@ -2006,7 +2006,6 @@ PluginDescriptor & PluginManager::CreatePlugin(IdentInterface *ident, PluginType
 
    // This will either create a new entry or replace an existing entry
    mPlugins[plug.GetID()] = plug;
-   PluginDescriptor &p = mPlugins[plug.GetID()];
    return mPlugins[plug.GetID()];
 }
 
@@ -2116,6 +2115,10 @@ bool PluginManager::SetConfig(const wxString & key, const wxString & value)
    {
       wxString wxval = value.c_str();
       result = mConfig->Write(key, wxval);
+      if (result)
+      {
+         result = mConfig->Flush();
+      }
    }
 
    return result;
@@ -2128,6 +2131,10 @@ bool PluginManager::SetConfig(const wxString & key, const int & value)
    if (mConfig && !key.empty())
    {
       result = mConfig->Write(key, value);
+      if (result)
+      {
+         result = mConfig->Flush();
+      }
    }
 
    return result;
@@ -2140,6 +2147,10 @@ bool PluginManager::SetConfig(const wxString & key, const bool & value)
    if (mConfig && !key.empty())
    {
       result = mConfig->Write(key, value);
+      if (result)
+      {
+         result = mConfig->Flush();
+      }
    }
 
    return result;
@@ -2152,6 +2163,10 @@ bool PluginManager::SetConfig(const wxString & key, const float & value)
    if (mConfig && !key.empty())
    {
       result = mConfig->Write(key, value);
+      if (result)
+      {
+         result = mConfig->Flush();
+      }
    }
 
    return result;
@@ -2164,6 +2179,10 @@ bool PluginManager::SetConfig(const wxString & key, const double & value)
    if (mConfig && !key.empty())
    {
       result = mConfig->Write(key, value);
+      if (result)
+      {
+         result = mConfig->Flush();
+      }
    }
 
    return result;
@@ -2176,6 +2195,10 @@ bool PluginManager::SetConfig(const wxString & key, const sampleCount & value)
    if (mConfig && !key.empty())
    {
       result = mConfig->Write(key, wxString::Format(wxT("%d"), (int) value));
+      if (result)
+      {
+         result = mConfig->Flush();
+      }
    }
 
    return result;
