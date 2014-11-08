@@ -79,6 +79,8 @@ audacity$(EXEEXT): src/audacity$(EXEEXT)
 
 modules:
 	mkdir -p modules
-	(cd lib-src/mod-nyq-bench && make && cp .libs/mod-nyq-bench.so ../../modules)
+	(cd lib-src/mod-nyq-bench && make clean && make && cp .libs/mod-nyq-bench.so ../../modules)
+
+.PHONY: modules
 
 CLEANFILES = audacity$(EXEEXT) plug-ins nyquist locale modules
