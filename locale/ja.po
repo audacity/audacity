@@ -1073,7 +1073,7 @@ msgstr "プロジェクトファイルを精査しています"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1089,7 +1089,7 @@ msgid ""
 "project immediately\" on further error alerts."
 msgstr ""
 "フォルダ \"%s\" のチェックにおいて\n"
-" %d 個のオーディオファイルの欠損が見つかりました. \n"
+" %lld 個のオーディオファイルの欠損が見つかりました. \n"
 "('エイリアスファイル'). Audacityはこれらのファイルを\n"
 "自動的に復旧することはできません. \n"
 "\n"
@@ -1124,12 +1124,12 @@ msgstr "プロジェクトチェックは欠落したエイリアスファイル
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "\"%s\"フォルダのプロジェクトチェックは\n"
-" %d 個の欠落エイリアス　(.auf)　ブロックファイルを検出しました．\n"
+" %lld 個の欠落エイリアス　(.auf)　ブロックファイルを検出しました．\n"
 "Audacity は, それらのファイルをプロジェクト中の元の\n"
 "オーディオから復元することができます."
 
@@ -1157,7 +1157,7 @@ msgstr "プロジェクトチェックは欠落したエイリアス要約ファ
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1171,7 +1171,7 @@ msgid ""
 msgstr ""
 "\"%s\"フォルダのプロジェクトチェックは\n"
 "バグかシステムクラッシュあるいは偶発的な削除によって\n"
-"オーディオデータのブロックファイル(.au)%d 個が行方不明\n"
+"オーディオデータのブロックファイル(.au)%lld 個が行方不明\n"
 "であることを検出しました．Audacity はそれらの失われた\n"
 "データを自動的に回復することはできません. \n"
 "\n"
@@ -4749,8 +4749,8 @@ msgstr "ステレオの作製"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "'%s' から %d Hz に変更されました"
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s' から %s Hz に変更されました"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4782,8 +4782,8 @@ msgstr "上位速度の制限"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "範囲を '%d' から '%d' に設定"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "範囲を '%ld' から '%ld' に設定"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8562,13 +8562,13 @@ msgstr "書き込むためのファイルを開けません"
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "選択したオーディオを %d kbps で書き出し"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "選択したオーディオを %ld kbps で書き出し"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "ファイル全体を %d kbps で書き出し"
+msgid "Exporting entire file at %ld kbps"
+msgstr "ファイル全体を %ld kbps で書き出し"
 
 #  i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
@@ -8771,8 +8771,8 @@ msgstr "ファイル全体を %d Kbps で書き出し"
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "MP3エンコーダにおいて, エラー %d が返されました. "
+msgid "Error %ld returned from MP3 encoder"
+msgstr "MP3エンコーダにおいて, エラー %ld が返されました. "
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8888,28 +8888,28 @@ msgstr "書き出して保存するファイルの場所を選んでください
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "次の %ld ファイルの書き出しに成功しました."
+msgid "Successfully exported the following %lld file(s)."
+msgstr "次の %lld ファイルの書き出しに成功しました."
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
-msgstr "次の %ld ファイルの書き出し後, 異常が発生しました."
+msgid "Something went wrong after exporting the following %lld file(s)."
+msgstr "次の %lld ファイルの書き出し後, 異常が発生しました."
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
-msgstr "書き出しは次の%ldファイルの後にキャンセルされました."
+msgid "Export canceled after exporting the following %lld file(s)."
+msgstr "書き出しは次の%lldファイルの後にキャンセルされました."
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
-msgstr "書き出しは次の%ldファイルの後に停止しました."
+msgid "Export stopped after exporting the following %lld file(s)."
+msgstr "書き出しは次の%lldファイルの後に停止しました."
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
-msgstr "次の %ld ファイルの書き出し後, 重大な異常が発生しました."
+msgid "Something went really wrong after exporting the following %lld file(s)."
+msgstr "次の %lld ファイルの書き出し後, 重大な異常が発生しました."
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
@@ -9257,9 +9257,9 @@ msgstr "FFmpeg 互換ファイル"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
-"インデックス[%02x] コーデック[%S], 言語[%S], ビットレート[%S], チャンネル"
+"インデックス[%02x] コーデック[%s], 言語[%s], ビットレート[%s], チャンネル"
 "[%d], 継続時間[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28

@@ -1064,7 +1064,7 @@ msgstr "프로젝트 파일 데이터 검사하기"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1080,7 +1080,7 @@ msgid ""
 "project immediately\" on further error alerts."
 msgstr ""
 "\"%s\" 폴더에 대한 프로젝트 검사에서 \n"
-"빠진 외부 오디오 파일('별명 파일') %d개를 \n"
+"빠진 외부 오디오 파일('별명 파일') %lld개를 \n"
 "발견했습니다. Audacity가 이 파일을 자동으로 \n"
 "복구할 방법이 없습니다. \n"
 "\n"
@@ -1115,12 +1115,12 @@ msgstr "  프로젝트 검사에서 빠진 별명 파일을 묵음으로 바꿨�
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "\"%s\" 폴더에 대한 프로젝트 검사에서 \n"
-"빠진 별명(.auf) 블록 파일 %d개를 발견했습니다. \n"
+"빠진 별명(.auf) 블록 파일 %lld개를 발견했습니다. \n"
 "Audacity는 현재 프로젝트의 오디오에서 \n"
 "이들 파일을 완전히 새로 만들 수 있습니다."
 
@@ -1148,7 +1148,7 @@ msgstr "  프로젝트 검사에서 빠진 별명 요약 파일을 다시 만들
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1161,7 +1161,7 @@ msgid ""
 "may not show silence."
 msgstr ""
 "\"%s\" 폴더에 대한 프로젝트 검사에서 \n"
-"빠진 오디오 데이터(.au) 블록 파일 %d개를 발견했습니다. \n"
+"빠진 오디오 데이터(.au) 블록 파일 %lld개를 발견했습니다. \n"
 "아마도 버그이거나, 시스템이 깨졌거나 잘못 \n"
 "감지했을 수도 있습니다. Audacity가 이 빠진 파일을 \n"
 "자동으로 복구할 방법이 없습니다. \n"
@@ -4726,8 +4726,8 @@ msgstr "스테레오 만들기"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "'%s'을(를) %d Hz로 바꾸었습니다"
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s'을(를) %s Hz로 바꾸었습니다"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4759,8 +4759,8 @@ msgstr "상위 속도 제한"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "'%d' - '%d' 범위로 설정"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "'%ld' - '%ld' 범위로 설정"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8570,13 +8570,13 @@ msgstr "기록을 위해 대상 파일을 열 수 없습니다"
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "선택한 오디오를 %d kbps로 내보내는 중"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "선택한 오디오를 %ld kbps로 내보내는 중"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "%d kbps로 전체 파일 내보내는 중"
+msgid "Exporting entire file at %ld kbps"
+msgstr "%ld kbps로 전체 파일 내보내는 중"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8775,8 +8775,8 @@ msgstr "전체 파일을 %d Kbps로 내보내는 중"
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "MP3 인코더에서 오류 %d을(를) 반환했습니다"
+msgid "Error %ld returned from MP3 encoder"
+msgstr "MP3 인코더에서 오류 %ld을(를) 반환했습니다"
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8892,28 +8892,28 @@ msgstr "내보낼 파일 저장 위치 선택"
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "다음 %ld개 파일을 성공적으로 내보냈습니다."
+msgid "Successfully exported the following %lld file(s)."
+msgstr "다음 %lld개 파일을 성공적으로 내보냈습니다."
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
-msgstr "다음 %ld개 파일을 내보낸 후에 무엇인가가 잘못되었습니다."
+msgid "Something went wrong after exporting the following %lld file(s)."
+msgstr "다음 %lld개 파일을 내보낸 후에 무엇인가가 잘못되었습니다."
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
-msgstr "다음 %ld개 파일을 내보낸 후에 내보내기를 취소했습니다."
+msgid "Export canceled after exporting the following %lld file(s)."
+msgstr "다음 %lld개 파일을 내보낸 후에 내보내기를 취소했습니다."
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
-msgstr "다음 %ld개 파일을 내보낸 후에 내보내기를 멈췄습니다."
+msgid "Export stopped after exporting the following %lld file(s)."
+msgstr "다음 %lld개 파일을 내보낸 후에 내보내기를 멈췄습니다."
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
-msgstr "다음 %ld개 파일을 내보낸 후에 무엇인가가 제대로 잘못되었습니다."
+msgid "Something went really wrong after exporting the following %lld file(s)."
+msgstr "다음 %lld개 파일을 내보낸 후에 무엇인가가 제대로 잘못되었습니다."
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
@@ -9250,8 +9250,8 @@ msgstr "FFmpeg-호환 파일"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
-msgstr "인덱스[%02x] 코덱[%S], 언어[%S], 비트 전송율[%S], 채널[%d], 길이[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr "인덱스[%02x] 코덱[%s], 언어[%s], 비트 전송율[%s], 채널[%d], 길이[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28
 msgid "FLAC files"

@@ -1008,7 +1008,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1044,7 +1044,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
@@ -1074,7 +1074,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -4646,8 +4646,8 @@ msgstr "စတီရီယို ဖန်တီးပါ"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "'%s' မှ %d Hz သို့ ပြောင်းလဲမှု"
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s' မှ %s Hz သို့ ပြောင်းလဲမှု"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4679,8 +4679,8 @@ msgstr "အထက်ပိုင်း အရှိန် ကန့်သတ်�
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "သတ်မှတ်မဲ့ အတိုင်းအတာ '%d' - '%d'"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "သတ်မှတ်မဲ့ အတိုင်းအတာ '%ld' - '%ld'"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8484,13 +8484,13 @@ msgstr "ပစ်မှတ်ထားတဲ့ ဖိုင်ကို ရေ�
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "ရွေးထားတဲ့ အသံ %d kbps ကို တင်ပို့နေခြင်း"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "ရွေးထားတဲ့ အသံ %ld kbps ကို တင်ပို့နေခြင်း"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "ဖိုင် တခုလုံးကို %d kbps မှာ တင်ပို့နေတယ်"
+msgid "Exporting entire file at %ld kbps"
+msgstr "ဖိုင် တခုလုံးကို %ld kbps မှာ တင်ပို့နေတယ်"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8689,8 +8689,8 @@ msgstr "ဖိုင်တခုလုံးကို %d Kbps မှာ တင�
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "MP3 စာဝှက်ရေးကိရယာမှ ပေးပို့တဲ့ အမှားအယွင်း %d"
+msgid "Error %ld returned from MP3 encoder"
+msgstr "MP3 စာဝှက်ရေးကိရယာမှ ပေးပို့တဲ့ အမှားအယွင်း %ld"
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8805,28 +8805,28 @@ msgstr "တင်ပို့ထားတဲ့ ဖိုင်များက�
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "အောက်ပါ %ld ဖိုင်(များ)ကို အောင်မြင်စွာ တင်ပို့လိုက်ပြီ။"
+msgid "Successfully exported the following %lld file(s)."
+msgstr "အောက်ပါ %lld ဖိုင်(များ)ကို အောင်မြင်စွာ တင်ပို့လိုက်ပြီ။"
 
 #: src/export/ExportMultiple.cpp:539
 #, fuzzy, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
-msgstr "အောက်ပါ %ld ဖိုင်(များ)ကကို တင်ပို့ပြီးနောက် တစုံတခု ချို့ယွင်းသွားတယ်။"
+msgid "Something went wrong after exporting the following %lld file(s)."
+msgstr "အောက်ပါ %lld ဖိုင်(များ)ကကို တင်ပို့ပြီးနောက် တစုံတခု ချို့ယွင်းသွားတယ်။"
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
-msgstr "အောက်ပါ %ld ဖိုင်(များ) တင်ပို့ပြီးနောက် တင်ပို့မှု ရပ်ဆိုင်းသွားတယ်။"
+msgid "Export canceled after exporting the following %lld file(s)."
+msgstr "အောက်ပါ %lld ဖိုင်(များ) တင်ပို့ပြီးနောက် တင်ပို့မှု ရပ်ဆိုင်းသွားတယ်။"
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
-msgstr "အောက်ပါ %ld ဖိုင်(များ) တင်ပို့ပြီးနောက် တင်ပို့မှု ရပ်နားသွားတယ်။"
+msgid "Export stopped after exporting the following %lld file(s)."
+msgstr "အောက်ပါ %lld ဖိုင်(များ) တင်ပို့ပြီးနောက် တင်ပို့မှု ရပ်နားသွားတယ်။"
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
-msgstr "အောက်ပါ %ld ဖိုင်(များ)ကကို တင်ပို့ပြီးနောက် တစုံတခု တကယ်ပဲ ချို့ယွင်းသွားတယ်။"
+msgid "Something went really wrong after exporting the following %lld file(s)."
+msgstr "အောက်ပါ %lld ဖိုင်(များ)ကကို တင်ပို့ပြီးနောက် တစုံတခု တကယ်ပဲ ချို့ယွင်းသွားတယ်။"
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
@@ -9162,9 +9162,9 @@ msgstr "FFmpeg-လိုက်ဖက်တဲ့ ဖိုင်များ"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
-"အညွှန်း[%02x] ကိုဓ[%S], ဘာသာစကား[%S], ဘစ်နှုန်းထား[%S], ချာနယ်များ[%d], ကြာမြင့်ချိန်[%d]"
+"အညွှန်း[%02x] ကိုဓ[%s], ဘာသာစကား[%s], ဘစ်နှုန်းထား[%s], ချာနယ်များ[%d], ကြာမြင့်ချိန်[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28
 msgid "FLAC files"

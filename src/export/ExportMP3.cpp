@@ -1495,10 +1495,10 @@ static void dump_config( 	lame_global_flags*	gfp )
    wxPrintf(wxT("CRC                    =%s\n"), lame_get_error_protection( gfp ) ? wxT("on") : wxT("off") );
    wxPrintf(wxT("Fast mode              =%s\n"), ( lame_get_quality( gfp ) )? wxT("enabled") : wxT("disabled") );
    wxPrintf(wxT("Force mid/side stereo  =%s\n"), ( lame_get_force_ms( gfp ) )?wxT("enabled"):wxT("disabled") );
-   wxPrintf(wxT("Padding Type           =%d\n"), lame_get_padding_type( gfp ) );
+   wxPrintf(wxT("Padding Type           =%d\n"), (int) lame_get_padding_type( gfp ) );
    wxPrintf(wxT("Disable Reservoir      =%d\n"), lame_get_disable_reservoir( gfp ) );
    wxPrintf(wxT("Allow diff-short       =%d\n"), lame_get_allow_diff_short( gfp ) );
-   wxPrintf(wxT("Interchannel masking   =%f\n"), lame_get_interChRatio( gfp ) );
+   wxPrintf(wxT("Interchannel masking   =%d\n"), lame_get_interChRatio( gfp ) ); // supposed to be a float, but in lib-src/lame/lame/lame.h it's int
    wxPrintf(wxT("Strict ISO Encoding    =%s\n"), ( lame_get_strict_ISO( gfp ) ) ?wxT("Yes"):wxT("No"));
    wxPrintf(wxT("Scale                  =%5.2f\n"), lame_get_scale( gfp ) );
 
@@ -1799,7 +1799,7 @@ int ExportMP3::Export(AudacityProject *project,
 
       if (bytes < 0) {
          wxString msg;
-         msg.Printf(_("Error %d returned from MP3 encoder"), bytes);
+         msg.Printf(_("Error %ld returned from MP3 encoder"), bytes);
          wxMessageBox(msg);
          break;
       }

@@ -1055,7 +1055,7 @@ msgstr "Sto ispezionando i file dati del progetto"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1071,7 +1071,7 @@ msgid ""
 "project immediately\" on further error alerts."
 msgstr ""
 "Il controllo del progetto della cartella \"%s\"  \n"
-"ha evidenziato %d file audio esterni mancanti \n"
+"ha evidenziato %lld file audio esterni mancanti \n"
 "(\"file alias\"). Non vi è modo per Audacity\n"
 "di recuperarli automaticamente. \n"
 "\n"
@@ -1108,12 +1108,12 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "Il controllo del progetto della cartella \"%s\" \n"
-" ha individuato %d blocco di file alias mancanti (.auf).\n"
+" ha individuato %lld blocco di file alias mancanti (.auf).\n"
 "Audacity può rigenerare completamente questi \n"
 "file dall'audio originale nel progetto."
 
@@ -1144,7 +1144,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1157,7 +1157,7 @@ msgid ""
 "may not show silence."
 msgstr ""
 "Il controllo del progetto della cartella \"%s\" \n"
-"ha individuato %d blocchi file di dati audio (.au) mancanti, \n"
+"ha individuato %lld blocchi file di dati audio (.au) mancanti, \n"
 "probabilmente a causa di un errore, di un crash di sistema, o di una "
 "accidentale \n"
 "eliminazione. Audacity non è in grado di recuperare \n"
@@ -4729,8 +4729,8 @@ msgstr "Crea stereo"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "Modificato %s in %d Hz"
+msgid "Changed '%s' to %s Hz"
+msgstr "Modificato %s in %s Hz"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4762,8 +4762,8 @@ msgstr "Limite superiore della velocità"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "Imposta intervallo a '%d' - '%d'"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Imposta intervallo a '%ld' - '%ld'"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8564,13 +8564,13 @@ msgstr "Impossibile scrivere sul file di destinazione"
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "Sto esportando l'audio selezionato a %d kb/sec"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "Sto esportando l'audio selezionato a %ld kb/sec"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "Sto esportando l'intero file a %d kb/sec"
+msgid "Exporting entire file at %ld kbps"
+msgstr "Sto esportando l'intero file a %ld kb/sec"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8769,8 +8769,8 @@ msgstr "Sto esportando l'intero file a %d Kb/sec"
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "Restituito errore %d dall'encoder MP3"
+msgid "Error %ld returned from MP3 encoder"
+msgstr "Restituito errore %ld dall'encoder MP3"
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8887,29 +8887,29 @@ msgstr "Scegli dove salvare i file esportati"
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "Esportati con successo i seguenti %ld file."
+msgid "Successfully exported the following %lld file(s)."
+msgstr "Esportati con successo i seguenti %lld file."
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
+msgid "Something went wrong after exporting the following %lld file(s)."
 msgstr ""
-"È successo qualcosa di sbagliato dopo l'esportazione dei seguenti %ld file."
+"È successo qualcosa di sbagliato dopo l'esportazione dei seguenti %lld file."
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
-msgstr "Esportazione eliminata dopo l'esportazione dei seguenti %ld file."
+msgid "Export canceled after exporting the following %lld file(s)."
+msgstr "Esportazione eliminata dopo l'esportazione dei seguenti %lld file."
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
-msgstr "Esportazione fermata dopo l'esportazione dei seguenti %ld file."
+msgid "Export stopped after exporting the following %lld file(s)."
+msgstr "Esportazione fermata dopo l'esportazione dei seguenti %lld file."
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
-msgstr "Qualcosa è andata male dopo l'esportazione dei seguenti %ld file."
+msgid "Something went really wrong after exporting the following %lld file(s)."
+msgstr "Qualcosa è andata male dopo l'esportazione dei seguenti %lld file."
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
@@ -9253,9 +9253,9 @@ msgstr "File FFmpeg compatibili"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
-"Indice[%02x] Codec[%S], Lingua[%S], Bitrate[%S], Canali[%d], Durata[%d]"
+"Indice[%02x] Codec[%s], Lingua[%s], Bitrate[%s], Canali[%d], Durata[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28
 msgid "FLAC files"

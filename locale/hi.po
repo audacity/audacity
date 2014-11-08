@@ -1059,7 +1059,7 @@ msgstr "परियोजना फ़ाईल में डेटा की �
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1074,7 +1074,7 @@ msgid ""
 "project in its current state, unless you \"Close \n"
 "project immediately\" on further error alerts."
 msgstr ""
-"\"%s\" फ़ोल्डर की परियोजना जांच में %d बाहरी ऑडियो फाइलें ('उपनाम फाइलें') अब\n"
+"\"%s\" फ़ोल्डर की परियोजना जांच में %lld बाहरी ऑडियो फाइलें ('उपनाम फाइलें') अब\n"
 "लापता हैं. Audacity के पास इन फाइलों को स्वयं बरामद करने का कोई कारगर \n"
 "तरीका नहीं है. \n"
 "\n"
@@ -1107,12 +1107,12 @@ msgstr "   परियोजना जांच ने लापता उप�
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "परियोजना जांच में \"%s\" फोल्डर में  \n"
-"%d लापता उपनाम (.auf)ब्लॉकफाइल(लें) मिली हैं. \n"
+"%lld लापता उपनाम (.auf)ब्लॉकफाइल(लें) मिली हैं. \n"
 "Audacity परियोजना के वर्तमान ऑडियो डाटा से \n"
 "इनका पूरी तरह निर्माण कर सकता है."
 
@@ -1140,7 +1140,7 @@ msgstr "   परियोजना जांच ने लापता उप�
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1153,7 +1153,7 @@ msgid ""
 "may not show silence."
 msgstr ""
 "परियोजना के \"%s\" फोल्डर की  \n"
-"जांच में %d ऑडियो डेटा ब्लाक फाइलें (.au) लापता पाई गई हैं, \n"
+"जांच में %lld ऑडियो डेटा ब्लाक फाइलें (.au) लापता पाई गई हैं, \n"
 "जो शायद एक त्रुटि, सिस्टम दुर्घटना या अंजाने में मिट जाने से हुई है. \n"
 "Audacity के पास इस खोए डेटा को स्वतः पाने का कोई कारगर \n"
 "तरीका नहीं है\n"
@@ -4742,8 +4742,8 @@ msgstr "स्टिरियो बनाएं"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "परिवर्तित '%s' से %d Hz"
+msgid "Changed '%s' to %s Hz"
+msgstr "परिवर्तित '%s' से %s Hz"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4775,8 +4775,8 @@ msgstr "अधिकतम गति-सीमा"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "सीमा निर्धारित करें '%d' - '%d'"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "सीमा निर्धारित करें '%ld' - '%ld'"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8600,13 +8600,13 @@ msgstr "लिखने के लिए इंगित फ़ाइल को 
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "चयनित ऑडियो का निर्यात %d kbps पर कर रहे हैं"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "चयनित ऑडियो का निर्यात %ld kbps पर कर रहे हैं"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "पूरी फ़ाइल का निर्यात %d kbps पर कर रहे हैं"
+msgid "Exporting entire file at %ld kbps"
+msgstr "पूरी फ़ाइल का निर्यात %ld kbps पर कर रहे हैं"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8806,8 +8806,8 @@ msgstr "पूरी फ़ाइल का निर्यात %d Kbps पर
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "MP3 एनकोडर ने त्रुटि संख्या %d  लौटाया"
+msgid "Error %ld returned from MP3 encoder"
+msgstr "MP3 एनकोडर ने त्रुटि संख्या %ld  लौटाया"
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8923,28 +8923,28 @@ msgstr "निर्यातित फ़ाइलों को सहेजन
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "सफलतापूर्वक निम्नलिखित %ld फ़ाइलों का निर्यात किया."
+msgid "Successfully exported the following %lld file(s)."
+msgstr "सफलतापूर्वक निम्नलिखित %lld फ़ाइलों का निर्यात किया."
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
-msgstr "निम्नलिखित %ld फ़ाइलों के निर्यात के बाद कुछ गड़बड़ी हो गई है."
+msgid "Something went wrong after exporting the following %lld file(s)."
+msgstr "निम्नलिखित %lld फ़ाइलों के निर्यात के बाद कुछ गड़बड़ी हो गई है."
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
-msgstr "निम्नलिखित %ld फ़ाइलों के निर्यात के बाद निर्यात रद्द कर दिया गया."
+msgid "Export canceled after exporting the following %lld file(s)."
+msgstr "निम्नलिखित %lld फ़ाइलों के निर्यात के बाद निर्यात रद्द कर दिया गया."
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
-msgstr "निम्नलिखित %ld फ़ाइलों के निर्यात करने के बाद निर्यात बंद हो गया."
+msgid "Export stopped after exporting the following %lld file(s)."
+msgstr "निम्नलिखित %lld फ़ाइलों के निर्यात करने के बाद निर्यात बंद हो गया."
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
-msgstr "निम्नलिखित %ld फ़ाइल निर्यात करने के बाद कुछ गड़बड़ी हो गई है."
+msgid "Something went really wrong after exporting the following %lld file(s)."
+msgstr "निम्नलिखित %lld फ़ाइल निर्यात करने के बाद कुछ गड़बड़ी हो गई है."
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
@@ -9280,8 +9280,8 @@ msgstr "FFmpeg-compatible फ़ाइलें"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
-msgstr "सूचकांक[%02x] कोडेक[%S], भाषा[%S], बिटदर [%S], चैनल[%d], अवधि[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr "सूचकांक[%02x] कोडेक[%s], भाषा[%s], बिटदर [%s], चैनल[%d], अवधि[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28
 msgid "FLAC files"

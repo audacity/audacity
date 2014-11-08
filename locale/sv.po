@@ -1063,7 +1063,7 @@ msgstr "Undersöker data i projektfil"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1079,7 +1079,7 @@ msgid ""
 "project immediately\" on further error alerts."
 msgstr ""
 "Projekt koll av \"%s\" mapp \n"
-"hittade %d saknade externa ljudfil(er) \n"
+"hittade %lld saknade externa ljudfil(er) \n"
 "('aliased files'). Det finns inget sätt för Audacity \n"
 "att återskapa dessa filer automatiskt. \n"
 "\n"
@@ -1114,12 +1114,12 @@ msgstr "   Projekt kollen ersätter saknade alias filer med tystnad."
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "Projekt koll av  \"%s\"  mapp \n"
-"hittade %d saknade alias (.auf) blockfil(er). \n"
+"hittade %lld saknade alias (.auf) blockfil(er). \n"
 "Audacity kan helt återskapa dessa filer \n"
 "från det nuvarande ljudet i projektet."
 
@@ -1147,7 +1147,7 @@ msgstr "   Project check regenerated missing alias summary file(s)."
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1160,7 +1160,7 @@ msgid ""
 "may not show silence."
 msgstr ""
 "Projekts koll av \"%s\" mapp \n"
-"hittade %d saknade ljuddata (.au) blockfil(er), \n"
+"hittade %lld saknade ljuddata (.au) blockfil(er), \n"
 "förmodligen orsakade av en bug, systemkrasch \n"
 "eller felaktig radering. Det finns inget sätt för Audacity att \n"
 "återskapa dessa saknade filer automatiskt. \n"
@@ -4738,8 +4738,8 @@ msgstr "Skapa stereo"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "Ändrat '%s' till %d Hz"
+msgid "Changed '%s' to %s Hz"
+msgstr "Ändrat '%s' till %s Hz"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4771,8 +4771,8 @@ msgstr "Övre hastighetsgräns"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "Bestäm yta till '%d' - '%d'"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Bestäm yta till '%ld' - '%ld'"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8595,13 +8595,13 @@ msgstr "Det gick inte att öppna önskad fil för att spara"
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "Exporterar valt ljud vid %d kbps"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "Exporterar valt ljud vid %ld kbps"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "Exportera hela filen vid %d kbps"
+msgid "Exporting entire file at %ld kbps"
+msgstr "Exportera hela filen vid %ld kbps"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8800,8 +8800,8 @@ msgstr "Exportera hela filen vid %d Kbps"
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "Fel %d rapporterades från MP3 encoder"
+msgid "Error %ld returned from MP3 encoder"
+msgstr "Fel %ld rapporterades från MP3 encoder"
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8917,28 +8917,28 @@ msgstr "Välj en plats att spara exporterade filer"
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "Export av följande %ld fil(er) lyckades."
+msgid "Successfully exported the following %lld file(s)."
+msgstr "Export av följande %lld fil(er) lyckades."
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
-msgstr "Något blev fel vid export av följande %ld fil(er)."
+msgid "Something went wrong after exporting the following %lld file(s)."
+msgstr "Något blev fel vid export av följande %lld fil(er)."
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
-msgstr "Export avbröts efter export av följande %ld fil(er)."
+msgid "Export canceled after exporting the following %lld file(s)."
+msgstr "Export avbröts efter export av följande %lld fil(er)."
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
-msgstr "Export stoppade efter  export av följande %ld fil(er)."
+msgid "Export stopped after exporting the following %lld file(s)."
+msgstr "Export stoppade efter  export av följande %lld fil(er)."
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
-msgstr "Något blev riktigt fel efter export av följande %ld fil(er)."
+msgid "Something went really wrong after exporting the following %lld file(s)."
+msgstr "Något blev riktigt fel efter export av följande %lld fil(er)."
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
@@ -9277,9 +9277,9 @@ msgstr "FFmpeg-kompatibla filer"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
-"Index[%02x] Codec[%S],Språk[%S], Bitrate[%S], Kannaler[%d], Duration[%d]"
+"Index[%02x] Codec[%s],Språk[%s], Bitrate[%s], Kannaler[%d], Duration[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28
 msgid "FLAC files"

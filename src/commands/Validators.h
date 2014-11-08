@@ -201,7 +201,7 @@ public:
    }
    virtual wxString GetDescription() const
    {
-      return wxString::Format(wxT("between %d and %d"), mLower, mUpper);
+      return wxString::Format(wxT("between %f and %f"), mLower, mUpper);
    }
    virtual Validator *GetClone() const
    {

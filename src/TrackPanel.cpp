@@ -1425,8 +1425,8 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
 #if DEBUG_DRAW_TIMING
    sw.Pause();
-   wxLogDebug(wxT("Total: %d milliseconds"), sw.Time());
-   wxPrintf(wxT("Total: %d milliseconds\n"), sw.Time());
+   wxLogDebug(wxT("Total: %ld milliseconds"), sw.Time());
+   wxPrintf(wxT("Total: %ld milliseconds\n"), sw.Time());
 #endif
 }
 
@@ -8349,8 +8349,10 @@ void TrackPanel::SetRate(Track * pTrack, double rate)
    Track *partner = mTracks->GetLink(pTrack);
    if (partner)
       ((WaveTrack *) partner)->SetRate(rate);
-   MakeParentPushState(wxString::Format(_("Changed '%s' to %d Hz"),
-                                        pTrack->GetName().c_str(), rate),
+   // Separate conversion of "rate" enables changing the decimals without affecting i18n
+   wxString rateString = wxString::Format(wxT("%.3f"), rate);
+   MakeParentPushState(wxString::Format(_("Changed '%s' to %s Hz"),
+                                        pTrack->GetName().c_str(), rateString.c_str()),
                        _("Rate Change"));
 }
 
@@ -8489,7 +8491,7 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
       wxArrayString rates;
       wxComboBox *cb;
 
-      rate.Printf(wxT("%d"), lrint(((WaveTrack *) mPopupMenuTarget)->GetRate()));
+      rate.Printf(wxT("%ld"), lrint(((WaveTrack *) mPopupMenuTarget)->GetRate()));
 
       rates.Add(wxT("8000"));
       rates.Add(wxT("11025"));
@@ -8576,9 +8578,9 @@ void TrackPanel::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
       if( lower >= 10 && upper <= 1000 && lower < upper ) {
          t->SetRangeLower((double)lower / 100.0);
          t->SetRangeUpper((double)upper / 100.0);
-         MakeParentPushState(wxString::Format(_("Set range to '%d' - '%d'"),
-                                              (int) lower,
-                                              (int) upper),
+         MakeParentPushState(wxString::Format(_("Set range to '%ld' - '%ld'"),
+                                              lower,
+                                              upper),
       /* i18n-hint: (verb)*/
 
                              _("Set Range"));
@@ -8833,7 +8835,7 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
          /* i18n-hint: (noun) The size of the typeface*/
          S.AddPrompt(_("Face size"));
          sc = new wxSpinCtrl(&dlg, wxID_ANY,
-                             wxString::Format(wxT("%d"), (int) fontsize),
+                             wxString::Format(wxT("%ld"), fontsize),
                              wxDefaultPosition,
                              wxDefaultSize,
                              wxSP_ARROW_KEYS,

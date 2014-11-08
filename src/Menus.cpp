@@ -1447,8 +1447,8 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
                      end = groupCnt;
                   }
                   c->BeginSubMenu(wxString::Format(_("Plug-ins %d to %d"),
-                                                   j + 1,
-                                                   end));
+                                                   (int) j + 1,
+                                                   (int) end));
                }
 
                c->AddItem(groupNames[j],
@@ -6208,7 +6208,7 @@ void AudacityProject::OnResample()
       wxArrayString rates;
       wxComboBox *cb;
 
-      rate.Printf(wxT("%d"), lrint(mRate));
+      rate.Printf(wxT("%ld"), lrint(mRate));
 
       rates.Add(wxT("8000"));
       rates.Add(wxT("11025"));

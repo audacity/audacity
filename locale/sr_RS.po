@@ -1069,7 +1069,7 @@ msgstr "Надгледам податке датотеке пројекта"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1084,7 +1084,7 @@ msgid ""
 "project in its current state, unless you \"Close \n"
 "project immediately\" on further error alerts."
 msgstr ""
-"Провера пројекта за фасциклу „%s“ је открила %d \n"
+"Провера пројекта за фасциклу „%s“ је открила %lld \n"
 "недостајуће спољне звучне датотеке („датотеке \n"
 "алијаса“). Не постоји начин да Одважност \n"
 "самостално опорави ове датотеке. \n"
@@ -1121,12 +1121,12 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "Провера пројекта за фасциклу „%s“ је открила \n"
-"%d недостајуће блок датотеке алијаса (.auf). \n"
+"%lld недостајуће блок датотеке алијаса (.auf). \n"
 "Одважност може у потпуности да обнови ове \n"
 "датотеке из текућег звука у пројекту."
 
@@ -1155,7 +1155,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1168,7 +1168,7 @@ msgid ""
 "may not show silence."
 msgstr ""
 "Провера пројекта за фасциклу „%s“ је открила \n"
-"%d недостајуће блок датотеке алијаса (.auf), \n"
+"%lld недостајуће блок датотеке алијаса (.auf), \n"
 "вероватно услед грешке, пада система, или \n"
 "случајног брисања. Нема начина да Одважност \n"
 "самостално обнови ове недостајуће датотеке.\n"
@@ -4728,8 +4728,8 @@ msgstr "Направи стерео"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "„%s“ је измењена у %d Hz"
+msgid "Changed '%s' to %s Hz"
+msgstr "„%s“ је измењена у %s Hz"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4761,8 +4761,8 @@ msgstr "Горње ограничење брзине"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "Постави опсег на „%d“ — „%d“"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Постави опсег на „%ld“ — „%ld“"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8538,13 +8538,13 @@ msgstr "Не могу да отворим циљну датотеку за уп�
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "Извозим изабрани звук при брзини од %d kb/s"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "Извозим изабрани звук при брзини од %ld kb/s"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "Извозим читаву датотеку при брзини од %d kb/s"
+msgid "Exporting entire file at %ld kbps"
+msgstr "Извозим читаву датотеку при брзини од %ld kb/s"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8743,8 +8743,8 @@ msgstr "Извозим читаву датотеку при брзини од %d
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "МП3 кодер је вратио грешку „%d“"
+msgid "Error %ld returned from MP3 encoder"
+msgstr "МП3 кодер је вратио грешку „%ld“"
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8858,28 +8858,28 @@ msgstr "Изаберите место за чување извежених да�
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "Упешно сам извезао следећу %ld датотеку."
+msgid "Successfully exported the following %lld file(s)."
+msgstr "Упешно сам извезао следећу %lld датотеку."
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
-msgstr "Нешто је пошло наопако након извоза следеће %ld датотеке."
+msgid "Something went wrong after exporting the following %lld file(s)."
+msgstr "Нешто је пошло наопако након извоза следеће %lld датотеке."
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
-msgstr "Извоз је отказан након извоза следеће %ld датотеке."
+msgid "Export canceled after exporting the following %lld file(s)."
+msgstr "Извоз је отказан након извоза следеће %lld датотеке."
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
-msgstr "Извоз је заустављен након извоза следеће %ld датотеке."
+msgid "Export stopped after exporting the following %lld file(s)."
+msgstr "Извоз је заустављен након извоза следеће %lld датотеке."
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
-msgstr "Нешто је стварно пошло наопако након извоза следеће %ld датотеке."
+msgid "Something went really wrong after exporting the following %lld file(s)."
+msgstr "Нешто је стварно пошло наопако након извоза следеће %lld датотеке."
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
@@ -9222,9 +9222,9 @@ msgstr "ФФмпег сагласне датотеке"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
-"Индекс[%02x] Кодек[%S], Језик[%S], Битски проток[%S], Број канала[%d], "
+"Индекс[%02x] Кодек[%s], Језик[%s], Битски проток[%s], Број канала[%d], "
 "Трајање[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28

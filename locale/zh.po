@@ -1030,7 +1030,7 @@ msgstr "正在检查项目文件数据"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1046,7 +1046,7 @@ msgid ""
 "project immediately\" on further error alerts."
 msgstr ""
 "项目检查 \"%s\"目录\n"
-"发现了 %d 个缺失的外部音频文件\n"
+"发现了 %lld 个缺失的外部音频文件\n"
 "('替身[alias]文件')。Audacity无法\n"
 "自动恢复这些文件。\n"
 "\n"
@@ -1081,12 +1081,12 @@ msgstr "   项目检查已经用静音代替缺失的替身(alias)文件。"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "项目检查 \"%s\"目录\n"
-"发现了 %d 个缺失的替身(.auf)块文件。\n"
+"发现了 %lld 个缺失的替身(.auf)块文件。\n"
 "Audacity可以从项目现有的音频中\n"
 "完整地重新生成这些文件。"
 
@@ -1114,7 +1114,7 @@ msgstr "   项目检查已经重新生成缺失的替身(alias)概要文件。"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1127,7 +1127,7 @@ msgid ""
 "may not show silence."
 msgstr ""
 "项目检查 \"%s\"目录\n"
-"发现了 %d 个缺失的音频数据(.au)块文件，\n"
+"发现了 %lld 个缺失的音频数据(.au)块文件，\n"
 "原因可能是程序的BUG、系统崩溃或者无意\n"
 "的误删除。Audacity无法自动恢复这些丢失\n"
 "的文件。\n"
@@ -4627,8 +4627,8 @@ msgstr "制作立体声"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "已变更的'%s' 至 %d Hz"
+msgid "Changed '%s' to %s Hz"
+msgstr "已变更的'%s' 至 %s Hz"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4660,8 +4660,8 @@ msgstr "最高速率限制"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "将范围设定为 '%d' - '%d'"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "将范围设定为 '%ld' - '%ld'"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8373,13 +8373,13 @@ msgstr "不能打开目标文件写入"
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "正以 %d kbps 导出选定的音频"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "正以 %ld kbps 导出选定的音频"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "正以 %d kbps 导出全部的音频"
+msgid "Exporting entire file at %ld kbps"
+msgstr "正以 %ld kbps 导出全部的音频"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8572,8 +8572,8 @@ msgstr "正以%d Kbps 导出整个文件"
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "MP3编码器返回错误号 %d"
+msgid "Error %ld returned from MP3 encoder"
+msgstr "MP3编码器返回错误号 %ld"
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8689,28 +8689,28 @@ msgstr "选择保存导出文件的位置"
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "成功导出下列 %ld 个文件。"
+msgid "Successfully exported the following %lld file(s)."
+msgstr "成功导出下列 %lld 个文件。"
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
-msgstr "导出下列 %ld 个文件后出错。"
+msgid "Something went wrong after exporting the following %lld file(s)."
+msgstr "导出下列 %lld 个文件后出错。"
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
-msgstr "导出下列 %ld 个文件后导出被取消。"
+msgid "Export canceled after exporting the following %lld file(s)."
+msgstr "导出下列 %lld 个文件后导出被取消。"
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
-msgstr "导出下列 %ld 个文件后导出被终止。"
+msgid "Export stopped after exporting the following %lld file(s)."
+msgstr "导出下列 %lld 个文件后导出被终止。"
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
-msgstr "导出下列 %ld 个文件后严重出错。"
+msgid "Something went really wrong after exporting the following %lld file(s)."
+msgstr "导出下列 %lld 个文件后严重出错。"
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
@@ -9045,8 +9045,8 @@ msgstr "FFmpeg兼容文件"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
-msgstr "索引[%02x] 编码器[%S], 语言[%S], 比特率[%S], 声道[%d], 持续时间[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr "索引[%02x] 编码器[%s], 语言[%s], 比特率[%s], 声道[%d], 持续时间[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28
 msgid "FLAC files"

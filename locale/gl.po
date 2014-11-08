@@ -1063,7 +1063,7 @@ msgstr "Inspeccionando os datos dos ficheiros do proxecto"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1079,7 +1079,7 @@ msgid ""
 "project immediately\" on further error alerts."
 msgstr ""
 "A verificación do cartafol do proxecto «% s» \n"
-"detectou que faltan %d ficheiro(s) externo(s) \n"
+"detectou que faltan %lld ficheiro(s) externo(s) \n"
 "de son («ficheiro(s) ligado(s) por alias»). Non \n"
 "hai maneira de que Audacity recupere estes \n"
 "ficheiros de forma automática. \n"
@@ -1118,12 +1118,12 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "A comprobación do proxecto do cartafol «%s»\n"
-"detectou a falta de %d alias (.auf) de ficheiro(s) de\n"
+"detectou a falta de %lld alias (.auf) de ficheiro(s) de\n"
 "bloque. Audacity pode rexeneralos automaticamente \n"
 "a partires dos ficheiros de son orixinais."
 
@@ -1153,7 +1153,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1166,7 +1166,7 @@ msgid ""
 "may not show silence."
 msgstr ""
 "A comprobación do proxecto do cartafol «%s»\n"
-"detectou %d bloque(s) de datos de son (.au) perdidos, \n"
+"detectou %lld bloque(s) de datos de son (.au) perdidos, \n"
 "probabelmente por mor dalgún erro, quebra do sistema, \n"
 "ou unha eliminación accidental. Non hai maneira de que \n"
 "Audacity recupere eses datos automaticamente.\n"
@@ -4750,8 +4750,8 @@ msgstr "Converter a estéreo"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "Cambiouse «%s» a %d Hz"
+msgid "Changed '%s' to %s Hz"
+msgstr "Cambiouse «%s» a %s Hz"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4783,8 +4783,8 @@ msgstr "Límite superior de velocidade"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "Estabelecer o intervalo en «%d» - «%d»"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Estabelecer o intervalo en «%ld» - «%ld»"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8570,13 +8570,13 @@ msgstr "Non foi posíbel abrir o ficheiro de destino para escritura"
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "Exportando o son seleccionado a %d Kbps"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "Exportando o son seleccionado a %ld Kbps"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "Exportando o ficheiro completo a %d Kbps"
+msgid "Exporting entire file at %ld kbps"
+msgstr "Exportando o ficheiro completo a %ld Kbps"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8775,8 +8775,8 @@ msgstr "Exportando o ficheiro completo a %d Kbps"
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "O codificador MP3 devolveu o erro %d"
+msgid "Error %ld returned from MP3 encoder"
+msgstr "O codificador MP3 devolveu o erro %ld"
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8892,32 +8892,32 @@ msgstr "Seleccione un lugar para gardar os ficheiros exportados"
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "Exportaronse correctamente os seguintes %ld ficheiro(s)."
+msgid "Successfully exported the following %lld file(s)."
+msgstr "Exportaronse correctamente os seguintes %lld ficheiro(s)."
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
+msgid "Something went wrong after exporting the following %lld file(s)."
 msgstr ""
-"Produciuse algún erro grave tras exportar o(s) seguinte(s) %ld ficheiro(s)."
+"Produciuse algún erro grave tras exportar o(s) seguinte(s) %lld ficheiro(s)."
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
+msgid "Export canceled after exporting the following %lld file(s)."
 msgstr ""
-"A exportación foi cancelada tras exportar o(s) seguinte(s) %ld ficheiro(s)."
+"A exportación foi cancelada tras exportar o(s) seguinte(s) %lld ficheiro(s)."
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
+msgid "Export stopped after exporting the following %lld file(s)."
 msgstr ""
-"A exportación foi detida tras exportar o(s) seguinte(s) %ld ficheiro(s)."
+"A exportación foi detida tras exportar o(s) seguinte(s) %lld ficheiro(s)."
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
+msgid "Something went really wrong after exporting the following %lld file(s)."
 msgstr ""
-"Produciuse algún erro realmente grave tras exportar o(s) seguinte(s) %ld "
+"Produciuse algún erro realmente grave tras exportar o(s) seguinte(s) %lld "
 "ficheiro(s)."
 
 #: src/export/ExportMultiple.cpp:577
@@ -9258,9 +9258,9 @@ msgstr "Ficheiros compatíbeis con FFmpeg"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
-"Índice[%02x] Códec[%S], Idioma[%S], Velocidade de transferencia[%S], Canles["
+"Índice[%02x] Códec[%s], Idioma[%s], Velocidade de transferencia[%s], Canles["
 "%d], Duración[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28

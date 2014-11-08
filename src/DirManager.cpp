@@ -1417,7 +1417,7 @@ int DirManager::ProjectFSCK(const bool bForceError, const bool bAutoRecoverMode)
       {
          wxString msgA =
 _("Project check of \"%s\" folder \
-\ndetected %d missing external audio file(s) \
+\ndetected %lld missing external audio file(s) \
 \n('aliased files'). There is no way for Audacity \
 \nto recover these files automatically. \
 \n\nIf you choose the first or second option below, \
@@ -1429,7 +1429,7 @@ _("Project check of \"%s\" folder \
 \nproject in its current state, unless you \"Close \
 \nproject immediately\" on further error alerts.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), missingAliasedFilePathHash.size());
+         msg.Printf(msgA, this->projName.c_str(), (long long) missingAliasedFilePathHash.size());
          const wxChar *buttons[] =
             {_("Close project immediately with no changes"),
                _("Treat missing audio as silence (this session only)"),
@@ -1487,11 +1487,11 @@ _("Project check of \"%s\" folder \
       {
          wxString msgA =
 _("Project check of \"%s\" folder \
-\ndetected %d missing alias (.auf) blockfile(s). \
+\ndetected %lld missing alias (.auf) blockfile(s). \
 \nAudacity can fully regenerate these files \
 \nfrom the current audio in the project.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), missingAUFHash.size());
+         msg.Printf(msgA, this->projName.c_str(), (long long) missingAUFHash.size());
          const wxChar *buttons[] = {_("Regenerate alias summary files (safe and recommended)"),
                                     _("Fill in silence for missing display data (this session only)"),
                                     _("Close project immediately with no further changes"),
@@ -1538,7 +1538,7 @@ _("Project check of \"%s\" folder \
       {
          wxString msgA =
 _("Project check of \"%s\" folder \
-\ndetected %d missing audio data (.au) blockfile(s), \
+\ndetected %lld missing audio data (.au) blockfile(s), \
 \nprobably due to a bug, system crash, or accidental \
 \ndeletion. There is no way for Audacity to recover \
 \nthese missing files automatically. \
@@ -1548,7 +1548,7 @@ _("Project check of \"%s\" folder \
 \n\nNote that for the second option, the waveform \
 \nmay not show silence.");
          wxString msg;
-         msg.Printf(msgA, this->projName.c_str(), missingAUHash.size());
+         msg.Printf(msgA, this->projName.c_str(), (long long) missingAUHash.size());
          const wxChar *buttons[] =
             {_("Close project immediately with no further changes"),
                _("Treat missing audio as silence (this session only)"),

@@ -3103,11 +3103,11 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
 
 #if defined(VST_DEBUG)
 #if defined(__WXMSW__)
-   wxLogDebug(wxT("vst: %p opcode: %d index: %d value: %d ptr: %p opt: %f user: %p"),
-              effect, opcode, index, value, ptr, opt, vst);
+   wxLogDebug(wxT("vst: %p opcode: %d index: %d value: %p ptr: %p opt: %f user: %p"),
+              effect, (int) opcode, (int) index, (void *) value, ptr, opt, vst);
 #else
-   wxPrintf(wxT("vst: %p opcode: %d index: %d value: %d ptr: %p opt: %f user: %p\n"),
-            effect, opcode, index, value, ptr, opt, vst);
+   wxPrintf(wxT("vst: %p opcode: %d index: %d value: %p ptr: %p opt: %f user: %p\n"),
+            effect, (int) opcode, (int) index, (void *) value, ptr, opt, vst);
 #endif
 #endif
 

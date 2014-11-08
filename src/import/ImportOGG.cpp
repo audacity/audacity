@@ -109,7 +109,7 @@ public:
       for (int i = 0; i < vorbisFile->links; i++)
       {
          wxString strinfo;
-         strinfo.Printf(wxT("Index[%02x] Version[%d], Channels[%d], Rate[%d]"),i,vorbisFile->vi[i].version,vorbisFile->vi[i].channels,vorbisFile->vi[i].rate);
+         strinfo.Printf(wxT("Index[%02x] Version[%d], Channels[%d], Rate[%ld]"), (unsigned int) i,vorbisFile->vi[i].version,vorbisFile->vi[i].channels,vorbisFile->vi[i].rate);
          mStreamInfo->Add(strinfo);
          mStreamUsage[i] = 0;
       }

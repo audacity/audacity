@@ -1058,7 +1058,7 @@ msgstr "செயற்திட்ட தரவு கோப்புகளை 
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1074,7 +1074,7 @@ msgid ""
 "project immediately\" on further error alerts."
 msgstr ""
 "\"%s\" கோப்பகதத்திற்கான செயற்திட்ட பரிசீலனை\n"
-"%d தவறவிடப்பட்ட ஒலி கோப்பு(கள்) கண்டுபிடிக்கப்பட்டுள்ளது\n"
+"%lld தவறவிடப்பட்ட ஒலி கோப்பு(கள்) கண்டுபிடிக்கப்பட்டுள்ளது\n"
 "('பெயர் மாற்றப்பட்டது'). தானியங்கி மூலம் மீள பெற\n"
 "வழியே இல்லை\n"
 "\n"
@@ -1109,12 +1109,12 @@ msgstr "பரிசீலனை செயற்திட்டம் தவற�
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "கோப்பகம் \"%s\" செயற்திட்ட பரிசீலனை\n"
-"பெயர் மாற்றப்பட்டு தவறவிடப்பட்ட %d (.auf) தொகுதி கோப்பு(கள்) கண்டுபிடிக்கப்பட்டது. \n"
+"பெயர் மாற்றப்பட்டு தவறவிடப்பட்ட %lld (.auf) தொகுதி கோப்பு(கள்) கண்டுபிடிக்கப்பட்டது. \n"
 "செயற்திட்டத்தில் உள்ள ஒளியில் இருந்து Audacity இனால் முழுமையாக இவற்றை மீள் உருவாக்க "
 "முடியும்"
 
@@ -1142,7 +1142,7 @@ msgstr "   மிண்டும் உருவாக்கிய தவறி�
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1155,7 +1155,7 @@ msgid ""
 "may not show silence."
 msgstr ""
 "திட்டம் \"%s\" கோப்பகத்தை ஆராய்ந்தது \n"
-"%d தவறிய ஒலித்தரவுப்பகுதி கோப்பு (.au), கண்டுபிடிக்கப்பட்டது \n"
+"%lld தவறிய ஒலித்தரவுப்பகுதி கோப்பு (.au), கண்டுபிடிக்கப்பட்டது \n"
 "பெரும்பாலும் வழுவினால், அமைப்பு கோளாறால், அல்லது எதிர்பாராத  \n"
 "நீக்கத்தால். தானாக மீளமைக்க Audacity க்கு எந்த வழியும் இல்லை. \n"
 "\n"
@@ -4668,8 +4668,8 @@ msgstr "பிரியோசையை உருவாக்கு"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "'%s' %d Hz க்கு மாற்றப்பட்டது"
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s' %s Hz க்கு மாற்றப்பட்டது"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4701,8 +4701,8 @@ msgstr "உயர்ந்த வேக எல்லை"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "எல்லையை '%d' - '%d' இற்க்கிடையில் நிர்ணயி "
+msgid "Set range to '%ld' - '%ld'"
+msgstr "எல்லையை '%ld' - '%ld' இற்க்கிடையில் நிர்ணயி "
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8402,13 +8402,13 @@ msgstr "தேர்வை திறந்து எழுதமுடியவ�
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "தேர்ந்தெடுத்த ஒலிப்பகுதி %d kbps ஏற்றுமதியாகுகிறது"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "தேர்ந்தெடுத்த ஒலிப்பகுதி %ld kbps ஏற்றுமதியாகுகிறது"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "முழு கோப்பும் %d kbps ஏற்றுமதியாகுகிறது"
+msgid "Exporting entire file at %ld kbps"
+msgstr "முழு கோப்பும் %ld kbps ஏற்றுமதியாகுகிறது"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8602,7 +8602,7 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
+msgid "Error %ld returned from MP3 encoder"
 msgstr ""
 
 #: src/export/ExportMP3.cpp:1893
@@ -8713,27 +8713,27 @@ msgstr ""
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
+msgid "Successfully exported the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
+msgid "Something went wrong after exporting the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
+msgid "Export canceled after exporting the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
+msgid "Export stopped after exporting the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
+msgid "Something went really wrong after exporting the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:577
@@ -9009,7 +9009,7 @@ msgstr ""
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28

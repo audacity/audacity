@@ -207,7 +207,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    size_t nBytesWritten = file.Write(&header, nBytesToWrite);
    if (nBytesWritten != nBytesToWrite)
    {
-      wxLogDebug(wxT("Wrote %d bytes, expected %d."), nBytesWritten, nBytesToWrite);
+      wxLogDebug(wxT("Wrote %lld bytes, expected %lld."), (long long) nBytesWritten, (long long) nBytesToWrite);
       return false;
    }
 
@@ -215,7 +215,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    nBytesWritten = file.Write(summaryData, nBytesToWrite);
    if (nBytesWritten != nBytesToWrite)
    {
-      wxLogDebug(wxT("Wrote %d bytes, expected %d."), nBytesWritten, nBytesToWrite);
+      wxLogDebug(wxT("Wrote %lld bytes, expected %lld."), (long long) nBytesWritten, (long long) nBytesToWrite);
       return false;
    }
 
@@ -237,7 +237,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
             #endif
          if (nBytesWritten != nBytesToWrite)
          {
-            wxLogDebug(wxT("Wrote %d bytes, expected %d."), nBytesWritten, nBytesToWrite);
+            wxLogDebug(wxT("Wrote %lld bytes, expected %lld."), (long long) nBytesWritten, (long long) nBytesToWrite);
             return false;
          }
       }
@@ -250,7 +250,7 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
       nBytesWritten = file.Write(sampleData, nBytesToWrite);
       if (nBytesWritten != nBytesToWrite)
       {
-         wxLogDebug(wxT("Wrote %d bytes, expected %d."), nBytesWritten, nBytesToWrite);
+         wxLogDebug(wxT("Wrote %lld bytes, expected %lld."), (long long) nBytesWritten, (long long) nBytesToWrite);
          return false;
       }
    }

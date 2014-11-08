@@ -950,7 +950,7 @@ msgstr "Proje dosyası verisi araştırılıyor"
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -964,7 +964,7 @@ msgid ""
 "If you choose the third option, this will save the \n"
 "project in its current state, unless you \"Close \n"
 "project immediately\" on further error alerts."
-msgstr "\"%s\" klasöründe yapılan proje denetimi \n%d kayıp dış dosya ('takma adlı dosyalar') \nalgıladı. Bu dosyaların Audacity tarafından \nkendiliğinden kurtarılmasının bir yolu yok. \n\nEğer aşağıdaki birinci ya da ikinci seçeneği \nseçerseniz, kayıp dosyaları daha önce bulundukları \nyerlerden bulup geri yüklemeyi deneyebilirsiniz. \n\nİkinci seçenek için dalga şeklinin sessizliği \ngöstermeyebileceğini unutmayın.\nÜçüncü seçeneği seçtiğinizde ve daha sonraki \nhata iletilerinde \"Projeyi hemen kapat\" komutunu \nseçmezseniz, proje şimdiki şekliyle kaydedilir."
+msgstr "\"%s\" klasöründe yapılan proje denetimi \n%lld kayıp dış dosya ('takma adlı dosyalar') \nalgıladı. Bu dosyaların Audacity tarafından \nkendiliğinden kurtarılmasının bir yolu yok. \n\nEğer aşağıdaki birinci ya da ikinci seçeneği \nseçerseniz, kayıp dosyaları daha önce bulundukları \nyerlerden bulup geri yüklemeyi deneyebilirsiniz. \n\nİkinci seçenek için dalga şeklinin sessizliği \ngöstermeyebileceğini unutmayın.\nÜçüncü seçeneği seçtiğinizde ve daha sonraki \nhata iletilerinde \"Projeyi hemen kapat\" komutunu \nseçmezseniz, proje şimdiki şekliyle kaydedilir."
 
 #: src/DirManager.cpp:1435 src/DirManager.cpp:1554
 msgid "Treat missing audio as silence (this session only)"
@@ -986,10 +986,10 @@ msgstr "   Proje denetimi kayıp takma adlı dosyaları sessizlik ile değiştir
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
-msgstr "Proje denetimi \"%s\" klasöründe \n%d kayıp takma adlı blok dosyası (.auf) algıladı. \nAudacity bu dosyaları projedeki özgün ses \nverisini kullanarak tümüyle yeniden oluşturabilir."
+msgstr "Proje denetimi \"%s\" klasöründe \n%lld kayıp takma adlı blok dosyası (.auf) algıladı. \nAudacity bu dosyaları projedeki özgün ses \nverisini kullanarak tümüyle yeniden oluşturabilir."
 
 #: src/DirManager.cpp:1495
 msgid "Regenerate alias summary files (safe and recommended)"
@@ -1015,7 +1015,7 @@ msgstr "   Proje denetimi kayıp takma adlı özet dosyalarını yeniden üretti
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -1026,7 +1026,7 @@ msgid ""
 "\n"
 "Note that for the second option, the waveform \n"
 "may not show silence."
-msgstr "Proje denetimi \"%s\" klasöründe \n%d kayıp ses verisi blok dosyaları (.au) algıladı. \nBu kayıplar muhtemelen bir hata, sistem çökmesi \nya da kazara silmeden kaynaklanıyor. Bu dosyaların \nAudacity tarafından kendiliğinden kurtarılmasının bir yolu yok. \n\nEğer aşağıdaki birinci ya da ikinci seçeneği \nseçerseniz, önceki yerlerinden  kayıp dosyaları \nbulmayı ve geri yüklemeyi deneyebilirsiniz. \n\nİkinci seçenek için dalga şeklinin sessizliği \ngöstermeyebileceğini unutmayın."
+msgstr "Proje denetimi \"%s\" klasöründe \n%lld kayıp ses verisi blok dosyaları (.au) algıladı. \nBu kayıplar muhtemelen bir hata, sistem çökmesi \nya da kazara silmeden kaynaklanıyor. Bu dosyaların \nAudacity tarafından kendiliğinden kurtarılmasının bir yolu yok. \n\nEğer aşağıdaki birinci ya da ikinci seçeneği \nseçerseniz, önceki yerlerinden  kayıp dosyaları \nbulmayı ve geri yüklemeyi deneyebilirsiniz. \n\nİkinci seçenek için dalga şeklinin sessizliği \ngöstermeyebileceğini unutmayın."
 
 #: src/DirManager.cpp:1555
 msgid "Replace missing audio with silence (permanent immediately)"
@@ -4396,8 +4396,8 @@ msgstr "Çift Kanallı Yap"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "'%s' %d Hz olarak değiştirildi"
+msgid "Changed '%s' to %s Hz"
+msgstr "'%s' %s Hz olarak değiştirildi"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4429,8 +4429,8 @@ msgstr "Daha yüksek hız sınırı"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "Aralığı '%d' - '%d' olarak ayarla"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "Aralığı '%ld' - '%ld' olarak ayarla"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8009,13 +8009,13 @@ msgstr "Hedef dosya yazmak için açılamadı"
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "Seçili ses %d kbps hızında veriliyor"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "Seçili ses %ld kbps hızında veriliyor"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "Tüm dosya %d kbps hızında veriliyor"
+msgid "Exporting entire file at %ld kbps"
+msgstr "Tüm dosya %ld kbps hızında veriliyor"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8204,8 +8204,8 @@ msgstr "Tüm dosya %d Kbps hızında veriliyor"
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
-msgstr "MP3 kodlayıcıda %d hatası oluştu"
+msgid "Error %ld returned from MP3 encoder"
+msgstr "MP3 kodlayıcıda %ld hatası oluştu"
 
 #: src/export/ExportMP3.cpp:1893
 #, c-format
@@ -8315,28 +8315,28 @@ msgstr "Verilen dosyaların kaydedileceği konumu seçin"
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
-msgstr "%ld dosya sorunsuz verildi."
+msgid "Successfully exported the following %lld file(s)."
+msgstr "%lld dosya sorunsuz verildi."
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
-msgstr "Şu %ld dosyaları verildikten sonra bir şeyler ters gitti."
+msgid "Something went wrong after exporting the following %lld file(s)."
+msgstr "Şu %lld dosyaları verildikten sonra bir şeyler ters gitti."
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
-msgstr "Şu %ld dosyaları verildikten sonra verme iptal edildi."
+msgid "Export canceled after exporting the following %lld file(s)."
+msgstr "Şu %lld dosyaları verildikten sonra verme iptal edildi."
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
-msgstr "Şu %ld dosyaları verildikten sonra verme durduruldu."
+msgid "Export stopped after exporting the following %lld file(s)."
+msgstr "Şu %lld dosyaları verildikten sonra verme durduruldu."
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
-msgstr "Şu %ld dosyalarının verilmesinden sonra bir şeyler çok ters gitti."
+msgid "Something went really wrong after exporting the following %lld file(s)."
+msgstr "Şu %lld dosyalarının verilmesinden sonra bir şeyler çok ters gitti."
 
 #: src/export/ExportMultiple.cpp:577
 #, c-format
@@ -8608,8 +8608,8 @@ msgstr "FFmpeg uyumlu dosyalar"
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
-msgstr "Belirteç[%02x] Kodek[%S], Dil[%S], Bithızı[%S], Kanallar[%d], Süre[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr "Belirteç[%02x] Kodek[%s], Dil[%s], Bithızı[%s], Kanallar[%d], Süre[%d]"
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28
 msgid "FLAC files"

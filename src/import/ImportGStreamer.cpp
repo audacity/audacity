@@ -983,9 +983,9 @@ GStreamerImportFileHandle::Init()
       // Create stream info string
       wxString strinfo;
       strinfo.Printf(wxT("Index[%02d], Type[%s], Channels[%d], Rate[%d]"),
-                     i,
+                     (unsigned int) i,
                      wxString::FromUTF8(c->mType).c_str(),
-                     c->mNumChannels,
+                     (int) c->mNumChannels,
                      (int) c->mSampleRate);
       mStreamInfo.Add(strinfo);
    }
@@ -1371,7 +1371,7 @@ GStreamerImportFileHandle::OnTag(GstAppSink * WXUNUSED(appsink), GstTagList *tag
          }
          else if (G_VALUE_HOLDS_UINT(val))
          {
-            string.Printf(wxT("%u"), g_value_get_uint(val));
+            string.Printf(wxT("%u"), (unsigned int) g_value_get_uint(val));
          }
          else if (G_VALUE_HOLDS_DOUBLE(val))
          {

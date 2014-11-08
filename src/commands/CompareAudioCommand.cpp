@@ -135,8 +135,8 @@ bool CompareAudioCommand::Apply(CommandExecutionContext context)
 
    // Output the results
    double errorSeconds = mTrack0->LongSamplesToTime(errorCount);
-   Status(wxString::Format(wxT("%i"), (int) errorCount));
+   Status(wxString::Format(wxT("%li"), errorCount));
    Status(wxString::Format(wxT("%.4f"), errorSeconds));
-   Status(wxString::Format(wxT("Finished comparison: %i samples (%.3f seconds) exceeded the error threshold of %f."), (int) errorCount, errorSeconds, errorThreshold));
+   Status(wxString::Format(wxT("Finished comparison: %li samples (%.3f seconds) exceeded the error threshold of %f."), errorCount, errorSeconds, errorThreshold));
    return true;
 }

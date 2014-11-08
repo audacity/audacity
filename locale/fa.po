@@ -999,7 +999,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing external audio file(s) \n"
+"detected %lld missing external audio file(s) \n"
 "('aliased files'). There is no way for Audacity \n"
 "to recover these files automatically. \n"
 "\n"
@@ -1035,7 +1035,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing alias (.auf) blockfile(s). \n"
+"detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
@@ -1065,7 +1065,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
-"detected %d missing audio data (.au) blockfile(s), \n"
+"detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
 "deletion. There is no way for Audacity to recover \n"
 "these missing files automatically. \n"
@@ -4609,8 +4609,8 @@ msgstr "استریو شود"
 
 #: src/TrackPanel.cpp:7586
 #, c-format
-msgid "Changed '%s' to %d Hz"
-msgstr "«%s» به %Id هرتز تغییر یافت"
+msgid "Changed '%s' to %s Hz"
+msgstr "«%s» به %s هرتز تغییر یافت"
 
 #: src/TrackPanel.cpp:7588
 msgid "Rate Change"
@@ -4642,8 +4642,8 @@ msgstr "حد بالای سرعت"
 
 #: src/TrackPanel.cpp:7813
 #, c-format
-msgid "Set range to '%d' - '%d'"
-msgstr "تنظیم ناحیه به «%Id» ‐ «%Id»"
+msgid "Set range to '%ld' - '%ld'"
+msgstr "تنظیم ناحیه به «%ld» ‐ «%ld»"
 
 #: src/TrackPanel.cpp:7818
 msgid "Set Range"
@@ -8332,13 +8332,13 @@ msgstr "باز کردن پروندهٔ مقصد برای نوشتن ممکن ن�
 
 #: src/export/ExportMP2.cpp:279
 #, c-format
-msgid "Exporting selected audio at %d kbps"
-msgstr "صدور صوت انتخاب‌شده با سرعت %Id کیلوبیت در ثانیه"
+msgid "Exporting selected audio at %ld kbps"
+msgstr "صدور صوت انتخاب‌شده با سرعت %ld کیلوبیت در ثانیه"
 
 #: src/export/ExportMP2.cpp:280
 #, c-format
-msgid "Exporting entire file at %d kbps"
-msgstr "صدور پرونده بطور کامل با سرعت %Id کیلوبیت در ثانیه"
+msgid "Exporting entire file at %ld kbps"
+msgstr "صدور پرونده بطور کامل با سرعت %ld کیلوبیت در ثانیه"
 
 #: src/export/ExportMP3.cpp:218 src/export/ExportMP3.cpp:236
 #: src/export/ExportMP3.cpp:251
@@ -8534,7 +8534,7 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp:1802
 #, c-format
-msgid "Error %d returned from MP3 encoder"
+msgid "Error %ld returned from MP3 encoder"
 msgstr ""
 
 #: src/export/ExportMP3.cpp:1893
@@ -8646,27 +8646,27 @@ msgstr "مکانی برای ذخیره‌سازی پرونده‌های صادر
 
 #: src/export/ExportMultiple.cpp:538
 #, c-format
-msgid "Successfully exported the following %ld file(s)."
+msgid "Successfully exported the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:539
 #, c-format
-msgid "Something went wrong after exporting the following %ld file(s)."
+msgid "Something went wrong after exporting the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:540
 #, c-format
-msgid "Export canceled after exporting the following %ld file(s)."
+msgid "Export canceled after exporting the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:541
 #, c-format
-msgid "Export stopped after exporting the following %ld file(s)."
+msgid "Export stopped after exporting the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:542
 #, c-format
-msgid "Something went really wrong after exporting the following %ld file(s)."
+msgid "Something went really wrong after exporting the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp:577
@@ -8946,7 +8946,7 @@ msgstr ""
 #: src/import/ImportFFmpeg.cpp:443
 #, c-format
 msgid ""
-"Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
 
 #: src/import/ImportFLAC.cpp:45 src/ondemand/ODDecodeFlacTask.cpp:28

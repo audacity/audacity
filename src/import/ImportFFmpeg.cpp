@@ -440,7 +440,7 @@ bool FFmpegImportFileHandle::InitCodecs()
          {
             lang.FromUTF8(tag->value);
          }
-         strinfo.Printf(_("Index[%02x] Codec[%S], Language[%S], Bitrate[%S], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
+         strinfo.Printf(_("Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"),sc->m_stream->id,codec->name,lang.c_str(),bitrate.c_str(),sc->m_stream->codec->channels, duration);
          mStreamInfo->Add(strinfo);
          mScs[mNumStreams++] = sc;
       }
@@ -541,7 +541,7 @@ int FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       if (mScs[s]->m_stream->start_time != int64_t(AV_NOPTS_VALUE) && mScs[s]->m_stream->start_time > 0)
       {
          stream_delay = mScs[s]->m_stream->start_time;
-         wxLogDebug(wxT("Stream %d start_time = %d, that would be %f milliseconds."), s, mScs[s]->m_stream->start_time, double(mScs[s]->m_stream->start_time)/AV_TIME_BASE*1000);
+         wxLogDebug(wxT("Stream %d start_time = %lld, that would be %f milliseconds."), s, (long long) mScs[s]->m_stream->start_time, double(mScs[s]->m_stream->start_time)/AV_TIME_BASE*1000);
       }
       if (stream_delay != 0)
       {

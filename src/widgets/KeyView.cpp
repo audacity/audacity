@@ -1576,7 +1576,7 @@ KeyView::CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2)
    else
    {
       // A "menu" node, so prepend the line number
-      k1.Printf(wxT("%08x%s"), t1->line, t1->label.c_str());
+      k1.Printf(wxT("%08x%s"), (unsigned int) t1->line, t1->label.c_str());
    }
 
    // See above for explanation
@@ -1588,7 +1588,7 @@ KeyView::CmpKeyNodeByTree(KeyNode ***n1, KeyNode ***n2)
    else
    {
       // A "menu" node, so prepend the line number
-      k2.Printf(wxT("%08x%s"), t2->line, t2->label.c_str());
+      k2.Printf(wxT("%08x%s"), (unsigned int) t2->line, t2->label.c_str());
    }
 
    // See wxWidgets documentation for explanation of comparison results.
