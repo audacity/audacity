@@ -606,9 +606,6 @@
     <ClCompile Include="..\..\..\src\widgets\Ruler.cpp">
       <Filter>src/widgets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\widgets\TimeTextCtrl.cpp">
-      <Filter>src/widgets</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\widgets\valnum.cpp">
       <Filter>src/widgets</Filter>
     </ClCompile>
@@ -827,6 +824,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\effects\EffectRack.cpp">
       <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\toolbars\SpectralSelectionBar.cpp">
+      <Filter>src/toolbars</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\widgets\NumericTextCtrl.cpp">
+      <Filter>src/widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1388,9 +1391,6 @@
     <ClInclude Include="..\..\..\src\widgets\Ruler.h">
       <Filter>src/widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\widgets\TimeTextCtrl.h">
-      <Filter>src/widgets</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\widgets\valnum.h">
       <Filter>src/widgets</Filter>
     </ClInclude>
@@ -1642,6 +1642,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\EffectRack.h">
       <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h">
+      <Filter>src/toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\widgets\NumericTextCtrl.h">
+      <Filter>src/widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

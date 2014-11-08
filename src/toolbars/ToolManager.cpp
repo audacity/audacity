@@ -605,19 +605,25 @@ void ToolManager::ReadConfig()
       // Change to the bar subkey
       gPrefs->SetPath( bar->GetSection() );
 
-
-      int defaultDock = (ndx == SelectionBarID
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-            || ndx == SpectralSelectionBarID
-#endif
-            )
-            ? BotDockID : TopDockID;
+      bool bShownByDefault = true;
+      int defaultDock = TopDockID;
+      
+      if( ndx == SelectionBarID )
+         defaultDock = BotDockID;
       if( ndx == MeterBarID )
-         defaultDock = 0;
+         bShownByDefault = false;
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+      if( ndx == SpectralSelectionBarID ){
+         defaultDock = BotDockID;
+         bShownByDefault = false; // Only show if asked for.  
+      }
+#endif
+
       // Read in all the settings
       gPrefs->Read( wxT("Dock"), &dock,  defaultDock );
       gPrefs->Read( wxT("Order"), &ord, NoBarID );
-      gPrefs->Read( wxT("Show"), &show[ ndx ], defaultDock != 0);
+      gPrefs->Read( wxT("Show"), &show[ ndx ], bShownByDefault);
 
       gPrefs->Read( wxT("X"), &x, -1 );
       gPrefs->Read( wxT("Y"), &y, -1 );
@@ -625,6 +631,7 @@ void ToolManager::ReadConfig()
       gPrefs->Read( wxT("H"), &height[ ndx ], -1 );
 
       bar->SetVisible( show[ ndx ] );
+
       // Docked or floating?
       if( dock )
       {

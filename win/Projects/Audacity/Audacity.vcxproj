@@ -313,6 +313,7 @@
     <ClCompile Include="..\..\..\src\TimeDialog.cpp" />
     <ClCompile Include="..\..\..\src\TimerRecordDialog.cpp" />
     <ClCompile Include="..\..\..\src\TimeTrack.cpp" />
+    <ClCompile Include="..\..\..\src\toolbars\SpectralSelectionBar.cpp" />
     <ClCompile Include="..\..\..\src\Track.cpp" />
     <ClCompile Include="..\..\..\src\TrackArtist.cpp" />
     <ClCompile Include="..\..\..\src\TrackPanel.cpp" />
@@ -322,6 +323,7 @@
     <ClCompile Include="..\..\..\src\WaveClip.cpp" />
     <ClCompile Include="..\..\..\src\WaveTrack.cpp" />
     <ClCompile Include="..\..\..\src\widgets\HelpSystem.cpp" />
+    <ClCompile Include="..\..\..\src\widgets\NumericTextCtrl.cpp" />
     <ClCompile Include="..\..\..\src\WrappedType.cpp" />
     <ClCompile Include="..\..\..\src\effects\Amplify.cpp" />
     <ClCompile Include="..\..\..\src\effects\AutoDuck.cpp" />
@@ -426,7 +428,6 @@
     <ClCompile Include="..\..\..\src\widgets\numformatter.cpp" />
     <ClCompile Include="..\..\..\src\widgets\ProgressDialog.cpp" />
     <ClCompile Include="..\..\..\src\widgets\Ruler.cpp" />
-    <ClCompile Include="..\..\..\src\widgets\TimeTextCtrl.cpp" />
     <ClCompile Include="..\..\..\src\widgets\valnum.cpp" />
     <ClCompile Include="..\..\..\src\widgets\Warning.cpp" />
     <ClCompile Include="..\..\..\src\xml\XMLFileReader.cpp" />
@@ -522,7 +523,10 @@
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
     <ClInclude Include="..\..\..\src\ModuleManager.h" />
     <ClInclude Include="..\..\..\src\SseMathFuncs.h" />
+    <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h" />
+    <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h" />
     <ClInclude Include="..\..\..\src\widgets\HelpSystem.h" />
+    <ClInclude Include="..\..\..\src\widgets\NumericTextCtrl.h" />
     <ClInclude Include="..\..\configwin.h" />
     <ClInclude Include="..\..\..\src\Dependencies.h" />
     <ClInclude Include="..\..\..\src\DeviceManager.h" />
@@ -695,7 +699,6 @@
     <ClInclude Include="..\..\..\src\widgets\numformatter.h" />
     <ClInclude Include="..\..\..\src\widgets\ProgressDialog.h" />
     <ClInclude Include="..\..\..\src\widgets\Ruler.h" />
-    <ClInclude Include="..\..\..\src\widgets\TimeTextCtrl.h" />
     <ClInclude Include="..\..\..\src\widgets\valnum.h" />
     <ClInclude Include="..\..\..\src\widgets\Warning.h" />
     <ClInclude Include="..\..\..\src\xml\XMLFileReader.h" />
