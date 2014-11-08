@@ -487,6 +487,9 @@ audacity_SOURCES = \
 	toolbars/MixerToolBar.h \
 	toolbars/SelectionBar.cpp \
 	toolbars/SelectionBar.h \
+	toolbars/SpectralSelectionBar.cpp \
+	toolbars/SpectralSelectionBar.h \
+	toolbars/SpectralSelectionBarListener.h \
 	toolbars/ToolBar.cpp \
 	toolbars/ToolBar.h \
 	toolbars/ToolDock.cpp \
@@ -527,6 +530,8 @@ audacity_SOURCES = \
 	widgets/Meter.h \
 	widgets/MultiDialog.cpp \
 	widgets/MultiDialog.h \
+	widgets/NumericTextCtrl.cpp \
+	widgets/NumericTextCtrl.h \
 	widgets/numformatter.cpp \
 	widgets/numformatter.h \
 	widgets/ProgressDialog.cpp \
