@@ -107,6 +107,7 @@ int SCRIPT_PIPE_DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
       pScriptServerFn = pFn;
       PipeServer();
    }
+
    return 4;
 }
 

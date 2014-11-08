@@ -341,7 +341,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void SetCursorAndTipWhenInLabel( Track * t, wxMouseEvent &event, const wxChar ** ppTip );
    virtual void SetCursorAndTipWhenInVResizeArea( Track * label, bool blinked, const wxChar ** ppTip );
    virtual void SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT, wxMouseEvent & event, const wxChar ** ppTip );
-   virtual void SetCursorAndTipWhenSelectTool( Track * t, wxMouseEvent & event, wxRect &r, bool bMultiToolMode, const wxChar ** ppTip );
+   virtual void SetCursorAndTipWhenSelectTool
+      ( Track * t, wxMouseEvent & event, wxRect &r, bool bMultiToolMode, const wxChar ** ppTip, const wxCursor ** ppCursor );
    virtual void SetCursorAndTipByTool( int tool, wxMouseEvent & event, const wxChar **ppTip );
    virtual void HandleCursor(wxMouseEvent & event);
    virtual void MaySetOnDemandTip( Track * t, const wxChar ** ppTip );
@@ -643,6 +644,14 @@ protected:
    sampleCount mDrawingLastDragSample; // sample of last drag-over
    float mDrawingLastDragSampleValue;  // value of last drag-over
 
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   void HandleCenterFrequencyCursor
+      (bool shiftDown, const wxChar ** ppTip, const wxCursor ** ppCursor);
+
+   void HandleCenterFrequencyClick
+      (bool shiftDown, Track *pTrack, double value);
+#endif
+
    double PositionToTime(wxInt64 mouseXCoordinate,
                          wxInt64 trackLeftEdge) const;
    wxInt64 TimeToPosition(double time,
@@ -672,7 +681,7 @@ protected:
    SelectionBoundary ChooseBoundary
       (wxMouseEvent & event, const Track *pTrack,
        const wxRect &rect,
-       bool mayChooseCenter,
+       bool mayDragWidth,
        bool onlyWithinSnapDistance,
        double *pPinValue = NULL) const;
 
@@ -725,7 +734,8 @@ protected:
    wxCursor *mSelectCursor;
    wxCursor *mResizeCursor;
    wxCursor *mSlideCursor;
-   wxCursor *mEnvelopeCursor;
+   wxCursor *mEnvelopeCursor; // doubles as the center frequency cursor
+                              // for spectral selection
    wxCursor *mSmoothCursor;
    wxCursor *mZoomInCursor;
    wxCursor *mZoomOutCursor;
@@ -735,6 +745,12 @@ protected:
    wxCursor *mDisabledCursor;
    wxCursor *mAdjustLeftSelectionCursor;
    wxCursor *mAdjustRightSelectionCursor;
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   wxCursor *mBottomFrequencyCursor;
+   wxCursor *mTopFrequencyCursor;
+   wxCursor *mBandWidthCursor;
+#endif
+   wxCursor *mPlaybackCursor;
 #if USE_MIDI
    wxCursor *mStretchCursor;
    wxCursor *mStretchLeftCursor;

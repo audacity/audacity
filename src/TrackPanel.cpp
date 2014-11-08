@@ -165,6 +165,7 @@ is time to refresh some aspect of the screen.
 #include <stdlib.h>
 
 //#define DEBUG_DRAW_TIMING 1
+// #define SPECTRAL_EDITING_ESC_KEY
 
 #include <wx/combobox.h>
 #include <wx/dcclient.h>
@@ -495,6 +496,17 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mZoomOutCursor = MakeCursor( wxCURSOR_MAGNIFIER, ZoomOutCursorXpm, 19, 15);
    mLabelCursorLeft  = MakeCursor( wxCURSOR_ARROW,  LabelCursorLeftXpm, 19, 15);
    mLabelCursorRight = MakeCursor( wxCURSOR_ARROW,  LabelCursorRightXpm, 16, 16);
+   
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   mBottomFrequencyCursor =
+      MakeCursor( wxCURSOR_ARROW,  BottomFrequencyCursorXpm, 16, 16);
+   mTopFrequencyCursor =
+      MakeCursor( wxCURSOR_ARROW,  TopFrequencyCursorXpm, 16, 16);
+   mBandWidthCursor = MakeCursor( wxCURSOR_ARROW,  BandWidthCursorXpm, 16, 16);
+#endif
+
+   mPlaybackCursor = MakeCursor(wxCURSOR_ARROW, PlaybackCursorXpm, 8, 16);
+
 #if USE_MIDI
    mStretchMode = stretchCenter;
    mStretching = false;
@@ -612,6 +624,12 @@ TrackPanel::~TrackPanel()
    delete mRearrangeCursor;
    delete mAdjustLeftSelectionCursor;
    delete mAdjustRightSelectionCursor;
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   delete mBottomFrequencyCursor;
+   delete mTopFrequencyCursor;
+   delete mBandWidthCursor;
+#endif
+   delete mPlaybackCursor;
 #if USE_MIDI
    delete mStretchCursor;
    delete mStretchLeftCursor;
@@ -656,7 +674,7 @@ void TrackPanel::BuildMenus(void)
 
    /* build the pop-down menu used on wave (sampled audio) tracks */
    mWaveTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mWaveTrackMenu);	// does name, up/down etc
+   BuildCommonDropMenuItems(mWaveTrackMenu);   // does name, up/down etc
    mWaveTrackMenu->Append(OnWaveformID, _("Wa&veform"));
    mWaveTrackMenu->Append(OnWaveformDBID, _("&Waveform (dB)"));
    mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrogram"));
@@ -678,18 +696,18 @@ void TrackPanel::BuildMenus(void)
 
    /* build the pop-down menu used on note (MIDI) tracks */
    mNoteTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mNoteTrackMenu);	// does name, up/down etc
+   BuildCommonDropMenuItems(mNoteTrackMenu);   // does name, up/down etc
    mNoteTrackMenu->Append(OnUpOctaveID, _("Up &Octave"));
    mNoteTrackMenu->Append(OnDownOctaveID, _("Down Octa&ve"));
 
    /* build the pop-down menu used on label tracks */
    mLabelTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mLabelTrackMenu);	// does name, up/down etc
+   BuildCommonDropMenuItems(mLabelTrackMenu);   // does name, up/down etc
    mLabelTrackMenu->Append(OnSetFontID, _("&Font..."));
 
    /* build the pop-down menu used on time warping tracks */
    mTimeTrackMenu = new wxMenu();
-   BuildCommonDropMenuItems(mTimeTrackMenu);	// does name, up/down etc
+   BuildCommonDropMenuItems(mTimeTrackMenu);   // does name, up/down etc
    mTimeTrackMenu->Append(OnTimeTrackLinID, _("&Linear"));
    mTimeTrackMenu->Append(OnTimeTrackLogID, _("L&ogarithmic"));
    mTimeTrackMenu->AppendSeparator();
@@ -1641,13 +1659,61 @@ void TrackPanel::MaySetOnDemandTip( Track * t, const wxChar ** ppTip )
    return;
 }
 
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+void TrackPanel::HandleCenterFrequencyCursor
+(bool shiftDown, const wxChar ** ppTip, const wxCursor ** ppCursor)
+{
+#ifndef SPECTRAL_EDITING_ESC_KEY
+   *ppTip =
+      shiftDown ?
+      _("Click and drag to move center selection frequency.") :
+      _("Click and drag to move center selection frequency to a spectral peak.");
+
+#else
+   shiftDown;
+
+   *ppTip =
+      _("Click and drag to move center selection frequency.");
+
+#endif
+
+   *ppCursor = mEnvelopeCursor;
+}
+
+void TrackPanel::HandleCenterFrequencyClick
+(bool shiftDown, Track *pTrack, double value)
+{
+   if (shiftDown) {
+      // Disable time selection
+      mSelStart = -1;
+      mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
+      mFreqSelPin = value;
+      mFreqSelMode = FREQ_SEL_DRAG_CENTER;
+   }
+   else {
+#ifndef SPECTRAL_EDITING_ESC_KEY
+      // Start center snapping
+      WaveTrack *wt = static_cast<WaveTrack*>(pTrack);
+      // Turn center snapping on (the only way to do this)
+      mFreqSelMode = FREQ_SEL_SNAPPING_CENTER;
+      // Disable time selection
+      mSelStart = -1;
+      StartSnappingFreqSelection(wt);
+#endif
+   }
+}
+#endif
+
 // The select tool can have different cursors and prompts depending on what
 // we hover over, most notably when hovering over the selction boundaries.
 // Determine and set the cursor and tip accordingly.
 void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
-        wxMouseEvent & event, wxRect &r, bool bMultiToolMode, const wxChar ** ppTip )
+        wxMouseEvent & event, wxRect &r, bool bMultiToolMode,
+        const wxChar ** ppTip, const wxCursor ** ppCursor )
 {
-   SetCursor(*mSelectCursor);
+   // Do not set the default cursor here and re-set later, that causes
+   // flashing.
+   *ppCursor = mSelectCursor;
 
    //In Multi-tool mode, give multitool prompt if no-special-hit.
    if( bMultiToolMode ) {
@@ -1694,18 +1760,18 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       ) {
       *ppTip = _("Click to start or resume playback at the chosen time.");
       // cursor?
+      *ppCursor = mPlaybackCursor;
       return;
    }
 #endif
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    bool logF;
-   if ( !bShiftDown && 
-        (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
+   if ( (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
          isSpectrogramTrack(t, &logF) ) {
       // Not shift-down, but center frequency snapping toggle is on
-      *ppTip = _("Click and drag to set frequency band width.");
-      // need new distinct cursor?
+      *ppTip = _("Click and drag to set frequency bandwidth.");
+      *ppCursor = mEnvelopeCursor;
       return;
    }
 #endif
@@ -1724,7 +1790,7 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       case SBRight:
          if ( HitTestStretch(t, r, event)) {
             *ppTip = _("Click and drag to stretch within selected region.");
-            SetCursor(*mStretchCursor);
+            *ppCursor = mStretchCursor;
             return;
          }
          break;
@@ -1745,32 +1811,33 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
          break;
       case SBLeft:
          *ppTip = _("Click and drag to move left selection boundary.");
-         SetCursor(*mAdjustLeftSelectionCursor);
+         *ppCursor = mAdjustLeftSelectionCursor;
          return;
       case SBRight:
          *ppTip = _("Click and drag to move right selection boundary.");
-         SetCursor(*mAdjustRightSelectionCursor);
+         *ppCursor = mAdjustRightSelectionCursor;
          return;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       case SBBottom:
          *ppTip = bShiftDown ? 
             _("Click and drag to move bottom selection frequency.") :
-            _("Click and drag to adjust frequency band width.");
-         SetCursor(*mEnvelopeCursor); // For want of a better...
+            _("Click and drag to adjust frequency bandwidth.");
+         *ppCursor = bShiftDown
+          ? mBottomFrequencyCursor
+          : mBandWidthCursor;
          return;
       case SBTop:
          // With Shift NOT down, this is no different from dragging
          // the bottom.
          *ppTip = bShiftDown ?
             _("Click and drag to move top selection frequency.") :
-            _("Click and drag to adjust frequency band width.");
-         SetCursor(*mEnvelopeCursor); // For want of a better...
+            _("Click and drag to adjust frequency bandwidth.");
+       *ppCursor = bShiftDown
+          ? mTopFrequencyCursor
+          : mBandWidthCursor;
          return;
       case SBCenter:
-         // Don't need to assert, can just ignore shift down
-         // wxASSERT( !bShiftDown );
-         *ppTip = _("Click and drag to move center selection frequency.");
-         SetCursor(*mEnvelopeCursor); // For want of a better...
+         HandleCenterFrequencyCursor(bShiftDown, ppTip, ppCursor);
          return;
 #endif
       default:
@@ -1892,7 +1959,12 @@ void TrackPanel::HandleCursor(wxMouseEvent & event)
       else
       {
          bool bMultiToolMode = ttb->IsDown(multiTool);
-         SetCursorAndTipWhenSelectTool( t, event, r, bMultiToolMode, &tip );
+         const wxCursor *pSelection = 0;
+         SetCursorAndTipWhenSelectTool
+            ( t, event, r, bMultiToolMode, &tip, &pSelection );
+         if (pSelection)
+            // Set cursor once only here, to avoid flashing during drags
+            SetCursor(*pSelection);
       }
    }
 
@@ -1980,10 +2052,12 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
       MakeParentModifyState(false);
    }
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+#ifdef SPECTRAL_EDITING_ESC_KEY
    else if (!event.IsButton() &&
             mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
             !mViewInfo->selectedRegion.isPoint())
       MoveSnappingFreqSelection(event.m_y, r.y, r.height, t);
+#endif
 #endif
  done:
    SelectionHandleDrag(event, t);
@@ -2092,6 +2166,9 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
             ExtendFreqSelection(event.m_y, r.y, r.height);
             break;
          }
+         case SBCenter:
+            HandleCenterFrequencyClick(true, pTrack, value);
+            break;
 #endif
          default:
             wxASSERT(false);
@@ -2194,14 +2271,16 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
             case SBBottom:
             case SBTop:
-            case SBCenter:
                startNewSelection = false;
                // Disable time selection
                mSelStart = -1;
                mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
                mFreqSelPin = value;
-               mFreqSelMode = (boundary == SBCenter)
-                  ? FREQ_SEL_DRAG_CENTER : FREQ_SEL_PINNED_CENTER;
+               mFreqSelMode = FREQ_SEL_PINNED_CENTER;
+               break;
+            case SBCenter:
+               HandleCenterFrequencyClick(false, pTrack, value);
+               startNewSelection = false;
                break;
 #endif
             default:
@@ -2499,7 +2578,7 @@ void TrackPanel::MoveSnappingFreqSelection (int mouseYCoordinate,
        isSpectrogramTrack(pTrack, &logF)) {
       WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
       // PRL:
-      // What happens if ESC then move began in one spectrogram track,
+      // What happens if center snapping selection began in one spectrogram track,
       // then continues inside another?  We do not then recalculate
       // the spectrum (as was done in StartSnappingFreqSelection)
       // but snap according to the peaks in the old track.
@@ -2889,6 +2968,12 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 #endif
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+#ifndef SPECTRAL_EDITING_ESC_KEY
+   if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
+      !mViewInfo->selectedRegion.isPoint())
+      MoveSnappingFreqSelection(y, r.y, r.height, pTrack);
+   else
+#endif
    if (mFreqSelTrack == pTrack)
       ExtendFreqSelection(y, r.y, r.height);
 #endif
@@ -3008,7 +3093,7 @@ void SetIfNotNull( double * pValue, const double Value )
 
 TrackPanel::SelectionBoundary TrackPanel::ChooseBoundary
 (wxMouseEvent & event, const Track *pTrack, const wxRect &rect,
- bool mayChooseCenter, bool onlyWithinSnapDistance,
+bool mayDragWidth, bool onlyWithinSnapDistance,
  double *pPinValue) const
 {
    // Choose one of four boundaries to adjust, or the center frequency.
@@ -3022,7 +3107,7 @@ TrackPanel::SelectionBoundary TrackPanel::ChooseBoundary
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    const double f0 = mViewInfo->selectedRegion.f0();
    const double f1 = mViewInfo->selectedRegion.f1();
-   double fc = SelectedRegion::UndefinedFrequency;
+   const double fc = mViewInfo->selectedRegion.fc();
    double ratio = 0;
 #endif
    wxInt64 pixelDist = mViewInfo->zoom * fabs(selend - t0);
@@ -3055,24 +3140,25 @@ TrackPanel::SelectionBoundary TrackPanel::ChooseBoundary
       const wxInt64 topDist = abs(int(event.m_y - topSel));
       if (topDist < verticalDist)
          chooseBottom = false, verticalDist = topDist;
-      if (mayChooseCenter) {
-         fc = mViewInfo->selectedRegion.fc();
-         if (fc > 0) {
-            const wxInt64 centerSel =
-               FrequencyToPosition(fc, rect.y, rect.height,
-                                   wt->GetRate(), logF);
-            const wxInt64 centerDist = abs(int(event.m_y - centerSel));
-            if (centerDist < verticalDist)
-               chooseCenter = true, verticalDist = centerDist,
-               ratio = f1 / fc;
-         }
+      if (fc > 0
+#ifdef SPECTRAL_EDITING_ESC_KEY
+         && mayDragWidth
+#endif
+         ) {
+         const wxInt64 centerSel =
+            FrequencyToPosition(fc, rect.y, rect.height,
+                                 wt->GetRate(), logF);
+         const wxInt64 centerDist = abs(int(event.m_y - centerSel));
+         if (centerDist < verticalDist)
+            chooseCenter = true, verticalDist = centerDist,
+            ratio = f1 / fc;
       }
       if (verticalDist >= 0 &&
           verticalDist < pixelDist &&
-          // If center choice is possible, do not choose any frequency,
+          // If dragging width is possible, do not choose any frequency,
           // unless center is defined (i.e. top and bottom are both
           // defined).
-          (!mayChooseCenter || fc > 0)) {
+          (!mayDragWidth || fc > 0)) {
          pixelDist = verticalDist;
          chooseTime = false;
       }
@@ -3093,11 +3179,11 @@ TrackPanel::SelectionBoundary TrackPanel::ChooseBoundary
          return SBCenter;
       }
       else if (chooseBottom) {
-         SetIfNotNull( pPinValue, mayChooseCenter ? fc : f1 );
+         SetIfNotNull( pPinValue, mayDragWidth ? fc : f1 );
          return SBBottom;
       }
       else {
-         SetIfNotNull( pPinValue, mayChooseCenter ? fc : f0 );
+         SetIfNotNull(pPinValue, mayDragWidth ? fc : f0);
          return SBTop;
       }
    }
@@ -4156,10 +4242,10 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       // zoom out.
       if(spectrum) {
          if (event.ShiftDown() && event.RightUp()) {
-			   // Zoom out full
-			   min = 0.0;
-			   max = rate/2.;
-		   }
+            // Zoom out full
+            min = 0.0;
+            max = rate/2.;
+         }
          else {
             // Zoom out
             c = 0.5*(min+max);
@@ -4196,10 +4282,10 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          }
          else {
             if (event.ShiftDown() && event.RightUp()) {
-				   // Zoom out full
-				   min = -1.0;
-				   max = 1.0;
-			   }
+               // Zoom out full
+               min = -1.0;
+               max = 1.0;
+            }
             else {
                // Zoom out
                if (min <= -1.0 && max >= 1.0) {
@@ -5682,10 +5768,11 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    Track *t = GetFocusedTrack();
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+#ifdef SPECTRAL_EDITING_ESC_KEY
    // Test for pinning and unpinning of the center frequency
    bool logF;
    if (mAdjustSelectionEdges &&
-       event.GetKeyCode() == WXK_ESCAPE){
+       event.GetKeyCode() == WXK_ESCAPE) {
       if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) {
          // Toggle center snapping off
          // (left click can also turn it off)
@@ -5726,6 +5813,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
          // And don't skip event, yet
       }
    }
+#endif
 #endif
 
    // Only deal with LabelTracks
