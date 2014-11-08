@@ -40,6 +40,7 @@
 #include <wx/tokenzr.h>
 #include <wx/intl.h>
 #include <wx/scrolwin.h>
+#include <wx/version.h>
 
 #include "../Effect.h"
 #include "LoadLV2.h"
@@ -913,10 +914,10 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
    mLength(length)
 {
 
-#if defined(__WXMSW__)
-   // On Windows, for some reason, wxWindows calls OnTextCtrl during creation
+#if defined(__WXMSW__) || (defined(__WXGTK__) && wxCHECK_VERSION(3, 0, 0))
+   // In some environments wxWindows calls OnTextCtrl during creation
    // of the text control, and LV2EffectDialog::OnTextCtrl calls HandleText,
-   // which assumes all the mFields have been initialized.
+   // which assumes all the fields have been initialized.
    // This can give us a bad pointer crash, so manipulate inSlider to
    // no-op HandleText during creation.
    inSlider = true;
