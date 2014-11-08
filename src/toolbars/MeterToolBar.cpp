@@ -92,7 +92,7 @@ void MeterToolBar::Populate()
                                 wxID_ANY,
                                 true,
                                 wxDefaultPosition,
-                                wxSize( 130, 55 ) );
+                                wxSize( 260, 55 ) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.*/
       mRecordMeter->SetName( _("Record Meter"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
@@ -107,7 +107,7 @@ void MeterToolBar::Populate()
                               wxID_ANY,
                               false,
                               wxDefaultPosition,
-                              wxSize( 130, 55 ) );
+                              wxSize( 260, 55 ) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.*/
       mPlayMeter->SetName( _("Play Meter"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.

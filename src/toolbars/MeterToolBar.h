@@ -47,7 +47,7 @@ class MeterToolBar:public ToolBar {
    virtual bool Expose( bool show );
 
    int GetInitialWidth() {return (mWhichMeters == 
-      (kWithRecordMeter + kWithPlayMeter)) ? 338 : 165;}
+      (kWithRecordMeter + kWithPlayMeter)) ? 338 : 460;} // Separate bars used to be smaller.
    int GetMinToolbarWidth() { return 100; }
 
  private:

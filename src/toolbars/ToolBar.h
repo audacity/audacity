@@ -63,14 +63,14 @@ enum
    NoBarID = -1,
    TransportBarID,
    ToolsBarID,
+   MixerBarID,
+   TranscriptionBarID,
+   EditBarID,
    MeterBarID,
    RecordMeterBarID,
    PlayMeterBarID,
-   MixerBarID,
-   EditBarID,
-   TranscriptionBarID,
-   SelectionBarID,
    DeviceBarID,
+   SelectionBarID,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBarID,
 #endif
