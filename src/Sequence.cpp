@@ -1843,10 +1843,10 @@ void Sequence::DebugPrintf(wxString *dest)
    for (i = 0; i < mBlock->GetCount(); i++) {
       SeqBlock* pSeqBlock = mBlock->Item(i);
       *dest += wxString::Format
-         (wxT("   Block %3d: start %8d, len %8d, refs %d, "),
+         (wxT("   Block %3u: start %8lld, len %8lld, refs %d, "),
           i,
-          pSeqBlock->start,
-          pSeqBlock->f ? pSeqBlock->f->GetLength() : 0,
+          (long long) pSeqBlock->start,
+          pSeqBlock->f ? (long long) pSeqBlock->f->GetLength() : 0,
           pSeqBlock->f ? mDirManager->GetRefCount(pSeqBlock->f) : 0);
 
       if (pSeqBlock->f)
@@ -1864,7 +1864,7 @@ void Sequence::DebugPrintf(wxString *dest)
    }
    if (pos != mNumSamples)
       *dest += wxString::Format
-         (wxT("ERROR mNumSamples = %d\n"), mNumSamples);
+         (wxT("ERROR mNumSamples = %lld\n"), (long long) mNumSamples);
 }
 
 // static

@@ -1038,7 +1038,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
                       sampleCount len, unsigned int stride /* = 1 */,
                       XMLWriter* blockFileLog /*=NULL*/)
 {
-   //wxLogDebug(wxT("Append: len=%i"), len);
+   //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
 
    sampleCount maxBlockSize = mSequence->GetMaxBlockSize();
    sampleCount blockSize = mSequence->GetIdealAppendLen();
@@ -1113,8 +1113,8 @@ bool WaveClip::AppendCoded(wxString fName, sampleCount start,
 bool WaveClip::Flush()
 {
    //wxLogDebug(wxT("WaveClip::Flush"));
-   //wxLogDebug(wxT("   mAppendBufferLen=%i"), mAppendBufferLen);
-   //wxLogDebug(wxT("   previous sample count %i"), mSequence->GetNumSamples());
+   //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
+   //wxLogDebug(wxT("   previous sample count %lli"), (long long) mSequence->GetNumSamples());
 
    bool success = true;
    if (mAppendBufferLen > 0) {
@@ -1126,7 +1126,7 @@ bool WaveClip::Flush()
       }
    }
 
-   //wxLogDebug(wxT("now sample count %i"), mSequence->GetNumSamples());
+   //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
 
    return success;
 }

@@ -189,7 +189,7 @@ bool Shuttle::TransferLongLong( const wxString & Name, wxLongLong_t & iValue, co
    else
    {
       /// \todo Fix for long long values.
-      mValueString = wxString::Format(wxT("%d"),(int) iValue);
+      mValueString = wxString::Format(wxT("%lld"), (long long) iValue);
       return ExchangeWithMaster( Name );
    }
    return true;
