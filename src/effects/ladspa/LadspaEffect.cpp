@@ -1287,7 +1287,7 @@ LadspaEffectDialog::LadspaEffectDialog(LadspaEffect *eff,
    if (mEffect->GetType() == EffectTypeGenerate) {
       item = new wxStaticText(w, 0, _("Length (seconds):"));
       gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-      mSeconds = new TimeTextCtrl(w,
+      mSeconds = new NumericTextCtrl(NumericConverter::TIME, w, 
                                   wxID_ANY,
                                   _("hh:mm:ss + milliseconds"),
                                   length,
@@ -1565,7 +1565,7 @@ void LadspaEffectDialog::ControlSetFocus(wxFocusEvent & evt)
 double LadspaEffectDialog::GetLength()
 {
    if (mEffect->GetType() == EffectTypeGenerate) {
-      return mSeconds->GetTimeValue();
+      return mSeconds->GetValue();
    }
 
    return 0;
