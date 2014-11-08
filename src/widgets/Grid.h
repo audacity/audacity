@@ -26,12 +26,12 @@ class GridAx;
 
 #endif
 
-class TimeTextCtrl;
+class NumericTextCtrl;
 
 // ----------------------------------------------------------------------------
 // TimeEditor
 //
-// wxGridCellEditor for the TimeTextCtrl.
+// wxGridCellEditor for the NumericTextCtrl.
 // ----------------------------------------------------------------------------
 #define GRID_VALUE_TIME wxT("Time")
 
@@ -71,7 +71,7 @@ class TimeEditor:public wxGridCellEditor
    wxGridCellEditor *Clone() const;
    wxString GetValue() const;
 
-   TimeTextCtrl *GetTimeCtrl() const { return (TimeTextCtrl *)m_control; };
+   NumericTextCtrl *GetTimeCtrl() const { return (NumericTextCtrl *)m_control; }
 
  private:
 
@@ -84,7 +84,7 @@ class TimeEditor:public wxGridCellEditor
 // ----------------------------------------------------------------------------
 // TimeRenderer
 //
-// wxGridCellRenderer for the TimeTextCtrl.
+// wxGridCellRenderer for the NumericTextCtrl.
 // ----------------------------------------------------------------------------
 
 class TimeRenderer : public wxGridCellRenderer

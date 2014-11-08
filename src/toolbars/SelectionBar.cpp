@@ -51,7 +51,7 @@ with changes in the SelectionBar.
 #include "../AColor.h"
 #include "../Prefs.h"
 #include "../Snap.h"
-#include "../widgets/TimeTextCtrl.h"
+#include "../widgets/NumericTextCtrl.h"
 
 IMPLEMENT_CLASS(SelectionBar, ToolBar);
 
@@ -89,10 +89,14 @@ SelectionBar::SelectionBar()
   mListener(NULL), mRate(0.0), mStart(0.0), mEnd(0.0), mAudio(0.0),
   mLeftTime(NULL), mRightTime(NULL), mAudioTime(NULL)
 {
-   // Make sure we have a valid rate as the TimeTextCtrl()s created in Populate()
-   // depend on it.  Otherwise, division-by-zero floating point exceptions will occur.
-   // Refer to bug #462 for a scenario where the division-by-zero causes Audacity to fail.
-   mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), AudioIO::GetOptimalSupportedSampleRate());
+   // Make sure we have a valid rate as the NumericTextCtrl()s
+   // created in Populate()
+   // depend on it.  Otherwise, division-by-zero floating point exceptions
+   // will occur.
+   // Refer to bug #462 for a scenario where the division-by-zero causes
+   // Audacity to fail.
+   mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
+      AudioIO::GetOptimalSupportedSampleRate());
 }
 
 SelectionBar::~SelectionBar()
@@ -247,12 +251,14 @@ void SelectionBar::Populate()
                     NULL,
                     this);
 
-   mLeftTime = new TimeTextCtrl(this, OnLeftTimeID, formatName, 0.0, mRate);
+   mLeftTime = new NumericTextCtrl(
+      NumericConverter::TIME, this, OnLeftTimeID, formatName, 0.0, mRate);
    mLeftTime->SetName(_("Selection Start:"));
    mLeftTime->EnableMenu();
    mainSizer->Add(mLeftTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mRightTime = new TimeTextCtrl(this, OnRightTimeID, formatName, 0.0, mRate);
+   mRightTime = new NumericTextCtrl(
+      NumericConverter::TIME, this, OnRightTimeID, formatName, 0.0, mRate);
    mRightTime->SetName(wxString(_("Selection ")) + (showSelectionLength ?
                                                    _("Length") :
                                                    _("End")));
@@ -264,7 +270,8 @@ void SelectionBar::Populate()
                                    wxLI_VERTICAL),
                   0, wxRIGHT, 5);
 
-   mAudioTime = new TimeTextCtrl(this, wxID_ANY, formatName, 0.0, mRate);
+   mAudioTime = new NumericTextCtrl(
+      NumericConverter::TIME, this, wxID_ANY, formatName, 0.0, mRate);
    mAudioTime->SetName(_("Audio Position:"));
    mAudioTime->EnableMenu();
    mainSizer->Add(mAudioTime, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
@@ -308,8 +315,8 @@ void SelectionBar::OnSize(wxSizeEvent &evt)
 
 void SelectionBar::ModifySelection(bool done)
 {
-   mStart = mLeftTime->GetTimeValue();
-   double right = mRightTime->GetTimeValue();
+   mStart = mLeftTime->GetValue();
+   double right = mRightTime->GetValue();
 
    if (mRightEndButton->GetValue()) {
       if(mStart > right)
@@ -406,10 +413,10 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
 void SelectionBar::ValuesToControls()
 {
-   mLeftTime->SetTimeValue(mStart);
+   mLeftTime->SetValue(mStart);
 
    if (mRightEndButton->GetValue())
-      mRightTime->SetTimeValue(mEnd);
+      mRightTime->SetValue(mEnd);
    else
    {  // mRightTime is the length.
       // Be sure to take into account the sub-sample offset.
@@ -417,10 +424,10 @@ void SelectionBar::ValuesToControls()
       double t = (sampleCount)floor(mEnd * mRate + 0.5);
       t -= (sampleCount)floor(mStart * mRate + 0.5);
       t /= mRate;
-      mRightTime->SetTimeValue(t);
+      mRightTime->SetValue(t);
    }
 
-   mAudioTime->SetTimeValue(mAudio);
+   mAudioTime->SetValue(mAudio);
 }
 
 void SelectionBar::SetTimes(double start, double end, double audio)
@@ -434,20 +441,21 @@ void SelectionBar::SetTimes(double start, double end, double audio)
 
 double SelectionBar::GetLeftTime()
 {
-   return mLeftTime->GetTimeValue();
+   return mLeftTime->GetValue();
 }
 
 double SelectionBar::GetRightTime()
 {
    if (mRightEndButton->GetValue())
-      return mRightTime->GetTimeValue();
+      return mRightTime->GetValue();
    else {
       // What would be shown if we were showing the end time
-      TimeTextCtrl ttc(this, wxID_ANY, wxT(""), 0.0, mRate);
+      NumericTextCtrl ttc(
+         NumericConverter::TIME, this, wxID_ANY, wxT(""), 0.0, mRate);
       ttc.SetFormatString(mRightTime->GetFormatString());
       ttc.SetSampleRate(mRate);
-      ttc.SetTimeValue(mEnd);
-      return ttc.GetTimeValue();
+      ttc.SetValue(mEnd);
+      return ttc.GetValue();
    }
 }
 

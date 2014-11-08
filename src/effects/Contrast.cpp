@@ -22,6 +22,7 @@
 #include "../FileNames.h"
 #include "../widgets/LinkingHtmlWindow.h"
 #include "../widgets/HelpSystem.h"
+#include "../widgets/NumericTextCtrl.h"
 #include "FileDialog.h"
 
 #include <math.h>
@@ -72,13 +73,13 @@ void InitContrastDialog(wxWindow * parent)
    // Zero dialog boxes.  Do we need to do this here?
    if( !gContrastDialog->bFGset )
    {
-      gContrastDialog->mForegroundStartT->SetTimeValue(0.0);
-      gContrastDialog->mForegroundEndT->SetTimeValue(0.0);
+      gContrastDialog->mForegroundStartT->SetValue(0.0);
+      gContrastDialog->mForegroundEndT->SetValue(0.0);
    }
    if( !gContrastDialog->bBGset )
    {
-      gContrastDialog->mBackgroundStartT->SetTimeValue(0.0);
-      gContrastDialog->mBackgroundEndT->SetTimeValue(0.0);
+      gContrastDialog->mBackgroundStartT->SetValue(0.0);
+      gContrastDialog->mBackgroundEndT->SetValue(0.0);
    }
 
    gContrastDialog->CentreOnParent();
@@ -259,7 +260,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (mForegroundStartT == NULL)
          {
             mForegroundStartT = new
-            TimeTextCtrl(this,
+               NumericTextCtrl(NumericConverter::TIME, this,
                          ID_FOREGROUNDSTART_T,
                          _("hh:mm:ss + hundredths"),
                          0.0,
@@ -275,7 +276,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (mForegroundEndT == NULL)
          {
             mForegroundEndT = new
-            TimeTextCtrl(this,
+               NumericTextCtrl(NumericConverter::TIME, this,
                          ID_FOREGROUNDEND_T,
                          _("hh:mm:ss + hundredths"),
                          0.0,
@@ -297,7 +298,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (mBackgroundStartT == NULL)
          {
             mBackgroundStartT = new
-            TimeTextCtrl(this,
+               NumericTextCtrl(NumericConverter::TIME, this,
                          ID_BACKGROUNDSTART_T,
                          _("hh:mm:ss + hundredths"),
                          0.0,
@@ -313,7 +314,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          if (mBackgroundEndT == NULL)
          {
             mBackgroundEndT = new
-            TimeTextCtrl(this,
+               NumericTextCtrl(NumericConverter::TIME, this,
                          ID_BACKGROUNDEND_T,
                          _("hh:mm:ss + hundredths"),
                          0.0,
@@ -375,8 +376,8 @@ ContrastDialog::~ContrastDialog()
 
 void ContrastDialog::OnGetForegroundDB( wxCommandEvent & WXUNUSED(event))
 {
-   SetStartTime(mForegroundStartT->GetTimeValue());
-   SetEndTime(mForegroundEndT->GetTimeValue());
+   SetStartTime(mForegroundStartT->GetValue());
+   SetEndTime(mForegroundEndT->GetValue());
    foregrounddB = GetDB();
    m_pButton_UseCurrentF->SetFocus();
    results();
@@ -384,8 +385,8 @@ void ContrastDialog::OnGetForegroundDB( wxCommandEvent & WXUNUSED(event))
 
 void ContrastDialog::OnGetBackgroundDB( wxCommandEvent & WXUNUSED(event))
 {
-   SetStartTime(mBackgroundStartT->GetTimeValue());
-   SetEndTime(mBackgroundEndT->GetTimeValue());
+   SetStartTime(mBackgroundStartT->GetValue());
+   SetEndTime(mBackgroundEndT->GetValue());
    backgrounddB = GetDB();
    m_pButton_UseCurrentB->SetFocus();
    results();
@@ -410,8 +411,8 @@ void ContrastDialog::OnUseSelectionF(wxCommandEvent & event)
    Track *t = iter.First();
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         mForegroundStartT->SetTimeValue(p->mViewInfo.selectedRegion.t0());
-         mForegroundEndT->SetTimeValue(p->mViewInfo.selectedRegion.t1());
+         mForegroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
+         mForegroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
          break;
       }
       t = iter.Next();
@@ -427,8 +428,8 @@ void ContrastDialog::OnUseSelectionB(wxCommandEvent & event)
    Track *t = iter.First();
    while (t) {
       if (t->GetSelected() && t->GetKind() == Track::Wave) {
-         mBackgroundStartT->SetTimeValue(p->mViewInfo.selectedRegion.t0());
-         mBackgroundEndT->SetTimeValue(p->mViewInfo.selectedRegion.t1());
+         mBackgroundStartT->SetValue(p->mViewInfo.selectedRegion.t0());
+         mBackgroundEndT->SetValue(p->mViewInfo.selectedRegion.t1());
          break;
       }
       t = iter.Next();
@@ -521,12 +522,12 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    f.AddLine(wxString::Format(_("Filename = %s."), project->GetFileName().c_str() ));
    f.AddLine(wxT(""));
    f.AddLine(_("Foreground"));
-   float t = (float)mForegroundStartT->GetTimeValue();
+   float t = (float)mForegroundStartT->GetValue();
    int h = (int)(t/3600);  // there must be a standard function for this!
    int m = (int)((t - h*3600)/60);
    float s = t - h*3600.0 - m*60.0;
    f.AddLine(wxString::Format(_("Time started = %2d hour(s), %2d minute(s), %.2f seconds."), h, m, s ));
-   t = (float)mForegroundEndT->GetTimeValue();
+   t = (float)mForegroundEndT->GetValue();
    h = (int)(t/3600);
    m = (int)((t - h*3600)/60);
    s = t - h*3600.0 - m*60.0;
@@ -540,12 +541,12 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
       f.AddLine(wxString::Format(_("Average RMS =  dB.")));
    f.AddLine(wxT(""));
    f.AddLine(_("Background"));
-   t = (float)mBackgroundStartT->GetTimeValue();
+   t = (float)mBackgroundStartT->GetValue();
    h = (int)(t/3600);
    m = (int)((t - h*3600)/60);
    s = t - h*3600.0 - m*60.0;
    f.AddLine(wxString::Format(_("Time started = %2d hour(s), %2d minute(s), %.2f seconds."), h, m, s ));
-   t = (float)mBackgroundEndT->GetTimeValue();
+   t = (float)mBackgroundEndT->GetValue();
    h = (int)(t/3600);
    m = (int)((t - h*3600)/60);
    s = t - h*3600.0 - m*60.0;
@@ -603,10 +604,10 @@ void ContrastDialog::OnReset(wxCommandEvent & event)
    bFGset = false;
    bBGset = false;
 
-   mForegroundStartT->SetTimeValue(0.0);
-   mForegroundEndT->SetTimeValue(0.0);
-   mBackgroundStartT->SetTimeValue(0.0);
-   mBackgroundEndT->SetTimeValue(0.0);
+   mForegroundStartT->SetValue(0.0);
+   mForegroundEndT->SetValue(0.0);
+   mBackgroundStartT->SetValue(0.0);
+   mBackgroundEndT->SetValue(0.0);
 
    wxCommandEvent dummyEvt;
    OnGetForegroundDB(event);

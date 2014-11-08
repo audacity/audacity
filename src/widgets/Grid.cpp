@@ -24,7 +24,7 @@
 #include <wx/toplevel.h>
 
 #include "Grid.h"
-#include "TimeTextCtrl.h"
+#include "NumericTextCtrl.h"
 
 TimeEditor::TimeEditor()
 {
@@ -44,7 +44,7 @@ TimeEditor::~TimeEditor()
 
 void TimeEditor::Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler)
 {
-   m_control = new TimeTextCtrl(parent,
+   m_control = new NumericTextCtrl(NumericConverter::TIME, parent,
                                 wxID_ANY,
                                 mFormat,
                                 mOld,
@@ -73,7 +73,7 @@ void TimeEditor::BeginEdit(int row, int col, wxGrid *grid)
 
    table->GetValue(row, col).ToDouble(&mOld);
 
-   GetTimeCtrl()->SetTimeValue(mOld);
+   GetTimeCtrl()->SetValue(mOld);
    GetTimeCtrl()->EnableMenu();
 
    GetTimeCtrl()->SetFocus();
@@ -103,7 +103,7 @@ void TimeEditor::ApplyEdit(int row, int col, wxGrid *grid)
 
 bool TimeEditor::EndEdit(int row, int col, wxGrid *grid)
 {
-   double newtime = GetTimeCtrl()->GetTimeValue();
+   double newtime = GetTimeCtrl()->GetValue();
    bool changed = newtime != mOld;
 
    if (changed) {
@@ -117,7 +117,7 @@ bool TimeEditor::EndEdit(int row, int col, wxGrid *grid)
 
 void TimeEditor::Reset()
 {
-   GetTimeCtrl()->SetTimeValue(mOld);
+   GetTimeCtrl()->SetValue(mOld);
 }
 
 bool TimeEditor::IsAcceptedKey(wxKeyEvent &event)
@@ -138,7 +138,7 @@ wxGridCellEditor *TimeEditor::Clone() const
 
 wxString TimeEditor::GetValue() const
 {
-   return wxString::Format(wxT("%g"), GetTimeCtrl()->GetTimeValue());
+   return wxString::Format(wxT("%g"), GetTimeCtrl()->GetValue());
 }
 
 wxString TimeEditor::GetFormat()
@@ -180,7 +180,7 @@ void TimeRenderer::Draw(wxGrid &grid,
 
       table->GetValue(row, col).ToDouble(&value);
 
-      TimeTextCtrl tt(&grid,
+      NumericTextCtrl tt(NumericConverter::TIME, &grid,
                       wxID_ANY,
                       te->GetFormat(),
                       value,
@@ -188,7 +188,7 @@ void TimeRenderer::Draw(wxGrid &grid,
                       wxPoint(10000, 10000),  // create offscreen
                       wxDefaultSize,
                       true);
-      tstr = tt.GetTimeString();
+      tstr = tt.GetString();
 
       te->DecRef();
    }
@@ -236,7 +236,7 @@ wxSize TimeRenderer::GetBestSize(wxGrid &grid,
    if (te) {
       double value;
       table->GetValue(row, col).ToDouble(&value);
-      TimeTextCtrl tt(&grid,
+      NumericTextCtrl tt(NumericConverter::TIME, &grid,
                       wxID_ANY,
                       te->GetFormat(),
                       value,
@@ -790,7 +790,7 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
          double value;
          v.ToDouble(&value);
 
-         TimeTextCtrl tt(mGrid,
+         NumericTextCtrl tt(NumericConverter::TIME, mGrid,
                          wxID_ANY,
                          c->GetFormat(),
                          value,
@@ -798,7 +798,7 @@ wxAccStatus GridAx::GetName(int childId, wxString *name)
                          wxPoint(10000, 10000),  // create offscreen
                          wxDefaultSize,
                          true);
-         v = tt.GetTimeString();
+         v = tt.GetString();
       }
 
       if (c)

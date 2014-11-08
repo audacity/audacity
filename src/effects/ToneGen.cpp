@@ -30,6 +30,7 @@ frequency changes smoothly during the tone.
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../Prefs.h"
+#include "../widgets/NumericTextCtrl.h"
 
 #include <wx/choice.h>
 #include <wx/intl.h>
@@ -272,8 +273,8 @@ void ToneGenDialog::PopulateOrExchangeStandard( ShuttleGui & S )
       S.AddPrompt(_("Duration") + wxString(wxT(":")));
       if (mToneDurationT == NULL)
       {
-         mToneDurationT =
-            new TimeTextCtrl(this,
+         mToneDurationT = new
+            NumericTextCtrl(NumericConverter::TIME, this,
                               wxID_ANY,
                               isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
                               mDuration,
@@ -320,7 +321,7 @@ void ToneGenDialog::PopulateOrExchangeExtended( ShuttleGui & S )
       if (mToneDurationT == NULL)
       {
          mToneDurationT = new
-         TimeTextCtrl(this,
+         NumericTextCtrl(NumericConverter::TIME, this,
                       wxID_ANY,
                       isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
                       mDuration,
@@ -349,7 +350,7 @@ bool ToneGenDialog::TransferDataToWindow()
    EffectDialog::TransferDataToWindow();
 
    // Must handle this ourselves since ShuttleGui doesn't know about it
-   mToneDurationT->SetTimeValue(mDuration);
+   mToneDurationT->SetValue(mDuration);
 
    return true;
 }
@@ -364,7 +365,7 @@ bool ToneGenDialog::TransferDataFromWindow()
    frequency[1] = TrapDouble(frequency[1], FREQ_MIN, (float)(GetActiveProject()->GetRate())/2.);
 
    // Must handle this ourselves since ShuttleGui doesn't know about it
-   mDuration = mToneDurationT->GetTimeValue();
+   mDuration = mToneDurationT->GetValue();
 
    return true;
 }

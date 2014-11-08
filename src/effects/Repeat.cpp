@@ -26,7 +26,7 @@
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
-#include "../widgets/TimeTextCtrl.h"
+#include "../widgets/NumericTextCtrl.h"
 #include "../Project.h"
 
 #include <wx/button.h>
@@ -261,7 +261,7 @@ void RepeatDialog::DisplayNewTime()
    wxString str;
 
    str = _("New selection length: ");
-   TimeTextCtrl tt(this,
+   NumericTextCtrl tt(NumericTextCtrl::TIME, this,
                    wxID_ANY,
                    wxT(""),
                    selectionTimeSecs * (repeatCount + 1),
@@ -270,7 +270,7 @@ void RepeatDialog::DisplayNewTime()
                    wxDefaultSize,
                    true);
    tt.SetFormatString(tt.GetBuiltinFormat(_("hh:mm:ss")));
-   str += tt.GetTimeString();
+   str += tt.GetString();
 
    mTotalTime->SetLabel(str);
    mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)

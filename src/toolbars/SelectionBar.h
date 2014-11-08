@@ -25,7 +25,7 @@ class wxRadioButton;
 class wxSizeEvent;
 
 class SelectionBarListener;
-class TimeTextCtrl;
+class NumericTextCtrl;
 
 class SelectionBar:public ToolBar {
 
@@ -78,11 +78,11 @@ class SelectionBar:public ToolBar {
    double mStart, mEnd, mAudio;
    wxString mField[10];
 
-   TimeTextCtrl   *mLeftTime;
-   TimeTextCtrl   *mRightTime;
+   NumericTextCtrl   *mLeftTime;
+   NumericTextCtrl   *mRightTime;
    wxRadioButton  *mRightEndButton;
    wxRadioButton  *mRightLengthButton;
-   TimeTextCtrl   *mAudioTime;
+   NumericTextCtrl   *mAudioTime;
 
    wxComboBox     *mRateBox;
    wxChoice       *mSnapTo;

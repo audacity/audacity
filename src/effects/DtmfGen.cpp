@@ -27,6 +27,7 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
+#include "../widgets/NumericTextCtrl.h"
 
 #include <wx/slider.h>
 #include <wx/button.h>
@@ -456,7 +457,7 @@ void DtmfDialog::PopulateOrExchange( ShuttleGui & S )
       if (mDtmfDurationT == NULL)
       {
          mDtmfDurationT = new
-            TimeTextCtrl(this,
+            NumericTextCtrl(NumericConverter::TIME, this,
                          ID_DTMF_DURATION_TEXT,
          /* use this instead of "seconds" because if a selection is passed to the
          * effect, I want it (dDuration) to be used as the duration, and with
@@ -496,7 +497,7 @@ void DtmfDialog::PopulateOrExchange( ShuttleGui & S )
 bool DtmfDialog::TransferDataToWindow()
  {
    mDtmfDutyS->SetValue((int)dDutyCycle);
-   mDtmfDurationT->SetTimeValue(dDuration);
+   mDtmfDurationT->SetValue(dDuration);
    mDtmfStringT->SetValue(dString);
 
    return true;
@@ -523,7 +524,7 @@ void DtmfDialog::Recalculate(void) {
    double slot;
 
    dString = mDtmfStringT->GetValue();
-   dDuration = mDtmfDurationT->GetTimeValue();
+   dDuration = mDtmfDurationT->GetValue();
 
    dNTones = wxStrlen(dString);
    dDutyCycle = TrapLong(mDtmfDutyS->GetValue(), DUTY_MIN, DUTY_MAX);

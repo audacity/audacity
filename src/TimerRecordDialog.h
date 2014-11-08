@@ -20,9 +20,9 @@
 #include <wx/datectrl.h>
 #include <wx/calctrl.h>
 
-#include "widgets/TimeTextCtrl.h"
-
 #include "ShuttleGui.h"
+
+class NumericTextCtrl;
 
 class TimerRecordDialog : public wxDialog
 {
@@ -59,12 +59,12 @@ private:
 
    // controls
    wxDatePickerCtrl* m_pDatePickerCtrl_Start;
-   TimeTextCtrl* m_pTimeTextCtrl_Start;
+   NumericTextCtrl* m_pTimeTextCtrl_Start;
 
    wxDatePickerCtrl* m_pDatePickerCtrl_End;
-   TimeTextCtrl* m_pTimeTextCtrl_End;
+   NumericTextCtrl* m_pTimeTextCtrl_End;
 
-   TimeTextCtrl* m_pTimeTextCtrl_Duration;
+   NumericTextCtrl* m_pTimeTextCtrl_Duration;
 
    wxTimer m_timer;
 

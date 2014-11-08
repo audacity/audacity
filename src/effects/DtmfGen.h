@@ -23,9 +23,10 @@
 
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
-#include "../widgets/TimeTextCtrl.h"
 
 #include "Generator.h"
+
+class NumericTextCtrl;
 
 #define __UNINITIALIZED__ (-1)
 
@@ -112,7 +113,7 @@ class DtmfDialog:public EffectDialog {
    EffectDtmf *mEffect;
    wxSlider   *mDtmfDutyS;
    wxTextCtrl *mDtmfStringT;
-   TimeTextCtrl *mDtmfDurationT;
+   NumericTextCtrl *mDtmfDurationT;
    wxStaticText *mDtmfToneT;
    wxStaticText *mDtmfSilenceT;
    wxStaticText *mDtmfDutyT;

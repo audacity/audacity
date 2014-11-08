@@ -13,6 +13,8 @@
 #ifndef __AUDACITY_TOOLBAR__
 #define __AUDACITY_TOOLBAR__
 
+#include "../Experimental.h"
+
 #include <wx/defs.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
@@ -69,6 +71,9 @@ enum
    TranscriptionBarID,
    SelectionBarID,
    DeviceBarID,
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   SpectralSelectionBarID,
+#endif
    ToolBarCount
 };
 

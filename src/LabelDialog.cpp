@@ -36,7 +36,7 @@
 #include "Project.h"
 #include "Track.h"
 #include "ViewInfo.h"
-#include "widgets/TimeTextCtrl.h"
+#include "widgets/NumericTextCtrl.h"
 
 #include "FileDialog.h"
 
@@ -226,7 +226,7 @@ bool LabelDialog::TransferDataToWindow()
    int i;
 
    // Set the editor parameters.  Do this each time since they may change
-   // due to new tracks and change in TimeTextCtrl format.  Rate won't
+   // due to new tracks and change in NumericTextCtrl format.  Rate won't
    // change but might as well leave it here.
    mChoiceEditor->SetChoices(mTrackNames);
    mTimeEditor->SetFormat(mFormat);

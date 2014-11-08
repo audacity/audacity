@@ -17,11 +17,11 @@
 #include <wx/intl.h>
 
 #include "Generator.h"
-#include "../widgets/TimeTextCtrl.h"
 
 class wxString;
 class wxChoice;
 class wxTextCtrl;
+class NumericTextCtrl;
 class ShuttleGui;
 
 #define __UNINITIALIZED__ (-1)
@@ -114,7 +114,7 @@ class NoiseDialog:public EffectDialog {
 
  private:
    EffectNoise  *mEffect;
-   TimeTextCtrl *mNoiseDurationT;
+   NumericTextCtrl *mNoiseDurationT;
 };
 
 #endif

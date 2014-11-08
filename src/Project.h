@@ -19,6 +19,7 @@
 #define __AUDACITY_PROJECT__
 
 #include "Audacity.h"
+#include "Experimental.h"
 
 #include "DirManager.h"
 #include "UndoManager.h"
@@ -29,6 +30,7 @@
 #include "effects/EffectManager.h"
 #include "xml/XMLTagHandler.h"
 #include "toolbars/SelectionBarListener.h"
+#include "toolbars/SpectralSelectionBarListener.h"
 
 #include <wx/defs.h>
 #include <wx/event.h>
@@ -66,6 +68,7 @@ class EditToolBar;
 class MeterToolBar;
 class MixerToolBar;
 class SelectionBar;
+class SpectralSelectionBar;
 class Toolbar;
 class ToolManager;
 class ToolsToolBar;
@@ -122,6 +125,7 @@ class ImportXMLTagHandler : public XMLTagHandler
 class AUDACITY_DLL_API AudacityProject:  public wxFrame,
                                      public TrackPanelListener,
                                      public SelectionBarListener,
+                                     public SpectralSelectionBarListener,
                                      public XMLTagHandler,
                                      public AudioIOListener
 {
@@ -313,7 +317,15 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Selection Format
 
    void SetSelectionFormat(const wxString & format);
-   const wxString & GetSelectionFormat();
+   const wxString & GetSelectionFormat() const;
+
+   // Spectral Selection Formats
+
+   void SetFrequencySelectionFormatName(const wxString & format);
+   const wxString & GetFrequencySelectionFormatName() const;
+
+   void SetLogFrequencySelectionFormatName(const wxString & format);
+   const wxString & GetLogFrequencySelectionFormatName() const;
 
    // Scrollbars
 
@@ -362,6 +374,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    MeterToolBar *GetMeterToolBar();
    MixerToolBar *GetMixerToolBar();
    SelectionBar *GetSelectionBar();
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   SpectralSelectionBar *GetSpectralSelectionBar();
+#endif
    ToolsToolBar *GetToolsToolBar();
    TranscriptionToolBar *GetTranscriptionToolBar();
 
@@ -377,6 +392,18 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual const wxString & AS_GetSelectionFormat();
    virtual void AS_SetSelectionFormat(const wxString & format);
    virtual void AS_ModifySelection(double &start, double &end, bool done);
+
+   // SpectralSelectionBarListener callback methods
+
+   virtual double SSBL_GetRate() const;
+
+   virtual const wxString & SSBL_GetFrequencySelectionFormatName();
+   virtual void SSBL_SetFrequencySelectionFormatName(const wxString & formatName);
+
+   virtual const wxString & SSBL_GetLogFrequencySelectionFormatName();
+   virtual void SSBL_SetLogFrequencySelectionFormatName(const wxString & formatName);
+
+   virtual void SSBL_ModifySpectralSelection(double &bottom, double &top, bool done);
 
    void SetStateTo(unsigned int n);
 
@@ -453,6 +480,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    int mSnapTo;
    wxString mSelectionFormat;
+   wxString mFrequencySelectionFormatName;
+   wxString mLogFrequencySelectionFormatName;
 
    TrackList *mLastSavedTracks;
 

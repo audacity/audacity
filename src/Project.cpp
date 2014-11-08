@@ -148,6 +148,7 @@ scroll information.  It also has some status flags.
 #include "toolbars/MeterToolBar.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/SelectionBar.h"
+#include "toolbars/SpectralSelectionBar.h"
 #include "toolbars/ToolsToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
 
@@ -845,6 +846,9 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    mToolManager = new ToolManager( this );
    GetSelectionBar()->SetListener(this);
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   GetSpectralSelectionBar()->SetListener(this);
+#endif
    mToolManager->LayoutToolBars();
 
    // Fix the sliders on the mixer toolbar so that the tip windows
@@ -1224,6 +1228,83 @@ void AudacityProject::AS_SetSelectionFormat(const wxString & format)
    gPrefs->Flush();
 }
 
+double AudacityProject::SSBL_GetRate() const
+{
+   return mRate;
+}
+
+const wxString & AudacityProject::SSBL_GetFrequencySelectionFormatName()
+{
+   return GetFrequencySelectionFormatName();
+}
+
+void AudacityProject::SSBL_SetFrequencySelectionFormatName(const wxString & formatName)
+{
+   mFrequencySelectionFormatName = formatName;
+
+   gPrefs->Write(wxT("/FrequencySelectionFormatName"), mFrequencySelectionFormatName);
+   gPrefs->Flush();
+}
+
+const wxString & AudacityProject::SSBL_GetLogFrequencySelectionFormatName()
+{
+   return GetLogFrequencySelectionFormatName();
+}
+
+void AudacityProject::SSBL_SetLogFrequencySelectionFormatName(const wxString & formatName)
+{
+   mLogFrequencySelectionFormatName = formatName;
+
+   gPrefs->Write(wxT("/LogFrequencySelectionFormatName"), mLogFrequencySelectionFormatName);
+   gPrefs->Flush();
+}
+
+void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, bool done)
+{
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   double nyq = mRate / 2.0;
+   bottom = std::max(1.0, std::min(nyq, bottom));
+   top = std::max(0.0, std::min(nyq, top));
+   mViewInfo.selectedRegion.setFrequencies(bottom, top);
+   mTrackPanel->Refresh(false);
+   if (done) {
+      ModifyState(false);
+   }
+#else
+   bottom; top; done;
+#endif
+}
+
+const wxString & AudacityProject::GetFrequencySelectionFormatName() const
+{
+   return mFrequencySelectionFormatName;
+}
+
+void AudacityProject::SetFrequencySelectionFormatName(const wxString & formatName)
+{
+   SSBL_SetFrequencySelectionFormatName(formatName);
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   if (GetSpectralSelectionBar()) {
+      GetSpectralSelectionBar()->SetFrequencySelectionFormatName(formatName);
+   }
+#endif
+}
+
+const wxString & AudacityProject::GetLogFrequencySelectionFormatName() const
+{
+   return mLogFrequencySelectionFormatName;
+}
+
+void AudacityProject::SetLogFrequencySelectionFormatName(const wxString & formatName)
+{
+   SSBL_SetLogFrequencySelectionFormatName(formatName);
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   if (GetSpectralSelectionBar()) {
+      GetSpectralSelectionBar()->SetLogFrequencySelectionFormatName(formatName);
+   }
+#endif
+}
+
 void AudacityProject::SetSelectionFormat(const wxString & format)
 {
    AS_SetSelectionFormat(format);
@@ -1232,7 +1313,7 @@ void AudacityProject::SetSelectionFormat(const wxString & format)
    }
 }
 
-const wxString & AudacityProject::GetSelectionFormat()
+const wxString & AudacityProject::GetSelectionFormat() const
 {
    return mSelectionFormat;
 }
@@ -4066,10 +4147,20 @@ MixerToolBar *AudacityProject::GetMixerToolBar()
 SelectionBar *AudacityProject::GetSelectionBar()
 {
    return (SelectionBar *)
-          (mToolManager ?
-           mToolManager->GetToolBar(SelectionBarID) :
-           NULL);
+      (mToolManager ?
+      mToolManager->GetToolBar(SelectionBarID) :
+      NULL);
 }
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+SpectralSelectionBar *AudacityProject::GetSpectralSelectionBar()
+{
+   return static_cast<SpectralSelectionBar*>(
+      (mToolManager ?
+      mToolManager->GetToolBar(SpectralSelectionBarID) :
+      NULL));
+}
+#endif
 
 ToolsToolBar *AudacityProject::GetToolsToolBar()
 {
@@ -4388,6 +4479,10 @@ void AudacityProject::TP_DisplaySelection()
 
    GetSelectionBar()->SetTimes(mViewInfo.selectedRegion.t0(),
                                mViewInfo.selectedRegion.t1(), audioTime);
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   GetSpectralSelectionBar()->SetFrequencies
+      (mViewInfo.selectedRegion.f0(), mViewInfo.selectedRegion.f1());
+#endif
 
    if (!gAudioIO->IsBusy() && !mLockPlayRegion)
       mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),

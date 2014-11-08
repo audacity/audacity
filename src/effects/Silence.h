@@ -18,7 +18,6 @@
 #include <wx/intl.h>
 
 #include "Generator.h"
-#include "../widgets/TimeTextCtrl.h"
 
 class wxSizer;
 class wxTextCtrl;

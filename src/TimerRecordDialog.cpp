@@ -33,6 +33,7 @@
 #include "Project.h"
 #include "Internat.h"
 #include "Prefs.h"
+#include "widgets/NumericTextCtrl.h"
 
 #define TIMER_ID 7000
 
@@ -86,7 +87,8 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
    ShuttleGui S(this, eIsCreating);
    this->PopulateOrExchange(S);
 
-   // Set initial focus to "1" of "01h" in Duration TimeTextCtrl, instead of OK button (default).
+   // Set initial focus to "1" of "01h" in Duration NumericTextCtrl,
+   // instead of OK button (default).
    m_pTimeTextCtrl_Duration->SetFocus();
    m_pTimeTextCtrl_Duration->SetFieldFocus(3);
 
@@ -104,7 +106,7 @@ void TimerRecordDialog::OnTimer(wxTimerEvent& WXUNUSED(event))
    if (m_DateTime_Start < dateTime_UNow) {
       m_DateTime_Start = dateTime_UNow;
       m_pDatePickerCtrl_Start->SetValue(m_DateTime_Start);
-      m_pTimeTextCtrl_Start->SetTimeValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
+      m_pTimeTextCtrl_Start->SetValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
       this->UpdateEnd(); // Keep Duration constant and update End for changed Start.
    }
 }
@@ -112,7 +114,7 @@ void TimerRecordDialog::OnTimer(wxTimerEvent& WXUNUSED(event))
 void TimerRecordDialog::OnDatePicker_Start(wxDateEvent& WXUNUSED(event))
 {
    m_DateTime_Start = m_pDatePickerCtrl_Start->GetValue();
-   double dTime = m_pTimeTextCtrl_Start->GetTimeValue();
+   double dTime = m_pTimeTextCtrl_Start->GetValue();
    long hr = (long)(dTime / 3600.0);
    long min = (long)((dTime - (hr * 3600.0)) / 60.0);
    long sec = (long)(dTime - (hr * 3600.0) - (min * 60.0));
@@ -133,16 +135,18 @@ void TimerRecordDialog::OnDatePicker_Start(wxDateEvent& WXUNUSED(event))
 
 void TimerRecordDialog::OnTimeText_Start(wxCommandEvent& WXUNUSED(event))
 {
-   //v TimeTextCtrl doesn't implement upper ranges, i.e., if I tell it "024 h 060 m 060 s", then
-   // user increments the hours past 23, it rolls over to 0 (although if you increment below 0, it stays at 0).
+   //v NumericTextCtrl doesn't implement upper ranges, i.e.,
+   // if I tell it "024 h 060 m 060 s", then
+   // user increments the hours past 23, it rolls over to 0
+   // (although if you increment below 0, it stays at 0).
    // So instead, set the max to 99 and just catch hours > 24 and fix the ctrls.
-   double dTime = m_pTimeTextCtrl_Start->GetTimeValue();
+   double dTime = m_pTimeTextCtrl_Start->GetValue();
    long days = (long)(dTime / (24.0 * 3600.0));
    if (days > 0) {
       dTime -= (double)days * 24.0 * 3600.0;
       m_DateTime_Start += wxTimeSpan::Days(days);
       m_pDatePickerCtrl_Start->SetValue(m_DateTime_Start);
-      m_pTimeTextCtrl_Start->SetTimeValue(dTime);
+      m_pTimeTextCtrl_Start->SetValue(dTime);
    }
 
    wxDateEvent dummyDateEvent;
@@ -152,7 +156,7 @@ void TimerRecordDialog::OnTimeText_Start(wxCommandEvent& WXUNUSED(event))
 void TimerRecordDialog::OnDatePicker_End(wxDateEvent& WXUNUSED(event))
 {
    m_DateTime_End = m_pDatePickerCtrl_End->GetValue();
-   double dTime = m_pTimeTextCtrl_End->GetTimeValue();
+   double dTime = m_pTimeTextCtrl_End->GetValue();
    long hr = (long)(dTime / 3600.0);
    long min = (long)((dTime - (hr * 3600.0)) / 60.0);
    long sec = (long)(dTime - (hr * 3600.0) - (min * 60.0));
@@ -165,7 +169,7 @@ void TimerRecordDialog::OnDatePicker_End(wxDateEvent& WXUNUSED(event))
    if (m_DateTime_End < m_DateTime_Start) {
       m_DateTime_End = m_DateTime_Start;
       m_pDatePickerCtrl_End->SetValue(m_DateTime_End);
-      m_pTimeTextCtrl_End->SetTimeValue(wxDateTime_to_AudacityTime(m_DateTime_End));
+      m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
    }
 
    this->UpdateDuration(); // Keep Start constant and update Duration for changed End.
@@ -173,16 +177,18 @@ void TimerRecordDialog::OnDatePicker_End(wxDateEvent& WXUNUSED(event))
 
 void TimerRecordDialog::OnTimeText_End(wxCommandEvent& WXUNUSED(event))
 {
-   //v TimeTextCtrl doesn't implement upper ranges, i.e., if I tell it "024 h 060 m 060 s", then
-   // user increments the hours past 23, it rolls over to 0 (although if you increment below 0, it stays at 0).
+   //v NumericTextCtrl doesn't implement upper ranges, i.e.,
+   // if I tell it "024 h 060 m 060 s", then
+   // user increments the hours past 23, it rolls over to 0
+   // (although if you increment below 0, it stays at 0).
    // So instead, set the max to 99 and just catch hours > 24 and fix the ctrls.
-   double dTime = m_pTimeTextCtrl_End->GetTimeValue();
+   double dTime = m_pTimeTextCtrl_End->GetValue();
    long days = (long)(dTime / (24.0 * 3600.0));
    if (days > 0) {
       dTime -= (double)days * 24.0 * 3600.0;
       m_DateTime_End += wxTimeSpan::Days(days);
       m_pDatePickerCtrl_End->SetValue(m_DateTime_End);
-      m_pTimeTextCtrl_End->SetTimeValue(dTime);
+      m_pTimeTextCtrl_End->SetValue(dTime);
    }
 
    wxDateEvent dummyDateEvent;
@@ -191,7 +197,7 @@ void TimerRecordDialog::OnTimeText_End(wxCommandEvent& WXUNUSED(event))
 
 void TimerRecordDialog::OnTimeText_Duration(wxCommandEvent& WXUNUSED(event))
 {
-   double dTime = m_pTimeTextCtrl_Duration->GetTimeValue();
+   double dTime = m_pTimeTextCtrl_Duration->GetValue();
    long hr = (long)(dTime / 3600.0);
    long min = (long)((dTime - (hr * 3600.0)) / 60.0);
    long sec = (long)(dTime - (hr * 3600.0) - (min * 60.0));
@@ -342,10 +348,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          m_pDatePickerCtrl_Start->SetRange(wxDateTime::Today(), wxInvalidDateTime); // No backdating.
          S.AddWindow(m_pDatePickerCtrl_Start);
 
-         m_pTimeTextCtrl_Start = new TimeTextCtrl(this, ID_TIMETEXT_START);
+         m_pTimeTextCtrl_Start = new NumericTextCtrl(
+            NumericConverter::TIME, this, ID_TIMETEXT_START);
          m_pTimeTextCtrl_Start->SetName(_("Start Time"));
          m_pTimeTextCtrl_Start->SetFormatString(strFormat);
-         m_pTimeTextCtrl_Start->SetTimeValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
+         m_pTimeTextCtrl_Start->
+            SetValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
          S.AddWindow(m_pTimeTextCtrl_Start);
          m_pTimeTextCtrl_Start->EnableMenu(false);
       }
@@ -362,10 +370,11 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
          m_pDatePickerCtrl_End->SetName(_("End Date"));
          S.AddWindow(m_pDatePickerCtrl_End);
 
-         m_pTimeTextCtrl_End = new TimeTextCtrl(this, ID_TIMETEXT_END);
+         m_pTimeTextCtrl_End = new NumericTextCtrl(
+            NumericConverter::TIME, this, ID_TIMETEXT_END);
          m_pTimeTextCtrl_End->SetName(_("End Time"));
          m_pTimeTextCtrl_End->SetFormatString(strFormat);
-         m_pTimeTextCtrl_End->SetTimeValue(wxDateTime_to_AudacityTime(m_DateTime_End));
+         m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
          S.AddWindow(m_pTimeTextCtrl_End);
          m_pTimeTextCtrl_End->EnableMenu(false);
       }
@@ -382,10 +391,12 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
           * seconds.
           */
          wxString strFormat1 = _("099 days 024 h 060 m 060 s");
-         m_pTimeTextCtrl_Duration = new TimeTextCtrl(this, ID_TIMETEXT_DURATION);
+         m_pTimeTextCtrl_Duration = new NumericTextCtrl(
+            NumericConverter::TIME, this, ID_TIMETEXT_DURATION);
          m_pTimeTextCtrl_Duration->SetName(_("Duration"));
          m_pTimeTextCtrl_Duration->SetFormatString(strFormat1);
-         m_pTimeTextCtrl_Duration->SetTimeValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
+         m_pTimeTextCtrl_Duration->
+            SetValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
          S.AddWindow(m_pTimeTextCtrl_Duration);
          m_pTimeTextCtrl_Duration->EnableMenu(false);
       }
@@ -409,7 +420,7 @@ bool TimerRecordDialog::TransferDataFromWindow()
    long sec;
 
    m_DateTime_Start = m_pDatePickerCtrl_Start->GetValue();
-   dTime = m_pTimeTextCtrl_Start->GetTimeValue();
+   dTime = m_pTimeTextCtrl_Start->GetValue();
    hr = (long)(dTime / 3600.0);
    min = (long)((dTime - (hr * 3600.0)) / 60.0);
    sec = (long)(dTime - (hr * 3600.0) - (min * 60.0));
@@ -418,7 +429,7 @@ bool TimerRecordDialog::TransferDataFromWindow()
    m_DateTime_Start.SetSecond(sec);
 
    m_DateTime_End = m_pDatePickerCtrl_End->GetValue();
-   dTime = m_pTimeTextCtrl_End->GetTimeValue();
+   dTime = m_pTimeTextCtrl_End->GetValue();
    hr = (long)(dTime / 3600.0);
    min = (long)((dTime - (hr * 3600.0)) / 60.0);
    sec = (long)(dTime - (hr * 3600.0) - (min * 60.0));
@@ -435,7 +446,7 @@ bool TimerRecordDialog::TransferDataFromWindow()
 void TimerRecordDialog::UpdateDuration()
 {
    m_TimeSpan_Duration = m_DateTime_End - m_DateTime_Start;
-   m_pTimeTextCtrl_Duration->SetTimeValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
+   m_pTimeTextCtrl_Duration->SetValue(m_TimeSpan_Duration.GetSeconds().ToDouble());
 }
 
 // Update m_DateTime_End and ctrls based on m_DateTime_Start and m_TimeSpan_Duration.
@@ -446,7 +457,7 @@ void TimerRecordDialog::UpdateEnd()
    m_pDatePickerCtrl_End->SetValue(m_DateTime_End);
    m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
    m_pDatePickerCtrl_End->Refresh();
-   m_pTimeTextCtrl_End->SetTimeValue(wxDateTime_to_AudacityTime(m_DateTime_End));
+   m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
 }
 
 int TimerRecordDialog::WaitForStart()

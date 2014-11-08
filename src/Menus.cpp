@@ -67,7 +67,6 @@ simplifies construction of menu items.
 #include "export/Export.h"
 #include "export/ExportMultiple.h"
 #include "prefs/PrefsDialog.h"
-#include "widgets/TimeTextCtrl.h"
 #include "ShuttleGui.h"
 #include "HistoryWindow.h"
 #include "LyricsWindow.h"
@@ -714,8 +713,12 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCheck(wxT("ShowPlayMeterTB"), _("&Playback Meter Toolbar"), FN(OnShowPlayMeterToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
    /* i18n-hint: Clicking this menu item shows the toolbar with the mixer*/
    c->AddCheck(wxT("ShowMixerTB"), _("Mi&xer Toolbar"), FN(OnShowMixerToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
-   /* i18n-hint: Clicking this menu item shows the toolbar for selecting audio*/
+   /* i18n-hint: Clicking this menu item shows the toolbar for selecting a time range of audio*/
    c->AddCheck(wxT("ShowSelectionTB"), _("&Selection Toolbar"), FN(OnShowSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   /* i18n-hint: Clicking this menu item shows the toolbar for selecting a frequency range of audio*/
+   c->AddCheck(wxT("ShowSpectralSelectionTB"), _("&Spectral Selection Toolbar"), FN(OnShowSpectralSelectionToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
+#endif
    /* i18n-hint: Clicking this menu item shows a toolbar that has some tools in it*/
    c->AddCheck(wxT("ShowToolsTB"), _("T&ools Toolbar"), FN(OnShowToolsToolBar), 0, AlwaysEnabledFlag, AlwaysEnabledFlag);
    /* i18n-hint: Clicking this menu item shows the toolbar for transcription (currently just vary play speed)*/
@@ -1824,8 +1827,6 @@ void AudacityProject::ModifyToolbarMenus()
       return;
    }
 
-   mCommandManager.Check(wxT("ShowTransportTB"),
-                         mToolManager->IsVisible(TransportBarID));
    mCommandManager.Check(wxT("ShowDeviceTB"),
                          mToolManager->IsVisible(DeviceBarID));
    mCommandManager.Check(wxT("ShowEditTB"),
@@ -1840,10 +1841,16 @@ void AudacityProject::ModifyToolbarMenus()
                          mToolManager->IsVisible(MixerBarID));
    mCommandManager.Check(wxT("ShowSelectionTB"),
                          mToolManager->IsVisible(SelectionBarID));
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   mCommandManager.Check(wxT("ShowSpectralSelectionTB"),
+                         mToolManager->IsVisible(SpectralSelectionBarID));
+#endif
    mCommandManager.Check(wxT("ShowToolsTB"),
                          mToolManager->IsVisible(ToolsBarID));
    mCommandManager.Check(wxT("ShowTranscriptionTB"),
                          mToolManager->IsVisible(TranscriptionBarID));
+   mCommandManager.Check(wxT("ShowTransportTB"),
+                         mToolManager->IsVisible(TransportBarID));
 
    // Now, go through each toolbar, and call EnableDisableButtons()
    for (int i = 0; i < ToolBarCount; i++) {
@@ -4908,6 +4915,14 @@ void AudacityProject::OnShowSelectionToolBar()
    mToolManager->ShowHide( SelectionBarID );
    ModifyToolbarMenus();
 }
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+void AudacityProject::OnShowSpectralSelectionToolBar()
+{
+   mToolManager->ShowHide( SpectralSelectionBarID );
+   ModifyToolbarMenus();
+}
+#endif
 
 void AudacityProject::OnShowToolsToolBar()
 {

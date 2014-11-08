@@ -16,8 +16,7 @@
 #include <wx/event.h>
 #include <wx/string.h>
 
-#include "widgets/TimeTextCtrl.h"
-
+class NumericTextCtrl;
 class ShuttleGui;
 
 class TimeDialog:public wxDialog
@@ -51,7 +50,7 @@ class TimeDialog:public wxDialog
    double mRate;
    double mTime;
 
-   TimeTextCtrl *mTimeCtrl;
+   NumericTextCtrl *mTimeCtrl;
 
    DECLARE_EVENT_TABLE();
 };

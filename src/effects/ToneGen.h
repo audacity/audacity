@@ -14,7 +14,6 @@
 #define __AUDACITY_EFFECT_TONEGEN__
 
 #include "Generator.h"
-#include "../widgets/TimeTextCtrl.h"
 #include "../Experimental.h"
 
 #include <wx/dialog.h>
@@ -22,6 +21,7 @@
 class wxString;
 class wxChoice;
 class wxTextCtrl;
+class NumericTextCtrl;
 class ShuttleGui;
 
 #define __UNINITIALIZED__ (-1)
@@ -126,7 +126,7 @@ class ToneGenDialog:public EffectDialog {
    wxArrayString *interpolations;
 
  private:
-   TimeTextCtrl *mToneDurationT;
+   NumericTextCtrl *mToneDurationT;
 };
 
 #endif

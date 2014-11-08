@@ -19,7 +19,7 @@
 #include <wx/dynarray.h>
 
 #include "Track.h"
-#include "widgets/TimeTextCtrl.h"
+#include "widgets/NumericTextCtrl.h"
 
 class TrackClipArray;
 
@@ -80,7 +80,7 @@ class SnapManager {
    SnapPointArray  *mSnapPoints;
 
    // Info for snap-to-time
-   TimeConverter    mConverter;
+   NumericConverter    mConverter;
    bool             mSnapToTime;
 };
 

@@ -19,6 +19,7 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
+#include "../widgets/NumericTextCtrl.h"
 
 #include <math.h>
 
@@ -197,7 +198,7 @@ void NoiseDialog::PopulateOrExchange( ShuttleGui & S )
       if (mNoiseDurationT == NULL)
       {
          mNoiseDurationT = new
-         TimeTextCtrl(this,
+            NumericTextCtrl(NumericConverter::TIME, this,
                       wxID_ANY,
                       wxT(""),
                       nDuration,
@@ -223,7 +224,7 @@ bool NoiseDialog::TransferDataToWindow()
    EffectDialog::TransferDataToWindow();
 
    // Must handle this ourselves since ShuttleGui doesn't know about it
-   mNoiseDurationT->SetTimeValue(nDuration);
+   mNoiseDurationT->SetValue(nDuration);
 
    return true;
 }
@@ -235,7 +236,7 @@ bool NoiseDialog::TransferDataFromWindow()
    nAmplitude = TrapDouble(nAmplitude, AMP_MIN, AMP_MAX);
 
    // Must handle this ourselves since ShuttleGui doesn't know about it
-   nDuration = mNoiseDurationT->GetTimeValue();
+   nDuration = mNoiseDurationT->GetValue();
 
    return true;
 }

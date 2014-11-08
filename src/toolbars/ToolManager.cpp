@@ -54,6 +54,7 @@
 #include "MeterToolBar.h"
 #include "MixerToolBar.h"
 #include "SelectionBar.h"
+#include "SpectralSelectionBar.h"
 #include "ToolsToolBar.h"
 #include "TranscriptionToolBar.h"
 
@@ -412,6 +413,9 @@ ToolManager::ToolManager( AudacityProject *parent )
    mBars[ TranscriptionBarID ] = new TranscriptionToolBar();
    mBars[ SelectionBarID ]     = new SelectionBar();
    mBars[ DeviceBarID ]        = new DeviceToolBar();
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   mBars[SpectralSelectionBarID] = new SpectralSelectionBar();
+#endif
 
    // We own the timer
    mTimer.SetOwner( this );
@@ -486,7 +490,11 @@ void ToolManager::Reset()
          floater = bar->GetParent();
       }
 
-      if( ndx == SelectionBarID )
+      if (ndx == SelectionBarID
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+         || ndx == SpectralSelectionBarID
+#endif
+          )
       {
          dock = mBotDock;
 
@@ -598,7 +606,12 @@ void ToolManager::ReadConfig()
       gPrefs->SetPath( bar->GetSection() );
 
 
-      int defaultDock = ndx == SelectionBarID ? BotDockID : TopDockID;
+      int defaultDock = (ndx == SelectionBarID
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+            || ndx == SpectralSelectionBarID
+#endif
+            )
+            ? BotDockID : TopDockID;
       if( ndx == MeterBarID )
          defaultDock = 0;
       // Read in all the settings

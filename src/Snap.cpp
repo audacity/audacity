@@ -16,7 +16,7 @@
 #include "Snap.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
-#include "widgets/TimeTextCtrl.h"
+#include "widgets/NumericTextCtrl.h"
 
 // Change this to "true" to snap to nearest and "false" to snap to previous
 // As of 2013/10/23, defaulting to "true" until a decision is made on
@@ -30,6 +30,7 @@ static int CompareSnapPoints(SnapPoint *s1, SnapPoint *s2)
 
 SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
                          double zoom, int pixelTolerance, bool noTimeSnap)
+ : mConverter(NumericConverter::TIME)
 {
    int i;
 
@@ -110,10 +111,10 @@ SnapManager::SnapManager(TrackList *tracks, TrackClipArray *exclusions,
 void SnapManager::CondListAdd(double t, Track *tr)
 {
    if (mSnapToTime) {
-      mConverter.SetTimeValue(t);
+      mConverter.SetValue(t);
    }
 
-   if (!mSnapToTime || mConverter.GetTimeValue() == t) {
+   if (!mSnapToTime || mConverter.GetValue() == t) {
       mSnapPoints->Add(new SnapPoint(t, tr));
    }
 }
@@ -259,7 +260,7 @@ bool SnapManager::Snap(Track *currentTrack,
          // Snap time to the grid
          mConverter.ValueToControls(t, GetActiveProject()->GetSnapTo() == SNAP_NEAREST);
          mConverter.ControlsToValue();
-         *out_t = mConverter.GetTimeValue();
+         *out_t = mConverter.GetValue();
          *snappedTime = true;
       }
    }

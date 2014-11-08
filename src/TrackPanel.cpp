@@ -220,7 +220,7 @@ is time to refresh some aspect of the screen.
 
 #include "widgets/ASlider.h"
 #include "widgets/Ruler.h"
-#include "widgets/TimeTextCtrl.h"
+#include "widgets/NumericTextCtrl.h"
 
 #include <wx/arrimpl.cpp>
 
@@ -462,7 +462,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mTrackArtist(NULL),
      mBacking(NULL),
      mRefreshBacking(false),
-     mConverter(),
+     mConverter(NumericConverter::TIME),
      mAutoScrolling(false),
      mVertScrollRemainder(0),
      vrulerSize(36,0)
@@ -7527,23 +7527,23 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
 // negative to move backward.
 double TrackPanel::GridMove(double t, int minPix)
 {
-   TimeTextCtrl ttc(this, wxID_ANY, wxT(""), 0.0, GetProject()->GetRate());
+   NumericTextCtrl ttc(NumericConverter::TIME, this, wxID_ANY, wxT(""), 0.0, GetProject()->GetRate());
    ttc.SetFormatName(GetProject()->GetSelectionFormat());
-   ttc.SetTimeValue(t);
+   ttc.SetValue(t);
 
    // Try incrementing/decrementing the value; if we've moved far enough we're
    // done
    double result;
    minPix >= 0 ? ttc.Increment() : ttc.Decrement();
-   result = ttc.GetTimeValue();
+   result = ttc.GetValue();
    if (fabs(result - t) * mViewInfo->zoom >= fabs((double)minPix)) {
       return result;
    }
 
    // Otherwise, move minPix pixels, then snap to the time.
    result = t + minPix / mViewInfo->zoom;
-   ttc.SetTimeValue(result);
-   result = ttc.GetTimeValue();
+   ttc.SetValue(result);
+   result = ttc.GetValue();
    return result;
 }
 
