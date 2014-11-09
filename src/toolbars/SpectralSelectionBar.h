@@ -50,18 +50,24 @@ private:
 
    void ValuesToControls();
    void OnUpdate(wxCommandEvent &evt);
-   void OnCenter(wxCommandEvent &evt);
-   void OnWidth(wxCommandEvent &evt);
+   void OnCtrl(wxCommandEvent &evt);
+   void OnChoice(wxCommandEvent &evt);
 
    void OnSize(wxSizeEvent &evt);
 
    void ModifySpectralSelection(bool done = false);
 
    SpectralSelectionBarListener * mListener;
-   double mCenter, mWidth;
 
-   NumericTextCtrl   *mCenterCtrl;
-   NumericTextCtrl   *mWidthCtrl;
+   bool mbCenterAndWidth;
+
+   double mCenter; // hertz
+   double mWidth; // logarithm of ratio of hertz
+   double mLow; // hertz
+   double mHigh; // hertz
+
+   NumericTextCtrl *mCenterCtrl, *mWidthCtrl, *mLowCtrl, *mHighCtrl;
+   wxChoice *mChoice;
 
 public:
 

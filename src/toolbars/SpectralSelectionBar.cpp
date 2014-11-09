@@ -59,26 +59,35 @@ IMPLEMENT_CLASS(SpectralSelectionBar, ToolBar);
 enum {
    SpectralSelectionBarFirstID = 2750,
    OnCenterID,
-   OnWidthID
+   OnWidthID,
+   OnLowID,
+   OnHighID,
+   OnChoiceID,
 };
 
 BEGIN_EVENT_TABLE(SpectralSelectionBar, ToolBar)
-EVT_SIZE(SpectralSelectionBar::OnSize)
-EVT_TEXT(OnCenterID, SpectralSelectionBar::OnCenter)
-EVT_TEXT(OnWidthID, SpectralSelectionBar::OnWidth)
-EVT_COMMAND(wxID_ANY, EVT_FREQUENCYTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
-EVT_COMMAND(wxID_ANY, EVT_LOGFREQUENCYTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
+   EVT_SIZE(OnSize)
+   EVT_TEXT(OnCenterID, OnCtrl)
+   EVT_TEXT(OnWidthID, OnCtrl)
+   EVT_TEXT(OnLowID, OnCtrl)
+   EVT_TEXT(OnHighID, OnCtrl)
+   EVT_CHOICE(OnChoiceID, OnChoice)
+   EVT_COMMAND(wxID_ANY, EVT_FREQUENCYTEXTCTRL_UPDATED, OnUpdate)
+   EVT_COMMAND(wxID_ANY, EVT_LOGFREQUENCYTEXTCTRL_UPDATED, OnUpdate)
 END_EVENT_TABLE()
 
 SpectralSelectionBar::SpectralSelectionBar()
-: ToolBar(SpectralSelectionBarID, _("SpectralSelection"), wxT("SpectralSelection")),
-mListener(NULL), mCenter(0.0), mWidth(0.0),
-mCenterCtrl(NULL), mWidthCtrl(NULL)
+: ToolBar(SpectralSelectionBarID, _("SpectralSelection"), wxT("SpectralSelection"))
+, mListener(NULL), mbCenterAndWidth(false)
+, mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
+, mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
+, mChoice(NULL)
 {
 }
 
 SpectralSelectionBar::~SpectralSelectionBar()
 {
+   // Do nothing, sizer deletes the controls
 }
 
 void SpectralSelectionBar::Create(wxWindow * parent)
@@ -90,9 +99,6 @@ void SpectralSelectionBar::Populate()
 {
    // This will be inherited by all children:
    SetFont(wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-
-   wxFlexGridSizer *mainSizer;
-   wxBoxSizer *hSizer;
 
    /* we don't actually need a control yet, but we want to use its methods
    * to do some look-ups, so we'll have to create one. We can't make the
@@ -106,35 +112,55 @@ void SpectralSelectionBar::Populate()
       ? mListener->SSBL_GetLogFrequencySelectionFormatName()
       : wxString(wxEmptyString);
 
-   mainSizer = new wxFlexGridSizer(2, 1, 1);
+   wxFlexGridSizer *mainSizer = new wxFlexGridSizer(1, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL);
 
    //
-   // Top row (labels)
+   // Top row, choice box
    //
 
-   mainSizer->Add(new wxStaticText(this, -1, _("Center:"),
-                                   wxDefaultPosition, wxDefaultSize),
-      0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
-
-   mainSizer->Add(new wxStaticText(this, -1, _("Bandwidth:")),
-      0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+   const wxString choices[2] = {
+      _("Center frequency and Width"),
+      _("Low and High Frequencies"),
+   };
+   mChoice = new wxChoice
+      (this, OnChoiceID, wxDefaultPosition, wxDefaultSize, 2, choices,
+       0, wxDefaultValidator, _("Spectral Selection Specifications"));
+   mChoice->SetSelection(mbCenterAndWidth ? 0 : 1);
+   mainSizer->Add(mChoice, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
 
    //
-   // Bottom row (controls)
+   // Bottom row, split into two columns, each with one control
    //
 
-   mCenterCtrl = new NumericTextCtrl(
-      NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
-   mCenterCtrl->SetName(_("Center Frequency:"));
-   mCenterCtrl->EnableMenu();
-   mainSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   wxBoxSizer *subSizer = new wxBoxSizer(wxHORIZONTAL);
+   if (mbCenterAndWidth) {
+      mCenterCtrl = new NumericTextCtrl(
+         NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
+      mCenterCtrl->SetName(_("Center Frequency:"));
+      mCenterCtrl->EnableMenu();
+      subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-   mWidthCtrl = new NumericTextCtrl(
-      NumericConverter::LOG_FREQUENCY, this, OnWidthID, logFrequencyFormatName, 0.0);
-   mWidthCtrl->SetName(wxString(_("Bandwidth:")));
-   mWidthCtrl->EnableMenu();
-   mainSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+      mWidthCtrl = new NumericTextCtrl(
+         NumericConverter::LOG_FREQUENCY, this, OnWidthID, logFrequencyFormatName, 0.0);
+      mWidthCtrl->SetName(wxString(_("Bandwidth:")));
+      mWidthCtrl->EnableMenu();
+      subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+   }
+   else {
+      mLowCtrl = new NumericTextCtrl(
+         NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
+      mLowCtrl->SetName(_("Low Frequency:"));
+      mLowCtrl->EnableMenu();
+      subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+
+      mHighCtrl = new NumericTextCtrl(
+         NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
+      mHighCtrl->SetName(wxString(_("High Frequency:")));
+      mHighCtrl->EnableMenu();
+      subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+   }
+   mainSizer->Add(subSizer, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
    mainSizer->Layout();
 
@@ -147,10 +173,11 @@ void SpectralSelectionBar::UpdatePrefs()
 {
    {
       wxCommandEvent e(EVT_FREQUENCYTEXTCTRL_UPDATED);
-      e.SetInt(mCenterCtrl->GetFormatIndex());
+      e.SetInt((mbCenterAndWidth? mCenterCtrl : mLowCtrl)->GetFormatIndex());
       OnUpdate(e);
    }
 
+   if (mbCenterAndWidth)
    {
       wxCommandEvent e(EVT_LOGFREQUENCYTEXTCTRL_UPDATED);
       e.SetInt(mWidthCtrl->GetFormatIndex());
@@ -182,31 +209,47 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
 {
    const double nyq = mListener->SSBL_GetRate() / 2.0;
 
-   mCenter = mCenterCtrl->GetValue();
-   mWidth = mWidthCtrl->GetValue();
    double bottom, top;
-   if (mCenter < 0 && mWidth < 0)
-      bottom = top = SelectedRegion::UndefinedFrequency;
-   else {
-      if (mCenter < 0) {
-         mWidth = log(std::min(nyq, exp(mWidth)));
-         // Choose arbitrary center for the width
-         mCenter = sqrt(nyq);
-      }
-      else if (mWidth < 0) {
-         mCenter = std::max(1.0, std::min(nyq, mCenter));
-         // Choose arbitrary width for the center
-         const double ratio = std::min(mCenter, nyq / mCenter);
-         mWidth = log(ratio * ratio);
-      }
+   if (mbCenterAndWidth) {
+      mCenter = mCenterCtrl->GetValue();
+      mWidth = mWidthCtrl->GetValue();
+      if (mCenter < 0 && mWidth < 0)
+         bottom = top = SelectedRegion::UndefinedFrequency;
       else {
-         mCenter = std::max(1.0, std::min(nyq, mCenter));
-         double ratio = std::min(mCenter, nyq / mCenter);
-         mWidth = std::min(2 * log(ratio), mWidth);
-      }
+         if (mCenter < 0) {
+            mWidth = log(std::min(nyq, exp(mWidth)));
+            // Choose arbitrary center for the width
+            mCenter = sqrt(nyq);
+         }
+         else if (mWidth < 0) {
+            mCenter = std::max(1.0, std::min(nyq, mCenter));
+            // Choose arbitrary width for the center
+            const double ratio = std::min(mCenter, nyq / mCenter);
+            mWidth = log(ratio * ratio);
+         }
+         else {
+            mCenter = std::max(1.0, std::min(nyq, mCenter));
+            double ratio = std::min(mCenter, nyq / mCenter);
+            mWidth = std::min(2 * log(ratio), mWidth);
+         }
 
-      const double ratio = exp(mWidth / 2);
-      bottom = mCenter / ratio, top = mCenter * ratio;
+         const double ratio = exp(mWidth / 2);
+         bottom = mCenter / ratio, top = mCenter * ratio;
+      }
+   }
+   else {
+      bottom = mLowCtrl->GetValue();
+      top = mHighCtrl->GetValue();
+
+      if (bottom >= 0)
+         bottom = std::min(nyq, bottom);
+      else
+         bottom = SelectedRegion::UndefinedFrequency;
+
+      if (top >= 0)
+         top = std::min(nyq, top);
+      else
+         top = SelectedRegion::UndefinedFrequency;
    }
 
    // Notify project and track panel, which may change
@@ -214,52 +257,51 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
    mListener->SSBL_ModifySpectralSelection(bottom, top, done);
 }
 
-void SpectralSelectionBar::OnCenter(wxCommandEvent & event)
+void SpectralSelectionBar::OnCtrl(wxCommandEvent & event)
 {
    ModifySpectralSelection(event.GetInt() != 0);
 }
 
-void SpectralSelectionBar::OnWidth(wxCommandEvent & event)
+void SpectralSelectionBar::OnChoice(wxCommandEvent &)
 {
-   ModifySpectralSelection(event.GetInt() != 0);
+   mbCenterAndWidth = (0 == mChoice->GetSelection());
+   ToolBar::ReCreateButtons();
+   ValuesToControls();
+   Updated();
 }
 
 void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
 {
    int index = evt.GetInt();
    wxWindow *w = FindFocus();
-   bool centerFocus = (w == mCenterCtrl);
-   bool widthFocus = (w == mWidthCtrl);
+   bool centerFocus = (w && w == mCenterCtrl);
+   bool widthFocus = (w && w == mWidthCtrl);
+   bool lowFocus = (w && w == mLowCtrl);
+   bool highFocus = (w && w == mHighCtrl);
 
    evt.Skip(false);
 
    // Save formats before recreating the controls so they resize properly
    wxEventType type = evt.GetEventType();
-   int frequencyFormatIndex = mCenterCtrl->GetFormatIndex();
-   int widthFormatIndex = mWidthCtrl->GetFormatIndex();
    if (type == EVT_FREQUENCYTEXTCTRL_UPDATED) {
-      frequencyFormatIndex = index;
-      mListener->SSBL_SetFrequencySelectionFormatName
-         (mCenterCtrl->GetBuiltinName(index));
+      NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
+      wxString frequencyFormatName = frequencyCtrl->GetBuiltinName(index);
+      mListener->SSBL_SetFrequencySelectionFormatName(frequencyFormatName);
    }
-   else if (type == EVT_LOGFREQUENCYTEXTCTRL_UPDATED) {
-      widthFormatIndex = index;
-      mListener->SSBL_SetLogFrequencySelectionFormatName
-         (mWidthCtrl->GetBuiltinName(index));
+   else if (mbCenterAndWidth &&
+            type == EVT_LOGFREQUENCYTEXTCTRL_UPDATED) {
+      wxString logFrequencyFormatName = mWidthCtrl->GetBuiltinName(index);
+      mListener->SSBL_SetLogFrequencySelectionFormatName(logFrequencyFormatName);
    }
 
    // ToolBar::ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
    mCenterCtrl = mWidthCtrl = NULL;
+   mLowCtrl = mHighCtrl = NULL;
 
    ToolBar::ReCreateButtons();
-
    ValuesToControls();
 
-   mCenterCtrl->SetFormatName
-      (mCenterCtrl->GetBuiltinName(frequencyFormatIndex));
-   mWidthCtrl->SetFormatName
-      (mWidthCtrl->GetBuiltinName(widthFormatIndex));
 
    if (centerFocus) {
       mCenterCtrl->SetFocus();
@@ -267,18 +309,33 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
    else if (widthFocus) {
       mWidthCtrl->SetFocus();
    }
+   else if (lowFocus) {
+      mLowCtrl->SetFocus();
+   }
+   else if (highFocus) {
+      mHighCtrl->SetFocus();
+   }
 
    Updated();
 }
 
 void SpectralSelectionBar::ValuesToControls()
 {
-   mCenterCtrl->SetValue(mCenter);
-   mWidthCtrl->SetValue(mWidth);
+   if (mbCenterAndWidth) {
+      mCenterCtrl->SetValue(mCenter);
+      mWidthCtrl->SetValue(mWidth);
+   }
+   else {
+      mLowCtrl->SetValue(mLow);
+      mHighCtrl->SetValue(mHigh);
+   }
 }
 
 void SpectralSelectionBar::SetFrequencies(double bottom, double top)
 {
+   mLow = bottom;
+   mHigh = top;
+
    if (bottom > 0 && top >= bottom)
       mWidth = log(top / bottom), mCenter = sqrt(top * bottom);
    else
@@ -289,20 +346,23 @@ void SpectralSelectionBar::SetFrequencies(double bottom, double top)
 
 void SpectralSelectionBar::SetFrequencySelectionFormatName(const wxString & formatName)
 {
-   mCenterCtrl->SetFormatName(formatName);
+   NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
+   frequencyCtrl->SetFormatName(formatName);
 
    wxCommandEvent e(EVT_FREQUENCYTEXTCTRL_UPDATED);
-   e.SetInt(mCenterCtrl->GetFormatIndex());
+   e.SetInt(frequencyCtrl->GetFormatIndex());
    OnUpdate(e);
 }
 
 void SpectralSelectionBar::SetLogFrequencySelectionFormatName(const wxString & formatName)
 {
-   mWidthCtrl->SetFormatName(formatName);
+   if (mbCenterAndWidth) {
+      mWidthCtrl->SetFormatName(formatName);
 
-   wxCommandEvent e(EVT_LOGFREQUENCYTEXTCTRL_UPDATED);
-   e.SetInt(mWidthCtrl->GetFormatIndex());
-   OnUpdate(e);
+      wxCommandEvent e(EVT_LOGFREQUENCYTEXTCTRL_UPDATED);
+      e.SetInt(mWidthCtrl->GetFormatIndex());
+      OnUpdate(e);
+   }
 }
 
 #endif // #ifdef EXPERIMENTAL_SPECTRAL_EDITING
