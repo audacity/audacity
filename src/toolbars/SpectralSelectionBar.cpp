@@ -34,6 +34,7 @@ with changes in the SpectralSelectionBar.
 #include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
+#include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/combobox.h>
@@ -42,6 +43,7 @@ with changes in the SpectralSelectionBar.
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/valtext.h>
+#include <wx/window.h>
 #endif
 #include <wx/statline.h>
 
@@ -66,14 +68,14 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(SpectralSelectionBar, ToolBar)
-   EVT_SIZE(OnSize)
-   EVT_TEXT(OnCenterID, OnCtrl)
-   EVT_TEXT(OnWidthID, OnCtrl)
-   EVT_TEXT(OnLowID, OnCtrl)
-   EVT_TEXT(OnHighID, OnCtrl)
-   EVT_CHOICE(OnChoiceID, OnChoice)
-   EVT_COMMAND(wxID_ANY, EVT_FREQUENCYTEXTCTRL_UPDATED, OnUpdate)
-   EVT_COMMAND(wxID_ANY, EVT_LOGFREQUENCYTEXTCTRL_UPDATED, OnUpdate)
+   EVT_SIZE(SpectralSelectionBar::OnSize)
+   EVT_TEXT(OnCenterID, SpectralSelectionBar::OnCtrl)
+   EVT_TEXT(OnWidthID, SpectralSelectionBar::OnCtrl)
+   EVT_TEXT(OnLowID, SpectralSelectionBar::OnCtrl)
+   EVT_TEXT(OnHighID, SpectralSelectionBar::OnCtrl)
+   EVT_CHOICE(OnChoiceID, SpectralSelectionBar::OnChoice)
+   EVT_COMMAND(wxID_ANY, EVT_FREQUENCYTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
+   EVT_COMMAND(wxID_ANY, EVT_LOGFREQUENCYTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
 END_EVENT_TABLE()
 
 SpectralSelectionBar::SpectralSelectionBar()
