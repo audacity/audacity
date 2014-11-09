@@ -60,6 +60,8 @@ END_EVENT_TABLE()
 DeviceToolBar::DeviceToolBar()
 : ToolBar(DeviceBarID, _("Device"), wxT("Device"), true)
 {
+   mPlayBitmap = NULL;
+   mRecordBitmap = NULL;
 }
 
 DeviceToolBar::~DeviceToolBar()
@@ -111,7 +113,8 @@ void DeviceToolBar::Populate()
    Add(mHost, 0, wxALIGN_CENTER);
 
    // Input device
-   mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
+   if( mRecordBitmap == NULL )
+      mRecordBitmap = new wxBitmap(theTheme.Bitmap(bmpMic));
 
    Add(new wxStaticBitmap(this,
                           wxID_ANY,
@@ -133,7 +136,8 @@ void DeviceToolBar::Populate()
    Add(mInputChannels, 0, wxALIGN_CENTER);
 
    // Output device
-   mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
+   if( mPlayBitmap == NULL )
+      mPlayBitmap = new wxBitmap(theTheme.Bitmap(bmpSpeaker));
    Add(new wxStaticBitmap(this,
                           wxID_ANY,
                           *mPlayBitmap), 0, wxALIGN_CENTER);

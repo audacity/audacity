@@ -203,7 +203,7 @@ class Meter : public wxPanel
 #endif
    void OnFloat(wxCommandEvent &evt);
    void OnPreferences(wxCommandEvent &evt);
-
+   void SetBarClip( int iBar );
    void DrawMeterBar(wxDC &dc, MeterBar *meterBar);
    void ResetBar(MeterBar *bar, bool resetClipping);
    void RepaintBarsNow();
