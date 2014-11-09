@@ -548,7 +548,7 @@ void GetDefaultWindowRect(wxRect *defRect)
    *defRect = wxGetClientDisplayRect();
 
    defRect->width = 940;
-   defRect->height = 780;
+   defRect->height = 674;
 
    //These conditional values assist in improving placement and size
    //of new windows on different platforms.
