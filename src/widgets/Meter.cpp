@@ -1150,6 +1150,29 @@ void Meter::HandlePaint(wxDC &destDC)
                r.SetRight(mBar[i].r.GetRight());
                dc.GradientFillLinear(r, yellow, red);
             }
+#ifdef EXPERIMENTAL_METER_LED_STYLE
+            if (!mBar[i].vert)
+            {
+               wxRect r = mBar[i].r;
+               wxPen BackgroundPen;
+               BackgroundPen.SetColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
+               dc.SetPen( BackgroundPen );
+               int i;
+               for(i=0;i<r.width;i++)
+               {
+                  // 2 pixel spacing between the LEDs
+                  if( (i%7)<2 ){
+                     dc.DrawLine( i+r.x, r.y, i+r.x, r.y+r.height );
+                  } else {
+                     // The LEDs have triangular ends.  
+                     // This code shapes the ends.
+                     int j = abs( (i%7)-4);
+                     dc.DrawLine( i+r.x, r.y, i+r.x, r.y+j +1);
+                     dc.DrawLine( i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
+                  }
+               }
+            }
+#endif
          }
 
          // Give it a recessed look
