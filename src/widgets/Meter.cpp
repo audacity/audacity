@@ -833,7 +833,6 @@ void Meter::HandleLayout(wxDC &dc)
    int left = 0, top = 0;
    int right, bottom;
    int barw, barh;
-   int rulerHeight;
    int i;
 
    mRuler.SetFlip(true);
@@ -976,9 +975,9 @@ void Meter::HandleLayout(wxDC &dc)
          const int RulerHeight = 24;
          const int TextDownBy = 2;
          mRuler.SetBounds(mBar[0].r.x,
-                       BarMid +TextDownBy,
+                       BarMid +TextDownBy - RulerHeight/2,
                        mBar[1].r.x + mBar[1].r.width,
-                       BarMid +TextDownBy);
+                       BarMid +TextDownBy + RulerHeight/2);
       }
       if (mDB) {
          mRuler.SetRange(-mDBRange, 0);
