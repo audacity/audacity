@@ -63,12 +63,12 @@ enum
    NoBarID = -1,
    TransportBarID,
    ToolsBarID,
-   MixerBarID,
-   TranscriptionBarID,
-   EditBarID,
    MeterBarID,
    RecordMeterBarID,
    PlayMeterBarID,
+   MixerBarID,
+   EditBarID,
+   TranscriptionBarID,
    DeviceBarID,
    SelectionBarID,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -110,10 +110,10 @@ class ToolBar:public wxPanel
    void SetVisible( bool bVisible );
    void SetPositioned(){ mPositioned = true;};
 
-
    /// Resizable toolbars should implement this.
    virtual int GetInitialWidth() {return -1;}
    virtual int GetMinToolbarWidth() {return GetInitialWidth();}
+   virtual wxSize GetDockedSize(){ return GetMinSize();}
  protected:
 
    AButton *MakeButton(teBmps eUp,

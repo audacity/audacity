@@ -97,7 +97,8 @@ class Meter : public wxPanel
       VerticalMulti,
       Equalizer,
       Waveform,
-      MixerTrackCluster // Doesn't show menu, icon, or L/R labels, but otherwise like VerticalStereo.
+      MixerTrackCluster, // Doesn't show menu, icon, or L/R labels, but otherwise like VerticalStereo.
+      HorizontalStereoCompact // Thinner.
    };
 
 

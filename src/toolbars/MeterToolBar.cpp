@@ -92,7 +92,7 @@ void MeterToolBar::Populate()
                                 wxID_ANY,
                                 true,
                                 wxDefaultPosition,
-                                wxSize( 260, 55 ) );
+                                wxSize( 260, 28 ) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.*/
       mRecordMeter->SetName( _("Record Meter"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
@@ -107,14 +107,14 @@ void MeterToolBar::Populate()
                               wxID_ANY,
                               false,
                               wxDefaultPosition,
-                              wxSize( 260, 55 ) );
+                              wxSize( 260, 28 ) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.*/
       mPlayMeter->SetName( _("Play Meter"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.
        This is the name used in screen reader software, where having 'Meter' first
        apparently is helpful to partially sighted people.  */
       mPlayMeter->SetLabel( _("Meter-Play"));
-      mSizer->Add( mPlayMeter, wxGBPosition( 0, 1 ), wxDefaultSpan, wxEXPAND );
+      mSizer->Add( mPlayMeter, wxGBPosition( (mWhichMeters & kWithRecordMeter)?1:0, 0 ), wxDefaultSpan, wxEXPAND );
    }
    if( IsVisible() )
       MeterToolBars::AddMeters( mPlayMeter, mRecordMeter );
@@ -220,7 +220,20 @@ bool MeterToolBar::Expose( bool show )
    return ToolBar::Expose( show );
 }
 
-
+wxSize MeterToolBar::GetDockedSize()
+{
+   const int tbs = toolbarSingle + toolbarGap;
+   wxSize sz = GetSize();
+   wxSize sz2 = GetMinSize();
+   sz.x = wxMax( sz.x, sz2.x );
+   sz.y = wxMax( sz.y, sz2.y );
+   // 50 is the size where we switch from expanded to compact.
+   if( sz.y < 55 )
+      sz.y = tbs-1;
+   else 
+      sz.y = 2 * tbs -1;
+   return sz;
+}
 
 // Locally defined - we can change implementation easily later.
 namespace MeterToolBars {

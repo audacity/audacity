@@ -294,6 +294,8 @@ void Ruler::OfflimitsPixels(int start, int end)
          mLength = mRight-mLeft;
       else
          mLength = mBottom-mTop;
+      if( mLength < 0 )
+         return;
       mUserBits = new int[mLength+1];
       for(i=0; i<=mLength; i++)
          mUserBits[i] = 0;

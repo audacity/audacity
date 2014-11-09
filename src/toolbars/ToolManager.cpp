@@ -130,7 +130,7 @@ class ToolFrame:public wxFrame
          width += sizerW;
       }
 
-      SetSize( width + 2, bar->GetMinSize().y + 2 );
+      SetSize( width + 2, bar->GetDockedSize().y + 2 );
 
       // Attach the sizer and resize the window to fit
       SetSizer( s );
@@ -490,18 +490,18 @@ void ToolManager::Reset()
          floater = bar->GetParent();
       }
 
-      if (ndx == SelectionBarID
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         || ndx == SpectralSelectionBarID
-#endif
-          )
+      if (ndx == SelectionBarID )
       {
          dock = mBotDock;
 
          wxCommandEvent e;
          bar->GetEventHandler()->ProcessEvent(e);
       }
-      else if( ndx == MeterBarID )
+      else if( ndx == MeterBarID 
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+         || ndx == SpectralSelectionBarID
+#endif
+          )
       {
          dock = NULL;
       }
@@ -648,6 +648,13 @@ void ToolManager::ReadConfig()
          else
          {
             bar->Create( mBotDock );
+         }
+
+         // Set the width and height
+         if( width[ ndx ] != -1 && height[ ndx ] != -1 )
+         {
+            wxSize sz( width[ ndx ], height[ ndx ] );
+            bar->SetSize( sz );
          }
 
 #ifdef EXPERIMENTAL_SYNC_LOCK

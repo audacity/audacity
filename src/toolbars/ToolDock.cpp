@@ -130,7 +130,7 @@ void ToolDock::Dock( ToolBar *bar, int before )
    mBars[ bar->GetId() ] = bar;
 
    // Reset height
-   bar->SetSize( bar->GetSize().x, bar->GetMinSize().y );
+   bar->SetSize( bar->GetSize().x, bar->GetDockedSize().y );
 
    // Park the new bar in the correct berth
    if( before >= 0 && before < (int)mDockedBars.GetCount() )
@@ -264,6 +264,7 @@ void ToolDock::LayoutToolBars()
 //
 // Determine the location and bar before which a new bar would be placed
 //
+// 'rect' will be the rectangle for the dock marker.
 int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
 {
    struct
@@ -306,7 +307,7 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
          {
             // Add the new bars' dimensions to the mix
             tinfo[ct].rect = t->GetRect();
-            tinfo[ct].min = t->GetMinSize();
+            tinfo[ct].min = t->GetDockedSize();
             tindx = ct;
          }
       }
@@ -336,7 +337,7 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
             {
                // Add the new bars' dimensions to the mix
                tinfo[ct].rect = t->GetRect();
-               tinfo[ct].min = t->GetMinSize();
+               tinfo[ct].min = t->GetDockedSize();
                tindx = ct;
                ndx--;
             }
