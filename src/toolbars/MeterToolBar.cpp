@@ -228,7 +228,7 @@ wxSize MeterToolBar::GetDockedSize()
    sz.x = wxMax( sz.x, sz2.x );
    sz.y = wxMax( sz.y, sz2.y );
    // 50 is the size where we switch from expanded to compact.
-   if( sz.y < 55 )
+   if( sz.y < 50 )
       sz.y = tbs-1;
    else 
       sz.y = 2 * tbs -1;
