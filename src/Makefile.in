@@ -458,11 +458,10 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	widgets/NumericTextCtrl.cpp widgets/NumericTextCtrl.h \
 	widgets/numformatter.cpp widgets/numformatter.h \
 	widgets/ProgressDialog.cpp widgets/ProgressDialog.h \
-	widgets/Ruler.cpp widgets/Ruler.h widgets/TimeTextCtrl.cpp \
-	widgets/TimeTextCtrl.h widgets/valnum.cpp widgets/valnum.h \
-	widgets/Warning.cpp widgets/Warning.h xml/XMLFileReader.cpp \
-	xml/XMLFileReader.h xml/XMLWriter.cpp xml/XMLWriter.h \
-	effects/audiounits/LoadAudioUnits.cpp \
+	widgets/Ruler.cpp widgets/Ruler.h widgets/valnum.cpp \
+	widgets/valnum.h widgets/Warning.cpp widgets/Warning.h \
+	xml/XMLFileReader.cpp xml/XMLFileReader.h xml/XMLWriter.cpp \
+	xml/XMLWriter.h effects/audiounits/LoadAudioUnits.cpp \
 	effects/audiounits/LoadAudioUnits.h \
 	effects/audiounits/AudioUnitEffect.cpp \
 	effects/audiounits/AudioUnitEffect.h export/ExportFFmpeg.cpp \
@@ -711,7 +710,6 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	widgets/audacity-numformatter.$(OBJEXT) \
 	widgets/audacity-ProgressDialog.$(OBJEXT) \
 	widgets/audacity-Ruler.$(OBJEXT) \
-	widgets/audacity-TimeTextCtrl.$(OBJEXT) \
 	widgets/audacity-valnum.$(OBJEXT) \
 	widgets/audacity-Warning.$(OBJEXT) \
 	xml/audacity-XMLFileReader.$(OBJEXT) \
@@ -1328,14 +1326,13 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	widgets/NumericTextCtrl.cpp widgets/NumericTextCtrl.h \
 	widgets/numformatter.cpp widgets/numformatter.h \
 	widgets/ProgressDialog.cpp widgets/ProgressDialog.h \
-	widgets/Ruler.cpp widgets/Ruler.h widgets/TimeTextCtrl.cpp \
-	widgets/TimeTextCtrl.h widgets/valnum.cpp widgets/valnum.h \
-	widgets/Warning.cpp widgets/Warning.h xml/XMLFileReader.cpp \
-	xml/XMLFileReader.h xml/XMLWriter.cpp xml/XMLWriter.h $(NULL) \
-	$(am__append_3) $(am__append_6) $(am__append_9) \
-	$(am__append_12) $(am__append_17) $(am__append_24) \
-	$(am__append_35) $(am__append_38) $(am__append_41) \
-	$(am__append_46) $(am__append_49)
+	widgets/Ruler.cpp widgets/Ruler.h widgets/valnum.cpp \
+	widgets/valnum.h widgets/Warning.cpp widgets/Warning.h \
+	xml/XMLFileReader.cpp xml/XMLFileReader.h xml/XMLWriter.cpp \
+	xml/XMLWriter.h $(NULL) $(am__append_3) $(am__append_6) \
+	$(am__append_9) $(am__append_12) $(am__append_17) \
+	$(am__append_24) $(am__append_35) $(am__append_38) \
+	$(am__append_41) $(am__append_46) $(am__append_49)
 
 # TODO: Check *.cpp and *.h files if they are needed.
 EXTRA_DIST = audacity.desktop.in xml/audacityproject.dtd \
@@ -1860,8 +1857,6 @@ widgets/audacity-ProgressDialog.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-Ruler.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
-widgets/audacity-TimeTextCtrl.$(OBJEXT): widgets/$(am__dirstamp) \
-	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-valnum.$(OBJEXT): widgets/$(am__dirstamp) \
 	widgets/$(DEPDIR)/$(am__dirstamp)
 widgets/audacity-Warning.$(OBJEXT): widgets/$(am__dirstamp) \
@@ -2244,7 +2239,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-NumericTextCtrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-ProgressDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-Ruler.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-TimeTextCtrl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-Warning.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-numformatter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widgets/$(DEPDIR)/audacity-valnum.Po@am__quote@
@@ -5650,20 +5644,6 @@ widgets/audacity-Ruler.obj: widgets/Ruler.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/Ruler.cpp' object='widgets/audacity-Ruler.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-Ruler.obj `if test -f 'widgets/Ruler.cpp'; then $(CYGPATH_W) 'widgets/Ruler.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/Ruler.cpp'; fi`
-
-widgets/audacity-TimeTextCtrl.o: widgets/TimeTextCtrl.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-TimeTextCtrl.o -MD -MP -MF widgets/$(DEPDIR)/audacity-TimeTextCtrl.Tpo -c -o widgets/audacity-TimeTextCtrl.o `test -f 'widgets/TimeTextCtrl.cpp' || echo '$(srcdir)/'`widgets/TimeTextCtrl.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-TimeTextCtrl.Tpo widgets/$(DEPDIR)/audacity-TimeTextCtrl.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/TimeTextCtrl.cpp' object='widgets/audacity-TimeTextCtrl.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-TimeTextCtrl.o `test -f 'widgets/TimeTextCtrl.cpp' || echo '$(srcdir)/'`widgets/TimeTextCtrl.cpp
-
-widgets/audacity-TimeTextCtrl.obj: widgets/TimeTextCtrl.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-TimeTextCtrl.obj -MD -MP -MF widgets/$(DEPDIR)/audacity-TimeTextCtrl.Tpo -c -o widgets/audacity-TimeTextCtrl.obj `if test -f 'widgets/TimeTextCtrl.cpp'; then $(CYGPATH_W) 'widgets/TimeTextCtrl.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/TimeTextCtrl.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) widgets/$(DEPDIR)/audacity-TimeTextCtrl.Tpo widgets/$(DEPDIR)/audacity-TimeTextCtrl.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='widgets/TimeTextCtrl.cpp' object='widgets/audacity-TimeTextCtrl.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o widgets/audacity-TimeTextCtrl.obj `if test -f 'widgets/TimeTextCtrl.cpp'; then $(CYGPATH_W) 'widgets/TimeTextCtrl.cpp'; else $(CYGPATH_W) '$(srcdir)/widgets/TimeTextCtrl.cpp'; fi`
 
 widgets/audacity-valnum.o: widgets/valnum.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT widgets/audacity-valnum.o -MD -MP -MF widgets/$(DEPDIR)/audacity-valnum.Tpo -c -o widgets/audacity-valnum.o `test -f 'widgets/valnum.cpp' || echo '$(srcdir)/'`widgets/valnum.cpp

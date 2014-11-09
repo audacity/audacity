@@ -538,8 +538,6 @@ audacity_SOURCES = \
 	widgets/ProgressDialog.h \
 	widgets/Ruler.cpp \
 	widgets/Ruler.h \
-	widgets/TimeTextCtrl.cpp \
-	widgets/TimeTextCtrl.h \
 	widgets/valnum.cpp \
 	widgets/valnum.h \
 	widgets/Warning.cpp \
