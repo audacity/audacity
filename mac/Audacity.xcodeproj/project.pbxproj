@@ -452,6 +452,8 @@
 		18A2840F0F79BCAB0013A1BE /* Generator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18A2840E0F79BCAB0013A1BE /* Generator.cpp */; };
 		18CE3C951145511200282C50 /* ODDecodeFFmpegTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CE3C941145511200282C50 /* ODDecodeFFmpegTask.cpp */; };
 		18D8314E0ED0F56300FD870D /* Contrast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18D8314C0ED0F56200FD870D /* Contrast.cpp */; };
+		28001B3E1A0F0E5D007DD161 /* NumericTextCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */; };
+		28001B4B1A0F0EB6007DD161 /* SpectralSelectionBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28001B481A0F0EB6007DD161 /* SpectralSelectionBar.cpp */; };
 		28006FFB132C167600BD34D7 /* Install.txt in Resources */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
 		28006FFC132C169700BD34D7 /* Install.txt in Install miscellany */ = {isa = PBXBuildFile; fileRef = 28006FFA132C167600BD34D7 /* Install.txt */; };
 		2800FE0D0FF32308005CA9E5 /* pminternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2800FDF40FF3225B005CA9E5 /* pminternal.h */; };
@@ -3072,6 +3074,11 @@
 		18CE3C941145511200282C50 /* ODDecodeFFmpegTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = ODDecodeFFmpegTask.cpp; path = ondemand/ODDecodeFFmpegTask.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		18D8314C0ED0F56200FD870D /* Contrast.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Contrast.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		18D8314D0ED0F56200FD870D /* Contrast.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Contrast.h; sourceTree = "<group>"; tabWidth = 3; };
+		28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NumericTextCtrl.cpp; sourceTree = "<group>"; };
+		28001B3D1A0F0E5D007DD161 /* NumericTextCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumericTextCtrl.h; sourceTree = "<group>"; };
+		28001B481A0F0EB6007DD161 /* SpectralSelectionBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpectralSelectionBar.cpp; sourceTree = "<group>"; };
+		28001B491A0F0EB6007DD161 /* SpectralSelectionBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpectralSelectionBar.h; sourceTree = "<group>"; };
+		28001B4A1A0F0EB6007DD161 /* SpectralSelectionBarListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpectralSelectionBarListener.h; sourceTree = "<group>"; };
 		28006FFA132C167600BD34D7 /* Install.txt */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = Install.txt; path = mac/Install.txt; sourceTree = "<group>"; };
 		2800FDF40FF3225B005CA9E5 /* pminternal.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = pminternal.h; path = portmidi/pm_common/pminternal.h; sourceTree = "<group>"; tabWidth = 3; };
 		2800FDF50FF3225B005CA9E5 /* pmutil.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; name = pmutil.c; path = portmidi/pm_common/pmutil.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -5398,8 +5405,6 @@
 		1790B0FD09883BFD008A330A /* widgets */ = {
 			isa = PBXGroup;
 			children = (
-				280112791943EE0E00D98A16 /* HelpSystem.cpp */,
-				2801127A1943EE0E00D98A16 /* HelpSystem.h */,
 				1790B0FE09883BFD008A330A /* AButton.cpp */,
 				1790B0FF09883BFD008A330A /* AButton.h */,
 				1790B10009883BFD008A330A /* ASlider.cpp */,
@@ -5416,6 +5421,8 @@
 				2897F6FD0AB3DCD0003C20C5 /* Grabber.h */,
 				280828580A75E0EA000002EF /* Grid.cpp */,
 				280828590A75E0EA000002EF /* Grid.h */,
+				280112791943EE0E00D98A16 /* HelpSystem.cpp */,
+				2801127A1943EE0E00D98A16 /* HelpSystem.h */,
 				28530C480DF2105200555C94 /* HtmlWindow.cpp */,
 				28530C490DF2105200555C94 /* HtmlWindow.h */,
 				28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */,
@@ -5428,6 +5435,8 @@
 				1790B10409883BFD008A330A /* Meter.h */,
 				1790B10509883BFD008A330A /* MultiDialog.cpp */,
 				1790B10609883BFD008A330A /* MultiDialog.h */,
+				28001B3C1A0F0E5D007DD161 /* NumericTextCtrl.cpp */,
+				28001B3D1A0F0E5D007DD161 /* NumericTextCtrl.h */,
 				28F2CED0181867BB00573D61 /* numformatter.cpp */,
 				28F2CED1181867BB00573D61 /* numformatter.h */,
 				28530C4A0DF2105200555C94 /* ProgressDialog.cpp */,
@@ -6300,6 +6309,9 @@
 		2897F6DB0AB3DB5A003C20C5 /* toolbars */ = {
 			isa = PBXGroup;
 			children = (
+				28001B481A0F0EB6007DD161 /* SpectralSelectionBar.cpp */,
+				28001B491A0F0EB6007DD161 /* SpectralSelectionBar.h */,
+				28001B4A1A0F0EB6007DD161 /* SpectralSelectionBarListener.h */,
 				2897F6DC0AB3DB5A003C20C5 /* ControlToolBar.cpp */,
 				2897F6DD0AB3DB5A003C20C5 /* ControlToolBar.h */,
 				289F9C7C0AC671BB00797DC1 /* DeviceToolBar.cpp */,
@@ -9111,6 +9123,8 @@
 				28F6717B197DFA1C00075C32 /* SpecPowerMeter.cpp in Sources */,
 				280A8B4719F4403B0091DE70 /* ModuleManager.cpp in Sources */,
 				280A8B4A19F440880091DE70 /* EffectRack.cpp in Sources */,
+				28001B3E1A0F0E5D007DD161 /* NumericTextCtrl.cpp in Sources */,
+				28001B4B1A0F0EB6007DD161 /* SpectralSelectionBar.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
