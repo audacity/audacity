@@ -30,6 +30,9 @@
 #include "Invert.h"
 #include "Leveller.h"
 #include "Noise.h"
+#ifdef EXPERIMENTAL_NOISE_REDUCTION
+#include "NoiseReduction.h"
+#endif
 #include "NoiseRemoval.h"
 #include "Normalize.h"
 #include "Phaser.h"
@@ -192,8 +195,12 @@ void LoadEffects()
 
 #define ATEAM "http://audacityteam.org/namespace#"
 
+#ifdef EXPERIMENTAL_NOISE_REDUCTION
+   CatPtr nrm = em.AddCategory(wxT(ATEAM) wxT("NoiseReduction"),
+      _("Noise Reduction"));
+#endif
    CatPtr nrm = em.AddCategory(wxT(ATEAM) wxT("NoiseRemoval"),
-                               _("Noise Removal"));
+      _("Noise Removal"));
    CatPtr pnt = em.AddCategory(wxT(ATEAM) wxT("PitchAndTempo"),
                                _("Pitch and Tempo"));
    CatPtr tim = em.AddCategory(wxT(ATEAM) wxT("TimelineChanger"),
@@ -249,6 +256,9 @@ void LoadEffects()
    em.RegisterEffect(new EffectFadeOut(), SIMPLE_EFFECT);
    em.RegisterEffect(new EffectInvert());
    em.RegisterEffect(new EffectLeveller(), SIMPLE_EFFECT);
+#ifdef EXPERIMENTAL_NOISE_REDUCTION
+   em.RegisterEffect(new EffectNoiseReduction(), SIMPLE_EFFECT);
+#endif
    em.RegisterEffect(new EffectNoiseRemoval(), SIMPLE_EFFECT);
    em.RegisterEffect(new EffectNormalize(), SIMPLE_EFFECT);
    em.RegisterEffect(new EffectPhaser());

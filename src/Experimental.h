@@ -185,5 +185,6 @@
 // Define to make the meters look like a row of LEDs
 //#define EXPERIMENTAL_METER_LED_STYLE
 
-
+// Define for new noise reduction effect from Paul Licameli.
+//#define EXPERIMENTAL_NOISE_REDUCTION
 #endif
