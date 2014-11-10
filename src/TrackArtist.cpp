@@ -3021,7 +3021,8 @@ void TrackArtist::UpdatePrefs()
    mdBrange = gPrefs->Read(wxT("/GUI/EnvdBRange"), mdBrange);
    mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
 
-   mMaxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), -1);
+   // mMaxFreq should have the same default as in SpectrumPrefs.
+   mMaxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
    mMinFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), -1);
    mLogMaxFreq = gPrefs->Read(wxT("/SpectrumLog/MaxFreq"), -1);
    if( mLogMaxFreq < 0 )
