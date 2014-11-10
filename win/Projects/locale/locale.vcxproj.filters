@@ -144,6 +144,9 @@
     <msgfmt Include="..\..\..\locale\sv.po">
       <Filter>Source Files</Filter>
     </msgfmt>
+    <msgfmt Include="..\..\..\locale\ta.po">
+      <Filter>Source Files</Filter>
+    </msgfmt>
     <msgfmt Include="..\..\..\locale\tg.po">
       <Filter>Source Files</Filter>
     </msgfmt>

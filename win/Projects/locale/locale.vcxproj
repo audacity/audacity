@@ -170,6 +170,7 @@ goto :EOF
     <msgfmt Include="..\..\..\locale\sr_RS.po" />
     <msgfmt Include="..\..\..\locale\sr_RS%40latin.po" />
     <msgfmt Include="..\..\..\locale\sv.po" />
+    <msgfmt Include="..\..\..\locale\ta.po" />
     <msgfmt Include="..\..\..\locale\tg.po" />
     <msgfmt Include="..\..\..\locale\tr.po" />
     <msgfmt Include="..\..\..\locale\uk.po" />
