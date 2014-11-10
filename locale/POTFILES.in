@@ -485,8 +485,6 @@ src/widgets/ProgressDialog.cpp
 src/widgets/ProgressDialog.h
 src/widgets/Ruler.cpp
 src/widgets/Ruler.h
-src/widgets/TimeTextCtrl.cpp
-src/widgets/TimeTextCtrl.h
 src/widgets/valnum.cpp
 src/widgets/valnum.h
 src/widgets/Warning.cpp
