@@ -51,6 +51,7 @@ with changes in the SpectralSelectionBar.
 #include "SpectralSelectionBar.h"
 
 #include "../AudacityApp.h"
+#include "../Prefs.h"
 #include "../SelectedRegion.h"
 #include "../widgets/NumericTextCtrl.h"
 
@@ -78,9 +79,12 @@ BEGIN_EVENT_TABLE(SpectralSelectionBar, ToolBar)
    EVT_COMMAND(wxID_ANY, EVT_LOGFREQUENCYTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
 END_EVENT_TABLE()
 
+static const wxString preferencePath
+(wxT("/GUI/Toolbars/SpectralSelection/CenterAndWidthChoice"));
+
 SpectralSelectionBar::SpectralSelectionBar()
 : ToolBar(SpectralSelectionBarID, _("SpectralSelection"), wxT("SpectralSelection"))
-, mListener(NULL), mbCenterAndWidth(false)
+, mListener(NULL), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
 , mChoice(NULL)
@@ -99,6 +103,8 @@ void SpectralSelectionBar::Create(wxWindow * parent)
 
 void SpectralSelectionBar::Populate()
 {
+   gPrefs->Read(preferencePath, &mbCenterAndWidth, true);
+
    // This will be inherited by all children:
    SetFont(wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 
@@ -127,7 +133,7 @@ void SpectralSelectionBar::Populate()
    };
    mChoice = new wxChoice
       (this, OnChoiceID, wxDefaultPosition, wxDefaultSize, 2, choices,
-       0, wxDefaultValidator, _("Spectral Selection Specifications"));
+       0, wxDefaultValidator, _("Spectral Selection"));
    mChoice->SetSelection(mbCenterAndWidth ? 0 : 1);
    mainSizer->Add(mChoice, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
 
@@ -267,7 +273,10 @@ void SpectralSelectionBar::OnCtrl(wxCommandEvent & event)
 void SpectralSelectionBar::OnChoice(wxCommandEvent &)
 {
    mbCenterAndWidth = (0 == mChoice->GetSelection());
+   gPrefs->Write(preferencePath, mbCenterAndWidth);
+   gPrefs->Flush();
    ToolBar::ReCreateButtons();
+   mChoice->SetFocus();
    ValuesToControls();
    Updated();
 }
