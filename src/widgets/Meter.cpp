@@ -1338,7 +1338,7 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *meterBar)
          rRMS = wxRect(x, y, wd, h);
 
          // Blank out the rest
-         dc.DrawRectangle(x + wd, y, w, h);
+         dc.DrawRectangle(x + wd, y, w - wd, h);
 
          // Reset the colors
          dc.SetBrush(*wxTRANSPARENT_BRUSH);
