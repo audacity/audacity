@@ -57,8 +57,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lv2", "Projects\lv2\lv2.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "expat", "Projects\expat\expat.vcxproj", "{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxWidgets-2.8.12", "Projects\wxWidgets-2.8.12\wxWidgets-2.8.12.vcxproj", "{D7B6910F-2AAB-4600-97FF-FE704897C448}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -271,14 +269,6 @@ Global
 		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.wx3-Debug|Win32.Build.0 = wx3-Debug|Win32
 		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.wx3-Release|Win32.ActiveCfg = wx3-Release|Win32
 		{A939AAF8-44F1-4CE7-9DD0-7A6E99814856}.wx3-Release|Win32.Build.0 = wx3-Release|Win32
-		{D7B6910F-2AAB-4600-97FF-FE704897C448}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D7B6910F-2AAB-4600-97FF-FE704897C448}.Debug|Win32.Build.0 = Debug|Win32
-		{D7B6910F-2AAB-4600-97FF-FE704897C448}.Release|Win32.ActiveCfg = Release|Win32
-		{D7B6910F-2AAB-4600-97FF-FE704897C448}.Release|Win32.Build.0 = Release|Win32
-		{D7B6910F-2AAB-4600-97FF-FE704897C448}.wx3-Debug|Win32.ActiveCfg = Debug|Win32
-		{D7B6910F-2AAB-4600-97FF-FE704897C448}.wx3-Debug|Win32.Build.0 = Debug|Win32
-		{D7B6910F-2AAB-4600-97FF-FE704897C448}.wx3-Release|Win32.ActiveCfg = Release|Win32
-		{D7B6910F-2AAB-4600-97FF-FE704897C448}.wx3-Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
