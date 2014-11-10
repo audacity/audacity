@@ -1594,15 +1594,15 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    // Convert numeric keypad entries.
    if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9)) keyCode -= WXK_NUMPAD0 - '0';
 
-   wxChar *theDigit = &mValueString[mDigits[mFocusedDigit].pos];
    if (keyCode >= '0' && keyCode <= '9') {
-      if (*theDigit == wxChar('-')) {
+      int digitPosition = mDigits[mFocusedDigit].pos;
+      if (mValueString[digitPosition] == wxChar('-')) {
          mValue = 0;
          ValueToControls();
          // Beware relocation of the string
-         theDigit = &mValueString[mDigits[mFocusedDigit].pos];
+         digitPosition = mDigits[mFocusedDigit].pos;
       }
-      *theDigit = wxChar(keyCode);
+      mValueString[digitPosition] = wxChar(keyCode);
       ControlsToValue();
       ValueToControls();
       mFocusedDigit = (mFocusedDigit + 1) % (mDigits.GetCount());
@@ -1614,9 +1614,9 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       mFocusedDigit--;
       mFocusedDigit += mDigits.GetCount();
       mFocusedDigit %= mDigits.GetCount();
-      theDigit = &mValueString[mDigits[mFocusedDigit].pos];
-      if (*theDigit != wxChar('-'))
-         *theDigit = '0';
+      wxString::reference theDigit = mValueString[mDigits[mFocusedDigit].pos];
+      if (theDigit != wxChar('-'))
+         theDigit = '0';
       ControlsToValue();
       ValueToControls();
       Updated();

@@ -71,7 +71,8 @@ void TimeEditor::BeginEdit(int row, int col, wxGrid *grid)
 {
    wxGridTableBase *table = grid->GetTable();
 
-   table->GetValue(row, col).ToDouble(&mOld);
+   mOldString = table->GetValue(row, col);
+   mOldString.ToDouble(&mOld);
 
    GetTimeCtrl()->SetValue(mOld);
    GetTimeCtrl()->EnableMenu();
@@ -79,16 +80,24 @@ void TimeEditor::BeginEdit(int row, int col, wxGrid *grid)
    GetTimeCtrl()->SetFocus();
 }
 
-#if wxCHECK_VERSION(3,0,0)
-
-bool TimeEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col), const wxGrid *WXUNUSED(grid), const wxString & WXUNUSED(oldval), wxString *newval)
+bool TimeEditor::EndEdit(int row, int col, wxGrid *grid)
 {
-   double newtime = GetTimeCtrl()->GetTimeValue();
+    wxString newvalue;
+    bool changed = EndEdit(row, col, grid, mOldString, &newvalue);
+    if (changed) {
+        ApplyEdit(row, col, grid);
+    }
+    return changed;
+}
+
+bool TimeEditor::EndEdit(int row, int col, const wxGrid *grid, const wxString &oldval, wxString *newval)
+{
+   double newtime = GetTimeCtrl()->GetValue();
    bool changed = newtime != mOld;
 
    if (changed) {
-      mNew = newtime;
-      *newval = wxString::Format(wxT("%g"), newtime);
+      mValueAsString = wxString::Format(wxT("%g"), newtime);
+      *newval = mValueAsString;
    }
 
    return changed;
@@ -96,24 +105,8 @@ bool TimeEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col), const wxGrid *WXU
 
 void TimeEditor::ApplyEdit(int row, int col, wxGrid *grid)
 {
-   grid->GetTable()->SetValue(row, col, wxString::Format(wxT("%g"), mNew));
+   grid->GetTable()->SetValue(row, col, mValueAsString);
 }
-
-#else
-
-bool TimeEditor::EndEdit(int row, int col, wxGrid *grid)
-{
-   double newtime = GetTimeCtrl()->GetValue();
-   bool changed = newtime != mOld;
-
-   if (changed) {
-      grid->GetTable()->SetValue(row, col, wxString::Format(wxT("%g"), newtime));
-   }
-
-   return changed;
-}
-
-#endif
 
 void TimeEditor::Reset()
 {
@@ -319,9 +312,19 @@ void ChoiceEditor::BeginEdit(int row, int col, wxGrid* grid)
    Choice()->SetFocus();
 }
 
-#if wxCHECK_VERSION(3,0,0)
+bool ChoiceEditor::EndEdit(int row, int col, wxGrid *grid)
+{
+    wxString newvalue;
+    bool changed = EndEdit(row, col, grid, mOld, &newvalue);
+    if (changed) {
+        ApplyEdit(row, col, grid);
+    }
+    return changed;
+}
 
-bool ChoiceEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col), const wxGrid* WXUNUSED(grid), const wxString & WXUNUSED(oldval), wxString *newval)
+bool ChoiceEditor::EndEdit(int row, int col,
+                           const wxGrid* grid,
+                           const wxString &oldval, wxString *newval)
 {
    int sel = Choice()->GetSelection();
 
@@ -332,46 +335,21 @@ bool ChoiceEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col), const wxGrid* W
    }
 
    wxString val = mChoices[sel];
-   if (val == mOld)
+   bool changed = val != mOld;
+
+   if (changed)
    {
-      return false;
+      mValueAsString = val;
+      *newval = val;
    }
 
-   *newval = val;
-
-   mNew = val;
-
-   return true;
+   return changed;
 }
 
 void ChoiceEditor::ApplyEdit(int row, int col, wxGrid *grid)
 {
-   grid->GetTable()->SetValue(row, col, mNew);
+   grid->GetTable()->SetValue(row, col, mValueAsString);
 }
-
-#else
-
-bool ChoiceEditor::EndEdit(int row, int col,
-   wxGrid* grid)
-{
-   int sel = Choice()->GetSelection();
-
-   // This can happen if the wxChoice control is displayed and the list of choices get changed
-   if ((sel < 0) || (sel >= (int)(mChoices.GetCount())))
-   {
-      return false;
-   }
-
-   wxString val = mChoices[sel];
-   if (val == mOld)
-      return false;
-
-   grid->GetTable()->SetValue(row, col, val);
-
-   return true;
-}
-
-#endif
 
 void ChoiceEditor::Reset()
 {
