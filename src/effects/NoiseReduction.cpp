@@ -55,6 +55,7 @@
 #include <wx/radiobut.h>
 #include <wx/slider.h>
 #include <wx/valtext.h>
+#include <wx/textctrl.h>
 
 typedef std::vector<float> FloatVector;
 
