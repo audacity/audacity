@@ -1263,8 +1263,10 @@ void AudacityProject::SSBL_ModifySpectralSelection(double &bottom, double &top, 
 {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    double nyq = mRate / 2.0;
-   bottom = std::max(1.0, std::min(nyq, bottom));
-   top = std::max(0.0, std::min(nyq, top));
+   if (bottom >= 0.0)
+      bottom = std::min(nyq, bottom);
+   if (top >= 0.0)
+      top = std::min(nyq, top);
    mViewInfo.selectedRegion.setFrequencies(bottom, top);
    mTrackPanel->Refresh(false);
    if (done) {

@@ -37,6 +37,7 @@
 */
 
 #include "../Audacity.h"
+#include "../Experimental.h"
 #include "NoiseReduction.h"
 
 #include "../Prefs.h"
@@ -229,7 +230,11 @@ public:
    typedef EffectNoiseReduction::Settings Settings;
    typedef  EffectNoiseReduction::Statistics Statistics;
 
-   Worker(const Settings &settings, double sampleRate);
+   Worker(const Settings &settings, double sampleRate
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+          , double f0, double f1
+#endif
+      );
    ~Worker();
 
    bool Process(EffectNoiseReduction &effect,
@@ -274,6 +279,9 @@ private:
    const int mSpectrumSize;
    FloatVector mFreqSmoothingScratch;
    const int mFreqSmoothingBins;
+   // When spectral selection limits the affected band:
+   int mBinLow;  // inclusive lower bound
+   int mBinHigh; // exclusive upper bound
 
    const int mNoiseReductionChoice;
    const int mStepsPerWindow;
@@ -545,12 +553,17 @@ bool EffectNoiseReduction::Settings::PrefsIO(bool read)
 bool EffectNoiseReduction::Settings::Validate() const
 {
    if (StepsPerWindow() < windowTypesInfo[mWindowTypes].minSteps) {
-      ::wxMessageBox(_("Steps per block are too few for the window types"));
+      ::wxMessageBox(_("Steps per block are too few for the window types."));
       return false;
    }
 
    if (StepsPerWindow() > WindowSize()) {
-      ::wxMessageBox(_("Steps per block cannot exceed the window size"));
+      ::wxMessageBox(_("Steps per block cannot exceed the window size."));
+      return false;
+   }
+
+   if (mMethod == DM_MEDIAN && StepsPerWindow() > 4) {
+      ::wxMessageBox(_("Median method is not implemented for more than four steps per window."));
       return false;
    }
 
@@ -589,10 +602,14 @@ bool EffectNoiseReduction::Process()
    }
    else if (mStatistics->mWindowTypes != mSettings->mWindowTypes) {
       // A warning only
-      ::wxMessageBox(_("Warning: window types are not the same as for profiling"));
+      ::wxMessageBox(_("Warning: window types are not the same as for profiling."));
    }
 
-   Worker worker(*mSettings, mStatistics->mRate);
+   Worker worker(*mSettings, mStatistics->mRate
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+                 , mF0, mF1
+#endif
+      );
    bool bGoodResult = worker.Process(*this, *mStatistics, *mFactory, iter, mT0, mT1);
    if (mSettings->mDoProfile) {
       if (bGoodResult)
@@ -646,7 +663,7 @@ bool EffectNoiseReduction::Worker::Process
 
    if (mDoProfile) {
       if (statistics.mTotalWindows == 0) {
-         ::wxMessageBox(_("Selected noise profile is too short"));
+         ::wxMessageBox(_("Selected noise profile is too short."));
          return false;
       }
    }
@@ -685,7 +702,11 @@ void EffectNoiseReduction::Worker::ApplyFreqSmoothing(FloatVector &gains)
 }
 
 EffectNoiseReduction::Worker::Worker
-(const Settings &settings, double sampleRate)
+(const Settings &settings, double sampleRate
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+, double f0, double f1
+#endif
+)
 : mDoProfile(settings.mDoProfile)
 
 , mSampleRate(sampleRate)
@@ -701,6 +722,8 @@ EffectNoiseReduction::Worker::Worker
 , mSpectrumSize(1 + mWindowSize / 2)
 , mFreqSmoothingScratch(mSpectrumSize)
 , mFreqSmoothingBins((int)(settings.mFreqSmoothingHz * mWindowSize / mSampleRate))
+, mBinLow(0)
+, mBinHigh(mSpectrumSize)
 
 , mNoiseReductionChoice(settings.mNoiseReductionChoice)
 , mStepsPerWindow(settings.StepsPerWindow())
@@ -714,6 +737,16 @@ EffectNoiseReduction::Worker::Worker
 , mOutStepCount(0)
 , mInWavePos(0)
 {
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   {
+      const double bin = mSampleRate / mWindowSize;
+      if (f0 >= 0.0 )
+         mBinLow = floor(f0 / bin);
+      if (f1 >= 0.0)
+         mBinHigh = ceil(f1 / bin);
+   }
+#endif
+
    const double noiseGain = -settings.mNoiseGain;
    const int nAttackBlocks = 1 + (int)(settings.mAttackTime * sampleRate / mStepSize);
    const int nReleaseBlocks = 1 + (int)(settings.mReleaseTime * sampleRate / mStepSize);
@@ -1074,13 +1107,21 @@ void EffectNoiseReduction::Worker::ReduceNoise
    {
       float *pGain = &mQueue[mCenter]->mGains[0];
       if (mNoiseReductionChoice == NRC_ISOLATE_NOISE) {
-         for (int jj = 0; jj < mSpectrumSize; ++jj) {
-            const bool isNoise = Classify(statistics, jj);
+         // All above or below the selected frequency range is non-noise
+         std::fill(pGain, pGain + mBinLow, 0.0f);
+         std::fill(pGain + mBinHigh, pGain + mSpectrumSize, 0.0f);
+         pGain += mBinLow;
+         for (int jj = mBinLow; jj < mBinHigh; ++jj) {
+               const bool isNoise = Classify(statistics, jj);
             *pGain++ = isNoise ? 1.0 : 0.0;
          }
       }
       else {
-         for (int jj = 0; jj < mSpectrumSize; ++jj) {
+         // All above or below the selected frequency range is non-noise
+         std::fill(pGain, pGain + mBinLow, 1.0f);
+         std::fill(pGain + mBinHigh, pGain + mSpectrumSize, 1.0f);
+         pGain += mBinLow;
+         for (int jj = mBinLow; jj < mBinHigh; ++jj) {
             const bool isNoise = Classify(statistics, jj);
             if (!isNoise) 
                *pGain = 1.0;
