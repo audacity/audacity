@@ -1819,25 +1819,19 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
          return;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       case SBBottom:
-         *ppTip = bShiftDown ? 
-            _("Click and drag to move bottom selection frequency.") :
-            _("Click and drag to adjust frequency bandwidth.");
-         *ppCursor = bShiftDown
-          ? mBottomFrequencyCursor
-          : mBandWidthCursor;
+         *ppTip = _("Click and drag to move bottom selection frequency.");
+         *ppCursor = mBottomFrequencyCursor;
          return;
       case SBTop:
-         // With Shift NOT down, this is no different from dragging
-         // the bottom.
-         *ppTip = bShiftDown ?
-            _("Click and drag to move top selection frequency.") :
-            _("Click and drag to adjust frequency bandwidth.");
-       *ppCursor = bShiftDown
-          ? mTopFrequencyCursor
-          : mBandWidthCursor;
+         *ppTip = _("Click and drag to move top selection frequency.");
+         *ppCursor = mTopFrequencyCursor;
          return;
       case SBCenter:
          HandleCenterFrequencyCursor(bShiftDown, ppTip, ppCursor);
+         return;
+      case SBWidth:
+         *ppTip = _("Click and drag to adjust frequency bandwidth.");
+         *ppCursor = mBandWidthCursor;
          return;
 #endif
       default:
@@ -2135,7 +2129,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       }
 
       double value;
-      // Shift-click, choose closest boundary (not center)
+      // Shift-click, choose closest boundary
       SelectionBoundary boundary =
          ChooseBoundary(event, pTrack, r, false, false, &value);
       switch (boundary) {
@@ -2250,8 +2244,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       else
 #endif
          {
-            // Not shift-down, choose boundary only within snapping,
-            // may be center
+            // Not shift-down, choose boundary only within snapping
             double value;
             SelectionBoundary boundary =
                ChooseBoundary(event, pTrack, r, true, true, &value);
@@ -2271,12 +2264,16 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
             case SBBottom:
             case SBTop:
+            case SBWidth:
                startNewSelection = false;
                // Disable time selection
                mSelStart = -1;
-               mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
+               mFreqSelTrack = static_cast<const WaveTrack*>(pTrack);
                mFreqSelPin = value;
-               mFreqSelMode = FREQ_SEL_PINNED_CENTER;
+               mFreqSelMode =
+                  (boundary == SBWidth) ? FREQ_SEL_PINNED_CENTER :
+                  (boundary == SBBottom) ? FREQ_SEL_BOTTOM_FREE :
+                  FREQ_SEL_TOP_FREE;
                break;
             case SBCenter:
                HandleCenterFrequencyClick(false, pTrack, value);
@@ -3154,18 +3151,12 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
             ratio = f1 / fc;
       }
       if (verticalDist >= 0 &&
-          verticalDist < pixelDist &&
-          // If dragging width is possible, do not choose any frequency,
-          // unless center is defined (i.e. top and bottom are both
-          // defined).
-          (!mayDragWidth || fc > 0)) {
+          verticalDist < pixelDist) {
          pixelDist = verticalDist;
          chooseTime = false;
       }
    }
-#endif
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    if (!chooseTime) {
       // PRL:  Seems I need a larger tolerance to make snapping work
       // at top of track, not sure why
@@ -3178,12 +3169,16 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
          SetIfNotNull( pPinValue, ratio);
          return SBCenter;
       }
+      else if (mayDragWidth && fc > 0) {
+         SetIfNotNull(pPinValue, fc);
+         return SBWidth;
+      }
       else if (chooseBottom) {
-         SetIfNotNull( pPinValue, mayDragWidth ? fc : f1 );
+         SetIfNotNull( pPinValue, f1 );
          return SBBottom;
       }
       else {
-         SetIfNotNull(pPinValue, mayDragWidth ? fc : f0);
+         SetIfNotNull(pPinValue, f0);
          return SBTop;
       }
    }

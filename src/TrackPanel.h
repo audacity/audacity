@@ -675,7 +675,7 @@ protected:
       SBNone,
       SBLeft, SBRight,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      SBBottom, SBTop, SBCenter,
+      SBBottom, SBTop, SBCenter, SBWidth,
 #endif
    };
    SelectionBoundary ChooseBoundary
