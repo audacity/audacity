@@ -56,7 +56,7 @@ typedef enum EffectType
    EffectTypeAnalyze
 } EffectType;
 
-class EffectIdentInterface : public IdentInterface
+class AUDACITY_DLL_API EffectIdentInterface : public IdentInterface
 {
 public:
    virtual ~EffectIdentInterface() {};
@@ -80,8 +80,9 @@ public:
    virtual bool IsRealtimeCapable() = 0;
 };
 
-class EffectHostInterface : public EffectIdentInterface,
-                            public ConfigClientInterface
+class AUDACITY_DLL_API EffectHostInterface : 
+   public EffectIdentInterface,
+   public ConfigClientInterface
 {
 public:
    virtual ~EffectHostInterface() {};

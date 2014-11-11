@@ -9,6 +9,7 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
 
 #include "Effect.h"
 #include "EffectCategory.h"

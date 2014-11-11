@@ -48,8 +48,8 @@
 #include "audacity/IdentInterface.h"
 #include "audacity/ImporterInterface.h"
 
-class IdentInterface;
-class EffectIdentInterface;
+class AUDACITY_DLL_API IdentInterface;
+class AUDACITY_DLL_API EffectIdentInterface;
 class PluginManagerInterface
 {
 public:

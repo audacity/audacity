@@ -11,6 +11,7 @@
 
 **********************************************************************/
 
+#include "../../Audacity.h"
 #include "VampEffect.h"
 
 #include <vamp-hostsdk/Plugin.h>

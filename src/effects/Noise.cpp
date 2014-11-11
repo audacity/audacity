@@ -13,13 +13,13 @@
 
 *//*******************************************************************/
 
-#include "Noise.h"
 #include "../Audacity.h"
 #include "../Project.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
+#include "Noise.h"
 
 #include <math.h>
 

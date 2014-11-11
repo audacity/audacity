@@ -19,6 +19,7 @@
 
 *//*******************************************************************/
 
+#include "../Audacity.h"
 #include "Reverb.h"
 #include "Reverb_libSoX.h"
 #include "../Prefs.h"

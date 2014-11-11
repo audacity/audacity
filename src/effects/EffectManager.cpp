@@ -9,6 +9,8 @@
 
 **********************************************************************/
 
+#include "../Audacity.h"
+
 #include <wx/msgdlg.h>
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>

@@ -44,7 +44,7 @@
 
 #include "audacity/Types.h"
 
-class ConfigClientInterface
+class AUDACITY_DLL_API ConfigClientInterface
 {
 public:
    virtual ~ConfigClientInterface() {};

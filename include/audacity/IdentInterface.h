@@ -44,7 +44,7 @@
 
 #include "audacity/Types.h"
 
-class IdentInterface
+class AUDACITY_DLL_API IdentInterface
 {
 public:
    virtual ~IdentInterface() {};
