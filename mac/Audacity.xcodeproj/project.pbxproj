@@ -417,7 +417,6 @@
 		1790B1A309883BFD008A330A /* Meter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10309883BFD008A330A /* Meter.cpp */; };
 		1790B1A409883BFD008A330A /* MultiDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10509883BFD008A330A /* MultiDialog.cpp */; };
 		1790B1A509883BFD008A330A /* Ruler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10709883BFD008A330A /* Ruler.cpp */; };
-		1790B1A609883BFD008A330A /* TimeTextCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10909883BFD008A330A /* TimeTextCtrl.cpp */; };
 		1790B1A709883BFD008A330A /* Warning.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10B09883BFD008A330A /* Warning.cpp */; };
 		1790B1A909883BFD008A330A /* XMLFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B11009883BFD008A330A /* XMLFileReader.cpp */; };
 		1790B1AA09883BFD008A330A /* XMLTagHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B11209883BFD008A330A /* XMLTagHandler.cpp */; };
@@ -1396,7 +1395,6 @@
 		ED663BFC16543647007F53A5 /* Meter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10309883BFD008A330A /* Meter.cpp */; };
 		ED663BFD16543647007F53A5 /* MultiDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10509883BFD008A330A /* MultiDialog.cpp */; };
 		ED663BFE16543647007F53A5 /* Ruler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10709883BFD008A330A /* Ruler.cpp */; };
-		ED663BFF16543647007F53A5 /* TimeTextCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10909883BFD008A330A /* TimeTextCtrl.cpp */; };
 		ED663C0016543647007F53A5 /* Warning.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10B09883BFD008A330A /* Warning.cpp */; };
 		ED663C0116543647007F53A5 /* XMLFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B11009883BFD008A330A /* XMLFileReader.cpp */; };
 		ED663C0216543647007F53A5 /* XMLTagHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B11209883BFD008A330A /* XMLTagHandler.cpp */; };
@@ -1722,7 +1720,6 @@
 		ED85B4D416A47353006DA21D /* Meter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10309883BFD008A330A /* Meter.cpp */; };
 		ED85B4D516A47353006DA21D /* MultiDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10509883BFD008A330A /* MultiDialog.cpp */; };
 		ED85B4D616A47353006DA21D /* Ruler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10709883BFD008A330A /* Ruler.cpp */; };
-		ED85B4D716A47353006DA21D /* TimeTextCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10909883BFD008A330A /* TimeTextCtrl.cpp */; };
 		ED85B4D816A47353006DA21D /* Warning.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B10B09883BFD008A330A /* Warning.cpp */; };
 		ED85B4D916A47353006DA21D /* XMLFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B11009883BFD008A330A /* XMLFileReader.cpp */; };
 		ED85B4DA16A47353006DA21D /* XMLTagHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B11209883BFD008A330A /* XMLTagHandler.cpp */; };
@@ -3031,8 +3028,6 @@
 		1790B10609883BFD008A330A /* MultiDialog.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = MultiDialog.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B10709883BFD008A330A /* Ruler.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Ruler.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B10809883BFD008A330A /* Ruler.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Ruler.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B10909883BFD008A330A /* TimeTextCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = TimeTextCtrl.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B10A09883BFD008A330A /* TimeTextCtrl.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = TimeTextCtrl.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B10B09883BFD008A330A /* Warning.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Warning.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B10C09883BFD008A330A /* Warning.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Warning.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B11009883BFD008A330A /* XMLFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = XMLFileReader.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5443,8 +5438,6 @@
 				28530C4B0DF2105200555C94 /* ProgressDialog.h */,
 				1790B10709883BFD008A330A /* Ruler.cpp */,
 				1790B10809883BFD008A330A /* Ruler.h */,
-				1790B10909883BFD008A330A /* TimeTextCtrl.cpp */,
-				1790B10A09883BFD008A330A /* TimeTextCtrl.h */,
 				28F2CED2181867BB00573D61 /* valnum.cpp */,
 				28F2CED3181867BB00573D61 /* valnum.h */,
 				1790B10B09883BFD008A330A /* Warning.cpp */,
@@ -8919,7 +8912,6 @@
 				1790B1A309883BFD008A330A /* Meter.cpp in Sources */,
 				1790B1A409883BFD008A330A /* MultiDialog.cpp in Sources */,
 				1790B1A509883BFD008A330A /* Ruler.cpp in Sources */,
-				1790B1A609883BFD008A330A /* TimeTextCtrl.cpp in Sources */,
 				1790B1A709883BFD008A330A /* Warning.cpp in Sources */,
 				1790B1A909883BFD008A330A /* XMLFileReader.cpp in Sources */,
 				1790B1AA09883BFD008A330A /* XMLTagHandler.cpp in Sources */,
@@ -9432,7 +9424,6 @@
 				ED663BFC16543647007F53A5 /* Meter.cpp in Sources */,
 				ED663BFD16543647007F53A5 /* MultiDialog.cpp in Sources */,
 				ED663BFE16543647007F53A5 /* Ruler.cpp in Sources */,
-				ED663BFF16543647007F53A5 /* TimeTextCtrl.cpp in Sources */,
 				ED663C0016543647007F53A5 /* Warning.cpp in Sources */,
 				ED663C0116543647007F53A5 /* XMLFileReader.cpp in Sources */,
 				ED663C0216543647007F53A5 /* XMLTagHandler.cpp in Sources */,
@@ -9741,7 +9732,6 @@
 				ED85B4D416A47353006DA21D /* Meter.cpp in Sources */,
 				ED85B4D516A47353006DA21D /* MultiDialog.cpp in Sources */,
 				ED85B4D616A47353006DA21D /* Ruler.cpp in Sources */,
-				ED85B4D716A47353006DA21D /* TimeTextCtrl.cpp in Sources */,
 				ED85B4D816A47353006DA21D /* Warning.cpp in Sources */,
 				ED85B4D916A47353006DA21D /* XMLFileReader.cpp in Sources */,
 				ED85B4DA16A47353006DA21D /* XMLTagHandler.cpp in Sources */,
