@@ -52,6 +52,7 @@
 #endif
 
 #include <wx/button.h>
+#include <wx/choice.h>
 #include <wx/dialog.h>
 #include <wx/radiobut.h>
 #include <wx/slider.h>
@@ -352,9 +353,18 @@ public:
    { return mTempSettings; }
 
 private:
+   void DisableControlsIfIsolating();
+
+#ifdef ADVANCED_SETTINGS
+   void EnableSensitivityControls();
+#endif
+
    // handlers
    void OnGetProfile( wxCommandEvent &event );
    void OnNoiseReductionChoice( wxCommandEvent &event );
+#ifdef ADVANCED_SETTINGS
+   void OnMethodChoice(wxCommandEvent &);
+#endif
    void OnPreview(wxCommandEvent &event);
    void OnReduceNoise( wxCommandEvent &event );
    void OnCancel( wxCommandEvent &event );
@@ -1317,6 +1327,10 @@ enum {
    ID_RADIOBUTTON_RESIDUE,
 #endif
 
+#ifdef ADVANCED_SETTINGS
+   ID_CHOICE_METHOD,
+#endif
+
    // Slider/text pairs
    ID_GAIN_SLIDER,
    ID_GAIN_TEXT,
@@ -1436,6 +1450,10 @@ BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialog)
    EVT_RADIOBUTTON(ID_RADIOBUTTON_RESIDUE, EffectNoiseReduction::Dialog::OnNoiseReductionChoice)
 #endif
 
+#ifdef ADVANCED_SETTINGS
+   EVT_CHOICE(ID_CHOICE_METHOD, EffectNoiseReduction::Dialog::OnMethodChoice)
+#endif
+
    EVT_SLIDER(ID_GAIN_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
    EVT_TEXT(ID_GAIN_TEXT, EffectNoiseReduction::Dialog::OnText)
 
@@ -1491,7 +1509,52 @@ EffectNoiseReduction::Dialog::Dialog
    }
 }
 
-void EffectNoiseReduction::Dialog::OnGetProfile( wxCommandEvent & WXUNUSED(event))
+void EffectNoiseReduction::Dialog::DisableControlsIfIsolating()
+{
+   // If Isolate is chosen, disable controls that define
+   // "what to do with noise" rather than "what is noise."
+   // Else, enable them.
+   // This does NOT include sensitivity, new or old, nor
+   // the choice of window functions, size, or step.
+   // The method choice is not included, because it affects
+   // which sensitivity slider is operative, and that is part
+   // of what defines noise.
+
+   static const int toDisable[] = {
+      ID_GAIN_SLIDER,
+      ID_GAIN_TEXT,
+
+      ID_FREQ_SLIDER,
+      ID_FREQ_TEXT,
+
+      ID_ATTACK_TIME_SLIDER,
+      ID_ATTACK_TIME_TEXT,
+
+      ID_RELEASE_TIME_SLIDER,
+      ID_RELEASE_TIME_TEXT,
+   };
+   static const int nToDisable = sizeof(toDisable) / sizeof(toDisable[0]);
+   
+   bool bIsolating = mKeepNoise->GetValue();
+   for (int ii = nToDisable; ii--;)
+      wxWindow::FindWindowById(toDisable[ii], this)->Enable(!bIsolating);
+}
+
+#ifdef ADVANCED_SETTINGS
+void EffectNoiseReduction::Dialog::EnableSensitivityControls()
+{
+   wxChoice *const pChoice =
+      static_cast<wxChoice*>(wxWindow::FindWindowById(ID_CHOICE_METHOD, this));
+   const bool bOldMethod =
+      pChoice->GetSelection() == DM_OLD_METHOD;
+   wxWindow::FindWindowById(ID_SENSITIVITY_SLIDER, this)->Enable(bOldMethod);
+   wxWindow::FindWindowById(ID_SENSITIVITY_TEXT, this)->Enable(bOldMethod);
+   wxWindow::FindWindowById(ID_NEW_SENSITIVITY_SLIDER, this)->Enable(!bOldMethod);
+   wxWindow::FindWindowById(ID_NEW_SENSITIVITY_TEXT, this)->Enable(!bOldMethod);
+}
+#endif
+
+void EffectNoiseReduction::Dialog::OnGetProfile(wxCommandEvent & WXUNUSED(event))
 {
    if (!TransferDataFromWindow())
       return;
@@ -1511,7 +1574,15 @@ void EffectNoiseReduction::Dialog::OnNoiseReductionChoice( wxCommandEvent & WXUN
    else
       mTempSettings.mNoiseReductionChoice = NRC_LEAVE_RESIDUE;
 #endif
+   DisableControlsIfIsolating();
 }
+
+#ifdef ADVANCED_SETTINGS
+void EffectNoiseReduction::Dialog::OnMethodChoice(wxCommandEvent &)
+{
+   EnableSensitivityControls();
+}
+#endif
 
 void EffectNoiseReduction::Dialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
@@ -1638,6 +1709,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
                &stepsPerWindowChoices);
          }
 
+         S.Id(ID_CHOICE_METHOD);
          {
             wxArrayString methodChoices;
             int nn = DM_N_METHODS;
@@ -1689,6 +1761,12 @@ bool EffectNoiseReduction::Dialog::TransferDataToWindow()
    mKeepNoise->SetValue(mTempSettings.mNoiseReductionChoice == NRC_ISOLATE_NOISE);
 #ifdef RESIDUE_CHOICE
    mResidue->SetValue(mTempSettings.mNoiseReductionChoice == NRC_LEAVE_RESIDUE);
+#endif
+
+   // Set the enabled states of controls
+   DisableControlsIfIsolating();
+#ifdef ADVANCED_SETTINGS
+   EnableSensitivityControls();
 #endif
 
    return true;
