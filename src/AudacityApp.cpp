@@ -924,7 +924,7 @@ bool AudacityApp::ShouldShowMissingAliasedFileWarning()
 
 AudacityLogger *AudacityApp::GetLogger()
 {
-   return wxDynamicCast(wxLog::GetActiveTarget(), AudacityLogger);
+   return static_cast<AudacityLogger *>(wxLog::GetActiveTarget());
 }
 
 void AudacityApp::InitLang( const wxString & lang )
