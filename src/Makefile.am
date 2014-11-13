@@ -338,6 +338,8 @@ audacity_SOURCES = \
 	effects/LoadEffects.h \
 	effects/Noise.cpp \
 	effects/Noise.h \
+	effects/NoiseReduction.cpp \
+	effects/NoiseReduction.h \
 	effects/NoiseRemoval.cpp \
 	effects/NoiseRemoval.h \
 	effects/Normalize.cpp \

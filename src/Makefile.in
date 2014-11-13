@@ -369,7 +369,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/Generator.h effects/Invert.cpp effects/Invert.h \
 	effects/Leveller.cpp effects/Leveller.h \
 	effects/LoadEffects.cpp effects/LoadEffects.h \
-	effects/Noise.cpp effects/Noise.h effects/NoiseRemoval.cpp \
+	effects/Noise.cpp effects/Noise.h effects/NoiseReduction.cpp \
+	effects/NoiseReduction.h effects/NoiseRemoval.cpp \
 	effects/NoiseRemoval.h effects/Normalize.cpp \
 	effects/Normalize.h effects/Paulstretch.cpp \
 	effects/Paulstretch.h effects/Phaser.cpp effects/Phaser.h \
@@ -612,6 +613,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	effects/audacity-Leveller.$(OBJEXT) \
 	effects/audacity-LoadEffects.$(OBJEXT) \
 	effects/audacity-Noise.$(OBJEXT) \
+	effects/audacity-NoiseReduction.$(OBJEXT) \
 	effects/audacity-NoiseRemoval.$(OBJEXT) \
 	effects/audacity-Normalize.$(OBJEXT) \
 	effects/audacity-Paulstretch.$(OBJEXT) \
@@ -1237,7 +1239,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	effects/Generator.h effects/Invert.cpp effects/Invert.h \
 	effects/Leveller.cpp effects/Leveller.h \
 	effects/LoadEffects.cpp effects/LoadEffects.h \
-	effects/Noise.cpp effects/Noise.h effects/NoiseRemoval.cpp \
+	effects/Noise.cpp effects/Noise.h effects/NoiseReduction.cpp \
+	effects/NoiseReduction.h effects/NoiseRemoval.cpp \
 	effects/NoiseRemoval.h effects/Normalize.cpp \
 	effects/Normalize.h effects/Paulstretch.cpp \
 	effects/Paulstretch.h effects/Phaser.cpp effects/Phaser.h \
@@ -1624,6 +1627,8 @@ effects/audacity-Leveller.$(OBJEXT): effects/$(am__dirstamp) \
 effects/audacity-LoadEffects.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-Noise.$(OBJEXT): effects/$(am__dirstamp) \
+	effects/$(DEPDIR)/$(am__dirstamp)
+effects/audacity-NoiseReduction.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-NoiseRemoval.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
@@ -2124,6 +2129,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Leveller.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-LoadEffects.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Noise.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-NoiseReduction.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-NoiseRemoval.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Normalize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Paulstretch.Po@am__quote@
@@ -4272,6 +4278,20 @@ effects/audacity-Noise.obj: effects/Noise.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/Noise.cpp' object='effects/audacity-Noise.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-Noise.obj `if test -f 'effects/Noise.cpp'; then $(CYGPATH_W) 'effects/Noise.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/Noise.cpp'; fi`
+
+effects/audacity-NoiseReduction.o: effects/NoiseReduction.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-NoiseReduction.o -MD -MP -MF effects/$(DEPDIR)/audacity-NoiseReduction.Tpo -c -o effects/audacity-NoiseReduction.o `test -f 'effects/NoiseReduction.cpp' || echo '$(srcdir)/'`effects/NoiseReduction.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-NoiseReduction.Tpo effects/$(DEPDIR)/audacity-NoiseReduction.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/NoiseReduction.cpp' object='effects/audacity-NoiseReduction.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-NoiseReduction.o `test -f 'effects/NoiseReduction.cpp' || echo '$(srcdir)/'`effects/NoiseReduction.cpp
+
+effects/audacity-NoiseReduction.obj: effects/NoiseReduction.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-NoiseReduction.obj -MD -MP -MF effects/$(DEPDIR)/audacity-NoiseReduction.Tpo -c -o effects/audacity-NoiseReduction.obj `if test -f 'effects/NoiseReduction.cpp'; then $(CYGPATH_W) 'effects/NoiseReduction.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/NoiseReduction.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-NoiseReduction.Tpo effects/$(DEPDIR)/audacity-NoiseReduction.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/NoiseReduction.cpp' object='effects/audacity-NoiseReduction.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-NoiseReduction.obj `if test -f 'effects/NoiseReduction.cpp'; then $(CYGPATH_W) 'effects/NoiseReduction.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/NoiseReduction.cpp'; fi`
 
 effects/audacity-NoiseRemoval.o: effects/NoiseRemoval.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-NoiseRemoval.o -MD -MP -MF effects/$(DEPDIR)/audacity-NoiseRemoval.Tpo -c -o effects/audacity-NoiseRemoval.o `test -f 'effects/NoiseRemoval.cpp' || echo '$(srcdir)/'`effects/NoiseRemoval.cpp

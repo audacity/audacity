@@ -187,8 +187,5 @@
 
 
 // Define for new noise reduction effect from Paul Licameli.
-// Only windows until someone updates the build files.
-#ifdef __WXMSW__
 #define EXPERIMENTAL_NOISE_REDUCTION
-#endif
 #endif

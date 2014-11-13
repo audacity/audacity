@@ -339,9 +339,9 @@ class EffectNoiseReduction::Dialog: public EffectDialog
 {
 public:
    // constructors and destructors
-   EffectNoiseReduction::Dialog
+   Dialog
       (EffectNoiseReduction *effect,
-       EffectNoiseReduction::Settings *settings,
+       Settings *settings,
        wxWindow *parent, bool bHasProfile,
        bool bAllowTwiddleSettings);
 
@@ -349,7 +349,7 @@ public:
    bool TransferDataToWindow();
    bool TransferDataFromWindow();
 
-   const EffectNoiseReduction::Settings &GetTempSettings() const
+   const Settings &GetTempSettings() const
    { return mTempSettings; }
 
 private:

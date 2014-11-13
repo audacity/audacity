@@ -297,6 +297,8 @@ src/effects/LoadEffects.cpp
 src/effects/LoadEffects.h
 src/effects/Noise.cpp
 src/effects/Noise.h
+src/effects/NoiseReduction.cpp
+src/effects/NoiseReduction.h
 src/effects/NoiseRemoval.cpp
 src/effects/NoiseRemoval.h
 src/effects/Normalize.cpp
