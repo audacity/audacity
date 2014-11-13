@@ -312,7 +312,7 @@ void ImageRoll::DrawBitmap(wxDC &dc, wxBitmap &bitmap,
    }
 }
 
-void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
+void ImageRoll::Draw(wxDC &dc, wxRect rect, wxRasterOperationMode WXUNUSED(logicalFunc))
 {
    int width = rect.width;
    int height = rect.height;
@@ -435,7 +435,7 @@ ImageRollPanel::ImageRollPanel(wxWindow *parent,
                 mImageRoll.GetMaxSize());
 }
 
-void ImageRollPanel::SetLogicalFunction(int func)
+void ImageRollPanel::SetLogicalFunction(wxRasterOperationMode func)
 {
    mLogicalFunction = func;
 }

@@ -13,9 +13,11 @@
 #define __AUDACITY_IMAGE_ROLL__
 
 #include <wx/dc.h>
+#include <wx/dcclient.h>
 #include <wx/defs.h>
 #include <wx/dynarray.h>
 #include <wx/panel.h>
+#include <wx/version.h>
 
 #if !wxCHECK_VERSION(3,0,0)
 #define wxRasterOperationMode int
@@ -45,7 +47,7 @@ class ImageRoll
    wxSize GetMaxSize() const { return mMaxSize; }
 
    void Draw(wxDC &dc, wxRect rect,
-             int logicalFunc = wxCOPY);
+             wxRasterOperationMode logicalFunc = wxCOPY);
 
    static ImageArray SplitH(const wxImage &src, wxColour magicColor);
    static ImageArray SplitV(const wxImage &src, wxColour magicColor);
@@ -77,7 +79,7 @@ class ImageRollPanel : public wxPanel
                   const wxSize& size = wxDefaultSize,
                   long style = wxTAB_TRAVERSAL);
 
-   void SetLogicalFunction(int func);
+   void SetLogicalFunction(wxRasterOperationMode func);
 
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
@@ -85,7 +87,7 @@ class ImageRollPanel : public wxPanel
  protected:
    ImageRoll mImageRoll;
 
-   int mLogicalFunction;
+   wxRasterOperationMode mLogicalFunction;
 
    DECLARE_EVENT_TABLE();
 
