@@ -1071,7 +1071,9 @@ void LWSlider::OnMouseEvent(wxMouseEvent & event)
                event.ShiftDown());
       }
 
-      mParent->CaptureMouse();
+      if (!mParent->HasCapture()) {
+         mParent->CaptureMouse();
+      }
       // wxSetCursor(wxCURSOR_BLANK);
       ((TipPanel*)LWSlider::sharedTipPanel)->SetTargetParent(mParent);
       FormatPopWin();
