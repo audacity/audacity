@@ -121,6 +121,8 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    virtual bool SupportsChains();
    virtual bool TransferParameters( Shuttle & shuttle );
 
+   static wxArrayString GetNyquistSearchPath();
+
  private:
 
    static wxString NyquistToWxString(const char *nyqString);
@@ -177,12 +179,14 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    bool              mDebug;
    std::string       mDebugOutput;
 
+   int               mVersion;
    NyqControlArray   mControls;
 
    int               mCurNumChannels;
    WaveTrack         *mCurTrack[2];
    sampleCount       mCurStart[2];
    sampleCount       mCurLen;
+   int               mTrackIndex;
    bool              mFirstInGroup;
    double            mOutputTime;
    int               mCount;
@@ -198,6 +202,8 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    WaveTrack         *mOutputTrack[2];
 
    wxArrayString     mCategories;
+
+   wxString          mProps;
 
    friend class NyquistDialog;
 };

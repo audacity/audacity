@@ -75,6 +75,7 @@ LOCAL int                 nyx_first_time = 1;
 LOCAL LVAL                nyx_obarray;
 LOCAL FLOTYPE             nyx_warp_stretch;
 LOCAL long                nyx_input_length = 0;
+LOCAL char               *nyx_audio_name = NULL;
 
 /* Suspension node */
 typedef struct nyx_susp_struct {
@@ -454,6 +455,7 @@ void nyx_init()
       argv[0] = "nyquist";
       xlisp_main_init(1, argv);
 
+      nyx_audio_name = NULL;
       nyx_os_cb = NULL;
       nyx_output_cb = NULL;
       
@@ -505,7 +507,7 @@ void nyx_cleanup()
 
    // Make sure the sound nodes can be garbage-collected.  Sounds are EXTERN
    // nodes whose value does not get copied during a full copy of the obarray.
-   setvalue(xlenter("S"), NIL);
+   setvalue(xlenter(nyx_get_audio_name()), NIL);
 
    // Free excess memory segments - does a gc()
    freesegs();
@@ -519,6 +521,11 @@ void nyx_cleanup()
 
    // Reset vars
    nyx_input_length = 0;
+
+   if (nyx_audio_name) {
+      free(nyx_audio_name);
+      nyx_audio_name = NULL;
+   }
 
 #if defined(NYX_MEMORY_STATS) && NYX_MEMORY_STATS
    printf("\nnyx_cleanup\n");
@@ -585,6 +592,25 @@ void nyx_capture_output(nyx_output_callback callback, void *userdata)
 {
    nyx_output_cb = callback;
    nyx_output_ud = userdata;
+}
+
+char *nyx_get_audio_name()
+{
+   if (!nyx_audio_name) {
+      nyx_audio_name = strdup("S");
+   }
+
+   return nyx_audio_name;
+}
+
+void nyx_set_audio_name(const char *name)
+{
+   if (nyx_audio_name) {
+      free(nyx_audio_name);
+      nyx_audio_name = NULL;
+   }
+
+   nyx_audio_name = strdup(name);
 }
 
 void nyx_set_audio_params(double rate, long len)
@@ -670,7 +696,7 @@ void nyx_set_input_audio(nyx_audio_callback callback,
       }
    }
 
-   setvalue(xlenter("S"), val);
+   setvalue(xlenter(nyx_get_audio_name()), val);
 
    xlpop();
 }
@@ -862,7 +888,7 @@ nyx_rval nyx_eval_expression(const char *expr_string)
 
    xlpop(); // unprotect expr
 
-   setvalue(xlenter("S"), NIL);
+   setvalue(xlenter(nyx_get_audio_name()), NIL);
 
    gc();
 

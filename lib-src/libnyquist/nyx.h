@@ -61,6 +61,9 @@ extern "C"
                                    void *userdata,
                                    int num_channels,
                                    long len, double rate);
+
+   char       *nyx_get_audio_name();
+   void        nyx_set_audio_name(const char *name);
    
    nyx_rval    nyx_eval_expression(const char *expr);
    

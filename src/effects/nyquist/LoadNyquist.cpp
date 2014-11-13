@@ -31,8 +31,7 @@ void LoadNyquistEffect(wxString fname)
 
 void LoadNyquistPlugins()
 {
-   wxArrayString audacityPathList = wxGetApp().audacityPathList;
-   wxArrayString pathList;
+   wxArrayString pathList = EffectNyquist::GetNyquistSearchPath();
    wxArrayString files;
    unsigned int i;
 
@@ -41,16 +40,6 @@ void LoadNyquistPlugins()
    EffectManager::Get().RegisterEffect(effect);
 
    // Load .ny plug-ins
-   for(i=0; i<audacityPathList.GetCount(); i++) {
-      wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
-      wxGetApp().AddUniquePathToPathList(prefix + wxT("nyquist"),
-                                         pathList);
-      wxGetApp().AddUniquePathToPathList(prefix + wxT("plugins"),
-                                         pathList);
-      wxGetApp().AddUniquePathToPathList(prefix + wxT("plug-ins"),
-                                         pathList);
-   }
-
    wxGetApp().FindFilesInPathList(wxT("*.ny"), pathList, files);
 #ifdef  __WXGTK__
    wxGetApp().FindFilesInPathList(wxT("*.NY"), pathList, files); // Ed's fix for bug 179
