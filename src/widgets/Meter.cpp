@@ -1417,7 +1417,10 @@ void Meter::StartMonitoring()
          gAudioIO->SetMeters(record, play);
       }
    }
-
+   // Update preferences also forces tooltips to be changed.
+   wxCommandEvent e(EVT_METER_PREFERENCES_CHANGED);
+   e.SetEventObject(this);
+   GetParent()->GetEventHandler()->ProcessEvent(e);
 }
 
 //

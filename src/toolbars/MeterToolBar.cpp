@@ -141,9 +141,13 @@ void MeterToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
    if( mPlayMeter )
-      mPlayMeter->SetToolTip( _("Playback Level") );
+      mPlayMeter->SetToolTip( _("Playback Level.") );
    if( mRecordMeter )
-      mRecordMeter->SetToolTip( _("Recording Level (Click to monitor.)") );
+      mRecordMeter->SetToolTip( 
+         !gAudioIO->IsMonitoring() ? 
+         _("Recording Level. (Click to monitor).") :
+         _("Recording Level. (Click to turn monitoring off).") 
+         );
 #endif
 }
 
