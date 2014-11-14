@@ -930,6 +930,7 @@
 		28B3C5DC1833D23E0024BE6D /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FADDEF1833C3C500BA4141 /* libexpat.a */; };
 		28B3C5DF1833D24E0024BE6D /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FADDEF1833C3C500BA4141 /* libexpat.a */; };
 		28B97B890FBF771A0076CF28 /* VSTEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28B97B850FBF771A0076CF28 /* VSTEffect.cpp */; };
+		28BB98051A15BE6800D1CC80 /* NoiseReduction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BB98031A15BE6800D1CC80 /* NoiseReduction.cpp */; };
 		28BD8AB1101DF4C700686679 /* BatchEvalCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */; };
 		28BD8AB2101DF4C700686679 /* CommandDirectory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAA101DF4C600686679 /* CommandDirectory.cpp */; };
 		28BD8AB3101DF4C700686679 /* ExecMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */; };
@@ -3678,6 +3679,8 @@
 		28AA28210F267A2D008AED9E /* vocoder.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = vocoder.ny; path = "../plug-ins/vocoder.ny"; sourceTree = SOURCE_ROOT; };
 		28B97B850FBF771A0076CF28 /* VSTEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = VSTEffect.cpp; path = VST/VSTEffect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28B97B860FBF771A0076CF28 /* VSTEffect.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = VSTEffect.h; path = VST/VSTEffect.h; sourceTree = "<group>"; tabWidth = 3; };
+		28BB98031A15BE6800D1CC80 /* NoiseReduction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NoiseReduction.cpp; sourceTree = "<group>"; };
+		28BB98041A15BE6800D1CC80 /* NoiseReduction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoiseReduction.h; sourceTree = "<group>"; };
 		28BD8AA9101DF4C600686679 /* BatchEvalCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = BatchEvalCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28BD8AAA101DF4C600686679 /* CommandDirectory.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = CommandDirectory.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28BD8AAB101DF4C600686679 /* CommandDirectory.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = CommandDirectory.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -5207,6 +5210,8 @@
 				1790B02D09883BFD008A330A /* LoadEffects.h */,
 				1790B02E09883BFD008A330A /* Noise.cpp */,
 				1790B02F09883BFD008A330A /* Noise.h */,
+				28BB98031A15BE6800D1CC80 /* NoiseReduction.cpp */,
+				28BB98041A15BE6800D1CC80 /* NoiseReduction.h */,
 				1790B03009883BFD008A330A /* NoiseRemoval.cpp */,
 				1790B03109883BFD008A330A /* NoiseRemoval.h */,
 				1790B03209883BFD008A330A /* Normalize.cpp */,
@@ -9119,6 +9124,7 @@
 				280A8B4A19F440880091DE70 /* EffectRack.cpp in Sources */,
 				28001B3E1A0F0E5D007DD161 /* NumericTextCtrl.cpp in Sources */,
 				28001B4B1A0F0EB6007DD161 /* SpectralSelectionBar.cpp in Sources */,
+				28BB98051A15BE6800D1CC80 /* NoiseReduction.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
