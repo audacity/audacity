@@ -645,7 +645,7 @@ IMPLEMENT_APP(AudacityApp)
 
 #ifdef __WXMAC__
 // This should be removed when Lame and FFmpeg support is converted
-// from loadable libraries to commands.mLogger
+// from loadable libraries to commands.
 //
 // The purpose of this is to give the user more control over where libraries
 // such as Lame and FFmpeg get loaded from.
@@ -1008,7 +1008,6 @@ int AudacityApp::FilterEvent(wxEvent & event)
    return -1;
 }
 #endif
-#include "effects/VST/VSTEffect.h"
 
 // The `main program' equivalent, creating the windows and returning the
 // main frame

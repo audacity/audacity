@@ -496,6 +496,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\audacity\ConfigInterface.h" />
+    <ClInclude Include="..\..\..\include\audacity\EffectAutomationParameters.h" />
     <ClInclude Include="..\..\..\include\audacity\EffectInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\IdentInterface.h" />
     <ClInclude Include="..\..\..\include\audacity\ImporterInterface.h" />

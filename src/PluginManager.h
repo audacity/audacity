@@ -45,8 +45,9 @@ public:
    PluginDescriptor();
    virtual ~PluginDescriptor();
 
-   void *GetInstance();
-   void SetInstance(void *instance);
+   bool IsInstantiated();
+   IdentInterface *GetInstance();
+   void SetInstance(IdentInterface *instance);
 
    PluginType GetPluginType() const;
    void SetPluginType(PluginType type);
@@ -81,14 +82,16 @@ public:
    bool IsEffectDefault() const;
    bool IsEffectInteractive() const;
    bool IsEffectLegacy() const;
-   bool IsEffectRealtimeCapable() const;
+   bool IsEffectRealtime() const;
+   bool IsEffectAutomatable() const;
 
    void SetEffectType(EffectType type);
    void SetEffectFamily(const wxString & family);
    void SetEffectDefault(bool dflt);
    void SetEffectInteractive(bool interactive);
    void SetEffectLegacy(bool legacy);
-   void SetEffectRealtimeCapable(bool realtime);
+   void SetEffectRealtime(bool realtime);
+   void SetEffectAutomatable(bool automatable);
 
    // Importer plugins only
 
@@ -104,7 +107,7 @@ private:
 
    // Common
 
-   void *mInstance;
+   IdentInterface *mInstance;
 
    PluginType mPluginType;
 
@@ -125,9 +128,11 @@ private:
    bool mEffectInteractive;
    bool mEffectDefault;
    bool mEffectLegacy;
-   bool mEffectRealtimeCapable;
+   bool mEffectRealtime;
+   bool mEffectAutomatable;
 
    // Importers
+
    wxString mImporterIdentifier;
    wxString mImporterFilterDesc;
    wxArrayString mImporterExtensions;
@@ -154,6 +159,8 @@ public:
                             wxArrayString & files,
                             bool directories = false);
 
+   virtual bool GetSharedConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups);
+
    virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T(""));
    virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval = 0);
    virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false);
@@ -168,6 +175,11 @@ public:
    virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value);
    virtual bool SetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value);
 
+   virtual bool RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group);
+   virtual bool RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key);
+
+   virtual bool GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups);
+
    virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T(""));
    virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, int & value, int defval = 0);
    virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, bool & value, bool defval = false);
@@ -181,6 +193,9 @@ public:
    virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const float & value);
    virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const double & value);
    virtual bool SetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, const sampleCount & value);
+
+   virtual bool RemovePrivateConfigSubgroup(const PluginID & ID, const wxString & group);
+   virtual bool RemovePrivateConfig(const PluginID & ID, const wxString & group, const wxString & key);
 
    // PluginManager implementation
 
@@ -214,8 +229,8 @@ public:
    void EnablePlugin(const PluginID & ID, bool enable);
 
    const wxString & GetName(const PluginID & ID);
-   void *GetInstance(const PluginID & ID);
-   void SetInstance(const PluginID & ID, void *instance);  // TODO: Remove after conversion
+   IdentInterface *GetInstance(const PluginID & ID);
+   void SetInstance(const PluginID & ID, IdentInterface *instance);  // TODO: Remove after conversion
 
    // 
    const PluginID & RegisterLegacyEffectPlugin(EffectIdentInterface *effect);
@@ -234,6 +249,8 @@ private:
    PluginDescriptor & CreatePlugin(IdentInterface *ident, PluginType type);
    wxString GetDateTime(const wxString & path);
 
+   bool GetSubgroups(const wxString & group, wxArrayString & subgroups);
+
    bool GetConfig(const wxString & key, wxString & value, const wxString & defval = L"");
    bool GetConfig(const wxString & key, int & value, int defval = 0);
    bool GetConfig(const wxString & key, bool & value, bool defval = false);
@@ -248,7 +265,9 @@ private:
    bool SetConfig(const wxString & key, const double & value);
    bool SetConfig(const wxString & key, const sampleCount & value);
 
+   wxString SharedGroup(const PluginID & ID, const wxString & group);
    wxString SharedKey(const PluginID & ID, const wxString & group, const wxString & key);
+   wxString PrivateGroup(const PluginID & ID, const wxString & group);
    wxString PrivateKey(const PluginID & ID, const wxString & group, const wxString & key);
    wxString ConvertID(const PluginID & ID);
 

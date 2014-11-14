@@ -42,11 +42,12 @@
 #ifndef __AUDACITY_EFFECTINTERFACE_H__
 #define __AUDACITY_EFFECTINTERFACE_H__
 
-#include <vector>
-
 #include "audacity/Types.h"
 #include "audacity/IdentInterface.h"
 #include "audacity/ConfigInterface.h"
+#include "audacity/EffectAutomationParameters.h"
+
+#include <wx/dialog.h>
 
 typedef enum EffectType
 {
@@ -65,7 +66,7 @@ public:
    virtual wxString GetFamily() = 0;
 
    // These should move to the "EffectClientInterface" class once all
-   // effects have bee converted.
+   // effects have been converted.
    virtual bool IsInteractive() = 0;
 
    // I don't really like this, but couldn't think of a better way to force the
@@ -76,13 +77,18 @@ public:
    // interface.
    virtual bool IsLegacy() = 0;
 
-   // Whether the effect supports realtime processing (while audio is playing).
-   virtual bool IsRealtimeCapable() = 0;
+   // Whether the effect supports realtime previewing (while audio is playing).
+   virtual bool SupportsRealtime() = 0;
+
+   // Can the effect be used without the UI.
+   virtual bool SupportsAutomation() = 0;
 };
 
-class AUDACITY_DLL_API EffectHostInterface : 
-   public EffectIdentInterface,
-   public ConfigClientInterface
+class EffectUIHostInterface;
+class EffectUIClientInterface;
+
+class AUDACITY_DLL_API EffectHostInterface : public EffectIdentInterface,
+                                             public ConfigClientInterface
 {
 public:
    virtual ~EffectHostInterface() {};
@@ -92,19 +98,22 @@ public:
 
    virtual bool Apply() = 0;
    virtual void Preview() = 0;
-};
 
-typedef float * pfloat;
-typedef std::vector<pfloat> pvec;
+   //
+   virtual wxDialog *CreateUI(wxWindow *parent, EffectUIClientInterface *client) = 0;
+
+   // Preset handling
+   virtual wxString GetUserPresetsGroup(const wxString & name) = 0;
+   virtual wxString GetCurrentSettingsGroup() = 0;
+   virtual wxString GetFactoryDefaultsGroup() = 0;
+};
 
 class EffectClientInterface : public EffectIdentInterface
 {
 public:
    virtual ~EffectClientInterface() {};
 
-   virtual void SetHost(EffectHostInterface *host) = 0;
-   virtual bool Startup() = 0;
-   virtual bool Shutdown() = 0;
+   virtual bool SetHost(EffectHostInterface *host) = 0;
 
    virtual int GetAudioInCount() = 0;
    virtual int GetAudioOutCount() = 0;
@@ -130,7 +139,43 @@ public:
    virtual bool RealtimeResume() = 0;
    virtual sampleCount RealtimeProcess(int group, float **inbuf, float **outbuf, sampleCount size) = 0;
 
-   virtual bool ShowInterface(void *parent) = 0;
+   virtual bool ShowInterface(wxWindow *parent, bool forceModal = false) = 0;
+
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms) = 0;
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms) = 0;
+};
+
+class EffectUIHostInterface
+{
+public:
+   virtual ~EffectUIHostInterface() {};
+
+//   virtual wxScrolledWindow *GetScrollableClientArea();
+//   virtual wxScrolledWindow *GetStaticClientArea();
+};
+
+class EffectUIClientInterface
+{
+public:
+   virtual ~EffectUIClientInterface() {};
+
+   virtual void SetUIHost(EffectUIHostInterface *host) = 0;
+   virtual bool PopulateUI(wxWindow *parent) = 0;
+   virtual bool ValidateUI() = 0;
+   virtual bool HideUI() = 0;
+   virtual bool CloseUI() = 0;
+
+   virtual void LoadUserPreset(const wxString & name) = 0;
+   virtual void SaveUserPreset(const wxString & name) = 0;
+
+   virtual void LoadFactoryPreset(int id) = 0;
+   virtual void LoadFactoryDefaults() = 0;
+
+   virtual wxArrayString GetFactoryPresets() = 0;
+
+   virtual void ExportPresets() = 0;
+   virtual void ImportPresets() = 0;
+   virtual void ShowOptions() = 0;
 };
 
 class EffectManagerInterface

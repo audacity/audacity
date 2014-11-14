@@ -29,8 +29,8 @@
 #if wxUSE_VALIDATORS && wxUSE_TEXTCTRL
 
 #ifndef WX_PRECOMP
+    #include "wx/msgdlg.h"
     #include "wx/textctrl.h"
-    #include "wx/combobox.h"
 #endif
 
 #include "valnum.h"
@@ -72,6 +72,26 @@ wxTextEntry *wxNumValidatorBase::GetTextEntry() const
     wxFAIL_MSG(wxT("Can only be used with wxTextCtrl or wxComboBox"));
 
     return NULL;
+}
+
+bool wxNumValidatorBase::Validate(wxWindow *parent)
+{
+    // If window is disabled, simply return
+    if ( !m_validatorWindow->IsEnabled() )
+        return true;
+
+    wxString errmsg;
+    bool res = DoValidateNumber(&errmsg);
+
+    if ( !res )
+    {
+        wxMessageBox(errmsg, _("Validation error"),
+                     wxOK | wxICON_ERROR, parent);
+        m_validatorWindow->SetFocus();
+        return false;
+    }
+
+    return true;
 }
 
 void
@@ -146,6 +166,8 @@ void wxNumValidatorBase::OnChar(wxKeyEvent& event)
     }
 #endif // wxUSE_UNICODE/!wxUSE_UNICODE
 
+    // Space is an allowed thousands separator. But we don't allow user to type
+    // it. We will add it at formatting time in OnKillFocus().
     if ( c < WXK_SPACE || c == WXK_DELETE )
     {
         // Allow ASCII control characters and Delete.
@@ -188,6 +210,8 @@ void wxNumValidatorBase::OnKillFocus(wxFocusEvent& event)
         text->MarkDirty();
 
     event.Skip();
+
+//    Validate(text);
 }
 
 // ============================================================================
@@ -223,24 +247,63 @@ wxIntegerValidatorBase::IsCharOk(const wxString& val, int pos, wxChar ch) const
         return m_min < 0 && IsMinusOk(val, pos);
     }
 
-    // We only accept digits here (remember that '-' is taken care of by the
-    // base class already).
+    // A separator is accepted if the locale allow it, the other chars must be digits
     if ( ch < '0' || ch > '9' )
-        return false;
+    {
+        wxChar thousands;
+        if ( wxNumberFormatter::GetThousandsSeparatorIfUsed(&thousands) )
+        {
+            if (ch != thousands)
+                return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-    // And the value after insertion needs to be in the defined range.
+    return true;
+}
+
+bool wxIntegerValidatorBase::DoValidateNumber(wxString * errMsg) const
+{
+    wxTextEntry * const control = GetTextEntry();
+    if ( !control )
+       return false;
+
+    wxString s(control->GetValue());
+    wxChar thousandsSep;
+    if ( wxNumberFormatter::GetThousandsSeparatorIfUsed(&thousandsSep) )
+        s.Replace(wxString(thousandsSep), wxString());
+
+    if ( s.empty() )
+    {
+        // Is blank, but allowed. Stop here
+        if ( HasFlag(wxNUM_VAL_ZERO_AS_BLANK) )
+        {
+            return true;
+        }
+        // We can't do any check with an empty string
+        else
+        {
+            *errMsg = _("Empty value");
+            return false;
+        }
+    }
+
+    // Can it be converted to a value?
     LongestValueType value;
-    if ( !FromString(GetValueAfterInsertingChar(val, pos, ch), &value) )
-        return false;
+    bool res = FromString(s, &value);
+    if ( !res )
+       *errMsg = _("Malformed number");
+    else
+    {
+       res = IsInRange(value);
+       if ( !res )
+             *errMsg = _("Not in range");
+    }
 
-    wxString smin = ToString(m_min);
-    wxString smax = ToString(m_max);
-    if ( pos < (int) smin.Length() )
-       return true;
-    if ( pos < (int) smax.Length() - 1 )
-       return true;
-
-    return IsInRange(value);
+    return res;
 }
 
 // ============================================================================
@@ -264,9 +327,26 @@ wxFloatingPointValidatorBase::IsCharOk(const wxString& val,
                                        int pos,
                                        wxChar ch) const
 {
-    // We may accept minus sign if we can represent negative numbers at all.
     if ( ch == '-' )
-        return m_min < 0 && IsMinusOk(val, pos);
+    {
+        // We may accept minus sign if we can represent negative numbers at all.
+        if ( pos == 0 )
+            return m_min < 0 && IsMinusOk(val, pos);
+        // or for the exponent definition
+        else if ( val[pos-1] != 'e' && val[pos-1] != 'E' )
+            return false;
+
+        return true;
+    }
+    else if ( ch == '+' )
+    {
+        if ( pos == 0 )
+            return m_max >= 0;
+        else if ( val[pos-1] != 'e' && val[pos-1] != 'E' )
+            return false;
+
+        return true;
+    }
 
     const wxChar separator = wxNumberFormatter::GetDecimalSeparator();
     if ( ch == separator )
@@ -277,8 +357,8 @@ wxFloatingPointValidatorBase::IsCharOk(const wxString& val,
             return false;
         }
 
-        // Prepending a separator before the minus sign isn't allowed.
-        if ( pos == 0 && !val.empty() && val[0] == '-' )
+        // Prepending a separator before the sign isn't allowed.
+        if ( pos == 0 && !val.empty() && ( val[0] == '-' || val[0] == '+' ) )
             return false;
 
         // Otherwise always accept it, adding a decimal separator doesn't
@@ -289,24 +369,83 @@ wxFloatingPointValidatorBase::IsCharOk(const wxString& val,
         return true;
     }
 
-    // Must be a digit then.
-    if ( ch < '0' || ch > '9' )
-        return false;
+    // Must be a digit, an exponent or a thousands separator.
+    if( ( ch < '0' || ch > '9' ) && ch != 'E' && ch != 'e' )
+    {
+        wxChar thousands;
+        if ( wxNumberFormatter::GetThousandsSeparatorIfUsed(&thousands) )
+        {
+            if (ch != thousands)
+                return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-    // Check whether the value we'd obtain if we accepted this key is correct.
-    const wxString newval(GetValueAfterInsertingChar(val, pos, ch));
+    // Check the number of decimal digits in the final string
+    wxString str(val);
+    str.insert(pos, ch);
+    return ValidatePrecision(str);
+}
+
+bool wxFloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
+{
+    wxTextEntry * const control = GetTextEntry();
+    if ( !control )
+       return false;
+
+    wxString s(control->GetValue());
+    wxChar thousandsSep;
+    if ( wxNumberFormatter::GetThousandsSeparatorIfUsed(&thousandsSep) )
+        s.Replace(wxString(thousandsSep), wxString());
+
+    if ( s.empty() )
+    {
+        if ( HasFlag(wxNUM_VAL_ZERO_AS_BLANK) )
+            return true; //Is blank, but allowed. Stop here
+        else
+        {
+            *errMsg = _("Empty value");
+            return false; //We can't do any checks with an empty string
+        }
+    }
 
     LongestValueType value;
-    if ( !FromString(newval, &value) )
-        return false;
+    bool res = FromString(s, &value); // Can it be converted to a value?
+    if ( !res )
+        *errMsg = _("Value overflow");
+    else
+    {
+        res = ValidatePrecision(s);
+        if ( !res )
+            *errMsg = _("Too meany decimal digits");
+        else
+        {
+            res = IsInRange(value);
+            if ( !res )
+                *errMsg = _("Not in range");
+        }
+    }
 
-    // Also check that it doesn't have too many decimal digits.
-    const size_t posSep = newval.find(separator);
-    if ( posSep != wxString::npos && newval.length() - posSep - 1 > m_precision )
-        return false;
+    return res;
+}
 
-    // Finally check whether it is in the range.
-    return IsInRange(value);
+bool wxFloatingPointValidatorBase::ValidatePrecision(const wxString& s) const
+{
+    size_t posSep = s.find(wxNumberFormatter::GetDecimalSeparator());
+    if ( posSep == wxString::npos )
+        posSep = s.length();
+
+    // If user typed exponent 'e' the number of decimal digits is not
+    // important at all. But we must know that 'e' position.
+    size_t posExp = s.Lower().Find(_("e"));
+    if ( posExp == wxString::npos )
+        posExp = s.length();
+
+    // Return true if number has no more decimal digits than allowed
+    return ( (int)(posExp - posSep) - 1 <= (int)m_precision );
 }
 
 #endif // wxUSE_VALIDATORS && wxUSE_TEXTCTRL

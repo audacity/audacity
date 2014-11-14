@@ -49,6 +49,8 @@ class AUDACITY_DLL_API ConfigClientInterface
 public:
    virtual ~ConfigClientInterface() {};
 
+   virtual bool GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups) = 0;
+
    virtual bool GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval) = 0;
    virtual bool GetSharedConfig(const wxString & group, const wxString & key, int & value, int defval) = 0;
    virtual bool GetSharedConfig(const wxString & group, const wxString & key, bool & value, bool defval) = 0;
@@ -63,6 +65,11 @@ public:
    virtual bool SetSharedConfig(const wxString & group, const wxString & key, const double & value) = 0;
    virtual bool SetSharedConfig(const wxString & group, const wxString & key, const sampleCount & value) = 0;
 
+   virtual bool RemoveSharedConfigSubgroup(const wxString & group) = 0;
+   virtual bool RemoveSharedConfig(const wxString & group, const wxString & key) = 0;
+
+   virtual bool GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups) = 0;
+
    virtual bool GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval) = 0;
    virtual bool GetPrivateConfig(const wxString & group, const wxString & key, int & value, int defval) = 0;
    virtual bool GetPrivateConfig(const wxString & group, const wxString & key, bool & value, bool defval) = 0;
@@ -76,6 +83,9 @@ public:
    virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const float & value) = 0;
    virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const double & value) = 0;
    virtual bool SetPrivateConfig(const wxString & group, const wxString & key, const sampleCount & value) = 0;
+
+   virtual bool RemovePrivateConfigSubgroup(const wxString & group) = 0;
+   virtual bool RemovePrivateConfig(const wxString & group, const wxString & key) = 0;
 };
 
 class ConfigHostInterface

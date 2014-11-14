@@ -8,6 +8,14 @@ dist_doc_DATA = LICENSE.txt README.txt
 dist_pkgdata_DATA = presets/EQDefaultCurves.xml
 
 nobase_dist_pkgdata_DATA = \
+   include/audacity/ConfigInterface.h \
+   include/audacity/EffectAutomationParameters.h \
+   include/audacity/EffectInterface.h \
+   include/audacity/IdentInterface.h \
+   include/audacity/ImporterInterface.h \
+   include/audacity/ModuleInterface.h \
+   include/audacity/PluginInterface.h \
+   include/audacity/Types.h \
    nyquist/bug.lsp \
    nyquist/dspprims.lsp \
    nyquist/envelopes.lsp \

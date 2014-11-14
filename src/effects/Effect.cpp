@@ -68,6 +68,8 @@ wxString Effect::StripAmpersand(const wxString& str)
 // Legacy (or full blown effect)
 Effect::Effect()
 {
+   mParent = NULL;
+
    mClient = NULL;
 
    mWarper = NULL;
@@ -99,11 +101,6 @@ Effect::Effect()
 
 Effect::~Effect()
 {
-   if (mClient)
-   {
-      mClient->Shutdown();
-   }
-
    if (mWarper != NULL)
    {
       delete mWarper;
@@ -214,6 +211,16 @@ wxString Effect::GetFamily()
    return _("Audacity");
 }
 
+bool Effect::IsInteractive()
+{
+   if (mClient)
+   {
+      return mClient->IsInteractive();
+   }
+
+   return GetEffectName().EndsWith(wxT("..."));
+}
+
 bool Effect::IsDefault()
 {
    if (mClient)
@@ -234,14 +241,14 @@ bool Effect::IsLegacy()
    return true;
 }
 
-bool Effect::IsInteractive()
+bool Effect::SupportsAutomation()
 {
    if (mClient)
    {
-      return mClient->IsInteractive();
+      return mClient->SupportsAutomation();
    }
 
-   return GetEffectName().EndsWith(wxT("..."));
+   return SupportsChains();
 }
 
 // EffectHostInterface implementation
@@ -283,7 +290,47 @@ void Effect::Preview()
    Preview(false);
 }
 
+wxDialog *Effect::CreateUI(wxWindow *parent, EffectUIClientInterface *client)
+{
+   EffectUIHost *dlg = new EffectUIHost(parent, this, client);
+
+   if (dlg->Initialize())
+   {
+      return dlg;
+   }
+
+   delete dlg;
+
+   return NULL;
+}
+
+wxString Effect::GetUserPresetsGroup(const wxString & name)
+{
+   wxString group = wxT("UserPresets");
+   if (!name.IsEmpty())
+   {
+      group += wxCONFIG_PATH_SEPARATOR + name;
+   }
+
+   return group;
+}
+
+wxString Effect::GetCurrentSettingsGroup()
+{
+   return wxT("CurrentSettings");
+}
+
+wxString Effect::GetFactoryDefaultsGroup()
+{
+   return wxT("FactoryDefaults");
+}
+
 // ConfigClientInterface implementation
+
+bool Effect::GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups)
+{
+   return PluginManager::Get().GetSharedConfigSubgroups(GetID(), group, subgroups);
+}
 
 bool Effect::GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval)
 {
@@ -343,6 +390,21 @@ bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const
 bool Effect::SetSharedConfig(const wxString & group, const wxString & key, const sampleCount & value)
 {
    return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
+}
+
+bool Effect::RemoveSharedConfigSubgroup(const wxString & group)
+{
+   return PluginManager::Get().RemoveSharedConfigSubgroup(GetID(), group);
+}
+
+bool Effect::RemoveSharedConfig(const wxString & group, const wxString & key)
+{
+   return PluginManager::Get().RemoveSharedConfig(GetID(), group, key);
+}
+
+bool Effect::GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups)
+{
+   return PluginManager::Get().GetPrivateConfigSubgroups(GetID(), group, subgroups);
 }
 
 bool Effect::GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval)
@@ -405,6 +467,16 @@ bool Effect::SetPrivateConfig(const wxString & group, const wxString & key, cons
    return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
 }
 
+bool Effect::RemovePrivateConfigSubgroup(const wxString & group)
+{
+   return PluginManager::Get().RemovePrivateConfigSubgroup(GetID(), group);
+}
+
+bool Effect::RemovePrivateConfig(const wxString & group, const wxString & key)
+{
+   return PluginManager::Get().RemovePrivateConfig(GetID(), group, key);
+}
+
 // Effect implementation
 
 bool Effect::Startup(EffectClientInterface *client)
@@ -412,14 +484,11 @@ bool Effect::Startup(EffectClientInterface *client)
    // Let destructor know we need to be shutdown
    mClient = client;
 
-   // Need to set host now so client startup can use our services
-   mClient->SetHost(this);
-   
-   // Bail if the client startup fails
-   if (!mClient->Startup())
+   // Set host so client startup can use our services
+   if (!mClient->SetHost(this))
    {
+      // Bail if the client startup fails
       mClient = NULL;
-
       return false;
    }
 
@@ -445,6 +514,46 @@ bool Effect::Startup(EffectClientInterface *client)
    SetEffectFlags(flags);
 
    return true;
+}
+
+bool Effect::GetAutomationParameters(wxString & parms)
+{
+   if (mClient)
+   {
+      EffectAutomationParameters eap;
+      if (!mClient->GetAutomationParameters(eap))
+      {
+         return false;
+      }
+
+      return eap.GetParameters(parms);
+   }
+
+   ShuttleCli shuttle;
+   shuttle.mbStoreInClient = false;
+   if (!TransferParameters(shuttle))
+   {
+      return false;
+   }
+
+   parms = shuttle.mParams;
+
+   return true;
+}
+
+bool Effect::SetAutomationParameters(const wxString & parms)
+{
+   if (mClient)
+   {
+      EffectAutomationParameters eap;
+      eap.SetParameters(parms);
+      return mClient->SetAutomationParameters(eap);
+   }
+
+   ShuttleCli shuttle;
+   shuttle.mParams = parms;
+   shuttle.mbStoreInClient = true;
+   return TransferParameters(shuttle);
 }
 
 // All legacy effects should have this overridden
@@ -591,19 +700,20 @@ bool Effect::PromptUser()
    return PromptUser(mParent);
 }
 
-bool Effect::PromptUser(wxWindow *parent)
+bool Effect::PromptUser(wxWindow *parent, bool forceModal)
 {
    if (mClient)
    {
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-      if (IsRealtimeCapable())
+      bool res = mClient->ShowInterface(parent, forceModal);
+
+      // Really need to clean this up...should get easier when
+      // all effects get converted.
+      if (!res || SupportsRealtime())
       {
-         mClient->ShowInterface(parent);
+         // Return false to force DoEffect() to skip processing since
+         // this UI has either been shown modeless or there was an error.
          return false;
       }
-#endif
-
-      return mClient->ShowInterface(parent);
    }
 
    return true;
@@ -853,6 +963,7 @@ bool Effect::ProcessTrack(int count,
    WaveTrack *genRight = NULL;
    sampleCount genLength = 0;
    bool isGenerator = mClient->GetType() == EffectTypeGenerate;
+   bool isProcessor = mClient->GetType() == EffectTypeProcess;
    if (isGenerator)
    {
       genLength = left->GetRate() * mDuration;
@@ -980,7 +1091,7 @@ bool Effect::ProcessTrack(int count,
       }
 
       // Get the current number of delayed samples and accumulate
-      if (!isGenerator)
+      if (isProcessor)
       {
          sampleCount delay = mClient->GetLatency();
          curDelay += delay;
@@ -999,7 +1110,7 @@ bool Effect::ProcessTrack(int count,
          else if (curDelay > 0)
          {
             curBlockSize -= curDelay;
-            for (int i = 0; i < mNumChannels; i++)
+            for (int i = 0; i < wxMin(mNumAudioOut, mNumChannels); i++)
             {
                memmove(mOutBufPos[i], mOutBufPos[i] + curDelay, SAMPLE_SIZE(floatSample) * curBlockSize);
             }
@@ -1014,7 +1125,7 @@ bool Effect::ProcessTrack(int count,
       if (outputBufferCnt < mBufferSize)
       {
          // Bump to next output buffer position
-         for (int i = 0; i < mNumChannels; i++)
+         for (int i = 0; i < wxMin(mNumAudioOut, mNumChannels); i++)
          {
             mOutBufPos[i] += curBlockSize;
          }
@@ -1022,7 +1133,7 @@ bool Effect::ProcessTrack(int count,
       // Output buffers have filled
       else
       {
-         if (!isGenerator)
+         if (isProcessor)
          {
             // Write them out
             left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
@@ -1031,7 +1142,7 @@ bool Effect::ProcessTrack(int count,
                right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
             }
          }
-         else
+         else if (isGenerator)
          {
             genLeft->Append((samplePtr) mOutBuffer[0], floatSample, outputBufferCnt);
             if (genRight)
@@ -1041,7 +1152,7 @@ bool Effect::ProcessTrack(int count,
          }
 
          // Reset the output buffer positions
-         for (int i = 0; i < mNumChannels; i++)
+         for (int i = 0; i < wxMin(mNumAudioOut, mNumChannels); i++)
          {
             mOutBufPos[i] = mOutBuffer[i];
          }
@@ -1080,7 +1191,7 @@ bool Effect::ProcessTrack(int count,
    // Put any remaining output
    if (outputBufferCnt)
    {
-      if (!isGenerator)
+      if (isProcessor)
       {
          left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
          if (right)
@@ -1088,7 +1199,7 @@ bool Effect::ProcessTrack(int count,
             right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
          }
       }
-      else
+      else if (isGenerator)
       {
          genLeft->Append((samplePtr) mOutBuffer[0], floatSample, outputBufferCnt);
          if (genRight)
@@ -1385,12 +1496,12 @@ wxString Effect::GetPreviewName()
    return _("Pre&view");
 }
 
-bool Effect::IsRealtimeCapable()
+bool Effect::SupportsRealtime()
 {
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    if (mClient)
    {
-      return mClient->IsRealtimeCapable();
+      return mClient->SupportsRealtime();
    }
 #endif
 
@@ -1791,5 +1902,359 @@ bool EffectDialog::Validate()
 
 void EffectDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 {
+   return;
+}
+
+enum
+{
+   kSaveAsID = 30001,
+   kImportID = 30002,
+   kExportID = 30003,
+   kDefaultsID = 30004,
+   kOptionsID = 30005,
+   kDeleteAllID = 30006,
+   kUserPresetsID = 31000,
+   kDeletePresetID = 32000,
+   kFactoryPresetsID = 33000,
+};
+
+BEGIN_EVENT_TABLE(EffectUIHost, wxDialog)
+//   EVT_WINDOW_DESTROY(EffectUIHost::OnDestroy)
+   EVT_CLOSE(EffectUIHost::OnClose)
+   EVT_BUTTON(wxID_OK, EffectUIHost::OnOk)
+   EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
+   EVT_BUTTON(ePreviewID, EffectUIHost::OnPreview)
+   EVT_BUTTON(eSettingsID, EffectUIHost::OnSettings)
+   EVT_MENU(kSaveAsID, EffectUIHost::OnSaveAs)
+   EVT_MENU(kImportID, EffectUIHost::OnImport)
+   EVT_MENU(kExportID, EffectUIHost::OnExport)
+   EVT_MENU(kOptionsID, EffectUIHost::OnOptions)
+   EVT_MENU(kDefaultsID, EffectUIHost::OnDefaults)
+   EVT_MENU(kDeleteAllID, EffectUIHost::OnDeleteAllPresets)
+   EVT_MENU_RANGE(kUserPresetsID, kUserPresetsID + 999, EffectUIHost::OnUserPreset)
+   EVT_MENU_RANGE(kDeletePresetID, kDeletePresetID + 999, EffectUIHost::OnDeletePreset)
+   EVT_MENU_RANGE(kFactoryPresetsID, kFactoryPresetsID + 999, EffectUIHost::OnFactoryPreset)
+END_EVENT_TABLE()
+
+EffectUIHost::EffectUIHost(wxWindow *parent,
+                           EffectHostInterface *host,
+                           EffectUIClientInterface *client)
+:  wxDialog(parent, wxID_ANY, host->GetName())
+{
+   SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
+
+   mParent = parent;
+   mHost = host;
+   mClient = client;
+   mClient->SetUIHost(this);
+}
+
+EffectUIHost::~EffectUIHost()
+{
+   if (mClient)
+   {
+     mClient->CloseUI();
+     mClient = NULL;
+   }
+}
+
+bool EffectUIHost::Initialize()
+{
+   wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
+
+   wxScrolledWindow *w = new wxScrolledWindow(this,
+                                              wxID_ANY,
+                                              wxDefaultPosition,
+                                              wxDefaultSize,
+                                              wxVSCROLL | wxTAB_TRAVERSAL);
+
+   // Try to give the window a sensible default/minimum size
+   w->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2/3),
+                        mParent->GetSize().GetHeight() / 2));
+
+   w->SetScrollRate(0, 20);
+
+   wxSizer *s = CreateStdButtonSizer(this, eSettingsButton | eOkButton | eCancelButton);
+
+   vs->Add(w, 1, wxEXPAND);
+   vs->Add(s, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL);
+   SetSizer(vs);
+
+   if (!mClient->PopulateUI(w))
+   {
+      return false;
+   }
+
+   Layout();
+   Fit();
+   Center();
+
+   LoadUserPresets();
+
+   mClient->LoadUserPreset(mHost->GetCurrentSettingsGroup());
+
+   return true;
+}
+
+void EffectUIHost::OnDestroy(wxWindowDestroyEvent & WXUNUSED(evt))
+{
+   mClient->CloseUI();
+}
+
+void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
+{
+   mClient->CloseUI();
+   mClient = NULL;
+   
+   Destroy();
+}
+
+void EffectUIHost::OnOk(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!mClient->ValidateUI())
+   {
+      return;
+   }
+
+   mClient->SaveUserPreset(mHost->GetCurrentSettingsGroup());
+
+   if (IsModal())
+   {
+      SetReturnCode(true);
+
+      Close();
+
+#if !defined(__WXGTK__)
+      EndModal(true);
+#endif
+      return;
+   }
+
+   mHost->Apply();
+
+   if (!mClient->HideUI())
+   {
+      return;
+   }
+
+   Close();
+
+   return;
+}
+
+void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
+{
+   if (IsModal())
+   {
+      EndModal(false);
+      return;
+   }
+
+   Close();
+
+   return;
+}
+
+void EffectUIHost::OnPreview(wxCommandEvent & WXUNUSED(evt))
+{
+   mHost->Preview();
+}
+
+void EffectUIHost::OnSettings(wxCommandEvent & evt)
+{
+   wxButton *b = (wxButton *)evt.GetEventObject();
+
+   wxMenu *menu = new wxMenu();
+   wxMenu *sub;
+
+   LoadUserPresets();
+
+   sub = new wxMenu();
+   for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
+   {
+      sub->Append(kUserPresetsID + i, mUserPresets[i]);
+   }
+   menu->Append(0, _("User Presets"), sub);
+
+   wxArrayString factory = mClient->GetFactoryPresets();
+
+   sub = new wxMenu();
+   sub->Append(kDefaultsID, _("Defaults"));
+   if (factory.GetCount() > 0)
+   {
+      sub->AppendSeparator();
+      for (size_t i = 0, cnt = factory.GetCount(); i < cnt; i++)
+      {
+         wxString label = factory[i];
+         if (label.IsEmpty())
+         {
+            label = _("None");
+         }
+
+         sub->Append(kFactoryPresetsID + i, label);
+      }
+   }
+   menu->Append(0, _("Factory Presets"), sub);
+
+   sub = new wxMenu();
+   for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
+   {
+      sub->Append(kDeletePresetID + i, mUserPresets[i]);
+   }
+   menu->Append(0, _("Delete Preset"), sub);
+
+   menu->AppendSeparator();
+   menu->Append(kSaveAsID, _("Save As..."));
+   menu->AppendSeparator();
+   menu->Append(kImportID, _("Import..."));
+   menu->Append(kExportID, _("Export..."));
+   menu->AppendSeparator();
+   menu->Append(kOptionsID, _("Options..."));
+   menu->AppendSeparator();
+
+   sub = new wxMenu();
+
+   sub->Append(0, wxString::Format(_("Type: %s"), mHost->GetFamily().c_str()));
+   sub->Append(0, wxString::Format(_("Name: %s"), mHost->GetName().c_str()));
+   sub->Append(0, wxString::Format(_("Version: %s"), mHost->GetVersion().c_str()));
+   sub->Append(0, wxString::Format(_("Vendor: %s"), mHost->GetVendor().c_str()));
+   sub->Append(0, wxString::Format(_("Description: %s"), mHost->GetDescription().c_str()));
+//   sub->Append(0, wxString::Format(_("Audio In: %d"), mHost->GetAudioInCount()));
+//   sub->Append(0, wxString::Format(_("Audio Out: %d"), mHost->GetAudioOutCount()));
+
+   menu->Append(0, _("About"), sub);
+
+   wxRect r = b->GetRect();
+   PopupMenu(menu, wxPoint(r.GetLeft(), r.GetBottom()));
+
+   delete menu;
+}
+
+void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
+{
+   wxTextCtrl *text;
+   wxString name;
+   wxDialog dlg(this, wxID_ANY, wxString(_("Save Preset")));
+   ShuttleGui S(&dlg, eIsCreating);
+
+   S.StartPanel();
+   {
+      S.StartVerticalLay(0);
+      {
+         S.StartHorizontalLay(wxALIGN_LEFT, 0);
+         {
+            text = S.AddTextBox(_("Preset name:"), name, 30);
+         }
+         S.EndHorizontalLay();
+         S.AddStandardButtons();
+      }
+      S.EndVerticalLay();
+   }
+   S.EndPanel();
+   dlg.SetSize(dlg.GetSizer()->GetMinSize());
+   dlg.Center();
+
+   while (true)
+   {
+      int rc = dlg.ShowModal();
+
+      if (rc != wxID_OK)
+      {
+         break;
+      }
+
+      name = text->GetValue();
+      if (mUserPresets.Index(name) == wxNOT_FOUND)
+      {
+         mClient->SaveUserPreset(mHost->GetUserPresetsGroup(name));
+         LoadUserPresets();
+         break;
+      }
+
+      wxMessageBox(_("Preset already exists"),
+                     _("Save Preset"),
+                     wxICON_EXCLAMATION);
+   }
+
+   return;
+}
+
+void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
+{
+   mClient->ImportPresets();
+
+   LoadUserPresets();
+
+   return;
+}
+
+void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
+{
+   mClient->ExportPresets();
+
+   return;
+}
+
+void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
+{
+   mClient->LoadFactoryDefaults();
+
+   return;
+}
+
+void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
+{
+   mClient->ShowOptions();
+
+   return;
+}
+
+void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
+{
+   int preset = evt.GetId() - kUserPresetsID;
+
+   mClient->LoadUserPreset(mHost->GetUserPresetsGroup(mUserPresets[preset]));
+
+   return;
+}
+
+void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
+{
+   mClient->LoadFactoryPreset(evt.GetId() - kFactoryPresetsID);
+
+   return;
+}
+
+void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
+{
+   mHost->RemovePrivateConfigSubgroup(mHost->GetUserPresetsGroup(mUserPresets[evt.GetId() - kDeletePresetID]));
+
+   LoadUserPresets();
+
+   return;
+}
+
+void EffectUIHost::OnDeleteAllPresets(wxCommandEvent & WXUNUSED(evt))
+{
+   int res = wxMessageBox(_("This will delete all of your user presets.  Are you sure?"),
+                          _("Delete All Presets"),
+                          wxICON_QUESTION | wxYES_NO);
+   if (res == wxID_YES)
+   {
+      mHost->RemovePrivateConfigSubgroup(mHost->GetUserPresetsGroup(wxEmptyString));
+      mUserPresets.Clear();
+   }
+
+   return;
+}
+
+void EffectUIHost::LoadUserPresets()
+{
+   mUserPresets.Clear();
+
+   mHost->GetPrivateConfigSubgroups(mHost->GetUserPresetsGroup(wxEmptyString), mUserPresets);
+
+   mUserPresets.Sort();
+
    return;
 }

@@ -104,14 +104,14 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
          wxArrayString visualgroups;
          wxArrayString prefsgroups;
       
-         visualgroups.Add(_("Publisher: Effect Name"));
-         visualgroups.Add(_("Name"));
+         visualgroups.Add(_("Effect Name"));
          visualgroups.Add(_("Publisher"));
+         visualgroups.Add(_("Publisher: Effect Name"));
          visualgroups.Add(_("Type (Internal, Ladspa, VST, etc.)"));
       
          prefsgroups.Add(wxT("default"));
-         prefsgroups.Add(wxT("name"));
          prefsgroups.Add(wxT("publisher"));
+         prefsgroups.Add(wxT("publisher:name"));
          prefsgroups.Add(wxT("family"));
 
          S.TieChoice(_("Group effects in menus by:"),

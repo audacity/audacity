@@ -2191,9 +2191,9 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
       bs->Add( 20, 0 );
    }
 
-   if( buttons & eDefaultsButton )
+   if( buttons & eSettingsButton )
    {
-      bs->Add(new wxButton( parent, eDefaultsID, _("&Defaults") ), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
+      bs->Add(new wxButton( parent, eSettingsID, _("&Settings") ), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
       bs->Add( 20, 0 );
    }
 

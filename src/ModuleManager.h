@@ -98,8 +98,9 @@ public:
 
    void InitializePlugins();
    bool IsProviderBuiltin(const PluginID & provider);
-   void *CreateProviderInstance(const PluginID & ID, const wxString & path);
-   void *CreateInstance(const PluginID & provider, const PluginID & ID, const wxString & path);
+   IdentInterface *CreateProviderInstance(const PluginID & ID, const wxString & path);
+   IdentInterface *CreateInstance(const PluginID & provider, const PluginID & ID, const wxString & path);
+   void DeleteInstance(const PluginID & provider, IdentInterface *instance);
 
 private:
    void InitializeBuiltins();

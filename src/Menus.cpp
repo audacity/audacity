@@ -216,26 +216,6 @@ void AudacityProjectCommandFunctor::operator()(int index, const wxEvent * evt)
 // Effects menu arrays
 //
 WX_DEFINE_ARRAY_PTR(const PluginDescriptor *, EffectPlugs);
-static int SortPlugsByDefault(const PluginDescriptor **a, const PluginDescriptor **b)
-{
-   wxString akey = (*a)->GetVendor();
-   wxString bkey = (*b)->GetVendor();
-
-   if ((*a)->IsEffectDefault())
-   {
-      akey = wxEmptyString;
-   }
-   if ((*b)->IsEffectDefault())
-   {
-      bkey = wxEmptyString;
-   }
-
-   akey += (*a)->GetName();
-   bkey += (*b)->GetName();
-
-   return akey.CmpNoCase(bkey);
-}
-
 static int SortPlugsByName(const PluginDescriptor **a, const PluginDescriptor **b)
 {
    wxString akey = (*a)->GetName();
@@ -256,6 +236,26 @@ static int SortPlugsByPublisher(const PluginDescriptor **a, const PluginDescript
    if (bkey.IsEmpty())
    {
       bkey = _("Uncategorized");
+   }
+
+   akey += (*a)->GetName();
+   bkey += (*b)->GetName();
+
+   return akey.CmpNoCase(bkey);
+}
+
+static int SortPlugsByPublisherAndName(const PluginDescriptor **a, const PluginDescriptor **b)
+{
+   wxString akey = (*a)->GetVendor();
+   wxString bkey = (*b)->GetVendor();
+
+   if ((*a)->IsEffectDefault())
+   {
+      akey = wxEmptyString;
+   }
+   if ((*b)->IsEffectDefault())
+   {
+      bkey = wxEmptyString;
    }
 
    akey += (*a)->GetName();
@@ -291,8 +291,6 @@ static int SortPlugsByFamily(const PluginDescriptor **a, const PluginDescriptor 
 void AudacityProject::CreateMenusAndCommands()
 {
    CommandManager *c = &mCommandManager;
-   EffectManager& em = EffectManager::Get();
-   EffectArray *effects;
    wxArrayString names;
    wxArrayInt indices;
 
@@ -934,8 +932,6 @@ void AudacityProject::CreateMenusAndCommands()
    // the plugin manager...sorry! :-(
 
    wxArrayString defaults;
-   PluginManager & pm = PluginManager::Get();
-   const PluginDescriptor *plug;
 
    //////////////////////////////////////////////////////////////////////////
    // Generate Menu
@@ -1004,8 +1000,6 @@ void AudacityProject::CreateMenusAndCommands()
               AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag | HasLastEffectFlag);
 
    c->AddSeparator();
-
-   int additionalEffects = ADVANCED_EFFECT;
 
    // this is really ugly but we need to keep all the old code to get any
    // effects at all in the menu when EFFECT_CATEGORIES is undefined
@@ -1290,13 +1284,18 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
 
    if (groupby == wxT("default"))
    {
-      defplugs.Sort(SortPlugsByDefault);
-      optplugs.Sort(SortPlugsByDefault);
+      defplugs.Sort(SortPlugsByName);
+      optplugs.Sort(SortPlugsByName);
    }
    else if (groupby == wxT("publisher"))
    {
       defplugs.Sort(SortPlugsByPublisher);
       optplugs.Sort(SortPlugsByPublisher);
+   }
+   else if (groupby == wxT("publisher:name"))
+   {
+      defplugs.Sort(SortPlugsByPublisherAndName);
+      optplugs.Sort(SortPlugsByPublisherAndName);
    }
    else if (groupby == wxT("family"))
    {
@@ -1351,11 +1350,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       const PluginDescriptor *plug = plugs[i];
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-      if (plug->GetName() == wxT("Cross Fade In"))
-      {
-         int f = 1;
-      }
-      int flags = plug->IsEffectRealtimeCapable() ? realflags : batchflags;
+      int flags = plug->IsEffectRealtime() ? realflags : batchflags;
 #else
       int flags = batchflags;
 #endif
@@ -1420,7 +1415,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
             groupPlugs.Add(plug->GetID());
          }
 
-         size_t groupCnt = groupPlugs.GetCount();
+         int groupCnt = (int) groupPlugs.GetCount();
 
          if (grouped && groupCnt > 0 && i > 0)
          {
@@ -1437,7 +1432,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
                max = 0;
             }
 
-            for (size_t j = 0; j < groupCnt; j++)
+            for (int j = 0; j < groupCnt; j++)
             {
                if (max > 0 && items == max)
                {
@@ -1447,8 +1442,8 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
                      end = groupCnt;
                   }
                   c->BeginSubMenu(wxString::Format(_("Plug-ins %d to %d"),
-                                                   (int) j + 1,
-                                                   (int) end));
+                                                   j + 1,
+                                                   end));
                }
 
                c->AddItem(groupNames[j],
@@ -3042,6 +3037,10 @@ void AudacityProject::OnEffect(const PluginID & pluginID)
       case EffectTypeAnalyze:
          type = ANALYZE_EFFECT;
       break;
+
+      case EffectTypeNone:
+         type = 0;
+      break;
    }
 
    type |= plug->IsEffectDefault() ? BUILTIN_EFFECT : PLUGIN_EFFECT;
@@ -3068,6 +3067,10 @@ void AudacityProject::OnEffect(const PluginID & pluginID, bool configured)
 
       case EffectTypeAnalyze:
          type = ANALYZE_EFFECT;
+      break;
+
+      case EffectTypeNone:
+         type = 0;
       break;
    }
 

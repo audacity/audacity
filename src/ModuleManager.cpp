@@ -578,8 +578,8 @@ bool ModuleManager::IsProviderBuiltin(const PluginID & providerID)
    return mModuleMains.find(providerID) != mModuleMains.end();
 }
 
-void *ModuleManager::CreateProviderInstance(const PluginID & providerID,
-                                            const wxString & path)
+IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
+                                                      const wxString & path)
 {
    if (path.empty() && mDynModules.find(providerID) != mDynModules.end())
    {
@@ -589,9 +589,9 @@ void *ModuleManager::CreateProviderInstance(const PluginID & providerID,
    return LoadModule(path);
 }
 
-void *ModuleManager::CreateInstance(const PluginID & providerID,
-                                    const PluginID & ID,
-                                    const wxString & path)
+IdentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
+                                              const PluginID & ID,
+                                              const wxString & path)
 {
    if (mDynModules.find(providerID) == mDynModules.end())
    {
@@ -599,4 +599,15 @@ void *ModuleManager::CreateInstance(const PluginID & providerID,
    }
 
    return mDynModules[providerID]->CreateInstance(ID, path);
+}
+
+void ModuleManager::DeleteInstance(const PluginID & providerID,
+                                   IdentInterface *instance)
+{
+   if (mDynModules.find(providerID) == mDynModules.end())
+   {
+      return;
+   }
+
+   mDynModules[providerID]->DeleteInstance(instance);
 }

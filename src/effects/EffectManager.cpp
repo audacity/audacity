@@ -215,6 +215,13 @@ EffectManager::~EffectManager()
    // wxWidgets has already destroyed the rack since it was derived from wxFrame. So
    // no need to delete it here.
 #endif
+
+   EffectMap::iterator iter = mEffects.begin();
+   while (iter != mEffects.end())
+   {
+      delete iter->second;
+      iter++;
+   }
 }
 
 void EffectManager::RegisterEffect(Effect *f, int NewFlags)
@@ -227,7 +234,7 @@ void EffectManager::RegisterEffect(Effect *f, int NewFlags)
    }
 
    // This will go away after all effects have been converted
-   mEffectPlugins.Add(PluginManager::Get().RegisterLegacyEffectPlugin(f));
+   mEffects[PluginManager::Get().RegisterLegacyEffectPlugin(f)] = f;
 
 #ifdef EFFECT_CATEGORIES
    // Add the effect in the right categories
@@ -275,7 +282,7 @@ bool EffectManager::DoEffect(const PluginID & ID,
    }
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS) && defined(EXPERIMENTAL_EFFECTS_RACK)
-   if (effect->IsRealtimeCapable())
+   if (effect->SupportsRealtime())
    {
       GetRack()->Add(effect);
    }
@@ -333,16 +340,28 @@ wxString EffectManager::GetEffectDescription(const PluginID & ID)
    return wxEmptyString;
 }
 
+bool EffectManager::SupportsAutomation(const PluginID & ID)
+{
+   const PluginDescriptor *plug =  PluginManager::Get().GetPlugin(ID);
+   if (plug)
+   {
+      return plug->IsEffectAutomatable();
+   }
+
+   return false;
+}
+
 wxString EffectManager::GetEffectParameters(const PluginID & ID)
 {
    Effect *effect = GetEffect(ID);
    
    if (effect)
    {
-      ShuttleCli shuttle;
-      shuttle.mbStoreInClient = false;
-      effect->TransferParameters(shuttle);
-      return shuttle.mParams;
+      wxString parms;
+
+      effect->GetAutomationParameters(parms);
+
+      return parms;
    }
 
    return wxEmptyString;
@@ -354,10 +373,7 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
    
    if (effect)
    {
-      ShuttleCli shuttle;
-      shuttle.mParams = params;
-      shuttle.mbStoreInClient=true;
-      return effect->TransferParameters(shuttle);
+      return effect->SetAutomationParameters(params);
    }
 
    return false;
@@ -370,7 +386,7 @@ bool EffectManager::PromptUser(const PluginID & ID, wxWindow *parent)
 
    if (effect)
    {
-      result = effect->PromptUser(parent);
+      result = effect->PromptUser(parent, true);
    }
 
    return result;
@@ -634,18 +650,17 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
    Effect *effect;
 
    // TODO: This is temporary and should be redone when all effects are converted
-   if (mEffectPlugins.Index(wxString(ID)) == wxNOT_FOUND)
+   if (mEffects.find(ID) == mEffects.end())
    {
       effect = new Effect();
       if (effect)
       {
          // This will instantiate the effect client if it hasn't already been done
-         EffectClientInterface *client = static_cast<EffectClientInterface *>(PluginManager::Get().GetInstance(ID));
+         EffectClientInterface *client = dynamic_cast<EffectClientInterface *>(PluginManager::Get().GetInstance(ID));
          if (client && effect->Startup(client))
          {
             effect->SetEffectID(mNumEffects++);
-            PluginManager::Get().SetInstance(ID, effect);
-            mEffectPlugins.Add(ID);
+            mEffects[ID] = effect;
             return effect;
          }
 
@@ -659,14 +674,14 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
       return NULL;
    }
 
-   return static_cast<Effect *>(PluginManager::Get().GetInstance(ID));
+   return mEffects[ID];
 }
 
 const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget)
 {
    if (strTarget == wxEmptyString) // set GetEffectIdentifier to wxT("") to not show an effect in Batch mode
    {
-      return PluginID(wxString(wxEmptyString));
+      return PluginID(wxEmptyString);
    }
 
    PluginManager & pm = PluginManager::Get();
@@ -680,7 +695,7 @@ const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }
 
-   return PluginID(wxString(wxEmptyString));
+   return PluginID(wxEmptyString);
 }
 
 #ifdef EFFECT_CATEGORIES

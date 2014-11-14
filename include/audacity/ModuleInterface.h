@@ -89,8 +89,11 @@ public:
    virtual bool RegisterPlugin(PluginManagerInterface & pluginManager,
                                const wxString & path) = 0;
 
-   // When appropriate, CreateInstance() will be called to instantiate the plugins.
-   virtual void *CreateInstance(const PluginID & ID, const wxString & path) = 0;
+   // When appropriate, CreateInstance() will be called to instantiate the plugin.
+   virtual IdentInterface *CreateInstance(const PluginID & ID, const wxString & path) = 0;
+
+   // When appropriate, DeleteInstance() will be called to delete the plugin.
+   virtual void DeleteInstance(IdentInterface *instance) = 0;
 };
 
 // ============================================================================

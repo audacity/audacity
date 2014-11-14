@@ -43,10 +43,9 @@ public:
     // Change the validator style. Usually it's specified during construction.
     void SetStyle(int style) { m_style = style; }
 
-
-    // Override base class method to not do anything but always return success:
-    // we don't need this as we do our validation on the fly here.
-    virtual bool Validate(wxWindow * WXUNUSED(parent)) { return true; }
+    // Called when the value in the window must be validated.
+    // This function can pop up an error message.
+    virtual bool Validate(wxWindow * parent);
 
 protected:
     wxNumValidatorBase(int style)
@@ -99,11 +98,15 @@ private:
     // empty string otherwise.
     virtual wxString NormalizeString(const wxString& s) const = 0;
 
+    // Do all checks to ensure this is a valid value.
+    // Returns 'true' if the control has valid value.
+    // Otherwise the cause is indicated in 'errMsg'.
+    virtual bool DoValidateNumber(wxString * errMsg) const = 0;
 
     // Event handlers.
     void OnChar(wxKeyEvent& event);
     void OnKillFocus(wxFocusEvent& event);
-
+    
 
     // Determine the current insertion point and text in the associated control.
     void GetCurrentValueAndInsertionPoint(wxString& val, int& pos) const;
@@ -297,6 +300,7 @@ protected:
 
     // Implement wxNumValidatorBase pure virtual method.
     virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const;
+    virtual bool DoValidateNumber(wxString * errMsg) const;
 
 private:
     // Minimal and maximal values accepted (inclusive).
@@ -392,6 +396,10 @@ protected:
 
     // Implement wxNumValidatorBase pure virtual method.
     virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const;
+    virtual bool DoValidateNumber(wxString * errMsg) const;
+
+    //Checks that it doesn't have too many decimal digits.
+    bool ValidatePrecision(const wxString& s) const;
 
 private:
     // Maximum number of decimals digits after the decimal separator.
