@@ -1,3 +1,4 @@
+/* XPM */
 static const char * StretchRightCursorXpm[] = {
 "16 16 3 1",
 ".	c #FF0000", // mask color = RGB:255,0,0
