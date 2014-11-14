@@ -321,7 +321,7 @@ private:
    };
    std::vector<Record*> mQueue;
 
-   friend EffectNoiseReduction::Dialog;
+   friend class EffectNoiseReduction::Dialog;
 };
 
 /****************************************************************//**

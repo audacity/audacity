@@ -43,7 +43,7 @@ public:
 
 private:
    class Worker;
-   friend Dialog;
+   friend class Dialog;
 
    std::auto_ptr<Settings> mSettings;
    std::auto_ptr<Statistics> mStatistics;
