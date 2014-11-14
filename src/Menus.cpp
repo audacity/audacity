@@ -4500,6 +4500,7 @@ void AudacityProject::OnSelectNone()
    ModifyState(false);
 }
 
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void AudacityProject::OnDefaultFrequencySelection()
 {
    mViewInfo.selectedRegion.setFrequencies
@@ -4507,6 +4508,7 @@ void AudacityProject::OnDefaultFrequencySelection()
    mTrackPanel->Refresh(false);
    ModifyState(false);
 }
+#endif
 
 void AudacityProject::OnSelectCursorEnd()
 {
