@@ -247,6 +247,8 @@
     <ClCompile Include="..\..\..\src\DeviceManager.cpp" />
     <ClCompile Include="..\..\..\src\DirManager.cpp" />
     <ClCompile Include="..\..\..\src\Dither.cpp" />
+    <ClCompile Include="..\..\..\src\effects\audacity\AudacityEffects.cpp" />
+    <ClCompile Include="..\..\..\src\effects\audacity\Phaser.cpp" />
     <ClCompile Include="..\..\..\src\effects\EffectRack.cpp" />
     <ClCompile Include="..\..\..\src\effects\NoiseReduction.cpp" />
     <ClCompile Include="..\..\..\src\Envelope.cpp" />
@@ -352,7 +354,6 @@
     <ClCompile Include="..\..\..\src\effects\NoiseRemoval.cpp" />
     <ClCompile Include="..\..\..\src\effects\Normalize.cpp" />
     <ClCompile Include="..\..\..\src\effects\Paulstretch.cpp" />
-    <ClCompile Include="..\..\..\src\effects\Phaser.cpp" />
     <ClCompile Include="..\..\..\src\effects\Repair.cpp" />
     <ClCompile Include="..\..\..\src\effects\Repeat.cpp" />
     <ClCompile Include="..\..\..\src\effects\Reverb.cpp" />
@@ -518,6 +519,8 @@
     <ClInclude Include="..\..\..\src\BlockFile.h" />
     <ClInclude Include="..\..\..\src\CaptureEvents.h" />
     <ClInclude Include="..\..\..\src\commands\OpenSaveCommands.h" />
+    <ClInclude Include="..\..\..\src\effects\audacity\AudacityEffects.h" />
+    <ClInclude Include="..\..\..\src\effects\audacity\Phaser.h" />
     <ClInclude Include="..\..\..\src\effects\EffectRack.h" />
     <ClInclude Include="..\..\..\src\effects\NoiseReduction.h" />
     <ClInclude Include="..\..\..\src\import\FormatClassifier.h" />
@@ -623,7 +626,6 @@
     <ClInclude Include="..\..\..\src\effects\NoiseRemoval.h" />
     <ClInclude Include="..\..\..\src\effects\Normalize.h" />
     <ClInclude Include="..\..\..\src\effects\Paulstretch.h" />
-    <ClInclude Include="..\..\..\src\effects\Phaser.h" />
     <ClInclude Include="..\..\..\src\effects\Repair.h" />
     <ClInclude Include="..\..\..\src\effects\Repeat.h" />
     <ClInclude Include="..\..\..\src\effects\Reverb.h" />
@@ -1247,10 +1249,6 @@
     </ProjectReference>
     <ProjectReference Include="..\libogg\libogg.vcxproj">
       <Project>{a939aaf8-44f1-4ce7-9dd0-7a6e99814857}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\libresample\libresample.vcxproj">
-      <Project>{f00717f2-67c8-44e1-af00-541dfa9cb7f2}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\libscorealign\libscorealign.vcxproj">

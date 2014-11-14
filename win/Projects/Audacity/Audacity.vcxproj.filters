@@ -67,6 +67,9 @@
     <Filter Include="includes\audacity">
       <UniqueIdentifier>{2bfa6793-371a-4d2e-b3f4-fb033a0c5729}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src/effects/audacity">
+      <UniqueIdentifier>{0402af49-19ee-48eb-8d25-3d37aa62b3ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AboutDialog.cpp">
@@ -373,9 +376,6 @@
       <Filter>src/effects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\effects\Paulstretch.cpp">
-      <Filter>src/effects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\effects\Phaser.cpp">
       <Filter>src/effects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\effects\Repair.cpp">
@@ -832,6 +832,12 @@
       <Filter>src/widgets</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\effects\NoiseReduction.cpp" />
+    <ClCompile Include="..\..\..\src\effects\audacity\AudacityEffects.cpp">
+      <Filter>src/effects/audacity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\audacity\Phaser.cpp">
+      <Filter>src/effects/audacity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1153,9 +1159,6 @@
       <Filter>src/effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\Paulstretch.h">
-      <Filter>src/effects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\effects\Phaser.h">
       <Filter>src/effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\Repair.h">
@@ -1656,6 +1659,12 @@
     <ClInclude Include="..\..\..\src\effects\NoiseReduction.h" />
     <ClInclude Include="..\..\..\include\audacity\EffectAutomationParameters.h">
       <Filter>includes\audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\audacity\AudacityEffects.h">
+      <Filter>src/effects/audacity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\audacity\Phaser.h">
+      <Filter>src/effects/audacity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
