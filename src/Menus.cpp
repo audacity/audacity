@@ -544,6 +544,10 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("SelectAll"), _("&All"), FN(OnSelectAll), wxT("Ctrl+A"));
    c->AddItem(wxT("SelectNone"), _("&None"), FN(OnSelectNone), wxT("Ctrl+Shift+A"));
 
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   c->AddItem(wxT("DefaultFrequencySelection"), _("Select all fre&quencies"), FN(OnDefaultFrequencySelection), wxT("Q"));
+#endif
+
    c->AddItem(wxT("SetLeftSelection"), _("&Left at Playback Position"), FN(OnSetLeftSelection), wxT("["));
    c->AddItem(wxT("SetRightSelection"), _("&Right at Playback Position"), FN(OnSetRightSelection), wxT("]"));
 
@@ -4493,6 +4497,14 @@ void AudacityProject::OnSelectNone()
 {
    this->SelectNone();
    mViewInfo.selectedRegion.collapseToT0();
+   ModifyState(false);
+}
+
+void AudacityProject::OnDefaultFrequencySelection()
+{
+   mViewInfo.selectedRegion.setFrequencies
+      (SelectedRegion::UndefinedFrequency, SelectedRegion::UndefinedFrequency);
+   mTrackPanel->Refresh(false);
    ModifyState(false);
 }
 
