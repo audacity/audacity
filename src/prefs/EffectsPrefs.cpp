@@ -104,21 +104,23 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
          wxArrayString visualgroups;
          wxArrayString prefsgroups;
       
-         visualgroups.Add(_("Effect Name"));
-         visualgroups.Add(_("Publisher"));
-         visualgroups.Add(_("Publisher: Effect Name"));
-         visualgroups.Add(_("Type (Internal, Ladspa, VST, etc.)"));
+         visualgroups.Add(_("Sorted by Effect Name"));
+         visualgroups.Add(_("Sorted by Publisher and Effect Name"));
+         visualgroups.Add(_("Grouped by Publisher"));
+         visualgroups.Add(_("Grouped by Type (Ladspa, VST, etc.)"));
       
-         prefsgroups.Add(wxT("default"));
-         prefsgroups.Add(wxT("publisher"));
+         prefsgroups.Add(wxT("name"));
          prefsgroups.Add(wxT("publisher:name"));
+         prefsgroups.Add(wxT("publisher"));
          prefsgroups.Add(wxT("family"));
 
-         S.TieChoice(_("Group effects in menus by:"),
-                     wxT("/Effects/GroupBy"),
-                     wxT("default"),
-                     visualgroups,
-                     prefsgroups);
+         wxChoice *c = S.TieChoice(_("Effects in menus are:"),
+                                   wxT("/Effects/GroupBy"),
+                                   wxT("name"),
+                                   visualgroups,
+                                   prefsgroups);
+         c->SetMinSize(c->GetBestSize());
+                     
          S.TieNumericTextBox(_("Maximum effects per group (0 to disable):"),
                              wxT("/Effects/MaxPerGroup"),
                              0,

@@ -216,7 +216,7 @@ void AudacityProjectCommandFunctor::operator()(int index, const wxEvent * evt)
 // Effects menu arrays
 //
 WX_DEFINE_ARRAY_PTR(const PluginDescriptor *, EffectPlugs);
-static int SortPlugsByName(const PluginDescriptor **a, const PluginDescriptor **b)
+static int SortEffectsByName(const PluginDescriptor **a, const PluginDescriptor **b)
 {
    wxString akey = (*a)->GetName();
    wxString bkey = (*b)->GetName();
@@ -224,7 +224,7 @@ static int SortPlugsByName(const PluginDescriptor **a, const PluginDescriptor **
    return akey.CmpNoCase(bkey);
 }
 
-static int SortPlugsByPublisher(const PluginDescriptor **a, const PluginDescriptor **b)
+static int SortEffectsByPublisher(const PluginDescriptor **a, const PluginDescriptor **b)
 {
    wxString akey = (*a)->GetVendor();
    wxString bkey = (*b)->GetVendor();
@@ -244,7 +244,7 @@ static int SortPlugsByPublisher(const PluginDescriptor **a, const PluginDescript
    return akey.CmpNoCase(bkey);
 }
 
-static int SortPlugsByPublisherAndName(const PluginDescriptor **a, const PluginDescriptor **b)
+static int SortEffectsByPublisherAndName(const PluginDescriptor **a, const PluginDescriptor **b)
 {
    wxString akey = (*a)->GetVendor();
    wxString bkey = (*b)->GetVendor();
@@ -264,7 +264,7 @@ static int SortPlugsByPublisherAndName(const PluginDescriptor **a, const PluginD
    return akey.CmpNoCase(bkey);
 }
 
-static int SortPlugsByFamily(const PluginDescriptor **a, const PluginDescriptor **b)
+static int SortEffectsByFamily(const PluginDescriptor **a, const PluginDescriptor **b)
 {
    wxString akey = (*a)->GetEffectFamily();
    wxString bkey = (*b)->GetEffectFamily();
@@ -1286,30 +1286,30 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
 
    wxString groupby = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("default"));
 
-   if (groupby == wxT("default"))
+   if (groupby == wxT("name"))
    {
-      defplugs.Sort(SortPlugsByName);
-      optplugs.Sort(SortPlugsByName);
+      defplugs.Sort(SortEffectsByName);
+      optplugs.Sort(SortEffectsByName);
    }
    else if (groupby == wxT("publisher"))
    {
-      defplugs.Sort(SortPlugsByPublisher);
-      optplugs.Sort(SortPlugsByPublisher);
+      defplugs.Sort(SortEffectsByPublisher);
+      optplugs.Sort(SortEffectsByPublisher);
    }
    else if (groupby == wxT("publisher:name"))
    {
-      defplugs.Sort(SortPlugsByPublisherAndName);
-      optplugs.Sort(SortPlugsByPublisherAndName);
+      defplugs.Sort(SortEffectsByPublisherAndName);
+      optplugs.Sort(SortEffectsByPublisherAndName);
    }
    else if (groupby == wxT("family"))
    {
-      defplugs.Sort(SortPlugsByFamily);
-      optplugs.Sort(SortPlugsByFamily);
+      defplugs.Sort(SortEffectsByFamily);
+      optplugs.Sort(SortEffectsByFamily);
    }      
    else // name
    {
-      defplugs.Sort(SortPlugsByName);
-      optplugs.Sort(SortPlugsByName);
+      defplugs.Sort(SortEffectsByName);
+      optplugs.Sort(SortEffectsByName);
    }
 
    AddEffectMenuItems(c, defplugs, batchflags, realflags);
@@ -1338,12 +1338,12 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
    gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 0);
 #endif
 
-   wxString groupBy = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("default"));
+   wxString groupBy = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("name"));
 
-   bool grouped = true;
-   if (groupBy == wxT("default") || groupBy == wxT("name"))
+   bool grouped = false;
+   if (groupBy == wxT("publisher") || groupBy == wxT("family"))
    {
-      grouped = false;
+      grouped = true;
    }
 
    wxString last;
@@ -1373,7 +1373,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       }
 
       wxString current;
-      if (groupBy == wxT("default"))
+      if (groupBy == wxT("publisher:name"))
       {
          current = plug->GetVendor();
          if (plug->IsEffectDefault())
@@ -1394,7 +1394,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          current = plug->GetVendor();
          if (current.IsEmpty())
          {
-            current = wxT("unknown");
+            current = _("Unknown");
          }
       }
       else if (groupBy == wxT("family"))
@@ -1402,10 +1402,15 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          current = plug->GetEffectFamily();
          if (current.IsEmpty())
          {
-            current = wxT("unknown");
+            current = _("Unknown");
          }
       }
-      else // name
+      else if (groupBy == wxT("name"))
+      {
+         current = plug->GetName();
+         name = current;
+      }
+      else // default to "name"
       {
          current = plug->GetName();
          name = current;
@@ -1440,8 +1445,8 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
             {
                if (max > 0 && items == max)
                {
-                  int end = j + 1 + max;
-                  if (end > groupCnt)
+                  int end = j + max;
+                  if (end + 1 > groupCnt)
                   {
                      end = groupCnt;
                   }
