@@ -485,7 +485,6 @@ public:
    bool Initialize();
 
 private:
-   void OnDestroy(wxWindowDestroyEvent & evt);
    void OnClose(wxCloseEvent & evt);
    void OnOk(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);

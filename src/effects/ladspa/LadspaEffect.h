@@ -134,9 +134,6 @@ private:
    void OnSlider(wxCommandEvent & evt);
    void OnTextCtrl(wxCommandEvent & evt);
    void RefreshControls(bool outputOnly = false);
-   void ConnectFocus(wxControl *c);
-   void DisconnectFocus(wxControl *c);
-   void ControlSetFocus(wxFocusEvent & evt);
 
 private:
 

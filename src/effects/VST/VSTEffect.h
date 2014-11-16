@@ -178,10 +178,6 @@ private:
 
    // UI
    void OnSlider(wxCommandEvent & evt);
-   void ConnectFocus(wxControl *c);
-   void DisconnectFocus(wxControl *c);
-   void ControlSetFocus(wxFocusEvent & evt);
-
    void OnSizeWindow(wxCommandEvent & evt);
    void OnUpdateDisplay(wxCommandEvent & evt);
 

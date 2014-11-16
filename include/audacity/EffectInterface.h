@@ -149,9 +149,6 @@ class EffectUIHostInterface
 {
 public:
    virtual ~EffectUIHostInterface() {};
-
-//   virtual wxScrolledWindow *GetScrollableClientArea();
-//   virtual wxScrolledWindow *GetStaticClientArea();
 };
 
 class EffectUIClientInterface

@@ -415,11 +415,6 @@ void LadspaEffectEventHelper::OnTextCtrl(wxCommandEvent & evt)
    mEffect->OnTextCtrl(evt);
 }
 
-void LadspaEffectEventHelper::ControlSetFocus(wxFocusEvent & evt)
-{
-   mEffect->ControlSetFocus(evt);
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LadspaEffect
@@ -1054,7 +1049,6 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          gridSizer->Add(1, 1, 0);
          gridSizer->Add(1, 1, 0);
          gridSizer->Add(1, 1, 0);
-         ConnectFocus(mDuration);
       }
 
       for (unsigned long p = 0; p < mData->PortCount; p++)
@@ -1078,7 +1072,6 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             mToggles[p]->SetName(labelText);
             mToggles[p]->SetValue(mInputControls[p] > 0);
             gridSizer->Add(mToggles[p], 0, wxALL, 5);
-            ConnectFocus(mToggles[p]);
 
             gridSizer->Add(1, 1, 0);
             gridSizer->Add(1, 1, 0);
@@ -1118,7 +1111,6 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          mFields[p] = new wxTextCtrl(mParent, ID_TEXTS + p);
          mFields[p]->SetName(labelText);
          gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
-         ConnectFocus(mFields[p]);
 
          wxString str;
          if (haslo)
@@ -1145,7 +1137,6 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                                     wxSize(200, -1));
          mSliders[p]->SetName(labelText);
          gridSizer->Add(mSliders[p], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
-         ConnectFocus(mSliders[p]);
       
          if (hashi)
          {
@@ -1240,7 +1231,6 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                                      wxTE_READONLY);
          mFields[p]->SetName(labelText);
          gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
-         ConnectFocus(mFields[p]);
       }
 
       paramSizer->Add(gridSizer, 1, wxEXPAND | wxALL, 5);
@@ -1600,45 +1590,3 @@ void LadspaEffect::RefreshControls(bool outputOnly)
       mFields[p]->SetValue(fieldText);
    }
 }
-
-void LadspaEffect::ConnectFocus(wxControl *c)
-{
-   c->GetEventHandler()->Connect(wxEVT_SET_FOCUS,
-                                 wxFocusEventHandler(LadspaEffectEventHelper::ControlSetFocus));
-}
-
-void LadspaEffect::DisconnectFocus(wxControl *c)
-{
-   c->GetEventHandler()->Disconnect(wxEVT_SET_FOCUS,
-                                    wxFocusEventHandler(LadspaEffectEventHelper::ControlSetFocus));
-}
-
-void LadspaEffect::ControlSetFocus(wxFocusEvent & evt)
-{
-   wxControl *c = (wxControl *) evt.GetEventObject();
-   wxScrolledWindow *p = (wxScrolledWindow *) c->GetParent();
-   wxRect r = c->GetRect();
-   wxRect rv = p->GetRect();
-   rv.y = 0;
-
-   evt.Skip();
-
-   int y;
-   int yppu;
-   p->GetScrollPixelsPerUnit(NULL, &yppu);
-
-   if (r.y >= rv.y && r.GetBottom() <= rv.GetBottom()) {
-      return;
-   }
-
-   if (r.y < rv.y) {
-      p->CalcUnscrolledPosition(0, r.y, NULL, &r.y);
-      y = r.y / yppu;
-   }
-   else {
-      p->CalcUnscrolledPosition(0, r.y, NULL, &r.y);
-      y = (r.GetBottom() - rv.GetBottom() + yppu) / yppu;
-   }
-
-   p->Scroll(-1, y);
-};
