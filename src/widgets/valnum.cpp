@@ -420,7 +420,7 @@ bool wxFloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
     {
         res = ValidatePrecision(s);
         if ( !res )
-            *errMsg = _("Too meany decimal digits");
+            *errMsg = _("Too many decimal digits");
         else
         {
             res = IsInRange(value);
