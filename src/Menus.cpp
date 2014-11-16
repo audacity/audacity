@@ -3365,7 +3365,7 @@ void AudacityProject::OnPreferences()
       //
       //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
       //
-      // This should be removed with wxWidgets 2.8.13 is released.
+      // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
       wxRect r = p->GetRect();
       p->SetSize(wxSize(1,1));
       p->SetSize(r.GetSize());
