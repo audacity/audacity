@@ -48,6 +48,7 @@ effects from this one class.
 #include <wx/textdlg.h>
 #include <wx/textfile.h>
 #include <wx/choice.h>
+#include <wx/checkbox.h>
 
 #include "../../AudacityApp.h"
 #include "../../FileNames.h"
@@ -58,6 +59,7 @@ effects from this one class.
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
+#include "../../Prefs.h"
 
 #include "Nyquist.h"
 
@@ -100,6 +102,7 @@ EffectNyquist::EffectNyquist(wxString fName)
 
    if (fName == wxT("")) {
       // Interactive Nyquist
+      gPrefs->Read(wxT("/Effects/NyquistPrompt/Version"), &mVersion, 4);
       mOK = true;
       mInteractive = true;
       mName = _("Nyquist Prompt...");
@@ -531,12 +534,15 @@ bool EffectNyquist::PromptUser()
                               _("Nyquist Prompt"),
                               _("Enter Nyquist Command: "),
                               mInputCmd);
+      dlog.mVersion = mVersion;
       dlog.CentreOnParent();
       int result = dlog.ShowModal();
 
       if (result == wxID_CANCEL) {
          return false;
       }
+
+      mVersion = dlog.mVersion;
 
       /*if (result == eDebugID) {
          mDebug = true;
@@ -895,9 +901,16 @@ bool EffectNyquist::ProcessOne()
 {
    nyx_rval rval;
 
-   nyx_set_audio_name(mVersion >= 4 ? "*TRACK*" : "S");
-
    wxString cmd;
+
+   if (mVersion >= 4) {
+      nyx_set_audio_name("*TRACK*");
+      cmd += wxT("(setf S 0.25)\n");
+   }
+   else {
+      nyx_set_audio_name("S");
+      cmd += wxT("(setf *TRACK* '*unbound*)\n");
+   }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    {
@@ -1698,8 +1711,10 @@ void NyquistDialog::OnPreview(wxCommandEvent & /* event */)
 }
 
 /**********************************************************/
+#define ID_VERSION 1001
 
 BEGIN_EVENT_TABLE(NyquistInputDialog, wxDialog)
+   EVT_CHECKBOX(ID_VERSION, NyquistInputDialog::OnVersionCheck)
    EVT_BUTTON(wxID_OK, NyquistInputDialog::OnOk)
    EVT_BUTTON(wxID_CANCEL, NyquistInputDialog::OnCancel)
    EVT_BUTTON(eDebugID, NyquistInputDialog::OnDebug)
@@ -1712,6 +1727,9 @@ NyquistInputDialog::NyquistInputDialog(wxWindow * parent, wxWindowID id,
                                        wxString initialCommand)
 :  wxDialog(parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
+   // Recover last used setting.
+   gPrefs->Read(wxT("/Effects/NyquistPrompt/Version"), &mVersion, 4);
+
    ShuttleGui S(this, eIsCreating);
 
    S.StartVerticalLay();
@@ -1728,6 +1746,14 @@ NyquistInputDialog::NyquistInputDialog(wxWindow * parent, wxWindowID id,
           mCommandText->SetMinSize(wxSize(500, 200));
       }
       S.EndHorizontalLay();
+
+      S.StartHorizontalLay(wxEXPAND, 0);
+      {
+         mVersionCheckBox = S.Id(ID_VERSION).AddCheckBox(_("&Use legacy (version 3) syntax."),
+                                    (mVersion == 3) ? wxT("true") : wxT("false"));
+        
+      }
+      S.EndHorizontalLay();
    }
    S.EndVerticalLay();
 
@@ -1742,6 +1768,13 @@ NyquistInputDialog::NyquistInputDialog(wxWindow * parent, wxWindowID id,
 wxString NyquistInputDialog::GetCommand()
 {
    return mCommandText->GetValue();
+}
+
+void NyquistInputDialog::OnVersionCheck(wxCommandEvent& WXUNUSED(evt))
+{
+   mVersion = (mVersionCheckBox->GetValue()) ? 3 : 4;
+   gPrefs->Write(wxT("/Effects/NyquistPrompt/Version"), mVersion);
+   gPrefs->Flush();
 }
 
 void NyquistInputDialog::OnOk(wxCommandEvent & /* event */)
