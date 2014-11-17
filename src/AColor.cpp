@@ -613,6 +613,16 @@ void AColor::PreComputeGradient() {
                      // not dimmed
                      break;
 
+                  case ColorGradientTimeAndFrequencySelected:
+                     if( !grayscale )
+                     {
+                        // flip the blue, makes spectrogram more yellow.
+                        b = 1.0f - 0.75f * b;
+                        break;
+                     }
+                     // else fall through to SAME grayscale colour as normal selection.
+                     // The white lines show it up clearly enough.
+
                   case ColorGradientTimeSelected:
                      // partly dimmed
                      r *= 0.75f;
@@ -620,12 +630,6 @@ void AColor::PreComputeGradient() {
                      b *= 0.75f;
                      break;
 
-                  case ColorGradientTimeAndFrequencySelected:
-                     // fully dimmed
-                     r *= 0.5f;
-                     g *= 0.5f;
-                     b *= 0.5f;
-                     break;
 
                   // For now edge colour is just black (or white if grey-scale)
                   // Later we might invert or something else funky.
