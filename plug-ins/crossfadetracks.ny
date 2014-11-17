@@ -42,7 +42,7 @@
          (mult (/ -1 (- 1 epsilon))
                (diff logcurve epsilon)))))
 
-(let ((tracks (get '*selection* 'tracks)))
+(let ((tracks (length (get '*selection* 'tracks))))
   (case tracks
     (1 "Only 1 track selected.\n'Crossfade Tracks' requires 2 tracks.")
     (2 (crossfade type))
