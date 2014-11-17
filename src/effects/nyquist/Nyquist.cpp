@@ -730,11 +730,18 @@ bool EffectNyquist::Process()
       int numLabel = 0;
       int numMidi = 0;
       int numTime = 0;
+      wxString waveTrackList = wxT("");   // track positions of selected audio tracks.
+
       for (t = all.First(); t; t = all.Next())
       {
          switch (t->GetKind())
          {
-            case Track::Wave: numWave++; break;
+            case Track::Wave:
+               numWave++;
+               if (t->GetSelected()) {
+                  waveTrackList += wxString::Format(wxT("%d "), 1 + numTracks);
+               }
+            break;
             case Track::Label: numLabel++; break;
 #if defined(USE_MIDI)
             case Track::Note: numMidi++; break;
@@ -759,9 +766,7 @@ bool EffectNyquist::Process()
 
       SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
       int numChannels = 0;
-      numTracks = 0;
       for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
-         numTracks++;
          numChannels++;
          if (mT1 >= mT0) {
             if (t->GetLinked()) {
@@ -773,7 +778,7 @@ bool EffectNyquist::Process()
 
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %g) 'START)\n"), mT0);
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %g) 'END)\n"), mT1);
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'TRACKS)\n"), numTracks);
+      mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList.c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), numChannels);
 
       wxString lowHz = wxT("nil");
