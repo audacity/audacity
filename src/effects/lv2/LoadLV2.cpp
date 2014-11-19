@@ -308,7 +308,7 @@ bool LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 wxArrayString LV2EffectsModule::FindPlugins(PluginManagerInterface & pm)
 {
    // Nothing to do here yet
-   return false;
+   return wxArrayString();
 }
 
 bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
