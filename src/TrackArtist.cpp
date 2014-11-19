@@ -1823,8 +1823,10 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    double freqLo = SelectedRegion::UndefinedFrequency;
    double freqHi = SelectedRegion::UndefinedFrequency;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   freqLo = viewInfo->selectedRegion.f0();
-   freqHi = viewInfo->selectedRegion.f1();
+   if (!autocorrelation) {
+      freqLo = viewInfo->selectedRegion.f0();
+      freqHi = viewInfo->selectedRegion.f1();
+   }
 #endif
 
    double tOffset = clip->GetOffset();
