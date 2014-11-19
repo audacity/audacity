@@ -5,6 +5,8 @@
 ;categories "http://lv2plug.in/ns/lv2core#LowpassPlugin"
 ;name "Low Pass Filter..."
 ;action "Performing Low Pass Filter..."
+;author "Dominic Mazzoni"
+;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; lowpass.ny by Dominic Mazzoni
 ;; Modified by David R. Sky

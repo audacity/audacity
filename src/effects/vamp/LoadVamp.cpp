@@ -19,60 +19,100 @@
 using namespace Vamp;
 using namespace Vamp::HostExt;
 
-#ifdef EFFECT_CATEGORIES
-
-static std::map<wxString, wxString> gCategoryMap;
-
-#define VAMP(S) wxT("http://audacityteam.org/namespace#VampCategories") wxT(S)
-#define ATEAM(S) wxT("http://audacityteam.org/namespace#") wxT(S)
-
-/** Initialise the data structure that maps locally generated URI strings to
-    internal ones. */
-static void InitCategoryMap()
+// ============================================================================
+// Module registration entry point
+//
+// This is the symbol that Audacity looks for when the module is built as a
+// dynamic library.
+//
+// When the module is builtin to Audacity, we use the same function, but it is
+// declared static so as not to clash with other builtin modules.
+// ============================================================================
+DECLARE_MODULE_ENTRY(AudacityModule)
 {
-   gCategoryMap[VAMP("/Time")] = ATEAM("TimeAnalyser");
-   gCategoryMap[VAMP("/Time/Onsets")] = ATEAM("OnsetDetector");
+   // Create and register the importer
+   return new VampEffectsModule(moduleManager, path);
 }
 
-/** Map the generated VAMP category URI to the internal ones. */
-static wxString MapCategoryUri(const wxString& uri)
-{
-   std::map<wxString, wxString>::const_iterator iter;
-   iter = gCategoryMap.find(uri);
-   if (iter != gCategoryMap.end())
-      return iter->second;
-   return uri;
-}
+// ============================================================================
+// Register this as a builtin module
+// ============================================================================
+DECLARE_BUILTIN_MODULE(VampsEffectBuiltin);
 
-/** Generate category URIs for all levels in a VAMP category hierarchy,
-    add them to the EffectManager and return the most detailed one. */
-static wxString VampHierarchyToUri(const PluginLoader::PluginCategoryHierarchy& h)
+///////////////////////////////////////////////////////////////////////////////
+//
+// VampEffectsModule
+//
+///////////////////////////////////////////////////////////////////////////////
+
+VampEffectsModule::VampEffectsModule(ModuleManagerInterface *moduleManager,
+                                           const wxString *path)
 {
-   // Else, generate URIs and add them to the EffectManager
-   EffectManager& em = EffectManager::Get();
-   wxString vampCategory =
-      wxString::FromAscii("http://audacityteam.org/namespace#VampCategories");
-   EffectCategory* parent =
-      em.LookupCategory(wxT("http://lv2plug.in/ns/lv2core#AnalyserPlugin"));
-   if (parent) {
-      for (size_t c = 0; c < h.size(); ++c) {
-         vampCategory += wxT("/");
-         wxString catName = wxString::FromAscii(h[c].c_str());
-         vampCategory += catName;
-         EffectCategory* ec = em.AddCategory(MapCategoryUri(vampCategory),
-                                             catName);
-         em.AddCategoryParent(ec, parent);
-         parent = ec;
-      }
+   mModMan = moduleManager;
+   if (path)
+   {
+      mPath = *path;
    }
-   return MapCategoryUri(vampCategory);
 }
 
-#endif
-
-void LoadVampPlugins()
+VampEffectsModule::~VampEffectsModule()
 {
+}
 
+// ============================================================================
+// IdentInterface implementation
+// ============================================================================
+
+wxString VampEffectsModule::GetID()
+{
+   // Can be anything, but this is a v4 UUID
+   return wxT("33a86140-7310-4bdf-ad8e-a4af29079f61");
+}
+
+wxString VampEffectsModule::GetPath()
+{
+   return mPath;
+}
+
+wxString VampEffectsModule::GetName()
+{
+   return _("Vamp Effects Module");
+}
+
+wxString VampEffectsModule::GetVendor()
+{
+   return _("The Audacity Team");
+}
+
+wxString VampEffectsModule::GetVersion()
+{
+   // This "may" be different if this were to be maintained as a separate DLL
+   return VAMPEFFECTS_VERSION;
+}
+
+wxString VampEffectsModule::GetDescription()
+{
+   return _("Provides Vamp Effects support to Audacity");
+}
+
+// ============================================================================
+// ModuleInterface implementation
+// ============================================================================
+
+bool VampEffectsModule::Initialize()
+{
+   // Nothing to do here
+   return true;
+}
+
+void VampEffectsModule::Terminate()
+{
+   // Nothing to do here
+   return;
+}
+
+bool VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+{
 #ifdef EFFECT_CATEGORIES
    InitCategoryMap();
 #endif
@@ -155,13 +195,115 @@ void LoadVampPlugins()
 #else
          VampEffect *effect = new VampEffect(*i, n, hasParameters, name);
 #endif
-         em.RegisterEffect(effect);
+         em.RegisterEffect(this, effect);
 
          ++n;
       }
 
       delete vp;
    }
+
+   return true;
+}
+
+wxArrayString VampEffectsModule::FindPlugins(PluginManagerInterface & pm)
+{
+   // Nothing to do here yet
+   return wxArrayString();
+}
+
+bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+{
+   // Nothing to do here yet
+   return false;
+}
+
+bool VampEffectsModule::IsPluginValid(const PluginID & ID,
+                                      const wxString & path)
+{
+   Vamp::HostExt::PluginLoader *loader = Vamp::HostExt::PluginLoader::getInstance();
+   Vamp::Plugin *plug = loader->loadPlugin(ID.ToUTF8().data(), 48000); // rate doesn't matter here
+
+   if (plug)
+   {
+      delete plug;
+      return true;
+   }
+
+   return false;
+}
+
+IdentInterface *VampEffectsModule::CreateInstance(const PluginID & ID,
+                                                     const wxString & path)
+{
+   // Nothing to do here yet since we are autoregistering (and creating legacy
+   // effects anyway).
+   return NULL;
+}
+
+void VampEffectsModule::DeleteInstance(IdentInterface *instance)
+{
+   // Nothing to do here yet
+}
+
+// ============================================================================
+// VampEffectsModule implementation
+// ============================================================================
+
+#ifdef EFFECT_CATEGORIES
+
+static std::map<wxString, wxString> gCategoryMap;
+
+#define VAMP(S) wxT("http://audacityteam.org/namespace#VampCategories") wxT(S)
+#define ATEAM(S) wxT("http://audacityteam.org/namespace#") wxT(S)
+
+/** Initialise the data structure that maps locally generated URI strings to
+    internal ones. */
+static void InitCategoryMap()
+{
+   gCategoryMap[VAMP("/Time")] = ATEAM("TimeAnalyser");
+   gCategoryMap[VAMP("/Time/Onsets")] = ATEAM("OnsetDetector");
+}
+
+/** Map the generated VAMP category URI to the internal ones. */
+static wxString MapCategoryUri(const wxString& uri)
+{
+   std::map<wxString, wxString>::const_iterator iter;
+   iter = gCategoryMap.find(uri);
+   if (iter != gCategoryMap.end())
+      return iter->second;
+   return uri;
+}
+
+/** Generate category URIs for all levels in a VAMP category hierarchy,
+    add them to the EffectManager and return the most detailed one. */
+static wxString VampHierarchyToUri(const PluginLoader::PluginCategoryHierarchy& h)
+{
+   // Else, generate URIs and add them to the EffectManager
+   EffectManager& em = EffectManager::Get();
+   wxString vampCategory =
+      wxString::FromAscii("http://audacityteam.org/namespace#VampCategories");
+   EffectCategory* parent =
+      em.LookupCategory(wxT("http://lv2plug.in/ns/lv2core#AnalyserPlugin"));
+   if (parent) {
+      for (size_t c = 0; c < h.size(); ++c) {
+         vampCategory += wxT("/");
+         wxString catName = wxString::FromAscii(h[c].c_str());
+         vampCategory += catName;
+         EffectCategory* ec = em.AddCategory(MapCategoryUri(vampCategory),
+                                             catName);
+         em.AddCategoryParent(ec, parent);
+         parent = ec;
+      }
+   }
+   return MapCategoryUri(vampCategory);
+}
+
+#endif
+
+void LoadVampPlugins()
+{
+
 }
 
 void UnloadVampPlugins()

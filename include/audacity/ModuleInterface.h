@@ -74,7 +74,7 @@ public:
    virtual void Terminate() = 0;
 
    // Modules providing a single or static set of plugins may use
-   //  AutoRegisterPlugins() to register those plugins.
+   // AutoRegisterPlugins() to register those plugins.
    virtual bool AutoRegisterPlugins(PluginManagerInterface & pluginManager) = 0;
 
    // For modules providing an interface to other dynamically loaded plugins,
@@ -88,6 +88,10 @@ public:
    // after registration.
    virtual bool RegisterPlugin(PluginManagerInterface & pluginManager,
                                const wxString & path) = 0;
+
+   // For modules providing an interface to other dynamically loaded plugins,
+   // the module returns true if the plugin is still valid, otherwise false.
+   virtual bool IsPluginValid(const PluginID & ID, const wxString & path) = 0;
 
    // When appropriate, CreateInstance() will be called to instantiate the plugin.
    virtual IdentInterface *CreateInstance(const PluginID & ID, const wxString & path) = 0;

@@ -265,7 +265,7 @@ void EffectRack::OnClose(wxCloseEvent & evt)
    evt.Veto();
 }
 
-void EffectRack::OnTimer(wxTimerEvent & AUNUSED(evt))
+void EffectRack::OnTimer(wxTimerEvent & WXUNUSED(evt))
 {
    int latency = EffectManager::Get().GetRealtimeLatency();
    if (latency != mLastLatency)
@@ -276,7 +276,7 @@ void EffectRack::OnTimer(wxTimerEvent & AUNUSED(evt))
    }
 }
 
-void EffectRack::OnApply(wxCommandEvent & AUNUSED(evt))
+void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
 {
    AudacityProject *project = GetActiveProject();
    

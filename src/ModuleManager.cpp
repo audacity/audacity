@@ -18,6 +18,7 @@ i.e. an alternative to the usual interface, for Audacity.
 
 *//*******************************************************************/
 
+#include <wx/dynarray.h>
 #include <wx/dynlib.h>
 #include <wx/list.h>
 #include <wx/log.h>
@@ -43,6 +44,8 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "ModuleManager.h"
 #include "widgets/MultiDialog.h"
+
+#include <wx/arrimpl.cpp>
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"
@@ -182,9 +185,12 @@ static wxArrayPtrVoid *pBuiltinModuleList = NULL;
 void RegisterBuiltinModule(ModuleMain moduleMain)
 {
    if (pBuiltinModuleList == NULL)
+   {
       pBuiltinModuleList = new wxArrayPtrVoid;
+   }
 
    pBuiltinModuleList->Add((void *)moduleMain);
+
    return;
 }
 
@@ -205,14 +211,17 @@ ModuleManager::~ModuleManager()
    }
    mModules.Clear();
 
-   for (ModuleMap::iterator iter = mDynModules.begin(); iter != mDynModules.end(); iter++)
+   ModuleMap::iterator iter = mDynModules.begin();
+   while (iter != mDynModules.end())
    {
-      ModuleInterface *mod = iter->second;
-      delete mod;
+      UnloadModule(iter->second);
+      iter = mDynModules.begin();
    }
-   mDynModules.clear();
-   if( pBuiltinModuleList != NULL )
+
+   if (pBuiltinModuleList != NULL)
+   {
       delete pBuiltinModuleList;
+   }
 }
 
 // static 
@@ -352,38 +361,10 @@ ModuleManager & ModuleManager::Get()
    return mInstance;
 }
 
-void ModuleManager::InitializeBuiltins()
-{
-   PluginManager & pm = PluginManager::Get();
-
-   if (pBuiltinModuleList==NULL)
-      return;
-
-   for (size_t i = 0, cnt = pBuiltinModuleList->GetCount(); i < cnt; i++)
-   {
-      ModuleMain audacityMain = (ModuleMain) (*pBuiltinModuleList)[i];
-      ModuleInterface *module = audacityMain(this, NULL);
-
-      mDynModules[module->GetID()] = module;
-
-      module->Initialize();
-
-      // First, we need to remember it 
-      pm.RegisterModulePlugin(module);
-
-      // Now, allow the module to auto-register children
-      module->AutoRegisterPlugins(pm);
-   }
-}
-
-// static 
-void ModuleManager::EarlyInit()
+bool ModuleManager::DiscoverProviders()
 {
    InitializeBuiltins();
-}
 
-bool ModuleManager::DiscoverProviders(wxArrayString & providers)
-{
    wxArrayString provList;
    wxArrayString pathList;
 
@@ -407,31 +388,43 @@ bool ModuleManager::DiscoverProviders(wxArrayString & providers)
    wxGetApp().FindFilesInPathList(wxT("*.so"), pathList, provList);
 #endif
 
+   PluginManager & pm = PluginManager::Get();
+
    for (int i = 0, cnt = provList.GetCount(); i < cnt; i++)
    {
-      providers.push_back(provList[i]);
+      ModuleInterface *module = LoadModule(provList[i]);
+      if (module)
+      {
+         // First, we need to remember it 
+         pm.RegisterModulePlugin(module);
+
+         // Now, allow the module to auto-register children
+         module->AutoRegisterPlugins(pm);
+      }
    }
 
    return true;
 }
 
-bool ModuleManager::DiscoverProvider(const wxString & path)
+void ModuleManager::InitializeBuiltins()
 {
-   ModuleInterface *module = LoadModule(path);
-   if (module)
+   PluginManager & pm = PluginManager::Get();
+
+   for (size_t i = 0, cnt = pBuiltinModuleList->GetCount(); i < cnt; i++)
    {
-      PluginManager & pm = PluginManager::Get();
+      ModuleInterface *module = ((ModuleMain) (*pBuiltinModuleList)[i])(this, NULL);
 
-      // First, we need to remember it 
-      pm.RegisterModulePlugin(module);
+      if (module->Initialize())
+      {
+         mDynModules[module->GetID()] = module;
 
-      // Now, allow the module to auto-register children
-      module->AutoRegisterPlugins(pm);
+         // First, we need to remember it 
+         pm.RegisterModulePlugin(module);
 
-//      UnloadModule(module);
+         // Now, allow the module to auto-register children
+         module->AutoRegisterPlugins(pm);
+      }
    }
-
-   return true;
 }
 
 ModuleInterface *ModuleManager::LoadModule(const wxString & path)
@@ -489,19 +482,6 @@ void ModuleManager::UnloadModule(ModuleInterface *module)
    }
 }
 
-void ModuleManager::InitializePlugins()
-{
-   InitializeBuiltins();
-
-   // Look for dynamic modules here
-
-   for (ModuleMap::iterator iter = mDynModules.begin(); iter != mDynModules.end(); iter++)
-   {
-      ModuleInterface *mod = iter->second;
-      mod->Initialize();
-   }
-}
-
 void ModuleManager::RegisterModule(ModuleInterface *module)
 {
    wxString id = module->GetID();
@@ -548,7 +528,7 @@ void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & pat
 }
 
 wxArrayString ModuleManager::FindPluginsForProvider(const PluginID & providerID,
-                                                   const wxString & path)
+                                                    const wxString & path)
 {
    // Instantiate if it hasn't already been done
    if (mDynModules.find(providerID) == mDynModules.end())
@@ -573,15 +553,10 @@ bool ModuleManager::RegisterPlugin(const PluginID & providerID, const wxString &
    return mDynModules[providerID]->RegisterPlugin(PluginManager::Get(), path);
 }
 
-bool ModuleManager::IsProviderBuiltin(const PluginID & providerID)
-{
-   return mModuleMains.find(providerID) != mModuleMains.end();
-}
-
 IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
                                                       const wxString & path)
 {
-   if (path.empty() && mDynModules.find(providerID) != mDynModules.end())
+   if (path.IsEmpty() && mDynModules.find(providerID) != mDynModules.end())
    {
       return mDynModules[providerID];
    }
@@ -611,3 +586,34 @@ void ModuleManager::DeleteInstance(const PluginID & providerID,
 
    mDynModules[providerID]->DeleteInstance(instance);
 }
+
+bool ModuleManager::IsProviderValid(const PluginID & providerID,
+                                    const wxString & path)
+{
+   // Builtin modules do not have a path
+   if (path.IsEmpty())
+   {
+      return true;  
+   }
+
+   wxFileName lib(path);
+   if (lib.FileExists() || lib.DirExists())
+   {
+      return true;
+   }
+
+   return false;
+}
+
+bool ModuleManager::IsPluginValid(const PluginID & providerID,
+                                  const PluginID & ID,
+                                  const wxString & path)
+{
+   if (mDynModules.find(providerID) == mDynModules.end())
+   {
+      return false;
+   }
+
+   return mDynModules[providerID]->IsPluginValid(ID, path);
+}
+

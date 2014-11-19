@@ -41,6 +41,32 @@ Functions that find and load all LV2 plugins on the system.
 
 #include "LoadLV2.h"
 
+// ============================================================================
+// Module registration entry point
+//
+// This is the symbol that Audacity looks for when the module is built as a
+// dynamic library.
+//
+// When the module is builtin to Audacity, we use the same function, but it is
+// declared static so as not to clash with other builtin modules.
+// ============================================================================
+DECLARE_MODULE_ENTRY(AudacityModule)
+{
+   // Create and register the importer
+   return new LV2EffectsModule(moduleManager, path);
+}
+
+// ============================================================================
+// Register this as a builtin module
+// ============================================================================
+DECLARE_BUILTIN_MODULE(LV2sEffectBuiltin);
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// LV2EffectsModule
+//
+///////////////////////////////////////////////////////////////////////////////
+
 LilvWorld *gWorld = NULL;
 
 // This is the URI Map Feature object. It is required for loading synth
@@ -96,24 +122,67 @@ LilvNode *gName;
 LilvNode *gPortGroup;
 LilvNode *gSubGroupOf;
 
-void LoadLV2Plugins()
+LV2EffectsModule::LV2EffectsModule(ModuleManagerInterface *moduleManager,
+                                           const wxString *path)
 {
-
-   EffectManager& em = EffectManager::Get();
-
-   // If gWorld isn't 0 we have already initialised Lilv - unload all plugins
-   // and initialise again.
-   if (gWorld)
+   mModMan = moduleManager;
+   if (path)
    {
-      UnloadLV2Plugins();
+      mPath = *path;
    }
+}
 
+LV2EffectsModule::~LV2EffectsModule()
+{
+}
+
+// ============================================================================
+// IdentInterface implementation
+// ============================================================================
+
+wxString LV2EffectsModule::GetID()
+{
+   // Can be anything, but this is a v4 UUID
+   return wxT("5d03b6ad-ca64-41b2-a3f2-785ff5b279d9");
+}
+
+wxString LV2EffectsModule::GetPath()
+{
+   return mPath;
+}
+
+wxString LV2EffectsModule::GetName()
+{
+   return _("LV2 Effects Module");
+}
+
+wxString LV2EffectsModule::GetVendor()
+{
+   return _("The Audacity Team");
+}
+
+wxString LV2EffectsModule::GetVersion()
+{
+   // This "may" be different if this were to be maintained as a separate DLL
+   return LV2EFFECTS_VERSION;
+}
+
+wxString LV2EffectsModule::GetDescription()
+{
+   return _("Provides LV2 Effects support to Audacity");
+}
+
+// ============================================================================
+// ModuleInterface implementation
+// ============================================================================
+
+bool LV2EffectsModule::Initialize()
+{
    // Try to initialise Lilv, or return.
    gWorld = lilv_world_new();
    if (!gWorld)
    {
-      wxLogMessage(wxT("Could not initialise lilv!"));
-      return;
+      return false;
    }
 
    gAudioPortClass = lilv_new_uri(gWorld, LV2_CORE__AudioPort);
@@ -133,49 +202,10 @@ void LoadLV2Plugins()
 
    lilv_world_load_all(gWorld);
 
-#ifdef EFFECT_CATEGORIES
-
-   // Add all LV2 categories and their relationships
-   LilvPluginClasses classes = Lilv_world_get_plugin_classes(gWorld);
-   for (unsigned index = 0; index < Lilv_plugin_classes_size(classes);++index){
-      LilvPluginClass c = Lilv_plugin_classes_get_at(classes, index);
-      em.AddCategory(wxString::FromUTF8(lilv_node_as_uri(Lilv_plugin_class_get_uri(c))),
-                     wxString::FromUTF8(lilv_node_as_string(Lilv_plugin_class_get_label(c))));
-   }
-   for (unsigned index = 0; index < Lilv_plugin_classes_size(classes);++index){
-      LilvPluginClass c = Lilv_plugin_classes_get_at(classes, index);
-      LilvPluginClasses ch = Lilv_plugin_class_get_children(c);
-      EffectCategory* pCat = em.LookupCategory(wxString::FromUTF8(lilv_node_as_uri(Lilv_plugin_class_get_uri(c))));
-      for (unsigned j = 0; j < Lilv_plugin_classes_size(ch); ++j) {
-         EffectCategory* chCat = em.LookupCategory(wxString::FromUTF8(lilv_node_as_uri(Lilv_plugin_class_get_uri(Lilv_plugin_classes_get_at(ch, j)))));
-         if (chCat && pCat) {
-            em.AddCategoryParent(chCat, pCat);
-         }
-      }
-   }
-
-#endif
-
-   // Retrieve data about all plugins
-   const LilvPlugins *plugs = lilv_world_get_all_plugins(gWorld);
-
-   // Iterate over all plugins and register them with the EffectManager
-   LILV_FOREACH(plugins, i, plugs)
-   {
-      const LilvPlugin *plug = lilv_plugins_get(plugs, i);
-      std::set<wxString> cats;
-      cats.insert(wxString::FromUTF8(lilv_node_as_uri(lilv_plugin_class_get_uri(lilv_plugin_get_class(plug)))));
-      LV2Effect *effect = new LV2Effect(plug, cats);
-      if (effect->IsValid())
-         em.RegisterEffect(effect);
-      else
-         delete effect;
-      //std::cerr<<"Loaded LV2 \""<<lilv_node_as_string(Lilv_plugin_get_name(plug))<<"\""<<std::endl;
-   }
-
+   return true;
 }
 
-void UnloadLV2Plugins()
+void LV2EffectsModule::Terminate()
 {
    lilv_node_free(gAudioPortClass);
    gAudioPortClass = NULL;
@@ -221,6 +251,97 @@ void UnloadLV2Plugins()
 
    lilv_world_free(gWorld);
    gWorld = NULL;
+
+   return;
 }
+
+bool LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+{
+   EffectManager& em = EffectManager::Get();
+
+#ifdef EFFECT_CATEGORIES
+
+   // Add all LV2 categories and their relationships
+   LilvPluginClasses classes = Lilv_world_get_plugin_classes(gWorld);
+   for (unsigned index = 0; index < Lilv_plugin_classes_size(classes);++index){
+      LilvPluginClass c = Lilv_plugin_classes_get_at(classes, index);
+      em.AddCategory(wxString::FromUTF8(lilv_node_as_uri(Lilv_plugin_class_get_uri(c))),
+                     wxString::FromUTF8(lilv_node_as_string(Lilv_plugin_class_get_label(c))));
+   }
+   for (unsigned index = 0; index < Lilv_plugin_classes_size(classes);++index){
+      LilvPluginClass c = Lilv_plugin_classes_get_at(classes, index);
+      LilvPluginClasses ch = Lilv_plugin_class_get_children(c);
+      EffectCategory* pCat = em.LookupCategory(wxString::FromUTF8(lilv_node_as_uri(Lilv_plugin_class_get_uri(c))));
+      for (unsigned j = 0; j < Lilv_plugin_classes_size(ch); ++j) {
+         EffectCategory* chCat = em.LookupCategory(wxString::FromUTF8(lilv_node_as_uri(Lilv_plugin_class_get_uri(Lilv_plugin_classes_get_at(ch, j)))));
+         if (chCat && pCat) {
+            em.AddCategoryParent(chCat, pCat);
+         }
+      }
+   }
+
+#endif
+
+   // Retrieve data about all plugins
+   const LilvPlugins *plugs = lilv_world_get_all_plugins(gWorld);
+
+   // Iterate over all plugins and register them with the EffectManager
+   LILV_FOREACH(plugins, i, plugs)
+   {
+      const LilvPlugin *plug = lilv_plugins_get(plugs, i);
+      std::set<wxString> cats;
+      cats.insert(wxString::FromUTF8(lilv_node_as_uri(lilv_plugin_class_get_uri(lilv_plugin_get_class(plug)))));
+      LV2Effect *effect = new LV2Effect(plug, cats);
+      if (effect->IsValid())
+      {
+         em.RegisterEffect(this, effect);
+      }
+      else
+      {
+         delete effect;
+      }
+   }
+
+   return true;
+}
+
+wxArrayString LV2EffectsModule::FindPlugins(PluginManagerInterface & pm)
+{
+   // Nothing to do here yet
+   return false;
+}
+
+bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+{
+   // Nothing to do here yet
+   return false;
+}
+
+bool LV2EffectsModule::IsPluginValid(const PluginID & ID,
+                                     const wxString & path)
+{
+   LilvNode *uri = lilv_new_uri(gWorld, path.ToUTF8());
+   const LilvPlugin *plugin = lilv_plugins_get_by_uri(lilv_world_get_all_plugins(gWorld), uri);
+   lilv_node_free(uri);
+
+   return plugin != NULL;
+}
+
+IdentInterface *LV2EffectsModule::CreateInstance(const PluginID & ID,
+                                                 const wxString & path)
+{
+   // Nothing to do here yet since we are autoregistering (and creating legacy
+   // effects anyway).
+   return NULL;
+}
+
+void LV2EffectsModule::DeleteInstance(IdentInterface *instance)
+{
+   // Nothing to do here yet
+}
+
+// ============================================================================
+// LV2EffectsModule implementation
+// ============================================================================
 
 #endif

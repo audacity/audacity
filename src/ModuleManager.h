@@ -86,21 +86,19 @@ public:
    void Initialize(CommandHandler & cmdHandler);
    int Dispatch(ModuleDispatchTypes type);
 
-   void EarlyInit();
-
    // PluginManager use
-   bool DiscoverProviders(wxArrayString & providers);
-   bool DiscoverProvider(const wxString & path);
+   bool DiscoverProviders();
 
    void FindAllPlugins(PluginIDList & providers, wxArrayString & paths);
    wxArrayString FindPluginsForProvider(const PluginID & provider, const wxString & path);
    bool RegisterPlugin(const PluginID & provider, const wxString & path);
 
-   void InitializePlugins();
-   bool IsProviderBuiltin(const PluginID & provider);
    IdentInterface *CreateProviderInstance(const PluginID & ID, const wxString & path);
    IdentInterface *CreateInstance(const PluginID & provider, const PluginID & ID, const wxString & path);
    void DeleteInstance(const PluginID & provider, IdentInterface *instance);
+
+   bool IsProviderValid(const PluginID & provider, const wxString & path);
+   bool IsPluginValid(const PluginID & provider, const PluginID & ID, const wxString & path);
 
 private:
    void InitializeBuiltins();

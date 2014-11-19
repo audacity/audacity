@@ -24,7 +24,8 @@ class wxComboBox;
 
 #include <vamp-hostsdk/PluginLoader.h>
 
-void LoadVampPlugins();
+#define VAMPEFFECTS_VERSION wxT("1.0.0.0");
+#define VAMPEFFECTS_FAMILY L"Vamp"
 
 class VampEffect : public Effect {
 
@@ -36,6 +37,27 @@ class VampEffect : public Effect {
               wxString name,
               wxString category = wxString());
    virtual ~VampEffect();
+
+   // IdentInterface implementation
+
+   virtual PluginID GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
+
+   // EffectIdentInterface implementation
+
+   virtual EffectType GetType();
+   virtual wxString GetFamily();
+   virtual bool IsInteractive();
+   virtual bool IsDefault();
+   virtual bool IsLegacy();
+   virtual bool SupportsRealtime();
+   virtual bool SupportsAutomation();
+
+   // Effect implementation
 
    virtual wxString GetEffectName();
 

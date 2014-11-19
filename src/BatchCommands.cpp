@@ -288,11 +288,13 @@ wxArrayString BatchCommands::GetAllCommands()
          command = em.GetEffectIdentifier(plug->GetID());
          if (!command.IsEmpty())
          {
-               commands.Add( command);
+            commands.Add(command);
          }
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }
+
+   commands.Sort();
 
    /* This is for later in development: include the menu commands.
          CommandManager * mManager = project->GetCommandManager();

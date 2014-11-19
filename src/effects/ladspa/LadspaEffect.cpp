@@ -346,6 +346,12 @@ bool LadspaEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxSt
    return index > 0;
 }
 
+bool LadspaEffectsModule::IsPluginValid(const PluginID & ID,
+                                        const wxString & path)
+{
+   return wxFileName::FileExists(path);
+}
+
 IdentInterface *LadspaEffectsModule::CreateInstance(const PluginID & ID,
                                                     const wxString & path)
 {
@@ -1222,7 +1228,6 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
          wxString fieldText;
-         LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
 
          mFields[p] = new wxTextCtrl(mParent, wxID_ANY,
                                      fieldText,
@@ -1556,24 +1561,6 @@ void LadspaEffect::RefreshControls(bool outputOnly)
       {
          mToggles[p]->SetValue(mInputControls[p] > 0);
          continue;
-      }
-
-      wxString bound;
-      double lower = -FLT_MAX;
-      double upper = FLT_MAX;
-      bool haslo = false;
-      bool hashi = false;
-
-      if (LADSPA_IS_HINT_BOUNDED_BELOW(hint.HintDescriptor))
-      {
-         lower = hint.LowerBound;
-         haslo = true;
-      }
-
-      if (LADSPA_IS_HINT_BOUNDED_ABOVE(hint.HintDescriptor))
-      {
-         upper = hint.UpperBound;
-         hashi = true;
       }
 
       if (LADSPA_IS_HINT_INTEGER(hint.HintDescriptor) || forceint)

@@ -28,6 +28,9 @@
 
 #include <string>
 
+#define NYQUISTEFFECTS_VERSION wxT("1.0.0.0");
+#define NYQUISTEFFECTS_FAMILY L"Nyquist"
+
 class NyqControl
 {
  public:
@@ -60,18 +63,26 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    EffectNyquist(wxString fName);
    virtual ~EffectNyquist();
 
-   bool SetXlispPath();
+   // IdentInterface implementation
 
-   bool LoadedNyFile() {
-      return mOK;
-   }
+   virtual PluginID GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
 
-   void Continue();
-   void Break();
-   void Stop();
+   // EffectIdentInterface implementation
 
-   void SetCommand(wxString cmd);
-   wxString GetOutput();
+   virtual EffectType GetType();
+   virtual wxString GetFamily();
+   virtual bool IsInteractive();
+   virtual bool IsDefault();
+   virtual bool IsLegacy();
+   virtual bool SupportsRealtime();
+   virtual bool SupportsAutomation();
+
+   // Effect implementation
 
    /** Get the name of the effect (taken from the script that is loaded). Note
     * that this name is currently not translated because the translations system
@@ -120,6 +131,22 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    // Batch chain support
    virtual bool SupportsChains();
    virtual bool TransferParameters( Shuttle & shuttle );
+
+   // EffectNyquist implementation
+
+   bool SetXlispPath();
+
+   bool LoadedNyFile() {
+      return mOK;
+   }
+
+   void Continue();
+   void Break();
+   void Stop();
+
+   void SetCommand(wxString cmd);
+   wxString GetOutput();
+
 
    static wxArrayString GetNyquistSearchPath();
 
@@ -175,6 +202,8 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    wxString          mName;   ///< Name of the Effect
    wxString          mAction;
    wxString          mInfo;
+   wxString          mAuthor;
+   wxString          mCopyright;
    bool              mEnablePreview;
    bool              mDebug;
    std::string       mDebugOutput;

@@ -3,6 +3,8 @@
 ;type analyze
 ;name "Regular Interval Labels..."
 ;action "Adding equally-spaced labels to the label track..."
+;author "David R. Sky"
+;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; by David R. Sky (http://www.garyallendj.com/davidsky/), June-October 2007.
 ;; Code for label placement based on silencemarker.ny by Alex S.Brown.

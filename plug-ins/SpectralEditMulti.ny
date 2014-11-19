@@ -3,6 +3,8 @@
 ;type process
 ;name "Spectral edit multi tool"
 ;action "Calculating..."
+;author "Paul Licameli"
+;copyright "Unknown"
 
 (defun wet (sig)
   (cond

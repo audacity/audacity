@@ -4,6 +4,8 @@
 ;categories "http://audacityteam.org/namespace#OnsetDetector"
 ;name "Beat Finder..."
 ;action "Finding beats..."
+;author "Audacity"
+;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html 

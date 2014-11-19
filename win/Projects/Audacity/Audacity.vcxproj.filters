@@ -1852,5 +1852,17 @@
     <copy Include="..\..\..\plug-ins\vocoder.ny">
       <Filter>plug-ins</Filter>
     </copy>
+    <copy Include="..\..\..\plug-ins\crossfadetracks.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\SpectralEditMulti.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\SpectralEditParametricEQ.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\SpectralEditShelves.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
   </ItemGroup>
 </Project>

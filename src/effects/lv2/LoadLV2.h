@@ -11,6 +11,52 @@
 
 #include <lilv/lilv.h>
 
+#include "audacity/ModuleInterface.h"
+#include "audacity/EffectInterface.h"
+#include "audacity/PluginInterface.h"
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// LV2EffectsModule
+//
+///////////////////////////////////////////////////////////////////////////////
+
+class LV2EffectsModule : public ModuleInterface
+{
+public:
+   LV2EffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
+   virtual ~LV2EffectsModule();
+
+   // IdentInterface implementatino
+
+   virtual wxString GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
+
+   // ModuleInterface implementation
+
+   virtual bool Initialize();
+   virtual void Terminate();
+
+   virtual bool AutoRegisterPlugins(PluginManagerInterface & pm);
+   virtual wxArrayString FindPlugins(PluginManagerInterface & pm);
+   virtual bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path);
+
+   virtual bool IsPluginValid(const PluginID & ID, const wxString & path);
+
+   virtual IdentInterface *CreateInstance(const PluginID & ID, const wxString & path);
+   virtual void DeleteInstance(IdentInterface *instance);
+
+   // LV2EffectModule implementation
+
+private:
+   ModuleManagerInterface *mModMan;
+   wxString mPath;
+};
+
 extern LilvWorld *gWorld;
 
 // This is the LV2 Feature array. It is passed to every LV2 plugin on

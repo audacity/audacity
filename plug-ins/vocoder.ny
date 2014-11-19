@@ -5,6 +5,8 @@
 ;categories "http://lv2plug.in/ns/lv2core#SpectralPlugin"
 ;name "Vocoder..."
 ;action "Processing Vocoder..."
+;author "Edgar-RFT"
+;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; vocoder.ny by Edgar-RFT
 ;; a bit of code added by David R. Sky

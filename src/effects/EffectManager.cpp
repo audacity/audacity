@@ -224,6 +224,20 @@ EffectManager::~EffectManager()
    }
 }
 
+void EffectManager::RegisterEffect(IdentInterface *p, Effect *f, int NewFlags)
+{
+   f->SetEffectID(mNumEffects++);
+
+   if( NewFlags != 0)
+   {
+      f->SetEffectFlags( NewFlags );
+   }
+
+   PluginManager::Get().RegisterEffectPlugin(p, f);
+
+   mEffects[f->GetID()] = f;
+}
+
 void EffectManager::RegisterEffect(Effect *f, int NewFlags)
 {
    f->SetEffectID(mNumEffects++);
@@ -679,9 +693,10 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
 
 const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget)
 {
+   static PluginID empty;
    if (strTarget == wxEmptyString) // set GetEffectIdentifier to wxT("") to not show an effect in Batch mode
    {
-      return PluginID(wxEmptyString);
+      return empty;
    }
 
    PluginManager & pm = PluginManager::Get();
@@ -695,7 +710,7 @@ const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }
 
-   return PluginID(wxEmptyString);
+   return empty;;
 }
 
 #ifdef EFFECT_CATEGORIES

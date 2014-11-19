@@ -4,6 +4,8 @@
 ;name "Sample Data Export..."
 ;action "Analyzing..."
 ;categories "http://lv2plug.in/ns/lv2core#AnalyserPlugin"
+;author "Steve Daulton"
+;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; sample-data-export.ny by Steve Daulton June 2012.
 ;; Updated July 16 2012.

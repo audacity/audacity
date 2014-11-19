@@ -57,16 +57,8 @@
 #include "ChangeTempo.h"
 #endif
 
-#ifdef USE_NYQUIST
-#include "nyquist/LoadNyquist.h"
-#endif
-
 #ifdef USE_AUDIO_UNITS
 #include "audiounits/LoadAudioUnits.h"
-#endif
-
-#ifdef USE_LV2
-#include "lv2/LoadLV2.h"
 #endif
 
 #ifdef USE_VAMP
@@ -279,42 +271,15 @@ void LoadEffects()
    // Analyze menu
    em.RegisterEffect(new EffectFindClipping());
 
-#ifdef USE_NYQUIST
-   if (gPrefs->Read(wxT("/Nyquist/Enable"), true)) {
-      LoadNyquistPlugins();
-   }
-#endif
-
-#ifdef USE_LV2
-   if (gPrefs->Read(wxT("/LV2/Enable"), true)) {
-      LoadLV2Plugins();
-   }
-#endif
-
 #ifdef USE_AUDIO_UNITS
    if (gPrefs->Read(wxT("/AudioUnits/Enable"), true)) {
       LoadAudioUnits();
    }
 #endif
-
-#ifdef USE_VAMP
-   if (gPrefs->Read(wxT("/VAMP/Enable"), true)) {
-      LoadVampPlugins();
-   }
-#endif
-
 }
 
 void UnloadEffects()
 {
    EffectManager::Get().UnregisterEffects();
-
-#ifdef USE_LV2
-   UnloadLV2Plugins();
-#endif
-
-#ifdef USE_VAMP
-   UnloadVampPlugins();
-#endif
 }
 

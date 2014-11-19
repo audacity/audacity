@@ -4,6 +4,8 @@
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
 ;name "Risset Drum..."
 ;action "Generating Risset Drum..."
+;author "Steven Jones"
+;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; rissetdrum.ny by Steven Jones, after Jean Claude Risset.
 ;; Updated by Steve Daulton July 2012.

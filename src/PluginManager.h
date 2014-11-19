@@ -25,7 +25,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// PluginManager
+// PluginDescriptor
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,6 +53,7 @@ public:
    void SetPluginType(PluginType type);
 
    // All plugins
+
    const wxString & GetID() const;
    const wxString & GetPath() const;
    const wxString & GetName() const;
@@ -60,7 +61,6 @@ public:
    const wxString & GetVendor() const;
    const wxString & GetDescription() const;
    const wxString & GetProviderID() const;
-   const wxString & GetDateTime() const;
    bool IsEnabled() const;
 
    void SetID(const PluginID & ID);
@@ -70,7 +70,6 @@ public:
    void SetVendor(const wxString & vendor);
    void SetDescription(const wxString & description);
    void SetProviderID(const PluginID & providerID);
-   void SetDateTime(const wxString & dateTime);
    void SetEnabled(bool enable);
 
    wxString GetMenuName() const;
@@ -118,7 +117,6 @@ private:
    wxString mVendor;
    wxString mDescription;
    wxString mProviderID;
-   wxString mDateTime;
    bool mEnabled;
 
    // Effects
@@ -138,9 +136,20 @@ private:
    wxArrayString mImporterExtensions;
 };
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// PluginManager
+//
+///////////////////////////////////////////////////////////////////////////////
+
+WX_DECLARE_STRING_HASH_MAP(wxArrayString, ArrayStringMap);
+
 //WX_DECLARE_STRING_HASH_MAP(PluginDescriptor, PluginMap);
 typedef std::map<PluginID, PluginDescriptor> PluginMap;
+
 typedef wxArrayString PluginIDList;
+
+class PluginRegistrationDialog;
 
 class PluginManager : public PluginManagerInterface
 {
@@ -213,14 +222,8 @@ public:
    const PluginDescriptor *GetFirstPlugin(PluginType type);
    const PluginDescriptor *GetNextPlugin(PluginType type);
 
-   const PluginDescriptor *GetFirstPluginForProvider(const PluginID & ID);
-   const PluginDescriptor *GetNextPluginForProvider(const PluginID & ID);
-
    const PluginDescriptor *GetFirstPluginForEffectType(EffectType type);
    const PluginDescriptor *GetNextPluginForEffectType(EffectType type);
-
-   const PluginDescriptor *GetFirstPluginForEffectFamily(const PluginID & ID);
-   const PluginDescriptor *GetNextPluginForEffectFamily(const PluginID & ID);
 
    bool IsRegistered(const PluginID & ID);
    void RegisterPlugin(const wxString & type, const wxString & path);
@@ -235,19 +238,17 @@ public:
    // 
    const PluginID & RegisterLegacyEffectPlugin(EffectIdentInterface *effect);
 
-   void CheckForUpdates();
-
 private:
    bool Load();
    void LoadGroup(const wxChar *group, PluginType type);
    void Save();
    void SaveGroup(const wxChar *group, PluginType type);
 
-   void RemoveMissing();
+   void CheckForUpdates(bool forceRescan);
+   void DisableMissing();
    wxArrayString IsNewOrUpdated(const wxArrayString & paths);
 
    PluginDescriptor & CreatePlugin(IdentInterface *ident, PluginType type);
-   wxString GetDateTime(const wxString & path);
 
    bool GetSubgroups(const wxString & group, wxArrayString & subgroups);
 
@@ -269,7 +270,12 @@ private:
    wxString SharedKey(const PluginID & ID, const wxString & group, const wxString & key);
    wxString PrivateGroup(const PluginID & ID, const wxString & group);
    wxString PrivateKey(const PluginID & ID, const wxString & group, const wxString & key);
+
+   // The PluginID must be kept unique.  Since the wxFileConfig class does not preserve
+   // case, we use base64 encoding.
    wxString ConvertID(const PluginID & ID);
+   wxString b64encode(const void *in, int len);
+   int b64decode(wxString in, void *out);
 
 private:
    static PluginManager mInstance;
@@ -283,6 +289,8 @@ private:
 
    PluginMap mPlugins;
    PluginMap::iterator mPluginsIter;
+
+   friend class PluginRegistrationDialog;
 };
 
 #endif /* __AUDACITY_PLUGINMANAGER_H__ */

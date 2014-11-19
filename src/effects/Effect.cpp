@@ -168,7 +168,7 @@ wxString Effect::GetName()
       return mClient->GetName();
    }
 
-   return GetEffectName();
+   return GetEffectIdentifier();
 }
 
 wxString Effect::GetVendor()
@@ -509,6 +509,10 @@ bool Effect::Startup(EffectClientInterface *client)
       case EffectTypeAnalyze:
          flags |= INSERT_EFFECT;
       break;
+
+      case EffectTypeNone:
+         // Nothing to set
+      break;
    }
 
    SetEffectFlags(flags);
@@ -708,12 +712,16 @@ bool Effect::PromptUser(wxWindow *parent, bool forceModal)
 
       // Really need to clean this up...should get easier when
       // all effects get converted.
-      if (!res || SupportsRealtime())
+      if (!res || (SupportsRealtime() && !forceModal))
       {
          // Return false to force DoEffect() to skip processing since
          // this UI has either been shown modeless or there was an error.
          return false;
       }
+   }
+   else
+   {
+      PromptUser();
    }
 
    return true;
@@ -1998,8 +2006,8 @@ EffectUIHost::~EffectUIHost()
 {
    if (mClient)
    {
-     mClient->CloseUI();
-     mClient = NULL;
+      mClient->CloseUI();
+      mClient = NULL;
    }
 }
 
@@ -2096,7 +2104,14 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 {
    if (IsModal())
    {
+      SetReturnCode(false);
+
+      Close();
+
+#if !defined(__WXGTK__)
       EndModal(false);
+#endif
+
       return;
    }
 

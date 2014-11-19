@@ -5,6 +5,8 @@
 ;name "Click Track..."
 ;action "Generating Click Track..."
 ;info "For help, select one of two help screens in 'Action choice' below."
+;author "Dominic Mazzoni"
+;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; by Dominic Mazzoni, modified by David R. Sky and Steve Daulton.
 ;; Released under terms of the GNU General Public License version 2:

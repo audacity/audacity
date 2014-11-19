@@ -22,6 +22,7 @@
 #include <wx/dir.h>
 #include <wx/dynarray.h>
 #include <wx/dynlib.h>
+#include <wx/hashmap.h>
 #include <wx/filename.h>
 #include <wx/icon.h>
 #include <wx/imaglist.h>
@@ -47,6 +48,8 @@
 #include "PluginManager.h"
 
 #include <wx/arrimpl.cpp>
+
+WX_DECLARE_STRING_HASH_MAP(wxString, ProviderMap);
 
 // ============================================================================
 //
@@ -373,11 +376,19 @@ wxAccStatus CheckListAx::GetValue( int childId, wxString *strValue )
 #define EffectClearAllID   7002
 #define EffectSelectAllID  7003
 
+int wxCALLBACK SortCompare(long item1, long item2, long WXUNUSED(sortData))
+{
+   wxString *str1 = (wxString *) item1;
+   wxString *str2 = (wxString *) item2;
+   
+   return str2->Cmp(*str1);
+}
+
 class PluginRegistrationDialog : public wxDialog
 {
 public:
    // constructors and destructors
-   PluginRegistrationDialog();
+   PluginRegistrationDialog(ProviderMap & map);
    virtual ~PluginRegistrationDialog();
 
 private:
@@ -405,9 +416,11 @@ private:
    wxListCtrl *mEffects;
    PluginIDList mProvs;
    wxArrayString mPaths;
-   std::vector<int> miState;
+   wxArrayInt miState;
 
    bool mCancelClicked;
+
+   ProviderMap & mMap;
 
    DECLARE_EVENT_TABLE()
 };
@@ -419,12 +432,13 @@ BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialog)
    EVT_BUTTON(EffectSelectAllID, PluginRegistrationDialog::OnSelectAll)
 END_EVENT_TABLE()
 
-PluginRegistrationDialog::PluginRegistrationDialog()
+PluginRegistrationDialog::PluginRegistrationDialog(ProviderMap & map)
 :  wxDialog(wxGetApp().GetTopWindow(),
             wxID_ANY,
             _("Register Effects"),
             wxDefaultPosition, wxDefaultSize,
-            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+   mMap(map)            
 {
    mEffects = NULL;
    SetLabel(_("Register Effects"));         // Provide visual label
@@ -443,6 +457,15 @@ PluginRegistrationDialog::~PluginRegistrationDialog()
                         wxKeyEventHandler(PluginRegistrationDialog::OnListChar),
                         NULL,
                         this);
+
+   for (int i = 0, cnt = mEffects->GetItemCount(); i < cnt; i++)
+   {
+      wxString *str = (wxString *) mEffects->GetItemData(i);
+      if (str)
+      {
+         delete str;
+      }
+   }
 }
 
 void PluginRegistrationDialog::Populate()
@@ -452,8 +475,6 @@ void PluginRegistrationDialog::Populate()
    PopulateOrExchange(S);
    // ----------------------- End of main section --------------
 }
-
-WX_DECLARE_STRING_HASH_MAP(wxString, ProviderMap);
 
 /// Defines the dialog and does data exchange with it.
 void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
@@ -521,44 +542,6 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
    S.EndVerticalLay();
 
-   PluginManager & pm = PluginManager::Get();
-   ModuleManager & mm = ModuleManager::Get();
-
-   // Capture all of the module IDs and paths so the iterate stays valid
-   ProviderMap provs;
-   wxArrayString keys;
-   wxArrayString paths;
-   wxString padding = wxT("0000000000");
-   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeModule);
-   while (plug)
-   {
-      wxString key = wxString::Format(wxT("%d"), (int) provs.size());
-      key.insert(0, padding.substr(0, padding.length() - key.length()));
-      provs[key] = plug->GetID();
-      keys.push_back(key);
-      paths.push_back(plug->GetPath());
-
-      plug = pm.GetNextPlugin(PluginTypeModule);
-   }
-
-   wxArrayString sortable;
-   for (size_t i = 0, icnt = paths.size(); i < icnt; i++)
-   {
-      wxString key = keys[i];
-      PluginID provID = provs[key];
-      wxString provPath = paths[i];
-
-      wxArrayString newPaths = mm.FindPluginsForProvider(provID, provPath);
-
-      for (size_t j = 0, jcnt = newPaths.size(); j < jcnt; j++)
-      {
-         sortable.push_back(key + wxT(" ") + newPaths[j]);
-      }
-   }
-
-   // With the index 
-   sortable.Sort();
-
    // The dc is used to compute the text width in pixels.
    // FIXME: That works fine for PC, but apparently comes out too small for wxMAC.
    // iLen is minimum width in pixels shown for the file names.  200 is reasonable.
@@ -566,20 +549,18 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    int iPathLen = 0;
    int x, y;
    wxRect iconrect;
-   for (int i = 0, cnt = sortable.size(); i < cnt; i++)
+   int i = 0;
+   for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); iter++, i++)
    {
-      miState.push_back( SHOW_CHECKED );
+      miState.Add( SHOW_CHECKED );
 
-      wxString item = sortable[i];
-      int split = item.find(wxT(" "));
-      mProvs.push_back(provs[item.substr(0, split)]);
-      mPaths.push_back(item.substr(split + 1, wxString::npos));
-
-      wxFileName fn(mPaths.back());
-      wxString name(fn.GetName());
-      wxString path(fn.GetFullPath());
+      wxFileName fname = iter->first;
+      wxString name = fname.GetName();
+      wxString path = fname.GetFullPath();
+      wxString *key = new wxString(iter->second + name);
 
       mEffects->InsertItem(i, name, SHOW_CHECKED);
+      mEffects->SetItemPtrData(i, (wxUIntPtr) key);
       mEffects->SetItem(i, COL_PATH, path);
 
       // Only need to get the icon width once 
@@ -605,6 +586,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       mEffects->GetTextExtent(path, &x, &y );
       iPathLen = wxMax(iPathLen, x + iconrect.width + (iconrect.x * 2));
    }
+
+   mEffects->SortItems(SortCompare, 0);
 
    mEffects->SetColumnWidth(COL_NAME, iNameLen + /* fudge */ 5);
    mEffects->SetColumnWidth(COL_PATH, iPathLen + /* fudge */ 5);
@@ -713,18 +696,50 @@ void PluginRegistrationDialog::OnClearAll(wxCommandEvent & WXUNUSED(evt))
 void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
 {
    mCancelClicked = false;
+   FindWindowById(EffectListID)->Disable();
    FindWindowById(wxID_OK)->Disable();
    FindWindowById(EffectListID)->Disable();
    FindWindowById(EffectClearAllID)->Disable();
    FindWindowById(EffectSelectAllID)->Disable();
 
-   for (size_t i = 0, cnt = mPaths.size(); i < cnt && !mCancelClicked; i++)
+   PluginManager & pm = PluginManager::Get();
+   ModuleManager & mm = ModuleManager::Get();
+
+   wxListItem li;
+   li.Clear();
+   for (int i = 0, cnt = mEffects->GetItemCount(); i < cnt && !mCancelClicked; i++)
    {
       mEffects->EnsureVisible(i);
+      li.SetId(i);
+      li.SetColumn(COL_PATH);
+      li.SetMask(wxLIST_MASK_TEXT);
+      mEffects->GetItem(li);
+      wxString path = li.GetText();
+
+      // Create a placeholder descriptor to show we've seen this plugin before and not
+      // to show it as new the next time Audacity starts.
+      //
+      // If the user chooses not to enable it or the scan of the plugin fails, the dummy
+      // entry will remain in the plugin list as disabled.
+      //
+      // However, if the scan of the of the plugin succeeds, then this dummy entry will be
+      // replaced during registration.
+      PluginDescriptor & plug = pm.mPlugins[path];
+
+      plug.SetID(path);
+      plug.SetPath(path);
+      plug.SetEnabled(false);
+
       if (miState[i] == SHOW_CHECKED)
       {
+         li.SetId(i);
+         li.SetColumn(COL_PATH);
+         li.SetMask(wxLIST_MASK_TEXT);
+         mEffects->GetItem(li);
+         wxString path = li.GetText();
+         
          mEffects->SetItemImage(i, SHOW_ARROW);
-         ModuleManager::Get().RegisterPlugin(mProvs[i], wxString(mPaths[i]));
+         mm.RegisterPlugin(mMap[path], path);
          mEffects->SetItemImage(i, SHOW_CHECKED);
       }
       wxYield();
@@ -841,11 +856,6 @@ const PluginID & PluginDescriptor::GetProviderID() const
    return mProviderID;
 }
 
-const wxString & PluginDescriptor::GetDateTime() const
-{
-   return mDateTime;
-}
-
 bool PluginDescriptor::IsEnabled() const
 {
    return mEnabled;
@@ -900,11 +910,6 @@ void PluginDescriptor::SetID(const PluginID & ID)
 void PluginDescriptor::SetProviderID(const PluginID & providerID)
 {
    mProviderID = providerID;
-}
-
-void PluginDescriptor::SetDateTime(const wxString & dateTime)
-{
-   mDateTime = dateTime;
 }
 
 void PluginDescriptor::SetEnabled(bool enable)
@@ -1054,7 +1059,9 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 
 void PluginManager::RegisterModulePlugin(IdentInterface *module)
 {
-   CreatePlugin(module, PluginTypeModule);
+   PluginDescriptor & plug = CreatePlugin(module, PluginTypeModule);
+
+   plug.SetEnabled(true);
 }
 
 void PluginManager::RegisterEffectPlugin(IdentInterface *provider, EffectIdentInterface *effect)
@@ -1332,26 +1339,14 @@ PluginManager & PluginManager::Get()
 
 void PluginManager::Initialize()
 {
+   // Always load the config first
    bool loaded = Load();
 
-   ModuleManager::Get().EarlyInit();
+   // Then look for providers (they may autoregister plugins)
+   ModuleManager::Get().DiscoverProviders();
 
-   CheckForUpdates();
-
-   bool doRescan;
-   gPrefs->Read(wxT("/Plugins/Rescan"), &doRescan, true);
-
-   if (!loaded || doRescan)
-   {
-      gPrefs->Write(wxT("/Plugins/Rescan"), false);
-      PluginRegistrationDialog dlg;
-      dlg.ShowModal();
-
-      if (mConfig)
-      {
-         mConfig->Flush();
-      }
-   }
+   // And finally check for updates
+   CheckForUpdates(!loaded);
 }
 
 void PluginManager::Terminate()
@@ -1415,6 +1410,8 @@ bool PluginManager::Load()
    LoadGroup(wxT("effects"), PluginTypeEffect);
    LoadGroup(wxT("exporters"), PluginTypeExporter);
    LoadGroup(wxT("importers"), PluginTypeImporter);
+
+   LoadGroup(wxT("placeholders"), PluginTypeNone);
 
    return true;
 }
@@ -1494,16 +1491,6 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
       }
       plug.SetDescription(wxString(strVal));
 
-      // Get the last update time and bypass group if not found
-      if (!plug.GetPath().IsEmpty())
-      {
-         if (!mConfig->Read(KEY_LASTUPDATED, &strVal))
-         {
-            continue;
-         }
-         plug.SetDateTime(wxString(strVal));
-      }
-
       // Is it enabled...default to no if not found
       mConfig->Read(KEY_ENABLED, &boolVal, false);
       plug.SetEnabled(boolVal);
@@ -1511,9 +1498,13 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
       switch (type)
       {
          case PluginTypeModule:
+         {
+            // Nothing to do here yet
+         }
          break;
 
          case PluginTypeEffect:
+         {
             // Get the effect type and bypass group if not found
             if (!mConfig->Read(KEY_EFFECTTYPE, &strVal))
             {
@@ -1571,7 +1562,7 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
                continue;
             }
             plug.SetEffectAutomatable(boolVal);
-
+         }
          break;
 
          case PluginTypeImporter:
@@ -1605,8 +1596,16 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
          }
          break;
 
+         case PluginTypeNone:
+         {
+            // Used for placeholder groups
+         }
+         break;
+
          default:
+         {
             continue;
+         }
       }
 
       // Everything checked out...accept the plugin
@@ -1624,12 +1623,13 @@ void PluginManager::Save()
       return;
    }
 
-   // TODO:  This is a bit drastic...only save groups when new plugins are registerd
+   // TODO:  This is a bit drastic...only save groups when new plugins are registered
 
    // Save the individual groups
    SaveGroup(wxT("effects"), PluginTypeEffect);
    SaveGroup(wxT("exporters"), PluginTypeExporter);
    SaveGroup(wxT("importers"), PluginTypeImporter);
+   SaveGroup(wxT("placeholders"), PluginTypeNone);
 
    // And now the providers
    SaveGroup(wxT("modules"), PluginTypeModule);
@@ -1656,7 +1656,6 @@ void PluginManager::SaveGroup(const wxChar *group, PluginType type)
       mConfig->Write(KEY_VENDOR, plug.GetVendor());
       mConfig->Write(KEY_DESCRIPTION, plug.GetDescription());
       mConfig->Write(KEY_PROVIDERID, plug.GetProviderID());
-      mConfig->Write(KEY_LASTUPDATED, plug.GetDateTime());
       mConfig->Write(KEY_ENABLED, plug.IsEnabled());
 
       switch (type)
@@ -1712,118 +1711,93 @@ void PluginManager::SaveGroup(const wxChar *group, PluginType type)
    return;
 }
 
-void PluginManager::CheckForUpdates()
+void PluginManager::CheckForUpdates(bool forceRescan)
 {
-   // Always check for and remove missing plugins
-   RemoveMissing();
-
    // Get ModuleManager reference
    ModuleManager & mm = ModuleManager::Get();
 
-   wxArrayString providers;
-   wxArrayString paths;
-
-   // Always check for new or updated modules
-   if (mm.DiscoverProviders(paths))
-   {
-      paths = IsNewOrUpdated(paths);
-      for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
-      {
-         mm.DiscoverProvider(paths[i]);
-      }
-   }
+   bool doRescan;
+   gPrefs->Read(wxT("/Plugins/Rescan"), &doRescan, true);
 
    bool doCheck;
    gPrefs->Read(wxT("/Plugins/CheckForUpdates"), &doCheck, true);
-   if (doCheck && paths.size() > 0)
-   {
-      PluginRegistrationDialog dlg;
-      dlg.ShowModal();
-   }
 
-   return;
-}
+   ProviderMap map;
 
-void PluginManager::RemoveMissing()
-{
-   // Check for plugins that no longer exist
+   // Always check for and disable missing plugins
+   // 
+   // Since the user's saved presets are in the registery, never delete them.  That is
+   // a job for the plugin manager UI (once it is written)
+   // Check for plugins that are no longer valid
    PluginMap::iterator iter = mPlugins.begin();
    while (iter != mPlugins.end())
    {
       PluginDescriptor & plug = iter->second;
+      const PluginID & plugID = plug.GetID();
+      const wxString & plugPath = plug.GetPath();
 
-      if (!plug.GetPath().IsEmpty())
+      if (plug.GetPluginType() == PluginTypeModule)
       {
-         wxFileName plugPath = plug.GetPath();
-
-         if (!(plugPath.FileExists() || plugPath.DirExists()))
+         if (!mm.IsProviderValid(plugID, plugPath))
          {
-            mPlugins.erase(iter++);
-            continue;
+            plug.SetEnabled(false);
+         }
+         else
+         {
+            // Only collect plugin paths if we're doing a full scan or checking for updates
+            if (doRescan || doCheck)
+            {
+               wxArrayString paths = mm.FindPluginsForProvider(plugID, plugPath);
+               for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++)
+               {
+                  map[paths[i]] = plugID;
+               }
+            }
+         }
+      }
+      else
+      {
+         if (!mm.IsPluginValid(plug.GetProviderID(), plugID, plugPath))
+         {
+            plug.SetEnabled(false);
          }
       }
 
-      ++iter;
-   }
-}
-
-wxArrayString PluginManager::IsNewOrUpdated(const wxArrayString & paths)
-{
-   wxArrayString plugsToAddOrUpdate;
-
-   // Create a map of plugins indexed by their path
-   std::map<wxString, PluginDescriptor *> pathPlugs;
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
-   {
-      PluginDescriptor & plug = iter->second;
-      pathPlugs[plug.GetPath()] = &plug;
+      iter++;
    }
 
-   // Now check for new or updated paths
-   for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
+   // If we're only checking for new plugins, then remove all of the known ones
+   if (doCheck && !doRescan)
    {
-      wxFileName scanPath = paths[i];
-      wxString scanFull = scanPath.GetFullPath();
-
-      if (pathPlugs.find(scanFull) != pathPlugs.end())
+      for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
       {
-         if (GetDateTime(scanFull) <= pathPlugs[scanFull]->GetDateTime())
+         PluginDescriptor & plug = iter->second;
+         const wxString & plugPath = plug.GetPath();
+
+         ProviderMap::iterator mapiter = map.find(plugPath);
+         if (map.find(plugPath) != map.end())
          {
-            continue;
+            map.erase(mapiter);
          }
       }
-
-      plugsToAddOrUpdate.push_back(scanFull);
    }
-
-   return plugsToAddOrUpdate;
-}
-
-bool PluginManager::HasType(PluginType type)
-{
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+   
+   // Allow the user to choose which ones to enable
+   if (map.size() != 0)
    {
-      if (iter->second.GetPluginType() == type)
+      PluginRegistrationDialog dlg(map);
+      if (dlg.ShowModal() == wxID_OK)
       {
-         return true;
+         gPrefs->Write(wxT("/Plugins/Rescan"), false);
       }
    }
 
-   return false;
-}
-
-void PluginManager::PurgeType(PluginType type)
-{
-#if 0
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+   if (mConfig)
    {
-      if (iter->second.GetPluginType() == type)
-      {
-         mPlugins.erase(iter->first);
-         mConfig->DeleteGroup(CACHEROOT + iter->second.GetID()
-      }
+      Save();
    }
-#endif
+
+   return;
 }
 
 int PluginManager::GetPluginCount(PluginType type)
@@ -1855,7 +1829,13 @@ const PluginDescriptor *PluginManager::GetFirstPlugin(PluginType type)
 {
    for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
    {
-      if (mPluginsIter->second.GetPluginType() == type)
+      PluginDescriptor & plug = mPluginsIter->second;
+      bool familyEnabled = true;
+      if (type == PluginTypeEffect)
+      {
+         gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      }
+      if (plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
          return &mPluginsIter->second;
       }
@@ -1868,33 +1848,13 @@ const PluginDescriptor *PluginManager::GetNextPlugin(PluginType type)
 {
    while (++mPluginsIter != mPlugins.end())
    {
-      if (mPluginsIter->second.GetPluginType() == type)
+      PluginDescriptor & plug = mPluginsIter->second;
+      bool familyEnabled = true;
+      if (type == PluginTypeEffect)
       {
-         return &mPluginsIter->second;
+         gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       }
-   }
-
-   return NULL;
-}
-
-const PluginDescriptor *PluginManager::GetFirstPluginForProvider(const PluginID & ID)
-{
-   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
-   {
-      if (mPluginsIter->second.GetProviderID() == ID)
-      {
-         return &mPluginsIter->second;
-      }
-   }
-
-   return NULL;
-}
-
-const PluginDescriptor *PluginManager::GetNextPluginForProvider(const PluginID & ID)
-{
-   while (++mPluginsIter != mPlugins.end())
-   {
-      if (mPluginsIter->second.GetProviderID() == ID)
+      if (plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
          return &mPluginsIter->second;
       }
@@ -1908,7 +1868,9 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
    for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
    {
       PluginDescriptor & plug = mPluginsIter->second;
-      if (plug.IsEnabled() && plug.GetEffectType() == type)
+      bool familyEnabled;
+      gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      if (plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          return &plug;
       }
@@ -1922,36 +1884,11 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
    while (++mPluginsIter != mPlugins.end())
    {
       PluginDescriptor & plug = mPluginsIter->second;
-      if (plug.IsEnabled() && plug.GetEffectType() == type)
+      bool familyEnabled;
+      gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      if (plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          return &plug;
-      }
-   }
-
-   return NULL;
-}
-
-
-const PluginDescriptor *PluginManager::GetFirstPluginForEffectFamily(const wxString & family)
-{
-   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
-   {
-      if (mPluginsIter->second.GetEffectFamily() == family)
-      {
-         return &mPluginsIter->second;
-      }
-   }
-
-   return NULL;
-}
-
-const PluginDescriptor *PluginManager::GetNextPluginForEffectFamily(const wxString & family)
-{
-   while (++mPluginsIter != mPlugins.end())
-   {
-      if (mPluginsIter->second.GetEffectFamily() == family)
-      {
-         return &mPluginsIter->second;
       }
    }
 
@@ -2053,7 +1990,8 @@ void PluginManager::SetInstance(const PluginID & ID, IdentInterface *instance)
 
 PluginDescriptor & PluginManager::CreatePlugin(IdentInterface *ident, PluginType type)
 {
-   PluginDescriptor plug;
+   // This will either create a new entry or replace an existing entry
+   PluginDescriptor & plug = mPlugins[ident->GetID()];
 
    plug.SetPluginType(type);
 
@@ -2063,24 +2001,8 @@ PluginDescriptor & PluginManager::CreatePlugin(IdentInterface *ident, PluginType
    plug.SetVendor(ident->GetVendor());
    plug.SetVersion(ident->GetVersion());
    plug.SetDescription(ident->GetDescription());
-   plug.SetEnabled(false);
-   plug.SetDateTime(GetDateTime(ident->GetPath()));
 
-   // This will either create a new entry or replace an existing entry
-   mPlugins[plug.GetID()] = plug;
-   return mPlugins[plug.GetID()];
-}
-
-wxString PluginManager::GetDateTime(const wxString & path)
-{
-   wxFileName fn(path);
-   if (fn.FileExists())
-   {
-      wxDateTime mod = fn.GetModificationTime();
-      return wxString(mod.FormatISODate() + wxT(' ') + mod.FormatISOTime());
-   }
-
-   return wxEmptyString;
+   return plug;
 }
 
 bool PluginManager::GetSubgroups(const wxString & group, wxArrayString & subgroups)
@@ -2358,24 +2280,149 @@ wxString PluginManager::PrivateKey(const PluginID & ID, const wxString & group, 
 }
 
 // Sanitize the ID...not the best solution, but will suffice until this
-// is converted to XML
+// is converted to XML.  We use base64 encoding to preserve case.
 wxString PluginManager::ConvertID(const PluginID & ID)
 {
-   wxString id = ID;
-   size_t cnt = 0;
-
-   cnt += id.Replace(wxT("\x01"), wxT(":"));
-   cnt += id.Replace(wxT("\x02"), wxT("/"));
-   cnt += id.Replace(wxT("\x03"), wxT("\\"));
-
-   if (cnt > 0)
+   if (ID.StartsWith(wxT("base64:")))
    {
+      wxString id = ID.Mid(7);
+      char *buf = new char[id.Length() / 4 * 3];
+      id =  wxString::FromUTF8(buf, b64decode(id, buf));
+      delete [] buf;
       return id;
    }
 
-   id.Replace(wxT(":"), wxT("\x01"));
-   id.Replace(wxT("/"), wxT("\x02"));
-   id.Replace(wxT("\\"), wxT("\x03"));
+   const wxCharBuffer & buf = ID.ToUTF8();
+   return wxT("base64:") + b64encode(buf, strlen(buf));
+}
 
-   return id;
+////////////////////////////////////////////////////////////////////////////////
+// Base64 en/decoding
+//
+// Original routines marked as public domain and found at:
+//
+// http://en.wikibooks.org/wiki/Algorithm_implementation/Miscellaneous/Base64
+//
+////////////////////////////////////////////////////////////////////////////////
+
+// Lookup table for encoding
+const static wxChar cset[] = wxT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+const static char padc = wxT('=');
+
+wxString PluginManager::b64encode(const void *in, int len)
+{
+   unsigned char *p = (unsigned char *) in;
+   wxString out;
+
+   unsigned long temp;
+   for (int i = 0; i < len / 3; i++)
+   {
+      temp  = (*p++) << 16; //Convert to big endian
+      temp += (*p++) << 8;
+      temp += (*p++);
+      out += cset[(temp & 0x00FC0000) >> 18];
+      out += cset[(temp & 0x0003F000) >> 12];
+      out += cset[(temp & 0x00000FC0) >> 6];
+      out += cset[(temp & 0x0000003F)];
+   }
+
+   switch (len % 3)
+   {
+      case 1:
+         temp  = (*p++) << 16; //Convert to big endian
+         out += cset[(temp & 0x00FC0000) >> 18];
+         out += cset[(temp & 0x0003F000) >> 12];
+         out += padc;
+         out += padc;
+      break;
+
+      case 2:
+         temp  = (*p++) << 16; //Convert to big endian
+         temp += (*p++) << 8;
+         out += cset[(temp & 0x00FC0000) >> 18];
+         out += cset[(temp & 0x0003F000) >> 12];
+         out += cset[(temp & 0x00000FC0) >> 6];
+         out += padc;
+      break;
+   }
+
+   return out;
+}
+
+int PluginManager::b64decode(wxString in, void *out)
+{
+   int len = in.length();
+   unsigned char *p = (unsigned char *) out;
+
+   if (len % 4)  //Sanity check
+   {
+      return 0;
+   }
+
+   int padding = 0;
+   if (len)
+   {
+      if (in[len - 1] == padc)
+      {
+         padding++;
+      }
+
+      if (in[len - 2] == padc)
+      {
+         padding++;
+      }
+   }
+
+   //const char *a = in.mb_str();
+   //Setup a vector to hold the result
+   unsigned long temp = 0; //Holds decoded quanta
+   int i = 0;
+   while (i < len)
+   {
+      for (int quantumPosition = 0; quantumPosition < 4; quantumPosition++)
+      {
+         unsigned char c = in[i];
+         temp <<= 6;
+
+         if (c >= 0x41 && c <= 0x5A)
+         {
+            temp |= c - 0x41;
+         }
+         else if (c >= 0x61 && c <= 0x7A)
+         {
+            temp |= c - 0x47;
+         }
+         else if (c >= 0x30 && c <= 0x39)
+         {
+            temp |= c + 0x04;
+         }
+         else if (c == 0x2B)
+         {
+            temp |= 0x3E;
+         }
+         else if (c == 0x2F)
+         {
+            temp |= 0x3F;
+         }
+         else if (c == padc)
+         {
+            switch (len - i)
+            {
+               case 1: //One pad character
+                  *p++ = (temp >> 16) & 0x000000FF;
+                  *p++ = (temp >> 8) & 0x000000FF;
+                  return p - (unsigned char *) out;
+               case 2: //Two pad characters
+                  *p++ = (temp >> 10) & 0x000000FF;
+                  return p - (unsigned char *) out;
+            }
+         }
+         i++;
+      }
+      *p++ = (temp >> 16) & 0x000000FF;
+      *p++ = (temp >> 8) & 0x000000FF;
+      *p++ = temp & 0x000000FF;
+   }
+
+   return p - (unsigned char *) out;
 }

@@ -33,6 +33,12 @@
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// VampEffect
+//
+///////////////////////////////////////////////////////////////////////////////
+
 VampEffect::VampEffect(Vamp::HostExt::PluginLoader::PluginKey key,
                        int output,
                        bool hasParameters,
@@ -46,6 +52,9 @@ VampEffect::VampEffect(Vamp::HostExt::PluginLoader::PluginKey key,
    mCategory(category),
    mPlugin(NULL)
 {
+   Vamp::HostExt::PluginLoader *loader = Vamp::HostExt::PluginLoader::getInstance();
+   mPlugin = loader->loadPlugin(mKey, 48000); // rate doesn't matter here
+
    SetEffectFlags(PLUGIN_EFFECT | ANALYZE_EFFECT);
 }
 
@@ -53,6 +62,82 @@ VampEffect::~VampEffect()
 {
    delete mPlugin;
    mPlugin = NULL;
+}
+
+// ============================================================================
+// IdentInterface implementation
+// ============================================================================
+
+wxString VampEffect::GetID()
+{
+   return mName;
+}
+
+wxString VampEffect::GetPath()
+{
+   Vamp::HostExt::PluginLoader *loader = Vamp::HostExt::PluginLoader::getInstance();
+   return LAT1CTOWX(loader->getLibraryPathForPlugin(mKey).c_str());
+}
+
+wxString VampEffect::GetName()
+{
+   return mName;
+}
+
+wxString VampEffect::GetVendor()
+{
+   return LAT1CTOWX(mPlugin->getMaker().c_str());
+}
+
+wxString VampEffect::GetVersion()
+{
+   return wxString::Format(wxT("%d"), mPlugin->getPluginVersion());
+}
+
+wxString VampEffect::GetDescription()
+{
+   return LAT1CTOWX(mPlugin->getCopyright().c_str());
+}
+
+// ============================================================================
+// EffectIdentInterface implementation
+// ============================================================================
+
+EffectType VampEffect::GetType()
+{
+   // For now, relegate to Effect()
+   return Effect::GetType();
+}
+
+wxString VampEffect::GetFamily()
+{
+   return VAMPEFFECTS_FAMILY;
+}
+
+bool VampEffect::IsInteractive()
+{
+   // For now, relegate to Effect()
+   return Effect::IsInteractive();
+}
+
+bool VampEffect::IsDefault()
+{
+   return false;
+}
+
+bool VampEffect::IsLegacy()
+{
+   return true;
+}
+
+bool VampEffect::SupportsRealtime()
+{
+   return false;
+}
+
+bool VampEffect::SupportsAutomation()
+{
+   return true;
 }
 
 wxString VampEffect::GetEffectName()

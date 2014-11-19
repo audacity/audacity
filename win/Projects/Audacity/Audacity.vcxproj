@@ -784,6 +784,7 @@
     <copy Include="..\..\..\plug-ins\clipfix.ny" />
     <copy Include="..\..\..\plug-ins\crossfadein.ny" />
     <copy Include="..\..\..\plug-ins\crossfadeout.ny" />
+    <copy Include="..\..\..\plug-ins\crossfadetracks.ny" />
     <copy Include="..\..\..\plug-ins\delay.ny" />
     <copy Include="..\..\..\plug-ins\equalabel.ny" />
     <copy Include="..\..\..\plug-ins\highpass.ny" />
@@ -794,6 +795,9 @@
     <copy Include="..\..\..\plug-ins\sample-data-export.ny" />
     <copy Include="..\..\..\plug-ins\SilenceMarker.ny" />
     <copy Include="..\..\..\plug-ins\SoundFinder.ny" />
+    <copy Include="..\..\..\plug-ins\SpectralEditMulti.ny" />
+    <copy Include="..\..\..\plug-ins\SpectralEditParametricEQ.ny" />
+    <copy Include="..\..\..\plug-ins\SpectralEditShelves.ny" />
     <copy Include="..\..\..\plug-ins\StudioFadeOut.ny" />
     <copy Include="..\..\..\plug-ins\tremolo.ny" />
     <copy Include="..\..\..\plug-ins\vocalremover.ny" />

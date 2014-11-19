@@ -92,8 +92,6 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
                     wxT("/VST/Enable"),
                     true);
 #endif
-
-      S.AddFixedText(_("Restart Audacity to apply changes."));
    }
    S.EndStatic();
 
@@ -106,13 +104,15 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
       
          visualgroups.Add(_("Sorted by Effect Name"));
          visualgroups.Add(_("Sorted by Publisher and Effect Name"));
+         visualgroups.Add(_("Sorted by Type and Effect Name"));
          visualgroups.Add(_("Grouped by Publisher"));
-         visualgroups.Add(_("Grouped by Type (Ladspa, VST, etc.)"));
+         visualgroups.Add(_("Grouped by Type"));
       
-         prefsgroups.Add(wxT("name"));
-         prefsgroups.Add(wxT("publisher:name"));
-         prefsgroups.Add(wxT("publisher"));
-         prefsgroups.Add(wxT("family"));
+         prefsgroups.Add(wxT("sortby:name"));
+         prefsgroups.Add(wxT("sortby:publisher:name"));
+         prefsgroups.Add(wxT("sortby:type:name"));
+         prefsgroups.Add(wxT("groupby:publisher"));
+         prefsgroups.Add(wxT("groupby:type"));
 
          wxChoice *c = S.TieChoice(_("Effects in menus are:"),
                                    wxT("/Effects/GroupBy"),
@@ -158,43 +158,10 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 }
 
-void EffectsPrefs::SetState(const wxString & family, const wxString & key)
-{
-   PluginManager & pm = PluginManager::Get();
-   bool state = gPrefs->Read(wxT("/Nyquist/Enable"), true);
-
-   const PluginDescriptor *plug = pm.GetFirstPluginForEffectFamily(family);
-   while (plug)
-   {
-      pm.EnablePlugin(plug->GetID(), state);
-      plug = pm.GetNextPluginForEffectFamily(family);
-   }
-}
-
 bool EffectsPrefs::Apply()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
-
-#ifdef USE_NYQUIST
-   SetState(wxT("Nyquist"), wxT("/Nyquist/Enable"));
-#endif
-
-#ifdef USE_LADSPA
-   SetState(wxT("Ladspa"), wxT("/Ladspa/Enable"));
-#endif
-
-#ifdef USE_LV2
-   SetState(wxT("LV2"), wxT("/LV2/Enable"));
-#endif
-
-#ifdef USE_AUDIO_UNITS
-   SetState(wxT("AudioUnit"), wxT("/AudioUnits/Enable"));
-#endif
-
-#ifdef USE_VAMP
-   SetState(wxT("VAMP"), wxT("/VAMP/Enable"));
-#endif
 
    return true;
 }

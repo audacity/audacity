@@ -5,6 +5,8 @@
 ;categories "http://audacityteam.org/namespace#NoiseRemoval"
 ;name "Clip Fix..."
 ;action "Reconstructing clips..."
+;author "Benjamin Schwartz"
+;copyright "Licensing confirmed under terms of the GNU General Public License version 2"
 
 ;; clipfix.ny by Benjamin Schwartz.
 ;; Licensing confirmed under terms of the GNU General Public License version 2:

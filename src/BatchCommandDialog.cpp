@@ -177,6 +177,7 @@ void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
 {
    wxString command = mCommand->GetValue();
    wxString params  = mParameters->GetValue();
+
    if (BatchCommands::SetCurrentParametersFor( command, params ))
    {
       if( BatchCommands::PromptForParamsFor( command, this ))

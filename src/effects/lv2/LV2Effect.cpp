@@ -53,6 +53,12 @@
 
 #include <wx/arrimpl.cpp>
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// LV2Effect
+//
+///////////////////////////////////////////////////////////////////////////////
+
 WX_DEFINE_OBJARRAY(LV2PortArray);
 
 LV2Effect::LV2Effect(const LilvPlugin *data,
@@ -291,6 +297,92 @@ LV2Effect::~LV2Effect()
       delete mMidiInput;
    }
 }
+
+// ============================================================================
+// IdentInterface implementation
+// ============================================================================
+
+wxString LV2Effect::GetID()
+{
+   return GetString(lilv_plugin_get_uri(mData));
+}
+
+wxString LV2Effect::GetPath()
+{
+   return GetString(lilv_plugin_get_bundle_uri(mData));
+}
+
+wxString LV2Effect::GetName()
+{
+   return pluginName;
+}
+
+wxString LV2Effect::GetVendor()
+{
+   wxString vendor = GetString(lilv_plugin_get_author_name(mData), true);
+
+   if (vendor.IsEmpty())
+   {
+      vendor = wxT("N/A");
+   }
+
+   return vendor;
+}
+
+wxString LV2Effect::GetVersion()
+{
+   return wxT("N/A");
+}
+
+wxString LV2Effect::GetDescription()
+{
+   return wxT("N/A");
+}
+
+// ============================================================================
+// EffectIdentInterface implementation
+// ============================================================================
+
+EffectType LV2Effect::GetType()
+{
+   // For now, relegate to Effect()
+   return Effect::GetType();
+}
+
+wxString LV2Effect::GetFamily()
+{
+   return LV2EFFECTS_FAMILY;
+}
+
+bool LV2Effect::IsInteractive()
+{
+   // For now, relegate to Effect()
+   return Effect::IsInteractive();
+}
+
+bool LV2Effect::IsDefault()
+{
+   return false;
+}
+
+bool LV2Effect::IsLegacy()
+{
+   return true;
+}
+
+bool LV2Effect::SupportsRealtime()
+{
+   return false;
+}
+
+bool LV2Effect::SupportsAutomation()
+{
+   return true;
+}
+
+// ============================================================================
+// Effect Implementation
+// ============================================================================
 
 wxString LV2Effect::GetEffectName()
 {
@@ -714,6 +806,9 @@ void LV2Effect::End()
    }
 }
 
+// ============================================================================
+// LV2Effect Implementation
+// ============================================================================
 
 bool LV2Effect::IsValid()
 {
@@ -1246,9 +1341,11 @@ LV2EffectDialog::LV2EffectDialog(LV2Effect *effect,
 
 LV2EffectDialog::~LV2EffectDialog()
 {
+   delete [] mToggles;
    delete [] mSliders;
    delete [] mFields;
    delete [] mLabels;
+   delete [] mEnums;
 }
 
 void LV2EffectDialog::OnCheckBox(wxCommandEvent &event)

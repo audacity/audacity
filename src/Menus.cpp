@@ -264,7 +264,36 @@ static int SortEffectsByPublisherAndName(const PluginDescriptor **a, const Plugi
    return akey.CmpNoCase(bkey);
 }
 
-static int SortEffectsByFamily(const PluginDescriptor **a, const PluginDescriptor **b)
+static int SortEffectsByTypeAndName(const PluginDescriptor **a, const PluginDescriptor **b)
+{
+   wxString akey = (*a)->GetEffectFamily();
+   wxString bkey = (*b)->GetEffectFamily();
+
+   if (akey.IsEmpty())
+   {
+      akey = _("Uncategorized");
+   }
+   if (bkey.IsEmpty())
+   {
+      bkey = _("Uncategorized");
+   }
+
+   if ((*a)->IsEffectDefault())
+   {
+      akey = wxEmptyString;
+   }
+   if ((*b)->IsEffectDefault())
+   {
+      bkey = wxEmptyString;
+   }
+
+   akey += (*a)->GetName();
+   bkey += (*b)->GetName();
+
+   return akey.CmpNoCase(bkey);
+}
+
+static int SortEffectsByType(const PluginDescriptor **a, const PluginDescriptor **b)
 {
    wxString akey = (*a)->GetEffectFamily();
    wxString bkey = (*b)->GetEffectFamily();
@@ -1284,27 +1313,32 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
       plug = pm.GetNextPluginForEffectType(type);
    }
 
-   wxString groupby = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("default"));
+   wxString groupby = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("name"));
 
-   if (groupby == wxT("name"))
+   if (groupby == wxT("sortby:name"))
    {
       defplugs.Sort(SortEffectsByName);
       optplugs.Sort(SortEffectsByName);
    }
-   else if (groupby == wxT("publisher"))
+   else if (groupby == wxT("sortby:publisher:name"))
+   {
+      defplugs.Sort(SortEffectsByName);
+      optplugs.Sort(SortEffectsByPublisherAndName);
+   }
+   else if (groupby == wxT("sortby:type:name"))
+   {
+      defplugs.Sort(SortEffectsByName);
+      optplugs.Sort(SortEffectsByTypeAndName);
+   }
+   else if (groupby == wxT("groupby:publisher"))
    {
       defplugs.Sort(SortEffectsByPublisher);
       optplugs.Sort(SortEffectsByPublisher);
    }
-   else if (groupby == wxT("publisher:name"))
+   else if (groupby == wxT("groupby:type"))
    {
-      defplugs.Sort(SortEffectsByPublisherAndName);
-      optplugs.Sort(SortEffectsByPublisherAndName);
-   }
-   else if (groupby == wxT("family"))
-   {
-      defplugs.Sort(SortEffectsByFamily);
-      optplugs.Sort(SortEffectsByFamily);
+      defplugs.Sort(SortEffectsByType);
+      optplugs.Sort(SortEffectsByType);
    }      
    else // name
    {
@@ -1341,151 +1375,193 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
    wxString groupBy = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("name"));
 
    bool grouped = false;
-   if (groupBy == wxT("publisher") || groupBy == wxT("family"))
+   if (groupBy.StartsWith(wxT("groupby")))
    {
       grouped = true;
    }
 
-   wxString last;
    wxArrayString groupNames;
    PluginIDList groupPlugs;
-   for (size_t i = 0; i < pluginCnt; i++)
+   wxArrayInt groupFlags;
+   if (grouped)
    {
-      const PluginDescriptor *plug = plugs[i];
-
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-      int flags = plug->IsEffectRealtime() ? realflags : batchflags;
-#else
-      int flags = batchflags;
-#endif
-
-      wxString name = plug->GetName();
-
-      wxString stripped;
-      if (name.EndsWith(wxT("..."), &stripped))
-      {
-         name = stripped;
-      }
-
-      if (plug->IsEffectInteractive())
-      {
-         name += wxT("...");
-      }
-
+      wxString last;
       wxString current;
-      if (groupBy == wxT("publisher:name"))
+
+      for (size_t i = 0; i < pluginCnt; i++)
       {
-         current = plug->GetVendor();
-         if (plug->IsEffectDefault())
+         const PluginDescriptor *plug = plugs[i];
+
+         wxString name = plug->GetName();
+
+         // This goes away once everything has been converted to new format
+         wxString stripped;
+         if (name.EndsWith(wxT("..."), &stripped))
          {
-            current = wxEmptyString;
+            name = stripped;
          }
 
-         if (!current.IsEmpty())
+         if (plug->IsEffectInteractive())
          {
-            current += wxT(": ");
+            name += wxT("...");
          }
 
-         current += name;
-         name = current;
-      }
-      else if (groupBy == wxT("publisher"))
-      {
-         current = plug->GetVendor();
-         if (current.IsEmpty())
+         if (groupBy == wxT("groupby:publisher"))
          {
-            current = _("Unknown");
-         }
-      }
-      else if (groupBy == wxT("family"))
-      {
-         current = plug->GetEffectFamily();
-         if (current.IsEmpty())
-         {
-            current = _("Unknown");
-         }
-      }
-      else if (groupBy == wxT("name"))
-      {
-         current = plug->GetName();
-         name = current;
-      }
-      else // default to "name"
-      {
-         current = plug->GetName();
-         name = current;
-      }
-
-      if (current != last || i + 1 == pluginCnt)
-      {
-         if (i + 1 == pluginCnt)
-         {
-            groupNames.Add(name);
-            groupPlugs.Add(plug->GetID());
-         }
-
-         int groupCnt = (int) groupPlugs.GetCount();
-
-         if (grouped && groupCnt > 0 && i > 0)
-         {
-            c->BeginSubMenu(last);
-         }
-
-         if (grouped || i + 1 == pluginCnt)
-         {
-            int max = perGroup;
-            int items = perGroup;
-
-            if (max > groupCnt)
+            current = plug->GetVendor();
+            if (current.IsEmpty())
             {
-               max = 0;
+               current = _("Unknown");
             }
-
-            for (int j = 0; j < groupCnt; j++)
+         }
+         else if (groupBy == wxT("groupby:type"))
+         {
+            current = plug->GetEffectFamily();
+            if (current.IsEmpty())
             {
-               if (max > 0 && items == max)
-               {
-                  int end = j + max;
-                  if (end + 1 > groupCnt)
-                  {
-                     end = groupCnt;
-                  }
-                  c->BeginSubMenu(wxString::Format(_("Plug-ins %d to %d"),
-                                                   j + 1,
-                                                   end));
-               }
-
-               c->AddItem(groupNames[j],
-                          groupNames[j],
-                          FNS(OnEffect, groupPlugs[j]),
-                          flags,
-                          flags);
-
-               if (max > 0)
-               {
-                  items--;
-                  if (items == 0 || j + 1 == groupCnt)
-                  {
-                     c->EndSubMenu();
-                     items = max;
-                  }
-               }
+               current = _("Unknown");
             }
          }
 
-         if (grouped && groupCnt > 0 && i > 0)
+         if (current != last)
          {
-            c->EndSubMenu();
+            if (!last.IsEmpty())
+            {
+               c->BeginSubMenu(last);
+            }
+
+            AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags);
+
+            if (!last.IsEmpty())
+            {
+               c->EndSubMenu();
+            }
 
             groupNames.Clear();
             groupPlugs.Clear();
+            groupFlags.Clear();
+            last = current;
          }
 
-         last = current;
+         groupNames.Add(name);
+         groupPlugs.Add(plug->GetID());
+         groupFlags.Add(plug->IsEffectRealtime() ? realflags : batchflags);
       }
 
-      groupNames.Add(name);
-      groupPlugs.Add(plug->GetID());
+      if (groupNames.GetCount() > 0)
+      {
+         c->BeginSubMenu(current);
+
+         AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags);
+
+         c->EndSubMenu();
+      }
+   }
+   else
+   {
+      for (size_t i = 0; i < pluginCnt; i++)
+      {
+         const PluginDescriptor *plug = plugs[i];
+
+         wxString name = plug->GetName();
+
+         // This goes away once everything has been converted to new format
+         wxString stripped;
+         if (name.EndsWith(wxT("..."), &stripped))
+         {
+            name = stripped;
+         }
+
+         if (plug->IsEffectInteractive())
+         {
+            name += wxT("...");
+         }
+
+         wxString group = wxEmptyString;
+         if (groupBy == wxT("sortby:publisher:name"))
+         {
+            group = plug->GetVendor();
+         }
+         else if (groupBy == wxT("sortby:type:name"))
+         {
+            group = plug->GetEffectFamily();
+         }
+
+         if (plug->IsEffectDefault())
+         {
+            group = wxEmptyString;
+         }
+
+         if (!group.IsEmpty())
+         {
+            group += wxT(": ");
+         }
+
+         groupNames.Add(group + name);
+         groupPlugs.Add(plug->GetID());
+         groupFlags.Add(plug->IsEffectRealtime() ? realflags : batchflags);
+      }
+      if (groupNames.GetCount() > 0)
+      {
+         AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags);
+      }
+
+   }
+
+   return;
+}
+
+void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
+                                             const wxArrayString & names,
+                                             const PluginIDList & plugs,
+                                             const wxArrayInt & flags)
+{
+   int groupCnt = (int) names.GetCount();
+   int perGroup;
+
+#if defined(__WXGTK__)
+   gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 15);
+#else
+   gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 0);
+#endif
+
+   int max = perGroup;
+   int items = perGroup;
+
+   if (max > groupCnt)
+   {
+      max = 0;
+   }
+
+   for (int j = 0; j < groupCnt; j++)
+   {
+      if (max > 0 && items == max)
+      {
+         int end = j + max;
+         if (end + 1 > groupCnt)
+         {
+            end = groupCnt;
+         }
+         c->BeginSubMenu(wxString::Format(_("Plug-ins %d to %d"),
+                                          j + 1,
+                                          end));
+      }
+
+      c->AddItem(names[j],
+                 names[j],
+                 FNS(OnEffect, plugs[j]),
+                 flags[j],
+                 flags[j]);
+
+      if (max > 0)
+      {
+         items--;
+         if (items == 0 || j + 1 == groupCnt)
+         {
+            c->EndSubMenu();
+            items = max;
+         }
+      }
    }
 
    return;

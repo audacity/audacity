@@ -3,6 +3,8 @@
 ;type process
 ;name "Spectral edit shelves..."
 ;action "Calculating..."
+;author "Paul Licameli"
+;copyright "Unknown"
 
 ;control control-gain "Gain (dB)" real "" 0 -24 24
 
