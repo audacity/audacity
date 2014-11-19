@@ -1185,6 +1185,15 @@
 		28EBA7FC0A78FADE00C8BB1F /* Repair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FA0A78FADE00C8BB1F /* Repair.cpp */; };
 		28EBA8010A78FAF800C8BB1F /* InterpolateAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FD0A78FAF800C8BB1F /* InterpolateAudio.cpp */; };
 		28EBA8020A78FAF800C8BB1F /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */; };
+		28ED7B711A1C77B0008A01D9 /* adjustable-fade.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B6E1A1C77B0008A01D9 /* adjustable-fade.ny */; };
+		28ED7B721A1C77B0008A01D9 /* crossfadetracks.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */; };
+		28ED7B731A1C77B0008A01D9 /* notch.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B701A1C77B0008A01D9 /* notch.ny */; };
+		28ED7B7A1A1C77BF008A01D9 /* sample-data-export.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B741A1C77BF008A01D9 /* sample-data-export.ny */; };
+		28ED7B7B1A1C77BF008A01D9 /* SoundFinder.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B751A1C77BF008A01D9 /* SoundFinder.ny */; };
+		28ED7B7C1A1C77BF008A01D9 /* SpectralEditMulti.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B761A1C77BF008A01D9 /* SpectralEditMulti.ny */; };
+		28ED7B7D1A1C77BF008A01D9 /* SpectralEditParametricEQ.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B771A1C77BF008A01D9 /* SpectralEditParametricEQ.ny */; };
+		28ED7B7E1A1C77BF008A01D9 /* SpectralEditShelves.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B781A1C77BF008A01D9 /* SpectralEditShelves.ny */; };
+		28ED7B7F1A1C77BF008A01D9 /* StudioFadeOut.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B791A1C77BF008A01D9 /* StudioFadeOut.ny */; };
 		28EDC8DF0E5550750034BBE7 /* LV2PortGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EDC8DD0E5550750034BBE7 /* LV2PortGroup.cpp */; };
 		28F00A930A3E2FF100A3E5F5 /* FileNames.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F00A900A3E2FF100A3E5F5 /* FileNames.cpp */; };
 		28F1D81D0A2D0019005506A7 /* AttachableScrollBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D8170A2D0018005506A7 /* AttachableScrollBar.cpp */; };
@@ -3661,7 +3670,6 @@
 		28A520520C12BE0300BF6811 /* pa_debugprint.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_debugprint.h; sourceTree = "<group>"; tabWidth = 3; };
 		28A520530C12BE0300BF6811 /* pa_ringbuffer.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = pa_ringbuffer.c; sourceTree = "<group>"; tabWidth = 3; };
 		28A520540C12BE0300BF6811 /* pa_ringbuffer.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_ringbuffer.h; sourceTree = "<group>"; tabWidth = 3; };
-		28AA28120F267A2D008AED9E /* analyze.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = analyze.ny; path = "../plug-ins/analyze.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28130F267A2D008AED9E /* beat.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = beat.ny; path = "../plug-ins/beat.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28140F267A2D008AED9E /* clicktrack.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = clicktrack.ny; path = "../plug-ins/clicktrack.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28150F267A2D008AED9E /* clipfix.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = clipfix.ny; path = "../plug-ins/clipfix.ny"; sourceTree = SOURCE_ROOT; };
@@ -3942,6 +3950,15 @@
 		28EBA7FE0A78FAF800C8BB1F /* InterpolateAudio.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = InterpolateAudio.h; sourceTree = "<group>"; tabWidth = 3; };
 		28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28EBA8000A78FAF800C8BB1F /* Matrix.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; tabWidth = 3; };
+		28ED7B6E1A1C77B0008A01D9 /* adjustable-fade.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "adjustable-fade.ny"; path = "../plug-ins/adjustable-fade.ny"; sourceTree = SOURCE_ROOT; };
+		28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crossfadetracks.ny; path = "../plug-ins/crossfadetracks.ny"; sourceTree = SOURCE_ROOT; };
+		28ED7B701A1C77B0008A01D9 /* notch.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = notch.ny; path = "../plug-ins/notch.ny"; sourceTree = SOURCE_ROOT; };
+		28ED7B741A1C77BF008A01D9 /* sample-data-export.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "sample-data-export.ny"; path = "../plug-ins/sample-data-export.ny"; sourceTree = SOURCE_ROOT; };
+		28ED7B751A1C77BF008A01D9 /* SoundFinder.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SoundFinder.ny; path = "../plug-ins/SoundFinder.ny"; sourceTree = SOURCE_ROOT; };
+		28ED7B761A1C77BF008A01D9 /* SpectralEditMulti.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SpectralEditMulti.ny; path = "../plug-ins/SpectralEditMulti.ny"; sourceTree = SOURCE_ROOT; };
+		28ED7B771A1C77BF008A01D9 /* SpectralEditParametricEQ.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SpectralEditParametricEQ.ny; path = "../plug-ins/SpectralEditParametricEQ.ny"; sourceTree = SOURCE_ROOT; };
+		28ED7B781A1C77BF008A01D9 /* SpectralEditShelves.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SpectralEditShelves.ny; path = "../plug-ins/SpectralEditShelves.ny"; sourceTree = SOURCE_ROOT; };
+		28ED7B791A1C77BF008A01D9 /* StudioFadeOut.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = StudioFadeOut.ny; path = "../plug-ins/StudioFadeOut.ny"; sourceTree = SOURCE_ROOT; };
 		28EDC8DA0E5550750034BBE7 /* lv2_event.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = lv2_event.h; path = lv2/lv2_event.h; sourceTree = "<group>"; tabWidth = 3; };
 		28EDC8DB0E5550750034BBE7 /* lv2_event_helpers.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = lv2_event_helpers.h; path = lv2/lv2_event_helpers.h; sourceTree = "<group>"; tabWidth = 3; };
 		28EDC8DC0E5550750034BBE7 /* lv2_uri_map.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = lv2_uri_map.h; path = lv2/lv2_uri_map.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -6355,19 +6372,27 @@
 		28AA28110F267957008AED9E /* plug-ins */ = {
 			isa = PBXGroup;
 			children = (
-				28AA28120F267A2D008AED9E /* analyze.ny */,
+				28ED7B6E1A1C77B0008A01D9 /* adjustable-fade.ny */,
 				28AA28130F267A2D008AED9E /* beat.ny */,
 				28AA28140F267A2D008AED9E /* clicktrack.ny */,
 				28AA28150F267A2D008AED9E /* clipfix.ny */,
 				28AA28160F267A2D008AED9E /* crossfadein.ny */,
 				28AA28170F267A2D008AED9E /* crossfadeout.ny */,
+				28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */,
 				28AA28180F267A2D008AED9E /* delay.ny */,
 				28AA28190F267A2D008AED9E /* equalabel.ny */,
 				28AA281A0F267A2D008AED9E /* highpass.ny */,
 				28AA281B0F267A2D008AED9E /* lowpass.ny */,
+				28ED7B701A1C77B0008A01D9 /* notch.ny */,
 				28AA281C0F267A2D008AED9E /* pluck.ny */,
 				28AA281D0F267A2D008AED9E /* rissetdrum.ny */,
+				28ED7B741A1C77BF008A01D9 /* sample-data-export.ny */,
 				28AA281E0F267A2D008AED9E /* SilenceMarker.ny */,
+				28ED7B751A1C77BF008A01D9 /* SoundFinder.ny */,
+				28ED7B761A1C77BF008A01D9 /* SpectralEditMulti.ny */,
+				28ED7B771A1C77BF008A01D9 /* SpectralEditParametricEQ.ny */,
+				28ED7B781A1C77BF008A01D9 /* SpectralEditShelves.ny */,
+				28ED7B791A1C77BF008A01D9 /* StudioFadeOut.ny */,
 				28AA281F0F267A2D008AED9E /* tremolo.ny */,
 				28AA28200F267A2D008AED9E /* vocalremover.ny */,
 				28AA28210F267A2D008AED9E /* vocoder.ny */,
@@ -8001,6 +8026,15 @@
 				8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */,
 				28006FFB132C167600BD34D7 /* Install.txt in Resources */,
 				ED9551A1195D95FC0027176E /* Audacity-DMG-background.png in Resources */,
+				28ED7B711A1C77B0008A01D9 /* adjustable-fade.ny in Resources */,
+				28ED7B721A1C77B0008A01D9 /* crossfadetracks.ny in Resources */,
+				28ED7B731A1C77B0008A01D9 /* notch.ny in Resources */,
+				28ED7B7A1A1C77BF008A01D9 /* sample-data-export.ny in Resources */,
+				28ED7B7B1A1C77BF008A01D9 /* SoundFinder.ny in Resources */,
+				28ED7B7C1A1C77BF008A01D9 /* SpectralEditMulti.ny in Resources */,
+				28ED7B7D1A1C77BF008A01D9 /* SpectralEditParametricEQ.ny in Resources */,
+				28ED7B7E1A1C77BF008A01D9 /* SpectralEditShelves.ny in Resources */,
+				28ED7B7F1A1C77BF008A01D9 /* StudioFadeOut.ny in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
