@@ -653,7 +653,7 @@ void CompressorDialog::PopulateOrExchange(ShuttleGui & S)
          mAttackLabel = S.AddVariableText(_("Attack Time:"), true,
                                          wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          S.SetStyle(wxSL_HORIZONTAL);
-         mAttackSlider = S.Id(AttackID).AddSlider(wxT(""), 2, 50, 1);
+         mAttackSlider = S.Id(AttackID).AddSlider(wxT(""), 2, 500, 1);
          mAttackSlider->SetName(_("Attack Time"));
          mAttackText = S.AddVariableText(wxT("XXXX secs"), true,
                                          wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -661,7 +661,7 @@ void CompressorDialog::PopulateOrExchange(ShuttleGui & S)
          mDecayLabel = S.AddVariableText(_("Release Time:"), true,
                                          wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
          S.SetStyle(wxSL_HORIZONTAL);
-         mDecaySlider = S.Id(DecayID).AddSlider(wxT(""), 2, 30, 1);
+         mDecaySlider = S.Id(DecayID).AddSlider(wxT(""), 10, 300, 1);
          mDecaySlider->SetName(_("Release Time"));
          mDecayText = S.AddVariableText(wxT("XXXX secs"), true,
                                         wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -690,8 +690,8 @@ bool CompressorDialog::TransferDataToWindow()
    mThresholdSlider->SetValue((int)rint(threshold));
    mNoiseFloorSlider->SetValue((int)rint(noisefloor/5));
    mRatioSlider->SetValue((int)rint(ratio*2));
-   mAttackSlider->SetValue((int)rint(attack*10));
-   mDecaySlider->SetValue((int)rint(decay));
+   mAttackSlider->SetValue((int)rint(attack*100));
+   mDecaySlider->SetValue((int)rint(decay*10));
    mGainCheckBox->SetValue(useGain);
    mPeakCheckBox->SetValue(usePeak);
 
@@ -705,8 +705,8 @@ bool CompressorDialog::TransferDataFromWindow()
    threshold = (double)mThresholdSlider->GetValue();
    noisefloor = (double)mNoiseFloorSlider->GetValue() * 5.0;
    ratio = (double)(mRatioSlider->GetValue() / 2.0);
-   attack = (double)(mAttackSlider->GetValue() / 10.0);
-   decay = (double)(mDecaySlider->GetValue());
+   attack = (double)(mAttackSlider->GetValue() / 100.0);
+   decay = (double)(mDecaySlider->GetValue() / 10.0);
    useGain = mGainCheckBox->GetValue();
    usePeak = mPeakCheckBox->GetValue();
 
@@ -737,8 +737,8 @@ bool CompressorDialog::TransferDataFromWindow()
    }
    mRatioText->SetName(mRatioText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
-   mAttackLabel->SetName(wxString::Format(_("Attack Time %.1f secs"), attack));
-   mAttackText->SetLabel(wxString::Format(_("%.1f secs"), attack));
+   mAttackLabel->SetName(wxString::Format(_("Attack Time %.2f secs"), attack));
+   mAttackText->SetLabel(wxString::Format(_("%.2f secs"), attack));
    mAttackText->SetName(mAttackText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    mDecayLabel->SetName(wxString::Format(_("Release Time %.1f secs"), decay));
