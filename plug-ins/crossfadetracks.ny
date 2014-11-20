@@ -4,6 +4,8 @@
 ;name "Crossfade Tracks..."
 ;action "Crossfading..."
 ;preview disabled - cannot use preview because tracks are processed differently.
+;author "Steve Daulton"
+;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; crossfadetracks.ny by Steve Daulton Nov 2014.
 ;; Released under terms of the GNU General Public License version 2:
