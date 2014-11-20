@@ -44,6 +44,10 @@ class EffectReverse:public Effect {
       return wxString(_("Reversing"));
    }
 
+   virtual bool PromptUser() {
+      return true;
+   }
+
    virtual bool Process();
 
  private:

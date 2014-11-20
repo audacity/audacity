@@ -41,6 +41,10 @@ class EffectInvert:public EffectSimpleMono {
       return wxString(_("Inverting"));
    }
 
+   virtual bool PromptUser() {
+      return true;
+   }
+
  protected:
    virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
 };

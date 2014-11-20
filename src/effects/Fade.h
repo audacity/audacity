@@ -38,6 +38,10 @@ class EffectFadeIn: public EffectSimpleMono {
       return wxString(_("Fading In"));
    }
 
+   virtual bool PromptUser() {
+      return true;
+   }
+
  protected:
    sampleCount mSample;
    sampleCount mLen;
@@ -66,6 +70,10 @@ class EffectFadeOut:public EffectSimpleMono {
 
    virtual wxString GetEffectAction() {
       return wxString(_("Fading Out"));
+   }
+
+   virtual bool PromptUser() {
+      return true;
    }
 
  protected:
