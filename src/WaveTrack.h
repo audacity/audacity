@@ -393,7 +393,8 @@ class AUDACITY_DLL_API WaveTrack: public Track {
       WaveformDBDisplay,
       SpectrumDisplay,
       SpectrumLogDisplay,
-      PitchDisplay
+      PitchDisplay,
+      NoDisplay            // Preview track has no display
    } WaveTrackDisplay;
 
    void SetDisplay(int display) {

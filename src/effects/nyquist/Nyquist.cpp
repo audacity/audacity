@@ -731,34 +731,34 @@ bool EffectNyquist::ProcessOne()
             type = wxT("wave");
             switch (((WaveTrack *) mCurTrack[0])->GetDisplay())
             {
-               case WaveTrack::WaveformDisplay: view = wxT("Waveform"); break;
-               case WaveTrack::WaveformDBDisplay: view = wxT("Waveform (dB)"); break;
-               case WaveTrack::SpectrumDisplay: view = wxT("Spectrogram"); break;
-               case WaveTrack::SpectrumLogDisplay: view = wxT("Spectrogram log(f)"); break;
-               case WaveTrack::PitchDisplay: view = wxT("Pitch (EAC)"); break;
-               default: break;
+               case WaveTrack::WaveformDisplay: view = wxT("\"Waveform\""); break;
+               case WaveTrack::WaveformDBDisplay: view = wxT("\"Waveform (dB)\""); break;
+               case WaveTrack::SpectrumDisplay: view = wxT("\"Spectrogram\""); break;
+               case WaveTrack::SpectrumLogDisplay: view = wxT("\"Spectrogram log(f)\""); break;
+               case WaveTrack::PitchDisplay: view = wxT("\"Pitch (EAC)\""); break;
+               default: view = wxT("NIL"); break;
             }
          break;
 #if defined(USE_MIDI)
          case Track::Note:
             type = wxT("midi");
-            view = wxT("Midi");
+            view = wxT("\"Midi\"");
          break;
 #endif
          case Track::Label:
             type = wxT("label");
-            view = wxT("Label");
+            view = wxT("\"Label\"");
          break;
          case Track::Time:
             type = wxT("time");
-            view = wxT("Time");
+            view = wxT("\"Time\"");
          break;
       }
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), mCurTrack[0]->GetName().c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type.c_str());
-      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'VIEW)\n"), view.c_str());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %g) 'START-TIME)\n"), mCurTrack[0]->GetStartTime());
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %g) 'END-TIME)\n"), mCurTrack[0]->GetEndTime());
@@ -785,16 +785,22 @@ bool EffectNyquist::ProcessOne()
       for (int i = 0; i < mCurNumChannels; i++) {
          WaveClipArray ca;
          mCurTrack[i]->FillSortedClipArray(ca);
+         // A list of clips for mono, or an array of lists for multi-channel.
+         if (mCurNumChannels > 1) clips += wxT("(list ");
+         // Each clip is a list (start-time, end-time)
          for (size_t j = 0; j < ca.GetCount(); j++) {
             clips += wxString::Format(wxT("(list (float %g) (float %g))"), ca[j]->GetStartTime(), ca[j]->GetEndTime());
          }
+         if (mCurNumChannels > 1) clips += wxT(" )");
 
          float min, max;
          mCurTrack[i]->GetMinMax(&min, &max, mT0, mT1);
          maxPeak = wxMax(wxMax(fabs(min), fabs(max)), maxPeak);
       }
-
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (list %s) 'CLIPS)\n"), clips.c_str());
+      // A list of clips for mono, or an array of lists for multi-channel.
+      cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
+                              (mCurNumChannels == 1) ? wxT("(list ") : wxT("#( "),
+                              clips.c_str());
       cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %g) 'PEAK-LEVEL)\n"), maxPeak);
    }
 

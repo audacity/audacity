@@ -1717,6 +1717,7 @@ void Effect::Preview(bool dryOnly)
    // Build new tracklist from rendering tracks
    mTracks = new TrackList();
    mixLeft->SetSelected(true);
+   mixLeft->SetDisplay(WaveTrack::NoDisplay);
    mTracks->Add(mixLeft);
    if (mixRight) {
       mixRight->SetSelected(true);
