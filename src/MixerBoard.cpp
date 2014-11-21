@@ -688,11 +688,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
 
 wxColour MixerTrackCluster::GetTrackColor()
 {
-   //#if (AUDACITY_BRANDING == BRAND_UMIXIT)
-   //   return AColor::GetTrackColor((void*)mLeftTrack);
-   //#else
-      return wxColour(102, 255, 102); // same as Meter playback color
-   //#endif
+   return wxColour(102, 255, 102); // same as Meter playback color
 }
 
 
