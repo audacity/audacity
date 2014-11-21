@@ -22,9 +22,6 @@ email audacity-devel@lists.sourceforge.net.
 
 Audacity releases for Windows are currently built with Microsoft Visual 
 Studio 2013 C++. Most of us use the Express edition, which is free. 
-For instructions on compiling Audacity under the Cygwin 
-UNIX Emulation Layer, see the "Compiling Audacity under 
-Cygwin" section below. This is not maintained.
 
 Note that Audacity uses VC++'s multithreaded DLL runtime libraries. 
 If you have MSVC installed, these are in your PATH, but users to 
@@ -36,27 +33,23 @@ UNIX Emulation Layer, see the "Compiling Audacity under
 Cygwin" section below. This is not maintained (for a very long time!).
 
 
----------------------------
-MSVC++ STEP 1:  Download and Install wxWidgets 
----------------------------
+------------------------------------------------------------------------
+MSVC++ STEP 1:  Download and Install wxWidgets
+------------------------------------------------------------------------
 
 To simplify the implementation of a near-identical user
 interface across platforms, Audacity uses wxWidgets, a  
-GUI framework. (https://www.wxwidgets.org/).
+GUI framework. 
 
 Audacity 2.1.0 requires wxWidgets 2.8.12.
 
-To be able to build Audacity for Windows, download and install wxWidgets:
-
-* installer: https://sourceforge.net/projects/wxwindows/files/2.8.12/wxMSW-2.8.12-Setup.exe
-
-* .zip file: https://sourceforge.net/projects/wxwindows/files/2.8.12/wxMSW-2.8.12.zip
+To be able to build Audacity for Windows, download and install 
+wxWidgets from http://www.wxwidgets.org/.
 
 
-
-------------------------
+------------------------------------------------------------------------
 MSVC++ STEP 2:  Build wxWidgets
-------------------------
+------------------------------------------------------------------------
 
 2.1. Open "C:\wxWidgets-2.8.12\build\msw\wx_dll.dsw" with 
    Microsoft Visual Studio. 
@@ -81,83 +74,109 @@ MSVC++ STEP 2:  Build wxWidgets
    in case you also build without these accessibility features. 
 
    Copy "audacity\win\wxWidgets_additions\setup.h" to 
-   "C:\wxWidgets-3.0.2\include\wx\msw\setup.h".
+   "C:\wxWidgets-2.8.12\include\wx\msw\setup.h".
 
    Audacity releases are built with these accessibility features.
 
 
 2.3. Build wxWidgets for all configurations of Audacity that you want.
-    * Build "DLL Unicode Release" to use in a "Release" 
-       version of Audacity.
-    * Build "DLL Unicode Debug" to use in a "Debug"
-       version of Audacity.
 
-With VS2013 you will get an error for missing pbt.h header, you can (apparently safely) comment that out.
+   With Visual Studio 2013 C++ and wxWidgets 2.8.12, 
+   you will get an error for a missing pbt.h header. 
+   You can (apparently safely) comment that out. 
+   In audacity-src\win\wxWidgets_additions, we have a copy of 
+   the file with this change already made. 
+   As above, you may want to save the original by renaming 
+   "C:\wxWidgets-2.8.12\src\msw\window.cpp" to 
+   "C:\wxWidgets-2.8.12\src\msw\window.cpp.bak". 
+   Then copy "audacity-src\win\wxWidgets_additions\window.cpp" to 
+   "C:\wxWidgets-2.8.12\src\msw\window.cpp".
+   
+   * Use the "DLL Unicode Release" configuration to use in a 
+     "Release" version of Audacity.
+   * Build "DLL Unicode Debug" configuration to use in a
+     "Debug" version of Audacity.
 
    See "MSVC++ STEP 6:  Build Audacity" for the differences
    between these versions of Audacity.
 
-   Because of dependencies, this should also build these projects:
-   But it may not on VS2013 so you will have to make sure to build these as well:
+   For Audacity, you need only the following five projects 
+   to build (not the whole solution) for each configuration:
+      * adv
+      * base
+      * core
+      * html
+      * net
+   Building only these will give you a faster build, and 
+   possibly smaller wxWidgets DLLs. 
+   To do this, Ctrl-select those 5 projects in the Solution Explorer. 
+   Then right-click and choose Build Selection (or Rebuild Selection).
+
+   Because of dependencies, this should also build the 
+   following projects.
+   But on some computer configurations, they may not on VS2013, 
+   so you might have to explicityly build these as well:
       * wxexpat
       * wxjpeg
       * wxpng
       * wxregex
       * wxtiff
       * wxzlib
+   To be certain about this, you can just Ctrl-select them with the 
+   others above, and build them all together. 
 
    If you build the whole solution, ignore the linker errors for 
    wxbase28*_odbc*.* dbgrid.
 
 
---------------------------
+------------------------------------------------------------------------
 MSVC++ STEP 3:  Download and Install Audacity
---------------------------
+------------------------------------------------------------------------
 
-To check out the latest 
-source code from SVN, see the instructions at 
+To check out the latest source code from SVN, see the instructions at 
 "http://audacity.sourceforge.net/community/developers". 
 
 
---------------------------------------------
+------------------------------------------------------------------------
 MSVC++ STEP 4:  Set wxWidgets location for Audacity
---------------------------------------------
+------------------------------------------------------------------------
 
-Before you can start the build process, you must update the
-project settings to tell Visual C++ where to find wxWidgets.
-There are three settings that need changing:
-    4.1. Include Directory (e.g., "C:\wxWidgets-2.8.12\include")
-    4.2. Resource Directory (e.g., "C:\wxWidgets-2.8.12\include")
-    4.3. Library Directory (e.g., "C:\wxWidgets-2.8.12\lib")
+The Audacity Visual Studio project has been set up to use enviornment
+variables to locate all externally referenced SDKs.  For wxWidgets, it
+uses the "WXWIN" environment variable.
 
-eFortunately, this is parameterized, using a Windows 
-environment variable, WXWIN. There are various ways to set 
-these, so look in the Windows help system. 
+Before you can build Audacity, you must set the variable.  This process
+can vary depending on the version of Windows you're using.  The following
+is based on Windows 7, so you may need to make adjustments.
 
-In the Audacity project file, there are declarations like 
+4.1. Open the "Control Panel"
+4.2. Click the "System" app
+4.3. Click the "Advanced system settings" link
+4.4. On the "Advanced" tab, click the "Environment Variables..." button
+4.5. Click "New..." in the "System variables" group
+4.6. Set the "Variable name" to "WXWIN" (without the quotes)
+4.7. Set the "Variable value" to the full path of where you installed
+     wxWidgets (typically "C:\wxWidgets-2.8.12")
+4.8. Click "OK" until you exit the "System Properties" app
 
-   $(WXWIN)\include
-
-that get interpreted as, e.g., "C:\wxWidgets-2.8.12\include".
-
-The typical setting for WXWIN is "C:\wxWidgets-2.8.12". 
-For example,
-
+An alternative way to do it, that's available on all versions of Windows, 
+is to open a cmd.exe window, and type: 
    set WXWIN =C:\wxWidgets-2.8.12
 
-Once you have set the WXWIN environment variable correctly, 
-the Audacity project file's declarations will do the rest.
+Once you have set the WXWIN environment variable correctly, the Audacity
+Project file's declarations will do the rest.
 
-Note that you must restart the Audacity solution (sln) 
-file so it picks up changes in the environment variables. 
+Note that if you currently have the Audacity Solution open in Visual
+Studio, you must restart Visual Studio for it to recognize the new
+environment variables.
 
 In some cases, you may need to reboot the computer to ensure 
 the variables are read correctly. 
 
 
------------------------
+------------------------------------------------------------------------
 MSVC++ STEP 5:  Consider and Configure Optional Features
------------------------
+------------------------------------------------------------------------
 
 5.1. Locally installed help is optional, but required for a full Release 
 build. (The "help" folder is included in the installer, but removed from 
@@ -188,25 +207,20 @@ e.g., C:\Windows.
 configuration, but requires that extra libraries be downloaded
 separately to use it. 
 
-* To allow export of MP3 files, install LAME:
-  http://manual.audacityteam.org/index.php?title=FAQ:Installation_and_Plug-Ins#lame
-
-* To allow import and export of a much wider range of audio formats
-  (including WMA, M4A and AC3), and to import audio from video files,
-  install FFmpeg:
-  http://www.audacityteam.org/manual/index.php?title=FAQ:Installation_and_Plug-Ins#installffmpeg
-
 To change the libraries enabled in Audacity, edit  
 "win\configwin.h" and comment or uncomment the entries.
 
 
-5.4 TO ADD SUPPORT FOR ASIO:
-Because ASIO is a proprietary, closed standard, 
-we (or any third party) cannot distribute its SDK. 
-That means we cannot distribute builds of Audacity that support 
-ASIO, because Audacity is licensed under the 
-GPL (http://audacity.sourceforge.net/about/license), which requires 
-we distribute all source code. 
+5.4. To add support for ASIO:
+
+ASIO (from Steinberg) is a sound card interface protocol that is faster
+than standard WMME. Unlike WMME, not all soundcard drivers support it.
+
+Because ASIO is a proprietary, closed standard, we (or any third party)
+cannot distribute its SDK. That means we cannot distribute builds of
+Audacity that support ASIO, because Audacity is licensed under the GPL 
+(http://audacity.sourceforge.net/about/license), which requires we
+distribute all source code. 
 
 So, although you can build your own copies of Audacity with 
 ASIO support, for personal use, you cannot distribute them without 
@@ -224,13 +238,12 @@ ASIO SDK, e.g.,
    set ASIOSDK_DIR=C:\ASIOSDK2
 
 
-
------------------------
+------------------------------------------------------------------------
 MSVC++ STEP 6:  Build Audacity
------------------------
+------------------------------------------------------------------------
 
-Now you can compile Audacity. Run Visual C++ and load the Audacity 
-solution, "audacity\win\audacity.sln".
+Run Visual C++ and load the Audacity solution, 
+"audacity\win\audacity.sln".
 
 Select the configuration that you wish to build:
 * "Release" for Unicode-based, general use 
@@ -245,9 +258,9 @@ Build Audacity by giving the "Build" menu > "Rebuild Solution"
 command.
 
 
------------------------
+------------------------------------------------------------------------
 MSVC++ STEP 7:  Provide Access to the wxWidgets DLLs
------------------------
+------------------------------------------------------------------------
 
 Each Audacity executable needs access to five specific wxWidgets
 DLLs from those you built in "MSVC++ STEP 2:  Build wxWidgets" 
@@ -291,9 +304,9 @@ installation of the wxWidgets source and the latest Audacity source
 from SVN". So if that's not what you attempted, please try that first. 
 
 
----------------------------
+------------------------------------------------------------------------
 HELP! I get linker errors!
----------------------------
+------------------------------------------------------------------------
 
 In some cases, Audacity does compile, but during the linking
 process you get a bunch of error messages like this:
