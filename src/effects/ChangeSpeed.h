@@ -22,6 +22,7 @@
 #include <wx/slider.h>
 #include <wx/string.h>
 #include <wx/textctrl.h>
+#include "../widgets/NumericTextCtrl.h"
 
 class EffectChangeSpeed : public Effect
 {
@@ -52,8 +53,8 @@ class EffectChangeSpeed : public Effect
    double CalcPreviewInputLength(double previewLength);
 
  protected:
+   virtual bool Init();
    virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
 
    virtual bool CheckWhetherSkipEffect() { return (m_PercentChange == 0.0); }
    virtual bool Process();
@@ -74,8 +75,9 @@ class EffectChangeSpeed : public Effect
                               // -100% is meaningless, but sky's the upper limit.
                               // Slider is (-100, 200], but textCtrls can set higher.
    int      mFromVinyl;       // from standard vinyl speed (RPM) enum
-   int      mToVinyl;         // to standard vinyl speed (RPM) enum
    double   mFactor;          // scale factor calculated from percent change
+   double   mFromLength;      // current selection length
+   int      mTimeCtrlFormat;  // time control format index number
 
 friend class ChangeSpeedDialog;
 };
@@ -89,40 +91,52 @@ class ChangeSpeedDialog : public EffectDialog
 
    void PopulateOrExchange(ShuttleGui& S);
    bool TransferDataToWindow();
-   bool TransferDataFromWindow();
+   bool Validate();
 
  private:
    // handlers
    void OnText_PercentChange(wxCommandEvent & event);
+   void OnText_Multiplier(wxCommandEvent & event);
    void OnSlider_PercentChange(wxCommandEvent & event);
-   void OnChoice_FromVinyl(wxCommandEvent & event);
-   void OnChoice_ToVinyl(wxCommandEvent & event);
+   void OnChoice_Vinyl(wxCommandEvent & event);
+   void OnTimeCtrl_ToLength(wxCommandEvent & event);
+   void OnTimeCtrlUpdate(wxCommandEvent & event);
 
    void OnPreview(wxCommandEvent &event);
 
-   // helper fns
+   // helper functions
    void Update_Text_PercentChange();   // Update control per current m_PercentChange.
+   void Update_Text_Multiplier();      // Update control per current m_PercentChange.
    void Update_Slider_PercentChange(); // Update control per current m_PercentChange.
    void Update_Vinyl();                // Update Vinyl controls for new percent change.
-   void Update_PercentChange();        // Update percent change controls for new Vinyl values.
+   void Update_TimeCtrl_ToLength();    // Update target length controls for new percent change.
+   void UpdateUI();                    // Enable / disable OK / preview.
 
  private:
    EffectChangeSpeed * mEffect;
    bool mbLoopDetect;
 
    // controls
-   wxTextCtrl *	mpTextCtrl_PercentChange;
-   wxSlider *		mpSlider_PercentChange;
-   wxChoice *		mpChoice_FromVinyl;
-   wxChoice *		mpChoice_ToVinyl;
+   wxTextCtrl *      mpTextCtrl_PercentChange;
+   wxTextCtrl *      mpTextCtrl_Multiplier;
+   wxSlider *        mpSlider_PercentChange;
+   wxChoice *        mpChoice_FromVinyl;
+   wxChoice *        mpChoice_ToVinyl;
+   NumericTextCtrl * mpFromLengthCtrl;
+   NumericTextCtrl * mpToLengthCtrl;
+   double mRate;
 
  public:
    // effect parameters
-   double   m_PercentChange;   // percent change to apply to tempo
+   double   m_PercentChange;  // percent change to apply to tempo
                               // -100% is meaningless, but sky's the upper limit.
                               // Slider is (-100, 200], but textCtrls can set higher.
-   int      mFromVinyl;       // from standard vinyl speed (RPM)
-   int      mToVinyl;         // to standard vinyl speed (RPM)
+   int      mFromVinyl;       // from standard vinyl speed (rpm)
+   int      mToVinyl;         // to standard vinyl speed (rpm)
+   double   mFromLength;      // current selection length
+   double   mToLength;        // target length of selection
+   wxString mFormat;          // time control format
+   int      mTimeCtrlFormat;  // time control format index
 
  private:
    DECLARE_EVENT_TABLE()
@@ -130,4 +144,3 @@ class ChangeSpeedDialog : public EffectDialog
 
 
 #endif // __AUDACITY_EFFECT_CHANGESPEED__
-
