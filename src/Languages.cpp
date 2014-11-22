@@ -128,6 +128,7 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
    localLanguageName[wxT("hi")] = wxT("Hindi");
    localLanguageName[wxT("hr")] = wxT("Croatian");
    localLanguageName[wxT("hu")] = wxT("Magyar");
+   localLanguageName[wxT("hy")] = wxT("Armenian");
    localLanguageName[wxT("id")] = wxT("Bahasa Indonesia"); // aka Indonesian
    localLanguageName[wxT("it")] = wxT("Italiano");
    localLanguageName[wxT("ja")] = wxT("Nihongo");

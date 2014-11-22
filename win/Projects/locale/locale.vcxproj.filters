@@ -78,6 +78,9 @@
     <msgfmt Include="..\..\..\locale\hu.po">
       <Filter>Source Files</Filter>
     </msgfmt>
+    <msgfmt Include="..\..\..\locale\hy.po">
+      <Filter>Source Files</Filter>
+    </msgfmt>
     <msgfmt Include="..\..\..\locale\id.po">
       <Filter>Source Files</Filter>
     </msgfmt>

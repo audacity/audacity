@@ -168,6 +168,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\locale\hy.po"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\locale\id.po"
 				>
 			</File>

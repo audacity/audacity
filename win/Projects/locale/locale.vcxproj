@@ -148,6 +148,7 @@ goto :EOF
     <msgfmt Include="..\..\..\locale\hi.po" />
     <msgfmt Include="..\..\..\locale\hr.po" />
     <msgfmt Include="..\..\..\locale\hu.po" />
+    <msgfmt Include="..\..\..\locale\hy.po" />
     <msgfmt Include="..\..\..\locale\id.po" />
     <msgfmt Include="..\..\..\locale\it.po" />
     <msgfmt Include="..\..\..\locale\ja.po" />
