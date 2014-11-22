@@ -1884,8 +1884,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
 
          if (rt0 + rlen*tstep > dClipEndTime)
          {
-            //vvvvv debugging   int nStartSample = clip->GetStartSample();
-            //vvvvv debugging   int nEndSample = clip->GetEndSample();
             int nClipLen = clip->GetEndSample() - clip->GetStartSample();
 
             if (nClipLen <= 0) // Testing for bug 641, this problem is consistently '== 0', but doesn't hurt to check <.
