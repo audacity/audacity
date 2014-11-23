@@ -329,6 +329,7 @@ BEGIN_EVENT_TABLE(ChangeSpeedDialog, EffectDialog)
     EVT_CHOICE(ID_CHOICE_FROMVINYL, ChangeSpeedDialog::OnChoice_Vinyl)
     EVT_CHOICE(ID_CHOICE_TOVINYL, ChangeSpeedDialog::OnChoice_Vinyl)
     EVT_TEXT(ID_TIMECTRL_TOLENGTH, ChangeSpeedDialog::OnTimeCtrl_ToLength)
+    EVT_TEXT(ID_TIMECTRL_FROMLENGTH, ChangeSpeedDialog::OnTimeCtrl_FromLength)
     EVT_COMMAND(ID_TIMECTRL_TOLENGTH, EVT_TIMETEXTCTRL_UPDATED, ChangeSpeedDialog::OnTimeCtrlUpdate)
 
     EVT_BUTTON(ID_EFFECT_PREVIEW, ChangeSpeedDialog::OnPreview)
@@ -585,6 +586,12 @@ void ChangeSpeedDialog::OnChoice_Vinyl(wxCommandEvent & WXUNUSED(event))
       this->Update_TimeCtrl_ToLength();
    }
    mbLoopDetect = false;
+}
+
+void ChangeSpeedDialog::OnTimeCtrl_FromLength(wxCommandEvent & WXUNUSED(event))
+{
+   // Don't allow user input to change FromLength.
+   mpFromLengthCtrl->SetValue(mFromLength); 
 }
 
 void ChangeSpeedDialog::OnTimeCtrl_ToLength(wxCommandEvent & WXUNUSED(event))
