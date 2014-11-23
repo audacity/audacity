@@ -1130,6 +1130,7 @@ NumericTextCtrl::NumericTextCtrl(NumericConverter::Type type,
    mDigitBoxW = 10;
    mDigitBoxH = 16;
 
+   mReadOnly = false;
    mMenuEnabled = true;
    mButtonWidth = 9;
 
@@ -1211,6 +1212,11 @@ void NumericTextCtrl::SetValue(double newValue)
    NumericConverter::SetValue(newValue);
    ValueToControls();
    ControlsToValue();
+}
+
+void NumericTextCtrl::SetReadOnly(bool readOnly)
+{
+   mReadOnly = readOnly;
 }
 
 void NumericTextCtrl::EnableMenu(bool enable)
@@ -1499,7 +1505,7 @@ void NumericTextCtrl::OnMouse(wxMouseEvent &event)
       wxContextMenuEvent e;
       OnContext(e);
    }
-   else if( event.m_wheelRotation != 0 ) {
+   else if(!mReadOnly && event.m_wheelRotation != 0 ) {
       double steps = event.m_wheelRotation /
          (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0) +
          mScrollRemainder;
@@ -1594,7 +1600,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
    // Convert numeric keypad entries.
    if ((keyCode >= WXK_NUMPAD0) && (keyCode <= WXK_NUMPAD9)) keyCode -= WXK_NUMPAD0 - '0';
 
-   if (keyCode >= '0' && keyCode <= '9') {
+   if (!mReadOnly && (keyCode >= '0' && keyCode <= '9')) {
       int digitPosition = mDigits[mFocusedDigit].pos;
       if (mValueString[digitPosition] == wxChar('-')) {
          mValue = 0;
@@ -1609,7 +1615,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       Updated();
    }
 
-   else if (keyCode == WXK_BACK) {
+   else if (!mReadOnly && keyCode == WXK_BACK) {
       // Moves left, replaces that char with '0', stays there...
       mFocusedDigit--;
       mFocusedDigit += mDigits.GetCount();
@@ -1645,12 +1651,12 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       Refresh();
    }
 
-   else if (keyCode == WXK_UP) {
+   else if (!mReadOnly && keyCode == WXK_UP) {
       Adjust(1, 1);
       Updated();
    }
 
-   else if (keyCode == WXK_DOWN) {
+   else if (!mReadOnly && keyCode == WXK_DOWN) {
       Adjust(1, -1);
       Updated();
    }

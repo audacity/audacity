@@ -99,7 +99,6 @@ class ChangeSpeedDialog : public EffectDialog
    void OnText_Multiplier(wxCommandEvent & event);
    void OnSlider_PercentChange(wxCommandEvent & event);
    void OnChoice_Vinyl(wxCommandEvent & event);
-   void OnTimeCtrl_FromLength(wxCommandEvent & event);
    void OnTimeCtrl_ToLength(wxCommandEvent & event);
    void OnTimeCtrlUpdate(wxCommandEvent & event);
 

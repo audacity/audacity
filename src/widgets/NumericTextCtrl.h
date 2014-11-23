@@ -144,6 +144,7 @@ class NumericTextCtrl: public wxControl, public NumericConverter
 
    void SetFieldFocus(int digit);
 
+   void SetReadOnly(bool readOnly = true);
    void EnableMenu(bool enable = true);
 
    int GetFocusedField() { return mLastField; }
@@ -172,6 +173,7 @@ private:
 private:
 
    bool           mMenuEnabled;
+   bool           mReadOnly;
 
    wxBitmap      *mBackgroundBitmap;
 
