@@ -4290,8 +4290,12 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
                else {
                   c = 0.5*(min+max);
                   l = (c - min);
-                  min = wxMax( -1.0, c - 2*l);  // limit to +/-1 range
-                  max = wxMin(  1.0, c + 2*l);
+                  // limit to +/- 1 range unless already outside that range...
+                  float minRange = (min < -1) ? -2.0 : -1.0;
+                  float maxRange = (max > 1) ? 2.0 : 1.0;
+                  // and enforce vertical zoom limits.
+                  min = wxMin(maxRange - ZOOMLIMIT, wxMax(minRange, c - 2*l));
+                  max = wxMax(minRange + ZOOMLIMIT, wxMin(maxRange, c + 2*l));
                }
             }
          }

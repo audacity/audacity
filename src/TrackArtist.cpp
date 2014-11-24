@@ -1004,7 +1004,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
 
       l = r.x + lx;
       w = x - lx;
-      if (lmaxbot != lmintop - 1) {
+      if (lmaxbot < lmintop - 1) {
          dc.DrawRectangle(l, r.y + lmaxtop, w, lmaxbot - lmaxtop);
          dc.DrawRectangle(l, r.y + lmintop, w, lminbot - lmintop);
       }
@@ -1023,7 +1023,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
    dc.SetBrush(lsel ? selectedBrush : unselectedBrush);
    l = r.x + lx;
    w = x - lx;
-   if (lmaxbot != lmintop - 1) {
+   if (lmaxbot < lmintop - 1) {
       dc.DrawRectangle(l, r.y + lmaxtop, w, lmaxbot - lmaxtop);
       dc.DrawRectangle(l, r.y + lmintop, w, lminbot - lmintop);
    }
