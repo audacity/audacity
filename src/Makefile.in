@@ -83,8 +83,6 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_AUDIO_UNITS_TRUE@am__append_1 = $(AUDIOUNITS_CFLAGS)
 @USE_AUDIO_UNITS_TRUE@am__append_2 = $(AUDIOUNITS_LIBS)
 @USE_AUDIO_UNITS_TRUE@am__append_3 = \
-@USE_AUDIO_UNITS_TRUE@	effects/audiounits/LoadAudioUnits.cpp \
-@USE_AUDIO_UNITS_TRUE@	effects/audiounits/LoadAudioUnits.h \
 @USE_AUDIO_UNITS_TRUE@	effects/audiounits/AudioUnitEffect.cpp \
 @USE_AUDIO_UNITS_TRUE@	effects/audiounits/AudioUnitEffect.h \
 @USE_AUDIO_UNITS_TRUE@	$(NULL)
@@ -462,9 +460,7 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	widgets/Ruler.cpp widgets/Ruler.h widgets/valnum.cpp \
 	widgets/valnum.h widgets/Warning.cpp widgets/Warning.h \
 	xml/XMLFileReader.cpp xml/XMLFileReader.h xml/XMLWriter.cpp \
-	xml/XMLWriter.h effects/audiounits/LoadAudioUnits.cpp \
-	effects/audiounits/LoadAudioUnits.h \
-	effects/audiounits/AudioUnitEffect.cpp \
+	xml/XMLWriter.h effects/audiounits/AudioUnitEffect.cpp \
 	effects/audiounits/AudioUnitEffect.h export/ExportFFmpeg.cpp \
 	export/ExportFFmpeg.h export/ExportFFmpegDialogs.cpp \
 	export/ExportFFmpegDialogs.h import/ImportFFmpeg.cpp \
@@ -497,8 +493,7 @@ am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 	blockfile/audacity-SilentBlockFile.$(OBJEXT) \
 	blockfile/audacity-SimpleBlockFile.$(OBJEXT) \
 	xml/audacity-XMLTagHandler.$(OBJEXT)
-@USE_AUDIO_UNITS_TRUE@am__objects_2 = effects/audiounits/audacity-LoadAudioUnits.$(OBJEXT) \
-@USE_AUDIO_UNITS_TRUE@	effects/audiounits/audacity-AudioUnitEffect.$(OBJEXT)
+@USE_AUDIO_UNITS_TRUE@am__objects_2 = effects/audiounits/audacity-AudioUnitEffect.$(OBJEXT)
 @USE_FFMPEG_TRUE@am__objects_3 =  \
 @USE_FFMPEG_TRUE@	export/audacity-ExportFFmpeg.$(OBJEXT) \
 @USE_FFMPEG_TRUE@	export/audacity-ExportFFmpegDialogs.$(OBJEXT) \
@@ -1876,9 +1871,6 @@ effects/audiounits/$(am__dirstamp):
 effects/audiounits/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) effects/audiounits/$(DEPDIR)
 	@: > effects/audiounits/$(DEPDIR)/$(am__dirstamp)
-effects/audiounits/audacity-LoadAudioUnits.$(OBJEXT):  \
-	effects/audiounits/$(am__dirstamp) \
-	effects/audiounits/$(DEPDIR)/$(am__dirstamp)
 effects/audiounits/audacity-AudioUnitEffect.$(OBJEXT):  \
 	effects/audiounits/$(am__dirstamp) \
 	effects/audiounits/$(DEPDIR)/$(am__dirstamp)
@@ -2152,7 +2144,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Wahwah.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/VST/$(DEPDIR)/audacity-VSTEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/audiounits/$(DEPDIR)/audacity-AudioUnitEffect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@effects/audiounits/$(DEPDIR)/audacity-LoadAudioUnits.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/ladspa/$(DEPDIR)/audacity-LadspaEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LV2Effect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Po@am__quote@
@@ -5720,20 +5711,6 @@ xml/audacity-XMLWriter.obj: xml/XMLWriter.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='xml/XMLWriter.cpp' object='xml/audacity-XMLWriter.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o xml/audacity-XMLWriter.obj `if test -f 'xml/XMLWriter.cpp'; then $(CYGPATH_W) 'xml/XMLWriter.cpp'; else $(CYGPATH_W) '$(srcdir)/xml/XMLWriter.cpp'; fi`
-
-effects/audiounits/audacity-LoadAudioUnits.o: effects/audiounits/LoadAudioUnits.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audiounits/audacity-LoadAudioUnits.o -MD -MP -MF effects/audiounits/$(DEPDIR)/audacity-LoadAudioUnits.Tpo -c -o effects/audiounits/audacity-LoadAudioUnits.o `test -f 'effects/audiounits/LoadAudioUnits.cpp' || echo '$(srcdir)/'`effects/audiounits/LoadAudioUnits.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/audiounits/$(DEPDIR)/audacity-LoadAudioUnits.Tpo effects/audiounits/$(DEPDIR)/audacity-LoadAudioUnits.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/audiounits/LoadAudioUnits.cpp' object='effects/audiounits/audacity-LoadAudioUnits.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audiounits/audacity-LoadAudioUnits.o `test -f 'effects/audiounits/LoadAudioUnits.cpp' || echo '$(srcdir)/'`effects/audiounits/LoadAudioUnits.cpp
-
-effects/audiounits/audacity-LoadAudioUnits.obj: effects/audiounits/LoadAudioUnits.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audiounits/audacity-LoadAudioUnits.obj -MD -MP -MF effects/audiounits/$(DEPDIR)/audacity-LoadAudioUnits.Tpo -c -o effects/audiounits/audacity-LoadAudioUnits.obj `if test -f 'effects/audiounits/LoadAudioUnits.cpp'; then $(CYGPATH_W) 'effects/audiounits/LoadAudioUnits.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/audiounits/LoadAudioUnits.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/audiounits/$(DEPDIR)/audacity-LoadAudioUnits.Tpo effects/audiounits/$(DEPDIR)/audacity-LoadAudioUnits.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/audiounits/LoadAudioUnits.cpp' object='effects/audiounits/audacity-LoadAudioUnits.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audiounits/audacity-LoadAudioUnits.obj `if test -f 'effects/audiounits/LoadAudioUnits.cpp'; then $(CYGPATH_W) 'effects/audiounits/LoadAudioUnits.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/audiounits/LoadAudioUnits.cpp'; fi`
 
 effects/audiounits/audacity-AudioUnitEffect.o: effects/audiounits/AudioUnitEffect.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audiounits/audacity-AudioUnitEffect.o -MD -MP -MF effects/audiounits/$(DEPDIR)/audacity-AudioUnitEffect.Tpo -c -o effects/audiounits/audacity-AudioUnitEffect.o `test -f 'effects/audiounits/AudioUnitEffect.cpp' || echo '$(srcdir)/'`effects/audiounits/AudioUnitEffect.cpp

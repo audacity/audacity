@@ -554,8 +554,6 @@ if USE_AUDIO_UNITS
 audacity_CPPFLAGS += $(AUDIOUNITS_CFLAGS)
 audacity_LDADD += $(AUDIOUNITS_LIBS)
 audacity_SOURCES += \
-	effects/audiounits/LoadAudioUnits.cpp \
-	effects/audiounits/LoadAudioUnits.h \
 	effects/audiounits/AudioUnitEffect.cpp \
 	effects/audiounits/AudioUnitEffect.h \
 	$(NULL)

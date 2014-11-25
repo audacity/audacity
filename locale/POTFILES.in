@@ -347,8 +347,6 @@ src/effects/Wahwah.cpp
 src/effects/Wahwah.h
 src/effects/audiounits/AudioUnitEffect.cpp
 src/effects/audiounits/AudioUnitEffect.h
-src/effects/audiounits/LoadAudioUnits.cpp
-src/effects/audiounits/LoadAudioUnits.h
 src/effects/ladspa/LadspaEffect.cpp
 src/effects/ladspa/LadspaEffect.h
 src/effects/ladspa/ladspa.h
