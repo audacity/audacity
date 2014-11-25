@@ -505,8 +505,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mBandWidthCursor = MakeCursor( wxCURSOR_ARROW,  BandWidthCursorXpm, 16, 16);
 #endif
 
-   mPlaybackCursor = MakeCursor(wxCURSOR_ARROW, PlaybackCursorXpm, 8, 16);
-
 #if USE_MIDI
    mStretchMode = stretchCenter;
    mStretching = false;
@@ -629,7 +627,6 @@ TrackPanel::~TrackPanel()
    delete mTopFrequencyCursor;
    delete mBandWidthCursor;
 #endif
-   delete mPlaybackCursor;
 #if USE_MIDI
    delete mStretchCursor;
    delete mStretchLeftCursor;
@@ -1750,20 +1747,6 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
    wxASSERT(!(rightSel < leftSel));
 
    const bool bShiftDown = event.ShiftDown();
-
-#if 1
-   // Should we make a distinct status message for the ctrl-click case?
-   if (!bShiftDown && event.CmdDown()
-#ifdef USE_MIDI
-                           && !HitTestStretch(t, r, event)
-#endif
-      ) {
-      *ppTip = _("Click to start or resume playback at the chosen time.");
-      // cursor?
-      *ppCursor = mPlaybackCursor;
-      return;
-   }
-#endif
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    bool logF;
@@ -3110,9 +3093,15 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
    wxInt64 pixelDist = mViewInfo->zoom * fabs(selend - t0);
    bool chooseLeft = true;
 
-   const wxInt64 rightDist = mViewInfo->zoom * fabs(selend - t1);
-   if (rightDist < pixelDist)
-      chooseLeft = false, pixelDist = rightDist;
+   if (mViewInfo->selectedRegion.isPoint())
+      // Special case when selection is a point, and thus left
+      // and right distances are the same
+      chooseLeft = (selend < t0);
+   else {
+      const wxInt64 rightDist = mViewInfo->zoom * fabs(selend - t1);
+      if (rightDist < pixelDist)
+         chooseLeft = false, pixelDist = rightDist;
+   }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    bool chooseTime = true;

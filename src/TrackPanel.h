@@ -750,7 +750,6 @@ protected:
    wxCursor *mTopFrequencyCursor;
    wxCursor *mBandWidthCursor;
 #endif
-   wxCursor *mPlaybackCursor;
 #if USE_MIDI
    wxCursor *mStretchCursor;
    wxCursor *mStretchLeftCursor;
