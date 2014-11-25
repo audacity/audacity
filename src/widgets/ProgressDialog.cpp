@@ -1148,9 +1148,18 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
 
    Show(false);
 
-   // Even though we won't necessarily show the dialog due to the the 500ms
+   // Even though we won't necessarily show the dialog due to the 500ms
    // delay, we MUST disable other windows/menus anyway since we run the risk
    // of allowing other tasks to run before this one is complete.
+   //
+   // Reviewed this code per Proposed Features #1, at 
+   // http://wiki.audacityteam.org/wiki/Proposal_Timer_Record_Improvements.
+   // Note that this causes a problem for Timer Record wait dialog 
+   // (see TimerRecordDialog::RunWaitDialog()), because it makes it 
+   // impossible to do any editing, even in other open projects, 
+   // while waiting for Timer Record to start -- and then also 
+   // while it's recording, it has a ProgressDialog, so really, 
+   // no editing in any project until Timer Record finishes. 
    mDisable = new wxWindowDisabler(this);
 
 #if defined(__WXMAC__)
