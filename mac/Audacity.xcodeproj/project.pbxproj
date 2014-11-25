@@ -324,7 +324,6 @@
 		1790B12C09883BFD008A330A /* Dither.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFF909883BFD008A330A /* Dither.cpp */; };
 		1790B12E09883BFD008A330A /* Amplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFFE09883BFD008A330A /* Amplify.cpp */; };
 		1790B12F09883BFD008A330A /* AudioUnitEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00109883BFD008A330A /* AudioUnitEffect.cpp */; };
-		1790B13009883BFD008A330A /* LoadAudioUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00409883BFD008A330A /* LoadAudioUnits.cpp */; };
 		1790B13409883BFD008A330A /* ChangePitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00C09883BFD008A330A /* ChangePitch.cpp */; };
 		1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00E09883BFD008A330A /* ChangeSpeed.cpp */; };
 		1790B13609883BFD008A330A /* ChangeTempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01009883BFD008A330A /* ChangeTempo.cpp */; };
@@ -484,6 +483,7 @@
 		28105DAC0AD09FC500BB4269 /* px_mixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 28105DA20AD09FC500BB4269 /* px_mixer.h */; };
 		2810644B1818EEB5004F678B /* cpu_detect_x86.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */; };
 		2810644D1818EED3004F678B /* cpu_detect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810644C1818EED3004F678B /* cpu_detect.h */; };
+		2812E9D91A1F773A001C24D3 /* AudioUnitCocoaHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2812E9D81A1F773A001C24D3 /* AudioUnitCocoaHelper.m */; };
 		2816372E0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */; };
 		282D474C0B9E8D900034BC49 /* Snap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282D474A0B9E8D900034BC49 /* Snap.cpp */; };
 		283135EC0DFB9D110076D551 /* ImportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */; };
@@ -1312,7 +1312,6 @@
 		ED663B9A16543647007F53A5 /* Dither.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFF909883BFD008A330A /* Dither.cpp */; };
 		ED663B9B16543647007F53A5 /* Amplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFFE09883BFD008A330A /* Amplify.cpp */; };
 		ED663B9C16543647007F53A5 /* AudioUnitEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00109883BFD008A330A /* AudioUnitEffect.cpp */; };
-		ED663B9D16543647007F53A5 /* LoadAudioUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00409883BFD008A330A /* LoadAudioUnits.cpp */; };
 		ED663BA016543647007F53A5 /* ChangePitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00C09883BFD008A330A /* ChangePitch.cpp */; };
 		ED663BA116543647007F53A5 /* ChangeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00E09883BFD008A330A /* ChangeSpeed.cpp */; };
 		ED663BA216543647007F53A5 /* ChangeTempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01009883BFD008A330A /* ChangeTempo.cpp */; };
@@ -1637,7 +1636,6 @@
 		ED85B47316A47353006DA21D /* Dither.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFF909883BFD008A330A /* Dither.cpp */; };
 		ED85B47416A47353006DA21D /* Amplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790AFFE09883BFD008A330A /* Amplify.cpp */; };
 		ED85B47516A47353006DA21D /* AudioUnitEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00109883BFD008A330A /* AudioUnitEffect.cpp */; };
-		ED85B47616A47353006DA21D /* LoadAudioUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00409883BFD008A330A /* LoadAudioUnits.cpp */; };
 		ED85B47816A47353006DA21D /* ChangePitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00C09883BFD008A330A /* ChangePitch.cpp */; };
 		ED85B47916A47353006DA21D /* ChangeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B00E09883BFD008A330A /* ChangeSpeed.cpp */; };
 		ED85B47A16A47353006DA21D /* ChangeTempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1790B01009883BFD008A330A /* ChangeTempo.cpp */; };
@@ -2846,8 +2844,6 @@
 		1790AFFF09883BFD008A330A /* Amplify.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Amplify.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00109883BFD008A330A /* AudioUnitEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = AudioUnitEffect.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00209883BFD008A330A /* AudioUnitEffect.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = AudioUnitEffect.h; sourceTree = "<group>"; tabWidth = 3; };
-		1790B00409883BFD008A330A /* LoadAudioUnits.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LoadAudioUnits.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		1790B00509883BFD008A330A /* LoadAudioUnits.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LoadAudioUnits.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00C09883BFD008A330A /* ChangePitch.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ChangePitch.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00D09883BFD008A330A /* ChangePitch.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ChangePitch.h; sourceTree = "<group>"; tabWidth = 3; };
 		1790B00E09883BFD008A330A /* ChangeSpeed.cpp */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ChangeSpeed.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -3177,6 +3173,8 @@
 		2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Static.xcconfig; sourceTree = "<group>"; };
 		2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Shared.xcconfig; sourceTree = "<group>"; };
 		2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Static.xcconfig; sourceTree = "<group>"; };
+		2812E9D71A1F773A001C24D3 /* AudioUnitCocoaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioUnitCocoaHelper.h; sourceTree = "<group>"; };
+		2812E9D81A1F773A001C24D3 /* AudioUnitCocoaHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioUnitCocoaHelper.m; sourceTree = "<group>"; };
 		2813897919E6163C004111ED /* SelectedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectedRegion.h; sourceTree = "<group>"; };
 		2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LinkingHtmlWindow.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LinkingHtmlWindow.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -5276,10 +5274,10 @@
 		1790B00009883BFD008A330A /* audiounits */ = {
 			isa = PBXGroup;
 			children = (
+				2812E9D71A1F773A001C24D3 /* AudioUnitCocoaHelper.h */,
+				2812E9D81A1F773A001C24D3 /* AudioUnitCocoaHelper.m */,
 				1790B00109883BFD008A330A /* AudioUnitEffect.cpp */,
 				1790B00209883BFD008A330A /* AudioUnitEffect.h */,
-				1790B00409883BFD008A330A /* LoadAudioUnits.cpp */,
-				1790B00509883BFD008A330A /* LoadAudioUnits.h */,
 			);
 			path = audiounits;
 			sourceTree = "<group>";
@@ -8860,7 +8858,6 @@
 				1790B12C09883BFD008A330A /* Dither.cpp in Sources */,
 				1790B12E09883BFD008A330A /* Amplify.cpp in Sources */,
 				1790B12F09883BFD008A330A /* AudioUnitEffect.cpp in Sources */,
-				1790B13009883BFD008A330A /* LoadAudioUnits.cpp in Sources */,
 				1790B13409883BFD008A330A /* ChangePitch.cpp in Sources */,
 				1790B13509883BFD008A330A /* ChangeSpeed.cpp in Sources */,
 				1790B13609883BFD008A330A /* ChangeTempo.cpp in Sources */,
@@ -9159,6 +9156,7 @@
 				28001B3E1A0F0E5D007DD161 /* NumericTextCtrl.cpp in Sources */,
 				28001B4B1A0F0EB6007DD161 /* SpectralSelectionBar.cpp in Sources */,
 				28BB98051A15BE6800D1CC80 /* NoiseReduction.cpp in Sources */,
+				2812E9D91A1F773A001C24D3 /* AudioUnitCocoaHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9373,7 +9371,6 @@
 				ED663B9A16543647007F53A5 /* Dither.cpp in Sources */,
 				ED663B9B16543647007F53A5 /* Amplify.cpp in Sources */,
 				ED663B9C16543647007F53A5 /* AudioUnitEffect.cpp in Sources */,
-				ED663B9D16543647007F53A5 /* LoadAudioUnits.cpp in Sources */,
 				ED663BA016543647007F53A5 /* ChangePitch.cpp in Sources */,
 				ED663BA116543647007F53A5 /* ChangeSpeed.cpp in Sources */,
 				ED663BA216543647007F53A5 /* ChangeTempo.cpp in Sources */,
@@ -9681,7 +9678,6 @@
 				ED85B47316A47353006DA21D /* Dither.cpp in Sources */,
 				ED85B47416A47353006DA21D /* Amplify.cpp in Sources */,
 				ED85B47516A47353006DA21D /* AudioUnitEffect.cpp in Sources */,
-				ED85B47616A47353006DA21D /* LoadAudioUnits.cpp in Sources */,
 				ED85B47816A47353006DA21D /* ChangePitch.cpp in Sources */,
 				ED85B47916A47353006DA21D /* ChangeSpeed.cpp in Sources */,
 				ED85B47A16A47353006DA21D /* ChangeTempo.cpp in Sources */,
@@ -10474,6 +10470,8 @@
 					"-framework",
 					CoreAudio,
 					"-framework",
+					CoreAudioKit,
+					"-framework",
 					CoreMIDI,
 					"-framework",
 					AudioUnit,
@@ -10825,6 +10823,8 @@
 					"-framework",
 					CoreAudio,
 					"-framework",
+					CoreAudioKit,
+					"-framework",
 					CoreMIDI,
 					"-framework",
 					AudioUnit,
@@ -11141,6 +11141,8 @@
 					WebKit,
 					"-framework",
 					CoreAudio,
+					"-framework",
+					CoreAudioKit,
 					"-framework",
 					CoreMIDI,
 					"-framework",
@@ -11649,6 +11651,8 @@
 					WebKit,
 					"-framework",
 					CoreAudio,
+					"-framework",
+					CoreAudioKit,
 					"-framework",
 					CoreMIDI,
 					"-framework",

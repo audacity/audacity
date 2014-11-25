@@ -1869,6 +1869,10 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
    {
       PluginDescriptor & plug = mPluginsIter->second;
       bool familyEnabled;
+      if (type == PluginTypeEffect)
+      {
+         gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
+      }
       gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {

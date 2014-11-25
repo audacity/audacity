@@ -554,7 +554,7 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
 bool VSTEffectsModule::IsPluginValid(const PluginID & ID,
                                      const wxString & path)
 {
-   return wxFileName::FileExists(path);
+   return wxFileName::FileExists(path) || wxFileName::DirExists(path);
 }
 
 IdentInterface *VSTEffectsModule::CreateInstance(const PluginID & WXUNUSED(ID),

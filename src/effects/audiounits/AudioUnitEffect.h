@@ -5,6 +5,7 @@
   AudioUnitEffect.h
 
   Dominic Mazzoni
+  Leland Lucius
 
 **********************************************************************/
 
@@ -18,61 +19,255 @@
 #include <AudioUnit/AUNTComponent.h>
 #include <AudioUnit/AudioUnitProperties.h>
 #include <AudioUnit/AudioUnitCarbonView.h>
+#include <AudioToolbox/AudioUnitUtilities.h>
 
-class AudioUnitEffect:public Effect {
+#include "audacity/EffectInterface.h"
+#include "audacity/ModuleInterface.h"
+#include "audacity/PluginInterface.h"
 
- public:
+#define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0");
+#define AUDIOUNITEFFECTS_FAMILY L"AudioUnit"
 
-   AudioUnitEffect(wxString name, Component component);
+class AudioUnitEffect;
+
+WX_DEFINE_ARRAY_PTR(AudioUnitEffect *, AudioUnitEffectArray);
+
+class AudioUnitEffectEventHelper;
+
+class AudioUnitEffect : public EffectClientInterface,
+                        public EffectUIClientInterface
+{
+public:
+   AudioUnitEffect(const wxString & path,
+                   const wxString & name,
+                   Component component,
+                   AudioUnitEffect *master = NULL);
    virtual ~AudioUnitEffect();
 
-   virtual wxString GetEffectName();
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories();
+   virtual PluginID GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier();
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction();
+   virtual EffectType GetType();
+   virtual wxString GetFamily();
+   virtual bool IsInteractive();
+   virtual bool IsDefault();
+   virtual bool IsLegacy();
+   virtual bool SupportsRealtime();
+   virtual bool SupportsAutomation();
 
-   virtual bool Init();
+   // EffectClientInterface implementation
 
-   virtual bool PromptUser();
+   virtual bool SetHost(EffectHostInterface *host);
 
-   virtual bool Process();
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
 
-   virtual void End();
+   virtual int GetMidiInCount();
+   virtual int GetMidiOutCount();
 
- private:
-   bool SetRateAndChannels(AudioUnit unit,
-                           int numChannels, Float64 sampleRate);
+   virtual void SetSampleRate(sampleCount rate);
+   virtual sampleCount GetBlockSize(sampleCount maxBlockSize);
 
-   bool ProcessStereo(int count, WaveTrack * left, WaveTrack *right,
-                      sampleCount lstart, sampleCount rstart,
-                      sampleCount len);
+   virtual sampleCount GetLatency();
+   virtual sampleCount GetTailSize();
 
-   bool DoRender(AudioUnit unit, int numChannels,
-                 float *leftBuffer, float *rightBuffer,
-                 int len, int unitBlockSize,
-                 AudioTimeStamp *timeStamp,
-                 AudioBufferList *bufferList);
+   virtual bool IsReady();
+   virtual bool ProcessInitialize();
+   virtual bool ProcessFinalize();
+   virtual sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size);
+
+   virtual bool RealtimeInitialize();
+   virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
+   virtual bool RealtimeFinalize();
+   virtual bool RealtimeSuspend();
+   virtual bool RealtimeResume();
+   virtual sampleCount RealtimeProcess(int group,
+                                       float **inbuf,
+                                       float **outbuf,
+                                       sampleCount numSamples);
+
+   virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
+
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // EffectUIClientInterface implementation
+
+   virtual void SetUIHost(EffectUIHostInterface *host);
+   virtual bool PopulateUI(wxWindow *parent);
+   virtual bool ValidateUI();
+   virtual bool HideUI();
+   virtual bool CloseUI();
+
+   virtual void LoadUserPreset(const wxString & name);
+   virtual void SaveUserPreset(const wxString & name);
+
+   virtual void LoadFactoryPreset(int id);
+   virtual void LoadFactoryDefaults();
+
+   virtual wxArrayString GetFactoryPresets();
+
+   virtual void ExportPresets();
+   virtual void ImportPresets();
+   virtual void ShowOptions();
+
+   // AudioUnitEffect implementation
+   
+private:
+   bool SetRateAndChannels();
 
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
 
-   static OSStatus
-      SimpleAudioRenderCallback(void *inRefCon,
-                                AudioUnitRenderActionFlags *inActionFlags,
-                                const AudioTimeStamp *inTimeStamp,
-                                UInt32 inBusNumber,
-                                UInt32 inNumFrames,
-                                AudioBufferList *ioData);
+   // Realtime
+   int GetChannelCount();
+   void SetChannelCount(int numChannels);
+   
+   static OSStatus RenderCallback(void *inRefCon,
+                                  AudioUnitRenderActionFlags *inActionFlags,
+                                  const AudioTimeStamp *inTimeStamp,
+                                  UInt32 inBusNumber,
+                                  UInt32 inNumFrames,
+                                  AudioBufferList *ioData);
+   OSStatus Render(AudioUnitRenderActionFlags *inActionFlags,
+                   const AudioTimeStamp *inTimeStamp,
+                   UInt32 inBusNumber,
+                   UInt32 inNumFrames,
+                   AudioBufferList *ioData);
 
-   Component GetCarbonViewComponent(OSType subtype);
+   static void EventListenerCallback(void *inCallbackRefCon,
+                                     void *inObject,
+                                     const AudioUnitEvent *inEvent,
+                                     UInt64 inEventHostTime,
+                                     AudioUnitParameterValue inParameterValue);
+   void EventListener(const AudioUnitEvent *inEvent,
+                      AudioUnitParameterValue inParameterValue);
 
+   static pascal OSStatus WindowEventHandlerCallback(EventHandlerCallRef handler,
+                                                     EventRef event,
+                                                     void *data);
+   OSStatus WindowEventHandler(EventRef event);
+
+   static pascal OSStatus ControlEventHandlerCallback(EventHandlerCallRef handler,
+                                                      EventRef event,
+                                                      void *data);
+   OSStatus ControlEventHandler(EventRef event);
+
+   void GetChannelCounts();
+
+   void LoadParameters(const wxString & group);
+   void SaveParameters(const wxString & group);
+
+   wxString    mPath;
    wxString    mName;
+   wxString    mVendor;
    Component   mComponent;
    AudioUnit   mUnit;
    bool        mSupportsMono;
    bool        mSupportsStereo;
-   float      *mLeftBufferForCallback;
-   float      *mRightBufferForCallback;
+
+   EffectHostInterface *mHost;
+   int         mAudioIns;
+   int         mAudioOuts;
+   bool        mInteractive;
+   bool        mLatencyDone;
+   Float64     mLatency;      // in seconds...multiply by samplerate
+   Float64     mTailTime;     // in seconds...multiply by samplerate
+   UInt32      mBlockSize;
+   double      mSampleRate;
+
+   int         mBufferSize;
+   bool        mUseBufferDelay;
+
+   AudioTimeStamp mTimeStamp;
+   bool        mReady;
+
+   AudioBufferList *mInputList;
+   AudioBufferList *mOutputList;
+
+   EffectUIHostInterface *mUIHost;
+   wxWindow *mParent;
+   wxDialog *mDialog;
+   wxSizerItem *mContainer;
+   AudioUnitCarbonView mCarbonView;
+   bool mUseGUI;
+   HIViewRef mAUView;
+   EventTargetRef mEventRef;
+   bool mIsCocoa;
+   bool mIsCarbon;
+   bool mIsGeneric;
+
+   AudioUnitEffect *mMaster;     // non-NULL if a slave
+   AudioUnitEffectArray mSlaves;
+   int mNumChannels;
+   float **mMasterIn;
+   int mMasterInLen;
+   float **mMasterOut;
+   int mMasterOutLen;
+   
+   AUEventListenerRef mEventListenerRef;
+
+   EventHandlerRef mHandlerRef;
+   EventHandlerUPP mHandlerUPP;
+   EventHandlerRef mControlHandlerRef;
+   EventHandlerUPP mControlHandlerUPP;
+
+   AudioUnitEffectEventHelper *mEventHelper;
+   friend class AudioUnitEffectEventHelper;
 };
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// AudioUnitEffectsModule
+//
+///////////////////////////////////////////////////////////////////////////////
+
+class AudioUnitEffectsModule : public ModuleInterface
+{
+public:
+   AudioUnitEffectsModule(ModuleManagerInterface *moduleManager, const wxString *path);
+   virtual ~AudioUnitEffectsModule();
+
+   // IdentInterface implementatino
+
+   virtual wxString GetID();
+   virtual wxString GetPath();
+   virtual wxString GetName();
+   virtual wxString GetVendor();
+   virtual wxString GetVersion();
+   virtual wxString GetDescription();
+
+   // ModuleInterface implementation
+
+   virtual bool Initialize();
+   virtual void Terminate();
+
+   virtual bool AutoRegisterPlugins(PluginManagerInterface & pm);
+   virtual wxArrayString FindPlugins(PluginManagerInterface & pm);
+   virtual bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path);
+
+   virtual bool IsPluginValid(const PluginID & ID, const wxString & path);
+
+   virtual IdentInterface *CreateInstance(const PluginID & ID, const wxString & path);
+   virtual void DeleteInstance(IdentInterface *instance);
+
+   // AudioUnitEffectModule implementation
+
+   void LoadAudioUnitsOfType(OSType inAUType, wxArrayString & effects);
+   Component FindAudioUnit(const wxString & path, wxString & name);
+
+   wxString FromOSType(OSType type);
+   OSType ToOSType(const wxString & type);
+
+private:
+   ModuleManagerInterface *mModMan;
+   wxString mPath;
+};
+

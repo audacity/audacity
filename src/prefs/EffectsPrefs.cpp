@@ -59,7 +59,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 
 #if USE_AUDIO_UNITS
       S.TieCheckBox(_("Audio Unit"),
-                    wxT("/AudioUnits/Enable"),
+                    wxT("/AudioUnit/Enable"),
                     true);
 #endif
 

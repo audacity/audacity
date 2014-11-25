@@ -57,15 +57,6 @@
 #include "ChangeTempo.h"
 #endif
 
-#ifdef USE_AUDIO_UNITS
-#include "audiounits/LoadAudioUnits.h"
-#endif
-
-#ifdef USE_VAMP
-#include "vamp/LoadVamp.h"
-#endif
-
-
 void LoadEffects()
 {
 
@@ -270,12 +261,6 @@ void LoadEffects()
 
    // Analyze menu
    em.RegisterEffect(new EffectFindClipping());
-
-#ifdef USE_AUDIO_UNITS
-   if (gPrefs->Read(wxT("/AudioUnits/Enable"), true)) {
-      LoadAudioUnits();
-   }
-#endif
 }
 
 void UnloadEffects()
