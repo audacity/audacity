@@ -226,9 +226,12 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
 ///Runs the wait for start dialog.  Returns false if the user clicks stop while we are recording
 ///so that the high
+// <ANSWER-ME: so that the "high" what does what?>
 bool TimerRecordDialog::RunWaitDialog()
 {
+   AudacityProject* pProject = GetActiveProject();
    int updateResult = eProgressSuccess;
+
    if (m_DateTime_Start > wxDateTime::UNow())
       updateResult = this->WaitForStart();
 
@@ -240,7 +243,6 @@ bool TimerRecordDialog::RunWaitDialog()
    else
    {
       // Record for specified time.
-      AudacityProject* pProject = GetActiveProject();
       pProject->OnRecord();
       bool bIsRecording = true;
 
@@ -273,6 +275,12 @@ bool TimerRecordDialog::RunWaitDialog()
    // Let the caller handle cancellation or failure from recording progress.
    if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
       return false;
+
+   // Success, so let's automatically save it, for safety's sake. 
+   // If user hadn't saved it before, they'll see the Save As dialog.
+   // If user had saved it before, it will safely be saved, automatically. 
+   pProject->Save();
+
    return true;
 }
 
