@@ -432,6 +432,7 @@ void ChangeSpeedDialog::PopulateOrExchange(ShuttleGui & S)
          mpFromLengthCtrl->SetToolTip(tip);
 #endif
          mpFromLengthCtrl->SetReadOnly(true);
+         mpFromLengthCtrl->EnableMenu(false);
 
 
          S.AddPrompt(_("New Length") + wxString(wxT(":")));
