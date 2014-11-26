@@ -620,6 +620,24 @@ void CommandManager::AddCommand(const wxChar *name,
    }
 }
 
+void CommandManager::AddMetaCommand(const wxChar *name,
+                                    const wxChar *label_in,
+                                    CommandFunctor *callback,
+                                    const wxChar *accel)
+{
+   wxString label(label_in);
+   label += wxT("\t");
+   label += accel;
+
+   NewIdentifier(name, label, NULL, callback, false, 0, 0);
+
+   CommandListEntry *entry = mCommandNameHash[name];
+   entry->enabled = false;
+   entry->isMeta = true;
+   entry->flags = 0;
+   entry->mask = 0;
+}
+
 void CommandManager::AddSeparator()
 {
    if( mHidingLevel > 0 )
@@ -697,6 +715,7 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
    tmpEntry->mask = mDefaultMask;
    tmpEntry->enabled = true;
    tmpEntry->wantevent = (label.Find(wxT("\twantevent")) != wxNOT_FOUND);
+   tmpEntry->isMeta = false;
 
    // Key from preferences overridse the default key given
    gPrefs->SetPath(wxT("/NewKeys"));
@@ -1063,6 +1082,27 @@ bool CommandManager::HandleKey(wxKeyEvent &evt, wxUint32 flags, wxUint32 mask)
    }
 
    return false;
+}
+
+bool CommandManager::HandleMeta(wxKeyEvent &evt)
+{
+   wxString keyStr = KeyEventToKeyString(evt);
+   CommandListEntry *entry = mCommandKeyHash[keyStr];
+
+   // Return unhandle if it isn't a meta command
+   if (!entry || !entry->isMeta)
+   {
+      return false;
+   }
+
+   // Meta commands are always disabled so they do not interfere with the
+   // rest of the command handling.  But, to use the common handler, we
+   // enable it temporarily and then disable it again after handling.
+   entry->enabled = true;
+   bool ret = HandleCommandEntry( entry, 0xffffffff, 0xffffffff, &evt );
+   entry->enabled = false;
+
+   return ret;
 }
 
 /// HandleTextualCommand() allows us a limitted version of script/batch

@@ -1163,6 +1163,9 @@ void AudacityProject::CreateMenusAndCommands()
 
    SetMenuBar(menubar);
 
+   c->AddMetaCommand(wxT("PrevWindow"), _("Move backward thru active windows"), FN(PrevWindow), wxT("Alt+Shift+F6"));
+   c->AddMetaCommand(wxT("NextWindow"), _("Move forward thru active windows"), FN(NextWindow), wxT("Alt+F6"));
+
    c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
    c->AddCommand(wxT("PrevFrame"), _("Move backward from toolbars to tracks"), FN(PrevFrame), wxT("Ctrl+Shift+F6"));
@@ -2711,6 +2714,132 @@ void AudacityProject::PrevFrame()
          mTrackPanel->SetFocus();
       break;
    }
+}
+
+void AudacityProject::NextWindow()
+{
+   wxWindow *w = wxGetTopLevelParent(wxWindow::FindFocus());
+   const wxWindowList & list = GetChildren();
+   wxWindowList::compatibility_iterator iter;
+
+   // If the project window has the current focus, start the search with the first child
+   if (w == this)
+   {
+      iter = list.GetFirst();
+   }
+   // Otherwise start the search with the current window's next sibling
+   else
+   {
+      // Find the window in this projects children.  If the window with the
+      // focus isn't a child of this project (like when a dialog is created
+      // without specifying a parent), then we'll get back NULL here.
+      iter = list.Find(w);
+      if (iter)
+      {
+         iter = iter->GetNext();
+      }
+   }
+
+   // Search for the next toplevel window
+   while (iter)
+   {
+      // If it's a toplevel, visible (we have hidden windows) and is enabled,
+      // then we're done.  The IsEnabled() prevents us from moving away from 
+      // a modal dialog because all other toplevel windows will be disabled.
+      w = iter->GetData();
+      if (w->IsTopLevel() && w->IsShown() && w->IsEnabled())
+      {
+         break;
+      }
+
+      // Get the next sibling
+      iter = iter->GetNext();
+   }
+
+   // Ran out of siblings, so make the current project's track panel active
+   if (!iter)
+   {
+#if defined(__WXGTK__)
+      // In wxGTK-2.8.12, focus gets lost if you don't set it to the project window
+      // instead of the track panel.  No idea why.
+      w = this;
+#else
+      w = mTrackPanel;
+#endif
+   }
+
+   // Move focus to the window and bring it to the fore
+   w->SetFocus();
+
+#if defined(__WXMAC__)
+   // Yes, I know...why 2 SetFocus() calls?  Without the second one, focus
+   // gets lost on wxMac-2.8.12.
+   w->SetFocus();
+#endif
+
+   // And make sure it's on top (only for floating windows...project window will not raise)
+   w->Raise();
+}
+
+void AudacityProject::PrevWindow()
+{
+   wxWindow *w = wxGetTopLevelParent(wxWindow::FindFocus());
+   const wxWindowList & list = GetChildren();
+   wxWindowList::compatibility_iterator iter;
+
+   // If the project window has the current focus, start the search with the last child
+   if (w == this)
+   {
+      iter = list.GetLast();
+   }
+   // Otherwise start the search with the current window's previous sibling
+   else
+   {
+      iter = list.Find(w)->GetPrevious();
+   }
+
+   // Search for the previous toplevel window
+   while (iter)
+   {
+      // If it's a toplevel and is visible (we have come hidden windows), then we're done
+      w = iter->GetData();
+      if (w->IsTopLevel() && w->IsShown())
+      {
+         break;
+      }
+
+      // Find the window in this projects children.  If the window with the
+      // focus isn't a child of this project (like when a dialog is created
+      // without specifying a parent), then we'll get back NULL here.
+      iter = list.Find(w);
+      if (iter)
+      {
+         iter = iter->GetPrevious();
+      }
+   }
+
+   // Ran out of siblings, so make the current project's track panel active
+   if (!iter)
+   {
+#if defined(__WXGTK__)
+      // In wxGTK-2.8.12, focus gets lost if you don't set it to the project window
+      // instead of the track panel.  No idea why.
+      w = this;
+#else
+      w = mTrackPanel;
+#endif
+   }
+
+   // Move focus to the window and bring it to the fore
+   w->SetFocus();
+
+#if defined(__WXMAC__)
+   // Yes, I know...why 2 SetFocus() calls?  Without the second one, focus
+   // gets lost on wxMac-2.8.12.
+   w->SetFocus();
+#endif
+
+   w->Raise();
 }
 
 void AudacityProject::OnTrackPan()

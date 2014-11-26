@@ -384,6 +384,9 @@ void OnSeparator();
 void PrevFrame();
 void NextFrame();
 
+void PrevWindow();
+void NextWindow();
+
 void OnResample();
 
 // Make sure we return to "public" for subsequent declarations in Project.h.

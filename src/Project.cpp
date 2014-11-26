@@ -1779,6 +1779,14 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 
 bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
 {
+   // Check to see if it is a meta command
+   if (mCommandManager.HandleMeta(event))
+      return true;
+
+   // Any other keypresses must be destined for this project window.
+   if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
+      return false;
+
    if (event.GetKeyCode() == WXK_ALT)
       mTrackPanel->HandleAltKey(true);
 
@@ -1821,6 +1829,10 @@ bool AudacityProject::HandleChar(wxKeyEvent & WXUNUSED(event))
 
 bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
 {
+   // All keypresses must be destined for this project window.
+   if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
+      return false;
+
    if (event.GetKeyCode() == WXK_ALT)
       mTrackPanel->HandleAltKey(false);
 

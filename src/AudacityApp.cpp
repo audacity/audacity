@@ -1752,9 +1752,6 @@ void AudacityApp::OnKeyDown(wxKeyEvent & event)
    if (!prj)
       return;
 
-   if (prj != wxGetTopLevelParent(wxWindow::FindFocus()))
-      return;
-
    if (prj->HandleKeyDown(event))
       event.Skip(false);
 }
@@ -1771,9 +1768,6 @@ void AudacityApp::OnChar(wxKeyEvent & event)
    // I was switching between apps fairly quickly so maybe that has something
    // to do with it.
    if (!prj)
-      return;
-
-   if (prj != wxGetTopLevelParent(wxWindow::FindFocus()))
       return;
 
    if (prj->HandleChar(event))
