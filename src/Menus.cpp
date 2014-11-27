@@ -2768,8 +2768,12 @@ void AudacityProject::NextWindow()
 #endif
    }
 
-   // Move focus to the window and bring it to the fore
+#if !defined(__WXMSW__)
+   // Move focus to the window and bring it to the fore.  We don't do it on Windows
+   // because the Raise() below will cause an Activation event to be issued and the
+   // Project's OnActivation() handler will take care of setting the focus.
    w->SetFocus();
+#endif
 
 #if defined(__WXMAC__)
    // Yes, I know...why 2 SetFocus() calls?  Without the second one, focus

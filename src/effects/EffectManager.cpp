@@ -179,8 +179,6 @@ EffectManager::EffectManager()
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    mRealtimeLock.Enter();
-   mRealtimeEffects = NULL;
-   mRealtimeCount = 0;
    mRealtimeActive = false;
    mRealtimeSuspended = true;
    mRealtimeLatency = 0;
@@ -202,13 +200,6 @@ EffectManager::~EffectManager()
    delete mUnsorted;
    delete mRootCategories;
    delete mCategories;
-#endif
-
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-   if (mRealtimeEffects)
-   {
-      delete [] mRealtimeEffects;
-   }
 #endif
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
@@ -422,9 +413,7 @@ void EffectManager::ShowRack()
 {
    GetRack()->Show(!GetRack()->IsShown());
 }
-#endif
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
 void EffectManager::RealtimeSetEffects(const EffectArray & effects)
 {
    int newCount = (int) effects.GetCount();
@@ -497,10 +486,37 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
 }
 #endif
 
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+void EffectManager::RealtimeAddEffect(Effect *effect)
+{
+   // Block RealtimeProcess()
+   RealtimeSuspend();
+
+   // Add to list of active effects
+   mRealtimeEffects.Add(effect);
+
+   // Allow RealtimeProcess() to, well, process 
+   RealtimeResume();
+}
+
+void EffectManager::RealtimeRemoveEffect(Effect *effect)
+{
+   // Block RealtimeProcess()
+   RealtimeSuspend();
+
+   // Remove from list of active effects
+   mRealtimeEffects.Remove(effect);
+
+   // Allow RealtimeProcess() to, well, process 
+   RealtimeResume();
+}
+
+#endif
+
 void EffectManager::RealtimeInitialize()
 {
    // No need to do anything if there are no effects
-   if (!mRealtimeCount)
+   if (mRealtimeEffects.IsEmpty())
    {
       return;
    }
@@ -513,7 +529,7 @@ void EffectManager::RealtimeInitialize()
    mRealtimeActive = true;
 
    // Tell each effect to get ready for action
-   for (int i = 0; i < mRealtimeCount; i++)
+   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
    {
       mRealtimeEffects[i]->RealtimeInitialize();
    }
@@ -531,7 +547,7 @@ void EffectManager::RealtimeFinalize()
    mRealtimeLatency = 0;
 
    // Tell each effect to clean up as well
-   for (int i = 0; i < mRealtimeCount; i++)
+   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
    {
       mRealtimeEffects[i]->RealtimeFinalize();
    }
@@ -554,7 +570,7 @@ void EffectManager::RealtimeSuspend()
    mRealtimeSuspended = true;
 
    // And make sure the effects don't either
-   for (int i = 0; i < mRealtimeCount; i++)
+   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
    {
       mRealtimeEffects[i]->RealtimeSuspend();
    }
@@ -574,7 +590,7 @@ void EffectManager::RealtimeResume()
    }
 
    // Tell the effects to get ready for more action
-   for (int i = 0; i < mRealtimeCount; i++)
+   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
    {
       mRealtimeEffects[i]->RealtimeResume();
    }
@@ -595,7 +611,7 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float rate, flo
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
-   if (mRealtimeSuspended || mRealtimeCount == 0)
+   if (mRealtimeSuspended || mRealtimeEffects.IsEmpty())
    {
       mRealtimeLock.Leave();
       return numSamples;
@@ -619,7 +635,7 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float rate, flo
 
    // Now call each effect in the chain while swapping buffer pointers to feed the
    // output of one effect as the input to the next effect
-   for (int i = 0; i < mRealtimeCount; i++)
+   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
    {
       mRealtimeEffects[i]->RealtimeProcess(group, chans, rate, ibuf, obuf, numSamples);
 
@@ -635,7 +651,7 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float rate, flo
    // Once we're done, we might wind up with the last effect storing its results
    // in the temporary buffers.  If that's the case, we need to copy it over to
    // the caller's buffers.  This happens when the number of effects is odd.
-   if (mRealtimeCount & 1)
+   if (mRealtimeEffects.GetCount() & 1)
    {
       for (int i = 0; i < chans; i++)
       {

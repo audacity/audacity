@@ -97,6 +97,8 @@ class AUDACITY_DLL_API EffectManager
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    // Realtime effect processing
+   void RealtimeAddEffect(Effect *effect);
+   void RealtimeRemoveEffect(Effect *effect);
    void RealtimeSetEffects(const EffectArray & mActive);
    void RealtimeInitialize();
    void RealtimeFinalize();
@@ -161,8 +163,7 @@ private:
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    wxCriticalSection mRealtimeLock;
-   Effect **mRealtimeEffects;
-   int mRealtimeCount;
+   EffectArray mRealtimeEffects;
    int mRealtimeLatency;
    bool mRealtimeSuspended;
    bool mRealtimeActive;

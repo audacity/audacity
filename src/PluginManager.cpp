@@ -49,7 +49,7 @@
 
 #include <wx/arrimpl.cpp>
 
-WX_DECLARE_STRING_HASH_MAP(wxString, ProviderMap);
+WX_DECLARE_STRING_HASH_MAP(wxArrayString, ProviderMap);
 
 // ============================================================================
 //
@@ -381,7 +381,7 @@ int wxCALLBACK SortCompare(long item1, long item2, long WXUNUSED(sortData))
    wxString *str1 = (wxString *) item1;
    wxString *str2 = (wxString *) item2;
    
-   return str2->Cmp(*str1);
+   return str1->Cmp(*str2);
 }
 
 class PluginRegistrationDialog : public wxDialog
@@ -549,6 +549,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    int iPathLen = 0;
    int x, y;
    wxRect iconrect;
+
    int i = 0;
    for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); iter++, i++)
    {
@@ -557,10 +558,9 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       wxFileName fname = iter->first;
       wxString name = fname.GetName();
       wxString path = fname.GetFullPath();
-      wxString *key = new wxString(iter->second + name);
 
       mEffects->InsertItem(i, name, SHOW_CHECKED);
-      mEffects->SetItemPtrData(i, (wxUIntPtr) key);
+      mEffects->SetItemPtrData(i, (wxUIntPtr) new wxString(name));
       mEffects->SetItem(i, COL_PATH, path);
 
       // Only need to get the icon width once 
@@ -732,14 +732,15 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
 
       if (miState[i] == SHOW_CHECKED)
       {
-         li.SetId(i);
-         li.SetColumn(COL_PATH);
-         li.SetMask(wxLIST_MASK_TEXT);
-         mEffects->GetItem(li);
-         wxString path = li.GetText();
-         
          mEffects->SetItemImage(i, SHOW_ARROW);
-         mm.RegisterPlugin(mMap[path], path);
+         wxArrayString providers = mMap[path];
+         for (size_t j = 0, cnt = providers.GetCount(); j < cnt; j++)
+         {
+            if (mm.RegisterPlugin(providers[j], path))
+            {
+               break;
+            }
+         }
          mEffects->SetItemImage(i, SHOW_CHECKED);
       }
       wxYield();
@@ -1750,7 +1751,7 @@ void PluginManager::CheckForUpdates(bool forceRescan)
                wxArrayString paths = mm.FindPluginsForProvider(plugID, plugPath);
                for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++)
                {
-                  map[paths[i]] = plugID;
+                  map[paths[i]].Add(plugID);
                }
             }
          }
@@ -1781,7 +1782,7 @@ void PluginManager::CheckForUpdates(bool forceRescan)
          }
       }
    }
-   
+
    // Allow the user to choose which ones to enable
    if (map.size() != 0)
    {
