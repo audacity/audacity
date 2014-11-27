@@ -483,8 +483,8 @@
 		28105DAC0AD09FC500BB4269 /* px_mixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 28105DA20AD09FC500BB4269 /* px_mixer.h */; };
 		2810644B1818EEB5004F678B /* cpu_detect_x86.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */; };
 		2810644D1818EED3004F678B /* cpu_detect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810644C1818EED3004F678B /* cpu_detect.h */; };
-		2812E9D91A1F773A001C24D3 /* AudioUnitCocoaHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2812E9D81A1F773A001C24D3 /* AudioUnitCocoaHelper.m */; };
 		2816372E0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */; };
+		28285C801A27A81600BC2205 /* AudioUnitCocoaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28285C7F1A27A81600BC2205 /* AudioUnitCocoaHelper.mm */; };
 		282D474C0B9E8D900034BC49 /* Snap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282D474A0B9E8D900034BC49 /* Snap.cpp */; };
 		283135EC0DFB9D110076D551 /* ImportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */; };
 		283135FF0DFBA2E80076D551 /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135FD0DFBA2E80076D551 /* FFmpeg.cpp */; };
@@ -3174,10 +3174,10 @@
 		2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Shared.xcconfig; sourceTree = "<group>"; };
 		2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Static.xcconfig; sourceTree = "<group>"; };
 		2812E9D71A1F773A001C24D3 /* AudioUnitCocoaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioUnitCocoaHelper.h; sourceTree = "<group>"; };
-		2812E9D81A1F773A001C24D3 /* AudioUnitCocoaHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioUnitCocoaHelper.m; sourceTree = "<group>"; };
 		2813897919E6163C004111ED /* SelectedRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectedRegion.h; sourceTree = "<group>"; };
 		2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LinkingHtmlWindow.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LinkingHtmlWindow.h; sourceTree = "<group>"; tabWidth = 3; };
+		28285C7F1A27A81600BC2205 /* AudioUnitCocoaHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioUnitCocoaHelper.mm; sourceTree = "<group>"; };
 		282D474A0B9E8D900034BC49 /* Snap.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Snap.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		282D474B0B9E8D900034BC49 /* Snap.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Snap.h; sourceTree = "<group>"; tabWidth = 3; };
 		283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportFFmpeg.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5274,8 +5274,8 @@
 		1790B00009883BFD008A330A /* audiounits */ = {
 			isa = PBXGroup;
 			children = (
+				28285C7F1A27A81600BC2205 /* AudioUnitCocoaHelper.mm */,
 				2812E9D71A1F773A001C24D3 /* AudioUnitCocoaHelper.h */,
-				2812E9D81A1F773A001C24D3 /* AudioUnitCocoaHelper.m */,
 				1790B00109883BFD008A330A /* AudioUnitEffect.cpp */,
 				1790B00209883BFD008A330A /* AudioUnitEffect.h */,
 			);
@@ -9156,7 +9156,7 @@
 				28001B3E1A0F0E5D007DD161 /* NumericTextCtrl.cpp in Sources */,
 				28001B4B1A0F0EB6007DD161 /* SpectralSelectionBar.cpp in Sources */,
 				28BB98051A15BE6800D1CC80 /* NoiseReduction.cpp in Sources */,
-				2812E9D91A1F773A001C24D3 /* AudioUnitCocoaHelper.m in Sources */,
+				28285C801A27A81600BC2205 /* AudioUnitCocoaHelper.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
