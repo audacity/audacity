@@ -1784,6 +1784,9 @@
     <CustomBuild Include="..\..\..\nyquist\stk.lsp">
       <Filter>nyquist</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\system.lsp">
+      <Filter>nyquist</Filter>
+    </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\xlinit.lsp">
       <Filter>nyquist</Filter>
     </CustomBuild>

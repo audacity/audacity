@@ -2551,6 +2551,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\nyquist\system.lsp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\nyquist\stk.lsp"
 				>
 			</File>
