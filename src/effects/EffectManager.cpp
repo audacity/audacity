@@ -487,6 +487,11 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
 #endif
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+bool EffectManager::RealtimeIsActive()
+{
+   return mRealtimeEffects.GetCount() != 0;
+}
+
 void EffectManager::RealtimeAddEffect(Effect *effect)
 {
    // Block RealtimeProcess()

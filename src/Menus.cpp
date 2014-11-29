@@ -1041,7 +1041,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeProcess,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       TracksExistFlag);
+                       TracksExistFlag | IsRealtimeNotActiveFlag);
 #else
    int flags = PROCESS_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT | ADVANCED_EFFECT;
    // The categories form a DAG, so we start at the roots (the categories
@@ -1088,7 +1088,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeAnalyze,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       TracksExistFlag);
+                       TracksExistFlag | IsRealtimeNotActiveFlag);
 #else
 
    flags = ANALYZE_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT;
@@ -1885,6 +1885,11 @@ wxUint32 AudacityProject::GetUpdateFlags()
    else
       flags |= IsNotSyncLockedFlag;
 
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+   if (!EffectManager::Get().RealtimeIsActive())
+      flags |= IsRealtimeNotActiveFlag;
+#endif
+
    return flags;
 }
 
@@ -1960,7 +1965,9 @@ void AudacityProject::ModifyToolbarMenus()
    mCommandManager.Check(wxT("SyncLock"), active);
 }
 
-void AudacityProject::UpdateMenus()
+// checkActive is a temporary hack that should be removed as soon as we
+// get multiple effect preview working
+void AudacityProject::UpdateMenus(bool checkActive)
 {
    //ANSWER-ME: Why UpdateMenus only does active project?
    //JKC: Is this test fixing a bug when multiple projects are open?
@@ -1968,7 +1975,7 @@ void AudacityProject::UpdateMenus()
    if (this != GetActiveProject())
       return;
 
-   if (!IsActive())
+   if (checkActive && !IsActive())
       return;
 
    wxUint32 flags = GetUpdateFlags();
@@ -3249,8 +3256,17 @@ bool AudacityProject::OnEffect(int type,
          delete newTrack;
          mTrackPanel->Refresh(false);
       }
+
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
+      // For now, we're limiting realtime preview to a single effect, so
+      // make sure the menus reflect that fact that one may have just been
+      // opened.
+      UpdateMenus(false);
+#endif
+
       return false;
    }
+
    return true;
 }
 

@@ -87,6 +87,7 @@ enum
    HaveRecentFiles        = 0x02000000,
    IsNotSyncLockedFlag    = 0x04000000,  //awd
    IsSyncLockedFlag       = 0x08000000,  //awd
+   IsRealtimeNotActiveFlag= 0x10000000,  //lll
 
    NoFlagsSpecifed        = 0xffffffff
 };

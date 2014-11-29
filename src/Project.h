@@ -286,7 +286,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    static void DeleteClipboard();
    static void DeleteAllProjectsDeleteLock();
 
-   void UpdateMenus();
+   // checkActive is a temporary hack that should be removed as soon as we
+   // get multiple effect preview working
+   void UpdateMenus(bool checkActive = true);
    void UpdatePrefs();
    void UpdatePrefsVariables();
    void RedrawProject(const bool bForceWaveTracks = false);
