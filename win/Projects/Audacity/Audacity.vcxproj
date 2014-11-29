@@ -510,6 +510,7 @@
     <ClInclude Include="..\..\..\src\AudacityApp.h" />
     <ClInclude Include="..\..\..\src\AudacityLogger.h" />
     <ClInclude Include="..\..\..\src\AudioIO.h" />
+    <ClInclude Include="..\..\..\src\AudioIOListener.h" />
     <ClInclude Include="..\..\..\src\AutoRecovery.h" />
     <ClInclude Include="..\..\..\src\BatchCommandDialog.h" />
     <ClInclude Include="..\..\..\src\BatchCommands.h" />

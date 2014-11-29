@@ -35,6 +35,7 @@
 #include "../widgets/treebook.h"
 #endif
 
+#include "../AudioIO.h"
 #include "../Experimental.h"
 #include "../Project.h"
 #include "../Prefs.h"

@@ -21,6 +21,7 @@
 #include <wx/settings.h> // for wxSystemSettings::GetColour and wxSystemSettings::GetMetric
 
 #include "AColor.h"
+#include "AudioIO.h"
 #include "MixerBoard.h"
 #ifdef EXPERIMENTAL_MIDI_OUT
    #include "NoteTrack.h"

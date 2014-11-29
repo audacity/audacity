@@ -32,6 +32,8 @@
 
 *//*******************************************************************/
 
+#include <algorithm>
+
 #include "../Audacity.h"
 #include "../Experimental.h"
 
@@ -438,7 +440,8 @@ bool ControlToolBar::IsRecordDown()
 void ControlToolBar::PlayPlayRegion(double t0, double t1,
                                     bool looped /* = false */,
                                     bool cutpreview /* = false */,
-                                    TimeTrack *timetrack /* = NULL */)
+                                    TimeTrack *timetrack /* = NULL */,
+                                    const double *pStartTime /* = NULL */)
 {
    SetPlay(true, looped, cutpreview);
 
@@ -564,7 +567,8 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
                NoteTrackArray(),
 #endif
                timetrack, p->GetRate(), tcp0, tcp1, p, false,
-               t0, t1-t0);
+               t0, t1-t0,
+               pStartTime);
          } else
          {
             // Cannot create cut preview tracks, clean up and exit
@@ -583,7 +587,9 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
                                        t->GetNoteTrackArray(false),
 #endif
                                        timetrack,
-                                       p->GetRate(), t0, t1, p, looped);
+                                       p->GetRate(), t0, t1, p, looped,
+                                       0, 0,
+                                       pStartTime);
       }
       if (token != 0) {
          success = true;

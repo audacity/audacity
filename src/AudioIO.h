@@ -53,16 +53,7 @@ wxString DeviceName(const PaDeviceInfo* info);
 wxString HostName(const PaDeviceInfo* info);
 bool ValidateDeviceNames();
 
-class AUDACITY_DLL_API AudioIOListener {
-public:
-   AudioIOListener() {}
-   virtual ~AudioIOListener() {}
-
-   virtual void OnAudioIORate(int rate) = 0;
-   virtual void OnAudioIOStartRecording() = 0;
-   virtual void OnAudioIOStopRecording() = 0;
-   virtual void OnAudioIONewBlockFiles(const wxString& blockFileLog) = 0;
-};
+class AudioIOListener;
 
 #define BAD_STREAM_TIME -1000000000.0
 
@@ -113,7 +104,10 @@ class AUDACITY_DLL_API AudioIO {
                    AudioIOListener* listener,
                    bool playLooped = false,
                    double cutPreviewGapStart = 0.0,
-                   double cutPreviewGapLen = 0.0);
+                   double cutPreviewGapLen = 0.0,
+                   // May be other than t0,
+                   // but will be constrained between t0 and t1
+                   const double *pStartTime = 0);
 
    /** \brief Stop recording, playback or input monitoring.
     *
@@ -123,7 +117,7 @@ class AUDACITY_DLL_API AudioIO {
    void StopStream();
    /** \brief Move the playback / recording position of the current stream
     * by the specified amount from where it is now */
-   void SeekStream(double seconds) { mSeek = seconds; };
+   void SeekStream(double seconds) { mSeek = seconds; }
 
    /** \brief  Returns true if audio i/o is busy starting, stopping, playing,
     * or recording.
@@ -139,6 +133,8 @@ class AUDACITY_DLL_API AudioIO {
     * new stream, use IsBusy() */
    bool IsStreamActive();
    bool IsStreamActive(int token);
+
+   wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    /** \brief Compute the current PortMidi timestamp time.
@@ -516,6 +512,8 @@ private:
    volatile bool       mAudioThreadShouldCallFillBuffersOnce;
    volatile bool       mAudioThreadFillBuffersLoopRunning;
    volatile bool       mAudioThreadFillBuffersLoopActive;
+
+   wxLongLong          mLastPlaybackTimeMillis;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    volatile bool       mMidiThreadFillBuffersLoopRunning;

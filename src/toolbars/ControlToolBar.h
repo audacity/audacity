@@ -67,7 +67,10 @@ class ControlToolBar:public ToolBar {
    void PlayPlayRegion(double t0, double t1,
                        bool looped = false,
                        bool cutpreview = false,
-                       TimeTrack *timetrack = NULL);
+                       TimeTrack *timetrack = NULL,
+                       // May be other than t0,
+                       // but will be constrained between t0 and t1
+                       const double *pStartTime = NULL);
    void PlayDefault();
 
    // Stop playing

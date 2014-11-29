@@ -105,6 +105,12 @@
 // Paul Licameli (PRL) 5 Oct 2014
 #define EXPERIMENTAL_SPECTRAL_EDITING
 
+// Paul Licameli (PRL) 29 Nov 2014
+#define EXPERIMENTAL_SCRUBBING
+
+// Paul Licameli (PRL) 29 Nov 2014
+#define EXPERIMENTAL_IMPROVED_SEEKING
+
 // Philip Van Baren 01 July 2009
 // Replace RealFFT() and PowerSpectrum function to use (faster) RealFFTf function
 #define EXPERIMENTAL_USE_REALFFTF

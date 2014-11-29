@@ -584,6 +584,12 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mSelStartValid = false;
    mSelStart = 0;
+
+#ifdef EXPERIMENTAL_SCRUBBING
+   mScrubbing = false;
+   mLastScrubTime = 0;
+   mLastScrubPosition = 0;
+#endif
 }
 
 TrackPanel::~TrackPanel()
@@ -993,6 +999,32 @@ void TrackPanel::OnTimer()
       pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(),
                                  (p->mLastPlayMode == loopedPlay));
    }
+
+#ifdef EXPERIMENTAL_SCRUBBING
+   if (mScrubbing
+      &&
+      gAudioIO->IsStreamActive(GetProject()->GetAudioIOToken()))
+   {
+      if (gAudioIO->GetLastPlaybackTime() < mLastScrubTime) {
+         // Allow some audio catch up
+      }
+      else {
+         wxMouseState state(::wxGetMouseState());
+         wxCoord xx = state.GetX();
+         ScreenToClient(&xx, NULL);
+         double leadPosition = PositionToTime(xx, GetLeftOffset());
+         if (mLastScrubPosition != leadPosition) {
+            wxLongLong clockTime = ::wxGetLocalTimeMillis();
+            double lagPosition = gAudioIO->GetStreamTime();
+
+            gAudioIO->SeekStream(leadPosition - lagPosition);
+
+            mLastScrubPosition = leadPosition;
+            mLastScrubTime = clockTime;
+         }
+      }
+   }
+#endif
 
    // Check whether we were playing or recording, but the stream has stopped.
    if (p->GetAudioIOToken()>0 &&
@@ -1724,8 +1756,12 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
       wxString keyStr
          (GetProject()->GetCommandManager()->GetKeyFromName(wxT("Preferences")));
       // Must compose a string that survives the function call, hence static.
+      if (keyStr.IsEmpty())
+         // No keyboard preference defined for opening Preferences dialog
+         /* i18n-hint: These are the names of a menu and a command in that menu */
+         keyStr = _("Edit, Preferences...");
       static wxString result;
-      /* i18n-hint: %s is usually replaced by "Ctrl+P" */
+      /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
       result = wxString::Format(
          _("Multi-Tool Mode: %s for Mouse and Keyboard Preferences."),
          keyStr.c_str());
@@ -1977,6 +2013,52 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
       }
 
    } else if (event.LeftUp() || event.RightUp()) {
+#ifdef EXPERIMENTAL_SCRUBBING
+      if(mScrubbing) {
+         if (gAudioIO->IsBusy()) {
+            AudacityProject *p = GetActiveProject();
+            if (p) {
+               ControlToolBar * ctb = p->GetControlToolBar();
+               ctb->StopPlaying();
+            }
+         }
+
+         if (mAdjustSelectionEdges) {
+            if (event.ShiftDown()) {
+               // Adjust time selection as if shift-left click at end
+               const double selend = PositionToTime(event.m_x, GetLeftOffset());
+               SelectionBoundary boundary = ChooseTimeBoundary(selend, false);
+               switch (boundary)
+               {
+               case SBLeft:
+                  mViewInfo->selectedRegion.setT0(selend);
+                  break;
+               case SBRight:
+                  mViewInfo->selectedRegion.setT1(selend);
+                  break;
+               default:
+                  wxASSERT(false);
+               }
+               UpdateSelectionDisplay();
+            }
+            else {
+               // Adjust time selection as if left click
+               StartSelection(event.m_x, r.x);
+               DisplaySelection();
+            }
+         }
+
+         mScrubbing = false;
+      }
+      else if (event.CmdDown()) {
+         // A control-click will set just the indicator to the clicked spot,
+         // and turn playback on -- but delayed until button up,
+         // and only if no intervening drag
+         StartOrJumpPlayback(event);
+      }
+      // Don't return yet
+#endif
+
       if (mSnapManager) {
          delete mSnapManager;
          mSnapManager = NULL;
@@ -2055,6 +2137,67 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
 }
 
 
+void TrackPanel::StartOrJumpPlayback(wxMouseEvent &event)
+{
+   AudacityProject *p = GetActiveProject();
+   if (p) {
+      double clicktime = PositionToTime(event.m_x, GetLeftOffset());
+      const double t1 = mViewInfo->selectedRegion.t1();
+      // Play to end of selection, or if that is not right of the pick, end of track
+      double endtime = clicktime < t1 ? t1 : mViewInfo->total;
+
+      //Behavior should differ depending upon whether we are
+      //currently in playback mode or not.
+
+      bool busy = gAudioIO->IsBusy();
+      if (!busy)
+      {
+         //If we aren't currently playing back, start playing back at
+         //the clicked point
+         ControlToolBar * ctb = p->GetControlToolBar();
+         //ctb->SetPlay(true);// Not needed as done in PlayPlayRegion
+         ctb->PlayPlayRegion(clicktime, endtime,false) ;
+      }
+      else
+      {
+         //If we are playing back, stop and move playback
+         //to the clicked point.
+         //This unpauses paused audio as well.  The right thing to do might be to
+         //leave it paused but move the point.  This would probably
+         //require a new method in ControlToolBar: SetPause();
+         ControlToolBar * ctb = p->GetControlToolBar();
+         ctb->StopPlaying();
+         ctb->PlayPlayRegion(clicktime,endtime,false) ;
+      }
+   }
+}
+
+
+#ifdef EXPERIMENTAL_SCRUBBING
+void TrackPanel::StartScrubbing(double position)
+{
+   AudacityProject *p = GetActiveProject();
+   if (p &&
+      // Should I make a bigger tolerance than zero?
+      mLastScrubPosition != position) {
+      ControlToolBar * ctb = p->GetControlToolBar();
+      bool busy = gAudioIO->IsBusy();
+      double maxTime = p->GetTracks()->GetEndTime();
+
+      if (busy)
+         ctb->StopPlaying();
+
+      ctb->PlayPlayRegion(0, maxTime, false, false,
+         0,
+         &position);
+      mScrubbing = true;
+      mLastScrubPosition = position;
+      mLastScrubTime = ::wxGetLocalTimeMillis();
+   }
+}
+#endif
+
+
 /// This method gets called when we're handling selection
 /// and the mouse was just clicked.
 void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
@@ -2087,10 +2230,16 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 #endif
 
    if (event.ShiftDown()
-#ifdef USE_MIDI
-                         && !stretch
+
+#ifdef EXPERIMENTAL_SCRUBBING
+       // Ctrl prevails over Shift with scrubbing enabled
+       && !event.CmdDown()
 #endif
-                                   ) {
+
+#ifdef USE_MIDI
+       && !stretch
+#endif
+   ) {
       // If the shift button is down and no track is selected yet,
       // at least select the track we clicked into.
       bool isAtLeastOneTrackSelected = false;
@@ -2168,43 +2317,17 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
    // and turn playback on.
    else if(event.CmdDown()
 #ifdef USE_MIDI
-                           && !stretch
+           && !stretch
 #endif
-                                     ) {
-      AudacityProject *p = GetActiveProject();
-      if (p) {
-
-         double clicktime = PositionToTime(event.m_x, GetLeftOffset());
-            const double t1 = mViewInfo->selectedRegion.t1();
-            double endtime = clicktime <  t1 ? t1 : mViewInfo->total;
-
-         //Behavior should differ depending upon whether we are
-         //currently in playback mode or not.
-
-         bool busy = gAudioIO->IsBusy();
-         if(!busy)
-         {
-            //If we aren't currently playing back, start playing back at
-            //the clicked point
-            ControlToolBar * ctb = p->GetControlToolBar();
-            //ctb->SetPlay(true);// Not needed as done in PlayPlayRegion
-            ctb->PlayPlayRegion(clicktime, endtime,false) ;
-
-         }
-         else
-         {
-            //If we are playing back, stop and move playback
-            //to the clicked point.
-            //This unpauses paused audio as well.  The right thing to do might be to
-            //leave it paused but move the point.  This would probably
-            //require a new method in ControlToolBar: SetPause();
-            ControlToolBar * ctb = p->GetControlToolBar();
-            ctb->StopPlaying();
-            ctb->PlayPlayRegion(clicktime,endtime,false) ;
-         }
-
-      }
-
+          ) {
+#ifdef EXPERIMENTAL_SCRUBBING
+      // With scrubbing enabled, playback happens on button up, not down,
+      // and only if we do not start a scrub in the interim.
+      mScrubbing = false;
+      mLastScrubPosition = PositionToTime(event.m_x, GetLeftOffset());
+#else
+      StartOrJumpPlayback(event);
+#endif
       return;
    }
    //Make sure you are within the selected track
@@ -2907,8 +3030,21 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
       return;
 
    // Also fuhggeddaboudit if we're not dragging and not autoscrolling.
-   if ((!event.Dragging() && !mAutoScrolling) || event.CmdDown())
+   if (!event.Dragging() && !mAutoScrolling)
       return;
+
+   if (event.CmdDown()) {
+#ifdef EXPERIMENTAL_SCRUBBING
+      if (!mScrubbing) {
+         double position = PositionToTime(event.m_x, GetLeftOffset());
+         StartScrubbing(position);
+      }
+      else
+#else
+      // Ctrl-drag has no meaning, fuhggeddaboudit
+#endif
+      return;
+   }
 
    wxRect r      = mCapturedRect;
    Track *pTrack = mCapturedTrack;
@@ -3091,11 +3227,49 @@ wxInt64 TrackPanel::FrequencyToPosition(double frequency,
 }
 #endif
 
-void SetIfNotNull( double * pValue, const double Value )
+template<typename T>
+inline void SetIfNotNull( T * pValue, const T Value )
 {
    if( pValue == NULL )
       return;
    *pValue = Value;
+}
+
+
+TrackPanel::SelectionBoundary TrackPanel::ChooseTimeBoundary
+(double selend, bool onlyWithinSnapDistance,
+ wxInt64 *pPixelDist, double *pPinValue) const
+{
+   const double t0 = mViewInfo->selectedRegion.t0();
+   const double t1 = mViewInfo->selectedRegion.t1();
+   wxInt64 pixelDist = mViewInfo->zoom * fabs(selend - t0);
+   bool chooseLeft = true;
+
+   if (mViewInfo->selectedRegion.isPoint())
+      // Special case when selection is a point, and thus left
+      // and right distances are the same
+      chooseLeft = (selend < t0);
+   else {
+      const wxInt64 rightDist = mViewInfo->zoom * fabs(selend - t1);
+      if (rightDist < pixelDist)
+         chooseLeft = false, pixelDist = rightDist;
+   }
+
+   SetIfNotNull(pPixelDist, pixelDist);
+
+   if (onlyWithinSnapDistance &&
+       pixelDist >= SELECTION_RESIZE_REGION) {
+      SetIfNotNull( pPinValue, -1.0);
+      return SBNone;
+   }
+   else if (chooseLeft) {
+      SetIfNotNull( pPinValue, t1);
+      return SBLeft;
+   }
+   else {
+      SetIfNotNull( pPinValue, t0);
+      return SBRight;
+   }
 }
 
 
@@ -3110,28 +3284,19 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
    // May choose no boundary if onlyWithinSnapDistance is true.
    // Otherwise choose the eligible boundary nearest the mouse click.
    const double selend = PositionToTime(event.m_x, rect.x);
+   wxInt64 pixelDist = 0;
+   SelectionBoundary boundary =
+      ChooseTimeBoundary(selend, onlyWithinSnapDistance,
+      &pixelDist, pPinValue);
+
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    const double t0 = mViewInfo->selectedRegion.t0();
    const double t1 = mViewInfo->selectedRegion.t1();
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    const double f0 = mViewInfo->selectedRegion.f0();
    const double f1 = mViewInfo->selectedRegion.f1();
    const double fc = mViewInfo->selectedRegion.fc();
    double ratio = 0;
-#endif
-   wxInt64 pixelDist = mViewInfo->zoom * fabs(selend - t0);
-   bool chooseLeft = true;
 
-   if (mViewInfo->selectedRegion.isPoint())
-      // Special case when selection is a point, and thus left
-      // and right distances are the same
-      chooseLeft = (selend < t0);
-   else {
-      const wxInt64 rightDist = mViewInfo->zoom * fabs(selend - t1);
-      if (rightDist < pixelDist)
-         chooseLeft = false, pixelDist = rightDist;
-   }
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    bool chooseTime = true;
    bool chooseBottom = true;
    bool chooseCenter = false;
@@ -3146,14 +3311,20 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
          ? FrequencyToPosition(f0, rect.y, rect.height,
                                wt->GetRate(), logF)
          : rect.y + rect.height;
-      wxInt64 verticalDist = abs(int(event.m_y - bottomSel));
       const wxInt64 topSel = (f1 >= 0)
          ? FrequencyToPosition(f1, rect.y, rect.height,
-                               wt->GetRate(), logF)
+         wt->GetRate(), logF)
          : rect.y;
-      const wxInt64 topDist = abs(int(event.m_y - topSel));
-      if (topDist < verticalDist)
-         chooseBottom = false, verticalDist = topDist;
+      wxInt64 signedBottomDist = int(event.m_y - bottomSel);
+      wxInt64 verticalDist = abs(signedBottomDist);
+      if (bottomSel == topSel)
+         // Top and bottom are too close to resolve on screen
+         chooseBottom = (signedBottomDist >= 0);
+      else {
+         const wxInt64 topDist = abs(int(event.m_y - topSel));
+         if (topDist < verticalDist)
+            chooseBottom = false, verticalDist = topDist;
+      }
       if (fc > 0
 #ifdef SPECTRAL_EDITING_ESC_KEY
          && mayDragWidth
@@ -3202,19 +3373,7 @@ bool mayDragWidth, bool onlyWithinSnapDistance,
    else
 #endif
    {
-      if (onlyWithinSnapDistance &&
-          pixelDist >= SELECTION_RESIZE_REGION) {
-         SetIfNotNull( pPinValue, -1.0);
-         return SBNone;
-      }
-      else if (chooseLeft) {
-         SetIfNotNull( pPinValue, t1);
-         return SBLeft;
-      }
-      else {
-         SetIfNotNull( pPinValue, t0);
-         return SBRight;
-      }
+      return boundary;
    }
 }
 
@@ -5805,8 +5964,8 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
          else {
             // Handle ESC during frequency drag
             wxMouseState state(::wxGetMouseState());
-            wxCoord xx = state.GetX(), yy = state.GetY();
-            ScreenToClient(&xx, &yy);
+            wxCoord yy = state.GetY();
+            ScreenToClient(NULL, &yy);
             wxRect r;
             if (wt == FindTrack(state.GetX(), yy, false, false, &r)) {
                eFreqSelMode saveMode = mFreqSelMode;
@@ -7333,113 +7492,42 @@ void TrackPanel::ScrollIntoView(int x)
 
 void TrackPanel::OnCursorLeft( bool shift, bool ctrl, bool keyup )
 {
-   if( keyup )
-   {
-      int token = GetProject()->GetAudioIOToken();
-      if( token > 0 && gAudioIO->IsStreamActive( token ) )
-      {
-         return;
-      }
-
-      MakeParentModifyState(false);
-      return;
-   }
-
-   // If the last adjustment was very recent, we are
-   // holding the key down and should move faster.
-   wxLongLong curtime = ::wxGetLocalTimeMillis();
-   int multiplier = 1;
-   if( curtime - mLastSelectionAdjustment < 50 )
-   {
-      multiplier = 4;
-   }
-   mLastSelectionAdjustment = curtime;
-
+   // PRL:  What I found and preserved, strange though it be:
+   // During playback:  jump depends on preferences and is independent of the zoom
+   // and does not vary if the key is held
+   // Else: jump depends on the zoom and gets bigger if the key is held
    int snapToTime = GetActiveProject()->GetSnapTo();
-
-   // Contract selection from the right to the left
-   if( shift && ctrl )
-   {
-      // Reduce and constrain (counter-intuitive)
-      mViewInfo->selectedRegion.setT1(
-         std::max(mViewInfo->selectedRegion.t0(),
-                  snapToTime
-                  ? GridMove(mViewInfo->selectedRegion.t1(), -multiplier)
-                  : mViewInfo->selectedRegion.t1() -
-                      multiplier / mViewInfo->zoom));
-
-      // Make sure it's visible.
-      ScrollIntoView( mViewInfo->selectedRegion.t1() );
-      Refresh( false );
-   }
-   // Extend selection toward the left
-   else if( shift )
-   {
-      // If playing, reposition a long amount of time
-      int token = GetProject()->GetAudioIOToken();
-      if( token > 0 && gAudioIO->IsStreamActive( token ) )
-      {
-         gAudioIO->SeekStream(-mSeekLong);
-         return;
-      }
-
-      // Expand and constrain
-      mViewInfo->selectedRegion.setT0(
-         std::max(0.0,
-                  snapToTime
-                  ? GridMove(mViewInfo->selectedRegion.t0(), -multiplier)
-                  : mViewInfo->selectedRegion.t0() -
-                      multiplier / mViewInfo->zoom));
-
-      // Make sure it's visible.
-      ScrollIntoView( mViewInfo->selectedRegion.t0() );
-      Refresh( false );
-   }
-   // Move the cursor toward the left
-   else
-   {
-      // If playing, reposition a short amount of time
-      int token = GetProject()->GetAudioIOToken();
-      if( token > 0 && gAudioIO->IsStreamActive( token ) )
-      {
-         gAudioIO->SeekStream(-mSeekShort);
-         return;
-      }
-
-      // Already in cursor mode?
-      if( mViewInfo->selectedRegion.isPoint() )
-      {
-         // Move and constrain
-         mViewInfo->selectedRegion.setT0(
-            std::max(0.0,
-                     snapToTime
-                     ? GridMove(mViewInfo->selectedRegion.t0(), -multiplier)
-                     : mViewInfo->selectedRegion.t0() -
-                        multiplier / mViewInfo->zoom),
-            false);
-         mViewInfo->selectedRegion.collapseToT0();
-
-         // Move the visual cursor
-         DrawCursor();
-      }
-      else
-      {
-         // Transition to cursor mode.
-         mViewInfo->selectedRegion.collapseToT0();
-         Refresh( false );
-      }
-
-      // Make sure it's visible
-      ScrollIntoView( mViewInfo->selectedRegion.t0() );
-   }
+   double quietSeekStepPositive = 1.0 / mViewInfo->zoom;
+   double audioSeekStepPositive = shift ? mSeekLong : mSeekShort;
+   SeekLeftOrRight
+      (true, shift, ctrl, keyup, snapToTime, true, false,
+       quietSeekStepPositive,  audioSeekStepPositive);
 }
 
-void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
+void TrackPanel::OnCursorRight(bool shift, bool ctrl, bool keyup)
 {
-   if( keyup )
+   // PRL:  What I found and preserved, strange though it be:
+   // During playback:  jump depends on preferences and is independent of the zoom
+   // and does not vary if the key is held
+   // Else: jump depends on the zoom and gets bigger if the key is held
+   int snapToTime = GetActiveProject()->GetSnapTo();
+   double quietSeekStepPositive = 1.0 / mViewInfo->zoom;
+   double audioSeekStepPositive = shift ? mSeekLong : mSeekShort;
+   SeekLeftOrRight
+      (false, shift, ctrl, keyup, snapToTime, true, false,
+       quietSeekStepPositive, audioSeekStepPositive);
+}
+
+// Handle small cursor and play head movements
+void TrackPanel::SeekLeftOrRight
+(bool leftward, bool shift, bool ctrl, bool keyup,
+ int snapToTime, bool mayAccelerateQuiet, bool mayAccelerateAudio,
+ double quietSeekStepPositive, double audioSeekStepPositive)
+{
+   if (keyup)
    {
       int token = GetProject()->GetAudioIOToken();
-      if( token > 0 && gAudioIO->IsStreamActive( token ) )
+      if (token > 0 && gAudioIO->IsStreamActive(token))
       {
          return;
       }
@@ -7450,78 +7538,119 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
 
    // If the last adjustment was very recent, we are
    // holding the key down and should move faster.
-   wxLongLong curtime = ::wxGetLocalTimeMillis();
-   int multiplier = 1;
-   if( curtime - mLastSelectionAdjustment < 50 )
-   {
-      multiplier = 4;
-   }
-   mLastSelectionAdjustment = curtime;
+   const wxLongLong curtime = ::wxGetLocalTimeMillis();
+   enum { MIN_INTERVAL = 50 };
+   const bool fast = (curtime - mLastSelectionAdjustment < MIN_INTERVAL);
+   
+   // How much faster should the cursor move if shift is down?
+   enum { LARGER_MULTIPLIER = 4 };
+   int multiplier = (fast && mayAccelerateQuiet) ? LARGER_MULTIPLIER : 1;
+   if (leftward)
+      multiplier = -multiplier;
 
-   int snapToTime = GetActiveProject()->GetSnapTo();
+   int token = GetProject()->GetAudioIOToken();
 
-   // Contract selection from the left to the right
-   if( shift && ctrl )
+   if (shift && ctrl)
    {
+      mLastSelectionAdjustment = curtime;
+
+         // Contract selection
       // Reduce and constrain (counter-intuitive)
-      mViewInfo->selectedRegion.setT0(
-         std::min(mViewInfo->selectedRegion.t1(),
-                  snapToTime
+      if (leftward) {
+         mViewInfo->selectedRegion.setT1(
+            std::max(mViewInfo->selectedRegion.t0(),
+            snapToTime
+               ? GridMove(mViewInfo->selectedRegion.t1(), multiplier)
+               : mViewInfo->selectedRegion.t1() +
+                  multiplier * quietSeekStepPositive));
+
+         // Make sure it's visible.
+         ScrollIntoView(mViewInfo->selectedRegion.t1());
+      }
+      else {
+         mViewInfo->selectedRegion.setT0(
+            std::min(mViewInfo->selectedRegion.t1(),
+               snapToTime
                   ? GridMove(mViewInfo->selectedRegion.t0(), multiplier)
                   : mViewInfo->selectedRegion.t0() +
-                     multiplier / mViewInfo->zoom));
+                     multiplier * quietSeekStepPositive));
 
-      // Make sure new position is in view.
-      ScrollIntoView( mViewInfo->selectedRegion.t0() );
-      Refresh( false );
+         // Make sure new position is in view.
+         ScrollIntoView(mViewInfo->selectedRegion.t0());
+      }
+      Refresh(false);
    }
-   // Extend selection toward the right
-   else if( shift )
-   {
-      // If playing, reposition a long amount of time
-      int token = GetProject()->GetAudioIOToken();
-      if( token > 0 && gAudioIO->IsStreamActive( token ) )
-      {
-         gAudioIO->SeekStream(mSeekLong);
+   else if (token > 0 && gAudioIO->IsStreamActive(token)) {
+#ifdef EXPERIMENTAL_IMPROVED_SEEKING
+      if (gAudioIO->GetLastPlaybackTime() < mLastSelectionAdjustment) {
+         // Allow time for the last seek to output a buffer before
+         // discarding samples again
+         // Do not advance mLastSelectionAdjustment
          return;
       }
+#endif
+      mLastSelectionAdjustment = curtime;
 
-      // Expand and constrain
-      double end = mTracks->GetEndTime();
-      mViewInfo->selectedRegion.setT1(
-         std::min(end,
-                  snapToTime
-                  ?  GridMove(mViewInfo->selectedRegion.t1(), multiplier)
-                  : mViewInfo->selectedRegion.t1() + multiplier/mViewInfo->zoom));
+      // Ignore the multiplier for the quiet case
+      multiplier = (fast && mayAccelerateAudio) ? LARGER_MULTIPLIER : 1;
+      if (leftward)
+         multiplier = -multiplier;
 
-      // Make sure new position is in view.
-      ScrollIntoView( mViewInfo->selectedRegion.t1() );
-      Refresh( false );
+      // If playing, reposition
+      gAudioIO->SeekStream(multiplier * audioSeekStepPositive);
+      return;
    }
-   // Move the cursor toward the right
+   else if (shift)
+   {
+      mLastSelectionAdjustment = curtime;
+
+      // Extend selection
+      // Expand and constrain
+      if (leftward) {
+         mViewInfo->selectedRegion.setT0(
+            std::max(0.0,
+               snapToTime
+                  ? GridMove(mViewInfo->selectedRegion.t0(), multiplier)
+                  : mViewInfo->selectedRegion.t0() +
+                     multiplier * quietSeekStepPositive));
+
+         // Make sure it's visible.
+         ScrollIntoView(mViewInfo->selectedRegion.t0());
+      }
+      else {
+         double end = mTracks->GetEndTime();
+         mViewInfo->selectedRegion.setT1(
+            std::min(end,
+               snapToTime
+                  ? GridMove(mViewInfo->selectedRegion.t1(), multiplier)
+                  : mViewInfo->selectedRegion.t1() +
+                     multiplier * quietSeekStepPositive));
+
+         // Make sure new position is in view.
+         ScrollIntoView(mViewInfo->selectedRegion.t1());
+      }
+      Refresh(false);
+   }
    else
    {
-      // If playing, reposition a short amount of time
-      int token = GetProject()->GetAudioIOToken();
-      if( token > 0 && gAudioIO->IsStreamActive( token ) )
-      {
-         gAudioIO->SeekStream(mSeekShort);
-         return;
-      }
+      mLastSelectionAdjustment = curtime;
 
+      // Move the cursor
       // Already in cursor mode?
       if (mViewInfo->selectedRegion.isPoint())
       {
          // Move and constrain
          double end = mTracks->GetEndTime();
-         mViewInfo->selectedRegion.setT1(
-            std::min(end,
-                     snapToTime
-                     ? GridMove(mViewInfo->selectedRegion.t1(), multiplier)
-                     : mViewInfo->selectedRegion.t1() +
-                        multiplier / mViewInfo->zoom),
+         mViewInfo->selectedRegion.setT0(
+            std::max(0.0,
+               std::min(end,
+                  snapToTime
+                     ? GridMove(mViewInfo->selectedRegion.t0(), multiplier)
+                     : mViewInfo->selectedRegion.t0() + multiplier * quietSeekStepPositive
+               )
+            ),
             false);
-         mViewInfo->selectedRegion.collapseToT1();
+         mViewInfo->selectedRegion.collapseToT0();
 
          // Move the visual cursor
          DrawCursor();
@@ -7529,12 +7658,15 @@ void TrackPanel::OnCursorRight( bool shift, bool ctrl, bool keyup )
       else
       {
          // Transition to cursor mode.
-         mViewInfo->selectedRegion.collapseToT1();
-         Refresh( false );
+         if (leftward)
+            mViewInfo->selectedRegion.collapseToT0();
+         else
+            mViewInfo->selectedRegion.collapseToT1();
+         Refresh(false);
       }
 
       // Make sure new position is in view
-      ScrollIntoView( mViewInfo->selectedRegion.t1() );
+      ScrollIntoView(mViewInfo->selectedRegion.t1());
    }
 }
 
@@ -7656,74 +7788,25 @@ void TrackPanel::OnBoundaryMove(bool left, bool boundaryContract)
 // longjump=false: Use mSeekShort; longjump=true: Use mSeekLong
 void TrackPanel::OnCursorMove(bool forward, bool jump, bool longjump )
 {
-   // If the last adjustment was very recent, we are
-   // holding the key down and should move faster.
-   wxLongLong curtime = ::wxGetLocalTimeMillis();
-   int multiplier = 1;
-   if( curtime - mLastSelectionAdjustment < 50 )
-   {
-      multiplier = 4;
-   }
-   mLastSelectionAdjustment = curtime;
+   // PRL:  nobody calls this yet with !jump
 
-   float direction = -1;
-   if (forward) {
-      direction = 1;
-   }
-
-   float mSeek;
+   double positiveSeekStep;
    if (jump) {
       if (!longjump) {
-         mSeek = mSeekShort;
+         positiveSeekStep = mSeekShort;
       } else {
-         mSeek = mSeekLong;
+         positiveSeekStep = mSeekLong;
       }
    } else {
-      mSeek = multiplier / mViewInfo->zoom;
+      positiveSeekStep = 1.0 / mViewInfo->zoom;
    }
-   mSeek *= direction;
+   bool mayAccelerate = !jump;
+   SeekLeftOrRight
+      (!forward, false, false, false,
+       0, mayAccelerate, mayAccelerate,
+       positiveSeekStep, positiveSeekStep);
 
-   // If playing, reposition a short amount of time
-   int token = GetProject()->GetAudioIOToken();
-   if( token > 0 && gAudioIO->IsStreamActive( token ) )
-   {
-      gAudioIO->SeekStream(mSeek);
-   }
-   else
-   {
-      // Already in cursor mode?
-      if( mViewInfo->selectedRegion.isPoint() )
-      {
-         // Move and constrain
-
-         double t0 = mViewInfo->selectedRegion.t0() + mSeek;
-         if( !forward && t0 < 0.0 )
-         {
-            t0 = 0.0;
-         }
-         double end = mTracks->GetEndTime();
-         if( forward && t0 > end)
-         {
-            t0 = end;
-         }
-         mViewInfo->selectedRegion.setT0(t0, false);
-         mViewInfo->selectedRegion.collapseToT0();
-
-         // Move the visual cursor
-         DrawCursor();
-      }
-      else
-      {
-         // Transition to cursor mode.
-         mViewInfo->selectedRegion.collapseToT0();
-         Refresh( false );
-      }
-
-      // Make sure it's visible
-      ScrollIntoView( mViewInfo->selectedRegion.t0() );
-
-      MakeParentModifyState(false);
-   }
+   MakeParentModifyState(false);
 }
 
 //The following methods operate controls on specified tracks,

@@ -605,6 +605,8 @@ AudioIO::AudioIO()
    mMixerOutputVol = 1.0;
    mInputMixerWorks = false;
 #endif
+
+   mLastPlaybackTimeMillis = 0;
 }
 
 AudioIO::~AudioIO()
@@ -1127,7 +1129,8 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
                          AudioIOListener* listener,
                          bool playLooped /* = false */,
                          double cutPreviewGapStart /* = 0.0 */,
-                         double cutPreviewGapLen /* = 0.0 */)
+                         double cutPreviewGapLen, /* = 0.0 */
+                         const double *pStartTime /* = 0 */)
 {
    if( IsBusy() )
       return 0;
@@ -1368,6 +1371,20 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
 #endif
+
+   if (pStartTime)
+   {
+      // Calculate the new time position
+      mTime = std::max(mT0, std::min(mT1, *pStartTime));
+      // Reset mixer positions for all playback tracks
+      unsigned numMixers = mPlaybackTracks.GetCount();
+      for (unsigned ii = 0; ii < numMixers; ++ii)
+         mPlaybackMixers[ii]->Reposition(mTime);
+      if(mTimeTrack)
+         mWarpedTime = mTimeTrack->ComputeWarpedLength(mT0, mTime);
+      else
+         mWarpedTime = mTime - mT0;
+   }
 
    // We signal the audio thread to call FillBuffers, to prime the RingBuffers
    // so that they will have data in them when the stream starts.  Having the
@@ -3647,6 +3664,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
             chanCnt = 0;
          }
+
+         gAudioIO->mLastPlaybackTimeMillis = ::wxGetLocalTimeMillis();
 
          //
          // Clip output to [-1.0,+1.0] range (msmeyer)

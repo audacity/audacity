@@ -25,7 +25,7 @@
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "TrackPanelListener.h"
-#include "AudioIO.h"
+#include "AudioIOListener.h"
 #include "commands/CommandManager.h"
 #include "effects/EffectManager.h"
 #include "xml/XMLTagHandler.h"

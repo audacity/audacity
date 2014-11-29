@@ -310,12 +310,22 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    // AS: Selection handling
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
+   void StartOrJumpPlayback(wxMouseEvent &event);
+#ifdef EXPERIMENTAL_SCRUBBING
+   void StartScrubbing(double position);
+#endif
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect r);
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
    virtual void ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
                         Track *pTrack);
    virtual void UpdateSelectionDisplay();
+
+   // Handle small cursor and play head movements
+   void SeekLeftOrRight
+      (bool left, bool shift, bool ctrl, bool keyup,
+      int snapToTime, bool mayAccelerateQuiet, bool mayAccelerateAudio,
+      double quietSeekStepPositive, double audioSeekStepPositive);
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    void StartSnappingFreqSelection (WaveTrack *pTrack);
@@ -688,6 +698,9 @@ protected:
       SBBottom, SBTop, SBCenter, SBWidth,
 #endif
    };
+   SelectionBoundary ChooseTimeBoundary
+      (double selend, bool onlyWithinSnapDistance,
+       wxInt64 *pPixelDist = NULL, double *pPinValue = NULL) const;
    SelectionBoundary ChooseBoundary
       (wxMouseEvent & event, const Track *pTrack,
        const wxRect &rect,
@@ -738,6 +751,12 @@ protected:
    //   coordinate should the dragging track move up or down?
    int mMoveUpThreshold;
    int mMoveDownThreshold;
+
+#ifdef EXPERIMENTAL_SCRUBBING
+   bool mScrubbing;
+   wxLongLong mLastScrubTime; // milliseconds
+   double mLastScrubPosition;
+#endif
 
    wxCursor *mArrowCursor;
    wxCursor *mPencilCursor;

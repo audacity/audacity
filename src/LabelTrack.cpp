@@ -47,6 +47,7 @@ for drawing different aspects of the label and its text box.
 #include <wx/textfile.h>
 #include <wx/utils.h>
 
+#include "AudioIO.h"
 #include "LabelTrack.h"
 #include "DirManager.h"
 #include "Internat.h"
