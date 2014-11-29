@@ -242,7 +242,7 @@ void OnDisjoinLabels();
 void OnSelectAll();
 void OnSelectNone();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-void OnDefaultFrequencySelection();
+void OnToggleSpectralSelection();
 #endif
 void OnSelectCursorEnd();
 void OnSelectStartCursor();
