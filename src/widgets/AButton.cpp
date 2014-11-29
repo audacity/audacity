@@ -46,6 +46,110 @@ BEGIN_EVENT_TABLE(AButton, wxWindow)
    EVT_ERASE_BACKGROUND(AButton::OnErase)
 END_EVENT_TABLE()
 
+class AButton::Listener
+   : public wxEvtHandler
+{
+public:
+   Listener (AButton *button);
+   ~Listener();
+
+   void OnKeyDown(wxKeyEvent & event);
+   void OnKeyUp(wxKeyEvent & event);
+   void OnTimer(wxTimerEvent & event);
+
+   DECLARE_CLASS(AButton::Listener);
+   DECLARE_EVENT_TABLE();
+
+private:
+   AButton *mButton;
+   wxTimer mShiftKeyTimer;
+};
+
+IMPLEMENT_CLASS(AButton::Listener, wxEvtHandler);
+
+BEGIN_EVENT_TABLE(AButton::Listener, wxEvtHandler)
+   EVT_TIMER(wxID_ANY, AButton::Listener::OnTimer)
+END_EVENT_TABLE()
+
+AButton::Listener::Listener (AButton *button)
+: mButton(button)
+{
+   mShiftKeyTimer.SetOwner(this);
+
+   wxTheApp->Connect( wxEVT_KEY_DOWN,
+                      wxKeyEventHandler( AButton::Listener::OnKeyDown ),
+                      NULL,
+                      this );
+
+   wxTheApp->Connect( wxEVT_KEY_UP,
+                      wxKeyEventHandler( AButton::Listener::OnKeyUp ),
+                      NULL,
+                      this );
+}
+
+AButton::Listener::~Listener ()
+{
+   wxTheApp->Disconnect( wxEVT_KEY_DOWN,
+                         wxKeyEventHandler( AButton::Listener::OnKeyDown ),
+                         NULL,
+                         this );
+
+   wxTheApp->Disconnect( wxEVT_KEY_UP,
+                         wxKeyEventHandler( AButton::Listener::OnKeyUp ),
+                         NULL,
+                         this );
+}
+
+void AButton::Listener::OnKeyDown(wxKeyEvent & event)
+{
+   // Really, it's all the same check for changes of key states.
+   OnKeyUp(event);
+
+   // See comments in OnTimer()
+   mShiftKeyTimer.Start(100);
+}
+
+void AButton::Listener::OnKeyUp(wxKeyEvent & event)
+{
+   event.Skip();
+
+   if (!mButton->IsDown())
+   {
+      int idx = 0;
+      // Ignore the event, consult key states.  One modifier key might
+      // have gone up but another remained down.
+      // Note that CMD (or CTRL) takes precedence over Shift if both are down
+      // and alternates are defined for both
+      // see also AButton::OnMouseEvent()
+      if (wxGetKeyState(WXK_CONTROL) && mButton->HasAlternateImages(2))
+         idx = 2;
+      else if (wxGetKeyState(WXK_SHIFT) && mButton->HasAlternateImages(1))
+         idx = 1;
+
+      // Turn e.g. the "Play" button into a "Loop" button
+      // or "Cut Preview" button
+      mButton->SetAlternateIdx(idx);
+   }
+}
+
+void AButton::Listener::OnTimer(wxTimerEvent & event)
+{
+   event.Skip();
+
+   // bug 307 fix:
+   // Shift key-up events get swallowed if a command with a Shift in its keyboard
+   // shortcut opens a dialog, and OnKeyUp() doesn't get called.
+   // With CTRL now causing the button to change appearance, presumably similar
+   // can happen with that key.
+   if (!wxGetKeyState(WXK_SHIFT) ||
+      !wxGetKeyState(WXK_CONTROL))
+   {
+      wxKeyEvent dummy;
+      this->OnKeyUp(dummy);
+      mShiftKeyTimer.Stop();
+   }
+}
+
 AButton::AButton(wxWindow * parent,
                  wxWindowID id,
                  const wxPoint & pos,
@@ -108,18 +212,19 @@ void AButton::Init(wxWindow * parent,
    mToggle = toggle;
    mUseDisabledAsDownHiliteImage = false;
 
-   mImage[0] = up;
-   mImage[1] = over;
-   mImage[2] = down;
-   mImage[3] = dis;
+   mImages.resize(1);
+   mImages[0].mArr[0] = up;
+   mImages[0].mArr[1] = over;
+   mImages[0].mArr[2] = down;
+   mImages[0].mArr[3] = dis;
 
-   mAlternate = false;
+   mAlternateIdx = 0;
 
    mButtonIsFocused = false;
    mFocusRect = GetRect().Deflate( 3, 3 );
 
-   SetSizeHints(mImage[0].GetMinSize(),
-                mImage[0].GetMaxSize());
+   SetSizeHints(mImages[0].mArr[0].GetMinSize(),
+                mImages[0].mArr[0].GetMaxSize());
 
 #if wxUSE_ACCESSIBILITY
    SetName( wxT("") );
@@ -132,36 +237,48 @@ void AButton::UseDisabledAsDownHiliteImage(bool flag)
    mUseDisabledAsDownHiliteImage = flag;
 }
 
-void AButton::SetAlternateImages(wxImage up,
+void AButton::SetAlternateImages(unsigned idx,
+                                 wxImage up,
                                  wxImage over,
                                  wxImage down,
                                  wxImage dis)
 {
-   mAltImage[0] = ImageRoll(up);
-   mAltImage[1] = ImageRoll(over);
-   mAltImage[2] = ImageRoll(down);
-   mAltImage[3] = ImageRoll(dis);
+   if (1 + idx > mImages.size())
+      mImages.resize(1 + idx);
+   mImages[idx].mArr[0] = ImageRoll(up);
+   mImages[idx].mArr[1] = ImageRoll(over);
+   mImages[idx].mArr[2] = ImageRoll(down);
+   mImages[idx].mArr[3] = ImageRoll(dis);
 }
 
-void AButton::SetAlternateImages(ImageRoll up,
+void AButton::SetAlternateImages(unsigned idx,
+                                 ImageRoll up,
                                  ImageRoll over,
                                  ImageRoll down,
                                  ImageRoll dis)
 {
-   mAltImage[0] = up;
-   mAltImage[1] = over;
-   mAltImage[2] = down;
-   mAltImage[3] = dis;
+   if (1 + idx > mImages.size())
+      mImages.resize(1 + idx);
+   mImages[idx].mArr[0] = up;
+   mImages[idx].mArr[1] = over;
+   mImages[idx].mArr[2] = down;
+   mImages[idx].mArr[3] = dis;
 }
 
-void AButton::SetAlternate(bool useAlternateImages)
+void AButton::SetAlternateIdx(unsigned idx)
 {
    // If alternate-image-state is already correct then
    // nothing to do (saves repainting button).
-   if( mAlternate == useAlternateImages )
+   if( mAlternateIdx == idx )
       return;
-   mAlternate = useAlternateImages;
+   mAlternateIdx = idx;
    Refresh(false);
+}
+
+void AButton::FollowModifierKeys()
+{
+   if(!mListener.get())
+      mListener.reset(new Listener(this));
 }
 
 void AButton::SetFocusRect(wxRect & r)
@@ -218,10 +335,7 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    AButtonState buttonState = GetState();
 
-   if (mAlternate)
-      mAltImage[buttonState].Draw(dc, GetClientRect());
-   else
-      mImage[buttonState].Draw(dc, GetClientRect());
+   mImages[mAlternateIdx].mArr[buttonState].Draw(dc, GetClientRect());
 
 #if defined(__WXMSW__)
    if( mButtonIsFocused )
@@ -242,12 +356,17 @@ void AButton::OnSize(wxSizeEvent & WXUNUSED(event))
    Refresh(false);
 }
 
-bool AButton::HasAlternateImages()
+bool AButton::HasAlternateImages(unsigned idx)
 {
-   return (mAltImage[0].Ok() &&
-           mAltImage[1].Ok() &&
-           mAltImage[2].Ok() &&
-           mAltImage[3].Ok());
+   if (mImages.size() <= idx)
+      return false;
+
+   const ImageArr &images = mImages[idx];
+   const ImageRoll (&arr)[4] = images.mArr;
+   return (arr[0].Ok() &&
+           arr[1].Ok() &&
+           arr[2].Ok() &&
+           arr[3].Ok());
 }
 
 void AButton::OnMouseEvent(wxMouseEvent & event)
@@ -264,8 +383,17 @@ void AButton::OnMouseEvent(wxMouseEvent & event)
          (event.m_x >= 0 && event.m_y >= 0 &&
           event.m_x < clientSize.x && event.m_y < clientSize.y);
 
-   if (HasAlternateImages() && !mButtonIsDown)
-      mAlternate = event.ShiftDown();
+   if (!mButtonIsDown)
+   {
+      // Note that CMD (or CTRL) takes precedence over Shift if both are down
+      // see also AButton::Listener::OnKeyUp()
+      if (event.CmdDown() && HasAlternateImages(2))
+         mAlternateIdx = 2;
+      else if (event.ShiftDown() && HasAlternateImages(1))
+         mAlternateIdx = 1;
+      else
+         mAlternateIdx = 0;
+   }
 
    if (mEnabled && event.IsButton()) {
       if (event.ButtonIsDown(wxMOUSE_BTN_ANY)) {

@@ -127,6 +127,8 @@ void OnInputGainDec();
         // Transcription control
 
 void OnPlayAtSpeed();
+void OnPlayAtSpeedLooped();
+void OnPlayAtSpeedCutPreview();
 void OnSetPlaySpeed();
 void OnPlaySpeedInc();
 void OnPlaySpeedDec();

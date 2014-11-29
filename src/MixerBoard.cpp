@@ -277,6 +277,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                   true); // toggle button
    mToggleButton_Mute->SetName(_("Mute"));
    mToggleButton_Mute->SetAlternateImages(
+      1,
       *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver),
       *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDisabled));
    this->UpdateMute();
@@ -465,10 +466,10 @@ void MixerTrackCluster::UpdateName()
 void MixerTrackCluster::UpdateMute()
 {
 #ifdef EXPERIMENTAL_MIDI_OUT
-   mToggleButton_Mute->SetAlternate(mTrack->GetSolo());
+   mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
    if (mTrack->GetMute())
 #else
-   mToggleButton_Mute->SetAlternate(mLeftTrack->GetSolo());
+   mToggleButton_Mute->SetAlternateIdx(mLeftTrack->GetSolo() ? 1 : 0);
    if (mLeftTrack->GetMute())
 #endif
       mToggleButton_Mute->PushDown();
@@ -487,7 +488,7 @@ void MixerTrackCluster::UpdateSolo()
       mToggleButton_Solo->PushDown();
    else
       mToggleButton_Solo->PopUp();
-   mToggleButton_Mute->SetAlternate(bIsSolo);
+   mToggleButton_Mute->SetAlternateIdx(bIsSolo ? 1 : 0);
 }
 
 void MixerTrackCluster::UpdatePan()
@@ -827,10 +828,10 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 {
 #ifdef EXPERIMENTAL_MIDI_OUT
    mProject->HandleTrackMute(mTrack, mToggleButton_Mute->WasShiftDown());
-   mToggleButton_Mute->SetAlternate(mTrack->GetSolo());
+   mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
 #else
    mProject->HandleTrackMute(mLeftTrack, mToggleButton_Mute->WasShiftDown());
-   mToggleButton_Mute->SetAlternate(mLeftTrack->GetSolo());
+   mToggleButton_Mute->SetAlternateIdx(mLeftTrack->GetSolo() ? 1 : 0);
 #endif
 
    // Update the TrackPanel correspondingly.
@@ -858,7 +859,7 @@ void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
    mProject->HandleTrackSolo(mLeftTrack, mToggleButton_Solo->WasShiftDown());
    bool bIsSolo = mLeftTrack->GetSolo();
 #endif
-   mToggleButton_Mute->SetAlternate(bIsSolo);
+   mToggleButton_Mute->SetAlternateIdx(bIsSolo ? 1 : 0);
 
    // Update the TrackPanel correspondingly.
    if (mProject->IsSoloSimple())

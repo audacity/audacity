@@ -127,6 +127,16 @@ class ToolBar:public wxPanel
                        bool processdownevents,
                        wxSize size);
 
+   static
+   void MakeAlternateImages(AButton &button, int idx,
+                            teBmps eUp,
+                            teBmps eDown,
+                            teBmps eHilite,
+                            teBmps eStandardUp,
+                            teBmps eStandardDown,
+                            teBmps eDisabled,
+                            wxSize size);
+   
    void SetButton(bool down, AButton *button);
 
    void MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);

@@ -49,6 +49,7 @@
 #include <wx/tooltip.h>
 
 #include "ControlToolBar.h"
+#include "TranscriptionToolBar.h"
 #include "MeterToolBar.h"
 
 #include "../AColor.h"
@@ -72,7 +73,6 @@ AudacityProject *ControlToolBar::mBusyProject = NULL;
 
 BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_CHAR(ControlToolBar::OnKeyEvent)
-   EVT_TIMER(wxID_ANY, ControlToolBar::OnTimer)
    EVT_BUTTON(ID_PLAY_BUTTON,   ControlToolBar::OnPlay)
    EVT_BUTTON(ID_STOP_BUTTON,   ControlToolBar::OnStop)
    EVT_BUTTON(ID_RECORD_BUTTON, ControlToolBar::OnRecord)
@@ -89,8 +89,6 @@ END_EVENT_TABLE()
 ControlToolBar::ControlToolBar()
 : ToolBar(TransportBarID, _("Transport"), wxT("Control"))
 {
-   mShiftKeyTimer.SetOwner(this);
-
    mPaused = false;
 
    gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
@@ -102,31 +100,12 @@ ControlToolBar::ControlToolBar()
 
 ControlToolBar::~ControlToolBar()
 {
-   wxTheApp->Disconnect( wxEVT_KEY_DOWN,
-                         wxKeyEventHandler( ControlToolBar::OnKeyDown ),
-                         NULL,
-                         this );
-
-   wxTheApp->Disconnect( wxEVT_KEY_UP,
-                         wxKeyEventHandler( ControlToolBar::OnKeyUp ),
-                         NULL,
-                         this );
 }
 
 
 void ControlToolBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
-
-   wxTheApp->Connect( wxEVT_KEY_DOWN,
-                      wxKeyEventHandler( ControlToolBar::OnKeyDown ),
-                      NULL,
-                      this );
-
-   wxTheApp->Connect( wxEVT_KEY_UP,
-                      wxKeyEventHandler( ControlToolBar::OnKeyUp ),
-                      NULL,
-                      this );
 }
 
 // This is a convenience function that allows for button creation in
@@ -148,27 +127,16 @@ AButton *ControlToolBar::MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBm
    return r;
 }
 
-void ControlToolBar::MakeLoopImage()
+// static
+void ControlToolBar::MakeAlternateImages(AButton &button, int idx,
+                                         teBmps eEnabledUp,
+                                         teBmps eEnabledDown,
+                                         teBmps eDisabled)
 {
-   // JKC: See ToolBar::MakeButton() for almost identical code.  Condense??
-
-   wxSize Size1( theTheme.ImageSize( bmpRecoloredUpLarge ));
-   wxSize Size2( theTheme.ImageSize( bmpLoop ));
-
-   int xoff = (Size1.GetWidth()  - Size2.GetWidth())/2;
-   int yoff = (Size1.GetHeight() - Size2.GetHeight())/2;
-
-   wxImage * up2        = OverlayImage(bmpRecoloredUpLarge,     bmpLoop, xoff, yoff);
-   wxImage * hilite2    = OverlayImage(bmpRecoloredHiliteLarge, bmpLoop, xoff, yoff);
-   wxImage * down2      = OverlayImage(bmpRecoloredDownLarge,   bmpLoop, xoff + 1, yoff + 1);
-   wxImage * disable2   = OverlayImage(bmpRecoloredUpLarge,     bmpLoopDisabled, xoff, yoff);
-
-   mPlay->SetAlternateImages(*up2, *hilite2, *down2, *disable2);
-
-   delete up2;
-   delete hilite2;
-   delete down2;
-   delete disable2;
+   ToolBar::MakeAlternateImages(button, idx,
+      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredHiliteLarge,
+      eEnabledUp, eEnabledDown, eDisabled,
+      theTheme.ImageSize( bmpRecoloredUpLarge ));
 }
 
 void ControlToolBar::Populate()
@@ -180,8 +148,10 @@ void ControlToolBar::Populate()
 
    mPlay = MakeButton( bmpPlay, bmpPlay, bmpPlayDisabled,
       ID_PLAY_BUTTON, true, _("Play"));
-
-   MakeLoopImage();
+   MakeAlternateImages(*mPlay, 1, bmpLoop, bmpLoop, bmpLoopDisabled);
+   MakeAlternateImages(*mPlay, 2,
+      bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
+   mPlay->FollowModifierKeys();
 
    mStop = MakeButton( bmpStop, bmpStop, bmpStopDisabled ,
       ID_STOP_BUTTON, false, _("Stop"));
@@ -194,6 +164,9 @@ void ControlToolBar::Populate()
 
    mRecord = MakeButton(bmpRecord, bmpRecord, bmpRecordDisabled,
       ID_RECORD_BUTTON, true, _("Record"));
+   MakeAlternateImages(*mRecord, 1, bmpAppendRecord, bmpAppendRecord,
+      bmpAppendRecordDisabled);
+   mRecord->FollowModifierKeys();
 
 #if wxUSE_TOOLTIPS
    RegenerateToolsTooltips();
@@ -397,7 +370,13 @@ void ControlToolBar::EnableDisableButtons()
       }
    }
 
-   mPlay->SetEnabled((!recording) || (tracks && !busy));
+   const bool enablePlay = (!recording) || (tracks && !busy);
+   mPlay->SetEnabled(enablePlay);
+   // Enable and disable the other play button 
+   TranscriptionToolBar *const pttb = p->GetTranscriptionToolBar();
+   if (pttb)
+      pttb->SetEnabled(enablePlay);
+
    mRecord->SetEnabled(!busy && !playing);
 
    mStop->SetEnabled(busy);
@@ -406,14 +385,26 @@ void ControlToolBar::EnableDisableButtons()
    mPause->SetEnabled(true);
 }
 
-void ControlToolBar::SetPlay(bool down, bool looped)
+void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
 {
+   AudacityProject *p = GetActiveProject();
+   TranscriptionToolBar *const pttb =
+      p ? p->GetTranscriptionToolBar(): 0;
    if (down) {
-      mPlay->SetAlternate(looped);
+      mPlay->SetAlternateIdx(cutPreview ? 2 : looped ? 1 : 0);
       mPlay->PushDown();
-   } else {
+      if (pttb)
+         // This disables cursor changes for modifier keys
+         // in the other play button too
+         pttb->SetPlaying(true, looped, cutPreview);
+   }
+   else {
       mPlay->PopUp();
-      mPlay->SetAlternate(false);
+      mPlay->SetAlternateIdx(0);
+      if (pttb)
+         // This reenables cursor changes for modifier keys
+         // in the other play button too
+         pttb->SetPlaying(false, looped, cutPreview);
    }
    EnableDisableButtons();
 }
@@ -444,13 +435,12 @@ bool ControlToolBar::IsRecordDown()
 {
    return mRecord->IsDown();
 }
-
 void ControlToolBar::PlayPlayRegion(double t0, double t1,
                                     bool looped /* = false */,
                                     bool cutpreview /* = false */,
                                     TimeTrack *timetrack /* = NULL */)
 {
-   SetPlay(true, looped);
+   SetPlay(true, looped, cutpreview);
 
    if (gAudioIO->IsBusy()) {
       SetPlay(false);
@@ -573,7 +563,7 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
 #ifdef EXPERIMENTAL_MIDI_OUT
                NoteTrackArray(),
 #endif
-               NULL, p->GetRate(), tcp0, tcp1, p, false,
+               timetrack, p->GetRate(), tcp0, tcp1, p, false,
                t0, t1-t0);
          } else
          {
@@ -677,48 +667,6 @@ void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
    event.Skip();
 }
 
-void ControlToolBar::OnKeyDown(wxKeyEvent & event)
-{
-   event.Skip();
-
-   if (event.GetKeyCode() == WXK_SHIFT)
-   {
-      // Turn the "Play" button into a "Loop" button
-      if (!mPlay->IsDown())
-         mPlay->SetAlternate(true);
-      mShiftKeyTimer.Start(100);
-   }
-}
-
-void ControlToolBar::OnKeyUp(wxKeyEvent & event)
-{
-   event.Skip();
-
-   if (event.GetKeyCode() == WXK_SHIFT)
-   {
-      // Turn the "Loop" button into a "Play" button
-      if (!mPlay->IsDown())
-         mPlay->SetAlternate(false);
-   }
-}
-
-void ControlToolBar::OnTimer(wxTimerEvent & event)
-{
-   event.Skip();
-
-   // bug 307 fix:
-   // Shift key-up events get swallowed if a command with a Shift in its keyboard
-   // shortcut opens a dialog, and ControlToolBar::OnKeyUp() doesn't get called.
-   if (!wxGetKeyState(WXK_SHIFT))
-   {
-      wxKeyEvent dummyEvent;
-      dummyEvent.m_keyCode = WXK_SHIFT;
-      this->OnKeyUp(dummyEvent);
-      mShiftKeyTimer.Stop();
-   }
-}
-
-
 void ControlToolBar::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
    StopPlaying();
@@ -736,12 +684,11 @@ void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 
 void ControlToolBar::PlayDefault()
 {
-   if(mPlay->WasControlDown())
-      PlayCurrentRegion(false, true); /* play with cut preview */
-   else if(mPlay->WasShiftDown())
-      PlayCurrentRegion(true); /* play looped */
-   else
-      PlayCurrentRegion(false); /* play normal */
+   // Let control have precedence over shift
+   const bool cutPreview = mPlay->WasControlDown();
+   const bool looped = !cutPreview &&
+      mPlay->WasShiftDown();
+   PlayCurrentRegion(looped, cutPreview);
 }
 
 void ControlToolBar::StopPlaying(bool stopStream /* = true*/)

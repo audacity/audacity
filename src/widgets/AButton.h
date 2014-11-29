@@ -12,6 +12,8 @@
 #ifndef __AUDACITY_BUTTON__
 #define __AUDACITY_BUTTON__
 
+#include <vector>
+
 #if wxUSE_ACCESSIBILITY
 #include <wx/access.h>
 #endif
@@ -23,9 +25,12 @@
 
 class AButton: public wxWindow {
    friend class AButtonAx;
+   class Listener;
 
  public:
 
+    // Construct button, specifying images (button up, highlight, button down,
+    // and disabled) for the default state
    AButton(wxWindow * parent,
            wxWindowID id,
            const wxPoint & pos,
@@ -36,6 +41,8 @@ class AButton: public wxWindow {
            ImageRoll dis,
            bool toggle);
 
+    // Construct button, specifying images (button up, highlight, button down,
+    // and disabled) for the default state
    AButton(wxWindow * parent,
            wxWindowID id,
            const wxPoint & pos,
@@ -48,17 +55,30 @@ class AButton: public wxWindow {
 
    virtual ~ AButton();
 
-   virtual void SetAlternateImages(ImageRoll up,
+   // Associate a set of four images (button up, highlight, button down,
+   // disabled) with one nondefault state of the button
+   virtual void SetAlternateImages(unsigned idx,
+                                   ImageRoll up,
                                    ImageRoll over,
                                    ImageRoll down,
                                    ImageRoll dis);
 
-   virtual void SetAlternateImages(wxImage up,
+   // Associate a set of four images (button up, highlight, button down,
+   // disabled) with one nondefault state of the button
+   virtual void SetAlternateImages(unsigned idx,
+                                   wxImage up,
                                    wxImage over,
                                    wxImage down,
                                    wxImage dis);
 
-   virtual void SetAlternate(bool useAlternateImages);
+   // Choose state of the button
+   virtual void SetAlternateIdx(unsigned idx);
+
+   // Make the button change appearance with the modifier keys, no matter
+   // where the mouse is:
+   // Use state 2 when CTRL is down, else 1 when SHIFT is down, else 0
+   virtual void FollowModifierKeys();
+
    virtual void SetFocusRect(wxRect & r);
 
    virtual bool IsEnabled() const { return mEnabled; }
@@ -103,7 +123,7 @@ class AButton: public wxWindow {
 
  private:
 
-   bool HasAlternateImages();
+   bool HasAlternateImages(unsigned idx);
 
    void Init(wxWindow * parent,
              wxWindowID id,
@@ -115,7 +135,7 @@ class AButton: public wxWindow {
              ImageRoll dis,
              bool toggle);
 
-   bool mAlternate;
+   unsigned mAlternateIdx;
    bool mToggle;   // This bool, if true, makes the button able to
                    // process events when it is in the down state, and
                    // moving to the opposite state when it is clicked.
@@ -133,10 +153,12 @@ class AButton: public wxWindow {
    bool mEnabled;
    bool mUseDisabledAsDownHiliteImage;
 
-   ImageRoll mImage[4];
-   ImageRoll mAltImage[4];
+   struct ImageArr { ImageRoll mArr[4]; };
+   std::vector<ImageArr> mImages;
 
    wxRect mFocusRect;
+
+   std::auto_ptr<Listener> mListener;
 
 public:
 

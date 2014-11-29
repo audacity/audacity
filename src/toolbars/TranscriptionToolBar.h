@@ -92,9 +92,12 @@ class TranscriptionToolBar:public ToolBar {
    virtual double GetSensitivity();
    virtual void SetKeyType(wxCommandEvent & event);
 
-   void PlayAtSpeed();
+   void PlayAtSpeed(bool looped, bool cutPreview);
    void ShowPlaySpeedDialog();
    void AdjustPlaySpeed(float adj);
+
+   void SetEnabled(bool enabled);
+   void SetPlaying(bool down, bool looped, bool cutPreview);
 
  private:
 
@@ -103,6 +106,9 @@ class TranscriptionToolBar:public ToolBar {
       teBmps eFore, teBmps eDisabled,
       int id,
       const wxChar *label);
+   void MakeAlternateImages(
+      teBmps eFore, teBmps eDisabled,
+      int id, unsigned altIdx);
    void GetSamples(WaveTrack *t, sampleCount *s0, sampleCount *slen);
    void SetButton(bool newstate, AButton *button);
    void RegenerateTooltips();

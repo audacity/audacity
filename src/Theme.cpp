@@ -63,7 +63,7 @@ and use it for toolbar and window layouts too.
 
 #include "Project.h"
 #include "toolbars/ToolBar.h"
-#include "toolbars/ControlToolBar.h"
+#include "toolbars/ToolManager.h"
 #include "ImageManipulation.h"
 #include "Theme.h"
 #include "Experimental.h"
@@ -223,9 +223,11 @@ void Theme::EnsureInitialised()
 void Theme::ApplyUpdatedImages()
 {
    AudacityProject *p = GetActiveProject();
-   if( p->GetControlToolBar() )
+   for( int ii = 0; ii < ToolBarCount; ++ii )
    {
-      p->GetControlToolBar()->ReCreateButtons();
+      ToolBar *pToolBar = p->mToolManager->GetToolBar(ii);
+      if( pToolBar )
+         pToolBar->ReCreateButtons();
    }
 }
 

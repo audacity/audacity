@@ -1281,6 +1281,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("InputGainDec"), _("Decrease recording volume"), FN(OnInputGainDec));
 
    c->AddCommand(wxT("PlayAtSpeed"), _("Play at speed"), FN(OnPlayAtSpeed));
+   c->AddCommand(wxT("PlayAtSpeedLooped"), _("Loop Play at speed"), FN(OnPlayAtSpeedLooped));
+   c->AddCommand(wxT("PlayAtSpeedCutPreview"), _("Play Cut Preview at speed"), FN(OnPlayAtSpeedCutPreview));
    c->AddCommand(wxT("SetPlaySpeed"), _("Adjust playback speed"), FN(OnSetPlaySpeed));
    c->AddCommand(wxT("PlaySpeedInc"), _("Increase playback speed"), FN(OnPlaySpeedInc));
    c->AddCommand(wxT("PlaySpeedDec"), _("Decrease playback speed"), FN(OnPlaySpeedDec));
@@ -3004,7 +3006,23 @@ void AudacityProject::OnPlayAtSpeed()
 {
    TranscriptionToolBar *tb = GetTranscriptionToolBar();
    if (tb) {
-      tb->PlayAtSpeed();
+      tb->PlayAtSpeed(false, false);
+   }
+}
+
+void AudacityProject::OnPlayAtSpeedLooped()
+{
+   TranscriptionToolBar *tb = GetTranscriptionToolBar();
+   if (tb) {
+      tb->PlayAtSpeed(true, false);
+   }
+}
+
+void AudacityProject::OnPlayAtSpeedCutPreview()
+{
+   TranscriptionToolBar *tb = GetTranscriptionToolBar();
+   if (tb) {
+      tb->PlayAtSpeed(false, true);
    }
 }
 
