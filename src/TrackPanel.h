@@ -559,6 +559,7 @@ protected:
 
    wxLongLong mLastSelectionAdjustment;
 
+   bool mSelStartValid;
    double mSelStart;
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING

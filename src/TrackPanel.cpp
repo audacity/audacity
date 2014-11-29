@@ -581,6 +581,9 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mLastF0 = mLastF1 = SelectedRegion::UndefinedFrequency;
 #endif
+
+   mSelStartValid = false;
+   mSelStart = 0;
 }
 
 TrackPanel::~TrackPanel()
@@ -1684,7 +1687,7 @@ void TrackPanel::HandleCenterFrequencyClick
 {
    if (shiftDown) {
       // Disable time selection
-      mSelStart = -1;
+      mSelStartValid = false;
       mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
       mFreqSelPin = value;
       mFreqSelMode = FREQ_SEL_DRAG_CENTER;
@@ -1696,7 +1699,7 @@ void TrackPanel::HandleCenterFrequencyClick
       // Turn center snapping on (the only way to do this)
       mFreqSelMode = FREQ_SEL_SNAPPING_CENTER;
       // Disable time selection
-      mSelStart = -1;
+      mSelStartValid = false;
       StartSnappingFreqSelection(wt);
 #endif
    }
@@ -2126,6 +2129,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
             // (also exit frequency snapping)
             mFreqSelMode = FREQ_SEL_INVALID;
 #endif
+            mSelStartValid = true;
             mSelStart = value;
             ExtendSelection(event.m_x, r.x, pTrack);
             break;
@@ -2141,7 +2145,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                ? FREQ_SEL_BOTTOM_FREE : FREQ_SEL_TOP_FREE;
 
             // Drag frequency only, not time:
-            mSelStart = -1;
+            mSelStartValid = false;
             ExtendFreqSelection(event.m_y, r.y, r.height);
             break;
          }
@@ -2218,7 +2222,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
             mFreqSelTrack = static_cast<WaveTrack*>(pTrack);
             mFreqSelPin = mViewInfo->selectedRegion.fc();
             // Do not adjust time boundaries
-            mSelStart = -1;
+            mSelStartValid = false;
             ExtendFreqSelection(event.m_y, r.y, r.height);
             UpdateSelectionDisplay();
             // Frequency selection doesn't persist (yet?), so skip this:
@@ -2244,6 +2248,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                // Disable frequency selection
                mFreqSelMode = FREQ_SEL_INVALID;
 #endif
+               mSelStartValid = true;
                mSelStart = value;
                break;
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -2252,7 +2257,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
             case SBWidth:
                startNewSelection = false;
                // Disable time selection
-               mSelStart = -1;
+               mSelStartValid = false;
                mFreqSelTrack = static_cast<const WaveTrack*>(pTrack);
                mFreqSelPin = value;
                mFreqSelMode =
@@ -2310,6 +2315,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
       if (startNewSelection) { // mouse is not at an edge, but after
          // quantization, we could be indicating the selection edge
+         mSelStartValid = true;
          mSelStart = PositionToTime(event.m_x, r.x);
          mStretchStart = nt->NearestBeatTime(mSelStart, &centerBeat);
          if (within(qBeat0, centerBeat, 0.1)) {
@@ -2335,7 +2341,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          mStretchMode = stretchCenter;
          mStretchLeftBeats = qBeat1 - centerBeat;
          mStretchRightBeats = centerBeat - qBeat0;
-      } else if (mViewInfo->selectedRegion.t1() == mSelStart) {
+      } else if (mSelStartValid && mViewInfo->selectedRegion.t1() == mSelStart) {
          // note that at this point, mSelStart is at the opposite
          // end of the selection from the cursor. If the cursor is
          // over sel0, then mSelStart is at sel1.
@@ -2400,6 +2406,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 /// Reset our selection markers.
 void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
 {
+   mSelStartValid = true;
    mSelStart = mViewInfo->h + ((mouseXCoordinate - trackLeftEdge)
                                / mViewInfo->zoom);
 
@@ -2427,7 +2434,7 @@ void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
 void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
                                  Track *pTrack)
 {
-   if (mSelStart < 0)
+   if (!mSelStartValid)
       // Must be dragging frequency bounds only.
       return;
 
@@ -2925,7 +2932,7 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
    const int minimumSizedSelection = 5; //measured in pixels
 
    // Might be dragging frequency bounds only, test
-   if (mSelStart >= 0) {
+   if (mSelStartValid) {
       wxInt64 SelStart=TimeToPosition( mSelStart, r.x); //cvt time to pixels.
       // Abandon this drag if selecting < 5 pixels.
       if (wxLongLong(SelStart-x).Abs() < minimumSizedSelection
@@ -3569,6 +3576,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
    mMouseClickX = event.m_x;
    mMouseClickY = event.m_y;
 
+   mSelStartValid = true;
    mSelStart = mViewInfo->h + ((event.m_x - r.x) / mViewInfo->zoom);
 
    if (mSnapManager)
