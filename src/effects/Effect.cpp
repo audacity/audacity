@@ -42,6 +42,10 @@ greater use in future.
 #include "../ondemand/ODManager.h"
 #include "TimeWarper.h"
 
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS) && defined(__WXMAC__)
+#include <wx/mac/private.h>
+#endif
+
 WX_DECLARE_VOIDPTR_HASH_MAP( bool, t2bHash );
 
 //
@@ -2262,6 +2266,11 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
    wxTextCtrl *text;
    wxString name;
    wxDialog dlg(this, wxID_ANY, wxString(_("Save Preset")));
+
+#if defined(EXPERIMENTAL_REALTIME_EFFECTS) && defined(__WXMAC__)
+   HIWindowChangeClass((WindowRef) dlg.MacGetWindowRef(), kMovableModalWindowClass);
+#endif
+
    ShuttleGui S(&dlg, eIsCreating);
 
    S.StartPanel();

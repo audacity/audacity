@@ -104,12 +104,61 @@ HIViewRef createGeneric(AudioUnit unit)
    OSStatus result;
 
    // Create a generic AU view
-   NSView *auView = [[AUGenericView alloc] initWithAudioUnit: unit];
+   NSView *auView = [[[AUGenericView alloc] initWithAudioUnit: unit] retain];
    if (auView != nil)
    {
       // Allow expert parameters to be used
       [(AUGenericView *) auView setShowsExpertParameters:YES];
 
+      // Get the AU view's frame for later
+      NSRect viewFrame = [auView frame];
+
+      // Create the view that will host the AU view
+      AUScrollView *scrollView =
+         [[[AUScrollView alloc] initWithFrame:viewFrame] autorelease];
+
+      // Not sure if this is necessary, but crashes seemed to occur
+      // without it.
+      [scrollView retain];
+
+      // Set the scroller options
+      [scrollView setDrawsBackground:YES];
+      [scrollView setAutohidesScrollers:YES];
+      [scrollView setHasHorizontalScroller:YES];
+      [scrollView setHasVerticalScroller:YES];
+      [scrollView setBorderType:NSNoBorder];
+      [scrollView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+
+      // Let the scrollview know about the AU view
+      //
+      // Should the AU view be released after this???
+      [scrollView setDocumentView:auView];
+      // [auView release];
+
+      // Carbonize it
+      result = HICocoaViewCreate(scrollView, 0, &hiView);
+      if (result == noErr)
+      {
+         // Resize the HIView to match the AU view
+         SizeControl(hiView, viewFrame.size.width, viewFrame.size.height);
+      }
+   }
+
+   return hiView;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Create a Cocoa based generic panner AU view wrapped in a Carbon view
+///////////////////////////////////////////////////////////////////////////////
+HIViewRef createPanner(AudioUnit unit)
+{
+   HIViewRef hiView = NULL;
+   OSStatus result;
+
+   // Create a generic AU view
+   NSView *auView = [[AUPannerView AUPannerViewWithAudioUnit:unit] retain];
+   if (auView != nil)
+   {
       // Get the AU view's frame for later
       NSRect viewFrame = [auView frame];
 
@@ -194,7 +243,7 @@ HIViewRef createCocoa(AudioUnit unit)
             NSSize size = {800, 600};
 
             // Create the view
-            NSView *auView = [factoryInst uiViewForAudioUnit: unit withSize: size];
+            NSView *auView = [[factoryInst uiViewForAudioUnit: unit withSize: size] retain];
             if (auView != nil)
             {
                // Get the AU views frame for later

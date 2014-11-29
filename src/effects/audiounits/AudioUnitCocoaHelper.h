@@ -18,6 +18,7 @@ extern "C" {
 #include <AudioUnit/AudioUnitCarbonView.h>
 
 HIViewRef createGeneric(AudioUnit unit);
+HIViewRef createPanner(AudioUnit unit);
 HIViewRef createCocoa(AudioUnit unit);
 HIViewRef createCarbon(AudioUnit unit, WindowRef window, AudioUnitCarbonView *carbonView);
 

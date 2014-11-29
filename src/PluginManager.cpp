@@ -380,8 +380,12 @@ int wxCALLBACK SortCompare(long item1, long item2, long WXUNUSED(sortData))
 {
    wxString *str1 = (wxString *) item1;
    wxString *str2 = (wxString *) item2;
-   
+
+#if defined(__WXMAC__)   
+   return str2->Cmp(*str1);
+#else
    return str1->Cmp(*str2);
+#endif
 }
 
 class PluginRegistrationDialog : public wxDialog
