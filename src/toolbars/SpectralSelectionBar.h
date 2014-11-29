@@ -69,6 +69,8 @@ private:
    NumericTextCtrl *mCenterCtrl, *mWidthCtrl, *mLowCtrl, *mHighCtrl;
    wxChoice *mChoice;
 
+   int mHeight;   // height of main sizer after creation - used by OnChoice()
+
 public:
 
    DECLARE_CLASS(SpectralSelectionBar);

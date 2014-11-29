@@ -99,6 +99,7 @@ SpectralSelectionBar::~SpectralSelectionBar()
 void SpectralSelectionBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);
+   mHeight = wxWindowBase::GetSizer()->GetSize().GetHeight();
 }
 
 void SpectralSelectionBar::Populate()
@@ -142,32 +143,36 @@ void SpectralSelectionBar::Populate()
    //
 
    wxBoxSizer *subSizer = new wxBoxSizer(wxHORIZONTAL);
-   if (mbCenterAndWidth) {
-      mCenterCtrl = new NumericTextCtrl(
-         NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
-      mCenterCtrl->SetName(_("Center Frequency:"));
-      mCenterCtrl->EnableMenu();
-      subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-      mWidthCtrl = new NumericTextCtrl(
-         NumericConverter::LOG_FREQUENCY, this, OnWidthID, logFrequencyFormatName, 0.0);
-      mWidthCtrl->SetName(wxString(_("Bandwidth:")));
-      mWidthCtrl->EnableMenu();
-      subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
-   }
-   else {
-      mLowCtrl = new NumericTextCtrl(
-         NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
-      mLowCtrl->SetName(_("Low Frequency:"));
-      mLowCtrl->EnableMenu();
-      subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+   mCenterCtrl = new NumericTextCtrl(
+      NumericConverter::FREQUENCY, this, OnCenterID, frequencyFormatName, 0.0);
+   mCenterCtrl->SetName(_("Center Frequency:"));
+   mCenterCtrl->EnableMenu();
+   subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
-      mHighCtrl = new NumericTextCtrl(
-         NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
-      mHighCtrl->SetName(wxString(_("High Frequency:")));
-      mHighCtrl->EnableMenu();
-      subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
-   }
+   mWidthCtrl = new NumericTextCtrl(
+      NumericConverter::LOG_FREQUENCY, this, OnWidthID, logFrequencyFormatName, 0.0);
+   mWidthCtrl->SetName(wxString(_("Bandwidth:")));
+   mWidthCtrl->EnableMenu();
+   subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+
+   mLowCtrl = new NumericTextCtrl(
+      NumericConverter::FREQUENCY, this, OnLowID, frequencyFormatName, 0.0);
+   mLowCtrl->SetName(_("Low Frequency:"));
+   mLowCtrl->EnableMenu();
+   subSizer->Add(mLowCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
+
+   mHighCtrl = new NumericTextCtrl(
+      NumericConverter::FREQUENCY, this, OnHighID, frequencyFormatName, 0.0);
+   mHighCtrl->SetName(wxString(_("High Frequency:")));
+   mHighCtrl->EnableMenu();
+   subSizer->Add(mHighCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
+
+   mCenterCtrl->Show(mbCenterAndWidth);
+   mWidthCtrl->Show(mbCenterAndWidth);
+   mLowCtrl->Show(!mbCenterAndWidth);
+   mHighCtrl->Show(!mbCenterAndWidth);
+
    mainSizer->Add(subSizer, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
 
    mainSizer->Layout();
@@ -275,9 +280,15 @@ void SpectralSelectionBar::OnChoice(wxCommandEvent &)
    mbCenterAndWidth = (0 == mChoice->GetSelection());
    gPrefs->Write(preferencePath, mbCenterAndWidth);
    gPrefs->Flush();
-   ToolBar::ReCreateButtons();
-   mChoice->SetFocus();
+
+   mCenterCtrl->Show(mbCenterAndWidth);
+   mWidthCtrl->Show(mbCenterAndWidth);
+   mLowCtrl->Show(!mbCenterAndWidth);
+   mHighCtrl->Show(!mbCenterAndWidth);
+
    ValuesToControls();
+   wxWindowBase::GetSizer()->SetMinSize(wxSize(0, mHeight));   // so that height of toolbar does not change
+   wxWindowBase::GetSizer()->SetSizeHints(this);
    Updated();
 }
 
