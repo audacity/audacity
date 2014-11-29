@@ -33,6 +33,8 @@ class AudioUnitEffect;
 WX_DEFINE_ARRAY_PTR(AudioUnitEffect *, AudioUnitEffectArray);
 
 class AudioUnitEffectEventHelper;
+class AudioUnitEffectExportDialog;
+class AudioUnitEffectImportDialog;
 
 class AudioUnitEffect : public EffectClientInterface,
                         public EffectUIClientInterface
@@ -220,7 +222,10 @@ private:
    EventHandlerUPP mControlHandlerUPP;
 
    AudioUnitEffectEventHelper *mEventHelper;
+
    friend class AudioUnitEffectEventHelper;
+   friend class AudioUnitEffectExportDialog;
+   friend class AudioUnitEffectImportDialog;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

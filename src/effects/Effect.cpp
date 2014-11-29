@@ -1983,6 +1983,7 @@ public:
 
 enum
 {
+   kDummyID = 30000,
    kSaveAsID = 30001,
    kImportID = 30002,
    kExportID = 30003,
@@ -2245,13 +2246,13 @@ void EffectUIHost::OnSettings(wxCommandEvent & evt)
 
    sub = new wxMenu();
 
-   sub->Append(0, wxString::Format(_("Type: %s"), mEffect->GetFamily().c_str()));
-   sub->Append(0, wxString::Format(_("Name: %s"), mEffect->GetName().c_str()));
-   sub->Append(0, wxString::Format(_("Version: %s"), mEffect->GetVersion().c_str()));
-   sub->Append(0, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
-   sub->Append(0, wxString::Format(_("Description: %s"), mEffect->GetDescription().c_str()));
-//   sub->Append(0, wxString::Format(_("Audio In: %d"), mEffect->GetAudioInCount()));
-//   sub->Append(0, wxString::Format(_("Audio Out: %d"), mEffect->GetAudioOutCount()));
+   sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily().c_str()));
+   sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetName().c_str()));
+   sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion().c_str()));
+   sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
+   sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().c_str()));
+//   sub->Append(kDummyID, wxString::Format(_("Audio In: %d"), mEffect->GetAudioInCount()));
+//   sub->Append(kDummyID, wxString::Format(_("Audio Out: %d"), mEffect->GetAudioOutCount()));
 
    menu->Append(0, _("About"), sub);
 
