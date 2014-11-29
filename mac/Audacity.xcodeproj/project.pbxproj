@@ -3995,6 +3995,7 @@
 		28F67176197DFA1C00075C32 /* MultiFormatReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiFormatReader.h; sourceTree = "<group>"; };
 		28F67177197DFA1C00075C32 /* SpecPowerMeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpecPowerMeter.cpp; sourceTree = "<group>"; };
 		28F67178197DFA1C00075C32 /* SpecPowerMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpecPowerMeter.h; sourceTree = "<group>"; };
+		28F996D91A2A9261008FEEF3 /* AudioIOListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioIOListener.h; sourceTree = "<group>"; };
 		28FADDEF1833C3C500BA4141 /* libexpat.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libexpat.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		28FADEDC1833C78C00BA4141 /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; };
 		28FADEDD1833C78C00BA4141 /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; };
@@ -4962,6 +4963,7 @@
 		1790AFC409883BFD008A330A /* src */ = {
 			isa = PBXGroup;
 			children = (
+				28F996D91A2A9261008FEEF3 /* AudioIOListener.h */,
 				1790AFDC09883BFD008A330A /* blockfile */,
 				174D9025098C78AF00D5909F /* commands */,
 				1790AFFD09883BFD008A330A /* effects */,
