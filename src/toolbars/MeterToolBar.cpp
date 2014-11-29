@@ -143,11 +143,7 @@ void MeterToolBar::RegenerateTooltips()
    if( mPlayMeter )
       mPlayMeter->SetToolTip( _("Playback Level.") );
    if( mRecordMeter )
-      mRecordMeter->SetToolTip( 
-         !gAudioIO->IsMonitoring() ? 
-         _("Recording Level. (Click to monitor).") :
-         _("Recording Level. (Click to turn monitoring off).") 
-         );
+      mRecordMeter->SetToolTip( _("Recording Level.") );
 #endif
 }
 
