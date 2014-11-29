@@ -3505,6 +3505,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
          }
 
+         bool selected;
          int group = 0;
          int chanCnt = 0;
          float rate = 0.0;
@@ -3529,6 +3530,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
                rate = vt->GetRate();
                linkFlag = vt->GetLinked();
+               selected = vt->GetSelected();
 
                // If we have a mono track, clear the right channel
                if (!linkFlag)
@@ -3585,7 +3587,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 #endif
 
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-            if( !cut )
+            if( !cut && selected )
                len = EffectManager::Get().RealtimeProcess(group++, chanCnt, rate, tempBufs, len);
 #endif
             // If our buffer is empty and the time indicator is past
