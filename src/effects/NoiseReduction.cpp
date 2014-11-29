@@ -98,6 +98,9 @@ enum WindowTypes {
    WT_HANN_RECTANGULAR, // requires 1/2 step
    WT_HANN_HANN,        // requires 1/4 step
    WT_BLACKMAN_HANN,     // requires 1/4 step
+   WT_HAMMING_RECTANGULAR, // requires 1/2 step
+   WT_HAMMING_HANN, // requires 1/4 step
+   WT_HAMMING_INV_HAMMING, // requires 1/2 step
 
    WT_N_WINDOW_TYPES,
    WT_DEFAULT_WINDOW_TYPES = WT_HANN_HANN
@@ -110,7 +113,7 @@ const struct WindowTypesInfo {
    double outCoefficients[3];
    double productConstantTerm;
 } windowTypesInfo [WT_N_WINDOW_TYPES] = {
-   // In all of these cases, the constant term of the product of windows
+   // In all of these cases (but the last), the constant term of the product of windows
    // is the product of the windows' two constant terms,
    // plus one half the product of the first cosine coefficients.
 
@@ -118,6 +121,9 @@ const struct WindowTypesInfo {
    { _("Hann, none"),                     2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
    { _("Hann, Hann (default)"),           4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
    { _("Blackman, Hann"),                 4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
+   { _("Hamming, none"),                  2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
+   { _("Hamming, Hann"),                  4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
+   { _("Hamming, Reciprocal Hamming"),    2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
 };
 
 enum {
@@ -807,8 +813,11 @@ EffectNoiseReduction::Worker::Worker
       break;
    default:
       {
+         const bool rectangularOut =
+            settings.mWindowTypes == WT_HAMMING_RECTANGULAR ||
+            settings.mWindowTypes == WT_HANN_RECTANGULAR;
          const double m =
-            settings.mWindowTypes == WT_HANN_RECTANGULAR ? multiplier : 1;
+           rectangularOut ? multiplier : 1;
          const double *const coefficients =
             windowTypesInfo[settings.mWindowTypes].inCoefficients;
          const double c0 = coefficients[0];
@@ -827,6 +836,14 @@ EffectNoiseReduction::Worker::Worker
       // Create the synthesis window
       switch (settings.mWindowTypes) {
       case WT_HANN_RECTANGULAR:
+      case WT_HAMMING_RECTANGULAR:
+         break;
+      case WT_HAMMING_INV_HAMMING:
+         {
+         mOutWindow.resize(mWindowSize);
+         for (int ii = 0; ii < mWindowSize; ++ii)
+               mOutWindow[ii] = multiplier / mInWindow[ii];
+         }
          break;
       default:
          {
@@ -871,18 +888,26 @@ void EffectNoiseReduction::Worker::StartNewTrack()
    pFill = &mInWaveBuffer[0];
    std::fill(pFill, pFill + mWindowSize, 0.0f);
 
-   // So that the queue gets primed with some windows,
-   // zero-padded in front, the first having mStepSize
-   // samples of wave data:
-   mInWavePos = mWindowSize - mStepSize;
+   if (mDoProfile)
+   {
+      // We do not want leading zero padded windows
+      mInWavePos = 0;
+      mOutStepCount = -(mHistoryLen - 1);
+   }
+   else
+   {
+      // So that the queue gets primed with some windows,
+      // zero-padded in front, the first having mStepSize
+      // samples of wave data:
+      mInWavePos = mWindowSize - mStepSize;
+      // This starts negative, to count up until the queue fills:
+      mOutStepCount = -(mHistoryLen - 1)
+         // ... and then must pass over the padded windows,
+         // before the first full window:
+         - (mStepsPerWindow - 1);
+   }
 
    mInSampleCount = 0;
-   
-   // This starts negative, to count up until the queue fills:
-   mOutStepCount = - (mHistoryLen - 1)
-                   // ... and then must pass over the padded windows,
-                   // before the first full window:
-                   - (mStepsPerWindow - 1);
 }
 
 void EffectNoiseReduction::Worker::ProcessSamples
@@ -961,8 +986,8 @@ void EffectNoiseReduction::Worker::FillFirstHistoryWindow()
 void EffectNoiseReduction::Worker::RotateHistoryWindows()
 {
    Record *save = mQueue[mHistoryLen - 1];
-   mQueue.insert(mQueue.begin(), save);
    mQueue.pop_back();
+   mQueue.insert(mQueue.begin(), save);
 }
 
 void EffectNoiseReduction::Worker::FinishTrackStatistics(Statistics &statistics)

@@ -828,8 +828,10 @@
     <ClCompile Include="..\..\..\src\widgets\NumericTextCtrl.cpp">
       <Filter>src/widgets</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\effects\NoiseReduction.cpp" />
     <ClCompile Include="..\..\..\src\effects\Phaser.cpp">
+      <Filter>src/effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\effects\NoiseReduction.cpp">
       <Filter>src/effects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1650,11 +1652,13 @@
     <ClInclude Include="..\..\..\src\widgets\NumericTextCtrl.h">
       <Filter>src/widgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\effects\NoiseReduction.h" />
     <ClInclude Include="..\..\..\include\audacity\EffectAutomationParameters.h">
       <Filter>includes\audacity</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\Phaser.h">
+      <Filter>src/effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\effects\NoiseReduction.h">
       <Filter>src/effects</Filter>
     </ClInclude>
   </ItemGroup>
