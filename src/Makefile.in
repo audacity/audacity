@@ -282,11 +282,11 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	xml/XMLTagHandler.cpp xml/XMLTagHandler.h AboutDialog.cpp \
 	AboutDialog.h AColor.cpp AColor.h AllThemeResources.h \
 	Audacity.h AudacityApp.cpp AudacityApp.h AudacityLogger.cpp \
-	AudacityLogger.h AudioIO.cpp AudioIO.h AutoRecovery.cpp \
-	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
-	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
-	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
-	CaptureEvents.cpp CaptureEvents.h Dependencies.cpp \
+	AudacityLogger.h AudioIO.cpp AudioIO.h AudioIOListenerer.h \
+	AutoRecovery.cpp AutoRecovery.h BatchCommandDialog.cpp \
+	BatchCommandDialog.h BatchCommands.cpp BatchCommands.h \
+	BatchProcessDialog.cpp BatchProcessDialog.h Benchmark.cpp \
+	Benchmark.h CaptureEvents.cpp CaptureEvents.h Dependencies.cpp \
 	Dependencies.h DeviceManager.cpp DeviceManager.h Envelope.cpp \
 	Envelope.h Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h \
 	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
@@ -1149,11 +1149,11 @@ audacity_LDADD = $(EXPAT_LIBS) $(FILEDIALOG_LIBS) $(PORTAUDIO_LIBS) \
 audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	AboutDialog.h AColor.cpp AColor.h AllThemeResources.h \
 	Audacity.h AudacityApp.cpp AudacityApp.h AudacityLogger.cpp \
-	AudacityLogger.h AudioIO.cpp AudioIO.h AutoRecovery.cpp \
-	AutoRecovery.h BatchCommandDialog.cpp BatchCommandDialog.h \
-	BatchCommands.cpp BatchCommands.h BatchProcessDialog.cpp \
-	BatchProcessDialog.h Benchmark.cpp Benchmark.h \
-	CaptureEvents.cpp CaptureEvents.h Dependencies.cpp \
+	AudacityLogger.h AudioIO.cpp AudioIO.h AudioIOListenerer.h \
+	AutoRecovery.cpp AutoRecovery.h BatchCommandDialog.cpp \
+	BatchCommandDialog.h BatchCommands.cpp BatchCommands.h \
+	BatchProcessDialog.cpp BatchProcessDialog.h Benchmark.cpp \
+	Benchmark.h CaptureEvents.cpp CaptureEvents.h Dependencies.cpp \
 	Dependencies.h DeviceManager.cpp DeviceManager.h Envelope.cpp \
 	Envelope.h Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h \
 	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
