@@ -12,6 +12,7 @@
 #ifndef __AUDACITY_BUTTON__
 #define __AUDACITY_BUTTON__
 
+#include <memory>
 #include <vector>
 
 #if wxUSE_ACCESSIBILITY
