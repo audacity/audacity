@@ -22,6 +22,7 @@
 #include <wx/toolbar.h>
 
 #include "AudacityApp.h"
+#include "AudioIO.h"
 #include "LabelTrack.h"
 #include "ModuleManager.h"
 #include "Prefs.h"
