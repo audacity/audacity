@@ -1783,7 +1783,7 @@ wxUint32 AudacityProject::GetUpdateFlags()
    else
       flags |= AudioIOBusyFlag;
 
-   if (gAudioIO->GetNumCaptureChannels() == 0)
+   if (!GetControlToolBar()->IsRecordDown())
       flags |= IsNotRecordingFlag;
 
    if (!mViewInfo.selectedRegion.isPoint())
