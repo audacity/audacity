@@ -808,9 +808,15 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddSeparator();
 
    /* i18n-hint: (verb)*/
-   c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"));
-   c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
-   c->AddItem(wxT("RecordAppend"), _("Appen&d Record"), FN(OnRecordAppend), wxT("Shift+R"));
+   c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"),
+              AudioIONotBusyFlag | IsRealtimeNotActiveFlag,
+              AlwaysEnabledFlag | IsRealtimeNotActiveFlag);
+   c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"),
+              AudioIONotBusyFlag | IsRealtimeNotActiveFlag,
+              AlwaysEnabledFlag | IsRealtimeNotActiveFlag);
+   c->AddItem(wxT("RecordAppend"), _("Appen&d Record"), FN(OnRecordAppend), wxT("Shift+R"),
+              AudioIONotBusyFlag | IsRealtimeNotActiveFlag,
+              AlwaysEnabledFlag | IsRealtimeNotActiveFlag);
 
    c->AddSeparator();
 
