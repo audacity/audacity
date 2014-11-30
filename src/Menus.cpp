@@ -1041,7 +1041,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeProcess,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       TracksExistFlag | IsRealtimeNotActiveFlag);
+                       TracksExistFlag | IsRealtimeNotActiveFlag | IsNotRecordingFlag);
 #else
    int flags = PROCESS_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT | ADVANCED_EFFECT;
    // The categories form a DAG, so we start at the roots (the categories
@@ -1088,7 +1088,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeAnalyze,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       TracksExistFlag | IsRealtimeNotActiveFlag);
+                       TracksExistFlag | IsRealtimeNotActiveFlag | IsNotRecordingFlag);
 #else
 
    flags = ANALYZE_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT;
@@ -1782,6 +1782,9 @@ wxUint32 AudacityProject::GetUpdateFlags()
       flags |= AudioIONotBusyFlag;
    else
       flags |= AudioIOBusyFlag;
+
+   if (gAudioIO->GetNumCaptureChannels() == 0)
+      flags |= IsNotRecordingFlag;
 
    if (!mViewInfo.selectedRegion.isPoint())
       flags |= TimeSelectedFlag;
