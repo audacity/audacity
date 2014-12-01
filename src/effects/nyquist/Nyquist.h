@@ -153,6 +153,7 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
  private:
 
    static wxString NyquistToWxString(const char *nyqString);
+   wxString EscapeString(const wxString & inStr);
 
    bool ProcessOne();
 
