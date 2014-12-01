@@ -639,10 +639,6 @@ END_EVENT_TABLE()
 VSTEffectSettingsDialog::VSTEffectSettingsDialog(wxWindow * parent, EffectHostInterface *host)
 :  wxDialog(parent, wxID_ANY, wxString(_("VST Effect Settings")))
 {
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS) && defined(__WXMAC__)
-   HIWindowChangeClass((WindowRef) MacGetWindowRef(), kMovableModalWindowClass);
-#endif
-
    mHost = host;
 
    mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), mBufferSize, 8192);
@@ -2064,12 +2060,6 @@ bool VSTEffect::PopulateUI(wxWindow *parent)
 
    mEventHelper = new VSTEffectEventHelper(this);
    mParent->PushEventHandler(mEventHelper);
-
-#if defined(__WXMAC__)
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
-   HIWindowChangeClass((WindowRef) mDialog->MacGetWindowRef(), kFloatingWindowClass);
-#endif
-#endif
 
    // Determine if the VST editor is supposed to be used or not
    mHost->GetSharedConfig(wxT("Settings"),

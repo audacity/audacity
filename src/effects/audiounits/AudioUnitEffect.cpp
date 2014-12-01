@@ -306,10 +306,6 @@ END_EVENT_TABLE()
 AudioUnitEffectSettingsDialog::AudioUnitEffectSettingsDialog(wxWindow * parent, EffectHostInterface *host)
 :  wxDialog(parent, wxID_ANY, wxString(_("AudioUnit Effect Settings")))
 {
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS) && defined(__WXMAC__)
-   HIWindowChangeClass((WindowRef) MacGetWindowRef(), kMovableModalWindowClass);
-#endif
-
    mHost = host;
 
    mHost->GetSharedConfig(wxT("Settings"), wxT("UseBufferDelay"), mUseBufferDelay, true);
@@ -421,8 +417,6 @@ END_EVENT_TABLE()
 AudioUnitEffectExportDialog::AudioUnitEffectExportDialog(wxWindow * parent, AudioUnitEffect *effect)
 :  wxDialog(parent, wxID_ANY, wxString(_("Export AudioUnit Presets")))
 {
-   HIWindowChangeClass((WindowRef) MacGetWindowRef(), kMovableModalWindowClass);
-
    mEffect = effect;
 
    ShuttleGui S(this, eIsCreating);
@@ -590,8 +584,6 @@ END_EVENT_TABLE()
 AudioUnitEffectImportDialog::AudioUnitEffectImportDialog(wxWindow * parent, AudioUnitEffect *effect)
 :  wxDialog(parent, wxID_ANY, wxString(_("Import AudioUnit Presets")))
 {
-   HIWindowChangeClass((WindowRef) MacGetWindowRef(), kMovableModalWindowClass);
-
    mEffect = effect;
 
    ShuttleGui S(this, eIsCreating);
@@ -1787,8 +1779,6 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
 
    mDialog = (wxDialog *) wxGetTopLevelParent(parent);
    mParent = parent;
-
-   HIWindowChangeClass((WindowRef) mDialog->MacGetWindowRef(), kFloatingWindowClass);
 
    WindowRef windowRef = (WindowRef) mDialog->MacGetWindowRef();
    ControlRef rootControl = HIViewGetRoot(windowRef);

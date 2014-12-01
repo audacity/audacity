@@ -298,6 +298,18 @@ wxDialog *Effect::CreateUI(wxWindow *parent, EffectUIClientInterface *client)
 {
    EffectUIHost *dlg = new EffectUIHost(parent, this, client);
 
+#if defined(__WXMAC__)
+   // We want the effects windows on the Mac to float above the project window
+   // but still have normal modal dialogs appear above the effects windows and
+   // not let the effect windows fall behind the project window.
+   //
+   // This seems to accomplish that, but time will be the real judge.
+   WindowRef windowRef = (WindowRef) dlg->MacGetWindowRef();
+   WindowGroupRef parentGroup = GetWindowGroup((WindowRef) ((wxFrame *)wxGetTopLevelParent(parent))->MacGetWindowRef());
+   ChangeWindowGroupAttributes(parentGroup, kWindowGroupAttrSharedActivation, kWindowGroupAttrMoveTogether);
+   SetWindowGroup(windowRef, parentGroup);
+#endif
+
    if (dlg->Initialize())
    {
       return dlg;
@@ -2267,10 +2279,6 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
    wxTextCtrl *text;
    wxString name;
    wxDialog dlg(this, wxID_ANY, wxString(_("Save Preset")));
-
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS) && defined(__WXMAC__)
-   HIWindowChangeClass((WindowRef) dlg.MacGetWindowRef(), kMovableModalWindowClass);
-#endif
 
    ShuttleGui S(&dlg, eIsCreating);
 
