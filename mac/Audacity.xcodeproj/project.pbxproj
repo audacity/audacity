@@ -3671,8 +3671,6 @@
 		28AA28130F267A2D008AED9E /* beat.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = beat.ny; path = "../plug-ins/beat.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28140F267A2D008AED9E /* clicktrack.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = clicktrack.ny; path = "../plug-ins/clicktrack.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28150F267A2D008AED9E /* clipfix.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = clipfix.ny; path = "../plug-ins/clipfix.ny"; sourceTree = SOURCE_ROOT; };
-		28AA28160F267A2D008AED9E /* crossfadein.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = crossfadein.ny; path = "../plug-ins/crossfadein.ny"; sourceTree = SOURCE_ROOT; };
-		28AA28170F267A2D008AED9E /* crossfadeout.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = crossfadeout.ny; path = "../plug-ins/crossfadeout.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28180F267A2D008AED9E /* delay.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = delay.ny; path = "../plug-ins/delay.ny"; sourceTree = SOURCE_ROOT; };
 		28AA28190F267A2D008AED9E /* equalabel.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = equalabel.ny; path = "../plug-ins/equalabel.ny"; sourceTree = SOURCE_ROOT; };
 		28AA281A0F267A2D008AED9E /* highpass.ny */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 5; name = highpass.ny; path = "../plug-ins/highpass.ny"; sourceTree = SOURCE_ROOT; };
@@ -6376,8 +6374,6 @@
 				28AA28130F267A2D008AED9E /* beat.ny */,
 				28AA28140F267A2D008AED9E /* clicktrack.ny */,
 				28AA28150F267A2D008AED9E /* clipfix.ny */,
-				28AA28160F267A2D008AED9E /* crossfadein.ny */,
-				28AA28170F267A2D008AED9E /* crossfadeout.ny */,
 				28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */,
 				28AA28180F267A2D008AED9E /* delay.ny */,
 				28AA28190F267A2D008AED9E /* equalabel.ny */,
