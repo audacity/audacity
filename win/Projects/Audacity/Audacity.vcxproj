@@ -783,8 +783,6 @@
     <copy Include="..\..\..\plug-ins\beat.ny" />
     <copy Include="..\..\..\plug-ins\clicktrack.ny" />
     <copy Include="..\..\..\plug-ins\clipfix.ny" />
-    <copy Include="..\..\..\plug-ins\crossfadein.ny" />
-    <copy Include="..\..\..\plug-ins\crossfadeout.ny" />
     <copy Include="..\..\..\plug-ins\crossfadetracks.ny" />
     <copy Include="..\..\..\plug-ins\delay.ny" />
     <copy Include="..\..\..\plug-ins\equalabel.ny" />

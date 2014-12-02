@@ -1661,6 +1661,7 @@
     <ClInclude Include="..\..\..\src\effects\NoiseReduction.h">
       <Filter>src/effects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\AudioIOListener.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">
@@ -1809,12 +1810,6 @@
       <Filter>plug-ins</Filter>
     </copy>
     <copy Include="..\..\..\plug-ins\clipfix.ny">
-      <Filter>plug-ins</Filter>
-    </copy>
-    <copy Include="..\..\..\plug-ins\crossfadein.ny">
-      <Filter>plug-ins</Filter>
-    </copy>
-    <copy Include="..\..\..\plug-ins\crossfadeout.ny">
       <Filter>plug-ins</Filter>
     </copy>
     <copy Include="..\..\..\plug-ins\delay.ny">
