@@ -808,15 +808,9 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddSeparator();
 
    /* i18n-hint: (verb)*/
-   c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"),
-              AudioIONotBusyFlag | IsRealtimeNotActiveFlag,
-              AlwaysEnabledFlag | IsRealtimeNotActiveFlag);
-   c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"),
-              AudioIONotBusyFlag | IsRealtimeNotActiveFlag,
-              AlwaysEnabledFlag | IsRealtimeNotActiveFlag);
-   c->AddItem(wxT("RecordAppend"), _("Appen&d Record"), FN(OnRecordAppend), wxT("Shift+R"),
-              AudioIONotBusyFlag | IsRealtimeNotActiveFlag,
-              AlwaysEnabledFlag | IsRealtimeNotActiveFlag);
+   c->AddItem(wxT("Record"), _("&Record"), FN(OnRecord), wxT("R"));
+   c->AddItem(wxT("TimerRecord"), _("&Timer Record..."), FN(OnTimerRecord), wxT("Shift+T"));
+   c->AddItem(wxT("RecordAppend"), _("Appen&d Record"), FN(OnRecordAppend), wxT("Shift+R"));
 
    c->AddSeparator();
 
@@ -1047,7 +1041,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeProcess,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       TracksExistFlag | IsRealtimeNotActiveFlag | IsNotRecordingFlag);
+                       TracksExistFlag | IsRealtimeNotActiveFlag);
 #else
    int flags = PROCESS_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT | ADVANCED_EFFECT;
    // The categories form a DAG, so we start at the roots (the categories
@@ -1094,7 +1088,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeAnalyze,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       TracksExistFlag | IsRealtimeNotActiveFlag | IsNotRecordingFlag);
+                       TracksExistFlag | IsRealtimeNotActiveFlag);
 #else
 
    flags = ANALYZE_EFFECT | BUILTIN_EFFECT | PLUGIN_EFFECT;
@@ -1788,9 +1782,6 @@ wxUint32 AudacityProject::GetUpdateFlags()
       flags |= AudioIONotBusyFlag;
    else
       flags |= AudioIOBusyFlag;
-
-   if (!GetControlToolBar()->IsRecordDown())
-      flags |= IsNotRecordingFlag;
 
    if (!mViewInfo.selectedRegion.isPoint())
       flags |= TimeSelectedFlag;

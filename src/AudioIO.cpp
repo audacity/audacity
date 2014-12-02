@@ -326,6 +326,9 @@ using std::min;
 
 AudioIO *gAudioIO;
 
+DEFINE_EVENT_TYPE(EVT_AUDIOIO_PLAYBACK);
+DEFINE_EVENT_TYPE(EVT_AUDIOIO_CAPTURE);
+
 // static
 int AudioIO::mNextStreamToken = 0;
 int AudioIO::mCachedPlaybackIndex = -1;
@@ -1419,6 +1422,20 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
       }
    }
 
+   if (mNumPlaybackChannels > 0)
+   {
+      wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
+      e.SetInt(true);
+      wxTheApp->ProcessEvent(e);
+   }
+
+   if (mNumCaptureChannels > 0)
+   {
+      wxCommandEvent e(EVT_AUDIOIO_CAPTURE);
+      e.SetInt(true);
+      wxTheApp->ProcessEvent(e);
+   }
+
    mAudioThreadFillBuffersLoopRunning = true;
 #ifdef EXPERIMENTAL_MIDI_OUT
    // If audio is not running, mNumFrames will not be incremented and
@@ -1683,6 +1700,20 @@ void AudioIO::StopStream()
       Pa_AbortStream( mPortStreamV19 );
       Pa_CloseStream( mPortStreamV19 );
       mPortStreamV19 = NULL;
+   }
+
+   if (mNumPlaybackChannels > 0)
+   {
+      wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
+      e.SetInt(false);
+      wxTheApp->ProcessEvent(e);
+   }
+
+   if (mNumCaptureChannels > 0)
+   {
+      wxCommandEvent e(EVT_AUDIOIO_CAPTURE);
+      e.SetInt(false);
+      wxTheApp->ProcessEvent(e);
    }
 
 

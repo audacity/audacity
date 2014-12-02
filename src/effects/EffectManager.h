@@ -98,6 +98,7 @@ class AUDACITY_DLL_API EffectManager
 #if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    // Realtime effect processing
    bool RealtimeIsActive();
+   bool RealtimeIsSuspended();
    void RealtimeAddEffect(Effect *effect);
    void RealtimeRemoveEffect(Effect *effect);
    void RealtimeSetEffects(const EffectArray & mActive);

@@ -88,7 +88,6 @@ enum
    IsNotSyncLockedFlag    = 0x04000000,  //awd
    IsSyncLockedFlag       = 0x08000000,  //awd
    IsRealtimeNotActiveFlag= 0x10000000,  //lll
-   IsNotRecordingFlag     = 0x20000000,  //lll
 
    NoFlagsSpecifed        = 0xffffffff
 };

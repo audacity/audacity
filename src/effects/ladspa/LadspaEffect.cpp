@@ -1266,11 +1266,6 @@ bool LadspaEffect::ValidateUI()
 
 bool LadspaEffect::HideUI()
 {
-   if (GetType() == EffectTypeAnalyze || mNumOutputControls > 0)
-   {
-      return false;
-   }
-
    return true;
 }
 

@@ -2127,7 +2127,7 @@ AttachableScrollBar * ShuttleGui::AddAttachableScrollBar( long style )
    return pAttachableScrollBar;
 }
 
-wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
+wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
 {
    wxButton *b = new wxButton( parent, 0, wxEmptyString );
    int margin;
@@ -2173,7 +2173,13 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxButton *extra)
    if( buttons & eApplyButton )
    {
       b = new wxButton( parent, wxID_APPLY );
+      b->SetDefault();
       bs->AddButton( b );
+   }
+
+   if( buttons & eCloseButton )
+   {
+      bs->AddButton( new wxButton( parent, wxID_CANCEL, _("&Close") ) );
    }
 
    if( buttons & eHelpButton )

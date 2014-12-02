@@ -28,6 +28,7 @@ greater use in future.
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/timer.h>
+#include <wx/tglbtn.h>
 #include <wx/hashmap.h>
 
 #include "audacity/ConfigInterface.h"
@@ -38,6 +39,7 @@ greater use in future.
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../WaveTrack.h"
+#include "../widgets/AButton.h"
 #include "../widgets/ProgressDialog.h"
 #include "../ondemand/ODManager.h"
 #include "TimeWarper.h"
@@ -2002,6 +2004,15 @@ enum
    kDefaultsID = 30004,
    kOptionsID = 30005,
    kDeleteAllID = 30006,
+#if defined(TRY_BUTTONS)
+   kMenuID = 30100,
+   kBypassID = 30101,
+   kPlayID = 30102,
+   kRewindID = 30103,
+   kFFwdID = 30104,
+   kPlaybackID = 30105,
+   kCaptureID = 30106,
+#endif
    kUserPresetsID = 31000,
    kDeletePresetID = 32000,
    kFactoryPresetsID = 33000,
@@ -2009,10 +2020,17 @@ enum
 
 BEGIN_EVENT_TABLE(EffectUIHost, wxDialog)
    EVT_CLOSE(EffectUIHost::OnClose)
-   EVT_BUTTON(wxID_OK, EffectUIHost::OnOk)
+   EVT_BUTTON(wxID_APPLY, EffectUIHost::OnApply)
    EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
    EVT_BUTTON(ePreviewID, EffectUIHost::OnPreview)
    EVT_BUTTON(eSettingsID, EffectUIHost::OnSettings)
+#if defined(TRY_BUTTONS)
+   EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
+   EVT_BUTTON(kBypassID, EffectUIHost::OnBypass)
+   EVT_BUTTON(kPlayID, EffectUIHost::OnPlay)
+   EVT_BUTTON(kRewindID, EffectUIHost::OnRewind)
+   EVT_BUTTON(kFFwdID, EffectUIHost::OnFFwd)
+#endif
    EVT_MENU(kSaveAsID, EffectUIHost::OnSaveAs)
    EVT_MENU(kImportID, EffectUIHost::OnImport)
    EVT_MENU(kExportID, EffectUIHost::OnExport)
@@ -2055,6 +2073,42 @@ EffectUIHost::~EffectUIHost()
    }
 }
 
+#define TRY_BUTTONS 1
+#if defined(TRY_BUTTONS)
+
+#include "../../images/Effect.h"
+
+wxBitmap EffectUIHost::CreateBitmap(const char *xpm[], bool up, bool pusher)
+{
+   wxMemoryDC dc;
+   wxBitmap pic(xpm);
+
+   wxBitmap mod(pic.GetWidth() + 6, pic.GetHeight() + 6);
+   dc.SelectObject(mod);
+#if defined( __WXGTK__ )
+   wxColour newColour = wxSystemSettings::GetColour( wxSYS_COLOUR_BACKGROUND );
+#else
+   wxColour newColour = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
+#endif
+   dc.SetBackground(wxBrush(newColour));
+   dc.Clear();
+
+   int offset = 3;
+   if (pusher)
+   {
+      if (!up)
+      {
+         offset += 1;
+      }
+   }
+   dc.DrawBitmap(pic, offset, offset, true);
+
+   dc.SelectObject(wxNullBitmap);
+
+   return mod;
+}
+#endif
+
 // ============================================================================
 // EffectUIHost implementation
 // ============================================================================
@@ -2072,7 +2126,74 @@ bool EffectUIHost::Initialize()
 
    w->SetScrollRate(0, 20);
 
-   wxSizer *s = CreateStdButtonSizer(this, eSettingsButton | eOkButton | eCancelButton);
+#if defined(TRY_BUTTONS)
+   mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
+   mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
+
+   wxPanel *bar = new wxPanel(this, wxID_ANY);
+   wxBoxSizer *bs = new wxBoxSizer(wxHORIZONTAL);
+   bar->SetSizer(bs);
+   
+   mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
+   mMenuBtn->SetToolTip(_("Mannage effect"));
+
+   bs->Add(mMenuBtn);
+
+   mOnBM = CreateBitmap(effect_on_xpm, true, false);
+   mOffBM = CreateBitmap(effect_off_xpm, true, false);
+   mBypassBtn = new wxBitmapButton(bar, kBypassID, mOnBM);
+   mBypassBtn->SetToolTip(_("Bypass effect"));
+   mOnToggle = true;
+   bs->Add(mBypassBtn);
+
+   bs->Add(5, 5);
+
+   mPlayBM = CreateBitmap(effect_play_xpm, true, false);
+   mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
+   mStopBM = CreateBitmap(effect_stop_xpm, true, false);
+   mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
+   mPlayBtn = new wxBitmapButton(bar, kPlayID, mPlayBM);
+   mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
+   mPlayBtn->SetToolTip(_("Play/Stop"));
+   mPlayToggle = true;
+   bs->Add(mPlayBtn);
+
+   mRewindBtn = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
+   mRewindBtn->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
+   mRewindBtn->SetToolTip(_("Skip backward"));
+   bs->Add(mRewindBtn);
+
+   mFFwdBtn = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
+   mFFwdBtn->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
+   mFFwdBtn->SetToolTip(_("Skip forward"));
+   bs->Add(mFFwdBtn);
+
+#if defined(__WXMAC__)
+   mMenuBtn->SetName(_("Manage effect"));
+   mBypassBtn->SetName(_("Bypass effect"));
+   mPlayBtn->SetName(_("Play/Stop"));
+   mRewindBtn->SetName(_("Skip backward"));
+   mFFwdBtn->SetName(_("Skip forward"));
+#else
+   mMenuBtn->SetLabel(_("Manage effect"));
+   mBypassBtn->SetLabel(_("Bypass effect"));
+   mPlayBtn->SetLabel(_("Play/Stop"));
+   mRewindBtn->SetLabel(_("Skip backward"));
+   mFFwdBtn->SetLabel(_("Skip forward"));
+#endif
+
+   bar->SetSizerAndFit(bs);
+
+   wxSizer *s = CreateStdButtonSizer(this, eApplyButton | eCloseButton, bar);
+
+   mApplyBtn = (wxButton *) FindWindowById(wxID_APPLY);
+   mCloseBtn = (wxButton *) FindWindowById(wxID_CANCEL);
+
+   UpdateControls();
+#else
+   wxSizer *s = CreateStdButtonSizer(this, eSettingsButton | eApplyButton | eCloseButton);
+#endif
+
 
    hs->Add(w, 1, wxEXPAND);
    vs->Add(hs, 1, wxEXPAND);
@@ -2089,9 +2210,9 @@ bool EffectUIHost::Initialize()
    Center();
 
 #if defined(__WXMAC__)
-   (w->GetChildren().GetCount() > 2 ? w : FindWindowById(wxID_OK))->SetFocus();
+   (w->GetChildren().GetCount() > 2 ? w : FindWindowById(wxID_APPLY))->SetFocus();
 #else
-   (w->GetChildren().GetCount() > 1 ? w : FindWindowById(wxID_OK))->SetFocus();
+   (w->GetChildren().GetCount() > 1 ? w : FindWindowById(wxID_APPLY))->SetFocus();
 #endif
  
    LoadUserPresets();
@@ -2106,6 +2227,18 @@ bool EffectUIHost::Initialize()
 
    EffectManager::Get().RealtimeAddEffect(mEffect);
 
+#if defined(TRY_BUTTONS)
+   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
+                     wxCommandEventHandler(EffectUIHost::OnPlayback),
+                     NULL,
+                     this);
+
+   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
+                     wxCommandEventHandler(EffectUIHost::OnCapture),
+                     NULL,
+                     this);
+#endif
+
    mInitialized = true;
 
    return true;
@@ -2115,9 +2248,22 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 {
    if (mInitialized)
    {
+      mInitialized = false;
+
+#if defined(TRY_BUTTONS)
+      wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
+                           wxCommandEventHandler(EffectUIHost::OnPlayback),
+                           NULL,
+                           this);
+
+      wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
+                           wxCommandEventHandler(EffectUIHost::OnCapture),
+                           NULL,
+                           this);
+#endif
+
       EffectManager::Get().RealtimeRemoveEffect(mEffect);
       mEffect->RealtimeFinalize();
-      mInitialized = false;
    }
 
    Hide();
@@ -2128,7 +2274,7 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    Destroy();
 }
 
-void EffectUIHost::OnOk(wxCommandEvent & WXUNUSED(evt))
+void EffectUIHost::OnApply(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mClient->ValidateUI())
    {
@@ -2139,9 +2285,9 @@ void EffectUIHost::OnOk(wxCommandEvent & WXUNUSED(evt))
 
    if (mInitialized)
    {
+      mInitialized = false;
       EffectManager::Get().RealtimeRemoveEffect(mEffect);
       mEffect->RealtimeFinalize();
-      mInitialized = false;
    }
 
    if (IsModal())
@@ -2158,6 +2304,7 @@ void EffectUIHost::OnOk(wxCommandEvent & WXUNUSED(evt))
 
    mEffect->Apply();
 
+#if defined(CLOSE_ON_APPLY)
    if (!mClient->HideUI())
    {
       return;
@@ -2166,6 +2313,7 @@ void EffectUIHost::OnOk(wxCommandEvent & WXUNUSED(evt))
    Hide();
 
    Close();
+#endif
 
    return;
 }
@@ -2174,9 +2322,22 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 {
    if (mInitialized)
    {
+      mInitialized = false;
+
+#if defined(TRY_BUTTONS)
+      wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
+                           wxCommandEventHandler(EffectUIHost::OnPlayback),
+                           NULL,
+                           this);
+
+      wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
+                           wxCommandEventHandler(EffectUIHost::OnCapture),
+                           NULL,
+                           this);
+#endif
+
       EffectManager::Get().RealtimeRemoveEffect(mEffect);
       mEffect->RealtimeFinalize();
-      mInitialized = false;
    }
 
    if (IsModal())
@@ -2203,6 +2364,151 @@ void EffectUIHost::OnPreview(wxCommandEvent & WXUNUSED(evt))
 {
    mEffect->Preview();
 }
+
+#if defined(TRY_BUTTONS)
+void EffectUIHost::OnMenu(wxCommandEvent & evt)
+{
+   wxBitmapButton *b = (wxBitmapButton *)evt.GetEventObject();
+
+   wxMenu *menu = new wxMenu();
+   wxMenu *sub;
+
+   LoadUserPresets();
+
+   sub = new wxMenu();
+   for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
+   {
+      sub->Append(kUserPresetsID + i, mUserPresets[i]);
+   }
+   menu->Append(0, _("User Presets"), sub);
+
+   wxArrayString factory = mClient->GetFactoryPresets();
+
+   sub = new wxMenu();
+   sub->Append(kDefaultsID, _("Defaults"));
+   if (factory.GetCount() > 0)
+   {
+      sub->AppendSeparator();
+      for (size_t i = 0, cnt = factory.GetCount(); i < cnt; i++)
+      {
+         wxString label = factory[i];
+         if (label.IsEmpty())
+         {
+            label = _("None");
+         }
+
+         sub->Append(kFactoryPresetsID + i, label);
+      }
+   }
+   menu->Append(0, _("Factory Presets"), sub);
+
+   sub = new wxMenu();
+   for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
+   {
+      sub->Append(kDeletePresetID + i, mUserPresets[i]);
+   }
+   menu->Append(0, _("Delete Preset"), sub);
+
+   menu->AppendSeparator();
+   menu->Append(kSaveAsID, _("Save As..."));
+   menu->AppendSeparator();
+   menu->Append(kImportID, _("Import..."));
+   menu->Append(kExportID, _("Export..."));
+   menu->AppendSeparator();
+   menu->Append(kOptionsID, _("Options..."));
+   menu->AppendSeparator();
+
+   sub = new wxMenu();
+
+   sub->Append(kDummyID, wxString::Format(_("Type: %s"), mEffect->GetFamily().c_str()));
+   sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetName().c_str()));
+   sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion().c_str()));
+   sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().c_str()));
+   sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().c_str()));
+//   sub->Append(kDummyID, wxString::Format(_("Audio In: %d"), mEffect->GetAudioInCount()));
+//   sub->Append(kDummyID, wxString::Format(_("Audio Out: %d"), mEffect->GetAudioOutCount()));
+
+   menu->Append(0, _("About"), sub);
+
+   wxRect r = b->GetParent()->GetRect();
+   PopupMenu(menu, wxPoint(r.GetLeft(), r.GetBottom()));
+
+   delete menu;
+}
+
+void EffectUIHost::OnBypass(wxCommandEvent & WXUNUSED(evt))
+{
+   EffectManager & em = EffectManager::Get();
+
+   if (em.RealtimeIsSuspended())
+   {
+      em.RealtimeResume();
+   }
+   else
+   {
+      em.RealtimeSuspend();
+   }
+
+   UpdateControls();
+}
+
+void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
+{
+   if (mPlayToggle)
+   {
+      mPlayToggle = false;
+      GetActiveProject()->OnPlayStop();
+   }
+   else
+   {
+      mPlayToggle = true;
+      GetActiveProject()->OnPlayStop();
+   }
+}
+
+void EffectUIHost::OnRewind(wxCommandEvent & WXUNUSED(evt))
+{
+   GetActiveProject()->OnSeekLeftShort();
+}
+
+void EffectUIHost::OnFFwd(wxCommandEvent & WXUNUSED(evt))
+{
+   GetActiveProject()->OnSeekRightShort();
+}
+
+void EffectUIHost::OnPlayback(wxCommandEvent & evt)
+{
+   mPlaying = evt.GetInt() != 0;
+   UpdateControls();
+}
+
+void EffectUIHost::OnCapture(wxCommandEvent & evt)
+{
+   mCapturing = evt.GetInt() != 0;
+   mCloseBtn->SetFocus();
+   UpdateControls();
+}
+
+void EffectUIHost::UpdateControls()
+{
+   mApplyBtn->Enable(!mCapturing);
+   mBypassBtn->Enable(!mCapturing);
+   mPlayBtn->Enable(!mCapturing);
+   mRewindBtn->Enable(!mCapturing);
+   mFFwdBtn->Enable(!mCapturing);
+
+   mOnToggle = !EffectManager::Get().RealtimeIsSuspended();
+   if (mOnToggle && mCapturing)
+   {
+      mOnToggle = false;
+      EffectManager::Get().RealtimeSuspend();
+   }
+
+   mPlayBtn->SetBitmapLabel(mPlaying ? mStopBM : mPlayBM);
+   mPlayBtn->SetBitmapDisabled(mPlaying ? mStopDisabledBM: mPlayDisabledBM);
+   mBypassBtn->SetBitmapLabel(mOnToggle ? mOnBM : mOffBM);
+}
+#endif
 
 void EffectUIHost::OnSettings(wxCommandEvent & evt)
 {

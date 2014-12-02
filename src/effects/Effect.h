@@ -12,8 +12,11 @@
 #ifndef __AUDACITY_EFFECT__
 #define __AUDACITY_EFFECT__
 
+#define TRY_BUTTONS 1
+
 #include <set>
 
+#include <wx/bmpbuttn.h>
 #include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/string.h>
@@ -485,8 +488,20 @@ public:
    bool Initialize();
 
 private:
+#if defined(TRY_BUTTONS)
+   void OnMenu(wxCommandEvent & evt);
+   void OnBypass(wxCommandEvent & evt);
+   void OnPlay(wxCommandEvent & evt);
+   void OnRewind(wxCommandEvent & evt);
+   void OnFFwd(wxCommandEvent & evt);
+   void OnPlayback(wxCommandEvent & evt);
+   void OnCapture(wxCommandEvent & evt);
+   void UpdateControls();
+   wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
+#endif
+
    void OnClose(wxCloseEvent & evt);
-   void OnOk(wxCommandEvent & evt);
+   void OnApply(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
    void OnPreview(wxCommandEvent & evt);
    void OnSettings(wxCommandEvent & evt);
@@ -509,6 +524,29 @@ private:
 
    wxArrayString mUserPresets;
    bool mInitialized;
+
+#if defined(TRY_BUTTONS)
+   wxButton *mApplyBtn;
+   wxButton *mCloseBtn;
+   wxBitmapButton *mMenuBtn;
+   wxBitmapButton *mBypassBtn;
+   wxBitmapButton *mPlayBtn;
+   wxBitmapButton *mRewindBtn;
+   wxBitmapButton *mFFwdBtn;
+
+   bool mPlayToggle;
+   wxBitmap mPlayBM;
+   wxBitmap mPlayDisabledBM;
+   wxBitmap mStopBM;
+   wxBitmap mStopDisabledBM;
+
+   bool mOnToggle;
+   wxBitmap mOnBM;
+   wxBitmap mOffBM;
+
+   bool mPlaying;
+   bool mCapturing;
+#endif
 
    DECLARE_EVENT_TABLE();
 };

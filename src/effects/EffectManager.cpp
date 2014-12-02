@@ -492,6 +492,11 @@ bool EffectManager::RealtimeIsActive()
    return mRealtimeEffects.GetCount() != 0;
 }
 
+bool EffectManager::RealtimeIsSuspended()
+{
+   return mRealtimeSuspended;
+}
+
 void EffectManager::RealtimeAddEffect(Effect *effect)
 {
    // Block RealtimeProcess()
