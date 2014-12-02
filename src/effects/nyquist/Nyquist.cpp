@@ -799,7 +799,7 @@ bool EffectNyquist::ProcessOne()
       }
       // A list of clips for mono, or an array of lists for multi-channel.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
-                              (mCurNumChannels == 1) ? wxT("(list ") : wxT("#( "),
+                              (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
                               clips.c_str());
       cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %g) 'PEAK-LEVEL)\n"), maxPeak);
    }
