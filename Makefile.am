@@ -60,8 +60,6 @@ nobase_dist_pkgdata_DATA = \
    plug-ins/beat.ny \
    plug-ins/clicktrack.ny \
    plug-ins/clipfix.ny \
-   plug-ins/crossfadein.ny \
-   plug-ins/crossfadeout.ny \
    plug-ins/delay.ny \
    plug-ins/equalabel.ny \
    plug-ins/highpass.ny \
