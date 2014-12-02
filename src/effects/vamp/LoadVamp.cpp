@@ -8,6 +8,8 @@
 
 **********************************************************************/
 
+#include <wx/filename.h>
+
 #include "../../Audacity.h"
 #include "../EffectManager.h"
 #include "VampEffect.h"
@@ -221,16 +223,7 @@ bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStri
 bool VampEffectsModule::IsPluginValid(const PluginID & ID,
                                       const wxString & path)
 {
-   Vamp::HostExt::PluginLoader *loader = Vamp::HostExt::PluginLoader::getInstance();
-   Vamp::Plugin *plug = loader->loadPlugin(ID.ToUTF8().data(), 48000); // rate doesn't matter here
-
-   if (plug)
-   {
-      delete plug;
-      return true;
-   }
-
-   return false;
+   return wxFileName::FileExists(path);
 }
 
 IdentInterface *VampEffectsModule::CreateInstance(const PluginID & ID,
