@@ -127,12 +127,6 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
                              5);
       }
       S.EndMultiColumn();
-
-      S.AddSpace(5);
-
-      S.TieCheckBox(_("Display effects in graphical mode when supported"),
-                     wxT("/Effects/GUI"),
-                     true);
    }
    S.EndStatic();
 
