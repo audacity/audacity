@@ -1472,6 +1472,9 @@ void AudacityApp::FinishInits()
    ModuleManager::Get().Dispatch(AppInitialized);
 
    mWindowRectAlreadySaved = FALSE;
+
+   mTimer.SetOwner(this, kAudacityAppTimerID);
+   mTimer.Start(200);
 }
 
 void AudacityApp::InitCommandHandler()

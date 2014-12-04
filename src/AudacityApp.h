@@ -209,6 +209,8 @@ class AudacityApp:public wxApp {
 
    wxSingleInstanceChecker *mChecker;
 
+   wxTimer mTimer;
+
    bool                 m_aliasMissingWarningShouldShow;
    BlockFile           *m_LastMissingBlockFile;
 
