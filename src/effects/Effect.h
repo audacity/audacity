@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_EFFECT__
 #define __AUDACITY_EFFECT__
 
-#define TRY_BUTTONS 1
-
 #include <set>
 
 #include <wx/bmpbuttn.h>
@@ -29,6 +27,7 @@ class wxWindow;
 
 #include "../Experimental.h"
 #include "../WaveTrack.h"
+#include "../SelectedRegion.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../Internat.h"
@@ -488,7 +487,9 @@ public:
    bool Initialize();
 
 private:
-#if defined(TRY_BUTTONS)
+   void OnClose(wxCloseEvent & evt);
+   void OnApply(wxCommandEvent & evt);
+   void OnCancel(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
    void OnBypass(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
@@ -496,25 +497,17 @@ private:
    void OnFFwd(wxCommandEvent & evt);
    void OnPlayback(wxCommandEvent & evt);
    void OnCapture(wxCommandEvent & evt);
-   void UpdateControls();
-   wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
-#endif
-
-   void OnClose(wxCloseEvent & evt);
-   void OnApply(wxCommandEvent & evt);
-   void OnCancel(wxCommandEvent & evt);
-   void OnPreview(wxCommandEvent & evt);
-   void OnSettings(wxCommandEvent & evt);
+   void OnUserPreset(wxCommandEvent & evt);
+   void OnFactoryPreset(wxCommandEvent & evt);
+   void OnDeletePreset(wxCommandEvent & evt);
    void OnSaveAs(wxCommandEvent & evt);
    void OnImport(wxCommandEvent & evt);
    void OnExport(wxCommandEvent & evt);
    void OnOptions(wxCommandEvent & evt);
-   void OnUserPreset(wxCommandEvent & evt);
-   void OnDeletePreset(wxCommandEvent & evt);
-   void OnFactoryPreset(wxCommandEvent & evt);
    void OnDefaults(wxCommandEvent & evt);
-   void OnDeleteAllPresets(wxCommandEvent & evt);
 
+   void UpdateControls();
+   wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
    void LoadUserPresets();
 
 private:
@@ -525,7 +518,6 @@ private:
    wxArrayString mUserPresets;
    bool mInitialized;
 
-#if defined(TRY_BUTTONS)
    wxButton *mApplyBtn;
    wxButton *mCloseBtn;
    wxBitmapButton *mMenuBtn;
@@ -534,7 +526,6 @@ private:
    wxBitmapButton *mRewindBtn;
    wxBitmapButton *mFFwdBtn;
 
-   bool mPlayToggle;
    wxBitmap mPlayBM;
    wxBitmap mPlayDisabledBM;
    wxBitmap mStopBM;
@@ -543,10 +534,13 @@ private:
    bool mOnToggle;
    wxBitmap mOnBM;
    wxBitmap mOffBM;
+   wxBitmap mOffDisabledBM;
 
    bool mPlaying;
    bool mCapturing;
-#endif
+
+   SelectedRegion mRegion;
+   double mPlayPos;
 
    DECLARE_EVENT_TABLE();
 };

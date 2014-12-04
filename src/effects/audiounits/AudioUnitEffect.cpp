@@ -92,7 +92,7 @@ wxString AudioUnitEffectsModule::GetPath()
 
 wxString AudioUnitEffectsModule::GetName()
 {
-   return _("AudioUnit Effects Module");
+   return _("Audio Unit Effects Module");
 }
 
 wxString AudioUnitEffectsModule::GetVendor()
@@ -108,7 +108,7 @@ wxString AudioUnitEffectsModule::GetVersion()
 
 wxString AudioUnitEffectsModule::GetDescription()
 {
-   return _("Provides AudioUnit Effects support to Audacity");
+   return _("Provides Audio Unit Effects support to Audacity");
 }
 
 // ============================================================================
@@ -291,10 +291,8 @@ public:
 
 private:
    EffectHostInterface *mHost;
-   int mBufferSize;
-   bool mUseBufferDelay;
+   bool mUseLatency;
    bool mUseGUI;
-   bool mRescan;
 
    DECLARE_EVENT_TABLE()
 };
@@ -304,11 +302,11 @@ BEGIN_EVENT_TABLE(AudioUnitEffectSettingsDialog, wxDialog)
 END_EVENT_TABLE()
 
 AudioUnitEffectSettingsDialog::AudioUnitEffectSettingsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialog(parent, wxID_ANY, wxString(_("AudioUnit Effect Settings")))
+:  wxDialog(parent, wxID_ANY, wxString(_("Audio Unit Effect Settings")))
 {
    mHost = host;
 
-   mHost->GetSharedConfig(wxT("Settings"), wxT("UseBufferDelay"), mUseBufferDelay, true);
+   mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
    mHost->GetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI, true);
 
    ShuttleGui S(this, eIsCreating);
@@ -326,19 +324,19 @@ void AudioUnitEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay(false);
       {
-         S.StartStatic(_("Buffer Delay Compensation"));
+         S.StartStatic(_("Latency Compensation"));
          {
             S.AddVariableText(wxString() +
-               _("As part of their processing, some AudioUnit effects must delay returning ") +
+               _("As part of their processing, some Audio Unit effects must delay returning ") +
                _("audio to Audacity. When not compensating for this delay, you will ") +
                _("notice that small silences have been inserted into the audio. ") +
                _("Enabling this setting will provide that compensation, but it may ") +
-               _("not work for all AudioUnit effects."))->Wrap(650);
+               _("not work for all Audio Unit effects."))->Wrap(650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
                S.TieCheckBox(_("Enable &compensation"),
-                             mUseBufferDelay);
+                             mUseLatency);
             }
             S.EndHorizontalLay();
          }
@@ -347,7 +345,7 @@ void AudioUnitEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
          S.StartStatic(_("Graphical Mode"));
          {
             S.AddVariableText(wxString() +
-               _("Most AudioUnit effects have a graphical interface for setting parameter values.") +
+               _("Most Audio Unit effects have a graphical interface for setting parameter values.") +
                _(" A basic text-only method is also available. ") +
                _(" Reopen the effect for this to take effect."))->Wrap(650);
             S.TieCheckBox(_("Enable &graphical interface"),
@@ -376,7 +374,7 @@ void AudioUnitEffectSettingsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   mHost->SetSharedConfig(wxT("Settings"), wxT("UseBufferDelay"), mUseBufferDelay);
+   mHost->SetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency);
    mHost->SetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI);
 
    EndModal(wxID_OK);
@@ -415,7 +413,7 @@ BEGIN_EVENT_TABLE(AudioUnitEffectExportDialog, wxDialog)
 END_EVENT_TABLE()
 
 AudioUnitEffectExportDialog::AudioUnitEffectExportDialog(wxWindow * parent, AudioUnitEffect *effect)
-:  wxDialog(parent, wxID_ANY, wxString(_("Export AudioUnit Presets")))
+:  wxDialog(parent, wxID_ANY, wxString(_("Export Audio Unit Presets")))
 {
    mEffect = effect;
 
@@ -582,7 +580,7 @@ BEGIN_EVENT_TABLE(AudioUnitEffectImportDialog, wxDialog)
 END_EVENT_TABLE()
 
 AudioUnitEffectImportDialog::AudioUnitEffectImportDialog(wxWindow * parent, AudioUnitEffect *effect)
-:  wxDialog(parent, wxID_ANY, wxString(_("Import AudioUnit Presets")))
+:  wxDialog(parent, wxID_ANY, wxString(_("Import Audio Unit Presets")))
 {
    mEffect = effect;
 
@@ -1131,19 +1129,18 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
    // mHost will be null during registration
    if (mHost)
    {
-      mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), mBufferSize, 8192);
-      mHost->GetSharedConfig(wxT("Settings"), wxT("UseBufferDelay"), mUseBufferDelay, true);
+      mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
       mHost->GetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI, true);
 
       bool haveDefaults;
-      mHost->GetPrivateConfig(wxT("Default"), wxT("Initialized"), haveDefaults, false);
+      mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
-         SaveParameters(wxT("Default"));
-         mHost->SetPrivateConfig(wxT("Default"), wxT("Initialized"), true);
+         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         mHost->SetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(wxT("Current"));
+      LoadParameters(mHost->GetCurrentSettingsGroup());
    } 
 
    if (!mMaster)
@@ -1264,7 +1261,7 @@ sampleCount AudioUnitEffect::GetBlockSize(sampleCount maxBlockSize)
 
 sampleCount AudioUnitEffect::GetLatency()
 {
-   if (!mLatencyDone)
+   if (mUseLatency && !mLatencyDone)
    {
       mLatencyDone = true;
       return mLatency * mSampleRate;
@@ -2026,6 +2023,11 @@ wxArrayString AudioUnitEffect::GetFactoryPresets()
    return presets;
 }
 
+bool AudioUnitEffect::CanExport()
+{
+   return true;
+}
+
 void AudioUnitEffect::ExportPresets()
 {
    AudioUnitEffectExportDialog dlg(mDialog, this);
@@ -2036,6 +2038,11 @@ void AudioUnitEffect::ImportPresets()
 {
    AudioUnitEffectImportDialog dlg(mDialog, this);
    dlg.ShowModal();
+}
+
+bool AudioUnitEffect::HasOptions()
+{
+   return true;
 }
 
 void AudioUnitEffect::ShowOptions()

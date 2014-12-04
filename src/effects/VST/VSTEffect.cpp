@@ -625,9 +625,8 @@ public:
 private:
    EffectHostInterface *mHost;
    int mBufferSize;
-   bool mUseBufferDelay;
+   bool mUseLatency;
    bool mUseGUI;
-   bool mRescan;
 
    DECLARE_EVENT_TABLE()
 };
@@ -642,9 +641,8 @@ VSTEffectSettingsDialog::VSTEffectSettingsDialog(wxWindow * parent, EffectHostIn
    mHost = host;
 
    mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), mBufferSize, 8192);
-   mHost->GetSharedConfig(wxT("Settings"), wxT("UseBufferDelay"), mUseBufferDelay, true);
+   mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
    mHost->GetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI, true);
-   mHost->GetSharedConfig(wxT("Settings"), wxT("Rescan"), mRescan, false);
 
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -686,7 +684,7 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndStatic();
 
-         S.StartStatic(_("Buffer Delay Compensation"));
+         S.StartStatic(_("Latency Compensation"));
          {
             S.AddVariableText(wxString() +
                _("As part of their processing, some VST effects must delay returning ") +
@@ -698,7 +696,7 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
                S.TieCheckBox(_("Enable &compensation"),
-                             mUseBufferDelay);
+                             mUseLatency);
             }
             S.EndHorizontalLay();
          }
@@ -712,18 +710,6 @@ void VSTEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
                _(" Reopen the effect for this to take effect."))->Wrap(650);
             S.TieCheckBox(_("Enable &graphical interface"),
                           mUseGUI);
-         }
-         S.EndStatic();
-
-         S.StartStatic(_("Rescan Effects"));
-         {
-            S.AddVariableText(wxString() +
-               _("To improve Audacity startup, a search for VST effects is performed ") +
-               _("once and relevant information is recorded. When you add VST effects ") +
-               _("to your system, you need to tell Audacity to rescan so the new ") +
-               _("information can be recorded."))->Wrap(650);
-            S.TieCheckBox(_("&Rescan effects on next launch"),
-                          mRescan);
          }
          S.EndStatic();
       }
@@ -749,9 +735,8 @@ void VSTEffectSettingsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    PopulateOrExchange(S);
 
    mHost->SetSharedConfig(wxT("Settings"), wxT("BufferSize"), mBufferSize);
-   mHost->SetSharedConfig(wxT("Settings"), wxT("UseBufferDelay"), mUseBufferDelay);
+   mHost->SetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency);
    mHost->SetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI);
-   mHost->SetSharedConfig(wxT("Settings"), wxT("Rescan"), mRescan);
 
    EndModal(wxID_OK);
 }
@@ -1418,7 +1403,7 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    mWantsEditIdle = false;
    mUserBlockSize = 8192;
    mBlockSize = mUserBlockSize;
-   mUseBufferDelay = true;
+   mUseLatency = true;
    mReady = false;
 
    mMasterIn = NULL;
@@ -1634,19 +1619,19 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
    if (mHost)
    {
       mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), mUserBlockSize, 8192);
-      mHost->GetSharedConfig(wxT("Settings"), wxT("UseBufferDelay"), mUseBufferDelay, true);
+      mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
 
       mBlockSize = mUserBlockSize;
 
       bool haveDefaults;
-      mHost->GetPrivateConfig(wxT("Default"), wxT("Initialized"), haveDefaults, false);
+      mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
-         SaveParameters(wxT("Default"));
-         mHost->SetPrivateConfig(wxT("Default"), wxT("Initialized"), true);
+         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         mHost->SetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(wxT("Current"));
+      LoadParameters(mHost->GetCurrentSettingsGroup());
    }
 
    return true;
@@ -1693,7 +1678,7 @@ void VSTEffect::SetSampleRate(sampleCount rate)
 
 sampleCount VSTEffect::GetLatency()
 {
-   if (mUseBufferDelay)
+   if (mUseLatency)
    {
       // ??? Threading issue ???
       sampleCount delay = mBufferDelay;
@@ -2118,23 +2103,13 @@ bool VSTEffect::CloseUI()
 void VSTEffect::LoadUserPreset(const wxString & name)
 {
    LoadParameters(name);
+
+   RefreshParameters();
 }
 
 void VSTEffect::SaveUserPreset(const wxString & name)
 {
    SaveParameters(name);
-}
-
-void VSTEffect::LoadFactoryPreset(int id)
-{
-   callDispatcher(effSetProgram, 0, id, NULL, 0.0);
-
-   RefreshParameters();
-}
-
-void VSTEffect::LoadFactoryDefaults()
-{
-   LoadParameters(mHost->GetFactoryDefaultsGroup());
 }
 
 wxArrayString VSTEffect::GetFactoryPresets()
@@ -2150,6 +2125,25 @@ wxArrayString VSTEffect::GetFactoryPresets()
    }
 
    return progs;
+}
+
+void VSTEffect::LoadFactoryPreset(int id)
+{
+   callDispatcher(effSetProgram, 0, id, NULL, 0.0);
+
+   RefreshParameters();
+}
+
+void VSTEffect::LoadFactoryDefaults()
+{
+   LoadParameters(mHost->GetFactoryDefaultsGroup());
+
+   RefreshParameters();
+}
+
+bool VSTEffect::CanExport()
+{
+   return true;
 }
 
 void VSTEffect::ExportPresets()
@@ -2263,6 +2257,11 @@ void VSTEffect::ImportPresets()
    RefreshParameters();
 
    return;
+}
+
+bool VSTEffect::HasOptions()
+{
+   return true;
 }
 
 void VSTEffect::ShowOptions()
@@ -2614,8 +2613,11 @@ void VSTEffect::LoadParameters(const wxString & group)
       if (len)
       {
          callDispatcher(effSetChunk, 1, len, buf, 0.0);
+         for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+         {
+            mSlaves[i]->callDispatcher(effSetChunk, 1, len, buf, 0.0);
+         }
       }
-
       delete [] buf;
 
       return;
@@ -2623,6 +2625,8 @@ void VSTEffect::LoadParameters(const wxString & group)
 
    if (mHost->GetPrivateConfig(group, wxT("Value"), value, wxEmptyString))
    {
+      size_t cnt = mSlaves.GetCount();
+      
       wxStringTokenizer st(value, wxT(','));
       for (int i = 0; st.HasMoreTokens(); i++)
       {
@@ -2632,6 +2636,10 @@ void VSTEffect::LoadParameters(const wxString & group)
          if (val >= -1.0 && val <= 1.0)
          {
             callSetParameter(i, val);
+            for (size_t i = 0; i < cnt; i++)
+            {
+               mSlaves[i]->callSetParameter(i, val);
+            }
          }
       }
    }
@@ -2788,7 +2796,7 @@ void VSTEffect::Automate(int index, float value)
 void VSTEffect::SetBufferDelay(int samples)
 {
    // We do not support negative delay
-   if (samples >= 0 && mUseBufferDelay)
+   if (samples >= 0 && mUseLatency)
    {
       mBufferDelay = samples;
    }

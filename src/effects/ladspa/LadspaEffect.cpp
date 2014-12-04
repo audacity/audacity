@@ -48,6 +48,7 @@ effects from this one class.
 
 #include "LadspaEffect.h"       // This class's header file
 #include "../../Internat.h"
+#include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 
 // ============================================================================
@@ -371,6 +372,99 @@ void LadspaEffectsModule::DeleteInstance(IdentInterface *instance)
    {
       delete effect;
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// LadspaEffectSettingsDialog
+//
+///////////////////////////////////////////////////////////////////////////////
+
+class LadspaEffectSettingsDialog:public wxDialog
+{
+public:
+   LadspaEffectSettingsDialog(wxWindow * parent, EffectHostInterface *host);
+   virtual ~LadspaEffectSettingsDialog();
+
+   void PopulateOrExchange(ShuttleGui & S);
+
+   void OnOk(wxCommandEvent & evt);
+
+private:
+   EffectHostInterface *mHost;
+   bool mUseLatency;
+
+   DECLARE_EVENT_TABLE()
+};
+
+BEGIN_EVENT_TABLE(LadspaEffectSettingsDialog, wxDialog)
+   EVT_BUTTON(wxID_OK, LadspaEffectSettingsDialog::OnOk)
+END_EVENT_TABLE()
+
+LadspaEffectSettingsDialog::LadspaEffectSettingsDialog(wxWindow * parent, EffectHostInterface *host)
+:  wxDialog(parent, wxID_ANY, wxString(_("Ladspa Effect Settings")))
+{
+   mHost = host;
+
+   mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
+
+   ShuttleGui S(this, eIsCreating);
+   PopulateOrExchange(S);
+}
+
+LadspaEffectSettingsDialog::~LadspaEffectSettingsDialog()
+{
+}
+
+void LadspaEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
+{
+   S.SetBorder(5);
+   S.StartHorizontalLay(wxEXPAND, 1);
+   {
+      S.StartVerticalLay(false);
+      {
+         S.StartStatic(_("Latency Compensation"));
+         {
+            S.AddVariableText(wxString() +
+               _("As part of their processing, some Ladspa effects must delay returning ") +
+               _("audio to Audacity. When not compensating for this delay, you will ") +
+               _("notice that small silences have been inserted into the audio. ") +
+               _("Enabling this setting will provide that compensation, but it may ") +
+               _("not work for all Ladspa effects."))->Wrap(650);
+
+            S.StartHorizontalLay(wxALIGN_LEFT);
+            {
+               S.TieCheckBox(_("Enable &compensation"),
+                             mUseLatency);
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndStatic();
+      }
+      S.EndVerticalLay();
+   }
+   S.EndHorizontalLay();
+
+   S.AddStandardButtons();
+
+   Layout();
+   Fit();
+   Center();
+}
+
+void LadspaEffectSettingsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!Validate())
+   {
+      return;
+   }
+
+   ShuttleGui S(this, eIsGettingFromDialog);
+   PopulateOrExchange(S);
+
+   mHost->SetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency);
+
+   EndModal(wxID_OK);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -739,18 +833,17 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
    // mHost will be null during registration
    if (mHost)
    {
-      mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), mUserBlockSize, 8192);
-      mBlockSize = mUserBlockSize;
+      mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
 
       bool haveDefaults;
-      mHost->GetPrivateConfig(wxT("Default"), wxT("Initialized"), haveDefaults, false);
+      mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
-         SaveParameters(wxT("Default"));
-         mHost->SetPrivateConfig(wxT("Default"), wxT("Initialized"), true);
+         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         mHost->SetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(wxT("Current"));
+      LoadParameters(mHost->GetCurrentSettingsGroup());
    }
 
    return true;
@@ -783,24 +876,12 @@ void LadspaEffect::SetSampleRate(sampleCount rate)
 
 sampleCount LadspaEffect::GetBlockSize(sampleCount maxBlockSize)
 {
-#if 0
-   // TODO:  Allow user to specify the max blocksize
-   if (mUserBlockSize > maxBlockSize)
-   {
-      mBlockSize = maxBlockSize;
-   }
-   else
-   {
-      mBlockSize = mUserBlockSize;
-   }
-#endif
-
    return mBlockSize;
 }
 
 sampleCount LadspaEffect::GetLatency()
 {
-   if (mLatencyPort >= 0 && !mLatencyDone)
+   if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone)
    {
       mLatencyDone = true;
       return mOutputControls[mLatencyPort] * 2;
@@ -1284,11 +1365,17 @@ bool LadspaEffect::CloseUI()
 void LadspaEffect::LoadUserPreset(const wxString & name)
 {
    LoadParameters(name);
+   RefreshControls();
 }
 
 void LadspaEffect::SaveUserPreset(const wxString & name)
 {
    SaveParameters(name);
+}
+
+wxArrayString LadspaEffect::GetFactoryPresets()
+{
+   return wxArrayString();
 }
 
 void LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
@@ -1299,11 +1386,12 @@ void LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
 void LadspaEffect::LoadFactoryDefaults()
 {
    LoadParameters(mHost->GetFactoryDefaultsGroup());
+   RefreshControls();
 }
 
-wxArrayString LadspaEffect::GetFactoryPresets()
+bool LadspaEffect::CanExport()
 {
-   return wxArrayString();
+   return false;
 }
 
 void LadspaEffect::ExportPresets()
@@ -1314,8 +1402,19 @@ void LadspaEffect::ImportPresets()
 {
 }
 
+bool LadspaEffect::HasOptions()
+{
+   return true;
+}
+
 void LadspaEffect::ShowOptions()
 {
+   LadspaEffectSettingsDialog dlg(mParent, mHost);
+   if (dlg.ShowModal())
+   {
+      // Reinitialize configuration settings
+      SetHost(mHost);
+   }
 }
 
 // ============================================================================

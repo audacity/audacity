@@ -406,6 +406,28 @@ static const char * effect_ffwd_xpm[] = {
 "                "};
 
 /* XPM */
+static const char * effect_off_disabled_xpm[] = {
+"16 16 2 1",
+" 	c None",
+".	c #7f7f7f",
+"                ",
+"       ..       ",
+"    .  ..  .    ",
+"   ..  ..  ..   ",
+"  ...  ..  ...  ",
+" ....  ..  .... ",
+" ...   ..   ... ",
+" ...   ..   ... ",
+" ...   ..   ... ",
+" ...        ... ",
+" ...        ... ",
+" ...        ... ",
+" ....      .... ",
+"  ............  ",
+"   ..........   ",
+"    ........    "};
+
+/* XPM */
 static const char * effect_play_disabled_xpm[] = {
 "16 16 48 1",
 " 	c None",

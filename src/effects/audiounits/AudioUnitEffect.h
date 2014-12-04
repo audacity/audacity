@@ -117,8 +117,11 @@ public:
 
    virtual wxArrayString GetFactoryPresets();
 
+   virtual bool CanExport();
    virtual void ExportPresets();
    virtual void ImportPresets();
+
+   virtual bool HasOptions();
    virtual void ShowOptions();
 
    // AudioUnitEffect implementation
@@ -186,7 +189,7 @@ private:
    double      mSampleRate;
 
    int         mBufferSize;
-   bool        mUseBufferDelay;
+   bool        mUseLatency;
 
    AudioTimeStamp mTimeStamp;
    bool        mReady;

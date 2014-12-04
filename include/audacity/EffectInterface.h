@@ -165,13 +165,15 @@ public:
    virtual void LoadUserPreset(const wxString & name) = 0;
    virtual void SaveUserPreset(const wxString & name) = 0;
 
+   virtual wxArrayString GetFactoryPresets() = 0;
    virtual void LoadFactoryPreset(int id) = 0;
    virtual void LoadFactoryDefaults() = 0;
 
-   virtual wxArrayString GetFactoryPresets() = 0;
-
+   virtual bool CanExport() = 0;
    virtual void ExportPresets() = 0;
    virtual void ImportPresets() = 0;
+
+   virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;
 };
 
