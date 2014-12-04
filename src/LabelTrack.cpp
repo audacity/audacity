@@ -163,7 +163,7 @@ bool LabelTrack::Clear(double b, double e)
       } else if (relation == LabelStruct::ENDS_IN_LABEL) {
          mLabels[i]->selectedRegion.setTimes(
             b,
-            mLabels[i]->getT1() - (e - mLabels[i]->getT0()));
+            mLabels[i]->getT1() - (e - b));
       } else if (relation == LabelStruct::BEGINS_IN_LABEL) {
          mLabels[i]->selectedRegion.setT1(b);
       } else if (relation == LabelStruct::WITHIN_LABEL) {
