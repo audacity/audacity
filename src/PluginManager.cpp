@@ -723,16 +723,14 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       // Create a placeholder descriptor to show we've seen this plugin before and not
       // to show it as new the next time Audacity starts.
       //
-      // If the user chooses not to enable it or the scan of the plugin fails, the dummy
-      // entry will remain in the plugin list as disabled.
-      //
-      // However, if the scan of the of the plugin succeeds, then this dummy entry will be
-      // replaced during registration.
+      // Placeholder descriptors have a plugin type of PluginTypeNone and the ID is the
+      // path.
       PluginDescriptor & plug = pm.mPlugins[path];
 
       plug.SetID(path);
       plug.SetPath(path);
       plug.SetEnabled(false);
+      plug.SetValid(false);
 
       if (miState[i] == SHOW_CHECKED)
       {
@@ -866,6 +864,11 @@ bool PluginDescriptor::IsEnabled() const
    return mEnabled;
 }
 
+bool PluginDescriptor::IsValid() const
+{
+   return mValid;
+}
+
 wxString PluginDescriptor::GetMenuName() const
 {
    // This probably shouldn't be here...but it was easy
@@ -920,6 +923,11 @@ void PluginDescriptor::SetProviderID(const PluginID & providerID)
 void PluginDescriptor::SetEnabled(bool enable)
 {
    mEnabled = enable;
+}
+
+void PluginDescriptor::SetValid(bool valid)
+{
+   mValid = valid;
 }
 
 // Effects
@@ -1042,6 +1050,7 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 #define KEY_DESCRIPTION                wxT("Description")
 #define KEY_LASTUPDATED                wxT("LastUpdated")
 #define KEY_ENABLED                    wxT("Enabled")
+#define KEY_VALID                      wxT("Valid")
 #define KEY_PROVIDERID                 wxT("ProviderID")
 #define KEY_EFFECTTYPE                 wxT("EffectType")
 #define KEY_EFFECTFAMILY               wxT("EffectFamily")
@@ -1067,6 +1076,7 @@ void PluginManager::RegisterModulePlugin(IdentInterface *module)
    PluginDescriptor & plug = CreatePlugin(module, PluginTypeModule);
 
    plug.SetEnabled(true);
+   plug.SetValid(true);
 }
 
 void PluginManager::RegisterEffectPlugin(IdentInterface *provider, EffectIdentInterface *effect)
@@ -1083,6 +1093,7 @@ void PluginManager::RegisterEffectPlugin(IdentInterface *provider, EffectIdentIn
    plug.SetEffectAutomatable(effect->SupportsAutomation());
 
    plug.SetEnabled(true);
+   plug.SetValid(true);
 }
 
 void PluginManager::RegisterImporterPlugin(IdentInterface *provider, ImporterInterface *importer)
@@ -1500,6 +1511,10 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
       mConfig->Read(KEY_ENABLED, &boolVal, false);
       plug.SetEnabled(boolVal);
 
+      // Is it valid...default to no if not found
+      mConfig->Read(KEY_VALID, &boolVal, false);
+      plug.SetValid(boolVal);
+
       switch (type)
       {
          case PluginTypeModule:
@@ -1662,6 +1677,7 @@ void PluginManager::SaveGroup(const wxChar *group, PluginType type)
       mConfig->Write(KEY_DESCRIPTION, plug.GetDescription());
       mConfig->Write(KEY_PROVIDERID, plug.GetProviderID());
       mConfig->Write(KEY_ENABLED, plug.IsEnabled());
+      mConfig->Write(KEY_VALID, plug.IsValid());
 
       switch (type)
       {
@@ -1745,7 +1761,7 @@ void PluginManager::CheckForUpdates(bool forceRescan)
       {
          if (!mm.IsProviderValid(plugID, plugPath))
          {
-            plug.SetEnabled(false);
+            plug.SetValid(false);
          }
          else
          {
@@ -1762,10 +1778,7 @@ void PluginManager::CheckForUpdates(bool forceRescan)
       }
       else
       {
-         if (!mm.IsPluginValid(plug.GetProviderID(), plugID, plugPath))
-         {
-            plug.SetEnabled(false);
-         }
+         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugID, plugPath));
       }
 
       iter++;
@@ -1778,9 +1791,8 @@ void PluginManager::CheckForUpdates(bool forceRescan)
       {
          PluginDescriptor & plug = iter->second;
          const wxString & plugPath = plug.GetPath();
-
          ProviderMap::iterator mapiter = map.find(plugPath);
-         if (map.find(plugPath) != map.end())
+         if (mapiter != map.end())
          {
             map.erase(mapiter);
          }
@@ -1840,7 +1852,7 @@ const PluginDescriptor *PluginManager::GetFirstPlugin(PluginType type)
       {
          gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       }
-      if (plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
+      if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
          return &mPluginsIter->second;
       }
@@ -1859,7 +1871,7 @@ const PluginDescriptor *PluginManager::GetNextPlugin(PluginType type)
       {
          gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       }
-      if (plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
+      if (plug.IsValid() && plug.IsEnabled() && plug.GetPluginType() == type && familyEnabled)
       {
          return &mPluginsIter->second;
       }
@@ -1879,7 +1891,7 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
          gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       }
       gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
-      if (plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
+      if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          return &plug;
       }
@@ -1895,7 +1907,7 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
       PluginDescriptor & plug = mPluginsIter->second;
       bool familyEnabled;
       gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
-      if (plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
+      if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
          return &plug;
       }
@@ -1928,6 +1940,7 @@ const PluginID & PluginManager::RegisterLegacyEffectPlugin(EffectIdentInterface 
    plug.SetInstance(effect);
    plug.SetEffectLegacy(true);
    plug.SetEnabled(true);
+   plug.SetValid(true);
 
    return plug.GetID();
 }

@@ -62,6 +62,7 @@ public:
    const wxString & GetDescription() const;
    const wxString & GetProviderID() const;
    bool IsEnabled() const;
+   bool IsValid() const;
 
    void SetID(const PluginID & ID);
    void SetPath(const wxString & path);
@@ -71,6 +72,7 @@ public:
    void SetDescription(const wxString & description);
    void SetProviderID(const PluginID & providerID);
    void SetEnabled(bool enable);
+   void SetValid(bool valid);
 
    wxString GetMenuName() const;
 
@@ -118,6 +120,7 @@ private:
    wxString mDescription;
    wxString mProviderID;
    bool mEnabled;
+   bool mValid;
 
    // Effects
 
