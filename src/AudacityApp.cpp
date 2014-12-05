@@ -564,7 +564,7 @@ GnomeShutdown GnomeShutdownInstance;
 
 #endif
 
-#if defined(__WXMSW__)
+#if defined(__WXMSW_) || defined(__WXGTK__)
 
 //
 // DDE support for opening multiple files with one instance
@@ -609,17 +609,24 @@ public:
          project->GetEventHandler()->AddPendingEvent(e);
       }
 
+      delete this;
+
       return true;
-   };
+   }
+
+   virtual bool OnDisconnect()
+   {
+      return true;
+   }
 };
 
 class IPCServ : public wxServer
 {
 public:
-   IPCServ()
+   IPCServ(const wxString & appl)
    : wxServer()
    {
-      Create(IPC_APPL);
+      Create(appl);
    };
 
    ~IPCServ()
@@ -636,7 +643,7 @@ public:
    };
 };
 
-#endif //__WXMSW__
+#endif
 
 #ifndef __WXMAC__
 IMPLEMENT_APP(AudacityApp)
@@ -1586,6 +1593,11 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
    wxString name = wxString::Format(wxT("audacity-lock-%s"), wxGetUserId().c_str());
    mChecker = new wxSingleInstanceChecker();
 
+   wxString appl = IPC_APPL;
+#if defined(__WXGTK__)
+   appl.Printf(wxT("%s/%s.sock"), dir.c_str(), IPC_APPL);
+#endif
+
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
 
    if (!mChecker->Create(name, dir)) {
@@ -1606,24 +1618,29 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
       }
    }
    else if ( mChecker->IsAnotherRunning() ) {
-#if defined(__WXMSW__)
+#if defined(__WXMSW__) || defined(__WXGTK__)
       //
-      // On Windows (and possibly Linux?), we attempt to make
-      // a DDE connection to an already active Audacity.  If
-      // successful, we send the first command line argument
-      // (the audio file name) to that Audacity for processing.
+      // On Windows and Linux, we attempt to make a connection
+      // to an already active Audacity.  If successful, we send
+      // the first command line argument (the audio file name)
+      // to that Audacity for processing.
       wxClient client;
       wxConnectionBase *conn;
 
       // We try up to 10 times since there's a small window
-      // where the DDE server may not have been fully initialized
-      // yet.
+      // where the DDE server on Windows may not have been fully
+      // initialized.
       for (int i = 0; i < 10; i++) {
          conn = client.MakeConnection(wxEmptyString,
-                                      IPC_APPL,
+                                      appl,
                                       IPC_TOPIC);
          if (conn) {
-            if (conn->Execute(argv[1])) {
+            bool ok = conn->Execute(argv[1]);
+
+            conn->Disconnect();
+            delete conn;
+
+            if (ok) {
                // Command was successfully queued so exit quietly
                delete mChecker;
                return false;
@@ -1644,9 +1661,9 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
       return false;
    }
 
-#if defined(__WXMSW__)
+#if defined(__WXMSW__) || defined(__WXGTK__)
    // Create the DDE server
-   mIPCServ = new IPCServ();
+   mIPCServ = new IPCServ(appl);
 #endif
 
    return true;
@@ -1811,7 +1828,7 @@ int AudacityApp::OnExit()
       Dispatch();
    }
 
-#if defined(__WXMSW__)
+#if defined(__WXMSW__) || defined(__WXGTK__)
    delete mIPCServ;
 #endif
 

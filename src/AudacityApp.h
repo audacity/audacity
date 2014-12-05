@@ -227,7 +227,7 @@ class AudacityApp:public wxApp {
 
    bool mWindowRectAlreadySaved;
 
-#if defined(__WXMSW__)
+#if defined(__WXMSW__) || defined(__WXGTK__)
    IPCServ *mIPCServ;
 #endif
  public:
