@@ -564,7 +564,7 @@ GnomeShutdown GnomeShutdownInstance;
 
 #endif
 
-#if defined(__WXMSW_) || defined(__WXGTK__)
+#if defined(__WXMSW__) || defined(__WXGTK__)
 
 //
 // DDE support for opening multiple files with one instance
