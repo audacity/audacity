@@ -1593,9 +1593,11 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
    wxString name = wxString::Format(wxT("audacity-lock-%s"), wxGetUserId().c_str());
    mChecker = new wxSingleInstanceChecker();
 
+#if defined(__WXMSW__) || defined(__WXGTK__)
    wxString appl = IPC_APPL;
 #if defined(__WXGTK__)
    appl.Printf(wxT("%s/%s.sock"), dir.c_str(), IPC_APPL);
+#endif
 #endif
 
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
