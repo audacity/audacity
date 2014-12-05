@@ -2129,7 +2129,7 @@ wxArrayString VSTEffect::GetFactoryPresets()
 
 void VSTEffect::LoadFactoryPreset(int id)
 {
-   callDispatcher(effSetProgram, 0, id, NULL, 0.0);
+   callSetProgram(id);
 
    RefreshParameters();
 }
@@ -3463,7 +3463,13 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
             }
          }
 
-         // They look okay, time to start changing things
+         // Ask the effect if this is an acceptable bank
+         if (callDispatcher(effBeginLoadBank, 0, 0, &iptr, 0.0) == -1)
+         {
+            return false;
+         }
+
+         // Start loading the individual programs
          for (int i = 0; i < numProgs; i++)
          {
             ret = LoadFXProgram(&bptr, len, i, false);
@@ -3496,6 +3502,12 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
             break;
          }
 
+         // Ask the effect if this is an acceptable bank
+         if (callDispatcher(effBeginLoadBank, 0, 0, &iptr, 0.0) == -1)
+         {
+            return false;
+         }
+
          // Set the entire bank in one shot
          callDispatcher(effSetChunk, 0, size, &iptr[40], 0.0);
 
@@ -3511,7 +3523,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
       // Set the active program
       if (ret && version == 2)
       {
-         callDispatcher(effSetProgram, 0, curProg, NULL, 0.0);
+         callSetProgram(curProg);
       }
    } while (false);
 
@@ -3594,7 +3606,7 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
    // Ignore the size...sometimes it's there, other times it's zero
 
    // Get the version and verify
-#if defined(IS_THIS_AND_FXP_ARTIFICAL_LIMITATION)
+#if defined(IS_THIS_AN_FXP_ARTIFICAL_LIMITATION)
    int version = wxINT32_SWAP_ON_LE(iptr[3]);
    if (version != 1)
    {
@@ -3650,11 +3662,20 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
       // They look okay...time to start changing things
       if (!dryrun)
       {
+         // Ask the effect if this is an acceptable program
+         if (callDispatcher(effBeginLoadProgram, 0, 0, &iptr, 0.0) == -1)
+         {
+            return false;
+         }
+
+         // Load all of the parameters
+         callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
          for (int i = 0; i < numParams; i++)
          {
             wxUint32 val = wxUINT32_SWAP_ON_LE(iptr[14 + i]);
             callSetParameter(i, *((float *) &val));
          }
+         callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
       }
 
       // Update in case we're loading an "FxBk" format bank file
@@ -3691,7 +3712,15 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
       // Set the entire program in one shot
       if (!dryrun)
       {
+         // Ask the effect if this is an acceptable program
+         if (callDispatcher(effBeginLoadProgram, 0, 0, &iptr, 0.0) == -1)
+         {
+            return false;
+         }
+
+         callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
          callDispatcher(effSetChunk, 1, size, &iptr[15], 0.0);
+         callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
       }
 
       // Update in case we're loading an "FxBk" format bank file
@@ -3714,10 +3743,18 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
 
 bool VSTEffect::LoadXML(const wxFileName & fn)
 {
+   // Tell the effect to prepare
+   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+
    // default to read as XML file
    // Load the program
    XMLFileReader reader;
-   if (!reader.Parse(this, fn.GetFullPath()))
+   bool ok = reader.Parse(this, fn.GetFullPath());
+
+   // Tell the effect we're done
+   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+
+   if (!ok)
    {
       // Inform user of load failure
       wxMessageBox(reader.GetErrorStr(),
@@ -3896,7 +3933,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
       for (int i = 0; i < mAEffect->numParams; i++)
       {
          float val = callGetParameter(i);
-         wxUint32 ival = wxUINT16_SWAP_ON_LE(*((wxUint32 *) &val));
+         wxUint32 ival = wxUINT32_SWAP_ON_LE(*((wxUint32 *) &val));
          buf.AppendData(&ival, sizeof(ival));
       }
    }
