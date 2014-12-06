@@ -6113,6 +6113,11 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          ReleaseMouse();
    }
 
+   if (event.Leaving() && !event.ButtonIsDown(wxMOUSE_BTN_ANY))
+   {
+      SetCapturedTrack(NULL);
+   }
+
    switch( mMouseCapture )
    {
    case IsVZooming:
