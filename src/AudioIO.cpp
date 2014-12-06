@@ -494,14 +494,14 @@ void DeinitAudioIO()
 
 wxString DeviceName(const PaDeviceInfo* info)
 {
-   wxString infoName(info->name, wxConvLocal);
+   wxString infoName = wxSafeConvertMB2WX(info->name);
 
    return infoName;
 }
 
 wxString HostName(const PaDeviceInfo* info)
 {
-   wxString hostapiName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
+   wxString hostapiName = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
 
    return hostapiName;
 }
@@ -727,7 +727,7 @@ wxArrayString AudioIO::GetInputSourceNames()
    {
       int numSources = Px_GetNumInputSources(mPortMixer);
       for( int source = 0; source < numSources; source++ )
-         deviceNames.Add(wxString(Px_GetInputSourceName(mPortMixer, source), wxConvLocal));
+         deviceNames.Add(wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(mPortMixer, source))));
    }
    else
    {
@@ -1568,10 +1568,10 @@ bool AudioIO::StartPortMidiStream()
          const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
          if (!info) continue;
          if (!info->output) continue;
-         wxString interf(info->interf, wxConvLocal);
-         wxString name(info->name, wxConvLocal);
+         wxString interf = wxSafeConvertMB2WX((info->interf);
+         wxString name = wxSafeConvertMB2WX(info->name);
          interf.Append(wxT(": ")).Append(name);
-        if (wxStrcmp(interf, playbackDeviceName) == 0) {
+         if (wxStrcmp(interf, playbackDeviceName) == 0) {
             playbackDevice = i;
          }
       }
@@ -2379,7 +2379,7 @@ int AudioIO::getRecordSourceIndex(PxMixer *portMixer)
    wxString sourceName = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
    int numSources = Px_GetNumInputSources(portMixer);
    for (i = 0; i < numSources; i++) {
-      if (sourceName == wxString(Px_GetInputSourceName(portMixer, i), wxConvLocal))
+      if (sourceName == wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(portMixer, i))))
          return i;
    }
    return -1;
@@ -2400,7 +2400,7 @@ int AudioIO::getPlayDevIndex(wxString devName)
    for (hostNum = 0; hostNum < hostCnt; hostNum++)
    {
       const PaHostApiInfo *hinfo = Pa_GetHostApiInfo(hostNum);
-      if (hinfo && wxString(hinfo->name, wxConvLocal) == hostName)
+      if (hinfo && wxString(wxSafeConvertMB2WX(hinfo->name)) == hostName)
       {
          for (PaDeviceIndex hostDevice = 0; hostDevice < hinfo->deviceCount; hostDevice++)
          {
@@ -2453,7 +2453,7 @@ int AudioIO::getRecordDevIndex(wxString devName)
    for (hostNum = 0; hostNum < hostCnt; hostNum++)
    {
       const PaHostApiInfo *hinfo = Pa_GetHostApiInfo(hostNum);
-      if (hinfo && wxString(hinfo->name, wxConvLocal) == hostName)
+      if (hinfo && wxString(wxSafeConvertMB2WX(hinfo->name)) == hostName)
       {
          for (PaDeviceIndex hostDevice = 0; hostDevice < hinfo->deviceCount; hostDevice++)
          {
@@ -2673,7 +2673,7 @@ wxString AudioIO::GetDeviceInfo()
 
       cnt = Px_GetNumMixers(stream);
       for (int i = 0; i < cnt; i++) {
-         wxString name(Px_GetMixerName(stream, i), wxConvLocal);
+         wxString name = wxSafeConvertMB2WX(Px_GetMixerName(stream, i));
          s << i << wxT(" - ") << name << e;
       }
 
@@ -2681,7 +2681,7 @@ wxString AudioIO::GetDeviceInfo()
       s << wxT("Available recording sources:") << e;
       cnt = Px_GetNumInputSources(PortMixer);
       for (int i = 0; i < cnt; i++) {
-         wxString name(Px_GetInputSourceName(PortMixer, i), wxConvLocal);
+         wxString name = wxSafeConvertMB2WX(Px_GetInputSourceName(PortMixer, i));
          s << i << wxT(" - ") << name << e;
       }
 
@@ -2689,7 +2689,7 @@ wxString AudioIO::GetDeviceInfo()
       s << wxT("Available playback volumes:") << e;
       cnt = Px_GetNumOutputVolumes(PortMixer);
       for (int i = 0; i < cnt; i++) {
-         wxString name(Px_GetOutputVolumeName(PortMixer, i), wxConvLocal);
+         wxString name = wxSafeConvertMB2WX(Px_GetOutputVolumeName(PortMixer, i));
          s << i << wxT(" - ") << name << e;
       }
 

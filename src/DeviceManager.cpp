@@ -70,7 +70,7 @@ wxString MakeDeviceSourceString(const DeviceSourceMap *map)
    wxString ret;
    ret = map->deviceString;
    if (map->totalSources > 1)
-      ret += wxString(": ", wxConvLocal) + map->sourceString;
+      ret += wxT(": ") + map->sourceString;
 
    return ret;
 }
@@ -120,8 +120,8 @@ static int DummyPaStreamCallback(
 
 static void FillHostDeviceInfo(DeviceSourceMap *map, const PaDeviceInfo *info, int deviceIndex, int isInput)
 {
-   wxString hostapiName(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
-   wxString infoName(info->name, wxConvLocal);
+   wxString hostapiName = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
+   wxString infoName = wxSafeConvertMB2WX(info->name);
 
    map->deviceIndex  = deviceIndex;
    map->hostIndex    = info->hostApi;
@@ -166,7 +166,7 @@ static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std:
       //open up a stream with the device so portmixer can get the info out of it.
       for (i = 0; i < map.totalSources; i++) {
          map.sourceIndex  = i;
-         map.sourceString = wxString(Px_GetInputSourceName(portMixer, i), wxConvLocal);
+         map.sourceString = wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(portMixer, i)));
          maps->push_back(map);
       }
    }
@@ -245,7 +245,7 @@ static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap> *
    if(error) {
       wxLogDebug(wxT("PortAudio stream error creating device list: ") +
                  map.hostString + wxT(":") + map.deviceString + wxT(": ") +
-                 wxString(Pa_GetErrorText( (PaError)error), wxConvLocal));
+                 wxString(wxSafeConvertMB2WX(Pa_GetErrorText((PaError)error))));
    }
 }
 

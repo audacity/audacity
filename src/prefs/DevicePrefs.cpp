@@ -92,7 +92,7 @@ void DevicePrefs::GetNamesAndLabels()
    for (int i = 0; i < nDevices; i++) {
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if (info->maxOutputChannels > 0 || info->maxInputChannels > 0) {
-         wxString name(Pa_GetHostApiInfo(info->hostApi)->name, wxConvLocal);
+         wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
          if (mHostNames.Index(name) == wxNOT_FOUND) {
             mHostNames.Add(name);
             mHostLabels.Add(name);
@@ -120,7 +120,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
          S.SetSizeHints(mHostNames);
 
          S.AddPrompt(_("Using:"));
-         S.AddFixedText(wxString(Pa_GetVersionText(), wxConvLocal));
+         S.AddFixedText(wxString(wxSafeConvertMB2WX(Pa_GetVersionText())));
       }
       S.EndMultiColumn();
    }
@@ -169,7 +169,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
    wxString apiName = mHostNames[mHost->GetCurrentSelection()];
    int nHosts = Pa_GetHostApiCount();
    for (int i = 0; i < nHosts; ++i) {
-      wxString name(Pa_GetHostApiInfo(i)->name, wxConvLocal);
+      wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(i)->name);
       if (name == apiName) {
          index = i;
          break;
@@ -201,7 +201,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
 
    recDevice = mRecordDevice;
    if (this->mRecordSource != wxT(""))
-      recDevice += wxString(": ", wxConvLocal) + mRecordSource;
+      recDevice += wxT(": ") + mRecordSource;
 
    mRecord->Clear();
    for (i = 0; i < inMaps.size(); i++) {

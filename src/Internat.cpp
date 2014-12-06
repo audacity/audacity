@@ -45,7 +45,7 @@ void Internat::Init()
    // Save decimal point character
    struct lconv * localeInfo = localeconv();
    if (localeInfo)
-      mDecimalSeparator = wxString(localeInfo->decimal_point, wxConvLocal).GetChar(0);
+      mDecimalSeparator = wxString(wxSafeConvertMB2WX(localeInfo->decimal_point)).GetChar(0);
 
 //   wxLogDebug(wxT("Decimal separator set to '%c'"), mDecimalSeparator);
 
