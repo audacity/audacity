@@ -202,6 +202,11 @@ class ExportCLProcess : public wxProcess
 public:
    ExportCLProcess(wxString *output)
    {
+#if defined(__WXMAC__)
+      // Don't want to crash on broken pipe
+      signal(SIGPIPE, SIG_IGN);
+#endif
+
       mOutput = output;
       mActive = true;
       mStatus = -555;
@@ -359,6 +364,7 @@ int ExportCL::Export(AudacityProject *project,
                                     fName.c_str()));
       p->Detach();
       p->CloseOutput();
+
       return false;
    }
 
