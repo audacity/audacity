@@ -834,6 +834,9 @@
     <ClCompile Include="..\..\..\src\effects\NoiseReduction.cpp">
       <Filter>src/effects</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\DeviceChange.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1661,7 +1664,12 @@
     <ClInclude Include="..\..\..\src\effects\NoiseReduction.h">
       <Filter>src/effects</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\AudioIOListener.h" />
+    <ClInclude Include="..\..\..\src\DeviceChange.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AudioIOListener.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">

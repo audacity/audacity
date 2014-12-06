@@ -116,6 +116,8 @@ audacity_SOURCES = \
 	CaptureEvents.h \
 	Dependencies.cpp \
 	Dependencies.h \
+	DeviceChange.cpp \
+	DeviceChange.h \
 	DeviceManager.cpp \
 	DeviceManager.h \
 	Envelope.cpp \

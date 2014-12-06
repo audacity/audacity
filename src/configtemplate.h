@@ -53,6 +53,9 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define to 1 if you have the <libudev.h> header file. */
+#undef HAVE_LIBUDEV_H
+
 /* Define if you have C99's lrint function. */
 #undef HAVE_LRINT
 

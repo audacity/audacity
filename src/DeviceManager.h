@@ -21,6 +21,10 @@
 #include <vector>
 #include "wx/wx.h"
 
+#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+#include "DeviceChange.h"
+#endif
+
 typedef struct DeviceSourceMap {
    int deviceIndex;
    int sourceIndex;
@@ -35,6 +39,11 @@ typedef struct DeviceSourceMap {
 wxString MakeDeviceSourceString(const DeviceSourceMap *map);
 
 class DeviceManager
+#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+#if defined(HAVE_DEVICE_CHANGE)
+:  public DeviceChangeHandler
+#endif
+#endif
 {
  public:
    /// Gets the singleton instance
@@ -53,7 +62,14 @@ class DeviceManager
    const std::vector<DeviceSourceMap> &GetInputDeviceMaps();
    const std::vector<DeviceSourceMap> &GetOutputDeviceMaps();
 
-  protected:
+#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+#if defined(HAVE_DEVICE_CHANGE)
+   // DeviceChangeHandler implementation
+   void DeviceChangeNotification();
+#endif
+#endif
+
+ protected:
    //private constructor - Singleton.
    DeviceManager();
    virtual ~DeviceManager();

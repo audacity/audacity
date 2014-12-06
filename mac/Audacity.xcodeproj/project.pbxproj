@@ -937,6 +937,7 @@
 		28BD8AB4101DF4C700686679 /* GetAllMenuCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAE101DF4C600686679 /* GetAllMenuCommands.cpp */; };
 		28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */; };
 		28CCDD000F939FD70081F2FC /* FileHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */; };
+		28D000A51A32920C00367B21 /* DeviceChange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D000A31A32920C00367B21 /* DeviceChange.cpp */; };
 		28D540050FD1912A00FA7C75 /* AppCommandEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D53FFA0FD1912A00FA7C75 /* AppCommandEvent.cpp */; };
 		28D540060FD1912A00FA7C75 /* CommandBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D53FFE0FD1912A00FA7C75 /* CommandBuilder.cpp */; };
 		28D540070FD1912A00FA7C75 /* CommandHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D540000FD1912A00FA7C75 /* CommandHandler.cpp */; };
@@ -3697,6 +3698,8 @@
 		28C3946C1818356800FDDAC9 /* AudacityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityLogger.h; sourceTree = "<group>"; };
 		28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FileHistory.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28CCDD040F93A0B20081F2FC /* FileHistory.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileHistory.h; sourceTree = "<group>"; tabWidth = 3; };
+		28D000A31A32920C00367B21 /* DeviceChange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceChange.cpp; sourceTree = "<group>"; };
+		28D000A41A32920C00367B21 /* DeviceChange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceChange.h; sourceTree = "<group>"; };
 		28D53FFA0FD1912A00FA7C75 /* AppCommandEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = AppCommandEvent.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28D53FFB0FD1912A00FA7C75 /* AppCommandEvent.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = AppCommandEvent.h; sourceTree = "<group>"; tabWidth = 3; };
 		28D53FFC0FD1912A00FA7C75 /* BatchEvalCommand.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = BatchEvalCommand.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -4961,7 +4964,6 @@
 		1790AFC409883BFD008A330A /* src */ = {
 			isa = PBXGroup;
 			children = (
-				28F996D91A2A9261008FEEF3 /* AudioIOListener.h */,
 				1790AFDC09883BFD008A330A /* blockfile */,
 				174D9025098C78AF00D5909F /* commands */,
 				1790AFFD09883BFD008A330A /* effects */,
@@ -4985,6 +4987,7 @@
 				28C3946C1818356800FDDAC9 /* AudacityLogger.h */,
 				1790AFD209883BFD008A330A /* AudioIO.cpp */,
 				1790AFD309883BFD008A330A /* AudioIO.h */,
+				28F996D91A2A9261008FEEF3 /* AudioIOListener.h */,
 				28560C8F0A75E40F00A3429E /* AutoRecovery.cpp */,
 				28560C900A75E40F00A3429E /* AutoRecovery.h */,
 				1790AFD409883BFD008A330A /* BatchCommandDialog.cpp */,
@@ -5003,6 +5006,8 @@
 				1790AFF509883BFD008A330A /* CrossFade.h */,
 				2849B4600A7444BE00ECF12D /* Dependencies.cpp */,
 				2849B4610A7444BE00ECF12D /* Dependencies.h */,
+				28D000A31A32920C00367B21 /* DeviceChange.cpp */,
+				28D000A41A32920C00367B21 /* DeviceChange.h */,
 				8484F31213086237002DF7F0 /* DeviceManager.cpp */,
 				8484F31313086237002DF7F0 /* DeviceManager.h */,
 				1790AFF709883BFD008A330A /* DirManager.cpp */,
@@ -9155,6 +9160,7 @@
 				28001B4B1A0F0EB6007DD161 /* SpectralSelectionBar.cpp in Sources */,
 				28BB98051A15BE6800D1CC80 /* NoiseReduction.cpp in Sources */,
 				28285C801A27A81600BC2205 /* AudioUnitCocoaHelper.mm in Sources */,
+				28D000A51A32920C00367B21 /* DeviceChange.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

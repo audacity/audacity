@@ -33,6 +33,7 @@
 
 #include "AudioIO.h"
 
+#include "DeviceChange.h"
 #include "DeviceManager.h"
 #include "toolbars/DeviceToolBar.h"
 
@@ -311,6 +312,11 @@ void DeviceManager::Rescan()
 
 //private constructor - Singleton.
 DeviceManager::DeviceManager()
+#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+#if defined(HAVE_DEVICE_CHANGE)
+:  DeviceChangeHandler()
+#endif
+#endif
 {
    m_inited = false;
 }
@@ -323,4 +329,20 @@ DeviceManager::~DeviceManager()
 void DeviceManager::Init()
 {
     Rescan();
+
+#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+#if defined(HAVE_DEVICE_CHANGE)
+   DeviceChangeHandler::Enable(true);
+#endif
+#endif
 }
+
+#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+#if defined(HAVE_DEVICE_CHANGE)
+void DeviceManager::DeviceChangeNotification()
+{
+   Rescan();
+   return;
+}
+#endif
+#endif

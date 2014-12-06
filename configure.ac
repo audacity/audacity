@@ -606,6 +606,8 @@ case "${host_os}" in
       dnl Unix configuration
       CONFIGHEADER="configunix.h"
 
+      AC_CHECK_HEADERS_ONCE(libudev.h)
+
       dnl On Unix we always use dlopen
       AC_SEARCH_LIBS([dlopen], [dl])
       if [[ "$ac_cv_search_dlopen" = no ]]; then
@@ -657,6 +659,9 @@ case "${host_os}" in
       AC_CHECK_LIB(rt, clock_gettime, [rt_libs=" -lrt"])
       LIBS="${LIBS}${rt_libs}"
       AC_CHECK_FUNCS([clock_gettime nanosleep])
+
+      AC_CHECK_LIB(udev, udev_new, [udev_libs=" -ludev"])
+      LIBS="${LIBS}${udev_libs}"
       ;;
 esac
 

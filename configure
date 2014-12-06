@@ -2813,6 +2813,7 @@ fi
 
 gt_needs="$gt_needs "
 as_fn_append ac_header_list " alloca.h"
+as_fn_append ac_header_list " libudev.h"
 # Check that the precious variables saved in the cache have kept the same
 # value.
 ac_cache_corrupted=false
@@ -23541,6 +23542,10 @@ $as_echo "#define _FILE_OFFSET_BITS 32" >>confdefs.h
    *)
             CONFIGHEADER="configunix.h"
 
+
+
+
+
             { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing dlopen" >&5
 $as_echo_n "checking for library containing dlopen... " >&6; }
 if ${ac_cv_search_dlopen+:} false; then :
@@ -24040,6 +24045,48 @@ _ACEOF
 fi
 done
 
+
+      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for udev_new in -ludev" >&5
+$as_echo_n "checking for udev_new in -ludev... " >&6; }
+if ${ac_cv_lib_udev_udev_new+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ludev  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char udev_new ();
+int
+main ()
+{
+return udev_new ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_udev_udev_new=yes
+else
+  ac_cv_lib_udev_udev_new=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_udev_udev_new" >&5
+$as_echo "$ac_cv_lib_udev_udev_new" >&6; }
+if test "x$ac_cv_lib_udev_udev_new" = xyes; then :
+  udev_libs=" -ludev"
+fi
+
+      LIBS="${LIBS}${udev_libs}"
       ;;
 esac
 

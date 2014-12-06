@@ -287,18 +287,19 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	BatchCommandDialog.h BatchCommands.cpp BatchCommands.h \
 	BatchProcessDialog.cpp BatchProcessDialog.h Benchmark.cpp \
 	Benchmark.h CaptureEvents.cpp CaptureEvents.h Dependencies.cpp \
-	Dependencies.h DeviceManager.cpp DeviceManager.h Envelope.cpp \
-	Envelope.h Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h \
-	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
-	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
-	HistoryWindow.cpp HistoryWindow.h ImageManipulation.cpp \
-	ImageManipulation.h InterpolateAudio.cpp InterpolateAudio.h \
-	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
-	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
-	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
-	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h Menus.cpp \
-	Menus.h Mix.cpp Mix.h MixerBoard.cpp MixerBoard.h \
-	ModuleManager.cpp ModuleManager.h PitchName.cpp PitchName.h \
+	Dependencies.h DeviceChange.cpp DeviceChange.h \
+	DeviceManager.cpp DeviceManager.h Envelope.cpp Envelope.h \
+	Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h FileIO.cpp \
+	FileIO.h FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
+	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
+	HistoryWindow.h ImageManipulation.cpp ImageManipulation.h \
+	InterpolateAudio.cpp InterpolateAudio.h LabelDialog.cpp \
+	LabelDialog.h LabelTrack.cpp LabelTrack.h LangChoice.cpp \
+	LangChoice.h Languages.cpp Languages.h Legacy.cpp Legacy.h \
+	Lyrics.cpp Lyrics.h LyricsWindow.cpp LyricsWindow.h \
+	MacroMagic.h Matrix.cpp Matrix.h Menus.cpp Menus.h Mix.cpp \
+	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	ModuleManager.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
 	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
@@ -525,6 +526,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-BatchProcessDialog.$(OBJEXT) \
 	audacity-Benchmark.$(OBJEXT) audacity-CaptureEvents.$(OBJEXT) \
 	audacity-Dependencies.$(OBJEXT) \
+	audacity-DeviceChange.$(OBJEXT) \
 	audacity-DeviceManager.$(OBJEXT) audacity-Envelope.$(OBJEXT) \
 	audacity-FFmpeg.$(OBJEXT) audacity-FFT.$(OBJEXT) \
 	audacity-FileIO.$(OBJEXT) audacity-FileNames.$(OBJEXT) \
@@ -1154,18 +1156,19 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	BatchCommandDialog.h BatchCommands.cpp BatchCommands.h \
 	BatchProcessDialog.cpp BatchProcessDialog.h Benchmark.cpp \
 	Benchmark.h CaptureEvents.cpp CaptureEvents.h Dependencies.cpp \
-	Dependencies.h DeviceManager.cpp DeviceManager.h Envelope.cpp \
-	Envelope.h Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h \
-	FileIO.cpp FileIO.h FileNames.cpp FileNames.h float_cast.h \
-	FreqWindow.cpp FreqWindow.h HelpText.cpp HelpText.h \
-	HistoryWindow.cpp HistoryWindow.h ImageManipulation.cpp \
-	ImageManipulation.h InterpolateAudio.cpp InterpolateAudio.h \
-	LabelDialog.cpp LabelDialog.h LabelTrack.cpp LabelTrack.h \
-	LangChoice.cpp LangChoice.h Languages.cpp Languages.h \
-	Legacy.cpp Legacy.h Lyrics.cpp Lyrics.h LyricsWindow.cpp \
-	LyricsWindow.h MacroMagic.h Matrix.cpp Matrix.h Menus.cpp \
-	Menus.h Mix.cpp Mix.h MixerBoard.cpp MixerBoard.h \
-	ModuleManager.cpp ModuleManager.h PitchName.cpp PitchName.h \
+	Dependencies.h DeviceChange.cpp DeviceChange.h \
+	DeviceManager.cpp DeviceManager.h Envelope.cpp Envelope.h \
+	Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h FileIO.cpp \
+	FileIO.h FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
+	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
+	HistoryWindow.h ImageManipulation.cpp ImageManipulation.h \
+	InterpolateAudio.cpp InterpolateAudio.h LabelDialog.cpp \
+	LabelDialog.h LabelTrack.cpp LabelTrack.h LangChoice.cpp \
+	LangChoice.h Languages.cpp Languages.h Legacy.cpp Legacy.h \
+	Lyrics.cpp Lyrics.h LyricsWindow.cpp LyricsWindow.h \
+	MacroMagic.h Matrix.cpp Matrix.h Menus.cpp Menus.h Mix.cpp \
+	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
+	ModuleManager.h PitchName.cpp PitchName.h \
 	PlatformCompatibility.cpp PlatformCompatibility.h \
 	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
 	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
@@ -1984,6 +1987,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-BlockFile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-CaptureEvents.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Dependencies.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-DeviceChange.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-DeviceManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-DirManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Dither.Po@am__quote@
@@ -2771,6 +2775,20 @@ audacity-Dependencies.obj: Dependencies.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Dependencies.cpp' object='audacity-Dependencies.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Dependencies.obj `if test -f 'Dependencies.cpp'; then $(CYGPATH_W) 'Dependencies.cpp'; else $(CYGPATH_W) '$(srcdir)/Dependencies.cpp'; fi`
+
+audacity-DeviceChange.o: DeviceChange.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-DeviceChange.o -MD -MP -MF $(DEPDIR)/audacity-DeviceChange.Tpo -c -o audacity-DeviceChange.o `test -f 'DeviceChange.cpp' || echo '$(srcdir)/'`DeviceChange.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-DeviceChange.Tpo $(DEPDIR)/audacity-DeviceChange.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DeviceChange.cpp' object='audacity-DeviceChange.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-DeviceChange.o `test -f 'DeviceChange.cpp' || echo '$(srcdir)/'`DeviceChange.cpp
+
+audacity-DeviceChange.obj: DeviceChange.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-DeviceChange.obj -MD -MP -MF $(DEPDIR)/audacity-DeviceChange.Tpo -c -o audacity-DeviceChange.obj `if test -f 'DeviceChange.cpp'; then $(CYGPATH_W) 'DeviceChange.cpp'; else $(CYGPATH_W) '$(srcdir)/DeviceChange.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-DeviceChange.Tpo $(DEPDIR)/audacity-DeviceChange.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DeviceChange.cpp' object='audacity-DeviceChange.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-DeviceChange.obj `if test -f 'DeviceChange.cpp'; then $(CYGPATH_W) 'DeviceChange.cpp'; else $(CYGPATH_W) '$(srcdir)/DeviceChange.cpp'; fi`
 
 audacity-DeviceManager.o: DeviceManager.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-DeviceManager.o -MD -MP -MF $(DEPDIR)/audacity-DeviceManager.Tpo -c -o audacity-DeviceManager.o `test -f 'DeviceManager.cpp' || echo '$(srcdir)/'`DeviceManager.cpp

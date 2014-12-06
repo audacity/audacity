@@ -191,6 +191,8 @@
 // Define to make the meters look like a row of LEDs
 //#define EXPERIMENTAL_METER_LED_STYLE
 
+// Define to enable the device change handler
+//#define EXPERIMENTAL_DEVICE_CHANGE_HANDLER
 
 // Define for new noise reduction effect from Paul Licameli.
 #define EXPERIMENTAL_NOISE_REDUCTION
