@@ -27,14 +27,14 @@ FileIO::FileIO(const wxString name, FileIOMode mode)
 
       if (mMode == FileIO::Input) {
          mInputStream = new wxFFileInputStream(mName);
-         if (mInputStream == NULL) {
+         if (mInputStream == NULL || !mInputStream->IsOk()) {
             wxPrintf(wxT("Couldn't get input stream: %s\n"), name.c_str());
             return;
          }
       }
       else {
          mOutputStream = new wxFFileOutputStream(mName);
-         if (mOutputStream == NULL) {
+         if (mOutputStream == NULL || !mOutputStream->IsOk()) {
             wxPrintf(wxT("Couldn't get output stream: %s\n"), name.c_str());
             return;
          }
