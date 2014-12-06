@@ -134,59 +134,28 @@ const char *PaMacCore_GetChannelName( int device, int channelIndex, bool input )
       return NULL;
    PaMacAUHAL *macCoreHostApi = (PaMacAUHAL*)hostApi;
    AudioDeviceID hostApiDevice = macCoreHostApi->devIds[device];
+	CFStringRef nameRef;
 
-   UInt32 size = 0;
-
-   error = AudioDeviceGetPropertyInfo( hostApiDevice,
-                                       channelIndex + 1,
-                                       input,
-                                       kAudioDevicePropertyChannelName,
-                                       &size,
-                                       NULL );
-   if( error ) {
-      //try the CFString
-      CFStringRef name;
-      bool isDeviceName = false;
-      size = sizeof( name );
+	/* First try with CFString */
+	UInt32 size = sizeof(nameRef);
       error = AudioDeviceGetProperty( hostApiDevice,
                                       channelIndex + 1,
                                       input,
                                       kAudioDevicePropertyChannelNameCFString,
                                       &size,
-                                      &name );
-      if( error ) { //as a last-ditch effort, get the device name. Later we'll append the channel number.
-         size = sizeof( name );
-         error = AudioDeviceGetProperty( hostApiDevice,
+								   &nameRef );
+	if( error )
+	{
+		/* try the C String */
+		size = 0;
+		error = AudioDeviceGetPropertyInfo( hostApiDevice,
                                       channelIndex + 1,
                                       input,
-                                      kAudioDevicePropertyDeviceNameCFString,
+										   kAudioDevicePropertyChannelName,
                                       &size,
-                                      &name );
-         if( error )
-            return NULL;
-         isDeviceName = true;
-      }
-      if( isDeviceName ) {
-         name = CFStringCreateWithFormat( NULL, NULL, CFSTR( "%@: %d"), name, channelIndex + 1 );
-      }
-
-      CFIndex length = CFStringGetLength(name);
-      while( ensureChannelNameSize( length * sizeof(UniChar) + 1 ) ) {
-         if( CFStringGetCString( name, channelName, channelNameSize, kCFStringEncodingUTF8 ) ) {
-            if( isDeviceName )
-               CFRelease( name );
-            return channelName;
-         }
-         if( length == 0 )
-            ++length;
-         length *= 2;
-      }
-      if( isDeviceName )
-         CFRelease( name );
-      return NULL;
-   }
-
-   //continue with C string:
+										   NULL);
+		if( !error )
+		{
    if( !ensureChannelNameSize( size ) )
       return NULL;
 
@@ -197,10 +166,36 @@ const char *PaMacCore_GetChannelName( int device, int channelIndex, bool input )
                                    &size,
                                    channelName );
 
-   if( error ) {
-      ERR( error );
+			
+			if( !error )
+				return channelName;
+		}
+		
+		/* as a last-ditch effort, we use the device name and append the channel number. */
+		nameRef = CFStringCreateWithFormat( NULL, NULL, CFSTR( "%s: %d"), hostApi->deviceInfos[device]->name, channelIndex + 1 );
+		
+		
+		size = CFStringGetMaximumSizeForEncoding(CFStringGetLength(nameRef), kCFStringEncodingUTF8);;
+		if( !ensureChannelNameSize( size ) )
+		{
+			CFRelease( nameRef );
+			return NULL;
+		}
+		CFStringGetCString( nameRef, channelName, size+1, kCFStringEncodingUTF8 );
+		CFRelease( nameRef );
+	}
+	else
+	{
+		size = CFStringGetMaximumSizeForEncoding(CFStringGetLength(nameRef), kCFStringEncodingUTF8);;
+		if( !ensureChannelNameSize( size ) )
+		{
+			CFRelease( nameRef );
       return NULL;
    }
+		CFStringGetCString( nameRef, channelName, size+1, kCFStringEncodingUTF8 );
+		CFRelease( nameRef );
+	}
+	
    return channelName;
 }
 
@@ -312,7 +307,7 @@ static PaError OpenAndSetupOneAudioUnit(
 
 /* for setting errors. */
 #define PA_AUHAL_SET_LAST_HOST_ERROR( errorCode, errorText ) \
-    PaUtil_SetLastHostErrorInfo( paInDevelopment, errorCode, errorText )
+    PaUtil_SetLastHostErrorInfo( paCoreAudio, errorCode, errorText )
 
 /*
  * Callback called when starting or stopping a stream.
@@ -657,6 +652,7 @@ static PaError InitializeDeviceInfo( PaMacAUHAL *auhalHostApi,
     Float64 sampleRate;
     char *name;
     PaError err = paNoError;
+	CFStringRef nameRef;
     UInt32 propSize;
 
     VVDBUG(("InitializeDeviceInfo(): macCoreDeviceId=%ld\n", macCoreDeviceId));
@@ -666,17 +662,36 @@ static PaError InitializeDeviceInfo( PaMacAUHAL *auhalHostApi,
     deviceInfo->structVersion = 2;
     deviceInfo->hostApi = hostApiIndex;
 
-    /* Get the device name.  Fail if we can't get it. */
+    /* Get the device name using CFString */
+	propSize = sizeof(nameRef);
+    err = ERR(AudioDeviceGetProperty(macCoreDeviceId, 0, 0, kAudioDevicePropertyDeviceNameCFString, &propSize, &nameRef));
+    if (err)
+    {
+		/* Get the device name using c string.  Fail if we can't get it. */
     err = ERR(AudioDeviceGetPropertyInfo(macCoreDeviceId, 0, 0, kAudioDevicePropertyDeviceName, &propSize, NULL));
     if (err)
         return err;
 
-    name = PaUtil_GroupAllocateMemory(auhalHostApi->allocations,propSize);
+		name = PaUtil_GroupAllocateMemory(auhalHostApi->allocations,propSize+1);
     if ( !name )
         return paInsufficientMemory;
     err = ERR(AudioDeviceGetProperty(macCoreDeviceId, 0, 0, kAudioDevicePropertyDeviceName, &propSize, name));
     if (err)
         return err;
+	}
+	else
+	{
+		/* valid CFString so we just allocate a c string big enough to contain the data */
+		propSize = CFStringGetMaximumSizeForEncoding(CFStringGetLength(nameRef), kCFStringEncodingUTF8);
+		name = PaUtil_GroupAllocateMemory(auhalHostApi->allocations, propSize+1);
+		if ( !name )
+		{
+			CFRelease(nameRef);
+			return paInsufficientMemory;
+		}
+		CFStringGetCString(nameRef, name, propSize+1, kCFStringEncodingUTF8);
+		CFRelease(nameRef);
+	}
     deviceInfo->name = name;
 
     /* Try to get the default sample rate.  Don't fail if we can't get this. */
