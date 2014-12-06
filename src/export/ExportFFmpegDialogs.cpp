@@ -471,7 +471,6 @@ void FFmpegPresets::DeletePreset(wxString &name)
       if (!preset->mPresetName->CmpNoCase(name))
       {
          mPresets->erase(iter);
-         delete preset;
          break;
       }
    }
