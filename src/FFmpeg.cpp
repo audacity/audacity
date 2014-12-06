@@ -225,12 +225,12 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 
    f = new wxFile;
    if (!f) {
-      return ENOMEM;
+      return -ENOMEM;
    }
 
    if (flags == (AVIO_FLAG_READ | AVIO_FLAG_WRITE)) {
       delete f;
-      return EINVAL;
+      return -EINVAL;
    } else if (flags == AVIO_FLAG_WRITE) {
       mode = wxFile::write;
    } else {
@@ -239,7 +239,7 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
 
    if (!f->Open(name, mode)) {
       delete f;
-      return ENOENT;
+      return -ENOENT;
    }
 
    *s = avio_alloc_context((unsigned char*)av_malloc(32768), 32768,
@@ -250,7 +250,7 @@ int ufile_fopen(AVIOContext **s, const wxString & name, int flags)
                            ufile_seek);
    if (!*s) {
       delete f;
-      return ENOMEM;
+      return -ENOMEM;
    }
 
    return 0;
