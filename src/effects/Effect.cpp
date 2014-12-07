@@ -175,7 +175,30 @@ wxString Effect::GetName()
       return mClient->GetName();
    }
 
-   return GetEffectIdentifier();
+   // Break up identifier into words based on caps
+   //
+   // EffectManager::GetEffectIdentifier() CamelCases identifiers based on
+   // blank delimited words.  But not all legacy effects have blank delimted
+   // words and were manually CamelCased.  So use that to break up the ident
+   // into words
+   //
+   // This is only temporary and will go away when the legacy effects
+   // get converted.
+   //
+   wxString ident = GetEffectIdentifier();
+   wxString name;
+
+   for (size_t i = 0, cnt = ident.Len(); i < cnt; i++)
+   {
+      wxChar c = ident.GetChar(i);
+      if (wxIsupper(c) && i != 0)
+      {
+         name += wxT(' ');
+      }
+      name += c;
+   }
+   
+   return name;
 }
 
 wxString Effect::GetVendor()

@@ -40,6 +40,11 @@ public:
    virtual bool Init();
    virtual void End();
    virtual bool CheckWhetherSkipEffect();
+
+   virtual bool PromptUser() {
+      return true;
+   }
+
  protected:
     virtual bool Process();
 
