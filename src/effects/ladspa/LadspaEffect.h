@@ -175,7 +175,6 @@ private:
 
    // Realtime processing
    LadspaSlaveArray mSlaves;
-   wxArrayInt mSlaveChannels;
 
    EffectUIHostInterface *mUIHost;
    LadspaEffectEventHelper *mEventHelper;

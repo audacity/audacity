@@ -1010,7 +1010,6 @@ bool LadspaEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
    }
 
    mSlaves.Add(slave);
-   mSlaveChannels.Add(numChannels);
 
    return true;
 }
