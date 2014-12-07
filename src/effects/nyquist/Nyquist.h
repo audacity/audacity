@@ -28,8 +28,8 @@
 
 #include <string>
 
-#define NYQUISTEFFECTS_VERSION wxT("1.0.0.0");
-#define NYQUISTEFFECTS_FAMILY L"Nyquist"
+#define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
+#define NYQUISTEFFECTS_FAMILY wxT("Nyquist")
 
 class NyqControl
 {

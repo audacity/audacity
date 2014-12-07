@@ -24,8 +24,8 @@ class wxCheckBox;
 #include "../Effect.h"
 #include "LV2PortGroup.h"
 
-#define LV2EFFECTS_VERSION wxT("1.0.0.0");
-#define LV2EFFECTS_FAMILY L"LV2"
+#define LV2EFFECTS_VERSION wxT("1.0.0.0")
+#define LV2EFFECTS_FAMILY wxT("LV2")
 
 /** A structure that contains information about a single LV2 plugin port. */
 struct LV2Port

@@ -24,8 +24,8 @@ class wxComboBox;
 
 #include <vamp-hostsdk/PluginLoader.h>
 
-#define VAMPEFFECTS_VERSION wxT("1.0.0.0");
-#define VAMPEFFECTS_FAMILY L"Vamp"
+#define VAMPEFFECTS_VERSION wxT("1.0.0.0")
+#define VAMPEFFECTS_FAMILY wxT("Vamp")
 
 class VampEffect : public Effect {
 

@@ -98,7 +98,7 @@ LadspaEffectsModule::~LadspaEffectsModule()
 wxString LadspaEffectsModule::GetID()
 {
    // Can be anything, but this is a v4 UUID
-   return L"3ebd9fb9-c020-4c0d-a786-d6a914e55e31";
+   return wxT("3ebd9fb9-c020-4c0d-a786-d6a914e55e31");
 }
 
 wxString LadspaEffectsModule::GetPath()

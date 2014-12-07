@@ -25,8 +25,8 @@
 #include "audacity/ModuleInterface.h"
 #include "audacity/PluginInterface.h"
 
-#define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0");
-#define AUDIOUNITEFFECTS_FAMILY L"AudioUnit"
+#define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
+#define AUDIOUNITEFFECTS_FAMILY wxT("AudioUnit")
 
 class AudioUnitEffect;
 

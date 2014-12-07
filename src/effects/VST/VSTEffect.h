@@ -20,8 +20,8 @@
 
 #include "aeffectx.h"
 
-#define VSTCMDKEY L"-checkvst"
-#define VSTPLUGINTYPE L"VST"
+#define VSTCMDKEY wxT("-checkvst")
+#define VSTPLUGINTYPE wxT("VST")
 
 #define audacityVSTID CCONST('a', 'u', 'D', 'y');
 
