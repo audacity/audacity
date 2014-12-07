@@ -538,6 +538,7 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
    mNumInputControls = 0;
    mNumOutputControls = 0;
    mSampleRate = 44100;
+   mBlockSize = 0;
 
    mInputPorts = NULL;
    mOutputPorts = NULL;
@@ -876,6 +877,8 @@ void LadspaEffect::SetSampleRate(sampleCount rate)
 
 sampleCount LadspaEffect::GetBlockSize(sampleCount maxBlockSize)
 {
+   mBlockSize = maxBlockSize;
+
    return mBlockSize;
 }
 
