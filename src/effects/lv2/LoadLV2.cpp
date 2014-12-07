@@ -320,7 +320,7 @@ bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
 bool LV2EffectsModule::IsPluginValid(const PluginID & ID,
                                      const wxString & path)
 {
-   LilvNode *uri = lilv_new_uri(gWorld, path.ToUTF8());
+   LilvNode *uri = lilv_new_uri(gWorld, ID.ToUTF8());
    const LilvPlugin *plugin = lilv_plugins_get_by_uri(lilv_world_get_all_plugins(gWorld), uri);
    lilv_node_free(uri);
 
