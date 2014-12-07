@@ -2002,6 +2002,11 @@ bool VSTEffect::GetAutomationParameters(EffectAutomationParameters & parms)
    for (int i = 0; i < mAEffect->numParams; i++)
    {
       wxString name = GetString(effGetParamName, i);
+      if (name.IsEmpty())
+      {
+         name.Printf(wxT("parm_%d"), i);
+      }
+
       float value = callGetParameter(i);
       if (!parms.Write(name, value))
       {
@@ -2017,6 +2022,11 @@ bool VSTEffect::SetAutomationParameters(EffectAutomationParameters & parms)
    for (int i = 0; i < mAEffect->numParams; i++)
    {
       wxString name = GetString(effGetParamName, i);
+      if (name.IsEmpty())
+      {
+         name.Printf(wxT("parm_%d"), i);
+      }
+
       double d = 0.0;
       if (!parms.Read(name, &d))
       {

@@ -11,6 +11,7 @@
 
 #include "../Audacity.h"
 
+#include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/stopwatch.h>
 #include <wx/tokenzr.h>
@@ -729,6 +730,7 @@ const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
    {
+wxLogDebug(wxT("id %s --- %s"), plug->GetID(), strTarget);
       if (GetEffectIdentifier(plug->GetID()).IsSameAs(strTarget))
       {
          return plug->GetID();
