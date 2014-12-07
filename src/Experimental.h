@@ -196,4 +196,8 @@
 
 // Define for new noise reduction effect from Paul Licameli.
 #define EXPERIMENTAL_NOISE_REDUCTION
+
+// Define to enable Nyquist audio clip boundary control (Steve Daulton Dec 2014)
+// #define EXPERIMENTAL_NYQUIST_SPLIT_CONTROL
+
 #endif
