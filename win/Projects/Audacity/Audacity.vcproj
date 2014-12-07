@@ -2551,7 +2551,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\nyquist\system.lsp"
+				RelativePath="..\..\..\lib-src\libnyquist\nyquist\sys\win\msvc\system.lsp"
 				>
 			</File>
 			<File

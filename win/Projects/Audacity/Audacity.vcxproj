@@ -1200,7 +1200,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='wx3-Release|Win32'">..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="..\..\..\nyquist\system.lsp">
+    <CustomBuild Include="..\..\..\lib-src\libnyquist\nyquist\sys\win\msvc\system.lsp">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='wx3-Debug|Win32'">copy /Y %(Identity) ..\..\$(IntDir)\Nyquist\%(Filename)%(Extension)</Command>
