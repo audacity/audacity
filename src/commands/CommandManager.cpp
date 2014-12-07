@@ -418,29 +418,14 @@ void CommandManager::InsertItem(wxString name, wxString label_in,
 
    int ID = NewIdentifier(name, label, menu, callback, false, 0, 0);
 
-   // Replace the accel key with the one from the preferences
-   label = label.BeforeFirst(wxT('\t'));
-
-   // This is a very weird hack.  Under GTK, menu labels are totally
-   // linked to accelerators the first time you create a menu item
-   // with that label and can't be changed.  This causes all sorts of
-   // problems.  As a workaround, we create each menu item with a
-   // made-up name (just an ID number string) but with the accelerator
-   // we want, then immediately change the label to the correct string.
-   // -DMM
-   mHiddenID++;
-   wxString dummy, newLabel;
-   dummy.Printf(wxT("%s%08d"), label.c_str(), mHiddenID);
-   newLabel = label;
-
    if (checkmark >= 0) {
-      menu->InsertCheckItem(pos, ID, dummy);
+      menu->InsertCheckItem(pos, ID, label);
       menu->Check(ID, checkmark != 0);
    }
    else {
-      menu->Insert(pos, ID, dummy);
+      menu->Insert(pos, ID, label);
    }
-   menu->SetLabel(ID, newLabel);
+//   menu->SetLabel(ID, newLabel);
 
    mbSeparatorAllowed = true;
 }
@@ -495,28 +480,14 @@ void CommandManager::AddItem(const wxChar *name,
       SetCommandFlags(name, flags, mask);
    }
 
-   // Replace the accel key with the one from the preferences
-   label = label.BeforeFirst(wxT('\t'));
-
-   // This is a very weird hack.  Under GTK, menu labels are totally
-   // linked to accelerators the first time you create a menu item
-   // with that label and can't be changed.  This causes all sorts of
-   // problems.  As a workaround, we create each menu item with a
-   // made-up name (just an ID number string) but with the accelerator
-   // we want, then immediately change the label to the correct string.
-   // -DMM
-   wxString newLabel;
-   newLabel.Printf(wxT("%s%08d"), label.c_str(), ++mHiddenID);
-
    if (checkmark >= 0) {
-      CurrentMenu()->AppendCheckItem(ID, newLabel);
+      CurrentMenu()->AppendCheckItem(ID, label);
       CurrentMenu()->Check(ID, checkmark != 0);
    }
    else {
-      CurrentMenu()->Append(ID, newLabel);
+      CurrentMenu()->Append(ID, label);
    }
 
-   CurrentMenu()->SetLabel(ID, label);
    mbSeparatorAllowed = true;
 }
 
