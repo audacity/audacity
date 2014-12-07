@@ -1788,6 +1788,21 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    mIsCarbon = false;
    mIsGeneric = false;
 
+   // This is a temporary hack to allow usage of effects from Waves.
+   // I don't know why, but they simply do not display.  Could be that
+   // they are "prefer" 64-bit and/or Cocoa apps.  I don't want to spend
+   // too much time trying to get them to work though since I suspect
+   // we'll have better luck once we upgrade to wx3 and become Cocoa-based.
+   //
+   // So, we'll use sort of a blacklist to force them to use the generic
+   // view.  They do seem to work fine when using the generic view, but
+   // some will cause Audacity to crash at termination.  It's not harmful,
+   // since it is after all files have been saved.
+   if (mVendor == wxT("Waves"))
+   {
+      mUseGUI = false;
+   }
+
    // Create the AU editor
    HIViewRef auView = NULL;
    if (mUseGUI)
