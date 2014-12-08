@@ -31,7 +31,7 @@ class EffectFadeIn: public EffectSimpleMono {
    }
 
    virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("FadeIn"));
+      return wxString(wxT("Fade In"));
    }
 
    virtual wxString GetEffectAction() {
@@ -65,7 +65,7 @@ class EffectFadeOut:public EffectSimpleMono {
    }
 
    virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("FadeOut"));
+      return wxString(wxT("Fade Out"));
    }
 
    virtual wxString GetEffectAction() {

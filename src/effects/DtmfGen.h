@@ -48,7 +48,7 @@ class EffectDtmf : public Generator {
    }
 
    virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("DTMFTone"));
+      return wxString(wxT("DTMF Tones"));
    }
 
    virtual wxString GetEffectDescription() {

@@ -31,7 +31,7 @@ public:
 
    // Used internally, users will not see this.  Do not translate.
    virtual wxString GetEffectIdentifier() {
-      return wxT("StereoToMono");
+      return wxT("Stereo To Mono");
    }
 
    virtual wxString GetEffectAction() {

@@ -42,7 +42,7 @@ class EffectChangeTempo : public EffectSoundTouch {
    }
 
    virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("ChangeTempo"));
+      return wxString(wxT("Change Tempo"));
    }
 
    virtual wxString GetEffectAction() {

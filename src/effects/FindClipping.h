@@ -46,7 +46,7 @@ class EffectFindClipping:public Effect
 
    virtual wxString GetEffectIdentifier()
    {
-      return wxString(wxT("FindClipping"));
+      return wxString(wxT("Find Clipping"));
    }
 
    virtual wxString GetEffectAction()

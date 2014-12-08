@@ -44,7 +44,7 @@ public:
    }
 
    virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("TruncateSilence"));
+      return wxString(wxT("Truncate Silence"));
    }
 
    virtual wxString GetEffectAction() {

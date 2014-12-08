@@ -432,7 +432,7 @@ std::set<wxString> EffectNoiseReduction::GetEffectCategories()
 
 wxString EffectNoiseReduction::GetEffectIdentifier()
 {
-   return wxString(wxT("NoiseReduction"));
+   return wxString(wxT("Noise Reduction"));
 }
 
 wxString EffectNoiseReduction::GetEffectAction()

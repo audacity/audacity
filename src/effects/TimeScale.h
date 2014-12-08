@@ -40,7 +40,7 @@ class EffectTimeScale : public EffectSBSMS {
    }
 
    virtual wxString GetEffectIdentifier() {
-     return wxString(wxT("TimeScale"));
+     return wxString(wxT("Time Scale"));
    }
 
    virtual wxString GetEffectAction() {
