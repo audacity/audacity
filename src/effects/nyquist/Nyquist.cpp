@@ -823,17 +823,23 @@ bool EffectNyquist::ProcessOne()
                           mCurLen, mCurTrack[0]->GetRate());
    }
 
+   // Restore the Nyquist sixteenth note symbol for Generate plugins.
+   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=490.
+   if (GetEffectFlags() & INSERT_EFFECT) {
+      cmd += wxT("(setf s 0.25)\n");
+   }
+
    if (mDebug) {
       cmd += wxT("(setf *tracenable* T)\n");
       if (mExternal) {
          cmd += wxT("(setf *breakenable* T)\n");
       }
    }
-
-   // Restore the Nyquist sixteenth note symbol for Generate plugins.
-   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=490.
-   if (GetEffectFlags() & INSERT_EFFECT) {
-      cmd += wxT("(setf s 0.25)\n");
+   else {
+      // Explicitly disable backtrace and prevent values
+      // from being carried through to the output.
+      // This should be the final command before evaluating the Nyquist script.
+      cmd += wxT("(setf *tracenable* NIL)\n");
    }
 
    for (unsigned int j = 0; j < mControls.GetCount(); j++) {
