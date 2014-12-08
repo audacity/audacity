@@ -1169,8 +1169,8 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          }
 
          wxString bound;
-         double lower = -FLT_MAX;
-         double upper = FLT_MAX;
+         float lower = -FLT_MAX;
+         float upper = FLT_MAX;
          bool haslo = false;
          bool hashi = false;
          bool forceint = false;
@@ -1192,6 +1192,21 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             lower *= mSampleRate;
             upper *= mSampleRate;
             forceint = true;
+         }
+
+         // Limit to the UI precision
+         lower = ceilf(lower * 1000000.0) / 1000000.0;
+         upper = floorf(upper * 1000000.0) / 1000000.0;
+         mInputControls[p] = roundf(mInputControls[p] * 1000000.0) / 1000000.0;
+
+         if (haslo && mInputControls[p] < lower)
+         {
+            mInputControls[p] = lower;
+         }
+
+         if (hashi && mInputControls[p] > upper)
+         {
+            mInputControls[p] = lower;
          }
 
          // Don't specify a value at creation time.  This prevents unwanted events
@@ -1251,7 +1266,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
 
             wxIntegerValidator<float> vld(&mInputControls[p]);
             vld.SetRange(haslo ? lower : INT_MIN,
-                           hashi ? upper : INT_MAX);
+                         hashi ? upper : INT_MAX);
             mFields[p]->SetValidator(vld);
          }
          else
@@ -1259,10 +1274,9 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             fieldText = Internat::ToDisplayString(mInputControls[p]);
 
             // > 12 decimal places can cause rounding errors in display.
-            wxFloatingPointValidator<float> vld(12, &mInputControls[p]);
-            vld.SetRange(haslo ? lower : -FLT_MAX,
-                           hashi ? upper : FLT_MAX);
-
+            wxFloatingPointValidator<float> vld(6, &mInputControls[p]);
+            vld.SetRange(lower, upper);
+            
             // Set number of decimal places
             if (upper - lower < 10.0)
             {
