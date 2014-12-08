@@ -62,13 +62,16 @@
 typedef std::vector<float> FloatVector;
 
 // Define to make the radio button three-way
-#define RESIDUE_CHOICE
+//#define RESIDUE_CHOICE
+
+// Define for Attack and release controls.
+//#define ATTACK_AND_RELEASE
 
 // Define to expose other advanced, experimental dialog controls
-#define ADVANCED_SETTINGS
+//#define ADVANCED_SETTINGS
 
 // Define to make the old statistical methods an available choice
-#define OLD_METHOD_AVAILABLE
+//#define OLD_METHOD_AVAILABLE
 
 namespace {
 
@@ -1366,11 +1369,13 @@ enum {
    ID_FREQ_SLIDER,
    ID_FREQ_TEXT,
 
+#ifdef ATTACK_AND_RELEASE
    ID_ATTACK_TIME_SLIDER,
    ID_ATTACK_TIME_TEXT,
 
    ID_RELEASE_TIME_SLIDER,
    ID_RELEASE_TIME_TEXT,
+#endif
 
    END_OF_BASIC_SLIDERS,
 
@@ -1446,12 +1451,15 @@ const struct ControlInfo {
    { &EffectNoiseReduction::Settings::mFreqSmoothingHz,
      0, 1000, 100, wxT("%d"), true,
      _("Fr&equency smoothing (Hz):"), _("Frequency smoothing") },
+#ifdef ATTACK_AND_RELEASE
    { &EffectNoiseReduction::Settings::mAttackTime,
      0, 1.0, 100, wxT("%.2f"), false,
      _("Attac&k time (secs):"), _("Attack time") },
    { &EffectNoiseReduction::Settings::mReleaseTime,
      0, 1.0, 100, wxT("%.2f"), false,
      _("&Release time (secs):"), _("Release time") },
+#endif
+
 #ifdef ADVANCED_SETTINGS
    { &EffectNoiseReduction::Settings::mNewSensitivity,
    1.0, 24.0, 92, wxT("%.2f"), false,
@@ -1488,11 +1496,14 @@ BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialog)
    EVT_SLIDER(ID_FREQ_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
    EVT_TEXT(ID_FREQ_TEXT, EffectNoiseReduction::Dialog::OnText)
 
+#ifdef ATTACK_AND_RELEASE
    EVT_SLIDER(ID_ATTACK_TIME_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
    EVT_TEXT(ID_ATTACK_TIME_TEXT, EffectNoiseReduction::Dialog::OnText)
 
    EVT_SLIDER(ID_RELEASE_TIME_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
    EVT_TEXT(ID_RELEASE_TIME_TEXT, EffectNoiseReduction::Dialog::OnText)
+#endif
+
 
 #ifdef ADVANCED_SETTINGS
    EVT_SLIDER(ID_NEW_SENSITIVITY_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
@@ -1552,11 +1563,13 @@ void EffectNoiseReduction::Dialog::DisableControlsIfIsolating()
       ID_FREQ_SLIDER,
       ID_FREQ_TEXT,
 
+#ifdef ATTACK_AND_RELEASE
       ID_ATTACK_TIME_SLIDER,
       ID_ATTACK_TIME_TEXT,
 
       ID_RELEASE_TIME_SLIDER,
       ID_RELEASE_TIME_TEXT,
+#endif
    };
    static const int nToDisable = sizeof(toDisable) / sizeof(toDisable[0]);
    
