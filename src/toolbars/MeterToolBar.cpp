@@ -68,6 +68,7 @@ MeterToolBar::MeterToolBar(int WhichMeters)
 
 MeterToolBar::~MeterToolBar()
 {
+   MeterToolBars::RemoveMeters(mPlayMeter, mRecordMeter);
 }
 
 
@@ -218,6 +219,16 @@ bool MeterToolBar::Expose( bool show )
    else
       MeterToolBars::RemoveMeters( mPlayMeter, mRecordMeter );
    return ToolBar::Expose( show );
+}
+
+void MeterToolBar::Activate( bool active )
+{
+   if( active )
+      MeterToolBars::AddMeters( mPlayMeter, mRecordMeter );
+   else
+      MeterToolBars::RemoveMeters( mPlayMeter, mRecordMeter );
+
+   gAudioIO->SetMeters(mRecordMeter, mPlayMeter);
 }
 
 wxSize MeterToolBar::GetDockedSize()

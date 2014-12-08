@@ -1919,6 +1919,31 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    mTrackPanel->SetFocus();
 #endif
 
+   if (mToolManager)
+   {
+      MeterToolBar *tb;
+
+      tb = (MeterToolBar *) mToolManager->GetToolBar(MeterBarID);
+      if (tb->IsVisible())
+      {
+         tb->Activate(mActive);
+      }
+      else
+      {
+         tb = (MeterToolBar *) mToolManager->GetToolBar(RecordMeterBarID);
+         if (tb->IsVisible())
+         {
+            tb->Activate(mActive);
+         }
+
+         tb = (MeterToolBar *) mToolManager->GetToolBar(PlayMeterBarID);
+         if (tb->IsVisible())
+         {
+            tb->Activate(mActive);
+         }
+      }
+   }
+
    // Under Windows, focus can be "lost" when returning to
    // Audacity from a different application.
    //
@@ -4139,14 +4164,6 @@ EditToolBar *AudacityProject::GetEditToolBar()
    return (EditToolBar *)
           (mToolManager ?
            mToolManager->GetToolBar(EditBarID) :
-           NULL);
-}
-
-MeterToolBar *AudacityProject::GetMeterToolBar()
-{
-   return (MeterToolBar *)
-          (mToolManager ?
-           mToolManager->GetToolBar(MeterBarID) :
            NULL);
 }
 

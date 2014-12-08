@@ -373,7 +373,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    DeviceToolBar *GetDeviceToolBar();
    EditToolBar *GetEditToolBar();
-   MeterToolBar *GetMeterToolBar();
    MixerToolBar *GetMixerToolBar();
    SelectionBar *GetSelectionBar();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
