@@ -1919,7 +1919,7 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    mTrackPanel->SetFocus();
 #endif
 
-   if (mToolManager)
+   if (mToolManager && GetActiveProject())
    {
       MeterToolBar *tb;
 
