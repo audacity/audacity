@@ -181,9 +181,10 @@ void LoadEffects()
 #ifdef EXPERIMENTAL_NOISE_REDUCTION
    CatPtr nrm = em.AddCategory(wxT(ATEAM) wxT("NoiseReduction"),
       _("Noise Reduction"));
-#endif
+#else
    CatPtr nrm = em.AddCategory(wxT(ATEAM) wxT("NoiseRemoval"),
       _("Noise Removal"));
+#endif
    CatPtr pnt = em.AddCategory(wxT(ATEAM) wxT("PitchAndTempo"),
                                _("Pitch and Tempo"));
    CatPtr tim = em.AddCategory(wxT(ATEAM) wxT("TimelineChanger"),
@@ -241,8 +242,9 @@ void LoadEffects()
    em.RegisterEffect(new EffectLeveller(), SIMPLE_EFFECT);
 #ifdef EXPERIMENTAL_NOISE_REDUCTION
    em.RegisterEffect(new EffectNoiseReduction(), SIMPLE_EFFECT);
-#endif
+#else
    em.RegisterEffect(new EffectNoiseRemoval(), SIMPLE_EFFECT);
+#endif
    em.RegisterEffect(new EffectNormalize(), SIMPLE_EFFECT);
    em.RegisterEffect(new EffectPhaser());
    em.RegisterEffect(new EffectRepair());
