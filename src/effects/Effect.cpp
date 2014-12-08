@@ -2095,7 +2095,6 @@ bool EffectUIHost::Initialize()
    bar->SetSizer(bs);
    
    mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
-   mMenuBtn->SetToolTip(_("Manage effect"));
 
    bs->Add(mMenuBtn);
 
@@ -2104,7 +2103,6 @@ bool EffectUIHost::Initialize()
    mOffDisabledBM = CreateBitmap(effect_off_disabled_xpm, true, false);
    mBypassBtn = new wxBitmapButton(bar, kBypassID, mOnBM);
    mBypassBtn->SetBitmapDisabled(mOffDisabledBM);
-   mBypassBtn->SetToolTip(_("Bypass effect"));
    mOnToggle = true;
    bs->Add(mBypassBtn);
 
@@ -2116,31 +2114,40 @@ bool EffectUIHost::Initialize()
    mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
    mPlayBtn = new wxBitmapButton(bar, kPlayID, mPlayBM);
    mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
-   mPlayBtn->SetToolTip(_("Play/Stop"));
    bs->Add(mPlayBtn);
 
    mRewindBtn = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
    mRewindBtn->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
-   mRewindBtn->SetToolTip(_("Skip backward"));
    bs->Add(mRewindBtn);
 
    mFFwdBtn = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
    mFFwdBtn->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
-   mFFwdBtn->SetToolTip(_("Skip forward"));
    bs->Add(mFFwdBtn);
 
 #if defined(__WXMAC__)
+   // On the Mac, setting a label still actually sets a label.  I don't 
+   // think that should happen, but...
    mMenuBtn->SetName(_("Manage effect"));
+   mMenuBtn->SetToolTip(_("Manage effect"));
    mBypassBtn->SetName(_("Bypass effect"));
+   mBypassBtn->SetToolTip(_("Bypass effect"));
    mPlayBtn->SetName(_("Play/Stop"));
+   mPlayBtn->SetToolTip(_("Play/Stop"));
    mRewindBtn->SetName(_("Skip backward"));
+   mRewindBtn->SetToolTip(_("Skip backward"));
    mFFwdBtn->SetName(_("Skip forward"));
+   mFFwdBtn->SetToolTip(_("Skip forward"));
 #else
-   mMenuBtn->SetLabel(_("Manage effect"));
-   mBypassBtn->SetLabel(_("Bypass effect"));
-   mPlayBtn->SetLabel(_("Play/Stop"));
-   mRewindBtn->SetLabel(_("Skip backward"));
-   mFFwdBtn->SetLabel(_("Skip forward"));
+   mMenuBtn->SetLabel(_("&Manage effect"));
+   mMenuBtn->SetToolTip(_("Manage effect (Alt+M)"));
+   mBypassBtn->SetLabel(_("B&ypass effect"));
+   mBypassBtn->SetToolTip(_("Bypass effect (Alt+Y)"));
+   mPlayBtn->SetLabel(_("&Play/Stop"));
+   mPlayBtn->SetToolTip(_("Play/Stop (Alt+P)"));
+   mRewindBtn->SetLabel(_("Skip &backward"));
+   mRewindBtn->SetToolTip(_("Skip backward (Alt+B)"));
+   mFFwdBtn->SetLabel(_("Skip &forward"));
+   mFFwdBtn->SetToolTip(_("Skip forward (Alt+F)"));
 #endif
 
    bar->SetSizerAndFit(bs);
