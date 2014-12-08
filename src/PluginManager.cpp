@@ -1058,6 +1058,7 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 #define KEY_EFFECTINTERACTIVE          wxT("EffectInteractive")
 #define KEY_EFFECTREALTIME             wxT("EffectRealtime")
 #define KEY_EFFECTAUTOMATABLE          wxT("EffectAutomatable")
+#define KEY_EFFECTTYPE_NONE            wxT("None")
 #define KEY_EFFECTTYPE_ANALYZE         wxT("Analyze")
 #define KEY_EFFECTTYPE_GENERATE        wxT("Generate")
 #define KEY_EFFECTTYPE_PROCESS         wxT("Process")
@@ -1531,7 +1532,11 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
                continue;
             }
 
-            if (strVal.IsSameAs(KEY_EFFECTTYPE_ANALYZE))
+            if (strVal.IsSameAs(KEY_EFFECTTYPE_NONE))
+            {
+               plug.SetEffectType(EffectTypeNone);
+            }
+            else if (strVal.IsSameAs(KEY_EFFECTTYPE_ANALYZE))
             {
                plug.SetEffectType(EffectTypeAnalyze);
             }
@@ -1688,7 +1693,11 @@ void PluginManager::SaveGroup(const wxChar *group, PluginType type)
          {
             EffectType etype = plug.GetEffectType();
             wxString stype;
-            if (etype == EffectTypeAnalyze)
+            if (etype == EffectTypeNone)
+            {
+               stype = KEY_EFFECTTYPE_NONE;
+            }
+            else if (etype == EffectTypeAnalyze)
             {
                stype = KEY_EFFECTTYPE_ANALYZE;
             }
