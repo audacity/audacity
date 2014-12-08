@@ -561,7 +561,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 
       wxFileName fname = iter->first;
       wxString name = fname.GetName();
-      wxString path = fname.GetFullPath();
+      wxString path = iter->first;
 
       mEffects->InsertItem(i, name, SHOW_CHECKED);
       mEffects->SetItemPtrData(i, (wxUIntPtr) new wxString(name));
