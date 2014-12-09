@@ -418,6 +418,9 @@ void CommandManager::InsertItem(wxString name, wxString label_in,
 
    int ID = NewIdentifier(name, label, menu, callback, false, 0, 0);
 
+   // Remove the accelerator as it will be handled internally
+   label = label.BeforeFirst(wxT('\t'));
+
    if (checkmark >= 0) {
       menu->InsertCheckItem(pos, ID, label);
       menu->Check(ID, checkmark != 0);
@@ -425,7 +428,6 @@ void CommandManager::InsertItem(wxString name, wxString label_in,
    else {
       menu->Insert(pos, ID, label);
    }
-//   menu->SetLabel(ID, newLabel);
 
    mbSeparatorAllowed = true;
 }
@@ -479,6 +481,9 @@ void CommandManager::AddItem(const wxChar *name,
    if (flags != NoFlagsSpecifed || mask != NoFlagsSpecifed) {
       SetCommandFlags(name, flags, mask);
    }
+
+   // Remove the accelerator as it will be handled internally
+   label = label.BeforeFirst(wxT('\t'));
 
    if (checkmark >= 0) {
       CurrentMenu()->AppendCheckItem(ID, label);
