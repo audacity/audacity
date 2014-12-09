@@ -2765,32 +2765,14 @@ void AudacityProject::NextWindow()
       iter = iter->GetNext();
    }
 
-   // Ran out of siblings, so make the current project's track panel active
+   // Ran out of siblings, so make the current project active
    if (!iter)
    {
-#if defined(__WXGTK__)
-      // In wxGTK-2.8.12, focus gets lost if you don't set it to the project window
-      // instead of the track panel.  No idea why.
       w = this;
-#else
-      w = mTrackPanel;
-#endif
    }
 
-#if !defined(__WXMSW__)
-   // Move focus to the window and bring it to the fore.  We don't do it on Windows
-   // because the Raise() below will cause an Activation event to be issued and the
-   // Project's OnActivation() handler will take care of setting the focus.
-   w->SetFocus();
-#endif
-
-#if defined(__WXMAC__)
-   // Yes, I know...why 2 SetFocus() calls?  Without the second one, focus
-   // gets lost on wxMac-2.8.12.
-   w->SetFocus();
-#endif
-
    // And make sure it's on top (only for floating windows...project window will not raise)
+   // (Really only works on Windows)
    w->Raise();
 }
 
@@ -2831,27 +2813,14 @@ void AudacityProject::PrevWindow()
       }
    }
 
-   // Ran out of siblings, so make the current project's track panel active
+   // Ran out of siblings, so make the current project active
    if (!iter)
    {
-#if defined(__WXGTK__)
-      // In wxGTK-2.8.12, focus gets lost if you don't set it to the project window
-      // instead of the track panel.  No idea why.
       w = this;
-#else
-      w = mTrackPanel;
-#endif
    }
 
-   // Move focus to the window and bring it to the fore
-   w->SetFocus();
-
-#if defined(__WXMAC__)
-   // Yes, I know...why 2 SetFocus() calls?  Without the second one, focus
-   // gets lost on wxMac-2.8.12.
-   w->SetFocus();
-#endif
-
+   // And make sure it's on top (only for floating windows...project window will not raise)
+   // (Really only works on Windows)
    w->Raise();
 }
 
