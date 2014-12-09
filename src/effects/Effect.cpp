@@ -2138,16 +2138,36 @@ bool EffectUIHost::Initialize()
    mFFwdBtn->SetName(_("Skip forward"));
    mFFwdBtn->SetToolTip(_("Skip forward"));
 #else
-   mMenuBtn->SetLabel(_("&Manage effect"));
+   mMenuBtn->SetLabel(_("Manage effect"));
    mMenuBtn->SetToolTip(_("Manage effect (Alt+M)"));
-   mBypassBtn->SetLabel(_("B&ypass effect"));
+   mBypassBtn->SetLabel(_("Bypass effect"));
    mBypassBtn->SetToolTip(_("Bypass effect (Alt+Y)"));
-   mPlayBtn->SetLabel(_("&Play/Stop"));
+   mPlayBtn->SetLabel(_("Play/Stop"));
    mPlayBtn->SetToolTip(_("Play/Stop (Alt+P)"));
-   mRewindBtn->SetLabel(_("Skip &backward"));
+   mRewindBtn->SetLabel(_("Skip backward"));
    mRewindBtn->SetToolTip(_("Skip backward (Alt+B)"));
-   mFFwdBtn->SetLabel(_("Skip &forward"));
+   mFFwdBtn->SetLabel(_("Skip forward"));
    mFFwdBtn->SetToolTip(_("Skip forward (Alt+F)"));
+
+   // We use an accelerator table instead of the normal "&" mnemonic
+   // so that they work on Windows and GTK...no accelerators on OSX and
+   // the wxBitmapButton under GTK didn't seem to like the mnemonics.
+   //
+   // On Windows, this also keeps the focus from jumping to the associated
+   // button, forcing keyboard users to have to constantly TAB back to the
+   // control they were on.
+   wxAcceleratorEntry entries[7] =
+   {
+      wxAcceleratorEntry(wxACCEL_ALT, 'M', kMenuID),
+      wxAcceleratorEntry(wxACCEL_ALT, 'Y', kBypassID),
+      wxAcceleratorEntry(wxACCEL_ALT, 'P', kPlayID),
+      wxAcceleratorEntry(wxACCEL_ALT, 'B', kRewindID),
+      wxAcceleratorEntry(wxACCEL_ALT, 'F', kFFwdID),
+      wxAcceleratorEntry(wxACCEL_ALT, 'A', wxID_OK),
+      wxAcceleratorEntry(wxACCEL_ALT, 'C', wxID_CANCEL),
+   };
+
+   SetAcceleratorTable(wxAcceleratorTable(7, entries));
 #endif
 
    bar->SetSizerAndFit(bs);
@@ -2320,8 +2340,6 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnMenu(wxCommandEvent & evt)
 {
-   wxBitmapButton *b = (wxBitmapButton *)evt.GetEventObject();
-
    wxMenu *menu = new wxMenu();
    wxMenu *sub;
 
@@ -2396,7 +2414,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & evt)
 
    menu->Append(0, _("About"), sub);
 
-   wxRect r = b->GetParent()->GetRect();
+   wxRect r = FindWindowById(kMenuID)->GetParent()->GetRect();
    PopupMenu(menu, wxPoint(r.GetLeft(), r.GetBottom()));
 
    delete menu;
