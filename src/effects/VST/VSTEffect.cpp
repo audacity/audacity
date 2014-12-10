@@ -4128,7 +4128,11 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    if (wxStrcmp(tag, wxT("effect")) == 0)
    {
-      mXMLInfo = {1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams};
+      memset(&mXMLInfo, 0, sizeof(mXMLInfo));
+      mXMLInfo.version = 1;
+      mXMLInfo.pluginUniqueID = mAEffect->uniqueID;
+      mXMLInfo.pluginVersion = mAEffect->version;
+      mXMLInfo.numElements = mAEffect->numParams;
 
       while (*attrs)
       {
