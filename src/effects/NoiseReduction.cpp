@@ -61,8 +61,9 @@
 
 typedef std::vector<float> FloatVector;
 
-// Define to make the radio button three-way
-//#define RESIDUE_CHOICE
+// Define both of these to make the radio button three-way
+#define RESIDUE_CHOICE
+//#define ISOLATE_CHOICE
 
 // Define for Attack and release controls.
 //#define ATTACK_AND_RELEASE
@@ -204,7 +205,7 @@ public:
    // Stored in preferences:
 
    // Basic:
-   double     mSensitivity;       // in dB, plus or minus
+   double     mOldSensitivity;    // in dB, plus or minus
    double     mFreqSmoothingHz;
    double     mNoiseGain;         // in dB, positive
    double     mAttackTime;        // in secs
@@ -392,7 +393,9 @@ private:
 
 
    wxRadioButton *mKeepSignal;
+#ifdef ISOLATE_CHOICE
    wxRadioButton *mKeepNoise;
+#endif
 #ifdef RESIDUE_CHOICE
    wxRadioButton *mResidue;
 #endif
@@ -513,14 +516,14 @@ bool EffectNoiseReduction::Settings::PrefsIO(bool read)
    static const double DEFAULT_SENSITIVITY = 6.0;
 
    static const PrefsTableEntry<Settings, double> doubleTable[] = {
-         { &Settings::mSensitivity, wxT("Sensitivity"), 0.0 },
+         { &Settings::mNewSensitivity, wxT("Sensitivity"), 0.0 },
          { &Settings::mFreqSmoothingHz, wxT("FreqSmoothing"), 150.0 },
          { &Settings::mNoiseGain, wxT("Gain"), 24.0 },
-         { &Settings::mAttackTime, wxT("AttackTime"), 0.15 },
-         { &Settings::mReleaseTime, wxT("ReleaseTime"), 0.15 },
+         { &Settings::mAttackTime, wxT("AttackTime"), 0.02 },
+         { &Settings::mReleaseTime, wxT("ReleaseTime"), 0.10 },
 
          // Advanced settings
-         { &Settings::mNewSensitivity, wxT("NewSensitivity"), DEFAULT_SENSITIVITY },
+         { &Settings::mOldSensitivity, wxT("NewSensitivity"), DEFAULT_SENSITIVITY },
    };
    static int doubleTableSize = sizeof(doubleTable) / sizeof(doubleTable[0]);
 
@@ -775,7 +778,7 @@ EffectNoiseReduction::Worker::Worker
    mOneBlockAttack = pow(10.0, (noiseGain / (20.0 * nAttackBlocks)));
    mOneBlockRelease = pow(10.0, (noiseGain / (20.0 * nReleaseBlocks)));
    // Applies to power, divide by 10:
-   mSensitivityFactor = pow(10.0, settings.mSensitivity / 10.0);
+   mSensitivityFactor = pow(10.0, settings.mOldSensitivity / 10.0);
 
    mNWindowsToExamine = (mMethod == DM_OLD_METHOD)
       ? std::max(2, (int)(minSignalTime * sampleRate / mStepSize))
@@ -1350,7 +1353,9 @@ bool EffectNoiseReduction::Worker::ProcessOne
 enum {
    ID_BUTTON_GETPROFILE = 10001,
    ID_RADIOBUTTON_KEEPSIGNAL,
+#ifdef ISOLATE_CHOICE
    ID_RADIOBUTTON_KEEPNOISE,
+#endif
 #ifdef RESIDUE_CHOICE
    ID_RADIOBUTTON_RESIDUE,
 #endif
@@ -1445,9 +1450,10 @@ const struct ControlInfo {
    { &EffectNoiseReduction::Settings::mNoiseGain,
      0.0, 48.0, 48, wxT("%d"), true,
      _("Noise re&duction (dB):"), _("Noise reduction") },
-   { &EffectNoiseReduction::Settings::mSensitivity,
-     -20.0, 20.0, 4000, wxT("%.2f"), false,
-     _("&Sensitivity (dB):"), _("Sensitivity") },
+   { &EffectNoiseReduction::Settings::mNewSensitivity,
+      1.0, 24.0, 92, wxT("%.2f"), false,
+//   wxT("New method sensiti&vity:\n(units? you want units?)"), _("New sensitivity") },
+     _("&Sensitivity:"), _("Sensitivity") },
    { &EffectNoiseReduction::Settings::mFreqSmoothingHz,
      0, 1000, 100, wxT("%d"), true,
      _("Fr&equency smoothing (Hz):"), _("Frequency smoothing") },
@@ -1461,9 +1467,9 @@ const struct ControlInfo {
 #endif
 
 #ifdef ADVANCED_SETTINGS
-   { &EffectNoiseReduction::Settings::mNewSensitivity,
-   1.0, 24.0, 92, wxT("%.2f"), false,
-   _("New method sensiti&vity:\n(units? you want units?)"), _("New sensitivity") },
+   { &EffectNoiseReduction::Settings::mOldSensitivity,
+     -20.0, 20.0, 4000, wxT("%.2f"), false,
+     wxT("&Sensitivity (dB):"), _("Old Sensitivity") },
    // add here
 #endif
 };
@@ -1477,8 +1483,10 @@ BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialog)
    EVT_BUTTON(ID_EFFECT_PREVIEW, EffectNoiseReduction::Dialog::OnPreview)
    EVT_BUTTON(ID_BUTTON_GETPROFILE, EffectNoiseReduction::Dialog::OnGetProfile)
 
-   EVT_RADIOBUTTON(ID_RADIOBUTTON_KEEPNOISE, EffectNoiseReduction::Dialog::OnNoiseReductionChoice)
    EVT_RADIOBUTTON(ID_RADIOBUTTON_KEEPSIGNAL, EffectNoiseReduction::Dialog::OnNoiseReductionChoice)
+#ifdef ISOLATE_CHOICE
+   EVT_RADIOBUTTON(ID_RADIOBUTTON_KEEPNOISE, EffectNoiseReduction::Dialog::OnNoiseReductionChoice)
+#endif
 #ifdef RESIDUE_CHOICE
    EVT_RADIOBUTTON(ID_RADIOBUTTON_RESIDUE, EffectNoiseReduction::Dialog::OnNoiseReductionChoice)
 #endif
@@ -1523,7 +1531,9 @@ EffectNoiseReduction::Dialog::Dialog
    , mbAllowTwiddleSettings(bAllowTwiddleSettings)
    // NULL out the control members until the controls are created.
    , mKeepSignal(NULL)
+#ifdef ISOLATE_CHOICE
    , mKeepNoise(NULL)
+#endif
 #ifdef RESIDUE_CHOICE
    , mResidue(NULL)
 #endif
@@ -1573,7 +1583,12 @@ void EffectNoiseReduction::Dialog::DisableControlsIfIsolating()
    };
    static const int nToDisable = sizeof(toDisable) / sizeof(toDisable[0]);
    
-   bool bIsolating = mKeepNoise->GetValue();
+   bool bIsolating = 
+#ifdef ISOLATE_CHOICE
+      mKeepNoise->GetValue();
+#else
+      false;
+#endif
    for (int ii = nToDisable; ii--;)
       wxWindow::FindWindowById(toDisable[ii], this)->Enable(!bIsolating);
 }
@@ -1606,8 +1621,10 @@ void EffectNoiseReduction::Dialog::OnNoiseReductionChoice( wxCommandEvent & WXUN
 {
    if (mKeepSignal->GetValue())
       mTempSettings.mNoiseReductionChoice = NRC_REDUCE_NOISE;
+#ifdef ISOLATE_CHOICE
    else if (mKeepNoise->GetValue())
       mTempSettings.mNoiseReductionChoice = NRC_ISOLATE_NOISE;
+#endif
 #ifdef RESIDUE_CHOICE
    else
       mTempSettings.mNoiseReductionChoice = NRC_LEAVE_RESIDUE;
@@ -1679,18 +1696,23 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
 
       S.StartMultiColumn(
+         2
 #ifdef RESIDUE_CHOICE
-         4,
-#else
-         3,
+         +1
 #endif
+#ifdef ISOLATE_CHOICE
+         +1
+#endif
+         ,
          wxALIGN_CENTER_HORIZONTAL);
       {
          S.AddPrompt(_("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
                .AddRadioButton(_("Re&duce"));
+#ifdef ISOLATE_CHOICE
          mKeepNoise = S.Id(ID_RADIOBUTTON_KEEPNOISE)
                .AddRadioButtonToGroup(_("&Isolate"));
+#endif
 #ifdef RESIDUE_CHOICE
          mResidue = S.Id(ID_RADIOBUTTON_RESIDUE)
                .AddRadioButtonToGroup(_("Resid&ue"));
@@ -1796,7 +1818,9 @@ bool EffectNoiseReduction::Dialog::TransferDataToWindow()
    }
 
    mKeepSignal->SetValue(mTempSettings.mNoiseReductionChoice == NRC_REDUCE_NOISE);
+#ifdef ISOLATE_CHOICE
    mKeepNoise->SetValue(mTempSettings.mNoiseReductionChoice == NRC_ISOLATE_NOISE);
+#endif
 #ifdef RESIDUE_CHOICE
    mResidue->SetValue(mTempSettings.mNoiseReductionChoice == NRC_LEAVE_RESIDUE);
 #endif
