@@ -345,5 +345,14 @@ enum VstParameterFlags
    kVstParameterCanRamp                 = 1 << 6   // set if parameter value can ramp up/down
 };
 
+// from http://www.asseca.org/vst-24-specs/efBeginLoadProgram.html
+struct VstPatchChunkInfo
+{
+   int32_t version;           // Format Version (should be 1)
+   int32_t pluginUniqueID;    // UniqueID of the plug-in
+   int32_t pluginVersion;     // Plug-in Version
+   int32_t numElements;       // Number of Programs (Bank) or Parameters (Program)
+   char future[48];           // Reserved for future use
+};
 
 #endif

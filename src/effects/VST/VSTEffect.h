@@ -245,6 +245,8 @@ private:
    void callSetParameter(int index, float value);
    float callGetParameter(int index);
    void callSetProgram(int index);
+   void callSetChunk(bool isPgm, int len, void *buf);
+   void callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info);
 
  private:
    EffectHostInterface *mHost;
@@ -312,8 +314,11 @@ private:
    wxStaticText **mDisplays;
    wxStaticText **mLabels;
 
+   bool mInSet;
    bool mInChunk;
    wxString mChunk;
+   long mXMLVersion;
+   VstPatchChunkInfo mXMLInfo;
 
 #if defined(__WXMAC__)
    static pascal OSStatus OverlayEventHandler(EventHandlerCallRef handler, EventRef event, void *data);
