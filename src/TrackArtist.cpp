@@ -442,7 +442,9 @@ void TrackArtist::DrawTrack(const Track * t,
          DrawSpectrum(wt, dc, r, viewInfo, true, false);
          break;
       }
-      if (mbShowTrackNameInWaveform && wt->GetChannel() != Track::RightChannel) {   // so left or mono only
+      if (mbShowTrackNameInWaveform &&
+          // Exclude right channel of stereo track 
+          !(!wt->GetLinked() && wt->GetLink())) {
          wxFont labelFont(12, wxSWISS, wxNORMAL, wxNORMAL);
          dc.SetFont(labelFont);
          dc.SetTextForeground(wxColour(255, 255, 0));
