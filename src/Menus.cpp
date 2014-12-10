@@ -854,7 +854,7 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("MixAndRender"), _("Mi&x and Render"), FN(OnMixAndRender),
               AudioIONotBusyFlag | WaveTracksSelectedFlag,
               AudioIONotBusyFlag | WaveTracksSelectedFlag);
-   c->AddItem(wxT("MixAndRenderToNewTrack"), _("Mix and Render to New Track"), FN(OnMixAndRenderToNewTrack), wxT("Ctrl+Shift+M"),
+   c->AddItem(wxT("MixAndRenderToNewTrack"), _("Mix and Render to Ne&w Track"), FN(OnMixAndRenderToNewTrack), wxT("Ctrl+Shift+M"),
                  AudioIONotBusyFlag | WaveTracksSelectedFlag,
                  AudioIONotBusyFlag | WaveTracksSelectedFlag);
    c->AddItem(wxT("Resample"), _("&Resample..."), FN(OnResample),
