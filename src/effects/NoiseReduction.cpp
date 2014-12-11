@@ -58,6 +58,7 @@
 #include <wx/slider.h>
 #include <wx/valtext.h>
 #include <wx/textctrl.h>
+#include <wx/sizer.h>
 
 typedef std::vector<float> FloatVector;
 
@@ -1449,14 +1450,14 @@ const struct ControlInfo {
 } controlInfo[] = {
    { &EffectNoiseReduction::Settings::mNoiseGain,
      0.0, 48.0, 48, wxT("%d"), true,
-     _("Noise re&duction (dB):"), _("Noise reduction") },
+     _("&Noise reduction (dB):"), _("Noise reduction") },
    { &EffectNoiseReduction::Settings::mNewSensitivity,
       1.0, 24.0, 92, wxT("%.2f"), false,
 //   wxT("New method sensiti&vity:\n(units? you want units?)"), _("New sensitivity") },
      _("&Sensitivity:"), _("Sensitivity") },
    { &EffectNoiseReduction::Settings::mFreqSmoothingHz,
      0, 1000, 100, wxT("%d"), true,
-     _("Fr&equency smoothing (Hz):"), _("Frequency smoothing") },
+     _("&Frequency smoothing (Hz):"), _("Frequency smoothing") },
 #ifdef ATTACK_AND_RELEASE
    { &EffectNoiseReduction::Settings::mAttackTime,
      0, 1.0, 100, wxT("%.2f"), false,
@@ -1687,6 +1688,13 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
+#ifdef __WXGTK__
+         // BoxSizer is to make first mnemonic work, on Linux.
+         wxPanel* cPanel = new wxPanel( this, wxID_ANY );
+         wxBoxSizer* cSizer = new wxBoxSizer(wxVERTICAL);
+         cPanel->SetSizer(cSizer);
+#endif
+
          wxTextValidator vld(wxFILTER_NUMERIC);
          for (int id = FIRST_SLIDER; id < END_OF_BASIC_SLIDERS; id += 2) {
             const ControlInfo &info = controlInfo[(id - FIRST_SLIDER) / 2];
