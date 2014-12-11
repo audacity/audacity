@@ -2342,7 +2342,7 @@ void AudacityProject::OnToggleSoundActivated()
 void AudacityProject::OnTogglePlayRecording()
 {
    bool Duplex;
-   gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, false);
+   gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, true);
    gPrefs->Write(wxT("/AudioIO/Duplex"), !Duplex);
    gPrefs->Flush();
    ModifyAllProjectToolbarMenus();
