@@ -472,6 +472,7 @@ void Meter::SetStyle(Meter::Style newStyle)
    if (mStyle == MixerTrackCluster)
       return;
    mStyle = newStyle;
+   gPrefs->Write(wxT("/Meter/MeterStyle"), newStyle == Meter::HorizontalStereo ? wxT("HorizontalStereo") : wxT("VerticalStereo"));
    mLayoutValid = false;
    Refresh(true);
 }
