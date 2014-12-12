@@ -30,6 +30,7 @@ greater use in future.
 #include <wx/timer.h>
 #include <wx/tglbtn.h>
 #include <wx/hashmap.h>
+#include <wx/utils.h>
 
 #include "audacity/ConfigInterface.h"
 
@@ -2015,6 +2016,9 @@ public:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <wx/arrimpl.cpp>
+WX_DEFINE_OBJARRAY(AccelArray);
+
 #include "../../images/Effect.h"
 
 enum
@@ -2114,7 +2118,7 @@ bool EffectUIHost::Initialize()
    bar->SetSizer(bs);
    
    mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
-
+   SetLabelAndTip(mMenuBtn, _("&Manage effect"));
    bs->Add(mMenuBtn);
 
    mOnBM = CreateBitmap(effect_on_xpm, true, false);
@@ -2122,6 +2126,7 @@ bool EffectUIHost::Initialize()
    mOffDisabledBM = CreateBitmap(effect_off_disabled_xpm, true, false);
    mBypassBtn = new wxBitmapButton(bar, kBypassID, mOnBM);
    mBypassBtn->SetBitmapDisabled(mOffDisabledBM);
+   SetLabelAndTip(mBypassBtn, _("B&ypass effect"));
    mOnToggle = true;
    bs->Add(mBypassBtn);
 
@@ -2133,66 +2138,21 @@ bool EffectUIHost::Initialize()
    mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
    mPlayBtn = new wxBitmapButton(bar, kPlayID, mPlayBM);
    mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
+   SetLabelAndTip(mPlayBtn, _("&Play/Stop"));
    bs->Add(mPlayBtn);
 
    mRewindBtn = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
    mRewindBtn->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
+   SetLabelAndTip(mRewindBtn, _("Skip &backward"));
    bs->Add(mRewindBtn);
 
    mFFwdBtn = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
    mFFwdBtn->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
+   SetLabelAndTip(mFFwdBtn, _("Skip &forward"));
    bs->Add(mFFwdBtn);
 
-#if defined(__WXMAC__)
-   // On the Mac, setting a label still actually sets a label.  I don't 
-   // think that should happen, but...
-   mMenuBtn->SetName(_("Manage effect"));
-   mMenuBtn->SetToolTip(_("Manage effect"));
-   mBypassBtn->SetName(_("Bypass effect"));
-   mBypassBtn->SetToolTip(_("Bypass effect"));
-   mPlayBtn->SetName(_("Play/Stop"));
-   mPlayBtn->SetToolTip(_("Play/Stop"));
-   mRewindBtn->SetName(_("Skip backward"));
-   mRewindBtn->SetToolTip(_("Skip backward"));
-   mFFwdBtn->SetName(_("Skip forward"));
-   mFFwdBtn->SetToolTip(_("Skip forward"));
-#else
-   mMenuBtn->SetLabel(_("&Manage effect"));
-   mMenuBtn->SetToolTip(_("Manage effect (Alt+M)"));
-   mBypassBtn->SetLabel(_("B&ypass effect"));
-   mBypassBtn->SetToolTip(_("Bypass effect (Alt+Y)"));
-   mPlayBtn->SetLabel(_("&Play/Stop"));
-   mPlayBtn->SetToolTip(_("Play/Stop (Alt+P)"));
-   mRewindBtn->SetLabel(_("Skip &backward"));
-   mRewindBtn->SetToolTip(_("Skip backward (Alt+B)"));
-   mFFwdBtn->SetLabel(_("Skip &forward"));
-   mFFwdBtn->SetToolTip(_("Skip forward (Alt+F)"));
-
-   // We use an accelerator table in addition to the normal "&" mnemonic
-   // so that they work on Windows and GTK...no accelerators on OSX and
-   // the wxBitmapButton under GTK didn't seem to like the mnemonics.
-   //
-   // On Windows, this also keeps the focus from jumping to the associated
-   // button, forcing keyboard users to have to constantly TAB back to the
-   // control they were on.  This problem appears to be related to the use
-   // of wxBitmapButton and how it is currently implemented in wx2.8.12.
-   //
-   // I believe this has internationalization ramifications, but I can't
-   // personally verify it.  I'm hoping that when we transition to wx3
-   // this can actually go away.
-   wxAcceleratorEntry entries[7] =
-   {
-      wxAcceleratorEntry(wxACCEL_ALT, 'M', kMenuID),
-      wxAcceleratorEntry(wxACCEL_ALT, 'Y', kBypassID),
-      wxAcceleratorEntry(wxACCEL_ALT, 'P', kPlayID),
-      wxAcceleratorEntry(wxACCEL_ALT, 'B', kRewindID),
-      wxAcceleratorEntry(wxACCEL_ALT, 'F', kFFwdID),
-      wxAcceleratorEntry(wxACCEL_ALT, 'A', wxID_APPLY),
-      wxAcceleratorEntry(wxACCEL_ALT, 'C', wxID_CANCEL),
-   };
-
-   SetAcceleratorTable(wxAcceleratorTable(7, entries));
-#endif
+   // All done...generate and set the accelerator table
+   SetLabelAndTip(NULL);
 
    bar->SetSizerAndFit(bs);
 
@@ -2697,6 +2657,46 @@ wxBitmap EffectUIHost::CreateBitmap(const char *xpm[], bool up, bool pusher)
    dc.SelectObject(wxNullBitmap);
 
    return mod;
+}
+
+// We use an accelerator table in addition to the normal "&" mnemonic
+// so that they work on Windows and GTK...no accelerators on OSX and
+// the wxBitmapButton under GTK didn't seem to like the mnemonics.
+//
+// On Windows, this also keeps the focus from jumping to the associated
+// button, forcing keyboard users to have to constantly TAB back to the
+// control they were on.  This problem appears to be related to the use
+// of wxBitmapButton and how it is currently implemented in wx2.8.12.
+//
+// I'm hoping that when we transition to wx3 all of this can go away.
+void EffectUIHost::SetLabelAndTip(wxBitmapButton *btn, const wxString & label)
+{
+   if (btn != NULL)
+   {
+      int pos = label.Find(wxT('&'));
+      if (pos != wxNOT_FOUND && pos < label.Length() - 1)
+      {
+         wxChar c = wxToupper(label[pos + 1]);
+         mAccels.Add(wxAcceleratorEntry(wxACCEL_ALT, c, btn->GetId()));
+#if defined(__WXMAC__)
+         btn->SetName(label);
+#else
+         btn->SetLabel(label);
+#endif
+         btn->SetToolTip(wxStripMenuCodes(label) + wxT(" (ALT+") + c + wxT(")"));
+      }
+   }
+   else
+   {
+      wxAcceleratorEntry *entries = new wxAcceleratorEntry[mAccels.GetCount()];
+      for (size_t i = 0, cnt = mAccels.GetCount(); i < cnt; i++)
+      {
+         entries[i] = mAccels[i];
+      }
+      SetAcceleratorTable(wxAcceleratorTable(mAccels.GetCount(), entries));
+      delete [] entries;
+      mAccels.Empty();
+   }
 }
 
 void EffectUIHost::UpdateControls()

@@ -476,6 +476,8 @@ private:
    DECLARE_EVENT_TABLE();
 };
 
+WX_DECLARE_OBJARRAY(wxAcceleratorEntry, AccelArray);
+
 //
 class EffectUIHost : public wxDialog,
                      public EffectUIHostInterface
@@ -511,6 +513,7 @@ private:
 
    void UpdateControls();
    wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
+   void SetLabelAndTip(wxBitmapButton *btn, const wxString & label = wxEmptyString);
    void LoadUserPresets();
 
 private:
@@ -544,6 +547,8 @@ private:
 
    SelectedRegion mRegion;
    double mPlayPos;
+
+   AccelArray mAccels;
 
    DECLARE_EVENT_TABLE();
 };
