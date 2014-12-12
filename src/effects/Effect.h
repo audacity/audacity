@@ -467,10 +467,13 @@ public:
    virtual bool TransferDataFromWindow();
    virtual bool Validate();
    virtual void OnPreview(wxCommandEvent & event);
+   virtual void OnOk(wxCommandEvent & event);
 
 private:
    int mType;
    int mAdditionalButtons;
+
+   DECLARE_EVENT_TABLE();
 };
 
 //
