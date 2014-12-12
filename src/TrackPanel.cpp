@@ -6116,6 +6116,12 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
    if (event.Leaving() && !event.ButtonIsDown(wxMOUSE_BTN_ANY))
    {
       SetCapturedTrack(NULL);
+#if defined(__WXMAC__)
+      // We must install the cursor ourselves since the window under
+      // the mouse is no longer this one and wx2.8.12 makes that check.
+      // Should re-evaluate with wx3.
+      wxSTANDARD_CURSOR->MacInstall();
+#endif
    }
 
    switch( mMouseCapture )
