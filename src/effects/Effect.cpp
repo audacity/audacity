@@ -2138,24 +2138,29 @@ bool EffectUIHost::Initialize()
    mFFwdBtn->SetName(_("Skip forward"));
    mFFwdBtn->SetToolTip(_("Skip forward"));
 #else
-   mMenuBtn->SetLabel(_("Manage effect"));
+   mMenuBtn->SetLabel(_("&Manage effect"));
    mMenuBtn->SetToolTip(_("Manage effect (Alt+M)"));
-   mBypassBtn->SetLabel(_("Bypass effect"));
+   mBypassBtn->SetLabel(_("B&ypass effect"));
    mBypassBtn->SetToolTip(_("Bypass effect (Alt+Y)"));
-   mPlayBtn->SetLabel(_("Play/Stop"));
+   mPlayBtn->SetLabel(_("&Play/Stop"));
    mPlayBtn->SetToolTip(_("Play/Stop (Alt+P)"));
-   mRewindBtn->SetLabel(_("Skip backward"));
+   mRewindBtn->SetLabel(_("Skip &backward"));
    mRewindBtn->SetToolTip(_("Skip backward (Alt+B)"));
-   mFFwdBtn->SetLabel(_("Skip forward"));
+   mFFwdBtn->SetLabel(_("Skip &forward"));
    mFFwdBtn->SetToolTip(_("Skip forward (Alt+F)"));
 
-   // We use an accelerator table instead of the normal "&" mnemonic
+   // We use an accelerator table in addition to the normal "&" mnemonic
    // so that they work on Windows and GTK...no accelerators on OSX and
    // the wxBitmapButton under GTK didn't seem to like the mnemonics.
    //
    // On Windows, this also keeps the focus from jumping to the associated
    // button, forcing keyboard users to have to constantly TAB back to the
-   // control they were on.
+   // control they were on.  This problem appears to be related to the use
+   // of wxBitmapButton and how it is currently implemented in wx2.8.12.
+   //
+   // I believe this has internationalization ramifications, but I can't
+   // personally verify it.  I'm hoping that when we transition to wx3
+   // this can actually go away.
    wxAcceleratorEntry entries[7] =
    {
       wxAcceleratorEntry(wxACCEL_ALT, 'M', kMenuID),
@@ -2163,7 +2168,7 @@ bool EffectUIHost::Initialize()
       wxAcceleratorEntry(wxACCEL_ALT, 'P', kPlayID),
       wxAcceleratorEntry(wxACCEL_ALT, 'B', kRewindID),
       wxAcceleratorEntry(wxACCEL_ALT, 'F', kFFwdID),
-      wxAcceleratorEntry(wxACCEL_ALT, 'A', wxID_OK),
+      wxAcceleratorEntry(wxACCEL_ALT, 'A', wxID_APPLY),
       wxAcceleratorEntry(wxACCEL_ALT, 'C', wxID_CANCEL),
    };
 
