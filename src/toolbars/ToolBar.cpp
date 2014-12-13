@@ -437,6 +437,8 @@ void ToolBar::ReCreateButtons()
 
    // Get rid of any children we may have
    DestroyChildren();
+   mGrabber = NULL;
+   mResizer = NULL;
 
    // Create the main sizer
    wxBoxSizer *ms = new wxBoxSizer( wxHORIZONTAL );
