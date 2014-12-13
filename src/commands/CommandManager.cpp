@@ -846,7 +846,8 @@ void CommandManager::Modify(wxString name, wxString newLabel)
 {
    CommandListEntry *entry = mCommandNameHash[name];
    if (entry && entry->menu) {
-      entry->menu->SetLabel(entry->id, newLabel.BeforeFirst(wxT('\t')));
+      entry->label = newLabel.BeforeFirst(wxT('\t'));
+      entry->menu->SetLabel(entry->id, entry->label);
    }
 }
 
