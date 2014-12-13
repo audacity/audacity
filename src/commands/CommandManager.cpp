@@ -922,10 +922,11 @@ void CommandManager::HandleMenuClose(wxMenuEvent &evt)
    //
    // This should go away (or at least be re-evaluated) when moving to wx3 as they've
    // completely redesigned the accelerator table handling.
+#if !wxCHECK_VERSION(3, 0, 0)
    wxAcceleratorTable & at = const_cast<wxAcceleratorTable &>(GetActiveProject()->GetMenuBar()->GetAccelTable());
    at = wxNullAcceleratorTable;
 #endif
-
+#endif
    return;
 }
 
