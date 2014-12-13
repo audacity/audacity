@@ -35,6 +35,7 @@ class wxWindow;
 
 class SelectedRegion;
 class TimeWarper;
+class EffectUIHost;
 
 #define PLUGIN_EFFECT   0x0001
 #define BUILTIN_EFFECT  0x0002
@@ -278,6 +279,7 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
                                float **inbuf,
                                float **outbuf,
                                sampleCount numSamples);
+   bool IsRealtimeActive();
 
  //
  // protected virtual methods
@@ -441,6 +443,9 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
    int mCurrentGroup;
    int mHighGroup;
 
+   wxCriticalSection mRealtimeSuspendLock;
+   int mRealtimeSuspendCount;
+
    friend class EffectManager;// so it can call PromptUser in support of batch commands.
    friend class EffectRack;
 };
@@ -496,7 +501,7 @@ private:
    void OnApply(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
-   void OnBypass(wxCommandEvent & evt);
+   void OnPower(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
    void OnRewind(wxCommandEvent & evt);
    void OnFFwd(wxCommandEvent & evt);
@@ -527,7 +532,7 @@ private:
    wxButton *mApplyBtn;
    wxButton *mCloseBtn;
    wxBitmapButton *mMenuBtn;
-   wxBitmapButton *mBypassBtn;
+   wxBitmapButton *mPowerBtn;
    wxBitmapButton *mPlayBtn;
    wxBitmapButton *mRewindBtn;
    wxBitmapButton *mFFwdBtn;
@@ -537,7 +542,7 @@ private:
    wxBitmap mStopBM;
    wxBitmap mStopDisabledBM;
 
-   bool mOnToggle;
+   bool mPowerOn;
    wxBitmap mOnBM;
    wxBitmap mOffBM;
    wxBitmap mOffDisabledBM;

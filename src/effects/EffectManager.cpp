@@ -645,9 +645,14 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float rate, flo
 
    // Now call each effect in the chain while swapping buffer pointers to feed the
    // output of one effect as the input to the next effect
-   for (int i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+   size_t called = 0;
+   for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
    {
-      mRealtimeEffects[i]->RealtimeProcess(group, chans, rate, ibuf, obuf, numSamples);
+      if (mRealtimeEffects[i]->IsRealtimeActive())
+      {
+         mRealtimeEffects[i]->RealtimeProcess(group, chans, rate, ibuf, obuf, numSamples);
+         called++;
+      }
 
       for (int j = 0; j < chans; j++)
       {
@@ -660,8 +665,9 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float rate, flo
 
    // Once we're done, we might wind up with the last effect storing its results
    // in the temporary buffers.  If that's the case, we need to copy it over to
-   // the caller's buffers.  This happens when the number of effects is odd.
-   if (mRealtimeEffects.GetCount() & 1)
+   // the caller's buffers.  This happens when the number of effects proccessed
+   // is odd.
+   if (called & 1)
    {
       for (int i = 0; i < chans; i++)
       {
