@@ -134,8 +134,6 @@ void ToolBarResizer::OnPaint( wxPaintEvent & event )
 
    wxSize sz = GetSize();
 
-wxLogDebug(wxT("x = %d y = %d"), sz.x, sz.y);
-
    AColor::Dark( &dc, false );
    AColor::Line(dc, sz.x - 4,  0, sz.x - 4, sz.y );
    AColor::Line(dc, sz.x - 1,  0, sz.x - 1, sz.y );
