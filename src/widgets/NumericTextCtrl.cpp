@@ -1098,7 +1098,6 @@ BEGIN_EVENT_TABLE(NumericTextCtrl, wxControl)
    EVT_ERASE_BACKGROUND(NumericTextCtrl::OnErase)
    EVT_PAINT(NumericTextCtrl::OnPaint)
    EVT_CONTEXT_MENU(NumericTextCtrl::OnContext)
-   EVT_MENU_RANGE(ID_MENU, ID_MENU+100, NumericTextCtrl::OnMenu)
    EVT_MOUSE_EVENTS(NumericTextCtrl::OnMouse)
    EVT_KEY_DOWN(NumericTextCtrl::OnKeyDown)
    EVT_KEY_UP(NumericTextCtrl::OnKeyUp)
@@ -1424,39 +1423,6 @@ void NumericTextCtrl::OnPaint(wxPaintEvent & WXUNUSED(event))
    dc.SetBrush( wxNullBrush );
 }
 
-void NumericTextCtrl::OnMenu(wxCommandEvent &event)
-{
-   int id = event.GetId() - ID_MENU;
-
-   if (!mMenuEnabled || id < 0 || id > GetNumBuiltins()) {
-      event.Skip();
-      return;
-   }
-
-   SetFormatString(GetBuiltinFormat(id));
-
-   int eventType = 0;
-   switch (mType) {
-      case NumericConverter::TIME:
-         eventType = EVT_TIMETEXTCTRL_UPDATED;
-         break;
-      case NumericConverter::FREQUENCY:
-         eventType = EVT_FREQUENCYTEXTCTRL_UPDATED;
-         break;
-      case NumericConverter::LOG_FREQUENCY:
-         eventType = EVT_LOGFREQUENCYTEXTCTRL_UPDATED;
-         break;
-      default:
-         wxASSERT(false);
-         break;
-   }
-
-   wxCommandEvent e(eventType, GetId());
-   e.SetInt(id);
-   e.SetString(GetBuiltinName(id));
-   GetParent()->GetEventHandler()->AddPendingEvent(e);
-}
-
 void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
 {
    wxMenu menu;
@@ -1469,13 +1435,49 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
 
    SetFocus();
 
-   for(i=0; i<GetNumBuiltins(); i++) {
-      menu.AppendCheckItem(ID_MENU+i, GetBuiltinName(i));
-      if (mFormatString == GetBuiltinFormat(i))
-         menu.Check(ID_MENU+i, true);
+   int currentSelection = -1;
+   for (i = 0; i < GetNumBuiltins(); i++) {
+      menu.AppendRadioItem(ID_MENU + i, GetBuiltinName(i));
+      if (mFormatString == GetBuiltinFormat(i)) {
+         menu.Check(ID_MENU + i, true);
+         currentSelection = i;
+      }
    }
 
    PopupMenu(&menu, wxPoint(0, 0));
+
+   // This used to be in an EVT_MENU() event handler, but GTK
+   // is sensitive to what is done within the handler if the
+   // user happens to check the first menuitem and then is 
+   // moving down the menu when the ...CTRL_UPDATED event
+   // handler kicks in.
+   for (i = 0; i < GetNumBuiltins(); i++) {
+      if (menu.IsChecked(ID_MENU + i) && i != currentSelection) {
+         SetFormatString(GetBuiltinFormat(i));
+      
+         int eventType = 0;
+         switch (mType) {
+            case NumericConverter::TIME:
+               eventType = EVT_TIMETEXTCTRL_UPDATED;
+               break;
+            case NumericConverter::FREQUENCY:
+               eventType = EVT_FREQUENCYTEXTCTRL_UPDATED;
+               break;
+            case NumericConverter::LOG_FREQUENCY:
+               eventType = EVT_LOGFREQUENCYTEXTCTRL_UPDATED;
+               break;
+            default:
+               wxASSERT(false);
+               break;
+         }
+      
+         wxCommandEvent e(eventType, GetId());
+         e.SetInt(i);
+         e.SetString(GetBuiltinName(i));
+         GetParent()->GetEventHandler()->AddPendingEvent(e);
+      }
+   }
+
 }
 
 void NumericTextCtrl::OnMouse(wxMouseEvent &event)

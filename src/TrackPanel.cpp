@@ -661,24 +661,24 @@ void TrackPanel::BuildMenus(void)
    // Use AppendCheckItem so we can have ticks beside the items.
    // We would use AppendRadioItem but it only currently works on windows and GTK.
    mRateMenu = new wxMenu();
-   mRateMenu->AppendCheckItem(OnRate8ID, wxT("8000 Hz"));
-   mRateMenu->AppendCheckItem(OnRate11ID, wxT("11025 Hz"));
-   mRateMenu->AppendCheckItem(OnRate16ID, wxT("16000 Hz"));
-   mRateMenu->AppendCheckItem(OnRate22ID, wxT("22050 Hz"));
-   mRateMenu->AppendCheckItem(OnRate44ID, wxT("44100 Hz"));
-   mRateMenu->AppendCheckItem(OnRate48ID, wxT("48000 Hz"));
-   mRateMenu->AppendCheckItem(OnRate88ID, wxT("88200 Hz"));
-   mRateMenu->AppendCheckItem(OnRate96ID, wxT("96000 Hz"));
-   mRateMenu->AppendCheckItem(OnRate176ID, wxT("176400 Hz"));
-   mRateMenu->AppendCheckItem(OnRate192ID, wxT("192000 Hz"));
-   mRateMenu->AppendCheckItem(OnRate352ID, wxT("352800 Hz"));
-   mRateMenu->AppendCheckItem(OnRate384ID, wxT("384000 Hz"));
-   mRateMenu->AppendCheckItem(OnRateOtherID, _("&Other..."));
+   mRateMenu->AppendRadioItem(OnRate8ID, wxT("8000 Hz"));
+   mRateMenu->AppendRadioItem(OnRate11ID, wxT("11025 Hz"));
+   mRateMenu->AppendRadioItem(OnRate16ID, wxT("16000 Hz"));
+   mRateMenu->AppendRadioItem(OnRate22ID, wxT("22050 Hz"));
+   mRateMenu->AppendRadioItem(OnRate44ID, wxT("44100 Hz"));
+   mRateMenu->AppendRadioItem(OnRate48ID, wxT("48000 Hz"));
+   mRateMenu->AppendRadioItem(OnRate88ID, wxT("88200 Hz"));
+   mRateMenu->AppendRadioItem(OnRate96ID, wxT("96000 Hz"));
+   mRateMenu->AppendRadioItem(OnRate176ID, wxT("176400 Hz"));
+   mRateMenu->AppendRadioItem(OnRate192ID, wxT("192000 Hz"));
+   mRateMenu->AppendRadioItem(OnRate352ID, wxT("352800 Hz"));
+   mRateMenu->AppendRadioItem(OnRate384ID, wxT("384000 Hz"));
+   mRateMenu->AppendRadioItem(OnRateOtherID, _("&Other..."));
 
    mFormatMenu = new wxMenu();
-   mFormatMenu->AppendCheckItem(On16BitID, GetSampleFormatStr(int16Sample));
-   mFormatMenu->AppendCheckItem(On24BitID, GetSampleFormatStr(int24Sample));
-   mFormatMenu->AppendCheckItem(OnFloatID, GetSampleFormatStr(floatSample));
+   mFormatMenu->AppendRadioItem(On16BitID, GetSampleFormatStr(int16Sample));
+   mFormatMenu->AppendRadioItem(On24BitID, GetSampleFormatStr(int24Sample));
+   mFormatMenu->AppendRadioItem(OnFloatID, GetSampleFormatStr(floatSample));
 
    /* build the pop-down menu used on wave (sampled audio) tracks */
    mWaveTrackMenu = new wxMenu();
@@ -690,9 +690,9 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnSpectrumLogID, _("Spectrogram l&og(f)"));
    mWaveTrackMenu->Append(OnPitchID, _("Pitc&h (EAC)"));
    mWaveTrackMenu->AppendSeparator();
-   mWaveTrackMenu->AppendCheckItem(OnChannelMonoID, _("&Mono"));
-   mWaveTrackMenu->AppendCheckItem(OnChannelLeftID, _("&Left Channel"));
-   mWaveTrackMenu->AppendCheckItem(OnChannelRightID, _("&Right Channel"));
+   mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
+   mWaveTrackMenu->AppendRadioItem(OnChannelLeftID, _("&Left Channel"));
+   mWaveTrackMenu->AppendRadioItem(OnChannelRightID, _("&Right Channel"));
    mWaveTrackMenu->Append(OnMergeStereoID, _("Ma&ke Stereo Track"));
    mWaveTrackMenu->Append(OnSwapChannelsID, _("Swap Stereo &Channels"));
    mWaveTrackMenu->Append(OnSplitStereoID, _("Spl&it Stereo Track"));
@@ -6346,6 +6346,7 @@ bool TrackPanel::HandleLabelTrackMouseEvent(LabelTrack * lTrack, wxRect &r, wxMo
          mLabelTrackInfoMenu->Enable(OnPasteSelectedTextID, lTrack->IsTextClipSupported());
          mLabelTrackInfoMenu->Enable(OnDeleteSelectedLabelID, true);
          PopupMenu(mLabelTrackInfoMenu, event.m_x + 1, event.m_y + 1);
+         mPopupMenuTarget = NULL;
          // it's an invalid dragging event
          lTrack->SetWrongDragging(true);
       }
@@ -8015,6 +8016,8 @@ void TrackPanel::OnTrackMenu(Track *t)
                   titleRect.y + titleRect.height + 1);
    }
 
+   mPopupMenuTarget = NULL;
+
    SetCapturedTrack(NULL);
 
    Refresh(false);
@@ -8272,7 +8275,6 @@ void TrackPanel::OnChannelChange(wxCommandEvent & event)
                         mPopupMenuTarget->GetName().c_str(),
                         channelmsgs[id - OnChannelLeftID]),
                         _("Channel"));
-   mPopupMenuTarget = NULL;
    Refresh(false);
 }
 
@@ -8448,7 +8450,6 @@ void TrackPanel::OnSetDisplay(wxCommandEvent & event)
       UpdateVRuler(wt);
    }
    MakeParentModifyState(true);
-   mPopupMenuTarget = NULL;
    Refresh(false);
 }
 
@@ -8512,7 +8513,6 @@ void TrackPanel::OnFormatChange(wxCommandEvent & event)
                        _("Format Change"));
 
    SetMenuCheck( *mFormatMenu, id );
-   mPopupMenuTarget = NULL;
    MakeParentRedrawScrollbars();
    Refresh(false);
 }
@@ -8569,7 +8569,6 @@ void TrackPanel::OnRateChange(wxCommandEvent & event)
    SetMenuCheck( *mRateMenu, id );
    SetRate(mPopupMenuTarget, gRates[id - OnRate8ID]);
 
-   mPopupMenuTarget = NULL;
    MakeParentRedrawScrollbars();
 
    Refresh(false);
@@ -8657,7 +8656,6 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
    SetMenuCheck( *mRateMenu, event.GetId() );
    SetRate(mPopupMenuTarget, newRate);
 
-   mPopupMenuTarget = NULL;
    MakeParentRedrawScrollbars();
    Refresh(false);
 }
@@ -8698,7 +8696,6 @@ void TrackPanel::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
          Refresh(false);
       }
    }
-   mPopupMenuTarget = NULL;
 }
 
 void TrackPanel::OnTimeTrackLin(wxCommandEvent & /*event*/)

@@ -160,7 +160,6 @@ private:
    void OnPaint(wxPaintEvent &event);
    void OnFocus(wxFocusEvent &event);
    void OnContext(wxContextMenuEvent &event);
-   void OnMenu(wxCommandEvent &event);
 
    void ValueToControls();
    void ControlsToValue();
