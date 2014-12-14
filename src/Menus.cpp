@@ -1351,14 +1351,14 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
       optplugs.Sort(SortEffectsByName);
    }
 
-   AddEffectMenuItems(c, defplugs, batchflags, realflags);
+   AddEffectMenuItems(c, defplugs, batchflags, realflags, true);
 
    if (optplugs.GetCount())
    {
       c->AddSeparator();
    }
 
-   AddEffectMenuItems(c, optplugs, batchflags, realflags);
+   AddEffectMenuItems(c, optplugs, batchflags, realflags, false);
 
    return;
 }
@@ -1366,16 +1366,10 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
 void AudacityProject::AddEffectMenuItems(CommandManager *c,
                                          EffectPlugs & plugs,
                                          int batchflags,
-                                         int realflags)
+                                         int realflags,
+                                         bool isDefault)
 {
    size_t pluginCnt = plugs.GetCount();
-   int perGroup;
-
-#if defined(__WXGTK__)
-   gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 15);
-#else
-   gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 0);
-#endif
 
    wxString groupBy = gPrefs->Read(wxT("/Effects/GroupBy"), wxT("name"));
 
@@ -1435,7 +1429,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
                c->BeginSubMenu(last);
             }
 
-            AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags);
+            AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags, isDefault);
 
             if (!last.IsEmpty())
             {
@@ -1457,7 +1451,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       {
          c->BeginSubMenu(current);
 
-         AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags);
+         AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags, isDefault);
 
          c->EndSubMenu();
       }
@@ -1508,7 +1502,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
       }
       if (groupNames.GetCount() > 0)
       {
-         AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags);
+         AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags, isDefault);
       }
 
    }
@@ -1519,7 +1513,8 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
 void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
                                              const wxArrayString & names,
                                              const PluginIDList & plugs,
-                                             const wxArrayInt & flags)
+                                             const wxArrayInt & flags,
+                                             bool isDefault)
 {
    int groupCnt = (int) names.GetCount();
    int perGroup;
@@ -1529,6 +1524,12 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
 #else
    gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 0);
 #endif
+
+   // The "default" effects shouldn't be broken into subgroups
+   if (groupCnt > 0 && isDefault)
+   {
+      perGroup = 0;
+   }
 
    int max = perGroup;
    int items = perGroup;
