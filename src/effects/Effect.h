@@ -518,7 +518,7 @@ private:
 
    void UpdateControls();
    wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
-   void SetLabelAndTip(wxBitmapButton *btn, const wxString & label = wxEmptyString);
+   void SetLabelAndTip(wxBitmapButton *btn, const wxString & label = wxEmptyString, bool setAccel = true);
    void LoadUserPresets();
 
 private:

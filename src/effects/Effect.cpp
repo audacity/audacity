@@ -2149,7 +2149,7 @@ bool EffectUIHost::Initialize()
    mOffDisabledBM = CreateBitmap(effect_off_disabled_xpm, true, false);
    mPowerBtn = new wxBitmapButton(bar, kPowerID, mOnBM);
    mPowerBtn->SetBitmapDisabled(mOffDisabledBM);
-   SetLabelAndTip(mPowerBtn, _("P&ower On/Off"));
+   SetLabelAndTip(mPowerBtn, _("P&ower On"));
    bs->Add(mPowerBtn);
 
    bs->Add(5, 5);
@@ -2691,7 +2691,7 @@ wxBitmap EffectUIHost::CreateBitmap(const char *xpm[], bool up, bool pusher)
 // of wxBitmapButton and how it is currently implemented in wx2.8.12.
 //
 // I'm hoping that when we transition to wx3 all of this can go away.
-void EffectUIHost::SetLabelAndTip(wxBitmapButton *btn, const wxString & label)
+void EffectUIHost::SetLabelAndTip(wxBitmapButton *btn, const wxString & label, bool setAccel)
 {
    if (btn != NULL)
    {
@@ -2699,7 +2699,10 @@ void EffectUIHost::SetLabelAndTip(wxBitmapButton *btn, const wxString & label)
       if (pos != wxNOT_FOUND && pos < label.Length() - 1)
       {
          wxChar c = wxToupper(label[pos + 1]);
-         mAccels.Add(wxAcceleratorEntry(wxACCEL_ALT, c, btn->GetId()));
+         if (setAccel)
+         {
+            mAccels.Add(wxAcceleratorEntry(wxACCEL_ALT, c, btn->GetId()));
+         }
 #if defined(__WXMAC__)
          btn->SetName(label);
 #else
@@ -2730,8 +2733,19 @@ void EffectUIHost::UpdateControls()
    mFFwdBtn->Enable(!mCapturing);
 
    mPlayBtn->SetBitmapLabel(mPlaying ? mStopBM : mPlayBM);
-   mPlayBtn->SetBitmapDisabled(mPlaying ? mStopDisabledBM: mPlayDisabledBM);
-   mPowerBtn->SetBitmapLabel(mPowerOn ? mOnBM : mOffBM);
+   mPlayBtn->SetBitmapDisabled(mPlaying ? mStopDisabledBM : mPlayDisabledBM);
+
+   if (mPowerOn)
+   {
+      mPowerBtn->SetBitmapLabel(mOnBM);
+      SetLabelAndTip(mPowerBtn, _("P&ower Off"), false);
+   }
+   else
+   {
+      mPowerBtn->SetBitmapLabel(mOffBM);
+      SetLabelAndTip(mPowerBtn, _("P&ower On"), false);
+   }
+
 }
 
 void EffectUIHost::LoadUserPresets()
