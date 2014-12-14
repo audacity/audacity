@@ -1429,7 +1429,7 @@ void LadspaEffect::ShowOptions()
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings
-      SetHost(mHost);
+      mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
    }
 }
 
