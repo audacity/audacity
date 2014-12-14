@@ -123,7 +123,11 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
                      
          S.TieNumericTextBox(_("Maximum effects per group (0 to disable):"),
                              wxT("/Effects/MaxPerGroup"),
+#if defined(__WXGTK__)
+                             15,
+#else
                              0,
+#endif
                              5);
       }
       S.EndMultiColumn();
