@@ -376,15 +376,15 @@ void LadspaEffectsModule::DeleteInstance(IdentInterface *instance)
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// LadspaEffectSettingsDialog
+// LadspaEffectOptionsDialog
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LadspaEffectSettingsDialog:public wxDialog
+class LadspaEffectOptionsDialog:public wxDialog
 {
 public:
-   LadspaEffectSettingsDialog(wxWindow * parent, EffectHostInterface *host);
-   virtual ~LadspaEffectSettingsDialog();
+   LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
+   virtual ~LadspaEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
 
@@ -397,26 +397,26 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-BEGIN_EVENT_TABLE(LadspaEffectSettingsDialog, wxDialog)
-   EVT_BUTTON(wxID_OK, LadspaEffectSettingsDialog::OnOk)
+BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialog)
+   EVT_BUTTON(wxID_OK, LadspaEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-LadspaEffectSettingsDialog::LadspaEffectSettingsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialog(parent, wxID_ANY, wxString(_("Ladspa Effect Settings")))
+LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
+:  wxDialog(parent, wxID_ANY, wxString(_("Ladspa Effect Options")))
 {
    mHost = host;
 
-   mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
+   mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
 
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
 
-LadspaEffectSettingsDialog::~LadspaEffectSettingsDialog()
+LadspaEffectOptionsDialog::~LadspaEffectOptionsDialog()
 {
 }
 
-void LadspaEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
+void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(5);
    S.StartHorizontalLay(wxEXPAND, 1);
@@ -452,7 +452,7 @@ void LadspaEffectSettingsDialog::PopulateOrExchange(ShuttleGui & S)
    Center();
 }
 
-void LadspaEffectSettingsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
+void LadspaEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 {
    if (!Validate())
    {
@@ -462,7 +462,7 @@ void LadspaEffectSettingsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   mHost->SetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency);
+   mHost->SetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency);
 
    EndModal(wxID_OK);
 }
@@ -834,7 +834,7 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
    // mHost will be null during registration
    if (mHost)
    {
-      mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
+      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
 
       bool haveDefaults;
       mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
@@ -1425,11 +1425,11 @@ bool LadspaEffect::HasOptions()
 
 void LadspaEffect::ShowOptions()
 {
-   LadspaEffectSettingsDialog dlg(mParent, mHost);
+   LadspaEffectOptionsDialog dlg(mParent, mHost);
    if (dlg.ShowModal())
    {
-      // Reinitialize configuration settings
-      mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
+      // Reinitialize configuration options
+      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
    }
 }
 
