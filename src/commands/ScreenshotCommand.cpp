@@ -38,6 +38,62 @@ project window.
 #include "../toolbars/TranscriptionToolBar.h"
 #include "../widgets/Ruler.h"
 
+#if defined(__WXMAC__) && !wxCHECK_VERSION(3, 0, 0)
+//
+// This is a temporary solution for capturing screenshots on
+// OS X 10.6 or greater.  This needs to go away once we move
+// to wx3.
+//
+// (This was copied from wx3.1.0 source and hacked up a bit.)
+//
+#include <wx/mac/private.h>
+#include <dlfcn.h>
+
+typedef CGImageRef (*CGDisplayCreateImageFunc)(CGDirectDisplayID displayID);
+
+static wxBitmap DoGetAsBitmap(const wxRect *subrect)
+{
+    CGRect cgbounds = CGDisplayBounds(CGMainDisplayID());
+
+    wxRect rect = subrect ? *subrect : wxRect(0, 0, cgbounds.size.width, cgbounds.size.height);
+
+    wxBitmap bmp(rect.GetSize().GetWidth(), rect.GetSize().GetHeight(), 32);
+
+    CGDisplayCreateImageFunc createImage =
+        (CGDisplayCreateImageFunc) dlsym(RTLD_NEXT, "CGDisplayCreateImage");
+    if (createImage == NULL)
+    {
+        return bmp;
+    }
+
+    CGRect srcRect = CGRectMake(rect.x, rect.y, rect.width, rect.height);
+
+    CGContextRef context = (CGContextRef)bmp.GetHBITMAP();
+
+    CGContextSaveGState(context);
+
+    CGContextTranslateCTM( context, 0,  cgbounds.size.height );
+    CGContextScaleCTM( context, 1, -1 );
+
+    if ( subrect )
+        srcRect = CGRectOffset( srcRect, -subrect->x, -subrect->y ) ;
+
+    CGImageRef image = NULL;
+
+    image = createImage(kCGDirectMainDisplay);
+
+    wxASSERT_MSG(image, wxT("wxScreenDC::GetAsBitmap - unable to get screenshot."));
+
+    CGContextDrawImage(context, srcRect, image);
+
+    CGImageRelease(image);
+
+    CGContextRestoreGState(context);
+
+    return bmp;
+}
+#endif
+
 wxTopLevelWindow *ScreenshotCommand::GetFrontWindow(AudacityProject *project)
 {
    wxWindow *front = NULL;
@@ -118,11 +174,15 @@ void ScreenshotCommand::Capture(wxString filename,
    wxScreenDC screenDC;
    wxMemoryDC fullDC;
 
+#if defined(__WXMAC__) && !wxCHECK_VERSION(3, 0, 0)
+   full = DoGetAsBitmap(NULL);
+#else
    // We grab the whole screen image since there seems to be a problem with
    // using non-zero source coordinates on OSX.  (as of wx2.8.9)
    fullDC.SelectObject(full);
    fullDC.Blit(0, 0, screenW, screenH, &screenDC, 0, 0);
    fullDC.SelectObject(wxNullBitmap);
+#endif
 
    wxRect r(x, y, width, height);
 
