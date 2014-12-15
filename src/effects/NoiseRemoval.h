@@ -34,7 +34,7 @@ public:
    virtual ~EffectNoiseRemoval();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Noise Removal..."));
+      return wxString(wxTRANSLATE("Noise Removal..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

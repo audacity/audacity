@@ -48,7 +48,7 @@ public:
    virtual ~EffectScienFilter();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Classic Filters..."));
+      return wxString(wxTRANSLATE("Classic Filters..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

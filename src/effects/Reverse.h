@@ -27,7 +27,7 @@ class EffectReverse:public Effect {
    EffectReverse();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Reverse"));
+      return wxString(wxTRANSLATE("Reverse"));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

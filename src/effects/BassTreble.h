@@ -25,7 +25,7 @@ public:
    virtual ~EffectBassTreble() {};
 
    virtual wxString GetEffectName() {
-      return wxString(_("Bass and Treble..."));
+      return wxString(wxTRANSLATE("Bass and Treble..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

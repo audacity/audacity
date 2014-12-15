@@ -41,7 +41,7 @@ class EffectNoise : public BlockGenerator {
    virtual bool Init();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Noise..."));
+      return wxString(wxTRANSLATE("Noise..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

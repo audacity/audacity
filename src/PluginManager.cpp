@@ -824,31 +824,6 @@ PluginType PluginDescriptor::GetPluginType() const
    return mPluginType;
 }
 
-const wxString & PluginDescriptor::GetPath() const
-{
-   return mPath;
-}
-
-const wxString & PluginDescriptor::GetName() const
-{
-   return mName;
-}
-
-const wxString & PluginDescriptor::GetVersion() const
-{
-   return mVersion;
-}
-
-const wxString & PluginDescriptor::GetVendor() const
-{
-   return mVendor;
-}
-
-const wxString & PluginDescriptor::GetDescription() const
-{
-   return mDescription;
-}
-
 const PluginID & PluginDescriptor::GetID() const
 {
    return mID;
@@ -857,6 +832,41 @@ const PluginID & PluginDescriptor::GetID() const
 const PluginID & PluginDescriptor::GetProviderID() const
 {
    return mProviderID;
+}
+
+const wxString & PluginDescriptor::GetPath() const
+{
+   return mPath;
+}
+
+const wxString & PluginDescriptor::GetSymbol() const
+{
+   if (mSymbol.IsEmpty())
+   {
+      return mName;
+   }
+
+   return mSymbol;
+}
+
+wxString PluginDescriptor::GetName() const
+{
+   return wxGetTranslation(mName);
+}
+
+wxString PluginDescriptor::GetVersion() const
+{
+   return wxGetTranslation(mVersion);
+}
+
+wxString PluginDescriptor::GetVendor() const
+{
+   return wxGetTranslation(mVendor);
+}
+
+wxString PluginDescriptor::GetDescription() const
+{
+   return wxGetTranslation(mDescription);
 }
 
 bool PluginDescriptor::IsEnabled() const
@@ -869,25 +879,29 @@ bool PluginDescriptor::IsValid() const
    return mValid;
 }
 
-wxString PluginDescriptor::GetMenuName() const
-{
-   // This probably shouldn't be here...but it was easy
-   wxString name;
-   mName.EndsWith(wxT("..."), &name);
-
-   return (mVendor.IsEmpty() ? wxT("") : mVendor + wxT(": ")) +
-          (name.IsEmpty() ? mName : name) +
-          (mEffectInteractive ? wxT("...") : wxT(""));
-}
-
 void PluginDescriptor::SetPluginType(PluginType type)
 {
    mPluginType = type;
 }
 
+void PluginDescriptor::SetID(const PluginID & ID)
+{
+   mID = ID;
+}
+
+void PluginDescriptor::SetProviderID(const PluginID & providerID)
+{
+   mProviderID = providerID;
+}
+
 void PluginDescriptor::SetPath(const wxString & path)
 {
    mPath = path;
+}
+
+void PluginDescriptor::SetSymbol(const wxString & symbol)
+{
+   mSymbol = symbol;
 }
 
 void PluginDescriptor::SetName(const wxString & name)
@@ -908,16 +922,6 @@ void PluginDescriptor::SetVendor(const wxString & vendor)
 void PluginDescriptor::SetDescription(const wxString & description)
 {
    mDescription = description;
-}
-
-void PluginDescriptor::SetID(const PluginID & ID)
-{
-   mID = ID;
-}
-
-void PluginDescriptor::SetProviderID(const PluginID & providerID)
-{
-   mProviderID = providerID;
 }
 
 void PluginDescriptor::SetEnabled(bool enable)
@@ -1040,11 +1044,14 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#define REGVERKEY wxString(wxT("/pluginregistryversion"))
+#define REGVERCUR wxString(wxT("1.1"))
 #define CACHEROOT wxString(wxT("/plugincache/"))
 
 #define KEY_ID                         wxT("ID")
-#define KEY_NAME                       wxT("Name")
 #define KEY_PATH                       wxT("Path")
+#define KEY_SYMBOL                     wxT("Symbol")
+#define KEY_NAME                       wxT("Name")
 #define KEY_VENDOR                     wxT("Vendor")
 #define KEY_VERSION                    wxT("Version")
 #define KEY_DESCRIPTION                wxT("Description")
@@ -1420,6 +1427,14 @@ bool PluginManager::Load()
       return false;
    }
 
+   // Check for a registry version that we can understand
+   wxString regver = mConfig->Read(REGVERKEY);
+   if (regver > REGVERCUR )
+   {
+      // This is where we'd put in conversion code when the
+      // registry version changed.
+   }
+
    // Load all provider plugins first
    LoadGroup(wxT("modules"), PluginTypeModule);
 
@@ -1469,7 +1484,7 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
       if (!mConfig->Read(KEY_PROVIDERID, &strVal, wxEmptyString))
       {
          // Bypass group if the provider isn't valid
-         if (!strVal.IsEmpty() && mPlugins.find(wxString(strVal)) == mPlugins.end())
+         if (!strVal.IsEmpty() && mPlugins.find(strVal) == mPlugins.end())
          {
             continue;
          }
@@ -1478,35 +1493,42 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
 
       // Get the path (optional)
       mConfig->Read(KEY_PATH, &strVal, wxEmptyString);
-      plug.SetPath(wxString(strVal));
+      plug.SetPath(strVal);
 
       // Get the name and bypass group if not found
       if (!mConfig->Read(KEY_NAME, &strVal))
       {
          continue;
       }
-      plug.SetName(wxString(strVal));
+      plug.SetName(strVal);
+
+      // Get the symbol...use name if not found
+      if (!mConfig->Read(KEY_SYMBOL, &strVal))
+      {
+         strVal = plug.GetName();
+      }
+      plug.SetSymbol(strVal);
 
       // Get the version and bypass group if not found
       if (!mConfig->Read(KEY_VERSION, &strVal))
       {
          continue;
       }
-      plug.SetVersion(wxString(strVal));
+      plug.SetVersion(strVal);
 
       // Get the vendor and bypass group if not found
       if (!mConfig->Read(KEY_VENDOR, &strVal))
       {
          continue;
       }
-      plug.SetVendor(wxString(strVal));
+      plug.SetVendor(strVal);
 
       // Get the description and bypass group if not found
       if (!mConfig->Read(KEY_DESCRIPTION, &strVal))
       {
          continue;
       }
-      plug.SetDescription(wxString(strVal));
+      plug.SetDescription(strVal);
 
       // Is it enabled...default to no if not found
       mConfig->Read(KEY_ENABLED, &boolVal, false);
@@ -1558,7 +1580,7 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
             {
                continue;
             }
-            plug.SetEffectFamily(wxString(strVal));
+            plug.SetEffectFamily(strVal);
 
             // Is it a default (above the line) effect and bypass group if not found
             if (!mConfig->Read(KEY_EFFECTDEFAULT, &boolVal))
@@ -1597,14 +1619,14 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
             {
                continue;
             }
-            plug.SetImporterIdentifier(wxString(strVal));
+            plug.SetImporterIdentifier(strVal);
 
             // Get the importer filter description and bypass group if not found
             if (!mConfig->Read(KEY_IMPORTERFILTER, &strVal))
             {
                continue;
             }
-            plug.SetImporterFilterDescription(wxString(strVal));
+            plug.SetImporterFilterDescription(strVal);
 
             // Get the importer extensions and bypass group if not found
             if (!mConfig->Read(KEY_IMPORTEREXTENSIONS, &strVal))
@@ -1615,7 +1637,7 @@ void PluginManager::LoadGroup(const wxChar * group, PluginType type)
             wxStringTokenizer tkr(strVal, wxT(":"));
             while (tkr.HasMoreTokens())
             {
-               extensions.push_back(wxString(tkr.GetNextToken()));
+               extensions.Add(tkr.GetNextToken());
             }
             plug.SetImporterExtensions(extensions);
          }
@@ -1676,6 +1698,7 @@ void PluginManager::SaveGroup(const wxChar *group, PluginType type)
       mConfig->SetPath(CACHEROOT + group + wxCONFIG_PATH_SEPARATOR + ConvertID(plug.GetID()));
 
       mConfig->Write(KEY_PATH, plug.GetPath());
+      mConfig->Write(KEY_SYMBOL, plug.GetSymbol());
       mConfig->Write(KEY_NAME, plug.GetName());
       mConfig->Write(KEY_VERSION, plug.GetVersion());
       mConfig->Write(KEY_VENDOR, plug.GetVendor());
@@ -1741,7 +1764,7 @@ void PluginManager::SaveGroup(const wxChar *group, PluginType type)
    return;
 }
 
-void PluginManager::CheckForUpdates(bool forceRescan)
+void PluginManager::CheckForUpdates(bool WXUNUSED(forceRescan))
 {
    // Get ModuleManager reference
    ModuleManager & mm = ModuleManager::Get();
@@ -1974,12 +1997,22 @@ void PluginManager::EnablePlugin(const PluginID & ID, bool enable)
    return mPlugins[ID].SetEnabled(enable);
 }
 
-const wxString & PluginManager::GetName(const PluginID & ID)
+const wxString & PluginManager::GetSymbol(const PluginID & ID)
 {
    if (mPlugins.find(ID) == mPlugins.end())
    {
       static wxString empty;
       return empty;
+   }
+
+   return mPlugins[ID].GetSymbol();
+}
+
+wxString PluginManager::GetName(const PluginID & ID)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      return wxEmptyString;
    }
 
    return mPlugins[ID].GetName();

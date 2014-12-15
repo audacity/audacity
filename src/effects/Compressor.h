@@ -36,7 +36,7 @@ public:
    virtual ~EffectCompressor();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Compressor..."));
+      return wxString(wxTRANSLATE("Compressor..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

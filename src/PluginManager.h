@@ -54,40 +54,49 @@ public:
 
    // All plugins
 
+   // These return untranslated strings
    const wxString & GetID() const;
-   const wxString & GetPath() const;
-   const wxString & GetName() const;
-   const wxString & GetVersion() const;
-   const wxString & GetVendor() const;
-   const wxString & GetDescription() const;
    const wxString & GetProviderID() const;
+   const wxString & GetPath() const;
+   const wxString & GetSymbol() const;
+   // These return translated strings (if available)
+   wxString GetName() const;
+   wxString GetVersion() const;
+   wxString GetVendor() const;
+   wxString GetDescription() const;
    bool IsEnabled() const;
    bool IsValid() const;
 
+   // These should be passed an untranslated value
    void SetID(const PluginID & ID);
+   void SetProviderID(const PluginID & providerID);
    void SetPath(const wxString & path);
+   void SetSymbol(const wxString & symbol);
+
+   // These should be passed an untranslated value wrapped in wxTRANSLATE() so
+   // the value will still be extracted for translation
    void SetName(const wxString & name);
    void SetVersion(const wxString & version);
    void SetVendor(const wxString & vendor);
    void SetDescription(const wxString & description);
-   void SetProviderID(const PluginID & providerID);
+
    void SetEnabled(bool enable);
    void SetValid(bool valid);
 
-   wxString GetMenuName() const;
-
    // Effect plugins only
 
-   EffectType GetEffectType() const;
+   // Will return an untranslated string
    const wxString & GetEffectFamily() const;
+   EffectType GetEffectType() const;
    bool IsEffectDefault() const;
    bool IsEffectInteractive() const;
    bool IsEffectLegacy() const;
    bool IsEffectRealtime() const;
    bool IsEffectAutomatable() const;
 
-   void SetEffectType(EffectType type);
+   // "family" should be an untranslated string wrapped in wxT()
    void SetEffectFamily(const wxString & family);
+   void SetEffectType(EffectType type);
    void SetEffectDefault(bool dflt);
    void SetEffectInteractive(bool interactive);
    void SetEffectLegacy(bool legacy);
@@ -114,6 +123,7 @@ private:
 
    wxString mID;
    wxString mPath;
+   wxString mSymbol;
    wxString mName;
    wxString mVersion;
    wxString mVendor;
@@ -234,7 +244,10 @@ public:
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
 
-   const wxString & GetName(const PluginID & ID);
+   // Returns untranslated string
+   const wxString & GetSymbol(const PluginID & ID);
+   // Returns translated string
+   wxString GetName(const PluginID & ID);
    IdentInterface *GetInstance(const PluginID & ID);
    void SetInstance(const PluginID & ID, IdentInterface *instance);  // TODO: Remove after conversion
 

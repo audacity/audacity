@@ -173,6 +173,16 @@ wxString Effect::GetPath()
    return wxEmptyString;
 }
 
+wxString Effect::GetSymbol()
+{
+   if (mClient)
+   {
+      return mClient->GetSymbol();
+   }
+
+   return GetEffectIdentifier();
+}
+
 wxString Effect::GetName()
 {
    if (mClient)
@@ -180,7 +190,7 @@ wxString Effect::GetName()
       return mClient->GetName();
    }
 
-   return GetEffectIdentifier();
+   return GetEffectName();
 }
 
 wxString Effect::GetVendor()
@@ -2344,7 +2354,7 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
    return;
 }
 
-void EffectUIHost::OnMenu(wxCommandEvent & evt)
+void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 {
    wxMenu *menu = new wxMenu();
    wxMenu *sub;
@@ -2695,7 +2705,7 @@ void EffectUIHost::SetLabelAndTip(wxBitmapButton *btn, const wxString & label, b
 {
    if (btn != NULL)
    {
-      int pos = label.Find(wxT('&'));
+      size_t pos = label.Find(wxT('&'));
       if (pos != wxNOT_FOUND && pos < label.Length() - 1)
       {
          wxChar c = wxToupper(label[pos + 1]);

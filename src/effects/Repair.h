@@ -26,7 +26,7 @@ public:
    virtual ~EffectRepair();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Repair"));
+      return wxString(wxTRANSLATE("Repair"));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

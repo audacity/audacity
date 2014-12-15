@@ -30,7 +30,7 @@ class EffectSilence : public Generator {
    }
 
    virtual wxString GetEffectName() {
-      return wxString(_("Silence..."));
+      return wxString(wxTRANSLATE("Silence..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

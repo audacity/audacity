@@ -25,7 +25,7 @@ class EffectLeveller: public EffectSimpleMono
    EffectLeveller();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Leveler..."));
+      return wxString(wxTRANSLATE("Leveler..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

@@ -31,7 +31,7 @@ class EffectEcho:public Effect {
    EffectEcho();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Echo..."));
+      return wxString(wxTRANSLATE("Echo..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

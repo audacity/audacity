@@ -34,7 +34,7 @@ public:
    EffectTruncSilence();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Truncate Silence..."));
+      return wxString(wxTRANSLATE("Truncate Silence..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

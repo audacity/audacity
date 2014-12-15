@@ -49,8 +49,13 @@ class AUDACITY_DLL_API IdentInterface
 public:
    virtual ~IdentInterface() {};
 
+   // These should return an untranslated value
    virtual PluginID GetID() = 0;
    virtual wxString GetPath() = 0;
+   virtual wxString GetSymbol() = 0;
+
+   // These should return an untranslated value whose translation
+   // will be determined at runtime (if available)
    virtual wxString GetName() = 0;
    virtual wxString GetVendor() = 0;
    virtual wxString GetVersion() = 0;

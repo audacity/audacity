@@ -37,7 +37,7 @@ class EffectToneGen : public BlockGenerator {
    EffectToneGen & EnableForChirps(){mbChirp=true;return *this;};
 
    virtual wxString GetEffectName() {
-      return wxString(mbChirp? _("Chirp..."):_("Tone..."));
+      return wxString(mbChirp? wxTRANSLATE("Chirp..."):wxTRANSLATE("Tone..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

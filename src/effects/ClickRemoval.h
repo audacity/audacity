@@ -39,7 +39,7 @@ public:
    virtual ~EffectClickRemoval();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Click Removal..."));
+      return wxString(wxTRANSLATE("Click Removal..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

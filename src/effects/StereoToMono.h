@@ -20,7 +20,7 @@ public:
    EffectStereoToMono();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Stereo to Mono"));
+      return wxString(wxTRANSLATE("Stereo to Mono"));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

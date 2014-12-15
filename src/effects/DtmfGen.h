@@ -38,7 +38,7 @@ class EffectDtmf : public Generator {
    }
 
    virtual wxString GetEffectName() {
-      return wxString(_("DTMF Tones..."));
+      return wxString(wxTRANSLATE("DTMF Tones..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

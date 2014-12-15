@@ -1123,8 +1123,8 @@ bool CommandManager::HandleTextualCommand(wxString & Str, wxUint32 flags, wxUint
    EffectManager & em = EffectManager::Get();
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
-         {
-      if (em.GetEffectName(plug->GetID()).IsSameAs(Str))
+   {
+      if (em.GetEffectByIdentifier(plug->GetID()).IsSameAs(Str))
       {
          return proj->OnEffect( ALL_EFFECTS | CONFIGURED_EFFECT, plug->GetID()); 
       }

@@ -32,7 +32,7 @@ class EffectChangePitch : public EffectSoundTouch
  public:
    EffectChangePitch();
 
-   virtual wxString GetEffectName() { return wxString(_("Change Pitch...")); }
+   virtual wxString GetEffectName() { return wxString(wxTRANSLATE("Change Pitch...")); }
 
    virtual std::set<wxString> GetEffectCategories() {
       std::set<wxString> result;

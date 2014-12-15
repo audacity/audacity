@@ -309,7 +309,7 @@ wxString EffectManager::GetEffectName(const PluginID & ID)
 
 wxString EffectManager::GetEffectIdentifier(const PluginID & ID)
 {
-   wxString name = (PluginManager::Get().GetName(ID));
+   wxString name = (PluginManager::Get().GetSymbol(ID));
 
    // Get rid of leading and trailing white space
    name.Trim(true).Trim(false);

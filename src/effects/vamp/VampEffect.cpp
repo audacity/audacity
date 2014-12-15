@@ -79,9 +79,14 @@ wxString VampEffect::GetPath()
    return LAT1CTOWX(loader->getLibraryPathForPlugin(mKey).c_str());
 }
 
-wxString VampEffect::GetName()
+wxString VampEffect::GetSymbol()
 {
    return mName;
+}
+
+wxString VampEffect::GetName()
+{
+   return GetSymbol();
 }
 
 wxString VampEffect::GetVendor()

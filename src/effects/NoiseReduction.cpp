@@ -427,7 +427,7 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
 
 wxString EffectNoiseReduction::GetEffectName()
 {
-   return wxString(_("Noise Reduction..."));
+   return wxString(wxTRANSLATE("Noise Reduction..."));
 }
 
 std::set<wxString> EffectNoiseReduction::GetEffectCategories()

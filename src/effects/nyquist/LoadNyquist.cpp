@@ -68,14 +68,19 @@ wxString NyquistEffectsModule::GetPath()
    return mPath;
 }
 
+wxString NyquistEffectsModule::GetSymbol()
+{
+   return wxT("Nyquist Effects");
+}
+
 wxString NyquistEffectsModule::GetName()
 {
-   return _("Nyquist Effects Module");
+   return wxTRANSLATE("Nyquist Effects");
 }
 
 wxString NyquistEffectsModule::GetVendor()
 {
-   return _("The Audacity Team");
+   return wxTRANSLATE("The Audacity Team");
 }
 
 wxString NyquistEffectsModule::GetVersion()
@@ -86,7 +91,7 @@ wxString NyquistEffectsModule::GetVersion()
 
 wxString NyquistEffectsModule::GetDescription()
 {
-   return _("Provides Nyquist Effects support to Audacity");
+   return wxTRANSLATE("Provides Nyquist Effects support to Audacity");
 }
 
 // ============================================================================
@@ -139,13 +144,13 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return true;
 }
 
-wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & pm)
+wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm))
 {
    // Nothing to do here yet
    return wxArrayString();
 }
 
-bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & WXUNUSED(pm), const wxString & WXUNUSED(path))
 {
    // Nothing to do here yet
    return false;
@@ -162,15 +167,15 @@ bool NyquistEffectsModule::IsPluginValid(const PluginID & ID,
    return wxFileName::FileExists(path);
 }
 
-IdentInterface *NyquistEffectsModule::CreateInstance(const PluginID & ID,
-                                                     const wxString & path)
+IdentInterface *NyquistEffectsModule::CreateInstance(const PluginID & WXUNUSED(ID),
+                                                     const wxString & WXUNUSED(path))
 {
    // Nothing to do here yet since we are autoregistering (and creating legacy
    // effects anyway).
    return NULL;
 }
 
-void NyquistEffectsModule::DeleteInstance(IdentInterface *instance)
+void NyquistEffectsModule::DeleteInstance(IdentInterface *WXUNUSED(instance))
 {
    // Nothing to do here yet
 }

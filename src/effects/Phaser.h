@@ -42,7 +42,7 @@ class EffectPhaser:public EffectSimpleMono {
    EffectPhaser();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Phaser..."));
+      return wxString(wxTRANSLATE("Phaser..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

@@ -198,9 +198,14 @@ public:
       return mPath;
    }
 
-   wxString GetName()
+   wxString GetSymbol()
    {
       return mName;
+   }
+
+   wxString GetName()
+   {
+      return GetSymbol();
    }
 
    wxString GetVendor()
@@ -298,6 +303,11 @@ wxString VSTEffectsModule::GetID()
 wxString VSTEffectsModule::GetPath()
 {
    return mPath;
+}
+
+wxString VSTEffectsModule::GetSymbol()
+{
+   return wxT("VST Effects");
 }
 
 wxString VSTEffectsModule::GetName()
@@ -551,7 +561,7 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
    return valid;
 }
 
-bool VSTEffectsModule::IsPluginValid(const PluginID & ID,
+bool VSTEffectsModule::IsPluginValid(const PluginID & WXUNUSED(ID),
                                      const wxString & path)
 {
    return wxFileName::FileExists(path) || wxFileName::DirExists(path);
@@ -1549,9 +1559,14 @@ wxString VSTEffect::GetPath()
    return mPath;
 }
 
-wxString VSTEffect::GetName()
+wxString VSTEffect::GetSymbol()
 {
    return mName;
+}
+
+wxString VSTEffect::GetName()
+{
+   return GetSymbol();
 }
 
 wxString VSTEffect::GetVendor()
@@ -2050,7 +2065,7 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
       return false;
    }
 
-   bool res = mDialog->ShowModal();
+   bool res = mDialog->ShowModal() != 0;
    mDialog = NULL;
 
    return res;

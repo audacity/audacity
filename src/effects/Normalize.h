@@ -30,7 +30,7 @@ class EffectNormalize: public Effect
    EffectNormalize();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Normalize..."));
+      return wxString(wxTRANSLATE("Normalize..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

@@ -99,7 +99,7 @@ public:
 
    virtual wxString GetEffectName()
    {
-      return wxString(_("Auto Duck..."));
+      return wxString(wxTRANSLATE("Auto Duck..."));
    }
 
    virtual std::set<wxString> GetEffectCategories()

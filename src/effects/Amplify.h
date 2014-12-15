@@ -34,7 +34,7 @@ class EffectAmplify:public EffectSimpleMono
    EffectAmplify();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Amplify..."));
+      return wxString(wxTRANSLATE("Amplify..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

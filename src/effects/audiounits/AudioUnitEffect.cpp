@@ -90,9 +90,14 @@ wxString AudioUnitEffectsModule::GetPath()
    return mPath;
 }
 
+wxString AudioUnitEffectsModule::GetSymbol()
+{
+   return wxT("Audio Unit Effects");
+}
+
 wxString AudioUnitEffectsModule::GetName()
 {
-   return _("Audio Unit Effects Module");
+   return _("Audio Unit Effects");
 }
 
 wxString AudioUnitEffectsModule::GetVendor()
@@ -976,9 +981,14 @@ wxString AudioUnitEffect::GetPath()
    return mPath;
 }
 
-wxString AudioUnitEffect::GetName()
+wxString AudioUnitEffect::GetSymbol()
 {
    return mName;
+}
+
+wxString AudioUnitEffect::GetName()
+{
+   return GetSymbol();
 }
 
 wxString AudioUnitEffect::GetVendor()

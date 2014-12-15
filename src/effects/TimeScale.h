@@ -30,7 +30,7 @@ class EffectTimeScale : public EffectSBSMS {
    EffectTimeScale();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Sliding Time Scale/Pitch Shift..."));
+      return wxString(wxTRANSLATE("Sliding Time Scale/Pitch Shift..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

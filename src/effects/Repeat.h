@@ -30,7 +30,7 @@ class EffectRepeat:public Effect
    EffectRepeat();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Repeat..."));
+      return wxString(wxTRANSLATE("Repeat..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

@@ -38,7 +38,7 @@ class EffectWahwah:public EffectSimpleMono {
    EffectWahwah();
 
    virtual wxString GetEffectName() {
-      return wxString(_("Wahwah..."));
+      return wxString(wxTRANSLATE("Wahwah..."));
    }
 
    virtual std::set<wxString> GetEffectCategories() {

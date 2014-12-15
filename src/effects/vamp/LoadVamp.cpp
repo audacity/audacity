@@ -76,14 +76,19 @@ wxString VampEffectsModule::GetPath()
    return mPath;
 }
 
+wxString VampEffectsModule::GetSymbol()
+{
+   return wxT("Vamp Effects");
+}
+
 wxString VampEffectsModule::GetName()
 {
-   return _("Vamp Effects Module");
+   return wxTRANSLATE("Vamp Effects");
 }
 
 wxString VampEffectsModule::GetVendor()
 {
-   return _("The Audacity Team");
+   return wxTRANSLATE("The Audacity Team");
 }
 
 wxString VampEffectsModule::GetVersion()
@@ -94,7 +99,7 @@ wxString VampEffectsModule::GetVersion()
 
 wxString VampEffectsModule::GetDescription()
 {
-   return _("Provides Vamp Effects support to Audacity");
+   return wxTRANSLATE("Provides Vamp Effects support to Audacity");
 }
 
 // ============================================================================
@@ -113,7 +118,7 @@ void VampEffectsModule::Terminate()
    return;
 }
 
-bool VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+bool VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
 {
 #ifdef EFFECT_CATEGORIES
    InitCategoryMap();
@@ -208,33 +213,33 @@ bool VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    return true;
 }
 
-wxArrayString VampEffectsModule::FindPlugins(PluginManagerInterface & pm)
+wxArrayString VampEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm))
 {
    // Nothing to do here yet
    return wxArrayString();
 }
 
-bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & WXUNUSED(pm), const wxString & WXUNUSED(path))
 {
    // Nothing to do here yet
    return false;
 }
 
-bool VampEffectsModule::IsPluginValid(const PluginID & ID,
+bool VampEffectsModule::IsPluginValid(const PluginID & WXUNUSED(ID),
                                       const wxString & path)
 {
    return wxFileName::FileExists(path);
 }
 
-IdentInterface *VampEffectsModule::CreateInstance(const PluginID & ID,
-                                                     const wxString & path)
+IdentInterface *VampEffectsModule::CreateInstance(const PluginID & WXUNUSED(ID),
+                                                  const wxString & WXUNUSED(path))
 {
    // Nothing to do here yet since we are autoregistering (and creating legacy
    // effects anyway).
    return NULL;
 }
 
-void VampEffectsModule::DeleteInstance(IdentInterface *instance)
+void VampEffectsModule::DeleteInstance(IdentInterface *WXUNUSED(instance))
 {
    // Nothing to do here yet
 }

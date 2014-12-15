@@ -42,6 +42,7 @@ class VampEffect : public Effect {
 
    virtual PluginID GetID();
    virtual wxString GetPath();
+   virtual wxString GetSymbol();
    virtual wxString GetName();
    virtual wxString GetVendor();
    virtual wxString GetVersion();

@@ -31,7 +31,7 @@ public:
    virtual ~EffectReverb() {};
 
    // Implemented from the base class 'Effect':
-   virtual wxString GetEffectName() {return _("Reverb...");}
+   virtual wxString GetEffectName() {return wxTRANSLATE("Reverb...");}
    virtual wxString GetEffectAction() {return _("Applying Reverb");}
    virtual wxString GetEffectIdentifier() {return wxT("Reverb");}
    virtual wxString GetEffectDescription(); // Useful only after PromptUser values have been set.
