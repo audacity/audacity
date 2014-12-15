@@ -340,7 +340,7 @@ private:
 \class EffectNoiseReduction::Dialog
 \brief Dialog used with EffectNoiseReduction
 
-//*******************************************************************/
+**//*****************************************************************/
 
 //----------------------------------------------------------------------------
 // EffectNoiseReduction::Dialog
@@ -1464,13 +1464,13 @@ const struct ControlInfo {
      _("Attac&k time (secs):"), _("Attack time") },
    { &EffectNoiseReduction::Settings::mReleaseTime,
      0, 1.0, 100, wxT("%.2f"), false,
-     _("&Release time (secs):"), _("Release time") },
+     _("R&elease time (secs):"), _("Release time") },
 #endif
 
 #ifdef ADVANCED_SETTINGS
    { &EffectNoiseReduction::Settings::mOldSensitivity,
      -20.0, 20.0, 4000, wxT("%.2f"), false,
-     wxT("&Sensitivity (dB):"), _("Old Sensitivity") },
+     wxT("Sensiti&vity (dB):"), _("Old Sensitivity") },
    // add here
 #endif
 };
@@ -1685,16 +1685,16 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       S.AddVariableText(_(
          "Select all of the audio you want filtered, choose how much noise you want\nfiltered out, and then click 'OK' to reduce noise.\n"));
 
+#if defined(__WXGTK__)
+      // Put everything inside a panel to workaround a problem on Linux where the access key
+      // does not work if it is defined within static text on the first control.
+      S.SetStyle(wxTAB_TRAVERSAL);
+      S.StartPanel();
+#endif
+
       S.StartMultiColumn(3, wxEXPAND);
       S.SetStretchyCol(2);
       {
-#ifdef __WXGTK__
-         // BoxSizer is to make first mnemonic work, on Linux.
-         wxPanel* cPanel = new wxPanel( this, wxID_ANY );
-         wxBoxSizer* cSizer = new wxBoxSizer(wxVERTICAL);
-         cPanel->SetSizer(cSizer);
-#endif
-
          wxTextValidator vld(wxFILTER_NUMERIC);
          for (int id = FIRST_SLIDER; id < END_OF_BASIC_SLIDERS; id += 2) {
             const ControlInfo &info = controlInfo[(id - FIRST_SLIDER) / 2];
@@ -1727,6 +1727,10 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 #endif
       }
       S.EndMultiColumn();
+
+#if defined(__WXGTK__)
+      S.EndPanel();
+#endif
    }
    S.EndStatic();
 
@@ -1734,6 +1738,13 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 #ifdef ADVANCED_SETTINGS
    S.StartStatic(_("Advanced Settings"));
    {
+#if defined(__WXGTK__)
+      // Put everything inside a panel to workaround a problem on Linux where the access key
+      // does not work if it is defined within static text on the first control.
+      S.SetStyle(wxTAB_TRAVERSAL);
+      S.StartPanel();
+#endif
+
       S.StartMultiColumn(2);
       {
          {
@@ -1759,7 +1770,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
             windowSizeChoices.Add(_("4096"));
             windowSizeChoices.Add(_("8192"));
             windowSizeChoices.Add(_("16384"));
-            S.TieChoice(_("&Window size") + wxString(wxT(":")),
+            S.TieChoice(_("Window si&ze") + wxString(wxT(":")),
                mTempSettings.mWindowSizeChoice,
                &windowSizeChoices);
          }
@@ -1772,7 +1783,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
             stepsPerWindowChoices.Add(_("16"));
             stepsPerWindowChoices.Add(_("32"));
             stepsPerWindowChoices.Add(_("64"));
-            S.TieChoice(_("Steps &per window") + wxString(wxT(":")),
+            S.TieChoice(_("S&teps per window") + wxString(wxT(":")),
                mTempSettings.mStepsPerWindowChoice,
                &stepsPerWindowChoices);
          }
@@ -1786,7 +1797,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 #endif
             for (int ii = 0; ii < nn; ++ii)
                methodChoices.Add(discriminationMethodInfo[ii].name);
-            S.TieChoice(_("&Discrimination method") + wxString(wxT(":")),
+            S.TieChoice(_("Discrimination &method") + wxString(wxT(":")),
                mTempSettings.mMethod,
                &methodChoices);
          }
@@ -1803,6 +1814,10 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
          }
       }
       S.EndMultiColumn();
+
+#if defined(__WXGTK__)
+      S.EndPanel();
+#endif
    }
    S.EndStatic();
 #endif
