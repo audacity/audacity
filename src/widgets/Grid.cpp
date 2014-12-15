@@ -90,7 +90,7 @@ bool TimeEditor::EndEdit(int row, int col, wxGrid *grid)
     return changed;
 }
 
-bool TimeEditor::EndEdit(int row, int col, const wxGrid *grid, const wxString &oldval, wxString *newval)
+bool TimeEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col), const wxGrid *WXUNUSED(grid), const wxString &WXUNUSED(oldval), wxString *newval)
 {
    double newtime = GetTimeCtrl()->GetValue();
    bool changed = newtime != mOld;
@@ -322,9 +322,9 @@ bool ChoiceEditor::EndEdit(int row, int col, wxGrid *grid)
     return changed;
 }
 
-bool ChoiceEditor::EndEdit(int row, int col,
-                           const wxGrid* grid,
-                           const wxString &oldval, wxString *newval)
+bool ChoiceEditor::EndEdit(int WXUNUSED(row), int WXUNUSED(col),
+                           const wxGrid* WXUNUSED(grid),
+                           const wxString &WXUNUSED(oldval), wxString *newval)
 {
    int sel = Choice()->GetSelection();
 
@@ -870,7 +870,11 @@ wxAccStatus GridAx::GetState(int childId, long *state)
 
 // Returns a localized string representing the value for the object
 // or child.
+#if defined(__WXMAC__)
 wxAccStatus GridAx::GetValue(int childId, wxString *strValue)
+#else
+wxAccStatus GridAx::GetValue(int WXUNUSED(childId), wxString *strValue)
+#endif
 {
    strValue->Clear();
 

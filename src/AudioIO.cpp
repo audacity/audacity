@@ -3553,7 +3553,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
          }
 
-         bool selected;
+         bool selected = false;
          int group = 0;
          int chanCnt = 0;
          float rate = 0.0;

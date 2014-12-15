@@ -587,7 +587,7 @@ void ModuleManager::DeleteInstance(const PluginID & providerID,
    mDynModules[providerID]->DeleteInstance(instance);
 }
 
-bool ModuleManager::IsProviderValid(const PluginID & providerID,
+bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
                                     const wxString & path)
 {
    // Builtin modules do not have a path

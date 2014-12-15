@@ -97,7 +97,11 @@ void FileIO::SetCatalogInfo()
    return;
 }
 
+#if defined(__WXMAC__)
 void FileIO::SetCatalogInfo(wxUint32 type)
+#else
+void FileIO::SetCatalogInfo(wxUint32 WXUNUSED(type))
+#endif
 {
 #ifdef __WXMAC__
 #if !wxCHECK_VERSION(3, 0, 0)

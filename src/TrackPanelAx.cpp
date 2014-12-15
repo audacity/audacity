@@ -437,7 +437,11 @@ wxAccStatus TrackPanelAx::GetState( int childId, long* state )
 
 // Returns a localized string representing the value for the object
 // or child.
+#if defined(__WXMAC__)
 wxAccStatus TrackPanelAx::GetValue( int childId, wxString* strValue )
+#else
+wxAccStatus TrackPanelAx::GetValue( int WXUNUSED(childId), wxString* WXUNUSED(strValue) )
+#endif
 {
 #if defined(__WXMSW__)
    return wxACC_NOT_IMPLEMENTED;

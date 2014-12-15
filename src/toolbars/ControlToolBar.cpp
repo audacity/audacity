@@ -622,7 +622,7 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
    }
 }
 
-void ControlToolBar::SetVUMeters(AudacityProject *p)
+void ControlToolBar::SetVUMeters(AudacityProject *WXUNUSED(p))
 {
    Meter *play, *record;
    MeterToolBars::GetMeters( &play, &record);
