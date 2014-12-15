@@ -325,6 +325,8 @@ private:
    OSStatus OnOverlayEvent(EventHandlerCallRef handler, EventRef event);
    static pascal OSStatus WindowEventHandler(EventHandlerCallRef handler, EventRef event, void *data);
    OSStatus OnWindowEvent(EventHandlerCallRef handler, EventRef event);
+   static pascal OSStatus TrackingEventHandler(EventHandlerCallRef handler, EventRef event, void *data);
+   OSStatus OnTrackingEvent(EventRef event);
 
    WindowRef mOverlayRef;
    EventHandlerUPP mOverlayEventHandlerUPP;
@@ -335,6 +337,13 @@ private:
    EventHandlerUPP mWindowEventHandlerUPP;
    EventHandlerRef mWindowEventHandlerRef;
 
+   EventHandlerUPP mTrackingHandlerUPP;
+   EventHandlerRef mRootTrackingHandlerRef;
+   EventHandlerRef mViewTrackingHandlerRef;
+   EventHandlerRef mSubviewTrackingHandlerRef;
+   EventHandlerRef mOverlayRootTrackingHandlerRef;
+   EventHandlerRef mOverlayViewTrackingHandlerRef;
+   
 #elif defined(__WXMSW__)
 
    HANDLE mHwnd;

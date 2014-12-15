@@ -822,6 +822,38 @@ printf("CONTROL class %d kind %d\n", GetEventClass(event), GetEventKind(event));
 }
 */
 
+// Event handler to track when the mouse enters/exits the various view
+static const EventTypeSpec trackingEventList[] =
+{
+   {kEventClassControl, kEventControlTrackingAreaEntered},
+   {kEventClassControl, kEventControlTrackingAreaExited},
+};
+
+pascal OSStatus
+AudioUnitEffect::TrackingEventHandler(EventHandlerCallRef handler, EventRef event, void *data)
+{
+   return ((AudioUnitEffect *)data)->OnTrackingEvent(event);
+}
+
+OSStatus AudioUnitEffect::OnTrackingEvent(EventRef event)
+{
+   OSStatus result = eventNotHandledErr;
+
+   if (GetEventKind(event) == kEventControlTrackingAreaEntered)
+   {
+      // Should we save the existing cursor???
+      SetThemeCursor(kThemeArrowCursor);
+   }
+
+   if (GetEventKind(event) == kEventControlTrackingAreaExited)
+   {
+      // Possibly restore a saved cursor
+   }
+
+   return result;
+}
+
+
 // Event handler to capture the window close event
 static const EventTypeSpec windowEventList[] =
 {
@@ -907,6 +939,11 @@ AudioUnitEffect::AudioUnitEffect(const wxString & path,
    mCarbonView = NULL;
    mHandlerRef = NULL;
    mHandlerUPP = NULL;
+
+   mRootTrackingHandlerRef = NULL;
+   mContentTrackingHandlerRef = NULL;
+   mAUTrackingHandlerRef = NULL;
+   mTrackingHandlerUPP = NULL;
 
    mEventHelper = NULL;
    mEventListenerRef = NULL;
@@ -1769,6 +1806,16 @@ bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms
 void AudioUnitEffect::SetUIHost(EffectUIHostInterface *host)
 {
    mUIHost = host;
+
+   mHandlerRef = 0;
+   mHandlerUPP = 0;
+   mControlHandlerRef = 0;
+   mControlHandlerUPP = 0;
+
+   mTrackingHandlerUPP = 0;
+   mRootTrackingHandlerRef = 0;
+   mContentTrackingHandlerRef = 0;
+   mAUTrackingHandlerRef = 0;
 }
 
 bool AudioUnitEffect::PopulateUI(wxWindow *parent)
@@ -1784,7 +1831,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
 
    // Find the content view within our window
    HIViewRef contentView;
-   HIViewFindByID(HIViewGetRoot(windowRef), kHIViewWindowContentID, &contentView);
+   HIViewFindByID(rootControl, kHIViewWindowContentID, &contentView);
 
    mIsCocoa = false;
    mIsCarbon = false;
@@ -1898,6 +1945,28 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
                              this,
                              &mControlHandlerRef);
 */
+   mTrackingHandlerUPP = NewEventHandlerUPP(AudioUnitEffect::TrackingEventHandler);
+   InstallControlEventHandler(rootControl,
+                              mTrackingHandlerUPP,
+                              GetEventTypeCount(trackingEventList),
+                              trackingEventList,
+                              this,
+                              &mRootTrackingHandlerRef);
+   InstallControlEventHandler(contentView,
+                              mTrackingHandlerUPP,
+                              GetEventTypeCount(trackingEventList),
+                              trackingEventList,
+                              this,
+                              &mContentTrackingHandlerRef);
+   InstallControlEventHandler(auView,
+                              mTrackingHandlerUPP,
+                              GetEventTypeCount(trackingEventList),
+                              trackingEventList,
+                              this,
+                              &mAUTrackingHandlerRef);
+   HIViewNewTrackingArea(rootControl, NULL, 0, NULL);
+   HIViewNewTrackingArea(contentView, NULL, 0, NULL);
+   HIViewNewTrackingArea(auView, NULL, 0, NULL);
 
    return true;
 }
@@ -1931,6 +2000,8 @@ bool AudioUnitEffect::HideUI()
 
 bool AudioUnitEffect::CloseUI()
 {
+   RemoveHandler();
+
    if (mEventHelper)
    {
       mParent->RemoveEventHandler(mEventHelper);
@@ -2074,6 +2145,57 @@ void AudioUnitEffect::ShowOptions()
 // ============================================================================
 // AudioUnitEffect Implementation
 // ============================================================================
+
+void AudioUnitEffect::RemoveHandler()
+{
+   if (mAUTrackingHandlerRef)
+   {
+      ::RemoveEventHandler(mAUTrackingHandlerRef);
+      mAUTrackingHandlerRef = 0;
+   }
+
+   if (mContentTrackingHandlerRef)
+   {
+      ::RemoveEventHandler(mContentTrackingHandlerRef);
+      mContentTrackingHandlerRef = 0;
+   }
+
+   if (mRootTrackingHandlerRef)
+   {
+      ::RemoveEventHandler(mRootTrackingHandlerRef);
+      mRootTrackingHandlerRef = 0;
+   }
+
+   if (mTrackingHandlerUPP)
+   {
+      DisposeEventHandlerUPP(mTrackingHandlerUPP);
+      mTrackingHandlerUPP = 0;
+   }
+
+   if (mControlHandlerRef)
+   {
+      ::RemoveEventHandler(mControlHandlerRef);
+      mControlHandlerRef = 0;
+   }
+
+   if (mControlHandlerUPP)
+   {
+      DisposeEventHandlerUPP(mControlHandlerUPP);
+      mControlHandlerUPP = 0;
+   }
+
+   if (mHandlerRef)
+   {
+      ::RemoveEventHandler(mHandlerRef);
+      mHandlerRef = 0;
+   }
+
+   if (mHandlerUPP)
+   {
+      DisposeEventHandlerUPP(mHandlerUPP);
+      mHandlerUPP = 0;
+   }
+}
 
 void AudioUnitEffect::LoadParameters(const wxString & group)
 {

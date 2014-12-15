@@ -165,6 +165,13 @@ private:
                                                       void *data);
    OSStatus ControlEventHandler(EventRef event);
 
+   static pascal OSStatus TrackingEventHandler(EventHandlerCallRef handler,
+                                               EventRef event,
+                                               void *data);
+   OSStatus OnTrackingEvent(EventRef event);
+
+   void RemoveHandler();
+
    void GetChannelCounts();
 
    void LoadParameters(const wxString & group);
@@ -223,6 +230,11 @@ private:
    EventHandlerUPP mHandlerUPP;
    EventHandlerRef mControlHandlerRef;
    EventHandlerUPP mControlHandlerUPP;
+
+   EventHandlerUPP mTrackingHandlerUPP;
+   EventHandlerRef mRootTrackingHandlerRef;
+   EventHandlerRef mContentTrackingHandlerRef;
+   EventHandlerRef mAUTrackingHandlerRef;
 
    AudioUnitEffectEventHelper *mEventHelper;
 
