@@ -429,7 +429,7 @@ void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
                _("As part of their processing, some Ladspa effects must delay returning ") +
                _("audio to Audacity. When not compensating for this delay, you will ") +
                _("notice that small silences have been inserted into the audio. ") +
-               _("Enabling this setting will provide that compensation, but it may ") +
+               _("Enabling this option will provide that compensation, but it may ") +
                _("not work for all Ladspa effects."))->Wrap(650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
