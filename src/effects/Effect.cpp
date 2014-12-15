@@ -2160,7 +2160,7 @@ bool EffectUIHost::Initialize()
    mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
    mPlayBtn = new wxBitmapButton(bar, kPlayID, mPlayBM);
    mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
-   SetLabelAndTip(mPlayBtn, _("&Play"));
+   SetLabelAndTip(mPlayBtn, _("Start &Playback"));
    bs->Add(mPlayBtn);
 
    mRewindBtn = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
@@ -2736,13 +2736,13 @@ void EffectUIHost::UpdateControls()
    {
       mPlayBtn->SetBitmapLabel(mStopBM);
       mPlayBtn->SetBitmapDisabled(mStopDisabledBM);
-      SetLabelAndTip(mPlayBtn, _("Sto&p"), false);
+      SetLabelAndTip(mPlayBtn, _("Stop &Playback"), false);
    }
    else
    {
       mPlayBtn->SetBitmapLabel(mPlayBM);
       mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
-      SetLabelAndTip(mPlayBtn, _("&Play"), false);
+      SetLabelAndTip(mPlayBtn, _("Start &Playback"), false);
    }
 
    if (mPowerOn)
