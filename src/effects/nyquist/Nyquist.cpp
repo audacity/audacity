@@ -116,7 +116,7 @@ EffectNyquist::EffectNyquist(wxString fName)
       gPrefs->Read(wxT("/Effects/NyquistPrompt/Version"), &mVersion, 4);
       mOK = true;
       mInteractive = true;
-      mName = _("Nyquist Prompt...");
+      mName = wxTRANSLATE("Nyquist Prompt");
       SetEffectFlags(PROCESS_EFFECT | BUILTIN_EFFECT | ADVANCED_EFFECT);
       return;
    }
