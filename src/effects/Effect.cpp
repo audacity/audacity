@@ -2109,6 +2109,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    mInitialized = false;
 
    mPowerOn = true;
+   mPlayPos = 0.0;
 
    mClient->SetUIHost(this);
 }
@@ -2159,7 +2160,6 @@ bool EffectUIHost::Initialize()
    mOffDisabledBM = CreateBitmap(effect_off_disabled_xpm, true, false);
    mPowerBtn = new wxBitmapButton(bar, kPowerID, mOnBM);
    mPowerBtn->SetBitmapDisabled(mOffDisabledBM);
-   SetLabelAndTip(mPowerBtn, _("P&ower On"));
    bs->Add(mPowerBtn);
 
    bs->Add(5, 5);
@@ -2170,7 +2170,6 @@ bool EffectUIHost::Initialize()
    mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
    mPlayBtn = new wxBitmapButton(bar, kPlayID, mPlayBM);
    mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
-   SetLabelAndTip(mPlayBtn, _("Start &Playback"));
    bs->Add(mPlayBtn);
 
    mRewindBtn = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
@@ -2272,6 +2271,14 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnApply(wxCommandEvent & WXUNUSED(evt))
 {
+   AudacityProject *p = GetActiveProject();
+
+   if (p->mViewInfo.selectedRegion.isPoint())
+   {
+      wxMessageBox(_("You must select audio in the project window."));
+      return;
+   }
+
    if (!mClient->ValidateUI())
    {
       return;
@@ -2463,8 +2470,15 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    }
    else
    {
-      if (p->mViewInfo.selectedRegion.t0() != mRegion.t0() ||
-          p->mViewInfo.selectedRegion.t1() != mRegion.t1())
+      if (p->IsPlayRegionLocked())
+      {
+         double t0, t1;
+         p->GetPlayRegion(&t0, &t1);
+         mRegion.setTimes(t0, t1);
+         mPlayPos = mRegion.t0();
+      }
+      else if (p->mViewInfo.selectedRegion.t0() != mRegion.t0() ||
+               p->mViewInfo.selectedRegion.t1() != mRegion.t1())
       {
          mRegion = p->mViewInfo.selectedRegion;
          mPlayPos = mRegion.t0();
@@ -2718,7 +2732,11 @@ void EffectUIHost::SetLabelAndTip(wxBitmapButton *btn, const wxString & label, b
 #else
          btn->SetLabel(label);
 #endif
-         btn->SetToolTip(wxStripMenuCodes(label) + wxT(" (ALT+") + c + wxT(")"));
+         btn->SetToolTip(wxStripMenuCodes(label)
+#if !defined(__WXMAC__)
+            + wxT(" (ALT+") + c + wxT(")")
+#endif
+            );
       }
    }
    else
@@ -2746,24 +2764,32 @@ void EffectUIHost::UpdateControls()
    {
       mPlayBtn->SetBitmapLabel(mStopBM);
       mPlayBtn->SetBitmapDisabled(mStopDisabledBM);
+      /* i18n-hint: The access key "&P" should be the same in
+         "Stop &Playback" and "Start &Playback" */
       SetLabelAndTip(mPlayBtn, _("Stop &Playback"), false);
    }
    else
    {
       mPlayBtn->SetBitmapLabel(mPlayBM);
       mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
+      /* i18n-hint: The access key "&P" should be the same in
+         "Stop &Playback" and "Start &Playback" */
       SetLabelAndTip(mPlayBtn, _("Start &Playback"), false);
    }
 
    if (mPowerOn)
    {
       mPowerBtn->SetBitmapLabel(mOnBM);
-      SetLabelAndTip(mPowerBtn, _("P&ower Off"), false);
+      /* i18n-hint: The access key "&O" should be the same in
+         "Turn Power &Off" and "Turn Power &On" */
+      SetLabelAndTip(mPowerBtn, _("Turn Power &Off"), false);
    }
    else
    {
       mPowerBtn->SetBitmapLabel(mOffBM);
-      SetLabelAndTip(mPowerBtn, _("P&ower On"), false);
+      /* i18n-hint: The access key "&O" should be the same in
+         "Turn Power &Off" and "Turn Power &On" */
+      SetLabelAndTip(mPowerBtn, _("Turn Power &On"), false);
    }
 }
 
