@@ -18,6 +18,7 @@
 #include <wx/dynarray.h>
 #include <wx/intl.h>
 #include <wx/string.h>
+#include <wx/tglbtn.h>
 
 class wxDialog;
 class wxWindow;
@@ -519,7 +520,6 @@ private:
 
    void UpdateControls();
    wxBitmap CreateBitmap(const char *xpm[], bool up, bool pusher);
-   void SetLabelAndTip(wxBitmapButton *btn, const wxString & label = wxEmptyString, bool setAccel = true);
    void LoadUserPresets();
 
 private:
@@ -530,13 +530,18 @@ private:
    wxArrayString mUserPresets;
    bool mInitialized;
 
+   bool mIsGUI;
+
    wxButton *mApplyBtn;
    wxButton *mCloseBtn;
-   wxBitmapButton *mMenuBtn;
-   wxBitmapButton *mPowerBtn;
-   wxBitmapButton *mPlayBtn;
-   wxBitmapButton *mRewindBtn;
-   wxBitmapButton *mFFwdBtn;
+   wxButton *mMenuBtn;
+   wxButton *mPowerBtn;
+   wxButton *mPlayBtn;
+   wxButton *mRewindBtn;
+   wxButton *mFFwdBtn;
+
+   wxButton *mPowerToggleBtn;
+   wxButton *mPlayToggleBtn;
 
    wxBitmap mPlayBM;
    wxBitmap mPlayDisabledBM;

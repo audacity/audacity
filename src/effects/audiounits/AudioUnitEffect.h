@@ -106,6 +106,7 @@ public:
 
    virtual void SetUIHost(EffectUIHostInterface *host);
    virtual bool PopulateUI(wxWindow *parent);
+   virtual bool IsGraphicalUI();
    virtual bool ValidateUI();
    virtual bool HideUI();
    virtual bool CloseUI();

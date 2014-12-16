@@ -1356,6 +1356,11 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
    return true;
 }
 
+bool LadspaEffect::IsGraphicalUI()
+{
+   return false;
+}
+
 bool LadspaEffect::ValidateUI()
 {
    if (!mParent->Validate())

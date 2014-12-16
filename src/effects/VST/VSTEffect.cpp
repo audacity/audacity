@@ -2158,6 +2158,11 @@ bool VSTEffect::PopulateUI(wxWindow *parent)
    return true;
 }
 
+bool VSTEffect::IsGraphicalUI()
+{
+   return mGui;
+}
+
 bool VSTEffect::ValidateUI()
 {
    return true;

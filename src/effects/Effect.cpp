@@ -2148,51 +2148,10 @@ bool EffectUIHost::Initialize()
    mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
 
    wxPanel *bar = new wxPanel(this, wxID_ANY);
-   wxBoxSizer *bs = new wxBoxSizer(wxHORIZONTAL);
-   bar->SetSizer(bs);
-   
-   mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
-   SetLabelAndTip(mMenuBtn, _("&Manage"));
-   bs->Add(mMenuBtn);
-
-   mOnBM = CreateBitmap(effect_on_xpm, true, false);
-   mOffBM = CreateBitmap(effect_off_xpm, true, false);
-   mOffDisabledBM = CreateBitmap(effect_off_disabled_xpm, true, false);
-   mPowerBtn = new wxBitmapButton(bar, kPowerID, mOnBM);
-   mPowerBtn->SetBitmapDisabled(mOffDisabledBM);
-   bs->Add(mPowerBtn);
-
-   bs->Add(5, 5);
-
-   mPlayBM = CreateBitmap(effect_play_xpm, true, false);
-   mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
-   mStopBM = CreateBitmap(effect_stop_xpm, true, false);
-   mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
-   mPlayBtn = new wxBitmapButton(bar, kPlayID, mPlayBM);
-   mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
-   bs->Add(mPlayBtn);
-
-   mRewindBtn = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
-   mRewindBtn->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
-   SetLabelAndTip(mRewindBtn, _("Skip &backward"));
-   bs->Add(mRewindBtn);
-
-   mFFwdBtn = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
-   mFFwdBtn->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
-   SetLabelAndTip(mFFwdBtn, _("Skip &forward"));
-   bs->Add(mFFwdBtn);
-
-   // All done...generate and set the accelerator table
-   SetLabelAndTip(NULL);
-
-   bar->SetSizerAndFit(bs);
-
    wxSizer *s = CreateStdButtonSizer(this, eApplyButton | eCloseButton, bar);
 
    mApplyBtn = (wxButton *) FindWindowById(wxID_APPLY);
    mCloseBtn = (wxButton *) FindWindowById(wxID_CANCEL);
-
-   UpdateControls();
 
    hs->Add(w, 1, wxEXPAND);
    vs->Add(hs, 1, wxEXPAND);
@@ -2204,6 +2163,93 @@ bool EffectUIHost::Initialize()
       return false;
    }
 
+   mIsGUI = mClient->IsGraphicalUI();
+
+   wxBoxSizer *bs = new wxBoxSizer(wxHORIZONTAL);
+   bar->SetSizer(bs);
+
+   wxBitmapButton *bb;
+
+   if (!mIsGUI)
+   {
+      mMenuBtn = new wxButton(bar, kMenuID, _("&Manage"));
+   }
+   else
+   {
+      mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
+   }
+   mMenuBtn->SetToolTip(_("Manage presets and options"));
+   bs->Add(mMenuBtn);
+
+   if (!mIsGUI)
+   {
+      mPowerToggleBtn = new wxButton(bar, kPowerID, _("Turn Power &On"));
+      mPowerToggleBtn->SetToolTip(_("Power effect on or off (enable or disable"));
+      bs->Add(mPowerToggleBtn);
+   }
+   else
+   {
+      mOnBM = CreateBitmap(effect_on_xpm, true, false);
+      mOffBM = CreateBitmap(effect_off_xpm, true, false);
+      mOffDisabledBM = CreateBitmap(effect_off_disabled_xpm, true, false);
+      bb = new wxBitmapButton(bar, kPowerID, mOnBM);
+      bb->SetBitmapDisabled(mOffDisabledBM);
+      mPowerBtn = bb;
+      mPowerBtn->SetToolTip(_("Power effect on or off (enable or disable"));
+      bs->Add(mPowerBtn);
+   }
+
+   bs->Add(5, 5);
+
+   if (!mIsGUI)
+   {
+      mPlayToggleBtn = new wxButton(bar, kPlayID, _("Start &Playback"));
+      mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
+      bs->Add(mPlayToggleBtn);
+   }
+   else
+   {
+      mPlayBM = CreateBitmap(effect_play_xpm, true, false);
+      mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
+      mStopBM = CreateBitmap(effect_stop_xpm, true, false);
+      mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
+      bb = new wxBitmapButton(bar, kPlayID, mPlayBM);
+      bb->SetBitmapDisabled(mPlayDisabledBM);
+      mPlayBtn = bb;
+      mPlayBtn->SetToolTip(_("Start and stop playback"));
+      bs->Add(mPlayBtn);
+   }
+
+   if (!mIsGUI)
+   {
+      mRewindBtn = new wxButton(bar, kRewindID, _("Skip &Backward"));
+   }
+   else
+   {
+      bb = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
+      bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
+      mRewindBtn = bb;
+   }
+   mRewindBtn->SetToolTip(_("Skip backward"));
+   bs->Add(mRewindBtn);
+
+   if (!mIsGUI)
+   {
+      mFFwdBtn = new wxButton(bar, kFFwdID, _("Skip &Forward"));
+   }
+   else
+   {
+      bb = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
+      bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
+      mFFwdBtn = bb;
+   }
+   mFFwdBtn->SetToolTip(_("Skip forward"));
+   bs->Add(mFFwdBtn);
+
+   UpdateControls();
+
+   bar->Layout();
+   bar->Fit();
    Layout();
    Fit();
    Center();
@@ -2705,91 +2751,88 @@ wxBitmap EffectUIHost::CreateBitmap(const char *xpm[], bool up, bool pusher)
    return mod;
 }
 
-// We use an accelerator table in addition to the normal "&" mnemonic
-// so that they work on Windows and GTK...no accelerators on OSX and
-// the wxBitmapButton under GTK didn't seem to like the mnemonics.
-//
-// On Windows, this also keeps the focus from jumping to the associated
-// button, forcing keyboard users to have to constantly TAB back to the
-// control they were on.  This problem appears to be related to the use
-// of wxBitmapButton and how it is currently implemented in wx2.8.12.
-//
-// I'm hoping that when we transition to wx3 all of this can go away.
-void EffectUIHost::SetLabelAndTip(wxBitmapButton *btn, const wxString & label, bool setAccel)
-{
-   if (btn != NULL)
-   {
-      size_t pos = label.Find(wxT('&'));
-      if (pos != wxNOT_FOUND && pos < label.Length() - 1)
-      {
-         wxChar c = wxToupper(label[pos + 1]);
-         if (setAccel)
-         {
-            mAccels.Add(wxAcceleratorEntry(wxACCEL_ALT, c, btn->GetId()));
-         }
-#if defined(__WXMAC__)
-         btn->SetName(label);
-#else
-         btn->SetLabel(label);
-#endif
-         btn->SetToolTip(wxStripMenuCodes(label)
-#if !defined(__WXMAC__)
-            + wxT(" (ALT+") + c + wxT(")")
-#endif
-            );
-      }
-   }
-   else
-   {
-      wxAcceleratorEntry *entries = new wxAcceleratorEntry[mAccels.GetCount()];
-      for (size_t i = 0, cnt = mAccels.GetCount(); i < cnt; i++)
-      {
-         entries[i] = mAccels[i];
-      }
-      SetAcceleratorTable(wxAcceleratorTable(mAccels.GetCount(), entries));
-      delete [] entries;
-      mAccels.Empty();
-   }
-}
-
 void EffectUIHost::UpdateControls()
 {
    mApplyBtn->Enable(!mCapturing);
-   mPowerBtn->Enable(!mCapturing);
-   mPlayBtn->Enable(!mCapturing);
    mRewindBtn->Enable(!mCapturing);
    mFFwdBtn->Enable(!mCapturing);
 
+   wxBitmapButton *bb;
+
    if (mPlaying)
    {
-      mPlayBtn->SetBitmapLabel(mStopBM);
-      mPlayBtn->SetBitmapDisabled(mStopDisabledBM);
-      /* i18n-hint: The access key "&P" should be the same in
-         "Stop &Playback" and "Start &Playback" */
-      SetLabelAndTip(mPlayBtn, _("Stop &Playback"), false);
+      if (!mIsGUI)
+      {
+         /* i18n-hint: The access key "&P" should be the same in
+            "Stop &Playback" and "Start &Playback" */
+         mPlayToggleBtn->SetLabel(_("Stop &Playback"));
+         //mPlayToggleBtn->SetValue(true);
+         mPlayToggleBtn->Enable(!mCapturing);
+         mPlayToggleBtn->Refresh();
+      }
+      else
+      {
+         bb = (wxBitmapButton *) mPlayBtn;
+         bb->SetBitmapLabel(mStopBM);
+         bb->SetBitmapDisabled(mStopDisabledBM);
+         mPlayBtn->Enable(!mCapturing);
+      }
    }
    else
    {
-      mPlayBtn->SetBitmapLabel(mPlayBM);
-      mPlayBtn->SetBitmapDisabled(mPlayDisabledBM);
-      /* i18n-hint: The access key "&P" should be the same in
-         "Stop &Playback" and "Start &Playback" */
-      SetLabelAndTip(mPlayBtn, _("Start &Playback"), false);
+      if (!mIsGUI)
+      {
+         /* i18n-hint: The access key "&P" should be the same in
+            "Stop &Playback" and "Start &Playback" */
+         mPlayToggleBtn->SetLabel(_("Start &Playback"));
+         //mPlayToggleBtn->SetValue(false);
+         mPlayToggleBtn->Enable(!mCapturing);
+         mPlayToggleBtn->Refresh();
+      }
+      else
+      {
+         bb = (wxBitmapButton *) mPlayBtn;
+         bb->SetBitmapLabel(mPlayBM);
+         bb->SetBitmapDisabled(mPlayDisabledBM);
+         mPlayBtn->Enable(!mCapturing);
+      }
    }
 
    if (mPowerOn)
    {
-      mPowerBtn->SetBitmapLabel(mOnBM);
-      /* i18n-hint: The access key "&O" should be the same in
-         "Turn Power &Off" and "Turn Power &On" */
-      SetLabelAndTip(mPowerBtn, _("Turn Power &Off"), false);
+      if (!mIsGUI)
+      {
+         /* i18n-hint: The access key "&O" should be the same in
+            "Turn Power &Off" and "Turn Power &On" */
+         mPowerToggleBtn->SetLabel(_("Turn Power &Off"));
+         //mPowerToggleBtn->SetValue(true);
+         mPowerToggleBtn->Enable(!mCapturing);
+         mPowerToggleBtn->Refresh();
+      }
+      else
+      {
+         bb = (wxBitmapButton *) mPowerBtn;
+         bb->SetBitmapLabel(mOnBM);
+         mPowerBtn->Enable(!mCapturing);
+      }
    }
    else
    {
-      mPowerBtn->SetBitmapLabel(mOffBM);
-      /* i18n-hint: The access key "&O" should be the same in
-         "Turn Power &Off" and "Turn Power &On" */
-      SetLabelAndTip(mPowerBtn, _("Turn Power &On"), false);
+      if (!mIsGUI)
+      {
+         /* i18n-hint: The access key "&O" should be the same in
+            "Turn Power &Off" and "Turn Power &On" */
+         mPowerToggleBtn->SetLabel(_("Turn Power &On"));
+         //mPowerToggleBtn->SetValue(false);
+         mPowerToggleBtn->Enable(!mCapturing);
+         mPowerToggleBtn->Refresh();
+      }
+      else
+      {
+         bb = (wxBitmapButton *) mPowerBtn;
+         bb->SetBitmapLabel(mOffBM);
+         mPowerBtn->Enable(!mCapturing);
+      }
    }
 }
 

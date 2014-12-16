@@ -1988,6 +1988,11 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    return true;
 }
 
+bool AudioUnitEffect::IsGraphicalUI()
+{
+   return !mIsGeneric;
+}
+
 bool AudioUnitEffect::ValidateUI()
 {
 #if 0
