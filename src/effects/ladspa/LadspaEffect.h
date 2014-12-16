@@ -24,7 +24,7 @@ class wxCheckBox;
 #include "ladspa.h"
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
-#define LADSPAEFFECTS_FAMILY wxT("Ladspa")
+#define LADSPAEFFECTS_FAMILY wxT("LADSPA")
 
 ///////////////////////////////////////////////////////////////////////////////
 //

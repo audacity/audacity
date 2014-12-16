@@ -6,7 +6,7 @@
 
   Dominic Mazzoni
 
-  This class implements a Ladspa Plug-in effect.
+  This class implements a LADSPA Plug-in effect.
 
 *******************************************************************//**
 
@@ -108,12 +108,12 @@ wxString LadspaEffectsModule::GetPath()
 
 wxString LadspaEffectsModule::GetSymbol()
 {
-   return wxT("Ladspa Effects");
+   return wxT("LADSPA Effects");
 }
 
 wxString LadspaEffectsModule::GetName()
 {
-   return wxTRANSLATE("Ladspa Effects");
+   return wxTRANSLATE("LADSPA Effects");
 }
 
 wxString LadspaEffectsModule::GetVendor()
@@ -129,7 +129,7 @@ wxString LadspaEffectsModule::GetVersion()
 
 wxString LadspaEffectsModule::GetDescription()
 {
-   return wxTRANSLATE("Provides Ladspa Effects");
+   return wxTRANSLATE("Provides LADSPA Effects");
 }
 
 // ============================================================================
@@ -362,7 +362,7 @@ IdentInterface *LadspaEffectsModule::CreateInstance(const PluginID & ID,
                                                     const wxString & path)
 {
    // For us, the ID is two words.
-   // 1)  The Ladspa descriptor index
+   // 1)  The LADSPA descriptor index
    // 2)  The library's path
    long index;
    ID.BeforeFirst(wxT(' ')).ToLong(&index);
@@ -407,7 +407,7 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialog)
 END_EVENT_TABLE()
 
 LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialog(parent, wxID_ANY, wxString(_("Ladspa Effect Options")))
+:  wxDialog(parent, wxID_ANY, wxString(_("LADSPA Effect Options")))
 {
    mHost = host;
 
@@ -431,11 +431,11 @@ void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
          S.StartStatic(_("Latency Compensation"));
          {
             S.AddVariableText(wxString() +
-               _("As part of their processing, some Ladspa effects must delay returning ") +
+               _("As part of their processing, some LADSPA effects must delay returning ") +
                _("audio to Audacity. When not compensating for this delay, you will ") +
                _("notice that small silences have been inserted into the audio. ") +
                _("Enabling this option will provide that compensation, but it may ") +
-               _("not work for all Ladspa effects."))->Wrap(650);
+               _("not work for all LADSPA effects."))->Wrap(650);
 
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
@@ -832,7 +832,7 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
          mNumOutputControls++;
          mOutputControls[p] = 0.0;
  
-         // Ladspa effects have a convention of providing latency on an output
+         // LADSPA effects have a convention of providing latency on an output
          // control port whose name is "latency".
          if (strcmp(mData->PortNames[p], "latency") == 0)
          {

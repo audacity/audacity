@@ -2152,7 +2152,7 @@ bool EffectUIHost::Initialize()
    bar->SetSizer(bs);
    
    mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
-   SetLabelAndTip(mMenuBtn, _("&Manage effect"));
+   SetLabelAndTip(mMenuBtn, _("&Manage"));
    bs->Add(mMenuBtn);
 
    mOnBM = CreateBitmap(effect_on_xpm, true, false);
