@@ -1849,7 +1849,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
 
    // This is a temporary hack to allow usage of effects from Waves.
    // I don't know why, but they simply do not display.  Could be that
-   // they are "prefer" 64-bit and/or Cocoa apps.  I don't want to spend
+   // they "prefer" 64-bit and/or Cocoa apps.  I don't want to spend
    // too much time trying to get them to work though since I suspect
    // we'll have better luck once we upgrade to wx3 and become Cocoa-based.
    //
@@ -1925,6 +1925,13 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    mDialog->Layout();
    mDialog->Fit();
    mDialog->SetMinSize(mDialog->GetSize());
+
+   wxSize ps = mParent->GetSize();
+   if ((int) rect.size.width < ps.GetWidth())
+   {
+      rect.size.width = ps.GetWidth();
+      HIViewSetFrame(auView, &rect);
+   }
 
    mEventHelper = new AudioUnitEffectEventHelper(this);
    mParent->PushEventHandler(mEventHelper);
