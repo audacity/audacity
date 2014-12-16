@@ -2170,22 +2170,29 @@ bool EffectUIHost::Initialize()
 
    wxBitmapButton *bb;
 
+   int margin = 0;
+
+#if defined(__WXMAC__)
+   margin = 3; // I'm sure it's needed because of the order things are created...
+#endif   
+
    if (!mIsGUI)
    {
       mMenuBtn = new wxButton(bar, kMenuID, _("&Manage"));
+      bs->Add(mMenuBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
    }
    else
    {
       mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
+      bs->Add(mMenuBtn);
    }
    mMenuBtn->SetToolTip(_("Manage presets and options"));
-   bs->Add(mMenuBtn);
 
    if (!mIsGUI)
    {
       mPowerToggleBtn = new wxButton(bar, kPowerID, _("Turn Power &On"));
       mPowerToggleBtn->SetToolTip(_("Power effect on or off (enable or disable"));
-      bs->Add(mPowerToggleBtn);
+      bs->Add(mPowerToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
    }
    else
    {
@@ -2205,7 +2212,7 @@ bool EffectUIHost::Initialize()
    {
       mPlayToggleBtn = new wxButton(bar, kPlayID, _("Start &Playback"));
       mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
-      bs->Add(mPlayToggleBtn);
+      bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
    }
    else
    {
@@ -2223,33 +2230,34 @@ bool EffectUIHost::Initialize()
    if (!mIsGUI)
    {
       mRewindBtn = new wxButton(bar, kRewindID, _("Skip &Backward"));
+      bs->Add(mRewindBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
    }
    else
    {
       bb = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
       bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
       mRewindBtn = bb;
+      bs->Add(mRewindBtn);
    }
    mRewindBtn->SetToolTip(_("Skip backward"));
-   bs->Add(mRewindBtn);
 
    if (!mIsGUI)
    {
       mFFwdBtn = new wxButton(bar, kFFwdID, _("Skip &Forward"));
+      bs->Add(mFFwdBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
    }
    else
    {
       bb = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
       bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
       mFFwdBtn = bb;
+      bs->Add(mFFwdBtn);
    }
    mFFwdBtn->SetToolTip(_("Skip forward"));
-   bs->Add(mFFwdBtn);
 
    UpdateControls();
 
-   bar->Layout();
-   bar->Fit();
+   bar->SetSizerAndFit(bs);
    Layout();
    Fit();
    Center();
