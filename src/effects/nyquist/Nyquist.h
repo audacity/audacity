@@ -235,11 +235,9 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    wxArrayString     mCategories;
 
    wxString          mProps;
-#if defined(EXPERIMENTAL_NYQUIST_SPLIT_CONTROL)
-   bool              mRestoreClips;
-   bool              mMergeClips;
-   double            mAlignedT1;
-#endif
+
+   bool              mRestoreSplits;
+   int               mMergeClips;
 
    friend class NyquistDialog;
 };
