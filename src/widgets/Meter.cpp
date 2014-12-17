@@ -425,7 +425,7 @@ void Meter::OnMouse(wxMouseEvent &evt)
       wxMenu *menu = new wxMenu();
       // Note: these should be kept in the same order as the enum
       if (mIsInput) {
-         if (gAudioIO->IsMonitoring())
+         if (mMonitoring)
             menu->Append(OnMonitorID, _("Stop Monitoring"));
          else
             menu->Append(OnMonitorID, _("Start Monitoring"));
