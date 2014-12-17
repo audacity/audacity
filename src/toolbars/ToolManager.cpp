@@ -406,9 +406,9 @@ ToolManager::ToolManager( AudacityProject *parent )
    // Create all of the toolbars
    mBars[ ToolsBarID ]         = new ToolsToolBar();
    mBars[ TransportBarID ]     = new ControlToolBar();
-   mBars[ RecordMeterBarID ]   = new MeterToolBar( kWithRecordMeter );
-   mBars[ PlayMeterBarID ]     = new MeterToolBar( kWithPlayMeter );
-   mBars[ MeterBarID ]         = new MeterToolBar( kWithPlayMeter | kWithRecordMeter );
+   mBars[ RecordMeterBarID ]   = new MeterToolBar( parent, RecordMeterBarID );
+   mBars[ PlayMeterBarID ]     = new MeterToolBar( parent, PlayMeterBarID );
+   mBars[ MeterBarID ]         = new MeterToolBar( parent, MeterBarID );
    mBars[ EditBarID ]          = new EditToolBar();
    mBars[ MixerBarID ]         = new MixerToolBar();
    mBars[ TranscriptionBarID ] = new TranscriptionToolBar();
@@ -468,10 +468,6 @@ ToolManager::~ToolManager()
 void ToolManager::Reset()
 {
    int ndx;
-
-   // The mInputMeter and mOutputMeter may be in use if audio is playing
-   // when this happens.
-   gAudioIO->SetMeters( NULL, NULL );
 
    // Disconnect all docked bars
    for( ndx = 0; ndx < ToolBarCount; ndx++ ) 
@@ -756,6 +752,10 @@ void ToolManager::ReadConfig()
             {
                d->ShowHide( t->GetId() );
             }
+            else
+            {
+               t->Expose( show[ ndx ] );
+            }
          }
       }
 
@@ -771,6 +771,10 @@ void ToolManager::ReadConfig()
          if( !show[ t->GetId() ] )
          {
             d->ShowHide( t->GetId() );
+         }
+         else
+         {
+            t->Expose( show[ ndx ] );
          }
       }
    }

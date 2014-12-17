@@ -328,6 +328,7 @@ AudioIO *gAudioIO;
 
 DEFINE_EVENT_TYPE(EVT_AUDIOIO_PLAYBACK);
 DEFINE_EVENT_TYPE(EVT_AUDIOIO_CAPTURE);
+DEFINE_EVENT_TYPE(EVT_AUDIOIO_MONITOR);
 
 // static
 int AudioIO::mNextStreamToken = 0;
@@ -963,6 +964,10 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
    mNumPauseFrames = 0;
    mPauseTime = 0;
 #endif
+   mOwningProject = GetActiveProject();
+   mInputMeter = NULL;
+   mOutputMeter = NULL;
+
    mLastPaError = paNoError;
    // pick a rate to do the audio I/O at, from those available. The project
    // rate is suggested, but we may get something else if it isn't supported
@@ -1014,6 +1019,8 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
             playbackDeviceInfo->defaultLowOutputLatency;
       else
          playbackParameters->suggestedLatency = latencyDuration/1000.0;
+
+      mOutputMeter = mOwningProject->GetPlaybackMeter();
    }
 
    if( numCaptureChannels > 0)
@@ -1046,7 +1053,12 @@ bool AudioIO::StartPortAudioStream(double sampleRate,
             captureDeviceInfo->defaultHighInputLatency;
       else
          captureParameters->suggestedLatency = latencyDuration/1000.0;
+
+      mInputMeter = mOwningProject->GetCaptureMeter();
    }
+
+   SetMeters();
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (numPlaybackChannels == 0 && numCaptureChannels == 0)
       return true;
@@ -1117,6 +1129,10 @@ void AudioIO::StartMonitoring(double sampleRate)
                                   captureFormat);
    // TODO: Check return value of success.
    (void)success;
+
+   wxCommandEvent e(EVT_AUDIOIO_MONITOR);
+   e.SetInt(true);
+   wxTheApp->ProcessEvent(e);
 
    // Now start the PortAudio stream!
    mLastPaError = Pa_StartStream( mPortStreamV19 );
@@ -1604,11 +1620,32 @@ bool AudioIO::StartPortMidiStream()
 }
 #endif
 
-void AudioIO::SetMeters(Meter *inputMeter, Meter *outputMeter)
+void AudioIO::SetCaptureMeter(Meter *meter)
 {
-   mInputMeter = inputMeter;
-   mOutputMeter = outputMeter;
+   if (!mOwningProject || mOwningProject == GetActiveProject())
+   {
+      mInputMeter = meter;
+      if (mInputMeter)
+      {
+         mInputMeter->Reset(mRate, true);
+      }
+   }
+}
 
+void AudioIO::SetPlaybackMeter(Meter *meter)
+{
+   if (!mOwningProject || mOwningProject == GetActiveProject())
+   {
+      mOutputMeter = meter;
+      if (mOutputMeter)
+      {
+         mOutputMeter->Reset(mRate, true);
+      }
+   }
+}
+
+void AudioIO::SetMeters()
+{
    if (mInputMeter)
       mInputMeter->Reset(mRate, true);
    if (mOutputMeter)
@@ -1711,11 +1748,10 @@ void AudioIO::StopStream()
 
    if (mNumCaptureChannels > 0)
    {
-      wxCommandEvent e(EVT_AUDIOIO_CAPTURE);
+      wxCommandEvent e(mStreamToken == 0 ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
       e.SetInt(false);
       wxTheApp->ProcessEvent(e);
    }
-
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    /* Stop Midi playback */
@@ -1869,10 +1905,13 @@ void AudioIO::StopStream()
    if (mOutputMeter)
       mOutputMeter->Reset(mRate, false);
 
-   AudacityProject* pProj = GetActiveProject();
-   MixerBoard* pMixerBoard = pProj->GetMixerBoard();
+   MixerBoard* pMixerBoard = mOwningProject->GetMixerBoard();
    if (pMixerBoard)
       pMixerBoard->ResetMeters(false);
+
+   mInputMeter = NULL;
+   mOutputMeter = NULL;
+   mOwningProject = NULL;
 
    if (mListener && mNumCaptureChannels > 0)
       mListener->OnAudioIOStopRecording();

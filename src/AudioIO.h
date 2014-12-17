@@ -72,6 +72,7 @@ class AudioIOListener;
 
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_PLAYBACK, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_CAPTURE, -1);
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
 
 class AUDACITY_DLL_API AudioIO {
 
@@ -222,10 +223,6 @@ class AUDACITY_DLL_API AudioIO {
     * GetSupported*Rate functions considerably */
    void HandleDeviceChange();
 
-   /** \brief Set the current VU meters - this should be done once after
-    * each call to StartStream currently */
-   void SetMeters(Meter *inputMeter, Meter *outputMeter);
-
    /** \brief Get a list of sample rates the output (playback) device
     * supports.
     *
@@ -326,7 +323,14 @@ class AUDACITY_DLL_API AudioIO {
       double AILAGetLastDecisionTime();
    #endif
 
+   void SetCaptureMeter(Meter *meter);
+   void SetPlaybackMeter(Meter *meter);
+
 private:
+   /** \brief Set the current VU meters - this should be done once after
+    * each call to StartStream currently */
+   void SetMeters();
+
    /** \brief Return a valid sample rate that is supported by the current I/O
     * device(s).
     *
@@ -526,6 +530,7 @@ private:
    volatile double     mLastRecordingOffset;
    PaError             mLastPaError;
 
+   AudacityProject    *mOwningProject;
    Meter              *mInputMeter;
    Meter              *mOutputMeter;
    bool                mUpdateMeters;

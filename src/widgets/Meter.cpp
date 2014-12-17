@@ -187,6 +187,7 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(Meter, wxPanel)
+   EVT_COMMAND(wxID_ANY, EVT_AUDIOIO_MONITOR, Meter::OnAudioIOMonitor)
    EVT_TIMER(OnMeterUpdateID, Meter::OnMeterUpdate)
    EVT_MOUSE_EVENTS(Meter::OnMouse)
    EVT_ERASE_BACKGROUND(Meter::OnErase)
@@ -232,6 +233,7 @@ Meter::Meter(wxWindow* parent, wxWindowID id,
    mPeakHoldDuration(3),
    mT(0),
    mRate(0),
+   mMonitoring(false),
    mNumBars(0),
    mLayoutValid(false),
    mBitmap(NULL),
@@ -291,6 +293,13 @@ Meter::Meter(wxWindow* parent, wxWindowID id,
       mBar[i].clipping = false;
       mBar[i].isclipping = false;
    }
+
+   // Register for AudioIO Monitor events
+   wxTheApp->Connect(EVT_AUDIOIO_MONITOR,
+                     wxCommandEventHandler(Meter::OnAudioIOMonitor),
+                     NULL,
+                     this);
+
 }
 
 void Meter::Clear()
@@ -319,6 +328,12 @@ void Meter::CreateIcon(int WXUNUSED(aquaOffset))
 
 Meter::~Meter()
 {
+   // Register for AudioIO Monitor events
+   wxTheApp->Disconnect(EVT_AUDIOIO_MONITOR,
+                        wxCommandEventHandler(Meter::OnAudioIOMonitor),
+                        NULL,
+                        this);
+
    // LLL:  This prevents a crash during termination if monitoring
    //       is active.
    if (gAudioIO->IsMonitoring())
@@ -1422,6 +1437,7 @@ bool Meter::IsMeterDisabled()
 
 void Meter::StartMonitoring()
 {
+   bool start = !mMonitoring;
 
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
@@ -1429,24 +1445,41 @@ void Meter::StartMonitoring()
          wxCommandEvent dummy;
          OnDisableMeter(dummy);
       }
-   } else {
+   } 
+
+   if (start){
       if (mMeterDisabled){
          wxCommandEvent dummy;
          OnDisableMeter(dummy);
       }
 
       AudacityProject *p = GetActiveProject();
-      if (p) {
+      if (p){
          gAudioIO->StartMonitoring(p->GetRate());
-         Meter *play, *record;
-         MeterToolBars::GetMeters( &play, &record );
-         gAudioIO->SetMeters(record, play);
       }
+   
+      // Update preferences also forces tooltips to be changed.
+      wxCommandEvent e(EVT_METER_PREFERENCES_CHANGED);
+      e.SetEventObject(this);
+      GetParent()->GetEventHandler()->ProcessEvent(e);
+      mMonitoring = true;
    }
-   // Update preferences also forces tooltips to be changed.
-   wxCommandEvent e(EVT_METER_PREFERENCES_CHANGED);
-   e.SetEventObject(this);
-   GetParent()->GetEventHandler()->ProcessEvent(e);
+}
+
+void Meter::OnAudioIOMonitor(wxCommandEvent &evt)
+{
+   evt.Skip();
+
+   if (mMonitoring && !evt.GetInt())
+   {
+      if (!mMeterDisabled){
+         wxCommandEvent dummy;
+         OnDisableMeter(dummy);
+      }
+      mMonitoring = false;
+   }
+
+   Refresh();
 }
 
 //

@@ -80,8 +80,6 @@ class ControlToolBar:public ToolBar {
    virtual void Repaint(wxDC *dc);
    virtual void EnableDisableButtons();
 
-   void SetVUMeters(AudacityProject *p);
-
    virtual void ReCreateButtons();
    void RegenerateToolsTooltips();
 

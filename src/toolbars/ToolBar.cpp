@@ -298,6 +298,8 @@ ToolBar::ToolBar( int type,
 
    mGrabber = NULL;
    mResizer = NULL;
+
+   SetId(mType);
 }
 
 //
@@ -384,7 +386,7 @@ bool ToolBar::Expose( bool show )
 {
    bool was = mVisible;
 
-   mVisible = show;
+   SetVisible( show );
    
    if( IsDocked() )
    {
@@ -423,10 +425,6 @@ void ToolBar::Create( wxWindow *parent )
 
    // Go do the rest of the creation
    ReCreateButtons();
-
-   // Let the user see it in all its glory
-   Show();
-   mVisible = true;
 }
 
 void ToolBar::ReCreateButtons()

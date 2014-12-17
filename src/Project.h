@@ -381,6 +381,11 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    ToolsToolBar *GetToolsToolBar();
    TranscriptionToolBar *GetTranscriptionToolBar();
 
+   Meter *GetPlaybackMeter();
+   void SetPlaybackMeter(Meter *playback);
+   Meter *GetCaptureMeter();
+   void SetCaptureMeter(Meter *capture);
+
    LyricsWindow* GetLyricsWindow() { return mLyricsWindow; };
    MixerBoard* GetMixerBoard() { return mMixerBoard; };
 
@@ -531,6 +536,10 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // dialog for missing alias warnings
    wxDialog            *mAliasMissingWarningDialog;
+
+   // Project owned meters
+   Meter *mPlaybackMeter;
+   Meter *mCaptureMeter;
 
  public:
    ToolManager *mToolManager;

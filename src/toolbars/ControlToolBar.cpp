@@ -63,6 +63,7 @@
 #include "../Theme.h"
 #include "../Track.h"
 #include "../widgets/AButton.h"
+#include "../widgets/Meter.h"
 
 IMPLEMENT_CLASS(ControlToolBar, ToolBar);
 
@@ -599,7 +600,6 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
          //AC: If init_seek was set, now's the time to make it happen.
          gAudioIO->SeekStream(init_seek);
 #endif
-         SetVUMeters(p);
       }
       else {
          // msmeyer: Show error message if stream could not be opened
@@ -620,13 +620,6 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
       SetStop(false);
       SetRecord(false);
    }
-}
-
-void ControlToolBar::SetVUMeters(AudacityProject *WXUNUSED(p))
-{
-   Meter *play, *record;
-   MeterToolBars::GetMeters( &play, &record);
-   gAudioIO->SetMeters(record, play);
 }
 
 void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
@@ -714,7 +707,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    mPause->PopUp();
    mPaused=false;
    //Make sure you tell gAudioIO to unpause
-      gAudioIO->SetPaused(mPaused);
+   gAudioIO->SetPaused(mPaused);
 
    ClearCutPreviewTracks();
 
@@ -724,7 +717,16 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
    AudacityProject *project = GetActiveProject();
    if( project ) {
       project->MayStartMonitoring();
-      MeterToolBars::Clear();
+
+      Meter *meter = project->GetPlaybackMeter();
+      if( meter ) {
+         meter->Clear();
+      }
+      
+      meter = project->GetPlaybackMeter();
+      if( meter ) {
+         meter->Clear();
+      }
    }
 }
 
@@ -878,7 +880,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       if (success) {
          p->SetAudioIOToken(token);
          mBusyProject = p;
-         SetVUMeters(p);
       }
       else {
          // msmeyer: Delete recently added tracks if opening stream fails

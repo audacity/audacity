@@ -752,6 +752,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mMixerBoardFrame(NULL),
      mFreqWindow(NULL),
      mAliasMissingWarningDialog(NULL),
+     mPlaybackMeter(NULL),
+     mCaptureMeter(NULL),
      mToolManager(NULL),
      mbBusyImporting(false),
      mAudioIOToken(-1),
@@ -1918,31 +1920,6 @@ void AudacityProject::OnActivate(wxActivateEvent & event)
    // See bug #294 for explanation
    mTrackPanel->SetFocus();
 #endif
-
-   if (mToolManager && GetActiveProject())
-   {
-      MeterToolBar *tb;
-
-      tb = (MeterToolBar *) mToolManager->GetToolBar(MeterBarID);
-      if (tb->IsVisible())
-      {
-         tb->Activate(mActive);
-      }
-      else
-      {
-         tb = (MeterToolBar *) mToolManager->GetToolBar(RecordMeterBarID);
-         if (tb->IsVisible())
-         {
-            tb->Activate(mActive);
-         }
-
-         tb = (MeterToolBar *) mToolManager->GetToolBar(PlayMeterBarID);
-         if (tb->IsVisible())
-         {
-            tb->Activate(mActive);
-         }
-      }
-   }
 
    // Under Windows, focus can be "lost" when returning to
    // Audacity from a different application.
@@ -4207,6 +4184,34 @@ TranscriptionToolBar *AudacityProject::GetTranscriptionToolBar()
           (mToolManager ?
            mToolManager->GetToolBar(TranscriptionBarID) :
            NULL);
+}
+
+Meter *AudacityProject::GetPlaybackMeter()
+{
+   return mPlaybackMeter;
+}
+
+void AudacityProject::SetPlaybackMeter(Meter *playback)
+{
+   mPlaybackMeter = playback;
+   if (gAudioIO)
+   {
+      gAudioIO->SetPlaybackMeter(mPlaybackMeter);
+   }
+}
+
+Meter *AudacityProject::GetCaptureMeter()
+{
+   return mCaptureMeter;
+}
+
+void AudacityProject::SetCaptureMeter(Meter *capture)
+{
+   mCaptureMeter = capture;
+   if (gAudioIO)
+   {
+      gAudioIO->SetCaptureMeter(mCaptureMeter);
+   }
 }
 
 void AudacityProject::SetStop(bool bStopped)
