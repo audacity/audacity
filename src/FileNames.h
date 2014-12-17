@@ -40,7 +40,8 @@ public:
    static wxString ChainDir();
    static wxString NRPDir();
    static wxString NRPFile();
-   static wxString PluginsCache();
+   static wxString PluginRegistry();
+   static wxString PluginSettings();
 
    static wxString BaseDir();
    static wxString ModulesDir();

@@ -255,16 +255,18 @@ public:
    const PluginID & RegisterLegacyEffectPlugin(EffectIdentInterface *effect);
 
 private:
-   bool Load();
+   void Load();
    void LoadGroup(const wxChar *group, PluginType type);
    void Save();
    void SaveGroup(const wxChar *group, PluginType type);
 
-   void CheckForUpdates(bool forceRescan);
+   void CheckForUpdates();
    void DisableMissing();
    wxArrayString IsNewOrUpdated(const wxArrayString & paths);
 
    PluginDescriptor & CreatePlugin(IdentInterface *ident, PluginType type);
+
+   wxFileConfig *GetSettings();
 
    bool GetSubgroups(const wxString & group, wxArrayString & subgroups);
 
@@ -298,7 +300,8 @@ private:
 
    bool IsDirty();
    void SetDirty(bool dirty = true);
-   wxFileConfig *mConfig;
+   wxFileConfig *mRegistry;
+   wxFileConfig *mSettings;
 
    bool mDirty;
    int mCurrentIndex;

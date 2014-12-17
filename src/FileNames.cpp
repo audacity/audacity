@@ -165,9 +165,14 @@ wxString FileNames::PlugInDir()
    return FileNames::MkDir( wxFileName( DataDir(), wxT("Plug-Ins") ).GetFullPath() );
 }
 
-wxString FileNames::PluginsCache()
+wxString FileNames::PluginRegistry()
 {
    return wxFileName( DataDir(), wxT("pluginregistry.cfg") ).GetFullPath();
+}
+
+wxString FileNames::PluginSettings()
+{
+   return wxFileName( DataDir(), wxT("pluginsettings.cfg") ).GetFullPath();
 }
 
 wxString FileNames::BaseDir()
