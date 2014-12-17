@@ -31,6 +31,7 @@
 #include "xml/XMLTagHandler.h"
 #include "toolbars/SelectionBarListener.h"
 #include "toolbars/SpectralSelectionBarListener.h"
+#include "widgets/Meter.h"
 
 #include <wx/defs.h>
 #include <wx/event.h>
