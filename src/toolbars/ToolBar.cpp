@@ -425,6 +425,9 @@ void ToolBar::Create( wxWindow *parent )
 
    // Go do the rest of the creation
    ReCreateButtons();
+
+   // ToolManager depends on this appearing to be visible for proper dock construction
+   mVisible = true;
 }
 
 void ToolBar::ReCreateButtons()
