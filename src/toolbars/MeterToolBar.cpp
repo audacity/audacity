@@ -192,10 +192,18 @@ void MeterToolBar::OnSize( wxSizeEvent & WXUNUSED(event) )
    if( mRecordMeter ) {
       mRecordMeter->SetStyle(bHorizontal ? Meter::HorizontalStereo : Meter::VerticalStereo);
       mRecordMeter->SetMinSize( wxSize( width, height ));
+      Meter *play = mProject->GetPlaybackMeter();
+      if( play ) {
+         play->SetStyle(bHorizontal ? Meter::HorizontalStereo : Meter::VerticalStereo);
+      }
    }
    if( mPlayMeter ) {
       mPlayMeter->SetStyle(bHorizontal ? Meter::HorizontalStereo : Meter::VerticalStereo);
       mPlayMeter->SetMinSize( wxSize( width, height ));
+      Meter *record = mProject->GetCaptureMeter();
+      if( record ) {
+         record->SetStyle(bHorizontal ? Meter::HorizontalStereo : Meter::VerticalStereo);
+      }
       mSizer->SetItemPosition( mPlayMeter, pos );
    }
 
@@ -207,12 +215,21 @@ bool MeterToolBar::Expose( bool show )
 {
    bool updated = false;
    if( show ) {
+      Meter *meter;
       if( mPlayMeter ) {
          mProject->SetPlaybackMeter( mPlayMeter );
+         meter = mProject->GetCaptureMeter();
+         if( meter ) {
+            meter->SetStyle( mPlayMeter->GetStyle() );
+         }
       }
 
       if( mRecordMeter ) {
          mProject->SetCaptureMeter( mRecordMeter );
+         meter = mProject->GetPlaybackMeter();
+         if( meter ) {
+            meter->SetStyle( mRecordMeter->GetStyle() );
+         }
       }
    } else {
       if( mPlayMeter && mProject->GetPlaybackMeter() == mPlayMeter ) {
