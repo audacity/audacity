@@ -486,10 +486,13 @@ void Meter::SetStyle(Meter::Style newStyle)
    // MixerTrackCluster disallows style change.
    if (mStyle == MixerTrackCluster)
       return;
-   mStyle = newStyle;
-   gPrefs->Write(wxT("/Meter/MeterStyle"), newStyle == Meter::HorizontalStereo ? wxT("HorizontalStereo") : wxT("VerticalStereo"));
-   mLayoutValid = false;
-   Refresh(true);
+   if (mStyle != newStyle)
+   {
+      mStyle = newStyle;
+      gPrefs->Write(wxT("/Meter/MeterStyle"), newStyle == Meter::HorizontalStereo ? wxT("HorizontalStereo") : wxT("VerticalStereo"));
+      mLayoutValid = false;
+      Refresh(true);
+   }
 }
 
 void Meter::Reset(double sampleRate, bool resetClipping)
@@ -1447,7 +1450,7 @@ void Meter::StartMonitoring()
       }
    } 
 
-   if (start){
+   if (start && !gAudioIO->IsBusy()){
       if (mMeterDisabled){
          wxCommandEvent dummy;
          OnDisableMeter(dummy);
