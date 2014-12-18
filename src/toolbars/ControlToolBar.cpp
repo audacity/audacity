@@ -723,7 +723,7 @@ void ControlToolBar::StopPlaying(bool stopStream /* = true*/)
          meter->Clear();
       }
       
-      meter = project->GetPlaybackMeter();
+      meter = project->GetCaptureMeter();
       if( meter ) {
          meter->Clear();
       }
