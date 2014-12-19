@@ -28,7 +28,6 @@ class wxWindow;
 
 #include "../Experimental.h"
 #include "../WaveTrack.h"
-#include "../Project.h"
 #include "../SelectedRegion.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

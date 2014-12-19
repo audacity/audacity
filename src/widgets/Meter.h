@@ -20,7 +20,6 @@
 #include <wx/panel.h>
 #include <wx/timer.h>
 
-#include "../Project.h"
 #include "../SampleFormat.h"
 #include "../Sequence.h"
 #include "Ruler.h"
