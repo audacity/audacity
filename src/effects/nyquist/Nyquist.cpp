@@ -591,7 +591,7 @@ bool EffectNyquist::Process()
          centerHz.Printf(wxT("(float %g)"), sqrt(mF0 * mF1));
       }
 
-      if ((mF0 > 0.0) && (mF1 > mF0)) {
+      if ((mF0 > 0.0) && (mF1 >= mF0)) {
          bandwidth.Printf(wxT("(float %g)"), log(mF1 / mF0)/log(2.0));
       }
 
