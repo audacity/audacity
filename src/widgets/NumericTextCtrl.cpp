@@ -468,10 +468,17 @@ const BuiltinFormatString TimeConverterFormats[] =  {
 const BuiltinFormatString FrequencyConverterFormats[] =  {
    /* i18n-hint: Name of display format that shows frequency in hertz */
    {
-      _("hertz"),
+      _("Hz"),
          /* i18n-hint: Format string for displaying frequency in hertz. Change 
          * the decimal point for your locale. Don't change the numbers. */
-         _("0100000.0100 hertz")
+         _("0100000.0100 Hz")
+   },
+
+   {
+      _("kHz"),
+         /* i18n-hint: Format string for displaying frequency in kilohertz. Change 
+         * the decimal point for your locale. Don't change the numbers. */
+         _("0100.01000 kHz|0.001")
    },
 };
 
@@ -492,13 +499,13 @@ const BuiltinFormatString LogFrequencyConverterFormats[] =  {
 
    {
    /* i18n-hint: Name of display format that shows log of frequency
-    * in steps and cents */
-   _("steps + cents"),
-   /* i18n-hint: Format string for displaying log of frequency in steps
+    * in semitones and cents */
+   _("semitones + cents"),
+   /* i18n-hint: Format string for displaying log of frequency in semitones
     * and cents.
     * Change the decimal points for your locale. Don't change the numbers. */
    // Scale factor is 12 / ln (2)
-   _("100 steps .0100 cents|17.312340491")
+   _("1000 semitones .0100 cents|17.312340491")
    },
    
    {
@@ -508,7 +515,7 @@ const BuiltinFormatString LogFrequencyConverterFormats[] =  {
    /* i18n-hint: Format string for displaying log of frequency in decades.
     * Change the decimal points for your locale. Don't change the numbers. */
    // Scale factor is 1 / ln (10)
-   _("100.0100 decades|0.434294482")
+   _("10.01000 decades|0.434294482")
    },
 };
 
