@@ -2184,6 +2184,11 @@ bool EffectUIHost::Initialize()
    else
    {
       mMenuBtn = new wxBitmapButton(bar, kMenuID, CreateBitmap(effect_menu_xpm, true, false));
+#if defined(__WXMAC__)
+      mMenuBtn->SetName(_("&Manage"));
+#else
+      mMenuBtn->SetLabel(_("&Manage"));
+#endif
       bs->Add(mMenuBtn);
    }
    mMenuBtn->SetToolTip(_("Manage presets and options"));
@@ -2238,6 +2243,11 @@ bool EffectUIHost::Initialize()
       bb = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
       bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
       mRewindBtn = bb;
+#if defined(__WXMAC__)
+      mRewindBtn->SetName(_("Skip &Backward"));
+#else
+      mRewindBtn->SetLabel(_("Skip &Backward"));
+#endif
       bs->Add(mRewindBtn);
    }
    mRewindBtn->SetToolTip(_("Skip backward"));
@@ -2252,6 +2262,11 @@ bool EffectUIHost::Initialize()
       bb = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
       bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
       mFFwdBtn = bb;
+#if defined(__WXMAC__)
+      mFFwdBtn->SetName(_("Skip &Foreward"));
+#else
+      mFFwdBtn->SetLabel(_("Skip &Foreward"));
+#endif
       bs->Add(mFFwdBtn);
    }
    mFFwdBtn->SetToolTip(_("Skip forward"));
