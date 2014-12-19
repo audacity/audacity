@@ -2063,7 +2063,7 @@ enum
    kUserPresetsDummyID = 30006,
    kDeletePresetDummyID = 30007,
    kMenuID = 30100,
-   kPowerID = 30101,
+   kEnableID = 30101,
    kPlayID = 30102,
    kRewindID = 30103,
    kFFwdID = 30104,
@@ -2079,7 +2079,7 @@ BEGIN_EVENT_TABLE(EffectUIHost, wxDialog)
    EVT_BUTTON(wxID_APPLY, EffectUIHost::OnApply)
    EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
    EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
-   EVT_BUTTON(kPowerID, EffectUIHost::OnPower)
+   EVT_BUTTON(kEnableID, EffectUIHost::OnEnable)
    EVT_BUTTON(kPlayID, EffectUIHost::OnPlay)
    EVT_BUTTON(kRewindID, EffectUIHost::OnRewind)
    EVT_BUTTON(kFFwdID, EffectUIHost::OnFFwd)
@@ -2108,7 +2108,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 
    mInitialized = false;
 
-   mPowerOn = true;
+   mEnable = false;
    mPlayPos = 0.0;
 
    mClient->SetUIHost(this);
@@ -2190,20 +2190,21 @@ bool EffectUIHost::Initialize()
 
    if (!mIsGUI)
    {
-      mPowerToggleBtn = new wxButton(bar, kPowerID, _("Turn Power &On"));
-      mPowerToggleBtn->SetToolTip(_("Power effect on or off (enable or disable"));
-      bs->Add(mPowerToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+      mEnableToggleBtn = new wxButton(bar, kEnableID, _("Disable &Effect"));
+      mEnableToggleBtn->SetToolTip(_("Enable or disable effect"));
+      bs->Add(mEnableToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
    }
    else
    {
-      mOnBM = CreateBitmap(effect_on_xpm, true, false);
-      mOffBM = CreateBitmap(effect_off_xpm, true, false);
-      mOffDisabledBM = CreateBitmap(effect_off_disabled_xpm, true, false);
-      bb = new wxBitmapButton(bar, kPowerID, mOnBM);
-      bb->SetBitmapDisabled(mOffDisabledBM);
-      mPowerBtn = bb;
-      mPowerBtn->SetToolTip(_("Power effect on or off (enable or disable"));
-      bs->Add(mPowerBtn);
+      mEnableBM = CreateBitmap(effect_enable_xpm, true, false);
+      mDisableBM = CreateBitmap(effect_disable_xpm, true, false);
+      mEnableDisabledBM = CreateBitmap(effect_enable_disabled_xpm, true, false);
+      mDisableDisabledBM = CreateBitmap(effect_disable_disabled_xpm, true, false);
+      bb = new wxBitmapButton(bar, kEnableID, mDisableBM);
+      bb->SetBitmapDisabled(mDisableDisabledBM);
+      mEnableBtn = bb;
+      mEnableBtn->SetToolTip(_("Enable or disable effect"));
+      bs->Add(mEnableBtn);
    }
 
    bs->Add(5, 5);
@@ -2497,17 +2498,17 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    delete menu;
 }
 
-void EffectUIHost::OnPower(wxCommandEvent & WXUNUSED(evt))
+void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
-   mPowerOn = !mPowerOn;
+   mEnable = !mEnable;
 
-   if (mPowerOn)
+   if (mEnable)
    {
-      mEffect->RealtimeResume();
+      mEffect->RealtimeSuspend();
    }
    else
    {
-      mEffect->RealtimeSuspend();
+      mEffect->RealtimeResume();
    }
 
    UpdateControls();
@@ -2788,6 +2789,11 @@ void EffectUIHost::UpdateControls()
          bb->SetBitmapLabel(mStopBM);
          bb->SetBitmapDisabled(mStopDisabledBM);
          mPlayBtn->Enable(!mCapturing);
+#if defined(__WXMAC__)
+         mPlayBtn->SetName(_("Stop &Playback"));
+#else
+         mPlayBtn->SetLabel(_("Stop &Playback"));
+#endif
       }
    }
    else
@@ -2807,25 +2813,36 @@ void EffectUIHost::UpdateControls()
          bb->SetBitmapLabel(mPlayBM);
          bb->SetBitmapDisabled(mPlayDisabledBM);
          mPlayBtn->Enable(!mCapturing);
+#if defined(__WXMAC__)
+         mPlayBtn->SetName(_("Start &Playback"));
+#else
+         mPlayBtn->SetLabel(_("Start &Playback"));
+#endif
       }
    }
 
-   if (mPowerOn)
+   if (mEnable)
    {
       if (!mIsGUI)
       {
          /* i18n-hint: The access key "&O" should be the same in
-            "Turn Power &Off" and "Turn Power &On" */
-         mPowerToggleBtn->SetLabel(_("Turn Power &Off"));
-         //mPowerToggleBtn->SetValue(true);
-         mPowerToggleBtn->Enable(!mCapturing);
-         mPowerToggleBtn->Refresh();
+            "Enable &Effect" and "Disable &Effect" */
+         mEnableToggleBtn->SetLabel(_("Enable &Effect"));
+         //mEnableToggleBtn->SetValue(true);
+         mEnableToggleBtn->Enable(!mCapturing);
+         mEnableToggleBtn->Refresh();
       }
       else
       {
-         bb = (wxBitmapButton *) mPowerBtn;
-         bb->SetBitmapLabel(mOnBM);
-         mPowerBtn->Enable(!mCapturing);
+         bb = (wxBitmapButton *) mEnableBtn;
+         bb->SetBitmapLabel(mEnableBM);
+         bb->SetBitmapDisabled(mEnableDisabledBM);
+         mEnableBtn->Enable(!mCapturing);
+#if defined(__WXMAC__)
+         mEnableBtn->SetName(_("Enable &Effect"));
+#else
+         mEnableBtn->SetLabel(_("Enable &Effect"));
+#endif
       }
    }
    else
@@ -2833,17 +2850,23 @@ void EffectUIHost::UpdateControls()
       if (!mIsGUI)
       {
          /* i18n-hint: The access key "&O" should be the same in
-            "Turn Power &Off" and "Turn Power &On" */
-         mPowerToggleBtn->SetLabel(_("Turn Power &On"));
-         //mPowerToggleBtn->SetValue(false);
-         mPowerToggleBtn->Enable(!mCapturing);
-         mPowerToggleBtn->Refresh();
+            "Enable &Effect" and "Disable &Effect" */
+         mEnableToggleBtn->SetLabel(_("Disable &Effect"));
+         //mEnableToggleBtn->SetValue(false);
+         mEnableToggleBtn->Enable(!mCapturing);
+         mEnableToggleBtn->Refresh();
       }
       else
       {
-         bb = (wxBitmapButton *) mPowerBtn;
-         bb->SetBitmapLabel(mOffBM);
-         mPowerBtn->Enable(!mCapturing);
+         bb = (wxBitmapButton *) mEnableBtn;
+         bb->SetBitmapLabel(mDisableBM);
+         bb->SetBitmapDisabled(mDisableDisabledBM);
+         mEnableBtn->Enable(!mCapturing);
+#if defined(__WXMAC__)
+         mEnableBtn->SetName(_("Disable &Effect"));
+#else
+         mEnableBtn->SetLabel(_("Disable &Effect"));
+#endif
       }
    }
 }

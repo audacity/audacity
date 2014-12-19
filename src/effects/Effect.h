@@ -503,7 +503,7 @@ private:
    void OnApply(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
-   void OnPower(wxCommandEvent & evt);
+   void OnEnable(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
    void OnRewind(wxCommandEvent & evt);
    void OnFFwd(wxCommandEvent & evt);
@@ -535,12 +535,12 @@ private:
    wxButton *mApplyBtn;
    wxButton *mCloseBtn;
    wxButton *mMenuBtn;
-   wxButton *mPowerBtn;
+   wxButton *mEnableBtn;
    wxButton *mPlayBtn;
    wxButton *mRewindBtn;
    wxButton *mFFwdBtn;
 
-   wxButton *mPowerToggleBtn;
+   wxButton *mEnableToggleBtn;
    wxButton *mPlayToggleBtn;
 
    wxBitmap mPlayBM;
@@ -548,10 +548,11 @@ private:
    wxBitmap mStopBM;
    wxBitmap mStopDisabledBM;
 
-   bool mPowerOn;
-   wxBitmap mOnBM;
-   wxBitmap mOffBM;
-   wxBitmap mOffDisabledBM;
+   bool mEnable;
+   wxBitmap mEnableBM;
+   wxBitmap mEnableDisabledBM;
+   wxBitmap mDisableBM;
+   wxBitmap mDisableDisabledBM;
 
    bool mPlaying;
    bool mCapturing;
