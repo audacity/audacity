@@ -4196,7 +4196,7 @@ void AudacityProject::SetPlaybackMeter(Meter *playback)
    mPlaybackMeter = playback;
    if (gAudioIO)
    {
-      gAudioIO->SetPlaybackMeter(mPlaybackMeter);
+      gAudioIO->SetPlaybackMeter(this, mPlaybackMeter);
    }
 }
 
@@ -4208,9 +4208,10 @@ Meter *AudacityProject::GetCaptureMeter()
 void AudacityProject::SetCaptureMeter(Meter *capture)
 {
    mCaptureMeter = capture;
+
    if (gAudioIO)
    {
-      gAudioIO->SetCaptureMeter(mCaptureMeter);
+      gAudioIO->SetCaptureMeter(this, mCaptureMeter);
    }
 }
 

@@ -90,7 +90,8 @@ void MeterToolBar::Populate()
    if( mWhichMeters & kWithRecordMeter ){
       //JKC: Record on left, playback on right.  Left to right flow
       //(maybe we should do it differently for Arabic language :-)  )
-      mRecordMeter = new Meter( this,
+      mRecordMeter = new Meter( mProject,
+                                this,
                                 wxID_ANY,
                                 true,
                                 wxDefaultPosition,
@@ -105,7 +106,8 @@ void MeterToolBar::Populate()
    }
 
    if( mWhichMeters & kWithPlayMeter ){
-      mPlayMeter = new Meter( this,
+      mPlayMeter = new Meter( mProject,
+                              this,
                               wxID_ANY,
                               false,
                               wxDefaultPosition,

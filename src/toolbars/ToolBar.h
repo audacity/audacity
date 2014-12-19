@@ -66,8 +66,8 @@ enum
    TransportBarID,
    ToolsBarID,
    MeterBarID,
-   PlayMeterBarID,         // RecorderMeterBarID should be after PlayMeterBarID
-   RecordMeterBarID,       // to ensure proper meter style setup during initialization
+   RecordMeterBarID,
+   PlayMeterBarID,
    MixerBarID,
    EditBarID,
    TranscriptionBarID,

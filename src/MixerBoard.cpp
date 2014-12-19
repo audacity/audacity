@@ -308,7 +308,8 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    if (mLeftTrack) {
 #endif
    mMeter =
-      new Meter(this, -1, // wxWindow* parent, wxWindowID id,
+      new Meter(GetActiveProject(), // AudacityProject* project,
+                this, -1, // wxWindow* parent, wxWindowID id,
                 false, // bool isInput
                 ctrlPos, ctrlSize, // const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
                 Meter::MixerTrackCluster); // Style style = HorizontalStereo,

@@ -323,8 +323,8 @@ class AUDACITY_DLL_API AudioIO {
       double AILAGetLastDecisionTime();
    #endif
 
-   void SetCaptureMeter(Meter *meter);
-   void SetPlaybackMeter(Meter *meter);
+   void SetCaptureMeter(AudacityProject *project, Meter *meter);
+   void SetPlaybackMeter(AudacityProject *project, Meter *meter);
 
 private:
    /** \brief Set the current VU meters - this should be done once after

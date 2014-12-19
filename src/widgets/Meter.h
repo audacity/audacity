@@ -20,6 +20,7 @@
 #include <wx/panel.h>
 #include <wx/timer.h>
 
+#include "../Project.h"
 #include "../SampleFormat.h"
 #include "../Sequence.h"
 #include "Ruler.h"
@@ -102,7 +103,8 @@ class Meter : public wxPanel
    };
 
 
-   Meter(wxWindow* parent, wxWindowID id,
+   Meter(AudacityProject *,
+         wxWindow* parent, wxWindowID id,
          bool isInput,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize,
@@ -179,7 +181,7 @@ class Meter : public wxPanel
    void OnSize(wxSizeEvent &evt);
    void OnMouse(wxMouseEvent &evt);
 
-   void OnAudioIOMonitor(wxCommandEvent &evt);
+   void OnAudioIOStatus(wxCommandEvent &evt);
 
    void OnMeterUpdate(wxTimerEvent &evt);
 
@@ -212,6 +214,7 @@ class Meter : public wxPanel
    void CreateIcon(int aquaOffset);
    wxFont GetFont();
 
+   AudacityProject *mProject;
    MeterUpdateQueue mQueue;
    wxTimer          mTimer;
 
@@ -235,6 +238,8 @@ class Meter : public wxPanel
    long      mMeterDisabled; //is used as a bool, needs long for easy gPrefs...
 
    bool      mMonitoring;
+
+   bool      mActive;
 
    int       mNumBars;
    MeterBar  mBar[kMaxMeterBars];

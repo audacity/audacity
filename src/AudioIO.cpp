@@ -1131,6 +1131,7 @@ void AudioIO::StartMonitoring(double sampleRate)
    (void)success;
 
    wxCommandEvent e(EVT_AUDIOIO_MONITOR);
+   e.SetEventObject(mOwningProject);
    e.SetInt(true);
    wxTheApp->ProcessEvent(e);
 
@@ -1191,8 +1192,6 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 
    mTimeTrack = timeTrack;
    mListener = listener;
-   mInputMeter = NULL;
-   mOutputMeter = NULL;
    mRate    = sampleRate;
    mT0      = t0;
    mT1      = t1;
@@ -1441,6 +1440,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    if (mNumPlaybackChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
+      e.SetEventObject(mOwningProject);
       e.SetInt(true);
       wxTheApp->ProcessEvent(e);
    }
@@ -1448,6 +1448,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    if (mNumCaptureChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_CAPTURE);
+      e.SetEventObject(mOwningProject);
       e.SetInt(true);
       wxTheApp->ProcessEvent(e);
    }
@@ -1620,9 +1621,9 @@ bool AudioIO::StartPortMidiStream()
 }
 #endif
 
-void AudioIO::SetCaptureMeter(Meter *meter)
+void AudioIO::SetCaptureMeter(AudacityProject *project, Meter *meter)
 {
-   if (!mOwningProject || mOwningProject == GetActiveProject())
+   if (!mOwningProject || mOwningProject == project)
    {
       mInputMeter = meter;
       if (mInputMeter)
@@ -1632,9 +1633,9 @@ void AudioIO::SetCaptureMeter(Meter *meter)
    }
 }
 
-void AudioIO::SetPlaybackMeter(Meter *meter)
+void AudioIO::SetPlaybackMeter(AudacityProject *project, Meter *meter)
 {
-   if (!mOwningProject || mOwningProject == GetActiveProject())
+   if (!mOwningProject || mOwningProject == project)
    {
       mOutputMeter = meter;
       if (mOutputMeter)
@@ -1742,6 +1743,7 @@ void AudioIO::StopStream()
    if (mNumPlaybackChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
+      e.SetEventObject(mOwningProject);
       e.SetInt(false);
       wxTheApp->ProcessEvent(e);
    }
@@ -1749,6 +1751,7 @@ void AudioIO::StopStream()
    if (mNumCaptureChannels > 0)
    {
       wxCommandEvent e(mStreamToken == 0 ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
+      e.SetEventObject(mOwningProject);
       e.SetInt(false);
       wxTheApp->ProcessEvent(e);
    }
@@ -1920,6 +1923,9 @@ void AudioIO::StopStream()
    // Only set token to 0 after we're totally finished with everything
    //
    mStreamToken = 0;
+
+   mNumCaptureChannels = 0;
+   mNumPlaybackChannels = 0;
 }
 
 void AudioIO::SetPaused(bool state)

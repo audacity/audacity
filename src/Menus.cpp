@@ -1150,7 +1150,10 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddSeparator();
 
-   c->AddItem(wxT("DeviceInfo"), _("Au&dio Device Info..."), FN(OnAudioDeviceInfo));
+   c->AddItem(wxT("DeviceInfo"), _("Au&dio Device Info..."), FN(OnAudioDeviceInfo),
+              AudioIONotBusyFlag,
+              AudioIONotBusyFlag);
+
    c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
 
    c->AddSeparator();
