@@ -5114,8 +5114,8 @@ void AudacityProject::OnShowMeterToolBar()
 {
    if( !mToolManager->IsVisible( MeterBarID ) )
    {
-      mToolManager->Hide( PlayMeterBarID ); 
-      mToolManager->Hide( RecordMeterBarID ); 
+      mToolManager->Expose( PlayMeterBarID, false );
+      mToolManager->Expose( RecordMeterBarID, false ); 
    }
    mToolManager->ShowHide( MeterBarID );
    ModifyToolbarMenus();
@@ -5125,7 +5125,7 @@ void AudacityProject::OnShowRecordMeterToolBar()
 {
    if( !mToolManager->IsVisible( RecordMeterBarID ) )
    {
-      mToolManager->Hide( MeterBarID ); 
+      mToolManager->Expose( MeterBarID, false );
    }
    mToolManager->ShowHide( RecordMeterBarID );
    ModifyToolbarMenus();
@@ -5135,7 +5135,7 @@ void AudacityProject::OnShowPlayMeterToolBar()
 {
    if( !mToolManager->IsVisible( PlayMeterBarID ) )
    {
-      mToolManager->Hide( MeterBarID ); 
+      mToolManager->Expose( MeterBarID, false );
    }
    mToolManager->ShowHide( PlayMeterBarID );
    ModifyToolbarMenus();

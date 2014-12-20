@@ -546,7 +546,7 @@ void ToolManager::Reset()
          floater->CentreOnParent( );
          floater->Move( floater->GetPosition() + wxSize( ndx * 10 - 200, ndx * 10 ));
          bar->SetDocked( NULL, false );
-         bar->Expose( false );
+         Expose( ndx, false );
       }
 
    }
@@ -715,11 +715,11 @@ void ToolManager::ReadConfig()
                bar->SetPositioned();
          }
 
-         // Show or hide it
-         bar->Expose( show[ ndx ] );
-
          // Inform toolbar of change
          bar->SetDocked( NULL, false );
+
+         // Show or hide it
+         Expose( ndx, show[ ndx ] );
       }
 
       // Change back to the bar root
@@ -746,16 +746,9 @@ void ToolManager::ReadConfig()
 
             // Dock it
             d->Dock( t );
-
-            // Hide the bar
-            if( !show[ t->GetId() ] )
-            {
-               d->ShowHide( t->GetId() );
-            }
-            else
-            {
-               t->Expose( show[ ndx ] );
-            }
+            
+            // Show or hide it
+            Expose( t->GetId(), show[ t->GetId() ] );
          }
       }
 
@@ -767,15 +760,8 @@ void ToolManager::ReadConfig()
          // Dock it
          d->Dock( t );
 
-         // Hide the bar
-         if( !show[ t->GetId() ] )
-         {
-            d->ShowHide( t->GetId() );
-         }
-         else
-         {
-            t->Expose( show[ ndx ] );
-         }
+         // Show or hide the bar
+         Expose( t->GetId(), show[ t->GetId() ] );
       }
    }
 
@@ -915,24 +901,7 @@ bool ToolManager::IsVisible( int type )
 //
 void ToolManager::ShowHide( int type )
 {
-   ToolBar *t = mBars[ type ];
-
-   // Handle docked and floaters differently
-   if( t->IsDocked() )
-   {
-      t->GetDock()->ShowHide( type );
-   }
-   else
-   {
-      t->Expose( !t->IsVisible() );
-   }
-}
-
-void ToolManager::Hide( int type )
-{
-   if( !IsVisible( type ) )
-      return;
-   ShowHide( type );
+   Expose( type, !mBars[ type ]->IsVisible() );
 }
 
 //

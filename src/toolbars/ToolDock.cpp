@@ -417,31 +417,6 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
 }
 
 //
-// Toggles the visible/hidden state of a toolbar
-//
-void ToolDock::ShowHide( int type )
-{
-   ToolBar *t = mBars[ type ];
-
-   // Maintain the docked array
-   if( t->IsVisible() )
-   {
-      mDockedBars.Remove( t );
-   }
-   else
-   {
-      mDockedBars.Add( t );
-   }
-
-   // Make it (dis)appear
-   t->Expose( !t->IsVisible() );
-
-   // Update the layout
-   LayoutToolBars();
-   Updated();
-}
-
-//
 // Set the visible/hidden state of a toolbar
 //
 void ToolDock::Expose( int type, bool show )

@@ -57,7 +57,7 @@ class ToolManager:public wxEvtHandler
    bool IsVisible( int type );
 
    void ShowHide( int type );
-   void Hide( int type );
+
    void Expose( int type, bool show );
 
    ToolBar *GetToolBar( int type ) const;
