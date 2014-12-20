@@ -558,6 +558,10 @@ AudioIO::AudioIO()
    mUpdateMeters = false;
    mUpdatingMeters = false;
 
+   mOwningProject = NULL;
+   mInputMeter = NULL;
+   mOutputMeter = NULL;
+
    PaError err = Pa_Initialize();
 
    if (err != paNoError) {
@@ -1620,6 +1624,11 @@ bool AudioIO::StartPortMidiStream()
    return (mLastPmError == pmNoError);
 }
 #endif
+
+bool AudioIO::IsAvailable(AudacityProject *project)
+{
+   return mOwningProject == NULL || mOwningProject == project;
+}
 
 void AudioIO::SetCaptureMeter(AudacityProject *project, Meter *meter)
 {

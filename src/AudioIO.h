@@ -323,6 +323,7 @@ class AUDACITY_DLL_API AudioIO {
       double AILAGetLastDecisionTime();
    #endif
 
+   bool IsAvailable(AudacityProject *projecT);
    void SetCaptureMeter(AudacityProject *project, Meter *meter);
    void SetPlaybackMeter(AudacityProject *project, Meter *meter);
 

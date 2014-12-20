@@ -2149,6 +2149,7 @@ bool EffectUIHost::Initialize()
 
    w->SetScrollRate(0, 20);
 
+   mDisableTransport = !gAudioIO->IsAvailable(mProject);
    mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
    mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0;
 
@@ -2234,7 +2235,6 @@ bool EffectUIHost::Initialize()
       bb = new wxBitmapButton(bar, kPlayID, mPlayBM);
       bb->SetBitmapDisabled(mPlayDisabledBM);
       mPlayBtn = bb;
-      mPlayBtn->SetToolTip(_("Start and stop playback"));
       bs->Add(mPlayBtn);
    }
 
@@ -2297,6 +2297,11 @@ bool EffectUIHost::Initialize()
    if (!mEffect->RealtimeInitialize())
    {
       return false;
+   }
+
+   if (mDisableTransport)
+   {
+      mEffect->RealtimeSuspend();
    }
 
    EffectManager::Get().RealtimeAddEffect(mEffect);
@@ -2844,10 +2849,11 @@ void EffectUIHost::UpdateControls()
          bb = (wxBitmapButton *) mPlayBtn;
          bb->SetBitmapLabel(mStopBM);
          bb->SetBitmapDisabled(mStopDisabledBM);
+         bb->SetToolTip(_("Stop"));
 #if defined(__WXMAC__)
-         mPlayBtn->SetName(_("Stop &Playback"));
+         bb->SetName(_("Stop &Playback"));
 #else
-         mPlayBtn->SetLabel(_("Stop &Playback"));
+         bb->SetLabel(_("Stop &Playback"));
 #endif
       }
    }
@@ -2865,10 +2871,11 @@ void EffectUIHost::UpdateControls()
          bb = (wxBitmapButton *) mPlayBtn;
          bb->SetBitmapLabel(mPlayBM);
          bb->SetBitmapDisabled(mPlayDisabledBM);
+         bb->SetToolTip(_("Play"));
 #if defined(__WXMAC__)
-         mPlayBtn->SetName(_("Start &Playback"));
+         bb->SetName(_("Start &Playback"));
 #else
-         mPlayBtn->SetLabel(_("Start &Playback"));
+         bb->SetLabel(_("Start &Playback"));
 #endif
       }
    }
@@ -2887,10 +2894,11 @@ void EffectUIHost::UpdateControls()
          bb = (wxBitmapButton *) mEnableBtn;
          bb->SetBitmapLabel(mEnableBM);
          bb->SetBitmapDisabled(mEnableDisabledBM);
+         bb->SetToolTip(_("Enable"));
 #if defined(__WXMAC__)
-         mEnableBtn->SetName(_("Enable &Effect"));
+         bb->SetName(_("Enable &Effect"));
 #else
-         mEnableBtn->SetLabel(_("Enable &Effect"));
+         bb->SetLabel(_("Enable &Effect"));
 #endif
       }
    }
@@ -2908,10 +2916,11 @@ void EffectUIHost::UpdateControls()
          bb = (wxBitmapButton *) mEnableBtn;
          bb->SetBitmapLabel(mDisableBM);
          bb->SetBitmapDisabled(mDisableDisabledBM);
+         bb->SetToolTip(_("Disable"));
 #if defined(__WXMAC__)
-         mEnableBtn->SetName(_("Disable &Effect"));
+         bb->SetName(_("Disable &Effect"));
 #else
-         mEnableBtn->SetLabel(_("Disable &Effect"));
+         bb->SetLabel(_("Disable &Effect"));
 #endif
       }
    }
