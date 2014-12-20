@@ -144,9 +144,9 @@ void MeterToolBar::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
    if( mPlayMeter )
-      mPlayMeter->SetToolTip( _("Playback Level.") );
+      mPlayMeter->SetToolTip( _("Playback Level") );
    if( mRecordMeter )
-      mRecordMeter->SetToolTip( _("Recording Level.") );
+      mRecordMeter->SetToolTip( _("Recording Level") );
 #endif
 }
 
