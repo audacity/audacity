@@ -536,10 +536,10 @@ private:
    wxButton *mApplyBtn;
    wxButton *mCloseBtn;
    wxButton *mMenuBtn;
-   wxButton *mEnableBtn;
    wxButton *mPlayBtn;
    wxButton *mRewindBtn;
    wxButton *mFFwdBtn;
+   wxCheckBox *mEnableCb;
 
    wxButton *mEnableToggleBtn;
    wxButton *mPlayToggleBtn;
@@ -549,11 +549,7 @@ private:
    wxBitmap mStopBM;
    wxBitmap mStopDisabledBM;
 
-   bool mEnable;
-   wxBitmap mEnableBM;
-   wxBitmap mEnableDisabledBM;
-   wxBitmap mDisableBM;
-   wxBitmap mDisableDisabledBM;
+   bool mEnabled;
 
    bool mDisableTransport;
    bool mPlaying;

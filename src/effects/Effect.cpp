@@ -2079,7 +2079,7 @@ BEGIN_EVENT_TABLE(EffectUIHost, wxDialog)
    EVT_BUTTON(wxID_APPLY, EffectUIHost::OnApply)
    EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
    EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
-   EVT_BUTTON(kEnableID, EffectUIHost::OnEnable)
+   EVT_CHECKBOX(kEnableID, EffectUIHost::OnEnable)
    EVT_BUTTON(kPlayID, EffectUIHost::OnPlay)
    EVT_BUTTON(kRewindID, EffectUIHost::OnRewind)
    EVT_BUTTON(kFFwdID, EffectUIHost::OnFFwd)
@@ -2112,7 +2112,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 
    mDisableTransport = false;
 
-   mEnable = false;
+   mEnabled = true;
 
    mPlayPos = 0.0;
 
@@ -2199,25 +2199,6 @@ bool EffectUIHost::Initialize()
    }
    mMenuBtn->SetToolTip(_("Manage presets and options"));
 
-   if (!mIsGUI)
-   {
-      mEnableToggleBtn = new wxButton(bar, kEnableID, _("Disable &Effect"));
-      mEnableToggleBtn->SetToolTip(_("Enable or disable effect"));
-      bs->Add(mEnableToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-   }
-   else
-   {
-      mEnableBM = CreateBitmap(effect_enable_xpm, true, false);
-      mDisableBM = CreateBitmap(effect_disable_xpm, true, false);
-      mEnableDisabledBM = CreateBitmap(effect_enable_disabled_xpm, true, false);
-      mDisableDisabledBM = CreateBitmap(effect_disable_disabled_xpm, true, false);
-      bb = new wxBitmapButton(bar, kEnableID, mDisableBM);
-      bb->SetBitmapDisabled(mDisableDisabledBM);
-      mEnableBtn = bb;
-      mEnableBtn->SetToolTip(_("Enable or disable effect"));
-      bs->Add(mEnableBtn);
-   }
-
    bs->Add(5, 5);
 
    if (!mIsGUI)
@@ -2275,6 +2256,13 @@ bool EffectUIHost::Initialize()
       bs->Add(mFFwdBtn);
    }
    mFFwdBtn->SetToolTip(_("Skip forward"));
+
+   bs->Add(5, 5);
+
+   mEnableCb = new wxCheckBox(bar, kEnableID, _("&Enable"));
+   mEnableCb->SetValue(mEnabled);
+   mEnableCb->SetName(_("Enable"));
+   bs->Add(mEnableCb, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
 
    UpdateControls();
 
@@ -2523,15 +2511,15 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
-   mEnable = !mEnable;
+   mEnabled = mEnableCb->GetValue();
 
-   if (mEnable)
+   if (mEnabled)
    {
-      mEffect->RealtimeSuspend();
+      mEffect->RealtimeResume();
    }
    else
    {
-      mEffect->RealtimeResume();
+      mEffect->RealtimeSuspend();
    }
 
    UpdateControls();
@@ -2821,17 +2809,17 @@ void EffectUIHost::UpdateControls()
    {
       // Don't allow focus to get trapped
       wxWindow *focus = FindFocus();
-      if (focus == mRewindBtn || focus == mFFwdBtn || focus == mPlayBtn || focus == mEnableBtn)
+      if (focus == mRewindBtn || focus == mFFwdBtn || focus == mPlayBtn || focus == mEnableCb)
       {
          mCloseBtn->SetFocus();
       }
    }
 
    mApplyBtn->Enable(!mCapturing);
+   (!mIsGUI ? mPlayToggleBtn : mPlayBtn)->Enable(!(mCapturing || mDisableTransport));
    mRewindBtn->Enable(!(mCapturing || mDisableTransport));
    mFFwdBtn->Enable(!(mCapturing || mDisableTransport));
-   (!mIsGUI ? mPlayToggleBtn : mPlayBtn)->Enable(!(mCapturing || mDisableTransport));
-   (!mIsGUI ? mEnableToggleBtn : mEnableBtn)->Enable(!(mCapturing || mDisableTransport));
+   mEnableCb->Enable(!(mCapturing || mDisableTransport));
 
    wxBitmapButton *bb;
 
@@ -2876,51 +2864,6 @@ void EffectUIHost::UpdateControls()
          bb->SetName(_("Start &Playback"));
 #else
          bb->SetLabel(_("Start &Playback"));
-#endif
-      }
-   }
-
-   if (mEnable)
-   {
-      if (!mIsGUI)
-      {
-         /* i18n-hint: The access key "&O" should be the same in
-            "Enable &Effect" and "Disable &Effect" */
-         mEnableToggleBtn->SetLabel(_("Enable &Effect"));
-         mEnableToggleBtn->Refresh();
-      }
-      else
-      {
-         bb = (wxBitmapButton *) mEnableBtn;
-         bb->SetBitmapLabel(mEnableBM);
-         bb->SetBitmapDisabled(mEnableDisabledBM);
-         bb->SetToolTip(_("Enable"));
-#if defined(__WXMAC__)
-         bb->SetName(_("Enable &Effect"));
-#else
-         bb->SetLabel(_("Enable &Effect"));
-#endif
-      }
-   }
-   else
-   {
-      if (!mIsGUI)
-      {
-         /* i18n-hint: The access key "&O" should be the same in
-            "Enable &Effect" and "Disable &Effect" */
-         mEnableToggleBtn->SetLabel(_("Disable &Effect"));
-         mEnableToggleBtn->Refresh();
-      }
-      else
-      {
-         bb = (wxBitmapButton *) mEnableBtn;
-         bb->SetBitmapLabel(mDisableBM);
-         bb->SetBitmapDisabled(mDisableDisabledBM);
-         bb->SetToolTip(_("Disable"));
-#if defined(__WXMAC__)
-         bb->SetName(_("Disable &Effect"));
-#else
-         bb->SetLabel(_("Disable &Effect"));
 #endif
       }
    }
