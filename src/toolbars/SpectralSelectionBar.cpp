@@ -287,6 +287,7 @@ void SpectralSelectionBar::OnChoice(wxCommandEvent &)
    mHighCtrl->Show(!mbCenterAndWidth);
 
    ValuesToControls();
+   GetSizer()->Layout();   // Required so that the layout does not mess up on Windows when changing the format.
    wxWindowBase::GetSizer()->SetMinSize(wxSize(0, mHeight));   // so that height of toolbar does not change
    wxWindowBase::GetSizer()->SetSizeHints(this);
    Updated();
