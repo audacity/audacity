@@ -1723,6 +1723,12 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
+   // Prevent accidentally stopping recording.
+   if (GetActiveProject()->GetControlToolBar()->IsRecordDown()) {
+      SetCursor(wxCursor(wxCURSOR_DEFAULT));
+      return;
+   }
+
    bool isWithinStart = IsWithinMarker(evt.GetX(), mPlayRegionStart);
    bool isWithinEnd = IsWithinMarker(evt.GetX(), mPlayRegionEnd);
 
