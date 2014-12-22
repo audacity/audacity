@@ -2644,6 +2644,45 @@ inline double findMaxRatio(double center, double rate)
 
 }
 
+void TrackPanel::SnapCenterOnce(WaveTrack *pTrack, bool up)
+{
+   const int windowSize = mTrackArtist->GetSpectrumWindowSize();
+   const double rate = pTrack->GetRate();
+   const double nyq = rate / 2.0;
+   const double binFrequency = rate / windowSize;
+
+   double f1 = mViewInfo->selectedRegion.f1();
+   double centerFrequency = mViewInfo->selectedRegion.fc();
+   if (centerFrequency <= 0) {
+      centerFrequency = up ? binFrequency : nyq;
+      f1 = centerFrequency * sqrt(2.0);
+   }
+
+   const double ratio = f1 / centerFrequency;
+   const int originalBin = floor(0.5 + centerFrequency / binFrequency);
+   const int limitingBin = up ? floor(0.5 + nyq / binFrequency) : 1;
+
+   // This is crude and wasteful, doing the FFT each time the command is called.
+   // It would be better to cache the data, but then invalidation of the cache would
+   // need doing in all places that change the time selection.
+   StartSnappingFreqSelection(pTrack);
+   double snappedFrequency = centerFrequency;
+   int bin = originalBin;
+   if (up) {
+      while (snappedFrequency <= centerFrequency &&
+             bin < limitingBin)
+         snappedFrequency = mFrequencySnapper->FindPeak(++bin * binFrequency, NULL);
+   }
+   else {
+      while (snappedFrequency >= centerFrequency &&
+         bin > limitingBin)
+         snappedFrequency = mFrequencySnapper->FindPeak(--bin * binFrequency, NULL);
+   }
+
+   mViewInfo->selectedRegion.setFrequencies
+      (snappedFrequency / ratio, snappedFrequency * ratio);
+}
+
 void TrackPanel::StartSnappingFreqSelection (WaveTrack *pTrack)
 {
    static const sampleCount minLength = 8;

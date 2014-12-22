@@ -328,6 +328,9 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
       double quietSeekStepPositive, double audioSeekStepPositive);
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+public:
+   void SnapCenterOnce (WaveTrack *pTrack, bool up);
+protected:
    void StartSnappingFreqSelection (WaveTrack *pTrack);
    void MoveSnappingFreqSelection (int mouseYCoordinate,
                                    int trackTopEdge,

@@ -245,6 +245,9 @@ void OnSelectAll();
 void OnSelectNone();
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 void OnToggleSpectralSelection();
+void DoNextPeakFrequency(bool up);
+void OnNextHigherPeakFrequency();
+void OnNextLowerPeakFrequency();
 #endif
 void OnSelectCursorEnd();
 void OnSelectStartCursor();

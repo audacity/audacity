@@ -574,7 +574,11 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddItem(wxT("SelectNone"), _("&None"), FN(OnSelectNone), wxT("Ctrl+Shift+A"));
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   c->BeginSubMenu(_("S&pectral"));
    c->AddItem(wxT("ToggleSpectralSelection"), _("To&ggle spectral selection"), FN(OnToggleSpectralSelection), wxT("Q"));
+   c->AddItem(wxT("NextHigherPeakFrequency"), _("Next Higher Peak Frequency"), FN(OnNextHigherPeakFrequency));
+   c->AddItem(wxT("NextLowerPeakFrequency"), _("Next Lower Peak Frequency"), FN(OnNextLowerPeakFrequency));
+   c->EndSubMenu();
 #endif
 
    c->AddItem(wxT("SetLeftSelection"), _("&Left at Playback Position"), FN(OnSetLeftSelection), wxT("["));
@@ -4727,6 +4731,39 @@ void AudacityProject::OnToggleSpectralSelection()
    mTrackPanel->ToggleSpectralSelection();
    mTrackPanel->Refresh(false);
    ModifyState(false);
+}
+
+void AudacityProject::DoNextPeakFrequency(bool up)
+{
+   // Find the first selected wave track that is in a spectrogram view.
+   WaveTrack *pTrack = 0;
+   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+   for (Track *t = iter.First(); t; t = iter.Next()) {
+      WaveTrack *const wt = static_cast<WaveTrack*>(t);
+      const int display = wt->GetDisplay();
+      if (display == WaveTrack::SpectrumDisplay ||
+          display == WaveTrack::SpectrumLogDisplay) {
+         pTrack = wt;
+         break;
+      }
+   }
+
+   if (pTrack) {
+      mTrackPanel->SnapCenterOnce(pTrack, up);
+      mTrackPanel->Refresh(false);
+      ModifyState(false);
+   }
+}
+
+void AudacityProject::OnNextHigherPeakFrequency()
+{
+   DoNextPeakFrequency(true);
+}
+
+
+void AudacityProject::OnNextLowerPeakFrequency()
+{
+   DoNextPeakFrequency(false);
 }
 #endif
 
