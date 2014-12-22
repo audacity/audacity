@@ -391,23 +391,13 @@ void ControlToolBar::EnableDisableButtons()
 void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
 {
    AudacityProject *p = GetActiveProject();
-   TranscriptionToolBar *const pttb =
-      p ? p->GetTranscriptionToolBar(): 0;
    if (down) {
       mPlay->SetAlternateIdx(cutPreview ? 2 : looped ? 1 : 0);
       mPlay->PushDown();
-      if (pttb)
-         // This disables cursor changes for modifier keys
-         // in the other play button too
-         pttb->SetPlaying(true, looped, cutPreview);
    }
    else {
       mPlay->PopUp();
       mPlay->SetAlternateIdx(0);
-      if (pttb)
-         // This reenables cursor changes for modifier keys
-         // in the other play button too
-         pttb->SetPlaying(false, looped, cutPreview);
    }
    EnableDisableButtons();
 }
