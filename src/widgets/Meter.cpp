@@ -1211,6 +1211,7 @@ void Meter::HandlePaint(wxDC &destDC)
    {
       DrawMeterBar(destDC, &mBar[i]);
    }
+
    // We can have numbers over the bars, in which case we have to draw them each time.
    if( mRuler.mRect.Intersects( mBar[0].r ) )
    {
@@ -1260,11 +1261,30 @@ void Meter::RepaintBarsNow()
       {
          DrawMeterBar(*dc, &mBar[i]);
       }
+
+#if defined(__WXMAC__)
+      if (mStyle != HorizontalStereoCompact)
+      {
+         // Due to compositing or antialiasing on the Mac, we have to make
+         // sure all remnants of the previous ruler text is completely gone.
+         // Otherwise, we get a strange bolding effect.
+         //
+         // Since redrawing the rulers above wipe out most of the ruler, the
+         // only thing that is left is the bits between the bars.
+         dc->SetPen(*wxTRANSPARENT_PEN);
+         dc->SetBrush(mBkgndBrush);
+         dc->DrawRectangle(mBar[0].r.GetLeft(),
+                           mBar[0].r.GetBottom() + 1,
+                           mBar[0].r.GetWidth(),
+                           mBar[1].r.GetTop() - mBar[0].r.GetBottom() - 1);
+         AColor::Bevel(*dc, false, mBar[0].r);
+         AColor::Bevel(*dc, false, mBar[1].r);
+      }
+#endif
+
       // We can have numbers over the bars, in which case we have to draw them each time.
       if( mRuler.mRect.Intersects( mBar[0].r ) )
-          mRuler.Draw(*dc);
-
-
+         mRuler.Draw(*dc);
    }
 }
 
@@ -1436,8 +1456,6 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *meterBar)
       dc.SetBrush(*wxTRANSPARENT_BRUSH);
       AColor::Bevel(dc, false, meterBar->rClip);
    }
-
-
 
    // No longer need the source DC, so unselect the predrawn bitmap
    srcDC.SelectObject(wxNullBitmap);
