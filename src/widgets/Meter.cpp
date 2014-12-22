@@ -482,7 +482,7 @@ void Meter::OnMouse(wxMouseEvent &evt)
          PopupMenu(menu, mMenuRect.x + 1, mMenuRect.y + mMenuRect.height + 1);
       delete menu;
    }
-   else if (evt.LeftIsDown()) {
+   else if (evt.LeftDown()) {
       if (mIsInput)
          StartMonitoring();
       else {
