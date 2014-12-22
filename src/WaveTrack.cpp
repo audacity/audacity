@@ -1851,16 +1851,24 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
    if( bufferLen <= 0 )
       return;
 
-   // This is useful in debugging, to easily find null envelope settings, but
-   // should not be necessary in Release build.
-   // If we were going to set it to failsafe values in Release build, better to set each element to 1.0.
-   #ifdef __WXDEBUG__
-      memset(buffer, 0, sizeof(double)*bufferLen);
-   #endif
+   // The output buffer corresponds to an unbroken span of time which the callers expect
+   // to be fully valid.  As clips are processed below, the output buffer is updated with
+   // envelope values from any portion of a clip, start, end, middle, or none at all.
+   // Since this does not guarantee that the entire buffer is filled with values we need
+   // to initialize the entire buffer to a default value.
+   //
+   // This does mean that, in the cases where a usuable clip is located, the buffer value will
+   // be set twice.  Unfortunately, there is no easy way around this since the clips are not
+   // stored in increasing time order.  If they were, we could just track the time as the
+   // buffer is filled.
+   for (int i = 0; i < bufferLen; i++)
+   {
+      buffer[i] = 1.0;
+   }
 
    double startTime = t0;
    double endTime = t0+tstep*bufferLen;
-
+   bool processed = false;
    for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
    {
       WaveClip *clip = it->GetData();
