@@ -1263,7 +1263,7 @@ void Meter::RepaintBarsNow()
       }
 
 #if defined(__WXMAC__)
-      if (mStyle != HorizontalStereoCompact)
+      if (mStyle == HorizontalStereo)
       {
          // Due to compositing or antialiasing on the Mac, we have to make
          // sure all remnants of the previous ruler text is completely gone.
