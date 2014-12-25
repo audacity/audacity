@@ -549,7 +549,12 @@ bool EffectNyquist::Process()
          }
       }
 
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %g) 'RATE)\n"), project->GetRate());
+      // We use Internat::ToString() rather than "%g" here because we
+      // always have to use the dot as decimal separator when giving
+      // numbers to Nyquist, whereas using "%g" will use the user's
+      // decimal separator which may be a comma in some countries.
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'RATE)\n"),
+                                 Internat::ToString(project->GetRate()).c_str());
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TRACKS)\n"), numTracks);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'WAVETRACKS)\n"), numWave);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'LABELTRACKS)\n"), numLabel);
@@ -568,8 +573,10 @@ bool EffectNyquist::Process()
          }
       }
 
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %g) 'START)\n"), mT0);
-      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %g) 'END)\n"), mT1);
+      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'START)\n"),
+                                 Internat::ToString(mT0).c_str());
+      mProps += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'END)\n"),
+                                 Internat::ToString(mT1).c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* (list %s) 'TRACKS)\n"), waveTrackList.c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %d 'CHANNELS)\n"), numChannels);
 
@@ -580,19 +587,19 @@ bool EffectNyquist::Process()
 
 #if defined(EXPERIMENTAL_SPECTRAL_EDITING)
       if (mF0 >= 0.0) {
-         lowHz.Printf(wxT("(float %g)"), mF0);
+         lowHz.Printf(wxT("(float %s)"), Internat::ToString(mF0).c_str());
       }
 
       if (mF1 >= 0.0) {
-         highHz.Printf(wxT("(float %g)"), mF1);
+         highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1).c_str());
       }
 
       if ((mF0 >= 0.0) && (mF1 >= 0.0)) {
-         centerHz.Printf(wxT("(float %g)"), sqrt(mF0 * mF1));
+         centerHz.Printf(wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)).c_str());
       }
 
       if ((mF0 > 0.0) && (mF1 >= mF0)) {
-         bandwidth.Printf(wxT("(float %g)"), log(mF1 / mF0)/log(2.0));
+         bandwidth.Printf(wxT("(float %s)"), Internat::ToString(log(mF1 / mF0)/log(2.0)).c_str());
       }
 
 #endif
@@ -711,24 +718,6 @@ bool EffectNyquist::ProcessOne()
       cmd += wxT("(setf *TRACK* '*unbound*)\n");
    }
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   {
-      static const wxString varName(wxT("*F0*"));
-      if (mF0 < 0)
-         cmd += wxString::Format(wxT("(setf %s nil)\n"), varName.c_str());
-      else
-         cmd += wxString::Format(wxT("(setf %s (float %g))\n"), varName.c_str(), mF0);
-   }
-
-   {
-      static const wxString varName(wxT("*F1*"));
-      if (mF1 < 0)
-         cmd += wxString::Format(wxT("(setf %s nil)\n"), varName.c_str());
-      else
-         cmd += wxString::Format(wxT("(setf %s (float %g))\n"), varName.c_str(), mF1);
-   }
-#endif
-
    if (mVersion >= 4) {
       cmd += mProps;
 
@@ -771,11 +760,16 @@ bool EffectNyquist::ProcessOne()
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view.c_str());
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %g) 'START-TIME)\n"), mCurTrack[0]->GetStartTime());
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %g) 'END-TIME)\n"), mCurTrack[0]->GetEndTime());
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %g) 'GAIN)\n"), mCurTrack[0]->GetGain());
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %g) 'PAN)\n"), mCurTrack[0]->GetPan());
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %g) 'RATE)\n"), mCurTrack[0]->GetRate());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'START-TIME)\n"),
+                              Internat::ToString(mCurTrack[0]->GetStartTime()).c_str());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'END-TIME)\n"),
+                              Internat::ToString(mCurTrack[0]->GetEndTime()).c_str());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"),
+                              Internat::ToString(mCurTrack[0]->GetGain()).c_str());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'PAN)\n"),
+                              Internat::ToString(mCurTrack[0]->GetPan()).c_str());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'RATE)\n"),
+                              Internat::ToString(mCurTrack[0]->GetRate()).c_str());
 
       switch (mCurTrack[0]->GetSampleFormat())
       {
@@ -800,7 +794,9 @@ bool EffectNyquist::ProcessOne()
          if (mCurNumChannels > 1) clips += wxT("(list ");
          // Each clip is a list (start-time, end-time)
          for (size_t j = 0; j < ca.GetCount(); j++) {
-            clips += wxString::Format(wxT("(list (float %g) (float %g))"), ca[j]->GetStartTime(), ca[j]->GetEndTime());
+            clips += wxString::Format(wxT("(list (float %s) (float %s))"),
+                                      Internat::ToString(ca[j]->GetStartTime()).c_str(),
+                                      Internat::ToString(ca[j]->GetEndTime()).c_str());
          }
          if (mCurNumChannels > 1) clips += wxT(" )");
 
@@ -812,7 +808,8 @@ bool EffectNyquist::ProcessOne()
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s%s ) 'CLIPS)\n"),
                               (mCurNumChannels == 1) ? wxT("(list ") : wxT("(vector "),
                               clips.c_str());
-      cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %g) 'PEAK-LEVEL)\n"), maxPeak);
+      cmd += wxString::Format(wxT("(putprop '*SELECTION* (float %s) 'PEAK-LEVEL)\n"),
+                              Internat::ToString(maxPeak).c_str());
    }
 
    if (GetEffectFlags() & INSERT_EFFECT) {
