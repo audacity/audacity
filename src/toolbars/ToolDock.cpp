@@ -98,6 +98,11 @@ int ToolDock::GetOrder( ToolBar *bar )
 
    if( order == wxNOT_FOUND )
    {
+      if( bar->GetDock() == this )
+      {
+         return 999;
+      }
+
       return 0;
    }
 
