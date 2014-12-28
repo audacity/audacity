@@ -214,6 +214,63 @@ void InitPreferences()
       }
    }
 
+   // In 2.1.0, the Meter toolbar was split and lengthened, but strange arrangements happen
+   // if upgrading due to the extra length.  So, if a user is upgrading, use the pre-2.1.0
+   // lengths, but still use the new split versions.
+   if (gPrefs->Exists(wxT("/GUI/ToolBars/Meter")) &&
+      !gPrefs->Exists(wxT("/GUI/ToolBars/CombinedMeter"))) {
+
+      // Read in all of the existing values
+      long dock, order, show, x, y, w, h;
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Dock"), &dock, -1);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Order"), &order, -1);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Show"), &show, -1);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/X"), &x, -1);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/Y"), &y, -1);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/W"), &w, -1);
+      gPrefs->Read(wxT("/GUI/ToolBars/Meter/H"), &h, -1);
+
+      // "Order" must be adjusted since we're inserting two new toolbars
+      if (dock > 0) {
+         wxString oldPath = gPrefs->GetPath();
+         gPrefs->SetPath(wxT("/GUI/ToolBars"));
+
+         wxString bar;
+         long ndx = 0;
+         bool cont = gPrefs->GetFirstGroup(bar, ndx);
+         while (cont) {
+            long o;
+            if (gPrefs->Read(bar + wxT("/Order"), &o) && o >= order) {
+               gPrefs->Write(bar + wxT("/Order"), o + 2);
+            }
+            cont = gPrefs->GetNextGroup(bar, ndx);
+         }
+         gPrefs->SetPath(oldPath);
+
+         // And override the height
+         h = 27;
+      }
+
+      // Write the split meter bar values
+      gPrefs->Write(wxT("/GUI/ToolBars/RecordMeter/Dock"), dock);
+      gPrefs->Write(wxT("/GUI/ToolBars/RecordMeter/Order"), order);
+      gPrefs->Write(wxT("/GUI/ToolBars/RecordMeter/Show"), show);
+      gPrefs->Write(wxT("/GUI/ToolBars/RecordMeter/X"), -1);
+      gPrefs->Write(wxT("/GUI/ToolBars/RecordMeter/Y"), -1);
+      gPrefs->Write(wxT("/GUI/ToolBars/RecordMeter/W"), w);
+      gPrefs->Write(wxT("/GUI/ToolBars/RecordMeter/H"), h);
+      gPrefs->Write(wxT("/GUI/ToolBars/PlayMeter/Dock"), dock);
+      gPrefs->Write(wxT("/GUI/ToolBars/PlayMeter/Order"), order + 1);
+      gPrefs->Write(wxT("/GUI/ToolBars/PlayMeter/Show"), show);
+      gPrefs->Write(wxT("/GUI/ToolBars/PlayMeter/X"), -1);
+      gPrefs->Write(wxT("/GUI/ToolBars/PlayMeter/Y"), -1);
+      gPrefs->Write(wxT("/GUI/ToolBars/PlayMeter/W"), w);
+      gPrefs->Write(wxT("/GUI/ToolBars/PlayMeter/H"), h);
+
+      // And hide the old combined meter bar
+      gPrefs->Write(wxT("/GUI/ToolBars/Meter/Dock"), -1);
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
