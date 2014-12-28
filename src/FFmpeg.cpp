@@ -739,15 +739,15 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
       if (!syspath.Contains(fmtdirsc) && !syspath.Contains(scfmtdir) && !syspath.Contains(fmtdir))
       {
          wxLogWarning(wxT("FFmpeg directory '%s' is not in PATH."), fmtdir.c_str());
-         if (syspath.Last() == wxT(';'))
+         if (syspath.Left(1) == wxT(';'))
          {
-            wxLogMessage(wxT("Temporarily appending '%s' to PATH..."), fmtdir.c_str());
-            syspath.Append(fmtdirsc);
+            wxLogMessage(wxT("Temporarily preending '%s' to PATH..."), fmtdir.c_str());
+            syspath.Prepend(scfmtdir);
          }
          else
          {
-            wxLogMessage(wxT("Temporarily appending '%s' to PATH..."), scfmtdir.c_str());
-            syspath.Append(scfmtdir);
+            wxLogMessage(wxT("Temporarily prepending '%s' to PATH..."), scfmtdir.c_str());
+            syspath.Prepend(fmtdirsc);
          }
 
          if (wxSetEnv(wxT("PATH"),syspath.c_str()))
