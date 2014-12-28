@@ -159,6 +159,7 @@ void wxNumValidatorBase::OnChar(wxKeyEvent& event)
     }
 #else // !wxUSE_UNICODE
     const int ch = event.GetKeyCode();
+    const int c = ch;
     if ( ch > WXK_DELETE )
     {
         // Not a character neither.
