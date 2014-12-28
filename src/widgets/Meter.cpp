@@ -391,8 +391,8 @@ void Meter::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
-   wxPaintDC paintDC(this);
-   wxDC & destDC = paintDC;
+   wxDC *paintDC = wxAutoBufferedPaintDCFactory(this);
+   wxDC & destDC = *paintDC;
 
    if (mLayoutValid == false)
    {
@@ -609,6 +609,8 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
          }
       }
    }
+
+   delete paintDC;
 }
 
 void Meter::OnSize(wxSizeEvent & WXUNUSED(event))
@@ -1360,7 +1362,12 @@ void Meter::RepaintBarsNow()
 {
    if (mLayoutValid)
    {
+#if defined(__WXMSW__)
+      wxClientDC clientDC(this);
+      wxBufferedDC dc(&clientDC, *mBitmap);
+#else
       wxClientDC dc(this);
+#endif
 
       for (int i = 0; i < mNumBars; i++)
       {
@@ -1452,13 +1459,9 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *bar)
          // it will be the same color as the original level.
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          ht = (int)(bar->peakHold * (h - 1) + 0.5);
-         if (ht > 0)
+         if (ht > 1)
          {
-            AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
-            if (ht > 1)
-            {
-               AColor::Line(dc, x, y + h - ht, x + w - 1, y + h - ht);
-            }
+            dc.Blit(x, y + h - ht - 1, w, 2, &srcDC, x, y + h - ht - 1);
          }
 
          // Draw the "maximum" peak hold line
@@ -1498,15 +1501,11 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *bar)
 
          // Draw the "recent" peak hold line using the predrawn meter bar so that
          // it will be the same color as the original level.
-         // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
+         // -1 to give a 2 pixel width
          wd = (int)(bar->peakHold * (w - 1) + 0.5);
-         if (wd > 0)
+         if (wd > 1)
          {
-            AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
-            if (wd > 1)
-            {
-               AColor::Line(dc, x + wd - 1, y, x + wd - 1, y + h - 1);
-            }
+            dc.Blit(x + wd - 1, y, 2, h, &srcDC, x + wd, y);
          }
 
          // Draw the "maximum" peak hold line using a themed color
@@ -1552,6 +1551,7 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *bar)
 
          // Draw the "recent" peak hold line
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
+         dc.SetPen(mPen);
          int ht = (int)(bar->peakHold * (h - 1) + 0.5);
          if (ht > 0)
          {
@@ -1568,6 +1568,7 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *bar)
          ht = (int)(bar->rms * (h - 1) + 0.5);
 
          // Draw the RMS level
+         dc.SetPen(*wxTRANSPARENT_PEN);
          dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush);
          if (ht)
          {
@@ -1611,6 +1612,7 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *bar)
 
          // Draw the "recent" peak hold line
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
+         dc.SetPen(mPen);
          wd = (int)(bar->peakHold * (w - 1) + 0.5);
          if (wd > 0)
          {
@@ -1627,6 +1629,7 @@ void Meter::DrawMeterBar(wxDC &dc, MeterBar *bar)
 
          // Draw the rms level 
          // +1 to include the rms position
+         dc.SetPen(*wxTRANSPARENT_PEN);
          dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush);
          if (wd)
          {
