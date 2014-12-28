@@ -1994,37 +1994,11 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    if (GetAudioIOToken()>0 &&
        gAudioIO->IsStreamActive(GetAudioIOToken())) {
 
-      wxBusyCursor busy;
-      gAudioIO->StopStream();
-      while(gAudioIO->IsBusy()) {
-         wxMilliSleep(100);
-      }
-
       // We were playing or recording audio, but we've stopped the stream.
       wxCommandEvent dummyEvent;
       GetControlToolBar()->OnStop(dummyEvent);
 
-      if (gAudioIO->GetNumCaptureChannels() > 0) {
-         // Tracks are buffered during recording.  This flushes
-         // them so that there's nothing left in the append
-         // buffers.
-         TrackListIterator iter(mTracks);
-         for (Track * t = iter.First(); t; t = iter.Next()) {
-            if (t->GetKind() == Track::Wave) {
-               ((WaveTrack *)t)->Flush();
-            }
-         }
-         PushState(_("Recorded Audio"), _("Record"));
-         if(IsTimerRecordCancelled())
-         {
-            OnUndo();
-            ResetTimerRecordFlag();
-         }
-      }
-
-      FixScrollbars();
       SetAudioIOToken(0);
-      RedrawProject();
    }
    else if (gAudioIO->IsMonitoring()) {
       gAudioIO->StopStream();
@@ -4751,6 +4725,20 @@ void AudacityProject::OnAudioIOStartRecording()
 // This is called after recording has stopped and all tracks have flushed.
 void AudacityProject::OnAudioIOStopRecording()
 {
+   // Add to history
+   PushState(_("Recorded Audio"), _("Record"));
+
+   // Reset timer record 
+   if (IsTimerRecordCancelled())
+   {
+      OnUndo();
+      ResetTimerRecordFlag();
+   }
+
+   // Refresh the project window
+   FixScrollbars();
+   RedrawProject();
+
    // Write all cached files to disk, if any
    mDirManager->WriteCacheToDisk();
 

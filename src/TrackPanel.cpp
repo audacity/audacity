@@ -1050,34 +1050,12 @@ void TrackPanel::OnTimer()
 
    // Next, check to see if we were playing or recording
    // audio, but now Audio I/O is completely finished.
-   // The main point of this is to properly push the state
-   // and flush the tracks once we've completely finished
-   // recording new state.
    if (p->GetAudioIOToken()>0 &&
          !gAudioIO->IsAudioTokenActive(p->GetAudioIOToken()))
    {
-      if (gAudioIO->GetNumCaptureChannels() > 0) {
-         // Tracks are buffered during recording.  This flushes
-         // them so that there's nothing left in the append
-         // buffers.
-         TrackListIterator iter(mTracks);
-         for (Track * t = iter.First(); t; t = iter.Next()) {
-            if (t->GetKind() == Track::Wave) {
-               ((WaveTrack *)t)->Flush();
-            }
-         }
-         MakeParentPushState(_("Recorded Audio"), _("Record"));
-         if(p->IsTimerRecordCancelled())
-         {
-            p->OnUndo();
-            p->ResetTimerRecordFlag();
-         }
-      }
+      p->SetAudioIOToken(0);
       mRedrawAfterStop = false;
 
-      MakeParentRedrawScrollbars();
-      p->SetAudioIOToken(0);
-      p->RedrawProject();
       //ANSWER-ME: Was DisplaySelection added to solve a repaint problem?
       DisplaySelection();
    }
