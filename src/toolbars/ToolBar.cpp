@@ -387,7 +387,7 @@ bool ToolBar::Expose( bool show )
    bool was = mVisible;
 
    SetVisible( show );
-   
+
    if( IsDocked() )
    {
       Show( show );
