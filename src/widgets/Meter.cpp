@@ -645,10 +645,12 @@ void Meter::OnMouse(wxMouseEvent &evt)
       wxMenu *menu = new wxMenu();
       // Note: these should be kept in the same order as the enum
       if (mIsInput) {
+         wxMenuItem *mi;
          if (mMonitoring)
-            menu->Append(OnMonitorID, _("Stop Monitoring"));
+            mi = menu->Append(OnMonitorID, _("Stop Monitoring"));
          else
-            menu->Append(OnMonitorID, _("Start Monitoring"));
+            mi = menu->Append(OnMonitorID, _("Start Monitoring"));
+         mi->Enable(!mActive || mMonitoring);
       }
 
       menu->Append(OnPreferencesID, _("Preferences..."));
@@ -662,7 +664,12 @@ void Meter::OnMouse(wxMouseEvent &evt)
    }
    else if (evt.LeftDown()) {
       if (mIsInput) {
-         StartMonitoring();
+         if (mActive && !mMonitoring) {
+            Reset(mRate, true);
+         }
+         else {
+            StartMonitoring();
+         }
       }
       else {
          Reset(mRate, true);
