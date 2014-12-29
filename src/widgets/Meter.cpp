@@ -1861,12 +1861,11 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
 
    if (dlg.ShowModal() == wxID_OK)
    {
-      wxChar *style[] =
-      {
-         wxT("AutomaticStereo"),
-         wxT("HorizontalStereo"),
-         wxT("VerticalStereo")
-      };
+      wxArrayString style;
+      style.Add(wxT("AutomaticStereo"));
+      style.Add(wxT("HorizontalStereo"));
+      style.Add(wxT("VerticalStereo"));
+
       int s = 0;
       s = automatic->GetValue() ? 0 : s;
       s = horizontal->GetValue() ? 1 : s;
