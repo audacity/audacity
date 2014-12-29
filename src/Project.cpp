@@ -4725,14 +4725,18 @@ void AudacityProject::OnAudioIOStartRecording()
 // This is called after recording has stopped and all tracks have flushed.
 void AudacityProject::OnAudioIOStopRecording()
 {
-   // Add to history
-   PushState(_("Recorded Audio"), _("Record"));
-
-   // Reset timer record 
-   if (IsTimerRecordCancelled())
+   // Only push state if we were capturing and not monitoring
+   if (GetAudioIOToken() > 0)
    {
-      OnUndo();
-      ResetTimerRecordFlag();
+      // Add to history
+      PushState(_("Recorded Audio"), _("Record"));
+
+      // Reset timer record 
+      if (IsTimerRecordCancelled())
+      {
+         OnUndo();
+         ResetTimerRecordFlag();
+      }
    }
 
    // Refresh the project window
