@@ -1998,7 +1998,9 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
       wxCommandEvent dummyEvent;
       GetControlToolBar()->OnStop(dummyEvent);
 
+      FixScrollbars();
       SetAudioIOToken(0);
+      RedrawProject();
    }
    else if (gAudioIO->IsMonitoring()) {
       gAudioIO->StopStream();
@@ -4737,11 +4739,11 @@ void AudacityProject::OnAudioIOStopRecording()
          OnUndo();
          ResetTimerRecordFlag();
       }
-   }
 
-   // Refresh the project window
-   FixScrollbars();
-   RedrawProject();
+      // Refresh the project window
+      FixScrollbars();
+      RedrawProject();
+   }
 
    // Write all cached files to disk, if any
    mDirManager->WriteCacheToDisk();

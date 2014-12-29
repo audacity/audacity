@@ -1053,7 +1053,10 @@ void TrackPanel::OnTimer()
    if (p->GetAudioIOToken()>0 &&
          !gAudioIO->IsAudioTokenActive(p->GetAudioIOToken()))
    {
+      p->FixScrollbars();
       p->SetAudioIOToken(0);
+      p->RedrawProject();
+
       mRedrawAfterStop = false;
 
       //ANSWER-ME: Was DisplaySelection added to solve a repaint problem?
