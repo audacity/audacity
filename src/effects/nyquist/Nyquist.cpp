@@ -483,7 +483,7 @@ bool EffectNyquist::Process()
    this->CopyInputTracks(Track::All);
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
    mCurTrack[0] = (WaveTrack *) iter.First();
-   mOutputTime = mT1 - mT0;
+   mOutputTime = 0;
    mCount = 0;
    mProgressIn = 0;
    mProgressOut = 0;
