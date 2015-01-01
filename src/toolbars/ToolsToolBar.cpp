@@ -92,17 +92,6 @@ ToolsToolBar::ToolsToolBar()
 #endif
    mMessageOfTool[drawTool] = _("Click and drag to move a track in time");
    mMessageOfTool[multiTool] = wxT(""); // multi-mode tool
-}
-
-ToolsToolBar::~ToolsToolBar()
-{
-   for (int i = 0; i < 5; i++)
-      delete mTool[i];
-}
-
-void ToolsToolBar::Create(wxWindow * parent)
-{
-   ToolBar::Create(parent);
 
    bool multiToolActive = false;
    gPrefs->Read(wxT("/GUI/ToolBars/Tools/MultiToolActive"), &multiToolActive);
@@ -111,8 +100,12 @@ void ToolsToolBar::Create(wxWindow * parent)
       mCurrentTool = multiTool;
    else
       mCurrentTool = selectTool;
+}
 
-   mTool[mCurrentTool]->PushDown();
+ToolsToolBar::~ToolsToolBar()
+{
+   for (int i = 0; i < 5; i++)
+      delete mTool[i];
 }
 
 void ToolsToolBar::RegenerateToolsTooltips()
@@ -185,6 +178,8 @@ void ToolsToolBar::Populate()
    mTool[ zoomTool     ] = MakeTool( bmpZoom, zoomTool, _("Zoom Tool") );
    mTool[ slideTool    ] = MakeTool( bmpTimeShift, slideTool, _("Slide Tool") );
    mTool[ multiTool    ] = MakeTool( bmpMulti, multiTool, _("Multi Tool") );
+
+   mTool[mCurrentTool]->PushDown();
 
    RegenerateToolsTooltips();
 }

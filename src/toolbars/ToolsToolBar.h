@@ -51,7 +51,6 @@ class ToolsToolBar:public ToolBar {
    ToolsToolBar();
    virtual ~ToolsToolBar();
 
-   void Create(wxWindow *parent);
    void UpdatePrefs();
 
    void OnTool(wxCommandEvent & evt);
