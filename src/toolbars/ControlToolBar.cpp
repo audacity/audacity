@@ -323,17 +323,46 @@ void ControlToolBar::ArrangeButtons()
 
 void ControlToolBar::ReCreateButtons()
 {
+   bool playDown = false;
+   bool playShift = false;
+   bool pauseDown = false;
+   bool recordDown = false;
+   bool recordShift = false;
+
    // ToolBar::ReCreateButtons() will get rid of its sizer and
    // since we've attached our sizer to it, ours will get deleted too
    // so clean ours up first.
    if( mSizer )
    {
+      playDown = mPlay->IsDown();
+      playShift = mPlay->WasShiftDown();
+      pauseDown = mPause->IsDown();
+      recordDown = mRecord->IsDown();
+      recordShift = mRecord->WasShiftDown();
       Detach( mSizer );
+
       delete mSizer;
       mSizer = NULL;
    }
 
    ToolBar::ReCreateButtons();
+
+   if (playDown)
+   {
+      SetPlay(playDown, playShift, false);
+   }
+
+   if (pauseDown)
+   {
+      mPause->PushDown();
+   }
+
+   if (recordDown)
+   {
+      SetRecord(recordDown, recordShift);
+   }
+
+   EnableDisableButtons();
 
    RegenerateToolsTooltips();
 }
@@ -376,9 +405,12 @@ void ControlToolBar::EnableDisableButtons()
    const bool enablePlay = (!recording) || (tracks && !busy);
    mPlay->SetEnabled(enablePlay);
    // Enable and disable the other play button 
-   TranscriptionToolBar *const pttb = p->GetTranscriptionToolBar();
-   if (pttb)
-      pttb->SetEnabled(enablePlay);
+   if (p)
+   {
+      TranscriptionToolBar *const pttb = p->GetTranscriptionToolBar();
+      if (pttb)
+         pttb->SetEnabled(enablePlay);
+   }
 
    mRecord->SetEnabled(!busy && !playing);
 
@@ -414,11 +446,16 @@ void ControlToolBar::SetStop(bool down)
    EnableDisableButtons();
 }
 
-void ControlToolBar::SetRecord(bool down)
+void ControlToolBar::SetRecord(bool down, bool append)
 {
    if (down)
+   {
+      mRecord->SetAlternateIdx(append ? 1 : 0);
       mRecord->PushDown();
-   else {
+   }
+   else
+   {
+      mRecord->SetAlternateIdx(0);
       mRecord->PopUp();
    }
    EnableDisableButtons();
@@ -733,7 +770,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
    if( evt.GetInt() == 2 )
       mRecord->SetShift(false);
 
-   SetRecord(true);
+   SetRecord(true, mRecord->WasShiftDown());
 
    if (p) {
       TrackList *t = p->GetTracks();
