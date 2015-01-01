@@ -39,6 +39,7 @@ class MeterToolBar:public ToolBar {
    void Create(wxWindow *parent);
 
    virtual void Populate();
+   virtual void ReCreateButtons();
    virtual void Repaint(wxDC * WXUNUSED(dc)) {};
    virtual void EnableDisableButtons() {};
    virtual void UpdatePrefs();

@@ -171,6 +171,10 @@ class Meter : public wxPanel
 
    void StartMonitoring();
 
+   // These exist solely for the purpose of reseting the toolbars
+   void *SaveState();
+   void RestoreState(void *state);
+
  private:
    //
    // Event handlers

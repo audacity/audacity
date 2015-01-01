@@ -81,6 +81,36 @@ void MeterToolBar::Create(wxWindow * parent)
    OnSize(dummy);
 }
 
+void MeterToolBar::ReCreateButtons()
+{
+   void *playState = NULL;
+   void *recordState = NULL;
+
+   if (mPlayMeter && mProject->GetPlaybackMeter() == mPlayMeter)
+   {
+      mProject->SetPlaybackMeter( NULL );
+      playState = mPlayMeter->SaveState();
+   }
+
+   if (mRecordMeter && mProject->GetCaptureMeter() == mRecordMeter)
+   {
+      mProject->SetCaptureMeter( NULL );
+      recordState = mRecordMeter->SaveState();
+   }
+
+   ToolBar::ReCreateButtons();
+
+   if (playState)
+   {
+      mPlayMeter->RestoreState(playState);
+   }
+
+   if (recordState)
+   {
+      mRecordMeter->RestoreState(recordState);
+   }
+}
+
 void MeterToolBar::Populate()
 {
    mSizer = new wxGridBagSizer();
