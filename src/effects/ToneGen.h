@@ -54,6 +54,11 @@ class EffectToneGen : public BlockGenerator {
       return wxString(mbChirp? _("Generating Chirp") : _("Generating Tone"));
    }
 
+   // Return true if the effect supports processing via batch chains.
+   virtual bool SupportsChains() {
+      return false;
+   }
+
    // Useful only after PromptUser values have been set.
    virtual wxString GetEffectDescription();
 

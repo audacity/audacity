@@ -51,6 +51,11 @@ class EffectDtmf : public Generator {
       return wxString(wxT("DTMF Tones"));
    }
 
+   // Return true if the effect supports processing via batch chains.
+   virtual bool SupportsChains() {
+      return false;
+   }
+
    virtual wxString GetEffectDescription() {
       return wxString::Format(_("Applied effect: Generate DTMF tones, %.6lf seconds"), mDuration);
    }

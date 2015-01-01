@@ -54,6 +54,11 @@ class EffectNoise : public BlockGenerator {
       return wxString(wxT("Noise"));
    }
 
+   // Return true if the effect supports processing via batch chains.
+   virtual bool SupportsChains() {
+      return false;
+   }
+
    virtual wxString GetEffectDescription() {
       return wxString::Format(_("Applied effect: Generate Noise, %.6lf seconds"), mDuration);
    }
