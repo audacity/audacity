@@ -95,8 +95,6 @@ BEGIN_EVENT_TABLE( ToolBarResizer, wxWindow )
    EVT_LEFT_DOWN( ToolBarResizer::OnLeftDown )
    EVT_LEFT_UP( ToolBarResizer::OnLeftUp )
    EVT_MOTION( ToolBarResizer::OnMotion )
-   EVT_ENTER_WINDOW( ToolBarResizer::OnEnter )
-   EVT_LEAVE_WINDOW( ToolBarResizer::OnLeave )
    EVT_MOUSE_CAPTURE_LOST( ToolBarResizer::OnCaptureLost )
 END_EVENT_TABLE();
 
@@ -104,6 +102,7 @@ ToolBarResizer::ToolBarResizer(ToolBar *bar)
 :  wxWindow(bar, wxID_ANY, wxDefaultPosition, wxSize(RWIDTH, -1))
 {
    mBar = bar;
+   SetCursor( wxCURSOR_SIZEWE );
 }
 
 ToolBarResizer::~ToolBarResizer()
@@ -160,8 +159,6 @@ void ToolBarResizer::OnLeftDown( wxMouseEvent & event )
 
    // We want all of the mouse events
    CaptureMouse();
-
-//   SetCursor( wxCURSOR_SIZEWE );
 }
 
 void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
@@ -172,30 +169,6 @@ void ToolBarResizer::OnLeftUp( wxMouseEvent & event )
    if( HasCapture() )
    {
       ReleaseMouse();
-   }
-
-//   SetCursor( wxCURSOR_ARROW );
-}
-
-void ToolBarResizer::OnEnter( wxMouseEvent & event )
-{
-   // Go ahead and set the event to propagate
-   event.Skip();
-
-   if( !HasCapture() )
-   {
-      SetCursor( wxCURSOR_SIZEWE );
-   }
-}
-
-void ToolBarResizer::OnLeave( wxMouseEvent & event )
-{
-   // Go ahead and set the event to propagate
-   event.Skip();
-
-   if( !HasCapture() )
-   {
-      SetCursor( wxCURSOR_ARROW );
    }
 }
 
