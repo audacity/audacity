@@ -103,10 +103,13 @@ class AUDACITY_DLL_API EffectManager
    void RealtimeRemoveEffect(Effect *effect);
    void RealtimeSetEffects(const EffectArray & mActive);
    void RealtimeInitialize();
+   void RealtimeAddProcessor(int group, int chans, float rate);
    void RealtimeFinalize();
    void RealtimeSuspend();
    void RealtimeResume();
-   sampleCount RealtimeProcess(int group, int chans, float rate, float **buffers, sampleCount numSamples);
+   void RealtimeProcessStart();
+   sampleCount RealtimeProcess(int group, int chans, float **buffers, sampleCount numSamples);
+   void RealtimeProcessEnd();
    int GetRealtimeLatency();
 #endif
 
@@ -169,6 +172,8 @@ private:
    int mRealtimeLatency;
    bool mRealtimeSuspended;
    bool mRealtimeActive;
+   wxArrayInt mRealtimeChans;
+   wxArrayDouble mRealtimeRates;
 #endif
 
 #ifdef EFFECT_CATEGORIES

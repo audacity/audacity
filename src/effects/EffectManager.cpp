@@ -502,6 +502,19 @@ void EffectManager::RealtimeAddEffect(Effect *effect)
    // Block RealtimeProcess()
    RealtimeSuspend();
 
+   // Initialize effect if realtime is already active
+   if (mRealtimeActive)
+   {
+      // Initialize realtime processing
+      effect->RealtimeInitialize();
+
+      // Add the required processors
+      for (size_t i = 0, cnt = mRealtimeChans.GetCount(); i < cnt; i++)
+      {
+         RealtimeAddProcessor(i, mRealtimeChans[i], mRealtimeRates[i]);
+      }
+   }
+   
    // Add to list of active effects
    mRealtimeEffects.Add(effect);
 
@@ -514,6 +527,12 @@ void EffectManager::RealtimeRemoveEffect(Effect *effect)
    // Block RealtimeProcess()
    RealtimeSuspend();
 
+   if (mRealtimeActive)
+   {
+      // Cleanup realtime processing
+      effect->RealtimeFinalize();
+   }
+      
    // Remove from list of active effects
    mRealtimeEffects.Remove(effect);
 
@@ -534,7 +553,11 @@ void EffectManager::RealtimeInitialize()
    // The audio thread should not be running yet, but protect anyway
    RealtimeSuspend();
 
-   // RealtimeSetEffects() needs to know when we're active so it can
+   // (Re)Set processor parameters
+   mRealtimeChans.Clear();
+   mRealtimeRates.Clear();
+
+   // RealtimeAdd/RemoveEffect() needs to know when we're active so it can
    // initialize newly added effects
    mRealtimeActive = true;
 
@@ -546,6 +569,17 @@ void EffectManager::RealtimeInitialize()
 
    // Get things moving
    RealtimeResume();
+}
+
+void EffectManager::RealtimeAddProcessor(int group, int chans, float rate)
+{
+   for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+   {
+      mRealtimeEffects[i]->RealtimeAddProcessor(group, chans, rate);
+   }
+
+   mRealtimeChans.Add(chans);
+   mRealtimeRates.Add(rate);
 }
 
 void EffectManager::RealtimeFinalize()
@@ -562,6 +596,11 @@ void EffectManager::RealtimeFinalize()
       mRealtimeEffects[i]->RealtimeFinalize();
    }
 
+   // Reset processor parameters
+   mRealtimeChans.Clear();
+   mRealtimeRates.Clear();
+
+   // No longer active
    mRealtimeActive = false;
 }
 
@@ -614,7 +653,18 @@ void EffectManager::RealtimeResume()
 //
 // This will be called in a different thread than the main GUI thread.
 //
-sampleCount EffectManager::RealtimeProcess(int group, int chans, float rate, float **buffers, sampleCount numSamples)
+void EffectManager::RealtimeProcessStart()
+{
+   for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+   {
+      mRealtimeEffects[i]->RealtimeProcessStart();
+   }
+}
+
+//
+// This will be called in a different thread than the main GUI thread.
+//
+sampleCount EffectManager::RealtimeProcess(int group, int chans, float **buffers, sampleCount numSamples)
 {
    // Protect ourselves from the main thread
    mRealtimeLock.Enter();
@@ -650,7 +700,7 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float rate, flo
    {
       if (mRealtimeEffects[i]->IsRealtimeActive())
       {
-         mRealtimeEffects[i]->RealtimeProcess(group, chans, rate, ibuf, obuf, numSamples);
+         mRealtimeEffects[i]->RealtimeProcess(group, chans, ibuf, obuf, numSamples);
          called++;
       }
 
@@ -684,6 +734,17 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float rate, flo
    // This is wrong...needs to handle tails
    //
    return numSamples;
+}
+
+//
+// This will be called in a different thread than the main GUI thread.
+//
+void EffectManager::RealtimeProcessEnd()
+{
+   for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+   {
+       mRealtimeEffects[i]->RealtimeProcessEnd();
+   }
 }
 
 int EffectManager::GetRealtimeLatency()

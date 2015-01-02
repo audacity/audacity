@@ -89,10 +89,12 @@ public:
    virtual bool RealtimeFinalize();
    virtual bool RealtimeSuspend();
    virtual bool RealtimeResume();
+   virtual bool RealtimeProcessStart();
    virtual sampleCount RealtimeProcess(int group,
                                        float **inbuf,
                                        float **outbuf,
                                        sampleCount numSamples);
+   virtual bool RealtimeProcessEnd();
 
    virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
 

@@ -137,7 +137,9 @@ public:
    virtual bool RealtimeFinalize() = 0;
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() = 0;
-   virtual sampleCount RealtimeProcess(int group, float **inbuf, float **outbuf, sampleCount size) = 0;
+   virtual bool RealtimeProcessStart() = 0;
+   virtual sampleCount RealtimeProcess(int group, float **inbuf, float **outbuf, sampleCount numSamples) = 0;
+   virtual bool RealtimeProcessEnd() = 0;
 
    virtual bool ShowInterface(wxWindow *parent, bool forceModal = false) = 0;
 

@@ -118,10 +118,12 @@ class VSTEffect : public EffectClientInterface,
    virtual bool RealtimeFinalize();
    virtual bool RealtimeSuspend();
    virtual bool RealtimeResume();
+   virtual bool RealtimeProcessStart();
    virtual sampleCount RealtimeProcess(int group,
                                        float **inbuf,
                                        float **outbuf,
                                        sampleCount numSamples);
+   virtual bool RealtimeProcessEnd();
 
    virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
 
@@ -167,6 +169,7 @@ private:
    // Plugin loading and unloading
    bool Load();
    void Unload();
+   wxArrayInt GetEffectIDs();
 
    // Parameter loading and saving
    void LoadParameters(const wxString & group);
@@ -267,6 +270,8 @@ private:
    int mVersion;
    bool mInteractive;
 
+   static intptr_t mCurrentEffectID;
+
    bool mReady;
 
 #if defined(__WXMAC__)
@@ -298,9 +303,8 @@ private:
    VSTEffectArray mSlaves;
    int mNumChannels;
    float **mMasterIn;
-   int mMasterInLen;
    float **mMasterOut;
-   int mMasterOutLen;
+   sampleCount mNumSamples;
 
    // UI
    wxDialog *mDialog;
@@ -424,6 +428,7 @@ public:
    // VSTEffectModule implementation
 
    static void Check(const wxChar *path);
+   static void VSTEffectsModule::WriteInfo(VSTEffect *effect);
 
 private:
    ModuleManagerInterface *mModMan;

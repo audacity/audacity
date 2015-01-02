@@ -115,6 +115,8 @@ const int effProcessEvents = 25;
 const int effCanBeAutomated = 26;
 // The next one was gleaned from http://www.kvraudio.com/forum/viewtopic.php?p=1905347
 const int effGetProgramNameIndexed = 29;
+// The next one was gleaned from http://www.asseca.org/vst-24-specs/efGetPlugCategory.html
+const int effGetPlugCategory = 35;
 const int effGetEffectName = 45;
 const int effGetParameterProperties = 56; // missing
 const int effGetVendorString = 47;
@@ -128,6 +130,8 @@ const int effGetVstVersion = 58; // currently unused
 const int effBeginSetProgram = 67;
 // The next one was gleaned from http://www.asseca.org/vst-24-specs/efEndSetProgram.html
 const int effEndSetProgram = 68;
+// The next one was gleaned from http://www.asseca.org/vst-24-specs/efShellGetNextPlugin.html
+const int effShellGetNextPlugin = 70;
 // The next one was gleaned from http://www.asseca.org/vst-24-specs/efBeginLoadBank.html
 const int effBeginLoadBank = 75;
 // The next one was gleaned from http://www.asseca.org/vst-24-specs/efBeginLoadProgram.html
@@ -353,6 +357,24 @@ struct VstPatchChunkInfo
    int32_t pluginVersion;     // Plug-in Version
    int32_t numElements;       // Number of Programs (Bank) or Parameters (Program)
    char future[48];           // Reserved for future use
+};
+
+// from http://www.asseca.org/vst-24-specs/efGetPlugCategory.html
+enum VstPlugCategory
+{
+  kPlugCategUnknown = 0,    // 0=Unknown, category not implemented
+  kPlugCategEffect,         // 1=Simple Effect
+  kPlugCategSynth,          // 2=VST Instrument (Synths, samplers,...)
+  kPlugCategAnalysis,       // 3=Scope, Tuner, ...
+  kPlugCategMastering,      // 4=Dynamics, ...
+  kPlugCategSpacializer,    // 5=Panners, ...
+  kPlugCategRoomFx,         // 6=Delays and Reverbs
+  kPlugSurroundFx,          // 7=Dedicated surround processor
+  kPlugCategRestoration,    // 8=Denoiser, ...
+  kPlugCategOfflineProcess, // 9=Offline Process
+  kPlugCategShell,          // 10=Plug-in is container of other plug-ins  @see effShellGetNextPlugin()
+  kPlugCategGenerator,      // 11=ToneGenerator, ...
+  kPlugCategMaxCount        // 12=Marker to count the categories
 };
 
 #endif

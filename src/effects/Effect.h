@@ -272,15 +272,17 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
 
    // Realtime Effect Processing
    bool RealtimeInitialize();
+   bool RealtimeAddProcessor(int group, int chans, float rate);
    bool RealtimeFinalize();
    bool RealtimeSuspend();
    bool RealtimeResume();
+   bool RealtimeProcessStart();
    sampleCount RealtimeProcess(int group,
                                int chans,
-                               float rate,
                                float **inbuf,
                                float **outbuf,
                                sampleCount numSamples);
+   bool RealtimeProcessEnd();
    bool IsRealtimeActive();
 
  //
@@ -442,8 +444,8 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
    sampleCount mBlockSize;
    int mNumChannels;
 
-   int mCurrentGroup;
-   int mHighGroup;
+   wxArrayInt mGroupProcessor;
+   int mCurrentProcessor;
 
    wxCriticalSection mRealtimeSuspendLock;
    int mRealtimeSuspendCount;

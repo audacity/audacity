@@ -12,6 +12,9 @@
 
 **********************************************************************/
 
+//#define VST_DEBUG
+//#define DEBUG_VST
+
 // *******************************************************************
 // WARNING:  This is NOT 64-bit safe
 // *******************************************************************
@@ -30,14 +33,17 @@
 #if USE_VST
 
 #include <limits.h>
+#include <stdio.h>
 
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/buffer.h>
+#include <wx/busyinfo.h>
 #include <wx/button.h>
 #include <wx/combobox.h>
 #include <wx/dcclient.h>
 #include <wx/dialog.h>
+#include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/frame.h>
 #include <wx/imaglist.h>
@@ -46,6 +52,7 @@
 #include <wx/module.h>
 #include <wx/msgdlg.h>
 #include <wx/process.h>
+#include <wx/progdlg.h>
 #include <wx/recguard.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
@@ -166,16 +173,22 @@ IMPLEMENT_DYNAMIC_CLASS(VSTSubEntry, wxModule);
 //----------------------------------------------------------------------------
 // VSTSubProcess
 //----------------------------------------------------------------------------
-#define OUTPUTKEY                wxT("<VSTLOADCHK>-")
-#define KEY_ID                   wxT("ID")
-#define KEY_NAME                 wxT("Name")
-#define KEY_PATH                 wxT("Path")
-#define KEY_VENDOR               wxT("Vendor")
-#define KEY_VERSION              wxT("Version")
-#define KEY_DESCRIPTION          wxT("Description")
-#define KEY_EFFECTTYPE           wxT("EffectType")
-#define KEY_INTERACTIVE          wxT("Interactive")
-#define KEY_AUTOMATABLE          wxT("Automatable")
+#define OUTPUTKEY wxT("<VSTLOADCHK>-")
+enum
+{
+   kKeySubIDs,
+   kKeyBegin,
+   kKeyID,
+   kKeyName,
+   kKeyPath,
+   kKeyVendor,
+   kKeyVersion,
+   kKeyDescription,
+   kKeyEffectType,
+   kKeyInteractive,
+   kKeyAutomatable,
+   kKeyEnd
+};
 
 class VSTSubProcess : public wxProcess,
                       public EffectIdentInterface
@@ -467,96 +480,171 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
    // TODO:  Fix this for external usage
    wxString cmdpath = PlatformCompatibility::GetExecutablePath();
 
-   wxString cmd;
-   cmd.Printf(wxT("\"%s\" %s \"%s\""), cmdpath.c_str(), VSTCMDKEY, path.c_str());
+   wxString effectIDs = wxT("0;");
+   wxStringTokenizer effectTzr(effectIDs, wxT(";"));
 
-   VSTSubProcess *proc = new VSTSubProcess();
-   try
+   wxProgressDialog *progress = NULL;
+   size_t idCnt = 0;
+   size_t idNdx = 0;
+
+   bool valid = false;
+   bool cont = true;
+
+   while (effectTzr.HasMoreTokens() && cont)
    {
-      wxExecute(cmd, wxEXEC_SYNC | wxEXEC_NODISABLE, proc);
+      wxString effectID = effectTzr.GetNextToken();
+
+      wxString cmd;
+      cmd.Printf(wxT("\"%s\" %s \"%s;%s\""), cmdpath.c_str(), VSTCMDKEY, path.c_str(), effectID.c_str());
+
+      VSTSubProcess *proc = new VSTSubProcess();
+      try
+      {
+         wxExecute(cmd, wxEXEC_SYNC | wxEXEC_NODISABLE, proc);
+      }
+      catch (...)
+      {
+         wxLogMessage(_("VST plugin registration failed for %s\n"), path.c_str());
+         delete proc;
+         return false;
+      }
+
+      wxString output;
+      wxStringOutputStream ss(&output);
+      proc->GetInputStream()->Read(ss);
+
+      int keycount = 0;
+      bool haveBegin = false;
+      wxStringTokenizer tzr(output, wxT("\n"));
+      while (tzr.HasMoreTokens())
+      {
+         wxString line = tzr.GetNextToken();
+
+         // Our output may follow any output the plugin may have written.
+         if (!line.StartsWith(OUTPUTKEY))
+         {
+            continue;
+         }
+
+         long key;
+         if (!line.Mid(wxStrlen(OUTPUTKEY)).BeforeFirst(wxT('=')).ToLong(&key))
+         {
+            continue;
+         }
+         wxString val = line.AfterFirst(wxT('=')).BeforeFirst(wxT('\r'));
+
+         switch (key)
+         {
+            case kKeySubIDs:
+               effectIDs = val;
+               effectTzr.Reinit(effectIDs);
+               idCnt = effectTzr.CountTokens();
+               if (idCnt > 3)
+               {
+                  progress = new wxProgressDialog(_("Scanning Shell VST"),
+                                                  wxString::Format(_("Registering %d of %d: %-64.64s"), 0, idCnt, proc->GetName().c_str()),
+                                                  idCnt,
+                                                  NULL,
+                                                  wxPD_APP_MODAL |
+                                                  wxPD_AUTO_HIDE |
+                                                  wxPD_CAN_ABORT |
+                                                  wxPD_ELAPSED_TIME |
+                                                  wxPD_ESTIMATED_TIME |
+                                                  wxPD_REMAINING_TIME);
+                  progress->Show();
+               }
+            break;
+
+            case kKeyBegin:
+               haveBegin = true;
+               keycount++;
+            break;
+
+            case kKeyID:
+               proc->mID = val;
+               keycount++;
+            break;
+
+            case kKeyName:
+               proc->mName = val;
+               keycount++;
+            break;
+
+            case kKeyPath:
+               proc->mPath = val;
+               keycount++;
+            break;
+
+            case kKeyVendor:
+               proc->mVendor = val;
+               keycount++;
+            break;
+
+            case kKeyVersion:
+               proc->mVersion = val;
+               keycount++;
+            break;
+
+            case kKeyDescription:
+               proc->mDescription = val;
+               keycount++;
+            break;
+
+            case kKeyEffectType:
+               long type;
+               val.ToLong(&type);
+               proc->mType = (EffectType) type;
+               keycount++;
+            break;
+
+            case kKeyInteractive:
+               proc->mInteractive = val.IsSameAs(wxT("1"));
+               keycount++;
+            break;
+
+            case kKeyAutomatable:
+               proc->mAutomatable = val.IsSameAs(wxT("1"));
+               keycount++;
+            break;
+
+            case kKeyEnd:
+            {
+               if (!haveBegin || ++keycount != kKeyEnd)
+               {
+                  keycount = 0;
+                  haveBegin = false;
+                  continue;
+               }
+
+               bool skip = false;
+               if (progress)
+               {
+                  cont = progress->Update(idNdx++,
+                                          wxString::Format(_("Registering %d of %d: %-64.64s"), idNdx, idCnt, proc->GetName().c_str()));
+               }
+
+               if (!skip && cont)
+               {
+                  valid = true;
+                  pm.RegisterEffectPlugin(this, proc);
+               }
+            }
+            break;
+
+            default:
+               keycount = 0;
+               haveBegin = false;
+            break;
+         }
+      }
+
+      delete proc;
    }
-   catch (...)
+
+   if (progress)
    {
-      wxLogMessage(_("VST plugin registration failed for %s\n"), path.c_str());
-      return false;
+      delete progress;
    }
-
-   wxString output;
-   wxStringOutputStream ss(&output);
-   proc->GetInputStream()->Read(ss);
-
-   int keycount = 0;
-   wxStringTokenizer tzr(output, wxT("\n"));
-   while (tzr.HasMoreTokens())
-   {
-      wxString line = tzr.GetNextToken();
-
-      // Our output may follow any output the plugin may have written.
-      if (!line.StartsWith(OUTPUTKEY))
-      {
-         continue;
-      }
-
-      wxString key = line.Mid(wxStrlen(OUTPUTKEY)).BeforeFirst(wxT('='));
-      wxString val = line.AfterFirst(wxT('=')).BeforeFirst(wxT('\r'));
-
-      if (key.IsSameAs(KEY_ID))
-      {
-         proc->mID = val;
-         keycount++;
-      }
-      else if (key.IsSameAs(KEY_NAME))
-      {
-         proc->mName = val;
-         keycount++;
-      }
-      else if (key.IsSameAs(KEY_PATH))
-      {
-         proc->mPath = val;
-         keycount++;
-      }
-      else if (key.IsSameAs(KEY_VENDOR))
-      {
-         proc->mVendor = val;
-         keycount++;
-      }
-      else if (key.IsSameAs(KEY_VERSION))
-      {
-         proc->mVersion = val;
-         keycount++;
-      }
-      else if (key.IsSameAs(KEY_DESCRIPTION))
-      {
-         proc->mDescription = val;
-         keycount++;
-      }
-      else if (key.IsSameAs(KEY_EFFECTTYPE))
-      {
-         long type;
-         val.ToLong(&type);
-         proc->mType = (EffectType) type;
-         keycount++;
-      }
-      else if (key.IsSameAs(KEY_INTERACTIVE))
-      {
-         proc->mInteractive = val.IsSameAs(wxT("1"));
-         keycount++;
-      }
-      else if (key.IsSameAs(KEY_AUTOMATABLE))
-      {
-         proc->mAutomatable = val.IsSameAs(wxT("1"));
-         keycount++;
-      }
-   }
-
-   bool valid = keycount == 9;
-
-   if (valid)
-   {
-      pm.RegisterEffectPlugin(this, proc);
-   }
-
-   delete proc;
 
    return valid;
 }
@@ -564,7 +652,8 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
 bool VSTEffectsModule::IsPluginValid(const PluginID & WXUNUSED(ID),
                                      const wxString & path)
 {
-   return wxFileName::FileExists(path) || wxFileName::DirExists(path);
+   wxString realPath = path.BeforeFirst(wxT(';'));
+   return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
 IdentInterface *VSTEffectsModule::CreateInstance(const PluginID & WXUNUSED(ID),
@@ -601,19 +690,66 @@ void VSTEffectsModule::Check(const wxChar *path)
    {
       if (effect->SetHost(NULL))
       {
-         wxPrintf(OUTPUTKEY KEY_ID wxT("=%s\n"), effect->GetID().c_str());
-         wxPrintf(OUTPUTKEY KEY_PATH wxT("=%s\n"), effect->GetPath().c_str());
-         wxPrintf(OUTPUTKEY KEY_NAME wxT("=%s\n"), effect->GetName().c_str());
-         wxPrintf(OUTPUTKEY KEY_VENDOR wxT("=%s\n"), effect->GetVendor().c_str());
-         wxPrintf(OUTPUTKEY KEY_VERSION wxT("=%s\n"), effect->GetVersion().c_str());
-         wxPrintf(OUTPUTKEY KEY_DESCRIPTION wxT("=%s\n"), effect->GetDescription().c_str());
-         wxPrintf(OUTPUTKEY KEY_EFFECTTYPE wxT("=%d\n"), effect->GetType());
-         wxPrintf(OUTPUTKEY KEY_INTERACTIVE wxT("=%d\n"), effect->IsInteractive());
-         wxPrintf(OUTPUTKEY KEY_AUTOMATABLE wxT("=%d\n"), effect->SupportsAutomation());
+         wxArrayInt effectIDs = effect->GetEffectIDs();
+         wxString out;
+
+         if (effectIDs.GetCount() > 0)
+         {
+            wxString subids;
+
+            for (size_t i = 0, cnt = effectIDs.GetCount(); i < cnt; i++)
+            {
+               subids += wxString::Format(wxT("%d;"), effectIDs[i]);
+            }
+
+            out = wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeySubIDs, subids.RemoveLast().c_str());
+         }
+         else
+         {
+            out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyBegin, wxEmptyString);
+            out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyID, effect->GetID().c_str());
+            out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect->GetPath().c_str());
+            out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect->GetName().c_str());
+            out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor, effect->GetVendor().c_str());
+            out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect->GetVersion().c_str());
+            out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect->GetDescription().c_str());
+            out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyEffectType, effect->GetType());
+            out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyInteractive, effect->IsInteractive());
+            out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyAutomatable, effect->SupportsAutomation());
+            out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyEnd, wxEmptyString);
+         }
+
+         // We want to output info in one chunk to prevent output
+         // from the effect intermixing with the info
+         const wxCharBuffer buf = out.ToUTF8();
+         fwrite(buf, 1, strlen(buf), stdout);
+         fflush(stdout);
       }
 
       delete effect;
    }
+}
+
+void VSTEffectsModule::WriteInfo(VSTEffect *effect)
+{
+   // We want to output info in one chunk to prevent output
+   // from the effect intermixing with the info
+   wxString out;
+   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyBegin, wxEmptyString);
+   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyID, effect->GetID().c_str());
+   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect->GetPath().c_str());
+   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect->GetName().c_str());
+   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor, effect->GetVendor().c_str());
+   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect->GetVersion().c_str());
+   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect->GetDescription().c_str());
+   out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyEffectType, effect->GetType());
+   out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyInteractive, effect->IsInteractive());
+   out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyAutomatable, effect->SupportsAutomation());
+   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyEnd, wxEmptyString);
+
+   const wxCharBuffer buf = out.ToUTF8();
+   fwrite(buf, 1, strlen(buf), stdout);
+   fflush(stdout);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1262,6 +1398,9 @@ static int X11TrapHandler(Display *, XErrorEvent *err)
 }
 #endif
 
+// Needed to support shell plugins...sucks, but whatcha gonna do???
+intptr_t VSTEffect::mCurrentEffectID;
+
 typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 
 intptr_t VSTEffect::AudioMaster(AEffect * effect,
@@ -1281,7 +1420,7 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
          return (intptr_t) 2400;
 
       case audioMasterCurrentId:
-         return (intptr_t) audacityVSTID;
+         return mCurrentEffectID;
 
       case audioMasterGetVendorString:
          strcpy((char *) ptr, "Audacity Team");    // Do not translate, max 64 + 1 for null terminator
@@ -1376,6 +1515,7 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
          if (strcmp(s, "acceptIOChanges") == 0 ||
             strcmp(s, "sendVstTimeInfo") == 0 ||
             strcmp(s, "startStopProcess") == 0 ||
+            strcmp(s, "shellCategory") == 0 ||
             strcmp(s, "sizeWindow") == 0)
          {
             return 1;
@@ -1453,6 +1593,7 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    mAudioOuts = 0;
    mMidiIns = 0;
    mMidiOuts = 0;
+   mSampleRate = 44100;
    mBlockSize = 0;
    mBufferDelay = 0;
    mProcessLevel = 1;         // in GUI thread
@@ -1463,11 +1604,6 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    mBlockSize = mUserBlockSize;
    mUseLatency = true;
    mReady = false;
-
-   mMasterIn = NULL;
-   mMasterInLen = 0;
-   mMasterOut = NULL;
-   mMasterOutLen = 0;
 
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
    mTimeInfo.samplePos = 0.0;
@@ -1668,7 +1804,7 @@ bool VSTEffect::SupportsAutomation()
 bool VSTEffect::SetHost(EffectHostInterface *host)
 {
    mHost = host;
-   
+
    if (!mAEffect)
    {
       Load();
@@ -1827,132 +1963,20 @@ void VSTEffect::SetChannelCount(int numChannels)
 
 bool VSTEffect::RealtimeInitialize()
 {
-   // This is really just a dummy value and one to make the dialog happy since
-   // all processing is handled by slaves.
-   SetSampleRate(44100);
-   mMasterIn = NULL;
-   mMasterInLen = 0;
-   mMasterOut = NULL;
-   mMasterOutLen = 0;
+   mMasterIn = new float *[mAudioIns];
+   for (int i = 0; i < mAudioIns; i++)
+   {
+      mMasterIn[i] = new float[mBlockSize];
+      memset(mMasterIn[i], 0, mBlockSize * sizeof(float));
+   }
+
+   mMasterOut = new float *[mAudioOuts];
+   for (int i = 0; i < mAudioOuts; i++)
+   {
+      mMasterOut[i] = new float[mBlockSize];
+   }
 
    return ProcessInitialize();
-}
-
-bool VSTEffect::RealtimeFinalize()
-{
-   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
-   {
-      mSlaves[i]->RealtimeFinalize();
-      delete mSlaves[i];
-   }
-   mSlaves.Clear();
-
-   if (mMasterIn)
-   {
-      for (int i = 0; i < mAudioIns; i++)
-      {
-         delete [] mMasterIn[i];
-      }
-      delete [] mMasterIn;
-      mMasterIn = NULL;
-   }
-
-   if (mMasterOut)
-   {
-      for (int i = 0; i < mAudioOuts; i++)
-      {
-         delete [] mMasterOut[i];
-      }
-      delete [] mMasterOut;
-      mMasterOut = NULL;
-   }
-
-   return ProcessFinalize();
-}
-
-bool VSTEffect::RealtimeSuspend()
-{
-   PowerOff();
-
-   return true;
-}
-
-bool VSTEffect::RealtimeResume()
-{
-   PowerOn();
-
-   return true;
-}
-
-sampleCount VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, sampleCount size)
-{
-   if (group < 0 || group >= (int) mSlaves.GetCount())
-   {
-      return 0;
-   }
-
-   if (group == 0)
-   {
-      if (mMasterIn == NULL || mMasterInLen < size)
-      {
-         if (mMasterIn)
-         {
-            for (int i = 0; i < mAudioIns; i++)
-            {
-               delete [] mMasterIn[i];
-            }
-            delete [] mMasterIn;
-         }
-
-         mMasterIn = new float *[mAudioIns];
-         for (int i = 0; i < mAudioIns; i++)
-         {
-            mMasterIn[i] = new float[size];
-         }
-         mMasterInLen = size;
-      }
-
-      for (int i = 0; i < mAudioIns; i++)
-      {
-         memset(mMasterIn[i], 0, size * sizeof(float));
-      }
-   }
-
-   int chanCnt = wxMin(mSlaves[group]->GetChannelCount(), mAudioIns);
-   for (int c = 0; c < chanCnt; c++)
-   {
-      for (int i = 0; i < size; i++)
-      {
-         mMasterIn[c][i] += inbuf[c][i];
-      }
-   }
-      
-   if (group == (int) mSlaves.GetCount() - 1)
-   {
-      if (mMasterOut == NULL || mMasterOutLen < size)
-      {
-         if (mMasterOut)
-         {
-            for (int i = 0; i < mAudioOuts; i++)
-            {
-               delete [] mMasterOut[i];
-            }
-            delete [] mMasterOut;
-            mMasterOut = NULL;
-         }
-      
-         mMasterOut = new float *[mAudioOuts];
-         for (int i = 0; i < mAudioOuts; i++)
-         {
-            mMasterOut[i] = new float[size];
-         }
-         mMasterOutLen = size;
-      }
-
-      ProcessBlock(mMasterIn, mMasterOut, size);
-   }
-
-   return mSlaves[group]->ProcessBlock(inbuf, outbuf, size);
 }
 
 bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
@@ -1960,6 +1984,7 @@ bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
    VSTEffect *slave = new VSTEffect(mPath, this);
    mSlaves.Add(slave);
 
+   slave->GetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
    slave->SetSampleRate(sampleRate);
 
@@ -1987,7 +2012,90 @@ bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
       callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
    }
 
-   return slave->RealtimeInitialize();
+   return slave->ProcessInitialize();
+}
+
+bool VSTEffect::RealtimeFinalize()
+{
+   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   {
+      mSlaves[i]->ProcessFinalize();
+      delete mSlaves[i];
+   }
+   mSlaves.Clear();
+
+   for (int i = 0; i < mAudioIns; i++)
+   {
+      delete [] mMasterIn[i];
+   }
+   delete [] mMasterIn;
+
+   for (int i = 0; i < mAudioOuts; i++)
+   {
+      delete [] mMasterOut[i];
+   }
+   delete [] mMasterOut;
+
+   return ProcessFinalize();
+}
+
+bool VSTEffect::RealtimeSuspend()
+{
+   PowerOff();
+
+   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   {
+      mSlaves[i]->PowerOff();
+   }
+
+   return true;
+}
+
+bool VSTEffect::RealtimeResume()
+{
+   PowerOn();
+
+   for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
+   {
+      mSlaves[i]->PowerOn();
+   }
+
+   return true;
+}
+
+bool VSTEffect::RealtimeProcessStart()
+{
+   for (int i = 0; i < mAudioIns; i++)
+   {
+      memset(mMasterIn[i], 0, mBlockSize * sizeof(float));
+   }
+
+   mNumSamples = 0;
+
+   return true;
+}
+
+sampleCount VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, sampleCount numSamples)
+{
+   wxASSERT(numSamples <= mBlockSize);
+
+   for (int c = 0; c < mAudioIns; c++)
+   {
+      for (sampleCount s = 0; s < numSamples; s++)
+      {
+         mMasterIn[c][s] += inbuf[c][s];
+      }
+   }
+   mNumSamples = wxMax(numSamples, mNumSamples);
+
+   return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
+}
+
+bool VSTEffect::RealtimeProcessEnd()
+{
+   ProcessBlock(mMasterIn, mMasterOut, mNumSamples);
+
+   return true;
 }
 
 //
@@ -2374,6 +2482,11 @@ bool VSTEffect::Load()
    vstPluginMain pluginMain;
    bool success = false;
 
+   long effectID = 0;
+   wxString realPath = mPath.BeforeFirst(wxT(';'));
+   mPath.AfterFirst(wxT(';')).ToLong(&effectID);
+   mCurrentEffectID = (intptr_t) effectID;
+
    mModule = NULL;
    mAEffect = NULL;
 
@@ -2385,7 +2498,7 @@ bool VSTEffect::Load()
    mResource = -1;
 
    // Convert the path to a CFSTring
-   wxMacCFStringHolder path(mPath);
+   wxMacCFStringHolder path(realPath);
 
    // Convert the path to a URL
    CFURLRef urlRef =
@@ -2471,7 +2584,7 @@ bool VSTEffect::Load()
       wxLogNull nolog;
 
       // Try to load the library
-      wxDynamicLibrary *lib = new wxDynamicLibrary(mPath);
+      wxDynamicLibrary *lib = new wxDynamicLibrary(realPath);
       if (!lib) 
       {
          return false;
@@ -2518,7 +2631,7 @@ bool VSTEffect::Load()
    // symbols.
    //
    // Once we define a proper external API, the flags can be removed.
-   void *lib = dlopen((const char *)wxString(mPath).ToUTF8(), RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
+   void *lib = dlopen((const char *)wxString(realPath).ToUTF8(), RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
    if (!lib) 
    {
       return false;
@@ -2588,7 +2701,7 @@ bool VSTEffect::Load()
             mName = GetString(effGetProductString);
             if (mName.length() == 0)
             {
-               wxFileName f(mPath);
+               wxFileName f(realPath);
                mName = f.GetName();
             }
          }
@@ -2611,7 +2724,7 @@ bool VSTEffect::Load()
          mMidiOuts = 0;
 
          // Check to see if parameters can be automated.  This isn't a gaurantee
-         // since it could be that the effect simply doesn't support the "Can
+         // since it could be that the effect simply doesn't support the opcode.
          mAutomatable = false;
          for (int i = 0; i < mAEffect->numParams; i++)
          {
@@ -2657,7 +2770,7 @@ void VSTEffect::Unload()
 
    if (mAEffect)
    {
-     // Turn the power off
+      // Turn the power off
       PowerOff();
 
       // Finally, close the plugin
@@ -2696,6 +2809,27 @@ void VSTEffect::Unload()
       mModule = NULL;
       mAEffect = NULL;
    }
+}
+
+wxArrayInt VSTEffect::GetEffectIDs()
+{
+   wxArrayInt effectIDs;
+
+   // Are we a shell?
+   if ((VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, NULL, 0) == kPlugCategShell)
+   {
+      char name[64];
+      int effectID;
+
+      effectID = (int) callDispatcher(effShellGetNextPlugin, 0, 0, &name, 0);
+      while (effectID)
+      {
+         effectIDs.Add(effectID);
+         effectID = (int) callDispatcher(effShellGetNextPlugin, 0, 0, &name, 0);
+      }
+   }
+
+   return effectIDs;
 }
 
 void VSTEffect::LoadParameters(const wxString & group)

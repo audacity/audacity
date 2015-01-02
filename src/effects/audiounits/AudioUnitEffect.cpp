@@ -524,7 +524,6 @@ wxPrintf(wxT("path %s\n"), path.c_str());
       // And convert it to XML
       CFDataRef xml = CFPropertyListCreateXMLData(kCFAllocatorDefault,
                                                   content);
-printf("xml %p\n", xml);
       if (xml)
       {
          // Create the CFURL for the path
@@ -532,7 +531,6 @@ printf("xml %p\n", xml);
                                                       wxMacCFStringHolder(path),
                                                       kCFURLPOSIXPathStyle,
                                                       false);
-printf("url %p\n", url);
          if (url)
          {
             SInt32 error;
@@ -540,7 +538,6 @@ printf("url %p\n", url);
                                                                 xml,
                                                                 NULL,
                                                                 &error);
-printf("res %d error %d\n", res, error);
             CFRelease(url);
          }
    
@@ -1444,45 +1441,67 @@ sampleCount AudioUnitEffect::ProcessBlock(float **inbuf, float **outbuf, sampleC
 
 bool AudioUnitEffect::RealtimeInitialize()
 {
-   // This is really just a dummy value and one to make the dialog happy since
-   // all processing is handled by slaves.
-   SetSampleRate(44100);
-   mMasterIn = NULL;
-   mMasterInLen = 0;
-   mMasterOut = NULL;
-   mMasterOutLen = 0;
+   mMasterIn = new float *[mAudioIns];
+
+   for (int i = 0; i < mAudioIns; i++)
+   {
+      mMasterIn[i] = new float[mBlockSize];
+      memset(mMasterIn[i], 0, mBlockSize * sizeof(float));
+   }
+
+   mMasterOut = new float *[mAudioOuts];
+   for (int i = 0; i < mAudioOuts; i++)
+   {
+      mMasterOut[i] = new float[mBlockSize];
+   }
 
    return ProcessInitialize();
+}
+
+bool AudioUnitEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
+{
+   AudioUnitEffect *slave = new AudioUnitEffect(mPath, mName, mComponent, this);
+   if (!slave->SetHost(NULL))
+   {
+      delete slave;
+      return false;
+   }
+
+   slave->GetBlockSize(mBlockSize);
+   slave->SetChannelCount(numChannels);
+   slave->SetSampleRate(sampleRate);
+
+   if (!CopyParameters(mUnit, slave->mUnit))
+   {
+      delete slave;
+      return false;
+   }
+
+   mSlaves.Add(slave);
+
+   return slave->ProcessInitialize();
 }
 
 bool AudioUnitEffect::RealtimeFinalize()
 {
    for (size_t i = 0, cnt = mSlaves.GetCount(); i < cnt; i++)
    {
-      mSlaves[i]->RealtimeFinalize();
+      mSlaves[i]->ProcessFinalize();
       delete mSlaves[i];
    }
    mSlaves.Clear();
 
-   if (mMasterIn)
+   for (int i = 0; i < mAudioIns; i++)
    {
-      for (int i = 0; i < mAudioIns; i++)
-      {
-         delete [] mMasterIn[i];
-      }
-      delete [] mMasterIn;
-      mMasterIn = NULL;
+      delete [] mMasterIn[i];
    }
+   delete [] mMasterIn;
 
-   if (mMasterOut)
+   for (int i = 0; i < mAudioOuts; i++)
    {
-      for (int i = 0; i < mAudioOuts; i++)
-      {
-         delete [] mMasterOut[i];
-      }
-      delete [] mMasterOut;
-      mMasterOut = NULL;
+      delete [] mMasterOut[i];
    }
+   delete [] mMasterOut;
 
    return ProcessFinalize();
 }
@@ -1505,107 +1524,42 @@ bool AudioUnitEffect::RealtimeResume()
    return true;
 }
 
+bool AudioUnitEffect::RealtimeProcessStart()
+{
+   for (int i = 0; i < mAudioIns; i++)
+   {
+      memset(mMasterIn[i], 0, mBlockSize * sizeof(float));
+   }
+
+   mNumSamples = 0;
+
+   return true;
+}
+
 sampleCount AudioUnitEffect::RealtimeProcess(int group,
                                              float **inbuf,
                                              float **outbuf,
                                              sampleCount numSamples)
 {
-   if (group < 0 || group >= (int) mSlaves.GetCount())
+   wxASSERT(numSamples <= mBlockSize);
+
+   for (int c = 0; c < mAudioIns; c++)
    {
-      return 0;
-   }
-
-   if (group == 0)
-   {
-      if (mMasterIn == NULL || mMasterInLen < numSamples)
+      for (sampleCount s = 0; s < numSamples; s++)
       {
-         if (mMasterIn)
-         {
-            for (int i = 0; i < mAudioIns; i++)
-            {
-               delete [] mMasterIn[i];
-            }
-            delete [] mMasterIn;
-         }
-
-         mMasterIn = new float *[mAudioIns];
-         for (int i = 0; i < mAudioIns; i++)
-         {
-            mMasterIn[i] = new float[numSamples];
-         }
-         mMasterInLen = numSamples;
-      }
-
-      for (int i = 0; i < mAudioIns; i++)
-      {
-         memset(mMasterIn[i], 0, numSamples * sizeof(float));
+         mMasterIn[c][s] += inbuf[c][s];
       }
    }
-
-   // This should never happen, but let's make sure
-   wxASSERT(numSamples <= mMasterInLen);
-
-   int chanCnt = wxMin(mSlaves[group]->GetChannelCount(), mAudioIns);
-   for (int c = 0; c < chanCnt; c++)
-   {
-      for (int i = 0; i < numSamples; i++)
-      {
-         mMasterIn[c][i] += inbuf[c][i];
-      }
-   }
-
-   if (group == (int) mSlaves.GetCount() - 1)
-   {
-      if (mMasterOut == NULL || mMasterOutLen < numSamples)
-      {
-         if (mMasterOut)
-         {
-            for (int i = 0; i < mAudioOuts; i++)
-            {
-               delete [] mMasterOut[i];
-            }
-            delete [] mMasterOut;
-            mMasterOut = NULL;
-         }
-      
-         mMasterOut = new float *[mAudioOuts];
-         for (int i = 0; i < mAudioOuts; i++)
-         {
-            mMasterOut[i] = new float[numSamples];
-         }
-         mMasterOutLen = numSamples;
-      }
-
-      // This should never happen, but let's make sure
-      wxASSERT(numSamples <= mMasterOutLen);
-
-      ProcessBlock(mMasterIn, mMasterOut, numSamples);
-   }
+   mNumSamples = wxMax(numSamples, mNumSamples);
 
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
-bool AudioUnitEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
+bool AudioUnitEffect::RealtimeProcessEnd()
 {
-   AudioUnitEffect *slave = new AudioUnitEffect(mPath, mName, mComponent, this);
-   if (!slave->SetHost(NULL))
-   {
-      delete slave;
-      return false;
-   }
+   ProcessBlock(mMasterIn, mMasterOut, mNumSamples);
 
-   slave->SetChannelCount(numChannels);
-   slave->SetSampleRate(sampleRate);
-
-   if (!CopyParameters(mUnit, slave->mUnit))
-   {
-      delete slave;
-      return false;
-   }
-
-   mSlaves.Add(slave);
-
-   return slave->RealtimeInitialize();
+   return true;
 }
 
 bool AudioUnitEffect::ShowInterface(wxWindow *parent, bool forceModal)
@@ -1859,7 +1813,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
    // since it is after all files have been saved.
    if (mVendor == wxT("Waves"))
    {
-      mUseGUI = false;
+//      mUseGUI = false;
    }
 
    // Create the AU editor
