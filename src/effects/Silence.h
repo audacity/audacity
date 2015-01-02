@@ -47,6 +47,11 @@ class EffectSilence : public Generator {
       return wxString(_("Generating Silence"));
    }
 
+   // Return true if the effect supports processing via batch chains.
+   virtual bool SupportsChains() {
+      return false;
+   }
+
    // Useful only after PromptUser values have been set.
    virtual wxString GetEffectDescription() {
       return wxString::Format(_("Applied effect: Generate Silence, %.6lf seconds"), mDuration);
