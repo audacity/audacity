@@ -1,5 +1,5 @@
 Building Audacity(R) for Apple Mac OS X (R) using gcc
-Copyright (c) 2014 Audacity Team
+Copyright (c) 2015 Audacity Team
 
 Authors:
   Dominic Mazzoni
@@ -9,7 +9,7 @@ Authors:
   Benjamin Drung
 
 ========================================================================
-This document is for Audacity version 2.0.6.
+This document is for Audacity version 2.1.0-alpha.
 
 If the advice here is inaccurate or incomplete, 
 email audacity-devel@lists.sourceforge.net.

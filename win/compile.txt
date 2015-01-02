@@ -1,5 +1,5 @@
 Building Audacity(R) for Microsoft Windows(R)
-Copyright (c) 1999-2014 Audacity Team
+Copyright (c) 1999-2015 Audacity Team
 
 Authors:
   Asger Ottar Alstrup
