@@ -66,6 +66,9 @@ public:
    ToolBarResizer(ToolBar *mBar);
    virtual ~ToolBarResizer();
 
+   // We don't need or want to accept focus.
+   bool AcceptsFocus() const;
+
 private:
    void OnErase(wxEraseEvent & event);
    void OnPaint(wxPaintEvent & event);
@@ -105,6 +108,11 @@ ToolBarResizer::ToolBarResizer(ToolBar *bar)
 
 ToolBarResizer::~ToolBarResizer()
 {
+}
+
+bool ToolBarResizer::AcceptsFocus() const
+{
+   return false;
 }
 
 //
