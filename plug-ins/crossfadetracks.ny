@@ -1,4 +1,4 @@
-;nyquist plug-in
+;nyquist plugin
 ;version 4
 ;type process
 ;name "Crossfade Tracks..."
