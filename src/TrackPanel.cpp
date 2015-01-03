@@ -8638,7 +8638,8 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
 
       S.StartVerticalLay(true);
       {
-         S.StartHorizontalLay(wxCENTER, false);
+         S.SetBorder(10);
+         S.StartHorizontalLay(wxEXPAND, false);
          {
             cb = S.AddCombo(_("New sample rate (Hz):"),
                             rate,
@@ -8654,7 +8655,7 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
       }
       S.EndVerticalLay();
 
-      dlg.SetSize(dlg.GetSizer()->GetMinSize());
+      dlg.SetClientSize(dlg.GetSizer()->CalcMin());
       dlg.Center();
 
       if (dlg.ShowModal() != wxID_OK)
