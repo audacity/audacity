@@ -18,7 +18,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 SHELL = /bin/sh
 @SET_MAKE@
 
-srcdir = .
+srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
 
@@ -89,10 +89,8 @@ CATALOGS = @CATALOGS@
 	@lang=`echo $* | sed -e 's,.*/,,'`; \
 	test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
 	echo "$${cdcmd}rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics --verbose -o $${lang}.gmo $${lang}.po"; \
-	cd $(srcdir) && rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics --verbose -o t-$${lang}.gmo $${lang}.po && mv t-$${lang}.gmo $${lang}.gmo; \
-	dir=$$lang/LC_MESSAGES; \
-	$(mkdir_p) $$dir && (cd $$dir ; ln -s ../../$${lang}.gmo $(DOMAIN).mo)
-   
+	cd $(srcdir) && rm -f $${lang}.gmo && $(GMSGFMT) -c --statistics --verbose -o t-$${lang}.gmo $${lang}.po && mv t-$${lang}.gmo $${lang}.gmo
+
 .sin.sed:
 	sed -e '/^#/d' $< > t-$@
 	mv t-$@ $@
