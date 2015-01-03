@@ -740,8 +740,30 @@ AC_OUTPUT
 echo ""
 echo "Finished configure:"
 
-# Copy the contents of the locale directory to the build directory
-[[ ! -e "${ac_abs_top_builddir}/po/LINGUAS" ]] && cp -a "${ac_abs_top_srcdir}/po/"* "${ac_abs_top_builddir}/po/"
+# When building from a temporary directory and not the top level directory,
+# the locale files get copied and the Makefile.in.in adjusted.  Otherwise,
+# the generated locale files will be placed in the top level "po" directory.
+#
+# The temporary Makefile.in.in is updated so we don't have to worry about
+# committing changes that might get lost when regenerating config files.
+if [[ ! -e "${ac_abs_top_builddir}/po/LINGUAS" ]]
+then
+   pushd >/dev/null "${ac_abs_top_builddir}/po/"
+   if [[ "${ac_abs_top_builddir}" != "${ac_abs_top_srcdir}" ]]
+   then
+      cp -pr "${ac_abs_top_srcdir}/po/." .
+      sed -e "s/@srcdir@/./" "${ac_abs_top_srcdir}/po/Makefile.in.in" >"Makefile.in.in"
+   fi
+
+   for lang in $(cat "${ac_abs_top_srcdir}/po/LINGUAS")
+   do
+      mkdir -p "${lang}/LC_MESSAGES"
+      pushd >/dev/null "${lang}/LC_MESSAGES"
+      ln -s "../../${lang}.gmo" "audacity.mo"
+      popd >/dev/null
+   done
+   popd >/dev/null
+fi
 
 for lib in $LIBRARIES ; do
    eval LIB_USE_LOCAL=\$${lib}_USE_LOCAL
