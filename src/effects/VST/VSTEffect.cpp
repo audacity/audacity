@@ -174,7 +174,7 @@ IMPLEMENT_DYNAMIC_CLASS(VSTSubEntry, wxModule);
 // VSTSubProcess
 //----------------------------------------------------------------------------
 #define OUTPUTKEY wxT("<VSTLOADCHK>-")
-enum
+enum InfoKeys
 {
    kKeySubIDs,
    kKeyBegin,
@@ -619,7 +619,8 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
                bool skip = false;
                if (progress)
                {
-                  cont = progress->Update(idNdx++,
+                  idNdx++;
+                  cont = progress->Update(idNdx,
                                           wxString::Format(_("Registering %d of %d: %-64.64s"), idNdx, idCnt, proc->GetName().c_str()));
                }
 
@@ -728,28 +729,6 @@ void VSTEffectsModule::Check(const wxChar *path)
 
       delete effect;
    }
-}
-
-void VSTEffectsModule::WriteInfo(VSTEffect *effect)
-{
-   // We want to output info in one chunk to prevent output
-   // from the effect intermixing with the info
-   wxString out;
-   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyBegin, wxEmptyString);
-   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyID, effect->GetID().c_str());
-   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect->GetPath().c_str());
-   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect->GetName().c_str());
-   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor, effect->GetVendor().c_str());
-   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect->GetVersion().c_str());
-   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect->GetDescription().c_str());
-   out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyEffectType, effect->GetType());
-   out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyInteractive, effect->IsInteractive());
-   out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyAutomatable, effect->SupportsAutomation());
-   out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyEnd, wxEmptyString);
-
-   const wxCharBuffer buf = out.ToUTF8();
-   fwrite(buf, 1, strlen(buf), stdout);
-   fflush(stdout);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3476,14 +3455,14 @@ void VSTEffect::BuildFancy()
    wxPanel *w = new wxPanel(mParent, wxID_ANY);
 
    // Make sure the parent has a window
-   if (!GTK_WIDGET(w->m_wxwindow)->window)
+   if (!gtk_widget_get_realized(GTK_WIDGET(w->m_wxwindow)))
    {
       gtk_widget_realize(GTK_WIDGET(w->m_wxwindow));
    }
 
-   GdkWindow *gwin = GTK_WIDGET(w->m_wxwindow)->window;
+   GdkWindow *gwin = gtk_widget_get_window(GTK_WIDGET(w->m_wxwindow));
    mXdisp = GDK_WINDOW_XDISPLAY(gwin);
-   mXwin = GDK_WINDOW_XWINDOW(gwin);
+   mXwin = GDK_WINDOW_XID(gwin);
 
    callDispatcher(effEditOpen, 0, (intptr_t)mXdisp, (void *)mXwin, 0.0);
 

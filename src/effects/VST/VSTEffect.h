@@ -428,7 +428,6 @@ public:
    // VSTEffectModule implementation
 
    static void Check(const wxChar *path);
-   static void WriteInfo(VSTEffect *effect);
 
 private:
    ModuleManagerInterface *mModMan;
