@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * $Id: config.h.in,v 1.13 2009-01-26 21:40:16 richardash1981 Exp $
+ * $Id: acconfig.h,v 1.2 2001-10-21 22:26:32 dmazzoni Exp $
  */
 
 # ifndef LIBMAD_CONFIG_H
@@ -128,6 +128,10 @@
 /* Define to 1 if you have the `waitpid' function. */
 #undef HAVE_WAITPID
 
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
+
 /* Define to disable debugging assertions. */
 #undef NDEBUG
 
@@ -158,6 +162,9 @@
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
