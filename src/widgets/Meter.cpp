@@ -190,6 +190,7 @@ enum {
 BEGIN_EVENT_TABLE(Meter, wxPanel)
    EVT_TIMER(OnMeterUpdateID, Meter::OnMeterUpdate)
    EVT_MOUSE_EVENTS(Meter::OnMouse)
+   EVT_KEY_DOWN(Meter::OnKeyDown)
    EVT_ERASE_BACKGROUND(Meter::OnErase)
    EVT_PAINT(Meter::OnPaint)
    EVT_SIZE(Meter::OnSize)
@@ -665,10 +666,12 @@ void Meter::OnMouse(wxMouseEvent &evt)
 
       menu->Append(OnPreferencesID, _("Preferences..."));
 
-      if (evt.RightDown())
-         PopupMenu(menu, evt.m_x, evt.m_y);
-      else
-         PopupMenu(menu, mIconRect.x + 1, mIconRect.y + mIconRect.height + 1);
+      if (evt.RightDown()) {
+         ShowMenu(evt.GetPosition());
+      }
+      else {
+         ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
+      }
 
       delete menu;
    }
@@ -687,7 +690,15 @@ void Meter::OnMouse(wxMouseEvent &evt)
    }
 }
 
-void Meter::SetStyle(Meter::Style newStyle)
+void Meter::OnKeyDown(wxKeyEvent &evt)
+{
+   if (evt.GetKeyCode() == WXK_WINDOWS_MENU)
+   {
+      ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
+   }
+}
+
+void Meter::SetStyle(Style newStyle)
 {
    if (mStyle != newStyle && mDesiredStyle == AutomaticStereo)
    {
@@ -1775,8 +1786,28 @@ void Meter::RestoreState(void *state)
 }
 
 //
-// Pop-up menu handlers
+// Pop-up menu
 //
+
+void Meter::ShowMenu(const wxPoint & pos)
+{
+   wxMenu *menu = new wxMenu();
+   // Note: these should be kept in the same order as the enum
+   if (mIsInput) {
+      wxMenuItem *mi;
+      if (mMonitoring)
+         mi = menu->Append(OnMonitorID, _("Stop Monitoring"));
+      else
+         mi = menu->Append(OnMonitorID, _("Start Monitoring"));
+      mi->Enable(!mActive || mMonitoring);
+   }
+
+   menu->Append(OnPreferencesID, _("Preferences..."));
+
+   PopupMenu(menu, pos);
+
+   delete menu;
+}
 
 void Meter::OnMonitor(wxCommandEvent & WXUNUSED(event))
 {
