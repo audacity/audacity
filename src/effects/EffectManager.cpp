@@ -511,7 +511,7 @@ void EffectManager::RealtimeAddEffect(Effect *effect)
       // Add the required processors
       for (size_t i = 0, cnt = mRealtimeChans.GetCount(); i < cnt; i++)
       {
-         RealtimeAddProcessor(i, mRealtimeChans[i], mRealtimeRates[i]);
+         effect->RealtimeAddProcessor(i, mRealtimeChans[i], mRealtimeRates[i]);
       }
    }
    
@@ -544,12 +544,6 @@ void EffectManager::RealtimeRemoveEffect(Effect *effect)
 
 void EffectManager::RealtimeInitialize()
 {
-   // No need to do anything if there are no effects
-   if (mRealtimeEffects.IsEmpty())
-   {
-      return;
-   }
-
    // The audio thread should not be running yet, but protect anyway
    RealtimeSuspend();
 
@@ -655,10 +649,20 @@ void EffectManager::RealtimeResume()
 //
 void EffectManager::RealtimeProcessStart()
 {
-   for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+   // Protect ourselves from the main thread
+   mRealtimeLock.Enter();
+
+   // Can be suspended because of the audio stream being paused or because effects
+   // have been suspended.
+   if (!mRealtimeSuspended)
    {
-      mRealtimeEffects[i]->RealtimeProcessStart();
+      for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+      {
+         mRealtimeEffects[i]->RealtimeProcessStart();
+      }
    }
+
+   mRealtimeLock.Leave();
 }
 
 //
@@ -741,10 +745,20 @@ sampleCount EffectManager::RealtimeProcess(int group, int chans, float **buffers
 //
 void EffectManager::RealtimeProcessEnd()
 {
-   for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+   // Protect ourselves from the main thread
+   mRealtimeLock.Enter();
+
+   // Can be suspended because of the audio stream being paused or because effects
+   // have been suspended.
+   if (!mRealtimeSuspended)
    {
-       mRealtimeEffects[i]->RealtimeProcessEnd();
+      for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
+      {
+         mRealtimeEffects[i]->RealtimeProcessEnd();
+      }
    }
+
+   mRealtimeLock.Leave();
 }
 
 int EffectManager::GetRealtimeLatency()
