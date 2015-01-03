@@ -1384,7 +1384,7 @@ void Meter::RepaintBarsNow()
          DrawMeterBar(dc, &mBar[i]);
       }
 
-#if defined(__WXMAC__)
+#if defined(__WXMAC__) || defined(__WXGTK__)
       // Due to compositing or antialiasing on the Mac, we have to make
       // sure all remnants of the previous ruler text is completely gone.
       // Otherwise, we get a strange bolding effect.
