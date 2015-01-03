@@ -88,7 +88,7 @@ void OnSeekRightLong();
 
         // Different posibilities for playing sound
 
-bool MakeReadyToPlay(); // Helper function that sets button states etc.
+bool MakeReadyToPlay(bool loop = false, bool cutpreview = false); // Helper function that sets button states etc.
 void OnPlayStop();
 void OnPlayStopSelect();
 void OnPlayOneSecond();

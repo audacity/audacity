@@ -424,6 +424,8 @@ void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
 {
    AudacityProject *p = GetActiveProject();
    if (down) {
+      mPlay->SetShift(looped);
+      mPlay->SetControl(cutPreview);
       mPlay->SetAlternateIdx(cutPreview ? 2 : looped ? 1 : 0);
       mPlay->PushDown();
    }

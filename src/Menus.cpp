@@ -2123,7 +2123,7 @@ void AudacityProject::OnPrevTool()
 /// and pops the play button up.  Then, if nothing is now
 /// playing, it pushes the play button down and enables
 /// the stop button.
-bool AudacityProject::MakeReadyToPlay()
+bool AudacityProject::MakeReadyToPlay(bool loop, bool cutpreview)
 {
    ControlToolBar *toolbar = GetControlToolBar();
    wxCommandEvent evt;
@@ -2142,7 +2142,7 @@ bool AudacityProject::MakeReadyToPlay()
    if (gAudioIO->IsBusy())
       return false;
 
-   toolbar->SetPlay(true);
+   toolbar->SetPlay(true, loop, cutpreview);
    toolbar->SetStop(false);
 
    return true;
@@ -2203,7 +2203,7 @@ void AudacityProject::OnPlayToSelection()
 
 void AudacityProject::OnPlayLooped()
 {
-   if( !MakeReadyToPlay() )
+   if( !MakeReadyToPlay(true) )
       return;
 
    // Now play in a loop
@@ -2213,7 +2213,7 @@ void AudacityProject::OnPlayLooped()
 
 void AudacityProject::OnPlayCutPreview()
 {
-   if ( !MakeReadyToPlay() )
+   if ( !MakeReadyToPlay(false, true) )
       return;
 
    // Play with cut preview

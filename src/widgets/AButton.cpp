@@ -545,6 +545,11 @@ void AButton::SetShift(bool shift)
    mWasShiftDown = shift;
 }
 
+void AButton::SetControl(bool control)
+{
+   mWasControlDown = control;
+}
+
 #if wxUSE_ACCESSIBILITY
 
 AButtonAx::AButtonAx( wxWindow *window ):
