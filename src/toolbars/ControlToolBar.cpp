@@ -815,6 +815,8 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          double allt0 = t0;
 
          // Find the maximum end time of selected and all wave tracks
+         // Find whether any tracks were selected.  (If any are selected,
+         // record only into them; else if tracks exist, record into all.)
          for (Track *tt = it.First(); tt; tt = it.Next()) {
             if (tt->GetKind() == Track::Wave) {
                wt = (WaveTrack *)tt;
@@ -824,8 +826,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
                if (tt->GetSelected()) {
                   sel = true;
-                  if (duplex)
-                     playbackTracks.Remove(wt);
                   if (wt->GetEndTime() > t0) {
                      t0 = wt->GetEndTime();
                   }
@@ -839,8 +839,12 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          }
 
          // Pad selected/all wave tracks to make them all the same length
+         // Remove recording tracks from the list of tracks for duplex ("overdub")
+         // playback.
          for (Track *tt = it.First(); tt; tt = it.Next()) {
             if (tt->GetKind() == Track::Wave && (tt->GetSelected() || !sel)) {
+               if (duplex)
+                  playbackTracks.Remove(wt);
                wt = (WaveTrack *)tt;
                t1 = wt->GetEndTime();
                if (t1 < t0) {
