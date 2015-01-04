@@ -190,6 +190,7 @@ enum {
 BEGIN_EVENT_TABLE(Meter, wxPanel)
    EVT_TIMER(OnMeterUpdateID, Meter::OnMeterUpdate)
    EVT_MOUSE_EVENTS(Meter::OnMouse)
+   EVT_CONTEXT_MENU(Meter::OnContext)
    EVT_KEY_DOWN(Meter::OnKeyDown)
    EVT_ERASE_BACKGROUND(Meter::OnErase)
    EVT_PAINT(Meter::OnPaint)
@@ -688,6 +689,11 @@ void Meter::OnMouse(wxMouseEvent &evt)
          Reset(mRate, true);
       }
    }
+}
+
+void Meter::OnContext(wxContextMenuEvent &evt)
+{
+   ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
 }
 
 void Meter::OnKeyDown(wxKeyEvent &evt)
