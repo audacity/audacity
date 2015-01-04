@@ -4,23 +4,23 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 // Name:        wx/numformatter.h
-// Purpose:     wxNumberFormatter class
+// Purpose:     NumberFormatter class
 // Author:      Fulvio Senore, Vadim Zeitlin
 // Created:     2010-11-06
 // Copyright:   (c) 2010 wxWidgets team
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef _WX_NUMFORMATTER_H_
-#define _WX_NUMFORMATTER_H_
+#ifndef _WIDGETS_NUMFORMATTER_H_
+#define _WIDGETS_NUMFORMATTER_H_
 
-#include "wx/string.h"
+#include <wx/string.h>
 
-#define wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
+#define HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
 
 // Helper class for formatting numbers with thousands separators which also
 // supports parsing the numbers formatted by it.
-class wxNumberFormatter
+class NumberFormatter
 {
 public:
     // Bit masks for ToString()
@@ -39,10 +39,10 @@ public:
     // precision can also be specified.
     static wxString ToString(long val,
                              int style = Style_WithThousandsSep);
-#ifdef wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
+#ifdef HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
     static wxString ToString(wxLongLong_t val,
                              int style = Style_WithThousandsSep);
-#endif // wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
+#endif // HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
     static wxString ToString(double val,
                              int precision,
                              int style = Style_WithThousandsSep);
@@ -52,9 +52,9 @@ public:
     // Return true on success and stores the result in the provided location
     // which must be a valid non-NULL pointer.
     static bool FromString(wxString s, long *val);
-#ifdef wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
+#ifdef HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
     static bool FromString(wxString s, wxLongLong_t *val);
-#endif // wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
+#endif // HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
     static bool FromString(wxString s, double *val);
 
 
@@ -84,4 +84,4 @@ private:
     static void RemoveThousandsSeparators(wxString& s);
 };
 
-#endif // _WX_NUMFORMATTER_H_
+#endif // _WIDGETS_NUMFORMATTER_H_

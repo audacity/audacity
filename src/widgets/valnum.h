@@ -8,36 +8,36 @@
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef _WX_VALNUM_H_
-#define _WX_VALNUM_H_
+#ifndef _WIDGETS_VALNUM_H_
+#define _WIDGETS_VALNUM_H_
 
-#include "wx/defs.h"
+#include <wx/defs.h>
 
 #if wxUSE_VALIDATORS
 
-#include "wx/validate.h"
+#include <wx/validate.h>
 
 #include <limits>
 
 #define wxTextEntry wxTextCtrl
 
 // Bit masks used for numeric validator styles.
-enum wxNumValidatorStyle
+enum NumValidatorStyle
 {
-    wxNUM_VAL_DEFAULT               = 0x0,
-    wxNUM_VAL_THOUSANDS_SEPARATOR   = 0x1,
-    wxNUM_VAL_ZERO_AS_BLANK         = 0x2,
-    wxNUM_VAL_NO_TRAILING_ZEROES    = 0x4,
-    wxNUM_VAL_ONE_TRAILING_ZERO     = 0x8,
-    wxNUM_VAL_TWO_TRAILING_ZEROES   = 0x10,
-    wxNUM_VAL_THREE_TRAILING_ZEROES = 0x20
+    NUM_VAL_DEFAULT               = 0x0,
+    NUM_VAL_THOUSANDS_SEPARATOR   = 0x1,
+    NUM_VAL_ZERO_AS_BLANK         = 0x2,
+    NUM_VAL_NO_TRAILING_ZEROES    = 0x4,
+    NUM_VAL_ONE_TRAILING_ZERO     = 0x8,
+    NUM_VAL_TWO_TRAILING_ZEROES   = 0x10,
+    NUM_VAL_THREE_TRAILING_ZEROES = 0x20
 };
 
 // ----------------------------------------------------------------------------
 // Base class for all numeric validators.
 // ----------------------------------------------------------------------------
 
-class wxNumValidatorBase : public wxValidator
+class NumValidatorBase : public wxValidator
 {
 public:
     // Change the validator style. Usually it's specified during construction.
@@ -48,17 +48,17 @@ public:
     virtual bool Validate(wxWindow * parent);
 
 protected:
-    wxNumValidatorBase(int style)
+    NumValidatorBase(int style)
     {
         m_style = style;
     }
 
-    wxNumValidatorBase(const wxNumValidatorBase& other) : wxValidator()
+    NumValidatorBase(const NumValidatorBase& other) : wxValidator()
     {
         m_style = other.m_style;
     }
 
-    bool HasFlag(wxNumValidatorStyle style) const
+    bool HasFlag(NumValidatorStyle style) const
     {
         return (m_style & style) != 0;
     }
@@ -68,8 +68,8 @@ protected:
     // still test the return value for safety.
     wxTextEntry *GetTextEntry() const;
 
-    // Convert wxNUM_VAL_THOUSANDS_SEPARATOR and wxNUM_VAL_NO_TRAILING_ZEROES
-    // bits of our style to the corresponding wxNumberFormatter::Style values.
+    // Convert NUM_VAL_THOUSANDS_SEPARATOR and NUM_VAL_NO_TRAILING_ZEROES
+    // bits of our style to the corresponding NumberFormatter::Style values.
     int GetFormatFlags() const;
 
     // Return true if pressing a '-' key is acceptable for the current control
@@ -118,24 +118,24 @@ private:
 
     DECLARE_EVENT_TABLE();
 
-    DECLARE_NO_ASSIGN_CLASS(wxNumValidatorBase);
+    DECLARE_NO_ASSIGN_CLASS(NumValidatorBase);
 };
 
-namespace wxPrivate
+namespace Private
 {
 
-// This is a helper class used by wxIntegerValidator and wxFloatingPointValidator
+// This is a helper class used by IntegerValidator and FloatingPointValidator
 // below that implements Transfer{To,From}Window() adapted to the type of the
 // variable.
 //
 // The template argument B is the name of the base class which must derive from
 // wxNumValidatorBase and define LongestValueType type and {To,As}String()
-// methods i.e. basically be one of wx{Integer,Number}ValidatorBase classes.
+// methods i.e. basically be one of {Integer,Number}ValidatorBase classes.
 //
 // The template argument T is just the type handled by the validator that will
 // inherit from this one.
 template <class B, typename T>
-class wxNumValidator : public B
+class NumValidator : public B
 {
 public:
     typedef B BaseValidator;
@@ -145,7 +145,7 @@ public:
 
     // FIXME-VC6: This compiler fails to compile the assert below with a
     // nonsensical error C2248: "'LongestValueType' : cannot access protected
-    // typedef declared in class 'wxIntegerValidatorBase'" so just disable the
+    // typedef declared in class 'IntegerValidatorBase'" so just disable the
     // check for it.
 #ifndef __VISUALC6__
     wxCOMPILE_TIME_ASSERT
@@ -195,7 +195,7 @@ public:
 
             const wxString s(control->GetValue());
             LongestValueType value;
-            if ( s.empty() && BaseValidator::HasFlag(wxNUM_VAL_ZERO_AS_BLANK) )
+            if ( s.empty() && BaseValidator::HasFlag(NUM_VAL_ZERO_AS_BLANK) )
                 value = 0;
             else if ( !BaseValidator::FromString(s, &value) )
                 return false;
@@ -210,13 +210,13 @@ public:
     }
 
 protected:
-    wxNumValidator(ValueType *value, int style)
+    NumValidator(ValueType *value, int style)
         : BaseValidator(style),
           m_value(value)
     {
     }
 
-    // Implement wxNumValidatorBase virtual method which is the same for
+    // Implement NumValidatorBase virtual method which is the same for
     // both integer and floating point numbers.
     virtual wxString NormalizeString(const wxString& s) const
     {
@@ -228,11 +228,11 @@ protected:
 private:
     // Just a helper which is a common part of TransferToWindow() and
     // NormalizeString(): returns string representation of a number honouring
-    // wxNUM_VAL_ZERO_AS_BLANK flag.
+    // NUM_VAL_ZERO_AS_BLANK flag.
     wxString NormalizeValue(LongestValueType value) const
     {
         wxString s;
-        if ( value != 0 || !BaseValidator::HasFlag(wxNUM_VAL_ZERO_AS_BLANK) )
+        if ( value != 0 || !BaseValidator::HasFlag(NUM_VAL_ZERO_AS_BLANK) )
             s = this->ToString(value);
 
         return s;
@@ -241,10 +241,10 @@ private:
 
     ValueType * const m_value;
 
-    DECLARE_NO_ASSIGN_CLASS(wxNumValidator);
+    DECLARE_NO_ASSIGN_CLASS(NumValidator);
 };
 
-} // namespace wxPrivate
+} // namespace Private
 
 // ----------------------------------------------------------------------------
 // Validators for integer numbers.
@@ -253,12 +253,12 @@ private:
 // Base class for integer numbers validator. This class contains all non
 // type-dependent code of wxIntegerValidator<> and always works with values of
 // type LongestValueType. It is not meant to be used directly, please use
-// wxIntegerValidator<> only instead.
-class wxIntegerValidatorBase : public wxNumValidatorBase
+// IntegerValidator<> only instead.
+class IntegerValidatorBase : public NumValidatorBase
 {
 protected:
     // Define the type we use here, it should be the maximal-sized integer type
-    // we support to make it possible to base wxIntegerValidator<> for any type
+    // we support to make it possible to base IntegerValidator<> for any type
     // on it.
 #ifdef wxLongLong_t
     typedef wxLongLong_t LongestValueType;
@@ -266,27 +266,27 @@ protected:
     typedef long LongestValueType;
 #endif
 
-    wxIntegerValidatorBase(int style)
-        : wxNumValidatorBase(style)
+    IntegerValidatorBase(int style)
+        : NumValidatorBase(style)
     {
-        wxASSERT_MSG( !(style & wxNUM_VAL_NO_TRAILING_ZEROES),
+        wxASSERT_MSG( !(style & NUM_VAL_NO_TRAILING_ZEROES),
                       wxT("This style doesn't make sense for integers.") );
-        wxASSERT_MSG( !(style & wxNUM_VAL_ONE_TRAILING_ZERO),
+        wxASSERT_MSG( !(style & NUM_VAL_ONE_TRAILING_ZERO),
                       wxT("This style doesn't make sense for integers.") );
-        wxASSERT_MSG( !(style & wxNUM_VAL_TWO_TRAILING_ZEROES),
+        wxASSERT_MSG( !(style & NUM_VAL_TWO_TRAILING_ZEROES),
                       wxT("This style doesn't make sense for integers.") );
-        wxASSERT_MSG( !(style & wxNUM_VAL_THREE_TRAILING_ZEROES),
+        wxASSERT_MSG( !(style & NUM_VAL_THREE_TRAILING_ZEROES),
                       wxT("This style doesn't make sense for integers.") );
     }
 
-    wxIntegerValidatorBase(const wxIntegerValidatorBase& other)
-        : wxNumValidatorBase(other)
+    IntegerValidatorBase(const IntegerValidatorBase& other)
+        : NumValidatorBase(other)
     {
         m_min = other.m_min;
         m_max = other.m_max;
     }
 
-    // Provide methods for wxNumValidator use.
+    // Provide methods for NumValidator use.
     wxString ToString(LongestValueType value) const;
     static bool FromString(const wxString& s, LongestValueType *value);
 
@@ -298,7 +298,7 @@ protected:
         return m_min <= value && value <= m_max;
     }
 
-    // Implement wxNumValidatorBase pure virtual method.
+    // Implement NumValidatorBase pure virtual method.
     virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const;
     virtual bool DoValidateNumber(wxString * errMsg) const;
 
@@ -306,55 +306,55 @@ private:
     // Minimal and maximal values accepted (inclusive).
     LongestValueType m_min, m_max;
 
-    DECLARE_NO_ASSIGN_CLASS(wxIntegerValidatorBase);
+    DECLARE_NO_ASSIGN_CLASS(IntegerValidatorBase);
 };
 
 // Validator for integer numbers. It can actually work with any integer type
 // (short, int or long and long long if supported) and their unsigned versions
 // as well.
 template <typename T>
-class wxIntegerValidator
-    : public wxPrivate::wxNumValidator<wxIntegerValidatorBase, T>
+class IntegerValidator
+    : public Private::NumValidator<IntegerValidatorBase, T>
 {
 public:
     typedef T ValueType;
 
     typedef
-        wxPrivate::wxNumValidator<wxIntegerValidatorBase, T> Base;
+        Private::NumValidator<IntegerValidatorBase, T> Base;
 
     // Ctor for an integer validator.
     //
     // Sets the range appropriately for the type, including setting 0 as the
     // minimal value for the unsigned types.
-    wxIntegerValidator(ValueType *value = NULL, int style = wxNUM_VAL_DEFAULT)
+    IntegerValidator(ValueType *value = NULL, int style = NUM_VAL_DEFAULT)
         : Base(value, style)
     {
         this->DoSetMin(std::numeric_limits<ValueType>::min());
         this->DoSetMax(std::numeric_limits<ValueType>::max());
     }
 
-    virtual wxObject *Clone() const { return new wxIntegerValidator(*this); }
+    virtual wxObject *Clone() const { return new IntegerValidator(*this); }
 
 private:
-    DECLARE_NO_ASSIGN_CLASS(wxIntegerValidator);
+    DECLARE_NO_ASSIGN_CLASS(IntegerValidator);
 };
 
 // Helper function for creating integer validators which allows to avoid
 // explicitly specifying the type as it deduces it from its parameter.
 template <typename T>
-inline wxIntegerValidator<T>
-wxMakeIntegerValidator(T *value, int style = wxNUM_VAL_DEFAULT)
+inline IntegerValidator<T>
+MakeIntegerValidator(T *value, int style = NUM_VAL_DEFAULT)
 {
-    return wxIntegerValidator<T>(value, style);
+    return IntegerValidator<T>(value, style);
 }
 
 // ----------------------------------------------------------------------------
 // Validators for floating point numbers.
 // ----------------------------------------------------------------------------
 
-// Similar to wxIntegerValidatorBase, this class is not meant to be used
-// directly, only wxFloatingPointValidator<> should be used in the user code.
-class wxFloatingPointValidatorBase : public wxNumValidatorBase
+// Similar to IntegerValidatorBase, this class is not meant to be used
+// directly, only FloatingPointValidator<> should be used in the user code.
+class FloatingPointValidatorBase : public NumValidatorBase
 {
 public:
     // Set precision i.e. the number of digits shown (and accepted on input)
@@ -364,17 +364,17 @@ public:
 
 protected:
     // Notice that we can't use "long double" here because it's not supported
-    // by wxNumberFormatter yet, so restrict ourselves to just double (and
+    // by NumberFormatter yet, so restrict ourselves to just double (and
     // float).
     typedef double LongestValueType;
 
-    wxFloatingPointValidatorBase(int style)
-        : wxNumValidatorBase(style)
+    FloatingPointValidatorBase(int style)
+        : NumValidatorBase(style)
     {
     }
 
-    wxFloatingPointValidatorBase(const wxFloatingPointValidatorBase& other)
-        : wxNumValidatorBase(other)
+    FloatingPointValidatorBase(const FloatingPointValidatorBase& other)
+        : NumValidatorBase(other)
     {
         m_precision = other.m_precision;
 
@@ -382,7 +382,7 @@ protected:
         m_max = other.m_max;
     }
 
-    // Provide methods for wxNumValidator use.
+    // Provide methods for NumValidator use.
     wxString ToString(LongestValueType value) const;
     static bool FromString(const wxString& s, LongestValueType *value);
 
@@ -394,7 +394,7 @@ protected:
         return m_min <= value && value <= m_max;
     }
 
-    // Implement wxNumValidatorBase pure virtual method.
+    // Implement NumValidatorBase pure virtual method.
     virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const;
     virtual bool DoValidateNumber(wxString * errMsg) const;
 
@@ -408,22 +408,22 @@ private:
     // Minimal and maximal values accepted (inclusive).
     LongestValueType m_min, m_max;
 
-    DECLARE_NO_ASSIGN_CLASS(wxFloatingPointValidatorBase);
+    DECLARE_NO_ASSIGN_CLASS(FloatingPointValidatorBase);
 };
 
 // Validator for floating point numbers. It can be used with float, double or
 // long double values.
 template <typename T>
-class wxFloatingPointValidator
-    : public wxPrivate::wxNumValidator<wxFloatingPointValidatorBase, T>
+class FloatingPointValidator
+    : public Private::NumValidator<FloatingPointValidatorBase, T>
 {
 public:
     typedef T ValueType;
-    typedef wxPrivate::wxNumValidator<wxFloatingPointValidatorBase, T> Base;
+    typedef Private::NumValidator<FloatingPointValidatorBase, T> Base;
 
     // Ctor using implicit (maximal) precision for this type.
-    wxFloatingPointValidator(ValueType *value = NULL,
-                             int style = wxNUM_VAL_DEFAULT)
+    FloatingPointValidator(ValueType *value = NULL,
+                             int style = NUM_VAL_DEFAULT)
         : Base(value, style)
     {
         DoSetMinMax();
@@ -432,9 +432,9 @@ public:
     }
 
     // Ctor specifying an explicit precision.
-    wxFloatingPointValidator(int precision,
+    FloatingPointValidator(int precision,
                       ValueType *value = NULL,
-                      int style = wxNUM_VAL_DEFAULT)
+                      int style = NUM_VAL_DEFAULT)
         : Base(value, style)
     {
         DoSetMinMax();
@@ -444,7 +444,7 @@ public:
 
     virtual wxObject *Clone() const
     {
-        return new wxFloatingPointValidator(*this);
+        return new FloatingPointValidator(*this);
     }
 
 private:
@@ -458,25 +458,25 @@ private:
     }
 };
 
-// Helper similar to wxMakeIntValidator().
+// Helper similar to MakeIntValidator().
 //
-// NB: Unfortunately we can't just have a wxMakeNumericValidator() which would
-//     return either wxIntegerValidator<> or wxFloatingPointValidator<> so we
+// NB: Unfortunately we can't just have a MakeNumericValidator() which would
+//     return either IntegerValidator<> or FloatingPointValidator<> so we
 //     do need two different functions.
 template <typename T>
-inline wxFloatingPointValidator<T>
-wxMakeFloatingPointValidator(T *value, int style = wxNUM_VAL_DEFAULT)
+inline FloatingPointValidator<T>
+MakeFloatingPointValidator(T *value, int style = NUM_VAL_DEFAULT)
 {
-    return wxFloatingPointValidator<T>(value, style);
+    return FloatingPointValidator<T>(value, style);
 }
 
 template <typename T>
-inline wxFloatingPointValidator<T>
-wxMakeFloatingPointValidator(int precision, T *value, int style = wxNUM_VAL_DEFAULT)
+inline FloatingPointValidator<T>
+MakeFloatingPointValidator(int precision, T *value, int style = NUM_VAL_DEFAULT)
 {
-    return wxFloatingPointValidator<T>(precision, value, style);
+    return FloatingPointValidator<T>(precision, value, style);
 }
 
 #endif // wxUSE_VALIDATORS
 
-#endif // _WX_VALNUM_H_
+#endif // _WIDGETS_VALNUM_H_

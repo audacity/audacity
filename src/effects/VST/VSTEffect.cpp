@@ -786,7 +786,7 @@ void VSTEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartStatic(_("Buffer Size"));
          {
-            wxIntegerValidator<int> vld(&mBufferSize);
+            IntegerValidator<int> vld(&mBufferSize);
             vld.SetRange(8, 1048576 * 1);
 
             S.AddVariableText(wxString() +

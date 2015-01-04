@@ -1279,7 +1279,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          {
             fieldText.Printf(wxT("%d"), (int)(mInputControls[p] + 0.5));
 
-            wxIntegerValidator<float> vld(&mInputControls[p]);
+            IntegerValidator<float> vld(&mInputControls[p]);
             vld.SetRange(haslo ? lower : INT_MIN,
                          hashi ? upper : INT_MAX);
             mFields[p]->SetValidator(vld);
@@ -1289,21 +1289,21 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             fieldText = Internat::ToDisplayString(mInputControls[p]);
 
             // > 12 decimal places can cause rounding errors in display.
-            wxFloatingPointValidator<float> vld(6, &mInputControls[p]);
+            FloatingPointValidator<float> vld(6, &mInputControls[p]);
             vld.SetRange(lower, upper);
             
             // Set number of decimal places
             if (upper - lower < 10.0)
             {
-               vld.SetStyle(wxNUM_VAL_THREE_TRAILING_ZEROES);
+               vld.SetStyle(NUM_VAL_THREE_TRAILING_ZEROES);
             }
             else if (upper - lower < 100.0)
             {
-               vld.SetStyle(wxNUM_VAL_TWO_TRAILING_ZEROES);
+               vld.SetStyle(NUM_VAL_TWO_TRAILING_ZEROES);
             }
             else
             {
-               vld.SetStyle(wxNUM_VAL_ONE_TRAILING_ZERO);
+               vld.SetStyle(NUM_VAL_ONE_TRAILING_ZERO);
             }
 
             mFields[p]->SetValidator(vld);

@@ -20,7 +20,7 @@
 // ----------------------------------------------------------------------------
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -29,40 +29,40 @@
 #if wxUSE_VALIDATORS && wxUSE_TEXTCTRL
 
 #ifndef WX_PRECOMP
-    #include "wx/msgdlg.h"
-    #include "wx/textctrl.h"
+    #include <wx/msgdlg.h>
+    #include <wx/textctrl.h>
 #endif
 
 #include "valnum.h"
 #include "numformatter.h"
 
 // ============================================================================
-// wxNumValidatorBase implementation
+// NumValidatorBase implementation
 // ============================================================================
 
-BEGIN_EVENT_TABLE(wxNumValidatorBase, wxValidator)
-    EVT_CHAR(wxNumValidatorBase::OnChar)
-    EVT_KILL_FOCUS(wxNumValidatorBase::OnKillFocus)
+BEGIN_EVENT_TABLE(NumValidatorBase, wxValidator)
+    EVT_CHAR(NumValidatorBase::OnChar)
+    EVT_KILL_FOCUS(NumValidatorBase::OnKillFocus)
 END_EVENT_TABLE()
 
-int wxNumValidatorBase::GetFormatFlags() const
+int NumValidatorBase::GetFormatFlags() const
 {
-    int flags = wxNumberFormatter::Style_None;
-    if ( m_style & wxNUM_VAL_THOUSANDS_SEPARATOR )
-        flags |= wxNumberFormatter::Style_WithThousandsSep;
-    if ( m_style & wxNUM_VAL_NO_TRAILING_ZEROES )
-        flags |= wxNumberFormatter::Style_NoTrailingZeroes;
-    if ( m_style & wxNUM_VAL_ONE_TRAILING_ZERO )
-        flags |= wxNumberFormatter::Style_OneTrailingZero;
-    if ( m_style & wxNUM_VAL_TWO_TRAILING_ZEROES )
-        flags |= wxNumberFormatter::Style_TwoTrailingZeroes;
-    if ( m_style & wxNUM_VAL_THREE_TRAILING_ZEROES )
-        flags |= wxNumberFormatter::Style_ThreeTrailingZeroes;
+    int flags = NumberFormatter::Style_None;
+    if ( m_style & NUM_VAL_THOUSANDS_SEPARATOR )
+        flags |= NumberFormatter::Style_WithThousandsSep;
+    if ( m_style & NUM_VAL_NO_TRAILING_ZEROES )
+        flags |= NumberFormatter::Style_NoTrailingZeroes;
+    if ( m_style & NUM_VAL_ONE_TRAILING_ZERO )
+        flags |= NumberFormatter::Style_OneTrailingZero;
+    if ( m_style & NUM_VAL_TWO_TRAILING_ZEROES )
+        flags |= NumberFormatter::Style_TwoTrailingZeroes;
+    if ( m_style & NUM_VAL_THREE_TRAILING_ZEROES )
+        flags |= NumberFormatter::Style_ThreeTrailingZeroes;
 
     return flags;
 }
 
-wxTextEntry *wxNumValidatorBase::GetTextEntry() const
+wxTextEntry *NumValidatorBase::GetTextEntry() const
 {
 #if wxUSE_TEXTCTRL
     if ( wxTextCtrl *text = wxDynamicCast(m_validatorWindow, wxTextCtrl) )
@@ -74,7 +74,7 @@ wxTextEntry *wxNumValidatorBase::GetTextEntry() const
     return NULL;
 }
 
-bool wxNumValidatorBase::Validate(wxWindow *parent)
+bool NumValidatorBase::Validate(wxWindow *parent)
 {
     // If window is disabled, simply return
     if ( !m_validatorWindow->IsEnabled() )
@@ -95,7 +95,7 @@ bool wxNumValidatorBase::Validate(wxWindow *parent)
 }
 
 void
-wxNumValidatorBase::GetCurrentValueAndInsertionPoint(wxString& val,
+NumValidatorBase::GetCurrentValueAndInsertionPoint(wxString& val,
                                                              int& pos) const
 {
     wxTextEntry * const control = GetTextEntry();
@@ -126,7 +126,7 @@ wxNumValidatorBase::GetCurrentValueAndInsertionPoint(wxString& val,
     }
 }
 
-bool wxNumValidatorBase::IsMinusOk(const wxString& val, int pos) const
+bool NumValidatorBase::IsMinusOk(const wxString& val, int pos) const
 {
     // Minus is only ever accepted in the beginning of the string.
     if ( pos != 0 )
@@ -139,7 +139,7 @@ bool wxNumValidatorBase::IsMinusOk(const wxString& val, int pos) const
     return true;
 }
 
-void wxNumValidatorBase::OnChar(wxKeyEvent& event)
+void NumValidatorBase::OnChar(wxKeyEvent& event)
 {
     // By default we just validate this key so don't prevent the normal
     // handling from taking place.
@@ -190,7 +190,7 @@ void wxNumValidatorBase::OnChar(wxKeyEvent& event)
     }
 }
 
-void wxNumValidatorBase::OnKillFocus(wxFocusEvent& event)
+void NumValidatorBase::OnKillFocus(wxFocusEvent& event)
 {
     wxTextEntry * const control = GetTextEntry();
     if ( !control )
@@ -216,22 +216,22 @@ void wxNumValidatorBase::OnKillFocus(wxFocusEvent& event)
 }
 
 // ============================================================================
-// wxIntegerValidatorBase implementation
+// IntegerValidatorBase implementation
 // ============================================================================
 
-wxString wxIntegerValidatorBase::ToString(LongestValueType value) const
+wxString IntegerValidatorBase::ToString(LongestValueType value) const
 {
-    return wxNumberFormatter::ToString(value, GetFormatFlags());
+    return NumberFormatter::ToString(value, GetFormatFlags());
 }
 
 bool
-wxIntegerValidatorBase::FromString(const wxString& s, LongestValueType *value)
+IntegerValidatorBase::FromString(const wxString& s, LongestValueType *value)
 {
-    return wxNumberFormatter::FromString(s, value);
+    return NumberFormatter::FromString(s, value);
 }
 
 bool
-wxIntegerValidatorBase::IsCharOk(const wxString& val, int pos, wxChar ch) const
+IntegerValidatorBase::IsCharOk(const wxString& val, int pos, wxChar ch) const
 {
     // We may accept minus sign if we can represent negative numbers at all.
     if ( ch == '-' )
@@ -252,7 +252,7 @@ wxIntegerValidatorBase::IsCharOk(const wxString& val, int pos, wxChar ch) const
     if ( ch < '0' || ch > '9' )
     {
         wxChar thousands;
-        if ( wxNumberFormatter::GetThousandsSeparatorIfUsed(&thousands) )
+        if ( NumberFormatter::GetThousandsSeparatorIfUsed(&thousands) )
         {
             if (ch != thousands)
                 return false;
@@ -266,7 +266,7 @@ wxIntegerValidatorBase::IsCharOk(const wxString& val, int pos, wxChar ch) const
     return true;
 }
 
-bool wxIntegerValidatorBase::DoValidateNumber(wxString * errMsg) const
+bool IntegerValidatorBase::DoValidateNumber(wxString * errMsg) const
 {
     wxTextEntry * const control = GetTextEntry();
     if ( !control )
@@ -274,13 +274,13 @@ bool wxIntegerValidatorBase::DoValidateNumber(wxString * errMsg) const
 
     wxString s(control->GetValue());
     wxChar thousandsSep;
-    if ( wxNumberFormatter::GetThousandsSeparatorIfUsed(&thousandsSep) )
+    if ( NumberFormatter::GetThousandsSeparatorIfUsed(&thousandsSep) )
         s.Replace(wxString(thousandsSep), wxString());
 
     if ( s.empty() )
     {
         // Is blank, but allowed. Stop here
-        if ( HasFlag(wxNUM_VAL_ZERO_AS_BLANK) )
+        if ( HasFlag(NUM_VAL_ZERO_AS_BLANK) )
         {
             return true;
         }
@@ -308,23 +308,23 @@ bool wxIntegerValidatorBase::DoValidateNumber(wxString * errMsg) const
 }
 
 // ============================================================================
-// wxFloatingPointValidatorBase implementation
+// FloatingPointValidatorBase implementation
 // ============================================================================
 
-wxString wxFloatingPointValidatorBase::ToString(LongestValueType value) const
+wxString FloatingPointValidatorBase::ToString(LongestValueType value) const
 {
-    return wxNumberFormatter::ToString(value, m_precision, GetFormatFlags());
+    return NumberFormatter::ToString(value, m_precision, GetFormatFlags());
 }
 
 bool
-wxFloatingPointValidatorBase::FromString(const wxString& s,
+FloatingPointValidatorBase::FromString(const wxString& s,
                                          LongestValueType *value)
 {
-    return wxNumberFormatter::FromString(s, value);
+    return NumberFormatter::FromString(s, value);
 }
 
 bool
-wxFloatingPointValidatorBase::IsCharOk(const wxString& val,
+FloatingPointValidatorBase::IsCharOk(const wxString& val,
                                        int pos,
                                        wxChar ch) const
 {
@@ -349,7 +349,7 @@ wxFloatingPointValidatorBase::IsCharOk(const wxString& val,
         return true;
     }
 
-    const wxChar separator = wxNumberFormatter::GetDecimalSeparator();
+    const wxChar separator = NumberFormatter::GetDecimalSeparator();
     if ( ch == separator )
     {
         if ( val.find(separator) != wxString::npos )
@@ -374,7 +374,7 @@ wxFloatingPointValidatorBase::IsCharOk(const wxString& val,
     if( ( ch < '0' || ch > '9' ) && ch != 'E' && ch != 'e' )
     {
         wxChar thousands;
-        if ( wxNumberFormatter::GetThousandsSeparatorIfUsed(&thousands) )
+        if ( NumberFormatter::GetThousandsSeparatorIfUsed(&thousands) )
         {
             if (ch != thousands)
                 return false;
@@ -391,7 +391,7 @@ wxFloatingPointValidatorBase::IsCharOk(const wxString& val,
     return ValidatePrecision(str);
 }
 
-bool wxFloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
+bool FloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
 {
     wxTextEntry * const control = GetTextEntry();
     if ( !control )
@@ -399,12 +399,12 @@ bool wxFloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
 
     wxString s(control->GetValue());
     wxChar thousandsSep;
-    if ( wxNumberFormatter::GetThousandsSeparatorIfUsed(&thousandsSep) )
+    if ( NumberFormatter::GetThousandsSeparatorIfUsed(&thousandsSep) )
         s.Replace(wxString(thousandsSep), wxString());
 
     if ( s.empty() )
     {
-        if ( HasFlag(wxNUM_VAL_ZERO_AS_BLANK) )
+        if ( HasFlag(NUM_VAL_ZERO_AS_BLANK) )
             return true; //Is blank, but allowed. Stop here
         else
         {
@@ -433,9 +433,9 @@ bool wxFloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
     return res;
 }
 
-bool wxFloatingPointValidatorBase::ValidatePrecision(const wxString& s) const
+bool FloatingPointValidatorBase::ValidatePrecision(const wxString& s) const
 {
-    size_t posSep = s.find(wxNumberFormatter::GetDecimalSeparator());
+    size_t posSep = s.find(NumberFormatter::GetDecimalSeparator());
     if ( posSep == wxString::npos )
         posSep = s.length();
 

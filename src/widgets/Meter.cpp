@@ -1914,7 +1914,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
                                 wxString::Format(wxT("%d"), meterRefreshRate),
                                 10);
             rate->SetName(_("Meter refresh rate per second [1-100]"));
-            wxIntegerValidator<long> vld(&mMeterRefreshRate);
+            IntegerValidator<long> vld(&mMeterRefreshRate);
             vld.SetRange(0, 100);
             rate->SetValidator(vld);
          }

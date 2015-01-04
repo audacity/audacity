@@ -4,7 +4,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 // Name:        src/common/numformatter.cpp
-// Purpose:     wxNumberFormatter
+// Purpose:     NumberFormatter
 // Author:      Fulvio Senore, Vadim Zeitlin
 // Created:     2010-11-06
 // Copyright:   (c) 2010 wxWidgets team
@@ -16,20 +16,20 @@
 // ----------------------------------------------------------------------------
 
 // For compilers that support precompilation, includes "wx.h".
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 
 #ifdef __WIN32__
-    #include "wx/msw/private.h"
+    #include <wx/msw/private.h>
 
 #endif
 
 
 #include "numformatter.h"
-#include "wx/intl.h"
+#include <wx/intl.h>
 
 #include <locale.h> // for setlocale and LC_ALL
 #include <wx/log.h>
@@ -110,14 +110,14 @@ private:
 } // anonymous namespace
 
 // ============================================================================
-// wxNumberFormatter implementation
+// NumberFormatter implementation
 // ============================================================================
 
 // ----------------------------------------------------------------------------
 // Locale information accessors
 // ----------------------------------------------------------------------------
 
-wxChar wxNumberFormatter::GetDecimalSeparator()
+wxChar NumberFormatter::GetDecimalSeparator()
 {
 #if wxUSE_INTL
     // Notice that while using static variable here is not MT-safe, the worst
@@ -155,7 +155,7 @@ wxChar wxNumberFormatter::GetDecimalSeparator()
 #endif // wxUSE_INTL/!wxUSE_INTL
 }
 
-bool wxNumberFormatter::GetThousandsSeparatorIfUsed(wxChar *sep)
+bool NumberFormatter::GetThousandsSeparatorIfUsed(wxChar *sep)
 {
 #if wxUSE_INTL
     static wxChar s_thousandsSeparator = 0;
@@ -216,7 +216,7 @@ bool wxNumberFormatter::GetThousandsSeparatorIfUsed(wxChar *sep)
 // Conversion to string and helpers
 // ----------------------------------------------------------------------------
 
-wxString wxNumberFormatter::PostProcessIntString(wxString s, int style)
+wxString NumberFormatter::PostProcessIntString(wxString s, int style)
 {
     if ( style & Style_WithThousandsSep )
         AddThousandsSeparators(s);
@@ -233,14 +233,14 @@ wxString wxNumberFormatter::PostProcessIntString(wxString s, int style)
     return s;
 }
 
-wxString wxNumberFormatter::ToString(long val, int style)
+wxString NumberFormatter::ToString(long val, int style)
 {
     return PostProcessIntString(wxString::Format(wxT("%ld"), val), style);
 }
 
-#ifdef wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
+#ifdef HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
 
-wxString wxNumberFormatter::ToString(wxLongLong_t val, int style)
+wxString NumberFormatter::ToString(wxLongLong_t val, int style)
 {
 #if wxCHECK_VERSION(3,0,0)
    return PostProcessIntString(wxString::Format("%" wxLongLongFmtSpec "d", val),
@@ -251,9 +251,9 @@ wxString wxNumberFormatter::ToString(wxLongLong_t val, int style)
 #endif
 }
 
-#endif // wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
+#endif // HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
 
-wxString wxNumberFormatter::ToString(double val, int precision, int style)
+wxString NumberFormatter::ToString(double val, int precision, int style)
 {
     wxString format;
     if ( precision == -1 )
@@ -287,7 +287,7 @@ wxString wxNumberFormatter::ToString(double val, int precision, int style)
     return s;
 }
 
-void wxNumberFormatter::AddThousandsSeparators(wxString& s)
+void NumberFormatter::AddThousandsSeparators(wxString& s)
 {
     wxChar thousandsSep;
     if ( !GetThousandsSeparatorIfUsed(&thousandsSep) )
@@ -318,7 +318,7 @@ void wxNumberFormatter::AddThousandsSeparators(wxString& s)
     }
 }
 
-void wxNumberFormatter::RemoveTrailingZeroes(wxString& s, size_t retain /* = 0 */)
+void NumberFormatter::RemoveTrailingZeroes(wxString& s, size_t retain /* = 0 */)
 {
    const size_t posDecSep = s.find(GetDecimalSeparator());
    wxCHECK_RET( posDecSep != wxString::npos,
@@ -342,7 +342,7 @@ void wxNumberFormatter::RemoveTrailingZeroes(wxString& s, size_t retain /* = 0 *
 // Conversion from strings
 // ----------------------------------------------------------------------------
 
-void wxNumberFormatter::RemoveThousandsSeparators(wxString& s)
+void NumberFormatter::RemoveThousandsSeparators(wxString& s)
 {
     wxChar thousandsSep;
     if ( !GetThousandsSeparatorIfUsed(&thousandsSep) )
@@ -351,23 +351,23 @@ void wxNumberFormatter::RemoveThousandsSeparators(wxString& s)
     s.Replace(wxString(thousandsSep), wxString());
 }
 
-bool wxNumberFormatter::FromString(wxString s, long *val)
+bool NumberFormatter::FromString(wxString s, long *val)
 {
     RemoveThousandsSeparators(s);
     return s.ToLong(val);
 }
 
-#ifdef wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
+#ifdef HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
 
-bool wxNumberFormatter::FromString(wxString s, wxLongLong_t *val)
+bool NumberFormatter::FromString(wxString s, wxLongLong_t *val)
 {
     RemoveThousandsSeparators(s);
     return s.ToLongLong(val);
 }
 
-#endif // wxHAS_LONG_LONG_T_DIFFERENT_FROM_LONG
+#endif // HAS_LONG_LONG_T_DIFFERENT_FROM_LONG
 
-bool wxNumberFormatter::FromString(wxString s, double *val)
+bool NumberFormatter::FromString(wxString s, double *val)
 {
     RemoveThousandsSeparators(s);
     return s.ToDouble(val);
