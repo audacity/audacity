@@ -159,6 +159,7 @@ class AButton: public wxWindow {
    std::vector<ImageArr> mImages;
 
    wxRect mFocusRect;
+   bool mForceFocusRect;
 
    std::auto_ptr<Listener> mListener;
 

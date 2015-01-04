@@ -192,6 +192,8 @@ BEGIN_EVENT_TABLE(Meter, wxPanel)
    EVT_MOUSE_EVENTS(Meter::OnMouse)
    EVT_CONTEXT_MENU(Meter::OnContext)
    EVT_KEY_DOWN(Meter::OnKeyDown)
+   EVT_SET_FOCUS(Meter::OnSetFocus)
+   EVT_KILL_FOCUS(Meter::OnKillFocus)
    EVT_ERASE_BACKGROUND(Meter::OnErase)
    EVT_PAINT(Meter::OnPaint)
    EVT_SIZE(Meter::OnSize)
@@ -233,6 +235,12 @@ Meter::Meter(AudacityProject *project,
    mIcon(NULL)
 {
    mStyle = mDesiredStyle;
+
+   mIsFocused = false;
+
+#if wxUSE_ACCESSIBILITY
+   SetAccessible(new MeterAx(this));
+#endif
 
    UpdatePrefs();
 
@@ -622,6 +630,14 @@ void Meter::OnPaint(wxPaintEvent & WXUNUSED(event))
       }
    }
 
+#if defined(__WXMSW__) || defined(__WXGTK__)
+   if (mIsFocused)
+   {
+      wxRect r = mIconRect;
+      AColor::DrawFocus(destDC, r.Inflate(1, 1));
+   }
+#endif
+
    delete paintDC;
 }
 
@@ -693,13 +709,7 @@ void Meter::OnMouse(wxMouseEvent &evt)
 
 void Meter::OnContext(wxContextMenuEvent &evt)
 {
-   ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
-}
-
-void Meter::OnKeyDown(wxKeyEvent &evt)
-{
-   int code = evt.GetKeyCode();
-   if (code == WXK_WINDOWS_MENU || code == WXK_MENU)
+   if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no menu.
    {
       ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
    }
@@ -707,6 +717,38 @@ void Meter::OnKeyDown(wxKeyEvent &evt)
    {
       evt.Skip();
    }
+}
+
+void Meter::OnKeyDown(wxKeyEvent &evt)
+{
+   if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no menu.
+   {
+      int code = evt.GetKeyCode();
+      if (code == WXK_WINDOWS_MENU || code == WXK_MENU)
+      {
+         ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
+      }
+      else
+      {
+         evt.Skip();
+      }
+   }
+   else
+   {
+      evt.Skip();
+   }
+}
+
+void Meter::OnSetFocus(wxFocusEvent & WXUNUSED(evt))
+{
+   mIsFocused = true;
+   Refresh(false);
+}
+
+void Meter::OnKillFocus(wxFocusEvent & WXUNUSED(evt))
+{
+   mIsFocused = false;
+   Refresh(false);
 }
 
 void Meter::SetStyle(Style newStyle)
@@ -1437,6 +1479,14 @@ void Meter::RepaintBarsNow()
       }
 #endif
 
+#if defined(__WXMSW__) || defined(__WXGTK__)
+      if (mIsFocused)
+      {
+         wxRect r = mIconRect;
+         AColor::DrawFocus(dc, r.Inflate(1, 1));
+      }
+#endif
+
       // Compact style requires redrawing ruler
       if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
       {
@@ -1977,3 +2027,242 @@ wxString Meter::Key(const wxString & key) const
 
    return wxT("/Meter/Output/") + key;
 }
+
+#if wxUSE_ACCESSIBILITY
+
+MeterAx::MeterAx(wxWindow *window):
+   wxWindowAccessible(window)
+{
+}
+
+MeterAx::~MeterAx()
+{
+}
+
+// Performs the default action. childId is 0 (the action for this object)
+// or > 0 (the action for a child).
+// Return wxACC_NOT_SUPPORTED if there is no default action for this
+// window (e.g. an edit control).
+wxAccStatus MeterAx::DoDefaultAction(int WXUNUSED(childId))
+{
+   Meter *m = wxDynamicCast(GetWindow(), Meter);
+
+   if (m && m->mIsInput)
+   {
+      m->StartMonitoring();
+   }
+
+   return wxACC_OK;
+}
+
+// Retrieves the address of an IDispatch interface for the specified child.
+// All objects must support this property.
+wxAccStatus MeterAx::GetChild(int childId, wxAccessible** child)
+{
+   if (childId == wxACC_SELF)
+   {
+      *child = this;
+   }
+   else
+   {
+      *child = NULL;
+   }
+
+   return wxACC_OK;
+}
+
+// Gets the number of children.
+wxAccStatus MeterAx::GetChildCount(int* childCount)
+{
+   *childCount = 0;
+
+   return wxACC_OK;
+}
+
+// Gets the default action for this object (0) or > 0 (the action for
+// a child).  Return wxACC_OK even if there is no action. actionName
+// is the action, or the empty string if there is no action.  The
+// retrieved string describes the action that is performed on an
+// object, not what the object does as a result. For example, a
+// toolbar button that prints a document has a default action of
+// "Press" rather than "Prints the current document."
+wxAccStatus MeterAx::GetDefaultAction(int WXUNUSED(childId), wxString* actionName)
+{
+   *actionName = _("Press");
+
+   return wxACC_OK;
+}
+
+// Returns the description for this object or a child.
+wxAccStatus MeterAx::GetDescription(int WXUNUSED(childId), wxString *description)
+{
+   Meter *m = wxDynamicCast(GetWindow(), Meter);
+
+   if (m->mMonitoring)
+   {
+      *description += wxString::Format(_(" Monitoring "));
+   }
+   else if (m->mActive)
+   {
+      *description += wxString::Format(_(" Active "));
+   }
+
+   float peak = 0.;
+   for (int i = 0; i < m->mNumBars; i++)
+   {
+      peak = wxMax(peak, m->mBar[i].peakPeakHold);
+   }
+
+   if (m->mDB)
+   {
+      *description += wxString::Format(_(" Peak %.2f dB"), (peak * m->mDBRange) - m->mDBRange);
+   }
+   else
+   {
+      *description += wxString::Format(_(" Peak %.2f "), peak);
+   }
+
+   if (m->IsClipping())
+   {
+      *description += wxString::Format(_(" Clipped "));
+   }
+
+   return wxACC_OK;
+}
+
+// Gets the window with the keyboard focus.
+// If childId is 0 and child is NULL, no object in
+// this subhierarchy has the focus.
+// If this object has the focus, child should be 'this'.
+wxAccStatus MeterAx::GetFocus(int* childId, wxAccessible** child)
+{
+   *childId = 0;
+   *child = this;
+
+   return wxACC_OK;
+}
+
+// Returns help text for this object or a child, similar to tooltip text.
+wxAccStatus MeterAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
+{
+#if wxUSE_TOOLTIPS // Not available in wxX11
+   Meter *m = wxDynamicCast(GetWindow(), Meter);
+
+   wxToolTip *pTip = m->GetToolTip();
+   if (pTip)
+   {
+      *helpText = pTip->GetTip();
+   }
+
+   return wxACC_OK;
+#else
+   helpText->Clear();
+
+   return wxACC_NOT_SUPPORTED;
+#endif
+}
+
+// Returns the keyboard shortcut for this object or child.
+// Return e.g. ALT+K
+wxAccStatus MeterAx::GetKeyboardShortcut(int WXUNUSED(childId), wxString *shortcut)
+{
+   shortcut->Clear();
+
+   return wxACC_OK;
+}
+
+// Returns the rectangle for this object (id = 0) or a child element (id > 0).
+// rect is in screen coordinates.
+wxAccStatus MeterAx::GetLocation(wxRect & rect, int WXUNUSED(elementId))
+{
+   Meter *m = wxDynamicCast(GetWindow(), Meter);
+
+   rect = m->GetRect();
+   rect.SetPosition(m->GetParent()->ClientToScreen(rect.GetPosition()));
+
+   return wxACC_OK;
+}
+
+// Gets the name of the specified object.
+wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
+{
+   Meter *m = wxDynamicCast(GetWindow(), Meter);
+
+   *name = m->GetName();
+   if (name->IsEmpty())
+   {
+      *name = m->GetLabel();
+   }
+
+   if (name->IsEmpty())
+   {
+      *name = _("Meter");
+   }
+#if 0
+   if (m->mMonitoring)
+   {
+      *name += wxString::Format(_(" Monitoring "));
+   }
+   else
+   {
+      *name += wxString::Format(_(" Active "));
+   }
+
+   *name += wxString::Format(_(" Max Peak %f "), m->GetMaxPeak());
+
+   if (m->IsClipping())
+   {
+      *name += wxString::Format(_(" Clipped "));
+   }
+#endif
+   return wxACC_OK;
+}
+
+// Returns a role constant.
+wxAccStatus MeterAx::GetRole(int WXUNUSED(childId), wxAccRole* role)
+{
+      *role = wxROLE_SYSTEM_DIAGRAM;
+
+   return wxACC_OK;
+}
+
+// Gets a variant representing the selected children
+// of this object.
+// Acceptable values:
+// - a null variant (IsNull() returns TRUE)
+// - a list variant (GetType() == wxT("list"))
+// - an integer representing the selected child element,
+//   or 0 if this object is selected (GetType() == wxT("long"))
+// - a "void*" pointer to a wxAccessible child object
+wxAccStatus MeterAx::GetSelections(wxVariant * WXUNUSED(selections))
+{
+   return wxACC_NOT_IMPLEMENTED;
+}
+
+// Returns a state constant.
+wxAccStatus MeterAx::GetState(int WXUNUSED(childId), long* state)
+{
+   Meter *m = wxDynamicCast( GetWindow(), Meter );
+
+   *state = wxACC_STATE_SYSTEM_FOCUSABLE;
+
+   if (m->mActive)
+   {
+      *state |= wxACC_STATE_SYSTEM_BUSY;
+   }
+
+   // Do not use mButtonIsFocused is not set until after this method
+   // is called.
+   *state |= ( m == wxWindow::FindFocus() ? wxACC_STATE_SYSTEM_FOCUSED : 0 );
+
+   return wxACC_OK;
+}
+
+// Returns a localized string representing the value for the object
+// or child.
+wxAccStatus MeterAx::GetValue(int WXUNUSED(childId), wxString* WXUNUSED(strValue))
+{
+   return wxACC_NOT_SUPPORTED;
+}
+
+#endif

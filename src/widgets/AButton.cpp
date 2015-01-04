@@ -221,7 +221,8 @@ void AButton::Init(wxWindow * parent,
    mAlternateIdx = 0;
 
    mButtonIsFocused = false;
-   mFocusRect = GetRect().Deflate( 3, 3 );
+   mFocusRect = GetClientRect().Deflate( 3, 3 );
+   mForceFocusRect = false;
 
    SetSizeHints(mImages[0].mArr[0].GetMinSize(),
                 mImages[0].mArr[0].GetMaxSize());
@@ -284,6 +285,7 @@ void AButton::FollowModifierKeys()
 void AButton::SetFocusRect(wxRect & r)
 {
    mFocusRect = r;
+   mForceFocusRect = true;
 }
 
 AButton::AButtonState AButton::GetState()
@@ -337,7 +339,7 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    mImages[mAlternateIdx].mArr[buttonState].Draw(dc, GetClientRect());
 
-#if defined(__WXMSW__)
+#if defined(__WXMSW__) || defined(__WXGTK__)
    if( mButtonIsFocused )
    {
       AColor::DrawFocus( dc, mFocusRect );
@@ -352,7 +354,10 @@ void AButton::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void AButton::OnSize(wxSizeEvent & WXUNUSED(event))
 {
-   mFocusRect = GetRect().Deflate( 3, 3 );
+   if (!mForceFocusRect)
+   {
+      mFocusRect = GetClientRect().Deflate( 3, 3 );
+   }
    Refresh(false);
 }
 
