@@ -586,10 +586,8 @@ public:
    {
    };
 
-   bool OnExecute(const wxString & WXUNUSED(topic),
-                  wxChar *data,
-                  int WXUNUSED(size),
-                  wxIPCFormat WXUNUSED(format))
+   bool OnExec(const wxString & WXUNUSED(topic),
+               const wxString & data)
    {
       if (!gInited) {
          return false;
@@ -597,13 +595,11 @@ public:
 
       AudacityProject *project = CreateNewAudacityProject();
 
-      wxString cmd(data);
-
       // We queue a command event to the project responsible for
       // opening the file since it can be a long process and we
       // only have 5 seconds to return the Execute message to the
       // client.
-      if (!cmd.IsEmpty()) {
+      if (!data.IsEmpty()) {
          wxCommandEvent e(EVT_OPEN_AUDIO_FILE);
          e.SetString(data);
          project->GetEventHandler()->AddPendingEvent(e);
@@ -613,6 +609,16 @@ public:
 
       return true;
    }
+
+#if !wxCHECK_VERSION(3, 0, 0)
+   bool OnExecute(const wxString & topic,
+                  wxChar *data,
+                  int WXUNUSED(size),
+                  wxIPCFormat WXUNUSED(format))
+   {
+      return OnExec(topic, data);
+   }
+#endif
 
    virtual bool OnDisconnect()
    {
