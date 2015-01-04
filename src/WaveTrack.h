@@ -313,12 +313,19 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    // to the newly created clip.
    WaveClip* CreateClip();
 
-   /** @brief Get access to the last clip, or create a clip, if there is not
-    *  already one.
-    *
-    *  @return a pointer to a WaveClip at the end of the track
-    */
-   WaveClip* GetLastOrCreateClip();
+   /** @brief Get access to the most recently added clip, or create a clip,
+   *  if there is not already one.  THIS IS NOT NECESSARILY RIGHTMOST.
+   *
+   *  @return a pointer to the most recently added WaveClip
+   */
+   WaveClip* NewestOrNewClip();
+
+   /** @brief Get access to the last (rightmost) clip, or create a clip,
+   *  if there is not already one.
+   *
+   *  @return a pointer to a WaveClip at the end of the track
+   */
+   WaveClip* RightmostOrNewClip();
 
    // Get the linear index of a given clip (-1 if the clip is not found)
    int GetClipIndex(WaveClip* clip);

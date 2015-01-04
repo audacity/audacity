@@ -282,7 +282,7 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
          return false;
       }
       WaveTrack* track = tracks.Item(index);
-      WaveClip*  clip  = track->GetLastOrCreateClip();
+      WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
 
       // Load the blockfile from the XML

@@ -1326,21 +1326,21 @@ bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
                        sampleCount len, unsigned int stride /* = 1 */,
                        XMLWriter *blockFileLog /* = NULL */)
 {
-   return GetLastOrCreateClip()->Append(buffer, format, len, stride,
+   return RightmostOrNewClip()->Append(buffer, format, len, stride,
                                         blockFileLog);
 }
 
 bool WaveTrack::AppendAlias(wxString fName, sampleCount start,
                             sampleCount len, int channel,bool useOD)
 {
-   return GetLastOrCreateClip()->AppendAlias(fName, start, len, channel,useOD);
+   return RightmostOrNewClip()->AppendAlias(fName, start, len, channel, useOD);
 }
 
 
 bool WaveTrack::AppendCoded(wxString fName, sampleCount start,
                             sampleCount len, int channel, int decodeType)
 {
-   return GetLastOrCreateClip()->AppendCoded(fName, start, len, channel, decodeType);
+   return RightmostOrNewClip()->AppendCoded(fName, start, len, channel, decodeType);
 }
 
 ///gets an int with OD flags so that we can determine which ODTasks should be run on this track after save/open, etc.
@@ -1401,12 +1401,13 @@ sampleCount WaveTrack::GetMaxBlockSize()
 
 sampleCount WaveTrack::GetIdealBlockSize()
 {
-   return GetLastOrCreateClip()->GetSequence()->GetIdealBlockSize();
+   return NewestOrNewClip()->GetSequence()->GetIdealBlockSize();
 }
 
 bool WaveTrack::Flush()
 {
-   return GetLastOrCreateClip()->Flush();
+   // After appending, presumably.  Do this to the clip that gets appended.
+   return RightmostOrNewClip()->Flush();
 }
 
 bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
@@ -1491,7 +1492,7 @@ void WaveTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
 {
    // In case we opened a pre-multiclip project, we need to
    // simulate closing the waveclip tag.
-   GetLastOrCreateClip()->HandleXMLEndTag( wxT("waveclip") );
+   NewestOrNewClip()->HandleXMLEndTag(wxT("waveclip"));
 }
 
 XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
@@ -1502,13 +1503,13 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
    if (!wxStrcmp(tag, wxT("sequence")) || !wxStrcmp(tag, wxT("envelope")))
    {
       // This is a legacy project, so set the cached offset
-      GetLastOrCreateClip()->SetOffset(mLegacyProjectFileOffset);
+      NewestOrNewClip()->SetOffset(mLegacyProjectFileOffset);
 
       // Legacy project file tracks are imported as one single wave clip
       if (!wxStrcmp(tag, wxT("sequence")))
-         return GetLastOrCreateClip()->GetSequence();
+         return NewestOrNewClip()->GetSequence();
       else if (!wxStrcmp(tag, wxT("envelope")))
-         return GetLastOrCreateClip()->GetEnvelope();
+         return NewestOrNewClip()->GetEnvelope();
    }
 
    // JKC... for 1.1.0, one step better than what we had, but still badly broken.
@@ -1516,8 +1517,8 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
    if( !wxStrcmp( tag, wxT("waveblock" )))
    {
       // This is a legacy project, so set the cached offset
-      GetLastOrCreateClip()->SetOffset(mLegacyProjectFileOffset);
-      Sequence *pSeq = GetLastOrCreateClip()->GetSequence();
+      NewestOrNewClip()->SetOffset(mLegacyProjectFileOffset);
+      Sequence *pSeq = NewestOrNewClip()->GetSequence();
       return pSeq;
    }
 
@@ -1977,7 +1978,7 @@ WaveClip* WaveTrack::CreateClip()
    return clip;
 }
 
-WaveClip* WaveTrack::GetLastOrCreateClip()
+WaveClip* WaveTrack::NewestOrNewClip()
 {
    if (mClips.IsEmpty()) {
       WaveClip *clip = CreateClip();
@@ -1986,6 +1987,29 @@ WaveClip* WaveTrack::GetLastOrCreateClip()
    }
    else
       return mClips.GetLast()->GetData();
+}
+
+WaveClip* WaveTrack::RightmostOrNewClip()
+{
+   if (mClips.IsEmpty()) {
+      WaveClip *clip = CreateClip();
+      clip->SetOffset(mOffset);
+      return clip;
+   }
+   else
+   {
+      WaveClipList::compatibility_iterator it = GetClipIterator();
+      WaveClip *rightmost = it->GetData();
+      double maxOffset = rightmost->GetOffset();
+      for (it = it->GetNext(); it; it = it->GetNext())
+      {
+         WaveClip *clip = it->GetData();
+         double offset = clip->GetOffset();
+         if (maxOffset < offset)
+            maxOffset = offset, rightmost = clip;
+      }
+      return rightmost;
+   }
 }
 
 int WaveTrack::GetClipIndex(WaveClip* clip)
