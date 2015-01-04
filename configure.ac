@@ -186,11 +186,11 @@ AC_ARG_ENABLE(dynamic-loading,
 
 AC_ARG_ENABLE(gtk3, [AS_HELP_STRING([--enable-gtk3],[enable use of GTK+-3.0 (default: use GTK+-2.0)])], enable_gtk3=$enableval, enable_gtk3=no)
 
-dnl AC_ARG_WITH(wx-version,
-dnl            [AS_HELP_STRING([--with-wx-version],
-dnl                            [select wxWidgets version (if both installed) [2.8,]])],
-dnl            wx_preference="--version=$withval",
-dnl            wx_preference="")
+AC_ARG_WITH(wx-version,
+           [AS_HELP_STRING([--with-wx-version],
+                           [select wxWidgets version (if both installed) [2.8,]])],
+           wx_preference="--version=$withval",
+           wx_preference="")
 dnl At the moment we only support wx2.8. If we start supporting 3.0 when it
 dnl comes out, we'll want it back again.
 

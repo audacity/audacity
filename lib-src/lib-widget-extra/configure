@@ -774,6 +774,7 @@ enable_libtool_lock
 enable_static_wx
 enable_unicode
 enable_debug
+with_wx_version
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1432,6 +1433,7 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot=DIR Search for dependent libraries within DIR
                         (or the compiler's sysroot if not specified).
+  --with-wx-version       select wxWidgets version (if both installed) [2.8,]
 
 Some influential environment variables:
   CC          C compiler command
@@ -16230,6 +16232,14 @@ else
   debug_preference="no"
 fi
 
+
+
+# Check whether --with-wx-version was given.
+if test "${with_wx_version+set}" = set; then :
+  withval=$with_wx_version; wx_preference="--version=$withval"
+else
+  wx_preference=""
+fi
 
 
 

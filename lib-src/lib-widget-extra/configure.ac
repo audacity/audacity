@@ -63,11 +63,11 @@ AC_ARG_ENABLE(debug,
             debug_preference="$enableval",
             debug_preference="no")
 
-dnl AC_ARG_WITH(wx-version,
-dnl             [AS_HELP_STRING([--with-wx-version],
-dnl                            [select wxWidgets version (if both installed) [2.8,]])],
-dnl            wx_preference="--version=$withval",
-dnl            wx_preference="")
+AC_ARG_WITH(wx-version,
+            [AS_HELP_STRING([--with-wx-version],
+                           [select wxWidgets version (if both installed) [2.8,]])],
+           wx_preference="--version=$withval",
+           wx_preference="")
 dnl Right now only support wx 2.8
 
 dnl ----------------------------------------------------

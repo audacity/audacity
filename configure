@@ -956,6 +956,7 @@ enable_sse
 enable_universal_binary
 enable_dynamic_loading
 enable_gtk3
+with_wx_version
 with_expat
 with_ffmpeg
 with_lame
@@ -1723,6 +1724,7 @@ Optional Packages:
                         (or the compiler's sysroot if not specified).
   --with-lib-preference   whether to use local and/or system libraries, in
                           order of preference (default="system local")
+  --with-wx-version       select wxWidgets version (if both installed) [2.8,]
   --with-expat            which expat to use for XML file support:
                           [system,local]
   --with-ffmpeg           use ffmpeg for import and export support
@@ -19188,6 +19190,14 @@ else
   enable_gtk3=no
 fi
 
+
+
+# Check whether --with-wx-version was given.
+if test "${with_wx_version+set}" = set; then :
+  withval=$with_wx_version; wx_preference="--version=$withval"
+else
+  wx_preference=""
+fi
 
 
 
