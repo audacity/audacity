@@ -2271,6 +2271,30 @@ bool VSTEffect::CloseUI()
 
    RemoveHandler();
 
+   if (mNames)
+   {
+      delete [] mNames;
+      mNames = NULL;
+   }
+
+   if (mSliders)
+   {
+      delete [] mSliders;
+      mSliders = NULL;
+   }
+
+   if (mDisplays)
+   {
+      delete [] mDisplays;
+      mDisplays = NULL;
+   }
+
+   if (mLabels)
+   {
+      delete [] mLabels;
+      mLabels = NULL;
+   }
+
    mUIHost = NULL;
    mParent = NULL;
    mDialog = NULL;
