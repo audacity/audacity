@@ -1329,6 +1329,7 @@ void AudacityApp::FinishInits()
       // Important: Prevent deleting any temporary files!
       DirManager::SetDontDeleteTempFiles();
       QuitAudacity(true);
+      return;
    }
 
    //
