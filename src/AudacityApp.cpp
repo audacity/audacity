@@ -1627,6 +1627,12 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
    }
    else if ( mChecker->IsAnotherRunning() ) {
 #if defined(__WXMSW__) || defined(__WXGTK__)
+      // Get the 1st argument (filename) if there is one.
+      wxString cmd;
+      if (argc > 1) {
+         cmd = argv[1];
+      }
+
       //
       // On Windows and Linux, we attempt to make a connection
       // to an already active Audacity.  If successful, we send
@@ -1643,7 +1649,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
                                       appl,
                                       IPC_TOPIC);
          if (conn) {
-            bool ok = conn->Execute(argv[1]);
+            bool ok = conn->Execute(cmd);
 
             conn->Disconnect();
             delete conn;
