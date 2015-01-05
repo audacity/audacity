@@ -2112,10 +2112,12 @@ bool AudioUnitEffect::HasOptions()
 void AudioUnitEffect::ShowOptions()
 {
    AudioUnitEffectOptionsDialog dlg(mParent, mHost);
-   dlg.ShowModal();
-
-   mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
-   mHost->GetSharedConfig(wxT("Options"), wxT("UseGUI"), mUseGUI, true);
+   if (dlg.ShowModal())
+   {
+      // Reinitialize configuration settings
+      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
+      mHost->GetSharedConfig(wxT("Options"), wxT("UseGUI"), mUseGUI, true);
+   }
 }
 
 // ============================================================================
