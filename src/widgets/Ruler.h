@@ -268,7 +268,10 @@ public:
    void SetProject(AudacityProject* project) {mProject = project;};
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
+   void RegenerateTooltips();
+
 private:
+   void OnCapture(wxCommandEvent & evt);
    void OnErase(wxEraseEvent &evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
@@ -305,6 +308,8 @@ private:
 
    double mPlayRegionStart;
    double mPlayRegionEnd;
+
+   bool mIsRecording;
 
    enum MouseEventState {
       mesNone,

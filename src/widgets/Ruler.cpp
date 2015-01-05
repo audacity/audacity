@@ -62,6 +62,7 @@ array of Ruler::Label.
 #include <wx/dcbuffer.h>
 #include <wx/settings.h>
 
+#include "../AudioIO.h"
 #include "../Internat.h"
 #include "../Project.h"
 #include "Ruler.h"
@@ -70,6 +71,7 @@ array of Ruler::Label.
 #include "../AllThemeResources.h"
 #include "../Experimental.h"
 #include "../TimeTrack.h"
+#include <wx/tooltip.h>
 
 #define max(a,b)  ( (a<b)?b:a )
 
@@ -1632,11 +1634,51 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
                     mInner.GetBottom() );
    ruler.SetLabelEdges( false );
    ruler.SetFormat( Ruler::TimeFormat );
+
+   mIsRecording = false;
+
+#if wxUSE_TOOLTIPS
+   RegenerateTooltips();
+   wxToolTip::Enable(true);
+#endif
+
+   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
+                     wxCommandEventHandler(AdornedRulerPanel::OnCapture),
+                     NULL,
+                     this);
 }
 
 AdornedRulerPanel::~AdornedRulerPanel()
 {
    delete mBuffer;
+}
+
+void AdornedRulerPanel::RegenerateTooltips()
+{
+#if wxUSE_TOOLTIPS
+   if (mIsRecording)
+      this->SetToolTip(_("Timeline actions disabled during recording"));
+   else
+      this->SetToolTip(_("Timeline - Quick Play enabled"));
+#endif
+}
+
+void AdornedRulerPanel::OnCapture(wxCommandEvent & evt)
+{
+   evt.Skip();
+
+   if (evt.GetInt() != 0)
+   {
+      // Set cursor immediately  because OnMouseEvents is not called
+      // if recording is initiated by a modal window (Timer Record).
+      SetCursor(wxCursor(wxCURSOR_DEFAULT));
+      mIsRecording = true;
+   }
+   else {
+      SetCursor(wxCursor(wxCURSOR_HAND));
+      mIsRecording = false;
+   }
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnErase(wxEraseEvent & WXUNUSED(evt))
@@ -1723,11 +1765,9 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
-   // Prevent accidentally stopping recording.
-   if (GetActiveProject()->GetControlToolBar()->IsRecordDown()) {
-      SetCursor(wxCursor(wxCURSOR_DEFAULT));
+   // Disable mouse actions on Timeline while recording.
+   if (mIsRecording)
       return;
-   }
 
    bool isWithinStart = IsWithinMarker(evt.GetX(), mPlayRegionStart);
    bool isWithinEnd = IsWithinMarker(evt.GetX(), mPlayRegionEnd);

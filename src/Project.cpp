@@ -742,6 +742,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mSnapTo(gPrefs->Read(wxT("/SnapTo"), SNAP_OFF)),
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
      mDirty(false),
+     mRuler(NULL),
      mTrackPanel(NULL),
      mTrackFactory(NULL),
      mAutoScrolling(false),
@@ -1065,6 +1066,10 @@ void AudacityProject::UpdatePrefs()
 
    if (mToolManager) {
       mToolManager->UpdatePrefs();
+   }
+
+   if (mRuler) {
+      mRuler->RegenerateTooltips();
    }
 
    // The toolbars will be recreated, so make sure we don't leave
