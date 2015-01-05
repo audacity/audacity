@@ -658,7 +658,10 @@ void EffectManager::RealtimeProcessStart()
    {
       for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
       {
-         mRealtimeEffects[i]->RealtimeProcessStart();
+         if (mRealtimeEffects[i]->IsRealtimeActive())
+         {
+            mRealtimeEffects[i]->RealtimeProcessStart();
+         }
       }
    }
 
@@ -754,7 +757,10 @@ void EffectManager::RealtimeProcessEnd()
    {
       for (size_t i = 0, cnt = mRealtimeEffects.GetCount(); i < cnt; i++)
       {
-         mRealtimeEffects[i]->RealtimeProcessEnd();
+         if (mRealtimeEffects[i]->IsRealtimeActive())
+         {
+            mRealtimeEffects[i]->RealtimeProcessEnd();
+         }
       }
    }
 
