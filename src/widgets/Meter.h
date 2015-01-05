@@ -186,6 +186,7 @@ class Meter : public wxPanel
    void OnSize(wxSizeEvent &evt);
    void OnMouse(wxMouseEvent &evt);
    void OnKeyDown(wxKeyEvent &evt);
+   void OnKeyUp(wxKeyEvent &evt);
    void OnContext(wxContextMenuEvent &evt);
    void OnSetFocus(wxFocusEvent &evt);
    void OnKillFocus(wxFocusEvent &evt);

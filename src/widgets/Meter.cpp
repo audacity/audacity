@@ -192,6 +192,7 @@ BEGIN_EVENT_TABLE(Meter, wxPanel)
    EVT_MOUSE_EVENTS(Meter::OnMouse)
    EVT_CONTEXT_MENU(Meter::OnContext)
    EVT_KEY_DOWN(Meter::OnKeyDown)
+   EVT_KEY_UP(Meter::OnKeyUp)
    EVT_SET_FOCUS(Meter::OnSetFocus)
    EVT_KILL_FOCUS(Meter::OnKillFocus)
    EVT_ERASE_BACKGROUND(Meter::OnErase)
@@ -210,7 +211,7 @@ Meter::Meter(AudacityProject *project,
              const wxSize& size /*= wxDefaultSize*/,
              Style style /*= HorizontalStereo*/,
              float fDecayRate /*= 60.0f*/)
-: wxPanel(parent, id, pos, size),
+: wxPanel(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
    mQueue(1024),
    mWidth(size.x),
@@ -721,21 +722,48 @@ void Meter::OnContext(wxContextMenuEvent &evt)
 
 void Meter::OnKeyDown(wxKeyEvent &evt)
 {
-   if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no menu.
+   switch (evt.GetKeyCode())
    {
-      int code = evt.GetKeyCode();
-      if (code == WXK_WINDOWS_MENU || code == WXK_MENU)
+   case WXK_RETURN:
+   case WXK_NUMPAD_ENTER:
+      // Ignore them...will be handled in OnKeyUp
+      break;
+   case WXK_WINDOWS_MENU:
+   case WXK_MENU:
+      // Ignore them...will be handled in OnContext
+      break;
+   case WXK_RIGHT:
+      Navigate(wxNavigationKeyEvent::IsForward);
+      break;
+   case WXK_LEFT:
+      Navigate(wxNavigationKeyEvent::IsBackward);
+      break;
+   case WXK_TAB:
+      if (evt.ShiftDown())
+         Navigate(wxNavigationKeyEvent::IsBackward);
+      else
+         Navigate(wxNavigationKeyEvent::IsForward);
+      break;
+   default:
+      evt.Skip();
+      break;
+   }
+}
+
+void Meter::OnKeyUp(wxKeyEvent &evt)
+{
+   switch (evt.GetKeyCode())
+   {
+   case WXK_RETURN:
+   case WXK_NUMPAD_ENTER:
+      if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no menu.
       {
          ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
       }
-      else
-      {
-         evt.Skip();
-      }
-   }
-   else
-   {
+      break;
+   default:
       evt.Skip();
+      break;
    }
 }
 
@@ -2096,38 +2124,9 @@ wxAccStatus MeterAx::GetDefaultAction(int WXUNUSED(childId), wxString* actionNam
 // Returns the description for this object or a child.
 wxAccStatus MeterAx::GetDescription(int WXUNUSED(childId), wxString *description)
 {
-   Meter *m = wxDynamicCast(GetWindow(), Meter);
+   description->Clear();
 
-   if (m->mMonitoring)
-   {
-      *description += wxString::Format(_(" Monitoring "));
-   }
-   else if (m->mActive)
-   {
-      *description += wxString::Format(_(" Active "));
-   }
-
-   float peak = 0.;
-   for (int i = 0; i < m->mNumBars; i++)
-   {
-      peak = wxMax(peak, m->mBar[i].peakPeakHold);
-   }
-
-   if (m->mDB)
-   {
-      *description += wxString::Format(_(" Peak %.2f dB"), (peak * m->mDBRange) - m->mDBRange);
-   }
-   else
-   {
-      *description += wxString::Format(_(" Peak %.2f "), peak);
-   }
-
-   if (m->IsClipping())
-   {
-      *description += wxString::Format(_(" Clipped "));
-   }
-
-   return wxACC_OK;
+   return wxACC_NOT_SUPPORTED;
 }
 
 // Gets the window with the keyboard focus.
@@ -2145,21 +2144,9 @@ wxAccStatus MeterAx::GetFocus(int* childId, wxAccessible** child)
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus MeterAx::GetHelpText(int WXUNUSED(childId), wxString *helpText)
 {
-#if wxUSE_TOOLTIPS // Not available in wxX11
-   Meter *m = wxDynamicCast(GetWindow(), Meter);
-
-   wxToolTip *pTip = m->GetToolTip();
-   if (pTip)
-   {
-      *helpText = pTip->GetTip();
-   }
-
-   return wxACC_OK;
-#else
    helpText->Clear();
 
    return wxACC_NOT_SUPPORTED;
-#endif
 }
 
 // Returns the keyboard shortcut for this object or child.
@@ -2177,8 +2164,8 @@ wxAccStatus MeterAx::GetLocation(wxRect & rect, int WXUNUSED(elementId))
 {
    Meter *m = wxDynamicCast(GetWindow(), Meter);
 
-   rect = m->GetRect();
-   rect.SetPosition(m->GetParent()->ClientToScreen(rect.GetPosition()));
+   rect = m->mIconRect;
+   rect.SetPosition(m->ClientToScreen(rect.GetPosition()));
 
    return wxACC_OK;
 }
@@ -2198,23 +2185,36 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
    {
       *name = _("Meter");
    }
-#if 0
+
    if (m->mMonitoring)
    {
       *name += wxString::Format(_(" Monitoring "));
    }
-   else
+   else if (m->mActive)
    {
       *name += wxString::Format(_(" Active "));
    }
 
-   *name += wxString::Format(_(" Max Peak %f "), m->GetMaxPeak());
+   float peak = 0.;
+   for (int i = 0; i < m->mNumBars; i++)
+   {
+      peak = wxMax(peak, m->mBar[i].peakPeakHold);
+   }
+
+   if (m->mDB)
+   {
+      *name += wxString::Format(_(" Peak %.2f dB"), (peak * m->mDBRange) - m->mDBRange);
+   }
+   else
+   {
+      *name += wxString::Format(_(" Peak %.2f "), peak);
+   }
 
    if (m->IsClipping())
    {
       *name += wxString::Format(_(" Clipped "));
    }
-#endif
+
    return wxACC_OK;
 }
 
