@@ -1650,6 +1650,10 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
 
 AdornedRulerPanel::~AdornedRulerPanel()
 {
+   wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
+                        wxCommandEventHandler(AdornedRulerPanel::OnCapture),
+                        NULL,
+                        this);
    delete mBuffer;
 }
 
