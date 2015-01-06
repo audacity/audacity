@@ -537,14 +537,21 @@ wxString DirManager::GetProjectName()
 wxLongLong DirManager::GetFreeDiskSpace()
 {
    wxLongLong freeSpace = -1;
-   wxString path = projPath;
+   wxFileName path;
 
-   if (projPath == wxT(""))
-      path = mytemp;
+   path.SetPath(projPath.IsEmpty() ? mytemp : projPath);
+
+   // Use the parent directory if the project directory hasn't yet been created
+   if (!path.DirExists())
    {
-      if (!wxGetDiskSpace(path, NULL, &freeSpace))
-         freeSpace = -1;
+      path.RemoveLastDir();
    }
+
+   if (!wxGetDiskSpace(path.GetFullPath(), NULL, &freeSpace))
+   {
+      freeSpace = -1;
+   }
+
    return freeSpace;
 }
 

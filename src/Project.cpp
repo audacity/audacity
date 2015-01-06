@@ -4212,7 +4212,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
-   if (gAudioIO->GetNumCaptureChannels() > 0) {
+   if (GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
       wxLongLong freeSpace = mDirManager->GetFreeDiskSpace();
       if (freeSpace >= 0) {
          wxString msg;
