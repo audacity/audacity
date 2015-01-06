@@ -2192,6 +2192,19 @@ EffectUIHost::~EffectUIHost()
 {
    if (mInitialized)
    {
+      mInitialized = false;
+
+      wxTheApp->Disconnect(EVT_AUDIOIO_PLAYBACK,
+                           wxCommandEventHandler(EffectUIHost::OnPlayback),
+                           NULL,
+                           this);
+
+      wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
+                           wxCommandEventHandler(EffectUIHost::OnCapture),
+                           NULL,
+                           this);
+
+      EffectManager::Get().RealtimeRemoveEffect(mEffect);
    }
 
    if (mClient)
