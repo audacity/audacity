@@ -270,8 +270,12 @@ bool TimerRecordDialog::RunWaitDialog()
          updateResult = progress.Update();
          bIsRecording = (wxDateTime::UNow() <= m_DateTime_End); // Call UNow() again for extra accuracy...
       }
-      pProject->OnStop();
    }
+
+   // Must do this AFTER the timer project dialog has been deleted to ensure the application
+   // responds to the AUDIOIO events...see not about bug #334 in the ProgressDialog constructor.
+   pProject->OnStop();
+
    // Let the caller handle cancellation or failure from recording progress.
    if (updateResult == eProgressCancelled || updateResult == eProgressFailed)
       return false;
