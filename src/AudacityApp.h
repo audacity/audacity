@@ -220,16 +220,15 @@ class AudacityApp:public wxApp {
    void DeInitCommandHandler();
 
    bool InitTempDir();
-   bool CreateSingleInstanceChecker(wxString dir);
+   bool CreateSingleInstanceChecker();
 
    /* utility method for printing the command line help message */
    void PrintCommandLineHelp(void);
 
    bool mWindowRectAlreadySaved;
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
    IPCServ *mIPCServ;
-#endif
+
  public:
     DECLARE_EVENT_TABLE()
 };

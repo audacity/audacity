@@ -564,8 +564,6 @@ GnomeShutdown GnomeShutdownInstance;
 
 #endif
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
-
 //
 // DDE support for opening multiple files with one instance
 // of Audacity.
@@ -648,8 +646,6 @@ public:
       return new IPCConn();
    };
 };
-
-#endif
 
 #ifndef __WXMAC__
 IMPLEMENT_APP(AudacityApp)
@@ -1041,9 +1037,6 @@ bool AudacityApp::OnInit()
    wxSystemOptions::SetOption( wxMAC_WINDOW_PLAIN_TRANSITION, 1 );
 #endif
 
-// LL: Moved here from InitPreferences() to ensure VST effect
-//     discovery writes configuration to the correct directory
-//     on OSX with case-sensitive file systems.
 #ifdef AUDACITY_NAME
    wxString appName = wxT(AUDACITY_NAME);
    wxString vendorName = wxT(AUDACITY_NAME);
@@ -1063,6 +1056,20 @@ bool AudacityApp::OnInit()
 
    wxFileSystem::AddHandler(new wxZipFSHandler);
 
+   // Use the system language for dialogs that are displayed before
+   // the user selected language is available from preferences.
+   mLocale = NULL;
+   InitLang(GetSystemLanguageCode());
+
+   // Check for another running instance.  This must be done before
+   // any activities that may modify the same resources of the other
+   // instance, like initializing preferences.
+   if (!CreateSingleInstanceChecker()) {
+      return false;
+   }
+
+   // Now we know we're the only instance running, so we're safe to
+   // initialize preferences
    InitPreferences();
 
    #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
@@ -1161,18 +1168,15 @@ bool AudacityApp::OnInit()
                          wxGetUserId().c_str());
    #endif //__WXMAC__
 
-   // Locale
-   // wxWidgets 2.3 has a much nicer wxLocale API.  We can make this code much
-   // better once we move to wx 2.3/2.4.
+   // Reset the language now that translation paths and preferences are available
 
    wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 
    if (lang == wxT(""))
       lang = GetSystemLanguageCode();
 
-   mLocale = NULL;
    InitLang( lang );
-
+   
    // Init DirManager, which initializes the temp directory
    // If this fails, we must exit the program.
 
@@ -1515,52 +1519,44 @@ bool AudacityApp::InitTempDir()
 {
    // We need to find a temp directory location.
 
-   wxString tempFromPrefs = gPrefs->Read(wxT("/Directories/TempDir"), wxT(""));
-   wxString tempDefaultLoc = wxGetApp().defaultTempDir;
+   wxFileName temp;
+   wxArrayString paths;
+   paths.Add(gPrefs->Read(wxT("/Directories/TempDir"), wxEmptyString));
+   paths.Add(defaultTempDir);
 
-   wxString temp = wxT("");
+   for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++)
+   {
+      temp.SetPath(paths[i]);
+      temp.AppendDir(wxGetUserId() + wxT("-temp-dir"));
 
-   #ifdef __WXGTK__
-   if (tempFromPrefs.Length() > 0 && tempFromPrefs[0] != wxT('/'))
-      tempFromPrefs = wxT("");
-   #endif
+      if (temp.IsOk() && temp.IsAbsolute())
+      {
+         if (temp.DirExists() || temp.Mkdir(0755, wxPATH_MKDIR_FULL))
+         {
+#ifdef __UNIX__
+            // Check temp directory ownership on *nix systems only
+            wxStructStat stats;
+            if (wxLstat(temp.GetFullPath(), &stats) != 0 || stats.st_uid != geteuid())
+            {
+               temp.Clear();
+               continue;
+            }
 
-   // Stop wxWidgets from printing its own error messages
+            // The permissions don't always seem to be set on
+            // some platforms.  Hopefully this fixes it...
+            chmod(OSFILENAME(temp.GetFullPath()), 0755);
+#endif
 
-   wxLogNull logNo;
-
-   // Try temp dir that was stored in prefs first
-
-   if (tempFromPrefs != wxT("")) {
-      if (wxDirExists(tempFromPrefs))
-         temp = tempFromPrefs;
-      else if (wxMkdir(tempFromPrefs, 0755))
-         temp = tempFromPrefs;
-   }
-
-   // If that didn't work, try the default location
-
-   if (temp==wxT("") && tempDefaultLoc != wxT("")) {
-      if (wxDirExists(tempDefaultLoc))
-         temp = tempDefaultLoc;
-      else if (wxMkdir(tempDefaultLoc, 0755))
-         temp = tempDefaultLoc;
-   }
-
-   // Check temp directory ownership on *nix systems only
-   #ifdef __UNIX__
-   struct stat tempStatBuf;
-   if ( lstat(temp.mb_str(), &tempStatBuf) != 0 ) {
-      temp.clear();
-   }
-   else {
-      if ( geteuid() != tempStatBuf.st_uid ) {
-         temp.clear();
+            gPrefs->Write(wxT("/Directories/TempDir"), paths[i]) && gPrefs->Flush();
+            DirManager::SetTempDir(temp.GetFullPath());
+            break;
+         }
       }
+      temp.Clear();
    }
-   #endif
 
-   if (temp == wxT("")) {
+   if (!temp.IsOk())
+   {
       // Failed
       wxMessageBox(_("Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
 
@@ -1572,44 +1568,25 @@ bool AudacityApp::InitTempDir()
       return false;
    }
 
-   // The permissions don't always seem to be set on
-   // some platforms.  Hopefully this fixes it...
-   #ifdef __UNIX__
-   chmod(OSFILENAME(temp), 0755);
-   #endif
-
-   bool bSuccess = gPrefs->Write(wxT("/Directories/TempDir"), temp) && gPrefs->Flush();
-   DirManager::SetTempDir(temp);
-
-   // Make sure the temp dir isn't locked by another process.
-   if (!CreateSingleInstanceChecker(temp))
-      return false;
-
-   return bSuccess;
+   return true;
 }
 
 // Return true if there are no other instances of Audacity running,
 // false otherwise.
-//
-// Use "dir" for creating lockfiles (on OS X and Unix).
-
-bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
+bool AudacityApp::CreateSingleInstanceChecker()
 {
-   wxLogNull dontLog;
-
-   wxString name = wxString::Format(wxT("audacity-lock-%s"), wxGetUserId().c_str());
+   wxString name = wxString(wxT(".")) + IPC_APPL;
    mChecker = new wxSingleInstanceChecker();
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
    wxString appl = IPC_APPL;
-#if defined(__WXGTK__)
-   appl.Printf(wxT("%s/%s.sock"), dir.c_str(), IPC_APPL);
-#endif
+
+#if defined(__WXGTK__) || defined(__WXMAC__)
+   appl = wxGetHomeDir() + wxT("/") + name + wxT(".sock");
 #endif
 
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
 
-   if (!mChecker->Create(name, dir)) {
+   if (!mChecker->Create(name + wxT(".lock"), wxGetHomeDir())) {
       // Error initializing the wxSingleInstanceChecker.  We don't know
       // whether there is another instance running or not.
 
@@ -1627,7 +1604,6 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
       }
    }
    else if ( mChecker->IsAnotherRunning() ) {
-#if defined(__WXMSW__) || defined(__WXGTK__)
       // Get the 1st argument (filename) if there is one.
       wxString cmd;
       if (argc > 1) {
@@ -1642,10 +1618,10 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
       wxClient client;
       wxConnectionBase *conn;
 
-      // We try up to 10 times since there's a small window
+      // We try up to 50 times since there's a small window
       // where the DDE server on Windows may not have been fully
       // initialized.
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < 50; i++) {
          conn = client.MakeConnection(wxEmptyString,
                                       appl,
                                       IPC_TOPIC);
@@ -1663,7 +1639,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
          }
          wxMilliSleep(100);
       }
-#endif
+
       // There is another copy of Audacity running.  Force quit.
 
       wxString prompt =
@@ -1676,10 +1652,8 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
       return false;
    }
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
    // Create the DDE server
    mIPCServ = new IPCServ(appl);
-#endif
 
    return true;
 }
@@ -1843,9 +1817,7 @@ int AudacityApp::OnExit()
       Dispatch();
    }
 
-#if defined(__WXMSW__) || defined(__WXGTK__)
    delete mIPCServ;
-#endif
 
    Importer::Get().Terminate();
 
