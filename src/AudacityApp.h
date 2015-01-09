@@ -23,6 +23,7 @@
 #include <wx/intl.h>
 #include <wx/snglinst.h>
 #include <wx/log.h>
+#include <wx/socket.h>
 #include <wx/timer.h>
 
 #include "widgets/FileHistory.h"
@@ -138,6 +139,10 @@ class AudacityApp:public wxApp {
 
    void OnTimer(wxTimerEvent & event);
 
+   // IPC communication
+   void OnServerEvent(wxSocketEvent & evt);
+   void OnSocketEvent(wxSocketEvent & evt);
+
    /** \brief Mark playback as having missing aliased blockfiles
      *
      * Playback will continue, but the missing files will be silenced
@@ -227,7 +232,11 @@ class AudacityApp:public wxApp {
 
    bool mWindowRectAlreadySaved;
 
+#if defined(__WXMSW__)
    IPCServ *mIPCServ;
+#else
+   wxSocketServer *mIPCServ;
+#endif
 
  public:
     DECLARE_EVENT_TABLE()

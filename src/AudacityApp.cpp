@@ -53,6 +53,7 @@ It handles initialization and termination by subclassing wxApp.
 // chmod, lstat, geteuid
 #ifdef __UNIX__
 #include <sys/types.h>
+#include <sys/file.h>
 #include <sys/stat.h>
 #endif
 
@@ -679,11 +680,11 @@ int main(int argc, char *argv[])
 }
 #endif
 
-#ifdef __WXMAC__
-
 // Where drag/drop or "Open With" filenames get stored until
 // the timer routine gets around to picking them up.
 static wxArrayString ofqueue;
+
+#ifdef __WXMAC__
 
 // in response of an open-document apple event
 void AudacityApp::MacOpenFile(const wxString &fileName)
@@ -719,6 +720,10 @@ typedef int (AudacityApp::*SPECIALKEYEVENT)(wxKeyEvent&);
 #define ID_RECENT_FIRST 6101
 #define ID_RECENT_LAST  6112
 
+// IPC communication
+#define ID_IPC_SERVER   6200
+#define ID_IPC_SOCKET   6201
+
 // we don't really care about the timer id, but set this value just in case we do in the future
 #define kAudacityAppTimerID 0
 
@@ -736,6 +741,12 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_MENU(wxID_PREFERENCES, AudacityApp::OnMenuPreferences)
    EVT_MENU(wxID_EXIT, AudacityApp::OnMenuExit)
 #endif
+
+#ifndef __WXMSW__
+   EVT_SOCKET(ID_IPC_SERVER, AudacityApp::OnServerEvent)
+   EVT_SOCKET(ID_IPC_SOCKET, AudacityApp::OnSocketEvent)
+#endif
+
    // Recent file event handlers.
    EVT_MENU(ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
    EVT_MENU_RANGE(ID_RECENT_FIRST, ID_RECENT_LAST, AudacityApp::OnMRUFile)
@@ -821,27 +832,36 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-#if defined(__WXMAC__)
    // Filenames are queued when Audacity receives the a few of the
    // AppleEvent messages (via wxWidgets).  So, open any that are
    // in the queue and clean the queue.
-   if (ofqueue.GetCount()) {
-      // Load each file on the queue
-      while (ofqueue.GetCount()) {
-         wxString name(ofqueue[0]);
-         ofqueue.RemoveAt(0);
-         // TODO: Handle failures better.
-         // Some failures are OK, e.g. file not found, just would-be-nices to do better,
-         // so FAIL_MSG is more a case of an enhancement request than an actual  problem.
-         // LL:  In all but one case an appropriate message is already displayed.  The
-         //      instance that a message is NOT displayed is when a failure to write
-         //      to the config file has occurred.
-         if (!MRUOpen(name)) {
-            wxFAIL_MSG(wxT("MRUOpen failed"));
+   if (gInited) {
+      if (ofqueue.GetCount()) {
+         // Load each file on the queue
+         while (ofqueue.GetCount()) {
+            wxString name(ofqueue[0]);
+            ofqueue.RemoveAt(0);
+
+            // Get the user's attention if no file name was specified
+            if (name.IsEmpty()) {
+               // Get the users attention
+               GetActiveProject()->Raise();
+               GetActiveProject()->RequestUserAttention();
+               continue;
+            }
+
+            // TODO: Handle failures better.
+            // Some failures are OK, e.g. file not found, just would-be-nices to do better,
+            // so FAIL_MSG is more a case of an enhancement request than an actual  problem.
+            // LL:  In all but one case an appropriate message is already displayed.  The
+            //      instance that a message is NOT displayed is when a failure to write
+            //      to the config file has occurred.
+            if (!MRUOpen(name)) {
+               wxFAIL_MSG(wxT("MRUOpen failed"));
+            }
          }
       }
    }
-#endif
 
    // Check if a warning for missing aliased files should be displayed
    if (ShouldShowMissingAliasedFileWarning()) {
@@ -1027,6 +1047,9 @@ bool AudacityApp::OnInit()
    m_aliasMissingWarningShouldShow = true;
    m_LastMissingBlockFile = NULL;
 
+   mChecker = NULL;
+   mIPCServ = NULL;
+
 #if defined(__WXGTK__)
    // Workaround for bug 154 -- initialize to false
    inKbdHandler = false;
@@ -1203,6 +1226,7 @@ bool AudacityApp::OnInit()
 #if !wxCHECK_VERSION(3, 0, 0)
    FinishInits();
 #endif
+
    return TRUE;
 }
 
@@ -1576,107 +1600,237 @@ bool AudacityApp::InitTempDir()
 bool AudacityApp::CreateSingleInstanceChecker()
 {
    wxString name = wxString(wxT(".")) + IPC_APPL;
-   mChecker = new wxSingleInstanceChecker();
-
-   wxString appl = IPC_APPL;
-
-#if defined(__WXGTK__) || defined(__WXMAC__)
-   appl = wxGetHomeDir() + wxT("/") + name + wxT(".sock");
-#endif
 
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
+   bool success;
 
-   if (!mChecker->Create(name + wxT(".lock"), wxGetHomeDir())) {
+   mChecker = new wxSingleInstanceChecker();
+   success = mChecker->Create(name + wxT(".lock"), wxGetHomeDir());
+   if (!success)
+   {
       // Error initializing the wxSingleInstanceChecker.  We don't know
       // whether there is another instance running or not.
 
       wxString prompt =
-         _("Audacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n") +
+         _("Audacity was not able to obtain lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n") +
          runningTwoCopiesStr +
          _("Do you still want to start Audacity?");
       int action = wxMessageBox(prompt,
                                 _("Error Locking Temporary Folder"),
                                 wxYES_NO | wxICON_EXCLAMATION,
                                 NULL);
-      if (action == wxNO) {
-         delete mChecker;
+      if (action == wxNO)
+      {
          return false;
       }
    }
-   else if ( mChecker->IsAnotherRunning() ) {
-      // Get the 1st argument (filename) if there is one.
-      wxString cmd;
-      if (argc > 1) {
-         cmd = argv[1];
+
+#if defined(__UNIX__)
+   wxString sockFile(wxGetHomeDir() + wxT("/") + name + wxT(".sock"));
+#endif
+
+   // Is this process the first one?
+   if (!mChecker->IsAnotherRunning())
+   {
+#if defined(__WXMSW__)
+      // Create the DDE IPC server
+      mIPCServ = new IPCServ(IPC_APPL);
+#else
+      int mask = umask(077);
+      remove(OSFILENAME(sockFile));
+      wxUNIXaddress addr;
+      addr.Filename(sockFile);
+      mIPCServ = new wxSocketServer(addr, wxSOCKET_NOWAIT);
+      umask(mask);
+
+      if (!mIPCServ || !mIPCServ->IsOk())
+      {
+         // TODO:  Complain here
+         return false;
       }
 
-      //
-      // On Windows and Linux, we attempt to make a connection
-      // to an already active Audacity.  If successful, we send
-      // the first command line argument (the audio file name)
-      // to that Audacity for processing.
-      wxClient client;
-      wxConnectionBase *conn;
-
-      // We try up to 50 times since there's a small window
-      // where the DDE server on Windows may not have been fully
-      // initialized.
-      for (int i = 0; i < 50; i++) {
-         conn = client.MakeConnection(wxEmptyString,
-                                      appl,
-                                      IPC_TOPIC);
-         if (conn) {
-            bool ok = conn->Execute(cmd);
-
-            conn->Disconnect();
-            delete conn;
-
-            if (ok) {
-               // Command was successfully queued so exit quietly
-               delete mChecker;
-               return false;
-            }
-         }
-         wxMilliSleep(100);
-      }
-
-      // There is another copy of Audacity running.  Force quit.
-
-      wxString prompt =
-         _("The system has detected that another copy of Audacity is running.\n") +
-         runningTwoCopiesStr +
-         _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
-      wxMessageBox(prompt, _("Audacity is already running"),
-            wxOK | wxICON_ERROR);
-      delete mChecker;
-      return false;
+      mIPCServ->SetEventHandler(*this, ID_IPC_SERVER);
+      mIPCServ->SetNotify(wxSOCKET_CONNECTION_FLAG);
+      mIPCServ->Notify(true);
+#endif
+      return true;
    }
 
-   // Create the DDE server
-   mIPCServ = new IPCServ(appl);
+   // Get the 1st argument (filename) if there is one.  Send a
+   // message even if there isn't an argument so that the existing
+   // Audacity will try to get the users attention.
+   wxString cmd;
+   if (argc > 1)
+   {
+      cmd = argv[1];
+   }
 
-   return true;
+#if defined(__WXMSW__)
+   // On Windows, we attempt to make a DDE connection
+   // to an already active Audacity.  If successful, we send
+   // the first command line argument (the audio file name)
+   // to that Audacity for processing.
+   wxClient client;
+   wxConnectionBase *conn;
+
+   // We try up to 50 times since there's a small window
+   // where the server may not have been fully initialized.
+   for (int i = 0; i < 50; i++)
+   {
+      conn = client.MakeConnection(wxEmptyString, IPC_APPL, IPC_TOPIC);
+      if (conn)
+      {
+         bool ok = conn->Execute(cmd);
+
+         conn->Disconnect();
+         delete conn;
+
+         if (ok)
+         {
+            // Command was successfully queued so exit quietly
+            return false;
+         }
+      }
+      wxMilliSleep(100);
+   }
+#else
+   // On Unix-like machines, we use a local (file based) socket to
+   // send the first command line argument to an already running
+   // Audacity.
+   wxUNIXaddress addr;
+   addr.Filename(sockFile);
+
+   // Setup the socket
+   wxSocketClient *sock = new wxSocketClient();
+   sock->SetFlags(wxSOCKET_WAITALL);
+
+   // We try up to 50 times since there's a small window
+   // where the server may not have been fully initialized.
+   for (int i = 0; i < 50; i++)
+   {
+      // Connect to the existing Audacity
+      sock->Connect(addr, true);
+      if (sock->IsConnected())
+      {
+         // Send the filename, nothing fancy, but maybe it should be?
+         int len = cmd.Len();
+         sock->Write(&len, sizeof(len));
+         sock->Write(cmd.c_str(), len * sizeof(wxChar));
+         sock->Destroy();
+         return false;
+      }
+
+      wxMilliSleep(100);
+   }
+
+   sock->Destroy();
+#endif
+
+   // There is another copy of Audacity running and we weren't able to
+   // communicate to it...force quit.  We should never really get to this point
+   // but let the user know just in case.
+
+   wxString prompt =
+      _("The system has detected that another copy of Audacity is running.\n") +
+      runningTwoCopiesStr +
+      _("Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
+   wxMessageBox(prompt, _("Audacity is already running"),
+         wxOK | wxICON_ERROR);
+   return false;
 }
+
+#if defined(__UNIX__)
+void AudacityApp::OnServerEvent(wxSocketEvent & evt)
+{
+   wxSocketBase *sock;
+
+   // Accept all pending connection requests
+   do
+   {
+      sock = mIPCServ->Accept(false);
+      if (sock)
+      {
+         // Setup the socket
+         sock->SetEventHandler(*this, ID_IPC_SOCKET);
+         sock->SetNotify(wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG);
+         sock->Notify(true);
+      }
+   } while (sock);
+}
+
+void AudacityApp::OnSocketEvent(wxSocketEvent & evt)
+{
+   wxSocketBase *sock = evt.GetSocket();
+
+   if (evt.GetSocketEvent() == wxSOCKET_LOST)
+   {
+      sock->Destroy();
+      return;
+   }
+
+   // We have data to read so suspend further input events
+   sock->SetNotify(wxSOCKET_LOST);
+
+   // Read the length of the filename and bail if we have a short read
+   int len;
+   if (sock->Read(&len, sizeof(len)).LastCount() != sizeof(len))
+   {
+      sock->Destroy();
+      return;
+   }
+
+   // Make sure it's in range
+   if (len < 0 || len >= PATH_MAX)
+   {
+      sock->Destroy();
+      return;
+   }
+
+   // Read the filename
+   wxString name;
+   if (len)
+   {
+      wxChar *data = new wxChar[len];
+      sock->Read(data, len * sizeof(wxChar));
+      if (sock->LastCount() != len * sizeof(wxChar))
+      {
+         delete [] data;
+         sock->Destroy();
+         return;
+      }
+      name = wxString(data, len);
+
+      delete [] data;
+   }
+
+   // Add the filename to the queue.  It will be opened by
+   // the OnTimer() event when it is safe to do so.
+   ofqueue.Add(name);
+
+   sock->Destroy();
+}
+
+#endif
 
 void  AudacityApp::PrintCommandLineHelp(void)
 {
-            wxPrintf(wxT("%s\n%s\n%s\n%s\n%s\n\n%s\n"),
-                   _("Command-line options supported:"),
-                   /*i18n-hint: '-help' is the option and needs to stay in
-                    * English. This displays a list of available options */
-                   _("\t-help (this message)"),
-                   /*i18n-hint '-version' needs to stay in English. */
-                   _("\t-version (display Audacity version)"),
-                   /*i18n-hint '-test' is the option and needs to stay in
-                    * English. This runs a set of automatic tests on audacity
-                    * itself */
-                   _("\t-test (run self diagnostics)"),
-                   /*i18n-hint '-blocksize' is the option and needs to stay in
-                    * English. 'nnn' is any integer number. This controls the
-                    * size pieces that audacity uses when writing files to the
-                    * disk */
-                   _("\t-blocksize nnn (set max disk block size in bytes)"),
-                   _("In addition, specify the name of an audio file or Audacity project to open it."));
+   wxPrintf(wxT("%s\n%s\n%s\n%s\n%s\n\n%s\n"),
+          _("Command-line options supported:"),
+          /*i18n-hint: '-help' is the option and needs to stay in
+           * English. This displays a list of available options */
+          _("\t-help (this message)"),
+          /*i18n-hint '-version' needs to stay in English. */
+          _("\t-version (display Audacity version)"),
+          /*i18n-hint '-test' is the option and needs to stay in
+           * English. This runs a set of automatic tests on audacity
+           * itself */
+          _("\t-test (run self diagnostics)"),
+          /*i18n-hint '-blocksize' is the option and needs to stay in
+           * English. 'nnn' is any integer number. This controls the
+           * size pieces that audacity uses when writing files to the
+           * disk */
+          _("\t-blocksize nnn (set max disk block size in bytes)"),
+          _("In addition, specify the name of an audio file or Audacity project to open it."));
 
 }
 
@@ -1817,8 +1971,6 @@ int AudacityApp::OnExit()
       Dispatch();
    }
 
-   delete mIPCServ;
-
    Importer::Get().Terminate();
 
    if(gPrefs)
@@ -1840,9 +1992,9 @@ int AudacityApp::OnExit()
 
    FinishPreferences();
 
-   #ifdef USE_FFMPEG
+#ifdef USE_FFMPEG
    DropFFmpegLibs();
-   #endif
+#endif
 
    UnloadEffects();
 
@@ -1856,7 +2008,21 @@ int AudacityApp::OnExit()
 
    if (mLocale)
       delete mLocale;
-   delete mChecker;
+
+   if (mIPCServ)
+   {
+#if defined(__UNIX__)
+      wxUNIXaddress addr;
+      if (mIPCServ->GetLocal(addr))
+      {
+         remove(OSFILENAME(addr.Filename()));
+      }
+#endif
+      delete mIPCServ;
+   }
+
+   if (mChecker)
+      delete mChecker;
 
    return 0;
 }
