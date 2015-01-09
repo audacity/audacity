@@ -270,6 +270,9 @@ class Meter : public wxPanel
 
    bool mIsFocused;
    wxRect mFocusRect;
+#if defined(__WXMSW__)
+   bool mHadKeyDown;
+#endif
 
    friend class MeterAx;
 

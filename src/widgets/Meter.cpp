@@ -710,6 +710,9 @@ void Meter::OnMouse(wxMouseEvent &evt)
 
 void Meter::OnContext(wxContextMenuEvent &evt)
 {
+#if defined(__WXMSW__)
+   if (mHadKeyDown)
+#endif
    if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no menu.
    {
       ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
@@ -718,19 +721,30 @@ void Meter::OnContext(wxContextMenuEvent &evt)
    {
       evt.Skip();
    }
+
+#if defined(__WXMSW__)
+   mHadKeyDown = false;
+#endif
 }
 
 void Meter::OnKeyDown(wxKeyEvent &evt)
 {
    switch (evt.GetKeyCode())
    {
+   // These are handled in the OnKeyUp handler because, on Windows at least, the
+   // key up event will be passed on to the menu if we show it here.  This causes
+   // the default sound to be heard if assigned.
+   //
+   // But, again on Windows, when the user selects a menu item, it is handled by
+   // the menu and the key up event is passed along to our OnKeyUp() handler, so
+   // we have to ignore it, otherwise we'd just show the menu again.
    case WXK_RETURN:
    case WXK_NUMPAD_ENTER:
-      // Ignore them...will be handled in OnKeyUp
-      break;
    case WXK_WINDOWS_MENU:
    case WXK_MENU:
-      // Ignore them...will be handled in OnContext
+#if defined(__WXMSW__)
+      mHadKeyDown = true;
+#endif
       break;
    case WXK_RIGHT:
       Navigate(wxNavigationKeyEvent::IsForward);
@@ -756,10 +770,16 @@ void Meter::OnKeyUp(wxKeyEvent &evt)
    {
    case WXK_RETURN:
    case WXK_NUMPAD_ENTER:
+#if defined(__WXMSW__)
+      if (mHadKeyDown)
+#endif
       if (mStyle != MixerTrackCluster) // MixerTrackCluster style has no menu.
       {
          ShowMenu(wxPoint(mIconRect.x + 1, mIconRect.y + mIconRect.height + 1));
       }
+#if defined(__WXMSW__)
+      mHadKeyDown = false;
+#endif
       break;
    default:
       evt.Skip();
