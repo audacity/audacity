@@ -2241,7 +2241,7 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
 // Returns a role constant.
 wxAccStatus MeterAx::GetRole(int WXUNUSED(childId), wxAccRole* role)
 {
-      *role = wxROLE_SYSTEM_DIAGRAM;
+   *role = wxROLE_SYSTEM_BUTTONDROPDOWN;
 
    return wxACC_OK;
 }
@@ -2265,11 +2265,6 @@ wxAccStatus MeterAx::GetState(int WXUNUSED(childId), long* state)
    Meter *m = wxDynamicCast( GetWindow(), Meter );
 
    *state = wxACC_STATE_SYSTEM_FOCUSABLE;
-
-   if (m->mActive)
-   {
-      *state |= wxACC_STATE_SYSTEM_BUSY;
-   }
 
    // Do not use mButtonIsFocused is not set until after this method
    // is called.
