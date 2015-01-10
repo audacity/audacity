@@ -810,7 +810,6 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       int recordingChannels = 0;
       bool shifted = mRecord->WasShiftDown();
       if (shifted) {
-         WaveTrack *wt;
          bool sel = false;
          double allt0 = t0;
 
@@ -819,7 +818,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // record only into them; else if tracks exist, record into all.)
          for (Track *tt = it.First(); tt; tt = it.Next()) {
             if (tt->GetKind() == Track::Wave) {
-               wt = (WaveTrack *)tt;
+               WaveTrack *wt = static_cast<WaveTrack *>(tt);
                if (wt->GetEndTime() > allt0) {
                   allt0 = wt->GetEndTime();
                }
@@ -843,9 +842,9 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
          // playback.
          for (Track *tt = it.First(); tt; tt = it.Next()) {
             if (tt->GetKind() == Track::Wave && (tt->GetSelected() || !sel)) {
+               WaveTrack *wt = static_cast<WaveTrack *>(tt);
                if (duplex)
                   playbackTracks.Remove(wt);
-               wt = (WaveTrack *)tt;
                t1 = wt->GetEndTime();
                if (t1 < t0) {
                   WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack();
