@@ -17,6 +17,7 @@
 #include "Audacity.h"
 
 #include <wx/app.h>
+#include <wx/cmdline.h>
 #include <wx/dir.h>
 #include <wx/event.h>
 #include <wx/docview.h>
@@ -227,8 +228,7 @@ class AudacityApp:public wxApp {
    bool InitTempDir();
    bool CreateSingleInstanceChecker();
 
-   /* utility method for printing the command line help message */
-   void PrintCommandLineHelp(void);
+   wxCmdLineParser *ParseCommandLine();
 
    bool mWindowRectAlreadySaved;
 

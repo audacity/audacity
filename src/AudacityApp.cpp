@@ -1199,7 +1199,7 @@ bool AudacityApp::OnInit()
       lang = GetSystemLanguageCode();
 
    InitLang( lang );
-   
+
    // Init DirManager, which initializes the temp directory
    // If this fails, we must exit the program.
 
@@ -1254,6 +1254,39 @@ void AudacityApp::OnEventLoopEnter(wxEventLoopBase * pLoop)
 // they make in their release notes.
 void AudacityApp::FinishInits()
 {
+   // Parse command line and handle options that might require
+   // immediate exit...no need to initialize all of the audio
+   // stuff to display the version string.
+   wxCmdLineParser *parser = ParseCommandLine();
+   if (!parser)
+   {
+      delete parser;
+
+      // Either user requested help or a parsing error occured
+      exit(1);
+   }
+
+   if (parser->Found(wxT("v")))
+   {
+      delete parser;
+
+      wxFprintf(stderr, wxT("Audacity v%s\n"), AUDACITY_VERSION_STRING);
+      exit(0);
+   }
+
+   long lval;
+   if (parser->Found(wxT("b"), &lval))
+   {
+      if (lval < 256 || lval > 100000000)
+      {
+         delete parser;
+
+         wxPrintf(_("Block size must be within 256 to 100000000\n"));
+         exit(1);
+      }
+
+      Sequence::SetMaxDiskBlockSize(lval);
+   }
 
 // No Splash screen on wx3 whislt we sort out the problem
 // with showing a dialog AND a splash screen during inits.
@@ -1331,7 +1364,7 @@ void AudacityApp::FinishInits()
    temporarywindow->Show(false);
    delete temporarywindow;
 #endif
-   
+
    if( project->mShowSplashScreen )
       project->OnHelpWelcome();
 
@@ -1356,158 +1389,31 @@ void AudacityApp::FinishInits()
    {
       // Important: Prevent deleting any temporary files!
       DirManager::SetDontDeleteTempFiles();
+      delete parser;
       QuitAudacity(true);
       return;
    }
 
    //
-   // Command-line parsing, but only if we didn't recover
+   // Remainder of command line parsing, but only if we didn't recover
    //
-
-#if !defined(__CYGWIN__)
-
-   // Parse command-line arguments
-   if (argc > 1 && !didRecoverAnything) {
-      for (int option = 1; option < argc; option++) {
-         if (!argv[option])
-            continue;
-         bool handled = false;
-
-         if (!wxString(wxT("-help")).CmpNoCase(argv[option])) {
-            PrintCommandLineHelp(); // print the help message out
-            exit(0);
-         }
-
-         if (option < argc - 1 &&
-#if wxCHECK_VERSION(3,0,0)
-            !argv[option + 1].IsEmpty() &&
-#else
-            argv[option + 1] &&
-#endif
-             !wxString(wxT("-blocksize")).CmpNoCase(argv[option])) {
-            long theBlockSize;
-            if (wxString(argv[option + 1]).ToLong(&theBlockSize)) {
-               if (theBlockSize >= 256 && theBlockSize < 100000000) {
-                  wxFprintf(stderr, _("Using block size of %ld\n"),
-                          theBlockSize);
-                  Sequence::SetMaxDiskBlockSize(theBlockSize);
-               }
-            }
-            option++;
-            handled = true;
-         }
-
-         if (!handled && !wxString(wxT("-test")).CmpNoCase(argv[option])) {
-            RunBenchmark(NULL);
-            exit(0);
-         }
-
-         if (!handled && !wxString(wxT("-version")).CmpNoCase(argv[option])) {
-            wxPrintf(wxT("Audacity v%s\n"),
-                     AUDACITY_VERSION_STRING);
-            exit(0);
-         }
-
-         if (argv[option][0] == wxT('-') && !handled) {
-            wxPrintf(_("Unknown command line option: %s\n"), argv[option]);
-            exit(0);
-         }
-
-         if (!handled)
-         {
-            if (!project)
-            {
-               // Create new window for project
-               project = CreateNewAudacityProject();
-            }
-            // Always open files with an absolute path
-            wxFileName fn(argv[option]);
-            fn.MakeAbsolute();
-            project->OpenFile(fn.GetFullPath());
-            project = NULL; // don't reuse this project for other file
-         }
-
-      }                         // for option...
-   }                            // if (argc>1)
-
-#else //__CYGWIN__
-
-   // Cygwin command line parser (by Dave Fancella)
-   if (argc > 1 && !didRecoverAnything) {
-      int optionstart = 1;
-      bool startAtOffset = false;
-
-      // Scan command line arguments looking for trouble
-      for (int option = 1; option < argc; option++) {
-         if (!argv[option])
-            continue;
-         // Check to see if argv[0] is copied across other arguments.
-         // This is the reason Cygwin gets its own command line parser.
-         if (wxString(argv[option]).Lower().Contains(wxString(wxT("audacity.exe")))) {
-            startAtOffset = true;
-            optionstart = option + 1;
-         }
+   if (!didRecoverAnything)
+   {
+      if (parser->Found(wxT("t")))
+      {
+         delete parser;
+   
+         RunBenchmark(NULL);
+         return;
       }
+   
+      for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+      {
+        MRUOpen(parser->GetParam(i));
+      }   
+   }
 
-      for (int option = optionstart; option < argc; option++) {
-         if (!argv[option])
-            continue;
-         bool handled = false;
-         bool openThisFile = false;
-         wxString fileToOpen;
-
-         if (!wxString(wxT("-help")).CmpNoCase(argv[option])) {
-            PrintCommandLineHelp(); // print the help message out
-            exit(0);
-         }
-
-         if (option < argc - 1 &&
-             argv[option + 1] &&
-             !wxString(wxT("-blocksize")).CmpNoCase(argv[option])) {
-            long theBlockSize;
-            if (wxString(argv[option + 1]).ToLong(&theBlockSize)) {
-               if (theBlockSize >= 256 && theBlockSize < 100000000) {
-                  wxFprintf(stderr, _("Using block size of %ld\n"),
-                          theBlockSize);
-                  Sequence::SetMaxDiskBlockSize(theBlockSize);
-               }
-            }
-            option++;
-            handled = true;
-         }
-
-         if (!handled && !wxString(wxT("-test")).CmpNoCase(argv[option])) {
-            RunBenchmark(NULL);
-            exit(0);
-         }
-
-         if (argv[option][0] == wxT('-') && !handled) {
-            wxPrintf(_("Unknown command line option: %s\n"), argv[option]);
-            exit(0);
-         }
-
-         if(handled)
-            fileToOpen.Clear();
-
-         if (!handled)
-            fileToOpen = fileToOpen + wxT(" ") + argv[option];
-         if(wxString(argv[option]).Lower().Contains(wxT(".aup")))
-            openThisFile = true;
-         if(openThisFile) {
-            openThisFile = false;
-            if (!project)
-            {
-               // Create new window for project
-               project = CreateNewAudacityProject();
-            }
-            project->OpenFile(fileToOpen);
-            project = NULL; // don't reuse this project for other file
-         }
-
-      }                         // for option...
-   }                            // if (argc>1)
-
-#endif // __CYGWIN__ (Cygwin command-line parser)
+   delete parser;
 
    gInited = true;
 
@@ -1656,13 +1562,13 @@ bool AudacityApp::CreateSingleInstanceChecker()
       return true;
    }
 
-   // Get the 1st argument (filename) if there is one.  Send a
-   // message even if there isn't an argument so that the existing
-   // Audacity will try to get the users attention.
-   wxString cmd;
-   if (argc > 1)
+   // Parse the command line to ensure correct syntax, but
+   // ignore options and only use the filenames, if any.
+   wxCmdLineParser *parser = ParseCommandLine();
+   if (!parser)
    {
-      cmd = argv[1];
+      // Complaints have already been made
+      return false;
    }
 
 #if defined(__WXMSW__)
@@ -1680,7 +1586,11 @@ bool AudacityApp::CreateSingleInstanceChecker()
       conn = client.MakeConnection(wxEmptyString, IPC_APPL, IPC_TOPIC);
       if (conn)
       {
-         bool ok = conn->Execute(cmd);
+         bool ok = true;
+         for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt && ok; i++)
+         {
+            ok = conn->Execute(parser->GetParam(i));
+         }
 
          conn->Disconnect();
          delete conn;
@@ -1688,6 +1598,7 @@ bool AudacityApp::CreateSingleInstanceChecker()
          if (ok)
          {
             // Command was successfully queued so exit quietly
+            delete parser;
             return false;
          }
       }
@@ -1712,11 +1623,15 @@ bool AudacityApp::CreateSingleInstanceChecker()
       sock->Connect(addr, true);
       if (sock->IsConnected())
       {
-         // Send the filename, nothing fancy, but maybe it should be?
-         int len = cmd.Len();
-         sock->Write(&len, sizeof(len));
-         sock->Write(cmd.c_str(), len * sizeof(wxChar));
+         for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
+         {
+            // Send the filename
+            wxString param = parser->GetParam(i);
+            sock->WriteMsg((const wxChar *) param.c_str(), (param.Len() + 1) * sizeof(wxChar));
+         }
+
          sock->Destroy();
+         delete parser;
          return false;
       }
 
@@ -1725,6 +1640,8 @@ bool AudacityApp::CreateSingleInstanceChecker()
 
    sock->Destroy();
 #endif
+
+   delete parser;
 
    // There is another copy of Audacity running and we weren't able to
    // communicate to it...force quit.  We should never really get to this point
@@ -1768,70 +1685,57 @@ void AudacityApp::OnSocketEvent(wxSocketEvent & evt)
       return;
    }
 
-   // We have data to read so suspend further input events
-   sock->SetNotify(wxSOCKET_LOST);
-
    // Read the length of the filename and bail if we have a short read
-   int len;
-   if (sock->Read(&len, sizeof(len)).LastCount() != sizeof(len))
+   wxChar name[PATH_MAX];
+   sock->ReadMsg(&name, sizeof(name));
+   if (!sock->Error())
    {
-      sock->Destroy();
-      return;
+      // Add the filename to the queue.  It will be opened by
+      // the OnTimer() event when it is safe to do so.
+      ofqueue.Add(name);
    }
-
-   // Make sure it's in range
-   if (len < 0 || len >= PATH_MAX)
-   {
-      sock->Destroy();
-      return;
-   }
-
-   // Read the filename
-   wxString name;
-   if (len)
-   {
-      wxChar *data = new wxChar[len];
-      sock->Read(data, len * sizeof(wxChar));
-      if (sock->LastCount() != len * sizeof(wxChar))
-      {
-         delete [] data;
-         sock->Destroy();
-         return;
-      }
-      name = wxString(data, len);
-
-      delete [] data;
-   }
-
-   // Add the filename to the queue.  It will be opened by
-   // the OnTimer() event when it is safe to do so.
-   ofqueue.Add(name);
-
-   sock->Destroy();
 }
 
 #endif
 
-void  AudacityApp::PrintCommandLineHelp(void)
+wxCmdLineParser *AudacityApp::ParseCommandLine()
 {
-   wxPrintf(wxT("%s\n%s\n%s\n%s\n%s\n\n%s\n"),
-          _("Command-line options supported:"),
-          /*i18n-hint: '-help' is the option and needs to stay in
-           * English. This displays a list of available options */
-          _("\t-help (this message)"),
-          /*i18n-hint '-version' needs to stay in English. */
-          _("\t-version (display Audacity version)"),
-          /*i18n-hint '-test' is the option and needs to stay in
-           * English. This runs a set of automatic tests on audacity
-           * itself */
-          _("\t-test (run self diagnostics)"),
-          /*i18n-hint '-blocksize' is the option and needs to stay in
-           * English. 'nnn' is any integer number. This controls the
-           * size pieces that audacity uses when writing files to the
-           * disk */
-          _("\t-blocksize nnn (set max disk block size in bytes)"),
-          _("In addition, specify the name of an audio file or Audacity project to open it."));
+   wxCmdLineParser *parser = new wxCmdLineParser(argc, argv);
+   if (!parser)
+   {
+      return NULL;
+   }
 
+   /*i18n-hint: This controls the number of bytes that Audacity will
+    *           use when writing files to the disk */
+   parser->AddOption(wxT("b"), wxT("blocksize"), _("set max disk block size in bytes"),
+                     wxCMD_LINE_VAL_NUMBER);
+
+   /*i18n-hint: This displays a list of available options */
+   parser->AddSwitch(wxT("h"), wxT("help"), _("this help message"),
+                     wxCMD_LINE_OPTION_HELP);
+
+   /*i18n-hint: This runs a set of automatic tests on Audacity itself */
+   parser->AddSwitch(wxT("t"), wxT("test"), _("run self diagnostics"));
+
+   /*i18n-hint: This displays the Audacity version */
+   parser->AddSwitch(wxT("v"), wxT("version"), _("display Audacity version"));
+
+   /*i18n-hint: This is a list of one or more files that Audacity
+    *           should open upon startup */
+   parser->AddParam(_("audio or project file name"),
+                    wxCMD_LINE_VAL_STRING,
+                    wxCMD_LINE_PARAM_MULTIPLE | wxCMD_LINE_PARAM_OPTIONAL);
+
+   // Run the parser
+   if (parser->Parse() == 0)
+   {
+      return parser;
+   }
+
+   delete parser;
+
+   return NULL;
 }
 
 // static
