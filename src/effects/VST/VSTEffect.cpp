@@ -1389,7 +1389,7 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
                                 void * ptr,
                                 float opt)
 {
-   VSTEffect *vst = (effect ? (VSTEffect *) effect->user : NULL);
+   VSTEffect *vst = (effect ? (VSTEffect *) effect->ptr2 : NULL);
 
    // Handles operations during initialization...before VSTEffect has had a
    // chance to set its instance pointer.
@@ -2677,7 +2677,7 @@ bool VSTEffect::Load()
       // Note:  Some hosts use "user" and some use "ptr2/resvd2".  It might
       //        be worthwhile to check if user is NULL before using it and
       //        then falling back to "ptr2/resvd2".
-      mAEffect->user = this;
+      mAEffect->ptr2 = this;
 
       // Give the plugin an initial sample rate and blocksize
       callDispatcher(effSetSampleRate, 0, 0, NULL, 48000.0);
