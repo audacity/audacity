@@ -2223,7 +2223,7 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
 
    if (m->mDB)
    {
-      *name += wxString::Format(_(" Peak %d dB"), (int) ((peak * m->mDBRange) - m->mDBRange) + 0.5);
+      *name += wxString::Format(_(" Peak %2.f dB"), (peak * m->mDBRange) - m->mDBRange);
    }
    else
    {
