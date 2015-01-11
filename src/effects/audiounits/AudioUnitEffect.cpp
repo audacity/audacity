@@ -931,8 +931,6 @@ AudioUnitEffect::AudioUnitEffect(const wxString & path,
 
    mUnit = NULL;
    
-   mLatency = 0.0;
-   mTailTime = 0.0;
    mBlockSize = 0.0;
 
    mUIHost = NULL;
@@ -1140,37 +1138,15 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
 
    SetRateAndChannels();
 
-   UInt32 dataSize;
-
-   // Retrieve the latency (can be updated via an event)
-   dataSize = sizeof(mLatency);
-   mLatency = 0.0;
-   AudioUnitGetProperty(mUnit,
-                        kAudioUnitProperty_Latency,
-                        kAudioUnitScope_Global,
-                        0,
-                        &mLatency,
-                        &dataSize);  
-
-   // Retrieve the tail time
-   dataSize = sizeof(mTailTime);
-   mTailTime = 0.0;
-   AudioUnitGetProperty(mUnit,
-                        kAudioUnitProperty_TailTime,
-                        kAudioUnitScope_Global,
-                        0,
-                        &mTailTime,
-                        &dataSize);  
-
    // Retrieve the desired number of frames per slice
-   dataSize = sizeof(mBlockSize);
+   UInt32 dataSize = sizeof(mBlockSize);
    mBlockSize = 512;
    AudioUnitGetProperty(mUnit,
                         kAudioUnitProperty_MaximumFramesPerSlice,
                         kAudioUnitScope_Global,
                         0,
                         &mBlockSize,
-                        &dataSize);  
+                        &dataSize);
 
    // mHost will be null during registration
    if (mHost)
@@ -1307,10 +1283,21 @@ sampleCount AudioUnitEffect::GetBlockSize(sampleCount maxBlockSize)
 
 sampleCount AudioUnitEffect::GetLatency()
 {
+   // Retrieve the latency (can be updated via an event)
    if (mUseLatency && !mLatencyDone)
    {
       mLatencyDone = true;
-      return mLatency * mSampleRate;
+
+      Float64 latency = 0.0;
+      UInt32 dataSize = sizeof(latency);
+      AudioUnitGetProperty(mUnit,
+                           kAudioUnitProperty_Latency,
+                           kAudioUnitScope_Global,
+                           0,
+                           &latency,
+                           &dataSize);  
+
+      return (sampleCount) (latency * mSampleRate);
    }
 
    return 0;
@@ -1318,7 +1305,17 @@ sampleCount AudioUnitEffect::GetLatency()
 
 sampleCount AudioUnitEffect::GetTailSize()
 {
-   return mTailTime * mSampleRate;
+   // Retrieve the tail time
+   Float64 tailTime = 0.0;
+   UInt32 dataSize = sizeof(tailTime);
+   AudioUnitGetProperty(mUnit,
+                        kAudioUnitProperty_TailTime,
+                        kAudioUnitScope_Global,
+                        0,
+                        &tailTime,
+                        &dataSize);  
+
+   return (sampleCount) (tailTime * mSampleRate);
 }
 
 bool AudioUnitEffect::IsReady()
@@ -1373,6 +1370,8 @@ bool AudioUnitEffect::ProcessInitialize()
    {
       return false;
    }
+
+   mLatencyDone = false;
 
    mReady = true;
 
@@ -2320,6 +2319,30 @@ bool AudioUnitEffect::SetRateAndChannels()
       return false;
    }
 
+   auResult = AudioUnitSetProperty(mUnit,
+                                   kAudioUnitProperty_SampleRate,
+                                   kAudioUnitScope_Input,
+                                   0,
+                                   &mSampleRate,
+                                   sizeof(Float64));
+   if (auResult != 0)
+   {
+      printf("Didn't accept sample rate\n");
+      return false;
+   }
+
+   auResult = AudioUnitSetProperty(mUnit,
+                                   kAudioUnitProperty_SampleRate,
+                                   kAudioUnitScope_Output,
+                                   0,
+                                   &mSampleRate,
+                                   sizeof(Float64));
+   if (auResult != 0)
+   {
+      printf("Didn't accept sample rate\n");
+      return false;
+   }
+
    AudioStreamBasicDescription streamFormat = {0};
 
    streamFormat.mSampleRate = mSampleRate;
@@ -2481,18 +2504,8 @@ void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
       // We're only registered for Latency changes
       if (inEvent->mArgument.mProperty.mPropertyID == kAudioUnitProperty_Latency)
       {
-         // Retrieve the latency
-         UInt32 dataSize = sizeof(mLatency);
-         mLatency = 0.0;
-         AudioUnitGetProperty(mUnit,
-                              kAudioUnitProperty_Latency,
-                              kAudioUnitScope_Global,
-                              0,
-                              &mLatency,
-                              &dataSize);  
-
-         // And allow change to be used
-         mLatencyDone = false;
+         // Allow change to be used
+         //mLatencyDone = false;
       }
 
       return;

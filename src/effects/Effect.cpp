@@ -1003,6 +1003,8 @@ bool Effect::ProcessTrack(int count,
    sampleCount outputBufferCnt = 0;
    bool cleared = false;
 
+   int chans = wxMin(mNumAudioOut, mNumChannels);
+
    WaveTrack *genLeft = NULL;
    WaveTrack *genRight = NULL;
    sampleCount genLength = 0;
@@ -1134,6 +1136,13 @@ bool Effect::ProcessTrack(int count,
          inputBufferCnt -= curBlockSize;
       }
 
+      // "ls" and "rs" serve as the input sample index for the left and
+      // right channels when processing the input samples.  If we flip
+      // over to processing delayed samples, they simply become counters
+      // for the progress display.
+      inLeftPos += curBlockSize;
+      inRightPos += curBlockSize;
+
       // Get the current number of delayed samples and accumulate
       if (isProcessor)
       {
@@ -1154,22 +1163,22 @@ bool Effect::ProcessTrack(int count,
          else if (curDelay > 0)
          {
             curBlockSize -= curDelay;
-            for (int i = 0; i < wxMin(mNumAudioOut, mNumChannels); i++)
+            for (int i = 0; i < chans; i++)
             {
-               memmove(mOutBufPos[i], mOutBufPos[i] + curDelay, SAMPLE_SIZE(floatSample) * curBlockSize);
+               memmove(mOutBufPos[i], mOutBufPos[i] + curDelay, sizeof(float) * curBlockSize);
             }
             curDelay = 0;
          }
       }
 
-      //
+      // Adjust the number of samples in the output buffers
       outputBufferCnt += curBlockSize;
 
-      //
+      // Still have room in the output buffers
       if (outputBufferCnt < mBufferSize)
       {
          // Bump to next output buffer position
-         for (int i = 0; i < wxMin(mNumAudioOut, mNumChannels); i++)
+         for (int i = 0; i < chans; i++)
          {
             mOutBufPos[i] += curBlockSize;
          }
@@ -1196,7 +1205,7 @@ bool Effect::ProcessTrack(int count,
          }
 
          // Reset the output buffer positions
-         for (int i = 0; i < wxMin(mNumAudioOut, mNumChannels); i++)
+         for (int i = 0; i < chans; i++)
          {
             mOutBufPos[i] = mOutBuffer[i];
          }
@@ -1206,13 +1215,6 @@ bool Effect::ProcessTrack(int count,
          outRightPos += outputBufferCnt;
          outputBufferCnt = 0;
       }
-
-      // "ls" and "rs" serve as the input sample index for the left and
-      // right channels when processing the input samples.  If we flip
-      // over to processing delayed samples, they simply become counters
-      // for the progress display.
-      inLeftPos += curBlockSize;
-      inRightPos += curBlockSize;
 
       if (mNumChannels > 1)
       {
