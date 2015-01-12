@@ -1160,7 +1160,9 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
 
+#ifndef __WXMAC__
    c->AddSeparator();
+#endif
 
    c->AddItem(wxT("About"), _("&About Audacity..."), FN(OnAbout));
 
