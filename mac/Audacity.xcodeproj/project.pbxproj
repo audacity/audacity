@@ -1186,6 +1186,7 @@
 		28EBA7FC0A78FADE00C8BB1F /* Repair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FA0A78FADE00C8BB1F /* Repair.cpp */; };
 		28EBA8010A78FAF800C8BB1F /* InterpolateAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FD0A78FAF800C8BB1F /* InterpolateAudio.cpp */; };
 		28EBA8020A78FAF800C8BB1F /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */; };
+		28ECC1921A66CC5000EECC53 /* hy.po in Resources */ = {isa = PBXBuildFile; fileRef = 28ECC1911A66CC5000EECC53 /* hy.po */; };
 		28ED7B711A1C77B0008A01D9 /* adjustable-fade.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B6E1A1C77B0008A01D9 /* adjustable-fade.ny */; };
 		28ED7B721A1C77B0008A01D9 /* crossfadetracks.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */; };
 		28ED7B731A1C77B0008A01D9 /* notch.ny in Resources */ = {isa = PBXBuildFile; fileRef = 28ED7B701A1C77B0008A01D9 /* notch.ny */; };
@@ -3949,6 +3950,7 @@
 		28EBA7FE0A78FAF800C8BB1F /* InterpolateAudio.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = InterpolateAudio.h; sourceTree = "<group>"; tabWidth = 3; };
 		28EBA7FF0A78FAF800C8BB1F /* Matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28EBA8000A78FAF800C8BB1F /* Matrix.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; tabWidth = 3; };
+		28ECC1911A66CC5000EECC53 /* hy.po */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = hy.po; path = ../locale/hy.po; sourceTree = SOURCE_ROOT; };
 		28ED7B6E1A1C77B0008A01D9 /* adjustable-fade.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "adjustable-fade.ny"; path = "../plug-ins/adjustable-fade.ny"; sourceTree = SOURCE_ROOT; };
 		28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crossfadetracks.ny; path = "../plug-ins/crossfadetracks.ny"; sourceTree = SOURCE_ROOT; };
 		28ED7B701A1C77B0008A01D9 /* notch.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = notch.ny; path = "../plug-ins/notch.ny"; sourceTree = SOURCE_ROOT; };
@@ -6272,6 +6274,7 @@
 				28884927131B6CF600B59735 /* hi.po */,
 				ED85B3CF16A46DDA006DA21D /* hr.po */,
 				28884928131B6CF600B59735 /* hu.po */,
+				28ECC1911A66CC5000EECC53 /* hy.po */,
 				28884929131B6CF600B59735 /* id.po */,
 				2888492A131B6CF600B59735 /* it.po */,
 				2888492B131B6CF600B59735 /* ja.po */,
@@ -8036,6 +8039,7 @@
 				28ED7B7D1A1C77BF008A01D9 /* SpectralEditParametricEQ.ny in Resources */,
 				28ED7B7E1A1C77BF008A01D9 /* SpectralEditShelves.ny in Resources */,
 				28ED7B7F1A1C77BF008A01D9 /* StudioFadeOut.ny in Resources */,
+				28ECC1921A66CC5000EECC53 /* hy.po in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
