@@ -46,7 +46,7 @@
 
 (cond
   ((not (get '*TRACK* 'VIEW)) ; 'View is NIL during Preview
-      (setf p-err (format nil "This effect requires a frequency selction in the~%~
+      (setf p-err (format nil "This effect requires a frequency selection in the~%~
                               'Spectrogram' or 'Spectrogram (log f)' track view.~%~%"))
       (catch 'debug-message
         (multichan-expand #'result *track*)))
