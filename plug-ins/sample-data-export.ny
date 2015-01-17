@@ -317,7 +317,7 @@ Length processed: ~a samples ~a seconds.~a"
 (defun fullhead ()
   (format nil
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
-samples, ~a seconds.~%Peak amplitude: ~a (lin) ~a dB.  Unweighted rms: ~a dB.~%~
+samples, ~a seconds.~%Peak amplitude: ~a (lin) ~a dB.  Unweighted RMS: ~a dB.~%~
 DC offset: ~a~a" 
   filename                                  ; file name
   (get 'info 'srate)                        ; sample rate
