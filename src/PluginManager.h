@@ -55,11 +55,12 @@ public:
    // All plugins
 
    // These return untranslated strings
-   const wxString & GetID() const;
    const wxString & GetProviderID() const;
    const wxString & GetPath() const;
    const wxString & GetSymbol() const;
+
    // These return translated strings (if available)
+   const wxString & GetID() const;
    wxString GetName() const;
    wxString GetVersion() const;
    wxString GetVendor() const;
@@ -172,9 +173,9 @@ public:
 
    // PluginManagerInterface implementation
 
-   void RegisterModulePlugin(IdentInterface *module);
-   void RegisterEffectPlugin(IdentInterface *provider, EffectIdentInterface *effect);
-   void RegisterImporterPlugin(IdentInterface *provider, ImporterInterface *importer);
+   const PluginID & RegisterModulePlugin(ModuleInterface *module);
+   const PluginID & RegisterEffectPlugin(ModuleInterface *provider, EffectIdentInterface *effect);
+   const PluginID & RegisterImporterPlugin(ModuleInterface *provider, ImporterInterface *importer);
 
    void FindFilesInPathList(const wxString & pattern,
                             const wxArrayString & pathList,
@@ -226,8 +227,11 @@ public:
 
    static PluginManager & Get();
 
-   bool HasType(PluginType type);
-   void PurgeType(PluginType type);
+   static PluginID GetID(ModuleInterface *module);
+   static PluginID GetID(EffectIdentInterface *effect);
+   static PluginID GetID(ImporterInterface *importer);
+
+   static wxString GetPluginTypeString(PluginType type);
 
    int GetPluginCount(PluginType type);
    const PluginDescriptor *GetPlugin(const PluginID & ID);
@@ -256,15 +260,15 @@ public:
 
 private:
    void Load();
-   void LoadGroup(const wxChar *group, PluginType type);
+   void LoadGroup(PluginType type);
    void Save();
-   void SaveGroup(const wxChar *group, PluginType type);
+   void SaveGroup(PluginType type);
 
    void CheckForUpdates();
    void DisableMissing();
    wxArrayString IsNewOrUpdated(const wxArrayString & paths);
 
-   PluginDescriptor & CreatePlugin(IdentInterface *ident, PluginType type);
+   PluginDescriptor & CreatePlugin(const PluginID & id, IdentInterface *ident, PluginType type);
 
    wxFileConfig *GetSettings();
 
@@ -284,6 +288,7 @@ private:
    bool SetConfig(const wxString & key, const double & value);
    bool SetConfig(const wxString & key, const sampleCount & value);
 
+   wxString SettingsID(const PluginID & ID);
    wxString SharedGroup(const PluginID & ID, const wxString & group);
    wxString SharedKey(const PluginID & ID, const wxString & group, const wxString & key);
    wxString PrivateGroup(const PluginID & ID, const wxString & group);

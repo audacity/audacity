@@ -145,11 +145,6 @@ EffectNyquist::~EffectNyquist()
 // IdentInterface implementation
 // ============================================================================
 
-wxString EffectNyquist::GetID()
-{
-   return GetPath();
-}
-
 wxString EffectNyquist::GetPath()
 {
    if (mFileName.GetFullPath().IsEmpty())
@@ -172,7 +167,7 @@ wxString EffectNyquist::GetName()
 
 wxString EffectNyquist::GetVendor()
 {
-   if (GetID() == wxT("nyquist prompt"))
+   if (GetPath() == wxT("nyquist prompt"))
    {
       return _("Audacity");
    }
@@ -213,7 +208,7 @@ bool EffectNyquist::IsInteractive()
 
 bool EffectNyquist::IsDefault()
 {
-   if (GetID() == wxT("nyquist prompt"))
+   if (GetPath() == wxT("nyquist prompt"))
    {
       return true;
    }

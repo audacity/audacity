@@ -40,7 +40,6 @@ class VampEffect : public Effect {
 
    // IdentInterface implementation
 
-   virtual PluginID GetID();
    virtual wxString GetPath();
    virtual wxString GetSymbol();
    virtual wxString GetName();

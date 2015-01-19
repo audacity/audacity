@@ -65,12 +65,6 @@ VampEffectsModule::~VampEffectsModule()
 // IdentInterface implementation
 // ============================================================================
 
-wxString VampEffectsModule::GetID()
-{
-   // Can be anything, but this is a v4 UUID
-   return wxT("33a86140-7310-4bdf-ad8e-a4af29079f61");
-}
-
 wxString VampEffectsModule::GetPath()
 {
    return mPath;
@@ -225,14 +219,12 @@ bool VampEffectsModule::RegisterPlugin(PluginManagerInterface & WXUNUSED(pm), co
    return false;
 }
 
-bool VampEffectsModule::IsPluginValid(const PluginID & WXUNUSED(ID),
-                                      const wxString & path)
+bool VampEffectsModule::IsPluginValid(const wxString & path)
 {
    return wxFileName::FileExists(path);
 }
 
-IdentInterface *VampEffectsModule::CreateInstance(const PluginID & WXUNUSED(ID),
-                                                  const wxString & WXUNUSED(path))
+IdentInterface *VampEffectsModule::CreateInstance(const wxString & WXUNUSED(path))
 {
    // Nothing to do here yet since we are autoregistering (and creating legacy
    // effects anyway).

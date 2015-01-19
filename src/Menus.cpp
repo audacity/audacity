@@ -221,6 +221,9 @@ static int SortEffectsByName(const PluginDescriptor **a, const PluginDescriptor 
    wxString akey = (*a)->GetName();
    wxString bkey = (*b)->GetName();
 
+   akey += (*a)->GetPath();
+   bkey += (*b)->GetPath();
+
    return akey.CmpNoCase(bkey);
 }
 
@@ -241,6 +244,9 @@ static int SortEffectsByPublisher(const PluginDescriptor **a, const PluginDescri
    akey += (*a)->GetName();
    bkey += (*b)->GetName();
 
+   akey += (*a)->GetPath();
+   bkey += (*b)->GetPath();
+
    return akey.CmpNoCase(bkey);
 }
 
@@ -260,6 +266,9 @@ static int SortEffectsByPublisherAndName(const PluginDescriptor **a, const Plugi
 
    akey += (*a)->GetName();
    bkey += (*b)->GetName();
+
+   akey += (*a)->GetPath();
+   bkey += (*b)->GetPath();
 
    return akey.CmpNoCase(bkey);
 }
@@ -290,6 +299,9 @@ static int SortEffectsByTypeAndName(const PluginDescriptor **a, const PluginDesc
    akey += (*a)->GetName();
    bkey += (*b)->GetName();
 
+   akey += (*a)->GetPath();
+   bkey += (*b)->GetPath();
+
    return akey.CmpNoCase(bkey);
 }
 
@@ -309,6 +321,9 @@ static int SortEffectsByType(const PluginDescriptor **a, const PluginDescriptor 
 
    akey += (*a)->GetName();
    bkey += (*b)->GetName();
+
+   akey += (*a)->GetPath();
+   bkey += (*b)->GetPath();
 
    return akey.CmpNoCase(bkey);
 }
@@ -1509,6 +1524,7 @@ void AudacityProject::AddEffectMenuItems(CommandManager *c,
          groupPlugs.Add(plug->GetID());
          groupFlags.Add(plug->IsEffectRealtime() ? realflags : batchflags);
       }
+
       if (groupNames.GetCount() > 0)
       {
          AddEffectMenuItemGroup(c, groupNames, groupPlugs, groupFlags, isDefault);
@@ -1525,7 +1541,7 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
                                              const wxArrayInt & flags,
                                              bool isDefault)
 {
-   int groupCnt = (int) names.GetCount();
+   int namesCnt = (int) names.GetCount();
    int perGroup;
 
 #if defined(__WXGTK__)
@@ -1534,8 +1550,18 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
    gPrefs->Read(wxT("/Effects/MaxPerGroup"), &perGroup, 0);
 #endif
 
+   int groupCnt = namesCnt;
+   for (int i = 0; i < namesCnt; i++)
+   {
+      while (i + 1 < namesCnt && names[i].IsSameAs(names[i + 1]))
+      {
+         i++;
+         groupCnt--;
+      }
+   }
+
    // The "default" effects shouldn't be broken into subgroups
-   if (groupCnt > 0 && isDefault)
+   if (namesCnt > 0 && isDefault)
    {
       perGroup = 0;
    }
@@ -1548,30 +1574,53 @@ void AudacityProject::AddEffectMenuItemGroup(CommandManager *c,
       max = 0;
    }
 
-   for (int j = 0; j < groupCnt; j++)
+   int groupNdx = 0;
+   for (int i = 0; i < namesCnt; i++)
    {
       if (max > 0 && items == max)
       {
-         int end = j + max;
+         int end = groupNdx + max;
          if (end + 1 > groupCnt)
          {
             end = groupCnt;
          }
          c->BeginSubMenu(wxString::Format(_("Plug-ins %d to %d"),
-                                          j + 1,
+                                          groupNdx + 1,
                                           end));
       }
 
-      c->AddItem(names[j],
-                 names[j],
-                 FNS(OnEffect, plugs[j]),
-                 flags[j],
-                 flags[j]);
+      if (i + 1 < namesCnt && names[i].IsSameAs(names[i + 1]))
+      {
+         wxString name = names[i];
+         c->BeginSubMenu(name);
+         while (i < namesCnt && names[i].IsSameAs(name))
+         {
+            wxString item = PluginManager::Get().GetPlugin(plugs[i])->GetPath();
+            c->AddItem(item,
+                       item,
+                       FNS(OnEffect, plugs[i]),
+                       flags[i],
+                       flags[i]);
+
+            i++;
+         }
+         c->EndSubMenu();
+         i--;
+      }
+      else
+      {
+         c->AddItem(names[i],
+                    names[i],
+                    FNS(OnEffect, plugs[i]),
+                    flags[i],
+                    flags[i]);
+      }
 
       if (max > 0)
       {
+         groupNdx++;
          items--;
-         if (items == 0 || j + 1 == groupCnt)
+         if (items == 0 || i + 1 == namesCnt)
          {
             c->EndSubMenu();
             items = max;

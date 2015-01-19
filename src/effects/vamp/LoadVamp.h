@@ -26,7 +26,6 @@ public:
 
    // IdentInterface implementatino
 
-   virtual wxString GetID();
    virtual wxString GetPath();
    virtual wxString GetSymbol();
    virtual wxString GetName();
@@ -43,9 +42,9 @@ public:
    virtual wxArrayString FindPlugins(PluginManagerInterface & pm);
    virtual bool RegisterPlugin(PluginManagerInterface & pm, const wxString & path);
 
-   virtual bool IsPluginValid(const PluginID & ID, const wxString & path);
+   virtual bool IsPluginValid(const wxString & path);
 
-   virtual IdentInterface *CreateInstance(const PluginID & ID, const wxString & path);
+   virtual IdentInterface *CreateInstance(const wxString & path);
    virtual void DeleteInstance(IdentInterface *instance);
 
    // VampEffectModule implementation

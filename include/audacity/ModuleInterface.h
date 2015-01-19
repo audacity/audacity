@@ -91,10 +91,10 @@ public:
 
    // For modules providing an interface to other dynamically loaded plugins,
    // the module returns true if the plugin is still valid, otherwise false.
-   virtual bool IsPluginValid(const PluginID & ID, const wxString & path) = 0;
+   virtual bool IsPluginValid(const wxString & path) = 0;
 
    // When appropriate, CreateInstance() will be called to instantiate the plugin.
-   virtual IdentInterface *CreateInstance(const PluginID & ID, const wxString & path) = 0;
+   virtual IdentInterface *CreateInstance(const wxString & path) = 0;
 
    // When appropriate, DeleteInstance() will be called to delete the plugin.
    virtual void DeleteInstance(IdentInterface *instance) = 0;

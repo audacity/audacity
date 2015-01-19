@@ -178,7 +178,6 @@ enum InfoKeys
 {
    kKeySubIDs,
    kKeyBegin,
-   kKeyID,
    kKeyName,
    kKeyPath,
    kKeyVendor,
@@ -200,11 +199,6 @@ public:
    }
 
    // EffectClientInterface implementation
-
-   PluginID GetID()
-   {
-      return mID;
-   }
 
    wxString GetPath()
    {
@@ -272,7 +266,6 @@ public:
    }
 
 public:
-   PluginID mID;
    wxString mPath;
    wxString mName;
    wxString mVendor;
@@ -306,12 +299,6 @@ VSTEffectsModule::~VSTEffectsModule()
 // ============================================================================
 // IdentInterface implementation
 // ============================================================================
-
-wxString VSTEffectsModule::GetID()
-{
-   // Can be anything, but this is a v4 UUID
-   return wxT("c5520489-0253-418e-bdcd-daba3a227b28");
-}
 
 wxString VSTEffectsModule::GetPath()
 {
@@ -560,11 +547,6 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
                keycount++;
             break;
 
-            case kKeyID:
-               proc->mID = val;
-               keycount++;
-            break;
-
             case kKeyName:
                proc->mName = val;
                keycount++;
@@ -650,15 +632,13 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
    return valid;
 }
 
-bool VSTEffectsModule::IsPluginValid(const PluginID & WXUNUSED(ID),
-                                     const wxString & path)
+bool VSTEffectsModule::IsPluginValid(const wxString & path)
 {
    wxString realPath = path.BeforeFirst(wxT(';'));
    return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
-IdentInterface *VSTEffectsModule::CreateInstance(const PluginID & WXUNUSED(ID),
-                                                 const wxString & path)
+IdentInterface *VSTEffectsModule::CreateInstance(const wxString & path)
 {
    // For us, the ID is simply the path to the effect
    return new VSTEffect(path);
@@ -708,7 +688,6 @@ void VSTEffectsModule::Check(const wxChar *path)
          else
          {
             out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyBegin, wxEmptyString);
-            out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyID, effect->GetID().c_str());
             out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect->GetPath().c_str());
             out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect->GetName().c_str());
             out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor, effect->GetVendor().c_str());
@@ -1663,11 +1642,6 @@ VSTEffect::~VSTEffect()
 // ============================================================================
 // IdentInterface Implementation
 // ============================================================================
-
-wxString VSTEffect::GetID()
-{
-   return wxString(wxT("VST_") + GetVendor() + wxT("_") + GetName() + wxT("_") + GetVersion());
-}
 
 wxString VSTEffect::GetPath()
 {

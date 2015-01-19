@@ -57,12 +57,6 @@ NyquistEffectsModule::~NyquistEffectsModule()
 // IdentInterface implementation
 // ============================================================================
 
-wxString NyquistEffectsModule::GetID()
-{
-   // Can be anything, but this is a v4 UUID
-   return wxT("42a58b1e-cc24-4b55-861a-4b2008a7cf7b");
-}
-
 wxString NyquistEffectsModule::GetPath()
 {
    return mPath;
@@ -156,10 +150,9 @@ bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & WXUNUSED(pm),
    return false;
 }
 
-bool NyquistEffectsModule::IsPluginValid(const PluginID & ID,
-                                         const wxString & path)
+bool NyquistEffectsModule::IsPluginValid(const wxString & path)
 {
-   if (ID == wxT("nyquist prompt"))
+   if (path == wxT("nyquist prompt"))
    {
       return true;
    }
@@ -167,17 +160,25 @@ bool NyquistEffectsModule::IsPluginValid(const PluginID & ID,
    return wxFileName::FileExists(path);
 }
 
-IdentInterface *NyquistEffectsModule::CreateInstance(const PluginID & WXUNUSED(ID),
-                                                     const wxString & WXUNUSED(path))
+IdentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
 {
-   // Nothing to do here yet since we are autoregistering (and creating legacy
-   // effects anyway).
+   // Normally, we wouldn't have anything to do here since we're autoregistering, but
+   // if we have Nyquist effects in directories we didn't scan.
+
+   EffectNyquist *effect = new EffectNyquist(path);
+   if (effect->LoadedNyFile())
+   {
+      return effect;
+   }
+
+   delete effect;
+
    return NULL;
 }
 
-void NyquistEffectsModule::DeleteInstance(IdentInterface *WXUNUSED(instance))
+void NyquistEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   // Nothing to do here yet
+   // Nothing to do here
 }
 
 // ============================================================================

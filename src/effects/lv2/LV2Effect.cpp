@@ -302,14 +302,9 @@ LV2Effect::~LV2Effect()
 // IdentInterface implementation
 // ============================================================================
 
-wxString LV2Effect::GetID()
-{
-   return GetString(lilv_plugin_get_uri(mData));
-}
-
 wxString LV2Effect::GetPath()
 {
-   return GetString(lilv_plugin_get_bundle_uri(mData));
+   return GetString(lilv_plugin_get_uri(mData));
 }
 
 wxString LV2Effect::GetSymbol()

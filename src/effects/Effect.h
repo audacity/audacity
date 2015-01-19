@@ -82,7 +82,6 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
 
    // IdentInterface implementation
 
-   virtual PluginID GetID();
    virtual wxString GetPath();
    virtual wxString GetSymbol();
    virtual wxString GetName();
@@ -156,6 +155,7 @@ class AUDACITY_DLL_API Effect : public EffectHostInterface
 
    // Effect implementation
 
+   virtual PluginID GetID();
    virtual bool Startup(EffectClientInterface *client);
    virtual bool GetAutomationParameters(wxString & parms);
    virtual bool SetAutomationParameters(const wxString & parms);

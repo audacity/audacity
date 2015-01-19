@@ -50,7 +50,6 @@ public:
    virtual ~IdentInterface() {};
 
    // These should return an untranslated value
-   virtual PluginID GetID() = 0;
    virtual wxString GetPath() = 0;
    virtual wxString GetSymbol() = 0;
 

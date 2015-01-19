@@ -140,12 +140,6 @@ LV2EffectsModule::~LV2EffectsModule()
 // IdentInterface implementation
 // ============================================================================
 
-wxString LV2EffectsModule::GetID()
-{
-   // Can be anything, but this is a v4 UUID
-   return wxT("5d03b6ad-ca64-41b2-a3f2-785ff5b279d9");
-}
-
 wxString LV2EffectsModule::GetPath()
 {
    return mPath;
@@ -322,18 +316,16 @@ bool LV2EffectsModule::RegisterPlugin(PluginManagerInterface & WXUNUSED(pm), con
    return false;
 }
 
-bool LV2EffectsModule::IsPluginValid(const PluginID & ID,
-                                     const wxString & WXUNUSED(path))
+bool LV2EffectsModule::IsPluginValid(const wxString & path)
 {
-   LilvNode *uri = lilv_new_uri(gWorld, ID.ToUTF8());
+   LilvNode *uri = lilv_new_uri(gWorld, path.ToUTF8());
    const LilvPlugin *plugin = lilv_plugins_get_by_uri(lilv_world_get_all_plugins(gWorld), uri);
    lilv_node_free(uri);
 
    return plugin != NULL;
 }
 
-IdentInterface *LV2EffectsModule::CreateInstance(const PluginID & WXUNUSED(ID),
-                                                 const wxString & WXUNUSED(path))
+IdentInterface *LV2EffectsModule::CreateInstance(const wxString & WXUNUSED(path))
 {
    // Nothing to do here yet since we are autoregistering (and creating legacy
    // effects anyway).

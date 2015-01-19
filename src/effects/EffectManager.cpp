@@ -215,7 +215,7 @@ EffectManager::~EffectManager()
    }
 }
 
-void EffectManager::RegisterEffect(IdentInterface *p, Effect *f, int NewFlags)
+void EffectManager::RegisterEffect(ModuleInterface *p, Effect *f, int NewFlags)
 {
    f->SetEffectID(mNumEffects++);
 
@@ -224,9 +224,7 @@ void EffectManager::RegisterEffect(IdentInterface *p, Effect *f, int NewFlags)
       f->SetEffectFlags( NewFlags );
    }
 
-   PluginManager::Get().RegisterEffectPlugin(p, f);
-
-   mEffects[f->GetID()] = f;
+   mEffects[PluginManager::Get().RegisterEffectPlugin(p, f)] = f;
 }
 
 void EffectManager::RegisterEffect(Effect *f, int NewFlags)
@@ -779,11 +777,20 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
    // TODO: This is temporary and should be redone when all effects are converted
    if (mEffects.find(ID) == mEffects.end())
    {
+      EffectIdentInterface *ident = dynamic_cast<EffectIdentInterface *>(PluginManager::Get().GetInstance(ID));
+      if (ident && ident->IsLegacy())
+      {
+         effect = dynamic_cast<Effect *>(ident);
+         effect->SetEffectID(mNumEffects++);
+         mEffects[ID] = effect;
+         return effect;
+      }
+
       effect = new Effect();
       if (effect)
       {
          // This will instantiate the effect client if it hasn't already been done
-         EffectClientInterface *client = dynamic_cast<EffectClientInterface *>(PluginManager::Get().GetInstance(ID));
+         EffectClientInterface *client = dynamic_cast<EffectClientInterface *>(ident);
          if (client && effect->Startup(client))
          {
             effect->SetEffectID(mNumEffects++);

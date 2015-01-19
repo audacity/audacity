@@ -70,7 +70,6 @@ public:
 
    // IdentInterface implementation
 
-   virtual PluginID GetID();
    virtual wxString GetPath();
    virtual wxString GetSymbol();
    virtual wxString GetName();

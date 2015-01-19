@@ -79,12 +79,6 @@ AudioUnitEffectsModule::~AudioUnitEffectsModule()
 // IdentInterface implementation
 // ============================================================================
 
-wxString AudioUnitEffectsModule::GetID()
-{
-   // Can be anything, but this is a v4 UUID
-   return wxT("1e767ec4-6f78-4c94-b6b8-c50b5780093b");
-}
-
 wxString AudioUnitEffectsModule::GetPath()
 {
    return mPath;
@@ -171,15 +165,13 @@ bool AudioUnitEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const w
    return true;
 }
 
-bool AudioUnitEffectsModule::IsPluginValid(const PluginID & ID,
-                                           const wxString & path)
+bool AudioUnitEffectsModule::IsPluginValid(const wxString & path)
 {
    wxString name;
    return FindAudioUnit(path, name) != NULL;
 }
 
-IdentInterface *AudioUnitEffectsModule::CreateInstance(const PluginID & ID,
-                                                       const wxString & path)
+IdentInterface *AudioUnitEffectsModule::CreateInstance(const wxString & path)
 {
    wxString name;
    Component component = FindAudioUnit(path, name);
@@ -495,7 +487,7 @@ void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       fn.Normalize();
       fn.Mkdir(0755, wxPATH_MKDIR_FULL);
       path = fn.GetFullPath();
-wxPrintf(wxT("path %s\n"), path.c_str());
+
       // First set the name of the preset
       wxMacCFStringHolder cfname;
       cfname.Assign(name);
@@ -965,11 +957,6 @@ AudioUnitEffect::~AudioUnitEffect()
 // ============================================================================
 // IdentInterface implementation
 // ============================================================================
-
-wxString AudioUnitEffect::GetID()
-{
-   return mPath;
-}
 
 wxString AudioUnitEffect::GetPath()
 {

@@ -93,12 +93,12 @@ public:
    wxArrayString FindPluginsForProvider(const PluginID & provider, const wxString & path);
    bool RegisterPlugin(const PluginID & provider, const wxString & path);
 
-   IdentInterface *CreateProviderInstance(const PluginID & ID, const wxString & path);
-   IdentInterface *CreateInstance(const PluginID & provider, const PluginID & ID, const wxString & path);
+   IdentInterface *CreateProviderInstance(const PluginID & provider, const wxString & path);
+   IdentInterface *CreateInstance(const PluginID & provider, const wxString & path);
    void DeleteInstance(const PluginID & provider, IdentInterface *instance);
 
    bool IsProviderValid(const PluginID & provider, const wxString & path);
-   bool IsPluginValid(const PluginID & provider, const PluginID & ID, const wxString & path);
+   bool IsPluginValid(const PluginID & provider, const wxString & path);
 
 private:
    void InitializeBuiltins();

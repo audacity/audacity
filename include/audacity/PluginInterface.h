@@ -47,15 +47,18 @@
 #include "audacity/EffectInterface.h"
 #include "audacity/IdentInterface.h"
 #include "audacity/ImporterInterface.h"
+#include "audacity/ModuleInterface.h"
+
+class ModuleInterface;
 
 class PluginManagerInterface
 {
 public:
    virtual ~PluginManagerInterface() {};
 
-   virtual void RegisterModulePlugin(IdentInterface *module) = 0;
-   virtual void RegisterEffectPlugin(IdentInterface *provider, EffectIdentInterface *effect) = 0;
-   virtual void RegisterImporterPlugin(IdentInterface *provider, ImporterInterface *importer) = 0;
+   virtual const PluginID & RegisterModulePlugin(ModuleInterface *module) = 0;
+   virtual const PluginID & RegisterEffectPlugin(ModuleInterface *provider, EffectIdentInterface *effect) = 0;
+   virtual const PluginID & RegisterImporterPlugin(ModuleInterface *provider, ImporterInterface *importer) = 0;
 
    virtual void FindFilesInPathList(const wxString & pattern,
                                     const wxArrayString & pathList,

@@ -395,7 +395,7 @@ bool ModuleManager::DiscoverProviders()
       ModuleInterface *module = LoadModule(provList[i]);
       if (module)
       {
-         // First, we need to remember it 
+         // Register the provider
          pm.RegisterModulePlugin(module);
 
          // Now, allow the module to auto-register children
@@ -416,12 +416,13 @@ void ModuleManager::InitializeBuiltins()
 
       if (module->Initialize())
       {
-         mDynModules[module->GetID()] = module;
+         // Register the provider
+         const PluginID & id = pm.RegisterModulePlugin(module);
 
-         // First, we need to remember it 
-         pm.RegisterModulePlugin(module);
+         // Need to remember it 
+         mDynModules[id] = module;
 
-         // Now, allow the module to auto-register children
+         // Allow the module to auto-register children
          module->AutoRegisterPlugins(pm);
       }
    }
@@ -444,7 +445,7 @@ ModuleInterface *ModuleManager::LoadModule(const wxString & path)
             if (module->Initialize())
             {
 
-               mDynModules[module->GetID()] = module;
+               mDynModules[PluginManager::GetID(module)] = module;
                mLibs[module] = lib;
 
                return module;
@@ -466,7 +467,7 @@ void ModuleManager::UnloadModule(ModuleInterface *module)
 {
    if (module)
    {
-      const PluginID & modID = module->GetID();
+      PluginID modID = PluginManager::GetID(module);
 
       module->Terminate();
 
@@ -484,7 +485,7 @@ void ModuleManager::UnloadModule(ModuleInterface *module)
 
 void ModuleManager::RegisterModule(ModuleInterface *module)
 {
-   wxString id = module->GetID();
+   PluginID id = PluginManager::GetID(module);
 
    if (mDynModules.find(id) != mDynModules.end())
    {
@@ -565,7 +566,6 @@ IdentInterface *ModuleManager::CreateProviderInstance(const PluginID & providerI
 }
 
 IdentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
-                                              const PluginID & ID,
                                               const wxString & path)
 {
    if (mDynModules.find(providerID) == mDynModules.end())
@@ -573,7 +573,7 @@ IdentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
       return NULL;
    }
 
-   return mDynModules[providerID]->CreateInstance(ID, path);
+   return mDynModules[providerID]->CreateInstance(path);
 }
 
 void ModuleManager::DeleteInstance(const PluginID & providerID,
@@ -606,7 +606,6 @@ bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
 }
 
 bool ModuleManager::IsPluginValid(const PluginID & providerID,
-                                  const PluginID & ID,
                                   const wxString & path)
 {
    if (mDynModules.find(providerID) == mDynModules.end())
@@ -614,6 +613,6 @@ bool ModuleManager::IsPluginValid(const PluginID & providerID,
       return false;
    }
 
-   return mDynModules[providerID]->IsPluginValid(ID, path);
+   return mDynModules[providerID]->IsPluginValid(path);
 }
 

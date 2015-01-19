@@ -68,11 +68,6 @@ VampEffect::~VampEffect()
 // IdentInterface implementation
 // ============================================================================
 
-wxString VampEffect::GetID()
-{
-   return mName;
-}
-
 wxString VampEffect::GetPath()
 {
    Vamp::HostExt::PluginLoader *loader = Vamp::HostExt::PluginLoader::getInstance();

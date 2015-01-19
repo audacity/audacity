@@ -805,7 +805,7 @@ IdentInterface *PluginDescriptor::GetInstance()
       }
       else
       {
-         mInstance = ModuleManager::Get().CreateInstance(GetProviderID(), GetID(), GetPath());
+         mInstance = ModuleManager::Get().CreateInstance(GetProviderID(), GetPath());
       }
    }
 
@@ -1083,19 +1083,21 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 //
 // ============================================================================
 
-void PluginManager::RegisterModulePlugin(IdentInterface *module)
+const PluginID & PluginManager::RegisterModulePlugin(ModuleInterface *module)
 {
-   PluginDescriptor & plug = CreatePlugin(module, PluginTypeModule);
+   PluginDescriptor & plug = CreatePlugin(GetID(module), module, PluginTypeModule);
 
    plug.SetEnabled(true);
    plug.SetValid(true);
+
+   return plug.GetID();
 }
 
-void PluginManager::RegisterEffectPlugin(IdentInterface *provider, EffectIdentInterface *effect)
+const PluginID & PluginManager::RegisterEffectPlugin(ModuleInterface *provider, EffectIdentInterface *effect)
 {
-   PluginDescriptor & plug = CreatePlugin(effect, PluginTypeEffect);
+   PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, PluginTypeEffect);
 
-   plug.SetProviderID(provider->GetID());
+   plug.SetProviderID(PluginManager::GetID(provider));
 
    plug.SetEffectType(effect->GetType());
    plug.SetEffectFamily(effect->GetFamily());
@@ -1106,17 +1108,21 @@ void PluginManager::RegisterEffectPlugin(IdentInterface *provider, EffectIdentIn
 
    plug.SetEnabled(true);
    plug.SetValid(true);
+
+   return plug.GetID();
 }
 
-void PluginManager::RegisterImporterPlugin(IdentInterface *provider, ImporterInterface *importer)
+const PluginID & PluginManager::RegisterImporterPlugin(ModuleInterface *provider, ImporterInterface *importer)
 {
-   PluginDescriptor & plug = CreatePlugin(importer, PluginTypeImporter);
+   PluginDescriptor & plug = CreatePlugin(GetID(importer), importer, PluginTypeImporter);
 
-   plug.SetProviderID(provider->GetID());
+   plug.SetProviderID(PluginManager::GetID(provider));
 
    plug.SetImporterIdentifier(importer->GetPluginStringID());
    plug.SetImporterFilterDescription(importer->GetPluginFormatDescription());
    plug.SetImporterExtensions(importer->GetSupportedExtensions());
+
+   return plug.GetID();
 }
 
 void PluginManager::FindFilesInPathList(const wxString & pattern,
@@ -1432,26 +1438,27 @@ void PluginManager::Load()
    }
 
    // Load all provider plugins first
-   LoadGroup(wxT("modules"), PluginTypeModule);
+   LoadGroup(PluginTypeModule);
 
    // Now the rest
-   LoadGroup(wxT("effects"), PluginTypeEffect);
-   LoadGroup(wxT("exporters"), PluginTypeExporter);
-   LoadGroup(wxT("importers"), PluginTypeImporter);
+   LoadGroup(PluginTypeEffect);
+   LoadGroup(PluginTypeExporter);
+   LoadGroup(PluginTypeImporter);
 
-   LoadGroup(wxT("placeholders"), PluginTypeNone);
+   LoadGroup(PluginTypeNone);
 
    delete mRegistry;
 
    return;
 }
 
-void PluginManager::LoadGroup(const wxChar * group, PluginType type)
+void PluginManager::LoadGroup(PluginType type)
 {
    wxString strVal;
    bool boolVal;
    wxString groupName;
    long groupIndex;
+   wxString group = GetPluginTypeString(type);
    wxString cfgPath = REGROOT + group + wxCONFIG_PATH_SEPARATOR;
 
    mRegistry->SetPath(cfgPath);
@@ -1669,13 +1676,13 @@ void PluginManager::Save()
    mRegistry->Write(REGVERKEY, REGVERCUR);
 
    // Save the individual groups
-   SaveGroup(wxT("effects"), PluginTypeEffect);
-   SaveGroup(wxT("exporters"), PluginTypeExporter);
-   SaveGroup(wxT("importers"), PluginTypeImporter);
-   SaveGroup(wxT("placeholders"), PluginTypeNone);
+   SaveGroup(PluginTypeEffect);
+   SaveGroup(PluginTypeExporter);
+   SaveGroup(PluginTypeImporter);
+   SaveGroup(PluginTypeNone);
 
    // And now the providers
-   SaveGroup(wxT("modules"), PluginTypeModule);
+   SaveGroup(PluginTypeModule);
 
    // Just to be safe
    mRegistry->Flush();
@@ -1683,8 +1690,9 @@ void PluginManager::Save()
    delete mRegistry;
 }
 
-void PluginManager::SaveGroup(const wxChar *group, PluginType type)
+void PluginManager::SaveGroup(PluginType type)
 {
+   wxString group = GetPluginTypeString(type);
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
    {
       PluginDescriptor & plug = iter->second;
@@ -1809,7 +1817,7 @@ void PluginManager::CheckForUpdates()
       }
       else
       {
-         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugID, plugPath));
+         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath));
       }
 
       iter++;
@@ -1913,6 +1921,7 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
    for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
    {
       PluginDescriptor & plug = mPluginsIter->second;
+
       bool familyEnabled;
       if (type == PluginTypeEffect)
       {
@@ -1956,7 +1965,7 @@ bool PluginManager::IsRegistered(const PluginID & ID)
 
 const PluginID & PluginManager::RegisterLegacyEffectPlugin(EffectIdentInterface *effect)
 {
-   PluginDescriptor & plug = CreatePlugin(effect, PluginTypeEffect);
+   PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, PluginTypeEffect);
 
    plug.SetEffectType(effect->GetType());
    plug.SetEffectFamily(effect->GetFamily());
@@ -2048,14 +2057,72 @@ void PluginManager::SetInstance(const PluginID & ID, IdentInterface *instance)
    return mPlugins[ID].SetInstance(instance);
 }
 
-PluginDescriptor & PluginManager::CreatePlugin(IdentInterface *ident, PluginType type)
+PluginID PluginManager::GetID(ModuleInterface *module)
+{
+   return wxString::Format(wxT("%s_%s_%s_%s_%s"),
+                           GetPluginTypeString(PluginTypeModule),
+                           wxEmptyString,
+                           module->GetVendor().c_str(),
+                           module->GetName().c_str(),
+                           module->GetPath().c_str());
+}
+
+PluginID PluginManager::GetID(EffectIdentInterface *effect)
+{
+   return wxString::Format(wxT("%s_%s_%s_%s_%s"),
+                           GetPluginTypeString(PluginTypeEffect),
+                           effect->GetFamily().c_str(),
+                           effect->GetVendor().c_str(),
+                           effect->GetName().c_str(),
+                           effect->GetPath().c_str());
+}
+
+PluginID PluginManager::GetID(ImporterInterface *importer)
+{
+   return wxString::Format(wxT("%s_%s_%s_%s_%s"),
+                           GetPluginTypeString(PluginTypeImporter),
+                           wxEmptyString,
+                           importer->GetVendor().c_str(),
+                           importer->GetName().c_str(),
+                           importer->GetPath().c_str());
+}
+
+wxString PluginManager::GetPluginTypeString(PluginType type)
+{
+   wxString str;
+
+   switch (type)
+   {
+   case PluginTypeNone:
+      str = wxT("Placeholder");
+      break;
+   case PluginTypeEffect:
+      str = wxT("Effect");
+      break;
+   case PluginTypeExporter:
+      str = wxT("Exporter");
+      break;
+   case PluginTypeImporter:
+      str = wxT("Importer");
+      break;
+   case PluginTypeModule:
+      str = wxT("Module");
+      break;
+   }
+
+   return str;
+}
+
+PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
+                                               IdentInterface *ident,
+                                               PluginType type)
 {
    // This will either create a new entry or replace an existing entry
-   PluginDescriptor & plug = mPlugins[ident->GetID()];
+   PluginDescriptor & plug = mPlugins[id];
 
    plug.SetPluginType(type);
 
-   plug.SetID(ident->GetID());
+   plug.SetID(id);
    plug.SetPath(ident->GetPath());
    plug.SetName(ident->GetName());
    plug.SetVendor(ident->GetVendor());
@@ -2303,15 +2370,28 @@ bool PluginManager::SetConfig(const wxString & key, const sampleCount & value)
    return result;
 }
 
-wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
+wxString PluginManager::SettingsID(const PluginID & ID)
 {
    if (mPlugins.find(ID) == mPlugins.end())
    {
       return wxEmptyString;
    }
 
+   const PluginDescriptor & plug = mPlugins[ID];
+
+   return wxString::Format(wxT("%s_%s_%s_%s"),
+                           GetPluginTypeString(plug.GetPluginType()),
+                           plug.GetEffectFamily().c_str(), // is empty for non-Effects
+                           plug.GetVendor().c_str(),
+                           plug.GetName().c_str());
+}
+
+wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
+{
+   wxString settingsID = SettingsID(ID);
+
    wxString path = SETROOT +
-                   ConvertID(mPlugins[ID].GetProviderID()) +
+                   ConvertID(settingsID) +
                    wxCONFIG_PATH_SEPARATOR +
                    wxT("shared") +
                    wxCONFIG_PATH_SEPARATOR;
@@ -2338,13 +2418,10 @@ wxString PluginManager::SharedKey(const PluginID & ID, const wxString & group, c
 
 wxString PluginManager::PrivateGroup(const PluginID & ID, const wxString & group)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
-      return wxEmptyString;
-   }
+   wxString settingsID = SettingsID(ID);
 
    wxString path = SETROOT +
-                  ConvertID(ID) +
+                  ConvertID(settingsID) +
                   wxCONFIG_PATH_SEPARATOR +
                   wxT("private") +
                   wxCONFIG_PATH_SEPARATOR;
