@@ -233,7 +233,8 @@ Meter::Meter(AudacityProject *project,
    mNumBars(0),
    mLayoutValid(false),
    mBitmap(NULL),
-   mIcon(NULL)
+   mIcon(NULL),
+   mAccSilent(false)
 {
    mStyle = mDesiredStyle;
 
@@ -1913,7 +1914,21 @@ void Meter::ShowMenu(const wxPoint & pos)
 
    menu->Append(OnPreferencesID, _("Preferences..."));
 
+   mAccSilent = true;      // temporarily make screen readers say (close to) nothing on focus events
+
    PopupMenu(menu, pos);
+
+   /* if stop/start monitoring was chosen in the menu, then by this point
+   OnMonitoring has been called and variables which affect the accessibility
+   name have been updated so it's now ok for screen readers to read the name of
+   the button */
+   mAccSilent = false;
+#if wxUSE_ACCESSIBILITY
+   GetAccessible()->NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
+                                this,
+                                wxOBJID_CLIENT,
+                                wxACC_SELF);
+#endif
 
    delete menu;
 }
@@ -2195,44 +2210,52 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
 {
    Meter *m = wxDynamicCast(GetWindow(), Meter);
 
-   *name = m->GetName();
-   if (name->IsEmpty())
+   if (m->mAccSilent)
    {
-      *name = m->GetLabel();
-   }
-
-   if (name->IsEmpty())
-   {
-      *name = _("Meter");
-   }
-
-   if (m->mMonitoring)
-   {
-      *name += wxString::Format(_(" Monitoring "));
-   }
-   else if (m->mActive)
-   {
-      *name += wxString::Format(_(" Active "));
-   }
-
-   float peak = 0.;
-   for (int i = 0; i < m->mNumBars; i++)
-   {
-      peak = wxMax(peak, m->mBar[i].peakPeakHold);
-   }
-
-   if (m->mDB)
-   {
-      *name += wxString::Format(_(" Peak %2.f dB"), (peak * m->mDBRange) - m->mDBRange);
+      *name = wxT("");     // Jaws reads nothing, and nvda reads "unknown"
    }
    else
    {
-      *name += wxString::Format(_(" Peak %.2f "), peak);
-   }
 
-   if (m->IsClipping())
-   {
-      *name += wxString::Format(_(" Clipped "));
+      *name = m->GetName();
+      if (name->IsEmpty())
+      {
+         *name = m->GetLabel();
+      }
+
+      if (name->IsEmpty())
+      {
+         *name = _("Meter");
+      }
+
+      if (m->mMonitoring)
+      {
+         *name += wxString::Format(_(" Monitoring "));
+      }
+      else if (m->mActive)
+      {
+         *name += wxString::Format(_(" Active "));
+      }
+
+      float peak = 0.;
+      for (int i = 0; i < m->mNumBars; i++)
+      {
+         peak = wxMax(peak, m->mBar[i].peakPeakHold);
+      }
+
+      if (m->mDB)
+      {
+         *name += wxString::Format(_(" Peak %2.f dB"), (peak * m->mDBRange) - m->mDBRange);
+      }
+      else
+      {
+         *name += wxString::Format(_(" Peak %.2f "), peak);
+      }
+
+      if (m->IsClipping())
+      {
+         *name += wxString::Format(_(" Clipped "));
+      }
    }
 
    return wxACC_OK;
@@ -2241,7 +2264,12 @@ wxAccStatus MeterAx::GetName(int WXUNUSED(childId), wxString* name)
 // Returns a role constant.
 wxAccStatus MeterAx::GetRole(int WXUNUSED(childId), wxAccRole* role)
 {
-   *role = wxROLE_SYSTEM_BUTTONDROPDOWN;
+   Meter *m = wxDynamicCast(GetWindow(), Meter);
+
+   if (m->mAccSilent)
+      *role = wxROLE_NONE;    // Jaws and nvda both read nothing
+   else
+      *role = wxROLE_SYSTEM_BUTTONDROPDOWN;
 
    return wxACC_OK;
 }
