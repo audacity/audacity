@@ -2060,7 +2060,7 @@ void PluginManager::SetInstance(const PluginID & ID, IdentInterface *instance)
 PluginID PluginManager::GetID(ModuleInterface *module)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeModule),
+                           GetPluginTypeString(PluginTypeModule).c_str(),
                            wxEmptyString,
                            module->GetVendor().c_str(),
                            module->GetName().c_str(),
@@ -2070,7 +2070,7 @@ PluginID PluginManager::GetID(ModuleInterface *module)
 PluginID PluginManager::GetID(EffectIdentInterface *effect)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeEffect),
+                           GetPluginTypeString(PluginTypeEffect).c_str(),
                            effect->GetFamily().c_str(),
                            effect->GetVendor().c_str(),
                            effect->GetName().c_str(),
@@ -2080,7 +2080,7 @@ PluginID PluginManager::GetID(EffectIdentInterface *effect)
 PluginID PluginManager::GetID(ImporterInterface *importer)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeImporter),
+                           GetPluginTypeString(PluginTypeImporter).c_str(),
                            wxEmptyString,
                            importer->GetVendor().c_str(),
                            importer->GetName().c_str(),
@@ -2380,7 +2380,7 @@ wxString PluginManager::SettingsID(const PluginID & ID)
    const PluginDescriptor & plug = mPlugins[ID];
 
    return wxString::Format(wxT("%s_%s_%s_%s"),
-                           GetPluginTypeString(plug.GetPluginType()),
+                           GetPluginTypeString(plug.GetPluginType()).c_str(),
                            plug.GetEffectFamily().c_str(), // is empty for non-Effects
                            plug.GetVendor().c_str(),
                            plug.GetName().c_str());
