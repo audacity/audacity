@@ -71,9 +71,9 @@ class DirManager: public XMLTagHandler {
                                  sampleCount aliasLen, int aliasChannel, int decodeType);
 
    /// Returns true if the blockfile pointed to by b is contained by the DirManager
-   bool ContainsBlockFile(BlockFile *b);
+   bool ContainsBlockFile(BlockFile *b) const;
    /// Check for existing using filename using complete filename
-   bool ContainsBlockFile(wxString filepath);
+   bool ContainsBlockFile(wxString filepath) const;
 
    // Adds one to the reference count of the block file,
    // UNLESS it is "locked", then it makes a new copy of

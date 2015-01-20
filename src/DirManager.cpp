@@ -934,15 +934,19 @@ BlockFile *DirManager::NewODDecodeBlockFile(
    return newBlockFile;
 }
 
-bool DirManager::ContainsBlockFile(BlockFile *b)
+bool DirManager::ContainsBlockFile(BlockFile *b) const
 {
-   return b ? mBlockFileHash[b->GetFileName().GetName()] == b : false;
+   if (!b)
+      return false;
+   BlockHash::const_iterator it = mBlockFileHash.find(b->GetFileName().GetName());
+   return it != mBlockFileHash.end() && it->second == b;
 }
 
-bool DirManager::ContainsBlockFile(wxString filepath)
+bool DirManager::ContainsBlockFile(wxString filepath) const
 {
    // check what the hash returns in case the blockfile is from a different project
-   return mBlockFileHash[filepath] != NULL;
+   BlockHash::const_iterator it = mBlockFileHash.find(filepath);
+   return it != mBlockFileHash.end();
 }
 
 // Adds one to the reference count of the block file,
