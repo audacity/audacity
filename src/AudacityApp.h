@@ -226,7 +226,7 @@ class AudacityApp:public wxApp {
    void DeInitCommandHandler();
 
    bool InitTempDir();
-   bool CreateSingleInstanceChecker();
+   bool CreateSingleInstanceChecker(wxString dir);
 
    wxCmdLineParser *ParseCommandLine();
 
