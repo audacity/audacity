@@ -67,7 +67,7 @@ typedef std::vector<float> FloatVector;
 //#define ISOLATE_CHOICE
 
 // Define for Attack and release controls.
-//#define ATTACK_AND_RELEASE
+// #define ATTACK_AND_RELEASE
 
 // Define to expose other advanced, experimental dialog controls
 //#define ADVANCED_SETTINGS
@@ -199,21 +199,21 @@ public:
    bool Validate() const;
 
    int WindowSize() const { return 1 << (3 + mWindowSizeChoice); }
-   int StepsPerWindow() const { return 1 << (1+ mStepsPerWindowChoice); }
+   int StepsPerWindow() const { return 1 << (1 + mStepsPerWindowChoice); }
 
    bool      mDoProfile;
 
    // Stored in preferences:
 
    // Basic:
-   double     mOldSensitivity;    // in dB, plus or minus
-   double     mFreqSmoothingHz;
+   double     mNewSensitivity;   // - log10 of a probability... yeah.
+   double     mFreqSmoothingBands; // really an integer
    double     mNoiseGain;         // in dB, positive
    double     mAttackTime;        // in secs
    double     mReleaseTime;       // in secs
 
    // Advanced:
-   double     mNewSensitivity;   // - log10 of a probability... yeah.
+   double     mOldSensitivity;    // in dB, plus or minus
 
    // Basic:
    int        mNoiseReductionChoice;
@@ -309,7 +309,7 @@ private:
    float     mOneBlockAttack;
    float     mOneBlockRelease;
    float     mNoiseAttenFactor;
-   float     mSensitivityFactor;
+   float     mOldSensitivityFactor;
 
    int       mNWindowsToExamine;
    int       mCenter;
@@ -331,8 +331,6 @@ private:
       FloatVector mImagFFTs;
    };
    std::vector<Record*> mQueue;
-
-   friend class EffectNoiseReduction::Dialog;
 };
 
 /****************************************************************//**
@@ -367,7 +365,7 @@ private:
    void DisableControlsIfIsolating();
 
 #ifdef ADVANCED_SETTINGS
-   void EnableSensitivityControls();
+   void EnableDisableSensitivityControls();
 #endif
 
    // handlers
@@ -514,17 +512,17 @@ namespace {
 
 bool EffectNoiseReduction::Settings::PrefsIO(bool read)
 {
-   static const double DEFAULT_SENSITIVITY = 6.0;
+   static const double DEFAULT_OLD_SENSITIVITY = 0.0;
 
    static const PrefsTableEntry<Settings, double> doubleTable[] = {
-         { &Settings::mNewSensitivity, wxT("Sensitivity"), 0.0 },
-         { &Settings::mFreqSmoothingHz, wxT("FreqSmoothing"), 150.0 },
-         { &Settings::mNoiseGain, wxT("Gain"), 24.0 },
+         { &Settings::mNewSensitivity, wxT("Sensitivity"), 6.0 },
+         { &Settings::mNoiseGain, wxT("Gain"), 12.0 },
          { &Settings::mAttackTime, wxT("AttackTime"), 0.02 },
          { &Settings::mReleaseTime, wxT("ReleaseTime"), 0.10 },
+         { &Settings::mFreqSmoothingBands, wxT("FreqSmoothing"), 0.0 },
 
          // Advanced settings
-         { &Settings::mOldSensitivity, wxT("NewSensitivity"), DEFAULT_SENSITIVITY },
+         { &Settings::mOldSensitivity, wxT("OldSensitivity"), DEFAULT_OLD_SENSITIVITY },
    };
    static int doubleTableSize = sizeof(doubleTable) / sizeof(doubleTable[0]);
 
@@ -552,11 +550,12 @@ bool EffectNoiseReduction::Settings::PrefsIO(bool read)
 #endif
 
 #ifndef ADVANCED_SETTINGS
-      mWindowTypes = WT_HANN_HANN;
+      // Initialize all hidden advanced settings to defaults.
+      mWindowTypes = WT_DEFAULT_WINDOW_TYPES;
       mWindowSizeChoice = DEFAULT_WINDOW_SIZE_CHOICE;
       mStepsPerWindowChoice = DEFAULT_STEPS_PER_WINDOW_CHOICE;
       mMethod = DM_DEFAULT_METHOD;
-      mNewSensitivity = DEFAULT_SENSITIVITY;
+      mOldSensitivity = DEFAULT_OLD_SENSITIVITY;
 #endif
 
 #ifndef OLD_METHOD_AVAILABLE
@@ -744,7 +743,7 @@ EffectNoiseReduction::Worker::Worker
 
 , mSpectrumSize(1 + mWindowSize / 2)
 , mFreqSmoothingScratch(mSpectrumSize)
-, mFreqSmoothingBins((int)(settings.mFreqSmoothingHz * mWindowSize / mSampleRate))
+, mFreqSmoothingBins(int(settings.mFreqSmoothingBands))
 , mBinLow(0)
 , mBinHigh(mSpectrumSize)
 
@@ -779,7 +778,7 @@ EffectNoiseReduction::Worker::Worker
    mOneBlockAttack = pow(10.0, (noiseGain / (20.0 * nAttackBlocks)));
    mOneBlockRelease = pow(10.0, (noiseGain / (20.0 * nReleaseBlocks)));
    // Applies to power, divide by 10:
-   mSensitivityFactor = pow(10.0, settings.mOldSensitivity / 10.0);
+   mOldSensitivityFactor = pow(10.0, settings.mOldSensitivity / 10.0);
 
    mNWindowsToExamine = (mMethod == DM_OLD_METHOD)
       ? std::max(2, (int)(minSignalTime * sampleRate / mStepSize))
@@ -1082,7 +1081,7 @@ bool EffectNoiseReduction::Worker::Classify(const Statistics &statistics, int ba
          float min = mQueue[0]->mSpectrums[band];
          for (int ii = 1; ii < mNWindowsToExamine; ++ii)
             min = std::min(min, mQueue[ii]->mSpectrums[band]);
-         return min <= mSensitivityFactor * statistics.mNoiseThreshold[band];
+         return min <= mOldSensitivityFactor * statistics.mNoiseThreshold[band];
       }
 #endif
    // New methods suppose an exponential distribution of power values
@@ -1369,11 +1368,8 @@ enum {
    ID_GAIN_SLIDER,
    ID_GAIN_TEXT,
 
-   ID_SENSITIVITY_SLIDER,
-   ID_SENSITIVITY_TEXT,
-
-   ID_FREQ_SLIDER,
-   ID_FREQ_TEXT,
+   ID_NEW_SENSITIVITY_SLIDER,
+   ID_NEW_SENSITIVITY_TEXT,
 
 #ifdef ATTACK_AND_RELEASE
    ID_ATTACK_TIME_SLIDER,
@@ -1383,11 +1379,14 @@ enum {
    ID_RELEASE_TIME_TEXT,
 #endif
 
+   ID_FREQ_SLIDER,
+   ID_FREQ_TEXT,
+
    END_OF_BASIC_SLIDERS,
 
 #ifdef ADVANCED_SETTINGS
-   ID_NEW_SENSITIVITY_SLIDER = END_OF_BASIC_SLIDERS,
-   ID_NEW_SENSITIVITY_TEXT,
+   ID_OLD_SENSITIVITY_SLIDER = END_OF_BASIC_SLIDERS,
+   ID_OLD_SENSITIVITY_TEXT,
 
    END_OF_ADVANCED_SLIDERS,
    END_OF_SLIDERS = END_OF_ADVANCED_SLIDERS,
@@ -1443,6 +1442,7 @@ const struct ControlInfo {
    double valueMin;
    double valueMax;
    long sliderMax;
+   // (valueMin - valueMax) / sliderMax is the value increment of the slider
    const wxChar* format;
    bool formatAsInt;
    wxString textBoxCaption;
@@ -1452,12 +1452,8 @@ const struct ControlInfo {
      0.0, 48.0, 48, wxT("%d"), true,
      _("&Noise reduction (dB):"), _("Noise reduction") },
    { &EffectNoiseReduction::Settings::mNewSensitivity,
-      1.0, 24.0, 92, wxT("%.2f"), false,
-//   wxT("New method sensiti&vity:\n(units? you want units?)"), _("New sensitivity") },
+      0.0, 24.0, 48, wxT("%.2f"), false,
      _("&Sensitivity:"), _("Sensitivity") },
-   { &EffectNoiseReduction::Settings::mFreqSmoothingHz,
-     0, 1000, 100, wxT("%d"), true,
-     _("&Frequency smoothing (Hz):"), _("Frequency smoothing") },
 #ifdef ATTACK_AND_RELEASE
    { &EffectNoiseReduction::Settings::mAttackTime,
      0, 1.0, 100, wxT("%.2f"), false,
@@ -1466,6 +1462,9 @@ const struct ControlInfo {
      0, 1.0, 100, wxT("%.2f"), false,
      _("R&elease time (secs):"), _("Release time") },
 #endif
+   { &EffectNoiseReduction::Settings::mFreqSmoothingBands,
+   0, 6, 6, wxT("%d"), true,
+   _("&Frequency smoothing (bands):"), _("Frequency smoothing") },
 
 #ifdef ADVANCED_SETTINGS
    { &EffectNoiseReduction::Settings::mOldSensitivity,
@@ -1499,8 +1498,8 @@ BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialog)
    EVT_SLIDER(ID_GAIN_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
    EVT_TEXT(ID_GAIN_TEXT, EffectNoiseReduction::Dialog::OnText)
 
-   EVT_SLIDER(ID_SENSITIVITY_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
-   EVT_TEXT(ID_SENSITIVITY_TEXT, EffectNoiseReduction::Dialog::OnText)
+   EVT_SLIDER(ID_NEW_SENSITIVITY_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
+   EVT_TEXT(ID_NEW_SENSITIVITY_TEXT, EffectNoiseReduction::Dialog::OnText)
 
    EVT_SLIDER(ID_FREQ_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
    EVT_TEXT(ID_FREQ_TEXT, EffectNoiseReduction::Dialog::OnText)
@@ -1515,8 +1514,8 @@ BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialog)
 
 
 #ifdef ADVANCED_SETTINGS
-   EVT_SLIDER(ID_NEW_SENSITIVITY_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
-   EVT_TEXT(ID_NEW_SENSITIVITY_TEXT, EffectNoiseReduction::Dialog::OnText)
+   EVT_SLIDER(ID_OLD_SENSITIVITY_SLIDER, EffectNoiseReduction::Dialog::OnSlider)
+   EVT_TEXT(ID_OLD_SENSITIVITY_TEXT, EffectNoiseReduction::Dialog::OnText)
 #endif
 END_EVENT_TABLE()
 
@@ -1595,14 +1594,14 @@ void EffectNoiseReduction::Dialog::DisableControlsIfIsolating()
 }
 
 #ifdef ADVANCED_SETTINGS
-void EffectNoiseReduction::Dialog::EnableSensitivityControls()
+void EffectNoiseReduction::Dialog::EnableDisableSensitivityControls()
 {
    wxChoice *const pChoice =
       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_CHOICE_METHOD, this));
    const bool bOldMethod =
       pChoice->GetSelection() == DM_OLD_METHOD;
-   wxWindow::FindWindowById(ID_SENSITIVITY_SLIDER, this)->Enable(bOldMethod);
-   wxWindow::FindWindowById(ID_SENSITIVITY_TEXT, this)->Enable(bOldMethod);
+   wxWindow::FindWindowById(ID_OLD_SENSITIVITY_SLIDER, this)->Enable(bOldMethod);
+   wxWindow::FindWindowById(ID_OLD_SENSITIVITY_TEXT, this)->Enable(bOldMethod);
    wxWindow::FindWindowById(ID_NEW_SENSITIVITY_SLIDER, this)->Enable(!bOldMethod);
    wxWindow::FindWindowById(ID_NEW_SENSITIVITY_TEXT, this)->Enable(!bOldMethod);
 }
@@ -1636,7 +1635,7 @@ void EffectNoiseReduction::Dialog::OnNoiseReductionChoice( wxCommandEvent & WXUN
 #ifdef ADVANCED_SETTINGS
 void EffectNoiseReduction::Dialog::OnMethodChoice(wxCommandEvent &)
 {
-   EnableSensitivityControls();
+   EnableDisableSensitivityControls();
 }
 #endif
 
@@ -1851,7 +1850,7 @@ bool EffectNoiseReduction::Dialog::TransferDataToWindow()
    // Set the enabled states of controls
    DisableControlsIfIsolating();
 #ifdef ADVANCED_SETTINGS
-   EnableSensitivityControls();
+   EnableDisableSensitivityControls();
 #endif
 
    return true;

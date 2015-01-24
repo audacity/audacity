@@ -127,33 +127,6 @@
 //#define EXPERIMENTAL_SCOREALIGN
 #endif
 
-// experimental features
-#define EXPERIMENTAL_FEATURES // ANSWER ME: EXPERIMENTAL within EXPERIMENTAL?
-#ifdef EXPERIMENTAL_FEATURES
-   // The first experimental feature is a notebook that adds
-   // a tabbed divider to the project.
-   //#define EXPERIMENTAL_NOTEBOOK
-   // The notebook in turn can contain:
-   // 1. The Nyquist Inspector, which is a browser for the objects in
-   // Audacity.
-   //#define EXPERIMENTAL_NYQUIST_INSPECTOR
-   // 2. The Vocal Studio, a screen for working with vocal sounds
-   // particularly vowel sounds.
-   //#define EXPERIMENTAL_VOCAL_STUDIO
-   // 3. The Audacity Tester is an extended version of the benchmarks
-   // display.  The crucial idea is to be able to compare waveforms
-   // where effects have been applied by audacity but using different
-   // block-sizes.  This should give high confidence that we don't
-   // suffer from end-effects on buffers, e.g. losing one sample on
-   // each buffer.
-   //#define EXPERIMENTAL_AUDACITY_TESTER
-
-   // A long term plan is to use dso's and dlls for Audacity extensions
-   // These are 'WX' plug ins that manage their own displays using
-   // wxWidgets.
-   //#define EXPERIMENTAL_WX_PLUG_INS
-#endif
-
 //If you want any of these files, ask JKC.  They are not
 //yet checked in to Audacity SVN as of 12-Feb-2010
 #ifdef EXPERIMENTAL_NOTEBOOK
@@ -164,9 +137,6 @@
 
 #ifdef EXPERIMENTAL_NYQUIST_INSPECTOR
    #include "NyquistAdapter.h"
-#endif
-
-#ifdef EXPERIMENTAL_AUDACITY_TESTER
 #endif
 
 #if USE_PORTMIXER
@@ -180,7 +150,7 @@
 
 // Module prefs provides a panel in prefs where users can choose which modules
 // to enable.
-#define EXPERIMENTAL_MODULE_PREFS
+// #define EXPERIMENTAL_MODULE_PREFS
 
 // Define to include realtime effects processing.
 #define EXPERIMENTAL_REALTIME_EFFECTS
