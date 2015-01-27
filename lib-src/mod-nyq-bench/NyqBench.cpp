@@ -690,7 +690,7 @@ NyqBench::NyqBench(wxWindow * parent)
    mOutput = NULL;
 
    // No need to delete...EffectManager will do it
-   mEffect = new EffectNyquist(wxT("///nyquist worker///"));
+   mEffect = new EffectNyquist(wxT("===nyquistworker==="));
    EffectManager::Get().RegisterEffect(mEffect, HIDDEN_EFFECT);
 
    mPath = gPrefs->Read(wxT("NyqBench/Path"), wxEmptyString);
@@ -1365,7 +1365,8 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      p->OnEffect(ALL_EFFECTS, mEffect->GetID());
+      const PluginID & id = EffectManager::Get().GetEffectByIdentifier(mEffect->GetSymbol());
+      p->OnEffect(ALL_EFFECTS, id);
 
       mRunning = false;
       UpdateWindowUI();
