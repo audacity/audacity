@@ -60,6 +60,10 @@
 #include <wx/textctrl.h>
 #include <wx/sizer.h>
 
+// SPECTRAL_SELECTION not to affect this effect for now, as there might be no indication that it does.
+// [Discussed and agreed for v2.1 by Steve, Paul, Bill].
+#undef EXPERIMENTAL_SPECTRAL_EDITING
+
 typedef std::vector<float> FloatVector;
 
 // Define both of these to make the radio button three-way
