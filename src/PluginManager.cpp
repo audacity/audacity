@@ -1246,12 +1246,20 @@ bool PluginManager::SetSharedConfig(const PluginID & ID, const wxString & group,
 
 bool PluginManager::RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group)
 {
-   return GetSettings()->DeleteGroup(SharedGroup(ID, group));
+   bool result = GetSettings()->DeleteGroup(SharedGroup(ID, group));
+   if (result)
+   {
+      GetSettings()->Flush();
+   }
 }
 
 bool PluginManager::RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key)
 {
-   return GetSettings()->DeleteEntry(SharedKey(ID, group, key));
+   bool result = GetSettings()->DeleteEntry(SharedKey(ID, group, key));
+   if (result)
+   {
+      GetSettings()->Flush();
+   }
 }
 
 bool PluginManager::GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups)
@@ -1321,12 +1329,20 @@ bool PluginManager::SetPrivateConfig(const PluginID & ID, const wxString & group
 
 bool PluginManager::RemovePrivateConfigSubgroup(const PluginID & ID, const wxString & group)
 {
-   return GetSettings()->DeleteGroup(PrivateGroup(ID, group));
+   bool result = GetSettings()->DeleteGroup(PrivateGroup(ID, group));
+   if (result)
+   {
+      GetSettings()->Flush();
+   }
 }
 
 bool PluginManager::RemovePrivateConfig(const PluginID & ID, const wxString & group, const wxString & key)
 {
-   return GetSettings()->DeleteEntry(PrivateKey(ID, group, key));
+   bool result = GetSettings()->DeleteEntry(PrivateKey(ID, group, key));
+   if (result)
+   {
+      GetSettings()->Flush();
+   }
 }
 
 // ============================================================================
