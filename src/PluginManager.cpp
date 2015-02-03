@@ -1251,6 +1251,8 @@ bool PluginManager::RemoveSharedConfigSubgroup(const PluginID & ID, const wxStri
    {
       GetSettings()->Flush();
    }
+
+   return result;
 }
 
 bool PluginManager::RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key)
@@ -1260,6 +1262,8 @@ bool PluginManager::RemoveSharedConfig(const PluginID & ID, const wxString & gro
    {
       GetSettings()->Flush();
    }
+
+   return result;
 }
 
 bool PluginManager::GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups)
@@ -1334,6 +1338,8 @@ bool PluginManager::RemovePrivateConfigSubgroup(const PluginID & ID, const wxStr
    {
       GetSettings()->Flush();
    }
+
+   return result;
 }
 
 bool PluginManager::RemovePrivateConfig(const PluginID & ID, const wxString & group, const wxString & key)
@@ -1343,6 +1349,8 @@ bool PluginManager::RemovePrivateConfig(const PluginID & ID, const wxString & gr
    {
       GetSettings()->Flush();
    }
+
+   return result;
 }
 
 // ============================================================================
