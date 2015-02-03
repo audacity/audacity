@@ -1,5 +1,5 @@
 ;   Audacity: A Digital Audio Editor
-;   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+;   Audacity(R) is copyright (c) 1999-2015 Audacity Team.
 ;   License: GPL v2.  See License.txt.
 ;
 ;   audacity.iss
@@ -12,7 +12,7 @@ Filename: "{app}\unins*.*";
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-2.0.6
+OutputBaseFilename=audacity-win-2.1.0
 
 WizardImageFile=audacity_InnoWizardImage.bmp
 WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
@@ -21,9 +21,9 @@ SolidCompression=yes
 
 ; installer-related directives
 AppName=Audacity
-AppVerName=Audacity 2.0.6
+AppVerName=Audacity 2.1.0
 ; Specify AppVersion as well, so it appears in the Add/Remove Programs entry. 
-AppVersion=2.0.6
+AppVersion=2.1.0
 AppPublisher=Audacity Team
 AppPublisherURL=http://audacity.sourceforge.net
 AppSupportURL=http://audacity.sourceforge.net
@@ -77,6 +77,7 @@ Name: "SerbianLatin"; MessagesFile: "compiler:Languages\SerbianLatin.isl"
 ; Name: "slovak"; MessagesFile: "compiler:Languages\Slovak.isl"
 Name: "slovenian"; MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
 Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 
 [Tasks]
@@ -112,18 +113,16 @@ Source: "..\win\release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; Flags: i
 ; This is not an ideal solution, but should need the least tech support.
 ; We'll know we have the right version, don't step on anybody else's older version, and
 ; it's easy to make the zip (and they match better).
-; These are for compiling on 64-bit Windows systems.
-Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Program Files (x86)\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
-; These are for compiling on 32-bit Windows systems.
-; Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
-; Source: "C:\Program Files\Microsoft Visual Studio 9.0\VC\redist\x86\Microsoft.VC90.CRT\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
+; Copy the two required DLL's from 
+; "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
+; or "C:\Program Files\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
+; according to your system 
+Source: "..\win\release\msvcp120.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\msvcr120.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\win\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 ; We don't currently ship any modules, so the next line is commented out
-;Source: "..\win\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+; Source: "..\win\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: "..\win\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
 Source: "..\win\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
 
@@ -145,8 +144,11 @@ Type: files; Name: "{app}\audacity-1.2-help.htb"
 
 ; Get rid of previous versions of MSVC runtimes.
 Type: files; Name: "{app}\Microsoft.VC80.CRT.manifest"
+Type: files; Name: "{app}\Microsoft.VC90.CRT.manifest"
 Type: files; Name: "{app}\msvcp80.dll"
 Type: files; Name: "{app}\msvcr80.dll"
+Type: files; Name: "{app}\msvcp90.dll"
+Type: files; Name: "{app}\msvcr90.dll"
 
 ; Get rid of previous help folder.
 Type: filesandordirs; Name: "{app}\help"
@@ -181,6 +183,10 @@ Type: dirifempty; Name: "{app}\Modules"
 
 ; Get rid of gverb that we no longer ship
 Type: files; Name: "{app}\Plug-Ins\gverb_1216.dll"
+
+; Get rid of old crossfade* plugins that we no longer ship
+Type: files; Name: "{app}\Plug-Ins\crossfadein.ny"
+Type: files; Name: "{app}\Plug-Ins\crossfadeout.ny"
                                             
 [Registry]
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
