@@ -2148,6 +2148,7 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
 
    plug.SetID(id);
    plug.SetPath(ident->GetPath());
+   plug.SetSymbol(ident->GetSymbol());
    plug.SetName(ident->GetName());
    plug.SetVendor(ident->GetVendor());
    plug.SetVersion(ident->GetVersion());
