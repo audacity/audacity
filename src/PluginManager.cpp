@@ -1360,7 +1360,7 @@ bool PluginManager::RemovePrivateConfig(const PluginID & ID, const wxString & gr
 // ============================================================================
 
 // The one and only PluginManager
-PluginManager PluginManager::mInstance;
+PluginManager *PluginManager::mInstance = NULL;
 
 // ----------------------------------------------------------------------------
 // Creation/Destruction
@@ -1392,7 +1392,20 @@ PluginManager::~PluginManager()
 
 PluginManager & PluginManager::Get()
 {
-   return mInstance;
+   if (!mInstance)
+   {
+      mInstance = new PluginManager();
+   }
+
+   return *mInstance;
+}
+
+void PluginManager::Destroy()
+{
+   if (mInstance)
+   {
+      delete mInstance;
+   }
 }
 
 void PluginManager::Initialize()
@@ -1947,10 +1960,6 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
       PluginDescriptor & plug = mPluginsIter->second;
 
       bool familyEnabled;
-      if (type == PluginTypeEffect)
-      {
-         gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
-      }
       gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {

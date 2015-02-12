@@ -1908,6 +1908,10 @@ int AudacityApp::OnExit()
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
 
+   // Done with plugins and modules
+   PluginManager::Destroy();
+   ModuleManager::Destroy();
+
    if (mLocale)
       delete mLocale;
 

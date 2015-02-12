@@ -82,6 +82,7 @@ public:
    // -------------------------------------------------------------------------
 
    static ModuleManager & Get();
+   static void Destroy();
 
    void Initialize(CommandHandler & cmdHandler);
    int Dispatch(ModuleDispatchTypes type);
@@ -106,7 +107,7 @@ private:
    void UnloadModule(ModuleInterface *module);
 
 private:
-   static ModuleManager mInstance;
+   static ModuleManager *mInstance;
 
    ModuleMainMap mModuleMains;
    ModuleMap mDynModules;

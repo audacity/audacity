@@ -178,7 +178,7 @@ void * Module::GetSymbol(wxString name)
 // ============================================================================
 
 // The one and only ModuleManager
-ModuleManager ModuleManager::mInstance;
+ModuleManager *ModuleManager::mInstance = NULL;
 
 // Provide builtin modules a means to identify themselves
 static wxArrayPtrVoid *pBuiltinModuleList = NULL;
@@ -358,7 +358,21 @@ int ModuleManager::Dispatch(ModuleDispatchTypes type)
 // ============================================================================
 ModuleManager & ModuleManager::Get()
 {
-   return mInstance;
+   if (!mInstance)
+   {
+      mInstance = new ModuleManager();
+   }
+
+   return *mInstance;
+}
+
+void ModuleManager::Destroy()
+{
+   if (mInstance)
+   {
+      delete mInstance;
+      mInstance = NULL;
+   }
 }
 
 bool ModuleManager::DiscoverProviders()

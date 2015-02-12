@@ -226,6 +226,7 @@ public:
    void Terminate();
 
    static PluginManager & Get();
+   static void Destroy();
 
    static PluginID GetID(ModuleInterface *module);
    static PluginID GetID(EffectIdentInterface *effect);
@@ -301,7 +302,7 @@ private:
    int b64decode(wxString in, void *out);
 
 private:
-   static PluginManager mInstance;
+   static PluginManager *mInstance;
 
    bool IsDirty();
    void SetDirty(bool dirty = true);
