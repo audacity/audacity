@@ -9,7 +9,7 @@ Authors:
   Benjamin Drung
 
 ========================================================================
-This document is for Audacity version 2.1.0-alpha.
+This document is for Audacity version 2.1.0.
 
 If the advice here is inaccurate or incomplete, 
 email audacity-devel@lists.sourceforge.net.
