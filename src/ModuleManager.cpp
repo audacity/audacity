@@ -215,6 +215,9 @@ ModuleManager::~ModuleManager()
    while (iter != mDynModules.end())
    {
       UnloadModule(iter->second);
+
+      mDynModules.erase(iter->first);
+
       iter = mDynModules.begin();
    }
 
@@ -481,13 +484,9 @@ void ModuleManager::UnloadModule(ModuleInterface *module)
 {
    if (module)
    {
-      PluginID modID = PluginManager::GetID(module);
-
       module->Terminate();
 
       delete module;
-
-      mDynModules.erase(modID);
 
       if (mLibs.find(module) != mLibs.end())
       {
