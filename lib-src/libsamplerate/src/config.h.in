@@ -103,6 +103,9 @@
    */
 #undef LT_OBJDIR
 
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+#undef NO_MINUS_C_MINUS_O
+
 /* Set to 1 if compiling for Win32 */
 #undef OS_IS_WIN32
 
