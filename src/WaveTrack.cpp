@@ -1869,7 +1869,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
 
    double startTime = t0;
    double endTime = t0+tstep*bufferLen;
-   bool processed = false;
    for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
    {
       WaveClip *clip = it->GetData();
