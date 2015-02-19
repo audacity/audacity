@@ -1901,8 +1901,10 @@ void WaveTrack::GetEnvelopeValues(double *buffer, int bufferLen,
             // This check prevents problem cited in http://bugzilla.audacityteam.org/show_bug.cgi?id=528#c11,
             // Gale's cross_fade_out project, which was already corrupted by bug 528.
             // This conditional prevents the previous write past the buffer end, in clip->GetEnvelope() call.
-            if (nClipLen < rlen) // Never increase rlen here.
-               rlen = nClipLen;
+            // Never increase rlen here.
+            // PRL bug 827:  rewrote it again
+            rlen = std::min(rlen, nClipLen);
+            rlen = std::min(rlen, int(floor(0.5 + (dClipEndTime - rt0) / tstep)));
          }
          clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
       }
