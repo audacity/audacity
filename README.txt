@@ -20,12 +20,12 @@ http://creativecommons.org/licenses/by/3.0/legalcode .
 
 "Audacity" is a registered trademark of Dominic Mazzoni.
 
-Version 2.0.6 
+Version 2.1.0 
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.0.5 
+2.  Changes since version 2.0.6 
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 5.  Compilation Instructions
@@ -57,70 +57,88 @@ to http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 -------------------------------------------------------------------------------
 
-2. Changes since version 2.0.5: 
-
-Bug fixes for:
-
- * Interface:
-   * Region Restore did not restore the region after using Preferences. 
-   * Dragging selections with the keyboard or Selection Toolbar digits 
-      was very slow.  
-   * (Windows) Help > About Audacity crashed when run in Magyar language.  
-   * (OS X) Some full and reduced Menu Bar items were not translated.  
-   * (OS X and Linux) Fixed various interface crashes.
-
- * Effects:
-   * Reverb and Paulstretch were missing from Chains.
-   * Analyze > Contrast could report very inaccurate rms levels.
-   * Noise Removal: Attack and decay times were half as long as set.  
-   * (OS X and Linux) Nyquist effects ran much more slowly than on Windows. 
-
- * Click or drag on the Timeline after Loop Play continued to loop.
- * Transcription Toolbar did not play slower than 0.1x speed.
- * (Linux) Audacity did not build if python 2 was not available.  
-
+2. Changes since version 2.0.6: 
 
 Changes and Improvements:
 
- * Interface:
-   * Redesigned, searchable Keyboard Preferences with Tree, Name and Key views.  
-   * Edit Menu: "Cut" and "Delete" are now in the top level of the menu.  
-   * Transport Menu now includes "Play/Stop" and "Play/Stop and Set Cursor" 
-      (use Keyboard Preferences to create shortcuts for "Play" and "Stop").
-   * Tracks Menu now includes "Mix and Render to New Track". 
-   * Track Drop-Down Menu now has Move Track To Top and Move Track To Bottom. 
-   * New right-click menu choice "Delete Label" to remove single labels.
-   * "Snap To" now offers choice of snap to the "closest" or "prior" position.
-      Note: the previous "Snap To On" keyboard shortcut will no longer work.   
-   * "Snap To" settings are now independent for each project.
-
  * Effects:
-   * Truncate Silence: redesigned with simpler option "Truncate Detected 
-      Silence" to shorten to the specified length without compressing silence.
-   * VST effects: New "Settings" dialog lets you specify buffer size (for 
-      faster processing) and enable buffer delay compensation (to prevent
-      inserted silence). Compensation may cause a crash in a few plug-ins. 
-   * VST effects now support standard FXP presets.  
-   * LV2 effects are now supported on all platforms (textual interface only).    
+   * LADSPA, VST and Audio Unit (OS X) effects now support real-time preview, 
+      save/load of user presets and saving effect settings across sessions. 
+      Note: Real-time preview does not yet support latency compensation.
+   * VST effects now support import/export of FXB preset banks. 
+   * Shell VST effects that host multiple plugins are now supported.
+   * All Effect Menu items (built-in or plugin) can now be used in a Chain. 
+   * Items in the Effect, Generate or Analyze Menus can be sorted or grouped
+      by name, publisher or class of effect.   
+   * Noise Removal is improved and renamed to "Noise Reduction".  
+   * Change Speed has new time controls for current and new length. You can 
+      now enter the speed change as a multiplier e.g. "2" is twice as fast.  
+   * New "Crossfade Tracks" effect can be used for crossfading two tracks. 
+      This replaces Cross Fade In and Cross Fade Out.  	
+   * Nyquist Prompt and most shipped Nyquist effects now have Preview button. 
 
- * Import or export using FFmpeg now requires FFmpeg 1.2 or later (or libav
-    0.8 or later). For recommended downloads of recent FFmpeg please visit:
-    http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#ffdown .
- * New Tamil translation (largely complete). 
- * (Windows) FLAC exports can now exceed 2 GB in size. 
- * (OS X) Easier Audacity installation using the DMG: drag the Audacity folder
-    to the /Applications shortcut. 
- * (OS X) Audacity 2.0.6 will not officially support OS X 10.10 Yosemite when 
-    released (in particular, Apple Audio Units may not open in Audacity).
- * (Linux) Self-compiled builds of Audacity now search for system LADSPA 
-    effects in /usr/lib/ladspa.  
+ * Interface:  
+   * Redesigned Meter Toolbars: The default shows separate Record and Playback   
+      Meters, half-height so they can be wider while docked, in gradient style. 
+   * A frequency selection can now be made (and spectral edit effects applied
+      to those frequencies) when in a spectrogram view. You can also create
+      or adjust frequency selections in a new "Spectral Selection Toolbar"
+      (available at View > Toolbars).  
+   * Transcription Toolbar (Play-at-speed) can now loop play and cut-preview. 
+   * Timer Record now saves recordings automatically into an existing project.  
+   * New Armenian translation. 
+
+ * Operating system and sound device support:
+   * (Windows) Audacity 2,1.0 requires Windows XP SP3 (32-bit) or XP SP2
+      (64-bit), Vista, Windows 7, Windows 8 or 8,1. 
+   * (Windows) Audacity is now compiled using Visual Studio 2013.  
+   * (Windows) Recording with WASAPI host now includes experimental support 
+      for physical inputs (up to 24-bit depth) as well as loopback recording.  
+   * (OS X) 10.10 (Yosemite) is now supported including Apple Audio Units,
+   * Please report any issues with WASAPI recording/playback or Yosemite 
+      to http://audacity.sourceforge.net/contact/#feedback .
+   * (Linux Ubuntu) Under Unity, keyboard shortcuts are not visible in the
+     Audacity menus. Keyboard shortcuts are visible if you install the classic
+     GNOME Flashback interface or under Unity if you open Audacity with the
+     UBUNTU_MENUPROXY=0 environment variable. Audacity compiled from source
+     will ship with src/audacity.desktop.in set to UBUNTU_MENUPROXY=0 but it
+     will remain up to distributions to use this desktop file. 
+
+Bug fixes:
+
+ * Interface:
+   * Typing "j" or "k" in a label track activated the "move cursor" shortcut.
+   * Spectrogram log (f) view displayed incorrectly until vertically zoomed.
+   * Fixed crash after zooming out on vertical scale beyond +/-1.0. 
+   * Selections made with Selection Toolbar were not restored after Undo.
+   * Undo could fail silently if a selection included/touched a clip boundary.
+
+ * Mac OS X:
+   * Fix uninitialized buffer - this should correct playback buzz or crackle
+      where the upper of multiple tracks started with or contained white space.   
+   * Device names were corrupted when using system language other than English. 
+   * Fixed crashes using (external program). 
+   * Waves v9 Audio Units should now work correctly.
+
+ * GNU/Linux: 
+   * Fix "Audacity already running" error when using the command-line or 
+      context menu to open multiple or further files. 
+   * Fix segfault exporting an FFmpeg format to an unwritable folder.
+   * Fix silent failure exporting FFmpeg, MP2 or OGG to an unwritable folder.
+   * Fix ENTER activated an effect when OK button was greyed out.  
+
+
+ * Addendum:  
+   * The previous Audacity 2.0.6 version fixed an issue that tracks  
+     containing 2^31 samples or greater of audio (just over 13.5 hours at 
+     44100 Hz) did not re-open correctly. 
 
 -------------------------------------------------------------------------------
 
-3. Known Issues in 2.0.6:
+3. Known Issues in 2.1.0:
 
-For known issues at release of 2.0.6, please see:
-  http://wiki.audacityteam.org/wiki/Release_Notes_2.0.6#known
+For known issues at release of 2.1.0 please see:
+  http://wiki.audacityteam.org/wiki/Release_Notes_2.1.0#known
 
 Please also check:
   http://wiki.audacityteam.org/index.php?title=Known_Issues
@@ -279,7 +297,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5. Compilation instructions
 
-First you must download wxWidgets. Audacity 2.0.6 requires wxWidgets 2.8.12
+First you must download wxWidgets. Audacity 2.1.0 requires wxWidgets 2.8.12
 from:
 
    http://www.wxWidgets.org/ .
@@ -329,6 +347,64 @@ or ask at:
 --------------------------------------------------------------------------------
 
 6.  Previous Changes going back to version 1.1.0
+
+Changes in version 2.0.6:
+
+Bug fixes for:
+
+ * Interface:
+   * Region Restore did not restore the region after using Preferences. 
+   * Dragging selections with the keyboard or Selection Toolbar digits 
+      was very slow.  
+   * (Windows) Help > About Audacity crashed when run in Magyar language.  
+   * (OS X) Some full and reduced Menu Bar items were not translated.  
+   * (OS X and Linux) Fixed various interface crashes.
+
+ * Effects:
+   * Reverb and Paulstretch were missing from Chains.
+   * Analyze > Contrast could report very inaccurate rms levels.
+   * Noise Removal: Attack and decay times were half as long as set.  
+   * (OS X and Linux) Nyquist effects ran much more slowly than on Windows. 
+
+ * Click or drag on the Timeline after Loop Play continued to loop.
+ * Transcription Toolbar did not play slower than 0.1x speed.
+ * (Linux) Audacity did not build if python 2 was not available.  
+
+
+Changes and Improvements:
+
+ * Interface:
+   * Redesigned, searchable Keyboard Preferences with Tree, Name and Key views.  
+   * Edit Menu: "Cut" and "Delete" are now in the top level of the menu.  
+   * Transport Menu now includes "Play/Stop" and "Play/Stop and Set Cursor" 
+      (use Keyboard Preferences to create shortcuts for "Play" and "Stop").
+   * Tracks Menu now includes "Mix and Render to New Track". 
+   * Track Drop-Down Menu now has Move Track To Top and Move Track To Bottom. 
+   * New right-click menu choice "Delete Label" to remove single labels.
+   * "Snap To" now offers choice of snap to the "closest" or "prior" position.
+      Note: the previous "Snap To On" keyboard shortcut will no longer work.   
+   * "Snap To" settings are now independent for each project.
+
+ * Effects:
+   * Truncate Silence: redesigned with simpler option "Truncate Detected 
+      Silence" to shorten to the specified length without compressing silence.
+   * VST effects: New "Settings" dialog lets you specify buffer size (for 
+      faster processing) and enable buffer delay compensation (to prevent
+      inserted silence). Compensation may cause a crash in a few plug-ins. 
+   * VST effects now support standard FXP presets.  
+   * LV2 effects are now supported on all platforms (textual interface only).    
+
+ * Import or export using FFmpeg now requires FFmpeg 1.2 or later (or libav
+    0.8 or later). For recommended downloads of recent FFmpeg please visit:
+    http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#ffdown .
+ * New Tamil translation (largely complete). 
+ * (Windows) FLAC exports can now exceed 2 GB in size. 
+ * (OS X) Easier Audacity installation using the DMG: drag the Audacity folder
+    to the /Applications shortcut. 
+ * (OS X) Audacity 2.0.6 will not officially support OS X 10.10 Yosemite when 
+    released (in particular, Apple Audio Units may not open in Audacity).
+ * (Linux) Self-compiled builds of Audacity now search for system LADSPA 
+    effects in /usr/lib/ladspa.  
 
 
 Changes in version 2.0.5:
