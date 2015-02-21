@@ -9,7 +9,7 @@ bug reports and patches at:
 Personal support with Audacity is not provided by e-mail, but on our Forum:
   http://audacityteam.org/forum/ .
 
-Audacity is copyright (c) 1999-2014 by Audacity Team. This copyright notice
+Audacity is copyright (c) 1999-2015 by Audacity Team. This copyright notice
 applies to all documents in the Audacity source code archive, except as
 otherwise noted (mostly in the lib-src subdirectories).
 
