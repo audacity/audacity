@@ -113,6 +113,10 @@ Bug fixes:
    * Selections made with Selection Toolbar were not restored after Undo.
    * Undo could fail silently if a selection included/touched a clip boundary.
 
+ * Imports and Exports 
+   * If there were invalid FFmpeg libs in system PATH this prevented Audacity
+      recognising the installed FFmpeg or the FFmpeg specified in audacity.cfg.
+
  * Mac OS X:
    * Fix uninitialized buffer - this should correct playback buzz or crackle
       where the upper of multiple tracks started with or contained white space.   
@@ -129,9 +133,9 @@ Bug fixes:
 
 
  * Addendum:  
-   * The previous Audacity 2.0.6 version fixed an issue that tracks  
-     containing 2^31 samples or greater of audio (just over 13.5 hours at 
-     44100 Hz) did not re-open correctly. 
+   * The previous Audacity 2.0.6 version fixed an issue that projects did not
+      reopen correctly if they contained tracks having 2^31 samples or greater
+      of audio (just over 13.5 hours at 44100 Hz).
 
 -------------------------------------------------------------------------------
 
