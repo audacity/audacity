@@ -109,7 +109,7 @@
 // #define EXPERIMENTAL_SCRUBBING
 
 // Paul Licameli (PRL) 29 Nov 2014
-#define EXPERIMENTAL_IMPROVED_SEEKING
+// #define EXPERIMENTAL_IMPROVED_SEEKING
 
 // Philip Van Baren 01 July 2009
 // Replace RealFFT() and PowerSpectrum function to use (faster) RealFFTf function
