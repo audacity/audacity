@@ -2849,7 +2849,8 @@ void AudacityProject::PrevWindow()
    // Otherwise start the search with the current window's previous sibling
    else
    {
-      iter = list.Find(w)->GetPrevious();
+      if (list.Find(w))
+         iter = list.Find(w)->GetPrevious();
    }
 
    // Search for the previous toplevel window
