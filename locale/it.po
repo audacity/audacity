@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-02-10 21:44-0600\n"
-"PO-Revision-Date: 2015-02-21 15:36+0100\n"
+"PO-Revision-Date: 2015-03-02 17:29+0100\n"
 "Last-Translator: Carmelo battaglia <battaglia.carmelo@fastwebnet.it>\n"
 "Language-Team: italiano <audacity-translation@lists.sourceforge.net>\n"
 "Language: it\n"
@@ -2351,7 +2351,7 @@ msgstr "Barra &Modifica"
 
 #: src/Menus.cpp:759
 msgid "&Combined Meter Toolbar"
-msgstr "&Combined Meter Toolbar"
+msgstr "&Barra monitor combinato"
 
 #: src/Menus.cpp:761
 msgid "&Recording Meter Toolbar"
