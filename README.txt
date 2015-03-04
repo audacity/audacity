@@ -89,12 +89,12 @@ Changes and Improvements:
    * New Armenian translation. 
 
  * Operating system and sound device support:
-   * (Windows) Audacity 2,1.0 requires Windows XP SP3 (32-bit) or XP SP2
-      (64-bit), Vista, Windows 7, Windows 8 or 8,1. 
+   * (Windows) Audacity 2.1.0 requires Windows XP SP3 (32-bit) or XP SP2
+      (64-bit), Vista, Windows 7, Windows 8 or 8.1. 
    * (Windows) Audacity is now compiled using Visual Studio 2013.  
    * (Windows) Recording with WASAPI host now includes experimental support 
       for physical inputs (up to 24-bit depth) as well as loopback recording.  
-   * (OS X) 10.10 (Yosemite) is now supported including Apple Audio Units,
+   * (OS X) 10.10 (Yosemite) is now supported including Apple Audio Units.
    * Please report any issues with WASAPI recording/playback or Yosemite 
       to http://audacity.sourceforge.net/contact/#feedback .
    * (Linux Ubuntu) Under Unity, keyboard shortcuts are not visible in the
