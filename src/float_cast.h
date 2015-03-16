@@ -61,10 +61,18 @@
 
 #elif (defined (WIN32) || defined (_WIN32))
 
-	/*	Win32 doesn't seem to have these functions.
+   // Including math.h allows us to use the inline assembler versions without
+   // producing errors in newer Visual Studio versions.
+   // Without the include, we get different linkage error messages.
+   // Without the inline assembler versions, these functions are VERY slow.
+   // I also see that the include was part of the original source for this file:
+   //    http://www.mega-nerd.com/FPcast/
+   
+   #include <math.h>
+
+   /*	Win32 doesn't seem to have these functions.
 	**	Therefore implement inline versions of these functions here.
 	*/
-#if (_MSC_VER == 1500)
 	__inline long int
 	lrint (double flt)
 	{	int intgr;
@@ -112,7 +120,7 @@
 
 		return intgr ;
 	}
-#endif
+
 #else
 
    /* dmazzoni: modified these to do a proper rounding, even though
