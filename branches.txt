@@ -1,0 +1,3 @@
+This file provides some information on git branches.
+
+wx3-warning : Adds a warning dialog IF audacity was compiled with wxWidgets 3.0 or higher.  Some distros are already compiling audacity with wx3.  We currently only develop and test with wx 2.8.12.  wx3 is known to make audacity unstable.  We can't completely stop distros building with the wrong wx for us, they have their own build scripts, but we can warn at start up.
