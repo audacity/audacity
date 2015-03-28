@@ -83,6 +83,7 @@ simplifies construction of menu items.
 #include "NoteTrack.h"
 #endif // USE_MIDI
 #include "Tags.h"
+#include "TimeTrack.h"
 #include "Mix.h"
 #include "AboutDialog.h"
 #include "Benchmark.h"

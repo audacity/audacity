@@ -29,6 +29,7 @@ for drawing different aspects of the label and its text box.
 *//*******************************************************************/
 
 #include "Audacity.h"
+#include "LabelTrack.h"
 
 #include <stdio.h>
 
@@ -48,7 +49,6 @@ for drawing different aspects of the label and its text box.
 #include <wx/utils.h>
 
 #include "AudioIO.h"
-#include "LabelTrack.h"
 #include "DirManager.h"
 #include "Internat.h"
 #include "Prefs.h"
@@ -1117,7 +1117,12 @@ bool LabelTrack::IsTextClipSupported()
 }
 
 
-double LabelTrack::GetStartTime()
+double LabelTrack::GetOffset() const
+{
+   return mOffset;
+}
+
+double LabelTrack::GetStartTime() const
 {
    int len = mLabels.Count();
 
@@ -1127,7 +1132,7 @@ double LabelTrack::GetStartTime()
       return mLabels[0]->getT0();
 }
 
-double LabelTrack::GetEndTime()
+double LabelTrack::GetEndTime() const
 {
    //we need to scan through all the labels, because the last
    //label might not have the right-most end (if there is overlap).

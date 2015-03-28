@@ -799,6 +799,12 @@ unsigned int Sequence::GetODFlags()
    return ret;
 }
 
+sampleCount Sequence::GetBlockStart(sampleCount position) const
+{
+   int b = FindBlock(position);
+   return mBlock->Item(b)->start;
+}
+
 sampleCount Sequence::GetBestBlockSize(sampleCount start) const
 {
    // This method returns a nice number of samples you should try to grab in

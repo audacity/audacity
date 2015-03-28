@@ -79,6 +79,7 @@ typedef enum
 // Generic pointer to sample data
 // ----------------------------------------------------------------------------
 typedef char *samplePtr;
+typedef const char *constSamplePtr;
 
 // ----------------------------------------------------------------------------
 // The type for plugin IDs
