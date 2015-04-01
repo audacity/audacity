@@ -4,5 +4,4 @@ before_install:
 language: cpp
 compiler:
     - gcc
-    - clang
 script: ./configure && make
