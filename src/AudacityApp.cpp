@@ -1029,6 +1029,9 @@ bool AudacityApp::OnInit()
 {
    delete wxLog::SetActiveTarget(new AudacityLogger);
 
+
+
+
    m_aliasMissingWarningShouldShow = true;
    m_LastMissingBlockFile = NULL;
 
@@ -1178,11 +1181,18 @@ bool AudacityApp::OnInit()
 
    // Init DirManager, which initializes the temp directory
    // If this fails, we must exit the program.
-
    if (!InitTempDir()) {
       FinishPreferences();
       return false;
    }
+
+//<<<< Try to avoid dialogs before this point.
+// The reason is that InitTempDir starts the single instance checker.
+// If we're waiitng in a dialog before then we can very easily
+// start multiple instances, defeating the single instance checker.
+
+
+
 
    //JKC We'd like to initialise the module manager WHILE showing the splash screen.
    //Can't in wx3.0.1 as MultiDialog interacts poorly with the splash screen.  So we do it before.
@@ -1230,6 +1240,32 @@ void AudacityApp::OnEventLoopEnter(wxEventLoopBase * pLoop)
 // they make in their release notes.
 void AudacityApp::FinishInits()
 {
+
+// Until we are ready for wxWidgets 3.x, put a warning dialog up.
+// Our problem is that distros may ship with 3.x builds as default.
+// We are saying, don't.
+//
+// wx3 is Ok for experimental builds.  
+//
+// Deliberately not translated.  People can search for the english error
+// text for more details.  This error will only show in versions
+// of Audacity that were incorrectly built.
+//
+// The intention was to do this, if needed, as part of the splash screen.
+// However the splash screen is one of the things broken by wx3.0
+// changes in OnInit handling.  We also can't put this dialog earlier.
+#if wxCHECK_VERSION(3, 0, 0)
+   ShowErrorDialog( NULL,
+                    wxT("Bad Version"),
+                    wxT(
+"Audacity should be built with wxWidgets 2.8.12.\n\n  This version \
+of Audacity is using wxWidgets 3.0 or later.\n  We're not ready for it yet.\n  \
+Click the 'Help' button for known issue."),
+                    wxT("http://bugzilla.audacityteam.org/buglist.cgi?keywords=wx3&resolution=---"),
+                     true);
+#endif
+
+
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
    // stuff to display the version string.
@@ -1555,7 +1591,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
          wxConnectionBase *conn = client.MakeConnection(wxEmptyString, IPC_APPL, IPC_TOPIC);
          if (conn)
          {
-            bool ok;
+            bool ok = false;
             if (parser->GetParamCount() > 0)
             {
                // Send each parameter to existing Audacity
