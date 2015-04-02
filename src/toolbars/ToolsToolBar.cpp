@@ -82,7 +82,7 @@ ToolsToolBar::ToolsToolBar()
 
    mMessageOfTool[selectTool] = _("Click and drag to select audio");
    mMessageOfTool[envelopeTool] = _("Click and drag to edit the amplitude envelope");
-   mMessageOfTool[slideTool] = _("Click and drag to edit the samples");
+   mMessageOfTool[drawTool] = _("Click and drag to edit the samples");
 #if defined( __WXMAC__ )
    mMessageOfTool[zoomTool] = _("Click to Zoom In, Shift-Click to Zoom Out");
 #elif defined( __WXMSW__ )
@@ -90,7 +90,7 @@ ToolsToolBar::ToolsToolBar()
 #elif defined( __WXGTK__ )
    mMessageOfTool[zoomTool] = _("Left=Zoom In, Right=Zoom Out, Middle=Normal");
 #endif
-   mMessageOfTool[drawTool] = _("Click and drag to move a track in time");
+   mMessageOfTool[slideTool] = _("Click and drag to move a track in time");
    mMessageOfTool[multiTool] = wxT(""); // multi-mode tool
 
    bool multiToolActive = false;
