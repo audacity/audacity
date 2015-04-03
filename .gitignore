@@ -4,6 +4,18 @@
 *.o
 *.obj
 
+# Other unwanted files.
+*.suo
+*.sdf
+*.exp
+*.ilk
+*.pdb
+*.idb
+*.lastbuild
+*.log
+*.tlog
+*.ipch
+
 # Precompiled Headers
 *.gch
 *.pch
