@@ -14,7 +14,7 @@
 *.lastbuild
 *.log
 *.tlog
-
+*.ipch
 
 # Precompiled Headers
 *.gch
