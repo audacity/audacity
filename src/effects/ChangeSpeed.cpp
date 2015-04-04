@@ -124,6 +124,12 @@ bool EffectChangeSpeed::ProcessLabelTrack(Track *t)
    return true;
 }
 
+bool EffectChangeSpeed::TransferParameters( Shuttle & shuttle )
+{
+   shuttle.TransferDouble(wxT("Percentage"),m_PercentChange,0.0);
+   return true;
+}
+
 bool EffectChangeSpeed::Process()
 {
    // Similar to EffectSoundTouch::Process()
