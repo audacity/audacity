@@ -39,3 +39,4 @@
 *.exe
 *.out
 *.app
+win/resetPrefs.txt
