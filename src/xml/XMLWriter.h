@@ -103,7 +103,7 @@ class XMLStringWriter:public wxString, public XMLWriter {
 
  public:
 
-   XMLStringWriter();
+   XMLStringWriter(size_t initialSize = 0);
    virtual ~XMLStringWriter();
 
    void Write(const wxString &data);

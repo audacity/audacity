@@ -61,18 +61,17 @@ struct UndoStackElem {
    wxString description;
    wxString shortDescription;
    SelectedRegion selectedRegion;
-   wxLongLong spaceUsage;
 };
 
 WX_DEFINE_USER_EXPORTED_ARRAY(UndoStackElem *, UndoStack, class AUDACITY_DLL_API);
+WX_DEFINE_USER_EXPORTED_ARRAY_SIZE_T(size_t, SpaceArray, class AUDACITY_DLL_API);
 
 // These flags control what extra to do on a PushState
-// Default is PUSH_AUTOSAVE | PUSH_CALC_SPACE
+// Default is PUSH_AUTOSAVE
 // Frequent/faster actions use PUSH_CONSOLIDATE
 const int PUSH_MINIMAL = 0;
 const int PUSH_CONSOLIDATE = 1;
-const int PUSH_CALC_SPACE = 2;
-const int PUSH_AUTOSAVE = 4;
+const int PUSH_AUTOSAVE = 2;
 
 class AUDACITY_DLL_API UndoManager {
  public:
@@ -82,7 +81,7 @@ class AUDACITY_DLL_API UndoManager {
    void PushState(TrackList * l,
                   const SelectedRegion &selectedRegion,
                   wxString longDescription, wxString shortDescription,
-                  int flags = PUSH_CALC_SPACE|PUSH_AUTOSAVE );
+                  int flags = PUSH_AUTOSAVE);
    void ModifyState(TrackList * l,
                     const SelectedRegion &selectedRegion);
    void ClearStates();
@@ -105,6 +104,8 @@ class AUDACITY_DLL_API UndoManager {
    bool UnsavedChanges();
    void StateSaved();
 
+   void CalculateSpaceUsage();
+
    // void Debug(); // currently unused
 
    ///to mark as unsaved changes without changing the state/tracks.
@@ -113,14 +114,14 @@ class AUDACITY_DLL_API UndoManager {
    void ResetODChangesFlag();
 
  private:
-   wxLongLong CalculateSpaceUsage(int index);
-
    int current;
    int saved;
    UndoStack stack;
 
    wxString lastAction;
    int consolidationCount;
+
+   SpaceArray space;
 
    bool mODChanges;
    ODLock mODChangesMutex;//mODChanges is accessed from many threads.
