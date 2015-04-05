@@ -1403,7 +1403,7 @@ enum {
 
 namespace {
 
-const struct ControlInfo {
+struct ControlInfo {
    typedef double (EffectNoiseReduction::Settings::*MemberPointer);
 
    double Value(long sliderSetting) const
@@ -1431,13 +1431,13 @@ const struct ControlInfo {
    void CreateControls(int id, wxTextValidator &vld, ShuttleGui &S) const
    {
       wxTextCtrl *const text =
-         S.Id(id + 1).AddTextBox(textBoxCaption, wxT(""), 0);
+         S.Id(id + 1).AddTextBox(textBoxCaption(), wxT(""), 0);
       S.SetStyle(wxSL_HORIZONTAL);
       text->SetValidator(vld);
 
       wxSlider *const slider =
          S.Id(id).AddSlider(wxT(""), 0, sliderMax);
-      slider->SetName(sliderName);
+      slider->SetName(sliderName());
       slider->SetRange(0, sliderMax);
       slider->SetSizeHints(150, -1);
    }
@@ -1449,34 +1449,34 @@ const struct ControlInfo {
    // (valueMin - valueMax) / sliderMax is the value increment of the slider
    const wxChar* format;
    bool formatAsInt;
-   wxString textBoxCaption;
-   wxString sliderName;
-} controlInfo[] = {
+   const wxChar* textBoxCaption_;  wxString textBoxCaption() const { return wxGetTranslation(textBoxCaption_); }
+   const wxChar* sliderName_;  wxString sliderName() const { return wxGetTranslation(sliderName_); }
+}; const ControlInfo *controlInfo() { static const ControlInfo table[] = {
    { &EffectNoiseReduction::Settings::mNoiseGain,
      0.0, 48.0, 48, wxT("%d"), true,
-     _("&Noise reduction (dB):"), _("Noise reduction") },
+     wxTRANSLATE("&Noise reduction (dB):"), wxTRANSLATE("Noise reduction") },
    { &EffectNoiseReduction::Settings::mNewSensitivity,
       0.0, 24.0, 48, wxT("%.2f"), false,
-     _("&Sensitivity:"), _("Sensitivity") },
+      wxTRANSLATE("&Sensitivity:"), wxTRANSLATE("Sensitivity") },
 #ifdef ATTACK_AND_RELEASE
    { &EffectNoiseReduction::Settings::mAttackTime,
      0, 1.0, 100, wxT("%.2f"), false,
-     _("Attac&k time (secs):"), _("Attack time") },
+     wxTRANSLATE("Attac&k time (secs):"), wxTRANSLATE("Attack time") },
    { &EffectNoiseReduction::Settings::mReleaseTime,
      0, 1.0, 100, wxT("%.2f"), false,
-     _("R&elease time (secs):"), _("Release time") },
+     wxTRANSLATE("R&elease time (secs):"), wxTRANSLATE("Release time") },
 #endif
    { &EffectNoiseReduction::Settings::mFreqSmoothingBands,
-   0, 6, 6, wxT("%d"), true,
-   _("&Frequency smoothing (bands):"), _("Frequency smoothing") },
+     0, 6, 6, wxT("%d"), true,
+     wxTRANSLATE("&Frequency smoothing (bands):"), wxTRANSLATE("Frequency smoothing") },
 
 #ifdef ADVANCED_SETTINGS
    { &EffectNoiseReduction::Settings::mOldSensitivity,
      -20.0, 20.0, 4000, wxT("%.2f"), false,
-     wxT("Sensiti&vity (dB):"), _("Old Sensitivity") },
+     wxTRANSLATE("Sensiti&vity (dB):"), wxTRANSLATE("Old Sensitivity") },
    // add here
 #endif
-};
+}; return table; }
 
 } // namespace
 
@@ -1700,7 +1700,7 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       {
          wxTextValidator vld(wxFILTER_NUMERIC);
          for (int id = FIRST_SLIDER; id < END_OF_BASIC_SLIDERS; id += 2) {
-            const ControlInfo &info = controlInfo[(id - FIRST_SLIDER) / 2];
+            const ControlInfo &info = controlInfo()[(id - FIRST_SLIDER) / 2];
             info.CreateControls(id, vld, S);
          }
       }
@@ -1719,14 +1719,14 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
       {
          S.AddPrompt(_("Noise:"));
          mKeepSignal = S.Id(ID_RADIOBUTTON_KEEPSIGNAL)
-               .AddRadioButton(_("Re&duce"));
+               .AddRadioButton(_("Re&duce")); /* i18n-hint: Translate differently from "Residue" ! */
 #ifdef ISOLATE_CHOICE
          mKeepNoise = S.Id(ID_RADIOBUTTON_KEEPNOISE)
                .AddRadioButtonToGroup(_("&Isolate"));
 #endif
 #ifdef RESIDUE_CHOICE
          mResidue = S.Id(ID_RADIOBUTTON_RESIDUE)
-               .AddRadioButtonToGroup(_("Resid&ue"));
+               .AddRadioButtonToGroup(_("Resid&ue")); /* i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" ! */
 #endif
       }
       S.EndMultiColumn();
@@ -1837,7 +1837,7 @@ bool EffectNoiseReduction::Dialog::TransferDataToWindow()
          static_cast<wxSlider*>(wxWindow::FindWindowById(id, this));
       wxTextCtrl* text =
          static_cast<wxTextCtrl*>(wxWindow::FindWindowById(id + 1, this));
-      const ControlInfo &info = controlInfo[(id - FIRST_SLIDER) / 2];
+      const ControlInfo &info = controlInfo()[(id - FIRST_SLIDER) / 2];
       const double field = mTempSettings.*(info.field);
       text->SetValue(info.Text(field));
       slider->SetValue(info.SliderSetting(field));
@@ -1876,7 +1876,7 @@ void EffectNoiseReduction::Dialog::OnText(wxCommandEvent &event)
 {
    int id = event.GetId();
    int idx = (id - FIRST_SLIDER - 1) / 2;
-   const ControlInfo &info = controlInfo[idx];
+   const ControlInfo &info = controlInfo()[idx];
    wxTextCtrl* text =
       static_cast<wxTextCtrl*>(wxWindow::FindWindowById(id, this));
    wxSlider* slider =
@@ -1891,7 +1891,7 @@ void EffectNoiseReduction::Dialog::OnSlider(wxCommandEvent &event)
 {
    int id = event.GetId();
    int idx = (id - FIRST_SLIDER) / 2;
-   const ControlInfo &info = controlInfo[idx];
+   const ControlInfo &info = controlInfo()[idx];
    wxSlider* slider =
       static_cast<wxSlider*>(wxWindow::FindWindowById(id, this));
    wxTextCtrl* text =
