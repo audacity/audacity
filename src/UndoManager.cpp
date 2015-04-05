@@ -22,6 +22,8 @@ UndoManager
 
 #include "Audacity.h"
 
+#include <wx/hashset.h>
+
 #include "BlockFile.h"
 #include "Internat.h"
 #include "Sequence.h"
@@ -29,10 +31,9 @@ UndoManager
 #include "WaveTrack.h"          // temp
 #include "NoteTrack.h"  // for Sonify* function declarations
 
-#include <map>
-#include <set>
-
 #include "UndoManager.h"
+
+WX_DECLARE_HASH_SET(BlockFile *, wxPointerHash, wxPointerEqual, Set );
 
 UndoManager::UndoManager()
 {
@@ -47,65 +48,60 @@ UndoManager::~UndoManager()
    ClearStates();
 }
 
-// get the sum of the sizes of all blocks this track list
-// references.  However, if a block is referred to multiple
-// times it is only counted once.  Return value is in bytes.
-wxLongLong UndoManager::CalculateSpaceUsage(int index)
+void UndoManager::CalculateSpaceUsage()
 {
    TrackListOfKindIterator iter(Track::Wave);
-   WaveTrack *wt;
-   WaveClipList::compatibility_iterator it;
-   BlockArray *blocks;
-   unsigned int i;
 
-   // get a map of all blocks referenced in this TrackList
-   std::map<BlockFile*, wxLongLong> cur;
+   space.Clear();
+   space.Add(0, stack.GetCount());
 
-   wt = (WaveTrack *) iter.First(stack[index]->tracks);
-   while (wt) {
-      for (it = wt->GetClipIterator(); it; it = it->GetNext()) {
-         blocks = it->GetData()->GetSequenceBlockArray();
-         for (i = 0; i < blocks->GetCount(); i++)
+   Set *prev = new Set;
+   Set *cur = new Set;
+
+   for (size_t i = 0, cnt = stack.GetCount(); i < cnt; i++)
+   {
+      // Swap map pointers
+      Set *swap = prev;
+      prev = cur;
+      cur = swap;
+
+      // And clean out the new current map
+      cur->clear();
+
+      // Scan all tracks at current level
+      WaveTrack *wt = (WaveTrack *) iter.First(stack[i]->tracks);
+      while (wt)
+      {
+         // Scan all clips within current track
+         WaveClipList::compatibility_iterator it = wt->GetClipIterator();
+         while (it)
          {
-            BlockFile* pBlockFile = blocks->Item(i)->f;
-            if (pBlockFile->GetFileName().FileExists())
-               cur[pBlockFile] = pBlockFile->GetSpaceUsage();
-         }
-      }
-      wt = (WaveTrack *) iter.Next();
-   }
+            // Scan all blockfiles within current clip
+            BlockArray *blocks = it->GetData()->GetSequenceBlockArray();
+            for (size_t b = 0, cnt = blocks->GetCount(); b < cnt; b++)
+            {
+               BlockFile *file = blocks->Item(b)->f;
 
-   if (index > 0) {
-      // get a set of all blocks referenced in all prev TrackList
-      std::set<BlockFile*> prev;
-      while (--index) {
-         wt = (WaveTrack *) iter.First(stack[index]->tracks);
-         while (wt) {
-            for (it = wt->GetClipIterator(); it; it = it->GetNext()) {
-               blocks = it->GetData()->GetSequenceBlockArray();
-               for (i = 0; i < blocks->GetCount(); i++) {
-                  prev.insert(blocks->Item(i)->f);
+               // Accumulate space used by the file if the file didn't exist
+               // in the previous level
+               if (!prev->count(file))
+               {
+                  space[i] += file->GetSpaceUsage().GetValue();
                }
+               
+               // Add file to current set
+               cur->insert(file);
             }
-            wt = (WaveTrack *) iter.Next();
+            
+            it = it->GetNext();
          }
-      }
 
-      // remove all blocks in prevBlockFiles from curBlockFiles
-      std::set<BlockFile*>::const_iterator prevIter;
-      for (prevIter = prev.begin(); prevIter != prev.end(); prevIter++) {
-         cur.erase(*prevIter);
+         wt = (WaveTrack *) iter.Next();
       }
    }
 
-   // sum the sizes of the blocks remaining in curBlockFiles;
-   wxLongLong bytes = 0;
-   std::map<BlockFile*, wxLongLong>::const_iterator curIter;
-   for (curIter = cur.begin(); curIter != cur.end(); curIter++) {
-      bytes += curIter->second;
-   }
-
-   return bytes;
+   delete cur;
+   delete prev;
 }
 
 void UndoManager::GetLongDescription(unsigned int n, wxString *desc,
@@ -114,10 +110,11 @@ void UndoManager::GetLongDescription(unsigned int n, wxString *desc,
    n -= 1; // 1 based to zero based
 
    wxASSERT(n < stack.Count());
+   wxASSERT(space.Count() == stack.Count());
 
    *desc = stack[n]->description;
 
-   *size = Internat::FormatSize(stack[n]->spaceUsage);
+   *size = Internat::FormatSize(space[n]);
 }
 
 void UndoManager::GetShortDescription(unsigned int n, wxString *desc)
@@ -252,12 +249,9 @@ void UndoManager::PushState(TrackList * l,
    push->selectedRegion = selectedRegion;
    push->description = longDescription;
    push->shortDescription = shortDescription;
-   push->spaceUsage = 0; // Calculate actual value after it's on the stack.
 
    stack.Add(push);
    current++;
-   if( (flags&PUSH_CALC_SPACE)!=0)
-      push->spaceUsage = this->CalculateSpaceUsage(current);
 
    if (saved >= current) {
       saved = -1;

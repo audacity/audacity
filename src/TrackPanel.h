@@ -437,7 +437,7 @@ protected:
 
    // AS: Pushing the state preserves state for Undo operations.
    virtual void MakeParentPushState(wxString desc, wxString shortDesc,
-                            int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE);
+                            int flags = PUSH_AUTOSAVE);
    virtual void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
                                                                // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
    virtual void MakeParentResize();
