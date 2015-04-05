@@ -1,0 +1,5 @@
+This file provides some information on git branches.
+
+wx3-warning : Adds a warning dialog IF audacity was compiled with wxWidgets 3.0 or higher. 
+reliability: Features for automated test and in-built monitoring, e.g of performancr, overruns and underruns.
+modules: Support for built-in modules and improvements to module support.

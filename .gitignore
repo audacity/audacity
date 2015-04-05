@@ -1,0 +1,41 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Other unwanted files.
+*.suo
+*.sdf
+*.exp
+*.ilk
+*.pdb
+*.idb
+*.lastbuild
+*.log
+*.tlog
+*.ipch
+
+# Precompiled Headers
+*.gch
+*.pch
+*.ncb
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app

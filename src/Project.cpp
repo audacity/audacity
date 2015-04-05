@@ -4505,6 +4505,9 @@ void AudacityProject::TP_DisplaySelection()
    if (!gAudioIO->IsBusy() && !mLockPlayRegion)
       mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
                             mViewInfo.selectedRegion.t1());
+   else
+      // Cause ruler redraw anyway, because we may be zooming or scrolling
+      mRuler->Refresh();
 }
 
 
