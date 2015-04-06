@@ -543,8 +543,7 @@ wxLongLong SimpleBlockFile::GetSpaceUsage()
       return 0;
    } else
    {
-      wxFFile dataFile(mFileName.GetFullPath());
-      return dataFile.Length();
+      return sizeof(auHeader) + mSummaryInfo.totalSummaryBytes + (GetLength() * SAMPLE_SIZE(floatSample));
    }
 }
 

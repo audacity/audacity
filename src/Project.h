@@ -443,7 +443,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    static void AllProjectsDeleteUnlock();
 
    void PushState(wxString desc, wxString shortDesc,
-                  int flags = PUSH_AUTOSAVE | PUSH_CALC_SPACE);
+                  int flags = PUSH_AUTOSAVE);
 
  private:
 

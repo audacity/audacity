@@ -4505,6 +4505,9 @@ void AudacityProject::TP_DisplaySelection()
    if (!gAudioIO->IsBusy() && !mLockPlayRegion)
       mRuler->SetPlayRegion(mViewInfo.selectedRegion.t0(),
                             mViewInfo.selectedRegion.t1());
+   else
+      // Cause ruler redraw anyway, because we may be zooming or scrolling
+      mRuler->Refresh();
 }
 
 
@@ -4622,17 +4625,16 @@ void AudacityProject::AutoSave()
    wxString fn = wxFileName(FileNames::AutoSaveDir(),
       projName + wxString(wxT(" - ")) + CreateUniqueName()).GetFullPath();
 
-   XMLFileWriter saveFile;
-
    try
    {
-      saveFile.Open(fn + wxT(".tmp"), wxT("wb"));
+      XMLStringWriter buffer(1024 * 1024);
+      VarSetter<bool> setter(&mAutoSaving, true, false);
+      WriteXMLHeader(buffer);
+      WriteXML(buffer);
 
-      {
-         VarSetter<bool> setter(&mAutoSaving, true, false);
-         WriteXMLHeader(saveFile);
-         WriteXML(saveFile);
-      }
+      XMLFileWriter saveFile;
+      saveFile.Open(fn + wxT(".tmp"), wxT("wb"));
+      saveFile.WriteSubTree(buffer);
 
       // JKC Calling XMLFileWriter::Close will close the <project> scope.
       // We certainly don't want to do that, if we're doing recordingrecovery,
