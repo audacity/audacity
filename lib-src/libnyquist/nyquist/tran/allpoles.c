@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "allpoles.h"
 
-void allpoles_free();
+void allpoles_free(snd_susp_type a_susp);
 
 
 typedef struct allpoles_susp_struct {
@@ -29,8 +29,9 @@ typedef struct allpoles_susp_struct {
 } allpoles_susp_node, *allpoles_susp_type;
 
 
-void allpoles_s_fetch(register allpoles_susp_type susp, snd_list_type snd_list)
+void allpoles_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    allpoles_susp_type susp = (allpoles_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -63,6 +64,7 @@ void allpoles_s_fetch(register allpoles_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -74,6 +76,7 @@ void allpoles_s_fetch(register allpoles_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -126,17 +129,14 @@ void allpoles_s_fetch(register allpoles_susp_type susp, snd_list_type snd_list)
 	x_snd_ptr_reg = susp->x_snd_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-double z0; long xi; long xj;
-               z0 = (x_snd_scale_reg * *x_snd_ptr_reg++)*gain_reg;
-               for (xi=0; xi < ak_len_reg ; xi++)
-                   {
-                     xj = index_reg + xi; if (xj >= ak_len_reg) xj -= ak_len_reg;
-                     z0 +=  ak_coefs_reg[xi] * zk_buf_reg[xj];
-                   }
-               zk_buf_reg[index_reg] = z0;
-               index_reg++; if (index_reg == ak_len_reg) index_reg = 0;
-               *out_ptr_reg++ = (sample_type) z0;
-;
+            double z0; long xi; long xj;            z0 = (x_snd_scale_reg * *x_snd_ptr_reg++)*gain_reg;
+            for (xi=0; xi < ak_len_reg ; xi++) {
+                xj = index_reg + xi; if (xj >= ak_len_reg) xj -= ak_len_reg;
+                z0 +=  ak_coefs_reg[xi] * zk_buf_reg[xj];
+            }
+            zk_buf_reg[index_reg] = z0;
+            index_reg++; if (index_reg == ak_len_reg) index_reg = 0;
+            *out_ptr_reg++ = (sample_type) z0;
 	} while (--n); /* inner loop */
 
 	susp->zk_buf = zk_buf_reg;
@@ -164,11 +164,9 @@ double z0; long xi; long xj;
 } /* allpoles_s_fetch */
 
 
-void allpoles_toss_fetch(susp, snd_list)
-  register allpoles_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void allpoles_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    allpoles_susp_type susp = (allpoles_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -183,19 +181,21 @@ void allpoles_toss_fetch(susp, snd_list)
     susp->x_snd_ptr += n;
     susp_took(x_snd_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void allpoles_mark(allpoles_susp_type susp)
+void allpoles_mark(snd_susp_type a_susp)
 {
+    allpoles_susp_type susp = (allpoles_susp_type) a_susp;
     if (susp->ak_array) mark(susp->ak_array);
     sound_xlmark(susp->x_snd);
 }
 
 
-void allpoles_free(allpoles_susp_type susp)
+void allpoles_free(snd_susp_type a_susp)
 {
+    allpoles_susp_type susp = (allpoles_susp_type) a_susp;
 
      free(susp->zk_buf);
      free(susp->ak_coefs);
@@ -205,8 +205,9 @@ void allpoles_free(allpoles_susp_type susp)
 }
 
 
-void allpoles_print_tree(allpoles_susp_type susp, int n)
+void allpoles_print_tree(snd_susp_type a_susp, int n)
 {
+    allpoles_susp_type susp = (allpoles_susp_type) a_susp;
     indent(n);
     stdputstr("x_snd:");
     sound_print_tree_1(susp->x_snd, n);
@@ -218,7 +219,6 @@ sound_type snd_make_allpoles(sound_type x_snd, LVAL ak_array, double gain)
     register allpoles_susp_type susp;
     rate_type sr = x_snd->sr;
     time_type t0 = x_snd->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, allpoles_susp_node, "snd_make_allpoles");
@@ -237,8 +237,8 @@ sound_type snd_make_allpoles(sound_type x_snd, LVAL ak_array, double gain)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = allpoles_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = allpoles_toss_fetch;
     }
 
     /* initialize susp state */

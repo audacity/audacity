@@ -87,11 +87,10 @@ long siosc_table_update(siosc_susp_type susp, long cur)
 )
 
 (ALWAYS-SCALE s_fm)
-(INLINE-INTERPOLATION T) ; so that modulation can be low frequency
 (STEP-FUNCTION s_fm)
 (TERMINATE (MIN s_fm))
 (LOGICAL-STOP (MIN s_fm))
-(INNER-LOOP-LOCALS "	    long table_index;
+(INNER-LOOP-LOCALS "            long table_index;
             double xa, xb;
 ")
 
@@ -106,7 +105,7 @@ long siosc_table_update(siosc_susp_type susp, long cur)
         togo = min(n, togo);
 ")
 
-(INNER-LOOP "	    table_index = (long) phase;
+(INNER-LOOP "table_index = (long) phase;
             xa = table_a_samps[table_index];
             xb = table_b_samps[table_index];
             output = (sample_type) 
@@ -122,10 +121,8 @@ long siosc_table_update(siosc_susp_type susp, long cur)
             while (phase < 0) phase += table_len")
 (CONSTANT "ph_incr" "table_len" "table_ptr" "table_a_samps"
           "table_b_samps" "ampslope" "table_a_ptr" "table_b_ptr_ptr")
-
 (SAMPLE-RATE "sr")
 (FINALIZATION "    table_unref(susp->table_a_ptr);
-    table_unref(susp->table_b_ptr_ptr);
-")
+    table_unref(susp->table_b_ptr_ptr);\n")
 )
 

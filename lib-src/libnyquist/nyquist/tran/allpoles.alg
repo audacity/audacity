@@ -45,26 +45,21 @@
 
 
 (CONSTANT "ak_array" "ak_coefs" "ak_len" "gain")
-(SAMPLE-RATE "x_snd->sr")
-(INNER-LOOP-LOCALS "double z0; long xi; long xj;")
+(SAMPLE-RATE (MAX x_snd))
+(INNER-LOOP-LOCALS "            double z0; long xi; long xj;")
 
-(INNER-LOOP "
-               z0 = x_snd*gain;
-               for (xi=0; xi < ak_len ; xi++)
-                   {
-                     xj = index + xi; if (xj >= ak_len) xj -= ak_len;
-                     z0 +=  ak_coefs[xi] * zk_buf[xj];
-                   }
-               zk_buf[index] = z0;
-               index++; if (index == ak_len) index = 0;
-               output = (sample_type) z0;
-")
-
+(INNER-LOOP "z0 = x_snd*gain;
+            for (xi=0; xi < ak_len ; xi++) {
+                xj = index + xi; if (xj >= ak_len) xj -= ak_len;
+                z0 +=  ak_coefs[xi] * zk_buf[xj];
+            }
+            zk_buf[index] = z0;
+            index++; if (index == ak_len) index = 0;
+            output = (sample_type) z0")
 (FINALIZATION "
      free(susp->zk_buf);
      free(susp->ak_coefs);
-     susp->ak_array = NULL;  /* free array */
-")
+     susp->ak_array = NULL;  /* free array */\n")
 )
 
 

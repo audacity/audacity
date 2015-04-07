@@ -198,14 +198,15 @@
 
 (defparameter *sal-print-list* t)
 
-(defun sal-printer (x &key (stream *standard-output*) (add-space t))
+(defun sal-printer (x &key (stream *standard-output*) (add-space t)
+                           (in-list nil))
   (let ((*print-case* ':downcase))
     (cond ((and (consp x) *sal-print-list*)
 	   (write-char #\{ stream)
 	   (do ((items x (cdr items)))
                ((null items))
 	      (sal-printer (car items) :stream stream
-                                       :add-space (cdr items))
+                                       :add-space (cdr items) :in-list t)
 	      (cond ((cdr items)
                      (cond ((not (consp (cdr items)))
                             (princ "<list not well-formed> " stream)
@@ -214,6 +215,7 @@
 	   (write-char #\} stream))
 	  ((not x)     (princ "#f" stream) )
 	  ((eq x t)    (princ "#t" stream))
+          (in-list     (prin1 x stream))
 	  (t           (princ x stream)))
     (if add-space (write-char #\space stream))))
 
@@ -224,9 +226,14 @@
   (apply #'format t string args))
 
 
+;; sal-print has been modified from the original SAL to print items separated
+;; by spaces (no final trailing space) and followed by a newline.
 (defun sal-print (&rest args)
+  (do ((items args (cdr items)))
+       ((null items))
+     ;; add space unless we are at the last element
+     (funcall *sal-printer* (car items) :add-space (cdr items)))
   (terpri)
-  (mapc *sal-printer* args)
   (values))
 
 (defmacro keyword (sym)
@@ -319,7 +326,7 @@
       (cond ((null fullpath)
              (format t "sal-load: could not find ~A~%" filename))
             (t
-             (return (generic-loader filename verbose print)))))))
+             (return (generic-loader fullpath verbose print)))))))
 
 
 ;; GENERIC-LOADER -- load a sal or lsp file based on extension
@@ -455,10 +462,12 @@
 ;; function called in sal programs to exit the sal read-compile-run-print loop
 (defun sal-exit () (setf *sal-exit* t))
 
+(setf *sal-call-stack* nil)
+
 ;; read-eval-print loop for sal commands
 (defun sal ()
-  (progv '(*breakenable* *tracenable* *sal-exit*)
-         (list *sal-xlispbreak* *sal-xlispbreak* nil)
+  (progv '(*breakenable* *tracenable* *sal-exit* *sal-mode*)
+         (list *sal-break* nil nil t)
     (let (input line)
       (setf *sal-call-stack* nil)
       (read-line) ; read the newline after the one the user 
@@ -478,9 +487,14 @@
             (setf input (subseq input 1)))
         (sal-compile input t nil "<console>")
         (sal-trace-exit))
-      (princ "Returning to Lisp ...\n")
-      t ; return value
-      )))
+      (princ "Returning to Lisp ...\n")))
+  ;; in case *xlisp-break* or *xlisp-traceback* was set from SAL, impose
+  ;; them here
+  (cond ((not *sal-mode*) 
+         (setf *breakenable* *xlisp-break*)
+         (setf *tracenable* *xlisp-traceback*)))
+  t)
+
 
 
 (defun sal-error-output (stack)
@@ -514,44 +528,48 @@
 ;;   otherwise, returns a list (PROGN p1 p2 p3 ...) where pn are lisp
 ;;      expressions
 ;;
-(defun sal-compile (input eval-flag multiple-statements filename)
+;; Note: replaced local variables here with "local" names to avoid
+;; collisions with globals that compiled code might try to use:
+;; eval uses local bindings, not global ones
+;;
+(defun sal-compile (sal:input sal:evflag sal:mult-stmts sal:filename)
   ;; save some globals because eval could call back recursively
   (progv '(*sal-tokens* *sal-input* *sal-input-text*) '(nil nil nil)
-    (let (output remainder rslt stack)
-      (setf stack *sal-call-stack*)
+    (let (sal:output sal:remainder sal:rslt sal:stack)
+      (setf sal:stack *sal-call-stack*)
       ;; if first input char is "(", then eval as a lisp expression:
-      ;(display "sal-compile" input)(setf *sal-compiler-debug* t)
-      (cond ((input-starts-with-open-paren input)
-             ;(print "input is lisp expression")
+      ;(display "sal-compile" sal:input)(setf *sal-compiler-debug* t)
+      (cond ((input-starts-with-open-paren sal:input)
+             ;(print "sal:input is lisp expression")
              (errset
-              (print (eval (read (make-string-input-stream input)))) t))
+              (print (eval (read (make-string-input-stream sal:input)))) t))
             (t ;; compile SAL expression(s):
              (loop
-                (setf output (sal-parse nil nil input multiple-statements 
-                                        filename))
-                (cond ((first output) ; successful parse
-                       (setf remainder *sal-tokens*)
-                       (setf output (second output))
+                (setf sal:output (sal-parse nil nil sal:input sal:mult-stmts 
+                                        sal:filename))
+                (cond ((first sal:output) ; successful parse
+                       (setf sal:remainder *sal-tokens*)
+                       (setf sal:output (second sal:output))
                        (when *sal-compiler-debug*
                          (terpri)
-                         (pprint output))
-                       (cond (eval-flag ;; evaluate the compiled code
-                              (cond ((null (errset (eval output) t))
-                                     (sal-error-output stack)
+                         (pprint sal:output))
+                       (cond (sal:evflag ;; evaluate the compiled code
+                              (cond ((null (errset (eval sal:output) t))
+                                     (sal-error-output sal:stack)
                                      (return)))) ;; stop on error
                              (t
-                              (push output rslt)))
+                              (push sal:output sal:rslt)))
                                         ;(display "sal-compile after eval" 
-                                        ;         remainder *sal-tokens*)
+                                        ;         sal:remainder *sal-tokens*)
                        ;; if there are statements left over, maybe compile again
-                       (cond ((and multiple-statements remainder)
-                              ;; move remainder to input and iterate
-                              (setf input remainder))
+                       (cond ((and sal:mult-stmts sal:remainder)
+                              ;; move sal:remainder to sal:input and iterate
+                              (setf sal:input sal:remainder))
                              ;; see if we've compiled everything
-                             ((and (not eval-flag) (not remainder))
-                              (return (cons 'progn (reverse rslt))))
-                             ;; if eval but no more input, return
-                             ((not remainder)
+                             ((and (not sal:evflag) (not sal:remainder))
+                              (return (cons 'progn (reverse sal:rslt))))
+                             ;; if eval but no more sal:input, return
+                             ((not sal:remainder)
                               (return))))
                       (t ; error encountered
                        (return)))))))))
@@ -568,3 +586,10 @@
     (and (stringp input)
          (> (length input) i)
          (eq (char input i) #\())))
+
+(defun sal-equal (a b)
+  (or (and (numberp a) (numberp b) (= a b)) 
+      (equal a b)))
+
+(defun not-sal-equal (a b)
+  (not (sal-equal a b)))

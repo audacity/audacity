@@ -209,7 +209,48 @@
 ;;   (2) EVAL is used on each event, so events cannot refer to parameters
 ;;        or local variables
 ;;
+;; If score events are very closely spaced (< 1020 samples), the block
+;; overlap can cause a ripple effect where to complete one block of the
+;; output, you have to compute part of the next score event, but then
+;; it in turn computes part of the next score event, and so on, until
+;; the stack overflows (if you have 1000's of events).
+;;
+;; This is really a fundamental problem in Nyquist because blocks are
+;; not aligned. To work around the problem (but not totally solve it)
+;; scores are evaluated up to a length of 100. If there are more than
+;; 100 score events, we form a balanced tree of adders so that maybe
+;; we will end up with a lot of sound in memory, but at least the
+;; stack will not overflow. Generally, we should not end up with more
+;; than 100 times as many blocks as we would like, but since the
+;; normal space required is O(1), we're still using constant space +
+;; a small constant * log(score-length).
+;;
+(setf MAX-LINEAR-SCORE-LEN 100)
 (defun timed-seq (score)
+  (let ((len (length score))
+        pair)
+    (cond ((< len MAX-LINEAR-SCORE-LEN)
+           (timed-seq-linear score))
+          (t ;; split the score -- divide and conquer
+           (setf pair (score-split score (/ len 2)))
+           (sum (timed-seq (car pair)) (timed-seq (cdr pair)))))))
+
+;; score-split -- helper function: split score into two, with n elements
+;;                in the first part; returns a dotted pair
+(defun score-split (score n)
+  ;; do the split without recursion to avoid stack overflow
+  ;; algorithm: modify the list destructively to get the first
+  ;; half. Copy it. Reassemble the list.
+  (let (pair last front back)
+    (setf last (nthcdr (1- n) score))
+    (setf back (cdr last))
+    (rplacd last nil)
+    (setf front (append score nil)) ; shallow copy
+    (rplacd last back)
+    (cons front back)))
+
+ 
+(defun timed-seq-linear (score)
   ; check to insure that times are strictly increasing and >= 0 and stretches are >= 0
   (let ((start-time 0) error-msg)
     (dolist (event score)

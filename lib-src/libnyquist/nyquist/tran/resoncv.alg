@@ -2,7 +2,6 @@
 (NAME "resoncv")
 (ARGUMENTS ("sound_type" "s1") ("double" "hz") ("sound_type" "bw")
            ("int" "normalization"))
-(INLINE-INTERPOLATION T)
 (INTERNAL-SCALING s1)
 (ALWAYS-SCALE bw)
 (START (MAX s1 bw))
@@ -30,6 +29,6 @@
 (CONSTANT "c1" "c2" "c3co" "coshz" "normalization" "scale1")
 (FORCE-INTO-REGISTER normalization coshz scale1)
 (INNER-LOOP "{ double y0 = c1 * s1 + c2 * y1 - c3co * y2;
-            output = (sample_type) y0; 
-            y2 = y1; y1 = y0; }")
+              output = (sample_type) y0; 
+              y2 = y1; y1 = y0; }")
 )

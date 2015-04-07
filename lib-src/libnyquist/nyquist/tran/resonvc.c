@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "resonvc.h"
 
-void resonvc_free();
+void resonvc_free(snd_susp_type a_susp);
 
 
 typedef struct resonvc_susp_struct {
@@ -46,8 +46,9 @@ typedef struct resonvc_susp_struct {
 } resonvc_susp_node, *resonvc_susp_type;
 
 
-void resonvc_ns_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
+void resonvc_ns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    resonvc_susp_type susp = (resonvc_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -90,6 +91,7 @@ void resonvc_ns_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -101,6 +103,7 @@ void resonvc_ns_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -137,9 +140,9 @@ void resonvc_ns_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 	    c1_reg = (normalization_reg == 0 ? scale1_reg :
           (normalization_reg == 1 ? omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
               sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg)) * scale1_reg;
-{ double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
-            *out_ptr_reg++ = (sample_type) y0;
-            y2_reg = y1_reg; y1_reg = y0; };
+            { double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
+              *out_ptr_reg++ = (sample_type) y0;
+              y2_reg = y1_reg; y1_reg = y0; };
 	} while (--n); /* inner loop */
 
 	susp->y1 = y1_reg;
@@ -170,8 +173,9 @@ void resonvc_ns_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 } /* resonvc_ns_fetch */
 
 
-void resonvc_ni_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
+void resonvc_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    resonvc_susp_type susp = (resonvc_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -222,6 +226,7 @@ void resonvc_ni_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -233,6 +238,7 @@ void resonvc_ni_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -274,14 +280,14 @@ void resonvc_ni_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 		hz_pHaSe_ReG -= 1.0;
 		susp_check_term_samples_break(hz, hz_ptr, hz_cnt, hz_x1_sample_reg);
 		hz_x1_sample_reg = susp_current_sample(hz, hz_ptr);
-		c2_reg = susp->c2 = c3t4_reg * cos(hz_x1_sample_reg) / c3p1_reg;
-		c1_reg = susp->c1 = (normalization_reg == 0 ? scale1_reg :
+		c2_reg = c3t4_reg * cos(hz_x1_sample_reg) / c3p1_reg;
+		c1_reg = (normalization_reg == 0 ? scale1_reg :
           (normalization_reg == 1 ? omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
               sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg)) * scale1_reg;
 	    }
-{ double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
-            *out_ptr_reg++ = (sample_type) y0;
-            y2_reg = y1_reg; y1_reg = y0; };
+            { double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
+              *out_ptr_reg++ = (sample_type) y0;
+              y2_reg = y1_reg; y1_reg = y0; };
 	    hz_pHaSe_ReG += hz_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -313,8 +319,9 @@ void resonvc_ni_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 } /* resonvc_ni_fetch */
 
 
-void resonvc_nr_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
+void resonvc_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    resonvc_susp_type susp = (resonvc_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type hz_val;
     int togo;
@@ -376,6 +383,7 @@ void resonvc_nr_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -387,6 +395,7 @@ void resonvc_nr_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -418,9 +427,9 @@ void resonvc_nr_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-{ double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
-            *out_ptr_reg++ = (sample_type) y0;
-            y2_reg = y1_reg; y1_reg = y0; };
+            { double y0 = c1_reg * *s1_ptr_reg++ + c2_reg * y1_reg - c3co_reg * y2_reg;
+              *out_ptr_reg++ = (sample_type) y0;
+              y2_reg = y1_reg; y1_reg = y0; };
 	} while (--n); /* inner loop */
 
 	susp->y1 = y1_reg;
@@ -450,11 +459,9 @@ void resonvc_nr_fetch(register resonvc_susp_type susp, snd_list_type snd_list)
 } /* resonvc_nr_fetch */
 
 
-void resonvc_toss_fetch(susp, snd_list)
-  register resonvc_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void resonvc_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    resonvc_susp_type susp = (resonvc_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -477,27 +484,30 @@ void resonvc_toss_fetch(susp, snd_list)
     susp->hz_ptr += n;
     susp_took(hz_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void resonvc_mark(resonvc_susp_type susp)
+void resonvc_mark(snd_susp_type a_susp)
 {
+    resonvc_susp_type susp = (resonvc_susp_type) a_susp;
     sound_xlmark(susp->s1);
     sound_xlmark(susp->hz);
 }
 
 
-void resonvc_free(resonvc_susp_type susp)
+void resonvc_free(snd_susp_type a_susp)
 {
+    resonvc_susp_type susp = (resonvc_susp_type) a_susp;
     sound_unref(susp->s1);
     sound_unref(susp->hz);
     ffree_generic(susp, sizeof(resonvc_susp_node), "resonvc_free");
 }
 
 
-void resonvc_print_tree(resonvc_susp_type susp, int n)
+void resonvc_print_tree(snd_susp_type a_susp, int n)
 {
+    resonvc_susp_type susp = (resonvc_susp_type) a_susp;
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);
@@ -529,6 +539,12 @@ sound_type snd_make_resonvc(sound_type s1, sound_type hz, double bw, int normali
     susp->y2 = 0.0;
     hz->scale = (sample_type) (hz->scale * (PI2 / s1->sr));
 
+    /* make sure no sample rate is too high */
+    if (hz->sr > sr) {
+        sound_unref(hz);
+        snd_badsr();
+    }
+
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(s1, sr);
     interp_desc = (interp_desc << 2) + interp_style(hz, sr);
@@ -553,8 +569,8 @@ sound_type snd_make_resonvc(sound_type s1, sound_type hz, double bw, int normali
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = resonvc_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = resonvc_toss_fetch;
     }
 
     /* initialize susp state */

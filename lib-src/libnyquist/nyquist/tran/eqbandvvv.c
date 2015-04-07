@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "eqbandvvv.h"
 
-void eqbandvvv_free();
+void eqbandvvv_free(snd_susp_type a_susp);
 
 
 typedef struct eqbandvvv_susp_struct {
@@ -78,8 +78,9 @@ typedef struct eqbandvvv_susp_struct {
 #define log_of_2_over_2 0.3465735902799726547086
 
 
-void eqbandvvv_ssss_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_list)
+void eqbandvvv_nsss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    eqbandvvv_susp_type susp = (eqbandvvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -109,9 +110,8 @@ void eqbandvvv_ssss_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
     register sample_block_values_type gain_ptr_reg;
     register sample_type hz_scale_reg = susp->hz->scale;
     register sample_block_values_type hz_ptr_reg;
-    register sample_type input_scale_reg = susp->input->scale;
     register sample_block_values_type input_ptr_reg;
-    falloc_sample_block(out, "eqbandvvv_ssss_fetch");
+    falloc_sample_block(out, "eqbandvvv_nsss_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
 
@@ -140,6 +140,7 @@ void eqbandvvv_ssss_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -151,6 +152,7 @@ void eqbandvvv_ssss_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -204,16 +206,17 @@ void eqbandvvv_ssss_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 	        /* a0_reg = 1.0 + gg_reg / J_reg; */
 	        double a_0_recip = J_reg / (J_reg + gg_reg);
 	        recompute_reg = false;
-	        gg_reg = sw_reg * sinh(log_of_2_over_2 * (width_scale_reg * *width_ptr_reg++) * w1_reg / sw_reg);
+	        gg_reg = sw_reg * sinh(log_of_2_over_2 * 
+	                       (width_scale_reg * *width_ptr_reg++) * w1_reg / sw_reg);
 	        b0_reg = (1.0 + gg_reg * J_reg) * a_0_recip;
 	        b1_reg *= a_0_recip;
 	        b2_reg = (1.0 - gg_reg * J_reg) * a_0_recip;
 	        a1_reg *= a_0_recip;
 	        a2_reg = (gg_reg / J_reg - 1.0) * a_0_recip;
 	    }
-    z0 = (input_scale_reg * *input_ptr_reg++) + a1_reg*z1_reg + a2_reg*z2_reg;
-    *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
-    z2_reg = z1_reg; z1_reg = z0;;
+            z0 = *input_ptr_reg++ + a1_reg*z1_reg + a2_reg*z2_reg;
+            *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
+            z2_reg = z1_reg; z1_reg = z0;
 	} while (--n); /* inner loop */
 
 	susp->z1 = z1_reg;
@@ -248,11 +251,12 @@ void eqbandvvv_ssss_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
 	susp->logically_stopped = true;
     }
-} /* eqbandvvv_ssss_fetch */
+} /* eqbandvvv_nsss_fetch */
 
 
-void eqbandvvv_siii_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_list)
+void eqbandvvv_niii_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    eqbandvvv_susp_type susp = (eqbandvvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -285,9 +289,8 @@ void eqbandvvv_siii_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
     register double hz_pHaSe_iNcR_rEg = susp->hz_pHaSe_iNcR;
     register double hz_pHaSe_ReG;
     register sample_type hz_x1_sample_reg;
-    register sample_type input_scale_reg = susp->input->scale;
     register sample_block_values_type input_ptr_reg;
-    falloc_sample_block(out, "eqbandvvv_siii_fetch");
+    falloc_sample_block(out, "eqbandvvv_niii_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
 
@@ -324,6 +327,7 @@ void eqbandvvv_siii_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -335,6 +339,7 @@ void eqbandvvv_siii_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -386,12 +391,12 @@ void eqbandvvv_siii_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 		hz_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(hz, hz_ptr, hz_cnt, hz_x1_sample_reg);
 		hz_x1_sample_reg = susp_current_sample(hz, hz_ptr);
-		w1_reg = susp->w1 = PI2 * hz_x1_sample_reg * inp_period_reg;
-		sw_reg = susp->sw = sin(w1_reg);
-		cw_reg = susp->cw = cos(w1_reg);
-		b1_reg = susp->b1 = -2.0 * cw_reg;
-		a1_reg = susp->a1 = -b1_reg;
-		recompute_reg = susp->recompute = true;
+		w1_reg = PI2 * hz_x1_sample_reg * inp_period_reg;
+		sw_reg = sin(w1_reg);
+		cw_reg = cos(w1_reg);
+		b1_reg = -2.0 * cw_reg;
+		a1_reg = -b1_reg;
+		recompute_reg = true;
 	    }
 	    if (gain_pHaSe_ReG >= 1.0) {
 /* fixup-depends gain */
@@ -401,8 +406,8 @@ void eqbandvvv_siii_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 		gain_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(gain, gain_ptr, gain_cnt, gain_x1_sample_reg);
 		gain_x1_sample_reg = susp_current_sample(gain, gain_ptr);
-		J_reg = susp->J = sqrt(gain_x1_sample_reg);
-		recompute_reg = susp->recompute = true;
+		J_reg = sqrt(gain_x1_sample_reg);
+		recompute_reg = true;
 	    }
 	    if (width_pHaSe_ReG >= 1.0) {
 /* fixup-depends width */
@@ -412,22 +417,23 @@ void eqbandvvv_siii_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 		width_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(width, width_ptr, width_cnt, width_x1_sample_reg);
 		width_x1_sample_reg = susp_current_sample(width, width_ptr);
-		recompute_reg = susp->recompute = true;
+		recompute_reg = true;
 	    }
 	    if (recompute_reg) {
 	        /* a0_reg = 1.0 + gg_reg / J_reg; */
 	        double a_0_recip = J_reg / (J_reg + gg_reg);
 	        recompute_reg = false;
-	        gg_reg = sw_reg * sinh(log_of_2_over_2 * width_x1_sample_reg * w1_reg / sw_reg);
+	        gg_reg = sw_reg * sinh(log_of_2_over_2 * 
+	                       width_x1_sample_reg * w1_reg / sw_reg);
 	        b0_reg = (1.0 + gg_reg * J_reg) * a_0_recip;
 	        b1_reg *= a_0_recip;
 	        b2_reg = (1.0 - gg_reg * J_reg) * a_0_recip;
 	        a1_reg *= a_0_recip;
 	        a2_reg = (gg_reg / J_reg - 1.0) * a_0_recip;
 	    }
-    z0 = (input_scale_reg * *input_ptr_reg++) + a1_reg*z1_reg + a2_reg*z2_reg;
-    *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
-    z2_reg = z1_reg; z1_reg = z0;;
+            z0 = *input_ptr_reg++ + a1_reg*z1_reg + a2_reg*z2_reg;
+            *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
+            z2_reg = z1_reg; z1_reg = z0;
 	    hz_pHaSe_ReG += hz_pHaSe_iNcR_rEg;
 	    gain_pHaSe_ReG += gain_pHaSe_iNcR_rEg;
 	    width_pHaSe_ReG += width_pHaSe_iNcR_rEg;
@@ -463,11 +469,12 @@ void eqbandvvv_siii_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
 	susp->logically_stopped = true;
     }
-} /* eqbandvvv_siii_fetch */
+} /* eqbandvvv_niii_fetch */
 
 
-void eqbandvvv_srrr_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_list)
+void eqbandvvv_nrrr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    eqbandvvv_susp_type susp = (eqbandvvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type hz_val;
     sample_type gain_val;
@@ -487,11 +494,9 @@ void eqbandvvv_srrr_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
     register double a2_reg;
     register double z1_reg;
     register double z2_reg;
-    register boolean recompute_reg;
     register double inp_period_reg;
-    register sample_type input_scale_reg = susp->input->scale;
     register sample_block_values_type input_ptr_reg;
-    falloc_sample_block(out, "eqbandvvv_srrr_fetch");
+    falloc_sample_block(out, "eqbandvvv_nrrr_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
 
@@ -567,7 +572,8 @@ void eqbandvvv_srrr_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 	    /* susp->a0 = 1.0 + susp->gg / susp->J; */
 	    double a_0_recip = susp->J / (susp->J + susp->gg);
 	    susp->recompute = false;
-	    susp->gg = susp->sw * sinh(log_of_2_over_2 * width_val * susp->w1 / susp->sw);
+	    susp->gg = susp->sw * sinh(log_of_2_over_2 * 
+	                   width_val * susp->w1 / susp->sw);
 	    susp->b0 = (1.0 + susp->gg * susp->J) * a_0_recip;
 	    susp->b1 *= a_0_recip;
 	    susp->b2 = (1.0 - susp->gg * susp->J) * a_0_recip;
@@ -578,6 +584,7 @@ void eqbandvvv_srrr_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -589,6 +596,7 @@ void eqbandvvv_srrr_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -615,20 +623,18 @@ void eqbandvvv_srrr_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
 	a2_reg = susp->a2;
 	z1_reg = susp->z1;
 	z2_reg = susp->z2;
-	recompute_reg = susp->recompute;
 	inp_period_reg = susp->inp_period;
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
             double z0;
-    z0 = (input_scale_reg * *input_ptr_reg++) + a1_reg*z1_reg + a2_reg*z2_reg;
-    *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
-    z2_reg = z1_reg; z1_reg = z0;;
+            z0 = *input_ptr_reg++ + a1_reg*z1_reg + a2_reg*z2_reg;
+            *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
+            z2_reg = z1_reg; z1_reg = z0;
 	} while (--n); /* inner loop */
 
 	susp->z1 = z1_reg;
 	susp->z2 = z2_reg;
-	susp->recompute = recompute_reg;
 	/* using input_ptr_reg is a bad idea on RS/6000: */
 	susp->input_ptr += togo;
 	out_ptr += togo;
@@ -655,13 +661,12 @@ void eqbandvvv_srrr_fetch(register eqbandvvv_susp_type susp, snd_list_type snd_l
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
 	susp->logically_stopped = true;
     }
-} /* eqbandvvv_srrr_fetch */
+} /* eqbandvvv_nrrr_fetch */
 
 
-void eqbandvvv_toss_fetch(susp, snd_list)
-  register eqbandvvv_susp_type susp;
-  snd_list_type snd_list;
-{
+void eqbandvvv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    eqbandvvv_susp_type susp = (eqbandvvv_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -700,12 +705,13 @@ void eqbandvvv_toss_fetch(susp, snd_list)
     susp->width_ptr += n;
     susp_took(width_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void eqbandvvv_mark(eqbandvvv_susp_type susp)
+void eqbandvvv_mark(snd_susp_type a_susp)
 {
+    eqbandvvv_susp_type susp = (eqbandvvv_susp_type) a_susp;
     sound_xlmark(susp->input);
     sound_xlmark(susp->hz);
     sound_xlmark(susp->gain);
@@ -713,8 +719,9 @@ void eqbandvvv_mark(eqbandvvv_susp_type susp)
 }
 
 
-void eqbandvvv_free(eqbandvvv_susp_type susp)
+void eqbandvvv_free(snd_susp_type a_susp)
 {
+    eqbandvvv_susp_type susp = (eqbandvvv_susp_type) a_susp;
     sound_unref(susp->input);
     sound_unref(susp->hz);
     sound_unref(susp->gain);
@@ -723,8 +730,9 @@ void eqbandvvv_free(eqbandvvv_susp_type susp)
 }
 
 
-void eqbandvvv_print_tree(eqbandvvv_susp_type susp, int n)
+void eqbandvvv_print_tree(snd_susp_type a_susp, int n)
 {
+    eqbandvvv_susp_type susp = (eqbandvvv_susp_type) a_susp;
     indent(n);
     stdputstr("input:");
     sound_print_tree_1(susp->input, n);
@@ -752,6 +760,13 @@ sound_type snd_make_eqbandvvv(sound_type input, sound_type hz, sound_type gain, 
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     long lsc;
+    /* combine scale factors of linear inputs (INPUT) */
+    scale_factor *= input->scale;
+    input->scale = 1.0F;
+
+    /* try to push scale_factor back to a low sr input */
+    if (input->sr < sr) { input->scale = scale_factor; scale_factor = 1.0F; }
+
     falloc_generic(susp, eqbandvvv_susp_node, "snd_make_eqbandvvv");
     susp->inp_scale = input->scale;
     susp->w1 = 0.0;
@@ -770,6 +785,20 @@ sound_type snd_make_eqbandvvv(sound_type input, sound_type hz, sound_type gain, 
     susp->recompute = false;
     susp->inp_period = 1.0 / input->sr;
 
+    /* make sure no sample rate is too high */
+    if (hz->sr > sr) {
+        sound_unref(hz);
+        snd_badsr();
+    }
+    if (gain->sr > sr) {
+        sound_unref(gain);
+        snd_badsr();
+    }
+    if (width->sr > sr) {
+        sound_unref(width);
+        snd_badsr();
+    }
+
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(input, sr);
     interp_desc = (interp_desc << 2) + interp_style(hz, sr);
@@ -783,19 +812,9 @@ sound_type snd_make_eqbandvvv(sound_type input, sound_type hz, sound_type gain, 
       case INTERP_nsnn: /* handled below */
       case INTERP_nsns: /* handled below */
       case INTERP_nssn: /* handled below */
-      case INTERP_nsss: /* handled below */
-      case INTERP_snnn: /* handled below */
-      case INTERP_snns: /* handled below */
-      case INTERP_snsn: /* handled below */
-      case INTERP_snss: /* handled below */
-      case INTERP_ssnn: /* handled below */
-      case INTERP_ssns: /* handled below */
-      case INTERP_sssn: /* handled below */
-      case INTERP_ssss: susp->susp.fetch = eqbandvvv_ssss_fetch; break;
-      case INTERP_niii: /* handled below */
-      case INTERP_siii: susp->susp.fetch = eqbandvvv_siii_fetch; break;
-      case INTERP_nrrr: /* handled below */
-      case INTERP_srrr: susp->susp.fetch = eqbandvvv_srrr_fetch; break;
+      case INTERP_nsss: susp->susp.fetch = eqbandvvv_nsss_fetch; break;
+      case INTERP_niii: susp->susp.fetch = eqbandvvv_niii_fetch; break;
+      case INTERP_nrrr: susp->susp.fetch = eqbandvvv_nrrr_fetch; break;
       default: snd_badsr(); break;
     }
 
@@ -810,8 +829,8 @@ sound_type snd_make_eqbandvvv(sound_type input, sound_type hz, sound_type gain, 
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = eqbandvvv_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = eqbandvvv_toss_fetch;
     }
 
     /* initialize susp state */

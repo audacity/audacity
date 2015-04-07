@@ -13,8 +13,8 @@
 (LINEAR input)
 (TERMINATE (MIN input))
 (INNER-LOOP "output = *delayptr;
-         *delayptr = (sample_type) (*delayptr * feedback) + input;
-         if (++delayptr >= endptr) delayptr = susp->delaybuf;")
-(FINALIZATION "free(susp->delaybuf);")
+            *delayptr = (sample_type) (*delayptr * feedback) + input;
+            if (++delayptr >= endptr) delayptr = susp->delaybuf")
+(FINALIZATION "free(susp->delaybuf);\n")
 )
 

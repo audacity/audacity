@@ -1,6 +1,6 @@
 
-xtype_desc create_desc(char *type_name, void (*fm)(), void (*pm)(),
-                       void (*sm)(), unsigned char * (*rm)(), void (*mm)());
+xtype_desc create_desc(char *type_name, void (*fm)(void*), void (*pm)(void*, void*),
+                       void (*sm)(FILE*, void*), unsigned char * (*rm)(FILE*), void (*mm)(void*));
 int exttypep(LVAL x, LVAL type_sym);
 
 

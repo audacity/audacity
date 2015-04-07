@@ -3,7 +3,6 @@
 (ARGUMENTS ("sound_type" "s1") ("sound_type" "hz") ("double" "bw")
            ("int" "normalization"))
 (LINEAR s1)
-(INLINE-INTERPOLATION T)
 (ALWAYS-SCALE hz)
 (START (MAX s1 hz))
 (TERMINATE (MIN s1 hz))

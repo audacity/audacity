@@ -33,31 +33,28 @@ void h_reverse(sample_type *h, long len)
 (TERMINATE (MIN x_snd))
 (LOGICAL-STOP (MIN x_snd))
 (INNER-LOOP-LOCALS 
-  "long i; double sum;")
-(INNER-LOOP "
-        /* see if we've reached end of x_buffer */
-        if ((x_buffer_pointer + x_buf_len) <= (x_buffer_current + h_len)) {
-            /* shift x_buffer from current back to base */
-            for (i = 1; i < h_len; i++) {
-                x_buffer_pointer[i-1] = x_buffer_current[i];
-            }    
-            /* this will be incremented back to x_buffer_pointer below */
-            x_buffer_current = x_buffer_pointer - 1;
-        }
-
-        x_buffer_current++;
-
-        x_buffer_current[h_len - 1] = x_snd;
-
-        sum = 0.0;
-        for (i = 0; i < h_len; i++) {
-            sum += x_buffer_current[i] * h_buf[i];
-        }
-
-        output = (sample_type) sum;
-")
+  "            long i; double sum;")
+(INNER-LOOP "/* see if we've reached end of x_buffer */
+            if ((x_buffer_pointer + x_buf_len) <= (x_buffer_current + h_len)) {
+                /* shift x_buffer from current back to base */
+                for (i = 1; i < h_len; i++) {
+                    x_buffer_pointer[i-1] = x_buffer_current[i];
+                }    
+                /* this will be incremented back to x_buffer_pointer below */
+                x_buffer_current = x_buffer_pointer - 1;
+            }
+    
+            x_buffer_current++;
+    
+            x_buffer_current[h_len - 1] = x_snd;
+    
+            sum = 0.0;
+            for (i = 0; i < h_len; i++) {
+                sum += x_buffer_current[i] * h_buf[i];
+            }
+            output = (sample_type) sum")
 (CONSTANT "h_buf" "h_len" "x_buf_len" "table")
 (SAMPLE-RATE "x_snd->sr")
 (FINALIZATION "    table_unref(susp->table); 
-    free(susp->x_buffer_pointer);")
+    free(susp->x_buffer_pointer);\n")
 )

@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "xlisp.h"
+#include "sound.h"
 
 static FILE* probefile = NULL;
 static long line_num = 0;

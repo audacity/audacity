@@ -12,7 +12,6 @@
 #include "sound.h"
 #include "falloc.h"
 
-
 void stats()
 {
     nyquist_printf("\n\nNyquist statistics:\n\n");

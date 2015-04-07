@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "const.h"
 
-void const_free();
+void const_free(snd_susp_type a_susp);
 
 
 typedef struct const_susp_struct {
@@ -20,8 +20,9 @@ typedef struct const_susp_struct {
 } const_susp_node, *const_susp_type;
 
 
-void const__fetch(register const_susp_type susp, snd_list_type snd_list)
+void const__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    const_susp_type susp = (const_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -44,6 +45,7 @@ void const__fetch(register const_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -51,7 +53,7 @@ void const__fetch(register const_susp_type susp, snd_list_type snd_list)
 	c_reg = susp->c;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = c_reg;
+            *out_ptr_reg++ = c_reg;
 	} while (--n); /* inner loop */
 
 	out_ptr += togo;
@@ -68,13 +70,14 @@ void const__fetch(register const_susp_type susp, snd_list_type snd_list)
 } /* const__fetch */
 
 
-void const_free(const_susp_type susp)
+void const_free(snd_susp_type a_susp)
 {
+    const_susp_type susp = (const_susp_type) a_susp;
     ffree_generic(susp, sizeof(const_susp_node), "const_free");
 }
 
 
-void const_print_tree(const_susp_type susp, int n)
+void const_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
@@ -89,7 +92,7 @@ sound_type snd_make_const(double c, time_type t0, rate_type sr, time_type d)
     susp->c = (sample_type) c;
     susp->susp.fetch = const__fetch;
 
-    susp->terminate_cnt = round((d) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
     /* initialize susp state */
     susp->susp.free = const_free;
     susp->susp.sr = sr;

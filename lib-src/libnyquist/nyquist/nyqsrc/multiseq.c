@@ -136,9 +136,9 @@ known", I mean somewhere in the block referenced by ->s1_ptr and ->s1_cnt.
 /* extern LVAL s_stdout; */
 
 void multiseq_convert(multiseq_type ms);
-void multiseq_free(add_susp_type susp);
+void multiseq_free(snd_susp_type a_susp);
 sample_block_type multiseq_get_next(sound_type snd, long * cnt);
-void multiseq_print_tree(add_susp_type susp, int n);
+void multiseq_print_tree(snd_susp_type a_susp, int n);
 
 
 #define susp_cnt_time(ssp, ms, cnt) (ssp->susp.t0 - ms->t0 + (cnt)/ssp->s1->sr)
@@ -390,7 +390,7 @@ D	    nyquist_printf("susp %p using add_s1_s2_nn_fetch\n", susp);
          */
         snd_list->u.next = snd_list_create(&(susp->susp));
         snd_list->block = internal_zero_block;
-        (*(susp->susp.fetch))(susp, snd_list);
+        (*(susp->susp.fetch))((snd_susp_type) susp, snd_list);
     }
     
     /* now free the multiseq struct */
@@ -420,10 +420,9 @@ D	    nyquist_printf("susp %p using add_s1_s2_nn_fetch\n", susp);
  * must check the pointers and substitute internal_zero_block to
  * avoid premature termination.
  */
-void multiseq_fetch(susp, snd_list)
-  register add_susp_type susp;
-  snd_list_type snd_list;
+void multiseq_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     time_type block_end_time;
 
     /* undo the preallocation of a snd_list_node */
@@ -483,8 +482,9 @@ D   nyquist_printf("block_end_time of %p: %g\n", susp, block_end_time);
 
 /* multiseq_mark -- mark routine for multiseq susps */
 /**/
-void multiseq_mark(add_susp_type susp)
+void multiseq_mark(snd_susp_type a_susp)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     int i;
     multiseq_type ms = susp->multiseq;
 D    nyquist_printf("multiseq_mark(%p)\n", susp);
@@ -607,8 +607,9 @@ D    nyquist_printf("ms->t0 == %g\n", ms->t0);
 
 /* note: snd_multiseq is a noop, just call snd_make_multiseq */
 
-void multiseq_free(add_susp_type susp)
+void multiseq_free(snd_susp_type a_susp)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     int i;
     multiseq_type ms = susp->multiseq;
     boolean dead = true;
@@ -642,8 +643,9 @@ D                nyquist_printf("susp %p freed, ms@%p->chans[%d] = NULL\n",
 }
 
 
-void multiseq_print_tree(add_susp_type susp, int n)
+void multiseq_print_tree(snd_susp_type a_susp, int n)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     int i;
 
     indent(n);

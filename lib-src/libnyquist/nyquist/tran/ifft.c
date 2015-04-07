@@ -1,6 +1,4 @@
 #include "stdio.h"
-#define _USE_MATH_DEFINES 1 /* for Visual C++ to get M_LN2 */
-#include <math.h>
 #ifndef mips
 #include "stdlib.h"
 #endif
@@ -11,7 +9,7 @@
 #include "cext.h"
 #include "ifft.h"
 
-void ifft_free();
+void ifft_free(snd_susp_type a_susp);
 
 
 typedef struct ifft_susp_struct {
@@ -85,8 +83,9 @@ table_type get_window_samples(LVAL window, sample_type **samples, long *len)
 }
 
 
-void ifft__fetch(register ifft_susp_type susp, snd_list_type snd_list)
+void ifft__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    ifft_susp_type susp = (ifft_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -174,7 +173,7 @@ out:        togo = 0;   /* indicate termination */
 
             /* here is where the IFFT and windowing should take place */
             //fftnf(1, &n, susp->samples, susp->samples + n, -1, 1.0);
-            m = round(log(n) / M_LN2);
+            m = round(log2(n));
             if (!fftInit(m)) riffts(susp->samples, m, 1);
             else xlfail("FFT initialization error");
             if (susp->window) {
@@ -208,7 +207,7 @@ out:        togo = 0;   /* indicate termination */
 	outbuf_reg = susp->outbuf;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = outbuf_reg[index_reg++];;
+            *out_ptr_reg++ = outbuf_reg[index_reg++];
 	} while (--n); /* inner loop */
 
 	susp->index = index_reg;
@@ -227,15 +226,17 @@ out:        togo = 0;   /* indicate termination */
 } /* ifft__fetch */
 
 
-void ifft_mark(ifft_susp_type susp)
+void ifft_mark(snd_susp_type a_susp)
 {
+    ifft_susp_type susp = (ifft_susp_type) a_susp;
     if (susp->src) mark(susp->src);
     if (susp->array) mark(susp->array);
 }
 
 
-void ifft_free(ifft_susp_type susp)
+void ifft_free(snd_susp_type a_susp)
 {
+    ifft_susp_type susp = (ifft_susp_type) a_susp;
     if (susp->samples) free(susp->samples);
     if (susp->table) table_unref(susp->table);
     if (susp->outbuf) free(susp->outbuf);
@@ -243,7 +244,7 @@ void ifft_free(ifft_susp_type susp)
 }
 
 
-void ifft_print_tree(ifft_susp_type susp, int n)
+void ifft_print_tree(snd_susp_type a_susp, int n)
 {
 }
 

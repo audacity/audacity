@@ -156,10 +156,10 @@ static int SrcUD(float X[], float Y[], double factor, double *Time,
 }
 
 
-void resample__fetch(register resample_susp_type susp, snd_list_type snd_list)
+void resample__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    resample_susp_type susp = (resample_susp_type) a_susp;
     int togo;
-    int n;
     int Nout;
     sample_block_type out;
     /* note that in this fetch routine, out_ptr is used to remember where
@@ -167,9 +167,6 @@ void resample__fetch(register resample_susp_type susp, snd_list_type snd_list)
      * loop that copies input samples into X, a buffer
      */
     register sample_block_values_type out_ptr;
-    register sample_block_values_type X_ptr_reg;
-
-    register sample_type *s_ptr_reg;
     falloc_sample_block(out, "resample__fetch");
     out_ptr = out->samples;
     snd_list->block = out;
@@ -268,22 +265,25 @@ samples need to be shifted from the end of X to the beginning.
 } /* resample__fetch */
 
 
-void resample_mark(resample_susp_type susp)
+void resample_mark(snd_susp_type a_susp)
 {
+    resample_susp_type susp = (resample_susp_type) a_susp;
     sound_xlmark(susp->s);
 }
 
 
-void resample_free(resample_susp_type susp)
+void resample_free(snd_susp_type a_susp)
 {
+    resample_susp_type susp = (resample_susp_type) a_susp;
     sound_unref(susp->s);
     free(susp->X);
     ffree_generic(susp, sizeof(resample_susp_node), "resample_free");
 }
 
 
-void resample_print_tree(resample_susp_type susp, int n)
+void resample_print_tree(snd_susp_type a_susp, int n)
 {
+    resample_susp_type susp = (resample_susp_type) a_susp;
     indent(n);
     stdputstr("s:");
     sound_print_tree_1(susp->s, n);

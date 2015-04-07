@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "pwl.h"
 
-void pwl_free();
+void pwl_free(snd_susp_type a_susp);
 
 
 typedef struct pwl_susp_struct {
@@ -74,8 +74,9 @@ boolean compute_incr(pwl_susp_type susp, long *n, long cur)
 }
 
 
-void pwl__fetch(register pwl_susp_type susp, snd_list_type snd_list)
+void pwl__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    pwl_susp_type susp = (pwl_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -113,7 +114,7 @@ out:	    togo = 0;	/* indicate termination */
 	lvl_reg = susp->lvl;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = (sample_type) lvl_reg; lvl_reg += incr_reg;;
+            *out_ptr_reg++ = (sample_type) lvl_reg; lvl_reg += incr_reg;
 	} while (--n); /* inner loop */
 
 	susp->lvl += susp->incr * togo;
@@ -131,19 +132,21 @@ out:	    togo = 0;	/* indicate termination */
 } /* pwl__fetch */
 
 
-void pwl_mark(pwl_susp_type susp)
+void pwl_mark(snd_susp_type a_susp)
 {
+    pwl_susp_type susp = (pwl_susp_type) a_susp;
     if (susp->bpt_ptr) mark(susp->bpt_ptr);
 }
 
 
-void pwl_free(pwl_susp_type susp)
+void pwl_free(snd_susp_type a_susp)
 {
+    pwl_susp_type susp = (pwl_susp_type) a_susp;
     ffree_generic(susp, sizeof(pwl_susp_node), "pwl_free");
 }
 
 
-void pwl_print_tree(pwl_susp_type susp, int n)
+void pwl_print_tree(snd_susp_type a_susp, int n)
 {
 }
 

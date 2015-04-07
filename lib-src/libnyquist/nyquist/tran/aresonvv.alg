@@ -2,7 +2,6 @@
 (NAME "aresonvv")
 (ARGUMENTS ("sound_type" "s1") ("sound_type" "hz1") ("sound_type" "bw")
            ("int" "normalization"))
-(INLINE-INTERPOLATION T)
 (ALWAYS-SCALE hz1 bw)
 (START (MAX s1 hz1 bw))
 (TERMINATE (MIN s1 hz1 bw))
@@ -28,7 +27,7 @@
          ("recompute" "hz1" "true")
          ("c3co"  "bw" "exp(bw)")
          ("c3p1"  "bw" "c3co + 1.0")
-          ("c3t4"  "bw" "c3co * 4.0")
+         ("c3t4"  "bw" "c3co * 4.0")
          ("omc3"  "bw" "1.0 - c3co")
          ("recompute" "bw" "true"))
 (JOINT-DEPENDENCY (("hz1" "bw")
@@ -36,13 +35,15 @@
 "    recompute = false;"
 "    c2 = c3t4 * coshz / c3p1;"
 "    c1 = (normalization == 0 ? 0.0 :"
-"          (normalization == 1 ? 1.0 - omc3 * sqrt(1.0 - c2 * c2 / c3t4) :"
-"           1.0 - sqrt(c3p1 * c3p1 - c2 * c2) * omc3 / c3p1));"
+"          (normalization == 1 ? "
+"           1.0 - omc3 * sqrt(1.0 - c2 * c2 / c3t4) :"
+"           1.0 - sqrt(c3p1 * c3p1 - c2 * c2) * "
+"           omc3 / c3p1));"
 "}"))
 (CONSTANT "c1" "c2" "c3co" "coshz" "c3p1" "c3t4" "omc3" 
           "normalization" "scale1")
 (FORCE-INTO-REGISTER recompute) ;c3t4 c3p1 normalization omc3 scale1
-(INNER-LOOP-LOCALS "            register double y0, current;")
+(INNER-LOOP-LOCALS "            register double y0, current;\n")
 (INNER-LOOP "current = s1;
             y0 = c1 * current + c2 * y1 - c3co * y2;
             output = (sample_type) y0;

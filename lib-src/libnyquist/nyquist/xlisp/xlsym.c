@@ -153,7 +153,7 @@ LOCAL void test_one_env(LVAL environment, int i, char *s)
 
 
 /* xlenter - enter a symbol into the obarray */
-LVAL xlenter(char *name)
+LVAL xlenter(const char *name)
 {
     LVAL sym,array;
     int i;
@@ -181,7 +181,7 @@ LVAL xlenter(char *name)
 }
 
 /* xlmakesym - make a new symbol node */
-LVAL xlmakesym(char *name)
+LVAL xlmakesym(const char *name)
 {
     LVAL sym;
     sym = cvsymbol(name);
@@ -345,7 +345,7 @@ LVAL findprop(LVAL sym, LVAL prp)
 }
 
 /* hash - hash a symbol name string */
-int hash(char *str, int len)
+int hash(const char *str, int len)
 {
     int i;
     for (i = 0; *str; )

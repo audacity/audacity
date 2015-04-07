@@ -1,0 +1,3 @@
+cat $1 | graph | tplot -Ttek
+echo "Type ^D to exit"
+cat

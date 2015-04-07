@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "buzz.h"
 
-void buzz_free();
+void buzz_free(snd_susp_type a_susp);
 
 
 typedef struct buzz_susp_struct {
@@ -40,8 +40,9 @@ typedef struct buzz_susp_struct {
 #include "sine.h"
 
 
-void buzz_s_fetch(register buzz_susp_type susp, snd_list_type snd_list)
+void buzz_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    buzz_susp_type susp = (buzz_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -73,6 +74,7 @@ void buzz_s_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -84,6 +86,7 @@ void buzz_s_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -109,10 +112,9 @@ void buzz_s_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 	s_fm_ptr_reg = susp->s_fm_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-	    long table_index;
+            long table_index;
             double x1;
             sample_type num, denom, samp;
-
             table_index = (long) phase_reg;
             x1 = sine_table[table_index];
             denom = (sample_type) (x1 + (phase_reg - table_index) * 
@@ -159,8 +161,9 @@ void buzz_s_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 } /* buzz_s_fetch */
 
 
-void buzz_i_fetch(register buzz_susp_type susp, snd_list_type snd_list)
+void buzz_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    buzz_susp_type susp = (buzz_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -196,6 +199,7 @@ void buzz_i_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -207,6 +211,7 @@ void buzz_i_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -233,7 +238,7 @@ void buzz_i_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 	s_fm_x1_sample_reg = susp->s_fm_x1_sample;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-	    long table_index;
+            long table_index;
             double x1;
             sample_type num, denom, samp;
 	    if (s_fm_pHaSe_ReG >= 1.0) {
@@ -245,7 +250,6 @@ void buzz_i_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 		susp_check_term_log_samples_break(s_fm, s_fm_ptr, s_fm_cnt, s_fm_x1_sample_reg);
 		s_fm_x1_sample_reg = susp_current_sample(s_fm, s_fm_ptr);
 	    }
-
             table_index = (long) phase_reg;
             x1 = sine_table[table_index];
             denom = (sample_type) (x1 + (phase_reg - table_index) * 
@@ -293,8 +297,9 @@ void buzz_i_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 } /* buzz_i_fetch */
 
 
-void buzz_r_fetch(register buzz_susp_type susp, snd_list_type snd_list)
+void buzz_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    buzz_susp_type susp = (buzz_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type s_fm_val;
     int togo;
@@ -341,6 +346,7 @@ void buzz_r_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -352,6 +358,7 @@ void buzz_r_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -376,10 +383,9 @@ void buzz_r_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 	phase_reg = susp->phase;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-	    long table_index;
+            long table_index;
             double x1;
             sample_type num, denom, samp;
-
             table_index = (long) phase_reg;
             x1 = sine_table[table_index];
             denom = (sample_type) (x1 + (phase_reg - table_index) * 
@@ -425,11 +431,9 @@ void buzz_r_fetch(register buzz_susp_type susp, snd_list_type snd_list)
 } /* buzz_r_fetch */
 
 
-void buzz_toss_fetch(susp, snd_list)
-  register buzz_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void buzz_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    buzz_susp_type susp = (buzz_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -444,25 +448,28 @@ void buzz_toss_fetch(susp, snd_list)
     susp->s_fm_ptr += n;
     susp_took(s_fm_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void buzz_mark(buzz_susp_type susp)
+void buzz_mark(snd_susp_type a_susp)
 {
+    buzz_susp_type susp = (buzz_susp_type) a_susp;
     sound_xlmark(susp->s_fm);
 }
 
 
-void buzz_free(buzz_susp_type susp)
+void buzz_free(snd_susp_type a_susp)
 {
+    buzz_susp_type susp = (buzz_susp_type) a_susp;
     sound_unref(susp->s_fm);
     ffree_generic(susp, sizeof(buzz_susp_node), "buzz_free");
 }
 
 
-void buzz_print_tree(buzz_susp_type susp, int n)
+void buzz_print_tree(snd_susp_type a_susp, int n)
 {
+    buzz_susp_type susp = (buzz_susp_type) a_susp;
     indent(n);
     stdputstr("s_fm:");
     sound_print_tree_1(susp->s_fm, n);
@@ -486,6 +493,12 @@ sound_type snd_make_buzz(long n, rate_type sr, double hz, time_type t0, sound_ty
     s_fm->scale *= hz != 0 ? (sample_type) (susp->ph_incr / hz)
                            : (sample_type) (SINE_TABLE_LEN * 0.5 / sr);
 
+    /* make sure no sample rate is too high */
+    if (s_fm->sr > sr) {
+        sound_unref(s_fm);
+        snd_badsr();
+    }
+
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(s_fm, sr);
     switch (interp_desc) {
@@ -504,8 +517,8 @@ sound_type snd_make_buzz(long n, rate_type sr, double hz, time_type t0, sound_ty
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = buzz_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = buzz_toss_fetch;
     }
 
     /* initialize susp state */

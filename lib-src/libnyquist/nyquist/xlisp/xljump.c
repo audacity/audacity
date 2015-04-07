@@ -10,7 +10,7 @@ extern XLCONTEXT *xlcontext,*xltarget;
 extern LVAL xlvalue,xlenv,xlfenv,xldenv;
 extern int xlmask;
 
-LOCAL void findandjump(int mask, char *error);
+LOCAL void findandjump(int mask, const char *error);
 
 
 /* xlbegin - beginning of an execution context */
@@ -83,7 +83,7 @@ void xlthrow(LVAL tag, LVAL val)
 }
 
 /* xlsignal - signal an error */
-void xlsignal(char *emsg, LVAL arg)
+void xlsignal(const char *emsg, LVAL arg)
 {
     XLCONTEXT *cptr;
 
@@ -148,11 +148,11 @@ void xljump(XLCONTEXT *target, int mask, LVAL val)
     xlvalue = val;
 
     /* call the handler */
-    longjmp(xlcontext->c_jmpbuf,mask);
+    _longjmp(xlcontext->c_jmpbuf,mask);
 }
 
 /* findandjump - find a target context frame and jump to it */
-LOCAL void findandjump(int mask, char *error)
+LOCAL void findandjump(int mask, const char *error)
 {
     XLCONTEXT *cptr;
 

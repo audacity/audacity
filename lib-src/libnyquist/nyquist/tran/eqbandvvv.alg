@@ -12,9 +12,9 @@
 (LOGICAL-STOP (MIN input hz gain width))
 (SAMPLE-RATE (MAX input))
 ;;(INTERNAL-SCALING input hz gain width)
-(INLINE-INTERPOLATION T)
 (MATCHED-SAMPLE-RATE hz gain width)
-(ALWAYS-SCALE input hz gain width)
+(LINEAR input)
+(ALWAYS-SCALE hz gain width)
 (STEP-FUNCTION hz gain width)
 (STATE	("double" "inp_scale" "input->scale")
         ("double" "w1" "0.0")
@@ -47,18 +47,19 @@
 "    /* a0 = 1.0 + gg / J; */"
 "    double a_0_recip = J / (J + gg);"
 "    recompute = false;"
-"    gg = sw * sinh(log_of_2_over_2 * width * w1 / sw);"
+"    gg = sw * sinh(log_of_2_over_2 * "
+"                   width * w1 / sw);"
 "    b0 = (1.0 + gg * J) * a_0_recip;"
 "    b1 *= a_0_recip;"
 "    b2 = (1.0 - gg * J) * a_0_recip;"
 "    a1 *= a_0_recip;"
 "    a2 = (gg / J - 1.0) * a_0_recip;"
 "}"))
-(FORCE-INTO-REGISTER recompute inp_period cw)
+(FORCE-INTO-REGISTER inp_period cw)
 (CONSTANT "w1" "sw" "cw" "J" "gg" "b0" "b1" "b2" "b3" "a0" "a1" "a2" "inp_period")
 (INNER-LOOP-LOCALS "            double z0;\n")
-(INNER-LOOP "    z0 = input + a1*z1 + a2*z2;
-    output = (sample_type) (z0*b0 + z1*b1 + z2*b2);
-    z2 = z1; z1 = z0;")
+(INNER-LOOP "z0 = input + a1*z1 + a2*z2;
+            output = (sample_type) (z0*b0 + z1*b1 + z2*b2);
+            z2 = z1; z1 = z0")
 )
 
