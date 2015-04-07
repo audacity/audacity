@@ -1,0 +1,7 @@
+before_install:
+    - sudo apt-get update -qq
+    - sudo apt-get install -y libwxgtk2.8-dev
+language: cpp
+compiler:
+    - gcc
+script: ./configure && make
