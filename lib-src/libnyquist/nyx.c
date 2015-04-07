@@ -848,7 +848,7 @@ nyx_rval nyx_eval_expression(const char *expr_string)
    xlbegin(&nyx_cntxt, CF_TOPLEVEL|CF_CLEANUP|CF_BRKLEVEL|CF_ERROR, s_true);
 
    // Set the context jump destination
-   if (setjmp(nyx_cntxt.c_jmpbuf)) {
+   if (_setjmp(nyx_cntxt.c_jmpbuf)) {
       // If the script is cancelled or some other condition occurs that causes
       // the script to exit and return to this level, then we don't need to
       // restore the previous context.
@@ -878,7 +878,7 @@ nyx_rval nyx_eval_expression(const char *expr_string)
    // xlisp stacks will contain pointers to invalid objects otherwise.
    //
    // Also note that execution will jump back up to the statement following the
-   // setjmp() above.
+   // _setjmp() above.
    xljump(&nyx_cntxt, CF_TOPLEVEL, NIL);
    // Never reached
 
@@ -928,9 +928,9 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
    int num_channels;
    int ch;
 
-   // Any variable whose value is set between the setjmp() and the "finish" label
+   // Any variable whose value is set between the _setjmp() and the "finish" label
    // and that is used after the "finish" label, must be marked volatile since
-   // any routine outside of the current one that calls longjmp() will cause values
+   // any routine outside of the current one that calls _longjmp() will cause values
    // cached in registers to be lost.
    volatile int success = FALSE;
 
@@ -969,7 +969,7 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
    xlbegin(&nyx_cntxt, CF_TOPLEVEL|CF_CLEANUP|CF_BRKLEVEL|CF_ERROR, s_true);
 
    // Set the context jump destination
-   if (setjmp(nyx_cntxt.c_jmpbuf)) {
+   if (_setjmp(nyx_cntxt.c_jmpbuf)) {
       // If the script is cancelled or some other condition occurs that causes
       // the script to exit and return to this level, then we don't need to
       // restore the previous context.
@@ -1038,7 +1038,7 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
    // xlisp stacks will contain pointers to invalid objects otherwise.
    //
    // Also note that execution will jump back up to the statement following the
-   // setjmp() above.
+   // _setjmp() above.
    xljump(&nyx_cntxt, CF_TOPLEVEL, NIL);
    // Never reached
 
@@ -1447,7 +1447,7 @@ int osdir_list_start(char *path)
 }
 
 /* osdir_list_next -- read the next entry from a directory */
-char *osdir_list_next()
+const char *osdir_list_next()
 {
    if (FindNextFile(hFind, &FindFileData) == 0) {
       osdir_list_status = OSDIR_LIST_DONE;
