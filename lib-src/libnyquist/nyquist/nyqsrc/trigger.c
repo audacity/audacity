@@ -80,13 +80,14 @@ typedef struct trigger_susp_struct {
 } trigger_susp_node, *trigger_susp_type;
 
 
-void trigger_fetch(trigger_susp_type, snd_list_type);
+void trigger_fetch(snd_susp_type, snd_list_type);
 void trigger_free();
 
 extern LVAL s_stdout;
 
-void trigger_mark(trigger_susp_type susp)
+void trigger_mark(snd_susp_type a_susp)
 {
+    trigger_susp_type susp = (trigger_susp_type) a_susp;
     sound_xlmark(susp->s1);
     if (susp->closure) mark(susp->closure);
 }
@@ -95,8 +96,9 @@ void trigger_mark(trigger_susp_type susp)
 
 /* trigger_fetch returns zero blocks until s1 goes from <=0 to >0 */
 /**/
-void trigger_fetch(trigger_susp_type susp, snd_list_type snd_list)
+void trigger_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    trigger_susp_type susp = (trigger_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -208,7 +210,7 @@ D               nyquist_printf("in trigger: after evaluation; "
 
 D               stdputstr("in trigger: calling add's fetch\n");
                 /* fetch will get called later ..
-                   (*(susp->susp.fetch))(susp, snd_list); */
+                   (*(susp->susp.fetch))(a_susp, snd_list); */
 D               stdputstr("in trigger: returned from add's fetch\n");
                 xlpop();
 
@@ -217,8 +219,9 @@ D               stdputstr("in trigger: returned from add's fetch\n");
                 /* but if cnt == 0, then we haven't computed any samples */
                 /* call on new fetch routine to get some samples */
                 if (cnt == 0) {
-                    ffree_sample_block(out, "trigger-pre-adder"); // because adder will reallocate
-                    (*susp->susp.fetch)(susp, snd_list);
+                    // because adder will reallocate
+                    ffree_sample_block(out, "trigger-pre-adder");
+                    (*susp->susp.fetch)(a_susp, snd_list);
                 }
                 return;
             } else {
@@ -244,16 +247,18 @@ D               stdputstr("in trigger: returned from add's fetch\n");
 } /* trigger_fetch */
 
 
-void trigger_free(trigger_susp_type susp)
+void trigger_free(snd_susp_type a_susp)
 {
+    trigger_susp_type susp = (trigger_susp_type) a_susp;
     sound_unref(susp->s1);
     sound_unref(susp->s2);
     ffree_generic(susp, sizeof(trigger_susp_node), "trigger_free");
 }
 
 
-void trigger_print_tree(trigger_susp_type susp, int n)
+void trigger_print_tree(snd_susp_type a_susp, int n)
 {
+    trigger_susp_type susp = (trigger_susp_type) a_susp;
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);

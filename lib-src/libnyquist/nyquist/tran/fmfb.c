@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "fmfb.h"
 
-void fmfb_free();
+void fmfb_free(snd_susp_type a_susp);
 
 
 typedef struct fmfb_susp_struct {
@@ -24,8 +24,9 @@ typedef struct fmfb_susp_struct {
 } fmfb_susp_node, *fmfb_susp_type;
 
 
-void fmfb__fetch(register fmfb_susp_type susp, snd_list_type snd_list)
+void fmfb__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    fmfb_susp_type susp = (fmfb_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -52,6 +53,7 @@ void fmfb__fetch(register fmfb_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -63,17 +65,17 @@ void fmfb__fetch(register fmfb_susp_type susp, snd_list_type snd_list)
 	index_reg = susp->index;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-xx_reg += x_incr_reg;
-               if (xx_reg > SINE_TABLE_LEN) xx_reg -= SINE_TABLE_LEN;
-               /* xx_reg incremented and index_reg scaled to table index_reg, and
-                  sin_y_reg is a signal (-1 to +1) */
-               yy_reg = xx_reg + index_reg * sin_y_reg;
-               /* so yy_reg is a table index_reg */
-               while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
-               while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
-               sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index_reg */
-               /* sin_y_reg is now a signal not ready for table lookup */
-               *out_ptr_reg++ = sin_y_reg;;
+            xx_reg += x_incr_reg;
+            if (xx_reg > SINE_TABLE_LEN) xx_reg -= SINE_TABLE_LEN;
+            /* xx_reg incremented and index_reg scaled to table index_reg, and
+               sin_y_reg is a signal (-1 to +1) */
+            yy_reg = xx_reg + index_reg * sin_y_reg;
+            /* so yy_reg is a table index_reg */
+            while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
+            while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
+            sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index_reg */
+            /* sin_y_reg is now a signal not ready for table lookup */
+            *out_ptr_reg++ = sin_y_reg;
 	} while (--n); /* inner loop */
 
 	susp->yy = yy_reg;
@@ -94,13 +96,14 @@ xx_reg += x_incr_reg;
 } /* fmfb__fetch */
 
 
-void fmfb_free(fmfb_susp_type susp)
+void fmfb_free(snd_susp_type a_susp)
 {
+    fmfb_susp_type susp = (fmfb_susp_type) a_susp;
     ffree_generic(susp, sizeof(fmfb_susp_node), "fmfb_free");
 }
 
 
-void fmfb_print_tree(fmfb_susp_type susp, int n)
+void fmfb_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
@@ -119,7 +122,7 @@ sound_type snd_make_fmfb(time_type t0, double hz, rate_type sr, double index, ti
     susp->index = index * SINE_TABLE_LEN / PI2;
     susp->susp.fetch = fmfb__fetch;
 
-    susp->terminate_cnt = round((d) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
     /* initialize susp state */
     susp->susp.free = fmfb_free;
     susp->susp.sr = sr;

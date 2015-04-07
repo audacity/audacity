@@ -25,7 +25,7 @@ extern FUNDEF funtab[];
 extern char buf[];
 
 LOCAL void putsymbol(LVAL fptr, char *str, int escflag);
-LOCAL void putsubr(LVAL fptr, char *tag, LVAL val);
+LOCAL void putsubr(LVAL fptr, const char *tag, LVAL val);
 LOCAL void putfixnum(LVAL fptr, FIXTYPE n);
 LOCAL void putflonum(LVAL fptr, FLOTYPE n);
 LOCAL void putchcode(LVAL fptr, int ch, int escflag);
@@ -130,7 +130,7 @@ void xlterpri(LVAL fptr)
 }
 
 /* xlputstr - output a string */
-void xlputstr(LVAL fptr, char *str)
+void xlputstr(LVAL fptr, const char *str)
 {
     while (*str)
         xlputc(fptr,*str++);
@@ -242,7 +242,7 @@ LOCAL void putqstring(LVAL fptr, LVAL str)
 }
 
 /* putatm - output an atom */
-void putatm(LVAL fptr, char *tag, LVAL val)
+void putatm(LVAL fptr, const char *tag, LVAL val)
 {
     sprintf(buf,"#<%s: #",tag); xlputstr(fptr,buf);
     sprintf(buf,AFMT,(long unsigned int)val); xlputstr(fptr,buf);
@@ -250,7 +250,7 @@ void putatm(LVAL fptr, char *tag, LVAL val)
 }
 
 /* putsubr - output a subr/fsubr */
-LOCAL void putsubr(LVAL fptr, char *tag, LVAL val)
+LOCAL void putsubr(LVAL fptr, const char *tag, LVAL val)
 {
     sprintf(buf,"#<%s-%s: #",tag,funtab[getoffset(val)].fd_name);
     xlputstr(fptr,buf);

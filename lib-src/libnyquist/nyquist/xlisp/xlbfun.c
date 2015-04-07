@@ -603,10 +603,7 @@ LVAL xcleanup(void)
 {
     xllastarg();
     xlcleanup();
-    /* this point will never be reached because xlcleanup() does a
-       longjmp(). The return is added to avoid false positive 
-       error messages from static analyzers and compilers */
-    return (NIL);
+    /* compiler might (wrongly) complain there is no return value */
 }
 
 /* xtoplevel - special form 'top-level' */
@@ -615,7 +612,7 @@ LVAL xtoplevel(void)
     xllastarg();
     xltoplevel();
     /* this point will never be reached because xltoplevel() does a
-       longjmp(). The return is added to avoid false positive 
+       _longjmp(). The return is added to avoid false positive 
        error messages from static analyzers and compilers */
     return (NIL); 
 }
@@ -625,7 +622,7 @@ LVAL xcontinue(void)
 {
     xllastarg();
     xlcontinue();
-    return (NIL);
+    return (NIL); 
 }
 
 /* xevalhook - eval hook function */

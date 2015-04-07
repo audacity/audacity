@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "white.h"
 
-void white_free();
+void white_free(snd_susp_type a_susp);
 
 
 typedef struct white_susp_struct {
@@ -18,8 +18,9 @@ typedef struct white_susp_struct {
 } white_susp_node, *white_susp_type;
 
 
-void white__fetch(register white_susp_type susp, snd_list_type snd_list)
+void white__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    white_susp_type susp = (white_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -41,13 +42,14 @@ void white__fetch(register white_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
 	n = togo;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = (sample_type) (rand() * rand_scale - 1.0);;
+            *out_ptr_reg++ = (sample_type) (rand() * rand_scale - 1.0);
 	} while (--n); /* inner loop */
 
 	out_ptr += togo;
@@ -64,13 +66,14 @@ void white__fetch(register white_susp_type susp, snd_list_type snd_list)
 } /* white__fetch */
 
 
-void white_free(white_susp_type susp)
+void white_free(snd_susp_type a_susp)
 {
+    white_susp_type susp = (white_susp_type) a_susp;
     ffree_generic(susp, sizeof(white_susp_node), "white_free");
 }
 
 
-void white_print_tree(white_susp_type susp, int n)
+void white_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
@@ -84,7 +87,7 @@ sound_type snd_make_white(time_type t0, rate_type sr, time_type d)
     falloc_generic(susp, white_susp_node, "snd_make_white");
     susp->susp.fetch = white__fetch;
 
-    susp->terminate_cnt = round((d) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
     /* initialize susp state */
     susp->susp.free = white_free;
     susp->susp.sr = sr;

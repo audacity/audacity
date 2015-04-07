@@ -1,0 +1,50 @@
+diff -ruN nyquist/xlisp/security.c ../audacity/lib-src/libnyquist/nyquist/xlisp/security.c
+--- nyquist/xlisp/security.c	2015-03-05 03:00:46.520295100 -0600
++++ nyquist/xlisp/security.c	2015-03-05 03:08:57.526379100 -0600
+@@ -4,7 +4,9 @@
+  */
+ 
+ #include <stdlib.h>
++#ifndef WIN32
+ #include <unistd.h>
++#endif
+ #include <string.h>
+ #include <xlisp.h>
+ 
+@@ -56,13 +58,13 @@
+ int ok_to_open(const char *filename, const char *mode)
+ {
+     char fullname[STRMAX];
+-    if (index(mode, 'r')) { /* asking for read permission */
++    if (strchr(mode, 'r')) { /* asking for read permission */
+ 	if (secure_read_path) { /* filename must be in path */
+ 	    find_full_path(filename, fullname);
+ 	    if (!in_tree(fullname, secure_read_path)) return FALSE;
+ 	}
+     }
+-    if (index(mode, 'w')) { /* asking for write permission */
++    if (strchr(mode, 'w')) { /* asking for write permission */
+ 	if (safe_write_path) { /* filename must be in path */
+ 	    find_full_path(filename, fullname);
+ 	    if (!in_tree(fullname, safe_write_path)) return FALSE;
+@@ -98,7 +100,7 @@
+     /* if windows, replace \ with / to simplify the rest */
+     char *loc = fullname;
+     if (os_pathchar != '/') {
+-        while ((loc = index(loc, os_pathchar))) {
++        while ((loc = strchr(loc, os_pathchar))) {
+ 	    *loc = '/';
+ 	}
+     }
+diff -ruN nyquist/xlisp/xlisp.h ../audacity/lib-src/libnyquist/nyquist/xlisp/xlisp.h
+--- nyquist/xlisp/xlisp.h	2015-03-05 03:00:46.507294400 -0600
++++ nyquist/xlisp/xlisp.h	2015-03-05 03:10:39.273198700 -0600
+@@ -40,6 +40,8 @@
+ #define OFFTYPE		long
+ #define SAVERESTORE
+ #define XL_LITTLE_ENDIAN 
++#define _setjmp setjmp
++#define _longjmp longjmp
+ #endif
+ 
+ /* for the Turbo C compiler - MS-DOS, large model */

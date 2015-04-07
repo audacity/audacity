@@ -101,14 +101,14 @@
 (defun check-for-no-interpolation-1 (encoding index 
                                      interpolation-rationale stream)
   (cond ((= index (length encoding))
-         (display "check-for-no-interpolation output" encoding)
+         ; (display "check-for-no-interpolation output" encoding)
          ; see if we need a newline (*cfni-output* is initially nil)
          (if *cfni-output* (format stream "/* handled below */~%"))
          (setf *cfni-output* t)
          (format stream "      case INTERP_~A: " encoding))
         (t
          (let ((ch (char encoding index)))
-           (display "cfni" index ch)
+           ; (display "cfni" index ch)
            (cond ((eql ch #\s)
                   (let ((new-encoding (strcat (subseq encoding 0 index)
                                               "n"
@@ -198,11 +198,14 @@
         (sound-names (get-slot alg 'sound-names))
         (xlisp-pointers (get-slot alg 'xlisp-pointers)))
     ;----------------
-    ; void NAME_mark(NAME_susp_type susp)
+    ; void NAME_mark(snd_susp_type a_susp)
     ; {
+    ;     NAME_susp_type susp = (NAME_susp_type) a_susp;
     ; *WATCH*: printf("NAME_mark(%x)\n", susp);
     ;----------------
-    (format stream "~%~%void ~A_mark(~A_susp_type susp)~%{~%" name name)
+    (format stream "~%~%void ~A_mark(snd_susp_type a_susp)~%{~%" name)
+    (format stream "    ~A_susp_type susp = (~A_susp_type) a_susp;~%"
+            name name)
     (if *WATCH*
       (format stream
        "    printf(\"~A_mark(%x)\\n\", susp);~%" name))
@@ -235,6 +238,73 @@
 
 (print 'write-mark)
 
+;; in-set-of-srate-determiners
+;;
+;; We want to make sure no input has a sample rate higher than the output
+;; sample rate. A test is generated, but sometimes the test is not
+;; necessary. In particular, if the output sample rate is the max of
+;; some input sample rates, we don't have to test those input sample rates.
+;; This function tells whether the output sample rate is known to be as
+;; high as that of name. This is true when name is an element of a MAX
+;; expression in the SAMPLE-RATE property.
+;;
+;; name is one of sound-names
+(defun in-set-of-srate-determiners (name sr)
+  (display "in-set-of-srate-determiners" name sr)
+  (or (null sr) ; no SAMPLE-RATE spec, so take max of all sounds
+      (and (listp sr) (eq (car sr) 'MAX) ; explicit max expression
+           (member name (cdr sr) :test
+            #'(lambda (x y) (string-equal x (symbol-to-name y)))))))
+         
+
+;;************
+;; out-of-line-interpolation -- determine if input sound should be
+;;     interpolated using snd_up() unit generator
+;;
+;; Interpolate out-of-line if inline-interpolation is false either
+;;   by default or by specification
+;; If out-of-line-interpolation is true, then the signal should be
+;;   either scaled internally or always scaled. Otherwise, we'll generate
+;;   an extra implementation for scaling (S) vs non-scaling (N) which is
+;;   a real waste given that we're willing to run a separate unit generator
+;;   to do up-sampling. Therefore, this will raise an error.
+;;************
+
+(defun out-of-line-interpolation (alg name)
+  (let ((ili *INLINE-INTERPOLATION*)
+        (ili-spec (get alg 'inline-interpolation)))
+    (if ili-spec (setf ili t))
+    (if (eq ili-spec 'no) (setf ili nil))
+    ;(display "out-of-line-interpolation" alg ili name
+    ;         (get alg 'ALWAYS-SCALE) (get alg 'INTERNAL-SCALING))
+;    (cond ((and (not ili) ;; make sure always scaled in some way
+;                (not (member name (get alg 'LINEAR) :test
+;                      #'(lambda (x y) (string-equal x (symbol-to-name y)))))
+;                (not (member name (get alg 'ALWAYS-SCALE) :test
+;                      #'(lambda (x y) (string-equal x (symbol-to-name y)))))
+;                (not (member name (get alg 'INTERNAL-SCALING) :test
+;                      #'(lambda (x y) (string-equal x (symbol-to-name y))))))
+;           (error (format nil "~A is not always scaled" name))))
+    (not ili)))
+
+;; a signal needs out-of-line scaling if out-of-line interpolation is
+;; in effect and there is no built-in scaling (ALWAYS-SCALE or
+;; INTERNAL-SCALING)
+;;
+(defun needs-out-of-line-scaling (alg name)
+  (let ((ili *INLINE-INTERPOLATION*)
+        (ili-spec (get alg 'inline-interpolation)))
+    (if ili-spec (setf ili t))
+    (if (eq ili-spec 'no) (setf ili nil))
+    (and (not ili)
+         (not (member name (get alg 'LINEAR) :test
+                      #'(lambda (x y) (string-equal x (symbol-to-name y)))))
+         (not (member name (get alg 'ALWAYS-SCALE) :test
+                      #'(lambda (x y) (string-equal x (symbol-to-name y)))))
+         (not (member name (get alg 'INTERNAL-SCALING) :test
+                      #'(lambda (x y) (string-equal x (symbol-to-name y))))))))
+
+
 ;;************
 ;;				  write-make
 ;;
@@ -266,10 +336,13 @@
         (start (get-slot alg 'start)))
 
     ;--------------------
-    ; void NAME_free(NAME_susp_type susp)
+    ; void NAME_free(snd_susp_type a_susp)
     ; {
+    ;     NAME_susp_type susp = (NAME_susp_type) a_susp;
     ;----------------
-    (format stream "~%~%void ~A_free(~A_susp_type susp)~%{~%"
+    (format stream "~%~%void ~A_free(snd_susp_type a_susp)~%{~%"
+            name)
+    (format stream "    ~A_susp_type susp = (~A_susp_type) a_susp;~%"
             name name)
 
     ;----------------
@@ -294,11 +367,15 @@
             name name)
 
     ;--------------------
-    ; void NAME_print_tree(NAME_susp_type susp, int n)
+    ; void NAME_print_tree(snd_susp_type a_susp, int n)
     ; {
+    ;     NAME_susp_type susp = (NAME_susp_type) a_susp;
     ;----------------
-    (format stream "~%~%void ~A_print_tree(~A_susp_type susp, int n)~%{~%"
+    (format stream "~%~%void ~A_print_tree(snd_susp_type a_susp, int n)~%{~%"
             name name)
+    (cond (sound-names
+           (format stream "    ~A_susp_type susp = (~A_susp_type) a_susp;~%"
+            name name)))
     ;----------------
     ; for each sound argument:
     ;
@@ -362,7 +439,7 @@
     ;--------------------
     ;    int interp_desc = 0;
     ;--------------------
-    (cond (interpolation-list
+    (cond ((< 1 (length interpolation-list))
            (format stream "    int interp_desc = 0;~%")))
 
     ;--------------------
@@ -437,7 +514,7 @@
     ;-------------------
     ; insert TYPE-CHECK code here
     ;-------------------
-    (display "write-make" type-check)
+    ; (display "write-make" type-check)
     (if type-check
       (format stream type-check))
 
@@ -465,6 +542,49 @@
         (format stream "    ~A~A = ~A;~%" 
                 prefix (cadr state) (caddr state))))
 
+    ;---------------------
+    ; /* make sure no sample rate is too high */
+    ; if (***->sr > sr) {
+    ;    sound_unref(***);
+    ;    snd_badsr();
+    ; } [maybe there will be an else part here]
+    ;---------------------
+    ; where *** is any sound input that is not in the max clause of
+    ; the SAMPLE-RATE attribute
+    ;
+    (setf first-time t)
+    (dolist (name sound-names)
+      (let (too-high-test ;; did we test for sr too high (follow with else)
+            (srate-determiner (in-set-of-srate-determiners name sr)))
+        (cond ((not srate-determiner)
+               (cond (first-time
+                      (setf first-time nil)
+                      (format stream
+                       "~%    /* make sure no sample rate is too high */~%")))
+               (format stream "    if (~A->sr > sr) {~%" name)
+               (format stream "        sound_unref(~A);~%" name)
+               (format stream "        snd_badsr();~%" name)
+               (format stream "    }")
+               (setf too-high-test t)
+    ;---------------------
+    ; Add this if signal needs out-of-line resampling
+    ;  else if (***->sr < sr) *** = snd_make_up(sr, ***);
+    ;---------------------
+               (cond ((out-of-line-interpolation alg name)
+                      (format stream (if too-high-test " else " "    "))
+                      (format stream "if (~A->sr < sr) " name)
+                      (format stream "~A = snd_make_up(sr, ~A);" name name)))
+               (format stream "~%")))
+    ;---------------------
+    ; Add this if signal needs out-of-line rescaling
+    ; if (***->scale != 1.0) *** = snd_make_normalize(***);
+    ;---------------------
+        (cond ((needs-out-of-line-scaling alg name)
+               (format t "WARNING: out-of-line scaling possible for ~A\n" name)
+               (format stream "    if (~A->scale != 1.0F) " name)
+               (format stream "~A = snd_make_normalize(~A);~%" name name)))))
+
+    ; (display "write-make select implementation" interpolation-list)
     ; if we have a choice of implementations, select one
     (cond ((< 1 (length interpolation-list))
 
@@ -522,18 +642,18 @@
            (cond ((eq (car terminate) 'AT)
                   (let ((time-expr (cadr terminate)))
         ;----------------
-        ; susp->terminate_cnt = round(((TIME-EXPR) - t0) * sr);
+        ; susp->terminate_cnt = check_terminate_cnt(round(((TIME-EXPR) - t0) * sr));
         ;----------------
                     (format stream 
-                     "    susp->terminate_cnt = round(((~A) - t0) * sr);~%"
+                     "    susp->terminate_cnt = check_terminate_cnt(round(((~A) - t0) * sr));~%"
                             time-expr)))
                  ((eq (car terminate) 'AFTER)
                   (let ((dur-expr (cadr terminate)))
                     ;----------------
-                    ; susp->terminate_cnt = round((DUR-EXPR) * sr);
+                    ; susp->terminate_cnt = check_terminate_cnt(round((DUR-EXPR) * sr));
                     ;----------------
                     (format stream 
-                            "    susp->terminate_cnt = round((~A) * sr);~%"
+                            "    susp->terminate_cnt = check_terminate_cnt(round((~A) * sr));~%"
                             dur-expr)))
                  (t
                   ;----------------
@@ -582,9 +702,9 @@
            (format stream "    susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + ~A.5);\n"
                    (if delay delay 0))
            (format stream "    if (susp->susp.toss_cnt > 0) {\n")
-           (format stream "\tsusp->susp.keep_fetch = susp->susp.fetch;\n")
-           (format stream "\tsusp->susp.fetch = ~A_toss_fetch;~%" name)
-;	   (format stream "\tt0 = t0_min;~%    }\n\n")))
+           (format stream "        susp->susp.keep_fetch = susp->susp.fetch;\n")
+           (format stream "        susp->susp.fetch = ~A_toss_fetch;~%" name)
+;	   (format stream "        t0 = t0_min;~%    }\n\n")))
            (format stream "    }\n\n")))
 
     ;--------------------
@@ -772,7 +892,7 @@
 (defun write-sample-rate (stream sr sound-names arguments)
     ;; if sr is "sr" and "sr" is a parameter, then do nothing:
 
-    (display "write-sample-rate: " sr sound-names arguments)
+    ; (display "write-sample-rate: " sr sound-names arguments)
 
     (cond ( (and (equal sr "sr") (is-argument "sr" arguments))
             ;---------------------
@@ -782,7 +902,7 @@
           )
     ;; else if sample rate is specified, use it to initialize sr:
           ((stringp sr)
-           (display "write-sample-rate: using specified sr" sr)
+           ; (display "write-sample-rate: using specified sr" sr)
             ;---------------------
             ;   rate_type sr = <sr>;
             ;---------------------
@@ -832,7 +952,7 @@
 
 (defun write-start-time (stream start arguments)
   ;; if t0 is "t0" and "t0" is a parameter, then do nothing:
-  (display "write-start time:" start arguments)
+  ; (display "write-start time:" start arguments)
   (cond ((is-argument "t0" arguments)
          ;---------------------
          ;   /* t0 specified as input parameter */
@@ -873,7 +993,7 @@
 (defun is-table (alg snd)
   (dolist (table (get-slot alg 'table))
     (cond ((equal snd table)
-           (display "is-table" snd table)
+           ; (display "is-table" snd table)
            (return t)))))
 
  

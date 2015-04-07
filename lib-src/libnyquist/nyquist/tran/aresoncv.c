@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "aresoncv.h"
 
-void aresoncv_free();
+void aresoncv_free(snd_susp_type a_susp);
 
 
 typedef struct aresoncv_susp_struct {
@@ -43,8 +43,9 @@ typedef struct aresoncv_susp_struct {
 } aresoncv_susp_node, *aresoncv_susp_type;
 
 
-void aresoncv_ns_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
+void aresoncv_ns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresoncv_susp_type susp = (aresoncv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -84,6 +85,7 @@ void aresoncv_ns_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -95,6 +97,7 @@ void aresoncv_ns_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -125,6 +128,17 @@ void aresoncv_ns_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
             register double y0, current;
+	    double c3p1;
+	    double c3t4;
+	    double omc3;
+	    c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
+	    c3p1 = c3co_reg + 1.0;
+	    c3t4 = c3co_reg * 4.0;
+	    omc3 = 1.0 - c3co_reg;
+	    c2_reg = c3t4 * coshz_reg / c3p1;
+	    c1_reg = (normalization_reg == 0 ? 0.0 :
+          (normalization_reg == 1 ? 1.0 - omc3 * sqrt(1.0 - c2_reg * c2_reg / c3t4) :
+              1.0 - sqrt(c3p1 * c3p1 - c2_reg * c2_reg) * omc3 / c3p1));
             current = *s1_ptr_reg++;
             *out_ptr_reg++ = (float) (y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg);
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -158,8 +172,9 @@ void aresoncv_ns_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 } /* aresoncv_ns_fetch */
 
 
-void aresoncv_ni_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
+void aresoncv_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresoncv_susp_type susp = (aresoncv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -185,9 +200,20 @@ void aresoncv_ni_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
+	    double c3p1;
+	    double c3t4;
+	    double omc3;
 	susp->started = true;
 	susp_check_term_samples(bw, bw_ptr, bw_cnt);
 	susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
+	susp->c3co = exp(susp->bw_x1_sample);
+	c3p1 = susp->c3co + 1.0;
+	c3t4 = susp->c3co * 4.0;
+	omc3 = 1.0 - susp->c3co;
+	susp->c2 = c3t4 * susp->coshz / c3p1;
+	susp->c1 = (susp->normalization == 0 ? 0.0 :
+          (susp->normalization == 1 ? 1.0 - omc3 * sqrt(1.0 - susp->c2 * susp->c2 / c3t4) :
+              1.0 - sqrt(c3p1 * c3p1 - susp->c2 * susp->c2) * omc3 / c3p1));
     }
 
     while (cnt < max_sample_block_len) { /* outer loop */
@@ -203,6 +229,7 @@ void aresoncv_ni_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -214,6 +241,7 @@ void aresoncv_ni_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -244,16 +272,27 @@ void aresoncv_ni_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;	    if (bw_pHaSe_ReG >= 1.0) {
+            register double y0, current;
+	    if (bw_pHaSe_ReG >= 1.0) {
 /* fixup-depends bw */
+		double c3p1; 
+		double c3t4; 
+		double omc3; 
 		/* pick up next sample as bw_x1_sample: */
 		susp->bw_ptr++;
 		susp_took(bw_cnt, 1);
 		bw_pHaSe_ReG -= 1.0;
 		susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
 		bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
+		c3co_reg = exp(bw_x1_sample_reg);
+		c3p1 = c3co_reg + 1.0;
+		c3t4 = c3co_reg * 4.0;
+		omc3 = 1.0 - c3co_reg;
+		c2_reg = c3t4 * coshz_reg / c3p1;
+		c1_reg = (normalization_reg == 0 ? 0.0 :
+          (normalization_reg == 1 ? 1.0 - omc3 * sqrt(1.0 - c2_reg * c2_reg / c3t4) :
+              1.0 - sqrt(c3p1 * c3p1 - c2_reg * c2_reg) * omc3 / c3p1));
 	    }
-
             current = *s1_ptr_reg++;
             *out_ptr_reg++ = (float) (y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg);
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -288,8 +327,9 @@ void aresoncv_ni_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 } /* aresoncv_ni_fetch */
 
 
-void aresoncv_nr_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
+void aresoncv_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresoncv_susp_type susp = (aresoncv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type bw_val;
     int togo;
@@ -331,12 +371,23 @@ void aresoncv_nr_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	/* grab next bw_x1_sample when phase goes past 1.0; */
 	/* use bw_n (computed below) to avoid roundoff errors: */
 	if (susp->bw_n <= 0) {
+	    double c3p1;
+	    double c3t4;
+	    double omc3;
 	    susp_check_term_samples(bw, bw_ptr, bw_cnt);
 	    susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
 	    susp->bw_pHaSe -= 1.0;
 	    /* bw_n gets number of samples before phase exceeds 1.0: */
 	    susp->bw_n = (long) ((1.0 - susp->bw_pHaSe) *
 					susp->output_per_bw);
+	    susp->c3co = exp(susp->bw_x1_sample);
+	    c3p1 = susp->c3co + 1.0;
+	    c3t4 = susp->c3co * 4.0;
+	    omc3 = 1.0 - susp->c3co;
+	    susp->c2 = c3t4 * susp->coshz / c3p1;
+	    susp->c1 = (susp->normalization == 0 ? 0.0 :
+          (susp->normalization == 1 ? 1.0 - omc3 * sqrt(1.0 - susp->c2 * susp->c2 / c3t4) :
+              1.0 - sqrt(c3p1 * c3p1 - susp->c2 * susp->c2) * omc3 / c3p1));
 	}
 	togo = min(togo, susp->bw_n);
 	bw_val = susp->bw_x1_sample;
@@ -344,6 +395,7 @@ void aresoncv_nr_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -355,6 +407,7 @@ void aresoncv_nr_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -416,11 +469,9 @@ void aresoncv_nr_fetch(register aresoncv_susp_type susp, snd_list_type snd_list)
 } /* aresoncv_nr_fetch */
 
 
-void aresoncv_toss_fetch(susp, snd_list)
-  register aresoncv_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void aresoncv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    aresoncv_susp_type susp = (aresoncv_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -443,27 +494,30 @@ void aresoncv_toss_fetch(susp, snd_list)
     susp->bw_ptr += n;
     susp_took(bw_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void aresoncv_mark(aresoncv_susp_type susp)
+void aresoncv_mark(snd_susp_type a_susp)
 {
+    aresoncv_susp_type susp = (aresoncv_susp_type) a_susp;
     sound_xlmark(susp->s1);
     sound_xlmark(susp->bw);
 }
 
 
-void aresoncv_free(aresoncv_susp_type susp)
+void aresoncv_free(snd_susp_type a_susp)
 {
+    aresoncv_susp_type susp = (aresoncv_susp_type) a_susp;
     sound_unref(susp->s1);
     sound_unref(susp->bw);
     ffree_generic(susp, sizeof(aresoncv_susp_node), "aresoncv_free");
 }
 
 
-void aresoncv_print_tree(aresoncv_susp_type susp, int n)
+void aresoncv_print_tree(snd_susp_type a_susp, int n)
 {
+    aresoncv_susp_type susp = (aresoncv_susp_type) a_susp;
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);
@@ -499,6 +553,12 @@ sound_type snd_make_aresoncv(sound_type s1, double hz, sound_type bw, int normal
     susp->y2 = 0.0;
     bw->scale = (float) (bw->scale * (-PI2 / s1->sr));
 
+    /* make sure no sample rate is too high */
+    if (bw->sr > sr) {
+        sound_unref(bw);
+        snd_badsr();
+    }
+
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(s1, sr);
     interp_desc = (interp_desc << 2) + interp_style(bw, sr);
@@ -519,8 +579,8 @@ sound_type snd_make_aresoncv(sound_type s1, double hz, sound_type bw, int normal
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = aresoncv_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = aresoncv_toss_fetch;
     }
 
     /* initialize susp state */

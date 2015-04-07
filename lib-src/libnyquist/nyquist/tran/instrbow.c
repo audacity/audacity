@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "instrbow.h"
 
-void bowed_free();
+void bowed_free(snd_susp_type a_susp);
 
 
 typedef struct bowed_susp_struct {
@@ -21,14 +21,16 @@ typedef struct bowed_susp_struct {
 
     struct instr *mybow;
     int temp_ret_value;
+    float bow_scale;
 } bowed_susp_node, *bowed_susp_type;
 
+#include "instr.h"
+#include "upsample.h"
 
-	    #include "instr.h"
 
-
-void bowed_s_fetch(register bowed_susp_type susp, snd_list_type snd_list)
+void bowed_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    bowed_susp_type susp = (bowed_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -38,9 +40,9 @@ void bowed_s_fetch(register bowed_susp_type susp, snd_list_type snd_list)
     register sample_block_values_type out_ptr_reg;
 
     register struct instr * mybow_reg;
-    register sample_type bowpress_env_scale_reg = susp->bowpress_env->scale;
+    register float bow_scale_reg;
     register sample_block_values_type bowpress_env_ptr_reg;
-    falloc_sample_block(out, "bowed_s_fetch");
+    falloc_sample_block(out, "bowed_n_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
 
@@ -57,17 +59,18 @@ void bowed_s_fetch(register bowed_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
 	n = togo;
 	mybow_reg = susp->mybow;
+	bow_scale_reg = susp->bow_scale;
 	bowpress_env_ptr_reg = susp->bowpress_env_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-
-	    controlChange(mybow_reg, 128, BOW_CONTROL_CHANGE_CONST * (bowpress_env_scale_reg * *bowpress_env_ptr_reg++));
-	    *out_ptr_reg++ = (sample_type) tick(mybow_reg);
+            controlChange(mybow_reg, 128, bow_scale_reg * *bowpress_env_ptr_reg++);
+            *out_ptr_reg++ = (sample_type) tick(mybow_reg);
 	} while (--n); /* inner loop */
 
 	susp->mybow = mybow_reg;
@@ -85,14 +88,12 @@ void bowed_s_fetch(register bowed_susp_type susp, snd_list_type snd_list)
 	snd_list->block_len = cnt;
 	susp->susp.current += cnt;
     }
-} /* bowed_s_fetch */
+} /* bowed_n_fetch */
 
 
-void bowed_toss_fetch(susp, snd_list)
-  register bowed_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void bowed_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    bowed_susp_type susp = (bowed_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -107,27 +108,29 @@ void bowed_toss_fetch(susp, snd_list)
     susp->bowpress_env_ptr += n;
     susp_took(bowpress_env_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void bowed_mark(bowed_susp_type susp)
+void bowed_mark(snd_susp_type a_susp)
 {
+    bowed_susp_type susp = (bowed_susp_type) a_susp;
     sound_xlmark(susp->bowpress_env);
 }
 
 
-void bowed_free(bowed_susp_type susp)
+void bowed_free(snd_susp_type a_susp)
 {
-
-	    deleteInstrument(susp->mybow);
+    bowed_susp_type susp = (bowed_susp_type) a_susp;
+    deleteInstrument(susp->mybow);
     sound_unref(susp->bowpress_env);
     ffree_generic(susp, sizeof(bowed_susp_node), "bowed_free");
 }
 
 
-void bowed_print_tree(bowed_susp_type susp, int n)
+void bowed_print_tree(snd_susp_type a_susp, int n)
 {
+    bowed_susp_type susp = (bowed_susp_type) a_susp;
     indent(n);
     stdputstr("bowpress_env:");
     sound_print_tree_1(susp->bowpress_env, n);
@@ -139,14 +142,20 @@ sound_type snd_make_bowed(double freq, sound_type bowpress_env, rate_type sr)
     register bowed_susp_type susp;
     /* sr specified as input parameter */
     time_type t0 = bowpress_env->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, bowed_susp_node, "snd_make_bowed");
     susp->mybow = initInstrument(BOWED, round(sr));
     controlChange(susp->mybow, 1, 0.0);;
     susp->temp_ret_value = noteOn(susp->mybow, freq, 1.0);
-    susp->susp.fetch = bowed_s_fetch;
+    susp->bow_scale = bowpress_env->scale * BOW_CONTROL_CHANGE_CONST;
+
+    /* make sure no sample rate is too high */
+    if (bowpress_env->sr > sr) {
+        sound_unref(bowpress_env);
+        snd_badsr();
+    } else if (bowpress_env->sr < sr) bowpress_env = snd_make_up(sr, bowpress_env);
+    susp->susp.fetch = bowed_n_fetch;
     susp->terminate_cnt = UNKNOWN;
     /* handle unequal start times, if any */
     if (t0 < bowpress_env->t0) sound_prepend_zeros(bowpress_env, t0);
@@ -155,8 +164,8 @@ sound_type snd_make_bowed(double freq, sound_type bowpress_env, rate_type sr)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = bowed_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = bowed_toss_fetch;
     }
 
     /* initialize susp state */

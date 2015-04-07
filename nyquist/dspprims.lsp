@@ -93,21 +93,8 @@
   (error "feedback-delay with variable delay is not implemented"))
 
 
-;; NYQ::DELAYCV -- coerce sample rates and call snd-delaycv
-;;
-(defun nyq:delaycv (the-snd delay feedback)
-  (display "delaycv" the-snd delay feedback)
-  (let ((the-snd-srate (snd-srate the-snd))
-        (feedback-srate (snd-srate feedback)))
-    (cond ((> the-snd-srate feedback-srate)
-           (setf feedback (snd-up the-snd-srate feedback)))
-          ((< the-snd-srate feedback-srate)
-           (format t "Warning: down-sampling feedback in feedback-delay/comb~%")
-           (setf feedback (snd-down the-snd-srate feedback))))
-    (snd-delaycv the-snd delay feedback)))
-
 (setf feedback-delay-implementations
-      (vector #'snd-delay #'snd-delay-error #'nyq:delaycv #'snd-delay-error))
+      (vector #'snd-delay #'snd-delay-error #'snd-delaycv #'snd-delay-error))
 
 
 ;; NYQ:FEEDBACK-DELAY -- single channel delay
@@ -130,29 +117,9 @@
     (defun snd-alpassvv (snd delay feedback min-hz)
       (error "snd-alpassvv (ALPASS with variable decay and feedback) is not implemented")))
       
-(defun snd-alpass-4 (snd delay feedback min-hz)
-    (snd-alpass snd delay feedback))
-    
 
-(defun snd-alpasscv-4 (the-snd delay feedback min-hz)
-    (display "snd-alpasscv-4" (snd-srate the-snd) (snd-srate feedback))
-    (let ((the-snd-srate (snd-srate the-snd))
-          (feedback-srate (snd-srate feedback)))
-      (cond ((> the-snd-srate feedback-srate)
-             (setf feedback (snd-up the-snd-srate feedback)))
-            ((< the-snd-srate feedback-srate)
-             (format t "Warning: down-sampling feedback in alpass~%")
-             (setf feedback (snd-down the-snd-srate feedback))))
-      ;(display "snd-alpasscv-4 after cond" (snd-srate the-snd) (snd-srate feedback))
-      (snd-alpasscv the-snd delay feedback)))
-
-    
-(defun snd-alpassvv-4 (the-snd delay feedback min-hz)
-    ;(display "snd-alpassvv-4" (snd-srate the-snd) (snd-srate feedback))
-    (let ((the-snd-srate (snd-srate the-snd))
-          (delay-srate (snd-srate delay))
-          (feedback-srate (snd-srate feedback))
-          max-delay)
+(defun nyq:alpassvv (the-snd delay feedback min-hz)
+    (let (max-delay)
       (cond ((or (not (numberp min-hz))
                  (<= min-hz 0))
              (error "alpass needs numeric (>0) 4th parameter (min-hz) when delay is variable")))
@@ -164,23 +131,22 @@
                               (* max-delay 0.5)))
       ; now delay is between 0 and max-delay, so we won't crash nyquist when
       ; we call snd-alpassvv, which doesn't test for out-of-range data
-      (cond ((> the-snd-srate feedback-srate)
-             (setf feedback (snd-up the-snd-srate feedback)))
-            ((< the-snd-srate feedback-srate)
-             (format t "Warning: down-sampling feedback in alpass~%")
-             (setf feedback (snd-down the-snd-srate feedback))))
-      (cond ((> the-snd-srate delay-srate)
-             (setf delay (snd-up the-snd-srate delay)))
-            ((< the-snd-srate delay-srate)
-             (format t "Warning: down-sampling delay in alpass~%")
-             (setf delay (snd-down the-snd-srate delay))))
-      (display "snd-alpassvv-4 after cond" (snd-srate the-snd) (snd-srate feedback))
       (snd-alpassvv the-snd delay feedback max-delay)))
 
-(setf alpass-implementations
-      (vector #'snd-alpass-4 #'snd-alpass-error
-              #'snd-alpasscv-4 #'snd-alpassvv-4))
 
+;; NYQ:SND-ALPASS -- ignores min-hz argument and calls snd-alpass
+;;
+(defun nyq:snd-alpass (snd delay feedback min-hz)
+  (snd-alpass snd delay feedback))
+
+;; NYQ:SND-ALPASSCV -- ignores min-hz argument and calls snd-alpasscv
+;;
+(defun nyq:snd-alpasscv (snd delay feedback min-hz)
+  (snd-alpasscv snd delay feedback))
+
+(setf alpass-implementations
+      (vector #'nyq:snd-alpass #'snd-alpass-error
+              #'nyq:snd-alpasscv #'nyq:alpassvv))
 
 
 ;; NYQ:ALPASS1 -- single channel alpass
@@ -246,7 +212,7 @@
                                                  (floor 0.01) (threshold 0.01))
   (let ((rms (lp (mult snd snd) (/ *control-srate* 10.0))))
     (setf threshold (* threshold threshold))
-    (mult snd (gate rms lookahead risetime falltime floor threshold))))
+    (mult snd (gate rms floor risetime falltime lookahead threshold))))
 
 
 ;; QUANTIZE -- quantize a sound
@@ -342,9 +308,11 @@
 
 ; convenient biquad: normalize a0, and use zero initial conditions.
 (defun nyq:biquad (x b0 b1 b2 a0 a1 a2)
+  (if (< a0 1.0)
+      (error (format t "a0 < 1 (unstable parameter) in biquad~%")))
   (let ((a0r (/ 1.0 a0)))
     (snd-biquad x (* a0r b0) (* a0r b1) (* a0r b2) 
-                             (* a0r a1) (* a0r a2) 0 0)))
+                  (* a0r a1) (* a0r a2) 0 0)))
 
 
 (defun biquad (x b0 b1 b2 a0 a1 a2)
@@ -364,8 +332,9 @@
 
 ;; NYQ:LOWPASS2 -- operates on single channel
 (defun nyq:lowpass2 (x hz q)
-  (if (or (> hz (/ (snd-srate x) 2.0))(< hz 0))
-    (error "frequency out of range" hz))
+  (if (or (> hz (* 0.5 (snd-srate x)))
+          (< hz 0))
+      (error "cutoff frequency out of range" hz))
   (let* ((w (* 2.0 Pi (/ hz (snd-srate x))))
          (cw (cos w))
          (sw (sin w))
@@ -383,8 +352,9 @@
   (multichan-expand #'nyq:highpass2 x hz q))
 
 (defun nyq:highpass2 (x hz q)
-  (if (or (> hz (/ (snd-srate x) 2.0))(< hz 0))
-    (error "frequency out of range" hz))
+  (if (or (> hz (* 0.5 (snd-srate x)))
+          (< hz 0))
+      (error "cutoff frequency out of range" hz))
   (let* ((w (* 2.0 Pi (/ hz (snd-srate x))))
          (cw (cos w))
          (sw (sin w))
@@ -574,8 +544,9 @@
   (extract (/ lookahead (snd-srate sound)) 10000
            (snd-follow sound floor risetime falltime lookahead)))
 
-(defun gate (sound floor risetime falltime lookahead threshold)
-  (setf lookahead (round (* lookahead (snd-srate sound))))
-  (setf lookahead (/ lookahead (snd-srate sound)))
-  (extract lookahead 10000
-           (snd-gate sound lookahead risetime falltime floor threshold)))
+; Note: gate implementation moved to nyquist.lsp
+;(defun gate (sound floor risetime falltime lookahead threshold)
+;  (setf lookahead (round (* lookahead (snd-srate sound))))
+;  (setf lookahead (/ lookahead (snd-srate sound)))
+;  (extract lookahead 10000
+;           (snd-gate sound lookahead risetime falltime floor threshold)))

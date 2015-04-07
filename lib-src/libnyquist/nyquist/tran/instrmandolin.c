@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "instrmandolin.h"
 
-void mandolin_free();
+void mandolin_free(snd_susp_type a_susp);
 
 
 typedef struct mandolin_susp_struct {
@@ -20,13 +20,12 @@ typedef struct mandolin_susp_struct {
     int temp_ret_value;
 } mandolin_susp_node, *mandolin_susp_type;
 
-
-	    #include "instr.h"
-
+#include "instr.h"
 
 
-void mandolin__fetch(register mandolin_susp_type susp, snd_list_type snd_list)
+void mandolin__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    mandolin_susp_type susp = (mandolin_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -49,6 +48,7 @@ void mandolin__fetch(register mandolin_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -56,8 +56,7 @@ void mandolin__fetch(register mandolin_susp_type susp, snd_list_type snd_list)
 	mymand_reg = susp->mymand;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-
-	    *out_ptr_reg++ = (sample_type) tick(mymand_reg);
+            *out_ptr_reg++ = (sample_type) tick(mymand_reg);
 	} while (--n); /* inner loop */
 
 	susp->mymand = mymand_reg;
@@ -75,15 +74,15 @@ void mandolin__fetch(register mandolin_susp_type susp, snd_list_type snd_list)
 } /* mandolin__fetch */
 
 
-void mandolin_free(mandolin_susp_type susp)
+void mandolin_free(snd_susp_type a_susp)
 {
-
-	    deleteInstrument(susp->mymand);
+    mandolin_susp_type susp = (mandolin_susp_type) a_susp;
+    deleteInstrument(susp->mymand);
     ffree_generic(susp, sizeof(mandolin_susp_node), "mandolin_free");
 }
 
 
-void mandolin_print_tree(mandolin_susp_type susp, int n)
+void mandolin_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
@@ -101,7 +100,7 @@ sound_type snd_make_mandolin(time_type t0, double freq, time_type d, double body
     susp->temp_ret_value = noteOn(susp->mymand, freq, 1.0);
     susp->susp.fetch = mandolin__fetch;
 
-    susp->terminate_cnt = round((d) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
     /* initialize susp state */
     susp->susp.free = mandolin_free;
     susp->susp.sr = sr;

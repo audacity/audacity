@@ -69,12 +69,12 @@ LVAL xget_env(void)
 /* xload - read and evaluate expressions from a file */
 LVAL xload(void)
 {
-    unsigned char *name;
+    const char *name;
     int vflag,pflag;
     LVAL arg;
 
-    /* get the file name */
-    name = getstring(xlgetfname());
+    /* get the file name, converting unsigned char to char */
+    name = (const char *) getstring(xlgetfname());
 
     /* get the :verbose flag */
     if (xlgetkeyarg(k_verbose,&arg))
@@ -89,7 +89,7 @@ LVAL xload(void)
         pflag = FALSE;
 
     /* load the file */
-    return (xlload((char *) name, vflag, pflag) ? s_true : NIL);
+    return (xlload(name, vflag, pflag) ? s_true : NIL);
 }
 
 /* xtranscript - open or close a transcript file */
@@ -221,7 +221,7 @@ LVAL xaddrs(void)
     /* return the address of the node */
     return (cvfixnum((FIXTYPE)val));
 }
-#endif PEEK_AND_POKE
+#endif /* PEEK_AND_POKE */
 
 /* xprofile - turn profiling on and off */
 LVAL xprofile()
@@ -248,7 +248,11 @@ FILE *read_by_xlisp = NULL;
 
 LVAL xstartrecordio()
 {
+    to_input_buffer = NULL;
+    if (ok_to_open("to-input-buffer.txt", "w"))
 	to_input_buffer = fopen("to-input-buffer.txt", "w");
+    read_by_xlisp = NULL;
+    if (ok_to_open("read-by-xlisp.txt", "w"))
 	read_by_xlisp = fopen("read-by-xlisp.txt", "w");
 	if (!to_input_buffer || !read_by_xlisp) {
 		return NIL;
@@ -268,4 +272,9 @@ LVAL xstoprecordio()
 
 #endif
 
-
+/* xgetruntime - get current run_time */
+LVAL xgetruntime(void)
+{
+    /* return the value at that address */
+    return cvfixnum((FIXTYPE) run_time);
+}

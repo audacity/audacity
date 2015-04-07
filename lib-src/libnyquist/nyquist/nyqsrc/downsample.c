@@ -17,7 +17,7 @@
 #include "cext.h"
 #include "downsample.h"
 
-void down_free();
+void down_free(snd_susp_type a_susp);
 
 
 typedef struct down_susp_struct {
@@ -40,12 +40,11 @@ typedef struct down_susp_struct {
 } down_susp_node, *down_susp_type;
 
 
-void down_n_fetch(susp, snd_list)
-  register down_susp_type susp;
-  snd_list_type snd_list;
+void down_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    down_susp_type susp = (down_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
-    int togo = 0;
+    int togo;
     int n;
     sample_block_type out;
     register sample_block_values_type out_ptr;
@@ -76,7 +75,25 @@ void down_n_fetch(susp, snd_list)
         /* don't run past logical stop time */
         if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
             int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-            if (to_stop < togo && ((togo = to_stop) == 0)) break;
+	    /* break if to_stop == 0 (we're at the logical stop)
+	     * AND cnt > 0 (we're not at the beginning of the
+	     * output block).
+	     */
+	    if (to_stop < togo) {
+		if (to_stop == 0) {
+		    if (cnt) {
+			togo = 0;
+			break;
+		    } else /* keep togo as is: since cnt == 0, we
+		            * can set the logical stop flag on this
+		            * output block
+		            */
+			susp->logically_stopped = true;
+		} else /* limit togo so we can start a new
+		        * block at the LST
+		        */
+		    togo = to_stop;
+	    }
         }
 
         n = togo;
@@ -109,12 +126,11 @@ void down_n_fetch(susp, snd_list)
 } /* down_n_fetch */
 
 
-void down_s_fetch(susp, snd_list)
-  register down_susp_type susp;
-  snd_list_type snd_list;
+void down_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    down_susp_type susp = (down_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
-    int togo = 0;
+    int togo;
     int n;
     sample_block_type out;
     register sample_block_values_type out_ptr;
@@ -132,6 +148,10 @@ void down_s_fetch(susp, snd_list)
         /* don't overflow the output sample block: */
         togo = max_sample_block_len - cnt;
 
+	/* don't run past the s input sample block: */
+	susp_check_term_log_samples(s, s_ptr, s_cnt);
+	togo = min(togo, susp->s_cnt);
+
         /* don't run past terminate time */
         if (susp->terminate_cnt != UNKNOWN &&
             susp->terminate_cnt <= susp->susp.current + cnt + togo) {
@@ -142,8 +162,26 @@ void down_s_fetch(susp, snd_list)
         /* don't run past logical stop time */
         if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
             int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-            if (to_stop < togo && ((togo = to_stop) == 0)) break;
-        }
+	    /* break if to_stop == 0 (we're at the logical stop)
+	     * AND cnt > 0 (we're not at the beginning of the
+	     * output block).
+	     */
+	    if (to_stop < togo) {
+		if (to_stop == 0) {
+		    if (cnt) {
+			togo = 0;
+			break;
+		    } else /* keep togo as is: since cnt == 0, we
+		            * can set the logical stop flag on this
+		            * output block
+		            */
+			susp->logically_stopped = true;
+		} else /* limit togo so we can start a new
+		        * block at the LST
+		        */
+		    togo = to_stop;
+	    }
+	}
 
         n = togo;
         s_ptr_reg = susp->s_ptr;
@@ -152,7 +190,8 @@ void down_s_fetch(susp, snd_list)
             *out_ptr_reg++ = (s_scale_reg * *s_ptr_reg++);
         } while (--n); /* inner loop */
 
-        susp->s_ptr = s_ptr_reg;
+	/* using s_ptr_reg is a bad idea on RS/6000: */
+	susp->s_ptr += togo;
         out_ptr += togo;
         cnt += togo;
     } /* outer loop */
@@ -173,23 +212,21 @@ void down_s_fetch(susp, snd_list)
 } /* down_s_fetch */
 
 
-void down_i_fetch(susp, snd_list)
-  register down_susp_type susp;
-  snd_list_type snd_list;
+void down_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    down_susp_type susp = (down_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type s_x2_sample;
-    int togo = 0;
+    int togo;
     int n;
     sample_block_type out;
     register sample_block_values_type out_ptr;
 
     register sample_block_values_type out_ptr_reg;
 
-    register sample_type s_pHaSe_iNcR_rEg = (sample_type) susp->s_pHaSe_iNcR;
+    register double s_pHaSe_iNcR_rEg = susp->s_pHaSe_iNcR;
     register double s_pHaSe_ReG;
     register sample_type s_x1_sample_reg;
-
     falloc_sample_block(out, "down_i_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
@@ -222,11 +259,26 @@ void down_i_fetch(susp, snd_list)
         /* don't run past logical stop time */
         if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
             int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-            if (to_stop < togo && ((togo = to_stop) <= 0)) {
-                togo = 0;
-                break;
-            }
-        }
+	    /* break if to_stop == 0 (we're at the logical stop)
+	     * AND cnt > 0 (we're not at the beginning of the
+	     * output block).
+	     */
+	    if (to_stop < togo) {
+		if (to_stop == 0) {
+		    if (cnt) {
+			togo = 0;
+			break;
+		    } else /* keep togo as is: since cnt == 0, we
+		            * can set the logical stop flag on this
+		            * output block
+		            */
+			susp->logically_stopped = true;
+		} else /* limit togo so we can start a new
+		        * block at the LST
+		        */
+		    togo = to_stop;
+	    }
+	}
 
         n = togo;
         s_pHaSe_ReG = susp->s_pHaSe;
@@ -263,7 +315,7 @@ void down_i_fetch(susp, snd_list)
                  s_x2_sample * s_pHaSe_ReG);
             s_pHaSe_ReG += s_pHaSe_iNcR_rEg;
         } while (--n); /* inner loop */
-breakout:
+      breakout:
         togo -= n;
         susp->s_pHaSe = s_pHaSe_ReG;
         susp->s_x1_sample = s_x1_sample_reg;
@@ -287,10 +339,9 @@ breakout:
 } /* down_i_fetch */
 
 
-void down_toss_fetch(snd_list)
-  snd_list_type snd_list;
+void down_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
-    register down_susp_type susp = (down_susp_type) snd_list->u.susp;
+    down_susp_type susp = (down_susp_type) a_susp;
     long final_count = MIN(susp->susp.current + max_sample_block_len,
                            susp->susp.toss_cnt);
     time_type final_time = susp->susp.t0 + final_count / susp->susp.sr;
@@ -316,30 +367,31 @@ void down_toss_fetch(snd_list)
 }
 
 
-void down_mark(down_susp_type susp)
+void down_mark(snd_susp_type a_susp)
 {
+    down_susp_type susp = (down_susp_type) a_susp;
     sound_xlmark(susp->s);
 }
 
 
-void down_free(down_susp_type susp)
+void down_free(snd_susp_type a_susp)
 {
+    down_susp_type susp = (down_susp_type) a_susp;
     sound_unref(susp->s);
     ffree_generic(susp, sizeof(down_susp_node), "down_free");
 }
 
 
-void down_print_tree(down_susp_type susp, int n)
+void down_print_tree(snd_susp_type a_susp, int n)
 {
+    down_susp_type susp = (down_susp_type) a_susp;
     indent(n);
     stdputstr("s:");
     sound_print_tree_1(susp->s, n);
 }
 
 
-sound_type snd_make_down(sr, s)
-  rate_type sr;
-  sound_type s;
+sound_type snd_make_down(rate_type sr, sound_type s)
 {
     register down_susp_type susp;
     /* sr specified as input parameter */
@@ -365,13 +417,12 @@ sound_type snd_make_down(sr, s)
     /* handle unequal start times, if any */
     if (t0 < s->t0) sound_prepend_zeros(s, t0);
     /* minimum start time over all inputs: */
-    t0_min = MIN(s->t0, t0);
+    t0_min = min(s->t0, t0);
     /* how many samples to toss before t0: */
-    susp->susp.toss_cnt = ROUND((t0 - t0_min) * sr);
+    susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
         susp->susp.keep_fetch = susp->susp.fetch;
         susp->susp.fetch = down_toss_fetch;
-        t0 = t0_min;
     }
 
     /* initialize susp state */
@@ -395,9 +446,7 @@ sound_type snd_make_down(sr, s)
 }
 
 
-sound_type snd_down(sr, s)
-  rate_type sr;
-  sound_type s;
+sound_type snd_down(rate_type sr, sound_type s)
 {
     sound_type s_copy = sound_copy(s);
     return snd_make_down(sr, s_copy);

@@ -167,9 +167,6 @@ private void smfw_dotrack(seq)
     unsigned long chunk_size;
 
     if (seq->runflag) {
-        if ((seq->timebase->virt_base == 0) &&
-          (seq->timebase->rate == STOPRATE)) 
-          /*we just set these last time through... do nothing*/;
         seq_stop(seq);
     }
     timebase_use(seq->timebase);
@@ -541,8 +538,9 @@ void seq_write_smf(seq, outfile)
 
     event = seq_events(smfw_seq.seq);
 
-    /*search for clock events up till start of score*/
-    while(event->ntime <= 0){
+    /* search for clock events up till start of score */
+    /* careful: there may be no events at all */
+    while(event && event->ntime <= 0){
         if(debug)   gprintf(TRANS, "event (time:%ld)\n", event->ntime); 
         if(vc_ctrl(event->nvoice) == ESC_CTRL && event->value == CLOCK_VALUE) {
             if(debug)   gprintf(TRANS, "clock %lu at 0\n", event->u.clock.ticksize);
@@ -570,55 +568,61 @@ void seq_write_smf(seq, outfile)
     putc(0x02, smfw_seq.outfile);/*division resolution of 600*/
     putc(0x58, smfw_seq.outfile);
 
-    for(i = 0; i < 17; i++){/*for each track..*/
-        if(((seq_used_mask(smfw_seq.seq) >> (i - 1)) & 0x1) || (i == 0)){
-        if(debug) gprintf(TRANS, "write track %d \n", i);
-        track_count++;
-        clock_ticksize = starting_ticksize;
-        last_tick_size = starting_ticksize;
-        putc(0x4D, smfw_seq.outfile);/*track header: MTrk*/
-        putc(0x54, smfw_seq.outfile);
-        putc(0x72, smfw_seq.outfile);
-        putc(0x6B, smfw_seq.outfile);
+    for (i = 0; i < 17; i++) { /* for each track... */
+        if (((seq_used_mask(smfw_seq.seq) >> (i - 1)) & 0x1) || (i == 0)) {
+            if (debug) gprintf(TRANS, "write track %d \n", i);
+            track_count++;
+            clock_ticksize = starting_ticksize;
+            last_tick_size = starting_ticksize;
+            putc(0x4D, smfw_seq.outfile);/*track header: MTrk*/
+            putc(0x54, smfw_seq.outfile);
+            putc(0x72, smfw_seq.outfile);
+            putc(0x6B, smfw_seq.outfile);
        
-        chunk_size_marker = ftell(smfw_seq.outfile);/*size of chunk will be written later*/
-        putc(0x00, smfw_seq.outfile);                               /*will be filled by chunk_size_marker*/
-        putc(0x00, smfw_seq.outfile);
-        putc(0x00, smfw_seq.outfile);
-        putc(0x00, smfw_seq.outfile);
-
-        if(i == 0) { /*tempo and time signature track*/
-            putc(0x00, smfw_seq.outfile);/* default time sig stuff*/
-            putc(0xFF, smfw_seq.outfile);
-            putc(0x58, smfw_seq.outfile);
-            putc(0x04, smfw_seq.outfile);
-            putc(0x04, smfw_seq.outfile);
-            putc(0x02, smfw_seq.outfile);
-            putc(0x18, smfw_seq.outfile);
-            putc(0x08, smfw_seq.outfile);
+            chunk_size_marker = ftell(smfw_seq.outfile); 
+            /* size of chunk will be written later */
+            /* will be filled by chunk_size_marker */
             putc(0x00, smfw_seq.outfile);
+            putc(0x00, smfw_seq.outfile);
+            putc(0x00, smfw_seq.outfile);
+            putc(0x00, smfw_seq.outfile);
+
+            if (i == 0) { /* tempo and time signature track */
+                putc(0x00, smfw_seq.outfile);/* default time sig stuff*/
+                putc(0xFF, smfw_seq.outfile);
+                putc(0x58, smfw_seq.outfile);
+                putc(0x04, smfw_seq.outfile);
+                putc(0x04, smfw_seq.outfile);
+                putc(0x02, smfw_seq.outfile);
+                putc(0x18, smfw_seq.outfile);
+                putc(0x08, smfw_seq.outfile);
+                putc(0x00, smfw_seq.outfile);
             
-            putc(0xFF, smfw_seq.outfile);/*TEMPO: inserted here in case default is used*/
-            putc(0x51, smfw_seq.outfile);
-            putc(0x03, smfw_seq.outfile);
-            /* ticksize is in ms<<16, so to get milliseconds per tick, it's
-               ticksize / 65536. To get beat durations, multiply by 24 to get
-               ticksize * 24 / 65536. To get microseconds, multiply by 1000:
-               ticksize * 24000 / 65536. Divide both constants by 64 to get
-               ticksize * 375 / 1024 = microseconds per quarter note.
-            */
-            put_tick_size = scale(clock_ticksize, 375L, 1024L);
-            putc((int) ((put_tick_size >> 16) & 0xFF), smfw_seq.outfile);
-            putc((int) ((put_tick_size >> 8) & 0xFF), smfw_seq.outfile);
-            putc((int) (put_tick_size & 0xFF), smfw_seq.outfile);
+                /* TEMPO: inserted here in case default is used */
+                putc(0xFF, smfw_seq.outfile);
+                putc(0x51, smfw_seq.outfile);
+                putc(0x03, smfw_seq.outfile);
+                /* ticksize is in ms<<16, so to get milliseconds per tick, it's
+                   ticksize / 65536. To get beat durations, multiply by 24 
+                   to get ticksize * 24 / 65536. To get microseconds, 
+                   multiply by 1000: ticksize * 24000 / 65536. Divide both
+                   constants by 64 to get ticksize * 375 / 1024 = 
+                   microseconds per quarter note.
+                */
+                put_tick_size = scale(clock_ticksize, 375L, 1024L);
+                putc((int) ((put_tick_size >> 16) & 0xFF), smfw_seq.outfile);
+                putc((int) ((put_tick_size >> 8) & 0xFF), smfw_seq.outfile);
+                putc((int) (put_tick_size & 0xFF), smfw_seq.outfile);
+            }
+            smfw_seq.track = i;
+            smfw_dotrack(smfw_seq.seq);
         }
-        smfw_seq.track = i;
-        smfw_dotrack(smfw_seq.seq);
-      }
     }
-    if(seti_counter) gprintf(TRANS, "%d SETI events IGNORED!\n", seti_counter);
+    if (seti_counter) 
+        gprintf(TRANS, "%d SETI events IGNORED!\n", seti_counter);
     seq_stop(smfw_seq.seq);
-    fseek(smfw_seq.outfile, track_count_marker, 0);/*go back and insert number of tracks*/
+    /* go back and insert number of tracks */
+    fseek(smfw_seq.outfile, track_count_marker, 0);
     putc(0xFF & track_count, smfw_seq.outfile);
     fclose(smfw_seq.outfile);
 }

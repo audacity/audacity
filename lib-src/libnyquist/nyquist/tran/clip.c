@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "clip.h"
 
-void clip_free();
+void clip_free(snd_susp_type a_susp);
 
 
 typedef struct clip_susp_struct {
@@ -24,8 +24,9 @@ typedef struct clip_susp_struct {
 } clip_susp_node, *clip_susp_type;
 
 
-void clip_n_fetch(register clip_susp_type susp, snd_list_type snd_list)
+void clip_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    clip_susp_type susp = (clip_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -53,6 +54,7 @@ void clip_n_fetch(register clip_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -64,6 +66,7 @@ void clip_n_fetch(register clip_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -86,7 +89,10 @@ void clip_n_fetch(register clip_susp_type susp, snd_list_type snd_list)
 	s_ptr_reg = susp->s_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-double x = *s_ptr_reg++; *out_ptr_reg++ = (sample_type) (x > level_reg ? level_reg : (x < -level_reg ? -level_reg : x));
+            double x = *s_ptr_reg++; 
+            *out_ptr_reg++ = (sample_type) 
+            (x > level_reg ? 
+             level_reg : (x < -level_reg ? -level_reg : x));
 	} while (--n); /* inner loop */
 
 	susp->level = level_reg;
@@ -113,8 +119,9 @@ double x = *s_ptr_reg++; *out_ptr_reg++ = (sample_type) (x > level_reg ? level_r
 } /* clip_n_fetch */
 
 
-void clip_s_fetch(register clip_susp_type susp, snd_list_type snd_list)
+void clip_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    clip_susp_type susp = (clip_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -143,6 +150,7 @@ void clip_s_fetch(register clip_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -154,6 +162,7 @@ void clip_s_fetch(register clip_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -176,7 +185,10 @@ void clip_s_fetch(register clip_susp_type susp, snd_list_type snd_list)
 	s_ptr_reg = susp->s_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-double x = (s_scale_reg * *s_ptr_reg++); *out_ptr_reg++ = (sample_type) (x > level_reg ? level_reg : (x < -level_reg ? -level_reg : x));
+            double x = (s_scale_reg * *s_ptr_reg++); 
+            *out_ptr_reg++ = (sample_type) 
+            (x > level_reg ? 
+             level_reg : (x < -level_reg ? -level_reg : x));
 	} while (--n); /* inner loop */
 
 	susp->level = level_reg;
@@ -203,11 +215,9 @@ double x = (s_scale_reg * *s_ptr_reg++); *out_ptr_reg++ = (sample_type) (x > lev
 } /* clip_s_fetch */
 
 
-void clip_toss_fetch(susp, snd_list)
-  register clip_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void clip_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    clip_susp_type susp = (clip_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -222,25 +232,28 @@ void clip_toss_fetch(susp, snd_list)
     susp->s_ptr += n;
     susp_took(s_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void clip_mark(clip_susp_type susp)
+void clip_mark(snd_susp_type a_susp)
 {
+    clip_susp_type susp = (clip_susp_type) a_susp;
     sound_xlmark(susp->s);
 }
 
 
-void clip_free(clip_susp_type susp)
+void clip_free(snd_susp_type a_susp)
 {
+    clip_susp_type susp = (clip_susp_type) a_susp;
     sound_unref(susp->s);
     ffree_generic(susp, sizeof(clip_susp_node), "clip_free");
 }
 
 
-void clip_print_tree(clip_susp_type susp, int n)
+void clip_print_tree(snd_susp_type a_susp, int n)
 {
+    clip_susp_type susp = (clip_susp_type) a_susp;
     indent(n);
     stdputstr("s:");
     sound_print_tree_1(susp->s, n);
@@ -274,8 +287,8 @@ sound_type snd_make_clip(sound_type s, double level)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = clip_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = clip_toss_fetch;
     }
 
     /* initialize susp state */

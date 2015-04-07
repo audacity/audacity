@@ -53,6 +53,14 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_ss 5
 #define INTERP_si 6
 #define INTERP_sr 7
+#define INTERP_in 8
+#define INTERP_is 9
+#define INTERP_ii 10
+#define INTERP_ir 11
+#define INTERP_rn 12
+#define INTERP_rs 13
+#define INTERP_ri 14
+#define INTERP_rr 15
 
 #define INTERP_nnn 0
 #define INTERP_nns 1
@@ -87,6 +95,39 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_sri 30
 #define INTERP_srr 31
 
+#define INTERP_inn 32
+#define INTERP_ins 33
+#define INTERP_ini 34
+#define INTERP_inr 35
+#define INTERP_isn 36
+#define INTERP_iss 37
+#define INTERP_isi 38
+#define INTERP_isr 39
+#define INTERP_iin 40
+#define INTERP_iis 41
+#define INTERP_iii 42
+#define INTERP_iir 43
+#define INTERP_irn 44
+#define INTERP_irs 45
+#define INTERP_iri 46
+#define INTERP_irr 47
+#define INTERP_rnn 48
+#define INTERP_rns 49
+#define INTERP_rni 50
+#define INTERP_rnr 51
+#define INTERP_rsn 52
+#define INTERP_rss 53
+#define INTERP_rsi 54
+#define INTERP_rsr 55
+#define INTERP_rin 56
+#define INTERP_ris 57
+#define INTERP_rii 58
+#define INTERP_rir 59
+#define INTERP_rrn 60
+#define INTERP_rrs 61
+#define INTERP_rri 62
+#define INTERP_rrr 63
+
 #define INTERP_nnnn 0
 #define INTERP_nnns 1
 #define INTERP_nnsn 4
@@ -95,6 +136,7 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_nsns 17
 #define INTERP_nssn 20
 #define INTERP_nsss 21
+#define INTERP_nrrr 63
 #define INTERP_snnn 64
 #define INTERP_snns 65
 #define INTERP_snsn 68
@@ -105,11 +147,76 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_ssss 85
 #define INTERP_niii 42
 #define INTERP_siii 106
-#define INTERP_nrrr 63
 #define INTERP_srrr 127
+#define INTERP_iiii 170
+#define INTERP_rrrr 255
 
-#define INTERP_nnnnnn 0 
+#define INTERP_nnnnnn 0
+#define INTERP_nnnnns 1
+#define INTERP_nnnnsn 4
+#define INTERP_nnnnss 5
+#define INTERP_nnnsnn 16
+#define INTERP_nnnsns 17
+#define INTERP_nnnssn 20
+#define INTERP_nnnsss 21
+#define INTERP_nnsnnn 64
+#define INTERP_nnsnns 65
+#define INTERP_nnsnsn 68
+#define INTERP_nnsnss 69
+#define INTERP_nnssnn 80
+#define INTERP_nnssns 81
+#define INTERP_nnsssn 84
+#define INTERP_nnssss 85
+#define INTERP_nsnnnn 256
+#define INTERP_nsnnns 257
+#define INTERP_nsnnsn 260
+#define INTERP_nsnnss 261
+#define INTERP_nsnsnn 272
+#define INTERP_nsnsns 273
+#define INTERP_nsnssn 276
+#define INTERP_nsnsss 277
+#define INTERP_nssnnn 320
+#define INTERP_nssnns 321
+#define INTERP_nssnsn 324
+#define INTERP_nssnss 325
+#define INTERP_nsssnn 336
+#define INTERP_nsssns 337
+#define INTERP_nssssn 340
+#define INTERP_nsssss 341
+#define INTERP_snnnnn 1024
+#define INTERP_snnnns 1025
+#define INTERP_snnnsn 1028
+#define INTERP_snnnss 1029
+#define INTERP_snnsnn 1040
+#define INTERP_snnsns 1041
+#define INTERP_snnssn 1044
+#define INTERP_snnsss 1045
+#define INTERP_snsnnn 1088
+#define INTERP_snsnns 1089
+#define INTERP_snsnsn 1092
+#define INTERP_snsnss 1093
+#define INTERP_snssnn 1104
+#define INTERP_snssns 1105
+#define INTERP_snsssn 1108
+#define INTERP_snssss 1109
+#define INTERP_ssnnnn 1280
+#define INTERP_ssnnns 1281
+#define INTERP_ssnnsn 1284
+#define INTERP_ssnnss 1285
+#define INTERP_ssnsnn 1296
+#define INTERP_ssnsns 1297
+#define INTERP_ssnssn 1300
+#define INTERP_ssnsss 1301
+#define INTERP_sssnnn 1344
+#define INTERP_sssnns 1345
+#define INTERP_sssnsn 1348
+#define INTERP_sssnss 1349
+#define INTERP_ssssnn 1360
+#define INTERP_ssssns 1361
+#define INTERP_sssssn 1364
 #define INTERP_ssssss 1365
+#define INTERP_iiiiii 2730
+#define INTERP_rrrrrr 4095
 
 #define INTERP_nnnnnnnn 0
 #define INTERP_ssssssss 21845
@@ -119,6 +226,7 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 #define INTERP_SHIFT 2
 
 LVAL snd_badsr(void);
+long check_terminate_cnt(long tc);
 
 typedef double time_type;
 typedef double rate_type;
@@ -141,6 +249,11 @@ typedef double promoted_sample_type;
 #define max_sample_block_len 1020
 /* #define max_sample_block_len 4 */
 
+/* longest allowed sample is basically 2^31 but a bit lower to 
+   allow for rounding */
+#define MAX_SND_LEN (MAX_STOP - max_sample_block_len * 2)
+
+
 /* Defines needed for xlisp */
 #define getsound(x)     ((sound_type) getinst(x))
 #define xlgasound()     (testarg(typearg(soundp)))
@@ -156,18 +269,21 @@ typedef struct {
 } sample_block_node, *sample_block_type;
  
 
+/* forward declaration for circular type dependencies */
+typedef struct snd_list_struct *snd_list_type;
+
 typedef struct snd_susp_struct {
-    void                (*fetch)();
-    void                (*keep_fetch)();
-    void                (*free)();
-    void                (*mark)();  /* marks LVAL nodes for GC */
-    void                (*print_tree)();    /* debugging */
-    char *              name;       /* string name for debugging */
-    long                toss_cnt;   /* return this many zeros, then compute */
-    long                current;    /* current sample number */
-    double              sr;         /* sample rate */
-    time_type           t0;         /* starting time */
-    long                log_stop_cnt;   /* logical stop count */
+    void  (*fetch)(struct snd_susp_struct *, snd_list_type snd_list);
+    void  (*keep_fetch)(struct snd_susp_struct *, snd_list_type snd_list);
+    void  (*free)(struct snd_susp_struct *);
+    void  (*mark)(struct snd_susp_struct *);  /* marks LVAL nodes for GC */
+    void  (*print_tree)(struct snd_susp_struct *, int);    /* debugging */
+    char *name;        /* string name for debugging */
+    long  toss_cnt;    /* return this many zeros, then compute */
+    long  current;     /* current sample number */
+    double sr;         /* sample rate */
+    time_type t0;      /* starting time */
+    long log_stop_cnt; /* logical stop count */
     /* other susp dependent stuff will be here... */
 } snd_susp_node, *snd_susp_type;
 
@@ -177,11 +293,11 @@ typedef struct snd_list_struct {
     union {
         struct snd_list_struct  *next;
         snd_susp_type           susp;
-    }                   u;
-    short               refcnt;
-    short               block_len;
-    boolean             logically_stopped;
-} snd_list_node, *snd_list_type;
+    }       u;
+    short   refcnt;
+    short   block_len;
+    boolean logically_stopped;
+} snd_list_node; /* , *snd_list_type; -- defined above */
 
 extern snd_list_type list_watch; //DBY
 
@@ -200,7 +316,7 @@ typedef struct table_struct {
 #define UNKNOWN (-10-max_sample_block_len)
 
 typedef struct sound_struct {
-    sample_block_type   (*get_next)(/* struct sound_struct *snd, long *cnt */);
+    sample_block_type   (*get_next)(struct sound_struct *snd, long *cnt);
     time_type           time;   /* logical starting time */
     time_type           t0;     /* quantized time of first sample */
     long                stop;  /* stop (clipping) sample no. */
@@ -216,7 +332,7 @@ typedef struct sound_struct {
     long                prepend_cnt;    /* how many zeros to prepend */
     /* function to use as get_next after prepended zeros are generated: */
     sample_block_type   (*after_prepend)
-                        (/* struct sound_struct * snd, long * cnt */);
+                        (struct sound_struct * snd, long * cnt);
     table_type table;   /* pointer to table-ized version of this sound */
     long *extra;        /* used for extra state information, first word of extra
 			   state should be the length of the extra state 
@@ -242,14 +358,14 @@ double snd_set_latency(double latency);
 double compute_phase(double phase, double key, long n, double srate,
                      double new_srate, double freq, double *incr_ptr);
 
-boolean soundp();
+boolean soundp(LVAL);
 /* LISP: (SOUNDP ANY) */
 
 void snd_list_ref(snd_list_type list);
 void sound_unref(sound_type snd);
 void snd_list_unref(snd_list_type list);
 
-LVAL cvsound();
+LVAL cvsound(sound_type);
 extern LVAL a_sound;
 
 sample_block_type SND_get_next(sound_type snd, long * cnt);
@@ -257,9 +373,9 @@ sample_block_type SND_get_first(sound_type snd, long * cnt);
 sample_block_type SND_get_zeros(sound_type snd, long * cnt);
 sample_block_type SND_flush(sound_type snd, long * cnt);
 
-double hz_to_step();    /* LISP: (HZ-TO-STEP ANYNUM) */
+double hz_to_step(double);    /* LISP: (HZ-TO-STEP ANYNUM) */
 int interp_style(sound_type s, rate_type sr);
-void set_logical_stop_time(); /* LISP: (SND-SET-LOGICAL-STOP SOUND ANYNUM) */
+void set_logical_stop_time(sound_type sound, time_type when); /* LISP: (SND-SET-LOGICAL-STOP SOUND ANYNUM) */
 
 #define xlog(x) log(x)
 /* LISP: double (LOG FLONUM) */
@@ -307,17 +423,17 @@ long sound_nth_block(sound_type snd, long n);
 
 sound_type sound_copy(sound_type snd); 
     /* LISP: (SND-COPY SOUND) */
-void sound_xlmark(sound_type s);
+void sound_xlmark(void *a_sound);
 void sound_print(LVAL snd_expr, long n);
     /* LISP: (SND-PRINT ANY FIXNUM) */
 void sound_play(LVAL snd_expr);
     /* LISP: (SND-PLAY ANY) */
-void stats();
+void stats(void);
     /* LISP: (STATS) */
 void sound_print_tree(sound_type snd);
     /* LISP: (SND-PRINT-TREE SOUND) */
     
-void mark_audio_time();
+void mark_audio_time(void);
 
 void sound_print_tree_1(sound_type snd, int n);
 
@@ -338,8 +454,12 @@ sound_type sound_zero(time_type t0, rate_type sr);
 
 #define susp_print_tree(s, n) (*((s)->print_tree))(s, n)
 
-double step_to_hz();
+double step_to_hz(double);
     /* LISP: (STEP-TO-HZ ANYNUM) */
+
+#ifdef WIN32
+double log2(double x);
+#endif WIN32
 
 /* macros for access to samples within a suspension */
 /* NOTE: assume suspension structure is named "susp" */

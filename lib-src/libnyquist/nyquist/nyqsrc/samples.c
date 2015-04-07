@@ -210,7 +210,10 @@ LVAL snd_fetch_array(sound_type s, long len, long step)
     long i, maxlen, skip, fillptr;
     float *samples;
     LVAL result;
-    
+    LVAL rslt_symbol = xlenter("*RSLT*");
+
+    setvalue(rslt_symbol, NULL);
+
     if (len < 1) xlfail("len < 1");
 
     if (!s->extra) { /* this is the first call, so fix up s */
@@ -232,6 +235,7 @@ LVAL snd_fetch_array(sound_type s, long len, long step)
         if (s->INDEX == s->CNT) {
             sound_get_next(s, &(s->CNT));
             if (s->SAMPLES == zero_block->samples) {
+                setvalue(rslt_symbol, cvfixnum(fillptr));
                 if (s->TERMCNT < 0) s->TERMCNT = fillptr;
             }	
             s->INDEX = 0;

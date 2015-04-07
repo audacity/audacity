@@ -40,6 +40,8 @@
 
  (setf snd-head-raw 20) 
 
+ (setf snd-head-OGG 21) 
+
  (setf snd-head-channels 1) 
 
  (setf snd-head-mode 2) 
@@ -77,6 +79,8 @@
  (setf snd-mode-DPCM 10) 
 
  (setf snd-mode-msadpcm 11) 
+
+ (setf snd-mode-vorbis 11) 
 
  (SETF MAX-STOP-TIME 10E20) 
 

@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "integrate.h"
 
-void integrate_free();
+void integrate_free(snd_susp_type a_susp);
 
 
 typedef struct integrate_susp_struct {
@@ -24,8 +24,9 @@ typedef struct integrate_susp_struct {
 } integrate_susp_node, *integrate_susp_type;
 
 
-void integrate_n_fetch(register integrate_susp_type susp, snd_list_type snd_list)
+void integrate_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    integrate_susp_type susp = (integrate_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -53,6 +54,7 @@ void integrate_n_fetch(register integrate_susp_type susp, snd_list_type snd_list
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -64,6 +66,7 @@ void integrate_n_fetch(register integrate_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -86,7 +89,7 @@ void integrate_n_fetch(register integrate_susp_type susp, snd_list_type snd_list
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = (sample_type) integral_reg; integral_reg += *input_ptr_reg++;;
+            *out_ptr_reg++ = (sample_type) integral_reg; integral_reg += *input_ptr_reg++;
 	} while (--n); /* inner loop */
 
 	susp->integral = integral_reg;
@@ -113,11 +116,9 @@ void integrate_n_fetch(register integrate_susp_type susp, snd_list_type snd_list
 } /* integrate_n_fetch */
 
 
-void integrate_toss_fetch(susp, snd_list)
-  register integrate_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void integrate_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    integrate_susp_type susp = (integrate_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -132,25 +133,28 @@ void integrate_toss_fetch(susp, snd_list)
     susp->input_ptr += n;
     susp_took(input_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void integrate_mark(integrate_susp_type susp)
+void integrate_mark(snd_susp_type a_susp)
 {
+    integrate_susp_type susp = (integrate_susp_type) a_susp;
     sound_xlmark(susp->input);
 }
 
 
-void integrate_free(integrate_susp_type susp)
+void integrate_free(snd_susp_type a_susp)
 {
+    integrate_susp_type susp = (integrate_susp_type) a_susp;
     sound_unref(susp->input);
     ffree_generic(susp, sizeof(integrate_susp_node), "integrate_free");
 }
 
 
-void integrate_print_tree(integrate_susp_type susp, int n)
+void integrate_print_tree(snd_susp_type a_susp, int n)
 {
+    integrate_susp_type susp = (integrate_susp_type) a_susp;
     indent(n);
     stdputstr("input:");
     sound_print_tree_1(susp->input, n);
@@ -162,7 +166,6 @@ sound_type snd_make_integrate(sound_type input)
     register integrate_susp_type susp;
     rate_type sr = input->sr;
     time_type t0 = input->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     /* combine scale factors of linear inputs (INPUT) */
@@ -184,8 +187,8 @@ sound_type snd_make_integrate(sound_type input)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = integrate_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = integrate_toss_fetch;
     }
 
     /* initialize susp state */

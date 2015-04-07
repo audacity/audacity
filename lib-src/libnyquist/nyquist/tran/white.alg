@@ -3,7 +3,7 @@
 (ARGUMENTS ("time_type" "t0") ("rate_type" "sr") ("time_type" "d"))
 (STATE )
 (TERMINATE (AFTER "d"))
-(INNER-LOOP "output = (sample_type) (rand() * rand_scale - 1.0);")
+(INNER-LOOP "output = (sample_type) (rand() * rand_scale - 1.0)")
 (SAMPLE-RATE "sr")
 (SUPPORT-HEADER "
 /* CHANGE LOG

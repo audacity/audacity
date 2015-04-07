@@ -71,7 +71,7 @@ void xlungetc(LVAL fptr, int ch)
     LVAL lptr;
     
     /* check for ungetc from nil */
-    if (fptr == NIL)
+    if (fptr == NIL || ch == EOF)
         ;
         
     /* otherwise, check for ungetc to a stream */
@@ -85,7 +85,7 @@ void xlungetc(LVAL fptr, int ch)
     }
     
     /* otherwise, it must be a file */
-    else if (fptr)
+    else
         setsavech(fptr,ch);
 }
 
@@ -190,7 +190,7 @@ void stdprint(LVAL expr)
 }
 
 /* stdputstr - print a string to *standard-output* */
-void stdputstr(char *str)
+void stdputstr(const char *str)
 {
     xlputstr(getvalue(s_stdout),str);
 }
@@ -209,7 +209,7 @@ void errprint(LVAL expr)
 }
 
 /* errputstr - print a string to *error-output* */
-void errputstr(char *str)
+void errputstr(const const char *str)
 {
     xlputstr(getvalue(s_stderr),str);
 }
@@ -222,7 +222,7 @@ void dbgprint(LVAL expr)
 }
 
 /* dbgputstr - print a string to *debug-io* */
-void dbgputstr(char *str)
+void dbgputstr(const char *str)
 {
     xlputstr(getvalue(s_debugio),str);
 }
@@ -234,7 +234,7 @@ void trcprin1(LVAL expr)
 }
 
 /* trcputstr - print a string to *trace-output* */
-void trcputstr(char *str)
+void trcputstr(const char *str)
 {
     xlputstr(getvalue(s_traceout),str);
 }

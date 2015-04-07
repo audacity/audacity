@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "offset.h"
 
-void offset_free();
+void offset_free(snd_susp_type a_susp);
 
 
 typedef struct offset_susp_struct {
@@ -24,8 +24,9 @@ typedef struct offset_susp_struct {
 } offset_susp_node, *offset_susp_type;
 
 
-void offset_n_fetch(register offset_susp_type susp, snd_list_type snd_list)
+void offset_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    offset_susp_type susp = (offset_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -53,6 +54,7 @@ void offset_n_fetch(register offset_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -64,6 +66,7 @@ void offset_n_fetch(register offset_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -86,7 +89,7 @@ void offset_n_fetch(register offset_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = *s1_ptr_reg++ + offset_reg;
+            *out_ptr_reg++ = *s1_ptr_reg++ + offset_reg;
 	} while (--n); /* inner loop */
 
 	/* using s1_ptr_reg is a bad idea on RS/6000: */
@@ -112,8 +115,9 @@ void offset_n_fetch(register offset_susp_type susp, snd_list_type snd_list)
 } /* offset_n_fetch */
 
 
-void offset_s_fetch(register offset_susp_type susp, snd_list_type snd_list)
+void offset_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    offset_susp_type susp = (offset_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -142,6 +146,7 @@ void offset_s_fetch(register offset_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -153,6 +158,7 @@ void offset_s_fetch(register offset_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -175,7 +181,7 @@ void offset_s_fetch(register offset_susp_type susp, snd_list_type snd_list)
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = (s1_scale_reg * *s1_ptr_reg++) + offset_reg;
+            *out_ptr_reg++ = (s1_scale_reg * *s1_ptr_reg++) + offset_reg;
 	} while (--n); /* inner loop */
 
 	/* using s1_ptr_reg is a bad idea on RS/6000: */
@@ -201,11 +207,9 @@ void offset_s_fetch(register offset_susp_type susp, snd_list_type snd_list)
 } /* offset_s_fetch */
 
 
-void offset_toss_fetch(susp, snd_list)
-  register offset_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void offset_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    offset_susp_type susp = (offset_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -220,25 +224,28 @@ void offset_toss_fetch(susp, snd_list)
     susp->s1_ptr += n;
     susp_took(s1_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void offset_mark(offset_susp_type susp)
+void offset_mark(snd_susp_type a_susp)
 {
+    offset_susp_type susp = (offset_susp_type) a_susp;
     sound_xlmark(susp->s1);
 }
 
 
-void offset_free(offset_susp_type susp)
+void offset_free(snd_susp_type a_susp)
 {
+    offset_susp_type susp = (offset_susp_type) a_susp;
     sound_unref(susp->s1);
     ffree_generic(susp, sizeof(offset_susp_node), "offset_free");
 }
 
 
-void offset_print_tree(offset_susp_type susp, int n)
+void offset_print_tree(snd_susp_type a_susp, int n)
 {
+    offset_susp_type susp = (offset_susp_type) a_susp;
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);
@@ -272,8 +279,8 @@ sound_type snd_make_offset(sound_type s1, double offset)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = offset_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = offset_toss_fetch;
     }
 
     /* initialize susp state */

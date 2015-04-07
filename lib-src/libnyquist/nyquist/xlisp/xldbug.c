@@ -15,24 +15,25 @@
 
 /* forward declarations */
 FORWARD LVAL stacktop(void);
-FORWARD LOCAL void breakloop(char *hdr, char *cmsg, char *emsg, LVAL arg, int cflag);
+FORWARD LOCAL void breakloop(const char *hdr, const char *cmsg, 
+                             const char *emsg, LVAL arg, int cflag);
 
 /* xlabort - xlisp serious error handler */
-void xlabort(char *emsg)
+void xlabort(const char *emsg)
 {
     xlsignal(emsg,s_unbound);
-    xlerrprint("error",(char *) NULL,emsg,s_unbound);
+    xlerrprint("error",(const char *) NULL,emsg,s_unbound);
     xlbrklevel();
 }
 
 /* xlbreak - enter a break loop */
-void xlbreak(char *emsg, LVAL arg)
+void xlbreak(const char *emsg, LVAL arg)
 {
     breakloop("break","return from BREAK",emsg,arg,TRUE);
 }
 
 /* xlfail - xlisp error handler */
-void xlfail(char *emsg)
+void xlfail(const char *emsg)
 {
     xlerror(emsg,s_unbound);
 }
@@ -56,7 +57,7 @@ void close_loadingfiles()
 }
 
 /* xlerror - handle a fatal error */
-void xlerror(char *emsg, LVAL arg)
+void xlerror(const char *emsg, LVAL arg)
 {
     close_loadingfiles();
     if (getvalue(s_breakenable) != NIL)
@@ -69,7 +70,7 @@ void xlerror(char *emsg, LVAL arg)
 }
 
 /* xlcerror - handle a recoverable error */
-void xlcerror(char *cmsg, char *emsg, LVAL arg)
+void xlcerror(const char *cmsg, const char *emsg, LVAL arg)
 {
     if (getvalue(s_breakenable) != NIL)
         breakloop("error",cmsg,emsg,arg,TRUE);
@@ -81,7 +82,7 @@ void xlcerror(char *cmsg, char *emsg, LVAL arg)
 }
 
 /* xlerrprint - print an error message */
-void xlerrprint(char *hdr, char *cmsg, char *emsg, LVAL arg)
+void xlerrprint(const char *hdr, const char *cmsg, const char *emsg, LVAL arg)
 {
     /* print the error message */
     sprintf(buf,"%s: %s",hdr,emsg);
@@ -105,7 +106,8 @@ void xlerrprint(char *hdr, char *cmsg, char *emsg, LVAL arg)
 }
 
 /* breakloop - the debug read-eval-print loop */
-LOCAL void breakloop(char *hdr, char *cmsg, char *emsg, LVAL arg, int cflag)
+LOCAL void breakloop(const char *hdr, const char *cmsg, 
+                     const char *emsg, LVAL arg, int cflag)
 {
     LVAL expr,val;
     XLCONTEXT cntxt;
@@ -134,7 +136,7 @@ LOCAL void breakloop(char *hdr, char *cmsg, char *emsg, LVAL arg, int cflag)
     for (type = 0; type == 0; ) {
 
         /* setup the continue trap */
-        if ((type = setjmp(cntxt.c_jmpbuf)))
+        if ((type = _setjmp(cntxt.c_jmpbuf)))
             switch (type) {
             case CF_CLEANUP:
                 continue;

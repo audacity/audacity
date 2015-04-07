@@ -129,7 +129,7 @@ LVAL new_string(int size)
 }
 
 /* cvsymbol - convert a string to a symbol */
-LVAL cvsymbol(char *pname)
+LVAL cvsymbol(const char *pname)
 {
     /* pname points to a global buffer space. This is ok unless you have
      * a gc hook that writes things and therefore uses the buffer. Then
@@ -299,8 +299,6 @@ LOCAL unsigned char *stralloc(int size)
 LOCAL void findmem(void)
 {
     gc();
-    if (nfree < (long)anodes)
-        addseg();
 }
 
 /* gc - garbage collect (only called here and in xlimage.c) */
@@ -345,6 +343,10 @@ void gc(void)
 
     /* count the gc call */
     ++gccalls;
+
+    /* add a new segment if still no free nodes */
+    if (nfree < (long)anodes)
+        addseg();
 
     /* call the *gc-hook* if necessary */
     if (s_gchook && (fun = getvalue(s_gchook))) {
@@ -701,7 +703,7 @@ LVAL xrestore(void)
 
     /* return directly to the top level */
     stdputstr("[ returning to the top level ]\n");
-    longjmp(top_level,1);
+    _longjmp(top_level,1);
 }
 #endif
 

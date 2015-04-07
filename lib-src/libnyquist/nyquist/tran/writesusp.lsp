@@ -121,8 +121,8 @@
                                    (caddr dep) name var-name))))
                    (t
                     (setf fixup-code
-                          (format nil "~A\t\t~A_reg = susp->~A = ~A;~%"
-                                  fixup-code (car dep) (car dep)
+                          (format nil "~A\t\t~A_reg = ~A;~%"
+                                  fixup-code (car dep)
                                   (fixup-substitutions alg
                                    (caddr dep) name var-name))))))))
     (put-slot alg fixup-code 'fixup-code)))
@@ -346,28 +346,32 @@
 
     ;---------------------------
     ; non-ANSI:
-    ;     void NAME_<encoding>_fetch(susp, snd_list)
-    ;   register pwl_susp_type susp;
+    ;     void NAME_<encoding>_fetch(a_susp, snd_list)
+    ;   register pwl_susp_type a_susp;
     ;        snd_list_type snd_list;
     ;	     {
     ; ANSI:
-    ;     void NAME_<encoding>_fetch(register susp_type susp, snd_list_type snd_list)
+    ;     void NAME_<encoding>_fetch(snd_susp_type a_susp,
+    ;                                snd_list_type snd_list)
     ;        {
     ;---------------------------
 
     (setf fn-name (format nil "~A_~A_fetch" name encoding))
     (cond (*ANSI*
            (format stream
-        "~%~%void ~A(register ~A_susp_type susp, snd_list_type snd_list)~%{~%"
-            fn-name name))
+        "~%~%void ~A(snd_susp_type a_susp, snd_list_type snd_list)~%{~%"
+            fn-name))
           (t
            (format stream
-            "~%~%void ~A(susp, snd_list)~%  register ~A_susp_type susp;~%~A~%"
-            fn-name name "  snd_list_type snd_list;\n{")))
+            "~%~%void ~A(a_susp, snd_list)~%  snd_susp_type a_susp;~%~A~%"
+            fn-name "  snd_list_type snd_list;\n{")))
 
     ;-----------------------------
+    ;    NAME_susp_type susp = (NAME_susp_type) a_susp;
     ;    int cnt = 0;  /* how many samples computed */
     ;-----------------------------
+    (format stream "    ~A_susp_type susp = (~A_susp_type) a_susp;~%"
+            name name)
     (format stream "    int cnt = 0; /* how many samples computed */~%")
 
     (dotimes (n (length interp))
@@ -433,7 +437,8 @@
                                         "\t    " stmt "\n"))))))
 
     ; this computes some additional declarations
-    (compute-inner-loop alg (strcat loop-prefix joint-depend inner-loop))
+    (compute-inner-loop alg (strcat loop-prefix joint-depend
+                                    "            " inner-loop))
     ; make the declarations
     (print-strings (get-slot alg 'register-decl) stream)
 
@@ -671,10 +676,10 @@
     ;
     ;	/* don't run past terminate time */
     ;	if (susp->terminate_cnt != UNKNOWN && 
-    ;		susp->terminate_cnt <= susp->susp.current) {
-    ;	    int to_stop = (susp->terminate_cnt + max_sample_block_len) -
-    ;			 (susp->susp.current + cnt);
-    ;	    if (to_stop < togo && ((togo = to_stop) == 0)) break;
+    ;		susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+   ;	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+    ;       if (togo < 0) togo = 0; // avoids rounding errors
+    ;       if (togo == 0) break;
     ;	}
     ;----------------
     (cond ((terminate-check-needed terminate alg)
@@ -683,6 +688,7 @@
      "\tif (susp->terminate_cnt != UNKNOWN &&\n"
      "\t    susp->terminate_cnt <= susp->susp.current + cnt + togo) {\n"
      "\t    togo = susp->terminate_cnt - (susp->susp.current + cnt);\n"
+     "\t    if (togo < 0) togo = 0;  /* avoids rounding errros */\n"
      "\t    if (togo == 0) break;\n"
      "\t}\n\n") stream)))
 
@@ -697,6 +703,7 @@
     ;	     * AND cnt > 0 (we're not at the beginning of the
     ;	     * output block).
     ;	     */
+    ;       if (to_stop < 0) to_stop = 0; // avoids rounding errors
     ;	    if (to_stop < togo) {
     ;		if (to_stop == 0) {
     ;		    if (cnt) {
@@ -723,6 +730,7 @@
      "\t     * AND cnt > 0 (we're not at the beginning of the\n"
      "\t     * output block).\n"
      "\t     */\n"
+     "\t    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */\n"
      "\t    if (to_stop < togo) {\n"
      "\t\tif (to_stop == 0) {\n"
      "\t\t    if (cnt) {\n"

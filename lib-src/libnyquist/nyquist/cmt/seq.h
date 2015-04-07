@@ -168,15 +168,15 @@ typedef struct chunk_struct {
 
 
 typedef struct seq_struct {
-    void (*cause_noteoff_fn)();
-    void (*midi_bend_fn)();
-    void (*midi_ctrl_fn)();
-    void (*midi_program_fn)();
-    void (*midi_touch_fn)();
-    void (*noteoff_fn)();
-    void (*noteon_fn)();
-    void (*free_fn)();
-    void (*reset_fn)();
+    void (*cause_noteoff_fn)(struct seq_struct *, time_type, int, int);
+    void (*midi_bend_fn)(struct seq_struct * seq, int voice, int value);
+    void (*midi_ctrl_fn)(struct seq_struct * seq, int voice, int ctrl, int value);
+    void (*midi_program_fn)(struct seq_struct * seq, int voice, int prog);
+    void (*midi_touch_fn)(struct seq_struct * seq, int voice, int value);
+    void (*noteoff_fn)(struct seq_struct * seq, int voice, int pitch);
+    void (*noteon_fn)(struct seq_struct * seq, int chan, int pitch, int vel);
+    void (*free_fn)(struct seq_struct * seq);
+    void (*reset_fn)(struct seq_struct * seq);
     void (*stopfunc)(struct seq_struct *);
     chunk_type chunklist;
     /* event_type eventlist;

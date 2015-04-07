@@ -89,6 +89,13 @@
 #include "ctype.h"
 #include "string.h"
 
+/* this should really be defined in security.h, but it is in xlisp.h.
+ * I don't want to add an xlisp dependency here, nor do I want to 
+ * create security.h since that's not how xlisp does things.
+ * The C++ linker will type check so this is at least type safe.
+ */
+int ok_to_open(const char *filename, const char *mode);
+
 #define syntax_max 10           /* allow for 10 syntax strings */
 private char *syntax[syntax_max];
 private int n_syntax = 0;       /* number of strings so far */
@@ -440,9 +447,11 @@ private void indirect_command(filename, oldarg0)
   char *filename;
   char *oldarg0;
 {
-    FILE *argfile = fopen(filename, "r");
+    FILE *argfile = NULL;
+    if (ok_to_open(filename, "r"))
+        argfile = fopen(filename, "r");
     if (!argfile) {
-            argv = (char **) malloc(sizeof(char *));
+        argv = (char **) malloc(sizeof(char *));
         argv[0] = oldarg0;
         argc = 1;
     } else {

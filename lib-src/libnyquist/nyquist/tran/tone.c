@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "tone.h"
 
-void tone_free();
+void tone_free(snd_susp_type a_susp);
 
 
 typedef struct tone_susp_struct {
@@ -26,8 +26,9 @@ typedef struct tone_susp_struct {
 } tone_susp_node, *tone_susp_type;
 
 
-void tone_n_fetch(register tone_susp_type susp, snd_list_type snd_list)
+void tone_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    tone_susp_type susp = (tone_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -57,6 +58,7 @@ void tone_n_fetch(register tone_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -68,6 +70,7 @@ void tone_n_fetch(register tone_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -92,7 +95,7 @@ void tone_n_fetch(register tone_susp_type susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = (sample_type) (prev_reg = c1_reg * *input_ptr_reg++ + c2_reg * prev_reg);
+            *out_ptr_reg++ = (sample_type) (prev_reg = c1_reg * *input_ptr_reg++ + c2_reg * prev_reg);
 	} while (--n); /* inner loop */
 
 	susp->prev = prev_reg;
@@ -119,11 +122,9 @@ void tone_n_fetch(register tone_susp_type susp, snd_list_type snd_list)
 } /* tone_n_fetch */
 
 
-void tone_toss_fetch(susp, snd_list)
-  register tone_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void tone_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    tone_susp_type susp = (tone_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -138,25 +139,28 @@ void tone_toss_fetch(susp, snd_list)
     susp->input_ptr += n;
     susp_took(input_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void tone_mark(tone_susp_type susp)
+void tone_mark(snd_susp_type a_susp)
 {
+    tone_susp_type susp = (tone_susp_type) a_susp;
     sound_xlmark(susp->input);
 }
 
 
-void tone_free(tone_susp_type susp)
+void tone_free(snd_susp_type a_susp)
 {
+    tone_susp_type susp = (tone_susp_type) a_susp;
     sound_unref(susp->input);
     ffree_generic(susp, sizeof(tone_susp_node), "tone_free");
 }
 
 
-void tone_print_tree(tone_susp_type susp, int n)
+void tone_print_tree(snd_susp_type a_susp, int n)
 {
+    tone_susp_type susp = (tone_susp_type) a_susp;
     indent(n);
     stdputstr("input:");
     sound_print_tree_1(susp->input, n);
@@ -169,7 +173,6 @@ sound_type snd_make_tone(sound_type input, double hz)
     double b;
     rate_type sr = input->sr;
     time_type t0 = input->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, tone_susp_node, "snd_make_tone");
@@ -186,8 +189,8 @@ sound_type snd_make_tone(sound_type input, double hz)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = tone_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = tone_toss_fetch;
     }
 
     /* initialize susp state */

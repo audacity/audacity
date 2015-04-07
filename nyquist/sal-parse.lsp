@@ -51,8 +51,8 @@
     (:/ "/" /)
     (:% "%" rem)
     (:^ "^" expt)
-    (:= "=" eql)   ; equality and assigment
-    (:!= "!=" not-eql)
+    (:= "=" sal-equal)   ; equality and assigment
+    (:!= "!=" not-sal-equal)
     (:< "<" <)
     (:> ">" >)
     (:<= "<=" <=) ; leq and assignment minimization
@@ -1419,7 +1419,7 @@
 	    ((eq op '/=) (setq expr `(/ ,vref ,expr)))
 	    ((eq op '&=) (setq expr `(nconc ,vref (list ,expr))))
 	    ((eq op '@=) (setq expr `(cons ,expr ,vref)))
-            ((eq op '^=) (setq expr `(nconc ,vref (copy-list ,expr))))
+            ((eq op '^=) (setq expr `(nconc ,vref (append ,expr nil))))
 	    ((eq op '<=) (setq expr `(min ,vref ,expr)))
 	    ((eq op '>=) (setq expr `(max ,vref ,expr)))
 	    (t (errexit (format nil "unknown assigment operator ~A" op))))
@@ -1605,7 +1605,7 @@
                       (and term-test (member (car term-test) '(>= >))))
                   (setf binding (list id init (list '1+ id))))
                  (t ; loop goes down because of "above" or "downto"
-                  (display "for step" term-test)
+                    ; (display "for step" term-test)
                   (setf binding (list id init (list '1- id)))))
            (setf binding (list binding)))
           (t

@@ -59,17 +59,9 @@ factor, ADD will create a rescaling of the operand.
 /* #define GC_DEBUG 1 */
 
 
-void add_s1_s2_nn_fetch(add_susp_type, snd_list_type);
-void add_s1_nn_fetch(add_susp_type, snd_list_type);
-void add_s2_nn_fetch(add_susp_type, snd_list_type);
-void add_zero_fill_nn_fetch(add_susp_type, snd_list_type);
-void add_free();
-
-
-void add_s1_s2_nn_fetch(susp, snd_list)
-  register add_susp_type susp;
-  snd_list_type snd_list;
+void add_s1_s2_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -126,7 +118,7 @@ A	if (susp->terminate_bits & 2) {
          * if a sound has terminated)
          */
 A	nyquist_printf(
- "add[%p,%p] (s1_s2_nn) %p: logically_stopped %d, logical_stop_cnt %d, s1 logical_stop_cnt %d, s2 logical_stop_cnt %d \n",
+ "add[%p,%p] (s1_s2_nn) %p: logically_stopped %d, logical_stop_cnt %d, s1 logical_stop_cnt %ld, s2 logical_stop_cnt %ld \n",
                susp->s1, susp->s2, susp, susp->logically_stopped, 
                (int) susp->susp.log_stop_cnt,
                susp->s1->logical_stop_cnt,
@@ -173,7 +165,7 @@ A	nyquist_printf("add[%p,%p] (s1_s2_nn) %p starting inner loop, n %d\n",
         out_ptr_reg = out_ptr;
         if (n) do { /* the inner sample computation loop */
             /* scale? */
-A 	    nyquist_printf("add_s1_s2_nn: %g + %g\n", *s1_ptr_reg, *s2_ptr_reg);
+/*A 	    nyquist_printf("add_s1_s2_nn: %g + %g\n", *s1_ptr_reg, *s2_ptr_reg); */
             *out_ptr_reg++ = *(s1_ptr_reg++) + *(s2_ptr_reg++);
         } while (--n); /* inner loop */
         /* using s1_ptr_reg is a bad idea on RS/6000 */
@@ -238,7 +230,7 @@ D           nyquist_printf("add_s1_s2_nn_fetch: add_s2_nn_fetch installed\n");
             if (cnt == 0) {
 D		nyquist_printf("add[%p,%p]: calling add_s2_nn_fetch\n",
                        susp->s1, susp->s2);
-                add_s2_nn_fetch(susp, snd_list);
+                add_s2_nn_fetch(a_susp, snd_list);
             }
         }
         else if (susp->terminate_bits & 2) {
@@ -251,7 +243,7 @@ D           stdputstr("add_s1_s2_nn_fetch: add_s1_nn_fetch installed\n");
             if (cnt == 0) {
 D		nyquist_printf("add[%p,%p]: calling add_s1_nn_fetch\n",
                        susp->s1, susp->s2);
-                add_s1_nn_fetch(susp, snd_list);
+                add_s1_nn_fetch(a_susp, snd_list);
             }
         }
         
@@ -267,10 +259,9 @@ D		nyquist_printf("add[%p,%p]: calling add_s1_nn_fetch\n",
  * They should probably be made into one routine, but for now,
  * any changes to one should be made to the other.
  */
-void add_s1_nn_fetch(susp, snd_list)
-  register add_susp_type susp;
-  snd_list_type snd_list;
+void add_s1_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     /* expansion of add_s_nn_fetch(snd_list,s1,s2,1); follows: */
     int togo, s2_start=0;
     int n;
@@ -314,7 +305,7 @@ B       if (togo == 0) stdputstr("togo is zero at checkpoint 2\n");
             susp->s1 = NULL;
             susp->susp.fetch = add_s2_nn_fetch;
 D            stdputstr("add_s_nn_fetch: other installed, calling now...\n");
-            add_s2_nn_fetch(susp, snd_list);
+            add_s2_nn_fetch(a_susp, snd_list);
         } else if (susp->s2 && susp->susp.current < s2_start) {
             /* s2 not started and s1 stops */
             /* go to zero-fill state */
@@ -322,7 +313,7 @@ D            stdputstr("add_s_nn_fetch: other installed, calling now...\n");
             susp->s1 = NULL;
             susp->susp.fetch = add_zero_fill_nn_fetch;
 B           stdputstr("add_s_nn_fetch: zero_fill installed\n");
-            add_zero_fill_nn_fetch(susp, snd_list);
+            add_zero_fill_nn_fetch(a_susp, snd_list);
         } else if (susp->s2) {
 D	    stdputstr("add_s_nn_fetch: unexpected condition\n");
             EXIT(1);
@@ -391,7 +382,7 @@ B           if (togo == 0) stdputstr("togo is zero at checkpoint 4\n");
         snd_list->block_len = togo;
 
         /* if other is terminated and sound_types match, collapse */
-        /* NOTE: in order to collapse, we need s2 to be generating
+        /* NOTE: in order to collapse, we need s1 to be generating
          * blocks and linking them onto a sound list.  This is true
          * when the get_next fn is SND_get_next.  (A counterexample is
          * SND_get_zeros, which returns zero blocks but does not link
@@ -493,10 +484,9 @@ D    {
 }
 
 
-void add_s2_nn_fetch(susp, snd_list)
-  register add_susp_type susp;
-  snd_list_type snd_list;
+void add_s2_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     int togo, s1_start=0;
     int n;
     sample_block_type out;
@@ -537,7 +527,7 @@ D   nyquist_printf("add_s2_nn_fetch(susp %p, snd_list %p)\n",
             susp->s2 = NULL;
             susp->susp.fetch = add_s1_nn_fetch;
 D            stdputstr("add_s_nn_fetch: other installed, calling now...\n");
-            add_s1_nn_fetch(susp, snd_list);
+            add_s1_nn_fetch(a_susp, snd_list);
         } else if (susp->s1 && susp->susp.current < s1_start) {
             /* s1 not started and s2 stops */
             /* go to zero-fill state */
@@ -545,7 +535,7 @@ D            stdputstr("add_s_nn_fetch: other installed, calling now...\n");
             susp->s2 = NULL;
             susp->susp.fetch = add_zero_fill_nn_fetch;
 D            stdputstr("add_s_nn_fetch: zero_fill installed\n");
-            add_zero_fill_nn_fetch(susp, snd_list);
+            add_zero_fill_nn_fetch(a_susp, snd_list);
         } else if (susp->s1) {
 D	    stdputstr("add_s_nn_fetch: unexpected condition\n");
             EXIT(1);
@@ -565,13 +555,12 @@ D	nyquist_printf("add_s_nn_fetch: special return, susp %p\n", susp);
         /* check if we've seen the logical stop from s2. If so then
            log_stop_cnt is max of s1 and s2 stop times */
         (susp->logical_stop_bits & 2)) {
-        /* (some compilers don't like statements before declarations)
-D       nyquist_printf("add_s2_nn_fetch: susp->susp.log_stop_cnt %d\n",
+        int to_stop;
+D       nyquist_printf("add_s2_nn_fetch: susp->susp.log_stop_cnt %ld\n",
                        susp->susp.log_stop_cnt);
-D       nyquist_printf("add_s2_nn_fetch: susp->susp.current %d\n", 
+D       nyquist_printf("add_s2_nn_fetch: susp->susp.current %ld\n", 
                        susp->susp.current);
-        */
-        int to_stop = susp->susp.log_stop_cnt - susp->susp.current;
+        to_stop = susp->susp.log_stop_cnt - susp->susp.current;
         // to_stop can be less than zero if we've been adding in sounds with
         // t0 less than the time when the sound is added. E.g. if the user
         // wants a sequence of two sounds that start at 0, the second sound
@@ -636,7 +625,7 @@ D	nyquist_printf("add[%p,%p] (s%d_nn) %p shared block %p zero_block %p\n",susp->
         snd_list->block_len = togo;
 
         /* if other is terminated and sound_types match, collapse */
-        /* NOTE: in order to collapse, we need s1 to be generating
+        /* NOTE: in order to collapse, we need s2 to be generating
          * blocks and linking them onto a sound list.  This is true
          * when the get_next fn is SND_get_next.  (A counterexample is
          * SND_get_zeros, which returns zero blocks but does not link
@@ -650,9 +639,9 @@ D	nyquist_printf("add[%p,%p] (s%d_nn) %p shared block %p zero_block %p\n",susp->
             susp->s2->get_next == SND_get_next &&
             susp->s2->logical_stop_cnt == UNKNOWN) {
             snd_list_type addend_list;
-D	    nyquist_printf("add[%p,%p]: collapsing! LSC %d\n",
+D           nyquist_printf("add[%p,%p]: collapsing! LSC %d\n",
                       susp->s2, susp->s1, (int)susp->s2->logical_stop_cnt);
-D	    sound_print_tree(susp->s2);
+D           sound_print_tree(susp->s2);
             /* will "current" values match? */
             /* test for logical stop */
             if (susp->logically_stopped) {
@@ -667,6 +656,9 @@ D	    sound_print_tree(susp->s2);
             snd_list_unref(snd_list->u.next);
             snd_list->u.next = addend_list;
             return;
+        } else {
+D           nyquist_printf("s1 == NULL, but no collapse, lsc %ld\n",
+                           susp->s2->logical_stop_cnt);
         }
     } else {
         /*
@@ -746,10 +738,9 @@ D        stdputstr("add_s_nn_fetch: susp->logically_stopped\n");
 
 
 
-void add_zero_fill_nn_fetch(susp, snd_list)
-  register add_susp_type susp;
-  snd_list_type snd_list;
+void add_zero_fill_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     int togo, s_start=0;
 
 #ifdef GC_DEBUG
@@ -790,16 +781,18 @@ D       stdputstr("add_zero_fill_nn_fetch: add_s2_nn_fetch installed\n");
 } /* add_zero_fill_nn_fetch */
 
 
-void add_free(add_susp_type susp)
+void add_free(snd_susp_type a_susp)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     sound_unref(susp->s1);
     sound_unref(susp->s2);
     ffree_generic(susp, sizeof(add_susp_node), "add_free");
 }
 
 
-void add_mark(add_susp_type susp)
+void add_mark(snd_susp_type a_susp)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
 /*    nyquist_printf("add_mark(%p)\n", susp);*/
 /*    nyquist_printf("marking s1@%p in add@%p\n", susp->s1, susp);*/
     sound_xlmark(susp->s1);
@@ -809,8 +802,9 @@ void add_mark(add_susp_type susp)
 }
 
 
-void add_print_tree(add_susp_type susp, int n)
+void add_print_tree(snd_susp_type a_susp, int n)
 {
+    add_susp_type susp = (add_susp_type) a_susp;
     indent(n);
     nyquist_printf("logically_stopped %d logical_stop_bits %d terminate_bits %d\n", 
            susp->logically_stopped, susp->logical_stop_bits, susp->terminate_bits);
@@ -826,9 +820,7 @@ void add_print_tree(add_susp_type susp, int n)
 }
 
 
-sound_type snd_make_add(s1, s2)
-  sound_type s1;
-  sound_type s2;
+sound_type snd_make_add(sound_type s1, sound_type s2)
 {
     register add_susp_type susp;
     rate_type sr = MAX(s1->sr, s2->sr);
@@ -906,13 +898,10 @@ D            stdputstr("snd_make_add: add_s1_s2_nn_fetch installed\n");
 }
 
 
-sound_type snd_add(s1, s2, t0)
-  sound_type s1;
-  sound_type s2;
-  time_type t0;
+sound_type snd_add(sound_type s1, sound_type s2)
 {
     sound_type s1_copy = sound_copy(s1);
     sound_type s2_copy = sound_copy(s2);
 /*    nyquist_printf("snd_add %p %p copied to %p %p\n", s1, s2, s1_copy,  s2_copy); */
-    return snd_make_add(s1_copy, s2_copy, t0);
+    return snd_make_add(s1_copy, s2_copy);
 }

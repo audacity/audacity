@@ -1375,7 +1375,9 @@ pattern argument (by default).
     `(let (sg:seq (sg:start ,score-begin) sg:ioi 
            (sg:score-len ,score-len) (sg:score-dur ,score-dur)
            (sg:count 0) (sg:save ,save) 
-           (sg:begin ,score-begin) (sg:end ,score-end))
+           (sg:begin ,score-begin) (sg:end ,score-end) sg:det-end)
+       ;; sg:det-end is a flag that tells us to determine the end time
+       (cond ((null sg:end) (setf sg:end 0 sg:det-end t)))
        ;; make sure at least one of score-len, score-dur is present
        (loop
          (cond ((or (and sg:score-len (<= sg:score-len sg:count))
@@ -1392,17 +1394,19 @@ pattern argument (by default).
                 (format t "get-seq trace at ~A stretch ~A: ~A~%" 
                           sg:start sg:dur (car sg:seq))))
          (incf sg:count)
-         (setf sg:start ,next-expr))
+         (setf sg:start ,next-expr)
+         ;; end time of score will be max over start times of the next note
+         ;; this bases the score duration on ioi's rather than durs. But
+         ;; if user specified sg:end, sg:det-end is false and we do not
+         ;; try to compute sg:end.
+         (cond ((and sg:det-end (> sg:start sg:end))
+                (setf sg:end sg:start))))
        (setf sg:seq (reverse sg:seq))
        ;; avoid sorting a sorted list -- XLisp's quicksort can overflow the
        ;; stack if the list is sorted because (apparently) the pivot points
        ;; are not random.
        (cond ((not (score-sorted sg:seq))
               (setf sg:seq (bigsort sg:seq #'event-before))))
-       (cond ((and sg:seq (null sg:end))
-              (setf sg:end (event-end (car (last sg:seq)))))
-             ((null sg:end)
-              (setf sg:end 0)))
        (push (list 0 0 (list 'SCORE-BEGIN-END ,score-begin sg:end)) sg:seq)
        (cond (sg:save (set sg:save sg:seq)))
        sg:seq)))
@@ -1625,12 +1629,23 @@ pattern argument (by default).
 
 ;; SCORE-SORT -- sort a score into time order
 ;;
+;; If begin-end exists, preserve it. If not, compute
+;; it from the sorted score.
+;;
 (defun score-sort (score &optional (copy-flag t)) 
-  (setf score (score-must-have-begin-end score))
-  (let ((begin-end (car score)))
-    (setf score (cdr score))
-    (if copy-flag (setf score (append score nil)))
-    (cons begin-end (bigsort score #'event-before))))
+  (let* ((score1 (score-must-have-begin-end score))
+         (begin-end (car score1))
+         ;; if begin-end already existed, then it will
+         ;; be the first of score. Otherwise, one must
+         ;; have been generated above by score-must-have-begin-end
+         ;; in which case we should create it again after sorting.
+         (needs-begin-end (not (eq begin-end (first score)))))
+    (setf score1 (cdr score1)) ;; don't include begin-end in sort.
+    (if copy-flag (setf score1 (append score1 nil)))
+    (setf score1 (bigsort score1 #'event-before))
+    (if needs-begin-end (score-must-have-begin-end score1)
+                        (cons begin-end score1))
+  ))
   
 
 ;; PUSH-SORT -- insert an event in (reverse) sorted order
@@ -1762,14 +1777,26 @@ pattern argument (by default).
                                      from-time to-time))
                   (cdr score)))))
     
+
+;; Get the second element of params (the value field) and turn it
+;; into a numeric value if possible (by looking up a global variable
+;; binding). This allows scores to say C4 instead of 60.
+;;
+(defun get-numeric-value (params)
+  (let ((v (cadr params)))
+    (cond ((and (symbolp v) (boundp v) (numberp (symbol-value v)))
+           (setf v (symbol-value v))))
+    v))
+
           
 (defun params-transpose (params keyword amount)
   (cond ((null params) nil)
-        ((and (eq keyword (car params))
-              (numberp (cadr params)))
-         (cons (car params)
-               (cons (+ amount (cadr params))
-                     (cddr params))))
+        ((eq keyword (car params))
+         (let ((v (get-numeric-value params)))
+           (cond ((numberp v)
+                  (setf v (+ v amount))))
+           (cons (car params)
+                 (cons v (cddr params)))))
         (t (cons (car params)
                  (cons (cadr params)
                        (params-transpose (cddr params) keyword amount))))))
@@ -1789,11 +1816,12 @@ pattern argument (by default).
 
 (defun params-scale (params keyword amount)
   (cond ((null params) nil)
-        ((and (eq keyword (car params))
-              (numberp (cadr params)))
-         (cons (car params)
-               (cons (* amount (cadr params))
-                     (cddr params))))
+        ((eq keyword (car params))
+         (let ((v (get-numeric-value params)))
+           (cond ((numberp v)
+                  (setf v (* v amount))))
+           (cons (car params)
+                 (cons v (cddr params)))))
         (t (cons (car params)
                  (cons (cadr params)
                        (params-scale (cddr params) keyword amount))))))
@@ -2124,6 +2152,18 @@ pattern argument (by default).
           (t nil))))
 
 
+;; SCORE-READ -- read a standard MIDI file to a score
+;;
+(defun score-read (filename)
+  (let ((seq (seq-create))
+        (file (open filename)))
+    (cond (file
+           (seq-read seq file)
+           (close file)
+           (score-from-seq seq))
+          (t nil))))
+
+
 ;; SET-PROGRAM-TO -- a helper function to set a list value
 (defun set-program-to (lis index value default)
   ;; if length or lis <= index, extend the lis with default
@@ -2167,8 +2207,12 @@ exit
     (return (score-sort score))))
 
 
-(defun score-write-smf (score filename &optional programs)
-  (let ((file (open-binary filename :direction :output))
+(defun score-write (score filename &optional programs)
+  (score-write-smf score filename programs t))
+
+(defun score-write-smf (score filename &optional programs as-adagio)
+  (let ((file (if as-adagio (open filename :direction :output)
+                            (open-binary filename :direction :output)))
         (seq (seq-create))
         (chan 1))
     (cond (file
@@ -2199,7 +2243,7 @@ exit
                       (seq-insert-note seq (round (* time 1000))
                                        0 (1+ chan) (round pitch)
                                        (round (* dur 1000)) (round vel))))))
-           (seq-write-smf seq file)
+           (if as-adagio (seq-write seq file) (seq-write-smf seq file))
            (close file)))))
 
 

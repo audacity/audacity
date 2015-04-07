@@ -15,7 +15,7 @@
 extern LVAL k_test,k_tnot,s_eql;
 
 /* xlsubr - define a builtin function */
-LVAL xlsubr(char *sname, int type, LVAL (*fcn)(void), int offset)
+LVAL xlsubr(const char *sname, int type, LVAL (*fcn)(void), int offset)
 {
     LVAL sym;
     sym = xlenter(sname);
@@ -97,9 +97,9 @@ LVAL xlgetfname(void)
 }
 
 /* needsextension - check if a filename needs an extension */
-int needsextension(char *name)
+int needsextension(const char *name)
 {
-    char *p;
+    const char *p;
 
     /* check for an extension */
     for (p = &name[strlen(name)]; --p >= &name[0]; )

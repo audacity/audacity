@@ -73,6 +73,16 @@ double snd_set_latency(double latency)
 }
 
 
+long check_terminate_cnt(long tc)
+{
+    if (tc < 0) {
+        xlfail("duration is less than 0 samples");
+        tc = 0; /* this should not be reached */
+    }
+    return tc;
+}
+
+
 /* xlbadsr - report a "bad combination of sample rates" error */
 LVAL snd_badsr(void)
 {
@@ -506,33 +516,39 @@ void snd_list_terminate(snd_list)
 void snd_list_unref(snd_list_type list)
 {
     void (*freefunc)();
+    snd_list_type next;
 
-    if (list == NULL || list == zero_snd_list) {
-        if (list == NULL)
+    while (list != zero_snd_list) {
+        if (list == NULL) {
            nyquist_printf("why did snd_list_unref get %p?\n", list);
-        return;
-    }
-    list->refcnt--;
-/*    nyquist_printf("snd_list_unref "); print_snd_list_type(list); stdputstr("\n"); */
-    if (list->refcnt == 0) {
-        if (list->block && list->block != zero_block) {
-            /* there is a next snd_list */
-/*          stdputstr("["); */
-            sample_block_unref(list->block);
-/*          stdputstr("]"); */
-            snd_list_unref(list->u.next);
+           return;
         }
-        else if (list->block == NULL) { /* the next thing is the susp */
-            /* free suspension structure */
-            /* nyquist_printf("freeing susp@%p\n", list->u.susp); */
-            freefunc = list->u.susp->free;
-            (*freefunc)(list->u.susp);
+        next = zero_snd_list;
+
+        list->refcnt--;
+/*      nyquist_printf("snd_list_unref "); print_snd_list_type(list); stdputstr("\n"); */
+        if (list->refcnt == 0) {
+            if (list->block && list->block != zero_block) {
+                /* there is a next snd_list */
+/*              stdputstr("["); */
+                sample_block_unref(list->block);
+/*              stdputstr("]"); */
+                next = list->u.next;
+            }
+            else if (list->block == NULL) { /* the next thing is the susp */
+                /* free suspension structure */
+                /* nyquist_printf("freeing susp@%p\n", list->u.susp); */
+                freefunc = list->u.susp->free;
+                (*freefunc)(list->u.susp);
+            }
+            /* nyquist_printf("freeing snd_list@%p\n", list); */
+            //DBY
+            if (list == list_watch) printf("freeing watched snd_list %p\n", list);
+            //DBY
+            ffree_snd_list(list, "snd_list_unref");
         }
-        /* nyquist_printf("freeing snd_list@%p\n", list); */
-        //DBY
-        if (list == list_watch) printf("freeing watched snd_list %p\n", list);
-        //DBY
-        ffree_snd_list(list, "snd_list_unref");
+
+        list = next;
     }
 }
 
@@ -1572,12 +1588,19 @@ double hz_to_step(double hz)
 }
 
 
-double step_to_hz(steps)
-  double steps;
+double step_to_hz(double steps)
 {
     return exp(steps * p1 + p2);
 }
 
+#ifdef WIN32
+#define RECIP_LOG_2 1.44269504088895364453
+
+double log2(double x)
+{
+  return log(x) * RECIP_LOG_2;
+}
+#endif
 
 /*
  * from old stuff...
@@ -1616,9 +1639,9 @@ static unsigned char *sound_xlrestore(FILE *fp)
 
 /* sound_xlmark -- mark LVAL nodes reachable from this sound */
 /**/
-void sound_xlmark(s)
-sound_type s;
+void sound_xlmark(void *a_sound)
 {
+    sound_type s = (sound_type) a_sound;
     snd_list_type snd_list;
     long counter = 0;
 #ifdef TRACESNDGC

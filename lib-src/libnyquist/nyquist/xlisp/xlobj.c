@@ -59,7 +59,7 @@ LVAL xsendsuper(void)
 }
 
 /* xlclass - define a class */
-LVAL xlclass(char *name, int vcnt)
+LVAL xlclass(const char *name, int vcnt)
 {
     LVAL sym,cls;
 
@@ -80,13 +80,13 @@ LVAL xlclass(char *name, int vcnt)
 }
 
 /* xladdivar - enter an instance variable */
-void xladdivar(LVAL cls, char *var)
+void xladdivar(LVAL cls, const char *var)
 {
     setivar(cls,IVARS,cons(xlenter(var),getivar(cls,IVARS)));
 }
 
 /* xladdmsg - add a message to a class */
-void xladdmsg(LVAL cls, char *msg, int offset)
+void xladdmsg(LVAL cls, const char *msg, int offset)
 {
     extern FUNDEF funtab[];
     LVAL mptr;
@@ -402,7 +402,7 @@ LOCAL LVAL evmethod(LVAL obj, LVAL msgcls, LVAL method)
         xlbegin(&cntxt,CF_RETURN,name);
 
     /* execute the block */
-    if (name && setjmp(cntxt.c_jmpbuf))
+    if (name && _setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
     else
         for (cptr = getbody(method); consp(cptr); cptr = cdr(cptr))

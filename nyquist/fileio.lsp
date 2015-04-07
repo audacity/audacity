@@ -13,16 +13,24 @@
        ;; needed
        (let ((current (setdir ".")))
          (setf *default-sf-dir*
-               (or (setdir "c:\\tmp\\")
-                   (setdir "c:\\temp\\")
-                   (setdir "d:\\tmp\\")
-                   (setdir "d:\\temp\\")
-                   (setdir "e:\\tmp\\")
-                   (setdir "e:\\temp\\")
+               (or (setdir "c:\\tmp\\" nil)
+                   (setdir "c:\\temp\\" nil)
+                   (setdir "d:\\tmp\\" nil)
+                   (setdir "d:\\temp\\" nil)
+                   (setdir "e:\\tmp\\" nil)
+                   (setdir "e:\\temp\\" nil)
 	           (get-temp-path)))
          (format t "Set *default-sf-dir* to \"~A\" in fileio.lsp~%" 
 		 *default-sf-dir*)
 	 (setdir current))))
+
+;; if the steps above fail, then *default-sf-dir* might be "" (especially
+;; on windows), and the current directory could be read-only on Vista and
+;; Windows 7. Therefore, the Nyquist IDE will subsequently call
+;; suggest-default-sf-dir with Java's idea of a valid temp directory.
+;; If *default-sf-dir* is the empty string (""), this will set the variable:
+(defun suggest-default-sf-dir (path)
+  (cond ((equal *default-sf-dir* "") (setf *default-sf-dir* path))))
 
 ;; s-save -- saves a file
 (setf NY:ALL 1000000000)	; 1GIG constant for maxlen
@@ -69,6 +77,7 @@
 	(t (error "unexpected value in multichannel-max" snd))))
 
 
+
 ;; AUTONORM -- look ahead to find peak and normalize sound to 80%
 ;;
 (defun autonorm (snd)
@@ -89,9 +98,19 @@
 	  (t snd))))
 	
 
+(init-global *clipping-threshold* (/ 127.0 128.0))
+
 (defmacro s-save-autonorm (expression &rest arglist)
   `(let ((peak (s-save (autonorm ,expression) ,@arglist)))
+     (when (and *clipping-error* (> peak *clipping-threshold*))
+       (format t "s-save-autonorm peak ~A from ~A~%" peak ,expression)
+       (error "clipping"))
      (autonorm-update peak)))
+
+;; If the amplitude exceeds *clipping-threshold*, an error will
+;; be raised if *clipping-error* is set.
+;;
+(init-global *clipping-error* nil)
 
 ;; The "AutoNorm" facility: when you play something, the Nyquist play
 ;; command will automatically compute what normalization factor you
@@ -113,6 +132,7 @@
 ;;
 (init-global *autonorm-type* 'lookahead)
 (init-global *autonorm-max-samples* 1000000) ; default is 4MB buffer
+
 ;;
 (defun autonorm-on ()
   (setf *autonorm* 1.0)
@@ -126,6 +146,17 @@
   (setf *autonormflag* nil)
   (setf *autonorm* 1.0)
   (format t "AutoNorm feature is off.~%"))
+
+(defun explain-why-autonorm-failed ()
+  (format t "~A~A~A~A~A~A"
+          "     *autonorm-type* is LOOKAHEAD and your sound got\n"
+          "       louder after the lookahead period, resulting in\n"
+          "       too large a scale factor and clipping. Consider\n"
+          "       setting *autonorm-type* to 'PREVIOUS. Alternatively,\n"
+          "       try turning off autonorm, e.g. \"exec autonorm-off()\"\n"
+          "       or in Lisp mode, (autonorm-off), and scale your sound\n"
+          "       as follows.\n"))
+
 
 ;; AUTONORM-UPDATE -- called with true peak to report and prepare
 ;;
@@ -146,20 +177,31 @@
   (cond ((> peak 1.0)
          (format t "*** CLIPPING DETECTED! ***~%")))
   (cond ((and *autonormflag* (> peak 0.0))
-           (setf *autonorm-previous-peak* (/ peak *autonorm*))
+         (setf *autonorm-previous-peak* (/ peak *autonorm*))
          (setf *autonorm* (/ *autonorm-target* *autonorm-previous-peak*))
          (format t "AutoNorm: peak was ~A,~%" *autonorm-previous-peak*)
          (format t "     peak after normalization was ~A,~%" peak)
-         (format t (if (eq *autonorm-type* 'PREVIOUS)
-                       "     new normalization factor is ~A~%"
-                       "     suggested normalization factor is ~A~%")
-                 *autonorm*))
+         (cond ((eq *autonorm-type* 'PREVIOUS)
+                (cond ((zerop *autonorm*)
+                       (setf *autonorm* 1.0)))
+                (format t "     new normalization factor is ~A~%" *autonorm*))
+               ((eq *autonorm-type* 'LOOKAHEAD)
+                (cond ((> peak 1.0)
+                       (explain-why-autonorm-failed)))
+                (format t "     suggested manual normalization factor is ~A~%"
+                          *autonorm*))
+               (t
+                (format t
+                 "     unexpected value for *autonorm-type*, reset to LOOKAHEAD\n")
+                (setf *autonorm-type* 'LOOKAHEAD))))
         (t
          (format t "Peak was ~A,~%" peak)
-         (format t "     suggested normalization factor is ~A~%"
-                   (/ *autonorm-target* peak)))
+         (cond ((> peak 0.0)
+                (format t "     suggested normalization factor is ~A~%"
+                        (/ *autonorm-target* peak))))))
    peak
-  ))
+  )
+
 
 ;; s-read -- reads a file
 (defun s-read (filename &key (time-offset 0) (srate *sound-srate*)
@@ -272,18 +314,21 @@
 (defun sound-on () (setf *soundenable* t))
 (defun sound-off () (setf *soundenable* nil))
 
+(defun coterm (snd1 snd2)
+  (multichan-expand #'snd-coterm snd1 snd2))
+
 (defmacro s-add-to (expr maxlen filename &optional (time-offset 0.0))
   `(let ((ny:fname (soundfilename ,filename))
          ny:peak ny:input (ny:offset ,time-offset))
     (format t "Adding sound to ~A at offset ~A~%" 
               ny:fname ,time-offset)
     (setf ny:peak (snd-overwrite '(let ((ny:addend ,expr))
-                                   (sum (snd-coterm
+                                   (sum (coterm
                                          (s-read ny:fname
                                           :time-offset ny:offset)
                                          ny:addend)
                                     ny:addend))
-                   ,maxlen ny:fname ny:offset SND-HEAD-NONE 0 0 0))
+                   ,maxlen ny:fname ny:offset SND-HEAD-NONE 0 0 0 0.0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 
@@ -291,11 +336,11 @@
 (defmacro s-overwrite (expr maxlen filename &optional (time-offset 0.0))
   `(let ((ny:fname (soundfilename ,filename))
          (ny:peak 0.0)
-         ny:input ny:rslt ny:offset)
-    (format t "Overwriting ~A at offset ~A~%" ny:fname ,time-offset)
+         ny:input ny:rslt (ny:offset ,time-offset))
+    (format t "Overwriting ~A at offset ~A~%" ny:fname ny:offset)
     (setf ny:offset (s-read-byte-offset ny:rslt))
-    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ,time-offset
-                   0, 0, 0, 0))
+    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ny:offset
+                   SND-HEAD-NONE 0 0 0 0.0))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 

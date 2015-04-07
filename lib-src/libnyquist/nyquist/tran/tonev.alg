@@ -1,7 +1,6 @@
 (TONEV-ALG
 (NAME "tonev")
 (ARGUMENTS ("sound_type" "s1") ("sound_type" "hz"))
-(INLINE-INTERPOLATION T)
 (INTERNAL-SCALING s1)
 (ALWAYS-SCALE hz)
 (START (MAX s1 hz))
@@ -19,6 +18,6 @@
          ("c1" "hz" "(1.0 - c2) * scale1"))
 (CONSTANT "c1" "c2" "b" "scale1")
 (FORCE-INTO-REGISTER scale1)
-(INNER-LOOP "            output = (sample_type) (prev = c1 * s1 + c2 * prev)")
+(INNER-LOOP "output = (sample_type) (prev = c1 * s1 + c2 * prev)")
 )
 
