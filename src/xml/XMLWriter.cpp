@@ -310,8 +310,12 @@ void XMLFileWriter::Write(const wxString &data)
 ///
 /// XMLStringWriter class
 ///
-XMLStringWriter::XMLStringWriter()
+XMLStringWriter::XMLStringWriter(size_t initialSize)
 {
+   if (initialSize)
+   {
+      Alloc(initialSize);
+   }
 }
 
 XMLStringWriter::~XMLStringWriter()

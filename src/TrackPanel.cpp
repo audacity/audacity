@@ -3033,7 +3033,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
       break;
    }
    MakeParentPushState(_("Stretch Note Track"), _("Stretch"),
-      PUSH_CONSOLIDATE | PUSH_AUTOSAVE | PUSH_CALC_SPACE);
+      PUSH_CONSOLIDATE | PUSH_AUTOSAVE);
    mStretched = true;
    Refresh(false);
 }
@@ -3620,7 +3620,7 @@ void TrackPanel::HandleSlide(wxMouseEvent & event)
          consolidate = true;
       }
       MakeParentPushState(msg, _("Time-Shift"),
-         consolidate ? (PUSH_CONSOLIDATE) : (PUSH_AUTOSAVE|PUSH_CALC_SPACE));
+         consolidate ? (PUSH_CONSOLIDATE) : (PUSH_AUTOSAVE));
    }
 }
 
@@ -4886,7 +4886,7 @@ void TrackPanel::HandleSampleEditingButtonUp( wxMouseEvent & WXUNUSED(event))
    mDrawingTrack=NULL;       //Set this to NULL so it will catch improper drag events.
    MakeParentPushState(_("Moved Sample"),
                        _("Sample Edit"),
-                       PUSH_CONSOLIDATE|PUSH_AUTOSAVE|PUSH_CALC_SPACE);
+                       PUSH_CONSOLIDATE|PUSH_AUTOSAVE);
 }
 
 
@@ -6259,7 +6259,7 @@ bool TrackPanel::HandleTrackLocationMouseEvent(WaveTrack * track, wxRect &r, wxM
                   !linked->MergeClips(mCapturedTrackLocation.clipidx1, mCapturedTrackLocation.clipidx2))
                      return false;
 
-            MakeParentPushState(_("Merged Clips"),_("Merge"), PUSH_CONSOLIDATE|PUSH_CALC_SPACE);
+            MakeParentPushState(_("Merged Clips"),_("Merge"), PUSH_CONSOLIDATE);
             handled = true;
          }
       }
