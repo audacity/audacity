@@ -57,6 +57,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxString(wxT("Roger Dannenberg - ")) + _("co-founder"), roleTeamDeveloper);
    AddCredit(wxT("Benjamin Drung"), roleTeamDeveloper);
    AddCredit(wxT("Vaughan Johnson"), roleTeamDeveloper);
+   AddCredit(wxT("Paul Licameli"), roleTeamDeveloper);
    AddCredit(wxT("Leland Lucius"), roleTeamDeveloper);
    AddCredit(wxT("Martyn Shaw"), roleTeamDeveloper);
 
@@ -98,7 +99,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Steve Jolly"), roleContributor);
    AddCredit(wxT("Steven Jones"), roleContributor);
    AddCredit(wxT("Arun Kishore"), roleContributor);
-   AddCredit(wxT("Paul Licameli"), roleContributor);
    AddCredit(wxT("Paul Livesey"), roleContributor);
    AddCredit(wxT("Harvey Lubin"), roleContributor);
    AddCredit(wxT("Greg Mekkes"), roleContributor);
