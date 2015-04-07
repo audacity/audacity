@@ -1,14 +1,15 @@
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2011 Audacity Team.
+   Audacity(R) is copyright (c) 1999-2015 Audacity Team.
    License: GPL v2.  See License.txt.
 
    Audacity.h
 
    Dominic Mazzoni
    Joshua Haberman
-   et al
+   Vaughan Johnson
+   et alii
 
 ********************************************************************//*!
 
@@ -26,12 +27,12 @@
 // We only do alpha builds and release versions.
 // Most of the time we're in development, so IS_ALPHA should be defined
 // to 1.
-#define IS_ALPHA 0
+#define IS_ALPHA 1
 
 // Increment as appropriate every time we release a new version.
 #define AUDACITY_VERSION   2
 #define AUDACITY_RELEASE   1
-#define AUDACITY_REVISION  0
+#define AUDACITY_REVISION  1
 #define AUDACITY_MODLEVEL  0
 
 #if IS_ALPHA
