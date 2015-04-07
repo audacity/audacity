@@ -40,6 +40,8 @@ HISTORY
 #define OFFTYPE		long
 #define SAVERESTORE
 #define XL_LITTLE_ENDIAN 
+#define _setjmp setjmp
+#define _longjmp longjmp
 #endif
 
 /* for the Turbo C compiler - MS-DOS, large model */

@@ -60,10 +60,9 @@ Upstream version: 0.15.1 (beta)
 libnyquist
 ----------
 Digital Audio scripting language, with our own library interface added to it
-kFreeBSD-nyquist.patch	Patch from Benjamin Drung to build nyquist on
-						kFreeBSD. Asked him to send it upstream 2009/08/22
-hurd-nyquist.patch      Patch from Benjamin Drung to build nyquist on HURD.
-                        Asked him to send it upstream 2009/12/05.
+Version in Audacity SVN: 3.09
+nyquist.patch  Fix for a couple of memory leaks
+xlisp.patch    Fix build in Windows
 
 libogg
 ------

@@ -61,6 +61,14 @@ extern LVAL a_sound;
 extern snd_list_type zero_snd_list;
 
 /* globals */
+#if defined(EXPERIMENTAL_NYX_V5)
+LOCAL nyx_cmd_callback    nyx_cmd_cb = NULL;
+LOCAL void               *nyx_cmd_ud;
+LOCAL XLCONTEXT           nyx_cmd_cntxt;
+LOCAL LVAL                nyx_cmd_result;
+LOCAL LVAL                nyx_result_elem;
+#endif
+
 LOCAL nyx_os_callback     nyx_os_cb = NULL;
 LOCAL void               *nyx_os_ud;
 LOCAL nyx_output_callback nyx_output_cb;
@@ -458,7 +466,10 @@ void nyx_init()
       nyx_audio_name = NULL;
       nyx_os_cb = NULL;
       nyx_output_cb = NULL;
-      
+#if defined(EXPERIMENTAL_NYX_V5)
+      nyx_cmd_cb = NULL;
+#endif
+
       nyx_first_time = 0;
 
 #if defined(NYX_FULL_COPY) && NYX_FULL_COPY
@@ -518,6 +529,9 @@ void nyx_cleanup()
    // No longer need the callbacks
    nyx_output_cb = NULL;
    nyx_os_cb = NULL;
+#if defined(EXPERIMENTAL_NYX_V5)
+   nyx_cmd_cb = NULL;
+#endif
 
    // Reset vars
    nyx_input_length = 0;
@@ -538,7 +552,7 @@ void nyx_set_xlisp_path(const char *path)
    set_xlisp_path(path);
 }
 
-LOCAL void nyx_susp_fetch(register nyx_susp_type susp, snd_list_type snd_list)
+LOCAL void nyx_susp_fetch(nyx_susp_type susp, snd_list_type snd_list)
 {
    sample_block_type         out;
    sample_block_values_type  out_ptr;
@@ -675,11 +689,11 @@ void nyx_set_input_audio(nyx_audio_callback callback,
       susp->len = len;
       susp->channel = ch;
 
-      susp->susp.fetch = nyx_susp_fetch;
+      susp->susp.fetch = (void  (*)(struct snd_susp_struct *, snd_list_type snd_list)) nyx_susp_fetch;
       susp->susp.keep_fetch = NULL;
-      susp->susp.free = nyx_susp_free;
+      susp->susp.free = (void  (*)(struct snd_susp_struct *)) nyx_susp_free;
       susp->susp.mark = NULL;
-      susp->susp.print_tree = nyx_susp_print_tree;
+      susp->susp.print_tree = (void  (*)(struct snd_susp_struct *, int)) nyx_susp_print_tree;
       susp->susp.name = "nyx";
       susp->susp.toss_cnt = 0;
       susp->susp.current = 0;
@@ -820,6 +834,421 @@ nyx_rval nyx_get_type(LVAL expr)
    return nyx_result_type;
 }
 
+
+#if defined(EXPERIMENTAL_NYX_V5)
+void nyx_add_symbol(const char *key)
+{
+   LVAL val;
+   LVAL kw = NIL;
+
+   if (key) {
+      kw = xlenter(key);
+   }
+}
+
+static int get_list_arg(LVAL expr, nyx_rval type, nyx_list **listp)
+{
+   nyx_list *list;
+   int count = 0;
+
+   for (LVAL d = expr; d; d = cdr(d)) {
+      if (!consp(d)) {
+         xlbadtype(expr);
+      }
+
+      if (ntype(car(d)) != type) {
+         xlbadtype(expr);
+         /* Doesn't return */
+      }
+
+      count++;
+   }
+
+   if (count == 0) {
+      return 0;
+   }
+
+   list = (nyx_list *) malloc(count * sizeof(*list));
+   if (!list) {
+      return 0;
+   }
+
+   int ndx = 0;
+   for (LVAL d = expr; d; d = cdr(d), ndx++) {
+      LVAL a = car(d);
+
+      if (floatp(a)) {
+         list[ndx].flo = getflonum(a);
+      }
+      else if (fixp(a)) {
+         list[ndx].fix = getfixnum(a);
+      }
+      else if (stringp(a)) {
+         list[ndx].str = getstring(a);
+      }
+      else if (symbolp(a)) {
+         list[ndx].str = getstring(getpname(a));
+      }
+      else {
+         free(list);
+         xlbadtype(expr);
+      }
+   }
+
+   *listp = list;
+
+   return count;
+}
+
+static int get_key_arg(const char *key, LVAL *arg, char type)
+{
+   LVAL val;
+   LVAL kw = NIL;
+
+   if (key) {
+      if (key[0] != ':') {
+         char *k = key;
+         int len = strlen(key);
+         k = malloc(len + 2);
+         k[0] = ':';
+         memcpy(&k[1], key, len + 1);
+         kw = xlenter(k);
+         free(k);
+      }
+      else {
+         kw = xlenter(key);
+      }
+
+      if (!xlgetkeyarg(kw, &val)) {
+         return FALSE;
+      }
+
+      if (val && ntype(val) == type) {
+         *arg = val;
+         return TRUE;
+      }
+
+      xlbadtype(val);
+      // never gets here
+   }
+
+   return FALSE;
+}
+
+int nyx_get_int_arg()
+{
+   return (int) getfixnum(xlgafixnum());
+}
+
+int nyx_get_int_arg_kw(const char *key, int *arg)
+{
+   LVAL val = NIL;
+
+   if (!key || !arg) {
+      return FALSE;
+   }
+
+   if (!get_key_arg(key, &val, FIXNUM)) {
+      return FALSE;
+   }
+
+   *arg = (int) getfixnum(val);
+
+   return TRUE;
+}
+
+int nyx_get_long_arg()
+{
+   return (long) getfixnum(xlgafixnum());
+}
+
+int nyx_get_long_arg_kw(const char *key, long *arg)
+{
+   LVAL val = NIL;
+
+   if (!key || !arg) {
+      return FALSE;
+   }
+
+   if (!get_key_arg(key, &val, FIXNUM)) {
+      return FALSE;
+   }
+
+   *arg = (long) getfixnum(val);
+
+   return TRUE;
+}
+
+double nyx_get_double_arg()
+{
+   return (double) getflonum(xlgaflonum());
+}
+
+int nyx_get_double_arg_kw(const char *key, double *arg)
+{
+   LVAL val = NIL;
+
+   if (!key || !arg) {
+      return FALSE;
+   }
+
+   if (!get_key_arg(key, &val, FLONUM)) {
+      return FALSE;
+   }
+
+   *arg = (double) getflonum(val);
+
+   return TRUE;
+}
+
+const char *nyx_get_string_arg()
+{
+   return (const char *)getstring(xlgastring());
+}
+
+int nyx_get_string_arg_kw(const char *key, const char **arg)
+{
+   LVAL val = NIL;
+
+   if (!key || !arg) {
+      return FALSE;
+   }
+
+   if (!get_key_arg(key, &val, STRING)) {
+      return FALSE;
+   }
+
+   *arg = (const char *) getstring(val);
+
+   return TRUE;
+}
+
+const char *nyx_get_symbol_arg()
+{
+   return (const char *)getstring(getpname(xlgasymbol()));
+}
+
+int nyx_get_symbol_arg_kw(const char *key, const char **arg)
+{
+   LVAL val = NIL;
+
+   if (!key || !arg) {
+      return FALSE;
+   }
+
+   if (!get_key_arg(key, &val, SYMBOL)) {
+      return FALSE;
+   }
+
+   *arg = (const char *) getstring(getpname(val));
+
+   return TRUE;
+}
+
+int nyx_get_string_list_arg(nyx_list **arg)
+{
+   return get_list_arg(xlgalist(), STRING, arg);
+}
+
+int nyx_get_string_list_kw(const char *key, nyx_list **arg)
+{
+   LVAL val = NIL;
+
+   if (!key || !arg) {
+      return FALSE;
+   }
+
+   if (!get_key_arg(key, &val, CONS)) {
+      return FALSE;
+   }
+
+   return get_list_arg(val, STRING, arg);
+}
+
+int nyx_get_samples_arg(float **samples)
+{
+   LVAL vector;
+   LVAL sample;
+   int len;
+   float *s = NULL;
+   *samples = NULL;
+
+   xlstkcheck(2);
+   xlsave(vector);
+   xlsave(sample);
+
+   vector = xlgavector();
+   len = (int) getsize(vector);
+   if (len > 0) {
+      int i;
+
+      s = malloc(sizeof(float) * len);
+      if (!s) {
+         xlfail("nyx_get_samples_arg: insufficient memory for samples");
+         /* doesn't return */
+      }
+
+      for (i = 0; i < len; i++) {
+         sample = getelement(vector, i);
+         if (!floatp(sample)) {
+            xlbadtype(vector);
+            /* doesn't return */
+         }
+         s[i] = (float) getflonum(sample);
+      }
+   }
+
+   *samples = s;
+
+   xlpopn(2);
+
+   return len;
+}
+
+nyx_rval nyx_get_next_arg()
+{
+   nyx_result_type = nyx_error;
+   nyx_result = xlgetarg();
+
+   return nyx_get_type(nyx_result);
+}
+
+void nyx_last_arg()
+{
+   xllastarg();
+}
+
+void nyx_fail(char *msg)
+{
+   xlfail(msg);
+}
+
+void nyx_set_int_rval(int val)
+{
+   nyx_cmd_result = cvfixnum((FIXTYPE) val);
+}
+
+void nyx_set_double_rval(double val)
+{
+   nyx_cmd_result = cvflonum((FLOTYPE) val);
+}
+
+void nyx_set_string_rval(char *val)
+{
+   nyx_cmd_result = cvstring(val);
+}
+
+void nyx_set_samples_rval(float *samples, int len)
+{
+   LVAL vector;
+   LVAL sample;
+   int i;
+
+   xlstkcheck(2);
+   xlsave(vector);
+   xlsave(sample);
+
+   // Setup a new context
+   xlbegin(&nyx_cmd_cntxt, CF_TOPLEVEL|CF_CLEANUP|CF_BRKLEVEL|CF_ERROR, s_true);
+
+   // Set the context jump destination
+   if (_setjmp(nyx_cmd_cntxt.c_jmpbuf)) {
+      // If the script is cancelled or some other condition occurs that causes
+      // the script to exit and return to this level, then we don't need to
+      // restore the previous context.
+      goto finish;
+   }
+
+   vector = newvector(len);
+
+   if (!vector) {
+      xlfail("nyx_set_samples_rval: insufficient memory to allocate vector");
+      /* doesn't return */
+   }
+
+   for (i = 0; i < len; i++) {
+      sample = cvflonum((FLOTYPE) samples[i]);
+      if (!sample) {
+         xlfail("nyx_set_samples_rval: insufficient memory to allocate vector");
+         /* doesn't return */
+      }
+      setelement(vector, i, sample);
+   }
+
+   nyx_cmd_result = vector;
+
+   // This will unwind the xlisp context and restore internals to a point just
+   // before we issued our xlbegin() above.  This is important since the internal
+   // xlisp stacks will contain pointers to invalid objects otherwise.
+   //
+   // Also note that execution will jump back up to the statement following the
+   // _setjmp() above.
+   xljump(&nyx_cmd_cntxt, CF_TOPLEVEL, NIL);
+   // Never reached
+
+finish:
+   xlpopn(2);
+
+   return;
+}
+
+LOCAL LVAL nyx_cmd_thunk(void)
+{
+   int ret = -1;
+
+   nyx_cmd_result = NULL;
+
+   if (nyx_cmd_cb) {
+      ret = nyx_cmd_cb(xlargc, nyx_cmd_ud);
+   }
+
+   return nyx_cmd_result;
+}
+
+void nyx_define_function(const char *name, nyx_cmd_callback callback, void *userdata)
+{
+   nyx_cmd_cb = callback;
+   nyx_cmd_ud = userdata;
+   if (name != NULL && callback != NULL) {
+      xlsubr(name, SUBR, nyx_cmd_thunk, 0);
+   }
+}
+
+void nyx_set_cmd_callback(const char *name,
+                          nyx_cmd_callback callback,
+                          void *userdata)
+{
+   nyx_cmd_cb = callback;
+   nyx_cmd_ud = userdata;
+   if (name != NULL && callback != NULL) {
+      xlsubr(name, SUBR, nyx_cmd_thunk, 0);
+   }
+}
+
+void nyx_set_property(const char *varname,
+                      const char *propname,
+                      nyx_rval type,
+                      const void *value)
+{
+   LVAL val;
+
+   if (type == nyx_int) {
+      FIXTYPE fix = (FIXTYPE) *((int *)value);
+      val = cvfixnum(fix);
+   }
+   else if (type == nyx_double) {
+      FLOTYPE flo = (FLOTYPE) *((double *)value);
+      val = cvflonum(flo);
+   }
+   else if (type == nyx_string) {
+      val = cvstring((char *)value);
+   }
+
+   xlputprop(xlenter(varname), val, xlenter(propname));
+}
+
+#endif
+
 nyx_rval nyx_eval_expression(const char *expr_string)
 {
    LVAL expr = NULL;
@@ -848,7 +1277,7 @@ nyx_rval nyx_eval_expression(const char *expr_string)
    xlbegin(&nyx_cntxt, CF_TOPLEVEL|CF_CLEANUP|CF_BRKLEVEL|CF_ERROR, s_true);
 
    // Set the context jump destination
-   if (setjmp(nyx_cntxt.c_jmpbuf)) {
+   if (_setjmp(nyx_cntxt.c_jmpbuf)) {
       // If the script is cancelled or some other condition occurs that causes
       // the script to exit and return to this level, then we don't need to
       // restore the previous context.
@@ -878,7 +1307,7 @@ nyx_rval nyx_eval_expression(const char *expr_string)
    // xlisp stacks will contain pointers to invalid objects otherwise.
    //
    // Also note that execution will jump back up to the statement following the
-   // setjmp() above.
+   // _setjmp() above.
    xljump(&nyx_cntxt, CF_TOPLEVEL, NIL);
    // Never reached
 
@@ -928,7 +1357,7 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
    int num_channels;
    int ch;
 
-   // Any variable whose value is set between the setjmp() and the "finish" label
+   // Any variable whose value is set between the _setjmp() and the "finish" label
    // and that is used after the "finish" label, must be marked volatile since
    // any routine outside of the current one that calls longjmp() will cause values
    // cached in registers to be lost.
@@ -969,7 +1398,7 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
    xlbegin(&nyx_cntxt, CF_TOPLEVEL|CF_CLEANUP|CF_BRKLEVEL|CF_ERROR, s_true);
 
    // Set the context jump destination
-   if (setjmp(nyx_cntxt.c_jmpbuf)) {
+   if (_setjmp(nyx_cntxt.c_jmpbuf)) {
       // If the script is cancelled or some other condition occurs that causes
       // the script to exit and return to this level, then we don't need to
       // restore the previous context.
@@ -1038,7 +1467,7 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
    // xlisp stacks will contain pointers to invalid objects otherwise.
    //
    // Also note that execution will jump back up to the statement following the
-   // setjmp() above.
+   // _setjmp() above.
    xljump(&nyx_cntxt, CF_TOPLEVEL, NIL);
    // Never reached
 
@@ -1213,7 +1642,7 @@ int ostgetc()
 }
 
 /* osinit - initialize */
-void osinit(char *banner)
+void osinit(const char *banner)
 {
 }
 
@@ -1223,7 +1652,7 @@ void osfinish(void)
 }
 
 /* oserror - print an error message */
-void oserror(char *msg)
+void oserror(const char *msg)
 {
    errputstr(msg);
 }
@@ -1235,13 +1664,13 @@ long osrand(long n)
 
 /* cd ..
 open - open an ascii file */
-FILE *osaopen(char *name, char *mode)
+FILE *osaopen(const char *name, const char *mode)
 {
    return fopen(name, mode);
 }
 
 /* osbopen - open a binary file */
-FILE *osbopen(char *name, char *mode)
+FILE *osbopen(const char *name, const char *mode)
 {
    char bmode[10];
    
@@ -1407,7 +1836,7 @@ static int osdir_list_status = OSDIR_LIST_READY;
 static char osdir_path[OSDIR_MAX_PATH];
 
 // osdir_list_start -- prepare to list a directory
-int osdir_list_start(char *path)
+int osdir_list_start(const char *path)
 {
    if (strlen(path) >= OSDIR_MAX_PATH - 2) {
       xlcerror("LISTDIR path too big", "return nil", NULL);
@@ -1434,7 +1863,7 @@ int osdir_list_start(char *path)
 }
 
 /* osdir_list_next -- read the next entry from a directory */
-char *osdir_list_next()
+const char *osdir_list_next()
 {
    if (FindNextFile(hFind, &FindFileData) == 0) {
       osdir_list_status = OSDIR_LIST_DONE;

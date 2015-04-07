@@ -299,8 +299,6 @@ LOCAL unsigned char *stralloc(int size)
 LOCAL void findmem(void)
 {
     gc();
-    if (nfree < (long)anodes)
-        addseg();
 }
 
 /* gc - garbage collect (only called here and in xlimage.c) */
@@ -345,6 +343,10 @@ void gc(void)
 
     /* count the gc call */
     ++gccalls;
+
+    /* add a new segment if still no free nodes */
+    if (nfree < (long)anodes)
+        addseg();
 
     /* call the *gc-hook* if necessary */
     if (s_gchook && (fun = getvalue(s_gchook))) {
