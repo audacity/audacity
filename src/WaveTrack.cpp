@@ -734,6 +734,10 @@ bool WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       }
    }
 
+   // Delete cutlines that fell outside of resulting clips
+   for (int ii = cuts.GetCount(); ii--;)
+      delete cuts[ii];
+
    // If we created a default time warper, we need to delete it
    if (effectWarper == NULL)
       delete warper;
