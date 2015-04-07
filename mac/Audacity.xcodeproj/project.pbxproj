@@ -589,7 +589,6 @@
 		284A83010F3158A2001D7A67 /* seqext.c in Sources */ = {isa = PBXBuildFile; fileRef = 284A80A20F3158A1001D7A67 /* seqext.c */; };
 		284A83030F3158A2001D7A67 /* seqfnint.c in Sources */ = {isa = PBXBuildFile; fileRef = 284A80A60F3158A1001D7A67 /* seqfnint.c */; };
 		284A83060F3158A2001D7A67 /* seqinterf.c in Sources */ = {isa = PBXBuildFile; fileRef = 284A80AA0F3158A1001D7A67 /* seqinterf.c */; };
-		284A83080F3158A2001D7A67 /* sliders.c in Sources */ = {isa = PBXBuildFile; fileRef = 284A80AC0F3158A1001D7A67 /* sliders.c */; };
 		284A830C0F3158A2001D7A67 /* sndfnint.c in Sources */ = {isa = PBXBuildFile; fileRef = 284A80B20F3158A1001D7A67 /* sndfnint.c */; };
 		284A830F0F3158A2001D7A67 /* sndmax.c in Sources */ = {isa = PBXBuildFile; fileRef = 284A80B60F3158A1001D7A67 /* sndmax.c */; };
 		284A83110F3158A2001D7A67 /* sndread.c in Sources */ = {isa = PBXBuildFile; fileRef = 284A80B80F3158A1001D7A67 /* sndread.c */; };
@@ -814,6 +813,9 @@
 		28624C0E181CE65700E1AD1A /* sratom_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 2862439F181CE65500E1AD1A /* sratom_config.h */; };
 		28624C0F181CE65700E1AD1A /* sratom.h in Headers */ = {isa = PBXBuildFile; fileRef = 286243A0181CE65500E1AD1A /* sratom.h */; };
 		28624C10181CE65700E1AD1A /* sratom.c in Sources */ = {isa = PBXBuildFile; fileRef = 286243A1181CE65500E1AD1A /* sratom.c */; };
+		2862CED11AD3900000A53194 /* test.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2862CECE1AD3900000A53194 /* test.lsp */; };
+		2862CED21AD3900000A53194 /* upic.sal in Resources */ = {isa = PBXBuildFile; fileRef = 2862CECF1AD3900000A53194 /* upic.sal */; };
+		2862CED31AD3900000A53194 /* velocity.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2862CED01AD3900000A53194 /* velocity.lsp */; };
 		28640874181CE74100CC4E2C /* sord_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28640873181CE74100CC4E2C /* sord_config.h */; };
 		28640876181CE75800CC4E2C /* serd_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28640875181CE75800CC4E2C /* serd_config.h */; };
 		28640878181CE77200CC4E2C /* lilv_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28640877181CE77200CC4E2C /* lilv_config.h */; };
@@ -936,6 +938,15 @@
 		28BD8AB3101DF4C700686679 /* ExecMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */; };
 		28BD8AB4101DF4C700686679 /* GetAllMenuCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAE101DF4C600686679 /* GetAllMenuCommands.cpp */; };
 		28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */; };
+		28CC03A81AD386CF00826380 /* phasevocoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A01AD386CF00826380 /* phasevocoder.c */; };
+		28CC03A91AD386CF00826380 /* phasevocoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 28CC03A11AD386CF00826380 /* phasevocoder.h */; };
+		28CC03AA1AD386CF00826380 /* pvshell.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A21AD386CF00826380 /* pvshell.c */; };
+		28CC03AB1AD386CF00826380 /* pvshell.h in Headers */ = {isa = PBXBuildFile; fileRef = 28CC03A31AD386CF00826380 /* pvshell.h */; };
+		28CC03AC1AD386CF00826380 /* sliderdata.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A41AD386CF00826380 /* sliderdata.c */; };
+		28CC03AD1AD386CF00826380 /* sliderdata.h in Headers */ = {isa = PBXBuildFile; fileRef = 28CC03A51AD386CF00826380 /* sliderdata.h */; };
+		28CC03AE1AD386CF00826380 /* sndsliders.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A61AD386CF00826380 /* sndsliders.c */; };
+		28CC03AF1AD386CF00826380 /* sndsliders.h in Headers */ = {isa = PBXBuildFile; fileRef = 28CC03A71AD386CF00826380 /* sndsliders.h */; };
+		28CC03B11AD3874500826380 /* security.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03B01AD3874500826380 /* security.c */; };
 		28CCDD000F939FD70081F2FC /* FileHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */; };
 		28D000A51A32920C00367B21 /* DeviceChange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D000A31A32920C00367B21 /* DeviceChange.cpp */; };
 		28D540050FD1912A00FA7C75 /* AppCommandEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D53FFA0FD1912A00FA7C75 /* AppCommandEvent.cpp */; };
@@ -1051,7 +1062,6 @@
 		28EB74F40FDC2EDF0046D78E /* seqfnintdefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 28EB74D30FDC2EDE0046D78E /* seqfnintdefs.h */; };
 		28EB74F50FDC2EDF0046D78E /* seqfnintptrs.h in Headers */ = {isa = PBXBuildFile; fileRef = 28EB74D40FDC2EDE0046D78E /* seqfnintptrs.h */; };
 		28EB74F60FDC2EDF0046D78E /* seqinterf.h in Headers */ = {isa = PBXBuildFile; fileRef = 28EB74D50FDC2EDE0046D78E /* seqinterf.h */; };
-		28EB74F70FDC2EDF0046D78E /* sliders.h in Headers */ = {isa = PBXBuildFile; fileRef = 28EB74D60FDC2EDE0046D78E /* sliders.h */; };
 		28EB74F80FDC2EDF0046D78E /* sndfnintdefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 28EB74D70FDC2EDE0046D78E /* sndfnintdefs.h */; };
 		28EB74F90FDC2EDF0046D78E /* sndfnintptrs.h in Headers */ = {isa = PBXBuildFile; fileRef = 28EB74D80FDC2EDE0046D78E /* sndfnintptrs.h */; };
 		28EB74FA0FDC2EDF0046D78E /* sndmax.h in Headers */ = {isa = PBXBuildFile; fileRef = 28EB74D90FDC2EDE0046D78E /* sndmax.h */; };
@@ -3108,7 +3118,6 @@
 		2803C8B519F35AA000278526 /* PluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PluginManager.h; sourceTree = "<group>"; };
 		2803C8B619F35AA000278526 /* TrackPanelListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackPanelListener.h; sourceTree = "<group>"; };
 		2803C8BB19F35B4900278526 /* SelectionBarListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectionBarListener.h; sourceTree = "<group>"; };
-		2808025B0F32C11F0021001D /* bug.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = bug.lsp; path = ../nyquist/bug.lsp; sourceTree = SOURCE_ROOT; };
 		2808025C0F32C11F0021001D /* dspprims.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = dspprims.lsp; path = ../nyquist/dspprims.lsp; sourceTree = SOURCE_ROOT; };
 		2808025D0F32C11F0021001D /* envelopes.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = envelopes.lsp; path = ../nyquist/envelopes.lsp; sourceTree = SOURCE_ROOT; };
 		2808025E0F32C11F0021001D /* equalizer.lsp */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = text; name = equalizer.lsp; path = ../nyquist/equalizer.lsp; sourceTree = SOURCE_ROOT; };
@@ -3298,7 +3307,6 @@
 		284A80A20F3158A1001D7A67 /* seqext.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = seqext.c; sourceTree = "<group>"; tabWidth = 3; };
 		284A80A60F3158A1001D7A67 /* seqfnint.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = seqfnint.c; sourceTree = "<group>"; tabWidth = 3; };
 		284A80AA0F3158A1001D7A67 /* seqinterf.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = seqinterf.c; sourceTree = "<group>"; tabWidth = 3; };
-		284A80AC0F3158A1001D7A67 /* sliders.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = sliders.c; sourceTree = "<group>"; tabWidth = 3; };
 		284A80B20F3158A1001D7A67 /* sndfnint.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = sndfnint.c; sourceTree = "<group>"; tabWidth = 3; };
 		284A80B60F3158A1001D7A67 /* sndmax.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = sndmax.c; sourceTree = "<group>"; tabWidth = 3; };
 		284A80B80F3158A1001D7A67 /* sndread.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = sndread.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -3541,6 +3549,9 @@
 		2862439F181CE65500E1AD1A /* sratom_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sratom_config.h; path = lv2/sratom/build/sratom_config.h; sourceTree = "<group>"; };
 		286243A0181CE65500E1AD1A /* sratom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sratom.h; path = lv2/sratom/sratom/sratom.h; sourceTree = "<group>"; };
 		286243A1181CE65500E1AD1A /* sratom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sratom.c; path = lv2/sratom/src/sratom.c; sourceTree = "<group>"; };
+		2862CECE1AD3900000A53194 /* test.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = test.lsp; path = ../nyquist/test.lsp; sourceTree = SOURCE_ROOT; };
+		2862CECF1AD3900000A53194 /* upic.sal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = upic.sal; path = ../nyquist/upic.sal; sourceTree = SOURCE_ROOT; };
+		2862CED01AD3900000A53194 /* velocity.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = velocity.lsp; path = ../nyquist/velocity.lsp; sourceTree = SOURCE_ROOT; };
 		28640873181CE74100CC4E2C /* sord_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sord_config.h; path = lv2/sord/build/sord_config.h; sourceTree = "<group>"; };
 		28640875181CE75800CC4E2C /* serd_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serd_config.h; path = lv2/serd/build/serd_config.h; sourceTree = "<group>"; };
 		28640877181CE77200CC4E2C /* lilv_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lilv_config.h; path = lv2/lilv/build/lilv_config.h; sourceTree = "<group>"; };
@@ -3697,6 +3708,15 @@
 		28BD8AB0101DF4C600686679 /* Validators.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Validators.h; sourceTree = "<group>"; tabWidth = 3; };
 		28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudacityLogger.cpp; sourceTree = "<group>"; };
 		28C3946C1818356800FDDAC9 /* AudacityLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudacityLogger.h; sourceTree = "<group>"; };
+		28CC03A01AD386CF00826380 /* phasevocoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = phasevocoder.c; sourceTree = "<group>"; };
+		28CC03A11AD386CF00826380 /* phasevocoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = phasevocoder.h; sourceTree = "<group>"; };
+		28CC03A21AD386CF00826380 /* pvshell.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pvshell.c; sourceTree = "<group>"; };
+		28CC03A31AD386CF00826380 /* pvshell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pvshell.h; sourceTree = "<group>"; };
+		28CC03A41AD386CF00826380 /* sliderdata.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sliderdata.c; sourceTree = "<group>"; };
+		28CC03A51AD386CF00826380 /* sliderdata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sliderdata.h; sourceTree = "<group>"; };
+		28CC03A61AD386CF00826380 /* sndsliders.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sndsliders.c; sourceTree = "<group>"; };
+		28CC03A71AD386CF00826380 /* sndsliders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sndsliders.h; sourceTree = "<group>"; };
+		28CC03B01AD3874500826380 /* security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = security.c; sourceTree = "<group>"; };
 		28CCDCFF0F939FD70081F2FC /* FileHistory.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = FileHistory.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28CCDD040F93A0B20081F2FC /* FileHistory.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FileHistory.h; sourceTree = "<group>"; tabWidth = 3; };
 		28D000A31A32920C00367B21 /* DeviceChange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceChange.cpp; sourceTree = "<group>"; };
@@ -3811,7 +3831,6 @@
 		28EB74D30FDC2EDE0046D78E /* seqfnintdefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = seqfnintdefs.h; sourceTree = "<group>"; tabWidth = 3; };
 		28EB74D40FDC2EDE0046D78E /* seqfnintptrs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = seqfnintptrs.h; sourceTree = "<group>"; tabWidth = 3; };
 		28EB74D50FDC2EDE0046D78E /* seqinterf.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = seqinterf.h; sourceTree = "<group>"; tabWidth = 3; };
-		28EB74D60FDC2EDE0046D78E /* sliders.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sliders.h; sourceTree = "<group>"; tabWidth = 3; };
 		28EB74D70FDC2EDE0046D78E /* sndfnintdefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sndfnintdefs.h; sourceTree = "<group>"; tabWidth = 3; };
 		28EB74D80FDC2EDE0046D78E /* sndfnintptrs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sndfnintptrs.h; sourceTree = "<group>"; tabWidth = 3; };
 		28EB74D90FDC2EDE0046D78E /* sndmax.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sndmax.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -5830,10 +5849,12 @@
 				28EB74CC0FDC2EDE0046D78E /* multiread.h */,
 				284A80910F3158A1001D7A67 /* multiseq.c */,
 				28EB74CD0FDC2EDE0046D78E /* multiseq.h */,
+				28CC03A01AD386CF00826380 /* phasevocoder.c */,
+				28CC03A11AD386CF00826380 /* phasevocoder.h */,
+				28CC03A21AD386CF00826380 /* pvshell.c */,
+				28CC03A31AD386CF00826380 /* pvshell.h */,
 				284A80990F3158A1001D7A67 /* probe.c */,
 				28EB74CE0FDC2EDE0046D78E /* probe.h */,
-				28EB74D20FDC2EDE0046D78E /* seqext.h */,
-				28EB74D50FDC2EDE0046D78E /* seqinterf.h */,
 				284A809B0F3158A1001D7A67 /* resamp.c */,
 				28EB74CF0FDC2EDE0046D78E /* resamp.h */,
 				284A809D0F3158A1001D7A67 /* resampv.c */,
@@ -5841,13 +5862,15 @@
 				284A80A00F3158A1001D7A67 /* samples.c */,
 				28EB74D10FDC2EDE0046D78E /* samples.h */,
 				284A80A20F3158A1001D7A67 /* seqext.c */,
-				284A80A60F3158A1001D7A67 /* seqfnint.c */,
+				28EB74D20FDC2EDE0046D78E /* seqext.h */,
+				28EB74D50FDC2EDE0046D78E /* seqinterf.h */,
 				28EB74D30FDC2EDE0046D78E /* seqfnintdefs.h */,
 				28EB74D40FDC2EDE0046D78E /* seqfnintptrs.h */,
 				284A80AA0F3158A1001D7A67 /* seqinterf.c */,
-				284A80AC0F3158A1001D7A67 /* sliders.c */,
-				28EB74D60FDC2EDE0046D78E /* sliders.h */,
 				284A80B20F3158A1001D7A67 /* sndfnint.c */,
+				284A80A60F3158A1001D7A67 /* seqfnint.c */,
+				28CC03A41AD386CF00826380 /* sliderdata.c */,
+				28CC03A51AD386CF00826380 /* sliderdata.h */,
 				28EB74D70FDC2EDE0046D78E /* sndfnintdefs.h */,
 				28EB74D80FDC2EDE0046D78E /* sndfnintptrs.h */,
 				284A80B60F3158A1001D7A67 /* sndmax.c */,
@@ -5856,6 +5879,8 @@
 				28EB74DA0FDC2EDE0046D78E /* sndread.h */,
 				284A80BA0F3158A1001D7A67 /* sndseq.c */,
 				28EB74DB0FDC2EDE0046D78E /* sndseq.h */,
+				28CC03A61AD386CF00826380 /* sndsliders.c */,
+				28CC03A71AD386CF00826380 /* sndsliders.h */,
 				284A80BF0F3158A1001D7A67 /* sndwritepa.c */,
 				284A80C00F3158A1001D7A67 /* sound.c */,
 				28EB74DC0FDC2EDE0046D78E /* sound.h */,
@@ -6099,6 +6124,7 @@
 			children = (
 				284A827B0F3158A2001D7A67 /* extern.c */,
 				284A827F0F3158A2001D7A67 /* path.c */,
+				28CC03B01AD3874500826380 /* security.c */,
 				284A82800F3158A2001D7A67 /* xlbfun.c */,
 				284A82810F3158A2001D7A67 /* xlcont.c */,
 				284A82820F3158A2001D7A67 /* xldbug.c */,
@@ -6408,7 +6434,6 @@
 			isa = PBXGroup;
 			children = (
 				2808026A0F32C11F0021001D /* rawwaves */,
-				2808025B0F32C11F0021001D /* bug.lsp */,
 				2808025C0F32C11F0021001D /* dspprims.lsp */,
 				2808025D0F32C11F0021001D /* envelopes.lsp */,
 				2808025E0F32C11F0021001D /* equalizer.lsp */,
@@ -6431,6 +6456,9 @@
 				2808027F0F32C11F0021001D /* sndfnint.lsp */,
 				280802800F32C11F0021001D /* stk.lsp */,
 				280802810F32C11F0021001D /* system.lsp */,
+				2862CECE1AD3900000A53194 /* test.lsp */,
+				2862CECF1AD3900000A53194 /* upic.sal */,
+				2862CED01AD3900000A53194 /* velocity.lsp */,
 				280802820F32C11F0021001D /* xlinit.lsp */,
 				280802830F32C11F0021001D /* xm.lsp */,
 			);
@@ -7038,7 +7066,6 @@
 				28EB74F40FDC2EDF0046D78E /* seqfnintdefs.h in Headers */,
 				28EB74F50FDC2EDF0046D78E /* seqfnintptrs.h in Headers */,
 				28EB74F60FDC2EDF0046D78E /* seqinterf.h in Headers */,
-				28EB74F70FDC2EDF0046D78E /* sliders.h in Headers */,
 				28EB74F80FDC2EDF0046D78E /* sndfnintdefs.h in Headers */,
 				28EB74F90FDC2EDF0046D78E /* sndfnintptrs.h in Headers */,
 				28EB74FA0FDC2EDF0046D78E /* sndmax.h in Headers */,
@@ -7170,6 +7197,10 @@
 				28EB75F60FDC30C70046D78E /* white.h in Headers */,
 				28EB75F90FDC322A0046D78E /* xldmem.h in Headers */,
 				28EB75FA0FDC322A0046D78E /* xlisp.h in Headers */,
+				28CC03A91AD386CF00826380 /* phasevocoder.h in Headers */,
+				28CC03AB1AD386CF00826380 /* pvshell.h in Headers */,
+				28CC03AD1AD386CF00826380 /* sliderdata.h in Headers */,
+				28CC03AF1AD386CF00826380 /* sndsliders.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8040,6 +8071,9 @@
 				28ED7B7E1A1C77BF008A01D9 /* SpectralEditShelves.ny in Resources */,
 				28ED7B7F1A1C77BF008A01D9 /* StudioFadeOut.ny in Resources */,
 				28ECC1921A66CC5000EECC53 /* hy.po in Resources */,
+				2862CED11AD3900000A53194 /* test.lsp in Resources */,
+				2862CED21AD3900000A53194 /* upic.sal in Resources */,
+				2862CED31AD3900000A53194 /* velocity.lsp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8118,7 +8152,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp-4.0\nexport CC=gcc-4.0\nexport CXX=g++-4.0\nexport CPPFLAGS=\"-isysroot ${SDKROOT}\"\nexport CFLAGS=\"-isysroot ${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot ${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\n#\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Libsoxr's endianness detection is a bit unfriendly to universal binary\n# builds. We need to disable SIMD since we can't build UBs with it enabled.\n#\nFILE=lib-src/libsoxr/soxr-config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#if defined(__BIG_ENDIAN__)\n#undef WORDS_BIGENDIAN\n#define WORDS_BIGENDIAN 1\n#endif\n#undef HAVE_SIMD\n#define HAVE_SIMD 0\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
+			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp-4.0\nexport CC=gcc-4.0\nexport CXX=g++-4.0\nexport CPPFLAGS=\"-isysroot ${SDKROOT}\"\nexport CFLAGS=\"-isysroot ${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot ${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Libsoxr's endianness detection is a bit unfriendly to universal binary\n# builds. We need to disable SIMD since we can't build UBs with it enabled.\n#\nFILE=lib-src/libsoxr/soxr-config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#if defined(__BIG_ENDIAN__)\n#undef WORDS_BIGENDIAN\n#define WORDS_BIGENDIAN 1\n#endif\n#undef HAVE_SIMD\n#define HAVE_SIMD 0\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
 		};
 		17073FEB0988E6C9008541CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8644,7 +8678,6 @@
 				284A83010F3158A2001D7A67 /* seqext.c in Sources */,
 				284A83030F3158A2001D7A67 /* seqfnint.c in Sources */,
 				284A83060F3158A2001D7A67 /* seqinterf.c in Sources */,
-				284A83080F3158A2001D7A67 /* sliders.c in Sources */,
 				284A830C0F3158A2001D7A67 /* sndfnint.c in Sources */,
 				284A830F0F3158A2001D7A67 /* sndmax.c in Sources */,
 				284A83110F3158A2001D7A67 /* sndread.c in Sources */,
@@ -8803,6 +8836,11 @@
 				28A4E2AC0F60319300E9E7F2 /* fftext.c in Sources */,
 				28A4E2AE0F60319300E9E7F2 /* fftlib.c in Sources */,
 				28A4E2B00F60319300E9E7F2 /* matlib.c in Sources */,
+				28CC03A81AD386CF00826380 /* phasevocoder.c in Sources */,
+				28CC03AA1AD386CF00826380 /* pvshell.c in Sources */,
+				28CC03AC1AD386CF00826380 /* sliderdata.c in Sources */,
+				28CC03AE1AD386CF00826380 /* sndsliders.c in Sources */,
+				28CC03B11AD3874500826380 /* security.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10361,6 +10399,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CMTSTUFF,
 					EXT,
@@ -10920,6 +10959,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CMTSTUFF,
 					EXT,
@@ -11239,6 +11279,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CMTSTUFF,
 					EXT,
@@ -11516,6 +11557,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CMTSTUFF,
 					EXT,
