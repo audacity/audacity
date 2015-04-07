@@ -641,7 +641,7 @@ bool EffectNoiseReduction::Process()
       if (bGoodResult)
          mSettings->mDoProfile = false; // So that "repeat last effect" will reduce noise
       else
-         mStatistics.release(); // So that profiling must be done again before noise reduction
+         mStatistics.reset(); // So that profiling must be done again before noise reduction
    }
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
