@@ -2021,7 +2021,7 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    if (event.CanVeto() && (mEmptyCanBeDirty || bHasTracks)) {
       if (mUndoManager.UnsavedChanges()) {
 
-         wxString Message = _("Save changes before closing?");
+         wxString Message = _("Save project before closing?");
          if( !bHasTracks )
          {
           Message += _("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
