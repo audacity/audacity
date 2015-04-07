@@ -16,7 +16,6 @@ nobase_dist_pkgdata_DATA = \
    include/audacity/ModuleInterface.h \
    include/audacity/PluginInterface.h \
    include/audacity/Types.h \
-   nyquist/bug.lsp \
    nyquist/dspprims.lsp \
    nyquist/envelopes.lsp \
    nyquist/equalizer.lsp \
@@ -27,18 +26,21 @@ nobase_dist_pkgdata_DATA = \
    nyquist/misc.lsp \
    nyquist/nyinit.lsp \
    nyquist/nyqmisc.lsp \
-   nyquist/nyquist.lsp \
    nyquist/nyquist-plot.txt \
+   nyquist/nyquist.lsp \
    nyquist/printrec.lsp \
    nyquist/profile.lsp \
-   nyquist/sal.lsp \
    nyquist/sal-parse.lsp \
-   nyquist/seqfnint.lsp \
+   nyquist/sal.lsp \
    nyquist/seq.lsp \
+   nyquist/seqfnint.lsp \
    nyquist/seqmidi.lsp \
    nyquist/sndfnint.lsp \
    nyquist/stk.lsp \
    nyquist/system.lsp \
+   nyquist/test.lsp \
+   nyquist/upic.sal \
+   nyquist/velocity.lsp \
    nyquist/xlinit.lsp \
    nyquist/xm.lsp \
    nyquist/rawwaves/mand1.raw \

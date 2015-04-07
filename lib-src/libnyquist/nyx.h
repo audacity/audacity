@@ -16,9 +16,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-   /* enabled experimental v5 functionality */
-   #define EXPERIMENTAL_NYX_V5 1
-
    #define nyx_returns_start_and_end_time 1
 
    typedef enum {
@@ -67,61 +64,7 @@ extern "C"
 
    char       *nyx_get_audio_name();
    void        nyx_set_audio_name(const char *name);
-
-#if defined(EXPERIMENTAL_NYX_V5)
-   /* should return return 0 for success, -1 for error */
-   typedef int (*nyx_cmd_callback)(int argc,
-                                   void *userdata);
-
-   /* Set to NULL to stop checking */
-   void        nyx_set_cmd_callback(const char *name, nyx_cmd_callback callback, void *userdata);
-   void        nyx_define_function(const char *name, nyx_cmd_callback callback, void *userdata);
-   void        nyx_set_property(const char *varname,
-                                const char *propname,
-                                nyx_rval type,
-                                const void *value);
-
-   /* used by CMD callback */
-   void        nyx_add_symbol(const char *sym);
-
-   void        nyx_fail(char *msg);
-   nyx_rval    nyx_get_next_arg();
-   void        nyx_last_arg();
-
-   int         nyx_get_int_arg();
-   int         nyx_get_int_arg_kw(const char *key, int *arg);
-
-   long        nyx_get_long_arg();
-   int         nyx_get_long_arg_kw(const char *key, long *arg);
-
-   double      nyx_get_double_arg();
-   int         nyx_get_double_arg_kw(const char *key, double *arg);
-
-   const char  *nyx_get_string_arg();
-   int         nyx_get_string_arg_kw(const char *key, const char **arg);
-
-   const char  *nyx_get_symbol_arg();
-   int         nyx_get_symbol_arg_kw(const char *key, const char **arg);
-
-   typedef union
-   {
-      const char *str;
-      double flo;
-      int fix;
-   } nyx_list;
-
-   nyx_list    *nyx_get_list_arg();
-   int         nyx_get_list_arg_kw(const char *key, nyx_list **arg);
-
-   int         nyx_get_samples_arg(float **samples); /* must free() buffer */
-
-
-   void        nyx_set_int_rval(int val);
-   void        nyx_set_double_rval(double val);
-   void        nyx_set_string_rval(char *val);
-   void        nyx_set_samples_rval(float *samples, int count);
-#endif
-
+   
    nyx_rval    nyx_eval_expression(const char *expr);
    
    /** @brief Get the number of channels in the Nyquist audio object
