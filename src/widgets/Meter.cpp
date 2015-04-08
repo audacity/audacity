@@ -823,14 +823,14 @@ void Meter::Reset(double sampleRate, bool resetClipping)
 
    // wxTimers seem to be a little unreliable - sometimes they stop for
    // no good reason, so this "primes" it every now and then...
-//   mTimer.Stop();
+   mTimer.Stop();
 
    // While it's stopped, empty the queue
    mQueue.Clear();
 
    mLayoutValid = false;
 
-//   mTimer.Start(1000 / mMeterRefreshRate);
+   mTimer.Start(1000 / mMeterRefreshRate);
 
    Refresh(false);
 }
