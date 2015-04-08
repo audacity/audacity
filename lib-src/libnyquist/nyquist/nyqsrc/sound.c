@@ -1588,12 +1588,14 @@ double step_to_hz(double steps)
 }
 
 #ifdef WIN32
+#ifndef _MSC_VER < 1800
 #define RECIP_LOG_2 1.44269504088895364453
 
 double log2(double x)
 {
   return log(x) * RECIP_LOG_2;
 }
+#endif
 #endif
 
 /*
