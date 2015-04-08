@@ -700,8 +700,9 @@ Track *SyncLockedTracksIterator::Last(bool skiplinked)
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_RESIZED);
 DEFINE_EVENT_TYPE(EVT_TRACKLIST_UPDATED);
 
-TrackList::TrackList()
+TrackList::TrackList(bool destructorDeletesTracks)
 :  wxEvtHandler()
+, mDestructorDeletesTracks(destructorDeletesTracks)
 {
    head = NULL;
    tail = NULL;
@@ -709,7 +710,7 @@ TrackList::TrackList()
 
 TrackList::~TrackList()
 {
-   Clear();
+   Clear(mDestructorDeletesTracks);
 }
 
 void TrackList::RecalcPositions(const TrackListNode *node)

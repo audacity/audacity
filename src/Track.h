@@ -348,7 +348,7 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
 {
  public:
    // Create an empty TrackList
-   TrackList();
+   TrackList(bool destructorDeletesTracks = false);
 
    // Destructor
    virtual ~TrackList();
@@ -437,6 +437,8 @@ class AUDACITY_DLL_API TrackList:public wxEvtHandler
 
    TrackListNode *head;
    TrackListNode *tail;
+
+   bool mDestructorDeletesTracks;
 };
 
 class AUDACITY_DLL_API TrackFactory

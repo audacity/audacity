@@ -113,6 +113,7 @@ Effect::Effect()
 
 Effect::~Effect()
 {
+   delete mOutputTracks;
    if (mWarper != NULL)
    {
       delete mWarper;
@@ -1364,7 +1365,7 @@ void Effect::CopyInputTracks(int trackType)
    mIMap.Clear();
    mOMap.Clear();
 
-   mOutputTracks = new TrackList();
+   mOutputTracks = new TrackList(true);
    mOutputTracksType = trackType;
 
    //iterate over tracks of type trackType (All types if Track::All)
