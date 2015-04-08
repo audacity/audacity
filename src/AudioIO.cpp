@@ -3888,7 +3888,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       }
 
       // Wrap to start if looping
-      if (gAudioIO->mPlayLooped && gAudioIO->mTime >= gAudioIO->mT1)
+      while (gAudioIO->mPlayLooped && gAudioIO->mTime >= gAudioIO->mT1)
       {
          // LL:  This is not exactly right, but I'm at my wits end trying to
          //      figure it out.  Feel free to fix it.  :-)
