@@ -483,6 +483,7 @@
 		28105DAC0AD09FC500BB4269 /* px_mixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 28105DA20AD09FC500BB4269 /* px_mixer.h */; };
 		2810644B1818EEB5004F678B /* cpu_detect_x86.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */; };
 		2810644D1818EED3004F678B /* cpu_detect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810644C1818EED3004F678B /* cpu_detect.h */; };
+		281110001AD4FDD8009FAC14 /* suil_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28110FFF1AD4FDD8009FAC14 /* suil_config.h */; };
 		2816372E0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */; };
 		28285C801A27A81600BC2205 /* AudioUnitCocoaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28285C7F1A27A81600BC2205 /* AudioUnitCocoaHelper.mm */; };
 		282D474C0B9E8D900034BC49 /* Snap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282D474A0B9E8D900034BC49 /* Snap.cpp */; };
@@ -545,6 +546,17 @@
 		284249EE10D337CE004330A6 /* GetProjectInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284249EA10D337CE004330A6 /* GetProjectInfoCommand.cpp */; };
 		284249EF10D337CE004330A6 /* SetProjectInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284249EC10D337CE004330A6 /* SetProjectInfoCommand.cpp */; };
 		28456AC20A2C180E00C23C1E /* ThemePrefs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */; };
+		284750541AD4EB84000AD751 /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 2847504D1AD4EB84000AD751 /* common.h */; };
+		284750551AD4EB84000AD751 /* digest.c in Sources */ = {isa = PBXBuildFile; fileRef = 2847504E1AD4EB84000AD751 /* digest.c */; };
+		284750561AD4EB84000AD751 /* digest.h in Headers */ = {isa = PBXBuildFile; fileRef = 2847504F1AD4EB84000AD751 /* digest.h */; };
+		284750571AD4EB84000AD751 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 284750501AD4EB84000AD751 /* hash.c */; };
+		284750581AD4EB84000AD751 /* hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 284750511AD4EB84000AD751 /* hash.h */; };
+		284750591AD4EB84000AD751 /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 284750521AD4EB84000AD751 /* tree.c */; };
+		2847505A1AD4EB84000AD751 /* tree.h in Headers */ = {isa = PBXBuildFile; fileRef = 284750531AD4EB84000AD751 /* tree.h */; };
+		2847505E1AD4EBE1000AD751 /* host.c in Sources */ = {isa = PBXBuildFile; fileRef = 2847505B1AD4EBE1000AD751 /* host.c */; };
+		2847505F1AD4EBE1000AD751 /* suil_instance.c in Sources */ = {isa = PBXBuildFile; fileRef = 2847505C1AD4EBE1000AD751 /* suil_instance.c */; };
+		284750601AD4EBE1000AD751 /* suil_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2847505D1AD4EBE1000AD751 /* suil_internal.h */; };
+		284750621AD4EC28000AD751 /* suil.h in Headers */ = {isa = PBXBuildFile; fileRef = 284750611AD4EC28000AD751 /* suil.h */; };
 		2849A42017F8BEC2005C653F /* KeyView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2849A41E17F8BEC2005C653F /* KeyView.cpp */; };
 		2849B4620A7444BE00ECF12D /* Dependencies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2849B4600A7444BE00ECF12D /* Dependencies.cpp */; };
 		284A7B920F31571C001D7A67 /* nyx.c in Sources */ = {isa = PBXBuildFile; fileRef = 284A7B8F0F31571B001D7A67 /* nyx.c */; };
@@ -796,9 +808,6 @@
 		286229CF181CE51800E1AD1A /* ui.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229BD181CE51800E1AD1A /* ui.c */; };
 		286229D0181CE51800E1AD1A /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229BE181CE51800E1AD1A /* util.c */; };
 		286229D1181CE51800E1AD1A /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229BF181CE51800E1AD1A /* world.c */; };
-		286229D2181CE51800E1AD1A /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229C0181CE51800E1AD1A /* common.h */; };
-		286229D3181CE51800E1AD1A /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229C1181CE51800E1AD1A /* tree.c */; };
-		286229D4181CE51800E1AD1A /* tree.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229C2181CE51800E1AD1A /* tree.h */; };
 		286229DD181CE5EC00E1AD1A /* serd.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229D5181CE5EC00E1AD1A /* serd.h */; };
 		286229DE181CE5EC00E1AD1A /* env.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229D6181CE5EC00E1AD1A /* env.c */; };
 		286229DF181CE5EC00E1AD1A /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229D7181CE5EC00E1AD1A /* node.c */; };
@@ -3171,6 +3180,7 @@
 		28105DA20AD09FC500BB4269 /* px_mixer.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = px_mixer.h; sourceTree = "<group>"; tabWidth = 3; };
 		2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpu_detect_x86.cpp; sourceTree = "<group>"; };
 		2810644C1818EED3004F678B /* cpu_detect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpu_detect.h; path = "../lib-src/soundtouch/source/SoundTouch/cpu_detect.h"; sourceTree = SOURCE_ROOT; };
+		28110FFF1AD4FDD8009FAC14 /* suil_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = suil_config.h; path = lv2/suil/build/suil_config.h; sourceTree = "<group>"; };
 		2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Shared.xcconfig; sourceTree = "<group>"; };
 		2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Static.xcconfig; sourceTree = "<group>"; };
 		2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Shared.xcconfig; sourceTree = "<group>"; };
@@ -3252,6 +3262,17 @@
 		284249ED10D337CE004330A6 /* SetProjectInfoCommand.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SetProjectInfoCommand.h; sourceTree = "<group>"; tabWidth = 3; };
 		28456AC00A2C180E00C23C1E /* ThemePrefs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ThemePrefs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28456AC10A2C180E00C23C1E /* ThemePrefs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ThemePrefs.h; sourceTree = "<group>"; tabWidth = 3; };
+		2847504D1AD4EB84000AD751 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = lv2/sord/src/zix/common.h; sourceTree = "<group>"; };
+		2847504E1AD4EB84000AD751 /* digest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = digest.c; path = lv2/sord/src/zix/digest.c; sourceTree = "<group>"; };
+		2847504F1AD4EB84000AD751 /* digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = digest.h; path = lv2/sord/src/zix/digest.h; sourceTree = "<group>"; };
+		284750501AD4EB84000AD751 /* hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hash.c; path = lv2/sord/src/zix/hash.c; sourceTree = "<group>"; };
+		284750511AD4EB84000AD751 /* hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hash.h; path = lv2/sord/src/zix/hash.h; sourceTree = "<group>"; };
+		284750521AD4EB84000AD751 /* tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree.c; path = lv2/sord/src/zix/tree.c; sourceTree = "<group>"; };
+		284750531AD4EB84000AD751 /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tree.h; path = lv2/sord/src/zix/tree.h; sourceTree = "<group>"; };
+		2847505B1AD4EBE1000AD751 /* host.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = host.c; path = lv2/suil/src/host.c; sourceTree = "<group>"; };
+		2847505C1AD4EBE1000AD751 /* suil_instance.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = suil_instance.c; path = lv2/suil/src/suil_instance.c; sourceTree = "<group>"; };
+		2847505D1AD4EBE1000AD751 /* suil_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = suil_internal.h; path = lv2/suil/src/suil_internal.h; sourceTree = "<group>"; };
+		284750611AD4EC28000AD751 /* suil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = suil.h; path = lv2/suil/suil/suil.h; sourceTree = "<group>"; };
 		2849A41E17F8BEC2005C653F /* KeyView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyView.cpp; sourceTree = "<group>"; };
 		2849A41F17F8BEC2005C653F /* KeyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyView.h; sourceTree = "<group>"; };
 		2849B4600A7444BE00ECF12D /* Dependencies.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Dependencies.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -3523,9 +3544,6 @@
 		286229BD181CE51800E1AD1A /* ui.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ui.c; path = lv2/lilv/src/ui.c; sourceTree = "<group>"; };
 		286229BE181CE51800E1AD1A /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = util.c; path = lv2/lilv/src/util.c; sourceTree = "<group>"; };
 		286229BF181CE51800E1AD1A /* world.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = world.c; path = lv2/lilv/src/world.c; sourceTree = "<group>"; };
-		286229C0181CE51800E1AD1A /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = lv2/lilv/src/zix/common.h; sourceTree = "<group>"; };
-		286229C1181CE51800E1AD1A /* tree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tree.c; path = lv2/lilv/src/zix/tree.c; sourceTree = "<group>"; };
-		286229C2181CE51800E1AD1A /* tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tree.h; path = lv2/lilv/src/zix/tree.h; sourceTree = "<group>"; };
 		286229D5181CE5EC00E1AD1A /* serd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serd.h; path = lv2/serd/serd/serd.h; sourceTree = "<group>"; };
 		286229D6181CE5EC00E1AD1A /* env.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = env.c; path = lv2/serd/src/env.c; sourceTree = "<group>"; };
 		286229D7181CE5EC00E1AD1A /* node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = node.c; path = lv2/serd/src/node.c; sourceTree = "<group>"; };
@@ -5742,6 +5760,32 @@
 			name = "mod-script-pipe";
 			sourceTree = "<group>";
 		};
+		2847504B1AD4EB41000AD751 /* suil */ = {
+			isa = PBXGroup;
+			children = (
+				28110FFF1AD4FDD8009FAC14 /* suil_config.h */,
+				284750611AD4EC28000AD751 /* suil.h */,
+				2847505B1AD4EBE1000AD751 /* host.c */,
+				2847505C1AD4EBE1000AD751 /* suil_instance.c */,
+				2847505D1AD4EBE1000AD751 /* suil_internal.h */,
+			);
+			name = suil;
+			sourceTree = "<group>";
+		};
+		2847504C1AD4EB5A000AD751 /* zix */ = {
+			isa = PBXGroup;
+			children = (
+				2847504D1AD4EB84000AD751 /* common.h */,
+				2847504E1AD4EB84000AD751 /* digest.c */,
+				2847504F1AD4EB84000AD751 /* digest.h */,
+				284750501AD4EB84000AD751 /* hash.c */,
+				284750511AD4EB84000AD751 /* hash.h */,
+				284750521AD4EB84000AD751 /* tree.c */,
+				284750531AD4EB84000AD751 /* tree.h */,
+			);
+			name = zix;
+			sourceTree = "<group>";
+		};
 		284A7B8E0F3156B4001D7A67 /* nyquist */ = {
 			isa = PBXGroup;
 			children = (
@@ -6179,6 +6223,7 @@
 				2862299A181CE3AE00E1AD1A /* serd */,
 				2862299B181CE3B400E1AD1A /* sord */,
 				2862299C181CE3BA00E1AD1A /* sratom */,
+				2847504B1AD4EB41000AD751 /* suil */,
 			);
 			name = lv2;
 			sourceTree = "<group>";
@@ -6202,9 +6247,6 @@
 				286229BD181CE51800E1AD1A /* ui.c */,
 				286229BE181CE51800E1AD1A /* util.c */,
 				286229BF181CE51800E1AD1A /* world.c */,
-				286229C0181CE51800E1AD1A /* common.h */,
-				286229C1181CE51800E1AD1A /* tree.c */,
-				286229C2181CE51800E1AD1A /* tree.h */,
 			);
 			name = lilv;
 			sourceTree = "<group>";
@@ -6228,6 +6270,7 @@
 		2862299B181CE3B400E1AD1A /* sord */ = {
 			isa = PBXGroup;
 			children = (
+				2847504C1AD4EB5A000AD751 /* zix */,
 				28640873181CE74100CC4E2C /* sord_config.h */,
 				286229E5181CE62A00E1AD1A /* sord.h */,
 				286229E6181CE62A00E1AD1A /* sord_internal.h */,
@@ -7258,8 +7301,6 @@
 			files = (
 				286229C3181CE51800E1AD1A /* lilv.h in Headers */,
 				286229C7181CE51800E1AD1A /* lilv_internal.h in Headers */,
-				286229D2181CE51800E1AD1A /* common.h in Headers */,
-				286229D4181CE51800E1AD1A /* tree.h in Headers */,
 				286229DD181CE5EC00E1AD1A /* serd.h in Headers */,
 				286229E1181CE5EC00E1AD1A /* serd_internal.h in Headers */,
 				286229E9181CE62A00E1AD1A /* sord.h in Headers */,
@@ -7269,6 +7310,13 @@
 				28640874181CE74100CC4E2C /* sord_config.h in Headers */,
 				28640876181CE75800CC4E2C /* serd_config.h in Headers */,
 				28640878181CE77200CC4E2C /* lilv_config.h in Headers */,
+				284750541AD4EB84000AD751 /* common.h in Headers */,
+				284750561AD4EB84000AD751 /* digest.h in Headers */,
+				284750581AD4EB84000AD751 /* hash.h in Headers */,
+				2847505A1AD4EB84000AD751 /* tree.h in Headers */,
+				284750601AD4EBE1000AD751 /* suil_internal.h in Headers */,
+				284750621AD4EC28000AD751 /* suil.h in Headers */,
+				281110001AD4FDD8009FAC14 /* suil_config.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9242,7 +9290,6 @@
 				286229CF181CE51800E1AD1A /* ui.c in Sources */,
 				286229D0181CE51800E1AD1A /* util.c in Sources */,
 				286229D1181CE51800E1AD1A /* world.c in Sources */,
-				286229D3181CE51800E1AD1A /* tree.c in Sources */,
 				286229DE181CE5EC00E1AD1A /* env.c in Sources */,
 				286229DF181CE5EC00E1AD1A /* node.c in Sources */,
 				286229E0181CE5EC00E1AD1A /* reader.c in Sources */,
@@ -9252,6 +9299,11 @@
 				286229EB181CE62A00E1AD1A /* sord.c in Sources */,
 				286229EC181CE62A00E1AD1A /* syntax.c in Sources */,
 				28624C10181CE65700E1AD1A /* sratom.c in Sources */,
+				284750551AD4EB84000AD751 /* digest.c in Sources */,
+				284750571AD4EB84000AD751 /* hash.c in Sources */,
+				284750591AD4EB84000AD751 /* tree.c in Sources */,
+				2847505E1AD4EBE1000AD751 /* host.c in Sources */,
+				2847505F1AD4EBE1000AD751 /* suil_instance.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10632,10 +10684,11 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = (
 					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
-					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/**",
 				);
 				PRODUCT_NAME = lv2;
 			};
@@ -10649,10 +10702,11 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = (
 					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
-					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/**",
 				);
 				PRODUCT_NAME = lv2;
 			};
@@ -10666,10 +10720,11 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = (
 					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
-					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/**",
 				);
 				PRODUCT_NAME = lv2;
 			};
@@ -10683,10 +10738,11 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = (
 					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
-					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
 					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil/**",
 				);
 				PRODUCT_NAME = lv2;
 			};
