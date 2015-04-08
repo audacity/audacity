@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "oneshot.h"
 
-void oneshot_free();
+void oneshot_free(snd_susp_type a_susp);
 
 
 typedef struct oneshot_susp_struct {
@@ -26,8 +26,9 @@ typedef struct oneshot_susp_struct {
 } oneshot_susp_node, *oneshot_susp_type;
 
 
-void oneshot_n_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
+void oneshot_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    oneshot_susp_type susp = (oneshot_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -57,6 +58,7 @@ void oneshot_n_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -68,6 +70,7 @@ void oneshot_n_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -92,10 +95,10 @@ void oneshot_n_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        double x = *input_ptr_reg++;
-        if (x > lev_reg) cnt_reg = oncount_reg;
-        cnt_reg--;
-        *out_ptr_reg++ = (cnt_reg >= 0 ? 1.0F : 0.0F);;
+            double x = *input_ptr_reg++;
+            if (x > lev_reg) cnt_reg = oncount_reg;
+            cnt_reg--;
+            *out_ptr_reg++ = (cnt_reg >= 0 ? 1.0F : 0.0F);;
 	} while (--n); /* inner loop */
 
 	susp->cnt = cnt_reg;
@@ -122,8 +125,9 @@ void oneshot_n_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
 } /* oneshot_n_fetch */
 
 
-void oneshot_s_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
+void oneshot_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    oneshot_susp_type susp = (oneshot_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -154,6 +158,7 @@ void oneshot_s_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -165,6 +170,7 @@ void oneshot_s_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -189,10 +195,10 @@ void oneshot_s_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-        double x = (input_scale_reg * *input_ptr_reg++);
-        if (x > lev_reg) cnt_reg = oncount_reg;
-        cnt_reg--;
-        *out_ptr_reg++ = (cnt_reg >= 0 ? 1.0F : 0.0F);;
+            double x = (input_scale_reg * *input_ptr_reg++);
+            if (x > lev_reg) cnt_reg = oncount_reg;
+            cnt_reg--;
+            *out_ptr_reg++ = (cnt_reg >= 0 ? 1.0F : 0.0F);;
 	} while (--n); /* inner loop */
 
 	susp->cnt = cnt_reg;
@@ -219,11 +225,9 @@ void oneshot_s_fetch(register oneshot_susp_type susp, snd_list_type snd_list)
 } /* oneshot_s_fetch */
 
 
-void oneshot_toss_fetch(susp, snd_list)
-  register oneshot_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void oneshot_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    oneshot_susp_type susp = (oneshot_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -238,25 +242,28 @@ void oneshot_toss_fetch(susp, snd_list)
     susp->input_ptr += n;
     susp_took(input_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void oneshot_mark(oneshot_susp_type susp)
+void oneshot_mark(snd_susp_type a_susp)
 {
+    oneshot_susp_type susp = (oneshot_susp_type) a_susp;
     sound_xlmark(susp->input);
 }
 
 
-void oneshot_free(oneshot_susp_type susp)
+void oneshot_free(snd_susp_type a_susp)
 {
+    oneshot_susp_type susp = (oneshot_susp_type) a_susp;
     sound_unref(susp->input);
     ffree_generic(susp, sizeof(oneshot_susp_node), "oneshot_free");
 }
 
 
-void oneshot_print_tree(oneshot_susp_type susp, int n)
+void oneshot_print_tree(snd_susp_type a_susp, int n)
 {
+    oneshot_susp_type susp = (oneshot_susp_type) a_susp;
     indent(n);
     stdputstr("input:");
     sound_print_tree_1(susp->input, n);
@@ -292,8 +299,8 @@ sound_type snd_make_oneshot(sound_type input, double level, double ontime)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = oneshot_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = oneshot_toss_fetch;
     }
 
     /* initialize susp state */

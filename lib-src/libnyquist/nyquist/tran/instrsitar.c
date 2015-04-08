@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "instrsitar.h"
 
-void sitar_free();
+void sitar_free(snd_susp_type a_susp);
 
 
 typedef struct sitar_susp_struct {
@@ -20,12 +20,12 @@ typedef struct sitar_susp_struct {
     int temp_ret_value;
 } sitar_susp_node, *sitar_susp_type;
 
+#include "instr.h"
 
-	    #include "instr.h"
 
-
-void sitar__fetch(register sitar_susp_type susp, snd_list_type snd_list)
+void sitar__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    sitar_susp_type susp = (sitar_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -48,6 +48,7 @@ void sitar__fetch(register sitar_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -55,8 +56,7 @@ void sitar__fetch(register sitar_susp_type susp, snd_list_type snd_list)
 	mysitar_reg = susp->mysitar;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-
-	    *out_ptr_reg++ = (sample_type) tick(mysitar_reg);
+            *out_ptr_reg++ = (sample_type) tick(mysitar_reg);
 	} while (--n); /* inner loop */
 
 	susp->mysitar = mysitar_reg;
@@ -74,15 +74,15 @@ void sitar__fetch(register sitar_susp_type susp, snd_list_type snd_list)
 } /* sitar__fetch */
 
 
-void sitar_free(sitar_susp_type susp)
+void sitar_free(snd_susp_type a_susp)
 {
-
-	    deleteInstrument(susp->mysitar);
+    sitar_susp_type susp = (sitar_susp_type) a_susp;
+    deleteInstrument(susp->mysitar);
     ffree_generic(susp, sizeof(sitar_susp_node), "sitar_free");
 }
 
 
-void sitar_print_tree(sitar_susp_type susp, int n)
+void sitar_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
@@ -98,7 +98,7 @@ sound_type snd_make_sitar(time_type t0, double freq, time_type dur, rate_type sr
     susp->temp_ret_value = noteOn(susp->mysitar, freq, 1.0);
     susp->susp.fetch = sitar__fetch;
 
-    susp->terminate_cnt = round((dur) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((dur) * sr));
     /* initialize susp state */
     susp->susp.free = sitar_free;
     susp->susp.sr = sr;

@@ -21,8 +21,7 @@
             break;    /* we're done */
         }
 ")
-  (INNER-LOOP 
-"            LVAL rslt = xleval(cons(s_send, cons(src,
+  (INNER-LOOP "LVAL rslt = xleval(cons(s_send, cons(src,
                                                  consa(s_next))));
             if (floatp(rslt)) {
                 output = (sample_type) getflonum(rslt);

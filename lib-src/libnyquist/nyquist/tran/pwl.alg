@@ -74,7 +74,7 @@ out:	    togo = 0;	/* indicate termination */
           togo = min(nn, togo);
         }
 ")
-  (INNER-LOOP "output = (sample_type) lvl; lvl += incr;")
+  (INNER-LOOP "output = (sample_type) lvl; lvl += incr")
   (MAINTAIN ("lvl" "susp->lvl += susp->incr * togo"))
   (CONSTANT "incr")
   (TERMINATE COMPUTED)

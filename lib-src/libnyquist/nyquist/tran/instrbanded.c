@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "instrbanded.h"
 
-void bandedwg_free();
+void bandedwg_free(snd_susp_type a_susp);
 
 
 typedef struct bandedwg_susp_struct {
@@ -21,14 +21,16 @@ typedef struct bandedwg_susp_struct {
 
     struct instr *mybanded;
     int temp_ret_value;
+    float bowpress_scale;
 } bandedwg_susp_node, *bandedwg_susp_type;
 
+#include "instr.h"
+#include "upsample.h"
 
-	    #include "instr.h"
 
-
-void bandedwg_s_fetch(register bandedwg_susp_type susp, snd_list_type snd_list)
+void bandedwg_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    bandedwg_susp_type susp = (bandedwg_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -38,9 +40,9 @@ void bandedwg_s_fetch(register bandedwg_susp_type susp, snd_list_type snd_list)
     register sample_block_values_type out_ptr_reg;
 
     register struct instr * mybanded_reg;
-    register sample_type bowpress_env_scale_reg = susp->bowpress_env->scale;
+    register float bowpress_scale_reg;
     register sample_block_values_type bowpress_env_ptr_reg;
-    falloc_sample_block(out, "bandedwg_s_fetch");
+    falloc_sample_block(out, "bandedwg_n_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
 
@@ -57,17 +59,18 @@ void bandedwg_s_fetch(register bandedwg_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
 	n = togo;
 	mybanded_reg = susp->mybanded;
+	bowpress_scale_reg = susp->bowpress_scale;
 	bowpress_env_ptr_reg = susp->bowpress_env_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-
-	    controlChange(mybanded_reg, 2, BANDEDWG_CONTROL_CHANGE_CONST * (bowpress_env_scale_reg * *bowpress_env_ptr_reg++));
-	    *out_ptr_reg++ = (sample_type) tick(mybanded_reg);
+            controlChange(mybanded_reg, 2, bowpress_scale_reg * *bowpress_env_ptr_reg++);
+            *out_ptr_reg++ = (sample_type) tick(mybanded_reg);
 	} while (--n); /* inner loop */
 
 	susp->mybanded = mybanded_reg;
@@ -85,14 +88,12 @@ void bandedwg_s_fetch(register bandedwg_susp_type susp, snd_list_type snd_list)
 	snd_list->block_len = cnt;
 	susp->susp.current += cnt;
     }
-} /* bandedwg_s_fetch */
+} /* bandedwg_n_fetch */
 
 
-void bandedwg_toss_fetch(susp, snd_list)
-  register bandedwg_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void bandedwg_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    bandedwg_susp_type susp = (bandedwg_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -107,27 +108,29 @@ void bandedwg_toss_fetch(susp, snd_list)
     susp->bowpress_env_ptr += n;
     susp_took(bowpress_env_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void bandedwg_mark(bandedwg_susp_type susp)
+void bandedwg_mark(snd_susp_type a_susp)
 {
+    bandedwg_susp_type susp = (bandedwg_susp_type) a_susp;
     sound_xlmark(susp->bowpress_env);
 }
 
 
-void bandedwg_free(bandedwg_susp_type susp)
+void bandedwg_free(snd_susp_type a_susp)
 {
-
-	    deleteInstrument(susp->mybanded);
+    bandedwg_susp_type susp = (bandedwg_susp_type) a_susp;
+	   deleteInstrument(susp->mybanded);
     sound_unref(susp->bowpress_env);
     ffree_generic(susp, sizeof(bandedwg_susp_node), "bandedwg_free");
 }
 
 
-void bandedwg_print_tree(bandedwg_susp_type susp, int n)
+void bandedwg_print_tree(snd_susp_type a_susp, int n)
 {
+    bandedwg_susp_type susp = (bandedwg_susp_type) a_susp;
     indent(n);
     stdputstr("bowpress_env:");
     sound_print_tree_1(susp->bowpress_env, n);
@@ -139,14 +142,20 @@ sound_type snd_make_bandedwg(double freq, sound_type bowpress_env, int preset, r
     register bandedwg_susp_type susp;
     /* sr specified as input parameter */
     time_type t0 = bowpress_env->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, bandedwg_susp_node, "snd_make_bandedwg");
     susp->mybanded = initInstrument(BANDEDWG, round(sr));
     controlChange(susp->mybanded, 16, preset);;
     susp->temp_ret_value = noteOn(susp->mybanded, freq, 1.0);
-    susp->susp.fetch = bandedwg_s_fetch;
+    susp->bowpress_scale = bowpress_env->scale * BANDEDWG_CONTROL_CHANGE_CONST;
+
+    /* make sure no sample rate is too high */
+    if (bowpress_env->sr > sr) {
+        sound_unref(bowpress_env);
+        snd_badsr();
+    } else if (bowpress_env->sr < sr) bowpress_env = snd_make_up(sr, bowpress_env);
+    susp->susp.fetch = bandedwg_n_fetch;
     susp->terminate_cnt = UNKNOWN;
     /* handle unequal start times, if any */
     if (t0 < bowpress_env->t0) sound_prepend_zeros(bowpress_env, t0);
@@ -155,8 +164,8 @@ sound_type snd_make_bandedwg(double freq, sound_type bowpress_env, int preset, r
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = bandedwg_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = bandedwg_toss_fetch;
     }
 
     /* initialize susp state */

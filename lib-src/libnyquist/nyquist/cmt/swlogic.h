@@ -139,7 +139,7 @@
 #ifndef NYQUIST
 #define MIDIMGR
 #endif
-#define USE_VSPRINTF
+#define HAVE_VSNPRINTF 1
 #endif
 
 #ifdef BORLAND
@@ -161,12 +161,12 @@
 #define ITC
 #endif
 
-/* USE_VSPRINTF says vsprintf() is defined */
+/* HAVE_VSNPRINTF says vsnprintf() is defined */
 #ifdef ITC
-#define USE_VSPRINTF
+#define HAVE_VSNPRINTF 1
 #endif
 #ifdef AZTEC
-#define USE_VSPRINTF
+#define HAVE_VSNPRINTF 1
 #endif
 
 

@@ -18,23 +18,7 @@ HISTORY
     - RBD 16apr04 */
 #include <stdio.h>
 #include <ctype.h>
-
-/* On the Mac, using _setjmp()/_longjmp() can speed up execution
-   quite a bit. */
-#if defined(__APPLE__)
-
-#define setjmp slow_setjmp
-#define longjmp slow_longjmp
 #include <setjmp.h>
-#undef setjmp
-#undef longjmp
-#define setjmp _setjmp
-#define longjmp _longjmp
-
-#else
-#include <setjmp.h>
-#endif
-
 
 /* NNODES	number of nodes to allocate in each request (1000) */
 /* EDEPTH	evaluation stack depth (2000) */
@@ -259,7 +243,9 @@ extern long ptrtoabs();
    characters, so I picked a bigger value. -RBD */
 
 #define HSIZE		1499		/* symbol hash table size */
-#define SAMPLE		1000		/* control character sample rate */
+#define SAMPLE		50000		/* control character sample rate */
+/* Jul 2014: Under Xcode, debug, 2.4 GHz Intel Core i7: oscheck rate is
+   about 66Hz */
 
 /* function table offsets for the initialization functions */
 #define FT_RMHASH	0
@@ -400,7 +386,7 @@ typedef struct {
 typedef struct context {
     int c_flags;			/* context type flags */
     LVAL c_expr;			/* expression (type dependant) */
-    jmp_buf c_jmpbuf;			/* longjmp context */
+    jmp_buf c_jmpbuf;			/* _longjmp context */
     struct context *c_xlcontext;	/* old value of xlcontext */
     LVAL **c_xlstack;			/* old value of xlstack */
     LVAL *c_xlargv;			/* old value of xlargv */
@@ -448,8 +434,8 @@ extern int gsnumber;
 
 /* additional prototypes */
 
-extern FILE *osaopen (char *name, char *mode);
-extern FILE *osbopen (char *name, char *mode);
+extern FILE *osaopen (const char *name, const char *mode);
+extern FILE *osbopen (const char *name, const char *mode);
 
 #ifdef __MWERKS__
 /* macfun.c */
@@ -482,7 +468,7 @@ LVAL xrdnohang(void);
 
 /* for extern.c */
 
-void inval_caches();
+void inval_caches(void);
 
 
 /* for xlbfun.c */
@@ -585,22 +571,23 @@ LVAL xuntrace(void);
 
 /* xldbug.c */
 
-void xlabort(char *emsg);
-void xlbreak(char *emsg, LVAL arg);
-void xlfail(char *emsg);
-void xlerror(char *emsg, LVAL arg);
-void xlcerror(char *cmsg, char *emsg, LVAL arg);
-void xlerrprint(char *hdr, char *cmsg, char *emsg, LVAL arg);
+void xlabort(const char *emsg);
+void xlbreak(const char *emsg, LVAL arg);
+void xlfail(const char *emsg);
+void xlerror(const char *emsg, LVAL arg);
+void xlcerror(const char *cmsg, const char *emsg, LVAL arg);
+void xlerrprint(const char *hdr, const char *cmsg, const char *emsg, LVAL arg);
 void xlbaktrace(int n);
 void xldinit(void);
 void close_loadingfiles(void);
 
 /* xldmem.c */
+extern long total; /* total bytes allocated by xlisp */
 
 LVAL cons(LVAL x, LVAL y);
 LVAL cvstring(const char *str);
 LVAL new_string(int size);
-LVAL cvsymbol(char *pname);
+LVAL cvsymbol(const char *pname);
 LVAL cvsubr(LVAL (*fcn)(void), int type, int offset);
 LVAL cvfile(FILE *fp);
 LVAL cvfixnum(FIXTYPE n);
@@ -673,8 +660,8 @@ LVAL xlistdir(void);
 
 /* xlimage.c */
 
-int xlisave(char *fname);
-int xlirestore(char *fname);
+int xlisave(const char *fname);
+int xlirestore(const char *fname);
 
 
 /* xlinit.c */
@@ -692,14 +679,14 @@ void xlputc(LVAL fptr, int ch);
 void xloutflush(LVAL fptr);
 void xlflush(void);
 void stdprint(LVAL expr);
-void stdputstr(char *str);
-void stdflush();
+void stdputstr(const char *str);
+void stdflush(void);
 void errprint(LVAL expr);
-void errputstr(char *str);
+void errputstr(const char *str);
 void dbgprint(LVAL expr);
-void dbgputstr(char *str);
+void dbgputstr(const char *str);
 void trcprin1(LVAL expr);
-void trcputstr(char *str);
+void trcputstr(const char *str);
 
 
 /* xlisp.c */
@@ -707,7 +694,7 @@ long xlrand(long range);
 double xlrealrand(void);
 void xlrdsave(LVAL expr);
 void xlevsave(LVAL expr);
-void xlfatal(char *msg);
+void xlfatal(const char *msg);
 void xlisp_main_init(int, char **);
 void xlisp_main(void);
 void xlisp_wrapup(void);
@@ -720,7 +707,7 @@ void xlend(XLCONTEXT *cptr);
 void xlgo(LVAL label);
 void xlreturn(LVAL name, LVAL val);
 void xlthrow(LVAL tag, LVAL val);
-void xlsignal(char *emsg, LVAL arg);
+void xlsignal(const char *emsg, LVAL arg);
 void xltoplevel(void);
 void xlbrklevel(void);
 void xlcleanup(void);
@@ -838,9 +825,9 @@ LVAL xgtr(void);
 
 LVAL xsend(void);
 LVAL xsendsuper(void);
-LVAL xlclass(char *name, int vcnt);
-void xladdivar(LVAL cls, char *var);
-void xladdmsg(LVAL cls, char *msg, int offset);
+LVAL xlclass(const char *name, int vcnt);
+void xladdivar(LVAL cls, const char *var);
+void xladdmsg(LVAL cls, const char *msg, int offset);
 int xlobgetvalue(LVAL pair, LVAL sym, LVAL *pval);
 int xlobsetvalue(LVAL pair, LVAL sym, LVAL val);
 LVAL obisnew(void);
@@ -863,13 +850,13 @@ LVAL xpp(void);
 
 void xlprint(LVAL fptr, LVAL vptr, int flag);
 void xlterpri(LVAL fptr);
-void xlputstr(LVAL fptr, char *str);
-void putatm(LVAL fptr, char *tag, LVAL val);
+void xlputstr(LVAL fptr, const char *str);
+void putatm(LVAL fptr, const char *tag, LVAL val);
 
 
 /* xlread.c */
 
-int xlload(char *fname, int vflag, int pflag);
+int xlload(const char *fname, int vflag, int pflag);
 int xlread(LVAL fptr, LVAL *pval, int rflag);
 int readone(LVAL fptr, LVAL *pval);
 LVAL rmhash(void);
@@ -941,14 +928,14 @@ LVAL xinfo(void);
 
 /* xlsubr.c */
 
-LVAL xlsubr(char *sname, int type, LVAL (*fcn)(void), int offset);
+LVAL xlsubr(const char *sname, int type, LVAL (*fcn)(void), int offset);
 int xlgetkeyarg(LVAL key, LVAL *pval);
 void xltest(LVAL *pfcn, int *ptresult);
 int xlgkfixnum(LVAL key, LVAL *pval);
 /* argument list parsing functions */
 extern LVAL xlgetfile(void);  	/* get a file/stream argument */
 extern LVAL xlgetfname(void);	/* get a filename argument */
-int needsextension(char *name);
+int needsextension(const char *name);
 /* error reporting functions (don't *really* return at all) */
 extern LVAL xlbadtype(LVAL arg);	/* report "bad argument type" error */
 extern LVAL xltoofew(void);		/* report "too few arguments" error */
@@ -960,8 +947,8 @@ int lval_equal(LVAL arg1, LVAL arg2);
 
 /* xlsym.c */
 
-LVAL xlenter(char *name);	/* enter a symbol */
-LVAL xlmakesym(char *name);	/* make an uninterned symbol */
+LVAL xlenter(const char *name);	/* enter a symbol */
+LVAL xlmakesym(const char *name);	/* make an uninterned symbol */
 LVAL xlgetvalue(LVAL sym);	/* get value of a symbol (checked) */
 LVAL xlxgetvalue(LVAL sym);	/* get value of a symbol */
 void xlsetvalue(LVAL sym, LVAL val);
@@ -971,7 +958,7 @@ void xlsetfunction(LVAL sym, LVAL val);
 LVAL xlgetprop(LVAL sym, LVAL prp);
 void xlputprop(LVAL sym, LVAL val, LVAL prp);
 void xlremprop(LVAL sym, LVAL prp);
-int hash(char *str, int len);
+int hash(const char *str, int len);
 void xlsinit(void);
 LVAL findprop(LVAL sym, LVAL prp);
 
@@ -986,14 +973,24 @@ LVAL xexit(void);
 LVAL xpeek(void);
 LVAL xpoke(void);
 LVAL xaddrs(void);
+LVAL xgetruntime(void);
 
 /* macstuff, unixstuff, winstuff */
 
 extern const char os_pathchar;
 extern const char os_sepchar;
 
-void osinit(char *banner);
-void oserror(char *msg);
+/* security.c */
+extern char *secure_read_path;
+extern char *safe_write_path;
+extern int run_time_limit;
+extern int run_time;
+extern int memory_limit;
+#define SAFE_NYQUIST (safe_write_path != NULL)
+int ok_to_open(const char *filename, const char *mode);
+
+void osinit(const char *banner);
+void oserror(const char *msg);
 void osfinish(void);
 int osclose(FILE *fp);
 void osflush(void);
@@ -1002,22 +999,22 @@ int osaputc(int ch, FILE *fp);
 void osoutflush(FILE *fp);
 int osbputc(int ch, FILE *fp);
 void ostputc(int ch);
-void ostoutflush();
+void ostoutflush(void);
 int osagetc(FILE *fp);
 int osbgetc(FILE *fp);
 int ostgetc(void);
 void ossymbols(void);
 LVAL xlinfo(void);
 LVAL xsetdir(void);
-int osdir_list_start(char *path);
-char *osdir_list_next();
-void osdir_list_finish();
-LVAL xosc_enable();
-LVAL xget_temp_path();
-LVAL xfind_in_xlisp_path();
+int osdir_list_start(const char *path);
+const char *osdir_list_next(void);
+void osdir_list_finish(void);
+LVAL xosc_enable(void);
+LVAL xget_temp_path(void);
+LVAL xfind_in_xlisp_path(void);
 
 /* These are now implemented in path.c   -dmazzoni */
-const char *return_xlisp_path();
+const char *return_xlisp_path(void);
 const char *find_in_xlisp_path(const char *fname);
 void set_xlisp_path(const char *p);
 

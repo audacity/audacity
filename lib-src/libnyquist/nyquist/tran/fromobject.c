@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "fromobject.h"
 
-void fromobject_free();
+void fromobject_free(snd_susp_type a_susp);
 
 
 typedef struct fromobject_susp_struct {
@@ -29,8 +29,9 @@ typedef struct fromobject_susp_struct {
 #include "samples.h"
 
 
-void fromobject__fetch(register fromobject_susp_type susp, snd_list_type snd_list)
+void fromobject__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    fromobject_susp_type susp = (fromobject_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -87,19 +88,21 @@ void fromobject__fetch(register fromobject_susp_type susp, snd_list_type snd_lis
 } /* fromobject__fetch */
 
 
-void fromobject_mark(fromobject_susp_type susp)
+void fromobject_mark(snd_susp_type a_susp)
 {
+    fromobject_susp_type susp = (fromobject_susp_type) a_susp;
     if (susp->src) mark(susp->src);
 }
 
 
-void fromobject_free(fromobject_susp_type susp)
+void fromobject_free(snd_susp_type a_susp)
 {
+    fromobject_susp_type susp = (fromobject_susp_type) a_susp;
     ffree_generic(susp, sizeof(fromobject_susp_node), "fromobject_free");
 }
 
 
-void fromobject_print_tree(fromobject_susp_type susp, int n)
+void fromobject_print_tree(snd_susp_type a_susp, int n)
 {
 }
 

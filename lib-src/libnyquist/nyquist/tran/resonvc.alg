@@ -2,7 +2,6 @@
 (NAME "resonvc")
 (ARGUMENTS ("sound_type" "s1") ("sound_type" "hz") ("double" "bw")
            ("int" "normalization"))
-(INLINE-INTERPOLATION T)
 (INTERNAL-SCALING s1)
 (ALWAYS-SCALE hz)
 (START (MAX s1 hz))
@@ -28,6 +27,6 @@
 (CONSTANT "c1" "c2" "c3co" "c3p1" "c3t4" "omc3" "normalization" "scale1")
 (FORCE-INTO-REGISTER c3t4 c3p1 normalization omc3 scale1)
 (INNER-LOOP "{ double y0 = c1 * s1 + c2 * y1 - c3co * y2;
-            output = (sample_type) y0;
-            y2 = y1; y1 = y0; }")
+              output = (sample_type) y0;
+              y2 = y1; y1 = y0; }")
 )

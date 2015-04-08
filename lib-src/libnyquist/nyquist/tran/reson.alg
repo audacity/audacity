@@ -17,7 +17,7 @@
        ("double" "y2" "0.0"))
 (CONSTANT "c1" "c2" "c3")
 (INNER-LOOP "{ double y0 = c1 * s + c2 * y1 - c3 * y2;
-            output = (sample_type) y0;	
-            y2 = y1; y1 = y0; }")
+              output = (sample_type) y0;	
+              y2 = y1; y1 = y0; }")
 )
 

@@ -600,7 +600,20 @@ boolean rec_init(boolean bender)
     /* it would be silly to record with only room enough for 10 notes! */
 }
 
-
+#ifdef NEED_REC_EVENT
+/* 
+This function was part of the CMU MIDI Toolkit. It provided a constant time
+fast way to record midi data into a buffer. After recording, the buffered 
+data could be transferred into an Adagio score structure, which involved 
+linked list allocation and insertion that might have caused performance 
+problems. This code uses the high-order bit of longs to distinguish timestamps
+from data (MIDI messages), but the code seems to assume little endian, and 
+I'm not sure how it worked on both Intel and 68000 processors. Rather than
+look more closely or fix it, I'm commenting it out because Nyquist does not
+have any MIDI I/O capability and does not need the function. It is here for
+completeness, since this is probably the only archived version of the CMU
+MIDI Toolkit. */
+
 /****************************************************************************
 *               rec_event
 * Inputs:
@@ -636,3 +649,5 @@ overflow:
     gprintf(ERROR, "No more memory.\n");
     return FALSE;
 }
+
+#endif

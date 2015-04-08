@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "gate.h"
 
-void gate_free();
+void gate_free(snd_susp_type a_susp);
 
 
 typedef struct gate_susp_struct {
@@ -43,24 +43,27 @@ typedef struct gate_susp_struct {
 #define ST_RISE 5
 
 /* Overview:
-This operation generates an exponential rise and decay suitable for implementing a 
-noise gate. The decay starts when the signal drops below threshold and stays there
-for longer than lookahead. 
-Decay continues until the value reaches floor, at which point the decay stops
-and the value is held constant. Either during the decay or after the floor is reached,
-if the signal goes above threshold, then the output value will rise to 1.0 (0dB) at
-the point the signal crosses the threshold. Again, lookahead is used, so the rise
-actually starts before the signal crosses the threshold. The rise rate is constant
-and set so that a rise from floor to 0dB occurs in the specified risetime.  Similarly,
-the fall rate is constant such that a fall from 0dB to the floor takes falltime.
+This operation generates an exponential rise and decay suitable for 
+implementing a noise gate. The decay starts when the signal drops 
+below threshold and stays there for longer than lookahead. 
+Decay continues until the value reaches floor, at which point the 
+decay stops and the value is held constant. Either during the decay 
+or after the floor is reached, if the signal goes above threshold, 
+then the output value will rise to 1.0 (0dB) at the point the 
+signal crosses the threshold. Again, lookahead is used, so the rise
+actually starts before the signal crosses the threshold. The rise 
+rate is constant and set so that a rise from floor to 0dB occurs 
+in the specified risetime.  Similarly, the fall rate is constant 
+such that a fall from 0dB to the floor takes falltime.
 
-Rather than looking ahead, the output actually lags the input by lookahead. The caller
-should advance the time of the input signal in order to get a correct output signal,
-and this will be taken care of in Lisp code.
+Rather than looking ahead, the output actually lags the input by 
+lookahead. The caller should advance the time of the input signal 
+in order to get a correct output signal, and this will be taken 
+care of in Lisp code.
 
-The implementation is a finite-state machine that simultaneously computes the value
-and scans ahead for threshold crossings. Time points, remembered as sample counts are
-saved in variables:
+The implementation is a finite-state machine that simultaneously 
+computes the value and scans ahead for threshold crossings. Time 
+points, remembered as sample counts are saved in variables:
     on_count -- the time at which the rise should complete
     off_count -- the time at which the fall should begin
     rise_factor -- multiply by this to get exponential rise
@@ -103,8 +106,9 @@ void compute_start_rise(gate_susp_type susp)
 }
 
 
-void gate_n_fetch(register gate_susp_type susp, snd_list_type snd_list)
+void gate_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    gate_susp_type susp = (gate_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -137,6 +141,7 @@ void gate_n_fetch(register gate_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -150,76 +155,76 @@ void gate_n_fetch(register gate_susp_type susp, snd_list_type snd_list)
 	signal_ptr_reg = susp->signal_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-{
-        sample_type future = *signal_ptr_reg++;
-        long now = susp->susp.current + cnt + togo - n;
-        
-        switch (state_reg) {
-          /* hold at 1.0 and look for the moment to begin fall: */
-          case ST_HOLD:
-              if (future >= threshold_reg) {
-                  off_count_reg = now + delay_len_reg;
-              } else if (now >= off_count_reg) {
-                  state_reg = ST_FALL;
-                  stop_count_reg = (long) (now + susp->fall_time);
-                  susp->start_fall = now;
+            {
+            sample_type future = *signal_ptr_reg++;
+            long now = susp->susp.current + cnt + togo - n;
+            
+            switch (state_reg) {
+              /* hold at 1.0 and look for the moment to begin fall: */
+              case ST_HOLD:
+                  if (future >= threshold_reg) {
+                      off_count_reg = now + delay_len_reg;
+                  } else if (now >= off_count_reg) {
+                      state_reg = ST_FALL;
+                      stop_count_reg = (long) (now + susp->fall_time);
+                      susp->start_fall = now;
+                  }
+                  break;
+              /* fall until stop_count_reg while looking for next rise time */
+              case ST_FALL:
+                if (future >= threshold_reg) {
+                    off_count_reg = susp->on_count = now + delay_len_reg;
+                    compute_start_rise(susp);
+                    state_reg = ST_FALL_UNTIL;
+                } else if (now == stop_count_reg) {
+                    state_reg = ST_OFF;
+                    value_reg = susp->floor;
+                } else value_reg *= susp->fall_factor;
+                break;
+              /* fall until start_rise while looking for next fall time */
+              case ST_FALL_UNTIL:
+                value_reg *= susp->fall_factor;
+                if (future >= threshold_reg) {
+                       off_count_reg = now + delay_len_reg;
+                   }
+                   if (now >= susp->start_rise) {
+                       state_reg = ST_RISE;
+                   } else if (now >= stop_count_reg) {
+                       state_reg = ST_OFF_UNTIL;
+                       value_reg = susp->floor;
+                   }
+                   break;
+              /* hold at floor (minimum value_reg) and look for next rise time */
+              case ST_OFF:
+                if (future >= threshold_reg) {
+                    off_count_reg = susp->on_count = now + delay_len_reg;
+                    compute_start_rise(susp);
+                    state_reg = ST_OFF_UNTIL;
+                }
+                break;
+              /* hold at floor until start_rise while looking for next fall time */
+              case ST_OFF_UNTIL:
+                  if (future >= threshold_reg) {
+                      off_count_reg = now + delay_len_reg;
+                  }
+                  if (now >= susp->start_rise) {
+                      state_reg = ST_RISE;
+                  }
+                  break;
+              /* rise while looking for fall time */
+              case ST_RISE:
+                value_reg *= susp->rise_factor;
+                if (future >= threshold_reg) {
+                    off_count_reg = now + delay_len_reg;
+                }
+                if (now >= susp->on_count) {
+                    value_reg = 1.0;
+                    state_reg = ST_HOLD;
+                }
+                break;
               }
-              break;
-          /* fall until stop_count_reg while looking for next rise time */
-          case ST_FALL:
-            if (future >= threshold_reg) {
-                off_count_reg = susp->on_count = now + delay_len_reg;
-                compute_start_rise(susp);
-                state_reg = ST_FALL_UNTIL;
-            } else if (now == stop_count_reg) {
-                state_reg = ST_OFF;
-                value_reg = susp->floor;
-            } else value_reg *= susp->fall_factor;
-            break;
-          /* fall until start_rise while looking for next fall time */
-          case ST_FALL_UNTIL:
-            value_reg *= susp->fall_factor;
-            if (future >= threshold_reg) {
-                   off_count_reg = now + delay_len_reg;
-               }
-               if (now >= susp->start_rise) {
-                   state_reg = ST_RISE;
-               } else if (now >= stop_count_reg) {
-                   state_reg = ST_OFF_UNTIL;
-                   value_reg = susp->floor;
-               }
-               break;
-          /* hold at floor (minimum value_reg) and look for next rise time */
-          case ST_OFF:
-            if (future >= threshold_reg) {
-                off_count_reg = susp->on_count = now + delay_len_reg;
-                compute_start_rise(susp);
-                state_reg = ST_OFF_UNTIL;
-            }
-            break;
-          /* hold at floor until start_rise while looking for next fall time */
-          case ST_OFF_UNTIL:
-              if (future >= threshold_reg) {
-                  off_count_reg = now + delay_len_reg;
-              }
-              if (now >= susp->start_rise) {
-                  state_reg = ST_RISE;
-              }
-              break;
-          /* rise while looking for fall time */
-          case ST_RISE:
-            value_reg *= susp->rise_factor;
-            if (future >= threshold_reg) {
-                off_count_reg = now + delay_len_reg;
-            }
-            if (now >= susp->on_count) {
-                value_reg = 1.0;
-                state_reg = ST_HOLD;
-            }
-            break;
-          }
-          *out_ptr_reg++ = (sample_type) value_reg;
-      };
+              *out_ptr_reg++ = (sample_type) value_reg;
+            };
 	} while (--n); /* inner loop */
 
 	togo -= n;
@@ -244,11 +249,9 @@ void gate_n_fetch(register gate_susp_type susp, snd_list_type snd_list)
 } /* gate_n_fetch */
 
 
-void gate_toss_fetch(susp, snd_list)
-  register gate_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void gate_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    gate_susp_type susp = (gate_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -263,25 +266,28 @@ void gate_toss_fetch(susp, snd_list)
     susp->signal_ptr += n;
     susp_took(signal_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void gate_mark(gate_susp_type susp)
+void gate_mark(snd_susp_type a_susp)
 {
+    gate_susp_type susp = (gate_susp_type) a_susp;
     sound_xlmark(susp->signal);
 }
 
 
-void gate_free(gate_susp_type susp)
+void gate_free(snd_susp_type a_susp)
 {
+    gate_susp_type susp = (gate_susp_type) a_susp;
     sound_unref(susp->signal);
     ffree_generic(susp, sizeof(gate_susp_node), "gate_free");
 }
 
 
-void gate_print_tree(gate_susp_type susp, int n)
+void gate_print_tree(snd_susp_type a_susp, int n)
 {
+    gate_susp_type susp = (gate_susp_type) a_susp;
     indent(n);
     stdputstr("signal:");
     sound_print_tree_1(susp->signal, n);
@@ -293,7 +299,6 @@ sound_type snd_make_gate(sound_type signal, time_type lookahead, double risetime
     register gate_susp_type susp;
     rate_type sr = signal->sr;
     time_type t0 = signal->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     /* combine scale factors of linear inputs (SIGNAL) */
@@ -327,8 +332,8 @@ sound_type snd_make_gate(sound_type signal, time_type lookahead, double risetime
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = gate_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = gate_toss_fetch;
     }
 
     /* initialize susp state */

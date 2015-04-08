@@ -8,11 +8,4 @@
   (LINEAR input)
   (TERMINATE (MIN input))
   (LOGICAL-STOP (MIN input))
-  (TYPE-CHECK
-"    if (input->sr > sr) {
-        sound_unref(input);
-        xlfail(\"snd-up: output sample rate must be higher than input\");
-    }
-")
 )
-

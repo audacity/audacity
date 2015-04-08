@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "biquadfilt.h"
 
-void biquadfilt_free();
+void biquadfilt_free(snd_susp_type a_susp);
 
 
 typedef struct biquadfilt_susp_struct {
@@ -30,8 +30,9 @@ typedef struct biquadfilt_susp_struct {
 } biquadfilt_susp_node, *biquadfilt_susp_type;
 
 
-void biquadfilt_n_fetch(register biquadfilt_susp_type susp, snd_list_type snd_list)
+void biquadfilt_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    biquadfilt_susp_type susp = (biquadfilt_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -65,6 +66,7 @@ void biquadfilt_n_fetch(register biquadfilt_susp_type susp, snd_list_type snd_li
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -76,6 +78,7 @@ void biquadfilt_n_fetch(register biquadfilt_susp_type susp, snd_list_type snd_li
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -104,9 +107,9 @@ void biquadfilt_n_fetch(register biquadfilt_susp_type susp, snd_list_type snd_li
 	s_ptr_reg = susp->s_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-double z0;	z0 = *s_ptr_reg++ + a1_reg*z1_reg + a2_reg*z2_reg;
-                    *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
-                    z2_reg = z1_reg; z1_reg = z0;;
+            double z0;            z0 = *s_ptr_reg++ + a1_reg*z1_reg + a2_reg*z2_reg;
+            *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
+            z2_reg = z1_reg; z1_reg = z0;
 	} while (--n); /* inner loop */
 
 	susp->z1 = z1_reg;
@@ -134,116 +137,9 @@ double z0;	z0 = *s_ptr_reg++ + a1_reg*z1_reg + a2_reg*z2_reg;
 } /* biquadfilt_n_fetch */
 
 
-void biquadfilt_s_fetch(register biquadfilt_susp_type susp, snd_list_type snd_list)
-{
-    int cnt = 0; /* how many samples computed */
-    int togo;
-    int n;
-    sample_block_type out;
-    register sample_block_values_type out_ptr;
-
-    register sample_block_values_type out_ptr_reg;
-
-    register double z1_reg;
-    register double z2_reg;
-    register double b0_reg;
-    register double b1_reg;
-    register double b2_reg;
-    register double a1_reg;
-    register double a2_reg;
-    register sample_type s_scale_reg = susp->s->scale;
-    register sample_block_values_type s_ptr_reg;
-    falloc_sample_block(out, "biquadfilt_s_fetch");
-    out_ptr = out->samples;
-    snd_list->block = out;
-
-    while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
-
-	/* don't run past the s input sample block: */
-	susp_check_term_log_samples(s, s_ptr, s_cnt);
-	togo = min(togo, susp->s_cnt);
-
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo == 0) break;
-	}
-
-
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
-
-	n = togo;
-	z1_reg = susp->z1;
-	z2_reg = susp->z2;
-	b0_reg = susp->b0;
-	b1_reg = susp->b1;
-	b2_reg = susp->b2;
-	a1_reg = susp->a1;
-	a2_reg = susp->a2;
-	s_ptr_reg = susp->s_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
-double z0;	z0 = (s_scale_reg * *s_ptr_reg++) + a1_reg*z1_reg + a2_reg*z2_reg;
-                    *out_ptr_reg++ = (sample_type) (z0*b0_reg + z1_reg*b1_reg + z2_reg*b2_reg);
-                    z2_reg = z1_reg; z1_reg = z0;;
-	} while (--n); /* inner loop */
-
-	susp->z1 = z1_reg;
-	susp->z2 = z2_reg;
-	/* using s_ptr_reg is a bad idea on RS/6000: */
-	susp->s_ptr += togo;
-	out_ptr += togo;
-	susp_took(s_cnt, togo);
-	cnt += togo;
-    } /* outer loop */
-
-    /* test for termination */
-    if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
-    } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
-    }
-    /* test for logical stop */
-    if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
-    } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
-    }
-} /* biquadfilt_s_fetch */
-
-
-void biquadfilt_toss_fetch(susp, snd_list)
-  register biquadfilt_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void biquadfilt_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    biquadfilt_susp_type susp = (biquadfilt_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -258,25 +154,28 @@ void biquadfilt_toss_fetch(susp, snd_list)
     susp->s_ptr += n;
     susp_took(s_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void biquadfilt_mark(biquadfilt_susp_type susp)
+void biquadfilt_mark(snd_susp_type a_susp)
 {
+    biquadfilt_susp_type susp = (biquadfilt_susp_type) a_susp;
     sound_xlmark(susp->s);
 }
 
 
-void biquadfilt_free(biquadfilt_susp_type susp)
+void biquadfilt_free(snd_susp_type a_susp)
 {
+    biquadfilt_susp_type susp = (biquadfilt_susp_type) a_susp;
     sound_unref(susp->s);
     ffree_generic(susp, sizeof(biquadfilt_susp_node), "biquadfilt_free");
 }
 
 
-void biquadfilt_print_tree(biquadfilt_susp_type susp, int n)
+void biquadfilt_print_tree(snd_susp_type a_susp, int n)
 {
+    biquadfilt_susp_type susp = (biquadfilt_susp_type) a_susp;
     indent(n);
     stdputstr("s:");
     sound_print_tree_1(susp->s, n);
@@ -288,9 +187,15 @@ sound_type snd_make_biquadfilt(sound_type s, double b0, double b1, double b2, do
     register biquadfilt_susp_type susp;
     rate_type sr = s->sr;
     time_type t0 = s->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
+    /* combine scale factors of linear inputs (S) */
+    scale_factor *= s->scale;
+    s->scale = 1.0F;
+
+    /* try to push scale_factor back to a low sr input */
+    if (s->sr < sr) { s->scale = scale_factor; scale_factor = 1.0F; }
+
     falloc_generic(susp, biquadfilt_susp_node, "snd_make_biquadfilt");
     susp->z1 = z1init;
     susp->z2 = z2init;
@@ -299,15 +204,7 @@ sound_type snd_make_biquadfilt(sound_type s, double b0, double b1, double b2, do
     susp->b2 = b2;
     susp->a1 = a1;
     susp->a2 = a2;
-
-    /* select a susp fn based on sample rates */
-    interp_desc = (interp_desc << 2) + interp_style(s, sr);
-    switch (interp_desc) {
-      case INTERP_n: susp->susp.fetch = biquadfilt_n_fetch; break;
-      case INTERP_s: susp->susp.fetch = biquadfilt_s_fetch; break;
-      default: snd_badsr(); break;
-    }
-
+    susp->susp.fetch = biquadfilt_n_fetch;
     susp->terminate_cnt = UNKNOWN;
     /* handle unequal start times, if any */
     if (t0 < s->t0) sound_prepend_zeros(s, t0);
@@ -316,8 +213,8 @@ sound_type snd_make_biquadfilt(sound_type s, double b0, double b1, double b2, do
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = biquadfilt_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = biquadfilt_toss_fetch;
     }
 
     /* initialize susp state */

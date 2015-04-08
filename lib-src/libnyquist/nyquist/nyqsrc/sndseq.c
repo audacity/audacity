@@ -59,16 +59,15 @@ typedef struct sndseq_susp_struct {
 } sndseq_susp_node, *sndseq_susp_type;
 
 
-void sndseq_fetch(sndseq_susp_type, snd_list_type);
+void sndseq_fetch(snd_susp_type a_susp, snd_list_type snd_list);
 void sndseq_zero_fill_fetch(sndseq_susp_type, snd_list_type);
-void sndseq_free();
+void sndseq_free(snd_susp_type susp);
 
 extern LVAL s_stdout;
 
-void sndseq_mark(sndseq_susp_type susp)
+void sndseq_mark(snd_susp_type a_susp)
 {
-/*    nyquist_printf("sndseq_mark(%x)\n", susp);*/
-/*    nyquist_printf("marking s1@%x in sndseq@%x\n", susp->s1, susp); */
+    sndseq_susp_type susp = (sndseq_susp_type) a_susp;
     sound_xlmark(susp->s1);
     if (susp->closure) mark(susp->closure);
 }
@@ -77,10 +76,9 @@ void sndseq_mark(sndseq_susp_type susp)
 
 /* sndseq_fetch returns blocks of s1 until the logical stop time of s1 */
 /**/
-void sndseq_fetch(susp, snd_list)
-  register sndseq_susp_type susp;
-  snd_list_type snd_list;
+void sndseq_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    sndseq_susp_type susp = (sndseq_susp_type) a_susp;
     int togo;
     int n;
     sample_block_type out;
@@ -173,7 +171,7 @@ D	    stdputstr("using add_s1_nn_fetch\n");
         susp->output_per_s2 = susp->susp.sr / susp->s2->sr;
 
 D        stdputstr("in sndseq: calling add's fetch\n");
-        (*(susp->susp.fetch))(susp, snd_list);
+        (*(susp->susp.fetch))(a_susp, snd_list);
 D        stdputstr("in sndseq: returned from add's fetch\n");
 /*	gc();*/
         xlpop();
@@ -262,16 +260,17 @@ D        stdputstr("in sndseq: returned from add's fetch\n");
 } /* sndseq_fetch */
 
 
-void sndseq_free(sndseq_susp_type susp)
+void sndseq_free(snd_susp_type a_susp)
 {
-    sound_unref(susp->s1);
+    sndseq_susp_type susp = (sndseq_susp_type) a_susp;
     sound_unref(susp->s2);
     ffree_generic(susp, sizeof(sndseq_susp_node), "sndseq_free");
 }
 
 
-void sndseq_print_tree(sndseq_susp_type susp, int n)
+void sndseq_print_tree(snd_susp_type a_susp, int n)
 {
+    sndseq_susp_type susp = (sndseq_susp_type) a_susp;
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);

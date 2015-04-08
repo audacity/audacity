@@ -6,7 +6,7 @@
 (TERMINATE (AFTER "d"))
 (INNER-LOOP "output = sine_table[phase >> SINE_TABLE_SHIFT];
             phase += ph_incr;
-            phase &= SINE_TABLE_MASK;")
+            phase &= SINE_TABLE_MASK")
 (MAINTAIN ("phase" 
  "susp->phase = (susp->phase + susp->ph_incr * togo) & SINE_TABLE_MASK"))
 (CONSTANT "ph_incr")

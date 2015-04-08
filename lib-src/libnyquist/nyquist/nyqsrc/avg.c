@@ -73,8 +73,9 @@ sample_type peak_block(avg_susp_type susp)
 }
 
 
-void avg_s_fetch(avg_susp_type susp, snd_list_type snd_list)
+void avg_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    avg_susp_type susp = (avg_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo = 0;
     int n;
@@ -164,10 +165,9 @@ void avg_s_fetch(avg_susp_type susp, snd_list_type snd_list)
 } /* avg_s_fetch */
 
 
-void avg_toss_fetch(susp, snd_list)
-  avg_susp_type susp;
-  snd_list_type snd_list;
+void avg_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    avg_susp_type susp = (avg_susp_type) a_susp;
     long final_count = MIN(susp->susp.current + max_sample_block_len,
                susp->susp.toss_cnt);
     time_type final_time = susp->susp.t0 + final_count / susp->susp.sr;
@@ -193,22 +193,25 @@ void avg_toss_fetch(susp, snd_list)
 }
 
 
-void avg_mark(avg_susp_type susp)
+void avg_mark(snd_susp_type a_susp)
 {
+    avg_susp_type susp = (avg_susp_type) a_susp;
     sound_xlmark(susp->s);
 }
 
 
-void avg_free(avg_susp_type susp)
+void avg_free(snd_susp_type a_susp)
 {
+    avg_susp_type susp = (avg_susp_type) a_susp;
     sound_unref(susp->s);
     free(susp->buffer);
     ffree_generic(susp, sizeof(avg_susp_node), "avg_free");
 }
 
 
-void avg_print_tree(avg_susp_type susp, int n)
+void avg_print_tree(snd_susp_type a_susp, int n)
 {
+    avg_susp_type susp = (avg_susp_type) a_susp;
     indent(n);
     stdputstr("s:");
     sound_print_tree_1(susp->s, n);

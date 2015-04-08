@@ -142,8 +142,9 @@ static float SrcUD(float X[], double dt, double Time,
 }
 
 
-void resamplev__fetch(register resamplev_susp_type susp, snd_list_type snd_list)
+void resamplev__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    resamplev_susp_type susp = (resamplev_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_block_type out;
     /* note that in this fetch routine, out_ptr is used to remember where
@@ -304,15 +305,17 @@ void resampv_refill(resamplev_susp_type susp) {
 
 
 
-void resamplev_mark(resamplev_susp_type susp)
+void resamplev_mark(snd_susp_type a_susp)
 {
+    resamplev_susp_type susp = (resamplev_susp_type) a_susp;
     sound_xlmark(susp->f);
     sound_xlmark(susp->g);
 }
 
 
-void resamplev_free(resamplev_susp_type susp)
+void resamplev_free(snd_susp_type a_susp)
 {
+    resamplev_susp_type susp = (resamplev_susp_type) a_susp;
     sound_unref(susp->f);
     sound_unref(susp->g);
     free(susp->X);
@@ -320,8 +323,9 @@ void resamplev_free(resamplev_susp_type susp)
 }
 
 
-void resamplev_print_tree(resamplev_susp_type susp, int n)
+void resamplev_print_tree(snd_susp_type a_susp, int n)
 {
+    resamplev_susp_type susp = (resamplev_susp_type) a_susp;
     indent(n);
     nyquist_printf("f:");
     sound_print_tree_1(susp->f, n);

@@ -19,11 +19,11 @@
 #include "io.h"
 #else
 #include <stat.h>
-#endif
+#endif /* WINDOWS */
 #define L_SET SEEK_SET
 #define L_INCR SEEK_CUR
 #define PROTECTION 
-#endif
+#endif /* UNIX */
 #ifndef mips
 #include "stdlib.h"
 #endif
@@ -86,15 +86,16 @@ void read__fetch(susp, snd_list)
 } /* read__fetch */
 
 
-void read_free(read_susp_type susp)
+void read_free(snd_susp_type a_susp)
 {
+    read_susp_type susp = (read_susp_type) a_susp;
     sf_close(susp->sndfile);
     sndread_file_open_count--;
     ffree_generic(susp, sizeof(read_susp_node), "read_free");
 }
 
 
-void read_print_tree(read_susp_type susp, int n)
+void read_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
@@ -169,12 +170,15 @@ LVAL snd_make_read(
         susp->sf_info.format |= format;
     }
 
-    susp->sndfile = sf_open((const char *) filename, SFM_READ, 
-                            &(susp->sf_info));
+    susp->sndfile = NULL;
+    if (ok_to_open((const char *) filename, "rb"))
+        susp->sndfile = sf_open((const char *) filename, SFM_READ,
+                                &(susp->sf_info));
 
     if (!susp->sndfile) {
         char error[240];
-        sprintf(error, "SND-READ: Cannot open file '%s'", filename);
+        sprintf(error, "SND-READ: Cannot open file '%s' because of %s", filename,
+                sf_strerror(susp->sndfile));
         xlfail(error);
     }
     if (susp->sf_info.channels < 1) {
@@ -239,6 +243,7 @@ LVAL snd_make_read(
     case SF_FORMAT_SD2: *format = SND_HEAD_SD2; break;
     case SF_FORMAT_FLAC: *format = SND_HEAD_FLAC; break;
     case SF_FORMAT_CAF: *format = SND_HEAD_CAF; break;
+    case SF_FORMAT_OGG: *format = SND_HEAD_OGG; break;
     default: *format = SND_HEAD_NONE; break;
     }
     *channels = susp->sf_info.channels;

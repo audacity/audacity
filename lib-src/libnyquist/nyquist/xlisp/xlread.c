@@ -79,7 +79,7 @@ extern FILE *read_by_xlisp;
 
 
 /* xlload - load a file of xlisp expressions */
-int xlload(char *fname, int vflag, int pflag)
+int xlload(const char *fname, int vflag, int pflag)
 {
     char fullname[STRMAX+1];
 #ifdef WINDOWS
@@ -111,7 +111,7 @@ int xlload(char *fname, int vflag, int pflag)
         }
     }
     if (strcmp(fullname, "*.*") == 0) {
-        char *name = getfilename(NULL, "lsp", "r", "Load file");
+        const char *name = getfilename(NULL, "lsp", "r", "Load file");
         if (name) {
             strcpy(fullname, name);
             strcpy(save_file_name, name);
@@ -183,7 +183,7 @@ int xlload(char *fname, int vflag, int pflag)
 
     /* read, evaluate and possibly print each expression in the file */
     xlbegin(&cntxt,CF_ERROR,s_true);
-    if (setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf))
         sts = FALSE;
         #ifdef DEBUG_INPUT
             if (read_by_xlisp) {
@@ -336,7 +336,7 @@ int readone(LVAL fptr, LVAL *pval)
     else {
         xlerror("illegal character",cvfixnum((FIXTYPE)ch));
         /* this point will never be reached because xlerror() does a
-           longjmp(). The return is added to avoid false positive 
+           _longjmp(). The return is added to avoid false positive 
            error messages from static analyzers and compilers */
         return (FALSE);
     }

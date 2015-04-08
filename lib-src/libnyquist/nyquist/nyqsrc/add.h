@@ -30,15 +30,15 @@ typedef struct add_susp_struct {
     long                        s1_prepend; /* offset to susp.current */
 } add_susp_node, *add_susp_type;
 
-sound_type snd_make_add();
-sound_type snd_add();
+sound_type snd_make_add(sound_type s1, sound_type s2);
+sound_type snd_add(sound_type s1, sound_type s2);
     /* LISP: (SND-ADD SOUND SOUND) */
 
 /* we export these for seq.c and multiseq.c */ 
-void add_zero_fill_nn_fetch(add_susp_type susp, snd_list_type snd_list);
-void add_s1_s2_nn_fetch(add_susp_type susp, snd_list_type snd_list);
-void add_s2_nn_fetch(add_susp_type susp, snd_list_type snd_list);
-void add_s1_nn_fetch(add_susp_type susp, snd_list_type snd_list);
-void add_mark(add_susp_type susp);
-void add_print_tree(add_susp_type susp, int n);
-void add_free(add_susp_type susp);
+void add_zero_fill_nn_fetch(snd_susp_type, snd_list_type);
+void add_s1_s2_nn_fetch(snd_susp_type, snd_list_type);
+void add_s1_nn_fetch(snd_susp_type, snd_list_type);
+void add_s2_nn_fetch(snd_susp_type, snd_list_type);
+void add_mark(snd_susp_type susp);
+void add_print_tree(snd_susp_type susp, int n);
+void add_free(snd_susp_type susp);

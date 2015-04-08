@@ -47,7 +47,7 @@ static sample_type *create_buf(double floor, long lookahead)
 }
 ")
 (ARGUMENTS ("sound_type" "sndin") ("double" "floor") ("double" "risetime") 
-                   ("double" "falltime") ("long" "lookahead"))
+           ("double" "falltime") ("long" "lookahead"))
 (START (MIN sndin))
 (STATE ("long" "lookahead" "lookahead = lookahead + 1")
        ("sample_type *" "delaybuf" "create_buf(floor, lookahead)")
@@ -63,7 +63,7 @@ static sample_type *create_buf(double floor, long lookahead)
 (NOT-REGISTER delaybuf)
 (ALWAYS-SCALE sndin)
 (TERMINATE (MIN sndin))
-(INNER-LOOP "            sample_type current = sndin;
+(INNER-LOOP "sample_type current = sndin;
             sample_type high = (sample_type) (*prevptr * rise_factor);
             sample_type low = (sample_type) (*prevptr * fall_factor);
             if (low < floor) low = (sample_type) floor;
@@ -100,7 +100,7 @@ static sample_type *create_buf(double floor, long lookahead)
             }
             prevptr = delayptr++;
             if (delayptr == endptr) delayptr = susp->delaybuf;
-            output = *delayptr;")
+            output = *delayptr")
 (FINALIZATION "free(susp->delaybuf);")
 )
 

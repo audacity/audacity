@@ -18,16 +18,13 @@
                            : (sample_type) (SINE_TABLE_LEN * 0.5 / sr)")) ;cancel 0/0
 
 (ALWAYS-SCALE s_fm)
-(INLINE-INTERPOLATION T) ; so that modulation can be low frequency
 (STEP-FUNCTION s_fm)
 (TERMINATE (MIN s_fm))
 (LOGICAL-STOP (MIN s_fm))
-(INNER-LOOP-LOCALS "	    long table_index;
+(INNER-LOOP-LOCALS "            long table_index;
             double x1;
-            sample_type num, denom, samp;
-")
-(INNER-LOOP "
-            table_index = (long) phase;
+            sample_type num, denom, samp;\n")
+(INNER-LOOP "table_index = (long) phase;
             x1 = sine_table[table_index];
             denom = (sample_type) (x1 + (phase - table_index) * 
                           (sine_table[table_index + 1] - x1));
@@ -48,7 +45,6 @@
             /* watch out for negative frequencies! */
             while (phase < 0) phase += SINE_TABLE_LEN")
 (CONSTANT "ph_incr" "n_2_p1" "n_2_r")
-
 (SAMPLE-RATE "sr")
 )
 

@@ -12,8 +12,8 @@
 (LINEAR s)
 (TERMINATE (MIN s))
 (INNER-LOOP "output = *delayptr;
-         *delayptr = *delayptr * feedback + s;
-         if (++delayptr >= endptr) delayptr = susp->delaybuf;")
-(FINALIZATION "free(susp->delaybuf);")
+            *delayptr = *delayptr * feedback + s;
+            if (++delayptr >= endptr) delayptr = susp->delaybuf")
+(FINALIZATION "free(susp->delaybuf);\n")
 )
 

@@ -73,6 +73,16 @@ double snd_set_latency(double latency)
 }
 
 
+long check_terminate_cnt(long tc)
+{
+    if (tc < 0) {
+        xlfail("duration is less than 0 samples");
+        tc = 0; /* this should not be reached */
+    }
+    return tc;
+}
+
+
 /* xlbadsr - report a "bad combination of sample rates" error */
 LVAL snd_badsr(void)
 {
@@ -1572,12 +1582,19 @@ double hz_to_step(double hz)
 }
 
 
-double step_to_hz(steps)
-  double steps;
+double step_to_hz(double steps)
 {
     return exp(steps * p1 + p2);
 }
 
+#ifdef WIN32
+#define RECIP_LOG_2 1.44269504088895364453
+
+double log2(double x)
+{
+  return log(x) * RECIP_LOG_2;
+}
+#endif
 
 /*
  * from old stuff...
@@ -1616,9 +1633,9 @@ static unsigned char *sound_xlrestore(FILE *fp)
 
 /* sound_xlmark -- mark LVAL nodes reachable from this sound */
 /**/
-void sound_xlmark(s)
-sound_type s;
+void sound_xlmark(void *a_sound)
 {
+    sound_type s = (sound_type) a_sound;
     snd_list_type snd_list;
     long counter = 0;
 #ifdef TRACESNDGC

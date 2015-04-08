@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "abs.h"
 
-void abs_free();
+void abs_free(snd_susp_type a_susp);
 
 
 typedef struct abs_susp_struct {
@@ -22,8 +22,9 @@ typedef struct abs_susp_struct {
 } abs_susp_node, *abs_susp_type;
 
 
-void abs_s_fetch(register abs_susp_type susp, snd_list_type snd_list)
+void abs_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    abs_susp_type susp = (abs_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -32,9 +33,8 @@ void abs_s_fetch(register abs_susp_type susp, snd_list_type snd_list)
 
     register sample_block_values_type out_ptr_reg;
 
-    register sample_type input_scale_reg = susp->input->scale;
     register sample_block_values_type input_ptr_reg;
-    falloc_sample_block(out, "abs_s_fetch");
+    falloc_sample_block(out, "abs_n_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
 
@@ -51,6 +51,7 @@ void abs_s_fetch(register abs_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -62,6 +63,7 @@ void abs_s_fetch(register abs_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -83,7 +85,10 @@ void abs_s_fetch(register abs_susp_type susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-{ sample_type s = (input_scale_reg * *input_ptr_reg++); sample_type o = s; if (o < 0.0) o = -o; *out_ptr_reg++ = o; };
+            { sample_type s = *input_ptr_reg++; 
+              sample_type o = s; 
+              if (o < 0.0) o = -o; 
+              *out_ptr_reg++ = o; };
 	} while (--n); /* inner loop */
 
 	/* using input_ptr_reg is a bad idea on RS/6000: */
@@ -106,14 +111,12 @@ void abs_s_fetch(register abs_susp_type susp, snd_list_type snd_list)
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
 	susp->logically_stopped = true;
     }
-} /* abs_s_fetch */
+} /* abs_n_fetch */
 
 
-void abs_toss_fetch(susp, snd_list)
-  register abs_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void abs_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    abs_susp_type susp = (abs_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -128,25 +131,28 @@ void abs_toss_fetch(susp, snd_list)
     susp->input_ptr += n;
     susp_took(input_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void abs_mark(abs_susp_type susp)
+void abs_mark(snd_susp_type a_susp)
 {
+    abs_susp_type susp = (abs_susp_type) a_susp;
     sound_xlmark(susp->input);
 }
 
 
-void abs_free(abs_susp_type susp)
+void abs_free(snd_susp_type a_susp)
 {
+    abs_susp_type susp = (abs_susp_type) a_susp;
     sound_unref(susp->input);
     ffree_generic(susp, sizeof(abs_susp_node), "abs_free");
 }
 
 
-void abs_print_tree(abs_susp_type susp, int n)
+void abs_print_tree(snd_susp_type a_susp, int n)
 {
+    abs_susp_type susp = (abs_susp_type) a_susp;
     indent(n);
     stdputstr("input:");
     sound_print_tree_1(susp->input, n);
@@ -158,11 +164,17 @@ sound_type snd_make_abs(sound_type input)
     register abs_susp_type susp;
     rate_type sr = input->sr;
     time_type t0 = input->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
+    /* combine scale factors of linear inputs (INPUT) */
+    scale_factor *= input->scale;
+    input->scale = 1.0F;
+
+    /* try to push scale_factor back to a low sr input */
+    if (input->sr < sr) { input->scale = scale_factor; scale_factor = 1.0F; }
+
     falloc_generic(susp, abs_susp_node, "snd_make_abs");
-    susp->susp.fetch = abs_s_fetch;
+    susp->susp.fetch = abs_n_fetch;
     susp->terminate_cnt = UNKNOWN;
     /* handle unequal start times, if any */
     if (t0 < input->t0) sound_prepend_zeros(input, t0);
@@ -171,8 +183,8 @@ sound_type snd_make_abs(sound_type input)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = abs_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = abs_toss_fetch;
     }
 
     /* initialize susp state */

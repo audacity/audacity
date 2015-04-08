@@ -36,6 +36,15 @@
 #include <sys/types.h>
 #include <string.h>
 #include <cmath>
+#include <cstdio>
+
+/* this is defined in xlisp.h, but it seems a bad idea
+ * to create an stk dependency on xlisp, or to add a new
+ * security.h file to share between xlisp.h and stk
+ */
+extern "C" {
+    int ok_to_open(const char *filename, const char *mode);
+}
 
 using namespace Nyq;
 
@@ -47,7 +56,7 @@ FileRead :: FileRead()
 FileRead :: FileRead( std::string fileName, bool typeRaw )
   : fd_(0)
 {
-  open( fileName, typeRaw );
+    open( fileName, typeRaw );
 }
 
 FileRead :: ~FileRead()
@@ -75,7 +84,9 @@ void FileRead :: open( std::string fileName, bool typeRaw )
   close();
 
   // Try to open the file.
-  fd_ = fopen( fileName.c_str(), "rb" );
+  fd_ = NULL;
+  if (ok_to_open(fileName.c_str(), "rb"))
+    fd_ = fopen( fileName.c_str(), "rb" );
   if ( !fd_ ) {
     errorString_ << "FileRead::open: could not open or find file (" << fileName << ")!";
     handleError( StkError::FILE_NOT_FOUND );

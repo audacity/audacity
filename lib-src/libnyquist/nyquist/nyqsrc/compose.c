@@ -36,8 +36,9 @@ typedef struct compose_susp_struct {
 
 /* compose_fetch -- computes f(g(t)) */
 /**/
-void compose_fetch(register compose_susp_type susp, snd_list_type snd_list)
+void compose_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    compose_susp_type susp = (compose_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo = 0;
     int n;
@@ -173,10 +174,9 @@ f_out_of_samples:
 } /* compose_fetch */
 
 
-void compose_toss_fetch(susp, snd_list)
-  register compose_susp_type susp;
-  snd_list_type snd_list;
+void compose_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    compose_susp_type susp = (compose_susp_type) a_susp;
     long final_count = MIN(susp->susp.current + max_sample_block_len,
                            susp->susp.toss_cnt);
     time_type final_time = susp->susp.t0 + final_count / susp->susp.sr;
@@ -210,23 +210,26 @@ void compose_toss_fetch(susp, snd_list)
 }
 
 
-void compose_mark(compose_susp_type susp)
+void compose_mark(snd_susp_type a_susp)
 {
+    compose_susp_type susp = (compose_susp_type) a_susp;
     sound_xlmark(susp->f);
     sound_xlmark(susp->g);
 }
 
 
-void compose_free(compose_susp_type susp)
+void compose_free(snd_susp_type a_susp)
 {
+    compose_susp_type susp = (compose_susp_type) a_susp;
     sound_unref(susp->f);
     sound_unref(susp->g);
     ffree_generic(susp, sizeof(compose_susp_node), "compose_free");
 }
 
 
-void compose_print_tree(compose_susp_type susp, int n)
+void compose_print_tree(snd_susp_type a_susp, int n)
 {
+    compose_susp_type susp = (compose_susp_type) a_susp;
     indent(n);
     stdputstr("f:");
     sound_print_tree_1(susp->f, n);

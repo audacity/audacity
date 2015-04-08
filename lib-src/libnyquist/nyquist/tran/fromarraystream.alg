@@ -61,11 +61,10 @@ out:	    togo = 0;	/* indicate termination */
         }
         togo = min(togo, susp->length - susp->index);
 ")
-  (INNER-LOOP "output = samples[index++];")
+  (INNER-LOOP "output = samples[index++]")
   (CONSTANT "length" "samples" "array" "src")
   (TERMINATE COMPUTED)
-  (FINALIZATION "    free(susp->samples);
-")
+  (FINALIZATION "    free(susp->samples);\n")
 
 )
 

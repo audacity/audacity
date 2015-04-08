@@ -56,11 +56,11 @@ struct xtype_desc_struct desc_table[NTYPES];
 /**/
 xtype_desc create_desc(
   char *type_name,	/* the type string name */
-  void (*fm)(),		/* method to free instances of the type */
-  void (*pm)(),		/* method to print instances of the type */
-  void (*sm)(),		/* method to save instances of the type */
-  unsigned char * (*rm)(), /* method to restore instances of the type */
-  void (*mm)())		/* method to mark instances of the type for GC */
+  void (*fm)(void*),		/* method to free instances of the type */
+  void (*pm)(void*, void*),		/* method to print instances of the type */
+  void (*sm)(FILE*, void*),		/* method to save instances of the type */
+  unsigned char * (*rm)(FILE*), /* method to restore instances of the type */
+  void (*mm)(void*))		/* method to mark instances of the type for GC */
 {
     xtype_desc td;	/* the new type descriptor */
     if (extindex >= NTYPES) xlfail("insufficient type desc space");

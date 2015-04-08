@@ -34,8 +34,9 @@ typedef struct inverse_susp_struct {
     boolean started;
 } inverse_susp_node, *inverse_susp_type;
 
-void inverse_fetch(register inverse_susp_type susp, snd_list_type snd_list)
+void inverse_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    inverse_susp_type susp = (inverse_susp_type) a_susp;
     int cnt = 0; /* how many samples read from s */
     int out_cnt = 0; /* how many samples output */
     int togo = 0; /* how many more to read from s in inner loop */
@@ -128,10 +129,9 @@ void inverse_fetch(register inverse_susp_type susp, snd_list_type snd_list)
 } /* inverse_fetch */
 
 
-void inverse_toss_fetch(susp, snd_list)
-  register inverse_susp_type susp;
-  snd_list_type snd_list;
+void inverse_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    inverse_susp_type susp = (inverse_susp_type) a_susp;
     long final_count = MIN(susp->susp.current + max_sample_block_len,
                            susp->susp.toss_cnt);
     time_type final_time = susp->susp.t0 + final_count / susp->susp.sr;
@@ -157,21 +157,24 @@ void inverse_toss_fetch(susp, snd_list)
 }
 
 
-void inverse_mark(inverse_susp_type susp)
+void inverse_mark(snd_susp_type a_susp)
 {
+    inverse_susp_type susp = (inverse_susp_type) a_susp;
     sound_xlmark(susp->s);
 }
 
 
-void inverse_free(inverse_susp_type susp)
+void inverse_free(snd_susp_type a_susp)
 {
+    inverse_susp_type susp = (inverse_susp_type) a_susp;
     sound_unref(susp->s);
     ffree_generic(susp, sizeof(inverse_susp_node), "inverse_free");
 }
 
 
-void inverse_print_tree(inverse_susp_type susp, int n)
+void inverse_print_tree(snd_susp_type a_susp, int n)
 {
+    inverse_susp_type susp = (inverse_susp_type) a_susp;
     indent(n);
     stdputstr("s:");
     sound_print_tree_1(susp->s, n);

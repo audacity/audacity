@@ -44,10 +44,9 @@
  * deallocated, because it can only be referenced through the
  * snd_list nodes to which there are backpointers.
  */
-void multiread_fetch(susp, snd_list)
-  register read_susp_type susp;
-  snd_list_type snd_list;
+void multiread_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    read_susp_type susp = (read_susp_type) a_susp;
     int i, j;
     int frames_read = 0; /* total frames read in this call to fetch */
     int n;
@@ -252,8 +251,9 @@ void multiread_fetch(susp, snd_list)
 } /* multiread__fetch */
   
 
-void multiread_free(read_susp_type susp)
+void multiread_free(snd_susp_type a_susp)
 {
+    read_susp_type susp = (read_susp_type) a_susp;
     int j;
     boolean active = false;
 /*    stdputstr("multiread_free: "); */

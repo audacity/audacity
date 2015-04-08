@@ -14,49 +14,69 @@
 xsetdir - set current directory of the process */
 LVAL xsetdir() {
     TCHAR ssCurDir[MAX_PATH], szCurDir[MAX_PATH];
+    int verbose = TRUE;
 
     strcpy(ssCurDir, getstring(xlgastring()));
+    if (moreargs()) {
+        verbose = (xlgetarg() != NIL);
+    }
     xllastarg();
-    if (SetCurrentDirectory(ssCurDir)) {
-        if (GetCurrentDirectory(
-            sizeof(szCurDir)/sizeof(TCHAR), szCurDir)) {
-            return cvstring(szCurDir);
-        /* create the result string
-            stdputstr("Current Directory: ");
-            stdputstr(szCurDir);
-            stdputstr("\n"); */
+    if (ok_to_open(ssCurDir, "r"))
+        if (SetCurrentDirectory(ssCurDir)) {
+            if (GetCurrentDirectory(
+                sizeof(szCurDir)/sizeof(TCHAR), szCurDir)) {
+                return cvstring(szCurDir);
+            /* create the result string
+                stdputstr("Current Directory: ");
+                stdputstr(szCurDir);
+                stdputstr("\n"); */
+	    }
         }	
     }
-    stdputstr("Directory Setting Error\n");
+    if (verbose) stdputstr("Directory Setting Error\n");
 
     /* return nil on error*/
     return NIL;
 }
+
+
+// test if source matches "c:\\windows" (case insensitive)
+//
+static int is_windows_dir(char *source)
+{
+	char *windows_dir = "c:\\windows";
+	while (*source) {
+		if (!*windows_dir || tolower(*source++) != *windows_dir++) {
+			return FALSE;
+		}
+	}
+	return !*windows_dir;
+}
+
 
 /* xget_temp_path -- get a path to create temp files */
 LVAL xget_temp_path()
 {
     char *p;
     char szDir[MAX_PATH];
-    char szDirLC[MAX_PATH];
     int rslt = GetTempPath(MAX_PATH, szDir);
-    if (rslt > MAX_PATH || rslt <= 0) {
-        return cvstring("");
-    } else {
-        /* Vista apparently treats c:\windows with
+    if (!(rslt > MAX_PATH || rslt <= 0)) {
+		/* Vista apparently treats c:\windows with
          * special semantics, so just don't allow
          * GetTempPath to put us in c:\windows...
          */
-        strcpy(szDirLC, szDir); /* convert to lower case */
-        for (p = szDirLC; *p; p++) { 
-            *p = tolower(*p);
+        if (!is_windows_dir(szDir)) {
+           return cvstring(szDir);
         }
-        if (strstr(szDirLC, "c:\\windows")) {
-            /* c:\windows is bad. */
-            return cvstring("");
-        }
+    }
+	// if not defined or "c:\\windows", which is bad
+	p = getenv("TEMP");
+	if (p && strlen(p) < MAX_PATH) strcpy(szDir, p);
+	else *szDir = 0;
+    if (!is_windows_dir(szDir)) {
         return cvstring(szDir);
     }
+	return cvstring("");
 }
 
 //Updated End
