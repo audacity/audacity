@@ -1,5 +1,5 @@
 /*
-  Copyright 2012 David Robillard <http://drobilla.net>
+  Copyright 2012-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -22,8 +22,10 @@ lilv_lib_open(LilvWorld*               world,
               const char*              bundle_path,
               const LV2_Feature*const* features)
 {
-	ZixTreeIter*            i   = NULL;
-	const struct LilvHeader key = { world, (LilvNode*)uri };
+	ZixTreeIter*  i   = NULL;
+	const LilvLib key = {
+		world, (LilvNode*)uri, (char*)bundle_path, NULL, NULL, NULL, 0
+	};
 	if (!zix_tree_find(world->libs, &key, &i)) {
 		LilvLib* llib = (LilvLib*)zix_tree_get(i);
 		++llib->refs;
@@ -69,6 +71,7 @@ lilv_lib_open(LilvWorld*               world,
 	LilvLib* llib = (LilvLib*)malloc(sizeof(LilvLib));
 	llib->world          = world;
 	llib->uri            = lilv_node_duplicate(uri);
+	llib->bundle_path    = lilv_strdup(bundle_path);
 	llib->lib            = lib;
 	llib->lv2_descriptor = df;
 #ifdef LILV_NEW_LV2
@@ -106,6 +109,7 @@ lilv_lib_close(LilvLib* lib)
 		}
 
 		lilv_node_free(lib->uri);
+		free(lib->bundle_path);
 		free(lib);
 	}
 }

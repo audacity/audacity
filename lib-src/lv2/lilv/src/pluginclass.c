@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2011 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -33,9 +33,9 @@ lilv_plugin_class_new(LilvWorld*      world,
 	pc->world      = world;
 	pc->uri        = lilv_node_new_from_node(world, uri);
 	pc->label      = lilv_node_new(world, LILV_VALUE_STRING, label);
-	pc->parent_uri = (parent_node)
-		? lilv_node_new_from_node(world, parent_node)
-		: NULL;
+	pc->parent_uri = (parent_node
+	                  ? lilv_node_new_from_node(world, parent_node)
+	                  : NULL);
 	return pc;
 }
 
@@ -49,33 +49,25 @@ lilv_plugin_class_free(LilvPluginClass* plugin_class)
 	free(plugin_class);
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_plugin_class_get_parent_uri(const LilvPluginClass* plugin_class)
 {
-	if (plugin_class->parent_uri)
-		return plugin_class->parent_uri;
-	else
-		return NULL;
+	return plugin_class->parent_uri ? plugin_class->parent_uri : NULL;
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_plugin_class_get_uri(const LilvPluginClass* plugin_class)
 {
-	assert(plugin_class->uri);
 	return plugin_class->uri;
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_plugin_class_get_label(const LilvPluginClass* plugin_class)
 {
 	return plugin_class->label;
 }
 
-LILV_API
-LilvPluginClasses*
+LILV_API LilvPluginClasses*
 lilv_plugin_class_get_children(const LilvPluginClass* plugin_class)
 {
 	// Returned list doesn't own categories

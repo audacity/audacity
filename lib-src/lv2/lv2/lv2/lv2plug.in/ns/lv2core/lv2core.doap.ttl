@@ -16,6 +16,26 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "12.2" ;
+		doap:created "2014-08-08" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.10.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Clarify lv2_descriptor() and lv2_lib_descriptor() documentation."
+			]
+		]
+	] , [
+		doap:revision "12.0" ;
+		doap:created "2014-01-04" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.8.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add lv2:prototype for property inheritance."
+			]
+		]
+	] , [
 		doap:revision "10.0" ;
 		doap:created "2013-02-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;

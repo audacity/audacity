@@ -1,0 +1,2 @@
+# BNode as predicate
+<http://www.w3.org/2013/TurtleTests/s> _:a <http://www.w3.org/2013/TurtleTests/p>  .

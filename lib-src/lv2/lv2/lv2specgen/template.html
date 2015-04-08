@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html about="@URI@"
       xmlns="http://www.w3.org/1999/xhtml"
@@ -18,30 +19,28 @@
 
   <!-- HEADER -->
   <div id="header">
-    <h1 id="title">@NAME@</h1>
-    <span id="subtitle">@SUBTITLE@</span>
+    <div id="titlebox">
+      <h1 id="title">@NAME@</h1>
+      <div id="subtitle"><a href="@URI@">@URI@</a></div>
+      <div id="shortdesc">@SHORT_DESC@</div>
+    </div>
     <table id="meta">
-      <tr><th>URI</th><td><a href="@URI@">@URI@</a></td></tr>
-      <tr><th>Version</th><td>@REVISION@</td></tr>
-      <tr><th>Prefixes</th><td>@PREFIXES@</td></tr>
-      <tr><th>Discuss</th><td>
-          <a href="mailto:@MAIL@">@MAIL@</a>
-	      (<a href="http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in">subscribe</a>)
-      </td></tr>
+      <!--<tr><th>URI</th><td><a href="@URI@">@URI@</a></td></tr>
+      <tr><th>Version</th><td>@REVISION@</td></tr>-->
+      <!--<tr><th>Prefixes</th><td>@PREFIXES@</td></tr>-->
+      <tr><th>Version</th><td>@VERSION@</td></tr>
+      <tr><th>Date</th><td>@DATE@</td></tr>
+      @MAIL@
       @AUTHORS@
     </table>
   </div>
-
-  <h2 class="sec">Contents</h2>
-  <div class="content">
-    <ul>
-      <li><a href="#sec-description">Description</a></li>
-      <li><a href="#sec-index">Index</a></li>
-      <li><a href="#sec-documentation">Documentation</a></li>
-      <li><a href="#sec-releases">Releases</a></li>
-      @FILES@
-    </ul>
-  </div>
+  <ul id="contents">
+    <li><a href="#sec-description">Description</a></li>
+    <li><a href="#sec-index">Index</a></li>
+    <li><a href="#sec-reference">Reference</a></li>
+    <li><a href="#sec-history">History</a></li>
+    @FILES@
+  </ul>
 
   <!-- DESCRIPTION -->
   <h2 class="sec" id="sec-description">Description</h2>
@@ -54,13 +53,13 @@
   </div>
 
   <!-- DOCUMENTATION -->
-  <h2 class="sec" id="sec-documentation">Documentation</h2>
+  <h2 class="sec" id="sec-reference">Reference</h2>
   <div class="content">
   @REFERENCE@
   </div>
 
-  <!-- RELEASES -->
-  <h2 class="sec" id="sec-releases">Releases</h2>
+  <!-- HISTORY -->
+  <h2 class="sec" id="sec-history">History</h2>
   <div class="content">
   @HISTORY@
   </div>
@@ -90,4 +89,3 @@
 
   </body>
 </html>
-

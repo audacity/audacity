@@ -36,7 +36,9 @@ class utest(Task.Task):
 			for g in self.generator.bld.groups:
 				for tg in g:
 					if getattr(tg,'link_task',None):
-						lst.append(tg.link_task.outputs[0].parent.abspath())
+						s=tg.link_task.outputs[0].parent.abspath()
+						if s not in lst:
+							lst.append(s)
 			def add_path(dct,path,var):
 				dct[var]=os.pathsep.join(Utils.to_list(path)+[os.environ.get(var,'')])
 			if Utils.is_win32:

@@ -2,7 +2,7 @@
 # encoding: utf-8
 # WARNING! Do not edit! http://waf.googlecode.com/git/docs/wafbook/single.html#_obtaining_the_waf_file
 
-import os
+import os,re
 from waflib import Task,Utils,Node,Errors
 from waflib.TaskGen import after_method,before_method,feature,taskgen_method,extension
 from waflib.Tools import c_aliases,c_preproc,c_config,c_osx,c_tests
@@ -70,9 +70,12 @@ class link_task(Task.Task):
 			if not pattern:
 				pattern='%s'
 			folder,name=os.path.split(target)
-			if self.__class__.__name__.find('shlib')>0:
-				if self.env.DEST_BINFMT=='pe'and getattr(self.generator,'vnum',None):
-					name=name+'-'+self.generator.vnum.split('.')[0]
+			if self.__class__.__name__.find('shlib')>0 and getattr(self.generator,'vnum',None):
+				nums=self.generator.vnum.split('.')
+				if self.env.DEST_BINFMT=='pe':
+					name=name+'-'+nums[0]
+				elif self.env.DEST_OS=='openbsd':
+					pattern='%s.%s.%s'%(pattern,nums[0],nums[1])
 			tmp=folder+os.sep+pattern%name
 			target=self.generator.path.find_or_declare(tmp)
 		self.set_outputs(target)
@@ -197,14 +200,16 @@ def process_use(self):
 				self.add_objects_from_tgen(y)
 		if getattr(y,'export_includes',None):
 			self.includes.extend(y.to_incnodes(y.export_includes))
+		if getattr(y,'export_defines',None):
+			self.env.append_value('DEFINES',self.to_list(y.export_defines))
 	for x in names:
 		try:
 			y=self.bld.get_tgen_by_name(x)
-		except Exception:
+		except Errors.WafError:
 			if not self.env['STLIB_'+x]and not x in self.uselib:
 				self.uselib.append(x)
 		else:
-			for k in self.to_list(getattr(y,'uselib',[])):
+			for k in self.to_list(getattr(y,'use',[])):
 				if not self.env['STLIB_'+k]and not k in self.uselib:
 					self.uselib.append(k)
 @taskgen_method
@@ -273,12 +278,15 @@ def apply_implib(self):
 	if not inst_to:
 		return
 	self.implib_install_task=self.bld.install_as('${LIBDIR}/%s'%implib.name,implib,self.env)
+re_vnum=re.compile('^([1-9]\\d*|0)[.]([1-9]\\d*|0)[.]([1-9]\\d*|0)$')
 @feature('cshlib','cxxshlib','dshlib','fcshlib','vnum')
 @after_method('apply_link','propagate_uselib_vars')
 def apply_vnum(self):
 	if not getattr(self,'vnum','')or os.name!='posix'or self.env.DEST_BINFMT not in('elf','mac-o'):
 		return
 	link=self.link_task
+	if not re_vnum.match(self.vnum):
+		raise Errors.WafError('Invalid version %r for %r'%(self.vnum,self))
 	nums=self.vnum.split('.')
 	node=link.outputs[0]
 	libname=node.name
@@ -291,15 +299,21 @@ def apply_vnum(self):
 	if self.env.SONAME_ST:
 		v=self.env.SONAME_ST%name2
 		self.env.append_value('LINKFLAGS',v.split())
-	self.create_task('vnum',node,[node.parent.find_or_declare(name2),node.parent.find_or_declare(name3)])
+	if self.env.DEST_OS!='openbsd':
+		self.create_task('vnum',node,[node.parent.find_or_declare(name2),node.parent.find_or_declare(name3)])
 	if getattr(self,'install_task',None):
 		self.install_task.hasrun=Task.SKIP_ME
 		bld=self.bld
 		path=self.install_task.dest
-		t1=bld.install_as(path+os.sep+name3,node,env=self.env,chmod=self.link_task.chmod)
-		t2=bld.symlink_as(path+os.sep+name2,name3)
-		t3=bld.symlink_as(path+os.sep+libname,name3)
-		self.vnum_install_task=(t1,t2,t3)
+		if self.env.DEST_OS=='openbsd':
+			libname=self.link_task.outputs[0].name
+			t1=bld.install_as('%s%s%s'%(path,os.sep,libname),node,env=self.env,chmod=self.link_task.chmod)
+			self.vnum_install_task=(t1,)
+		else:
+			t1=bld.install_as(path+os.sep+name3,node,env=self.env,chmod=self.link_task.chmod)
+			t2=bld.symlink_as(path+os.sep+name2,name3)
+			t3=bld.symlink_as(path+os.sep+libname,name3)
+			self.vnum_install_task=(t1,t2,t3)
 	if'-dynamiclib'in self.env['LINKFLAGS']:
 		try:
 			inst_to=self.install_path
@@ -341,11 +355,11 @@ class fake_stlib(stlink_task):
 			x.sig=Utils.h_file(x.abspath())
 		return Task.SKIP_ME
 @conf
-def read_shlib(self,name,paths=[]):
-	return self(name=name,features='fake_lib',lib_paths=paths,lib_type='shlib')
+def read_shlib(self,name,paths=[],export_includes=[],export_defines=[]):
+	return self(name=name,features='fake_lib',lib_paths=paths,lib_type='shlib',export_includes=export_includes,export_defines=export_defines)
 @conf
-def read_stlib(self,name,paths=[]):
-	return self(name=name,features='fake_lib',lib_paths=paths,lib_type='stlib')
+def read_stlib(self,name,paths=[],export_includes=[],export_defines=[]):
+	return self(name=name,features='fake_lib',lib_paths=paths,lib_type='stlib',export_includes=export_includes,export_defines=export_defines)
 lib_patterns={'shlib':['lib%s.so','%s.so','lib%s.dylib','lib%s.dll','%s.dll'],'stlib':['lib%s.a','%s.a','lib%s.dll','%s.dll','lib%s.lib','%s.lib'],}
 @feature('fake_lib')
 def process_lib(self):

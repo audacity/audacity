@@ -43,8 +43,8 @@ typedef uint32_t (*ZixHashFunc)(const void* value);
 /**
    Function to visit a hash element.
 */
-typedef void (*ZixHashVisitFunc)(const void* value,
-                                 void*       user_data);
+typedef void (*ZixHashVisitFunc)(void* value,
+                                 void* user_data);
 
 /**
    Create a new hash table.
@@ -65,29 +65,29 @@ zix_hash_new(ZixHashFunc  hash_func,
              size_t       value_size);
 
 /**
-   Free @p hash.
+   Free `hash`.
 */
 ZIX_API void
 zix_hash_free(ZixHash* hash);
 
 /**
-   Return the number of elements in @p hash.
+   Return the number of elements in `hash`.
 */
 ZIX_API size_t
 zix_hash_size(const ZixHash* hash);
 
 /**
-   Insert an item into @p hash.
+   Insert an item into `hash`.
 
    If no matching value is found, ZIX_STATUS_SUCCESS will be returned, and @p
-   inserted will be pointed to the copy of @p value made in the new hash node.
+   inserted will be pointed to the copy of `value` made in the new hash node.
    
    If a matching value already exists, ZIX_STATUS_EXISTS will be returned, and
-   @p inserted will be pointed to the existing value.
+   `inserted` will be pointed to the existing value.
 
    @param hash The hash table.
    @param value The value to be inserted.
-   @param inserted The copy of @p value in the hash table.
+   @param inserted The copy of `value` in the hash table.
    @return ZIX_STATUS_SUCCESS, ZIX_STATUS_EXISTS, or ZIX_STATUS_NO_MEM.
 */
 ZIX_API ZixStatus
@@ -96,7 +96,7 @@ zix_hash_insert(ZixHash*     hash,
                 const void** inserted);
 
 /**
-   Remove an item from @p hash.
+   Remove an item from `hash`.
 
    @param hash The hash table.
    @param value The value to remove.
@@ -107,7 +107,7 @@ zix_hash_remove(ZixHash*    hash,
                 const void* value);
 
 /**
-   Search for an item in @p hash.
+   Search for an item in `hash`.
 
    @param hash The hash table.
    @param value The value to search for.
@@ -117,14 +117,14 @@ zix_hash_find(const ZixHash* hash,
               const void*    value);
 
 /**
-   Call @p f on each value in @p hash.
+   Call `f` on each value in `hash`.
 
    @param hash The hash table.
    @param f The function to call on each value.
-   @param user_data The user_data parameter passed to @p f.
+   @param user_data The user_data parameter passed to `f`.
 */
 ZIX_API void
-zix_hash_foreach(const ZixHash*   hash,
+zix_hash_foreach(ZixHash*         hash,
                  ZixHashVisitFunc f,
                  void*            user_data);
 

@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -277,9 +277,9 @@ serd_strerror(SerdStatus status);
 
 /**
    Measure a UTF-8 string.
-   @return Length of @c str in characters (except NULL).
+   @return Length of `str` in characters (except NULL).
    @param str A null-terminated UTF-8 string.
-   @param n_bytes (Output) Set to the size of @c str in bytes (except NULL).
+   @param n_bytes (Output) Set to the size of `str` in bytes (except NULL).
    @param flags (Output) Set to the applicable flags.
 */
 SERD_API
@@ -303,7 +303,7 @@ serd_strtod(const char* str, char** endptr);
    serd_node_new_blob().
 
    @param str Base64 string to decode.
-   @param len The length of @c str.
+   @param len The length of `str`.
    @param size Set to the size of the returned blob in bytes.
    @return A newly allocated blob which must be freed with free().
 */
@@ -320,9 +320,9 @@ serd_base64_decode(const uint8_t* str, size_t len, size_t* size);
 static const SerdURI SERD_URI_NULL = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
 
 /**
-   Return the local path for @c uri, or NULL if @c uri is not a file URI.
+   Return the local path for `uri`, or NULL if `uri` is not a file URI.
    Note this (inappropriately named) function only removes the file scheme if
-   necessary, and returns @c uri unmodified if it is an absolute path.  Percent
+   necessary, and returns `uri` unmodified if it is an absolute path.  Percent
    encoding and other issues are not handled, to properly convert a file URI to
    a path, use serd_file_uri_parse().
 */
@@ -336,7 +336,7 @@ serd_uri_to_path(const uint8_t* uri);
    @param hostname If non-NULL, set to the hostname, if present.
    @return The path component of the URI.
 
-   Both the returned path and @c hostname (if applicable) are owned by the
+   Both the returned path and `hostname` (if applicable) are owned by the
    caller and must be freed with free().
 */
 SERD_API
@@ -344,21 +344,21 @@ uint8_t*
 serd_file_uri_parse(const uint8_t* uri, uint8_t** hostname);
 
 /**
-   Return true iff @c utf8 starts with a valid URI scheme.
+   Return true iff `utf8` starts with a valid URI scheme.
 */
 SERD_API
 bool
 serd_uri_string_has_scheme(const uint8_t* utf8);
 
 /**
-   Parse @c utf8, writing result to @c out.
+   Parse `utf8`, writing result to `out`.
 */
 SERD_API
 SerdStatus
 serd_uri_parse(const uint8_t* utf8, SerdURI* out);
 
 /**
-   Set @c out to @c uri resolved against @c base.
+   Set `out` to `uri` resolved against `base`.
 */
 SERD_API
 void
@@ -370,17 +370,17 @@ serd_uri_resolve(const SerdURI* uri, const SerdURI* base, SerdURI* out);
 typedef size_t (*SerdSink)(const void* buf, size_t len, void* stream);
 
 /**
-   Serialise @c uri with a series of calls to @c sink.
+   Serialise `uri` with a series of calls to `sink`.
 */
 SERD_API
 size_t
 serd_uri_serialise(const SerdURI* uri, SerdSink sink, void* stream);
 
 /**
-   Serialise @c uri relative to @c base with a series of calls to @c sink.
+   Serialise `uri` relative to `base` with a series of calls to `sink`.
 
-   The @c uri is written as a relative URI iff if it a child of @c base and @c
-   root.  The optional @c root parameter must be a prefix of @c base and can be
+   The `uri` is written as a relative URI iff if it a child of `base` and @c
+   root.  The optional `root` parameter must be a prefix of `base` and can be
    used keep up-references ("../") within a certain namespace.
 */
 SERD_API
@@ -400,25 +400,25 @@ serd_uri_serialise_relative(const SerdURI* uri,
 static const SerdNode SERD_NODE_NULL = { 0, 0, 0, 0, SERD_NOTHING };
 
 /**
-   Make a (shallow) node from @c str.
+   Make a (shallow) node from `str`.
 
-   This measures, but does not copy, @c str.  No memory is allocated.
+   This measures, but does not copy, `str`.  No memory is allocated.
 */
 SERD_API
 SerdNode
 serd_node_from_string(SerdType type, const uint8_t* str);
 
 /**
-   Make a deep copy of @c node.
+   Make a deep copy of `node`.
 
-   @return a node that the caller must free with @ref serd_node_free.
+   @return a node that the caller must free with serd_node_free().
 */
 SERD_API
 SerdNode
 serd_node_copy(const SerdNode* node);
 
 /**
-   Return true iff @c a is equal to @c b.
+   Return true iff `a` is equal to `b`.
 */
 SERD_API
 bool
@@ -446,11 +446,11 @@ serd_node_new_uri_from_string(const uint8_t* str,
    Create a new file URI node from a file system path and optional hostname.
 
    Backslashes in Windows paths will be converted and '%' will always be
-   percent encoded.  If @c escape is true, all other invalid characters will be
+   percent encoded.  If `escape` is true, all other invalid characters will be
    percent encoded as well.
 
-   If @c path is relative, @c hostname is ignored.
-   If @c out is not NULL, it will be set to the parsed URI.
+   If `path` is relative, `hostname` is ignored.
+   If `out` is not NULL, it will be set to the parsed URI.
 */
 SERD_API
 SerdNode
@@ -460,11 +460,11 @@ serd_node_new_file_uri(const uint8_t* path,
                        bool           escape);
 
 /**
-   Create a new node by serialising @c uri into a new string.
+   Create a new node by serialising `uri` into a new string.
 
    @param uri The URI to parse and serialise.
 
-   @param base Base URI to resolve @c uri against (or NULL for no resolution).
+   @param base Base URI to resolve `uri` against (or NULL for no resolution).
 
    @param out Set to the parsing of the new URI (i.e. points only to
    memory owned by the new returned node).
@@ -474,13 +474,13 @@ SerdNode
 serd_node_new_uri(const SerdURI* uri, const SerdURI* base, SerdURI* out);
 
 /**
-   Create a new node by serialising @c d into an xsd:decimal string.
+   Create a new node by serialising `d` into an xsd:decimal string.
 
    The resulting node will always contain a `.', start with a digit, and end
    with a digit (i.e. will have a leading and/or trailing `0' if necessary).
-   It will never be in scientific notation.  A maximum of @c frac_digits digits
+   It will never be in scientific notation.  A maximum of `frac_digits` digits
    will be written after the decimal point, but trailing zeros will
-   automatically be omitted (except one if @c d is a round integer).
+   automatically be omitted (except one if `d` is a round integer).
 
    Note that about 16 and 8 fractional digits are required to precisely
    represent a double and float, respectively.
@@ -493,19 +493,19 @@ SerdNode
 serd_node_new_decimal(double d, unsigned frac_digits);
 
 /**
-   Create a new node by serialising @c i into an xsd:integer string.
+   Create a new node by serialising `i` into an xsd:integer string.
 */
 SERD_API
 SerdNode
 serd_node_new_integer(int64_t i);
 
 /**
-   Create a node by serialising @c buf into an xsd:base64Binary string.
+   Create a node by serialising `buf` into an xsd:base64Binary string.
    This function can be used to make a serialisable node out of arbitrary
    binary data, which can be decoded using serd_base64_decode().
 
    @param buf Raw binary input data.
-   @param size Size of @c buf.
+   @param size Size of `buf`.
    @param wrap_lines Wrap lines at 76 characters to conform to RFC 2045.
 */
 SERD_API
@@ -513,9 +513,9 @@ SerdNode
 serd_node_new_blob(const void* buf, size_t size, bool wrap_lines);
 
 /**
-   Free any data owned by @c node.
+   Free any data owned by `node`.
 
-   Note that if @c node is itself dynamically allocated (which is not the case
+   Note that if `node` is itself dynamically allocated (which is not the case
    for nodes created internally by serd), it will not be freed.
 */
 SERD_API
@@ -572,7 +572,7 @@ typedef SerdStatus (*SerdStatementSink)(void*              handle,
    Sink (callback) for anonymous node end markers.
 
    This is called to indicate that the anonymous node with the given
-   @c value will no longer be referred to by any future statements
+   `value` will no longer be referred to by any future statements
    (i.e. the anonymous serialisation of the node is finished).
 */
 typedef SerdStatus (*SerdEndSink)(void*           handle,
@@ -592,7 +592,7 @@ SerdEnv*
 serd_env_new(const SerdNode* base_uri);
 
 /**
-   Free @c ns.
+   Free `ns`.
 */
 SERD_API
 void
@@ -633,7 +633,7 @@ serd_env_set_prefix_from_strings(SerdEnv*       env,
                                  const uint8_t* uri);
 
 /**
-   Qualify @c uri into a CURIE if possible.
+   Qualify `uri` into a CURIE if possible.
 */
 SERD_API
 bool
@@ -643,7 +643,7 @@ serd_env_qualify(const SerdEnv*  env,
                  SerdChunk*      suffix);
 
 /**
-   Expand @c curie.
+   Expand `curie`.
 */
 SERD_API
 SerdStatus
@@ -653,7 +653,7 @@ serd_env_expand(const SerdEnv*  env,
                 SerdChunk*      uri_suffix);
 
 /**
-   Expand @c node, which must be a CURIE or URI, to a full URI.
+   Expand `node`, which must be a CURIE or URI, to a full URI.
 */
 SERD_API
 SerdNode
@@ -661,7 +661,7 @@ serd_env_expand_node(const SerdEnv*  env,
                      const SerdNode* node);
 
 /**
-   Call @c func for each prefix defined in @c env.
+   Call `func` for each prefix defined in `env`.
 */
 SERD_API
 void
@@ -691,7 +691,7 @@ serd_reader_new(SerdSyntax        syntax,
 /**
    Set a function to be called when errors occur during reading.
 
-   The @p error_sink will be called with @p handle as its first argument.  If
+   The `error_sink` will be called with `handle` as its first argument.  If
    no error function is set, errors are printed to stderr in GCC style.
 */
 SERD_API
@@ -701,7 +701,7 @@ serd_reader_set_error_sink(SerdReader*   reader,
                            void*         handle);
 
 /**
-   Return the @c handle passed to @ref serd_reader_new.
+   Return the `handle` passed to serd_reader_new().
 */
 SERD_API
 void*
@@ -734,7 +734,7 @@ serd_reader_set_default_graph(SerdReader*     reader,
                               const SerdNode* graph);
 
 /**
-   Read a file at a given @c uri.
+   Read a file at a given `uri`.
 */
 SERD_API
 SerdStatus
@@ -744,10 +744,10 @@ serd_reader_read_file(SerdReader*    reader,
 /**
    Start an incremental read from a file handle.
 
-   Iff @p bulk is true, @p file will be read a page at a time.  This is more
+   Iff `bulk` is true, `file` will be read a page at a time.  This is more
    efficient, but uses a page of memory and means that an entire page of input
    must be ready before any callbacks will fire.  To react as soon as input
-   arrives, set @p bulk to false.
+   arrives, set `bulk` to false.
 */
 SERD_API
 SerdStatus
@@ -776,7 +776,7 @@ SerdStatus
 serd_reader_end_stream(SerdReader* me);
 
 /**
-   Read @c file.
+   Read `file`.
 */
 SERD_API
 SerdStatus
@@ -785,14 +785,14 @@ serd_reader_read_file_handle(SerdReader*    reader,
                              const uint8_t* name);
 
 /**
-   Read @c utf8.
+   Read `utf8`.
 */
 SERD_API
 SerdStatus
 serd_reader_read_string(SerdReader* me, const uint8_t* utf8);
 
 /**
-   Free @c reader.
+   Free `reader`.
 */
 SERD_API
 void
@@ -817,14 +817,14 @@ serd_writer_new(SerdSyntax     syntax,
                 void*          stream);
 
 /**
-   Free @c writer.
+   Free `writer`.
 */
 SERD_API
 void
 serd_writer_free(SerdWriter* writer);
 
 /**
-   Return the env used by @c writer.
+   Return the env used by `writer`.
 */
 SERD_API
 SerdEnv*
@@ -834,7 +834,7 @@ serd_writer_get_env(SerdWriter* writer);
    A convenience sink function for writing to a FILE*.
 
    This function can be used as a SerdSink when writing to a FILE*.  The
-   @c stream parameter must be a FILE* opened for writing.
+   `stream` parameter must be a FILE* opened for writing.
 */
 SERD_API
 size_t
@@ -844,7 +844,7 @@ serd_file_sink(const void* buf, size_t len, void* stream);
    A convenience sink function for writing to a string.
 
    This function can be used as a SerdSink to write to a SerdChunk which is
-   resized as necessary with realloc().  The @c stream parameter must point to
+   resized as necessary with realloc().  The `stream` parameter must point to
    an initialized SerdChunk.  When the write is finished, the string should be
    retrieved with serd_chunk_sink_finish().
 */
@@ -865,7 +865,7 @@ serd_chunk_sink_finish(SerdChunk* stream);
 /**
    Set a function to be called when errors occur during writing.
 
-   The @p error_sink will be called with @p handle as its first argument.  If
+   The `error_sink` will be called with `handle` as its first argument.  If
    no error function is set, errors are printed to stderr.
 */
 SERD_API

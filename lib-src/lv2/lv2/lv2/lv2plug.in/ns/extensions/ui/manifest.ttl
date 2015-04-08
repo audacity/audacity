@@ -4,5 +4,5 @@
 <http://lv2plug.in/ns/extensions/ui>
 	a lv2:Specification ;
 	lv2:minorVersion 2 ;
-	lv2:microVersion 14 ;
+	lv2:microVersion 18 ;
 	rdfs:seeAlso <ui.ttl> .

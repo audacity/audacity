@@ -1,0 +1,5 @@
+# {} fomulae not in Turtle
+@prefix : <http://www.w3.org/2013/TurtleTests/> .
+
+{ :a :q :c . } :p :z .
+

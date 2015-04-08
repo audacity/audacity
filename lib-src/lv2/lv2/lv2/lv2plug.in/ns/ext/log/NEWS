@@ -1,3 +1,9 @@
+log (2.2) stable;
+
+  * Add missing include string.h to logger.h for memset.
+
+ -- David Robillard <d@drobilla.net>  Sat, 04 Jan 2014 00:00:00 +0000
+
 log (2.0) stable;
 
   * Add logger convenience API.

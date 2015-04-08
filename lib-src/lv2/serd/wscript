@@ -11,7 +11,7 @@ import waflib.extras.autowaf as autowaf
 # major increment <=> incompatible changes
 # minor increment <=> compatible changes (additions)
 # micro increment <=> no interface changes
-SERD_VERSION       = '0.18.2'
+SERD_VERSION       = '0.20.0'
 SERD_MAJOR_VERSION = '0'
 
 # Mandatory waf variables
@@ -37,12 +37,14 @@ def options(opt):
                    help='Build programs as static binaries')
     opt.add_option('--largefile', action='store_true', dest='largefile',
                    help='Build with large file support on 32-bit systems')
+    opt.add_option('--no-posix', action='store_true', dest='no_posix',
+                   help='Do not use posix_memalign, posix_fadvise, and fileno, even if present')
 
 def configure(conf):
     conf.load('compiler_c')
     autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
     autowaf.display_header('Serd Configuration')
+    autowaf.set_c99_mode(conf)
 
     conf.env.BUILD_TESTS  = Options.options.build_tests
     conf.env.BUILD_UTILS  = not Options.options.no_utils
@@ -71,23 +73,24 @@ def configure(conf):
                lib           = ['m'],
                mandatory     = False)
 
-    conf.check(function_name = 'posix_memalign',
-               header_name   = 'stdlib.h',
-               define_name   = 'HAVE_POSIX_MEMALIGN',
-               defines       = ['_POSIX_C_SOURCE=201112L'],
-               mandatory     = False)
+    if not Options.options.no_posix:
+        conf.check(function_name = 'posix_memalign',
+                   header_name   = 'stdlib.h',
+                   define_name   = 'HAVE_POSIX_MEMALIGN',
+                   defines       = ['_POSIX_C_SOURCE=201112L'],
+                   mandatory     = False)
 
-    conf.check(function_name = 'posix_fadvise',
-               header_name   = 'fcntl.h',
-               define_name   = 'HAVE_POSIX_FADVISE',
-               defines       = ['_POSIX_C_SOURCE=201112L'],
-               mandatory     = False)
+        conf.check(function_name = 'posix_fadvise',
+                   header_name   = 'fcntl.h',
+                   define_name   = 'HAVE_POSIX_FADVISE',
+                   defines       = ['_POSIX_C_SOURCE=201112L'],
+                   mandatory     = False)
 
-    conf.check(function_name = 'fileno',
-               header_name   = 'stdio.h',
-               define_name   = 'HAVE_FILENO',
-               defines       = ['_POSIX_C_SOURCE=201112L'],
-               mandatory     = False)
+        conf.check(function_name = 'fileno',
+                   header_name   = 'stdio.h',
+                   define_name   = 'HAVE_FILENO',
+                   defines       = ['_POSIX_C_SOURCE=201112L'],
+                   mandatory     = False)
 
     autowaf.define(conf, 'SERD_VERSION', SERD_VERSION)
     autowaf.set_lib_env(conf, 'serd', SERD_VERSION)
@@ -253,6 +256,9 @@ def fix_docs(ctx):
 
 def upload_docs(ctx):
     os.system('rsync -ravz --delete -e ssh build/doc/html/ drobilla@drobilla.net:~/drobilla.net/docs/serd/')
+    for page in glob.glob('doc/*.[1-8]'):
+        os.system('soelim %s | pre-grohtml troff -man -wall -Thtml | post-grohtml > build/%s.html' % (page, page))
+        os.system('rsync -avz --delete -e ssh build/%s.html drobilla@drobilla.net:~/drobilla.net/man/' % page)
 
 def file_equals(patha, pathb, subst_from='', subst_to=''):
     fa = open(patha, 'rU')
@@ -264,12 +270,141 @@ def file_equals(patha, pathb, subst_from='', subst_to=''):
     fb.close()
     return True
 
+def earl_assertion(test, passed, asserter):
+    import datetime
+
+    asserter_str = ''
+    if asserter is not None:
+        asserter_str = '\n\tearl:assertedBy <%s> ;' % asserter
+
+    passed_str = 'earl:failed'
+    if passed:
+        passed_str = 'earl:passed'
+
+    return '''
+[]
+	a earl:Assertion ;%s
+	earl:subject <http://drobilla.net/sw/serd> ;
+	earl:test <%s> ;
+	earl:result [
+		a earl:TestResult ;
+		earl:outcome %s ;
+		dc:date "%s"^^xsd:dateTime
+	] .
+''' % (asserter_str,
+       test,
+       passed_str,
+       datetime.datetime.now().replace(microsecond=0).isoformat())
+
+def test_thru(ctx, base, path, check_filename, flags):
+    in_filename = os.path.join(ctx.path.abspath(), path);
+    out_filename = path + '.thru'
+
+    command = ('%s %s -i turtle -o turtle -p foo "%s" "%s" | '
+               '%s -i turtle -o ntriples -c foo - "%s" > %s') % (
+        'serdi_static', flags.ljust(5),
+        in_filename, base,
+        'serdi_static', base, out_filename)
+
+    passed = autowaf.run_test(ctx, APPNAME, command, 0, name=out_filename)
+    if not passed:
+        Logs.pprint('RED', '** Failed command: %s' % command)
+        return False
+
+    if not os.access(out_filename, os.F_OK):
+        Logs.pprint('RED', 'FAIL: %s is missing' % out_filename)
+    elif not file_equals(check_filename, out_filename, '_:docid', '_:genid'):
+        Logs.pprint('RED', 'FAIL: %s != %s' % (out_filename, check_filename))
+    else:
+        #Logs.pprint('GREEN', '** Pass %s == %s' % (out_filename, check_filename))
+        return True
+
+    return False
+
+def test_manifest(ctx, srcdir, testdir, report, base_uri):
+    import rdflib
+    import urlparse
+
+    rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+    rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
+    mf   = rdflib.Namespace('http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#')
+    rdft = rdflib.Namespace('http://www.w3.org/ns/rdftest#')
+    earl = rdflib.Namespace('http://www.w3.org/ns/earl#')
+
+    model = rdflib.ConjunctiveGraph()
+    model.parse(os.path.join(srcdir, 'tests', testdir, 'manifest.ttl'),
+                rdflib.URIRef(base_uri + 'manifest.ttl'),
+                format='n3')
+
+    asserter = ''
+    if os.getenv('USER') == 'drobilla':
+        asserter = 'http://drobilla.net/drobilla#me'
+
+    def run_test(action_node, expected_return):
+        output  = os.path.join('tests', testdir, action_node + '.out')
+        action  = os.path.join(srcdir, 'tests', testdir, action_node)
+        rel     = os.path.relpath(action, os.path.join(srcdir, 'tests', testdir))
+        command = 'serdi_static -f "%s" "%s" > %s' % (action, base_uri + rel, output)
+
+        return autowaf.run_test(ctx, APPNAME, command, expected_return, name=name)
+
+    for i in sorted(model.triples([None, rdf.type, rdft.TestTurtlePositiveSyntax])):
+        test        = i[0]
+        name        = model.value(test, mf.name, None)
+        action_node = model.value(test, mf.action, None)[len(base_uri):]
+
+        passed = run_test(action_node, 0)
+        report.write(earl_assertion(test, passed, asserter))
+
+    for i in sorted(model.triples([None, rdf.type, rdft.TestTurtleNegativeSyntax])):
+        test        = i[0]
+        name        = model.value(test, mf.name, None)
+        action_node = model.value(test, mf.action, None)[len(base_uri):]
+
+        passed = run_test(action_node, 1)
+        report.write(earl_assertion(test, passed, asserter))
+
+    for i in sorted(model.triples([None, rdf.type, rdft.TestTurtleNegativeEval])):
+        test        = i[0]
+        name        = model.value(test, mf.name, None)
+        action_node = model.value(test, mf.action, None)[len(base_uri):]
+
+        passed = run_test(action_node, 1)
+        report.write(earl_assertion(test, passed, asserter))
+
+    for i in sorted(model.triples([None, rdf.type, rdft.TestTurtleEval])):
+        test        = i[0]
+        name        = model.value(test, mf.name, None)
+        action_node = model.value(test, mf.action, None)[len(base_uri):]
+        result_node = model.value(test, mf.result, None)[len(base_uri):]
+
+        passed = run_test(action_node, 0)
+
+        if passed:
+            action = os.path.join('tests', testdir, action_node)
+            output = action + '.out'
+            result = os.path.join(srcdir, 'tests', testdir, result_node)
+
+            if not os.access(output, os.F_OK):
+                passed = False
+                Logs.pprint('RED', 'FAIL: %s output %s is missing' % (name, output))
+            elif not file_equals(result, output):
+                passed = False
+                Logs.pprint('RED', 'FAIL: %s != %s' % (os.path.abspath(output), result))
+            else:
+                Logs.pprint('GREEN', '** Pass %s' % output)
+
+            test_thru(ctx, base_uri + action_node, action, result, "")
+
+        report.write(earl_assertion(test, passed, asserter))
+
 def test(ctx):
     blddir = autowaf.build_dir(APPNAME, 'tests')
-    try:
-        os.makedirs(blddir)
-    except:
-        pass
+    for i in ['', 'bad', 'good', 'new', 'TurtleTests', 'extra']:
+        try:
+            os.makedirs(os.path.join(blddir, i))
+        except:
+            pass
 
     for i in glob.glob(blddir + '/*.*'):
         os.remove(i)
@@ -277,14 +412,16 @@ def test(ctx):
     srcdir   = ctx.path.abspath()
     orig_dir = os.path.abspath(os.curdir)
 
+    os.chdir(os.path.join(srcdir, 'tests', 'good'))
+    old_good_tests = glob.glob('*.ttl')
+    old_good_tests.sort()
+    old_good_tests.remove('manifest.ttl')
+    good_tests = { 'good': old_good_tests }
+    os.chdir(orig_dir)
+
     os.chdir(srcdir)
-
-    good_tests = glob.glob('tests/test-*.ttl')
-    good_tests.sort()
-
-    bad_tests = glob.glob('tests/bad-*.ttl')
+    bad_tests = glob.glob('tests/bad/*.ttl')
     bad_tests.sort()
-
     os.chdir(orig_dir)
 
     autowaf.pre_test(ctx, APPNAME)
@@ -294,16 +431,16 @@ def test(ctx):
     autowaf.run_tests(ctx, APPNAME, ['serd_test'], dirs=['.'])
 
     autowaf.run_tests(ctx, APPNAME, [
-            'serdi_static -o turtle %s/tests/base.ttl "base.ttl" > tests/base.ttl.out' % srcdir],
+            'serdi_static -q -o turtle %s/tests/good/base.ttl "base.ttl" > tests/good/base.ttl.out' % srcdir],
                       0, name='base')
 
-    if not file_equals('%s/tests/base.ttl' % srcdir, 'tests/base.ttl.out'):
+    if not file_equals('%s/tests/good/base.ttl' % srcdir, 'tests/good/base.ttl.out'):
         Logs.pprint('RED', 'FAIL: build/tests/base.ttl.out is incorrect')
 
     nul = os.devnull
     autowaf.run_tests(ctx, APPNAME, [
-            'serdi_static file://%s/tests/manifest.ttl > %s' % (srcdir, nul),
-            'serdi_static %s/tests/UTF-8.ttl > %s' % (srcdir, nul),
+            'serdi_static file://%s/tests/good/manifest.ttl > %s' % (srcdir, nul),
+#            'serdi_static %s/tests/good/UTF-8.ttl > %s' % (srcdir, nul),
             'serdi_static -v > %s' % nul,
             'serdi_static -h > %s' % nul,
             'serdi_static -s "<foo> a <#Thingie> ." > %s' % nul,
@@ -326,66 +463,81 @@ def test(ctx):
             'serdi_static /no/such/file > %s' % nul],
                       1, name='serdi-cmd-bad')
 
-    commands = []
-    for test in good_tests:
-        base_uri = 'http://www.w3.org/2001/sw/DataAccess/df1/' + test.replace('\\', '/')
-        commands += [ 'serdi_static -f "%s" "%s" > %s.out' % (
-                os.path.join(srcdir, test), base_uri, test) ]
+    def test_base(test):
+        return ('http://www.w3.org/2001/sw/DataAccess/df1/tests/'
+                + test.replace('\\', '/'))
 
-    autowaf.run_tests(ctx, APPNAME, commands, 0, name='good')
+    # Good tests
+    for tdir, tests in good_tests.items():
+        commands = []
 
-    Logs.pprint('BOLD', '\nVerifying turtle => ntriples')
-    for test in good_tests:
-        out_filename = test + '.out'
-        if not os.access(out_filename, os.F_OK):
-            Logs.pprint('RED', 'FAIL: %s output is missing' % test)
-        elif not file_equals(srcdir + '/' + test.replace('.ttl', '.out'),
-                             test + '.out'):
-            Logs.pprint('RED', 'FAIL: %s is incorrect' % out_filename)
-        else:
-            Logs.pprint('GREEN', 'Pass: %s' % test)
+        for test in tests:
+            path = os.path.join('tests', tdir, test)
+            commands += [ 'serdi_static -f "%s" "%s" > %s.out' % (
+                    os.path.join(srcdir, path), test_base(test), path) ]
 
+        autowaf.run_tests(ctx, APPNAME, commands, 0, name=tdir)
+
+        Logs.pprint('BOLD', '\nVerifying turtle => ntriples')
+        for test in tests:
+            check_filename = os.path.join(
+                srcdir, 'tests', tdir, test.replace('.ttl', '.nt'))
+            out_filename = os.path.join('tests', tdir, test + '.out')
+            if not os.access(out_filename, os.F_OK):
+                Logs.pprint('RED', 'FAIL: %s output is missing' % test)
+            elif not file_equals(check_filename, out_filename):
+                Logs.pprint('RED', 'FAIL: %s is incorrect' % out_filename)
+            else:
+                Logs.pprint('GREEN', 'Pass: %s' % test)
+
+    # Bad tests
     commands = []
     for test in bad_tests:
-        commands += [ 'serdi_static "%s" "http://www.w3.org/2001/sw/DataAccess/df1/%s" > %s.out' % (os.path.join(srcdir, test), test.replace('\\', '/'), test) ]
+        commands += [ 'serdi_static -q "%s" "%s" > %s.out' % (
+                os.path.join(srcdir, test), test_base(test), test) ]
 
     autowaf.run_tests(ctx, APPNAME, commands, 1, name='bad')
 
-    thru_tests = good_tests
-    thru_tests.remove(os.path.join('tests', 'test-id.ttl')) # IDs are mapped so files won't be identical
+    # Don't do a round-trip test for test-id.ttl, IDs have changed
+    good_tests['good'].remove('test-id.ttl')
 
-    commands = []
-    num = 0
-    for test in thru_tests:
-        num += 1
-        flags = ''
-        if (num % 2 == 0):
-            flags += '-b'
-        if (num % 5 == 0):
-            flags += ' -f'
-        if (num % 3 == 0):
-            flags += ' -r http://www.w3.org/'
-        if (num % 7 == 0):
-            flags += ' -e'
-        base_uri = 'http://www.w3.org/2001/sw/DataAccess/df1/' + test.replace('\\', '/')
-        out_filename = test + '.thru'
-        commands += [
-            '%s %s -i ntriples -o turtle -p foo "%s" "%s" | %s -i turtle -o ntriples -c foo - "%s" > %s.thru' % (
-                'serdi_static', flags.ljust(5),
-                os.path.join(srcdir, test), base_uri,
-                'serdi_static', base_uri, test) ]
+    # Round-trip good tests
+    for tdir, tests in good_tests.items():
+        thru_tests = tests;
 
-    autowaf.run_tests(ctx, APPNAME, commands, 0, name='turtle-round-trip')
-    Logs.pprint('BOLD', '\nVerifying ntriples => turtle => ntriples')
-    for test in thru_tests:
-        out_filename = test + '.thru'
-        if not os.access(out_filename, os.F_OK):
-            Logs.pprint('RED', 'FAIL: %s output is missing' % test)
-        elif not file_equals(srcdir + '/' + test.replace('.ttl', '.out'),
-                             test + '.thru',
-                             '_:docid', '_:genid'):
-            Logs.pprint('RED', 'FAIL: %s is incorrect' % out_filename)
-        else:
-            Logs.pprint('GREEN', 'Pass: %s' % test)
+        commands = []
+        num = 0
+        for test in thru_tests:
+            num += 1
+            flags = ''
+            if (num % 2 == 0):
+                flags += '-b'
+            if (num % 5 == 0):
+                flags += ' -f'
+            if (num % 3 == 0):
+                flags += ' -r http://www.w3.org/'
+            if (num % 7 == 0):
+                flags += ' -e'
+
+            path  = os.path.join('tests', tdir, test)
+            check = os.path.join(srcdir, path.replace('.ttl', '.nt'))
+            test_thru(ctx, test_base(test), path, check, flags)
+
+    # New manifest-driven tests
+    try:
+        report = open('earl.ttl', 'w')
+        report.write('''@prefix earl: <http://www.w3.org/ns/earl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n''')
+
+        serd_ttl = open(os.path.join(srcdir, 'serd.ttl'))
+        for line in serd_ttl:
+            report.write(line)
+        serd_ttl.close()
+        turtle_tests = 'http://www.w3.org/2013/TurtleTests/'
+        test_manifest(ctx, srcdir, 'TurtleTests', report, turtle_tests)
+        report.close()
+
+    except:
+        pass
 
     autowaf.post_test(ctx, APPNAME)

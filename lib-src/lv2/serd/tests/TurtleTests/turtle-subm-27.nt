@@ -1,0 +1,5 @@
+<http://www.w3.org/2013/TurtleTests/a1> <http://www.w3.org/2013/TurtleTests/b1> <http://www.w3.org/2013/TurtleTests/c1> .
+<http://example.org/ns/a2> <http://example.org/ns/b2> <http://example.org/ns/c2> .
+<http://example.org/ns/foo/a3> <http://example.org/ns/foo/b3> <http://example.org/ns/foo/c3> .
+<http://example.org/ns/foo/bar#a4> <http://example.org/ns/foo/bar#b4> <http://example.org/ns/foo/bar#c4> .
+<http://example.org/ns2#a5> <http://example.org/ns2#b5> <http://example.org/ns2#c5> .

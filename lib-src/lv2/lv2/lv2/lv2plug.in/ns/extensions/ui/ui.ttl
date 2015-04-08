@@ -11,10 +11,15 @@
 	rdfs:seeAlso <ui.h> ,
 		<lv2-ui.doap.ttl> ;
 	lv2:documentation """
-<p>This extension defines an interface that can be used in LV2 plugins and
-hosts to create UIs for plugins. The UIs are similar to plugins and reside in
-shared object files in an LV2 bundle.  UIs are associated with a plugin in RDF
-using the triples:</p>
+    
+<p>This extension is used to create User Interfaces (UIs) for LV2 plugins.</p>
+
+<p>UIs are implemented as an LV2UI_Descriptor loaded via lv2ui_descriptor() in
+a shared library, and are distributed in bundles just like plugins.  See the <a
+href="../../../doc/html/ui_8h.html">API reference</a> for details on the C
+API.</p>
+
+<p>UIs are associated with plugins in data:</p>
 
 <pre class="turtle-code">
 @prefix ui: &lt;http://lv2plug.in/ns/extensions/ui#&gt; .
@@ -325,11 +330,26 @@ ui:idleInterface
 UI.  To support this feature, the UI should list it as a lv2:optionalFeature or
 lv2:requiredFeature in its data, and also as lv2:extensionData.  When the UI's
 extension_data() is called with this URI (LV2_UI__idleInterface), it should
-return a pointer to an LV2_UI_Idle_Interface.</p>
+return a pointer to an LV2UI_Idle_Interface.</p>
 
 <p>To indicate support, the host should pass a feature to instantiate() with
 this URI, with NULL for data.</p>
 """ .
+
+ui:showInterface
+	a lv2:ExtensionData ;
+	lv2:documentation """
+<p>An interface for showing and hiding a window for a UI.  This allows UIs to
+gracefully degrade to separate windows when the host is unable to embed the UI
+widget for whatever reason.  When the UI's extension_data() is called with this
+URI (LV2_UI__showInterface), it should return a pointer to an
+LV2UI_Show_Interface.</p>
+""" .
+
+ui:windowTitle
+	a rdf:Property ;
+	rdfs:range xsd:string ;
+	rdfs:comment "The title for the window shown by LV2UI_Show_Interface." .
 
 ui:updateRate
 	a rdf:Property ;

@@ -1,5 +1,5 @@
 /*
-  Copyright 2011 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -38,7 +38,7 @@ extern "C" {
 typedef struct ZixTreeImpl ZixTree;
 
 /**
-   An iterator over a @ref ZixTree.
+   An iterator over a ZixTree.
 */
 typedef struct ZixTreeNodeImpl ZixTreeIter;
 
@@ -52,32 +52,32 @@ zix_tree_new(bool           allow_duplicates,
              ZixDestroyFunc destroy);
 
 /**
-   Free @a t.
+   Free `t`.
 */
 ZIX_API void
 zix_tree_free(ZixTree* t);
 
 /**
-   Return the number of elements in @a t.
+   Return the number of elements in `t`.
 */
 ZIX_API size_t
 zix_tree_size(const ZixTree* t);
 
 /**
-   Insert the element @a e into @a t and point @a ti at the new element.
+   Insert the element `e` into `t` and point `ti` at the new element.
 */
 ZIX_API ZixStatus
 zix_tree_insert(ZixTree* t, void* e, ZixTreeIter** ti);
 
 /**
-   Remove the item pointed at by @a ti from @a t.
+   Remove the item pointed at by `ti` from `t`.
 */
 ZIX_API ZixStatus
 zix_tree_remove(ZixTree* t, ZixTreeIter* ti);
 
 /**
-   Set @a ti to an element equal to @a e in @a t.
-   If no such item exists, @a ti is set to NULL.
+   Set `ti` to an element equal to `e` in `t`.
+   If no such item exists, `ti` is set to NULL.
 */
 ZIX_API ZixStatus
 zix_tree_find(const ZixTree* t, const void* e, ZixTreeIter** ti);
@@ -89,49 +89,49 @@ ZIX_API void*
 zix_tree_get(ZixTreeIter* ti);
 
 /**
-   Return an iterator to the first (smallest) element in @a t.
+   Return an iterator to the first (smallest) element in `t`.
 */
 ZIX_API ZixTreeIter*
 zix_tree_begin(ZixTree* t);
 
 /**
-   Return an iterator the the element one past the last element in @a t.
+   Return an iterator the the element one past the last element in `t`.
 */
 ZIX_API ZixTreeIter*
 zix_tree_end(ZixTree* t);
 
 /**
-   Return true iff @a i is an iterator to the end of its tree.
+   Return true iff `i` is an iterator to the end of its tree.
 */
 ZIX_API bool
 zix_tree_iter_is_end(ZixTreeIter* i);
 
 /**
-   Return an iterator to the last (largest) element in @a t.
+   Return an iterator to the last (largest) element in `t`.
 */
 ZIX_API ZixTreeIter*
 zix_tree_rbegin(ZixTree* t);
 
 /**
-   Return an iterator the the element one before the first element in @a t.
+   Return an iterator the the element one before the first element in `t`.
 */
 ZIX_API ZixTreeIter*
 zix_tree_rend(ZixTree* t);
 
 /**
-   Return true iff @a i is an iterator to the reverse end of its tree.
+   Return true iff `i` is an iterator to the reverse end of its tree.
 */
 ZIX_API bool
 zix_tree_iter_is_rend(ZixTreeIter* i);
 
 /**
-   Return an iterator that points to the element one past @a i.
+   Return an iterator that points to the element one past `i`.
 */
 ZIX_API ZixTreeIter*
 zix_tree_iter_next(ZixTreeIter* i);
 
 /**
-   Return an iterator that points to the element one before @a i.
+   Return an iterator that points to the element one before `i`.
 */
 ZIX_API ZixTreeIter*
 zix_tree_iter_prev(ZixTreeIter* i);

@@ -1,0 +1,4 @@
+# N3 is...of
+@prefix : <http://www.w3.org/2013/TurtleTests/> .
+
+:z is :p of :x .

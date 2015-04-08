@@ -103,7 +103,7 @@ class mcs(Task.Task):
 		if flag.find(' ')>-1:
 			for x in('/r:','/reference:','/resource:','/lib:','/out:'):
 				if flag.startswith(x):
-					flag='%s"%s"'%(x,flag[len(x):])
+					flag='%s"%s"'%(x,'","'.join(flag[len(x):].split(',')))
 					break
 			else:
 				flag='"%s"'%flag

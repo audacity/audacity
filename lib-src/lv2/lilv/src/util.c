@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2011 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -92,10 +92,10 @@ lilv_strdup(const char* str)
 		return NULL;
 	}
 
-	const size_t len = strlen(str);
-	char*        dup = (char*)malloc(len + 1);
-	memcpy(dup, str, len + 1);
-	return dup;
+	const size_t len  = strlen(str);
+	char*        copy = (char*)malloc(len + 1);
+	memcpy(copy, str, len + 1);
+	return copy;
 }
 
 const char*
@@ -165,7 +165,7 @@ append_var(char* dst, size_t* dst_len, const char* var)
 	}
 }
 
-/** Expand variables (e.g. POSIX ~ or $FOO, Windows %FOO%) in @a path. */
+/** Expand variables (e.g. POSIX ~ or $FOO, Windows %FOO%) in `path`. */
 char*
 lilv_expand(const char* path)
 {
@@ -392,7 +392,7 @@ update_latest(const char* path, const char* name, void* data)
 	}
 }
 
-/** Return the latest copy of the file at @c path that is newer. */
+/** Return the latest copy of the file at `path` that is newer. */
 char*
 lilv_get_latest_copy(const char* path, const char* copy_path)
 {

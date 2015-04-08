@@ -9,3 +9,4 @@ eg:thing eg:num -.6 .
 eg:thing eg:num 1.58490e-05 .
 eg:thing eg:num 1.58490e+05 .
 eg:thing eg:num 1.58490e05 .
+eg:thing eg:num 1.58490E05 .

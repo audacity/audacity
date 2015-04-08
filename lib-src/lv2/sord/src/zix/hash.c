@@ -46,8 +46,8 @@ struct ZixHashImpl {
 	unsigned        count;
 };
 
-static inline const void*
-zix_hash_value(const ZixHashEntry* entry)
+static inline void*
+zix_hash_value(ZixHashEntry* entry)
 {
 	return entry + 1;
 }
@@ -214,13 +214,13 @@ zix_hash_remove(ZixHash* hash, const void* value)
 }
 
 ZIX_API void
-zix_hash_foreach(const ZixHash*   hash,
+zix_hash_foreach(ZixHash*         hash,
                  ZixHashVisitFunc f,
                  void*            user_data)
 {
 	for (unsigned b = 0; b < *hash->n_buckets; ++b) {
 		ZixHashEntry* bucket = hash->buckets[b];
-		for (const ZixHashEntry* e = bucket; e; e = e->next) {
+		for (ZixHashEntry* e = bucket; e; e = e->next) {
 			f(zix_hash_value(e), user_data);
 		}
 	}

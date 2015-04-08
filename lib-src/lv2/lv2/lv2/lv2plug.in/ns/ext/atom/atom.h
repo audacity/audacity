@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2012 David Robillard <http://drobilla.net>
+  Copyright 2008-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -189,7 +189,7 @@ typedef struct {
 
 /** The body of an atom:Object. May be cast to LV2_Atom. */
 typedef struct {
-	uint32_t id;     /**< URID (atom:Resource) or blank ID (atom:Blank). */
+	uint32_t id;     /**< URID, or 0 for blank. */
 	uint32_t otype;  /**< Type URID (same as rdf:type, for fast dispatch). */
 	/* Contents (a series of property bodies) follow here. */
 } LV2_Atom_Object_Body;

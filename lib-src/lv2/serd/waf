@@ -32,11 +32,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import os, sys
 
-VERSION="1.7.8"
-REVISION="1c3712b2830c6d416ddd4310ce313202"
+VERSION="1.7.16"
+REVISION="0356ded4079f8d9c0828a065ed2fdab1"
 INSTALL=''
-C1='#1'
-C2='#/'
+C1='#&'
+C2='#$'
 cwd = os.getcwd()
 join = os.path.join
 
@@ -108,7 +108,7 @@ def unpack_wafdir(dir):
 		import fixpy2
 		fixpy2.fixdir(dir)
 
-	os.unlink(tmp)
+	os.remove(tmp)
 	os.chdir(cwd)
 
 	try: dir = unicode(dir, 'mbcs')

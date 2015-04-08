@@ -195,7 +195,7 @@ class ConfigurationContext(Context.Context):
 			self.tools.append({'tool':tool,'tooldir':tooldir,'funs':funs})
 	def post_recurse(self,node):
 		super(ConfigurationContext,self).post_recurse(node)
-		self.hash=hash((self.hash,node.read('rb')))
+		self.hash=Utils.h_list((self.hash,node.read('rb')))
 		self.files.append(node.abspath())
 	def eval_rules(self,rules):
 		self.rules=Utils.to_list(rules)

@@ -1,3 +1,17 @@
+serd (0.20.0) stable;
+
+  * Support new RDF 1.1 Turtle
+  * Don't write xsd:decimal literals to Turtle bare if they would not be read
+    back with the same type
+  * Fix possible crash in serd_writer_end_anon() when writing invalid lists
+  * Generate blank names like _:b1 and _:B2 not _:genid1 _:docid2
+  * Correctly handle posix_memalign failure
+  * Fix const-correctness violation for reader input string
+  * Add -lm to pkg-config libs
+  * Update to waf 1.7.14
+
+ -- David Robillard <d@drobilla.net>  Fri, 08 Aug 2014 18:02:54 -0400
+
 serd (0.18.2) stable;
 
   * Fix crash when serd_node_new_decimal is called with infinity or NaN

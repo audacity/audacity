@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2011 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -47,6 +47,11 @@ uri_to_path(const char* uri) {
 #define LILV_WRAP2(RT, prefix, name, T1, a1, T2, a2) \
 	inline RT name(T1 a1, T2 a2) { \
 		return lilv_ ## prefix ## _ ## name(me, a1, a2); \
+	}
+
+#define LILV_WRAP3(RT, prefix, name, T1, a1, T2, a2, T3, a3) \
+	inline RT name(T1 a1, T2 a2, T3 a3) { \
+		return lilv_ ## prefix ## _ ## name(me, a1, a2, a3); \
 	}
 
 #define LILV_WRAP2_VOID(prefix, name, T1, a1, T2, a2) \
@@ -137,6 +142,27 @@ struct Nodes {
 	LILV_WRAP_COLL(Nodes, Node, nodes);
 	LILV_WRAP1(bool, nodes, contains, const Node, node);
 	LILV_WRAP0(Node, nodes, get_first);
+};
+
+struct UI {
+	inline UI(const LilvUI* c_obj) : me(c_obj) {}
+	LILV_WRAP_CONVERSION(const LilvUI);
+
+	LILV_WRAP0(const LilvNode*, ui, get_uri);
+	LILV_WRAP0(const LilvNode*, ui, get_bundle_uri);
+	LILV_WRAP0(const LilvNode*, ui, get_binary_uri);
+	LILV_WRAP0(const LilvNodes*, ui, get_classes);
+	/*LILV_WRAP3(bool, ui, is_supported,
+	           LilvUISupportedFunc, supported_func,
+	           const LilvNode*,     container_type,
+	           const LilvNode**,    ui_type);*/
+	LILV_WRAP1(bool, ui, is_a, const LilvNode*, class_uri);
+
+	const LilvUI* me;
+};
+
+struct UIs {
+	LILV_WRAP_COLL(UIs, UI, uis);
 };
 
 struct Port {

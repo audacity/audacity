@@ -177,7 +177,8 @@ def configure(conf):
 		append_cxx_flags(['-DNDEBUG'])
 	if Options.options.ultra_strict:
 		Options.options.strict=True
-		conf.env.append_value('CFLAGS',['-Wredundant-decls','-Wstrict-prototypes','-Wmissing-prototypes'])
+		conf.env.append_value('CFLAGS',['-Wredundant-decls','-Wstrict-prototypes','-Wmissing-prototypes','-Wcast-qual'])
+		conf.env.append_value('CXXFLAGS',['-Wcast-qual'])
 	if Options.options.strict:
 		conf.env.append_value('CFLAGS',['-pedantic','-Wshadow'])
 		conf.env.append_value('CXXFLAGS',['-ansi','-Wnon-virtual-dtor','-Woverloaded-virtual'])
@@ -247,7 +248,7 @@ def set_lib_env(conf,name,version):
 	'Set up environment for local library as if found via pkg-config.'
 	NAME=name.upper()
 	major_ver=version.split('.')[0]
-	pkg_var_name='PKG_'+name.replace('-','_')
+	pkg_var_name='PKG_'+name.replace('-','_')+'_'+major_ver
 	lib_name='%s-%s'%(name,major_ver)
 	if conf.env.PARDEBUG:
 		lib_name+='D'
@@ -340,7 +341,7 @@ def make_simple_dox(name):
 		os.chdir(top)
 	except Exception ,e:
 		Logs.error("Failed to fix up %s documentation: %s"%(name,e))
-def build_dox(bld,name,version,srcdir,blddir,outdir=''):
+def build_dox(bld,name,version,srcdir,blddir,outdir='',versioned=True):
 	if not bld.env['DOCS']:
 		return
 	if is_child():
@@ -355,8 +356,10 @@ def build_dox(bld,name,version,srcdir,blddir,outdir=''):
 	subst_tg.post()
 	docs=bld(features='doxygen',doxyfile='doc/reference.doxygen')
 	docs.post()
-	major=int(version[0:version.find('.')])
-	bld.install_files(os.path.join('${DOCDIR}','%s-%d'%(name.lower(),major),outdir,'html'),bld.path.get_bld().ant_glob('doc/html/*'))
+	outname=name.lower()
+	if versioned:
+		outname+='-%d'%int(version[0:version.find('.')])
+	bld.install_files(os.path.join('${DOCDIR}',outname,outdir,'html'),bld.path.get_bld().ant_glob('doc/html/*'))
 	for i in range(1,8):
 		bld.install_files('${MANDIR}/man%d'%i,bld.path.get_bld().ant_glob('doc/man/man%d/*'%i,excl='**/_*'))
 def build_version_files(header_path,source_path,domain,major,minor,micro):
@@ -478,26 +481,30 @@ def post_test(ctx,appname,dirs=['src'],remove=['*boost*','c++*']):
 	print('')
 	Logs.pprint('BOLD','Coverage:',sep='')
 	print('<file://%s>\n\n'%os.path.abspath('coverage/index.html'))
-def run_tests(ctx,appname,tests,desired_status=0,dirs=['src'],name='*'):
+def run_test(ctx,appname,test,desired_status=0,dirs=['src'],name='',header=False):
+	s=test
+	if type(test)==type([]):
+		s=' '.join(i)
+	if header:
+		Logs.pprint('BOLD','** Test',sep='')
+		Logs.pprint('NORMAL','%s'%s)
+	cmd=test
+	if Options.options.grind:
+		cmd='valgrind '+test
+	if subprocess.call(cmd,shell=True)==desired_status:
+		Logs.pprint('GREEN','** Pass %s'%name)
+		return True
+	else:
+		Logs.pprint('RED','** FAIL %s'%name)
+		return False
+def run_tests(ctx,appname,tests,desired_status=0,dirs=['src'],name='*',headers=False):
 	failures=0
 	diropts=''
 	for i in dirs:
 		diropts+=' -d '+i
 	for i in tests:
-		s=i
-		if type(i)==type([]):
-			s=' '.join(i)
-		print('')
-		Logs.pprint('BOLD','** Test',sep='')
-		Logs.pprint('NORMAL','%s'%s)
-		cmd=i
-		if Options.options.grind:
-			cmd='valgrind '+i
-		if subprocess.call(cmd,shell=True)==desired_status:
-			Logs.pprint('GREEN','** Pass')
-		else:
+		if not run_test(ctx,appname,i,desired_status,dirs,i,headers):
 			failures+=1
-			Logs.pprint('RED','** FAIL')
 	print('')
 	if failures==0:
 		Logs.pprint('GREEN','** Pass: All %s.%s tests passed'%(appname,name))
@@ -557,7 +564,7 @@ def write_news(name,in_files,out_file,top_entries=None,extra_entries=None):
 			if blamee_name and blamee_mbox:
 				entry+=' %s <%s>'%(blamee_name,blamee_mbox.replace('mailto:',''))
 			entry+='  %s\n\n'%(strftime('%a, %d %b %Y %H:%M:%S +0000',strptime(date,'%Y-%m-%d')))
-			entries[revision]=entry
+			entries[(date,revision)]=entry
 		else:
 			Logs.warn('Ignored incomplete %s release description'%name)
 	if len(entries)>0:

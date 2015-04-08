@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2012 David Robillard <http://drobilla.net>
+  Copyright 2008-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -50,7 +50,7 @@ extern "C" {
 static inline uint16_t
 lv2_event_pad_size(uint16_t size)
 {
-	return (size + 7) & (~7);
+	return (uint16_t)(size + 7U) & (uint16_t)(~7U);
 }
 
 
@@ -60,7 +60,7 @@ lv2_event_pad_size(uint16_t size)
 static inline void
 lv2_event_buffer_reset(LV2_Event_Buffer*  buf,
                        uint16_t           stamp_type,
-                       uint8_t           *data)
+                       uint8_t*           data)
 {
 	buf->data = data;
 	buf->header_size = sizeof(LV2_Event_Buffer);
@@ -96,8 +96,8 @@ typedef struct {
 } LV2_Event_Iterator;
 
 
-/** Reset an iterator to point to the start of @a buf.
- * @return True if @a iter is valid, otherwise false (buffer is empty) */
+/** Reset an iterator to point to the start of `buf`.
+ * @return True if `iter` is valid, otherwise false (buffer is empty) */
 static inline bool
 lv2_event_begin(LV2_Event_Iterator* iter,
                 LV2_Event_Buffer*   buf)
@@ -108,8 +108,8 @@ lv2_event_begin(LV2_Event_Iterator* iter,
 }
 
 
-/** Check if @a iter is valid.
- * @return True if @a iter is valid, otherwise false (past end of buffer) */
+/** Check if `iter` is valid.
+ * @return True if `iter` is valid, otherwise false (past end of buffer) */
 static inline bool
 lv2_event_is_valid(LV2_Event_Iterator* iter)
 {
@@ -117,9 +117,9 @@ lv2_event_is_valid(LV2_Event_Iterator* iter)
 }
 
 
-/** Advance @a iter forward one event.
- * @a iter must be valid.
- * @return True if @a iter is valid, otherwise false (reached end of buffer) */
+/** Advance `iter` forward one event.
+ * `iter` must be valid.
+ * @return True if `iter` is valid, otherwise false (reached end of buffer) */
 static inline bool
 lv2_event_increment(LV2_Event_Iterator* iter)
 {
@@ -130,18 +130,19 @@ lv2_event_increment(LV2_Event_Iterator* iter)
 	LV2_Event* const ev = (LV2_Event*)(
 			(uint8_t*)iter->buf->data + iter->offset);
 
-	iter->offset += lv2_event_pad_size(sizeof(LV2_Event) + ev->size);
+	iter->offset += lv2_event_pad_size(
+		(uint16_t)((uint16_t)sizeof(LV2_Event) + ev->size));
 
 	return true;
 }
 
 
 /** Dereference an event iterator (get the event currently pointed at).
- * @a iter must be valid.
- * @a data if non-NULL, will be set to point to the contents of the event
+ * `iter` must be valid.
+ * `data` if non-NULL, will be set to point to the contents of the event
  *         returned.
- * @return A Pointer to the event @a iter is currently pointing at, or NULL
- *         if the end of the buffer is reached (in which case @a data is
+ * @return A Pointer to the event `iter` is currently pointing at, or NULL
+ *         if the end of the buffer is reached (in which case `data` is
  *         also set to NULL). */
 static inline LV2_Event*
 lv2_event_get(LV2_Event_Iterator* iter,
@@ -161,8 +162,8 @@ lv2_event_get(LV2_Event_Iterator* iter,
 }
 
 
-/** Write an event at @a iter.
- * The event (if any) pointed to by @a iter will be overwritten, and @a iter
+/** Write an event at `iter`.
+ * The event (if any) pointed to by `iter` will be overwritten, and `iter`
  * incremented to point to the following event (i.e. several calls to this
  * function can be done in sequence without twiddling iter in-between).
  * @return True if event was written, otherwise false (buffer is full). */
@@ -190,7 +191,7 @@ lv2_event_write(LV2_Event_Iterator* iter,
 	memcpy((uint8_t*)ev + sizeof(LV2_Event), data, size);
 	++iter->buf->event_count;
 
-	size = lv2_event_pad_size(sizeof(LV2_Event) + size);
+	size = lv2_event_pad_size((uint16_t)(sizeof(LV2_Event) + size));
 	iter->buf->size += size;
 	iter->offset    += size;
 
@@ -208,11 +209,12 @@ lv2_event_reserve(LV2_Event_Iterator* iter,
                   uint16_t type,
                   uint16_t size)
 {
-	if (iter->buf->capacity - iter->buf->size < sizeof(LV2_Event) + size)
+	const uint16_t total_size = (uint16_t)(sizeof(LV2_Event) + size);
+	if (iter->buf->capacity - iter->buf->size < total_size)
 		return NULL;
 
-	LV2_Event* const ev = (LV2_Event*)((uint8_t*)iter->buf->data +
-					   iter->offset);
+	LV2_Event* const ev = (LV2_Event*)(
+		(uint8_t*)iter->buf->data + iter->offset);
 
 	ev->frames = frames;
 	ev->subframes = subframes;
@@ -220,16 +222,16 @@ lv2_event_reserve(LV2_Event_Iterator* iter,
 	ev->size = size;
 	++iter->buf->event_count;
 
-	size = lv2_event_pad_size(sizeof(LV2_Event) + size);
-	iter->buf->size += size;
-	iter->offset    += size;
+	const uint16_t padded_size = lv2_event_pad_size(total_size);
+	iter->buf->size += padded_size;
+	iter->offset    += padded_size;
 
 	return (uint8_t*)ev + sizeof(LV2_Event);
 }
 
 
-/** Write an event at @a iter.
- * The event (if any) pointed to by @a iter will be overwritten, and @a iter
+/** Write an event at `iter`.
+ * The event (if any) pointed to by `iter` will be overwritten, and `iter`
  * incremented to point to the following event (i.e. several calls to this
  * function can be done in sequence without twiddling iter in-between).
  * @return True if event was written, otherwise false (buffer is full). */
@@ -238,19 +240,20 @@ lv2_event_write_event(LV2_Event_Iterator* iter,
                       const LV2_Event*    ev,
                       const uint8_t*      data)
 {
-	if (iter->buf->capacity - iter->buf->size < sizeof(LV2_Event) + ev->size)
+	const uint16_t total_size = (uint16_t)(sizeof(LV2_Event) + ev->size);
+	if (iter->buf->capacity - iter->buf->size < total_size)
 		return false;
 
 	LV2_Event* const write_ev = (LV2_Event*)(
-			(uint8_t*)iter->buf->data + iter->offset);
+		(uint8_t*)iter->buf->data + iter->offset);
 
 	*write_ev = *ev;
 	memcpy((uint8_t*)write_ev + sizeof(LV2_Event), data, ev->size);
 	++iter->buf->event_count;
 
-	const uint16_t size = lv2_event_pad_size(sizeof(LV2_Event) + ev->size);
-	iter->buf->size += size;
-	iter->offset    += size;
+	const uint16_t padded_size = lv2_event_pad_size(total_size);
+	iter->buf->size += padded_size;
+	iter->offset    += padded_size;
 
 	return true;
 }

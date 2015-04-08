@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2011 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -29,11 +29,11 @@ extern "C" {
 #ifdef _WIN32
 #    include <windows.h>
 #    define dlopen(path, flags) LoadLibrary(path)
-#    define dlclose(lib) FreeLibrary((HMODULE)lib)
+#    define dlclose(lib)        FreeLibrary((HMODULE)lib)
 #    ifdef _MSC_VER
 #        define __func__ __FUNCTION__
 #        define INFINITY DBL_MAX + DBL_MAX
-#        define NAN INFINITY - INFINITY
+#        define NAN      INFINITY - INFINITY
 #        define snprintf _snprintf
 #    endif
 static inline char* dlerror(void) { return "Unknown error"; }
@@ -64,7 +64,7 @@ typedef struct LilvSpecImpl LilvSpec;
 typedef void LilvCollection;
 
 struct LilvPortImpl {
-	SordNode*  node;     ///< RDF node
+	LilvNode*  node;     ///< RDF node
 	uint32_t   index;    ///< lv2:index
 	LilvNode*  symbol;   ///< lv2:symbol
 	LilvNodes* classes;  ///< rdf:type
@@ -99,6 +99,7 @@ typedef struct {
 typedef struct {
 	LilvWorld*                world;
 	LilvNode*                 uri;
+	char*                     bundle_path;
 	void*                     lib;
 	LV2_Descriptor_Function   lv2_descriptor;
 #ifdef LILV_NEW_LV2
@@ -163,6 +164,7 @@ struct LilvWorldImpl {
 		SordNode* lv2_designation;
 		SordNode* lv2_extensionData;
 		SordNode* lv2_index;
+		SordNode* lv2_latency;
 		SordNode* lv2_maximum;
 		SordNode* lv2_minimum;
 		SordNode* lv2_name;
@@ -172,6 +174,7 @@ struct LilvWorldImpl {
 		SordNode* lv2_reportsLatency;
 		SordNode* lv2_requiredFeature;
 		SordNode* lv2_symbol;
+		SordNode* lv2_prototype;
 		SordNode* null_uri;
 		SordNode* pset_value;
 		SordNode* rdf_a;
@@ -273,29 +276,31 @@ LilvPluginClasses* lilv_plugin_classes_new(void);
 LilvUIs*           lilv_uis_new(void);
 
 const uint8_t* lilv_world_blank_node_prefix(LilvWorld* world);
-void           lilv_world_load_file(LilvWorld* world, const char* file_uri);
+
+SerdStatus lilv_world_load_file(LilvWorld*      world,
+                                SerdReader*     reader,
+                                const LilvNode* uri);
+
+SerdStatus
+lilv_world_load_graph(LilvWorld*      world,
+                      SordNode*       graph,
+                      const LilvNode* uri);
 
 LilvUI* lilv_ui_new(LilvWorld* world,
-                    LilvNode* uri,
-                    LilvNode* type_uri,
-                    LilvNode* binary_uri);
+                    LilvNode*  uri,
+                    LilvNode*  type_uri,
+                    LilvNode*  binary_uri);
 
 void lilv_ui_free(LilvUI* ui);
 
-LilvNode*       lilv_node_new(LilvWorld*   world,
-                              LilvNodeType type,
-                              const char*  val);
-LilvNode*       lilv_node_new_from_node(LilvWorld*      world,
-                                        const SordNode* node);
-const SordNode* lilv_node_as_node(const LilvNode* value);
+LilvNode* lilv_node_new(LilvWorld* world, LilvNodeType type, const char* val);
+LilvNode* lilv_node_new_from_node(LilvWorld* world, const SordNode* node);
 
 int lilv_header_compare_by_uri(const void* a, const void* b, void* user_data);
+int lilv_lib_compare(const void* a, const void* b, void* user_data);
 
-int
-lilv_ptr_cmp(const void* a, const void* b, void* user_data);
-
-int
-lilv_resource_node_cmp(const void* a, const void* b, void* user_data);
+int lilv_ptr_cmp(const void* a, const void* b, void* user_data);
+int lilv_resource_node_cmp(const void* a, const void* b, void* user_data);
 
 struct LilvHeader*
 lilv_collection_get_by_uri(const ZixTree* seq, const LilvNode* uri);
@@ -356,16 +361,16 @@ lilv_dir_for_each(const char* path,
                   void*       data,
                   void (*f)(const char* path, const char* name, void* data));
 
-typedef void (*VoidFunc)(void);
+typedef void (*LilvVoidFunc)(void);
 
 /** dlsym wrapper to return a function pointer (without annoying warning) */
-static inline VoidFunc
+static inline LilvVoidFunc
 lilv_dlfunc(void* handle, const char* symbol)
 {
 #ifdef _WIN32
-   return (VoidFunc)GetProcAddress((HMODULE)handle, symbol);
+	 return (LilvVoidFunc)GetProcAddress((HMODULE)handle, symbol);
 #else
-	typedef VoidFunc (*VoidFuncGetter)(void*, const char*);
+	typedef LilvVoidFunc (*VoidFuncGetter)(void*, const char*);
 	VoidFuncGetter dlfunc = (VoidFuncGetter)dlsym;
 	return dlfunc(handle, symbol);
 #endif

@@ -1,2 +1,0 @@
-_:genid1 a _:genid2 .
-_:genid2 a _:docid1 .

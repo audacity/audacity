@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -102,7 +102,7 @@ serd_node_new_uri_from_node(const SerdNode* uri_node,
                             const SerdURI*  base,
                             SerdURI*        out)
 {
-	return (uri_node->type == SERD_URI)
+	return (uri_node->type == SERD_URI && uri_node->buf)
 		? serd_node_new_uri_from_string(uri_node->buf, base, out)
 		: SERD_NODE_NULL;
 }
@@ -114,7 +114,11 @@ serd_node_new_uri_from_string(const uint8_t* str,
                               SerdURI*       out)
 {
 	if (!str || str[0] == '\0') {
-		return serd_node_new_uri(base, NULL, out);  // Empty URI => Base URI
+		if (base) {
+			return serd_node_new_uri(base, NULL, out);  // Empty URI => Base
+		} else {
+			return SERD_NODE_NULL;  // Nonsense
+		}
 	}
 	SerdURI uri;
 	serd_uri_parse(str, &uri);
@@ -340,7 +344,7 @@ SERD_API
 void
 serd_node_free(SerdNode* node)
 {
-	if (node->buf) {
+	if (node && node->buf) {
 		free((uint8_t*)node->buf);
 		node->buf = NULL;
 	}

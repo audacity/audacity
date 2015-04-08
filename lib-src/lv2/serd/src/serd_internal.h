@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -67,8 +67,8 @@ serd_bufalloc(size_t size)
 {
 #ifdef HAVE_POSIX_MEMALIGN
 	void* ptr;
-	posix_memalign(&ptr, SERD_PAGE_SIZE, size);
-	return ptr;
+	const int ret = posix_memalign(&ptr, SERD_PAGE_SIZE, size);
+	return ret ? NULL : ptr;
 #else
 	return malloc(size);
 #endif
@@ -195,7 +195,7 @@ serd_bulk_sink_write(const void* buf, size_t len, SerdBulkSink* bsink)
 
 /* Character utilities */
 
-/** Return true if @a c lies within [min...max] (inclusive) */
+/** Return true if `c` lies within [`min`...`max`] (inclusive) */
 static inline bool
 in_range(const uint8_t c, const uint8_t min, const uint8_t max)
 {
@@ -265,11 +265,11 @@ uri_path_at(const SerdURI* uri, size_t i)
 	}
 }
 
-/** Return true iff @p uri is within the base of @p root */
+/** Return true iff `uri` is within the base of `root` */
 static inline bool
 uri_is_under(const SerdURI* uri, const SerdURI* root)
 {
-	if (!root || !uri || !root->scheme.len ||
+	if (!root || !root->scheme.len ||
 	    !chunk_equals(&root->scheme, &uri->scheme) ||
 	    !chunk_equals(&root->authority, &uri->authority)) {
 		return false;

@@ -51,6 +51,9 @@ class doxygen(Task.Task):
 			self.pars=parse_doxy(txt)
 			if not self.pars.get('OUTPUT_DIRECTORY'):
 				self.pars['OUTPUT_DIRECTORY']=self.inputs[0].parent.get_bld().abspath()
+			if getattr(self.generator,'pars',None):
+				for k,v in self.generator.pars.iteritems():
+					self.pars[k]=v
 			self.doxy_inputs=getattr(self,'doxy_inputs',[])
 			if not self.pars.get('INPUT'):
 				self.doxy_inputs.append(self.inputs[0].parent)
@@ -87,7 +90,9 @@ class doxygen(Task.Task):
 				nodes.append(node)
 		return(nodes,names)
 	def run(self):
-		code='\n'.join(['%s = %s'%(x,self.pars[x])for x in self.pars])
+		dct=self.pars.copy()
+		dct['INPUT']=' '.join([x.abspath()for x in self.doxy_inputs])
+		code='\n'.join(['%s = %s'%(x,dct[x])for x in self.pars])
 		code=code
 		cmd=Utils.subst_vars(DOXY_STR,self.env)
 		env=self.env.env or None

@@ -11,6 +11,16 @@
 	doap:created "2012-01-12" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.2" ;
+		doap:created "2014-01-04" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.8.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add missing include string.h to logger.h for memset."
+			]
+		]
+	] , [
 		doap:revision "2.0" ;
 		doap:created "2013-01-08" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;

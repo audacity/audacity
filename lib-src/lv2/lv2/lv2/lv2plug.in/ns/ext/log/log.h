@@ -69,7 +69,7 @@ typedef struct _LV2_Log {
 
 	   The API of this function matches that of the standard C printf function,
 	   except for the addition of the first two parameters.  This function may
-	   be called from any non-realtime context, or from any context if @p type
+	   be called from any non-realtime context, or from any context if `type`
 	   is @ref LV2_LOG__Trace.
 	*/
 	LV2_LOG_FUNC(3, 4)
@@ -83,7 +83,7 @@ typedef struct _LV2_Log {
 	   The API of this function matches that of the standard C vprintf
 	   function, except for the addition of the first two parameters.  This
 	   function may be called from any non-realtime context, or from any
-	   context if @p type is @ref LV2_LOG__Trace.
+	   context if `type` is @ref LV2_LOG__Trace.
 	*/
 	LV2_LOG_FUNC(3, 0)
 	int (*vprintf)(LV2_Log_Handle handle,

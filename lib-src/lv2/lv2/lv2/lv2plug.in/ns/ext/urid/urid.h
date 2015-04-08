@@ -35,6 +35,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
    Opaque pointer to host data for LV2_URID_Map.
 */
@@ -102,11 +106,11 @@ typedef struct _LV2_URID_Unmap {
 	/**
 	   Get the URI for a previously mapped numeric ID.
 
-	   Returns NULL if @p urid is not yet mapped.  Otherwise, the corresponding
+	   Returns NULL if `urid` is not yet mapped.  Otherwise, the corresponding
 	   URI is returned in a canonical form.  This MAY not be the exact same
 	   string that was originally passed to LV2_URID_Map::map(), but it MUST be
 	   an identical URI according to the URI syntax specification (RFC3986).  A
-	   non-NULL return for a given @p urid will always be the same for the life
+	   non-NULL return for a given `urid` will always be the same for the life
 	   of the plugin.  Plugins that intend to perform string comparison on
 	   unmapped URIs SHOULD first canonicalise URI strings with a call to
 	   map_uri() followed by a call to unmap_uri().
@@ -117,5 +121,9 @@ typedef struct _LV2_URID_Unmap {
 	const char* (*unmap)(LV2_URID_Unmap_Handle handle,
 	                     LV2_URID              urid);
 } LV2_URID_Unmap;
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* LV2_URID_H */

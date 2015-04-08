@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -378,6 +378,11 @@ main(void)
 		return failure("%s != %s\n", lhs.buf, lhs.buf);
 	}
 
+	SerdNode null_copy = serd_node_copy(&SERD_NODE_NULL);
+	if (!serd_node_equals(&SERD_NODE_NULL, &null_copy)) {
+		return failure("copy of null node != null node\n");
+	}
+
 	// Test serd_node_from_string
 
 	SerdNode node = serd_node_from_string(SERD_LITERAL, (const uint8_t*)"hello\"");
@@ -398,11 +403,14 @@ main(void)
 	SerdNode base = serd_node_new_uri_from_string(USTR("http://example.org/"),
 	                                              NULL, &base_uri);
 	SerdNode nil = serd_node_new_uri_from_string(NULL, &base_uri, NULL);
-	if (nil.type != SERD_URI || strcmp((const char*)nil.buf, (const char*)base.buf)) {
+	SerdNode nil2 = serd_node_new_uri_from_string(USTR(""), &base_uri, NULL);
+	if (nil.type != SERD_URI || strcmp((const char*)nil.buf, (const char*)base.buf) ||
+	    nil2.type != SERD_URI || strcmp((const char*)nil2.buf, (const char*)base.buf)) {
 		return failure("URI %s != base %s\n", nil.buf, base.buf);
 	}
 	serd_node_free(&base);
 	serd_node_free(&nil);
+	serd_node_free(&nil2);
 
 	// Test SerdEnv
 
@@ -414,6 +422,10 @@ main(void)
 
 	if (!serd_env_set_base_uri(env, &node)) {
 		return failure("Set base URI to %s\n", node.buf);
+	}
+
+	if (!serd_node_equals(serd_env_get_base_uri(env, NULL), &node)) {
+		return failure("Base URI mismatch\n");
 	}
 
 	SerdChunk prefix, suffix;

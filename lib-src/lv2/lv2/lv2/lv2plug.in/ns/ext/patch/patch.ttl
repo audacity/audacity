@@ -310,16 +310,36 @@ patch:remove
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
+	rdfs:label "remove" ;
 	rdfs:domain patch:Message .
 
 patch:request
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
+	rdfs:label "request" ;
 	rdfs:domain patch:Response ;
 	rdfs:range patch:Request ;
 	lv2:documentation """
-<p>The request this is a response to.</p>
+<p>The request this is a response to.  This can be used if referring directly
+to the URI or blank node ID of the request is possible.  Otherwise, use
+patch:sequenceNumber.</p>
+""" .
+
+patch:sequenceNumber
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "sequence number" ;
+	rdfs:domain patch:Message ;
+	rdfs:range xsd:int ;
+	lv2:documentation """
+<p>The sequence number of a request or response.  This property is used to
+associate replies with requests when it is not feasible to refer to request
+URIs with patch:request.  A patch:Response with a given sequence number is the
+reply to the previously send patch:Request with the same sequence number.</p>
+
+<p>The special sequence number 0 means no reply is desired.</p>
 """ .
 
 patch:subject

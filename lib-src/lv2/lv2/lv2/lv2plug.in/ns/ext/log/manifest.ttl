@@ -4,6 +4,6 @@
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
 	lv2:minorVersion 2 ;
-	lv2:microVersion 0 ;
+	lv2:microVersion 2 ;
 	rdfs:seeAlso <log.ttl> .
 

@@ -1,0 +1,5 @@
+# N3 paths
+@prefix : <http://www.w3.org/2013/TurtleTests/> .
+@prefix ns: <http://www.w3.org/2013/TurtleTests/p#> .
+
+:x^ns:p :p :z .

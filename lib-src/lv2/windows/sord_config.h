@@ -3,6 +3,7 @@
 #ifndef W_SORD_CONFIG_H_WAF
 #define W_SORD_CONFIG_H_WAF
 
-#define SORD_VERSION "0.12.0"
+#define HAVE_SERD 1
+#define SORD_VERSION "0.12.2"
 
 #endif /* W_SORD_CONFIG_H_WAF */

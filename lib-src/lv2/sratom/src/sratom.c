@@ -1,5 +1,5 @@
 /*
-  Copyright 2012 David Robillard <http://drobilla.net>
+  Copyright 2012-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -262,7 +262,7 @@ sratom_write(Sratom*         sratom,
 		const uint8_t* str = USTR(body);
 		if (path_is_absolute((const char*)str)) {
 			new_node = true;
-			object   = serd_node_new_file_uri(str, NULL, NULL, false);
+			object   = serd_node_new_file_uri(str, NULL, NULL, true);
 		} else {
 			SerdURI base_uri = SERD_URI_NULL;
 			if (!sratom->base_uri.buf ||
@@ -276,7 +276,7 @@ sratom_write(Sratom*         sratom,
 					serd_uri_parse(sratom->base_uri.buf, &base_uri);
 				}
 				new_node = true;
-				SerdNode rel = serd_node_new_file_uri(str, NULL, NULL, false);
+				SerdNode rel = serd_node_new_file_uri(str, NULL, NULL, true);
 				object = serd_node_new_uri_from_node(&rel, &base_uri, NULL);
 				serd_node_free(&rel);
 			}
@@ -370,12 +370,12 @@ sratom_write(Sratom*         sratom,
 		if (sratom->end_anon) {
 			sratom->end_anon(sratom->handle, &id);
 		}
-	} else if (type_urid == sratom->forge.Blank ||
-	           type_urid == sratom->forge.Resource) {
+	} else if (lv2_atom_forge_is_object_type(&sratom->forge, type_urid)) {
 		const LV2_Atom_Object_Body* obj   = (const LV2_Atom_Object_Body*)body;
 		const char*                 otype = unmap->unmap(unmap->handle,
 		                                                 obj->otype);
-		if (type_urid == sratom->forge.Blank) {
+
+		if (lv2_atom_forge_is_blank(&sratom->forge, type_urid, obj)) {
 			gensym(&id, 'b', sratom->next_id++);
 			start_object(sratom, &flags, subject, predicate, &id, otype);
 		} else {
@@ -424,6 +424,14 @@ sratom_write(Sratom*         sratom,
 	}
 
 	if (object.buf) {
+		SerdNode def_s = serd_node_from_string(SERD_BLANK, USTR("atom"));
+		SerdNode def_p = serd_node_from_string(SERD_URI, USTR(NS_RDF "value"));
+		if (!subject) {
+			subject = &def_s;
+		}
+		if (!predicate) {
+			predicate = &def_p;
+		}
 		sratom->write_statement(sratom->handle, flags, NULL,
 		                        subject, predicate, &object, &datatype, &language);
 	}
@@ -457,8 +465,6 @@ sratom_to_turtle(Sratom*         sratom,
 	                                 USTR(LV2_ATOM_URI "#"));
 	serd_env_set_prefix_from_strings(env, USTR("rdf"), NS_RDF);
 	serd_env_set_prefix_from_strings(env, USTR("xsd"), NS_XSD);
-	serd_env_set_prefix_from_strings(env, USTR("eg"),
-	                                 USTR("http://example.org/"));
 
 	SerdWriter* writer = serd_writer_new(
 		SERD_TURTLE,
@@ -525,7 +531,7 @@ read_resource(Sratom*         sratom,
 		if (!(sord_node_equals(p, sratom->nodes.rdf_type) &&
 		      sord_node_get_type(o) == SORD_URI &&
 		      map->map(map->handle, (const char*)sord_node_get_string(o)) == otype)) {
-			lv2_atom_forge_property_head(forge, p_urid, 0);
+			lv2_atom_forge_key(forge, p_urid);
 			read_node(sratom, forge, world, model, o, MODE_BODY);
 		}
 	}
@@ -679,11 +685,11 @@ read_node(Sratom*         sratom,
 			lv2_atom_forge_write(forge, body, size);
 			free(body);
 		} else if (sord_node_get_type(node) == SORD_URI) {
-			lv2_atom_forge_resource(
+			lv2_atom_forge_object(
 				forge, &frame, map->map(map->handle, str), type_urid);
 			read_resource(sratom, forge, world, model, node, type_urid);
 		} else {
-			lv2_atom_forge_blank(forge, &frame, sratom->next_id++, type_urid);
+			lv2_atom_forge_object(forge, &frame, 0, type_urid);
 			read_resource(sratom, forge, world, model, node, type_urid);
 		}
 		if (frame.ref) {

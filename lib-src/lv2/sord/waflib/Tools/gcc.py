@@ -2,8 +2,6 @@
 # encoding: utf-8
 # WARNING! Do not edit! http://waf.googlecode.com/git/docs/wafbook/single.html#_obtaining_the_waf_file
 
-import os,sys
-from waflib import Configure,Options,Utils
 from waflib.Tools import ccroot,ar
 from waflib.Configure import conf
 @conf
@@ -59,8 +57,8 @@ def gcc_modifier_cygwin(conf):
 @conf
 def gcc_modifier_darwin(conf):
 	v=conf.env
-	v['CFLAGS_cshlib']=['-fPIC','-compatibility_version','1','-current_version','1']
-	v['LINKFLAGS_cshlib']=['-dynamiclib']
+	v['CFLAGS_cshlib']=['-fPIC']
+	v['LINKFLAGS_cshlib']=['-dynamiclib','-Wl,-compatibility_version,1','-Wl,-current_version,1']
 	v['cshlib_PATTERN']='lib%s.dylib'
 	v['FRAMEWORKPATH_ST']='-F%s'
 	v['FRAMEWORK_ST']=['-framework']
@@ -82,6 +80,9 @@ def gcc_modifier_hpux(conf):
 	v['STLIB_MARKER']='-Bstatic'
 	v['CFLAGS_cshlib']=['-fPIC','-DPIC']
 	v['cshlib_PATTERN']='lib%s.sl'
+@conf
+def gcc_modifier_openbsd(conf):
+	conf.env.SONAME_ST=[]
 @conf
 def gcc_modifier_platform(conf):
 	gcc_modifier_func=getattr(conf,'gcc_modifier_'+conf.env.DEST_OS,None)

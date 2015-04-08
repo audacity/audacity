@@ -1,3 +1,20 @@
+atom (2.0) stable;
+
+  * Add lv2_atom_sequence_clear() and lv2_atom_sequence_append_event() helper
+    functions.
+  * Add lv2_atom_forge_is_object_type() and lv2_atom_forge_is_blank() to ease
+    backwards compatibility.
+  * Deprecate Blank and Resource in favour of just Object.
+  * Add lv2_atom_forge_key() for terser object writing.
+
+ -- David Robillard <d@drobilla.net>  Fri, 08 Aug 2014 00:00:00 +0000
+
+atom (1.8) stable;
+
+  * Make lv2_atom_*_is_end() arguments const.
+
+ -- David Robillard <d@drobilla.net>  Sat, 04 Jan 2014 00:00:00 +0000
+
 atom (1.6) stable;
 
   * Fix crash in forge.h when pushing atoms to a full buffer.
@@ -6,21 +23,21 @@ atom (1.6) stable;
 
 atom (1.4) stable;
 
-  * Fix lv2_atom_sequence_end().
+  * Improve atom documentation.
   * Remove atom:stringType in favour of owl:onDatatype so generic tools can
     understand and validate atom literals.
-  * Improve atom documentation.
+  * Fix lv2_atom_sequence_end().
 
  -- David Robillard <d@drobilla.net>  Sun, 27 Jan 2013 00:00:00 +0000
 
 atom (1.2) stable;
 
-  * Use consistent label style.
   * Fix outdated documentation in forge.h.
-  * Add LV2_ATOM_CONTENTS_CONST and LV2_ATOM_BODY_CONST.
-  * Fix implicit conversions in forge.h that are invalid in C++11.
-  * Add lv2_atom_object_body_get().
   * Fix lv2_atom_object_next() on 32-bit platforms.
+  * Use consistent label style.
+  * Add LV2_ATOM_CONTENTS_CONST and LV2_ATOM_BODY_CONST.
+  * Add lv2_atom_object_body_get().
+  * Fix implicit conversions in forge.h that are invalid in C++11.
 
  -- David Robillard <d@drobilla.net>  Sun, 14 Oct 2012 00:00:00 +0000
 

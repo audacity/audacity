@@ -105,11 +105,11 @@ typedef enum {
 /**
    A host-provided function to store a property.
    @param handle Must be the handle passed to LV2_State_Interface.save().
-   @param key The key to store @p value under (URID).
+   @param key The key to store `value` under (URID).
    @param value Pointer to the value to be stored.
-   @param size The size of @p value in bytes.
-   @param type The type of @p value (URID).
-   @param flags LV2_State_Flags for @p value.
+   @param size The size of `value` in bytes.
+   @param type The type of `value` (URID).
+   @param flags LV2_State_Flags for `value`.
    @return 0 on success, otherwise a non-zero error code.
 
    The host passes a callback of this type to LV2_State_Interface.save(). This
@@ -129,8 +129,8 @@ typedef enum {
    (http://lv2plug.in/ns/ext/atom) wherever possible.  The plugin SHOULD
    attempt to fall-back and avoid the error if possible.
 
-   Note that @p size MUST be > 0, and @p value MUST point to a valid region of
-   memory @p size bytes long (this is required to make restore unambiguous).
+   Note that `size` MUST be > 0, and `value` MUST point to a valid region of
+   memory `size` bytes long (this is required to make restore unambiguous).
 
    The plugin MUST NOT attempt to use this function outside of the
    LV2_State_Interface.restore() context.
@@ -151,7 +151,7 @@ typedef LV2_State_Status (*LV2_State_Store_Function)(
    @param type (Output) If non-NULL, set to the type of the restored value.
    @param flags (Output) If non-NULL, set to the flags for the restored value.
    @return A pointer to the restored value (object), or NULL if no value
-   has been stored under @p key.
+   has been stored under `key`.
 
    A callback of this type is passed by the host to
    LV2_State_Interface.restore().  This callback is called repeatedly by the
@@ -188,12 +188,12 @@ typedef const void* (*LV2_State_Retrieve_Function)(
 */
 typedef struct _LV2_State_Interface {
 	/**
-	   Save plugin state using a host-provided @p store callback.
+	   Save plugin state using a host-provided `store` callback.
 
 	   @param instance The instance handle of the plugin.
 	   @param store The host-provided store callback.
 	   @param handle An opaque pointer to host data which MUST be passed as the
-	   handle parameter to @p store if it is called.
+	   handle parameter to `store` if it is called.
 	   @param flags Flags describing desired properties of this save.  These
 	   flags may be used to determine the most appropriate values to store.
 	   @param features Extensible parameter for passing any additional
@@ -204,7 +204,7 @@ typedef struct _LV2_State_Interface {
 	   possible, and consider the possibility of state being restored much
 	   later on a different machine.
 
-	   The @p handle pointer and @p store function MUST NOT be used
+	   The `handle` pointer and `store` function MUST NOT be used
 	   beyond the scope of save().
 
 	   This function has its own special threading class: it may not be called
@@ -230,12 +230,12 @@ typedef struct _LV2_State_Interface {
 	                         const LV2_Feature *const * features);
 
 	/**
-	   Restore plugin state using a host-provided @p retrieve callback.
+	   Restore plugin state using a host-provided `retrieve` callback.
 
 	   @param instance The instance handle of the plugin.
 	   @param retrieve The host-provided retrieve callback.
 	   @param handle An opaque pointer to host data which MUST be passed as the
-	   handle parameter to @p retrieve if it is called.
+	   handle parameter to `retrieve` if it is called.
 	   @param flags Currently unused.
 	   @param features Extensible parameter for passing any additional
 	   features to be used for this restore.
@@ -247,7 +247,7 @@ typedef struct _LV2_State_Interface {
 	   not be retrieved.  This allows the host to reset the plugin state with
 	   an empty map.
 
-	   The @p handle pointer and @p store function MUST NOT be used
+	   The `handle` pointer and `store` function MUST NOT be used
 	   beyond the scope of restore().
 
 	   This function is in the "Instantiation" threading class as defined by
@@ -262,7 +262,7 @@ typedef struct _LV2_State_Interface {
 } LV2_State_Interface;
 
 /**
-   Feature data for state:mapPath (LV2_STATE__mapPath).
+   Feature data for state:mapPath (@ref LV2_STATE__mapPath).
 */
 typedef struct {
 	/**
@@ -272,18 +272,18 @@ typedef struct {
 
 	/**
 	   Map an absolute path to an abstract path for use in plugin state.
-	   @param handle MUST be the @p handle member of this struct.
+	   @param handle MUST be the `handle` member of this struct.
 	   @param absolute_path The absolute path of a file.
 	   @return An abstract path suitable for use in plugin state.
 
 	   The plugin MUST use this function to map any paths that will be stored
 	   in plugin state.  The returned value is an abstract path which MAY not
-	   be an actual file system path; @ref absolute_path() MUST be used to map
+	   be an actual file system path; absolute_path() MUST be used to map
 	   it to an actual path in order to use the file.
 
 	   Plugins MUST NOT make any assumptions about abstract paths except that
 	   they can be mapped back to the absolute path of the "same" file (though
-	   not necessarily the same original path) using @ref absolute_path().
+	   not necessarily the same original path) using absolute_path().
 
 	   This function may only be called within the context of
 	   LV2_State_Interface methods.  The caller is responsible for freeing the
@@ -294,7 +294,7 @@ typedef struct {
 
 	/**
 	   Map an abstract path from plugin state to an absolute path.
-	   @param handle MUST be the @p handle member of this struct.
+	   @param handle MUST be the `handle` member of this struct.
 	   @param abstract_path An abstract path (e.g. a path from plugin state).
 	   @return An absolute file system path.
 
@@ -320,7 +320,7 @@ typedef struct {
 
 	/**
 	   Return a path the plugin may use to create a new file.
-	   @param handle MUST be the @p handle member of this struct.
+	   @param handle MUST be the `handle` member of this struct.
 	   @param path The path of the new file within a namespace unique to this
 	   plugin instance.
 	   @return The absolute path to use for the new file.

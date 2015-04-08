@@ -1,5 +1,5 @@
 /*
-  Copyright 2012 David Robillard <http://drobilla.net>
+  Copyright 2012-2013 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -28,6 +28,7 @@
 #define LV2_ATOM_LOGGER_H
 
 #include <stdio.h>
+#include <string.h>
 
 #include "lv2/lv2plug.in/ns/ext/log/log.h"
 
@@ -48,10 +49,10 @@ typedef struct {
 } LV2_Log_Logger;
 
 /**
-   Initialise @p logger.
+   Initialise `logger`.
 
-   URIs will be mapped using @p map and stored, a reference to @p map itself is
-   not held.  Both @p map and @p log may be NULL when unsupported by the host,
+   URIs will be mapped using `map` and stored, a reference to `map` itself is
+   not held.  Both `map` and `log` may be NULL when unsupported by the host,
    in which case the implementation will fall back to printing to stderr.
 */
 static inline void

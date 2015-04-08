@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2012 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -277,7 +277,7 @@ absolute_path(LV2_State_Map_Path_Handle handle,
 	return path;
 }
 
-/** Return a new features array which is @c feature added to @c features. */
+/** Return a new features array which is `feature` added to `features`. */
 static const LV2_Feature**
 add_features(const LV2_Feature *const * features,
              const LV2_Feature* map, const LV2_Feature* make)
@@ -319,8 +319,7 @@ state_strerror(LV2_State_Status st)
 	}
 }
 
-LILV_API
-LilvState*
+LILV_API LilvState*
 lilv_state_new_from_instance(const LilvPlugin*          plugin,
                              LilvInstance*              instance,
                              LV2_URID_Map*              map,
@@ -374,7 +373,7 @@ lilv_state_new_from_instance(const LilvPlugin*          plugin,
 	// Store properties
 	const LV2_Descriptor*      desc  = instance->lv2_descriptor;
 	const LV2_State_Interface* iface = (desc->extension_data)
-		? (LV2_State_Interface*)desc->extension_data(LV2_STATE__interface)
+		? (const LV2_State_Interface*)desc->extension_data(LV2_STATE__interface)
 		: NULL;
 
 	if (iface) {
@@ -396,8 +395,7 @@ lilv_state_new_from_instance(const LilvPlugin*          plugin,
 	return state;
 }
 
-LILV_API
-void
+LILV_API void
 lilv_state_restore(const LilvState*           state,
                    LilvInstance*              instance,
                    LilvSetPortValueFunc       set_value,
@@ -411,9 +409,9 @@ lilv_state_restore(const LilvState*           state,
 
 	const LV2_Feature** sfeatures = add_features(features, &map_feature, NULL);
 
-	const LV2_Descriptor*      desc  = instance->lv2_descriptor;
-	const LV2_State_Interface* iface = (desc->extension_data)
-		? (LV2_State_Interface*)desc->extension_data(LV2_STATE__interface)
+	const LV2_Descriptor*      desc  = instance ? instance->lv2_descriptor : NULL;
+	const LV2_State_Interface* iface = (desc && desc->extension_data)
+		? (const LV2_State_Interface*)desc->extension_data(LV2_STATE__interface)
 		: NULL;
 
 	if (iface) {
@@ -439,6 +437,12 @@ new_state_from_model(LilvWorld*       world,
                      const SordNode*  node,
                      const char*      dir)
 {
+	// Check that we know at least something about this state subject
+	if (!sord_ask(model, node, 0, 0, 0)) {
+		return NULL;
+	}
+
+	// Allocate state
 	LilvState* const state = (LilvState*)malloc(sizeof(LilvState));
 	memset(state, '\0', sizeof(LilvState));
 	state->dir       = lilv_strdup(dir);
@@ -501,11 +505,12 @@ new_state_from_model(LilvWorld*       world,
 		} else if (value) {
 			chunk.len = 0;
 			sratom_read(sratom, &forge, world->world, model, value);
-			LV2_Atom* atom = (LV2_Atom*)chunk.buf;
+			const LV2_Atom* atom = (const LV2_Atom*)chunk.buf;
 
 			append_port_value(state,
 			                  (const char*)sord_node_get_string(symbol),
-			                  LV2_ATOM_BODY(atom), atom->size, atom->type);
+			                  LV2_ATOM_BODY_CONST(atom),
+			                  atom->size, atom->type);
 
 			if (label) {
 				lilv_state_set_label(state,
@@ -532,15 +537,15 @@ new_state_from_model(LilvWorld*       world,
 				&forge, sratom_forge_sink, sratom_forge_deref, &chunk);
 
 			sratom_read(sratom, &forge, world->world, model, o);
-			LV2_Atom* atom  = (LV2_Atom*)chunk.buf;
-			uint32_t  flags = LV2_STATE_IS_POD|LV2_STATE_IS_PORTABLE;
-			Property  prop  = { NULL, 0, 0, 0, flags };
+			const LV2_Atom* atom  = (const LV2_Atom*)chunk.buf;
+			uint32_t        flags = LV2_STATE_IS_POD|LV2_STATE_IS_PORTABLE;
+			Property        prop  = { NULL, 0, 0, 0, flags };
 
 			prop.key   = map->map(map->handle, (const char*)sord_node_get_string(p));
 			prop.type  = atom->type;
 			prop.size  = atom->size;
 			prop.value = malloc(atom->size);
-			memcpy(prop.value, LV2_ATOM_BODY(atom), atom->size);
+			memcpy(prop.value, LV2_ATOM_BODY_CONST(atom), atom->size);
 			if (atom->type == forge.Path) {
 				prop.flags = LV2_STATE_IS_PORTABLE;
 			}
@@ -565,8 +570,7 @@ new_state_from_model(LilvWorld*       world,
 	return state;
 }
 
-LILV_API
-LilvState*
+LILV_API LilvState*
 lilv_state_new_from_world(LilvWorld*      world,
                           LV2_URID_Map*   map,
                           const LilvNode* node)
@@ -583,8 +587,7 @@ lilv_state_new_from_world(LilvWorld*      world,
 	return state;
 }
 
-LILV_API
-LilvState*
+LILV_API LilvState*
 lilv_state_new_from_file(LilvWorld*      world,
                          LV2_URID_Map*   map,
                          const LilvNode* subject,
@@ -637,8 +640,7 @@ set_prefixes(SerdEnv* env)
 	SET_PSET(env, USTR("xsd"),   USTR(LILV_NS_XSD));
 }
 
-LILV_API
-LilvState*
+LILV_API LilvState*
 lilv_state_new_from_string(LilvWorld*    world,
                            LV2_URID_Map* map,
                            const char*   str)
@@ -713,7 +715,7 @@ add_state_to_manifest(const LilvNode* plugin_uri,
                       const char*     state_uri,
                       const char*     state_path)
 {
-	FILE* fd = fopen((char*)manifest_path, "a");
+	FILE* fd = fopen(manifest_path, "a");
 	if (!fd) {
 		LILV_ERRORF("Failed to open %s (%s)\n",
 		            manifest_path, strerror(errno));
@@ -923,8 +925,7 @@ lilv_state_make_links(const LilvState* state, const char* dir)
 	}
 }
 
-LILV_API
-int
+LILV_API int
 lilv_state_save(LilvWorld*       world,
                 LV2_URID_Map*    map,
                 LV2_URID_Unmap*  unmap,
@@ -979,8 +980,7 @@ lilv_state_save(LilvWorld*       world,
 	return ret;
 }
 
-LILV_API
-char*
+LILV_API char*
 lilv_state_to_string(LilvWorld*       world,
                      LV2_URID_Map*    map,
                      LV2_URID_Unmap*  unmap,
@@ -1005,8 +1005,7 @@ lilv_state_to_string(LilvWorld*       world,
 	return (char*)serd_chunk_sink_finish(&chunk);
 }
 
-LILV_API
-void
+LILV_API void
 lilv_state_free(LilvState* state)
 {
 	if (state) {
@@ -1031,8 +1030,7 @@ lilv_state_free(LilvState* state)
 	}
 }
 
-LILV_API
-bool
+LILV_API bool
 lilv_state_equals(const LilvState* a, const LilvState* b)
 {
 	if (!lilv_node_equals(a->plugin_uri, b->plugin_uri)
@@ -1075,29 +1073,25 @@ lilv_state_equals(const LilvState* a, const LilvState* b)
 	return true;
 }
 
-LILV_API
-unsigned
+LILV_API unsigned
 lilv_state_get_num_properties(const LilvState* state)
 {
 	return state->num_props;
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_state_get_plugin_uri(const LilvState* state)
 {
 	return state->plugin_uri;
 }
 
-LILV_API
-const char*
+LILV_API const char*
 lilv_state_get_label(const LilvState* state)
 {
 	return state->label;
 }
 
-LILV_API
-void
+LILV_API void
 lilv_state_set_label(LilvState* state, const char* label)
 {
 	const size_t len = strlen(label);

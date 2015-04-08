@@ -473,10 +473,8 @@ public:
 	inline World& world() const { return _world; }
 
 private:
-	World&      _world;
-	Node        _base;
-	SerdWriter* _writer;
-	size_t      _next_blank_id;
+	World& _world;
+	Node   _base;
 };
 
 /** Create an empty in-memory RDF model.
@@ -488,7 +486,6 @@ Model::Model(World&             world,
              bool               graphs)
 	: _world(world)
 	, _base(world, Node::URI, base_uri)
-	, _writer(NULL)
 {
 	_c_obj = sord_new(_world.world(), indices, graphs);
 }

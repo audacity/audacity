@@ -1,0 +1,2 @@
+# Bad IRI : good escape, bad charcater
+<http://www.w3.org/2013/TurtleTests/\u0020> <http://www.w3.org/2013/TurtleTests/p> <http://www.w3.org/2013/TurtleTests/o> .

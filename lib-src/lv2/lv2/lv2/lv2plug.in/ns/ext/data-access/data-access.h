@@ -29,6 +29,10 @@
 
 #define LV2_DATA_ACCESS_URI "http://lv2plug.in/ns/ext/data-access"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
    The data field of the LV2_Feature for this extension.
 
@@ -51,5 +55,9 @@ typedef struct {
 	*/
 	const void* (*data_access)(const char* uri);
 } LV2_Extension_Data_Feature;
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif  /* LV2_DATA_ACCESS_H */

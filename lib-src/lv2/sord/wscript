@@ -10,7 +10,7 @@ import waflib.extras.autowaf as autowaf
 # major increment <=> incompatible changes
 # minor increment <=> compatible changes (additions)
 # micro increment <=> no interface changes
-SORD_VERSION       = '0.12.0'
+SORD_VERSION       = '0.12.2'
 SORD_MAJOR_VERSION = '0'
 
 # Mandatory waf variables
@@ -204,7 +204,10 @@ def build(bld):
             if bld.env.STATIC_PROGS:
                 obj.env.SHLIB_MARKER = obj.env.STLIB_MARKER
                 obj.linkflags        = ['-static', '-Wl,--start-group']
-            autowaf.use_lib(bld, obj, 'SERD PCRE')
+            autowaf.use_lib(bld, obj, 'SERD')
+            if i == 'sord_validate':
+                autowaf.use_lib(bld, obj, 'PCRE')
+                obj.cflags = '-pthread'
 
     # Documentation
     autowaf.build_dox(bld, 'SORD', SORD_VERSION, top, out)
@@ -225,6 +228,9 @@ def fix_docs(ctx):
 
 def upload_docs(ctx):
     os.system('rsync -ravz --delete -e ssh build/doc/html/ drobilla@drobilla.net:~/drobilla.net/docs/sord/')
+    for page in glob.glob('doc/*.[1-8]'):
+        os.system('soelim %s | pre-grohtml troff -man -wall -Thtml | post-grohtml > build/%s.html' % (page, page))
+        os.system('rsync -avz --delete -e ssh build/%s.html drobilla@drobilla.net:~/drobilla.net/man/' % page)
 
 def test(ctx):
     blddir = autowaf.build_dir(APPNAME, 'tests')

@@ -7,3 +7,4 @@
 <http://example.org/eg#thing> <http://example.org/eg#num> "1.58490e-05"^^<http://www.w3.org/2001/XMLSchema#double> .
 <http://example.org/eg#thing> <http://example.org/eg#num> "1.58490e+05"^^<http://www.w3.org/2001/XMLSchema#double> .
 <http://example.org/eg#thing> <http://example.org/eg#num> "1.58490e05"^^<http://www.w3.org/2001/XMLSchema#double> .
+<http://example.org/eg#thing> <http://example.org/eg#num> "1.58490E05"^^<http://www.w3.org/2001/XMLSchema#double> .

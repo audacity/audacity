@@ -372,10 +372,10 @@ def gather_intel_composer_versions(conf,versions):
 					setattr(conf,compilervars_warning_attr,False)
 					patch_url='http://software.intel.com/en-us/forums/topic/328487'
 					compilervars_arch=os.path.join(path,'bin','compilervars_arch.bat')
-					for vscomntools in['VS110COMNTOOLS','VS100COMNTOOLS']:
-						if os.environ.has_key(vscomntools):
-							vs_express_path=os.environ[vscomntools]+r'..\IDE\VSWinExpress.exe'
-							dev_env_path=os.environ[vscomntools]+r'..\IDE\devenv.exe'
+					for vscomntool in['VS110COMNTOOLS','VS100COMNTOOLS']:
+						if vscomntool in os.environ:
+							vs_express_path=os.environ[vscomntool]+r'..\IDE\VSWinExpress.exe'
+							dev_env_path=os.environ[vscomntool]+r'..\IDE\devenv.exe'
 							if(r'if exist "%VS110COMNTOOLS%..\IDE\VSWinExpress.exe"'in Utils.readf(compilervars_arch)and not os.path.exists(vs_express_path)and not os.path.exists(dev_env_path)):
 								Logs.warn(('The Intel compilervar_arch.bat only checks for one Visual Studio SKU ''(VSWinExpress.exe) but it does not seem to be installed at %r. ''The intel command line set up will fail to configure unless the file %r''is patched. See: %s')%(vs_express_path,compilervars_arch,patch_url))
 			except WindowsError:
@@ -569,11 +569,10 @@ def msvc_common_flags(conf):
 	v['DEFINES_ST']='/D%s'
 	v['CC_SRC_F']=''
 	v['CC_TGT_F']=['/c','/Fo']
-	if v['MSVC_VERSION']>=8:
-		v['CC_TGT_F']=['/FC']+v['CC_TGT_F']
 	v['CXX_SRC_F']=''
 	v['CXX_TGT_F']=['/c','/Fo']
-	if v['MSVC_VERSION']>=8:
+	if(v.MSVC_COMPILER=='msvc'and v.MSVC_VERSION>=8)or(v.MSVC_COMPILER=='wsdk'and v.MSVC_VERSION>=6):
+		v['CC_TGT_F']=['/FC']+v['CC_TGT_F']
 		v['CXX_TGT_F']=['/FC']+v['CXX_TGT_F']
 	v['CPPPATH_ST']='/I%s'
 	v['AR_TGT_F']=v['CCLNK_TGT_F']=v['CXXLNK_TGT_F']='/OUT:'

@@ -116,7 +116,7 @@ sratom_set_sink(Sratom*           sratom,
 /**
    Write pretty numeric literals.
 
-   If @p pretty_numbers is true, numbers will be written as pretty Turtle
+   If `pretty_numbers` is true, numbers will be written as pretty Turtle
    literals, rather than string literals with precise types.  The cost of this
    is that the types might get fudged on a round-trip to RDF and back.
 */
@@ -151,7 +151,7 @@ sratom_write(Sratom*         sratom,
 
 /**
    Read an Atom from RDF.
-   The resulting atom will be written to @p forge.
+   The resulting atom will be written to `forge`.
 */
 SRATOM_API
 void

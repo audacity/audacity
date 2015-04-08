@@ -207,7 +207,7 @@ GPL-compatible license.  Specifically:
     separate download.
 
   lv2: a merging of the lilv (ISC license), lv2 (LGPL), msinttypes, serd (ISC), 
-    sord and sratom libraries to support LV2 plug-ins. 
+    sord, sratom, and suil libraries to support LV2 plug-ins. 
 
   portsmf: BSD-like license.
     library for reading and writing midi files. Included with Audacity

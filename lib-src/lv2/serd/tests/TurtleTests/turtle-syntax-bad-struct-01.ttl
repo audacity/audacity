@@ -1,0 +1,2 @@
+# Turtle is not TriG
+{ <http://www.w3.org/2013/TurtleTests/s> <http://www.w3.org/2013/TurtleTests/p> <http://www.w3.org/2013/TurtleTests/o> }

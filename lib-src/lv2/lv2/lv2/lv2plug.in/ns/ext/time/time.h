@@ -22,10 +22,6 @@
 #ifndef LV2_TIME_H
 #define LV2_TIME_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define LV2_TIME_URI "http://lv2plug.in/ns/ext/time"
 
 #define LV2_TIME__Time            LV2_TIME_URI "#Time"
@@ -41,9 +37,5 @@ extern "C" {
 #define LV2_TIME__frame           LV2_TIME_URI "#frame"
 #define LV2_TIME__framesPerSecond LV2_TIME_URI "#framesPerSecond"
 #define LV2_TIME__speed           LV2_TIME_URI "#speed"
-
-#ifdef __cplusplus
-}  /* extern "C" */
-#endif
 
 #endif  /* LV2_TIME_H */
