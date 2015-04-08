@@ -11,7 +11,7 @@
 
 /* external variables */
 extern LVAL obarray,s_gchook,s_gcflag;
-extern long nnodes,nfree,total;
+extern long nnodes,nfree;
 extern int anodes,nsegs,gccalls;
 extern struct segment *segs,*lastseg,*fixseg,*charseg;
 extern XLCONTEXT *xlcontext;
@@ -34,7 +34,7 @@ LOCAL void readnode(int type, LVAL node);
 
 
 /* xlisave - save the memory image */
-int xlisave(char *fname)
+int xlisave(const char *fname)
 {
     char fullname[STRMAX+1];
     unsigned char *cp;
@@ -132,7 +132,7 @@ int xlisave(char *fname)
 }
 
 /* xlirestore - restore a saved memory image */
-int xlirestore(char *fname)
+int xlirestore(const char *fname)
 {
     extern FUNDEF funtab[];
     char fullname[STRMAX+1];
@@ -398,7 +398,7 @@ LOCAL OFFTYPE cvoptr(LVAL p)
     /* pointer not within any segment */
     xlerror("bad pointer found during image save",p);
     /* this point will never be reached because xlerror() does a
-       longjmp(). The return is added to avoid false positive 
+       _longjmp(). The return is added to avoid false positive 
        error messages from static analyzers and compilers */
     return ((OFFTYPE)NIL);
 }

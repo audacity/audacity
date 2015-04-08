@@ -1,22 +1,62 @@
-README file for Nyquist Version 3.03
-24 Feb 2009
+README file for Nyquist Version 3.09
+28 Dec 2014
 Roger B. Dannenberg
 
 LICENSE: see license.txt
-WEB SITE: http://www.cs.cmu.edu/~rbd/nyquist.html
+WEB SITE: http://www.cs.cmu.edu/~music/nyquist
 
 INSTALLING NYQUIST
 ====================
-Please see Section 1.1, Page 1, of the Nyquist Manual
+You can download pre-compiled versions for Windows and OS X.
 
-If you use Windows 95 or Windows NT, this release was
-compiled with Visual C++ 6.0.
+You can compile Nyquist from sources for Windows, OS X, linux, and
+other versions of Unix. For details, see one of these files:
+ - sys/win/README.txt
+ - sys/mac/README.txt
+ - sys/unix/README.txt
 
-For Mac OS X command line users, there is an executable
-Nyquist program: NyquistIDE.app/Contents/Resources/Java/ny
 
 IMPLEMENTATION STATUS
 =====================
+
+Version 3.09 provides:
+    Various bug fixes
+    OS X version is significantly faster
+    Security features added to limit CPU, memory, file access (default
+        is still unrestricted; this feature is to protect servers)
+
+Version 3.08 provides:
+    NyquistIDE opens documentation properly on default browser
+    NyquistIDE forcefully terminates nyquist process on exit if needed
+    bug fix for mixed sample rate signal handling, affects many primitives
+    timed-seq and score-play avoid stack overflow on finely spaced events
+    sampler() primitive does error checking to avoid infinite loop
+    
+Version 3.07 provides:
+    Bug fixes in NyquistIDE Envelope Editor
+    NyquistIDE installs symbolic links to lib and demos
+      directories from nyquist directory (where documentation
+      is kept) so these folders are not hidden in the app bundle.
+    Bug fix in quantize and snd-quantize functions. 
+
+Version 3.06 provides:
+    64-bit architecture support
+    Access to OGG and FLAC file formats
+    Updates for MSVC++2010, VS2012, XCode 4.5
+    This is a deadline-driven release. Expect an update soon.
+
+Version 3.05 provides:
+    New "UPIC Editor" window in NyquistIDE
+    Fix to escape backslashes in default windows directory
+    Fix to other problems with Preferences
+    Arpeggiator example in nyquist/demos
+
+Version 3.04 provides:
+    Updates to libraries, including liblo and PortAudio
+    Documentation uses both syntax SAL and Lisp syntax
+    Some STK instruments have been added
+    Build files modified to make 32-bit code even on 64-bit 
+      architectures (Nyquist only runs in 32-bit mode)
 Version 3.03 provides:
     Bug fix to Markov pattern generator (see make-markov).
     Update to current (24-feb-09) liblo library.
@@ -214,21 +254,4 @@ test - test code (this is not maintained and may not be in the release)
 todo - list of things to do (this may not be in the release)
 tran - descriptor (.alg) files for machine-translated Nyquist code
 xlisp - sources for Xlisp (these are linked into Nyquist)
-
-THE RUNTIME ONLY RELEASE
-========================
-The runtime-only release contains everything related to running
-Nyquist, but no source code. The files in this release are:
-    Readme.txt (this file)
-    nyquist.exe (located in the runtime directory)
-    runtime (directory)
-    lib (directory)
-    demos (directory)
-    test (directory)
-
-BUILDING UNDER LINUX
-====================
-in the nyquist directory:
-> ln -s sys/unix/linux/Makefile
-> make
 

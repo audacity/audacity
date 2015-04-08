@@ -54,7 +54,9 @@ error here
 /* LISP-SRC: (setf snd-head-CAF 19) */
 #define SND_HEAD_RAW 20
 /* LISP-SRC: (setf snd-head-raw 20) */
-#define SND_NUM_HEADS 21
+#define SND_HEAD_OGG 21
+/* LISP-SRC: (setf snd-head-OGG 21) */
+#define SND_NUM_HEADS 22
 
 /* bitfields for soundheaders */
 #define SND_HEAD_CHANNELS (1<<0)
@@ -103,7 +105,9 @@ error here
 /* microsoft ADPCM */
 #define SND_MODE_MSADPCM 11
 /* LISP-SRC: (setf snd-mode-msadpcm 11) */
-#define SND_NUM_MODES 12
+#define SND_MODE_VORBIS 12
+/* LISP-SRC: (setf snd-mode-vorbis 11) */
+#define SND_NUM_MODES 13
 
 
 #define SND_LOOP_NONE 0

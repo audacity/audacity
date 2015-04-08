@@ -271,8 +271,9 @@ void yin_compute(yin_susp_type susp, float *pitch, float *harmonicity)
  * deallocated, because it can only be referenced through the
  * snd_list nodes to which there are backpointers.
  */
-void yin_fetch(yin_susp_type susp, snd_list_type snd_list)
+void yin_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    yin_susp_type susp = (yin_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -478,14 +479,16 @@ void yin_fetch(yin_susp_type susp, snd_list_type snd_list)
 } /* yin_fetch */
 
   
-void yin_mark(yin_susp_type susp)
+void yin_mark(snd_susp_type a_susp)
 {
+    yin_susp_type susp = (yin_susp_type) a_susp;
     sound_xlmark(susp->s);
 }
 
 
-void yin_free(yin_susp_type susp)
+void yin_free(snd_susp_type a_susp)
 {
+    yin_susp_type susp = (yin_susp_type) a_susp;
     int j;
     boolean active = false;
 /*    stdputstr("yin_free: "); */
@@ -509,8 +512,9 @@ void yin_free(yin_susp_type susp)
 }
 
 
-void yin_print_tree(yin_susp_type susp, int n)
+void yin_print_tree(snd_susp_type a_susp, int n)
 {
+    yin_susp_type susp = (yin_susp_type) a_susp;
     indent(n);
     stdputstr("s:");
     sound_print_tree_1(susp->s, n);

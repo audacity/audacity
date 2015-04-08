@@ -9,7 +9,7 @@
 (ALWAYS-SCALE x_snd)
 (TERMINATE (MIN x_snd))
 (LOGICAL-STOP (MIN x_snd))
-(SAMPLE-RATE "x_snd->sr")
+(SAMPLE-RATE (MAX x_snd))
 (STATE  
         ("long" "fr_indx" "0")
         ("long" "ak_len" "0") ; length of coefs ak array 
@@ -84,26 +84,21 @@ out:        togo = 0;     /* indicate termination */
 
 ")
 
-(INNER-LOOP-LOCALS "double z0; long xi; long xj;")
+(INNER-LOOP-LOCALS "            double z0; long xi; long xj;")
 
-(INNER-LOOP "
-             z0 = x_snd * gain;
-             for (xi=0; xi < ak_len; xi++) {
-                 xj = index + xi; if (xj >= ak_len) xj -= ak_len;
-                 z0 += ak_coefs[xi] * zk_buf[xj];
-             } 
-             zk_buf[index] = z0;
-             index++; if (index == ak_len) index = 0;
-             fr_indx++; 
-             output = (sample_type) z0;
-")
+(INNER-LOOP "z0 = x_snd * gain;
+            for (xi=0; xi < ak_len; xi++) {
+                xj = index + xi; if (xj >= ak_len) xj -= ak_len;
+                z0 += ak_coefs[xi] * zk_buf[xj];
+            } 
+            zk_buf[index] = z0;
+            index++; if (index == ak_len) index = 0;
+            fr_indx++; 
+            output = (sample_type) z0")
 
 (CONSTANT "frame_length" "src")
-
-(FINALIZATION " free(susp->ak_coefs);
-                free(susp->zk_buf);
-")
-
+(FINALIZATION "    free(susp->ak_coefs);
+    free(susp->zk_buf);\n")
 )
 
 

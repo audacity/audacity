@@ -1,4 +1,4 @@
-/* sndwrite.c -- write sounds to files */
+ /* sndwrite.c -- write sounds to files */
 
 #include "stdlib.h"
 #include "switches.h"
@@ -93,12 +93,8 @@
             max_sample = -s; \
         }
 
-
-/* jlh Changed these to the <> format, so it will be sought for in the
-   include path */
-#include <portaudio.h>
-/* #include "exitpa.h" jlh obsolete? or windows only? PortAudio 2007
-                       has no such thing.  Is it PA 19 or PA 2.0??? */
+// should be looking for local portaudio
+#include "portaudio.h"
 
 long flush_count = 0; /* how many samples to write to finish */
 
@@ -138,8 +134,9 @@ static int portaudio_error(PaError err, char *problem)
 {
     char msgbuffer[256];
     if (err != paNoError) {
-        sprintf(msgbuffer, "%s, error %ld, %s.", problem, err, 
-                            Pa_GetErrorText(err));
+        snprintf(msgbuffer, sizeof(msgbuffer), 
+                 "%s, error %d, %s.", problem, (int) err, 
+                                Pa_GetErrorText(err));
         xlerrprint("warning", NULL, msgbuffer, s_unbound);
         return true;
     }
@@ -242,7 +239,8 @@ long lookup_format(long format, long mode, long bits, long swap)
     case SND_HEAD_SD2: sf_format = SF_FORMAT_SD2; break;
     case SND_HEAD_FLAC: sf_format = SF_FORMAT_FLAC; break;
     case SND_HEAD_CAF: sf_format = SF_FORMAT_CAF; break;
-    case SND_HEAD_RAW: 
+    case SND_HEAD_OGG: sf_format = SF_FORMAT_OGG; mode = SND_MODE_VORBIS; break; /* ZEYU */
+    case SND_HEAD_RAW:
         sf_format = SF_FORMAT_RAW; 
 #ifdef XL_BIG_ENDIAN
         sf_format |= (swap ? SF_ENDIAN_LITTLE : SF_ENDIAN_BIG);
@@ -267,7 +265,7 @@ long lookup_format(long format, long mode, long bits, long swap)
                            "using PCM instead\n");
         } /* no break here, fall through to SND_MODE_PCM... */
     default:
-        nyquist_printf("s-save: unrecognized mode (%d), using PCM\n",
+        nyquist_printf("s-save: unrecognized mode (%ld), using PCM\n",
                        mode);
         /* no break, fall through as SND_MODE_PCM */
     case SND_MODE_PCM: 
@@ -278,7 +276,7 @@ long lookup_format(long format, long mode, long bits, long swap)
         else {
             sf_mode = SF_FORMAT_PCM_16;
             nyquist_printf(
-                    "s-save: bad bits parameter (%d), using 16-bit PCM\n",
+                    "s-save: bad bits parameter (%ld), using 16-bit PCM\n",
                     bits);
         }
         break;
@@ -287,7 +285,7 @@ long lookup_format(long format, long mode, long bits, long swap)
     case SND_MODE_FLOAT: sf_mode = SF_FORMAT_FLOAT; break;
     case SND_MODE_DOUBLE: sf_mode = SF_FORMAT_DOUBLE; break;
     case SND_MODE_UNKNOWN: sf_mode = SF_FORMAT_PCM_16; break;
-    case SND_MODE_GSM610: sf_mode = SF_FORMAT_GSM610; break;
+    case SND_MODE_GSM610: sf_mode = SF_FORMAT_GSM610; break; 
     case SND_MODE_DWVW: 
         if (bits <= 12) sf_mode = SF_FORMAT_DWVW_12;
         else if (bits <= 16) sf_mode = SF_FORMAT_DWVW_16;
@@ -300,11 +298,12 @@ long lookup_format(long format, long mode, long bits, long swap)
         else {
             sf_mode = SF_FORMAT_DPCM_16;
             nyquist_printf(
-                    "s-save: bad bits parameter (%d), using 16-bit DPCM\n",
+                    "s-save: bad bits parameter (%ld), using 16-bit DPCM\n",
                     bits);
         }
         break;
     case SND_MODE_MSADPCM: sf_mode = SF_FORMAT_MS_ADPCM; break;
+    case SND_MODE_VORBIS: sf_mode = SF_FORMAT_VORBIS; break;
     }
     return sf_format | sf_mode;
 }
@@ -330,6 +329,7 @@ double sound_save(
     SNDFILE *sndfile = NULL;
     SF_INFO sf_info;
     PaStream *audio_stream = NULL;
+    if (SAFE_NYQUIST) play = FALSE;
     
     gc();
     
@@ -356,7 +356,9 @@ double sound_save(
          * write the file if (filename[0])
          */ 
         if (filename[0]) {
-            sndfile = sf_open((char *) filename, SFM_WRITE, &sf_info);
+            sndfile = NULL;
+            if (ok_to_open((char *) filename, "wb"))
+                sndfile = sf_open((char *) filename, SFM_WRITE, &sf_info);
             if (sndfile) {
                 /* use proper scale factor: 8000 vs 7FFF */
                 sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
@@ -381,10 +383,19 @@ double sound_save(
         sf_info.samplerate = ROUND((getsound(result))->sr);
         *sr = sf_info.samplerate;
         if (filename[0]) {
-            sndfile = sf_open((char *) filename, SFM_WRITE, &sf_info);
-            if (sndfile) {
-                /* use proper scale factor: 8000 vs 7FFF */
-                sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
+            sndfile = NULL;
+            if (ok_to_open((char *) filename, "wb")) {
+                sndfile = sf_open((char *) filename, SFM_WRITE, &sf_info);
+                if (sndfile) {
+                    /* use proper scale factor: 8000 vs 7FFF */
+                    sf_command(sndfile, SFC_SET_CLIPPING, NULL, SF_TRUE);
+                } else {
+                    char error[240];
+                    sprintf(error, "snd_save -- %s", sf_error_number(sf_error(sndfile)));
+                    xlabort(error);
+                }
+            } else {
+                xlabort("snd_save -- write not permitted by -W option");
             }
         }
         if (play)
@@ -432,10 +443,12 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     } else {
         sf_info->format = 0;
     }
-    sndfile = sf_open((const char *) filename, direction, sf_info); 
+    sndfile = NULL;
+    if (ok_to_open((char *) filename, "w"))
+        sndfile = sf_open((const char *) filename, direction, sf_info);
 
     if (!sndfile) {
-        sprintf(error, "snd_overwrite: cannot open file %s", filename);
+        snprintf(error, sizeof(error), "snd_overwrite: cannot open file %s", filename);
         xlabort(error);
     }
     /* use proper scale factor: 8000 vs 7FFF */
@@ -444,12 +457,12 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     frames = round(offset * sf_info->samplerate);
     rslt = sf_seek(sndfile, frames, SEEK_SET);
     if (rslt < 0) {
-        sprintf(error, "snd_overwrite: cannot seek to frame %lld of %s",
+        snprintf(error, sizeof(error), "snd_overwrite: cannot seek to frame %lld of %s",
                 frames, filename);
         xlabort(error);
     }
     if (sf_info->channels != channels) {
-        sprintf(error, "%s%ld%s%ld%s", 
+        snprintf(error, sizeof(error), "%s%d%s%d%s", 
                 "snd_overwrite: number of channels in sound (",
                 channels,
                 ") does not match\n    number of channels in file (",
@@ -459,7 +472,7 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     }
 
     if (sf_info->samplerate != srate) {
-        sprintf(error, "%s%g%s%ld%s",
+        snprintf(error, sizeof(error), "%s%ld%s%d%s",
                 "snd_overwrite: sample rate in sound (",
                 srate,
                 ") does not match\n    sample rate in file (",
@@ -496,7 +509,9 @@ double sound_overwrite(
     long flags;
     */
     // first check if sound file exists, do not create new file
-    FILE *file = fopen((char *) filename, "rb");
+    FILE *file = NULL;
+    if (ok_to_open((char *) filename, "rb"))
+        file = fopen((char *) filename, "rb");
     // if not then fail
     if (!file) {
         *duration = 0;
@@ -513,6 +528,7 @@ double sound_overwrite(
         float *buf; // buffer for samples read in from sound file
         /* make sure all elements are of type a_sound */
         long i = getsize(result);
+        long channels = i;
         while (i > 0) {
             i--;
             if (!exttypep(getelement(result, i), a_sound)) {
@@ -520,7 +536,7 @@ double sound_overwrite(
                          result);
             }
         }
-        sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, i,
+        sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, channels,
                                  ROUND(getsound(getelement(result, 0))->sr),
                                  offset_secs, &buf);
 
@@ -569,7 +585,6 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
     sample_type threshold = 0.0F;
     /* jlh    cvtfn_type cvtfn; */
     *ntotal = 0;
-
     /* if snd_expr was simply a symbol, then s now points to
         a shared sound_node.  If we read samples from it, then
         the sound bound to the symbol will be destroyed, so
@@ -746,7 +761,7 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
         for (i = 0; i < chans; i++) {
             if (state[i].cnt == 0) {
                 if (sndwrite_trace) {
-                    nyquist_printf("CALLING SOUND_GET_NEXT ON CHANNEL %ld (%x)\n",
+                    nyquist_printf("CALLING SOUND_GET_NEXT ON CHANNEL %ld (%lx)\n",
 				   i, (unsigned long) state[i].sound); /* jlh 64 bit issue */
                     sound_print_tree(state[i].sound);
                 }

@@ -168,15 +168,13 @@ out:        togo = 0;   /* indicate termination */
                 susp->outbuf[i] += susp->samples[i];
             }
         }
-        togo = min(togo, susp->stepsize - susp->index);
-")
-  (INNER-LOOP "output = outbuf[index++];")
+        togo = min(togo, susp->stepsize - susp->index);\n")
+  (INNER-LOOP "output = outbuf[index++]")
   (CONSTANT "length" "samples" "array" "src" "window")
   (TERMINATE COMPUTED)
   (FINALIZATION "    if (susp->samples) free(susp->samples);
     if (susp->table) table_unref(susp->table);
-    if (susp->outbuf) free(susp->outbuf);
-")
+    if (susp->outbuf) free(susp->outbuf);\n")
 
 )
 

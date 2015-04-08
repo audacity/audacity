@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "instrmodalbar.h"
 
-void modalbar_free();
+void modalbar_free(snd_susp_type a_susp);
 
 
 typedef struct modalbar_susp_struct {
@@ -20,12 +20,12 @@ typedef struct modalbar_susp_struct {
     int temp_ret_value;
 } modalbar_susp_node, *modalbar_susp_type;
 
+#include "instr.h"
 
-	    #include "instr.h"
 
-
-void modalbar__fetch(register modalbar_susp_type susp, snd_list_type snd_list)
+void modalbar__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    modalbar_susp_type susp = (modalbar_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -48,6 +48,7 @@ void modalbar__fetch(register modalbar_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -55,8 +56,7 @@ void modalbar__fetch(register modalbar_susp_type susp, snd_list_type snd_list)
 	mymbar_reg = susp->mymbar;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-
-	    *out_ptr_reg++ = (sample_type) tick(mymbar_reg);
+            *out_ptr_reg++ = (sample_type) tick(mymbar_reg);
 	} while (--n); /* inner loop */
 
 	susp->mymbar = mymbar_reg;
@@ -74,15 +74,15 @@ void modalbar__fetch(register modalbar_susp_type susp, snd_list_type snd_list)
 } /* modalbar__fetch */
 
 
-void modalbar_free(modalbar_susp_type susp)
+void modalbar_free(snd_susp_type a_susp)
 {
-
-	    deleteInstrument(susp->mymbar);
+    modalbar_susp_type susp = (modalbar_susp_type) a_susp;
+    deleteInstrument(susp->mymbar);
     ffree_generic(susp, sizeof(modalbar_susp_node), "modalbar_free");
 }
 
 
-void modalbar_print_tree(modalbar_susp_type susp, int n)
+void modalbar_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
@@ -99,7 +99,7 @@ sound_type snd_make_modalbar(time_type t0, double freq, int preset, time_type du
     susp->temp_ret_value = noteOn(susp->mymbar, freq, 1.0);;
     susp->susp.fetch = modalbar__fetch;
 
-    susp->terminate_cnt = round((dur) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((dur) * sr));
     /* initialize susp state */
     susp->susp.free = modalbar_free;
     susp->susp.sr = sr;

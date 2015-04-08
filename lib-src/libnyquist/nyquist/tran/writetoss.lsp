@@ -11,19 +11,30 @@
     ;;   register ALG_susp_type susp;
     ;;   snd_list_type snd_list;
     ;; {
+;   (format stream "~%~%void ~A_toss_fetch(susp, snd_list)~%" alg-name)
+;   (format stream "  register ~A_susp_type susp;~%" alg-name)
+;   (format stream "  snd_list_type snd_list;~%{~%")
+    ;;--------OR------
+    ;; void ALG_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    ;; {
+    ;;    ALG_susp_type susp = (ALG_susp_type) a_susp;
+    (format stream
+     "~%~%void ~A_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)~%"
+     alg-name)
+    (format stream "    {~%    ~A_susp_type susp = (~A_susp_type) a_susp;~%"
+            alg-name alg-name)
+    ;;----------------
     ;;    long final_count = susp->susp.toss_cnt);
     ;;    time_type final_time = susp->susp.t0;
     ;;    FORMERLY, THIS WAS:
     ;;      time_type final_time = susp->susp.t0 + final_count / susp->susp.sr;
     ;;    long n;
     ;;----------------
-    (format stream "~%~%void ~A_toss_fetch(susp, snd_list)~%" alg-name)
-    (format stream "  register ~A_susp_type susp;~%" alg-name)
-    (format stream "  snd_list_type snd_list;~%{~%")
+    (if *watch*
+      (format stream
+       "    long final_count = susp->susp.toss_cnt;~%"))
     (format stream
-     "    long final_count = susp->susp.toss_cnt;~%")
-    (format stream
-"    time_type final_time = susp->susp.t0;~%")
+     "    time_type final_time = susp->susp.t0;~%")
     (format stream "    long n;~%~%")
 
     (cond (*watch*
@@ -77,9 +88,9 @@
 
     ;;----------------
     ;;	susp->susp.fetch = susp->susp.keep_fetch;
-    ;;  (*(susp->susp.fetch))(susp, snd_list);
+    ;;  (*(susp->susp.fetch))(a_susp, snd_list);
     ;; }
     ;;----------------
     (format stream "    susp->susp.fetch = susp->susp.keep_fetch;~%")
-    (format stream "    (*(susp->susp.fetch))(susp, snd_list);~%")
+    (format stream "    (*(susp->susp.fetch))(a_susp, snd_list);~%")
     (format stream "}~%")))

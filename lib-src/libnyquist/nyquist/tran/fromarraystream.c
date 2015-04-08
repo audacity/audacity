@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "fromarraystream.h"
 
-void fromarraystream_free();
+void fromarraystream_free(snd_susp_type a_susp);
 
 
 typedef struct fromarraystream_susp_struct {
@@ -34,8 +34,9 @@ typedef struct fromarraystream_susp_struct {
 #include "samples.h"
 
 
-void fromarraystream__fetch(register fromarraystream_susp_type susp, snd_list_type snd_list)
+void fromarraystream__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    fromarraystream_susp_type susp = (fromarraystream_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -100,7 +101,7 @@ out:	    togo = 0;	/* indicate termination */
 	samples_reg = susp->samples;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = samples_reg[index_reg++];;
+            *out_ptr_reg++ = samples_reg[index_reg++];
 	} while (--n); /* inner loop */
 
 	susp->index = index_reg;
@@ -118,21 +119,23 @@ out:	    togo = 0;	/* indicate termination */
 } /* fromarraystream__fetch */
 
 
-void fromarraystream_mark(fromarraystream_susp_type susp)
+void fromarraystream_mark(snd_susp_type a_susp)
 {
+    fromarraystream_susp_type susp = (fromarraystream_susp_type) a_susp;
     if (susp->src) mark(susp->src);
     if (susp->array) mark(susp->array);
 }
 
 
-void fromarraystream_free(fromarraystream_susp_type susp)
+void fromarraystream_free(snd_susp_type a_susp)
 {
+    fromarraystream_susp_type susp = (fromarraystream_susp_type) a_susp;
     free(susp->samples);
     ffree_generic(susp, sizeof(fromarraystream_susp_node), "fromarraystream_free");
 }
 
 
-void fromarraystream_print_tree(fromarraystream_susp_type susp, int n)
+void fromarraystream_print_tree(snd_susp_type a_susp, int n)
 {
 }
 

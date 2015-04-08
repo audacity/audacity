@@ -7,13 +7,8 @@
 (NOT-IN-INNER-LOOP "freq" "temp_ret_value")
 (SAMPLE-RATE "sr")
 (TERMINATE (after "dur"))
-(INNER-LOOP "
-	    output = (sample_type) tick(mymbar)")
-(SUPPORT-FUNCTIONS "
-	    #include \"instr.h\"
-")
-(FINALIZATION "
-	    deleteInstrument(susp->mymbar);
-")
+(INNER-LOOP "output = (sample_type) tick(mymbar)")
+(SUPPORT-FUNCTIONS "#include \"instr.h\"\n")
+(FINALIZATION "    deleteInstrument(susp->mymbar);\n")
 )
 

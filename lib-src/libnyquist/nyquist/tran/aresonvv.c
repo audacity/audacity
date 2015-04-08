@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "aresonvv.h"
 
-void aresonvv_free();
+void aresonvv_free(snd_susp_type a_susp);
 
 
 typedef struct aresonvv_susp_struct {
@@ -60,8 +60,9 @@ typedef struct aresonvv_susp_struct {
 } aresonvv_susp_node, *aresonvv_susp_type;
 
 
-void aresonvv_nss_fetch(register aresonvv_susp_type susp, snd_list_type snd_list)
+void aresonvv_nss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -111,6 +112,7 @@ void aresonvv_nss_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -122,6 +124,7 @@ void aresonvv_nss_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -156,7 +159,8 @@ void aresonvv_nss_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;	    coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
+            register double y0, current;
+	    coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
 	    recompute_reg = true;
 	    c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
 	    c3p1_reg = c3co_reg + 1.0;
@@ -167,10 +171,12 @@ void aresonvv_nss_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	        recompute_reg = false;
 	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
 	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg));
+	              (normalization_reg == 1 ? 
+	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+	               omc3_reg / c3p1_reg));
 	    }
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -208,8 +214,9 @@ current = *s1_ptr_reg++;
 } /* aresonvv_nss_fetch */
 
 
-void aresonvv_nsi_fetch(register aresonvv_susp_type susp, snd_list_type snd_list)
+void aresonvv_nsi_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -268,6 +275,7 @@ void aresonvv_nsi_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -279,6 +287,7 @@ void aresonvv_nsi_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -314,7 +323,8 @@ void aresonvv_nsi_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;	    if (bw_pHaSe_ReG >= 1.0) {
+            register double y0, current;
+	    if (bw_pHaSe_ReG >= 1.0) {
 /* fixup-depends bw */
 		/* pick up next sample as bw_x1_sample: */
 		susp->bw_ptr++;
@@ -322,11 +332,11 @@ void aresonvv_nsi_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 		bw_pHaSe_ReG -= 1.0;
 		susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
 		bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
-		c3co_reg = susp->c3co = exp(bw_x1_sample_reg);
-		c3p1_reg = susp->c3p1 = c3co_reg + 1.0;
-		c3t4_reg = susp->c3t4 = c3co_reg * 4.0;
-		omc3_reg = susp->omc3 = 1.0 - c3co_reg;
-		recompute_reg = susp->recompute = true;
+		c3co_reg = exp(bw_x1_sample_reg);
+		c3p1_reg = c3co_reg + 1.0;
+		c3t4_reg = c3co_reg * 4.0;
+		omc3_reg = 1.0 - c3co_reg;
+		recompute_reg = true;
 	    }
 	    coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
 	    recompute_reg = true;
@@ -334,10 +344,12 @@ void aresonvv_nsi_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	        recompute_reg = false;
 	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
 	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg));
+	              (normalization_reg == 1 ? 
+	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+	               omc3_reg / c3p1_reg));
 	    }
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -376,8 +388,9 @@ current = *s1_ptr_reg++;
 } /* aresonvv_nsi_fetch */
 
 
-void aresonvv_nsr_fetch(register aresonvv_susp_type susp, snd_list_type snd_list)
+void aresonvv_nsr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type bw_val;
     int togo;
@@ -447,6 +460,7 @@ void aresonvv_nsr_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -458,6 +472,7 @@ void aresonvv_nsr_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -491,16 +506,19 @@ void aresonvv_nsr_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;	    coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
+            register double y0, current;
+	    coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
 	    recompute_reg = true;
 	    if (recompute_reg) {
 	        recompute_reg = false;
 	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
 	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg));
+	              (normalization_reg == 1 ? 
+	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+	               omc3_reg / c3p1_reg));
 	    }
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -537,8 +555,9 @@ current = *s1_ptr_reg++;
 } /* aresonvv_nsr_fetch */
 
 
-void aresonvv_nis_fetch(register aresonvv_susp_type susp, snd_list_type snd_list)
+void aresonvv_nis_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -594,6 +613,7 @@ void aresonvv_nis_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -605,6 +625,7 @@ void aresonvv_nis_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -640,7 +661,8 @@ void aresonvv_nis_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;	    if (hz1_pHaSe_ReG >= 1.0) {
+            register double y0, current;
+	    if (hz1_pHaSe_ReG >= 1.0) {
 /* fixup-depends hz1 */
 		/* pick up next sample as hz1_x1_sample: */
 		susp->hz1_ptr++;
@@ -648,8 +670,8 @@ void aresonvv_nis_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 		hz1_pHaSe_ReG -= 1.0;
 		susp_check_term_samples_break(hz1, hz1_ptr, hz1_cnt, hz1_x1_sample_reg);
 		hz1_x1_sample_reg = susp_current_sample(hz1, hz1_ptr);
-		coshz_reg = susp->coshz = cos(hz1_x1_sample_reg);
-		recompute_reg = susp->recompute = true;
+		coshz_reg = cos(hz1_x1_sample_reg);
+		recompute_reg = true;
 	    }
 	    c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
 	    c3p1_reg = c3co_reg + 1.0;
@@ -660,10 +682,12 @@ void aresonvv_nis_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	        recompute_reg = false;
 	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
 	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg));
+	              (normalization_reg == 1 ? 
+	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+	               omc3_reg / c3p1_reg));
 	    }
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -702,8 +726,9 @@ current = *s1_ptr_reg++;
 } /* aresonvv_nis_fetch */
 
 
-void aresonvv_nii_fetch(register aresonvv_susp_type susp, snd_list_type snd_list)
+void aresonvv_nii_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -763,6 +788,7 @@ void aresonvv_nii_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -774,6 +800,7 @@ void aresonvv_nii_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -810,7 +837,8 @@ void aresonvv_nii_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;	    if (hz1_pHaSe_ReG >= 1.0) {
+            register double y0, current;
+	    if (hz1_pHaSe_ReG >= 1.0) {
 /* fixup-depends hz1 */
 		/* pick up next sample as hz1_x1_sample: */
 		susp->hz1_ptr++;
@@ -818,8 +846,8 @@ void aresonvv_nii_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 		hz1_pHaSe_ReG -= 1.0;
 		susp_check_term_samples_break(hz1, hz1_ptr, hz1_cnt, hz1_x1_sample_reg);
 		hz1_x1_sample_reg = susp_current_sample(hz1, hz1_ptr);
-		coshz_reg = susp->coshz = cos(hz1_x1_sample_reg);
-		recompute_reg = susp->recompute = true;
+		coshz_reg = cos(hz1_x1_sample_reg);
+		recompute_reg = true;
 	    }
 	    if (bw_pHaSe_ReG >= 1.0) {
 /* fixup-depends bw */
@@ -829,20 +857,22 @@ void aresonvv_nii_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 		bw_pHaSe_ReG -= 1.0;
 		susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
 		bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
-		c3co_reg = susp->c3co = exp(bw_x1_sample_reg);
-		c3p1_reg = susp->c3p1 = c3co_reg + 1.0;
-		c3t4_reg = susp->c3t4 = c3co_reg * 4.0;
-		omc3_reg = susp->omc3 = 1.0 - c3co_reg;
-		recompute_reg = susp->recompute = true;
+		c3co_reg = exp(bw_x1_sample_reg);
+		c3p1_reg = c3co_reg + 1.0;
+		c3t4_reg = c3co_reg * 4.0;
+		omc3_reg = 1.0 - c3co_reg;
+		recompute_reg = true;
 	    }
 	    if (recompute_reg) {
 	        recompute_reg = false;
 	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
 	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg));
+	              (normalization_reg == 1 ? 
+	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+	               omc3_reg / c3p1_reg));
 	    }
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -881,8 +911,9 @@ current = *s1_ptr_reg++;
 } /* aresonvv_nii_fetch */
 
 
-void aresonvv_nir_fetch(register aresonvv_susp_type susp, snd_list_type snd_list)
+void aresonvv_nir_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type bw_val;
     int togo;
@@ -953,6 +984,7 @@ void aresonvv_nir_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -964,6 +996,7 @@ void aresonvv_nir_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -998,7 +1031,8 @@ void aresonvv_nir_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;	    if (hz1_pHaSe_ReG >= 1.0) {
+            register double y0, current;
+	    if (hz1_pHaSe_ReG >= 1.0) {
 /* fixup-depends hz1 */
 		/* pick up next sample as hz1_x1_sample: */
 		susp->hz1_ptr++;
@@ -1006,17 +1040,19 @@ void aresonvv_nir_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 		hz1_pHaSe_ReG -= 1.0;
 		susp_check_term_samples_break(hz1, hz1_ptr, hz1_cnt, hz1_x1_sample_reg);
 		hz1_x1_sample_reg = susp_current_sample(hz1, hz1_ptr);
-		coshz_reg = susp->coshz = cos(hz1_x1_sample_reg);
-		recompute_reg = susp->recompute = true;
+		coshz_reg = cos(hz1_x1_sample_reg);
+		recompute_reg = true;
 	    }
 	    if (recompute_reg) {
 	        recompute_reg = false;
 	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
 	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg));
+	              (normalization_reg == 1 ? 
+	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+	               omc3_reg / c3p1_reg));
 	    }
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -1054,8 +1090,9 @@ current = *s1_ptr_reg++;
 } /* aresonvv_nir_fetch */
 
 
-void aresonvv_nrs_fetch(register aresonvv_susp_type susp, snd_list_type snd_list)
+void aresonvv_nrs_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type hz1_val;
     int togo;
@@ -1122,6 +1159,7 @@ void aresonvv_nrs_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -1133,6 +1171,7 @@ void aresonvv_nrs_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -1166,7 +1205,8 @@ void aresonvv_nrs_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;	    c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
+            register double y0, current;
+	    c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
 	    c3p1_reg = c3co_reg + 1.0;
 	    c3t4_reg = c3co_reg * 4.0;
 	    omc3_reg = 1.0 - c3co_reg;
@@ -1175,10 +1215,12 @@ void aresonvv_nrs_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	        recompute_reg = false;
 	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
 	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg));
+	              (normalization_reg == 1 ? 
+	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+	               omc3_reg / c3p1_reg));
 	    }
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -1215,8 +1257,9 @@ current = *s1_ptr_reg++;
 } /* aresonvv_nrs_fetch */
 
 
-void aresonvv_nri_fetch(register aresonvv_susp_type susp, snd_list_type snd_list)
+void aresonvv_nri_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type hz1_val;
     int togo;
@@ -1287,6 +1330,7 @@ void aresonvv_nri_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -1298,6 +1342,7 @@ void aresonvv_nri_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -1332,7 +1377,8 @@ void aresonvv_nri_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;	    if (bw_pHaSe_ReG >= 1.0) {
+            register double y0, current;
+	    if (bw_pHaSe_ReG >= 1.0) {
 /* fixup-depends bw */
 		/* pick up next sample as bw_x1_sample: */
 		susp->bw_ptr++;
@@ -1340,20 +1386,22 @@ void aresonvv_nri_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 		bw_pHaSe_ReG -= 1.0;
 		susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
 		bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
-		c3co_reg = susp->c3co = exp(bw_x1_sample_reg);
-		c3p1_reg = susp->c3p1 = c3co_reg + 1.0;
-		c3t4_reg = susp->c3t4 = c3co_reg * 4.0;
-		omc3_reg = susp->omc3 = 1.0 - c3co_reg;
-		recompute_reg = susp->recompute = true;
+		c3co_reg = exp(bw_x1_sample_reg);
+		c3p1_reg = c3co_reg + 1.0;
+		c3t4_reg = c3co_reg * 4.0;
+		omc3_reg = 1.0 - c3co_reg;
+		recompute_reg = true;
 	    }
 	    if (recompute_reg) {
 	        recompute_reg = false;
 	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
 	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * omc3_reg / c3p1_reg));
+	              (normalization_reg == 1 ? 
+	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+	               omc3_reg / c3p1_reg));
 	    }
-current = *s1_ptr_reg++;
+            current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -1391,8 +1439,9 @@ current = *s1_ptr_reg++;
 } /* aresonvv_nri_fetch */
 
 
-void aresonvv_nrr_fetch(register aresonvv_susp_type susp, snd_list_type snd_list)
+void aresonvv_nrr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type hz1_val;
     sample_type bw_val;
@@ -1469,13 +1518,16 @@ void aresonvv_nrr_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	    susp->recompute = false;
 	    susp->c2 = susp->c3t4 * susp->coshz / susp->c3p1;
 	    susp->c1 = (susp->normalization == 0 ? 0.0 :
-	          (susp->normalization == 1 ? 1.0 - susp->omc3 * sqrt(1.0 - susp->c2 * susp->c2 / susp->c3t4) :
-	           1.0 - sqrt(susp->c3p1 * susp->c3p1 - susp->c2 * susp->c2) * susp->omc3 / susp->c3p1));
+	          (susp->normalization == 1 ? 
+	           1.0 - susp->omc3 * sqrt(1.0 - susp->c2 * susp->c2 / susp->c3t4) :
+	           1.0 - sqrt(susp->c3p1 * susp->c3p1 - susp->c2 * susp->c2) * 
+	           susp->omc3 / susp->c3p1));
 	}
 	/* don't run past terminate time */
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -1487,6 +1539,7 @@ void aresonvv_nrr_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -1514,7 +1567,8 @@ void aresonvv_nrr_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 	s1_ptr_reg = susp->s1_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;current = *s1_ptr_reg++;
+            register double y0, current;
+            current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
@@ -1550,11 +1604,9 @@ void aresonvv_nrr_fetch(register aresonvv_susp_type susp, snd_list_type snd_list
 } /* aresonvv_nrr_fetch */
 
 
-void aresonvv_toss_fetch(susp, snd_list)
-  register aresonvv_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void aresonvv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -1585,20 +1637,22 @@ void aresonvv_toss_fetch(susp, snd_list)
     susp->bw_ptr += n;
     susp_took(bw_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void aresonvv_mark(aresonvv_susp_type susp)
+void aresonvv_mark(snd_susp_type a_susp)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     sound_xlmark(susp->s1);
     sound_xlmark(susp->hz1);
     sound_xlmark(susp->bw);
 }
 
 
-void aresonvv_free(aresonvv_susp_type susp)
+void aresonvv_free(snd_susp_type a_susp)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     sound_unref(susp->s1);
     sound_unref(susp->hz1);
     sound_unref(susp->bw);
@@ -1606,8 +1660,9 @@ void aresonvv_free(aresonvv_susp_type susp)
 }
 
 
-void aresonvv_print_tree(aresonvv_susp_type susp, int n)
+void aresonvv_print_tree(snd_susp_type a_susp, int n)
 {
+    aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);
@@ -1653,6 +1708,16 @@ sound_type snd_make_aresonvv(sound_type s1, sound_type hz1, sound_type bw, int n
     hz1->scale = (sample_type) (hz1->scale * (PI2 / s1->sr));
     bw->scale = (sample_type) (bw->scale * (-PI2 / s1->sr));;
 
+    /* make sure no sample rate is too high */
+    if (hz1->sr > sr) {
+        sound_unref(hz1);
+        snd_badsr();
+    }
+    if (bw->sr > sr) {
+        sound_unref(bw);
+        snd_badsr();
+    }
+
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(s1, sr);
     interp_desc = (interp_desc << 2) + interp_style(hz1, sr);
@@ -1687,8 +1752,8 @@ sound_type snd_make_aresonvv(sound_type s1, sound_type hz1, sound_type bw, int n
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = aresonvv_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = aresonvv_toss_fetch;
     }
 
     /* initialize susp state */

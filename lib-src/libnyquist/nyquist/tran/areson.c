@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "areson.h"
 
-void areson_free();
+void areson_free(snd_susp_type a_susp);
 
 
 typedef struct areson_susp_struct {
@@ -28,8 +28,9 @@ typedef struct areson_susp_struct {
 } areson_susp_node, *areson_susp_type;
 
 
-void areson_n_fetch(register areson_susp_type susp, snd_list_type snd_list)
+void areson_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    areson_susp_type susp = (areson_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -61,6 +62,7 @@ void areson_n_fetch(register areson_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -72,6 +74,7 @@ void areson_n_fetch(register areson_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -98,7 +101,7 @@ void areson_n_fetch(register areson_susp_type susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-            register double y0, current;current = *input_ptr_reg++;
+            register double y0, current;            current = *input_ptr_reg++;
             *out_ptr_reg++ = (sample_type) (y0 = c1_reg * current + c2_reg * y1_reg - c3_reg * y2_reg);
             y2_reg = y1_reg; y1_reg = y0 - current;
 	} while (--n); /* inner loop */
@@ -128,11 +131,9 @@ void areson_n_fetch(register areson_susp_type susp, snd_list_type snd_list)
 } /* areson_n_fetch */
 
 
-void areson_toss_fetch(susp, snd_list)
-  register areson_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void areson_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    areson_susp_type susp = (areson_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -147,25 +148,28 @@ void areson_toss_fetch(susp, snd_list)
     susp->input_ptr += n;
     susp_took(input_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void areson_mark(areson_susp_type susp)
+void areson_mark(snd_susp_type a_susp)
 {
+    areson_susp_type susp = (areson_susp_type) a_susp;
     sound_xlmark(susp->input);
 }
 
 
-void areson_free(areson_susp_type susp)
+void areson_free(snd_susp_type a_susp)
 {
+    areson_susp_type susp = (areson_susp_type) a_susp;
     sound_unref(susp->input);
     ffree_generic(susp, sizeof(areson_susp_node), "areson_free");
 }
 
 
-void areson_print_tree(areson_susp_type susp, int n)
+void areson_print_tree(snd_susp_type a_susp, int n)
 {
+    areson_susp_type susp = (areson_susp_type) a_susp;
     indent(n);
     stdputstr("input:");
     sound_print_tree_1(susp->input, n);
@@ -180,7 +184,6 @@ sound_type snd_make_areson(sound_type input, double hz, double bw, int normaliza
     double omc3;
     rate_type sr = input->sr;
     time_type t0 = input->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     /* combine scale factors of linear inputs (INPUT) */
@@ -210,8 +213,8 @@ sound_type snd_make_areson(sound_type input, double hz, double bw, int normaliza
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = areson_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = areson_toss_fetch;
     }
 
     /* initialize susp state */

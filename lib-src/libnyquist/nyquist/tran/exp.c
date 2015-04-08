@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "exp.h"
 
-void exp_free();
+void exp_free(snd_susp_type a_susp);
 
 
 typedef struct exp_susp_struct {
@@ -22,8 +22,9 @@ typedef struct exp_susp_struct {
 } exp_susp_node, *exp_susp_type;
 
 
-void exp_s_fetch(register exp_susp_type susp, snd_list_type snd_list)
+void exp_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    exp_susp_type susp = (exp_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -51,6 +52,7 @@ void exp_s_fetch(register exp_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -62,6 +64,7 @@ void exp_s_fetch(register exp_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -83,7 +86,7 @@ void exp_s_fetch(register exp_susp_type susp, snd_list_type snd_list)
 	in_ptr_reg = susp->in_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = (sample_type) exp((in_scale_reg * *in_ptr_reg++));
+            *out_ptr_reg++ = (sample_type) exp((in_scale_reg * *in_ptr_reg++));
 	} while (--n); /* inner loop */
 
 	/* using in_ptr_reg is a bad idea on RS/6000: */
@@ -109,11 +112,9 @@ void exp_s_fetch(register exp_susp_type susp, snd_list_type snd_list)
 } /* exp_s_fetch */
 
 
-void exp_toss_fetch(susp, snd_list)
-  register exp_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void exp_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    exp_susp_type susp = (exp_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -128,25 +129,28 @@ void exp_toss_fetch(susp, snd_list)
     susp->in_ptr += n;
     susp_took(in_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void exp_mark(exp_susp_type susp)
+void exp_mark(snd_susp_type a_susp)
 {
+    exp_susp_type susp = (exp_susp_type) a_susp;
     sound_xlmark(susp->in);
 }
 
 
-void exp_free(exp_susp_type susp)
+void exp_free(snd_susp_type a_susp)
 {
+    exp_susp_type susp = (exp_susp_type) a_susp;
     sound_unref(susp->in);
     ffree_generic(susp, sizeof(exp_susp_node), "exp_free");
 }
 
 
-void exp_print_tree(exp_susp_type susp, int n)
+void exp_print_tree(snd_susp_type a_susp, int n)
 {
+    exp_susp_type susp = (exp_susp_type) a_susp;
     indent(n);
     stdputstr("in:");
     sound_print_tree_1(susp->in, n);
@@ -158,7 +162,6 @@ sound_type snd_make_exp(sound_type in)
     register exp_susp_type susp;
     rate_type sr = in->sr;
     time_type t0 = in->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, exp_susp_node, "snd_make_exp");
@@ -171,8 +174,8 @@ sound_type snd_make_exp(sound_type in)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = exp_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = exp_toss_fetch;
     }
 
     /* initialize susp state */

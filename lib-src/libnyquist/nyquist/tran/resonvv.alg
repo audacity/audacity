@@ -2,7 +2,7 @@
 (NAME "resonvv")
 (ARGUMENTS ("sound_type" "s1") ("sound_type" "hz1") ("sound_type" "bw")
            ("int" "normalization"))
-(INLINE-INTERPOLATION T)
+(LINEAR s1)
 (ALWAYS-SCALE hz1 bw)
 (START (MAX s1 hz1 bw))
 (TERMINATE (MIN s1 hz1 bw))
@@ -42,6 +42,6 @@
           "normalization" "scale1")
 (FORCE-INTO-REGISTER recompute) ;c3t4 c3p1 normalization omc3 scale1
 (INNER-LOOP "{ double y0 = c1 * s1 + c2 * y1 - c3co * y2;
-            output = (sample_type) y0;
-            y2 = y1; y1 = y0; }")
+              output = (sample_type) y0;
+              y2 = y1; y1 = y0; }")
 )

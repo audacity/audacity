@@ -7,7 +7,8 @@
 
 (EXPREL-ALG
 (NAME "exprel")
-(ARGUMENTS ("sound_type" "signal") ("time_type" "release_time") ("double" "fall_time"))
+(ARGUMENTS ("sound_type" "signal") ("time_type" "release_time") 
+           ("double" "fall_time"))
 (SUPPORT-FUNCTIONS "#define ST_HOLD 0
 #define ST_FALL 1
 #define ST_FALL_UNTIL 2
@@ -16,9 +17,9 @@
 #define ST_RISE 5
 
 /* Overview:
-This operation passes its input to its output until the release time. Then, it takes
-the last sample output as a starting point for an exponential decay, with a duration
-of falltime.
+This operation passes its input to its output until the release time. 
+Then, it takes the last sample output as a starting point for an 
+exponential decay, with a duration of falltime.
 */
 
 ")
@@ -31,19 +32,19 @@ of falltime.
 (LOGICAL-STOP "release_time")
 (LINEAR signal)
 (INNER-LOOP "{
-        sample_type result;
-        if (falling) {
-            value = value * decay;
-            result = value;
-        } else {
-            result = signal;
-            if (release_time <= susp->susp.current + cnt + togo - n) {
-                value = result;
-                falling = 1;
-            }
-        }
-        output = (sample_type) value;
-      }")
+              sample_type result;
+              if (falling) {
+                  value = value * decay;
+                  result = value;
+              } else {
+                  result = signal;
+                  if (release_time <= susp->susp.current + cnt + togo - n) {
+                      value = result;
+                      falling = 1;
+                  }
+              }
+              output = (sample_type) value;
+            }")
 )
 
 need to do logical stop time and termination time

@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "instrclar.h"
 
-void clarinet_free();
+void clarinet_free(snd_susp_type a_susp);
 
 
 typedef struct clarinet_susp_struct {
@@ -21,14 +21,16 @@ typedef struct clarinet_susp_struct {
 
     struct instr *clar;
     int temp_ret_value;
+    float breath_scale;
 } clarinet_susp_node, *clarinet_susp_type;
 
+#include "instr.h"
+#include "upsample.h"
 
-	    #include "instr.h"
 
-
-void clarinet_s_fetch(register clarinet_susp_type susp, snd_list_type snd_list)
+void clarinet_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    clarinet_susp_type susp = (clarinet_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -38,9 +40,9 @@ void clarinet_s_fetch(register clarinet_susp_type susp, snd_list_type snd_list)
     register sample_block_values_type out_ptr_reg;
 
     register struct instr * clar_reg;
-    register sample_type breath_env_scale_reg = susp->breath_env->scale;
+    register float breath_scale_reg;
     register sample_block_values_type breath_env_ptr_reg;
-    falloc_sample_block(out, "clarinet_s_fetch");
+    falloc_sample_block(out, "clarinet_n_fetch");
     out_ptr = out->samples;
     snd_list->block = out;
 
@@ -57,17 +59,18 @@ void clarinet_s_fetch(register clarinet_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
 	n = togo;
 	clar_reg = susp->clar;
+	breath_scale_reg = susp->breath_scale;
 	breath_env_ptr_reg = susp->breath_env_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-
-	    controlChange(clar_reg, 128, CLAR_CONTROL_CHANGE_CONST * (breath_env_scale_reg * *breath_env_ptr_reg++));
-	    *out_ptr_reg++ = (sample_type) tick(clar_reg);
+            controlChange(clar_reg, 128, breath_scale_reg * *breath_env_ptr_reg++);
+            *out_ptr_reg++ = (sample_type) tick(clar_reg);
 	} while (--n); /* inner loop */
 
 	susp->clar = clar_reg;
@@ -85,14 +88,12 @@ void clarinet_s_fetch(register clarinet_susp_type susp, snd_list_type snd_list)
 	snd_list->block_len = cnt;
 	susp->susp.current += cnt;
     }
-} /* clarinet_s_fetch */
+} /* clarinet_n_fetch */
 
 
-void clarinet_toss_fetch(susp, snd_list)
-  register clarinet_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void clarinet_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    clarinet_susp_type susp = (clarinet_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -107,27 +108,29 @@ void clarinet_toss_fetch(susp, snd_list)
     susp->breath_env_ptr += n;
     susp_took(breath_env_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void clarinet_mark(clarinet_susp_type susp)
+void clarinet_mark(snd_susp_type a_susp)
 {
+    clarinet_susp_type susp = (clarinet_susp_type) a_susp;
     sound_xlmark(susp->breath_env);
 }
 
 
-void clarinet_free(clarinet_susp_type susp)
+void clarinet_free(snd_susp_type a_susp)
 {
-
-	    deleteInstrument(susp->clar);
+    clarinet_susp_type susp = (clarinet_susp_type) a_susp;
+    deleteInstrument(susp->clar);
     sound_unref(susp->breath_env);
     ffree_generic(susp, sizeof(clarinet_susp_node), "clarinet_free");
 }
 
 
-void clarinet_print_tree(clarinet_susp_type susp, int n)
+void clarinet_print_tree(snd_susp_type a_susp, int n)
 {
+    clarinet_susp_type susp = (clarinet_susp_type) a_susp;
     indent(n);
     stdputstr("breath_env:");
     sound_print_tree_1(susp->breath_env, n);
@@ -139,14 +142,20 @@ sound_type snd_make_clarinet(double freq, sound_type breath_env, rate_type sr)
     register clarinet_susp_type susp;
     /* sr specified as input parameter */
     time_type t0 = breath_env->t0;
-    int interp_desc = 0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
     falloc_generic(susp, clarinet_susp_node, "snd_make_clarinet");
     susp->clar = initInstrument(CLARINET, round(sr));
     controlChange(susp->clar, 1, 0.0);;
     susp->temp_ret_value = noteOn(susp->clar, freq, 1.0);
-    susp->susp.fetch = clarinet_s_fetch;
+    susp->breath_scale = breath_env->scale * CLAR_CONTROL_CHANGE_CONST;
+
+    /* make sure no sample rate is too high */
+    if (breath_env->sr > sr) {
+        sound_unref(breath_env);
+        snd_badsr();
+    } else if (breath_env->sr < sr) breath_env = snd_make_up(sr, breath_env);
+    susp->susp.fetch = clarinet_n_fetch;
     susp->terminate_cnt = UNKNOWN;
     /* handle unequal start times, if any */
     if (t0 < breath_env->t0) sound_prepend_zeros(breath_env, t0);
@@ -155,8 +164,8 @@ sound_type snd_make_clarinet(double freq, sound_type breath_env, rate_type sr)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = clarinet_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = clarinet_toss_fetch;
     }
 
     /* initialize susp state */

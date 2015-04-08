@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "pluck.h"
 
-void pluck_free();
+void pluck_free(snd_susp_type a_susp);
 
 
 typedef struct pluck_susp_struct {
@@ -115,8 +115,9 @@ void pluck_initialize(sample_type *shiftreg, sample_type *array,
     shiftreg[len + 1] = 0;
 }
 
-void pluck__fetch(register pluck_susp_type susp, snd_list_type snd_list)
+void pluck__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    pluck_susp_type susp = (pluck_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -148,6 +149,7 @@ void pluck__fetch(register pluck_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -178,7 +180,6 @@ void pluck__fetch(register pluck_susp_type susp, snd_list_type snd_list)
 
             /* deliver sample */
             *out_ptr_reg++ = sum;
-;
 	} while (--n); /* inner loop */
 
 	susp->i1 = i1_reg;
@@ -199,14 +200,15 @@ void pluck__fetch(register pluck_susp_type susp, snd_list_type snd_list)
 } /* pluck__fetch */
 
 
-void pluck_free(pluck_susp_type susp)
+void pluck_free(snd_susp_type a_susp)
 {
+    pluck_susp_type susp = (pluck_susp_type) a_susp;
     free(susp->shiftreg);
     ffree_generic(susp, sizeof(pluck_susp_node), "pluck_free");
 }
 
 
-void pluck_print_tree(pluck_susp_type susp, int n)
+void pluck_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
@@ -236,7 +238,7 @@ sound_type snd_make_pluck(rate_type sr, double hz, time_type t0, time_type d, do
                                     susp->len, susp->cons);
     susp->susp.fetch = pluck__fetch;
 
-    susp->terminate_cnt = round((d) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
     /* initialize susp state */
     susp->susp.free = pluck_free;
     susp->susp.sr = sr;

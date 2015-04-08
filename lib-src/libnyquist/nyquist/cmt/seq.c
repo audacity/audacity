@@ -35,14 +35,15 @@ boolean clock_running = FALSE;  /* TRUE if clock is running */
 boolean external_midi_clock = FALSE;
 boolean suppress_midi_clock = FALSE;
 
-private void insert_event();
-private void process_event();
+private void insert_event(seq_type, register event_type);
+private void process_event(seq_type);
 
-private char *chunk_alloc();
-private void clock_tick();
+private char *chunk_alloc(seq_type seq, int size);
+private void clock_tick(seq_type seq, time_type fraction);
 private void ramp_event(seq_type seq, event_type event, unsigned int value,
     unsigned int to_value, int increment, time_type step, int n);
-/*private*/ void send_macro();
+/*private*/ void send_macro(register unsigned char *ptr, int voice,
+    short parameter[], int parm_num, int value, int nline);
 
 /* chunk_alloc -- allocate data for a sequence */
 /*
@@ -103,9 +104,7 @@ chunk_type chunk_create(boolean first_flag)
 
 /* clock_tick -- advance the clock and send a tick */
 /**/
-private void clock_tick(seq, fraction)
-  seq_type seq;
-  time_type fraction;
+private void clock_tick(seq_type seq, time_type fraction)
 {
     int delay;
     fraction += clock_ticksize;
@@ -121,8 +120,7 @@ private void clock_tick(seq, fraction)
     }
 }
 
-private void cycle(seq)
-  seq_type seq;
+private void cycle(seq_type seq)
 {
     seq_reset(seq);
     seq_play(seq);
@@ -828,11 +826,7 @@ void seq_at_end(seq, fn)
 
 /* seq_cause_noteoff_meth -- turn off a note in the future */
 /**/
-void seq_cause_noteoff_meth(seq, delay, voice, pitch)
-  seq_type seq;
-  time_type delay;
-  int voice;
-  int pitch;
+void seq_cause_noteoff_meth(seq_type seq, time_type delay, int voice, int pitch)
 {
     if (seq->note_enable) {
         pitch += seq->transpose;
@@ -1021,10 +1015,7 @@ void seq_midi_touch_meth(seq_type seq, int voice, int value)
 
 /* seq_noteoff_meth -- turn a seq note off */
 /**/
-void seq_noteoff_meth(seq, voice, pitch)
-  seq_type seq;
-  int voice;
-  int pitch;
+void seq_noteoff_meth(seq_type seq, int voice, int pitch)
 {
     midi_note(voice, pitch, 0);
         /*gprintf(TRANS, "_e");*/
@@ -1034,9 +1025,7 @@ void seq_noteoff_meth(seq, voice, pitch)
 
 /* seq_noteon_meth -- play a note with transformations */
 /**/
-void seq_noteon_meth(seq, chan, pitch, vel)
-  seq_type seq;
-  int chan, pitch, vel;
+void seq_noteon_meth(seq_type seq, int chan, int pitch, int vel)
 {
     if (seq->note_enable) {
         pitch += seq->transpose;
@@ -1100,8 +1089,7 @@ void seq_play(seq)
 
 /* seq_reset_meth -- reset a sequence to start back at the first event */
 /**/
-void seq_reset_meth(seq)
-  seq_type seq;
+void seq_reset_meth(seq_type seq)
 {
     timebase_type old_timebase = timebase;
 

@@ -95,7 +95,7 @@ void nyquist_printf(char *format, ...);
 #define HAVE_SSIZE_T 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
-#define HAVE_STDINT_H 0
+#define HAVE_STDINT_H 1
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #define HAVE_SYS_STAT_H 1

@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "osc.h"
 
-void osc_free();
+void osc_free(snd_susp_type a_susp);
 
 
 typedef struct osc_susp_struct {
@@ -24,8 +24,9 @@ typedef struct osc_susp_struct {
 } osc_susp_node, *osc_susp_type;
 
 
-void osc__fetch(register osc_susp_type susp, snd_list_type snd_list)
+void osc__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    osc_susp_type susp = (osc_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -51,6 +52,7 @@ void osc__fetch(register osc_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -61,14 +63,12 @@ void osc__fetch(register osc_susp_type susp, snd_list_type snd_list)
 	phase_reg = susp->phase;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-
-        long table_index = (long) phase_reg;
-        double x1 = table_ptr_reg[table_index];
-        *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
-              (table_ptr_reg[table_index + 1] - x1));
-        phase_reg += ph_incr_reg;
-        while (phase_reg >= table_len_reg) phase_reg -= table_len_reg;
-;
+            long table_index = (long) phase_reg;
+            double x1 = table_ptr_reg[table_index];
+            *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
+                  (table_ptr_reg[table_index + 1] - x1));
+            phase_reg += ph_incr_reg;
+            while (phase_reg >= table_len_reg) phase_reg -= table_len_reg;
 	} while (--n); /* inner loop */
 
 	susp->phase = phase_reg;
@@ -86,14 +86,15 @@ void osc__fetch(register osc_susp_type susp, snd_list_type snd_list)
 } /* osc__fetch */
 
 
-void osc_free(osc_susp_type susp)
+void osc_free(snd_susp_type a_susp)
 {
+    osc_susp_type susp = (osc_susp_type) a_susp;
     table_unref(susp->the_table);
     ffree_generic(susp, sizeof(osc_susp_node), "osc_free");
 }
 
 
-void osc_print_tree(osc_susp_type susp, int n)
+void osc_print_tree(snd_susp_type a_susp, int n)
 {
 }
 
@@ -113,7 +114,7 @@ sound_type snd_make_osc(sound_type input, double step, rate_type sr, double hz, 
     input->sr, sr, hz, &susp->ph_incr);
     susp->susp.fetch = osc__fetch;
 
-    susp->terminate_cnt = round((d) * sr);
+    susp->terminate_cnt = check_terminate_cnt(round((d) * sr));
     /* initialize susp state */
     susp->susp.free = osc_free;
     susp->susp.sr = sr;

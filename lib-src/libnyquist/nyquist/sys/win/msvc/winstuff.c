@@ -59,8 +59,9 @@ const char os_sepchar = ',';
 #include "xlisp.h"
 #include "cext.h"
 #include "userio.h"
-#include "sliders.h"
+#include "sliderdata.h"
 #include "sound.h" /* define nosc_enabled */
+#include "falloc.h" /* define table_memory */
 
 /* externals */
 extern FILE *tfp;  /* transcript file pointer */
@@ -196,7 +197,7 @@ void start_input_thread()
 
 void osinit (char *banner) 
 {
-    printf(banner);
+    printf("%s\n", banner);
     if (_isatty( _fileno( stdin ) ) ){
         redirect_flag = 0;
 #ifdef DEBUG
@@ -217,13 +218,23 @@ void osinit (char *banner)
 }
 
 FILE *osaopen (char *name, char *mode) {
-    return fopen (name, mode);
+    FILE *fp = NULL;
+#ifdef SAFE_NYQUIST
+    if (ok_to_open(name, mode))
+#endif
+      fp = fopen (name, mode);
+    return fp;
 }
 
 FILE *osbopen (char *name, char *mode) {
+    FILE *fp = NULL;
     char nmode[4];
     strcpy (nmode, mode); strcat (nmode, "b");
-    return (fopen (name, nmode));
+#ifdef SAFE_NYQUIST
+    if (ok_to_open(name, mode))
+#endif
+      fp = fopen (name, mode);
+    return fp;
 }
 
 int osclose (FILE *fp) { return (fclose (fp)); }
@@ -285,7 +296,7 @@ void osflush (void) {
 }
 
 
-void oscheck (void) {				
+void oscheck (void) {
     MSG lpMsg;
 
 #if OSC
@@ -317,6 +328,19 @@ void oscheck (void) {
         osflush();
         xlbreak("BREAK", s_unbound);
     }
+    run_time++;
+    if (run_time % 30 == 0) {
+        // maybe we should call fflush here like in Unix; I'm not sure if this is 
+	// a bug or it is not necessary for Windows - RBD
+        if (run_time_limit > 0 && run_time > run_time_limit) {
+            xlfatal("Run time limit exceeded");
+        }
+	if (memory_limit > 0 &&  
+	    npools * MAXPOOLSIZE + table_memory + total > 
+	    memory_limit * 1000000) {
+            xlfatal("Memory limit exceeded");
+	}
+    }	
 }
 //Update end
 
@@ -351,6 +375,7 @@ static char osdir_path[OSDIR_MAX_PATH];
 // osdir_list_start -- prepare to list a directory
 int osdir_list_start(char *path)
 {
+    if (!ok_to_open(path, "r")) return FALSE;
     if (strlen(path) >= OSDIR_MAX_PATH - 2) {
         xlcerror("LISTDIR path too big", "return nil", NULL);
         return FALSE;
@@ -368,7 +393,7 @@ int osdir_list_start(char *path)
 }
 
 
-char *osdir_list_next()
+const char *osdir_list_next()
 {
     if (FindNextFile(hFind, &FindFileData) == 0) {
         osdir_list_status = OSDIR_LIST_DONE;

@@ -15,11 +15,10 @@
                                                    : s->sr / (sr * step_to_hz(step))") ) ; cancel 0/0
 
 (ALWAYS-SCALE s_fm)
-(INLINE-INTERPOLATION T) ; so that modulation can be low frequency
 (STEP-FUNCTION s_fm)
 (TERMINATE (MIN s_fm))
 (LOGICAL-STOP (MIN s_fm))
-(INNER-LOOP-LOCALS "	    long table_index;
+(INNER-LOOP-LOCALS "            long table_index;
             double x1;
 ")
 (INNER-LOOP "table_index = (long) phase;
@@ -33,7 +32,5 @@
 (CONSTANT "ph_incr" "table_len" "table_ptr" "table")
 
 (SAMPLE-RATE "sr")
-(FINALIZATION "    table_unref(susp->the_table);
-")
+(FINALIZATION "    table_unref(susp->the_table);\n")
 )
-

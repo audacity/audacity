@@ -461,7 +461,7 @@ LOCAL LVAL evfun(LVAL fun, int argc, LVAL *argv)
         xlbegin(&cntxt,CF_RETURN,name);
 
     /* execute the block */
-    if (name && setjmp(cntxt.c_jmpbuf))
+    if (name && _setjmp(cntxt.c_jmpbuf))
         val = xlvalue;
     else
         for (val = NIL, cptr = getbody(fun); consp(cptr); cptr = cdr(cptr))

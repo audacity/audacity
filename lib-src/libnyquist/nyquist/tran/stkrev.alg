@@ -1,20 +1,16 @@
 (STKREV-ALG
 (NAME "stkrev")
-(ARGUMENTS ("int" "rev_type")("sound_type" "s1")("time_type" "trev")("double" "mix")("rate_type" "sr"))
+(ARGUMENTS ("int" "rev_type") ("sound_type" "s1") ("time_type" "trev")
+           ("double" "mix"))
 (STATE 	("struct stkEffect *" "myrv"  "initStkEffect(rev_type, trev, round(sr));
-stkEffectSetMix(susp->myrv, mix)"))
+    stkEffectSetMix(susp->myrv, mix)"))
+(LINEAR s1)
 (START (MIN s1))
 (TERMINATE (MIN s1))
 (LOGICAL-STOP (MIN s1))
 (NOT-IN-INNER-LOOP "myrv" "trev")
-(SAMPLE-RATE "sr")
-(SUPPORT-FUNCTIONS "
-      #include \"stkint.h\"
-")
-(INNER-LOOP "
-	output = (sample_type) (stkEffectTick(myrv, s1))
-")
-(FINALIZATION "
-	deleteStkEffect(susp->myrv);
-")
+(SAMPLE-RATE (MAX s1))
+(SUPPORT-FUNCTIONS "#include \"stkint.h\"\n")
+(INNER-LOOP "output = (sample_type) (stkEffectTick(myrv, s1))")
+(FINALIZATION "    deleteStkEffect(susp->myrv);\n")
 )

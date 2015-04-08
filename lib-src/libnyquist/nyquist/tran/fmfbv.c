@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "fmfbv.h"
 
-void fmfbv_free();
+void fmfbv_free(snd_susp_type a_susp);
 
 
 typedef struct fmfbv_susp_struct {
@@ -37,8 +37,9 @@ typedef struct fmfbv_susp_struct {
 } fmfbv_susp_node, *fmfbv_susp_type;
 
 
-void fmfbv_n_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
+void fmfbv_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    fmfbv_susp_type susp = (fmfbv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -69,6 +70,7 @@ void fmfbv_n_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -80,6 +82,7 @@ void fmfbv_n_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -105,17 +108,17 @@ void fmfbv_n_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	index_ptr_reg = susp->index_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-phase_reg += ph_incr_reg;
-               if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
-               /* PHASE is incremented and INDEX scaled to table INDEX, and
-                  sin_y_reg is a signal (-1 to +1) */
-               yy_reg = phase_reg + *index_ptr_reg++ * sin_y_reg;
-               /* so yy_reg is a table index */
-               while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
-               while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
-               sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
-               /* sin_y_reg is now a signal not ready for table lookup */
-               *out_ptr_reg++ =  sin_y_reg;;
+            phase_reg += ph_incr_reg;
+            if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
+            /* PHASE is incremented and INDEX scaled to table INDEX, and
+               sin_y_reg is a signal (-1 to +1) */
+            yy_reg = phase_reg + *index_ptr_reg++ * sin_y_reg;
+            /* so yy_reg is a table index */
+            while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
+            while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
+            sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
+            /* sin_y_reg is now a signal ready for table lookup */
+            *out_ptr_reg++ =  sin_y_reg;
 	} while (--n); /* inner loop */
 
 	susp->yy = yy_reg;
@@ -144,8 +147,9 @@ phase_reg += ph_incr_reg;
 } /* fmfbv_n_fetch */
 
 
-void fmfbv_s_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
+void fmfbv_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    fmfbv_susp_type susp = (fmfbv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -177,6 +181,7 @@ void fmfbv_s_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -188,6 +193,7 @@ void fmfbv_s_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -213,17 +219,17 @@ void fmfbv_s_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	index_ptr_reg = susp->index_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-phase_reg += ph_incr_reg;
-               if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
-               /* PHASE is incremented and INDEX scaled to table INDEX, and
-                  sin_y_reg is a signal (-1 to +1) */
-               yy_reg = phase_reg + (index_scale_reg * *index_ptr_reg++) * sin_y_reg;
-               /* so yy_reg is a table index */
-               while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
-               while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
-               sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
-               /* sin_y_reg is now a signal not ready for table lookup */
-               *out_ptr_reg++ =  sin_y_reg;;
+            phase_reg += ph_incr_reg;
+            if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
+            /* PHASE is incremented and INDEX scaled to table INDEX, and
+               sin_y_reg is a signal (-1 to +1) */
+            yy_reg = phase_reg + (index_scale_reg * *index_ptr_reg++) * sin_y_reg;
+            /* so yy_reg is a table index */
+            while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
+            while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
+            sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
+            /* sin_y_reg is now a signal ready for table lookup */
+            *out_ptr_reg++ =  sin_y_reg;
 	} while (--n); /* inner loop */
 
 	susp->yy = yy_reg;
@@ -252,8 +258,9 @@ phase_reg += ph_incr_reg;
 } /* fmfbv_s_fetch */
 
 
-void fmfbv_i_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
+void fmfbv_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    fmfbv_susp_type susp = (fmfbv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -289,6 +296,7 @@ void fmfbv_i_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -300,6 +308,7 @@ void fmfbv_i_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -335,17 +344,17 @@ void fmfbv_i_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 		susp_check_term_log_samples_break(index, index_ptr, index_cnt, index_x1_sample_reg);
 		index_x1_sample_reg = susp_current_sample(index, index_ptr);
 	    }
-phase_reg += ph_incr_reg;
-               if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
-               /* PHASE is incremented and INDEX scaled to table INDEX, and
-                  sin_y_reg is a signal (-1 to +1) */
-               yy_reg = phase_reg + index_x1_sample_reg * sin_y_reg;
-               /* so yy_reg is a table index */
-               while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
-               while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
-               sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
-               /* sin_y_reg is now a signal not ready for table lookup */
-               *out_ptr_reg++ =  sin_y_reg;;
+            phase_reg += ph_incr_reg;
+            if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
+            /* PHASE is incremented and INDEX scaled to table INDEX, and
+               sin_y_reg is a signal (-1 to +1) */
+            yy_reg = phase_reg + index_x1_sample_reg * sin_y_reg;
+            /* so yy_reg is a table index */
+            while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
+            while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
+            sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
+            /* sin_y_reg is now a signal ready for table lookup */
+            *out_ptr_reg++ =  sin_y_reg;
 	    index_pHaSe_ReG += index_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
 
@@ -375,8 +384,9 @@ phase_reg += ph_incr_reg;
 } /* fmfbv_i_fetch */
 
 
-void fmfbv_r_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
+void fmfbv_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    fmfbv_susp_type susp = (fmfbv_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type index_val;
     int togo;
@@ -423,6 +433,7 @@ void fmfbv_r_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -434,6 +445,7 @@ void fmfbv_r_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -458,17 +470,17 @@ void fmfbv_r_fetch(register fmfbv_susp_type susp, snd_list_type snd_list)
 	ph_incr_reg = susp->ph_incr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-phase_reg += ph_incr_reg;
-               if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
-               /* PHASE is incremented and INDEX scaled to table INDEX, and
-                  sin_y_reg is a signal (-1 to +1) */
-               yy_reg = phase_reg + index_val * sin_y_reg;
-               /* so yy_reg is a table index */
-               while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
-               while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
-               sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
-               /* sin_y_reg is now a signal not ready for table lookup */
-               *out_ptr_reg++ =  sin_y_reg;;
+            phase_reg += ph_incr_reg;
+            if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
+            /* PHASE is incremented and INDEX scaled to table INDEX, and
+               sin_y_reg is a signal (-1 to +1) */
+            yy_reg = phase_reg + index_val * sin_y_reg;
+            /* so yy_reg is a table index */
+            while (yy_reg > SINE_TABLE_LEN) yy_reg -= SINE_TABLE_LEN;
+            while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
+            sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
+            /* sin_y_reg is now a signal ready for table lookup */
+            *out_ptr_reg++ =  sin_y_reg;
 	} while (--n); /* inner loop */
 
 	susp->yy = yy_reg;
@@ -496,11 +508,9 @@ phase_reg += ph_incr_reg;
 } /* fmfbv_r_fetch */
 
 
-void fmfbv_toss_fetch(susp, snd_list)
-  register fmfbv_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void fmfbv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    fmfbv_susp_type susp = (fmfbv_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -515,25 +525,28 @@ void fmfbv_toss_fetch(susp, snd_list)
     susp->index_ptr += n;
     susp_took(index_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void fmfbv_mark(fmfbv_susp_type susp)
+void fmfbv_mark(snd_susp_type a_susp)
 {
+    fmfbv_susp_type susp = (fmfbv_susp_type) a_susp;
     sound_xlmark(susp->index);
 }
 
 
-void fmfbv_free(fmfbv_susp_type susp)
+void fmfbv_free(snd_susp_type a_susp)
 {
+    fmfbv_susp_type susp = (fmfbv_susp_type) a_susp;
     sound_unref(susp->index);
     ffree_generic(susp, sizeof(fmfbv_susp_node), "fmfbv_free");
 }
 
 
-void fmfbv_print_tree(fmfbv_susp_type susp, int n)
+void fmfbv_print_tree(snd_susp_type a_susp, int n)
 {
+    fmfbv_susp_type susp = (fmfbv_susp_type) a_susp;
     indent(n);
     stdputstr("index:");
     sound_print_tree_1(susp->index, n);
@@ -556,6 +569,12 @@ sound_type snd_make_fmfbv(time_type t0, double hz, rate_type sr, sound_type inde
     index->scale *= SINE_TABLE_LEN / PI2
 ;
 
+    /* make sure no sample rate is too high */
+    if (index->sr > sr) {
+        sound_unref(index);
+        snd_badsr();
+    }
+
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(index, sr);
     switch (interp_desc) {
@@ -574,8 +593,8 @@ sound_type snd_make_fmfbv(time_type t0, double hz, rate_type sr, sound_type inde
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = fmfbv_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = fmfbv_toss_fetch;
     }
 
     /* initialize susp state */

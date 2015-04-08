@@ -93,11 +93,13 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
     float *temp_fft;
     float *window;
     LVAL result;
+    float *float_base;
     
     if (len < 1) xlfail("len < 1");
 
     if (!s->extra) { /* this is the first call, so fix up s */
         sound_type w = NULL;
+        long bytes = sizeof(long) * OFFSET + sizeof(float) * 3 * len;
         if (winval) {
             if (soundp(winval)) {
                 w = getsound(winval);
@@ -106,10 +108,9 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
             }
         }
         /* note: any storage required by fft must be allocated here in a 
-         * contiguous block of memory who's size is given by the first long
+         * contiguous block of memory whose size is given by the first long
          * in the block. Here, there are 4 more longs after the size, and 
-         * then room for 3*len floats (assumes that floats and longs take 
-         * equal space).
+         * then room for 3*len floats
          *
          * The reason for 3*len floats is to provide space for:
          *    the samples to be transformed (len)
@@ -122,12 +123,15 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
          * structure (this could be added in sound.c, however, if it's 
          * really necessary).
          */
-        s->extra = (long *) malloc(sizeof(long) * (3 * len + OFFSET));
-        s->extra[0] = sizeof(long) * (3 * len + OFFSET);
+        
+        s->extra = (long *) malloc(bytes);
+        s->extra[0] = bytes;
         s->CNT = s->INDEX = s->FILLCNT = 0;
         s->TERMCNT = -1;
         maxlen = len;
-        window = (float *) &(s->extra[OFFSET + 2 * len]);
+        // float_base is where the floats start, after the longs
+        float_base = (float *) &(s->extra[OFFSET]);
+        window = float_base + 2 * len;
         /* fill the window from w */
         if (!w) {
             for (i = 0; i < len; i++) *window++ = 1.0F;
@@ -135,12 +139,14 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
             n_samples_from_sound(w, len, window);
         }
     } else {
-        maxlen = ((s->extra[0] / sizeof(long)) - OFFSET) / 3;
+        maxlen = (s->extra[0] - sizeof(long) * OFFSET) / (sizeof(float) * 3);
         if (maxlen != len) xlfail("len changed from initial value");
+        float_base = (float *) &(s->extra[OFFSET]);
     }
-    samples = (float *) &(s->extra[OFFSET]);
-    temp_fft = samples + len;
-    window = temp_fft + len;
+    samples = float_base;
+    temp_fft = float_base + len;
+    // this code computes window location 
+    window = float_base + 2 * len;
     /* step 1: refill buffer with samples */
     fillptr = s->FILLCNT;
     while (fillptr < maxlen) {
@@ -178,6 +184,9 @@ LVAL snd_fft(sound_type s, long len, long step, LVAL winval)
     }
     /* perform the fft: */
     m = round(log(len) / M_LN2); /* compute log-base-2(len) */
+    if (1 << m != len) {
+        xlfail("FFT len is not a power of two");
+    }
     if (!fftInit(m)) rffts(temp_fft, m, 1);
     else xlfail("FFT initialization error");
 

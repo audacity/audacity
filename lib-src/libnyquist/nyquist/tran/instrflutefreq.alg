@@ -5,24 +5,21 @@
 (STATE ("struct instr *" "myflute" "initInstrument(FLUTE, round(sr));
     controlChange(susp->myflute, 1, 0.0);")
        ("int" "temp_ret_value" "noteOn(susp->myflute, freq, 1.0)")
-	("double" "frequency" "freq"))
+       ("float" "breath_scale" "breath_env->scale * FLUTE_CONTROL_CHANGE_CONST")
+       ("double" "frequency" "freq"))
+(INLINE-INTERPOLATION no) 
+(INTERNAL-SCALING breath_env)
+(ALWAYS-SCALE freq_env)
 (START (min breath_env))
 (NOT-IN-INNER-LOOP  "temp_ret_value")
-(CONSTANT "frequency")
+(CONSTANT "frequency" "breath_scale")
 (SAMPLE-RATE "sr")
-(MATCHED-SAMPLE-RATE freq_env breath_env)
+;(MATCHED-SAMPLE-RATE freq_env breath_env)
 (TERMINATE (min breath_env))
-(INNER-LOOP "
-	    controlChange(myflute, 128, FLUTE_CONTROL_CHANGE_CONST * breath_env);
+(INNER-LOOP "controlChange(myflute, 128, breath_scale * breath_env);
             setFrequency(myflute, frequency + freq_env);
 	    output = (sample_type) tick(myflute)")
-(SUPPORT-HEADER "
-	    #define FLUTE_CONTROL_CHANGE_CONST	128
-")
-(SUPPORT-FUNCTIONS "
-	    #include \"instr.h\"
-")
-(FINALIZATION "
-	    deleteInstrument(susp->myflute);
-")
+(SUPPORT-HEADER "#define FLUTE_CONTROL_CHANGE_CONST 128\n")
+(SUPPORT-FUNCTIONS "#include \"instr.h\"\n#include \"upsample.h\"\n")
+(FINALIZATION "    deleteInstrument(susp->myflute);\n")
 )

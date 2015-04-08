@@ -48,6 +48,7 @@
 (defun mb () (translate "buzz"))
 (defun mal () (translate "alpass"))
 (defun macv () (translate "alpasscv"))
+(defun mavc () (translate "alpassvc"))
 (defun mavv () (translate "alpassvv"))
 (defun mf () (translate "follow"))
 (defun mfas () (translate "fromarraystream"))
@@ -111,26 +112,41 @@
 (defun mpl () (translate "pluck"))
 (defun icl () (translate "instrclar"))
 (defun isx () (translate "instrsax"))
+(defun ifl () (translate "instrflute"))
 (defun icla () (translate "instrclarall"))
 (defun isxa () (translate "instrsaxall"))
+(defun ifla () (translate "instrfluteall"))
 (defun iclf () (translate "instrclarfreq"))
 (defun isxf () (translate "instrsaxfreq"))
+(defun iflf () (translate "instrflutefreq"))
 (defun mla () (translate "allpoles"))
 (defun mlr () (translate "lpreson"))
+(defun ibf () (translate "instrbowedfreq"))
+(defun mib () (translate "instrbow"))
+(defun mps () (translate "stkpitshift"))
+(defun mcho () (translate "stkchorus"))
+(defun mrv () (translate "stkrev"))
+(defun mbd () (translate "instrbanded"))
+(defun mmd () (translate "instrmandolin"))
+(defun mst () (translate "instrsitar"))
+(defun mmb () (translate "instrmodalbar"))
+ 
 
-(defun mstk () (icl) (isx) (icla) (isxa) (iclf) (isxf))
+(defun mstk () (icl) (isx) (ifl) (icla) (isxa) (ifla) (iclf) (isxf) (iflf)
+               (ibf) (mib) (mps) (mcho) (mrv) (mbd) (mmd) (mst) (mmb))
 (defun mfmfb () (translate "fmfb") (translate "fmfbv"))
 
 (defun m () (mf) (mp) (mc) (mcl) (mg)
 ;;;;;;      (mr) (msfr) (md)
+        (meqb)
         (mm) (ms) (msh) (mpw) (ma) (mb) (mde) (mdcv)
         (mi) (mu) (ml) (mlo)
         (mo) (mof) (mam) (mfm) (mw) (msl) (mt) (mat) (mre) (mrec)
-        (mar) (mtv)	(mta) (mtf) (matv) (mrvc) (mrcv) (marvc) (marcv)
-            (mrvv) (marvv) (me) (msa) (msio) (mq) (mcg) (mifft) 
-            (mfas) (mfo) (mct) (mal) (mos) (mch) (mbq) (mpl)
-            (mabs) (msqrt) (macv) (mavv) ; (mcv) must be managed by hand
-            (mstk) (mla) (mlr) (load "translate-stk") (mfmfb))
+        (mar) (mtv) (mta) (mtf) (matv) (mrvc) (mrcv) (marvc) (marcv)
+        (mrvv) (marvv) (me) (msa) (msio) (mq) (mcg) (mifft) 
+        (mfas) (mfo) (mct) (mal) (mos) (mch) (mbq) (mpl)
+        (mabs) (msqrt) (macv) (mavc) (mavv) ; (mcv) must be managed by hand
+        (mstk) (mla) (mlr) (mfmfb))
 
 ; call this when you change writesusp.lsp: "N"ew "S"usp
 (defun ns () (ls) (m))
@@ -195,7 +211,7 @@
        "#ifndef mips\n"
        "#include \"stdlib.h\"\n"
        "#endif\n"
-       "#include \"xlisp.h\"\n"                             
+       "#include \"xlisp.h\"\n"
        "#include \"sound.h\"\n\n"
        "#include \"falloc.h\"\n"
        "#include \"cext.h\"\n"
@@ -239,7 +255,7 @@
     (print-strings header-list stream)
     (format stream "#include \"~A\"~%" (get-slot alg 'hfile))
     (display "code-gen: printed header")
-    (format stream "~%void ~A_free();~%" name)
+    (format stream "~%void ~A_free(snd_susp_type a_susp);~%" name)
     (setf interpolation-list (make-interpolation-list alg))
     (display "code-gen: " interpolation-list)
     (put-slot alg interpolation-list 'interpolation-list)
@@ -377,10 +393,12 @@
 ;;   (unless the algorithm is the up-sample algorithm, a special case
 ;;
 (defun interp-check (alg spec)
-  (or *INLINE-INTERPOLATION*
-      (get alg 'inline-interpolation)
-      (and (not (member 'INTERP spec))
-       (not (member 'RAMP spec)))))
+  (let ((ili *INLINE-INTERPOLATION*)
+        (ili-spec (get alg 'inline-interpolation)))
+    (if ili-spec (setf ili t))
+    (if (eq ili-spec 'no) (setf ili nil))
+    (or ili (and (not (member 'INTERP spec))
+                 (not (member 'RAMP spec))))))
     
 (print 'interp-check)
 
@@ -661,19 +679,21 @@
 (defun sr-check (alg spec)
   (let ((sample-rate (get-slot alg 'sample-rate))
     (sound-args (get-slot alg 'sound-args))
-    (result t))
+    (result nil))
     ;; if expression given, then anything is ok
-    (cond ((stringp sample-rate) t)
-      ;; if (MAX ...) expression given, then one of signals must be NONE or SCALE
-      ((and (listp sample-rate) (eq (car sample-rate) 'MAX))
-       (dolist (sig (cdr sample-rate))  ; for all sig in max list ...
-           (cond ((not (spec-is-none-or-scale sig sound-args spec))
-              (setf result nil))))
-       result)
-      ;; if no expression given, then one signal must be NONE or SCALE
-      ((or (member 'NONE spec) (member 'SCALE spec)) t)
-      ;; o.w. return false
-      (t nil))))
+    (cond ((stringp sample-rate)
+           t)
+          ;; if (MAX ...) expression given, then one of signals
+          ;; must be NONE or SCALE
+          ((and (listp sample-rate) (eq (car sample-rate) 'MAX))
+           (dolist (sig (cdr sample-rate))  ; for all sig in max list ...
+             (cond ((spec-is-none-or-scale sig sound-args spec)
+                    (setf result t))))
+           result)
+          ;; if no expression given, then one signal must be NONE or SCALE
+          ((or (member 'NONE spec) (member 'SCALE spec)) t)
+          ;; o.w. return false
+          (t nil))))
 
 
 ;;****************

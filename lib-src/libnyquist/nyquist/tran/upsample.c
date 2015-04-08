@@ -9,7 +9,7 @@
 #include "cext.h"
 #include "upsample.h"
 
-void up_free();
+void up_free(snd_susp_type a_susp);
 
 
 typedef struct up_susp_struct {
@@ -32,8 +32,9 @@ typedef struct up_susp_struct {
 } up_susp_node, *up_susp_type;
 
 
-void up_n_fetch(register up_susp_type susp, snd_list_type snd_list)
+void up_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    up_susp_type susp = (up_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     int togo;
     int n;
@@ -60,6 +61,7 @@ void up_n_fetch(register up_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -71,6 +73,7 @@ void up_n_fetch(register up_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -92,7 +95,7 @@ void up_n_fetch(register up_susp_type susp, snd_list_type snd_list)
 	input_ptr_reg = susp->input_ptr;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = (sample_type) *input_ptr_reg++;
+            *out_ptr_reg++ = (sample_type) *input_ptr_reg++;
 	} while (--n); /* inner loop */
 
 	/* using input_ptr_reg is a bad idea on RS/6000: */
@@ -118,8 +121,9 @@ void up_n_fetch(register up_susp_type susp, snd_list_type snd_list)
 } /* up_n_fetch */
 
 
-void up_i_fetch(register up_susp_type susp, snd_list_type snd_list)
+void up_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    up_susp_type susp = (up_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type input_x2_sample;
     int togo;
@@ -155,6 +159,7 @@ void up_i_fetch(register up_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -166,6 +171,7 @@ void up_i_fetch(register up_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -196,7 +202,7 @@ void up_i_fetch(register up_susp_type susp, snd_list_type snd_list)
 		input_pHaSe_ReG -= 1.0;
 		susp_check_term_log_samples_break(input, input_ptr, input_cnt, input_x2_sample);
 	    }
-*out_ptr_reg++ = (sample_type) 
+            *out_ptr_reg++ = (sample_type) 
 		(input_x1_sample_reg * (1 - input_pHaSe_ReG) + input_x2_sample * input_pHaSe_ReG);
 	    input_pHaSe_ReG += input_pHaSe_iNcR_rEg;
 	} while (--n); /* inner loop */
@@ -224,8 +230,9 @@ void up_i_fetch(register up_susp_type susp, snd_list_type snd_list)
 } /* up_i_fetch */
 
 
-void up_r_fetch(register up_susp_type susp, snd_list_type snd_list)
+void up_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
+    up_susp_type susp = (up_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
     sample_type input_DeLtA;
     sample_type input_val;
@@ -277,6 +284,7 @@ void up_r_fetch(register up_susp_type susp, snd_list_type snd_list)
 	if (susp->terminate_cnt != UNKNOWN &&
 	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
 	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+	    if (togo < 0) togo = 0;  /* avoids rounding errros */
 	    if (togo == 0) break;
 	}
 
@@ -288,6 +296,7 @@ void up_r_fetch(register up_susp_type susp, snd_list_type snd_list)
 	     * AND cnt > 0 (we're not at the beginning of the
 	     * output block).
 	     */
+	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
 	    if (to_stop < togo) {
 		if (to_stop == 0) {
 		    if (cnt) {
@@ -308,7 +317,7 @@ void up_r_fetch(register up_susp_type susp, snd_list_type snd_list)
 	n = togo;
 	out_ptr_reg = out_ptr;
 	if (n) do { /* the inner sample computation loop */
-*out_ptr_reg++ = (sample_type) input_val;
+            *out_ptr_reg++ = (sample_type) input_val;
 	    input_val += input_DeLtA;
 	} while (--n); /* inner loop */
 
@@ -334,11 +343,9 @@ void up_r_fetch(register up_susp_type susp, snd_list_type snd_list)
 } /* up_r_fetch */
 
 
-void up_toss_fetch(susp, snd_list)
-  register up_susp_type susp;
-  snd_list_type snd_list;
-{
-    long final_count = susp->susp.toss_cnt;
+void up_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
+    {
+    up_susp_type susp = (up_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
     long n;
 
@@ -353,25 +360,28 @@ void up_toss_fetch(susp, snd_list)
     susp->input_ptr += n;
     susp_took(input_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
-    (*(susp->susp.fetch))(susp, snd_list);
+    (*(susp->susp.fetch))(a_susp, snd_list);
 }
 
 
-void up_mark(up_susp_type susp)
+void up_mark(snd_susp_type a_susp)
 {
+    up_susp_type susp = (up_susp_type) a_susp;
     sound_xlmark(susp->input);
 }
 
 
-void up_free(up_susp_type susp)
+void up_free(snd_susp_type a_susp)
 {
+    up_susp_type susp = (up_susp_type) a_susp;
     sound_unref(susp->input);
     ffree_generic(susp, sizeof(up_susp_node), "up_free");
 }
 
 
-void up_print_tree(up_susp_type susp, int n)
+void up_print_tree(snd_susp_type a_susp, int n)
 {
+    up_susp_type susp = (up_susp_type) a_susp;
     indent(n);
     stdputstr("input:");
     sound_print_tree_1(susp->input, n);
@@ -393,11 +403,13 @@ sound_type snd_make_up(rate_type sr, sound_type input)
     /* try to push scale_factor back to a low sr input */
     if (input->sr < sr) { input->scale = scale_factor; scale_factor = 1.0F; }
 
+    falloc_generic(susp, up_susp_node, "snd_make_up");
+
+    /* make sure no sample rate is too high */
     if (input->sr > sr) {
         sound_unref(input);
-        xlfail("snd-up: output sample rate must be higher than input");
+        snd_badsr();
     }
-    falloc_generic(susp, up_susp_node, "snd_make_up");
 
     /* select a susp fn based on sample rates */
     interp_desc = (interp_desc << 2) + interp_style(input, sr);
@@ -416,8 +428,8 @@ sound_type snd_make_up(rate_type sr, sound_type input)
     /* how many samples to toss before t0: */
     susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + 0.5);
     if (susp->susp.toss_cnt > 0) {
-	susp->susp.keep_fetch = susp->susp.fetch;
-	susp->susp.fetch = up_toss_fetch;
+        susp->susp.keep_fetch = susp->susp.fetch;
+        susp->susp.fetch = up_toss_fetch;
     }
 
     /* initialize susp state */

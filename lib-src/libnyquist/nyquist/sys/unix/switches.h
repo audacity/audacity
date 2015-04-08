@@ -193,5 +193,20 @@
  */
 #define NYQUIST 1
 
+/* If SAFE_NYQUIST is defined, Nyquist will prevent:
+ * - writes anywhere except in the directory tree
+ *     named after the -w flag (if any) on the command
+ *     line
+ * - play sounds or open the audio input or output
+ * - any networking functions.
+ */
+
+/* If SECURE_NYQUIST is defined, Nyquist will
+ * not read anywhere except in the directory forest
+ * given by the initial search path (XLISPPATH) and
+ * by a path list following -r on the command line
+ * (if any).
+ */
+
 #include "swlogic.h"
 

@@ -3,23 +3,18 @@
 (ARGUMENTS ("double" "freq") ("sound_type" "bowpress_env") ("rate_type" "sr"))
 (STATE ("struct instr *" "mybow" "initInstrument(BOWED, round(sr));
     controlChange(susp->mybow, 1, 0.0);")
-       ("int" "temp_ret_value" "noteOn(susp->mybow, freq, 1.0)"))
+       ("int" "temp_ret_value" "noteOn(susp->mybow, freq, 1.0)")
+       ("float" "bow_scale" "bowpress_env->scale * BOW_CONTROL_CHANGE_CONST"))
+(INLINE-INTERPOLATION no)
+(INTERNAL-SCALING bowpress_env)
 (START (min bowpress_env))
 (NOT-IN-INNER-LOOP "freq" "temp_ret_value")
+(CONSTANT "bow_scale")
 (SAMPLE-RATE "sr")
-(ALWAYS-SCALE bowpress_env)
 (TERMINATE (min bowpress_env))
-(INNER-LOOP "
-	    controlChange(mybow, 128, BOW_CONTROL_CHANGE_CONST * bowpress_env);
-	    output = (sample_type) tick(mybow)")
-(SUPPORT-HEADER "
-	    #define BOW_CONTROL_CHANGE_CONST	128
-")
-(SUPPORT-FUNCTIONS "
-	    #include \"instr.h\"
-")
-(FINALIZATION "
-	    deleteInstrument(susp->mybow);
-")
+(INNER-LOOP "controlChange(mybow, 128, bow_scale * bowpress_env);
+            output = (sample_type) tick(mybow)")
+(SUPPORT-HEADER "#define BOW_CONTROL_CHANGE_CONST 128\n")
+(SUPPORT-FUNCTIONS "#include \"instr.h\"\n#include \"upsample.h\"\n")
+(FINALIZATION "    deleteInstrument(susp->mybow);\n")
 )
-

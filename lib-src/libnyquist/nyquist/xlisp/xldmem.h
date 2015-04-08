@@ -156,11 +156,11 @@
 typedef struct xtype_desc_struct {
     char *type_name;
     struct node *type_symbol;
-    void (*free_meth)();
-    void (*print_meth)();
-    void (*save_meth)();
-    unsigned char * (*restore_meth)();
-    void (*mark_meth)();
+    void (*free_meth)(void*);
+    void (*print_meth)(void*, void*);
+    void (*save_meth)(FILE*, void*);
+    unsigned char * (*restore_meth)(FILE*);
+    void (*mark_meth)(void*);
 } *xtype_desc;
 
 /* node structure */
@@ -211,5 +211,9 @@ typedef struct segment {
     struct node sg_nodes[1];
 } SEGMENT;
 
-extern xtype_desc create_desc();	/* initialize a type descriptor */
-
+/* initialize a type descriptor */
+extern xtype_desc create_desc(char *type_name, void (*fm)(void*), 
+                              void (*pm)(void*, void*),
+                              void (*sm)(FILE*, void*), 
+                              unsigned char * (*rm)(FILE*), 
+                              void (*mm)(void*));
