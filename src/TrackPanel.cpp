@@ -6126,7 +6126,8 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
    if (event.ButtonDown()) {
       SetFocus();
-      CaptureMouse();
+      if (!HasCapture())
+         CaptureMouse();
    }
    else if (event.ButtonUp()) {
       if (HasCapture())
