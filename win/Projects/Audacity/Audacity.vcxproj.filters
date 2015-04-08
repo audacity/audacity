@@ -1684,6 +1684,15 @@
   <ItemGroup>
     <None Include="..\..\ny.rules" />
     <None Include="..\..\po.rules" />
+    <None Include="..\..\..\nyquist\test.lsp">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\upic.sal">
+      <Filter>nyquist</Filter>
+    </None>
+    <None Include="..\..\..\nyquist\velocity.lsp">
+      <Filter>nyquist</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand1.raw">
@@ -1730,9 +1739,6 @@
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\sinewave.raw">
       <Filter>nyquist\rawwaves</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\..\nyquist\bug.lsp">
-      <Filter>nyquist</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\..\nyquist\dspprims.lsp">
       <Filter>nyquist</Filter>
