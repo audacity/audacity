@@ -117,9 +117,9 @@ private:
 public:
    EffectBassTreble *mEffect;
 
-   double bass;
-   double treble;
-   double level;
+   double mBass;
+   double mTreble;
+   double mLevel;
    bool mbNormalize;
 
    DECLARE_EVENT_TABLE()
