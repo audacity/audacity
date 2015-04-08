@@ -27,6 +27,7 @@ Track classes.
 *//*******************************************************************/
 
 
+#include "WaveTrack.h"
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/debug.h>
@@ -34,10 +35,10 @@ Track classes.
 #include <float.h>
 #include <math.h>
 #include <algorithm>
+#include <memory>
 
 #include "float_cast.h"
 
-#include "WaveTrack.h"
 #include "LabelTrack.h"
 
 #include "Envelope.h"
