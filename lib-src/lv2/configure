@@ -54,8 +54,8 @@ Cflags: -I\${includedir}/${pkg}${major}
 EOF
 
    export PKG_CONFIG_PATH="$(pwd)/${pkg}/build:${PKG_CONFIG_PATH}"
-   export CFLAGS="-I$(pwd)/${pkg} ${CFLAGS}"
-   export LDFLAGS="-L$(pwd)/${pkg} ${lib} ${LDFLAGS}"
+   export CFLAGS="-I$(pwd)/${pkg} -I$(pwd)/${pkg}/build ${CFLAGS}"
+   export LDFLAGS="-L$(pwd)/${pkg}/build ${lib} ${LDFLAGS}"
 
    ln -s ../${pkg}/${pkg} include
 }
