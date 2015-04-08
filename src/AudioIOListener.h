@@ -15,6 +15,8 @@
 
 #include <wx/string.h>
 
+#include "AutoRecovery.h"
+
 class AUDACITY_DLL_API AudioIOListener {
 public:
    AudioIOListener() {}
@@ -23,7 +25,7 @@ public:
    virtual void OnAudioIORate(int rate) = 0;
    virtual void OnAudioIOStartRecording() = 0;
    virtual void OnAudioIOStopRecording() = 0;
-   virtual void OnAudioIONewBlockFiles(const wxString& blockFileLog) = 0;
+   virtual void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) = 0;
 };
 
 #endif

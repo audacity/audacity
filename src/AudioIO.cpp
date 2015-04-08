@@ -2924,7 +2924,7 @@ void AudioIO::FillBuffers()
       {
          // Append captured samples to the end of the WaveTracks.
          // The WaveTracks have their own buffering for efficiency.
-         XMLStringWriter blockFileLog;
+         AutoSaveFile blockFileLog;
          int numChannels = mCaptureTracks.GetCount();
 
          for( i = 0; (int)i < numChannels; i++ )
@@ -2932,7 +2932,7 @@ void AudioIO::FillBuffers()
             int avail = commonlyAvail;
             sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
 
-            XMLStringWriter appendLog;
+            AutoSaveFile appendLog;
 
             if( mFactor == 1.0 )
             {

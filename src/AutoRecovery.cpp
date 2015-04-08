@@ -345,3 +345,454 @@ XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
 
    return NULL;
 }
+
+///
+/// AutoSaveFile class
+///
+
+// Simple "binary xml" format used exclusively for autosave files.
+//
+// It is not intended to transport these files across platform architectures,
+// so endianness is not a concern.
+//
+// It is not intended that the user view or modify the file.
+//
+// It IS intended that as little work be done during auto save, so numbers
+// and strings are written in their native format.  They will be converted
+// during recovery.
+//
+// The file has 3 main sections:
+//
+//    ident             literal "<?xml autosave>"
+//    name dictionary   dictionary of all names used in the document
+//    data fields       the "encoded" XML document
+//
+// To save space, each name (attribute or element) encountered is stored in
+// the name dictionary and replaced with the assigned 2-byte identifier.
+//
+// All strings are in native unicode format, 2-byte or 4-byte.
+//
+// All "lengths" are 2-byte signed, so are limited to 32767 bytes long/
+
+enum FieldTypes
+{
+   FT_StartTag,      // type, ID, name
+   FT_EndTag,        // type, ID, name
+   FT_String,        // type, ID, name, string length, string
+   FT_Int,           // type, ID, value
+   FT_Bool,          // type, ID, value
+   FT_Long,          // type, ID, value
+   FT_LongLong,      // type, ID, value
+   FT_SizeT,         // type, ID, value
+   FT_Float,         // type, ID, value
+   FT_Double,        // type, ID, value
+   FT_Data,          // type, string length, string
+   FT_Raw,           // type, string length, string
+   FT_Name           // type, name length, name
+};
+
+AutoSaveFile::AutoSaveFile(size_t allocSize)
+{
+   mAllocSize = allocSize;
+}
+
+AutoSaveFile::~AutoSaveFile()
+{
+}
+
+void AutoSaveFile::StartTag(const wxString &name)
+{
+   mBuffer.PutC(FT_StartTag);
+   WriteName(name);
+}
+
+void AutoSaveFile::EndTag(const wxString &name)
+{
+   mBuffer.PutC(FT_EndTag);
+   WriteName(name);
+}
+
+void AutoSaveFile::WriteAttr(const wxString &name, const wxChar *value)
+{
+   WriteAttr(name, wxString(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString &name, const wxString &value)
+{
+   mBuffer.PutC(FT_String);
+   WriteName(name);
+
+   short len = value.Length() * sizeof(wxChar);
+
+   mBuffer.Write(&len, sizeof(len));
+   mBuffer.Write(value.c_str(), len);
+}
+
+void AutoSaveFile::WriteAttr(const wxString &name, int value)
+{
+   mBuffer.PutC(FT_Int);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString &name, bool value)
+{
+   mBuffer.PutC(FT_Bool);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString &name, long value)
+{
+   mBuffer.PutC(FT_Long);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString &name, long long value)
+{
+   mBuffer.PutC(FT_LongLong);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString &name, size_t value)
+{
+   mBuffer.PutC(FT_SizeT);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString &name, float value, int digits)
+{
+   mBuffer.PutC(FT_Float);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+   mBuffer.Write(&digits, sizeof(digits));
+}
+
+void AutoSaveFile::WriteAttr(const wxString &name, double value, int digits)
+{
+   mBuffer.PutC(FT_Double);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+   mBuffer.Write(&digits, sizeof(digits));
+}
+
+void AutoSaveFile::WriteData(const wxString &value)
+{
+   mBuffer.PutC(FT_Data);
+
+   short len = value.Length() * sizeof(wxChar);
+
+   mBuffer.Write(&len, sizeof(len));
+   mBuffer.Write(value.c_str(), len);
+}
+
+void AutoSaveFile::Write(const wxString & value)
+{
+   mBuffer.PutC(FT_Raw);
+
+   short len = value.Length() * sizeof(wxChar);
+
+   mBuffer.Write(&len, sizeof(len));
+   mBuffer.Write(value.c_str(), len);
+}
+
+void AutoSaveFile::WriteSubTree(const AutoSaveFile &value)
+{
+   wxStreamBuffer *buf = value.mBuffer.GetOutputStreamBuffer();
+   mBuffer.Write(buf->GetBufferStart(), buf->GetBufferSize());
+}
+
+bool AutoSaveFile::Write(wxFFile & file) const
+{
+   NameMap::const_iterator i = mNames.begin();
+   while (i != mNames.end())
+   {
+      wxLogMessage(wxT("%d %s"), i->second, i->first.c_str());
+      i++;
+   }
+
+   bool success = file.Write(AutoSaveIdent, strlen(AutoSaveIdent)) == strlen(AutoSaveIdent);
+   if (success)
+   {
+      wxStreamBuffer *buf = mDict.GetOutputStreamBuffer();
+      success = file.Write(buf->GetBufferStart(), buf->GetIntPosition()) == buf->GetIntPosition();
+
+      if (success)
+      {
+         buf = mBuffer.GetOutputStreamBuffer();
+         success = file.Write(buf->GetBufferStart(), buf->GetIntPosition()) == buf->GetIntPosition();
+      }
+   }
+
+   return success;
+}
+
+void AutoSaveFile::CheckSpace(wxMemoryOutputStream & os)
+{
+   wxStreamBuffer *buf = os.GetOutputStreamBuffer();
+   size_t left = buf->GetBytesLeft();
+   if (left == 0)
+   {
+      size_t origPos = buf->GetIntPosition();
+      char *temp = new char[mAllocSize];
+      buf->Write(temp, mAllocSize);
+      delete temp;
+      buf->SetIntPosition(origPos);
+   }
+}
+
+void AutoSaveFile::WriteName(const wxString & name)
+{
+   short len = name.Length() * sizeof(wxChar);
+   short id;
+
+   if (mNames.count(name))
+   {
+      id = mNames[name];
+   }
+   else
+   {
+      id = mNames.size();
+      mNames[name] = id;
+
+      CheckSpace(mDict);
+      mDict.PutC(FT_Name);
+      mDict.Write(&id, sizeof(id));
+      mDict.Write(&len, sizeof(len));
+      mDict.Write(name.c_str(), len);
+   }
+
+   CheckSpace(mBuffer);
+   mBuffer.Write(&id, sizeof(id));
+}
+
+bool AutoSaveFile::IsEmpty() const
+{
+   return mBuffer.GetLength() == 0;
+}
+
+bool AutoSaveFile::Decode(const wxString & fileName)
+{
+   char ident[sizeof(AutoSaveIdent)];
+   size_t len = strlen(AutoSaveIdent);
+
+   wxFFile file;
+
+   if (!file.Open(fileName, wxT("rb")))
+   {
+      return false;
+   }
+
+   if (file.Read(&ident, len) != len || strncmp(ident, AutoSaveIdent, len) != 0)
+   {
+      // Not something we recognize...let the caller deal with it
+      file.Close();
+
+      return true;
+   }
+
+   len = file.Length() - len;
+   char *buf = new char[len];
+
+   if (file.Read(buf, len) != len)
+   {
+      delete buf;
+      file.Close();
+      return false;
+   }
+
+   wxMemoryInputStream in(buf, len);
+
+   file.Close();
+
+   XMLFileWriter out;
+
+   out.Open(fileName, wxT("wb"));
+   if (!out.IsOpened())
+   {
+      delete buf;
+
+      return false;
+   }
+
+   mIds.clear();
+
+   while (!in.Eof())
+   {
+      short id;
+
+      switch (in.GetC())
+      {
+         case FT_Name:
+         {
+            short len;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&len, sizeof(len));
+            wxChar *name = new wxChar[len / sizeof(wxChar)];
+            in.Read(name, len);
+
+            mIds[id] = wxString(name, len / sizeof(wxChar));
+            delete name;
+         }
+         break;
+
+         case FT_StartTag:
+         {
+            in.Read(&id, sizeof(id));
+
+            out.StartTag(mIds[id]);
+         }
+         break;
+
+         case FT_EndTag:
+         {
+            in.Read(&id, sizeof(id));
+
+            out.EndTag(mIds[id]);
+         }
+         break;
+
+         case FT_String:
+         {
+            short len;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&len, sizeof(len));
+            wxChar *val = new wxChar[len / sizeof(wxChar)];
+            in.Read(val, len);
+
+            out.WriteAttr(mIds[id], wxString(val, len / sizeof(wxChar)));
+            delete val;
+         }
+         break;
+
+         case FT_Float:
+         {
+            float val;
+            int dig;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+            in.Read(&dig, sizeof(dig));
+
+            out.WriteAttr(mIds[id], val, dig);
+         }
+         break;
+
+         case FT_Double:
+         {
+            double val;
+            int dig;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+            in.Read(&dig, sizeof(dig));
+
+            out.WriteAttr(mIds[id], val, dig);
+         }
+         break;
+
+         case FT_Int:
+         {
+            int val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_Bool:
+         {
+            bool val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_Long:
+         {
+            long val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_LongLong:
+         {
+            long long val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_SizeT:
+         {
+            size_t val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_Data:
+         {
+            short len;
+
+            in.Read(&len, sizeof(len));
+            wxChar *val = new wxChar[len / sizeof(wxChar)];
+            in.Read(val, len);
+
+            out.WriteData(wxString(val, len / sizeof(wxChar)));
+            delete val;
+         }
+         break;
+
+         case FT_Raw:
+         {
+            short len;
+
+            in.Read(&len, sizeof(len));
+            wxChar *val = new wxChar[len / sizeof(wxChar)];
+            in.Read(val, len);
+
+            out.Write(wxString(val, len / sizeof(wxChar)));
+            delete val;
+         }
+         break;
+
+         default:
+            wxASSERT(true);
+         break;
+      }
+   }
+
+   delete buf;
+
+   out.Close();
+
+   return true;
+}
