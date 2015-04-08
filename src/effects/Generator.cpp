@@ -59,21 +59,22 @@ bool Generator::Process()
          if (mDuration > 0.0)
          {
             // Create a temporary track
-            WaveTrack *tmp = mFactory->NewWaveTrack(track->GetSampleFormat(),
-                                                    track->GetRate());
+            std::auto_ptr<WaveTrack> tmp(
+               mFactory->NewWaveTrack(track->GetSampleFormat(),
+               track->GetRate())
+            );
             BeforeTrack(*track);
             BeforeGenerate();
 
             // Fill it with data
-            if (!GenerateTrack(tmp, *track, ntrack))
+            if (!GenerateTrack(&*tmp, *track, ntrack))
                bGoodResult = false;
             else {
                // Transfer the data from the temporary track to the actual one
                tmp->Flush();
                SetTimeWarper(new StepTimeWarper(mT0+mDuration, mDuration-(mT1-mT0)));
-               bGoodResult = track->ClearAndPaste(mT0, mT1, tmp, true,
+               bGoodResult = track->ClearAndPaste(mT0, mT1, &*tmp, true,
                      false, GetTimeWarper());
-               delete tmp;
             }
 
             if (!bGoodResult) {
