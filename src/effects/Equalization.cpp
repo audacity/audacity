@@ -76,7 +76,7 @@
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../WaveTrack.h"
-#include "float_cast.h"
+#include "../float_cast.h"
 #include <vector>
 
 #include <wx/bitmap.h>
