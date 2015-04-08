@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2011 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -52,30 +52,19 @@ void
 lilv_ui_free(LilvUI* ui)
 {
 	lilv_node_free(ui->uri);
-	ui->uri = NULL;
-
 	lilv_node_free(ui->bundle_uri);
-	ui->bundle_uri = NULL;
-
 	lilv_node_free(ui->binary_uri);
-	ui->binary_uri = NULL;
-
 	lilv_nodes_free(ui->classes);
-
 	free(ui);
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_ui_get_uri(const LilvUI* ui)
 {
-	assert(ui);
-	assert(ui->uri);
 	return ui->uri;
 }
 
-LILV_API
-unsigned
+LILV_API unsigned
 lilv_ui_is_supported(const LilvUI*       ui,
                      LilvUISupportedFunc supported_func,
                      const LilvNode*     container_type,
@@ -85,7 +74,7 @@ lilv_ui_is_supported(const LilvUI*       ui,
 	LILV_FOREACH(nodes, c, classes) {
 		const LilvNode* type = lilv_nodes_get(classes, c);
 		const unsigned  q    = supported_func(lilv_node_as_uri(container_type),
-		                                       lilv_node_as_uri(type));
+		                                      lilv_node_as_uri(type));
 		if (q) {
 			if (ui_type) {
 				*ui_type = type;
@@ -97,34 +86,26 @@ lilv_ui_is_supported(const LilvUI*       ui,
 	return 0;
 }
 
-LILV_API
-const LilvNodes*
+LILV_API const LilvNodes*
 lilv_ui_get_classes(const LilvUI* ui)
 {
 	return ui->classes;
 }
 
-LILV_API
-bool
+LILV_API bool
 lilv_ui_is_a(const LilvUI* ui, const LilvNode* ui_class_uri)
 {
 	return lilv_nodes_contains(ui->classes, ui_class_uri);
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_ui_get_bundle_uri(const LilvUI* ui)
 {
-	assert(ui);
-	assert(ui->bundle_uri);
 	return ui->bundle_uri;
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_ui_get_binary_uri(const LilvUI* ui)
 {
-	assert(ui);
-	assert(ui->binary_uri);
 	return ui->binary_uri;
 }

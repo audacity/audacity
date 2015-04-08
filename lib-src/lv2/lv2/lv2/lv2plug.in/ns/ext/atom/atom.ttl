@@ -388,17 +388,18 @@ atom:Object
 <p>An <q>Object</q> is an atom with a set of properties.  This corresponds to
 an RDF Resource, and can be thought of as a dictionary with URID keys.</p>
 
-<p>An LV2_Atom_Object has a uint32_t <code>id</code> and uint32_t
-<code>type</code>, followed by a series of atom:Property bodies (without
-headers, i.e. LV2_Atom_Property_Body).  The LV2_Atom_Object::type field is
-semantically equivalent to a property with key rdf:type, but is included in the
-structure to allow for fast dispatch.</p>
+<p>An LV2_Atom_Object body has a uint32_t <code>id</code> and
+<code>type</code>, followed by a series of atom:Property bodies
+(LV2_Atom_Property_Body).  The LV2_Atom_Object_Body::otype field is equivalent
+to a property with key rdf:type, but is included in the structure to allow for
+fast dispatching.</p>
 
-<p>This is an abstract Atom type, an Object is always either a atom:Resource
-or a atom:Blank.</p>
+<p>Code SHOULD check for objects using lv2_atom_forge_is_object() or
+lv2_atom_forge_is_blank() if a forge is available, rather than checking the
+atom type directly.  This will correctly handle the deprecated atom:Resource
+and atom:Blank types.</p>
 
-<p>If serialised to RDF, an Object SHOULD be represented directly as a
-resource, e.g.:</p>
+<p>When serialised to RDF, an Object is represented as a resource, e.g.:</p>
 
 <pre class="turtle-code">
 eg:someObject
@@ -412,8 +413,11 @@ atom:Resource
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Object ;
 	rdfs:label "Resource" ;
+	owl:deprecated "true"^^xsd:boolean ;
 	atom:cType "LV2_Atom_Object" ;
 	lv2:documentation """
+<p>This class is deprecated.  Use atom:Object instead.</p>
+
 <p>An atom:Object where the <code>id</code> field is a URID, i.e. an Object
 with a URI.</p>
 """ .
@@ -422,8 +426,11 @@ atom:Blank
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Object ;
 	rdfs:label "Blank" ;
+	owl:deprecated "true"^^xsd:boolean ;
 	atom:cType "LV2_Atom_Object" ;
 	lv2:documentation """
+<p>This class is deprecated.  Use atom:Object with ID 0 instead.</p>
+
 <p>An atom:Object where the LV2_Atom_Object::id is a blank node ID (NOT a URI).
 The ID of a Blank is valid only within the context the Blank appears in.  For
 ports this is the context of the associated run() call, i.e. all ports share

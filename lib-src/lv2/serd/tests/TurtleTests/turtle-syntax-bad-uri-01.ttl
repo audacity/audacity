@@ -1,0 +1,2 @@
+# Bad IRI : space.
+<http://www.w3.org/2013/TurtleTests/ space> <http://www.w3.org/2013/TurtleTests/p> <http://www.w3.org/2013/TurtleTests/o> .

@@ -90,10 +90,10 @@ main(void)
 
 	LV2_Atom_Forge_Frame obj_frame;
 	LV2_Atom* obj = lv2_atom_forge_deref(
-		&forge, lv2_atom_forge_resource(&forge, &obj_frame, 0, eg_Object));
+		&forge, lv2_atom_forge_object(&forge, &obj_frame, 0, eg_Object));
 
 	// eg_one = (Int)1
-	lv2_atom_forge_property_head(&forge, eg_one, 0);
+	lv2_atom_forge_key(&forge, eg_one);
 	LV2_Atom_Int* one = (LV2_Atom_Int*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_int(&forge, 1));
 	if (one->body != 1) {
@@ -101,7 +101,7 @@ main(void)
 	}
 
 	// eg_two = (Long)2
-	lv2_atom_forge_property_head(&forge, eg_two, 0);
+	lv2_atom_forge_key(&forge, eg_two);
 	LV2_Atom_Long* two = (LV2_Atom_Long*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_long(&forge, 2));
 	if (two->body != 2) {
@@ -109,7 +109,7 @@ main(void)
 	}
 
 	// eg_three = (Float)3.0
-	lv2_atom_forge_property_head(&forge, eg_three, 0);
+	lv2_atom_forge_key(&forge, eg_three);
 	LV2_Atom_Float* three = (LV2_Atom_Float*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_float(&forge, 3.0f));
 	if (three->body != 3) {
@@ -117,7 +117,7 @@ main(void)
 	}
 
 	// eg_four = (Double)4.0
-	lv2_atom_forge_property_head(&forge, eg_four, 0);
+	lv2_atom_forge_key(&forge, eg_four);
 	LV2_Atom_Double* four = (LV2_Atom_Double*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_double(&forge, 4.0));
 	if (four->body != 4) {
@@ -125,7 +125,7 @@ main(void)
 	}
 
 	// eg_true = (Bool)1
-	lv2_atom_forge_property_head(&forge, eg_true, 0);
+	lv2_atom_forge_key(&forge, eg_true);
 	LV2_Atom_Bool* t = (LV2_Atom_Bool*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_bool(&forge, true));
 	if (t->body != 1) {
@@ -133,7 +133,7 @@ main(void)
 	}
 
 	// eg_false = (Bool)0
-	lv2_atom_forge_property_head(&forge, eg_false, 0);
+	lv2_atom_forge_key(&forge, eg_false);
 	LV2_Atom_Bool* f = (LV2_Atom_Bool*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_bool(&forge, false));
 	if (f->body != 0) {
@@ -143,7 +143,7 @@ main(void)
 	// eg_path = (Path)"/foo/bar"
 	const char*  pstr     = "/foo/bar";
 	const size_t pstr_len = strlen(pstr);
-	lv2_atom_forge_property_head(&forge, eg_path, 0);
+	lv2_atom_forge_key(&forge, eg_path);
 	LV2_Atom_String* path  = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_uri(&forge, pstr, pstr_len));
 	char* pbody = (char*)LV2_ATOM_BODY(path);
@@ -154,7 +154,7 @@ main(void)
 	// eg_uri = (URI)"http://example.org/value"
 	const char*  ustr     = "http://example.org/value";
 	const size_t ustr_len = strlen(ustr);
-	lv2_atom_forge_property_head(&forge, eg_uri, 0);
+	lv2_atom_forge_key(&forge, eg_uri);
 	LV2_Atom_String* uri = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_uri(&forge, ustr, ustr_len));
 	char* ubody = (char*)LV2_ATOM_BODY(uri);
@@ -164,7 +164,7 @@ main(void)
 
 	// eg_urid = (URID)"http://example.org/value"
 	LV2_URID eg_value = urid_map(NULL, "http://example.org/value");
-	lv2_atom_forge_property_head(&forge, eg_urid, 0);
+	lv2_atom_forge_key(&forge, eg_urid);
 	LV2_Atom_URID* urid = (LV2_Atom_URID*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_urid(&forge, eg_value));
 	if (urid->body != eg_value) {
@@ -172,7 +172,7 @@ main(void)
 	}
 
 	// eg_string = (String)"hello"
-	lv2_atom_forge_property_head(&forge, eg_string, 0);
+	lv2_atom_forge_key(&forge, eg_string);
 	LV2_Atom_String* string = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_string(
 			&forge, "hello", strlen("hello")));
@@ -182,7 +182,7 @@ main(void)
 	}
 
 	// eg_literal = (Literal)"hello"@fr
-	lv2_atom_forge_property_head(&forge, eg_literal, 0);
+	lv2_atom_forge_key(&forge, eg_literal);
 	LV2_Atom_Literal* literal = (LV2_Atom_Literal*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_literal(
 			&forge, "bonjour", strlen("bonjour"),
@@ -193,7 +193,7 @@ main(void)
 	}
 
 	// eg_tuple = "foo",true
-	lv2_atom_forge_property_head(&forge, eg_tuple, 0);
+	lv2_atom_forge_key(&forge, eg_tuple);
 	LV2_Atom_Forge_Frame tuple_frame;
 	LV2_Atom_Tuple*      tuple = (LV2_Atom_Tuple*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_tuple(&forge, &tuple_frame));
@@ -225,7 +225,7 @@ main(void)
 	}
 
 	// eg_vector = (Vector<Int>)1,2,3,4
-	lv2_atom_forge_property_head(&forge, eg_vector, 0);
+	lv2_atom_forge_key(&forge, eg_vector);
 	int32_t elems[] = { 1, 2, 3, 4 };
 	LV2_Atom_Vector* vector = (LV2_Atom_Vector*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_vector(
@@ -236,7 +236,7 @@ main(void)
 	}
 
 	// eg_vector2 = (Vector<Int>)1,2,3,4
-	lv2_atom_forge_property_head(&forge, eg_vector2, 0);
+	lv2_atom_forge_key(&forge, eg_vector2);
 	LV2_Atom_Forge_Frame vec_frame;
 	LV2_Atom_Vector* vector2 = (LV2_Atom_Vector*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_vector_head(
@@ -250,7 +250,7 @@ main(void)
 	}
 
 	// eg_seq = (Sequence)1, 2
-	lv2_atom_forge_property_head(&forge, eg_seq, 0);
+	lv2_atom_forge_key(&forge, eg_seq);
 	LV2_Atom_Forge_Frame seq_frame;
 	LV2_Atom_Sequence* seq = (LV2_Atom_Sequence*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_sequence_head(&forge, &seq_frame, 0));

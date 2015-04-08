@@ -2,3 +2,4 @@
 <http://example.org/test-lang#thing> <http://example.org/test-lang#greeting> "Howdy"@en-us .
 <http://example.org/test-lang#thing> <http://example.org/test-lang#greeting> "Bonjour"@fr .
 <http://example.org/test-lang#thing> <http://example.org/test-lang#greeting> "Guten Tag"@de-latn-de .
+<http://example.org/test-lang#thing> <http://example.org/test-lang#greeting> "HEY MAN"@en-crazy0place .

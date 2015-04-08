@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2012 David Robillard <http://drobilla.net>
+  Copyright 2008-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -48,10 +48,25 @@
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 
+#if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
+#    define LV2_ATOM_FORGE_DEPRECATED __attribute__((__deprecated__))
+#else
+#    define LV2_ATOM_FORGE_DEPRECATED
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #else
 #    include <stdbool.h>
+#endif
+
+// Disable deprecation warnings for Blank and Resource
+#if defined(__clang__)
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 /** Handle for LV2_Atom_Forge_Sink. */
@@ -89,7 +104,7 @@ typedef struct {
 
 	LV2_Atom_Forge_Frame* stack;
 
-	LV2_URID Blank;
+	LV2_URID Blank LV2_ATOM_FORGE_DEPRECATED;
 	LV2_URID Bool;
 	LV2_URID Chunk;
 	LV2_URID Double;
@@ -97,9 +112,10 @@ typedef struct {
 	LV2_URID Int;
 	LV2_URID Long;
 	LV2_URID Literal;
+	LV2_URID Object;
 	LV2_URID Path;
 	LV2_URID Property;
-	LV2_URID Resource;
+	LV2_URID Resource LV2_ATOM_FORGE_DEPRECATED;
 	LV2_URID Sequence;
 	LV2_URID String;
 	LV2_URID Tuple;
@@ -112,9 +128,9 @@ static inline void
 lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size);
 
 /**
-   Initialise @p forge.
+   Initialise `forge`.
 
-   URIs will be mapped using @p map and stored, a reference to @p map itself is
+   URIs will be mapped using `map` and stored, a reference to `map` itself is
    not held.
 */
 static inline void
@@ -129,6 +145,7 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 	forge->Int      = map->map(map->handle, LV2_ATOM__Int);
 	forge->Long     = map->map(map->handle, LV2_ATOM__Long);
 	forge->Literal  = map->map(map->handle, LV2_ATOM__Literal);
+	forge->Object   = map->map(map->handle, LV2_ATOM__Object);
 	forge->Path     = map->map(map->handle, LV2_ATOM__Path);
 	forge->Property = map->map(map->handle, LV2_ATOM__Property);
 	forge->Resource = map->map(map->handle, LV2_ATOM__Resource);
@@ -188,18 +205,37 @@ lv2_atom_forge_top_is(LV2_Atom_Forge* forge, uint32_t type)
 		(lv2_atom_forge_deref(forge, forge->stack->ref)->type == type);
 }
 
+/** Return true iff `type` is an atom:Object. */
+static inline bool
+lv2_atom_forge_is_object_type(const LV2_Atom_Forge* forge, uint32_t type)
+{
+	return (type == forge->Object ||
+	        type == forge->Blank ||
+	        type == forge->Resource);
+}
+
+/** Return true iff `type` is an atom:Object with a blank ID. */
+static inline bool
+lv2_atom_forge_is_blank(const LV2_Atom_Forge*       forge,
+                        uint32_t                    type,
+                        const LV2_Atom_Object_Body* body)
+{
+	return (type == forge->Blank ||
+	        (type == forge->Object && body->id == 0));
+}
+
 /**
    @}
    @name Output Configuration
    @{
 */
 
-/** Set the output buffer where @p forge will write atoms. */
+/** Set the output buffer where `forge` will write atoms. */
 static inline void
 lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size)
 {
 	forge->buf    = buf;
-	forge->size   = size;
+	forge->size   = (uint32_t)size;
 	forge->offset = 0;
 	forge->deref  = NULL;
 	forge->sink   = NULL;
@@ -208,7 +244,7 @@ lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size)
 }
 
 /**
-   Set the sink function where @p forge will write output.
+   Set the sink function where `forge` will write output.
 
    The return value of forge functions is an LV2_Atom_Forge_Ref which is an
    integer type safe to use as a pointer but is otherwise opaque.  The sink
@@ -319,9 +355,10 @@ static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_primitive(LV2_Atom_Forge* forge, const LV2_Atom* a)
 {
 	if (lv2_atom_forge_top_is(forge, forge->Vector)) {
-		return lv2_atom_forge_raw(forge, LV2_ATOM_BODY(a), a->size);
+		return lv2_atom_forge_raw(forge, LV2_ATOM_BODY_CONST(a), a->size);
 	} else {
-		return lv2_atom_forge_write(forge, a, sizeof(LV2_Atom) + a->size);
+		return lv2_atom_forge_write(
+			forge, a, (uint32_t)sizeof(LV2_Atom) + a->size);
 	}
 }
 
@@ -392,7 +429,7 @@ lv2_atom_forge_typed_string(LV2_Atom_Forge* forge,
 	return out;
 }
 
-/** Write an atom:String.  Note that @p str need not be NULL terminated. */
+/** Write an atom:String.  Note that `str` need not be NULL terminated. */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_string(LV2_Atom_Forge* forge, const char* str, uint32_t len)
 {
@@ -400,7 +437,7 @@ lv2_atom_forge_string(LV2_Atom_Forge* forge, const char* str, uint32_t len)
 }
 
 /**
-   Write an atom:URI.  Note that @p uri need not be NULL terminated.
+   Write an atom:URI.  Note that `uri` need not be NULL terminated.
    This does not map the URI, but writes the complete URI string.  To write
    a mapped URI, use lv2_atom_forge_urid().
 */
@@ -410,7 +447,7 @@ lv2_atom_forge_uri(LV2_Atom_Forge* forge, const char* uri, uint32_t len)
 	return lv2_atom_forge_typed_string(forge, forge->URI, uri, len);
 }
 
-/** Write an atom:Path.  Note that @p path need not be NULL terminated. */
+/** Write an atom:Path.  Note that `path` need not be NULL terminated. */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_path(LV2_Atom_Forge* forge, const char* path, uint32_t len)
 {
@@ -503,7 +540,7 @@ lv2_atom_forge_tuple(LV2_Atom_Forge* forge, LV2_Atom_Forge_Frame* frame)
 }
 
 /**
-   Write the header of an atom:Resource.
+   Write the header of an atom:Object.
 
    The passed frame will be initialised to represent this object.  To complete
    the object, write a sequence of properties, then pop the frame with
@@ -514,12 +551,12 @@ lv2_atom_forge_tuple(LV2_Atom_Forge* forge, LV2_Atom_Forge_Frame* frame)
    LV2_URID eg_Cat  = map("http://example.org/Cat");
    LV2_URID eg_name = map("http://example.org/name");
 
-   // Write object header
+   // Start object with type eg_Cat and blank ID
    LV2_Atom_Forge_Frame frame;
-   lv2_atom_forge_resource(forge, &frame, 1, eg_Cat);
+   lv2_atom_forge_object(forge, &frame, 0, eg_Cat);
 
-   // Write property: eg:name = "Hobbes"
-   lv2_atom_forge_property_head(forge, eg_name, 0);
+   // Append property eg:name = "Hobbes"
+   lv2_atom_forge_key(forge, eg_name);
    lv2_atom_forge_string(forge, "Hobbes", strlen("Hobbes"));
 
    // Finish object
@@ -527,13 +564,13 @@ lv2_atom_forge_tuple(LV2_Atom_Forge* forge, LV2_Atom_Forge_Frame* frame)
    @endcode
 */
 static inline LV2_Atom_Forge_Ref
-lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
-                        LV2_Atom_Forge_Frame* frame,
-                        LV2_URID              id,
-                        LV2_URID              otype)
+lv2_atom_forge_object(LV2_Atom_Forge*       forge,
+                      LV2_Atom_Forge_Frame* frame,
+                      LV2_URID              id,
+                      LV2_URID              otype)
 {
 	const LV2_Atom_Object a = {
-		{ sizeof(LV2_Atom_Object) - sizeof(LV2_Atom), forge->Resource },
+		{ (uint32_t)sizeof(LV2_Atom_Object_Body), forge->Object },
 		{ id, otype }
 	};
 	return lv2_atom_forge_push(
@@ -541,8 +578,33 @@ lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
 }
 
 /**
-   The same as lv2_atom_forge_resource(), but for object:Blank.
+   The same as lv2_atom_forge_object(), but for object:Resource.
+
+   This function is deprecated and should not be used in new code.
+   Use lv2_atom_forge_object() directly instead.
 */
+LV2_ATOM_FORGE_DEPRECATED
+static inline LV2_Atom_Forge_Ref
+lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
+                        LV2_Atom_Forge_Frame* frame,
+                        LV2_URID              id,
+                        LV2_URID              otype)
+{
+	const LV2_Atom_Object a = {
+		{ (uint32_t)sizeof(LV2_Atom_Object_Body), forge->Resource },
+		{ id, otype }
+	};
+	return lv2_atom_forge_push(
+		forge, frame, lv2_atom_forge_write(forge, &a, sizeof(a)));
+}
+
+/**
+   The same as lv2_atom_forge_object(), but for object:Blank.
+
+   This function is deprecated and should not be used in new code.
+   Use lv2_atom_forge_object() directly instead.
+*/
+LV2_ATOM_FORGE_DEPRECATED
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
                      LV2_Atom_Forge_Frame* frame,
@@ -550,7 +612,7 @@ lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
                      LV2_URID              otype)
 {
 	const LV2_Atom_Object a = {
-		{ sizeof(LV2_Atom_Object) - sizeof(LV2_Atom), forge->Blank },
+		{ (uint32_t)sizeof(LV2_Atom_Object_Body), forge->Blank },
 		{ id, otype }
 	};
 	return lv2_atom_forge_push(
@@ -558,8 +620,23 @@ lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
 }
 
 /**
-   Write the header for a property body (likely in an Object).
-   See lv2_atom_forge_resource() documentation for an example.
+   Write a property key in an Object, to be followed by the value.
+
+   See lv2_atom_forge_object() documentation for an example.
+*/
+static inline LV2_Atom_Forge_Ref
+lv2_atom_forge_key(LV2_Atom_Forge* forge,
+                   LV2_URID        key)
+{
+	const LV2_Atom_Property_Body a = { key, 0, { 0, 0 } };
+	return lv2_atom_forge_write(forge, &a, 2 * (uint32_t)sizeof(uint32_t));
+}
+
+/**
+   Write the header for a property body in an object, with context.
+
+   If you do not need the context, which is almost certainly the case,
+   use the simpler lv2_atom_forge_key() instead.
 */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_property_head(LV2_Atom_Forge* forge,
@@ -567,7 +644,7 @@ lv2_atom_forge_property_head(LV2_Atom_Forge* forge,
                              LV2_URID        context)
 {
 	const LV2_Atom_Property_Body a = { key, context, { 0, 0 } };
-	return lv2_atom_forge_write(forge, &a, 2 * sizeof(uint32_t));
+	return lv2_atom_forge_write(forge, &a, 2 * (uint32_t)sizeof(uint32_t));
 }
 
 /**
@@ -579,7 +656,7 @@ lv2_atom_forge_sequence_head(LV2_Atom_Forge*       forge,
                              uint32_t              unit)
 {
 	const LV2_Atom_Sequence a = {
-		{ sizeof(LV2_Atom_Sequence) - sizeof(LV2_Atom), forge->Sequence },
+		{ (uint32_t)sizeof(LV2_Atom_Sequence_Body), forge->Sequence },
 		{ unit, 0 }
 	};
 	return lv2_atom_forge_push(
@@ -611,6 +688,12 @@ lv2_atom_forge_beat_time(LV2_Atom_Forge* forge, double beats)
 /**
    @}
 */
+
+#if defined(__clang__)
+#    pragma clang diagnostic pop
+#elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#    pragma GCC diagnostic pop
+#endif
 
 #ifdef __cplusplus
 }  /* extern "C" */

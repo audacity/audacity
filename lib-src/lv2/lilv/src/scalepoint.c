@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2011 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -20,8 +20,7 @@
 LilvScalePoint*
 lilv_scale_point_new(LilvNode* value, LilvNode* label)
 {
-	LilvScalePoint* point = (LilvScalePoint*)malloc(
-		sizeof(struct LilvScalePointImpl));
+	LilvScalePoint* point = (LilvScalePoint*)malloc(sizeof(LilvScalePoint));
 	point->value = value;
 	point->label = label;
 	return point;
@@ -37,15 +36,13 @@ lilv_scale_point_free(LilvScalePoint* point)
 	}
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_scale_point_get_value(const LilvScalePoint* p)
 {
 	return p->value;
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_scale_point_get_label(const LilvScalePoint* p)
 {
 	return p->label;

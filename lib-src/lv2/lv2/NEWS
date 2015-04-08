@@ -1,12 +1,44 @@
+lv2 (1.10.0) stable;
+
+  * Upgrade to waf 1.7.16.
+  * lv2specgen: Display deprecated warning on classes marked owl:deprecated.
+  * Fix -Wconversion warnings in headers.
+  * lv2core: Clarify lv2_descriptor() and lv2_lib_descriptor() documentation.
+  * atom: Add lv2_atom_sequence_clear() and lv2_atom_sequence_append_event() helper
+    functions.
+  * atom: Add lv2_atom_forge_is_object_type() and lv2_atom_forge_is_blank() to ease
+    backwards compatibility.
+  * atom: Deprecate Blank and Resource in favour of just Object.
+  * atom: Add lv2_atom_forge_key() for terser object writing.
+  * event: Minor documentation improvements.
+  * patch: Add patch:sequenceNumber for associating replies with requests.
+  * ui: Fix identifier typos in documentation.
+  * ui: Add show interface so UIs can gracefully degrade to separate windows if hosts
+    can not use their widget directly.
+
+ -- David Robillard <d@drobilla.net>  Fri, 08 Aug 2014 00:00:00 +0000
+
+lv2 (1.8.0) stable;
+
+  * lv2specgen: Fix links to externally defined terms.
+  * Add scope example plugin from Robin Gareus.
+  * Install lv2specgen for use by other projects.
+  * lv2core: Add lv2:prototype for property inheritance.
+  * atom: Make lv2_atom_*_is_end() arguments const.
+  * log: Add missing include string.h to logger.h for memset.
+  * ui: Fix LV2_UI_INVALID_PORT_INDEX identifier in documentation.
+
+ -- David Robillard <d@drobilla.net>  Sat, 04 Jan 2014 00:00:00 +0000
+
 lv2 (1.6.0) stable;
 
-  * Upgrade to waf 1.7.11.
-  * Fix port indices of metronome example.
   * Fix lv2specgen usage from command line.
+  * Fix port indices of metronome example.
+  * Upgrade to waf 1.7.11.
   * atom: Fix crash in forge.h when pushing atoms to a full buffer.
+  * ui: Add ui:updateRate property.
   * ui: Add idle interface so native UIs and foreign toolkits can drive their event
     loops.
-  * ui: Add ui:updateRate property.
 
  -- David Robillard <d@drobilla.net>  Fri, 09 Aug 2013 00:00:00 +0000
 
@@ -14,21 +46,21 @@ lv2 (1.4.0) stable;
 
   * Add metronome example plugin to demonstrate sample accurate tempo sync.
   * Generate book-style HTML documentation from example plugins.
-  * lv2core: Make lv2:Parameter rdfs:subClassOf rdf:Property.
-  * lv2core: Set range of lv2:designation to lv2:Designation.
-  * lv2core: Add lv2:control for designating primary event-based control ports.
-  * lv2core: Add lv2:EnvelopePlugin class.
   * lv2core: Reserve minor version 0 for unstable development plugins.
-  * atom: Fix lv2_atom_sequence_end().
+  * lv2core: Add lv2:control for designating primary event-based control ports.
+  * lv2core: Set range of lv2:designation to lv2:Designation.
+  * lv2core: Add lv2:EnvelopePlugin class.
+  * lv2core: Make lv2:Parameter rdfs:subClassOf rdf:Property.
+  * atom: Improve atom documentation.
   * atom: Remove atom:stringType in favour of owl:onDatatype so generic tools can
     understand and validate atom literals.
-  * atom: Improve atom documentation.
+  * atom: Fix lv2_atom_sequence_end().
   * buf-size: Fix typo in bufsz:sequenceSize label.
   * event: Fix incorrect return type in lv2_event_get().
   * log: Add logger convenience API.
   * options: Set the range of opts:requiredOption and opts:supportedOption to opts:Option.
-  * patch: Add patch:readable and patch:writable for describing available properties.
   * patch: Make patch:Set a compact message for setting one property.
+  * patch: Add patch:readable and patch:writable for describing available properties.
   * state: Add state:loadDefaultState feature so plugins can have their default state
     loaded without hard-coding default state as a special case.
   * ui: Fix incorrect linker flag in ui:makeSONameResident documentation.
@@ -37,29 +69,29 @@ lv2 (1.4.0) stable;
 
 lv2 (1.2.0) stable;
 
-  * Use stricter datatype definitions conformant with the XSD and OWL
-    specifications for better validation.
   * Move all project metadata for extensions (e.g. change log) to separate files to
     spare hosts from loading them during discovery.
+  * Use stricter datatype definitions conformant with the XSD and OWL
+    specifications for better validation.
   * lv2core: Use consistent label style.
-  * atom: Use consistent label style.
   * atom: Fix outdated documentation in forge.h.
-  * atom: Add LV2_ATOM_CONTENTS_CONST and LV2_ATOM_BODY_CONST.
-  * atom: Fix implicit conversions in forge.h that are invalid in C++11.
-  * atom: Add lv2_atom_object_body_get().
   * atom: Fix lv2_atom_object_next() on 32-bit platforms.
+  * atom: Use consistent label style.
+  * atom: Add LV2_ATOM_CONTENTS_CONST and LV2_ATOM_BODY_CONST.
+  * atom: Add lv2_atom_object_body_get().
+  * atom: Fix implicit conversions in forge.h that are invalid in C++11.
   * buf-size: Initial release.
   * dynmanifest: Use consistent label style.
-  * event: Make event iterator gracefully handle optional ports.
   * event: Remove asserts from event-helper.h.
-  * event: Use consistent label style.
   * event: Use more precise domain and range for EventPort properties.
-  * midi: Remove non-standard midi:Tick message type.
-  * midi: Add C definitions for message types and standard controllers.
+  * event: Make event iterator gracefully handle optional ports.
+  * event: Use consistent label style.
   * midi: Use consistent label style.
+  * midi: Remove non-standard midi:Tick message type.
   * midi: Add midi:HexByte datatype for status bytes and masks.
-  * midi: Add midi:binding and midi:channel predicates.
+  * midi: Add C definitions for message types and standard controllers.
   * midi: Fix definition of SystemExclusive status byte.
+  * midi: Add midi:binding and midi:channel predicates.
   * morph: Initial release.
   * options: Initial release.
   * parameters: Add parameters.h of URI defines for convenience.
@@ -71,49 +103,49 @@ lv2 (1.2.0) stable;
   * state: Use consistent label style.
   * time: Use consistent label style.
   * urid: Fix typo in urid:unmap documentation.
-  * ui: Add types for WindowsUI, CocoaUI, and Gtk3UI.
   * ui: Use consistent label style.
+  * ui: Add types for WindowsUI, CocoaUI, and Gtk3UI.
   * ui: Add missing LV2_SYMBOL_EXPORT declaration for lv2ui_descriptor prototype.
-  * units: Remove units:name in favour of rdfs:label.
   * units: Use consistent label style.
+  * units: Remove units:name in favour of rdfs:label.
 
  -- David Robillard <d@drobilla.net>  Sun, 14 Oct 2012 00:00:00 +0000
 
 lv2 (1.0.0) stable;
 
-  * Initial release as a unified project.  Projects can now simply depend on the
-    pkg-config package 'lv2' for all official LV2 APIs.
   * New extensions: atom, log, parameters, patch, port-groups, port-props, resize-
     port, state, time, worker.
-  * lv2core: Add metadata concept of a designation, a channel or parameter description which
-    can be assigned to ports for more intelligent use by hosts.
-  * lv2core: Relax the range of lv2:index so it can be used for things other than ports.
+  * Initial release as a unified project.  Projects can now simply depend on the
+    pkg-config package 'lv2' for all official LV2 APIs.
   * lv2core: Remove lv2:Resource, which turned out to be meaningless.
   * lv2core: Add new discovery API which allows libraries to read bundle files during
     discovery, makes library construction/destruction explicit, and adds
     extensibility to prevent future breakage.
   * lv2core: Fix LV2_SYMBOL_EXPORT and lv2_descriptor prototype for Windows.
-  * lv2core: Add lv2:CVPort.
   * lv2core: Merge with unified LV2 package.
+  * lv2core: Add metadata concept of a designation, a channel or parameter description which
+    can be assigned to ports for more intelligent use by hosts.
+  * lv2core: Add lv2:CVPort.
+  * lv2core: Relax the range of lv2:index so it can be used for things other than ports.
   * atom: Initial release.
   * data-access: Merge with unified LV2 package.
   * dynmanifest: Merge with unified LV2 package.
   * event: Fix incorrect ranges of some properties.
-  * event: Merge with unified LV2 package.
   * event: Fix bug in lv2_event_reserve().
+  * event: Merge with unified LV2 package.
   * instance-access: Merge with unified LV2 package.
   * log: Initial release.
-  * midi: Add class definitions for various message types.
-  * midi: Merge with unified LV2 package.
   * midi: Document how to serialise a MidiEvent to a string.
+  * midi: Merge with unified LV2 package.
+  * midi: Add class definitions for various message types.
   * parameters: Initial release.
   * patch: Initial release.
   * port-groups: Initial release.
   * port-props: Initial release.
-  * presets: Merge with unified LV2 package.
+  * presets: Remove pset:appliesTo property, use lv2:appliesTo instead.
   * presets: Add pset:preset property for describing the preset currently applied to a
     plugin instance.
-  * presets: Remove pset:appliesTo property, use lv2:appliesTo instead.
+  * presets: Merge with unified LV2 package.
   * resize-port: Initial release.
   * state: Initial release.
   * time: Initial release.
@@ -121,17 +153,17 @@ lv2 (1.0.0) stable;
   * urid: Merge with unified LV2 package.
   * urid: Add feature struct names.
   * worker: Initial release.
-  * ui: Add port protocols and a dynamic notification subscription mechanism, for more
-    flexible communication, and audio port metering without control port kludges.
-  * ui: Add touch feature to notify the host that the user has grabbed a control.
-  * ui: Add support for referring to ports by symbol.
   * ui: Add ui:portMap for accessing ports by symbol, allowing for UIs to be
     distributed separately from plugins.
   * ui: Add ui:parent and ui:resize.
+  * ui: Add port protocols and a dynamic notification subscription mechanism, for more
+    flexible communication, and audio port metering without control port kludges.
+  * ui: Add touch feature to notify the host that the user has grabbed a control.
   * ui: Merge with unified LV2 package.
+  * ui: Add support for referring to ports by symbol.
   * units: Merge with unified LV2 package.
-  * units: Add header of URI defines.
   * units: Add unit for audio frames.
+  * units: Add header of URI defines.
 
  -- David Robillard <d@drobilla.net>  Mon, 16 Apr 2012 00:00:00 +0000
 

@@ -1,0 +1,236 @@
+#!/usr/bin/env python
+import os
+import subprocess
+import sys
+import waflib.Options as Options
+import waflib.extras.autowaf as autowaf
+
+# Library and package version (UNIX style major, minor, micro)
+# major increment <=> incompatible changes
+# minor increment <=> compatible changes (additions)
+# micro increment <=> no interface changes
+SUIL_VERSION       = '0.8.2'
+SUIL_MAJOR_VERSION = '0'
+
+# Mandatory waf variables
+APPNAME = 'suil'        # Package name for waf dist
+VERSION = SUIL_VERSION  # Package version for waf dist
+top     = '.'           # Source directory
+out     = 'build'       # Build directory
+
+def options(opt):
+    opt.load('compiler_c')
+    opt.load('compiler_cxx')
+    autowaf.set_options(opt)
+    opt.add_option('--static', action='store_true', dest='static',
+                   help="Build static library")
+    opt.add_option('--no-shared', action='store_true', dest='no_shared',
+                   help='Do not build shared library')
+    opt.add_option('--no-gtk', action='store_true', dest='no_gtk',
+                   help='Do not build support for Gtk')
+    opt.add_option('--no-qt', action='store_true', dest='no_qt',
+                   help='Do not build support for Qt')
+    opt.add_option('--gtk2-lib-name', type='string', dest='gtk2_lib_name',
+                   default="libgtk-x11-2.0.so.0",
+                   help="Gtk2 library name [Default: libgtk-x11-2.0.so.0]")
+
+def configure(conf):
+    conf.line_just = 40
+    conf.load('compiler_c')
+    conf.load('compiler_cxx')
+    autowaf.configure(conf)
+    autowaf.set_c99_mode(conf)
+    autowaf.display_header('Suil Configuration')
+
+    conf.env.BUILD_SHARED = not Options.options.no_shared
+    conf.env.BUILD_STATIC = Options.options.static
+
+    if not conf.env.BUILD_SHARED and not conf.env.BUILD_STATIC:
+        conf.fatal('Neither a shared nor a static build requested')
+
+    conf.env.NODELETE_FLAGS = []
+    if (not conf.env.MSVC_COMPILER and
+        conf.check(linkflags = ['-Wl,-z,nodelete'],
+                   msg       = 'Checking for link flags -Wl,-z,-nodelete',
+                   mandatory = False)):
+        conf.env.NODELETE_FLAGS = ['-Wl,-z,nodelete']
+
+    autowaf.check_pkg(conf, 'lv2', atleast_version='1.0.0', uselib_store='LV2')
+    autowaf.check_pkg(conf, 'lv2', atleast_version='1.6.0',
+                      uselib_store='LV2_1_6_0', mandatory=False)
+
+    if not Options.options.no_gtk:
+        autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
+                          atleast_version='2.18.0', mandatory=False)
+        if not conf.is_defined('HAVE_GTK2'):
+            autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
+                              atleast_version='2.0.0', mandatory=False)
+            if conf.is_defined('HAVE_GTK2'):
+                autowaf.define(conf, 'SUIL_OLD_GTK', 1)
+
+        autowaf.check_pkg(conf, 'gtk+-x11-2.0', uselib_store='GTK2_X11',
+                          atleast_version='2.0.0', mandatory=False)
+
+    if not Options.options.no_qt:
+        autowaf.check_pkg(conf, 'QtGui', uselib_store='QT4',
+                          atleast_version='4.0.0', mandatory=False)
+
+    conf.check_cc(define_name   = 'HAVE_LIBDL',
+                  lib           = 'dl',
+                  mandatory     = False)
+
+    autowaf.define(conf, 'SUIL_VERSION', SUIL_VERSION)
+    autowaf.define(conf, 'SUIL_MODULE_DIR',
+                   conf.env.LIBDIR + '/suil-' + SUIL_MAJOR_VERSION)
+    autowaf.define(conf, 'SUIL_DIR_SEP', '/')
+    autowaf.define(conf, 'SUIL_GTK2_LIB_NAME', Options.options.gtk2_lib_name);
+
+    module_prefix = ''
+    module_ext    = ''
+    if conf.env.PARDEBUG:
+        module_ext += 'D'
+    if Options.platform == 'win32':
+        module_ext += '.dll'
+    else:
+        module_prefix = 'lib'
+        module_ext += '.so'
+
+    autowaf.define(conf, 'SUIL_MODULE_PREFIX', module_prefix)
+    autowaf.define(conf, 'SUIL_MODULE_EXT', module_ext)
+
+    autowaf.set_lib_env(conf, 'suil', SUIL_VERSION)
+    conf.write_config_header('suil_config.h', remove=False)
+
+    autowaf.display_msg(conf, "Gtk2 Support",
+                        conf.is_defined('HAVE_GTK2'))
+    if conf.is_defined('HAVE_GTK2'):
+        autowaf.display_msg(conf, "Gtk2 Library Name",
+                            conf.env.SUIL_GTK2_LIB_NAME)
+    autowaf.display_msg(conf, "Qt4 Support",
+                        conf.is_defined('HAVE_QT4'))
+    print('')
+
+def build(bld):
+    # C Headers
+    includedir = '${INCLUDEDIR}/suil-%s/suil' % SUIL_MAJOR_VERSION
+    bld.install_files(includedir, bld.path.ant_glob('suil/*.h'))
+
+    # Pkgconfig file
+    autowaf.build_pc(bld, 'SUIL', SUIL_VERSION, SUIL_MAJOR_VERSION, [],
+                     {'SUIL_MAJOR_VERSION' : SUIL_MAJOR_VERSION})
+
+    cflags = []
+    lib    = []
+    modlib = []
+    if sys.platform == 'win32':
+        modlib += ['user32']
+    else:
+        cflags += ['-fvisibility=hidden']
+        if bld.is_defined('HAVE_LIBDL'):
+            lib += ['dl']
+
+    module_dir = '${LIBDIR}/suil-' + SUIL_MAJOR_VERSION
+
+    # Shared Library
+    if bld.env.BUILD_SHARED:
+        obj = bld(features        = 'c cshlib',
+                  export_includes = ['.'],
+                  source          = 'src/host.c src/instance.c',
+                  target          = 'suil-%s' % SUIL_MAJOR_VERSION,
+                  includes        = ['.'],
+                  defines         = ['SUIL_SHARED', 'SUIL_INTERNAL'],
+                  name            = 'libsuil',
+                  vnum            = SUIL_VERSION,
+                  install_path    = '${LIBDIR}',
+                  cflags          = cflags,
+                  lib             = lib,
+                  uselib          = 'LV2')
+
+    # Static library
+    if bld.env.BUILD_STATIC:
+        obj = bld(features        = 'c cstlib',
+                  export_includes = ['.'],
+                  source          = 'src/host.c src/instance.c',
+                  target          = 'suil-%s' % SUIL_MAJOR_VERSION,
+                  includes        = ['.'],
+                  defines         = ['SUIL_INTERNAL'],
+                  name            = 'libsuil_static',
+                  vnum            = SUIL_VERSION,
+                  install_path    = '${LIBDIR}',
+                  cflags          = cflags,
+                  lib             = lib,
+                  uselib          = 'LV2')
+
+    if bld.is_defined('HAVE_GTK2') and bld.is_defined('HAVE_QT4'):
+        obj = bld(features     = 'cxx cxxshlib',
+                  source       = 'src/gtk2_in_qt4.cpp',
+                  target       = 'suil_gtk2_in_qt4',
+                  includes     = ['.'],
+                  defines      = ['SUIL_SHARED', 'SUIL_INTERNAL'],
+                  install_path = module_dir,
+                  cflags       = cflags,
+                  lib          = modlib)
+        autowaf.use_lib(bld, obj, 'GTK2 QT4 LV2')
+
+        obj = bld(features     = 'cxx cxxshlib',
+                  source       = 'src/qt4_in_gtk2.cpp',
+                  target       = 'suil_qt4_in_gtk2',
+                  includes     = ['.'],
+                  defines      = ['SUIL_SHARED', 'SUIL_INTERNAL'],
+                  install_path = module_dir,
+                  cflags       = cflags,
+                  lib          = modlib,
+                  linkflags    = bld.env.NODELETE_FLAGS)
+        autowaf.use_lib(bld, obj, 'GTK2 QT4 LV2')
+
+    if bld.is_defined('HAVE_GTK2') and bld.is_defined('HAVE_GTK2_X11'):
+        obj = bld(features     = 'c cshlib',
+                  source       = 'src/x11_in_gtk2.c',
+                  target       = 'suil_x11_in_gtk2',
+                  includes     = ['.'],
+                  defines      = ['SUIL_SHARED', 'SUIL_INTERNAL'],
+                  install_path = module_dir,
+                  cflags       = cflags,
+                  lib          = modlib,
+                  linkflags    = bld.env.NODELETE_FLAGS)
+        autowaf.use_lib(bld, obj, 'GTK2 GTK2_X11 LV2 LV2_1_4_3')
+
+    if bld.is_defined('HAVE_GTK2') and sys.platform == 'win32':
+        obj = bld(features     = 'cxx cxxshlib',
+                  source       = 'src/win_in_gtk2.cpp',
+                  target       = 'suil_win_in_gtk2',
+                  includes     = ['.'],
+                  defines      = ['SUIL_SHARED', 'SUIL_INTERNAL'],
+                  install_path = module_dir,
+                  cflags       = cflags,
+                  lib          = modlib,
+                  linkflags    = bld.env.NODELETE_FLAGS)
+        autowaf.use_lib(bld, obj, 'GTK2 LV2')
+
+    if bld.is_defined('HAVE_QT4'):
+        obj = bld(features     = 'cxx cxxshlib',
+                  source       = 'src/x11_in_qt4.cpp',
+                  target       = 'suil_x11_in_qt4',
+                  includes     = ['.'],
+                  defines      = ['SUIL_SHARED', 'SUIL_INTERNAL'],
+                  install_path = module_dir,
+                  cflags       = cflags,
+                  lib          = modlib)
+        autowaf.use_lib(bld, obj, 'QT4 LV2 LV2_1_4_3')
+
+    # Documentation
+    autowaf.build_dox(bld, 'SUIL', SUIL_VERSION, top, out)
+
+    bld.add_post_fun(autowaf.run_ldconfig)
+    if bld.env.DOCS:
+        bld.add_post_fun(fix_docs)
+
+def fix_docs(ctx):
+    if ctx.cmd == 'build':
+        autowaf.make_simple_dox(APPNAME)
+
+def upload_docs(ctx):
+    os.system("rsync -ravz --delete -e ssh build/doc/html/ drobilla@drobilla.net:~/drobilla.net/docs/suil/")
+
+def lint(ctx):
+    subprocess.call('cpplint.py --filter=-whitespace,+whitespace/comments,-build/header_guard,-readability/casting,-readability/todo src/* suil/*', shell=True)

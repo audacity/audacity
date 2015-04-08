@@ -1,16 +1,15 @@
 #!/bin/sh
 set -e
 
-lv_dir=$(readlink -f "${0%/*}")
-
-for dir in $(find $lv_dir -type f -name waf); do
-   cd "${dir%/*}"
+for dir in $(find . -type f -name waf); do
+   pushd "${dir%/*}"
    ./waf --help > /dev/null
    mv .waf-*/* .
    sed -i '/^#==>$/,$d' waf
    rmdir .waf-*
    find waflib -name "*.pyc" -delete
-   svn propset svn:mime-type "text/x-python" waf
+   popd
 done
+#find . -name waf | xargs svn propset svn:mime-type "text/x-python"
 
 echo "All waf scripts extracted successfully."

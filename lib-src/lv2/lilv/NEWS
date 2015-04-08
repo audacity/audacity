@@ -1,3 +1,41 @@
+lilv (0.20.0) stable;
+
+  * Don't load files multiple times if they are listed as rdfs:seeAlso for
+    several plugins
+  * Call lv2_lib_descriptor separately for different bundle paths
+    (fix loading several dynamic plugins like Ingen at once)
+  * Tolerate calling lilv_node_as_uri or lilv_node_as_blank on NULL
+  * Add convenient lilv_new_file_uri for creating file URIs
+  * Fix use of lv2info -m and -p options to write plugin data
+    (useful for porting plugins bridges with NASPRO)
+  * Fix issues with lilv_plugin_get_author_name and friends
+    (thanks Filipe Coelho)
+  * Improved/working lv2_apply.py to apply plugin to a .wav
+    (thanks Joe Button)
+  * Add lilv_world_unload_bundle() and lilv_world_unload_resource()
+  * Fix several minor memory leaks
+  * Improve test coverage
+  * Upgrade to waf 1.7.16
+
+ -- David Robillard <d@drobilla.net>  Fri, 08 Aug 2014 18:21:32 -0400
+
+lilv (0.18.0) stable;
+
+  * Allow lilv_state_restore() to be used without passing an instance,
+    for restoring port values via a callback only
+  * Fix unlikely memory leak in lilv_plugin_instantiate()
+  * Support denoting latency ports with lv2:designation lv2:latency
+  * Allow passing NULL port_class to lilv_plugin_get_port_by_designation
+  * Call GetProcAddress with correct calling convention on Windows
+  * Add support for running plugins from Python by Kaspar Emanuel
+  * Clean up after test suite so multiple runs are successful
+  * Add lilv_port_get_node() for using world query functions with ports
+  * lv2info: Don't display invalid control maxes and defaults
+    (patch from Robin Gareus)
+  * lilvmm.hpp: Add wrappers for UI API
+
+ -- David Robillard <d@drobilla.net>  Sat, 04 Jan 2014 16:06:42 -0500
+
 lilv (0.16.0) stable;
 
   * Add lilv_world_ask() for easily checking if a statement exists

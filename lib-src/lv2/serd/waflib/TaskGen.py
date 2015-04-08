@@ -305,11 +305,13 @@ class subst_pc(Task.Task):
 			self.outputs[0].write(self.inputs[0].read('rb'),'wb')
 			if getattr(self.generator,'chmod',None):
 				os.chmod(self.outputs[0].abspath(),self.generator.chmod)
-			return
+			return None
+		if getattr(self.generator,'fun',None):
+			return self.generator.fun(self)
 		code=self.inputs[0].read(encoding=getattr(self.generator,'encoding','ISO8859-1'))
 		if getattr(self.generator,'subst_fun',None):
 			code=self.generator.subst_fun(self,code)
-			if code:
+			if code is not None:
 				self.outputs[0].write(code,encoding=getattr(self.generator,'encoding','ISO8859-1'))
 			return
 		code=code.replace('%','%%')
@@ -320,7 +322,8 @@ class subst_pc(Task.Task):
 				lst.append(g(1))
 				return"%%(%s)s"%g(1)
 			return''
-		code=re_m4.sub(repl,code)
+		global re_m4
+		code=getattr(self.generator,'re_m4',re_m4).sub(repl,code)
 		try:
 			d=self.generator.dct
 		except AttributeError:
@@ -339,6 +342,8 @@ class subst_pc(Task.Task):
 		bld=self.generator.bld
 		env=self.env
 		upd=self.m.update
+		if getattr(self.generator,'fun',None):
+			upd(Utils.h_fun(self.generator.fun))
 		if getattr(self.generator,'subst_fun',None):
 			upd(Utils.h_fun(self.generator.subst_fun))
 		vars=self.generator.bld.raw_deps.get(self.uid(),[])

@@ -13,8 +13,8 @@ uri-map (1.4) stable;
 
 uri-map (1.2) stable;
 
-  * Mark up documentation in HTML using lv2:documentation.
   * Add build system (for installation).
+  * Mark up documentation in HTML using lv2:documentation.
 
  -- David Robillard <d@drobilla.net>  Thu, 26 May 2011 00:00:00 +0000
 

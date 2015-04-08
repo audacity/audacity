@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -16,7 +16,6 @@
 
 #include "serd_internal.h"
 
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,12 +35,8 @@ SERD_API
 SerdEnv*
 serd_env_new(const SerdNode* base_uri)
 {
-	SerdEnv* env = (SerdEnv*)malloc(sizeof(struct SerdEnvImpl));
-	env->prefixes      = NULL;
-	env->n_prefixes    = 0;
-	env->base_uri_node = SERD_NODE_NULL;
-	env->base_uri      = SERD_URI_NULL;
-	if (base_uri) {
+	SerdEnv* env = (SerdEnv*)calloc(sizeof(struct SerdEnvImpl), 1);
+	if (env && base_uri) {
 		serd_env_set_base_uri(env, base_uri);
 	}
 	return env;
@@ -76,6 +71,10 @@ SerdStatus
 serd_env_set_base_uri(SerdEnv*        env,
                       const SerdNode* uri_node)
 {
+	if (!env || !uri_node) {
+		return SERD_ERR_BAD_ARG;
+	}
+
 	// Resolve base URI and create a new node and URI for it
 	SerdURI  base_uri;
 	SerdNode base_uri_node = serd_node_new_uri_from_node(
@@ -168,7 +167,7 @@ is_nameChar(const uint8_t c)
 }
 
 /**
-   Return true iff @c buf is a valid prefixed name suffix.
+   Return true iff `buf` is a valid prefixed name suffix.
    TODO: This is more strict than it should be.
 */
 static inline bool

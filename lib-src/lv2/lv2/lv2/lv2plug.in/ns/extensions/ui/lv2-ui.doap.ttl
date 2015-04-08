@@ -8,11 +8,33 @@
 	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 UI" ;
-	doap:shortdesc "Generic UI interface for LV2 plugins." ;
+	doap:shortdesc "LV2 plugin UIs of any type." ;
 	doap:created "2006-00-00" ;
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.18" ;
+		doap:created "2014-08-08" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.10.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add show interface so UIs can gracefully degrade to separate windows if hosts can not use their widget directly."
+			] , [
+				rdfs:label "Fix identifier typos in documentation."
+			]
+		]
+	] , [
+		doap:revision "2.16" ;
+		doap:created "2014-01-04" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.8.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix LV2_UI_INVALID_PORT_INDEX identifier in documentation."
+			]
+		]
+	] , [
 		doap:revision "2.14" ;
 		doap:created "2013-03-18" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.6.0.tar.bz2> ;

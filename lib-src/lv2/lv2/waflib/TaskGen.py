@@ -307,11 +307,11 @@ class subst_pc(Task.Task):
 				os.chmod(self.outputs[0].abspath(),self.generator.chmod)
 			return None
 		if getattr(self.generator,'fun',None):
-			self.generator.fun(self)
+			return self.generator.fun(self)
 		code=self.inputs[0].read(encoding=getattr(self.generator,'encoding','ISO8859-1'))
 		if getattr(self.generator,'subst_fun',None):
 			code=self.generator.subst_fun(self,code)
-			if code:
+			if code is not None:
 				self.outputs[0].write(code,encoding=getattr(self.generator,'encoding','ISO8859-1'))
 			return
 		code=code.replace('%','%%')
@@ -322,7 +322,8 @@ class subst_pc(Task.Task):
 				lst.append(g(1))
 				return"%%(%s)s"%g(1)
 			return''
-		code=re_m4.sub(repl,code)
+		global re_m4
+		code=getattr(self.generator,'re_m4',re_m4).sub(repl,code)
 		try:
 			d=self.generator.dct
 		except AttributeError:

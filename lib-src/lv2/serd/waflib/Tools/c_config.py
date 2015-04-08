@@ -74,6 +74,8 @@ def parse_flags(self,line,uselib_store,env=None,force_static=False):
 		elif st=='-L':
 			if not ot:ot=lst.pop(0)
 			appu('LIBPATH_'+uselib,[ot])
+		elif x.startswith('/LIBPATH:'):
+			appu('LIBPATH_'+uselib,[x.replace('/LIBPATH:','')])
 		elif x=='-pthread'or x.startswith('+')or x.startswith('-std'):
 			app('CFLAGS_'+uselib,[x])
 			app('CXXFLAGS_'+uselib,[x])
@@ -97,7 +99,7 @@ def parse_flags(self,line,uselib_store,env=None,force_static=False):
 			app('CFLAGS_'+uselib,tmp)
 			app('CXXFLAGS_'+uselib,tmp)
 			app('LINKFLAGS_'+uselib,tmp)
-		elif x.endswith('.a')or x.endswith('.so')or x.endswith('.dylib'):
+		elif x.endswith('.a')or x.endswith('.so')or x.endswith('.dylib')or x.endswith('.lib'):
 			appu('LINKFLAGS_'+uselib,[x])
 @conf
 def ret_msg(self,f,kw):
@@ -135,10 +137,7 @@ def validate_cfg(self,kw):
 @conf
 def exec_cfg(self,kw):
 	def define_it():
-		if kw.get('uselib_store',None):
-			self.env.append_unique('DEFINES_%s'%kw['uselib_store'],"%s=1"%self.have_define(kw['uselib_store']))
-		else:
-			self.define(self.have_define(kw['package']),1,0)
+		self.define(self.have_define(kw.get('uselib_store',kw['package'])),1,0)
 	if'atleast_pkgconfig_version'in kw:
 		cmd=[kw['path'],'--atleast-pkgconfig-version=%s'%kw['atleast_pkgconfig_version']]
 		self.cmd_and_log(cmd)
@@ -163,6 +162,13 @@ def exec_cfg(self,kw):
 		defi=self.env.PKG_CONFIG_DEFINES or{}
 	for key,val in defi.items():
 		lst.append('--define-variable=%s=%s'%(key,val))
+	static=False
+	if'args'in kw:
+		args=Utils.to_list(kw['args'])
+		if'--static'in args or'--static-libs'in args:
+			static=True
+		lst+=args
+	lst.extend(Utils.to_list(kw['package']))
 	if'variables'in kw:
 		env=kw.get('env',self.env)
 		uselib=kw.get('uselib_store',kw['package'].upper())
@@ -174,13 +180,6 @@ def exec_cfg(self,kw):
 		if not'okmsg'in kw:
 			kw['okmsg']='yes'
 		return
-	static=False
-	if'args'in kw:
-		args=Utils.to_list(kw['args'])
-		if'--static'in args or'--static-libs'in args:
-			static=True
-		lst+=args
-	lst.extend(Utils.to_list(kw['package']))
 	ret=self.cmd_and_log(lst)
 	if not'okmsg'in kw:
 		kw['okmsg']='yes'
@@ -207,6 +206,8 @@ def check_cfg(self,*k,**kw):
 		else:
 			self.fatal('The configuration failed')
 	else:
+		if not ret:
+			ret=True
 		kw['success']=ret
 		if'okmsg'in kw:
 			self.end_msg(self.ret_msg(kw['okmsg'],kw))
@@ -328,7 +329,8 @@ def validate_c(self,kw):
 	if not kw.get('success'):kw['success']=None
 	if'define_name'in kw:
 		self.undefine(kw['define_name'])
-	assert'msg'in kw,'invalid parameters, read http://freehackers.org/~tnagy/wafbook/single.html#config_helpers_c'
+	if not'msg'in kw:
+		self.fatal('missing "msg" in conf.check(...)')
 @conf
 def post_check(self,*k,**kw):
 	is_success=0
@@ -359,13 +361,11 @@ def post_check(self,*k,**kw):
 				_vars|=ccroot.USELIB_VARS[x]
 		for k in _vars:
 			lk=k.lower()
-			if k=='INCLUDES':lk='includes'
-			if k=='DEFINES':lk='defines'
 			if lk in kw:
 				val=kw[lk]
 				if isinstance(val,str):
 					val=val.rstrip(os.path.sep)
-				self.env.append_unique(k+'_'+kw['uselib_store'],val)
+				self.env.append_unique(k+'_'+kw['uselib_store'],Utils.to_list(val))
 	return is_success
 @conf
 def check(self,*k,**kw):
@@ -600,7 +600,7 @@ def get_cc_version(conf,cc,gcc=False,icc=False):
 	if gcc:
 		if out.find('__INTEL_COMPILER')>=0:
 			conf.fatal('The intel compiler pretends to be gcc')
-		if out.find('__GNUC__')<0:
+		if out.find('__GNUC__')<0 and out.find('__clang__')<0:
 			conf.fatal('Could not determine the compiler type')
 	if icc and out.find('__INTEL_COMPILER')<0:
 		conf.fatal('Not icc/icpc')
@@ -630,9 +630,9 @@ def get_cc_version(conf,cc,gcc=False,icc=False):
 				conf.env.DEST_OS='generic'
 		if isD('__ELF__'):
 			conf.env.DEST_BINFMT='elf'
-		elif isD('__WINNT__')or isD('__CYGWIN__'):
+		elif isD('__WINNT__')or isD('__CYGWIN__')or isD('_WIN32'):
 			conf.env.DEST_BINFMT='pe'
-			conf.env.LIBDIR=conf.env['PREFIX']+'/bin'
+			conf.env.LIBDIR=conf.env.BINDIR
 		elif isD('__APPLE__'):
 			conf.env.DEST_BINFMT='mac-o'
 		if not conf.env.DEST_BINFMT:
@@ -649,7 +649,10 @@ def get_cc_version(conf,cc,gcc=False,icc=False):
 			if isD('__clang__'):
 				conf.env['CC_VERSION']=(k['__clang_major__'],k['__clang_minor__'],k['__clang_patchlevel__'])
 			else:
-				conf.env['CC_VERSION']=(k['__GNUC__'],k['__GNUC_MINOR__'],k['__GNUC_PATCHLEVEL__'])
+				try:
+					conf.env['CC_VERSION']=(k['__GNUC__'],k['__GNUC_MINOR__'],k['__GNUC_PATCHLEVEL__'])
+				except KeyError:
+					conf.env['CC_VERSION']=(k['__GNUC__'],k['__GNUC_MINOR__'],0)
 	return k
 @conf
 def get_xlc_version(conf,cc):
@@ -667,6 +670,25 @@ def get_xlc_version(conf,cc):
 			break
 	else:
 		conf.fatal('Could not determine the XLC version.')
+@conf
+def get_suncc_version(conf,cc):
+	cmd=cc+['-V']
+	try:
+		out,err=conf.cmd_and_log(cmd,output=0)
+	except Errors.WafError ,e:
+		if not(hasattr(e,'returncode')and hasattr(e,'stdout')and hasattr(e,'stderr')):
+			conf.fatal('Could not find suncc %r'%cmd)
+		out=e.stdout
+		err=e.stderr
+	version=(out or err)
+	version=version.split('\n')[0]
+	version_re=re.compile(r'cc:\s+sun\s+(c\+\+|c)\s+(?P<major>\d*)\.(?P<minor>\d*)',re.I).search
+	match=version_re(version)
+	if match:
+		k=match.groupdict()
+		conf.env['CC_VERSION']=(k['major'],k['minor'])
+	else:
+		conf.fatal('Could not determine the suncc version.')
 @conf
 def add_as_needed(self):
 	if self.env.DEST_BINFMT=='elf'and'gcc'in(self.env.CXX_NAME,self.env.CC_NAME):

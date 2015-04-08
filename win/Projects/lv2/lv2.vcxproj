@@ -85,7 +85,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\sord\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;snprintf=_snprintf;HAVE_FMAX;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -99,7 +99,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='wx3-Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\sord\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;snprintf=_snprintf;HAVE_FMAX;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -114,7 +114,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\sord\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;snprintf=_snprintf;HAVE_FMAX;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -136,7 +136,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='wx3-Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\sord\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\lib-src\lv2\windows;..\..\..\lib-src\lv2\sord\src;..\..\..\lib-src\lv2\lilv;..\..\..\lib-src\lv2\lv2;..\..\..\lib-src\lv2\serd;..\..\..\lib-src\lv2\sord;..\..\..\lib-src\lv2\sratom;..\..\..\lib-src\lv2\suil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;snprintf=_snprintf;HAVE_FMAX;LILV_INTERNAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -178,7 +178,6 @@
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\ui.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\util.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\world.c" />
-    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\env.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\reader.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\serdnode.c" />
@@ -187,20 +186,33 @@
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\writer.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\sord\src\sord.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\sord\src\syntax.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\digest.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\hash.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\tree.c" />
     <ClCompile Include="..\..\..\lib-src\lv2\sratom\src\sratom.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\suil\src\host.c" />
+    <ClCompile Include="..\..\..\lib-src\lv2\suil\src\suil_instance.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib-src\lv2\lilv\lilv\lilv.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\lilv_internal.h" />
-    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\common.h" />
-    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\serd\serd\serd.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\serd\src\serd_internal.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sord\sord\sord.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\sord_internal.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\common.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\digest.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\hash.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\tree.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\sratom\sratom\sratom.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\msinttypes\inttypes.h" />
     <ClInclude Include="..\..\..\lib-src\lv2\msinttypes\stdint.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\suil\suil\suil.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\lilv_config.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\serd_config.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\sord_config.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\sratom_config.h" />
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\suil_config.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,15 +6,15 @@ data-access (1.6) stable;
 
 data-access (1.4) stable;
 
-  * Improve documentation.
   * Update packaging.
+  * Improve documentation.
 
  -- David Robillard <d@drobilla.net>  Mon, 21 Nov 2011 00:00:00 +0000
 
 data-access (1.2) stable;
 
-  * Add build system for installation.
   * Switch to ISC license.
+  * Add build system for installation.
 
  -- David Robillard <d@drobilla.net>  Thu, 26 May 2011 00:00:00 +0000
 

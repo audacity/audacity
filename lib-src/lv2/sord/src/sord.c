@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2013 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -199,9 +199,9 @@ sord_world_new(void)
 }
 
 static void
-free_node_entry(const void* value, void* user_data)
+free_node_entry(void* value, void* user_data)
 {
-	const SordNode* node = (const SordNode*)value;
+	SordNode* node = (SordNode*)value;
 	if (node->node.type == SERD_LITERAL) {
 		sord_node_free((SordWorld*)user_data, node->meta.lit.datatype);
 	}
@@ -336,7 +336,7 @@ sord_iter_forward(SordIter* iter)
 }
 
 /**
-   Seek forward as necessary until @a iter points at a match.
+   Seek forward as necessary until `iter` points at a match.
    @return true iff iterator reached end of valid range.
 */
 static inline bool
@@ -353,7 +353,7 @@ sord_iter_seek_match(SordIter* iter)
 }
 
 /**
-   Seek forward as necessary until @a iter points at a match, or the prefix
+   Seek forward as necessary until `iter` points at a match, or the prefix
    no longer matches iter->pat.
    @return true iff iterator reached end of valid range.
 */
@@ -520,8 +520,8 @@ sord_iter_free(SordIter* iter)
 }
 
 /**
-   Return true iff @a sord has an index for @a order.
-   If @a graphs is true, @a order will be modified to be the
+   Return true iff `sord` has an index for `order`.
+   If `graphs` is true, `order` will be modified to be the
    corresponding order with a G prepended (so G will be the MSN).
 */
 static inline bool
@@ -540,7 +540,7 @@ sord_has_index(SordModel* sord, SordOrder* order, int* n_prefix, bool graphs)
    @param pat Pattern in standard (S P O G) order
    @param mode Set to the (best) iteration mode for iterating over results
    @param n_prefix Set to the length of the range prefix
-   (for @a mode == RANGE and @a mode == FILTER_RANGE)
+   (for `mode` == RANGE and `mode` == FILTER_RANGE)
 */
 static inline SordOrder
 sord_best_index(SordModel*     sord,
@@ -570,8 +570,14 @@ sord_best_index(SordModel*     sord,
 	*n_prefix = 0;
 	switch (sig) {
 	case 0x000:
-		*mode = ALL;
-		return graph_search ? DEFAULT_GRAPH_ORDER : DEFAULT_ORDER;
+		if (graph_search) {
+			*mode     = RANGE;
+			*n_prefix = 1;
+			return DEFAULT_GRAPH_ORDER;
+		} else {
+			*mode = ALL;
+			return DEFAULT_ORDER;
+		}
 	case 0x111:
 		*mode = SINGLE;
 		return graph_search ? DEFAULT_GRAPH_ORDER : DEFAULT_ORDER;
@@ -809,10 +815,8 @@ sord_find(SordModel* sord, const SordQuad pat)
 	int             n_prefix;
 	const SordOrder index_order = sord_best_index(sord, pat, &mode, &n_prefix);
 
-	SORD_FIND_LOG("Find " TUP_FMT "  index=%s  mode=%d"
-	              "  n_prefix=%d ordering=%d%d%d%d\n",
-	              TUP_FMT_ARGS(pat), order_names[index_order], mode, n_prefix,
-	              ordering[0], ordering[1], ordering[2], ordering[3]);
+	SORD_FIND_LOG("Find " TUP_FMT "  index=%s  mode=%d  n_prefix=%d\n",
+	              TUP_FMT_ARGS(pat), order_names[index_order], mode, n_prefix);
 
 	if (pat[0] && pat[1] && pat[2] && pat[3])
 		mode = SINGLE;  // No duplicate quads (Sord is a set)

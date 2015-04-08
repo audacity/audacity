@@ -328,7 +328,7 @@ class Node(object):
 			if[]in nrej:
 				nacc=[]
 			return[nacc,nrej]
-		ret=[x for x in self.ant_iter(accept=accept,pats=[to_pat(incl),to_pat(excl)],maxdepth=25,dir=dir,src=src,remove=kw.get('remove',True))]
+		ret=[x for x in self.ant_iter(accept=accept,pats=[to_pat(incl),to_pat(excl)],maxdepth=kw.get('maxdepth',25),dir=dir,src=src,remove=kw.get('remove',True))]
 		if kw.get('flat',False):
 			return' '.join([x.path_from(self)for x in ret])
 		return ret

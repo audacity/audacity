@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2011 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -32,7 +32,7 @@ lilv_port_new(LilvWorld*      world,
               const char*     symbol)
 {
 	LilvPort* port = (LilvPort*)malloc(sizeof(LilvPort));
-	port->node    = sord_node_copy(node);
+	port->node    = lilv_node_new_from_node(world, node);
 	port->index   = index;
 	port->symbol  = lilv_node_new(world, LILV_VALUE_STRING, symbol);
 	port->classes = lilv_nodes_new();
@@ -43,15 +43,14 @@ void
 lilv_port_free(const LilvPlugin* plugin, LilvPort* port)
 {
 	if (port) {
-		sord_node_free(plugin->world->world, port->node);
+		lilv_node_free(port->node);
 		lilv_nodes_free(port->classes);
 		lilv_node_free(port->symbol);
 		free(port);
 	}
 }
 
-LILV_API
-bool
+LILV_API bool
 lilv_port_is_a(const LilvPlugin* plugin,
                const LilvPort*   port,
                const LilvNode*   port_class)
@@ -63,21 +62,18 @@ lilv_port_is_a(const LilvPlugin* plugin,
 	return false;
 }
 
-LILV_API
-bool
+LILV_API bool
 lilv_port_has_property(const LilvPlugin* p,
                        const LilvPort*   port,
                        const LilvNode*   property)
 {
-	return lilv_world_ask_internal(
-		p->world,
-		port->node,
-		p->world->uris.lv2_portProperty,
-		lilv_node_as_node(property));
+	return lilv_world_ask_internal(p->world,
+	                               port->node->node,
+	                               p->world->uris.lv2_portProperty,
+	                               property->node);
 }
 
-LILV_API
-bool
+LILV_API bool
 lilv_port_supports_event(const LilvPlugin* p,
                          const LilvPort*   port,
                          const LilvNode*   event)
@@ -88,9 +84,9 @@ lilv_port_supports_event(const LilvPlugin* p,
 
 	for (const uint8_t** pred = predicates; *pred; ++pred) {
 		if (lilv_world_ask_internal(p->world,
-		                            port->node,
+		                            port->node->node,
 		                            sord_new_uri(p->world->world, *pred),
-		                            lilv_node_as_node(event))) {
+		                            event->node)) {
 			return true;
 		}
 	}
@@ -102,15 +98,20 @@ lilv_port_get_value_by_node(const LilvPlugin* p,
                             const LilvPort*   port,
                             const SordNode*   predicate)
 {
-	return lilv_world_find_nodes_internal(
-		p->world,
-		port->node,
-		predicate,
-		NULL);
+	return lilv_world_find_nodes_internal(p->world,
+	                                      port->node->node,
+	                                      predicate,
+	                                      NULL);
 }
 
-LILV_API
-LilvNodes*
+LILV_API const LilvNode*
+lilv_port_get_node(const LilvPlugin* plugin,
+                   const LilvPort*   port)
+{
+	return port->node;
+}
+
+LILV_API LilvNodes*
 lilv_port_get_value(const LilvPlugin* p,
                     const LilvPort*   port,
                     const LilvNode*   predicate)
@@ -121,13 +122,10 @@ lilv_port_get_value(const LilvPlugin* p,
 		return NULL;
 	}
 
-	return lilv_port_get_value_by_node(
-		p, port,
-		lilv_node_as_node(predicate));
+	return lilv_port_get_value_by_node(p, port, predicate->node);
 }
 
-LILV_API
-LilvNode*
+LILV_API LilvNode*
 lilv_port_get(const LilvPlugin* p,
               const LilvPort*   port,
               const LilvNode*   predicate)
@@ -141,24 +139,21 @@ lilv_port_get(const LilvPlugin* p,
 	return value;
 }
 
-LILV_API
-uint32_t
+LILV_API uint32_t
 lilv_port_get_index(const LilvPlugin* p,
                     const LilvPort*   port)
 {
 	return port->index;
 }
 
-LILV_API
-const LilvNode*
+LILV_API const LilvNode*
 lilv_port_get_symbol(const LilvPlugin* p,
                      const LilvPort*   port)
 {
 	return port->symbol;
 }
 
-LILV_API
-LilvNode*
+LILV_API LilvNode*
 lilv_port_get_name(const LilvPlugin* p,
                    const LilvPort*   port)
 {
@@ -180,16 +175,14 @@ lilv_port_get_name(const LilvPlugin* p,
 	return ret;
 }
 
-LILV_API
-const LilvNodes*
+LILV_API const LilvNodes*
 lilv_port_get_classes(const LilvPlugin* p,
                       const LilvPort*   port)
 {
 	return port->classes;
 }
 
-LILV_API
-void
+LILV_API void
 lilv_port_get_range(const LilvPlugin* p,
                     const LilvPort*   port,
                     LilvNode**        def,
@@ -222,14 +215,13 @@ lilv_port_get_range(const LilvPlugin* p,
 	}
 }
 
-LILV_API
-LilvScalePoints*
+LILV_API LilvScalePoints*
 lilv_port_get_scale_points(const LilvPlugin* p,
                            const LilvPort*   port)
 {
 	SordIter* points = lilv_world_query_internal(
 		p->world,
-		port->node,
+		port->node->node,
 		sord_new_uri(p->world->world, (const uint8_t*)LV2_CORE__scalePoint),
 		NULL);
 
@@ -240,15 +232,13 @@ lilv_port_get_scale_points(const LilvPlugin* p,
 	FOREACH_MATCH(points) {
 		const SordNode* point = sord_iter_get_node(points, SORD_OBJECT);
 
-		LilvNode* value = lilv_plugin_get_unique(
-			p,
-			point,
-			p->world->uris.rdf_value);
+		LilvNode* value = lilv_plugin_get_unique(p,
+		                                         point,
+		                                         p->world->uris.rdf_value);
 
-		LilvNode* label = lilv_plugin_get_unique(
-			p,
-			point,
-			p->world->uris.rdfs_label);
+		LilvNode* label = lilv_plugin_get_unique(p,
+		                                         point,
+		                                         p->world->uris.rdfs_label);
 
 		if (value && label) {
 			zix_tree_insert(
@@ -261,8 +251,7 @@ lilv_port_get_scale_points(const LilvPlugin* p,
 	return ret;
 }
 
-LILV_API
-LilvNodes*
+LILV_API LilvNodes*
 lilv_port_get_properties(const LilvPlugin* p,
                          const LilvPort*   port)
 {

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # lv2specgen, a documentation generator for LV2 specifications.
-# Copyright (c) 2009-2012 David Robillard <d@drobilla.net>
+# Copyright (c) 2009-2014 David Robillard <d@drobilla.net>
 #
 # Based on SpecGen:
 # <http://forge.morfeo-project.org/wiki_en/index.php/SpecGen>
@@ -41,6 +41,7 @@ __license__ = "MIT License <http://www.opensource.org/licenses/mit>"
 __contact__ = "devel@lists.lv2plug.in"
 
 import datetime
+import optparse
 import os
 import re
 import sys
@@ -181,7 +182,7 @@ if have_pygments:
         aliases = ['n3', 'turtle']
         filenames = ['*.n3', '*.ttl', '*.nt']
         mimetypes = ['text/rdf+n3','application/x-turtle','application/n3']
-    
+
         tokens = {
             'comments': [
                 (r'(\s*#.*)', Comment)
@@ -202,7 +203,7 @@ if have_pygments:
                 (r'\s*[a-zA-Z_:][a-zA-Z0-9\-_:]*\b\s*', Name.Tag, 'object'),
                 (r'\s*(<[^>]*\>)', Name.Tag, 'object'),
                 (r'\s*\]\s*', Text, '#pop'),
-                (r'(?=\s*\.\s*)', Keyword, '#pop'), 
+                (r'(?=\s*\.\s*)', Keyword, '#pop'),
             ],
             'objList': [
                 include('comments'),
@@ -221,8 +222,8 @@ if have_pygments:
                 (r'\s*\(', Text, 'objList'),
                 (r'\s*;\s*\n?', Punctuation, '#pop'),
                 (r'\s*,\s*\n?', Punctuation),  # Added by drobilla so "," is not an error
-                (r'(?=\s*\])', Text, '#pop'),            
-                (r'(?=\s*\.)', Text, '#pop'),           
+                (r'(?=\s*\])', Text, '#pop'),
+                (r'(?=\s*\.)', Text, '#pop'),
             ],
         }
 
@@ -241,7 +242,7 @@ def linkify(string):
 
     def translateCodeLink(match):
         return match.group(1) + linkmap[match.group(2)] + match.group(3)
-    
+
     return rgx.sub(translateCodeLink, string)
 
 def getComment(m, urinode, classlist, proplist, instalist):
@@ -419,7 +420,7 @@ def parseCollection(model, node):
         rest  = findOne(model, node, rdf.rest, None)
         if not first or not rest:
             break;
-        
+
         uris.append(getObject(first))
         node = getObject(rest)
 
@@ -454,7 +455,7 @@ def rdfsClassInfo(term, m):
         else:
             meta_type = findOne(m, getObject(st), rdf.type, None)
             restrictions.append(getSubject(meta_type))
-            
+
     if len(superclasses) > 0:
         doc += "\n<tr><th>Sub-class of</th>"
         first = True
@@ -633,6 +634,9 @@ def owlInfo(term, m):
 
     return res
 
+def isDeprecated(m, subject):
+    deprecated = findOne(m, subject, owl.deprecated, None)
+    return deprecated and (str(deprecated[2]).find("true") >= 0)
 
 def docTerms(category, list, m, classlist, proplist, instalist):
     """
@@ -664,18 +668,22 @@ def docTerms(category, list, m, classlist, proplist, instalist):
 
         label = getLabel(m, term)
         comment = getComment(m, term, classlist, proplist, instalist)
+        is_deprecated = isDeprecated(m, term)
 
         doc += '<div class="spectermbody">'
-        if label != '' or comment != '':
+        if label != '' or comment != '' or is_deprecated:
             doc += '<div class="description">'
 
         if label != '':
             doc += "<div property=\"rdfs:label\" class=\"label\">%s</div>" % label
 
+        if is_deprecated:
+            doc += '<div class="warning">DEPRECATED</div>'
+
         if comment != '':
             doc += "<div property=\"rdfs:comment\">%s</div>" % comment
 
-        if label != '' or comment != '':
+        if label != '' or comment != '' or is_deprecated:
             doc += "</div>"
 
         terminfo = ""
@@ -726,6 +734,13 @@ def buildIndex(m, classlist, proplist, instalist=None):
 
     azlist = '<dl class="index">'
 
+    def termLink(m, t):
+        if str(t).startswith(spec_ns_str):
+            name = termName(m, t)
+            return '<a href="#%s">%s</a>' % (name, name)
+        else:
+            return '<a href="%s">%s</a>' % (str(t), str(t))
+
     if (len(classlist) > 0):
         azlist += "<dt>Classes</dt><dd><ul>"
         classlist.sort()
@@ -744,10 +759,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 continue
 
             shown[c] = True
-            name = termName(m, c)
-            if name.startswith(spec_ns_str):
-                name = name.split(spec_ns_str[-1])[1]
-            azlist += '<li><a href="#%s">%s</a>' % (name, name)
+            azlist += '<li>' + termLink(m, c)
             def class_tree(c):
                 tree = ''
                 shown[c] = True
@@ -758,8 +770,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 subclasses.sort()
 
                 for s in subclasses:
-                    s_name = termName(m, s)
-                    tree += '<li><a href="#%s">%s</a>\n' % (s_name, s_name)
+                    tree += '<li>' + termLink(m, s)
                     tree += class_tree(s)
                     tree += '</li>'
                 if tree != '':
@@ -774,10 +785,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
         proplist.sort()
         props = []
         for p in proplist:
-            name = termName(m, p)
-            if name.startswith(spec_ns_str):
-                name = name.split(spec_ns_str[-1])[1]
-            props += ['<a href="#%s">%s</a>' % (name, name)]
+            props += [termLink(m, p)]
         azlist += ', '.join(props) + '</dd>\n'
 
     if (instalist != None and len(instalist) > 0):
@@ -858,15 +866,23 @@ def specProperties(m, subject, predicate):
 
 def specAuthors(m, subject):
     "Return an HTML description of the authors of the spec."
+
+    subjects = [subject];
+    p = findOne(m, subject, lv2.project, None)
+    if p:
+        subjects += [getObject(p)]
+
     dev = set()
-    for i in findStatements(m, subject, doap.developer, None):
-        for j in findStatements(m, getObject(i), foaf.name, None):
-            dev.add(getLiteralString(getObject(j)))
+    for s in subjects:
+        for i in findStatements(m, s, doap.developer, None):
+            for j in findStatements(m, getObject(i), foaf.name, None):
+                dev.add(getLiteralString(getObject(j)))
 
     maint = set()
-    for i in findStatements(m, subject, doap.maintainer, None):
-        for j in findStatements(m, getObject(i), foaf.name, None):
-            maint.add(getLiteralString(getObject(j)))
+    for s in subjects:
+        for i in findStatements(m, s, doap.maintainer, None):
+            for j in findStatements(m, getObject(i), foaf.name, None):
+                maint.add(getLiteralString(getObject(j)))
 
     doc = ''
 
@@ -897,13 +913,36 @@ def specAuthors(m, subject):
     return doc
 
 
-def specHistory(m, subject):
-    entries = {}
+def releaseChangeset(m, release, prefix=''):
+    changeset = findOne(m, release, dcs.changeset, None)
+    if changeset is None:
+        return ''
+
+    entry = ''
+    #entry = '<dd><ul>\n'
+    for i in findStatements(m, getObject(changeset), dcs.item, None):
+        item  = getObject(i)
+        label = findOne(m, item, rdfs.label, None)
+        if not label:
+            print("error: dcs:item has no rdfs:label")
+            continue
+
+        text = getLiteralString(getObject(label))
+        if prefix:
+            text = prefix + ': ' + text
+
+        entry += '<li>%s</li>\n' % text
+
+    #entry += '</ul></dd>\n'
+    return entry
+
+
+def specHistoryEntries(m, subject, entries={}):
     for r in findStatements(m, subject, doap.release, None):
         release = getObject(r)
         revNode = findOne(m, release, doap.revision, None)
         if not revNode:
-            print "error: doap:release has no doap:revision"
+            print("error: doap:release has no doap:revision")
             continue
 
         rev = getLiteralString(getObject(revNode))
@@ -915,37 +954,34 @@ def specHistory(m, subject):
             entry = '<dt><a href="%s">Version %s</a>' % (getObject(dist), rev)
         else:
             entry = '<dt>Version %s' % rev
-            #print "warning: doap:release has no doap:file-release"
+            #print("warning: doap:release has no doap:file-release")
 
         if created:
-            entry += ' (%s)</dt>' % getLiteralString(getObject(created))
+            entry += ' (%s)</dt>\n' % getLiteralString(getObject(created))
         else:
             entry += ' (<span class="warning">EXPERIMENTAL</span>)</dt>'
 
-        changeset = findOne(m, release, dcs.changeset, None)
-        if changeset:
-            entry += '<dd><ul>'
-            for i in findStatements(m, getObject(changeset), dcs.item, None):
-                item = getObject(i)
-                label = findOne(m, item, rdfs.label, None)
-                if not label:
-                    print "error: dcs:item has no rdfs:label"
-                    continue
+        entry += '<dd><ul>\n%s' % releaseChangeset(m, release)
 
-                entry += '<li>%s</li>' % getLiteralString(getObject(label))
+        if dist is not None:
+            entries[(getObject(created), getObject(dist))] = entry
 
-            entry += '</ul></dd>\n'
+    return entries
 
-        entries[rev] = entry
 
+def specHistoryMarkup(entries):
     if len(entries) > 0:
-        history = '<dl>'
+        history = '<dl>\n'
         for e in sorted(entries.keys(), reverse=True):
-            history += entries[e]
-        history += '</dl>'
+            history += entries[e] + '</ul></dd>'
+        history += '</dl>\n'
         return history
     else:
         return ''
+
+
+def specHistory(m, subject):
+    return specHistoryMarkup(specHistoryEntries(m, subject))
 
 
 def specVersion(m, subject):
@@ -1045,7 +1081,7 @@ def load_tags(path, docdir):
 
     return linkmap
 
-def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=False):
+def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -1078,13 +1114,20 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
     spec_url = getOntologyNS(m)
     spec = rdflib.URIRef(spec_url)
 
-    # Parse all seeAlso files in the bundle
-    for uri in specProperties(m, spec, rdfs.seeAlso):
-        if uri[:7] == 'file://':
-            path = uri[7:]
-            if (path != os.path.abspath(specloc)
-                and path.endswith('.ttl')):
+    # Load all seeAlso files recursively
+    seeAlso = set()
+    done = False
+    while not done:
+        done = True
+        for uri in specProperties(m, spec, rdfs.seeAlso):
+            if uri[:7] == 'file://':
+                path = uri[7:]
+                if (path != os.path.abspath(specloc) and
+                    path.endswith('ttl') and
+                    path not in seeAlso):
+                    seeAlso.add(path)
                     m.parse(path, format='n3')
+                    done = False
 
     spec_ns_str = spec_url
     if (spec_ns_str[-1] != "/" and spec_ns_str[-1] != "#"):
@@ -1132,7 +1175,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
         termlist += docTerms('Instance', instalist, m, classlist, proplist, instalist)
 
     template = template.replace('@NAME@', specProperty(m, spec, doap.name))
-    template = template.replace('@SUBTITLE@', specProperty(m, spec, doap.shortdesc))
+    template = template.replace('@SHORT_DESC@', specProperty(m, spec, doap.shortdesc))
     template = template.replace('@URI@', spec)
     template = template.replace('@PREFIX@', spec_pre)
     if spec_pre == 'lv2':
@@ -1151,24 +1194,31 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
     template = template.replace('@REFERENCE@', termlist)
     template = template.replace('@FILENAME@', filename)
     template = template.replace('@HEADER@', basename + '.h')
-    template = template.replace('@MAIL@', 'devel@lists.lv2plug.in')
     template = template.replace('@HISTORY@', specHistory(m, spec))
+
+    mail_row = ''
+    if 'list_email' in opts:
+        mail_row = '<tr><th>Discuss</th><td><a href="mailto:%s">%s</a>' % (
+            opts['list_email'], opts['list_email'])
+        if 'list_page' in opts:
+            mail_row += ' <a href="%s">(subscribe)</a>' % opts['list_page']
+        mail_row += '</td></tr>'
+    template = template.replace('@MAIL@', mail_row)
 
     version = specVersion(m, spec)  # (minor, micro, date)
     date_string = version[2]
     if date_string == "":
         date_string = "Undated"
 
-    version_string = "%s.%s (%s)" % (version[0], version[1], date_string)
+    version_string = "%s.%s" % (version[0], version[1])
     experimental = (version[0] == 0 or version[1] % 2 == 1)
     if experimental:
         version_string += ' <span class="warning">EXPERIMENTAL</span>'
 
-    deprecated = findOne(m, rdflib.URIRef(spec_url), owl.deprecated, None)
-    if deprecated and str(deprecated[2]).find("true") > 0:
+    if isDeprecated(m, rdflib.URIRef(spec_url)):
         version_string += ' <span class="warning">DEPRECATED</span>'
 
-    template = template.replace('@REVISION@', version_string)
+    template = template.replace('@VERSION@', version_string)
 
     file_list = ''
     see_also_files = specProperties(m, spec, rdfs.seeAlso)
@@ -1182,24 +1232,16 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
             else:
                 continue  # Skip seeAlso file outside bundle
 
-
-        if offline:
-            entry = uri
-        else:
-            entry = '<a href="%s">%s</a>' % (uri, uri)
+        entry = '<a href="%s">%s</a>' % (uri, uri)
         if uri.endswith('.h') or uri.endswith('.hpp'):
             name = os.path.basename(uri)
-            entry += ' - <a href="%s">Documentation</a> ' % (
+            entry += ' <a href="%s">(docs)</a> ' % (
                 docdir + '/' + name.replace('.', '_8') + '.html')
             file_list += '<li>%s</li>' % entry
-        else:
+        elif not uri.endswith('.doap.ttl'):
             file_list += '<li>%s</li>' % entry
 
-    files = ''
-    if file_list:
-        files += '<li>Files<ul>%s</ul></li>' % file_list
-
-    template = template.replace('@FILES@', files)
+    template = template.replace('@FILES@', file_list)
 
     comment = getComment(m, rdflib.URIRef(spec_url), classlist, proplist, instalist)
     if comment != '':
@@ -1207,6 +1249,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
     else:
         template = template.replace('@COMMENT@', '')
 
+    template = template.replace('@DATE@', datetime.datetime.utcnow().strftime('%F'))
     template = template.replace('@TIME@', datetime.datetime.utcnow().strftime('%F %H:%M UTC'))
 
     return template
@@ -1250,7 +1293,7 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    print("""Usage: %s ONTOLOGY INDIR STYLE OUTPUT [DOCDIR TAGS] [FLAGS]
+    return """Usage: %s ONTOLOGY INDIR STYLE OUTPUT [DOCDIR TAGS] [FLAGS]
 
         ONTOLOGY  : Path to ontology file
         INDIR     : Input directory containing template.html and style.css
@@ -1265,38 +1308,34 @@ def usage():
 
 Example:
     %s lv2_foos.ttl template.html style.css lv2_foos.html ../doc -i -p foos
-""" % (script, script))
-    sys.exit(-1)
-
+""" % (script, script)
 
 if __name__ == "__main__":
     """Ontology specification generator tool"""
 
-    args = sys.argv[1:]
+    opt = optparse.OptionParser(usage=usage(),
+                                description='Write HTML documentation for an RDF ontology.')
+    opt.add_option('--list-email', type='string', dest='list_email')
+    opt.add_option('--list-page', type='string', dest='list_page')
+    opt.add_option('-i', action='store_true', dest='instances')
+    opt.add_option('-p', type='string', dest='prefix')
+
+    (options, args) = opt.parse_args()
+    opts = vars(options)
+
     if (len(args) < 3):
-        usage()
-    else:
-        ontology = "file:" + str(args[0])
-        indir    = args[1]
-        style    = args[2]
-        output   = args[3]
-        docdir   = None
-        tags     = None
-        if len(args) > 5:
-            docdir = args[4]
-            tags   = args[5]
+        print(usage())
+        sys.exit(-1)
 
-        # Flags
-        instances = False
-        if len(args) > 6:
-            flags = args[6:]
-            i = 0
-            while i < len(flags):
-                if flags[i] == '-i':
-                    instances = True
-                elif flags[i] == '-p':
-                    spec_pre = flags[i + 1]
-                    i += 1
-                i += 1
+    spec_pre = options.prefix
+    ontology = "file:" + str(args[0])
+    indir    = args[1]
+    style    = args[2]
+    output   = args[3]
+    docdir   = None
+    tags     = None
+    if len(args) > 5:
+        docdir = args[4]
+        tags   = args[5]
 
-    save(output, specgen(ontology, indir, style, docdir, tags, instances=instances))
+    save(output, specgen(ontology, indir, style, docdir, tags, opts, instances=options.instances))

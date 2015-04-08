@@ -46,7 +46,7 @@ typedef struct {
 	LV2_Resize_Port_Feature_Data data;
 
 	/**
-	   Resize a port buffer to at least @a size bytes.
+	   Resize a port buffer to at least `size` bytes.
 	 
 	   This function MAY return an error, in which case the port buffer was not
 	   resized and the port is still connected to the same location.  Plugins

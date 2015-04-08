@@ -1,0 +1,2 @@
+@prefix eg. : <http://www.w3.org/2013/TurtleTests/> .
+eg.:s eg.:p eg.:o .

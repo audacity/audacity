@@ -1,3 +1,11 @@
+sord (0.12.2) stable;
+
+  * Fix iteration over an entire graph (* * * graph)
+  * sordmm.hpp: Remove unused members
+  * Update to waf 1.7.16
+
+ -- David Robillard <d@drobilla.net>  Fri, 08 Aug 2014 18:03:02 -0400
+
 sord (0.12.0) stable;
 
   * Update to waf 1.7.9 and autowaf r90 (install docs to versioned directory)

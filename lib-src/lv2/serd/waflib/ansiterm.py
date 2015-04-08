@@ -6,7 +6,7 @@ import sys,os
 try:
 	if not(sys.stderr.isatty()and sys.stdout.isatty()):
 		raise ValueError('not a tty')
-	from ctypes import*
+	from ctypes import Structure,windll,c_short,c_ushort,c_ulong,c_int,byref,POINTER,c_long,c_wchar
 	class COORD(Structure):
 		_fields_=[("X",c_short),("Y",c_short)]
 	class SMALL_RECT(Structure):
@@ -15,6 +15,20 @@ try:
 		_fields_=[("Size",COORD),("CursorPosition",COORD),("Attributes",c_short),("Window",SMALL_RECT),("MaximumWindowSize",COORD)]
 	class CONSOLE_CURSOR_INFO(Structure):
 		_fields_=[('dwSize',c_ulong),('bVisible',c_int)]
+	windll.kernel32.GetStdHandle.argtypes=[c_ulong]
+	windll.kernel32.GetStdHandle.restype=c_ulong
+	windll.kernel32.GetConsoleScreenBufferInfo.argtypes=[c_ulong,POINTER(CONSOLE_SCREEN_BUFFER_INFO)]
+	windll.kernel32.GetConsoleScreenBufferInfo.restype=c_long
+	windll.kernel32.SetConsoleTextAttribute.argtypes=[c_ulong,c_ushort]
+	windll.kernel32.SetConsoleTextAttribute.restype=c_long
+	windll.kernel32.FillConsoleOutputCharacterW.argtypes=[c_ulong,c_wchar,c_ulong,POINTER(COORD),POINTER(c_ulong)]
+	windll.kernel32.FillConsoleOutputCharacterW.restype=c_long
+	windll.kernel32.FillConsoleOutputAttribute.argtypes=[c_ulong,c_ushort,c_ulong,POINTER(COORD),POINTER(c_ulong)]
+	windll.kernel32.FillConsoleOutputAttribute.restype=c_long
+	windll.kernel32.SetConsoleCursorPosition.argtypes=[c_ulong,POINTER(COORD)]
+	windll.kernel32.SetConsoleCursorPosition.restype=c_long
+	windll.kernel32.SetConsoleCursorInfo.argtypes=[c_ulong,POINTER(CONSOLE_CURSOR_INFO)]
+	windll.kernel32.SetConsoleCursorInfo.restype=c_long
 	sbinfo=CONSOLE_SCREEN_BUFFER_INFO()
 	csinfo=CONSOLE_CURSOR_INFO()
 	hconsole=windll.kernel32.GetStdHandle(-11)
@@ -59,8 +73,8 @@ else:
 			else:
 				line_start=sbinfo.CursorPosition
 				line_length=sbinfo.Size.X-sbinfo.CursorPosition.X
-			chars_written=c_int()
-			windll.kernel32.FillConsoleOutputCharacterA(self.hconsole,c_wchar(' '),line_length,line_start,byref(chars_written))
+			chars_written=c_ulong()
+			windll.kernel32.FillConsoleOutputCharacterW(self.hconsole,c_wchar(' '),line_length,line_start,byref(chars_written))
 			windll.kernel32.FillConsoleOutputAttribute(self.hconsole,sbinfo.Attributes,line_length,line_start,byref(chars_written))
 		def clear_screen(self,param):
 			mode=to_int(param,0)
@@ -75,8 +89,8 @@ else:
 			else:
 				clear_start=sbinfo.CursorPosition
 				clear_length=((sbinfo.Size.X-sbinfo.CursorPosition.X)+sbinfo.Size.X*(sbinfo.Size.Y-sbinfo.CursorPosition.Y))
-			chars_written=c_int()
-			windll.kernel32.FillConsoleOutputCharacterA(self.hconsole,c_wchar(' '),clear_length,clear_start,byref(chars_written))
+			chars_written=c_ulong()
+			windll.kernel32.FillConsoleOutputCharacterW(self.hconsole,c_wchar(' '),clear_length,clear_start,byref(chars_written))
 			windll.kernel32.FillConsoleOutputAttribute(self.hconsole,sbinfo.Attributes,clear_length,clear_start,byref(chars_written))
 		def push_cursor(self,param):
 			sbinfo=self.screen_buffer_info()
@@ -127,9 +141,9 @@ else:
 					c=int(c)
 				else:
 					c=to_int(c,0)
-				if c in range(30,38):
+				if 29<c<38:
 					attr=(attr&0xfff0)|self.rgb2bgr(c-30)
-				elif c in range(40,48):
+				elif 39<c<48:
 					attr=(attr&0xff0f)|(self.rgb2bgr(c-40)<<4)
 				elif c==0:
 					attr=self.orig_sbinfo.Attributes

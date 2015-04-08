@@ -177,7 +177,8 @@ def configure(conf):
 		append_cxx_flags(['-DNDEBUG'])
 	if Options.options.ultra_strict:
 		Options.options.strict=True
-		conf.env.append_value('CFLAGS',['-Wredundant-decls','-Wstrict-prototypes','-Wmissing-prototypes'])
+		conf.env.append_value('CFLAGS',['-Wredundant-decls','-Wstrict-prototypes','-Wmissing-prototypes','-Wcast-qual'])
+		conf.env.append_value('CXXFLAGS',['-Wcast-qual'])
 	if Options.options.strict:
 		conf.env.append_value('CFLAGS',['-pedantic','-Wshadow'])
 		conf.env.append_value('CXXFLAGS',['-ansi','-Wnon-virtual-dtor','-Woverloaded-virtual'])
@@ -563,7 +564,7 @@ def write_news(name,in_files,out_file,top_entries=None,extra_entries=None):
 			if blamee_name and blamee_mbox:
 				entry+=' %s <%s>'%(blamee_name,blamee_mbox.replace('mailto:',''))
 			entry+='  %s\n\n'%(strftime('%a, %d %b %Y %H:%M:%S +0000',strptime(date,'%Y-%m-%d')))
-			entries[revision]=entry
+			entries[(date,revision)]=entry
 		else:
 			Logs.warn('Ignored incomplete %s release description'%name)
 	if len(entries)>0:

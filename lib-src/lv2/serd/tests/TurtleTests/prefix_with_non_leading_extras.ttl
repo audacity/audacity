@@ -1,0 +1,2 @@
+@prefix a·̀ͯ‿.⁀: <http://a.example/>.
+a·̀ͯ‿.⁀:s <http://a.example/p> <http://a.example/o> .

@@ -6,3 +6,6 @@ GTK2 GUI and I18N support:
 
 Dynamic manifest support:
 	Stefano D'Angelo
+
+Plugin execution via Python bindings:
+    Kaspar Emanuel <kaspar.emanuel@gmail.com>

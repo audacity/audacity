@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2012 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -21,8 +21,7 @@
 
 #include "lilv_internal.h"
 
-LILV_API
-LilvInstance*
+LILV_API LilvInstance*
 lilv_plugin_instantiate(const LilvPlugin*        plugin,
                         double                   sample_rate,
                         const LV2_Feature*const* features)
@@ -30,12 +29,6 @@ lilv_plugin_instantiate(const LilvPlugin*        plugin,
 	lilv_plugin_load_if_necessary(plugin);
 
 	LilvInstance* result = NULL;
-
-	const LV2_Feature** local_features = NULL;
-	if (features == NULL) {
-		local_features = (const LV2_Feature**)malloc(sizeof(LV2_Feature));
-		local_features[0] = NULL;
-	}
 
 	const LilvNode* const lib_uri    = lilv_plugin_get_library_uri(plugin);
 	const LilvNode* const bundle_uri = lilv_plugin_get_bundle_uri(plugin);
@@ -54,6 +47,12 @@ lilv_plugin_instantiate(const LilvPlugin*        plugin,
 	if (serd_uri_parse((const uint8_t*)bundle_uri_str, &base_uri)) {
 		lilv_lib_close(lib);
 		return NULL;
+	}
+
+	const LV2_Feature** local_features = NULL;
+	if (features == NULL) {
+		local_features = (const LV2_Feature**)malloc(sizeof(LV2_Feature));
+		local_features[0] = NULL;
 	}
 
 	// Search for plugin by URI
@@ -93,6 +92,8 @@ lilv_plugin_instantiate(const LilvPlugin*        plugin,
 		}
 	}
 
+	free(local_features);
+
 	if (result) {
 		// Failed to instantiate
 		if (result->lv2_handle == NULL) {
@@ -105,13 +106,10 @@ lilv_plugin_instantiate(const LilvPlugin*        plugin,
 			result->lv2_descriptor->connect_port(result->lv2_handle, i, NULL);
 	}
 
-	free(local_features);
-
 	return result;
 }
 
-LILV_API
-void
+LILV_API void
 lilv_instance_free(LilvInstance* instance)
 {
 	if (!instance)

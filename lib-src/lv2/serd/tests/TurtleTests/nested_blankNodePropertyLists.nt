@@ -1,0 +1,3 @@
+_:b1 <http://a.example/p1> _:b2 .
+_:b2 <http://a.example/p2> <http://a.example/o2> .
+_:b1 <http://a.example/p> <http://a.example/o> .

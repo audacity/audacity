@@ -34,6 +34,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
    Opaque pointer to host data.
 */
@@ -86,5 +90,9 @@ typedef struct {
 	                      const char*               map,
 	                      const char*               uri);
 } LV2_URI_Map_Feature;
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* LV2_URI_MAP_H */

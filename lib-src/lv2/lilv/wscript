@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 import os
+import shutil
 import subprocess
 import sys
 import waflib.Options as Options
 import waflib.extras.autowaf as autowaf
+import waflib.Build as Build
+import waflib.Logs as Logs
 
 # Library and package version (UNIX style major, minor, micro)
 # major increment <=> incompatible changes
 # minor increment <=> compatible changes (additions)
 # micro increment <=> no interface changes
-LILV_VERSION       = '0.16.0'
+LILV_VERSION       = '0.20.0'
 LILV_MAJOR_VERSION = '0'
 
 # Mandatory waf variables
@@ -55,7 +58,7 @@ def configure(conf):
             conf.check_python_headers()
             autowaf.define(conf, 'LILV_PYTHON', 1);
         except:
-            pass
+            Logs.warn('Failed to configure Python (%s)\n' % sys.exc_info()[1])
 
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
@@ -73,7 +76,7 @@ def configure(conf):
         conf.fatal('Neither a shared nor a static build requested')
 
     autowaf.check_pkg(conf, 'lv2', uselib_store='LV2',
-                      atleast_version='1.0.0', mandatory=True)
+                      atleast_version='1.8.0', mandatory=True)
     autowaf.check_pkg(conf, 'serd-0', uselib_store='SERD',
                       atleast_version='0.14.0', mandatory=True)
     autowaf.check_pkg(conf, 'sord-0', uselib_store='SORD',
@@ -173,6 +176,7 @@ def build_util(bld, name, defines):
               target       = name,
               defines      = defines,
               install_path = '${BINDIR}')
+    autowaf.use_lib(bld, obj, 'SERD SORD SRATOM LV2')
     if not bld.env.BUILD_SHARED or bld.env.STATIC_PROGS:
         obj.use = 'liblilv_static'
     if bld.env.STATIC_PROGS:
@@ -296,8 +300,9 @@ def build(bld):
         autowaf.use_lib(bld, obj, 'SERD SORD SRATOM LV2')
 
         # Unit test program
-        bpath = os.path.abspath(os.path.join(out, 'test', 'test_plugin.lv2'))
-        bpath = bpath.replace('\\', '/')
+        blddir = autowaf.build_dir(APPNAME, 'test')
+        bpath  = os.path.abspath(os.path.join(blddir, 'test_plugin.lv2'))
+        bpath  = bpath.replace('\\', '/')
         obj = bld(features     = 'c cprogram',
                   source       = 'test/lilv_test.c',
                   includes     = ['.', './src'],
@@ -308,6 +313,36 @@ def build(bld):
                   defines      = defines + ['LILV_TEST_BUNDLE=\"%s/\"' % bpath],
                   cflags       = test_cflags)
         autowaf.use_lib(bld, obj, 'SERD SORD SRATOM LV2')
+
+        if bld.is_defined('LILV_PYTHON'):
+            # Copy Python unittest files
+            for i in [ 'test_api.py', 'test_api_mm.py' ]:
+                bld(features     = 'subst',
+                    is_copy      = True,
+                    source       = 'bindings/test/python/' + i,
+                    target       = 'bindings/' + i,
+                    install_path = None)
+
+            # Build bindings test plugin
+            obj = bld(features     = 'c cshlib',
+                      env          = penv,
+                      source       = 'bindings/test/bindings_test_plugin.c',
+                      name         = 'bindings_test_plugin',
+                      target       = 'bindings/bindings_test_plugin.lv2/bindings_test_plugin',
+                      install_path = None,
+                      defines      = defines,
+                      cflags       = test_cflags,
+                      lib          = test_libs,
+                      uselib       = 'LV2')
+
+            # Bindings test plugin data files
+            for i in [ 'manifest.ttl.in', 'bindings_test_plugin.ttl.in' ]:
+                bld(features     = 'subst',
+                    source       = 'bindings/test/' + i,
+                    target       = 'bindings/bindings_test_plugin.lv2/' + i.replace('.in', ''),
+                    install_path = None,
+                    SHLIB_EXT    = shlib_ext)
+
 
     # Utilities
     if bld.env.BUILD_UTILS:
@@ -320,7 +355,7 @@ def build(bld):
             build_util(bld, i, defines)
 
     # lv2bench (less portable than other utilities)
-    if bld.is_defined('HAVE_CLOCK_GETTIME'):
+    if bld.is_defined('HAVE_CLOCK_GETTIME') and not bld.env.STATIC_PROGS:
         obj = build_util(bld, 'utils/lv2bench', defines)
         if not bld.env.MSVC_COMPILER:
             obj.lib = ['rt']
@@ -357,13 +392,30 @@ def fix_docs(ctx):
         autowaf.make_simple_dox(APPNAME)
 
 def upload_docs(ctx):
+    import glob
     os.system('rsync -ravz --delete -e ssh build/doc/html/ drobilla@drobilla.net:~/drobilla.net/docs/lilv/')
+    for page in glob.glob('doc/*.[1-8]'):
+        os.system('soelim %s | pre-grohtml troff -man -wall -Thtml | post-grohtml > build/%s.html' % (page, page))
+        os.system('rsync -avz --delete -e ssh build/%s.html drobilla@drobilla.net:~/drobilla.net/man/' % page)
+
+# Inherit from build context so we can get the config data
+class TestContext(Build.BuildContext):
+    cmd = 'test'
+    fun = 'test'
 
 def test(ctx):
+    assert ctx.env.BUILD_TESTS, "You have run waf configure without the --test flag. No tests were run."
     autowaf.pre_test(ctx, APPNAME)
+    if ctx.is_defined('LILV_PYTHON'):
+        os.environ['LD_LIBRARY_PATH'] = os.getcwd()
+        autowaf.run_tests(ctx, 'Python ' + APPNAME, ['python -m unittest discover bindings/'])
     os.environ['PATH'] = 'test' + os.pathsep + os.getenv('PATH')
     autowaf.run_tests(ctx, APPNAME, ['lilv_test'], dirs=['./src','./test'])
     autowaf.post_test(ctx, APPNAME)
+    try:
+        shutil.rmtree('state')
+    except:
+        pass
 
 def lint(ctx):
     subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-readability/todo,-build/include,-runtime/sizeof src/* lilv/*', shell=True)

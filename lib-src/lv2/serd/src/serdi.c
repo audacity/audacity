@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2013 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -30,7 +30,7 @@ static int
 print_version(void)
 {
 	printf("serdi " SERD_VERSION " <http://drobilla.net/software/serd>\n");
-	printf("Copyright 2011-2012 David Robillard <http://drobilla.net>.\n"
+	printf("Copyright 2011-2013 David Robillard <http://drobilla.net>.\n"
 	       "License: <http://www.opensource.org/licenses/isc>\n"
 	       "This is free software; you are free to change and redistribute it."
 	       "\nThere is NO WARRANTY, to the extent permitted by law.\n");
@@ -195,9 +195,9 @@ main(int argc, char** argv)
 		}
 	}
 
-	if (input_syntax != SERD_NTRIPLES  // Base URI may change (@base)
-	    || (output_syntax == SERD_TURTLE)) {
-		output_style |= SERD_STYLE_RESOLVED;
+	if (input_syntax != SERD_NTRIPLES || (output_style & SERD_STYLE_CURIED)) {
+		// Base URI may change and/or we're abbreviating URIs, so must resolve
+		output_style |= SERD_STYLE_RESOLVED;  // Base may chan
 	}
 
 	if (bulk_write) {

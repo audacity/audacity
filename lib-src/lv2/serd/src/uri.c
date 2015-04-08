@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -100,7 +100,7 @@ bool
 serd_uri_string_has_scheme(const uint8_t* utf8)
 {
 	// RFC3986: scheme ::= ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
-	if (!is_alpha(utf8[0])) {
+	if (!utf8 || !is_alpha(utf8[0])) {
 		return false;  // Invalid scheme initial character, URI is relative
 	}
 	for (uint8_t c; (c = *++utf8) != '\0';) {
@@ -252,7 +252,7 @@ end:
 }
 
 /**
-   Remove leading dot components from @c path.
+   Remove leading dot components from `path`.
    See http://tools.ietf.org/html/rfc3986#section-5.2.3
    @param up Set to the number of up-references (e.g. "../") trimmed
    @return A pointer to the new start of @path
@@ -317,7 +317,7 @@ remove_dot_segments(const uint8_t* path, size_t len, size_t* up)
 	return begin;
 }
 
-/// Merge @p base and @p path in-place
+/// Merge `base` and `path` in-place
 static void
 merge(SerdChunk* base, SerdChunk* path)
 {
@@ -325,7 +325,7 @@ merge(SerdChunk* base, SerdChunk* path)
 	const uint8_t* begin = remove_dot_segments(path->buf, path->len, &up);
 	const uint8_t* end   = path->buf + path->len;
 
-	if (base->buf && base->len > 0) {
+	if (base->len) {
 		// Find the up'th last slash
 		const uint8_t* base_last = (base->buf + base->len - 1);
 		++up;
@@ -396,7 +396,7 @@ serd_uri_resolve(const SerdURI* r, const SerdURI* base, SerdURI* t)
 	#endif
 }
 
-/** Write the path of @p uri starting at index @p i */
+/** Write the path of `uri` starting at index `i` */
 static size_t
 write_path_tail(SerdSink sink, void* stream, const SerdURI* uri, size_t i)
 {
@@ -415,7 +415,7 @@ write_path_tail(SerdSink sink, void* stream, const SerdURI* uri, size_t i)
 	return len;
 }
 
-/** Write the path of @p uri relative to the path of @p base. */
+/** Write the path of `uri` relative to the path of `base`. */
 static size_t
 write_rel_path(SerdSink       sink,
                void*          stream,

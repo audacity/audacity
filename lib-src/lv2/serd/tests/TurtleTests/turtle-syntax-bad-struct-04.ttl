@@ -1,0 +1,2 @@
+# Turtle does not allow literals-as-subjects
+"hello" <http://www.w3.org/2013/TurtleTests/p> <http://www.w3.org/2013/TurtleTests/o> .

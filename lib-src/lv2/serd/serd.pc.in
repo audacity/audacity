@@ -7,4 +7,5 @@ Name: Serd
 Version: @SERD_VERSION@
 Description: Lightweight RDF syntax library
 Libs: -L${libdir} -l@LIB_SERD@
+Libs.private: -lm
 Cflags: -I${includedir}/serd-@SERD_MAJOR_VERSION@

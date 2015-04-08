@@ -1,5 +1,5 @@
 /*
-  Copyright 2011-2012 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -34,7 +34,7 @@ bench_elapsed_s(const struct timespec* start, const struct timespec* end)
 }
 
 static inline struct timespec
-bench_start()
+bench_start(void)
 {
 	struct timespec start_t;
 	clock_gettime(CLOCK_REALTIME, &start_t);

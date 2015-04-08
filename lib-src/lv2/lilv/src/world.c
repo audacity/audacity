@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2011 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -23,8 +23,7 @@
 
 #include "lilv_internal.h"
 
-LILV_API
-LilvWorld*
+LILV_API LilvWorld*
 lilv_world_new(void)
 {
 	LilvWorld* world = (LilvWorld*)malloc(sizeof(LilvWorld));
@@ -44,8 +43,7 @@ lilv_world_new(void)
 		false, lilv_resource_node_cmp, NULL, (ZixDestroyFunc)lilv_node_free);
 
 #ifdef LILV_NEW_LV2
-	world->libs = zix_tree_new(
-		false, lilv_header_compare_by_uri, NULL, NULL);
+	world->libs = zix_tree_new(false, lilv_lib_compare, NULL, NULL);
 #endif
 
 #define NS_DCTERMS "http://purl.org/dc/terms/"
@@ -64,6 +62,7 @@ lilv_world_new(void)
 	world->uris.lv2_designation     = NEW_URI(LV2_CORE__designation);
 	world->uris.lv2_extensionData   = NEW_URI(LV2_CORE__extensionData);
 	world->uris.lv2_index           = NEW_URI(LV2_CORE__index);
+	world->uris.lv2_latency         = NEW_URI(LV2_CORE__latency);
 	world->uris.lv2_maximum         = NEW_URI(LV2_CORE__maximum);
 	world->uris.lv2_minimum         = NEW_URI(LV2_CORE__minimum);
 	world->uris.lv2_name            = NEW_URI(LV2_CORE__name);
@@ -73,6 +72,7 @@ lilv_world_new(void)
 	world->uris.lv2_reportsLatency  = NEW_URI(LV2_CORE__reportsLatency);
 	world->uris.lv2_requiredFeature = NEW_URI(LV2_CORE__requiredFeature);
 	world->uris.lv2_symbol          = NEW_URI(LV2_CORE__symbol);
+	world->uris.lv2_prototype       = NEW_URI(LV2_CORE__prototype);
 	world->uris.pset_value          = NEW_URI(LV2_PRESETS__value);
 	world->uris.rdf_a               = NEW_URI(LILV_NS_RDF  "type");
 	world->uris.rdf_value           = NEW_URI(LILV_NS_RDF  "value");
@@ -102,8 +102,7 @@ fail:
 	return NULL;
 }
 
-LILV_API
-void
+LILV_API void
 lilv_world_free(LilvWorld* world)
 {
 	if (!world) {
@@ -154,8 +153,7 @@ lilv_world_free(LilvWorld* world)
 	free(world);
 }
 
-LILV_API
-void
+LILV_API void
 lilv_world_set_option(LilvWorld*      world,
                       const char*     option,
                       const LilvNode* value)
@@ -174,8 +172,7 @@ lilv_world_set_option(LilvWorld*      world,
 	LILV_WARNF("Unrecognized or invalid option `%s'\n", option);
 }
 
-LILV_API
-LilvNodes*
+LILV_API LilvNodes*
 lilv_world_find_nodes(LilvWorld*      world,
                       const LilvNode* subject,
                       const LilvNode* predicate,
@@ -194,15 +191,13 @@ lilv_world_find_nodes(LilvWorld*      world,
 		return NULL;
 	}
 	
-	return lilv_world_find_nodes_internal(
-		world,
-		subject ? subject->node : NULL,
-		predicate->node,
-		object ? object->node : NULL);
+	return lilv_world_find_nodes_internal(world,
+	                                      subject ? subject->node : NULL,
+	                                      predicate->node,
+	                                      object ? object->node : NULL);
 }
 
-LILV_API
-LilvNode*
+LILV_API LilvNode*
 lilv_world_get(LilvWorld*      world,
                const LilvNode* subject,
                const LilvNode* predicate,
@@ -236,8 +231,7 @@ lilv_world_ask_internal(LilvWorld*      world,
 	return sord_ask(world->model, subject, predicate, object, NULL);
 }
 
-LILV_API
-bool
+LILV_API bool
 lilv_world_ask(LilvWorld*      world,
                const LilvNode* subject,
                const LilvNode* predicate,
@@ -290,6 +284,23 @@ lilv_header_compare_by_uri(const void* a, const void* b, void* user_data)
 	              lilv_node_as_uri(header_b->uri));
 }
 
+/**
+   Comparator for libraries (world->libs).
+
+   Libraries do have a LilvHeader, but we must also compare the bundle to
+   handle the case where the same library is loaded with different bundles, and
+   consequently different contents (mainly plugins).
+ */
+int
+lilv_lib_compare(const void* a, const void* b, void* user_data)
+{
+	const LilvLib* const lib_a = (const LilvLib*)a;
+	const LilvLib* const lib_b = (const LilvLib*)b;
+	int cmp = strcmp(lilv_node_as_uri(lib_a->uri),
+	                 lilv_node_as_uri(lib_b->uri));
+	return cmp ? cmp : strcmp(lib_a->bundle_path, lib_b->bundle_path);
+}
+
 /** Get an element of a collection of any object with an LilvHeader by URI. */
 struct LilvHeader*
 lilv_collection_get_by_uri(const ZixTree*  const_seq,
@@ -301,9 +312,8 @@ lilv_collection_get_by_uri(const ZixTree*  const_seq,
 
 	ZixTree*          seq = (ZixTree*)const_seq;
 	struct LilvHeader key = { NULL, (LilvNode*)uri };
-
-	ZixTreeIter* i  = NULL;
-	ZixStatus    st = zix_tree_find(seq, &key, &i);
+	ZixTreeIter*      i   = NULL;
+	ZixStatus         st  = zix_tree_find(seq, &key, &i);
 	if (!st) {
 		return (struct LilvHeader*)zix_tree_get(i);
 	}
@@ -321,13 +331,12 @@ lilv_world_add_spec(LilvWorld*      world,
 	spec->bundle    = sord_node_copy(bundle_node);
 	spec->data_uris = lilv_nodes_new();
 
-	// Add all plugin data files (rdfs:seeAlso)
-	SordIter* files = sord_search(
-		world->model,
-		specification_node,
-		world->uris.rdfs_seeAlso,
-		NULL,
-		NULL);
+	// Add all data files (rdfs:seeAlso)
+	SordIter* files = sord_search(world->model,
+	                              specification_node,
+	                              world->uris.rdfs_seeAlso,
+	                              NULL,
+	                              NULL);
 	FOREACH_MATCH(files) {
 		const SordNode* file_node = sord_iter_get_node(files, SORD_OBJECT);
 		zix_tree_insert((ZixTree*)spec->data_uris,
@@ -344,7 +353,7 @@ lilv_world_add_spec(LilvWorld*      world,
 static void
 lilv_world_add_plugin(LilvWorld*       world,
                       const SordNode*  plugin_node,
-                      SerdNode*        manifest_uri,
+                      const LilvNode*  manifest_uri,
                       void*            dynmanifest,
                       const SordNode*  bundle_node)
 {
@@ -367,7 +376,7 @@ lilv_world_add_plugin(LilvWorld*       world,
 
 	// Add manifest as plugin data file (as if it were rdfs:seeAlso)
 	zix_tree_insert((ZixTree*)plugin->data_uris,
-	                lilv_new_uri(world, (const char*)manifest_uri->buf),
+	                lilv_node_duplicate(manifest_uri),
 	                NULL);
 
 #ifdef LILV_DYN_MANIFEST
@@ -379,12 +388,11 @@ lilv_world_add_plugin(LilvWorld*       world,
 #endif
 
 	// Add all plugin data files (rdfs:seeAlso)
-	SordIter* files = sord_search(
-		world->model,
-		plugin_node,
-		world->uris.rdfs_seeAlso,
-		NULL,
-		NULL);
+	SordIter* files = sord_search(world->model,
+	                              plugin_node,
+	                              world->uris.rdfs_seeAlso,
+	                              NULL,
+	                              NULL);
 	FOREACH_MATCH(files) {
 		const SordNode* file_node = sord_iter_get_node(files, SORD_OBJECT);
 		zix_tree_insert((ZixTree*)plugin->data_uris,
@@ -397,10 +405,25 @@ lilv_world_add_plugin(LilvWorld*       world,
 	zix_tree_insert((ZixTree*)world->plugins, plugin, NULL);
 }
 
+SerdStatus
+lilv_world_load_graph(LilvWorld* world, SordNode* graph, const LilvNode* uri)
+{
+	const SerdNode* base   = sord_node_to_serd_node(uri->node);
+	SerdEnv*        env    = serd_env_new(base);
+	SerdReader*     reader = sord_new_reader(
+		world->model, env, SERD_TURTLE, graph);
+
+	const SerdStatus st = lilv_world_load_file(world, reader, uri);
+
+	serd_env_free(env);
+	serd_reader_free(reader);
+	return st;
+}
+
 static void
-lilv_world_load_dyn_manifest(LilvWorld* world,
-                             SordNode*  bundle_node,
-                             SerdNode   manifest_uri)
+lilv_world_load_dyn_manifest(LilvWorld*      world,
+                             SordNode*       bundle_node,
+                             const LilvNode* manifest)
 {
 #ifdef LILV_DYN_MANIFEST
 	if (!world->opt.dyn_manifest) {
@@ -411,22 +434,20 @@ lilv_world_load_dyn_manifest(LilvWorld* world,
 	LV2_Dyn_Manifest_Handle handle = NULL;
 
 	// ?dman a dynman:DynManifest
-	SordIter* dmanifests = sord_search(
-		world->model,
-		NULL,
-		world->uris.rdf_a,
-		world->uris.dman_DynManifest,
-		bundle_node);
+	SordIter* dmanifests = sord_search(world->model,
+	                                   NULL,
+	                                   world->uris.rdf_a,
+	                                   world->uris.dman_DynManifest,
+	                                   bundle_node);
 	FOREACH_MATCH(dmanifests) {
 		const SordNode* dmanifest = sord_iter_get_node(dmanifests, SORD_SUBJECT);
 
 		// ?dman lv2:binary ?binary
-		SordIter* binaries = sord_search(
-			world->model,
-			dmanifest,
-			world->uris.lv2_binary,
-			NULL,
-			bundle_node);
+		SordIter* binaries = sord_search(world->model,
+		                                 dmanifest,
+		                                 world->uris.lv2_binary,
+		                                 NULL,
+		                                 bundle_node);
 		if (sord_iter_end(binaries)) {
 			sord_iter_free(binaries);
 			LILV_ERRORF("Dynamic manifest in <%s> has no binaries, ignored\n",
@@ -509,9 +530,8 @@ lilv_world_load_dyn_manifest(LilvWorld* world,
 			world->uris.lv2_Plugin,
 			dmanifest);
 		FOREACH_MATCH(plug_results) {
-			const SordNode* plugin_node = sord_iter_get_node(plug_results, SORD_SUBJECT);
-			lilv_world_add_plugin(world, plugin_node,
-			                      &manifest_uri, desc, bundle_node);
+			const SordNode* plug = sord_iter_get_node(plug_results, SORD_SUBJECT);
+			lilv_world_add_plugin(world, plug, manifest, desc, bundle_node);
 		}
 		sord_iter_free(plug_results);
 
@@ -521,8 +541,19 @@ lilv_world_load_dyn_manifest(LilvWorld* world,
 #endif  // LILV_DYN_MANIFEST
 }
 
-LILV_API
-void
+static
+LilvNode*
+lilv_world_get_manifest_uri(LilvWorld* world, LilvNode* bundle_uri)
+{
+	SerdNode manifest_uri = lilv_new_uri_relative_to_base(
+		(const uint8_t*)"manifest.ttl",
+		(const uint8_t*)sord_node_get_string(bundle_uri->node));
+	LilvNode* manifest = lilv_new_uri(world, (const char*)manifest_uri.buf);
+	serd_node_free(&manifest_uri);
+	return manifest;
+}
+
+LILV_API void
 lilv_world_load_bundle(LilvWorld* world, LilvNode* bundle_uri)
 {
 	if (!lilv_node_is_uri(bundle_uri)) {
@@ -532,54 +563,86 @@ lilv_world_load_bundle(LilvWorld* world, LilvNode* bundle_uri)
 	}
 
 	SordNode* bundle_node = bundle_uri->node;
+	LilvNode* manifest    = lilv_world_get_manifest_uri(world, bundle_uri);
 
-	SerdNode manifest_uri = lilv_new_uri_relative_to_base(
-		(const uint8_t*)"manifest.ttl",
-		(const uint8_t*)sord_node_get_string(bundle_node));
-
-	SerdEnv*    env    = serd_env_new(&manifest_uri);
-	SerdReader* reader = sord_new_reader(world->model, env, SERD_TURTLE,
-	                                     bundle_node);
-	serd_reader_add_blank_prefix(reader, lilv_world_blank_node_prefix(world));
-
-	SerdStatus st = serd_reader_read_file(reader, manifest_uri.buf);
-	serd_reader_free(reader);
-	serd_env_free(env);
-	if (st) {
-		LILV_ERRORF("Error reading %s\n", manifest_uri.buf);
+	// Read manifest into model with graph = bundle_node
+	SerdStatus st = lilv_world_load_graph(world, bundle_node, manifest);
+	if (st > SERD_FAILURE) {
+		LILV_ERRORF("Error reading %s\n", lilv_node_as_string(manifest));
+		lilv_node_free(manifest);
 		return;
 	}
-
+		
 	// ?plugin a lv2:Plugin
-	SordIter* plug_results = sord_search(
-		world->model,
-		NULL,
-		world->uris.rdf_a,
-		world->uris.lv2_Plugin,
-		bundle_node);
+	SordIter* plug_results = sord_search(world->model,
+	                                     NULL,
+	                                     world->uris.rdf_a,
+	                                     world->uris.lv2_Plugin,
+	                                     bundle_node);
 	FOREACH_MATCH(plug_results) {
-		const SordNode* plugin_node = sord_iter_get_node(plug_results, SORD_SUBJECT);
-		lilv_world_add_plugin(world, plugin_node,
-		                      &manifest_uri, NULL, bundle_node);
+		const SordNode* plug = sord_iter_get_node(plug_results, SORD_SUBJECT);
+		lilv_world_add_plugin(world, plug, manifest, NULL, bundle_node);
 	}
 	sord_iter_free(plug_results);
 
-	lilv_world_load_dyn_manifest(world, bundle_node, manifest_uri);
+	lilv_world_load_dyn_manifest(world, bundle_node, manifest);
 
 	// ?specification a lv2:Specification
-	SordIter* spec_results = sord_search(
-		world->model,
-		NULL,
-		world->uris.rdf_a,
-		world->uris.lv2_Specification,
-		bundle_node);
+	SordIter* spec_results = sord_search(world->model,
+	                                     NULL,
+	                                     world->uris.rdf_a,
+	                                     world->uris.lv2_Specification,
+	                                     bundle_node);
 	FOREACH_MATCH(spec_results) {
 		const SordNode* spec = sord_iter_get_node(spec_results, SORD_SUBJECT);
 		lilv_world_add_spec(world, spec, bundle_node);
 	}
 	sord_iter_free(spec_results);
 
-	serd_node_free(&manifest_uri);
+	lilv_node_free(manifest);
+}
+
+static int
+lilv_world_drop_graph(LilvWorld* world, LilvNode* graph)
+{
+	SordIter* i = sord_search(world->model, NULL, NULL, NULL, graph->node);
+	
+	while (!sord_iter_end(i)) {
+		// Get quad and increment iter so sord_remove doesn't invalidate it
+		SordQuad quad;
+		sord_iter_get(i, quad);
+		sord_iter_next(i);
+
+		// Remove quad (nodes may now be deleted, quad is invalid)
+		sord_remove(world->model, quad);
+	}
+	sord_iter_free(i);
+
+	return 0;
+}
+
+/** Remove loaded_files entry so file will be reloaded if requested. */
+static int
+lilv_world_unload_file(LilvWorld* world, LilvNode* file)
+{
+	ZixTreeIter* iter;
+	if (!zix_tree_find((ZixTree*)world->loaded_files, file, &iter)) {
+		zix_tree_remove((ZixTree*)world->loaded_files, iter);
+		return 0;
+	}
+	return 1;
+}
+
+LILV_API int
+lilv_world_unload_bundle(LilvWorld* world, LilvNode* bundle_uri)
+{
+	// Remove loaded_files entry for manifest.ttl
+	LilvNode* manifest = lilv_world_get_manifest_uri(world, bundle_uri);
+	lilv_world_unload_file(world, manifest);
+	lilv_node_free(manifest);
+
+	// Drop everything in bundle graph
+	return lilv_world_drop_graph(world, bundle_uri);
 }
 
 static void
@@ -598,38 +661,29 @@ load_dir_entry(const char* dir, const char* name, void* data)
 	free(uri);
 }
 
-/** Load all bundles in the directory at @a dir_path. */
+/** Load all bundles in the directory at `dir_path`. */
 static void
 lilv_world_load_directory(LilvWorld* world, const char* dir_path)
 {
 	char* path = lilv_expand(dir_path);
-	if (!path) {
-		LILV_WARNF("Empty path `%s'\n", path);
-		return;
+	if (path) {
+		lilv_dir_for_each(path, world, load_dir_entry);
+		free(path);
 	}
-
-	lilv_dir_for_each(path, world, load_dir_entry);
-	free(path);
-}
-
-static bool
-is_path_sep(char c)
-{
-	return c == LILV_PATH_SEP[0];
 }
 
 static const char*
 first_path_sep(const char* path)
 {
 	for (const char* p = path; *p != '\0'; ++p) {
-		if (is_path_sep(*p)) {
+		if (*p == LILV_PATH_SEP[0]) {
 			return p;
 		}
 	}
 	return NULL;
 }
 
-/** Load all bundles found in @a lv2_path.
+/** Load all bundles found in `lv2_path`.
  * @param lv2_path A colon-delimited list of directories.  These directories
  * should contain LV2 bundle directories (ie the search path is a list of
  * parent directories of bundles, not a list of bundle directories).
@@ -661,16 +715,7 @@ lilv_world_load_specifications(LilvWorld* world)
 	for (LilvSpec* spec = world->specs; spec; spec = spec->next) {
 		LILV_FOREACH(nodes, f, spec->data_uris) {
 			LilvNode* file = (LilvNode*)lilv_collection_get(spec->data_uris, f);
-
-			const SerdNode* node   = sord_node_to_serd_node(file->node);
-			SerdEnv*        env    = serd_env_new(node);
-			SerdReader*     reader = sord_new_reader(world->model, env,
-			                                         SERD_TURTLE, NULL);
-			serd_reader_add_blank_prefix(reader,
-			                             lilv_world_blank_node_prefix(world));
-			serd_reader_read_file(reader, node->buf);
-			serd_reader_free(reader);
-			serd_env_free(env);
+			lilv_world_load_graph(world, NULL, file);
 		}
 	}
 }
@@ -684,12 +729,11 @@ lilv_world_load_plugin_classes(LilvWorld* world)
 	   a menu), they won't be seen anyway...
 	*/
 
-	SordIter* classes = sord_search(
-		world->model,
-		NULL,
-		world->uris.rdf_a,
-		world->uris.rdfs_Class,
-		NULL);
+	SordIter* classes = sord_search(world->model,
+	                                NULL,
+	                                world->uris.rdf_a,
+	                                world->uris.rdfs_Class,
+	                                NULL);
 	FOREACH_MATCH(classes) {
 		const SordNode* class_node = sord_iter_get_node(classes, SORD_SUBJECT);
 
@@ -719,8 +763,7 @@ lilv_world_load_plugin_classes(LilvWorld* world)
 	sord_iter_free(classes);
 }
 
-LILV_API
-void
+LILV_API void
 lilv_world_load_all(LilvWorld* world)
 {
 	const char* lv2_path = getenv("LV2_PATH");
@@ -738,7 +781,7 @@ lilv_world_load_all(LilvWorld* world)
 		if (sord_ask(world->model,
 		             NULL,
 		             world->uris.dc_replaces,
-		             lilv_node_as_node(lilv_plugin_get_uri(plugin)),
+		             lilv_plugin_get_uri(plugin)->node,
 		             NULL)) {
 			// TODO: Check if replacement is a known plugin? (expensive)
 			((LilvPlugin*)plugin)->replaced = true;
@@ -750,8 +793,29 @@ lilv_world_load_all(LilvWorld* world)
 	lilv_world_load_plugin_classes(world);
 }
 
-LILV_API
-int
+SerdStatus
+lilv_world_load_file(LilvWorld* world, SerdReader* reader, const LilvNode* uri)
+{
+	ZixTreeIter* iter;
+	if (!zix_tree_find((ZixTree*)world->loaded_files, uri, &iter)) {
+		return SERD_FAILURE;  // File has already been loaded
+	}
+
+	serd_reader_add_blank_prefix(reader, lilv_world_blank_node_prefix(world));
+	const SerdStatus st = serd_reader_read_file(
+		reader, sord_node_get_string(uri->node));
+	if (st) {
+		LILV_ERRORF("Error loading file `%s'\n", lilv_node_as_string(uri));
+		return st;
+	}
+		
+	zix_tree_insert((ZixTree*)world->loaded_files,
+	                lilv_node_duplicate(uri),
+	                NULL);
+	return SERD_SUCCESS;
+}
+
+LILV_API int
 lilv_world_load_resource(LilvWorld*      world,
                          const LilvNode* resource)
 {
@@ -768,54 +832,65 @@ lilv_world_load_resource(LilvWorld*      world,
 	                               NULL, NULL);
 	FOREACH_MATCH(files) {
 		const SordNode* file      = sord_iter_get_node(files, SORD_OBJECT);
-		const uint8_t*  str       = sord_node_get_string(file);
+		const uint8_t*  file_str  = sord_node_get_string(file);
 		LilvNode*       file_node = lilv_node_new_from_node(world, file);
-		ZixTreeIter*    iter;
-		if (zix_tree_find((ZixTree*)world->loaded_files, file_node, &iter)) {
-			if (sord_node_get_type(file) == SORD_URI) {
-				const SerdNode* base   = sord_node_to_serd_node(file);
-				SerdEnv*        env    = serd_env_new(base);
-				SerdReader*     reader = sord_new_reader(
-					world->model, env, SERD_TURTLE, (SordNode*)file);
-				serd_reader_add_blank_prefix(
-					reader, lilv_world_blank_node_prefix(world));
-				if (!serd_reader_read_file(reader, str)) {
-					++n_read;
-					zix_tree_insert(
-						(ZixTree*)world->loaded_files, file_node, NULL);
-					file_node = NULL;  // prevent deletion...
-				} else {
-					LILV_ERRORF("Error loading resource `%s'\n", str);
-				}
-				serd_reader_free(reader);
-				serd_env_free(env);
-			} else {
-				LILV_ERRORF("rdfs:seeAlso node `%s' is not a URI\n", str);
-			}
+		if (sord_node_get_type(file) != SORD_URI) {
+			LILV_ERRORF("rdfs:seeAlso node `%s' is not a URI\n", file_str);
+		} else if (!lilv_world_load_graph(world, (SordNode*)file, file_node)) {
+			++n_read;
 		}
-		lilv_node_free(file_node);  // ...here
+		lilv_node_free(file_node);
 	}
 	sord_iter_free(files);
 
 	return n_read;
 }
 
-LILV_API
-const LilvPluginClass*
+LILV_API int
+lilv_world_unload_resource(LilvWorld*      world,
+                           const LilvNode* resource)
+{
+	if (!lilv_node_is_uri(resource) && !lilv_node_is_blank(resource)) {
+		LILV_ERRORF("Node `%s' is not a resource\n",
+		            sord_node_get_string(resource->node));
+		return -1;
+	}
+
+	int       n_dropped = 0;
+	SordIter* files     = sord_search(world->model,
+	                                  resource->node,
+	                                  world->uris.rdfs_seeAlso,
+	                                  NULL, NULL);
+	FOREACH_MATCH(files) {
+		const SordNode* file      = sord_iter_get_node(files, SORD_OBJECT);
+		LilvNode*       file_node = lilv_node_new_from_node(world, file);
+		if (sord_node_get_type(file) != SORD_URI) {
+			LILV_ERRORF("rdfs:seeAlso node `%s' is not a URI\n",
+			            sord_node_get_string(file));
+		} else if (!lilv_world_drop_graph(world, file_node)) {
+			lilv_world_unload_file(world, file_node);
+			++n_dropped;
+		}
+		lilv_node_free(file_node);
+	}
+	sord_iter_free(files);
+
+	return n_dropped;
+}
+
+LILV_API const LilvPluginClass*
 lilv_world_get_plugin_class(const LilvWorld* world)
 {
 	return world->lv2_plugin_class;
 }
 
-LILV_API
-const LilvPluginClasses*
+LILV_API const LilvPluginClasses*
 lilv_world_get_plugin_classes(const LilvWorld* world)
 {
 	return world->plugin_classes;
 }
 
-LILV_API
-const LilvPlugins*
+LILV_API const LilvPlugins*
 lilv_world_get_all_plugins(const LilvWorld* world)
 {
 	return world->plugins;

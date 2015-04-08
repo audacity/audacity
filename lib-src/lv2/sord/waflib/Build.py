@@ -132,29 +132,24 @@ class BuildContext(Context.Context):
 				raise Errors.WafError('Version mismatch! reconfigure the project')
 			for t in env['tools']:
 				self.setup(**t)
-		f=None
+		dbfn=os.path.join(self.variant_dir,Context.DBFILE)
 		try:
-			dbfn=os.path.join(self.variant_dir,Context.DBFILE)
+			data=Utils.readf(dbfn,'rb')
+		except(IOError,EOFError):
+			Logs.debug('build: Could not load the build cache %s (missing)'%dbfn)
+		else:
 			try:
-				f=open(dbfn,'rb')
-			except(IOError,EOFError):
-				Logs.debug('build: Could not load the build cache %s (missing)'%dbfn)
-			else:
+				waflib.Node.pickle_lock.acquire()
+				waflib.Node.Nod3=self.node_class
 				try:
-					waflib.Node.pickle_lock.acquire()
-					waflib.Node.Nod3=self.node_class
-					try:
-						data=cPickle.load(f)
-					except Exception ,e:
-						Logs.debug('build: Could not pickle the build cache %s: %r'%(dbfn,e))
-					else:
-						for x in SAVED_ATTRS:
-							setattr(self,x,data[x])
-				finally:
-					waflib.Node.pickle_lock.release()
-		finally:
-			if f:
-				f.close()
+					data=cPickle.loads(data)
+				except Exception ,e:
+					Logs.debug('build: Could not pickle the build cache %s: %r'%(dbfn,e))
+				else:
+					for x in SAVED_ATTRS:
+						setattr(self,x,data[x])
+			finally:
+				waflib.Node.pickle_lock.release()
 		self.init_dirs()
 	def store(self):
 		data={}
@@ -164,18 +159,13 @@ class BuildContext(Context.Context):
 		try:
 			waflib.Node.pickle_lock.acquire()
 			waflib.Node.Nod3=self.node_class
-			f=None
-			try:
-				f=open(db+'.tmp','wb')
-				cPickle.dump(data,f,-1)
-			finally:
-				if f:
-					f.close()
+			x=cPickle.dumps(data,-1)
 		finally:
 			waflib.Node.pickle_lock.release()
+		Utils.writef(db+'.tmp',x,m='wb')
 		try:
 			st=os.stat(db)
-			os.unlink(db)
+			os.remove(db)
 			if not Utils.is_win32:
 				os.chown(db+'.tmp',st.st_uid,st.st_gid)
 		except(AttributeError,OSError):
@@ -481,7 +471,6 @@ class inst(Task.Task):
 		for x,y in zip(self.source,self.inputs):
 			if self.relative_trick:
 				destfile=os.path.join(destpath,y.path_from(self.path))
-				Utils.check_dir(os.path.dirname(destfile))
 			else:
 				destfile=os.path.join(destpath,y.name)
 			self.generator.bld.do_install(y.abspath(),destfile,self.chmod)
@@ -624,7 +613,7 @@ class UninstallContext(InstallContext):
 	def do_link(self,src,tgt):
 		try:
 			if not self.progress_bar:
-				Logs.info('- unlink %s'%tgt)
+				Logs.info('- remove %s'%tgt)
 			os.remove(tgt)
 		except OSError:
 			pass

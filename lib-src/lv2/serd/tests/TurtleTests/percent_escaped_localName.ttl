@@ -1,0 +1,2 @@
+@prefix p: <http://a.example/>.
+p:%25 <http://a.example/p> <http://a.example/o> .

@@ -1,26 +1,26 @@
 midi (1.8) stable;
 
-  * Remove non-standard midi:Tick message type.
-  * Add C definitions for message types and standard controllers.
   * Use consistent label style.
+  * Remove non-standard midi:Tick message type.
   * Add midi:HexByte datatype for status bytes and masks.
-  * Add midi:binding and midi:channel predicates.
+  * Add C definitions for message types and standard controllers.
   * Fix definition of SystemExclusive status byte.
+  * Add midi:binding and midi:channel predicates.
 
  -- David Robillard <d@drobilla.net>  Sun, 14 Oct 2012 00:00:00 +0000
 
 midi (1.6) stable;
 
-  * Add class definitions for various message types.
-  * Merge with unified LV2 package.
   * Document how to serialise a MidiEvent to a string.
+  * Merge with unified LV2 package.
+  * Add class definitions for various message types.
 
  -- David Robillard <d@drobilla.net>  Tue, 17 Apr 2012 00:00:00 +0000
 
 midi (1.4) stable;
 
-  * Improve documentation.
   * Update packaging.
+  * Improve documentation.
 
  -- David Robillard <d@drobilla.net>  Mon, 21 Nov 2011 00:00:00 +0000
 

@@ -70,9 +70,12 @@ class link_task(Task.Task):
 			if not pattern:
 				pattern='%s'
 			folder,name=os.path.split(target)
-			if self.__class__.__name__.find('shlib')>0:
-				if self.env.DEST_BINFMT=='pe'and getattr(self.generator,'vnum',None):
-					name=name+'-'+self.generator.vnum.split('.')[0]
+			if self.__class__.__name__.find('shlib')>0 and getattr(self.generator,'vnum',None):
+				nums=self.generator.vnum.split('.')
+				if self.env.DEST_BINFMT=='pe':
+					name=name+'-'+nums[0]
+				elif self.env.DEST_OS=='openbsd':
+					pattern='%s.%s.%s'%(pattern,nums[0],nums[1])
 			tmp=folder+os.sep+pattern%name
 			target=self.generator.path.find_or_declare(tmp)
 		self.set_outputs(target)
@@ -202,11 +205,11 @@ def process_use(self):
 	for x in names:
 		try:
 			y=self.bld.get_tgen_by_name(x)
-		except Exception:
+		except Errors.WafError:
 			if not self.env['STLIB_'+x]and not x in self.uselib:
 				self.uselib.append(x)
 		else:
-			for k in self.to_list(getattr(y,'uselib',[])):
+			for k in self.to_list(getattr(y,'use',[])):
 				if not self.env['STLIB_'+k]and not k in self.uselib:
 					self.uselib.append(k)
 @taskgen_method
@@ -296,15 +299,21 @@ def apply_vnum(self):
 	if self.env.SONAME_ST:
 		v=self.env.SONAME_ST%name2
 		self.env.append_value('LINKFLAGS',v.split())
-	self.create_task('vnum',node,[node.parent.find_or_declare(name2),node.parent.find_or_declare(name3)])
+	if self.env.DEST_OS!='openbsd':
+		self.create_task('vnum',node,[node.parent.find_or_declare(name2),node.parent.find_or_declare(name3)])
 	if getattr(self,'install_task',None):
 		self.install_task.hasrun=Task.SKIP_ME
 		bld=self.bld
 		path=self.install_task.dest
-		t1=bld.install_as(path+os.sep+name3,node,env=self.env,chmod=self.link_task.chmod)
-		t2=bld.symlink_as(path+os.sep+name2,name3)
-		t3=bld.symlink_as(path+os.sep+libname,name3)
-		self.vnum_install_task=(t1,t2,t3)
+		if self.env.DEST_OS=='openbsd':
+			libname=self.link_task.outputs[0].name
+			t1=bld.install_as('%s%s%s'%(path,os.sep,libname),node,env=self.env,chmod=self.link_task.chmod)
+			self.vnum_install_task=(t1,)
+		else:
+			t1=bld.install_as(path+os.sep+name3,node,env=self.env,chmod=self.link_task.chmod)
+			t2=bld.symlink_as(path+os.sep+name2,name3)
+			t3=bld.symlink_as(path+os.sep+libname,name3)
+			self.vnum_install_task=(t1,t2,t3)
 	if'-dynamiclib'in self.env['LINKFLAGS']:
 		try:
 			inst_to=self.install_path

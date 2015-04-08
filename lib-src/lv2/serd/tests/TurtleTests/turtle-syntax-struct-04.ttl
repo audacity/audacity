@@ -1,0 +1,4 @@
+@prefix : <http://www.w3.org/2013/TurtleTests/> .
+:s :p1 :o1 ;;
+   :p2 :o2 
+   .

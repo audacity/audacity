@@ -1,0 +1,3 @@
+# Test long literal with lang tag
+@prefix :  <http://example.org/ex#> .
+:a :b """Cheers"""@en-UK .

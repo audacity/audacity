@@ -1,3 +1,18 @@
+sratom (0.4.6) stable;
+
+  * Update for latest LV2 Atom Object simplification
+  * Don't set eg prefix in sratom_to_turtle
+  * Upgrade to waf 1.7.16
+
+ -- David Robillard <d@drobilla.net>  Fri, 08 Aug 2014 18:14:19 -0400
+
+sratom (0.4.4) stable;
+
+  * Escape invalid characters when writing paths as URIs
+  * Fancier printing without subject and predicate
+
+ -- David Robillard <d@drobilla.net>  Sat, 04 Jan 2014 16:09:33 -0500
+
 sratom (0.4.2) stable;
 
   * Fix serialisation of nested tuples

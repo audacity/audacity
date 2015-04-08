@@ -23,4 +23,4 @@ the first plugin describes the basics in detail.
 
 This book is compiled from plugin source code into a single document for pleasant reading and ease of reference.
 Each chapter corresponds to executable plugin code which can be found in the +plugins+ directory of the LV2 distribution.
-If you prefer to read actual source code, all the content here is also available there, where the book text is included in comments.
+If you prefer to read actual source code, all the content here is also available in the source code as comments.

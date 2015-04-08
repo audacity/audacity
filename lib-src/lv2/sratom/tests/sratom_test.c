@@ -1,5 +1,5 @@
 /*
-  Copyright 2012 David Robillard <http://drobilla.net>
+  Copyright 2012-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -116,88 +116,88 @@ test(bool top_level)
 	LV2_URID             obj_id  = urid_map(NULL, obj_uri);
 	LV2_Atom_Forge_Frame obj_frame;
 	if (top_level) {
-		lv2_atom_forge_resource(&forge, &obj_frame, obj_id, eg_Object);
+		lv2_atom_forge_object(&forge, &obj_frame, obj_id, eg_Object);
 	} else {
-		lv2_atom_forge_blank(&forge, &obj_frame, 1, eg_Object);
+		lv2_atom_forge_object(&forge, &obj_frame, 0, eg_Object);
 	}
 	LV2_Atom* obj = lv2_atom_forge_deref(&forge, obj_frame.ref);
 
 	// eg_one = (Int32)1
-	lv2_atom_forge_property_head(&forge, eg_one, 0);
+	lv2_atom_forge_key(&forge, eg_one);
 	lv2_atom_forge_int(&forge, 1);
 
 	// eg_two = (Int64)2
-	lv2_atom_forge_property_head(&forge, eg_two, 0);
+	lv2_atom_forge_key(&forge, eg_two);
 	lv2_atom_forge_long(&forge, 2);
 
 	// eg_three = (Float)3.0
-	lv2_atom_forge_property_head(&forge, eg_three, 0);
+	lv2_atom_forge_key(&forge, eg_three);
 	lv2_atom_forge_float(&forge, 3.0f);
 
 	// eg_four = (Double)4.0
-	lv2_atom_forge_property_head(&forge, eg_four, 0);
+	lv2_atom_forge_key(&forge, eg_four);
 	lv2_atom_forge_double(&forge, 4.0);
 
 	// eg_true = (Bool)1
-	lv2_atom_forge_property_head(&forge, eg_true, 0);
+	lv2_atom_forge_key(&forge, eg_true);
 	lv2_atom_forge_bool(&forge, true);
 
 	// eg_false = (Bool)0
-	lv2_atom_forge_property_head(&forge, eg_false, 0);
+	lv2_atom_forge_key(&forge, eg_false);
 	lv2_atom_forge_bool(&forge, false);
 
 	// eg_path = (Path)"/absolute/path"
 	const char*  pstr     = "/absolute/path";
 	const size_t pstr_len = strlen(pstr);
-	lv2_atom_forge_property_head(&forge, eg_path, 0);
+	lv2_atom_forge_key(&forge, eg_path);
 	lv2_atom_forge_path(&forge, pstr, pstr_len);
 
 	// eg_urid = (URID)"http://example.org/value"
 	LV2_URID eg_value = urid_map(NULL, "http://example.org/value");
-	lv2_atom_forge_property_head(&forge, eg_urid, 0);
+	lv2_atom_forge_key(&forge, eg_urid);
 	lv2_atom_forge_urid(&forge, eg_value);
 
 	// eg_string = (String)"hello"
-	lv2_atom_forge_property_head(&forge, eg_string, 0);
+	lv2_atom_forge_key(&forge, eg_string);
 	lv2_atom_forge_string(&forge, "hello", strlen("hello"));
 
 	// eg_langlit = (Literal)"bonjour"@fr
-	lv2_atom_forge_property_head(&forge, eg_langlit, 0);
+	lv2_atom_forge_key(&forge, eg_langlit);
 	lv2_atom_forge_literal(
 		&forge, "bonjour", strlen("bonjour"),
 		0, urid_map(NULL, "http://lexvo.org/id/iso639-3/fra"));
 
 	// eg_typelit = (Literal)"bonjour"@fr
-	lv2_atom_forge_property_head(&forge, eg_typelit, 0);
+	lv2_atom_forge_key(&forge, eg_typelit);
 	lv2_atom_forge_literal(
 		&forge, "value", strlen("value"),
 		urid_map(NULL, "http://example.org/Type"), 0);
 
 	// eg_null = null
-	lv2_atom_forge_property_head(&forge, eg_null, 0);
+	lv2_atom_forge_key(&forge, eg_null);
 	lv2_atom_forge_atom(&forge, 0, 0);
 
 	// eg_chunk = 0xBEEFDEAD
 	uint8_t chunk_buf[] = { 0xBE, 0xEF, 0xDE, 0xAD };
-	lv2_atom_forge_property_head(&forge, eg_chunk, 0);
+	lv2_atom_forge_key(&forge, eg_chunk);
 	lv2_atom_forge_atom(&forge, sizeof(chunk_buf), forge.Chunk);
 	lv2_atom_forge_write(&forge, chunk_buf, sizeof(chunk_buf));
 
 	// eg_blob = 0xDEADBEEF
 	uint32_t blob_type  = map.map(map.handle, "http://example.org/Blob");
 	uint8_t  blob_buf[] = { 0xDE, 0xAD, 0xBE, 0xEF };
-	lv2_atom_forge_property_head(&forge, eg_blob, 0);
+	lv2_atom_forge_key(&forge, eg_blob);
 	lv2_atom_forge_atom(&forge, sizeof(blob_buf), blob_type);
 	lv2_atom_forge_write(&forge, blob_buf, sizeof(blob_buf));
 
 	// eg_blank = [ a <http://example.org/Object> ]
-	lv2_atom_forge_property_head(&forge, eg_blank, 0);
+	lv2_atom_forge_key(&forge, eg_blank);
 	LV2_Atom_Forge_Frame blank_frame;
-	lv2_atom_forge_blank(&forge, &blank_frame, top_level ? 1 : 2, eg_Object);
+	lv2_atom_forge_object(&forge, &blank_frame, 0, eg_Object);
 	lv2_atom_forge_pop(&forge, &blank_frame);
 
 	// eg_tuple = "foo",true
-	lv2_atom_forge_property_head(&forge, eg_tuple, 0);
+	lv2_atom_forge_key(&forge, eg_tuple);
 	LV2_Atom_Forge_Frame tuple_frame;
 	lv2_atom_forge_tuple(&forge, &tuple_frame);
 	lv2_atom_forge_string(&forge, "foo", strlen("foo"));
@@ -205,7 +205,7 @@ test(bool top_level)
 	lv2_atom_forge_pop(&forge, &tuple_frame);
 
 	// eg_rectup = "foo",true,("bar",false)
-	lv2_atom_forge_property_head(&forge, eg_rectup, 0);
+	lv2_atom_forge_key(&forge, eg_rectup);
 	LV2_Atom_Forge_Frame rectup_frame;
 	lv2_atom_forge_tuple(&forge, &rectup_frame);
 	lv2_atom_forge_string(&forge, "foo", strlen("foo"));
@@ -218,13 +218,13 @@ test(bool top_level)
 	lv2_atom_forge_pop(&forge, &rectup_frame);
 
 	// eg_vector = (Vector<Int32>)1,2,3,4
-	lv2_atom_forge_property_head(&forge, eg_vector, 0);
+	lv2_atom_forge_key(&forge, eg_vector);
 	int32_t elems[] = { 1, 2, 3, 4 };
 	lv2_atom_forge_vector(&forge, 4, forge.Int, sizeof(int32_t), elems);
 
 	// eg_seq = (Sequence)1, 2
 	LV2_URID midi_midiEvent = map.map(map.handle, LV2_MIDI__MidiEvent);
-	lv2_atom_forge_property_head(&forge, eg_seq, 0);
+	lv2_atom_forge_key(&forge, eg_seq);
 	LV2_Atom_Forge_Frame seq_frame;
 	lv2_atom_forge_sequence_head(&forge, &seq_frame, 0);
 

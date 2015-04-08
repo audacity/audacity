@@ -153,7 +153,7 @@ def check_python_headers(conf):
 	pybin=conf.env.PYTHON
 	if not pybin:
 		conf.fatal('Could not find the python executable')
-	v='prefix SO LDFLAGS LIBDIR LIBPL INCLUDEPY Py_ENABLE_SHARED MACOSX_DEPLOYMENT_TARGET LDSHARED CFLAGS'.split()
+	v='prefix SO LDFLAGS LIBDIR LIBPL INCLUDEPY Py_ENABLE_SHARED MACOSX_DEPLOYMENT_TARGET LDSHARED CFLAGS LDVERSION'.split()
 	try:
 		lst=conf.get_python_variables(["get_config_var('%s') or ''"%x for x in v])
 	except RuntimeError:
@@ -170,7 +170,9 @@ def check_python_headers(conf):
 	all_flags=dct['LDFLAGS']+' '+dct['LDSHARED']+' '+dct['CFLAGS']
 	conf.parse_flags(all_flags,'PYEXT')
 	result=None
-	for name in('python'+env['PYTHON_VERSION'],'python'+env['PYTHON_VERSION'].replace('.','')):
+	if not dct["LDVERSION"]:
+		dct["LDVERSION"]=env['PYTHON_VERSION']
+	for name in('python'+dct['LDVERSION'],'python'+env['PYTHON_VERSION']+'m','python'+env['PYTHON_VERSION'].replace('.','')):
 		if not result and env['LIBPATH_PYEMBED']:
 			path=env['LIBPATH_PYEMBED']
 			conf.to_log("\n\n# Trying default LIBPATH_PYEMBED: %r\n"%path)
@@ -230,9 +232,12 @@ def check_python_headers(conf):
 		conf.check(header_name='Python.h',define_name='HAVE_PYTHON_H',uselib='PYEMBED',fragment=FRAG,errmsg=':-(')
 	except conf.errors.ConfigurationError:
 		xx=conf.env.CXX_NAME and'cxx'or'c'
-		conf.check_cfg(msg='Asking python-config for the flags (pyembed)',path=conf.env.PYTHON_CONFIG,package='',uselib_store='PYEMBED',args=['--cflags','--libs','--ldflags'])
+		flags=['--cflags','--libs','--ldflags']
+		for f in flags:
+			conf.check_cfg(msg='Asking python-config for pyembed %s flags'%f,path=conf.env.PYTHON_CONFIG,package='',uselib_store='PYEMBED',args=[f])
 		conf.check(header_name='Python.h',define_name='HAVE_PYTHON_H',msg='Getting pyembed flags from python-config',fragment=FRAG,errmsg='Could not build a python embedded interpreter',features='%s %sprogram pyembed'%(xx,xx))
-		conf.check_cfg(msg='Asking python-config for the flags (pyext)',path=conf.env.PYTHON_CONFIG,package='',uselib_store='PYEXT',args=['--cflags','--libs','--ldflags'])
+		for f in flags:
+			conf.check_cfg(msg='Asking python-config for pyext %s flags'%f,path=conf.env.PYTHON_CONFIG,package='',uselib_store='PYEXT',args=[f])
 		conf.check(header_name='Python.h',define_name='HAVE_PYTHON_H',msg='Getting pyext flags from python-config',features='%s %sshlib pyext'%(xx,xx),fragment=FRAG,errmsg='Could not build python extensions')
 @conf
 def check_python_version(conf,minver=None):

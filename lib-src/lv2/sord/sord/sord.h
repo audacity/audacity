@@ -150,7 +150,7 @@ SordWorld*
 sord_world_new(void);
 
 /**
-   Free @c world.
+   Free `world`.
 */
 SORD_API
 void
@@ -159,7 +159,7 @@ sord_world_free(SordWorld* world);
 /**
    Set a function to be called when errors occur.
 
-   The @p error_sink will be called with @p handle as its first argument.  If
+   The `error_sink` will be called with `handle` as its first argument.  If
    no error function is set, errors are printed to stderr.
 */
 SORD_API
@@ -177,8 +177,8 @@ sord_world_set_error_sink(SordWorld*    world,
 /**
    Get a URI node from a string.
 
-   Note this function measures @c str, which is a common bottleneck.
-   Use sord_node_from_serd_node instead if @c str is already measured.
+   Note this function measures `str`, which is a common bottleneck.
+   Use sord_node_from_serd_node instead if `str` is already measured.
 */
 SORD_API
 SordNode*
@@ -196,8 +196,8 @@ sord_new_relative_uri(SordWorld*     world,
 /**
    Get a blank node from a string.
 
-   Note this function measures @c str, which is a common bottleneck.
-   Use sord_node_from_serd_node instead if @c str is already measured.
+   Note this function measures `str`, which is a common bottleneck.
+   Use sord_node_from_serd_node instead if `str` is already measured.
 */
 SORD_API
 SordNode*
@@ -206,8 +206,8 @@ sord_new_blank(SordWorld* world, const uint8_t* str);
 /**
    Get a literal node from a string.
 
-   Note this function measures @c str, which is a common bottleneck.
-   Use sord_node_from_serd_node instead if @c str is already measured.
+   Note this function measures `str`, which is a common bottleneck.
+   Use sord_node_from_serd_node instead if `str` is already measured.
 */
 SORD_API
 SordNode*
@@ -220,7 +220,7 @@ sord_new_literal(SordWorld*     world,
    Copy a node (obtain a reference).
 
    Node that since nodes are interned and reference counted, this does not
-   actually create a deep copy of @c node.
+   actually create a deep copy of `node`.
 */
 SORD_API
 SordNode*
@@ -248,7 +248,7 @@ const uint8_t*
 sord_node_get_string(const SordNode* node);
 
 /**
-   Return the string value of a node, and set @c len to its length.
+   Return the string value of a node, and set `len` to its length.
 */
 SORD_API
 const uint8_t*
@@ -287,7 +287,7 @@ bool
 sord_node_is_inline_object(const SordNode* node);
 
 /**
-   Return true iff @c a is equal to @c b.
+   Return true iff `a` is equal to `b`.
 
    Note this is much faster than comparing the node's strings.
 */
@@ -342,37 +342,37 @@ sord_new(SordWorld* world,
          bool      graphs);
 
 /**
-   Close and free @c model.
+   Close and free `model`.
 */
 SORD_API
 void
 sord_free(SordModel* model);
 
 /**
-   Get the world associated with @c model.
+   Get the world associated with `model`.
 */
 SORD_API
 SordWorld*
 sord_get_world(SordModel* model);
 
 /**
-   Return the number of nodes stored in @c world.
+   Return the number of nodes stored in `world`.
 
-   Nodes are included in this count iff they are a part of a quad in @c world.
+   Nodes are included in this count iff they are a part of a quad in `world`.
 */
 SORD_API
 size_t
 sord_num_nodes(const SordWorld* world);
 
 /**
-   Return the number of quads stored in @c model.
+   Return the number of quads stored in `model`.
 */
 SORD_API
 size_t
 sord_num_quads(const SordModel* model);
 
 /**
-   Return an iterator to the start of @c model.
+   Return an iterator to the start of `model`.
 */
 SORD_API
 SordIter*
@@ -399,7 +399,7 @@ sord_search(SordModel*      model,
             const SordNode* g);
 /**
    Search for a single node that matches a pattern.
-   Exactly one of @p s, @p p, @p o must be NULL.
+   Exactly one of `s`, `p`, `o` must be NULL.
    This function is mainly useful for predicates that only have one value.
    The returned node must be freed using sord_node_free.
    @return the first matching node, or NULL if no matches are found.
@@ -435,7 +435,7 @@ sord_count(SordModel*      model,
            const SordNode* g);
 
 /**
-   Check if @a model contains a triple pattern.
+   Check if `model` contains a triple pattern.
 */
 SORD_API
 bool
@@ -451,7 +451,7 @@ sord_add(SordModel* model, const SordQuad quad);
 /**
    Remove a quad from a model.
 
-   Note that is it illegal to remove while iterating over @c model.
+   Note that is it illegal to remove while iterating over `model`.
 */
 SORD_API
 void
@@ -522,42 +522,42 @@ sord_inserter_write_statement(SordInserter*      inserter,
 */
 
 /**
-   Set @c quad to the quad pointed to by @c iter.
+   Set `quad` to the quad pointed to by `iter`.
 */
 SORD_API
 void
 sord_iter_get(const SordIter* iter, SordQuad quad);
 
 /**
-   Return a field of the quad pointed to by @c iter.
+   Return a field of the quad pointed to by `iter`.
 */
 SORD_API
 const SordNode*
 sord_iter_get_node(const SordIter* iter, SordQuadIndex index);
 
 /**
-   Return the store pointed to by @c iter.
+   Return the store pointed to by `iter`.
 */
 SORD_API
 const SordModel*
 sord_iter_get_model(SordIter* iter);
 
 /**
-   Increment @c iter to point to the next statement.
+   Increment `iter` to point to the next statement.
 */
 SORD_API
 bool
 sord_iter_next(SordIter* iter);
 
 /**
-   Return true iff @c iter is at the end of its range.
+   Return true iff `iter` is at the end of its range.
 */
 SORD_API
 bool
 sord_iter_end(const SordIter* iter);
 
 /**
-   Free @c iter.
+   Free `iter`.
 */
 SORD_API
 void
@@ -574,7 +574,7 @@ sord_iter_free(SordIter* iter);
 
    This function is a straightforward and fast equivalence match with wildcard
    support (ID 0 is a wildcard). It does not actually read node data.
-   @return true iff @c x and @c y match.
+   @return true iff `x` and `y` match.
 */
 SORD_API
 bool
@@ -587,7 +587,7 @@ sord_quad_match(const SordQuad x, const SordQuad y);
 */
 
 /**
-   Return a reader that will read into @c model.
+   Return a reader that will read into `model`.
 */
 SORD_API
 SerdReader*
@@ -608,7 +608,7 @@ sord_write(SordModel*  model,
 /**
    Write a range to a writer.
 
-   This increments @c iter to its end, then frees it.
+   This increments `iter` to its end, then frees it.
 */
 SORD_API
 bool

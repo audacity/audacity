@@ -153,7 +153,7 @@ def check_python_headers(conf):
 	pybin=conf.env.PYTHON
 	if not pybin:
 		conf.fatal('Could not find the python executable')
-	v='prefix SO LDFLAGS LIBDIR LIBPL INCLUDEPY Py_ENABLE_SHARED MACOSX_DEPLOYMENT_TARGET LDSHARED CFLAGS'.split()
+	v='prefix SO LDFLAGS LIBDIR LIBPL INCLUDEPY Py_ENABLE_SHARED MACOSX_DEPLOYMENT_TARGET LDSHARED CFLAGS LDVERSION'.split()
 	try:
 		lst=conf.get_python_variables(["get_config_var('%s') or ''"%x for x in v])
 	except RuntimeError:
@@ -170,7 +170,9 @@ def check_python_headers(conf):
 	all_flags=dct['LDFLAGS']+' '+dct['LDSHARED']+' '+dct['CFLAGS']
 	conf.parse_flags(all_flags,'PYEXT')
 	result=None
-	for name in('python'+env['PYTHON_VERSION'],'python'+env['PYTHON_VERSION']+'m','python'+env['PYTHON_VERSION'].replace('.','')):
+	if not dct["LDVERSION"]:
+		dct["LDVERSION"]=env['PYTHON_VERSION']
+	for name in('python'+dct['LDVERSION'],'python'+env['PYTHON_VERSION']+'m','python'+env['PYTHON_VERSION'].replace('.','')):
 		if not result and env['LIBPATH_PYEMBED']:
 			path=env['LIBPATH_PYEMBED']
 			conf.to_log("\n\n# Trying default LIBPATH_PYEMBED: %r\n"%path)

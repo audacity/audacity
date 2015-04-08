@@ -3,7 +3,7 @@
 # WARNING! Do not edit! http://waf.googlecode.com/git/docs/wafbook/single.html#_obtaining_the_waf_file
 
 import os,sys,re,tempfile
-from waflib import Utils,Task,Logs,Options
+from waflib import Utils,Task,Logs,Options,Errors
 from waflib.Logs import debug,warn
 from waflib.TaskGen import after_method,feature
 from waflib.Configure import conf
@@ -28,7 +28,7 @@ traffic unicows url urlmon user32 userenv usp10 uuid uxtheme vcomp vcompd vdmdbg
 version vfw32 wbemuuid  webpost wiaguid wininet winmm winscard winspool winstrm
 wintrust wldap32 wmiutils wow32 ws2_32 wsnmp32 wsock32 wst wtsapi32 xaswitch xolehlp
 '''.split()
-all_msvc_platforms=[('x64','amd64'),('x86','x86'),('ia64','ia64'),('x86_amd64','amd64'),('x86_ia64','ia64')]
+all_msvc_platforms=[('x64','amd64'),('x86','x86'),('ia64','ia64'),('x86_amd64','amd64'),('x86_ia64','ia64'),('x86_arm','arm')]
 all_wince_platforms=[('armv4','arm'),('armv4i','arm'),('mipsii','mips'),('mipsii_fp','mips'),('mipsiv','mips'),('mipsiv_fp','mips'),('sh4','sh'),('x86','cex86')]
 all_icl_platforms=[('intel64','amd64'),('em64t','amd64'),('ia32','x86'),('Itanium','ia64')]
 def options(opt):
@@ -66,23 +66,12 @@ set LIB=
 call "%s" %s
 echo PATH=%%PATH%%
 echo INCLUDE=%%INCLUDE%%
-echo LIB=%%LIB%%
+echo LIB=%%LIB%%;%%LIBPATH%%
 """%(vcvars,target))
 	sout=conf.cmd_and_log(['cmd','/E:on','/V:on','/C',batfile.abspath()])
 	lines=sout.splitlines()
 	if not lines[0]:
 		lines.pop(0)
-	if version=='11.0':
-		if lines[0].startswith('Error'):
-			conf.fatal('msvc: Could not find a valid architecture for building (get_msvc_version_1)')
-	else:
-		for x in('Setting environment','Setting SDK environment','Intel(R) C++ Compiler','Intel Parallel Studio','Intel(R) Parallel Studio','Intel(R) Composer','Intel Corporation. All rights reserved.'):
-			if lines[0].find(x)>-1:
-				lines.pop(0)
-				break
-		else:
-			debug('msvc: get_msvc_version: %r %r %r -> not found',compiler,version,target)
-			conf.fatal('msvc: Could not find a valid architecture for building (get_msvc_version_2)')
 	MSVC_PATH=MSVC_INCDIR=MSVC_LIBDIR=None
 	for line in lines:
 		if line.startswith('PATH='):
@@ -232,7 +221,8 @@ def gather_msvc_targets(conf,versions,version,vc_path):
 			targets.append(('x86',('x86',conf.get_msvc_version('msvc',version,'',os.path.join(vc_path,'Bin','vcvars32.bat')))))
 		except conf.errors.ConfigurationError:
 			pass
-	versions.append(('msvc '+version,targets))
+	if targets:
+		versions.append(('msvc '+version,targets))
 @conf
 def gather_wince_targets(conf,versions,version,vc_path,vsvars,supported_platforms):
 	for device,platforms in supported_platforms:
@@ -253,6 +243,16 @@ def gather_wince_targets(conf,versions,version,vc_path,vsvars,supported_platform
 		if cetargets:
 			versions.append((device+' '+version,cetargets))
 @conf
+def gather_winphone_targets(conf,versions,version,vc_path,vsvars):
+	targets=[]
+	for target,realtarget in all_msvc_platforms[::-1]:
+		try:
+			targets.append((target,(realtarget,conf.get_msvc_version('winphone',version,target,vsvars))))
+		except conf.errors.ConfigurationError ,e:
+			pass
+	if targets:
+		versions.append(('winphone '+version,targets))
+@conf
 def gather_msvc_versions(conf,versions):
 	vc_paths=[]
 	for(v,version,reg)in gather_msvc_detected_versions():
@@ -271,6 +271,9 @@ def gather_msvc_versions(conf,versions):
 		vsvars=os.path.join(vs_path,'Common7','Tools','vsvars32.bat')
 		if wince_supported_platforms and os.path.isfile(vsvars):
 			conf.gather_wince_targets(versions,version,vc_path,vsvars,wince_supported_platforms)
+		vsvars=os.path.join(vs_path,'VC','WPSDK','WP80','vcvarsphoneall.bat')
+		if os.path.isfile(vsvars):
+			conf.gather_winphone_targets(versions,'8.0',vc_path,vsvars)
 	for version,vc_path in vc_paths:
 		vs_path=os.path.dirname(vc_path)
 		conf.gather_msvc_targets(versions,version,vc_path)
@@ -369,10 +372,12 @@ def gather_intel_composer_versions(conf,versions):
 					setattr(conf,compilervars_warning_attr,False)
 					patch_url='http://software.intel.com/en-us/forums/topic/328487'
 					compilervars_arch=os.path.join(path,'bin','compilervars_arch.bat')
-					vs_express_path=os.environ['VS110COMNTOOLS']+r'..\IDE\VSWinExpress.exe'
-					dev_env_path=os.environ['VS110COMNTOOLS']+r'..\IDE\devenv.exe'
-					if(r'if exist "%VS110COMNTOOLS%..\IDE\VSWinExpress.exe"'in Utils.readf(compilervars_arch)and not os.path.exists(vs_express_path)and not os.path.exists(dev_env_path)):
-						Logs.warn(('The Intel compilervar_arch.bat only checks for one Visual Studio SKU ''(VSWinExpress.exe) but it does not seem to be installed at %r. ''The intel command line set up will fail to configure unless the file %r''is patched. See: %s')%(vs_express_path,compilervars_arch,patch_url))
+					for vscomntool in['VS110COMNTOOLS','VS100COMNTOOLS']:
+						if vscomntool in os.environ:
+							vs_express_path=os.environ[vscomntool]+r'..\IDE\VSWinExpress.exe'
+							dev_env_path=os.environ[vscomntool]+r'..\IDE\devenv.exe'
+							if(r'if exist "%VS110COMNTOOLS%..\IDE\VSWinExpress.exe"'in Utils.readf(compilervars_arch)and not os.path.exists(vs_express_path)and not os.path.exists(dev_env_path)):
+								Logs.warn(('The Intel compilervar_arch.bat only checks for one Visual Studio SKU ''(VSWinExpress.exe) but it does not seem to be installed at %r. ''The intel command line set up will fail to configure unless the file %r''is patched. See: %s')%(vs_express_path,compilervars_arch,patch_url))
 			except WindowsError:
 				pass
 		major=version[0:2]
@@ -544,8 +549,9 @@ def find_msvc(conf):
 	if v.MSVC_MANIFEST:
 		conf.find_program('MT',path_list=path,var='MT')
 		v['MTFLAGS']=['/NOLOGO']
-	conf.load('winres')
-	if not conf.env['WINRC']:
+	try:
+		conf.load('winres')
+	except Errors.WafError:
 		warn('Resource compiler not found. Compiling resource file is disabled')
 @conf
 def visual_studio_add_flags(self):
@@ -563,11 +569,10 @@ def msvc_common_flags(conf):
 	v['DEFINES_ST']='/D%s'
 	v['CC_SRC_F']=''
 	v['CC_TGT_F']=['/c','/Fo']
-	if v['MSVC_VERSION']>=8:
-		v['CC_TGT_F']=['/FC']+v['CC_TGT_F']
 	v['CXX_SRC_F']=''
 	v['CXX_TGT_F']=['/c','/Fo']
-	if v['MSVC_VERSION']>=8:
+	if(v.MSVC_COMPILER=='msvc'and v.MSVC_VERSION>=8)or(v.MSVC_COMPILER=='wsdk'and v.MSVC_VERSION>=6):
+		v['CC_TGT_F']=['/FC']+v['CC_TGT_F']
 		v['CXX_TGT_F']=['/FC']+v['CXX_TGT_F']
 	v['CPPPATH_ST']='/I%s'
 	v['AR_TGT_F']=v['CCLNK_TGT_F']=v['CXXLNK_TGT_F']='/OUT:'
@@ -681,7 +686,6 @@ def exec_response_command(self,cmd,**kw):
 				pass
 	return ret
 def exec_command_msvc(self,*k,**kw):
-	assert self.env['CC_NAME']=='msvc'
 	if isinstance(k[0],list):
 		lst=[]
 		carry=''
@@ -724,3 +728,22 @@ def wrap_class(class_name):
 	return derived_class
 for k in'c cxx cprogram cxxprogram cshlib cxxshlib cstlib cxxstlib'.split():
 	wrap_class(k)
+def make_winapp(self,family):
+	append=self.env.append_unique
+	append('DEFINES','WINAPI_FAMILY=%s'%family)
+	append('CXXFLAGS','/ZW')
+	append('CXXFLAGS','/TP')
+	for lib_path in self.env.LIBPATH:
+		append('CXXFLAGS','/AI%s'%lib_path)
+@feature('winphoneapp')
+@after_method('process_use')
+@after_method('propagate_uselib_vars')
+def make_winphone_app(self):
+	make_winapp(self,'WINAPI_FAMILY_PHONE_APP')
+	conf.env.append_unique('LINKFLAGS','/NODEFAULTLIB:ole32.lib')
+	conf.env.append_unique('LINKFLAGS','PhoneAppModelHost.lib')
+@feature('winapp')
+@after_method('process_use')
+@after_method('propagate_uselib_vars')
+def make_windows_app(self):
+	make_winapp(self,'WINAPI_FAMILY_DESKTOP_APP')

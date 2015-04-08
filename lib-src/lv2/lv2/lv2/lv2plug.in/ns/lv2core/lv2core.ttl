@@ -61,10 +61,10 @@ and non-C programs to work with LV2 data.  LV2 itself and extensions are
 distributed in a similar way.</p>
 
 <p>An LV2 plugin library is suitable for dynamic loading (e.g. via
-<code>dlopen()</code>) and provides one or more plugin descriptors via the
-<code>lv2_descriptor()</code> function.  These can be instantiated to create
-plugin <q>instances</q>, which can be run directly on data or connected
-together to perform advanced signal processing tasks.</p>
+<code>dlopen()</code>) and provides one or more plugin descriptors via
+<code>lv2_descriptor()</code> or <code>lv2_lib_descriptor()</code>.  These can
+be instantiated to create plugin <q>instances</q>, which can be run directly on
+data or connected together to perform advanced signal processing tasks.</p>
 
 <p>Plugins communicate via <q>ports</q>, which can transmit any type of data.
 Data is processed by first <q>connecting</q> each port to a buffer, then
@@ -92,10 +92,11 @@ into several threading classes:</p>
 <tr><td>lv2_descriptor()</td>
     <td>LV2_Descriptor::instantiate()</td>
     <td>LV2_Descriptor::run()</td></tr>
-<tr><td>LV2_Descriptor::extension_data()</td>
+<tr><td>lv2_lib_descriptor()</td>
     <td>LV2_Descriptor::cleanup()</td>
     <td>LV2_Descriptor::connect_port()</td></tr>
-<tr><td></td><td>LV2_Descriptor::activate()</td><td></td></tr>
+<tr><td>LV2_Descriptor::extension_data()</td>
+    <td>LV2_Descriptor::activate()</td><td></td></tr>
 <tr><td></td><td>LV2_Descriptor::deactivate()</td><td></td></tr>
 </table>
 
@@ -306,6 +307,24 @@ nice quasi-global identifiers for plugins, e.g. <q>myproj.superamp</q> which
 can be useful for display or fast user entry.</p>
 """ .
 
+lv2:prototype
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:label "prototype" ;
+	lv2:documentation """
+<p>The prototype to inherit properties from.</p>
+
+<p>This property can be used to <q>include</q> common properties in several
+descriptions.  If a plugin has a prototype, then the host must load all the
+properties for the prototype as if they were properties of the plugin.  That
+is, if <code>:plug lv2:prototype :prot</code>, then for each triple <code>:prot
+p o</code>, the triple <code>:plug p o</code> should be loaded.</p>
+
+<p>This facility is useful for distributing text-only plugins that rely on a
+common binary, by referring to a prototype which is installed by the
+corresponding software, along with the plugin binary.</p>
+""" .
+
 lv2:minorVersion
 	a rdf:Property ,
 		owl:DatatypeProperty ;
@@ -398,10 +417,11 @@ resolves to a shared library object (the actual type of this library is system
 specific).</p>
 
 <p>This is a required property of a Plugin which MUST be included in the
-bundle's manifest.ttl file. The lv2:binary of an lv2:Plugin is the
-shared object containing the <code>lv2_descriptor()</code> function which can
-be used to access the descriptor for that plugin. This property may be used
-similarly by extensions to relate other resources to their implementations.</p>
+bundle's manifest.ttl file. The lv2:binary of an lv2:Plugin is the shared
+object containing the <code>lv2_descriptor()</code> or
+<code>lv2_lib_descriptor()</code> function which can be used to access the
+descriptor for that plugin. This property may be used similarly by extensions
+to relate other resources to their implementations.</p>
 """ .
 
 lv2:appliesTo
@@ -670,10 +690,10 @@ lv2:ExtensionData
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:label "Extension Data" ;
-	rdfs:comment """
-Additional data and/or functions a plugin may return from
-LV2_Descriptor:extension_data() which can be used to add additional API beyond
-that defined by LV2_Descriptor.
+	lv2:documentation """
+<p>Additional data and/or functions a plugin may return from
+LV2_Descriptor::extension_data() which can be used to add additional API beyond
+that defined by LV2_Descriptor.</p>
 """ .
 
 lv2:extensionData
@@ -683,7 +703,7 @@ lv2:extensionData
 	rdfs:label "extension data" ;
 	lv2:documentation """
 <p>Signifies that a plugin provides additional data or functions (as defined by
-some extension) via LV2:Descriptor::instantiate().</p>
+some extension) via LV2_Descriptor::instantiate().</p>
 """ .
 
 lv2:isLive

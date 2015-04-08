@@ -1,5 +1,5 @@
 /*
-  Copyright 2011 David Robillard <http://drobilla.net>
+  Copyright 2011-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -146,7 +146,7 @@ rotate(ZixTreeNode* p, ZixTreeNode* q)
 }
 
 /**
- * Rotate left about @a p.
+ * Rotate left about `p`.
  *
  *    p              q
  *   / \            / \
@@ -178,7 +178,7 @@ rotate_left(ZixTreeNode* p, int* height_change)
 }
 
 /**
- * Rotate right about @a p.
+ * Rotate right about `p`.
  *
  *      p          q
  *     / \        / \
@@ -211,7 +211,7 @@ rotate_right(ZixTreeNode* p, int* height_change)
 }
 
 /**
- * Rotate left about @a p->left then right about @a p.
+ * Rotate left about `p->left` then right about `p`.
  *
  *      p             r
  *     / \           / \
@@ -255,7 +255,7 @@ rotate_left_right(ZixTreeNode* p, int* height_change)
 }
 
 /**
- * Rotate right about @a p->right then right about @a p.
+ * Rotate right about `p->right` then right about `p`.
  *
  *    p               r
  *   / \             / \
@@ -612,7 +612,7 @@ zix_tree_find(const ZixTree* t, const void* e, ZixTreeIter** ti)
 }
 
 ZIX_API void*
-zix_tree_get(ZixTreeIter* ti)
+zix_tree_get(const ZixTreeIter* ti)
 {
 	return ti ? ti->data : NULL;
 }
@@ -658,13 +658,13 @@ zix_tree_rend(ZixTree* t)
 }
 
 ZIX_API bool
-zix_tree_iter_is_end(ZixTreeIter* i)
+zix_tree_iter_is_end(const ZixTreeIter* i)
 {
 	return !i;
 }
 
 ZIX_API bool
-zix_tree_iter_is_rend(ZixTreeIter* i)
+zix_tree_iter_is_rend(const ZixTreeIter* i)
 {
 	return !i;
 }

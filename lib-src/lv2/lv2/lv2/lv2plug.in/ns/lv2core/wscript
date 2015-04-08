@@ -6,7 +6,7 @@ import waflib.Options as Options
 import glob
 
 # Version of this package (even if built as a child)
-LV2CORE_VERSION = '6.7'
+LV2CORE_VERSION = '12.0'
 
 # Variables for 'waf dist'
 APPNAME = 'lv2core'

@@ -6,10 +6,10 @@ presets (2.8) stable;
 
 presets (2.6) stable;
 
-  * Merge with unified LV2 package.
+  * Remove pset:appliesTo property, use lv2:appliesTo instead.
   * Add pset:preset property for describing the preset currently applied to a
     plugin instance.
-  * Remove pset:appliesTo property, use lv2:appliesTo instead.
+  * Merge with unified LV2 package.
 
  -- David Robillard <d@drobilla.net>  Tue, 17 Apr 2012 00:00:00 +0000
 

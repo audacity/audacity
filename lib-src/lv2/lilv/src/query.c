@@ -1,5 +1,5 @@
 /*
-  Copyright 2007-2011 David Robillard <http://drobilla.net>
+  Copyright 2007-2014 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -129,7 +129,7 @@ lilv_nodes_from_stream_objects(LilvWorld*    world,
 		LilvNodes* values = lilv_nodes_new();
 		FOREACH_MATCH(stream) {
 			const SordNode* value = sord_iter_get_node(stream, field);
-			LilvNode* node = lilv_node_new_from_node(world, value);
+			LilvNode*       node  = lilv_node_new_from_node(world, value);
 			if (node) {
 				zix_tree_insert((ZixTree*)values, node, NULL);
 			}

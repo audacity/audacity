@@ -21,7 +21,7 @@
 /**
    @file lv2.h
    API for the LV2 specification <http://lv2plug.in/ns/lv2core>.
-   Revision: 6.5
+   Revision: 12.2
 */
 
 #ifndef LV2_H_INCLUDED
@@ -109,6 +109,7 @@
 #define LV2_CORE__port               LV2_CORE_PREFIX "port"
 #define LV2_CORE__portProperty       LV2_CORE_PREFIX "portProperty"
 #define LV2_CORE__project            LV2_CORE_PREFIX "project"
+#define LV2_CORE__prototype          LV2_CORE_PREFIX "prototype"
 #define LV2_CORE__reportsLatency     LV2_CORE_PREFIX "reportsLatency"
 #define LV2_CORE__requiredFeature    LV2_CORE_PREFIX "requiredFeature"
 #define LV2_CORE__sampleRate         LV2_CORE_PREFIX "sampleRate"
@@ -134,7 +135,7 @@ typedef void * LV2_Handle;
 
    Features allow hosts to make additional functionality available to plugins
    without requiring modification to the LV2 API.  Extensions may define new
-   features and specify the @ref URI and @ref data to be used if necessary.
+   features and specify the `URI` and `data` to be used if necessary.
    Some features, such as lv2:isLive, do not require the host to pass data.
 */
 typedef struct _LV2_Feature {
@@ -149,7 +150,7 @@ typedef struct _LV2_Feature {
 	   Pointer to arbitrary data.
 
 	   The format of this data is defined by the extension which describes the
-	   feature with the given @ref URI.
+	   feature with the given `URI`.
 	*/
 	void * data;
 } LV2_Feature;
@@ -275,12 +276,12 @@ typedef struct _LV2_Descriptor {
 	   things that the plugin MUST NOT do within the run() function (see
 	   lv2core.ttl for details).
 
-	   As a special case, when @p sample_count == 0, the plugin should update
+	   As a special case, when `sample_count` is 0, the plugin should update
 	   any output ports that represent a single instant in time (e.g. control
 	   ports, but not audio ports). This is particularly useful for latent
 	   plugins, which should update their latency output port so hosts can
 	   pre-roll plugins to compute latency. Plugins MUST NOT crash when
-	   @p sample_count == 0.
+	   `sample_count` is 0.
 
 	   @param instance Instance to be run.
 
@@ -352,28 +353,24 @@ typedef struct _LV2_Descriptor {
 /**
    Prototype for plugin accessor function.
 
-   This is part of the old discovery API, which has been replaced due to being
-   inadequate for some plugins.  It is limited because the bundle path is not
-   available during discovery, and it relies on non-portable shared library
-   constructors/destructors.  However, this API is still supported and plugins
-   are not required to migrate.
-
    Plugins are discovered by hosts using RDF data (not by loading libraries).
    See http://lv2plug.in for details on the discovery process, though most
    hosts should use an existing library to implement this functionality.
 
-   A plugin library MUST include a function called "lv2_descriptor" with this
-   prototype.  This function MUST have C-style linkage (if you are using C++
-   this is taken care of by the 'extern "C"' clause at the top of this file).
+   This is the simple plugin discovery API, suitable for most statically
+   defined plugins.  Advanced plugins that need access to their bundle during
+   discovery can use lv2_lib_descriptor() instead.  Plugin libraries MUST
+   include a function called "lv2_descriptor" or "lv2_lib_descriptor" with
+   C-style linkage, but SHOULD provide "lv2_descriptor" wherever possible.
 
    When it is time to load a plugin (designated by its URI), the host loads the
    plugin's library, gets the lv2_descriptor() function from it, and uses this
    function to find the LV2_Descriptor for the desired plugin.  Plugins are
    accessed by index using values from 0 upwards.  This function MUST return
    NULL for out of range indices, so the host can enumerate plugins by
-   increasing @p index until NULL is returned.
+   increasing `index` until NULL is returned.
 
-   Note that @p index has no meaning, hosts MUST NOT depend on it remaining
+   Note that `index` has no meaning, hosts MUST NOT depend on it remaining
    consistent between loads of the plugin library.
 */
 LV2_SYMBOL_EXPORT
@@ -421,7 +418,7 @@ typedef struct {
 
 	   Plugins are accessed by index using values from 0 upwards.  Out of range
 	   indices MUST result in this function returning NULL, so the host can
-	   enumerate plugins by increasing @a index until NULL is returned.
+	   enumerate plugins by increasing `index` until NULL is returned.
 	*/
 	const LV2_Descriptor * (*get_plugin)(LV2_Lib_Handle handle,
 	                                     uint32_t       index);
@@ -429,6 +426,13 @@ typedef struct {
 
 /**
    Prototype for library accessor function.
+
+   This is the more advanced discovery API, which allows plugin libraries to
+   access their bundles during discovery, which makes it possible for plugins to
+   be dynamically defined by files in their bundle.  This API also has an
+   explicit cleanup function, removing any need for non-portable shared library
+   destructors.  Simple plugins that do not require these features may use
+   lv2_descriptor() instead.
 
    This is the entry point for a plugin library.  Hosts load this symbol from
    the library and call this function to obtain a library descriptor which can

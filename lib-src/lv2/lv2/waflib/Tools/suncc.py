@@ -21,6 +21,7 @@ def find_scc(conf):
 		conf.fatal('%r is not a Sun compiler'%cc)
 	v['CC']=cc
 	v['CC_NAME']='sun'
+	conf.get_suncc_version(cc)
 @conf
 def scc_common_flags(conf):
 	v=conf.env

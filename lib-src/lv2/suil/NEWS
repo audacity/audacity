@@ -1,0 +1,112 @@
+suil (0.8.2) stable;
+
+  * Fix embedding several Qt UIs in Gtk
+  * Add configure options to disable all Gtk or Qt support
+  * Upgrade to waf 1.7.16
+  
+ -- David Robillard <d@drobilla.net>  Fri, 08 Aug 2014 18:18:00 -0400
+
+suil (0.8.0) stable;
+
+  * Add suil_instance_get_handle (patch from Rui Nuno Capela)
+  * Fix compilation errors on some systems
+  * Upgrade to waf 1.7.14
+  
+ -- David Robillard <d@drobilla.net>  Sat, 04 Jan 2014 16:06:56 -0500
+
+suil (0.6.16) stable;
+
+  * Fix suil_instance_extension_data() for UIs with NULL extension_data
+  * Fix crashes and resizing for X11 in Qt (patch from Rui Nuno Capela)
+
+ -- David Robillard <d@drobilla.net>  Mon, 16 Sep 2013 23:48:57 -0400
+
+suil (0.6.14) stable;
+
+  * Print system error message if module fails to load
+  * Lower dependency from Gtk 2.24 introduced in 0.6.12
+  * Add support for new LV2 idle interface
+  * Support resizing for X11 in Gtk (patch from Robin Gareus)
+  * Upgrade to waf 1.7.11
+
+ -- David Robillard <d@drobilla.net>  Fri, 09 Aug 2013 00:16:48 -0400
+
+suil (0.6.12) stable;
+
+  * Fix key events for X11 in Gtk without using a troublesome event filter
+  * Fix crash when a broken UI returns a NULL descriptor
+  * Fix compilation on BSD
+
+ -- David Robillard <d@drobilla.net>  Fri, 22 Feb 2013 13:03:48 -0500
+
+suil (0.6.10) stable;
+
+  * Downgrade to waf 1.7.5, previous version does not build modules due to
+    package check breakage in waf 1.7.6
+
+ -- David Robillard <d@drobilla.net>  Sat, 22 Dec 2012 23:08:06 -0500
+  
+suil (0.6.8) stable;
+
+  * Fix crash in x11_in_gtk2 when event_filter fires before widget is realized
+  * Use libgtk-x11-2.0.so.0 (with .0 suffix) by default which is available on
+    systems without the dev package
+  * Update to waf 1.7.8 and autowaf r90 (install docs to versioned directory)
+
+ -- David Robillard <d@drobilla.net>  Sat, 22 Dec 2012 21:11:23 -0500
+  
+suil (0.6.6) stable;
+
+  * Fix embedding Gtk in Qt as a child widget (support reparenting)
+  * Support for wrapping native Windows UIs in Gtk2
+  * Gracefully handle UIs with no port_event method
+  * Replace host provided features that match Suil implemented features, rather
+    than passing UIs duplicate features
+  * Disable timestamps in HTML documentation for reproducible build
+
+ -- David Robillard <d@drobilla.net>  Wed, 14 Nov 2012 11:17:03 -0500
+
+suil (0.6.4) stable;
+
+  * Correctly handle resizing for Gtk2 in Qt4
+  * Improve documentation
+
+ -- David Robillard <d@drobilla.net>  Mon, 09 Jul 2012 15:11:06 -0400
+
+suil (0.6.2) stable;
+
+  * Fix crashes when wrapper widget is destroyed by toolkit before
+    suil cleanup function is called
+  * Link Gtk wrappers with 'nodelete' to avoid Glib type errors
+  * Allow run-time configuration of module directory via environment variable
+    SUIL_MODULE_DIR
+
+ -- David Robillard <d@drobilla.net>  Thu, 24 May 2012 23:18:18 -0400
+
+suil (0.6.0) stable;
+
+  * Use path variables in pkgconfig files
+  * Add support for embedding X11 UIs (ui:X11UI)
+  * Support new LV2 UI features automatically if provided by host
+
+ -- David Robillard <d@drobilla.net>  Wed, 18 Apr 2012 19:32:43 -0400
+
+suil (0.4.4) stable;
+
+  * Fix embedding Gtk2 Qt4 UIs in Qt4 hosts that do not link to Gtk2
+
+ -- David Robillard <d@drobilla.net>  Sat, 11 Jun 2011 11:20:11 -0400
+
+suil (0.4.2) stable;
+
+  * Fix compilation issues on some systems
+  * Fix build system Python 3 compatibility
+
+ -- David Robillard <d@drobilla.net>  Wed, 25 May 2011 19:00:00 -0400
+
+suil (0.4.0) stable;
+
+  * Initial release
+
+ -- David Robillard <d@drobilla.net>  Tue, 24 May 2011 23:00:00 -0400
+

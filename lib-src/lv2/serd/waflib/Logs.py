@@ -3,10 +3,17 @@
 # WARNING! Do not edit! http://waf.googlecode.com/git/docs/wafbook/single.html#_obtaining_the_waf_file
 
 import os,re,traceback,sys
+_nocolor=os.environ.get('NOCOLOR','no')not in('no','0','false')
+try:
+	if not _nocolor:
+		import waflib.ansiterm
+except ImportError:
+	pass
 try:
 	import threading
 except ImportError:
-	pass
+	if not'JOBS'in os.environ:
+		os.environ['JOBS']='1'
 else:
 	wlock=threading.Lock()
 	class sync_stream(object):
@@ -26,12 +33,6 @@ else:
 			self.stream.flush()
 		def isatty(self):
 			return self.stream.isatty()
-	_nocolor=os.environ.get('NOCOLOR','no')not in('no','0','false')
-	try:
-		if not _nocolor:
-			import waflib.ansiterm
-	except ImportError:
-		pass
 	if not os.environ.get('NOSYNC',False):
 		if id(sys.stdout)==id(sys.__stdout__):
 			sys.stdout=sync_stream(sys.stdout)

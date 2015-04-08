@@ -28,9 +28,6 @@
     <Filter Include="sord">
       <UniqueIdentifier>{abd6ecf3-4541-4ba7-a0a4-21b513e2b517}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sord\Header Fiels">
-      <UniqueIdentifier>{4632c1fa-5e9a-4c23-ba4d-043f51fa53e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sord\Source Files">
       <UniqueIdentifier>{43c5dc57-70be-4f84-bf1a-dac8a0544fb6}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,30 @@
     </Filter>
     <Filter Include="msinttypes">
       <UniqueIdentifier>{dae06ddb-f7ed-44a9-b663-8c14266b7e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="suil">
+      <UniqueIdentifier>{b48e3ff1-c88c-4327-8786-8cec296bd0cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="suil\Header Files">
+      <UniqueIdentifier>{4799adcb-fa26-481a-b1a8-1c9227bb5ae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="suil\Source Files">
+      <UniqueIdentifier>{006385f4-178f-4753-b353-b374374cca59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="windows">
+      <UniqueIdentifier>{dbe4a2e1-3cf2-4a98-a41e-93775cc62934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="windows\Header Fiels">
+      <UniqueIdentifier>{f34a59e7-c073-407d-8803-75e692993c72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sord\Source Files\zix">
+      <UniqueIdentifier>{35375307-4893-4420-ae7e-23c5a20e8fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sord\Header Files">
+      <UniqueIdentifier>{4632c1fa-5e9a-4c23-ba4d-043f51fa53e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sord\Header Files\zix">
+      <UniqueIdentifier>{aff2e7d6-f42d-4c74-8fcc-afc61eb173e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +108,6 @@
     <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\world.c">
       <Filter>lilv\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.c">
-      <Filter>lilv\Source Files\zix</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\lv2\serd\src\env.c">
       <Filter>serd\Source Files</Filter>
     </ClCompile>
@@ -117,6 +135,21 @@
     <ClCompile Include="..\..\..\lib-src\lv2\sratom\src\sratom.c">
       <Filter>sratom\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\suil\src\host.c">
+      <Filter>suil\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\suil\src\suil_instance.c">
+      <Filter>suil\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\digest.c">
+      <Filter>sord\Source Files\zix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\hash.c">
+      <Filter>sord\Source Files\zix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\lv2\sord\src\zix\tree.c">
+      <Filter>sord\Source Files\zix</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib-src\lv2\lilv\lilv\lilv.h">
@@ -125,12 +158,6 @@
     <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\lilv_internal.h">
       <Filter>lilv\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\common.h">
-      <Filter>lilv\Header Files\zix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\lib-src\lv2\lilv\src\zix\tree.h">
-      <Filter>lilv\Header Files\zix</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\lib-src\lv2\serd\serd\serd.h">
       <Filter>serd\Header Files</Filter>
     </ClInclude>
@@ -138,10 +165,10 @@
       <Filter>serd\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\lib-src\lv2\sord\sord\sord.h">
-      <Filter>sord\Header Fiels</Filter>
+      <Filter>sord\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\lib-src\lv2\sord\src\sord_internal.h">
-      <Filter>sord\Header Fiels</Filter>
+      <Filter>sord\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\lib-src\lv2\sratom\sratom\sratom.h">
       <Filter>sratom\Header Files</Filter>
@@ -151,6 +178,36 @@
     </ClInclude>
     <ClInclude Include="..\..\..\lib-src\lv2\msinttypes\stdint.h">
       <Filter>msinttypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\suil\suil\suil.h">
+      <Filter>suil\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\lilv_config.h">
+      <Filter>windows\Header Fiels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\serd_config.h">
+      <Filter>windows\Header Fiels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\sord_config.h">
+      <Filter>windows\Header Fiels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\sratom_config.h">
+      <Filter>windows\Header Fiels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\windows\suil_config.h">
+      <Filter>windows\Header Fiels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\common.h">
+      <Filter>sord\Header Files\zix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\digest.h">
+      <Filter>sord\Header Files\zix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\hash.h">
+      <Filter>sord\Header Files\zix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\lv2\sord\src\zix\tree.h">
+      <Filter>sord\Header Files\zix</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
