@@ -1,6 +1,7 @@
-diff -ruN nyquist/xlisp/security.c ../audacity/lib-src/libnyquist/nyquist/xlisp/security.c
---- nyquist/xlisp/security.c	2015-03-05 03:00:46.520295100 -0600
-+++ nyquist/xlisp/security.c	2015-03-05 03:08:57.526379100 -0600
+diff --git a/lib-src/libnyquist/nyquist/xlisp/security.c b/lib-src/libnyquist/nyquist/xlisp/security.c
+index 8a5c265..d971567 100644
+--- a/lib-src/libnyquist/nyquist/xlisp/security.c
++++ b/lib-src/libnyquist/nyquist/xlisp/security.c
 @@ -4,7 +4,9 @@
   */
  
@@ -11,7 +12,7 @@ diff -ruN nyquist/xlisp/security.c ../audacity/lib-src/libnyquist/nyquist/xlisp/
  #include <string.h>
  #include <xlisp.h>
  
-@@ -56,13 +58,13 @@
+@@ -56,13 +58,13 @@ char *safe_write_path = NULL;
  int ok_to_open(const char *filename, const char *mode)
  {
      char fullname[STRMAX];
@@ -27,7 +28,7 @@ diff -ruN nyquist/xlisp/security.c ../audacity/lib-src/libnyquist/nyquist/xlisp/
  	if (safe_write_path) { /* filename must be in path */
  	    find_full_path(filename, fullname);
  	    if (!in_tree(fullname, safe_write_path)) return FALSE;
-@@ -98,7 +100,7 @@
+@@ -98,7 +100,7 @@ void find_full_path(const char *filename, char *fullname)
      /* if windows, replace \ with / to simplify the rest */
      char *loc = fullname;
      if (os_pathchar != '/') {
@@ -36,14 +37,14 @@ diff -ruN nyquist/xlisp/security.c ../audacity/lib-src/libnyquist/nyquist/xlisp/
  	    *loc = '/';
  	}
      }
-diff -ruN nyquist/xlisp/xlisp.h ../audacity/lib-src/libnyquist/nyquist/xlisp/xlisp.h
---- nyquist/xlisp/xlisp.h	2015-03-05 03:00:46.507294400 -0600
-+++ nyquist/xlisp/xlisp.h	2015-03-05 03:10:39.273198700 -0600
-@@ -40,6 +40,8 @@
+diff --git a/lib-src/libnyquist/nyquist/xlisp/xlisp.h b/lib-src/libnyquist/nyquist/xlisp/xlisp.h
+index 316f982..4e67e47 100644
+--- a/lib-src/libnyquist/nyquist/xlisp/xlisp.h
++++ b/lib-src/libnyquist/nyquist/xlisp/xlisp.h
+@@ -40,6 +40,7 @@ HISTORY
  #define OFFTYPE		long
  #define SAVERESTORE
  #define XL_LITTLE_ENDIAN 
-+#define _setjmp setjmp
 +#define _longjmp longjmp
  #endif
  

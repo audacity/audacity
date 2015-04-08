@@ -1,7 +1,7 @@
 libnyquist
 
 Library code and the "nyx" interface by Dominic Mazzoni.
-Updated to Nyquist version 3.03 by Leland Lucius.
+Updated to Nyquist version 3.09 by Leland Lucius.
 
 Originally based on Nyquist version 2.29 by Roger B. Dannenberg,
 which was based on xlisp 2 by David Michael Betz.

@@ -159,9 +159,6 @@
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\seqinterf.c">
       <Filter>nyquist\nyqsrc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sliders.c">
-      <Filter>nyquist\nyqsrc</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndfnint.c">
       <Filter>nyquist\nyqsrc</Filter>
     </ClCompile>
@@ -635,6 +632,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyx.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\xlextstart.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\security.c">
+      <Filter>nyquist\xlisp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndsliders.c">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sliderdata.c">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\phasevocoder.c">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\pvshell.c">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftext.h">
@@ -647,5 +659,17 @@
       <Filter>nyquist\ffts</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyx.h" />
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndsliders.h">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sliderdata.h">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\phasevocoder.h">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\pvshell.h">
+      <Filter>nyquist\nyqsrc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

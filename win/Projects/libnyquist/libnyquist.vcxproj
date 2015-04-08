@@ -194,17 +194,20 @@
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\lpanal.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\multiread.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\multiseq.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\phasevocoder.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\pvshell.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\resamp.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\resampv.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\samples.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\seqext.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\seqfnint.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\seqinterf.c" />
-    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sliders.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sliderdata.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndfnint.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndmax.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndread.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndseq.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndsliders.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndwritepa.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sound.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\stats.c" />
@@ -298,6 +301,7 @@
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\tran\white.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\extern.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\path.c" />
+    <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\security.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlbfun.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xlcont.c" />
     <ClCompile Include="..\..\..\lib-src\libnyquist\nyquist\xlisp\xldbug.c" />
@@ -370,6 +374,10 @@
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftext.h" />
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\fftlib.h" />
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\ffts\src\matlib.h" />
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\phasevocoder.h" />
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\pvshell.h" />
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sliderdata.h" />
+    <ClInclude Include="..\..\..\lib-src\libnyquist\nyquist\nyqsrc\sndsliders.h" />
     <ClInclude Include="..\..\..\lib-src\libnyquist\nyx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
