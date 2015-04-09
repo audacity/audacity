@@ -1468,6 +1468,21 @@ void TrackPanel::MakeParentResize()
    mListener->TP_HandleResize();
 }
 
+void TrackPanel::HandleEscapeKey()
+{
+   switch (mMouseCapture)
+   {
+   case IsZooming:
+   case IsVZooming:
+      SetCapturedTrack(NULL, IsUncaptured);
+      if (HasCapture())
+         ReleaseCapture();
+      return;
+   default:
+      return;
+   }
+}
+
 void TrackPanel::HandleAltKey(bool down)
 {
    mLastMouseEvent.m_altDown = down;
@@ -5962,6 +5977,11 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
 void TrackPanel::OnKeyDown(wxKeyEvent & event)
 {
    Track *t = GetFocusedTrack();
+
+   if (event.GetKeyCode() == WXK_ESCAPE) {
+      HandleEscapeKey();
+      return;
+   }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 #ifdef SPECTRAL_EDITING_ESC_KEY
