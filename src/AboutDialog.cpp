@@ -549,6 +549,10 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    // Current date
    AddBuildinfoRow(&informationStr, _("Program build date: "), __TDATE__);
 
+   AddBuildinfoRow(&informationStr, _("Commit Id:"),
+#include "RevisionIdent.h"
+);
+
 #ifdef __WXDEBUG__
    AddBuildinfoRow(&informationStr, _("Build type:"), _("Debug build"));
 #else
