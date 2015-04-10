@@ -741,6 +741,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
      mSnapTo(gPrefs->Read(wxT("/SnapTo"), SNAP_OFF)),
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
+     mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
+     mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
      mDirty(false),
      mRuler(NULL),
      mTrackPanel(NULL),
@@ -1254,16 +1256,16 @@ void AudacityProject::SSBL_SetFrequencySelectionFormatName(const wxString & form
    gPrefs->Flush();
 }
 
-const wxString & AudacityProject::SSBL_GetLogFrequencySelectionFormatName()
+const wxString & AudacityProject::SSBL_GetBandwidthSelectionFormatName()
 {
-   return GetLogFrequencySelectionFormatName();
+   return GetBandwidthSelectionFormatName();
 }
 
-void AudacityProject::SSBL_SetLogFrequencySelectionFormatName(const wxString & formatName)
+void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const wxString & formatName)
 {
-   mLogFrequencySelectionFormatName = formatName;
+   mBandwidthSelectionFormatName = formatName;
 
-   gPrefs->Write(wxT("/LogFrequencySelectionFormatName"), mLogFrequencySelectionFormatName);
+   gPrefs->Write(wxT("/BandwidthSelectionFormatName"), mBandwidthSelectionFormatName);
    gPrefs->Flush();
 }
 
@@ -1300,17 +1302,17 @@ void AudacityProject::SetFrequencySelectionFormatName(const wxString & formatNam
 #endif
 }
 
-const wxString & AudacityProject::GetLogFrequencySelectionFormatName() const
+const wxString & AudacityProject::GetBandwidthSelectionFormatName() const
 {
-   return mLogFrequencySelectionFormatName;
+   return mBandwidthSelectionFormatName;
 }
 
-void AudacityProject::SetLogFrequencySelectionFormatName(const wxString & formatName)
+void AudacityProject::SetBandwidthSelectionFormatName(const wxString & formatName)
 {
-   SSBL_SetLogFrequencySelectionFormatName(formatName);
+   SSBL_SetBandwidthSelectionFormatName(formatName);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    if (GetSpectralSelectionBar()) {
-      GetSpectralSelectionBar()->SetLogFrequencySelectionFormatName(formatName);
+      GetSpectralSelectionBar()->SetBandwidthSelectionFormatName(formatName);
    }
 #endif
 }
@@ -2922,19 +2924,9 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          requiredTags++;
       }
 
-      else if (!wxStrcmp(attr, wxT("sel0"))) {
-         double t0;
-         Internat::CompatibleToDouble(value, &t0);
-         mViewInfo.selectedRegion.setT0(t0, false);
+      else if (mViewInfo.selectedRegion
+         .HandleXMLAttribute(attr, value, wxT("sel0"), wxT("sel1"))) {
       }
-
-      else if (!wxStrcmp(attr, wxT("sel1"))) {
-         double t1;
-         Internat::CompatibleToDouble(value, &t1);
-         mViewInfo.selectedRegion.setT1(t1, false);
-      }
-
-      // PRL: to do: persistence of other fields of the selection
 
       else if (!wxStrcmp(attr, wxT("vpos")))
          // Just assign a variable, put the value in its place later 
@@ -2955,9 +2947,14 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          SetSnapTo(wxString(value) == wxT("on") ? true : false);
       }
 
-      else if (!wxStrcmp(attr, wxT("selectionformat"))) {
+      else if (!wxStrcmp(attr, wxT("selectionformat")))
          SetSelectionFormat(value);
-      }
+
+      else if (!wxStrcmp(attr, wxT("frequencyformat")))
+         SetFrequencySelectionFormatName(value);
+
+      else if (!wxStrcmp(attr, wxT("bandwidthformat")))
+         SetBandwidthSelectionFormatName(value);
    } // while
 
    if (longVpos != 0) {
@@ -3133,8 +3130,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("projname"), projName);
    xmlFile.WriteAttr(wxT("version"), wxT(AUDACITY_FILE_FORMAT_VERSION));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
-   xmlFile.WriteAttr(wxT("sel0"), mViewInfo.selectedRegion.t0(), 10);
-   xmlFile.WriteAttr(wxT("sel1"), mViewInfo.selectedRegion.t1(), 10);
+   mViewInfo.selectedRegion
+      .WriteXMLAttributes(xmlFile, wxT("sel0"), wxT("sel1"));
    // PRL: to do: persistence of other fields of the selection
    xmlFile.WriteAttr(wxT("vpos"), mViewInfo.vpos);
    xmlFile.WriteAttr(wxT("h"), mViewInfo.h, 10);
@@ -3142,6 +3139,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("rate"), mRate);
    xmlFile.WriteAttr(wxT("snapto"), GetSnapTo() ? wxT("on") : wxT("off"));
    xmlFile.WriteAttr(wxT("selectionformat"), GetSelectionFormat());
+   xmlFile.WriteAttr(wxT("frequencyformat"), GetFrequencySelectionFormatName());
+   xmlFile.WriteAttr(wxT("bandwidthformat"), GetBandwidthSelectionFormatName());
 
    mTags->WriteXML(xmlFile);
 

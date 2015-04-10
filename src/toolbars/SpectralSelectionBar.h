@@ -43,7 +43,7 @@ public:
 
    void SetFrequencies(double bottom, double top);
    void SetFrequencySelectionFormatName(const wxString & formatName);
-   void SetLogFrequencySelectionFormatName(const wxString & formatName);
+   void SetBandwidthSelectionFormatName(const wxString & formatName);
    void SetListener(SpectralSelectionBarListener *l);
 
 private:
