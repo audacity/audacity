@@ -103,6 +103,7 @@ void InterpolateAudio(float *buffer, int len,
       InterpolateAudio(buffer2, len, len-numBad, numBad);
       for(i=0; i<len; i++)
          buffer[len-1-i] = buffer2[i];
+      delete[] buffer2;
       return;
    }
 

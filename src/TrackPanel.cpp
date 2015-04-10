@@ -1476,7 +1476,7 @@ void TrackPanel::HandleEscapeKey()
    case IsVZooming:
       SetCapturedTrack(NULL, IsUncaptured);
       if (HasCapture())
-         ReleaseCapture();
+         ReleaseMouse();
       return;
    default:
       return;

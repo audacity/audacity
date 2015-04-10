@@ -529,6 +529,7 @@
     <ClInclude Include="..\..\..\src\import\MultiFormatReader.h" />
     <ClInclude Include="..\..\..\src\import\SpecPowerMeter.h" />
     <ClInclude Include="..\..\..\src\ModuleManager.h" />
+    <ClInclude Include="..\..\..\src\RevisionIdent.h" />
     <ClInclude Include="..\..\..\src\SseMathFuncs.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBar.h" />
     <ClInclude Include="..\..\..\src\toolbars\SpectralSelectionBarListener.h" />

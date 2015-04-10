@@ -1734,7 +1734,7 @@ bool WaveTrack::GetRMS(float *rms, double t0, double t1)
          }
       }
    }
-   *rms = sqrt(sumsq/length);
+   *rms = length > 0.0 ? sqrt(sumsq / length) : 0.0;
 
    return result;
 }
