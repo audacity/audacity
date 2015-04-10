@@ -28,6 +28,10 @@
 #include "Audacity.h"
 #include "Experimental.h"
 
+#include <wx/defs.h>
+#include <wx/wxchar.h>
+class XMLWriter;
+
 class AUDACITY_DLL_API SelectedRegion {
 
    // Maintains the invariant:  t1() >= t0()
@@ -156,15 +160,31 @@ public:
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    // Returns true iff the bounds got swapped
-   bool setF0(double f) {
+   bool setF0(double f, bool maySwap = true) {
+      if (f < 0)
+         f = UndefinedFrequency;
       mF0 = f;
-      return ensureFrequencyOrdering();
+      if (maySwap)
+         return ensureFrequencyOrdering();
+      else {
+         if (mF1 >= 0 && mF1 < mF0)
+            mF1 = mF0;
+         return false;
+      }
    }
 
    // Returns true iff the bounds got swapped
-   bool setF1(double f) {
+   bool setF1(double f, bool maySwap = true) {
+      if (f < 0)
+         f = UndefinedFrequency;
       mF1 = f;
-      return ensureFrequencyOrdering();
+      if (maySwap)
+         return ensureFrequencyOrdering();
+      else {
+         if (mF0 >= 0 && mF1 < mF0)
+            mF0 = mF1;
+         return false;
+      }
    }
 
    // Returns true iff the bounds got swapped
@@ -175,6 +195,30 @@ public:
       return ensureFrequencyOrdering();
    }
 #endif
+
+   // Serialization:  historically, selections were written to file
+   // in two places (project, and each label) but only as attributes
+   // in the tags, and different names were used in the two places.
+   // For compatibility, continue that, but possibly add attributes
+   // as SelectedRegion is extended.  Therefore, this is not an
+   // XMLTagHandler.
+
+   static const wxChar *sDefaultT0Name;
+   static const wxChar *sDefaultT1Name;
+
+   // Serialize, not with tags of its own, but as attributes within a tag.
+   // Don't add more legacy arguments as the structure grows.
+   void WriteXMLAttributes
+      (XMLWriter &xmlFile,
+       const wxChar *legacyT0Name = sDefaultT0Name,
+       const wxChar *legacyT1Name = sDefaultT1Name) const;
+
+   // Return true iff the attribute is recognized.
+   // Don't add more legacy arguments as the structure grows.
+   bool HandleXMLAttribute
+      (const wxChar *attr, const wxChar *value,
+       const wxChar *legacyT0Name = sDefaultT0Name,
+       const wxChar *legacyT1Name = sDefaultT1Name);
 
 private:
    bool ensureOrdering() 
