@@ -19,6 +19,8 @@
 #include "Generator.h"
 #include "TimeWarper.h"
 
+#include <memory>
+
 bool Generator::Process()
 {
    if (mDuration < 0.0)

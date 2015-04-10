@@ -1468,6 +1468,22 @@ void TrackPanel::MakeParentResize()
    mListener->TP_HandleResize();
 }
 
+void TrackPanel::HandleEscapeKey()
+{
+   switch (mMouseCapture)
+   {
+   case IsZooming:
+   case IsVZooming:
+      SetCapturedTrack(NULL, IsUncaptured);
+      if (HasCapture())
+         ReleaseMouse();
+      Refresh(false);
+      return;
+   default:
+      return;
+   }
+}
+
 void TrackPanel::HandleAltKey(bool down)
 {
    mLastMouseEvent.m_altDown = down;
@@ -5963,6 +5979,11 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 {
    Track *t = GetFocusedTrack();
 
+   if (event.GetKeyCode() == WXK_ESCAPE) {
+      HandleEscapeKey();
+      return;
+   }
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
 #ifdef SPECTRAL_EDITING_ESC_KEY
    // Test for pinning and unpinning of the center frequency
@@ -6126,7 +6147,8 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 
    if (event.ButtonDown()) {
       SetFocus();
-      CaptureMouse();
+      if (!HasCapture())
+         CaptureMouse();
    }
    else if (event.ButtonUp()) {
       if (HasCapture())
