@@ -1477,6 +1477,7 @@ void TrackPanel::HandleEscapeKey()
       SetCapturedTrack(NULL, IsUncaptured);
       if (HasCapture())
          ReleaseMouse();
+      Refresh(false);
       return;
    default:
       return;
