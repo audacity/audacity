@@ -618,7 +618,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Are we currently closing as the result of a menu command?
    bool mMenuClose;
 
-    DECLARE_EVENT_TABLE()
+   bool mbInitializingScrollbar;
+
+   DECLARE_EVENT_TABLE()
 };
 
 typedef void (AudacityProject::*audCommandFunction)();
