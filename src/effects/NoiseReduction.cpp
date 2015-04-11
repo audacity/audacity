@@ -1454,26 +1454,26 @@ struct ControlInfo {
 }; const ControlInfo *controlInfo() { static const ControlInfo table[] = {
    { &EffectNoiseReduction::Settings::mNoiseGain,
      0.0, 48.0, 48, wxT("%d"), true,
-     wxTRANSLATE("&Noise reduction (dB):"), wxTRANSLATE("Noise reduction") },
+	 wxString(wxTRANSLATE("&Noise reduction (dB):")), wxString(wxTRANSLATE("Noise reduction")) },
    { &EffectNoiseReduction::Settings::mNewSensitivity,
       0.0, 24.0, 48, wxT("%.2f"), false,
-      wxTRANSLATE("&Sensitivity:"), wxTRANSLATE("Sensitivity") },
+	  wxString(wxTRANSLATE("&Sensitivity:")), wxString(wxTRANSLATE("Sensitivity")) },
 #ifdef ATTACK_AND_RELEASE
    { &EffectNoiseReduction::Settings::mAttackTime,
      0, 1.0, 100, wxT("%.2f"), false,
-     wxTRANSLATE("Attac&k time (secs):"), wxTRANSLATE("Attack time") },
+	 wxString(wxTRANSLATE("Attac&k time (secs):")), wxString(wxTRANSLATE("Attack time")) },
    { &EffectNoiseReduction::Settings::mReleaseTime,
      0, 1.0, 100, wxT("%.2f"), false,
-     wxTRANSLATE("R&elease time (secs):"), wxTRANSLATE("Release time") },
+	 wxTRANSLATE("R&elease time (secs):"), wxString(wxTRANSLATE("Release time")) },
 #endif
    { &EffectNoiseReduction::Settings::mFreqSmoothingBands,
      0, 6, 6, wxT("%d"), true,
-     wxTRANSLATE("&Frequency smoothing (bands):"), wxTRANSLATE("Frequency smoothing") },
+	 wxString(wxTRANSLATE("&Frequency smoothing (bands):")), wxString(wxTRANSLATE("Frequency smoothing")) },
 
 #ifdef ADVANCED_SETTINGS
    { &EffectNoiseReduction::Settings::mOldSensitivity,
      -20.0, 20.0, 4000, wxT("%.2f"), false,
-     wxTRANSLATE("Sensiti&vity (dB):"), wxTRANSLATE("Old Sensitivity") },
+	 wxString(wxTRANSLATE("Sensiti&vity (dB):")), wxString(wxTRANSLATE("Old Sensitivity")) },
    // add here
 #endif
 }; return table; }
