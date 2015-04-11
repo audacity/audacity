@@ -110,10 +110,10 @@ enum PlayMode {
 class ImportXMLTagHandler : public XMLTagHandler
 {
  public:
-   ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; };
+   ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; }
 
    virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   virtual XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; };
+   virtual XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) { return NULL; }
 
    // Don't want a WriteXML method because ImportXMLTagHandler is not a WaveTrack.
    // <import> tags are instead written by AudacityProject::WriteXML.
@@ -135,7 +135,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
 
-   TrackList *GetTracks() { return mTracks; };
+   TrackList *GetTracks() { return mTracks; }
    UndoManager *GetUndoManager() { return &mUndoManager; }
 
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
@@ -221,7 +221,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool GetDirty() { return mDirty; }
    void SetProjectTitle();
 
-   TrackPanel * GetTrackPanel(){return mTrackPanel;};
+   TrackPanel * GetTrackPanel(){return mTrackPanel;}
 
    bool GetIsEmpty() { return mTracks->IsEmpty(); }
 
@@ -327,8 +327,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void SetFrequencySelectionFormatName(const wxString & format);
    const wxString & GetFrequencySelectionFormatName() const;
 
-   void SetLogFrequencySelectionFormatName(const wxString & format);
-   const wxString & GetLogFrequencySelectionFormatName() const;
+   void SetBandwidthSelectionFormatName(const wxString & format);
+   const wxString & GetBandwidthSelectionFormatName() const;
 
    // Scrollbars
 
@@ -387,8 +387,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    Meter *GetCaptureMeter();
    void SetCaptureMeter(Meter *capture);
 
-   LyricsWindow* GetLyricsWindow() { return mLyricsWindow; };
-   MixerBoard* GetMixerBoard() { return mMixerBoard; };
+   LyricsWindow* GetLyricsWindow() { return mLyricsWindow; }
+   MixerBoard* GetMixerBoard() { return mMixerBoard; }
 
    // SelectionBarListener callback methods
 
@@ -407,8 +407,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual const wxString & SSBL_GetFrequencySelectionFormatName();
    virtual void SSBL_SetFrequencySelectionFormatName(const wxString & formatName);
 
-   virtual const wxString & SSBL_GetLogFrequencySelectionFormatName();
-   virtual void SSBL_SetLogFrequencySelectionFormatName(const wxString & formatName);
+   virtual const wxString & SSBL_GetBandwidthSelectionFormatName();
+   virtual void SSBL_SetBandwidthSelectionFormatName(const wxString & formatName);
 
    virtual void SSBL_ModifySpectralSelection(double &bottom, double &top, bool done);
 
@@ -464,8 +464,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    static bool GetCacheBlockFiles();
 
  public:
-   bool IsSoloSimple() { return mSoloPref == wxT("Simple"); };
-   bool IsSoloNone() { return mSoloPref == wxT("None"); };
+   bool IsSoloSimple() { return mSoloPref == wxT("Simple"); }
+   bool IsSoloNone() { return mSoloPref == wxT("None"); }
 
  private:
 
@@ -488,7 +488,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    int mSnapTo;
    wxString mSelectionFormat;
    wxString mFrequencySelectionFormatName;
-   wxString mLogFrequencySelectionFormatName;
+   wxString mBandwidthSelectionFormatName;
 
    TrackList *mLastSavedTracks;
 
@@ -618,7 +618,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    // Are we currently closing as the result of a menu command?
    bool mMenuClose;
 
-    DECLARE_EVENT_TABLE()
+   bool mbInitializingScrollbar;
+
+   DECLARE_EVENT_TABLE()
 };
 
 typedef void (AudacityProject::*audCommandFunction)();
