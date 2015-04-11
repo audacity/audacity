@@ -26,6 +26,7 @@ drawing).  Cache's the Spectrogram frequency samples.
 *//*******************************************************************/
 
 #include <math.h>
+#include <memory>
 #include <vector>
 #include <wx/log.h>
 
@@ -311,7 +312,7 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
    mIsPlaceholder = false;
 }
 
-WaveClip::WaveClip(WaveClip& orig, DirManager *projDirManager)
+WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
 {
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying
@@ -1221,33 +1222,33 @@ bool WaveClip::CreateFromCopy(double t0, double t1, WaveClip* other)
    return true;
 }
 
-bool WaveClip::Paste(double t0, WaveClip* other)
+bool WaveClip::Paste(double t0, const WaveClip* other)
 {
-   WaveClip* pastedClip;
+   const bool clipNeedsResampling = other->mRate != mRate;
+   const bool clipNeedsNewFormat =
+      other->mSequence->GetSampleFormat() != mSequence->GetSampleFormat();
+   std::auto_ptr<WaveClip> newClip;
+   const WaveClip* pastedClip;
 
-   bool clipNeedsResampling = other->mRate != mRate;
-
-   if (clipNeedsResampling)
+   if (clipNeedsResampling || clipNeedsNewFormat)
    {
-      // The other clip's rate is different to our's, so resample
-      pastedClip = new WaveClip(*other, mSequence->GetDirManager());
-      if (!pastedClip->Resample(mRate))
-      {
-         delete pastedClip;
-         return false;
-      }
+      newClip.reset(new WaveClip(*other, mSequence->GetDirManager()));
+      if (clipNeedsResampling)
+         // The other clip's rate is different from ours, so resample
+         if (!newClip->Resample(mRate))
+            return false;
+      if (clipNeedsNewFormat)
+         // Force sample formats to match.
+         newClip->ConvertToSampleFormat(mSequence->GetSampleFormat());
+      pastedClip = newClip.get();
    } else
    {
-      // No resampling needed, just use original clip without making a copy
+      // No resampling or format change needed, just use original clip without making a copy
       pastedClip = other;
    }
 
    sampleCount s0;
    TimeToSamplesClip(t0, &s0);
-
-   // Force sample formats to match.
-   if (pastedClip->mSequence->GetSampleFormat() != mSequence->GetSampleFormat())
-      pastedClip->ConvertToSampleFormat(mSequence->GetSampleFormat());
 
    bool result = false;
    if (mSequence->Paste(s0, pastedClip->mSequence))
@@ -1268,12 +1269,6 @@ bool WaveClip::Paste(double t0, WaveClip* other)
       }
 
       result = true;
-   }
-
-   if (clipNeedsResampling)
-   {
-      // Clip was constructed as a copy, so delete it
-      delete pastedClip;
    }
 
    return result;

@@ -656,14 +656,14 @@ void Envelope::CollapseRegion(double t0, double t1)
 // envelope point applies to the first sample, but the t=tracklen
 // envelope point applies one-past the last actual sample.
 // Rather than going to a .5-offset-index, we special case the framing.
-void Envelope::Paste(double t0, Envelope *e)
+void Envelope::Paste(double t0, const Envelope *e)
 {
-   bool pointsAdded = false;
+   const bool wasEmpty = (this->mEnv.Count() == 0);
 
-// JC: The old analysis of cases and the resulting code here is way more complex than needed.
-// TODO: simplify the analysis and simplify the code.
+   // JC: The old analysis of cases and the resulting code here is way more complex than needed.
+   // TODO: simplify the analysis and simplify the code.
 
-   if (e->mEnv.Count() == 0 && this->mEnv.Count() == 0 && e->mDefaultValue == this->mDefaultValue)
+   if (e->mEnv.Count() == 0 && wasEmpty && e->mDefaultValue == this->mDefaultValue)
    {
       // msmeyer: The envelope is empty and has the same default value, so
       // there is nothing that must be inserted, just return. This avoids
@@ -671,16 +671,6 @@ void Envelope::Paste(double t0, Envelope *e)
       // MJS: but the envelope does get longer
       mTrackLen += e->mTrackLen;
       return;
-   }
-   if (this->mEnv.Count() != 0)
-   {
-      // inserting a clip with a possibly empty envelope into one with an envelope
-      // so add end points to e, in case they are not there
-      double leftval  = e->GetValue(0+e->mOffset);
-      double rightval = e->GetValue(e->mTrackLen+e->mOffset);
-      e->Insert(0, leftval);
-      e->Insert(e->mTrackLen, rightval);
-      pointsAdded = true;  // we need to delete them later so's not to corrupt 'e' for later use
    }
 
    t0 = wxMin(t0 - mOffset, mTrackLen);   // t0 now has origin of zero
@@ -834,17 +824,24 @@ Old analysis of cases:
    }
 
    // Copy points from inside the selection
+
+   if (!wasEmpty) {
+      // Add end points in case they are not not in e.
+      // If they are in e, no harm, because the repeated Insert
+      // calls for the start and end times will have no effect.
+      const double leftval = e->GetValue(0 + e->mOffset);
+      const double rightval = e->GetValue(e->mTrackLen + e->mOffset);
+      Insert(t0, leftval);
+      Insert(t0 + e->mTrackLen, rightval);
+   }
+
    len = e->mEnv.Count();
    for (i = 0; i < len; i++)
-      pos=Insert(t0 + e->mEnv[i]->GetT(), e->mEnv[i]->GetVal());
+      Insert(t0 + e->mEnv[i]->GetT(), e->mEnv[i]->GetVal());
 
 /*   if(len != 0)
       for (i = 0; i < mEnv.Count(); i++)
          wxLogDebug(wxT("Fixed i %d when %.18f val %f"),i,mEnv[i]->GetT(),mEnv[i]->GetVal()); */
-
-   if(pointsAdded)
-      while(e->mEnv.Count() != 0)
-         e->Delete(0);  // they were not there when we entered this
 }
 
 // Deletes 'unneeded' points, starting from the left.

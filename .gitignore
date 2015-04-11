@@ -15,6 +15,7 @@
 *.log
 *.tlog
 *.ipch
+*.opensdf
 
 # Precompiled Headers
 *.gch
@@ -40,3 +41,5 @@
 *.out
 *.app
 win/resetPrefs.txt
+src/RevisionIdent.h
+

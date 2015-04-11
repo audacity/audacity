@@ -1214,6 +1214,10 @@ void AudacityProject::CreateMenusAndCommands()
                  AudioIOBusyFlag);
    c->AddCommand(wxT("PlayOneSec"), _("Play One Second"), FN(OnPlayOneSecond), wxT("1"));
    c->AddCommand(wxT("PlayToSelection"),_("Play To Selection"), FN(OnPlayToSelection), wxT("B"));
+   c->AddCommand(wxT("PlayBeforeSelectionStart"),_("Play Before Selection Start"), FN(OnPlayBeforeSelectionStart), wxT("Shift+F5"));
+   c->AddCommand(wxT("PlayAfterSelectionStart"),_("Play After Selection Start"), FN(OnPlayAfterSelectionStart), wxT("Shift+F6"));
+   c->AddCommand(wxT("PlayBeforeSelectionEnd"),_("Play Before Selection End"), FN(OnPlayBeforeSelectionEnd), wxT("Shift+F7"));
+   c->AddCommand(wxT("PlayAfterSelectionEnd"),_("Play After Selection End"), FN(OnPlayAfterSelectionEnd), wxT("Shift+F8"));
    c->AddCommand(wxT("PlayCutPreview"), _("Play Cut Preview"), FN(OnPlayCutPreview), wxT("C"));
 
    c->AddCommand(wxT("SelStart"), _("Selection to Start"), FN(OnSelToStart), wxT("Shift+Home"));
@@ -2250,6 +2254,74 @@ void AudacityProject::OnPlayToSelection()
 //   mLastPlayMode = ((t1-t0) > 1.0) ? normalPlay : oneSecondPlay;
 
    GetControlToolBar()->PlayPlayRegion(t0, t1);
+}
+
+// The next 4 functions provide a limited version of the
+// functionality of OnPlayToSelection() for keyboard users
+
+void AudacityProject::OnPlayBeforeSelectionStart()
+{
+   if( !MakeReadyToPlay() )
+      return;
+
+   double t0 = mViewInfo.selectedRegion.t0();
+   double beforeLen;
+   gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
+
+   mLastPlayMode = oneSecondPlay;      // this disables auto scrolling, as in OnPlayToSelection()
+
+   GetControlToolBar()->PlayPlayRegion(t0 - beforeLen, t0);
+}
+
+void AudacityProject::OnPlayAfterSelectionStart()
+{
+   if( !MakeReadyToPlay() )
+      return;
+
+   double t0 = mViewInfo.selectedRegion.t0();
+   double t1 = mViewInfo.selectedRegion.t1();
+   double afterLen;
+   gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
+
+   mLastPlayMode = oneSecondPlay;      // this disables auto scrolling, as in OnPlayToSelection()
+
+   if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
+      GetControlToolBar()->PlayPlayRegion(t0, t1);
+   else
+      GetControlToolBar()->PlayPlayRegion(t0, t0 + afterLen);
+}
+
+void AudacityProject::OnPlayBeforeSelectionEnd()
+{
+   if( !MakeReadyToPlay() )
+      return;
+
+   double t0 = mViewInfo.selectedRegion.t0();
+   double t1 = mViewInfo.selectedRegion.t1();
+   double beforeLen;
+   gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 1.0);
+
+   mLastPlayMode = oneSecondPlay;      // this disables auto scrolling, as in OnPlayToSelection()
+
+   if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
+      GetControlToolBar()->PlayPlayRegion(t0, t1);
+   else
+      GetControlToolBar()->PlayPlayRegion(t1 - beforeLen, t1);
+}
+
+
+void AudacityProject::OnPlayAfterSelectionEnd()
+{
+   if( !MakeReadyToPlay() )
+      return;
+
+   double t1 = mViewInfo.selectedRegion.t1();
+   double afterLen;
+   gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
+
+   mLastPlayMode = oneSecondPlay;      // this disables auto scrolling, as in OnPlayToSelection()
+
+   GetControlToolBar()->PlayPlayRegion(t1, t1 + afterLen);
 }
 
 void AudacityProject::OnPlayLooped()
