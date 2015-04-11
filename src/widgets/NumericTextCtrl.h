@@ -32,7 +32,7 @@
 // update their formats to agree.
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TIMETEXTCTRL_UPDATED, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQUENCYTEXTCTRL_UPDATED, -1);
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_LOGFREQUENCYTEXTCTRL_UPDATED,
+DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
                             -1);
 
 /** \brief struct to hold a formatting control string and it's user facing name
@@ -53,7 +53,7 @@ public:
    enum Type {
       TIME,
       FREQUENCY,
-      LOG_FREQUENCY,
+      BANDWIDTH,
    };
 
    NumericConverter(Type type,

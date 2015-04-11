@@ -837,6 +837,9 @@
     <ClCompile Include="..\..\..\src\DeviceChange.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\SelectedRegion.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1671,6 +1674,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\RevisionIdent.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SelectedRegion.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

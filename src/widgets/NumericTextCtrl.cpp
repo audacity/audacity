@@ -486,7 +486,7 @@ const BuiltinFormatString FrequencyConverterFormats[] =  {
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-const BuiltinFormatString LogFrequencyConverterFormats[] =  {
+const BuiltinFormatString BandwidthConverterFormats[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in octaves */
@@ -546,10 +546,10 @@ NumericConverter::NumericConverter(Type type,
          mNBuiltins = sizeof(FrequencyConverterFormats) /
             sizeof (FrequencyConverterFormats[0]);
          break;
-      case LOG_FREQUENCY:
-         mBuiltinFormatStrings = LogFrequencyConverterFormats;
-         mNBuiltins = sizeof(LogFrequencyConverterFormats) /
-            sizeof (LogFrequencyConverterFormats[0]);
+      case BANDWIDTH:
+         mBuiltinFormatStrings = BandwidthConverterFormats;
+         mNBuiltins = sizeof(BandwidthConverterFormats) /
+            sizeof(BandwidthConverterFormats[0]);
       default:
          break;
    }
@@ -1099,7 +1099,7 @@ void NumericConverter::Adjust(int steps, int dir)
 
 DEFINE_EVENT_TYPE(EVT_TIMETEXTCTRL_UPDATED)
 DEFINE_EVENT_TYPE(EVT_FREQUENCYTEXTCTRL_UPDATED)
-DEFINE_EVENT_TYPE(EVT_LOGFREQUENCYTEXTCTRL_UPDATED)
+DEFINE_EVENT_TYPE(EVT_BANDWIDTHTEXTCTRL_UPDATED)
 
 BEGIN_EVENT_TABLE(NumericTextCtrl, wxControl)
    EVT_ERASE_BACKGROUND(NumericTextCtrl::OnErase)
@@ -1470,8 +1470,8 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
             case NumericConverter::FREQUENCY:
                eventType = EVT_FREQUENCYTEXTCTRL_UPDATED;
                break;
-            case NumericConverter::LOG_FREQUENCY:
-               eventType = EVT_LOGFREQUENCYTEXTCTRL_UPDATED;
+            case NumericConverter::BANDWIDTH:
+               eventType = EVT_BANDWIDTHTEXTCTRL_UPDATED;
                break;
             default:
                wxASSERT(false);
