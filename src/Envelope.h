@@ -140,7 +140,7 @@ class Envelope : public XMLTagHandler {
    // Handling Cut/Copy/Paste events
    void CollapseRegion(double t0, double t1);
    void CopyFrom(const Envelope * e, double t0, double t1);
-   void Paste(double t0, Envelope *e);
+   void Paste(double t0, const Envelope *e);
    void InsertSpace(double t0, double tlen);
    void RemoveUnneededPoints(double time = -1, double tolerence = 0.001);
 

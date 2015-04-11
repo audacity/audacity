@@ -56,6 +56,7 @@ public:
    void DrawTextBox( wxDC & dc, const wxRect & r);
    void DrawHighlight( wxDC & dc, int xPos1, int xPos2, int charHeight);
    void getXPos( wxDC & dc, int * xPos1, int cursorPos);
+   const SelectedRegion &getSelectedRegion() const { return selectedRegion; }
    double getDuration() const { return selectedRegion.duration(); }
    double getT0() const { return selectedRegion.t0(); }
    double getT1() const { return selectedRegion.t1(); }
@@ -169,11 +170,11 @@ class AUDACITY_DLL_API LabelTrack : public Track
    static bool IsTextClipSupported();
 
    // methods to set flags
-   void SetDragXPos(const int d) { mDragXPos = d; };
-   void SetInBox(bool inTextBox) { mInBox = inTextBox; };
-   void SetResetCursorPos(bool resetFlag) { mResetCursorPos = resetFlag; };
-   void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; };
-   void SetDrawCursor(bool drawCursorFlag) { mDrawCursor = drawCursorFlag; };
+   void SetDragXPos(const int d) { mDragXPos = d; }
+   void SetInBox(bool inTextBox) { mInBox = inTextBox; }
+   void SetResetCursorPos(bool resetFlag) { mResetCursorPos = resetFlag; }
+   void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; }
+   void SetDrawCursor(bool drawCursorFlag) { mDrawCursor = drawCursorFlag; }
 
    bool HandleMouse(const wxMouseEvent & evt, wxRect & r, double h, double pps,
                            SelectedRegion *newSel);
@@ -202,7 +203,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
 
    //get current cursor position
    bool CalcCursorX(wxWindow * parent, int * x);
-   int getCurrentCursorPosition() const { return mCurrentCursorPos; };
+   int getCurrentCursorPosition() const { return mCurrentCursorPos; }
 
    void MayAdjustLabel( int iLabel, int iEdge, bool bAllowSwapping, double fNewTime);
    void MayMoveLabel( int iLabel, int iEdge, double fNewTime);

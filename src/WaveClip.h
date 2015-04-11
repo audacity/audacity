@@ -69,7 +69,7 @@ private:
    WaveClip(const WaveClip&)
    {
       wxFAIL_MSG(wxT("It is an error to copy a WaveClip without specifying the DirManager."));
-   };
+   }
    WaveClip& operator=(const WaveClip& orig)
    {
       WaveClip bogus(orig);
@@ -83,7 +83,7 @@ public:
    // essentially a copy constructor - but you must pass in the
    // current project's DirManager, because we might be copying
    // from one project to another
-   WaveClip(WaveClip& orig, DirManager *projDirManager);
+   WaveClip(const WaveClip& orig, DirManager *projDirManager);
 
    virtual ~WaveClip();
 
@@ -179,7 +179,7 @@ public:
    bool ClearAndAddCutLine(double t0, double t1);
 
    /// Paste data from other clip, resampling it if not equal rate
-   bool Paste(double t0, WaveClip* other);
+   bool Paste(double t0, const WaveClip* other);
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */
@@ -232,8 +232,8 @@ public:
    SpecPxCache    *mSpecPxCache;
 
    // AWD, Oct 2009: for pasting whitespace at the end of selection
-   bool GetIsPlaceholder() { return mIsPlaceholder; };
-   void SetIsPlaceholder(bool val) { mIsPlaceholder = val; };
+   bool GetIsPlaceholder() const { return mIsPlaceholder; }
+   void SetIsPlaceholder(bool val) { mIsPlaceholder = val; }
 
 protected:
    wxRect mDisplayRect;

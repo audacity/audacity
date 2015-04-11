@@ -837,6 +837,9 @@
     <ClCompile Include="..\..\..\src\DeviceChange.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\SelectedRegion.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\AboutDialog.h">
@@ -1670,6 +1673,12 @@
     <ClInclude Include="..\..\..\src\AudioIOListener.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\RevisionIdent.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\SelectedRegion.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\audacity.ico">
@@ -1684,15 +1693,6 @@
   <ItemGroup>
     <None Include="..\..\ny.rules" />
     <None Include="..\..\po.rules" />
-    <None Include="..\..\..\nyquist\test.lsp">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\upic.sal">
-      <Filter>nyquist</Filter>
-    </None>
-    <None Include="..\..\..\nyquist\velocity.lsp">
-      <Filter>nyquist</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\nyquist\rawwaves\mand1.raw">
@@ -1812,6 +1812,9 @@
     <CustomBuild Include="..\..\..\nyquist\xm.lsp">
       <Filter>nyquist</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\..\..\nyquist\test.lsp" />
+    <CustomBuild Include="..\..\..\nyquist\upic.sal" />
+    <CustomBuild Include="..\..\..\nyquist\velocity.lsp" />
   </ItemGroup>
   <ItemGroup>
     <copy Include="..\..\..\plug-ins\adjustable-fade.ny">

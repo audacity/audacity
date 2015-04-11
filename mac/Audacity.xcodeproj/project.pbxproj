@@ -966,6 +966,7 @@
 		28D587CC0E264CF4009C7DEA /* LV2Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D587C90E264CF4009C7DEA /* LV2Effect.cpp */; };
 		28D65C720B97E54B000E001A /* AutoDuck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D65C700B97E54B000E001A /* AutoDuck.cpp */; };
 		28D65C760B97E573000E001A /* DtmfGen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D65C740B97E573000E001A /* DtmfGen.cpp */; };
+		28D8425C1AD8D69D00551353 /* SelectedRegion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28D8425B1AD8D69D00551353 /* SelectedRegion.cpp */; };
 		28DA07390E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DA07380E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp */; };
 		28DABFBE0FF19DB100AC7848 /* RealFFTf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */; };
 		28DB34790FDC2C5D0011F589 /* ResponseQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DB34780FDC2C5D0011F589 /* ResponseQueue.cpp */; };
@@ -3757,6 +3758,8 @@
 		28D65C710B97E54B000E001A /* AutoDuck.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = AutoDuck.h; sourceTree = "<group>"; tabWidth = 3; };
 		28D65C740B97E573000E001A /* DtmfGen.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = DtmfGen.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28D65C750B97E573000E001A /* DtmfGen.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = DtmfGen.h; sourceTree = "<group>"; tabWidth = 3; };
+		28D8425A1AD8D69D00551353 /* RevisionIdent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RevisionIdent.h; sourceTree = "<group>"; };
+		28D8425B1AD8D69D00551353 /* SelectedRegion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedRegion.cpp; sourceTree = "<group>"; };
 		28DA07370E4F5CEC003933C5 /* ExportFFmpegDialogs.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportFFmpegDialogs.h; sourceTree = "<group>"; tabWidth = 3; };
 		28DA07380E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportFFmpegDialogs.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = RealFFTf.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5128,12 +5131,14 @@
 				EDFCEBA318894B2A00C98E51 /* RealFFTf48x.h */,
 				1790B0D209883BFD008A330A /* Resample.cpp */,
 				1790B0D309883BFD008A330A /* Resample.h */,
+				28D8425A1AD8D69D00551353 /* RevisionIdent.h */,
 				1790B0D409883BFD008A330A /* RingBuffer.cpp */,
 				1790B0D509883BFD008A330A /* RingBuffer.h */,
 				1790B0D609883BFD008A330A /* SampleFormat.cpp */,
 				1790B0D709883BFD008A330A /* SampleFormat.h */,
 				285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */,
 				285DE1F90BF03C7800A20DF0 /* Screenshot.h */,
+				28D8425B1AD8D69D00551353 /* SelectedRegion.cpp */,
 				2813897919E6163C004111ED /* SelectedRegion.h */,
 				1790B0DA09883BFD008A330A /* Sequence.cpp */,
 				1790B0DB09883BFD008A330A /* Sequence.h */,
@@ -9251,6 +9256,7 @@
 				28BB98051A15BE6800D1CC80 /* NoiseReduction.cpp in Sources */,
 				28285C801A27A81600BC2205 /* AudioUnitCocoaHelper.mm in Sources */,
 				28D000A51A32920C00367B21 /* DeviceChange.cpp in Sources */,
+				28D8425C1AD8D69D00551353 /* SelectedRegion.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
