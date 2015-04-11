@@ -30,6 +30,7 @@
 
 #include <wx/defs.h>
 #include <wx/wxchar.h>
+#include <math.h>
 class XMLWriter;
 
 class AUDACITY_DLL_API SelectedRegion {
