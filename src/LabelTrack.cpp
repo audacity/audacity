@@ -2130,8 +2130,6 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       // loop through attrs, which is a null-terminated list of
       // attribute-value pairs
-      bool has_t1 = false;
-      double dblValue;
       while(*attrs) {
          const wxChar *attr = *attrs++;
          const wxChar *value = *attrs++;
@@ -2145,14 +2143,8 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             return false;
          }
 
-         if (!wxStrcmp(attr, wxT("t")) && Internat::CompatibleToDouble(strValue, &dblValue))
-            selectedRegion.setT0(dblValue, false);
-         else if (!wxStrcmp(attr, wxT("t1")) && Internat::CompatibleToDouble(strValue, &dblValue))
-         {
-            has_t1 = true;
-            selectedRegion.setT1(dblValue, false);
-         }
-         // PRL: to do: read other selection fields
+         if (selectedRegion.HandleXMLAttribute(attr, value, wxT("t"), wxT("t1")))
+            ;
          else if (!wxStrcmp(attr, wxT("title")))
             title = strValue;
 
@@ -2160,8 +2152,10 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       // Handle files created by Audacity 1.1.   Labels in Audacity 1.1
       // did not have separate start- and end-times.
-      if (!has_t1)
-         selectedRegion.collapseToT0();
+      // PRL: this superfluous now, given class SelectedRegion's internal
+      // consistency guarantees
+      //if (selectedRegion.t1() < 0)
+      //   selectedRegion.collapseToT0();
 
       LabelStruct *l = new LabelStruct(selectedRegion, title);
       mLabels.Add(l);
@@ -2230,9 +2224,8 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile)
 
    for (i = 0; i < len; i++) {
       xmlFile.StartTag(wxT("label"));
-      // PRL: mismatch of attribute name and structure field name, historical
-      xmlFile.WriteAttr(wxT("t"), mLabels[i]->getT0(), 8);
-      xmlFile.WriteAttr(wxT("t1"), mLabels[i]->getT1(), 8);
+      mLabels[i]->getSelectedRegion()
+         .WriteXMLAttributes(xmlFile, wxT("t"), wxT("t1"));
       // PRL: to do: write other selection fields
       xmlFile.WriteAttr(wxT("title"), mLabels[i]->title);
       xmlFile.EndTag(wxT("label"));

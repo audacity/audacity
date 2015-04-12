@@ -52,6 +52,8 @@ void GUIPrefs::Populate()
    mRangeCodes.Add(wxT("36"));
    mRangeCodes.Add(wxT("48"));
    mRangeCodes.Add(wxT("60"));
+   mRangeCodes.Add(wxT("72"));
+   mRangeCodes.Add(wxT("84"));
    mRangeCodes.Add(wxT("96"));
    mRangeCodes.Add(wxT("120"));
    mRangeCodes.Add(wxT("145"));
@@ -59,6 +61,8 @@ void GUIPrefs::Populate()
    mRangeChoices.Add(_("-36 dB (shallow range for high-amplitude editing)"));
    mRangeChoices.Add(_("-48 dB (PCM range of 8 bit samples)"));
    mRangeChoices.Add(_("-60 dB (PCM range of 10 bit samples)"));
+   mRangeChoices.Add(_("-72 dB (PCM range of 12 bit samples)"));
+   mRangeChoices.Add(_("-84 dB (PCM range of 14 bit samples)"));
    mRangeChoices.Add(_("-96 dB (PCM range of 16 bit samples)"));
    mRangeChoices.Add(_("-120 dB (approximate limit of human hearing)"));
    mRangeChoices.Add(_("-145 dB (PCM range of 24 bit samples)"));

@@ -76,7 +76,7 @@ BEGIN_EVENT_TABLE(SpectralSelectionBar, ToolBar)
    EVT_TEXT(OnHighID, SpectralSelectionBar::OnCtrl)
    EVT_CHOICE(OnChoiceID, SpectralSelectionBar::OnChoice)
    EVT_COMMAND(wxID_ANY, EVT_FREQUENCYTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
-   EVT_COMMAND(wxID_ANY, EVT_LOGFREQUENCYTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
+   EVT_COMMAND(wxID_ANY, EVT_BANDWIDTHTEXTCTRL_UPDATED, SpectralSelectionBar::OnUpdate)
 END_EVENT_TABLE()
 
 static const wxString preferencePath
@@ -117,8 +117,8 @@ void SpectralSelectionBar::Populate()
    wxString frequencyFormatName = mListener
       ? mListener->SSBL_GetFrequencySelectionFormatName()
       : wxString(wxEmptyString);
-   wxString logFrequencyFormatName = mListener
-      ? mListener->SSBL_GetLogFrequencySelectionFormatName()
+   wxString bandwidthFormatName = mListener
+      ? mListener->SSBL_GetBandwidthSelectionFormatName()
       : wxString(wxEmptyString);
 
    wxFlexGridSizer *mainSizer = new wxFlexGridSizer(1, 1, 1);
@@ -151,7 +151,7 @@ void SpectralSelectionBar::Populate()
    subSizer->Add(mCenterCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 5);
 
    mWidthCtrl = new NumericTextCtrl(
-      NumericConverter::LOG_FREQUENCY, this, OnWidthID, logFrequencyFormatName, 0.0);
+      NumericConverter::BANDWIDTH, this, OnWidthID, bandwidthFormatName, 0.0);
    mWidthCtrl->SetName(wxString(_("Bandwidth:")));
    mWidthCtrl->EnableMenu();
    subSizer->Add(mWidthCtrl, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 0);
@@ -192,7 +192,7 @@ void SpectralSelectionBar::UpdatePrefs()
 
    if (mbCenterAndWidth)
    {
-      wxCommandEvent e(EVT_LOGFREQUENCYTEXTCTRL_UPDATED);
+      wxCommandEvent e(EVT_BANDWIDTHTEXTCTRL_UPDATED);
       e.SetInt(mWidthCtrl->GetFormatIndex());
       OnUpdate(e);
    }
@@ -208,7 +208,7 @@ void SpectralSelectionBar::SetListener(SpectralSelectionBarListener *l)
 {
    mListener = l;
    SetFrequencySelectionFormatName(mListener->SSBL_GetFrequencySelectionFormatName());
-   SetLogFrequencySelectionFormatName(mListener->SSBL_GetLogFrequencySelectionFormatName());
+   SetBandwidthSelectionFormatName(mListener->SSBL_GetBandwidthSelectionFormatName());
 };
 
 void SpectralSelectionBar::OnSize(wxSizeEvent &evt)
@@ -312,9 +312,9 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
       mListener->SSBL_SetFrequencySelectionFormatName(frequencyFormatName);
    }
    else if (mbCenterAndWidth &&
-            type == EVT_LOGFREQUENCYTEXTCTRL_UPDATED) {
-      wxString logFrequencyFormatName = mWidthCtrl->GetBuiltinName(index);
-      mListener->SSBL_SetLogFrequencySelectionFormatName(logFrequencyFormatName);
+            type == EVT_BANDWIDTHTEXTCTRL_UPDATED) {
+      wxString bandwidthFormatName = mWidthCtrl->GetBuiltinName(index);
+      mListener->SSBL_SetBandwidthSelectionFormatName(bandwidthFormatName);
    }
 
    // ToolBar::ReCreateButtons() will get rid of our sizers and controls
@@ -377,12 +377,12 @@ void SpectralSelectionBar::SetFrequencySelectionFormatName(const wxString & form
    OnUpdate(e);
 }
 
-void SpectralSelectionBar::SetLogFrequencySelectionFormatName(const wxString & formatName)
+void SpectralSelectionBar::SetBandwidthSelectionFormatName(const wxString & formatName)
 {
    if (mbCenterAndWidth) {
       mWidthCtrl->SetFormatName(formatName);
 
-      wxCommandEvent e(EVT_LOGFREQUENCYTEXTCTRL_UPDATED);
+      wxCommandEvent e(EVT_BANDWIDTHTEXTCTRL_UPDATED);
       e.SetInt(mWidthCtrl->GetFormatIndex());
       OnUpdate(e);
    }

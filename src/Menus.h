@@ -93,6 +93,10 @@ void OnPlayStop();
 void OnPlayStopSelect();
 void OnPlayOneSecond();
 void OnPlayToSelection();
+void OnPlayBeforeSelectionStart();
+void OnPlayAfterSelectionStart();
+void OnPlayBeforeSelectionEnd();
+void OnPlayAfterSelectionEnd();
 void OnPlayLooped();
 void OnPlayCutPreview();
 

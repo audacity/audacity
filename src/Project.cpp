@@ -741,6 +741,8 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
            Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample)),
      mSnapTo(gPrefs->Read(wxT("/SnapTo"), SNAP_OFF)),
      mSelectionFormat(gPrefs->Read(wxT("/SelectionFormat"), wxT(""))),
+     mFrequencySelectionFormatName(gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT(""))),
+     mBandwidthSelectionFormatName(gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT(""))),
      mDirty(false),
      mRuler(NULL),
      mTrackPanel(NULL),
@@ -773,6 +775,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mLastEffectType(0),
      mTimerRecordCanceled(false),
      mMenuClose(false)
+     , mbInitializingScrollbar(false)
 {
    int widths[] = {-2, -1};
    mStatusBar = CreateStatusBar(2);
@@ -1253,16 +1256,16 @@ void AudacityProject::SSBL_SetFrequencySelectionFormatName(const wxString & form
    gPrefs->Flush();
 }
 
-const wxString & AudacityProject::SSBL_GetLogFrequencySelectionFormatName()
+const wxString & AudacityProject::SSBL_GetBandwidthSelectionFormatName()
 {
-   return GetLogFrequencySelectionFormatName();
+   return GetBandwidthSelectionFormatName();
 }
 
-void AudacityProject::SSBL_SetLogFrequencySelectionFormatName(const wxString & formatName)
+void AudacityProject::SSBL_SetBandwidthSelectionFormatName(const wxString & formatName)
 {
-   mLogFrequencySelectionFormatName = formatName;
+   mBandwidthSelectionFormatName = formatName;
 
-   gPrefs->Write(wxT("/LogFrequencySelectionFormatName"), mLogFrequencySelectionFormatName);
+   gPrefs->Write(wxT("/BandwidthSelectionFormatName"), mBandwidthSelectionFormatName);
    gPrefs->Flush();
 }
 
@@ -1299,17 +1302,17 @@ void AudacityProject::SetFrequencySelectionFormatName(const wxString & formatNam
 #endif
 }
 
-const wxString & AudacityProject::GetLogFrequencySelectionFormatName() const
+const wxString & AudacityProject::GetBandwidthSelectionFormatName() const
 {
-   return mLogFrequencySelectionFormatName;
+   return mBandwidthSelectionFormatName;
 }
 
-void AudacityProject::SetLogFrequencySelectionFormatName(const wxString & formatName)
+void AudacityProject::SetBandwidthSelectionFormatName(const wxString & formatName)
 {
-   SSBL_SetLogFrequencySelectionFormatName(formatName);
+   SSBL_SetBandwidthSelectionFormatName(formatName);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    if (GetSpectralSelectionBar()) {
-      GetSpectralSelectionBar()->SetLogFrequencySelectionFormatName(formatName);
+      GetSpectralSelectionBar()->SetBandwidthSelectionFormatName(formatName);
    }
 #endif
 }
@@ -1508,7 +1511,16 @@ void AudacityProject::FixScrollbars()
    mViewInfo.sbarH = (wxInt64) (mViewInfo.h * mViewInfo.zoom);
 
    int lastv = mViewInfo.vpos;
-   mViewInfo.vpos = mVsbar->GetThumbPosition() * mViewInfo.scrollStep;
+   // PRL:  Can someone else find a more elegant solution to bug 812, than
+   // introducing this boolean member variable?
+   // Setting mVSbar earlier, int HandlXMLTag, didn't succeed in restoring
+   // the vertical scrollbar to its saved position.  So defer that till now.
+   // mbInitializingScrollbar should be true only at the start of the life
+   // of an AudacityProject reopened from disk.
+   if (!mbInitializingScrollbar) {
+      mViewInfo.vpos = mVsbar->GetThumbPosition() * mViewInfo.scrollStep;
+   }
+   mbInitializingScrollbar = false;
 
    if (mViewInfo.vpos >= totalHeight)
       mViewInfo.vpos = totalHeight - 1;
@@ -2808,6 +2820,7 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    wxString fileVersion = _("<unrecognized version -- possibly corrupt project file>");
    wxString audacityVersion = _("<unrecognized version -- possibly corrupt project file>");
    int requiredTags = 0;
+   long longVpos = 0;
 
    // loop through attrs, which is a null-terminated list of
    // attribute-value pairs
@@ -2834,19 +2847,19 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          }
       }
 
-      if (!wxStrcmp(attr, wxT("version")))
+      else if (!wxStrcmp(attr, wxT("version")))
       {
          fileVersion = value;
          bFileVersionFound = true;
          requiredTags++;
       }
 
-      if (!wxStrcmp(attr, wxT("audacityversion"))) {
+      else if (!wxStrcmp(attr, wxT("audacityversion"))) {
          audacityVersion = value;
          requiredTags++;
       }
 
-      if (!wxStrcmp(attr, wxT("projname"))) {
+      else if (!wxStrcmp(attr, wxT("projname"))) {
          wxString projName;
          wxString projPath;
 
@@ -2911,45 +2924,45 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          requiredTags++;
       }
 
-      if (!wxStrcmp(attr, wxT("sel0"))) {
-         double t0;
-         Internat::CompatibleToDouble(value, &t0);
-         mViewInfo.selectedRegion.setT0(t0, false);
+      else if (mViewInfo.selectedRegion
+         .HandleXMLAttribute(attr, value, wxT("sel0"), wxT("sel1"))) {
       }
 
-      if (!wxStrcmp(attr, wxT("sel1"))) {
-         double t1;
-         Internat::CompatibleToDouble(value, &t1);
-         mViewInfo.selectedRegion.setT1(t1, false);
-      }
-
-      // PRL: to do: persistence of other fields of the selection
-
-      long longVpos = 0;
-      if (!wxStrcmp(attr, wxT("vpos")))
+      else if (!wxStrcmp(attr, wxT("vpos")))
+         // Just assign a variable, put the value in its place later 
          wxString(value).ToLong(&longVpos);
-      mViewInfo.track = NULL;
-      mViewInfo.vpos = longVpos;
 
-      if (!wxStrcmp(attr, wxT("h")))
+      else if (!wxStrcmp(attr, wxT("h")))
          Internat::CompatibleToDouble(value, &mViewInfo.h);
 
-      if (!wxStrcmp(attr, wxT("zoom")))
+      else if (!wxStrcmp(attr, wxT("zoom")))
          Internat::CompatibleToDouble(value, &mViewInfo.zoom);
 
-      if (!wxStrcmp(attr, wxT("rate"))) {
+      else if (!wxStrcmp(attr, wxT("rate"))) {
          Internat::CompatibleToDouble(value, &mRate);
          GetSelectionBar()->SetRate(mRate);
       }
 
-      if (!wxStrcmp(attr, wxT("snapto"))) {
+      else if (!wxStrcmp(attr, wxT("snapto"))) {
          SetSnapTo(wxString(value) == wxT("on") ? true : false);
       }
 
-      if (!wxStrcmp(attr, wxT("selectionformat"))) {
+      else if (!wxStrcmp(attr, wxT("selectionformat")))
          SetSelectionFormat(value);
-      }
+
+      else if (!wxStrcmp(attr, wxT("frequencyformat")))
+         SetFrequencySelectionFormatName(value);
+
+      else if (!wxStrcmp(attr, wxT("bandwidthformat")))
+         SetBandwidthSelectionFormatName(value);
    } // while
+
+   if (longVpos != 0) {
+      // PRL: It seems this must happen after SetSnapTo
+       mViewInfo.track = NULL;
+       mViewInfo.vpos = longVpos;
+       mbInitializingScrollbar = true;
+   }
 
    // Specifically detect newer versions of Audacity
    // WARNING: This will need review/revision if we ever have a version string
@@ -3117,8 +3130,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("projname"), projName);
    xmlFile.WriteAttr(wxT("version"), wxT(AUDACITY_FILE_FORMAT_VERSION));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
-   xmlFile.WriteAttr(wxT("sel0"), mViewInfo.selectedRegion.t0(), 10);
-   xmlFile.WriteAttr(wxT("sel1"), mViewInfo.selectedRegion.t1(), 10);
+   mViewInfo.selectedRegion
+      .WriteXMLAttributes(xmlFile, wxT("sel0"), wxT("sel1"));
    // PRL: to do: persistence of other fields of the selection
    xmlFile.WriteAttr(wxT("vpos"), mViewInfo.vpos);
    xmlFile.WriteAttr(wxT("h"), mViewInfo.h, 10);
@@ -3126,6 +3139,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("rate"), mRate);
    xmlFile.WriteAttr(wxT("snapto"), GetSnapTo() ? wxT("on") : wxT("off"));
    xmlFile.WriteAttr(wxT("selectionformat"), GetSelectionFormat());
+   xmlFile.WriteAttr(wxT("frequencyformat"), GetFrequencySelectionFormatName());
+   xmlFile.WriteAttr(wxT("bandwidthformat"), GetBandwidthSelectionFormatName());
 
    mTags->WriteXML(xmlFile);
 

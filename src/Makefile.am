@@ -185,10 +185,12 @@ audacity_SOURCES = \
 	RealFFTf48x.h \
 	Resample.cpp \
 	Resample.h \
+	RevisionIdent.h \
 	RingBuffer.cpp \
 	RingBuffer.h \
 	Screenshot.cpp \
 	Screenshot.h \
+	SelectedRegion.cpp \
 	SelectedRegion.h \
 	Shuttle.cpp \
 	Shuttle.h \
