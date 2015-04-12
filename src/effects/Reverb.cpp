@@ -477,7 +477,12 @@ void ReverbDialogue::OnStereoWidthWidget(wxCommandEvent & WXUNUSED(event))
 
 static int wxGetChoiceFromUser(wxWindow * parent, wxString const & message,
       wxString const & caption, wxArrayString const & choices,
-      char * * clientData = 0, long style = wxCHOICEDLG_STYLE,
+#if wxCHECK_VERSION(3,0,0)
+	  void * * clientData = 0,
+#else
+	  char * * clientData = 0,
+#endif
+	  long style = wxCHOICEDLG_STYLE,
       wxPoint const & pos = wxDefaultPosition) // Home-grown function
 {
    wxSingleChoiceDialog d(parent, message, caption, choices, clientData, style, pos);
