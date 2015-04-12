@@ -9556,7 +9556,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
    wxString titleStr = t->GetName();
    int allowableWidth = kTrackInfoWidth - 38 - kLeftInset;
 
-   long textWidth, textHeight;
+   wxCoord textWidth, textHeight;
    dc->GetTextExtent(titleStr, &textWidth, &textHeight);
    while (textWidth > allowableWidth) {
       titleStr = titleStr.Left(titleStr.Length() - 1);
@@ -9622,7 +9622,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
    dc->SetPen( *wxTRANSPARENT_PEN );//No border!
    dc->DrawRectangle(bev);
 
-   long textWidth, textHeight;
+   wxCoord textWidth, textHeight;
    wxString str = (solo) ?
       /* i18n-hint: This is on a button that will silence this track.*/
       _("Solo") :

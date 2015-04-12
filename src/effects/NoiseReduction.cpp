@@ -1464,7 +1464,7 @@ struct ControlInfo {
 	 wxString(wxTRANSLATE("Attac&k time (secs):")), wxString(wxTRANSLATE("Attack time")) },
    { &EffectNoiseReduction::Settings::mReleaseTime,
      0, 1.0, 100, wxT("%.2f"), false,
-	 wxTRANSLATE("R&elease time (secs):"), wxString(wxTRANSLATE("Release time")) },
+	 wxString(wxTRANSLATE("R&elease time (secs):")), wxString(wxTRANSLATE("Release time")) },
 #endif
    { &EffectNoiseReduction::Settings::mFreqSmoothingBands,
      0, 6, 6, wxT("%d"), true,
