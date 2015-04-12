@@ -1,8 +1,8 @@
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -y libwxgtk2.8-dev
-    - git show -s --format="wxT(\"<a href=\\\"https://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")"
-    - git show -s --format="wxT(\"<a href=\\\"https://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")" > ./src/RevisionIdent.h
+    - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")"
+    - git show -s --format="wxT(\"<a href=\\\"http://github.com/audacity/audacity/commit/%H\\\">%h</a> of %cd\")" > ./src/RevisionIdent.h
 language: cpp
 compiler:
     - gcc

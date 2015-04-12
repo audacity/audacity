@@ -2299,7 +2299,7 @@ void AudacityProject::OnPlayBeforeSelectionEnd()
    double t0 = mViewInfo.selectedRegion.t0();
    double t1 = mViewInfo.selectedRegion.t1();
    double beforeLen;
-   gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 1.0);
+   gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
 
    mLastPlayMode = oneSecondPlay;      // this disables auto scrolling, as in OnPlayToSelection()
 

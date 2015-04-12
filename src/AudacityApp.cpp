@@ -960,7 +960,11 @@ void AudacityApp::InitLang( const wxString & lang )
    wxSetEnv(wxT("LANG"), wxT("en_US"));
 #endif
 
+#if wxCHECK_VERSION(3,0,0)
+   mLocale = new wxLocale(wxT(""), lang, wxT(""), true);
+#else
    mLocale = new wxLocale(wxT(""), lang, wxT(""), true, true);
+#endif
 
 #if defined(__WXMAC__)
    if (existed) {
