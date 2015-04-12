@@ -1474,14 +1474,41 @@ void TrackPanel::HandleEscapeKey()
    {
    case IsZooming:
    case IsVZooming:
-      SetCapturedTrack(NULL, IsUncaptured);
-      if (HasCapture())
-         ReleaseMouse();
-      Refresh(false);
-      return;
+      break;
+   case IsResizing:
+      mCapturedTrack->SetHeight(mInitialActualHeight);
+      mCapturedTrack->SetMinimized(mInitialMinimized);
+      break;
+   case IsResizingBetweenLinkedTracks:
+   {
+      Track *const next = mTracks->GetNext(mCapturedTrack);
+      mCapturedTrack->SetHeight(mInitialUpperActualHeight);
+      mCapturedTrack->SetMinimized(mInitialMinimized);
+      next->SetHeight(mInitialActualHeight);
+      next->SetMinimized(mInitialMinimized);
+   }
+      break;
+   case IsResizingBelowLinkedTracks:
+   {
+      Track *const prev = mTracks->GetPrev(mCapturedTrack);
+      mCapturedTrack->SetHeight(mInitialActualHeight);
+      mCapturedTrack->SetMinimized(mInitialMinimized);
+      prev->SetHeight(mInitialUpperActualHeight);
+      prev->SetMinimized(mInitialMinimized);
+   }
+      break;
    default:
       return;
+      ;
    }
+
+   // Common part in all cases that do anything
+   SetCapturedTrack(NULL, IsUncaptured);
+   if (HasCapture())
+      ReleaseMouse();
+   wxMouseEvent dummy;
+   HandleCursor(dummy);
+   Refresh(false);
 }
 
 void TrackPanel::HandleAltKey(bool down)
@@ -5591,6 +5618,7 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
    mMouseClickY = event.m_y;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   // To do: escape key
    if(MONO_WAVE_PAN(t)){
       //STM:  Determine whether we should rescale one or two tracks
       if (t->GetVirtualStereo()) {
@@ -5613,18 +5641,21 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
       if (prev && prev->GetLink() == t) {
          // mCapturedTrack is the lower track
          mInitialTrackHeight = t->GetHeight();
+         mInitialMinimized = t->GetMinimized();
          mInitialUpperTrackHeight = prev->GetHeight();
          SetCapturedTrack(t, IsResizingBelowLinkedTracks);
       }
       else if (next && t->GetLink() == next) {
          // mCapturedTrack is the upper track
          mInitialTrackHeight = next->GetHeight();
+         mInitialMinimized = next->GetMinimized();
          mInitialUpperTrackHeight = t->GetHeight();
          SetCapturedTrack(t, IsResizingBetweenLinkedTracks);
       }
       else {
          // DM: Save the initial mouse location and the initial height
          mInitialTrackHeight = t->GetHeight();
+         mInitialMinimized = t->GetMinimized();
          SetCapturedTrack(t, IsResizing);
       }
    }
@@ -5636,18 +5667,26 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
    if (prev && prev->GetLink() == t) {
       // mCapturedTrack is the lower track
       mInitialTrackHeight = t->GetHeight();
+      mInitialActualHeight = t->GetActualHeight();
+      mInitialMinimized = t->GetMinimized();
       mInitialUpperTrackHeight = prev->GetHeight();
+      mInitialUpperActualHeight = prev->GetActualHeight();
       SetCapturedTrack(t, IsResizingBelowLinkedTracks);
    }
    else if (next && t->GetLink() == next) {
       // mCapturedTrack is the upper track
       mInitialTrackHeight = next->GetHeight();
+      mInitialActualHeight = next->GetActualHeight();
+      mInitialMinimized = next->GetMinimized();
       mInitialUpperTrackHeight = t->GetHeight();
+      mInitialUpperActualHeight = t->GetActualHeight();
       SetCapturedTrack(t, IsResizingBetweenLinkedTracks);
    }
    else {
       // DM: Save the initial mouse location and the initial height
       mInitialTrackHeight = t->GetHeight();
+      mInitialActualHeight = t->GetActualHeight();
+      mInitialMinimized = t->GetMinimized();
       SetCapturedTrack(t, IsResizing);
    }
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
