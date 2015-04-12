@@ -318,8 +318,8 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
          }
 
          wxString t;
-         wxCoord w;
-         wxCoord h;
+         long w;
+         long h;
 
          t.Printf(wxT("%d"), chanName);
          dc.GetTextExtent(t, &w, &h);

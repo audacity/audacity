@@ -1688,7 +1688,7 @@ void AudacityProject::OnIconize(wxIconizeEvent &event)
    // why but it does no harm.
    // Should we be returning true/false rather than
    // void return?  I don't know.
-   mIconized = event.IsIconized();
+   mIconized = event.Iconized();
 
    unsigned int i;
 

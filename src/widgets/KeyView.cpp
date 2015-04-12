@@ -585,8 +585,8 @@ KeyView::RefreshBindings(const wxArrayString & names,
       int x, y;
 
       // Remove any menu code from the category and prefix
-      wxString cat = wxMenuItem::GetLabelText(categories[i]);
-      wxString pfx = wxMenuItem::GetLabelText(prefixes[i]);
+      wxString cat = wxMenuItem::GetLabelFromText(categories[i]);
+      wxString pfx = wxMenuItem::GetLabelFromText(prefixes[i]);
 
       // Append "Menu" this node is for a menu title
       if (cat != wxT("Command"))
@@ -696,7 +696,7 @@ KeyView::RefreshBindings(const wxArrayString & names,
       else
       {
          // Strip any menu codes from label
-         node.label = wxMenuItem::GetLabelText(labels[i].BeforeFirst(wxT('\t')));
+         node.label = wxMenuItem::GetLabelFromText(labels[i].BeforeFirst(wxT('\t')));
       }
 
       // Fill in remaining info
@@ -1229,11 +1229,7 @@ KeyView::OnSetFocus(wxFocusEvent & event)
    // will also refresh the visual (highlighted) state.
    if (GetSelection() != wxNOT_FOUND)
    {
-#if wxCHECK_VERSION(3,0,0)
-	   RefreshRow(GetSelection());
-#else
-	   RefreshLine(GetSelection());
-#endif
+      RefreshLine(GetSelection());
    }
 
 #if wxUSE_ACCESSIBILITY
@@ -1254,11 +1250,7 @@ KeyView::OnKillFocus(wxFocusEvent & event)
    // Refresh the selected line to adjust visual highlighting.
    if (GetSelection() != wxNOT_FOUND)
    {
-#if wxCHECK_VERSION(3,0,0)
-	   RefreshRow(GetSelection());
-#else
-	   RefreshLine(GetSelection());
-#endif
+      RefreshLine(GetSelection());
    }
 }
 
@@ -1333,11 +1325,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
             RefreshLines();
 
             // Reset the original top line
-#if wxCHECK_VERSION(3,0,0)
-			ScrollToRow(topline);
-#else
-			ScrollToLine(topline);
-#endif
+            ScrollToLine(topline);
 
             // And make sure current line is still selected
             SelectNode(LineToIndex(line));
@@ -1401,11 +1389,7 @@ KeyView::OnKeyDown(wxKeyEvent & event)
                RefreshLines();
 
                // Reset the original top line
-#if wxCHECK_VERSION(3,0,0)
-			   ScrollToRow(topline);
-#else
-			   ScrollToLine(topline);
-#endif
+               ScrollToLine(topline);
 
                // And make sure current line is still selected
                SelectNode(LineToIndex(line));
@@ -1547,11 +1531,7 @@ KeyView::OnLeftDown(wxMouseEvent & event)
          RefreshLines();
 
          // Reset the original top line
-#if wxCHECK_VERSION(3,0,0)
-		 ScrollToRow(topline);
-#else
-		 ScrollToLine(topline);
-#endif
+         ScrollToLine(topline);
 
          // And make sure current line is still selected
          SelectNode(LineToIndex(line));
@@ -1777,11 +1757,7 @@ KeyView::GetLineHeight(int line)
       return 0;
    }
 
-#if wxCHECK_VERSION(3,0,0)
-   return OnGetRowHeight(line);
-#else
    return OnGetLineHeight(line);
-#endif
 }
 
 //
@@ -1916,7 +1892,7 @@ KeyViewAx::IdToLine(int childId, int & line)
    line = childId - 1;
 
    // Make sure id is valid
-   if (line < 0 || line >= (int) mView->GetItemCount())
+   if (line < 0 || line >= (int) mView->GetLineCount())
    {
       // Indicate the control itself in this case
       return false;
@@ -1932,7 +1908,7 @@ bool
 KeyViewAx::LineToId(int line, int & childId)
 {
    // Make sure line is valid
-   if (line < 0 || line >= (int) mView->GetItemCount())
+   if (line < 0 || line >= (int) mView->GetLineCount())
    {
       // Indicate the control itself in this case
       childId = wxACC_SELF;
@@ -1990,7 +1966,7 @@ KeyViewAx::GetChild(int childId, wxAccessible** child)
 wxAccStatus
 KeyViewAx::GetChildCount(int *childCount)
 {
-   *childCount = (int) mView->GetItemCount();
+   *childCount = (int) mView->GetLineCount();
 
    return wxACC_OK;
 }
