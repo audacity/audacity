@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application>
-  <id type="desktop">audacity.desktop</id>
-  <licence>CC-BY</licence>
+<component type="desktop">
+  <id>audacity.desktop</id>
+  <metadata_licence>CC-BY</metadata_licence>
   <description>
     <p>
 	Audacity® is a free, easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. The interface is translated into many languages.
     </p>
+    <p xml:lang="uk">
+	Audacity® — вільна, проста у користуванні програма для редагування та запису багатодоріжкового звуку, яка може працювати у Windows, Mac OS X, GNU/Linux та інших операційних системах. Інтерфейс програми перекладено багатьма мовами.
+    </p>
     <p>
 	You can use Audacity to:
     </p>
+    <p xml:lang="uk">
+	Audacity можна скористатися для виконання таких завдань:
+    </p>
 	<ul>
 	<li>Record live audio</li>
+	<li xml:lang="uk">Інтерактивний запис звуку</li>
 	<li>Convert tapes and records into digital recordings or CDs</li>
+	<li xml:lang="uk">Перетворення стрічкових та інших записів на цифрові записи та записи на компакт-дисках</li>
 	<li>Edit WAV, AIFF, FLAC, MP2, MP3 or Ogg Vorbis sound files</li>
+	<li xml:lang="uk">Редагування звукових файлів WAV, AIFF, FLAC, MP2, MP3 та Ogg</li>
 	<li>Cut, copy, splice or mix sounds together</li>
+	<li xml:lang="uk">Вирізання, копіювання, поділ та мікшування звукових даних</li>
 	<li>Change the speed or pitch of a recording</li>
+	<li xml:lang="uk">Зміна швидкості або тональності записів</li>
 	<li>Apply a wide range of other effects to audio recordings</li>
+	<li xml:lang="uk">Застосування широкого діапазону інших ефектів до звукових записів</li>
 	</ul>
   </description>
   <url type="homepage">http://audacity.sourceforge.net/</url>
+  <url type="help">http://audacity.sourceforge.net/help/</url>
   <screenshots>
     <screenshot type="default">http://audacity.sourceforge.net/about/images/audacity-linux.png</screenshot>
     <screenshot>http://audacity.sourceforge.net/about/images/recording.png</screenshot>
   </screenshots>
   <updatecontact>audacity-devel@lists.sourceforge.net</updatecontact>
-</application>
+  <provides>
+    <binary>audacity</binary>
+  </provides>
+</component>
