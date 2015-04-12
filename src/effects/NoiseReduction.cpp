@@ -1403,6 +1403,14 @@ enum {
 
 namespace {
 
+// casting to a wxString required in wx3 and wrecks the strings in wx2.8.12
+// so make it conditional.
+#if( wxCHECK_VERSION( 3,0,0 ) )
+#define WX3_STRING_FIX wxString
+#else
+#define WX3_STRING_FIX
+#endif
+
 struct ControlInfo {
    typedef double (EffectNoiseReduction::Settings::*MemberPointer);
 
@@ -1454,26 +1462,26 @@ struct ControlInfo {
 }; const ControlInfo *controlInfo() { static const ControlInfo table[] = {
    { &EffectNoiseReduction::Settings::mNoiseGain,
      0.0, 48.0, 48, wxT("%d"), true,
-	 wxString(wxTRANSLATE("&Noise reduction (dB):")), wxString(wxTRANSLATE("Noise reduction")) },
+	 WX3_STRING_FIX(wxTRANSLATE("&Noise reduction (dB):")), WX3_STRING_FIX(wxTRANSLATE("Noise reduction")) },
    { &EffectNoiseReduction::Settings::mNewSensitivity,
       0.0, 24.0, 48, wxT("%.2f"), false,
-	  wxString(wxTRANSLATE("&Sensitivity:")), wxString(wxTRANSLATE("Sensitivity")) },
+	  WX3_STRING_FIX(wxTRANSLATE("&Sensitivity:")), WX3_STRING_FIX(wxTRANSLATE("Sensitivity")) },
 #ifdef ATTACK_AND_RELEASE
    { &EffectNoiseReduction::Settings::mAttackTime,
      0, 1.0, 100, wxT("%.2f"), false,
-	 wxString(wxTRANSLATE("Attac&k time (secs):")), wxString(wxTRANSLATE("Attack time")) },
+	 WX3_STRING_FIX(wxTRANSLATE("Attac&k time (secs):")), WX3_STRING_FIX(wxTRANSLATE("Attack time")) },
    { &EffectNoiseReduction::Settings::mReleaseTime,
      0, 1.0, 100, wxT("%.2f"), false,
-	 wxTRANSLATE("R&elease time (secs):"), wxString(wxTRANSLATE("Release time")) },
+	 WX3_STRING_FIX(wxTRANSLATE("R&elease time (secs):")), WX3_STRING_FIX(wxTRANSLATE("Release time")) },
 #endif
    { &EffectNoiseReduction::Settings::mFreqSmoothingBands,
      0, 6, 6, wxT("%d"), true,
-	 wxString(wxTRANSLATE("&Frequency smoothing (bands):")), wxString(wxTRANSLATE("Frequency smoothing")) },
+	 WX3_STRING_FIX(wxTRANSLATE("&Frequency smoothing (bands):")), WX3_STRING_FIX(wxTRANSLATE("Frequency smoothing")) },
 
 #ifdef ADVANCED_SETTINGS
    { &EffectNoiseReduction::Settings::mOldSensitivity,
      -20.0, 20.0, 4000, wxT("%.2f"), false,
-	 wxString(wxTRANSLATE("Sensiti&vity (dB):")), wxString(wxTRANSLATE("Old Sensitivity")) },
+	 WX3_STRING_FIX(wxTRANSLATE("Sensiti&vity (dB):")), WX3_STRING_FIX(wxTRANSLATE("Old Sensitivity")) },
    // add here
 #endif
 }; return table; }
