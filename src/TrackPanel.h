@@ -712,8 +712,11 @@ protected:
        bool onlyWithinSnapDistance,
        double *pPinValue = NULL) const;
 
+   bool mInitialMinimized;
    int mInitialTrackHeight;
+   int mInitialActualHeight;
    int mInitialUpperTrackHeight;
+   int mInitialUpperActualHeight;
    bool mAutoScrolling;
 
    enum   MouseCaptureEnum
