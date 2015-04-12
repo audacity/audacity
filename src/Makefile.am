@@ -122,6 +122,8 @@ audacity_SOURCES = \
 	DeviceChange.h \
 	DeviceManager.cpp \
 	DeviceManager.h \
+	Diags.cpp \
+	Diags.h \
 	Envelope.cpp \
 	Envelope.h \
 	Experimental.h \
