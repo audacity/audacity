@@ -590,6 +590,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mLastScrubTime = 0;
    mLastScrubPosition = 0;
 #endif
+
+   mInitialTrackSelection = new std::vector<bool>;
 }
 
 TrackPanel::~TrackPanel()
@@ -651,6 +653,8 @@ TrackPanel::~TrackPanel()
 #if !wxUSE_ACCESSIBILITY
    delete mAx;
 #endif
+
+   delete mInitialTrackSelection;
 }
 
 void TrackPanel::BuildMenus(void)
@@ -1472,6 +1476,19 @@ void TrackPanel::HandleEscapeKey()
 {
    switch (mMouseCapture)
    {
+   case IsSelecting:
+   {
+      TrackListIterator iter(mTracks);
+      std::vector<bool>::const_iterator
+         it = mInitialTrackSelection->begin(),
+         end = mInitialTrackSelection->end();
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         wxASSERT(it != end);
+         t->SetSelected(*it++);
+      }
+      mViewInfo->selectedRegion = mInitialSelection;
+   }
+      break;
    case IsZooming:
    case IsVZooming:
       break;
@@ -2228,14 +2245,39 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                                       Track * pTrack, wxRect r)
 {
    Track *rightTrack = NULL;
-   bool nextTrackIsLinkFromPTrack = false;
    mCapturedTrack = pTrack;
    mCapturedRect = r;
 
    mMouseClickX = event.m_x;
    mMouseClickY = event.m_y;
-   bool startNewSelection = true;
    mMouseCapture=IsSelecting;
+   mInitialSelection = mViewInfo->selectedRegion;
+
+   // Save initial state of track selections, also,
+   // if the shift button is down and no track is selected yet,
+   // at least select the track we clicked into.
+   bool isAtLeastOneTrackSelected = false;
+   mInitialTrackSelection->clear();
+   {
+      bool nextTrackIsLinkFromPTrack = false;
+      TrackListIterator iter(mTracks);
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         const bool isSelected = t->GetSelected();
+         mInitialTrackSelection->push_back(isSelected);
+         if (isSelected) {
+            isAtLeastOneTrackSelected = true;
+         }
+         if (!isAtLeastOneTrackSelected) {
+            if (t == pTrack && t->GetLinked()) {
+               nextTrackIsLinkFromPTrack = true;
+            }
+            else if (nextTrackIsLinkFromPTrack) {
+               rightTrack = t;
+               nextTrackIsLinkFromPTrack = false;
+            }
+         }
+      }
+   }
 
    // We create a new snap manager in case any snap-points have changed
    if (mSnapManager)
@@ -2264,23 +2306,6 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
        && !stretch
 #endif
    ) {
-      // If the shift button is down and no track is selected yet,
-      // at least select the track we clicked into.
-      bool isAtLeastOneTrackSelected = false;
-
-      TrackListIterator iter(mTracks);
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (t->GetSelected()) {
-            isAtLeastOneTrackSelected = true;
-            break;
-         } else if (t == pTrack && t->GetLinked()) {
-            nextTrackIsLinkFromPTrack = true;
-         } else if (nextTrackIsLinkFromPTrack) {
-            rightTrack = t;
-            nextTrackIsLinkFromPTrack = false;
-         }
-      }
-
       if (!isAtLeastOneTrackSelected) {
          pTrack->SetSelected(true);
          if (rightTrack)
@@ -2351,10 +2376,15 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       mLastScrubPosition = PositionToTime(event.m_x, GetLeftOffset());
 #else
       StartOrJumpPlayback(event);
+
+      // Not starting a drag
+      SetCapturedTrack(NULL, IsUncaptured);
 #endif
       return;
    }
+
    //Make sure you are within the selected track
+   bool startNewSelection = true;
    if (pTrack && pTrack->GetSelected()) {
       // Adjusting selection edges can be turned off in the
       // preferences now
@@ -2438,9 +2468,12 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
       // IF the user clicked a label, THEN select all other tracks by Label
       if (lt->IsSelected()) {
-         mTracks->Select( lt );
+         mTracks->Select(lt);
          SelectTracksByLabel( lt );
          DisplaySelection();
+
+         // Not starting a drag
+         SetCapturedTrack(NULL, IsUncaptured);
          return;
       }
    }
