@@ -610,7 +610,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & r)
             // ISO standard: A440 is in the 4th octave, denoted
             // A4 <- the "4" should be a subscript.
             s.Printf(wxT("C%d"), octave - 1);
-            long width, height;
+            wxCoord width, height;
             dc->GetTextExtent(s, &width, &height);
             if (obottom - height + 4 > r.y &&
                 obottom + 4 < r.y + r.height) {

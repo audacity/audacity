@@ -636,7 +636,11 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(TagsEditor, wxDialog)
+#if wxCHECK_VERSION(3,0,0)
+   EVT_GRID_CELL_CHANGED(TagsEditor::OnChange)
+#else
    EVT_GRID_CELL_CHANGE(TagsEditor::OnChange)
+#endif
    EVT_BUTTON(EditID, TagsEditor::OnEdit)
    EVT_BUTTON(ResetID, TagsEditor::OnReset)
    EVT_BUTTON(ClearID, TagsEditor::OnClear)
@@ -1216,7 +1220,7 @@ void TagsEditor::OnAdd(wxCommandEvent & WXUNUSED(event))
 
 void TagsEditor::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
-   size_t row = mGrid->GetCursorRow();
+   size_t row = mGrid->GetGridCursorRow();
 
    if (!mEditTitle && mGrid->GetCellValue(row, 0).CmpNoCase(LABEL_TITLE) == 0) {
       return;
