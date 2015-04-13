@@ -1134,7 +1134,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
 
    wxClientDC dc(this);
    dc.SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
-   long widthText = 0;
+   wxCoord widthText = 0;
    dc.GetTextExtent(message, &widthText, NULL, NULL, NULL, NULL);
    ds.x = (wxCoord) wxMax(wxMax(3 * widthText / 2, 4 * ds.y / 3), 300);
    SetClientSize(ds);

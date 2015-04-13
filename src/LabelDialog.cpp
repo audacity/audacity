@@ -72,7 +72,11 @@ enum {
 
 BEGIN_EVENT_TABLE(LabelDialog, wxDialog)
    EVT_GRID_SELECT_CELL(LabelDialog::OnSelectCell)
+#if wxCHECK_VERSION(3,0,0)
+   EVT_GRID_CELL_CHANGED(LabelDialog::OnCellChange)
+#else
    EVT_GRID_CELL_CHANGE(LabelDialog::OnCellChange)
+#endif
    EVT_BUTTON(ID_INSERTA, LabelDialog::OnInsert)
    EVT_BUTTON(ID_INSERTB, LabelDialog::OnInsert)
    EVT_BUTTON(ID_REMOVE,  LabelDialog::OnRemove)
@@ -438,7 +442,7 @@ void LabelDialog::OnInsert(wxCommandEvent &event)
 
    // Attempt to guess which track the label should reside on
    if (cnt > 0) {
-      row = mGrid->GetCursorRow();
+      row = mGrid->GetGridCursorRow();
       if (row > 0 && row >= cnt) {
          index = mTrackNames.Index(mGrid->GetCellValue(row - 1, Col_Track));
       }
@@ -470,8 +474,8 @@ void LabelDialog::OnInsert(wxCommandEvent &event)
 
 void LabelDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
-   int row = mGrid->GetCursorRow();
-   int col = mGrid->GetCursorColumn();
+   int row = mGrid->GetGridCursorRow();
+   int col = mGrid->GetGridCursorCol();
    int cnt = mData.GetCount();
 
    // Don't try to remove if no labels exist
