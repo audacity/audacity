@@ -1457,34 +1457,47 @@ struct ControlInfo {
    // (valueMin - valueMax) / sliderMax is the value increment of the slider
    const wxChar* format;
    bool formatAsInt;
-   const wxChar* textBoxCaption_;  wxString textBoxCaption() const { return wxGetTranslation(textBoxCaption_); }
-   const wxChar* sliderName_;  wxString sliderName() const { return wxGetTranslation(sliderName_); }
-}; const ControlInfo *controlInfo() { static const ControlInfo table[] = {
-   { &EffectNoiseReduction::Settings::mNoiseGain,
-     0.0, 48.0, 48, wxT("%d"), true,
-	 WX3_STRING_FIX(wxTRANSLATE("&Noise reduction (dB):")), WX3_STRING_FIX(wxTRANSLATE("Noise reduction")) },
-   { &EffectNoiseReduction::Settings::mNewSensitivity,
-      0.0, 24.0, 48, wxT("%.2f"), false,
-	  WX3_STRING_FIX(wxTRANSLATE("&Sensitivity:")), WX3_STRING_FIX(wxTRANSLATE("Sensitivity")) },
+   const wxString textBoxCaption_;  wxString textBoxCaption() const { return wxGetTranslation(textBoxCaption_); }
+   const wxString sliderName_;  wxString sliderName() const { return wxGetTranslation(sliderName_); }
+
+   ControlInfo(MemberPointer f, double vMin, double vMax, long sMax, const wxChar* fmt, bool fAsInt,
+      const wxString &caption, const wxString &name)
+      : field(f), valueMin(vMin), valueMax(vMax), sliderMax(sMax), format(fmt), formatAsInt(fAsInt)
+      , textBoxCaption_(caption), sliderName_(name)
+   {
+   }
+};
+
+const ControlInfo *controlInfo() {
+   static const ControlInfo table[] = {
+         { &EffectNoiseReduction::Settings::mNoiseGain,
+         0.0, 48.0, 48, wxT("%d"), true,
+         wxTRANSLATE("&Noise reduction (dB):"), wxTRANSLATE("Noise reduction") },
+         { &EffectNoiseReduction::Settings::mNewSensitivity,
+         0.0, 24.0, 48, wxT("%.2f"), false,
+         wxTRANSLATE("&Sensitivity:"), wxTRANSLATE("Sensitivity") },
 #ifdef ATTACK_AND_RELEASE
-   { &EffectNoiseReduction::Settings::mAttackTime,
-     0, 1.0, 100, wxT("%.2f"), false,
-	 WX3_STRING_FIX(wxTRANSLATE("Attac&k time (secs):")), WX3_STRING_FIX(wxTRANSLATE("Attack time")) },
-   { &EffectNoiseReduction::Settings::mReleaseTime,
-     0, 1.0, 100, wxT("%.2f"), false,
-	 WX3_STRING_FIX(wxTRANSLATE("R&elease time (secs):")), WX3_STRING_FIX(wxTRANSLATE("Release time")) },
+         { &EffectNoiseReduction::Settings::mAttackTime,
+         0, 1.0, 100, wxT("%.2f"), false,
+         wxTRANSLATE("Attac&k time (secs):"), wxTRANSLATE("Attack time") },
+         { &EffectNoiseReduction::Settings::mReleaseTime,
+         0, 1.0, 100, wxT("%.2f"), false,
+         wxTRANSLATE("R&elease time (secs):"), wxTRANSLATE("Release time") },
 #endif
-   { &EffectNoiseReduction::Settings::mFreqSmoothingBands,
-     0, 6, 6, wxT("%d"), true,
-	 WX3_STRING_FIX(wxTRANSLATE("&Frequency smoothing (bands):")), WX3_STRING_FIX(wxTRANSLATE("Frequency smoothing")) },
+         { &EffectNoiseReduction::Settings::mFreqSmoothingBands,
+         0, 6, 6, wxT("%d"), true,
+         wxTRANSLATE("&Frequency smoothing (bands):"), wxTRANSLATE("Frequency smoothing") },
 
 #ifdef ADVANCED_SETTINGS
-   { &EffectNoiseReduction::Settings::mOldSensitivity,
-     -20.0, 20.0, 4000, wxT("%.2f"), false,
-	 WX3_STRING_FIX(wxTRANSLATE("Sensiti&vity (dB):")), WX3_STRING_FIX(wxTRANSLATE("Old Sensitivity")) },
-   // add here
+         { &EffectNoiseReduction::Settings::mOldSensitivity,
+         -20.0, 20.0, 4000, wxT("%.2f"), false,
+         wxTRANSLATE("Sensiti&vity (dB):"), wxTRANSLATE("Old Sensitivity") },
+         // add here
 #endif
-}; return table; }
+   };
+
+return table;
+}
 
 } // namespace
 
