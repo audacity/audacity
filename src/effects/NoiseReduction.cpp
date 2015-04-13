@@ -1403,14 +1403,6 @@ enum {
 
 namespace {
 
-// casting to a wxString required in wx3 and wrecks the strings in wx2.8.12
-// so make it conditional.
-#if( wxCHECK_VERSION( 3,0,0 ) )
-#define WX3_STRING_FIX wxString
-#else
-#define WX3_STRING_FIX
-#endif
-
 struct ControlInfo {
    typedef double (EffectNoiseReduction::Settings::*MemberPointer);
 
