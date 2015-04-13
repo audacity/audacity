@@ -701,6 +701,13 @@ int Importer::Import(wxString fName,
          return 0;
       }
 
+      // Audacity project
+      if (extension.IsSameAs(wxT("aup"), false)) {
+         errorMessage.Printf(_("\"%s\" is an Audacity Project file. \nUse the 'File > Open' command to open Audacity Projects."), fName.c_str());
+         pProj->mbBusyImporting = false;
+         return 0;
+      }
+
       // we were not able to recognize the file type
       errorMessage.Printf(_("Audacity did not recognize the type of the file '%s'.\nIf it is uncompressed, try importing it using \"Import Raw\"."),fName.c_str());
    }
