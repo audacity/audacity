@@ -19,7 +19,7 @@
 #include "Generator.h"
 #include "TimeWarper.h"
 
-#include <memory>
+#include <algorithm>
 
 bool Generator::Process()
 {
