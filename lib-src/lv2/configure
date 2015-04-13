@@ -49,7 +49,7 @@ includedir=.
 Name: ${pkg}
 Version: ${version}
 Description: Temporary fake config file
-Libs: -L\${libdir} ${lib} -ldl
+Libs: -L\${libdir} ${lib} -ldl -lm
 Cflags: -I\${includedir}/${pkg}${major}
 EOF
 
