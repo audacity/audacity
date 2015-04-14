@@ -1462,28 +1462,28 @@ struct ControlInfo {
 
 const ControlInfo *controlInfo() {
    static const ControlInfo table[] = {
-         { &EffectNoiseReduction::Settings::mNoiseGain,
+         ControlInfo(&EffectNoiseReduction::Settings::mNoiseGain,
          0.0, 48.0, 48, wxT("%d"), true,
-         wxTRANSLATE("&Noise reduction (dB):"), wxTRANSLATE("Noise reduction") },
-         { &EffectNoiseReduction::Settings::mNewSensitivity,
+         wxTRANSLATE("&Noise reduction (dB):"), wxTRANSLATE("Noise reduction")),
+         ControlInfo(&EffectNoiseReduction::Settings::mNewSensitivity,
          0.0, 24.0, 48, wxT("%.2f"), false,
-         wxTRANSLATE("&Sensitivity:"), wxTRANSLATE("Sensitivity") },
+         wxTRANSLATE("&Sensitivity:"), wxTRANSLATE("Sensitivity")),
 #ifdef ATTACK_AND_RELEASE
-         { &EffectNoiseReduction::Settings::mAttackTime,
+         ControlInfo(&EffectNoiseReduction::Settings::mAttackTime,
          0, 1.0, 100, wxT("%.2f"), false,
-         wxTRANSLATE("Attac&k time (secs):"), wxTRANSLATE("Attack time") },
-         { &EffectNoiseReduction::Settings::mReleaseTime,
+         wxTRANSLATE("Attac&k time (secs):"), wxTRANSLATE("Attack time")),
+         ControlInfo(&EffectNoiseReduction::Settings::mReleaseTime,
          0, 1.0, 100, wxT("%.2f"), false,
-         wxTRANSLATE("R&elease time (secs):"), wxTRANSLATE("Release time") },
+         wxTRANSLATE("R&elease time (secs):"), wxTRANSLATE("Release time")),
 #endif
-         { &EffectNoiseReduction::Settings::mFreqSmoothingBands,
+         ControlInfo(&EffectNoiseReduction::Settings::mFreqSmoothingBands,
          0, 6, 6, wxT("%d"), true,
-         wxTRANSLATE("&Frequency smoothing (bands):"), wxTRANSLATE("Frequency smoothing") },
+         wxTRANSLATE("&Frequency smoothing (bands):"), wxTRANSLATE("Frequency smoothing")),
 
 #ifdef ADVANCED_SETTINGS
-         { &EffectNoiseReduction::Settings::mOldSensitivity,
+         ControlInfo(&EffectNoiseReduction::Settings::mOldSensitivity,
          -20.0, 20.0, 4000, wxT("%.2f"), false,
-         wxTRANSLATE("Sensiti&vity (dB):"), wxTRANSLATE("Old Sensitivity") },
+         wxTRANSLATE("Sensiti&vity (dB):"), wxTRANSLATE("Old Sensitivity")),
          // add here
 #endif
    };
