@@ -590,6 +590,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mLastScrubTime = 0;
    mLastScrubPosition = 0;
 #endif
+
+   mInitialTrackSelection = new std::vector<bool>;
 }
 
 TrackPanel::~TrackPanel()
@@ -651,6 +653,8 @@ TrackPanel::~TrackPanel()
 #if !wxUSE_ACCESSIBILITY
    delete mAx;
 #endif
+
+   delete mInitialTrackSelection;
 }
 
 void TrackPanel::BuildMenus(void)
@@ -1472,16 +1476,56 @@ void TrackPanel::HandleEscapeKey()
 {
    switch (mMouseCapture)
    {
+   case IsSelecting:
+   {
+      TrackListIterator iter(mTracks);
+      std::vector<bool>::const_iterator
+         it = mInitialTrackSelection->begin(),
+         end = mInitialTrackSelection->end();
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         wxASSERT(it != end);
+         t->SetSelected(*it++);
+      }
+      mViewInfo->selectedRegion = mInitialSelection;
+   }
+      break;
    case IsZooming:
    case IsVZooming:
-      SetCapturedTrack(NULL, IsUncaptured);
-      if (HasCapture())
-         ReleaseMouse();
-      Refresh(false);
-      return;
+      break;
+   case IsResizing:
+      mCapturedTrack->SetHeight(mInitialActualHeight);
+      mCapturedTrack->SetMinimized(mInitialMinimized);
+      break;
+   case IsResizingBetweenLinkedTracks:
+   {
+      Track *const next = mTracks->GetNext(mCapturedTrack);
+      mCapturedTrack->SetHeight(mInitialUpperActualHeight);
+      mCapturedTrack->SetMinimized(mInitialMinimized);
+      next->SetHeight(mInitialActualHeight);
+      next->SetMinimized(mInitialMinimized);
+   }
+      break;
+   case IsResizingBelowLinkedTracks:
+   {
+      Track *const prev = mTracks->GetPrev(mCapturedTrack);
+      mCapturedTrack->SetHeight(mInitialActualHeight);
+      mCapturedTrack->SetMinimized(mInitialMinimized);
+      prev->SetHeight(mInitialUpperActualHeight);
+      prev->SetMinimized(mInitialMinimized);
+   }
+      break;
    default:
       return;
+      ;
    }
+
+   // Common part in all cases that do anything
+   SetCapturedTrack(NULL, IsUncaptured);
+   if (HasCapture())
+      ReleaseMouse();
+   wxMouseEvent dummy;
+   HandleCursor(dummy);
+   Refresh(false);
 }
 
 void TrackPanel::HandleAltKey(bool down)
@@ -2201,14 +2245,39 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
                                       Track * pTrack, wxRect r)
 {
    Track *rightTrack = NULL;
-   bool nextTrackIsLinkFromPTrack = false;
    mCapturedTrack = pTrack;
    mCapturedRect = r;
 
    mMouseClickX = event.m_x;
    mMouseClickY = event.m_y;
-   bool startNewSelection = true;
    mMouseCapture=IsSelecting;
+   mInitialSelection = mViewInfo->selectedRegion;
+
+   // Save initial state of track selections, also,
+   // if the shift button is down and no track is selected yet,
+   // at least select the track we clicked into.
+   bool isAtLeastOneTrackSelected = false;
+   mInitialTrackSelection->clear();
+   {
+      bool nextTrackIsLinkFromPTrack = false;
+      TrackListIterator iter(mTracks);
+      for (Track *t = iter.First(); t; t = iter.Next()) {
+         const bool isSelected = t->GetSelected();
+         mInitialTrackSelection->push_back(isSelected);
+         if (isSelected) {
+            isAtLeastOneTrackSelected = true;
+         }
+         if (!isAtLeastOneTrackSelected) {
+            if (t == pTrack && t->GetLinked()) {
+               nextTrackIsLinkFromPTrack = true;
+            }
+            else if (nextTrackIsLinkFromPTrack) {
+               rightTrack = t;
+               nextTrackIsLinkFromPTrack = false;
+            }
+         }
+      }
+   }
 
    // We create a new snap manager in case any snap-points have changed
    if (mSnapManager)
@@ -2237,23 +2306,6 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
        && !stretch
 #endif
    ) {
-      // If the shift button is down and no track is selected yet,
-      // at least select the track we clicked into.
-      bool isAtLeastOneTrackSelected = false;
-
-      TrackListIterator iter(mTracks);
-      for (Track *t = iter.First(); t; t = iter.Next()) {
-         if (t->GetSelected()) {
-            isAtLeastOneTrackSelected = true;
-            break;
-         } else if (t == pTrack && t->GetLinked()) {
-            nextTrackIsLinkFromPTrack = true;
-         } else if (nextTrackIsLinkFromPTrack) {
-            rightTrack = t;
-            nextTrackIsLinkFromPTrack = false;
-         }
-      }
-
       if (!isAtLeastOneTrackSelected) {
          pTrack->SetSelected(true);
          if (rightTrack)
@@ -2324,10 +2376,15 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       mLastScrubPosition = PositionToTime(event.m_x, GetLeftOffset());
 #else
       StartOrJumpPlayback(event);
+
+      // Not starting a drag
+      SetCapturedTrack(NULL, IsUncaptured);
 #endif
       return;
    }
+
    //Make sure you are within the selected track
+   bool startNewSelection = true;
    if (pTrack && pTrack->GetSelected()) {
       // Adjusting selection edges can be turned off in the
       // preferences now
@@ -2411,9 +2468,12 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 
       // IF the user clicked a label, THEN select all other tracks by Label
       if (lt->IsSelected()) {
-         mTracks->Select( lt );
+         mTracks->Select(lt);
          SelectTracksByLabel( lt );
          DisplaySelection();
+
+         // Not starting a drag
+         SetCapturedTrack(NULL, IsUncaptured);
          return;
       }
    }
@@ -5591,6 +5651,7 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
    mMouseClickY = event.m_y;
 
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
+   // To do: escape key
    if(MONO_WAVE_PAN(t)){
       //STM:  Determine whether we should rescale one or two tracks
       if (t->GetVirtualStereo()) {
@@ -5613,18 +5674,21 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
       if (prev && prev->GetLink() == t) {
          // mCapturedTrack is the lower track
          mInitialTrackHeight = t->GetHeight();
+         mInitialMinimized = t->GetMinimized();
          mInitialUpperTrackHeight = prev->GetHeight();
          SetCapturedTrack(t, IsResizingBelowLinkedTracks);
       }
       else if (next && t->GetLink() == next) {
          // mCapturedTrack is the upper track
          mInitialTrackHeight = next->GetHeight();
+         mInitialMinimized = next->GetMinimized();
          mInitialUpperTrackHeight = t->GetHeight();
          SetCapturedTrack(t, IsResizingBetweenLinkedTracks);
       }
       else {
          // DM: Save the initial mouse location and the initial height
          mInitialTrackHeight = t->GetHeight();
+         mInitialMinimized = t->GetMinimized();
          SetCapturedTrack(t, IsResizing);
       }
    }
@@ -5636,18 +5700,26 @@ void TrackPanel::HandleResizeClick( wxMouseEvent & event )
    if (prev && prev->GetLink() == t) {
       // mCapturedTrack is the lower track
       mInitialTrackHeight = t->GetHeight();
+      mInitialActualHeight = t->GetActualHeight();
+      mInitialMinimized = t->GetMinimized();
       mInitialUpperTrackHeight = prev->GetHeight();
+      mInitialUpperActualHeight = prev->GetActualHeight();
       SetCapturedTrack(t, IsResizingBelowLinkedTracks);
    }
    else if (next && t->GetLink() == next) {
       // mCapturedTrack is the upper track
       mInitialTrackHeight = next->GetHeight();
+      mInitialActualHeight = next->GetActualHeight();
+      mInitialMinimized = next->GetMinimized();
       mInitialUpperTrackHeight = t->GetHeight();
+      mInitialUpperActualHeight = t->GetActualHeight();
       SetCapturedTrack(t, IsResizingBetweenLinkedTracks);
    }
    else {
       // DM: Save the initial mouse location and the initial height
       mInitialTrackHeight = t->GetHeight();
+      mInitialActualHeight = t->GetActualHeight();
+      mInitialMinimized = t->GetMinimized();
       SetCapturedTrack(t, IsResizing);
    }
 #endif // EXPERIMENTAL_OUTPUT_DISPLAY
@@ -9517,7 +9589,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
    wxString titleStr = t->GetName();
    int allowableWidth = kTrackInfoWidth - 38 - kLeftInset;
 
-   long textWidth, textHeight;
+   wxCoord textWidth, textHeight;
    dc->GetTextExtent(titleStr, &textWidth, &textHeight);
    while (textWidth > allowableWidth) {
       titleStr = titleStr.Left(titleStr.Length() - 1);
@@ -9583,7 +9655,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
    dc->SetPen( *wxTRANSPARENT_PEN );//No border!
    dc->DrawRectangle(bev);
 
-   long textWidth, textHeight;
+   wxCoord textWidth, textHeight;
    wxString str = (solo) ?
       /* i18n-hint: This is on a button that will silence this track.*/
       _("Solo") :
@@ -9837,69 +9909,3 @@ TrackPanel *(*TrackPanel::FactoryFunction)(
               TrackPanelListener * listener,
               AdornedRulerPanel * ruler) = TrackPanelFactory;
 
-
-
-
-/**********************************************************************
-
-Audacity: A Digital Audio Editor
-
-SelectedRegion.cpp
-
-Paul Licameli
-
-*******************************************************************/
-
-#include "Internat.h"
-#include "SelectedRegion.h"
-#include "xml/XMLWriter.h"
-
-const wxChar *SelectedRegion::sDefaultT0Name = wxT("selStart");
-const wxChar *SelectedRegion::sDefaultT1Name = wxT("selEnd");
-
-namespace {
-const wxChar *sDefaultF0Name = wxT("selLow");
-const wxChar *sDefaultF1Name = wxT("selHigh");
-}
-
-void SelectedRegion::WriteXMLAttributes
-(XMLWriter &xmlFile,
-const wxChar *legacyT0Name, const wxChar *legacyT1Name) const
-{
-   xmlFile.WriteAttr(legacyT0Name, t0(), 10);
-   xmlFile.WriteAttr(legacyT1Name, t1(), 10);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   if (f0() >= 0)
-      xmlFile.WriteAttr(sDefaultF0Name, f0(), 10);
-   if (f1() >= 0)
-      xmlFile.WriteAttr(sDefaultF1Name, f1(), 10);
-#endif
-}
-
-bool SelectedRegion::HandleXMLAttribute
-(const wxChar *attr, const wxChar *value,
-const wxChar *legacyT0Name, const wxChar *legacyT1Name)
-{
-   typedef bool (SelectedRegion::*Setter)(double, bool);
-   Setter setter = 0;
-   if (!wxStrcmp(attr, legacyT0Name))
-      setter = &SelectedRegion::setT0;
-   else if (!wxStrcmp(attr, legacyT1Name))
-      setter = &SelectedRegion::setT1;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   else if (!wxStrcmp(attr, sDefaultF0Name))
-      setter = &SelectedRegion::setF0;
-   else if (!wxStrcmp(attr, sDefaultF1Name))
-      setter = &SelectedRegion::setF1;
-#endif
-   else
-      return false;
-
-   double dblValue;
-   if (!Internat::CompatibleToDouble(value, &dblValue))
-      return false;
-
-   // False means don't flip time or frequency boundaries
-   (void)(this->*setter)(dblValue, false);
-   return true;
-}

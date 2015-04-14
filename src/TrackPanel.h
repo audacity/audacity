@@ -12,6 +12,7 @@
 #define __AUDACITY_TRACK_PANEL__
 
 #include <memory>
+#include <vector>
 
 #include <wx/dcmemory.h>
 #include <wx/dynarray.h>
@@ -573,6 +574,10 @@ protected:
 
    wxLongLong mLastSelectionAdjustment;
 
+   SelectedRegion mInitialSelection;
+   // Extra indirection to avoid the stupid MSW compiler warnings!  Rrrr!
+   std::vector<bool> *mInitialTrackSelection;
+
    bool mSelStartValid;
    double mSelStart;
 
@@ -712,8 +717,11 @@ protected:
        bool onlyWithinSnapDistance,
        double *pPinValue = NULL) const;
 
+   bool mInitialMinimized;
    int mInitialTrackHeight;
+   int mInitialActualHeight;
    int mInitialUpperTrackHeight;
+   int mInitialUpperActualHeight;
    bool mAutoScrolling;
 
    enum   MouseCaptureEnum

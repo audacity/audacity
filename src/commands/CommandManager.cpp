@@ -394,7 +394,7 @@ void CommandManager::InsertItem(wxString name, wxString label_in,
 
       for (size_t lndx = 0; lndx < lcnt; lndx++) {
          item = list.Item(lndx)->GetData();
-         if (item->GetLabel() == label) {
+         if (item->GetItemLabelText() == label) {
             break;
          }
          pos++;
@@ -681,7 +681,7 @@ int CommandManager::NewIdentifier(wxString name, wxString label, wxMenu *menu,
 
    tmpEntry->label = label;
    tmpEntry->labelPrefix = labelPrefix;
-   tmpEntry->labelTop = wxMenuItem::GetLabelFromText(mCurrentMenuName);
+   tmpEntry->labelTop = wxMenuItem::GetLabelText(mCurrentMenuName);
    tmpEntry->menu = menu;
    tmpEntry->callback = callback;
    tmpEntry->multi = multi;
@@ -975,7 +975,7 @@ void CommandManager::ToggleAccels(wxMenu *m, bool show)
          }
 
          // Set the new label
-         mi->SetText( label );
+         mi->SetItemLabel( label );
       }
    }
 
@@ -1251,7 +1251,7 @@ wxString CommandManager::GetPrefixedLabelFromName(wxString name)
    if (!entry->labelPrefix.IsEmpty()) {
       prefix = entry->labelPrefix + wxT(" - ");
    }
-   return wxMenuItem::GetLabelFromText(prefix + entry->label);
+   return wxMenuItem::GetLabelText(prefix + entry->label);
 #else
    return wxString(entry->labelPrefix + wxT(" ") + entry->label).Trim(false).Trim(true);
 #endif
@@ -1342,7 +1342,7 @@ void CommandManager::WriteXML(XMLWriter &xmlFile)
 
    for(j=0; j<mCommandList.GetCount(); j++) {
       wxString label = mCommandList[j]->label;
-      label = wxMenuItem::GetLabelFromText(label.BeforeFirst(wxT('\t')));
+      label = wxMenuItem::GetLabelText(label.BeforeFirst(wxT('\t')));
 
       xmlFile.StartTag(wxT("command"));
       xmlFile.WriteAttr(wxT("name"), mCommandList[j]->name);

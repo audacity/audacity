@@ -21,8 +21,12 @@
 
 *//********************************************************************/
 
+// The commented out string below is like the one the build servers
+// will replace this file with.
+//wxT("<a href=\"http://github.com/audacity/audacity/commit/28864acb238cb3ca71dda190a2d93242591dd80e\">28864ac</a> of Sun Apr 12 12:40:22 2015 +0100")
+
+
 // The string below is what you get if 
 // the build system does not replace this file.
-
 wxT("No revision identifier was provided")
 

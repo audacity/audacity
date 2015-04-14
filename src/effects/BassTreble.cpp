@@ -36,6 +36,7 @@
 #include <wx/slider.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
+#include <wx/utils.h>
 
 // Used to communicate the type of the filter.
 static const int bassType = 0; //Low Shelf
@@ -78,9 +79,9 @@ wxString EffectBassTreble::GetEffectDescription() {
 bool EffectBassTreble::PromptUser()
 {
    BassTrebleDialog dlog(this, mParent);
-   dlog.bass = dB_bass;
-   dlog.treble = dB_treble;
-   dlog.level = dB_level;
+   dlog.mBass = dB_bass;
+   dlog.mTreble = dB_treble;
+   dlog.mLevel = dB_level;
    dlog.mbNormalize = mbNormalize;
    dlog.TransferDataToWindow();
    dlog.CentreOnParent();
@@ -89,9 +90,9 @@ bool EffectBassTreble::PromptUser()
    if (dlog.GetReturnCode() == wxID_CANCEL)
       return false;
 
-   dB_bass = dlog.bass;
-   dB_treble = dlog.treble;
-   dB_level = dlog.level;
+   dB_bass = dlog.mBass;
+   dB_treble = dlog.mTreble;
+   dB_level = dlog.mLevel;
    mbNormalize = dlog.mbNormalize;
 
    gPrefs->Write(wxT("/Effects/BassTreble/Bass"), dB_bass);
@@ -268,6 +269,7 @@ float EffectBassTreble::DoFilter(float in)
 #define TREBLE_MAX 150     // Corresponds to +15 dB
 #define LEVEL_MIN -300     // Corresponds to -30 dN
 #define LEVEL_MAX 0        // Corresponds to 0 dB
+#define DB_MAX 100         // Maximum allowed dB boost
 
 BEGIN_EVENT_TABLE(BassTrebleDialog, EffectDialog)
    EVT_SLIDER(ID_BASS_SLIDER, BassTrebleDialog::OnBassSlider)
@@ -341,26 +343,27 @@ void BassTrebleDialog::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 
    // Normalize checkbox
-   S.StartHorizontalLay(wxLEFT, true);
+   S.StartTwoColumn();
    {
+      S.AddSpace(5,0);
       mNormalizeCheckBox = S.Id(ID_NORMALIZE).AddCheckBox(_("&Enable level control"),
                                     mbNormalize ? wxT("true") : wxT("false"));
-      mWarning = S.AddVariableText( wxT(""), false,
-                                    wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+      
+      S.AddSpace(5, 0);
+      mWarning = S.AddVariableText( wxT(""), false);
    }
-   S.EndHorizontalLay();
-
+   S.EndTwoColumn();
 }
 
 bool BassTrebleDialog::TransferDataToWindow()
 {
-   mBassS->SetValue((double)bass);
-   mTrebleS->SetValue((double)treble);
-   mLevelS->SetValue((double)level);
+   mBassS->SetValue((double)mBass);
+   mTrebleS->SetValue((double)mTreble);
+   mLevelS->SetValue((double)mLevel);
 
-   mBassT->SetValue(wxString::Format(wxT("%.1f"), (float)bass));
-   mTrebleT->SetValue(wxString::Format(wxT("%.1f"), (float)treble));
-   mLevelT->SetValue(wxString::Format(wxT("%.1f"), (float)level));
+   mBassT->SetValue(wxString::Format(wxT("%.1f"), (float)mBass));
+   mTrebleT->SetValue(wxString::Format(wxT("%.1f"), (float)mTreble));
+   mLevelT->SetValue(wxString::Format(wxT("%.1f"), (float)mLevel));
 
    mNormalizeCheckBox->SetValue(mbNormalize);
    UpdateUI();
@@ -371,10 +374,16 @@ bool BassTrebleDialog::TransferDataToWindow()
 
 bool BassTrebleDialog::TransferDataFromWindow()
 {
-   mBassT->GetValue().ToDouble(&bass);
-   mTrebleT->GetValue().ToDouble(&treble);
-   mLevelT->GetValue().ToDouble(&level);
+   mBassT->GetValue().ToDouble(&mBass);
+   mTrebleT->GetValue().ToDouble(&mTreble);
+   mLevelT->GetValue().ToDouble(&mLevel);
    mbNormalize = mNormalizeCheckBox->GetValue();
+
+   // Ensure that max values can never exceed design limits
+   // See bug 683.
+   mBass = wxMin(DB_MAX, mBass);
+   mTreble = wxMin(DB_MAX, mTreble);
+   mLevel = wxMin(0, mLevel);
 
    return true;
 }
@@ -387,6 +396,9 @@ void BassTrebleDialog::OnNormalize(wxCommandEvent& WXUNUSED(evt))
 void BassTrebleDialog::UpdateUI()
 {
    bool enable = mNormalizeCheckBox->GetValue();
+   bool okEnabled = true;
+   bool preveiwEnabled = true;
+   wxString warning = wxT("");
    double v0, v1, v2;
    wxString val0 = mBassT->GetValue();
    val0.ToDouble(&v0);
@@ -402,30 +414,31 @@ void BassTrebleDialog::UpdateUI()
    wxButton *ok = (wxButton *) FindWindow(wxID_OK);
    wxButton *preview = (wxButton *) FindWindow(ID_EFFECT_PREVIEW);
 
-   if (v0==0 && v1==0 && !enable)
-   {
+   if (v0==0 && v1==0 && !enable) {
       // Disallow OK if nothing to do (but  allow preview)
-      ok->Enable(false);
-      preview->Enable(true);
-      mWarning->SetLabel(_("    No change to apply."));
+      okEnabled = false;
+      warning = (_("Warning: No change to apply."));
    }
-   else
-   {
-      if ((v2 > 0) && enable)
-      {
-         // Disallow OK and Preview if level enabled and > 0
-         ok->Enable(false);
-         preview->Enable(false);
-         mWarning->SetLabel(_(":   Maximum 0 dB."));
-      }
-      else
-      {
-         // OK and Preview enabled
-         ok->Enable(true);
-         preview->Enable(true);
-         mWarning->SetLabel(wxT(""));
-      }
+   if (v0 > DB_MAX) {
+      okEnabled = false;
+      preveiwEnabled = false;
+      warning = (_("Error: Maximum Bass = 100 dB."));
    }
+   if (v1 > DB_MAX) {
+      okEnabled = false;
+      preveiwEnabled = false;
+      warning = (_("Error: Maximum Treble = 100 dB."));
+   }
+   if ((v2 > 0) && enable) {
+      // Disallow OK and Preview if level enabled and > 0
+      okEnabled = false;
+      preveiwEnabled = false;
+      warning = (_("Error: Maximum Level = 0 dB."));
+   }
+
+   mWarning->SetLabel(warning);
+   ok->Enable(okEnabled);
+   preview->Enable(preveiwEnabled);
 }
 
 // handler implementations for BassTrebleDialog
@@ -484,9 +497,9 @@ void BassTrebleDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    double oldLevel = mEffect->dB_level;
    bool oldUseGain = mEffect->mbNormalize;
 
-   mEffect->dB_bass = bass;
-   mEffect->dB_treble = treble;
-   mEffect->dB_level = level;
+   mEffect->dB_bass = mBass;
+   mEffect->dB_treble = mTreble;
+   mEffect->dB_level = mLevel;
    mEffect->mbNormalize = mbNormalize;
    mEffect->Preview();
 
