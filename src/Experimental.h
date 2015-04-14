@@ -170,7 +170,4 @@
 // Define to enable Nyquist audio clip boundary control (Steve Daulton Dec 2014)
 // #define EXPERIMENTAL_NYQUIST_SPLIT_CONTROL
 
-// Define to enable Nyquist time/date property list
-// #define EXPERIMENTAL_NYQUIST_TIME_PROPERTY
-
 #endif
