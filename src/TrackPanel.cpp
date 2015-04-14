@@ -585,12 +585,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mSelStartValid = false;
    mSelStart = 0;
 
-#ifdef EXPERIMENTAL_SCRUBBING
-   mScrubbing = false;
-   mLastScrubTime = 0;
-   mLastScrubPosition = 0;
-#endif
-
    mInitialTrackSelection = new std::vector<bool>;
 }
 
@@ -1003,32 +997,6 @@ void TrackPanel::OnTimer()
       pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(),
                                  (p->mLastPlayMode == loopedPlay));
    }
-
-#ifdef EXPERIMENTAL_SCRUBBING
-   if (mScrubbing
-      &&
-      gAudioIO->IsStreamActive(GetProject()->GetAudioIOToken()))
-   {
-      if (gAudioIO->GetLastPlaybackTime() < mLastScrubTime) {
-         // Allow some audio catch up
-      }
-      else {
-         wxMouseState state(::wxGetMouseState());
-         wxCoord xx = state.GetX();
-         ScreenToClient(&xx, NULL);
-         double leadPosition = PositionToTime(xx, GetLeftOffset());
-         if (mLastScrubPosition != leadPosition) {
-            wxLongLong clockTime = ::wxGetLocalTimeMillis();
-            double lagPosition = gAudioIO->GetStreamTime();
-
-            gAudioIO->SeekStream(leadPosition - lagPosition);
-
-            mLastScrubPosition = leadPosition;
-            mLastScrubTime = clockTime;
-         }
-      }
-   }
-#endif
 
    // Check whether we were playing or recording, but the stream has stopped.
    if (p->GetAudioIOToken()>0 &&
@@ -2054,52 +2022,6 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
       }
 
    } else if (event.LeftUp() || event.RightUp()) {
-#ifdef EXPERIMENTAL_SCRUBBING
-      if(mScrubbing) {
-         if (gAudioIO->IsBusy()) {
-            AudacityProject *p = GetActiveProject();
-            if (p) {
-               ControlToolBar * ctb = p->GetControlToolBar();
-               ctb->StopPlaying();
-            }
-         }
-
-         if (mAdjustSelectionEdges) {
-            if (event.ShiftDown()) {
-               // Adjust time selection as if shift-left click at end
-               const double selend = PositionToTime(event.m_x, GetLeftOffset());
-               SelectionBoundary boundary = ChooseTimeBoundary(selend, false);
-               switch (boundary)
-               {
-               case SBLeft:
-                  mViewInfo->selectedRegion.setT0(selend);
-                  break;
-               case SBRight:
-                  mViewInfo->selectedRegion.setT1(selend);
-                  break;
-               default:
-                  wxASSERT(false);
-               }
-               UpdateSelectionDisplay();
-            }
-            else {
-               // Adjust time selection as if left click
-               StartSelection(event.m_x, r.x);
-               DisplaySelection();
-            }
-         }
-
-         mScrubbing = false;
-      }
-      else if (event.CmdDown()) {
-         // A control-click will set just the indicator to the clicked spot,
-         // and turn playback on -- but delayed until button up,
-         // and only if no intervening drag
-         StartOrJumpPlayback(event);
-      }
-      // Don't return yet
-#endif
-
       if (mSnapManager) {
          delete mSnapManager;
          mSnapManager = NULL;
@@ -2214,31 +2136,6 @@ void TrackPanel::StartOrJumpPlayback(wxMouseEvent &event)
 }
 
 
-#ifdef EXPERIMENTAL_SCRUBBING
-void TrackPanel::StartScrubbing(double position)
-{
-   AudacityProject *p = GetActiveProject();
-   if (p &&
-      // Should I make a bigger tolerance than zero?
-      mLastScrubPosition != position) {
-      ControlToolBar * ctb = p->GetControlToolBar();
-      bool busy = gAudioIO->IsBusy();
-      double maxTime = p->GetTracks()->GetEndTime();
-
-      if (busy)
-         ctb->StopPlaying();
-
-      ctb->PlayPlayRegion(0, maxTime, false, false,
-         0,
-         &position);
-      mScrubbing = true;
-      mLastScrubPosition = position;
-      mLastScrubTime = ::wxGetLocalTimeMillis();
-   }
-}
-#endif
-
-
 /// This method gets called when we're handling selection
 /// and the mouse was just clicked.
 void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
@@ -2296,11 +2193,6 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 #endif
 
    if (event.ShiftDown()
-
-#ifdef EXPERIMENTAL_SCRUBBING
-       // Ctrl prevails over Shift with scrubbing enabled
-       && !event.CmdDown()
-#endif
 
 #ifdef USE_MIDI
        && !stretch
@@ -2369,17 +2261,10 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
            && !stretch
 #endif
           ) {
-#ifdef EXPERIMENTAL_SCRUBBING
-      // With scrubbing enabled, playback happens on button up, not down,
-      // and only if we do not start a scrub in the interim.
-      mScrubbing = false;
-      mLastScrubPosition = PositionToTime(event.m_x, GetLeftOffset());
-#else
       StartOrJumpPlayback(event);
 
       // Not starting a drag
       SetCapturedTrack(NULL, IsUncaptured);
-#endif
       return;
    }
 
@@ -3130,15 +3015,7 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
       return;
 
    if (event.CmdDown()) {
-#ifdef EXPERIMENTAL_SCRUBBING
-      if (!mScrubbing) {
-         double position = PositionToTime(event.m_x, GetLeftOffset());
-         StartScrubbing(position);
-      }
-      else
-#else
       // Ctrl-drag has no meaning, fuhggeddaboudit
-#endif
       return;
    }
 
