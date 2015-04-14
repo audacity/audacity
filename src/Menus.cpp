@@ -2013,7 +2013,8 @@ void AudacityProject::OnPlayOneSecond()
 
    double pos = mTrackPanel->GetMostRecentXPos();
    mLastPlayMode = oneSecondPlay;
-   GetControlToolBar()->PlayPlayRegion(pos - 0.5, pos + 0.5);
+   GetControlToolBar()->PlayPlayRegion
+      (SelectedRegion(pos - 0.5, pos + 0.5), GetDefaultPlayOptions());
 }
 
 
@@ -2056,7 +2057,8 @@ void AudacityProject::OnPlayToSelection()
    // only when playing a short region, less than or equal to a second.
 //   mLastPlayMode = ((t1-t0) > 1.0) ? normalPlay : oneSecondPlay;
 
-   GetControlToolBar()->PlayPlayRegion(t0, t1);
+   GetControlToolBar()->PlayPlayRegion
+      (SelectedRegion(t0, t1), GetDefaultPlayOptions());
 }
 
 // The next 4 functions provide a limited version of the
@@ -2073,7 +2075,7 @@ void AudacityProject::OnPlayBeforeSelectionStart()
 
    mLastPlayMode = oneSecondPlay;      // this disables auto scrolling, as in OnPlayToSelection()
 
-   GetControlToolBar()->PlayPlayRegion(t0 - beforeLen, t0);
+   GetControlToolBar()->PlayPlayRegion(SelectedRegion(t0 - beforeLen, t0), GetDefaultPlayOptions());
 }
 
 void AudacityProject::OnPlayAfterSelectionStart()
@@ -2089,9 +2091,9 @@ void AudacityProject::OnPlayAfterSelectionStart()
    mLastPlayMode = oneSecondPlay;      // this disables auto scrolling, as in OnPlayToSelection()
 
    if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
-      GetControlToolBar()->PlayPlayRegion(t0, t1);
+      GetControlToolBar()->PlayPlayRegion(SelectedRegion(t0, t1), GetDefaultPlayOptions());
    else
-      GetControlToolBar()->PlayPlayRegion(t0, t0 + afterLen);
+      GetControlToolBar()->PlayPlayRegion(SelectedRegion(t0, t0 + afterLen), GetDefaultPlayOptions());
 }
 
 void AudacityProject::OnPlayBeforeSelectionEnd()
@@ -2107,9 +2109,9 @@ void AudacityProject::OnPlayBeforeSelectionEnd()
    mLastPlayMode = oneSecondPlay;      // this disables auto scrolling, as in OnPlayToSelection()
 
    if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
-      GetControlToolBar()->PlayPlayRegion(t0, t1);
+      GetControlToolBar()->PlayPlayRegion(SelectedRegion(t0, t1), GetDefaultPlayOptions());
    else
-      GetControlToolBar()->PlayPlayRegion(t1 - beforeLen, t1);
+      GetControlToolBar()->PlayPlayRegion(SelectedRegion(t1 - beforeLen, t1), GetDefaultPlayOptions());
 }
 
 
@@ -2124,7 +2126,7 @@ void AudacityProject::OnPlayAfterSelectionEnd()
 
    mLastPlayMode = oneSecondPlay;      // this disables auto scrolling, as in OnPlayToSelection()
 
-   GetControlToolBar()->PlayPlayRegion(t1, t1 + afterLen);
+   GetControlToolBar()->PlayPlayRegion(SelectedRegion(t1, t1 + afterLen), GetDefaultPlayOptions());
 }
 
 void AudacityProject::OnPlayLooped()

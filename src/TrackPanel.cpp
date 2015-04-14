@@ -973,7 +973,7 @@ void TrackPanel::OnTimer()
    AudacityProject *p = GetProject();
 
    if ((p->GetAudioIOToken() > 0) &&
-         gAudioIO->IsStreamActive(p->GetAudioIOToken()))
+      gAudioIO->IsStreamActive(p->GetAudioIOToken()))
    {
       // Update lyrics display.
       LyricsWindow* pLyricsWindow = p->GetLyricsWindow();
@@ -991,11 +991,11 @@ void TrackPanel::OnTimer()
    //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
    MixerBoard* pMixerBoard = this->GetMixerBoard();
    if (pMixerBoard &&
-         (p->GetAudioIOToken() > 0) &&
-         gAudioIO->IsStreamActive(p->GetAudioIOToken()))
+      (p->GetAudioIOToken() > 0) &&
+      gAudioIO->IsStreamActive(p->GetAudioIOToken()))
    {
       pMixerBoard->UpdateMeters(gAudioIO->GetStreamTime(),
-                                 (p->mLastPlayMode == loopedPlay));
+         (p->mLastPlayMode == loopedPlay));
    }
 
    // Check whether we were playing or recording, but the stream has stopped.
@@ -1379,27 +1379,29 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
       mRefreshBacking = false;
 
       // Redraw the backing bitmap
-      DrawTracks( &mBackingDC );
+      DrawTracks(&mBackingDC);
 
       // Copy it to the display
-      dc->Blit( 0, 0, mBacking->GetWidth(), mBacking->GetHeight(), &mBackingDC, 0, 0 );
+      dc->Blit(0, 0, mBacking->GetWidth(), mBacking->GetHeight(), &mBackingDC, 0, 0);
    }
    else
    {
       // Copy full, possibly clipped, damage rectange
-      dc->Blit( box.x, box.y, box.width, box.height, &mBackingDC, box.x, box.y );
+      dc->Blit(box.x, box.y, box.width, box.height, &mBackingDC, box.x, box.y);
    }
 
    // Done with the clipped DC
    delete dc;
 
    // Drawing now goes directly to the client area
-   wxClientDC cdc( this );
+   wxClientDC cdc(this);
 
    // Update the indicator in case it was damaged if this project is playing
+
+   // PRL: mIndicatorShowing never becomes true!
    AudacityProject* p = GetProject();
    if (!gAudioIO->IsPaused() &&
-       ( mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken())))
+      (mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken())))
    {
       // We just want to repair, not update the old, so set the second param to true.
       // This is important because this onPaint could be for just some of the tracks.
@@ -1407,8 +1409,8 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    }
 
    // Draw the cursor
-   if( mViewInfo->selectedRegion.isPoint())
-      DoDrawCursor( cdc );
+   if (mViewInfo->selectedRegion.isPoint())
+      DoDrawCursor(cdc);
 
 #if DEBUG_DRAW_TIMING
    sw.Pause();
@@ -2119,7 +2121,8 @@ void TrackPanel::StartOrJumpPlayback(wxMouseEvent &event)
          //the clicked point
          ControlToolBar * ctb = p->GetControlToolBar();
          //ctb->SetPlay(true);// Not needed as done in PlayPlayRegion
-         ctb->PlayPlayRegion(clicktime, endtime,false) ;
+         ctb->PlayPlayRegion
+            (SelectedRegion(clicktime, endtime), p->GetDefaultPlayOptions());
       }
       else
       {
@@ -2130,7 +2133,7 @@ void TrackPanel::StartOrJumpPlayback(wxMouseEvent &event)
          //require a new method in ControlToolBar: SetPause();
          ControlToolBar * ctb = p->GetControlToolBar();
          ctb->StopPlaying();
-         ctb->PlayPlayRegion(clicktime,endtime,false) ;
+         ctb->PlayPlayRegion(SelectedRegion(clicktime, endtime), p->GetDefaultPlayOptions());
       }
    }
 }

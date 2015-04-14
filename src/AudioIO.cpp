@@ -1148,13 +1148,8 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                          NoteTrackArray midiPlaybackTracks,
 #endif
-                         TimeTrack *timeTrack, double sampleRate,
-                         double t0, double t1,
-                         AudioIOListener* listener,
-                         bool playLooped /* = false */,
-                         double cutPreviewGapStart /* = 0.0 */,
-                         double cutPreviewGapLen, /* = 0.0 */
-                         const double * /* pStartTime */ /* = 0 */)
+                         double sampleRate, double t0, double t1,
+                         const AudioIOStartStreamOptions &options)
 {
    if( IsBusy() )
       return 0;
@@ -1194,8 +1189,8 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    }
    mSilenceLevel = (silenceLevelDB + dBRange)/(double)dBRange;  // meter goes -dBRange dB -> 0dB
 
-   mTimeTrack = timeTrack;
-   mListener = listener;
+   mTimeTrack = options.timeTrack;
+   mListener = options.listener;
    mRate    = sampleRate;
    mT0      = t0;
    mT1      = t1;
@@ -1207,9 +1202,9 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
    mMidiPlaybackTracks = midiPlaybackTracks;
 #endif
-   mPlayLooped = playLooped;
-   mCutPreviewGapStart = cutPreviewGapStart;
-   mCutPreviewGapLen = cutPreviewGapLen;
+   mPlayLooped = options.playLooped;
+   mCutPreviewGapStart = options.cutPreviewGapStart;
+   mCutPreviewGapLen = options.cutPreviewGapLen;
    mPlaybackBuffers = NULL;
    mPlaybackMixers = NULL;
    mCaptureBuffers = NULL;
@@ -1326,13 +1321,17 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
             memset(mPlaybackBuffers, 0, sizeof(RingBuffer*)*mPlaybackTracks.GetCount());
             memset(mPlaybackMixers, 0, sizeof(Mixer*)*mPlaybackTracks.GetCount());
 
-            for( unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++ )
+            const Mixer::WarpOptions &warpOptions =
+               Mixer::WarpOptions(mTimeTrack);
+
+            for (unsigned int i = 0; i < mPlaybackTracks.GetCount(); i++)
             {
                mPlaybackBuffers[i] = new RingBuffer(floatSample, playbackBufferSize);
 
                // MB: use normal time for the end time, not warped time!
                mPlaybackMixers[i]  = new Mixer(1, &mPlaybackTracks[i],
-                                               mTimeTrack, mT0, mT1, 1,
+                                               warpOptions,
+                                               mT0, mT1, 1,
                                                playbackMixBufferSize, false,
                                                mRate, floatSample, false);
                mPlaybackMixers[i]->ApplyTrackGains(false);

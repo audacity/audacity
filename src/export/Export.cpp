@@ -277,7 +277,7 @@ Mixer* ExportPlugin::CreateMixer(int numInputTracks, WaveTrack **inputTracks,
 {
    // MB: the stop time should not be warped, this was a bug.
    return new Mixer(numInputTracks, inputTracks,
-                  timeTrack,
+                  Mixer::WarpOptions(timeTrack),
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
                   outRate, outFormat,

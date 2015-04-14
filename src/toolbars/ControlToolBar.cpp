@@ -467,34 +467,42 @@ bool ControlToolBar::IsRecordDown()
 {
    return mRecord->IsDown();
 }
-void ControlToolBar::PlayPlayRegion(double t0, double t1,
-                                    bool looped /* = false */,
-                                    bool cutpreview /* = false */,
-                                    TimeTrack *timetrack /* = NULL */,
-                                    const double *pStartTime /* = NULL */)
+
+int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
+                                   const AudioIOStartStreamOptions &options,
+                                   bool cutpreview, /* = false */
+                                   bool backwards /* = false */)
 {
+   double t0 = selectedRegion.t0();
+   double t1 = selectedRegion.t1();
+   // SelectedRegion guarantees t0 <= t1, so we need another boolean argument
+   // to indicate backwards play.
+   const bool looped = options.playLooped;
+
+   wxASSERT(! backwards);
+
    SetPlay(true, looped, cutpreview);
 
    if (gAudioIO->IsBusy()) {
       SetPlay(false);
-      return;
+      return -1;
    }
 
    if (cutpreview && t0==t1) {
       SetPlay(false);
-      return; /* msmeyer: makes no sense */
+      return -1; /* msmeyer: makes no sense */
    }
 
    AudacityProject *p = GetActiveProject();
    if (!p) {
       SetPlay(false);
-      return;  // Should never happen, but...
+      return -1;  // Should never happen, but...
    }
 
    TrackList *t = p->GetTracks();
    if (!t) {
       mPlay->PopUp();
-      return;  // Should never happen, but...
+      return -1;  // Should never happen, but...
    }
 
    bool hasaudio = false;
@@ -512,7 +520,7 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
 
    if (!hasaudio) {
       SetPlay(false);
-      return;  // No need to continue without audio tracks
+      return -1;  // No need to continue without audio tracks
    }
 
    double maxofmins,minofmaxs;
@@ -565,7 +573,7 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
       // we test if the intersection has no volume
       if (minofmaxs <= maxofmins) {
          // no volume; play nothing
-         return;
+         return -1;
       }
       else {
          t0 = maxofmins;
@@ -573,14 +581,15 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
       }
    }
 
-   // Can't play before 0...either shifted or latencey corrected tracks
-   if (t0 < 0.0) {
+   // Can't play before 0...either shifted or latency corrected tracks
+   if (t0 < 0.0)
       t0 = 0.0;
-   }
+   if (t1 < 0.0)
+      t1 = 0.0;
 
+   int token = -1;
    bool success = false;
    if (t1 > t0) {
-      int token;
       if (cutpreview) {
          double beforeLen, afterLen;
          gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
@@ -590,36 +599,37 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
          SetupCutPreviewTracks(tcp0, t0, t1, tcp1);
          if (mCutPreviewTracks)
          {
+            AudioIOStartStreamOptions myOptions = options;
+            myOptions.cutPreviewGapStart = t0;
+            myOptions.cutPreviewGapLen = t1 - t0;
             token = gAudioIO->StartStream(
                mCutPreviewTracks->GetWaveTrackArray(false),
                WaveTrackArray(),
 #ifdef EXPERIMENTAL_MIDI_OUT
                NoteTrackArray(),
 #endif
-               timetrack, p->GetRate(), tcp0, tcp1, p, false,
-               t0, t1-t0,
-               pStartTime);
+               p->GetRate(), tcp0, tcp1, myOptions);
          } else
          {
             // Cannot create cut preview tracks, clean up and exit
             SetPlay(false);
             SetStop(false);
             SetRecord(false);
-            return;
+            return -1;
          }
       } else {
+         // Lifted the following into AudacityProject::GetDefaultPlayOptions()
+         /*
          if (!timetrack) {
             timetrack = t->GetTimeTrack();
          }
+         */
          token = gAudioIO->StartStream(t->GetWaveTrackArray(false),
                                        WaveTrackArray(),
 #ifdef EXPERIMENTAL_MIDI_OUT
                                        t->GetNoteTrackArray(false),
 #endif
-                                       timetrack,
-                                       p->GetRate(), t0, t1, p, looped,
-                                       0, 0,
-                                       pStartTime);
+                                       p->GetRate(), t0, t1, options);
       }
       if (token != 0) {
          success = true;
@@ -648,7 +658,10 @@ void ControlToolBar::PlayPlayRegion(double t0, double t1,
       SetPlay(false);
       SetStop(false);
       SetRecord(false);
+      return -1;
    }
+
+   return token;
 }
 
 void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
@@ -666,9 +679,12 @@ void ControlToolBar::PlayCurrentRegion(bool looped /* = false */,
       double playRegionStart, playRegionEnd;
       p->GetPlayRegion(&playRegionStart, &playRegionEnd);
 
-      PlayPlayRegion(playRegionStart,
-                     playRegionEnd,
-                     looped, cutpreview);
+      AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
+      options.playLooped = looped;
+      if (cutpreview)
+         options.timeTrack = NULL;
+      PlayPlayRegion(SelectedRegion(playRegionStart, playRegionEnd),
+                     options, cutpreview);
    }
 }
 
@@ -898,14 +914,14 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
          gAudioIO->AILAInitialize();
       #endif
-
+         
+      AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
       int token = gAudioIO->StartStream(playbackTracks,
                                         newRecordingTracks,
 #ifdef EXPERIMENTAL_MIDI_OUT
                                         midiTracks,
 #endif
-                                        t->GetTimeTrack(),
-                                        p->GetRate(), t0, t1, p);
+                                        p->GetRate(), t0, t1, options);
 
       bool success = (token != 0);
 

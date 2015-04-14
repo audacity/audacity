@@ -80,7 +80,7 @@ class Sequence: public XMLTagHandler {
             sampleCount start, sampleCount len);
 
    bool GetWaveDisplay(float *min, float *max, float *rms,int* bl,
-                       int len, sampleCount *where,
+                       int len, const sampleCount *where,
                        double samplesPerPixel);
 
    bool Copy(sampleCount s0, sampleCount s1, Sequence **dest);

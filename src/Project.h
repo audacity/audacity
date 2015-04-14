@@ -82,6 +82,7 @@ class LyricsWindow;
 class MixerBoard;
 class MixerBoardFrame;
 
+struct AudioIOStartStreamOptions;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -134,6 +135,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    AudacityProject(wxWindow * parent, wxWindowID id,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
+
+   AudioIOStartStreamOptions GetDefaultPlayOptions();
 
    TrackList *GetTracks() { return mTracks; }
    UndoManager *GetUndoManager() { return &mUndoManager; }

@@ -161,7 +161,8 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       endTime = mixEndTime;
    }
 
-   Mixer *mixer = new Mixer(numWaves, waveArray, tracks->GetTimeTrack(),
+   Mixer *mixer = new Mixer(numWaves, waveArray,
+                            Mixer::WarpOptions(tracks->GetTimeTrack()),
                             startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
                             rate, format);
 
@@ -226,8 +227,28 @@ bool MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    return (updateResult == eProgressSuccess || updateResult == eProgressStopped);
 }
 
+Mixer::WarpOptions::WarpOptions(double min, double max)
+   : timeTrack(0), minSpeed(min), maxSpeed(max)
+{
+   if (minSpeed < 0)
+   {
+      wxASSERT(false);
+      minSpeed = 0;
+   }
+   if (maxSpeed < 0)
+   {
+      wxASSERT(false);
+      maxSpeed = 0;
+   }
+   if (minSpeed > maxSpeed)
+   {
+      wxASSERT(false);
+      std::swap(minSpeed, maxSpeed);
+   }
+}
+
 Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
-             TimeTrack *timeTrack,
+             const WarpOptions &warpOptions,
              double startTime, double stopTime,
              int numOutChannels, int outBufferSize, bool outInterleaved,
              double outRate, sampleFormat outFormat,
@@ -238,12 +259,15 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
    mHighQuality = highQuality;
    mNumInputTracks = numInputTracks;
    mInputTrack = new WaveTrack*[mNumInputTracks];
+
+   // mSamplePos holds for each track the next sample position not
+   // yet processed.
    mSamplePos = new sampleCount[mNumInputTracks];
    for(i=0; i<mNumInputTracks; i++) {
       mInputTrack[i] = inputTracks[i];
       mSamplePos[i] = inputTracks[i]->TimeToLongSamples(startTime);
    }
-   mTimeTrack = timeTrack;
+   mTimeTrack = warpOptions.timeTrack;
    mT0 = startTime;
    mT1 = stopTime;
    mTime = startTime;
@@ -277,23 +301,45 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
    }
    mFloatBuffer = new float[mInterleavedBufferSize];
 
+   // This is the number of samples grabbed in one go from a track
+   // and placed in a queue, when mixing with resampling.
+   // (Should we use WaveTrack::GetBestBlockSize instead?)
    mQueueMaxLen = 65536;
+
+   // But cut the queue into blocks of this finer size
+   // for variable rate resampling.  Each block is resampled at some
+   // constant rate.
    mProcessLen = 1024;
 
+   // Position in each queue of the start of the next block to resample.
    mQueueStart = new int[mNumInputTracks];
+
+   // For each queue, the number of available samples after the queue start.
    mQueueLen = new int[mNumInputTracks];
    mSampleQueue = new float *[mNumInputTracks];
    mResample = new Resample*[mNumInputTracks];
    for(i=0; i<mNumInputTracks; i++) {
       double factor = (mRate / mInputTrack[i]->GetRate());
-      if (timeTrack) {
+      double minFactor, maxFactor;
+      if (mTimeTrack) {
          // variable rate resampling
-         mResample[i] = new Resample(mHighQuality,
-                                      factor / timeTrack->GetRangeUpper(),
-                                      factor / timeTrack->GetRangeLower());
-      } else {
-         mResample[i] = new Resample(mHighQuality, factor, factor); // constant rate resampling
+         mbVariableRates = true;
+         minFactor = factor / mTimeTrack->GetRangeUpper();
+         maxFactor = factor / mTimeTrack->GetRangeLower();
       }
+      else if (warpOptions.minSpeed > 0.0 && warpOptions.maxSpeed > 0.0) {
+         // variable rate resampling
+         mbVariableRates = true;
+         minFactor = factor / warpOptions.maxSpeed;
+         maxFactor = factor / warpOptions.minSpeed;
+      }
+      else {
+         // constant rate resampling
+         mbVariableRates = false;
+         minFactor = maxFactor = factor;
+      }
+
+      mResample[i] = new Resample(mHighQuality, minFactor, maxFactor);
       mSampleQueue[i] = new float[mQueueMaxLen];
       mQueueStart[i] = 0;
       mQueueLen[i] = 0;
@@ -408,6 +454,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
 
    while (out < mMaxOut) {
       if (*queueLen < mProcessLen) {
+         // Shift pending portion to start of the buffer
          memmove(queue, &queue[*queueStart], (*queueLen) * sampleSize);
          *queueStart = 0;
 
@@ -581,7 +628,7 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
          }
       }
 
-      if (mTimeTrack || track->GetRate() != mRate)
+      if (mbVariableRates || track->GetRate() != mRate)
          out = MixVariableRates(channelFlags, track,
                                 &mSamplePos[i], mSampleQueue[i],
                                 &mQueueStart[i], &mQueueLen[i], mResample[i]);
@@ -594,28 +641,27 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
       double t = (double)mSamplePos[i] / (double)track->GetRate();
       if(t > mTime)
          mTime = std::min(t, mT1);
-
    }
    if(mInterleaved) {
       for(int c=0; c<mNumChannels; c++) {
          CopySamples(mTemp[0] + (c * SAMPLE_SIZE(floatSample)),
-                     floatSample,
-                     mBuffer[0] + (c * SAMPLE_SIZE(mFormat)),
-                     mFormat,
-                     maxOut,
-                     mHighQuality,
-                     mNumChannels,
-                     mNumChannels);
+            floatSample,
+            mBuffer[0] + (c * SAMPLE_SIZE(mFormat)),
+            mFormat,
+            maxOut,
+            mHighQuality,
+            mNumChannels,
+            mNumChannels);
       }
    }
    else {
       for(int c=0; c<mNumBuffers; c++) {
-            CopySamples(mTemp[c],
-                        floatSample,
-                        mBuffer[c],
-                        mFormat,
-                        maxOut,
-                        mHighQuality);
+         CopySamples(mTemp[c],
+            floatSample,
+            mBuffer[c],
+            mFormat,
+            maxOut,
+            mHighQuality);
       }
    }
    // MB: this doesn't take warping into account, replaced with code based on mSamplePos
