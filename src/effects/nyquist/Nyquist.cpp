@@ -49,6 +49,7 @@ effects from this one class.
 #include <wx/textfile.h>
 #include <wx/choice.h>
 #include <wx/checkbox.h>
+#include <wx/datetime.h>
 
 #if defined EXPERIMENTAL_NYQUIST_TIME_PROPERTY
 #include <wx/datetime.h>
@@ -538,6 +539,30 @@ bool EffectNyquist::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month).c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day).c_str());
 #endif
+
+
+      // Date and time:
+      wxDateTime now = wxDateTime::Now();
+      int year = now.GetYear();
+      int doy = now.GetDayOfYear();
+      int dom = now.GetDay();
+      // enumerated constants
+      wxDateTime::Month month = now.GetMonth();
+      wxDateTime::WeekDay day = now.GetWeekDay();
+      
+      // Date/time as a list: year, day of year, hour, minute, seconds
+      mProps += wxString::Format(wxT("(setf *SYSTEM-TIME* (list %d %d %d %d %d))\n"),
+                                 year, doy, now.GetHour(), now.GetMinute(), now.GetSecond());
+
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DATE)\n"), now.FormatDate().c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'TIME)\n"), now.FormatTime().c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'ISO-DATE)\n"), now.FormatISODate().c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'ISO-TIME)\n"), now.FormatISOTime().c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'YEAR)\n"), year);
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'DAY)\n"), dom);   // day of month
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'MONTH)\n"), month);
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month).c_str());
+      mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day).c_str());
 
 
       TrackListIterator all(project->GetTracks());
