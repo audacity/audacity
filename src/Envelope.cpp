@@ -1430,31 +1430,42 @@ double Envelope::SolveIntegralOfInverse( double t0, double area )
 {
    if(area == 0.0)
       return t0;
-   if(area < 0.0)
-   {
-      fprintf( stderr, "SolveIntegralOfInverse called with negative area, this is not supported!\n" );
-      return t0;
-   }
 
    unsigned int count = mEnv.Count();
    if(count == 0) // 'empty' envelope
       return t0 + area * mDefaultValue;
 
    double lastT, lastVal;
-   unsigned int i; // this is the next point to check
+   int i; // this is the next point to check
    if(t0 < mEnv[0]->GetT()) // t0 preceding the first point
    {
-      i = 1;
-      lastT = mEnv[0]->GetT();
-      lastVal = mEnv[0]->GetVal();
-      double added = (lastT - t0) / lastVal;
-      if(added >= area)
+      if (area < 0) {
          return t0 + area * mEnv[0]->GetVal();
-      area -= added;
+      }
+      else {
+         i = 1;
+         lastT = mEnv[0]->GetT();
+         lastVal = mEnv[0]->GetVal();
+         double added = (lastT - t0) / lastVal;
+         if(added >= area)
+            return t0 + area * mEnv[0]->GetVal();
+         area -= added;
+      }
    }
    else if(t0 >= mEnv[count - 1]->GetT()) // t0 following the last point
    {
-      return t0 + area * mEnv[count - 1]->GetVal();
+      if (area < 0) {
+         i = count - 2;
+         lastT = mEnv[count - 1]->GetT();
+         lastVal = mEnv[count - 1]->GetVal();
+         double added = (lastT - t0) / lastVal; // negative
+         if(added <= area)
+            return t0 + area * mEnv[count - 1]->GetVal();
+         area -= added;
+      }
+      else {
+         return t0 + area * mEnv[count - 1]->GetVal();
+      }
    }
    else // t0 enclosed by points
    {
@@ -1463,25 +1474,52 @@ double Envelope::SolveIntegralOfInverse( double t0, double area )
       BinarySearchForTime(lo, hi, t0);
       lastVal = InterpolatePoints(mEnv[lo]->GetVal(), mEnv[hi]->GetVal(), (t0 - mEnv[lo]->GetT()) / (mEnv[hi]->GetT() - mEnv[lo]->GetT()), mDB);
       lastT = t0;
-      i = hi; // the point immediately after t0.
+      if (area < 0)
+         i = lo;
+      else
+         i = hi; // the point immediately after t0.
    }
 
-   // loop through the rest of the envelope points until we get to t1
-   while (1)
-   {
-      if(i >= count) // the requested range extends beyond the last point
+   if (area < 0) {
+      // loop BACKWARDS through the rest of the envelope points until we get to t1
+      // (which is less than t0)
+      while (1)
       {
-         return lastT + area * lastVal;
+         if(i < 0) // the requested range extends beyond the leftmost point
+         {
+            return lastT + area * lastVal;
+         }
+         else
+         {
+            double added =
+               -IntegrateInverseInterpolated(mEnv[i]->GetVal(), lastVal, lastT - mEnv[i]->GetT(), mDB);
+            if(added <= area)
+               return lastT - SolveIntegrateInverseInterpolated(lastVal, mEnv[i]->GetVal(), lastT - mEnv[i]->GetT(), -area, mDB);
+            area -= added;
+            lastT = mEnv[i]->GetT();
+            lastVal = mEnv[i]->GetVal();
+            --i;
+         }
       }
-      else
+   }
+   else {
+      // loop through the rest of the envelope points until we get to t1
+      while (1)
       {
-         double added = IntegrateInverseInterpolated(lastVal, mEnv[i]->GetVal(), mEnv[i]->GetT() - lastT, mDB);
-         if(added >= area)
-            return lastT + SolveIntegrateInverseInterpolated(lastVal, mEnv[i]->GetVal(), mEnv[i]->GetT() - lastT, area, mDB);
-         area -= added;
-         lastT = mEnv[i]->GetT();
-         lastVal = mEnv[i]->GetVal();
-         i++;
+         if(i >= count) // the requested range extends beyond the last point
+         {
+            return lastT + area * lastVal;
+         }
+         else
+         {
+            double added = IntegrateInverseInterpolated(lastVal, mEnv[i]->GetVal(), mEnv[i]->GetT() - lastT, mDB);
+            if(added >= area)
+               return lastT + SolveIntegrateInverseInterpolated(lastVal, mEnv[i]->GetVal(), mEnv[i]->GetT() - lastT, area, mDB);
+            area -= added;
+            lastT = mEnv[i]->GetT();
+            lastVal = mEnv[i]->GetVal();
+            i++;
+         }
       }
    }
 }

@@ -79,6 +79,7 @@
   the speed control. In a separate algorithm, the audio callback updates
   mTime by (frames / samplerate) * factor, where factor reflects the
   speed at mTime. This effectively integrates speed to get position.
+  Negative speeds are allowed too, for instance in scrubbing.
 
   \par Midi Time
   MIDI is not warped according to the speed control. This might be
@@ -1213,10 +1214,13 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    // with ComputeWarpedLength, it is now possible the calculate the warped length with 100% accuracy
    // (ignoring accumulated rounding errors during playback) which fixes the 'missing sound at the end' bug
    mWarpedTime = 0.0;
-   if(mTimeTrack)
+   if (mTimeTrack)
+      // Following gives negative when mT0 > mT1
       mWarpedLength = mTimeTrack->ComputeWarpedLength(mT0, mT1);
    else
       mWarpedLength = mT1 - mT0;
+   // PRL allow backwards play
+   mWarpedLength = abs(mWarpedLength);
 
    //
    // The RingBuffer sizes, and the max amount of the buffer to
@@ -1999,6 +2003,15 @@ bool AudioIO::IsMonitoring()
    return ( mPortStreamV19 && mStreamToken==0 );
 }
 
+double AudioIO::LimitStreamTime(double absoluteTime) const
+{
+   // Allows for forward or backward play
+   if (ReversedTime())
+      return std::max(mT1, std::min(mT0, absoluteTime));
+   else
+      return std::max(mT0, std::min(mT1, absoluteTime));
+}
+
 double AudioIO::NormalizeStreamTime(double absoluteTime) const
 {
    // dmazzoni: This function is needed for two reasons:
@@ -2013,13 +2026,7 @@ double AudioIO::NormalizeStreamTime(double absoluteTime) const
    //          mode. In this case, we should jump over a defined "gap" in the
    //          audio.
 
-   // msmeyer: Just to be sure, the returned stream time should
-   //          never be smaller than the actual start time.
-   if (absoluteTime < mT0)
-      absoluteTime = mT0;
-
-   if (absoluteTime > mT1)
-      absoluteTime = mT1;
+   absoluteTime = LimitStreamTime(absoluteTime);
 
    if (mCutPreviewGapLen > 0)
    {
@@ -2863,6 +2870,7 @@ void AudioIO::FillBuffers()
                   warpedSamples = mPlaybackMixers[i]->GetBuffer();
                   mPlaybackBuffers[i]->Put(warpedSamples, floatSample, processed);
                }
+               
                //if looping and processed is less than the full chunk/block/buffer that gets pulled from
                //other longer tracks, then we still need to advance the ring buffers or
                //we'll trip up on ourselves when we start them back up again.
@@ -3561,17 +3569,20 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
             // Calculate the new time position
             gAudioIO->mTime += gAudioIO->mSeek;
-            if (gAudioIO->mTime < gAudioIO->mT0)
-                gAudioIO->mTime = gAudioIO->mT0;
-            else if (gAudioIO->mTime > gAudioIO->mT1)
-                gAudioIO->mTime = gAudioIO->mT1;
+            gAudioIO->mTime = gAudioIO->LimitStreamTime(gAudioIO->mTime);
             gAudioIO->mSeek = 0.0;
 
             // Reset mixer positions and flush buffers for all tracks
             if(gAudioIO->mTimeTrack)
-               gAudioIO->mWarpedTime = gAudioIO->mTimeTrack->ComputeWarpedLength(gAudioIO->mT0, gAudioIO->mTime);
+               // Following gives negative when mT0 > mTime
+               gAudioIO->mWarpedTime =
+                  gAudioIO->mTimeTrack->ComputeWarpedLength
+                     (gAudioIO->mT0, gAudioIO->mTime);
             else
                gAudioIO->mWarpedTime = gAudioIO->mTime - gAudioIO->mT0;
+            gAudioIO->mWarpedTime = abs(gAudioIO->mWarpedTime);
+
+            // Reset mixer positions and flush buffers for all tracks
             for (i = 0; i < (unsigned int)numPlaybackTracks; i++)
             {
                gAudioIO->mPlaybackMixers[i]->Reposition(gAudioIO->mTime);
@@ -3703,10 +3714,12 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             // the end, then we've actually finished playing the entire
             // selection.
             // msmeyer: We never finish if we are playing looped
-            if (len == 0 && gAudioIO->mTime >= gAudioIO->mT1 &&
-                !gAudioIO->mPlayLooped)
-            {
-               callbackReturn = paComplete;
+            if (len == 0 &&
+                !gAudioIO->mPlayLooped) {
+               if ((gAudioIO->ReversedTime()
+                  ? gAudioIO->mTime <= gAudioIO->mT1
+                  : gAudioIO->mTime >= gAudioIO->mT1))
+                  callbackReturn = paComplete;
             }
 
             if (cut) // no samples to process, they've been discarded
@@ -3852,20 +3865,30 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
       }
 
       // Update the current time position
-      if (gAudioIO->mTimeTrack) {
-         // MB: this is why SolveWarpedLength is needed :)
-         gAudioIO->mTime = gAudioIO->mTimeTrack->SolveWarpedLength(gAudioIO->mTime, framesPerBuffer / gAudioIO->mRate);
-      } else {
-         gAudioIO->mTime += framesPerBuffer / gAudioIO->mRate;
+      {
+         double delta = framesPerBuffer / gAudioIO->mRate;
+         if (gAudioIO->ReversedTime())
+            delta *= -1.0;
+         if (gAudioIO->mTimeTrack)
+            // MB: this is why SolveWarpedLength is needed :)
+            gAudioIO->mTime =
+               gAudioIO->mTimeTrack->SolveWarpedLength(gAudioIO->mTime, delta);
+         else
+            gAudioIO->mTime += delta;
       }
 
       // Wrap to start if looping
-      while (gAudioIO->mPlayLooped && gAudioIO->mTime >= gAudioIO->mT1)
+      if (gAudioIO->mPlayLooped)
       {
-         // LL:  This is not exactly right, but I'm at my wits end trying to
-         //      figure it out.  Feel free to fix it.  :-)
-         // MB: it's much easier than you think, mTime isn't warped at all!
-         gAudioIO->mTime -= gAudioIO->mT1 - gAudioIO->mT0;
+         while (gAudioIO->ReversedTime()
+            ? gAudioIO->mTime <= gAudioIO->mT1
+            : gAudioIO->mTime >= gAudioIO->mT1)
+         {
+            // LL:  This is not exactly right, but I'm at my wits end trying to
+            //      figure it out.  Feel free to fix it.  :-)
+            // MB: it's much easier than you think, mTime isn't warped at all!
+            gAudioIO->mTime -= gAudioIO->mT1 - gAudioIO->mT0;
+         }
       }
 
       // Record the reported latency from PortAudio.

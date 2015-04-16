@@ -473,13 +473,17 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    bool cutpreview, /* = false */
                                    bool backwards /* = false */)
 {
+   // Uncomment this for laughs!
+   // backwards = true;
+
    double t0 = selectedRegion.t0();
    double t1 = selectedRegion.t1();
    // SelectedRegion guarantees t0 <= t1, so we need another boolean argument
    // to indicate backwards play.
    const bool looped = options.playLooped;
 
-   wxASSERT(! backwards);
+   if (backwards)
+      std::swap(t0, t1);
 
    SetPlay(true, looped, cutpreview);
 
@@ -555,7 +559,9 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       t1 = t->GetEndTime();
    }
    else {
-      // always t0 < t1 right?
+      // maybe t1 < t0, with backwards scrubbing for instance
+      if (backwards)
+         std::swap(t0, t1);
 
       // the set intersection between the play region and the
       // valid range maximum of lower bounds
@@ -579,6 +585,9 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
          t0 = maxofmins;
          t1 = minofmaxs;
       }
+
+      if (backwards)
+         std::swap(t0, t1);
    }
 
    // Can't play before 0...either shifted or latency corrected tracks
@@ -589,14 +598,19 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    int token = -1;
    bool success = false;
-   if (t1 > t0) {
+   if (t1 != t0) {
       if (cutpreview) {
+         const double tless = std::min(t0, t1);
+         const double tgreater = std::max(t0, t1);
          double beforeLen, afterLen;
          gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
          gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
-         double tcp0 = t0-beforeLen;
-         double tcp1 = (t1+afterLen) - (t1-t0);
-         SetupCutPreviewTracks(tcp0, t0, t1, tcp1);
+         double tcp0 = tless-beforeLen;
+         double diff = tgreater - tless;
+         double tcp1 = (tgreater+afterLen) - diff;
+         SetupCutPreviewTracks(tcp0, tless, tgreater, tcp1);
+         if (backwards)
+            std::swap(tcp0, tcp1);
          if (mCutPreviewTracks)
          {
             AudioIOStartStreamOptions myOptions = options;

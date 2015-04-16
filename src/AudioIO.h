@@ -435,6 +435,12 @@ private:
    /** \brief How many sample rates to try */
    static const int NumRatesToTry;
 
+   bool ReversedTime() const
+   {
+      return mT1 < mT0;
+   }
+   double LimitStreamTime(double absoluteTime) const;
+
    double NormalizeStreamTime(double absoluteTime) const;
 
    /** \brief Clean up after StartStream if it fails.

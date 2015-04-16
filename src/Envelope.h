@@ -99,8 +99,8 @@ class Envelope : public XMLTagHandler {
    void Flatten(double value);
    int GetDragPoint(void)   {return mDragPoint;}
 
-   double GetMinValue() { return mMinValue; }
-   double GetMaxValue() { return mMaxValue; }
+   double GetMinValue() const { return mMinValue; }
+   double GetMaxValue() const { return mMaxValue; }
    void SetRange(double minValue, double maxValue);
 
    double ClampValue(double value) { return std::max(mMinValue, std::min(mMaxValue, value)); }
