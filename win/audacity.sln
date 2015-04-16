@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audacity", "Projects\Audacity\Audacity.vcxproj", "{1D64095C-F936-4FCF-B609-56E9DDF941FA}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -18,10 +18,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmad", "Projects\libmad\libmad.vcxproj", "{A52BBEA5-8B02-4147-8734-5D9BBF4D1177}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libnyquist", "Projects\libnyquist\libnyquist.vcxproj", "{7AA41BED-41B0-427A-9148-DEA40549D158}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libresample", "Projects\libresample\libresample.vcxproj", "{F00717F2-67C8-44E1-AF00-541DFA9CB7F2}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsamplerate", "Projects\libsamplerate\libsamplerate.vcxproj", "{3DDDCAA9-276D-4FC3-A15C-485F7B9B24CC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsndfile", "Projects\libsndfile\libsndfile.vcxproj", "{F4B4A272-4ED3-4951-A6EE-B7BAAC1C4952}"
 EndProject
@@ -121,20 +117,6 @@ Global
 		{7AA41BED-41B0-427A-9148-DEA40549D158}.wx3-Debug|Win32.Build.0 = wx3-Debug|Win32
 		{7AA41BED-41B0-427A-9148-DEA40549D158}.wx3-Release|Win32.ActiveCfg = wx3-Release|Win32
 		{7AA41BED-41B0-427A-9148-DEA40549D158}.wx3-Release|Win32.Build.0 = wx3-Release|Win32
-		{F00717F2-67C8-44E1-AF00-541DFA9CB7F2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F00717F2-67C8-44E1-AF00-541DFA9CB7F2}.Debug|Win32.Build.0 = Debug|Win32
-		{F00717F2-67C8-44E1-AF00-541DFA9CB7F2}.Release|Win32.ActiveCfg = Release|Win32
-		{F00717F2-67C8-44E1-AF00-541DFA9CB7F2}.Release|Win32.Build.0 = Release|Win32
-		{F00717F2-67C8-44E1-AF00-541DFA9CB7F2}.wx3-Debug|Win32.ActiveCfg = wx3-Debug|Win32
-		{F00717F2-67C8-44E1-AF00-541DFA9CB7F2}.wx3-Debug|Win32.Build.0 = wx3-Debug|Win32
-		{F00717F2-67C8-44E1-AF00-541DFA9CB7F2}.wx3-Release|Win32.ActiveCfg = wx3-Release|Win32
-		{F00717F2-67C8-44E1-AF00-541DFA9CB7F2}.wx3-Release|Win32.Build.0 = wx3-Release|Win32
-		{3DDDCAA9-276D-4FC3-A15C-485F7B9B24CC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{3DDDCAA9-276D-4FC3-A15C-485F7B9B24CC}.Release|Win32.ActiveCfg = Release|Win32
-		{3DDDCAA9-276D-4FC3-A15C-485F7B9B24CC}.Release|Win32.Build.0 = Release|Win32
-		{3DDDCAA9-276D-4FC3-A15C-485F7B9B24CC}.wx3-Debug|Win32.ActiveCfg = wx3-Debug|Win32
-		{3DDDCAA9-276D-4FC3-A15C-485F7B9B24CC}.wx3-Release|Win32.ActiveCfg = wx3-Release|Win32
-		{3DDDCAA9-276D-4FC3-A15C-485F7B9B24CC}.wx3-Release|Win32.Build.0 = wx3-Release|Win32
 		{F4B4A272-4ED3-4951-A6EE-B7BAAC1C4952}.Debug|Win32.ActiveCfg = Debug|Win32
 		{F4B4A272-4ED3-4951-A6EE-B7BAAC1C4952}.Debug|Win32.Build.0 = Debug|Win32
 		{F4B4A272-4ED3-4951-A6EE-B7BAAC1C4952}.Release|Win32.ActiveCfg = Release|Win32

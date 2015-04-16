@@ -84,22 +84,20 @@ DIST_COMMON = $(srcdir)/dist-libsoxr.mk $(srcdir)/dist-libvamp.mk \
 @USE_LOCAL_LIBID3TAG_TRUE@am__append_2 = libid3tag
 @USE_LOCAL_LIBMAD_TRUE@am__append_3 = libmad
 @USE_LOCAL_LIBNYQUIST_TRUE@am__append_4 = libnyquist
-@USE_LOCAL_LIBRESAMPLE_TRUE@am__append_5 = libresample
-@USE_LOCAL_LIBSAMPLERATE_TRUE@am__append_6 = libsamplerate
-@USE_LOCAL_LIBSNDFILE_TRUE@am__append_7 = libsndfile
-@USE_LOCAL_LIBSOUNDTOUCH_TRUE@am__append_8 = soundtouch
-@USE_LOCAL_LIBSOXR_TRUE@am__append_9 = libsoxr
-@USE_LOCAL_LIBTWOLAME_TRUE@am__append_10 = twolame
-@USE_LOCAL_LIBVORBIS_TRUE@am__append_11 = libogg libvorbis
+@USE_LOCAL_LIBSNDFILE_TRUE@am__append_5 = libsndfile
+@USE_LOCAL_LIBSOXR_TRUE@am__append_6 = libsoxr
+@USE_LOCAL_LIBSOUNDTOUCH_TRUE@am__append_7 = soundtouch
+@USE_LOCAL_LIBTWOLAME_TRUE@am__append_8 = twolame
+@USE_LOCAL_LIBVORBIS_TRUE@am__append_9 = libogg libvorbis
 
 # Note: libflac needs to be linked against (the local or system) libogg.
-@USE_LOCAL_LIBFLAC_TRUE@am__append_12 = libflac
-@USE_LOCAL_LV2_TRUE@am__append_13 = lv2
-@USE_LOCAL_PORTAUDIO_TRUE@am__append_14 = portaudio-v19
-@USE_LOCAL_PORTSMF_TRUE@am__append_15 = portsmf
-@USE_LOCAL_SBSMS_TRUE@am__append_16 = sbsms
-@USE_LOCAL_VAMP_TRUE@am__append_17 = libvamp
-@USE_LOCAL_WIDGETEXTRA_TRUE@am__append_18 = lib-widget-extra
+@USE_LOCAL_LIBFLAC_TRUE@am__append_10 = libflac
+@USE_LOCAL_LV2_TRUE@am__append_11 = lv2
+@USE_LOCAL_PORTAUDIO_TRUE@am__append_12 = portaudio-v19
+@USE_LOCAL_PORTSMF_TRUE@am__append_13 = portsmf
+@USE_LOCAL_SBSMS_TRUE@am__append_14 = sbsms
+@USE_LOCAL_VAMP_TRUE@am__append_15 = libvamp
+@USE_LOCAL_WIDGETEXTRA_TRUE@am__append_16 = lib-widget-extra
 subdir = lib-src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
@@ -112,8 +110,6 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libid3tag.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libmad.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libnyquist.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libresample.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libsamplerate.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsbsms.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsndfile.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsoundtouch.m4 \
@@ -310,11 +306,7 @@ LIBMAD_LIBS = @LIBMAD_LIBS@
 LIBNYQUIST_CFLAGS = @LIBNYQUIST_CFLAGS@
 LIBNYQUIST_LIBS = @LIBNYQUIST_LIBS@
 LIBOBJS = @LIBOBJS@
-LIBRESAMPLE_CFLAGS = @LIBRESAMPLE_CFLAGS@
-LIBRESAMPLE_LIBS = @LIBRESAMPLE_LIBS@
 LIBS = @LIBS@
-LIBSAMPLERATE_SYSTEM_CFLAGS = @LIBSAMPLERATE_SYSTEM_CFLAGS@
-LIBSAMPLERATE_SYSTEM_LIBS = @LIBSAMPLERATE_SYSTEM_LIBS@
 LIBTOOL = @LIBTOOL@
 LIBTWOLAME_CFLAGS = @LIBTWOLAME_CFLAGS@
 LIBTWOLAME_LIBS = @LIBTWOLAME_LIBS@
@@ -358,8 +350,6 @@ PORTSMF_LIBS = @PORTSMF_LIBS@
 POSUB = @POSUB@
 PRECOMP_CFLAGS = @PRECOMP_CFLAGS@
 RANLIB = @RANLIB@
-SAMPLERATE_CFLAGS = @SAMPLERATE_CFLAGS@
-SAMPLERATE_LIBS = @SAMPLERATE_LIBS@
 SBSMS_CFLAGS = @SBSMS_CFLAGS@
 SBSMS_LIBS = @SBSMS_LIBS@
 SED = @SED@
@@ -937,6 +927,7 @@ EXTRA_DIST = ffmpeg/libavcodec/avcodec.h ffmpeg/libavcodec/avfft.h \
 DIST_SUBDIRS = \
 	FileDialog \
 	libnyquist \
+	libsoxr \
 	lib-widget-extra \
 	lv2 \
 	portmixer \
@@ -951,13 +942,12 @@ DIST_SUBDIRS = \
 # Note: portmixer needs to be linked against (the local or system) portaudio.
 
 # Note: These optional libraries will not be distributed in the source tarball.
-SUBDIRS = FileDialog $(am__append_4) $(am__append_9) $(am__append_13) \
-	$(am__append_14) portmixer $(am__append_15) $(am__append_16) \
-	$(am__append_17) $(am__append_18) $(OPTIONAL_SUBDIRS)
+SUBDIRS = FileDialog $(am__append_4) $(am__append_11) $(am__append_12) \
+	portmixer $(am__append_13) $(am__append_14) $(am__append_15) \
+	$(am__append_16) $(OPTIONAL_SUBDIRS)
 OPTIONAL_SUBDIRS = $(am__append_1) $(am__append_2) $(am__append_3) \
 	$(am__append_5) $(am__append_6) $(am__append_7) \
-	$(am__append_8) $(am__append_10) $(am__append_11) \
-	$(am__append_12)
+	$(am__append_8) $(am__append_9) $(am__append_10)
 all: all-recursive
 
 .SUFFIXES:

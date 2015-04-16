@@ -533,11 +533,6 @@ will compile with either one, but if you use the one provided with PortAudio you
 make sure the PortAudio dll is in Audacity's path.  Of course, you shouldn't have any problems,
 so this is probably more information than you need.  :)
 
-Libsamplerate is not supported at all with Cygwin, and it is doubtful that it will ever be
-supported.  If make tries to build it, --disable it.  Use Libresample instead.
-
-Libresample may require tweaking some #define statements in a fashion that is noted below.
-
 Expat should compile out of the box.  If not, you might be better off trying to install the version
 of expat that ships with Cygwin.  If configure fails to detect a system installed expat, this
 is probably a bug and should be submitted to the Audacity developers.  You can use the system-installed

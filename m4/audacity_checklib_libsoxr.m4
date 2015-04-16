@@ -6,7 +6,7 @@ dnl for the benefit of automatic macro update systems
 AC_DEFUN([AUDACITY_CHECKLIB_LIBSOXR], [
    AC_ARG_WITH(libsoxr,
                [AS_HELP_STRING([--with-libsoxr],
-                               [use libsoxr for sample rate conversion])],
+                               [use libsoxr for sample rate conversion (required): [system,local]])],
                LIBSOXR_ARGUMENT=$withval,
                LIBSOXR_ARGUMENT="unspecified")
 
@@ -49,11 +49,5 @@ AC_DEFUN([AUDACITY_CONFIG_LIBSOXR], [
    AC_SUBST([SOXR_CFLAGS])
    AC_SUBST([SOXR_LIBS])
 
-   AM_CONDITIONAL([USE_LIBSOXR], [test "$LIBSOXR_USE_LOCAL" = yes -o "$LIBSOXR_USE_SYSTEM" = yes])
    AM_CONDITIONAL([USE_LOCAL_LIBSOXR], [test "$LIBSOXR_USE_LOCAL" = yes])
-
-   if test "$LIBSOXR_USE_LOCAL" = yes -o "$LIBSOXR_USE_SYSTEM" = yes; then
-      AC_DEFINE(USE_LIBSOXR, 1,
-                [Define if libsoxr support should be enabled])
-   fi
 ])

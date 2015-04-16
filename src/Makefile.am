@@ -54,6 +54,7 @@ audacity_CPPFLAGS = \
 	$(PORTAUDIO_CFLAGS) \
 	$(PORTMIXER_CFLAGS) \
 	$(SNDFILE_CFLAGS) \
+	$(SOXR_CFLAGS) \
 	$(WIDGETEXTRA_CFLAGS) \
 	$(WX_CXXFLAGS) \
 	$(NULL)
@@ -83,6 +84,7 @@ audacity_LDADD = \
 	$(PORTAUDIO_LIBS) \
 	$(PORTMIXER_LIBS) \
 	$(SNDFILE_LIBS) \
+	$(SOXR_LIBS) \
 	$(WIDGETEXTRA_LIBS) \
 	$(WX_LIBS) \
 	$(NULL)
@@ -634,11 +636,6 @@ endif
 if USE_LIBSOUNDTOUCH
 audacity_CPPFLAGS += $(SOUNDTOUCH_CFLAGS)
 audacity_LDADD += $(SOUNDTOUCH_LIBS)
-endif
-
-if USE_LIBSOXR
-audacity_CPPFLAGS += $(SOXR_CFLAGS)
-audacity_LDADD += $(SOXR_LIBS)
 endif
 
 if USE_LIBTWOLAME
