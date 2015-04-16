@@ -51,7 +51,7 @@ a graph for EffectScienFilter.
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../WaveTrack.h"
-#include "float_cast.h"
+#include "../float_cast.h"
 
 #include <wx/bitmap.h>
 #include <wx/msgdlg.h>

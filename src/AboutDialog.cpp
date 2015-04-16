@@ -124,15 +124,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("FLAC"), roleLibrary);
    AddCredit(wxT("LAME"), roleLibrary);
    AddCredit(wxT("libmad"), roleLibrary);
-   #if USE_LIBRESAMPLE
-      AddCredit(wxT("libresample, by Dominic Mazzoni and Julius Smith"), roleLibrary);
-   #endif
-   #if USE_LIBSAMPLERATE
-      AddCredit(wxT("libsamplerate, by Erik de Castro Lopo"), roleLibrary);
-   #endif
-   #if USE_LIBSOXR
-      AddCredit(wxT("libsoxr, by Rob Sykes"), roleLibrary);
-   #endif
+   AddCredit(wxT("libsoxr, by Rob Sykes"), roleLibrary);
    #if USE_LV2
       AddCredit(wxT("lilv, serd, sord, and sratom, by David Robillard"), roleLibrary);
       AddCredit(wxT("msinttypes, by Alexander Chemeris"), roleLibrary);
@@ -431,27 +423,8 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += _("Core Libraries");
    informationStr += wxT("</h3>\n<table>");  // start table of features
 
-
-   #if USE_LIBRESAMPLE
-   AddBuildinfoRow(&informationStr, wxT("libresample"),
+   AddBuildinfoRow(&informationStr, wxT("libsoxr"),
          _("Sample rate conversion"), enabled);
-   #elif USE_LIBSAMPLERATE
-   AddBuildinfoRow(&informationStr, wxT("libsamplerate"),
-         _("Sample rate conversion"), enabled);
-   #else
-      AddBuildinfoRow(&informationStr, wxT("libresample"),
-            _("Sample rate conversion"), disabled);
-      AddBuildinfoRow(&informationStr, wxT("libsamplerate"),
-            _("Sample rate conversion"), disabled);
-   #endif
-
-   #if USE_LIBSOXR
-      AddBuildinfoRow(&informationStr, wxT("libsoxr"),
-            _("Sample rate conversion"), enabled);
-   #else
-      AddBuildinfoRow(&informationStr, wxT("libsoxr"),
-            _("Sample rate conversion"), disabled);
-   #endif
 
    AddBuildinfoRow(&informationStr, wxT("PortAudio"),
          _("Audio playback and recording"), wxString(wxT("v19")));

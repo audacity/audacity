@@ -107,11 +107,7 @@ function cleanfulltree {
    printf "Done\n"
 
    printf "removing unused libraries from SVN tree ..."
-   myrmrvf $1 lib-src/id3lib 
-   myrmrvf $1 lib-src/portburn
    myrmrvf $1 lib-src/portmidi
-   myrmrvf $1 lib-src/taglib
-   myrmrvf $1 lib-src/libresample
    myrmrvf $1 lib-src/libscorealign
    printf "Done\n"
 }
@@ -131,9 +127,7 @@ function slimtree {
    printf "removing libraries that should be installed locally ... "
    myrmrvf $1 lib-src/expat lib-src/libflac lib-src/libid3tag
    myrmrvf $1 lib-src/libmad lib-src/libogg
-   myrmrvf $1 lib-src/libsamplerate lib-src/libsndfile
    myrmrvf $1 lib-src/libvorbis lib-src/soundtouch
-   myrmrvf $1 lib-src/libsoxr lib-src/twolame
    myrmrvf $1 lib-src/libvamp lib-src/lv2
    # these bindings aren't built by default, we don't need them
    myrmrvf $1 lib-src/portaudio-v19/bindings/

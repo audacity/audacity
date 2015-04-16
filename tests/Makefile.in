@@ -93,8 +93,6 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libid3tag.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libmad.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libnyquist.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libresample.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libsamplerate.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsbsms.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsndfile.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsoundtouch.m4 \
@@ -490,11 +488,7 @@ LIBMAD_LIBS = @LIBMAD_LIBS@
 LIBNYQUIST_CFLAGS = @LIBNYQUIST_CFLAGS@
 LIBNYQUIST_LIBS = @LIBNYQUIST_LIBS@
 LIBOBJS = @LIBOBJS@
-LIBRESAMPLE_CFLAGS = @LIBRESAMPLE_CFLAGS@
-LIBRESAMPLE_LIBS = @LIBRESAMPLE_LIBS@
 LIBS = @LIBS@
-LIBSAMPLERATE_SYSTEM_CFLAGS = @LIBSAMPLERATE_SYSTEM_CFLAGS@
-LIBSAMPLERATE_SYSTEM_LIBS = @LIBSAMPLERATE_SYSTEM_LIBS@
 LIBTOOL = @LIBTOOL@
 LIBTWOLAME_CFLAGS = @LIBTWOLAME_CFLAGS@
 LIBTWOLAME_LIBS = @LIBTWOLAME_LIBS@
@@ -538,8 +532,6 @@ PORTSMF_LIBS = @PORTSMF_LIBS@
 POSUB = @POSUB@
 PRECOMP_CFLAGS = @PRECOMP_CFLAGS@
 RANLIB = @RANLIB@
-SAMPLERATE_CFLAGS = @SAMPLERATE_CFLAGS@
-SAMPLERATE_LIBS = @SAMPLERATE_LIBS@
 SBSMS_CFLAGS = @SBSMS_CFLAGS@
 SBSMS_LIBS = @SBSMS_LIBS@
 SED = @SED@
