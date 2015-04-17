@@ -33,7 +33,6 @@ the general functionality for creating XML in UTF8 encoding.
 
 #include "../Internat.h"
 #include "XMLWriter.h"
-#include "XMLTagHandler.h"
 
 //table for xml encoding compatibility with expat decoding
 //see wxWidgets-2.8.12/src/expat/lib/xmltok_impl.h

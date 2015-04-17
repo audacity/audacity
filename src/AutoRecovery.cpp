@@ -274,13 +274,29 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
 
       // We need to find the track and sequence where the blockfile belongs
       WaveTrackArray tracks = mProject->GetTracks()->GetWaveTrackArray(false);
-      int index = tracks.GetCount() - mNumChannels + mChannel;
-      if (index < 0 || index >= (int)tracks.GetCount())
+      size_t index;
+      if (mAutoSaveIdent)
+      {
+         for (index = 0; index < tracks.GetCount(); index++)
+         {
+            if (tracks[index]->GetAutoSaveIdent() == mAutoSaveIdent)
+            {
+               break;
+            }
+         }
+      }
+      else
+      {
+         index = tracks.GetCount() - mNumChannels + mChannel;
+      }
+
+      if (index < 0 || index >= tracks.GetCount())
       {
          // This should only happen if there is a bug
          wxASSERT(false);
          return false;
       }
+
       WaveTrack* track = tracks.Item(index);
       WaveClip*  clip = track->NewestOrNewClip();
       Sequence* seq = clip->GetSequence();
@@ -302,6 +318,8 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
 
    } else if (wxStrcmp(tag, wxT("recordingrecovery")) == 0)
    {
+      mAutoSaveIdent = 0;
+
       // loop through attrs, which is a null-terminated list of
       // attribute-value pairs
       long nValue;
@@ -331,6 +349,13 @@ bool RecordingRecoveryHandler::HandleXMLTag(const wxChar *tag,
                return false;
             mNumChannels = nValue;
          }
+         else if (wxStrcmp(attr, wxT("id")) == 0)
+         {
+            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) ||
+                  (nValue < 1))
+               return false;
+            mAutoSaveIdent = nValue;
+         }
 
       }
    }
@@ -344,4 +369,512 @@ XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
       return this; // HandleXMLTag also handles <simpleblockfile>
 
    return NULL;
+}
+
+///
+/// AutoSaveFile class
+///
+
+// Simple "binary xml" format used exclusively for autosave files.
+//
+// It is not intended to transport these files across platform architectures,
+// so endianness is not a concern.
+//
+// It is not intended that the user view or modify the file.
+//
+// It IS intended that as little work be done during auto save, so numbers
+// and strings are written in their native format.  They will be converted
+// during recovery.
+//
+// The file has 3 main sections:
+//
+//    ident             literal "<?xml autosave>"
+//    name dictionary   dictionary of all names used in the document
+//    data fields       the "encoded" XML document
+//
+// If a subtree is added, it will be preceeded with FT_Push tell the decoder
+// to preserve the active dictionary.  The decoder when then restore the
+// dictionary when an FT_Pop is encountered.  Nesting is unlimited.
+//
+// To save space, each name (attribute or element) encountered is stored in
+// the name dictionary and replaced with the assigned 2-byte identifier.
+//
+// All strings are in native unicode format, 2-byte or 4-byte.
+//
+// All "lengths" are 2-byte signed, so are limited to 32767 bytes long/
+
+enum FieldTypes
+{
+   FT_StartTag,      // type, ID, name
+   FT_EndTag,        // type, ID, name
+   FT_String,        // type, ID, name, string length, string
+   FT_Int,           // type, ID, value
+   FT_Bool,          // type, ID, value
+   FT_Long,          // type, ID, value
+   FT_LongLong,      // type, ID, value
+   FT_SizeT,         // type, ID, value
+   FT_Float,         // type, ID, value
+   FT_Double,        // type, ID, value
+   FT_Data,          // type, string length, string
+   FT_Raw,           // type, string length, string
+   FT_Push,          // type only
+   FT_Pop,           // type only
+   FT_Name           // type, name length, name
+};
+
+#include <wx/arrimpl.cpp>
+WX_DEFINE_OBJARRAY(IdMapArray);
+
+AutoSaveFile::AutoSaveFile(size_t allocSize)
+{
+   mAllocSize = allocSize;
+}
+
+AutoSaveFile::~AutoSaveFile()
+{
+}
+
+void AutoSaveFile::StartTag(const wxString & name)
+{
+   mBuffer.PutC(FT_StartTag);
+   WriteName(name);
+}
+
+void AutoSaveFile::EndTag(const wxString & name)
+{
+   mBuffer.PutC(FT_EndTag);
+   WriteName(name);
+}
+
+void AutoSaveFile::WriteAttr(const wxString & name, const wxChar *value)
+{
+   WriteAttr(name, wxString(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString & name, const wxString & value)
+{
+   mBuffer.PutC(FT_String);
+   WriteName(name);
+
+   short len = value.Length() * sizeof(wxChar);
+
+   mBuffer.Write(&len, sizeof(len));
+   mBuffer.Write(value.c_str(), len);
+}
+
+void AutoSaveFile::WriteAttr(const wxString & name, int value)
+{
+   mBuffer.PutC(FT_Int);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString & name, bool value)
+{
+   mBuffer.PutC(FT_Bool);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString & name, long value)
+{
+   mBuffer.PutC(FT_Long);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString & name, long long value)
+{
+   mBuffer.PutC(FT_LongLong);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString & name, size_t value)
+{
+   mBuffer.PutC(FT_SizeT);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+}
+
+void AutoSaveFile::WriteAttr(const wxString & name, float value, int digits)
+{
+   mBuffer.PutC(FT_Float);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+   mBuffer.Write(&digits, sizeof(digits));
+}
+
+void AutoSaveFile::WriteAttr(const wxString & name, double value, int digits)
+{
+   mBuffer.PutC(FT_Double);
+   WriteName(name);
+
+   mBuffer.Write(&value, sizeof(value));
+   mBuffer.Write(&digits, sizeof(digits));
+}
+
+void AutoSaveFile::WriteData(const wxString & value)
+{
+   mBuffer.PutC(FT_Data);
+
+   short len = value.Length() * sizeof(wxChar);
+
+   mBuffer.Write(&len, sizeof(len));
+   mBuffer.Write(value.c_str(), len);
+}
+
+void AutoSaveFile::Write(const wxString & value)
+{
+   mBuffer.PutC(FT_Raw);
+
+   short len = value.Length() * sizeof(wxChar);
+
+   mBuffer.Write(&len, sizeof(len));
+   mBuffer.Write(value.c_str(), len);
+}
+
+void AutoSaveFile::WriteSubTree(const AutoSaveFile & value)
+{
+   mBuffer.PutC(FT_Push);
+
+   wxStreamBuffer *buf = value.mDict.GetOutputStreamBuffer();
+   mBuffer.Write(buf->GetBufferStart(), buf->GetIntPosition());
+
+   buf = value.mBuffer.GetOutputStreamBuffer();
+   mBuffer.Write(buf->GetBufferStart(), buf->GetIntPosition());
+
+   mBuffer.PutC(FT_Pop);
+}
+
+bool AutoSaveFile::Write(wxFFile & file) const
+{
+   bool success = file.Write(AutoSaveIdent, strlen(AutoSaveIdent)) == strlen(AutoSaveIdent);
+   if (success)
+   {
+      success = Append(file);
+   }
+
+   return success;
+}
+
+bool AutoSaveFile::Append(wxFFile & file) const
+{
+   wxStreamBuffer *buf = mDict.GetOutputStreamBuffer();
+
+   bool success = file.Write(buf->GetBufferStart(), buf->GetIntPosition()) == buf->GetIntPosition();
+   if (success)
+   {
+      buf = mBuffer.GetOutputStreamBuffer();
+      success = file.Write(buf->GetBufferStart(), buf->GetIntPosition()) == buf->GetIntPosition();
+   }
+
+   return success;
+}
+
+void AutoSaveFile::CheckSpace(wxMemoryOutputStream & os)
+{
+   wxStreamBuffer *buf = os.GetOutputStreamBuffer();
+   size_t left = buf->GetBytesLeft();
+   if (left == 0)
+   {
+      size_t origPos = buf->GetIntPosition();
+      char *temp = new char[mAllocSize];
+      buf->Write(temp, mAllocSize);
+      delete temp;
+      buf->SetIntPosition(origPos);
+   }
+}
+
+void AutoSaveFile::WriteName(const wxString & name)
+{
+   short len = name.Length() * sizeof(wxChar);
+   short id;
+
+   if (mNames.count(name))
+   {
+      id = mNames[name];
+   }
+   else
+   {
+      id = mNames.size();
+      mNames[name] = id;
+
+      CheckSpace(mDict);
+      mDict.PutC(FT_Name);
+      mDict.Write(&id, sizeof(id));
+      mDict.Write(&len, sizeof(len));
+      mDict.Write(name.c_str(), len);
+   }
+
+   CheckSpace(mBuffer);
+   mBuffer.Write(&id, sizeof(id));
+}
+
+bool AutoSaveFile::IsEmpty() const
+{
+   return mBuffer.GetLength() == 0;
+}
+
+bool AutoSaveFile::Decode(const wxString & fileName)
+{
+   char ident[sizeof(AutoSaveIdent)];
+   size_t len = strlen(AutoSaveIdent);
+
+   wxFileName fn(fileName);
+   wxFFile file;
+
+   if (!file.Open(fn.GetFullPath(), wxT("rb")))
+   {
+      return false;
+   }
+
+   if (file.Read(&ident, len) != len || strncmp(ident, AutoSaveIdent, len) != 0)
+   {
+      // Not something we recognize.  Could be decoded already.  Let the caller
+      // deal with it.
+      file.Close();
+
+      return true;
+   }
+
+   len = file.Length() - len;
+   char *buf = new char[len];
+
+   if (file.Read(buf, len) != len)
+   {
+      delete buf;
+      file.Close();
+      return false;
+   }
+
+   wxMemoryInputStream in(buf, len);
+
+   file.Close();
+
+   // Decode to a temporary file to preserve the orignal.
+   wxString tempName = fn.CreateTempFileName(fn.GetPath(true));
+
+   XMLFileWriter out;
+
+   out.Open(tempName, wxT("wb"));
+   if (!out.IsOpened())
+   {
+      delete buf;
+
+      wxRemoveFile(tempName);
+
+      return false;
+   }
+
+   mIds.clear();
+
+   while (!in.Eof() && !out.Error())
+   {
+      short id;
+
+      switch (in.GetC())
+      {
+         case FT_Push:
+         {
+            mIdStack.Add(mIds);
+            mIds.clear();
+         }
+         break;
+
+         case FT_Pop:
+         {
+            mIds = mIdStack[mIdStack.GetCount() - 1];
+            mIdStack.RemoveAt(mIdStack.GetCount() - 1);
+         }
+         break;
+
+         case FT_Name:
+         {
+            short len;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&len, sizeof(len));
+            wxChar *name = new wxChar[len / sizeof(wxChar)];
+            in.Read(name, len);
+
+            mIds[id] = wxString(name, len / sizeof(wxChar));
+            delete name;
+         }
+         break;
+
+         case FT_StartTag:
+         {
+            in.Read(&id, sizeof(id));
+
+            out.StartTag(mIds[id]);
+         }
+         break;
+
+         case FT_EndTag:
+         {
+            in.Read(&id, sizeof(id));
+
+            out.EndTag(mIds[id]);
+         }
+         break;
+
+         case FT_String:
+         {
+            short len;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&len, sizeof(len));
+            wxChar *val = new wxChar[len / sizeof(wxChar)];
+            in.Read(val, len);
+
+            out.WriteAttr(mIds[id], wxString(val, len / sizeof(wxChar)));
+            delete val;
+         }
+         break;
+
+         case FT_Float:
+         {
+            float val;
+            int dig;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+            in.Read(&dig, sizeof(dig));
+
+            out.WriteAttr(mIds[id], val, dig);
+         }
+         break;
+
+         case FT_Double:
+         {
+            double val;
+            int dig;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+            in.Read(&dig, sizeof(dig));
+
+            out.WriteAttr(mIds[id], val, dig);
+         }
+         break;
+
+         case FT_Int:
+         {
+            int val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_Bool:
+         {
+            bool val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_Long:
+         {
+            long val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_LongLong:
+         {
+            long long val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_SizeT:
+         {
+            size_t val;
+
+            in.Read(&id, sizeof(id));
+            in.Read(&val, sizeof(val));
+
+            out.WriteAttr(mIds[id], val);
+         }
+         break;
+
+         case FT_Data:
+         {
+            short len;
+
+            in.Read(&len, sizeof(len));
+            wxChar *val = new wxChar[len / sizeof(wxChar)];
+            in.Read(val, len);
+
+            out.WriteData(wxString(val, len / sizeof(wxChar)));
+            delete val;
+         }
+         break;
+
+         case FT_Raw:
+         {
+            short len;
+
+            in.Read(&len, sizeof(len));
+            wxChar *val = new wxChar[len / sizeof(wxChar)];
+            in.Read(val, len);
+
+            out.Write(wxString(val, len / sizeof(wxChar)));
+            delete val;
+         }
+         break;
+
+         default:
+            wxASSERT(true);
+         break;
+      }
+   }
+
+   delete buf;
+
+   bool error = out.Error();
+ 
+   out.Close();
+
+   // Bail if decoding failed.
+   if (error)
+   {
+      // File successfully decoded
+      wxRemoveFile(tempName);
+
+      return false;
+   }
+
+   // Decoding was successful, so remove the original file and replace with decoded one.
+   if (wxRemoveFile(fileName))
+   {
+      if (!wxRenameFile(tempName, fileName))
+      {
+         return false;
+      }
+   }
+
+   return true;
 }
