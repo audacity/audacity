@@ -819,6 +819,7 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
       // If SHIFT key was down, the user wants append to tracks
       int recordingChannels = 0;
+      TrackList *tracksCopy = NULL;
       bool shifted = mRecord->WasShiftDown();
       if (shifted) {
          bool sel = false;
@@ -858,6 +859,16 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
                   playbackTracks.Remove(wt);
                t1 = wt->GetEndTime();
                if (t1 < t0) {
+                  if (!tracksCopy) {
+                     tracksCopy = new TrackList();
+                     TrackListIterator iter(t);
+                     Track *trk = iter.First();
+                     while (trk) {
+                        tracksCopy->Add(trk->Duplicate());
+                        trk = iter.Next();
+                     }
+                  }
+
                   WaveTrack *newTrack = p->GetTrackFactory()->NewWaveTrack();
                   newTrack->InsertSilence(0.0, t0 - t1);
                   newTrack->Flush();
@@ -926,7 +937,21 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
       }
       else {
          // msmeyer: Delete recently added tracks if opening stream fails
-         if (!shifted) {
+         if (shifted) {
+            if (tracksCopy) {
+               t->Clear(true);
+               TrackListIterator iter(tracksCopy);
+               Track *trk = iter.First();
+               while (trk)
+               {
+                  Track *tmp = trk;
+                  trk = iter.RemoveCurrent();
+                  t->Add(tmp);
+               }
+               delete tracksCopy;
+            }
+         }
+         else {
             for (unsigned int i = 0; i < newRecordingTracks.GetCount(); i++) {
                t->Remove(newRecordingTracks[i]);
                delete newRecordingTracks[i];
