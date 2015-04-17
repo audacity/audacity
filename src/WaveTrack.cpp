@@ -1482,6 +1482,9 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("linked")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
             SetLinked(nValue != 0);
+         else if (!wxStrcmp(attr, wxT("autosaveid")) &&
+                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+            mAutoSaveIdent = (int) nValue;
 
       } // while
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
@@ -1539,6 +1542,10 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
 void WaveTrack::WriteXML(XMLWriter &xmlFile)
 {
    xmlFile.StartTag(wxT("wavetrack"));
+   if (mAutoSaveIdent)
+   {
+      xmlFile.WriteAttr(wxT("autosaveid"), mAutoSaveIdent);
+   }
    xmlFile.WriteAttr(wxT("name"), mName);
    xmlFile.WriteAttr(wxT("channel"), mChannel);
    xmlFile.WriteAttr(wxT("linked"), mLinked);
@@ -2375,4 +2382,14 @@ void WaveTrack::AddInvalidRegion(sampleCount startSample, sampleCount endSample)
 {
    for (WaveClipList::compatibility_iterator it=GetClipIterator(); it; it=it->GetNext())
       it->GetData()->AddInvalidRegion(startSample,endSample);
+}
+
+int WaveTrack::GetAutoSaveIdent()
+{
+   return mAutoSaveIdent;
+}
+
+void WaveTrack::SetAutoSaveIdent(int ident)
+{
+   mAutoSaveIdent = ident;
 }

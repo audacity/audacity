@@ -391,6 +391,14 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    bool Resample(int rate, ProgressDialog *progress = NULL);
 
    //
+   // AutoSave related
+   //
+   // Retrieve the unique autosave ID
+   int GetAutoSaveIdent();
+   // Set the unique autosave ID
+   void SetAutoSaveIdent(int id);
+
+   //
    // The following code will eventually become part of a GUIWaveTrack
    // and will be taken out of the WaveTrack class:
    //
@@ -454,7 +462,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
-
+   int mAutoSaveIdent;
 };
 
 #endif // __AUDACITY_WAVETRACK__

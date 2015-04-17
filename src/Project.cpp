@@ -98,6 +98,7 @@ scroll information.  It also has some status flags.
 #include "AColor.h"
 #include "AudioIO.h"
 #include "Dependencies.h"
+#include "Diags.h"
 #include "HistoryWindow.h"
 #include "Lyrics.h"
 #include "LyricsWindow.h"
@@ -2477,19 +2478,17 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       return;
    }
 
-   // We want to open projects using wxTextFile, but if it's NOT a project
-   // file (but actually a WAV file, for example), then wxTextFile will spin
-   // for a long time searching for line breaks.  So, we look for our
-   // signature at the beginning of the file first:
-
-   wxString firstLine = wxT("AudacityProject");
-
    if (!::wxFileExists(fileName)) {
       wxMessageBox(_("Could not open file: ") + fileName,
                    _("Error Opening File"),
                    wxOK | wxCENTRE, this);
       return;
    }
+
+   // We want to open projects using wxTextFile, but if it's NOT a project
+   // file (but actually a WAV file, for example), then wxTextFile will spin
+   // for a long time searching for line breaks.  So, we look for our
+   // signature at the beginning of the file first:
 
    wxFFile *ff = new wxFFile(fileName, wxT("rb"));
    if (!ff->IsOpened()) {
@@ -2503,9 +2502,9 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
       wxMessageBox(wxString::Format(_("File may be invalid or corrupted: \n%s"),
                    (const wxChar*)fileName), _("Error Opening File or Project"),
                    wxOK | wxCENTRE, this);
-     ff->Close();
-     delete ff;
-     return;
+      ff->Close();
+      delete ff;
+      return;
    }
    buf[15] = 0;
    ff->Close();
@@ -2557,31 +2556,13 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
    if (mFileName.Length() >= autoSaveExt.Length() &&
        mFileName.Right(autoSaveExt.Length()) == autoSaveExt)
    {
-      // This is an auto-save file, add </project> tag, if necessary
-      wxFile f(fileName, wxFile::read_write);
-      if (f.IsOpened())
+      AutoSaveFile asf;
+      if (!asf.Decode(fileName))
       {
-         // Read the last 16 bytes of the file and check if they contain
-         // "</project>" somewhere.
-         const int bufsize = 16;
-         char buf[bufsize];
-         bool seekOk, readOk;
-         seekOk = f.SeekEnd(-bufsize) != wxInvalidOffset;
-         if (seekOk)
-            readOk = (f.Read(buf, bufsize) == bufsize);
-         else
-            readOk = false;
-         if (readOk && !strstr(buf, "</project>"))
-         {
-            // End of file does not contain closing </project> tag, so add it
-            if (f.Seek(0, wxFromEnd) != wxInvalidOffset)
-            {
-               strcpy(buf, "</project>\n");
-               f.Write(buf, strlen(buf));
-            }
-         }
-
-         f.Close();
+         wxMessageBox(_("Could not decode file: ") + fileName,
+                      _("Error decoding file"),
+                      wxOK | wxCENTRE, this);
+         return;
       }
    }
 
@@ -3106,6 +3087,7 @@ void AudacityProject::WriteXMLHeader(XMLWriter &xmlFile)
 
 void AudacityProject::WriteXML(XMLWriter &xmlFile)
 {
+   TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
    // Warning: This block of code is duplicated in Save, for now...
    wxString project = mFileName;
    if (project.Len() > 4 && project.Mid(project.Len() - 4) == wxT(".aup"))
@@ -3185,8 +3167,18 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
          if (t->GetLinked())
             t = iter.Next();
       }
-      else
+      else if (t->GetKind() == Track::Wave && mAutoSaving)
+      {
+         pWaveTrack = (WaveTrack*)t;
+         pWaveTrack->SetAutoSaveIdent(++ndx);
          t->WriteXML(xmlFile);
+      }
+      else
+      {
+         pWaveTrack = (WaveTrack*)t;
+         pWaveTrack->SetAutoSaveIdent(0);
+         t->WriteXML(xmlFile);
+      }
 
       t = iter.Next();
    }
@@ -3198,6 +3190,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
       // recording log data to the end of the file later
       xmlFile.EndTag(wxT("project"));
    }
+   TIMER_STOP( xml_writer_timer );
+
 }
 
 // Lock all blocks in all tracks of the last saved version
@@ -4649,20 +4643,16 @@ void AudacityProject::AutoSave()
 
    try
    {
-      XMLStringWriter buffer(1024 * 1024);
       VarSetter<bool> setter(&mAutoSaving, true, false);
+
+      AutoSaveFile buffer;
       WriteXMLHeader(buffer);
       WriteXML(buffer);
 
-      XMLFileWriter saveFile;
+      wxFFile saveFile;
       saveFile.Open(fn + wxT(".tmp"), wxT("wb"));
-      saveFile.WriteSubTree(buffer);
-
-      // JKC Calling XMLFileWriter::Close will close the <project> scope.
-      // We certainly don't want to do that, if we're doing recordingrecovery,
-      // because the recordingrecovery tags need to be inside <project></project>.
-      // So instead we do not call Close() but CloseWithoutEndingTags().
-      saveFile.CloseWithoutEndingTags();
+      buffer.Write(saveFile);
+      saveFile.Close();
    }
    catch (XMLFileWriterException* pException)
    {
@@ -4744,13 +4734,7 @@ void AudacityProject::OnAudioIOStartRecording()
 {
    // Before recording is started, auto-save the file. The file will have
    // empty tracks at the bottom where the recording will be put into
-   //
-   // When block files are cached, auto recovery is disabled while recording,
-   // since no block files are written during recording that could be
-   // recovered.
-   //
-   if (!GetCacheBlockFiles())
-      AutoSave();
+   AutoSave();
 }
 
 // This is called after recording has stopped and all tracks have flushed.
@@ -4781,28 +4765,17 @@ void AudacityProject::OnAudioIOStopRecording()
    AutoSave();
 }
 
-void AudacityProject::OnAudioIONewBlockFiles(const wxString& blockFileLog)
+void AudacityProject::OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog)
 {
    // New blockfiles have been created, so add them to the auto-save file
-   if (!GetCacheBlockFiles() &&
-       !mAutoSaveFileName.IsEmpty())
+   if (!mAutoSaveFileName.IsEmpty())
    {
-      wxFFile f(mAutoSaveFileName, wxT("at"));
+      wxFFile f(mAutoSaveFileName, wxT("ab"));
       if (!f.IsOpened())
          return; // Keep recording going, there's not much we can do here
-      f.Write(blockFileLog);
+      blockFileLog.Append(f);
       f.Close();
    }
-}
-
-bool AudacityProject::GetCacheBlockFiles()
-{
-   bool cacheBlockFiles = false;
-#ifdef DEPRECATED_AUDIO_CACHE
-   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
-   gPrefs->Read(wxT("/Directories/CacheBlockFiles"), &cacheBlockFiles);
-#endif
-   return cacheBlockFiles;
 }
 
 void AudacityProject::SetSnapTo(int snap)
