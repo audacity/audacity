@@ -272,7 +272,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void DrawIndicator();
    /// draws the green line on the tracks to show playback position
    /// @param repairOld if true the playback position is not updated/erased, and simply redrawn
-   virtual void DoDrawIndicator(wxDC & dc, bool repairOld = false);
+   /// @param indicator if nonnegative, overrides the indicator value obtainable from AudioIO
+   virtual void DoDrawIndicator(wxDC & dc, bool repairOld = false, double indicator = -1);
    virtual void DrawCursor();
    virtual void DoDrawCursor(wxDC & dc);
 
@@ -315,6 +316,17 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
    void StartOrJumpPlayback(wxMouseEvent &event);
+
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+   double FindScrubSpeed(double timeAtMouse) const;
+#endif
+
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   bool MaybeStartScrubbing(wxMouseEvent &event);
+   bool ContinueScrubbing(wxCoord position, bool maySkip);
+   bool StopScrubbing();
+#endif
+
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect r);
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
@@ -513,6 +525,7 @@ protected:
                            const wxRect panelRect, const wxRect clip);
    virtual void DrawOutside(Track *t, wxDC *dc, const wxRect rec,
                     const wxRect trackRect);
+   void DrawScrubSpeed(wxDC &dc);
    virtual void DrawZooming(wxDC* dc, const wxRect clip);
 
    virtual void HighlightFocusedTrack (wxDC* dc, const wxRect r);
@@ -750,7 +763,10 @@ protected:
 #ifdef USE_MIDI
       IsStretching,
 #endif
-      IsZooming
+      IsZooming,
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+      IsMiddleButtonScrubbing,
+#endif
    };
 
    enum MouseCaptureEnum mMouseCapture;
@@ -765,6 +781,23 @@ protected:
    //   coordinate should the dragging track move up or down?
    int mMoveUpThreshold;
    int mMoveDownThreshold;
+
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   bool IsScrubbing();
+   int mScrubToken;
+   wxLongLong mScrubStartClockTimeMillis;
+   wxCoord mScrubStartPosition;
+   double mMaxScrubSpeed;
+   int mScrubSpeedDisplayCountdown;
+#endif
+
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+   bool mSmoothScrollingScrub;
+#endif
+
+#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
+   int mLogMaxScrubSpeed;
+#endif
 
    wxCursor *mArrowCursor;
    wxCursor *mPencilCursor;
