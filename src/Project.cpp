@@ -98,6 +98,7 @@ scroll information.  It also has some status flags.
 #include "AColor.h"
 #include "AudioIO.h"
 #include "Dependencies.h"
+#include "Diags.h"
 #include "HistoryWindow.h"
 #include "Lyrics.h"
 #include "LyricsWindow.h"
