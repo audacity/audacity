@@ -1174,6 +1174,10 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("TrackMute"), _("Mute/Unmute focused track"), FN(OnTrackMute), wxT("Shift+U"));
    c->AddCommand(wxT("TrackSolo"), _("Solo/Unsolo focused track"), FN(OnTrackSolo), wxT("Shift+S"));
    c->AddCommand(wxT("TrackClose"), _("Close focused track"), FN(OnTrackClose), wxT("Shift+C"));
+   c->AddCommand(wxT("TrackMoveUp"), _("Move focused track up"), FN(OnTrackMoveUp));
+   c->AddCommand(wxT("TrackMoveDown"), _("Move focused track down"), FN(OnTrackMoveDown));
+   c->AddCommand(wxT("TrackMoveTop"), _("Move focused track to top"), FN(OnTrackMoveTop));
+   c->AddCommand(wxT("TrackMoveBottom"), _("Move focused track to bottom"), FN(OnTrackMoveBottom));
 
    c->SetDefaultFlags(AlwaysEnabledFlag, AlwaysEnabledFlag);
 
@@ -2859,6 +2863,26 @@ void AudacityProject::OnTrackSolo()
 void AudacityProject::OnTrackClose()
 {
    mTrackPanel->OnTrackClose();
+}
+
+void AudacityProject::OnTrackMoveUp()
+{
+   mTrackPanel->OnTrackMoveUp();
+}
+
+void AudacityProject::OnTrackMoveDown()
+{
+   mTrackPanel->OnTrackMoveDown();
+}
+
+void AudacityProject::OnTrackMoveTop()
+{
+   mTrackPanel->OnTrackMoveTop();
+}
+
+void AudacityProject::OnTrackMoveBottom()
+{
+   mTrackPanel->OnTrackMoveBottom();
 }
 
 void AudacityProject::OnInputDevice()

@@ -8559,6 +8559,30 @@ void TrackPanel::OnTrackClose()
    Refresh( false );
 }
 
+void TrackPanel::OnTrackMoveUp()
+{
+   if (GetFocusedTrack())
+      MoveTrack(GetFocusedTrack(), OnMoveUpID);
+}
+
+void TrackPanel::OnTrackMoveDown()
+{
+   if (GetFocusedTrack())
+      MoveTrack(GetFocusedTrack(), OnMoveDownID);
+}
+
+void TrackPanel::OnTrackMoveTop()
+{
+   if (GetFocusedTrack())
+      MoveTrack(GetFocusedTrack(), OnMoveTopID);
+}
+
+void TrackPanel::OnTrackMoveBottom()
+{
+   if (GetFocusedTrack())
+      MoveTrack(GetFocusedTrack(), OnMoveBottomID);
+}
+
 
 Track * TrackPanel::GetFirstSelectedTrack()
 {
@@ -9190,24 +9214,30 @@ void TrackPanel::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 }
 
 /// Move a track up, down, to top or to bottom.
-void TrackPanel::OnMoveTrack(wxCommandEvent & event)
+
+void TrackPanel::OnMoveTrack(wxCommandEvent &event)
 {
    wxASSERT(event.GetId() == OnMoveUpID || event.GetId() == OnMoveDownID ||
             event.GetId() == OnMoveTopID || event.GetId() == OnMoveBottomID);
 
+   MoveTrack( mPopupMenuTarget, event.GetId() );
+}
+
+void TrackPanel::MoveTrack( Track* target, int eventId )
+{
    wxString direction;
 
-   switch (event.GetId())
+   switch (eventId)
    {
    case OnMoveTopID :
       /* i18n-hint: where the track is moving to.*/
       direction = _("to Top");
 
-      while (mTracks->CanMoveUp(mPopupMenuTarget)) {
-         if (mTracks->Move(mPopupMenuTarget, true)) {
+      while (mTracks->CanMoveUp(target)) {
+         if (mTracks->Move(target, true)) {
             MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board.
-            if (pMixerBoard && (mPopupMenuTarget->GetKind() == Track::Wave))
-               pMixerBoard->MoveTrackCluster((WaveTrack*)mPopupMenuTarget, true);
+            if (pMixerBoard && (target->GetKind() == Track::Wave))
+               pMixerBoard->MoveTrackCluster((WaveTrack*)target, true);
          }
       }
       break;
@@ -9215,23 +9245,23 @@ void TrackPanel::OnMoveTrack(wxCommandEvent & event)
       /* i18n-hint: where the track is moving to.*/
       direction = _("to Bottom");
 
-      while (mTracks->CanMoveDown(mPopupMenuTarget)) {
-         if (mTracks->Move(mPopupMenuTarget, false)) {
+      while (mTracks->CanMoveDown(target)) {
+         if (mTracks->Move(target, false)) {
             MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board.
-            if (pMixerBoard && (mPopupMenuTarget->GetKind() == Track::Wave))
-               pMixerBoard->MoveTrackCluster((WaveTrack*)mPopupMenuTarget, false);
+            if (pMixerBoard && (target->GetKind() == Track::Wave))
+               pMixerBoard->MoveTrackCluster((WaveTrack*)target, false);
          }
       }
       break;
    default:
-      bool bUp = (OnMoveUpID == event.GetId());
+      bool bUp = (OnMoveUpID == eventId);
       /* i18n-hint: a direction.*/
       direction = bUp ? _("Up") : _("Down");
 
-      if (mTracks->Move(mPopupMenuTarget, bUp)) {
+      if (mTracks->Move(target, bUp)) {
          MixerBoard* pMixerBoard = this->GetMixerBoard();
-         if (pMixerBoard && (mPopupMenuTarget->GetKind() == Track::Wave)) {
-            pMixerBoard->MoveTrackCluster((WaveTrack*)mPopupMenuTarget, bUp);
+         if (pMixerBoard && (target->GetKind() == Track::Wave)) {
+            pMixerBoard->MoveTrackCluster((WaveTrack*)target, bUp);
          }
       }
    }
@@ -9242,7 +9272,7 @@ void TrackPanel::OnMoveTrack(wxCommandEvent & event)
    wxString shortDesc = (_("Move Track"));
 
    longDesc = (wxString::Format(wxT("%s '%s' %s"), longDesc.c_str(),
-                                mPopupMenuTarget->GetName().c_str(), direction.c_str()));
+                                target->GetName().c_str(), direction.c_str()));
    shortDesc = (wxString::Format(wxT("%s %s"), shortDesc.c_str(), direction.c_str()));
 
    MakeParentPushState(longDesc, shortDesc);

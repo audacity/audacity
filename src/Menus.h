@@ -98,6 +98,10 @@ void OnTrackMenu();
 void OnTrackMute();
 void OnTrackSolo();
 void OnTrackClose();
+void OnTrackMoveUp();
+void OnTrackMoveDown();
+void OnTrackMoveTop();
+void OnTrackMoveBottom();
 
         // Device control
 void OnInputDevice();

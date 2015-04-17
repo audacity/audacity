@@ -240,6 +240,10 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnTrackMute(bool shiftdown, Track *t = NULL);
    virtual void OnTrackSolo(bool shiftdown, Track *t = NULL);
    virtual void OnTrackClose();
+   virtual void OnTrackMoveUp();
+   virtual void OnTrackMoveDown();
+   virtual void OnTrackMoveTop();
+   virtual void OnTrackMoveBottom();
    virtual Track * GetFirstSelectedTrack();
    virtual bool IsMouseCaptured();
 
@@ -462,6 +466,7 @@ protected:
    virtual void OnSetFont(wxCommandEvent &event);
 
    virtual void OnMoveTrack    (wxCommandEvent &event);
+   virtual void MoveTrack(Track* target, int eventId);
    virtual void OnChangeOctave (wxCommandEvent &event);
    virtual void OnChannelChange(wxCommandEvent &event);
    virtual void OnSetDisplay   (wxCommandEvent &event);
