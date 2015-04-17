@@ -467,11 +467,14 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
    mWaveCacheMutex.Lock();
 
 
-   if (mWaveCache &&
-       mWaveCache->dirty == mDirty &&
+   const bool match =
+      mWaveCache &&
+      mWaveCache->dirty == mDirty &&
+      mWaveCache->pps == pixelsPerSecond;
+
+   if (match &&
        mWaveCache->start == t0 &&
-       mWaveCache->len >= numPixels &&
-       mWaveCache->pps == pixelsPerSecond) {
+       mWaveCache->len >= numPixels) {
 
       //check for invalid regions, and make the bottom if an else if.
       //invalid regions are kept in a sorted array.
@@ -534,7 +537,8 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
    sampleCount denom = 0;
    int oldX0 = 0, oldXLast = 0;
    double error = 0.0;
-   if (oldCache->len > 0) {
+   if (match &&
+       oldCache->len > 0) {
       oldWhere0 = oldCache->where[1] - samplesPerPixel;
       const sampleCount oldWhereLast(floor(0.5 +
          oldWhere0 + oldCache->len * samplesPerPixel
@@ -574,9 +578,8 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
    // possible
-   if (denom > 0 &&
-       oldCache->dirty == mDirty &&
-       oldCache->pps == pixelsPerSecond &&
+   if (match &&
+       denom > 0 &&
        oldX0 < oldCache->len &&
        oldXLast > oldCache->start) {
 
@@ -791,22 +794,25 @@ bool WaveClip::GetSpectrogram(float *freq, sampleCount *where,
    }
 #endif // EXPERIMENTAL_USE_REALFFTF
 
-   if (mSpecCache &&
-       mSpecCache->minFreqOld == minFreq &&
-       mSpecCache->maxFreqOld == maxFreq &&
-       mSpecCache->rangeOld == range &&
-       mSpecCache->gainOld == gain &&
-       mSpecCache->windowTypeOld == windowType &&
-       mSpecCache->windowSizeOld == windowSize &&
-       mSpecCache->frequencyGainOld == frequencygain &&
+   const bool match =
+      mSpecCache &&
+      mSpecCache->dirty == mDirty &&
+      mSpecCache->minFreqOld == minFreq &&
+      mSpecCache->maxFreqOld == maxFreq &&
+      mSpecCache->rangeOld == range &&
+      mSpecCache->gainOld == gain &&
+      mSpecCache->windowTypeOld == windowType &&
+      mSpecCache->windowSizeOld == windowSize &&
+      mSpecCache->frequencyGainOld == frequencygain &&
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-       mSpecCache->fftSkipPointsOld == fftSkipPoints &&
+      mSpecCache->fftSkipPointsOld == fftSkipPoints &&
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-       mSpecCache->dirty == mDirty &&
+      mSpecCache->ac == autocorrelation &&
+      mSpecCache->pps == pixelsPerSecond;
+
+   if (match &&
        mSpecCache->start == t0 &&
-       mSpecCache->ac == autocorrelation &&
-       mSpecCache->len >= numPixels &&
-       mSpecCache->pps == pixelsPerSecond) {
+       mSpecCache->len >= numPixels) {
       memcpy(freq, mSpecCache->freq, numPixels*half*sizeof(float));
       memcpy(where, mSpecCache->where, (numPixels+1)*sizeof(sampleCount));
       return false;  //hit cache completely
@@ -828,7 +834,8 @@ bool WaveClip::GetSpectrogram(float *freq, sampleCount *where,
    int oldX0 = 0, oldXLast = 0;
    double error = 0.0;
 
-   if (oldCache->len > 0) {
+   if (match &&
+       oldCache->len > 0) {
       oldWhere0 = oldCache->where[1] - samplesPerPixel;
       const sampleCount oldWhereLast(floor(0.5 +
          oldWhere0 + oldCache->len * samplesPerPixel
@@ -865,20 +872,8 @@ bool WaveClip::GetSpectrogram(float *freq, sampleCount *where,
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
    // possible
-   if (denom > 0 &&
-       oldCache->dirty == mDirty &&
-       oldCache->minFreqOld == minFreq &&
-       oldCache->maxFreqOld == maxFreq &&
-       oldCache->rangeOld == range &&
-       oldCache->gainOld == gain &&
-       oldCache->windowTypeOld == windowType &&
-       oldCache->windowSizeOld == windowSize &&
-       oldCache->frequencyGainOld == frequencygain &&
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-       oldCache->fftSkipPointsOld == fftSkipPoints &&
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-       oldCache->pps == pixelsPerSecond &&
-       oldCache->ac == autocorrelation &&
+   if (match &&
+       denom > 0 &&
        oldX0 < oldCache->len &&
        oldXLast > oldCache->start) {
       for (sampleCount x = 0; x < mSpecCache->len; x++) {
