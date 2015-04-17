@@ -67,7 +67,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "DirManager.h"
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
-#include "effects/LoadEffects.h"
 #include "effects/Contrast.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
@@ -1320,8 +1319,6 @@ Click the 'Help' button for known issue."),
    InitDitherers();
    InitAudioIO();
 
-   LoadEffects();
-
 #ifdef __WXMAC__
 
    // On the Mac, users don't expect a program to quit when you close the last window.
@@ -1925,8 +1922,6 @@ int AudacityApp::OnExit()
 #ifdef USE_FFMPEG
    DropFFmpegLibs();
 #endif
-
-   UnloadEffects();
 
    DeinitFFT();
    BlockFile::Deinit();

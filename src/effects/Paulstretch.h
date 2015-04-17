@@ -10,88 +10,56 @@
 #ifndef __AUDACITY_EFFECT_PAULSTRETCH__
 #define __AUDACITY_EFFECT_PAULSTRETCH__
 
-#include "SimpleMono.h"
-#include <wx/dialog.h>
-#include <wx/intl.h>
+#include <wx/string.h>
 
+#include "../ShuttleGui.h"
+#include "../WaveTrack.h"
 
-class WaveTrack;
+#include "Effect.h"
 
-class EffectPaulstretch:public Effect{
+#define PAULSTRETCH_PLUGIN_SYMBOL wxTRANSLATE("Paulstretch")
 
-   public:
-      EffectPaulstretch();
+class EffectPaulstretch : public Effect
+{
+public:
+   EffectPaulstretch();
+   virtual ~EffectPaulstretch();
 
-      virtual wxString GetEffectName() {
-         /* i18n-hint: This is the name of the effect, i.e. a proper noun, which
-          * wouldn't normally get translated. It's the combination of the author's
-          * name (Paul) with what it does (stretch sound)
-          */
-         return wxString(wxTRANSLATE("Paulstretch..."));
-      }
+   // IdentInterface implementation
 
-      virtual wxString GetEffectAction() {
-         /* i18n-hint: This is the text that is shown whilst the effect is being
-          * processed. The effect stretches the input in time, making the sound
-          * much longer and spread out whilst at the same pitch. Paulstretch is the
-          * name of the effect (it's also translated on it's own).
-          */
-         return wxString(_("Stretching with Paulstretch"));
-      }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-      virtual wxString GetEffectIdentifier() {return wxT("Paulstretch");}
+   // EffectIdentInterface implementation
 
-      // Useful only after PromptUser values have been set.
-      virtual wxString GetEffectDescription();
+   virtual EffectType GetType();
 
-      virtual bool PromptUser();
-      virtual bool TransferParameters( Shuttle & shuttle );
-      virtual bool Process();
+   // EffectClientInterface implementation
 
-   protected:
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
-      bool ProcessOne(WaveTrack *track,double t0,double t1,int count);
-      float amount;
-      float time_resolution;//seconds
+   // Effect implementation
 
-      friend class PaulstretchDialog;
-   private:
-      double m_t1;
+   virtual bool Process();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
+
+private:
+   // EffectPaulstretch implementation
+   
+   void OnText(wxCommandEvent & evt);
+
+   bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
+
+private:
+   float amount;
+   float time_resolution;  //seconds
+   double m_t1;
+
+   DECLARE_EVENT_TABLE();
 };
-
-
-//--------------------------------------------------------------------------
-// PaulstretchDialog
-//--------------------------------------------------------------------------
-
-class PaulstretchDialog:public EffectDialog {
-   public:
-      PaulstretchDialog(EffectPaulstretch * effect, wxWindow * parent);
-
-      void PopulateOrExchange(ShuttleGui & S);
-      bool TransferDataToWindow();
-      bool TransferDataFromWindow();
-
-   private:
-      // handlers
-      void OnPreview( wxCommandEvent &event );
-
-   private:
-      bool				m_bLoopDetect;
-      EffectPaulstretch *	m_pEffect;
-
-      // controls
-      wxTextCtrl *	m_pTextCtrl_Amount;
-      wxTextCtrl *	m_pTextCtrl_TimeResolution;
-
-   public:
-      // effect parameters
-      float amount;
-      float time_resolution;//seconds
-   private:
-      DECLARE_EVENT_TABLE()
-};
-
 
 #endif
 

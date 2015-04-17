@@ -24,20 +24,6 @@
 private:
 void CreateMenusAndCommands();
 
-#ifdef EFFECT_CATEGORIES
-
-/** Generate submenus for the categories that contain more than one effect
-    and return the effects from the categories that do not contain more than
-    submenuThreshold effects so the caller can add them to the current menu. */
-EffectSet CreateEffectSubmenus(CommandManager* c,
-                               const CategorySet& categories, int flags,
-                               unsigned submenuThreshold = 1);
-
-/** Add the set of effects to the current menu. */
-void AddEffectsToMenu(CommandManager* c, const EffectSet& effects);
-
-#endif
-
 void PopulateEffectsMenu(CommandManager *c, EffectType type, int batchflags, int realflags);
 void AddEffectMenuItems(CommandManager *c, EffectPlugs & plugs, int batchflags, int realflags, bool isDefault);
 void AddEffectMenuItemGroup(CommandManager *c, const wxArrayString & names, const PluginIDList & plugs, const wxArrayInt & flags, bool isDefault);
@@ -361,17 +347,22 @@ void OnEditLabels();
 
         // Effect Menu
 
-bool OnEffect(int type, const PluginID & ID, wxString params = wxEmptyString, bool saveState = true);
-void OnEffect(const PluginID & pluginID);
-void OnEffect(const PluginID & pluginID, bool configured = false);
+class OnEffectFlags
+{
+public:
+   // No flags specified
+   static const int kNone = 0x00;
+   // Flag used to disable prompting for configuration parameteres.
+   static const int kConfigured = 0x01;
+   // Flag used to disable saving the state after processing.
+   static const int kSkipState  = 0x02;
+};
+
+bool OnEffect(const PluginID & ID, int flags = OnEffectFlags::kNone);
 void OnRepeatLastEffect(int index);
-#ifdef EFFECT_CATEGORIES
-void OnProcessAny(int index);
-#endif
 void OnApplyChain();
 void OnEditChains();
 void OnStereoToMono(int index);
-wxString BuildCleanFileName(wxString fileName, wxString extension);
 
         // Help Menu
 

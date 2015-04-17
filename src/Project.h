@@ -605,8 +605,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Last effect applied to this project
    PluginID mLastEffect;
-   int mLastEffectType;
-
+   
    // The screenshot class needs to access internals
    friend class ScreenshotCommand;
 
@@ -626,7 +625,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 typedef void (AudacityProject::*audCommandFunction)();
 typedef void (AudacityProject::*audCommandKeyFunction)(const wxEvent *);
 typedef void (AudacityProject::*audCommandListFunction)(int);
-typedef void (AudacityProject::*audCommandPluginFunction)(const PluginID &);
+typedef bool (AudacityProject::*audCommandPluginFunction)(const PluginID &, int);
 
 // Previously this was in menus.cpp, and the declaration of the
 // command functor was not visible anywhere else.
@@ -642,11 +641,6 @@ public:
    AudacityProjectCommandFunctor(AudacityProject *project,
       audCommandPluginFunction commandFunction,
       const PluginID & pluginID);
-#if defined(EFFECT_CATEGORIES)
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandListFunction commandFunction,
-      wxArrayInt explicitIndices);
-#endif
 
    virtual void operator()(int index = 0, const wxEvent *evt = NULL);
 
@@ -657,9 +651,6 @@ private:
    audCommandListFunction mCommandListFunction;
    audCommandPluginFunction mCommandPluginFunction;
    PluginID mPluginID;
-#if defined(EFFECT_CATEGORIES)
-   wxArrayInt mExplicitIndices;
-#endif
 };
 
 #endif

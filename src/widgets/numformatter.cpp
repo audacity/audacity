@@ -32,6 +32,7 @@
 #include <wx/intl.h>
 
 #include <locale.h> // for setlocale and LC_ALL
+#include <math.h>
 #include <wx/log.h>
 
 // ----------------------------------------------------------------------------
@@ -265,6 +266,14 @@ wxString NumberFormatter::ToString(double val, int precision, int style)
         format.Printf(wxT("%%.%df"), precision);
     }
 
+    if (isnan(val))
+    {
+        return _("NaN");
+    }
+    if (isinf(val))
+    {
+        return _("-Infinity");
+    }
     wxString s = wxString::Format(format, val);
 
     if ( style & Style_WithThousandsSep )

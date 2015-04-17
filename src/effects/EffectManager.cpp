@@ -37,153 +37,11 @@ EffectManager & EffectManager::Get()
 
 EffectManager::EffectManager()
 {
-#ifdef EFFECT_CATEGORIES
-   mCategories = new CategoryMap();
-   mRootCategories = new CategorySet();
-   mUnsorted = new EffectSet();
-   
-   // Create effect category graph. These categories and relationships
-   // are taken from revision 2 of lv2.ttl, loaders for other plugin systems 
-   // (such as LADSPA/LRDF) should map their categories to these ones when 
-   // applicable. Individual LADSPA/LRDF and LV2 plugins can add new 
-   // categories and make them subcategories of the existing ones, but not 
-   // add subcategory relationships between these categories.
-   //
-   // We need some persistent, global identifiers for categories - LRDF
-   // and LV2 uses URI strings so we do that too. The URIs here are the
-   // same ones as in lv2.ttl. Category identifiers in other plugin systems
-   // must be mapped to URIs by their loaders.
-
-#define LV2PREFIX "http://lv2plug.in/ns/lv2core#"
-   
-   typedef EffectCategory* CatPtr;
-   
-   CatPtr gen = AddCategory(wxT(LV2PREFIX) wxT("GeneratorPlugin"),
-                            _("Generator"));
-   CatPtr inst = AddCategory(wxT(LV2PREFIX) wxT("InstrumentPlugin"),
-   /* i18n-hint: (noun).*/
-                             _("Instrument"));
-   CatPtr osc = AddCategory(wxT(LV2PREFIX) wxT("OscillatorPlugin"),
-                            _("Oscillator"));
-   CatPtr util = AddCategory(wxT(LV2PREFIX) wxT("UtilityPlugin"),
-                             _("Utility"));
-   CatPtr conv = AddCategory(wxT(LV2PREFIX) wxT("ConverterPlugin"),
-                             _("Converter"));
-   CatPtr anal = AddCategory(wxT(LV2PREFIX) wxT("AnalyserPlugin"),
-                             _("Analyser"));
-   CatPtr mix = AddCategory(wxT(LV2PREFIX) wxT("MixerPlugin"),
-                            _("Mixer"));
-   CatPtr sim = AddCategory(wxT(LV2PREFIX) wxT("SimulatorPlugin"),
-                            _("Simulator"));
-   CatPtr del = AddCategory(wxT(LV2PREFIX) wxT("DelayPlugin"),
-                            _("Delay"));
-   CatPtr mod = AddCategory(wxT(LV2PREFIX) wxT("ModulatorPlugin"),
-                            _("Modulator"));
-   CatPtr rev = AddCategory(wxT(LV2PREFIX) wxT("ReverbPlugin"),
-                            _("Reverb"));
-   CatPtr phas = AddCategory(wxT(LV2PREFIX) wxT("PhaserPlugin"),
-                             _("Phaser"));
-   CatPtr flng = AddCategory(wxT(LV2PREFIX) wxT("FlangerPlugin"),
-                             _("Flanger"));
-   CatPtr chor = AddCategory(wxT(LV2PREFIX) wxT("ChorusPlugin"),
-                             _("Chorus"));
-   CatPtr flt = AddCategory(wxT(LV2PREFIX) wxT("FilterPlugin"),
-                            _("Filter"));
-   CatPtr lp = AddCategory(wxT(LV2PREFIX) wxT("LowpassPlugin"),
-                           _("Lowpass"));
-   CatPtr bp = AddCategory(wxT(LV2PREFIX) wxT("BandpassPlugin"),
-                           _("Bandpass"));
-   CatPtr hp = AddCategory(wxT(LV2PREFIX) wxT("HighpassPlugin"),
-                           _("Highpass"));
-   CatPtr comb = AddCategory(wxT(LV2PREFIX) wxT("CombPlugin"),
-                             _("Comb"));
-   CatPtr alp = AddCategory(wxT(LV2PREFIX) wxT("AllpassPlugin"),
-                            _("Allpass"));
-   CatPtr eq = AddCategory(wxT(LV2PREFIX) wxT("EQPlugin"),
-                           _("Equaliser"));
-   CatPtr peq = AddCategory(wxT(LV2PREFIX) wxT("ParaEQPlugin"),
-                            _("Parametric"));
-   CatPtr meq = AddCategory(wxT(LV2PREFIX) wxT("MultiEQPlugin"),
-                            _("Multiband"));
-   CatPtr spec = AddCategory(wxT(LV2PREFIX) wxT("SpectralPlugin"),
-                             _("Spectral Processor"));
-   CatPtr ptch = AddCategory(wxT(LV2PREFIX) wxT("PitchPlugin"),
-                             _("Pitch Shifter"));
-   CatPtr amp = AddCategory(wxT(LV2PREFIX) wxT("AmplifierPlugin"),
-                            _("Amplifier"));
-   CatPtr dist = AddCategory(wxT(LV2PREFIX) wxT("DistortionPlugin"),
-                             _("Distortion"));
-   CatPtr shp = AddCategory(wxT(LV2PREFIX) wxT("WaveshaperPlugin"),
-                            _("Waveshaper"));
-   CatPtr dyn = AddCategory(wxT(LV2PREFIX) wxT("DynamicsPlugin"),
-                            _("Dynamics Processor"));
-   CatPtr cmp = AddCategory(wxT(LV2PREFIX) wxT("CompressorPlugin"),
-                            _("Compressor"));
-   CatPtr exp = AddCategory(wxT(LV2PREFIX) wxT("ExpanderPlugin"),
-                            _("Expander"));
-   CatPtr lim = AddCategory(wxT(LV2PREFIX) wxT("LimiterPlugin"),
-                            _("Limiter"));
-   CatPtr gate = AddCategory(wxT(LV2PREFIX) wxT("GatePlugin"),
-                             _("Gate"));
-   
-   AddCategoryParent(inst, gen);
-   AddCategoryParent(osc, gen);
-   AddCategoryParent(conv, util);
-   AddCategoryParent(anal, util);
-   AddCategoryParent(mix, util);
-   AddCategoryParent(rev, sim);
-   AddCategoryParent(rev, del);
-   AddCategoryParent(phas, mod);
-   AddCategoryParent(flng, mod);
-   AddCategoryParent(chor, mod);
-   AddCategoryParent(lp, flt);
-   AddCategoryParent(bp, flt);
-   AddCategoryParent(hp, flt);
-   AddCategoryParent(comb, flt);
-   AddCategoryParent(alp, flt);
-   AddCategoryParent(eq, flt);
-   AddCategoryParent(peq, eq);
-   AddCategoryParent(meq, eq);
-   AddCategoryParent(ptch, spec);
-   AddCategoryParent(shp, dist);
-   AddCategoryParent(cmp, dyn);
-   AddCategoryParent(exp, dyn);
-   AddCategoryParent(lim, dyn);
-   AddCategoryParent(gate, dyn);
-   // We also add a couple of categories for internal use. These are not
-   // in lv2.ttl.
-
-#define ATEAM "http://audacityteam.org/namespace#"
-   
-   CatPtr nrm = AddCategory(wxT(ATEAM) wxT("NoiseRemoval"),
-                            _("Noise Removal"));
-   CatPtr pnt = AddCategory(wxT(ATEAM) wxT("PitchAndTempo"),
-                            _("Pitch and Tempo"));
-   CatPtr tim = AddCategory(wxT(ATEAM) wxT("TimelineChanger"),
-                            _("Timeline Changer"));
-   CatPtr aTim = AddCategory(wxT(ATEAM) wxT("TimeAnalyser"),
-                             _("Time"));
-   CatPtr onst = AddCategory(wxT(ATEAM) wxT("OnsetDetector"),
-                             _("Onsets"));
-   AddCategoryParent(nrm, util);
-   AddCategoryParent(tim, util);
-   AddCategoryParent(aTim, anal);
-   AddCategoryParent(onst, aTim);
-   
-   // We freeze the internal subcategory relations between the categories
-   // added so far so LADSPA/LRDF or other category systems don't ruin
-   // our hierarchy.
-   FreezeCategories();
-   
-#endif
-
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    mRealtimeLock.Enter();
    mRealtimeActive = false;
    mRealtimeSuspended = true;
    mRealtimeLatency = 0;
    mRealtimeLock.Leave();
-#endif
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    mRack = NULL;
@@ -192,90 +50,35 @@ EffectManager::EffectManager()
 
 EffectManager::~EffectManager()
 {
-#ifdef EFFECT_CATEGORIES
-   CategoryMap::iterator i;
-   for (i = mCategories->begin(); i != mCategories->end(); ++i)
-      delete i->second;
-
-   delete mUnsorted;
-   delete mRootCategories;
-   delete mCategories;
-#endif
-
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
    // wxWidgets has already destroyed the rack since it was derived from wxFrame. So
    // no need to delete it here.
 #endif
 
-   EffectMap::iterator iter = mEffects.begin();
-   while (iter != mEffects.end())
+   EffectMap::iterator iter = mHostEffects.begin();
+   while (iter != mHostEffects.end())
    {
       delete iter->second;
       iter++;
    }
 }
 
-void EffectManager::RegisterEffect(ModuleInterface *p, Effect *f, int NewFlags)
+// Here solely for the purpose of Nyquist Workbench until
+// a better solution is devised.
+void EffectManager::RegisterEffect(Effect *f)
 {
-   f->SetEffectID(mNumEffects++);
-
-   if( NewFlags != 0)
-   {
-      f->SetEffectFlags( NewFlags );
-   }
-
-   mEffects[PluginManager::Get().RegisterEffectPlugin(p, f)] = f;
-}
-
-void EffectManager::RegisterEffect(Effect *f, int NewFlags)
-{
-   f->SetEffectID(mNumEffects++);
-
-   if( NewFlags != 0)
-   {
-      f->SetEffectFlags( NewFlags );
-   }
-
    // This will go away after all effects have been converted
-   mEffects[PluginManager::Get().RegisterLegacyEffectPlugin(f)] = f;
-
-#ifdef EFFECT_CATEGORIES
-   // Add the effect in the right categories
-   std::set<wxString> catUris = f->GetEffectCategories();
-   bool oneValid = false;
-   std::set<wxString>::const_iterator iter;
-   for (iter = catUris.begin(); iter != catUris.end(); ++iter) {
-      EffectCategory* cat = LookupCategory(*iter);
-      if (cat != 0) {
-         cat->AddEffect(f);
-         oneValid = true;
-      }
-   }
-   if (!oneValid)
-      mUnsorted->insert(f);
-
-#endif
-}
-
-void EffectManager::UnregisterEffects()
-{
-#ifdef EFFECT_CATEGORIES
-   mUnsorted->clear();
-
-   CategoryMap::iterator iter;
-   for (iter = mCategories->begin(); iter != mCategories->end(); ++iter)
-      iter->second->mEffects.clear();
-#endif
+   mEffects[PluginManager::Get().RegisterPlugin(f)] = f;
 }
 
 bool EffectManager::DoEffect(const PluginID & ID,
                              wxWindow *parent,
-                             int flags,
                              double projectRate,
                              TrackList *list,
                              TrackFactory *factory,
                              SelectedRegion *selectedRegion,
-                             wxString params)
+                             bool shouldPrompt /* = true */)
+
 {
    Effect *effect = GetEffect(ID);
    
@@ -284,7 +87,7 @@ bool EffectManager::DoEffect(const PluginID & ID,
       return false;
    }
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS) && defined(EXPERIMENTAL_EFFECTS_RACK)
+#if defined(EXPERIMENTAL_EFFECTS_RACK)
    if (effect->SupportsRealtime())
    {
       GetRack()->Add(effect);
@@ -292,12 +95,11 @@ bool EffectManager::DoEffect(const PluginID & ID,
 #endif
 
    return effect->DoEffect(parent,
-                           flags,
                            projectRate,
                            list,
                            factory,
                            selectedRegion,
-                           params);
+                           shouldPrompt);
 }
 
 wxString EffectManager::GetEffectName(const PluginID & ID)
@@ -337,7 +139,7 @@ wxString EffectManager::GetEffectDescription(const PluginID & ID)
 
    if (effect)
    {
-      return effect->GetEffectDescription();
+      return wxString::Format(_("Applied effect: %s"), effect->GetName().c_str());
    }
 
    return wxEmptyString;
@@ -484,7 +286,6 @@ void EffectManager::RealtimeSetEffects(const EffectArray & effects)
 }
 #endif
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
 bool EffectManager::RealtimeIsActive()
 {
    return mRealtimeEffects.GetCount() != 0;
@@ -537,8 +338,6 @@ void EffectManager::RealtimeRemoveEffect(Effect *effect)
    // Allow RealtimeProcess() to, well, process 
    RealtimeResume();
 }
-
-#endif
 
 void EffectManager::RealtimeInitialize()
 {
@@ -772,29 +571,31 @@ int EffectManager::GetRealtimeLatency()
 
 Effect *EffectManager::GetEffect(const PluginID & ID)
 {
-   Effect *effect;
-
    // TODO: This is temporary and should be redone when all effects are converted
    if (mEffects.find(ID) == mEffects.end())
    {
+      Effect *effect;
+
+      // This will instantiate the effect client if it hasn't already been done
       EffectIdentInterface *ident = dynamic_cast<EffectIdentInterface *>(PluginManager::Get().GetInstance(ID));
       if (ident && ident->IsLegacy())
       {
          effect = dynamic_cast<Effect *>(ident);
-         effect->SetEffectID(mNumEffects++);
-         mEffects[ID] = effect;
-         return effect;
+         if (effect && effect->Startup(NULL))
+         {
+            mEffects[ID] = effect;
+            return effect;
+         }
       }
 
       effect = new Effect();
       if (effect)
       {
-         // This will instantiate the effect client if it hasn't already been done
          EffectClientInterface *client = dynamic_cast<EffectClientInterface *>(ident);
          if (client && effect->Startup(client))
          {
-            effect->SetEffectID(mNumEffects++);
             mEffects[ID] = effect;
+            mHostEffects[ID] = effect;
             return effect;
          }
 
@@ -832,63 +633,3 @@ const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget
 
    return empty;;
 }
-
-#ifdef EFFECT_CATEGORIES
-
-EffectCategory* EffectManager::AddCategory(const wxString& URI,
-                                           const wxString& name) {
-
-   CategoryMap::const_iterator iter = mCategories->find(URI);
-   if (iter != mCategories->end())
-      return iter->second;
-   EffectCategory* cat = new EffectCategory(URI, name);
-   mCategories->insert(std::make_pair(URI, cat));
-   mRootCategories->insert(cat);
-   return cat;
-}
-
-EffectCategory* EffectManager::LookupCategory(const wxString& URI) {
-   CategoryMap::const_iterator iter = mCategories->find(URI);
-   if (iter != mCategories->end())
-      return iter->second;
-   return 0;
-}
-
-bool EffectManager::AddCategoryParent(EffectCategory* child,
-                                      EffectCategory* parent) {
-   bool result = child->AddParent(parent);
-   if (!result)
-      return false;
-   CategorySet::iterator iter = mRootCategories->find(child);
-   if (iter != mRootCategories->end())
-      mRootCategories->erase(iter);
-   return true;
-}
-
-void EffectManager::FreezeCategories() {
-   CategoryMap::iterator iter;
-   for (iter = mCategories->begin(); iter != mCategories->end(); ++iter)
-      iter->second->FreezeParents();
-}
-
-const CategorySet& EffectManager::GetRootCategories() const {
-   return *mRootCategories;
-}
-
-EffectSet EffectManager::GetUnsortedEffects(int flags) const {
-
-   if (flags == ALL_EFFECTS)
-      return *mUnsorted;
-
-   EffectSet result;
-   EffectSet::const_iterator iter;
-   for (iter = mUnsorted->begin(); iter != mUnsorted->end(); ++iter) {
-      int g = (*iter)->GetEffectFlags();
-      if ((flags & g) == g)
-         result.insert(*iter);
-   }
-
-   return result;
-}
-
-#endif

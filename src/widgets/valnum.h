@@ -15,6 +15,7 @@
 
 #if wxUSE_VALIDATORS
 
+#include <wx/textctrl.h>
 #include <wx/validate.h>
 
 #include <limits>
@@ -51,11 +52,15 @@ protected:
     NumValidatorBase(int style)
     {
         m_style = style;
+        m_minSet = false;
+        m_maxSet = false;
     }
 
     NumValidatorBase(const NumValidatorBase& other) : wxValidator()
     {
         m_style = other.m_style;
+        m_minSet = other.m_minSet;
+        m_maxSet = other.m_maxSet;
     }
 
     bool HasFlag(NumValidatorStyle style) const
@@ -85,6 +90,9 @@ protected:
         return val;
     }
 
+    bool m_minSet;
+    bool m_maxSet;
+
 private:
     // Check whether the specified character can be inserted in the control at
     // the given position in the string representing the current controls
@@ -105,6 +113,7 @@ private:
 
     // Event handlers.
     void OnChar(wxKeyEvent& event);
+    void OnPaste(wxClipboardTextEvent& event);
     void OnKillFocus(wxFocusEvent& event);
     
 
@@ -114,7 +123,6 @@ private:
 
     // Combination of wxVAL_NUM_XXX values.
     int m_style;
-
 
     DECLARE_EVENT_TABLE();
 
@@ -158,11 +166,13 @@ public:
     void SetMin(ValueType min)
     {
         this->DoSetMin(min);
+        BaseValidator::m_minSet = true;
     }
 
     void SetMax(ValueType max)
     {
         this->DoSetMax(max);
+        BaseValidator::m_maxSet = true;
     }
 
     void SetRange(ValueType min, ValueType max)
@@ -179,7 +189,7 @@ public:
             if ( !control )
                 return false;
 
-            control->SetValue(NormalizeValue(*m_value));
+            control->ChangeValue(NormalizeValue(*m_value));
         }
 
         return true;
@@ -192,6 +202,10 @@ public:
             wxTextEntry * const control = BaseValidator::GetTextEntry();
             if ( !control )
                 return false;
+
+            // If window is disabled, simply return
+            if ( !control->IsEnabled() )
+                return true;
 
             const wxString s(control->GetValue());
             LongestValueType value;

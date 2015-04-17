@@ -19,6 +19,7 @@
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>
+#include <wx/textbuf.h>
 #include <wx/textctrl.h>
 #include <wx/tokenzr.h>
 
@@ -31,12 +32,23 @@
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 #define NYQUISTEFFECTS_FAMILY wxT("Nyquist")
 
+#define NYQUIST_PROMPT_ID wxT("=== Nyquist Prompt ===")
+#define NYQUIST_WORKER_ID wxT("=== Nyquist Worker ===")
+
+enum NyqControlType
+{
+   NYQ_CTRL_INT,
+   NYQ_CTRL_REAL,
+   NYQ_CTRL_STRING,
+   NYQ_CTRL_CHOICE,
+};
+
 class NyqControl
 {
- public:
+public:
+   int type;
    wxString var;
    wxString name;
-   int type;
    wxString label;
    wxString valStr;
    wxString lowStr;
@@ -46,22 +58,18 @@ class NyqControl
    double high;
    int ticks;
 };
-#define NYQ_CTRL_INT 0
-#define NYQ_CTRL_REAL 1
-#define NYQ_CTRL_STRING 2
-#define NYQ_CTRL_CHOICE 3
 
 WX_DECLARE_USER_EXPORTED_OBJARRAY(NyqControl,  NyqControlArray, AUDACITY_DLL_API);
 
-class AUDACITY_DLL_API EffectNyquist:public Effect
+class AUDACITY_DLL_API NyquistEffect : public Effect
 {
- public:
+public:
 
    /** @param fName File name of the Nyquist script defining this effect. If
     * an empty string, then prompt the user for the Nyquist code to interpret.
     */
-   EffectNyquist(wxString fName);
-   virtual ~EffectNyquist();
+   NyquistEffect(wxString fName);
+   virtual ~NyquistEffect();
 
    // IdentInterface implementation
 
@@ -78,84 +86,48 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    virtual wxString GetFamily();
    virtual bool IsInteractive();
    virtual bool IsDefault();
-   virtual bool IsLegacy();
-   virtual bool SupportsRealtime();
-   virtual bool SupportsAutomation();
+
+   // EffectClientInterface implementation
+
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
    // Effect implementation
 
-   /** Get the name of the effect (taken from the script that is loaded). Note
-    * that this name is currently not translated because the translations system
-    * doesn't see the lisp files containing the Nyquist effect scripts.
-    * @return The name of the effect */
-   virtual wxString GetEffectName() {
-      return mName;
-   }
-
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> cats;
-      for (size_t i = 0; i < mCategories.GetCount(); i++) {
-         cats.insert(mCategories[i]);
-      }
-      return cats;
-   }
-
-   virtual wxString GetEffectIdentifier() {
-      if (mInteractive) {
-         // Disabled for now...
-         return wxT("");
-      }
-
-      wxStringTokenizer st(mName, wxT(" "));
-      wxString id;
-
-      // CamelCase the name
-      while (st.HasMoreTokens()) {
-         wxString tok = st.GetNextToken();
-
-         id += tok.Left(1).MakeUpper() + tok.Mid(1);
-      }
-
-      return id;
-   }
-
-   virtual wxString GetEffectAction() {
-      return mAction;
-   }
-
-   virtual bool GeneratorPreview();
-   virtual bool PromptUser(); 
-
    virtual bool Process();
+   virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
-   // Batch chain support
-   virtual bool SupportsChains();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   // NyquistEffect implementation
 
-   // EffectNyquist implementation
-
-   bool SetXlispPath();
-
-   bool LoadedNyFile() {
-      return mOK;
-   }
-
+   // For Nyquist Workbench support
+   void SetCommand(wxString cmd);
    void Continue();
    void Break();
    void Stop();
 
-   void SetCommand(wxString cmd);
-   wxString GetOutput();
+private:
+   // NyquistEffect implementation
 
+   bool ProcessOne();
+
+   void BuildPromptWindow(ShuttleGui & S);
+   void BuildEffectWindow(ShuttleGui & S);
+
+   bool TransferDataToPromptWindow();
+   bool TransferDataToEffectWindow();
+
+   bool TransferDataFromPromptWindow();
+   bool TransferDataFromEffectWindow();
+
+   bool IsOk();
 
    static wxArrayString GetNyquistSearchPath();
 
- private:
-
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
-
-   bool ProcessOne();
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,
@@ -173,12 +145,24 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    void OutputCallback(int c);
    void OSCallback();
 
-   void Parse(wxString line);
    void ParseFile();
+   bool ParseCommand(const wxString & cmd);
+   bool ParseProgram(wxInputStream & stream);
+   void Parse(wxString line);
+
    wxString UnQuote(wxString s);
    double GetCtrlValue(wxString s);
 
- private:
+   void OnLoad(wxCommandEvent & evt);
+   void OnSave(wxCommandEvent & evt);
+   void OnClear(wxCommandEvent & evt);
+   void OnDebug(wxCommandEvent & evt);
+
+   void OnText(wxCommandEvent & evt);
+   void OnSlider(wxCommandEvent & evt);
+   void OnChoice(wxCommandEvent & evt);
+
+private:
 
    wxString          mXlispPath;
 
@@ -189,6 +173,7 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    bool              mBreak;
    bool              mCont;
 
+   bool              mFoundType;
    bool              mCompiler;
    bool              mIsSal;
    bool              mExternal;
@@ -196,7 +181,7 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
     * the "Nyquist Prompt", false for all other effects (lisp code read from
     * files)
     */
-   bool              mInteractive;
+   bool              mIsPrompt;
    bool              mOK;
    wxString          mInputCmd; // history: exactly what the user typed
    wxString          mCmd;      // the command to be processed
@@ -205,9 +190,12 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    wxString          mInfo;
    wxString          mAuthor;
    wxString          mCopyright;
+   EffectType        mType;
+
    bool              mEnablePreview;
    bool              mDebug;
-   std::string       mDebugOutput;
+   std::string       *mDebugOutput;
+   wxString          mOutput;
 
    int               mVersion;
    NyqControlArray   mControls;
@@ -238,75 +226,27 @@ class AUDACITY_DLL_API EffectNyquist:public Effect
    bool              mRestoreSplits;
    int               mMergeClips;
 
-   friend class NyquistDialog;
-};
-
-class NyquistDialog:public wxDialog
-{
- public:
-   // constructors and destructors
-   NyquistDialog(wxWindow * parent, wxWindowID id,
-                 const wxString & title,
-                 wxString info,
-                 bool preview,
-                 EffectNyquist *effect);
-
- private:
-   EffectNyquist    *mEffect;
-   NyqControlArray  *mControls;
-   bool              mInHandler;
-
-   void OnText(wxCommandEvent & event);
-   void OnSlider(wxCommandEvent & event);
-   void OnChoice( wxCommandEvent &event );
-   void OnPreview(wxCommandEvent & event);
-   void OnDebug(wxCommandEvent & event);
-   void OnOk(wxCommandEvent & event);
-   void OnCancel(wxCommandEvent & event);
-
- private:
-   DECLARE_EVENT_TABLE()
-
-};
-
-class NyquistInputDialog:public wxDialog
-{
- public:
-   NyquistInputDialog(wxWindow * parent, wxWindowID id,
-                      const wxString & title,
-                      const wxString & prompt,
-                      wxString initialCommand);
-
-   wxString GetCommand();
-   void     OnVersionCheck(wxCommandEvent& evt);
-   int      mVersion;
-
- private:
    wxTextCtrl *mCommandText;
    wxCheckBox *mVersionCheckBox;
 
-   void OnOk(wxCommandEvent & event);
-   void OnCancel(wxCommandEvent & event);
-   void OnDebug(wxCommandEvent & event);
-   void OnPreview(wxCommandEvent & event);
+   DECLARE_EVENT_TABLE();
 
- private:
-   DECLARE_EVENT_TABLE()
+   friend class NyquistEffectsModule;
 };
 
-class NyquistOutputDialog:public wxDialog
+class NyquistOutputDialog : public wxDialog
 {
- public:
+public:
    NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                        const wxString & title,
                        const wxString & prompt,
                        wxString message);
 
- private:
+private:
    void OnOk(wxCommandEvent & event);
 
- private:
-   DECLARE_EVENT_TABLE()
+private:
+   DECLARE_EVENT_TABLE();
 };
 
 

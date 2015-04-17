@@ -148,11 +148,6 @@ bin_PROGRAMS = audacity$(EXEEXT)
 @USE_LV2_TRUE@	effects/lv2/LoadLV2.h \
 @USE_LV2_TRUE@	effects/lv2/LV2Effect.cpp \
 @USE_LV2_TRUE@	effects/lv2/LV2Effect.h \
-@USE_LV2_TRUE@	effects/lv2/lv2_event.h \
-@USE_LV2_TRUE@	effects/lv2/lv2_event_helpers.h \
-@USE_LV2_TRUE@	effects/lv2/LV2PortGroup.cpp \
-@USE_LV2_TRUE@	effects/lv2/LV2PortGroup.h \
-@USE_LV2_TRUE@	effects/lv2/lv2_uri_map.h \
 @USE_LV2_TRUE@	$(NULL)
 
 @USE_PORTSMF_TRUE@am__append_34 = $(PORTSMF_CFLAGS)
@@ -354,7 +349,6 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/Compressor.h effects/Contrast.cpp effects/Contrast.h \
 	effects/DtmfGen.cpp effects/DtmfGen.h effects/Echo.cpp \
 	effects/Echo.h effects/Effect.cpp effects/Effect.h \
-	effects/EffectCategory.cpp effects/EffectCategory.h \
 	effects/EffectManager.cpp effects/EffectManager.h \
 	effects/EffectRack.cpp effects/EffectRack.h \
 	effects/Equalization.cpp effects/Equalization.h \
@@ -469,14 +463,12 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/nyquist/Nyquist.cpp effects/nyquist/Nyquist.h \
 	effects/lv2/LoadLV2.cpp effects/lv2/LoadLV2.h \
 	effects/lv2/LV2Effect.cpp effects/lv2/LV2Effect.h \
-	effects/lv2/lv2_event.h effects/lv2/lv2_event_helpers.h \
-	effects/lv2/LV2PortGroup.cpp effects/lv2/LV2PortGroup.h \
-	effects/lv2/lv2_uri_map.h NoteTrack.cpp NoteTrack.h \
-	import/ImportMIDI.cpp import/ImportMIDI.h import/ImportQT.cpp \
-	import/ImportQT.h effects/vamp/LoadVamp.cpp \
-	effects/vamp/LoadVamp.h effects/vamp/VampEffect.cpp \
-	effects/vamp/VampEffect.h effects/VST/aeffectx.h \
-	effects/VST/VSTEffect.cpp effects/VST/VSTEffect.h
+	NoteTrack.cpp NoteTrack.h import/ImportMIDI.cpp \
+	import/ImportMIDI.h import/ImportQT.cpp import/ImportQT.h \
+	effects/vamp/LoadVamp.cpp effects/vamp/LoadVamp.h \
+	effects/vamp/VampEffect.cpp effects/vamp/VampEffect.h \
+	effects/VST/aeffectx.h effects/VST/VSTEffect.cpp \
+	effects/VST/VSTEffect.h
 am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 	audacity-DirManager.$(OBJEXT) audacity-Dither.$(OBJEXT) \
 	audacity-FileFormats.$(OBJEXT) audacity-Internat.$(OBJEXT) \
@@ -502,8 +494,7 @@ am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 @USE_LIBNYQUIST_TRUE@am__objects_7 = effects/nyquist/audacity-LoadNyquist.$(OBJEXT) \
 @USE_LIBNYQUIST_TRUE@	effects/nyquist/audacity-Nyquist.$(OBJEXT)
 @USE_LV2_TRUE@am__objects_8 = effects/lv2/audacity-LoadLV2.$(OBJEXT) \
-@USE_LV2_TRUE@	effects/lv2/audacity-LV2Effect.$(OBJEXT) \
-@USE_LV2_TRUE@	effects/lv2/audacity-LV2PortGroup.$(OBJEXT)
+@USE_LV2_TRUE@	effects/lv2/audacity-LV2Effect.$(OBJEXT)
 @USE_PORTSMF_TRUE@am__objects_9 = audacity-NoteTrack.$(OBJEXT) \
 @USE_PORTSMF_TRUE@	import/audacity-ImportMIDI.$(OBJEXT)
 @USE_QUICKTIME_TRUE@am__objects_10 =  \
@@ -595,7 +586,6 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	effects/audacity-DtmfGen.$(OBJEXT) \
 	effects/audacity-Echo.$(OBJEXT) \
 	effects/audacity-Effect.$(OBJEXT) \
-	effects/audacity-EffectCategory.$(OBJEXT) \
 	effects/audacity-EffectManager.$(OBJEXT) \
 	effects/audacity-EffectRack.$(OBJEXT) \
 	effects/audacity-Equalization.$(OBJEXT) \
@@ -1217,7 +1207,6 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	effects/Compressor.h effects/Contrast.cpp effects/Contrast.h \
 	effects/DtmfGen.cpp effects/DtmfGen.h effects/Echo.cpp \
 	effects/Echo.h effects/Effect.cpp effects/Effect.h \
-	effects/EffectCategory.cpp effects/EffectCategory.h \
 	effects/EffectManager.cpp effects/EffectManager.h \
 	effects/EffectRack.cpp effects/EffectRack.h \
 	effects/Equalization.cpp effects/Equalization.h \
@@ -1592,8 +1581,6 @@ effects/audacity-Echo.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-Effect.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
-effects/audacity-EffectCategory.$(OBJEXT): effects/$(am__dirstamp) \
-	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-EffectManager.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-EffectRack.$(OBJEXT): effects/$(am__dirstamp) \
@@ -1908,9 +1895,6 @@ effects/lv2/audacity-LoadLV2.$(OBJEXT): effects/lv2/$(am__dirstamp) \
 	effects/lv2/$(DEPDIR)/$(am__dirstamp)
 effects/lv2/audacity-LV2Effect.$(OBJEXT): effects/lv2/$(am__dirstamp) \
 	effects/lv2/$(DEPDIR)/$(am__dirstamp)
-effects/lv2/audacity-LV2PortGroup.$(OBJEXT):  \
-	effects/lv2/$(am__dirstamp) \
-	effects/lv2/$(DEPDIR)/$(am__dirstamp)
 import/audacity-ImportMIDI.$(OBJEXT): import/$(am__dirstamp) \
 	import/$(DEPDIR)/$(am__dirstamp)
 import/audacity-ImportQT.$(OBJEXT): import/$(am__dirstamp) \
@@ -2104,7 +2088,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-DtmfGen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Echo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Effect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-EffectCategory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-EffectManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-EffectRack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Equalization.Po@am__quote@
@@ -2141,7 +2124,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/audiounits/$(DEPDIR)/audacity-AudioUnitEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/ladspa/$(DEPDIR)/audacity-LadspaEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LV2Effect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LoadLV2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/nyquist/$(DEPDIR)/audacity-LoadNyquist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/nyquist/$(DEPDIR)/audacity-Nyquist.Po@am__quote@
@@ -4125,20 +4107,6 @@ effects/audacity-Effect.obj: effects/Effect.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-Effect.obj `if test -f 'effects/Effect.cpp'; then $(CYGPATH_W) 'effects/Effect.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/Effect.cpp'; fi`
 
-effects/audacity-EffectCategory.o: effects/EffectCategory.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-EffectCategory.o -MD -MP -MF effects/$(DEPDIR)/audacity-EffectCategory.Tpo -c -o effects/audacity-EffectCategory.o `test -f 'effects/EffectCategory.cpp' || echo '$(srcdir)/'`effects/EffectCategory.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-EffectCategory.Tpo effects/$(DEPDIR)/audacity-EffectCategory.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/EffectCategory.cpp' object='effects/audacity-EffectCategory.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-EffectCategory.o `test -f 'effects/EffectCategory.cpp' || echo '$(srcdir)/'`effects/EffectCategory.cpp
-
-effects/audacity-EffectCategory.obj: effects/EffectCategory.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-EffectCategory.obj -MD -MP -MF effects/$(DEPDIR)/audacity-EffectCategory.Tpo -c -o effects/audacity-EffectCategory.obj `if test -f 'effects/EffectCategory.cpp'; then $(CYGPATH_W) 'effects/EffectCategory.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/EffectCategory.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-EffectCategory.Tpo effects/$(DEPDIR)/audacity-EffectCategory.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/EffectCategory.cpp' object='effects/audacity-EffectCategory.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-EffectCategory.obj `if test -f 'effects/EffectCategory.cpp'; then $(CYGPATH_W) 'effects/EffectCategory.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/EffectCategory.cpp'; fi`
-
 effects/audacity-EffectManager.o: effects/EffectManager.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-EffectManager.o -MD -MP -MF effects/$(DEPDIR)/audacity-EffectManager.Tpo -c -o effects/audacity-EffectManager.o `test -f 'effects/EffectManager.cpp' || echo '$(srcdir)/'`effects/EffectManager.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-EffectManager.Tpo effects/$(DEPDIR)/audacity-EffectManager.Po
@@ -5888,20 +5856,6 @@ effects/lv2/audacity-LV2Effect.obj: effects/lv2/LV2Effect.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/lv2/LV2Effect.cpp' object='effects/lv2/audacity-LV2Effect.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/lv2/audacity-LV2Effect.obj `if test -f 'effects/lv2/LV2Effect.cpp'; then $(CYGPATH_W) 'effects/lv2/LV2Effect.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/lv2/LV2Effect.cpp'; fi`
-
-effects/lv2/audacity-LV2PortGroup.o: effects/lv2/LV2PortGroup.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/lv2/audacity-LV2PortGroup.o -MD -MP -MF effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Tpo -c -o effects/lv2/audacity-LV2PortGroup.o `test -f 'effects/lv2/LV2PortGroup.cpp' || echo '$(srcdir)/'`effects/lv2/LV2PortGroup.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Tpo effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/lv2/LV2PortGroup.cpp' object='effects/lv2/audacity-LV2PortGroup.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/lv2/audacity-LV2PortGroup.o `test -f 'effects/lv2/LV2PortGroup.cpp' || echo '$(srcdir)/'`effects/lv2/LV2PortGroup.cpp
-
-effects/lv2/audacity-LV2PortGroup.obj: effects/lv2/LV2PortGroup.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/lv2/audacity-LV2PortGroup.obj -MD -MP -MF effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Tpo -c -o effects/lv2/audacity-LV2PortGroup.obj `if test -f 'effects/lv2/LV2PortGroup.cpp'; then $(CYGPATH_W) 'effects/lv2/LV2PortGroup.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/lv2/LV2PortGroup.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Tpo effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/lv2/LV2PortGroup.cpp' object='effects/lv2/audacity-LV2PortGroup.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/lv2/audacity-LV2PortGroup.obj `if test -f 'effects/lv2/LV2PortGroup.cpp'; then $(CYGPATH_W) 'effects/lv2/LV2PortGroup.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/lv2/LV2PortGroup.cpp'; fi`
 
 audacity-NoteTrack.o: NoteTrack.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-NoteTrack.o -MD -MP -MF $(DEPDIR)/audacity-NoteTrack.Tpo -c -o audacity-NoteTrack.o `test -f 'NoteTrack.cpp' || echo '$(srcdir)/'`NoteTrack.cpp

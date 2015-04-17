@@ -772,7 +772,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mImportedDependencies(false),
      mWantSaveCompressed(false),
      mLastEffect(wxEmptyString),
-     mLastEffectType(0),
      mTimerRecordCanceled(false),
      mMenuClose(false)
      , mbInitializingScrollbar(false)
@@ -3656,8 +3655,8 @@ bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= 
       //TODO: All we want is a SelectAll()
       SelectNone();
       SelectAllIfNone();
-      OnEffect(ALL_EFFECTS | CONFIGURED_EFFECT,
-               EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")));
+      OnEffect(EffectManager::Get().GetEffectByIdentifier(wxT("Normalize")),
+               OnEffectFlags::kConfigured);
    }
 
    GetDirManager()->FillBlockfilesCache();

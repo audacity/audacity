@@ -321,8 +321,6 @@ audacity_SOURCES = \
 	effects/Echo.h \
 	effects/Effect.cpp \
 	effects/Effect.h \
-	effects/EffectCategory.cpp \
-	effects/EffectCategory.h \
 	effects/EffectManager.cpp \
 	effects/EffectManager.h \
 	effects/EffectRack.cpp \
@@ -656,11 +654,6 @@ audacity_SOURCES += \
 	effects/lv2/LoadLV2.h \
 	effects/lv2/LV2Effect.cpp \
 	effects/lv2/LV2Effect.h \
-	effects/lv2/lv2_event.h \
-	effects/lv2/lv2_event_helpers.h \
-	effects/lv2/LV2PortGroup.cpp \
-	effects/lv2/LV2PortGroup.h \
-	effects/lv2/lv2_uri_map.h \
 	$(NULL)
 endif
 

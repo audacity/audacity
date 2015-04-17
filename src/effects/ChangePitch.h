@@ -20,78 +20,55 @@ the pitch without changing the tempo.
 #ifndef __AUDACITY_EFFECT_CHANGEPITCH__
 #define __AUDACITY_EFFECT_CHANGEPITCH__
 
-#include "SoundTouchEffect.h"
-
-#include <wx/dialog.h>
-#include <wx/intl.h>
+#include <wx/choice.h>
+#include <wx/event.h>
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
+
+#include "../ShuttleGui.h"
+
+#include "SoundTouchEffect.h"
+
+#define CHANGEPITCH_PLUGIN_SYMBOL wxTRANSLATE("Change Pitch")
 
 class EffectChangePitch : public EffectSoundTouch
 {
- public:
+public:
    EffectChangePitch();
+   virtual ~EffectChangePitch();
 
-   virtual wxString GetEffectName() { return wxString(wxTRANSLATE("Change Pitch...")); }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#PitchPlugin"));
-      result.insert(wxT("http://audacityteam.org/namespace#PitchAndTempo"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Change Pitch"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Changing Pitch"));
-   }
+   virtual EffectType GetType();
 
-   // Useful only after PromptUser values have been set.
-   virtual wxString GetEffectDescription();
+   // EffectClientInterface implementation
+
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
 
    virtual bool Init();
+   virtual bool Process();
+   virtual bool CheckWhetherSkipEffect();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
+
+private:
+   // EffectChangePitch implementation
 
    // Deduce m_FromFrequency from the samples at the beginning of
    // the selection. Then set some other params accordingly.
    virtual void DeduceFrequencies();
 
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
-
-   virtual bool CheckWhetherSkipEffect() { return (m_dPercentChange == 0.0); }
-   virtual bool Process();
-
-private:
-   double m_dSemitonesChange;   // how many semitones to change pitch
-   double m_dStartFrequency;    // starting frequency of first 0.2s of selection
-   double m_dPercentChange;     // percent change to apply to frequency
-
-friend class ChangePitchDialog;
-};
-
-//----------------------------------------------------------------------------
-// ChangePitchDialog
-//----------------------------------------------------------------------------
-
-class wxChoice;
-class wxRadioButton;
-class wxString;
-class wxTextCtrl;
-
-class ChangePitchDialog : public EffectDialog
-{
- public:
-   ChangePitchDialog(EffectChangePitch * effect, wxWindow * parent,
-                     double dSemitonesChange, double dStartFrequency);
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
- private:
    // calculations
    void Calc_ToPitch(); // Update m_nToPitch from new m_dSemitonesChange.
    void Calc_ToOctave();
@@ -102,20 +79,18 @@ class ChangePitchDialog : public EffectDialog
    void Calc_PercentChange(); // Update m_dPercentChange based on new m_dSemitonesChange.
 
    // handlers
-   void OnChoice_FromPitch(wxCommandEvent & event);
-   void OnSpin_FromOctave(wxCommandEvent & event);
-   void OnChoice_ToPitch(wxCommandEvent & event);
-   void OnSpin_ToOctave(wxCommandEvent & event);
+   void OnChoice_FromPitch(wxCommandEvent & evt);
+   void OnSpin_FromOctave(wxCommandEvent & evt);
+   void OnChoice_ToPitch(wxCommandEvent & evt);
+   void OnSpin_ToOctave(wxCommandEvent & evt);
 
-   void OnText_SemitonesChange(wxCommandEvent & event);
+   void OnText_SemitonesChange(wxCommandEvent & evt);
 
-   void OnText_FromFrequency(wxCommandEvent & event);
-   void OnText_ToFrequency(wxCommandEvent & event);
+   void OnText_FromFrequency(wxCommandEvent & evt);
+   void OnText_ToFrequency(wxCommandEvent & evt);
 
-   void OnText_PercentChange(wxCommandEvent & event);
-   void OnSlider_PercentChange(wxCommandEvent & event);
-
-   void OnPreview( wxCommandEvent &event );
+   void OnText_PercentChange(wxCommandEvent & evt);
+   void OnSlider_PercentChange(wxCommandEvent & evt);
 
    // helper fns for controls
    void Update_Choice_FromPitch();
@@ -131,8 +106,21 @@ class ChangePitchDialog : public EffectDialog
    void Update_Text_PercentChange(); // Update control per current m_dPercentChange.
    void Update_Slider_PercentChange(); // Update control per current m_dPercentChange.
 
- private:
-   EffectChangePitch * mEffect;
+private:
+   // effect parameters
+   int    m_nFromPitch;          // per PitchIndex()
+   int    m_nFromOctave;         // per PitchOctave()
+   int    m_nToPitch;            // per PitchIndex()
+   int    m_nToOctave;           // per PitchOctave()
+
+   double m_FromFrequency;       // starting frequency of selection
+   double m_ToFrequency;         // target frequency of selection
+
+   double m_dSemitonesChange;    // how many semitones to change pitch
+   double m_dStartFrequency;     // starting frequency of first 0.2s of selection
+   double m_dPercentChange;      // percent change to apply to pitch
+                                 // Slider is (-100, 200], but textCtrls can set higher.
+
    bool m_bLoopDetect; // Used to avoid loops in initialization and in event handling.
 
    // controls
@@ -147,25 +135,8 @@ class ChangePitchDialog : public EffectDialog
    wxTextCtrl *   m_pTextCtrl_PercentChange;
    wxSlider *     m_pSlider_PercentChange;
 
- public:
-   // effect parameters
-   int      m_nFromPitch;    // per PitchIndex()
-   int      m_nFromOctave;   // per PitchOctave()
-   int      m_nToPitch;      // per PitchIndex()
-   int      m_nToOctave;     // per PitchOctave()
-
-   double   m_dSemitonesChange;   // how many semitones to change pitch
-
-   double   m_FromFrequency;     // starting frequency of selection
-   double   m_ToFrequency;       // target frequency of selection
-
-   double   m_dPercentChange;     // percent change to apply to pitch
-                                 // Slider is (-100, 200], but textCtrls can set higher.
-
- private:
-   DECLARE_EVENT_TABLE()
+   DECLARE_EVENT_TABLE();
 };
-
 
 #endif // __AUDACITY_EFFECT_CHANGEPITCH__
 

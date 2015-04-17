@@ -273,8 +273,6 @@ src/effects/Echo.cpp
 src/effects/Echo.h
 src/effects/Effect.cpp
 src/effects/Effect.h
-src/effects/EffectCategory.cpp
-src/effects/EffectCategory.h
 src/effects/EffectManager.cpp
 src/effects/EffectManager.h
 src/effects/EffectRack.cpp
@@ -352,13 +350,8 @@ src/effects/ladspa/LadspaEffect.h
 src/effects/ladspa/ladspa.h
 src/effects/lv2/LV2Effect.cpp
 src/effects/lv2/LV2Effect.h
-src/effects/lv2/LV2PortGroup.cpp
-src/effects/lv2/LV2PortGroup.h
 src/effects/lv2/LoadLV2.cpp
 src/effects/lv2/LoadLV2.h
-src/effects/lv2/lv2_event.h
-src/effects/lv2/lv2_event_helpers.h
-src/effects/lv2/lv2_uri_map.h
 src/effects/nyquist/LoadNyquist.cpp
 src/effects/nyquist/LoadNyquist.h
 src/effects/nyquist/Nyquist.cpp

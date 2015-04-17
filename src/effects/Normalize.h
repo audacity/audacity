@@ -12,63 +12,64 @@
 #ifndef __AUDACITY_EFFECT_NORMALIZE__
 #define __AUDACITY_EFFECT_NORMALIZE__
 
-#include "Effect.h"
-
 #include <wx/checkbox.h>
+#include <wx/event.h>
 #include <wx/stattext.h>
+#include <wx/string.h>
 #include <wx/textctrl.h>
 
-class wxString;
+#include "../ShuttleGui.h"
+#include "../WaveTrack.h"
 
-class WaveTrack;
+#include "Effect.h"
 
-class EffectNormalize: public Effect
+#define NORMALIZE_PLUGIN_SYMBOL wxTRANSLATE("Normalize")
+
+class EffectNormalize : public Effect
 {
- friend class NormalizeDialog;
-
- public:
+public:
    EffectNormalize();
+   virtual ~EffectNormalize();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Normalize..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#UtilityPlugin"));
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#AmplifierPlugin"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   // This is just used internally, users should not see it.  Do not translate.
-   virtual wxString GetEffectIdentifier() {
-      return wxT("Normalize");
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Normalizing..."));
-   }
+   virtual EffectType GetType();
 
-   virtual wxString GetEffectDescription(); // useful only after parameter values have been set
+   // EffectClientInterface implementation
 
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
-   virtual bool Init();
-   virtual void End();
+   // Effect implementation
+
    virtual bool CheckWhetherSkipEffect();
+   virtual bool Startup();
    virtual bool Process();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
- private:
+private:
+   // EffectNormalize implementation
+
    bool ProcessOne(WaveTrack * t, wxString msg);
    virtual void AnalyseTrack(WaveTrack * track, wxString msg);
    virtual void AnalyzeData(float *buffer, sampleCount len);
    bool AnalyseDC(WaveTrack * track, wxString msg);
    virtual void ProcessData(float *buffer, sampleCount len);
 
+   void OnUpdateUI(wxCommandEvent & evt);
+   void UpdateUI();
+
+private:
+   double mLevel;
    bool   mGain;
    bool   mDC;
-   double mLevel;
    bool   mStereoInd;
 
    int    mCurTrackNum;
@@ -80,32 +81,7 @@ class EffectNormalize: public Effect
    float  mMax;
    double mSum;
    sampleCount    mCount;
-};
 
-//----------------------------------------------------------------------------
-// NormalizeDialog
-//----------------------------------------------------------------------------
-
-class NormalizeDialog: public EffectDialog
-{
- public:
-   // constructors and destructors
-   NormalizeDialog(EffectNormalize *effect, wxWindow * parent);
-
-   // method declarations
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
- private:
-   // handlers
-   void OnUpdateUI(wxCommandEvent& evt);
-   void OnPreview(wxCommandEvent &event);
-
-   void UpdateUI();
-
- private:
-   EffectNormalize *mEffect;
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mDCCheckBox;
    wxTextCtrl *mLevelTextCtrl;
@@ -113,13 +89,9 @@ class NormalizeDialog: public EffectDialog
    wxStaticText *mWarning;
    wxCheckBox *mStereoIndCheckBox;
 
-   DECLARE_EVENT_TABLE()
+   bool mCreating;
 
- public:
-   bool mGain;
-   bool mDC;
-   double mLevel;
-   bool mStereoInd;
+   DECLARE_EVENT_TABLE();
 };
 
 #endif

@@ -7,134 +7,92 @@
   Salvo Ventura
   Dec 2006
 
-  An effect for the "Generator" menu to generate DTMF tones
+  An effect that generates DTMF tones
 
 **********************************************************************/
 
 #ifndef __AUDACITY_EFFECT_DTMF__
 #define __AUDACITY_EFFECT_DTMF__
 
-#include <wx/choice.h>
-#include <wx/defs.h>
-#include <wx/intl.h>
-#include <wx/sizer.h>
+#include <wx/event.h>
+#include <wx/slider.h>
+#include <wx/stattext.h>
 #include <wx/string.h>
-#include <wx/textctrl.h>
 
 #include "../ShuttleGui.h"
-#include "../WaveTrack.h"
+#include "../widgets/NumericTextCtrl.h"
 
-#include "Generator.h"
+#include "Effect.h"
 
-class NumericTextCtrl;
+#define DTMFTONES_PLUGIN_SYMBOL wxTRANSLATE("DTMF Tones")
 
-#define __UNINITIALIZED__ (-1)
+class EffectDtmf : public Effect
+{
+public:
+   EffectDtmf();
+   virtual ~EffectDtmf();
 
-class EffectDtmf : public Generator {
+   // IdentInterface implementation
 
- public:
-   EffectDtmf() : mIsSelection(false) {
-      SetEffectFlags(BUILTIN_EFFECT | INSERT_EFFECT);
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("DTMF Tones..."));
-   }
+   // EffectIdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-     std::set<wxString> result;
-     result.insert(wxT("http://lv2plug.in/ns/lv2core#GeneratorPlugin"));
-     return result;
-   }
+   virtual EffectType GetType();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("DTMF Tones"));
-   }
+   // EffectClientInterface implementation
 
-   // Return true if the effect supports processing via batch chains.
-   virtual bool SupportsChains() {
-      return false;
-   }
+   virtual int GetAudioOutCount();
+   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
-   virtual wxString GetEffectDescription() {
-      return wxString::Format(_("Applied effect: Generate DTMF tones, %.6lf seconds"), mDuration);
-   }
+   // Effect implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Generating DTMF tones"));
-   }
+   virtual bool Startup();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataFromWindow();
+   virtual bool TransferDataToWindow();
 
-   virtual bool Init();
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+private:
+   // EffectDtmf implementation
 
- private:
-   sampleCount numSamplesSequence, numSamplesTone, numSamplesSilence;
+   bool MakeDtmfTone(float *buffer, sampleCount len, float fs,
+                     wxChar tone, sampleCount last,
+                     sampleCount total, float amplitude);
+   void Recalculate();
 
-   wxString dtmfString;       // dtmf tone string
-   int    dtmfNTones;         // total number of tones to generate
-   double dtmfTone;           // duration of a single tone in ms
-   double dtmfSilence;        // duration of silence between tones in ms
-   double dtmfDutyCycle;      // ratio of dtmfTone/(dtmfTone+dtmfSilence)
-   double dtmfAmplitude;      // amplitude of dtmf tone sequence, restricted to (0-1)
-   bool mIsSelection;
+   void UpdateUI();
 
- protected:
-   virtual bool MakeDtmfTone(float *buffer, sampleCount len, float fs,
-                             wxChar tone, sampleCount last,
-                             sampleCount total, float amplitude);
-   bool GenerateTrack(WaveTrack *tmp, const WaveTrack &track, int ntrack);
-   void Success();
+   void OnText(wxCommandEvent & evt);
+   void OnSlider(wxCommandEvent & evt);
 
- // friendship ...
- friend class DtmfDialog;
+private:
+   sampleCount numSamplesSequence;  // total number of samples to generate
+   sampleCount numSamplesTone;      // number of samples in a tone block
+   sampleCount numSamplesSilence;   // number of samples in a silence block
+   sampleCount diff;                // number of extra samples to redistribute
+   sampleCount numRemaining;        // number of samples left to produce in the current block
+   sampleCount curTonePos;          // position in tone to start the wave
+   bool isTone;                     // true if block is tone, otherwise silence
+   int curSeqPos;                   // index into dtmf tone string
 
-};
+   wxString dtmfString;             // dtmf tone string
+   int    dtmfNTones;               // total number of tones to generate
+   double dtmfTone;                 // duration of a single tone in ms
+   double dtmfSilence;              // duration of silence between tones in ms
+   double dtmfDutyCycle;            // ratio of dtmfTone/(dtmfTone+dtmfSilence)
+   double dtmfAmplitude;            // amplitude of dtmf tone sequence, restricted to (0-1)
 
-//----------------------------------------------------------------------------
-// DtmfDialog
-//----------------------------------------------------------------------------
-
-// Declare window functions
-
-class DtmfDialog:public EffectDialog {
- public:
-   // constructors and destructors
-   DtmfDialog(EffectDtmf * effect, wxWindow * parent, const wxString & title);
-
-   // method declarations
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
- private:
-   void OnDtmfStringText(wxCommandEvent & event);
-   void OnDtmfDurationText(wxCommandEvent & event);
-   void OnDutyCycleSlider(wxCommandEvent & event);
-   void OnTimeCtrlUpdate(wxCommandEvent & event);
-   void Recalculate(void);
-
- private:
-   EffectDtmf *mEffect;
    wxSlider   *mDtmfDutyS;
-   wxTextCtrl *mDtmfStringT;
    NumericTextCtrl *mDtmfDurationT;
    wxStaticText *mDtmfToneT;
    wxStaticText *mDtmfSilenceT;
    wxStaticText *mDtmfDutyT;
 
-   DECLARE_EVENT_TABLE()
-
- public:
-   wxString dString;       // dtmf tone string
-   int    dNTones;         // total number of tones to generate
-   double dTone;           // duration of a single tone
-   double dSilence;        // duration of silence between tones
-   double dDuration;       // duration of the whole dtmf tone sequence
-   double dDutyCycle;      // ratio of dTone/(dTone+dSilence)
-   double dAmplitude;      // amplitude of dtmf tone sequence, restricted to (0-1)
-   bool   dIsSelection;    // true if duration comes from selection
-
+   DECLARE_EVENT_TABLE();
 };
 
 #endif

@@ -16,85 +16,57 @@
 #ifndef __AUDACITY_EFFECT_CHANGETEMPO__
 #define __AUDACITY_EFFECT_CHANGETEMPO__
 
+#include <wx/event.h>
+#include <wx/slider.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
+
+#include "../ShuttleGui.h"
+
 #include "SoundTouchEffect.h"
 
-#include <wx/intl.h>
-#include <wx/dialog.h>
-#include <wx/slider.h>
+#define CHANGETEMPO_PLUGIN_SYMBOL wxTRANSLATE("Change Tempo")
 
-class wxString;
-class wxTextCtrl;
-
-
-class EffectChangeTempo : public EffectSoundTouch {
-
- public:
+class EffectChangeTempo : public EffectSoundTouch
+{
+public:
    EffectChangeTempo();
+   virtual ~EffectChangeTempo();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Change Tempo..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://audacityteam.org/namespace#PitchAndTempo"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Change Tempo"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Changing Tempo"));
-   }
+   virtual EffectType GetType();
+   virtual bool SupportsAutomation();
 
-   // Useful only after PromptUser values have been set.
-   virtual wxString GetEffectDescription();
+   // EffectClientInterface implementation
+
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
 
    virtual bool Init();
-
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
-
-   virtual bool CheckWhetherSkipEffect() { return (m_PercentChange == 0.0); }
+   virtual bool CheckWhetherSkipEffect();
    virtual bool Process();
+   virtual double CalcPreviewInputLength(double previewLength);
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
-   double CalcPreviewInputLength(double previewLength);
+private:
+   // EffectChangeTempo implementation
 
- private:
-   double         m_PercentChange;  // percent change to apply to tempo
-                                    // -100% is meaningless, but sky's the upper limit
-   double         m_FromBPM;        // user-set beats-per-minute. Zero means not yet set.
-   double         m_ToBPM;          // Zero value means not yet set.
-   double         m_FromLength;     // starting length of selection
-   double         m_ToLength;       // target length of selection
-
-friend class ChangeTempoDialog;
-};
-
-//----------------------------------------------------------------------------
-// ChangeTempoDialog
-//----------------------------------------------------------------------------
-
-class ChangeTempoDialog:public EffectDialog {
- public:
-   ChangeTempoDialog(EffectChangeTempo * effect,
-                     wxWindow * parent);
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
- private:
    // handlers
-   void OnText_PercentChange(wxCommandEvent & event);
-   void OnSlider_PercentChange(wxCommandEvent & event);
-   void OnText_FromBPM(wxCommandEvent & event);
-   void OnText_ToBPM(wxCommandEvent & event);
-   void OnText_ToLength(wxCommandEvent & event);
-
-   void OnPreview( wxCommandEvent &event );
+   void OnText_PercentChange(wxCommandEvent & evt);
+   void OnSlider_PercentChange(wxCommandEvent & evt);
+   void OnText_FromBPM(wxCommandEvent & evt);
+   void OnText_ToBPM(wxCommandEvent & evt);
+   void OnText_ToLength(wxCommandEvent & evt);
 
    // helper fns
    void Update_Text_PercentChange(); // Update control per current m_PercentChange.
@@ -102,8 +74,14 @@ class ChangeTempoDialog:public EffectDialog {
    void Update_Text_ToBPM(); // Use m_FromBPM & m_PercentChange to set new m_ToBPM & control.
    void Update_Text_ToLength(); // Use m_FromLength & m_PercentChange to set new m_ToLength & control.
 
- private:
-   EffectChangeTempo * mEffect;
+private:
+   double         m_PercentChange;  // percent change to apply to tempo
+                                    // -100% is meaningless, but sky's the upper limit
+   double         m_FromBPM;        // user-set beats-per-minute. Zero means not yet set.
+   double         m_ToBPM;          // Zero value means not yet set.
+   double         m_FromLength;     // starting length of selection
+   double         m_ToLength;       // target length of selection
+
    bool m_bLoopDetect;
 
    // controls
@@ -114,20 +92,8 @@ class ChangeTempoDialog:public EffectDialog {
    wxTextCtrl *	m_pTextCtrl_FromLength;
    wxTextCtrl *	m_pTextCtrl_ToLength;
 
- public:
-   // effect parameters
-   double         m_PercentChange;  // percent change to apply to tempo
-                                    // -100% is meaningless, but sky's the upper limit.
-                                    // Slider is (-100, 200], but textCtrls can set higher.
-   double         m_FromBPM;        // user-set beats-per-minute. Zero means not yet set.
-   double         m_ToBPM;          // Zero value means not yet set.
-   double         m_FromLength;     // starting length of selection
-   double         m_ToLength;       // target length of selection
-
- private:
-   DECLARE_EVENT_TABLE()
+   DECLARE_EVENT_TABLE();
 };
-
 
 #endif // __AUDACITY_EFFECT_CHANGETEMPO__
 

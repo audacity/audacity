@@ -17,6 +17,7 @@
 #include "Audacity.h"
 
 #include <wx/grid.h>
+#include <wx/sizer.h>
 #include <wx/string.h>
 
 #include "WrappedType.h"
@@ -176,6 +177,7 @@ public:
 
    wxSlider * TieSlider( const wxString &Prompt, WrappedType & WrappedRef, const int max, const int min = 0 );
    wxSlider * TieSlider( const wxString &Prompt, int &pos, const int max, const int min = 0);
+   wxSlider * TieSlider( const wxString &Prompt, double &pos, const double max, const double min = 0.0);
    wxSlider * TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
    wxSlider * TieVSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax);
 
@@ -258,6 +260,8 @@ public:
    ShuttleGuiBase & Prop( int iProp );
    int GetId() {return miIdNext;};
    void UseUpId();
+
+   wxSizer * GetSizer() {return mpSizer;};
 
 protected:
    void SetProportions( int Default );
@@ -368,8 +372,8 @@ public:
    RulerPanel * AddRulerVertical( float low, float hi, const wxString & Units );
    AttachableScrollBar * AddAttachableScrollBar( long style = wxSB_HORIZONTAL );
    void AddStandardButtons( long buttons = eOkButton | eCancelButton, wxButton *extra = NULL );
-   void AddSpace( int width, int height );
-   void AddSpace( int size ) { AddSpace( size, size ); };
+   wxSizerItem * AddSpace( int width, int height );
+   wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };
    int GetBorder() { return miBorder; };
 
    void SetSizeHints( int minX = -1, int minY = -1 );
@@ -377,5 +381,7 @@ public:
    void SetSizeHints( const wxArrayInt & items );
    static void SetSizeHints( wxWindow *window, const wxArrayString & items );
    static void SetSizeHints( wxWindow *window, const wxArrayInt & items );
+
+   teShuttleMode GetMode() { return  mShuttleMode; };
 };
 #endif

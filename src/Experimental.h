@@ -39,7 +39,7 @@
 #define EXPERIMENTAL_FULL_WASAPI
 
 // JKC (effect by Norm C, 02 Oct 2013)
-//#define EXPERIMENTAL_SCIENCE_FILTERS
+#define EXPERIMENTAL_SCIENCE_FILTERS
 
 // LLL, 01 Oct 2013:
 // new key assignment view for preferences
@@ -73,6 +73,8 @@
 // As a minimum, if this is turned on for a release,
 // it should have an easy mechanism to disable it at run-time, such as a menu item or a pref,
 // preferrably disabled until other work is done.  Martyn 22/12/2008.
+// 
+// All code removed after 2.1.0 release since it was unmaintained. LLL
 //#define EFFECT_CATEGORIES
 
 // Andreas Micheler, 20.Nov 2007:
@@ -150,10 +152,7 @@
 
 // Module prefs provides a panel in prefs where users can choose which modules
 // to enable.
-// #define EXPERIMENTAL_MODULE_PREFS
-
-// Define to include realtime effects processing.
-#define EXPERIMENTAL_REALTIME_EFFECTS
+#define EXPERIMENTAL_MODULE_PREFS
 
 // Define to include the effects rack (such as it is).
 //#define EXPERIMENTAL_EFFECTS_RACK

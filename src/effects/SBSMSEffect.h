@@ -21,14 +21,15 @@
 #include "sbsms.h"
 using namespace _sbsms_;
 
-class EffectSBSMS : public Effect {
- public:
+class EffectSBSMS : public Effect
+{
+public:
    virtual bool Process();
    void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
                       SlideType rateSlideType, SlideType pitchSlideType,
                       bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput);
 
- private:
+private:
    bool ProcessLabelTrack(Track *track);
    double rateStart, rateEnd, pitchStart, pitchEnd;
    bool bLinkRatePitch, bRateReferenceInput, bPitchReferenceInput;
