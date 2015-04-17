@@ -121,6 +121,9 @@ class AUDACITY_DLL_API Mixer {
    /// Process() is called.
    void Reposition(double t);
 
+   // Used in scrubbing.
+   void SetTimesAndSpeed(double t0, double t1, double speed);
+
    /// Current time in seconds (unwarped, i.e. always between startTime and stopTime)
    /// This value is not accurate, it's useful for progress bars and indicators, but nothing else.
    double MixGetCurrentTime();
@@ -175,6 +178,7 @@ class AUDACITY_DLL_API Mixer {
    samplePtr       *mTemp;
    float           *mFloatBuffer;
    double           mRate;
+   double           mSpeed;
    bool             mHighQuality;
 };
 

@@ -275,6 +275,7 @@ Mixer::Mixer(int numInputTracks, WaveTrack **inputTracks,
    mBufferSize = outBufferSize;
    mInterleaved = outInterleaved;
    mRate = outRate;
+   mSpeed = 1.0;
    mFormat = outFormat;
    mApplyTrackGains = true;
    mGains = new float[mNumChannels];
@@ -424,7 +425,7 @@ sampleCount Mixer::MixVariableRates(int *channelFlags, WaveTrack *track,
                                     Resample * pResample)
 {
    const double trackRate = track->GetRate();
-   const double initialWarp = mRate / trackRate;
+   const double initialWarp = mRate / mSpeed / trackRate;
    const double tstep = 1.0 / trackRate;
    int sampleSize = SAMPLE_SIZE(floatSample);
 
@@ -634,7 +635,6 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
    //   return 0;
 
    int i, j;
-   sampleCount out;
    sampleCount maxOut = 0;
    int *channelFlags = new int[mNumChannels];
 
@@ -669,16 +669,14 @@ sampleCount Mixer::Process(sampleCount maxToProcess)
             break;
          }
       }
-
       if (mbVariableRates || track->GetRate() != mRate)
-         out = MixVariableRates(channelFlags, track,
-                                &mSamplePos[i], mSampleQueue[i],
-                                &mQueueStart[i], &mQueueLen[i], mResample[i]);
+         maxOut = std::max(maxOut,
+         MixVariableRates(channelFlags, track,
+         &mSamplePos[i], mSampleQueue[i],
+         &mQueueStart[i], &mQueueLen[i], mResample[i]));
       else
-         out = MixSameRate(channelFlags, track, &mSamplePos[i]);
-
-      if (out > maxOut)
-         maxOut = out;
+         maxOut = std::max(maxOut,
+         MixSameRate(channelFlags, track, &mSamplePos[i]));
 
       double t = (double)mSamplePos[i] / (double)track->GetRate();
       if (mT0 > mT1)
@@ -762,6 +760,15 @@ void Mixer::Reposition(double t)
       mQueueStart[i] = 0;
       mQueueLen[i] = 0;
    }
+}
+
+void Mixer::SetTimesAndSpeed(double t0, double t1, double speed)
+{
+   wxASSERT(isfinite(speed));
+   mT0 = t0;
+   mT1 = t1;
+   mSpeed = abs(speed);
+   Reposition(t0);
 }
 
 MixerSpec::MixerSpec( int numTracks, int maxNumChannels )
