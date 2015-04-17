@@ -29,7 +29,7 @@
 //     Name          Type        Key                        Def               Min      Max      Scale
 Param( Sequence,     wxString,   wxTRANSLATE("Sequence"),   wxT("audacity"),  wxT(""), wxT(""), wxT(""));
 Param( DutyCycle,    double,     wxTRANSLATE("Duty Cycle"), 55.0,             0.0,     100.0,   10.0   );
-Param( Amplitude,    double,     wxTRANSLATE("Amplitude"),  0.0,              0.0,     1.0,     1      );
+Param( Amplitude,    double,     wxTRANSLATE("Amplitude"),  0.8,              0.0,     1.0,     1      );
 
 static const double kFadeInOut = 250.0; // used for fadein/out needed to remove clicking noise
 
