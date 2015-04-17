@@ -52,6 +52,7 @@ class wxScrollBar;
 class wxPanel;
 
 class AudacityProject;
+class AutoSaveFile;
 class Importer;
 class ODLock;
 class RecordingRecoveryHandler;

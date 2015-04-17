@@ -25,6 +25,7 @@ UndoManager
 #include <wx/hashset.h>
 
 #include "BlockFile.h"
+#include "Diags.h"
 #include "Internat.h"
 #include "Sequence.h"
 #include "Track.h"

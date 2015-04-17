@@ -302,6 +302,7 @@ writing audio.
 #include "Prefs.h"
 #include "Project.h"
 #include "WaveTrack.h"
+#include "AutoRecovery.h"
 
 #include "toolbars/ControlToolBar.h"
 #include "widgets/Meter.h"

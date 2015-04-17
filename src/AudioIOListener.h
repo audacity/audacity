@@ -15,7 +15,7 @@
 
 #include <wx/string.h>
 
-#include "AutoRecovery.h"
+class AutoSaveFile;
 
 class AUDACITY_DLL_API AudioIOListener {
 public:
