@@ -8561,25 +8561,25 @@ void TrackPanel::OnTrackClose()
 
 void TrackPanel::OnTrackMoveUp()
 {
-   if (GetFocusedTrack())
+   if (mTracks->CanMoveUp(GetFocusedTrack()))
       MoveTrack(GetFocusedTrack(), OnMoveUpID);
 }
 
 void TrackPanel::OnTrackMoveDown()
 {
-   if (GetFocusedTrack())
+   if (mTracks->CanMoveDown(GetFocusedTrack()))
       MoveTrack(GetFocusedTrack(), OnMoveDownID);
 }
 
 void TrackPanel::OnTrackMoveTop()
 {
-   if (GetFocusedTrack())
+   if (mTracks->CanMoveUp(GetFocusedTrack()))
       MoveTrack(GetFocusedTrack(), OnMoveTopID);
 }
 
 void TrackPanel::OnTrackMoveBottom()
 {
-   if (GetFocusedTrack())
+   if (mTracks->CanMoveDown(GetFocusedTrack()))
       MoveTrack(GetFocusedTrack(), OnMoveBottomID);
 }
 
