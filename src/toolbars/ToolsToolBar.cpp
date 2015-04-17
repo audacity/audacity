@@ -80,7 +80,12 @@ ToolsToolBar::ToolsToolBar()
    wxASSERT( drawTool     == drawTool     - firstTool );
    wxASSERT( multiTool    == multiTool    - firstTool );
 
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   mMessageOfTool[selectTool] =
+      _("Click and drag to select audio, Middle-Click and drag to scrub, Shift-Middle-Click and drag to seek");
+#else
    mMessageOfTool[selectTool] = _("Click and drag to select audio");
+#endif
    mMessageOfTool[envelopeTool] = _("Click and drag to edit the amplitude envelope");
    mMessageOfTool[drawTool] = _("Click and drag to edit the samples");
 #if defined( __WXMAC__ )
