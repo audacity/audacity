@@ -160,7 +160,7 @@ bool AudioUnitEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const w
       return false;
    }
 
-   pm.RegisterEffectPlugin(this, &effect);
+   pm.RegisterPlugin(this, &effect);
 
    return true;
 }
@@ -722,63 +722,6 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// AudioUnitEffectEventHelper
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class AudioUnitEffectEventHelper : public wxEvtHandler
-{
-public:
-   AudioUnitEffectEventHelper(AudioUnitEffect *effect);
-   virtual ~AudioUnitEffectEventHelper();
-
-   // AudioUnitEffectEventHelper implementatino
-
-   void OnSize(wxSizeEvent & evt);
-
-private:
-   AudioUnitEffect *mEffect;
-
-   DECLARE_EVENT_TABLE();
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// AudioUnitEffectEventHelper
-//
-///////////////////////////////////////////////////////////////////////////////
-
-BEGIN_EVENT_TABLE(AudioUnitEffectEventHelper, wxEvtHandler)
-   EVT_SIZE(AudioUnitEffectEventHelper::OnSize)
-END_EVENT_TABLE()
-
-AudioUnitEffectEventHelper::AudioUnitEffectEventHelper(AudioUnitEffect *effect)
-{
-   mEffect = effect;
-}
-
-AudioUnitEffectEventHelper::~AudioUnitEffectEventHelper()
-{
-}
-
-// ============================================================================
-// AudioUnitEffectEventHelper implementation
-// ============================================================================
-
-void AudioUnitEffectEventHelper::OnSize(wxSizeEvent & evt)
-{
-   HIViewRef viewRef = mEffect->mAUView;
-   wxWindow *parent = mEffect->mParent;
-
-   // The parent panel has been resized, so make the AU the
-   // same size.
-   HIRect rect;
-   HIViewGetFrame((HIViewRef) parent->GetHandle(), &rect);
-   HIViewSetFrame(viewRef, &rect);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//
 // AudioUnitEffect
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -910,6 +853,10 @@ OSStatus AudioUnitEffect::WindowEventHandler(EventRef eventRef)
    return result;
 }
 
+BEGIN_EVENT_TABLE(AudioUnitEffect, wxEvtHandler)
+   EVT_SIZE(AudioUnitEffect::OnSize)
+END_EVENT_TABLE()
+
 AudioUnitEffect::AudioUnitEffect(const wxString & path,
                                  const wxString & name,
                                  Component component,
@@ -937,7 +884,6 @@ AudioUnitEffect::AudioUnitEffect(const wxString & path,
    mAUTrackingHandlerRef = NULL;
    mTrackingHandlerUPP = NULL;
 
-   mEventHelper = NULL;
    mEventListenerRef = NULL;
 }
 
@@ -1263,7 +1209,7 @@ void AudioUnitEffect::SetSampleRate(sampleCount rate)
    mSampleRate = rate;
 }
 
-sampleCount AudioUnitEffect::GetBlockSize(sampleCount maxBlockSize)
+sampleCount AudioUnitEffect::SetBlockSize(sampleCount maxBlockSize)
 {
    return mBlockSize;
 }
@@ -1310,7 +1256,7 @@ bool AudioUnitEffect::IsReady()
    return mReady;
 }
 
-bool AudioUnitEffect::ProcessInitialize()
+bool AudioUnitEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
 {
    ComponentResult auResult;
 
@@ -1389,20 +1335,20 @@ bool AudioUnitEffect::ProcessFinalize()
    return true;
 }
 
-sampleCount AudioUnitEffect::ProcessBlock(float **inbuf, float **outbuf, sampleCount size)
+sampleCount AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
    for (int i = 0; i < mAudioIns; i++)
    {
       mInputList->mBuffers[i].mNumberChannels = 1;
-      mInputList->mBuffers[i].mData = inbuf[i];
-      mInputList->mBuffers[i].mDataByteSize = sizeof(float) * size;
+      mInputList->mBuffers[i].mData = inBlock[i];
+      mInputList->mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
    }
 
    for (int i = 0; i < mAudioOuts; i++)
    {
       mOutputList->mBuffers[i].mNumberChannels = 1;
-      mOutputList->mBuffers[i].mData = outbuf[i];
-      mOutputList->mBuffers[i].mDataByteSize = sizeof(float) * size;
+      mOutputList->mBuffers[i].mData = outBlock[i];
+      mOutputList->mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
    }
 
    AudioUnitRenderActionFlags flags = 0;
@@ -1412,7 +1358,7 @@ sampleCount AudioUnitEffect::ProcessBlock(float **inbuf, float **outbuf, sampleC
                               &flags,
                               &mTimeStamp,
                               0,
-                              size,
+                              blockLen,
                               mOutputList);
    if (auResult != 0)
    {
@@ -1420,9 +1366,9 @@ sampleCount AudioUnitEffect::ProcessBlock(float **inbuf, float **outbuf, sampleC
       return 0;
    }
 
-   mTimeStamp.mSampleTime += size;
+   mTimeStamp.mSampleTime += blockLen;
 
-   return size;
+   return blockLen;
 }
 
 bool AudioUnitEffect::RealtimeInitialize()
@@ -1441,7 +1387,7 @@ bool AudioUnitEffect::RealtimeInitialize()
       mMasterOut[i] = new float[mBlockSize];
    }
 
-   return ProcessInitialize();
+   return ProcessInitialize(0);
 }
 
 bool AudioUnitEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
@@ -1453,7 +1399,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
       return false;
    }
 
-   slave->GetBlockSize(mBlockSize);
+   slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
    slave->SetSampleRate(sampleRate);
 
@@ -1465,7 +1411,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
 
    mSlaves.Add(slave);
 
-   return slave->ProcessInitialize();
+   return slave->ProcessInitialize(0);
 }
 
 bool AudioUnitEffect::RealtimeFinalize()
@@ -1749,11 +1695,100 @@ bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms
    return true;
 }
 
+bool AudioUnitEffect::LoadUserPreset(const wxString & name)
+{
+   return LoadParameters(name);
+}
+
+bool AudioUnitEffect::SaveUserPreset(const wxString & name)
+{
+   return SaveParameters(name);
+}
+
+bool AudioUnitEffect::LoadFactoryPreset(int id)
+{
+   OSStatus result;
+
+   // Retrieve the list of factory presets
+   CFArrayRef array;
+   UInt32 dataSize = sizeof(CFArrayRef);
+   result = AudioUnitGetProperty(mUnit,
+                                 kAudioUnitProperty_FactoryPresets,
+                                 kAudioUnitScope_Global,
+                                 0,
+                                 &array,
+                                 &dataSize);  
+   if (result != noErr)
+   {
+      return false;
+   }
+
+   if (id < 0 || id >= CFArrayGetCount(array))
+   {
+      return false;
+   }
+
+   AUPreset *preset = (AUPreset *) CFArrayGetValueAtIndex(array, id);
+
+   result = AudioUnitSetProperty(mUnit,
+                                 kAudioUnitProperty_PresentPreset,
+                                 kAudioUnitScope_Global,
+                                 0,
+                                 preset,
+                                 sizeof(AUPreset));
+   if (result == noErr)
+   {
+      AudioUnitParameter aup;
+      aup.mAudioUnit = mUnit;
+      aup.mParameterID = kAUParameterListener_AnyParameter;
+      aup.mScope = kAudioUnitScope_Global;
+      aup.mElement = 0;
+      AUParameterListenerNotify(NULL, NULL, &aup);
+   }
+
+   CFRelease(array);
+
+   return result == noErr;
+}
+
+bool AudioUnitEffect::LoadFactoryDefaults()
+{
+   return LoadParameters(mHost->GetFactoryDefaultsGroup());
+}
+
+wxArrayString AudioUnitEffect::GetFactoryPresets()
+{
+   OSStatus result;
+   wxArrayString presets;
+
+   // Retrieve the list of factory presets
+   CFArrayRef array;
+   UInt32 dataSize = sizeof(CFArrayRef);
+   result = AudioUnitGetProperty(mUnit,
+                                 kAudioUnitProperty_FactoryPresets,
+                                 kAudioUnitScope_Global,
+                                 0,
+                                 &array,
+                                 &dataSize);  
+   if (result == noErr)
+   {
+      for (CFIndex i = 0, cnt = CFArrayGetCount(array); i < cnt; i++)
+      {
+         AUPreset *preset = (AUPreset *) CFArrayGetValueAtIndex(array, i);
+         wxMacCFStringHolder holder(preset->presetName, false);
+         presets.Add(holder.AsString());
+      }
+      CFRelease(array);
+   }
+                        
+   return presets;
+}
+
 // ============================================================================
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-void AudioUnitEffect::SetUIHost(EffectUIHostInterface *host)
+void AudioUnitEffect::SetHostUI(EffectUIHostInterface *host)
 {
    mUIHost = host;
 
@@ -1873,8 +1908,7 @@ bool AudioUnitEffect::PopulateUI(wxWindow *parent)
       HIViewSetFrame(auView, &rect);
    }
 
-   mEventHelper = new AudioUnitEffectEventHelper(this);
-   mParent->PushEventHandler(mEventHelper);
+   mParent->PushEventHandler(this);
 
    mEventRef = GetControlEventTarget(auView);
 
@@ -1964,11 +1998,7 @@ bool AudioUnitEffect::CloseUI()
 {
    RemoveHandler();
 
-   if (mEventHelper)
-   {
-      mParent->RemoveEventHandler(mEventHelper);
-      delete mEventHelper;
-   }
+   mParent->RemoveEventHandler(this);
 
    if (mCarbonView)
    {
@@ -1988,92 +2018,7 @@ bool AudioUnitEffect::CloseUI()
    return true;
 }
 
-void AudioUnitEffect::LoadUserPreset(const wxString & name)
-{
-   LoadParameters(name);
-}
-
-void AudioUnitEffect::SaveUserPreset(const wxString & name)
-{
-   SaveParameters(name);
-}
-
-void AudioUnitEffect::LoadFactoryPreset(int id)
-{
-   OSStatus result;
-
-   // Retrieve the list of factory presets
-   CFArrayRef array;
-   UInt32 dataSize = sizeof(CFArrayRef);
-   result = AudioUnitGetProperty(mUnit,
-                                 kAudioUnitProperty_FactoryPresets,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &array,
-                                 &dataSize);  
-   if (result == noErr)
-   {
-      if (id < CFArrayGetCount(array))
-      {
-         AUPreset *preset = (AUPreset *) CFArrayGetValueAtIndex(array, id);
-
-         result = AudioUnitSetProperty(mUnit,
-                                       kAudioUnitProperty_PresentPreset,
-                                       kAudioUnitScope_Global,
-                                       0,
-                                       preset,
-                                       sizeof(AUPreset));
-         if (result == noErr)
-         {
-            AudioUnitParameter aup;
-            aup.mAudioUnit = mUnit;
-            aup.mParameterID = kAUParameterListener_AnyParameter;
-            aup.mScope = kAudioUnitScope_Global;
-            aup.mElement = 0;
-            AUParameterListenerNotify(NULL, NULL, &aup);
-         }
-      }
-
-      CFRelease(array);
-   }
-
-   return;
-}
-
-void AudioUnitEffect::LoadFactoryDefaults()
-{
-   LoadParameters(mHost->GetFactoryDefaultsGroup());
-}
-
-wxArrayString AudioUnitEffect::GetFactoryPresets()
-{
-   OSStatus result;
-   wxArrayString presets;
-
-   // Retrieve the list of factory presets
-   CFArrayRef array;
-   UInt32 dataSize = sizeof(CFArrayRef);
-   result = AudioUnitGetProperty(mUnit,
-                                 kAudioUnitProperty_FactoryPresets,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &array,
-                                 &dataSize);  
-   if (result == noErr)
-   {
-      for (CFIndex i = 0, cnt = CFArrayGetCount(array); i < cnt; i++)
-      {
-         AUPreset *preset = (AUPreset *) CFArrayGetValueAtIndex(array, i);
-         wxMacCFStringHolder holder(preset->presetName, false);
-         presets.Add(holder.AsString());
-      }
-      CFRelease(array);
-   }
-                        
-   return presets;
-}
-
-bool AudioUnitEffect::CanExport()
+bool AudioUnitEffect::CanExportPresets()
 {
    return true;
 }
@@ -2109,6 +2054,15 @@ void AudioUnitEffect::ShowOptions()
 // ============================================================================
 // AudioUnitEffect Implementation
 // ============================================================================
+
+void AudioUnitEffect::OnSize(wxSizeEvent & evt)
+{
+   // The parent panel has been resized, so make the AU the
+   // same size.
+   HIRect rect;
+   HIViewGetFrame((HIViewRef) mParent->GetHandle(), &rect);
+   HIViewSetFrame(mAUView, &rect);
+}
 
 void AudioUnitEffect::RemoveHandler()
 {
@@ -2161,7 +2115,7 @@ void AudioUnitEffect::RemoveHandler()
    }
 }
 
-void AudioUnitEffect::LoadParameters(const wxString & group)
+bool AudioUnitEffect::LoadParameters(const wxString & group)
 {
    OSStatus result;
    UInt32 dataSize;
@@ -2170,7 +2124,7 @@ void AudioUnitEffect::LoadParameters(const wxString & group)
    wxString value;
    if (!mHost->GetPrivateConfig(group, wxT("Value"), value, wxEmptyString))
    {
-      return;
+      return false;
    }
    wxStringTokenizer tokens(value, wxT(','));
 
@@ -2182,14 +2136,14 @@ void AudioUnitEffect::LoadParameters(const wxString & group)
                                      &isWritable);
    if (result != noErr)
    {
-      return;
+      return false;
    }
 
    UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
 
    if (cnt != tokens.CountTokens())
    {
-      return;
+      return false;
    }
 
    AudioUnitParameterID *array = new AudioUnitParameterID[cnt];
@@ -2203,7 +2157,7 @@ void AudioUnitEffect::LoadParameters(const wxString & group)
    if (result != noErr)
    {
       delete [] array;
-      return;
+      return false;
    }
 
    for (int i = 0; i < cnt; i++)
@@ -2221,7 +2175,7 @@ void AudioUnitEffect::LoadParameters(const wxString & group)
       if (result != noErr)
       {
          delete [] array;
-         return;
+         return false;
       }
    }
 
@@ -2233,9 +2187,11 @@ void AudioUnitEffect::LoadParameters(const wxString & group)
    AUParameterListenerNotify(NULL, NULL, &aup);
 
    delete [] array;
+
+   return true;
 }
 
-void AudioUnitEffect::SaveParameters(const wxString & group)
+bool AudioUnitEffect::SaveParameters(const wxString & group)
 {
    OSStatus result;
    UInt32 dataSize;
@@ -2250,7 +2206,7 @@ void AudioUnitEffect::SaveParameters(const wxString & group)
                                      &isWritable);
    if (result != noErr)
    {
-      return;
+      return false;
    }
 
    UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
@@ -2265,7 +2221,7 @@ void AudioUnitEffect::SaveParameters(const wxString & group)
    if (result != noErr)
    {
       delete [] array;
-      return;
+      return false;
    }
 
    for (int i = 0; i < cnt; i++)
@@ -2279,7 +2235,7 @@ void AudioUnitEffect::SaveParameters(const wxString & group)
       if (result != noErr)
       {
          delete [] array;
-         return;
+         return false;
       }
 
       parms += wxString::Format(wxT(",%f"), value);
@@ -2288,6 +2244,8 @@ void AudioUnitEffect::SaveParameters(const wxString & group)
    mHost->SetPrivateConfig(group, wxT("Value"), parms.Mid(1));
 
    delete [] array;
+
+   return true;
 }
 
 bool AudioUnitEffect::SetRateAndChannels()

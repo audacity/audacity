@@ -16,360 +16,431 @@
 An extended mode of EffectToneGen supports 'chirps' where the
 frequency changes smoothly during the tone.
 
-*//****************************************************************//**
-
-\class ToneGenDialog
-\brief Dialog used with EffectToneGen
-
 *//*******************************************************************/
 
 #include "../Audacity.h"
-#include "ToneGen.h"
-#include "../FFT.h"
-#include "../Project.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../Prefs.h"
-#include "../widgets/NumericTextCtrl.h"
-
-#include <wx/choice.h>
-#include <wx/intl.h>
-#include <wx/textctrl.h>
 
 #include <math.h>
+#include <float.h>
+
+#include <wx/intl.h>
+
+#include "../Project.h"
+#include "../widgets/NumericTextCtrl.h"
+#include "../widgets/valnum.h"
+
+#include "ToneGen.h"
+
+enum kInterpolations
+{
+   kLinear,
+   kLogarithmic,
+   kNumInterpolations
+};
+
+static const wxString kInterStrings[kNumInterpolations] =
+{
+   wxTRANSLATE("Linear"),
+   wxTRANSLATE("Logarithmic")
+};
+
+enum kWaveforms
+{
+   kSine,
+   kSquare,
+   kSawtooth,
+   kSquareNoAlias,
+   kNumWaveforms
+};
+
+static const wxString kWaveStrings[kNumWaveforms] =
+{
+   wxTRANSLATE("Sine"),
+   wxTRANSLATE("Square"),
+   wxTRANSLATE("Sawtooth"),
+   wxTRANSLATE("Square, no alias")
+};
+
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name       Type     Key                           Def      Min      Max                     Scale
+Param( StartFreq, double,  wxTRANSLATE("StartFreq"),     440.0,   1.0,     DBL_MAX,                1  );
+Param( EndFreq,   double,  wxTRANSLATE("EndFreq"),       1320.0,  1.0,     DBL_MAX,                1  );
+Param( StartAmp,  double,  wxTRANSLATE("StartAmp"),      0.8,     0.0,     1.0,                    1  );
+Param( EndAmp,    double,  wxTRANSLATE("EndAmp"),        0.1,     0.0,     1.0,                    1  );
+Param( Frequency, double,  wxTRANSLATE("Frequency"),     440.0,   1.0,     DBL_MAX,                1  );
+Param( Amplitude, double,  wxTRANSLATE("Amplitude"),     0.8,     0.0,     1.0,                    1  );
+Param( Waveform,  int,     wxTRANSLATE("Waveform"),      0,       0,       kNumWaveforms - 1,      1  );
+Param( Interp,    int,     wxTRANSLATE("Interpolation"), 0,       0,       kNumInterpolations - 1, 1  );
 
 //
 // EffectToneGen
 //
 
-EffectToneGen::EffectToneGen()
+BEGIN_EVENT_TABLE(EffectToneGen, wxEvtHandler)
+    EVT_TEXT(wxID_ANY, EffectToneGen::OnControlUpdate)
+END_EVENT_TABLE();
+
+EffectToneGen::EffectToneGen(bool isChirp)
 {
-   SetEffectFlags(BUILTIN_EFFECT | INSERT_EFFECT);
-   mbChirp = false;
-   mbLogInterpolation = false;
-   waveform = 0;                //sine
-   frequency[0] = float(440.0);          //Hz
-   frequency[1] = float(1320.0);          //Hz
-   amplitude[0] = float(0.8);
-   amplitude[1] = float(0.1);
-   interpolation = 0;
+   wxASSERT(kNumWaveforms == WXSIZEOF(kWaveStrings));
+   wxASSERT(kNumInterpolations == WXSIZEOF(kInterStrings));
+
+   mChirp = isChirp;
+
+   mWaveform = DEF_Waveform;
+   mFrequency[0] = DEF_StartFreq;
+   mFrequency[1] = DEF_EndFreq;
+   mAmplitude[0] = DEF_StartAmp;
+   mAmplitude[1] = DEF_EndAmp;
+   mInterpolation = DEF_Interp;
+   mDuration = GetDuration();
+
+   for (int i = 0; i < kNumWaveforms; i++)
+   {
+      mWaveforms.Add(wxGetTranslation(kWaveStrings[i]));
+   }
+
+   for (int i = 0; i < kNumInterpolations; i++)
+   {
+      mInterpolations.Add(wxGetTranslation(kInterStrings[i]));
+   }
 }
 
-wxString EffectToneGen::GetEffectDescription() {
-   // Note: This is useful only after values have been set.
-   /// \todo update to include *all* chirp parameters??
-   const wxChar* waveformNames[] = {wxT("sine"), wxT("square"), wxT("sawtooth"), wxT("square, no alias")};
-   //const wxChar* interpolationNames[] = {wxT("linear"), wxT("logarithmic")};
-   return wxString::Format(_("Applied effect: Generate %s wave %s, frequency = %.2f Hz, amplitude = %.2f, %.6lf seconds"),
-      waveformNames[waveform], mbChirp ? wxT("chirp") : wxT("tone"), frequency[0], amplitude[0], mDuration);
+EffectToneGen::~EffectToneGen()
+{
 }
 
-bool EffectToneGen::PromptUser()
+// IdentInterface implementation
+
+wxString EffectToneGen::GetSymbol()
 {
-   wxArrayString waveforms;
-   wxArrayString interpolations;
-   interpolations.Add(_("Linear"));
-   interpolations.Add(_("Logarithmic"));
-   ToneGenDialog dlog(this, mParent, mbChirp ? _("Chirp Generator") : _("Tone Generator"));
-   waveforms.Add(_("Sine"));
-   waveforms.Add(_("Square"));
-   waveforms.Add(_("Sawtooth"));
-   waveforms.Add(_("Square, no alias"));
-   dlog.isSelection= false;
+   return mChirp
+      ? CHIRP_PLUGIN_SYMBOL
+      : TONE_PLUGIN_SYMBOL;
+}
 
-   if (mT1 > mT0) {
-      mDuration = mT1 - mT0;
-      dlog.isSelection= true;
-   }
-   else {
-      // Retrieve last used values
-      gPrefs->Read(wxT("/Effects/ToneGen/Duration"), &mDuration, 30L);
-   }
+wxString EffectToneGen::GetDescription()
+{
+   return mChirp
+      ? wxTRANSLATE("Generates four different types of tone waveform while allowing starting and ending amplitude and frequency")
+      : wxTRANSLATE("Generates four different types of tone waveform");
+}
 
-   dlog.mbChirp = mbChirp;
-   dlog.waveform = waveform;
-   dlog.frequency[0] = frequency[0];
-   dlog.frequency[1] = frequency[1];
-   dlog.amplitude[0] = amplitude[0];
-   dlog.amplitude[1] = amplitude[1];
-   dlog.mDuration = mDuration;
-   dlog.waveforms = &waveforms;
-   dlog.interpolation = interpolation;
-   dlog.interpolations = &interpolations;
-   dlog.Init();
-   dlog.TransferDataToWindow();
-   dlog.Fit();
-   dlog.ShowModal();
+// EffectIdentInterface implementation
 
-   if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
+EffectType EffectToneGen::GetType()
+{
+   return EffectTypeGenerate;
+}
 
-   waveform = dlog.waveform;
-   frequency[0] = dlog.frequency[0];
-   frequency[1] = dlog.frequency[1];
-   amplitude[0] = dlog.amplitude[0];
-   amplitude[1] = dlog.amplitude[1];
-   interpolation = dlog.interpolation;
-   if (interpolation==0)
-      mbLogInterpolation = false;
-   if (interpolation==1)
-      mbLogInterpolation = true;
-   if( !mbChirp )
-   {
-      frequency[1] = frequency[0];
-      amplitude[1] = amplitude[0];
-   }
-   mDuration = dlog.mDuration;
-   /* Save last used values.
-      Save duration unless value was got from selection, so we save only
-      when user explicitly set up a value */
-   if (mT1 == mT0) // ANSWER ME: Only if end time equals start time?
-   {
-      return (gPrefs->Write(wxT("/Effects/ToneGen/Duration"), mDuration) &&
-               gPrefs->Flush());
-   }
+// EffectClientInterface implementation
+
+int EffectToneGen::GetAudioOutCount()
+{
+   return 1;
+}
+
+bool EffectToneGen::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+{
+   mPositionInCycles = 0.0;
+   mSample = 0;
+
    return true;
 }
 
-bool EffectToneGen::TransferParameters( Shuttle & WXUNUSED(shuttle) )
+sampleCount EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBlock, sampleCount blockLen)
 {
-/// \todo this should in time be using ShuttleGui too.
-//   shuttle.TransferInt("",,0);
-   return true;
-}
-
-bool EffectToneGen::MakeTone(float *buffer, sampleCount len)
-{
+   float *buffer = outBlock[0];
    double throwaway = 0;        //passed to modf but never used
    sampleCount i;
    double f = 0.0;
-   double a,b;
+   double a, b;
    int k;
 
    double frequencyQuantum;
    double BlendedFrequency;
    double BlendedAmplitude;
-   double BlendedLogFrequency = 0.0f;
+   double BlendedLogFrequency = 0.0;
 
    // calculate delta, and reposition from where we left
-   double amplitudeQuantum = (amplitude[1]-amplitude[0]) / numSamples;
-   BlendedAmplitude = amplitude[0] + amplitudeQuantum * mSample;
+   double amplitudeQuantum = (mAmplitude[1] - mAmplitude[0]) / mSampleCnt;
+   BlendedAmplitude = mAmplitude[0] + amplitudeQuantum * mSample;
 
    // precalculations:
-   double pre2PI = 2 * M_PI;
-   double pre4divPI = 4. / M_PI;
+   double pre2PI = 2.0 * M_PI;
+   double pre4divPI = 4.0 / M_PI;
 
    // initial setup should calculate deltas
-   if( mbLogInterpolation )
+   if (mInterpolation == kLogarithmic)
    {
       // this for log interpolation
-      logFrequency[0] = log10( frequency[0] );
-      logFrequency[1] = log10( frequency[1] );
+      mLogFrequency[0] = log10(mFrequency[0]);
+      mLogFrequency[1] = log10(mFrequency[1]);
       // calculate delta, and reposition from where we left
-      frequencyQuantum = (logFrequency[1]-logFrequency[0]) / numSamples;
-      BlendedLogFrequency = logFrequency[0] + frequencyQuantum * mSample;
-      BlendedFrequency = pow( 10.0, (double)BlendedLogFrequency );
-   } else {
+      frequencyQuantum = (mLogFrequency[1] - mLogFrequency[0]) / mSampleCnt;
+      BlendedLogFrequency = mLogFrequency[0] + frequencyQuantum * mSample;
+      BlendedFrequency = pow(10.0, BlendedLogFrequency);
+   }
+   else
+   {
       // this for regular case, linear interpolation
-      frequencyQuantum = (frequency[1]-frequency[0]) / numSamples;
-      BlendedFrequency = frequency[0] + frequencyQuantum * mSample;
+      frequencyQuantum = (mFrequency[1] - mFrequency[0]) / mSampleCnt;
+      BlendedFrequency = mFrequency[0] + frequencyQuantum * mSample;
    }
 
    // synth loop
-   for (i = 0; i < len; i++) {
-      switch (waveform) {
-      case 0:    //sine
-         f = (float) sin(pre2PI * mPositionInCycles/mCurRate);
+   for (i = 0; i < blockLen; i++)
+   {
+      switch (mWaveform)
+      {
+      case kSine:
+         f = sin(pre2PI * mPositionInCycles / mSampleRate);
          break;
-      case 1:    //square
-         f = (modf(mPositionInCycles/mCurRate, &throwaway) < 0.5) ? 1.0f :-1.0f;
+      case kSquare:
+         f = (modf(mPositionInCycles / mSampleRate, &throwaway) < 0.5) ? 1.0 : -1.0;
          break;
-      case 2:    //sawtooth
-         f = (2 * modf(mPositionInCycles/mCurRate+0.5f, &throwaway)) -1.0f;
+      case kSawtooth:
+         f = (2.0 * modf(mPositionInCycles / mSampleRate + 0.5, &throwaway)) - 1.0;
          break;
-      case 3:    //square, no alias.  Good down to 110Hz @ 44100Hz sampling.
+      case kSquareNoAlias:    // Good down to 110Hz @ 44100Hz sampling.
          //do fundamental (k=1) outside loop
-         b = (1. + cos((pre2PI * BlendedFrequency)/mCurRate))/pre4divPI;  //scaling
-         f = (float) pre4divPI * sin(pre2PI * mPositionInCycles/mCurRate);
-         for(k=3; (k<200) && (k * BlendedFrequency < mCurRate/2.); k+=2)
-            {
-               //Hanning Window in freq domain
-               a = 1. + cos((pre2PI * k * BlendedFrequency)/mCurRate);
-               //calc harmonic, apply window, scale to amplitude of fundamental
-               f += (float) a * sin(pre2PI * mPositionInCycles/mCurRate * k)/(b*k);
-            }
+         b = (1.0 + cos((pre2PI * BlendedFrequency) / mSampleRate)) / pre4divPI;  //scaling
+         f = pre4divPI * sin(pre2PI * mPositionInCycles / mSampleRate);
+         for (k = 3; (k < 200) && (k * BlendedFrequency < mSampleRate / 2.0); k += 2)
+         {
+            //Hanning Window in freq domain
+            a = 1.0 + cos((pre2PI * k * BlendedFrequency) / mSampleRate);
+            //calc harmonic, apply window, scale to amplitude of fundamental
+            f += a * sin(pre2PI * mPositionInCycles / mSampleRate * k) / (b * k);
+         }
       }
       // insert value in buffer
-      buffer[i] = BlendedAmplitude * f;
+      buffer[i] = (float) (BlendedAmplitude * f);
       // update freq,amplitude
       mPositionInCycles += BlendedFrequency;
       BlendedAmplitude += amplitudeQuantum;
-      if (mbLogInterpolation) {
+      if (mInterpolation == kLogarithmic)
+      {
          BlendedLogFrequency += frequencyQuantum;
-         BlendedFrequency = pow( 10.0, (double)BlendedLogFrequency);
-      } else {
+         BlendedFrequency = pow(10.0, BlendedLogFrequency);
+      }
+      else
+      {
          BlendedFrequency += frequencyQuantum;
       }
    }
 
    // update external placeholder
-   mSample += len;
+   mSample += blockLen;
+
+   return blockLen;
+}
+
+bool EffectToneGen::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   if (mChirp)
+   {
+      parms.Write(KEY_StartFreq, mFrequency[0]);
+      parms.Write(KEY_EndFreq, mFrequency[1]);
+      parms.Write(KEY_StartAmp, mAmplitude[0]);
+      parms.Write(KEY_EndAmp, mAmplitude[1]);
+   }
+   else
+   {
+      parms.Write(KEY_Frequency, mFrequency[0]);
+      parms.Write(KEY_Amplitude, mAmplitude[0]);
+   }
+
+   parms.Write(KEY_Waveform, mWaveforms[mWaveform]);
+   parms.Write(KEY_Interp, mInterpolations[mInterpolation]);
+
    return true;
 }
 
-void EffectToneGen::BeforeGenerate()
+bool EffectToneGen::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   mPositionInCycles = 0.0;
-}
-
-void EffectToneGen::GenerateBlock(float *data,
-                                  const WaveTrack & WXUNUSED(track),
-                                  sampleCount block)
-{
-   MakeTone(data, block);
-}
-
-void EffectToneGen::BeforeTrack(const WaveTrack &track)
-{
-   mSample = 0;
-   mCurRate = track.GetRate();
-}
-
-// WDR: class implementations
-
-//----------------------------------------------------------------------------
-// ToneGenDialog
-//----------------------------------------------------------------------------
-
-#define FREQ_MIN 1
-#define AMP_MIN 0
-#define AMP_MAX 1
-
-BEGIN_EVENT_TABLE(ToneGenDialog, EffectDialog)
-    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, ToneGenDialog::OnTimeCtrlUpdate)
-END_EVENT_TABLE()
-
-ToneGenDialog::ToneGenDialog(EffectToneGen * effect, wxWindow * parent, const wxString & title)
-:  EffectDialog(parent, title, INSERT_EFFECT),
-   mEffect(effect)
-{
-   mToneDurationT = NULL;
-   mbChirp = false;
-}
-
-/// Populates simple dialog that has a single tone.
-void ToneGenDialog::PopulateOrExchangeStandard( ShuttleGui & S )
-{
-   S.StartMultiColumn(2, wxCENTER);
+   ReadAndVerifyEnum(Waveform, mWaveforms);
+   ReadAndVerifyEnum(Interp, mInterpolations);
+   if (mChirp)
    {
-      S.TieChoice(_("Waveform") + wxString(wxT(":")), waveform,  waveforms);
-      S.SetSizeHints(-1, -1);
-
-      // The added colon to improve visual consistency was placed outside
-      // the translatable strings to avoid breaking translations close to 2.0.
-      // TODO: Make colon part of the translatable string after 2.0.
-      S.TieNumericTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 5);
-      S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), amplitude[0], 5);
-      S.AddPrompt(_("Duration") + wxString(wxT(":")));
-      if (mToneDurationT == NULL)
-      {
-         mToneDurationT = new
-            NumericTextCtrl(NumericConverter::TIME, this,
-                              wxID_ANY,
-                              isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                              mDuration,
-                              mEffect->mProjectRate,
-                              wxDefaultPosition,
-                              wxDefaultSize,
-                              true);
-         mToneDurationT->SetName(_("Duration"));
-         mToneDurationT->EnableMenu();
-      }
-      S.AddWindow(mToneDurationT);
+      ReadAndVerifyDouble(StartFreq);
+      ReadAndVerifyDouble(EndFreq);
+      ReadAndVerifyDouble(StartAmp);
+      ReadAndVerifyDouble(EndAmp);
+      mFrequency[0] = StartFreq;
+      mFrequency[1] = EndFreq;
+      mAmplitude[0] = StartAmp;
+      mAmplitude[1] = EndAmp;
    }
-   S.EndMultiColumn();
-}
-
-/// Populates more complex dialog that has a chirp.
-void ToneGenDialog::PopulateOrExchangeExtended( ShuttleGui & S )
-{
-   S.StartMultiColumn(2, wxCENTER);
-   {
-      S.TieChoice(_("Waveform:"), waveform,  waveforms);
-      S.SetSizeHints(-1, -1);
-   }
-   S.EndMultiColumn();
-   S.StartMultiColumn(3, wxCENTER);
-   {
-      S.AddFixedText(wxT(""));
-      S.AddTitle(_("Start"));
-      S.AddTitle(_("End"));
-
-      // The added colon to improve visual consistency was placed outside
-      // the translatable strings to avoid breaking translations close to 2.0.
-      // TODO: Make colon part of the translatable string after 2.0.
-      S.TieNumericTextBox(_("Frequency (Hz)") + wxString(wxT(":")), frequency[0], 10)->SetName(_("Frequency Hertz Start"));
-      S.TieNumericTextBox(wxT(""), frequency[1], 10)->SetName(_("Frequency Hertz End"));
-      S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), amplitude[0], 10)->SetName(_("Amplitude Start"));
-      S.TieNumericTextBox(wxT(""), amplitude[1], 10)->SetName(_("Amplitude End"));
-   }
-   S.EndMultiColumn();
-   S.StartMultiColumn(2, wxCENTER);
-   {
-      S.TieChoice(_("Interpolation:"), interpolation,  interpolations);
-      S.AddPrompt(_("Duration") + wxString(wxT(":")));
-      if (mToneDurationT == NULL)
-      {
-         mToneDurationT = new
-         NumericTextCtrl(NumericConverter::TIME, this,
-                      wxID_ANY,
-                      isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                      mDuration,
-                      mEffect->mProjectRate,
-                      wxDefaultPosition,
-                      wxDefaultSize,
-                      true);
-         mToneDurationT->SetName(_("Duration"));
-         mToneDurationT->EnableMenu();
-      }
-      S.AddWindow(mToneDurationT);
-   }
-   S.EndMultiColumn();
-}
-
-void ToneGenDialog::PopulateOrExchange(ShuttleGui & S)
-{
-   if( !mbChirp )
-      PopulateOrExchangeStandard( S );
    else
-      PopulateOrExchangeExtended( S );
+   {
+      ReadAndVerifyDouble(Frequency);
+      ReadAndVerifyDouble(Amplitude);
+      mFrequency[0] = Frequency;
+      mFrequency[1] = Frequency;
+      mAmplitude[0] = Amplitude;
+      mAmplitude[1] = Amplitude;
+   }
+
+   mWaveform = Waveform;
+   mInterpolation = Interp;
+
+   double freqMax = (GetActiveProject() ? GetActiveProject()->GetRate() : 44100.0) / 2.0;
+   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
+
+   return true;
 }
 
-bool ToneGenDialog::TransferDataToWindow()
-{
-   EffectDialog::TransferDataToWindow();
+// Effect implementation
 
-   // Must handle this ourselves since ShuttleGui doesn't know about it
+void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
+{
+   wxTextCtrl *t;
+
+   S.StartMultiColumn(2, wxCENTER);
+   {
+      S.TieChoice(_("Waveform:"), mWaveform,  &mWaveforms);
+
+      if (mChirp)
+      {
+         S.AddFixedText(wxT(""));
+         S.StartHorizontalLay(wxEXPAND);
+         {
+            S.StartHorizontalLay(wxLEFT, 50);
+            {
+               S.AddTitle(_("Start"));
+            }
+            S.EndHorizontalLay();
+
+            S.StartHorizontalLay(wxLEFT, 50);
+            {
+               S.AddTitle(_("End"));
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndHorizontalLay();
+
+         S.AddPrompt(_("Frequency (Hz):"));
+         S.StartHorizontalLay(wxEXPAND);
+         {
+            S.StartHorizontalLay(wxLEFT, 50);
+            {
+               FloatingPointValidator<double> vldStartFreq(6, &mFrequency[0], NUM_VAL_NO_TRAILING_ZEROES);
+               vldStartFreq.SetRange(MIN_StartFreq, GetActiveProject()->GetRate() / 2.0);
+               t = S.AddTextBox(wxT(""), wxT(""), 12);
+               t->SetName(_("Frequency Hertz Start"));
+               t->SetValidator(vldStartFreq);
+            }
+            S.EndHorizontalLay();
+
+            S.StartHorizontalLay(wxLEFT, 50);
+            {
+               FloatingPointValidator<double> vldEndFreq(6, &mFrequency[1], NUM_VAL_NO_TRAILING_ZEROES);
+               vldEndFreq.SetRange(MIN_EndFreq, GetActiveProject()->GetRate() / 2.0);
+               t = S.AddTextBox(wxT(""), wxT(""), 12);
+               t->SetName(_("Frequency Hertz End"));
+               t->SetValidator(vldEndFreq);
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndHorizontalLay();
+
+         S.AddPrompt(_("Amplitude (Hz):"));
+         S.StartHorizontalLay(wxEXPAND);
+         {
+            S.StartHorizontalLay(wxLEFT, 50);
+            {
+               FloatingPointValidator<double> vldStartAmp(6, &mAmplitude[0], NUM_VAL_NO_TRAILING_ZEROES);
+               vldStartAmp.SetRange(MIN_StartAmp, MAX_StartAmp);
+               t = S.AddTextBox(wxT(""), wxT(""), 12);
+               t->SetName(_("Amplitude Start"));
+               t->SetValidator(vldStartAmp);
+            }
+            S.EndHorizontalLay();
+
+            S.StartHorizontalLay(wxLEFT, 50);
+            {
+               FloatingPointValidator<double> vldEndAmp(6, &mAmplitude[1], NUM_VAL_NO_TRAILING_ZEROES);
+               vldEndAmp.SetRange(MIN_EndAmp, MAX_EndAmp);
+               t = S.AddTextBox(wxT(""), wxT(""), 12);
+               t->SetName(_("Amplitude End"));
+               t->SetValidator(vldEndAmp);
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndHorizontalLay();
+      }
+      else
+      {
+         FloatingPointValidator<double> vldFrequency(6, &mFrequency[0], NUM_VAL_NO_TRAILING_ZEROES);
+         vldFrequency.SetRange(MIN_Frequency, GetActiveProject()->GetRate() / 2.0);
+         t = S.AddTextBox(_("Frequency (Hz):"), wxT(""), 12);
+         t->SetValidator(vldFrequency);
+
+         FloatingPointValidator<double> vldAmplitude(6, &mAmplitude[1], NUM_VAL_NO_TRAILING_ZEROES);
+         vldAmplitude.SetRange(MIN_Amplitude, MAX_Amplitude);
+         t = S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 12);
+         t->SetValidator(vldAmplitude);
+      }
+
+      S.TieChoice(_("Interpolation:"), mInterpolation, &mInterpolations);
+      S.AddPrompt(_("Duration:"));
+      mToneDurationT = new
+         NumericTextCtrl(NumericConverter::TIME,
+                        S.GetParent(),
+                        wxID_ANY,
+                        (mT1 > mT0) ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
+                        mDuration,
+                        mProjectRate,
+                        wxDefaultPosition,
+                        wxDefaultSize,
+                        true);
+      mToneDurationT->SetName(_("Duration"));
+      mToneDurationT->EnableMenu();
+      S.AddWindow(mToneDurationT, wxALIGN_LEFT | wxALL);
+   }
+   S.EndMultiColumn();
+
+   return;
+}
+
+bool EffectToneGen::TransferDataToWindow()
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
    mToneDurationT->SetValue(mDuration);
 
    return true;
 }
 
-bool ToneGenDialog::TransferDataFromWindow()
+bool EffectToneGen::TransferDataFromWindow()
 {
-   EffectDialog::TransferDataFromWindow();
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
 
-   amplitude[0] = TrapDouble(amplitude[0], AMP_MIN, AMP_MAX);
-   frequency[0] = TrapDouble(frequency[0], FREQ_MIN, (float)(GetActiveProject()->GetRate())/2.);
-   amplitude[1] = TrapDouble(amplitude[1], AMP_MIN, AMP_MAX);
-   frequency[1] = TrapDouble(frequency[1], FREQ_MIN, (float)(GetActiveProject()->GetRate())/2.);
+   if (!mChirp)
+   {
+      mFrequency[1] = mFrequency[0];
+      mAmplitude[1] = mAmplitude[0];
+   }
 
-   // Must handle this ourselves since ShuttleGui doesn't know about it
    mDuration = mToneDurationT->GetValue();
 
    return true;
 }
 
-void ToneGenDialog::OnTimeCtrlUpdate(wxCommandEvent & WXUNUSED(event)) {
-   Fit();
+// EffectToneGen implementation
+
+void EffectToneGen::OnControlUpdate(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
+   }
 }

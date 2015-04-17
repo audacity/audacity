@@ -45,7 +45,7 @@ public:
    PluginDescriptor();
    virtual ~PluginDescriptor();
 
-   bool IsInstantiated();
+   bool IsInstantiated() const;
    IdentInterface *GetInstance();
    void SetInstance(IdentInterface *instance);
 
@@ -173,14 +173,14 @@ public:
 
    // PluginManagerInterface implementation
 
-   const PluginID & RegisterModulePlugin(ModuleInterface *module);
-   const PluginID & RegisterEffectPlugin(ModuleInterface *provider, EffectIdentInterface *effect);
-   const PluginID & RegisterImporterPlugin(ModuleInterface *provider, ImporterInterface *importer);
+   virtual const PluginID & RegisterPlugin(ModuleInterface *module);
+   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect);
+   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer);
 
-   void FindFilesInPathList(const wxString & pattern,
-                            const wxArrayString & pathList,
-                            wxArrayString & files,
-                            bool directories = false);
+   virtual void FindFilesInPathList(const wxString & pattern,
+                                    const wxArrayString & pathList,
+                                    wxArrayString & files,
+                                    bool directories = false);
 
    virtual bool GetSharedConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups);
 
@@ -256,8 +256,8 @@ public:
    IdentInterface *GetInstance(const PluginID & ID);
    void SetInstance(const PluginID & ID, IdentInterface *instance);  // TODO: Remove after conversion
 
-   // 
-   const PluginID & RegisterLegacyEffectPlugin(EffectIdentInterface *effect);
+   // For builtin effects
+   const PluginID & RegisterPlugin(EffectIdentInterface *effect);
 
 private:
    void Load();
@@ -289,7 +289,7 @@ private:
    bool SetConfig(const wxString & key, const double & value);
    bool SetConfig(const wxString & key, const sampleCount & value);
 
-   wxString SettingsID(const PluginID & ID);
+   wxString SettingsPath(const PluginID & ID, bool shared);
    wxString SharedGroup(const PluginID & ID, const wxString & group);
    wxString SharedKey(const PluginID & ID, const wxString & group, const wxString & key);
    wxString PrivateGroup(const PluginID & ID, const wxString & group);

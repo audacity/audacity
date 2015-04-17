@@ -22,104 +22,83 @@
 
 #include "../Audacity.h"
 
-#include "Repeat.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../LabelTrack.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../Project.h"
-
-#include <wx/button.h>
-#include <wx/defs.h>
-#include <wx/intl.h>
-#include <wx/msgdlg.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/validate.h>
-#include <wx/valtext.h>
 
 #include <math.h>
 
+#include <wx/intl.h>
+
+#include "../LabelTrack.h"
+#include "../ShuttleGui.h"
+#include "../WaveTrack.h"
+#include "../widgets/NumericTextCtrl.h"
+#include "../widgets/valnum.h"
+
+#include "Repeat.h"
+
+BEGIN_EVENT_TABLE(EffectRepeat, wxEvtHandler)
+   EVT_TEXT(wxID_ANY, EffectRepeat::OnRepeatTextChange)
+END_EVENT_TABLE()
 
 EffectRepeat::EffectRepeat()
 {
    repeatCount = 10;
 }
 
-wxString EffectRepeat::GetEffectDescription() {
-   // Note: This is useful only after values have been set.
-   return wxString::Format(_("Repeated %d times"), repeatCount);
+EffectRepeat::~EffectRepeat()
+{
 }
 
-bool EffectRepeat::PromptUser()
+// IdentInterface implementation
+
+wxString EffectRepeat::GetSymbol()
 {
-   //
-   // Figure out the maximum number of times the selection
-   // could be repeated without overflowing any track
-   //
-   int maxCount = -1;
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
-   WaveTrack *track = (WaveTrack *) iter.First();
-   while (track) {
-      sampleCount trackLen =
-         (sampleCount)((track->GetEndTime() - track->GetStartTime()) *
-                       track->GetRate());
-      sampleCount selectionLen = (sampleCount)((mT1 - mT0) * track->GetRate());
-      if (selectionLen == 0) {
-         wxMessageBox(_("Selection is too short to repeat."),
-                      _("Repeat"), wxOK | wxCENTRE, mParent);
-         return false;
-      }
-      int availSamples = 2147483647 - trackLen;
-      int count = availSamples / selectionLen;
-      if (maxCount == -1 || count < maxCount)
-         maxCount = count;
+   return REPEAT_PLUGIN_SYMBOL;
+}
 
-      track = (WaveTrack *) iter.Next();
-   }
+wxString EffectRepeat::GetDescription()
+{
+   return wxTRANSLATE("Repeats the selection the specified number of times");
+}
 
-   if (maxCount <= 1) {
-      // TO DO: Not really true now that SampleCount is 64-bit int, but while bug 416
-      // is open, do we want to encourage repeating hugely long tracks?
-      wxMessageBox(_("Tracks are too long to repeat the selection."),
-                   _("Repeat"), wxOK | wxCENTRE, mParent);
-      return false;
-   }
+// EffectIdentInterface implementation
 
-   RepeatDialog dlog(this, mParent);
-   dlog.repeatCount = repeatCount;
-   dlog.selectionTimeSecs = mT1 - mT0;
-   dlog.maxCount = maxCount;
-   dlog.TransferDataToWindow();
+EffectType EffectRepeat::GetType()
+{
+   return EffectTypeProcess;
+}
 
-   dlog.CentreOnParent();
+// EffectClientInterface implementation
 
-   dlog.ShowModal();
-
-  if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
-
-   repeatCount = dlog.repeatCount;
-   if (repeatCount > maxCount)
-      repeatCount = maxCount;
-   if (repeatCount < 1)
-      repeatCount = 1;
+bool EffectRepeat::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(wxT("Count"), repeatCount);
 
    return true;
 }
 
-bool EffectRepeat::TransferParameters( Shuttle & shuttle )
+bool EffectRepeat::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   shuttle.TransferInt(wxT("Count"),repeatCount,1);
+   int count;
+
+   parms.Read(wxT("Count"), &count, 10);
+
+   if (count < 0 || count > 2147483647 / mProjectRate)
+   {
+      return false;
+   }
+
+   repeatCount = count;
+
    return true;
 }
+
+// Effect implementation
 
 bool EffectRepeat::Process()
 {
    // Set up mOutputTracks.
    // This effect needs Track::All for sync-lock grouping.
-   this->CopyInputTracks(Track::All);
+   CopyInputTracks(Track::All);
 
    int nTrack = 0;
    bool bGoodResult = true;
@@ -127,7 +106,8 @@ bool EffectRepeat::Process()
 
    TrackListIterator iter(mOutputTracks);
 
-   for (Track *t = iter.First(); t && bGoodResult; t = iter.Next()) {
+   for (Track *t = iter.First(); t && bGoodResult; t = iter.Next())
+   {
       if (t->GetKind() == Track::Label)
       {
          if (t->GetSelected() || t->IsSyncLockSelected())
@@ -152,7 +132,9 @@ bool EffectRepeat::Process()
          double tc = mT0 + tLen;
 
          if (len <= 0)
+         {
             continue;
+         }
 
          Track *dest;
          track->Copy(mT0, mT1, &dest);
@@ -183,57 +165,29 @@ bool EffectRepeat::Process()
       mT1 = maxDestLen;
    }
 
-   this->ReplaceProcessedTracks(bGoodResult);
+   ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
-//----------------------------------------------------------------------------
-// RepeatDialog
-//----------------------------------------------------------------------------
-
-const static wxChar *numbers[] =
+void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
 {
-   wxT("0"), wxT("1"), wxT("2"), wxT("3"), wxT("4"),
-   wxT("5"), wxT("6"), wxT("7"), wxT("8"), wxT("9")
-};
-
-#define ID_REPEAT_TEXT 7000
-
-BEGIN_EVENT_TABLE(RepeatDialog, EffectDialog)
-   EVT_TEXT(ID_REPEAT_TEXT, RepeatDialog::OnRepeatTextChange)
-   EVT_BUTTON(ID_EFFECT_PREVIEW, RepeatDialog::OnPreview)
-END_EVENT_TABLE()
-
-RepeatDialog::RepeatDialog(EffectRepeat *effect,
-                           wxWindow * parent)
-:  EffectDialog(parent, _("Repeat"), PROCESS_EFFECT),
-   mEffect(effect)
-{
-   Init();
-}
-
-void RepeatDialog::PopulateOrExchange(ShuttleGui & S)
-{
-   wxTextValidator vld(wxFILTER_INCLUDE_CHAR_LIST);
-   vld.SetIncludes(wxArrayString(10, numbers));
-
    S.StartHorizontalLay(wxCENTER, false);
    {
-      mRepeatCount = S.Id(ID_REPEAT_TEXT).AddTextBox(_("Number of times to repeat:"),
-                                                     wxT(""),
-                                                     12);
-      mRepeatCount->SetValidator(vld);
+      IntegerValidator<int> vldRepeatCount(&repeatCount);
+      vldRepeatCount.SetRange(1, 2147483647 / mProjectRate);
+      mRepeatCount = S.AddTextBox(_("Number of times to repeat:"), wxT(""), 12);
+      mRepeatCount->SetValidator(vldRepeatCount);
    }
    S.EndHorizontalLay();
 
    S.StartHorizontalLay(wxCENTER, true);
    {
-      mTotalTime = S.AddVariableText(_("New selection length: hh:mm:ss"));
+      mTotalTime = S.AddVariableText(_("New selection length: dd:hh:mm:ss"));
    }
    S.EndHorizontalLay();
 }
 
-bool RepeatDialog::TransferDataToWindow()
+bool EffectRepeat::TransferDataToWindow()
 {
    mRepeatCount->ChangeValue(wxString::Format(wxT("%d"), repeatCount));
 
@@ -242,57 +196,38 @@ bool RepeatDialog::TransferDataToWindow()
    return true;
 }
 
-bool RepeatDialog::TransferDataFromWindow()
+bool EffectRepeat::TransferDataFromWindow()
 {
+   if (!mUIParent->Validate())
+   {
+      return false;
+   }
+
    long l;
+
    mRepeatCount->GetValue().ToLong(&l);
 
-   repeatCount = l;
-   if (repeatCount < 1)
-      repeatCount = 1;
-   if (repeatCount > maxCount)
-      repeatCount = maxCount;
+   repeatCount = (int) l;
 
    return true;
 }
 
-void RepeatDialog::DisplayNewTime()
+void EffectRepeat::DisplayNewTime()
 {
-   wxString str;
+   TransferDataFromWindow();
 
-   str = _("New selection length: ");
-   NumericTextCtrl tt(NumericTextCtrl::TIME, this,
-                   wxID_ANY,
-                   wxT(""),
-                   selectionTimeSecs * (repeatCount + 1),
-                   mEffect->mProjectRate,
-                   wxPoint(10000, 10000),  // create offscreen
-                   wxDefaultSize,
-                   true);
-   tt.SetFormatString(tt.GetBuiltinFormat(_("hh:mm:ss")));
-   str += tt.GetString();
+   NumericConverter nc(NumericConverter::TIME,
+                       _("hh:mm:ss"),
+                       (mT1 - mT0) * (repeatCount + 1),
+                       mProjectRate);
+
+   wxString str = _("New selection length: ") + nc.GetString();
 
    mTotalTime->SetLabel(str);
    mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
-void RepeatDialog::OnRepeatTextChange(wxCommandEvent & WXUNUSED(event))
+void EffectRepeat::OnRepeatTextChange(wxCommandEvent & WXUNUSED(evt))
 {
-   TransferDataFromWindow();
-
    DisplayNewTime();
-}
-
-void RepeatDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
-{
-   TransferDataFromWindow();
-
-   int oldRepeatCount = mEffect->repeatCount;
-
-   mEffect->repeatCount = repeatCount;
-
-   // LL:  Preview doesn't work...Effect::Preview needs to allow new length
-   mEffect->Preview();
-
-   mEffect->repeatCount = oldRepeatCount;
 }

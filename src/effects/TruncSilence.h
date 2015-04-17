@@ -17,85 +17,80 @@
 #ifndef __AUDACITY_EFFECT_TRUNC_SILENCE__
 #define __AUDACITY_EFFECT_TRUNC_SILENCE__
 
-#include "Effect.h"
-#include "../Experimental.h"
-
+#include <wx/arrstr.h>
+#include <wx/choice.h>
+#include <wx/event.h>
 #include <wx/list.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
+
+#include "../ShuttleGui.h"
+
+#include "Effect.h"
+
+#define TRUNCATESILENCE_PLUGIN_SYMBOL wxTRANSLATE("Truncate Silence")
 
 // Declaration of RegionList
 struct REGION;
 typedef struct REGION Region;
 WX_DECLARE_LIST(Region, RegionList);
 
-class EffectTruncSilence: public Effect {
-
+class EffectTruncSilence : public Effect
+{
 public:
-
    EffectTruncSilence();
+   virtual ~EffectTruncSilence();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Truncate Silence..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-     std::set<wxString> result;
-     result.insert(wxT("http://audacityteam.org/namespace#TimelineChanger"));
-     return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Truncate Silence"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Truncating Silence..."));
-   }
-   virtual bool Init();
-   virtual void End();
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   virtual EffectType GetType();
 
+   // EffectClientInterface implementation
+
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
+
+   virtual bool Startup();
    virtual bool Process();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
- private:
+private:
+   // EffectTruncSilence implementation
+
    //ToDo ... put BlendFrames in Effects, Project, or other class
    void BlendFrames(float* buffer, int leftIndex, int rightIndex, int blendFrameCount);
    void Intersect(RegionList &dest, const RegionList &src);
 
- private:
+   void OnControlChange(wxCommandEvent & evt);
+   void UpdateUI();
+
+private:
    int mTruncDbChoiceIndex;
-   int mProcessIndex;
-   sampleCount mBlendFrameCount;
+   int mActionIndex;
    double mInitialAllowedSilence;
    double mTruncLongestAllowedSilence;
    double mSilenceCompressPercent;
 
-friend class TruncSilenceDialog;
-};
+   wxArrayString mDbChoices;
 
-//----------------------------------------------------------------------------
-// TruncSilenceDialog
-//----------------------------------------------------------------------------
+   sampleCount mBlendFrameCount;
 
-class TruncSilenceDialog: public EffectDialog
-{
-public:
-   // constructors and destructors
-   TruncSilenceDialog(EffectTruncSilence * effect,
-                      wxWindow * parent);
+   wxChoice *mTruncDbChoice;
+   wxChoice *mActionChoice;
+   wxTextCtrl *mInitialAllowedSilenceT;
+   wxTextCtrl *mTruncLongestAllowedSilenceT;
+   wxTextCtrl *mSilenceCompressPercentT;
 
-   void PopulateOrExchange(ShuttleGui & S);
-   void OnPreview(wxCommandEvent & event);
-   void OnControlChange(wxCommandEvent & event);
-   void UpdateUI();
-
-private:
-   EffectTruncSilence *mEffect;
-   wxStaticText * pWarning;
-
-private:
-   DECLARE_EVENT_TABLE()
-
+   DECLARE_EVENT_TABLE();
 };
 
 #endif

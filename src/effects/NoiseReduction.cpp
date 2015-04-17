@@ -417,6 +417,25 @@ EffectNoiseReduction::~EffectNoiseReduction()
 {
 }
 
+// IdentInterface implementation
+
+wxString EffectNoiseReduction::GetSymbol()
+{
+   return NOISEREDUCTION_PLUGIN_SYMBOL;
+}
+
+wxString EffectNoiseReduction::GetDescription()
+{
+   return wxTRANSLATE("Removes background noise such as fans, tape noise, or hums");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectNoiseReduction::GetType()
+{
+   return EffectTypeProcess;
+}
+
 bool EffectNoiseReduction::Init()
 {
    return true;
@@ -427,37 +446,12 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
    return false;
 }
 
-wxString EffectNoiseReduction::GetEffectName()
-{
-   return wxString(wxTRANSLATE("Noise Reduction..."));
-}
-
-std::set<wxString> EffectNoiseReduction::GetEffectCategories()
-{
-   std::set<wxString> result;
-   result.insert(wxT("http://audacityteam.org/namespace#NoiseReduction"));
-   return result;
-}
-
-wxString EffectNoiseReduction::GetEffectIdentifier()
-{
-   return wxString(wxT("Noise Reduction"));
-}
-
-wxString EffectNoiseReduction::GetEffectAction()
-{
-  if (mSettings->mDoProfile)
-     return wxString(_("Creating Noise Profile"));
-  else
-     return wxString(_("Reducing Noise"));
-}
-
-bool EffectNoiseReduction::PromptUser()
+bool EffectNoiseReduction::PromptUser(wxWindow *parent, bool isBatch)
 {
    // We may want to twiddle the levels if we are setting
    // from an automation dialog, the only case in which we can
    // get here without any wavetracks.
-   return mSettings->PromptUser(this, mParent,
+   return mSettings->PromptUser(this, parent,
       (mStatistics.get() != 0), (GetNumWaveTracks() == 0));
 }
 
@@ -593,13 +587,6 @@ bool EffectNoiseReduction::Settings::Validate() const
       return false;
    }
 
-   return true;
-}
-
-bool EffectNoiseReduction::TransferParameters( Shuttle & WXUNUSED(shuttle) )
-{
-   //shuttle.TransferDouble(wxT("Gain"), mNoiseGain, 0.0);
-   //shuttle.TransferDouble(wxT("Freq"), mFreqSmoothingHz, 0.0);
    return true;
 }
 
@@ -1540,7 +1527,7 @@ EffectNoiseReduction::Dialog::Dialog
 (EffectNoiseReduction *effect,
  EffectNoiseReduction::Settings *settings,
  wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings)
-   : EffectDialog( parent, _("Noise Reduction"), PROCESS_EFFECT)
+   : EffectDialog( parent, _("Noise Reduction"), EffectTypeProcess)
    , m_pEffect(effect)
    , m_pSettings(settings) // point to
    , mTempSettings(*settings)  // copy

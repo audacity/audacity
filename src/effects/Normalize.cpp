@@ -12,11 +12,6 @@
 \class EffectNormalize
 \brief An Effect.
 
-*//****************************************************************//**
-
-\class NormalizeDialog
-\brief Dialog used with EffectNormalize
-
 *//*******************************************************************/
 
 
@@ -24,122 +19,128 @@
 
 #include <math.h>
 
-#include "Normalize.h"
-#include "../ShuttleGui.h"
-#include "../Internat.h"
-#include "../WaveTrack.h"
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../Shuttle.h"
-
-#include <wx/button.h>
-#include <wx/checkbox.h>
-#include <wx/defs.h>
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textdlg.h>
+#include <wx/valgen.h>
 
-#define NORMALIZE_DB_MIN -145
-#define NORMALIZE_DB_MAX 60
+#include "../Internat.h"
+#include "../Prefs.h"
+#include "../ShuttleGui.h"
+#include "../WaveTrack.h"
+#include "../widgets/valnum.h"
+
+#include "Normalize.h"
+
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name       Type     Key                                 Def      Min      Max   Scale
+Param( Level,     double,  wxTRANSLATE("Level"),               0.0,     -145.0,  0.0,  1  );
+Param( RemoveDC,  bool,    wxTRANSLATE("RemoveDcOffset"),      true,    false,   true, 1  );
+Param( ApplyGain, bool,    wxTRANSLATE("ApplyGain"),           true,    false,   true, 1  );
+Param( StereoInd, bool,    wxTRANSLATE("StereoIndependent"),   false,   false,   true, 1  );
+
+BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
+   EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)
+   EVT_TEXT(wxID_ANY, EffectNormalize::OnUpdateUI)
+END_EVENT_TABLE()
 
 EffectNormalize::EffectNormalize()
 {
-   Init();
+   mLevel = MIN_Level;
+   mDC = DEF_RemoveDC;
+   mGain = DEF_ApplyGain;
+   mStereoInd = DEF_StereoInd;
 }
 
-static double gFrameSum; //lda odd ... having this as member var crashed on exit
-
-bool EffectNormalize::Init()
+EffectNormalize::~EffectNormalize()
 {
-   int boolProxy = gPrefs->Read(wxT("/Effects/Normalize/RemoveDcOffset"), 1);
-   mDC = (boolProxy == 1);
-   boolProxy = gPrefs->Read(wxT("/Effects/Normalize/Normalize"), 1);
-   mGain = (boolProxy == 1);
-   gPrefs->Read(wxT("/Effects/Normalize/Level"), &mLevel, -1.0);
-   if(mLevel > 0.0)  // this should never happen
-      mLevel = -mLevel;
-   boolProxy = gPrefs->Read(wxT("/Effects/Normalize/StereoIndependent"), 0L);
-   mStereoInd = (boolProxy == 1);
+}
+
+// IdentInterface implementation
+
+wxString EffectNormalize::GetSymbol()
+{
+   return NORMALIZE_PLUGIN_SYMBOL;
+}
+
+wxString EffectNormalize::GetDescription()
+{
+   return wxTRANSLATE("Sets the peak amplitude of a one or more tracks");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectNormalize::GetType()
+{
+   return EffectTypeProcess;
+}
+
+// EffectClientInterface implementation
+
+bool EffectNormalize::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_Level, mLevel);
+   parms.Write(KEY_ApplyGain, mGain);
+   parms.Write(KEY_RemoveDC, mDC);
+   parms.Write(KEY_StereoInd, mStereoInd);
+
    return true;
 }
 
-wxString EffectNormalize::GetEffectDescription() // useful only after parameter values have been set
+bool EffectNormalize::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   // Note: This is useful only after ratio has been set.
-   wxString strResult =
-      /* i18n-hint: First %s is the effect name, 2nd and 3rd are either true or
-       * false (translated below) if those options were selected */
-      wxString::Format(_("Applied effect: %s remove dc offset = %s, normalize amplitude = %s, stereo independent %s"),
-                        this->GetEffectName().c_str(),
-                        /* i18n-hint: true here means that the option was
-                         * selected. Opposite false if not selected */
-                        mDC ? _("true") : _("false"),
-                        mGain ? _("true") : _("false"),
-                        mStereoInd ? _("true") : _("false"));
-   if (mGain)
-      strResult += wxString::Format(_(", maximum amplitude = %.1f dB"), mLevel);
+   ReadAndVerifyDouble(Level);
+   ReadAndVerifyBool(ApplyGain);
+   ReadAndVerifyBool(RemoveDC);
+   ReadAndVerifyBool(StereoInd);
 
-   return strResult;
-}
+   mLevel = Level;
+   mGain = ApplyGain;
+   mDC = RemoveDC;
+   mStereoInd = StereoInd;
 
-bool EffectNormalize::TransferParameters( Shuttle & shuttle )
-{
-   shuttle.TransferBool( wxT("ApplyGain"), mGain, true );
-   shuttle.TransferBool( wxT("RemoveDcOffset"), mDC, true );
-   shuttle.TransferDouble( wxT("Level"), mLevel, 0.0);
-   shuttle.TransferBool( wxT("StereoIndependent"), mStereoInd, false );
    return true;
 }
+
+// Effect implementation
 
 bool EffectNormalize::CheckWhetherSkipEffect()
 {
-   bool rc = ((mGain == false) && (mDC == false));
-   return rc;
+   return ((mGain == false) && (mDC == false));
 }
 
-void EffectNormalize::End()
+bool EffectNormalize::Startup()
 {
-   bool bValidate;
-   gPrefs->Read(wxT("/Validate/Enabled"), &bValidate, false ); // this never get written!  Why is this here? MJS
-   if( bValidate )
+   wxString base = wxT("/Effects/Normalize/");
+
+   // Migrate settings from 2.1.0 or before
+
+   // Already migrated, so bail
+   if (gPrefs->Exists(base + wxT("Migrated")))
    {
-      int checkOffset = abs((int)(mOffset * 1000.0));
-      gPrefs->Write(wxT("/Validate/Norm_Offset"), checkOffset);
-      int checkMultiplier = abs((int)(mMult * 1000.0));
-      gPrefs->Write(wxT("/Validate/Norm_Multiplier"), checkMultiplier);
-      int checkFrameSum = (int)gFrameSum;
-      gPrefs->Write(wxT("/Validate/Norm_FrameSum"), checkFrameSum);
+      return true;
+   }
+
+   // Load the old "current" settings
+   if (gPrefs->Exists(base))
+   {
+      int boolProxy = gPrefs->Read(base + wxT("RemoveDcOffset"), 1);
+      mDC = (boolProxy == 1);
+      boolProxy = gPrefs->Read(base + wxT("Normalize"), 1);
+      mGain = (boolProxy == 1);
+      gPrefs->Read(base + wxT("Level"), &mLevel, -1.0);
+      if(mLevel > 0.0)  // this should never happen
+         mLevel = -mLevel;
+      boolProxy = gPrefs->Read(base + wxT("StereoIndependent"), 0L);
+      mStereoInd = (boolProxy == 1);
+
+      SaveUserPreset(GetCurrentSettingsGroup());
+
+      // Do not migrate again
+      gPrefs->Write(base + wxT("Migrated"), true);
       gPrefs->Flush();
    }
-}
 
-bool EffectNormalize::PromptUser()
-{
-   NormalizeDialog dlog(this, mParent);
-   dlog.mGain = mGain;
-   dlog.mDC = mDC;
-   dlog.mLevel = mLevel;
-   dlog.mStereoInd = mStereoInd;
-   dlog.TransferDataToWindow();
-
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-
-   if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
-
-   mGain = dlog.mGain;
-   mDC = dlog.mDC;
-   mLevel = dlog.mLevel;
-   mStereoInd = dlog.mStereoInd;
-   gPrefs->Write(wxT("/Effects/Normalize/RemoveDcOffset"), mDC);
-   gPrefs->Write(wxT("/Effects/Normalize/Normalize"), mGain);
-   gPrefs->Write(wxT("/Effects/Normalize/Level"), mLevel);
-   gPrefs->Write(wxT("/Effects/Normalize/StereoIndependent"), mStereoInd);
-
-   return gPrefs->Flush();
+   return true;
 }
 
 bool EffectNormalize::Process()
@@ -150,8 +151,8 @@ bool EffectNormalize::Process()
    float ratio;
    if( mGain )
       ratio = pow(10.0,TrapDouble(mLevel, // same value used for all tracks
-                               NORMALIZE_DB_MIN,
-                               NORMALIZE_DB_MAX)/20.0);
+                               MIN_Level,
+                               MAX_Level)/20.0);
    else
       ratio = 1.0;
 
@@ -261,6 +262,76 @@ bool EffectNormalize::Process()
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
+
+void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
+{
+   mCreating = true;
+
+   S.StartVerticalLay(0);
+   {
+      S.StartMultiColumn(2, wxALIGN_CENTER);
+      {
+         S.StartVerticalLay(false);
+         {
+            mDCCheckBox = S.AddCheckBox(_("Remove DC offset (center on 0.0 vertically)"),
+                                        mDC ? wxT("true") : wxT("false"));
+            mDCCheckBox->SetValidator(wxGenericValidator(&mDC));
+
+            S.StartHorizontalLay(wxALIGN_CENTER, false);
+            {
+               mGainCheckBox = S.AddCheckBox(_("Normalize maximum amplitude to"),
+                                             mGain ? wxT("true") : wxT("false"));
+               mGainCheckBox->SetValidator(wxGenericValidator(&mGain));
+
+               FloatingPointValidator<double> vldLevel(1, &mLevel);
+               vldLevel.SetRange(MIN_Level, MAX_Level);
+               mLevelTextCtrl = S.AddTextBox(wxT(""), wxT(""), 10);
+               mLevelTextCtrl->SetName(_("Maximum amplitude dB"));
+               mLevelTextCtrl->SetValidator(vldLevel);
+               mLeveldB = S.AddVariableText(_("dB"), false,
+                                            wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               mWarning = S.AddVariableText( wxT(""), false,
+                                            wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+            }
+            S.EndHorizontalLay();
+
+         
+            mStereoIndCheckBox = S.AddCheckBox(_("Normalize stereo channels independently"),
+                                               mStereoInd ? wxT("true") : wxT("false"));
+            mStereoIndCheckBox->SetValidator(wxGenericValidator(&mStereoInd));
+         }
+         S.EndVerticalLay();
+      }
+      S.EndMultiColumn();
+   }
+   S.EndVerticalLay();
+
+   mCreating = false;
+}
+
+bool EffectNormalize::TransferDataToWindow()
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
+   UpdateUI();
+
+   return true;
+}
+
+bool EffectNormalize::TransferDataFromWindow()
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   return true;
+}
+
+// EffectNormalize implementation
 
 void EffectNormalize::AnalyseTrack(WaveTrack * track, wxString msg)
 {
@@ -427,160 +498,29 @@ void EffectNormalize::ProcessData(float *buffer, sampleCount len)
    for(i=0; i<len; i++) {
       float adjFrame = (buffer[i] + mOffset) * mMult;
       buffer[i] = adjFrame;
-      gFrameSum += fabs(adjFrame);  //lda: validation.
    }
 }
 
-//----------------------------------------------------------------------------
-// NormalizeDialog
-//----------------------------------------------------------------------------
-
-#define ID_DC_REMOVE 10002
-#define ID_NORMALIZE_AMPLITUDE 10003
-#define ID_LEVEL_TEXT 10004
-
-BEGIN_EVENT_TABLE(NormalizeDialog, EffectDialog)
-   EVT_CHECKBOX(ID_DC_REMOVE, NormalizeDialog::OnUpdateUI)
-   EVT_CHECKBOX(ID_NORMALIZE_AMPLITUDE, NormalizeDialog::OnUpdateUI)
-   EVT_BUTTON(ID_EFFECT_PREVIEW, NormalizeDialog::OnPreview)
-   EVT_TEXT(ID_LEVEL_TEXT, NormalizeDialog::OnUpdateUI)
-END_EVENT_TABLE()
-
-NormalizeDialog::NormalizeDialog(EffectNormalize *effect,
-                                 wxWindow * parent)
-:  EffectDialog(parent, _("Normalize"), PROCESS_EFFECT),
-   mEffect(effect)
+void EffectNormalize::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
 {
-   mDC = false;
-   mGain = false;
-   mLevel = 0;
-   mStereoInd = false;
-
-   Init();
+   UpdateUI();
 }
 
-void NormalizeDialog::PopulateOrExchange(ShuttleGui & S)
+void EffectNormalize::UpdateUI()
 {
-   wxTextValidator vld(wxFILTER_NUMERIC);
-
-   S.StartTwoColumn();
+   if (!mUIParent->TransferDataFromWindow())
    {
-      S.StartVerticalLay(false);
-      {
-         mDCCheckBox =
-            S.Id(ID_DC_REMOVE).
-               AddCheckBox(_("Remove DC offset (center on 0.0 vertically)"),
-                           mDC ? wxT("true") : wxT("false"));
-
-         S.StartHorizontalLay(wxALIGN_CENTER, false);
-         {
-            mGainCheckBox =
-               S.Id(ID_NORMALIZE_AMPLITUDE).
-                  AddCheckBox(_("Normalize maximum amplitude to"),
-                              mGain ? wxT("true") : wxT("false"));
-
-            mLevelTextCtrl = S.Id(ID_LEVEL_TEXT).AddTextBox(wxT(""), wxT(""), 10);
-            mLevelTextCtrl->SetValidator(vld);
-            mLevelTextCtrl->SetName(_("Maximum amplitude dB"));
-            mLeveldB = S.AddVariableText(_("dB"), false,
-                                         wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-            mWarning = S.AddVariableText( wxT(""), false,
-                                         wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-         }
-         S.EndHorizontalLay();
-         mStereoIndCheckBox = S.AddCheckBox(_("Normalize stereo channels independently"),
-                                     mStereoInd ? wxT("true") : wxT("false"));
-      }
-      S.EndVerticalLay();
+      mWarning->SetLabel(_(".  Maximum 0dB."));
+      EnableApply(false);
+      return;
    }
-   S.EndTwoColumn();
-}
+   mWarning->SetLabel(wxT(""));
 
-bool NormalizeDialog::TransferDataToWindow()
-{
-   mGainCheckBox->SetValue(mGain);
-   mDCCheckBox->SetValue(mDC);
-   mLevelTextCtrl->SetValue(Internat::ToDisplayString(mLevel, 1));
-   mStereoIndCheckBox->SetValue(mStereoInd);
-
-   UpdateUI();
-
-   TransferDataFromWindow();
-
-   return true;
-}
-
-bool NormalizeDialog::TransferDataFromWindow()
-{
-   mGain = mGainCheckBox->GetValue();
-   mDC = mDCCheckBox->GetValue();
-   mLevel = Internat::CompatibleToDouble(mLevelTextCtrl->GetValue());
-   mStereoInd = mStereoIndCheckBox->GetValue();
-
-   return true;
-}
-
-void NormalizeDialog::OnUpdateUI(wxCommandEvent& WXUNUSED(event))
-{
-   UpdateUI();
-}
-
-void NormalizeDialog::UpdateUI()
-{
    // Disallow level stuff if not normalizing
-   bool enable = mGainCheckBox->GetValue();
-   mLevelTextCtrl->Enable(enable);
-   mLeveldB->Enable(enable);
-   mStereoIndCheckBox->Enable(enable);
+   mLevelTextCtrl->Enable(mGain);
+   mLeveldB->Enable(mGain);
+   mStereoIndCheckBox->Enable(mGain);
 
    // Disallow OK/Preview if doing nothing
-   wxButton *ok = (wxButton *) FindWindow(wxID_OK);
-   wxButton *preview = (wxButton *) FindWindow(ID_EFFECT_PREVIEW);
-   bool dc = mDCCheckBox->GetValue();
-   if( !enable && !dc )
-   {
-      ok->Enable(false);
-      preview->Enable(false);
-   }
-   else
-   {
-      ok->Enable(true);
-      preview->Enable(true);
-   }
-
-   // Disallow OK/Preview if requested level is > 0
-   wxString val = mLevelTextCtrl->GetValue();
-   double r;
-   val.ToDouble(&r);
-   if(r > 0.0)
-   {
-      ok->Enable(false);
-      preview->Enable(false);
-      mWarning->SetLabel(_(".  Maximum 0dB."));
-   }
-   else
-      mWarning->SetLabel(wxT(""));
-}
-
-void NormalizeDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
-{
-   TransferDataFromWindow();
-
-   // Save & restore parameters around Preview, because we didn't do OK.
-   bool oldGain = mEffect->mGain;
-   bool oldDC = mEffect->mDC;
-   double oldLevel = mEffect->mLevel;
-   bool oldStereoInd = mEffect->mStereoInd;
-
-   mEffect->mGain = mGain;
-   mEffect->mDC = mDC;
-   mEffect->mLevel = mLevel;
-   mEffect->mStereoInd = mStereoInd;
-
-   mEffect->Preview();
-
-   mEffect->mGain = oldGain;
-   mEffect->mDC = oldDC;
-   mEffect->mLevel = oldLevel;
-   mEffect->mStereoInd = oldStereoInd;
+   EnableApply(mGain || mDC);
 }

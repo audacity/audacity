@@ -9,50 +9,269 @@
 *******************************************************************//**
 
 \class EffectDtmf
-\brief An effect for the "Generator" menu to generate DTMF tones
+\brief An effect that generates DTMF tones
 
 *//*******************************************************************/
 
-// For compilers that support precompilation, includes "wx/wx.h".
-#include <wx/wxprec.h>
-
-#ifndef WX_PRECOMP
-// Include your minimal set of headers here, or wx.h
-#include <wx/wx.h>
-#endif
-
-#include "DtmfGen.h"
 #include "../Audacity.h"
-#include "../Project.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../widgets/NumericTextCtrl.h"
 
-#include <wx/slider.h>
-#include <wx/button.h>
-#include <wx/choice.h>
-#include <wx/radiobox.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
+#include <wx/intl.h>
+#include <wx/valgen.h>
 #include <wx/valtext.h>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846  /* pi */
-#endif
-#define DUTY_MIN 0
-#define DUTY_MAX 1000
-#define DUTY_SCALE (DUTY_MAX/100.0) // ensure float division
-#define FADEINOUT 250.0    // used for fadein/out needed to remove clicking noise
-#define AMP_MIN 0
-#define AMP_MAX 1
+#include "../Prefs.h"
+#include "../widgets/valnum.h"
+
+#include "DtmfGen.h"
+
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name          Type        Key                        Def               Min      Max      Scale
+Param( Sequence,     wxString,   wxTRANSLATE("Sequence"),   wxT("audacity"),  wxT(""), wxT(""), wxT(""));
+Param( DutyCycle,    double,     wxTRANSLATE("Duty Cycle"), 55.0,             0.0,     100.0,   10.0   );
+Param( Amplitude,    double,     wxTRANSLATE("Amplitude"),  0.0,              0.0,     1.0,     1      );
+
+static const double kFadeInOut = 250.0; // used for fadein/out needed to remove clicking noise
+
+const static wxChar *kSymbols[] =
+{
+   wxT("0"), wxT("1"), wxT("2"), wxT("3"),
+   wxT("4"), wxT("5"), wxT("6"), wxT("7"),
+   wxT("8"), wxT("9"), wxT("*"), wxT("#"),
+   wxT("A"), wxT("B"), wxT("C"), wxT("D"),
+   wxT("a"), wxT("b"), wxT("c"), wxT("d"),
+   wxT("e"), wxT("f"), wxT("g"), wxT("h"),
+   wxT("i"), wxT("j"), wxT("k"), wxT("l"),
+   wxT("m"), wxT("n"), wxT("o"), wxT("p"),
+   wxT("q"), wxT("r"), wxT("s"), wxT("t"),
+   wxT("u"), wxT("v"), wxT("w"), wxT("x"),
+   wxT("y"), wxT("z")
+};
 
 //
 // EffectDtmf
 //
 
-bool EffectDtmf::Init()
+BEGIN_EVENT_TABLE(EffectDtmf, wxEvtHandler)
+    EVT_TEXT(wxID_ANY, EffectDtmf::OnText)
+    EVT_SLIDER(wxID_ANY, EffectDtmf::OnSlider)
+END_EVENT_TABLE()
+
+EffectDtmf::EffectDtmf()
+{
+   dtmfDutyCycle = DEF_DutyCycle;
+   dtmfAmplitude = DEF_Amplitude;
+   dtmfString = DEF_Sequence;
+   mDuration = GetDefaultDuration();
+   dtmfTone = 0.0;
+   dtmfSilence = 0.0;
+}
+
+EffectDtmf::~EffectDtmf()
+{
+}
+
+// IdentInterface implementation
+
+wxString EffectDtmf::GetSymbol()
+{
+   return DTMFTONES_PLUGIN_SYMBOL;
+}
+
+wxString EffectDtmf::GetDescription()
+{
+   return wxTRANSLATE("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectDtmf::GetType()
+{
+   return EffectTypeGenerate;
+}
+
+// EffectClientInterface implementation
+
+int EffectDtmf::GetAudioOutCount()
+{
+   return 1;
+}
+
+bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+{
+   // all dtmf sequence durations in samples from seconds
+   // MJS: Note that mDuration is in seconds but will have been quantised to the units of the TTC.
+   // If this was 'samples' and the project rate was lower than the track rate,
+   // extra samples may get created as mDuration may now be > mT1 - mT0;
+   // However we are making our best efforts at creating what was asked for.
+
+   sampleCount nT0 = (sampleCount)floor(mT0 * mSampleRate + 0.5);
+   sampleCount nT1 = (sampleCount)floor((mT0 + mDuration) * mSampleRate + 0.5);
+   numSamplesSequence = nT1 - nT0;  // needs to be exact number of samples selected
+
+   //make under-estimates if anything, and then redistribute the few remaining samples
+   numSamplesTone = (sampleCount)floor(dtmfTone * mSampleRate);
+   numSamplesSilence = (sampleCount)floor(dtmfSilence * mSampleRate);
+
+   // recalculate the sum, and spread the difference - due to approximations.
+   // Since diff should be in the order of "some" samples, a division (resulting in zero)
+   // is not sufficient, so we add the additional remaining samples in each tone/silence block,
+   // at least until available.
+   diff = numSamplesSequence - (dtmfNTones*numSamplesTone) - (dtmfNTones-1)*numSamplesSilence;
+   while (diff > 2*dtmfNTones - 1) {   // more than one per thingToBeGenerated
+      // in this case, both numSamplesTone and numSamplesSilence would change, so it makes sense
+      //  to recalculate diff here, otherwise just keep the value we already have
+
+      // should always be the case that dtmfNTones>1, as if 0, we don't even start processing,
+      // and with 1 there is no difference to spread (no silence slot)...
+      wxASSERT(dtmfNTones > 1);
+      numSamplesTone += (diff/(dtmfNTones));
+      numSamplesSilence += (diff/(dtmfNTones-1));
+      diff = numSamplesSequence - (dtmfNTones*numSamplesTone) - (dtmfNTones-1)*numSamplesSilence;
+   }
+   wxASSERT(diff >= 0);  // should never be negative
+
+   curSeqPos = -1; // pointer to string in dtmfString
+   isTone = false;
+   numRemaining = 0;
+
+   return true;
+}
+
+sampleCount EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, sampleCount size)
+{
+   float *buffer = outbuf[0];
+   sampleCount processed = 0;
+
+   // for the whole dtmf sequence, we will be generating either tone or silence
+   // according to a bool value, and this might be done in small chunks of size
+   // 'block', as a single tone might sometimes be larger than the block
+   // tone and silence generally have different duration, thus two generation blocks
+   //
+   // Note: to overcome a 'clicking' noise introduced by the abrupt transition from/to
+   // silence, I added a fade in/out of 1/250th of a second (4ms). This can still be
+   // tweaked but gives excellent results at 44.1kHz: I haven't tried other freqs.
+   // A problem might be if the tone duration is very short (<10ms)... (?)
+   //
+   // One more problem is to deal with the approximations done when calculating the duration
+   // of both tone and silence: in some cases the final sum might not be same as the initial
+   // duration. So, to overcome this, we had a redistribution block up, and now we will spread
+   // the remaining samples in every bin in order to achieve the full duration: test case was
+   // to generate an 11 tone DTMF sequence, in 4 seconds, and with DutyCycle=75%: after generation
+   // you ended up with 3.999s or in other units: 3 seconds and 44097 samples.
+   //
+   while (size)
+   {
+      if (numRemaining == 0)
+      {
+         isTone = !isTone;
+
+         if (isTone)
+         {
+            curSeqPos++;
+            numRemaining = numSamplesTone;
+            curTonePos = 0;
+         }
+         else
+         {
+            numRemaining = numSamplesSilence;
+         }
+
+         // the statement takes care of extracting one sample from the diff bin and
+         // adding it into the current block until depletion
+         numRemaining += (diff-- > 0 ? 1 : 0);         
+      }
+
+      sampleCount len = wxMin(numRemaining, size);
+
+      if (isTone)
+      {
+         // generate the tone and append
+         MakeDtmfTone(buffer, len, mSampleRate, dtmfString[curSeqPos], curTonePos, numSamplesTone, dtmfAmplitude);
+         curTonePos += len;
+      }
+      else
+      {
+         memset(buffer, 0, sizeof(float) * len);
+      }
+
+      numRemaining -= len;
+
+      buffer += len;
+      size -= len;
+      processed += len;
+   }
+
+   return processed;
+}
+
+bool EffectDtmf::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_Sequence, dtmfString);
+   parms.Write(KEY_DutyCycle, dtmfDutyCycle);
+   parms.Write(KEY_Amplitude, dtmfAmplitude);
+
+   return true;
+}
+
+bool EffectDtmf::SetAutomationParameters(EffectAutomationParameters & parms)
+{
+   ReadAndVerifyDouble(DutyCycle);
+   ReadAndVerifyDouble(Amplitude);
+   ReadAndVerifyString(Sequence);
+
+   wxString symbols;
+   for (unsigned int i = 0; i < WXSIZEOF(kSymbols); i++)
+   {
+      symbols += kSymbols[i];
+   }
+
+   if (Sequence.find_first_not_of(symbols) != wxString::npos)
+   {
+      return false;
+   }
+
+   dtmfDutyCycle = DutyCycle;
+   dtmfAmplitude = Amplitude;
+   dtmfString = Sequence;
+   
+   Recalculate();
+
+   return true;
+}
+
+// Effect implementation
+
+bool EffectDtmf::Startup()
+{
+   wxString base = wxT("/Effects/DtmfGen/");
+
+   // Migrate settings from 2.1.0 or before
+
+   // Already migrated, so bail
+   if (gPrefs->Exists(base + wxT("Migrated")))
+   {
+      return true;
+   }
+
+   // Load the old "current" settings
+   if (gPrefs->Exists(base))
+   {
+      gPrefs->Read(base + wxT("String"), &dtmfString, wxT("audacity"));
+      gPrefs->Read(base + wxT("DutyCycle"), &dtmfDutyCycle, 550L);
+      gPrefs->Read(base + wxT("Amplitude"), &dtmfAmplitude, 0.8f);
+
+      SaveUserPreset(GetCurrentSettingsGroup());
+
+      // Do not migrate again
+      gPrefs->Write(base + wxT("Migrated"), true);
+      gPrefs->Flush();
+   }
+
+   return true;
+}
+
+void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
 {
    // dialog will be passed values from effect
    // Effect retrieves values from saved config
@@ -61,75 +280,151 @@ bool EffectDtmf::Init()
    // value from saved config: this is useful is user wants to
    // replace selection with dtmf sequence
 
+   bool isSelection = false;
    if (mT1 > mT0) {
       // there is a selection: let's fit in there...
       // MJS: note that this is just for the TTC and is independent of the track rate
       // but we do need to make sure we have the right number of samples at the project rate
-      AudacityProject *p = GetActiveProject();
-      double projRate = p->GetRate();
-      double quantMT0 = QUANTIZED_TIME(mT0, projRate);
-      double quantMT1 = QUANTIZED_TIME(mT1, projRate);
+      double quantMT0 = QUANTIZED_TIME(mT0, mProjectRate);
+      double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
       mDuration = quantMT1 - quantMT0;
-      mIsSelection = true;
-   } else {
-      // retrieve last used values
-      gPrefs->Read(wxT("/Effects/DtmfGen/SequenceDuration"), &mDuration, 1L);
-      mIsSelection = false;
+      isSelection = true;
    }
-   gPrefs->Read(wxT("/Effects/DtmfGen/String"), &dtmfString, wxT("audacity"));
-   gPrefs->Read(wxT("/Effects/DtmfGen/DutyCycle"), &dtmfDutyCycle, 550L);
-   gPrefs->Read(wxT("/Effects/DtmfGen/Amplitude"), &dtmfAmplitude, 0.8f);
 
-   dtmfNTones = wxStrlen(dtmfString);
+   S.AddSpace(0, 5);
+   S.StartMultiColumn(2, wxCENTER);
+   {
+      wxTextValidator vldDtmf(wxFILTER_INCLUDE_CHAR_LIST, &dtmfString);
+      vldDtmf.SetIncludes(wxArrayString(WXSIZEOF(kSymbols), kSymbols));
+      S.AddTextBox(_("DTMF sequence:"), wxT(""), 10)->SetValidator(vldDtmf);
 
-   return true;
+      FloatingPointValidator<double> vldAmp(1, &dtmfAmplitude);
+      vldAmp.SetRange(MIN_Amplitude, MAX_Amplitude);
+      S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 10)->SetValidator(vldAmp);
+
+      S.AddPrompt(_("Duration:"));
+      mDtmfDurationT = new
+         NumericTextCtrl(NumericConverter::TIME,
+                         S.GetParent(),
+                         wxID_ANY,
+      /* use this instead of "seconds" because if a selection is passed to the
+      * effect, I want it (mDuration) to be used as the duration, and with
+      * "seconds" this does not always work properly. For example, it rounds
+      * down to zero... */
+                         isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
+                         mDuration,
+                         mProjectRate,
+                         wxDefaultPosition,
+                         wxDefaultSize,
+                         true);
+      mDtmfDurationT->SetName(_("Duration"));
+      mDtmfDurationT->EnableMenu();
+      S.AddWindow(mDtmfDurationT);
+
+      S.AddFixedText(_("Tone/silence ratio:"), false);
+      S.SetStyle(wxSL_HORIZONTAL | wxEXPAND);
+      mDtmfDutyS = S.AddSlider(wxT(""),
+                               dtmfDutyCycle * SCL_DutyCycle,
+                               MAX_DutyCycle * SCL_DutyCycle, 
+                               MIN_DutyCycle * SCL_DutyCycle);
+      S.SetSizeHints(-1,-1);
+   }
+   S.EndMultiColumn();
+
+   S.StartMultiColumn(2, wxCENTER);
+   {
+      S.AddFixedText(_("Duty cycle:"), false);
+      mDtmfDutyT = S.AddVariableText(wxString::Format(wxT("%.1f %%"), dtmfDutyCycle), false);
+      
+      S.AddFixedText(_("Tone duration:"), false);
+      mDtmfSilenceT = S.AddVariableText(wxString::Format(wxString(wxT("%.0f ")) + _("ms"), dtmfTone * 1000.0), false);
+
+      S.AddFixedText(_("Silence duration:"), false);
+      mDtmfToneT = S.AddVariableText(wxString::Format(wxString(wxT("%0.f ")) + _("ms"), dtmfSilence * 1000.0), false);
+   }
+   S.EndMultiColumn();
 }
 
-bool EffectDtmf::PromptUser()
+bool EffectDtmf::TransferDataToWindow()
 {
-   DtmfDialog dlog(this, mParent,
-      /* i18n-hint: DTMF stands for 'Dial Tone Modulation Format'.  Leave as is.*/
-      _("DTMF Tone Generator"));
+   Recalculate();
 
-   Init();
-
-   // Initialize dialog locals
-   dlog.dIsSelection = mIsSelection;
-   dlog.dString = dtmfString;
-   dlog.dDutyCycle = dtmfDutyCycle;
-   dlog.dDuration = mDuration;
-   dlog.dAmplitude = dtmfAmplitude;
-
-   // start dialog
-   dlog.Init();
-   dlog.ShowModal();
-
-   if (dlog.GetReturnCode() == wxID_CANCEL)
+   if (!mUIParent->TransferDataToWindow())
+   {
       return false;
+   }
 
-   // if there was an OK, retrieve values
-   dtmfString = dlog.dString;
-   dtmfDutyCycle = dlog.dDutyCycle;
-   mDuration = dlog.dDuration;
-   dtmfAmplitude = dlog.dAmplitude;
+   mDtmfDutyS->SetValue(dtmfDutyCycle * SCL_DutyCycle);
+   mDtmfDurationT->SetValue(mDuration);
 
-   dtmfNTones = dlog.dNTones;
-   dtmfTone = dlog.dTone;
-   dtmfSilence = dlog.dSilence;
+   UpdateUI();
 
    return true;
 }
 
-
-bool EffectDtmf::TransferParameters( Shuttle & WXUNUSED(shuttle) )
+bool EffectDtmf::TransferDataFromWindow()
 {
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   dtmfDutyCycle = (double) mDtmfDutyS->GetValue() / SCL_DutyCycle;
+   mDuration = mDtmfDurationT->GetValue();
+
+   // recalculate to make sure all values are up-to-date. This is especially
+   // important if the user did not change any values in the dialog
+   Recalculate();
+
    return true;
 }
 
+// EffectDtmf implementation
+
+void EffectDtmf::Recalculate()
+{
+   // remember that dtmfDutyCycle is in range (0.0-100.0)
+
+   dtmfNTones = (int) dtmfString.Length();
+
+   if (dtmfNTones==0) {
+      // no tones, all zero: don't do anything
+      // this should take care of the case where user got an empty
+      // dtmf sequence into the generator: track won't be generated
+      mDuration = 0;
+      dtmfTone = 0;
+      dtmfSilence = mDuration;
+   } else {
+      if (dtmfNTones==1) {
+        // single tone, as long as the sequence
+          dtmfTone = mDuration;
+          dtmfSilence = 0;
+      } else {
+         // Don't be fooled by the fact that you divide the sequence into dtmfNTones:
+         // the last slot will only contain a tone, not ending with silence.
+         // Given this, the right thing to do is to divide the sequence duration
+         // by dtmfNTones tones and (dtmfNTones-1) silences each sized according to the duty
+         // cycle: original division was:
+         // slot=mDuration / (dtmfNTones*(dtmfDutyCycle/MAX_DutyCycle)+(dtmfNTones-1)*(1.0-dtmfDutyCycle/MAX_DutyCycle))
+         // which can be simplified in the one below.
+         // Then just take the part that belongs to tone or silence.
+         //
+         double slot = mDuration / ((double)dtmfNTones + (dtmfDutyCycle / 100.0) - 1);
+         dtmfTone = slot * (dtmfDutyCycle / 100.0); // seconds
+         dtmfSilence = slot * (1.0 - (dtmfDutyCycle / 100.0)); // seconds
+
+         // Note that in the extremes we have:
+         // - dutyCycle=100%, this means no silence, so each tone will measure mDuration/dtmfNTones
+         // - dutyCycle=0%, this means no tones, so each silence slot will measure mDuration/(NTones-1)
+         // But we always count:
+         // - dtmfNTones tones
+         // - dtmfNTones-1 silences
+      }
+   }
+}
 
 bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar tone, sampleCount last, sampleCount total, float amplitude)
 {
-
 /*
   --------------------------------------------
               1209 Hz 1336 Hz 1477 Hz 1633 Hz
@@ -232,7 +527,7 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
 
    // generate a fade-in of duration 1/250th of second
    if (last==0) {
-      A=(fs/FADEINOUT);
+      A=(fs/kFadeInOut);
       for(sampleCount i=0; i<A; i++) {
          buffer[i]*=i/A;
       }
@@ -242,8 +537,8 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
    if (last==total-len) {
       // we are at the last buffer of 'len' size, so, offset is to
       // backup 'A' samples, from 'len'
-      A=(fs/FADEINOUT);
-      sampleCount offset=len-(sampleCount)(fs/FADEINOUT);
+      A=(fs/kFadeInOut);
+      sampleCount offset=len-(sampleCount)(fs/kFadeInOut);
       // protect against negative offset, which can occur if too a
       // small selection is made
       if (offset>=0) {
@@ -255,336 +550,30 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, sampleCount len, float fs, wxChar t
    return true;
 }
 
-bool EffectDtmf::GenerateTrack(WaveTrack *tmp,
-                               const WaveTrack &track,
-                               int ntrack)
+void EffectDtmf::UpdateUI(void)
 {
-   bool bGoodResult = true;
-
-   // all dtmf sequence durations in samples from seconds
-   // MJS: Note that mDuration is in seconds but will have been quantised to the units of the TTC.
-   // If this was 'samples' and the project rate was lower than the track rate,
-   // extra samples may get created as mDuration may now be > mT1 - mT0;
-   // However we are making our best efforts at creating what was asked for.
-   sampleCount nT0 = tmp->TimeToLongSamples(mT0);
-   sampleCount nT1 = tmp->TimeToLongSamples(mT0 + mDuration);
-   numSamplesSequence = nT1 - nT0;  // needs to be exact number of samples selected
-
-   //make under-estimates if anything, and then redistribute the few remaining samples
-   numSamplesTone = (sampleCount)floor(dtmfTone * track.GetRate());
-   numSamplesSilence = (sampleCount)floor(dtmfSilence * track.GetRate());
-
-   // recalculate the sum, and spread the difference - due to approximations.
-   // Since diff should be in the order of "some" samples, a division (resulting in zero)
-   // is not sufficient, so we add the additional remaining samples in each tone/silence block,
-   // at least until available.
-   int diff = numSamplesSequence - (dtmfNTones*numSamplesTone) - (dtmfNTones-1)*numSamplesSilence;
-   while (diff > 2*dtmfNTones - 1) {   // more than one per thingToBeGenerated
-      // in this case, both numSamplesTone and numSamplesSilence would change, so it makes sense
-      //  to recalculate diff here, otherwise just keep the value we already have
-
-      // should always be the case that dtmfNTones>1, as if 0, we don't even start processing,
-      // and with 1 there is no difference to spread (no silence slot)...
-      wxASSERT(dtmfNTones > 1);
-      numSamplesTone += (diff/(dtmfNTones));
-      numSamplesSilence += (diff/(dtmfNTones-1));
-      diff = numSamplesSequence - (dtmfNTones*numSamplesTone) - (dtmfNTones-1)*numSamplesSilence;
-   }
-   wxASSERT(diff >= 0);  // should never be negative
-
-   // this var will be used as extra samples distributor
-   int extra=0;
-
-   sampleCount i = 0;
-   sampleCount j = 0;
-   int n=0; // pointer to string in dtmfString
-   sampleCount block;
-   bool isTone = true;
-   float *data = new float[tmp->GetMaxBlockSize()];
-
-   // for the whole dtmf sequence, we will be generating either tone or silence
-   // according to a bool value, and this might be done in small chunks of size
-   // 'block', as a single tone might sometimes be larger than the block
-   // tone and silence generally have different duration, thus two generation blocks
-   //
-   // Note: to overcome a 'clicking' noise introduced by the abrupt transition from/to
-   // silence, I added a fade in/out of 1/250th of a second (4ms). This can still be
-   // tweaked but gives excellent results at 44.1kHz: I haven't tried other freqs.
-   // A problem might be if the tone duration is very short (<10ms)... (?)
-   //
-   // One more problem is to deal with the approximations done when calculating the duration
-   // of both tone and silence: in some cases the final sum might not be same as the initial
-   // duration. So, to overcome this, we had a redistribution block up, and now we will spread
-   // the remaining samples in every bin in order to achieve the full duration: test case was
-   // to generate an 11 tone DTMF sequence, in 4 seconds, and with DutyCycle=75%: after generation
-   // you ended up with 3.999s or in other units: 3 seconds and 44097 samples.
-   //
-   while ((i < numSamplesSequence) && bGoodResult) {
-      if (isTone)
-      {  // generate tone
-         // the statement takes care of extracting one sample from the diff bin and
-         // adding it into the tone block until depletion
-         extra=(diff-- > 0?1:0);
-         for(j=0; j < numSamplesTone+extra && bGoodResult; j+=block) {
-            block = tmp->GetBestBlockSize(j);
-            if (block > (numSamplesTone+extra - j))
-               block = numSamplesTone+extra - j;
-
-            // generate the tone and append
-            MakeDtmfTone(data, block, track.GetRate(), dtmfString[n], j, numSamplesTone, dtmfAmplitude);
-            tmp->Append((samplePtr)data, floatSample, block);
-            //Update the Progress meter
-            if (TrackProgress(ntrack, (double)(i+j) / numSamplesSequence))
-               bGoodResult = false;
-         }
-         i += numSamplesTone;
-         n++;
-         if(n>=dtmfNTones)break;
-      }
-      else
-      {  // generate silence
-         // the statement takes care of extracting one sample from the diff bin and
-         // adding it into the silence block until depletion
-         extra=(diff-- > 0?1:0);
-         for(j=0; j < numSamplesSilence+extra && bGoodResult; j+=block) {
-            block = tmp->GetBestBlockSize(j);
-            if (block > (numSamplesSilence+extra - j))
-               block = numSamplesSilence+extra - j;
-
-            // generate silence and append
-            memset(data, 0, sizeof(float)*block);
-            tmp->Append((samplePtr)data, floatSample, block);
-            //Update the Progress meter
-            if (TrackProgress(ntrack, (double)(i+j) / numSamplesSequence))
-               bGoodResult = false;
-         }
-         i += numSamplesSilence;
-      }
-      // flip flag
-      isTone=!isTone;
-
-   } // finished the whole dtmf sequence
-   wxLogDebug(wxT("Extra %d diff: %d"), extra, diff);
-   delete[] data;
-   return bGoodResult;
-}
-
-void EffectDtmf::Success()
-{
-   /* save last used values
-      save duration unless value was got from selection, so we save only
-      when user explicitely setup a value
-      */
-   if (mT1 == mT0)
-      gPrefs->Write(wxT("/Effects/DtmfGen/SequenceDuration"), mDuration);
-
-   gPrefs->Write(wxT("/Effects/DtmfGen/String"), dtmfString);
-   gPrefs->Write(wxT("/Effects/DtmfGen/DutyCycle"), dtmfDutyCycle);
-   gPrefs->Write(wxT("/Effects/DtmfGen/Amplitude"), dtmfAmplitude);
-   gPrefs->Flush();
-}
-
-//----------------------------------------------------------------------------
-// DtmfDialog
-//----------------------------------------------------------------------------
-
-const static wxChar *dtmfSymbols[] =
-{
-   wxT("0"), wxT("1"), wxT("2"), wxT("3"),
-   wxT("4"), wxT("5"), wxT("6"), wxT("7"),
-   wxT("8"), wxT("9"), wxT("*"), wxT("#"),
-   wxT("A"), wxT("B"), wxT("C"), wxT("D"),
-   wxT("a"), wxT("b"), wxT("c"), wxT("d"),
-   wxT("e"), wxT("f"), wxT("g"), wxT("h"),
-   wxT("i"), wxT("j"), wxT("k"), wxT("l"),
-   wxT("m"), wxT("n"), wxT("o"), wxT("p"),
-   wxT("q"), wxT("r"), wxT("s"), wxT("t"),
-   wxT("u"), wxT("v"), wxT("w"), wxT("x"),
-   wxT("y"), wxT("z")
-};
-
-#define ID_DTMF_DUTYCYCLE_SLIDER 10001
-#define ID_DTMF_STRING_TEXT      10002
-#define ID_DTMF_DURATION_TEXT    10003
-#define ID_DTMF_DUTYCYCLE_TEXT   10004
-#define ID_DTMF_TONELEN_TEXT     10005
-#define ID_DTMF_SILENCE_TEXT     10006
-
-
-BEGIN_EVENT_TABLE(DtmfDialog, EffectDialog)
-    EVT_TEXT(ID_DTMF_STRING_TEXT, DtmfDialog::OnDtmfStringText)
-    EVT_TEXT(ID_DTMF_DURATION_TEXT, DtmfDialog::OnDtmfDurationText)
-    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, DtmfDialog::OnTimeCtrlUpdate)
-    EVT_SLIDER(ID_DTMF_DUTYCYCLE_SLIDER, DtmfDialog::OnDutyCycleSlider)
-END_EVENT_TABLE()
-
-
-DtmfDialog::DtmfDialog(EffectDtmf * effect, wxWindow * parent, const wxString & title)
-:  EffectDialog(parent, title, INSERT_EFFECT),
-   mEffect(effect)
-{
-   /*
-   wxString dString;       // dtmf tone string
-   int    dNTones;         // total number of tones to generate
-   double dTone;           // duration of a single tone
-   double dSilence;        // duration of silence between tones
-   double dDuration;       // duration of the whole dtmf tone sequence
-   */
-   dTone = 0;
-   dSilence = 0;
-   dDuration = 0;
-
-   mDtmfDurationT = NULL;
-}
-
-void DtmfDialog::PopulateOrExchange( ShuttleGui & S )
-{
-   wxTextValidator vldDtmf(wxFILTER_INCLUDE_CHAR_LIST);
-   vldDtmf.SetIncludes(wxArrayString(42, dtmfSymbols));
-
-   S.AddSpace(0, 5);
-   S.StartMultiColumn(2, wxEXPAND);
-   {
-      mDtmfStringT = S.Id(ID_DTMF_STRING_TEXT).AddTextBox(_("DTMF sequence:"), wxT(""), 10);
-      mDtmfStringT->SetValidator(vldDtmf);
-
-      // The added colon to improve visual consistency was placed outside
-      // the translatable strings to avoid breaking translations close to 2.0.
-      // TODO: Make colon part of the translatable string after 2.0.
-      S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")),  dAmplitude, 10);
-
-      S.AddPrompt(_("Duration:"));
-      if (mDtmfDurationT == NULL)
-      {
-         mDtmfDurationT = new
-            NumericTextCtrl(NumericConverter::TIME, this,
-                         ID_DTMF_DURATION_TEXT,
-         /* use this instead of "seconds" because if a selection is passed to the
-         * effect, I want it (dDuration) to be used as the duration, and with
-         * "seconds" this does not always work properly. For example, it rounds
-         * down to zero... */
-                         dIsSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                         dDuration,
-                         mEffect->mProjectRate,
-                         wxDefaultPosition,
-                         wxDefaultSize,
-                         true);
-         mDtmfDurationT->SetName(_("Duration"));
-         mDtmfDurationT->EnableMenu();
-      }
-      S.AddWindow(mDtmfDurationT);
-
-      S.AddFixedText(_("Tone/silence ratio:"), false);
-      S.SetStyle(wxSL_HORIZONTAL | wxEXPAND);
-      mDtmfDutyS = S.Id(ID_DTMF_DUTYCYCLE_SLIDER).AddSlider(wxT(""), (int)dDutyCycle, DUTY_MAX, DUTY_MIN);
-
-      S.SetSizeHints(-1,-1);
-   }
-   S.EndMultiColumn();
-
-   S.StartMultiColumn(2, wxCENTER);
-   {
-      S.AddFixedText(_("Duty cycle:"), false);
-      mDtmfDutyT = S.Id(ID_DTMF_DUTYCYCLE_TEXT).AddVariableText(wxString::Format(wxT("%.1f %%"), (float) dDutyCycle/DUTY_SCALE), false);
-      S.AddFixedText(_("Tone duration:"), false);
-      mDtmfSilenceT = S.Id(ID_DTMF_TONELEN_TEXT).AddVariableText(wxString::Format(wxString(wxT("%d ")) + _("ms"),  (int) dTone * 1000), false);
-      S.AddFixedText(_("Silence duration:"), false);
-      mDtmfToneT = S.Id(ID_DTMF_SILENCE_TEXT).AddVariableText(wxString::Format(wxString(wxT("%d ")) + _("ms"), (int) dSilence * 1000), false);
-   }
-   S.EndMultiColumn();
-}
-
-bool DtmfDialog::TransferDataToWindow()
- {
-   mDtmfDutyS->SetValue((int)dDutyCycle);
-   mDtmfDurationT->SetValue(dDuration);
-   mDtmfStringT->SetValue(dString);
-
-   return true;
-}
-
-bool DtmfDialog::TransferDataFromWindow()
-{
-   EffectDialog::TransferDataFromWindow();
-   dAmplitude = TrapDouble(dAmplitude, AMP_MIN, AMP_MAX);
-   // recalculate to make sure all values are up-to-date. This is especially
-   // important if the user did not change any values in the dialog
-   Recalculate();
-
-   return true;
-}
-
-/*
- *
- */
-
-void DtmfDialog::Recalculate(void) {
-
-   // remember that dDutyCycle is in range (0-1000)
-   double slot;
-
-   dString = mDtmfStringT->GetValue();
-   dDuration = mDtmfDurationT->GetValue();
-
-   dNTones = wxStrlen(dString);
-   dDutyCycle = TrapLong(mDtmfDutyS->GetValue(), DUTY_MIN, DUTY_MAX);
-
-   if (dNTones==0) {
-      // no tones, all zero: don't do anything
-      // this should take care of the case where user got an empty
-      // dtmf sequence into the generator: track won't be generated
-      dTone = 0;
-      dDuration = 0;
-      dSilence = dDuration;
-   } else
-     if (dNTones==1) {
-        // single tone, as long as the sequence
-          dSilence = 0;
-          dTone = dDuration;
-
-     } else {
-        // Don't be fooled by the fact that you divide the sequence into dNTones:
-        // the last slot will only contain a tone, not ending with silence.
-        // Given this, the right thing to do is to divide the sequence duration
-        // by dNTones tones and (dNTones-1) silences each sized according to the duty
-        // cycle: original division was:
-        // slot=dDuration / (dNTones*(dDutyCycle/DUTY_MAX)+(dNTones-1)*(1.0-dDutyCycle/DUTY_MAX))
-        // which can be simplified in the one below.
-        // Then just take the part that belongs to tone or silence.
-        //
-        slot=dDuration/((double)dNTones+(dDutyCycle/DUTY_MAX)-1);
-        dTone = slot * (dDutyCycle/DUTY_MAX); // seconds
-        dSilence = slot * (1.0 - (dDutyCycle/DUTY_MAX)); // seconds
-
-        // Note that in the extremes we have:
-        // - dutyCycle=100%, this means no silence, so each tone will measure dDuration/dNTones
-        // - dutyCycle=0%, this means no tones, so each silence slot will measure dDuration/(NTones-1)
-        // But we always count:
-        // - dNTones tones
-        // - dNTones-1 silences
-     }
-
-   mDtmfDutyT->SetLabel(wxString::Format(wxT("%.1f %%"), (float)dDutyCycle/DUTY_SCALE));
+   mDtmfDutyT->SetLabel(wxString::Format(wxT("%.1f %%"), dtmfDutyCycle));
    mDtmfDutyT->SetName(mDtmfDutyT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   mDtmfSilenceT->SetLabel(wxString::Format(wxString(wxT("%d ")) + _("ms"),  (int) (dTone * 1000)));
+
+   mDtmfSilenceT->SetLabel(wxString::Format(wxString(wxT("%.0f ")) + _("ms"), dtmfTone * 1000.0));
    mDtmfSilenceT->SetName(mDtmfSilenceT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   mDtmfToneT->SetLabel(wxString::Format(wxString(wxT("%d ")) + _("ms"),  (int) (dSilence * 1000)));
+
+   mDtmfToneT->SetLabel(wxString::Format(wxString(wxT("%0.f ")) + _("ms"), dtmfSilence * 1000.0));
    mDtmfToneT->SetName(mDtmfToneT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
-void DtmfDialog::OnDutyCycleSlider(wxCommandEvent & WXUNUSED(event)) {
+void EffectDtmf::OnSlider(wxCommandEvent & evt)
+{
+   dtmfDutyCycle = (double) evt.GetInt() / SCL_DutyCycle;
+   mUIParent->TransferDataFromWindow();
    Recalculate();
+   UpdateUI();
 }
 
-
-void DtmfDialog::OnDtmfStringText(wxCommandEvent & WXUNUSED(event)) {
+void EffectDtmf::OnText(wxCommandEvent & WXUNUSED(evt))
+{
+   mDuration = mDtmfDurationT->GetValue();
+   mUIParent->TransferDataFromWindow();
    Recalculate();
-}
-
-void DtmfDialog::OnDtmfDurationText(wxCommandEvent & WXUNUSED(event)) {
-   Recalculate();
-}
-
-void DtmfDialog::OnTimeCtrlUpdate(wxCommandEvent & WXUNUSED(event)) {
-   this->Fit();
+   UpdateUI();
 }

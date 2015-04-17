@@ -1456,6 +1456,12 @@ wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, int &pos, const in
    return TieSlider( Prompt, WrappedRef, max, min );
 }
 
+wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, double &pos, const double max, const double min )
+{
+   WrappedType WrappedRef( pos );
+   return TieSlider( Prompt, WrappedRef, max, min );
+}
+
 wxSlider * ShuttleGuiBase::TieSlider( const wxString &Prompt, float &pos, const float fMin, const float fMax)
 {
    const float RoundFix=0.0000001f;
@@ -2241,12 +2247,12 @@ void ShuttleGui::AddStandardButtons(long buttons, wxButton *extra)
    EndVerticalLay();
 }
 
-void ShuttleGui::AddSpace( int width, int height )
+wxSizerItem * ShuttleGui::AddSpace( int width, int height )
 {
    if( mShuttleMode != eIsCreating )
-      return;
+      return NULL;
 
-   mpSizer->Add( width, height, 0);
+   return mpSizer->Add( width, height, 0);
 }
 
 void ShuttleGui::SetSizeHints( wxWindow *window, const wxArrayString & items )

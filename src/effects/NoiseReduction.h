@@ -17,6 +17,8 @@
 
 #include <memory>
 
+#define NOISEREDUCTION_PLUGIN_SYMBOL wxTRANSLATE("Noise Reduction")
+
 class EffectNoiseReduction: public Effect {
 public:
 
@@ -25,13 +27,20 @@ public:
 
    using Effect::TrackProgress;
 
-   virtual wxString GetEffectName();
-   virtual std::set<wxString> GetEffectCategories();
-   virtual wxString GetEffectIdentifier();
-   virtual wxString GetEffectAction();
+   // IdentInterface implementation
 
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
+
+   // EffectIdentInterface implementation
+
+   virtual EffectType GetType();
+
+   // Effect implementation
+
+//   using Effect::TrackProgress;
+
+   virtual bool PromptUser(wxWindow *parent = NULL, bool isBatch = false);
 
    virtual bool Init();
    virtual bool CheckWhetherSkipEffect();

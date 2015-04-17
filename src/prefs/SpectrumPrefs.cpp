@@ -79,14 +79,14 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         S.TieChoice(_("Window &size") + wxString(wxT(":")),
+         S.TieChoice(_("Window &size:"),
                      wxT("/Spectrum/FFTSize"),
                      256,
                      mSizeChoices,
                      mSizeCodes);
          S.SetSizeHints(mSizeChoices);
 
-         S.TieChoice(_("Window &type") + wxString(wxT(":")),
+         S.TieChoice(_("Window &type:"),
                      wxT("/Spectrum/WindowType"),
                      3,
                      mTypeChoices,
@@ -114,7 +114,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          /* /////i18n-hint: (noun) here the user chooses points to skip.*/
-         S.TieChoice(TRANSLATABLE("Skip Points") + wxString(wxT(":")),
+         S.TieChoice(TRANSLATABLE("Skip Points:"),
                      wxT("/Spectrum/FFTSkipPoints"),
                      0,
                      wskipn,

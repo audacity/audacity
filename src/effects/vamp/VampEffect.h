@@ -11,31 +11,34 @@
 
 **********************************************************************/
 
-#include "../Effect.h"
-#include "../../LabelTrack.h"
+#include "../../Audacity.h"
 
-class wxSlider;
-class wxStaticText;
-class wxTextCtrl;
-class wxCheckBox;
-class wxComboBox;
+#if defined(USE_VAMP)
 
-#include <wx/dialog.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/event.h>
+#include <wx/slider.h>
+#include <wx/string.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
 
 #include <vamp-hostsdk/PluginLoader.h>
+
+#include "../../LabelTrack.h"
+
+#include "../Effect.h"
 
 #define VAMPEFFECTS_VERSION wxT("1.0.0.0")
 #define VAMPEFFECTS_FAMILY wxT("Vamp")
 
-class VampEffect : public Effect {
-
- public:
-
-   VampEffect(Vamp::HostExt::PluginLoader::PluginKey key,
+class VampEffect : public Effect
+{
+public:
+   VampEffect(Vamp::Plugin *plugin,
+              const wxString & path,
               int output,
-              bool hasParameters,
-              wxString name,
-              wxString category = wxString());
+              bool hasParameters);
    virtual ~VampEffect();
 
    // IdentInterface implementation
@@ -53,84 +56,59 @@ class VampEffect : public Effect {
    virtual wxString GetFamily();
    virtual bool IsInteractive();
    virtual bool IsDefault();
-   virtual bool IsLegacy();
-   virtual bool SupportsRealtime();
-   virtual bool SupportsAutomation();
+
+   // EffectClientInterface implementation
+
+   virtual int GetAudioInCount();
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
    // Effect implementation
 
-   virtual wxString GetEffectName();
-
-   virtual std::set<wxString> GetEffectCategories();
-
-   virtual wxString GetEffectIdentifier();
-
-   virtual wxString GetEffectAction();
-
    virtual bool Init();
-
-   virtual bool PromptUser();
-
    virtual bool Process();
-
    virtual void End();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
- private:
+private:
+   // VampEffect implemetation
 
-   VampEffect(const VampEffect &);
-   VampEffect &operator=(const VampEffect &);
+   void AddFeatures(LabelTrack *track, Vamp::Plugin::FeatureSet & features);
 
-   Vamp::HostExt::PluginLoader::PluginKey mKey;
+   void UpdateFromPlugin();
+
+   void OnCheckBox(wxCommandEvent & evt);
+   void OnChoice(wxCommandEvent & evt);
+   void OnSlider(wxCommandEvent & evt);
+   void OnTextCtrl(wxCommandEvent & evt);
+
+private:
+   Vamp::Plugin *mPlugin;
+   wxString mPath;
    int mOutput;
    bool mHasParameters;
+
+   Vamp::HostExt::PluginLoader::PluginKey mKey;
    wxString mName;
    double mRate;
-   wxString mCategory;
 
-   Vamp::Plugin *mPlugin;
+   bool mInSlider;
+   bool mInText;
 
-   void AddFeatures(LabelTrack *track,
-                    Vamp::Plugin::FeatureSet &features);
-};
-
-
-class VampEffectDialog : public wxDialog {
-
-   DECLARE_DYNAMIC_CLASS(VampEffectDialog)
-
- public:
-   VampEffectDialog(VampEffect *effect,
-                    wxWindow *parent,
-                    Vamp::Plugin *plugin);
-   ~VampEffectDialog();
-
-   void OnCheckBox(wxCommandEvent & event);
-   void OnComboBox(wxCommandEvent & event);
-   void OnSlider(wxCommandEvent & event);
-   void OnTextCtrl(wxCommandEvent & event);
-   void OnOK(wxCommandEvent & event);
-   void OnCancel(wxCommandEvent & event);
-   void OnPreview(wxCommandEvent & event);
-   void ControlSetFocus(wxFocusEvent & event);
-
-   DECLARE_EVENT_TABLE()
-
- private:
-   void HandleText();
-   void UpdateFromPlugin();
-   void ConnectFocus(wxControl *c);
-   void DisconnectFocus(wxControl *c);
-   bool inSlider;
-   bool inText;
-
-   VampEffect *mEffect;
-   Vamp::Plugin *mPlugin;
    Vamp::Plugin::ParameterList mParameters;
 
-   wxSlider **sliders;
-   wxTextCtrl **fields;
-   wxStaticText **labels;
-   wxCheckBox **toggles;
-   wxComboBox **combos;
-   wxComboBox *programCombo;
+   float *mValues;
+
+   wxSlider **mSliders;
+   wxTextCtrl **mFields;
+   wxStaticText **mLabels;
+   wxCheckBox **mToggles;
+   wxChoice **mChoices;
+   wxChoice *mProgram;
+
+   DECLARE_EVENT_TABLE();
 };
+
+#endif

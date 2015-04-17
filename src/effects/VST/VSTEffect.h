@@ -61,12 +61,10 @@ WX_DEFINE_ARRAY_PTR(VSTEffect *, VSTEffectArray);
 DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
-class VSTEffectEventHelper;
-
-class VSTEffect : public EffectClientInterface,
+class VSTEffect : public wxEvtHandler, 
+                  public EffectClientInterface,
                   public EffectUIClientInterface,
                   public XMLTagHandler
-
 {
  public:
    VSTEffect(const wxString & path, VSTEffect *master = NULL);
@@ -105,12 +103,12 @@ class VSTEffect : public EffectClientInterface,
    virtual sampleCount GetTailSize();
 
    virtual void SetSampleRate(sampleCount rate);
-   virtual sampleCount GetBlockSize(sampleCount maxBlockSize);
+   virtual sampleCount SetBlockSize(sampleCount maxBlockSize);
 
    virtual bool IsReady();
-   virtual bool ProcessInitialize();
+   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
    virtual bool ProcessFinalize();
-   virtual sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size);
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
 
    virtual bool RealtimeInitialize();
    virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
@@ -129,23 +127,23 @@ class VSTEffect : public EffectClientInterface,
    virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
+   virtual bool LoadUserPreset(const wxString & name);
+   virtual bool SaveUserPreset(const wxString & name);
+
+   virtual wxArrayString GetFactoryPresets();
+   virtual bool LoadFactoryPreset(int id);
+   virtual bool LoadFactoryDefaults();
+
    // EffectUIClientInterface implementation
 
-   virtual void SetUIHost(EffectUIHostInterface *host);
+   virtual void SetHostUI(EffectUIHostInterface *host);
    virtual bool PopulateUI(wxWindow *parent);
    virtual bool IsGraphicalUI();
    virtual bool ValidateUI();
    virtual bool HideUI();
    virtual bool CloseUI();
 
-   virtual void LoadUserPreset(const wxString & name);
-   virtual void SaveUserPreset(const wxString & name);
-
-   virtual wxArrayString GetFactoryPresets();
-   virtual void LoadFactoryPreset(int id);
-   virtual void LoadFactoryDefaults();
-
-   virtual bool CanExport();
+   virtual bool CanExportPresets();
    virtual void ExportPresets();
    virtual void ImportPresets();
 
@@ -171,8 +169,8 @@ private:
    wxArrayInt GetEffectIDs();
 
    // Parameter loading and saving
-   void LoadParameters(const wxString & group);
-   void SaveParameters(const wxString & group);
+   bool LoadParameters(const wxString & group);
+   bool SaveParameters(const wxString & group);
 
    // Base64 encoding and decoding
    static wxString b64encode(const void *in, int len);
@@ -194,15 +192,6 @@ private:
    void OnLoad(wxCommandEvent & evt);
    void OnSave(wxCommandEvent & evt);
    void OnSettings(wxCommandEvent & evt);
-
-
-   void OnApply(wxCommandEvent & evt);
-   void OnOk(wxCommandEvent & evt);
-   void OnCancel(wxCommandEvent & evt);
-   void OnPreview(wxCommandEvent & evt);
-   void OnDefaults(wxCommandEvent & evt);
-   void OnClose(wxCloseEvent & evt);
-
 
    void BuildPlain();
    void BuildFancy();
@@ -309,7 +298,6 @@ private:
    wxDialog *mDialog;
    wxWindow *mParent;
    EffectUIHostInterface *mUIHost;
-   VSTEffectEventHelper *mEventHelper;
    wxSizerItem *mContainer;
    bool mGui;
 
@@ -360,32 +348,9 @@ private:
 
 #endif
 
-   friend class VSTEffectEventHelper;
-   friend class VSTEffectsModule;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// VSTEffectEventHelper
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class VSTEffectEventHelper : public wxEvtHandler
-{
-public:
-   VSTEffectEventHelper(VSTEffect *effect);
-   virtual ~VSTEffectEventHelper();
-
-   // VSTEffectEventHelper implementation
-
-   void OnSlider(wxCommandEvent & evt);
-   void ControlSetFocus(wxFocusEvent & evt);
-   void OnSizeWindow(wxCommandEvent & evt);
-
-private:
-   VSTEffect *mEffect;
-
    DECLARE_EVENT_TABLE();
+
+   friend class VSTEffectsModule;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

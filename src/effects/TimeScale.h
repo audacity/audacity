@@ -15,86 +15,63 @@
 #ifndef __AUDACITY_EFFECT_TIMESCALE__
 #define __AUDACITY_EFFECT_TIMESCALE__
 
+#include <wx/event.h>
+#include <wx/slider.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
+
+#include "../ShuttleGui.h"
+
 #include "SBSMSEffect.h"
 
-#include <wx/intl.h>
-#include <wx/dialog.h>
-#include <wx/slider.h>
+#define TIMESCALE_PLUGIN_SYMBOL wxTRANSLATE("Time Scale")
 
-class wxString;
-class wxTextCtrl;
-
-class EffectTimeScale : public EffectSBSMS {
-
- public:
+class EffectTimeScale : public EffectSBSMS
+{
+public:
    EffectTimeScale();
+   virtual ~EffectTimeScale();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Sliding Time Scale/Pitch Shift..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-     std::set<wxString> result;
-     result.insert(wxT("http://audacityteam.org/namespace#PitchAndTempo"));
-     return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetName();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-     return wxString(wxT("Time Scale"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-     return wxString(_("Changing Tempo/Pitch"));
-   }
+   virtual EffectType GetType();
 
-   // Useful only after PromptUser values have been set.
-   virtual wxString GetEffectDescription();
+   // EffectClientInterface implementation
+
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
 
    virtual bool Init();
-
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
    virtual bool Process();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
- private:
-   double m_RatePercentChangeStart;
-   double m_RatePercentChangeEnd;
-   double m_PitchHalfStepsStart;
-   double m_PitchHalfStepsEnd;
-   double m_PitchPercentChangeStart;
-   double m_PitchPercentChangeEnd;
-   bool m_PreAnalyze;
+private:
+   // EffectTimeScale implementation
 
-   friend class TimeScaleDialog;
-};
+   inline double PercentChangeToRatio(double percentChange);
+   inline double HalfStepsToPercentChange(double halfSteps);
+   inline double PercentChangeToHalfSteps(double percentChange);
 
-//----------------------------------------------------------------------------
-// TimeScaleDialog
-//----------------------------------------------------------------------------
+   void OnText_RatePercentChangeStart(wxCommandEvent & evt);
+   void OnText_RatePercentChangeEnd(wxCommandEvent & evt);
+   void OnText_PitchPercentChangeStart(wxCommandEvent & evt);
+   void OnText_PitchPercentChangeEnd(wxCommandEvent & evt);
+   void OnText_PitchHalfStepsStart(wxCommandEvent & evt);
+   void OnText_PitchHalfStepsEnd(wxCommandEvent & evt);
+   void OnSlider_RatePercentChangeStart(wxCommandEvent & evt);
+   void OnSlider_RatePercentChangeEnd(wxCommandEvent & evt);
+   void OnCheckBox_PreAnalyze(wxCommandEvent & evt);
 
-class TimeScaleDialog:public EffectDialog {
- public:
-   TimeScaleDialog(EffectTimeScale * effect,
-                   wxWindow * parent);
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
- private:
-   // handlers
-   void OnText_RatePercentChangeStart(wxCommandEvent & event);
-   void OnText_RatePercentChangeEnd(wxCommandEvent & event);
-   void OnText_PitchPercentChangeStart(wxCommandEvent & event);
-   void OnText_PitchPercentChangeEnd(wxCommandEvent & event);
-   void OnText_PitchHalfStepsStart(wxCommandEvent & event);
-   void OnText_PitchHalfStepsEnd(wxCommandEvent & event);
-   void OnSlider_RatePercentChangeStart(wxCommandEvent & event);
-   void OnSlider_RatePercentChangeEnd(wxCommandEvent & event);
-   void OnCheckBox_PreAnalyze(wxCommandEvent & event);
-
-   // helper fns
-   bool CheckParameters();
    void Update_Text_RatePercentChangeStart();
    void Update_Text_RatePercentChangeEnd();
    void Update_Text_PitchPercentChangeStart();
@@ -103,13 +80,15 @@ class TimeScaleDialog:public EffectDialog {
    void Update_Text_PitchHalfStepsEnd();
    void Update_Slider_RatePercentChangeStart();
    void Update_Slider_RatePercentChangeEnd();
-   void Update_CheckBox_PreAnalyze();
 
- private:
-   EffectTimeScale *mEffect;
-   bool m_bLoopDetect;
+private:
+   double m_RatePercentChangeStart;
+   double m_RatePercentChangeEnd;
+   double m_PitchHalfStepsStart;
+   double m_PitchHalfStepsEnd;
+   double m_PitchPercentChangeStart;
+   double m_PitchPercentChangeEnd;
 
-   // controls
    wxTextCtrl *m_pTextCtrl_RatePercentChangeStart;
    wxTextCtrl *m_pTextCtrl_RatePercentChangeEnd;
    wxSlider *m_pSlider_RatePercentChangeStart;
@@ -118,19 +97,8 @@ class TimeScaleDialog:public EffectDialog {
    wxTextCtrl *m_pTextCtrl_PitchHalfStepsEnd;
    wxTextCtrl *m_pTextCtrl_PitchPercentChangeStart;
    wxTextCtrl *m_pTextCtrl_PitchPercentChangeEnd;
-   wxCheckBox *m_pCheckBox_PreAnalyze;
 
- public:
-   double m_RatePercentChangeStart;
-   double m_RatePercentChangeEnd;
-   double m_PitchHalfStepsStart;
-   double m_PitchHalfStepsEnd;
-   double m_PitchPercentChangeStart;
-   double m_PitchPercentChangeEnd;
-   bool m_PreAnalyze;
-
- private:
-   DECLARE_EVENT_TABLE()
+   DECLARE_EVENT_TABLE();
 };
 
 #endif // __AUDACITY_EFFECT_TIMESCALE

@@ -24,7 +24,7 @@
 class Generator : public Effect
 {
 public:
-   Generator() : mDuration(sDefaultGenerateLen) { }
+   Generator() : mDuration(GetDefaultDuration()) { }
 
 protected:
    // Amount of time to generate, in seconds

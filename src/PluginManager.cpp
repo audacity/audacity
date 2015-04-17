@@ -608,7 +608,11 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
    Layout();
    Fit();
-   SetSizeHints(GetSize());
+   wxRect r = wxGetClientDisplayRect();
+   wxSize sz = GetSize();
+   sz.SetWidth(wxMin(sz.GetWidth(), r.GetWidth()));
+   sz.SetHeight(wxMin(sz.GetHeight(), r.GetHeight()));
+   SetMinSize(sz);
    // Parent window is usually not there yet, so centre on screen rather than on parent.
    CenterOnScreen();
 
@@ -790,7 +794,7 @@ PluginDescriptor::~PluginDescriptor()
    return;
 }
 
-bool PluginDescriptor::IsInstantiated()
+bool PluginDescriptor::IsInstantiated() const
 {
    return mInstance != NULL;
 }
@@ -1083,7 +1087,7 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 //
 // ============================================================================
 
-const PluginID & PluginManager::RegisterModulePlugin(ModuleInterface *module)
+const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(module), module, PluginTypeModule);
 
@@ -1093,7 +1097,7 @@ const PluginID & PluginManager::RegisterModulePlugin(ModuleInterface *module)
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterEffectPlugin(ModuleInterface *provider, EffectIdentInterface *effect)
+const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, PluginTypeEffect);
 
@@ -1112,7 +1116,7 @@ const PluginID & PluginManager::RegisterEffectPlugin(ModuleInterface *provider, 
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterImporterPlugin(ModuleInterface *provider, ImporterInterface *importer)
+const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(importer), importer, PluginTypeImporter);
 
@@ -1963,6 +1967,11 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
       gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
+         if (plug.IsInstantiated() && ((Effect *)plug.GetInstance())->IsHidden())
+         {
+            continue;
+         }
+
          return &plug;
       }
    }
@@ -1979,6 +1988,11 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
       gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
+         if (plug.IsInstantiated() && ((Effect *)plug.GetInstance())->IsHidden())
+         {
+            continue;
+         }
+
          return &plug;
       }
    }
@@ -1996,7 +2010,7 @@ bool PluginManager::IsRegistered(const PluginID & ID)
    return true;
 }
 
-const PluginID & PluginManager::RegisterLegacyEffectPlugin(EffectIdentInterface *effect)
+const PluginID & PluginManager::RegisterPlugin(EffectIdentInterface *effect)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, PluginTypeEffect);
 
@@ -2404,7 +2418,7 @@ bool PluginManager::SetConfig(const wxString & key, const sampleCount & value)
    return result;
 }
 
-wxString PluginManager::SettingsID(const PluginID & ID)
+wxString PluginManager::SettingsPath(const PluginID & ID, bool shared)
 {
    if (mPlugins.find(ID) == mPlugins.end())
    {
@@ -2412,23 +2426,25 @@ wxString PluginManager::SettingsID(const PluginID & ID)
    }
 
    const PluginDescriptor & plug = mPlugins[ID];
+   
+   wxString id = GetPluginTypeString(plug.GetPluginType()) +
+                 wxT("_") +
+                 plug.GetEffectFamily() + // is empty for non-Effects
+                 wxT("_") +
+                 plug.GetVendor() +
+                 wxT("_") +
+                 (shared ? wxT("") : plug.GetName());
 
-   return wxString::Format(wxT("%s_%s_%s_%s"),
-                           GetPluginTypeString(plug.GetPluginType()).c_str(),
-                           plug.GetEffectFamily().c_str(), // is empty for non-Effects
-                           plug.GetVendor().c_str(),
-                           plug.GetName().c_str());
+   return SETROOT +
+          ConvertID(id) +
+          wxCONFIG_PATH_SEPARATOR +
+          (shared ? wxT("shared") : wxT("private")) +
+          wxCONFIG_PATH_SEPARATOR;
 }
 
 wxString PluginManager::SharedGroup(const PluginID & ID, const wxString & group)
 {
-   wxString settingsID = SettingsID(ID);
-
-   wxString path = SETROOT +
-                   ConvertID(settingsID) +
-                   wxCONFIG_PATH_SEPARATOR +
-                   wxT("shared") +
-                   wxCONFIG_PATH_SEPARATOR;
+   wxString path = SettingsPath(ID, true);
 
    wxFileName f(group);
    if (!f.GetName().IsEmpty())
@@ -2452,13 +2468,7 @@ wxString PluginManager::SharedKey(const PluginID & ID, const wxString & group, c
 
 wxString PluginManager::PrivateGroup(const PluginID & ID, const wxString & group)
 {
-   wxString settingsID = SettingsID(ID);
-
-   wxString path = SETROOT +
-                  ConvertID(settingsID) +
-                  wxCONFIG_PATH_SEPARATOR +
-                  wxT("private") +
-                  wxCONFIG_PATH_SEPARATOR;
+   wxString path = SettingsPath(ID, false);
 
    wxFileName f(group);
    if (!f.GetName().IsEmpty())

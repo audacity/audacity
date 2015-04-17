@@ -13,14 +13,16 @@
 #define __AUDACITY_EFFECT_REVERB__
 
 #include <wx/checkbox.h>
-#include <wx/dialog.h>
-#include <wx/intl.h>
+#include <wx/event.h>
 #include <wx/slider.h>
+#include <wx/spinctrl.h>
+#include <wx/string.h>
+
+#include "../ShuttleGui.h"
 
 #include "Effect.h"
 
-class wxSpinCtrl;
-class WaveTrack;
+#define REVERB_PLUGIN_SYMBOL wxTRANSLATE("Reverb")
 
 struct Reverb_priv_t;
 
@@ -28,34 +30,12 @@ class EffectReverb : public Effect
 {
 public:
    EffectReverb();
-   virtual ~EffectReverb() {};
+   virtual ~EffectReverb();
 
-   // Implemented from the base class 'Effect':
-   virtual wxString GetEffectName() {return wxTRANSLATE("Reverb...");}
-   virtual wxString GetEffectAction() {return _("Applying Reverb");}
-   virtual wxString GetEffectIdentifier() {return wxT("Reverb");}
-   virtual wxString GetEffectDescription(); // Useful only after PromptUser values have been set.
-   virtual bool TransferParameters(Shuttle & shuttle);
-
- protected:
-   bool PromptUser();
-   bool Process();
-
-   // Processing:
-   void Create(double rate, bool isStereo);
-   bool ProcessOneBlock(sampleCount len, float * const * chans);
-   bool ProcessOneTrack(size_t n, WaveTrack * track, WaveTrack * track2, wxString const & msg);
-   void Delete();
-   double mCurT0, mCurT1;
-   Reverb_priv_t * mP;
-
-   // Settings:
-   wxString SettingsPath(int settingsNumber) const;
-   wxString SettingsName(int settingsNumber) const;
-
-   struct Params {
+   struct Params
+   {
       double mRoomSize;
-      double mDelay;
+      double mPreDelay;
       double mReverberance;
       double mHfDamping;
       double mToneLow;
@@ -65,89 +45,83 @@ public:
       double mStereoWidth;
       bool mWetOnly;
    };
-   void LoadSettings(int settingsNumber, Params & params);
-   void SaveSettings(int settingsNumber, Params const * params, wxString const * name = 0) const;
 
-   Params mParams;
+   // IdentInterface implementation
 
-   friend class ReverbDialogue;
-};
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-//----------------------------------------------------------------------------
-// ReverbDialogue
-//----------------------------------------------------------------------------
-class ReverbDialogue : public EffectDialog
-{
-public:
-   ReverbDialogue(EffectReverb * effect, wxWindow * parent);
-   virtual ~ReverbDialogue() {};
+   // EffectIdentInterface implementation
 
-private:
-   void SetTitle(wxString const & name = wxT(""));
-   void PopulateOrExchange(ShuttleGui &);
+   virtual EffectType GetType();
+
+   // EffectClientInterface implementation
+
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
+   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
+   virtual bool ProcessFinalize();
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   virtual wxArrayString GetFactoryPresets();
+   virtual bool LoadFactoryPreset(int id);
+
+   // Effect implementation
+
+   bool Startup();
+   void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow();
    bool TransferDataFromWindow();
 
-   void LoadPreset(wxCommandEvent & WXUNUSED(event));
-   int  ChooseSettings(wxString const & message);
-   void LoadSettings(wxCommandEvent & WXUNUSED(event));
-   void RenameSettings(wxCommandEvent & WXUNUSED(event));
-   void SaveSettings(wxCommandEvent & WXUNUSED(event));
-   void OnPreview(wxCommandEvent & event);
+private:
+   // EffectReverb implementation
 
-   // event handlers and member vars
-   void OnRoomSizeWidget(wxCommandEvent & event);
-   void OnRoomSizeText(wxCommandEvent & event);
-   wxSlider * mRoomSizeWidget;
-   wxSpinCtrl * mRoomSizeText;
+   void SetTitle(const wxString & name = wxT(""));
 
-   void OnDelayWidget(wxCommandEvent & event);
-   void OnDelayText(wxCommandEvent & event);
-   wxSlider * mDelayWidget;
-   wxSpinCtrl * mDelayText;
+#define SpinSliderHandlers(n) \
+   void On ## n ## Slider(wxCommandEvent & evt); \
+   void On ## n ## Text(wxCommandEvent & evt);
 
-   void OnReverberanceWidget(wxCommandEvent & event);
-   void OnReverberanceText(wxCommandEvent & event);
-   wxSlider *  mReverberanceWidget;
-   wxSpinCtrl * mReverberanceText;
+   SpinSliderHandlers(RoomSize);
+   SpinSliderHandlers(PreDelay);
+   SpinSliderHandlers(Reverberance);
+   SpinSliderHandlers(HfDamping);
+   SpinSliderHandlers(ToneLow);
+   SpinSliderHandlers(ToneHigh);
+   SpinSliderHandlers(WetGain);
+   SpinSliderHandlers(DryGain);
+   SpinSliderHandlers(StereoWidth);
 
-   void OnHfDampingWidget(wxCommandEvent & event);
-   void OnHfDampingText(wxCommandEvent & event);
-   wxSlider * mHfDampingWidget;
-   wxSpinCtrl * mHfDampingText;
+#undef SpinSliderHandlers
 
-   void OnToneLowWidget(wxCommandEvent & event);
-   void OnToneLowText(wxCommandEvent & event);
-   wxSlider * mToneLowWidget;
-   wxSpinCtrl * mToneLowText;
+private:
+   int mNumChans;
+   Reverb_priv_t *mP;
 
-   void OnToneHighWidget(wxCommandEvent & event);
-   void OnToneHighText(wxCommandEvent & event);
-   wxSlider * mToneHighWidget;
-   wxSpinCtrl * mToneHighText;
+   Params mParams;
 
-   void OnWetGainWidget(wxCommandEvent & event);
-   void OnWetGainText(wxCommandEvent & event);
-   wxSlider * mWetGainWidget;
-   wxSpinCtrl * mWetGainText;
+   bool mProcessingEvent;
 
-   void OnDryGainWidget(wxCommandEvent & event);
-   void OnDryGainText(wxCommandEvent & event);
-   wxSlider * mDryGainWidget;
-   wxSpinCtrl * mDryGainText;
+#define SpinSlider(n) \
+   wxSpinCtrl  *m ## n ## T; \
+   wxSlider    *m ## n ## S;
 
-   void OnStereoWidthWidget(wxCommandEvent & event);
-   void OnStereoWidthText(wxCommandEvent & event);
-   wxSlider * mStereoWidthWidget;
-   wxSpinCtrl * mStereoWidthText;
+   SpinSlider(RoomSize);
+   SpinSlider(PreDelay);
+   SpinSlider(Reverberance);
+   SpinSlider(HfDamping);
+   SpinSlider(ToneLow);
+   SpinSlider(ToneHigh);
+   SpinSlider(WetGain);
+   SpinSlider(DryGain);
+   SpinSlider(StereoWidth);
 
-   wxCheckBox * mWetOnlyWidget;
+#undef SpinSlider
 
+   wxCheckBox  *mWetOnlyC;
 
-   EffectReverb & mEffect;
-   EffectReverb::Params & mParams;
-
-   DECLARE_EVENT_TABLE()
+   DECLARE_EVENT_TABLE();
 };
 
 #endif

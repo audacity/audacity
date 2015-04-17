@@ -12,91 +12,55 @@
 #ifndef __AUDACITY_EFFECT_ECHO__
 #define __AUDACITY_EFFECT_ECHO__
 
-class wxString;
+#include <wx/event.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
-#include <wx/dialog.h>
-
-#include <wx/intl.h>
+#include "../ShuttleGui.h"
 
 #include "Effect.h"
 
-class wxStaticText;
+#define ECHO_PLUGIN_SYMBOL wxTRANSLATE("Echo")
 
-class WaveTrack;
-
-class EffectEcho:public Effect {
-
- public:
-
+class EffectEcho : public Effect
+{
+public:
    EffectEcho();
+   virtual ~EffectEcho();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Echo..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#DelayPlugin"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Echo"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Performing Echo"));
-   }
+   virtual EffectType GetType();
 
-   // Useful only after PromptUser values have been set.
-   virtual wxString GetEffectDescription();
+   // EffectClientInterface implementation
 
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
+   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
+   virtual bool ProcessFinalize();
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
-   virtual bool Process();
+   // Effect implementation
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
- private:
-   bool ProcessOne(int count, WaveTrack * t,
-                   sampleCount start, sampleCount len);
+private:
+   // EffectEcho implementation
 
-   float delay;
-   float decay;
-
-friend class EchoDialog;
-};
-
-//----------------------------------------------------------------------------
-// EchoDialog
-//----------------------------------------------------------------------------
-
-class EchoDialog:public EffectDialog {
- public:
-   EchoDialog(EffectEcho * effect, wxWindow * parent);
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
- private:
-   // handlers
-   void OnPreview( wxCommandEvent &event );
-
- private:
-   bool           m_bLoopDetect;
-   EffectEcho *   m_pEffect;
-
-   // controls
-   wxTextCtrl *   m_pTextCtrl_Delay;
-   wxTextCtrl *   m_pTextCtrl_Decay;
-
- public:
-   // effect parameters
-   float delay;
-   float decay;
-
- private:
-   DECLARE_EVENT_TABLE()
+private:
+   double delay;
+   double decay;
+   float *history;
+   sampleCount histPos;
+   sampleCount histLen;
 };
 
 #endif // __AUDACITY_EFFECT_ECHO__

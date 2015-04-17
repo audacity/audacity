@@ -34,21 +34,27 @@ using namespace soundtouch;
 
 class WaveTrack;
 
-class EffectSoundTouch:public Effect {
+class EffectSoundTouch : public Effect
+{
+public:
 
- public:
+   // Effect implementation
+
    virtual bool Process();
+
+   // EffectSoundTouch implementation
+
 #ifdef USE_MIDI
    double mSemitones; // pitch change for NoteTracks
    EffectSoundTouch() { mSemitones = 0; }
 #endif
 
- protected:
+protected:
    SoundTouch *mSoundTouch;
    double mCurT0;
    double mCurT1;
 
- private:
+private:
    bool ProcessLabelTrack(Track *track);
 #ifdef USE_MIDI
    bool ProcessNoteTrack(Track *track);

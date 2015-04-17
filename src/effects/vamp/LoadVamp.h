@@ -8,6 +8,10 @@
 
 **********************************************************************/
 
+#include "../../Audacity.h"
+
+#if defined(USE_VAMP)
+
 #include "audacity/ModuleInterface.h"
 #include "audacity/EffectInterface.h"
 #include "audacity/PluginInterface.h"
@@ -47,9 +51,16 @@ public:
    virtual IdentInterface *CreateInstance(const wxString & path);
    virtual void DeleteInstance(IdentInterface *instance);
 
+private:
    // VampEffectModule implementation
+
+   Vamp::Plugin *FindPlugin(const wxString & wpath,
+                            int & output,
+                            bool & hasParameters);
 
 private:
    ModuleManagerInterface *mModMan;
    wxString mPath;
 };
+
+#endif

@@ -32,11 +32,11 @@ class AudioUnitEffect;
 
 WX_DEFINE_ARRAY_PTR(AudioUnitEffect *, AudioUnitEffectArray);
 
-class AudioUnitEffectEventHelper;
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
 
-class AudioUnitEffect : public EffectClientInterface,
+class AudioUnitEffect : public wxEvtHandler,
+                        public EffectClientInterface,
                         public EffectUIClientInterface
 {
 public:
@@ -76,15 +76,15 @@ public:
    virtual int GetMidiOutCount();
 
    virtual void SetSampleRate(sampleCount rate);
-   virtual sampleCount GetBlockSize(sampleCount maxBlockSize);
+   virtual sampleCount SetBlockSize(sampleCount maxBlockSize);
 
    virtual sampleCount GetLatency();
    virtual sampleCount GetTailSize();
 
    virtual bool IsReady();
-   virtual bool ProcessInitialize();
+   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
    virtual bool ProcessFinalize();
-   virtual sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size);
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
 
    virtual bool RealtimeInitialize();
    virtual bool RealtimeAddProcessor(int numChannels, float sampleRate);
@@ -103,24 +103,23 @@ public:
    virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
+   virtual bool LoadUserPreset(const wxString & name);
+   virtual bool SaveUserPreset(const wxString & name);
+
+   virtual bool LoadFactoryPreset(int id);
+   virtual bool LoadFactoryDefaults();
+   virtual wxArrayString GetFactoryPresets();
+
    // EffectUIClientInterface implementation
 
-   virtual void SetUIHost(EffectUIHostInterface *host);
+   virtual void SetHostUI(EffectUIHostInterface *host);
    virtual bool PopulateUI(wxWindow *parent);
    virtual bool IsGraphicalUI();
    virtual bool ValidateUI();
    virtual bool HideUI();
    virtual bool CloseUI();
 
-   virtual void LoadUserPreset(const wxString & name);
-   virtual void SaveUserPreset(const wxString & name);
-
-   virtual void LoadFactoryPreset(int id);
-   virtual void LoadFactoryDefaults();
-
-   virtual wxArrayString GetFactoryPresets();
-
-   virtual bool CanExport();
+   virtual bool CanExportPresets();
    virtual void ExportPresets();
    virtual void ImportPresets();
 
@@ -177,8 +176,12 @@ private:
 
    void GetChannelCounts();
 
-   void LoadParameters(const wxString & group);
-   void SaveParameters(const wxString & group);
+   bool LoadParameters(const wxString & group);
+   bool SaveParameters(const wxString & group);
+
+   void OnSize(wxSizeEvent & evt);
+
+private:
 
    wxString    mPath;
    wxString    mName;
@@ -236,9 +239,8 @@ private:
    EventHandlerRef mContentTrackingHandlerRef;
    EventHandlerRef mAUTrackingHandlerRef;
 
-   AudioUnitEffectEventHelper *mEventHelper;
+   DECLARE_EVENT_TABLE();
 
-   friend class AudioUnitEffectEventHelper;
    friend class AudioUnitEffectExportDialog;
    friend class AudioUnitEffectImportDialog;
 };

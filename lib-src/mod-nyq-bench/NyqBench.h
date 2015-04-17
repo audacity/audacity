@@ -191,7 +191,7 @@ class NyqBench:public wxFrame
    wxFindReplaceData mFindData;
    NyqTextCtrl *mFindText;
 
-   EffectNyquist *mEffect;
+   NyquistEffect *mEffect;
 
    wxFont mScriptFont;
    wxFont mOutputFont;

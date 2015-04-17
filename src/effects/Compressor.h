@@ -11,71 +11,77 @@
 #ifndef __AUDACITY_EFFECT_COMPRESSOR__
 #define __AUDACITY_EFFECT_COMPRESSOR__
 
-class wxString;
-
-#include <wx/defs.h>
-#include <wx/dc.h>
-#include <wx/dcclient.h>
 #include <wx/bitmap.h>
-#include <wx/button.h>
 #include <wx/checkbox.h>
-#include <wx/slider.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
 #include <wx/panel.h>
-#include <wx/sizer.h>
+#include <wx/slider.h>
+#include <wx/string.h>
 #include <wx/stattext.h>
-#include <wx/intl.h>
+#include <wx/window.h>
+
+#include "../ShuttleGui.h"
+
 #include "TwoPassSimpleMono.h"
 
-class WaveTrack;
+class EffectCompressorPanel;
 
-class EffectCompressor: public EffectTwoPassSimpleMono {
+#define COMPRESSOR_PLUGIN_SYMBOL wxTRANSLATE("Compressor")
 
+class EffectCompressor : public EffectTwoPassSimpleMono
+{
 public:
 
    EffectCompressor();
    virtual ~EffectCompressor();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Compressor..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-     std::set<wxString> result;
-     result.insert(wxT("http://lv2plug.in/ns/lv2core#CompressorPlugin"));
-     return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Compressor"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Applying Dynamic Range Compression..."));
-   }
+   virtual EffectType GetType();
 
-   virtual bool Init();
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   // EffectClientInterface implementation
 
- protected:
-   virtual bool TwoBufferProcessPass1(float *buffer1, sampleCount len1, float *buffer2, sampleCount len2);
-   virtual bool ProcessPass2(float *buffer, sampleCount len);
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
- private:
+   // Effect implementation
 
-   virtual bool NewTrackPass1();
+   virtual bool Startup();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
+
+protected:
+   // EffectTwoPassSimpleMono implementation
+
    virtual bool InitPass1();
    virtual bool InitPass2();
+   virtual bool NewTrackPass1();
+   virtual bool ProcessPass2(float *buffer, sampleCount len);
+   virtual bool TwoBufferProcessPass1(float *buffer1, sampleCount len1, float *buffer2, sampleCount len2);
+
+private:
+   // EffectCompressor implementation
 
    void FreshenCircle();
    float AvgCircle(float x);
+   void Follow(float *buffer, float *env, int len, float *previous, int previous_len);
+   float DoCompression(float x, double env);
+
+   void OnSlider(wxCommandEvent & evt);
+   void UpdateUI();
+
+private:
    double    mRMSSum;
    int       mCircleSize;
    int       mCirclePos;
    double   *mCircle;
-
-   void Follow(float *buffer, float *env, int len, float *previous, int previous_len);
-   float DoCompression(float x, double env);
 
    double    mAttackTime;
    double    mThresholdDB;
@@ -94,69 +100,13 @@ public:
    int       mNoiseCounter;
    double    mGain;
    double    mLastLevel;
-   float	*mFollow1;
-   float	*mFollow2;
+   float	   *mFollow1;
+   float	   *mFollow2;
    sampleCount mFollowLen;
 
    double    mMax;			//MJS
 
-   friend class CompressorDialog;
-};
-
-class CompressorPanel: public wxPanel
-{
-public:
-   CompressorPanel( wxWindow *parent, wxWindowID id,
-                    const wxPoint& pos = wxDefaultPosition,
-                    const wxSize& size = wxDefaultSize);
-
-   void OnPaint(wxPaintEvent & event);
-
-   double threshold;
-   double noisefloor;
-   double ratio;
-
-private:
-
-   wxBitmap *mBitmap;
-   wxRect mEnvRect;
-   int mWidth;
-   int mHeight;
-
-   DECLARE_EVENT_TABLE()
-};
-
-// WDR: class declarations
-
-//----------------------------------------------------------------------------
-// CompressorDialog
-//----------------------------------------------------------------------------
-
-class CompressorDialog: public EffectDialog
-{
-public:
-   // constructors and destructors
-   CompressorDialog( EffectCompressor *effect, wxWindow *parent);
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
-   double threshold;
-   double noisefloor;
-   double ratio;
-   double attack;
-   double decay;  // "release"
-   bool useGain;
-   bool usePeak;
-
-private:
-   void OnSize( wxSizeEvent &event );
-   void OnSlider( wxCommandEvent &event );
-   void OnPreview( wxCommandEvent &event );
-
-   EffectCompressor *mEffect;
-   CompressorPanel *mPanel;
+   EffectCompressorPanel *mPanel;
 
    wxStaticText *mThresholdLabel;
    wxSlider *mThresholdSlider;
@@ -181,8 +131,32 @@ private:
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mPeakCheckBox;
 
+   DECLARE_EVENT_TABLE();
+};
+
+class EffectCompressorPanel: public wxPanel
+{
+public:
+   EffectCompressorPanel(wxWindow *parent,
+                         double & threshold,
+                         double & noiseFloor,
+                         double & ratio);
+
 private:
-   DECLARE_EVENT_TABLE()
+   void OnPaint(wxPaintEvent & evt);
+   void OnSize(wxSizeEvent & evt);
+
+private:
+   double & threshold;
+   double & noiseFloor;
+   double & ratio;
+
+   wxBitmap *mBitmap;
+   wxRect mEnvRect;
+   int mWidth;
+   int mHeight;
+
+   DECLARE_EVENT_TABLE();
 };
 
 #endif

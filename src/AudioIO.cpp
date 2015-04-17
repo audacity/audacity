@@ -1383,7 +1383,6 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
        }
    } while(!bDone);
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    if (mNumPlaybackChannels > 0)
    {
       EffectManager & em = EffectManager::Get();
@@ -1407,7 +1406,6 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
          em.RealtimeAddProcessor(group++, chanCnt, vt->GetRate());
       }
    }
-#endif
 
 #ifdef AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
@@ -1500,12 +1498,10 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
 
 void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 {
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    if (mNumPlaybackChannels > 0)
    {
       EffectManager::Get().RealtimeFinalize();
    }
-#endif
 
    if(mPlaybackBuffers)
    {
@@ -1709,13 +1705,11 @@ void AudioIO::StopStream()
 
    wxMutexLocker locker(mSuspendAudioThread);
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    // No longer need effects processing
    if (mNumPlaybackChannels > 0)
    {
       EffectManager::Get().RealtimeFinalize();
    }
-#endif
 
    //
    // We got here in one of two ways:
@@ -1964,7 +1958,6 @@ void AudioIO::StopStream()
 
 void AudioIO::SetPaused(bool state)
 {
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
    if (state != mPaused)
    {
       if (state)
@@ -1976,7 +1969,6 @@ void AudioIO::SetPaused(bool state)
          EffectManager::Get().RealtimeResume();
       }
    }
-#endif
 
    mPaused = state;
 }
@@ -3632,10 +3624,8 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
          }
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
          EffectManager & em = EffectManager::Get();
          em.RealtimeProcessStart();
-#endif
 
          bool selected = false;
          int group = 0;
@@ -3718,13 +3708,12 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             }
 #endif
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
             if( !cut && selected )
             {
                len = em.RealtimeProcess(group, chanCnt, tempBufs, len);
             }
             group++;
-#endif
+
             // If our buffer is empty and the time indicator is past
             // the end, then we've actually finished playing the entire
             // selection.
@@ -3783,9 +3772,7 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
             chanCnt = 0;
          }
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
          em.RealtimeProcessEnd();
-#endif
 
          gAudioIO->mLastPlaybackTimeMillis = ::wxGetLocalTimeMillis();
 

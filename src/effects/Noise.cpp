@@ -9,238 +9,260 @@
 *******************************************************************//**
 
 \class EffectNoise
-\brief An Effect for the "Generator" menu to add white noise.
+\brief An effect to add white noise.
 
 *//*******************************************************************/
 
 #include "../Audacity.h"
-#include "../Project.h"
-#include "../Prefs.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "Noise.h"
 
 #include <math.h>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846  /* pi */
-#endif
-#define AMP_MIN 0
-#define AMP_MAX 1
+#include <wx/choice.h>
+#include <wx/intl.h>
+#include <wx/textctrl.h>
+#include <wx/valgen.h>
+
+#include "../Prefs.h"
+#include "../widgets/valnum.h"
+
+#include "Noise.h"
+
+enum kTypes
+{
+   kWhite,
+   kPink,
+   kBrownian,
+   kNumTypes
+};
+
+static const wxChar *kTypeStrings[kNumTypes] =
+{
+   wxTRANSLATE("White"),
+   wxTRANSLATE("Pink"),
+   wxTRANSLATE("Brownian")
+};
+
+//     Name    Type     Key                        Def      Min   Max            Scale
+Param( Type,   int,     wxTRANSLATE("Type"),       kWhite,  0,    kNumTypes - 1, 1  );
+Param( Amp,    double,  wxTRANSLATE("Amplitude"),  0.8,     0.0,  1.0,           1  );
 
 //
 // EffectNoise
 //
 
-bool EffectNoise::Init()
+EffectNoise::EffectNoise()
 {
-   gPrefs->Read(wxT("/Effects/Noise/Duration"), &mDuration, 1L);
-   return true;
+   mType = DEF_Type;
+   mAmp = DEF_Amp;
+   mDuration = GetDefaultDuration();
+
+   y = z = buf0 = buf1 = buf2 = buf3 = buf4 = buf5 = buf6 = 0;
 }
 
-bool EffectNoise::PromptUser()
+EffectNoise::~EffectNoise()
 {
-   wxArrayString noiseTypeList;
-
-   noiseTypeList.Add(_("White"));
-   noiseTypeList.Add(_("Pink"));
-   noiseTypeList.Add(_("Brownian"));
-
-   NoiseDialog dlog(this, mParent, _("Noise Generator"));
-
-   // dialog will be passed values from effect
-   // Effect retrieves values from saved config
-   // Dialog will take care of using them to initialize controls
-   // If there is a selection, use that duration, otherwise use
-   // value from saved config: this is useful is user wants to
-   // replace selection with noise
-   //
-   if (mT1 > mT0) {
-      mDuration = mT1 - mT0;
-      dlog.nIsSelection = true;
-   } else {
-      gPrefs->Read(wxT("/Effects/Noise/Duration"), &mDuration, 30L);
-      dlog.nIsSelection = false;
-   }
-
-   gPrefs->Read(wxT("/Effects/Noise/Type"), &noiseType, 0L);
-   gPrefs->Read(wxT("/Effects/Noise/Amplitude"), &noiseAmplitude, 0.8f);
-
-   // Initialize dialog locals
-   dlog.nDuration = mDuration;
-   dlog.nAmplitude = noiseAmplitude;
-   dlog.nType = noiseType;
-   dlog.nTypeList = &noiseTypeList;
-
-   // start dialog
-   dlog.Init();
-   dlog.TransferDataToWindow();
-   dlog.Fit();
-   dlog.ShowModal();
-
-   if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
-
-   // if there was an OK, retrieve values
-   noiseType = dlog.nType;
-   mDuration = dlog.nDuration;
-   noiseAmplitude = dlog.nAmplitude;
-
-   return true;
 }
 
-bool EffectNoise::TransferParameters( Shuttle & WXUNUSED(shuttle) )
+// IdentInterface implementation
+
+wxString EffectNoise::GetSymbol()
 {
-   return true;
+   return NOISE_PLUGIN_SYMBOL;
 }
 
-bool EffectNoise::MakeNoise(float *buffer, sampleCount len, float fs, float amplitude)
+wxString EffectNoise::GetDescription()
 {
+   return wxTRANSLATE("Generates one of three different types of noise");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectNoise::GetType()
+{
+   return EffectTypeGenerate;
+}
+
+// EffectClientInterface implementation
+
+int EffectNoise::GetAudioOutCount()
+{
+   return 1;
+}
+
+sampleCount EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, sampleCount size)
+{
+   float *buffer = outbuf[0];
+
    float white;
-   sampleCount i;
-   float div = ((float)RAND_MAX) / 2.0f;
+   float amplitude;
+   float div = ((float) RAND_MAX) / 2.0f;
 
-   switch (noiseType) {
+   switch (mType)
+   {
    default:
-   case 0: // white
-       for(i=0; i<len; i++)
-          buffer[i] = amplitude * ((rand() / div) - 1.0f);
+   case kWhite: // white
+       for (sampleCount i = 0; i < size; i++)
+       {
+          buffer[i] = mAmp * ((rand() / div) - 1.0f);
+       }
        break;
 
-   case 1: // pink
+   case kPink: // pink
       // based on Paul Kellet's "instrumentation grade" algorithm.
-      white=0;
 
       // 0.129f is an experimental normalization factor.
-      amplitude *= 0.129f;
-      for(i=0; i<len; i++) {
-      white=(rand() / div) - 1.0f;
-      buf0=0.99886f * buf0 + 0.0555179f * white;
-      buf1=0.99332f * buf1 + 0.0750759f * white;
-      buf2=0.96900f * buf2 + 0.1538520f * white;
-      buf3=0.86650f * buf3 + 0.3104856f * white;
-      buf4=0.55000f * buf4 + 0.5329522f * white;
-      buf5=-0.7616f * buf5 - 0.0168980f * white;
-      buffer[i] = amplitude *
-         (buf0 + buf1 + buf2 + buf3 + buf4 + buf5 + buf6 + white * 0.5362);
-      buf6 = white * 0.115926;
+      amplitude = mAmp * 0.129f;
+      for (sampleCount i = 0; i < size; i++)
+      {
+         white = (rand() / div) - 1.0f;
+         buf0 = 0.99886f * buf0 + 0.0555179f * white;
+         buf1 = 0.99332f * buf1 + 0.0750759f * white;
+         buf2 = 0.96900f * buf2 + 0.1538520f * white;
+         buf3 = 0.86650f * buf3 + 0.3104856f * white;
+         buf4 = 0.55000f * buf4 + 0.5329522f * white;
+         buf5 = -0.7616f * buf5 - 0.0168980f * white;
+         buffer[i] = amplitude *
+            (buf0 + buf1 + buf2 + buf3 + buf4 + buf5 + buf6 + white * 0.5362);
+         buf6 = white * 0.115926;
       }
       break;
 
-   case 2: // Brownian
-       white=0;
-       //float leakage=0.997; // experimental value at 44.1kHz
-       //double scaling = 0.05; // experimental value at 44.1kHz
-       // min and max protect against instability at extreme sample rates.
-       float leakage = ((fs-144.0)/fs < 0.9999)? (fs-144.0)/fs : 0.9999;
-       float scaling = (9.0/sqrt(fs) > 0.01)? 9.0/sqrt(fs) : 0.01;
+   case kBrownian: // Brownian
+      //float leakage=0.997; // experimental value at 44.1kHz
+      //double scaling = 0.05; // experimental value at 44.1kHz
+      // min and max protect against instability at extreme sample rates.
+      float leakage = ((mSampleRate - 144.0) / mSampleRate < 0.9999)
+         ? (mSampleRate - 144.0) / mSampleRate
+         : 0.9999f;
 
-       for(i=0; i<len; i++){
-         white=(rand() / div) - 1.0f;
+      float scaling = (9.0 / sqrt(mSampleRate) > 0.01)
+         ? 9.0 / sqrt(mSampleRate)
+         : 0.01f;
+ 
+      for (sampleCount i = 0; i < size; i++)
+      {
+         white = (rand() / div) - 1.0f;
          z = leakage * y + white * scaling;
-         y = (fabs(z) > 1.0) ? (leakage * y - white * scaling) : z;
-         buffer[i] = amplitude * y;
-       }
-       break;
+         y = fabs(z) > 1.0
+            ? leakage * y - white * scaling
+            : z;
+         buffer[i] = mAmp * y;
+      }
+      break;
    }
+
+   return size;
+}
+
+bool EffectNoise::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_Type, kTypeStrings[mType]);
+   parms.Write(KEY_Amp, mAmp);
+
    return true;
 }
 
-void EffectNoise::GenerateBlock(float *data,
-                                const WaveTrack &track,
-                                sampleCount block)
+bool EffectNoise::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   MakeNoise(data, block, track.GetRate(), noiseAmplitude);
+   ReadAndVerifyEnum(Type, wxArrayString(kNumTypes, kTypeStrings));
+   ReadAndVerifyDouble(Amp);
+
+   mType = Type;
+   mAmp = Amp;
+
+   return true;
 }
 
-void EffectNoise::Success()
-{
-   /* save last used values
-      save duration unless value was got from selection, so we save only
-      when user explicitely setup a value
-      */
-   if (mT1 == mT0)
-      gPrefs->Write(wxT("/Effects/Noise/Duration"), mDuration);
+// Effect implementation
 
-   gPrefs->Write(wxT("/Effects/Noise/Type"), noiseType);
-   gPrefs->Write(wxT("/Effects/Noise/Amplitude"), noiseAmplitude);
-   gPrefs->Flush();
+bool EffectNoise::Startup()
+{
+   wxString base = wxT("/Effects/Noise/");
+
+   // Migrate settings from 2.1.0 or before
+
+   // Already migrated, so bail
+   if (gPrefs->Exists(base + wxT("Migrated")))
+   {
+      return true;
+   }
+
+   // Load the old "current" settings
+   if (gPrefs->Exists(base))
+   {
+      gPrefs->Read(base + wxT("Type"), &mType, 0L);
+      gPrefs->Read(base + wxT("Amplitude"), &mAmp, 0.8f);
+
+      SaveUserPreset(GetCurrentSettingsGroup());
+
+      // Do not migrate again
+      gPrefs->Write(base + wxT("Migrated"), true);
+      gPrefs->Flush();
+   }
+
+   return true;
 }
 
-//----------------------------------------------------------------------------
-// NoiseDialog
-//----------------------------------------------------------------------------
-
-BEGIN_EVENT_TABLE(NoiseDialog, EffectDialog)
-    EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, NoiseDialog::OnTimeCtrlUpdate)
-END_EVENT_TABLE()
-
-NoiseDialog::NoiseDialog(EffectNoise * effect, wxWindow * parent, const wxString & title)
-:  EffectDialog(parent, title, INSERT_EFFECT),
-   mEffect(effect)
+void EffectNoise::PopulateOrExchange(ShuttleGui & S)
 {
-   mNoiseDurationT = NULL;
-   /* // already initialized in EffectNoise::PromptUser
-   nDuration = mDuration;
-   nAmplitude = noiseAmplitude;
-   nType = noiseType;
-   */
-}
+   wxASSERT(kNumTypes == WXSIZEOF(kTypeStrings));
 
-void NoiseDialog::PopulateOrExchange( ShuttleGui & S )
-{
+   wxArrayString typeChoices;
+   for (int i = 0; i < kNumTypes; i++)
+   {
+      typeChoices.Add(wxGetTranslation(kTypeStrings[i]));
+   }
+
    S.StartMultiColumn(2, wxCENTER);
    {
-      S.TieChoice(_("Noise type:"), nType, nTypeList);
-      S.TieNumericTextBox(_("Amplitude (0-1)") + wxString(wxT(":")), nAmplitude, 10);
-      S.AddPrompt(_("Duration") + wxString(wxT(":")));
-      if (mNoiseDurationT == NULL)
-      {
-         mNoiseDurationT = new
-            NumericTextCtrl(NumericConverter::TIME, this,
-                      wxID_ANY,
-                      wxT(""),
-                      nDuration,
-                      mEffect->mProjectRate,
-                      wxDefaultPosition,
-                      wxDefaultSize,
-                      true);
-         /* use this instead of "seconds" because if a selection is passed to
-          * the effect, I want it (nDuration) to be used as the duration, and
-          * with "seconds" this does not always work properly. For example,
-          * it rounds down to zero... */
-         mNoiseDurationT->SetName(_("Duration"));
-         mNoiseDurationT->SetFormatString(mNoiseDurationT->GetBuiltinFormat(nIsSelection==true?(_("hh:mm:ss + samples")):(_("hh:mm:ss + milliseconds"))));
-         mNoiseDurationT->EnableMenu();
-      }
+      S.AddChoice(_("Noise type:"), wxT(""), &typeChoices)->SetValidator(wxGenericValidator(&mType));
+
+      FloatingPointValidator<double> vldAmp(1, &mAmp, NUM_VAL_NO_TRAILING_ZEROES);
+      vldAmp.SetRange(MIN_Amp, MAX_Amp);
+      S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 12)->SetValidator(vldAmp);
+      S.AddPrompt(_("Duration:"));
+
+      mNoiseDurationT = new
+         NumericTextCtrl(NumericConverter::TIME,
+                           S.GetParent(),
+                           wxID_ANY,
+      /* use this instead of "seconds" because if a selection is passed to
+         * the effect, I want it (nDuration) to be used as the duration, and
+         * with "seconds" this does not always work properly. For example,
+         * it rounds down to zero... */
+                           (mT1 > mT0) ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
+                           mDuration,
+                           mProjectRate,
+                           wxDefaultPosition,
+                           wxDefaultSize,
+                           true);
+      mNoiseDurationT->SetName(_("Duration"));
+      mNoiseDurationT->EnableMenu();
       S.AddWindow(mNoiseDurationT, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL);
    }
    S.EndMultiColumn();
 }
 
-bool NoiseDialog::TransferDataToWindow()
+bool EffectNoise::TransferDataToWindow()
 {
-   EffectDialog::TransferDataToWindow();
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
 
-   // Must handle this ourselves since ShuttleGui doesn't know about it
-   mNoiseDurationT->SetValue(nDuration);
+   mNoiseDurationT->SetValue(mDuration);
 
    return true;
 }
 
-bool NoiseDialog::TransferDataFromWindow()
+bool EffectNoise::TransferDataFromWindow()
 {
-   EffectDialog::TransferDataFromWindow();
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
 
-   nAmplitude = TrapDouble(nAmplitude, AMP_MIN, AMP_MAX);
-
-   // Must handle this ourselves since ShuttleGui doesn't know about it
-   nDuration = mNoiseDurationT->GetValue();
+   mDuration = mNoiseDurationT->GetValue();
 
    return true;
-}
-
-void NoiseDialog::OnTimeCtrlUpdate(wxCommandEvent & WXUNUSED(event)) {
-   Fit();
 }

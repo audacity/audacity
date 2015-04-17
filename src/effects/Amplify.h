@@ -15,98 +15,71 @@
 #ifndef __AUDACITY_EFFECT_AMPLIFY__
 #define __AUDACITY_EFFECT_AMPLIFY__
 
-#include <wx/button.h>
 #include <wx/checkbox.h>
-#include <wx/dialog.h>
-#include <wx/intl.h>
+#include <wx/event.h>
 #include <wx/slider.h>
+#include <wx/string.h>
 #include <wx/textctrl.h>
 
-#include "SimpleMono.h"
+#include "../ShuttleGui.h"
 
-class WaveTrack;
+#include "Effect.h"
 
-class EffectAmplify:public EffectSimpleMono
+#define AMPLIFY_PLUGIN_SYMBOL wxTRANSLATE("Amplify")
+
+class EffectAmplify : public Effect
 {
- friend class AmplifyDialog;
-
- public:
+public:
    EffectAmplify();
+   virtual ~EffectAmplify();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Amplify..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#AmplifierPlugin"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Amplify"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Amplifying"));
-   }
+   virtual EffectType GetType();
 
-   // Useful only after PromptUser values have been set.
-   virtual wxString GetEffectDescription();
+   // EffectClientInterface implementation
+
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
 
    virtual bool Init();
-
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
-
- protected:
-   virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
-
- private:
-   float ratio;
-   float peak;
-};
-
-//----------------------------------------------------------------------------
-// AmplifyDialog
-//----------------------------------------------------------------------------
-
-class AmplifyDialog:public EffectDialog
-{
- public:
-   // constructors and destructors
-   AmplifyDialog(EffectAmplify *effect, wxWindow * parent);
-
-   // method declarations
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-   bool Validate();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
 private:
-   // handlers
-   void OnAmpText(wxCommandEvent & event);
-   void OnPeakText(wxCommandEvent & event);
-   void OnAmpSlider(wxCommandEvent & event);
-   void OnClipCheckBox(wxCommandEvent & event);
-   void OnPreview( wxCommandEvent &event );
+   // EffectAmplify implementation
 
+   void OnAmpText(wxCommandEvent & evt);
+   void OnPeakText(wxCommandEvent & evt);
+   void OnAmpSlider(wxCommandEvent & evt);
+   void OnClipCheckBox(wxCommandEvent & evt);
    void CheckClip();
 
- private:
+private:
+   float mPeak;
+
+   float mRatio;
+   float mAmp;
+   float mNewPeak;
+   bool mNoClip;
+
    wxSlider *mAmpS;
    wxTextCtrl *mAmpT;
-   wxTextCtrl *mPeakT;
+   wxTextCtrl *mNewPeakT;
    wxCheckBox *mClip;
 
    DECLARE_EVENT_TABLE();
-
- public:
-   EffectAmplify *mEffect;
-
-   float ratio;
-   float peak;
-   bool noclip;
 };
 
 #endif // __AUDACITY_EFFECT_AMPLIFY__

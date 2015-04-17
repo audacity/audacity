@@ -11,83 +11,57 @@
 #ifndef __AUDACITY_EFFECT_LEVELER__
 #define __AUDACITY_EFFECT_LEVELER__
 
-#include "SimpleMono.h"
-
-#include <wx/choice.h>
+#include <wx/arrstr.h>
 #include <wx/string.h>
-#include <wx/textctrl.h>
 
-class EffectLeveller: public EffectSimpleMono
+#include "../ShuttleGui.h"
+
+#include "Effect.h"
+
+#define LEVELLER_PLUGIN_SYMBOL wxTRANSLATE("Leveller")
+
+class EffectLeveller : public Effect
 {
- friend class LevellerDialog;
-
- public:
+public:
    EffectLeveller();
+   virtual ~EffectLeveller();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Leveler..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-     std::set<wxString> result;
-     result.insert(wxT("http://lv2plug.in/ns/lv2core#CompressorPlugin"));
-     return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Leveller"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Applying Leveler..."));
-   }
-   virtual bool Init();
-   virtual void End();
-   virtual bool CheckWhetherSkipEffect();
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   virtual EffectType GetType();
 
- protected:
-   virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
+   // EffectClientInterface implementation
 
- private:
-   void   CalcLevellerFactors();
-   int    mLevellerDbChoiceIndex;
-   int    mLevellerNumPasses;
-   double mFrameSum;
-   double mLevellerDbSilenceThreshold;
-   float  LevelOneFrame(float frame);
-};
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
-//----------------------------------------------------------------------------
-// LevellerDialog
-//----------------------------------------------------------------------------
+   // Effect implementation
 
-class LevellerDialog: public EffectDialog
-{
- public:
-   // constructors and destructors
-   LevellerDialog(EffectLeveller *effect, wxWindow * parent);
+   virtual bool Startup();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
-   // method declarations
-   void PopulateOrExchange(ShuttleGui & S);
-//   bool TransferDataToWindow();
-//   bool TransferDataFromWindow();
+private:
+   // EffectLeveller implementation
 
- private:
-   // handlers
-   void OnPreview( wxCommandEvent &event );
+   void CalcLevellerFactors();
+   float LevelOneFrame(float frame);
 
- private:
-   EffectLeveller *mEffect;
-   wxChoice *mLevellerDbSilenceThresholdChoice;
-   wxChoice *mLevellerNumPassesChoice;
+private:
+   int    mNumPasses;
+   double mDbSilenceThreshold;
 
-   DECLARE_EVENT_TABLE()
-
- public:
-   int mLevellerDbChoiceIndex;
-   int mLevellerNumPassesChoiceIndex;
+   int    mDbIndex;
+   int    mPassIndex;
 };
 
 #endif
