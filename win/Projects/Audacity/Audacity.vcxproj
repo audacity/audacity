@@ -509,6 +509,7 @@
     <ClInclude Include="..\..\..\src\AllThemeResources.h" />
     <ClInclude Include="..\..\..\src\Audacity.h" />
     <ClInclude Include="..\..\..\src\AudacityApp.h" />
+    <ClInclude Include="..\..\..\src\AudacityHeaders.h" />
     <ClInclude Include="..\..\..\src\AudacityLogger.h" />
     <ClInclude Include="..\..\..\src\AudioIO.h" />
     <ClInclude Include="..\..\..\src\AudioIOListener.h" />

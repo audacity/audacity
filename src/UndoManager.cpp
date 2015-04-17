@@ -50,6 +50,7 @@ UndoManager::~UndoManager()
 
 void UndoManager::CalculateSpaceUsage()
 {
+   TIMER_START( "CalculateSpaceUsage", space_calc );
    TrackListOfKindIterator iter(Track::Wave);
 
    space.Clear();
@@ -102,6 +103,7 @@ void UndoManager::CalculateSpaceUsage()
 
    delete cur;
    delete prev;
+   TIMER_STOP( space_calc );
 }
 
 void UndoManager::GetLongDescription(unsigned int n, wxString *desc,
