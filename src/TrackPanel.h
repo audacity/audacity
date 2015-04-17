@@ -253,6 +253,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdateTrackVRuler(Track *t);
    virtual void UpdateVRulerSize();
 
+   virtual void DrawQuickPlayIndicator(wxDC & dc, double pos);
+
  protected:
    virtual MixerBoard* GetMixerBoard();
    /** @brief Populates the track pop-down menu with the common set of
@@ -560,6 +562,9 @@ protected:
    // and cursor
    double mLastIndicator;
    double mLastCursor;
+
+   // Quick Play indicator postion
+   double mOldQPIndicatorPos;
 
    int mTimeCount;
 

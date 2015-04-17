@@ -18,6 +18,7 @@
 #include <wx/window.h>
 #include "../Envelope.h"
 #include "../Experimental.h"
+#include "../Snap.h"
 
 struct ViewInfo;
 class AudacityProject;
@@ -270,6 +271,8 @@ public:
 
    void RegenerateTooltips();
 
+   bool mIsSnapped;
+
 private:
    void OnCapture(wxCommandEvent & evt);
    void OnErase(wxEraseEvent &evt);
@@ -283,10 +286,12 @@ private:
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
    void DoDrawIndicator(wxDC * dc);
+   void DrawQuickPlayIndicator(wxDC * dc, bool clear /*delete old only*/);
    void DoDrawPlayRegion(wxDC * dc);
 
    double Pos2Time(int p);
    int Time2Pos(double t);
+   int Seconds2Pixels(double t);
 
    bool IsWithinMarker(int mousePosX, double markerTime);
 
@@ -303,13 +308,33 @@ private:
 
    double mCurPos;
 
-   int mIndType;     // -1 = No indicator, 0 = Play, 1 = Record
+   int    mIndType;     // -1 = No indicator, 0 = Play, 1 = Record
    double mIndPos;
+   bool   mQuickPlayInd;
+   double mQuickPlayPos;
+   SnapManager *mSnapManager;
 
+   bool   mPlayRegionLock;
    double mPlayRegionStart;
    double mPlayRegionEnd;
+   double mOldPlayRegionStart;
+   double mOldPlayRegionEnd;
 
    bool mIsRecording;
+
+   //
+   // Pop-up menu
+   //
+   void ShowMenu(const wxPoint & pos);
+   void DragLoopSelection();
+   void OnSyncSelToQuickPlay(wxCommandEvent &evt);
+   void OnTimelineToolTips(wxCommandEvent &evt);
+   void OnAutoScroll(wxCommandEvent &evt);
+   void OnLockPlayRegion(wxCommandEvent &evt);
+
+   bool mPlayRegionDragsSelection;
+   bool mTimelineToolTip;
+
 
    enum MouseEventState {
       mesNone,

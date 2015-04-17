@@ -1554,7 +1554,7 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
       else
          mWarpedLength = mT1 - mT0;
       // PRL allow backwards play
-      mWarpedLength = abs(mWarpedLength);
+      mWarpedLength = fabs(mWarpedLength);
    }
 
    //
