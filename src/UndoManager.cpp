@@ -30,6 +30,7 @@ UndoManager
 #include "Track.h"
 #include "WaveTrack.h"          // temp
 #include "NoteTrack.h"  // for Sonify* function declarations
+#include "Diags.h"
 
 #include "UndoManager.h"
 
