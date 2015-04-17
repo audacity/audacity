@@ -30,6 +30,9 @@ class AudacityProject;
 class TrackList;
 class TimeTrack;
 
+struct AudioIOStartStreamOptions;
+class SelectedRegion;
+
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
 class ControlToolBar:public ToolBar {
 
@@ -64,13 +67,10 @@ class ControlToolBar:public ToolBar {
    // play from current cursor.
    void PlayCurrentRegion(bool looped = false, bool cutpreview = false);
    // Play the region [t0,t1]
-   void PlayPlayRegion(double t0, double t1,
-                       bool looped = false,
-                       bool cutpreview = false,
-                       TimeTrack *timetrack = NULL,
-                       // May be other than t0,
-                       // but will be constrained between t0 and t1
-                       const double *pStartTime = NULL);
+   // Return the Audio IO token or -1 for failure
+   int PlayPlayRegion(const SelectedRegion &selectedRegion,
+                      const AudioIOStartStreamOptions &options,
+                      bool cutpreview = false, bool backwards = false);
    void PlayDefault();
 
    // Stop playing

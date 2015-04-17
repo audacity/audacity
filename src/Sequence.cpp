@@ -1248,7 +1248,7 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
 }
 
 bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
-                              int len, sampleCount *where,
+                              int len, const sampleCount *where,
                               double samplesPerPixel)
 {
    sampleCount s0 = where[0];

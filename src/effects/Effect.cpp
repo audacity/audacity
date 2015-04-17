@@ -2265,7 +2265,7 @@ void Effect::Preview(bool dryOnly)
 #ifdef EXPERIMENTAL_MIDI_OUT
                                empty,
 #endif
-                               NULL, rate, t0, t1, NULL);
+                               rate, t0, t1);
 
       if (token) {
          int previewing = eProgressSuccess;
@@ -2959,7 +2959,9 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
          mPlayPos = mRegion.t1();
       }
 
-      mProject->GetControlToolBar()->PlayPlayRegion(mPlayPos, mRegion.t1());
+      mProject->GetControlToolBar()->PlayPlayRegion
+         (SelectedRegion(mPlayPos, mRegion.t1()),
+          mProject->GetDefaultPlayOptions());
    }
 }
 

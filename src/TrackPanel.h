@@ -313,9 +313,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
    void StartOrJumpPlayback(wxMouseEvent &event);
-#ifdef EXPERIMENTAL_SCRUBBING
-   void StartScrubbing(double position);
-#endif
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect r);
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
@@ -763,12 +760,6 @@ protected:
    //   coordinate should the dragging track move up or down?
    int mMoveUpThreshold;
    int mMoveDownThreshold;
-
-#ifdef EXPERIMENTAL_SCRUBBING
-   bool mScrubbing;
-   wxLongLong mLastScrubTime; // milliseconds
-   double mLastScrubPosition;
-#endif
 
    wxCursor *mArrowCursor;
    wxCursor *mPencilCursor;

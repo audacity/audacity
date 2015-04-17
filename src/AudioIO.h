@@ -42,6 +42,7 @@ class Resample;
 class TimeTrack;
 class AudioThread;
 class Meter;
+class SelectedRegion;
 class TimeTrack;
 class wxDialog;
 
@@ -74,6 +75,49 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_PLAYBACK, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_CAPTURE, -1);
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_AUDIOIO_MONITOR, -1);
 
+// To avoid growing the argument list of StartStream, add fields here
+struct AudioIOStartStreamOptions
+{
+   AudioIOStartStreamOptions()
+      : timeTrack(NULL)
+      , listener(NULL)
+      , playLooped(false)
+      , cutPreviewGapStart(0.0)
+      , cutPreviewGapLen(0.0)
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+      , scrubDelay(0.0)
+      , maxScrubSpeed(1.0)
+      , minScrubStutter(0.0)
+      , scrubStartClockTimeMillis(-1)
+#endif
+   {}
+
+   TimeTrack *timeTrack;
+   AudioIOListener* listener;
+   bool playLooped;
+   double cutPreviewGapStart;
+   double cutPreviewGapLen;
+
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   // Positive value indicates that scrubbing will happen
+   // (do not specify a time track, looping, or recording, which
+   //  are all incompatible with scrubbing):
+   double scrubDelay;
+
+   // We need a limiting value for the speed of the first scrub
+   // interval:
+   double maxScrubSpeed;
+
+   // When maximum speed scrubbing skips to follow the mouse,
+   // this is the minimum amount of playback at the maximum speed:
+   double minScrubStutter;
+
+   // Scrubbing needs the time of start of the mouse movement that began
+   // the scrub:
+   wxLongLong scrubStartClockTimeMillis;
+#endif
+};
+
 class AUDACITY_DLL_API AudioIO {
 
  public:
@@ -103,15 +147,9 @@ class AUDACITY_DLL_API AudioIO {
 #ifdef EXPERIMENTAL_MIDI_OUT
                    NoteTrackArray midiTracks,
 #endif
-                   TimeTrack *timeTrack, double sampleRate,
-                   double t0, double t1,
-                   AudioIOListener* listener,
-                   bool playLooped = false,
-                   double cutPreviewGapStart = 0.0,
-                   double cutPreviewGapLen = 0.0,
-                   // May be other than t0,
-                   // but will be constrained between t0 and t1
-                   const double *pStartTime = 0);
+                   double sampleRate, double t0, double t1,
+                   const AudioIOStartStreamOptions &options =
+                      AudioIOStartStreamOptions());
 
    /** \brief Stop recording, playback or input monitoring.
     *
@@ -122,6 +160,37 @@ class AUDACITY_DLL_API AudioIO {
    /** \brief Move the playback / recording position of the current stream
     * by the specified amount from where it is now */
    void SeekStream(double seconds) { mSeek = seconds; }
+
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   static double GetMaxScrubSpeed() { return 32.0; } // Is five octaves enough for your amusement?
+   static double GetMinScrubSpeed() { return 0.01; }
+   /** \brief enqueue a new end time, using the last end as the new start,
+   * to be played over the same duration, as between this and the last
+   * enqueuing (or the starting of the stream).  Except, we do not exceed maximum
+   * scrub speed, so may need to adjust either the start or the end.
+   * If maySkip is true, then when mouse movement exceeds maximum scrub speed,
+   * adjust the beginning of the scrub interval rather than the end, so that
+   * the scrub skips or "stutters" to stay near the cursor.
+   * But if the "stutter" is too short for the minimum, then there is no effect
+   * on the work queue.
+   * Return true if some work was really enqueued.
+   */
+   bool EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySkip);
+
+   /** \brief enqueue a new positive or negative scrubbing speed,
+   * using the last end as the new start,
+   * to be played over the same duration, as between this and the last
+   * enqueueing (or the starting of the stream).  Except, we do not exceed maximum
+   * scrub speed, so may need to adjust either the start or the end.
+   * If maySkip is true, then when mouse movement exceeds maximum scrub speed,
+   * adjust the beginning of the scrub interval rather than the end, so that
+   * the scrub skips or "stutters" to stay near the cursor.
+   * But if the "stutter" is too short for the minimum, then there is no effect
+   * on the work queue.
+   * Return true if some work was really enqueued.
+   */
+   bool EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool maySkip);
+#endif
 
    /** \brief  Returns true if audio i/o is busy starting, stopping, playing,
     * or recording.
@@ -281,9 +350,8 @@ class AUDACITY_DLL_API AudioIO {
     */
    static int GetOptimalSupportedSampleRate();
 
-   /** \brief The time the stream has been playing for
+   /** \brief During playback, the (unwarped) track time most recently played
     *
-    * This is given in seconds based on starting at t0
     * When playing looped, this will start from t0 again,
     * too. So the returned time should be always between
     * t0 and t1
@@ -375,10 +443,10 @@ private:
 #endif
 
    /** \brief Get the number of audio samples free in all of the playback
-    * buffers.
-    *
-    * Returns the smallest of the buffer free space values in the event that
-    * they are different. */
+   * buffers.
+   *
+   * Returns the smallest of the buffer free space values in the event that
+   * they are different. */
    int GetCommonlyAvailPlayback();
 
    /** \brief Get the number of audio samples ready in all of the recording
@@ -421,6 +489,12 @@ private:
    static const int RatesToTry[];
    /** \brief How many sample rates to try */
    static const int NumRatesToTry;
+
+   bool ReversedTime() const
+   {
+      return mT1 < mT0;
+   }
+   double LimitStreamTime(double absoluteTime) const;
 
    double NormalizeStreamTime(double absoluteTime) const;
 
@@ -506,7 +580,7 @@ private:
    double              mSeek;
    double              mPlaybackRingBufferSecs;
    double              mCaptureRingBufferSecs;
-   double              mMaxPlaybackSecsToCopy;
+   long                mPlaybackSamplesToCopy;
    double              mMinCaptureSecsToCopy;
    bool                mPaused;
    PaStream           *mPortStreamV19;
@@ -535,7 +609,7 @@ private:
    Meter              *mInputMeter;
    Meter              *mOutputMeter;
    bool                mUpdateMeters;
-   bool                mUpdatingMeters;
+   volatile bool       mUpdatingMeters;
 
    #if USE_PORTMIXER
    PxMixer            *mPortMixer;
@@ -553,7 +627,13 @@ private:
    bool                mInputMixerWorks;
    float               mMixerOutputVol;
 
-   bool                mPlayLooped;
+   enum {
+      PLAY_STRAIGHT,
+      PLAY_LOOPED,
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+      PLAY_SCRUB,
+#endif
+   }                   mPlayMode;
    double              mCutPreviewGapStart;
    double              mCutPreviewGapLen;
 
@@ -612,6 +692,14 @@ private:
    // Serialize main thread and PortAudio thread's attempts to pause and change
    // the state used by the third, Audio thread.
    wxMutex mSuspendAudioThread;
+
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   struct ScrubQueue;
+   ScrubQueue *mScrubQueue;
+
+   bool mSilentScrub;
+   long mScrubDuration;
+#endif
 };
 
 #endif

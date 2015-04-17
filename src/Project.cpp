@@ -1037,6 +1037,14 @@ AudacityProject::~AudacityProject()
    wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
 }
 
+AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
+{
+   AudioIOStartStreamOptions options;
+   options.timeTrack = GetTracks()->GetTimeTrack();
+   options.listener = this;
+   return options;
+}
+
 void AudacityProject::UpdatePrefsVariables()
 {
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
