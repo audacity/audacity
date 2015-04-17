@@ -70,7 +70,9 @@ class ControlToolBar:public ToolBar {
    // Return the Audio IO token or -1 for failure
    int PlayPlayRegion(const SelectedRegion &selectedRegion,
                       const AudioIOStartStreamOptions &options,
-                      bool cutpreview = false, bool backwards = false);
+                      bool cutpreview = false, bool backwards = false,
+                      // Allow t0 and t1 to be beyond end of tracks
+                      bool playWhiteSpace = false);
    void PlayDefault();
 
    // Stop playing

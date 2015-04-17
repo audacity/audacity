@@ -422,7 +422,6 @@ void ControlToolBar::EnableDisableButtons()
 
 void ControlToolBar::SetPlay(bool down, bool looped, bool cutPreview)
 {
-   AudacityProject *p = GetActiveProject();
    if (down) {
       mPlay->SetShift(looped);
       mPlay->SetControl(cutPreview);
@@ -471,7 +470,8 @@ bool ControlToolBar::IsRecordDown()
 int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    const AudioIOStartStreamOptions &options,
                                    bool cutpreview, /* = false */
-                                   bool backwards /* = false */)
+                                   bool backwards, /* = false */
+                                   bool playWhiteSpace /* = false */)
 {
    // Uncomment this for laughs!
    // backwards = true;
@@ -522,23 +522,32 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       }
    }
 
+   double latestEnd = (playWhiteSpace)? t1 : t->GetEndTime();
+
    if (!hasaudio) {
       SetPlay(false);
       return -1;  // No need to continue without audio tracks
    }
 
-   double maxofmins,minofmaxs;
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
    double init_seek = 0.0;
 #endif
 
-   // JS: clarified how the final play region is computed;
    if (t1 == t0) {
-      // msmeyer: When playing looped, we play the whole file, if
-      // no range is selected. Otherwise, we play from t0 to end
       if (looped) {
-         // msmeyer: always play from start
-         t0 = t->GetStartTime();
+         // play selection if there is one, otherwise
+         // set start of play region to project start, 
+         // and loop the project from current play position.
+
+         if ((t0 > p->GetSel0()) && (t0 < p->GetSel1())) {
+            t0 = p->GetSel0();
+            t1 = p->GetSel1();
+         }
+         else {
+            // loop the entire project
+            t0 = t->GetStartTime();
+            t1 = t->GetEndTime();
+         }
       } else {
          // move t0 to valid range
          if (t0 < 0) {
@@ -554,8 +563,6 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
          }
 #endif
       }
-
-      // always play to end
       t1 = t->GetEndTime();
    }
    else {
@@ -563,38 +570,12 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       if (backwards)
          std::swap(t0, t1);
 
-      // the set intersection between the play region and the
-      // valid range maximum of lower bounds
-      if (t0 < t->GetStartTime())
-         maxofmins = t->GetStartTime();
-      else
-         maxofmins = t0;
-
-      // minimum of upper bounds
-      if (t1 > t->GetEndTime())
-         minofmaxs = t->GetEndTime();
-      else
-         minofmaxs = t1;
-
-      // we test if the intersection has no volume
-      if (minofmaxs <= maxofmins) {
-         // no volume; play nothing
-         return -1;
-      }
-      else {
-         t0 = maxofmins;
-         t1 = minofmaxs;
-      }
+      t0 = wxMax(t0, 0.0);
+      t1 = wxMin(t1, latestEnd);
 
       if (backwards)
          std::swap(t0, t1);
    }
-
-   // Can't play before 0...either shifted or latency corrected tracks
-   if (t0 < 0.0)
-      t0 = 0.0;
-   if (t1 < 0.0)
-      t1 = 0.0;
 
    int token = -1;
    bool success = false;

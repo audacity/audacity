@@ -564,6 +564,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mLastCursor = -1;
    mLastIndicator = -1;
+   mOldQPIndicatorPos = -1;
 
    // Register for tracklist updates
    mTracks->Connect(EVT_TRACKLIST_RESIZED,
@@ -1117,6 +1118,36 @@ void TrackPanel::DrawIndicator()
 {
    wxClientDC dc( this );
    DoDrawIndicator( dc );
+}
+
+void TrackPanel::DrawQuickPlayIndicator(wxDC & dc, double pos)
+{
+   // Erase the old indicator.
+   if( mOldQPIndicatorPos != -1 ) {
+      dc.Blit( mOldQPIndicatorPos, 0, 1, mBacking->GetHeight(), &mBackingDC, mOldQPIndicatorPos, 0 );
+      mOldQPIndicatorPos = -1;
+   }
+
+   if (pos >= 0) {
+
+      (mRuler->mIsSnapped)? AColor::SnapGuidePen( &dc) : AColor::Light( &dc, false);
+
+      // Draw indicator in all visible tracks
+      VisibleTrackIterator iter( GetProject() );
+      for( Track *t = iter.First(); t; t = iter.Next() )
+      {
+         // Convert virtual coordinate to physical
+         int y = t->GetY() - mViewInfo->vpos;
+
+         // Draw the new indicator in its new location
+         AColor::Line(dc,
+                     pos,
+                     y + kTopInset + 1,
+                     pos,
+                     y + t->GetHeight() - 3 );
+      }
+      mOldQPIndicatorPos = pos;
+   }
 }
 
 /// Second level DrawIndicator()
