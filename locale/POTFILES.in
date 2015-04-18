@@ -175,6 +175,7 @@ src/TrackPanelAx.h
 src/TrackPanelListener.h
 src/UndoManager.cpp
 src/UndoManager.h
+src/ViewInfo.cpp
 src/ViewInfo.h
 src/VoiceKey.cpp
 src/VoiceKey.h

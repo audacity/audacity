@@ -307,19 +307,20 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
-	UndoManager.cpp UndoManager.h ViewInfo.h VoiceKey.cpp \
-	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
-	WrappedType.cpp WrappedType.h commands/AppCommandEvent.cpp \
-	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
-	commands/BatchEvalCommand.h commands/Command.cpp \
-	commands/Command.h commands/CommandBuilder.cpp \
-	commands/CommandBuilder.h commands/CommandDirectory.cpp \
-	commands/CommandDirectory.h commands/CommandHandler.cpp \
-	commands/CommandHandler.h commands/CommandManager.cpp \
-	commands/CommandManager.h commands/CommandMisc.h \
-	commands/CommandSignature.cpp commands/CommandSignature.h \
-	commands/CommandTargets.h commands/CommandType.cpp \
-	commands/CommandType.h commands/CompareAudioCommand.cpp \
+	UndoManager.cpp UndoManager.h ViewInfo.cpp ViewInfo.h \
+	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
+	WaveTrack.h WrappedType.cpp WrappedType.h \
+	commands/AppCommandEvent.cpp commands/AppCommandEvent.h \
+	commands/BatchEvalCommand.cpp commands/BatchEvalCommand.h \
+	commands/Command.cpp commands/Command.h \
+	commands/CommandBuilder.cpp commands/CommandBuilder.h \
+	commands/CommandDirectory.cpp commands/CommandDirectory.h \
+	commands/CommandHandler.cpp commands/CommandHandler.h \
+	commands/CommandManager.cpp commands/CommandManager.h \
+	commands/CommandMisc.h commands/CommandSignature.cpp \
+	commands/CommandSignature.h commands/CommandTargets.h \
+	commands/CommandType.cpp commands/CommandType.h \
+	commands/CompareAudioCommand.cpp \
 	commands/CompareAudioCommand.h commands/ExecMenuCommand.cpp \
 	commands/ExecMenuCommand.h commands/GetAllMenuCommands.cpp \
 	commands/GetAllMenuCommands.h \
@@ -546,8 +547,9 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-TimeTrack.$(OBJEXT) audacity-Track.$(OBJEXT) \
 	audacity-TrackArtist.$(OBJEXT) audacity-TrackPanel.$(OBJEXT) \
 	audacity-TrackPanelAx.$(OBJEXT) audacity-UndoManager.$(OBJEXT) \
-	audacity-VoiceKey.$(OBJEXT) audacity-WaveClip.$(OBJEXT) \
-	audacity-WaveTrack.$(OBJEXT) audacity-WrappedType.$(OBJEXT) \
+	audacity-ViewInfo.$(OBJEXT) audacity-VoiceKey.$(OBJEXT) \
+	audacity-WaveClip.$(OBJEXT) audacity-WaveTrack.$(OBJEXT) \
+	audacity-WrappedType.$(OBJEXT) \
 	commands/audacity-AppCommandEvent.$(OBJEXT) \
 	commands/audacity-BatchEvalCommand.$(OBJEXT) \
 	commands/audacity-Command.$(OBJEXT) \
@@ -1166,19 +1168,20 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
-	UndoManager.cpp UndoManager.h ViewInfo.h VoiceKey.cpp \
-	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
-	WrappedType.cpp WrappedType.h commands/AppCommandEvent.cpp \
-	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
-	commands/BatchEvalCommand.h commands/Command.cpp \
-	commands/Command.h commands/CommandBuilder.cpp \
-	commands/CommandBuilder.h commands/CommandDirectory.cpp \
-	commands/CommandDirectory.h commands/CommandHandler.cpp \
-	commands/CommandHandler.h commands/CommandManager.cpp \
-	commands/CommandManager.h commands/CommandMisc.h \
-	commands/CommandSignature.cpp commands/CommandSignature.h \
-	commands/CommandTargets.h commands/CommandType.cpp \
-	commands/CommandType.h commands/CompareAudioCommand.cpp \
+	UndoManager.cpp UndoManager.h ViewInfo.cpp ViewInfo.h \
+	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
+	WaveTrack.h WrappedType.cpp WrappedType.h \
+	commands/AppCommandEvent.cpp commands/AppCommandEvent.h \
+	commands/BatchEvalCommand.cpp commands/BatchEvalCommand.h \
+	commands/Command.cpp commands/Command.h \
+	commands/CommandBuilder.cpp commands/CommandBuilder.h \
+	commands/CommandDirectory.cpp commands/CommandDirectory.h \
+	commands/CommandHandler.cpp commands/CommandHandler.h \
+	commands/CommandManager.cpp commands/CommandManager.h \
+	commands/CommandMisc.h commands/CommandSignature.cpp \
+	commands/CommandSignature.h commands/CommandTargets.h \
+	commands/CommandType.cpp commands/CommandType.h \
+	commands/CompareAudioCommand.cpp \
 	commands/CompareAudioCommand.h commands/ExecMenuCommand.cpp \
 	commands/ExecMenuCommand.h commands/GetAllMenuCommands.cpp \
 	commands/GetAllMenuCommands.h \
@@ -2026,6 +2029,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelAx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UndoManager.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ViewInfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-VoiceKey.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-WaveClip.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-WaveTrack.Po@am__quote@
@@ -3521,6 +3525,20 @@ audacity-UndoManager.obj: UndoManager.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='UndoManager.cpp' object='audacity-UndoManager.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-UndoManager.obj `if test -f 'UndoManager.cpp'; then $(CYGPATH_W) 'UndoManager.cpp'; else $(CYGPATH_W) '$(srcdir)/UndoManager.cpp'; fi`
+
+audacity-ViewInfo.o: ViewInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ViewInfo.o -MD -MP -MF $(DEPDIR)/audacity-ViewInfo.Tpo -c -o audacity-ViewInfo.o `test -f 'ViewInfo.cpp' || echo '$(srcdir)/'`ViewInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ViewInfo.Tpo $(DEPDIR)/audacity-ViewInfo.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ViewInfo.cpp' object='audacity-ViewInfo.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ViewInfo.o `test -f 'ViewInfo.cpp' || echo '$(srcdir)/'`ViewInfo.cpp
+
+audacity-ViewInfo.obj: ViewInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ViewInfo.obj -MD -MP -MF $(DEPDIR)/audacity-ViewInfo.Tpo -c -o audacity-ViewInfo.obj `if test -f 'ViewInfo.cpp'; then $(CYGPATH_W) 'ViewInfo.cpp'; else $(CYGPATH_W) '$(srcdir)/ViewInfo.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ViewInfo.Tpo $(DEPDIR)/audacity-ViewInfo.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ViewInfo.cpp' object='audacity-ViewInfo.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ViewInfo.obj `if test -f 'ViewInfo.cpp'; then $(CYGPATH_W) 'ViewInfo.cpp'; else $(CYGPATH_W) '$(srcdir)/ViewInfo.cpp'; fi`
 
 audacity-VoiceKey.o: VoiceKey.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-VoiceKey.o -MD -MP -MF $(DEPDIR)/audacity-VoiceKey.Tpo -c -o audacity-VoiceKey.o `test -f 'VoiceKey.cpp' || echo '$(srcdir)/'`VoiceKey.cpp
