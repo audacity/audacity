@@ -4942,6 +4942,7 @@ void AudacityProject::OnHistory()
       mHistoryWindow = new HistoryWindow(this, &mUndoManager);
    mHistoryWindow->Show();
    mHistoryWindow->Raise();
+   mHistoryWindow->UpdateDisplay();
 }
 
 void AudacityProject::OnKaraoke()
