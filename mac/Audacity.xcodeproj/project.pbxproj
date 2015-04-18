@@ -864,6 +864,7 @@
 		28884971131B6CF600B59735 /* vi.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884940131B6CF600B59735 /* vi.po */; };
 		28884972131B6CF600B59735 /* zh_TW.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884941131B6CF600B59735 /* zh_TW.po */; };
 		28884973131B6CF600B59735 /* zh.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884942131B6CF600B59735 /* zh.po */; };
+		2888A1631AE25F9A00E06FDC /* Diags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2888A1611AE25F9A00E06FDC /* Diags.cpp */; };
 		288A544B1346D1BA0050D774 /* chanmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A54481346D1BA0050D774 /* chanmap.c */; };
 		288A544C1346D1BA0050D774 /* chanmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 288A54491346D1BA0050D774 /* chanmap.h */; };
 		288A544D1346D1BA0050D774 /* id3.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A544A1346D1BA0050D774 /* id3.c */; };
@@ -2584,6 +2585,8 @@
 		28884940131B6CF600B59735 /* vi.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = vi.po; path = ../locale/vi.po; sourceTree = SOURCE_ROOT; };
 		28884941131B6CF600B59735 /* zh_TW.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = zh_TW.po; path = ../locale/zh_TW.po; sourceTree = SOURCE_ROOT; };
 		28884942131B6CF600B59735 /* zh.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = zh.po; path = ../locale/zh.po; sourceTree = SOURCE_ROOT; };
+		2888A1611AE25F9A00E06FDC /* Diags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Diags.cpp; sourceTree = "<group>"; };
+		2888A1621AE25F9A00E06FDC /* Diags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Diags.h; sourceTree = "<group>"; };
 		288A54481346D1BA0050D774 /* chanmap.c */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.c; path = chanmap.c; sourceTree = "<group>"; };
 		288A54491346D1BA0050D774 /* chanmap.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; path = chanmap.h; sourceTree = "<group>"; };
 		288A544A1346D1BA0050D774 /* id3.c */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.c; path = id3.c; sourceTree = "<group>"; };
@@ -3869,6 +3872,8 @@
 				28D000A41A32920C00367B21 /* DeviceChange.h */,
 				8484F31213086237002DF7F0 /* DeviceManager.cpp */,
 				8484F31313086237002DF7F0 /* DeviceManager.h */,
+				2888A1611AE25F9A00E06FDC /* Diags.cpp */,
+				2888A1621AE25F9A00E06FDC /* Diags.h */,
 				1790AFF709883BFD008A330A /* DirManager.cpp */,
 				1790AFF809883BFD008A330A /* DirManager.h */,
 				1790AFF909883BFD008A330A /* Dither.cpp */,
@@ -7646,6 +7651,7 @@
 				28285C801A27A81600BC2205 /* AudioUnitCocoaHelper.mm in Sources */,
 				28D000A51A32920C00367B21 /* DeviceChange.cpp in Sources */,
 				28D8425C1AD8D69D00551353 /* SelectedRegion.cpp in Sources */,
+				2888A1631AE25F9A00E06FDC /* Diags.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
