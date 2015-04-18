@@ -62,7 +62,6 @@ EffectDtmf::EffectDtmf()
    dtmfDutyCycle = DEF_DutyCycle;
    dtmfAmplitude = DEF_Amplitude;
    dtmfString = DEF_Sequence;
-   mDuration = GetDefaultDuration();
    dtmfTone = 0.0;
    dtmfSilence = 0.0;
 }

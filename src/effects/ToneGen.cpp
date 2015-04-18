@@ -94,7 +94,6 @@ EffectToneGen::EffectToneGen(bool isChirp)
    mAmplitude[0] = DEF_StartAmp;
    mAmplitude[1] = DEF_EndAmp;
    mInterpolation = DEF_Interp;
-   mDuration = GetDuration();
 
    for (int i = 0; i < kNumWaveforms; i++)
    {

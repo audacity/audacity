@@ -21,7 +21,6 @@
 
 EffectSilence::EffectSilence()
 {
-   mDuration = GetDuration();
 }
 
 EffectSilence::~EffectSilence()
