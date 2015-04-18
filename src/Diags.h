@@ -55,20 +55,20 @@ extern void diagnostics_do_perfmon_stop( t_diag_struct ** ppDiag);
 // static ensures struct is initialised just once.
 // No function is called after the countdown is counted out.
 #define DIAG( message ) { \
-   static t_diag_struct diag{ DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
+   static t_diag_struct diag = { DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
    if( --diag.countdown >=0 )\
       diagnostics_do_diag( &diag );\
 }
 
 #define TRACK_MEM( message, amount ) { \
-   static t_diag_struct diag{ DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
+   static t_diag_struct diag = { DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
    if( --diag.countdown >=0 )\
       diagnostics_do_diag_mem( &diag, amount );\
 }
 
 #define TIMER_START( message, timername )\
    MAKE_TIMER( timername ); { \
-   static t_diag_struct diag{ DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
+   static t_diag_struct diag = { DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
    if( --diag.countdown >=0 )\
       diagnostics_do_perfmon_start( &diag, &timername );\
 }
