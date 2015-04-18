@@ -36,6 +36,7 @@ simplifies construction of menu items.
 #include <limits>
 #include <math.h>
 
+
 #include <wx/defs.h>
 #include <wx/docview.h>
 #include <wx/msgdlg.h>
@@ -116,6 +117,10 @@ simplifies construction of menu items.
 
 #include "CaptureEvents.h"
 #include "Snap.h"
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+#include <wx/debugrpt.h>
+#endif
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
@@ -1060,6 +1065,10 @@ void AudacityProject::CreateMenusAndCommands()
               AudioIONotBusyFlag);
 
    c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+   c->AddItem(wxT("CrashReport"), _("&Generate Support Data..."), FN(OnCrashReport));
+#endif
 
 #ifndef __WXMAC__
    c->AddSeparator();
@@ -6174,6 +6183,18 @@ void AudacityProject::OnBenchmark()
 {
    ::RunBenchmark(this);
 }
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+void AudacityProject::OnCrashReport()
+{
+// Change to "1" to test a real crash
+#if 0
+   char *p = 0;
+   *p = 1234;
+#endif
+   wxGetApp().GenerateCrashReport(wxDebugReport::Context_Current);
+}
+#endif
 
 void AudacityProject::OnScreenshot()
 {

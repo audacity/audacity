@@ -259,6 +259,13 @@ void AudacityLogger::Show(bool show)
    Flush();
 }
 
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+wxString AudacityLogger::GetLog()
+{
+   return mBuffer;
+}
+#endif
+
 void AudacityLogger::OnCloseWindow(wxCloseEvent & WXUNUSED(e))
 {
 #if defined(__WXMAC__)

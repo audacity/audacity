@@ -99,6 +99,12 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "import/Import.h"
 
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+#include <wx/debugrpt.h>
+#include <wx/evtloop.h>
+#include <wx/textdlg.h>
+#endif
+
 #ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
 #endif
@@ -184,6 +190,13 @@ It handles initialization and termination by subclassing wxApp.
 #     pragma comment(lib, "libvamp")
 #  endif
 
+#   if defined(EXPERIMENTAL_CRASH_REPORT)
+#     if defined(__WXDEBUG__)
+#        pragma comment(lib, "wxmsw28ud_qa")
+#     else
+#        pragma comment(lib, "wxmsw28u_qa")
+#     endif
+#  endif
 #endif //(__WXMSW__)
 
 #include "../images/AudacityLogoWithName.xpm"
@@ -925,7 +938,9 @@ bool AudacityApp::ShouldShowMissingAliasedFileWarning()
 
 AudacityLogger *AudacityApp::GetLogger()
 {
-   return static_cast<AudacityLogger *>(wxLog::GetActiveTarget());
+   // Use dynamic_cast so that we get a NULL ptr if we haven't yet
+   // setup our logger.
+   return dynamic_cast<AudacityLogger *>(wxLog::GetActiveTarget());
 }
 
 void AudacityApp::InitLang( const wxString & lang )
@@ -984,11 +999,54 @@ void AudacityApp::InitLang( const wxString & lang )
    Internat::Init();
 }
 
-// Only used when checking plugins
 void AudacityApp::OnFatalException()
 {
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+   GenerateCrashReport(wxDebugReport::Context_Exception);
+#endif
+
    exit(-1);
 }
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
+{
+   wxDebugReportCompress rpt;
+   rpt.AddAll(ctx);
+
+   wxFileName fn(FileNames::DataDir(), wxT("audacity.cfg"));
+   rpt.AddFile(fn.GetFullPath(), wxT("Audacity Configuration"));
+   rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
+   rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
+
+   AudacityLogger *logger = GetLogger();
+   if (logger)
+   {
+      rpt.AddText(wxT("log.txt"), logger->GetLog(), wxT("Audacity Log"));
+   }
+
+   bool ok = wxDebugReportPreviewStd().Show(rpt);
+
+#if defined(__WXMSW__)
+   wxEventLoop::SetCriticalWindow(NULL);
+#endif
+
+   if (ok && rpt.Process())
+   {
+      wxTextEntryDialog dlg(NULL,
+                              _("Report generated to:"),
+                              _("Audacity Support Data"),
+                              rpt.GetCompressedFileName(),
+                              wxOK | wxCENTER);
+      dlg.ShowModal();
+
+      wxLogMessage(wxT("Report generated to: %s"),
+                     rpt.GetCompressedFileName().c_str());
+
+      rpt.Reset();
+   }
+}
+#endif
 
 #if defined(__WXGTK__)
 // On wxGTK, there's a focus issue where dialogs do not automatically pass focus
@@ -1013,6 +1071,15 @@ int AudacityApp::FilterEvent(wxEvent & event)
    return -1;
 }
 #endif
+
+AudacityApp::AudacityApp()
+{
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+#if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
+   wxHandleFatalExceptions();
+#endif
+#endif
+}
 
 // The `main program' equivalent, creating the windows and returning the
 // main frame

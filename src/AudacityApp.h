@@ -31,6 +31,10 @@
 #include "ondemand/ODTaskThread.h"
 #include "Experimental.h"
 
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+#include <wx/debugrpt.h>
+#endif
+
 class IPCServ;
 class Importer;
 class CommandHandler;
@@ -98,6 +102,7 @@ class BlockFile;
 
 class AudacityApp:public wxApp {
  public:
+   AudacityApp();
    virtual bool OnInit(void);
    void FinishInits();
 #if wxCHECK_VERSION(3, 0, 0)
@@ -200,6 +205,10 @@ class AudacityApp:public wxApp {
    void SetWindowRectAlreadySaved(bool alreadySaved) {mWindowRectAlreadySaved = alreadySaved;}
 
    AudacityLogger *GetLogger();
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+   void GenerateCrashReport(wxDebugReport::Context ctx);
+#endif
 
 #if defined(__WXGTK__)
    /** \brief This flag is set true when in a keyboard event handler.

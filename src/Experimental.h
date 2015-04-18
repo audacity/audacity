@@ -178,4 +178,11 @@
 // You must define EXPERIMENTAL_SCRUBBING_BASIC if you enable this:
 #define EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
 
+
+// Define to include crash reporting
+#define EXPERIMENTAL_CRASH_REPORT
+#if !defined(wxUSE_DEBUGREPORT) || !wxUSE_DEBUGREPORT
+#undef EXPERIMENTAL_CRASH_REPORT
+#endif
+
 #endif

@@ -22,6 +22,8 @@
 #include <wx/textctrl.h>
 #include <wx/string.h>
 
+#include "Experimental.h"
+
 class AudacityLogger:public wxEvtHandler, public wxLog {
  public:
    AudacityLogger();
@@ -29,6 +31,10 @@ class AudacityLogger:public wxEvtHandler, public wxLog {
 
    void Show(bool show = true);
    void Destroy();
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+   wxString GetLog();
+#endif
 
  protected:
    virtual void Flush();
