@@ -24,6 +24,7 @@ frequency changes smoothly during the tone.
 #include <float.h>
 
 #include <wx/intl.h>
+#include <wx/valgen.h>
 
 #include "../Project.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -299,7 +300,8 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxCENTER);
    {
-      S.TieChoice(_("Waveform:"), mWaveform,  &mWaveforms);
+      wxChoice *c = S.AddChoice(_("Waveform:"), wxT(""), &mWaveforms);
+      c->SetValidator(wxGenericValidator(&mWaveform));
 
       if (mChirp)
       {
@@ -369,6 +371,9 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
             S.EndHorizontalLay();
          }
          S.EndHorizontalLay();
+
+         c = S.AddChoice(_("Interpolation:"), wxT(""), &mInterpolations);
+         c->SetValidator(wxGenericValidator(&mInterpolation));
       }
       else
       {
@@ -383,7 +388,6 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          t->SetValidator(vldAmplitude);
       }
 
-      S.TieChoice(_("Interpolation:"), mInterpolation, &mInterpolations);
       S.AddPrompt(_("Duration:"));
       mToneDurationT = new
          NumericTextCtrl(NumericConverter::TIME,
