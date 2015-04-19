@@ -270,7 +270,7 @@ void Track::ReorderList(bool resize)
 }
 #endif
 
-bool Track::IsSyncLockSelected()
+bool Track::IsSyncLockSelected() const
 {
 #ifdef EXPERIMENTAL_SYNC_LOCK
    AudacityProject *p = GetActiveProject();
@@ -278,7 +278,7 @@ bool Track::IsSyncLockSelected()
       return false;
 
    SyncLockedTracksIterator git(mList);
-   Track *t = git.First(this);
+   Track *t = git.First(const_cast<Track*>(this));
 
    if (!t) {
       // Not in a sync-locked group.

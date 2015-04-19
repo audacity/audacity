@@ -1631,7 +1631,7 @@ AUDACITY_DLL_API sampleCount WaveTrack::TimeToLongSamples(double t0) const
    return (sampleCount)floor(t0 * mRate + 0.5);
 }
 
-double WaveTrack::LongSamplesToTime(sampleCount pos)
+double WaveTrack::LongSamplesToTime(sampleCount pos) const
 {
    return ((double)pos) / mRate;
 }

@@ -218,7 +218,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
    Alg_iterator iter(mSeq, false);
    iter.begin();
    Alg_event_ptr event;
-   while ((event = iter.next()) && event->time < t1) {
+   while (0 != (event = iter.next()) && event->time < t1) {
       if (event->is_note() && event->time >= t0 &&
           // Allegro data structure does not restrict channels to 16.
           // Since there is not way to select more than 16 channels,
