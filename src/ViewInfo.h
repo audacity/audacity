@@ -18,10 +18,28 @@ const double gMaxZoom = 6000000,
 
 class Track;
 
-class AUDACITY_DLL_API ViewInfo
+
+// The subset of ViewInfo information (other than selection)
+// that is sufficient for purposes of TrackArtist,
+// and for computing conversions between track times and pixel positions.
+class AUDACITY_DLL_API ZoomInfo
 {
 public:
+   ZoomInfo(double start, double duration, double pixelsPerSecond);
+   ~ZoomInfo();
 
+   int vpos;                    // vertical scroll pos
+
+   double h;                    // h pos in secs
+
+   double screen;               // screen width in secs
+   double zoom;                 // pixels per second
+};
+
+class AUDACITY_DLL_API ViewInfo
+   : public ZoomInfo
+{
+public:
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
 
    // Current selection
@@ -31,13 +49,8 @@ public:
    // Scroll info
 
    Track *track;                // first visible track
-   int vpos;                    // vertical scroll pos
 
-   double h;                    // h pos in secs
-   double screen;               // screen width in secs
    double total;                // total width in secs
-   double zoom;                 // pixels per second
-
    // Current horizontal scroll bar positions, in pixels
    wxInt64 sbarH;
    wxInt64 sbarScreen;

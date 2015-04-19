@@ -13,21 +13,29 @@ Paul Licameli
 #include "Internat.h"
 #include "xml/XMLWriter.h"
 
-ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
-   : selectedRegion()
-   , track(0)
-   , vpos(0)
+ZoomInfo::ZoomInfo(double start, double screenDuration, double pixelsPerSecond)
+   : vpos(0)
    , h(start)
    , screen(screenDuration)
-   , total(screen)
    , zoom(pixelsPerSecond)
+{
+}
 
+ZoomInfo::~ZoomInfo()
+{
+}
+
+
+ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
+   : ZoomInfo(start, screenDuration, pixelsPerSecond)
+   , selectedRegion()
+   , track(NULL)
+   , total(screen)
    , sbarH(0)
    , sbarScreen(1)
    , sbarTotal(1)
    , sbarScale(1.0)
    , scrollStep(16)
-
    , bUpdateTrackIndicator(true)
 {
 }
