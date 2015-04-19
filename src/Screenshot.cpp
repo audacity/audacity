@@ -480,7 +480,7 @@ void ScreenFrame::OnCloseWindow(wxCloseEvent &  WXUNUSED(event))
 void ScreenFrame::OnUIUpdate(wxUpdateUIEvent &  WXUNUSED(event))
 {
 #ifdef __WXMAC__
-   wxTopLevelWindow *top = mCommand->GetFrontWindow(mContext.proj);
+   wxTopLevelWindow *top = mCommand->GetFrontWindow(GetActiveProject());
    bool needupdate = false;
    bool enable = false;
 
