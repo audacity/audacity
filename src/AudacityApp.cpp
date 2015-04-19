@@ -190,13 +190,26 @@ It handles initialization and termination by subclassing wxApp.
 #     pragma comment(lib, "libvamp")
 #  endif
 
-#   if defined(EXPERIMENTAL_CRASH_REPORT)
-#     if defined(__WXDEBUG__)
-#        pragma comment(lib, "wxmsw28ud_qa")
-#     else
-#        pragma comment(lib, "wxmsw28u_qa")
-#     endif
+#  if defined(__WXDEBUG__)
+#     define D "d"
+#  else
+#     define D ""
 #  endif
+#  if wxCHECK_VERSION(3, 1, 0)
+#     define V "31"
+#  elif wxCHECK_VERSION(3, 0, 0)
+#     define V "30"
+#  else
+#     define V "28"
+#  endif
+
+#  if defined(EXPERIMENTAL_CRASH_REPORT)
+#     pragma comment(lib, "wxmsw" V "u" D "_qa")
+#  endif
+
+#  undef V
+#  undef D
+
 #endif //(__WXMSW__)
 
 #include "../images/AudacityLogoWithName.xpm"
