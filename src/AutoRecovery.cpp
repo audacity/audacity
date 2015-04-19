@@ -645,7 +645,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       file.Close();
 
       // Add </project> tag, if necessary
-      if (!file.Open(fn.GetFullPath(), wxT("r+")))
+      if (!file.Open(fn.GetFullPath(), wxT("r+b")))
       {
          // Really shouldn't happen, but let the caller deal with it
          return false;
