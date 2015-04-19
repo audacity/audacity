@@ -2548,10 +2548,6 @@ void AudacityProject::OpenFile(wxString fileName, bool addtohistory)
 
    SetProjectTitle();
 
-   // Auto-save files (which are known by the special ending .autosave) do
-   // not necessarily have the closing </project> tag, because log data can
-   // be added anytime. So before opening an .autosave file, add the necessary
-   // closing bracket to make the XML parser happy.
    const wxString autoSaveExt = wxT(".autosave");
    if (mFileName.Length() >= autoSaveExt.Length() &&
        mFileName.Right(autoSaveExt.Length()) == autoSaveExt)
