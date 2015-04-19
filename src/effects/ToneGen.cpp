@@ -362,7 +362,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
 
             S.StartHorizontalLay(wxLEFT, 50);
             {
-               FloatingPointValidator<double> vldEndAmp(6, &mAmplitude[0], NUM_VAL_NO_TRAILING_ZEROES);
+               FloatingPointValidator<double> vldEndAmp(6, &mAmplitude[1], NUM_VAL_NO_TRAILING_ZEROES);
                vldEndAmp.SetRange(MIN_EndAmp, MAX_EndAmp);
                t = S.AddTextBox(wxT(""), wxT(""), 12);
                t->SetName(_("Amplitude End"));
