@@ -1032,6 +1032,11 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
    rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
    rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
 
+   if (ctx == wxDebugReport::Context_Current)
+   {
+      rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
+   }
+
    AudacityLogger *logger = GetLogger();
    if (logger)
    {
