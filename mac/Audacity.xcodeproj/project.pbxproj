@@ -937,6 +937,7 @@
 		28DA07390E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DA07380E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp */; };
 		28DABFBE0FF19DB100AC7848 /* RealFFTf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */; };
 		28DB34790FDC2C5D0011F589 /* ResponseQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DB34780FDC2C5D0011F589 /* ResponseQueue.cpp */; };
+		28DDE3A21AE3771100C784FE /* ViewInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DDE3A11AE3771100C784FE /* ViewInfo.cpp */; };
 		28DE72AE10388583007E18EC /* PreferenceCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72AA10388583007E18EC /* PreferenceCommands.cpp */; };
 		28DE72AF10388583007E18EC /* SetTrackInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72AC10388583007E18EC /* SetTrackInfoCommand.cpp */; };
 		28DE72B2103885AA007E18EC /* TimeWarper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72B0103885AA007E18EC /* TimeWarper.cpp */; };
@@ -2698,6 +2699,7 @@
 		28DABFBD0FF19DB100AC7848 /* RealFFTf.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = RealFFTf.h; sourceTree = "<group>"; tabWidth = 3; };
 		28DB34770FDC2C5D0011F589 /* ResponseQueue.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ResponseQueue.h; sourceTree = "<group>"; tabWidth = 3; };
 		28DB34780FDC2C5D0011F589 /* ResponseQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ResponseQueue.cpp; sourceTree = "<group>"; tabWidth = 3; };
+		28DDE3A11AE3771100C784FE /* ViewInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ViewInfo.cpp; sourceTree = "<group>"; };
 		28DE72AA10388583007E18EC /* PreferenceCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = PreferenceCommands.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28DE72AB10388583007E18EC /* PreferenceCommands.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = PreferenceCommands.h; sourceTree = "<group>"; tabWidth = 3; };
 		28DE72AC10388583007E18EC /* SetTrackInfoCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SetTrackInfoCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4002,6 +4004,7 @@
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
+				28DDE3A11AE3771100C784FE /* ViewInfo.cpp */,
 				1790B0F609883BFD008A330A /* ViewInfo.h */,
 				1790B0F709883BFD008A330A /* VoiceKey.cpp */,
 				1790B0F809883BFD008A330A /* VoiceKey.h */,
@@ -7652,6 +7655,7 @@
 				28D000A51A32920C00367B21 /* DeviceChange.cpp in Sources */,
 				28D8425C1AD8D69D00551353 /* SelectedRegion.cpp in Sources */,
 				2888A1631AE25F9A00E06FDC /* Diags.cpp in Sources */,
+				28DDE3A21AE3771100C784FE /* ViewInfo.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
