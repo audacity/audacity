@@ -152,7 +152,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    sampleFormat GetDefaultFormat() { return mDefaultFormat; }
 
    double GetRate() { return mRate; }
-   double GetZoom() { return mViewInfo.zoom; }
+   bool ZoomInAvailable() const { return mViewInfo.ZoomInAvailable(); }
+   bool ZoomOutAvailable() const { return mViewInfo.ZoomOutAvailable(); }
    double GetSel0() { return mViewInfo.selectedRegion.t0(); }
    double GetSel1() { return mViewInfo.selectedRegion.t1(); }
 
@@ -308,6 +309,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void SelectNone();
    void SelectAllIfNone();
    void Zoom(double level);
+   void ZoomBy(double multiplier);
    void Rewind(bool shift);
    void SkipEnd(bool shift);
    void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks );

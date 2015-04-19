@@ -4568,15 +4568,11 @@ void TrackPanel::DragZoom(wxMouseEvent & event, int trackLeftEdge)
    double left = PositionToTime(mZoomStart, trackLeftEdge);
    double right = PositionToTime(mZoomEnd, trackLeftEdge);
 
+   double multiplier = mViewInfo->screen / (right - left);
    if (event.ShiftDown())
-      mViewInfo->zoom /= mViewInfo->screen / (right - left);
-   else
-      mViewInfo->zoom *= mViewInfo->screen / (right - left);
+      multiplier = 1.0 / multiplier;
 
-   if (mViewInfo->zoom > gMaxZoom)
-      mViewInfo->zoom = gMaxZoom;
-   if (mViewInfo->zoom <= gMinZoom)
-      mViewInfo->zoom = gMinZoom;
+   mViewInfo->ZoomBy(multiplier);
 
    mViewInfo->h = left;
 }
@@ -4588,13 +4584,13 @@ void TrackPanel::DoZoomInOut(wxMouseEvent & event, int trackLeftEdge)
 {
    double center_h = PositionToTime(event.m_x, trackLeftEdge);
 
-   if (event.RightUp() || event.RightDClick() || event.ShiftDown())
-      mViewInfo->zoom = wxMax(mViewInfo->zoom / 2.0, gMinZoom);
-   else
-      mViewInfo->zoom = wxMin(mViewInfo->zoom * 2.0, gMaxZoom);
+   const double multiplier =
+      (event.RightUp() || event.RightDClick() || event.ShiftDown())
+      ? 0.5 : 2.0;
+   mViewInfo->ZoomBy(multiplier);
 
    if (event.MiddleUp() || event.MiddleDClick())
-      mViewInfo->zoom = 44100.0 / 512.0;        // AS: Reset zoom.
+      mViewInfo->SetZoom(ZoomInfo::GetDefaultZoom()); // AS: Reset zoom.
 
    double new_center_h = PositionToTime(event.m_x, trackLeftEdge);
 
@@ -5301,7 +5297,7 @@ void TrackPanel::UpdateViewIfNoTracks()
    {
       // BG: There are no more tracks on screen
       //BG: Set zoom to normal
-      mViewInfo->zoom = 44100.0 / 512.0;
+      mViewInfo->SetZoom(ZoomInfo::GetDefaultZoom());
 
       //STM: Set selection to 0,0
       //PRL: and default the rest of the selection information
@@ -6322,8 +6318,7 @@ void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
             center_h = audioEndTime;
       }
 
-      // Constrain maximum as well as minimum zoom.
-      mViewInfo->zoom = wxMax( gMinZoom, wxMin(mViewInfo->zoom * pow(2.0, steps), gMaxZoom));
+      mViewInfo->ZoomBy(pow(2.0, steps));
 
       double new_center_h = PositionToTime(xx, trackLeftEdge);
       mViewInfo->h += (center_h - new_center_h);
@@ -8007,11 +8002,14 @@ void TrackPanel::OnToggle()
 // Make sure selection edge is in view
 void TrackPanel::ScrollIntoView(double pos)
 {
+   const int screenWidth = rint(mViewInfo->GetScreenWidth());
+
    int w, h;
    GetTracksUsableArea( &w, &h );
+   // Or should we just set w = screenWidth ?
 
-   if( ( pos < mViewInfo->h ) ||
-       ( pos > mViewInfo->h + ( ( w - 1 ) / mViewInfo->zoom ) ) )
+   int pixel = mViewInfo->TimeToPosition(pos);
+   if (pixel < 0 || pixel >= screenWidth)
    {
       mListener->TP_ScrollWindow( pos - ( ( w / 2 ) / mViewInfo->zoom ) );
       Refresh(false);
@@ -8620,7 +8618,7 @@ void TrackPanel::OnTrackClose()
    if( mTracks->IsEmpty() )
    {
       //BG: Set zoom to normal
-      mViewInfo->zoom = 44100.0 / 512.0;
+      mViewInfo->SetZoom(ZoomInfo::GetDefaultZoom());
 
       //STM: Set selection to 0,0
       //PRL: and default the rest of the selection information

@@ -259,7 +259,7 @@ void OnSelectAllTracks();
 
 void OnZoomIn();
 void OnZoomOut();
-void OnZoomToggle();
+// void OnZoomToggle();
 void OnZoomNormal();
 void OnZoomFit();
 void OnZoomFitV();
