@@ -19,7 +19,7 @@
 #include "../Envelope.h"
 #include "../Experimental.h"
 
-struct ViewInfo;
+class ViewInfo;
 class AudacityProject;
 class TimeTrack;
 class SnapManager;

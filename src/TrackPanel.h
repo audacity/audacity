@@ -45,7 +45,7 @@ class AudacityProject;
 
 class TrackPanelAx;
 
-struct ViewInfo;
+class ViewInfo;
 
 WX_DEFINE_ARRAY(LWSlider *, LWSliderArray);
 

@@ -780,6 +780,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mTimerRecordCanceled(false),
      mMenuClose(false)
      , mbInitializingScrollbar(false)
+     , mViewInfo(0.0, 1.0, (44100.0 / 512.0))
 {
    // Note that the first field of the status bar is a dummy, and it's width is set
    // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
@@ -809,26 +810,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    //
    // Initialize view info (shared with TrackPanel)
    //
-
-   // Selection
-   mViewInfo.selectedRegion = SelectedRegion();
-
-   // Horizontal scrollbar
-   mViewInfo.total = 1.0;
-   mViewInfo.screen = 1.0;
-   mViewInfo.h = 0.0;
-   mViewInfo.zoom = 44100.0 / 512.0;
-
-   // Vertical scrollbar
-   mViewInfo.track = NULL;
-   mViewInfo.vpos = 0;
-
-   mViewInfo.scrollStep = 16;
-
-   mViewInfo.sbarH = 0;
-   mViewInfo.sbarScreen = 1;
-   mViewInfo.sbarTotal = 1;
-   mViewInfo.sbarScale = 1.0;
 
    UpdatePrefs();
 
@@ -2902,6 +2883,12 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       if (!value || !XMLValueChecker::IsGoodString(value))
          break;
 
+      if (mViewInfo.ReadXMLAttribute(attr, value)) {
+         // We need to save vpos now and restore it below
+         longVpos = std::max(longVpos, long(mViewInfo.vpos));
+         continue;
+      }
+
       if (!wxStrcmp(attr, wxT("datadir")))
       {
          //
@@ -2994,20 +2981,6 @@ bool AudacityProject::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
          requiredTags++;
       }
-
-      else if (mViewInfo.selectedRegion
-         .HandleXMLAttribute(attr, value, wxT("sel0"), wxT("sel1"))) {
-      }
-
-      else if (!wxStrcmp(attr, wxT("vpos")))
-         // Just assign a variable, put the value in its place later 
-         wxString(value).ToLong(&longVpos);
-
-      else if (!wxStrcmp(attr, wxT("h")))
-         Internat::CompatibleToDouble(value, &mViewInfo.h);
-
-      else if (!wxStrcmp(attr, wxT("zoom")))
-         Internat::CompatibleToDouble(value, &mViewInfo.zoom);
 
       else if (!wxStrcmp(attr, wxT("rate"))) {
          Internat::CompatibleToDouble(value, &mRate);
@@ -3202,12 +3175,8 @@ void AudacityProject::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("projname"), projName);
    xmlFile.WriteAttr(wxT("version"), wxT(AUDACITY_FILE_FORMAT_VERSION));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
-   mViewInfo.selectedRegion
-      .WriteXMLAttributes(xmlFile, wxT("sel0"), wxT("sel1"));
-   // PRL: to do: persistence of other fields of the selection
-   xmlFile.WriteAttr(wxT("vpos"), mViewInfo.vpos);
-   xmlFile.WriteAttr(wxT("h"), mViewInfo.h, 10);
-   xmlFile.WriteAttr(wxT("zoom"), mViewInfo.zoom, 10);
+
+   mViewInfo.WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("rate"), mRate);
    xmlFile.WriteAttr(wxT("snapto"), GetSnapTo() ? wxT("on") : wxT("off"));
    xmlFile.WriteAttr(wxT("selectionformat"), GetSelectionFormat());

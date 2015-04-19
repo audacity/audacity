@@ -37,7 +37,7 @@ class LabelTrack;
 class TimeTrack;
 class TrackList;
 class Ruler;
-struct ViewInfo;
+class ViewInfo;
 
 #ifndef uchar
 typedef unsigned char uchar;
