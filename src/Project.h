@@ -356,6 +356,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void SafeDisplayStatusMessage(const wxChar *msg);
 
    double ScrollingLowerBoundTime() const;
+   // How many pixels are covered by the period from lowermost scrollable time, to the given time:
+   wxInt64 PixelWidthBeforeTime(double scrollto) const;
    void SetHorizontalThumb(double scrollto);
 
    // TrackPanel access

@@ -1451,19 +1451,20 @@ double AudacityProject::ScrollingLowerBoundTime() const
       : 0;
 }
 
+wxInt64 AudacityProject::PixelWidthBeforeTime(double scrollto) const
+{
+   const double lowerBound = ScrollingLowerBoundTime();
+   return
+      mViewInfo.TimeToPosition(scrollto, 0
+      ) -
+      mViewInfo.TimeToPosition(lowerBound, 0
+      );
+}
+
 void AudacityProject::SetHorizontalThumb(double scrollto)
 {
-   const double timeOffset = -ScrollingLowerBoundTime();
-   int pos = (int) (
-      (scrollto + timeOffset) * mViewInfo.zoom * mViewInfo.sbarScale
-   );
-   int max = mHsbar->GetRange() - mHsbar->GetThumbSize();
-
-   if (pos > max)
-      pos = max;
-   else if (pos < 0)
-      pos = 0;
-
+   wxInt64 max = mHsbar->GetRange() - mHsbar->GetThumbSize();
+   int pos = std::min(max, std::max(wxInt64(0), PixelWidthBeforeTime(scrollto)));
    mHsbar->SetThumbPosition(pos);
 }
 
@@ -1623,8 +1624,7 @@ void AudacityProject::FixScrollbars()
       int scaledSbarH = (int)(mViewInfo.sbarH * mViewInfo.sbarScale);
       int scaledSbarScreen = (int)(mViewInfo.sbarScreen * mViewInfo.sbarScale);
       int scaledSbarTotal = (int)(mViewInfo.sbarTotal * mViewInfo.sbarScale);
-      int offset;
-      offset = -lowerBound * mViewInfo.zoom * mViewInfo.sbarScale;
+      const int offset = mViewInfo.sbarScale * PixelWidthBeforeTime(0.0);
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
@@ -1816,7 +1816,7 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    const wxInt64 hlast = mViewInfo.sbarH;
 
    const double lowerBound = ScrollingLowerBoundTime();
-   const wxInt64 offset = 0.5 + -lowerBound * mViewInfo.zoom;
+   const wxInt64 offset = PixelWidthBeforeTime(0.0);
 
    mViewInfo.sbarH =
       (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
@@ -1824,10 +1824,10 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
    if (mViewInfo.sbarH != hlast)
       mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH, lowerBound);
 
-
    if (mScrollBeyondZero) {
       enum { SCROLL_PIXEL_TOLERANCE = 10 };
-      if (fabs(mViewInfo.h * mViewInfo.zoom) < SCROLL_PIXEL_TOLERANCE) {
+      if (abs(mViewInfo.TimeToPosition(0.0, 0
+                                   )) < SCROLL_PIXEL_TOLERANCE) {
          // Snap the scrollbar to 0
          mViewInfo.h = 0;
          SetHorizontalThumb(0.0);
