@@ -66,8 +66,8 @@ private:
 #define AutoSaveIdent "<?xml autosave>"
 
 WX_DECLARE_STRING_HASH_MAP_WITH_DECL(short, NameMap, class AUDACITY_DLL_API);
-WX_DECLARE_HASH_MAP(short, wxString, wxIntegerHash, wxIntegerEqual, IdMap);
-WX_DECLARE_OBJARRAY(IdMap, IdMapArray);
+WX_DECLARE_HASH_MAP_WITH_DECL(short, wxString, wxIntegerHash, wxIntegerEqual, IdMap, class AUDACITY_DLL_API);
+WX_DECLARE_OBJARRAY_WITH_DECL(IdMap, IdMapArray, class AUDACITY_DLL_API);
 
 class AUDACITY_DLL_API AutoSaveFile : public XMLWriter
 {

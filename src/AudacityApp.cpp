@@ -1371,6 +1371,21 @@ Click the 'Help' button for known issue."),
       Sequence::SetMaxDiskBlockSize(lval);
    }
 
+   wxString fileName;
+   if (parser->Found(wxT("d"), &fileName))
+   {
+      AutoSaveFile asf;
+      if (asf.Decode(fileName))
+      {
+         wxPrintf(_("File decoded successfully\n"));
+      }
+      else
+      {
+         wxPrintf(_("Decoding failed\n"));
+      }
+      exit(1);
+   }
+
 // No Splash screen on wx3 whislt we sort out the problem
 // with showing a dialog AND a splash screen during inits.
 #if !wxCHECK_VERSION(3, 0, 0)
@@ -1813,6 +1828,10 @@ wxCmdLineParser *AudacityApp::ParseCommandLine()
     *           use when writing files to the disk */
    parser->AddOption(wxT("b"), wxT("blocksize"), _("set max disk block size in bytes"),
                      wxCMD_LINE_VAL_NUMBER);
+
+   /*i18n-hint: This decodes an autosave file */
+   parser->AddOption(wxT("d"), wxT("decode"), _("decode an autosave file"),
+                     wxCMD_LINE_VAL_STRING);
 
    /*i18n-hint: This displays a list of available options */
    parser->AddSwitch(wxT("h"), wxT("help"), _("this help message"),
