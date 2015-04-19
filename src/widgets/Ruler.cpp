@@ -77,6 +77,7 @@ array of Ruler::Label.
 #include "../TrackPanel.h"
 #include "../Menus.h"
 #include "../Prefs.h"
+#include "../Snap.h"
 
 #define max(a,b)  ( (a<b)?b:a )
 
