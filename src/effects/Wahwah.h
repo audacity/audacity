@@ -25,7 +25,7 @@
 
 #include "Effect.h"
 
-#define WAHWAH_PLUGIN_SYMBOL wxTRANSLATE("Wahwah")
+#define WAHWAH_PLUGIN_SYMBOL XO("Wahwah")
 
 class EffectWahwah : public Effect
 {

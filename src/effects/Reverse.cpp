@@ -45,7 +45,7 @@ wxString EffectReverse::GetSymbol()
 
 wxString EffectReverse::GetDescription()
 {
-   return wxTRANSLATE("Reverses the selected audio");
+   return XO("Reverses the selected audio");
 }
 
 // EffectIdentInterface implementation

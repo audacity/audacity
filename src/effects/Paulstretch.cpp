@@ -28,11 +28,10 @@
 #include "Paulstretch.h"
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
-
 //
-//     Name       Type     Key                              Def      Min      Max      Scale
-Param( Amount,    float,   wxTRANSLATE("Stretch Factor"),   10.0,    1.0,     FLT_MAX, 1   );
-Param( Time,      float,   wxTRANSLATE("Time Resolution"),  0.25f,   0.001f,  FLT_MAX, 1   );
+//     Name    Type     Key                     Def      Min      Max      Scale
+Param( Amount, float,   XO("Stretch Factor"),   10.0,    1.0,     FLT_MAX, 1   );
+Param( Time,   float,   XO("Time Resolution"),  0.25f,   0.001f,  FLT_MAX, 1   );
 
 class PaulStretch
 {
@@ -95,7 +94,7 @@ wxString EffectPaulstretch::GetSymbol()
 
 wxString EffectPaulstretch::GetDescription()
 {
-   return wxTRANSLATE("Use Paulstretch only for an extreme time-stretch or \"stasis\" effect");
+   return XO("Use Paulstretch only for an extreme time-stretch or \"stasis\" effect");
 }
 
 // EffectIdentInterface implementation

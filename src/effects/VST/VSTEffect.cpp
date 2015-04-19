@@ -306,17 +306,17 @@ wxString VSTEffectsModule::GetPath()
 
 wxString VSTEffectsModule::GetSymbol()
 {
-   return wxT("VST Effects");
+   return XO("VST Effects");
 }
 
 wxString VSTEffectsModule::GetName()
 {
-   return _("VST Effects");
+   return GetSymbol();
 }
 
 wxString VSTEffectsModule::GetVendor()
 {
-   return _("The Audacity Team");
+   return XO("The Audacity Team");
 }
 
 wxString VSTEffectsModule::GetVersion()
@@ -327,7 +327,7 @@ wxString VSTEffectsModule::GetVersion()
 
 wxString VSTEffectsModule::GetDescription()
 {
-   return _("Adds the ability to use VST effects in Audacity.");
+   return XO("Adds the ability to use VST effects in Audacity.");
 }
 
 // ============================================================================

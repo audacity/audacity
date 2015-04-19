@@ -17,7 +17,7 @@
 
 #include "Effect.h"
 
-#define INVERT_PLUGIN_SYMBOL wxTRANSLATE("Invert")
+#define INVERT_PLUGIN_SYMBOL XO("Invert")
 
 class EffectInvert : public Effect
 {

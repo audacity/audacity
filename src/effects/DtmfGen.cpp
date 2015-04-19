@@ -26,10 +26,10 @@
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name          Type        Key                        Def               Min      Max      Scale
-Param( Sequence,     wxString,   wxTRANSLATE("Sequence"),   wxT("audacity"),  wxT(""), wxT(""), wxT(""));
-Param( DutyCycle,    double,     wxTRANSLATE("Duty Cycle"), 55.0,             0.0,     100.0,   10.0   );
-Param( Amplitude,    double,     wxTRANSLATE("Amplitude"),  0.8,              0.0,     1.0,     1      );
+//     Name       Type        Key               Def               Min      Max      Scale
+Param( Sequence,  wxString,   XO("Sequence"),   wxT("audacity"),  wxT(""), wxT(""), wxT(""));
+Param( DutyCycle, double,     XO("Duty Cycle"), 55.0,             0.0,     100.0,   10.0   );
+Param( Amplitude, double,     XO("Amplitude"),  0.8,              0.0,     1.0,     1      );
 
 static const double kFadeInOut = 250.0; // used for fadein/out needed to remove clicking noise
 
@@ -79,7 +79,7 @@ wxString EffectDtmf::GetSymbol()
 
 wxString EffectDtmf::GetDescription()
 {
-   return wxTRANSLATE("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
+   return XO("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
 }
 
 // EffectIdentInterface implementation

@@ -35,6 +35,11 @@
 
 #include "Repeat.h"
 
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name    Type  Key             Def  Min   Max      Scale
+Param( Count,  int,  XO("Count"),    10,  2,    INT_MAX, 1  );
+
 BEGIN_EVENT_TABLE(EffectRepeat, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectRepeat::OnRepeatTextChange)
 END_EVENT_TABLE()
@@ -57,7 +62,7 @@ wxString EffectRepeat::GetSymbol()
 
 wxString EffectRepeat::GetDescription()
 {
-   return wxTRANSLATE("Repeats the selection the specified number of times");
+   return XO("Repeats the selection the specified number of times");
 }
 
 // EffectIdentInterface implementation
@@ -71,23 +76,16 @@ EffectType EffectRepeat::GetType()
 
 bool EffectRepeat::GetAutomationParameters(EffectAutomationParameters & parms)
 {
-   parms.Write(wxT("Count"), repeatCount);
+   parms.Write(KEY_Count, repeatCount);
 
    return true;
 }
 
 bool EffectRepeat::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   int count;
+   ReadAndVerifyInt(Count);
 
-   parms.Read(wxT("Count"), &count, 10);
-
-   if (count < 0 || count > 2147483647 / mProjectRate)
-   {
-      return false;
-   }
-
-   repeatCount = count;
+   repeatCount = Count;
 
    return true;
 }
@@ -174,7 +172,7 @@ void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxCENTER, false);
    {
       IntegerValidator<int> vldRepeatCount(&repeatCount);
-      vldRepeatCount.SetRange(1, 2147483647 / mProjectRate);
+      vldRepeatCount.SetRange(MIN_Count, 2147483647 / mProjectRate);
       mRepeatCount = S.AddTextBox(_("Number of times to repeat:"), wxT(""), 12);
       mRepeatCount->SetValidator(vldRepeatCount);
    }

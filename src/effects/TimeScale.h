@@ -24,7 +24,7 @@
 
 #include "SBSMSEffect.h"
 
-#define TIMESCALE_PLUGIN_SYMBOL wxTRANSLATE("Time Scale")
+#define TIMESCALE_PLUGIN_SYMBOL XO("Time Scale")
 
 class EffectTimeScale : public EffectSBSMS
 {

@@ -37,14 +37,16 @@ enum kTypes
 
 static const wxChar *kTypeStrings[kNumTypes] =
 {
-   wxTRANSLATE("White"),
-   wxTRANSLATE("Pink"),
-   wxTRANSLATE("Brownian")
+   XO("White"),
+   XO("Pink"),
+   XO("Brownian")
 };
 
-//     Name    Type     Key                        Def      Min   Max            Scale
-Param( Type,   int,     wxTRANSLATE("Type"),       kWhite,  0,    kNumTypes - 1, 1  );
-Param( Amp,    double,  wxTRANSLATE("Amplitude"),  0.8,     0.0,  1.0,           1  );
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name    Type     Key               Def      Min   Max            Scale
+Param( Type,   int,     XO("Type"),       kWhite,  0,    kNumTypes - 1, 1  );
+Param( Amp,    double,  XO("Amplitude"),  0.8,     0.0,  1.0,           1  );
 
 //
 // EffectNoise
@@ -72,7 +74,7 @@ wxString EffectNoise::GetSymbol()
 
 wxString EffectNoise::GetDescription()
 {
-   return wxTRANSLATE("Generates one of three different types of noise");
+   return XO("Generates one of three different types of noise");
 }
 
 // EffectIdentInterface implementation

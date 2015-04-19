@@ -26,7 +26,7 @@
 
 #include "Effect.h"
 
-#define CHANGESPEED_PLUGIN_SYMBOL wxTRANSLATE("Change Speed")
+#define CHANGESPEED_PLUGIN_SYMBOL XO("Change Speed")
 
 class EffectChangeSpeed : public Effect
 {

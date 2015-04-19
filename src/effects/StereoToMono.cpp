@@ -36,7 +36,7 @@ wxString EffectStereoToMono::GetSymbol()
 
 wxString EffectStereoToMono::GetDescription()
 {
-   return wxTRANSLATE("Converts stereo tracks to mono");
+   return XO("Converts stereo tracks to mono");
 }
 
 // EffectIdentInterface implementation

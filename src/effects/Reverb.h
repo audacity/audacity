@@ -22,7 +22,7 @@
 
 #include "Effect.h"
 
-#define REVERB_PLUGIN_SYMBOL wxTRANSLATE("Reverb")
+#define REVERB_PLUGIN_SYMBOL XO("Reverb")
 
 struct Reverb_priv_t;
 

@@ -81,8 +81,8 @@ enum
 
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
-static const wxChar *KEY_Version = wxTRANSLATE("Version");
-static const wxChar *KEY_Command = wxTRANSLATE("Command");
+static const wxChar *KEY_Version = XO("Version");
+static const wxChar *KEY_Command = XO("Command");
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -134,7 +134,7 @@ NyquistEffect::NyquistEffect(wxString fName)
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID)
    {
-      mName = wxTRANSLATE("Nyquist Prompt");
+      mName = XO("Nyquist Prompt");
       mType = EffectTypeProcess;
       mOK = true;
       mIsPrompt = true;
@@ -168,7 +168,7 @@ wxString NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
    {
-      return wxTRANSLATE("Nyquist Prompt");
+      return XO("Nyquist Prompt");
    }
 
    return mName;

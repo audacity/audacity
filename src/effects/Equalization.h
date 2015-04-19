@@ -42,7 +42,7 @@
 #include "../widgets/Ruler.h"
 #include "../RealFFTf.h"
 
-#define EQUALIZATION_PLUGIN_SYMBOL wxTRANSLATE("Equalization")
+#define EQUALIZATION_PLUGIN_SYMBOL XO("Equalization")
 
 
 class EqualizationPanel;

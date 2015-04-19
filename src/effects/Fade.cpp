@@ -40,8 +40,8 @@ wxString EffectFade::GetSymbol()
 wxString EffectFade::GetDescription()
 {
    return mFadeIn
-      ? wxTRANSLATE("Applies a linear fade-in to the selected audio")
-      : wxTRANSLATE("Applies a linear fade-out to the selected audio");
+      ? XO("Applies a linear fade-in to the selected audio")
+      : XO("Applies a linear fade-out to the selected audio");
 }
 
 // EffectIdentInterface implementation

@@ -41,8 +41,8 @@ enum kInterpolations
 
 static const wxString kInterStrings[kNumInterpolations] =
 {
-   wxTRANSLATE("Linear"),
-   wxTRANSLATE("Logarithmic")
+   XO("Linear"),
+   XO("Logarithmic")
 };
 
 enum kWaveforms
@@ -56,23 +56,23 @@ enum kWaveforms
 
 static const wxString kWaveStrings[kNumWaveforms] =
 {
-   wxTRANSLATE("Sine"),
-   wxTRANSLATE("Square"),
-   wxTRANSLATE("Sawtooth"),
-   wxTRANSLATE("Square, no alias")
+   XO("Sine"),
+   XO("Square"),
+   XO("Sawtooth"),
+   XO("Square, no alias")
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name       Type     Key                           Def      Min      Max                     Scale
-Param( StartFreq, double,  wxTRANSLATE("StartFreq"),     440.0,   1.0,     DBL_MAX,                1  );
-Param( EndFreq,   double,  wxTRANSLATE("EndFreq"),       1320.0,  1.0,     DBL_MAX,                1  );
-Param( StartAmp,  double,  wxTRANSLATE("StartAmp"),      0.8,     0.0,     1.0,                    1  );
-Param( EndAmp,    double,  wxTRANSLATE("EndAmp"),        0.1,     0.0,     1.0,                    1  );
-Param( Frequency, double,  wxTRANSLATE("Frequency"),     440.0,   1.0,     DBL_MAX,                1  );
-Param( Amplitude, double,  wxTRANSLATE("Amplitude"),     0.8,     0.0,     1.0,                    1  );
-Param( Waveform,  int,     wxTRANSLATE("Waveform"),      0,       0,       kNumWaveforms - 1,      1  );
-Param( Interp,    int,     wxTRANSLATE("Interpolation"), 0,       0,       kNumInterpolations - 1, 1  );
+//     Name       Type     Key                  Def      Min      Max                     Scale
+Param( StartFreq, double,  XO("StartFreq"),     440.0,   1.0,     DBL_MAX,                1  );
+Param( EndFreq,   double,  XO("EndFreq"),       1320.0,  1.0,     DBL_MAX,                1  );
+Param( StartAmp,  double,  XO("StartAmp"),      0.8,     0.0,     1.0,                    1  );
+Param( EndAmp,    double,  XO("EndAmp"),        0.1,     0.0,     1.0,                    1  );
+Param( Frequency, double,  XO("Frequency"),     440.0,   1.0,     DBL_MAX,                1  );
+Param( Amplitude, double,  XO("Amplitude"),     0.8,     0.0,     1.0,                    1  );
+Param( Waveform,  int,     XO("Waveform"),      0,       0,       kNumWaveforms - 1,      1  );
+Param( Interp,    int,     XO("Interpolation"), 0,       0,       kNumInterpolations - 1, 1  );
 
 //
 // EffectToneGen
@@ -123,8 +123,8 @@ wxString EffectToneGen::GetSymbol()
 wxString EffectToneGen::GetDescription()
 {
    return mChirp
-      ? wxTRANSLATE("Generates four different types of tone waveform while allowing starting and ending amplitude and frequency")
-      : wxTRANSLATE("Generates four different types of tone waveform");
+      ? XO("Generates four different types of tone waveform while allowing starting and ending amplitude and frequency")
+      : XO("Generates four different types of tone waveform");
 }
 
 // EffectIdentInterface implementation
@@ -382,7 +382,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          t = S.AddTextBox(_("Frequency (Hz):"), wxT(""), 12);
          t->SetValidator(vldFrequency);
 
-         FloatingPointValidator<double> vldAmplitude(6, &mAmplitude[1], NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldAmplitude(6, &mAmplitude[0], NUM_VAL_NO_TRAILING_ZEROES);
          vldAmplitude.SetRange(MIN_Amplitude, MAX_Amplitude);
          t = S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 12);
          t->SetValidator(vldAmplitude);

@@ -17,7 +17,7 @@
 
 #include "Effect.h"
 
-#define PAULSTRETCH_PLUGIN_SYMBOL wxTRANSLATE("Paulstretch")
+#define PAULSTRETCH_PLUGIN_SYMBOL XO("Paulstretch")
 
 class EffectPaulstretch : public Effect
 {

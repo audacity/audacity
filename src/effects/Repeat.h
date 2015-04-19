@@ -20,7 +20,7 @@
 
 #include "Effect.h"
 
-#define REPEAT_PLUGIN_SYMBOL wxTRANSLATE("Repeat")
+#define REPEAT_PLUGIN_SYMBOL XO("Repeat")
 
 class EffectRepeat : public Effect
 {

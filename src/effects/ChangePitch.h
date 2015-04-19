@@ -31,7 +31,7 @@ the pitch without changing the tempo.
 
 #include "SoundTouchEffect.h"
 
-#define CHANGEPITCH_PLUGIN_SYMBOL wxTRANSLATE("Change Pitch")
+#define CHANGEPITCH_PLUGIN_SYMBOL XO("Change Pitch")
 
 class EffectChangePitch : public EffectSoundTouch
 {

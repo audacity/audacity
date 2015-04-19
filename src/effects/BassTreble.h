@@ -23,7 +23,7 @@
 
 #include "Effect.h"
 
-#define BASSTREBLE_PLUGIN_SYMBOL wxTRANSLATE("Bass and Treble")
+#define BASSTREBLE_PLUGIN_SYMBOL XO("Bass and Treble")
 
 class EffectBassTreble : public Effect
 {

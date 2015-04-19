@@ -21,8 +21,8 @@
 
 #include "Effect.h"
 
-#define CHIRP_PLUGIN_SYMBOL wxTRANSLATE("Chirp")
-#define TONE_PLUGIN_SYMBOL wxTRANSLATE("Tone")
+#define CHIRP_PLUGIN_SYMBOL XO("Chirp")
+#define TONE_PLUGIN_SYMBOL XO("Tone")
 
 class EffectToneGen : public Effect
 {

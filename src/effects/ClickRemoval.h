@@ -27,7 +27,7 @@
 
 #include "Effect.h"
 
-#define CLICKREMOVAL_PLUGIN_SYMBOL wxTRANSLATE("Click Removal")
+#define CLICKREMOVAL_PLUGIN_SYMBOL XO("Click Removal")
 
 class EffectClickRemoval : public Effect
 {

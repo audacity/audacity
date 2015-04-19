@@ -38,19 +38,19 @@ enum kPasses
 static const wxString kPassStrings[kNumPasses] =
 {
    /* i18n-hint: Of strength of an effect.  Not strongly.*/
-   wxTRANSLATE("Light"),
-   wxTRANSLATE("Moderate"),
+   XO("Light"),
+   XO("Moderate"),
    /* i18n-hint: Of strength of an effect.  Strongly.*/
-   wxTRANSLATE("Heavy"),
-   wxTRANSLATE("Heavier"),
-   wxTRANSLATE("Heaviest"),
+   XO("Heavy"),
+   XO("Heavier"),
+   XO("Heaviest"),
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name    Type  Key                     Def        Min   Max                        Scale
-Param( Level,  int,  wxTRANSLATE("dB"),      10,        0,    Enums::NumDbChoices - 1,   1  );
-Param( Passes, int,  wxTRANSLATE("Passes"),  kModerate, 0,    kNumPasses - 1,            1  );
+//     Name    Type  Key            Def        Min   Max                        Scale
+Param( Level,  int,  XO("dB"),      10,        0,    Enums::NumDbChoices - 1,   1  );
+Param( Passes, int,  XO("Passes"),  kModerate, 0,    kNumPasses - 1,            1  );
 
 //
 // EffectLeveller
@@ -80,7 +80,7 @@ wxString EffectLeveller::GetSymbol()
 
 wxString EffectLeveller::GetDescription()
 {
-   return wxTRANSLATE("Leveler is a simple, combined compressor and limiter effect for reducing the dynamic range of audio");
+   return XO("Leveler is a simple, combined compressor and limiter effect for reducing the dynamic range of audio");
 }
 
 // EffectIdentInterface implementation

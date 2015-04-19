@@ -35,14 +35,14 @@
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name                Type     Key                              Def      Min      Max      Scale
-Param( DuckAmountDb,       double,  wxTRANSLATE("DuckAmountDb"),     -12.0,   -24.0,   0.0,     1  );
-Param( InnerFadeDownLen,   double,  wxTRANSLATE("InnerFadeDownLen"), 0.0,     0.0,     3.0,     1  );
-Param( InnerFadeUpLen,     double,  wxTRANSLATE("InnerFadeUpLen"),   0.0,     0.0,     3.0,     1  );
-Param( OuterFadeDownLen,   double,  wxTRANSLATE("OuterFadeDownLen"), 0.5,     0.0,     3.0,     1  );
-Param( OuterFadeUpLen,     double,  wxTRANSLATE("OuterFadeUpLen"),   0.5,     0.0,     3.0,     1  );
-Param( ThresholdDb,        double,  wxTRANSLATE("ThresholdDb"),      -30.0,   -100.0,  0.0,     1  );
-Param( MaximumPause,       double,  wxTRANSLATE("MaximumPause"),     1.0,     0.0,     DBL_MAX, 1  );
+//     Name                Type     Key                     Def      Min      Max      Scale
+Param( DuckAmountDb,       double,  XO("DuckAmountDb"),     -12.0,   -24.0,   0.0,     1  );
+Param( InnerFadeDownLen,   double,  XO("InnerFadeDownLen"), 0.0,     0.0,     3.0,     1  );
+Param( InnerFadeUpLen,     double,  XO("InnerFadeUpLen"),   0.0,     0.0,     3.0,     1  );
+Param( OuterFadeDownLen,   double,  XO("OuterFadeDownLen"), 0.5,     0.0,     3.0,     1  );
+Param( OuterFadeUpLen,     double,  XO("OuterFadeUpLen"),   0.5,     0.0,     3.0,     1  );
+Param( ThresholdDb,        double,  XO("ThresholdDb"),      -30.0,   -100.0,  0.0,     1  );
+Param( MaximumPause,       double,  XO("MaximumPause"),     1.0,     0.0,     DBL_MAX, 1  );
 
 /*
  * Common constants
@@ -108,7 +108,7 @@ wxString EffectAutoDuck::GetSymbol()
 
 wxString EffectAutoDuck::GetDescription()
 {
-   return wxTRANSLATE("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
+   return XO("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
 }
 
 // EffectIdentInterface implementation

@@ -20,7 +20,7 @@
 
 #include "Generator.h"
 
-#define SILENCE_PLUGIN_SYMBOL wxTRANSLATE("Silence")
+#define SILENCE_PLUGIN_SYMBOL XO("Silence")
 
 class EffectSilence : public Generator
 {

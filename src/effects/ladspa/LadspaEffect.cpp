@@ -102,17 +102,17 @@ wxString LadspaEffectsModule::GetPath()
 
 wxString LadspaEffectsModule::GetSymbol()
 {
-   return wxT("LADSPA Effects");
+   return XO("LADSPA Effects");
 }
 
 wxString LadspaEffectsModule::GetName()
 {
-   return wxTRANSLATE("LADSPA Effects");
+   return GetSymbol();
 }
 
 wxString LadspaEffectsModule::GetVendor()
 {
-   return wxTRANSLATE("The Audacity Team");
+   return XO("The Audacity Team");
 }
 
 wxString LadspaEffectsModule::GetVersion()
@@ -123,7 +123,7 @@ wxString LadspaEffectsModule::GetVersion()
 
 wxString LadspaEffectsModule::GetDescription()
 {
-   return wxTRANSLATE("Provides LADSPA Effects");
+   return XO("Provides LADSPA Effects");
 }
 
 // ============================================================================

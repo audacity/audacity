@@ -15,7 +15,7 @@
 
 #include "Effect.h"
 
-#define REPAIR_PLUGIN_SYMBOL wxTRANSLATE("Repair")
+#define REPAIR_PLUGIN_SYMBOL XO("Repair")
 
 class WaveTrack;
 

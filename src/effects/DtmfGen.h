@@ -24,7 +24,7 @@
 
 #include "Effect.h"
 
-#define DTMFTONES_PLUGIN_SYMBOL wxTRANSLATE("DTMF Tones")
+#define DTMFTONES_PLUGIN_SYMBOL XO("DTMF Tones")
 
 class EffectDtmf : public Effect
 {

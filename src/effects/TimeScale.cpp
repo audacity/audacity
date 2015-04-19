@@ -38,13 +38,13 @@ enum
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name                Type    Key                                     Def   Min      Max    Scale
-Param( RatePercentStart,   double, wxTRANSLATE("RatePercentChangeStart"),  0.0,  -90.0,   500,   1  );
-Param( RatePercentEnd,     double, wxTRANSLATE("RatePercentChangeEnd"),    0.0,  -90.0,   500,   1  );
-Param( HalfStepsStart,     double, wxTRANSLATE("PitchHalfStepsStart"),     0.0,  -12.0,   12.0,  1  );
-Param( HalfStepsEnd,       double, wxTRANSLATE("PitchHalfStepsEnd"),       0.0,  -12.0,   12.0,  1  );
-Param( PitchPercentStart,  double, wxTRANSLATE("PitchPercentChangeStart"), 0.0,  -50.0,   100.0, 1  );
-Param( PitchPercentEnd,    double, wxTRANSLATE("PitchPercentChangeEnd"),   0.0,  -50.0,   100.0, 1  );
+//     Name                Type    Key                            Def   Min      Max    Scale
+Param( RatePercentStart,   double, XO("RatePercentChangeStart"),  0.0,  -90.0,   500,   1  );
+Param( RatePercentEnd,     double, XO("RatePercentChangeEnd"),    0.0,  -90.0,   500,   1  );
+Param( HalfStepsStart,     double, XO("PitchHalfStepsStart"),     0.0,  -12.0,   12.0,  1  );
+Param( HalfStepsEnd,       double, XO("PitchHalfStepsEnd"),       0.0,  -12.0,   12.0,  1  );
+Param( PitchPercentStart,  double, XO("PitchPercentChangeStart"), 0.0,  -50.0,   100.0, 1  );
+Param( PitchPercentEnd,    double, XO("PitchPercentChangeEnd"),   0.0,  -50.0,   100.0, 1  );
 
 //
 // EffectTimeScale
@@ -84,12 +84,12 @@ wxString EffectTimeScale::GetSymbol()
 
 wxString EffectTimeScale::GetName()
 {
-   return wxTRANSLATE("Sliding Time Scale/Pitch Shift");
+   return XO("Sliding Time Scale/Pitch Shift");
 }
 
 wxString EffectTimeScale::GetDescription()
 {
-   return wxTRANSLATE("Allows continuous changes to the tempo and/or pitch");
+   return XO("Allows continuous changes to the tempo and/or pitch");
 }
 
 // EffectIdentInterface implementation

@@ -21,7 +21,7 @@ class wxString;
 
 #include "Effect.h"
 
-#define FINDCLIPPING_PLUGIN_SYMBOL wxTRANSLATE("Find Clipping")
+#define FINDCLIPPING_PLUGIN_SYMBOL XO("Find Clipping")
 
 class EffectFindClipping : public Effect
 {

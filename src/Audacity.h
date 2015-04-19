@@ -155,4 +155,7 @@ void QuitAudacity();
 // This macro is used widely, so declared here.
 #define QUANTIZED_TIME(time, rate) ((double)((sampleCount)floor(((double)(time) * (rate)) + 0.5))) / (rate)
 
+// Marks strings for extraction only...must use wxGetTranslation() to translate.
+#define XO(s) wxT(s)
+
 #endif // __AUDACITY_H__

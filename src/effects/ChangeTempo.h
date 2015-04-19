@@ -25,7 +25,7 @@
 
 #include "SoundTouchEffect.h"
 
-#define CHANGETEMPO_PLUGIN_SYMBOL wxTRANSLATE("Change Tempo")
+#define CHANGETEMPO_PLUGIN_SYMBOL XO("Change Tempo")
 
 class EffectChangeTempo : public EffectSoundTouch
 {

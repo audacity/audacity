@@ -23,7 +23,7 @@
 
 #include "Effect.h"
 
-#define NORMALIZE_PLUGIN_SYMBOL wxTRANSLATE("Normalize")
+#define NORMALIZE_PLUGIN_SYMBOL XO("Normalize")
 
 class EffectNormalize : public Effect
 {
