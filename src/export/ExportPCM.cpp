@@ -377,7 +377,18 @@ ExportPCM::ExportPCM()
    AddExtension(wavext,format);
    SetMaxChannels(si.channels - 1,format);
 
-   /* add GSM6.10 to list of formats at position 3 */
+   /* add WAV float at position 3 */
+   si.format = SF_FORMAT_WAV | SF_FORMAT_FLOAT;
+   for (si.channels = 1; sf_format_check(&si); si.channels++){};
+   format = AddFormat() - 1;
+   SetFormat(wxT("WAV"),format);
+   SetCanMetaData(true,format);
+   SetDescription(_("WAV (Microsoft) float PCM"),format);
+   // we sorted out wavext near the begining
+   AddExtension(wavext,format);
+   SetMaxChannels(si.channels - 1,format);
+
+   /* add GSM6.10 to list of formats at position 4 */
    si.format = SF_FORMAT_WAV | SF_FORMAT_GSM610;
    for (si.channels = 1; sf_format_check(&si); si.channels++){};
    format = AddFormat() - 1;
@@ -423,7 +434,10 @@ int ExportPCM::Export(AudacityProject *project,
    case 2:  // WAV
       sf_format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
       break;
-   case 3:
+   case 3:  // WAV (float)
+      sf_format = SF_FORMAT_WAV | SF_FORMAT_FLOAT;
+      break;
+   case 4:
       sf_format = SF_FORMAT_WAV | SF_FORMAT_GSM610;
       break;
    default: // land here if supplied a sub-format that we don't know about
