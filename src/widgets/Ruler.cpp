@@ -2043,7 +2043,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
          options.playLooped = (loopEnabled && evt.ShiftDown());
 
-         // options.pStartTime = &mPlayRegionStart;
+         options.pStartTime = &mPlayRegionStart;
          ctb->PlayPlayRegion((SelectedRegion(start, end)),
                              options,
                              evt.ControlDown(),
