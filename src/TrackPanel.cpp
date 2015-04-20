@@ -2570,7 +2570,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       delete mSnapManager;
 
    mSnapManager = new SnapManager(mTracks, NULL,
-                                  mViewInfo->zoom,
+                                  *mViewInfo,
                                   4); // pixel tolerance
 
    mSnapLeft = -1;
@@ -4120,7 +4120,7 @@ void TrackPanel::StartSlide(wxMouseEvent & event)
       delete mSnapManager;
    mSnapManager = new SnapManager(mTracks,
                                   &mCapturedClipArray,
-                                  mViewInfo->zoom,
+                                  *mViewInfo,
                                   4,     // pixel tolerance
                                   true); // don't snap to time
    mSnapLeft = -1;

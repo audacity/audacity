@@ -2204,7 +2204,7 @@ void AdornedRulerPanel::HandleSnapping()
       delete mSnapManager;
    }
    mSnapManager = new SnapManager(mProject->GetTracks(), NULL,
-                                 mViewInfo->zoom,
+                                 *mViewInfo,
                                  QUICK_PLAY_SNAP_PIXEL);
    bool snappedPoint, snappedTime;
    mIsSnapped = (mSnapManager->Snap(NULL, mQuickPlayPos, false,
