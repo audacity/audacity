@@ -1767,6 +1767,20 @@ int AudioIO::StartStream(WaveTrackArray playbackTracks,
    AILASetStartTime();
 #endif
 
+   if (options.pStartTime)
+   {
+      // Calculate the new time position
+      mTime = std::max(mT0, std::min(mT1, *options.pStartTime));
+      // Reset mixer positions for all playback tracks
+      unsigned numMixers = mPlaybackTracks.GetCount();
+      for (unsigned ii = 0; ii < numMixers; ++ii)
+         mPlaybackMixers[ii]->Reposition(mTime);
+      if(mTimeTrack)
+         mWarpedTime = mTimeTrack->ComputeWarpedLength(mT0, mTime);
+      else
+         mWarpedTime = mTime - mT0;
+   }
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    delete mScrubQueue;
    if (scrubbing)
