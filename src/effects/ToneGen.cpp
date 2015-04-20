@@ -388,13 +388,16 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          t->SetValidator(vldAmplitude);
       }
 
+      bool isSelection;
+      double duration = GetDuration(&isSelection);
+
       S.AddPrompt(_("Duration:"));
       mToneDurationT = new
          NumericTextCtrl(NumericConverter::TIME,
                         S.GetParent(),
                         wxID_ANY,
-                        (mT1 > mT0) ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                        mDuration,
+                        isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
+                        duration,
                         mProjectRate,
                         wxDefaultPosition,
                         wxDefaultSize,
@@ -415,7 +418,7 @@ bool EffectToneGen::TransferDataToWindow()
       return false;
    }
 
-   mToneDurationT->SetValue(mDuration);
+   mToneDurationT->SetValue(GetDuration());
 
    return true;
 }
@@ -433,7 +436,7 @@ bool EffectToneGen::TransferDataFromWindow()
       mAmplitude[1] = mAmplitude[0];
    }
 
-   mDuration = mToneDurationT->GetValue();
+   SetDuration(mToneDurationT->GetValue());
 
    return true;
 }

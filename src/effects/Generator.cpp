@@ -23,7 +23,7 @@
 
 bool Generator::Process()
 {
-   if (mDuration < 0.0)
+   if (GetDuration() < 0.0)
       return false;
 
 
@@ -49,7 +49,7 @@ bool Generator::Process()
          //make sure there's room.
          if (!editClipCanMove &&
              track->IsEmpty(mT0, mT1+1.0/track->GetRate()) &&
-             !track->IsEmpty(mT0, mT0+mDuration-(mT1-mT0)-1.0/track->GetRate()))
+             !track->IsEmpty(mT0, mT0+GetDuration()-(mT1-mT0)-1.0/track->GetRate()))
          {
             wxMessageBox(
                   _("There is not enough room available to generate the audio"),
@@ -58,7 +58,7 @@ bool Generator::Process()
             return false;
          }
 
-         if (mDuration > 0.0)
+         if (GetDuration() > 0.0)
          {
             // Create a temporary track
             std::auto_ptr<WaveTrack> tmp(
@@ -74,7 +74,7 @@ bool Generator::Process()
             else {
                // Transfer the data from the temporary track to the actual one
                tmp->Flush();
-               SetTimeWarper(new StepTimeWarper(mT0+mDuration, mDuration-(mT1-mT0)));
+               SetTimeWarper(new StepTimeWarper(mT0+GetDuration(), GetDuration()-(mT1-mT0)));
                bGoodResult = track->ClearAndPaste(mT0, mT1, &*tmp, true,
                      false, GetTimeWarper());
             }
@@ -94,7 +94,7 @@ bool Generator::Process()
          ntrack++;
       }
       else if (t->IsSyncLockSelected()) {
-         t->SyncLockAdjust(mT1, mT0 + mDuration);
+         t->SyncLockAdjust(mT1, mT0 + GetDuration());
       }
       // Move on to the next track
       t = iter.Next();
@@ -104,7 +104,7 @@ bool Generator::Process()
 
    this->ReplaceProcessedTracks(bGoodResult);
 
-   mT1 = mT0 + mDuration; // Update selection.
+   mT1 = mT0 + GetDuration(); // Update selection.
 
    return true;
 }
@@ -114,7 +114,7 @@ bool BlockGenerator::GenerateTrack(WaveTrack *tmp,
                                    int ntrack)
 {
    bool bGoodResult = true;
-   numSamples = track.TimeToLongSamples(mDuration);
+   numSamples = track.TimeToLongSamples(GetDuration());
    sampleCount i = 0;
    float *data = new float[tmp->GetMaxBlockSize()];
    sampleCount block = 0;

@@ -880,15 +880,15 @@ private:
 
 enum
 {
-   ID_DURATION = 20000,
-   ID_SLIDERS = 21000,
+   ID_Duration = 20000,
+   ID_Sliders = 21000,
 };
 
 DEFINE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW);
 DEFINE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY);
 
 BEGIN_EVENT_TABLE(VSTEffect, wxEvtHandler)
-   EVT_COMMAND_RANGE(ID_SLIDERS, ID_SLIDERS + 999, wxEVT_COMMAND_SLIDER_UPDATED, VSTEffect::OnSlider)
+   EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, VSTEffect::OnSlider)
 
    // Events from the audioMaster callback
    EVT_COMMAND(wxID_ANY, EVT_SIZEWINDOW, VSTEffect::OnSizeWindow)
@@ -2207,6 +2207,16 @@ bool VSTEffect::IsGraphicalUI()
 
 bool VSTEffect::ValidateUI()
 {
+   if (!mParent->Validate() || !mParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   if (GetType() == EffectTypeGenerate)
+   {
+      mHost->SetDuration(mDuration->GetValue());
+   }
+
    return true;
 }
 
@@ -3492,17 +3502,21 @@ void VSTEffect::BuildPlain()
    // Add the duration control for generators
    if (GetType() == EffectTypeGenerate)
    {
+      bool isSelection;
+      double duration = mHost->GetDuration(&isSelection);
+
       wxControl *item = new wxStaticText(scroller, 0, _("Duration:"));
       gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-      mDuration = new NumericTextCtrl(NumericConverter::TIME,
-                                     scroller,
-                                     ID_DURATION,
-                                     _("hh:mm:ss + milliseconds"),
-                                     mHost->GetDuration(),
-                                     mSampleRate,
-                                     wxDefaultPosition,
-                                     wxDefaultSize,
-                                     true);
+      mDuration = new
+         NumericTextCtrl(NumericConverter::TIME,
+                         scroller,
+                         ID_Duration,
+                         isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
+                         duration,
+                         mSampleRate,
+                         wxDefaultPosition,
+                         wxDefaultSize,
+                         true);
       mDuration->SetName(_("Duration"));
       mDuration->EnableMenu();
       gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
@@ -3543,7 +3557,7 @@ void VSTEffect::BuildPlain()
       gridSizer->Add(mNames[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
       mSliders[i] = new wxSlider(scroller,
-                                 ID_SLIDERS + i,
+                                 ID_Sliders + i,
                                  0,
                                  0,
                                  1000,
@@ -3644,7 +3658,7 @@ void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
 void VSTEffect::OnSlider(wxCommandEvent & evt)
 {
    wxSlider *s = (wxSlider *) evt.GetEventObject();
-   int i = s->GetId() - ID_SLIDERS;
+   int i = s->GetId() - ID_Sliders;
 
    callSetParameter(i, s->GetValue() / 1000.0);
 

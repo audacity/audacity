@@ -646,26 +646,64 @@ double Effect::GetDefaultDuration()
    return 30.0;
 }
 
-double Effect::GetDuration()
+double Effect::GetDuration(bool *isSelection)
 {
    if (mT1 > mT0)
    {
-      return mT1 - mT0;
+      // there is a selection: let's fit in there...
+      // MJS: note that this is just for the TTC and is independent of the track rate
+      // but we do need to make sure we have the right number of samples at the project rate
+      double quantMT0 = QUANTIZED_TIME(mT0, mProjectRate);
+      double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
+      mDuration = quantMT1 - quantMT0;
+
+      if (isSelection)
+      {
+         *isSelection = true;
+      }
+
+      return mDuration;
+   }
+
+   if (isSelection)
+   {
+      *isSelection = false;
+   }
+
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("LastUsedDuration"), mDuration, 0.0);
+   if (mDuration > 0.0)
+   {
+      return mDuration;
+   }
+
+   if (mDuration < 0.0)
+   {
+      mDuration = 0.0;
    }
 
    if (GetType() == EffectTypeGenerate)
    {
-      return GetDefaultDuration();
+      mDuration = GetDefaultDuration();
    }
 
-   return 0;
+   return mDuration;
 }
 
-bool Effect::SetDuration(double seconds)
+void Effect::SetDuration(double seconds)
 {
+   if (seconds < 0.0)
+   {
+      seconds = 0.0;
+   }
+
+   if (mDuration != seconds)
+   {
+      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
+   }
+
    mDuration = seconds;
 
-   return true;
+   return;
 }
 
 bool Effect::Apply()

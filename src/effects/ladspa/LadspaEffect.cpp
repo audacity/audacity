@@ -361,10 +361,10 @@ void LadspaEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
 enum
 {
-   ID_DURATION = 20000,
-   ID_TOGGLES = 21000,
-   ID_SLIDERS = 22000,
-   ID_TEXTS = 23000,
+   ID_Duration = 20000,
+   ID_Toggles = 21000,
+   ID_Sliders = 22000,
+   ID_Texts = 23000,
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -374,9 +374,9 @@ enum
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(LadspaEffect, wxEvtHandler)
-   EVT_COMMAND_RANGE(ID_TOGGLES, ID_TOGGLES + 999, wxEVT_COMMAND_CHECKBOX_CLICKED, LadspaEffect::OnCheckBox)
-   EVT_COMMAND_RANGE(ID_SLIDERS, ID_SLIDERS + 999, wxEVT_COMMAND_SLIDER_UPDATED, LadspaEffect::OnSlider)
-   EVT_COMMAND_RANGE(ID_TEXTS, ID_TEXTS + 999, wxEVT_COMMAND_TEXT_UPDATED, LadspaEffect::OnTextCtrl)
+   EVT_COMMAND_RANGE(ID_Toggles, ID_Toggles + 999, wxEVT_COMMAND_CHECKBOX_CLICKED, LadspaEffect::OnCheckBox)
+   EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, LadspaEffect::OnSlider)
+   EVT_COMMAND_RANGE(ID_Texts, ID_Texts + 999, wxEVT_COMMAND_TEXT_UPDATED, LadspaEffect::OnTextCtrl)
 END_EVENT_TABLE()
 
 LadspaEffect::LadspaEffect(const wxString & path, int index)
@@ -1035,17 +1035,21 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
       // Add the duration control for generators
       if (GetType() == EffectTypeGenerate)
       {
+         bool isSelection;
+         double duration = mHost->GetDuration(&isSelection);
+
          item = new wxStaticText(w, 0, _("Duration:"));
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-         mDuration = new NumericTextCtrl(NumericConverter::TIME,
-                                         w,
-                                         ID_DURATION,
-                                         _("hh:mm:ss + milliseconds"),
-                                         mHost->GetDuration(),
-                                         mSampleRate,
-                                         wxDefaultPosition,
-                                         wxDefaultSize,
-                                         true);
+         mDuration = new
+            NumericTextCtrl(NumericConverter::TIME,
+                            w,
+                            ID_Duration,
+                            isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
+                            duration,
+                            mSampleRate,
+                            wxDefaultPosition,
+                            wxDefaultSize,
+                            true);
          mDuration->SetName(_("Duration"));
          mDuration->EnableMenu();
          gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
@@ -1071,7 +1075,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
 
          if (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor))
          {
-            mToggles[p] = new wxCheckBox(w, ID_TOGGLES + p, wxT(""));
+            mToggles[p] = new wxCheckBox(w, ID_Toggles + p, wxT(""));
             mToggles[p]->SetName(labelText);
             mToggles[p]->SetValue(mInputControls[p] > 0);
             gridSizer->Add(mToggles[p], 0, wxALL, 5);
@@ -1126,7 +1130,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          // Don't specify a value at creation time.  This prevents unwanted events
          // being sent to the OnTextCtrl() handler before the associated slider
          // has been created.
-         mFields[p] = new wxTextCtrl(w, ID_TEXTS + p);
+         mFields[p] = new wxTextCtrl(w, ID_Texts + p);
          mFields[p]->SetName(labelText);
          gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
@@ -1149,7 +1153,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
             gridSizer->Add(1, 1, 0);
          }
 
-         mSliders[p] = new wxSlider(w, ID_SLIDERS + p,
+         mSliders[p] = new wxSlider(w, ID_Sliders + p,
                                     0, 0, 1000,
                                     wxDefaultPosition,
                                     wxSize(200, -1));
@@ -1472,14 +1476,14 @@ void LadspaEffect::FreeInstance(LADSPA_Handle handle)
 
 void LadspaEffect::OnCheckBox(wxCommandEvent & evt)
 {
-   int p = evt.GetId() - ID_TOGGLES;
+   int p = evt.GetId() - ID_Toggles;
 
    mInputControls[p] = mToggles[p]->GetValue();
 }
 
 void LadspaEffect::OnSlider(wxCommandEvent & evt)
 {
-   int p = evt.GetId() - ID_SLIDERS;
+   int p = evt.GetId() - ID_Sliders;
 
    float val;
    float lower = float(0.0);
@@ -1516,7 +1520,7 @@ void LadspaEffect::OnSlider(wxCommandEvent & evt)
 void LadspaEffect::OnTextCtrl(wxCommandEvent & evt)
 {
    LadspaEffect *that = reinterpret_cast<LadspaEffect *>(this);
-   int p = evt.GetId() - ID_TEXTS;
+   int p = evt.GetId() - ID_Texts;
 
    float val;
    float lower = float(0.0);

@@ -98,6 +98,8 @@ int EffectDtmf::GetAudioOutCount()
 
 bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
 {
+   double duration = GetDuration();
+
    // all dtmf sequence durations in samples from seconds
    // MJS: Note that mDuration is in seconds but will have been quantised to the units of the TTC.
    // If this was 'samples' and the project rate was lower than the track rate,
@@ -105,7 +107,7 @@ bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    // However we are making our best efforts at creating what was asked for.
 
    sampleCount nT0 = (sampleCount)floor(mT0 * mSampleRate + 0.5);
-   sampleCount nT1 = (sampleCount)floor((mT0 + mDuration) * mSampleRate + 0.5);
+   sampleCount nT1 = (sampleCount)floor((mT0 + duration) * mSampleRate + 0.5);
    numSamplesSequence = nT1 - nT0;  // needs to be exact number of samples selected
 
    //make under-estimates if anything, and then redistribute the few remaining samples
@@ -279,17 +281,6 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
    // value from saved config: this is useful is user wants to
    // replace selection with dtmf sequence
 
-   bool isSelection = false;
-   if (mT1 > mT0) {
-      // there is a selection: let's fit in there...
-      // MJS: note that this is just for the TTC and is independent of the track rate
-      // but we do need to make sure we have the right number of samples at the project rate
-      double quantMT0 = QUANTIZED_TIME(mT0, mProjectRate);
-      double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
-      mDuration = quantMT1 - quantMT0;
-      isSelection = true;
-   }
-
    S.AddSpace(0, 5);
    S.StartMultiColumn(2, wxCENTER);
    {
@@ -301,17 +292,16 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
       vldAmp.SetRange(MIN_Amplitude, MAX_Amplitude);
       S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 10)->SetValidator(vldAmp);
 
+      bool isSelection;
+      double duration = GetDuration(&isSelection);
+
       S.AddPrompt(_("Duration:"));
       mDtmfDurationT = new
          NumericTextCtrl(NumericConverter::TIME,
                          S.GetParent(),
                          wxID_ANY,
-      /* use this instead of "seconds" because if a selection is passed to the
-      * effect, I want it (mDuration) to be used as the duration, and with
-      * "seconds" this does not always work properly. For example, it rounds
-      * down to zero... */
                          isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                         mDuration,
+                         duration,
                          mProjectRate,
                          wxDefaultPosition,
                          wxDefaultSize,
@@ -354,7 +344,8 @@ bool EffectDtmf::TransferDataToWindow()
    }
 
    mDtmfDutyS->SetValue(dtmfDutyCycle * SCL_DutyCycle);
-   mDtmfDurationT->SetValue(mDuration);
+
+   mDtmfDurationT->SetValue(GetDuration());
 
    UpdateUI();
 
@@ -369,7 +360,7 @@ bool EffectDtmf::TransferDataFromWindow()
    }
 
    dtmfDutyCycle = (double) mDtmfDutyS->GetValue() / SCL_DutyCycle;
-   mDuration = mDtmfDurationT->GetValue();
+   SetDuration(mDtmfDurationT->GetValue());
 
    // recalculate to make sure all values are up-to-date. This is especially
    // important if the user did not change any values in the dialog
@@ -390,13 +381,13 @@ void EffectDtmf::Recalculate()
       // no tones, all zero: don't do anything
       // this should take care of the case where user got an empty
       // dtmf sequence into the generator: track won't be generated
-      mDuration = 0;
+      SetDuration(0.0);
       dtmfTone = 0;
-      dtmfSilence = mDuration;
+      dtmfSilence = 0;
    } else {
       if (dtmfNTones==1) {
         // single tone, as long as the sequence
-          dtmfTone = mDuration;
+          dtmfTone = GetDuration();
           dtmfSilence = 0;
       } else {
          // Don't be fooled by the fact that you divide the sequence into dtmfNTones:
@@ -408,7 +399,7 @@ void EffectDtmf::Recalculate()
          // which can be simplified in the one below.
          // Then just take the part that belongs to tone or silence.
          //
-         double slot = mDuration / ((double)dtmfNTones + (dtmfDutyCycle / 100.0) - 1);
+         double slot = GetDuration() / ((double)dtmfNTones + (dtmfDutyCycle / 100.0) - 1);
          dtmfTone = slot * (dtmfDutyCycle / 100.0); // seconds
          dtmfSilence = slot * (1.0 - (dtmfDutyCycle / 100.0)); // seconds
 
@@ -571,7 +562,7 @@ void EffectDtmf::OnSlider(wxCommandEvent & evt)
 
 void EffectDtmf::OnText(wxCommandEvent & WXUNUSED(evt))
 {
-   mDuration = mDtmfDurationT->GetValue();
+   SetDuration(mDtmfDurationT->GetValue());
    mUIParent->TransferDataFromWindow();
    Recalculate();
    UpdateUI();

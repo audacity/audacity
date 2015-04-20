@@ -144,8 +144,8 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    // EffectHostInterface implementation
 
    virtual double GetDefaultDuration();
-   virtual double GetDuration();
-   virtual bool SetDuration(double duration);
+   virtual double GetDuration(bool *isSelection = NULL);
+   virtual void SetDuration(double duration);
 
    virtual bool Apply();
    virtual void Preview();
@@ -344,7 +344,6 @@ protected:
    wxDialog       *mUIDialog;
    wxWindow       *mUIParent;
 
-   double mDuration;
    sampleCount mSampleCnt;
 
    // type of the tracks on mOutputTracks
@@ -372,6 +371,8 @@ protected:
  //
 private:
    wxWindow *mParent;
+
+   double mDuration;
 
    wxArrayPtrVoid mIMap;
    wxArrayPtrVoid mOMap;

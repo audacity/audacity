@@ -56,7 +56,6 @@ EffectNoise::EffectNoise()
 {
    mType = DEF_Type;
    mAmp = DEF_Amp;
-   mDuration = GetDefaultDuration();
 
    y = z = buf0 = buf1 = buf2 = buf3 = buf4 = buf5 = buf6 = 0;
 }
@@ -222,18 +221,17 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
       FloatingPointValidator<double> vldAmp(1, &mAmp, NUM_VAL_NO_TRAILING_ZEROES);
       vldAmp.SetRange(MIN_Amp, MAX_Amp);
       S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 12)->SetValidator(vldAmp);
-      S.AddPrompt(_("Duration:"));
 
+      bool isSelection;
+      double duration = GetDuration(&isSelection);
+
+      S.AddPrompt(_("Duration:"));
       mNoiseDurationT = new
          NumericTextCtrl(NumericConverter::TIME,
                            S.GetParent(),
                            wxID_ANY,
-      /* use this instead of "seconds" because if a selection is passed to
-         * the effect, I want it (nDuration) to be used as the duration, and
-         * with "seconds" this does not always work properly. For example,
-         * it rounds down to zero... */
-                           (mT1 > mT0) ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                           mDuration,
+                           isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
+                           duration,
                            mProjectRate,
                            wxDefaultPosition,
                            wxDefaultSize,
@@ -252,7 +250,7 @@ bool EffectNoise::TransferDataToWindow()
       return false;
    }
 
-   mNoiseDurationT->SetValue(mDuration);
+   mNoiseDurationT->SetValue(GetDuration());
 
    return true;
 }
@@ -264,7 +262,7 @@ bool EffectNoise::TransferDataFromWindow()
       return false;
    }
 
-   mDuration = mNoiseDurationT->GetValue();
+   SetDuration(mNoiseDurationT->GetValue());
 
    return true;
 }
