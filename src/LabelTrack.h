@@ -36,6 +36,7 @@ class TrackList;
 class AudacityProject;
 class DirManager;
 class TimeWarper;
+class ZoomInfo;
 
 
 class LabelStruct
@@ -177,7 +178,7 @@ class AUDACITY_DLL_API LabelTrack : public Track
    void SetWrongDragging(bool rightFlag) { mRightDragging = rightFlag; }
    void SetDrawCursor(bool drawCursorFlag) { mDrawCursor = drawCursorFlag; }
 
-   bool HandleMouse(const wxMouseEvent & evt, wxRect & r, double h, double pps,
+   bool HandleMouse(const wxMouseEvent & evt, wxRect & r, const ZoomInfo &zoomInfo,
                            SelectedRegion *newSel);
 
    bool CaptureKey(wxKeyEvent & event);
