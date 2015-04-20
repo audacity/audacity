@@ -2634,6 +2634,10 @@ bool EffectUIHost::Initialize()
 
    wxPanel *bar = new wxPanel(this, wxID_ANY);
 
+   // This fools NVDA into not saying "Panel" when the dialog gets focus
+   bar->SetName(wxT(","));
+   bar->SetLabel(wxT(","));
+
    wxBoxSizer *bs = new wxBoxSizer(wxHORIZONTAL);
 
    mSupportsRealtime = mEffect->SupportsRealtime();
