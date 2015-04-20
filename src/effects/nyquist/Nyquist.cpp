@@ -71,7 +71,6 @@ enum
    ID_Version,
    ID_Load,
    ID_Save,
-   ID_Clear,
    ID_Debug,
 
    ID_Slider = 11000,
@@ -96,7 +95,6 @@ WX_DEFINE_OBJARRAY(NyqControlArray);
 BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
    EVT_BUTTON(ID_Load, NyquistEffect::OnLoad)
    EVT_BUTTON(ID_Save, NyquistEffect::OnSave)
-   EVT_BUTTON(ID_Clear, NyquistEffect::OnClear)
    EVT_BUTTON(ID_Debug, NyquistEffect::OnDebug)
 
    EVT_COMMAND_RANGE(ID_Slider, ID_Slider+99,
@@ -626,7 +624,7 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    // Show the normal (prompt or effect) interface
    bool res = Effect::ShowInterface(parent, forceModal);
-printf("res = %d %d %d\n", res, mIsPrompt, (int)mControls.GetCount());
+
    // We're done if the user clicked "Close", we are not the Nyquist Prompt,
    // or the program currently loaded into the prompt doesn't have a UI.
    if (!res || !mIsPrompt || mControls.GetCount() == 0)
@@ -1787,7 +1785,6 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
       {
          S.Id(ID_Load).AddButton(_("&Load"));
          S.Id(ID_Save).AddButton(_("&Save"));
-         S.Id(ID_Clear).AddButton(_("&Clear"));
          S.AddSpace(10, 1);
          S.Id(ID_Debug).AddButton(_("&Debug"));
       }
@@ -1901,12 +1898,12 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
       }
    }
 
-   FileDialog dlog(mUIParent,
-                   _("Load Nyquist script"),
-                   mFileName.GetPath(),
-                   wxEmptyString,
-                   _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"),
-                   wxFD_OPEN | wxRESIZE_BORDER);
+   wxFileDialog dlog(mUIParent,
+                     _("Load Nyquist script"),
+                     mFileName.GetPath(),
+                     wxEmptyString,
+                     _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|*.txt|All files|*"),
+                     wxFD_OPEN | wxRESIZE_BORDER);
 
    if (dlog.ShowModal() != wxID_OK)
    {
@@ -1923,12 +1920,12 @@ void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
 
 void NyquistEffect::OnSave(wxCommandEvent & WXUNUSED(evt))
 {
-   FileDialog dlog(mUIParent,
-                   _("Save Nyquist script"),
-                   mFileName.GetPath(),
-                   mFileName.GetFullName(),
-                   _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"),
-                   wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
+   wxFileDialog dlog(mUIParent,
+                     _("Save Nyquist script"),
+                     mFileName.GetPath(),
+                     mFileName.GetFullName(),
+                     _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"),
+                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
 
    if (dlog.ShowModal() != wxID_OK)
    {
@@ -1943,16 +1940,13 @@ void NyquistEffect::OnSave(wxCommandEvent & WXUNUSED(evt))
    }
 }
 
-void NyquistEffect::OnClear(wxCommandEvent & WXUNUSED(evt))
-{
-   mCommandText->Clear();
-}
-
 void NyquistEffect::OnDebug(wxCommandEvent & WXUNUSED(evt))
 {
+   TransferDataFromPromptWindow();
+
    NyquistEffect effect(NYQUIST_WORKER_ID);
  
-   effect.SetCommand(mCommandText->GetValue());
+   effect.SetCommand(mInputCmd);
    effect.mDebug = true;
 
    SelectedRegion region(mT0, mT1);
@@ -1970,6 +1964,8 @@ void NyquistEffect::OnDebug(wxCommandEvent & WXUNUSED(evt))
                             effect.mOutput);
    dlog.CentreOnParent();
    dlog.ShowModal();
+
+   SaveUserPreset(GetCurrentSettingsGroup());
 
    return;
 }

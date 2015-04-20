@@ -259,12 +259,14 @@ public:
    {
       val.Replace(wxT("\\"), wxT("\\\\"), true);
       val.Replace(wxT("\""), wxT("\\\""), true);
+      val.Replace(wxT("\n"), wxT("\\n"), true);
 
       return val;
    }
 
    wxString Unescape(wxString val)
    {
+      val.Replace(wxT("\\n"), wxT("\n"), true);
       val.Replace(wxT("\\\""), wxT("\""), true);
       val.Replace(wxT("\\\\"), wxT("\\"), true);
 

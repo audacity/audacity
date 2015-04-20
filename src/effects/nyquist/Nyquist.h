@@ -155,7 +155,6 @@ private:
 
    void OnLoad(wxCommandEvent & evt);
    void OnSave(wxCommandEvent & evt);
-   void OnClear(wxCommandEvent & evt);
    void OnDebug(wxCommandEvent & evt);
 
    void OnText(wxCommandEvent & evt);
