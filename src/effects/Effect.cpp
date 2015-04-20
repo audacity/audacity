@@ -2446,6 +2446,10 @@ public:
    EffectPanel(wxWindow *parent)
    :  wxPanel(parent)
    {
+      // This fools NVDA into not saying "Panel" when the dialog gets focus
+      SetName(wxT(","));
+      SetLabel(wxT(","));
+
       mAcceptsFocus = true;
    }
 

@@ -1470,6 +1470,11 @@ bool LV2Effect::BuildPlain()
                                               wxDefaultSize,
                                               wxVSCROLL | wxTAB_TRAVERSAL);
    w->SetScrollRate(0, 20);
+
+   // This fools NVDA into not saying "Panel" when the dialog gets focus
+   w->SetName(wxT(","));
+   w->SetLabel(wxT(","));
+
    outerSizer->Add(w, 1, wxEXPAND);
 
    wxSizer *innerSizer = new wxBoxSizer(wxVERTICAL);

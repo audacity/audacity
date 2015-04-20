@@ -1018,6 +1018,11 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
                                               wxDefaultSize,
                                               wxVSCROLL | wxTAB_TRAVERSAL);
    w->SetScrollRate(0, 20);
+
+   // This fools NVDA into not saying "Panel" when the dialog gets focus
+   w->SetName(wxT(","));
+   w->SetLabel(wxT(","));
+
    mainSizer->Add(w, 0, wxEXPAND);
    mParent->SetSizer(mainSizer);
 
@@ -1025,7 +1030,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
 
    if (mNumInputControls)
    {
-      wxSizer *paramSizer = new wxStaticBoxSizer(wxVERTICAL, w, _("Effect Settings"));
+      wxStaticBoxSizer *paramSizer = new wxStaticBoxSizer(wxVERTICAL, w, _("Effect Settings"));
 
       wxFlexGridSizer *gridSizer = new wxFlexGridSizer(5, 0, 0);
       gridSizer->AddGrowableCol(3);
