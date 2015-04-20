@@ -50,6 +50,20 @@
    }
 #endif
 
+struct
+{
+   int format;
+   wxChar *name;
+   wxChar *desc;
+}
+static const kFormats[] =
+{
+   { SF_FORMAT_AIFF | SF_FORMAT_PCM_16,   wxT("AIFF"),   XO("AIFF (Apple) signed 16 bit PCM")    },
+   { SF_FORMAT_WAV | SF_FORMAT_PCM_16,    wxT("WAV"),    XO("WAV (Microsoft) signed 16 bit PCM") },
+   { SF_FORMAT_WAV | SF_FORMAT_FLOAT,     wxT("WAVFLT"), XO("WAV (Microsoft) float PCM")         },
+   { SF_FORMAT_WAV | SF_FORMAT_GSM610,    wxT("GSM610"), XO("GSM 6.10 WAV (mobile)")             },
+};
+
 //----------------------------------------------------------------------------
 // Statics
 //----------------------------------------------------------------------------
@@ -116,26 +130,18 @@ ExportPCMOptions::ExportPCMOptions(wxWindow * WXUNUSED(parent), int selformat)
             wxString(_("Specify Uncompressed Options")))
 {
    mOk = NULL;
+
    int format = 0;
-   switch (selformat)
+
+   if (selformat < 0 || selformat >= WXSIZEOF(kFormats))
    {
-   case 0:  // other uncompressed
       format = ReadExportFormatPref();
-      break;
-   case 1:  // 16-bit AIFF
-      format = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
-      break;
-   case 2:  // 16-bit WAV
-      format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
-      break;
-   case 3:  // GSM WAV
-      format = SF_FORMAT_WAV | SF_FORMAT_GSM610;
-      break;
-   default: // bug - forgot to extend this case statement
-      wxASSERT(false);
-      format = ReadExportFormatPref();
-      break;
    }
+   else
+   {
+      format = kFormats[selformat].format;
+   }
+
    int i;
    int num;
    int sel;
@@ -338,65 +344,37 @@ ExportPCM::ExportPCM()
 
    int format; // the index of the format we are setting up at the moment
 
-   /* add default user controlled format to list of formats this plug-in does
-    * at position 0 */
+   // Add the "special" formats first
+   for (size_t i = 0; i < WXSIZEOF(kFormats); i++)
+   {
+      format = AddFormat() - 1;
+
+      si.format = kFormats[i].format;
+      for (si.channels = 1; sf_format_check(&si); si.channels++){};
+      wxString ext = sf_header_extension(si.format);
+
+      SetFormat(kFormats[i].name, format);
+      SetCanMetaData(true, format);
+      SetDescription(wxGetTranslation(kFormats[i].desc), format);
+      AddExtension(ext, format);
+      SetMaxChannels(si.channels - 1, format);
+   }
+
+   // Then add the generic libsndfile formats
    format = AddFormat() - 1;  // store the index = 1 less than the count
-   SetFormat(wxT("LIBSNDFILE"),format);
-   SetCanMetaData(true,format);
-   SetDescription(_("Other uncompressed files"),format);
+   SetFormat(wxT("LIBSNDFILE"), format);
+   SetCanMetaData(true, format);
+   SetDescription(_("Other uncompressed files"), format);
    wxArrayString allext = sf_get_all_extensions();
    wxString wavext = sf_header_extension(SF_FORMAT_WAV);   // get WAV ext.
 #if defined(wxMSW)
    // On Windows make sure WAV is at the beginning of the list of all possible
    // extensions for this format
    allext.Remove(wavext);
-   allext.Insert(wavext,0);
+   allext.Insert(wavext, 0);
 #endif
-   SetExtensions(allext,format);
-   SetMaxChannels(255,format);
-
-   /* add AIFF 16-bit to list of sub-formats for this plug-in at position 1 */
-   si.format = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
-   for (si.channels = 1; sf_format_check(&si); si.channels++){};
-   format = AddFormat() - 1;
-   SetFormat(wxT("AIFF"),format);
-   SetCanMetaData(true,format);
-   SetDescription(_("AIFF (Apple) signed 16 bit PCM"),format);
-   wxString aiffext = sf_header_extension(si.format);
-   AddExtension(aiffext,format);
-   SetMaxChannels(si.channels - 1,format);
-
-   /* add WAV 16-bit at position 2 */
-   si.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
-   for (si.channels = 1; sf_format_check(&si); si.channels++){};
-   format = AddFormat() - 1;
-   SetFormat(wxT("WAV"),format);
-   SetCanMetaData(true,format);
-   SetDescription(_("WAV (Microsoft) signed 16 bit PCM"),format);
-   // we sorted out wavext near the begining
-   AddExtension(wavext,format);
-   SetMaxChannels(si.channels - 1,format);
-
-   /* add WAV float at position 3 */
-   si.format = SF_FORMAT_WAV | SF_FORMAT_FLOAT;
-   for (si.channels = 1; sf_format_check(&si); si.channels++){};
-   format = AddFormat() - 1;
-   SetFormat(wxT("WAV"),format);
-   SetCanMetaData(true,format);
-   SetDescription(_("WAV (Microsoft) float PCM"),format);
-   // we sorted out wavext near the begining
-   AddExtension(wavext,format);
-   SetMaxChannels(si.channels - 1,format);
-
-   /* add GSM6.10 to list of formats at position 4 */
-   si.format = SF_FORMAT_WAV | SF_FORMAT_GSM610;
-   for (si.channels = 1; sf_format_check(&si); si.channels++){};
-   format = AddFormat() - 1;
-   SetFormat(wxT("GSM610"),format);
-   SetCanMetaData(true,format);
-   SetDescription(_("GSM 6.10 WAV (mobile)"),format);
-   AddExtension(sf_header_extension(si.format),format);
-   SetMaxChannels(si.channels - 1,format);
+   SetExtensions(allext, format);
+   SetMaxChannels(255, format);
 }
 
 void ExportPCM::Destroy()
@@ -407,9 +385,8 @@ void ExportPCM::Destroy()
 /**
  *
  * @param subformat Control whether we are doing a "preset" export to a popular
- * file type, or giving the user full control over libsndfile. Set to 0
- * (default) gives full control, 1 gives 16-bit AIFF, 2 gives 16-bit WAV
- * 3 gives a GSM 6.10 WAV file */
+ * file type, or giving the user full control over libsndfile.
+ */
 int ExportPCM::Export(AudacityProject *project,
                        int numChannels,
                        wxString fName,
@@ -423,28 +400,14 @@ int ExportPCM::Export(AudacityProject *project,
    double       rate = project->GetRate();
    TrackList   *tracks = project->GetTracks();
    int sf_format;
-   switch (subformat)
+
+   if (subformat < 0 || subformat >= WXSIZEOF(kFormats))
    {
-   case 0:  // other uncompressed
       sf_format = ReadExportFormatPref();
-      break;
-   case 1:  // AIFF
-      sf_format = SF_FORMAT_AIFF | SF_FORMAT_PCM_16;
-      break;
-   case 2:  // WAV
-      sf_format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
-      break;
-   case 3:  // WAV (float)
-      sf_format = SF_FORMAT_WAV | SF_FORMAT_FLOAT;
-      break;
-   case 4:
-      sf_format = SF_FORMAT_WAV | SF_FORMAT_GSM610;
-      break;
-   default: // land here if supplied a sub-format that we don't know about
-      wxASSERT(false);  // raise assertion - this is a bug
-      sf_format = ReadExportFormatPref(); // treat it like 0 so users get a
-      // working result
-   break;
+   }
+   else
+   {
+      sf_format = kFormats[subformat].format;
    }
 
    wxString     formatStr;
@@ -923,33 +886,23 @@ void ExportPCM::AddID3Chunk(wxString fName, Tags *tags, int sf_format)
  * method. Controls use of pre-defined export settings.*/
 bool ExportPCM::DisplayOptions(wxWindow *parent, int format)
 {
-   wxString nopt(_("There are no options for this format.\n"));
-   /* i18n-hint: This is pointing users at another possible export format in
-    * the list. So you should translate the quoted string
-    * 'Other uncompressed files' exactly the same as you do the same string
-    * when it comes up on it's own.*/
-   wxString usepcm(_("If you need more control over the export format please use the 'Other uncompressed files' format."));
-
-   /* actual code - decide what options if any are useful to show */
-   if (format == 1)
-   {   // 16-bit AIFF
-      wxMessageBox(nopt + _("Your file will be exported as a 16-bit AIFF (Apple/SGI) file.\n") + usepcm);
-      return true;
-   }
-   else if (format == 2)
-   {  // 16-bit WAV
-      wxMessageBox(nopt + _("Your file will be exported as a 16-bit WAV (Microsoft) file.\n") + usepcm);
-      return true;
-   }
-   else if (format == 3)
-   {  // GSM WAV
-      wxMessageBox(nopt + _("Your file will be exported as a GSM 6.10 WAV file.\n") + usepcm);
-      return true;
-   }
-
    // default, full user control
-   ExportPCMOptions od(parent,format);
-   od.ShowModal();
+   if (format < 0 || format >= WXSIZEOF(kFormats))
+   {
+      ExportPCMOptions od(parent,format);
+      od.ShowModal();
+      return true;
+   }
+
+   wxString nopt, fmt, usepcm;
+
+   nopt.Printf(_("There are no options for this format.\n"));
+   fmt.Printf(_("Your file will be exported as a \"%s\" file\n"),
+              wxGetTranslation(kFormats[format].desc));
+   usepcm.Printf(_("If you need more control over the export format please use the \"%s\" format."),
+                 _("Other uncompressed files"));
+
+   wxMessageBox(nopt + fmt + usepcm);
 
    return true;
 }
