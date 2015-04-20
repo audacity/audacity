@@ -1472,8 +1472,8 @@ bool LV2Effect::BuildPlain()
    w->SetScrollRate(0, 20);
 
    // This fools NVDA into not saying "Panel" when the dialog gets focus
-   w->SetName(wxT(","));
-   w->SetLabel(wxT(","));
+   w->SetName(wxT("\a"));
+   w->SetLabel(wxT("\a"));
 
    outerSizer->Add(w, 1, wxEXPAND);
 

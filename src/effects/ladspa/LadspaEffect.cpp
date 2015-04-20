@@ -1020,8 +1020,8 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
    w->SetScrollRate(0, 20);
 
    // This fools NVDA into not saying "Panel" when the dialog gets focus
-   w->SetName(wxT(","));
-   w->SetLabel(wxT(","));
+   w->SetName(wxT("\a"));
+   w->SetLabel(wxT("\a"));
 
    mainSizer->Add(w, 0, wxEXPAND);
    mParent->SetSizer(mainSizer);

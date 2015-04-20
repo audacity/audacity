@@ -1879,8 +1879,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
    scroller->SetScrollRate(0, 20);
 
    // This fools NVDA into not saying "Panel" when the dialog gets focus
-   scroller->SetName(wxT(","));
-   scroller->SetLabel(wxT(","));
+   scroller->SetName(wxT("\a"));
+   scroller->SetLabel(wxT("\a"));
 }
 
 // NyquistEffect implementation

@@ -3488,8 +3488,8 @@ void VSTEffect::BuildPlain()
    scroller->SetScrollRate(0, 20);
 
    // This fools NVDA into not saying "Panel" when the dialog gets focus
-   scroller->SetName(wxT(","));
-   scroller->SetLabel(wxT(","));
+   scroller->SetName(wxT("\a"));
+   scroller->SetLabel(wxT("\a"));
 
    mainSizer->Add(scroller, 1, wxEXPAND | wxALL, 5);
    mParent->SetSizer(mainSizer);
