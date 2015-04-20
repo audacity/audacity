@@ -299,7 +299,6 @@ private:
 
    double Pos2Time(int p);
    int Time2Pos(double t);
-   int Seconds2Pixels(double t);
 
    bool IsWithinMarker(int mousePosX, double markerTime);
 

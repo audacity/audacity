@@ -1803,17 +1803,12 @@ void AdornedRulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 
 double AdornedRulerPanel::Pos2Time(int p)
 {
-   return (p-mLeftOffset) / mViewInfo->zoom + mViewInfo->h;
+   return mViewInfo->PositionToTime(p, mLeftOffset);
 }
 
 int AdornedRulerPanel::Time2Pos(double t)
 {
-   return mLeftOffset + Seconds2Pixels(t-mViewInfo->h);
-}
-
-int AdornedRulerPanel::Seconds2Pixels(double t)
-{
-   return (int)(t * mViewInfo->zoom + 0.5);
+   return mViewInfo->TimeToPosition(t, mLeftOffset);
 }
 
 
@@ -1903,7 +1898,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (!mQuickPlayEnabled)
       return;
 
-
    HandleSnapping();
 
    if (evt.LeftDown())
@@ -1924,7 +1918,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
             mMouseEventState = mesSelectingPlayRegionClick;
          // otherwise check which marker is nearer
          else {
-            if (fabs(mQuickPlayPos - mOldPlayRegionStart) < fabs(mQuickPlayPos - mOldPlayRegionEnd))
+            // Don't compare times, compare positions.
+            //if (fabs(mQuickPlayPos - mPlayRegionStart) < fabs(mQuickPlayPos - mPlayRegionEnd))
+            if (abs(Time2Pos(mQuickPlayPos) - Time2Pos(mPlayRegionStart)) <
+               abs(Time2Pos(mQuickPlayPos) - Time2Pos(mPlayRegionEnd)))
                mMouseEventState = mesDraggingPlayRegionStart;
             else
                mMouseEventState = mesDraggingPlayRegionEnd;
