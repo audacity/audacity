@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -21,7 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		17048268098C0F5F00824C66 /* mad.h in Headers */ = {isa = PBXBuildFile; fileRef = 17048267098C0F5F00824C66 /* mad.h */; };
 		17073F630988E13B008541CC /* compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 17072F810988D6A9008541CC /* compat.c */; };
 		17073F640988E13B008541CC /* compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F830988D6A9008541CC /* compat.h */; };
 		17073F650988E13B008541CC /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072F850988D6A9008541CC /* config.h */; };
@@ -59,7 +58,6 @@
 		17073F870988E13B008541CC /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072FD00988D6A9008541CC /* version.h */; };
 		17073FC50988E577008541CC /* bit.c in Sources */ = {isa = PBXBuildFile; fileRef = 17072FE10988D6A9008541CC /* bit.c */; };
 		17073FC60988E577008541CC /* bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072FE20988D6A9008541CC /* bit.h */; };
-		17073FC70988E577008541CC /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072FE50988D6A9008541CC /* config.h */; };
 		17073FC80988E577008541CC /* decoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 17072FF40988D6A9008541CC /* decoder.c */; };
 		17073FC90988E577008541CC /* decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 17072FF50988D6A9008541CC /* decoder.h */; };
 		17073FCA0988E577008541CC /* fixed.c in Sources */ = {isa = PBXBuildFile; fileRef = 17072FF70988D6A9008541CC /* fixed.c */; };
@@ -88,7 +86,6 @@
 		170740250988EEBA008541CC /* command.c in Sources */ = {isa = PBXBuildFile; fileRef = 1707349D0988D6AD008541CC /* command.c */; };
 		170740260988EEBA008541CC /* common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1707349E0988D6AD008541CC /* common.c */; };
 		170740270988EEBA008541CC /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 1707349F0988D6AD008541CC /* common.h */; };
-		170740280988EEBA008541CC /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 170734A00988D6AD008541CC /* config.h */; };
 		170740290988EEBA008541CC /* dither.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734A40988D6AD008541CC /* dither.c */; };
 		1707402A0988EEBA008541CC /* double64.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734A50988D6AD008541CC /* double64.c */; };
 		1707402B0988EEBA008541CC /* dwd.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734A60988D6AD008541CC /* dwd.c */; };
@@ -104,7 +101,6 @@
 		170740360988EEBA008541CC /* g72x_priv.h in Headers */ = {isa = PBXBuildFile; fileRef = 170734BB0988D6AD008541CC /* g72x_priv.h */; };
 		170740370988EEBA008541CC /* add.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734D20988D6AD008541CC /* add.c */; };
 		170740380988EEBA008541CC /* code.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734D40988D6AD008541CC /* code.c */; };
-		170740390988EEBA008541CC /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 170734D50988D6AD008541CC /* config.h */; };
 		1707403A0988EEBA008541CC /* decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 170734D80988D6AD008541CC /* decode.c */; };
 		1707403B0988EEBA008541CC /* gsm.h in Headers */ = {isa = PBXBuildFile; fileRef = 170734D90988D6AD008541CC /* gsm.h */; };
 		1707403C0988EEBA008541CC /* gsm610_priv.h in Headers */ = {isa = PBXBuildFile; fileRef = 170734DA0988D6AD008541CC /* gsm610_priv.h */; };
@@ -141,7 +137,6 @@
 		1707405B0988EEBA008541CC /* sf_unistd.h in Headers */ = {isa = PBXBuildFile; fileRef = 170735010988D6AD008541CC /* sf_unistd.h */; };
 		1707405C0988EEBA008541CC /* sfendian.h in Headers */ = {isa = PBXBuildFile; fileRef = 170735020988D6AD008541CC /* sfendian.h */; };
 		1707405D0988EEBA008541CC /* sndfile.c in Sources */ = {isa = PBXBuildFile; fileRef = 170735030988D6AD008541CC /* sndfile.c */; };
-		1707405E0988EEBA008541CC /* sndfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 170735040988D6AD008541CC /* sndfile.h */; };
 		1707405F0988EEBA008541CC /* strings.c in Sources */ = {isa = PBXBuildFile; fileRef = 170735070988D6AD008541CC /* strings.c */; };
 		170740600988EEBA008541CC /* svx.c in Sources */ = {isa = PBXBuildFile; fileRef = 170735080988D6AD008541CC /* svx.c */; };
 		170740610988EEBA008541CC /* txw.c in Sources */ = {isa = PBXBuildFile; fileRef = 170735100988D6AD008541CC /* txw.c */; };
@@ -169,7 +164,6 @@
 		170740890988F1CC008541CC /* SoundTouch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1707383D0988D6B0008541CC /* SoundTouch.cpp */; };
 		1707408A0988F1CC008541CC /* TDStretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 170738410988D6B0008541CC /* TDStretch.cpp */; };
 		1707408B0988F1CC008541CC /* TDStretch.h in Headers */ = {isa = PBXBuildFile; fileRef = 170738420988D6B0008541CC /* TDStretch.h */; };
-		170740D50988F835008541CC /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 170735820988D6AD008541CC /* config.h */; };
 		170740D60988F835008541CC /* codec.h in Headers */ = {isa = PBXBuildFile; fileRef = 1707363D0988D6AE008541CC /* codec.h */; };
 		170740D70988F835008541CC /* vorbisenc.h in Headers */ = {isa = PBXBuildFile; fileRef = 170736420988D6AE008541CC /* vorbisenc.h */; };
 		170740D80988F835008541CC /* vorbisfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 170736430988D6AE008541CC /* vorbisfile.h */; };
@@ -262,8 +256,6 @@
 		176EEC2109A2F2FA00188F3B /* metadata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 176EEB5C09A2EF1100188F3B /* metadata.cpp */; };
 		176EEC2409A2F2FA00188F3B /* stream_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 176EEB6809A2EF1100188F3B /* stream_decoder.cpp */; };
 		176EEC2509A2F2FA00188F3B /* stream_encoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 176EEB6C09A2EF1100188F3B /* stream_encoder.cpp */; };
-		176EEC2709A2F30800188F3B /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 176EE9F209A2EF1000188F3B /* config.h */; };
-		176EEC2809A2F30A00188F3B /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 176EE9F209A2EF1000188F3B /* config.h */; settings = {ATTRIBUTES = (); }; };
 		176EEC2B09A2F31300188F3B /* callback.h in Headers */ = {isa = PBXBuildFile; fileRef = 176EEA1109A2EF1000188F3B /* callback.h */; settings = {ATTRIBUTES = (); }; };
 		176EEC2C09A2F31300188F3B /* export.h in Headers */ = {isa = PBXBuildFile; fileRef = 176EEA1209A2EF1000188F3B /* export.h */; settings = {ATTRIBUTES = (); }; };
 		176EEC2F09A2F31300188F3B /* format.h in Headers */ = {isa = PBXBuildFile; fileRef = 176EEA1509A2EF1000188F3B /* format.h */; settings = {ATTRIBUTES = (); }; };
@@ -398,8 +390,6 @@
 		17C99D5F098971390041B1BC /* libsoundtouch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1707407A0988F1BB008541CC /* libsoundtouch.a */; };
 		17C99D60098971390041B1BC /* libportmixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 170740960988F2F7008541CC /* libportmixer.a */; };
 		17CBAE4A098B85CD00575C58 /* libnyquist.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 176A1A5B098B7B8D00DC73B4 /* libnyquist.a */; };
-		17FDBCFE098BFF4E00BCEF32 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 170731F30988D6AA008541CC /* config.h */; };
-		17FDBCFF098BFF4E00BCEF32 /* config_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 170732F20988D6AB008541CC /* config_types.h */; };
 		17FDBD00098BFF4E00BCEF32 /* ogg.h in Headers */ = {isa = PBXBuildFile; fileRef = 170732F80988D6AB008541CC /* ogg.h */; };
 		17FDBD01098BFF4E00BCEF32 /* os_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 170732F90988D6AB008541CC /* os_types.h */; };
 		17FDBD02098BFF4E00BCEF32 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = 170733980988D6AC008541CC /* bitwise.c */; };
@@ -453,7 +443,6 @@
 		28105DAC0AD09FC500BB4269 /* px_mixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 28105DA20AD09FC500BB4269 /* px_mixer.h */; };
 		2810644B1818EEB5004F678B /* cpu_detect_x86.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */; };
 		2810644D1818EED3004F678B /* cpu_detect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810644C1818EED3004F678B /* cpu_detect.h */; };
-		281110001AD4FDD8009FAC14 /* suil_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28110FFF1AD4FDD8009FAC14 /* suil_config.h */; };
 		2816372E0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */; };
 		28285C801A27A81600BC2205 /* AudioUnitCocoaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28285C7F1A27A81600BC2205 /* AudioUnitCocoaHelper.mm */; };
 		282D474C0B9E8D900034BC49 /* Snap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282D474A0B9E8D900034BC49 /* Snap.cpp */; };
@@ -461,7 +450,6 @@
 		283135FF0DFBA2E80076D551 /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135FD0DFBA2E80076D551 /* FFmpeg.cpp */; };
 		2835062D0A3A88ED00EB1EBD /* pa_unix_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 283506280A3A88ED00EB1EBD /* pa_unix_util.c */; };
 		2835062E0A3A88ED00EB1EBD /* pa_unix_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 283506290A3A88ED00EB1EBD /* pa_unix_util.h */; };
-		2835D8D11833D54100CF5EFF /* expat_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 2835D8D01833D54100CF5EFF /* expat_config.h */; };
 		283A11A50A2C0DE7004372C4 /* broadcast.c in Sources */ = {isa = PBXBuildFile; fileRef = 283A11A40A2C0DE7004372C4 /* broadcast.c */; };
 		283A11AA0A2C0E15004372C4 /* ShuttleGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283A11A60A2C0E15004372C4 /* ShuttleGui.cpp */; };
 		283A11AB0A2C0E15004372C4 /* Theme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283A11A80A2C0E15004372C4 /* Theme.cpp */; };
@@ -510,7 +498,6 @@
 		2840CF740AEB807E00F49FC3 /* twolame.h in Headers */ = {isa = PBXBuildFile; fileRef = 2840CF4A0AEB807E00F49FC3 /* twolame.h */; };
 		2840CF750AEB807E00F49FC3 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = 2840CF4B0AEB807E00F49FC3 /* util.c */; };
 		2840CF760AEB807E00F49FC3 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 2840CF4C0AEB807E00F49FC3 /* util.h */; };
-		2840CF7A0AEB810000F49FC3 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 2840CF790AEB810000F49FC3 /* config.h */; };
 		2840CF860AEB83DB00F49FC3 /* ExportMP2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2840CF840AEB83DB00F49FC3 /* ExportMP2.cpp */; };
 		2840CFA80AEB883500F49FC3 /* libtwolame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2840CF220AEB803C00F49FC3 /* libtwolame.a */; };
 		284249EE10D337CE004330A6 /* GetProjectInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 284249EA10D337CE004330A6 /* GetProjectInfoCommand.cpp */; };
@@ -787,15 +774,12 @@
 		286229EA181CE62A00E1AD1A /* sord_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 286229E6181CE62A00E1AD1A /* sord_internal.h */; };
 		286229EB181CE62A00E1AD1A /* sord.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229E7181CE62A00E1AD1A /* sord.c */; };
 		286229EC181CE62A00E1AD1A /* syntax.c in Sources */ = {isa = PBXBuildFile; fileRef = 286229E8181CE62A00E1AD1A /* syntax.c */; };
-		28624C0E181CE65700E1AD1A /* sratom_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 2862439F181CE65500E1AD1A /* sratom_config.h */; };
 		28624C0F181CE65700E1AD1A /* sratom.h in Headers */ = {isa = PBXBuildFile; fileRef = 286243A0181CE65500E1AD1A /* sratom.h */; };
 		28624C10181CE65700E1AD1A /* sratom.c in Sources */ = {isa = PBXBuildFile; fileRef = 286243A1181CE65500E1AD1A /* sratom.c */; };
 		2862CED11AD3900000A53194 /* test.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2862CECE1AD3900000A53194 /* test.lsp */; };
 		2862CED21AD3900000A53194 /* upic.sal in Resources */ = {isa = PBXBuildFile; fileRef = 2862CECF1AD3900000A53194 /* upic.sal */; };
 		2862CED31AD3900000A53194 /* velocity.lsp in Resources */ = {isa = PBXBuildFile; fileRef = 2862CED01AD3900000A53194 /* velocity.lsp */; };
-		28640874181CE74100CC4E2C /* sord_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28640873181CE74100CC4E2C /* sord_config.h */; };
-		28640876181CE75800CC4E2C /* serd_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28640875181CE75800CC4E2C /* serd_config.h */; };
-		28640878181CE77200CC4E2C /* lilv_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28640877181CE77200CC4E2C /* lilv_config.h */; };
+		2867F1E81AE60CD900011DB5 /* FileDialogPrivate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F5C10F0BE5886A00D17341 /* FileDialogPrivate.cpp */; };
 		287DBE890F3F6B2700C5BBED /* audio_detect.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE830F3F6B2700C5BBED /* audio_detect.c */; };
 		287DBE8A0F3F6B2700C5BBED /* chunk.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE840F3F6B2700C5BBED /* chunk.c */; };
 		287DBE8B0F3F6B2700C5BBED /* ima_oki_adpcm.c in Sources */ = {isa = PBXBuildFile; fileRef = 287DBE850F3F6B2700C5BBED /* ima_oki_adpcm.c */; };
@@ -914,6 +898,30 @@
 		28BD8AB3101DF4C700686679 /* ExecMenuCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAC101DF4C600686679 /* ExecMenuCommand.cpp */; };
 		28BD8AB4101DF4C700686679 /* GetAllMenuCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BD8AAE101DF4C600686679 /* GetAllMenuCommands.cpp */; };
 		28C3946D1818356800FDDAC9 /* AudacityLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28C3946B1818356800FDDAC9 /* AudacityLogger.cpp */; };
+		28CA9E6B1AE60C53005C0BFE /* dBTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184D13CF01A600C1B664 /* dBTable.cpp */; };
+		28CA9E6C1AE60C53005C0BFE /* dBTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 82FF184E13CF01A600C1B664 /* dBTable.h */; };
+		28CA9E6D1AE60C53005C0BFE /* slide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184F13CF01A600C1B664 /* slide.cpp */; };
+		28CA9E6E1AE60C53005C0BFE /* sse.h in Headers */ = {isa = PBXBuildFile; fileRef = 82FF185013CF01A600C1B664 /* sse.h */; };
+		28CA9E6F1AE60C53005C0BFE /* synthTable.h in Headers */ = {isa = PBXBuildFile; fileRef = 82FF185113CF01A600C1B664 /* synthTable.h */; };
+		28CA9E701AE60C53005C0BFE /* sincCoeffs.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707110EF9C51D007D4FFD /* sincCoeffs.h */; };
+		28CA9E711AE60C53005C0BFE /* buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707040EF9C51D007D4FFD /* buffer.cpp */; };
+		28CA9E721AE60C53005C0BFE /* buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707050EF9C51D007D4FFD /* buffer.h */; };
+		28CA9E731AE60C53005C0BFE /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707070EF9C51D007D4FFD /* fft.cpp */; };
+		28CA9E741AE60C53005C0BFE /* fft.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707080EF9C51D007D4FFD /* fft.h */; };
+		28CA9E751AE60C53005C0BFE /* grain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707090EF9C51D007D4FFD /* grain.cpp */; };
+		28CA9E761AE60C53005C0BFE /* grain.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070A0EF9C51D007D4FFD /* grain.h */; };
+		28CA9E771AE60C53005C0BFE /* real.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070E0EF9C51D007D4FFD /* real.h */; };
+		28CA9E781AE60C53005C0BFE /* resample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27070F0EF9C51D007D4FFD /* resample.cpp */; };
+		28CA9E791AE60C53005C0BFE /* sbsms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707100EF9C51D007D4FFD /* sbsms.cpp */; };
+		28CA9E7A1AE60C53005C0BFE /* sms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707120EF9C51D007D4FFD /* sms.cpp */; };
+		28CA9E7B1AE60C53005C0BFE /* sms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707130EF9C51D007D4FFD /* sms.h */; };
+		28CA9E7C1AE60C53005C0BFE /* subband.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707140EF9C51D007D4FFD /* subband.cpp */; };
+		28CA9E7D1AE60C53005C0BFE /* subband.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707150EF9C51D007D4FFD /* subband.h */; };
+		28CA9E7E1AE60C53005C0BFE /* track.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707160EF9C51D007D4FFD /* track.cpp */; };
+		28CA9E7F1AE60C53005C0BFE /* track.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707170EF9C51D007D4FFD /* track.h */; };
+		28CA9E801AE60C53005C0BFE /* trackpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707180EF9C51D007D4FFD /* trackpoint.cpp */; };
+		28CA9E811AE60C53005C0BFE /* trackpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707190EF9C51D007D4FFD /* trackpoint.h */; };
+		28CA9E821AE60C53005C0BFE /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27071B0EF9C51D007D4FFD /* utils.h */; };
 		28CC03A81AD386CF00826380 /* phasevocoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A01AD386CF00826380 /* phasevocoder.c */; };
 		28CC03A91AD386CF00826380 /* phasevocoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 28CC03A11AD386CF00826380 /* phasevocoder.h */; };
 		28CC03AA1AD386CF00826380 /* pvshell.c in Sources */ = {isa = PBXBuildFile; fileRef = 28CC03A21AD386CF00826380 /* pvshell.c */; };
@@ -1189,7 +1197,6 @@
 		28F1D81F0A2D0019005506A7 /* ImageRoll.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F1D81B0A2D0019005506A7 /* ImageRoll.cpp */; };
 		28F2CED4181867BB00573D61 /* numformatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F2CED0181867BB00573D61 /* numformatter.cpp */; };
 		28F2CED5181867BB00573D61 /* valnum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F2CED2181867BB00573D61 /* valnum.cpp */; };
-		28F5C1110BE5886A00D17341 /* FileDialogPrivate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F5C10F0BE5886A00D17341 /* FileDialogPrivate.cpp */; };
 		28F67179197DFA1C00075C32 /* FormatClassifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F67173197DFA1C00075C32 /* FormatClassifier.cpp */; };
 		28F6717A197DFA1C00075C32 /* MultiFormatReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F67175197DFA1C00075C32 /* MultiFormatReader.cpp */; };
 		28F6717B197DFA1C00075C32 /* SpecPowerMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F67177197DFA1C00075C32 /* SpecPowerMeter.cpp */; };
@@ -1212,13 +1219,9 @@
 		28FC1AFB0A47762C00A188AE /* WrappedType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FC1AF90A47762C00A188AE /* WrappedType.cpp */; };
 		28FE4A080ABF4E960056F5C4 /* mmx_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */; };
 		28FE4A090ABF4E960056F5C4 /* sse_optimized.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */; };
-		28FE4A3A0ABF58360056F5C4 /* soundtouch_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28FE4A390ABF58360056F5C4 /* soundtouch_config.h */; };
-		82FF185213CF01A600C1B664 /* dBTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184D13CF01A600C1B664 /* dBTable.cpp */; };
-		82FF185313CF01A600C1B664 /* slide.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82FF184F13CF01A600C1B664 /* slide.cpp */; };
 		8406A93812D0F2510011EA01 /* EQDefaultCurves.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8406A93712D0F2510011EA01 /* EQDefaultCurves.xml */; };
 		8484F31413086237002DF7F0 /* DeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8484F31213086237002DF7F0 /* DeviceManager.cpp */; };
 		ED15214D163C22F000451B5F /* lsr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED152123163C220300451B5F /* lsr.c */; };
-		ED152151163C232500451B5F /* soxr-config.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152150163C232500451B5F /* soxr-config.h */; };
 		ED152161163C244200451B5F /* soxr.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15215F163C244200451B5F /* soxr.c */; };
 		ED152162163C244200451B5F /* soxr.h in Headers */ = {isa = PBXBuildFile; fileRef = ED152160163C244200451B5F /* soxr.h */; };
 		ED15216C163C249500451B5F /* data-io.c in Sources */ = {isa = PBXBuildFile; fileRef = ED15216A163C249500451B5F /* data-io.c */; };
@@ -1236,25 +1239,6 @@
 		ED1521EB163C2B9000451B5F /* libsoxr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED152130163C227C00451B5F /* libsoxr.a */; };
 		ED19449A1733F92800F4F5CA /* Reverb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED1944981733F92800F4F5CA /* Reverb.cpp */; };
 		ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2706FE0EF9C47E007D4FFD /* sbsms.h */; };
-		ED2707260EF9C51D007D4FFD /* buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707040EF9C51D007D4FFD /* buffer.cpp */; };
-		ED2707270EF9C51D007D4FFD /* buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707050EF9C51D007D4FFD /* buffer.h */; };
-		ED2707290EF9C51D007D4FFD /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707070EF9C51D007D4FFD /* fft.cpp */; };
-		ED27072A0EF9C51D007D4FFD /* fft.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707080EF9C51D007D4FFD /* fft.h */; };
-		ED27072B0EF9C51D007D4FFD /* grain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707090EF9C51D007D4FFD /* grain.cpp */; };
-		ED27072C0EF9C51D007D4FFD /* grain.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070A0EF9C51D007D4FFD /* grain.h */; };
-		ED2707300EF9C51D007D4FFD /* real.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27070E0EF9C51D007D4FFD /* real.h */; };
-		ED2707310EF9C51D007D4FFD /* resample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27070F0EF9C51D007D4FFD /* resample.cpp */; };
-		ED2707320EF9C51D007D4FFD /* sbsms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707100EF9C51D007D4FFD /* sbsms.cpp */; };
-		ED2707330EF9C51D007D4FFD /* sincCoeffs.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707110EF9C51D007D4FFD /* sincCoeffs.h */; };
-		ED2707340EF9C51D007D4FFD /* sms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707120EF9C51D007D4FFD /* sms.cpp */; };
-		ED2707350EF9C51D007D4FFD /* sms.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707130EF9C51D007D4FFD /* sms.h */; };
-		ED2707360EF9C51D007D4FFD /* subband.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707140EF9C51D007D4FFD /* subband.cpp */; };
-		ED2707370EF9C51D007D4FFD /* subband.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707150EF9C51D007D4FFD /* subband.h */; };
-		ED2707380EF9C51D007D4FFD /* track.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707160EF9C51D007D4FFD /* track.cpp */; };
-		ED2707390EF9C51D007D4FFD /* track.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707170EF9C51D007D4FFD /* track.h */; };
-		ED27073A0EF9C51D007D4FFD /* trackpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED2707180EF9C51D007D4FFD /* trackpoint.cpp */; };
-		ED27073B0EF9C51D007D4FFD /* trackpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = ED2707190EF9C51D007D4FFD /* trackpoint.h */; };
-		ED27073D0EF9C51D007D4FFD /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = ED27071B0EF9C51D007D4FFD /* utils.h */; };
 		ED2707460EF9C550007D4FFD /* libsbsms.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2706F40EF9C3C6007D4FFD /* libsbsms.a */; };
 		ED2707500EF9C64F007D4FFD /* SBSMSEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074B0EF9C64F007D4FFD /* SBSMSEffect.cpp */; };
 		ED2707510EF9C64F007D4FFD /* TimeScale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED27074D0EF9C64F007D4FFD /* TimeScale.cpp */; };
@@ -1479,7 +1463,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		17048267098C0F5F00824C66 /* mad.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = mad.h; sourceTree = "<group>"; tabWidth = 3; };
 		17072F810988D6A9008541CC /* compat.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = compat.c; sourceTree = "<group>"; tabWidth = 3; };
 		17072F830988D6A9008541CC /* compat.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = compat.h; sourceTree = "<group>"; tabWidth = 3; };
 		17072F850988D6A9008541CC /* config.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -1519,7 +1502,6 @@
 		17072FD00988D6A9008541CC /* version.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; tabWidth = 3; };
 		17072FE10988D6A9008541CC /* bit.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = bit.c; sourceTree = "<group>"; tabWidth = 3; };
 		17072FE20988D6A9008541CC /* bit.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = bit.h; sourceTree = "<group>"; tabWidth = 3; };
-		17072FE50988D6A9008541CC /* config.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; tabWidth = 3; };
 		17072FF40988D6A9008541CC /* decoder.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = decoder.c; sourceTree = "<group>"; tabWidth = 3; };
 		17072FF50988D6A9008541CC /* decoder.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = decoder.h; sourceTree = "<group>"; tabWidth = 3; };
 		17072FF70988D6A9008541CC /* fixed.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = fixed.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -1541,8 +1523,6 @@
 		170730260988D6A9008541CC /* timer.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = timer.h; sourceTree = "<group>"; tabWidth = 3; };
 		170730290988D6A9008541CC /* version.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = version.c; sourceTree = "<group>"; tabWidth = 3; };
 		1707302A0988D6A9008541CC /* version.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; tabWidth = 3; };
-		170731F30988D6AA008541CC /* config.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; tabWidth = 3; };
-		170732F20988D6AB008541CC /* config_types.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = config_types.h; sourceTree = "<group>"; tabWidth = 3; };
 		170732F80988D6AB008541CC /* ogg.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ogg.h; sourceTree = "<group>"; tabWidth = 3; };
 		170732F90988D6AB008541CC /* os_types.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = os_types.h; sourceTree = "<group>"; tabWidth = 3; };
 		170733980988D6AC008541CC /* bitwise.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = bitwise.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -1554,7 +1534,6 @@
 		1707349D0988D6AD008541CC /* command.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = command.c; sourceTree = "<group>"; tabWidth = 3; };
 		1707349E0988D6AD008541CC /* common.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = common.c; sourceTree = "<group>"; tabWidth = 3; };
 		1707349F0988D6AD008541CC /* common.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; tabWidth = 3; };
-		170734A00988D6AD008541CC /* config.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; tabWidth = 3; };
 		170734A40988D6AD008541CC /* dither.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = dither.c; sourceTree = "<group>"; tabWidth = 3; };
 		170734A50988D6AD008541CC /* double64.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = double64.c; sourceTree = "<group>"; tabWidth = 3; };
 		170734A60988D6AD008541CC /* dwd.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = dwd.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -1570,7 +1549,6 @@
 		170734BB0988D6AD008541CC /* g72x_priv.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = g72x_priv.h; sourceTree = "<group>"; tabWidth = 3; };
 		170734D20988D6AD008541CC /* add.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = add.c; sourceTree = "<group>"; tabWidth = 3; };
 		170734D40988D6AD008541CC /* code.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = code.c; sourceTree = "<group>"; tabWidth = 3; };
-		170734D50988D6AD008541CC /* config.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; tabWidth = 3; };
 		170734D80988D6AD008541CC /* decode.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = decode.c; sourceTree = "<group>"; tabWidth = 3; };
 		170734D90988D6AD008541CC /* gsm.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = gsm.h; sourceTree = "<group>"; tabWidth = 3; };
 		170734DA0988D6AD008541CC /* gsm610_priv.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = gsm610_priv.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -1607,7 +1585,6 @@
 		170735010988D6AD008541CC /* sf_unistd.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sf_unistd.h; sourceTree = "<group>"; tabWidth = 3; };
 		170735020988D6AD008541CC /* sfendian.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sfendian.h; sourceTree = "<group>"; tabWidth = 3; };
 		170735030988D6AD008541CC /* sndfile.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = sndfile.c; sourceTree = "<group>"; tabWidth = 3; };
-		170735040988D6AD008541CC /* sndfile.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = sndfile.h; sourceTree = "<group>"; tabWidth = 3; };
 		170735070988D6AD008541CC /* strings.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = strings.c; sourceTree = "<group>"; tabWidth = 3; };
 		170735080988D6AD008541CC /* svx.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = svx.c; sourceTree = "<group>"; tabWidth = 3; };
 		170735100988D6AD008541CC /* txw.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = txw.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -1620,7 +1597,6 @@
 		170735170988D6AD008541CC /* wav_w64.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = wav_w64.h; sourceTree = "<group>"; tabWidth = 3; };
 		170735180988D6AD008541CC /* wve.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = wve.c; sourceTree = "<group>"; tabWidth = 3; };
 		170735190988D6AD008541CC /* xi.c */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = xi.c; sourceTree = "<group>"; tabWidth = 3; };
-		170735820988D6AD008541CC /* config.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; tabWidth = 3; };
 		1707363D0988D6AE008541CC /* codec.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = codec.h; sourceTree = "<group>"; tabWidth = 3; };
 		170736420988D6AE008541CC /* vorbisenc.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = vorbisenc.h; sourceTree = "<group>"; tabWidth = 3; };
 		170736430988D6AE008541CC /* vorbisfile.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = vorbisfile.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -1721,7 +1697,6 @@
 		176EE9DB09A2EC1000188F3B /* caf.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = caf.c; sourceTree = "<group>"; tabWidth = 3; };
 		176EE9DC09A2EC1000188F3B /* flac.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = flac.c; sourceTree = "<group>"; tabWidth = 3; };
 		176EE9DD09A2EC1000188F3B /* g72x.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = g72x.c; sourceTree = "<group>"; tabWidth = 3; };
-		176EE9F209A2EF1000188F3B /* config.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; tabWidth = 3; };
 		176EEA1109A2EF1000188F3B /* callback.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = callback.h; sourceTree = "<group>"; tabWidth = 3; };
 		176EEA1209A2EF1000188F3B /* export.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = export.h; sourceTree = "<group>"; tabWidth = 3; };
 		176EEA1509A2EF1000188F3B /* format.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = format.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -2120,7 +2095,6 @@
 		28105DA20AD09FC500BB4269 /* px_mixer.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = px_mixer.h; sourceTree = "<group>"; tabWidth = 3; };
 		2810644A1818EEB5004F678B /* cpu_detect_x86.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cpu_detect_x86.cpp; sourceTree = "<group>"; };
 		2810644C1818EED3004F678B /* cpu_detect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cpu_detect.h; path = "../lib-src/soundtouch/source/SoundTouch/cpu_detect.h"; sourceTree = SOURCE_ROOT; };
-		28110FFF1AD4FDD8009FAC14 /* suil_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = suil_config.h; path = lv2/suil/build/suil_config.h; sourceTree = "<group>"; };
 		2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Shared.xcconfig; sourceTree = "<group>"; };
 		2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug_Static.xcconfig; sourceTree = "<group>"; };
 		2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release_Shared.xcconfig; sourceTree = "<group>"; };
@@ -2138,7 +2112,6 @@
 		283135FE0DFBA2E80076D551 /* FFmpeg.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = FFmpeg.h; sourceTree = "<group>"; tabWidth = 3; };
 		283506280A3A88ED00EB1EBD /* pa_unix_util.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = pa_unix_util.c; sourceTree = "<group>"; tabWidth = 3; };
 		283506290A3A88ED00EB1EBD /* pa_unix_util.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = pa_unix_util.h; sourceTree = "<group>"; tabWidth = 3; };
-		2835D8D01833D54100CF5EFF /* expat_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = expat_config.h; path = expat/expat_config.h; sourceTree = "<group>"; };
 		283A11A40A2C0DE7004372C4 /* broadcast.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = broadcast.c; sourceTree = "<group>"; tabWidth = 3; };
 		283A11A60A2C0E15004372C4 /* ShuttleGui.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ShuttleGui.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		283A11A70A2C0E15004372C4 /* ShuttleGui.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ShuttleGui.h; sourceTree = "<group>"; tabWidth = 3; };
@@ -2193,7 +2166,6 @@
 		2840CF4A0AEB807E00F49FC3 /* twolame.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = twolame.h; path = twolame/libtwolame/twolame.h; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF4B0AEB807E00F49FC3 /* util.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; name = util.c; path = twolame/libtwolame/util.c; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF4C0AEB807E00F49FC3 /* util.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = util.h; path = twolame/libtwolame/util.h; sourceTree = "<group>"; tabWidth = 3; };
-		2840CF790AEB810000F49FC3 /* config.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = config.h; path = twolame/build/config.h; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF840AEB83DB00F49FC3 /* ExportMP2.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ExportMP2.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2840CF850AEB83DB00F49FC3 /* ExportMP2.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ExportMP2.h; sourceTree = "<group>"; tabWidth = 3; };
 		284249EA10D337CE004330A6 /* GetProjectInfoCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = GetProjectInfoCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -2495,15 +2467,11 @@
 		286229E6181CE62A00E1AD1A /* sord_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sord_internal.h; path = lv2/sord/src/sord_internal.h; sourceTree = "<group>"; };
 		286229E7181CE62A00E1AD1A /* sord.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sord.c; path = lv2/sord/src/sord.c; sourceTree = "<group>"; };
 		286229E8181CE62A00E1AD1A /* syntax.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = syntax.c; path = lv2/sord/src/syntax.c; sourceTree = "<group>"; };
-		2862439F181CE65500E1AD1A /* sratom_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sratom_config.h; path = lv2/sratom/build/sratom_config.h; sourceTree = "<group>"; };
 		286243A0181CE65500E1AD1A /* sratom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sratom.h; path = lv2/sratom/sratom/sratom.h; sourceTree = "<group>"; };
 		286243A1181CE65500E1AD1A /* sratom.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sratom.c; path = lv2/sratom/src/sratom.c; sourceTree = "<group>"; };
 		2862CECE1AD3900000A53194 /* test.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = test.lsp; path = ../nyquist/test.lsp; sourceTree = SOURCE_ROOT; };
 		2862CECF1AD3900000A53194 /* upic.sal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = upic.sal; path = ../nyquist/upic.sal; sourceTree = SOURCE_ROOT; };
 		2862CED01AD3900000A53194 /* velocity.lsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = velocity.lsp; path = ../nyquist/velocity.lsp; sourceTree = SOURCE_ROOT; };
-		28640873181CE74100CC4E2C /* sord_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sord_config.h; path = lv2/sord/build/sord_config.h; sourceTree = "<group>"; };
-		28640875181CE75800CC4E2C /* serd_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serd_config.h; path = lv2/serd/build/serd_config.h; sourceTree = "<group>"; };
-		28640877181CE77200CC4E2C /* lilv_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lilv_config.h; path = lv2/lilv/build/lilv_config.h; sourceTree = "<group>"; };
 		287DBE830F3F6B2700C5BBED /* audio_detect.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = audio_detect.c; sourceTree = "<group>"; tabWidth = 3; };
 		287DBE840F3F6B2700C5BBED /* chunk.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = chunk.c; sourceTree = "<group>"; tabWidth = 3; };
 		287DBE850F3F6B2700C5BBED /* ima_oki_adpcm.c */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.c; path = ima_oki_adpcm.c; sourceTree = "<group>"; tabWidth = 3; };
@@ -2989,7 +2957,6 @@
 		28FC1AFA0A47762C00A188AE /* WrappedType.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = WrappedType.h; sourceTree = "<group>"; tabWidth = 3; };
 		28FE4A060ABF4E960056F5C4 /* mmx_optimized.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = mmx_optimized.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28FE4A070ABF4E960056F5C4 /* sse_optimized.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = sse_optimized.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		28FE4A390ABF58360056F5C4 /* soundtouch_config.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; name = soundtouch_config.h; path = "../lib-src/soundtouch/include/soundtouch_config.h"; sourceTree = SOURCE_ROOT; tabWidth = 3; };
 		28FEC1B21A12B6FB00FACE48 /* EffectAutomationParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EffectAutomationParameters.h; path = ../include/audacity/EffectAutomationParameters.h; sourceTree = SOURCE_ROOT; };
 		82FF184D13CF01A600C1B664 /* dBTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dBTable.cpp; path = sbsms/src/dBTable.cpp; sourceTree = "<group>"; };
 		82FF184E13CF01A600C1B664 /* dBTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dBTable.h; path = sbsms/src/dBTable.h; sourceTree = "<group>"; };
@@ -3019,7 +2986,6 @@
 		ED05D12A0E50AD5700CC4BD3 /* scorealign.h */ = {isa = PBXFileReference; fileEncoding = 30; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = scorealign.h; sourceTree = "<group>"; tabWidth = 3; };
 		ED152123163C220300451B5F /* lsr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lsr.c; sourceTree = "<group>"; };
 		ED152130163C227C00451B5F /* libsoxr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsoxr.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		ED152150163C232500451B5F /* soxr-config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "soxr-config.h"; path = "libsoxr/soxr-config.h"; sourceTree = "<group>"; };
 		ED15215F163C244200451B5F /* soxr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = soxr.c; sourceTree = "<group>"; };
 		ED152160163C244200451B5F /* soxr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soxr.h; sourceTree = "<group>"; };
 		ED15216A163C249500451B5F /* data-io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "data-io.c"; sourceTree = "<group>"; };
@@ -3242,7 +3208,6 @@
 			children = (
 				17072FE10988D6A9008541CC /* bit.c */,
 				17072FE20988D6A9008541CC /* bit.h */,
-				17072FE50988D6A9008541CC /* config.h */,
 				17072FF40988D6A9008541CC /* decoder.c */,
 				17072FF50988D6A9008541CC /* decoder.h */,
 				17072FF70988D6A9008541CC /* fixed.c */,
@@ -3256,7 +3221,6 @@
 				170730030988D6A9008541CC /* layer12.h */,
 				170730040988D6A9008541CC /* layer3.c */,
 				170730050988D6A9008541CC /* layer3.h */,
-				17048267098C0F5F00824C66 /* mad.h */,
 				170730210988D6A9008541CC /* stream.c */,
 				170730220988D6A9008541CC /* stream.h */,
 				170730230988D6A9008541CC /* synth.c */,
@@ -3274,7 +3238,6 @@
 			children = (
 				170732EC0988D6AB008541CC /* include */,
 				170733920988D6AC008541CC /* src */,
-				170731F30988D6AA008541CC /* config.h */,
 			);
 			path = libogg;
 			sourceTree = "<group>";
@@ -3290,7 +3253,6 @@
 		170732F10988D6AB008541CC /* ogg */ = {
 			isa = PBXGroup;
 			children = (
-				170732F20988D6AB008541CC /* config_types.h */,
 				170732F80988D6AB008541CC /* ogg.h */,
 				170732F90988D6AB008541CC /* os_types.h */,
 			);
@@ -3332,7 +3294,6 @@
 				1707349D0988D6AD008541CC /* command.c */,
 				1707349E0988D6AD008541CC /* common.c */,
 				1707349F0988D6AD008541CC /* common.h */,
-				170734A00988D6AD008541CC /* config.h */,
 				170734A40988D6AD008541CC /* dither.c */,
 				170734A50988D6AD008541CC /* double64.c */,
 				170734A60988D6AD008541CC /* dwd.c */,
@@ -3368,7 +3329,6 @@
 				170735010988D6AD008541CC /* sf_unistd.h */,
 				170735020988D6AD008541CC /* sfendian.h */,
 				170735030988D6AD008541CC /* sndfile.c */,
-				170735040988D6AD008541CC /* sndfile.h */,
 				170735070988D6AD008541CC /* strings.c */,
 				170735080988D6AD008541CC /* svx.c */,
 				170735100988D6AD008541CC /* txw.c */,
@@ -3404,7 +3364,6 @@
 			children = (
 				170734D20988D6AD008541CC /* add.c */,
 				170734D40988D6AD008541CC /* code.c */,
-				170734D50988D6AD008541CC /* config.h */,
 				170734D80988D6AD008541CC /* decode.c */,
 				170734D90988D6AD008541CC /* gsm.h */,
 				170734DA0988D6AD008541CC /* gsm610_priv.h */,
@@ -3428,7 +3387,6 @@
 			children = (
 				170736370988D6AE008541CC /* include */,
 				170736450988D6AE008541CC /* lib */,
-				170735820988D6AD008541CC /* config.h */,
 			);
 			path = libvorbis;
 			sourceTree = "<group>";
@@ -3536,19 +3494,10 @@
 		170737D30988D6AF008541CC /* soundtouch */ = {
 			isa = PBXGroup;
 			children = (
-				170737D60988D6AF008541CC /* config */,
 				170737EA0988D6AF008541CC /* include */,
 				170737FB0988D6AF008541CC /* source */,
 			);
 			path = soundtouch;
-			sourceTree = "<group>";
-		};
-		170737D60988D6AF008541CC /* config */ = {
-			isa = PBXGroup;
-			children = (
-				28FE4A390ABF58360056F5C4 /* soundtouch_config.h */,
-			);
-			path = config;
 			sourceTree = "<group>";
 		};
 		170737EA0988D6AF008541CC /* include */ = {
@@ -3676,7 +3625,6 @@
 			children = (
 				176EEA0D09A2EF1000188F3B /* include */,
 				176EEA6B09A2EF1000188F3B /* src */,
-				176EE9F209A2EF1000188F3B /* config.h */,
 			);
 			path = libflac;
 			sourceTree = "<group>";
@@ -4531,7 +4479,6 @@
 		2840CEC70AEB7E9D00F49FC3 /* twolame */ = {
 			isa = PBXGroup;
 			children = (
-				2840CF780AEB80CE00F49FC3 /* build */,
 				2840CECA0AEB7FA700F49FC3 /* libtwolame */,
 			);
 			name = twolame;
@@ -4586,14 +4533,6 @@
 			name = libtwolame;
 			sourceTree = "<group>";
 		};
-		2840CF780AEB80CE00F49FC3 /* build */ = {
-			isa = PBXGroup;
-			children = (
-				2840CF790AEB810000F49FC3 /* config.h */,
-			);
-			name = build;
-			sourceTree = "<group>";
-		};
 		2844B48E0DEA66900087C656 /* mod-script-pipe */ = {
 			isa = PBXGroup;
 			children = (
@@ -4607,7 +4546,6 @@
 		2847504B1AD4EB41000AD751 /* suil */ = {
 			isa = PBXGroup;
 			children = (
-				28110FFF1AD4FDD8009FAC14 /* suil_config.h */,
 				284750611AD4EC28000AD751 /* suil.h */,
 				2847505B1AD4EBE1000AD751 /* host.c */,
 				2847505C1AD4EBE1000AD751 /* suil_instance.c */,
@@ -5082,7 +5020,6 @@
 		28622999181CE37800E1AD1A /* lilv */ = {
 			isa = PBXGroup;
 			children = (
-				28640877181CE77200CC4E2C /* lilv_config.h */,
 				286229B1181CE51800E1AD1A /* lilv.h */,
 				286229B2181CE51800E1AD1A /* collections.c */,
 				286229B3181CE51800E1AD1A /* instance.c */,
@@ -5105,7 +5042,6 @@
 		2862299A181CE3AE00E1AD1A /* serd */ = {
 			isa = PBXGroup;
 			children = (
-				28640875181CE75800CC4E2C /* serd_config.h */,
 				286229D5181CE5EC00E1AD1A /* serd.h */,
 				286229D6181CE5EC00E1AD1A /* env.c */,
 				286229D7181CE5EC00E1AD1A /* node.c */,
@@ -5122,7 +5058,6 @@
 			isa = PBXGroup;
 			children = (
 				2847504C1AD4EB5A000AD751 /* zix */,
-				28640873181CE74100CC4E2C /* sord_config.h */,
 				286229E5181CE62A00E1AD1A /* sord.h */,
 				286229E6181CE62A00E1AD1A /* sord_internal.h */,
 				286229E7181CE62A00E1AD1A /* sord.c */,
@@ -5134,7 +5069,6 @@
 		2862299C181CE3BA00E1AD1A /* sratom */ = {
 			isa = PBXGroup;
 			children = (
-				2862439F181CE65500E1AD1A /* sratom_config.h */,
 				286243A0181CE65500E1AD1A /* sratom.h */,
 				286243A1181CE65500E1AD1A /* sratom.c */,
 			);
@@ -5521,7 +5455,6 @@
 			isa = PBXGroup;
 			children = (
 				28FADEDA1833C78C00BA4141 /* lib */,
-				2835D8D01833D54100CF5EFF /* expat_config.h */,
 			);
 			name = expat;
 			sourceTree = "<group>";
@@ -5586,7 +5519,6 @@
 		ED151F3F163BFD0400451B5F /* libsoxr */ = {
 			isa = PBXGroup;
 			children = (
-				ED152150163C232500451B5F /* soxr-config.h */,
 				ED151F4B163BFE9800451B5F /* src */,
 			);
 			name = libsoxr;
@@ -5721,7 +5653,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				17073FC60988E577008541CC /* bit.h in Headers */,
-				17073FC70988E577008541CC /* config.h in Headers */,
 				17073FC90988E577008541CC /* decoder.h in Headers */,
 				17073FCB0988E577008541CC /* fixed.h in Headers */,
 				17073FCD0988E577008541CC /* frame.h in Headers */,
@@ -5733,7 +5664,6 @@
 				17073FD80988E577008541CC /* synth.h in Headers */,
 				17073FDA0988E577008541CC /* timer.h in Headers */,
 				17073FDC0988E577008541CC /* version.h in Headers */,
-				17048268098C0F5F00824C66 /* mad.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5741,8 +5671,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17FDBCFE098BFF4E00BCEF32 /* config.h in Headers */,
-				17FDBCFF098BFF4E00BCEF32 /* config_types.h in Headers */,
 				17FDBD00098BFF4E00BCEF32 /* ogg.h in Headers */,
 				17FDBD01098BFF4E00BCEF32 /* os_types.h in Headers */,
 			);
@@ -5753,15 +5681,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				170740270988EEBA008541CC /* common.h in Headers */,
-				170740280988EEBA008541CC /* config.h in Headers */,
 				170740350988EEBA008541CC /* g72x.h in Headers */,
 				170740360988EEBA008541CC /* g72x_priv.h in Headers */,
-				170740390988EEBA008541CC /* config.h in Headers */,
 				1707403B0988EEBA008541CC /* gsm.h in Headers */,
 				1707403C0988EEBA008541CC /* gsm610_priv.h in Headers */,
 				1707405B0988EEBA008541CC /* sf_unistd.h in Headers */,
 				1707405C0988EEBA008541CC /* sfendian.h in Headers */,
-				1707405E0988EEBA008541CC /* sndfile.h in Headers */,
 				170740680988EEBA008541CC /* wav_w64.h in Headers */,
 				287DBE8C0F3F6B2700C5BBED /* ima_oki_adpcm.h in Headers */,
 				288A544C1346D1BA0050D774 /* chanmap.h in Headers */,
@@ -5781,7 +5706,6 @@
 				170740850988F1CC008541CC /* FIRFilter.h in Headers */,
 				170740880988F1CC008541CC /* RateTransposer.h in Headers */,
 				1707408B0988F1CC008541CC /* TDStretch.h in Headers */,
-				28FE4A3A0ABF58360056F5C4 /* soundtouch_config.h in Headers */,
 				2810644D1818EED3004F678B /* cpu_detect.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5799,7 +5723,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				170740D50988F835008541CC /* config.h in Headers */,
 				170740D60988F835008541CC /* codec.h in Headers */,
 				170740D70988F835008541CC /* vorbisenc.h in Headers */,
 				170740D80988F835008541CC /* vorbisfile.h in Headers */,
@@ -6033,7 +5956,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				176EEC2809A2F30A00188F3B /* config.h in Headers */,
 				176EEC2B09A2F31300188F3B /* callback.h in Headers */,
 				176EEC2C09A2F31300188F3B /* export.h in Headers */,
 				176EEC2F09A2F31300188F3B /* format.h in Headers */,
@@ -6048,7 +5970,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				176EEC2709A2F30800188F3B /* config.h in Headers */,
 				176EEC3709A2F31A00188F3B /* decoder.h in Headers */,
 				176EEC3809A2F31A00188F3B /* encoder.h in Headers */,
 				176EEC3909A2F31A00188F3B /* export.h in Headers */,
@@ -6097,7 +6018,6 @@
 				2840CF720AEB807E00F49FC3 /* subband.h in Headers */,
 				2840CF740AEB807E00F49FC3 /* twolame.h in Headers */,
 				2840CF760AEB807E00F49FC3 /* util.h in Headers */,
-				2840CF7A0AEB810000F49FC3 /* config.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6118,18 +6038,13 @@
 				286229E1181CE5EC00E1AD1A /* serd_internal.h in Headers */,
 				286229E9181CE62A00E1AD1A /* sord.h in Headers */,
 				286229EA181CE62A00E1AD1A /* sord_internal.h in Headers */,
-				28624C0E181CE65700E1AD1A /* sratom_config.h in Headers */,
 				28624C0F181CE65700E1AD1A /* sratom.h in Headers */,
-				28640874181CE74100CC4E2C /* sord_config.h in Headers */,
-				28640876181CE75800CC4E2C /* serd_config.h in Headers */,
-				28640878181CE77200CC4E2C /* lilv_config.h in Headers */,
 				284750541AD4EB84000AD751 /* common.h in Headers */,
 				284750561AD4EB84000AD751 /* digest.h in Headers */,
 				284750581AD4EB84000AD751 /* hash.h in Headers */,
 				2847505A1AD4EB84000AD751 /* tree.h in Headers */,
 				284750601AD4EBE1000AD751 /* suil_internal.h in Headers */,
 				284750621AD4EC28000AD751 /* suil.h in Headers */,
-				281110001AD4FDD8009FAC14 /* suil_config.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6202,7 +6117,6 @@
 				28FADF041833C78C00BA4141 /* xmlrole.h in Headers */,
 				28FADF061833C78C00BA4141 /* xmltok.h in Headers */,
 				28FADF081833C78C00BA4141 /* xmltok_impl.h in Headers */,
-				2835D8D11833D54100CF5EFF /* expat_config.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6210,7 +6124,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED152151163C232500451B5F /* soxr-config.h in Headers */,
 				ED152162163C244200451B5F /* soxr.h in Headers */,
 				ED15216D163C249500451B5F /* data-io.h in Headers */,
 				ED152177163C24D900451B5F /* rate.h in Headers */,
@@ -6224,17 +6137,20 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28CA9E701AE60C53005C0BFE /* sincCoeffs.h in Headers */,
+				28CA9E811AE60C53005C0BFE /* trackpoint.h in Headers */,
+				28CA9E821AE60C53005C0BFE /* utils.h in Headers */,
+				28CA9E771AE60C53005C0BFE /* real.h in Headers */,
+				28CA9E741AE60C53005C0BFE /* fft.h in Headers */,
+				28CA9E6F1AE60C53005C0BFE /* synthTable.h in Headers */,
+				28CA9E7B1AE60C53005C0BFE /* sms.h in Headers */,
+				28CA9E721AE60C53005C0BFE /* buffer.h in Headers */,
+				28CA9E7F1AE60C53005C0BFE /* track.h in Headers */,
+				28CA9E6E1AE60C53005C0BFE /* sse.h in Headers */,
 				ED2706FF0EF9C47E007D4FFD /* sbsms.h in Headers */,
-				ED2707270EF9C51D007D4FFD /* buffer.h in Headers */,
-				ED27072A0EF9C51D007D4FFD /* fft.h in Headers */,
-				ED27072C0EF9C51D007D4FFD /* grain.h in Headers */,
-				ED2707300EF9C51D007D4FFD /* real.h in Headers */,
-				ED2707330EF9C51D007D4FFD /* sincCoeffs.h in Headers */,
-				ED2707350EF9C51D007D4FFD /* sms.h in Headers */,
-				ED2707370EF9C51D007D4FFD /* subband.h in Headers */,
-				ED2707390EF9C51D007D4FFD /* track.h in Headers */,
-				ED27073B0EF9C51D007D4FFD /* trackpoint.h in Headers */,
-				ED27073D0EF9C51D007D4FFD /* utils.h in Headers */,
+				28CA9E761AE60C53005C0BFE /* grain.h in Headers */,
+				28CA9E6C1AE60C53005C0BFE /* dBTable.h in Headers */,
+				28CA9E7D1AE60C53005C0BFE /* subband.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6314,7 +6230,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 17073FDD0988E584008541CC /* Build configuration list for PBXNativeTarget "libmad" */;
 			buildPhases = (
-				17073FEB0988E6C9008541CC /* ShellScript */,
 				17073FC00988E561008541CC /* Headers */,
 				17073FC10988E561008541CC /* Sources */,
 			);
@@ -6649,9 +6564,9 @@
 			productReference = ED152130163C227C00451B5F /* libsoxr.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		ED2706F30EF9C3C6007D4FFD /* libsbsms */ = {
+		ED2706F30EF9C3C6007D4FFD /* sbsms */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = ED2706F90EF9C3E4007D4FFD /* Build configuration list for PBXNativeTarget "libsbsms" */;
+			buildConfigurationList = ED2706F90EF9C3E4007D4FFD /* Build configuration list for PBXNativeTarget "sbsms" */;
 			buildPhases = (
 				ED2706F00EF9C3C6007D4FFD /* Headers */,
 				ED2706F10EF9C3C6007D4FFD /* Sources */,
@@ -6660,7 +6575,7 @@
 			);
 			dependencies = (
 			);
-			name = libsbsms;
+			name = sbsms;
 			productName = libsbsms;
 			productReference = ED2706F40EF9C3C6007D4FFD /* libsbsms.a */;
 			productType = "com.apple.product-type.library.static";
@@ -6688,9 +6603,10 @@
 		1790ABE309883346008A330A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0630;
 			};
-			buildConfigurationList = 1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity" */;
-			compatibilityVersion = "Xcode 2.4";
+			buildConfigurationList = 1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity_Xcode_5.1_with_10.6_sdk" */;
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -6727,7 +6643,7 @@
 				170740790988F1BB008541CC /* soundtouch */,
 				2840CECB0AEB803C00F49FC3 /* twolame */,
 				28E236F40E515D1D00281398 /* libscorealign */,
-				ED2706F30EF9C3C6007D4FFD /* libsbsms */,
+				ED2706F30EF9C3C6007D4FFD /* sbsms */,
 				2892CDC3131ADC6900E1E17D /* Manual */,
 				282413C6131D4E3F009FD931 /* Plugins */,
 			);
@@ -6792,22 +6708,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp\nexport CC=gcc\nexport CXX=g++\nexport CPPFLAGS=\"-isysroot${SDKROOT}\"\nexport CFLAGS=\"-isysroot${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Libsoxr's endianness detection is a bit unfriendly to universal binary\n# builds. We need to disable SIMD since we can't build UBs with it enabled.\n#\nFILE=lib-src/libsoxr/soxr-config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#if defined(__BIG_ENDIAN__)\n#undef WORDS_BIGENDIAN\n#define WORDS_BIGENDIAN 1\n#endif\n#undef HAVE_SIMD\n#define HAVE_SIMD 0\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
-		};
-		17073FEB0988E6C9008541CC /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(TOPLEVEL)/lib-src/libmad/config.h",
-			);
-			outputPaths = (
-				"$(TOPLEVEL)/lib-src/libmad/mad.h",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C $TOPLEVEL/lib-src/libmad mad.h\nexit $?\n";
+			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp\nexport CC=gcc\nexport CXX=g++\nexport CPPFLAGS=\"-isysroot${SDKROOT}\"\nexport CFLAGS=\"-isysroot${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\nif false\nthen\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Libsoxr's endianness detection is a bit unfriendly to universal binary\n# builds. We need to disable SIMD since we can't build UBs with it enabled.\n#\nFILE=lib-src/libsoxr/soxr-config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#if defined(__BIG_ENDIAN__)\n#undef WORDS_BIGENDIAN\n#define WORDS_BIGENDIAN 1\n#endif\n#undef HAVE_SIMD\n#define HAVE_SIMD 0\nEOF\nfi\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
 		};
 		28032560131DAFAF0059D002 /* Copy nyquist */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6853,7 +6754,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
+			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
 		};
 		282413DA131D52CE009FD931 /* Install plugins */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7446,6 +7347,7 @@
 				1790B1A209883BFD008A330A /* ASlider.cpp in Sources */,
 				1790B1A309883BFD008A330A /* Meter.cpp in Sources */,
 				1790B1A409883BFD008A330A /* MultiDialog.cpp in Sources */,
+				2867F1E81AE60CD900011DB5 /* FileDialogPrivate.cpp in Sources */,
 				1790B1A509883BFD008A330A /* Ruler.cpp in Sources */,
 				1790B1A709883BFD008A330A /* Warning.cpp in Sources */,
 				1790B1A909883BFD008A330A /* XMLFileReader.cpp in Sources */,
@@ -7492,7 +7394,6 @@
 				2816372E0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp in Sources */,
 				283B3D4D0BC21EBE00FA01D5 /* FileDialog.cpp in Sources */,
 				2809C4B80BCB7E560006010F /* FileIO.cpp in Sources */,
-				28F5C1110BE5886A00D17341 /* FileDialogPrivate.cpp in Sources */,
 				285DE1FA0BF03C7800A20DF0 /* Screenshot.cpp in Sources */,
 				2801A6460BF9268700648258 /* ImportQT.cpp in Sources */,
 				2891B2870C531D2C0044FBE3 /* FindClipping.cpp in Sources */,
@@ -7626,8 +7527,6 @@
 				28884971131B6CF600B59735 /* vi.po in Sources */,
 				28884972131B6CF600B59735 /* zh_TW.po in Sources */,
 				28884973131B6CF600B59735 /* zh.po in Sources */,
-				82FF185213CF01A600C1B664 /* dBTable.cpp in Sources */,
-				82FF185313CF01A600C1B664 /* slide.cpp in Sources */,
 				EDF3B7B01588C0D50032D35F /* Paulstretch.cpp in Sources */,
 				ED920CAF15B19F61008CA12C /* ModulePrefs.cpp in Sources */,
 				EDD2431416934A6100D9DEC2 /* BassTreble.cpp in Sources */,
@@ -7829,15 +7728,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED2707260EF9C51D007D4FFD /* buffer.cpp in Sources */,
-				ED2707290EF9C51D007D4FFD /* fft.cpp in Sources */,
-				ED27072B0EF9C51D007D4FFD /* grain.cpp in Sources */,
-				ED2707310EF9C51D007D4FFD /* resample.cpp in Sources */,
-				ED2707320EF9C51D007D4FFD /* sbsms.cpp in Sources */,
-				ED2707340EF9C51D007D4FFD /* sms.cpp in Sources */,
-				ED2707360EF9C51D007D4FFD /* subband.cpp in Sources */,
-				ED2707380EF9C51D007D4FFD /* track.cpp in Sources */,
-				ED27073A0EF9C51D007D4FFD /* trackpoint.cpp in Sources */,
+				28CA9E751AE60C53005C0BFE /* grain.cpp in Sources */,
+				28CA9E731AE60C53005C0BFE /* fft.cpp in Sources */,
+				28CA9E801AE60C53005C0BFE /* trackpoint.cpp in Sources */,
+				28CA9E711AE60C53005C0BFE /* buffer.cpp in Sources */,
+				28CA9E7A1AE60C53005C0BFE /* sms.cpp in Sources */,
+				28CA9E7C1AE60C53005C0BFE /* subband.cpp in Sources */,
+				28CA9E7E1AE60C53005C0BFE /* track.cpp in Sources */,
+				28CA9E6B1AE60C53005C0BFE /* dBTable.cpp in Sources */,
+				28CA9E781AE60C53005C0BFE /* resample.cpp in Sources */,
+				28CA9E791AE60C53005C0BFE /* sbsms.cpp in Sources */,
+				28CA9E6D1AE60C53005C0BFE /* slide.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7954,7 +7855,7 @@
 		};
 		ED2707480EF9C55A007D4FFD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = ED2706F30EF9C3C6007D4FFD /* libsbsms */;
+			target = ED2706F30EF9C3C6007D4FFD /* sbsms */;
 			targetProxy = ED2707470EF9C55A007D4FFD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -7964,6 +7865,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					FLAC__NO_ASM,
@@ -7971,7 +7873,8 @@
 					NDEBUG,
 				);
 				PRODUCT_NAME = FLAC;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/lib-src/libogg/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Debug Static";
 		};
@@ -7979,13 +7882,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					NDEBUG,
 					"FLaC__INLINE=__inline__",
 				);
 				PRODUCT_NAME = "FLAC++";
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
 			};
 			name = "Debug Static";
 		};
@@ -8001,7 +7906,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Static";
 		};
@@ -8009,8 +7916,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
 			};
 			name = "Debug Static";
 		};
@@ -8018,11 +7928,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					HAVE_CONFIG_H,
-					FPM_PPC,
-				);
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
 			};
 			name = "Debug Static";
 		};
@@ -8030,14 +7940,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CMTSTUFF,
 					EXT,
 				);
-				HEADER_SEARCH_PATHS = "";
 				PRODUCT_NAME = nyquist;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
 				USE_HEADERMAP = "";
 			};
 			name = "Debug Static";
@@ -8046,7 +7957,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Debug Static";
 		};
@@ -8054,9 +7968,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
 				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
 			};
 			name = "Debug Static";
 		};
@@ -8064,13 +7980,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					DARWIN,
 					USE_MEMORY_H,
 				);
 				PRODUCT_NAME = vorbis;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/lib-src/libogg/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Debug Static";
 		};
@@ -8078,8 +7996,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
 				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Static";
 		};
@@ -8087,8 +8007,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
 			};
 			name = "Debug Static";
 		};
@@ -8096,6 +8019,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
@@ -8153,7 +8077,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 			};
 			name = "Debug Static";
 		};
@@ -8176,7 +8100,7 @@
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = macosx10.6;
-				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -8191,28 +8115,36 @@
 		2800FE080FF322D5005CA9E5 /* Debug Static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Static";
 		};
 		2800FE090FF322D5005CA9E5 /* Debug Shared */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Shared";
 		};
 		2800FE0A0FF322D5005CA9E5 /* Release Static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Static";
 		};
 		2800FE0B0FF322D5005CA9E5 /* Release Shared */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portmidi;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Shared";
 		};
@@ -8248,9 +8180,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
 				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
 			};
 			name = "Debug Static";
 		};
@@ -8258,9 +8193,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
 				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
 			};
 			name = "Release Static";
 		};
@@ -8268,9 +8206,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
 				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Static";
 		};
@@ -8278,9 +8218,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
 				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Static";
 		};
@@ -8288,18 +8230,26 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = (
-					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
 					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
 					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
 					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
 					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
 					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
 					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
 				);
 				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Static";
 		};
@@ -8307,18 +8257,26 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = (
-					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
 					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
 					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
 					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
 					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
 					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
 					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
 				);
 				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Shared";
 		};
@@ -8326,18 +8284,26 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = (
-					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
 					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
 					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
 					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
 					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
 					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
 					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
 				);
 				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Static";
 		};
@@ -8345,18 +8311,26 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = (
-					"$(TOPLEVEL)/lib-src/lv2/include",
+					"$(TOPLEVEL)/mac/config/$(arch)/lib-src/lv2/**",
+					"$(TOPLEVEL)/lib-src/lv2/lv2",
+					"$(TOPLEVEL)/lib-src/lv2/sord",
 					"$(TOPLEVEL)/lib-src/lv2/sord/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/lilv",
 					"$(TOPLEVEL)/lib-src/lv2/lilv/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/serd",
 					"$(TOPLEVEL)/lib-src/lv2/serd/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/sratom",
 					"$(TOPLEVEL)/lib-src/lv2/sratom/src/**",
+					"$(TOPLEVEL)/lib-src/lv2/suil",
 					"$(TOPLEVEL)/lib-src/lv2/suil/build/**",
 					"$(TOPLEVEL)/lib-src/lv2/suil/src/**",
 				);
 				PRODUCT_NAME = lv2;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Shared";
 		};
@@ -8364,6 +8338,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
@@ -8395,6 +8370,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
@@ -8443,7 +8419,7 @@
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = macosx10.6;
-				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -8459,6 +8435,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
@@ -8514,7 +8491,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 			};
 			name = "Debug Shared";
 		};
@@ -8530,7 +8507,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Shared";
 		};
@@ -8538,6 +8517,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					FLAC__NO_ASM,
@@ -8545,7 +8525,8 @@
 					NDEBUG,
 				);
 				PRODUCT_NAME = FLAC;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/lib-src/libogg/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Debug Shared";
 		};
@@ -8553,13 +8534,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					NDEBUG,
 					"FLaC__INLINE=__inline__",
 				);
 				PRODUCT_NAME = "FLAC++";
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
 			};
 			name = "Debug Shared";
 		};
@@ -8567,8 +8550,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
 			};
 			name = "Debug Shared";
 		};
@@ -8576,11 +8562,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					HAVE_CONFIG_H,
-					FPM_PPC,
-				);
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
 			};
 			name = "Debug Shared";
 		};
@@ -8588,13 +8574,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CMTSTUFF,
 					EXT,
 				);
 				PRODUCT_NAME = nyquist;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/fft $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
 			};
 			name = "Debug Shared";
 		};
@@ -8602,13 +8590,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					DARWIN,
 					USE_MEMORY_H,
 				);
 				PRODUCT_NAME = vorbis;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/lib-src/libogg/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Debug Shared";
 		};
@@ -8616,7 +8606,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Debug Shared";
 		};
@@ -8624,9 +8617,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
 				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
 			};
 			name = "Debug Shared";
 		};
@@ -8634,9 +8629,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
 				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Shared";
 		};
@@ -8644,6 +8641,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"STDC_HEADERS=1",
 					"HAVE_SYS_TYPES_H=1",
@@ -8664,6 +8662,7 @@
 					"PA_USE_COREAUDIO=1",
 				);
 				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Shared";
 		};
@@ -8671,8 +8670,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
 				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Shared";
 		};
@@ -8680,8 +8681,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
 			};
 			name = "Debug Shared";
 		};
@@ -8689,9 +8693,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
 				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
 			};
 			name = "Debug Shared";
 		};
@@ -8699,6 +8706,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
@@ -8747,7 +8755,7 @@
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = macosx10.6;
-				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -8763,6 +8771,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8820,7 +8829,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 			};
 			name = "Release Shared";
 		};
@@ -8836,7 +8845,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Shared";
 		};
@@ -8844,6 +8855,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					FLAC__NO_ASM,
@@ -8851,7 +8863,8 @@
 					NDEBUG,
 				);
 				PRODUCT_NAME = FLAC;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/lib-src/libogg/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Release Shared";
 		};
@@ -8859,13 +8872,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					NDEBUG,
 					"FLaC__INLINE=__inline__",
 				);
 				PRODUCT_NAME = "FLAC++";
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
 			};
 			name = "Release Shared";
 		};
@@ -8873,8 +8888,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
 			};
 			name = "Release Shared";
 		};
@@ -8882,11 +8900,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					HAVE_CONFIG_H,
-					FPM_PPC,
-				);
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
 			};
 			name = "Release Shared";
 		};
@@ -8894,13 +8912,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CMTSTUFF,
 					EXT,
 				);
 				PRODUCT_NAME = nyquist;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/fft $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
 			};
 			name = "Release Shared";
 		};
@@ -8908,13 +8928,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					DARWIN,
 					USE_MEMORY_H,
 				);
 				PRODUCT_NAME = vorbis;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/lib-src/libogg/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Release Shared";
 		};
@@ -8922,7 +8944,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Release Shared";
 		};
@@ -8930,9 +8955,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
 				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
 			};
 			name = "Release Shared";
 		};
@@ -8940,9 +8967,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvamp";
 				PRODUCT_NAME = vamp;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Shared";
 		};
@@ -8950,6 +8979,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"STDC_HEADERS=1",
 					"HAVE_SYS_TYPES_H=1",
@@ -8970,6 +9000,7 @@
 					"PA_USE_COREAUDIO=1",
 				);
 				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Shared";
 		};
@@ -8977,8 +9008,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
 				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Shared";
 		};
@@ -8986,8 +9019,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
 			};
 			name = "Release Shared";
 		};
@@ -8995,9 +9031,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
 				PRODUCT_NAME = twolame;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/twolame/**";
 			};
 			name = "Release Shared";
 		};
@@ -9005,6 +9044,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
@@ -9064,7 +9104,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Static";
 		};
@@ -9072,7 +9114,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Shared";
 		};
@@ -9080,7 +9124,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Static";
 		};
@@ -9088,7 +9134,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = scorealign;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Shared";
 		};
@@ -9104,7 +9152,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = portsmf;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Static";
 		};
@@ -9112,6 +9162,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					FLAC__NO_ASM,
@@ -9119,7 +9170,8 @@
 					NDEBUG,
 				);
 				PRODUCT_NAME = FLAC;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/lib-src/libogg/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac/** $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libflac/src/libFLAC/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Release Static";
 		};
@@ -9127,13 +9179,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					NDEBUG,
 					"FLaC__INLINE=__inline__",
 				);
 				PRODUCT_NAME = "FLAC++";
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libflac/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libflac $(TOPLEVEL)/lib-src/libflac/include";
 			};
 			name = "Release Static";
 		};
@@ -9141,8 +9195,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = id3tag;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libid3tag/** $(TOPLEVEL)/lib-src/libid3tag";
 			};
 			name = "Release Static";
 		};
@@ -9150,11 +9207,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					HAVE_CONFIG_H,
-					FPM_PPC,
-				);
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = mad;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad/** $(TOPLEVEL)/lib-src/libmad";
 			};
 			name = "Release Static";
 		};
@@ -9162,13 +9219,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					CMTSTUFF,
 					EXT,
 				);
 				PRODUCT_NAME = nyquist;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/fft $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libnyquist $(TOPLEVEL)/lib-src/libnyquist/nyquist/cmt $(TOPLEVEL)/lib-src/libnyquist/nyquist/ffts/** $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqsrc $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk $(TOPLEVEL)/lib-src/libnyquist/nyquist/nyqstk/include $(TOPLEVEL)/lib-src/libnyquist/nyquist/sys/unix $(TOPLEVEL)/lib-src/libnyquist/nyquist/tran $(TOPLEVEL)/lib-src/libnyquist/nyquist/xlisp";
 			};
 			name = "Release Static";
 		};
@@ -9176,7 +9235,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = ogg;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Release Static";
 		};
@@ -9184,9 +9246,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				HEADER_SEARCH_PATHS = /Developer/Headers/FlatCarbon;
 				PRODUCT_NAME = sndfile;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/**";
 			};
 			name = "Release Static";
 		};
@@ -9194,13 +9258,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_CONFIG_H,
 					DARWIN,
 					USE_MEMORY_H,
 				);
 				PRODUCT_NAME = vorbis;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/lib-src/libogg/include";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libvorbis/** $(TOPLEVEL)/lib-src/libvorbis/lib $(TOPLEVEL)/mac/config/$(arch)/lib-src/libogg/** $(TOPLEVEL)/lib-src/libogg/include";
 			};
 			name = "Release Static";
 		};
@@ -9208,6 +9274,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"STDC_HEADERS=1",
 					"HAVE_SYS_TYPES_H=1",
@@ -9228,6 +9295,7 @@
 					"PA_USE_COREAUDIO=1",
 				);
 				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Static";
 		};
@@ -9235,8 +9303,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "PX_USE_MAC_COREAUDIO=1";
 				PRODUCT_NAME = portmixer;
+				SKIP_INSTALL = YES;
 			};
 			name = "Release Static";
 		};
@@ -9244,8 +9314,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
 				PRODUCT_NAME = soundtouch;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/**";
 			};
 			name = "Release Static";
 		};
@@ -9253,6 +9326,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
@@ -9312,7 +9386,7 @@
 				);
 				PRODUCT_NAME = Audacity;
 				SKIP_INSTALL = NO;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/include $(TOPLEVEL)/lib-src/twolame/libtwolame";
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/$(arch)/src/** $(TOPLEVEL)/mac $(TOPLEVEL)/src/** $(TOPLEVEL)/lib-src/FileDialog $(TOPLEVEL)/lib-src/libflac/include $(TOPLEVEL)/lib-src/libid3tag $(TOPLEVEL)/lib-src/lame $(TOPLEVEL)/mac/config/$(arch)/lib-src/libmad $(TOPLEVEL)/lib-src/libmad $(TOPLEVEL)/lib-src/libogg/include $(TOPLEVEL)/lib-src/libnyquist/nyq $(TOPLEVEL)/mac/config/$(arch)/lib-src/libsndfile/** $(TOPLEVEL)/lib-src/libsndfile/src $(TOPLEVEL)/lib-src/libsoxr/src $(TOPLEVEL)/lib-src/libvamp $(TOPLEVEL)/lib-src/libvorbis/include $(TOPLEVEL)/lib-src/portaudio-v19/include $(TOPLEVEL)/lib-src/portmixer/px_common $(TOPLEVEL)/lib-src/portsmf $(TOPLEVEL)/mac/config/$(arch)/lib-src/soundtouch/** $(TOPLEVEL)/lib-src/soundtouch/include $(TOPLEVEL)/lib-src/lv2/lv2 $(TOPLEVEL)/lib-src/lv2/lilv $(TOPLEVEL)/lib-src/lv2/suil $(TOPLEVEL)/lib-src/twolame/libtwolame $(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 			};
 			name = "Release Static";
 		};
@@ -9335,7 +9409,7 @@
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = macosx10.6;
-				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -9351,6 +9425,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"STDC_HEADERS=1",
 					"HAVE_SYS_TYPES_H=1",
@@ -9371,6 +9446,7 @@
 					"PA_USE_COREAUDIO=1",
 				);
 				PRODUCT_NAME = portaudio;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug Static";
 		};
@@ -9378,9 +9454,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				PRODUCT_NAME = expat;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/expat/lib";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
 			};
 			name = "Debug Static";
 		};
@@ -9388,9 +9466,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				PRODUCT_NAME = expat;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/expat/lib";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
 			};
 			name = "Debug Shared";
 		};
@@ -9398,9 +9478,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				PRODUCT_NAME = expat;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/expat/lib";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
 			};
 			name = "Release Static";
 		};
@@ -9408,57 +9490,67 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				PRODUCT_NAME = expat;
-				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/lib-src/expat/lib";
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/expat/** $(TOPLEVEL)/lib-src/expat/lib";
 			};
 			name = "Release Shared";
 		};
 		ED152131163C227C00451B5F /* Debug Static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
 				PREBINDING = NO;
 				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
 			};
 			name = "Debug Static";
 		};
 		ED152132163C227C00451B5F /* Debug Shared */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
 				PREBINDING = NO;
 				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
 			};
 			name = "Debug Shared";
 		};
 		ED152133163C227C00451B5F /* Release Static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
 				PREBINDING = NO;
 				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
 			};
 			name = "Release Static";
 		};
 		ED152134163C227C00451B5F /* Release Shared */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = SOXR_LIB;
 				PREBINDING = NO;
 				PRODUCT_NAME = soxr;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/libsoxr/**";
 			};
 			name = "Release Shared";
 		};
@@ -9466,20 +9558,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = (
-					"$(SSE_CPPFLAGS)",
-					"$(WX_CFLAGS)",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(SSE_CPPFLAGS)",
-					"$(WX_CXXFLAGS)",
-				);
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
 				PREBINDING = NO;
 				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 			};
 			name = "Debug Static";
 		};
@@ -9487,20 +9575,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = (
-					"$(SSE_CPPFLAGS)",
-					"$(WX_CFLAGS)",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(SSE_CPPFLAGS)",
-					"$(WX_CXXFLAGS)",
-				);
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
 				PREBINDING = NO;
 				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 			};
 			name = "Debug Shared";
 		};
@@ -9508,20 +9592,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = (
-					"$(SSE_CPPFLAGS)",
-					"$(WX_CFLAGS)",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(SSE_CPPFLAGS)",
-					"$(WX_CXXFLAGS)",
-				);
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
 				PREBINDING = NO;
 				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 			};
 			name = "Release Static";
 		};
@@ -9529,20 +9609,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = (
-					"$(SSE_CPPFLAGS)",
-					"$(WX_CFLAGS)",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(SSE_CPPFLAGS)",
-					"$(WX_CXXFLAGS)",
-				);
+				OTHER_CFLAGS = "$(SSE_CPPFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(SSE_CPPFLAGS)";
 				PREBINDING = NO;
 				PRODUCT_NAME = sbsms;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/mac/config/$(arch)/lib-src/sbsms/**";
 			};
 			name = "Release Shared";
 		};
@@ -9550,6 +9626,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
@@ -9587,6 +9664,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
@@ -9624,6 +9702,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
@@ -9661,6 +9740,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/modules";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
@@ -9829,7 +9909,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Debug Static";
 		};
-		1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity" */ = {
+		1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity_Xcode_5.1_with_10.6_sdk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				17CAEBB6098C9B8E00337968 /* Debug Static */,
@@ -9972,7 +10052,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Debug Static";
 		};
-		ED2706F90EF9C3E4007D4FFD /* Build configuration list for PBXNativeTarget "libsbsms" */ = {
+		ED2706F90EF9C3E4007D4FFD /* Build configuration list for PBXNativeTarget "sbsms" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ED2706F50EF9C3C6007D4FFD /* Debug Static */,

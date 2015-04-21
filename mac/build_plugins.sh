@@ -44,8 +44,15 @@ function build
    # Build the plugin if it doesn't exist
    if [ ! -e "${TARGET_BUILD_DIR}/${target}.so" ]
    then 
-      echo "Building ${target}"
-      gcc-"${GCC_VERSION}" -bundle -arch ${ARCHS/ / -arch } \
+      GCC=gcc
+      if [ -e "${GCC}-${GCC_VERSION}" ]
+      then
+         GCC="${GCC}-${GCC_VERSION}"
+      fi
+      
+      echo "Building ${target} using ${GCC}"
+
+      "${GCC}" -bundle -arch ${ARCHS/ / -arch } \
           -mmacosx-version-min="${MACOSX_DEPLOYMENT_TARGET}" -isysroot "${SDKROOT}" \
           -O3 -fomit-frame-pointer -fstrength-reduce -funroll-loops -ffast-math \
           "-D_init=__attribute__ ((constructor)) _${target}_init" \
