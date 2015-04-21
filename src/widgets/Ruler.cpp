@@ -1701,10 +1701,10 @@ void AdornedRulerPanel::RegenerateTooltips()
          this->SetToolTip(_("Timeline actions disabled during recording"));
       }
       else if (!mQuickPlayEnabled) {
-         this->SetToolTip(_("Quick Play disabled"));
+         this->SetToolTip(_("Quick-Play disabled"));
       }
       else {
-         this->SetToolTip(_("Quick Play enabled"));
+         this->SetToolTip(_("Quick-Play enabled"));
       }
    }
    else {
@@ -1853,7 +1853,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    double sel0 = mProject->GetSel0();
    double sel1 = mProject->GetSel1();
 
-   // Restrict Quick Play region to where there is something to play or is selected.
+   // Restrict Quick-Play region to where there is something to play or is selected.
    mQuickPlayPos = wxMax(0.0, mQuickPlayPos);
 
    // If not looping, restrict selection to end of project
@@ -2004,7 +2004,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          ClearPlayRegion();
       }
       // Disable if empty selection before start.
-      // (allow Quick Play region to include 'pre-roll' white space)
+      // (allow Quick-Play region to include 'pre-roll' white space)
       else if (((mPlayRegionEnd - mPlayRegionStart) > 0.0) && (mPlayRegionEnd < t0)) {
          ClearPlayRegion();
       }
@@ -2083,9 +2083,9 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    wxMenu *rulerMenu = new wxMenu();
 
    if (mQuickPlayEnabled)
-      rulerMenu->Append(OnToggleQuickPlayID, _("Disable Quick Play"));
+      rulerMenu->Append(OnToggleQuickPlayID, _("Disable Quick-Play"));
    else
-      rulerMenu->Append(OnToggleQuickPlayID, _("Enable Quick Play"));
+      rulerMenu->Append(OnToggleQuickPlayID, _("Enable Quick-Play"));
 
    wxMenuItem *dragitem;
    if (mPlayRegionDragsSelection && !mProject->IsPlayRegionLocked())
@@ -2111,12 +2111,12 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
       prlitem = rulerMenu->Append(OnLockPlayRegionID, _("Lock Play Region"));
    else
       prlitem = rulerMenu->Append(OnLockPlayRegionID, _("Unlock Play Region"));
-   prlitem->Enable(mProject->IsPlayRegionLocked() || mProject->GetSel0() != mProject->GetSel1());
+   prlitem->Enable(mProject->IsPlayRegionLocked() || (mPlayRegionStart != mPlayRegionEnd));
 
    PopupMenu(rulerMenu, pos);
 
    delete rulerMenu;
-   // dismiss and clear Quick Play indicator
+   // dismiss and clear Quick-Play indicator
    mQuickPlayInd = false;
    wxClientDC cdc(this);
    DrawQuickPlayIndicator(&cdc, true);

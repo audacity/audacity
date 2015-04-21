@@ -1741,9 +1741,11 @@ wxUint32 AudacityProject::GetUpdateFlags()
 
    flags |= GetFocusedFrame();
 
+   double start, end;
+   GetPlayRegion(&start, &end);
    if (IsPlayRegionLocked())
       flags |= PlayRegionLockedFlag;
-   else
+   else if (start != end)
       flags |= PlayRegionNotLockedFlag;
 
    if (flags & AudioIONotBusyFlag) {
@@ -6312,8 +6314,16 @@ void AudacityProject::OnUnMuteAllTracks()
 
 void AudacityProject::OnLockPlayRegion()
 {
-   mLockPlayRegion = true;
-   mRuler->Refresh(false);
+   double start, end;
+   GetPlayRegion(&start, &end);
+   if (start >= mTracks->GetEndTime()) {
+       wxMessageBox(_("Cannot lock region beyond\nend of project."),
+                    _("Error"));
+   }
+   else {
+      mLockPlayRegion = true;
+      mRuler->Refresh(false);
+   }
 }
 
 void AudacityProject::OnUnlockPlayRegion()
