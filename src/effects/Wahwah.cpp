@@ -39,12 +39,12 @@ enum
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name       Type     Key                        Def      Min      Max      Scale
-Param( Freq,      double,  wxTRANSLATE("Freq"),       1.5,     0.1,     4.0,     10  );
-Param( Phase,     double,  wxTRANSLATE("Phase"),      0.0,     0.0,     359.0,   1   );
-Param( Depth,     int,     wxTRANSLATE("Depth"),      70,      0,       100,     1   ); // scaled to 0-1 before processing
-Param( Res,       double,  wxTRANSLATE("Resonance"),  2.5,     0.1,     10.0,    10  );
-Param( FreqOfs,   int,     wxTRANSLATE("Offset"),     30,      0,       100,     1   ); // scaled to 0-1 before processing
+//     Name       Type     Key               Def      Min      Max      Scale
+Param( Freq,      double,  XO("Freq"),       1.5,     0.1,     4.0,     10  );
+Param( Phase,     double,  XO("Phase"),      0.0,     0.0,     359.0,   1   );
+Param( Depth,     int,     XO("Depth"),      70,      0,       100,     1   ); // scaled to 0-1 before processing
+Param( Res,       double,  XO("Resonance"),  2.5,     0.1,     10.0,    10  );
+Param( FreqOfs,   int,     XO("Offset"),     30,      0,       100,     1   ); // scaled to 0-1 before processing
 
 // How many samples are processed before recomputing the lfo value again
 #define lfoskipsamples 30
@@ -88,7 +88,7 @@ wxString EffectWahwah::GetSymbol()
 
 wxString EffectWahwah::GetDescription()
 {
-   return wxTRANSLATE("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
+   return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }
 
 // EffectIdentInterface implementation

@@ -91,12 +91,12 @@ wxString AudioUnitEffectsModule::GetSymbol()
 
 wxString AudioUnitEffectsModule::GetName()
 {
-   return _("Audio Unit Effects");
+   return XO("Audio Unit Effects");
 }
 
 wxString AudioUnitEffectsModule::GetVendor()
 {
-   return _("The Audacity Team");
+   return XO("The Audacity Team");
 }
 
 wxString AudioUnitEffectsModule::GetVersion()
@@ -107,7 +107,7 @@ wxString AudioUnitEffectsModule::GetVersion()
 
 wxString AudioUnitEffectsModule::GetDescription()
 {
-   return _("Provides Audio Unit Effects support to Audacity");
+   return XO("Provides Audio Unit Effects support to Audacity");
 }
 
 // ============================================================================

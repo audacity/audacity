@@ -20,7 +20,7 @@
 
 #include "Effect.h"
 
-#define NOISE_PLUGIN_SYMBOL wxTRANSLATE("Noise")
+#define NOISE_PLUGIN_SYMBOL XO("Noise")
 
 class EffectNoise : public Effect
 {

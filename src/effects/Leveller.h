@@ -18,7 +18,7 @@
 
 #include "Effect.h"
 
-#define LEVELLER_PLUGIN_SYMBOL wxTRANSLATE("Leveller")
+#define LEVELLER_PLUGIN_SYMBOL XO("Leveller")
 
 class EffectLeveller : public Effect
 {

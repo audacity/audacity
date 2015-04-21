@@ -28,7 +28,7 @@
 
 #include "Effect.h"
 
-#define TRUNCATESILENCE_PLUGIN_SYMBOL wxTRANSLATE("Truncate Silence")
+#define TRUNCATESILENCE_PLUGIN_SYMBOL XO("Truncate Silence")
 
 // Declaration of RegionList
 struct REGION;

@@ -15,7 +15,7 @@
 
 #include "Effect.h"
 
-#define STEREOTOMONO_PLUGIN_SYMBOL wxTRANSLATE("Stereo To Mono")
+#define STEREOTOMONO_PLUGIN_SYMBOL XO("Stereo To Mono")
 
 class EffectStereoToMono : public Effect
 {

@@ -42,8 +42,8 @@ enum
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name          Type     Key                        Def      Min      Max      Scale
-Param( Percentage,   double,  wxTRANSLATE("Percentage"), 0.0,     -99.0,   3000.0,  1  );
+//     Name          Type     Key               Def   Min      Max      Scale
+Param( Percentage,   double,  XO("Percentage"), 0.0,  -99.0,   3000.0,  1  );
 
 // We warp the slider to go up to 400%, but user can enter higher values.
 static const double kSliderMax = 100.0;         // warped above zero to actually go up to 400%
@@ -85,7 +85,7 @@ wxString EffectChangeTempo::GetSymbol()
 
 wxString EffectChangeTempo::GetDescription()
 {
-   return wxTRANSLATE("Change the tempo of a selection without changing its pitch");
+   return XO("Change the tempo of a selection without changing its pitch");
 }
 
 // EffectIdentInterface implementation

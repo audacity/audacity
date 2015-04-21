@@ -74,7 +74,7 @@ public:
    void SetPath(const wxString & path);
    void SetSymbol(const wxString & symbol);
 
-   // These should be passed an untranslated value wrapped in wxTRANSLATE() so
+   // These should be passed an untranslated value wrapped in XO() so
    // the value will still be extracted for translation
    void SetName(const wxString & name);
    void SetVersion(const wxString & version);

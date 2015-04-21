@@ -88,11 +88,11 @@ enum kTypes
 static const wxChar *kTypeStrings[] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
-   wxTRANSLATE("Butterworth"),
+   XO("Butterworth"),
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   wxTRANSLATE("Chebyshev Type I"),
+   XO("Chebyshev Type I"),
    /*i18n-hint: Chebyshev is the name of the person after whom the filter type is named.*/
-   wxTRANSLATE("Chebyshev Type II")
+   XO("Chebyshev Type II")
 };
 
 enum kSubTypes
@@ -104,19 +104,19 @@ enum kSubTypes
 
 static const wxChar *kSubTypeStrings[] =
 {
-   wxTRANSLATE("Lowpass"),
-   wxTRANSLATE("Highpass")
+   XO("Lowpass"),
+   XO("Highpass")
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name       Type     Key                              Def            Min   Max               Scale
-Param( Type,      int,     wxTRANSLATE("FilterType"),       kButterworth,  0,    kNumTypes - 1,    1  );
-Param( Subtype,   int,     wxTRANSLATE("FilterSubtype"),    kLowPass,      0,    kNumSubTypes - 1, 1  );
-Param( Order,     int,     wxTRANSLATE("Order"),            1,             1,    10,               1  );
-Param( Cutoff,    float,   wxTRANSLATE("Cutoff"),           1000.0,        1.0,  FLT_MAX,          1  );
-Param( Passband,  float,   wxTRANSLATE("PassbandRipple"),   1.0,           0.0,  100.0,            1  );
-Param( Stopband,  float,   wxTRANSLATE("StopbandRipple"),   30.0,          0.0,  100.0,            1  );
+//     Name       Type     Key                     Def            Min   Max               Scale
+Param( Type,      int,     XO("FilterType"),       kButterworth,  0,    kNumTypes - 1,    1  );
+Param( Subtype,   int,     XO("FilterSubtype"),    kLowPass,      0,    kNumSubTypes - 1, 1  );
+Param( Order,     int,     XO("Order"),            1,             1,    10,               1  );
+Param( Cutoff,    float,   XO("Cutoff"),           1000.0,        1.0,  FLT_MAX,          1  );
+Param( Passband,  float,   XO("PassbandRipple"),   1.0,           0.0,  100.0,            1  );
+Param( Stopband,  float,   XO("StopbandRipple"),   30.0,          0.0,  100.0,            1  );
 
 static const double s_fChebyCoeffs[MAX_Order][MAX_Order + 1] =
 {
@@ -190,7 +190,7 @@ wxString EffectScienFilter::GetSymbol()
 
 wxString EffectScienFilter::GetDescription()
 {
-   return wxTRANSLATE("Performs IIR filtering that emulates analog filters");
+   return XO("Performs IIR filtering that emulates analog filters");
 }
 
 // EffectIdentInterface implementation

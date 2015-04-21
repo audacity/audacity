@@ -77,6 +77,7 @@ array of Ruler::Label.
 #include "../TrackPanel.h"
 #include "../Menus.h"
 #include "../Prefs.h"
+#include "../Snap.h"
 
 #define max(a,b)  ( (a<b)?b:a )
 
@@ -1600,7 +1601,8 @@ void RulerPanel::DoSetSize(int x, int y,
 #include "../AColor.h"
 
 enum {
-   OnSyncQuickPlaySelID = 7000,
+   OnToggleQuickPlayID = 7000,
+   OnSyncQuickPlaySelID,
    OnTimelineToolTipID,
    OnAutoScrollID,
    OnLockPlayRegionID
@@ -1612,6 +1614,7 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
    EVT_SIZE(AdornedRulerPanel::OnSize)
    EVT_MOUSE_EVENTS(AdornedRulerPanel::OnMouseEvents)
    EVT_MOUSE_CAPTURE_LOST(AdornedRulerPanel::OnCaptureLost)
+   EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
    EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
    EVT_MENU(OnTimelineToolTipID, AdornedRulerPanel::OnTimelineToolTips)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
@@ -1665,6 +1668,7 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
 
    mTimelineToolTip = gPrefs->Read(wxT("/QuickPlay/ToolTips"), wxT("Enabled")) == wxT("Enabled");
    mPlayRegionDragsSelection = gPrefs->Read(wxT("/QuickPlay/DragLoopSelection"), wxT("Enabled")) == wxT("Enabled");
+   mQuickPlayEnabled = gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), wxT("Enabled")) == wxT("Enabled");
 
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();
@@ -1696,8 +1700,11 @@ void AdornedRulerPanel::RegenerateTooltips()
       if (mIsRecording) {
          this->SetToolTip(_("Timeline actions disabled during recording"));
       }
+      else if (!mQuickPlayEnabled) {
+         this->SetToolTip(_("Quick-Play disabled"));
+      }
       else {
-         this->SetToolTip(_("Timeline - Quick Play enabled"));
+         this->SetToolTip(_("Quick-Play enabled"));
       }
    }
    else {
@@ -1846,7 +1853,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    double sel0 = mProject->GetSel0();
    double sel1 = mProject->GetSel1();
 
-   // Restrict Quick Play region to where there is something to play or is selected.
+   // Restrict Quick-Play region to where there is something to play or is selected.
    mQuickPlayPos = wxMax(0.0, mQuickPlayPos);
 
    // If not looping, restrict selection to end of project
@@ -1868,17 +1875,24 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
       Refresh(false);
    }
-   else {
+   else if (mQuickPlayEnabled) {
       mQuickPlayInd = true;
       Refresh(false);
 
       if (isWithinStart || isWithinEnd) {
          SetCursor(wxCursor(wxCURSOR_SIZEWE));
       }
-      else {
-         SetCursor(wxCursor(wxCURSOR_HAND));
-      }
    }
+   else {
+      SetCursor(wxCursor(wxCURSOR_HAND));
+   }
+
+   if (evt.RightDown()) {
+      ShowMenu(evt.GetPosition());
+   }
+
+   if (!mQuickPlayEnabled)
+      return;
 
    if (mSnapManager) {
       // Create a new snap manager in case any snap-points have changed
@@ -1889,7 +1903,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
                                  QUICK_PLAY_SNAP_PIXEL);
    bool snappedPoint, snappedTime;
    mIsSnapped = (mSnapManager->Snap(NULL, mQuickPlayPos, false,
-                                     &mQuickPlayPos, &snappedPoint, &snappedTime));
+                                    &mQuickPlayPos, &snappedPoint, &snappedTime));
 
    if (evt.LeftDown())
    {
@@ -1915,11 +1929,6 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          Refresh();
       }
       CaptureMouse();
-   }
-
-   if (evt.RightDown())
-   {
-      ShowMenu(evt.GetPosition());
    }
 
    switch (mMouseEventState)
@@ -1995,7 +2004,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          ClearPlayRegion();
       }
       // Disable if empty selection before start.
-      // (allow Quick Play region to include 'pre-roll' white space)
+      // (allow Quick-Play region to include 'pre-roll' white space)
       else if (((mPlayRegionEnd - mPlayRegionStart) > 0.0) && (mPlayRegionEnd < t0)) {
          ClearPlayRegion();
       }
@@ -2034,7 +2043,8 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
          options.playLooped = (loopEnabled && evt.ShiftDown());
 
-         ctb->PlayPlayRegion((SelectedRegion(mPlayRegionStart, mPlayRegionEnd)),
+         options.pStartTime = &mPlayRegionStart;
+         ctb->PlayPlayRegion((SelectedRegion(start, end)),
                              options,
                              evt.ControlDown(),
                              false,
@@ -2072,12 +2082,17 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
 {
    wxMenu *rulerMenu = new wxMenu();
 
+   if (mQuickPlayEnabled)
+      rulerMenu->Append(OnToggleQuickPlayID, _("Disable Quick-Play"));
+   else
+      rulerMenu->Append(OnToggleQuickPlayID, _("Enable Quick-Play"));
+
    wxMenuItem *dragitem;
    if (mPlayRegionDragsSelection && !mProject->IsPlayRegionLocked())
       dragitem = rulerMenu->Append(OnSyncQuickPlaySelID, _("Disable dragging selection"));
    else
       dragitem = rulerMenu->Append(OnSyncQuickPlaySelID, _("Enable dragging selection"));
-   dragitem->Enable(!mProject->IsPlayRegionLocked());
+   dragitem->Enable(mQuickPlayEnabled && !mProject->IsPlayRegionLocked());
 
 #if wxUSE_TOOLTIPS
    if (mTimelineToolTip)
@@ -2096,15 +2111,23 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
       prlitem = rulerMenu->Append(OnLockPlayRegionID, _("Lock Play Region"));
    else
       prlitem = rulerMenu->Append(OnLockPlayRegionID, _("Unlock Play Region"));
-   prlitem->Enable(mProject->GetSel0() != mProject->GetSel1());
+   prlitem->Enable(mProject->IsPlayRegionLocked() || (mPlayRegionStart != mPlayRegionEnd));
 
    PopupMenu(rulerMenu, pos);
 
    delete rulerMenu;
-   // dismiss and clear Quick Play indicator
+   // dismiss and clear Quick-Play indicator
    mQuickPlayInd = false;
    wxClientDC cdc(this);
    DrawQuickPlayIndicator(&cdc, true);
+}
+
+void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent& evt)
+{
+   mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
+   gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled ? wxT("Enabled") : wxT("Disabled"));
+   gPrefs->Flush();
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent& evt)

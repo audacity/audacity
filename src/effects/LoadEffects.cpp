@@ -220,17 +220,17 @@ wxString BuiltinEffectsModule::GetPath()
 
 wxString BuiltinEffectsModule::GetSymbol()
 {
-   return wxTRANSLATE("Builtin Effects");
+   return XO("Builtin Effects");
 }
 
 wxString BuiltinEffectsModule::GetName()
 {
-   return wxTRANSLATE("Builtin Effects");
+   return XO("Builtin Effects");
 }
 
 wxString BuiltinEffectsModule::GetVendor()
 {
-   return wxTRANSLATE("The Audacity Team");
+   return XO("The Audacity Team");
 }
 
 wxString BuiltinEffectsModule::GetVersion()
@@ -241,7 +241,7 @@ wxString BuiltinEffectsModule::GetVersion()
 
 wxString BuiltinEffectsModule::GetDescription()
 {
-   return wxTRANSLATE("Provides builtin effects to Audacity");
+   return XO("Provides builtin effects to Audacity");
 }
 
 // ============================================================================

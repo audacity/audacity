@@ -68,7 +68,7 @@ wxString NyquistEffectsModule::GetPath()
 
 wxString NyquistEffectsModule::GetSymbol()
 {
-   return wxTRANSLATE("Nyquist Effects");
+   return XO("Nyquist Effects");
 }
 
 wxString NyquistEffectsModule::GetName()
@@ -78,7 +78,7 @@ wxString NyquistEffectsModule::GetName()
 
 wxString NyquistEffectsModule::GetVendor()
 {
-   return wxTRANSLATE("The Audacity Team");
+   return XO("The Audacity Team");
 }
 
 wxString NyquistEffectsModule::GetVersion()
@@ -89,7 +89,7 @@ wxString NyquistEffectsModule::GetVersion()
 
 wxString NyquistEffectsModule::GetDescription()
 {
-   return wxTRANSLATE("Provides Nyquist Effects support to Audacity");
+   return XO("Provides Nyquist Effects support to Audacity");
 }
 
 // ============================================================================

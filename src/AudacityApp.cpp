@@ -99,6 +99,12 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "import/Import.h"
 
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+#include <wx/debugrpt.h>
+#include <wx/evtloop.h>
+#include <wx/textdlg.h>
+#endif
+
 #ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
 #endif
@@ -183,6 +189,26 @@ It handles initialization and termination by subclassing wxApp.
 #  if defined(USE_VAMP)
 #     pragma comment(lib, "libvamp")
 #  endif
+
+#  if defined(__WXDEBUG__)
+#     define D "d"
+#  else
+#     define D ""
+#  endif
+#  if wxCHECK_VERSION(3, 1, 0)
+#     define V "31"
+#  elif wxCHECK_VERSION(3, 0, 0)
+#     define V "30"
+#  else
+#     define V "28"
+#  endif
+
+#  if defined(EXPERIMENTAL_CRASH_REPORT)
+#     pragma comment(lib, "wxmsw" V "u" D "_qa")
+#  endif
+
+#  undef V
+#  undef D
 
 #endif //(__WXMSW__)
 
@@ -925,7 +951,9 @@ bool AudacityApp::ShouldShowMissingAliasedFileWarning()
 
 AudacityLogger *AudacityApp::GetLogger()
 {
-   return static_cast<AudacityLogger *>(wxLog::GetActiveTarget());
+   // Use dynamic_cast so that we get a NULL ptr if we haven't yet
+   // setup our logger.
+   return dynamic_cast<AudacityLogger *>(wxLog::GetActiveTarget());
 }
 
 void AudacityApp::InitLang( const wxString & lang )
@@ -984,11 +1012,59 @@ void AudacityApp::InitLang( const wxString & lang )
    Internat::Init();
 }
 
-// Only used when checking plugins
 void AudacityApp::OnFatalException()
 {
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+   GenerateCrashReport(wxDebugReport::Context_Exception);
+#endif
+
    exit(-1);
 }
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
+{
+   wxDebugReportCompress rpt;
+   rpt.AddAll(ctx);
+
+   wxFileName fn(FileNames::DataDir(), wxT("audacity.cfg"));
+   rpt.AddFile(fn.GetFullPath(), wxT("Audacity Configuration"));
+   rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
+   rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
+
+   if (ctx == wxDebugReport::Context_Current)
+   {
+      rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
+   }
+
+   AudacityLogger *logger = GetLogger();
+   if (logger)
+   {
+      rpt.AddText(wxT("log.txt"), logger->GetLog(), wxT("Audacity Log"));
+   }
+
+   bool ok = wxDebugReportPreviewStd().Show(rpt);
+
+#if defined(__WXMSW__)
+   wxEventLoop::SetCriticalWindow(NULL);
+#endif
+
+   if (ok && rpt.Process())
+   {
+      wxTextEntryDialog dlg(NULL,
+                              _("Report generated to:"),
+                              _("Audacity Support Data"),
+                              rpt.GetCompressedFileName(),
+                              wxOK | wxCENTER);
+      dlg.ShowModal();
+
+      wxLogMessage(wxT("Report generated to: %s"),
+                     rpt.GetCompressedFileName().c_str());
+
+      rpt.Reset();
+   }
+}
+#endif
 
 #if defined(__WXGTK__)
 // On wxGTK, there's a focus issue where dialogs do not automatically pass focus
@@ -1013,6 +1089,15 @@ int AudacityApp::FilterEvent(wxEvent & event)
    return -1;
 }
 #endif
+
+AudacityApp::AudacityApp()
+{
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+#if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
+   wxHandleFatalExceptions();
+#endif
+#endif
+}
 
 // The `main program' equivalent, creating the windows and returning the
 // main frame
@@ -1289,6 +1374,21 @@ Click the 'Help' button for known issue."),
       }
 
       Sequence::SetMaxDiskBlockSize(lval);
+   }
+
+   wxString fileName;
+   if (parser->Found(wxT("d"), &fileName))
+   {
+      AutoSaveFile asf;
+      if (asf.Decode(fileName))
+      {
+         wxPrintf(_("File decoded successfully\n"));
+      }
+      else
+      {
+         wxPrintf(_("Decoding failed\n"));
+      }
+      exit(1);
    }
 
 // No Splash screen on wx3 whislt we sort out the problem
@@ -1733,6 +1833,10 @@ wxCmdLineParser *AudacityApp::ParseCommandLine()
     *           use when writing files to the disk */
    parser->AddOption(wxT("b"), wxT("blocksize"), _("set max disk block size in bytes"),
                      wxCMD_LINE_VAL_NUMBER);
+
+   /*i18n-hint: This decodes an autosave file */
+   parser->AddOption(wxT("d"), wxT("decode"), _("decode an autosave file"),
+                     wxCMD_LINE_VAL_STRING);
 
    /*i18n-hint: This displays a list of available options */
    parser->AddSwitch(wxT("h"), wxT("help"), _("this help message"),

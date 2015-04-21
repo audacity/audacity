@@ -27,7 +27,7 @@
 
 class EffectCompressorPanel;
 
-#define COMPRESSOR_PLUGIN_SYMBOL wxTRANSLATE("Compressor")
+#define COMPRESSOR_PLUGIN_SYMBOL XO("Compressor")
 
 class EffectCompressor : public EffectTwoPassSimpleMono
 {

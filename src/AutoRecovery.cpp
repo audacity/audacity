@@ -637,8 +637,41 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
    if (file.Read(&ident, len) != len || strncmp(ident, AutoSaveIdent, len) != 0)
    {
-      // Not something we recognize.  Could be decoded already.  Let the caller
-      // deal with it.
+      // It could be that the file has already been decoded or that it is one
+      // from 2.1.0 or earlier.  In the latter case, we need to ensure the
+      // closing </project> tag is preset.
+
+      // Close the file so we can reopen it in read/write mode
+      file.Close();
+
+      // Add </project> tag, if necessary
+      if (!file.Open(fn.GetFullPath(), wxT("r+b")))
+      {
+         // Really shouldn't happen, but let the caller deal with it
+         return false;
+      }
+
+      // Read the last 16 bytes of the file and check if they contain
+      // "</project>" somewhere.
+      const int bufsize = 16;
+      char buf[bufsize + 1];
+      if (file.SeekEnd(-bufsize) != wxInvalidOffset)
+      {
+         if (file.Read(buf, bufsize) == bufsize)
+         {
+            buf[bufsize] = 0;
+            if (strstr(buf, "</project>") == 0)
+            {
+               // End of file does not contain closing </project> tag, so add it
+               if (file.Seek(0, wxFromEnd) != wxInvalidOffset)
+               {
+                  strcpy(buf, "</project>\n");
+                  file.Write(buf, strlen(buf));
+               }
+            }
+         }
+      }
+
       file.Close();
 
       return true;
@@ -650,7 +683,6 @@ bool AutoSaveFile::Decode(const wxString & fileName)
    if (file.Read(buf, len) != len)
    {
       delete buf;
-      file.Close();
       return false;
    }
 

@@ -45,10 +45,10 @@ enum
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name    Type     Key                              Def         Min         Max      Scale
-Param( Ratio,  float,   wxTRANSLATE("Ratio"),            0.9f,       -FLT_MAX,   FLT_MAX, 1.0f  );
-Param( NoClip, bool,    wxTRANSLATE("Allow Clipping"),   false,      false,      true,    1.0f  );
-Param( Amp,    float,   wxT(""),                         -0.91515f,  -50.0,      50.0,    10.0f );
+//     Name    Type     Key                     Def         Min         Max      Scale
+Param( Ratio,  float,   XO("Ratio"),            0.9f,       -FLT_MAX,   FLT_MAX, 1.0f  );
+Param( NoClip, bool,    XO("Allow Clipping"),   false,      false,      true,    1.0f  );
+Param( Amp,    float,   wxT(""),                -0.91515f,  -50.0,      50.0,    10.0f );
 
 //
 // EffectAmplify
@@ -83,7 +83,7 @@ wxString EffectAmplify::GetSymbol()
 wxString EffectAmplify::GetDescription()
 {
    // Note: This is useful only after ratio has been set.
-   return wxTRANSLATE("Increases or decreases the volume of the audio you have selected");
+   return XO("Increases or decreases the volume of the audio you have selected");
 }
 
 // EffectIdentInterface implementation

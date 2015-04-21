@@ -20,7 +20,7 @@
 
 #include "Effect.h"
 
-#define ECHO_PLUGIN_SYMBOL wxTRANSLATE("Echo")
+#define ECHO_PLUGIN_SYMBOL XO("Echo")
 
 class EffectEcho : public Effect
 {

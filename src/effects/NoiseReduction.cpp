@@ -426,7 +426,7 @@ wxString EffectNoiseReduction::GetSymbol()
 
 wxString EffectNoiseReduction::GetDescription()
 {
-   return wxTRANSLATE("Removes background noise such as fans, tape noise, or hums");
+   return XO("Removes background noise such as fans, tape noise, or hums");
 }
 
 // EffectIdentInterface implementation
@@ -1451,26 +1451,26 @@ const ControlInfo *controlInfo() {
    static const ControlInfo table[] = {
          ControlInfo(&EffectNoiseReduction::Settings::mNoiseGain,
          0.0, 48.0, 48, wxT("%d"), true,
-         wxTRANSLATE("&Noise reduction (dB):"), wxTRANSLATE("Noise reduction")),
+         XO("&Noise reduction (dB):"), XO("Noise reduction")),
          ControlInfo(&EffectNoiseReduction::Settings::mNewSensitivity,
          0.0, 24.0, 48, wxT("%.2f"), false,
-         wxTRANSLATE("&Sensitivity:"), wxTRANSLATE("Sensitivity")),
+         XO("&Sensitivity:"), XO("Sensitivity")),
 #ifdef ATTACK_AND_RELEASE
          ControlInfo(&EffectNoiseReduction::Settings::mAttackTime,
          0, 1.0, 100, wxT("%.2f"), false,
-         wxTRANSLATE("Attac&k time (secs):"), wxTRANSLATE("Attack time")),
+         XO("Attac&k time (secs):"), XO("Attack time")),
          ControlInfo(&EffectNoiseReduction::Settings::mReleaseTime,
          0, 1.0, 100, wxT("%.2f"), false,
-         wxTRANSLATE("R&elease time (secs):"), wxTRANSLATE("Release time")),
+         XO("R&elease time (secs):"), XO("Release time")),
 #endif
          ControlInfo(&EffectNoiseReduction::Settings::mFreqSmoothingBands,
          0, 6, 6, wxT("%d"), true,
-         wxTRANSLATE("&Frequency smoothing (bands):"), wxTRANSLATE("Frequency smoothing")),
+         XO("&Frequency smoothing (bands):"), XO("Frequency smoothing")),
 
 #ifdef ADVANCED_SETTINGS
          ControlInfo(&EffectNoiseReduction::Settings::mOldSensitivity,
          -20.0, 20.0, 4000, wxT("%.2f"), false,
-         wxTRANSLATE("Sensiti&vity (dB):"), wxTRANSLATE("Old Sensitivity")),
+         XO("Sensiti&vity (dB):"), XO("Old Sensitivity")),
          // add here
 #endif
    };

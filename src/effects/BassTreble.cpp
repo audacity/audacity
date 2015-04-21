@@ -43,11 +43,11 @@ enum
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name       Type     Key                        Def      Min      Max      Scale
-Param( Bass,      double,  wxTRANSLATE("Bass"),       0.0,     -15.0,   15.0,    1  );
-Param( Treble,    double,  wxTRANSLATE("Treble"),     0.0,     -15.0,   15.0,    1  );
-Param( Level,     double,  wxTRANSLATE("Level"),      -1.0,    -30.0,   0.0,     1  );
-Param( Normalize, bool,    wxTRANSLATE("Normalize"),  true,    false,   true,    1  );
+//     Name       Type     Key               Def      Min      Max      Scale
+Param( Bass,      double,  XO("Bass"),       0.0,     -15.0,   15.0,    1  );
+Param( Treble,    double,  XO("Treble"),     0.0,     -15.0,   15.0,    1  );
+Param( Level,     double,  XO("Level"),      -1.0,    -30.0,   0.0,     1  );
+Param( Normalize, bool,    XO("Normalize"),  true,    false,   true,    1  );
 
 // Sliders are integer, so range is x 10
 // to allow 1 decimal place resolution
@@ -91,7 +91,7 @@ wxString EffectBassTreble::GetSymbol()
 
 wxString EffectBassTreble::GetDescription()
 {
-   return wxTRANSLATE("Increases or decreases the lower frequencies and higher frequencies of your audio independently");
+   return XO("Increases or decreases the lower frequencies and higher frequencies of your audio independently");
 }
 
 // EffectIdentInterface implementation

@@ -576,7 +576,7 @@ protected:
    double mLastIndicator;
    double mLastCursor;
 
-   // Quick Play indicator postion
+   // Quick-Play indicator postion
    double mOldQPIndicatorPos;
 
    int mTimeCount;

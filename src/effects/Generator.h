@@ -24,12 +24,9 @@
 class Generator : public Effect
 {
 public:
-   Generator() : mDuration(GetDefaultDuration()) { }
+   Generator() { }
 
 protected:
-   // Amount of time to generate, in seconds
-   double mDuration;
-
    // [ GenerateTrack() must be overridden by the actual generator class ]
    // Precondition:  mDuration > 0.0
    // Postcondition: <tmp> is filled with the data intended for <track>

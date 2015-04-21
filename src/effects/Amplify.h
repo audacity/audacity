@@ -25,7 +25,7 @@
 
 #include "Effect.h"
 
-#define AMPLIFY_PLUGIN_SYMBOL wxTRANSLATE("Amplify")
+#define AMPLIFY_PLUGIN_SYMBOL XO("Amplify")
 
 class EffectAmplify : public Effect
 {

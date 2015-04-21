@@ -45,9 +45,9 @@ enum
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name          Type     Key                        Def      Min      Max      Scale
-Param( Threshold,    int,     wxTRANSLATE("Threshold"),  200,     0,       900,     1  );
-Param( Width,        int,     wxTRANSLATE("Width"),      20,      0,       40,      1  );
+//     Name       Type     Key               Def      Min      Max      Scale
+Param( Threshold, int,     XO("Threshold"),  200,     0,       900,     1  );
+Param( Width,     int,     XO("Width"),      20,      0,       40,      1  );
 
 BEGIN_EVENT_TABLE(EffectClickRemoval, wxEvtHandler)
     EVT_SLIDER(ID_Thresh, EffectClickRemoval::OnThreshSlider)
@@ -78,7 +78,7 @@ wxString EffectClickRemoval::GetSymbol()
 
 wxString EffectClickRemoval::GetDescription()
 {
-   return wxTRANSLATE("Click Removal is designed to remove clicks on audio tracks");
+   return XO("Click Removal is designed to remove clicks on audio tracks");
 }
 
 // EffectIdentInterface implementation

@@ -19,7 +19,7 @@
 
 #include "Effect.h"
 
-#define REVERSE_PLUGIN_SYMBOL wxTRANSLATE("Reverse")
+#define REVERSE_PLUGIN_SYMBOL XO("Reverse")
 
 class EffectReverse : public Effect
 {

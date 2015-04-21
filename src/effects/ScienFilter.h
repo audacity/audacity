@@ -29,7 +29,7 @@ Vaughan Johnson (Preview)
 
 #include "Effect.h"
 
-#define CLASSICFILTERS_PLUGIN_SYMBOL wxTRANSLATE("Classic Filters")
+#define CLASSICFILTERS_PLUGIN_SYMBOL XO("Classic Filters")
 
 class EffectScienFilterPanel;
 

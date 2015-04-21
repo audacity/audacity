@@ -30,11 +30,11 @@
 
 #include "FindClipping.h"
 
-#define DEF_Start 3
-#define MIN_Start 1
-
-#define DEF_Stop 3
-#define MIN_Stop 1
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name    Type  Key               Def   Min   Max      Scale
+Param( Start,  int,  XO("Duty Cycle"), 3,    1,    INT_MAX, 1   );
+Param( Stop,   int,  XO("Duty Cycle"), 3,    1,    INT_MAX, 1   );
 
 EffectFindClipping::EffectFindClipping()
 {
@@ -55,7 +55,7 @@ wxString EffectFindClipping::GetSymbol()
 
 wxString EffectFindClipping::GetDescription()
 {
-   return wxTRANSLATE("This displays runs of clipped samples in a Label Track");
+   return XO("This displays runs of clipped samples in a Label Track");
 }
 
 // EffectIdentInterface implementation
@@ -69,24 +69,19 @@ EffectType EffectFindClipping::GetType()
 
 bool EffectFindClipping::GetAutomationParameters(EffectAutomationParameters & parms)
 {
-   parms.Write(wxT("Start"), mStart);
-   parms.Write(wxT("Stop"), mStop);
+   parms.Write(KEY_Start, mStart);
+   parms.Write(KEY_Stop, mStop);
 
    return true;
 }
 
 bool EffectFindClipping::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   int start;
-   int stop;
+   ReadAndVerifyInt(Start);
+   ReadAndVerifyInt(Stop);
 
-   parms.Read(wxT("Start"), &start, DEF_Start);
-   parms.Read(wxT("Stop"), &stop, DEF_Stop);
-
-   if (start < MIN_Start || stop < MIN_Stop)
-   {
-      return false;
-   }
+   mStart = Start;
+   mStop = Stop;
 
    return true;
 }

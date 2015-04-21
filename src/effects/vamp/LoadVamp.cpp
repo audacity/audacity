@@ -81,12 +81,12 @@ wxString VampEffectsModule::GetSymbol()
 
 wxString VampEffectsModule::GetName()
 {
-   return wxTRANSLATE("Vamp Effects");
+   return XO("Vamp Effects");
 }
 
 wxString VampEffectsModule::GetVendor()
 {
-   return wxTRANSLATE("The Audacity Team");
+   return XO("The Audacity Team");
 }
 
 wxString VampEffectsModule::GetVersion()
@@ -97,7 +97,7 @@ wxString VampEffectsModule::GetVersion()
 
 wxString VampEffectsModule::GetDescription()
 {
-   return wxTRANSLATE("Provides Vamp Effects support to Audacity");
+   return XO("Provides Vamp Effects support to Audacity");
 }
 
 // ============================================================================

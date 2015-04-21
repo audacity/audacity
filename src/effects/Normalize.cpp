@@ -32,11 +32,11 @@
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name       Type     Key                                 Def      Min      Max   Scale
-Param( Level,     double,  wxTRANSLATE("Level"),               0.0,     -145.0,  0.0,  1  );
-Param( RemoveDC,  bool,    wxTRANSLATE("RemoveDcOffset"),      true,    false,   true, 1  );
-Param( ApplyGain, bool,    wxTRANSLATE("ApplyGain"),           true,    false,   true, 1  );
-Param( StereoInd, bool,    wxTRANSLATE("StereoIndependent"),   false,   false,   true, 1  );
+//     Name       Type     Key                        Def      Min      Max   Scale
+Param( Level,     double,  XO("Level"),               0.0,     -145.0,  0.0,  1  );
+Param( RemoveDC,  bool,    XO("RemoveDcOffset"),      true,    false,   true, 1  );
+Param( ApplyGain, bool,    XO("ApplyGain"),           true,    false,   true, 1  );
+Param( StereoInd, bool,    XO("StereoIndependent"),   false,   false,   true, 1  );
 
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
    EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)
@@ -64,7 +64,7 @@ wxString EffectNormalize::GetSymbol()
 
 wxString EffectNormalize::GetDescription()
 {
-   return wxTRANSLATE("Sets the peak amplitude of a one or more tracks");
+   return XO("Sets the peak amplitude of a one or more tracks");
 }
 
 // EffectIdentInterface implementation

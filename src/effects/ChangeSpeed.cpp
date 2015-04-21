@@ -57,15 +57,15 @@ static const wxChar *kVinylStrings[kNumVinyl] =
    wxT("45"),
    wxT("78"),
    /* i18n-hint: n/a is an English abbreviation meaning "not applicable". */
-   wxTRANSLATE("n/a"),
+   XO("n/a"),
 };
 
 // Soundtouch is not reasonable below -99% or above 3000%.
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name          Type     Key                        Def      Min      Max      Scale
-Param( Percentage,   double,  wxTRANSLATE("Percentage"), 0.0,     -99.0,   4900.0,  1  );
+//     Name          Type     Key               Def   Min      Max      Scale
+Param( Percentage,   double,  XO("Percentage"), 0.0,  -99.0,   4900.0,  1  );
 
 // We warp the slider to go up to 400%, but user can enter higher values
 static const double kSliderMax = 100.0;         // warped above zero to actually go up to 400%
@@ -111,7 +111,7 @@ wxString EffectChangeSpeed::GetSymbol()
 
 wxString EffectChangeSpeed::GetDescription()
 {
-   return wxTRANSLATE("Change the speed of a track, also changing its pitch");
+   return XO("Change the speed of a track, also changing its pitch");
 }
 
 // EffectIdentInterface implementation

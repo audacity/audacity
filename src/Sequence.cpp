@@ -30,6 +30,7 @@
 
 #include "Audacity.h"
 
+#include <algorithm>
 #include <float.h>
 #include <math.h>
 
@@ -1247,194 +1248,239 @@ bool Sequence::Set(samplePtr buffer, sampleFormat format,
    return ConsistencyCheck(wxT("Set"));
 }
 
-bool Sequence::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
-                              int len, const sampleCount *where,
-                              double samplesPerPixel)
+namespace {
+
+struct MinMaxSumsq
 {
-   sampleCount s0 = where[0];
-   sampleCount s1 = where[len];
-
-   // None of the samples asked for are in range. Abandon.
-   if (s0 >= mNumSamples)
-      return false;
-
-   int divisor;
-   if (samplesPerPixel >= 65536)
-      divisor = 65536;
-   else if (samplesPerPixel >= 256)
-      divisor = 256;
-   else
-      divisor = 1;
-
-   if (s1 > mNumSamples)
-      s1 = mNumSamples;
-
-   sampleCount srcX = s0;
-
-   unsigned int block0 = FindBlock(s0);
-
-   float *temp = new float[mMaxSamples];
-
-   int pixel = 0;
-   float theMin = 0.0;
-   float theMax = 0.0;
-   float sumsq = float(0.0);
-   unsigned int b = block0;
-   int jcount = 0;
-   int blockStatus = 1;
-
-   while (srcX < s1) {
-      // Get more samples
-      sampleCount num;
-
-      num = ((mBlock->Item(b)->f->GetLength() -
-              (srcX - mBlock->Item(b)->start)) + divisor - 1)
-         / divisor;
-
-      if (num > (s1 - srcX + divisor - 1) / divisor)
-         num = (s1 - srcX + divisor - 1) / divisor;
-
-      switch (divisor) {
-      default:
-      case 1:
-         Read((samplePtr)temp, floatSample, mBlock->Item(b),
-              srcX - mBlock->Item(b)->start, num);
-
-         blockStatus=b;
-         break;
-      case 256:
-         //check to see if summary data has been computed
-         if(mBlock->Item(b)->f->IsSummaryAvailable())
-         {
-            mBlock->Item(b)->f->Read256(temp,
-                 (srcX - mBlock->Item(b)->start) / divisor, num);
-            blockStatus=b;
-         }
-         else
-         {
-            //otherwise, mark the display as not yet computed
-            blockStatus=-1-b;
-         }
-         break;
-      case 65536:
-         //check to see if summary data has been computed
-         if(mBlock->Item(b)->f->IsSummaryAvailable())
-         {
-            mBlock->Item(b)->f->Read64K(temp,
-                 (srcX - mBlock->Item(b)->start) / divisor, num);
-            blockStatus=b;
-         }
-         else
-         {
-            blockStatus=-1-b;
-         }
-         break;
-      }
-
-      // Get min/max/rms of samples for each pixel we can
-      int x = 0;
-
-      if (b==block0) {
-         if (divisor > 1) {
-            theMin = temp[0];
-            theMax = temp[1];
-         }
-         else {
-            theMin = temp[0];
-            theMax = temp[0];
-         }
-         sumsq = float(0.0);
-         jcount = 0;
-      }
-
-      while (x < num) {
-
-         while (pixel < len &&
-                where[pixel] / divisor == srcX / divisor + x) {
-            if (pixel > 0) {
-               min[pixel - 1] = theMin;
-               max[pixel - 1] = theMax;
-               bl[pixel - 1] = blockStatus;//MC
-               if (jcount > 0)
-                  rms[pixel - 1] = (float)sqrt(sumsq / jcount);
-               else
-                  rms[pixel - 1] = 0.0f;
-            }
-            pixel++;
-            if (where[pixel] != where[pixel - 1]) {
-               theMin = FLT_MAX;
-               theMax = -FLT_MAX;
-               sumsq = float(0.0);
-               jcount = 0;
-            }
-         }
-
-         sampleCount stop = (where[pixel] - srcX) / divisor;
-         if (stop == x)
-            stop++;
-         if (stop > num)
-            stop = num;
-
+   MinMaxSumsq(const float *pv, int count, int divisor)
+   {
+      min = FLT_MAX, max = -FLT_MAX, sumsq = 0.0f;
+      while (count--) {
+         float v;
          switch (divisor) {
          default:
          case 1:
-            while (x < stop) {
-               if (temp[x] < theMin)
-                  theMin = temp[x];
-               if (temp[x] > theMax)
-                  theMax = temp[x];
-               sumsq += ((float)temp[x]) * ((float)temp[x]);
-               x++;
-               jcount++;
-            }
+            // array holds samples
+            v = *pv++;
+            if (v < min)
+               min = v;
+            if (v > max)
+               max = v;
+            sumsq += v * v;
             break;
          case 256:
          case 65536:
-            while (x < stop) {
-               if (temp[3 * x] < theMin)
-                  theMin = temp[3 * x];
-               if (temp[3 * x + 1] > theMax)
-                  theMax = temp[3 * x + 1];
-               sumsq += ((float)temp[3*x+2]) * ((float)temp[3*x+2]);
-               x++;
-               jcount++;
-            }
-
+            // array holds triples of min, max, and rms values
+            v = *pv++;
+            if (v < min)
+               min = v;
+            v = *pv++;
+            if (v > max)
+               max = v;
+            v = *pv++;
+            sumsq += v * v;
             break;
          }
       }
+   }
 
-      b++;
+   float min;
+   float max;
+   float sumsq;
+};
 
-      srcX += num * divisor;
+}
 
-      if (b >= mBlock->GetCount())
+bool Sequence::GetWaveDisplay(float *min, float *max, float *rms, int* bl,
+                              int len, const sampleCount *where)
+{
+   const sampleCount s0 = std::max(sampleCount(0), where[0]);
+   if (s0 >= mNumSamples)
+      // None of the samples asked for are in range. Abandon.
+      return false;
+
+   // In case where[len - 1] == where[len], raise the limit by one,
+   // so we load at least one pixel for column len - 1
+   // ... unless the mNumSamples ceiling applies, and then there are other defenses
+   const sampleCount s1 =
+      std::min(mNumSamples, std::max(1 + where[len - 1], where[len]));
+   float *temp = new float[mMaxSamples];
+
+   int pixel = 0;
+
+   sampleCount srcX = s0;
+   sampleCount nextSrcX = 0;
+   int lastRmsDenom = 0;
+   int lastDivisor = 0;
+   int whereNow = std::min(s1 - 1, where[0]);
+   int whereNext = 0;
+   // Loop over block files, opening and reading and closing each
+   // not more than once
+   unsigned nBlocks = mBlock->GetCount();
+   const unsigned int block0 = FindBlock(s0);
+   for (unsigned int b = block0; b < nBlocks; ++b) {
+      if (b > block0)
+         srcX = nextSrcX;
+      if (srcX >= s1)
          break;
 
-      srcX = mBlock->Item(b)->start;
+      // Find the range of sample values for this block that
+      // are in the display.
+      SeqBlock *const pSeqBlock = mBlock->Item(b);
+      const sampleCount start = pSeqBlock->start;
+      nextSrcX = std::min(s1, start + pSeqBlock->f->GetLength());
 
-   }
+      // The column for pixel p covers samples from
+      // where[p] up to but excluding where[p + 1].
 
-   // Make sure that min[pixel - 1] doesn't segfault
-   if (pixel <= 0)
-      pixel = 1;
+      // Find the range of pixels covered by the current block file
+      // (Their starting samples covered by it, to be exact)
+      int nextPixel;
+      if (nextSrcX >= s1)
+         // last pass
+         nextPixel = len;
+      else {
+         nextPixel = pixel;
+         // Taking min with s1 - 1, here and elsewhere, is another defense
+         // to be sure the last pixel column gets at least one sample
+         while (nextPixel < len &&
+                (whereNext = std::min(s1 - 1, where[nextPixel])) < nextSrcX)
+            ++nextPixel;
+      }
+      if (nextPixel == pixel)
+         // The entire block's samples fall within one pixel column.
+         // Either it's a rare odd block at the end, or else,
+         // we must be really zoomed out!
+         // Omit the entire block's contents from min/max/rms
+         // calculation, which is not correct, but correctness might not
+         // be worth the compute time if this happens every pixel
+         // column. -- PRL
+         continue;
+      if (nextPixel == len)
+         whereNext = s1;
 
-   if (pixel == 0)
-      pixel++;
+      // Decide the summary level
+      const double samplesPerPixel =
+         double(whereNext - whereNow) / (nextPixel - pixel);
+      const int divisor =
+           (samplesPerPixel >= 65536) ? 65536
+         : (samplesPerPixel >= 256) ? 256
+         : 1;
 
-   if (pixel == 0)
-      pixel++;
+      int blockStatus = b;
 
-   while (pixel <= len) {
-      min[pixel - 1] = theMin;
-      max[pixel - 1] = theMax;
-      bl[pixel - 1] = blockStatus;//mchinen
-      if (jcount > 0)
-         rms[pixel - 1] = (float)sqrt(sumsq / jcount);
-      else
-         rms[pixel - 1] = 0.0f;
-      pixel++;
-   }
+      // How many samples or triples are needed?
+      const sampleCount startPosition =
+         std::max(sampleCount(0), (srcX - start) / divisor);
+      const sampleCount inclusiveEndPosition =
+         std::min((mMaxSamples / divisor) - 1, (nextSrcX - 1 - start) / divisor);
+      const sampleCount num = 1 + inclusiveEndPosition - startPosition;
+      if (num <= 0) {
+         // What?  There was a zero length block file?
+         wxASSERT(false);
+         // Do some defense against this case anyway
+         while (pixel < nextPixel) {
+            min[pixel] = max[pixel] = rms[pixel] = 0;
+            bl[pixel] = blockStatus;//MC
+            ++pixel;
+         }
+         continue;
+      }
+
+      // Read from the block file or its summary
+      switch (divisor) {
+      default:
+      case 1:
+         // Read samples
+         Read((samplePtr)temp, floatSample, pSeqBlock, startPosition, num);
+         break;
+      case 256:
+         // Read triples
+         //check to see if summary data has been computed
+         if (pSeqBlock->f->IsSummaryAvailable())
+            pSeqBlock->f->Read256(temp, startPosition, num);
+         else
+            //otherwise, mark the display as not yet computed
+            blockStatus = -1 - b;
+         break;
+      case 65536:
+         // Read triples
+         //check to see if summary data has been computed
+         if (pSeqBlock->f->IsSummaryAvailable())
+             pSeqBlock->f->Read64K(temp, startPosition, num);
+         else
+            //otherwise, mark the display as not yet computed
+            blockStatus = -1 - b;
+         break;
+      }
+      
+      sampleCount filePosition = startPosition;
+
+      // The previous pixel column might straddle blocks.
+      // If so, impute some of the data to it.
+      if (b > block0 && pixel > 0) {
+         sampleCount midPosition = (whereNow - start) / divisor;
+         int diff(midPosition - filePosition);
+         if (diff > 0) {
+            MinMaxSumsq values(temp, diff, divisor);
+            const int lastPixel = pixel - 1;
+            float &lastMin = min[lastPixel];
+            lastMin = std::min(lastMin, values.min);
+            float &lastMax = max[lastPixel];
+            lastMax = std::max(lastMax, values.max);
+            float &lastRms = rms[lastPixel];
+            int lastNumSamples = lastRmsDenom * lastDivisor;
+            lastRms = sqrt(
+               (lastRms * lastRms * lastNumSamples + values.sumsq * divisor) /
+               (lastNumSamples + diff * divisor)
+            );
+
+            filePosition = midPosition;
+         }
+      }
+
+      // Loop over file positions
+      int rmsDenom = 0;
+      for (; filePosition <= inclusiveEndPosition;) {
+         // Find range of pixel columns for this file position
+         // (normally just one, but maybe more when zoomed very close)
+         // and the range of positions for those columns
+         // (normally one or more, for that one column)
+         int pixelX = pixel + 1;
+         sampleCount positionX = 0;
+         while (pixelX < nextPixel &&
+            filePosition ==
+                (positionX = (std::min(s1 - 1, where[pixelX]) - start) / divisor)
+         )
+            ++pixelX;
+         if (pixelX >= nextPixel)
+            positionX = 1 + inclusiveEndPosition;
+
+         // Find results to assign
+         rmsDenom = (positionX - filePosition);
+         wxASSERT(rmsDenom > 0);
+         const float *const pv =
+            temp + (filePosition - startPosition) * (divisor == 1 ? 1 : 3);
+         MinMaxSumsq values(pv, rmsDenom, divisor);
+
+         // Assign results
+         std::fill(&min[pixel], &min[pixelX], values.min);
+         std::fill(&max[pixel], &max[pixelX], values.max);
+         std::fill(&bl[pixel], &bl[pixelX], blockStatus);
+         std::fill(&rms[pixel], &rms[pixelX], (float)sqrt(values.sumsq / rmsDenom));
+
+         pixel = pixelX;
+         filePosition = positionX;
+      }
+
+      wxASSERT(pixel == nextPixel);
+      whereNow = whereNext;
+      pixel = nextPixel;
+      lastDivisor = divisor;
+      lastRmsDenom = rmsDenom;
+   } // for each block file
+
+   wxASSERT(pixel == len);
 
    delete[] temp;
 

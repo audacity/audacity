@@ -21,7 +21,6 @@
 
 EffectSilence::EffectSilence()
 {
-   mDuration = GetDuration();
 }
 
 EffectSilence::~EffectSilence()
@@ -37,7 +36,7 @@ wxString EffectSilence::GetSymbol()
 
 wxString EffectSilence::GetDescription()
 {
-   return wxTRANSLATE("Creates audio of zero amplitude");
+   return XO("Creates audio of zero amplitude");
 }
 
 // EffectIdentInterface implementation
@@ -55,22 +54,22 @@ void EffectSilence::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay();
       {
+         bool isSelection;
+         double duration = GetDuration(&isSelection);
+
          S.AddPrompt(_("Duration:"));
-         if (S.GetMode() == eIsCreating)
-         {
-            mDurationT = new
-               NumericTextCtrl(NumericConverter::TIME,
-                               S.GetParent(),
-                               wxID_ANY,
-                               (mT1 > mT0) ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                               mDuration,
-                               mProjectRate,
-                               wxDefaultPosition,
-                               wxDefaultSize,
-                               true);
-            mDurationT->SetName(_("Duration"));
-            mDurationT->EnableMenu();
-         }
+         mDurationT = new
+            NumericTextCtrl(NumericConverter::TIME,
+                              S.GetParent(),
+                              wxID_ANY,
+                              isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
+                              duration,
+                              mProjectRate,
+                              wxDefaultPosition,
+                              wxDefaultSize,
+                              true);
+         mDurationT->SetName(_("Duration"));
+         mDurationT->EnableMenu();
          S.AddWindow(mDurationT, wxALIGN_CENTER | wxALL);
       }
       S.EndHorizontalLay();
@@ -82,14 +81,14 @@ void EffectSilence::PopulateOrExchange(ShuttleGui & S)
 
 bool EffectSilence::TransferDataToWindow()
 {
-   mDurationT->SetValue(mDuration);
+   mDurationT->SetValue(GetDuration());
 
    return true;
 }
 
 bool EffectSilence::TransferDataFromWindow()
 {
-   mDuration = mDurationT->GetValue();
+   SetDuration(mDurationT->GetValue());
 
    return true;
 }
@@ -98,7 +97,7 @@ bool EffectSilence::GenerateTrack(WaveTrack *tmp,
                                   const WaveTrack & WXUNUSED(track),
                                   int WXUNUSED(ntrack))
 {
-   bool bResult = tmp->InsertSilence(0.0, mDuration);
+   bool bResult = tmp->InsertSilence(0.0, GetDuration());
    wxASSERT(bResult);
    return bResult;
 }

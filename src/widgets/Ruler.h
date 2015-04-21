@@ -18,11 +18,11 @@
 #include <wx/window.h>
 #include "../Envelope.h"
 #include "../Experimental.h"
-#include "../Snap.h"
 
 struct ViewInfo;
 class AudacityProject;
 class TimeTrack;
+class SnapManager;
 
 class AUDACITY_DLL_API Ruler {
  public:
@@ -327,6 +327,7 @@ private:
    //
    void ShowMenu(const wxPoint & pos);
    void DragLoopSelection();
+   void OnToggleQuickPlay(wxCommandEvent &evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
@@ -334,6 +335,7 @@ private:
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
+   bool mQuickPlayEnabled;
 
 
    enum MouseEventState {

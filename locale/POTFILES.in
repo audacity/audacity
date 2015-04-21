@@ -23,6 +23,7 @@ src/AudacityLogger.cpp
 src/AudacityLogger.h
 src/AudioIO.cpp
 src/AudioIO.h
+src/AudioIOListener.h
 src/AutoRecovery.cpp
 src/AutoRecovery.h
 src/BatchCommandDialog.cpp
@@ -41,8 +42,12 @@ src/CrossFade.cpp
 src/CrossFade.h
 src/Dependencies.cpp
 src/Dependencies.h
+src/DeviceChange.cpp
+src/DeviceChange.h
 src/DeviceManager.cpp
 src/DeviceManager.h
+src/Diags.cpp
+src/Diags.h
 src/DirManager.cpp
 src/DirManager.h
 src/Dither.cpp
@@ -121,12 +126,14 @@ src/RealFFTf48x.cpp
 src/RealFFTf48x.h
 src/Resample.cpp
 src/Resample.h
+src/RevisionIdent.h
 src/RingBuffer.cpp
 src/RingBuffer.h
 src/SampleFormat.cpp
 src/SampleFormat.h
 src/Screenshot.cpp
 src/Screenshot.h
+src/SelectedRegion.cpp
 src/SelectedRegion.h
 src/Sequence.cpp
 src/Sequence.h
@@ -168,6 +175,7 @@ src/TrackPanelAx.h
 src/TrackPanelListener.h
 src/UndoManager.cpp
 src/UndoManager.h
+src/ViewInfo.cpp
 src/ViewInfo.h
 src/VoiceKey.cpp
 src/VoiceKey.h
@@ -343,6 +351,7 @@ src/effects/VST/VSTEffect.h
 src/effects/VST/aeffectx.h
 src/effects/Wahwah.cpp
 src/effects/Wahwah.h
+src/effects/audiounits/AudioUnitCocoaHelper.h
 src/effects/audiounits/AudioUnitEffect.cpp
 src/effects/audiounits/AudioUnitEffect.h
 src/effects/ladspa/LadspaEffect.cpp

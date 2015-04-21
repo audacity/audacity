@@ -740,6 +740,10 @@ wxScrolledWindow * ShuttleGuiBase::StartScroller(int iStyle)
       Style( wxSUNKEN_BORDER ) );
    pScroller->SetScrollRate( 20,20 );
 
+   // This fools NVDA into not saying "Panel" when the dialog gets focus
+   pScroller->SetName(wxT("\a"));
+   pScroller->SetLabel(wxT("\a"));
+
    mpWind->SetBackgroundColour(
       iStyle==0
       ? wxColour( 245,244,240) :

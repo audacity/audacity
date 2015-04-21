@@ -39,13 +39,15 @@ enum
    ID_Feedback
 };
 
-//     Name       Type     Key                        Def   Min   Max         Scale
-Param( Stages,    int,     wxTRANSLATE("Stages"),     2,    2,    NUM_STAGES, 1  );
-Param( DryWet,    int,     wxTRANSLATE("DryWet"),     128,  0,    255,        1  );
-Param( Freq,      double,  wxTRANSLATE("Freq"),       0.4,  0.1,  4.0,        10 );
-Param( Phase,     double,  wxTRANSLATE("Phase"),      0.0,  0.0,  359.0,      1  );
-Param( Depth,     int,     wxTRANSLATE("Depth"),      100,  0,    255,        1  );
-Param( Feedback,  int,     wxTRANSLATE("Feedback"),   0,    -100, 100,        1  );
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name       Type     Key               Def   Min   Max         Scale
+Param( Stages,    int,     XO("Stages"),     2,    2,    NUM_STAGES, 1  );
+Param( DryWet,    int,     XO("DryWet"),     128,  0,    255,        1  );
+Param( Freq,      double,  XO("Freq"),       0.4,  0.1,  4.0,        10 );
+Param( Phase,     double,  XO("Phase"),      0.0,  0.0,  359.0,      1  );
+Param( Depth,     int,     XO("Depth"),      100,  0,    255,        1  );
+Param( Feedback,  int,     XO("Feedback"),   0,    -100, 100,        1  );
 
 //
 #define phaserlfoshape 4.0
@@ -95,7 +97,7 @@ wxString EffectPhaser::GetSymbol()
 
 wxString EffectPhaser::GetDescription()
 {
-   return wxTRANSLATE("Combines phase-shifted signals with the original signal");
+   return XO("Combines phase-shifted signals with the original signal");
 }
 
 // EffectIdentInterface implementation

@@ -36,6 +36,7 @@ simplifies construction of menu items.
 #include <limits>
 #include <math.h>
 
+
 #include <wx/defs.h>
 #include <wx/docview.h>
 #include <wx/msgdlg.h>
@@ -116,6 +117,10 @@ simplifies construction of menu items.
 
 #include "CaptureEvents.h"
 #include "Snap.h"
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+#include <wx/debugrpt.h>
+#endif
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
@@ -1061,6 +1066,10 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->AddItem(wxT("Log"), _("Show &Log..."), FN(OnShowLog));
 
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+   c->AddItem(wxT("CrashReport"), _("&Generate Support Data..."), FN(OnCrashReport));
+#endif
+
 #ifndef __WXMAC__
    c->AddSeparator();
 #endif
@@ -1732,9 +1741,11 @@ wxUint32 AudacityProject::GetUpdateFlags()
 
    flags |= GetFocusedFrame();
 
+   double start, end;
+   GetPlayRegion(&start, &end);
    if (IsPlayRegionLocked())
       flags |= PlayRegionLockedFlag;
-   else
+   else if (start != end)
       flags |= PlayRegionNotLockedFlag;
 
    if (flags & AudioIONotBusyFlag) {
@@ -4933,6 +4944,7 @@ void AudacityProject::OnHistory()
       mHistoryWindow = new HistoryWindow(this, &mUndoManager);
    mHistoryWindow->Show();
    mHistoryWindow->Raise();
+   mHistoryWindow->UpdateDisplay();
 }
 
 void AudacityProject::OnKaraoke()
@@ -6175,6 +6187,18 @@ void AudacityProject::OnBenchmark()
    ::RunBenchmark(this);
 }
 
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+void AudacityProject::OnCrashReport()
+{
+// Change to "1" to test a real crash
+#if 0
+   char *p = 0;
+   *p = 1234;
+#endif
+   wxGetApp().GenerateCrashReport(wxDebugReport::Context_Current);
+}
+#endif
+
 void AudacityProject::OnScreenshot()
 {
    ::OpenScreenshotTools();
@@ -6183,11 +6207,39 @@ void AudacityProject::OnScreenshot()
 void AudacityProject::OnAudioDeviceInfo()
 {
    wxString info = gAudioIO->GetDeviceInfo();
-   HelpSystem::ShowInfoDialog( this,
-      _("Audio Device Info"),
-      wxT(""),
-      info,
-      350,450);
+
+   wxDialog dlg(this, wxID_ANY, wxString(_("Audio Device Info")));
+   ShuttleGui S(&dlg, eIsCreating);
+
+   wxTextCtrl *text;
+   S.StartVerticalLay();
+   {
+      S.SetStyle(wxTE_MULTILINE | wxTE_READONLY);
+      text = S.Id(wxID_STATIC).AddTextWindow(info);
+      S.AddStandardButtons(eOkButton | eCancelButton);
+   }
+   S.EndVerticalLay();
+
+   dlg.FindWindowById(wxID_OK)->SetLabel(_("&Save"));
+   dlg.SetSize(350, 450);
+
+   if (dlg.ShowModal() == wxID_OK)
+   {
+      wxString fName = FileSelector(_("Save Device Info"),
+                                    wxEmptyString,
+                                    wxT("deviceinfo.txt"),
+                                    wxT("txt"),
+                                    wxT("*.txt"),
+                                    wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+                                    this);
+      if (!fName.IsEmpty())
+      {
+         if (!text->SaveFile(fName))
+         {
+            wxMessageBox(_("Unable to save device info"), _("Save Device Info"));
+         }
+      }
+   }
 }
 
 void AudacityProject::OnSeparator()
@@ -6262,8 +6314,16 @@ void AudacityProject::OnUnMuteAllTracks()
 
 void AudacityProject::OnLockPlayRegion()
 {
-   mLockPlayRegion = true;
-   mRuler->Refresh(false);
+   double start, end;
+   GetPlayRegion(&start, &end);
+   if (start >= mTracks->GetEndTime()) {
+       wxMessageBox(_("Cannot lock region beyond\nend of project."),
+                    _("Error"));
+   }
+   else {
+      mLockPlayRegion = true;
+      mRuler->Refresh(false);
+   }
 }
 
 void AudacityProject::OnUnlockPlayRegion()

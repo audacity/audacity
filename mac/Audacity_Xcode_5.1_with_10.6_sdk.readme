@@ -1,0 +1,20 @@
+At this time, the newest SDK version that Audacity can build with
+is 10.6.  To build Audacity using Xcode 5.1 or newer, you need
+to extract the 10.6 SDK from an earlier version of Xcode.
+
+In the instructions below, Xcode 4.3.3 (for the 10.6 SDK) and
+Xcode 5.1.1 will be used.  Xcode 6.1.1 and 6.3 have been verified
+to work as well.
+
+1)  Download Xcode 5.1.1 or greater and install it to /Applications
+2)  Download Xcode 4.3.3 and open it in Finder
+3)  Right click the "Xcode.app" bundle and select "Show Package Contents"
+4)  Navigate down the directories to get to:
+
+    Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+
+5)  Copy the MacOSX10.6.sdk folder to:
+
+    /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+
+That's it.  You can now build using the Xcode project in this directory.

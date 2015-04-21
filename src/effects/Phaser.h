@@ -27,7 +27,7 @@
 
 #define NUM_STAGES 24
 
-#define PHASER_PLUGIN_SYMBOL wxTRANSLATE("Phaser")
+#define PHASER_PLUGIN_SYMBOL XO("Phaser")
 
 class EffectPhaser : public Effect
 {

@@ -15,8 +15,8 @@
 
 #include "Effect.h"
 
-#define FADEIN_PLUGIN_SYMBOL wxTRANSLATE("Fade In")
-#define FADEOUT_PLUGIN_SYMBOL wxTRANSLATE("Fade Out")
+#define FADEIN_PLUGIN_SYMBOL XO("Fade In")
+#define FADEOUT_PLUGIN_SYMBOL XO("Fade Out")
 
 class EffectFade : public Effect
 {

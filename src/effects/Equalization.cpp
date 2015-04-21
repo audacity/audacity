@@ -143,9 +143,9 @@ enum kInterpolations
 static const wxString kInterpStrings[kNumInterpolations] =
 {
    /* i18n-hint: Technical term for a kind of curve.*/
-   wxTRANSLATE("B-spline"),
-   wxTRANSLATE("Cosine"),
-   wxTRANSLATE("Cubic")
+   XO("B-spline"),
+   XO("Cosine"),
+   XO("Cubic")
 };
 
 static const double kThirdOct[] =
@@ -157,15 +157,15 @@ static const double kThirdOct[] =
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name          Type        Key                              Def      Min      Max      Scale
-Param( FilterLength, int,     wxTRANSLATE("FilterLength"),        4001,    21,      8191,    0      );
-Param( CurveName,    wxChar*, wxTRANSLATE("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
-Param( InterpLin,    bool,    wxTRANSLATE("InterpolateLin"),      false,   false,   true,    false  );
-Param( InterpMeth,   int,     wxTRANSLATE("InterpolationMethod"), 0,       0,       0,       0      );
-Param( DrawMode,     bool,    wxT(""),                            true,    false,   true,    false  );
-Param( DrawGrid,     bool,    wxT(""),                            true,    false,   true,    false  );
-Param( dBMin,        float,   wxT(""),                            -30.0,   -120.0,  -10.0,   0      );
-Param( dBMax,        float,   wxT(""),                            30.0,    0.0,     60.0,    0      );
+//     Name          Type        Key                     Def      Min      Max      Scale
+Param( FilterLength, int,     XO("FilterLength"),        4001,    21,      8191,    0      );
+Param( CurveName,    wxChar*, XO("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
+Param( InterpLin,    bool,    XO("InterpolateLin"),      false,   false,   true,    false  );
+Param( InterpMeth,   int,     XO("InterpolationMethod"), 0,       0,       0,       0      );
+Param( DrawMode,     bool,    wxT(""),                   true,    false,   true,    false  );
+Param( DrawGrid,     bool,    wxT(""),                   true,    false,   true,    false  );
+Param( dBMin,        float,   wxT(""),                   -30.0,   -120.0,  -10.0,   0      );
+Param( dBMax,        float,   wxT(""),                   30.0,    0.0,     60.0,    0      );
 
 #include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY( EQPointArray );
@@ -323,7 +323,7 @@ wxString EffectEqualization::GetSymbol()
 
 wxString EffectEqualization::GetDescription()
 {
-   return wxTRANSLATE("Adjusts the volume levels of particular frequencies");
+   return XO("Adjusts the volume levels of particular frequencies");
 }
 
 // EffectIdentInterface implementation

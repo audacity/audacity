@@ -84,6 +84,7 @@ struct AudioIOStartStreamOptions
       , playLooped(false)
       , cutPreviewGapStart(0.0)
       , cutPreviewGapLen(0.0)
+      , pStartTime(NULL)
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
       , scrubDelay(0.0)
       , maxScrubSpeed(1.0)
@@ -97,6 +98,7 @@ struct AudioIOStartStreamOptions
    bool playLooped;
    double cutPreviewGapStart;
    double cutPreviewGapLen;
+   double * pStartTime;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    // Positive value indicates that scrubbing will happen

@@ -11,7 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 17072E890988BD58008541CC /* Build configuration list for PBXAggregateTarget "Configure" */;
 			buildPhases = (
-				17072E8C0988BD85008541CC /* ShellScript */,
+				17072E8C0988BD85008541CC /* Run Script */,
 			);
 			dependencies = (
 			);
@@ -937,7 +937,6 @@
 		28DA07390E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DA07380E4F5CEC003933C5 /* ExportFFmpegDialogs.cpp */; };
 		28DABFBE0FF19DB100AC7848 /* RealFFTf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DABFBC0FF19DB100AC7848 /* RealFFTf.cpp */; };
 		28DB34790FDC2C5D0011F589 /* ResponseQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DB34780FDC2C5D0011F589 /* ResponseQueue.cpp */; };
-		28DDE3A21AE3771100C784FE /* ViewInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DDE3A11AE3771100C784FE /* ViewInfo.cpp */; };
 		28DE72AE10388583007E18EC /* PreferenceCommands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72AA10388583007E18EC /* PreferenceCommands.cpp */; };
 		28DE72AF10388583007E18EC /* SetTrackInfoCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72AC10388583007E18EC /* SetTrackInfoCommand.cpp */; };
 		28DE72B2103885AA007E18EC /* TimeWarper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28DE72B0103885AA007E18EC /* TimeWarper.cpp */; };
@@ -2699,7 +2698,6 @@
 		28DABFBD0FF19DB100AC7848 /* RealFFTf.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = RealFFTf.h; sourceTree = "<group>"; tabWidth = 3; };
 		28DB34770FDC2C5D0011F589 /* ResponseQueue.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = ResponseQueue.h; sourceTree = "<group>"; tabWidth = 3; };
 		28DB34780FDC2C5D0011F589 /* ResponseQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ResponseQueue.cpp; sourceTree = "<group>"; tabWidth = 3; };
-		28DDE3A11AE3771100C784FE /* ViewInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ViewInfo.cpp; sourceTree = "<group>"; };
 		28DE72AA10388583007E18EC /* PreferenceCommands.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = PreferenceCommands.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		28DE72AB10388583007E18EC /* PreferenceCommands.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = PreferenceCommands.h; sourceTree = "<group>"; tabWidth = 3; };
 		28DE72AC10388583007E18EC /* SetTrackInfoCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SetTrackInfoCommand.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -4004,7 +4002,6 @@
 				2803C8B619F35AA000278526 /* TrackPanelListener.h */,
 				1790B0F209883BFD008A330A /* UndoManager.cpp */,
 				1790B0F309883BFD008A330A /* UndoManager.h */,
-				28DDE3A11AE3771100C784FE /* ViewInfo.cpp */,
 				1790B0F609883BFD008A330A /* ViewInfo.h */,
 				1790B0F709883BFD008A330A /* VoiceKey.cpp */,
 				1790B0F809883BFD008A330A /* VoiceKey.h */,
@@ -6690,6 +6687,8 @@
 /* Begin PBXProject section */
 		1790ABE309883346008A330A /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 1790ABE409883346008A330A /* Build configuration list for PBXProject "Audacity" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -6779,7 +6778,7 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		17072E8C0988BD85008541CC /* ShellScript */ = {
+		17072E8C0988BD85008541CC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -6787,12 +6786,13 @@
 			inputPaths = (
 				"$(TOPLEVEL)/Makefile.in",
 			);
+			name = "Run Script";
 			outputPaths = (
 				"$(TOPLEVEL)/Makefile",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp-4.0\nexport CC=gcc-4.0\nexport CXX=g++-4.0\nexport CPPFLAGS=\"-isysroot ${SDKROOT}\"\nexport CFLAGS=\"-isysroot ${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot ${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Libsoxr's endianness detection is a bit unfriendly to universal binary\n# builds. We need to disable SIMD since we can't build UBs with it enabled.\n#\nFILE=lib-src/libsoxr/soxr-config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#if defined(__BIG_ENDIAN__)\n#undef WORDS_BIGENDIAN\n#define WORDS_BIGENDIAN 1\n#endif\n#undef HAVE_SIMD\n#define HAVE_SIMD 0\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
+			shellScript = "#\n# Make building on Lion or higher easier\n#\nexport CPP=cpp\nexport CC=gcc\nexport CXX=g++\nexport CPPFLAGS=\"-isysroot${SDKROOT}\"\nexport CFLAGS=\"-isysroot${SDKROOT}\"\nexport CXXFLAGS=\"-isysroot${SDKROOT}\"\n\nif [ -z \"$WX_CONFIG\" ]\nthen\n   echo \"WX_CONFIG environment variable not set...aborting\"\n   exit 1\nfi\n\nif [ ! -z \"${DYLD_LIBRARY_PATH}\" ]\nthen\n\techo \"warning: -----\"\n\techo \"warning: Warning:\"\n\techo \"warning: -----\"\n\techo \"warning: You have DYLD_LIBRARY_PATH set to '${DYLD_LIBRARY_PATH}'\"\n\techo \"warning: When you run or debug Audacity it will be unset so that libraries loaded by Audacity (like Lame or FFmpeg) will be searched for in a similar manner as in released versions.\"\n\techo \"warning: If this is a problem, copy the DYLD_LIBRARY_PATH value to DYLD_FALLBACK_LIBRARY_PATH before starting Xcode.\"\n\techo \"warning: -----\"\nfi\n\n#\n# Here we create empty xcconfig files if they do not exist.  Otherwise,\n# the build will fail.\n#\nconfigs='Debug_Shared Debug_Static Release_Shared Release_Static'\nfor config in $configs\ndo\n\t[ ! -f $TOPLEVEL/mac/$config.xcconfig ] && touch $TOPLEVEL/mac/$config.xcconfig\ndone\n\n#\n# Get to a known location\n#\ncd $TOPLEVEL\n\n#\n# Libsndfile seems to have some date/time issues, so placate him.\n#\n# Run aclocal to make libsndfile happy\n#\n#touch lib-src/libsndfile/configure.ac\n\n#\n# Configure the world\nsh configure --enable-static=$CONFIG_STATIC \\\n             --enable-unicode=$CONFIG_UNICODE \\\n             --enable-debug=$CONFIG_DEBUG \\\n             --with-lib-preference=local,system \\\n             --with-wx-version=$WX_VER \\\n             $CONFIG_FLAGS || exit 1\n\n#\n# Libsndfile's endianness detection is a bit unfriendly to universal binary\n# builds, so we coerce it into working our way.\n#\nFILE=lib-src/libsndfile/src/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#undef CPU_IS_BIG_ENDIAN\n#undef CPU_IS_LITTLE_ENDIAN\n#if defined(__BIG_ENDIAN__)\n#define CPU_IS_BIG_ENDIAN 1\n#define CPU_IS_LITTLE_ENDIAN 0\n#else\n#define CPU_IS_BIG_ENDIAN 0\n#define CPU_IS_LITTLE_ENDIAN 1\n#endif\nEOF\n\n#\n# Ditto for libflac.\n#\nFILE=lib-src/libflac/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And libmad.\n#\nFILE=lib-src/libmad/config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef WORDS_BIGENDIAN\n#undef WORDS_BIGENDIAN\n#endif\n#if defined(__BIG_ENDIAN__)\n#define WORDS_BIGENDIAN 1\n#endif\nEOF\n\n#\n# And expat.\n#\nFILE=lib-src/expat/expat_config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#ifdef BYTEORDER\n#undef BYTEORDER\n#endif\n#if defined(__BIG_ENDIAN__)\n#define BYTEORDER 4321\n#else\n#define BYTEORDER 1234\n#endif\nEOF\n\n#\n# Libsoxr's endianness detection is a bit unfriendly to universal binary\n# builds. We need to disable SIMD since we can't build UBs with it enabled.\n#\nFILE=lib-src/libsoxr/soxr-config.h\ngrep -q '__BIG_ENDIAN__' $FILE || cat <<EOF >>$FILE\n#if defined(__BIG_ENDIAN__)\n#undef WORDS_BIGENDIAN\n#define WORDS_BIGENDIAN 1\n#endif\n#undef HAVE_SIMD\n#define HAVE_SIMD 0\nEOF\n\n#\n# Generate the header file for preprocessing the Info.plist\n#\ngcc -E -dM src/Audacity.h | grep AUDACITY >mac/Info.plist.h\necho >>mac/Info.plist.h '#define AUDACITY_EXECUTABLE Audacity'\n\nexit 0\n";
 		};
 		17073FEB0988E6C9008541CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7655,7 +7655,6 @@
 				28D000A51A32920C00367B21 /* DeviceChange.cpp in Sources */,
 				28D8425C1AD8D69D00551353 /* SelectedRegion.cpp in Sources */,
 				2888A1631AE25F9A00E06FDC /* Diags.cpp in Sources */,
-				28DDE3A21AE3771100C784FE /* ViewInfo.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8089,7 +8088,6 @@
 			baseConfigurationReference = 2812A5B90DF63FF000576305 /* Debug_Static.xcconfig */;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = "-fcheck-new";
 				PRODUCT_NAME = soundtouch;
 			};
 			name = "Debug Static";
@@ -8162,6 +8160,7 @@
 		17CAEBB6098C9B8E00337968 /* Debug Static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CONFIG_DEBUG = yes;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = yes;
@@ -8171,13 +8170,12 @@
 				FFMPEG_PREFIX = /usr/local;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = 4.0;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
@@ -8427,6 +8425,7 @@
 		288052CA0DEA74F100671EA4 /* Debug Shared */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CONFIG_DEBUG = yes;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
@@ -8438,13 +8437,12 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = 4.0;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
@@ -8683,7 +8681,6 @@
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = "-fcheck-new";
 				PRODUCT_NAME = soundtouch;
 			};
 			name = "Debug Shared";
@@ -8732,10 +8729,7 @@
 		288052DF0DEA74FD00671EA4 /* Release Shared */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
@@ -8747,13 +8741,12 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = 4.0;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
@@ -8994,7 +8987,6 @@
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = "-fcheck-new";
 				PRODUCT_NAME = soundtouch;
 			};
 			name = "Release Shared";
@@ -9253,7 +9245,6 @@
 			baseConfigurationReference = 2812A5BD0DF6400E00576305 /* Release_Static.xcconfig */;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_CONFIG_H;
-				OTHER_CFLAGS = "-fcheck-new";
 				PRODUCT_NAME = soundtouch;
 			};
 			name = "Release Static";
@@ -9328,10 +9319,7 @@
 		28E5DA3A0AC4CBA200E7F64C /* Release Static */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CONFIG_DEBUG = no;
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = yes;
@@ -9341,13 +9329,12 @@
 				FFMPEG_PREFIX = /usr/local;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = 4.0;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREFIX_HEADER = Info.plist.h;
 				INFOPLIST_PREPROCESS = YES;
 				KEEP_PRIVATE_EXTERNS = YES;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = macosx10.6;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";

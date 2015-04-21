@@ -500,8 +500,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                                         &mWaveCache->rms[invStart],
                                         &mWaveCache->bl[invStart],
                                         invEnd-invStart,
-                                        &mWaveCache->where[invStart],
-                                        mRate / pixelsPerSecond);
+                                        &mWaveCache->where[invStart]);
          //after check number of ODPixels
          for(int j=invStart;j<invEnd;j++)
          {
@@ -605,8 +604,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                                         &oldCache->rms[invStart],
                                         &oldCache->bl[invStart],
                                         invEnd-invStart,
-                                        &oldCache->where[invStart],
-                                        mRate / pixelsPerSecond);
+                                        &oldCache->where[invStart]);
       }
       oldCache->ClearInvalidRegions();
 
@@ -717,8 +715,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                                         &mWaveCache->rms[p0],
                                         &mWaveCache->bl[p0],
                                         p1-p0,
-                                        &mWaveCache->where[p0],
-                                        mRate / pixelsPerSecond))
+                                        &mWaveCache->where[p0]))
          {
             isLoadingOD=false;
             mWaveCacheMutex.Unlock();

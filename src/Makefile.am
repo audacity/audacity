@@ -233,6 +233,7 @@ audacity_SOURCES = \
 	TrackPanelAx.h \
 	UndoManager.cpp \
 	UndoManager.h \
+	ViewInfo.cpp \
 	ViewInfo.h \
 	VoiceKey.cpp \
 	VoiceKey.h \

@@ -42,17 +42,17 @@ enum
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name          Type     Key                           Def      Min      Max   Scale
-Param( RoomSize,     double,  wxTRANSLATE("RoomSize"),      75,      0,       100,  1  );
-Param( PreDelay,     double,  wxTRANSLATE("Delay"),         10,      0,       200,  1  );
-Param( Reverberance, double,  wxTRANSLATE("Reverberance"),  50,      0,       100,  1  );
-Param( HfDamping,    double,  wxTRANSLATE("HfDamping"),     50,      0,       100,  1  );
-Param( ToneLow,      double,  wxTRANSLATE("ToneLow"),       100,     0,       100,  1  );
-Param( ToneHigh,     double,  wxTRANSLATE("ToneHigh"),      100,     0,       100,  1  );
-Param( WetGain,      double,  wxTRANSLATE("WetGain"),       -1,      -20,     10,   1  );
-Param( DryGain,      double,  wxTRANSLATE("DryGain"),       -1,      -20,     10,   1  );
-Param( StereoWidth,  double,  wxTRANSLATE("StereoWidth"),   100,     0,       100,  1  );
-Param( WetOnly,      bool,    wxTRANSLATE("WetOnly"),       false,   false,   true, 1  );
+//     Name          Type     Key                  Def      Min      Max   Scale
+Param( RoomSize,     double,  XO("RoomSize"),      75,      0,       100,  1  );
+Param( PreDelay,     double,  XO("Delay"),         10,      0,       200,  1  );
+Param( Reverberance, double,  XO("Reverberance"),  50,      0,       100,  1  );
+Param( HfDamping,    double,  XO("HfDamping"),     50,      0,       100,  1  );
+Param( ToneLow,      double,  XO("ToneLow"),       100,     0,       100,  1  );
+Param( ToneHigh,     double,  XO("ToneHigh"),      100,     0,       100,  1  );
+Param( WetGain,      double,  XO("WetGain"),       -1,      -20,     10,   1  );
+Param( DryGain,      double,  XO("DryGain"),       -1,      -20,     10,   1  );
+Param( StereoWidth,  double,  XO("StereoWidth"),   100,     0,       100,  1  );
+Param( WetOnly,      bool,    XO("WetOnly"),       false,   false,   true, 1  );
 
 static const struct
 {
@@ -61,17 +61,17 @@ static const struct
 }
 FactoryPresets[] =
 {
-   //                                  Room  Pre            Hf       Tone Tone  Wet   Dry   Stereo Wet
-   // Name                             Size, Delay, Reverb, Damping, Low, High, Gain, Gain, Width, Only
-   wxTRANSLATE("Vocal I" ),          { 70,   20,    40,     99,      100, 50,   -12,  0,    70,    false },
-   wxTRANSLATE("Vocal II"),          { 50,   0,     50,     99,      50,  100,  -1,   -1,   70,    false },
-   wxTRANSLATE("Bathroom"),          { 16,   8,     80,     0,       0,   100,  -6,   0,    100,   false },
-   wxTRANSLATE("Small Room Bright"), { 30,   10,    50,     50,      50,  100,  -1,   -1,   100,   false },
-   wxTRANSLATE("Small Room Dark"),   { 30,   10,    50,     50,      100, 0,    -1,   -1,   100,   false },
-   wxTRANSLATE("Medium Room"),       { 75,   10,    40,     50,      100, 70,   -1,   -1,   70,    false },
-   wxTRANSLATE("Large Room"),        { 85,   10,    40,     50,      100, 80,    0,   -6,   90,    false },
-   wxTRANSLATE("Church Hall"),       { 90,   32,    60,     50,      100, 50,    0,   -12,  100,   false },
-   wxTRANSLATE("Cathedral"),         { 90,   16,    90,     50,      100, 0,     0,   -20,  100,   false },
+   //                               Room  Pre            Hf       Tone Tone  Wet   Dry   Stereo Wet
+   // Name                    Size, Delay, Reverb, Damping, Low, High, Gain, Gain, Width, Only
+   XO("Vocal I" ),          { 70,   20,    40,     99,      100, 50,   -12,  0,    70,    false },
+   XO("Vocal II"),          { 50,   0,     50,     99,      50,  100,  -1,   -1,   70,    false },
+   XO("Bathroom"),          { 16,   8,     80,     0,       0,   100,  -6,   0,    100,   false },
+   XO("Small Room Bright"), { 30,   10,    50,     50,      50,  100,  -1,   -1,   100,   false },
+   XO("Small Room Dark"),   { 30,   10,    50,     50,      100, 0,    -1,   -1,   100,   false },
+   XO("Medium Room"),       { 75,   10,    40,     50,      100, 70,   -1,   -1,   70,    false },
+   XO("Large Room"),        { 85,   10,    40,     50,      100, 80,    0,   -6,   90,    false },
+   XO("Church Hall"),       { 90,   32,    60,     50,      100, 50,    0,   -12,  100,   false },
+   XO("Cathedral"),         { 90,   16,    90,     50,      100, 0,     0,   -20,  100,   false },
 };
 
 struct Reverb_priv_t
@@ -134,7 +134,7 @@ wxString EffectReverb::GetSymbol()
 
 wxString EffectReverb::GetDescription()
 {
-   return wxTRANSLATE("Adds ambience or a \"hall effect\"");
+   return XO("Adds ambience or a \"hall effect\"");
 }
 
 // EffectIdentInterface implementation

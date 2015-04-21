@@ -17,7 +17,7 @@
 
 #include <memory>
 
-#define NOISEREDUCTION_PLUGIN_SYMBOL wxTRANSLATE("Noise Reduction")
+#define NOISEREDUCTION_PLUGIN_SYMBOL XO("Noise Reduction")
 
 class EffectNoiseReduction: public Effect {
 public:

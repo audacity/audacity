@@ -51,14 +51,14 @@ enum
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name          Type     Key                           Def      Min      Max      Scale
-Param( Threshold,    double,  wxTRANSLATE("Threshold"),     -12.0,   -60.0,   -1.0,    1   );
-Param( NoiseFloor,   double,  wxTRANSLATE("NoiseFloor"),    -40.0,   -80.0,   -20.0,   5   );
-Param( Ratio,        double,  wxTRANSLATE("Ratio"),         2.0,     1.5,     10.0,    2   );
-Param( AttackTime,   double,  wxTRANSLATE("AttackTime"),    0.2,     0.1,     5.0,     100 );
-Param( ReleaseTime,  double,  wxTRANSLATE("ReleaseTime"),   1.0,     1.0,     30.0,    10  );
-Param( Normalize,    bool,    wxTRANSLATE("Normalize"),     true,    false,   true,    1   );
-Param( UsePeak,      bool,    wxTRANSLATE("UsePeak"),       false,   false,   true,    1   );
+//     Name          Type     Key                  Def      Min      Max      Scale
+Param( Threshold,    double,  XO("Threshold"),     -12.0,   -60.0,   -1.0,    1   );
+Param( NoiseFloor,   double,  XO("NoiseFloor"),    -40.0,   -80.0,   -20.0,   5   );
+Param( Ratio,        double,  XO("Ratio"),         2.0,     1.5,     10.0,    2   );
+Param( AttackTime,   double,  XO("AttackTime"),    0.2,     0.1,     5.0,     100 );
+Param( ReleaseTime,  double,  XO("ReleaseTime"),   1.0,     1.0,     30.0,    10  );
+Param( Normalize,    bool,    XO("Normalize"),     true,    false,   true,    1   );
+Param( UsePeak,      bool,    XO("UsePeak"),       false,   false,   true,    1   );
 
 //----------------------------------------------------------------------------
 // EffectCompressor
@@ -112,7 +112,7 @@ wxString EffectCompressor::GetSymbol()
 
 wxString EffectCompressor::GetDescription()
 {
-   return wxTRANSLATE("Compresses the dynamic range of audio");
+   return XO("Compresses the dynamic range of audio");
 }
 
 // EffectIdentInterface implementation

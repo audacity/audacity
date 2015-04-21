@@ -16,7 +16,6 @@
 #include <ApplicationServices/ApplicationServices.h>
 #include <CoreServices/CoreServices.h>
 #include <Carbon/Carbon.h>
-#include <AudioUnit/AUNTComponent.h>
 #include <AudioUnit/AudioUnitProperties.h>
 #include <AudioUnit/AudioUnitCarbonView.h>
 #include <AudioToolbox/AudioUnitUtilities.h>

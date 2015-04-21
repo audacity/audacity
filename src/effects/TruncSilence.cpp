@@ -37,8 +37,8 @@ enum kActions
 
 static const wxChar *kActionStrings[kNumActions] =
 {
-   wxTRANSLATE("Truncate Detected Silence"),
-   wxTRANSLATE("Compress Excess Silence")
+   XO("Truncate Detected Silence"),
+   XO("Compress Excess Silence")
 };
 
 // Define defaults, minimums, and maximums for each parameter
@@ -49,12 +49,12 @@ static const wxChar *kActionStrings[kNumActions] =
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name       Type     Key                        Def         Min      Max                        Scale
-Param( DbIndex,   int,     wxTRANSLATE("Db"),         0,          0,       Enums::NumDbChoices - 1,   1  );
-Param( ActIndex,  int,     wxTRANSLATE("Action"),     kTruncate,  0,       kNumActions - 1,           1  );
-Param( Minimum,   double,  wxTRANSLATE("Minimum"),    0.5,        0.001,   10000.0,                   1  );
-Param( Truncate,  double,  wxTRANSLATE("Truncate"),   0.5,        0.0,     10000.0,                   1  );
-Param( Compress,  double,  wxTRANSLATE("Compress"),   50.0,       0.0,     99.9,                      1  );
+//     Name       Type     Key               Def         Min      Max                        Scale
+Param( DbIndex,   int,     XO("Db"),         0,          0,       Enums::NumDbChoices - 1,   1  );
+Param( ActIndex,  int,     XO("Action"),     kTruncate,  0,       kNumActions - 1,           1  );
+Param( Minimum,   double,  XO("Minimum"),    0.5,        0.001,   10000.0,                   1  );
+Param( Truncate,  double,  XO("Truncate"),   0.5,        0.0,     10000.0,                   1  );
+Param( Compress,  double,  XO("Compress"),   50.0,       0.0,     99.9,                      1  );
 
 static const sampleCount DEF_BlendFrameCount = 100;
 
@@ -100,7 +100,7 @@ wxString EffectTruncSilence::GetSymbol()
 
 wxString EffectTruncSilence::GetDescription()
 {
-   return wxTRANSLATE("Automatically reduces the length of passages where the volume is below a specified level");
+   return XO("Automatically reduces the length of passages where the volume is below a specified level");
 }
 
 // EffectIdentInterface implementation
