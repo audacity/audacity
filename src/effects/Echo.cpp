@@ -31,9 +31,9 @@
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
-//     Name    Type     Key            Def   Min   Max      Scale
-Param( Delay,  float,   XO("Delay"),   1.0,  0.0,  FLT_MAX, 1  );
-Param( Decay,  float,   XO("Decay"),   0.5,  1.0,  1.0,     1  );
+//     Name    Type     Key            Def   Min      Max      Scale
+Param( Delay,  float,   XO("Delay"),   1.0,  0.001,   FLT_MAX, 1  );
+Param( Decay,  float,   XO("Decay"),   0.5,  0.0,     FLT_MAX, 1  );
 
 EffectEcho::EffectEcho()
 {
@@ -78,6 +78,11 @@ int EffectEcho::GetAudioOutCount()
 
 bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
 {
+   if (delay == 0.0)
+   {
+      return false;
+   }
+
    histPos = 0;
    histLen = (sampleCount) (mSampleRate * delay);
    history = new float[histLen];
