@@ -1985,7 +1985,7 @@ bool AudioIO::StartPortMidiStream()
          const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
          if (!info) continue;
          if (!info->output) continue;
-         wxString interf = wxSafeConvertMB2WX((info->interf);
+         wxString interf = wxSafeConvertMB2WX(info->interf);
          wxString name = wxSafeConvertMB2WX(info->name);
          interf.Append(wxT(": ")).Append(name);
          if (wxStrcmp(interf, playbackDeviceName) == 0) {
