@@ -2340,12 +2340,16 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
       return false;
    else
    {
+      const bool busy = gAudioIO->IsBusy();
+      if (busy && gAudioIO->GetNumCaptureChannels() > 0)
+         // Do not stop recording
+         return false;
+
       wxCoord position = event.m_x;
       AudacityProject *p = GetActiveProject();
       if (p &&
          abs(mScrubStartPosition - position) >= SCRUBBING_PIXEL_TOLERANCE) {
          ControlToolBar * ctb = p->GetControlToolBar();
-         bool busy = gAudioIO->IsBusy();
          double maxTime = p->GetTracks()->GetEndTime();
          double time0 = std::min(maxTime, PositionToTime(mScrubStartPosition, GetLeftOffset()));
          double time1 = std::min(maxTime, PositionToTime(position, GetLeftOffset()));
