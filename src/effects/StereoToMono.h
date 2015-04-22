@@ -37,11 +37,23 @@ public:
 
    virtual int GetAudioInCount();
    virtual int GetAudioOutCount();
-   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
 
    // Effect implementation
 
-   bool IsHidden();
+   virtual bool Process();
+   virtual bool IsHidden();
+
+private:
+   // EffectStereoToMono implementation
+
+   bool ProcessOne(int count);
+
+private:
+   sampleCount mStart;
+   sampleCount mEnd;
+   WaveTrack *mLeftTrack;
+   WaveTrack *mRightTrack;
+   WaveTrack *mOutTrack;
 };
 
 #endif
