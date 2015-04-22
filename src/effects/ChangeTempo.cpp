@@ -166,7 +166,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
       //
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldPercentage(3, &m_PercentChange, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldPercentage(3, &m_PercentChange, NUM_VAL_THREE_TRAILING_ZEROES);
          vldPercentage.SetRange(MIN_Percentage, MAX_Percentage);
          m_pTextCtrl_PercentChange = S.Id(ID_PercentChange)
             .AddTextBox(_("Percent Change:"), wxT(""), 12);
@@ -190,13 +190,13 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
          //
          S.AddUnits(_("Beats per minute:"));
 
-         FloatingPointValidator<double> vldFromBPM(3, &m_FromBPM, NUM_VAL_NO_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
+         FloatingPointValidator<double> vldFromBPM(3, &m_FromBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
          m_pTextCtrl_FromBPM = S.Id(ID_FromBPM)
             .AddTextBox(_("from"), wxT(""), 12);
          m_pTextCtrl_FromBPM->SetName(_("From beats per minute"));
          m_pTextCtrl_FromBPM->SetValidator(vldFromBPM);
 
-         FloatingPointValidator<double> vldToBPM(3, &m_ToBPM, NUM_VAL_NO_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
+         FloatingPointValidator<double> vldToBPM(3, &m_ToBPM, NUM_VAL_THREE_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
          m_pTextCtrl_ToBPM = S.Id(ID_ToBPM)
             .AddTextBox(_("to"), wxT(""), 12);
          m_pTextCtrl_ToBPM->SetName(_("To beats per minute"));
@@ -205,14 +205,14 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
          //
          S.AddUnits(_("Length (seconds):"));
 
-         FloatingPointValidator<double> vldFromLength(3, &m_FromLength, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldFromLength(2, &m_FromLength, NUM_VAL_TWO_TRAILING_ZEROES);
          m_pTextCtrl_FromLength = S.Id(ID_FromLength)
             .AddTextBox(_("from"), wxT(""), 12);
          m_pTextCtrl_FromLength->SetName(_("From length in seconds"));
          m_pTextCtrl_FromLength->SetValidator(vldFromLength);
          m_pTextCtrl_FromLength->Enable(false); // Disable because the value comes from the user selection.
 
-         FloatingPointValidator<double> vldToLength(3, &m_ToLength, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldToLength(2, &m_ToLength, NUM_VAL_TWO_TRAILING_ZEROES);
          vldToLength.SetRange((m_FromLength * 100.0) / (100.0 + MAX_Percentage),
                               (m_FromLength * 100.0) / (100.0 + MIN_Percentage));
          m_pTextCtrl_ToLength = S.Id(ID_ToLength)
@@ -229,6 +229,9 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
 
 bool EffectChangeTempo::TransferDataToWindow()
 {
+   // Reset from length because it can be changed by Preview
+   m_FromLength = mT1 - mT0;
+
    m_bLoopDetect = true;
 
    if (!mUIParent->TransferDataToWindow())
@@ -238,6 +241,8 @@ bool EffectChangeTempo::TransferDataToWindow()
 
    // percent change controls
    Update_Slider_PercentChange();
+   Update_Text_ToBPM();
+   Update_Text_ToLength();
 
    m_bLoopDetect = false;
 
