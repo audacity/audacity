@@ -286,13 +286,13 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       // Speed multiplier and percent change controls.
       S.StartMultiColumn(4, wxCENTER);
       {
-         FloatingPointValidator<double> vldMultiplier(3, &mMultiplier, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldMultiplier(3, &mMultiplier, NUM_VAL_THREE_TRAILING_ZEROES);
          vldMultiplier.SetRange(MIN_Percentage / 100.0, MAX_Percentage / 100.0);
          mpTextCtrl_Multiplier =
             S.Id(ID_Multiplier).AddTextBox(_("Speed Multiplier:"), wxT(""), 12);
          mpTextCtrl_Multiplier->SetValidator(vldMultiplier);
 
-         FloatingPointValidator<double> vldPercentage(3, &m_PercentChange, NUM_VAL_NO_TRAILING_ZEROES);
+         FloatingPointValidator<double> vldPercentage(3, &m_PercentChange, NUM_VAL_THREE_TRAILING_ZEROES);
          vldPercentage.SetRange(MIN_Percentage, MAX_Percentage);
          mpTextCtrl_PercentChange =
             S.Id(ID_PercentChange).AddTextBox(_("Percent Change:"), wxT(""), 12);
@@ -346,7 +346,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       // From/To time controls.
       S.StartStatic(_("Selection Length"), 0);
       {
-         S.StartMultiColumn(2, wxCENTER);
+         S.StartMultiColumn(2, wxALIGN_LEFT);
          {
             S.AddPrompt(_("Current Length:"));
 
