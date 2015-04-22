@@ -587,7 +587,7 @@ void AutoSaveFile::CheckSpace(wxMemoryOutputStream & os)
       size_t origPos = buf->GetIntPosition();
       char *temp = new char[mAllocSize];
       buf->Write(temp, mAllocSize);
-      delete temp;
+      delete[] temp;
       buf->SetIntPosition(origPos);
    }
 }
@@ -682,7 +682,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
    if (file.Read(buf, len) != len)
    {
-      delete buf;
+      delete[] buf;
       return false;
    }
 
@@ -698,7 +698,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
    out.Open(tempName, wxT("wb"));
    if (!out.IsOpened())
    {
-      delete buf;
+      delete[] buf;
 
       wxRemoveFile(tempName);
 
@@ -737,7 +737,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             in.Read(name, len);
 
             mIds[id] = wxString(name, len / sizeof(wxChar));
-            delete name;
+            delete[] name;
          }
          break;
 
@@ -767,7 +767,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             in.Read(val, len);
 
             out.WriteAttr(mIds[id], wxString(val, len / sizeof(wxChar)));
-            delete val;
+            delete[] val;
          }
          break;
 
@@ -861,7 +861,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             in.Read(val, len);
 
             out.WriteData(wxString(val, len / sizeof(wxChar)));
-            delete val;
+            delete[] val;
          }
          break;
 
@@ -874,7 +874,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             in.Read(val, len);
 
             out.Write(wxString(val, len / sizeof(wxChar)));
-            delete val;
+            delete[] val;
          }
          break;
 
@@ -884,7 +884,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       }
    }
 
-   delete buf;
+   delete[] buf;
 
    bool error = out.Error();
  
