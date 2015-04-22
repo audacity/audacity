@@ -222,12 +222,13 @@ EffectEqualization::EffectEqualization()
 
    mM = DEF_FilterLength;
    mLin = DEF_InterpLin;
-   mDrawMode = DEF_DrawMode;
-   mDrawGrid = DEF_DrawGrid;
    mInterp = DEF_InterpMeth;
-   mdBMin = DEF_dBMin;
-   mdBMax = DEF_dBMax;
    mCurveName = DEF_CurveName;
+
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
 
    for (int i = 0; i < kNumInterpolations; i++)
    {
@@ -853,10 +854,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 //
 bool EffectEqualization::TransferDataToWindow()
 {
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
+   // Start with a clean slate
+   Flatten();
+   mDirty = false;
 
    // Set log or lin freq scale (affects interpolation as well)
    mLinFreq->SetValue( mLin );
@@ -891,7 +891,6 @@ bool EffectEqualization::TransferDataToWindow()
    // Set graphic interpolation mode
    mInterpChoice->SetSelection(mInterp);
 
-   // Set Graphic (Fader) or Draw mode
    // Set Graphic (Fader) or Draw mode
    if (mDrawMode)
    {
@@ -1605,6 +1604,35 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
    // Clean up
    delete [] when;
    delete [] value;
+}
+
+//
+// Flatten the curve
+//
+void EffectEqualization::Flatten()
+{
+   mLogEnvelope->Flatten(0.);
+   mLogEnvelope->SetTrackLen(1.0);
+   mLinEnvelope->Flatten(0.);
+   mLinEnvelope->SetTrackLen(1.0);
+   mPanel->ForceRecalc();
+   if( !mDrawMode )
+   {
+      for( int i=0; i< mBandsInUse; i++)
+      {
+         mSliders[i]->SetValue(0);
+         mSlidersOld[i] = 0;
+         mEQVals[i] = 0.;
+
+         wxString tip;
+         if( kThirdOct[i] < 1000.)
+            tip.Printf( wxT("%dHz\n%.1fdB"), (int)kThirdOct[i], 0. );
+         else
+            tip.Printf( wxT("%gkHz\n%.1fdB"), kThirdOct[i]/1000., 0. );
+         mSliders[i]->SetToolTip(tip);
+      }
+   }
+   EnvelopeUpdated();
 }
 
 //
@@ -2394,28 +2422,7 @@ void EffectEqualization::OnManage(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnClear(wxCommandEvent & WXUNUSED(event))
 {
-   mLogEnvelope->Flatten(0.);
-   mLogEnvelope->SetTrackLen(1.0);
-   mLinEnvelope->Flatten(0.);
-   mLinEnvelope->SetTrackLen(1.0);
-   mPanel->ForceRecalc();
-   if( !mDrawMode )
-   {
-      for( int i=0; i< mBandsInUse; i++)
-      {
-         mSliders[i]->SetValue(0);
-         mSlidersOld[i] = 0;
-         mEQVals[i] = 0.;
-
-         wxString tip;
-         if( kThirdOct[i] < 1000.)
-            tip.Printf( wxT("%dHz\n%.1fdB"), (int)kThirdOct[i], 0. );
-         else
-            tip.Printf( wxT("%gkHz\n%.1fdB"), kThirdOct[i]/1000., 0. );
-         mSliders[i]->SetToolTip(tip);
-      }
-   }
-   EnvelopeUpdated();
+   Flatten();
 }
 
 void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts any curve
@@ -2795,6 +2802,11 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
 void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
 {
+   if (!mEffect->mDrawMode)
+   {
+      return;
+   }
+
    if (event.ButtonDown() && !HasCapture())
    {
       CaptureMouse();

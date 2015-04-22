@@ -133,6 +133,7 @@ private:
    virtual bool CalcFilter();
    void Filter(sampleCount len, float *buffer);
    
+   void Flatten();
    void EnvelopeUpdated();
    void EnvelopeUpdated(Envelope *env, bool lin);
 
