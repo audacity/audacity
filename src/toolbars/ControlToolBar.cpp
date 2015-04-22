@@ -482,8 +482,6 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
    // to indicate backwards play.
    const bool looped = options.playLooped;
 
-   double startTime = *options.pStartTime;
-
    if (backwards)
       std::swap(t0, t1);
 

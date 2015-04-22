@@ -40,6 +40,14 @@
 *.exe
 *.out
 *.app
-win/resetPrefs.txt
+
+# Mac Specific
+.DS_Store
+project.xcworkspace
+xcuserdata
+
+*.xcconfig
+mac/Info.plist.h
 src/RevisionIdent.h
+win/resetPrefs.txt
 

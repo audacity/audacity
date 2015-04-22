@@ -1,6 +1,6 @@
-diff -wruN orig/wxMac-2.8.12/Makefile.in wxMac-2.8.12/Makefile.in
+diff -ruN orig/wxMac-2.8.12/Makefile.in wxMac-2.8.12/Makefile.in
 --- orig/wxMac-2.8.12/Makefile.in	2011-03-22 07:34:13.000000000 -0500
-+++ wxMac-2.8.12/Makefile.in	2012-03-20 20:59:30.000000000 -0500
++++ wxMac-2.8.12/Makefile.in	2015-04-21 11:05:15.000000000 -0500
 @@ -2170,6 +2170,7 @@
  @COND_TOOLKIT_GTK_TOOLKIT_VERSION_2@GUI_HDR = $(COND_TOOLKIT_GTK_TOOLKIT_VERSION_2_GUI_HDR)
  COND_TOOLKIT_MAC_GUI_HDR =  \
@@ -89,9 +89,9 @@ diff -wruN orig/wxMac-2.8.12/Makefile.in wxMac-2.8.12/Makefile.in
  corelib_aga.o: $(srcdir)/src/mac/carbon/aga.cpp $(CORELIB_ODEP)
  	$(CXXC) -c -o $@ $(CORELIB_CXXFLAGS) $(srcdir)/src/mac/carbon/aga.cpp
  
-diff -wruN orig/wxMac-2.8.12/include/wx/access.h wxMac-2.8.12/include/wx/access.h
+diff -ruN orig/wxMac-2.8.12/include/wx/access.h wxMac-2.8.12/include/wx/access.h
 --- orig/wxMac-2.8.12/include/wx/access.h	2011-03-22 07:32:57.000000000 -0500
-+++ wxMac-2.8.12/include/wx/access.h	2012-03-20 20:59:30.000000000 -0500
++++ wxMac-2.8.12/include/wx/access.h	2015-04-21 11:05:15.000000000 -0500
 @@ -371,6 +371,10 @@
      #include "wx/msw/ole/access.h"
  #endif
@@ -103,18 +103,18 @@ diff -wruN orig/wxMac-2.8.12/include/wx/access.h wxMac-2.8.12/include/wx/access.
  #endif // wxUSE_ACCESSIBILITY
  
  #endif // _WX_ACCESSBASE_H_
-diff -wruN orig/wxMac-2.8.12/include/wx/mac/access.h wxMac-2.8.12/include/wx/mac/access.h
+diff -ruN orig/wxMac-2.8.12/include/wx/mac/access.h wxMac-2.8.12/include/wx/mac/access.h
 --- orig/wxMac-2.8.12/include/wx/mac/access.h	1969-12-31 18:00:00.000000000 -0600
-+++ wxMac-2.8.12/include/wx/mac/access.h	2012-03-20 20:59:30.000000000 -0500
++++ wxMac-2.8.12/include/wx/mac/access.h	2015-04-21 11:05:15.000000000 -0500
 @@ -0,0 +1,5 @@
 +#ifdef __WXMAC_CLASSIC__
 +#error "wxAccessible not implemented for Classic build."
 +#else
 +#include "wx/mac/carbon/access.h"
 +#endif
-diff -wruN orig/wxMac-2.8.12/include/wx/mac/carbon/access.h wxMac-2.8.12/include/wx/mac/carbon/access.h
+diff -ruN orig/wxMac-2.8.12/include/wx/mac/carbon/access.h wxMac-2.8.12/include/wx/mac/carbon/access.h
 --- orig/wxMac-2.8.12/include/wx/mac/carbon/access.h	1969-12-31 18:00:00.000000000 -0600
-+++ wxMac-2.8.12/include/wx/mac/carbon/access.h	2012-03-20 20:59:30.000000000 -0500
++++ wxMac-2.8.12/include/wx/mac/carbon/access.h	2015-04-21 11:05:15.000000000 -0500
 @@ -0,0 +1,140 @@
 +///////////////////////////////////////////////////////////////////////////////
 +// Name:        mac/carbon/access.h
@@ -256,10 +256,10 @@ diff -wruN orig/wxMac-2.8.12/include/wx/mac/carbon/access.h wxMac-2.8.12/include
 +
 +#endif  //_WX_ACCESS_H_
 +
-diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carbon/access.cpp
+diff -ruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carbon/access.cpp
 --- orig/wxMac-2.8.12/src/mac/carbon/access.cpp	1969-12-31 18:00:00.000000000 -0600
-+++ wxMac-2.8.12/src/mac/carbon/access.cpp	2012-03-20 20:59:30.000000000 -0500
-@@ -0,0 +1,3912 @@
++++ wxMac-2.8.12/src/mac/carbon/access.cpp	2015-04-21 16:07:03.000000000 -0500
+@@ -0,0 +1,3919 @@
 +///////////////////////////////////////////////////////////////////////////////
 +// Name:        src/msw/ole/access.cpp
 +// Purpose:     implementation of wxIAccessible and wxAccessible
@@ -387,11 +387,13 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +                                typeCFTypeRef,
 +                                sizeof(element),
 +                                &element);
-+    require_noerr(result, MissingElement);
-+    wxASSERT(element != NULL);
++    if (result != noErr) {
++        return result;
++    }
 +
++    wxASSERT(element != NULL);
 +    if (element == NULL) {
-+        goto MissingElement;
++        return result;
 +    }
 +
 +    UInt64 id;
@@ -461,7 +463,6 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +
 +    wxTheApp->MacSetCurrentEvent(formerEvent, formerEventHandlerCallRef);
 +
-+MissingElement:
 +    return result;
 +}
 +
@@ -536,7 +537,7 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +
 +        CFRelease(elem);
 +
-+            result = noErr;
++        result = noErr;
 +    }
 +
 +    return result;
@@ -633,8 +634,9 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +        {
 +            CFMutableArrayRef array;
 +
-+            require_noerr(GetArray(event, array, kEventParamAccessibleAttributeNames),
-+                          ParameterError);
++            if (GetArray(event, array, kEventParamAccessibleAttributeNames) != noErr) {
++               return result;
++            }
 +
 +            CFArrayAppendValue(array, kAXRoleAttribute);
 +            CFArrayAppendValue(array, kAXRoleDescriptionAttribute);
@@ -769,10 +771,12 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +    OSStatus result = CallNextEventHandler(handlerRef, eventRef);
 +
 +    AXUIElementRef elem = NULL;;
-+    require_noerr(event.GetParameter(kEventParamAccessibleObject,
-+                                     typeCFTypeRef,
-+                                     sizeof(elem),
-+                                     &elem), ParameterError);
++    if (event.GetParameter(kEventParamAccessibleObject,
++                           typeCFTypeRef,
++                           sizeof(elem),
++                           &elem) != noErr) {
++        return result;
++    }
 +
 +    ControlRef ctrl;
 +    UInt64 id;
@@ -1098,12 +1102,11 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +            {
 +
 +                CFStringRef attr;
-+                Boolean settable = false;
 +    
 +                result = event.GetParameter(kEventParamAccessibleAttributeName,
-+                                                 typeCFTypeRef,
-+                                                 sizeof(attr),
-+                                                 &attr);
++                                            typeCFTypeRef,
++                                            sizeof(attr),
++                                            &attr);
 +
 +                CFShow(attr);
 +                wxASSERT_MSG(false, wxT("SETNAMED WAS CALLED FOR ITEM"));
@@ -1553,7 +1556,9 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +                                typeHIPoint,
 +                                sizeof(pt),
 +                                &pt);
-+    require_noerr(result, ParameterError);
++    if (result != noErr) {
++        return result;
++    }
 +
 +    result = eventNotHandledErr;
 +
@@ -3573,6 +3578,8 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +    OSStatus result;
 +    CFStringRef attr;
 +    Boolean settable = false;
++    wxAccessible *acc = NULL;
++    wxWindow *w = NULL;
 +
 +    result = event.GetParameter(kEventParamAccessibleAttributeName,
 +                                typeCFStringRef,
@@ -3581,8 +3588,8 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +
 +    require_noerr(result, ParameterError);
 +
-+    wxAccessible *acc = GetAccessible();
-+    wxWindow *w = acc->GetWindow();
++    acc = GetAccessible();
++    w = acc->GetWindow();
 +
 +    if (CFStringCompare(attr, kAXFocusedAttribute, 0) == kCFCompareEqualTo) {
 +        settable = true;
@@ -4172,9 +4179,21 @@ diff -wruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carb
 +}
 +
 +#endif  // wxUSE_OLE && wxUSE_ACCESSIBILITY
-diff -wruN orig/wxMac-2.8.12/src/mac/carbon/window.cpp wxMac-2.8.12/src/mac/carbon/window.cpp
+diff -ruN orig/wxMac-2.8.12/src/mac/carbon/graphics.cpp wxMac-2.8.12/src/mac/carbon/graphics.cpp
+--- orig/wxMac-2.8.12/src/mac/carbon/graphics.cpp	2011-03-22 07:34:35.000000000 -0500
++++ wxMac-2.8.12/src/mac/carbon/graphics.cpp	2015-04-21 12:14:01.000000000 -0500
+@@ -1069,7 +1069,7 @@
+     virtual void Transform( const wxGraphicsMatrixData* matrix );
+ 
+     // gets the bounding box enclosing all points (possibly including control points)
+-    virtual void GetBox(wxDouble *x, wxDouble *y, wxDouble *w, wxDouble *y) const;
++    virtual void GetBox(wxDouble *x, wxDouble *y, wxDouble *w, wxDouble *h) const;
+ 
+     virtual bool Contains( wxDouble x, wxDouble y, int fillStyle = wxODDEVEN_RULE) const;
+ private :
+diff -ruN orig/wxMac-2.8.12/src/mac/carbon/window.cpp wxMac-2.8.12/src/mac/carbon/window.cpp
 --- orig/wxMac-2.8.12/src/mac/carbon/window.cpp	2011-03-22 07:34:36.000000000 -0500
-+++ wxMac-2.8.12/src/mac/carbon/window.cpp	2012-03-20 20:59:30.000000000 -0500
++++ wxMac-2.8.12/src/mac/carbon/window.cpp	2015-04-21 11:05:15.000000000 -0500
 @@ -1229,6 +1229,10 @@
          SetInitialSize(size);
  
