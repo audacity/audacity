@@ -71,7 +71,6 @@ enum
    ID_Version,
    ID_Load,
    ID_Save,
-   ID_Debug,
 
    ID_Slider = 11000,
    ID_Text = 12000,
@@ -95,7 +94,6 @@ WX_DEFINE_OBJARRAY(NyqControlArray);
 BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
    EVT_BUTTON(ID_Load, NyquistEffect::OnLoad)
    EVT_BUTTON(ID_Save, NyquistEffect::OnSave)
-   EVT_BUTTON(ID_Debug, NyquistEffect::OnDebug)
 
    EVT_COMMAND_RANGE(ID_Slider, ID_Slider+99,
                      wxEVT_COMMAND_SLIDER_UPDATED, NyquistEffect::OnSlider)
@@ -113,6 +111,7 @@ NyquistEffect::NyquistEffect(wxString fName)
    mIsPrompt = false;
    mExternal = false;
    mCompiler = false;
+   mRedirectOutput = false;
    mDebug = false;
    mIsSal = false;
    mOK = false;
@@ -391,8 +390,7 @@ bool NyquistEffect::Process()
 
    mTrackIndex = 0;
 
-   mDebugOutput = new std::string();
-   mOutput.Clear();
+   mDebugOutput.Clear();
 
    if (mVersion >= 4)
    {
@@ -611,11 +609,18 @@ bool NyquistEffect::Process()
 
  finish:
 
+   if (mDebug && !mRedirectOutput) {
+      NyquistOutputDialog dlog(mUIParent, -1,
+                               _("Nyquist"),
+                               _("Nyquist Output: "),
+                               mDebugOutput.c_str());
+      dlog.CentreOnParent();
+      dlog.ShowModal();
+   }
+
    ReplaceProcessedTracks(success);
 
    mDebug = false;
-
-   delete mDebugOutput;
 
    return success;
 }
@@ -624,6 +629,9 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
 {
    // Show the normal (prompt or effect) interface
    bool res = Effect::ShowInterface(parent, forceModal);
+
+   // Remember if the user clicked debug
+   mDebug = (mUIResultID == eDebugID);
 
    // We're done if the user clicked "Close", we are not the Nyquist Prompt,
    // or the program currently loaded into the prompt doesn't have a UI.
@@ -635,7 +643,7 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
    NyquistEffect effect(NYQUIST_WORKER_ID);
 
    effect.SetCommand(mInputCmd);
-   effect.mDebug = false;
+   effect.mDebug = (mUIResultID == eDebugID);
 
    SelectedRegion region(mT0, mT1);
    effect.DoEffect(parent,
@@ -658,6 +666,8 @@ void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
    {
       BuildEffectWindow(S);
    }
+
+   EnableDebug();
 }
 
 bool NyquistEffect::TransferDataToWindow()
@@ -908,7 +918,6 @@ bool NyquistEffect::ProcessOne()
       mCurBuffer[i] = NULL;
    }
 
-   wxLogMessage(wxT("%s"), cmd.c_str());
    rval = nyx_eval_expression(cmd.mb_str(wxConvUTF8));
 
    if (!rval) {
@@ -1576,12 +1585,11 @@ void NyquistEffect::StaticOutputCallback(int c, void *This)
 
 void NyquistEffect::OutputCallback(int c)
 {
-   if (mDebug && !mExternal) {
-      mOutput += c;
+   if (mDebug && !mRedirectOutput) {
+      mDebugOutput += (char)c;
       return;
    }
-//   mOutput += wxString::FromUTF8((char *) &c, 1);
-   mOutput += c;
+
    std::cout << (char)c;
 }
 
@@ -1785,8 +1793,6 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
       {
          S.Id(ID_Load).AddButton(_("&Load"));
          S.Id(ID_Save).AddButton(_("&Save"));
-         S.AddSpace(10, 1);
-         S.Id(ID_Debug).AddButton(_("&Debug"));
       }
       S.EndHorizontalLay();
    }
@@ -1942,36 +1948,6 @@ void NyquistEffect::OnSave(wxCommandEvent & WXUNUSED(evt))
    {
       wxMessageBox(_("File could not be saved"), GetName());
    }
-}
-
-void NyquistEffect::OnDebug(wxCommandEvent & WXUNUSED(evt))
-{
-   TransferDataFromPromptWindow();
-
-   NyquistEffect effect(NYQUIST_WORKER_ID);
- 
-   effect.SetCommand(mInputCmd);
-   effect.mDebug = true;
-
-   SelectedRegion region(mT0, mT1);
-   effect.DoEffect(mUIParent,
-                   mProjectRate,
-                   mTracks,
-                   mFactory,
-                   &region,
-                   true);
-
-   NyquistOutputDialog dlog(mUIParent,
-                            wxID_ANY,
-                            _("Nyquist"),
-                            _("Nyquist Output: "),
-                            effect.mOutput);
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-
-   SaveUserPreset(GetCurrentSettingsGroup());
-
-   return;
 }
 
 void NyquistEffect::OnSlider(wxCommandEvent & evt)

@@ -106,6 +106,8 @@ Effect::Effect()
    mBlockSize = 0;
    mNumChannels = 0;
 
+   mUIDebug = false;
+
    AudacityProject *p = GetActiveProject();
    mProjectRate = p ? p->GetRate() : 44100;
 }
@@ -1781,6 +1783,11 @@ bool Effect::EnablePreview(bool enable)
    return enable;
 }
 
+void Effect::EnableDebug(bool enable)
+{
+   mUIDebug = enable;
+}
+
 bool Effect::TotalProgress(double frac)
 {
    int updateResult = (mProgress ?
@@ -2492,6 +2499,7 @@ BEGIN_EVENT_TABLE(EffectUIHost, wxDialog)
    EVT_CLOSE(EffectUIHost::OnClose)
    EVT_BUTTON(wxID_APPLY, EffectUIHost::OnApply)
    EVT_BUTTON(wxID_CANCEL, EffectUIHost::OnCancel)
+   EVT_BUTTON(eDebugID, EffectUIHost::OnDebug)
    EVT_BUTTON(kMenuID, EffectUIHost::OnMenu)
    EVT_CHECKBOX(kEnableID, EffectUIHost::OnEnable)
    EVT_BUTTON(kPlayID, EffectUIHost::OnPlay)
@@ -2756,7 +2764,7 @@ bool EffectUIHost::Initialize()
 
    bar->SetSizerAndFit(bs);
 
-   wxSizer *s = CreateStdButtonSizer(this, eApplyButton | eCloseButton, bar);
+   wxSizer *s = CreateStdButtonSizer(this, eApplyButton | eCloseButton | (mEffect->mUIDebug ? eDebugButton : 0), bar);
    vs->Add(s, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL);
 
    SetSizer(vs);
@@ -2807,7 +2815,7 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    Destroy();
 }
 
-void EffectUIHost::OnApply(wxCommandEvent & WXUNUSED(evt))
+void EffectUIHost::OnApply(wxCommandEvent & evt)
 {
    // On wxGTK (wx2.8.12), the default action is still executed even if
    // the button is disabled.  This appears to affect all wxDialogs, not
@@ -2836,6 +2844,8 @@ void EffectUIHost::OnApply(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 
+   mEffect->mUIResultID = evt.GetId();
+
    if (IsModal())
    {
       EndModal(true);
@@ -2850,8 +2860,10 @@ void EffectUIHost::OnApply(wxCommandEvent & WXUNUSED(evt))
    return;
 }
 
-void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
+void EffectUIHost::OnCancel(wxCommandEvent & evt)
 {
+   mEffect->mUIResultID = evt.GetId();
+
    if (IsModal())
    {
       EndModal(false);
@@ -2864,6 +2876,15 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
    Hide();
 
    Close();
+
+   return;
+}
+
+void EffectUIHost::OnDebug(wxCommandEvent & evt)
+{
+   OnApply(evt);
+
+   mEffect->mUIResultID = evt.GetId();
 
    return;
 }

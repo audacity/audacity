@@ -1354,6 +1354,7 @@ void NyqBench::OnLargeIcons(wxCommandEvent & e)
 void NyqBench::OnGo(wxCommandEvent & e)
 {
    mEffect->SetCommand(mScript->GetValue());
+   mEffect->RedirectOutput();
 
    AudacityProject *p = GetActiveProject();
    wxASSERT(p != NULL);

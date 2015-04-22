@@ -27,8 +27,6 @@
 
 #include "nyx.h"
 
-#include <string>
-
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 #define NYQUISTEFFECTS_FAMILY wxT("Nyquist")
 
@@ -103,6 +101,7 @@ public:
    // NyquistEffect implementation
 
    // For Nyquist Workbench support
+   void RedirectOutput();
    void SetCommand(wxString cmd);
    void Continue();
    void Break();
@@ -193,8 +192,8 @@ private:
 
    bool              mEnablePreview;
    bool              mDebug;
-   std::string       *mDebugOutput;
-   wxString          mOutput;
+   bool              mRedirectOutput;
+   wxString          mDebugOutput;
 
    int               mVersion;
    NyqControlArray   mControls;

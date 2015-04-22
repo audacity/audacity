@@ -277,6 +277,7 @@ protected:
    virtual bool TransferDataFromWindow();
    virtual bool EnableApply(bool enable = true);
    virtual bool EnablePreview(bool enable = true);
+   virtual void EnableDebug(bool enable = true);
 
    // The Progress methods all return true if the user has cancelled;
    // you should exit immediately if this happens (cleaning up memory
@@ -343,11 +344,12 @@ protected:
    // UI
    wxDialog       *mUIDialog;
    wxWindow       *mUIParent;
+   int            mUIResultID;
 
-   sampleCount mSampleCnt;
+   sampleCount    mSampleCnt;
 
    // type of the tracks on mOutputTracks
-   int mOutputTracksType;
+   int            mOutputTracksType;
 
  // Used only by the base Effect class
  //
@@ -373,6 +375,8 @@ private:
    wxWindow *mParent;
 
    double mDuration;
+
+   bool mUIDebug;
 
    wxArrayPtrVoid mIMap;
    wxArrayPtrVoid mOMap;
@@ -469,6 +473,7 @@ private:
    void OnClose(wxCloseEvent & evt);
    void OnApply(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
+   void OnDebug(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
    void OnEnable(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
