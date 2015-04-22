@@ -488,6 +488,8 @@ bool EffectAutoDuck::TransferDataToWindow()
       return false;
    }
 
+   mPanel->Refresh(false);
+
    return true;
 }
 
