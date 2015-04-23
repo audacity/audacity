@@ -380,7 +380,7 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool NyquistEffect::Init()
 {
-   if (!mExternal)
+   if (!mIsPrompt && !mExternal)
    {
       //TODO: If we want to auto-add parameters from spectral selection,
       //we will need to modify this test.
@@ -398,6 +398,13 @@ bool NyquistEffect::Init()
    }
 
    return true;
+}
+
+bool NyquistEffect::CheckWhetherSkipEffect()
+{
+   // If we're a prompt and we have controls, then we've already processed
+   // the audio, so skip further processing.
+   return (mIsPrompt && mControls.GetCount() > 0);
 }
 
 bool NyquistEffect::Process()
