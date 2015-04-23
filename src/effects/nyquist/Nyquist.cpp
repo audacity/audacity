@@ -646,14 +646,12 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
    effect.mDebug = (mUIResultID == eDebugID);
 
    SelectedRegion region(mT0, mT1);
-   effect.DoEffect(parent,
-                   mProjectRate,
-                   mTracks,
-                   mFactory,
-                   &region,
-                   true);
-
-   return false;
+   return effect.DoEffect(parent,
+                          mProjectRate,
+                          mTracks,
+                          mFactory,
+                          &region,
+                          true);
 }
 
 void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
