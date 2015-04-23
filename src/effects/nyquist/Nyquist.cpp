@@ -260,7 +260,12 @@ bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
       }
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
-         parms.WriteEnum(ctrl.var, (int) d, wxStringTokenize(ctrl.label, wxT(",")));
+         wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
+         for (size_t i = 0, cnt = choices.GetCount();i < cnt; i++)
+         {
+            choices[i] = choices[i].Trim(true).Trim(false);
+         }
+         parms.WriteEnum(ctrl.var, (int) d, choices);
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
       {
@@ -309,7 +314,12 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          int val;
-         good = parms.ReadEnum(ctrl.var, &val, wxStringTokenize(ctrl.label, wxT(","))) &&
+         wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
+         for (size_t i = 0, cnt = choices.GetCount();i < cnt; i++)
+         {
+            choices[i] = choices[i].Trim(true).Trim(false);
+         }
+         good = parms.ReadEnum(ctrl.var, &val, choices) &&
                 val != wxNOT_FOUND;
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
@@ -348,7 +358,12 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          int val;
-         parms.ReadEnum(ctrl.var, &val, wxStringTokenize(ctrl.label, wxT(",")));
+         wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
+         for (size_t i = 0, cnt = choices.GetCount();i < cnt; i++)
+         {
+            choices[i] = choices[i].Trim(true).Trim(false);
+         }
+         parms.ReadEnum(ctrl.var, &val, choices);
          ctrl.val = (double) val;
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
