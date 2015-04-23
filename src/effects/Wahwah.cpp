@@ -223,9 +223,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       mFreqS = S.Id(ID_Freq).AddSlider(wxT(""), DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, MIN_Freq * SCL_Freq);
       mFreqS->SetName(_("LFO frequency in hertz"));
-#if defined(__WXGTK__)
       mFreqS->SetMinSize(wxSize(100, -1));
-#endif
 
       FloatingPointValidator<double> vldphase(1, &mPhase);
       vldphase.SetRange(MIN_Phase, MAX_Phase);
@@ -236,9 +234,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       mPhaseS = S.Id(ID_Phase).AddSlider(wxT(""), DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
       mPhaseS->SetName(_("LFO start phase in degrees"));
       mPhaseS->SetLineSize(10);
-#if defined(__WXGTK__)
       mPhaseS->SetMinSize(wxSize(100, -1));
-#endif
 
       IntegerValidator<int> vlddepth(&mDepth);
       vlddepth.SetRange(MIN_Depth, MAX_Depth);
@@ -248,9 +244,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       mDepthS = S.Id(ID_Depth).AddSlider(wxT(""), DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
       mDepthS->SetName(_("Depth in percent"));
-#if defined(__WXGTK__)
       mDepthS->SetMinSize(wxSize(100, -1));
-#endif
 
       FloatingPointValidator<double> vldres(1, &mRes);
       vldres.SetRange(MIN_Res, MAX_Res);
@@ -260,9 +254,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       mResS = S.Id(ID_Res).AddSlider(wxT(""), DEF_Res * SCL_Res, MAX_Res * SCL_Res, MIN_Res * SCL_Res);
       mResS->SetName(_("Resonance"));
-#if defined(__WXGTK__)
       mResS->SetMinSize(wxSize(100, -1));
-#endif
 
       IntegerValidator<int> vldfreqoffset(&mFreqOfs);
       vldfreqoffset.SetRange(MIN_FreqOfs, MAX_FreqOfs);
@@ -272,9 +264,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       mFreqOfsS = S.Id(ID_FreqOfs).AddSlider(wxT(""), DEF_FreqOfs * SCL_FreqOfs, MAX_FreqOfs * SCL_FreqOfs, MIN_FreqOfs * SCL_FreqOfs);
       mFreqOfsT->SetName(_("Wah frequency offset in percent"));
-#if defined(__WXGTK__)
       mFreqOfsT->SetMinSize(wxSize(100, -1));
-#endif
    }
    S.EndMultiColumn();
 }
@@ -285,6 +275,12 @@ bool EffectWahwah::TransferDataToWindow()
    {
       return false;
    }
+
+   mFreqS->SetValue((int) (mFreq * SCL_Freq));
+   mPhaseS->SetValue((int) (mPhase * SCL_Phase));
+   mDepthS->SetValue((int) (mDepth * SCL_Depth));
+   mResS->SetValue((int) (mRes * SCL_Res));
+   mFreqOfsS->SetValue((int) (mFreqOfs * SCL_FreqOfs));
 
    return true;
 }
