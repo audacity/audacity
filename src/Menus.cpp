@@ -6177,7 +6177,7 @@ void AudacityProject::OnManual()
 
 void AudacityProject::OnCheckForUpdates()
 {
-   ::OpenInDefaultBrowser( wxString( wxT("http://audacityteam.org/download/")) );
+   ::OpenInDefaultBrowser( wxString( wxT("http://audacityteam.org/download/?from_ver=")) + AUDACITY_VERSION_STRING );
 }
 
 void AudacityProject::OnShowLog()
