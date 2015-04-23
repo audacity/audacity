@@ -1826,6 +1826,8 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
+   //TODO: Ensure that cursor is refreshed when necessary.
+
    // Disable mouse actions on Timeline while recording.
    if (mIsRecording)
       return;
@@ -1839,14 +1841,20 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       mProject->OnUnlockPlayRegion();
    }
 
+   // Keep Quick-Play within usable track area.
+   TrackPanel *tp = mProject->GetTrackPanel();
+   int mousePosX, width, height;
+   tp->GetTracksUsableArea(&width, &height);
+   mousePosX = wxMax(evt.GetX(), tp->GetLeftOffset());
+   mousePosX = wxMin(mousePosX, tp->GetLeftOffset() + width - 1);
 
-   bool isWithinStart = IsWithinMarker(evt.GetX(), mPlayRegionStart);
-   bool isWithinEnd = IsWithinMarker(evt.GetX(), mPlayRegionEnd);
+   bool isWithinStart = IsWithinMarker(mousePosX, mPlayRegionStart);
+   bool isWithinEnd = IsWithinMarker(mousePosX, mPlayRegionEnd);
    bool canDragLoopSel = !mPlayRegionLock && mPlayRegionDragsSelection;
 
-   mLastMouseX = evt.GetX();
+   mLastMouseX = mousePosX;
 
-   mQuickPlayPos = Pos2Time(evt.GetX());
+   mQuickPlayPos = Pos2Time(mousePosX);
 
    double t0 = mProject->GetTracks()->GetStartTime();
    double t1 = mProject->GetTracks()->GetEndTime();
@@ -1907,7 +1915,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    if (evt.LeftDown())
    {
-      mButtonDownMousePos = evt.GetX();
+      mButtonDownMousePos = mousePosX;
 
       if (isWithinStart && isWithinEnd) {
          // Both could be selected, check which marker is nearer
@@ -1951,7 +1959,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       Refresh();
       break;
    case mesSelectingPlayRegionClick:
-      if (abs(evt.GetX() - mButtonDownMousePos) > SELECT_TOLERANCE_PIXEL)
+      if (abs(mousePosX - mButtonDownMousePos) > SELECT_TOLERANCE_PIXEL)
       {
          // User moved mouse at least SELECT_TOLERANCE_PIXEL, so change
          // from "click" mode to "range" mode to allow selecting a range
@@ -2043,7 +2051,11 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
          options.playLooped = (loopEnabled && evt.ShiftDown());
 
-         options.pStartTime = &mPlayRegionStart;
+         if (!evt.ControlDown())
+            options.pStartTime = &mPlayRegionStart;
+         else
+            options.timeTrack = NULL;
+
          ctb->PlayPlayRegion((SelectedRegion(start, end)),
                              options,
                              evt.ControlDown(),
@@ -2342,6 +2354,7 @@ void AdornedRulerPanel::DrawIndicator( double pos, bool rec )
    Refresh(false);
 }
 
+// Draws the play/recording position indicator.
 void AdornedRulerPanel::DoDrawIndicator(wxDC * dc)
 {
    if (mIndType < 0) {
