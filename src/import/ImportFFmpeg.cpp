@@ -778,6 +778,11 @@ int FFmpegImportFileHandle::WriteData(streamContext *sc)
 
                default:
                   wxLogError(wxT("Stream %d has unrecognized sample format %d."), streamid, sc->m_samplefmt);
+                  for (int chn=0; chn < nChannels; chn++)
+                  {
+                     free(tmp[chn]);
+                  }
+                  free(tmp);
                   return 1;
                break;
             }

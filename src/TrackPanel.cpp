@@ -7187,7 +7187,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
                             *dc, region, tracksRect, clip, mViewInfo,
                             envelopeFlag, samplesFlag, sliderFlag);
 
-   DrawEverythingElse(dc, region, panelRect, clip);
+   DrawEverythingElse(dc, region, clip);
 }
 
 /// Draws 'Everything else'.  In particular it draws:
@@ -7196,7 +7196,6 @@ void TrackPanel::DrawTracks(wxDC * dc)
 ///  - Fills in space below the tracks.
 void TrackPanel::DrawEverythingElse(wxDC * dc,
                                     const wxRegion &region,
-                                    const wxRect & WXUNUSED(panelRect),
                                     const wxRect & clip)
 {
    // We draw everything else

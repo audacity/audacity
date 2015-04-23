@@ -2283,7 +2283,7 @@ void AudioIO::StopStream()
                   }
                   if( appendRecord )
                   {  // append-recording
-                     bool bResult = true;
+                     bool bResult;
                      if (recordingOffset < 0)
                         bResult = track->Clear(mT0, mT0 - recordingOffset); // cut the latency out
                      else
@@ -4115,7 +4115,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
          bool selected = false;
          int group = 0;
          int chanCnt = 0;
-         float rate = 0.0;
          int maxLen = 0;
          for (t = 0; t < numPlaybackTracks; t++)
          {
@@ -4136,7 +4135,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
                if (vt->GetMute() && !vt->GetSolo())
                   cut = true;
 
-               rate = vt->GetRate();
                linkFlag = vt->GetLinked();
                selected = vt->GetSelected();
 

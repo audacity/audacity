@@ -157,7 +157,7 @@ sampleCount EffectPhaser::ProcessBlock(float **inBlock, float **outBlock, sample
          gain = (1.0 + cos(skipcount * lfoskip + phase)) / 2.0;
 
          // change lfo shape
-         gain = (exp(gain * phaserlfoshape) - 1.0) / (exp(phaserlfoshape) - 1.0);
+         gain = expm1(gain * phaserlfoshape) / expm1(phaserlfoshape);
 
          // attenuate the lfo
          gain = 1.0 - gain / 255.0 * mDepth;

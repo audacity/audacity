@@ -1064,7 +1064,6 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
       mProcessed[i] = float(0.0);
 
    float *in = new float[mWindowSize];
-   float *in2 = new float[mWindowSize];
    float *out = new float[mWindowSize];
    float *out2 = new float[mWindowSize];
    float *win = new float[mWindowSize];
@@ -1277,7 +1276,6 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
    }
 
    delete[]in;
-   delete[]in2;
    delete[]out;
    delete[]out2;
    delete[]win;
