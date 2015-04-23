@@ -388,8 +388,12 @@ bool NyquistEffect::Init()
       //(during this session).
       if (mFileName.GetModificationTime().IsLaterThan(mFileModified)) 
       {
+         SaveUserPreset(GetCurrentSettingsGroup());
+
          ParseFile();
          mFileModified = mFileName.GetModificationTime();
+
+         LoadUserPreset(GetCurrentSettingsGroup());
       }
    }
 
