@@ -100,6 +100,7 @@ simplifies construction of menu items.
 #include "toolbars/DeviceToolBar.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/TranscriptionToolBar.h"
+#include "widgets/LinkingHtmlWindow.h"
 
 #include "Experimental.h"
 #include "PlatformCompatibility.h"
@@ -1059,7 +1060,7 @@ void AudacityProject::CreateMenusAndCommands()
 #endif
 
    c->AddSeparator();
-
+   c->AddItem(wxT("Updates"), _("&Check for Updates..."), FN(OnCheckForUpdates));
    c->AddItem(wxT("DeviceInfo"), _("Au&dio Device Info..."), FN(OnAudioDeviceInfo),
               AudioIONotBusyFlag,
               AudioIONotBusyFlag);
@@ -6172,6 +6173,11 @@ void AudacityProject::OnManual()
    HelpSystem::ShowHelpDialog(
       this,
       wxT("Main_Page"));
+}
+
+void AudacityProject::OnCheckForUpdates()
+{
+   ::OpenInDefaultBrowser( wxString( wxT("http://audacityteam.org/download/")) );
 }
 
 void AudacityProject::OnShowLog()

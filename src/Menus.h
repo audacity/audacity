@@ -369,6 +369,7 @@ void OnStereoToMono(int index);
 void OnAbout();
 void OnQuickHelp();
 void OnManual();
+void OnCheckForUpdates();
 void OnShowLog();
 void OnHelpWelcome();
 void OnBenchmark();
