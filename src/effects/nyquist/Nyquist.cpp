@@ -378,6 +378,24 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 // Effect Implementation
 
+bool NyquistEffect::Init()
+{
+   if (!mExternal)
+   {
+      //TODO: If we want to auto-add parameters from spectral selection,
+      //we will need to modify this test.
+      //Note that removing it stops the caching of parameter values,
+      //(during this session).
+      if (mFileName.GetModificationTime().IsLaterThan(mFileModified)) 
+      {
+         ParseFile();
+         mFileModified = mFileName.GetModificationTime();
+      }
+   }
+
+   return true;
+}
+
 bool NyquistEffect::Process()
 {
    bool success = true;
@@ -1712,19 +1730,6 @@ bool NyquistEffect::TransferDataFromPromptWindow()
 
 bool NyquistEffect::TransferDataFromEffectWindow()
 {
-   if (!mExternal)
-   {
-      //TODO: If we want to auto-add parameters from spectral selection,
-      //we will need to modify this test.
-      //Note that removing it stops the caching of parameter values,
-      //(during this session).
-      if (mFileName.GetModificationTime().IsLaterThan(mFileModified)) 
-      {
-         ParseFile();
-         mFileModified = mFileName.GetModificationTime();
-      }
-   }
-
    if (mControls.GetCount() == 0)
    {
       return true;
