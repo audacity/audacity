@@ -561,16 +561,31 @@ bool Effect::SaveUserPreset(const wxString & name)
 
 wxArrayString Effect::GetFactoryPresets()
 {
+   if (mClient)
+   {
+      return mClient->GetFactoryPresets();
+   }
+
    return wxArrayString();
 }
 
-bool Effect::LoadFactoryPreset(int WXUNUSED(id))
+bool Effect::LoadFactoryPreset(int id)
 {
+   if (mClient)
+   {
+      return mClient->LoadFactoryPreset(id);
+   }
+
    return true;
 }
 
 bool Effect::LoadFactoryDefaults()
 {
+   if (mClient)
+   {
+      return mClient->LoadFactoryDefaults();
+   }
+
    return LoadUserPreset(GetFactoryDefaultsGroup());
 }
 
