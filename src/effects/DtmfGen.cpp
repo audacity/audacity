@@ -24,12 +24,20 @@
 
 #include "DtmfGen.h"
 
+enum
+{
+   ID_Sequence,
+   ID_Amplitude,
+   ID_Duration,
+   ID_DutyCycle,
+};
+
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type        Key               Def               Min      Max      Scale
 Param( Sequence,  wxString,   XO("Sequence"),   wxT("audacity"),  wxT(""), wxT(""), wxT(""));
 Param( DutyCycle, double,     XO("Duty Cycle"), 55.0,             0.0,     100.0,   10.0   );
-Param( Amplitude, double,     XO("Amplitude"),  0.8,              0.0,     1.0,     1      );
+Param( Amplitude, double,     XO("Amplitude"),  0.8,              0.001,   1.0,     1      );
 
 static const double kFadeInOut = 250.0; // used for fadein/out needed to remove clicking noise
 
@@ -53,15 +61,17 @@ const static wxChar *kSymbols[] =
 //
 
 BEGIN_EVENT_TABLE(EffectDtmf, wxEvtHandler)
-    EVT_TEXT(wxID_ANY, EffectDtmf::OnText)
-    EVT_SLIDER(wxID_ANY, EffectDtmf::OnSlider)
+    EVT_TEXT(ID_Sequence, EffectDtmf::OnSequence)
+    EVT_TEXT(ID_DutyCycle, EffectDtmf::OnAmplitude)
+    EVT_TEXT(ID_Duration, EffectDtmf::OnDuration)
+    EVT_SLIDER(ID_DutyCycle, EffectDtmf::OnDutyCycle)
 END_EVENT_TABLE()
 
 EffectDtmf::EffectDtmf()
 {
    dtmfDutyCycle = DEF_DutyCycle;
    dtmfAmplitude = DEF_Amplitude;
-   dtmfString = DEF_Sequence;
+   dtmfSequence = DEF_Sequence;
    dtmfTone = 0.0;
    dtmfSilence = 0.0;
 }
@@ -132,7 +142,7 @@ bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    }
    wxASSERT(diff >= 0);  // should never be negative
 
-   curSeqPos = -1; // pointer to string in dtmfString
+   curSeqPos = -1; // pointer to string in dtmfSequence
    isTone = false;
    numRemaining = 0;
 
@@ -188,7 +198,7 @@ sampleCount EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, sa
       if (isTone)
       {
          // generate the tone and append
-         MakeDtmfTone(buffer, len, mSampleRate, dtmfString[curSeqPos], curTonePos, numSamplesTone, dtmfAmplitude);
+         MakeDtmfTone(buffer, len, mSampleRate, dtmfSequence[curSeqPos], curTonePos, numSamplesTone, dtmfAmplitude);
          curTonePos += len;
       }
       else
@@ -208,7 +218,7 @@ sampleCount EffectDtmf::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, sa
 
 bool EffectDtmf::GetAutomationParameters(EffectAutomationParameters & parms)
 {
-   parms.Write(KEY_Sequence, dtmfString);
+   parms.Write(KEY_Sequence, dtmfSequence);
    parms.Write(KEY_DutyCycle, dtmfDutyCycle);
    parms.Write(KEY_Amplitude, dtmfAmplitude);
 
@@ -234,7 +244,7 @@ bool EffectDtmf::SetAutomationParameters(EffectAutomationParameters & parms)
 
    dtmfDutyCycle = DutyCycle;
    dtmfAmplitude = Amplitude;
-   dtmfString = Sequence;
+   dtmfSequence = Sequence;
    
    Recalculate();
 
@@ -258,7 +268,7 @@ bool EffectDtmf::Startup()
    // Load the old "current" settings
    if (gPrefs->Exists(base))
    {
-      gPrefs->Read(base + wxT("String"), &dtmfString, wxT("audacity"));
+      gPrefs->Read(base + wxT("String"), &dtmfSequence, wxT("audacity"));
       gPrefs->Read(base + wxT("DutyCycle"), &dtmfDutyCycle, 550L);
       gPrefs->Read(base + wxT("Amplitude"), &dtmfAmplitude, 0.8f);
 
@@ -284,13 +294,14 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
    S.AddSpace(0, 5);
    S.StartMultiColumn(2, wxCENTER);
    {
-      wxTextValidator vldDtmf(wxFILTER_INCLUDE_CHAR_LIST, &dtmfString);
+      wxTextValidator vldDtmf(wxFILTER_INCLUDE_CHAR_LIST, &dtmfSequence);
       vldDtmf.SetIncludes(wxArrayString(WXSIZEOF(kSymbols), kSymbols));
-      S.AddTextBox(_("DTMF sequence:"), wxT(""), 10)->SetValidator(vldDtmf);
+      mDtmfSequenceT = S.Id(ID_Sequence).AddTextBox(_("DTMF sequence:"), wxT(""), 10);
+      mDtmfSequenceT->SetValidator(vldDtmf);
 
-      FloatingPointValidator<double> vldAmp(1, &dtmfAmplitude);
+      FloatingPointValidator<double> vldAmp(3, &dtmfAmplitude, NUM_VAL_NO_TRAILING_ZEROES);
       vldAmp.SetRange(MIN_Amplitude, MAX_Amplitude);
-      S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 10)->SetValidator(vldAmp);
+      S.Id(ID_Amplitude).AddTextBox(_("Amplitude (0-1):"), wxT(""), 10)->SetValidator(vldAmp);
 
       bool isSelection;
       double duration = GetDuration(&isSelection);
@@ -299,7 +310,7 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
       mDtmfDurationT = new
          NumericTextCtrl(NumericConverter::TIME,
                          S.GetParent(),
-                         wxID_ANY,
+                         ID_Duration,
                          isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
                          duration,
                          mProjectRate,
@@ -312,10 +323,10 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
 
       S.AddFixedText(_("Tone/silence ratio:"), false);
       S.SetStyle(wxSL_HORIZONTAL | wxEXPAND);
-      mDtmfDutyS = S.AddSlider(wxT(""),
-                               dtmfDutyCycle * SCL_DutyCycle,
-                               MAX_DutyCycle * SCL_DutyCycle, 
-                               MIN_DutyCycle * SCL_DutyCycle);
+      mDtmfDutyCycleS = S.Id(ID_DutyCycle).AddSlider(wxT(""),
+                                                     dtmfDutyCycle * SCL_DutyCycle,
+                                                     MAX_DutyCycle * SCL_DutyCycle, 
+                                                     MIN_DutyCycle * SCL_DutyCycle);
       S.SetSizeHints(-1,-1);
    }
    S.EndMultiColumn();
@@ -343,7 +354,7 @@ bool EffectDtmf::TransferDataToWindow()
       return false;
    }
 
-   mDtmfDutyS->SetValue(dtmfDutyCycle * SCL_DutyCycle);
+   mDtmfDutyCycleS->SetValue(dtmfDutyCycle * SCL_DutyCycle);
 
    mDtmfDurationT->SetValue(GetDuration());
 
@@ -359,8 +370,8 @@ bool EffectDtmf::TransferDataFromWindow()
       return false;
    }
 
-   dtmfDutyCycle = (double) mDtmfDutyS->GetValue() / SCL_DutyCycle;
-   SetDuration(mDtmfDurationT->GetValue());
+//   dtmfDutyCycle = (double) mDtmfDutyCycleS->GetValue() / SCL_DutyCycle;
+//   SetDuration(mDtmfDurationT->GetValue());
 
    // recalculate to make sure all values are up-to-date. This is especially
    // important if the user did not change any values in the dialog
@@ -375,7 +386,7 @@ void EffectDtmf::Recalculate()
 {
    // remember that dtmfDutyCycle is in range (0.0-100.0)
 
-   dtmfNTones = (int) dtmfString.Length();
+   dtmfNTones = (int) dtmfSequence.Length();
 
    if (dtmfNTones==0) {
       // no tones, all zero: don't do anything
@@ -552,18 +563,32 @@ void EffectDtmf::UpdateUI(void)
    mDtmfToneT->SetName(mDtmfToneT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
-void EffectDtmf::OnSlider(wxCommandEvent & evt)
+void EffectDtmf::OnSequence(wxCommandEvent & WXUNUSED(evt))
 {
-   dtmfDutyCycle = (double) evt.GetInt() / SCL_DutyCycle;
-   mUIParent->TransferDataFromWindow();
+   dtmfSequence = mDtmfSequenceT->GetValue();
    Recalculate();
    UpdateUI();
 }
 
-void EffectDtmf::OnText(wxCommandEvent & WXUNUSED(evt))
+void EffectDtmf::OnAmplitude(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!mDtmfAmplitudeT->GetValidator()->TransferFromWindow())
+   {
+      return;
+   }
+   Recalculate();
+   UpdateUI();
+}
+void EffectDtmf::OnDuration(wxCommandEvent & WXUNUSED(evt))
 {
    SetDuration(mDtmfDurationT->GetValue());
-   mUIParent->TransferDataFromWindow();
+   Recalculate();
+   UpdateUI();
+}
+
+void EffectDtmf::OnDutyCycle(wxCommandEvent & evt)
+{
+   dtmfDutyCycle = (double) evt.GetInt() / SCL_DutyCycle;
    Recalculate();
    UpdateUI();
 }
