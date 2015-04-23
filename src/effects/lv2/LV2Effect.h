@@ -57,6 +57,7 @@ public:
    }
 
    uint32_t mIndex;
+   wxString mSymbol;
    wxString mName;
    wxString mGroup;
    wxString mUnits;
@@ -232,7 +233,16 @@ private:
                 uint32_t protocol,
                 const void *buffer);
 
-   void UIRefresh();
+   static void set_value_func(const char *port_symbol,
+                              void       *user_data,
+                              const void *value,
+                              uint32_t   size,
+                              uint32_t   type);
+
+   void SetPortValue(const char *port_symbol,
+                     const void *value,
+                     uint32_t   size,
+                     uint32_t   type);
 
 private:
    // Declare the static URI nodes
@@ -307,6 +317,10 @@ private:
    NumericTextCtrl *mDuration;
    wxSlider **mSliders;
    wxTextCtrl **mFields;
+
+   bool mFactoryPresetsLoaded;
+   wxArrayString mFactoryPresetNames;
+   wxArrayString mFactoryPresetUris;
 
    DECLARE_EVENT_TABLE();
 

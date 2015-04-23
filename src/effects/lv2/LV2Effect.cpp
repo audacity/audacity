@@ -187,7 +187,7 @@ LV2EffectSettingsDialog::LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *ef
 
    mEffect->mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
    mEffect->mHost->GetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI, true);
-wxPrintf(wxT("#1 usegui %d\n"), mUseGUI);
+
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
@@ -296,6 +296,7 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
    mHost = NULL;
    mMaster = NULL;
    mProcess = NULL;
+   mSuilInstance = NULL;
 
    mSampleRate = 44100;
    mBlockSize = 512;
@@ -317,6 +318,8 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 
    mIdleFeature = NULL;
    mOptionsInterface = NULL;
+
+   mFactoryPresetsLoaded = false;
 }
 
 LV2Effect::~LV2Effect()
@@ -490,6 +493,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       ctrl.mIndex = index;
 
       // Get the port name
+      ctrl.mSymbol = LilvString(lilv_port_get_symbol(mPlug, port));
       LilvNode *tmpName = lilv_port_get_name(mPlug, port);
       ctrl.mName = LilvString(tmpName);
       lilv_node_free(tmpName);
@@ -632,7 +636,6 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    {
       mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
       mHost->GetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI, true);
-wxPrintf(wxT("#1 usegui %d\n"), mUseGUI);
 
       bool haveDefaults;
       mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
@@ -1049,7 +1052,6 @@ bool LV2Effect::PopulateUI(wxWindow *parent)
                           wxT("UseGUI"),
                           mUseGUI,
                           true);
-wxPrintf(wxT("#2 usegui %d\n"), mUseGUI);
 
    if (mUseGUI)
    {
@@ -1133,7 +1135,12 @@ bool LV2Effect::CloseUI()
 
 bool LV2Effect::LoadUserPreset(const wxString & name)
 {
-   return LoadParameters(name);
+   if (!LoadParameters(name))
+   {
+      return false;
+   }
+
+   return TransferDataToWindow();
 }
 
 bool LV2Effect::SaveUserPreset(const wxString & name)
@@ -1143,22 +1150,86 @@ bool LV2Effect::SaveUserPreset(const wxString & name)
 
 wxArrayString LV2Effect::GetFactoryPresets()
 {
-   return wxArrayString();
+   if (mFactoryPresetsLoaded)
+   {
+      return mFactoryPresetNames;
+   }
+
+   LilvNodes* presets = lilv_plugin_get_related(mPlug, gPreset);
+   if (presets)
+   {
+      LILV_FOREACH(nodes, i, presets)
+      {
+         const LilvNode *preset = lilv_nodes_get(presets, i);
+
+         mFactoryPresetUris.Add(LilvString(preset));
+
+         lilv_world_load_resource(gWorld, preset);
+   
+         LilvNodes *labels = lilv_world_find_nodes(gWorld, preset, gLabel, NULL);
+         if (labels)
+         {
+            const LilvNode *label = lilv_nodes_get_first(labels);
+
+            mFactoryPresetNames.Add(LilvString(label));
+
+            lilv_nodes_free(labels);
+         }
+         else
+         {
+            mFactoryPresetNames.Add(LilvString(preset).AfterLast(wxT('#')));
+         }
+      }
+   
+      lilv_nodes_free(presets);
+   }
+
+   mFactoryPresetsLoaded = true;
+
+   return mFactoryPresetNames;
 }
 
-bool LV2Effect::LoadFactoryPreset(int WXUNUSED(id))
+bool LV2Effect::LoadFactoryPreset(int id)
 {
-   return true;
+   if (id < 0 || id >= (int) mFactoryPresetUris.GetCount())
+   {
+      return false;
+   }
+
+   LilvNode *preset = lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8());
+   if (!preset)
+   {
+      return false;
+   }
+
+   LilvState *state = lilv_state_new_from_world(gWorld, &mURIDMapFeature, preset);
+   if (state)
+   {
+      lilv_state_restore(state, mMaster, set_value_func, this, 0, NULL);
+   
+      lilv_state_free(state);
+   
+      TransferDataToWindow();
+   }
+
+   lilv_node_free(preset);
+
+   return state != NULL;
 }
 
 bool LV2Effect::LoadFactoryDefaults()
 {
-   return LoadParameters(mHost->GetFactoryDefaultsGroup());
+   if (!LoadParameters(mHost->GetFactoryDefaultsGroup()))
+   {
+      return false;
+   }
+
+   return TransferDataToWindow();
 }
 
 bool LV2Effect::CanExportPresets()
 {
-   return true;
+   return false;
 }
 
 void LV2Effect::ExportPresets()
@@ -1449,7 +1520,7 @@ bool LV2Effect::BuildFancy()
    mIdleFeature = (const LV2UI_Idle_Interface *)
       suil_instance_extension_data(mSuilInstance, LV2_UI__idleInterface);
 
-   UIRefresh();
+   TransferDataToWindow();
 
    return true;
 }
@@ -1747,6 +1818,26 @@ bool LV2Effect::BuildPlain()
 
 bool LV2Effect::TransferDataToWindow()
 {
+   if (mUseGUI)
+   {
+      if (mSuilInstance)
+      {
+         for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+         {
+            if (mControls[p].mInput)
+            {
+               suil_instance_port_event(mSuilInstance,
+                                        mControls[p].mIndex,
+                                        sizeof(float),
+                                        0,
+                                        &mControls[p].mVal);
+            }
+         }
+      }
+
+      return true;
+   }
+
    if (!mParent->TransferDataToWindow())
    {
       return false;
@@ -1870,24 +1961,6 @@ void LV2Effect::OnIdle(wxIdleEvent & WXUNUSED(evt))
    }
 }
 
-void LV2Effect::UIRefresh()
-{
-   if (mSuilInstance)
-   {
-      for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
-      {
-         if (mControls[p].mInput)
-         {
-            suil_instance_port_event(mSuilInstance,
-                                     p,
-                                     sizeof(float),
-                                     0,
-                                     &mControls[p].mVal);
-         }
-      }
-   }
-}
-
 // ============================================================================
 // Feature handlers
 // ============================================================================
@@ -1977,6 +2050,58 @@ void LV2Effect::UIWrite(uint32_t port_index,
    if (it != mControlsMap.end())
    {
       mControls[(it->second)].mVal = *((const float *)buffer);
+   }
+}
+
+// static callback
+void LV2Effect::set_value_func(const char *port_symbol,
+                               void       *user_data,
+                               const void *value,
+                               uint32_t   size,
+                               uint32_t   type)
+{
+   ((LV2Effect *)user_data)->SetPortValue(port_symbol, value, size, type);
+}
+
+void LV2Effect::SetPortValue(const char *port_symbol,
+                             const void *value,
+                             uint32_t   size,
+                             uint32_t   type)
+{
+   wxString symbol = wxString::FromUTF8(port_symbol);
+   LV2_URID Bool = URID_Map(lilv_node_as_string(gBool));
+   LV2_URID Double = URID_Map(lilv_node_as_string(gDouble));
+   LV2_URID Float = URID_Map(lilv_node_as_string(gFloat));
+   LV2_URID Int = URID_Map(lilv_node_as_string(gInt));
+   LV2_URID Long = URID_Map(lilv_node_as_string(gLong));
+
+   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   {
+      if (mControls[p].mSymbol.IsSameAs(symbol))
+      {
+         if (type == Bool && size == sizeof(bool))
+         {
+            mControls[p].mVal = (float) *((const bool *) value) ? 1.0f : 0.0f;
+         }
+         else if (type == Double && size == sizeof(double))
+         {
+            mControls[p].mVal = (float) *((const double *) value);
+         }
+         else if (type == Float && size == sizeof(float))
+         {
+            mControls[p].mVal = (float) *((const float *) value);
+         }
+         else if (type == Int && size == sizeof(int32_t))
+         {
+            mControls[p].mVal = (float) *((const int32_t *) value);
+         }
+         else if (type == Long && size == sizeof(int64_t))
+         {
+            mControls[p].mVal = (float) *((const int64_t *) value);
+         }
+
+         break;
+      }
    }
 }
 

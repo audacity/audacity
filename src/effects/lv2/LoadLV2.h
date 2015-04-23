@@ -36,6 +36,11 @@
 // Define the list of URIs that we will use
 #undef URILIST
 #define URILIST \
+   URI( gBool,          LV2_ATOM__Bool                ) \
+   URI( gDouble,        LV2_ATOM__Double              ) \
+   URI( gFloat,         LV2_ATOM__Float               ) \
+   URI( gInt,           LV2_ATOM__Int                 ) \
+   URI( gLong,          LV2_ATOM__Long                ) \
    URI( gAudio,         LV2_CORE__AudioPort           ) \
    URI( gControl,       LV2_CORE__ControlPort         ) \
    URI( gInput,         LV2_CORE__InputPort           ) \
