@@ -534,6 +534,11 @@ bool Effect::LoadUserPreset(const wxString & name)
       return true;
    }
 
+   if (mClient)
+   {
+      return mClient->LoadUserPreset(name);
+   }
+
    wxString parms;
    if (!GetPrivateConfig(name, wxT("Parameters"), parms))
    {
@@ -548,6 +553,11 @@ bool Effect::SaveUserPreset(const wxString & name)
    if (!SupportsAutomation())
    {
       return true;
+   }
+
+   if (mClient)
+   {
+      return mClient->SaveUserPreset(name);
    }
 
    wxString parms;
