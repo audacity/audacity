@@ -233,9 +233,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mStagesS = S.Id(ID_Stages).AddSlider(wxT(""), DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
       mStagesS->SetName(_("Stages"));
       mStagesS->SetLineSize(2);
-#if defined(__WXGTK__)
       mStagesS->SetMinSize(wxSize(100, -1));
-#endif
 
       IntegerValidator<int> vldDryWet(&mDryWet);
       vldDryWet.SetRange(MIN_DryWet, MAX_DryWet);
@@ -245,9 +243,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       mDryWetS = S.Id(ID_DryWet).AddSlider(wxT(""), DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
       mDryWetS->SetName(_("Dry Wet"));
-#if defined(__WXGTK__)
       mDryWetS->SetMinSize(wxSize(100, -1));
-#endif
 
       FloatingPointValidator<double> vldFreq(1, &mFreq);
       vldFreq.SetRange(MIN_Freq, MAX_Freq);
@@ -257,9 +253,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       mFreqS = S.Id(ID_Freq).AddSlider(wxT(""), DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, MIN_Freq * SCL_Freq);
       mFreqS ->SetName(_("LFO frequency in hertz"));
-#if defined(__WXGTK__)
       mFreqS ->SetMinSize(wxSize(100, -1));
-#endif
 
       FloatingPointValidator<double> vldPhase(1, &mPhase);
       vldPhase.SetRange(MIN_Phase, MAX_Phase);
@@ -270,9 +264,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mPhaseS = S.Id(ID_Phase).AddSlider(wxT(""), DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
       mPhaseS->SetName(_("LFO start phase in degrees"));
       mPhaseS->SetLineSize(10);
-#if defined(__WXGTK__)
       mPhaseS->SetMinSize(wxSize(100, -1));
-#endif
 
       IntegerValidator<int> vldDepth(&mDepth);
       vldDepth.SetRange(MIN_Depth, MAX_Depth);
@@ -282,9 +274,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       S.SetStyle(wxSL_HORIZONTAL);
       mDepthS = S.Id(ID_Depth).AddSlider(wxT(""), DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
       mDepthS->SetName(_("Depth in percent"));
-#if defined(__WXGTK__)
       mDepthS->SetMinSize(wxSize(100, -1));
-#endif
 
       IntegerValidator<int> vldFeedback(&mFeedback);
       vldFeedback.SetRange(MIN_Feedback, MAX_Feedback);
@@ -295,9 +285,7 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
       mFeedbackS = S.Id(ID_Feedback).AddSlider(wxT(""), DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
       mFeedbackS->SetName(_("Feedback in percent"));
       mFeedbackS->SetLineSize(10);
-#if defined(__WXGTK__)
       mFeedbackS->SetMinSize(wxSize(100, -1));
-#endif
    }
    S.EndMultiColumn();
 }
@@ -308,6 +296,13 @@ bool EffectPhaser::TransferDataToWindow()
    {
       return false;
    }
+
+   mStagesS->SetValue((int) (mStages * SCL_Stages));
+   mDryWetS->SetValue((int) (mDryWet * SCL_DryWet));
+   mFreqS->SetValue((int) (mFreq * SCL_Freq));
+   mPhaseS->SetValue((int) (mPhase * SCL_Phase));
+   mDepthS->SetValue((int) (mDepth * SCL_Depth));
+   mFeedbackS->SetValue((int) (mFeedback * SCL_Feedback));
 
    return true;
 }
@@ -322,7 +317,7 @@ bool EffectPhaser::TransferDataFromWindow()
    if (mStages & 1)    // must be even
    {
       mStages &= ~1;
-      mUIParent->TransferDataToWindow();
+      mStagesT->GetValidator()->TransferToWindow();
    }
 
    return true;
@@ -332,9 +327,8 @@ bool EffectPhaser::TransferDataFromWindow()
 
 void EffectPhaser::OnStagesSlider(wxCommandEvent & evt)
 {
-   int val = evt.GetInt() & ~1;  // must be even;
-   mPhaseS->SetValue(val);
-   mStages /= SCL_Stages;
+   mStages = (evt.GetInt() / SCL_Stages) & ~1;  // must be even;
+   mPhaseS->SetValue(mStages * SCL_Stages);
    mStagesT->GetValidator()->TransferToWindow();
    EnableApply(mUIParent->Validate());
 }
