@@ -154,7 +154,7 @@ WX_DEFINE_ARRAY(MixerTrackCluster*, MixerTrackClusterArray);
 class MusicalInstrument
 {
 public:
-   MusicalInstrument(wxBitmap* pBitmap, const wxString strXPMfilename);
+   MusicalInstrument(wxBitmap* pBitmap, const wxString & strXPMfilename);
    virtual ~MusicalInstrument();
 
    wxBitmap*      mBitmap;
@@ -213,7 +213,7 @@ public:
    void RemoveTrackCluster(const Track* pTrack);
 
 
-   wxBitmap* GetMusicalInstrumentBitmap(const wxString name);
+   wxBitmap* GetMusicalInstrumentBitmap(const wxString & name);
 #else
    void MoveTrackCluster(const WaveTrack* pTrack, bool bUp); // Up in TrackPanel is left in MixerBoard.
    void RemoveTrackCluster(const WaveTrack* pTrack);

@@ -29,12 +29,12 @@ public:
    // "Good" means well-formed and for the file-related functions, names an existing file or folder.
    // These are used in HandleXMLTag and BuildFomXML methods to check the input for
    // security vulnerabilites, per the NGS report for UmixIt.
-   static bool IsGoodString(const wxString str);
+   static bool IsGoodString(const wxString & str);
 
-   static bool IsGoodFileName(const wxString strFileName, const wxString strDirName = wxEmptyString);
+   static bool IsGoodFileName(const wxString & strFileName, const wxString & strDirName = wxEmptyString);
    static bool IsGoodFileString(wxString str);
-   static bool IsGoodSubdirName(const wxString strSubdirName, const wxString strDirName = wxEmptyString);
-   static bool IsGoodPathName(const wxString strPathName);
+   static bool IsGoodSubdirName(const wxString & strSubdirName, const wxString & strDirName = wxEmptyString);
+   static bool IsGoodPathName(const wxString & strPathName);
    static bool IsGoodPathString(wxString str);
 
    /** @brief Check that the supplied string can be converted to a long (32bit)
@@ -46,7 +46,7 @@ public:
 	* @param strInt The string to test
 	* @return true if the string is convertable, false if not
 	*/
-   static bool IsGoodInt(const wxString strInt);
+   static bool IsGoodInt(const wxString & strInt);
    /** @brief Check that the supplied string can be converted to a 64bit
 	* integer.
 	*
@@ -56,7 +56,7 @@ public:
 	* @param strInt The string to test
 	* @return true if the string is convertable, false if not
 	*/
-   static bool IsGoodInt64(const wxString strInt);
+   static bool IsGoodInt64(const wxString & strInt);
 
    static bool IsValidChannel(const int nValue);
 #ifdef USE_MIDI

@@ -327,7 +327,7 @@ public:
 
 private:
 
-   char *AdjustString(wxString wxStr, int sf_format);
+   char *AdjustString(const wxString & wxStr, int sf_format);
    bool AddStrings(AudacityProject *project, SNDFILE *sf, Tags *tags, int sf_format);
    void AddID3Chunk(wxString fName, Tags *tags, int sf_format);
 
@@ -574,7 +574,7 @@ int ExportPCM::Export(AudacityProject *project,
    return updateResult;
 }
 
-char *ExportPCM::AdjustString(const wxString wxStr, int sf_format)
+char *ExportPCM::AdjustString(const wxString & wxStr, int sf_format)
 {
    bool b_aiff = false;
    if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF)

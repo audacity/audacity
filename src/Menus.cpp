@@ -3613,7 +3613,6 @@ void AudacityProject::OnSplitCut()
    Track *dest;
 
    ClearClipboard();
-   n = iter.First();
    while (n) {
       if (n->GetSelected()) {
          dest = NULL;

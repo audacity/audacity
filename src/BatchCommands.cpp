@@ -427,7 +427,7 @@ wxString BatchCommands::BuildCleanFileName(wxString fileName, wxString extension
    return cleanedName;
 }
 
-bool BatchCommands::WriteMp3File( const wxString Name, int bitrate )
+bool BatchCommands::WriteMp3File( const wxString & Name, int bitrate )
 {  //check if current project is mono or stereo
    int numChannels = 2;
    if (IsMono()) {
@@ -471,7 +471,7 @@ bool BatchCommands::WriteMp3File( const wxString Name, int bitrate )
 // and think again.
 // ======= IMPORTANT ========
 // CLEANSPEECH remnant
-bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString command,const wxString params)
+bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString & command,const wxString & params)
 {
    if (ReportAndSkip(command, params))
       return true;
@@ -555,7 +555,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString c
 }
 // end CLEANSPEECH remnant
 
-bool BatchCommands::SetCurrentParametersFor(const wxString command, const wxString params)
+bool BatchCommands::SetCurrentParametersFor(const wxString & command, const wxString & params)
 {
    // transfer the parameters to the effect...
    if( !params.IsEmpty() )
@@ -576,7 +576,7 @@ bool BatchCommands::SetCurrentParametersFor(const wxString command, const wxStri
    return true;
 }
 
-bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString command, const wxString params)
+bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params)
 {
    //Possibly end processing here, if in batch-debug
    if( ReportAndSkip(command, params))
@@ -597,7 +597,7 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString comma
                                 AudacityProject::OnEffectFlags::kSkipState);
 }
 
-bool BatchCommands::ApplyCommand(const wxString command, const wxString params)
+bool BatchCommands::ApplyCommand(const wxString & command, const wxString & params)
 {
 
    unsigned int i;
@@ -729,7 +729,7 @@ void BatchCommands::ResetChain()
 
 // ReportAndSkip() is a diagnostic function that avoids actually
 // applying the requested effect if in batch-debug mode.
-bool BatchCommands::ReportAndSkip(const wxString command, const wxString params)
+bool BatchCommands::ReportAndSkip(const wxString & command, const wxString & params)
 {
    int bDebug;
    gPrefs->Read(wxT("/Batch/Debug"), &bDebug, false);

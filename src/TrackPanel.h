@@ -103,28 +103,28 @@ private:
    void EnsureSufficientSliders(int index);
 
    void SetTrackInfoFont(wxDC *dc);
-   void DrawBackground(wxDC * dc, const wxRect r, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul);
-   void DrawBordersWithin(wxDC * dc, const wxRect r, bool bHasMuteSolo );
-   void DrawCloseBox(wxDC * dc, const wxRect r, bool down);
-   void DrawTitleBar(wxDC * dc, const wxRect r, Track * t, bool down);
-   void DrawMuteSolo(wxDC * dc, const wxRect r, Track * t, bool down, bool solo, bool bHasSoloButton);
-   void DrawVRuler(wxDC * dc, const wxRect r, Track * t);
+   void DrawBackground(wxDC * dc, const wxRect & r, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul);
+   void DrawBordersWithin(wxDC * dc, const wxRect & r, bool bHasMuteSolo );
+   void DrawCloseBox(wxDC * dc, const wxRect & r, bool down);
+   void DrawTitleBar(wxDC * dc, const wxRect & r, Track * t, bool down);
+   void DrawMuteSolo(wxDC * dc, const wxRect & r, Track * t, bool down, bool solo, bool bHasSoloButton);
+   void DrawVRuler(wxDC * dc, const wxRect & r, Track * t);
 #ifdef EXPERIMENTAL_MIDI_OUT
    void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect r);
 #endif
    void DrawSliders(wxDC * dc, WaveTrack *t, wxRect r);
 
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
-   void DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down);
+   void DrawMinimize(wxDC * dc, const wxRect & r, Track * t, bool down);
 
-   void GetTrackControlsRect(const wxRect r, wxRect &dest) const;
-   void GetCloseBoxRect(const wxRect r, wxRect &dest) const;
-   void GetTitleBarRect(const wxRect r, wxRect &dest) const;
-   void GetMuteSoloRect(const wxRect r, wxRect &dest, bool solo, bool bHasSoloButton) const;
-   void GetGainRect(const wxRect r, wxRect &dest) const;
-   void GetPanRect(const wxRect r, wxRect &dest) const;
-   void GetMinimizeRect(const wxRect r, wxRect &dest) const;
-   void GetSyncLockIconRect(const wxRect r, wxRect &dest) const;
+   void GetTrackControlsRect(const wxRect & r, wxRect &dest) const;
+   void GetCloseBoxRect(const wxRect & r, wxRect &dest) const;
+   void GetTitleBarRect(const wxRect & r, wxRect &dest) const;
+   void GetMuteSoloRect(const wxRect & r, wxRect &dest, bool solo, bool bHasSoloButton) const;
+   void GetGainRect(const wxRect & r, wxRect &dest) const;
+   void GetPanRect(const wxRect & r, wxRect &dest) const;
+   void GetMinimizeRect(const wxRect & r, wxRect &dest) const;
+   void GetSyncLockIconRect(const wxRect & r, wxRect &dest) const;
 
    // These arrays are always kept the same size.
    LWSliderArray mGains;
@@ -521,17 +521,17 @@ public:
 protected:
    virtual void DrawTracks(wxDC * dc);
 
-   virtual void DrawEverythingElse(wxDC *dc, const wxRegion region,
-                           const wxRect panelRect, const wxRect clip);
-   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect rec,
-                    const wxRect trackRect);
+   virtual void DrawEverythingElse(wxDC *dc, const wxRegion & region,
+                           const wxRect & panelRect, const wxRect & clip);
+   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec,
+                    const wxRect &trackRect);
    void DrawScrubSpeed(wxDC &dc);
-   virtual void DrawZooming(wxDC* dc, const wxRect clip);
+   virtual void DrawZooming(wxDC* dc, const wxRect & clip);
 
-   virtual void HighlightFocusedTrack (wxDC* dc, const wxRect r);
-   virtual void DrawShadow            (Track *t, wxDC* dc, const wxRect r);
-   virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect r, const int labelw, const int vrul);
-   virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect r);
+   virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &r);
+   virtual void DrawShadow            (Track *t, wxDC* dc, const wxRect & r);
+   virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & r, const int labelw, const int vrul);
+   virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & r);
 
    virtual int IdOfRate( int rate );
    virtual int IdOfFormat( int format );

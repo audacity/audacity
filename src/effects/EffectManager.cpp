@@ -59,7 +59,7 @@ EffectManager::~EffectManager()
    while (iter != mHostEffects.end())
    {
       delete iter->second;
-      iter++;
+      ++iter;
    }
 }
 

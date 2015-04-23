@@ -132,8 +132,8 @@ public:
 
    wxNotebook * StartNotebook();
    void EndNotebook();
-   wxNotebookPage * StartNotebookPage( const wxString Name );
-   void StartNotebookPage( const wxString Name, wxNotebookPage * pPage );
+   wxNotebookPage * StartNotebookPage( const wxString & Name );
+   void StartNotebookPage( const wxString & Name, wxNotebookPage * pPage );
    void EndNotebookPage();
    wxPanel * StartInvisiblePanel();
    void EndInvisiblePanel();

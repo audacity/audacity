@@ -867,7 +867,7 @@ void Ruler::TickCustom(int labelIdx, bool major, bool minor)
       }
       else {
 
-         strTop =-strH-mLead;
+         //strTop =-strH-mLead;
          strTop = mTop- mLead+4;// More space was needed...
          mMaxHeight = max(mMaxHeight, strH + 6);
       }

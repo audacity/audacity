@@ -463,7 +463,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
 
       progress->Update(count, total);
 
-      iter++;
+      ++iter;
       count++;
    }
 
@@ -485,7 +485,7 @@ bool DirManager::SetProject(wxString& newProjPath, wxString& newProjName, const 
          if (count>=0)
             progress->Update(count, total);
 
-         iter++;
+         ++iter;
          count--;
       }
 
@@ -1271,7 +1271,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
          db->LockRead();
       }
 
-      iter++;
+      ++iter;
    }
 
    if (needToRename) {
@@ -1297,7 +1297,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
             if (!b->IsDataAvailable() && (db->GetEncodedAudioFilename() == fName))
                db->UnlockRead();
 
-            iter++;
+            ++iter;
          }
 
          // Print error message and cancel the export
@@ -1327,7 +1327,7 @@ bool DirManager::EnsureSafeFilename(wxFileName fName)
                db->ChangeAudioFile(renamedFileName);
                db->UnlockRead();
             }
-            iter++;
+            ++iter;
          }
 
       }
@@ -1474,7 +1474,7 @@ _("Project check of \"%s\" folder \
                b->Recover();
                nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
             }
-            iter++;
+            ++iter;
          }
          if ((action == 2) && bAutoRecoverMode)
             wxLogWarning(_("   Project check replaced missing aliased file(s) with silence."));
@@ -1527,7 +1527,7 @@ _("Project check of \"%s\" folder \
                // Silence error logging for this block in this session.
                b->SilenceLog();
             }
-            iter++;
+            ++iter;
          }
          if ((action == 0) && bAutoRecoverMode)
             wxLogWarning(_("   Project check regenerated missing alias summary file(s)."));
@@ -1585,7 +1585,7 @@ _("Project check of \"%s\" folder \
             }
             else if (action == 1)
                b->SilenceLog();
-            iter++;
+            ++iter;
          }
          if ((action == 2) && bAutoRecoverMode)
             wxLogWarning(_("   Project check replaced missing audio data block file(s) with silence."));
@@ -1701,14 +1701,14 @@ void DirManager::FindMissingAliasedFiles(
                missingAliasedFilePathHash[aliasedFileFullPath] = NULL;
          }
       }
-      iter++;
+      ++iter;
    }
 
    iter = missingAliasedFilePathHash.begin();
    while (iter != missingAliasedFilePathHash.end())
    {
       wxLogWarning(_("Missing aliased audio file: '%s'"), iter->first.c_str());
-      iter++;
+      ++iter;
    }
 }
 
@@ -1734,7 +1734,7 @@ void DirManager::FindMissingAUFs(
                            fileName.GetFullPath().c_str());
          }
       }
-      iter++;
+      ++iter;
    }
 }
 
@@ -1758,7 +1758,7 @@ void DirManager::FindMissingAUs(
                            fileName.GetFullPath().c_str());
          }
       }
-      iter++;
+      ++iter;
    }
 }
 
@@ -1847,7 +1847,7 @@ void DirManager::FillBlockfilesCache()
       BlockFile *b = iter->second;
       if (b->GetNeedFillCache())
          numNeed++;
-      iter++;
+      ++iter;
    }
 
    if (numNeed == 0)
@@ -1867,7 +1867,7 @@ void DirManager::FillBlockfilesCache()
 
       if (!progress.Update(current, numNeed))
          break; // user cancelled progress dialog, stop caching
-      iter++;
+      ++iter;
       current++;
    }
 #endif // DEPRECATED_AUDIO_CACHE
@@ -1884,7 +1884,7 @@ void DirManager::WriteCacheToDisk()
       BlockFile *b = iter->second;
       if (b->GetNeedWriteCacheToDisk())
          numNeed++;
-      iter++;
+      ++iter;
    }
 
    if (numNeed == 0)
@@ -1903,7 +1903,7 @@ void DirManager::WriteCacheToDisk()
          b->WriteCacheToDisk();
          progress.Update(current, numNeed);
       }
-      iter++;
+      ++iter;
       current++;
    }
 }
