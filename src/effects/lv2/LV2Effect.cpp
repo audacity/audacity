@@ -1507,10 +1507,12 @@ bool LV2Effect::BuildFancy()
    gtk_widget_show_all(GTK_WIDGET(pizza));
    si->SetMinSize(wxSize(sz.width, sz.height));
 #elif defined(__WXMSW__)
+#ifdef EXPERIMENTAL_WINDOWS_SUIL
    HWND widget = (HWND) suil_instance_get_widget(mSuilInstance);
    RECT rect;
    GetWindowRect(widget, &rect);
    si->SetMinSize(wxSize(rect.right - rect.left, rect.bottom - rect.top));
+#endif
 #elif defined(__WXMAC__)
 //   si->SetMinSize(wxSize(sz.width, sz.height));
 #endif
