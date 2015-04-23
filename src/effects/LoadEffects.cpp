@@ -123,6 +123,7 @@
    EFFECT( LEVELLER,          EffectLeveller() )         \
    EFFECT( NORMALIZE,         EffectNormalize() )        \
    EFFECT( PHASER,            EffectPhaser() )           \
+   EFFECT( REPAIR,            EffectRepair() )           \
    EFFECT( REPEAT,            EffectRepeat() )           \
    EFFECT( REVERB,            EffectReverb() )           \
    EFFECT( REVERSE,           EffectReverse() )          \
