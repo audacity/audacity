@@ -91,7 +91,8 @@ public:
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
    // Effect implementation
-
+   
+   virtual bool Init();
    virtual bool Process();
    virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
    virtual void PopulateOrExchange(ShuttleGui & S);
