@@ -746,6 +746,7 @@ protected:
       IsClosing,
       IsSelecting,
       IsAdjustingLabel,
+      IsAdjustingSample,
       IsResizing,
       IsResizingBetweenLinkedTracks,
       IsResizingBelowLinkedTracks,

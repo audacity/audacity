@@ -3503,6 +3503,10 @@ void AudacityProject::OnRedo()
       wxMessageBox(_("Nothing to redo"));
       return;
    }
+   // Can't redo whilst dragging
+   if (mTrackPanel->IsMouseCaptured()) {
+      return;
+   }
 
    TrackList *l = mUndoManager.Redo(&mViewInfo.selectedRegion);
    PopState(l);

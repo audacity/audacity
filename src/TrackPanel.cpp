@@ -1578,6 +1578,7 @@ void TrackPanel::HandleEscapeKey()
       break;
    case IsZooming:
    case IsVZooming:
+   case IsAdjustingSample:
       break;
    case IsResizing:
       mCapturedTrack->SetHeight(mInitialActualHeight);
@@ -4906,6 +4907,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
          ReleaseMouse();
       return;
    }
+   SetCapturedTrack( t, IsAdjustingSample);
 
    /// \todo Should mCapturedTrack take the place of mDrawingTrack??
    mDrawingTrack = t;
@@ -5149,7 +5151,7 @@ void TrackPanel::HandleSampleEditingButtonUp( wxMouseEvent & WXUNUSED(event))
    //*************************************************
    //***    UP-CLICK  (Finish drawing)             ***
    //*************************************************
-
+   SetCapturedTrack( NULL );
    //On up-click, send the state to the undo stack
    mDrawingTrack=NULL;       //Set this to NULL so it will catch improper drag events.
    MakeParentPushState(_("Moved Sample"),
