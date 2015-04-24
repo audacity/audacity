@@ -123,11 +123,16 @@ void OnSetPlaySpeed();
 void OnPlaySpeedInc();
 void OnPlaySpeedDec();
 
-        // Selection-Editing Commands
+        // Moving track focus commands
 
 void OnCursorUp();
-void OnShiftUp();
 void OnCursorDown();
+void OnFirstTrack();
+void OnLastTrack();
+
+        // Selection-Editing Commands
+
+void OnShiftUp();
 void OnShiftDown();
 void OnToggle();
 

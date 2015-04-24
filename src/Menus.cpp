@@ -1138,8 +1138,12 @@ void AudacityProject::CreateMenusAndCommands()
                       TracksExistFlag | TrackPanelHasFocus);
 
    c->AddCommand(wxT("PrevTrack"), _("Move Focus to Previous Track"), FN(OnCursorUp), wxT("Up"));
-   c->AddCommand(wxT("ShiftUp"), _("Move Focus to Previous and Select"), FN(OnShiftUp), wxT("Shift+Up"));
    c->AddCommand(wxT("NextTrack"), _("Move Focus to Next Track"), FN(OnCursorDown), wxT("Down"));
+   c->AddCommand(wxT("FirstTrack"), _("Move Focus to First Track"), FN(OnFirstTrack), wxT("Ctrl+Home"));
+   c->AddCommand(wxT("LastTrack"), _("Move Focus to Last Track"), FN(OnLastTrack), wxT("Ctrl+End"));
+
+
+   c->AddCommand(wxT("ShiftUp"), _("Move Focus to Previous and Select"), FN(OnShiftUp), wxT("Shift+Up"));
    c->AddCommand(wxT("ShiftDown"), _("Move Focus to Next and Select"), FN(OnShiftDown), wxT("Shift+Down"));
    c->AddCommand(wxT("Toggle"), _("Toggle Focused Track"), FN(OnToggle), wxT("Return"));
    c->AddCommand(wxT("ToggleAlt"), _("Toggle Focused Track"), FN(OnToggle), wxT("NUMPAD_ENTER"));
@@ -2491,14 +2495,24 @@ void AudacityProject::OnCursorUp()
    mTrackPanel->OnPrevTrack( false );
 }
 
-void AudacityProject::OnShiftUp()
-{
-   mTrackPanel->OnPrevTrack( true );
-}
-
 void AudacityProject::OnCursorDown()
 {
    mTrackPanel->OnNextTrack( false );
+}
+
+void AudacityProject::OnFirstTrack()
+{
+   mTrackPanel->OnFirstTrack();
+}
+
+void AudacityProject::OnLastTrack()
+{
+   mTrackPanel->OnLastTrack();
+}
+
+void AudacityProject::OnShiftUp()
+{
+   mTrackPanel->OnPrevTrack( true );
 }
 
 void AudacityProject::OnShiftDown()
