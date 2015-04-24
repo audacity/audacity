@@ -83,6 +83,8 @@ void OnPlayBeforeSelectionStart();
 void OnPlayAfterSelectionStart();
 void OnPlayBeforeSelectionEnd();
 void OnPlayAfterSelectionEnd();
+void OnPlayBeforeAndAfterSelectionStart();
+void OnPlayBeforeAndAfterSelectionEnd();
 void OnPlayLooped();
 void OnPlayCutPreview();
 
