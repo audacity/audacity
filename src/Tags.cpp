@@ -409,7 +409,7 @@ bool Tags::GetFirst(wxString & name, wxString & value)
 
 bool Tags::GetNext(wxString & name, wxString & value)
 {
-   mIter++;
+   ++mIter;
    if (mIter == mMap.end()) {
       return false;
    }

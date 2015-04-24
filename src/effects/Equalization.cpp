@@ -955,7 +955,6 @@ bool EffectEqualization::TransferDataFromWindow()
 
    int m = 2 * mMSlider->GetValue() + 1;   // odd numbers only
    if (m != mM) {
-      rr = true;
       mM = m;
       mPanel->ForceRecalc();
 

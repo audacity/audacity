@@ -405,7 +405,7 @@ bool Exporter::Process(AudacityProject *project, bool selectedOnly, double t0, d
 }
 
 bool Exporter::Process(AudacityProject *project, int numChannels,
-                       const wxChar *type, const wxString filename,
+                       const wxChar *type, const wxString & filename,
                        bool selectedOnly, double t0, double t1)
 {
    // Save parms

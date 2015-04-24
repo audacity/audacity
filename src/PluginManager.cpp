@@ -555,7 +555,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    wxRect iconrect;
 
    int i = 0;
-   for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); iter++, i++)
+   for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); ++iter, i++)
    {
       miState.Add( SHOW_CHECKED );
 
@@ -1734,7 +1734,7 @@ void PluginManager::Save()
 void PluginManager::SaveGroup(PluginType type)
 {
    wxString group = GetPluginTypeString(type);
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
       PluginDescriptor & plug = iter->second;
 
@@ -1861,13 +1861,13 @@ void PluginManager::CheckForUpdates()
          plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath));
       }
 
-      iter++;
+      ++iter;
    }
 
    // If we're only checking for new plugins, then remove all of the known ones
    if (doCheck && !doRescan)
    {
-      for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+      for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
       {
          PluginDescriptor & plug = iter->second;
          const wxString & plugPath = plug.GetPath();
@@ -1898,7 +1898,7 @@ int PluginManager::GetPluginCount(PluginType type)
 {
    int num = 0;
 
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); iter++)
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
       if (iter->second.GetPluginType() == type)
       {
@@ -1921,7 +1921,7 @@ const PluginDescriptor *PluginManager::GetPlugin(const PluginID & ID)
 
 const PluginDescriptor *PluginManager::GetFirstPlugin(PluginType type)
 {
-   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
+   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); ++mPluginsIter)
    {
       PluginDescriptor & plug = mPluginsIter->second;
       bool familyEnabled = true;
@@ -1959,7 +1959,7 @@ const PluginDescriptor *PluginManager::GetNextPlugin(PluginType type)
 
 const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType type)
 {
-   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); mPluginsIter++)
+   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); ++mPluginsIter)
    {
       PluginDescriptor & plug = mPluginsIter->second;
 

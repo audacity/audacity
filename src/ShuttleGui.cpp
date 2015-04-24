@@ -844,7 +844,7 @@ void ShuttleGuiBase::EndNotebook()
 }
 
 
-wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString Name )
+wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
 {
    if( mShuttleMode != eIsCreating )
       return NULL;
@@ -867,7 +867,7 @@ wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString Name )
    return pPage;
 }
 
-void ShuttleGuiBase::StartNotebookPage( const wxString Name, wxNotebookPage * pPage )
+void ShuttleGuiBase::StartNotebookPage( const wxString & Name, wxNotebookPage * pPage )
 {
    if( mShuttleMode != eIsCreating )
       return;

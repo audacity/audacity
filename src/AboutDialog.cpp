@@ -117,6 +117,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Philip Van Baren"), roleContributor);
    AddCredit(wxT("Salvo Ventura"), roleContributor);
    AddCredit(wxT("Jun Wan"), roleContributor);
+   AddCredit(wxT("Daniel Winzen"), roleContributor);
    AddCredit(wxT("Tom Woodhams"), roleContributor);
    AddCredit(wxT("Wing Yu"), roleContributor);
 

@@ -19,7 +19,7 @@
 
 #include "FileIO.h"
 
-FileIO::FileIO(const wxString name, FileIOMode mode)
+FileIO::FileIO(const wxString & name, FileIOMode mode)
 : mName(name),
   mMode(mode),
   mInputStream(NULL),

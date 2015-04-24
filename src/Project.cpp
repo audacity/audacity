@@ -2344,7 +2344,7 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
 }
 
 // static method, can be called outside of a project
-bool AudacityProject::IsAlreadyOpen(const wxString projPathName)
+bool AudacityProject::IsAlreadyOpen(const wxString & projPathName)
 {
    wxFileName newProjPathName(projPathName);
    size_t numProjects = gAudacityProjects.Count();
@@ -3436,7 +3436,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 }
 
 #ifdef USE_LIBVORBIS
-   bool AudacityProject::SaveCompressedWaveTracks(const wxString strProjectPathName) // full path for aup except extension
+   bool AudacityProject::SaveCompressedWaveTracks(const wxString & strProjectPathName) // full path for aup except extension
    {
       // Some of this is similar to code in ExportMultiple::ExportMultipleByTrack
       // but that code is really tied into the dialogs.
@@ -3661,7 +3661,7 @@ bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= 
    return true;
 }
 
-bool AudacityProject::SaveAs(const wxString newFileName, bool bWantSaveCompressed /*= false*/, bool addToHistory /*= true*/)
+bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompressed /*= false*/, bool addToHistory /*= true*/)
 {
    wxString oldFileName = mFileName;
 

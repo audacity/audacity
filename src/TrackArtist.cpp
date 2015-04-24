@@ -2199,7 +2199,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
             }
          }
          int it=0;
-         int oldBin0=-1;
          bool inMaximum = false;
 #endif //EXPERIMENTAL_FIND_NOTES
 

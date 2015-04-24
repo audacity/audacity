@@ -310,7 +310,7 @@ void DeviceToolBar::UpdatePrefs()
       }
    }
 
-   long oldChannels = 1, newChannels;
+   long oldChannels, newChannels;
    oldChannels = mInputChannels->GetSelection() + 1;
    gPrefs->Read(wxT("/AudioIO/RecordChannels"), &newChannels, 0);
    if (newChannels > 0 && oldChannels != newChannels)

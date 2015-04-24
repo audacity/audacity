@@ -3752,7 +3752,7 @@ void TrackPanel::ForwardEventToWaveTrackEnvelope(wxMouseEvent & event)
    //  ie one of the Wave displays
    if (display <= 1) {
       bool dB = (display == 1);
-      bool needUpdate = false;
+      bool needUpdate;
 
       // AS: Then forward our mouse event to the envelope.
       // It'll recalculate and then tell us whether or not to redraw.
@@ -7189,7 +7189,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
                             *dc, region, tracksRect, clip, mViewInfo,
                             envelopeFlag, samplesFlag, sliderFlag);
 
-   DrawEverythingElse(dc, region, panelRect, clip);
+   DrawEverythingElse(dc, region, clip);
 }
 
 /// Draws 'Everything else'.  In particular it draws:
@@ -7197,9 +7197,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
 ///  - Zooming Indicators.
 ///  - Fills in space below the tracks.
 void TrackPanel::DrawEverythingElse(wxDC * dc,
-                                    const wxRegion region,
-                                    const wxRect WXUNUSED(panelRect),
-                                    const wxRect clip)
+                                    const wxRegion &region,
+                                    const wxRect & clip)
 {
    // We draw everything else
 
@@ -7402,7 +7401,7 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
 /// be zoomed into when the user clicks and drags with a
 /// zoom cursor.  Handles both vertical and horizontal
 /// zooming.
-void TrackPanel::DrawZooming(wxDC * dc, const wxRect clip)
+void TrackPanel::DrawZooming(wxDC * dc, const wxRect & clip)
 {
    wxRect r;
 
@@ -7429,8 +7428,8 @@ void TrackPanel::DrawZooming(wxDC * dc, const wxRect clip)
 }
 
 
-void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
-                             const wxRect trackRect)
+void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect & rec,
+                             const wxRect & trackRect)
 {
    wxRect r = rec;
    int labelw = GetLabelWidth();
@@ -7557,7 +7556,7 @@ void TrackPanel::DrawOutside(Track * t, wxDC * dc, const wxRect rec,
 #endif // USE_MIDI
 }
 
-void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect r)
+void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect & r)
 {
    // Fill in area outside of the track
    AColor::TrackPanelBackground(dc, false);
@@ -7598,7 +7597,7 @@ void TrackPanel::DrawOutsideOfTrack(Track * t, wxDC * dc, const wxRect r)
 }
 
 /// Draw a three-level highlight gradient around the focused track.
-void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect r)
+void TrackPanel::HighlightFocusedTrack(wxDC * dc, const wxRect & r)
 {
    wxRect rect = r;
    rect.x += kLeftInset;
@@ -8639,7 +8638,7 @@ void TrackPanel::EnsureVisible(Track * t)
 }
 
 void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
-                                        const wxRect r, const int vrul,
+                                        const wxRect & r, const int vrul,
                                         const int labelw)
 {
    // Border around track and label area
@@ -8666,7 +8665,7 @@ void TrackPanel::DrawBordersAroundTrack(Track * t, wxDC * dc,
 #endif
 }
 
-void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect r)
+void TrackPanel::DrawShadow(Track * /* t */ , wxDC * dc, const wxRect & r)
 {
    int right = r.x + r.width - 1;
    int bottom = r.y + r.height - 1;
@@ -9754,7 +9753,7 @@ int TrackInfo::GetTrackInfoWidth() const
    return kTrackInfoWidth;
 }
 
-void TrackInfo::GetCloseBoxRect(const wxRect r, wxRect & dest) const
+void TrackInfo::GetCloseBoxRect(const wxRect & r, wxRect & dest) const
 {
    dest.x = r.x;
    dest.y = r.y;
@@ -9762,7 +9761,7 @@ void TrackInfo::GetCloseBoxRect(const wxRect r, wxRect & dest) const
    dest.height = kTrackInfoBtnSize;
 }
 
-void TrackInfo::GetTitleBarRect(const wxRect r, wxRect & dest) const
+void TrackInfo::GetTitleBarRect(const wxRect & r, wxRect & dest) const
 {
    dest.x = r.x + kTrackInfoBtnSize; // to right of CloseBoxRect
    dest.y = r.y;
@@ -9770,7 +9769,7 @@ void TrackInfo::GetTitleBarRect(const wxRect r, wxRect & dest) const
    dest.height = kTrackInfoBtnSize;
 }
 
-void TrackInfo::GetMuteSoloRect(const wxRect r, wxRect & dest, bool solo, bool bHasSoloButton) const
+void TrackInfo::GetMuteSoloRect(const wxRect & r, wxRect & dest, bool solo, bool bHasSoloButton) const
 {
    dest.x = r.x ;
    dest.y = r.y + 50;
@@ -9787,7 +9786,7 @@ void TrackInfo::GetMuteSoloRect(const wxRect r, wxRect & dest, bool solo, bool b
    }
 }
 
-void TrackInfo::GetGainRect(const wxRect r, wxRect & dest) const
+void TrackInfo::GetGainRect(const wxRect & r, wxRect & dest) const
 {
    dest.x = r.x + 7;
    dest.y = r.y + 70;
@@ -9795,7 +9794,7 @@ void TrackInfo::GetGainRect(const wxRect r, wxRect & dest) const
    dest.height = 25;
 }
 
-void TrackInfo::GetPanRect(const wxRect r, wxRect & dest) const
+void TrackInfo::GetPanRect(const wxRect & r, wxRect & dest) const
 {
    dest.x = r.x + 7;
    dest.y = r.y + 100;
@@ -9803,7 +9802,7 @@ void TrackInfo::GetPanRect(const wxRect r, wxRect & dest) const
    dest.height = 25;
 }
 
-void TrackInfo::GetMinimizeRect(const wxRect r, wxRect &dest) const
+void TrackInfo::GetMinimizeRect(const wxRect & r, wxRect &dest) const
 {
    const int kBlankWidth = kTrackInfoBtnSize + 4;
    dest.x = r.x + kBlankWidth;
@@ -9813,7 +9812,7 @@ void TrackInfo::GetMinimizeRect(const wxRect r, wxRect &dest) const
    dest.height = kTrackInfoBtnSize;
 }
 
-void TrackInfo::GetSyncLockIconRect(const wxRect r, wxRect &dest) const
+void TrackInfo::GetSyncLockIconRect(const wxRect & r, wxRect &dest) const
 {
    dest.x = r.x + kTrackInfoWidth - kTrackInfoBtnSize - 4; // to right of minimize button
    dest.y = r.y + r.height - 19;
@@ -9828,7 +9827,7 @@ void TrackInfo::SetTrackInfoFont(wxDC * dc)
    dc->SetFont(mFont);
 }
 
-void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect r, bool bHasMuteSolo)
+void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect & r, bool bHasMuteSolo)
 {
    AColor::Dark(dc, false); // same color as border of toolbars (ToolBar::OnPaint())
 
@@ -9854,7 +9853,7 @@ void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect r, bool bHasMuteSolo)
                   minimizeRect.x + minimizeRect.width, minimizeRect.y - 1);
 }
 
-void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
+void TrackInfo::DrawBackground(wxDC * dc, const wxRect & r, bool bSelected,
    bool WXUNUSED(bHasMuteSolo), const int labelw, const int WXUNUSED(vrul))
 {
    // fill in label
@@ -9879,7 +9878,7 @@ void TrackInfo::DrawBackground(wxDC * dc, const wxRect r, bool bSelected,
    //}
 }
 
-void TrackInfo::GetTrackControlsRect(const wxRect r, wxRect & dest) const
+void TrackInfo::GetTrackControlsRect(const wxRect & r, wxRect & dest) const
 {
    wxRect top;
    wxRect bot;
@@ -9894,7 +9893,7 @@ void TrackInfo::GetTrackControlsRect(const wxRect r, wxRect & dest) const
 }
 
 
-void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect r, bool down)
+void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & r, bool down)
 {
    wxRect bev;
    GetCloseBoxRect(r, bev);
@@ -9923,7 +9922,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect r, bool down)
    AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
-void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
+void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & r, Track * t,
                               bool down)
 {
    wxRect bev;
@@ -9969,7 +9968,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect r, Track * t,
 }
 
 /// Draw the Mute or the Solo button, depending on the value of solo.
-void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
+void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & r, Track * t,
                               bool down, bool solo, bool bHasSoloButton)
 {
    wxRect bev;
@@ -10022,7 +10021,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect r, Track * t,
 }
 
 // Draw the minimize button *and* the sync-lock track icon, if necessary.
-void TrackInfo::DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down)
+void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & r, Track * t, bool down)
 {
    wxRect bev;
    GetMinimizeRect(r, bev);
