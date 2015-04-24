@@ -16,6 +16,8 @@
 *.tlog
 *.ipch
 *.opensdf
+# unsure about the .sal files.  Disable for now.
+*.sal
 
 # Precompiled Headers
 *.gch
