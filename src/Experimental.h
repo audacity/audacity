@@ -39,7 +39,7 @@
 #define EXPERIMENTAL_FULL_WASAPI
 
 // JKC (effect by Norm C, 02 Oct 2013)
-#define EXPERIMENTAL_SCIENCE_FILTERS
+//#define EXPERIMENTAL_SCIENCE_FILTERS
 
 // LLL, 01 Oct 2013:
 // new key assignment view for preferences
