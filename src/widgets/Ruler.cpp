@@ -81,6 +81,7 @@ array of Ruler::Label.
 
 #define max(a,b)  ( (a<b)?b:a )
 
+// TODO: Reduce the pixel tolerance when the mouse cursor gives better visual feedback.
 #define SELECT_TOLERANCE_PIXEL 10
 #define QUICK_PLAY_SNAP_PIXEL 4     // pixel tolerance for snap guides
 
