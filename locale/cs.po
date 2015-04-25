@@ -150,7 +150,7 @@ msgstr "Adresář neexistuje."
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:91
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr "Soubor '%' již existuje. Opravdu si jej přejete přepsat?"
+msgstr "Soubor '%s' již existuje. Opravdu si jej přejete přepsat?"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:1433
 #: lib-src/FileDialog/gtk/FileDialogPrivate.cpp:94 src/LangChoice.cpp:134
