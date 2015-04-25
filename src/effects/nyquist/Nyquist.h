@@ -129,6 +129,7 @@ private:
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
+   wxArrayString ParseChoice(const NyqControl & ctrl);
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,

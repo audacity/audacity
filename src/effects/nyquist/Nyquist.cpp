@@ -31,14 +31,15 @@ effects from this one class.
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
+#include <wx/datetime.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/msgdlg.h>
 #include <wx/sstream.h>
 #include <wx/textdlg.h>
 #include <wx/txtstrm.h>
+#include <wx/valgen.h>
 #include <wx/wfstream.h>
-#include <wx/datetime.h>
 
 #include "../../AudacityApp.h"
 #include "../../FileNames.h"
@@ -260,11 +261,7 @@ bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
       }
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
-         wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
-         for (size_t i = 0, cnt = choices.GetCount();i < cnt; i++)
-         {
-            choices[i] = choices[i].Trim(true).Trim(false);
-         }
+         wxArrayString choices = ParseChoice(ctrl);
          parms.WriteEnum(ctrl.var, (int) d, choices);
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
@@ -314,11 +311,7 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          int val;
-         wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
-         for (size_t i = 0, cnt = choices.GetCount();i < cnt; i++)
-         {
-            choices[i] = choices[i].Trim(true).Trim(false);
-         }
+         wxArrayString choices = ParseChoice(ctrl);
          good = parms.ReadEnum(ctrl.var, &val, choices) &&
                 val != wxNOT_FOUND;
       }
@@ -358,17 +351,12 @@ bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          int val;
-         wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
-         for (size_t i = 0, cnt = choices.GetCount();i < cnt; i++)
-         {
-            choices[i] = choices[i].Trim(true).Trim(false);
-         }
+         wxArrayString choices = ParseChoice(ctrl);
          parms.ReadEnum(ctrl.var, &val, choices);
          ctrl.val = (double) val;
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
       {
-         wxString val;
          parms.Read(ctrl.var, &ctrl.valStr);
       }
    }
@@ -715,15 +703,14 @@ void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
 bool NyquistEffect::TransferDataToWindow()
 {
    mUIParent->TransferDataToWindow();
-   bool success;
 
+   bool success;
    if (mIsPrompt)
    {
       success = TransferDataToPromptWindow();
    }
    else
    {
-
       success = TransferDataToEffectWindow();
    }
 
@@ -1169,6 +1156,17 @@ wxString NyquistEffect::EscapeString(const wxString & inStr)
    return str;
 }
 
+wxArrayString NyquistEffect::ParseChoice(const NyqControl & ctrl)
+{
+   wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
+
+   for (size_t i = 0, cnt = choices.GetCount();i < cnt; i++)
+   {
+      choices[i] = choices[i].Trim(true).Trim(false);
+   }
+
+   return choices;
+}
 void NyquistEffect::SetCommand(wxString cmd)
 {
    mExternal = true;
@@ -1700,14 +1698,9 @@ bool NyquistEffect::TransferDataToEffectWindow()
    {
       NyqControl & ctrl = mControls[i];
 
-      if (ctrl.type == NYQ_CTRL_STRING)
+      if (ctrl.type == NYQ_CTRL_CHOICE)
       {
-         wxTextCtrl *t = (wxTextCtrl *) mUIParent->FindWindow(ID_Text + i);
-         t->ChangeValue(ctrl.valStr);
-      }
-      else if (ctrl.type == NYQ_CTRL_CHOICE)
-      {
-         wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
+         wxArrayString choices = ParseChoice(ctrl);
 
          int val = (int)ctrl.val;
          if (val < 0 || val >= (int)choices.GetCount())
@@ -1718,7 +1711,7 @@ bool NyquistEffect::TransferDataToEffectWindow()
          wxChoice *c = (wxChoice *) mUIParent->FindWindow(ID_Choice + i);
          c->SetSelection(val);
       }
-      else
+      else if (ctrl.type != NYQ_CTRL_STRING)
       {
          // wxTextCtrls are handled by the validators
          double range = ctrl.high - ctrl.low;
@@ -1847,21 +1840,15 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
             {
                S.AddSpace(10, 10);
             
-               S.Id(ID_Text + i).AddTextBox(wxT(""), ctrl.valStr, 12);
+               wxTextCtrl *item = S.Id(ID_Text + i).AddTextBox(wxT(""), wxT(""), 12);
+               item->SetValidator(wxGenericValidator(&ctrl.valStr));
             }
             else if (ctrl.type == NYQ_CTRL_CHOICE)
             {
                S.AddSpace(10, 10);
 
                wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
-
-               int val = (int)ctrl.val;
-               if (val < 0 || val >= (int)choices.GetCount())
-               {
-                  val = 0;
-               }
-
-               S.Id(ID_Choice + i).AddChoice(wxT(""), choices[val], &choices);
+               wxChoice *item = S.Id(ID_Choice + i).AddChoice(wxT(""), wxT(""), &choices);
             }
             else
             {
@@ -1891,9 +1878,8 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                   item->SetValidator(vld);
                }
 
-               int val = (int)(0.5 + ctrl.ticks * (ctrl.val - ctrl.low) / range);
                S.SetStyle(wxSL_HORIZONTAL);
-               S.Id(ID_Slider + i).AddSlider(wxT(""), val, ctrl.ticks, 0);
+               S.Id(ID_Slider + i).AddSlider(wxT(""), 0, ctrl.ticks, 0);
                S.SetSizeHints(150, -1);
             }
 
@@ -2022,13 +2008,9 @@ void NyquistEffect::OnText(wxCommandEvent & evt)
 
    NyqControl & ctrl = mControls[i];
 
-   if (ctrl.type == NYQ_CTRL_STRING)
+   if (wxDynamicCast(evt.GetEventObject(), wxWindow)->GetValidator()->TransferFromWindow())
    {
-      ctrl.valStr = evt.GetString();
-   }
-   else
-   {
-      if (wxDynamicCast(evt.GetEventObject(), wxWindow)->GetValidator()->TransferFromWindow())
+      if (ctrl.type != NYQ_CTRL_STRING)
       {
          int pos = (int)floor((ctrl.val - ctrl.low) /
                               (ctrl.high - ctrl.low) * ctrl.ticks + 0.5);
