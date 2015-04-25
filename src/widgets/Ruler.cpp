@@ -81,8 +81,7 @@ array of Ruler::Label.
 
 #define max(a,b)  ( (a<b)?b:a )
 
-// TODO: Reduce the pixel tolerance when the mouse cursor gives better visual feedback.
-#define SELECT_TOLERANCE_PIXEL 10
+#define SELECT_TOLERANCE_PIXEL 4
 #define QUICK_PLAY_SNAP_PIXEL 4     // pixel tolerance for snap guides
 
 #define PLAY_REGION_TRIANGLE_SIZE 6
@@ -1826,8 +1825,6 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 
 void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 {
-   //TODO: Ensure that cursor is refreshed when necessary.
-
    // Disable mouse actions on Timeline while recording.
    if (mIsRecording)
       return;
@@ -1890,6 +1887,9 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       if (isWithinStart || isWithinEnd) {
          SetCursor(wxCursor(wxCURSOR_SIZEWE));
       }
+      else {
+         SetCursor(wxCursor(wxCURSOR_HAND));
+      }
    }
    else {
       SetCursor(wxCursor(wxCURSOR_HAND));
@@ -1936,6 +1936,9 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
          mPlayRegionEnd = mQuickPlayPos;
          Refresh();
       }
+      // Check if we are dragging BEFORE CaptureMouse.
+      if (mMouseEventState != mesNone)
+         SetCursor(wxCursor(wxCURSOR_SIZEWE));
       CaptureMouse();
    }
 
