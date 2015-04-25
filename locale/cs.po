@@ -32,7 +32,7 @@ msgid "<DRIVE>"
 msgstr "<DISK>"
 
 #: lib-src/FileDialog/generic/FileDialogPrivate.cpp:325
-#, c-format
+#, fuzzy,c-format
 msgid "%ld bytes"
 msgstr "%ld bajtů"
 
