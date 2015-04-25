@@ -1011,6 +1011,12 @@ void AudacityProject::CreateMenusAndCommands()
                        EffectTypeProcess,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
                        TracksExistFlag | IsRealtimeNotActiveFlag);
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+   c->AddSeparator();
+   // We could say Manage Effects on the menu, but More... is more intuitive.
+   c->AddItem(wxT("ManageEffects"), _("&More..."), FN(OnManageEffects));
+
+#endif
 
    c->EndMenu();
 
@@ -3272,6 +3278,14 @@ void AudacityProject::OnRepeatLastEffect(int WXUNUSED(index))
    {
       OnEffect(mLastEffect, OnEffectFlags::kConfigured);
    }
+}
+
+void AudacityProject::OnManageEffects()
+{
+   //gPrefs->Write( wxT("/Plugins/Rescan"), true);
+   //gPrefs->Read(wxT("/Plugins/CheckForUpdates"), &doCheck, true);
+   PluginManager::Get().CheckForUpdates(kPROMPT_TO_ADD_EFFECTS);
+   RebuildMenuBar();
 }
 
 void AudacityProject::OnStereoToMono(int WXUNUSED(index))

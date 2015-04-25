@@ -394,6 +394,7 @@ public:
    // constructors and destructors
    PluginRegistrationDialog(ProviderMap & map);
    virtual ~PluginRegistrationDialog();
+   void RegisterDefaultEffects();
 
 private:
    void Populate();
@@ -754,6 +755,58 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
 
    EndModal(mCancelClicked ? wxID_CANCEL : wxID_OK);
 }
+
+void PluginRegistrationDialog::RegisterDefaultEffects()
+{
+   PluginManager & pm = PluginManager::Get();
+   ModuleManager & mm = ModuleManager::Get();
+
+   int i = 0;
+   for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); ++iter, i++)
+   {
+      wxFileName fname = iter->first;
+      wxString name = fname.GetName();
+      wxString path = iter->first;
+
+      // Create a placeholder descriptor to show we've seen this plugin before and not
+      // to show it as new the next time Audacity starts.
+      //
+      // Placeholder descriptors have a plugin type of PluginTypeNone and the ID is the
+      // path.
+      PluginDescriptor & plug = pm.mPlugins[path];
+
+      plug.SetID(path);
+      plug.SetPath(path);
+      plug.SetEnabled(false);
+      plug.SetValid(false);
+
+      // This is just a proof of concept to show we can get a list of default effects.
+      // Here we take the Builtin ones, and remove several optional ones, so that they become
+      // opt-in.
+      bool bAddIt = fname.GetVolume().StartsWith( wxString( BUILTIN_EFFECT_PREFIX).BeforeFirst(':')  );
+      wxLogDebug(wxT("Name: [%s]"), fname.GetName().c_str() );
+      bAddIt &= !fname.GetName().StartsWith( wxT(" Leveller") );
+      bAddIt &= !fname.GetName().StartsWith( wxT(" Auto Duck") );
+      bAddIt &= !fname.GetName().StartsWith( wxT(" Paulstretch") );
+      bAddIt &= !fname.GetName().StartsWith( wxT(" Time Scale") );
+      bAddIt &= !fname.GetName().StartsWith( wxT(" Classic Filters") );
+
+      // Built in effects get registered...
+      if (bAddIt)
+      {
+         wxArrayString providers = mMap[path];
+         for (size_t j = 0, cnt = providers.GetCount(); j < cnt; j++)
+         {
+            if (mm.RegisterPlugin(providers[j], path))
+            {
+               break;
+            }
+         }
+      }
+      wxYield();
+   }
+}
+
 
 void PluginRegistrationDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
 {
@@ -1421,7 +1474,13 @@ void PluginManager::Initialize()
    ModuleManager::Get().DiscoverProviders();
 
    // And finally check for updates
+   // CheckForUpdates will prompt for what to add normally.
+   // If it is told kJUST_STANDARD_EFFECTS then it doesn't prompt.
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+   CheckForUpdates(kJUST_STANDARD_EFFECTS);
+#else
    CheckForUpdates();
+#endif
 }
 
 void PluginManager::Terminate()
@@ -1812,7 +1871,7 @@ void PluginManager::SaveGroup(PluginType type)
    return;
 }
 
-void PluginManager::CheckForUpdates()
+void PluginManager::CheckForUpdates(eItemsToUpdate UpdateWhat)
 {
    // Get ModuleManager reference
    ModuleManager & mm = ModuleManager::Get();
@@ -1822,6 +1881,9 @@ void PluginManager::CheckForUpdates()
    bool doCheck;
    gPrefs->Read(wxT("/Plugins/Rescan"), &doRescan, true);
    gPrefs->Read(wxT("/Plugins/CheckForUpdates"), &doCheck, true);
+
+   if( UpdateWhat == kPROMPT_TO_ADD_EFFECTS )
+      doRescan = true;
 
    ProviderMap map;
 
@@ -1883,7 +1945,12 @@ void PluginManager::CheckForUpdates()
    if (map.size() != 0)
    {
       PluginRegistrationDialog dlg(map);
-      if (dlg.ShowModal() == wxID_OK)
+      if( UpdateWhat == kJUST_STANDARD_EFFECTS )
+      {
+         dlg.RegisterDefaultEffects();
+         gPrefs->Write(wxT("/Plugins/Rescan"), false);
+      }
+      else if (dlg.ShowModal() == wxID_OK)
       {
          gPrefs->Write(wxT("/Plugins/Rescan"), false);
       }

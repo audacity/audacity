@@ -165,6 +165,13 @@ typedef wxArrayString PluginIDList;
 
 class PluginRegistrationDialog;
 
+enum eItemsToUpdate {
+   kCHECK_ALL,
+   kJUST_STANDARD_EFFECTS,
+   kPROMPT_TO_ADD_EFFECTS
+};
+
+
 class PluginManager : public PluginManagerInterface
 {
 public:
@@ -258,6 +265,7 @@ public:
 
    // For builtin effects
    const PluginID & RegisterPlugin(EffectIdentInterface *effect);
+   void CheckForUpdates(eItemsToUpdate UpdateWhat=kCHECK_ALL);
 
 private:
    void Load();
@@ -265,7 +273,6 @@ private:
    void Save();
    void SaveGroup(PluginType type);
 
-   void CheckForUpdates();
    void DisableMissing();
    wxArrayString IsNewOrUpdated(const wxArrayString & paths);
 

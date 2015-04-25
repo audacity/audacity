@@ -77,6 +77,9 @@
 // All code removed after 2.1.0 release since it was unmaintained. LLL
 //#define EFFECT_CATEGORIES
 
+// JKC Apr 2015, Menu item to manage effects.
+#define EXPERIMENTAL_EFFECT_MANAGEMENT
+
 // Andreas Micheler, 20.Nov 2007:
 // A spectrumLogF-like view mode with notes quantization.
 // Just select the "Find Notes" checkbox in the spectrum prefs
@@ -184,5 +187,6 @@
 #if !defined(wxUSE_DEBUGREPORT) || !wxUSE_DEBUGREPORT
 #undef EXPERIMENTAL_CRASH_REPORT
 #endif
+
 
 #endif
