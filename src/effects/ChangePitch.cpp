@@ -136,8 +136,6 @@ bool EffectChangePitch::SetAutomationParameters(EffectAutomationParameters & par
 
    m_dPercentChange = Percentage;
 
-   m_dSemitonesChange = (12.0 * log((100.0 + m_dPercentChange) / 100.0)) / log(2.0);
-
    return true;
 }
 
@@ -307,13 +305,18 @@ bool EffectChangePitch::TransferDataToWindow()
       return false;
    }
 
-   // from/to pitch controls
-   m_pChoice_FromPitch->SetSelection(m_nFromPitch);
-   m_pSpin_FromOctave->SetValue(m_nFromOctave);
-   Update_Choice_ToPitch();
-   Update_Spin_ToOctave();
+   Calc_SemitonesChange_fromPercentChange();
+   Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
+   Calc_ToFrequency();
+   Calc_ToOctave(); // Call after Calc_ToFrequency().
 
-   // percent change controls
+   Update_Choice_FromPitch();
+   Update_Choice_ToPitch();
+   Update_Spin_FromOctave();
+   Update_Spin_ToOctave();
+   Update_Text_SemitonesChange();
+   Update_Text_ToFrequency();
+   Update_Text_PercentChange();
    Update_Slider_PercentChange();
 
    m_bLoopDetect = false;
@@ -742,7 +745,6 @@ void EffectChangePitch::Update_Text_ToFrequency()
 {
    m_pTextCtrl_ToFrequency->GetValidator()->TransferToWindow();
 }
-
 
 void EffectChangePitch::Update_Text_PercentChange()
 {
