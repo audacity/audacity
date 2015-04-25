@@ -2401,7 +2401,8 @@ void EffectDialog::Init()
       long buttons = eOkButton;
       if (mType != EffectTypeAnalyze)
       {
-         buttons |= eCancelButton;
+         //JKC I find the cancel button gets in the way of ordinary effects.
+         //buttons |= eCancelButton;
          if (mType == EffectTypeProcess)
          {
             buttons |= ePreviewButton;
@@ -2789,7 +2790,7 @@ bool EffectUIHost::Initialize()
 
    bar->SetSizerAndFit(bs);
 
-   wxSizer *s = CreateStdButtonSizer(this, eApplyButton | eCloseButton | (mEffect->mUIDebug ? eDebugButton : 0), bar);
+   wxSizer *s = CreateStdButtonSizer(this, eApplyButton | /*eCloseButton | */(mEffect->mUIDebug ? eDebugButton : 0), bar);
    vs->Add(s, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL);
 
    SetSizer(vs);
