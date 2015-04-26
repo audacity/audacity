@@ -1848,7 +1848,7 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
                S.AddSpace(10, 10);
 
                wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
-               wxChoice *item = S.Id(ID_Choice + i).AddChoice(wxT(""), wxT(""), &choices);
+               S.Id(ID_Choice + i).AddChoice(wxT(""), wxT(""), &choices);
             }
             else
             {

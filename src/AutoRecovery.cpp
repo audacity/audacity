@@ -655,7 +655,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       // "</project>" somewhere.
       const int bufsize = 16;
       char buf[bufsize + 1];
-      if (file.SeekEnd(-bufsize) != wxInvalidOffset)
+      if (file.SeekEnd(-bufsize))
       {
          if (file.Read(buf, bufsize) == bufsize)
          {
@@ -663,7 +663,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             if (strstr(buf, "</project>") == 0)
             {
                // End of file does not contain closing </project> tag, so add it
-               if (file.Seek(0, wxFromEnd) != wxInvalidOffset)
+               if (file.Seek(0, wxFromEnd))
                {
                   strcpy(buf, "</project>\n");
                   file.Write(buf, strlen(buf));
