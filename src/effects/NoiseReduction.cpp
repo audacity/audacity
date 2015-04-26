@@ -446,7 +446,7 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
    return false;
 }
 
-bool EffectNoiseReduction::PromptUser(wxWindow *parent, bool isBatch)
+bool EffectNoiseReduction::PromptUser(wxWindow *parent)
 {
    // We may want to twiddle the levels if we are setting
    // from an automation dialog, the only case in which we can

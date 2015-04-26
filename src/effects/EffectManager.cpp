@@ -77,7 +77,8 @@ bool EffectManager::DoEffect(const PluginID & ID,
                              TrackList *list,
                              TrackFactory *factory,
                              SelectedRegion *selectedRegion,
-                             bool shouldPrompt /* = true */)
+                             bool shouldPrompt /* = true */,
+                             bool isBatch /* = false */)
 
 {
    Effect *effect = GetEffect(ID);
@@ -94,12 +95,18 @@ bool EffectManager::DoEffect(const PluginID & ID,
    }
 #endif
 
-   return effect->DoEffect(parent,
-                           projectRate,
-                           list,
-                           factory,
-                           selectedRegion,
-                           shouldPrompt);
+   effect->SetBatchProcessing(isBatch);
+
+   bool res = effect->DoEffect(parent,
+                               projectRate,
+                               list,
+                               factory,
+                               selectedRegion,
+                               shouldPrompt);
+
+   effect->SetBatchProcessing(false);
+
+   return res;
 }
 
 wxString EffectManager::GetEffectName(const PluginID & ID)
@@ -176,12 +183,19 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
 {
    Effect *effect = GetEffect(ID);
    
-   if (effect)
+   if (!effect)
    {
-      return effect->SetAutomationParameters(params);
+      return false;
    }
 
-   return false;
+   EffectAutomationParameters eap(params);
+
+   if (eap.HasEntry(wxT("Use Preset")))
+   {
+      return effect->SetAutomationParameters(eap.Read(wxT("Use Preset")));
+   }
+
+   return effect->SetAutomationParameters(params);
 }
 
 bool EffectManager::PromptUser(const PluginID & ID, wxWindow *parent)
@@ -191,10 +205,52 @@ bool EffectManager::PromptUser(const PluginID & ID, wxWindow *parent)
 
    if (effect)
    {
-      result = effect->PromptUser(parent, true);
+      effect->SetBatchProcessing(true);
+
+      result = effect->PromptUser(parent);
+
+      effect->SetBatchProcessing(false);
    }
 
    return result;
+}
+
+bool EffectManager::HasPresets(const PluginID & ID)
+{
+   Effect *effect = GetEffect(ID);
+
+   if (!effect)
+   {
+      return false;
+   }
+
+   return effect->GetUserPresets().GetCount() > 0 ||
+          effect->GetFactoryPresets().GetCount() > 0 ||
+          effect->HasCurrentSettings() ||
+          effect->HasFactoryDefaults();
+}
+
+wxString EffectManager::GetPreset(const PluginID & ID, wxWindow * parent)
+{
+   Effect *effect = GetEffect(ID);
+
+   if (!effect)
+   {
+      return wxEmptyString;
+   }
+
+   wxString preset = effect->GetPreset(parent);
+   if (preset.IsEmpty())
+   {
+      return preset;
+   }
+
+   EffectAutomationParameters eap;
+   
+   eap.Write(wxT("Use Preset"), preset);
+   eap.GetParameters(preset);
+
+   return preset;
 }
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
@@ -633,3 +689,4 @@ const PluginID & EffectManager::GetEffectByIdentifier(const wxString & strTarget
 
    return empty;;
 }
+

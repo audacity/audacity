@@ -45,17 +45,20 @@ selected command.
 
 #define CommandsListID        7001
 #define EditParamsButtonID    7002
+#define UsePresetButtonID     7003
 
 BEGIN_EVENT_TABLE(BatchCommandDialog, wxDialog)
    EVT_BUTTON(wxID_OK,                     BatchCommandDialog::OnOk)
    EVT_BUTTON(wxID_CANCEL,                 BatchCommandDialog::OnCancel)
    EVT_BUTTON(EditParamsButtonID,          BatchCommandDialog::OnEditParams)
-   EVT_LIST_ITEM_ACTIVATED(CommandsListID,  BatchCommandDialog::OnItemSelected)
+   EVT_BUTTON(UsePresetButtonID,           BatchCommandDialog::OnUsePreset)
+   EVT_LIST_ITEM_ACTIVATED(CommandsListID, BatchCommandDialog::OnItemSelected)
+   EVT_LIST_ITEM_SELECTED(CommandsListID,  BatchCommandDialog::OnItemSelected)
 END_EVENT_TABLE();
 
 BatchCommandDialog::BatchCommandDialog(wxWindow * parent, wxWindowID id):
    wxDialog(parent, id, _("Select Command"),
-            wxDefaultPosition, wxSize(250,200),
+            wxDefaultPosition, wxDefaultSize,
             wxCAPTION | wxRESIZE_BORDER)
 {
    SetLabel(_("Select Command"));         // Provide visual label
@@ -75,13 +78,15 @@ void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
 {
    S.StartVerticalLay(true);
    {
-      S.StartMultiColumn(3, wxEXPAND);
+      S.StartMultiColumn(4, wxEXPAND);
       {
          S.SetStretchyCol(1);
          mCommand = S.AddTextBox(_("&Command"), wxT(""), 20);
          mCommand->SetEditable(false);
          mEditParams = S.Id(EditParamsButtonID).AddButton(_("&Edit Parameters"));
-         mEditParams->Enable( false ); // disable button as box is empty
+         mEditParams->Enable(false); // disable button as box is empty
+         mUsePreset = S.Id(UsePresetButtonID).AddButton(_("&Use Preset"));
+         mUsePreset->Enable(false); // disable button as box is empty
       }
       S.EndMultiColumn();
 
@@ -104,14 +109,10 @@ void BatchCommandDialog::PopulateOrExchange(ShuttleGui &S)
 
    S.AddStandardButtons();
 
-   for(int i=0;i<99;i++)
-   {
-      mChoices->InsertItem( i, wxString::Format(wxT("Item%02i"),i));
-   }
    PopulateCommandList();
 
-   SetSize(350, 400);
-   SetSizeHints(GetSize());
+   SetMinSize(wxSize(500, 400));
+   Fit();
    Center();
 }
 
@@ -169,8 +170,12 @@ void BatchCommandDialog::OnItemSelected(wxListEvent &event)
    mCommand->SetValue( command );
    wxString params = BatchCommands::GetCurrentParamsFor( command );
    mParameters->SetValue( params );
-   PluginID ID = EffectManager::Get().GetEffectByIdentifier( command );
-   mEditParams->Enable( !ID.empty() );
+
+   EffectManager & em = EffectManager::Get();
+   PluginID ID = em.GetEffectByIdentifier( command );
+   wxASSERT(!ID.IsEmpty());
+   mEditParams->Enable(true);
+   mUsePreset->Enable(em.HasPresets(ID));
 }
 
 void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
@@ -188,6 +193,19 @@ void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
          mParameters->SetValue( params.Strip(wxString::trailing) );
          mParameters->Refresh();
       }
+   }
+}
+
+void BatchCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
+{
+   wxString command = mCommand->GetValue();
+   wxString params  = mParameters->GetValue();
+
+   wxString preset = BatchCommands::PromptForPresetFor(command, this);
+   if (!preset.IsEmpty())
+   {
+      mParameters->SetValue(preset);
+      mParameters->Refresh();
    }
 }
 

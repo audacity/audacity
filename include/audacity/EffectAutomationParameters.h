@@ -62,6 +62,16 @@ public:
    {
    }
 
+   virtual bool HasGroup(const wxString & strName) const
+   {
+      return wxFileConfig::HasGroup(NormalizeName(strName));
+   }
+
+   virtual bool HasEntry(const wxString& strName) const
+   {
+      return wxFileConfig::HasEntry(NormalizeName(strName));
+   }
+
    virtual bool DoReadString(const wxString & key, wxString *pStr) const
    {
       return wxFileConfig::DoReadString(NormalizeName(key), pStr);

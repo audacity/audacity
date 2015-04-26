@@ -158,6 +158,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
 
    // ConfigClientInterface implementation
 
+   virtual bool HasSharedConfigGroup(const wxString & group);
    virtual bool GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString);
@@ -177,6 +178,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual bool RemoveSharedConfigSubgroup(const wxString & group);
    virtual bool RemoveSharedConfig(const wxString & group, const wxString & key);
 
+   virtual bool HasPrivateConfigGroup(const wxString & group);
    virtual bool GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString);
@@ -206,6 +208,14 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual bool GetAutomationParameters(wxString & parms);
    virtual bool SetAutomationParameters(const wxString & parms);
 
+   virtual wxArrayString GetUserPresets();
+   virtual bool HasCurrentSettings();
+   virtual bool HasFactoryDefaults();
+   virtual wxString GetPreset(wxWindow * parent);
+
+   virtual bool IsBatchProcessing();
+   virtual void SetBatchProcessing(bool enable);
+
    void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ){
       if( Names ) mPresetNames = *Names;
       if( Values ) mPresetValues = *Values;
@@ -228,7 +238,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    bool IsRealtimeActive();
 
    virtual bool IsHidden();
-   
+
 //
 // protected virtual methods
 //
@@ -245,7 +255,7 @@ protected:
    // This method will not always be called (for example if a user
    // repeats an effect) but if it is called, it will be called
    // after Init.
-   virtual bool PromptUser(wxWindow *parent = NULL, bool isBatch = false);
+   virtual bool PromptUser(wxWindow *parent);
 
    // Check whether effect should be skipped
    // Typically this is only useful in automation, for example
@@ -374,6 +384,8 @@ protected:
 private:
    wxWindow *mParent;
 
+   bool mIsBatch;
+
    double mDuration;
 
    bool mUIDebug;
@@ -404,9 +416,15 @@ private:
    wxCriticalSection mRealtimeSuspendLock;
    int mRealtimeSuspendCount;
 
+   const static wxString kUserPresetIdent;
+   const static wxString kFactoryPresetIdent;
+   const static wxString kCurrentSettingsIdent;
+   const static wxString kFactoryDefaultsIdent;
+
    friend class EffectManager;// so it can call PromptUser in support of batch commands.
    friend class EffectRack;
    friend class EffectUIHost;
+   friend class EffectPresetsDialog;
 };
 
 
@@ -507,6 +525,7 @@ private:
    bool mInitialized;
    bool mSupportsRealtime;
    bool mIsGUI;
+   bool mIsBatch;
 
 #if defined(__WXMAC__)
    bool mIsModal;
@@ -536,6 +555,32 @@ private:
 
    SelectedRegion mRegion;
    double mPlayPos;
+
+   DECLARE_EVENT_TABLE();
+};
+
+class EffectPresetsDialog : public wxDialog
+{
+public:
+   EffectPresetsDialog(wxWindow *parent, Effect *effect);
+   virtual ~EffectPresetsDialog();
+
+   wxString GetSelected() const;
+
+private:
+   void UpdateUI();
+
+   void OnType(wxCommandEvent & evt);
+   void OnOk(wxCommandEvent & evt);
+   void OnCancel(wxCommandEvent & evt);
+
+private:
+   wxChoice *mType;
+   wxListBox *mPresets;
+
+   wxArrayString mFactoryPresets;
+   wxArrayString mUserPresets;
+   wxString mSelection;
 
    DECLARE_EVENT_TABLE();
 };

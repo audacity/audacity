@@ -331,6 +331,18 @@ bool BatchCommands::PromptForParamsFor(wxString command, wxWindow *parent)
    return EffectManager::Get().PromptUser(ID, parent);
 }
 
+wxString BatchCommands::PromptForPresetFor(wxString command, wxWindow *parent)
+{
+   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
+
+   if (ID.empty())
+   {
+      return wxEmptyString;   // effect not found.
+   }
+
+   return EffectManager::Get().GetPreset(ID, parent);
+}
+
 double BatchCommands::GetEndTime()
 {
    AudacityProject *project = GetActiveProject();
@@ -557,23 +569,19 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
 
 bool BatchCommands::SetCurrentParametersFor(const wxString & command, const wxString & params)
 {
-   // transfer the parameters to the effect...
-   if( !params.IsEmpty() )
+   if (params.IsEmpty())
    {
-      const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
-      if (ID.empty())
-      {
-         return false;
-      }
-      if (!EffectManager::Get().SetEffectParameters(ID, params))
-      {
-         wxMessageBox(
-            wxString::Format(
-            _("Could not set parameters of effect %s\n to %s."), command.c_str(),params.c_str() ));
-         return false;
-      }
+      return true;
    }
-   return true;
+
+   // transfer the parameters to the effect...
+   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
+   if (ID.empty())
+   {
+      return false;
+   }
+
+   return EffectManager::Get().SetEffectParameters(ID, params);
 }
 
 bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params)
@@ -594,7 +602,8 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    
    // NOW actually apply the effect.
    return project->OnEffect(ID, AudacityProject::OnEffectFlags::kConfigured |
-                                AudacityProject::OnEffectFlags::kSkipState);
+                                AudacityProject::OnEffectFlags::kSkipState |
+                                AudacityProject::OnEffectFlags::kIsBatch );
 }
 
 bool BatchCommands::ApplyCommand(const wxString & command, const wxString & params)

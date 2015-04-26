@@ -69,6 +69,11 @@ static const int kUserPresetsID = 31000;
 static const int kDeletePresetID = 32000;
 static const int kFactoryPresetsID = 33000;
 
+const wxString Effect::kUserPresetIdent = wxT("User Preset:");
+const wxString Effect::kFactoryPresetIdent = wxT("Factory Preset:");
+const wxString Effect::kCurrentSettingsIdent = wxT("<Current Settings>");
+const wxString Effect::kFactoryDefaultsIdent = wxT("<Factory Defaults>");
+
 WX_DECLARE_VOIDPTR_HASH_MAP( bool, t2bHash );
 
 Effect::Effect()
@@ -110,14 +115,25 @@ Effect::Effect()
 
    AudacityProject *p = GetActiveProject();
    mProjectRate = p ? p->GetRate() : 44100;
+
+   mIsBatch = false;
 }
 
 Effect::~Effect()
 {
-   delete mOutputTracks;
+   if (mOutputTracks)
+   {
+      delete mOutputTracks;
+   }
+
    if (mWarper != NULL)
    {
       delete mWarper;
+   }
+
+   if (mUIDialog)
+   {
+      mUIDialog->Close();
    }
 }
 
@@ -485,10 +501,23 @@ bool Effect::RealtimeProcessEnd()
 
 bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
 {
+   if (!IsInteractive())
+   {
+      return true;
+   }
+
+   if (mUIDialog)
+   {
+      mUIDialog->Close(true);
+      return false;
+   }
+
    if (mClient)
    {
       return mClient->ShowInterface(parent, forceModal);
    }
+
+   mParent = parent;
 
    mUIDialog = CreateUI(parent, this);
    if (!mUIDialog)
@@ -500,9 +529,17 @@ bool Effect::ShowInterface(wxWindow *parent, bool forceModal)
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
 
-   bool res = mUIDialog->ShowModal() != 0;
+   if (SupportsRealtime() && !forceModal)
+   {
+      mUIDialog->Show();
 
+      // Return false to bypass effect processing
+      return false;
+   }
+
+   bool res = mUIDialog->ShowModal() != 0;
    mUIDialog = NULL;
+   mParent = NULL;
 
    return res;
 }
@@ -529,11 +566,6 @@ bool Effect::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool Effect::LoadUserPreset(const wxString & name)
 {
-   if (!SupportsAutomation())
-   {
-      return true;
-   }
-
    if (mClient)
    {
       return mClient->LoadUserPreset(name);
@@ -550,11 +582,6 @@ bool Effect::LoadUserPreset(const wxString & name)
 
 bool Effect::SaveUserPreset(const wxString & name)
 {
-   if (!SupportsAutomation())
-   {
-      return true;
-   }
-
    if (mClient)
    {
       return mClient->SaveUserPreset(name);
@@ -610,7 +637,7 @@ bool Effect::PopulateUI(wxWindow *parent)
    mUIParent = parent;
    mUIParent->PushEventHandler(this);
 
-   LoadUserPreset(GetCurrentSettingsGroup());
+//   LoadUserPreset(GetCurrentSettingsGroup());
 
    ShuttleGui S(mUIParent, eIsCreating);
    PopulateOrExchange(S);
@@ -782,6 +809,10 @@ wxString Effect::GetFactoryDefaultsGroup()
 }
 
 // ConfigClientInterface implementation
+bool Effect::HasSharedConfigGroup(const wxString & group)
+{
+   return PluginManager::Get().HasSharedConfigGroup(GetID(), group);
+}
 
 bool Effect::GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups)
 {
@@ -856,6 +887,11 @@ bool Effect::RemoveSharedConfigSubgroup(const wxString & group)
 bool Effect::RemoveSharedConfig(const wxString & group, const wxString & key)
 {
    return PluginManager::Get().RemoveSharedConfig(GetID(), group, key);
+}
+
+bool Effect::HasPrivateConfigGroup(const wxString & group)
+{
+   return PluginManager::Get().HasPrivateConfigGroup(GetID(), group);
 }
 
 bool Effect::GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups)
@@ -997,17 +1033,45 @@ bool Effect::GetAutomationParameters(wxString & parms)
 
 bool Effect::SetAutomationParameters(const wxString & parms)
 {
-   EffectAutomationParameters eap(parms);
- 
-   if (!SetAutomationParameters(eap))
+   wxString preset = parms;
+   bool success = false;
+   if (preset.StartsWith(kUserPresetIdent))
+   {
+      preset.Replace(kUserPresetIdent, wxEmptyString, false);
+      success = LoadUserPreset(GetUserPresetsGroup(preset));
+   }
+   else if (preset.StartsWith(kFactoryPresetIdent))
+   {
+      preset.Replace(kFactoryPresetIdent, wxEmptyString, false);
+      wxArrayString presets = GetFactoryPresets();
+      success = LoadFactoryPreset(presets.Index(preset));
+   }
+   else if (preset.StartsWith(kCurrentSettingsIdent))
+   {
+      preset.Replace(kCurrentSettingsIdent, wxEmptyString, false);
+      success = LoadUserPreset(GetCurrentSettingsGroup());
+   }
+   else if (preset.StartsWith(kFactoryDefaultsIdent))
+   {
+      preset.Replace(kFactoryDefaultsIdent, wxEmptyString, false);
+      success = LoadUserPreset(GetFactoryDefaultsGroup());
+   }
+   else
+   {
+      EffectAutomationParameters eap(parms);
+      success = SetAutomationParameters(eap);
+   }
+
+   if (!success)
    {
       wxMessageBox(
          wxString::Format(
-            _("Could not set parameters of effect %s\n to %s."),
+            _("Could not update effect \"%s\" with:\n%s"),
             GetName().c_str(),
-            parms.c_str()
+            preset.c_str()
          )
       );
+
       return false;
    }
 
@@ -1017,6 +1081,52 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    }
 
    return TransferDataToWindow();
+}
+
+wxArrayString Effect::GetUserPresets()
+{
+   wxArrayString presets;
+
+   GetPrivateConfigSubgroups(GetUserPresetsGroup(wxEmptyString), presets);
+
+   presets.Sort();
+
+   return presets;
+}
+
+bool Effect::HasCurrentSettings()
+{
+   return HasPrivateConfigGroup(GetCurrentSettingsGroup());
+}
+
+bool Effect::HasFactoryDefaults()
+{
+   return HasPrivateConfigGroup(GetFactoryDefaultsGroup());
+}
+
+wxString Effect::GetPreset(wxWindow * parent)
+{
+   EffectPresetsDialog dlg(parent, this);
+   dlg.Layout();
+   dlg.Fit();
+   dlg.SetSize(dlg.GetMinSize());
+
+   if (dlg.ShowModal())
+   {
+      return dlg.GetSelected();
+   }
+
+   return wxEmptyString;
+}
+
+bool Effect::IsBatchProcessing()
+{
+   return mIsBatch;
+}
+
+void Effect::SetBatchProcessing(bool enable)
+{
+   mIsBatch = enable;
 }
 
 bool Effect::DoEffect(wxWindow *parent,
@@ -1062,7 +1172,7 @@ bool Effect::DoEffect(wxWindow *parent,
 
    // Prompting will be bypassed when applying an effect that has already 
    // been configured, e.g. repeating the last effect on a different selection.
-   if (shouldPrompt && !PromptUser(parent))
+   if (shouldPrompt && IsInteractive() && !PromptUser(parent))
    {
       return false;
    }
@@ -1101,27 +1211,11 @@ bool Effect::Init()
    return true;
 }
 
-bool Effect::PromptUser(wxWindow *parent, bool isBatch)
+// Remove this method once NoiseReduction gets migrated
+bool Effect::PromptUser(wxWindow *parent)
 {
-   if (IsInteractive())
-   {
-      mParent = parent;
-
-      bool res = ShowInterface(parent, isBatch);
-
-      // Really need to clean this up...should get easier when
-      // all effects get converted.
-      if (!res || (SupportsRealtime() && isBatch))
-      {
-         // Return false to force DoEffect() to skip processing since
-         // this UI has either been shown modeless or there was an error.
-         return false;
-      }
-   }
-
-   return true;
+   return ShowInterface(parent, IsBatchProcessing());
 }
-
 
 int Effect::GetPass()
 {
@@ -2676,6 +2770,7 @@ bool EffectUIHost::Initialize()
 
    mSupportsRealtime = mEffect->SupportsRealtime();
    mIsGUI = mClient->IsGraphicalUI();
+   mIsBatch = mEffect->IsBatchProcessing();
 
    wxBitmapButton *bb;
 
@@ -2704,93 +2799,106 @@ bool EffectUIHost::Initialize()
 
    bs->Add(5, 5);
 
-   if (!mIsGUI)
+   if (!mIsBatch)
    {
+      if (!mIsGUI)
+      {
+         if (mSupportsRealtime)
+         {
+            mPlayToggleBtn = new wxButton(bar, kPlayID, _("Start &Playback"));
+            mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
+            bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+         }
+         else if (mEffect->GetType() != EffectTypeAnalyze)
+         {
+            mPlayToggleBtn = new wxButton(bar, kPlayID, _("&Preview"));
+            mPlayToggleBtn->SetToolTip(_("Preview effect"));
+            bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+         }
+      }
+      else
+      {
+         mPlayBM = CreateBitmap(effect_play_xpm, true, false);
+         mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
+         mStopBM = CreateBitmap(effect_stop_xpm, true, false);
+         mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
+         bb = new wxBitmapButton(bar, kPlayID, mPlayBM);
+         bb->SetBitmapDisabled(mPlayDisabledBM);
+         mPlayBtn = bb;
+         bs->Add(mPlayBtn);
+         if (!mSupportsRealtime)
+         {
+            mPlayBtn->SetToolTip(_("Preview effect"));
+#if defined(__WXMAC__)
+            mPlayBtn->SetName(_("Preview effect"));
+#else
+            mPlayBtn->SetLabel(_("&Preview effect"));
+#endif
+         }
+      }
+
       if (mSupportsRealtime)
       {
-         mPlayToggleBtn = new wxButton(bar, kPlayID, _("Start &Playback"));
-         mPlayToggleBtn->SetToolTip(_("Start and stop playback"));
-         bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-      }
-      else if (mEffect->GetType() != EffectTypeAnalyze)
-      {
-         mPlayToggleBtn = new wxButton(bar, kPlayID, _("&Preview"));
-         mPlayToggleBtn->SetToolTip(_("Preview effect"));
-         bs->Add(mPlayToggleBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-      }
-   }
-   else
-   {
-      mPlayBM = CreateBitmap(effect_play_xpm, true, false);
-      mPlayDisabledBM = CreateBitmap(effect_play_disabled_xpm, true, false);
-      mStopBM = CreateBitmap(effect_stop_xpm, true, false);
-      mStopDisabledBM = CreateBitmap(effect_stop_disabled_xpm, true, false);
-      bb = new wxBitmapButton(bar, kPlayID, mPlayBM);
-      bb->SetBitmapDisabled(mPlayDisabledBM);
-      mPlayBtn = bb;
-      bs->Add(mPlayBtn);
-      if (!mSupportsRealtime)
-      {
-         mPlayBtn->SetToolTip(_("Preview effect"));
+         if (!mIsGUI)
+         {
+            mRewindBtn = new wxButton(bar, kRewindID, _("Skip &Backward"));
+            bs->Add(mRewindBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+         }
+         else
+         {
+            bb = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
+            bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
+            mRewindBtn = bb;
 #if defined(__WXMAC__)
-         mPlayBtn->SetName(_("Preview effect"));
+            mRewindBtn->SetName(_("Skip &Backward"));
 #else
-         mPlayBtn->SetLabel(_("&Preview effect"));
+            mRewindBtn->SetLabel(_("Skip &Backward"));
 #endif
-      }
-   }
+            bs->Add(mRewindBtn);
+         }
+         mRewindBtn->SetToolTip(_("Skip backward"));
 
-   if (mSupportsRealtime)
-   {
-      if (!mIsGUI)
-      {
-         mRewindBtn = new wxButton(bar, kRewindID, _("Skip &Backward"));
-         bs->Add(mRewindBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-      }
-      else
-      {
-         bb = new wxBitmapButton(bar, kRewindID, CreateBitmap(effect_rewind_xpm, true, true));
-         bb->SetBitmapDisabled(CreateBitmap(effect_rewind_disabled_xpm, true, true));
-         mRewindBtn = bb;
+         if (!mIsGUI)
+         {
+            mFFwdBtn = new wxButton(bar, kFFwdID, _("Skip &Forward"));
+            bs->Add(mFFwdBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+         }
+         else
+         {
+            bb = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
+            bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
+            mFFwdBtn = bb;
 #if defined(__WXMAC__)
-         mRewindBtn->SetName(_("Skip &Backward"));
+            mFFwdBtn->SetName(_("Skip &Foreward"));
 #else
-         mRewindBtn->SetLabel(_("Skip &Backward"));
+            mFFwdBtn->SetLabel(_("Skip &Foreward"));
 #endif
-         bs->Add(mRewindBtn);
-      }
-      mRewindBtn->SetToolTip(_("Skip backward"));
+            bs->Add(mFFwdBtn);
+         }
+         mFFwdBtn->SetToolTip(_("Skip forward"));
 
-      if (!mIsGUI)
-      {
-         mFFwdBtn = new wxButton(bar, kFFwdID, _("Skip &Forward"));
-         bs->Add(mFFwdBtn, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
-      }
-      else
-      {
-         bb = new wxBitmapButton(bar, kFFwdID, CreateBitmap(effect_ffwd_xpm, true, true));
-         bb->SetBitmapDisabled(CreateBitmap(effect_ffwd_disabled_xpm, true, true));
-         mFFwdBtn = bb;
-#if defined(__WXMAC__)
-         mFFwdBtn->SetName(_("Skip &Foreward"));
-#else
-         mFFwdBtn->SetLabel(_("Skip &Foreward"));
-#endif
-         bs->Add(mFFwdBtn);
-      }
-      mFFwdBtn->SetToolTip(_("Skip forward"));
+         bs->Add(5, 5);
 
-      bs->Add(5, 5);
-
-      mEnableCb = new wxCheckBox(bar, kEnableID, _("&Enable"));
-      mEnableCb->SetValue(mEnabled);
-      mEnableCb->SetName(_("Enable"));
-      bs->Add(mEnableCb, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+         mEnableCb = new wxCheckBox(bar, kEnableID, _("&Enable"));
+         mEnableCb->SetValue(mEnabled);
+         mEnableCb->SetName(_("Enable"));
+         bs->Add(mEnableCb, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, margin);
+      }
    }
 
    bar->SetSizerAndFit(bs);
 
-   wxSizer *s = CreateStdButtonSizer(this, eApplyButton | /*eCloseButton | */(mEffect->mUIDebug ? eDebugButton : 0), bar);
+   long buttons = eApplyButton;
+   if (!mIsBatch)
+   {
+      // buttons += eCloseButton;
+      if (mEffect->mUIDebug)
+      {
+         buttons += eDebugButton;
+      }
+   }
+
+   wxSizer *s = CreateStdButtonSizer(this, buttons, bar);
    vs->Add(s, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL);
 
    SetSizer(vs);
@@ -2853,7 +2961,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
 
-   if (mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
+   if (!mIsBatch && mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
    {
       wxMessageBox(_("You must select audio in the project window."));
       return;
@@ -3305,6 +3413,11 @@ wxBitmap EffectUIHost::CreateBitmap(const char *xpm[], bool up, bool pusher)
 
 void EffectUIHost::UpdateControls()
 {
+   if (mIsBatch)
+   {
+      return;
+   }
+
    if (mCapturing || mDisableTransport)
    {
       // Don't allow focus to get trapped
@@ -3426,3 +3539,160 @@ void EffectUIHost::CleanupRealtime()
       mInitialized = false;
    }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// EffectPresetsDialog
+//
+///////////////////////////////////////////////////////////////////////////////
+
+enum
+{
+   ID_Type = 10000
+};
+
+BEGIN_EVENT_TABLE(EffectPresetsDialog, wxDialog)
+   EVT_CHOICE(ID_Type, EffectPresetsDialog::OnType)
+   EVT_LISTBOX_DCLICK(wxID_ANY, EffectPresetsDialog::OnOk)
+   EVT_BUTTON(wxID_OK, EffectPresetsDialog::OnOk)
+   EVT_BUTTON(wxID_CANCEL, EffectPresetsDialog::OnCancel)
+END_EVENT_TABLE()
+
+EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
+:  wxDialog(parent, wxID_ANY, wxString(_("Select Preset")))
+{
+   ShuttleGui S(this, eIsCreating);
+   S.StartVerticalLay();
+   {
+      S.StartTwoColumn();
+      S.SetStretchyCol(1);
+      {
+         wxArrayString empty;
+
+         S.AddPrompt(_("Type:"));
+         mType = S.Id(ID_Type).AddChoice(wxT(""), wxT(""), &empty);
+         mType->SetSelection(0);
+
+         S.AddPrompt(_("&Preset:"));
+         mPresets = S.AddListBox(&empty, wxLB_SINGLE | wxLB_NEEDED_SB );
+      }
+      S.EndTwoColumn();
+
+      S.AddStandardButtons();
+   }
+   S.EndVerticalLay();
+
+   mUserPresets = effect->GetUserPresets();
+   mFactoryPresets = effect->GetFactoryPresets();
+
+   if (mUserPresets.GetCount() > 0)
+   {
+      mType->Append(_("User Presets"));
+   }
+
+   if (mFactoryPresets.GetCount() > 0)
+   {
+      mType->Append(_("Factory Presets"));
+   }
+
+   if (effect->HasCurrentSettings())
+   {
+      mType->Append(_("Current Settings"));
+   }
+
+   if (effect->HasFactoryDefaults())
+   {
+      mType->Append(_("Factory Defaults"));
+   }
+
+   UpdateUI();
+}
+
+EffectPresetsDialog::~EffectPresetsDialog()
+{
+}
+
+void EffectPresetsDialog::UpdateUI()
+{
+   int selected = mType->GetSelection();
+   if (selected == wxNOT_FOUND)
+   {
+      selected = 0;
+      mType->SetSelection(selected);
+   }
+   wxString type = mType->GetString(selected);
+
+   if (type.IsSameAs(_("User Presets")))
+   {
+      selected = mPresets->GetSelection();
+      if (selected == wxNOT_FOUND)
+      {
+         selected = 0;
+      }
+
+      mPresets->Clear();
+      mPresets->Append(mUserPresets);
+      mPresets->Enable(true);
+      mPresets->SetSelection(selected);
+      mSelection = Effect::kUserPresetIdent + mPresets->GetString(selected);
+   }
+   else if (type.IsSameAs(_("Factory Presets")))
+   {
+      selected = mPresets->GetSelection();
+      if (selected == wxNOT_FOUND)
+      {
+         selected = 0;
+      }
+
+      mPresets->Clear();
+      for (size_t i = 0, cnt = mFactoryPresets.GetCount(); i < cnt; i++)
+      {
+         wxString label = mFactoryPresets[i];
+         if (label.IsEmpty())
+         {
+            label = _("None");
+         }
+         mPresets->Append(label);
+      }
+      mPresets->Enable(true);
+      mPresets->SetSelection(selected);
+      mSelection = Effect::kFactoryPresetIdent + mPresets->GetString(selected);
+   }
+   else if (type.IsSameAs(_("Current Settings")))
+   {
+      mPresets->Clear();
+      mPresets->Enable(false);
+      mSelection = Effect::kCurrentSettingsIdent;
+   }
+   else if (type.IsSameAs(_("Factory Defaults")))
+   {
+      mPresets->Clear();
+      mPresets->Enable(false);
+      mSelection = Effect::kFactoryDefaultsIdent;
+   }
+}
+
+void EffectPresetsDialog::OnType(wxCommandEvent & WXUNUSED(evt))
+{
+   UpdateUI();
+}
+
+void EffectPresetsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
+{
+   UpdateUI();
+
+   EndModal(true);
+}
+
+void EffectPresetsDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
+{
+   mSelection = wxEmptyString;
+
+   EndModal(false);
+}
+
+wxString EffectPresetsDialog::GetSelected() const
+{
+   return mSelection;
+}
+

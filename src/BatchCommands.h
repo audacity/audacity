@@ -43,6 +43,8 @@ class BatchCommands {
    static bool PromptForParamsFor( wxString command, wxWindow *parent );
    static wxString GetCurrentParamsFor( wxString command );
    static bool SetCurrentParametersFor(const wxString & command, const wxString & params);
+   static wxString PromptForPresetFor( wxString command, wxWindow *parent );
+   static bool SetCurrentPresetFor(const wxString & command, const wxString & preset);
    static wxArrayString GetAllCommands();
 
    // These commands do depend on the command list.

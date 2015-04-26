@@ -1236,6 +1236,11 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    return;
 }
 
+bool PluginManager::HasSharedConfigGroup(const PluginID & ID, const wxString & group)
+{
+   return HasGroup(SharedGroup(ID, group));
+}
+
 bool PluginManager::GetSharedConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups)
 {
    return GetSubgroups(SharedGroup(ID, group), subgroups);
@@ -1321,6 +1326,11 @@ bool PluginManager::RemoveSharedConfig(const PluginID & ID, const wxString & gro
    }
 
    return result;
+}
+
+bool PluginManager::HasPrivateConfigGroup(const PluginID & ID, const wxString & group)
+{
+   return HasGroup(PrivateGroup(ID, group));
 }
 
 bool PluginManager::GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups)
@@ -2277,29 +2287,34 @@ wxFileConfig *PluginManager::GetSettings()
    return mSettings;
 }
 
+bool PluginManager::HasGroup(const wxString & group)
+{
+   return GetSettings()->HasGroup(group);
+}
+
 bool PluginManager::GetSubgroups(const wxString & group, wxArrayString & subgroups)
 {
-   bool result = false;
-
-   if (!group.IsEmpty())
+   if (group.IsEmpty() || !HasGroup(group))
    {
-      wxString name = wxEmptyString;
-      long index = 0;
-      wxString path = GetSettings()->GetPath();
-      GetSettings()->SetPath(group);
-
-      if (GetSettings()->GetFirstGroup(name, index))
-      {
-         do
-         {
-            subgroups.Add(name);
-         } while (GetSettings()->GetNextGroup(name, index));
-      }
-
-      GetSettings()->SetPath(path);
+      return false;
    }
 
-   return result;
+   wxString path = GetSettings()->GetPath();
+   GetSettings()->SetPath(group);
+
+   wxString name = wxEmptyString;
+   long index = 0;
+   if (GetSettings()->GetFirstGroup(name, index))
+   {
+      do
+      {
+         subgroups.Add(name);
+      } while (GetSettings()->GetNextGroup(name, index));
+   }
+
+   GetSettings()->SetPath(path);
+
+   return true;
 }
 
 bool PluginManager::GetConfig(const wxString & key, int & value, int defval)

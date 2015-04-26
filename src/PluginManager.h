@@ -189,6 +189,7 @@ public:
                                     wxArrayString & files,
                                     bool directories = false);
 
+   virtual bool HasSharedConfigGroup(const PluginID & ID, const wxString & group);
    virtual bool GetSharedConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T(""));
@@ -208,6 +209,7 @@ public:
    virtual bool RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group);
    virtual bool RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key);
 
+   virtual bool HasPrivateConfigGroup(const PluginID & ID, const wxString & group);
    virtual bool GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T(""));
@@ -280,6 +282,7 @@ private:
 
    wxFileConfig *GetSettings();
 
+   bool HasGroup(const wxString & group);
    bool GetSubgroups(const wxString & group, wxArrayString & subgroups);
 
    bool GetConfig(const wxString & key, wxString & value, const wxString & defval = L"");
