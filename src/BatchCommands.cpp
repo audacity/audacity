@@ -305,7 +305,7 @@ wxArrayString BatchCommands::GetAllCommands()
 }
 
 
-wxString BatchCommands::GetCurrentParamsFor(wxString command)
+wxString BatchCommands::GetCurrentParamsFor(const wxString & command)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
    if( ID.empty() )
@@ -316,7 +316,7 @@ wxString BatchCommands::GetCurrentParamsFor(wxString command)
    return EffectManager::Get().GetEffectParameters(ID);
 }
 
-bool BatchCommands::PromptForParamsFor(wxString command, wxWindow *parent)
+bool BatchCommands::PromptForParamsFor(const wxString & command, wxWindow *parent)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
 
@@ -328,7 +328,7 @@ bool BatchCommands::PromptForParamsFor(wxString command, wxWindow *parent)
    return EffectManager::Get().PromptUser(ID, parent);
 }
 
-wxString BatchCommands::PromptForPresetFor(wxString command, wxWindow *parent)
+wxString BatchCommands::PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
 
@@ -337,7 +337,7 @@ wxString BatchCommands::PromptForPresetFor(wxString command, wxWindow *parent)
       return wxEmptyString;   // effect not found.
    }
 
-   return EffectManager::Get().GetPreset(ID, parent);
+   return EffectManager::Get().GetPreset(ID, params, parent);
 }
 
 double BatchCommands::GetEndTime()

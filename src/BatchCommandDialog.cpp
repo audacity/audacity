@@ -165,17 +165,27 @@ void BatchCommandDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 
 void BatchCommandDialog::OnItemSelected(wxListEvent &event)
 {
-   int itemNo = event.GetIndex();
-   wxString command = mChoices->GetItemText( itemNo );
-   mCommand->SetValue( command );
-   wxString params = BatchCommands::GetCurrentParamsFor( command );
-   mParameters->SetValue( params );
+   wxString command = mChoices->GetItemText(event.GetIndex());
 
    EffectManager & em = EffectManager::Get();
-   PluginID ID = em.GetEffectByIdentifier( command );
+   PluginID ID = em.GetEffectByIdentifier(command);
    wxASSERT(!ID.IsEmpty());
    mEditParams->Enable(true);
    mUsePreset->Enable(em.HasPresets(ID));
+
+   if (command == mCommand->GetValue())
+   {
+      return;
+   }
+
+   mCommand->SetValue(command);
+   wxString params = BatchCommands::GetCurrentParamsFor(command);
+   if (params.IsEmpty())
+   {
+      params = em.GetDefaultPreset(ID);
+   }
+
+   mParameters->SetValue(params);
 }
 
 void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
@@ -201,7 +211,7 @@ void BatchCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
    wxString command = mCommand->GetValue();
    wxString params  = mParameters->GetValue();
 
-   wxString preset = BatchCommands::PromptForPresetFor(command, this);
+   wxString preset = BatchCommands::PromptForPresetFor(command, params, this);
    if (!preset.IsEmpty())
    {
       mParameters->SetValue(preset);

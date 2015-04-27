@@ -211,7 +211,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual wxArrayString GetUserPresets();
    virtual bool HasCurrentSettings();
    virtual bool HasFactoryDefaults();
-   virtual wxString GetPreset(wxWindow * parent);
+   virtual wxString GetPreset(wxWindow * parent, const wxString & parms);
 
    virtual bool IsBatchProcessing();
    virtual void SetBatchProcessing(bool enable);
@@ -566,8 +566,10 @@ public:
    virtual ~EffectPresetsDialog();
 
    wxString GetSelected() const;
+   void SetSelected(const wxString & parms);
 
 private:
+   void SetPrefix(const wxString & type, const wxString & prefix);
    void UpdateUI();
 
    void OnType(wxCommandEvent & evt);

@@ -230,7 +230,7 @@ bool EffectManager::HasPresets(const PluginID & ID)
           effect->HasFactoryDefaults();
 }
 
-wxString EffectManager::GetPreset(const PluginID & ID, wxWindow * parent)
+wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent)
 {
    Effect *effect = GetEffect(ID);
 
@@ -239,16 +239,54 @@ wxString EffectManager::GetPreset(const PluginID & ID, wxWindow * parent)
       return wxEmptyString;
    }
 
-   wxString preset = effect->GetPreset(parent);
+   EffectAutomationParameters eap(params);
+
+   wxString preset;
+   if (eap.HasEntry(wxT("Use Preset")))
+   {
+      preset = eap.Read(wxT("Use Preset"));
+   }
+
+   preset = effect->GetPreset(parent, preset);
    if (preset.IsEmpty())
    {
       return preset;
    }
 
-   EffectAutomationParameters eap;
+   eap.DeleteAll();
    
    eap.Write(wxT("Use Preset"), preset);
    eap.GetParameters(preset);
+
+   return preset;
+}
+
+wxString EffectManager::GetDefaultPreset(const PluginID & ID)
+{
+   Effect *effect = GetEffect(ID);
+
+   if (!effect)
+   {
+      return wxEmptyString;
+   }
+
+   wxString preset;
+   if (effect->HasCurrentSettings())
+   {
+      preset = Effect::kCurrentSettingsIdent;
+   }
+   else if (effect->HasFactoryDefaults())
+   {
+      preset = Effect::kFactoryDefaultsIdent;
+   }
+
+   if (!preset.IsEmpty())
+   {
+      EffectAutomationParameters eap;
+
+      eap.Write(wxT("Use Preset"), preset);
+      eap.GetParameters(preset);
+   }
 
    return preset;
 }

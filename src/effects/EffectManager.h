@@ -84,9 +84,10 @@ public:
    bool SetEffectParameters(const PluginID & ID, const wxString & params);
    bool PromptUser(const PluginID & ID, wxWindow *parent);
    bool HasPresets(const PluginID & ID);
-   wxString GetPreset(const PluginID & ID, wxWindow * parent);
+   wxString GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent);
+   wxString GetDefaultPreset(const PluginID & ID);
 
-   // Realtime effect processing
+      // Realtime effect processing
    bool RealtimeIsActive();
    bool RealtimeIsSuspended();
    void RealtimeAddEffect(Effect *effect);

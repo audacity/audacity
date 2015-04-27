@@ -1104,12 +1104,13 @@ bool Effect::HasFactoryDefaults()
    return HasPrivateConfigGroup(GetFactoryDefaultsGroup());
 }
 
-wxString Effect::GetPreset(wxWindow * parent)
+wxString Effect::GetPreset(wxWindow * parent, const wxString & parms)
 {
    EffectPresetsDialog dlg(parent, this);
    dlg.Layout();
    dlg.Fit();
    dlg.SetSize(dlg.GetMinSize());
+   dlg.SetSelected(parms);
 
    if (dlg.ShowModal())
    {
@@ -3612,6 +3613,85 @@ EffectPresetsDialog::~EffectPresetsDialog()
 {
 }
 
+wxString EffectPresetsDialog::GetSelected() const
+{
+   return mSelection;
+}
+
+void EffectPresetsDialog::SetSelected(const wxString & parms)
+{
+   wxString preset = parms;
+   if (preset.StartsWith(Effect::kUserPresetIdent))
+   {
+      preset.Replace(Effect::kUserPresetIdent, wxEmptyString, false);
+      SetPrefix(_("User Presets"), preset);
+   }
+   else if (preset.StartsWith(Effect::kFactoryPresetIdent))
+   {
+      preset.Replace(Effect::kFactoryPresetIdent, wxEmptyString, false);
+      SetPrefix(_("Factory Presets"), preset);
+   }
+   else if (preset.StartsWith(Effect::kCurrentSettingsIdent))
+   {
+      SetPrefix(_("Current Settings"), wxEmptyString);
+   }
+   else if (preset.StartsWith(Effect::kFactoryDefaultsIdent))
+   {
+      SetPrefix(_("Factory Defaults"), wxEmptyString);
+   }
+}
+
+void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & prefix)
+{
+   mType->SetStringSelection(type);
+
+   int selected;
+   if (type.IsSameAs(_("User Presets")))
+   {
+      mPresets->Clear();
+      mPresets->Append(mUserPresets);
+      mPresets->Enable(true);
+      mPresets->SetStringSelection(prefix);
+      if (mPresets->GetSelection() == wxNOT_FOUND)
+      {
+         mPresets->SetSelection(0);
+      }
+      mSelection = Effect::kUserPresetIdent + mPresets->GetStringSelection();
+   }
+   else if (type.IsSameAs(_("Factory Presets")))
+   {
+      mPresets->Clear();
+      for (size_t i = 0, cnt = mFactoryPresets.GetCount(); i < cnt; i++)
+      {
+         wxString label = mFactoryPresets[i];
+         if (label.IsEmpty())
+         {
+            label = _("None");
+         }
+         mPresets->Append(label);
+      }
+      mPresets->Enable(true);
+      mPresets->SetStringSelection(prefix);
+      if (mPresets->GetSelection() == wxNOT_FOUND)
+      {
+         mPresets->SetSelection(0);
+      }
+      mSelection = Effect::kFactoryPresetIdent + mPresets->GetStringSelection();
+   }
+   else if (type.IsSameAs(_("Current Settings")))
+   {
+      mPresets->Clear();
+      mPresets->Enable(false);
+      mSelection = Effect::kCurrentSettingsIdent;
+   }
+   else if (type.IsSameAs(_("Factory Defaults")))
+   {
+      mPresets->Clear();
+      mPresets->Enable(false);
+      mSelection = Effect::kFactoryDefaultsIdent;
+   }
+}
+
 void EffectPresetsDialog::UpdateUI()
 {
    int selected = mType->GetSelection();
@@ -3690,9 +3770,3 @@ void EffectPresetsDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
    EndModal(false);
 }
-
-wxString EffectPresetsDialog::GetSelected() const
-{
-   return mSelection;
-}
-
