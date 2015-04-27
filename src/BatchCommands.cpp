@@ -282,13 +282,10 @@ wxArrayString BatchCommands::GetAllCommands()
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
    {
-      if (plug->IsEffectAutomatable())
+      command = em.GetEffectIdentifier(plug->GetID());
+      if (!command.IsEmpty())
       {
-         command = em.GetEffectIdentifier(plug->GetID());
-         if (!command.IsEmpty())
-         {
-            commands.Add(command);
-         }
+         commands.Add(command);
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }
