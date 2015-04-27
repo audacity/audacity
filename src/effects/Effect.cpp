@@ -808,6 +808,11 @@ wxString Effect::GetFactoryDefaultsGroup()
    return wxT("FactoryDefaults");
 }
 
+wxString Effect::GetSavedStateGroup()
+{
+   return wxT("SavedState");
+}
+
 // ConfigClientInterface implementation
 bool Effect::HasSharedConfigGroup(const wxString & group)
 {
@@ -1125,9 +1130,18 @@ bool Effect::IsBatchProcessing()
    return mIsBatch;
 }
 
-void Effect::SetBatchProcessing(bool enable)
+void Effect::SetBatchProcessing(bool start)
 {
-   mIsBatch = enable;
+   mIsBatch = start;
+
+   if (start)
+   {
+      SaveUserPreset(GetSavedStateGroup());
+   }
+   else
+   {
+      LoadUserPreset(GetSavedStateGroup());
+   }
 }
 
 bool Effect::DoEffect(wxWindow *parent,

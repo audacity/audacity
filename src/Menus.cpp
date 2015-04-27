@@ -3216,8 +3216,7 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
    bool success = em.DoEffect(ID, this, mRate,
                                mTracks, mTrackFactory, 
                                &mViewInfo.selectedRegion,
-                               (flags & OnEffectFlags::kConfigured) == 0,
-                               (flags & OnEffectFlags::kIsBatch) != 0);
+                               (flags & OnEffectFlags::kConfigured) == 0);
 
    if (!success) {
       if (newTrack) {

@@ -77,8 +77,7 @@ bool EffectManager::DoEffect(const PluginID & ID,
                              TrackList *list,
                              TrackFactory *factory,
                              SelectedRegion *selectedRegion,
-                             bool shouldPrompt /* = true */,
-                             bool isBatch /* = false */)
+                             bool shouldPrompt /* = true */)
 
 {
    Effect *effect = GetEffect(ID);
@@ -95,16 +94,12 @@ bool EffectManager::DoEffect(const PluginID & ID,
    }
 #endif
 
-   effect->SetBatchProcessing(isBatch);
-
    bool res = effect->DoEffect(parent,
                                projectRate,
                                list,
                                factory,
                                selectedRegion,
                                shouldPrompt);
-
-   effect->SetBatchProcessing(false);
 
    return res;
 }
@@ -205,11 +200,7 @@ bool EffectManager::PromptUser(const PluginID & ID, wxWindow *parent)
 
    if (effect)
    {
-      effect->SetBatchProcessing(true);
-
       result = effect->PromptUser(parent);
-
-      effect->SetBatchProcessing(false);
    }
 
    return result;
@@ -289,6 +280,18 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
    }
 
    return preset;
+}
+
+void EffectManager::SetBatchProcessing(const PluginID & ID, bool start)
+{
+   Effect *effect = GetEffect(ID);
+
+   if (!effect)
+   {
+      return;
+   }
+
+   effect->SetBatchProcessing(start);
 }
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)

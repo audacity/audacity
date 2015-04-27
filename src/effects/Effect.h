@@ -155,6 +155,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual wxString GetUserPresetsGroup(const wxString & name);
    virtual wxString GetCurrentSettingsGroup();
    virtual wxString GetFactoryDefaultsGroup();
+   virtual wxString GetSavedStateGroup();
 
    // ConfigClientInterface implementation
 
@@ -214,7 +215,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual wxString GetPreset(wxWindow * parent, const wxString & parms);
 
    virtual bool IsBatchProcessing();
-   virtual void SetBatchProcessing(bool enable);
+   virtual void SetBatchProcessing(bool start);
 
    void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ){
       if( Names ) mPresetNames = *Names;

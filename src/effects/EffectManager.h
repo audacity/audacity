@@ -71,8 +71,7 @@ public:
                  TrackList *list,
                  TrackFactory *factory,
                  SelectedRegion *selectedRegion,
-                 bool shouldPrompt = true,
-                 bool isBatch = false);
+                 bool shouldPrompt = true);
 
    wxString GetEffectName(const PluginID & ID);
    wxString GetEffectIdentifier(const PluginID & ID);
@@ -86,6 +85,7 @@ public:
    bool HasPresets(const PluginID & ID);
    wxString GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent);
    wxString GetDefaultPreset(const PluginID & ID);
+   void SetBatchProcessing(const PluginID & ID, bool start);
 
       // Realtime effect processing
    bool RealtimeIsActive();

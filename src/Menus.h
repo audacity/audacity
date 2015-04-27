@@ -367,8 +367,6 @@ public:
    static const int kConfigured = 0x01;
    // Flag used to disable saving the state after processing.
    static const int kSkipState  = 0x02;
-   // Flag used to designate batch processing is active.
-   static const int kIsBatch  = 0x04;
 };
 
 bool OnEffect(const PluginID & ID, int flags = OnEffectFlags::kNone);

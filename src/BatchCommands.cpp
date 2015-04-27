@@ -308,7 +308,7 @@ wxArrayString BatchCommands::GetAllCommands()
 wxString BatchCommands::GetCurrentParamsFor(const wxString & command)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
-   if( ID.empty() )
+   if (ID.empty())
    {
       return wxEmptyString;   // effect not found.
    }
@@ -316,22 +316,34 @@ wxString BatchCommands::GetCurrentParamsFor(const wxString & command)
    return EffectManager::Get().GetEffectParameters(ID);
 }
 
-bool BatchCommands::PromptForParamsFor(const wxString & command, wxWindow *parent)
+wxString BatchCommands::PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
-
    if (ID.empty())
    {
-      return false;
+      return wxEmptyString;   // effect not found
    }
 
-   return EffectManager::Get().PromptUser(ID, parent);
+   wxString res = params;
+
+   EffectManager::Get().SetBatchProcessing(ID, true);
+
+   if (EffectManager::Get().SetEffectParameters(ID, params))
+   {
+      if (EffectManager::Get().PromptUser(ID, parent))
+      {
+         res = EffectManager::Get().GetEffectParameters(ID);
+      }
+   }
+
+   EffectManager::Get().SetBatchProcessing(ID, false);
+
+   return res;
 }
 
 wxString BatchCommands::PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
-
    if (ID.empty())
    {
       return wxEmptyString;   // effect not found.
@@ -564,23 +576,6 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString &
 }
 // end CLEANSPEECH remnant
 
-bool BatchCommands::SetCurrentParametersFor(const wxString & command, const wxString & params)
-{
-   if (params.IsEmpty())
-   {
-      return true;
-   }
-
-   // transfer the parameters to the effect...
-   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
-   if (ID.empty())
-   {
-      return false;
-   }
-
-   return EffectManager::Get().SetEffectParameters(ID, params);
-}
-
 bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params)
 {
    //Possibly end processing here, if in batch-debug
@@ -594,13 +589,21 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & com
    // (most effects require that you have something selected).
    project->SelectAllIfNone();
 
-   if (!SetCurrentParametersFor(command, params))
-      return false;
-   
-   // NOW actually apply the effect.
-   return project->OnEffect(ID, AudacityProject::OnEffectFlags::kConfigured |
-                                AudacityProject::OnEffectFlags::kSkipState |
-                                AudacityProject::OnEffectFlags::kIsBatch );
+   bool res = false;
+
+   EffectManager::Get().SetBatchProcessing(ID, true);
+
+   // transfer the parameters to the effect...
+   if (EffectManager::Get().SetEffectParameters(ID, params))
+   {
+      // and apply the effect...
+      res = project->OnEffect(ID, AudacityProject::OnEffectFlags::kConfigured |
+                                  AudacityProject::OnEffectFlags::kSkipState);
+   }
+
+   EffectManager::Get().SetBatchProcessing(ID, false);
+
+   return res;
 }
 
 bool BatchCommands::ApplyCommand(const wxString & command, const wxString & params)

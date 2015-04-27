@@ -193,17 +193,10 @@ void BatchCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
    wxString command = mCommand->GetValue();
    wxString params  = mParameters->GetValue();
 
-   if (BatchCommands::SetCurrentParametersFor( command, params ))
-   {
-      if( BatchCommands::PromptForParamsFor( command, this ))
-      {
-         // we've just prompted for the parameters, so the values
-         // that are current have changed.
-         params = BatchCommands::GetCurrentParamsFor( command );
-         mParameters->SetValue( params.Strip(wxString::trailing) );
-         mParameters->Refresh();
-      }
-   }
+   params = BatchCommands::PromptForParamsFor(command, params, this).Trim();
+
+   mParameters->SetValue(params);
+   mParameters->Refresh();
 }
 
 void BatchCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
@@ -211,12 +204,10 @@ void BatchCommandDialog::OnUsePreset(wxCommandEvent & WXUNUSED(event))
    wxString command = mCommand->GetValue();
    wxString params  = mParameters->GetValue();
 
-   wxString preset = BatchCommands::PromptForPresetFor(command, params, this);
-   if (!preset.IsEmpty())
-   {
-      mParameters->SetValue(preset);
-      mParameters->Refresh();
-   }
+   wxString preset = BatchCommands::PromptForPresetFor(command, params, this).Trim();
+
+   mParameters->SetValue(preset);
+   mParameters->Refresh();
 }
 
 void BatchCommandDialog::SetCommandAndParams(const wxString &Command, const wxString &Params)
