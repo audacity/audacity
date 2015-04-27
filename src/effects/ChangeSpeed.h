@@ -47,6 +47,7 @@ public:
 
    virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool LoadFactoryDefaults();
 
    // Effect implementation
 

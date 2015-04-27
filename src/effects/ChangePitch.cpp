@@ -139,6 +139,13 @@ bool EffectChangePitch::SetAutomationParameters(EffectAutomationParameters & par
    return true;
 }
 
+bool EffectChangePitch::LoadFactoryDefaults()
+{
+   DeduceFrequencies();
+
+   return Effect::LoadFactoryDefaults();
+}
+
 // Effect implementation
 
 bool EffectChangePitch::Init()
@@ -173,20 +180,6 @@ bool EffectChangePitch::CheckWhetherSkipEffect()
 void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
-
-   // effect parameters
-   double dFromMIDInote = FreqToMIDInote(m_dStartFrequency);
-   double dToMIDInote = dFromMIDInote + m_dSemitonesChange;
-   m_nFromPitch = PitchIndex(dFromMIDInote);
-   m_nFromOctave = PitchOctave(dFromMIDInote);
-   m_nToPitch = PitchIndex(dToMIDInote);
-   m_nToOctave = PitchOctave(dToMIDInote);
-
-   m_dSemitonesChange = m_dSemitonesChange;
-
-   m_FromFrequency = m_dStartFrequency;
-   Calc_PercentChange();
-   Calc_ToFrequency();
 
    wxArrayString pitch;
    pitch.Add(wxT("C"));
@@ -315,6 +308,7 @@ bool EffectChangePitch::TransferDataToWindow()
    Update_Spin_FromOctave();
    Update_Spin_ToOctave();
    Update_Text_SemitonesChange();
+   Update_Text_FromFrequency();
    Update_Text_ToFrequency();
    Update_Text_PercentChange();
    Update_Slider_PercentChange();
@@ -408,6 +402,17 @@ void EffectChangePitch::DeduceFrequencies()
       lag = (windowSize/2 - 1) - argmax;
       m_dStartFrequency = rate / lag;
    }
+
+   double dFromMIDInote = FreqToMIDInote(m_dStartFrequency);
+   double dToMIDInote = dFromMIDInote + m_dSemitonesChange;
+   m_nFromPitch = PitchIndex(dFromMIDInote);
+   m_nFromOctave = PitchOctave(dFromMIDInote);
+   m_nToPitch = PitchIndex(dToMIDInote);
+   m_nToOctave = PitchOctave(dToMIDInote);
+
+   m_FromFrequency = m_dStartFrequency;
+   Calc_PercentChange();
+   Calc_ToFrequency();
 }
 
 // calculations

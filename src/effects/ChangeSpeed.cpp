@@ -139,6 +139,14 @@ bool EffectChangeSpeed::SetAutomationParameters(EffectAutomationParameters & par
    return true;
 }
 
+bool EffectChangeSpeed::LoadFactoryDefaults()
+{
+   mFromVinyl = kVinyl_33AndAThird;
+   mFormat = _("hh:mm:ss + milliseconds");
+
+   return Effect::LoadFactoryDefaults();
+}
+
 // Effect implementation
 
 bool EffectChangeSpeed::CheckWhetherSkipEffect()
@@ -275,6 +283,9 @@ bool EffectChangeSpeed::Process()
 
 void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 {
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat, mFormat);
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, mFromVinyl);
+
    S.SetBorder(5);
 
    S.StartVerticalLay(0);
@@ -393,9 +404,6 @@ bool EffectChangeSpeed::TransferDataToWindow()
    {
       return false;
    }
-
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat, mFormat);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
    if (mFromVinyl == kVinyl_NA)
    {

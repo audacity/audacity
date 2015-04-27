@@ -101,6 +101,7 @@ public:
 
    virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool LoadFactoryDefaults();
 
    // EffectUIClientInterface implementation
 
@@ -148,6 +149,8 @@ private:
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
    XMLTagHandler *HandleXMLChild(const wxChar *tag);
    void WriteXML(XMLWriter &xmlFile);
+
+   void UpdateDraw();
 
    void LayoutEQSliders();
    void UpdateGraphic(void);

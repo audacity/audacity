@@ -376,6 +376,16 @@ bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & pa
    return true;
 }
 
+bool EffectEqualization::LoadFactoryDefaults()
+{
+   mdBMin = DEF_dBMin;
+   mdBMax = DEF_dBMax;
+   mDrawMode = DEF_DrawMode;
+   mDrawGrid = DEF_DrawGrid;
+
+   return Effect::LoadFactoryDefaults();
+}
+
 // EffectUIClientInterface implementation
 
 bool EffectEqualization::ValidateUI()
@@ -895,6 +905,7 @@ bool EffectEqualization::TransferDataToWindow()
    if (mDrawMode)
    {
       mDraw->SetValue(true);
+      UpdateDraw();
    }
    else
    {
@@ -1841,6 +1852,60 @@ void EffectEqualization::LayoutEQSliders()
    mUIParent->RefreshRect(wxRect(szrG->GetPosition(), szrGSize));
 }
 
+void EffectEqualization::UpdateDraw()
+{
+   int numPoints = mLogEnvelope->GetNumberOfPoints();
+   double *when = new double[ numPoints ];
+   double *value = new double[ numPoints ];
+   double deltadB = 0.1;
+   double dx, dy, dx1, dy1, err;
+
+   mLogEnvelope->GetPoints( when, value, numPoints );
+
+   // set 'unnamed' as the selected curve
+   EnvelopeUpdated();
+
+   bool flag = true;
+   while (flag)
+   {
+      flag = false;
+      int numDeleted = 0;
+      mLogEnvelope->GetPoints( when, value, numPoints );
+      for(int j=0;j<numPoints-2;j++)
+      {
+         dx = when[j+2+numDeleted] - when[j+numDeleted];
+         dy = value[j+2+numDeleted] - value[j+numDeleted];
+         dx1 = when[j+numDeleted+1] - when[j+numDeleted];
+         dy1 = dy * dx1 / dx;
+         err = fabs(value[j+numDeleted+1] - (value[j+numDeleted] + dy1));
+         if( err < deltadB )
+         {   // within < deltadB dB?
+            mLogEnvelope->Delete(j+1);
+            numPoints--;
+            numDeleted++;
+            flag = true;
+         }
+      }
+   }
+   delete [] when;
+   delete [] value;
+
+   if(mLin)
+   {
+      EnvLogToLin();
+      mEnvelope = mLinEnvelope;
+      mFreqRuler->ruler.SetLog(false);
+      mFreqRuler->ruler.SetRange(0, mHiFreq);
+   }
+
+   szrV->Show(szrG,false);
+   szrH->Show(szrI,false);
+   szrH->Show(szrL,true);
+   mUIParent->Layout();
+   wxGetTopLevelParent(mUIParent)->Layout();
+   mPanel->ForceRecalc();     // it may have changed slightly due to the deletion of points
+}
+
 void EffectEqualization::UpdateGraphic()
 {
    double loLog = log10(mLoFreq);
@@ -2323,56 +2388,8 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnDrawMode(wxCommandEvent & WXUNUSED(event))
 {
-   int numPoints = mLogEnvelope->GetNumberOfPoints();
-   double *when = new double[ numPoints ];
-   double *value = new double[ numPoints ];
-   double deltadB = 0.1;
-   double dx, dy, dx1, dy1, err;
+   UpdateDraw();
 
-   mLogEnvelope->GetPoints( when, value, numPoints );
-
-   // set 'unnamed' as the selected curve
-   EnvelopeUpdated();
-
-   bool flag = true;
-   while (flag)
-   {
-      flag = false;
-      int numDeleted = 0;
-      mLogEnvelope->GetPoints( when, value, numPoints );
-      for(int j=0;j<numPoints-2;j++)
-      {
-         dx = when[j+2+numDeleted] - when[j+numDeleted];
-         dy = value[j+2+numDeleted] - value[j+numDeleted];
-         dx1 = when[j+numDeleted+1] - when[j+numDeleted];
-         dy1 = dy * dx1 / dx;
-         err = fabs(value[j+numDeleted+1] - (value[j+numDeleted] + dy1));
-         if( err < deltadB )
-         {   // within < deltadB dB?
-            mLogEnvelope->Delete(j+1);
-            numPoints--;
-            numDeleted++;
-            flag = true;
-         }
-      }
-   }
-   delete [] when;
-   delete [] value;
-
-   if(mLin)
-   {
-      EnvLogToLin();
-      mEnvelope = mLinEnvelope;
-      mFreqRuler->ruler.SetLog(false);
-      mFreqRuler->ruler.SetRange(0, mHiFreq);
-   }
-
-   szrV->Show(szrG,false);
-   szrH->Show(szrI,false);
-   szrH->Show(szrL,true);
-   mUIParent->Layout();
-   wxGetTopLevelParent(mUIParent)->Layout();
-   mPanel->ForceRecalc();     // it may have changed slightly due to the deletion of points
    mDrawMode = true;
 }
 
