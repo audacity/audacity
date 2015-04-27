@@ -13,14 +13,11 @@
 
 #if defined(USE_LV2)
 
-#include <queue>
-
 #if defined(__WXMSW__)
 #include <float.h>
 #define isfinite _finite
 #define isnan _isnan
 #endif
-
 
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -130,6 +127,7 @@ void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
    wxCoord w = r.GetWidth();
    wxCoord h = r.GetHeight();
 
+   // These use unscaled value, min, and max
    float val = mCtrl.mVal;
    if (val > mCtrl.mMax)
    {
@@ -546,7 +544,6 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       // Collect the value and range info
       ctrl.mHasLo = !isnan(minimumVals[i]);
       ctrl.mHasHi = !isnan(maximumVals[i]);
-      ctrl.mVal = 0.0;
       ctrl.mMin = ctrl.mHasLo ? minimumVals[i] : 0.0;
       ctrl.mMax = ctrl.mHasHi ? maximumVals[i] : 1.0;
       ctrl.mLo = ctrl.mMin;
@@ -554,10 +551,11 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       ctrl.mDef = !isnan(defaultValues[i]) ?
                   defaultValues[i] :
                      ctrl.mHasLo ?
-                     ctrl.mMin :
+                     ctrl.mLo :
                         ctrl.mHasHi ?
-                        ctrl.mMax :
+                        ctrl.mHi :
                            0.0;
+      ctrl.mVal = ctrl.mDef;
 
       // Figure out the type of port we have
       if (lilv_port_is_a(mPlug, port, gInput))
@@ -592,15 +590,6 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
          if (lilv_port_has_property(mPlug, port, gLogarithmic))
          {
             ctrl.mLogarithmic = true;
-            if (ctrl.mHasLo)
-            {
-               ctrl.mLo = logf(ctrl.mLo);
-            }
-
-            if (ctrl.mHasHi)
-            {
-               ctrl.mHi = logf(ctrl.mHi);
-            }
          }
 
          if (lilv_port_has_property(mPlug, port, gEnumeration))
@@ -1007,17 +996,41 @@ bool LV2Effect::GetAutomationParameters(EffectAutomationParameters & parms)
 
 bool LV2Effect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
+   // First pass validates values
    for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
    {
-      if (mControls[p].mInput)
+      LV2Port & ctrl = mControls[p];
+      
+      if (ctrl.mInput)
       {
          double d = 0.0;
-         if (!parms.Read(mControls[p].mName, &d))
+         if (!parms.Read(ctrl.mName, &d))
          {
             return false;
          }
 
-         mControls[p].mVal = d;
+         // Use unscaled range here
+         if (d < ctrl.mMin || d > ctrl.mMax)
+         {
+            return false;
+         }
+      }
+   }
+
+   // Second pass actually sets the values
+   for (size_t p = 0, cnt = mControls.GetCount(); p < cnt; p++)
+   {
+      LV2Port & ctrl = mControls[p];
+      
+      if (ctrl.mInput)
+      {
+         double d = 0.0;
+         if (!parms.Read(ctrl.mName, &d))
+         {
+            return false;
+         }
+
+         ctrl.mTmp = ctrl.mVal * (ctrl.mSampleRate ? mSampleRate : 1.0);
       }
    }
 
@@ -1679,25 +1692,25 @@ bool LV2Effect::BuildPlain()
             gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 
             float rate = ctrl.mSampleRate ? mSampleRate : 1.0;
-            float lower = ctrl.mMin * rate;
-            float upper = ctrl.mMax * rate;
 
             ctrl.mVal = ctrl.mDef;
+            ctrl.mLo = ctrl.mMin * rate;
+            ctrl.mHi = ctrl.mMax * rate;
             ctrl.mTmp = ctrl.mDef * rate;
 
             if (ctrl.mInteger)
             {
                IntegerValidator<float> vld(&ctrl.mTmp);
-               vld.SetRange(lower, upper);
+               vld.SetRange(ctrl.mLo, ctrl.mHi);
                mFields[p]->SetValidator(vld);
             }
             else
             {
                FloatingPointValidator<float> vld(6, &ctrl.mTmp);
-               vld.SetRange(lower, upper);
+               vld.SetRange(ctrl.mLo, ctrl.mHi);
 
                // Set number of decimal places
-               float range = ctrl.mMax - ctrl.mMin;
+               float range = ctrl.mHi - ctrl.mLo;
                int style = range < 10 ? NUM_VAL_THREE_TRAILING_ZEROES :
                            range < 100 ? NUM_VAL_TWO_TRAILING_ZEROES :
                            NUM_VAL_ONE_TRAILING_ZERO;
@@ -1711,11 +1724,11 @@ bool LV2Effect::BuildPlain()
                wxString str;
                if (ctrl.mInteger || ctrl.mSampleRate)
                {
-                  str.Printf(wxT("%d"), (int)(ctrl.mMin * rate + 0.5));
+                  str.Printf(wxT("%d"), lrintf(ctrl.mLo));
                }
                else
                {
-                  str = Internat::ToDisplayString(ctrl.mMin * rate);
+                  str = Internat::ToDisplayString(ctrl.mLo);
                }
                item = new wxStaticText(w, wxID_ANY, str);
                gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
@@ -1737,11 +1750,11 @@ bool LV2Effect::BuildPlain()
                wxString str;
                if (ctrl.mInteger || ctrl.mSampleRate)
                {
-                  str.Printf(wxT("%d"), (int)(ctrl.mMax * rate + 0.5));
+                  str.Printf(wxT("%d"), lrintf(ctrl.mHi));
                }
                else
                {
-                  str = Internat::ToDisplayString(ctrl.mMax * rate);
+                  str = Internat::ToDisplayString(ctrl.mHi);
                }
                item = new wxStaticText(w, wxID_ANY, str);
                gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -1842,11 +1855,6 @@ bool LV2Effect::TransferDataToWindow()
       return true;
    }
 
-   if (!mParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    for (size_t i = 0, cnt = mGroups.GetCount(); i < cnt; i++)
    {
       const wxArrayInt & params = mGroupMap[mGroups[i]];
@@ -1886,9 +1894,15 @@ bool LV2Effect::TransferDataToWindow()
          }
          else if (ctrl.mInput)
          {
+            ctrl.mTmp = ctrl.mDef * (ctrl.mSampleRate ? mSampleRate : 1.0);
             SetSlider(mSliders[p], ctrl);
          }
       }
+   }
+
+   if (!mParent->TransferDataToWindow())
+   {
+      return false;
    }
 
    return true;
@@ -1906,9 +1920,18 @@ bool LV2Effect::TransferDataFromWindow()
 
 void LV2Effect::SetSlider(wxSlider *slider, const LV2Port & ctrl)
 {
-   float val = ctrl.mLogarithmic ? logf(ctrl.mVal) : ctrl.mVal;
+   float lo = ctrl.mLo;
+   float hi = ctrl.mHi;
+   float val = ctrl.mTmp;
 
-   slider->SetValue((int) (val - ctrl.mLo) / (ctrl.mHi - ctrl.mLo) * 1000.0 + 0.5);
+   if (ctrl.mLogarithmic)
+   {
+      lo = logf(lo);
+      hi = logf(hi);
+      val = logf(val);
+   }
+
+   slider->SetValue(lrintf((val - lo) / (hi - lo) * 1000.0));
 }
 
 void LV2Effect::OnTrigger(wxCommandEvent & evt)
@@ -1940,6 +1963,7 @@ void LV2Effect::OnText(wxCommandEvent & evt)
    if (mParent->FindWindow(ID_Texts + p)->GetValidator()->TransferFromWindow())
    {
       ctrl.mVal = ctrl.mSampleRate ? ctrl.mTmp / mSampleRate : ctrl.mTmp;
+
       SetSlider(mSliders[p], mControls[p]);
    }   
 }
@@ -1949,10 +1973,22 @@ void LV2Effect::OnSlider(wxCommandEvent & evt)
    int p = evt.GetId() - ID_Sliders;
    LV2Port & ctrl = mControls[p];
 
-   float val = ((float) evt.GetInt() / 1000.0) * (ctrl.mHi - ctrl.mLo) + ctrl.mLo;
+   float lo = ctrl.mLo;
+   float hi = ctrl.mHi;
 
-   ctrl.mVal = ctrl.mLogarithmic ? expf(val) : val;
-   ctrl.mTmp = ctrl.mSampleRate ? ctrl.mVal * mSampleRate : ctrl.mVal;
+   if (ctrl.mLogarithmic)
+   {
+      lo = logf(lo);
+      hi = logf(hi);
+   }
+
+   ctrl.mTmp = ((float) evt.GetInt() / 1000.0) * (hi - lo) + lo;
+   ctrl.mTmp = ctrl.mLogarithmic ? expf(ctrl.mTmp) : ctrl.mTmp;
+
+   ctrl.mTmp = ctrl.mTmp < ctrl.mLo ? ctrl.mLo : ctrl.mTmp;
+   ctrl.mTmp = ctrl.mTmp > ctrl.mHi ? ctrl.mHi : ctrl.mTmp;
+
+   ctrl.mVal = ctrl.mSampleRate ? ctrl.mTmp / mSampleRate : ctrl.mTmp;
 
    mParent->FindWindow(ID_Texts + p)->GetValidator()->TransferToWindow();
 }
