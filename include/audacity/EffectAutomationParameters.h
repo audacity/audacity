@@ -92,6 +92,11 @@ public:
       return wxFileConfig::DoWriteLong(NormalizeName(key), lValue);
    }
 
+   virtual bool DoWriteDouble(const wxString & key, double value)
+   {
+      return DoWriteString(key, wxString::Format(wxT("%.12g"), value));
+   }
+
    bool ReadFloat(const wxString & key, float *pf) const
    {
       double d = *pf;
