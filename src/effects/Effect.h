@@ -480,9 +480,7 @@ public:
    virtual bool TransferDataToWindow();
    virtual bool TransferDataFromWindow();
 
-#if defined(__WXMAC__)
    virtual int ShowModal();
-#endif
 
    bool Initialize();
 

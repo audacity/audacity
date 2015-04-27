@@ -24,12 +24,13 @@ greater use in future.
 #include "../Audacity.h"
 
 #include <wx/defs.h>
-#include <wx/string.h>
+#include <wx/hashmap.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
-#include <wx/timer.h>
+#include <wx/stockitem.h>
+#include <wx/string.h>
 #include <wx/tglbtn.h>
-#include <wx/hashmap.h>
+#include <wx/timer.h>
 #include <wx/utils.h>
 
 #include "audacity/ConfigInterface.h"
@@ -2738,15 +2739,17 @@ bool EffectUIHost::TransferDataFromWindow()
 // wxDialog implementation
 // ============================================================================
 
-#if defined(__WXMAC__)
-// See explanation in EffectUIHost::Show()
 int EffectUIHost::ShowModal()
 {
+#if defined(__WXMAC__)
+   // See explanation in EffectUIHost::Show()
    mIsModal = true;
+#endif
+
+   mApplyBtn->SetLabel(wxGetStockLabel(wxID_OK));
 
    return wxDialog::ShowModal();
 }
-#endif
 
 // ============================================================================
 // EffectUIHost implementation
@@ -3659,7 +3662,6 @@ void EffectPresetsDialog::SetPrefix(const wxString & type, const wxString & pref
 {
    mType->SetStringSelection(type);
 
-   int selected;
    if (type.IsSameAs(_("User Presets")))
    {
       mPresets->Clear();
