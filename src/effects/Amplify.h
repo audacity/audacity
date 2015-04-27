@@ -72,7 +72,7 @@ private:
    float mRatio;
    float mAmp;
    float mNewPeak;
-   bool mNoClip;
+   bool mCanClip;
 
    wxSlider *mAmpS;
    wxTextCtrl *mAmpT;
