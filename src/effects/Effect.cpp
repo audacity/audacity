@@ -1116,6 +1116,7 @@ wxString Effect::GetPreset(wxWindow * parent, const wxString & parms)
    dlg.Layout();
    dlg.Fit();
    dlg.SetSize(dlg.GetMinSize());
+   dlg.CenterOnParent();
    dlg.SetSelected(parms);
 
    if (dlg.ShowModal())
