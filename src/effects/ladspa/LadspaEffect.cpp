@@ -406,6 +406,7 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
    mLatencyPort = -1;
 
    mDialog = NULL;
+   mParent = NULL;
    mSliders = NULL;
    mFields = NULL;
    mLabels = NULL;
