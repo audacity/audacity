@@ -1839,11 +1839,15 @@ bool VSTEffect::ProcessFinalize()
 
 sampleCount VSTEffect::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
-   // Go let the plugin moleste the samples
-   callProcessReplacing(inBlock, outBlock, blockLen);
+   // Only call the effect if there's something to do...some do not like zero-length block
+   if (blockLen)
+   {
+      // Go let the plugin moleste the samples
+      callProcessReplacing(inBlock, outBlock, blockLen);
 
-   // And track the position
-   mTimeInfo.samplePos += ((double) blockLen / mTimeInfo.sampleRate);
+      // And track the position
+      mTimeInfo.samplePos += ((double) blockLen / mTimeInfo.sampleRate);
+   }
 
    return blockLen;
 }
