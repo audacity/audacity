@@ -102,6 +102,12 @@ float ContrastDialog::GetDB()
    AudacityProject *p = GetActiveProject();
    TrackListOfKindIterator iter(Track::Wave, p->GetTracks());
    Track *t = iter.First();
+   if(!t)
+   {
+      wxMessageDialog m(NULL, _("No wave tracks exist."), _("Error"), wxOK);
+      m.ShowModal();
+      return 1234.0; // 'magic number', but the whole +ve dB range will 'almost' never occur
+   }
    if(mT0 > mT1)
    {
       wxMessageDialog m(NULL, _("Start time after end time!\nPlease enter reasonable times."), _("Error"), wxOK);
