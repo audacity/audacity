@@ -8425,9 +8425,20 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnMergeStereoID, canMakeStereo);
       theMenu->Enable(OnSplitStereoID, t->GetLinked());
       theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
-      theMenu->Check(OnChannelMonoID, t->GetChannel() == Track::MonoChannel);
-      theMenu->Check(OnChannelLeftID, t->GetChannel() == Track::LeftChannel);
-      theMenu->Check(OnChannelRightID, t->GetChannel() == Track::RightChannel);
+
+      // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
+      int channels = t->GetChannel();
+      switch (t->GetChannel()) {
+      case Track::LeftChannel:
+         theMenu->Check(OnChannelLeftID, true);
+         break;
+      case Track::RightChannel:
+         theMenu->Check(OnChannelRightID, true);
+         break;
+      default:
+         theMenu->Check(OnChannelMonoID, true);
+      }
+
       theMenu->Enable(OnChannelMonoID, !t->GetLinked());
       theMenu->Enable(OnChannelLeftID, !t->GetLinked());
       theMenu->Enable(OnChannelRightID, !t->GetLinked());
@@ -9018,7 +9029,7 @@ int TrackPanel::IdOfFormat( int format )
    return OnFloatID;// Compiler food.
 }
 
-/// Puts a check mark at a given position in a menu, clearing all other check marks.
+/// Puts a check mark at a given position in a menu.
 void TrackPanel::SetMenuCheck( wxMenu & menu, int newId )
 {
    wxMenuItemList & list = menu.GetMenuItems();
@@ -9029,7 +9040,9 @@ void TrackPanel::SetMenuCheck( wxMenu & menu, int newId )
    {
       item = node->GetData();
       id = item->GetId();
-      menu.Check( id, id==newId );
+      // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
+      if (id==newId)
+         menu.Check( id, true );
    }
 }
 
