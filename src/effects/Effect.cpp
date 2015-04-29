@@ -2605,7 +2605,7 @@ public:
    // wxWindow implementation
    // ============================================================================
 
-   bool AcceptsFocus() const
+   virtual bool AcceptsFocus() const
    {
       return mAcceptsFocus;
    }
@@ -2631,6 +2631,7 @@ private:
 #include "../../images/Effect.h"
 
 BEGIN_EVENT_TABLE(EffectUIHost, wxDialog)
+   EVT_INIT_DIALOG(EffectUIHost::OnInitDialog)
    EVT_ERASE_BACKGROUND(EffectUIHost::OnErase)
    EVT_PAINT(EffectUIHost::OnPaint)
    EVT_CLOSE(EffectUIHost::OnClose)
@@ -2938,6 +2939,29 @@ bool EffectUIHost::Initialize()
    InitializeRealtime();
 
    return true;
+}
+
+void EffectUIHost::OnInitDialog(wxInitDialogEvent & evt)
+{
+   // Do default handling
+   wxDialog::OnInitDialog(evt);
+
+#if wxCHECK_VERSION(3, 0, 0)
+#warning "check to see if this still needed in wx3"
+#endif
+
+   // Pure hackage coming down the pike...
+   //
+   // I have no idea why, but if a wxTextCtrl is the first control in the
+   // panel, then its contents will not be automatically selected when the
+   // dialog is displayed.
+   //
+   // So, we do the selection manually.
+   wxTextCtrl *focused = wxDynamicCast(FindFocus(), wxTextCtrl);
+   if (focused)
+   {
+      focused->SelectAll();
+   }
 }
 
 void EffectUIHost::OnErase(wxEraseEvent & WXUNUSED(evt))
