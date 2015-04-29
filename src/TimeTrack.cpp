@@ -254,7 +254,7 @@ void TimeTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps)
                             //
                             // LL:  It's because the ruler only Invalidate()s when the new value is different
                             //      than the current value.
-   mRuler->SetFlip(GetHeight() > 75 ? true : true); // MB: so why don't we just call Invalidate()? :)
+   mRuler->SetFlip(true);   // MB: so why don't we just call Invalidate()? :)
    mRuler->Draw(dc, this);
 
    double *envValues = new double[mid.width];

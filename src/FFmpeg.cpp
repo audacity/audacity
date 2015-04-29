@@ -774,7 +774,7 @@ bool FFmpegLibs::InitLibs(wxString libpath_format, bool WXUNUSED(showerr))
    wxFileName avcodec_filename;
    wxFileName avutil_filename;
    wxFileName name(libpath_format);
-   bool gotError = false;
+   bool gotError;
 
    // Check for a monolithic avformat
    avformat = new wxDynamicLibrary();

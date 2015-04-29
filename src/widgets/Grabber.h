@@ -46,15 +46,13 @@ class GrabberEvent:public wxCommandEvent
    GrabberEvent(wxEventType type = wxEVT_NULL,
                 wxWindowID winid = 0,
                 const wxPoint& pt = wxDefaultPosition)
-   : wxCommandEvent(type, winid)
+   : wxCommandEvent(type, winid), mPos(pt)
    {
-      mPos = pt;
    }
 
    GrabberEvent(const GrabberEvent & event)
-   : wxCommandEvent(event)
+   : wxCommandEvent(event), mPos(event.mPos)
    {
-      mPos = event.mPos;
    }
 
    // Position of event (in screen coordinates)

@@ -97,6 +97,8 @@ KeyView::KeyView(wxWindow *parent,
 
    // The default view
    mViewType = ViewByTree;
+
+   RecalcExtents();
 }
 
 KeyView::~KeyView()
