@@ -565,9 +565,10 @@ NumericConverter::NumericConverter(Type type,
 
    mFocusedDigit = 0;
 
+   mValue = value;
+
    SetSampleRate(sampleRate);
    SetFormatName(formatName);
-   SetValue(value);
 }
 
 void NumericConverter::ParseFormatString( const wxString & format)

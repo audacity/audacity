@@ -86,9 +86,9 @@ wxWindow * MakeHijackPanel()
 // starts a thread and reads script commands.
 static tpRegScriptServerFunc scriptFn;
 
-Module::Module(const wxString & name)
+Module::Module(const wxString & name) :
+   mName(name)
 {
-   mName = name;
    mLib = new wxDynamicLibrary();
    mDispatch = NULL;
 }
@@ -484,15 +484,15 @@ void ModuleManager::UnloadModule(ModuleInterface *module)
 {
    if (module)
    {
-      module->Terminate();
-
-      delete module;
-
       if (mLibs.find(module) != mLibs.end())
       {
          mLibs[module]->Unload();
          mLibs.erase(module);
       }
+
+      module->Terminate();
+
+      delete module;
    }
 }
 

@@ -333,7 +333,7 @@ int ToolDock::PositionBar( ToolBar *t, wxPoint & pos, wxRect & rect )
 
             // Get bar rect and make gap part of it
             r.SetPosition(b->GetParent()->ClientToScreen(b->GetPosition()));
-            r.SetSize(b->IsResizable() ? b->GetSize() : b->GetSize());
+            r.SetSize(b->GetSize());
             r.width += toolbarGap;
             r.height += toolbarGap;
 
