@@ -2289,7 +2289,19 @@ wxFileConfig *PluginManager::GetSettings()
 
 bool PluginManager::HasGroup(const wxString & group)
 {
-   return GetSettings()->HasGroup(group);
+   wxFileConfig *settings = GetSettings();
+
+   bool res = settings->HasGroup(group);
+   if (res)
+   {
+      // The group exists, but empty groups aren't considered valid
+      wxString oldPath = settings->GetPath();
+      settings->SetPath(group);
+      res = settings->GetNumberOfEntries() || settings->GetNumberOfGroups();
+      settings->SetPath(oldPath);
+   }
+
+   return res;
 }
 
 bool PluginManager::GetSubgroups(const wxString & group, wxArrayString & subgroups)

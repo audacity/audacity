@@ -168,6 +168,13 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
 
       effect->GetAutomationParameters(parms);
 
+      // Some effects don't have automatable parameters and will not return
+      // anything, so try to get the active preset (current or factory).
+      if (parms.IsEmpty())
+      {
+         parms = GetDefaultPreset(ID);
+      }
+
       return parms;
    }
 

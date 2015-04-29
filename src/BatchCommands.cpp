@@ -349,7 +349,16 @@ wxString BatchCommands::PromptForPresetFor(const wxString & command, const wxStr
       return wxEmptyString;   // effect not found.
    }
 
-   return EffectManager::Get().GetPreset(ID, params, parent);
+   wxString preset = EffectManager::Get().GetPreset(ID, params, parent);
+
+   // Preset will be empty if the user cancelled the dialog, so return the original
+   // parameter value.
+   if (preset.IsEmpty())
+   {
+      return params;
+   }
+
+   return preset;
 }
 
 double BatchCommands::GetEndTime()
