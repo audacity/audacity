@@ -565,9 +565,11 @@ NumericConverter::NumericConverter(Type type,
 
    mFocusedDigit = 0;
 
+   mValue = value; // used in SetSampleRate, reassigned later
+
    SetSampleRate(sampleRate);
    SetFormatName(formatName);
-   SetValue(value);
+   SetValue(value); // mValue got overridden to -1 in ControlsToValue(), reassign
 }
 
 void NumericConverter::ParseFormatString( const wxString & format)

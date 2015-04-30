@@ -97,6 +97,9 @@ KeyView::KeyView(wxWindow *parent,
 
    // The default view
    mViewType = ViewByTree;
+
+   // Calculate measurements used for columns and scrolling
+   RecalcExtents();
 }
 
 KeyView::~KeyView()
