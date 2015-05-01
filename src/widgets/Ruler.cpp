@@ -1847,7 +1847,7 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
 
    bool isWithinStart = IsWithinMarker(mousePosX, mPlayRegionStart);
    bool isWithinEnd = IsWithinMarker(mousePosX, mPlayRegionEnd);
-   bool canDragLoopSel = !mPlayRegionLock && mPlayRegionDragsSelection;
+   bool canDragSel = !mPlayRegionLock && mPlayRegionDragsSelection;
 
    mLastMouseX = mousePosX;
 
@@ -1949,15 +1949,15 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
       break;
    case mesDraggingPlayRegionStart:
       mPlayRegionStart = mQuickPlayPos;
-      if (canDragLoopSel) {
-         DragLoopSelection();
+      if (canDragSel) {
+         DragSelection();
       }
       Refresh();
       break;
    case mesDraggingPlayRegionEnd:
       mPlayRegionEnd = mQuickPlayPos;
-      if (canDragLoopSel) {
-         DragLoopSelection();
+      if (canDragSel) {
+         DragSelection();
       }
       Refresh();
       break;
@@ -2152,7 +2152,7 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent& evt)
    gPrefs->Flush();
 }
 
-void AdornedRulerPanel::DragLoopSelection()
+void AdornedRulerPanel::DragSelection()
 {
    if (mPlayRegionStart < mPlayRegionEnd) {
       mProject->SetSel0(mPlayRegionStart);

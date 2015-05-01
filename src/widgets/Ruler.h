@@ -326,7 +326,7 @@ private:
    // Pop-up menu
    //
    void ShowMenu(const wxPoint & pos);
-   void DragLoopSelection();
+   void DragSelection();
    void OnToggleQuickPlay(wxCommandEvent &evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    void OnTimelineToolTips(wxCommandEvent &evt);
