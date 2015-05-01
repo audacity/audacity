@@ -151,9 +151,15 @@
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\cpu.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\crc.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\fixed.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\fixed_intrin_sse2.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\fixed_intrin_ssse3.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\float.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\format.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\lpc.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\lpc_intrin_avx2.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\lpc_intrin_sse.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\lpc_intrin_sse2.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\lpc_intrin_sse41.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\md5.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\memory.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\metadata_iterators.c" />
@@ -161,6 +167,9 @@
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\stream_decoder.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\stream_encoder.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\stream_encoder_framing.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\stream_encoder_intrin_avx2.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\stream_encoder_intrin_sse2.c" />
+    <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\stream_encoder_intrin_ssse3.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\share\win_utf8_io\win_utf8_io.c" />
     <ClCompile Include="..\..\..\lib-src\libflac\src\libFLAC\window.c" />
   </ItemGroup>
