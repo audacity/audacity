@@ -1,6 +1,6 @@
 /* FLAC - Free Lossless Audio Codec
  * Copyright (C) 2001-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This file is part the FLAC project.  FLAC is comprised of several
  * components distributed under different licenses.  The codec libraries
@@ -31,7 +31,7 @@ FLAC is comprised of
   * `flac', a command-line program for encoding and decoding files
   * `metaflac', a command-line program for viewing and editing FLAC
     metadata
-  * player plugins for XMMS and Winamp
+  * player plugin for XMMS
   * user and API documentation
 
 The libraries (libFLAC, libFLAC++) are
@@ -42,7 +42,7 @@ Documentation License (see COPYING.FDL).
 
 
 ===============================================================================
-FLAC - 1.3.0 - Contents
+FLAC - 1.3.1 - Contents
 ===============================================================================
 
 - Introduction
@@ -67,10 +67,16 @@ for full documentation.
 A brief description of the directory tree:
 
 	doc/          the HTML documentation
+	examples/     example programs demonstrating the use of libFLAC and libFLAC++
 	include/      public include files for libFLAC and libFLAC++
-	man/          the man page for `flac'
+	man/          the man pages for `flac' and `metaflac'
 	src/          the source code and private headers
 	test/         the test scripts
+
+If you have questions about building FLAC that this document does not answer,
+please submit them at the following tracker so this document can be improved:
+
+	https://sourceforge.net/p/flac/support-requests/
 
 
 ===============================================================================
@@ -152,7 +158,7 @@ extra (and more verbose) error checking.
 assembly routines.  Many routines have assembly versions for
 speed and `configure' is pretty good about knowing what is
 supported, but you can use this option to build only from the
-C sources.  May be necessary for building on OS X (Intel)
+C sources.  May be necessary for building on OS X (Intel).
 
 --enable-sse : If you are building for an x86 CPU that supports
 SSE instructions, you can enable some of the faster routines
@@ -214,10 +220,9 @@ Prerequisite: you must have nasm installed, and nasm.exe must be in
 your PATH, or the path to nasm.exe must be added to the list of
 directories for executable files in the MSVC global options.
 
-VC++ 2005:
 To build everything, run Visual Studio, do File|Open and open FLAC.sln.
 From the dropdown in the toolbar, select "Release" instead of "Debug",
-then hit F7 to build.
+then do Build|Build Solution.
 
 This will build all libraries both statically (e.g.
 objs\release\lib\libFLAC_static.lib) and as DLLs (e.g.

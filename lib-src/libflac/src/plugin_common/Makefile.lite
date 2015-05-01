@@ -1,6 +1,6 @@
 #  plugin_common - Routines common to several plugins
 #  Copyright (C) 2002-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,16 @@ topdir = ../..
 
 LIB_NAME = libplugin_common
 INCLUDES = -I$(topdir)/include -I$(HOME)/local/include
-DEFINES  = 
+
+ifeq ($(OS),Darwin)
+    EXPLICIT_LIBS = $(libdir)/libgrabbag.a $(libdir)/libreplaygain_analysis.a $(libdir)/libFLAC.a $(OGG_EXPLICIT_LIBS) -lm
+else
+ifeq ($(findstring Windows,$(OS)),Windows)
+    LIBS = -lgrabbag -lreplaygain_analysis -lFLAC -lwin_utf8_io $(OGG_LIBS) -lm
+else
+    LIBS = -lgrabbag -lreplaygain_analysis -lFLAC $(OGG_LIBS) -lm
+endif
+endif
 
 SRCS_C = \
 	charset.c \

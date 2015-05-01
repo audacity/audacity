@@ -1,6 +1,6 @@
 #  FLAC - Free Lossless Audio Codec
 #  Copyright (C) 2001-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
 #  components distributed under different licenses.  The codec libraries
@@ -46,9 +46,13 @@ replaygain_synthesis:
 utf8:
 	(cd $@ ; $(MAKE) -f Makefile.lite $(CONFIG))
 
+win_utf8_io:
+	(cd $@ ; $(MAKE) -f Makefile.lite $(CONFIG))
+
 clean:
 	-(cd getopt ; $(MAKE) -f Makefile.lite clean)
 	-(cd grabbag ; $(MAKE) -f Makefile.lite clean)
 	-(cd replaygain_analysis ; $(MAKE) -f Makefile.lite clean)
 	-(cd replaygain_synthesis ; $(MAKE) -f Makefile.lite clean)
 	-(cd utf8 ; $(MAKE) -f Makefile.lite clean)
+	-(cd win_utf8_io ; $(MAKE) -f Makefile.lite clean)

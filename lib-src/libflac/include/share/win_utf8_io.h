@@ -1,5 +1,5 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2013  Xiph.Org Foundation
+ * Copyright (C) 2013-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,7 +58,7 @@ int unlink_utf8(const char *filename);
 int rename_utf8(const char *oldname, const char *newname);
 size_t strlen_utf8(const char *str);
 int win_get_console_width(void);
-int print_console(FILE *stream, const wchar_t *text, uint32_t len);
+int print_console(FILE *stream, const wchar_t *text, size_t len);
 HANDLE WINAPI CreateFile_utf8(const char *lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);
 
 #ifdef __cplusplus

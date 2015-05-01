@@ -1,6 +1,6 @@
 #  test_cuesheet - Simple tester for cuesheet routines in grabbag
 #  Copyright (C) 2002-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -18,7 +18,9 @@
 
 EXTRA_DIST = \
 	Makefile.lite \
-	test_cuesheet.vcproj
+	test_cuesheet.vcproj \
+	test_cuesheet.vcxproj \
+	test_cuesheet.vcxproj.filters
 
 AM_CPPFLAGS = -I$(top_builddir) -I$(srcdir)/include -I$(top_srcdir)/include
 noinst_PROGRAMS = test_cuesheet

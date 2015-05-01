@@ -28,11 +28,17 @@
 
 #include "FLAC/ordinals.h"
 
+typedef union {
+	FLAC__byte *p8;
+	FLAC__int16 *p16;
+	FLAC__int32 *p32;
+} FLAC__multibyte;
+
 typedef struct {
 	FLAC__uint32 in[16];
 	FLAC__uint32 buf[4];
 	FLAC__uint32 bytes[2];
-	FLAC__byte *internal_buf;
+	FLAC__multibyte internal_buf;
 	size_t capacity;
 } FLAC__MD5Context;
 

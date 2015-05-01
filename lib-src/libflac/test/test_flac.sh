@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/sh -e
 
 #  FLAC - Free Lossless Audio Codec
 #  Copyright (C) 2001-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
 #  components distributed under different licenses.  The codec libraries
@@ -18,56 +18,27 @@
 #  restrictive of those mentioned above.  See the file COPYING.Xiph in this
 #  distribution.
 
+. ./common.sh
+
 # we use '.' as decimal separator in --skip/--until tests
 export LANG=C LC_ALL=C
 
-die ()
-{
-	echo $* 1>&2
-	exit 1
-}
-
 dddie="die ERROR: creating files with dd"
 
-if [ x = x"$1" ] ; then
-	BUILD=debug
-else
-	BUILD="$1"
-fi
-
-# change to 'false' to show flac output (useful for debugging)
-if true ; then
-	SILENT='--silent'
-	TOTALLY_SILENT='--totally-silent'
-else
-	SILENT=''
-	TOTALLY_SILENT=''
-fi
-
-LD_LIBRARY_PATH=`pwd`/../src/libFLAC/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=`pwd`/../src/share/grabbag/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=`pwd`/../src/share/getopt/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=`pwd`/../src/share/replaygain_analysis/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=`pwd`/../src/share/replaygain_synthesis/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=`pwd`/../src/share/utf8/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=`pwd`/../objs/$BUILD/lib:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH
-export MALLOC_CHECK_=3
-export MALLOC_PERTURB_=$(($(date +%s) % 255 + 1))
 PATH=`pwd`/../src/flac:$PATH
 PATH=`pwd`/../src/metaflac:$PATH
 PATH=`pwd`/../src/test_streams:$PATH
 PATH=`pwd`/../objs/$BUILD/bin:$PATH
 
-flac --help 1>/dev/null 2>/dev/null || die "ERROR can't find flac executable"
+flac${EXE} --help 1>/dev/null 2>/dev/null || die "ERROR can't find flac executable"
 
 run_flac ()
 {
 	if [ x"$FLAC__TEST_WITH_VALGRIND" = xyes ] ; then
 		echo "valgrind --leak-check=yes --show-reachable=yes --num-callers=50 flac $*" >>test_flac.valgrind.log
-		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 flac $* 4>>test_flac.valgrind.log
+		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 flac${EXE} --no-error-on-compression-fail $* 4>>test_flac.valgrind.log
 	else
-		flac $*
+		flac${EXE} --no-error-on-compression-fail $*
 	fi
 }
 
@@ -75,16 +46,15 @@ run_metaflac ()
 {
 	if [ x"$FLAC__TEST_WITH_VALGRIND" = xyes ] ; then
 		echo "valgrind --leak-check=yes --show-reachable=yes --num-callers=50 metaflac $*" >>test_flac.valgrind.log
-		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 metaflac $* 4>>test_flac.valgrind.log
+		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 metaflac${EXE} $* 4>>test_flac.valgrind.log
 	else
-		metaflac $*
+		metaflac${EXE} $*
 	fi
 }
 
 md5cmp ()
 {
-	#n=`( [ -f "$1" ] && [ -f "$2" ] && metaflac --show-md5sum --no-filename "$1" "$2" 2>/dev/null || die "ERROR: comparing FLAC files $1 and $2 by MD5 sum" ) | uniq | wc -l`
-	n=`( [ -f "$1" ] && [ -f "$2" ] && metaflac --show-md5sum --no-filename "$1" "$2" 2>/dev/null || exit 1 ) | uniq | wc -l`
+	n=`( [ -f "$1" ] && [ -f "$2" ] && metaflac${EXE} --show-md5sum --no-filename "$1" "$2" 2>/dev/null || exit 1 ) | uniq | wc -l`
 	[ "$n" != "" ] && [ $n = 1 ]
 }
 
@@ -95,7 +65,7 @@ else
 fi
 
 echo "Checking for --ogg support in flac..."
-if flac --ogg $SILENT --force-raw-format --endian=little --sign=signed --channels=1 --bps=8 --sample-rate=44100 -c $0 1>/dev/null 2>&1 ; then
+if flac${EXE} --ogg $SILENT --force-raw-format --endian=little --sign=signed --channels=1 --bps=8 --sample-rate=44100 -c $0 1>/dev/null 2>&1 ; then
 	has_ogg=yes;
 	echo "flac --ogg works"
 else
@@ -1058,13 +1028,13 @@ dd if=/dev/zero ibs=4 count=$file2_remainder of=z.raw 2>/dev/null || $dddie
 cat z.raw >> file2s.raw || die "ERROR: cat-ing sector-aligned files"
 rm -f z.raw
 
-convert_to_wav file0s "$multifile_format_encode --force" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned WAVE"
-convert_to_wav file1s "$multifile_format_encode --force" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned WAVE"
-convert_to_wav file2s "$multifile_format_encode --force" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned WAVE"
+convert_to_wav file0s "$multifile_format_encode --force --force-raw-format" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned WAVE"
+convert_to_wav file1s "$multifile_format_encode --force --force-raw-format" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned WAVE"
+convert_to_wav file2s "$multifile_format_encode --force --force-raw-format" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned WAVE"
 
-convert_to_aiff file0s "$multifile_format_encode --force" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned AIFF"
-convert_to_aiff file1s "$multifile_format_encode --force" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned AIFF"
-convert_to_aiff file2s "$multifile_format_encode --force" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned AIFF"
+convert_to_aiff file0s "$multifile_format_encode --force --force-raw-format" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned AIFF"
+convert_to_aiff file1s "$multifile_format_encode --force --force-raw-format" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned AIFF"
+convert_to_aiff file2s "$multifile_format_encode --force --force-raw-format" "$SILENT --force --decode" || die "ERROR creating authoritative sector-aligned AIFF"
 
 test_multifile ()
 {

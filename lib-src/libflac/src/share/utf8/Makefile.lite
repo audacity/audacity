@@ -13,7 +13,7 @@ else
     LIBS = -lgrabbag $(ICONV_LIBS)
 endif
 
-INCLUDES = -I$(topdir)/include -I$(topdir)/include/share
+INCLUDES = -I$(topdir)/include
 
 SRCS_C = \
 	charset.c \

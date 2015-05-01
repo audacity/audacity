@@ -1,6 +1,6 @@
 #  FLAC - Free Lossless Audio Codec
 #  Copyright (C) 2001-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
 #  components distributed under different licenses.  The codec libraries
@@ -26,6 +26,7 @@ check_SCRIPTS = \
 	test_grabbag.sh \
 	test_flac.sh \
 	test_metaflac.sh \
+	test_replaygain.sh \
 	test_seeking.sh \
 	test_streams.sh \
 	test_compression.sh
@@ -54,6 +55,7 @@ endif
 	$(TESTS_ENVIRONMENT) ./test_grabbag.sh
 	$(TESTS_ENVIRONMENT) ./test_flac.sh
 	$(TESTS_ENVIRONMENT) ./test_metaflac.sh
+	$(TESTS_ENVIRONMENT) ./test_replaygain.sh
 	$(TESTS_ENVIRONMENT) ./test_seeking.sh
 	$(TESTS_ENVIRONMENT) ./test_streams.sh
 	$(TESTS_ENVIRONMENT) ./test_compression.sh

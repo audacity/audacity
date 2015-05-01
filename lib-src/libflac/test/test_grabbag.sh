@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/sh -e
 
 #  FLAC - Free Lossless Audio Codec
 #  Copyright (C) 2001-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
 #  components distributed under different licenses.  The codec libraries
@@ -18,25 +18,8 @@
 #  restrictive of those mentioned above.  See the file COPYING.Xiph in this
 #  distribution.
 
-die ()
-{
-	echo $* 1>&2
-	exit 1
-}
+. ./common.sh
 
-if [ x = x"$1" ] ; then 
-	BUILD=debug
-else
-	BUILD="$1"
-fi
-
-LD_LIBRARY_PATH=../src/libFLAC/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=../src/share/grabbag/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=../src/share/replaygain_analysis/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=../objs/$BUILD/lib:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH
-export MALLOC_CHECK_=3
-export MALLOC_PERTURB_=$(($(date +%s) % 255 + 1))
 PATH=../src/test_grabbag/cuesheet:$PATH
 PATH=../src/test_grabbag/picture:$PATH
 PATH=../objs/$BUILD/bin:$PATH
@@ -48,9 +31,9 @@ run_test_cuesheet ()
 {
 	if [ x"$FLAC__TEST_WITH_VALGRIND" = xyes ] ; then
 		echo "valgrind --leak-check=yes --show-reachable=yes --num-callers=50 test_cuesheet $*" >>test_grabbag.valgrind.log
-		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 test_cuesheet $* 4>>test_grabbag.valgrind.log
+		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 test_cuesheet${EXE} $* 4>>test_grabbag.valgrind.log
 	else
-		test_cuesheet $*
+		test_cuesheet${EXE} $*
 	fi
 }
 
@@ -58,9 +41,9 @@ run_test_picture ()
 {
 	if [ x"$FLAC__TEST_WITH_VALGRIND" = xyes ] ; then
 		echo "valgrind --leak-check=yes --show-reachable=yes --num-callers=50 test_picture $*" >>test_grabbag.valgrind.log
-		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 test_picture $* 4>>test_grabbag.valgrind.log
+		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 test_picture${EXE} $* 4>>test_grabbag.valgrind.log
 	else
-		test_picture $*
+		test_picture${EXE} $*
 	fi
 }
 
@@ -114,8 +97,7 @@ rm -f $log
 #
 for cuesheet in $bad_cuesheets ; do
 	echo "NEGATIVE $cuesheet" >> $log 2>&1
-	run_test_cuesheet $cuesheet $good_leadout 44100 cdda >> $log 2>&1
-	exit_code=$?
+	run_test_cuesheet $cuesheet $good_leadout 44100 cdda >> $log 2>&1 || exit_code=$?
 	if [ "$exit_code" = 255 ] ; then
 		die "Error: test script is broken"
 	fi

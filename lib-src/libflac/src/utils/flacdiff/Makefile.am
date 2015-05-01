@@ -1,6 +1,6 @@
 #  flacdiff - Displays where two FLAC streams differ
 #  Copyright (C) 2007-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -19,4 +19,6 @@
 EXTRA_DIST = \
 	Makefile.lite \
 	flacdiff.vcproj \
+	flacdiff.vcxproj \
+	flacdiff.vcxproj.filters \
 	main.cpp

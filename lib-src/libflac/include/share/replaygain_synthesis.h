@@ -1,6 +1,6 @@
 /* replaygain_synthesis - Routines for applying ReplayGain to a signal
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,9 +21,9 @@
 #define FLAC__SHARE__REPLAYGAIN_SYNTHESIS_H
 
 #include <stdlib.h> /* for size_t */
-#include "FLAC/ordinals.h"
+#include "FLAC/format.h"
 
-#define FLAC_SHARE__MAX_SUPPORTED_CHANNELS 2
+#define FLAC_SHARE__MAX_SUPPORTED_CHANNELS FLAC__MAX_CHANNELS
 
 typedef enum {
 	NOISE_SHAPING_NONE = 0,

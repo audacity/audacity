@@ -1,6 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -74,7 +74,6 @@
  */
 static const unsigned FLAC__BITREADER_DEFAULT_CAPACITY = 65536u / FLAC__BITS_PER_WORD; /* in words */
 
-/* WATCHOUT: assembly routines rely on the order in which these fields are declared */
 struct FLAC__BitReader {
 	/* any partially-consumed word at the head will stay right-justified as bits are consumed from the left */
 	/* any incomplete word at the tail will be left-justified, and bytes from the read callback are added on the right */
@@ -88,7 +87,6 @@ struct FLAC__BitReader {
 	unsigned crc16_align; /* the number of bits in the current consumed word that should not be CRC'd */
 	FLAC__BitReaderReadCallback read_callback;
 	void *client_data;
-	FLAC__CPUInfo cpu_info;
 };
 
 static inline void crc16_update_word_(FLAC__BitReader *br, uint32_t word)
@@ -120,8 +118,7 @@ static inline void crc16_update_word_(FLAC__BitReader *br, uint32_t word)
 	br->crc16_align = 0;
 }
 
-/* would be static except it needs to be called by asm routines */
-FLAC__bool bitreader_read_from_client_(FLAC__BitReader *br)
+static FLAC__bool bitreader_read_from_client_(FLAC__BitReader *br)
 {
 	unsigned start, end;
 	size_t bytes;
@@ -232,7 +229,7 @@ void FLAC__bitreader_delete(FLAC__BitReader *br)
  *
  ***********************************************************************/
 
-FLAC__bool FLAC__bitreader_init(FLAC__BitReader *br, FLAC__CPUInfo cpu, FLAC__BitReaderReadCallback rcb, void *cd)
+FLAC__bool FLAC__bitreader_init(FLAC__BitReader *br, FLAC__BitReaderReadCallback rcb, void *cd)
 {
 	FLAC__ASSERT(0 != br);
 
@@ -244,7 +241,6 @@ FLAC__bool FLAC__bitreader_init(FLAC__BitReader *br, FLAC__CPUInfo cpu, FLAC__Bi
 		return false;
 	br->read_callback = rcb;
 	br->client_data = cd;
-	br->cpu_info = cpu;
 
 	return true;
 }
@@ -1049,9 +1045,9 @@ FLAC__bool FLAC__bitreader_read_utf8_uint64(FLAC__BitReader *br, FLAC__uint64 *v
 	return true;
 }
 
-/* These functions a declared inline in this file but are also callable as
+/* These functions are declared inline in this file but are also callable as
  * externs from elsewhere.
- * According to the C99 sepc, section 6.7.4, simply providing a function
+ * According to the C99 spec, section 6.7.4, simply providing a function
  * prototype in a header file without 'inline' and making the function inline
  * in this file should be sufficient.
  * Unfortunately, the Microsoft VS compiler doesn't pick them up externally. To

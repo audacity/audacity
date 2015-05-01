@@ -1,6 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2006-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -65,6 +65,8 @@ void FLAC__window_nuttall(FLAC__real *window, const FLAC__int32 L);
 void FLAC__window_rectangle(FLAC__real *window, const FLAC__int32 L);
 void FLAC__window_triangle(FLAC__real *window, const FLAC__int32 L);
 void FLAC__window_tukey(FLAC__real *window, const FLAC__int32 L, const FLAC__real p);
+void FLAC__window_partial_tukey(FLAC__real *window, const FLAC__int32 L, const FLAC__real p, const FLAC__real start, const FLAC__real end);
+void FLAC__window_punchout_tukey(FLAC__real *window, const FLAC__int32 L, const FLAC__real p, const FLAC__real start, const FLAC__real end);
 void FLAC__window_welch(FLAC__real *window, const FLAC__int32 L);
 
 #endif /* !defined FLAC__INTEGER_ONLY_LIBRARY */

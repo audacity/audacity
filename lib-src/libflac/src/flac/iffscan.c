@@ -1,6 +1,6 @@
 /* iffscan - Simple AIFF/RIFF chunk scanner
  * Copyright (C) 2007-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
 #ifdef _WIN32
 	if (get_utf8_argv(&argc, &argv) != 0) {
-		fprintf(stderr, "%ERROR: failed to convert command line parameters to UTF-8\n");
+		fprintf(stderr, "ERROR: failed to convert command line parameters to UTF-8\n");
 		return 1;
 	}
 #endif

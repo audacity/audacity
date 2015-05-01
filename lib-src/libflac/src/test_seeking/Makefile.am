@@ -1,6 +1,6 @@
 #  test_seeking - Seeking tester for libFLAC
 #  Copyright (C) 2004-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -18,7 +18,9 @@
 
 EXTRA_DIST = \
 	Makefile.lite \
-	test_seeking.vcproj
+	test_seeking.vcproj \
+	test_seeking.vcxproj \
+	test_seeking.vcxproj.filters
 
 AM_CFLAGS = @OGG_CFLAGS@
 

@@ -1,6 +1,6 @@
 #  libFLAC - Free Lossless Audio Codec library
 #  Copyright (C) 2001-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -38,7 +38,11 @@ topdir = ../..
 ifeq ($(OS),Darwin)
     EXPLICIT_LIBS = $(OGG_EXPLICIT_LIBS) -lm
 else
+ifeq ($(findstring Windows,$(OS)),Windows)
+    LIBS = -lwin_utf8_io $(OGG_LIBS) -lm
+else
     LIBS = $(OGG_LIBS) -lm
+endif
 endif
 
 LIB_NAME = libFLAC
@@ -49,7 +53,7 @@ ifeq ($(OS),Solaris)
     DEFINES = -DFLAC__NO_ASM -DFLAC__ALIGN_MALLOC_DATA
 else
 ifeq ($(PROC),i386)
-    DEFINES = -DFLAC__CPU_IA32 -DFLAC__USE_3DNOW -DFLAC__HAS_NASM -DFLAC__ALIGN_MALLOC_DATA
+    DEFINES = -DFLAC__CPU_IA32 -DFLAC__HAS_NASM -DFLAC__ALIGN_MALLOC_DATA
 else
     DEFINES = -DFLAC__ALIGN_MALLOC_DATA
 endif
@@ -58,18 +62,11 @@ endif
 INCLUDES = -I./include -I$(topdir)/include $(OGG_INCLUDES)
 DEBUG_CFLAGS = -DFLAC__OVERFLOW_DETECT
 
-ifeq ($(OS),Darwin)
-SRCS_S = \
-	ppc/as/lpc_asm.s
-else
 ifeq ($(PROC),i386)
 SRCS_NASM = \
-	ia32/bitreader_asm.nasm \
 	ia32/cpu_asm.nasm \
 	ia32/fixed_asm.nasm \
-	ia32/lpc_asm.nasm \
-	ia32/stream_encoder_asm.nasm
-endif
+	ia32/lpc_asm.nasm
 endif
 
 OGG_SRCS_C = \
@@ -85,15 +82,24 @@ SRCS_C = \
 	cpu.c \
 	crc.c \
 	fixed.c \
+	fixed_intrin_sse2.c \
+	fixed_intrin_ssse3.c \
 	float.c \
 	format.c \
 	lpc.c \
+	lpc_intrin_sse.c \
+	lpc_intrin_sse2.c \
+	lpc_intrin_sse41.c \
+	lpc_intrin_avx2.c \
 	md5.c \
 	memory.c \
 	metadata_iterators.c \
 	metadata_object.c \
 	stream_decoder.c \
 	stream_encoder.c \
+	stream_encoder_intrin_sse2.c \
+	stream_encoder_intrin_ssse3.c \
+	stream_encoder_intrin_avx2.c \
 	stream_encoder_framing.c \
 	window.c \
 	$(OGG_SRCS)

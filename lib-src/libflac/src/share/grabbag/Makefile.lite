@@ -8,7 +8,11 @@ libdir = $(topdir)/objs/$(BUILD)/lib
 ifeq ($(OS),Darwin)
     EXPLICIT_LIBS = $(libdir)/libFLAC.a $(libdir)/libreplaygain_analysis.a $(OGG_EXPLICIT_LIBS) -lm
 else
+ifeq ($(findstring Windows,$(OS)),Windows)
+    LIBS = -lFLAC -lreplaygain_analysis -lwin_utf8_io $(OGG_LIBS) -lm
+else
     LIBS = -lFLAC -lreplaygain_analysis $(OGG_LIBS) -lm
+endif
 endif
 
 LIB_NAME = libgrabbag
@@ -20,7 +24,8 @@ SRCS_C = \
 	file.c \
 	picture.c \
 	replaygain.c \
-	seektable.c
+	seektable.c \
+	snprintf.c
 
 include $(topdir)/build/lib.mk
 

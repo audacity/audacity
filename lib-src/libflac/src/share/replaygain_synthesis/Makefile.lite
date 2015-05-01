@@ -5,7 +5,7 @@
 topdir = ../../..
 
 LIB_NAME = libreplaygain_synthesis
-INCLUDES = -I./include -I$(topdir)/include -I$(topdir)/include/share
+INCLUDES = -I./include -I$(topdir)/include
 
 SRCS_C = \
 	replaygain_synthesis.c

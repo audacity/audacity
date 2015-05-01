@@ -24,20 +24,20 @@
 /* define if building for SPARC */
 #undef FLAC__CPU_SPARC
 
-/* define if you are compiling for PowerPC and have the 'as' assembler */
-#undef FLAC__HAS_AS
+/* define if building for x86_64 */
+#undef FLAC__CPU_X86_64
 
 /* define if you have docbook-to-man or docbook2man */
 #undef FLAC__HAS_DOCBOOK_TO_MAN
-
-/* define if you are compiling for PowerPC and have the 'gas' assembler */
-#undef FLAC__HAS_GAS
 
 /* define if you are compiling for x86 and have the NASM assembler */
 #undef FLAC__HAS_NASM
 
 /* define if you have the ogg library */
 #undef FLAC__HAS_OGG
+
+/* Set to 1 if <x86intrin.h> is available. */
+#undef FLAC__HAS_X86INTRIN
 
 /* define to disable use of assembly code */
 #undef FLAC__NO_ASM
@@ -51,20 +51,23 @@
 /* define if building for Linux */
 #undef FLAC__SYS_LINUX
 
-/* define to enable use of 3Dnow! instructions */
-#undef FLAC__USE_3DNOW
-
 /* define to enable use of Altivec instructions */
 #undef FLAC__USE_ALTIVEC
 
 /* Define to 1 if `TIOCGWINSZ' requires <sys/ioctl.h>. */
 #undef GWINSZ_IN_SYS_IOCTL
 
+/* Compiler has the __builtin_bswap16 intrinsic */
+#undef HAVE_BSWAP16
+
 /* Compiler has the __builtin_bswap32 intrinsic */
 #undef HAVE_BSWAP32
 
 /* Define to 1 if you have the <byteswap.h> header file. */
 #undef HAVE_BYTESWAP_H
+
+/* Define to 1 if you have the <cpuid.h> header file. */
+#undef HAVE_CPUID_H
 
 /* Define to 1 if C++ supports variable-length arrays. */
 #undef HAVE_CXX_VARARRAYS
@@ -129,15 +132,15 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define to 1 if you have the <x86intrin.h> header file. */
+#undef HAVE_X86INTRIN_H
+
 /* Define as const if the declaration of iconv() needs const. */
 #undef ICONV_CONST
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
 #undef LT_OBJDIR
-
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-#undef NO_MINUS_C_MINUS_O
 
 /* Name of package */
 #undef PACKAGE

@@ -1,6 +1,6 @@
 /* example_c_encode_file - Simple FLAC file encoder using libFLAC
  * Copyright (C) 2007-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,10 +22,10 @@
  * file.  It only supports 16-bit stereo files in canonical WAVE format.
  *
  * Complete API documentation can be found at:
- *   http://flac.sourceforge.net/api/
+ *   http://xiph.org/flac/api/
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 

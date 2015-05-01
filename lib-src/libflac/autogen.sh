@@ -40,5 +40,5 @@ test -n "$srcdir" && cd "$srcdir"
 echo "Updating build configuration files for FLAC, please wait...."
 
 touch config.rpath
-autoreconf -isf
+autoreconf --install --symlink --force
 #./configure "$@" && echo

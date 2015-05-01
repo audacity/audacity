@@ -1,4 +1,4 @@
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -7,6 +7,7 @@
 
 #include "private/md5.h"
 #include "share/alloc.h"
+#include "share/endswap.h"
 
 /*
  * This code implements the MD5 message-digest algorithm.
@@ -223,7 +224,7 @@ void FLAC__MD5Init(FLAC__MD5Context *ctx)
 	ctx->bytes[0] = 0;
 	ctx->bytes[1] = 0;
 
-	ctx->internal_buf = 0;
+	ctx->internal_buf.p8= 0;
 	ctx->capacity = 0;
 }
 
@@ -259,9 +260,9 @@ void FLAC__MD5Final(FLAC__byte digest[16], FLAC__MD5Context *ctx)
 
 	byteSwap(ctx->buf, 4);
 	memcpy(digest, ctx->buf, 16);
-	if(0 != ctx->internal_buf) {
-		free(ctx->internal_buf);
-		ctx->internal_buf = 0;
+	if (0 != ctx->internal_buf.p8) {
+		free(ctx->internal_buf.p8);
+		ctx->internal_buf.p8= 0;
 		ctx->capacity = 0;
 	}
 	memset(ctx, 0, sizeof(*ctx));	/* In case it's sensitive */
@@ -270,121 +271,217 @@ void FLAC__MD5Final(FLAC__byte digest[16], FLAC__MD5Context *ctx)
 /*
  * Convert the incoming audio signal to a byte stream
  */
-static void format_input_(FLAC__byte *buf, const FLAC__int32 * const signal[], unsigned channels, unsigned samples, unsigned bytes_per_sample)
+static void format_input_(FLAC__multibyte *mbuf, const FLAC__int32 * const signal[], unsigned channels, unsigned samples, unsigned bytes_per_sample)
 {
+	FLAC__byte *buf_ = mbuf->p8;
+	FLAC__int16 *buf16 = mbuf->p16;
+	FLAC__int32 *buf32 = mbuf->p32;
+	FLAC__int32 a_word;
 	unsigned channel, sample;
-	register FLAC__int32 a_word;
-	register FLAC__byte *buf_ = buf;
 
-#if WORDS_BIGENDIAN
-#else
-	if(channels == 2 && bytes_per_sample == 2) {
-		FLAC__int16 *buf1_ = ((FLAC__int16*)buf_) + 1;
-		memcpy(buf_, signal[0], sizeof(FLAC__int32) * samples);
-		for(sample = 0; sample < samples; sample++, buf1_+=2)
-			*buf1_ = (FLAC__int16)signal[1][sample];
-	}
-	else if(channels == 1 && bytes_per_sample == 2) {
-		FLAC__int16 *buf1_ = (FLAC__int16*)buf_;
-		for(sample = 0; sample < samples; sample++)
-			*buf1_++ = (FLAC__int16)signal[0][sample];
-	}
-	else
-#endif
-	if(bytes_per_sample == 2) {
-		if(channels == 2) {
-			for(sample = 0; sample < samples; sample++) {
+	/* Storage in the output buffer, buf, is little endian. */
+
+#define BYTES_CHANNEL_SELECTOR(bytes, channels)   (bytes * 100 + channels)
+
+	/* First do the most commonly used combinations. */
+	switch (BYTES_CHANNEL_SELECTOR (bytes_per_sample, channels)) {
+		/* One byte per sample. */
+		case (BYTES_CHANNEL_SELECTOR (1, 1)):
+			for (sample = 0; sample < samples; sample++)
+				*buf_++ = signal[0][sample];
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (1, 2)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf_++ = signal[0][sample];
+				*buf_++ = signal[1][sample];
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (1, 4)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf_++ = signal[0][sample];
+				*buf_++ = signal[1][sample];
+				*buf_++ = signal[2][sample];
+				*buf_++ = signal[3][sample];
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (1, 6)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf_++ = signal[0][sample];
+				*buf_++ = signal[1][sample];
+				*buf_++ = signal[2][sample];
+				*buf_++ = signal[3][sample];
+				*buf_++ = signal[4][sample];
+				*buf_++ = signal[5][sample];
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (1, 8)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf_++ = signal[0][sample];
+				*buf_++ = signal[1][sample];
+				*buf_++ = signal[2][sample];
+				*buf_++ = signal[3][sample];
+				*buf_++ = signal[4][sample];
+				*buf_++ = signal[5][sample];
+				*buf_++ = signal[6][sample];
+				*buf_++ = signal[7][sample];
+			}
+			return;
+
+		/* Two bytes per sample. */
+		case (BYTES_CHANNEL_SELECTOR (2, 1)):
+			for (sample = 0; sample < samples; sample++)
+				*buf16++ = H2LE_16(signal[0][sample]);
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (2, 2)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf16++ = H2LE_16(signal[0][sample]);
+				*buf16++ = H2LE_16(signal[1][sample]);
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (2, 4)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf16++ = H2LE_16(signal[0][sample]);
+				*buf16++ = H2LE_16(signal[1][sample]);
+				*buf16++ = H2LE_16(signal[2][sample]);
+				*buf16++ = H2LE_16(signal[3][sample]);
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (2, 6)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf16++ = H2LE_16(signal[0][sample]);
+				*buf16++ = H2LE_16(signal[1][sample]);
+				*buf16++ = H2LE_16(signal[2][sample]);
+				*buf16++ = H2LE_16(signal[3][sample]);
+				*buf16++ = H2LE_16(signal[4][sample]);
+				*buf16++ = H2LE_16(signal[5][sample]);
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (2, 8)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf16++ = H2LE_16(signal[0][sample]);
+				*buf16++ = H2LE_16(signal[1][sample]);
+				*buf16++ = H2LE_16(signal[2][sample]);
+				*buf16++ = H2LE_16(signal[3][sample]);
+				*buf16++ = H2LE_16(signal[4][sample]);
+				*buf16++ = H2LE_16(signal[5][sample]);
+				*buf16++ = H2LE_16(signal[6][sample]);
+				*buf16++ = H2LE_16(signal[7][sample]);
+			}
+			return;
+
+		/* Three bytes per sample. */
+		case (BYTES_CHANNEL_SELECTOR (3, 1)):
+			for (sample = 0; sample < samples; sample++) {
 				a_word = signal[0][sample];
+				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
+				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
+				*buf_++ = (FLAC__byte)a_word;
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (3, 2)):
+			for (sample = 0; sample < samples; sample++) {
+				a_word = signal[0][sample];
+				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
 				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
 				*buf_++ = (FLAC__byte)a_word;
 				a_word = signal[1][sample];
 				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word;
-			}
-		}
-		else if(channels == 1) {
-			for(sample = 0; sample < samples; sample++) {
-				a_word = signal[0][sample];
 				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
 				*buf_++ = (FLAC__byte)a_word;
 			}
-		}
-		else {
-			for(sample = 0; sample < samples; sample++) {
-				for(channel = 0; channel < channels; channel++) {
+			return;
+
+		/* Four bytes per sample. */
+		case (BYTES_CHANNEL_SELECTOR (4, 1)):
+			for (sample = 0; sample < samples; sample++)
+				*buf32++ = H2LE_32(signal[0][sample]);
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (4, 2)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf32++ = H2LE_32(signal[0][sample]);
+				*buf32++ = H2LE_32(signal[1][sample]);
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (4, 4)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf32++ = H2LE_32(signal[0][sample]);
+				*buf32++ = H2LE_32(signal[1][sample]);
+				*buf32++ = H2LE_32(signal[2][sample]);
+				*buf32++ = H2LE_32(signal[3][sample]);
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (4, 6)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf32++ = H2LE_32(signal[0][sample]);
+				*buf32++ = H2LE_32(signal[1][sample]);
+				*buf32++ = H2LE_32(signal[2][sample]);
+				*buf32++ = H2LE_32(signal[3][sample]);
+				*buf32++ = H2LE_32(signal[4][sample]);
+				*buf32++ = H2LE_32(signal[5][sample]);
+			}
+			return;
+
+		case (BYTES_CHANNEL_SELECTOR (4, 8)):
+			for (sample = 0; sample < samples; sample++) {
+				*buf32++ = H2LE_32(signal[0][sample]);
+				*buf32++ = H2LE_32(signal[1][sample]);
+				*buf32++ = H2LE_32(signal[2][sample]);
+				*buf32++ = H2LE_32(signal[3][sample]);
+				*buf32++ = H2LE_32(signal[4][sample]);
+				*buf32++ = H2LE_32(signal[5][sample]);
+				*buf32++ = H2LE_32(signal[6][sample]);
+				*buf32++ = H2LE_32(signal[7][sample]);
+			}
+			return;
+
+		default:
+			break;
+	}
+
+	/* General version. */
+	switch (bytes_per_sample) {
+		case 1:
+			for (sample = 0; sample < samples; sample++)
+				for (channel = 0; channel < channels; channel++)
+					*buf_++ = signal[channel][sample];
+			return;
+
+		case 2:
+			for (sample = 0; sample < samples; sample++)
+				for (channel = 0; channel < channels; channel++)
+					*buf16++ = H2LE_16(signal[channel][sample]);
+			return;
+
+		case 3:
+			for (sample = 0; sample < samples; sample++)
+				for (channel = 0; channel < channels; channel++) {
 					a_word = signal[channel][sample];
+					*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
 					*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
 					*buf_++ = (FLAC__byte)a_word;
 				}
-			}
-		}
-	}
-	else if(bytes_per_sample == 3) {
-		if(channels == 2) {
-			for(sample = 0; sample < samples; sample++) {
-				a_word = signal[0][sample];
-				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word;
-				a_word = signal[1][sample];
-				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word;
-			}
-		}
-		else if(channels == 1) {
-			for(sample = 0; sample < samples; sample++) {
-				a_word = signal[0][sample];
-				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word;
-			}
-		}
-		else {
-			for(sample = 0; sample < samples; sample++) {
-				for(channel = 0; channel < channels; channel++) {
-					a_word = signal[channel][sample];
-					*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-					*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-					*buf_++ = (FLAC__byte)a_word;
-				}
-			}
-		}
-	}
-	else if(bytes_per_sample == 1) {
-		if(channels == 2) {
-			for(sample = 0; sample < samples; sample++) {
-				a_word = signal[0][sample];
-				*buf_++ = (FLAC__byte)a_word;
-				a_word = signal[1][sample];
-				*buf_++ = (FLAC__byte)a_word;
-			}
-		}
-		else if(channels == 1) {
-			for(sample = 0; sample < samples; sample++) {
-				a_word = signal[0][sample];
-				*buf_++ = (FLAC__byte)a_word;
-			}
-		}
-		else {
-			for(sample = 0; sample < samples; sample++) {
-				for(channel = 0; channel < channels; channel++) {
-					a_word = signal[channel][sample];
-					*buf_++ = (FLAC__byte)a_word;
-				}
-			}
-		}
-	}
-	else { /* bytes_per_sample == 4, maybe optimize more later */
-		for(sample = 0; sample < samples; sample++) {
-			for(channel = 0; channel < channels; channel++) {
-				a_word = signal[channel][sample];
-				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word; a_word >>= 8;
-				*buf_++ = (FLAC__byte)a_word;
-			}
-		}
+			return;
+
+		case 4:
+			for (sample = 0; sample < samples; sample++)
+				for (channel = 0; channel < channels; channel++)
+					*buf32++ = H2LE_32(signal[channel][sample]);
+			return;
+
+		default:
+			break;
 	}
 }
 
@@ -396,26 +493,26 @@ FLAC__bool FLAC__MD5Accumulate(FLAC__MD5Context *ctx, const FLAC__int32 * const 
 	const size_t bytes_needed = (size_t)channels * (size_t)samples * (size_t)bytes_per_sample;
 
 	/* overflow check */
-	if((size_t)channels > SIZE_MAX / (size_t)bytes_per_sample)
+	if ((size_t)channels > SIZE_MAX / (size_t)bytes_per_sample)
 		return false;
-	if((size_t)channels * (size_t)bytes_per_sample > SIZE_MAX / (size_t)samples)
+	if ((size_t)channels * (size_t)bytes_per_sample > SIZE_MAX / (size_t)samples)
 		return false;
 
-	if(ctx->capacity < bytes_needed) {
-		FLAC__byte *tmp = realloc(ctx->internal_buf, bytes_needed);
-		if(0 == tmp) {
-			free(ctx->internal_buf);
-			if(0 == (ctx->internal_buf = safe_malloc_(bytes_needed)))
+	if (ctx->capacity < bytes_needed) {
+		FLAC__byte *tmp = realloc(ctx->internal_buf.p8, bytes_needed);
+		if (0 == tmp) {
+			free(ctx->internal_buf.p8);
+			if (0 == (ctx->internal_buf.p8= safe_malloc_(bytes_needed)))
 				return false;
 		}
 		else
-			ctx->internal_buf = tmp;
+			ctx->internal_buf.p8= tmp;
 		ctx->capacity = bytes_needed;
 	}
 
-	format_input_(ctx->internal_buf, signal, channels, samples, bytes_per_sample);
+	format_input_(&ctx->internal_buf, signal, channels, samples, bytes_per_sample);
 
-	FLAC__MD5Update(ctx, ctx->internal_buf, bytes_needed);
+	FLAC__MD5Update(ctx, ctx->internal_buf.p8, bytes_needed);
 
 	return true;
 }

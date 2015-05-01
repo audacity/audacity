@@ -1,6 +1,6 @@
 #  libFLAC++ - Free Lossless Audio Codec library
 #  Copyright (C) 2002-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -30,7 +30,6 @@
 #  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 lib_LTLIBRARIES = libFLAC++.la
-noinst_LTLIBRARIES = libFLAC++-static.la
 
 m4datadir = $(datadir)/aclocal
 m4data_DATA = libFLAC++.m4
@@ -42,17 +41,18 @@ EXTRA_DIST = \
 	Makefile.lite \
 	flac++.pc.in \
 	libFLAC++_dynamic.vcproj \
+	libFLAC++_dynamic.vcxproj \
+	libFLAC++_dynamic.vcxproj.filters \
 	libFLAC++_static.vcproj \
+	libFLAC++_static.vcxproj \
+	libFLAC++_static.vcxproj.filters \
 	libFLAC++.m4
 
 # see 'http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning' for numbering convention
-libFLAC___la_LDFLAGS = $(AM_LDFLAGS) -version-info 9:0:3 @LT_NO_UNDEFINED@
+libFLAC___la_LDFLAGS = $(AM_LDFLAGS) -no-undefined -version-info 9:0:3
 libFLAC___la_LIBADD = ../libFLAC/libFLAC.la
 
 libFLAC___la_SOURCES = \
 	metadata.cpp \
 	stream_decoder.cpp \
 	stream_encoder.cpp
-
-libFLAC___static_la_LIBADD = $(LOCAL_EXTRA_LIBADD)
-libFLAC___static_la_SOURCES = $(libFLAC___la_SOURCES)

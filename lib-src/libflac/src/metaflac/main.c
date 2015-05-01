@@ -1,6 +1,6 @@
 /* metaflac - Command-line FLAC metadata editor
  * Copyright (C) 2001-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -43,7 +43,20 @@ int main(int argc, char *argv[])
 	}
 #endif
 
+#ifdef _WIN32
+	{
+		const char *var;
+		var = getenv("LC_ALL");
+		if (!var)
+			var = getenv("LC_NUMERIC");
+		if (!var)
+			var = getenv("LANG");
+		if (!var || strcmp(var, "C") != 0)
+			setlocale(LC_ALL, "");
+	}
+#else
 	setlocale(LC_ALL, "");
+#endif
 	init_options(&options);
 
 	if ((ret = parse_options(argc, argv, &options)) == 0)
