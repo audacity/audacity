@@ -456,6 +456,15 @@
 		281110001AD4FDD8009FAC14 /* suil_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 28110FFF1AD4FDD8009FAC14 /* suil_config.h */; };
 		2816372E0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */; };
 		28285C801A27A81600BC2205 /* AudioUnitCocoaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28285C7F1A27A81600BC2205 /* AudioUnitCocoaHelper.mm */; };
+		282D1A661AF377BC00E715C9 /* fixed_intrin_sse2.c in Sources */ = {isa = PBXBuildFile; fileRef = 282D1A5D1AF377BC00E715C9 /* fixed_intrin_sse2.c */; };
+		282D1A671AF377BC00E715C9 /* fixed_intrin_ssse3.c in Sources */ = {isa = PBXBuildFile; fileRef = 282D1A5E1AF377BC00E715C9 /* fixed_intrin_ssse3.c */; };
+		282D1A681AF377BC00E715C9 /* lpc_intrin_avx2.c in Sources */ = {isa = PBXBuildFile; fileRef = 282D1A5F1AF377BC00E715C9 /* lpc_intrin_avx2.c */; };
+		282D1A691AF377BC00E715C9 /* lpc_intrin_sse.c in Sources */ = {isa = PBXBuildFile; fileRef = 282D1A601AF377BC00E715C9 /* lpc_intrin_sse.c */; };
+		282D1A6A1AF377BC00E715C9 /* lpc_intrin_sse2.c in Sources */ = {isa = PBXBuildFile; fileRef = 282D1A611AF377BC00E715C9 /* lpc_intrin_sse2.c */; };
+		282D1A6B1AF377BC00E715C9 /* lpc_intrin_sse41.c in Sources */ = {isa = PBXBuildFile; fileRef = 282D1A621AF377BC00E715C9 /* lpc_intrin_sse41.c */; };
+		282D1A6C1AF377BC00E715C9 /* stream_encoder_intrin_avx2.c in Sources */ = {isa = PBXBuildFile; fileRef = 282D1A631AF377BC00E715C9 /* stream_encoder_intrin_avx2.c */; };
+		282D1A6D1AF377BC00E715C9 /* stream_encoder_intrin_sse2.c in Sources */ = {isa = PBXBuildFile; fileRef = 282D1A641AF377BC00E715C9 /* stream_encoder_intrin_sse2.c */; };
+		282D1A6E1AF377BC00E715C9 /* stream_encoder_intrin_ssse3.c in Sources */ = {isa = PBXBuildFile; fileRef = 282D1A651AF377BC00E715C9 /* stream_encoder_intrin_ssse3.c */; };
 		282D474C0B9E8D900034BC49 /* Snap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 282D474A0B9E8D900034BC49 /* Snap.cpp */; };
 		283135EC0DFB9D110076D551 /* ImportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */; };
 		283135FF0DFBA2E80076D551 /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283135FD0DFBA2E80076D551 /* FFmpeg.cpp */; };
@@ -2131,6 +2140,15 @@
 		2816372C0BAE3B6C0079C746 /* LinkingHtmlWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = LinkingHtmlWindow.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2816372D0BAE3B6C0079C746 /* LinkingHtmlWindow.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = LinkingHtmlWindow.h; sourceTree = "<group>"; tabWidth = 3; };
 		28285C7F1A27A81600BC2205 /* AudioUnitCocoaHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioUnitCocoaHelper.mm; sourceTree = "<group>"; };
+		282D1A5D1AF377BC00E715C9 /* fixed_intrin_sse2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fixed_intrin_sse2.c; sourceTree = "<group>"; };
+		282D1A5E1AF377BC00E715C9 /* fixed_intrin_ssse3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fixed_intrin_ssse3.c; sourceTree = "<group>"; };
+		282D1A5F1AF377BC00E715C9 /* lpc_intrin_avx2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpc_intrin_avx2.c; sourceTree = "<group>"; };
+		282D1A601AF377BC00E715C9 /* lpc_intrin_sse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpc_intrin_sse.c; sourceTree = "<group>"; };
+		282D1A611AF377BC00E715C9 /* lpc_intrin_sse2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpc_intrin_sse2.c; sourceTree = "<group>"; };
+		282D1A621AF377BC00E715C9 /* lpc_intrin_sse41.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpc_intrin_sse41.c; sourceTree = "<group>"; };
+		282D1A631AF377BC00E715C9 /* stream_encoder_intrin_avx2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stream_encoder_intrin_avx2.c; sourceTree = "<group>"; };
+		282D1A641AF377BC00E715C9 /* stream_encoder_intrin_sse2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stream_encoder_intrin_sse2.c; sourceTree = "<group>"; };
+		282D1A651AF377BC00E715C9 /* stream_encoder_intrin_ssse3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stream_encoder_intrin_ssse3.c; sourceTree = "<group>"; };
 		282D474A0B9E8D900034BC49 /* Snap.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Snap.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		282D474B0B9E8D900034BC49 /* Snap.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Snap.h; sourceTree = "<group>"; tabWidth = 3; };
 		283135EA0DFB9D110076D551 /* ImportFFmpeg.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = ImportFFmpeg.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -3736,9 +3754,15 @@
 				176EEABF09A2EF1100188F3B /* cpu.c */,
 				176EEAC209A2EF1100188F3B /* crc.c */,
 				176EEACB09A2EF1100188F3B /* fixed.c */,
+				282D1A5D1AF377BC00E715C9 /* fixed_intrin_sse2.c */,
+				282D1A5E1AF377BC00E715C9 /* fixed_intrin_ssse3.c */,
 				176EEACE09A2EF1100188F3B /* float.c */,
 				176EEAD109A2EF1100188F3B /* format.c */,
 				176EEB0009A2EF1100188F3B /* lpc.c */,
+				282D1A5F1AF377BC00E715C9 /* lpc_intrin_avx2.c */,
+				282D1A601AF377BC00E715C9 /* lpc_intrin_sse.c */,
+				282D1A611AF377BC00E715C9 /* lpc_intrin_sse2.c */,
+				282D1A621AF377BC00E715C9 /* lpc_intrin_sse41.c */,
 				176EEB0809A2EF1100188F3B /* md5.c */,
 				176EEB0B09A2EF1100188F3B /* memory.c */,
 				176EEB0E09A2EF1100188F3B /* metadata_iterators.c */,
@@ -3750,6 +3774,9 @@
 				176EEB2809A2EF1100188F3B /* stream_decoder.c */,
 				176EEB2B09A2EF1100188F3B /* stream_encoder.c */,
 				176EEB2E09A2EF1100188F3B /* stream_encoder_framing.c */,
+				282D1A631AF377BC00E715C9 /* stream_encoder_intrin_avx2.c */,
+				282D1A641AF377BC00E715C9 /* stream_encoder_intrin_sse2.c */,
+				282D1A651AF377BC00E715C9 /* stream_encoder_intrin_ssse3.c */,
 			);
 			path = libFLAC;
 			sourceTree = "<group>";
@@ -7321,6 +7348,15 @@
 				ED924BD2182EA20500319F81 /* ogg_encoder_aspect.c in Sources */,
 				ED924BD3182EA20500319F81 /* ogg_helper.c in Sources */,
 				ED924BD4182EA20500319F81 /* ogg_mapping.c in Sources */,
+				282D1A661AF377BC00E715C9 /* fixed_intrin_sse2.c in Sources */,
+				282D1A671AF377BC00E715C9 /* fixed_intrin_ssse3.c in Sources */,
+				282D1A681AF377BC00E715C9 /* lpc_intrin_avx2.c in Sources */,
+				282D1A691AF377BC00E715C9 /* lpc_intrin_sse.c in Sources */,
+				282D1A6A1AF377BC00E715C9 /* lpc_intrin_sse2.c in Sources */,
+				282D1A6B1AF377BC00E715C9 /* lpc_intrin_sse41.c in Sources */,
+				282D1A6C1AF377BC00E715C9 /* stream_encoder_intrin_avx2.c in Sources */,
+				282D1A6D1AF377BC00E715C9 /* stream_encoder_intrin_sse2.c in Sources */,
+				282D1A6E1AF377BC00E715C9 /* stream_encoder_intrin_ssse3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
