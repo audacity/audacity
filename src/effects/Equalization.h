@@ -212,7 +212,6 @@ private:
    double mEQVals[NUMBER_OF_BANDS+1];
 
    EQCurveArray mCurves;
-   EQCurve mCustomBackup;
 
    Envelope *mLogEnvelope;
    Envelope *mLinEnvelope;

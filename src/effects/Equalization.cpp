@@ -251,16 +251,10 @@ EffectEqualization::EffectEqualization()
 
    mCurve = NULL;
    mDirty = false;
+   mDisallowCustom = false;
 
    // Load the EQ curves
    LoadCurves();
-   if (mDisallowCustom)
-   {
-      mCustomBackup.Name = wxT("unnamed");
-      EQCurve &realCustom = mCurves[mCurves.GetCount()-1];
-      wxASSERT(realCustom.Name.IsSameAs(wxT("unnamed")));
-      mCustomBackup.points = realCustom.points;
-   }
 
    // Note: initial curve is set in TransferDataToWindow
 
