@@ -995,6 +995,7 @@ void FreqWindow::Recalc()
 
    wxWindow *hadFocus = FindFocus();
    wxWindowDisabler *blocker = new wxWindowDisabler(mProgress);
+   wxYieldIfNeeded();
 
    mAnalyst->Calculate(alg, windowFunc, mWindowSize, mRate,
                        mData, mDataLen,
