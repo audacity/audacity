@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Audacity 1.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-11-10 14:18-0600\n"
-"PO-Revision-Date: 2015-05-01 19:36+0200\n"
+"PO-Revision-Date: 2015-05-03 17:44+0200\n"
 "Last-Translator: Heino Keränen\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Generator: Poedit 1.7.6\n"
 
 msgid "\t-help (this message)"
-msgstr "\t-help (this message)"
+msgstr "\t-help (tämä ohje)"
 
 msgid "\t-version (display Audacity version)"
 msgstr "\t-version (näytä Audacityn versio)"
@@ -23,19 +23,19 @@ msgid ") / Append Record ("
 msgstr ") / Jatka äänitystä ("
 
 msgid ") / Loop Play ("
-msgstr ") / Toistuva soitto ("
+msgstr ") / Silmukkatoisto ("
 
 msgid "    No change to apply."
 msgstr "    Ei muutoksia."
 
 msgid "Click Track..."
-msgstr "Klikkausääntä..."
+msgstr "Metronomiraita..."
 
 msgid " (disabled)"
 msgstr " (ei käytössä)"
 
 msgid " Mute On"
-msgstr "Mykistys päällä"
+msgstr " Mykistys päällä"
 
 msgid " Select On"
 msgstr "Valittu päällä"
@@ -74,7 +74,7 @@ msgid "%3d dB"
 msgstr "%3d dB"
 
 msgid "%d Channels"
-msgstr "%d Kanavaa"
+msgstr "%d kanavaa"
 
 msgid "%s changed"
 msgstr "%s muutettu"
@@ -104,7 +104,7 @@ msgid "&Always copy all audio into project (safest)"
 msgstr "&Kopioi aina kaikki audiot projektiin (turvallisin)"
 
 msgid "&Always mix all tracks down to Stereo or Mono channel(s)"
-msgstr "&Yhdistä aina kaikki raidat Stereo- tai Monokanavaksi"
+msgstr "&Yhdistä aina kaikki raidat stereo- tai monokanavaksi"
 
 msgid "&Analyze"
 msgstr "&Analysoi"
@@ -221,7 +221,7 @@ msgid "&Foreground:"
 msgstr "&Edusta:"
 
 msgid "&Frequency smoothing (bands):"
-msgstr "&Taajuuden tasoitus (raidat):"
+msgstr "&Virheiden häivytys (taajuusalueita):"
 
 msgid "&Generate"
 msgstr "&Luo"
@@ -290,7 +290,7 @@ msgid "&Lock"
 msgstr "&Lukitse"
 
 msgid "&Loop Play"
-msgstr "&Silmukka toisto"
+msgstr "&Silmukkatoisto"
 
 msgid "&MIDI..."
 msgstr "&MIDI..."
@@ -323,7 +323,7 @@ msgid "&None"
 msgstr "&Ei mitään"
 
 msgid "&Normalize all tracks in project"
-msgstr "&Normalisoi kaikki pojektin raidat"
+msgstr "&Normalisoi kaikki projektin raidat"
 
 msgid "&OK"
 msgstr "&OK"
@@ -347,7 +347,7 @@ msgid "&Paste"
 msgstr "&Liitä"
 
 msgid "&Pause"
-msgstr "&Tauko"
+msgstr "&Keskeytä"
 
 msgid "&Playback Meter Toolbar"
 msgstr "&Toiston mittaripalkki"
@@ -389,7 +389,7 @@ msgid "&Replot"
 msgstr "&Laske uudelleen"
 
 msgid "&Resample..."
-msgstr "&Sämplää uudelleen..."
+msgstr "&Muuta näytetaajuutta..."
 
 msgid "&Reset Toolbars"
 msgstr "&Työkalupalkkien oletukset"
@@ -491,7 +491,7 @@ msgid "&Update display while playing"
 msgstr "&Päivitä näyttö soitettaessa"
 
 msgid "&Use legacy (version 3) syntax."
-msgstr "Käytä vanhaa (version 3) syntaksia."
+msgstr "Käytä vanhaa (versio 3) syntaksia."
 
 msgid "&View"
 msgstr "&Näytä"
@@ -510,7 +510,7 @@ msgstr ""
 "Luo äänitiedosto, joka aukeaa muissa ohjelmissa, komennolla: 'Vie audio'.\n"
 "\n"
 "Pakatut projektitiedostot ovat hyvä tapa välittää projekti verkossa, \n"
-"mutta nekin voivat hukata jotain tietoja.\n"
+"mutta äänenlaatu hieman kärsii.\n"
 "\n"
 "Pakatun projektin avaaminen kestää tavallista pitempään, koska se tuo\n"
 "jokaisen pakatun raidan erikseen.\n"
@@ -532,7 +532,7 @@ msgid "(external program)"
 msgstr "(ulkoinen ohjelma)"
 
 msgid "(semitones) [-12 to 12]:"
-msgstr "(Puolisävelaskelia) [-12 -> 12]:"
+msgstr "(puolisävelaskelia) [-12 -> 12]:"
 
 msgid "- END -"
 msgstr "- LOPPU -"
@@ -574,13 +574,13 @@ msgid "1 (Mono)"
 msgstr "1 (mono)"
 
 msgid "1 (Mono) Recording Channel"
-msgstr "1 (Mono) äänityskanava"
+msgstr "1 (mono) äänityskanava"
 
 msgid "1 Channel (Mono)"
 msgstr "1 kanava (mono)"
 
 msgid "1.0 or earlier"
-msgstr "1.0 tai aikaisemp"
+msgstr "1.0 tai aikaisempi"
 
 msgid "2"
 msgstr "2"
@@ -592,7 +592,7 @@ msgid "2 Channels (Stereo)"
 msgstr "2 kanavaa (stereo)"
 
 msgid "2 (Stereo) Recording Channels"
-msgstr "2 (Stereo) äänityskanavaa"
+msgstr "2 (stereo) äänityskanavaa"
 
 msgid "256 - default"
 msgstr "256 - oletus"
@@ -601,7 +601,7 @@ msgid "3"
 msgstr "3"
 
 msgid "32-bit float"
-msgstr "32-bit liukuluku"
+msgstr "32-bittinen liukuluku"
 
 msgid "4"
 msgstr "4"
@@ -619,7 +619,7 @@ msgid "8 (best)"
 msgstr "8 (paras)"
 
 msgid ": Filename too short."
-msgstr ": Tiedoston nimi liian lyhyt."
+msgstr ": Tiedostnimi on liian lyhyt."
 
 msgid ": Incorrect filetype."
 msgstr ": Virheellinen tiedostotyyppi."
@@ -676,7 +676,10 @@ msgid "Adjustable Fade..."
 msgstr "Säädettävä häivytys..."
 
 msgid "Adjusted envelope."
-msgstr "Muokattu verhoa"
+msgstr "Muokattu äänenvoimakkuusraita."
+
+msgid "After recovery, save the project to save the changes to disk."
+msgstr "Palautuksen jälkeen tallenna projektin muutokset levylle."
 
 msgid "Album Title"
 msgstr "Albumin nimi"
@@ -684,8 +687,23 @@ msgstr "Albumin nimi"
 msgid "Align &Together"
 msgstr "Kohdista &toisiinsa"
 
+msgid "All"
+msgstr "Kaikki"
+
 msgid "All Toolbars"
 msgstr "Kaikki työkalupalkit"
+
+msgid "All audio is muted."
+msgstr "Kaikki äänet on vaimennettu."
+
+msgid "All files|*"
+msgstr "Kaikki tiedostot|*"
+
+msgid "All files|*|All supported files|"
+msgstr "Kaikki tiedostot|*|Kaikki tuetut tiedostot|"
+
+msgid "All noise profile data must have the same sample rate."
+msgstr "Kaikissa kohinanpoistomalleissa on oltava sama näytteenottotaajuus."
 
 msgid "Allow clipping"
 msgstr "Salli leikkautuminen"
@@ -699,6 +717,12 @@ msgstr "Tuonnin määrä:"
 msgid "Amplification (dB):"
 msgstr "Vahvistus (dB):"
 
+msgid "Amplification dB"
+msgstr "Vahvistus"
+
+msgid "Amplifier"
+msgstr "Vahvistin"
+
 msgid "Amplify"
 msgstr "Vahvista"
 
@@ -710,6 +734,15 @@ msgstr "Vahvistetaan"
 
 msgid "Amplitude (0-1)"
 msgstr "Amplitudi (0-1)"
+
+msgid "Analyser"
+msgstr "Analysaattori"
+
+msgid "Analysis Time:"
+msgstr "Analysointiaika:"
+
+msgid "Analyzing: "
+msgstr "Analysoidaan: "
 
 msgid "Any"
 msgstr "Mikä tahansa"
@@ -776,6 +809,15 @@ msgstr "Suoritetaan Wahwah-efektiä"
 
 msgid "Are you sure you want to delete %s?"
 msgstr "Haluatko varmasti poistaa %s?"
+
+msgid ""
+"Are you sure you want to discard all projects?\n"
+"\n"
+"Choosing \"Yes\" discards all projects immediately."
+msgstr ""
+"Haluatko varmasti hylätä kaikki projektit?\n"
+"\n"
+"Valitsemalla \"Kyllä\" hylkäät kaikki projektit välittömästi."
 
 msgid "Are you sure you want to reset the genre list to defaults?"
 msgstr "Haluatko varmasti palauttaa tyylilajilistan oletusarvoihin?"
@@ -931,13 +973,13 @@ msgid "Author: "
 msgstr "Tekijä: "
 
 msgid "Auto Duck"
-msgstr "Automaattinen välttely"
+msgstr "Automaattinen pumppaus"
 
 msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Automaattinen välttely tarvitsee erillisen ohjausraidan valitun raidan / valittujen raitojen alapuolelle, minkä mukaan välttely toteutetaan valitu(i)ssa raidassa/raidoissa."
+msgstr "Automaattinen pumppaus tarvitsee erillisen ohjausraidan valitun raidan / valittujen raitojen alapuolelle, minkä mukaan pumppaus toteutetaan valitu(i)ssa raidassa/raidoissa."
 
 msgid "Auto Duck..."
-msgstr "Automaattinen välttely..."
+msgstr "Automaattinen pumppaus (Duck)..."
 
 msgid "Automatic Crash Recovery"
 msgstr "Automaattinen kaatumispalautus"
@@ -967,7 +1009,7 @@ msgid "Beats per minute:"
 msgstr "Iskua minuutissa:"
 
 msgid "Big-endian"
-msgstr "Big-tavujärjestys"
+msgstr "Big endian -tavujärjestys"
 
 msgid "Bit Rate:"
 msgstr "Bittinopeus:"
@@ -1063,7 +1105,7 @@ msgid "Chain"
 msgstr "Ketju"
 
 msgid "Change Amplification Envelope"
-msgstr "Muuta voimakkuusverhoa"
+msgstr "Muuta voimakkuusraitaa"
 
 msgid "Change ONE Sample only"
 msgstr "Muuta vain YKSI näyte"
@@ -1189,28 +1231,28 @@ msgid "Click to Start Monitoring"
 msgstr "Klikkaa päälle signaalin näyttö"
 
 msgid "Click and drag to adjust relative size of stereo tracks."
-msgstr "Klikkaa ja raahaa muuttaaksesi stereoraitojen suhteellista kokoa."
+msgstr "Klikkaa ja vedä muuttaaksesi stereoraitojen suhteellista kokoa."
 
 msgid "Click and drag to edit the amplitude envelope"
-msgstr "Klikkaa ja raahaa muokataksesi amplitudiverhoa"
+msgstr "Klikkaa ja vedä muokataksesi voimakkuusraitaa"
 
 msgid "Click and drag to edit the samples"
-msgstr "Klikkaa ja raahaa muokataksesi näytteitä"
+msgstr "Klikkaa ja vedä muokataksesi näytteitä"
 
 msgid "Click and drag to move a track in time"
-msgstr "Klikkaa ja raahaa siirtääksesi raitaa aikajanalla"
+msgstr "Klikkaa ja vedä siirtääksesi raitaa aikajanalla"
 
 msgid "Click and drag to move left selection boundary."
-msgstr "Klikkaa ja raahaa siirtääksesi valinnan vasenta reunaa."
+msgstr "Klikkaa ja vedä siirtääksesi valinnan vasenta reunaa."
 
 msgid "Click and drag to move right selection boundary."
-msgstr "Klikkaa ja raahaa siirtääksesi valinnan oikeaa reunaa."
+msgstr "Klikkaa ja vedä siirtääksesi valinnan oikeaa reunaa."
 
 msgid "Click and drag to resize the track."
-msgstr "Klikkaa ja raahaa muuttaaksesi raidan kokoa."
+msgstr "Klikkaa ja vedä muuttaaksesi raidan kokoa."
 
 msgid "Click and drag to select audio"
-msgstr "Klikkaa ja raahaa valitaksesi audiota"
+msgstr "Klikkaa ja vedä valitaksesi audiota."
 
 msgid "Click for Monitoring"
 msgstr "Klikkaa päälle signaalin näyttö"
@@ -1219,7 +1261,10 @@ msgid "Click to Start"
 msgstr "Käynnistä klikkaamalla"
 
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
-msgstr "Klikkaa lähentääksesi, Vaihto-klikkaa loitontaaksesi"
+msgstr "Klikkaus lähentää, vaihto-klikkaus loitontaa."
+
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr "Klikkaus suurentaa pystysuunnassa. Vaihto-klikkaus pienentää. Vetäminen määrittää suurennusalueen."
 
 msgid "Clipping"
 msgstr "Leikkaus"
@@ -1283,6 +1328,9 @@ msgstr "Varmista"
 
 msgid "Confirm Deletion"
 msgstr "Vahvista poisto"
+
+msgid "Confirm Discard Projects"
+msgstr "Vahvista projektien hylkääminen"
 
 msgid "Confirm Overwrite"
 msgstr "Vahvista korvaus"
@@ -1387,13 +1435,13 @@ msgid "Created new time track"
 msgstr "Luotu uusi aikaraita"
 
 msgid "Creating Noise Profile"
-msgstr "Luodaan kohinaprofiilia"
+msgstr "Luodaan kohinanpoistomallia"
 
 msgid "Credits"
 msgstr "Tekijät"
 
 msgid "Ctrl-Left-Drag"
-msgstr "Ctrl + vasen-raahaus"
+msgstr "Ctrl + vasen-veto"
 
 msgid "Ctrl-Wheel-Rotate"
 msgstr "Ctrl + rullavieritys"
@@ -1462,7 +1510,7 @@ msgid "Decay factor:"
 msgstr "Vaimenemiskerroin:"
 
 msgid "Default endianness"
-msgstr "Oletus tavujärjestys"
+msgstr "Oletustavujärjestys"
 
 msgid "Degree of Leveling:"
 msgstr "Tasoitusaste:"
@@ -1513,7 +1561,7 @@ msgid "Detect Silence"
 msgstr "Tunnista hiljaisuus"
 
 msgid "Detect clipping"
-msgstr "Etsii leikkausta"
+msgstr "Etsi leikkausta"
 
 msgid "Detecting clipping"
 msgstr "Etsii leikkausta"
@@ -1536,6 +1584,9 @@ msgstr "Hakemisto %s ei ole kirjoitettava"
 msgid "Disabled"
 msgstr "Ei käytössä"
 
+msgid "Discard Projects"
+msgstr "Hylkää projekti"
+
 msgid "Display"
 msgstr "Näyttö"
 
@@ -1557,8 +1608,14 @@ msgstr "Lataa"
 msgid "Dr&y Gain (dB):"
 msgstr "Kuiva vahvistus (dB):"
 
+msgid "Drag the track vertically to change the order of the tracks."
+msgstr "Vetämällä raitaa pystysuunnassa voit muuttaa raitojen järjestystä."
+
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-msgstr "Raahaus lähentää alueeseen, oikea-klikkaus loitontaa"
+msgstr "Vetäminen lähentää alueeseen, oikea-klikkaus loitontaa."
+
+msgid "Draw Curves"
+msgstr "Piirrä käyriä"
 
 msgid "Draw Tool"
 msgstr "Piirtotyökalu"
@@ -1570,7 +1627,7 @@ msgid "Dry/Wet:"
 msgstr "Kuiva/tilava:"
 
 msgid "Duck amount:"
-msgstr "Välttelyn määrä:"
+msgstr "Pumppauksen määrä:"
 
 msgid "Duplic&ate"
 msgstr "Kahdenna"
@@ -1624,13 +1681,13 @@ msgid "Edit Labels"
 msgstr "Muokkaa merkkejä"
 
 msgid "Edit Me&tadata..."
-msgstr "Muokkaa Meta-tietoja..."
+msgstr "Muokkaa metatietoja..."
 
 msgid "Edit Metadata"
-msgstr "Muokkaa Meta-tietoja"
+msgstr "Muokkaa metatietoja"
 
 msgid "Edit Metadata Tags"
-msgstr "Muokkaa Meta-tiedon tunnisteita"
+msgstr "Muokkaa metatiedon tunnisteita"
 
 msgid "Effe&ct"
 msgstr "&Efekti"
@@ -1648,7 +1705,7 @@ msgid "Elapsed Time:"
 msgstr "Kulunut aika:"
 
 msgid "Emeritus Developers"
-msgstr "Emeritus kehittäjät"
+msgstr "Emeritus-kehittäjät"
 
 msgid "Empty"
 msgstr "Tyhjä"
@@ -1687,10 +1744,10 @@ msgid "Enter track name"
 msgstr "Kirjoita raidan nimi"
 
 msgid "Envelope"
-msgstr "Verho"
+msgstr "Voimakkuusraita"
 
 msgid "Envelope Tool"
-msgstr "Verhotyökalu"
+msgstr "Voimakkuustyökalu"
 
 msgid "Equalization"
 msgstr "Taajuuskorjaus"
@@ -1786,7 +1843,7 @@ msgid "Exporting an Audio File"
 msgstr "Viedään äänitiedostoa"
 
 msgid "Exporting entire file at %ld kbps"
-msgstr "Vien koko tiedoston %ld kbps:enä"
+msgstr "Vien koko tiedoston %ld kbps laadulla"
 
 msgid "Exporting entire file with %s preset"
 msgstr "Viedään koko tiedosto %s-esiasetuksella"
@@ -1810,7 +1867,7 @@ msgid "Exporting the entire project using command-line encoder"
 msgstr "Koko projektia viedään komentorivienkooderia käyttäen"
 
 msgid "Exporting the selected audio as FLAC"
-msgstr "Viedään valittua äänt FLAC-muodossa"
+msgstr "Viedään valittua ääntä FLAC-muodossa"
 
 msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "Valittua audiota viedään Ogg Vorbis -muodossa"
@@ -2138,7 +2195,7 @@ msgid "Interpolation:"
 msgstr "Interpolointi:"
 
 msgid "Invalid Vorbis bitstream header"
-msgstr "Virheellinen Vorbis-bittivirran otsikko"
+msgstr "Virheellinen Vorbis-bittivirran tunniste"
 
 msgid "Invalid duration in LOF file."
 msgstr "Virheellinen kesto LOF-tiedostossa."
@@ -2153,16 +2210,16 @@ msgid "Invalid window offset in LOF file."
 msgstr "Virheellinen ikkunan siirtymä LOF-tiedostossa."
 
 msgid "Invert"
-msgstr "Käänteinen (vastaääni)"
+msgstr "Muunna vastavaiheiseksi"
 
 msgid "Inverting"
-msgstr "Muunnetaan vastaääneksi"
+msgstr "Muunnetaan vastavaiheiseksi"
 
 msgid "Join"
 msgstr "Yhdistä"
 
 msgid "Joint Stereo"
-msgstr "Yhdistetty Stereo"
+msgstr "Joint stereo"
 
 msgid "KB"
 msgstr "KB"
@@ -2192,7 +2249,7 @@ msgid "LFO Start Phase (deg.):"
 msgstr "LFO-aloitusvaihe (°):"
 
 msgid "LFO frequency in hertz"
-msgstr "LFO-taajuus Herzeinä"
+msgstr "LFO-taajuus herzeinä"
 
 msgid "LOF Error"
 msgstr "LOF-virhe"
@@ -2228,10 +2285,10 @@ msgid "Large Room"
 msgstr "Suuri huone"
 
 msgid "Latency"
-msgstr "Saantiviive (Latency)"
+msgstr "Latenssi"
 
 msgid "Latency problem"
-msgstr "Viiveongelma"
+msgstr "Lantessiongelma"
 
 msgid "Left"
 msgstr "Vasen"
@@ -2249,7 +2306,7 @@ msgid "Left-Click"
 msgstr "Vasen-klikkaus"
 
 msgid "Left-Drag"
-msgstr "Vasen-raahaus"
+msgstr "Vasen-veto"
 
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Vasen=lähennä, oikea=loitonna, keskipainike=normaali"
@@ -2270,10 +2327,10 @@ msgid "Level:"
 msgstr "Taso:"
 
 msgid "Leveler"
-msgstr "Tasoitin"
+msgstr "Voimakkuuden tasoitin"
 
 msgid "Leveler..."
-msgstr "Tasoitin..."
+msgstr "Voimakkuuden tasoitin..."
 
 msgid "Levels To Discard"
 msgstr "Ohitettavat tasot"
@@ -2300,7 +2357,7 @@ msgid "List of Files in basic text format"
 msgstr "Lista tiedostoista tekstitiedostomuodossa"
 
 msgid "Little-endian"
-msgstr "Little-tavujärjestys"
+msgstr "Little endian -tavujärjestys"
 
 msgid "Lo&ad"
 msgstr "L&ataa"
@@ -2510,10 +2567,10 @@ msgid "Move Track &Up"
 msgstr "Siirrä raita &ylös"
 
 msgid "Move Track to &Bottom"
-msgstr "Siirrä raita ali&maiseksi"
+msgstr "Siirrä raita ali&mmaksi"
 
 msgid "Move Track to &Top"
-msgstr "Siirrä raita &päällimäiseksi"
+msgstr "Siirrä raita &ylimmäksi"
 
 msgid "Moved '%s' %s"
 msgstr "Siirretty \"%s\" %s"
@@ -2532,6 +2589,9 @@ msgstr "Monitoimi"
 
 msgid "Multi-Tool Mode"
 msgstr "Monitoimitila"
+
+msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
+msgstr "Monitoimitila: %s hiiren ja näppäimistön asetukset."
 
 msgid "Mute"
 msgstr "Mykkä"
@@ -2567,7 +2627,7 @@ msgid "New Project"
 msgstr "Uusi projekti"
 
 msgid "New sample rate (Hz):"
-msgstr "Uusi taajuusarvo (Hz):"
+msgstr "Uusi näytetaajuus (Hz):"
 
 msgid "New Temporary Directory"
 msgstr "Uusi väliaikaishakemisto"
@@ -2597,19 +2657,19 @@ msgid "No chain selected"
 msgstr "Ketjua ei valittu"
 
 msgid "No endianness"
-msgstr "Ei tavujärjestyksiä"
+msgstr "Ei tavujärjestystä"
 
 msgid "Noise:"
 msgstr "Kohina:"
 
 msgid "Noise Floor"
-msgstr "Taustakohina"
+msgstr "Kohinataso"
 
 msgid "Noise Floor %d dB"
-msgstr "Taustakohina %d dB"
+msgstr "Kohinataso %d dB"
 
 msgid "Noise Floor:"
-msgstr "Taustakohina:"
+msgstr "Kohinataso:"
 
 msgid "Noise Generator"
 msgstr "Kohinageneraattori"
@@ -2630,7 +2690,7 @@ msgid "Noise Reduction..."
 msgstr "Kohinan vaimennus..."
 
 msgid "Noise Threshold:"
-msgstr "Kohinakynnys"
+msgstr "Kohinakynnys:"
 
 msgid "Noise type:"
 msgstr "Kohinatyyppi:"
@@ -2645,7 +2705,7 @@ msgid "Normalize"
 msgstr "Normalisoi"
 
 msgid "Normalize maximum amplitude to"
-msgstr "Normalisoida maksimi amplitudi arvoon"
+msgstr "Normalisoi huippukohta arvoon"
 
 msgid "Normalize stereo channels independently"
 msgstr "Normalisoi stereokanavia itsenäisesti"
@@ -2729,7 +2789,7 @@ msgid "Ogg Vorbis files"
 msgstr "Ogg Vorbis -tiedostot"
 
 msgid "Ogg Vorbis support is not included in this build of Audacity"
-msgstr "Ogg Vorbis -tukea ei ole tässä Audacityn käännöksessä."
+msgstr "Ogg Vorbis -tukea ei ole sisällytetty tähän Audacityn versioon."
 
 msgid "One Hour"
 msgstr "1 tunti"
@@ -2771,10 +2831,10 @@ msgid "Out of disk space"
 msgstr "Levytila loppu"
 
 msgid "Outer fade down length:"
-msgstr "Ulkopuolinen alashäivitys:"
+msgstr "Ulompi vaimennus:"
 
 msgid "Outer fade up length:"
-msgstr "Ulkopuolinen ylöshäivitys:"
+msgstr "Ulompi palautus:"
 
 msgid "Overdub: &Play other tracks while recording new one"
 msgstr "Jälkiäänitys: &Toista muut raidat uutta raitaa äänitettäessä"
@@ -2816,7 +2876,7 @@ msgid "Pasted from the clipboard"
 msgstr "Liitetty leikepöydältä"
 
 msgid "Paulstretch..."
-msgstr "Paulstretch (supervenytys)..."
+msgstr "Supervenytys (Paulstretch)..."
 
 msgid "Pause"
 msgstr "Keskeytä"
@@ -2882,10 +2942,10 @@ msgid "Play/Stop and &Set Cursor"
 msgstr "Toista/Pysäytä ja aseta &kursori"
 
 msgid "Play Meter"
-msgstr "Soittomittari"
+msgstr "Tasomittari"
 
 msgid "Play One Second"
-msgstr "Toista yksi sekuntti"
+msgstr "Toista yksi sekunti"
 
 msgid "Playback"
 msgstr "Toisto"
@@ -2894,7 +2954,7 @@ msgid "Playback Device"
 msgstr "Toistolaite"
 
 msgid "Playback Meter"
-msgstr "Toiston mittari"
+msgstr "Toiston tasomittari"
 
 msgid "Playback Speed"
 msgstr "Toiston nopeus"
@@ -3068,7 +3128,7 @@ msgid "Recording Level"
 msgstr "Äänitystaso"
 
 msgid "Recording Meter"
-msgstr "Äänityksen mittari"
+msgstr "Äänityksen tasomittari"
 
 msgid "Recording start"
 msgstr "Äänityksen alku"
@@ -3134,7 +3194,7 @@ msgid "Remove Track"
 msgstr "Poista raita"
 
 msgid "Removed audio track(s)"
-msgstr "Poistettu audiorai(toj)a"
+msgstr "Poistettu audiorait(oj)a"
 
 msgid "Removed track '%s.'"
 msgstr "Poistettu raita \"%s\""
@@ -3246,7 +3306,7 @@ msgid "Right-Click"
 msgstr "Oikea-klikkaus"
 
 msgid "Right-Drag"
-msgstr "Oikea-raahaus"
+msgstr "Oikea-veto"
 
 msgid "Ruler"
 msgstr "Aikajana"
@@ -3276,7 +3336,7 @@ msgid "Save Files"
 msgstr "Tallenna tiedostot"
 
 msgid "Save Metadata As:"
-msgstr "Tallenna Meta-tiedot nimellä:"
+msgstr "Tallenna metatiedot nimellä:"
 
 msgid "Save Preset"
 msgstr "Tallenna esiasetus"
@@ -3313,7 +3373,7 @@ msgid "Saving an Audacity Project"
 msgstr "Tallennetaa Audacity-projektia"
 
 msgid "Saving project data files"
-msgstr "Tallennetaan projektin data-tiedostoja"
+msgstr "Tallennetaan projektin datatiedostoja"
 
 msgid "Saving recorded audio"
 msgstr "Tallennetaan äänitystä"
@@ -3355,8 +3415,8 @@ msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
 msgstr ""
-"Valitse muutama sekunti pelkkää kohinaa niin Audacity tietää mitä suodattaa pois,\n"
-"klikkaa sitten Luo kohinanpoistomalli."
+"Valitse muutama sekunti pelkkää kohinaa, että Audacity tietää mitä pitää suodattaa pois.\n"
+"Valitse sitten Luo kohinanpoistomalli."
 
 msgid "Select a text file containing labels..."
 msgstr "Valitse merkkejä sisältävä tekstitiedosto..."
@@ -3365,8 +3425,8 @@ msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to reduce noise.\n"
 msgstr ""
-"Valitse kaikki audio, jotka haluat suodattaa, valitse kuinka paljon melua haluat\n"
-"suodattaa pois ja valitse sitten OK melun vähentämiseksi.\n"
+"Valitse ensin suodatettava audio. Säädä sen jälkeen kohinanvaimennuksen määrä.\n"
+"Lopuksi valitse OK.\n"
 
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
 msgstr "Valitse Audacityn näppäinoikotiet sisältävä XML-tiedosto..."
@@ -3405,10 +3465,10 @@ msgid "Sensitivity"
 msgstr "Herkkyys"
 
 msgid "Set De&fault"
-msgstr "Aseta vakioksi"
+msgstr "Aseta oletukseksi"
 
 msgid "Set Left Selection Boundary"
-msgstr "Aseta vasen valintareuna"
+msgstr "Aseta valinnan vasen reuna"
 
 msgid "Set Ra&nge..."
 msgstr "Aseta alue..."
@@ -3423,10 +3483,10 @@ msgid "Set Rate"
 msgstr "Aseta näytetaajuus"
 
 msgid "Set Right Selection Boundary"
-msgstr "Aseta oikea valintareuna"
+msgstr "Aseta valinnan oikea reuna"
 
 msgid "Set Sample &Format"
-msgstr "Aseta sämpläys&muoto"
+msgstr "Aseta näytteistys&muoto"
 
 msgid "Set Selection Point"
 msgstr "Aseta valintapiste"
@@ -3447,7 +3507,7 @@ msgid "Shift-Left-Click"
 msgstr "Vaihto + vasen-klikkaus"
 
 msgid "Short Tracks"
-msgstr "Kapeat raidat"
+msgstr "Matalat raidat"
 
 msgid "Show &Log..."
 msgstr "Näytä &loki..."
@@ -3536,6 +3596,13 @@ msgstr "Toisto äänitettäessä (on/off)"
 msgid "Solo"
 msgstr "Soolo"
 
+msgid ""
+"Some projects were not saved properly the last time Audacity was run.\n"
+"Fortunately, the following projects can be automatically recovered:"
+msgstr ""
+"Edellisellä kerralla ei Audacityn projekteja tallennettu kunnolla.\n"
+"Onneksi seuraavat projektit voidaan palauttaa automaattisesti:"
+
 msgid "S&ort Tracks"
 msgstr "L&ajittele raidat"
 
@@ -3555,7 +3622,7 @@ msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "Valitan, yli 256 merkkiä pitkiä polkunimiä ei tueta."
 
 msgid "Sound Activated Record"
-msgstr "Ääniaktivointi äänitys"
+msgstr "Ääniaktivoitu äänitys"
 
 msgid "Sound Activated Recording"
 msgstr "Ääniaktivoitu äänitys"
@@ -3573,7 +3640,7 @@ msgid "Specify AC3 Options"
 msgstr "Määritä AC3-asetukset"
 
 msgid "Specify AMR-NB Options"
-msgstr "Määritä AMR-NB-asetukset"
+msgstr "Määritä AMR-NB -asetukset"
 
 msgid "Specify FLAC Options"
 msgstr "Määritä FLAC-asetukset"
@@ -3621,10 +3688,10 @@ msgid "Speed Multiplier:"
 msgstr "Nopeuskerroin:"
 
 msgid "Sp&lit"
-msgstr "&Jaa"
+msgstr "&Jaa osiin"
 
 msgid "Spli&t"
-msgstr "Jaa"
+msgstr "Jaa osiin"
 
 msgid "Spl&it Cut"
 msgstr "Jaa leikkaamalla"
@@ -3693,10 +3760,10 @@ msgid "Start"
 msgstr "Alku"
 
 msgid "Start Date and Time"
-msgstr "Alku päivämäärä ja aika"
+msgstr "Alkupäivämäärä ja -aika"
 
 msgid "Start Monitoring"
-msgstr "Aloita seuranta"
+msgstr "Aloita tarkkailu"
 
 msgid "Start Time"
 msgstr "Aloitusaika"
@@ -3705,7 +3772,7 @@ msgid "Start offset:"
 msgstr "Aloitussiirtymä:"
 
 msgid "Start threshold (samples):"
-msgstr "Pienin arvo (näytteessä):"
+msgstr "Pienin arvo (näytteinä):"
 
 msgid "Start to &Cursor/Selection Start"
 msgstr "Alku k&ursoriin / Valinnan alkuun"
@@ -3726,7 +3793,7 @@ msgid "Stereo Trac&k to Mono"
 msgstr "Stereoraita monoksi"
 
 msgid "Stereo to Mono Effect not found"
-msgstr "Sterosta Monoksi efektiä ei löydy"
+msgstr "Sterosta monoksi -efektiä ei löydy"
 
 msgid "Stereo, "
 msgstr "Stereo, "
@@ -3738,10 +3805,10 @@ msgid "Stop"
 msgstr "Pysäytä"
 
 msgid "Stop Monitoring"
-msgstr "Lopeta seuraus"
+msgstr "Lopeta tarkkailu"
 
 msgid "Stop threshold (samples):"
-msgstr "Suurin arvo (näytteessä):"
+msgstr "Suurin arvo (näytteinä):"
 
 msgid "Stretch"
 msgstr "Venytys"
@@ -3858,19 +3925,19 @@ msgid "To beats per minute"
 msgstr "Iskuiksi minuutissa"
 
 msgid "To get a free copy of FFmpeg, click here -->"
-msgstr "Ladataksesi ilmainen kopion ohjelmasta FFmpeg, klikkaa tästä -->"
+msgstr "Ladataksesi ilmaisen kopion ohjelmasta FFmpeg, klikkaa tästä -->"
 
 msgid "To&ggle spectral selection"
-msgstr "&Vaihda spektri-valinta"
+msgstr "&Vaihda spektrivalinta"
 
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr "Jotta spektri voidaan esittää, kaikkilla valituilla raidoilla täytyy olla sama näytetaajuus."
 
 msgid "Tone &High (%):"
-msgstr "&Korkea sävy (%):"
+msgstr "&Kirkas sävy (%):"
 
 msgid "Tone &Low (%):"
-msgstr "&Matala sävy (%):"
+msgstr "&Tumma sävy (%):"
 
 msgid "Tone Generator"
 msgstr "Äänigeneraattori"
@@ -3891,7 +3958,7 @@ msgid "Tool"
 msgstr "Työkalu"
 
 msgid "Tools"
-msgstr "Työkalu"
+msgstr "Työkalut"
 
 msgid "T&ools Toolbar"
 msgstr "T&yökalupalkki"
@@ -3945,10 +4012,10 @@ msgid "Triangle"
 msgstr "Kolmio"
 
 msgid "Tri&m Audio"
-msgstr "Leikaa valinnan ulkopuolelta"
+msgstr "Rajaa audio valintaan"
 
 msgid "Trim Audio"
-msgstr "Leikaa valinnan ulkopuolelta"
+msgstr "Rajaa audio valintaan"
 
 msgid "Truncate Detected Silence"
 msgstr "Lyhennä havaittu hiljaisuus"
@@ -4008,7 +4075,7 @@ msgid "Using Label/Track Name"
 msgstr "Käytetään merkin/raidan nimeä"
 
 msgid "Using block size of %ld\n"
-msgstr "Käytetään jakson kokoa %ld\n"
+msgstr "Käytetään blokkikokoa %ld\n"
 
 msgid "Using:"
 msgstr "Käytetään:"
@@ -4083,7 +4150,7 @@ msgid "Waveform:"
 msgstr "Aaltomuoto:"
 
 msgid "Welcome to Audacity "
-msgstr "Tervetuloa käyttämää Audacityä"
+msgstr "Tervetuloa käyttämään Audacityä"
 
 msgid "Welcome to Audacity version %s"
 msgstr "Tervetuloa käyttämään Audacityn versiota %s"
@@ -4095,13 +4162,13 @@ msgid "Welcome!"
 msgstr "Tervetuloa!"
 
 msgid "Wet O&nly"
-msgstr "Vain &tilava"
+msgstr "Pelkkä &kaiku"
 
 msgid "Wheel-Rotate"
 msgstr "Rullanpyöritys"
 
 msgid "When importing audio files"
-msgstr "Tuoatessa äänitiedostoja"
+msgstr "Tuotaessa äänitiedostoja"
 
 msgid "Where is %s?"
 msgstr "Missä on %s?"
@@ -4194,13 +4261,13 @@ msgid "down"
 msgstr "alas"
 
 msgid "from"
-msgstr "Arvosta"
+msgstr "arvosta"
 
 msgid "hh:mm:ss"
 msgstr "tt:mm:ss"
 
 msgid "hh:mm:ss + milliseconds"
-msgstr "tt:mm:ss + millisekuntit"
+msgstr "tt:mm:ss + millisekunnit"
 
 msgid "hidden"
 msgstr "piilotettu"
