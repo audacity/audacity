@@ -5078,8 +5078,6 @@ void AudacityProject::OnPlotSpectrum()
       mFreqWindow = new FreqWindow(this, -1, _("Frequency Analysis"), where);
    }
 
-   wxCommandEvent dummy;
-   mFreqWindow->OnReplot(dummy);
    mFreqWindow->Show(true);
    mFreqWindow->Raise();
    mFreqWindow->SetFocus();
