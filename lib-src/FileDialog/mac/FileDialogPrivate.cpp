@@ -747,13 +747,13 @@ int FileDialog::ShowModal()
             wxStringTokenizer tokenizer( myData.extensions[m_filterIndex], wxT(";"));            
             if (tokenizer.HasMoreTokens())
             {
-               wxString extension = tokenizer.GetNextToken();
-               if (extension.Right(2) != wxT(".*") && extension.GetChar(0) == '*')
+               wxString extension = tokenizer.GetNextToken().AfterFirst(wxT('.'));
+               if (extension.Right(2) == wxT("*"))
                {
-                  extension = extension.Mid(1);
+                  extension = wxEmptyString;
                }
+               fn.SetExt(extension);
             }
-            fn.SetExt(myData.extensions[m_filterIndex]);
          }
          m_path = fn.GetFullPath();
          m_paths.Add(m_path);
