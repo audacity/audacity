@@ -678,6 +678,10 @@ bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
    effect.mDebug = (mUIResultID == eDebugID);
 
    SelectedRegion region(mT0, mT1);
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   region.setF0(mF0);
+   region.setF1(mF1);
+#endif
    return effect.DoEffect(parent,
                           mProjectRate,
                           mTracks,
