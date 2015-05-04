@@ -2512,8 +2512,7 @@ void EffectDialog::Init()
       long buttons = eOkButton;
       if (mType != EffectTypeAnalyze)
       {
-         //JKC I find the cancel button gets in the way of ordinary effects.
-         //buttons |= eCancelButton;
+         buttons |= eCancelButton;
          if (mType == EffectTypeProcess)
          {
             buttons |= ePreviewButton;
@@ -2748,7 +2747,23 @@ int EffectUIHost::ShowModal()
    mIsModal = true;
 #endif
 
+#if defined(__WXMSW__)
+   // Swap the Close and Apply buttons
+   wxSizer *sz = mApplyBtn->GetContainingSizer();
+   wxButton *apply = new wxButton(mApplyBtn->GetParent(), wxID_APPLY);
+   sz->Replace(mCloseBtn, apply);
+   sz->Replace(mApplyBtn, mCloseBtn);
+   delete mApplyBtn;
+   mApplyBtn = apply;
+   mApplyBtn->SetDefault();
+   mApplyBtn->SetLabel(wxGetStockLabel(wxID_OK, 0));
+   mCloseBtn->SetLabel(wxGetStockLabel(wxID_CANCEL, 0));
+#else
    mApplyBtn->SetLabel(wxGetStockLabel(wxID_OK));
+   mCloseBtn->SetLabel(wxGetStockLabel(wxID_CANCEL));
+#endif
+
+   Layout();
 
    return wxDialog::ShowModal();
 }
@@ -2911,7 +2926,7 @@ bool EffectUIHost::Initialize()
    long buttons = eApplyButton;
    if (!mIsBatch)
    {
-      // buttons += eCloseButton;
+      buttons += eCloseButton;
       if (mEffect->mUIDebug)
       {
          buttons += eDebugButton;
@@ -3032,7 +3047,13 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
 
+   // Prevent recursive apply...can happen because ProgressDialog yields, which allows
+   // events to flow.
+//   mApplyBtn->Disable();
+
    mEffect->Apply();
+
+   mApplyBtn->Enable();
 
    return;
 }
