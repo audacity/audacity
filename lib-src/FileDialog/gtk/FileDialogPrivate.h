@@ -75,6 +75,7 @@ private:
    wxString m_buttonlabel;
    fdCallback m_callback;
    void *m_cbdata;
+   wxArrayString m_patterns;
 };
 
 #endif
