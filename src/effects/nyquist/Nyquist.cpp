@@ -909,8 +909,7 @@ bool NyquistEffect::ProcessOne()
    }
 
    if (mIsSal) {
-      wxString str = mCmd;
-      EscapeString(str);
+      wxString str = EscapeString(mCmd);
       // this is tricky: we need SAL to call main so that we can get a
       // SAL traceback in the event of an error (sal-compile catches the
       // error and calls sal-error-output), but SAL does not return values.
@@ -1493,7 +1492,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
          {
             mIsSal = false;
          }
-         else if (line.MakeUpper().Find(wxT("RETURN")) != wxNOT_FOUND)
+         else if (line.Upper().Find(wxT("RETURN")) != wxNOT_FOUND)
          {
             mIsSal = true;
          }
