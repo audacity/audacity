@@ -1194,9 +1194,9 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    // See Bug #334
    // LL:  On Windows, the application message loop is still active even though
    //      all of the windows have been disabled.  So, keyboard shortcuts still
-   //      work in windows not related to the progress diawhich allows interaction
-   //      when it should be blocked.
-   //      This disabled the application message loop so keyboard shortcuts will
+   //      work in windows not related to the progress dialog, which allows
+   //      interaction when it should be blocked.
+   //      This disables the application message loop so keyboard shortcuts will
    //      no longer be processed.
    wxTheApp->SetEvtHandlerEnabled(false);
 #endif
@@ -1330,6 +1330,7 @@ ProgressDialog::Show(bool show)
     return wxDialog::Show(show);
 }
 
+#include <wx/evtloop.h>
 //
 // Update the time and, optionally, the message
 //
@@ -1366,11 +1367,13 @@ ProgressDialog::Update(int value, const wxString & message)
    if (!IsShown() && elapsed > 500)
    {
       Show(true);
+      wxDialog::Update();
    }
 
    if (value != mLastValue)
    {
       mGauge->SetValue(value);
+      mGauge->Update();
       mLastValue = value;
    }
 
@@ -1382,13 +1385,23 @@ ProgressDialog::Update(int value, const wxString & message)
 
       mElapsed->SetLabel(tsElapsed.Format(wxT("%H:%M:%S")));
       mElapsed->SetName(mElapsed->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      mElapsed->Update();
       mRemaining->SetLabel(tsRemains.Format(wxT("%H:%M:%S")));
       mRemaining->SetName(mRemaining->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      mRemaining->Update();
 
       mLastUpdate = now;
    }
 
-   wxYieldIfNeeded();
+   wxEventLoop *loop = wxEventLoop::GetActive();
+   if (loop)
+   {
+      int i = 10;
+      while (loop->Pending() && --i)
+      {
+         loop->Dispatch();
+      }
+   }
 
    return eProgressSuccess;
 }
@@ -1492,12 +1505,13 @@ ProgressDialog::SetMessage(const wxString & message)
    {
       wxSize sizeBefore = this->GetClientSize();
       mMessage->SetLabel(message);
+      mMessage->Update();
       wxSize sizeAfter = this->GetBestSize();
       wxSize sizeNeeded;
       sizeNeeded.x = wxMax(sizeBefore.x, sizeAfter.x);
       sizeNeeded.y = wxMax(sizeBefore.y, sizeAfter.y);
       this->SetClientSize(sizeNeeded);
-      wxYieldIfNeeded();
+      wxDialog::Update();
    }
 }
 
@@ -1582,6 +1596,7 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
    if (!IsShown() && elapsed > 500)
    {
       Show(true);
+      wxDialog::Update();
    }
 
    int nGaugeValue = (1000 * elapsed) / mDuration; // range = [0,1000]
@@ -1594,6 +1609,7 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
    if (nGaugeValue != mLastValue)
    {
       mGauge->SetValue(nGaugeValue);
+      mGauge->Update();
       mLastValue = nGaugeValue;
    }
 
@@ -1604,12 +1620,22 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
       wxTimeSpan tsRemains(0, 0, 0, remains);
 
       mElapsed->SetLabel(tsElapsed.Format(wxT("%H:%M:%S")));
+      mElapsed->Update();
       mRemaining->SetLabel(tsRemains.Format(wxT("%H:%M:%S")));
+      mRemaining->Update();
 
       mLastUpdate = now;
    }
 
-   wxYieldIfNeeded();
+   wxEventLoop *loop = wxEventLoop::GetActive();
+   if (loop)
+   {
+      int i = 10;
+      while (loop->Pending() && --i)
+      {
+         loop->Dispatch();
+      }
+   }
 
    return eProgressSuccess;
 }
