@@ -141,9 +141,8 @@ wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & pm)
    
    // Load .ny plug-ins
    pm.FindFilesInPathList(wxT("*.ny"), pathList, files);
-#ifdef  __WXGTK__
+   // LLL:  Works for all platform with new plugin support (dups are removed)
    pm.FindFilesInPathList(wxT("*.NY"), pathList, files); // Ed's fix for bug 179
-#endif
 
    return files;
 }
