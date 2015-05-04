@@ -72,7 +72,6 @@
 #include <wx/string.h>
 #include <wx/textdlg.h>
 #include <wx/ffile.h>
-#include <wx/filedlg.h>
 #include <wx/filefn.h>
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
@@ -98,6 +97,8 @@
 #include "../AllThemeResources.h"
 #include "../WaveTrack.h"
 #include "../float_cast.h"
+
+#include "FileDialog.h"
 
 #include "Equalization.h"
 
@@ -3218,7 +3219,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
-   wxFileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
+   FileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
    wxString fileName = wxT("");
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
@@ -3238,7 +3239,7 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
-   wxFileDialog filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
+   FileDialog filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
    wxString fileName = wxT("");
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;

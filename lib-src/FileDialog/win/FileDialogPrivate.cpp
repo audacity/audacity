@@ -845,12 +845,8 @@ int FileDialog::ShowModal()
          //=== Adding the correct extension >>=================================
          m_filterIndex = (int)of.nFilterIndex - 1;
          
-#if 0
-         // LLL:  Removed to prevent adding extension during Export
-         //       processing.
-         
          if ( !of.nFileExtension ||
-             (of.nFileExtension && fileNameBuffer[of.nFileExtension] == wxT('\0')) )
+               (of.nFileExtension && fileNameBuffer[of.nFileExtension] == wxT('\0')) )
          {
             // User has typed a filename without an extension:
             const wxChar* extension = filterBuffer;
@@ -863,7 +859,7 @@ int FileDialog::ShowModal()
             wxStrncpy(fileNameBuffer, m_fileName.c_str(), wxMin(m_fileName.Len(), wxMAXPATH-1));
             fileNameBuffer[wxMin(m_fileName.Len(), wxMAXPATH-1)] = wxT('\0');
          }
-#endif
+
          m_path = fileNameBuffer;
          m_fileName = wxFileNameFromPath(fileNameBuffer);
          m_fileNames.Add(m_fileName);
