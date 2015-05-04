@@ -1014,7 +1014,7 @@ void AudacityProject::CreateMenusAndCommands()
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
    c->AddSeparator();
    // We could say Manage Effects on the menu, but More... is more intuitive.
-   c->AddItem(wxT("ManageEffects"), _("&More..."), FN(OnManageEffects));
+   c->AddItem(wxT("ManageEffects"), _("More..."), FN(OnManageEffects));
 
 #endif
 
