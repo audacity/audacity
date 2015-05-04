@@ -3047,9 +3047,9 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
 
-   // Prevent recursive apply...can happen because ProgressDialog yields, which allows
-   // events to flow.
-//   mApplyBtn->Disable();
+   // Progress dialog no longer yields, so this "shouldn't" be necessary (yet to be proven
+   // for sure), but it is a nice visual cue that something is going on.
+   mApplyBtn->Disable();
 
    mEffect->Apply();
 
