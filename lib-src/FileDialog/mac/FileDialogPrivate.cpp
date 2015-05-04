@@ -741,7 +741,21 @@ int FileDialog::ShowModal()
             return wxID_CANCEL;
          }
          
-         m_path = ConvertSlashInFileName(thePath);
+         wxFileName fn = ConvertSlashInFileName(thePath);
+         if (!fn.HasExt())
+         {
+            wxStringTokenizer tokenizer( myData.extensions[m_filterIndex], wxT(";"));            
+            if (tokenizer.HasMoreTokens())
+            {
+               wxString extension = tokenizer.GetNextToken();
+               if (extension.Right(2) != wxT(".*") && extension.GetChar(0) == '*')
+               {
+                  extension = extension.Mid(1);
+               }
+            }
+            fn.SetExt(myData.extensions[m_filterIndex]);
+         }
+         m_path = fn.GetFullPath();
          m_paths.Add(m_path);
          m_fileName = wxFileNameFromPath(m_path);
          m_fileNames.Add(m_fileName);
