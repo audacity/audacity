@@ -86,7 +86,7 @@ wxString sf_encoding_index_name(int i)
    format_info.format = i;
    sf_command (NULL, SFC_GET_FORMAT_SUBTYPE,
                &format_info, sizeof (format_info));
-   return LAT1CTOWX(format_info.name);
+   return sf_normalize_name(format_info.name);
 }
 
 unsigned int sf_encoding_index_to_subtype(int i)
@@ -163,7 +163,7 @@ wxString sf_encoding_name(int encoding)
    format_info.format = (encoding & SF_FORMAT_SUBMASK);
    sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
 
-   return LAT1CTOWX(format_info.name);
+   return sf_normalize_name(format_info.name);
 }
 
 int sf_num_simple_formats()
@@ -235,6 +235,19 @@ wxArrayString sf_get_all_extensions()
    exts.Add(wxT("sv16"));
 
    return exts;
+}
+
+wxString sf_normalize_name(const char *name)
+{
+   wxString n = LAT1CTOWX(name);
+
+   n.Replace(wxT("8 bit"), wxT("8-bit"));
+   n.Replace(wxT("16 bit"), wxT("16-bit"));
+   n.Replace(wxT("24 bit"), wxT("24-bit"));
+   n.Replace(wxT("32 bit"), wxT("32-bit"));
+   n.Replace(wxT("64 bit"), wxT("64-bit"));
+
+   return n;
 }
 
 #ifdef __WXMAC__
