@@ -1492,6 +1492,11 @@ bool Effect::ProcessPass()
       mInBufPos = NULL;
    }
 
+   if (bGoodResult && GetType() == EffectTypeGenerate)
+   {
+      mT1 = mT0 + mDuration;
+   }
+
    return bGoodResult;
 }
 
