@@ -327,6 +327,7 @@ private:
    //
    void ShowMenu(const wxPoint & pos);
    void DragSelection();
+   void HandleSnapping();
    void OnToggleQuickPlay(wxCommandEvent &evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    void OnTimelineToolTips(wxCommandEvent &evt);
@@ -347,8 +348,9 @@ private:
    };
 
    MouseEventState mMouseEventState;
-   int mButtonDownMousePos;
-   int mLastMouseX;
+   double mLeftDownClick;  // click position in seconds
+   int mLastMouseX;  // Pixel position
+   bool mIsDragging;
 
    DECLARE_EVENT_TABLE()
 };
