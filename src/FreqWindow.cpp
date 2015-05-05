@@ -497,6 +497,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    Layout();
    Fit();
    SetMinSize(GetSize());
+   mAlgChoice->SetFocus();
 
 #if defined(__WXGTK__)
    // This should be rechecked with wx3.
