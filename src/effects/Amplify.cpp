@@ -163,7 +163,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
    {
       if (mPeak > 0.0)
       {
-         mRatio = 1.0 / mPeak;
+         mRatio = 1.0f / mPeak;
       }
       else
       {
@@ -226,9 +226,10 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
 bool EffectAmplify::TransferDataToWindow()
 {
    // limit range of gain
-   float dB = TrapFloat(20.0f * log10f(mRatio) * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp;
-
-   mRatio = powf(10.0f, dB / 20.0f);
+   float dBInit = 20.0f*log10f(mRatio);
+   float dB = TrapFloat(dBInit, MIN_Amp, MAX_Amp);
+   if (dB != dBInit)
+      mRatio = powf(10.0f, dB / 20.0f);
 
    mAmp = 20.0f * log10f(mRatio);
    mAmpT->GetValidator()->TransferToWindow();
@@ -268,8 +269,7 @@ bool EffectAmplify::TransferDataFromWindow()
 
 void EffectAmplify::CheckClip()
 {
-   float peak = mRatio * mPeak;
-   EnableApply(mClip->GetValue() || (peak > 0.0f && peak <= 1.0f));
+   EnableApply(mClip->GetValue() || (mPeak > 0.0f && mRatio <= 1.0f/mPeak));
 }
 
 void EffectAmplify::OnAmpText(wxCommandEvent & WXUNUSED(evt))
@@ -298,10 +298,12 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 
-   float r = powf(10.0f, mNewPeak / 20.0f) / mPeak;
+   mRatio = powf(10.0f, mNewPeak / 20.0f) / mPeak;
 
-   mAmp = TrapFloat(20.0f * log10f(r) * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp;
-   mRatio = powf(10.0f, mAmp / 20.0f);
+   float ampInit = 20.0f * log10f(mRatio);
+   mAmp = TrapFloat(ampInit, MIN_Amp, MAX_Amp);
+   if (mAmp != ampInit)
+      mRatio = powf(10.0f, mAmp / 20.0f);
 
    mAmpT->GetValidator()->TransferToWindow();
 
