@@ -1667,9 +1667,9 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
 
    mIsRecording = false;
 
-   mTimelineToolTip = gPrefs->Read(wxT("/QuickPlay/ToolTips"), wxT("Enabled")) == wxT("Enabled");
-   mPlayRegionDragsSelection = gPrefs->Read(wxT("/QuickPlay/DragSelection"), wxT("Enabled")) == wxT("Enabled");
-   mQuickPlayEnabled = gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), wxT("Enabled")) == wxT("Enabled");
+   mTimelineToolTip = gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L); 
+   mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
+   mQuickPlayEnabled = gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L); 
 
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();
@@ -1890,8 +1890,10 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
 
 
-   if (evt.RightDown()) {
+   if (evt.RightDown() && !(evt.LeftIsDown())) {
       ShowMenu(evt.GetPosition());
+      if (HasCapture())
+         ReleaseMouse();
    }
 
    if (!mQuickPlayEnabled)
@@ -1936,71 +1938,73 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    }
 
 
-   switch (mMouseEventState)
-   {
-   case mesNone:
-      // If close to either end of play region, snap to closest
-      if (isWithinStart || isWithinEnd) {
-         if (fabs(mQuickPlayPos - mOldPlayRegionStart) < fabs(mQuickPlayPos - mOldPlayRegionEnd))
+   if (evt.LeftIsDown()) {
+      switch (mMouseEventState)
+      {
+      case mesNone:
+         // If close to either end of play region, snap to closest
+         if (isWithinStart || isWithinEnd) {
+            if (fabs(mQuickPlayPos - mOldPlayRegionStart) < fabs(mQuickPlayPos - mOldPlayRegionEnd))
+               mQuickPlayPos = mOldPlayRegionStart;
+            else
+               mQuickPlayPos = mOldPlayRegionEnd;
+         }
+         break;
+      case mesDraggingPlayRegionStart:
+         // Don't start dragging until beyond tollerance initial playback start
+         if (!mIsDragging && isWithinStart)
             mQuickPlayPos = mOldPlayRegionStart;
          else
+            mIsDragging = true;
+         // avoid accidental tiny selection
+         if (isWithinEnd)
             mQuickPlayPos = mOldPlayRegionEnd;
-      }
-      break;
-   case mesDraggingPlayRegionStart:
-      // Don't start dragging until beyond tollerance initial playback start
-      if (!mIsDragging && isWithinStart)
-         mQuickPlayPos = mOldPlayRegionStart;
-      else
-         mIsDragging = true;
-      // avoid accidental tiny selection
-      if (isWithinEnd)
-         mQuickPlayPos = mOldPlayRegionEnd;
-      mPlayRegionStart = mQuickPlayPos;
-      if (canDragSel) {
-         DragSelection();
-      }
-      break;
-   case mesDraggingPlayRegionEnd:
-      if (!mIsDragging && isWithinEnd)
-         mQuickPlayPos = mOldPlayRegionEnd;
-      else
-         mIsDragging = true;
-      if (isWithinStart)
-         mQuickPlayPos = mOldPlayRegionStart;
-      mPlayRegionEnd = mQuickPlayPos;
-      if (canDragSel) {
-         DragSelection();
-      }
-      break;
-   case mesSelectingPlayRegionClick:
-      // Don't start dragging until mouse is beyond tollerance of initial click.
-      if (isWithinClick || mLeftDownClick == -1) {
-         mQuickPlayPos = mLeftDownClick;
-         mPlayRegionStart = mLeftDownClick;
-         mPlayRegionEnd = mLeftDownClick;
-      }
-      else {
-         mMouseEventState = mesSelectingPlayRegionRange;
-      }
-      break;
-   case mesSelectingPlayRegionRange:
-      if (isWithinClick) {
-         mQuickPlayPos = mLeftDownClick;
-      }
-
-      if (mQuickPlayPos < mLeftDownClick) {
          mPlayRegionStart = mQuickPlayPos;
-         mPlayRegionEnd = mLeftDownClick;
-      }
-      else {
+         if (canDragSel) {
+            DragSelection();
+         }
+         break;
+      case mesDraggingPlayRegionEnd:
+         if (!mIsDragging && isWithinEnd)
+            mQuickPlayPos = mOldPlayRegionEnd;
+         else
+            mIsDragging = true;
+         if (isWithinStart)
+            mQuickPlayPos = mOldPlayRegionStart;
          mPlayRegionEnd = mQuickPlayPos;
-         mPlayRegionStart = mLeftDownClick;
+         if (canDragSel) {
+            DragSelection();
+         }
+         break;
+      case mesSelectingPlayRegionClick:
+         // Don't start dragging until mouse is beyond tollerance of initial click.
+         if (isWithinClick || mLeftDownClick == -1) {
+            mQuickPlayPos = mLeftDownClick;
+            mPlayRegionStart = mLeftDownClick;
+            mPlayRegionEnd = mLeftDownClick;
+         }
+         else {
+            mMouseEventState = mesSelectingPlayRegionRange;
+         }
+         break;
+      case mesSelectingPlayRegionRange:
+         if (isWithinClick) {
+            mQuickPlayPos = mLeftDownClick;
+         }
+
+         if (mQuickPlayPos < mLeftDownClick) {
+            mPlayRegionStart = mQuickPlayPos;
+            mPlayRegionEnd = mLeftDownClick;
+         }
+         else {
+            mPlayRegionEnd = mQuickPlayPos;
+            mPlayRegionStart = mLeftDownClick;
+         }
+         if (canDragSel) {
+            DragSelection();
+         }
+         break;
       }
-      if (canDragSel) {
-         DragSelection();
-      }
-      break;
    }
 
    if (evt.LeftUp())
@@ -2162,7 +2166,7 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
 void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent& evt)
 {
    mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
-   gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled ? wxT("Enabled") : wxT("Disabled"));
+   gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled);
    gPrefs->Flush();
    RegenerateTooltips();
 }
@@ -2170,7 +2174,7 @@ void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent& evt)
 void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent& evt)
 {
    mPlayRegionDragsSelection = (mPlayRegionDragsSelection)? false : true;
-   gPrefs->Write(wxT("/QuickPlay/DragSelection"), mPlayRegionDragsSelection ? wxT("Enabled") : wxT("Disabled"));
+   gPrefs->Write(wxT("/QuickPlay/DragSelection"), mPlayRegionDragsSelection);
    gPrefs->Flush();
 }
 
@@ -2207,7 +2211,7 @@ void AdornedRulerPanel::HandleSnapping()
 void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent& evt)
 {
    mTimelineToolTip = (mTimelineToolTip)? false : true;
-   gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip ? wxT("Enabled") : wxT("Disabled"));
+   gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
    gPrefs->Flush();
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();
