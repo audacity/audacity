@@ -298,8 +298,6 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 
-   float temp = powf(10.0f, 0.0/20.0f );
-
    mRatio = powf(10.0f, mNewPeak / 20.0f) / mPeak;
 
    float ampInit = 20.0f * log10f(mRatio);
