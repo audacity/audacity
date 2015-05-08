@@ -1247,7 +1247,10 @@ void AudacityProject::PopulateEffectsMenu(CommandManager* c,
    const PluginDescriptor *plug = pm.GetFirstPluginForEffectType(type);
    while (plug)
    {
-      if (plug->IsEffectDefault())
+      if ( !plug->IsEnabled() ){
+         ;// don't add to menus!
+      }
+      else if (plug->IsEffectDefault())
       {
          defplugs.Add(plug);
       }

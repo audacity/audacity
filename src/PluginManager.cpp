@@ -555,16 +555,35 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    int x, y;
    wxRect iconrect;
 
+   PluginManager & pm = PluginManager::Get();
+
+   // These ones will be ticked...
+   wxArrayString TickList;
+   // Get the list of enabled plugins.
+   PluginMap::iterator iter2 = pm.mPlugins.begin();
+   while (iter2 != pm.mPlugins.end())
+   {
+      PluginDescriptor & plug = iter2->second;
+      if( plug.IsEnabled() ){
+         wxLogDebug(wxT("Ticked: %s"), plug.GetName().c_str() );
+         TickList.Add( plug.GetPath());
+      }
+      iter2++;
+   };
+
+
+
    int i = 0;
    for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); ++iter, i++)
    {
-      miState.Add( SHOW_CHECKED );
+      miState.Add( SHOW_UNCHECKED);
 
       wxFileName fname = iter->first;
       wxString name = fname.GetName();
       wxString path = iter->first;
 
-      mEffects->InsertItem(i, name, SHOW_CHECKED);
+      bool bTicked = TickList.Index( path ) != wxNOT_FOUND;
+      mEffects->InsertItem(i, name, bTicked? SHOW_CHECKED:SHOW_UNCHECKED);
       mEffects->SetItemPtrData(i, (wxUIntPtr) new wxString(name));
       mEffects->SetItem(i, COL_PATH, path);
 
@@ -593,6 +612,15 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
 
    mEffects->SortItems(SortCompare, 0);
+   for(i=0;i<mEffects->GetItemCount();i++)
+   {
+      wxListItem item;
+      item.SetId( i );
+      item.SetMask( wxLIST_MASK_IMAGE );
+      mEffects->GetItem( item );
+      if( item.GetImage() != 0 )
+         miState[ i ] = SHOW_CHECKED;
+   }
 
    mEffects->SetColumnWidth(COL_NAME, iNameLen + /* fudge */ 5);
    mEffects->SetColumnWidth(COL_PATH, iPathLen + /* fudge */ 5);
@@ -714,6 +742,20 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
    PluginManager & pm = PluginManager::Get();
    ModuleManager & mm = ModuleManager::Get();
 
+
+   // JKC: The following loop disables all the effects, which 
+   // will in turn make them disappear from menus.
+   // I'm puzzled that this is needed.  It seems to reach different
+   // plugins than the plug.SetEnabled(false) in the enabling loop.
+   PluginMap::iterator iter = pm.mPlugins.begin();
+   while (iter != pm.mPlugins.end())
+   {
+      PluginDescriptor & plug = iter->second;
+      plug.SetEnabled( false ); // clear out all the effects....
+      iter++;
+   };
+
+
    wxListItem li;
    li.Clear();
    for (int i = 0, cnt = mEffects->GetItemCount(); i < cnt && !mCancelClicked; i++)
@@ -750,6 +792,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
          }
          mEffects->SetItemImage(i, SHOW_CHECKED);
       }
+
       wxYield();
    }
 
@@ -1909,6 +1952,9 @@ void PluginManager::CheckForUpdates(eItemsToUpdate UpdateWhat)
       const PluginID & plugID = plug.GetID();
       const wxString & plugPath = plug.GetPath();
 
+      //if( UpdateWhat == kPROMPT_TO_ADD_EFFECTS )
+      //   plug.SetEnabled( false ); // clear out all the effects....
+
       if (plug.GetPluginType() == PluginTypeModule)
       {
          if (!mm.IsProviderValid(plugID, plugPath))
@@ -1955,6 +2001,7 @@ void PluginManager::CheckForUpdates(eItemsToUpdate UpdateWhat)
    if (map.size() != 0)
    {
       PluginRegistrationDialog dlg(map);
+      // If just standard effects, then no dialog needed.
       if( UpdateWhat == kJUST_STANDARD_EFFECTS )
       {
          dlg.RegisterDefaultEffects();
