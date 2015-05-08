@@ -150,6 +150,11 @@ NyquistEffect::~NyquistEffect()
 {
 }
 
+void NyquistEffect::RedirectOutput()
+{
+   wxFAIL_MSG(XO("JKC: This function used to exist.  Have a look in SVN and see if you can find it") );
+}
+
 // IdentInterface implementation
 
 wxString NyquistEffect::GetPath()
