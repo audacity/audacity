@@ -9,7 +9,7 @@
 ******************************************************************//**
 
 \class EffectLeveller
-\brief An Effect
+\brief An Effect that aims to selectively make softer sounds louder.
 
 *//*******************************************************************/
 

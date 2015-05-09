@@ -16,7 +16,7 @@
 *//****************************************************************//**
 
 \class EffectScienFilter
-\brief An Effect.
+\brief An Effect that applies 'classical' IIR filters.
 
   Performs IIR filtering that emulates analog filters, specifically
   Butterworth, Chebyshev Type I and Type II. Highpass and lowpass filters

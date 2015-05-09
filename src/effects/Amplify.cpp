@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \class EffectAmplify
-\brief An Effect
+\brief An Effect that makes a sound louder or softer.
 
   This rewritten class supports a smart Amplify effect - it calculates
   the maximum amount of gain that can be applied to all tracks without

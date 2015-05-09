@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class EffectFade
-\brief An Effect
+\brief An Effect that reduces the volume to zero over  achosen interval.
 
 *//*******************************************************************/
 

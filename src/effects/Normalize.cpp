@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \class EffectNormalize
-\brief An Effect.
+\brief An Effect to bring the peak level up to a chosen level.
 
 *//*******************************************************************/
 

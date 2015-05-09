@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \class EffectRepeat
-\brief An Effect.
+\brief An Effect that repeats audio several times over.
 
 *//****************************************************************//**
 

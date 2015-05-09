@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class EffectClickRemoval
-\brief An Effect.
+\brief An Effect for removing clicks.
 
   Clicks are identified as small regions of high amplitude compared
   to the surrounding chunk of sound.  Anything sufficiently tall compared

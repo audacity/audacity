@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class EffectStereoToMono
-\brief An Effect.
+\brief An Effect to convert stereo to mono.
 
 *//*******************************************************************/
 

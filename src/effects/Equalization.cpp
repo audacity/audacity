@@ -18,7 +18,7 @@
 
 
    \class EffectEqualization
-   \brief An Effect.
+   \brief An Effect that modifies volume in different frequency bands.
 
    Performs filtering, using an FFT to do a FIR filter.
    It lets the user draw an arbitrary envelope (using the same
