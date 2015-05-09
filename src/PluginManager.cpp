@@ -399,6 +399,8 @@ public:
 private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
+   void RegenerateEffectsList( int iShowWhat );
+
 
    void OnOK(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
@@ -406,6 +408,7 @@ private:
    void OnListMouseDown(wxMouseEvent & evt);
    void OnSelectAll(wxCommandEvent & evt);
    void OnClearAll(wxCommandEvent & evt);
+   void OnChangedVisibility(wxCommandEvent & evt);
 
    void SetBoldOrRegular(int i);
    void SetState(int i, int state);
@@ -423,6 +426,10 @@ private:
    wxArrayString mPaths;
    wxArrayInt miState;
 
+   wxArrayString mTickList;       // Effects currently ticked
+   wxArrayString mRegisteredList; // Effects currently in menus.
+
+
    bool mCancelClicked;
 
    ProviderMap & mMap;
@@ -430,11 +437,20 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
+enum {
+   ID_ShowAll = 1000,
+   ID_ShowRegistered,
+   ID_ShowUnregistered
+};
+
 BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialog)
    EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
    EVT_BUTTON(EffectClearAllID, PluginRegistrationDialog::OnClearAll)
    EVT_BUTTON(EffectSelectAllID, PluginRegistrationDialog::OnSelectAll)
+   EVT_RADIOBUTTON(ID_ShowAll, PluginRegistrationDialog::OnChangedVisibility )
+   EVT_RADIOBUTTON(ID_ShowUnregistered, PluginRegistrationDialog::OnChangedVisibility )
+   EVT_RADIOBUTTON(ID_ShowRegistered, PluginRegistrationDialog::OnChangedVisibility )
 END_EVENT_TABLE()
 
 PluginRegistrationDialog::PluginRegistrationDialog(ProviderMap & map)
@@ -501,8 +517,21 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: The dialog shows a list of plugins with check-boxes 
        beside each one.*/
-      S.StartStatic(_("&Select Plug-ins to Install or press ENTER to Install All"), true);
+      S.StartStatic(_("&Select Plugins then press ENTER to Install"), true);
       {
+         S.StartHorizontalLay(wxALIGN_LEFT,0 );
+         {
+            /* i18n-hint: This is before radio buttons selecting which effects to show */
+            S.AddPrompt(_("Show:"));
+            /* i18n-hint: Radio button to show all effects */
+            S.Id(ID_ShowAll).AddRadioButton(_("All")); 
+            /* i18n-hint: Radio button to show just the currently unregistered effects */
+            S.Id(ID_ShowUnregistered).AddRadioButtonToGroup(_("Unregistered"));
+            /* i18n-hint: Radio button to show just the currently registered effects */
+            S.Id(ID_ShowRegistered).AddRadioButtonToGroup(_("Registered"));
+         }
+         S.EndHorizontalLay();
+
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES );
          mEffects = S.Id(EffectListID).AddListControlReportMode();
          mEffects->Connect(wxEVT_LEFT_DOWN,
@@ -547,6 +576,37 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
    S.EndVerticalLay();
 
+   PluginManager & pm = PluginManager::Get();
+   // These ones will be ticked...
+
+   // Get the list of enabled plugins.
+   PluginMap::iterator iter2 = pm.mPlugins.begin();
+   while (iter2 != pm.mPlugins.end())
+   {
+      PluginDescriptor & plug = iter2->second;
+      // Initially all the registered menu items are ticked.
+      if( plug.IsEnabled() ){
+         mTickList.Add( plug.GetPath());
+         mRegisteredList.Add( plug.GetPath()); 
+      }
+      iter2++;
+   };
+   RegenerateEffectsList( ID_ShowAll );
+
+   Layout();
+   Fit();
+   wxRect r = wxGetClientDisplayRect();
+   wxSize sz = GetSize();
+   sz.SetWidth(wxMin(sz.GetWidth(), r.GetWidth()));
+   sz.SetHeight(wxMin(sz.GetHeight(), r.GetHeight()));
+   SetMinSize(sz);
+   // Parent window is usually not there yet, so centre on screen rather than on parent.
+   CenterOnScreen();
+
+}
+
+void PluginRegistrationDialog::RegenerateEffectsList( int iShowWhat )
+{
    // The dc is used to compute the text width in pixels.
    // FIXME: That works fine for PC, but apparently comes out too small for wxMAC.
    // iLen is minimum width in pixels shown for the file names.  200 is reasonable.
@@ -555,34 +615,29 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    int x, y;
    wxRect iconrect;
 
-   PluginManager & pm = PluginManager::Get();
+   //PluginManager & pm = PluginManager::Get();
 
-   // These ones will be ticked...
-   wxArrayString TickList;
-   // Get the list of enabled plugins.
-   PluginMap::iterator iter2 = pm.mPlugins.begin();
-   while (iter2 != pm.mPlugins.end())
-   {
-      PluginDescriptor & plug = iter2->second;
-      if( plug.IsEnabled() ){
-         wxLogDebug(wxT("Ticked: %s"), plug.GetName().c_str() );
-         TickList.Add( plug.GetPath());
-      }
-      iter2++;
-   };
-
-
-
+   miState.Clear();
+   mEffects->DeleteAllItems();
    int i = 0;
-   for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); ++iter, i++)
+   for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); ++iter)
    {
-      miState.Add( SHOW_UNCHECKED);
 
       wxFileName fname = iter->first;
       wxString name = fname.GetName();
       wxString path = iter->first;
 
-      bool bTicked = TickList.Index( path ) != wxNOT_FOUND;
+      if( mRegisteredList.Index( path ) == wxNOT_FOUND ){
+         if( iShowWhat == ID_ShowRegistered )
+            continue;
+      } else {
+         if( iShowWhat == ID_ShowUnregistered )
+            continue;
+      }
+
+      miState.Add( SHOW_UNCHECKED);
+
+      bool bTicked = mTickList.Index( path ) != wxNOT_FOUND;
       mEffects->InsertItem(i, name, bTicked? SHOW_CHECKED:SHOW_UNCHECKED);
       mEffects->SetItemPtrData(i, (wxUIntPtr) new wxString(name));
       mEffects->SetItem(i, COL_PATH, path);
@@ -609,6 +664,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       iNameLen = wxMax(iNameLen, x + iconrect.width + (iconrect.x * 2));
       mEffects->GetTextExtent(path, &x, &y );
       iPathLen = wxMax(iPathLen, x + iconrect.width + (iconrect.x * 2));
+      i++;
    }
 
    mEffects->SortItems(SortCompare, 0);
@@ -635,16 +691,6 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       mAx->SetSelected(0);
 #endif
    }
-   Layout();
-   Fit();
-   wxRect r = wxGetClientDisplayRect();
-   wxSize sz = GetSize();
-   sz.SetWidth(wxMin(sz.GetWidth(), r.GetWidth()));
-   sz.SetHeight(wxMin(sz.GetHeight(), r.GetHeight()));
-   SetMinSize(sz);
-   // Parent window is usually not there yet, so centre on screen rather than on parent.
-   CenterOnScreen();
-
 }
 
 void PluginRegistrationDialog::OnListMouseDown(wxMouseEvent & evt)
@@ -714,6 +760,38 @@ void PluginRegistrationDialog::ToggleItem(int i)
    SetState(i, miState[i] == SHOW_CHECKED ? SHOW_UNCHECKED : SHOW_CHECKED);
 }
 
+void PluginRegistrationDialog::OnChangedVisibility(wxCommandEvent & evt)
+{
+   int iShowWhat=evt.GetId();
+
+   // First update mTickList
+   // The effects list may only be showing some of the effects, so it is ONLY
+   // the ones in the list that may need to affect mTickList.
+   wxListItem li;
+   li.Clear();
+   for (int i = 0, cnt = mEffects->GetItemCount(); i < cnt; i++)
+   {
+      mEffects->EnsureVisible(i);
+      li.SetId(i);
+      li.SetColumn(COL_PATH);
+      li.SetMask(wxLIST_MASK_TEXT);
+      mEffects->GetItem(li);
+      wxString path = li.GetText();
+      int ix = mTickList.Index( path );
+      if( miState[i] == SHOW_CHECKED ){
+         if( ix == wxNOT_FOUND )
+            mTickList.Add( path );
+      } else {
+         if( ix != wxNOT_FOUND )
+            mTickList.RemoveAt( ix );
+      }
+   }
+
+   // TickList has been updated.  Go and show the relevant items.
+   RegenerateEffectsList( iShowWhat );
+}
+
+
 void PluginRegistrationDialog::OnSelectAll(wxCommandEvent & WXUNUSED(evt))
 {
    for (size_t i = 0, cnt = miState.size(); i < cnt; i++)
@@ -732,6 +810,11 @@ void PluginRegistrationDialog::OnClearAll(wxCommandEvent & WXUNUSED(evt))
 
 void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
 {
+
+   wxCommandEvent ShowAllEvent;
+   ShowAllEvent.SetId( ID_ShowAll );
+   OnChangedVisibility(ShowAllEvent);
+
    mCancelClicked = false;
    FindWindowById(EffectListID)->Disable();
    FindWindowById(wxID_OK)->Disable();
