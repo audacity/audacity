@@ -517,18 +517,22 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: The dialog shows a list of plugins with check-boxes 
        beside each one.*/
-      S.StartStatic(_("&Select Plugins then press ENTER to Install"), true);
+      S.StartStatic(_("Select Plugins then press ENTER to Install"), true);
       {
          S.StartHorizontalLay(wxALIGN_LEFT,0 );
          {
+            wxRadioButton* rb;
             /* i18n-hint: This is before radio buttons selecting which effects to show */
             S.AddPrompt(_("Show:"));
             /* i18n-hint: Radio button to show all effects */
-            S.Id(ID_ShowAll).AddRadioButton(_("All")); 
+            rb = S.Id(ID_ShowAll).AddRadioButton(_("&All"));
+            rb->SetName(_("Show all"));
             /* i18n-hint: Radio button to show just the currently unregistered effects */
-            S.Id(ID_ShowUnregistered).AddRadioButtonToGroup(_("Unregistered"));
+            rb = S.Id(ID_ShowUnregistered).AddRadioButtonToGroup(_("&Unregistered"));
+            rb->SetName(_("Show unregistered"));
             /* i18n-hint: Radio button to show just the currently registered effects */
-            S.Id(ID_ShowRegistered).AddRadioButtonToGroup(_("Registered"));
+            rb = S.Id(ID_ShowRegistered).AddRadioButtonToGroup(_("&Registered"));
+            rb->SetName(_("Show registered"));
          }
          S.EndHorizontalLay();
 
@@ -559,8 +563,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          {
             S.AddSpace(12);
             S.SetBorder(6);
-            S.Id(EffectSelectAllID).AddButton(_("Select &All"));
-            S.Id(EffectClearAllID).AddButton(_("Clea&r All"));
+            S.Id(EffectSelectAllID).AddButton(_("&Select All"));
+            S.Id(EffectClearAllID).AddButton(_("Cl&ear All"));
          }
          S.EndHorizontalLay();
 
