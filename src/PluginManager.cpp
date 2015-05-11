@@ -32,6 +32,7 @@
 #include <wx/string.h>
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>
+#include <wx/radiobut.h>
 
 #include "audacity/EffectInterface.h"
 
