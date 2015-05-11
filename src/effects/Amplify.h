@@ -68,6 +68,7 @@ private:
 
 private:
    float mPeak;
+   bool mTracksAnalyzed;
 
    float mRatio;
    float mAmp;

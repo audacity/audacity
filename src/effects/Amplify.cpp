@@ -66,6 +66,7 @@ EffectAmplify::EffectAmplify()
    mRatio = powf(10.0f, mAmp / 20.0f);
    mCanClip = false;
    mPeak = 0.0f;
+   mTracksAnalyzed = false;
 }
 
 EffectAmplify::~EffectAmplify()
@@ -134,20 +135,25 @@ bool EffectAmplify::SetAutomationParameters(EffectAutomationParameters & parms)
 
 bool EffectAmplify::Init()
 {
-   mPeak = 0.0f;
-
-   SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
-
-   for (Track *t = iter.First(); t; t = iter.Next())
+   if (!mTracksAnalyzed)
    {
-      float min, max;
-      ((WaveTrack *)t)->GetMinMax(&min, &max, mT0, mT1);
-      float newpeak = (fabs(min) > fabs(max) ? fabs(min) : fabs(max));
+      mPeak = 0.0f;
 
-      if (newpeak > mPeak)
+      SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+
+      for (Track *t = iter.First(); t; t = iter.Next())
       {
-         mPeak = newpeak;
+         float min, max;
+         ((WaveTrack *)t)->GetMinMax(&min, &max, mT0, mT1);
+         float newpeak = (fabs(min) > fabs(max) ? fabs(min) : fabs(max));
+
+         if (newpeak > mPeak)
+         {
+            mPeak = newpeak;
+         }
       }
+
+      mTracksAnalyzed = true;
    }
 
    return true;
