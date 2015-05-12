@@ -710,7 +710,8 @@ void EditChainsDialog::OnAdd(wxCommandEvent & WXUNUSED(event))
    while (true) {
       wxTextEntryDialog d(this,
                           _("Enter name of new chain"),
-                          GetTitle());
+                          _("Name of new chain"));
+      d.SetName(d.GetTitle());
       wxString name;
 
       if (d.ShowModal() == wxID_CANCEL) {
