@@ -169,8 +169,10 @@ void BatchCommandDialog::OnItemSelected(wxListEvent &event)
 
    EffectManager & em = EffectManager::Get();
    PluginID ID = em.GetEffectByIdentifier(command);
-   wxASSERT(!ID.IsEmpty());
-   mEditParams->Enable(true);
+
+   // If ID is empty, then the effect wasn't found, in which case, the user must have
+   // selected one of the "special" commands.
+   mEditParams->Enable(!ID.IsEmpty());
    mUsePreset->Enable(em.HasPresets(ID));
 
    if (command == mCommand->GetValue())
@@ -179,6 +181,7 @@ void BatchCommandDialog::OnItemSelected(wxListEvent &event)
    }
 
    mCommand->SetValue(command);
+
    wxString params = BatchCommands::GetCurrentParamsFor(command);
    if (params.IsEmpty())
    {
@@ -216,9 +219,16 @@ void BatchCommandDialog::SetCommandAndParams(const wxString &Command, const wxSt
    mParameters->SetValue( Params );
 
    int item = mChoices->FindItem(-1, Command);
-   if( item != -1 )
+   if (item != wxNOT_FOUND)
    {
       mChoices->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-      mEditParams->Enable( true );
+
+      EffectManager & em = EffectManager::Get();
+      PluginID ID = em.GetEffectByIdentifier(Command);
+
+      // If ID is empty, then the effect wasn't found, in which case, the user must have
+      // selected one of the "special" commands.
+      mEditParams->Enable(!ID.IsEmpty());
+      mUsePreset->Enable(em.HasPresets(ID));
    }
 }
