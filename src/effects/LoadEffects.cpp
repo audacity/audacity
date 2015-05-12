@@ -100,7 +100,7 @@
 #endif
 
 //
-// Define the complete list of effects and how to instantiate each
+// Define the list of effects that will be autoregistered and how to instantiate each
 //
 #define EFFECT_LIST \
    EFFECT( CHIRP,             EffectToneGen(true) )      \
@@ -109,18 +109,15 @@
    EFFECT( SILENCE,           EffectSilence() )          \
    EFFECT( TONE,              EffectToneGen(false) )     \
    EFFECT( AMPLIFY,           EffectAmplify() )          \
-   EFFECT( AUTODUCK,          EffectAutoDuck() )         \
    EFFECT( BASSTREBLE,        EffectBassTreble() )       \
    EFFECT( CHANGESPEED,       EffectChangeSpeed() )      \
    EFFECT( CLICKREMOVAL,      EffectClickRemoval() )     \
    EFFECT( COMPRESSOR,        EffectCompressor() )       \
    EFFECT( ECHO,              EffectEcho() )             \
-   EFFECT( PAULSTRETCH,       EffectPaulstretch() )      \
    EFFECT( EQUALIZATION,      EffectEqualization() )     \
    EFFECT( FADEIN,            EffectFade(true) )         \
    EFFECT( FADEOUT,           EffectFade(false) )        \
    EFFECT( INVERT,            EffectInvert() )           \
-   EFFECT( LEVELLER,          EffectLeveller() )         \
    EFFECT( NORMALIZE,         EffectNormalize() )        \
    EFFECT( PHASER,            EffectPhaser() )           \
    EFFECT( REPAIR,            EffectRepair() )           \
@@ -132,8 +129,16 @@
    EFFECT( WAHWAH,            EffectWahwah() )           \
    EFFECT( FINDCLIPPING,      EffectFindClipping() )     \
    NOISEREDUCTION_EFFECT                                 \
+   SOUNDTOUCH_EFFECTS
+
+//
+// Define the list of effects that do not get autoregistered
+//
+#define EXCLUDE_LIST \
+   EFFECT( AUTODUCK,          EffectAutoDuck() )         \
+   EFFECT( LEVELLER,          EffectLeveller() )         \
+   EFFECT( PAULSTRETCH,       EffectPaulstretch() )      \
    CLASSICFILTER_EFFECT                                  \
-   SOUNDTOUCH_EFFECTS                                    \
    SBSMS_EFFECTS
 
 //
@@ -147,6 +152,7 @@
 enum
 {
    EFFECT_LIST
+   EXCLUDE_LIST
 };
 
 //
@@ -161,6 +167,14 @@ enum
 static const wxChar *kEffectNames[] =
 {
    EFFECT_LIST
+};
+
+//
+// Create the effect name array of excluded effects
+//
+static const wxChar *kExcludedNames[] =
+{
+   EXCLUDE_LIST
 };
 
 //
@@ -256,6 +270,11 @@ bool BuiltinEffectsModule::Initialize()
       mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + kEffectNames[i]);
    }
 
+   for (size_t i = 0; i < WXSIZEOF(kExcludedNames); i++)
+   {
+      mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + kExcludedNames[i]);
+   }
+
    return true;
 }
 
@@ -265,9 +284,19 @@ void BuiltinEffectsModule::Terminate()
    return;
 }
 
-bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
+bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
-   // Nothing to do here
+   for (size_t i = 0; i < WXSIZEOF(kEffectNames); i++)
+   {
+      PluginID ID(wxString(BUILTIN_EFFECT_PREFIX) + kEffectNames[i]);
+
+      if (!pm.IsPluginRegistered(ID))
+      {
+         RegisterPlugin(pm, ID);
+      }
+   }
+
+   // We still want to be called during the normal registration process
    return false;
 }
 
@@ -320,6 +349,7 @@ Effect *BuiltinEffectsModule::Instantiate(const wxString & path)
    switch (mNames.Index(path))
    {
       EFFECT_LIST;
+      EXCLUDE_LIST;
    }
 
    return NULL;

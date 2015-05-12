@@ -395,7 +395,6 @@ public:
    // constructors and destructors
    PluginRegistrationDialog(ProviderMap & map);
    virtual ~PluginRegistrationDialog();
-   void RegisterDefaultEffects();
 
 private:
    void Populate();
@@ -887,58 +886,6 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
    EndModal(mCancelClicked ? wxID_CANCEL : wxID_OK);
 }
 
-void PluginRegistrationDialog::RegisterDefaultEffects()
-{
-   PluginManager & pm = PluginManager::Get();
-   ModuleManager & mm = ModuleManager::Get();
-
-   int i = 0;
-   for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); ++iter, i++)
-   {
-      wxFileName fname = iter->first;
-      wxString name = fname.GetName();
-      wxString path = iter->first;
-
-      // Create a placeholder descriptor to show we've seen this plugin before and not
-      // to show it as new the next time Audacity starts.
-      //
-      // Placeholder descriptors have a plugin type of PluginTypeNone and the ID is the
-      // path.
-      PluginDescriptor & plug = pm.mPlugins[path];
-
-      plug.SetID(path);
-      plug.SetPath(path);
-      plug.SetEnabled(false);
-      plug.SetValid(false);
-
-      // This is just a proof of concept to show we can get a list of default effects.
-      // Here we take the Builtin ones, and remove several optional ones, so that they become
-      // opt-in.
-      bool bAddIt = fname.GetVolume().StartsWith( wxString( BUILTIN_EFFECT_PREFIX).BeforeFirst(':')  );
-      wxLogDebug(wxT("Name: [%s]"), fname.GetName().c_str() );
-      bAddIt &= !fname.GetName().StartsWith( wxT(" Leveller") );
-      bAddIt &= !fname.GetName().StartsWith( wxT(" Auto Duck") );
-      bAddIt &= !fname.GetName().StartsWith( wxT(" Paulstretch") );
-      bAddIt &= !fname.GetName().StartsWith( wxT(" Time Scale") );
-      bAddIt &= !fname.GetName().StartsWith( wxT(" Classic Filters") );
-
-      // Built in effects get registered...
-      if (bAddIt)
-      {
-         wxArrayString providers = mMap[path];
-         for (size_t j = 0, cnt = providers.GetCount(); j < cnt; j++)
-         {
-            if (mm.RegisterPlugin(providers[j], path))
-            {
-               break;
-            }
-         }
-      }
-      wxYield();
-   }
-}
-
-
 void PluginRegistrationDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
 {
    mCancelClicked = true;
@@ -1270,6 +1217,16 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 // PluginManagerInterface implementation
 //
 // ============================================================================
+
+bool PluginManager::IsPluginRegistered(const PluginID & ID)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      return false;
+   }
+
+   return true;
+}
 
 const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
 {
@@ -1615,11 +1572,7 @@ void PluginManager::Initialize()
    ModuleManager::Get().DiscoverProviders();
 
    // And finally check for updates
-   // CheckForUpdates will prompt for what to add normally.
-   // If it is told kJUST_STANDARD_EFFECTS then it doesn't prompt.
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-   CheckForUpdates(kJUST_STANDARD_EFFECTS);
-#else
+#ifndef EXPERIMENTAL_EFFECT_MANAGEMENT
    CheckForUpdates();
 #endif
 }
@@ -2089,13 +2042,8 @@ void PluginManager::CheckForUpdates(eItemsToUpdate UpdateWhat)
    if (map.size() != 0)
    {
       PluginRegistrationDialog dlg(map);
-      // If just standard effects, then no dialog needed.
-      if( UpdateWhat == kJUST_STANDARD_EFFECTS )
-      {
-         dlg.RegisterDefaultEffects();
-         gPrefs->Write(wxT("/Plugins/Rescan"), false);
-      }
-      else if (dlg.ShowModal() == wxID_OK)
+
+      if (dlg.ShowModal() == wxID_OK)
       {
          gPrefs->Write(wxT("/Plugins/Rescan"), false);
       }
@@ -2104,6 +2052,27 @@ void PluginManager::CheckForUpdates(eItemsToUpdate UpdateWhat)
    Save();
 
    return;
+}
+
+// Here solely for the purpose of Nyquist Workbench until
+// a better solution is devised.
+const PluginID & PluginManager::RegisterPlugin(EffectIdentInterface *effect)
+{
+   PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, PluginTypeEffect);
+
+   plug.SetEffectType(effect->GetType());
+   plug.SetEffectFamily(effect->GetFamily());
+   plug.SetEffectInteractive(effect->IsInteractive());
+   plug.SetEffectDefault(effect->IsDefault());
+   plug.SetEffectRealtime(effect->SupportsRealtime());
+   plug.SetEffectAutomatable(effect->SupportsAutomation());
+
+   plug.SetInstance(effect);
+   plug.SetEffectLegacy(true);
+   plug.SetEnabled(true);
+   plug.SetValid(true);
+
+   return plug.GetID();
 }
 
 int PluginManager::GetPluginCount(PluginType type)
@@ -2212,35 +2181,6 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
    return NULL;
 }
 
-bool PluginManager::IsRegistered(const PluginID & ID)
-{
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-const PluginID & PluginManager::RegisterPlugin(EffectIdentInterface *effect)
-{
-   PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, PluginTypeEffect);
-
-   plug.SetEffectType(effect->GetType());
-   plug.SetEffectFamily(effect->GetFamily());
-   plug.SetEffectInteractive(effect->IsInteractive());
-   plug.SetEffectDefault(effect->IsDefault());
-   plug.SetEffectRealtime(effect->SupportsRealtime());
-   plug.SetEffectAutomatable(effect->SupportsAutomation());
-
-   plug.SetInstance(effect);
-   plug.SetEffectLegacy(true);
-   plug.SetEnabled(true);
-   plug.SetValid(true);
-
-   return plug.GetID();
-}
-
 bool PluginManager::IsPluginEnabled(const PluginID & ID)
 {
    if (mPlugins.find(ID) == mPlugins.end())
@@ -2303,17 +2243,6 @@ IdentInterface *PluginManager::GetInstance(const PluginID & ID)
    }
 
    return plug.GetInstance();
-}
-
-// TODO:  This goes away when all effects have been converted
-void PluginManager::SetInstance(const PluginID & ID, IdentInterface *instance)
-{
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
-      return;
-   }
-
-   return mPlugins[ID].SetInstance(instance);
 }
 
 PluginID PluginManager::GetID(ModuleInterface *module)

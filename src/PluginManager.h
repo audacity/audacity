@@ -167,7 +167,6 @@ class PluginRegistrationDialog;
 
 enum eItemsToUpdate {
    kCHECK_ALL,
-   kJUST_STANDARD_EFFECTS,
    kPROMPT_TO_ADD_EFFECTS
 };
 
@@ -179,6 +178,8 @@ public:
    virtual ~PluginManager();
 
    // PluginManagerInterface implementation
+
+   virtual bool IsPluginRegistered(const PluginID & ID);
 
    virtual const PluginID & RegisterPlugin(ModuleInterface *module);
    virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect);
@@ -252,9 +253,6 @@ public:
    const PluginDescriptor *GetFirstPluginForEffectType(EffectType type);
    const PluginDescriptor *GetNextPluginForEffectType(EffectType type);
 
-   bool IsRegistered(const PluginID & ID);
-   void RegisterPlugin(const wxString & type, const wxString & path);
-
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
 
@@ -263,11 +261,12 @@ public:
    // Returns translated string
    wxString GetName(const PluginID & ID);
    IdentInterface *GetInstance(const PluginID & ID);
-   void SetInstance(const PluginID & ID, IdentInterface *instance);  // TODO: Remove after conversion
 
-   // For builtin effects
-   const PluginID & RegisterPlugin(EffectIdentInterface *effect);
    void CheckForUpdates(eItemsToUpdate UpdateWhat=kCHECK_ALL);
+
+   // Here solely for the purpose of Nyquist Workbench until
+   // a better solution is devised.
+   const PluginID & RegisterPlugin(EffectIdentInterface *effect);
 
 private:
    void Load();
