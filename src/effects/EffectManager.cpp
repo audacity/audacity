@@ -675,6 +675,12 @@ int EffectManager::GetRealtimeLatency()
 
 Effect *EffectManager::GetEffect(const PluginID & ID)
 {
+   // Must have a "valid" ID
+   if (ID.IsEmpty())
+   {
+      return NULL;
+   }
+
    // TODO: This is temporary and should be redone when all effects are converted
    if (mEffects.find(ID) == mEffects.end())
    {
