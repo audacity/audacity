@@ -165,6 +165,7 @@ void AudacityLogger::Show(bool show)
 
    // This is the first use, so create the frame
    wxFrame *frame = new wxFrame(NULL, wxID_ANY, _("Audacity Log"));
+   frame->SetName(frame->GetTitle());
    frame->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 
    // loads either the XPM or the windows resource, depending on the platform

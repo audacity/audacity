@@ -227,6 +227,8 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
   wxDialog(parent, id, title, pos, wxDefaultSize,
      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX )
 {
+   SetName(GetTitle());
+
    foregrounddB = 1234.0;
    backgrounddB = 1234.0;
 

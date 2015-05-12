@@ -56,6 +56,8 @@ WarningDialog::WarningDialog(wxWindow *parent, wxString message, bool showCancel
             wxDefaultPosition, wxDefaultSize,
             (showCancelButton ? wxDEFAULT_DIALOG_STYLE : wxCAPTION | wxSYSTEM_MENU)) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
 {
+   SetName(GetTitle());
+
    SetIcon(wxArtProvider::GetIcon(wxART_WARNING, wxART_MESSAGE_BOX));
    ShuttleGui S(this, eIsCreating);
 

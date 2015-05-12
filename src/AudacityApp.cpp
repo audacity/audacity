@@ -1056,6 +1056,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
                               _("Audacity Support Data"),
                               rpt.GetCompressedFileName(),
                               wxOK | wxCENTER);
+      dlg.SetName(dlg.GetTitle());
       dlg.ShowModal();
 
       wxLogMessage(wxT("Report generated to: %s"),

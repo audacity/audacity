@@ -200,6 +200,8 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    mBitmap(NULL),
    mAnalyst(new SpectrumAnalyst())
 {
+   SetName(GetTitle());
+
    mMouseX = 0;
    mMouseY = 0;
    mRate = 0;

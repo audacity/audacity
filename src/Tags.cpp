@@ -664,6 +664,8 @@ TagsEditor::TagsEditor(wxWindow * parent,
    mEditTitle(editTitle),
    mEditTrack(editTrack)
 {
+   SetName(GetTitle());
+
    names[0] = LABEL_ARTIST;
    names[1] = LABEL_TITLE;
    names[2] = LABEL_ALBUM;

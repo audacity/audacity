@@ -177,6 +177,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
+   SetName(GetTitle());
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    icon = NULL;
    ShuttleGui S( this, eIsCreating );
