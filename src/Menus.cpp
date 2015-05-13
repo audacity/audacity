@@ -3288,7 +3288,22 @@ void AudacityProject::OnManageEffects()
    //gPrefs->Write( wxT("/Plugins/Rescan"), true);
    //gPrefs->Read(wxT("/Plugins/CheckForUpdates"), &doCheck, true);
    PluginManager::Get().CheckForUpdates(kPROMPT_TO_ADD_EFFECTS);
-   RebuildMenuBar();
+
+   for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+      AudacityProject *p = gAudacityProjects[i];
+
+      p->RebuildMenuBar();
+#if defined(__WXGTK__)
+      // Workaround for:
+      //
+      //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
+      //
+      // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
+      wxRect r = p->GetRect();
+      p->SetSize(wxSize(1,1));
+      p->SetSize(r.GetSize());
+#endif
+   }
 }
 
 void AudacityProject::OnStereoToMono(int WXUNUSED(index))
