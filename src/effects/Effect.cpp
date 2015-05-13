@@ -88,6 +88,8 @@ Effect::Effect()
    mTracks = NULL;
    mOutputTracks = NULL;
    mOutputTracksType = Track::None;
+   mT0 = 0.0;
+   mT1 = 0.0;
    mDuration = 0.0;
    mNumTracks = 0;
    mNumGroups = 0;
