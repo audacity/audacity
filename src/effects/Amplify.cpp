@@ -279,7 +279,12 @@ bool EffectAmplify::TransferDataFromWindow()
 
 void EffectAmplify::CheckClip()
 {
-   EnableApply(mClip->GetValue() || (mPeak > 0.0f && mRatio <= 1.0f/mPeak));
+   // On Linux (not tested other platforms), 1.0f/mPeak is calculated at higher precision
+   // than the (float) value of mRatio, that is, the value is rounded in mRatio = 1/mPeak,
+   // so there is no guarantee that mRatio == 1/mPeak. To test for equality, assign the value
+   // of 1/mPeak to a float rather than directly comparing mRatio <= 1.0f/mPeak
+   float peakInv = 1.0f/mPeak;
+   EnableApply(mClip->GetValue() || (mPeak > 0.0f && mRatio <= peakInv));
 }
 
 void EffectAmplify::OnAmpText(wxCommandEvent & WXUNUSED(evt))
