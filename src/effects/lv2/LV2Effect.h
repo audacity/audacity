@@ -117,6 +117,7 @@ public:
    virtual bool IsLegacy();
    virtual bool SupportsRealtime();
    virtual bool SupportsAutomation();
+   virtual bool EnableFromGetGo(){ return false;};
 
    // EffectClientInterface implementation
 

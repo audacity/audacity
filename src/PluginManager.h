@@ -165,12 +165,6 @@ typedef wxArrayString PluginIDList;
 
 class PluginRegistrationDialog;
 
-enum eItemsToUpdate {
-   kCHECK_ALL,
-   kPROMPT_TO_ADD_EFFECTS
-};
-
-
 class PluginManager : public PluginManagerInterface
 {
 public:
@@ -262,7 +256,7 @@ public:
    wxString GetName(const PluginID & ID);
    IdentInterface *GetInstance(const PluginID & ID);
 
-   void CheckForUpdates(eItemsToUpdate UpdateWhat=kCHECK_ALL);
+   void CheckForUpdates(EffectType Type=EffectTypeAll);
 
    // Here solely for the purpose of Nyquist Workbench until
    // a better solution is devised.

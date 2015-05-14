@@ -984,6 +984,10 @@ void AudacityProject::CreateMenusAndCommands()
                        EffectTypeGenerate,
                        AudioIONotBusyFlag,
                        AudioIONotBusyFlag);
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+   c->AddSeparator();
+   c->AddItem(wxT("ManageGenerators"), _("More..."), FN(OnManageGenerators));
+#endif
 
    c->EndMenu();
 
@@ -1015,7 +1019,6 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddSeparator();
    // We could say Manage Effects on the menu, but More... is more intuitive.
    c->AddItem(wxT("ManageEffects"), _("More..."), FN(OnManageEffects));
-
 #endif
 
    c->EndMenu();
@@ -1037,6 +1040,10 @@ void AudacityProject::CreateMenusAndCommands()
                        EffectTypeAnalyze,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
                        TracksExistFlag | IsRealtimeNotActiveFlag);
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+   c->AddSeparator();
+   c->AddItem(wxT("ManageAnalyzers"), _("More..."), FN(OnManageAnalyzers));
+#endif
 
    c->EndMenu();
 
@@ -3283,11 +3290,14 @@ void AudacityProject::OnRepeatLastEffect(int WXUNUSED(index))
    }
 }
 
-void AudacityProject::OnManageEffects()
+
+
+
+void AudacityProject::OnManagePluginsMenu(EffectType Type)
 {
    //gPrefs->Write( wxT("/Plugins/Rescan"), true);
    //gPrefs->Read(wxT("/Plugins/CheckForUpdates"), &doCheck, true);
-   PluginManager::Get().CheckForUpdates(kPROMPT_TO_ADD_EFFECTS);
+   PluginManager::Get().CheckForUpdates(Type);
 
    for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
       AudacityProject *p = gAudacityProjects[i];
@@ -3305,6 +3315,12 @@ void AudacityProject::OnManageEffects()
 #endif
    }
 }
+
+void AudacityProject::OnManageGenerators(){   OnManagePluginsMenu(EffectTypeGenerate); }
+void AudacityProject::OnManageEffects(){      OnManagePluginsMenu(EffectTypeProcess); }
+void AudacityProject::OnManageAnalyzers(){    OnManagePluginsMenu(EffectTypeAnalyze); }
+
+
 
 void AudacityProject::OnStereoToMono(int WXUNUSED(index))
 {

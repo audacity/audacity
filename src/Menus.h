@@ -374,7 +374,10 @@ void OnRepeatLastEffect(int index);
 void OnApplyChain();
 void OnEditChains();
 void OnStereoToMono(int index);
+void OnManagePluginsMenu(EffectType Type);
+void OnManageGenerators();
 void OnManageEffects();
+void OnManageAnalyzers();
 
         // Help Menu
 

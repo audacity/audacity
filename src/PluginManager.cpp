@@ -393,7 +393,7 @@ class PluginRegistrationDialog : public wxDialog
 {
 public:
    // constructors and destructors
-   PluginRegistrationDialog(ProviderMap & map);
+   PluginRegistrationDialog(ProviderMap & map, EffectType TypeIn);
    virtual ~PluginRegistrationDialog();
 
 private:
@@ -416,6 +416,7 @@ private:
 
 private:
    ModuleInterface *mMod;
+   EffectType mType;
 
 #if wxUSE_ACCESSIBILITY
    CheckListAx *mAx;
@@ -423,7 +424,7 @@ private:
 
    wxListCtrl *mEffects;
    PluginIDList mProvs;
-   wxArrayString mPaths;
+   wxArrayString mPathsInCategory;
    wxArrayInt miState;
 
    wxArrayString mTickList;       // Effects currently ticked
@@ -453,13 +454,14 @@ BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialog)
    EVT_RADIOBUTTON(ID_ShowRegistered, PluginRegistrationDialog::OnChangedVisibility )
 END_EVENT_TABLE()
 
-PluginRegistrationDialog::PluginRegistrationDialog(ProviderMap & map)
+PluginRegistrationDialog::PluginRegistrationDialog(ProviderMap & map, EffectType TypeIn)
 :  wxDialog(wxGetApp().GetTopWindow(),
             wxID_ANY,
             _("Register Effects"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
-   mMap(map)            
+   mMap(map),
+   mType(TypeIn)
 {
    mEffects = NULL;
    SetLabel(_("Register Effects"));         // Provide visual label
@@ -581,17 +583,45 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    S.EndVerticalLay();
 
    PluginManager & pm = PluginManager::Get();
-   // These ones will be ticked...
+
+   mPathsInCategory.Clear();
+
+   // Add ALL plug ins...
+   for (ProviderMap::iterator iter = mMap.begin(); iter != mMap.end(); ++iter)
+   {
+      wxString path = iter->first;
+      mPathsInCategory.Add( path );
+   }
 
    // Get the list of enabled plugins.
+   // We'll take away ones which we know have the wrong type.
+
+   // This iteration is confusing, becuase registered effects appear twice, 
+   // once as generics (unloaded) with no type and once, if they have been loaded,
+   // with their actual correct types.
    PluginMap::iterator iter2 = pm.mPlugins.begin();
    while (iter2 != pm.mPlugins.end())
    {
       PluginDescriptor & plug = iter2->second;
-      // Initially all the registered menu items are ticked.
-      if( plug.IsEnabled() ){
-         mTickList.Add( plug.GetPath());
-         mRegisteredList.Add( plug.GetPath()); 
+      EffectType Type=plug.GetEffectType();
+      if( Type == mType )
+      {
+         // Initially all the registered menu items are ticked.
+         // So Ticklist and Registered list are the same.
+         if( plug.IsEnabled() )
+         {
+            mTickList.Add( plug.GetPath());
+            mRegisteredList.Add( plug.GetPath()); 
+         }
+      }
+      else if( Type != EffectTypeNone )
+      {
+         // Remove any that we know are the wrong type.
+         int ix = mPathsInCategory.Index( plug.GetPath() );
+         if( ix != wxNOT_FOUND )
+         {
+            mPathsInCategory.RemoveAt( ix );
+         }
       }
       iter2++;
    };
@@ -630,6 +660,9 @@ void PluginRegistrationDialog::RegenerateEffectsList( int iShowWhat )
       wxFileName fname = iter->first;
       wxString name = fname.GetName();
       wxString path = iter->first;
+
+      if( mPathsInCategory.Index( path ) == wxNOT_FOUND )
+         continue;
 
       if( mRegisteredList.Index( path ) == wxNOT_FOUND ){
          if( iShowWhat == ID_ShowRegistered )
@@ -686,7 +719,7 @@ void PluginRegistrationDialog::RegenerateEffectsList( int iShowWhat )
    mEffects->SetColumnWidth(COL_PATH, iPathLen + /* fudge */ 5);
 
    mEffects->SetSizeHints(iNameLen + iPathLen + /* fudge */ 15, 200);
-   if (mPaths.size() > 0)
+   if (mEffects->GetItemCount() > 0)
    {
       // Make sure first item is selected/focused.
       mEffects->SetFocus();
@@ -832,13 +865,15 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
 
    // JKC: The following loop disables all the effects, which 
    // will in turn make them disappear from menus.
-   // I'm puzzled that this is needed.  It seems to reach different
-   // plugins than the plug.SetEnabled(false) in the enabling loop.
    PluginMap::iterator iter = pm.mPlugins.begin();
    while (iter != pm.mPlugins.end())
    {
       PluginDescriptor & plug = iter->second;
-      plug.SetEnabled( false ); // clear out all the effects....
+      wxString path = plug.GetPath();
+      if( mPathsInCategory.Index( path ) != wxNOT_FOUND )
+      {
+         plug.SetEnabled( false ); // clear out all the effects....
+      }
       iter++;
    };
 
@@ -853,6 +888,8 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       li.SetMask(wxLIST_MASK_TEXT);
       mEffects->GetItem(li);
       wxString path = li.GetText();
+      if( mPathsInCategory.Index( path ) == wxNOT_FOUND )
+         continue;
 
       // Create a placeholder descriptor to show we've seen this plugin before and not
       // to show it as new the next time Audacity starts.
@@ -1251,7 +1288,7 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Effect
    plug.SetEffectRealtime(effect->SupportsRealtime());
    plug.SetEffectAutomatable(effect->SupportsAutomation());
 
-   plug.SetEnabled(true);
+   plug.SetEnabled(effect->EnableFromGetGo());
    plug.SetValid(true);
 
    return plug.GetID();
@@ -1965,7 +2002,7 @@ void PluginManager::SaveGroup(PluginType type)
    return;
 }
 
-void PluginManager::CheckForUpdates(eItemsToUpdate UpdateWhat)
+void PluginManager::CheckForUpdates(EffectType UpdateWhat)
 {
    // Get ModuleManager reference
    ModuleManager & mm = ModuleManager::Get();
@@ -1976,7 +2013,11 @@ void PluginManager::CheckForUpdates(eItemsToUpdate UpdateWhat)
    gPrefs->Read(wxT("/Plugins/Rescan"), &doRescan, true);
    gPrefs->Read(wxT("/Plugins/CheckForUpdates"), &doCheck, true);
 
-   if( UpdateWhat == kPROMPT_TO_ADD_EFFECTS )
+   if( UpdateWhat == EffectTypeGenerate )
+      doRescan = true;
+   else if( UpdateWhat == EffectTypeProcess )
+      doRescan = true;
+   else if( UpdateWhat == EffectTypeAnalyze )
       doRescan = true;
 
    ProviderMap map;
@@ -1992,9 +2033,6 @@ void PluginManager::CheckForUpdates(eItemsToUpdate UpdateWhat)
       PluginDescriptor & plug = iter->second;
       const PluginID & plugID = plug.GetID();
       const wxString & plugPath = plug.GetPath();
-
-      //if( UpdateWhat == kPROMPT_TO_ADD_EFFECTS )
-      //   plug.SetEnabled( false ); // clear out all the effects....
 
       if (plug.GetPluginType() == PluginTypeModule)
       {
@@ -2041,7 +2079,8 @@ void PluginManager::CheckForUpdates(eItemsToUpdate UpdateWhat)
    // Allow the user to choose which ones to enable
    if (map.size() != 0)
    {
-      PluginRegistrationDialog dlg(map);
+
+      PluginRegistrationDialog dlg(map,UpdateWhat);
 
       if (dlg.ShowModal() == wxID_OK)
       {
