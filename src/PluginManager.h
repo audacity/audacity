@@ -256,7 +256,7 @@ public:
    wxString GetName(const PluginID & ID);
    IdentInterface *GetInstance(const PluginID & ID);
 
-   void CheckForUpdates(EffectType Type=EffectTypeAll);
+   void CheckForUpdates(EffectType Type=EffectTypeNone);
 
    // Here solely for the purpose of Nyquist Workbench until
    // a better solution is devised.

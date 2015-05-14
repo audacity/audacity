@@ -51,11 +51,11 @@
 
 typedef enum EffectType
 {
-   EffectTypeNone =1,
-   EffectTypeGenerate =2,
-   EffectTypeProcess =4,
-   EffectTypeAnalyze =8,
-   EffectTypeAll = 15
+   EffectTypeNone,
+   EffectTypeHidden,
+   EffectTypeGenerate,
+   EffectTypeProcess,
+   EffectTypeAnalyze
 } EffectType;
 
 class AUDACITY_DLL_API EffectIdentInterface : public IdentInterface

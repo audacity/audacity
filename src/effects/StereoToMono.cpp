@@ -46,7 +46,7 @@ wxString EffectStereoToMono::GetDescription()
 EffectType EffectStereoToMono::GetType()
 {
    // Really EffectTypeProcess, but this prevents it from showing in the Effect Menu
-   return EffectTypeNone;
+   return EffectTypeHidden;
 }
 
 bool EffectStereoToMono::IsInteractive()
