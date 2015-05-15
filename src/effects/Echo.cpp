@@ -39,6 +39,8 @@ EffectEcho::EffectEcho()
 {
    delay = DEF_Delay;
    decay = DEF_Decay;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectEcho::~EffectEcho()

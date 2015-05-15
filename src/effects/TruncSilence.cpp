@@ -76,6 +76,8 @@ EffectTruncSilence::EffectTruncSilence()
    mTruncDbChoiceIndex = DEF_DbIndex;
    mActionIndex = DEF_ActIndex;
 
+   SetLinearEffectFlag(false);
+
    // This used to be changeable via the audacity.cfg/registery.  Doubtful that was
    // ever done.
    //

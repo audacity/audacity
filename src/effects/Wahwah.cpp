@@ -73,6 +73,8 @@ EffectWahwah::EffectWahwah()
    mDepth = DEF_Depth;
    mRes = DEF_Res;
    mFreqOfs = DEF_FreqOfs;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectWahwah::~EffectWahwah()

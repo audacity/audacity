@@ -66,6 +66,8 @@ EffectAmplify::EffectAmplify()
    mRatio = powf(10.0f, mAmp / 20.0f);
    mCanClip = false;
    mPeak = 0.0f;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectAmplify::~EffectAmplify()

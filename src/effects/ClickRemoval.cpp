@@ -61,6 +61,8 @@ EffectClickRemoval::EffectClickRemoval()
    mThresholdLevel = DEF_Threshold;
    mClickWidth = DEF_Width;
 
+   SetLinearEffectFlag(false);
+
    windowSize = 8192;
    sep = 2049;
 }

@@ -82,6 +82,8 @@ EffectPhaser::EffectPhaser()
    mPhase = DEF_Phase;
    mDepth = DEF_Depth;
    mFeedback = DEF_Feedback;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectPhaser::~EffectPhaser()

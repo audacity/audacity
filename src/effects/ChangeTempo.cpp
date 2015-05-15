@@ -70,6 +70,8 @@ EffectChangeTempo::EffectChangeTempo()
    m_ToLength = 0.0;
 
    m_bLoopDetect = false;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectChangeTempo::~EffectChangeTempo()

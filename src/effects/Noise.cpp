@@ -57,6 +57,8 @@ EffectNoise::EffectNoise()
    mType = DEF_Type;
    mAmp = DEF_Amp;
 
+   SetLinearEffectFlag(true);
+
    y = z = buf0 = buf1 = buf2 = buf3 = buf4 = buf5 = buf6 = 0;
 }
 

@@ -94,6 +94,8 @@ EffectChangePitch::EffectChangePitch()
 
    m_pTextCtrl_PercentChange = NULL;
    m_pSlider_PercentChange = NULL;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectChangePitch::~EffectChangePitch()

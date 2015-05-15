@@ -49,6 +49,8 @@ EffectNormalize::EffectNormalize()
    mDC = DEF_RemoveDC;
    mGain = DEF_ApplyGain;
    mStereoInd = DEF_StereoInd;
+
+   SetLinearEffectFlag(false);
 }
 
 EffectNormalize::~EffectNormalize()

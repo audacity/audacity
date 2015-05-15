@@ -96,6 +96,8 @@ EffectChangeSpeed::EffectChangeSpeed()
    mToLength = 0.0;
    mFormat = _("hh:mm:ss + milliseconds");
    mbLoopDetect = false;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectChangeSpeed::~EffectChangeSpeed()

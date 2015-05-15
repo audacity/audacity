@@ -105,6 +105,12 @@ EffectToneGen::EffectToneGen(bool isChirp)
    {
       mInterpolations.Add(wxGetTranslation(kInterStrings[i]));
    }
+   // Chirp varies over time so must use selected duration.
+   // TODO: When previewing, calculate only the first 'preview length'.
+   if (isChirp)
+      SetLinearEffectFlag(false);
+   else
+      SetLinearEffectFlag(true);
 }
 
 EffectToneGen::~EffectToneGen()

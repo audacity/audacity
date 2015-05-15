@@ -217,6 +217,8 @@ EffectEqualization::EffectEqualization()
    mFilterFuncR = new float[windowSize];
    mFilterFuncI = new float[windowSize];
 
+   SetLinearEffectFlag(true);
+
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    mEffectEqualization48x=NULL;
 #endif

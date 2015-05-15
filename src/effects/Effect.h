@@ -316,6 +316,11 @@ protected:
    void SetTimeWarper(TimeWarper *warper);
    TimeWarper *GetTimeWarper();
 
+   // Previewing linear effect can be optimised by pre-mixing. However this
+   // should not be used for non-linear effects such as dynamic processors
+   // To allow pre-mixing before Preview, set linearEffectFlag to true.
+   void SetLinearEffectFlag(bool linearEffectFlag);
+
    // Use these two methods to copy the input tracks to mOutputTracks, if
    // doing the processing on them, and replacing the originals only on success (and not cancel).
    void CopyInputTracks(int trackType = Track::Wave);
@@ -388,7 +393,11 @@ private:
 
    bool mIsBatch;
 
+   bool mIsLinearEffect;
+
    double mDuration;
+   // mSetDuration should ONLY be set when SetDuration() is called.
+   double mSetDuration;
 
    bool mUIDebug;
 

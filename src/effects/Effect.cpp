@@ -91,6 +91,7 @@ Effect::Effect()
    mT0 = 0.0;
    mT1 = 0.0;
    mDuration = 0.0;
+   mIsLinearEffect = false;
    mNumTracks = 0;
    mNumGroups = 0;
    mProgress = NULL;
@@ -759,6 +760,7 @@ void Effect::SetDuration(double seconds)
    }
 
    mDuration = seconds;
+   mSetDuration = mDuration;
 
    return;
 }
@@ -1931,6 +1933,11 @@ void Effect::EnableDebug(bool enable)
    mUIDebug = enable;
 }
 
+void Effect::SetLinearEffectFlag(bool linearEffectFlag)
+{
+   mIsLinearEffect = linearEffectFlag;
+}
+
 bool Effect::TotalProgress(double frac)
 {
    int updateResult = (mProgress ?
@@ -2352,6 +2359,11 @@ bool Effect::IsHidden()
 
 void Effect::Preview(bool dryOnly)
 {
+    if (mIsLinearEffect)
+       wxLogDebug(wxT("Linear Effect"));
+    else
+       wxLogDebug(wxT("Non-linear Effect"));
+
    if (mNumTracks==0) // nothing to preview
       return;
 
@@ -2363,45 +2375,80 @@ void Effect::Preview(bool dryOnly)
    double previewLen = 6.0;
    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
 
-   WaveTrack *mixLeft = NULL;
-   WaveTrack *mixRight = NULL;
    double rate = mProjectRate;
    double t0 = mT0;
    double t1 = t0 + CalcPreviewInputLength(previewLen);
 
-   if (t1 > mT1)
-      t1 = mT1;
-
    // Generators can run without a selection.
-//   if (!GeneratorPreview() && (t1 <= t0))
-//      return;
-
-   bool success = ::MixAndRender(mTracks, mFactory, rate, floatSample, t0, t1,
-                                 &mixLeft, &mixRight);
-
-   if (!success) {
-      return;
+   if (GetType() == EffectTypeGenerate) {
+      // If a generator varies over time, it must use the selected duration.
+      // otherwise set it as a linear effect and process no more than the preview length.
+      // TODO: When previewing non-linear generate effect, calculate only the first 'preview length'.
+      double dur = (mIsLinearEffect)? wxMin(mSetDuration, CalcPreviewInputLength(previewLen)) : mSetDuration;
+      t1 = t0 + dur;
+      this->SetDuration(dur);
    }
+   else if (t1 > mT1) {
+      t1 = mT1;
+   }
+   if (t1 <= t0)
+      return;
+
+   bool success;
+   WaveTrack *mixLeft = NULL;
+   WaveTrack *mixRight = NULL;
 
    // Save the original track list
    TrackList *saveTracks = mTracks;
 
+   // Linear Effect preview optimised by pre-mixing to one track.
+   // Generators need to generate per track.
+   if (mIsLinearEffect && !(GetType() == EffectTypeGenerate)) {
+      success = ::MixAndRender(mTracks, mFactory, rate, floatSample, t0, t1,
+                               &mixLeft, &mixRight);
+   }
+
    // Build new tracklist from rendering tracks
    mTracks = new TrackList();
-   mixLeft->SetSelected(true);
-   mixLeft->SetDisplay(WaveTrack::NoDisplay);
-   mTracks->Add(mixLeft);
-   if (mixRight) {
-      mixRight->SetSelected(true);
-      mTracks->Add(mixRight);
+
+   if (mIsLinearEffect && !(GetType() == EffectTypeGenerate)) {
+      if (!success) {
+         delete mTracks;
+         mTracks = saveTracks;
+         return;
+      }
+
+      mixLeft->SetSelected(true);
+      mixLeft->SetDisplay(WaveTrack::NoDisplay);
+      mTracks->Add(mixLeft);
+      if (mixRight) {
+         mixRight->SetSelected(true);
+         mTracks->Add(mixRight);
+      }
+
+      // TODO:  Don't really think this is necessary, but doesn't hurt
+      // Reset times
+      t0 = mixLeft->GetStartTime();
+      t1 = mixLeft->GetEndTime();
+   }
+   else {
+      // Copy all tracks as 'some' effects (AutoDuck) may require non-selected tracks.
+      TrackListOfKindIterator iter(Track::Wave, saveTracks);
+      WaveTrack *src = (WaveTrack *) iter.First();
+      while (src)
+      {
+         WaveTrack *dest;
+         src->Copy(t0, t1, (Track **) &dest);
+         dest->SetSelected(src->GetSelected());
+         dest->SetDisplay(WaveTrack::NoDisplay);
+         mTracks->Add(dest);
+
+         src = (WaveTrack *) iter.Next();
+      }
    }
 
    // Update track/group counts
    CountWaveTracks();
-
-   // Reset times
-   t0 = mixLeft->GetStartTime();
-   t1 = mixLeft->GetEndTime();
 
    double t0save = mT0;
    double t1save = mT1;
@@ -2412,36 +2459,26 @@ void Effect::Preview(bool dryOnly)
 
    bool bSuccess(true);
    if (!dryOnly) {
-      // Effect is already inited; we call Process, End, and then Init
-      // again, so the state is exactly the way it was before Preview
-      // was called.
       mProgress = new ProgressDialog(GetName(),
             _("Preparing preview"),
             pdlgHideCancelButton); // Have only "Stop" button.
       bSuccess = Process();
       delete mProgress;
       mProgress = NULL;
-      End();
-      Init();
    }
-
-   // Restore original selection
-   mT0 = t0save;
-   mT1 = t1save;
 
    if (bSuccess)
    {
       WaveTrackArray playbackTracks;
       WaveTrackArray recordingTracks;
-      // Probably not the same tracks post-processing, so can't rely on previous values of mixLeft & mixRight.
-      TrackListOfKindIterator iter(Track::Wave, mTracks);
-      mixLeft = (WaveTrack*)(iter.First());
-      mixRight = (WaveTrack*)(iter.Next());
-      playbackTracks.Add(mixLeft);
-      if (mixRight)
-         playbackTracks.Add(mixRight);
 
-      t1 = wxMin(mixLeft->GetEndTime(), t0 + previewLen);
+      SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
+      WaveTrack *src = (WaveTrack *) iter.First();
+      while (src)
+      {
+         playbackTracks.Add(src);
+         src = (WaveTrack *) iter.Next();
+      }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       NoteTrackArray empty;
@@ -2452,17 +2489,17 @@ void Effect::Preview(bool dryOnly)
 #ifdef EXPERIMENTAL_MIDI_OUT
                                empty,
 #endif
-                               rate, t0, t1);
+                               rate, mT0, mT1);
 
       if (token) {
          int previewing = eProgressSuccess;
 
          mProgress = new ProgressDialog(GetName(),
-                                        _("Previewing"), pdlgHideCancelButton);
+                                       _("Previewing"), pdlgHideCancelButton);
 
          while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
             ::wxMilliSleep(100);
-            previewing = mProgress->Update(gAudioIO->GetStreamTime() - t0, t1 - t0);
+            previewing = mProgress->Update(gAudioIO->GetStreamTime() - mT0, mT1);
          }
          gAudioIO->StopStream();
 
@@ -2475,9 +2512,13 @@ void Effect::Preview(bool dryOnly)
       }
       else {
          wxMessageBox(_("Error while opening sound device. Please check the playback device settings and the project sample rate."),
-                      _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
+                     _("Error"), wxOK | wxICON_EXCLAMATION, FocusDialog);
       }
    }
+
+   // Restore original selection
+   mT0 = t0save;
+   mT1 = t1save;
 
    if (FocusDialog) {
       FocusDialog->SetFocus();
@@ -2490,6 +2531,13 @@ void Effect::Preview(bool dryOnly)
    delete mTracks;
 
    mTracks = saveTracks;
+   // Effect is already inited; we call Process, End, and then Init
+   // again, so the state is exactly the way it was before Preview
+   // was called.
+   if (!dryOnly) {
+      End();
+      Init();
+   }
 }
 
 BEGIN_EVENT_TABLE(EffectDialog, wxDialog)

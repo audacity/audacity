@@ -76,6 +76,8 @@ EffectBassTreble::EffectBassTreble()
    dB_treble = DEF_Treble;
    dB_level = DEF_Level;
    mbNormalize = DEF_Normalize;
+
+   SetLinearEffectFlag(false);
 }
 
 EffectBassTreble::~EffectBassTreble()

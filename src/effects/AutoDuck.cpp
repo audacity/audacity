@@ -90,6 +90,8 @@ EffectAutoDuck::EffectAutoDuck()
    mThresholdDb = DEF_ThresholdDb;
    mMaximumPause = DEF_MaximumPause;
 
+   SetLinearEffectFlag(true);
+
    mControlTrack = NULL;
 
    mPanel = NULL;

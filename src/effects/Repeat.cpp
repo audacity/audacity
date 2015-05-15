@@ -47,6 +47,8 @@ END_EVENT_TABLE()
 EffectRepeat::EffectRepeat()
 {
    repeatCount = 10;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectRepeat::~EffectRepeat()

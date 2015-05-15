@@ -79,6 +79,8 @@ EffectPaulstretch::EffectPaulstretch()
 {
    amount = DEF_Amount;
    time_resolution = DEF_Time;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectPaulstretch::~EffectPaulstretch()

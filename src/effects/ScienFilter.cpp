@@ -160,6 +160,8 @@ EffectScienFilter::EffectScienFilter()
    mRipple = DEF_Passband;
    mStopbandRipple = DEF_Stopband;
 
+   SetLinearEffectFlag(true);
+
    mOrderIndex = mOrder - 1;
 
    mdBMin = -30.0;

@@ -85,6 +85,8 @@ EffectCompressor::EffectCompressor()
    mFollow1 = NULL;
    mFollow2 = NULL;
    mFollowLen = 0;
+
+   SetLinearEffectFlag(false);
 }
 
 EffectCompressor::~EffectCompressor()
