@@ -262,6 +262,9 @@ public:
    // a better solution is devised.
    const PluginID & RegisterPlugin(EffectIdentInterface *effect);
 
+public:
+   bool mbRegisterAndEnable;
+
 private:
    void Load();
    void LoadGroup(PluginType type);

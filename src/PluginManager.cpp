@@ -861,8 +861,9 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
 
    PluginManager & pm = PluginManager::Get();
    ModuleManager & mm = ModuleManager::Get();
-
-
+   // From here on, if we register an effect we want to enable it.
+   pm.mbRegisterAndEnable = true;
+   
    // JKC: The following loop disables all the effects, which 
    // will in turn make them disappear from menus.
    PluginMap::iterator iter = pm.mPlugins.begin();
@@ -911,6 +912,8 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
          {
             if (mm.RegisterPlugin(providers[j], path))
             {
+               plug = pm.mPlugins[path];
+               plug.SetEnabled( true );
                break;
             }
          }
@@ -1288,7 +1291,7 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Effect
    plug.SetEffectRealtime(effect->SupportsRealtime());
    plug.SetEffectAutomatable(effect->SupportsAutomation());
 
-   plug.SetEnabled(effect->EnableFromGetGo());
+   plug.SetEnabled(mbRegisterAndEnable | effect->EnableFromGetGo());
    plug.SetValid(true);
 
    return plug.GetID();
@@ -1561,6 +1564,7 @@ PluginManager *PluginManager::mInstance = NULL;
 PluginManager::PluginManager()
 {
    mSettings = NULL;
+   mbRegisterAndEnable = false;
 }
 
 PluginManager::~PluginManager()
