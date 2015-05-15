@@ -92,6 +92,7 @@ Effect::Effect()
    mT1 = 0.0;
    mDuration = 0.0;
    mIsLinearEffect = false;
+   mPreviewWithNotSelected = false;
    mNumTracks = 0;
    mNumGroups = 0;
    mProgress = NULL;
@@ -1938,6 +1939,11 @@ void Effect::SetLinearEffectFlag(bool linearEffectFlag)
    mIsLinearEffect = linearEffectFlag;
 }
 
+void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
+{
+   mPreviewWithNotSelected = includeNotSelected;
+}
+
 bool Effect::TotalProgress(double frac)
 {
    int updateResult = (mProgress ?
@@ -2432,17 +2438,17 @@ void Effect::Preview(bool dryOnly)
       t1 = mixLeft->GetEndTime();
    }
    else {
-      // Copy all tracks as 'some' effects (AutoDuck) may require non-selected tracks.
       TrackListOfKindIterator iter(Track::Wave, saveTracks);
       WaveTrack *src = (WaveTrack *) iter.First();
       while (src)
       {
          WaveTrack *dest;
-         src->Copy(t0, t1, (Track **) &dest);
-         dest->SetSelected(src->GetSelected());
-         dest->SetDisplay(WaveTrack::NoDisplay);
-         mTracks->Add(dest);
-
+         if (src->GetSelected() || mPreviewWithNotSelected) {
+            src->Copy(t0, t1, (Track **) &dest);
+            dest->SetSelected(src->GetSelected());
+            dest->SetDisplay(WaveTrack::NoDisplay);
+            mTracks->Add(dest);
+         }
          src = (WaveTrack *) iter.Next();
       }
    }
