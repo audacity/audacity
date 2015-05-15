@@ -2630,7 +2630,7 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    // just our Effects dialogs.  So, this is a only temporary workaround
    // for legacy effects that disable the OK button.  Hopefully this has
    // been corrected in wx3.
-   if (FindWindowById(wxID_OK)->IsEnabled() && Validate() && TransferDataFromWindow())
+   if (FindWindow(wxID_OK)->IsEnabled() && Validate() && TransferDataFromWindow())
    {
       EndModal(true);
    }
@@ -2984,14 +2984,10 @@ bool EffectUIHost::Initialize()
 
    bar->SetSizerAndFit(bs);
 
-   long buttons = eApplyButton;
-   if (!mIsBatch)
+   long buttons = eApplyButton + eCloseButton;
+   if (mEffect->mUIDebug)
    {
-      buttons += eCloseButton;
-      if (mEffect->mUIDebug)
-      {
-         buttons += eDebugButton;
-      }
+      buttons += eDebugButton;
    }
 
    wxSizer *s = CreateStdButtonSizer(this, buttons, bar);
@@ -3002,13 +2998,13 @@ bool EffectUIHost::Initialize()
    Fit();
    Center();
 
-   mApplyBtn = (wxButton *) FindWindowById(wxID_APPLY);
-   mCloseBtn = (wxButton *) FindWindowById(wxID_CANCEL);
+   mApplyBtn = (wxButton *) FindWindow(wxID_APPLY);
+   mCloseBtn = (wxButton *) FindWindow(wxID_CANCEL);
 
    UpdateControls();
 
    w->SetAccept(!mIsGUI);
-   (!mIsGUI ? w : FindWindowById(wxID_APPLY))->SetFocus();
+   (!mIsGUI ? w : FindWindow(wxID_APPLY))->SetFocus();
  
    LoadUserPresets();
 
@@ -3075,7 +3071,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    // just our Effects dialogs.  So, this is a only temporary workaround
    // for legacy effects that disable the OK button.  Hopefully this has
    // been corrected in wx3.
-   if (!FindWindowById(wxID_APPLY)->IsEnabled())
+   if (!FindWindow(wxID_APPLY)->IsEnabled())
    {
       return;
    }
@@ -3222,7 +3218,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
    menu->Append(0, _("About"), sub);
 
-   wxRect r = FindWindowById(kMenuID)->GetParent()->GetRect();
+   wxRect r = FindWindow(kMenuID)->GetParent()->GetRect();
    PopupMenu(menu, wxPoint(r.GetLeft(), r.GetBottom()));
 
    delete menu;
