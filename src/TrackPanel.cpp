@@ -2554,7 +2554,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       return;
    }
 
-
+/* Redundant now that we have a more comprehensive Quick-Play in the Timeline
    // A control-click will set just the indicator to the clicked spot,
    // and turn playback on.
    else if(event.CmdDown()
@@ -2569,6 +2569,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       SetCapturedTrack(NULL, IsUncaptured);
       return;
    }
+*/
 
    //Make sure you are within the selected track
    bool startNewSelection = true;

@@ -451,6 +451,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
  private:
 
+   void OnCapture(wxCommandEvent & evt);
    void ClearClipboard();
    void InitialState();
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
@@ -620,6 +621,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mMenuClose;
 
    bool mbInitializingScrollbar;
+
+   // Flag that we're recoding.
+   bool mIsCapturing;
 
    DECLARE_EVENT_TABLE()
 };

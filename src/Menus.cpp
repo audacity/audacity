@@ -1121,15 +1121,21 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("Stop"), _("Stop"), FN(OnStop),
                  AudioIOBusyFlag,
                  AudioIOBusyFlag);
-   c->AddCommand(wxT("PlayOneSec"), _("Play One Second"), FN(OnPlayOneSecond), wxT("1"));
-   c->AddCommand(wxT("PlayToSelection"),_("Play To Selection"), FN(OnPlayToSelection), wxT("B"));
+   c->AddCommand(wxT("PlayOneSec"), _("Play One Second"), FN(OnPlayOneSecond), wxT("1"),
+                 CaptureNotBusyFlag,
+                 CaptureNotBusyFlag);
+   c->AddCommand(wxT("PlayToSelection"),_("Play To Selection"), FN(OnPlayToSelection), wxT("B"),
+                 CaptureNotBusyFlag,
+                 CaptureNotBusyFlag);
    c->AddCommand(wxT("PlayBeforeSelectionStart"),_("Play Before Selection Start"), FN(OnPlayBeforeSelectionStart), wxT("Shift+F5"));
    c->AddCommand(wxT("PlayAfterSelectionStart"),_("Play After Selection Start"), FN(OnPlayAfterSelectionStart), wxT("Shift+F6"));
    c->AddCommand(wxT("PlayBeforeSelectionEnd"),_("Play Before Selection End"), FN(OnPlayBeforeSelectionEnd), wxT("Shift+F7"));
    c->AddCommand(wxT("PlayAfterSelectionEnd"),_("Play After Selection End"), FN(OnPlayAfterSelectionEnd), wxT("Shift+F8"));
    c->AddCommand(wxT("PlayBeforeAndAfterSelectionStart"),_("Play Before and After Selection Start"), FN(OnPlayBeforeAndAfterSelectionStart), wxT("Ctrl+Shift+F5"));
    c->AddCommand(wxT("PlayBeforeAndAfterSelectionEnd"),_("Play Before and After Selection End"), FN(OnPlayBeforeAndAfterSelectionEnd), wxT("Ctrl+Shift+F7"));
-   c->AddCommand(wxT("PlayCutPreview"), _("Play Cut Preview"), FN(OnPlayCutPreview), wxT("C"));
+   c->AddCommand(wxT("PlayCutPreview"), _("Play Cut Preview"), FN(OnPlayCutPreview), wxT("C"),
+                 CaptureNotBusyFlag,
+                 CaptureNotBusyFlag);
 
    c->AddCommand(wxT("SelStart"), _("Selection to Start"), FN(OnSelToStart), wxT("Shift+Home"));
    c->AddCommand(wxT("SelEnd"), _("Selection to End"), FN(OnSelToEnd), wxT("Shift+End"));
@@ -1226,6 +1232,8 @@ void AudacityProject::CreateMenusAndCommands()
    c->AddCommand(wxT("InputGain"), _("Adjust recording volume"), FN(OnInputGain));
    c->AddCommand(wxT("InputGainInc"), _("Increase recording volume"), FN(OnInputGainInc));
    c->AddCommand(wxT("InputGainDec"), _("Decrease recording volume"), FN(OnInputGainDec));
+
+   c->SetDefaultFlags(CaptureNotBusyFlag, CaptureNotBusyFlag);
 
    c->AddCommand(wxT("PlayAtSpeed"), _("Play at speed"), FN(OnPlayAtSpeed));
    c->AddCommand(wxT("PlayAtSpeedLooped"), _("Loop Play at speed"), FN(OnPlayAtSpeedLooped));
@@ -1793,6 +1801,9 @@ wxUint32 AudacityProject::GetUpdateFlags()
 
    if (!EffectManager::Get().RealtimeIsActive())
       flags |= IsRealtimeNotActiveFlag;
+
+      if (!mIsCapturing)
+      flags |= CaptureNotBusyFlag;
 
    return flags;
 }

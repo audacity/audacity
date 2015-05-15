@@ -1031,11 +1031,21 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 //   mTrackPanel->SetDropTarget(new AudacityDropTarget(this));
    mTrackPanel->SetDropTarget(new DropTarget(this));
 #endif
+
+   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
+                     wxCommandEventHandler(AudacityProject::OnCapture),
+                     NULL,
+                     this);
 }
 
 AudacityProject::~AudacityProject()
 {
    wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
+
+   wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
+                     wxCommandEventHandler(AudacityProject::OnCapture),
+                     NULL,
+                     this);
 }
 
 AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
@@ -1143,6 +1153,15 @@ void AudacityProject::SetSel1(double newSel1)
    mViewInfo.selectedRegion.setT1(newSel1);
 }
 
+void AudacityProject::OnCapture(wxCommandEvent& evt)
+{
+   evt.Skip();
+
+   if (evt.GetInt() != 0)
+      mIsCapturing = true;
+   else
+      mIsCapturing = false;
+}
 
 
 DirManager *AudacityProject::GetDirManager()
