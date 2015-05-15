@@ -256,6 +256,18 @@ diff -ruN orig/wxMac-2.8.12/include/wx/mac/carbon/access.h wxMac-2.8.12/include/
 +
 +#endif  //_WX_ACCESS_H_
 +
+diff -ruN orig/wxMac-2.8.12/src/common/matrix.cpp wxMac-2.8.12/src/common/matrix.cpp
+--- orig/wxMac-2.8.12/src/common/matrix.cpp	2011-03-22 07:33:13.000000000 -0500
++++ wxMac-2.8.12/src/common/matrix.cpp	2015-05-15 12:14:53.000000000 -0500
+@@ -25,7 +25,7 @@
+     #include "wx/math.h"
+ #endif
+ 
+-static const double pi = M_PI;
++//static const double pi = M_PI;
+ 
+ wxTransformMatrix::wxTransformMatrix(void)
+ {
 diff -ruN orig/wxMac-2.8.12/src/mac/carbon/access.cpp wxMac-2.8.12/src/mac/carbon/access.cpp
 --- orig/wxMac-2.8.12/src/mac/carbon/access.cpp	1969-12-31 18:00:00.000000000 -0600
 +++ wxMac-2.8.12/src/mac/carbon/access.cpp	2015-04-21 16:07:03.000000000 -0500
@@ -4205,3 +4217,17 @@ diff -ruN orig/wxMac-2.8.12/src/mac/carbon/window.cpp wxMac-2.8.12/src/mac/carbo
  }
  
  void wxWindowMac::DoSetWindowVariant( wxWindowVariant variant )
+diff -ruN orig/wxMac-2.8.12/src/tiff/tiff.h wxMac-2.8.12/src/tiff/tiff.h
+--- orig/wxMac-2.8.12/src/tiff/tiff.h	2011-03-22 07:34:07.000000000 -0500
++++ wxMac-2.8.12/src/tiff/tiff.h	2015-05-15 12:06:29.000000000 -0500
+@@ -83,8 +83,8 @@
+ typedef	int int32;
+ typedef	unsigned int uint32;	/* sizeof (uint32) must == 4 */
+ #else
+-typedef	long int32;
+-typedef	unsigned long uint32;	/* sizeof (uint32) must == 4 */
++typedef	int int32;
++typedef	unsigned int uint32;	/* sizeof (uint32) must == 4 */
+ #endif
+ #endif /* _TIFF_DATA_TYPEDEFS_ */
+ 
