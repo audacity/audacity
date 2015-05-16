@@ -214,17 +214,23 @@ bool EffectRepeat::TransferDataFromWindow()
 
 void EffectRepeat::DisplayNewTime()
 {
-   TransferDataFromWindow();
+   long l;
+   mRepeatCount->GetValue().ToLong(&l);
 
-   NumericConverter nc(NumericConverter::TIME,
-                       _("hh:mm:ss"),
-                       (mT1 - mT0) * (repeatCount + 1),
-                       mProjectRate);
+   if (l > 0)
+   {
+      repeatCount = l;
 
-   wxString str = _("New selection length: ") + nc.GetString();
+      NumericConverter nc(NumericConverter::TIME,
+                          _("hh:mm:ss"),
+                          (mT1 - mT0) * (repeatCount + 1),
+                          mProjectRate);
 
-   mTotalTime->SetLabel(str);
-   mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      wxString str = _("New selection length: ") + nc.GetString();
+
+      mTotalTime->SetLabel(str);
+      mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   }
 }
 
 void EffectRepeat::OnRepeatTextChange(wxCommandEvent & WXUNUSED(evt))
