@@ -454,12 +454,14 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
       mFuncChoice = S.Id(FreqFuncChoiceID).AddChoice(_("&Function:"), wxT(""), &funcChoices);
       mFuncChoice->SetSelection(mFunc);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
+      mFuncChoice->MoveAfterInTabOrder(mSizeChoice);
 
       S.AddSpace(5);
 
       mAxisChoice = S.Id(FreqAxisChoiceID).AddChoice(_("&Axis:"), wxT(""), &axisChoices);
       mAxisChoice->SetSelection(mAxis);
       S.SetSizeHints(wxDefaultCoord, wxDefaultCoord);
+      mAxisChoice->MoveAfterInTabOrder(mFuncChoice);
 
       S.AddSpace(5);
 
