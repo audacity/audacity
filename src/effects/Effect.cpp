@@ -2400,7 +2400,7 @@ void Effect::Preview(bool dryOnly)
    if (t1 <= t0)
       return;
 
-   bool success;
+   bool success = true;
    WaveTrack *mixLeft = NULL;
    WaveTrack *mixRight = NULL;
 
@@ -2463,17 +2463,16 @@ void Effect::Preview(bool dryOnly)
 
    // Apply effect
 
-   bool bSuccess(true);
    if (!dryOnly) {
       mProgress = new ProgressDialog(GetName(),
             _("Preparing preview"),
             pdlgHideCancelButton); // Have only "Stop" button.
-      bSuccess = Process();
+      success = Process();
       delete mProgress;
       mProgress = NULL;
    }
 
-   if (bSuccess)
+   if (success)
    {
       WaveTrackArray playbackTracks;
       WaveTrackArray recordingTracks;
