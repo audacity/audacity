@@ -85,8 +85,10 @@ void AboutDialog::CreateCreditsList()
 
    // All other contributors
    AddCredit(wxT("Lynn Allan"), roleContributor);
+   AddCredit(wxT("David Avery"), roleContributor);
    AddCredit(wxT("David Bailes"), roleContributor);
    AddCredit(wxT("William Bland"), roleContributor);
+   AddCredit(wxT("Sami Boukortt"), roleContributor);
    AddCredit(wxT("Jeremy R. Brown"), roleContributor);
    AddCredit(wxT("Alex S. Brown"), roleContributor);
    AddCredit(wxT("Chris Cannam"), roleContributor);
