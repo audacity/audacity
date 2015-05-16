@@ -1092,9 +1092,12 @@ int AudacityApp::FilterEvent(wxEvent & event)
 
 AudacityApp::AudacityApp()
 {
+// Do not capture crashes in debug builds
+#if !defined(__WXDEBUG__)
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
    wxHandleFatalExceptions();
+#endif
 #endif
 #endif
 }
