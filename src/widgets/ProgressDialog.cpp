@@ -1392,8 +1392,11 @@ ProgressDialog::Update(int value, const wxString & message)
 
       mLastUpdate = now;
    }
-
+#if wxCHECK_VERSION(3, 0, 0)
+   wxEventLoopBase *loop = wxEventLoop::GetActive();
+#else
    wxEventLoop *loop = wxEventLoop::GetActive();
+#endif
    if (loop)
    {
       int i = 10;
@@ -1627,7 +1630,11 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
       mLastUpdate = now;
    }
 
+#if wxCHECK_VERSION(3, 0, 0)
+   wxEventLoopBase *loop = wxEventLoop::GetActive();
+#else
    wxEventLoop *loop = wxEventLoop::GetActive();
+#endif
    if (loop)
    {
       int i = 10;
