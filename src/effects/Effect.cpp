@@ -3032,7 +3032,7 @@ void EffectUIHost::OnInitDialog(wxInitDialogEvent & evt)
    wxDialog::OnInitDialog(evt);
 
 #if wxCHECK_VERSION(3, 0, 0)
-#warning "check to see if this still needed in wx3"
+//#warning "check to see if this still needed in wx3"
 #endif
 
    // Pure hackage coming down the pike...
