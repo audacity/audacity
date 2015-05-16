@@ -618,7 +618,7 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
          {
             if (LADSPA_IS_HINT_LOGARITHMIC(hint.HintDescriptor))
             {
-               val = exp(log(lower)) * 0.75f + log(upper) * 0.25f;
+               val = exp(log(lower) * 0.75f + log(upper) * 0.25f);
             }
             else
             {
@@ -630,7 +630,7 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
          {
             if (LADSPA_IS_HINT_LOGARITHMIC(hint.HintDescriptor))
             {
-               val = exp(log(lower)) * 0.5f + log(upper) * 0.5f;
+               val = exp(log(lower) * 0.5f + log(upper) * 0.5f);
             }
             else
             {
@@ -642,7 +642,7 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
          {
             if (LADSPA_IS_HINT_LOGARITHMIC(hint.HintDescriptor))
             {
-               val = exp(log(lower)) * 0.25f + log(upper) * 0.75f;
+               val = exp(log(lower) * 0.25f + log(upper) * 0.75f);
             }
             else
             {
