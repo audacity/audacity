@@ -1749,7 +1749,14 @@ bool Effect::ProcessTrack(int count,
             left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
             if (right)
             {
-               right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+               if (chans >= 2)
+               {
+                  right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+               }
+               else
+               {
+                  right->Set((samplePtr) mOutBuffer[0], floatSample, outRightPos, outputBufferCnt);
+               }
             }
          }
          else if (isGenerator)
@@ -1799,7 +1806,14 @@ bool Effect::ProcessTrack(int count,
          left->Set((samplePtr) mOutBuffer[0], floatSample, outLeftPos, outputBufferCnt);
          if (right)
          {
-            right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+            if (chans >= 2)
+            {
+               right->Set((samplePtr) mOutBuffer[1], floatSample, outRightPos, outputBufferCnt);
+            }
+            else
+            {
+               right->Set((samplePtr) mOutBuffer[0], floatSample, outRightPos, outputBufferCnt);
+            }
          }
       }
       else if (isGenerator)
