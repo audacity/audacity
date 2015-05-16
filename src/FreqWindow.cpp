@@ -86,7 +86,7 @@ and in the spectrogram spectral selection.
 
 #if defined(__WXGTK__)
 #define GSocket GSocketHack
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 #endif
 
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);
@@ -516,7 +516,7 @@ FreqWindow::FreqWindow(wxWindow * parent, wxWindowID id,
    //
    // I guess the only way round it would be to handle key actions
    // ourselves, but we'll leave that for a future date.
-   GTK_WIDGET_SET_FLAGS(mPanScroller->m_widget, GTK_CAN_FOCUS);
+   gtk_widget_set_can_focus(mPanScroller->m_widget, true);
 #endif
 }
 
