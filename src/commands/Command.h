@@ -29,11 +29,12 @@ be controlled by a script should be separated out into its own Command class.
 
 #include <wx/app.h>
 
+#include "../Project.h"
+
 #include "CommandMisc.h"
 #include "CommandSignature.h"
 
 class AudacityApp;
-class AudacityProject;
 class CommandOutputTarget;
 
 class CommandExecutionContext
