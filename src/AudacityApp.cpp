@@ -1634,7 +1634,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
    mChecker = new wxSingleInstanceChecker();
 
 #if defined(__UNIX__)
-   wxString sockFile(FileNames::DataDir() + wxT("/.audacity.sock"));
+   wxString sockFile(defaultTempDir + wxT("/.audacity.sock"));
 #endif
 
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
