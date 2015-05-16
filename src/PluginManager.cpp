@@ -1031,24 +1031,24 @@ const wxString & PluginDescriptor::GetSymbol() const
    return mSymbol;
 }
 
-wxString PluginDescriptor::GetName() const
+wxString PluginDescriptor::GetName(bool translate) const
 {
-   return wxGetTranslation(mName);
+   return translate ? wxString(wxGetTranslation(mName)) : mName;
 }
 
-wxString PluginDescriptor::GetVersion() const
+wxString PluginDescriptor::GetVersion(bool translate) const
 {
-   return wxGetTranslation(mVersion);
+   return translate ? wxString(wxGetTranslation(mVersion)) : mVersion;
 }
 
-wxString PluginDescriptor::GetVendor() const
+wxString PluginDescriptor::GetVendor(bool translate) const
 {
-   return wxGetTranslation(mVendor);
+   return translate ? wxString(wxGetTranslation(mVendor)) : mVendor;
 }
 
-wxString PluginDescriptor::GetDescription() const
+wxString PluginDescriptor::GetDescription(bool translate) const
 {
-   return wxGetTranslation(mDescription);
+   return translate ? wxString(wxGetTranslation(mDescription)) : mDescription;
 }
 
 bool PluginDescriptor::IsEnabled() const
@@ -1948,10 +1948,10 @@ void PluginManager::SaveGroup(PluginType type)
 
       mRegistry->Write(KEY_PATH, plug.GetPath());
       mRegistry->Write(KEY_SYMBOL, plug.GetSymbol());
-      mRegistry->Write(KEY_NAME, plug.GetName());
-      mRegistry->Write(KEY_VERSION, plug.GetVersion());
-      mRegistry->Write(KEY_VENDOR, plug.GetVendor());
-      mRegistry->Write(KEY_DESCRIPTION, plug.GetDescription());
+      mRegistry->Write(KEY_NAME, plug.GetName(false));
+      mRegistry->Write(KEY_VERSION, plug.GetVersion(false));
+      mRegistry->Write(KEY_VENDOR, plug.GetVendor(false));
+      mRegistry->Write(KEY_DESCRIPTION, plug.GetDescription(false));
       mRegistry->Write(KEY_PROVIDERID, plug.GetProviderID());
       mRegistry->Write(KEY_ENABLED, plug.IsEnabled());
       mRegistry->Write(KEY_VALID, plug.IsValid());

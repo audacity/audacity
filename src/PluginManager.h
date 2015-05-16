@@ -55,16 +55,16 @@ public:
    // All plugins
 
    // These return untranslated strings
+   const wxString & GetID() const;
    const wxString & GetProviderID() const;
    const wxString & GetPath() const;
    const wxString & GetSymbol() const;
 
-   // These return translated strings (if available)
-   const wxString & GetID() const;
-   wxString GetName() const;
-   wxString GetVersion() const;
-   wxString GetVendor() const;
-   wxString GetDescription() const;
+   // These return translated strings (if available and if requested)
+   wxString GetName(bool translate = true) const;
+   wxString GetVersion(bool translate = true) const;
+   wxString GetVendor(bool translate = true) const;
+   wxString GetDescription(bool translate = true) const;
    bool IsEnabled() const;
    bool IsValid() const;
 
