@@ -20,6 +20,7 @@
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dir.h>
+#include <wx/display.h>
 #include <wx/dynarray.h>
 #include <wx/dynlib.h>
 #include <wx/hashmap.h>
@@ -682,10 +683,8 @@ void PluginRegistrationDialog::RegenerateEffectsList( int iShowWhat )
       // Only need to get the icon width once 
       if (i == 0)
       {
-#if defined(__WXMAC__)
-         // wxMac doesn't return the ICON rectangle.  It returns the
-         // rectangle for the first column and that even comes back
-         // with negative numbers sometimes.
+#if defined(__WXMAC__) || defined(__WXGTK__)
+         // wxMac and wxGtk do not return a valid width.
          // 
          // So, just guess.
          wxIcon i1(unchecked_xpm);
@@ -703,6 +702,14 @@ void PluginRegistrationDialog::RegenerateEffectsList( int iShowWhat )
       iPathLen = wxMax(iPathLen, x + iconrect.width + (iconrect.x * 2));
       i++;
    }
+
+#if defined(__WXGTK__)
+   // Keep dialog from getting too wide
+   wxDisplay d(wxDisplay::GetFromWindow(GetParent()));
+   int w = d.GetGeometry().GetWidth() - 100;
+   iNameLen = wxMin(iNameLen, w);
+   iPathLen = wxMin(iPathLen, w - iNameLen);
+#endif
 
    mEffects->SortItems(SortCompare, 0);
    for(i=0;i<mEffects->GetItemCount();i++)
