@@ -146,7 +146,6 @@ void ExportPlugin::SetDescription(const wxString & description, int index)
 void ExportPlugin::AddExtension(const wxString &extension,int index)
 {
    mFormatInfos[index].mExtensions.Add(extension);
-wxLogDebug(wxT("index %d %s"), index, extension.c_str());
 }
 
 void ExportPlugin::SetExtensions(const wxArrayString & extensions, int index)
@@ -544,7 +543,6 @@ bool Exporter::GetFilename()
 
    mFilename.SetPath(gPrefs->Read(wxT("/Export/Path"), ::wxGetCwd()));
    mFilename.SetName(mProject->GetName());
-wxLogDebug(wxT("mask %s"), maskString.c_str());
    while (true) {
 
       FileDialog fd(mProject,
