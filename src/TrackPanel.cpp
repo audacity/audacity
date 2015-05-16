@@ -5380,10 +5380,14 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
    bool panZero = false;
 #endif
 
+   // On the Mac, we'll lose track capture if the slider dialog
+   // is displayed, but it doesn't hurt to do this for all plats.
+   Track *capturedTrack = mCapturedTrack;
+
    if (pan)
-      slider = mTrackInfo.PanSlider(mCapturedTrack->GetIndex());
+      slider = mTrackInfo.PanSlider(capturedTrack->GetIndex());
    else
-      slider = mTrackInfo.GainSlider(mCapturedTrack->GetIndex());
+      slider = mTrackInfo.GainSlider(capturedTrack->GetIndex());
 
    slider->OnMouseEvent(event);
 
@@ -5394,15 +5398,15 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
    float newValue = slider->Get();
    MixerBoard* pMixerBoard = this->GetMixerBoard(); // Update mixer board, too.
 #ifdef EXPERIMENTAL_MIDI_OUT
-  if (mCapturedTrack->GetKind() == Track::Wave) {
+  if (capturedTrack->GetKind() == Track::Wave) {
 #endif
-   WaveTrack *link = (WaveTrack *)mTracks->GetLink(mCapturedTrack);
+   WaveTrack *link = (WaveTrack *)mTracks->GetLink(capturedTrack);
 
    if (pan) {
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-      panZero = ((WaveTrack *)mCapturedTrack)->SetPan(newValue);
+      panZero = ((WaveTrack *)capturedTrack)->SetPan(newValue);
 #else
-      ((WaveTrack *)mCapturedTrack)->SetPan(newValue);
+      ((WaveTrack *)capturedTrack)->SetPan(newValue);
 #endif
       if (link)
          link->SetPan(newValue);
@@ -5412,25 +5416,25 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 #endif
 
       if (pMixerBoard)
-         pMixerBoard->UpdatePan((WaveTrack*)mCapturedTrack);
+         pMixerBoard->UpdatePan((WaveTrack*)capturedTrack);
    }
    else {
-      ((WaveTrack *)mCapturedTrack)->SetGain(newValue);
+      ((WaveTrack *)capturedTrack)->SetGain(newValue);
       if (link)
          link->SetGain(newValue);
 
       if (pMixerBoard)
-         pMixerBoard->UpdateGain((WaveTrack*)mCapturedTrack);
+         pMixerBoard->UpdateGain((WaveTrack*)capturedTrack);
    }
 #ifdef EXPERIMENTAL_MIDI_OUT
   } else { // Note: funny indentation to match "if" about 20 lines back
       if (!pan) {
-         ((NoteTrack *) mCapturedTrack)->SetGain(newValue);
+         ((NoteTrack *) capturedTrack)->SetGain(newValue);
 #ifdef EXPERIMENTAL_MIXER_BOARD
             if (pMixerBoard)
                // probably should modify UpdateGain to take a track that is
                // either a WaveTrack or a NoteTrack.
-               pMixerBoard->UpdateGain((WaveTrack*)mCapturedTrack);
+               pMixerBoard->UpdateGain((WaveTrack*)capturedTrack);
 #endif
       }
    }
@@ -5444,7 +5448,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 
    if (event.ButtonUp()) {
 #ifdef EXPERIMENTAL_MIDI_OUT
-    if (mCapturedTrack->GetKind() == Track::Wave) {
+    if (capturedTrack->GetKind() == Track::Wave) {
 #endif
       MakeParentPushState(pan ? _("Moved pan slider") : _("Moved gain slider"),
                           pan ? _("Pan") : _("Gain"),
