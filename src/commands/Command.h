@@ -27,6 +27,8 @@ be controlled by a script should be separated out into its own Command class.
 #ifndef __COMMAND__
 #define __COMMAND__
 
+#include <wx/app.h>
+
 #include "CommandMisc.h"
 #include "CommandSignature.h"
 
@@ -36,11 +38,21 @@ class CommandOutputTarget;
 
 class CommandExecutionContext
 {
-   public:
-      AudacityApp *app;
-      AudacityProject *proj;
-      CommandExecutionContext(AudacityApp *app, AudacityProject *proj)
-         : app(app), proj(proj) {}
+public:
+   CommandExecutionContext(AudacityApp *WXUNUSED(app), AudacityProject *WXUNUSED(proj))
+   {
+   };
+   AudacityApp *GetApp() const
+   {
+      return (AudacityApp *) wxTheApp;
+   };
+   AudacityProject *GetProject() const
+   {
+      // TODO:  Presumably, this would be different if running in a command context.
+      // So, if this command system is ever actually enabled, then this will need to
+      // be reviewed.
+      return GetActiveProject();
+   };
 };
 
 // Interface

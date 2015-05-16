@@ -50,7 +50,7 @@ bool SetTrackInfoCommand::Apply(CommandExecutionContext context)
 
    // (Note: track selection ought to be somewhere else)
    long i = 0;
-   TrackListIterator iter(context.proj->GetTracks());
+   TrackListIterator iter(context.GetProject()->GetTracks());
    Track *t = iter.First();
    while (t && i != trackIndex)
    {
