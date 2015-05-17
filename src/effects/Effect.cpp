@@ -3439,18 +3439,20 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 
    S.StartPanel();
    {
-      S.StartVerticalLay(0);
+      S.StartVerticalLay(1);
       {
          S.StartHorizontalLay(wxALIGN_LEFT, 0);
          {
             text = S.AddTextBox(_("Preset name:"), name, 30);
          }
          S.EndHorizontalLay();
+         S.SetBorder(10);
          S.AddStandardButtons();
       }
       S.EndVerticalLay();
    }
    S.EndPanel();
+
    dlg.SetSize(dlg.GetSizer()->GetMinSize());
    dlg.Center();
 
@@ -3464,16 +3466,39 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
       }
 
       name = text->GetValue();
-      if (mUserPresets.Index(name) == wxNOT_FOUND)
+      if (name.IsEmpty())
       {
-         mEffect->SaveUserPreset(mEffect->GetUserPresetsGroup(name));
-         LoadUserPresets();
-         break;
+         wxMessageDialog md(this,
+                            _("You must specify a name"),
+                            _("Save Preset"));
+         md.Center();
+         md.ShowModal();
+         continue;
       }
 
-      wxMessageBox(_("Preset already exists"),
-                     _("Save Preset"),
-                     wxICON_EXCLAMATION);
+      if (mUserPresets.Index(name) != wxNOT_FOUND)
+      {
+         wxMessageDialog md(this,
+                            _("Preset already exists.\n\nReplace?"),
+                            _("Save Preset"),
+                            wxYES_NO | wxCANCEL | wxICON_EXCLAMATION);
+         md.Center();
+         int choice = md.ShowModal();
+         if (choice == wxID_CANCEL)
+         {
+            break;
+         }
+
+         if (choice == wxID_NO)
+         {
+            continue;
+         }
+      }
+
+      mEffect->SaveUserPreset(mEffect->GetUserPresetsGroup(name));
+      LoadUserPresets();
+
+      break;
    }
 
    return;
