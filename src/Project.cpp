@@ -1909,6 +1909,9 @@ bool AudacityProject::TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRq
 {
    bool bAllowed;
 
+   if( flags == 0 )
+      flags = GetUpdateFlags();
+
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    if( bAllowed )
       return true;

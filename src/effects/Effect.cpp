@@ -3089,10 +3089,18 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
 
+   // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
    if (!mIsBatch && mEffect->GetType() != EffectTypeGenerate && mProject->mViewInfo.selectedRegion.isPoint())
    {
-      wxMessageBox(_("You must select audio in the project window."));
-      return;
+      wxUint32 flags = 0;
+      bool allowed = mProject->TryToMakeActionAllowed(flags,
+                                                      WaveTracksSelectedFlag | TimeSelectedFlag,
+                                                      WaveTracksSelectedFlag | TimeSelectedFlag);
+      if (!allowed)
+      {
+         wxMessageBox(_("You must select audio in the project window."));
+         return;
+      }
    }
 
    if (!mClient->ValidateUI())
