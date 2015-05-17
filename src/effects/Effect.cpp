@@ -2869,7 +2869,8 @@ bool EffectUIHost::Initialize()
    hs->Add(w, 1, wxEXPAND);
    vs->Add(hs, 1, wxEXPAND);
 
-   wxPanel *bar = new wxPanel(this, wxID_ANY);
+   wxPanel *buttonPanel = new wxPanel(this, wxID_ANY);
+   wxPanel *bar = new wxPanel(buttonPanel, wxID_ANY);
 
    // This fools NVDA into not saying "Panel" when the dialog gets focus
    bar->SetName(wxT("\a"));
@@ -3003,8 +3004,8 @@ bool EffectUIHost::Initialize()
       buttons += eDebugButton;
    }
 
-   wxSizer *s = CreateStdButtonSizer(this, buttons, bar);
-   vs->Add(s, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL);
+   buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar));
+   vs->Add(buttonPanel, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL);
 
    SetSizer(vs);
    Layout();
@@ -3057,10 +3058,6 @@ void EffectUIHost::OnErase(wxEraseEvent & WXUNUSED(evt))
 void EffectUIHost::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
-
-#if defined(__WXGTK__)
-   dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
-#endif
 
    dc.Clear();
 }
