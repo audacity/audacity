@@ -68,11 +68,11 @@ private:
    void CheckClip();
 
 private:
-   float mPeak;
+   double mPeak;
 
-   float mRatio;
-   float mAmp;
-   float mNewPeak;
+   double mRatio;
+   double mAmp;
+   double mNewPeak;
    bool mCanClip;
 
    wxSlider *mAmpS;
