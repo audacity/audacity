@@ -2827,6 +2827,7 @@ int EffectUIHost::ShowModal()
    wxButton *apply = new wxButton(mApplyBtn->GetParent(), wxID_APPLY);
    sz->Replace(mCloseBtn, apply);
    sz->Replace(mApplyBtn, mCloseBtn);
+   sz->Layout();
    delete mApplyBtn;
    mApplyBtn = apply;
    mApplyBtn->SetDefault();
