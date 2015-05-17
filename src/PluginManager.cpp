@@ -2190,6 +2190,8 @@ const PluginDescriptor *PluginManager::GetNextPlugin(PluginType type)
 
 const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType type)
 {
+   EffectManager & em = EffectManager::Get();
+
    for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); ++mPluginsIter)
    {
       PluginDescriptor & plug = mPluginsIter->second;
@@ -2198,7 +2200,7 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
       gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
-         if (plug.IsInstantiated() && ((Effect *)plug.GetInstance())->IsHidden())
+         if (plug.IsInstantiated() && em.IsHidden(plug.GetID()))
          {
             continue;
          }
@@ -2212,6 +2214,8 @@ const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType ty
 
 const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType type)
 {
+   EffectManager & em = EffectManager::Get();
+
    while (++mPluginsIter != mPlugins.end())
    {
       PluginDescriptor & plug = mPluginsIter->second;
@@ -2219,7 +2223,7 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
       gPrefs->Read(plug.GetEffectFamily() + wxT("/Enable"), &familyEnabled, true);
       if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
       {
-         if (plug.IsInstantiated() && ((Effect *)plug.GetInstance())->IsHidden())
+         if (plug.IsInstantiated() && em.IsHidden(plug.GetID()))
          {
             continue;
          }

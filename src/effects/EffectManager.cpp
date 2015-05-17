@@ -147,6 +147,18 @@ wxString EffectManager::GetEffectDescription(const PluginID & ID)
    return wxEmptyString;
 }
 
+bool EffectManager::IsHidden(const PluginID & ID)
+{
+   Effect *effect = GetEffect(ID);
+
+   if (effect)
+   {
+      return effect->IsHidden();
+   }
+
+   return false;
+}
+
 bool EffectManager::SupportsAutomation(const PluginID & ID)
 {
    const PluginDescriptor *plug =  PluginManager::Get().GetPlugin(ID);

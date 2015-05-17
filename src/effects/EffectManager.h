@@ -76,6 +76,7 @@ public:
    wxString GetEffectName(const PluginID & ID);
    wxString GetEffectIdentifier(const PluginID & ID);
    wxString GetEffectDescription(const PluginID & ID);
+   bool IsHidden(const PluginID & ID);
 
    /** Support for batch commands */
    bool SupportsAutomation(const PluginID & ID);
