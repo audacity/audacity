@@ -1339,9 +1339,9 @@ void AudacityApp::FinishInits()
                     wxT("Bad Version"),
                     wxT(
 "Audacity should be built with wxWidgets 2.8.12.\n\n  This version \
-of Audacity is using wxWidgets 3.0 or later.\n  We're not ready for it yet.\n  \
-Click the 'Help' button for known issue."),
-                    wxT("http://bugzilla.audacityteam.org/buglist.cgi?keywords=wx3&resolution=---"),
+of Audacity (version 2.1.1) is using ")  wxVERSION_STRING  wxT( ".\n  We're not ready for it yet.\n\n  \
+Click the 'Help' button for known issues."),
+                    wxT("http://wiki.audacityteam.org/wiki/Incorrect_wxWidgets_Version"),
                      true);
 #endif
 
