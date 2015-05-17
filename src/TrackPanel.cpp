@@ -7390,14 +7390,18 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
          yy += height + 2 * offset;
       yy = std::max(0, std::min(panelHeight - height, yy));
 
-      // To do, theming?
-      static const wxColour red(255, 0, 0), green(0, 255, 0);
+      // These two colors were previously saturated red and green.  However 
+      // we have a rule to try to only use red for reserved purposes of
+      //  (a) Recording
+      //  (b) Error alerts
+      // So they were changed to 'orange' and 'lime'.
+      static const wxColour clrNoScroll(215, 162, 0), clrScroll(0, 204, 153);
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (mSmoothScrollingScrub)
-         dc.SetTextForeground(green);
+         dc.SetTextForeground(clrScroll);
       else
 #endif
-         dc.SetTextForeground(red);
+         dc.SetTextForeground(clrNoScroll);
       dc.DrawText(text, xx, yy);
    }
 }
