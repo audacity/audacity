@@ -152,6 +152,7 @@ ExportFFmpegAC3Options::ExportFFmpegAC3Options(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify AC3 Options")))
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    for (unsigned int i=0; i < (sizeof(iAC3BitRates)/sizeof(int)); i++)
@@ -216,6 +217,7 @@ ExportFFmpegAACOptions::ExportFFmpegAACOptions(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify AAC Options")))
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    PopulateOrExchange(S);
@@ -275,6 +277,7 @@ ExportFFmpegAMRNBOptions::ExportFFmpegAMRNBOptions(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify AMR-NB Options")))
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    for (unsigned int i=0; i < (sizeof(iAMRNBBitRate)/sizeof(int)); i++)
@@ -347,6 +350,7 @@ ExportFFmpegWMAOptions::ExportFFmpegWMAOptions(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify WMA Options")))
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    for (unsigned int i=0; i < (sizeof(iWMABitRate)/sizeof(int)); i++)
@@ -1211,6 +1215,7 @@ ExportFFmpegOptions::ExportFFmpegOptions(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify Other Options")))
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PickFFmpegLibs();
    //FFmpegLibsInst->LoadLibs(NULL,true); //Loaded at startup or from Prefs now

@@ -9101,6 +9101,7 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
    while (true)
    {
       wxDialog dlg(this, wxID_ANY, wxString(_("Set Rate")));
+      dlg.SetName(dlg.GetTitle());
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
       wxArrayString rates;
@@ -9429,6 +9430,7 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
 
    /* i18n-hint: (noun) This is the font for the label track.*/
    wxDialog dlg(this, wxID_ANY, wxString(_("Label Track Font")));
+   dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    wxListBox *lb;
    wxSpinCtrl *sc;

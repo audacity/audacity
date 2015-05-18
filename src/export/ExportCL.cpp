@@ -65,6 +65,8 @@ ExportCLOptions::ExportCLOptions(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify Command Line Encoder")))
 {
+   SetName(GetTitle());
+
    mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
    if (mHistory.GetCount() == 0) {
@@ -503,6 +505,7 @@ int ExportCL::Export(AudacityProject *project,
                    wxDefaultPosition,
                    wxSize(600, 400),
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+      dlg.SetName(dlg.GetTitle());
 
       ShuttleGui S(&dlg, eIsCreating);
       S.AddTextWindow(cmd + wxT("\n\n") + output);

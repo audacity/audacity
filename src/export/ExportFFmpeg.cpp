@@ -904,6 +904,7 @@ void ExportFFmpeg::SetMetadata(Tags *tags, const char *name, const wxChar *tag)
 int ExportFFmpeg::AskResample(int bitrate, int rate, int lowrate, int highrate, const int *sampRates)
 {
    wxDialog d(NULL, wxID_ANY, wxString(_("Invalid sample rate")));
+   d.SetName(d.GetTitle());
    wxChoice *choice;
    ShuttleGui S(&d, eIsCreating);
    wxString text;

@@ -177,6 +177,7 @@ public:
    FFmpegNotFoundDialog(wxWindow *parent)
       :  wxDialog(parent, wxID_ANY, wxString(_("FFmpeg not found")))
    {
+      SetName(GetTitle());
       ShuttleGui S(this, eIsCreating);
       PopulateOrExchange(S);
    }

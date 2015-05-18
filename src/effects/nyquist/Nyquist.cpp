@@ -2046,6 +2046,8 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                                        wxString message)
 :  wxDialog(parent, id, title)
 {
+   SetName(GetTitle());
+
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *hSizer;
    wxButton   *button;

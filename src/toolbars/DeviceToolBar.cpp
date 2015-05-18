@@ -793,6 +793,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
    wxArrayString inputSources = combo->GetStrings();
 
    wxDialog dlg(NULL, wxID_ANY, title);
+   dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    wxChoice *c;
 

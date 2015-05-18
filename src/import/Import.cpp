@@ -747,6 +747,8 @@ ImportStreamDialog::ImportStreamDialog( ImportFileHandle *_mFile, wxWindow *pare
                                        const wxPoint &position, const wxSize& size, long style ):
 wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
 {
+   SetName(GetTitle());
+
    mFile = _mFile;
    scount = mFile->GetStreamCount();
    for (wxInt32 i = 0; i < scount; i++)

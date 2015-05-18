@@ -450,6 +450,7 @@ public:
    FindFFmpegDialog(wxWindow *parent, wxString path, wxString name, wxString type)
       :  wxDialog(parent, wxID_ANY, wxString(_("Locate FFmpeg")))
    {
+      SetName(GetTitle());
       ShuttleGui S(this, eIsCreating);
 
       mPath = path;

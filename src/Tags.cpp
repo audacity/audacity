@@ -969,6 +969,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
    wxDialog dlg(this, wxID_ANY, _("Edit Genres"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+   dlg.SetName(dlg.GetTitle());
    wxTextCtrl *tc;
 
    ShuttleGui S(&dlg, eIsCreating);
