@@ -780,6 +780,8 @@ bool NyquistEffect::ProcessOne()
                case WaveTrack::WaveformDBDisplay: view = wxT("\"Waveform (dB)\""); break;
                case WaveTrack::SpectrumDisplay: view = wxT("\"Spectrogram\""); break;
                case WaveTrack::SpectrumLogDisplay: view = wxT("\"Spectrogram log(f)\""); break;
+               case WaveTrack::SpectralSelectionDisplay: view = wxT("\"Spectral Selection\""); break;
+               case WaveTrack::SpectralSelectionLogDisplay: view = wxT("\"Spectral Selection log(f)\""); break;
                case WaveTrack::PitchDisplay: view = wxT("\"Pitch (EAC)\""); break;
                default: view = wxT("NIL"); break;
             }

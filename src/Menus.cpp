@@ -4756,7 +4756,11 @@ void AudacityProject::DoNextPeakFrequency(bool up)
       WaveTrack *const wt = static_cast<WaveTrack*>(t);
       const int display = wt->GetDisplay();
       if (display == WaveTrack::SpectrumDisplay ||
-          display == WaveTrack::SpectrumLogDisplay) {
+          display == WaveTrack::SpectrumLogDisplay ||
+          display == WaveTrack::SpectralSelectionDisplay ||
+          display == WaveTrack::SpectralSelectionLogDisplay 
+          
+          ) {
          pTrack = wt;
          break;
       }

@@ -438,6 +438,12 @@ void TrackArtist::DrawTrack(const Track * t,
       case WaveTrack::SpectrumLogDisplay:
          DrawSpectrum(wt, dc, r, viewInfo, false, true);
          break;
+      case WaveTrack::SpectralSelectionDisplay:
+         DrawSpectrum(wt, dc, r, viewInfo, false, false);
+         break;
+      case WaveTrack::SpectralSelectionLogDisplay:
+         DrawSpectrum(wt, dc, r, viewInfo, false, true);
+         break;
       case WaveTrack::PitchDisplay:
          DrawSpectrum(wt, dc, r, viewInfo, true, false);
          break;
@@ -763,7 +769,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
          vruler->SetLabelEdges(true);
          vruler->SetLog(false);
       }
-      else if (display == WaveTrack::SpectrumDisplay) {
+      else if ( 
+         (display == WaveTrack::SpectrumDisplay) || 
+         (display == WaveTrack::SpectralSelectionDisplay) )
+      {
          // Spectrum
 
          if (r.height < 60)
@@ -806,7 +815,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
          }
          vruler->SetLog(false);
       }
-      else if (display == WaveTrack::SpectrumLogDisplay) {
+      else if ( 
+         (display == WaveTrack::SpectrumLogDisplay) || 
+         (display == WaveTrack::SpectralSelectionLogDisplay) )
+      {
          // SpectrumLog
 
          if (r.height < 10)
