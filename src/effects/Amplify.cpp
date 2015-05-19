@@ -37,7 +37,6 @@
 
 #include "Amplify.h"
 
-#define EPSILON 0.000000000001   // allow for imprecise equality comparisons.
 
 enum
 {
@@ -67,6 +66,7 @@ EffectAmplify::EffectAmplify()
 {
    mAmp = DEF_Amp;
    mRatio = pow(10.0, mAmp / 20.0);
+   mRatioClip = 0.0;
    mCanClip = false;
    mPeak = 0.0;
 
@@ -180,6 +180,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       if (mPeak > 0.0)
       {
          mRatio = 1.0 / mPeak;
+         mRatioClip = mRatio;
       }
       else
       {
@@ -291,7 +292,7 @@ bool EffectAmplify::TransferDataFromWindow()
 
 void EffectAmplify::CheckClip()
 {
-   EnableApply(mClip->GetValue() || (mPeak > 0.0 && mRatio <= 1.0/mPeak + EPSILON));
+   EnableApply(mClip->GetValue() || (mPeak > 0.0 && mRatio <= mRatioClip));
 }
 
 void EffectAmplify::OnAmpText(wxCommandEvent & WXUNUSED(evt))
@@ -320,7 +321,10 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 
-   mRatio = pow(10.0, mNewPeak / 20.0) / mPeak;
+   if (mNewPeak == 0.0)
+      mRatio = mRatioClip;
+   else
+      mRatio = pow(10.0, mNewPeak / 20.0) / mPeak;
 
    double ampInit = 20.0 * log10(mRatio);
    mAmp = TrapDouble(ampInit, MIN_Amp, MAX_Amp);

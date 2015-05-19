@@ -71,6 +71,7 @@ private:
    double mPeak;
 
    double mRatio;
+   double mRatioClip;   // maximum value of mRatio which does not cause clipping
    double mAmp;
    double mNewPeak;
    bool mCanClip;
