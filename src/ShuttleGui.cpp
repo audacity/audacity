@@ -744,11 +744,6 @@ wxScrolledWindow * ShuttleGuiBase::StartScroller(int iStyle)
    pScroller->SetName(wxT("\a"));
    pScroller->SetLabel(wxT("\a"));
 
-   mpWind->SetBackgroundColour(
-      iStyle==0
-      ? wxColour( 245,244,240) :
-      wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)
-      );
    SetProportions( 1 );
    if( iStyle==2 )
    {
@@ -756,6 +751,11 @@ wxScrolledWindow * ShuttleGuiBase::StartScroller(int iStyle)
    }
    else
    {
+      mpWind->SetBackgroundColour(
+         iStyle==0
+         ? wxColour( 245,244,240) :
+         wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)
+         );
       UpdateSizers();  // adds window in to current sizer.
    }
 
