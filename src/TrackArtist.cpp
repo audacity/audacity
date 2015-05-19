@@ -1806,26 +1806,20 @@ static float sumFreqValues(
 AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBinLo, 
    float selBinCenter, float selBinHi, int dashCount, bool isSpectral )
 {
-   if ( (selBinCenter >= 0) && (bin0 <= selBinCenter) && (selBinCenter < bin1) )
+   if (!isSpectral)
+      return  AColor::ColorGradientTimeSelected;
+   if ((selBinCenter >= 0) && (bin0 <= selBinCenter) &&
+       (selBinCenter < bin1))
       return AColor::ColorGradientEdge;
-   else if (
-      (0 == dashCount % 2)    &&
-      (((selBinLo >= 0) && (bin0 <= selBinLo) && ( selBinLo < bin1))  ||
-       ((selBinHi >= 0) && (bin0 <= selBinHi) && ( selBinHi < bin1)) ) )
+   if ((0 == dashCount % 2) &&
+       (((selBinLo >= 0) && (bin0 <= selBinLo) && ( selBinLo < bin1))  ||
+        ((selBinHi >= 0) && (bin0 <= selBinHi) && ( selBinHi < bin1))))
       return AColor::ColorGradientEdge;
-   else if (
-      (selBinLo < 0 || selBinLo < bin1) && 
-      (selBinHi < 0 || selBinHi > bin0) )
-      if (isSpectral) {
-         return  AColor::ColorGradientTimeAndFrequencySelected;
-      }
-      else {
-         return  AColor::ColorGradientTimeSelected;
-      }
-   else
+   if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0))
+      return  AColor::ColorGradientTimeAndFrequencySelected;
+
       return  AColor::ColorGradientTimeSelected;
 }
-
 
 
 void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
