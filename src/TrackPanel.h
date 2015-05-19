@@ -321,13 +321,24 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    // AS: Selection handling
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
+
+   // Made obsolete by scrubbing:
+#ifndef EXPERIMENTAL_SCRUBBING_BASIC
    void StartOrJumpPlayback(wxMouseEvent &event);
+#endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    double FindScrubSpeed(double timeAtMouse) const;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   bool IsScrubbing();
+   void ToggleScrubbing(
+      wxCoord xx
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      , bool smoothScrolling
+#endif
+   );
    bool MaybeStartScrubbing(wxMouseEvent &event);
    bool ContinueScrubbing(wxCoord position, bool maySkip);
    bool StopScrubbing();
@@ -532,7 +543,9 @@ protected:
                            const wxRect & clip);
    virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec,
                     const wxRect &trackRect);
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
    void DrawScrubSpeed(wxDC &dc);
+#endif
    virtual void DrawZooming(wxDC* dc, const wxRect & clip);
 
    virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &r);
@@ -772,9 +785,7 @@ protected:
       IsStretching,
 #endif
       IsZooming,
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-      IsMiddleButtonScrubbing,
-#endif
+
    };
 
    enum MouseCaptureEnum mMouseCapture;
@@ -791,7 +802,6 @@ protected:
    int mMoveDownThreshold;
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   bool IsScrubbing();
    int mScrubToken;
    wxLongLong mScrubStartClockTimeMillis;
    wxCoord mScrubStartPosition;
