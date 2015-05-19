@@ -73,6 +73,7 @@ public:
    virtual ~LV2EffectMeter();
 
 private:
+   void OnErase(wxEraseEvent & evt);
    void OnPaint(wxPaintEvent & evt);
    void OnIdle(wxIdleEvent & evt);
    void OnSize(wxSizeEvent & evt);
@@ -86,6 +87,7 @@ private:
 
 BEGIN_EVENT_TABLE(LV2EffectMeter, wxWindow)
    EVT_IDLE(LV2EffectMeter::OnIdle)
+   EVT_ERASE_BACKGROUND(LV2EffectMeter::OnErase)
    EVT_PAINT(LV2EffectMeter::OnPaint)
    EVT_SIZE(LV2EffectMeter::OnSize)
 END_EVENT_TABLE()
@@ -95,18 +97,26 @@ LV2EffectMeter::LV2EffectMeter(wxWindow *parent, const LV2Port & ctrl)
    mCtrl(ctrl)
 {
    mLastValue = -mCtrl.mVal;
+
+   SetBackgroundColour(*wxWHITE);
 }
 
 LV2EffectMeter::~LV2EffectMeter()
 {
 }
 
+
 void LV2EffectMeter::OnIdle(wxIdleEvent & WXUNUSED(evt))
 {
    if (mLastValue != mCtrl.mVal)
    {
-      Refresh();
+      Refresh(false);
    }
+}
+
+void LV2EffectMeter::OnErase(wxEraseEvent & WXUNUSED(evt))
+{
+   // Just ignore it to prevent flashing
 }
 
 void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
@@ -136,6 +146,7 @@ void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
    dc->SetPen(*wxTRANSPARENT_PEN);
    dc->SetBrush(wxColour(100, 100, 220));
 
+   dc->Clear();
    dc->DrawRectangle(x, y, (w * (val / fabs(mCtrl.mMax - mCtrl.mMin))), h);
 
    mLastValue = mCtrl.mVal;
@@ -145,7 +156,7 @@ void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
 void LV2EffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
-   Refresh();
+   Refresh(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
