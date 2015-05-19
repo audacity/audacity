@@ -336,8 +336,6 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       }
       UndoManager *um = project->GetUndoManager();
       um->ClearStates();
-	  project->OnSelectAll();
-	  project->OnRemoveTracks();
    }
    project->OnRemoveTracks();
 }
