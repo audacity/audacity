@@ -113,7 +113,7 @@ void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
       OpenInDefaultBrowser( link );
       return;
    }
-   else if( !href.StartsWith( wxT("http:")))
+   else if( !href.StartsWith( wxT("http:"))  && !href.StartsWith( wxT("https:")) )
    {
       HtmlWindow::OnLinkClicked( link );
    }
