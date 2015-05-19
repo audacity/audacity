@@ -1559,11 +1559,10 @@ void RulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
 
-#if defined(__WXGTK__)
-   dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
+#if defined(__WXMSW__)
+   dc.Clear();
 #endif
 
-   dc.Clear();
    ruler.Draw(dc);
 }
 
