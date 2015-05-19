@@ -73,7 +73,6 @@ public:
    virtual ~LV2EffectMeter();
 
 private:
-   void OnErase(wxEraseEvent & evt);
    void OnPaint(wxPaintEvent & evt);
    void OnIdle(wxIdleEvent & evt);
    void OnSize(wxSizeEvent & evt);
@@ -87,7 +86,6 @@ private:
 
 BEGIN_EVENT_TABLE(LV2EffectMeter, wxWindow)
    EVT_IDLE(LV2EffectMeter::OnIdle)
-   EVT_ERASE_BACKGROUND(LV2EffectMeter::OnErase)
    EVT_PAINT(LV2EffectMeter::OnPaint)
    EVT_SIZE(LV2EffectMeter::OnSize)
 END_EVENT_TABLE()
@@ -111,11 +109,6 @@ void LV2EffectMeter::OnIdle(wxIdleEvent & WXUNUSED(evt))
    }
 }
 
-void LV2EffectMeter::OnErase(wxEraseEvent & WXUNUSED(evt))
-{
-   // Just ignore it to prevent flashing
-}
-
 void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxDC *dc = wxAutoBufferedPaintDCFactory(this);
@@ -137,12 +130,13 @@ void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       val = mCtrl.mMin;
    }
+   val -= mCtrl.mMin;
 
    // Setup for erasing the background
    dc->SetPen(*wxTRANSPARENT_PEN);
    dc->SetBrush(wxColour(100, 100, 220));
 
-   dc->DrawRectangle(x, y, (w * (val / (mCtrl.mMax - mCtrl.mMin))), h);
+   dc->DrawRectangle(x, y, (w * (val / fabs(mCtrl.mMax - mCtrl.mMin))), h);
 
    mLastValue = mCtrl.mVal;
 
@@ -151,7 +145,7 @@ void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
 void LV2EffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
-   Refresh(false);
+   Refresh();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1827,6 +1821,14 @@ bool LV2Effect::BuildPlain()
    
    w->SetSizer(innerSizer);
    mParent->SetSizer(outerSizer);
+
+   // Try to give the window a sensible default/minimum size
+   wxSize sz1 = innerSizer->GetMinSize();
+   wxSize sz2 = mParent->GetMinSize();
+   w->SetSizeHints(wxSize(-1, wxMin(sz1.y, sz2.y)));
+
+   // And let the parent reduce to the new minimum if possible
+   mParent->SetSizeHints(w->GetMinSize());
 
    TransferDataToWindow();
 
