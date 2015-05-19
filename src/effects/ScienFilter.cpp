@@ -445,7 +445,6 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
 
       S.Prop(1);
       S.AddWindow(mfreqRuler, wxEXPAND | wxALIGN_LEFT | wxRIGHT);
-      S.SetSizeHints(-1, -1);
 
       S.AddSpace(1, 1);
 
