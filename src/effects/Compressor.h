@@ -151,11 +151,6 @@ private:
    double & noiseFloor;
    double & ratio;
 
-   wxBitmap *mBitmap;
-   wxRect mEnvRect;
-   int mWidth;
-   int mHeight;
-
    DECLARE_EVENT_TABLE();
 };
 
