@@ -91,7 +91,12 @@ bool NumValidatorBase::Validate(wxWindow *parent)
     {
         wxMessageBox(errmsg, _("Validation error"),
                      wxOK | wxICON_ERROR, parent);
-        m_validatorWindow->SetFocus();
+        wxTextEntry *te = GetTextEntry();
+        if ( te )
+        {
+            te->SelectAll();
+            te->SetFocus();
+        }
         return false;
     }
 

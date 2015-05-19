@@ -25,25 +25,26 @@ class BatchCommands {
    BatchCommands();
  public:
    bool ApplyChain(const wxString & filename = wxT(""));
-   bool ApplyCommand( const wxString command, const wxString params );
+   bool ApplyCommand( const wxString & command, const wxString & params );
    bool ApplyCommandInBatchMode(const wxString & command, const wxString &params);
-   bool ApplySpecialCommand(int iCommand, const wxString command,const wxString params);
-   bool ApplyEffectCommand(const PluginID & ID, const wxString command, const wxString params);
-   bool ReportAndSkip( const wxString command, const wxString params );
+   bool ApplySpecialCommand(int iCommand, const wxString & command,const wxString & params);
+   bool ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params);
+   bool ReportAndSkip( const wxString & command, const wxString & params );
    void AbortBatch();
 
    // Utility functions for the special commands.
    wxString BuildCleanFileName(wxString fileName, wxString extension);
-   bool WriteMp3File( const wxString Name, int bitrate );
+   bool WriteMp3File( const wxString & Name, int bitrate );
    double GetEndTime();
    bool IsMono();
 
    // These commands do not depend on the command list.
-   wxArrayString GetNames();
-   static bool PromptForParamsFor( wxString command, wxWindow *parent );
-   static wxString GetCurrentParamsFor( wxString command );
-   static bool SetCurrentParametersFor(const wxString command, const wxString params);
+   static wxArrayString GetNames();
    static wxArrayString GetAllCommands();
+
+   static wxString GetCurrentParamsFor(const wxString & command);
+   static wxString PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent);
+   static wxString PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent);
 
    // These commands do depend on the command list.
    void ResetChain();

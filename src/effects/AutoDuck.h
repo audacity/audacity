@@ -44,6 +44,7 @@ public:
    // EffectIdentInterface implementation
 
    virtual EffectType GetType();
+   virtual bool EnableFromGetGo(){ return false;};
 
    // EffectClientInterface implementation
 
@@ -109,9 +110,7 @@ private:
       none = 99,
    };
 
-#if defined(__WXMAC__) && wxUSE_ACCESSIBILITY
    virtual bool AcceptsFocus() const {return false;}
-#endif
 
    void OnPaint(wxPaintEvent & evt);
    void OnMouseCaptureChanged(wxMouseCaptureChangedEvent & evt);

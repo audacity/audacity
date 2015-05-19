@@ -1,6 +1,6 @@
 
 Audacity(R): A Free, Cross-Platform Digital Audio Editor
-  WWW: http://audacity.sourceforge.net/
+  WWW: http://audacityteam.org/
 
 We welcome feedback on Audacity, suggestions for new or improved features, 
 bug reports and patches at:

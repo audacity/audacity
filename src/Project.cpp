@@ -1031,11 +1031,21 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 //   mTrackPanel->SetDropTarget(new AudacityDropTarget(this));
    mTrackPanel->SetDropTarget(new DropTarget(this));
 #endif
+
+   wxTheApp->Connect(EVT_AUDIOIO_CAPTURE,
+                     wxCommandEventHandler(AudacityProject::OnCapture),
+                     NULL,
+                     this);
 }
 
 AudacityProject::~AudacityProject()
 {
    wxGetApp().GetRecentFiles()->RemoveMenu(mRecentFilesMenu);
+
+   wxTheApp->Disconnect(EVT_AUDIOIO_CAPTURE,
+                     wxCommandEventHandler(AudacityProject::OnCapture),
+                     NULL,
+                     this);
 }
 
 AudioIOStartStreamOptions AudacityProject::GetDefaultPlayOptions()
@@ -1143,6 +1153,15 @@ void AudacityProject::SetSel1(double newSel1)
    mViewInfo.selectedRegion.setT1(newSel1);
 }
 
+void AudacityProject::OnCapture(wxCommandEvent& evt)
+{
+   evt.Skip();
+
+   if (evt.GetInt() != 0)
+      mIsCapturing = true;
+   else
+      mIsCapturing = false;
+}
 
 
 DirManager *AudacityProject::GetDirManager()
@@ -1890,6 +1909,9 @@ bool AudacityProject::TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRq
 {
    bool bAllowed;
 
+   if( flags == 0 )
+      flags = GetUpdateFlags();
+
    bAllowed = ((flags & mask) == (flagsRqd & mask));
    if( bAllowed )
       return true;
@@ -2344,7 +2366,7 @@ wxArrayString AudacityProject::ShowOpenDialog(wxString extraformat, wxString ext
 }
 
 // static method, can be called outside of a project
-bool AudacityProject::IsAlreadyOpen(const wxString projPathName)
+bool AudacityProject::IsAlreadyOpen(const wxString & projPathName)
 {
    wxFileName newProjPathName(projPathName);
    size_t numProjects = gAudacityProjects.Count();
@@ -3436,7 +3458,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
 }
 
 #ifdef USE_LIBVORBIS
-   bool AudacityProject::SaveCompressedWaveTracks(const wxString strProjectPathName) // full path for aup except extension
+   bool AudacityProject::SaveCompressedWaveTracks(const wxString & strProjectPathName) // full path for aup except extension
    {
       // Some of this is similar to code in ExportMultiple::ExportMultipleByTrack
       // but that code is really tied into the dialogs.
@@ -3661,7 +3683,7 @@ bool AudacityProject::Import(wxString fileName, WaveTrackArray* pTrackArray /*= 
    return true;
 }
 
-bool AudacityProject::SaveAs(const wxString newFileName, bool bWantSaveCompressed /*= false*/, bool addToHistory /*= true*/)
+bool AudacityProject::SaveAs(const wxString & newFileName, bool bWantSaveCompressed /*= false*/, bool addToHistory /*= true*/)
 {
    wxString oldFileName = mFileName;
 

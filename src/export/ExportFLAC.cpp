@@ -67,6 +67,7 @@ ExportFLACOptions::ExportFLACOptions(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify FLAC Options")))
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    PopulateOrExchange(S);

@@ -37,6 +37,7 @@ SoundActivatedRecord::SoundActivatedRecord(wxWindow* parent)
            wxDefaultSize, wxCAPTION )
 //           wxDefaultSize, wxCAPTION | wxTHICK_FRAME)
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
    Fit();

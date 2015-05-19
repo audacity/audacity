@@ -290,8 +290,8 @@ public:
    FFmpegPreset(wxString &name);
    ~FFmpegPreset();
 
-   wxString *mPresetName;
-   wxArrayString *mControlState;
+   wxString mPresetName;
+   wxArrayString mControlState;
 
 };
 
@@ -320,6 +320,7 @@ public:
 private:
 
    FFmpegPresetList *mPresets;
+   FFmpegPreset *mPreset; // valid during XML parsing only
 };
 
 #endif

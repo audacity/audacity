@@ -34,6 +34,8 @@ class wxCheckBox;
 
 WX_DEFINE_ARRAY_PTR(LADSPA_Handle, LadspaSlaveArray);
 
+class LadspaEffectMeter;
+
 class LadspaEffect : public wxEvtHandler,
                      public EffectClientInterface,
                      public EffectUIClientInterface
@@ -187,6 +189,7 @@ private:
    wxTextCtrl **mFields;
    wxStaticText **mLabels;
    wxCheckBox **mToggles;
+   LadspaEffectMeter **mMeters;
 
    DECLARE_EVENT_TABLE();
 

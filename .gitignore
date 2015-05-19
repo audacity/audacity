@@ -3,6 +3,7 @@
 *.lo
 *.o
 *.obj
+*.pyc
 
 # Other unwanted files.
 *.suo
@@ -16,6 +17,8 @@
 *.tlog
 *.ipch
 *.opensdf
+# unsure about the .sal files.  Disable for now.
+*.sal
 
 # Precompiled Headers
 *.gch
@@ -45,9 +48,16 @@
 .DS_Store
 project.xcworkspace
 xcuserdata
-
 *.xcconfig
 mac/Info.plist.h
+
+# Windows specific
+win/Debug
+win/Release
+win/Projects/*/Debug
+win/Projects/*/Release
+
+# Misc
 src/RevisionIdent.h
 win/resetPrefs.txt
 

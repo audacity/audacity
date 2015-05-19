@@ -1,6 +1,6 @@
 /* libxmms-flac - XMMS FLAC input plugin
  * Copyright (C) 2004-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 #ifndef FLAC__PLUGIN_XMMS__PLUGIN_H
 #define FLAC__PLUGIN_XMMS__PLUGIN_H
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 

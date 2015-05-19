@@ -12,6 +12,7 @@
 #define __AUDACITY_SPECTRUM__
 
 #include "WaveTrack.h"
+#include "FFT.h"
 
 /*
   This function computes the power (mean square amplitude) as
@@ -22,6 +23,7 @@
 */
 
 bool ComputeSpectrum(float * data, int width, int windowSize,
-                     double rate, float *out, bool autocorrelation, int windowFunc=3);
+                     double rate, float *out, bool autocorrelation,
+                     int windowFunc = eWinFuncHanning);
 
 #endif

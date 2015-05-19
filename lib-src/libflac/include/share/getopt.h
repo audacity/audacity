@@ -6,7 +6,7 @@
 	of code with the ELIDE_CODE #define is not accurate enough on systems
 	that are POSIX but not glibc.  If someone has a patch that works on
 	GNU/Linux, Darwin, AND Solaris please submit it on the project page:
-		http://sourceforge.net/projects/flac
+		https://sourceforge.net/p/flac/patches/
 
 	In the meantime I have munged the global symbols and removed gates
 	around code, while at the same time trying to touch the original as

@@ -104,6 +104,8 @@ END_EVENT_TABLE()
 ExportMultiple::ExportMultiple(AudacityProject *project)
 : wxDialog(project, wxID_ANY, wxString(_("Export Multiple")))
 {
+   SetName(GetTitle());
+
    mProject = project;
    mTracks = project->GetTracks();
    mPlugins = mExporter.GetPlugins();

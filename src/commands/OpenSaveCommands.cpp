@@ -41,16 +41,16 @@ bool OpenProjectCommand::Apply(CommandExecutionContext context)
 {
    wxString fileName = GetString(wxT("Filename"));
    bool addToHistory  = GetBool(wxT("AddToHistory"));
-   wxString oldFileName = context.proj->GetFileName();
+   wxString oldFileName = context.GetProject()->GetFileName();
    if(fileName == wxEmptyString)
    {
-      context.proj->OnOpen();
+      context.GetProject()->OnOpen();
    }
    else
    {
-      context.proj->OpenFile(fileName,addToHistory);
+      context.GetProject()->OpenFile(fileName,addToHistory);
    }
-   wxString newFileName = context.proj->GetFileName();
+   wxString newFileName = context.GetProject()->GetFileName();
 
    // Because Open does not return a success or failure, we have to guess
    // at this point, based on whether the project file name has
@@ -91,9 +91,9 @@ bool SaveProjectCommand::Apply(CommandExecutionContext context)
    bool saveCompressed  = GetBool(wxT("Compress"));
    bool addToHistory  = GetBool(wxT("AddToHistory"));
    if(fileName == wxEmptyString)
-      return context.proj->SaveAs(saveCompressed);
+      return context.GetProject()->SaveAs(saveCompressed);
    else
-      return context.proj->SaveAs(fileName,saveCompressed,addToHistory);
+      return context.GetProject()->SaveAs(fileName,saveCompressed,addToHistory);
 }
 
 SaveProjectCommand::~SaveProjectCommand()

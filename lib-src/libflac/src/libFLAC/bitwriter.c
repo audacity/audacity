@@ -1,6 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -524,28 +524,6 @@ FLAC__bool FLAC__bitwriter_write_rice_signed_block(FLAC__BitWriter *bw, const FL
 
 		msbits = uval >> parameter;
 
-#if 0 /* OPT: can remove this special case if it doesn't make up for the extra compare (doesn't make a statistically significant difference with msvc or gcc/x86) */
-		if(bw->bits && bw->bits + msbits + lsbits <= FLAC__BITS_PER_WORD) { /* i.e. if the whole thing fits in the current uint32_t */
-			/* ^^^ if bw->bits is 0 then we may have filled the buffer and have no free uint32_t to work in */
-			bw->bits = bw->bits + msbits + lsbits;
-			uval |= mask1; /* set stop bit */
-			uval &= mask2; /* mask off unused top bits */
-			/* NOT: bw->accum <<= msbits + lsbits because msbits+lsbits could be 32, then the shift would be a NOP */
-			bw->accum <<= msbits;
-			bw->accum <<= lsbits;
-			bw->accum |= uval;
-			if(bw->bits == FLAC__BITS_PER_WORD) {
-				bw->buffer[bw->words++] = SWAP_BE_WORD_TO_HOST(bw->accum);
-				bw->bits = 0;
-				/* burying the capacity check down here means we have to grow the buffer a little if there are more vals to do */
-				if(bw->capacity <= bw->words && nvals > 1 && !bitwriter_grow_(bw, 1)) {
-					FLAC__ASSERT(bw->capacity == bw->words);
-					return false;
-				}
-			}
-		}
-		else {
-#elif 1 /*@@@@@@ OPT: try this version with MSVC6 to see if better, not much difference for gcc-4 */
 		if(bw->bits && bw->bits + msbits + lsbits < FLAC__BITS_PER_WORD) { /* i.e. if the whole thing fits in the current uint32_t */
 			/* ^^^ if bw->bits is 0 then we may have filled the buffer and have no free uint32_t to work in */
 			bw->bits = bw->bits + msbits + lsbits;
@@ -555,7 +533,6 @@ FLAC__bool FLAC__bitwriter_write_rice_signed_block(FLAC__BitWriter *bw, const FL
 			bw->accum |= uval;
 		}
 		else {
-#endif
 			/* slightly pessimistic size check but faster than "<= bw->words + (bw->bits+msbits+lsbits+FLAC__BITS_PER_WORD-1)/FLAC__BITS_PER_WORD" */
 			/* OPT: pessimism may cause flurry of false calls to grow_ which eat up all savings before it */
 			if(bw->capacity <= bw->words + bw->bits + msbits + 1/*lsbits always fit in 1 uint32_t*/ && !bitwriter_grow_(bw, msbits+lsbits))
@@ -610,9 +587,7 @@ break1:
 				bw->buffer[bw->words++] = SWAP_BE_WORD_TO_HOST(bw->accum);
 				bw->accum = uval;
 			}
-#if 1
 		}
-#endif
 		vals++;
 		nvals--;
 	}
@@ -853,9 +828,9 @@ FLAC__bool FLAC__bitwriter_zero_pad_to_byte_boundary(FLAC__BitWriter *bw)
 		return true;
 }
 
-/* These functions a declared inline in this file but are also callable as
+/* These functions are declared inline in this file but are also callable as
  * externs from elsewhere.
- * According to the C99 sepc, section 6.7.4, simply providing a function
+ * According to the C99 spec, section 6.7.4, simply providing a function
  * prototype in a header file without 'inline' and making the function inline
  * in this file should be sufficient.
  * Unfortunately, the Microsoft VS compiler doesn't pick them up externally. To

@@ -21,6 +21,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "plugin.h"
 
 #include <stdlib.h>
@@ -796,7 +800,7 @@ void FLAC_XMMS__aboutbox(void)
 		  "......\n"
 		  "and\n"
 		  "Daisuke Shimamura\n"
-		  "Visit http://flac.sourceforge.net/"),
+		  "Visit http://xiph.org/flac/"),
 		_("Ok"), FALSE, NULL, NULL);
 	gtk_signal_connect(GTK_OBJECT(about_window), "destroy",
 			   GTK_SIGNAL_FUNC(gtk_widget_destroyed),

@@ -849,6 +849,15 @@
 		28884972131B6CF600B59735 /* zh_TW.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884941131B6CF600B59735 /* zh_TW.po */; };
 		28884973131B6CF600B59735 /* zh.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884942131B6CF600B59735 /* zh.po */; };
 		2888A1631AE25F9A00E06FDC /* Diags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2888A1611AE25F9A00E06FDC /* Diags.cpp */; };
+		288A1FF91AF37EC000DC8F71 /* fixed_intrin_sse2.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF01AF37EC000DC8F71 /* fixed_intrin_sse2.c */; };
+		288A1FFA1AF37EC000DC8F71 /* fixed_intrin_ssse3.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF11AF37EC000DC8F71 /* fixed_intrin_ssse3.c */; };
+		288A1FFB1AF37EC000DC8F71 /* lpc_intrin_avx2.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF21AF37EC000DC8F71 /* lpc_intrin_avx2.c */; };
+		288A1FFC1AF37EC000DC8F71 /* lpc_intrin_sse.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF31AF37EC000DC8F71 /* lpc_intrin_sse.c */; };
+		288A1FFD1AF37EC000DC8F71 /* lpc_intrin_sse2.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF41AF37EC000DC8F71 /* lpc_intrin_sse2.c */; };
+		288A1FFE1AF37EC000DC8F71 /* lpc_intrin_sse41.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF51AF37EC000DC8F71 /* lpc_intrin_sse41.c */; };
+		288A1FFF1AF37EC000DC8F71 /* stream_encoder_intrin_avx2.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF61AF37EC000DC8F71 /* stream_encoder_intrin_avx2.c */; };
+		288A20001AF37EC000DC8F71 /* stream_encoder_intrin_sse2.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF71AF37EC000DC8F71 /* stream_encoder_intrin_sse2.c */; };
+		288A20011AF37EC000DC8F71 /* stream_encoder_intrin_ssse3.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A1FF81AF37EC000DC8F71 /* stream_encoder_intrin_ssse3.c */; };
 		288A544B1346D1BA0050D774 /* chanmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A54481346D1BA0050D774 /* chanmap.c */; };
 		288A544C1346D1BA0050D774 /* chanmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 288A54491346D1BA0050D774 /* chanmap.h */; };
 		288A544D1346D1BA0050D774 /* id3.c in Sources */ = {isa = PBXBuildFile; fileRef = 288A544A1346D1BA0050D774 /* id3.c */; };
@@ -2555,6 +2564,15 @@
 		28884942131B6CF600B59735 /* zh.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = zh.po; path = ../locale/zh.po; sourceTree = SOURCE_ROOT; };
 		2888A1611AE25F9A00E06FDC /* Diags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Diags.cpp; sourceTree = "<group>"; };
 		2888A1621AE25F9A00E06FDC /* Diags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Diags.h; sourceTree = "<group>"; };
+		288A1FF01AF37EC000DC8F71 /* fixed_intrin_sse2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fixed_intrin_sse2.c; sourceTree = "<group>"; };
+		288A1FF11AF37EC000DC8F71 /* fixed_intrin_ssse3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fixed_intrin_ssse3.c; sourceTree = "<group>"; };
+		288A1FF21AF37EC000DC8F71 /* lpc_intrin_avx2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpc_intrin_avx2.c; sourceTree = "<group>"; };
+		288A1FF31AF37EC000DC8F71 /* lpc_intrin_sse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpc_intrin_sse.c; sourceTree = "<group>"; };
+		288A1FF41AF37EC000DC8F71 /* lpc_intrin_sse2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpc_intrin_sse2.c; sourceTree = "<group>"; };
+		288A1FF51AF37EC000DC8F71 /* lpc_intrin_sse41.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lpc_intrin_sse41.c; sourceTree = "<group>"; };
+		288A1FF61AF37EC000DC8F71 /* stream_encoder_intrin_avx2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stream_encoder_intrin_avx2.c; sourceTree = "<group>"; };
+		288A1FF71AF37EC000DC8F71 /* stream_encoder_intrin_sse2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stream_encoder_intrin_sse2.c; sourceTree = "<group>"; };
+		288A1FF81AF37EC000DC8F71 /* stream_encoder_intrin_ssse3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stream_encoder_intrin_ssse3.c; sourceTree = "<group>"; };
 		288A54481346D1BA0050D774 /* chanmap.c */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.c; path = chanmap.c; sourceTree = "<group>"; };
 		288A54491346D1BA0050D774 /* chanmap.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; path = chanmap.h; sourceTree = "<group>"; };
 		288A544A1346D1BA0050D774 /* id3.c */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.c; path = id3.c; sourceTree = "<group>"; };
@@ -3682,9 +3700,15 @@
 				176EEABF09A2EF1100188F3B /* cpu.c */,
 				176EEAC209A2EF1100188F3B /* crc.c */,
 				176EEACB09A2EF1100188F3B /* fixed.c */,
+				288A1FF01AF37EC000DC8F71 /* fixed_intrin_sse2.c */,
+				288A1FF11AF37EC000DC8F71 /* fixed_intrin_ssse3.c */,
 				176EEACE09A2EF1100188F3B /* float.c */,
 				176EEAD109A2EF1100188F3B /* format.c */,
 				176EEB0009A2EF1100188F3B /* lpc.c */,
+				288A1FF21AF37EC000DC8F71 /* lpc_intrin_avx2.c */,
+				288A1FF31AF37EC000DC8F71 /* lpc_intrin_sse.c */,
+				288A1FF41AF37EC000DC8F71 /* lpc_intrin_sse2.c */,
+				288A1FF51AF37EC000DC8F71 /* lpc_intrin_sse41.c */,
 				176EEB0809A2EF1100188F3B /* md5.c */,
 				176EEB0B09A2EF1100188F3B /* memory.c */,
 				176EEB0E09A2EF1100188F3B /* metadata_iterators.c */,
@@ -3696,6 +3720,9 @@
 				176EEB2809A2EF1100188F3B /* stream_decoder.c */,
 				176EEB2B09A2EF1100188F3B /* stream_encoder.c */,
 				176EEB2E09A2EF1100188F3B /* stream_encoder_framing.c */,
+				288A1FF61AF37EC000DC8F71 /* stream_encoder_intrin_avx2.c */,
+				288A1FF71AF37EC000DC8F71 /* stream_encoder_intrin_sse2.c */,
+				288A1FF81AF37EC000DC8F71 /* stream_encoder_intrin_ssse3.c */,
 			);
 			path = libFLAC;
 			sourceTree = "<group>";
@@ -7208,13 +7235,21 @@
 				176EEC0B09A2F20800188F3B /* float.c in Sources */,
 				176EEC0C09A2F20800188F3B /* format.c in Sources */,
 				176EEC0D09A2F20800188F3B /* lpc.c in Sources */,
+				288A1FFC1AF37EC000DC8F71 /* lpc_intrin_sse.c in Sources */,
+				288A20011AF37EC000DC8F71 /* stream_encoder_intrin_ssse3.c in Sources */,
 				176EEC0E09A2F20800188F3B /* md5.c in Sources */,
 				176EEC0F09A2F20800188F3B /* memory.c in Sources */,
+				288A1FFA1AF37EC000DC8F71 /* fixed_intrin_ssse3.c in Sources */,
 				176EEC1009A2F20800188F3B /* metadata_iterators.c in Sources */,
+				288A20001AF37EC000DC8F71 /* stream_encoder_intrin_sse2.c in Sources */,
+				288A1FFE1AF37EC000DC8F71 /* lpc_intrin_sse41.c in Sources */,
 				176EEC1109A2F20800188F3B /* metadata_object.c in Sources */,
+				288A1FFB1AF37EC000DC8F71 /* lpc_intrin_avx2.c in Sources */,
 				176EEC1409A2F20800188F3B /* stream_decoder.c in Sources */,
 				176EEC1509A2F20800188F3B /* stream_encoder.c in Sources */,
+				288A1FFD1AF37EC000DC8F71 /* lpc_intrin_sse2.c in Sources */,
 				176EEC1609A2F20800188F3B /* stream_encoder_framing.c in Sources */,
+				288A1FFF1AF37EC000DC8F71 /* stream_encoder_intrin_avx2.c in Sources */,
 				28EA56630D9753B000C8D1B6 /* bitreader.c in Sources */,
 				28EA56640D9753B000C8D1B6 /* bitwriter.c in Sources */,
 				28EA56650D9753B000C8D1B6 /* window.c in Sources */,
@@ -7222,6 +7257,7 @@
 				ED924BD2182EA20500319F81 /* ogg_encoder_aspect.c in Sources */,
 				ED924BD3182EA20500319F81 /* ogg_helper.c in Sources */,
 				ED924BD4182EA20500319F81 /* ogg_mapping.c in Sources */,
+				288A1FF91AF37EC000DC8F71 /* fixed_intrin_sse2.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

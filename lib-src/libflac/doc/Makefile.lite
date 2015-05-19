@@ -1,6 +1,6 @@
 #  flac - Command-line FLAC encoder/decoder
 #  Copyright (C) 2002-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License

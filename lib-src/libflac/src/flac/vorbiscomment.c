@@ -1,6 +1,6 @@
 /* flac - Command-line FLAC encoder/decoder
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -243,7 +243,7 @@ FLAC__bool flac__vorbiscomment_add(FLAC__StreamMetadata *block, const char *comm
 		return false;
 	}
 
-	if(!set_vc_field(block, &parsed, &dummy, raw, violation)) {
+	if(parsed.field_value_length > 0 && !set_vc_field(block, &parsed, &dummy, raw, violation)) {
 		free_field(&parsed);
 		return false;
 	}

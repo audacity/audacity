@@ -57,6 +57,7 @@ AutoRecoveryDialog::AutoRecoveryDialog(wxWindow *parent) :
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)) // no close box
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
@@ -587,7 +588,7 @@ void AutoSaveFile::CheckSpace(wxMemoryOutputStream & os)
       size_t origPos = buf->GetIntPosition();
       char *temp = new char[mAllocSize];
       buf->Write(temp, mAllocSize);
-      delete temp;
+      delete[] temp;
       buf->SetIntPosition(origPos);
    }
 }
@@ -655,7 +656,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       // "</project>" somewhere.
       const int bufsize = 16;
       char buf[bufsize + 1];
-      if (file.SeekEnd(-bufsize) != wxInvalidOffset)
+      if (file.SeekEnd(-bufsize))
       {
          if (file.Read(buf, bufsize) == bufsize)
          {
@@ -663,7 +664,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             if (strstr(buf, "</project>") == 0)
             {
                // End of file does not contain closing </project> tag, so add it
-               if (file.Seek(0, wxFromEnd) != wxInvalidOffset)
+               if (file.Seek(0, wxFromEnd))
                {
                   strcpy(buf, "</project>\n");
                   file.Write(buf, strlen(buf));
@@ -682,7 +683,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
 
    if (file.Read(buf, len) != len)
    {
-      delete buf;
+      delete[] buf;
       return false;
    }
 
@@ -698,7 +699,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
    out.Open(tempName, wxT("wb"));
    if (!out.IsOpened())
    {
-      delete buf;
+      delete[] buf;
 
       wxRemoveFile(tempName);
 
@@ -737,7 +738,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             in.Read(name, len);
 
             mIds[id] = wxString(name, len / sizeof(wxChar));
-            delete name;
+            delete[] name;
          }
          break;
 
@@ -767,7 +768,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             in.Read(val, len);
 
             out.WriteAttr(mIds[id], wxString(val, len / sizeof(wxChar)));
-            delete val;
+            delete[] val;
          }
          break;
 
@@ -861,7 +862,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             in.Read(val, len);
 
             out.WriteData(wxString(val, len / sizeof(wxChar)));
-            delete val;
+            delete[] val;
          }
          break;
 
@@ -874,7 +875,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
             in.Read(val, len);
 
             out.Write(wxString(val, len / sizeof(wxChar)));
-            delete val;
+            delete[] val;
          }
          break;
 
@@ -884,7 +885,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
       }
    }
 
-   delete buf;
+   delete[] buf;
 
    bool error = out.Error();
  

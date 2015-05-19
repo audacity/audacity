@@ -42,15 +42,15 @@
 extern "C" {
 #endif
 
-typedef float   Float_t;         /* Type used for filtering */
+typedef float   flac_float_t;         /* Type used for filtering */
 
-extern Float_t ReplayGainReferenceLoudness; /* in dB SPL, currently == 89.0 */
+extern flac_float_t ReplayGainReferenceLoudness; /* in dB SPL, currently == 89.0 */
 
 int     InitGainAnalysis ( long samplefreq );
 int     ValidGainFrequency ( long samplefreq );
-int     AnalyzeSamples   ( const Float_t* left_samples, const Float_t* right_samples, size_t num_samples, int num_channels );
-Float_t GetTitleGain     ( void );
-Float_t GetAlbumGain     ( void );
+int     AnalyzeSamples   ( const flac_float_t* left_samples, const flac_float_t* right_samples, size_t num_samples, int num_channels );
+flac_float_t GetTitleGain     ( void );
+flac_float_t GetAlbumGain     ( void );
 
 #ifdef __cplusplus
 }

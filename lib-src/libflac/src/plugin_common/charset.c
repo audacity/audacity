@@ -1,6 +1,6 @@
 /* plugin_common - Routines common to several plugins
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Only slightly modified charset.c from:
  *  EasyTAG - Tag editor for MP3 and OGG files
@@ -21,7 +21,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 

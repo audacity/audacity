@@ -1,7 +1,7 @@
 /* flac - Command-line FLAC encoder/decoder
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 

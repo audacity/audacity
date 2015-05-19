@@ -1056,6 +1056,7 @@ void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
                               _("Audacity Support Data"),
                               rpt.GetCompressedFileName(),
                               wxOK | wxCENTER);
+      dlg.SetName(dlg.GetTitle());
       dlg.ShowModal();
 
       wxLogMessage(wxT("Report generated to: %s"),
@@ -1092,9 +1093,12 @@ int AudacityApp::FilterEvent(wxEvent & event)
 
 AudacityApp::AudacityApp()
 {
+// Do not capture crashes in debug builds
+#if !defined(__WXDEBUG__)
 #if defined(EXPERIMENTAL_CRASH_REPORT)
 #if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
    wxHandleFatalExceptions();
+#endif
 #endif
 #endif
 }
@@ -1335,9 +1339,10 @@ void AudacityApp::FinishInits()
                     wxT("Bad Version"),
                     wxT(
 "Audacity should be built with wxWidgets 2.8.12.\n\n  This version \
-of Audacity is using wxWidgets 3.0 or later.\n  We're not ready for it yet.\n  \
-Click the 'Help' button for known issue."),
-                    wxT("http://bugzilla.audacityteam.org/buglist.cgi?keywords=wx3&resolution=---"),
+of Audacity (") AUDACITY_VERSION_STRING wxT(") is using ")  wxVERSION_STRING  \
+wxT( ".\n  We're not ready for that version of wxWidgets yet.\n\n  \
+Click the 'Help' button for known issues."),
+                    wxT("http://wiki.audacityteam.org/wiki/Incorrect_wxWidgets_Version"),
                      true);
 #endif
 
@@ -1634,7 +1639,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
    mChecker = new wxSingleInstanceChecker();
 
 #if defined(__UNIX__)
-   wxString sockFile(FileNames::DataDir() + wxT("/.audacity.sock"));
+   wxString sockFile(defaultTempDir + wxT("/.audacity.sock"));
 #endif
 
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");

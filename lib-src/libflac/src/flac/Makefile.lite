@@ -1,6 +1,6 @@
 #  flac - Command-line FLAC encoder/decoder
 #  Copyright (C) 2000-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -30,7 +30,11 @@ INCLUDES = -I./include -I$(topdir)/include $(OGG_INCLUDES)
 ifeq ($(OS),Darwin)
     EXPLICIT_LIBS = $(libdir)/libgrabbag.a $(libdir)/libFLAC.a $(libdir)/libreplaygain_analysis.a $(libdir)/libreplaygain_synthesis.a $(libdir)/libgetopt.a $(libdir)/libutf8.a $(OGG_EXPLICIT_LIBS) $(ICONV_LIBS) -lm
 else
+ifeq ($(findstring Windows,$(OS)),Windows)
+    LIBS = -lgrabbag -lFLAC -lreplaygain_analysis -lreplaygain_synthesis -lgetopt -lutf8 -lgrabbag -lwin_utf8_io $(OGG_LIBS) -lm
+else
     LIBS = -lgrabbag -lFLAC -lreplaygain_analysis -lreplaygain_synthesis -lgetopt -lutf8 -lgrabbag $(OGG_LIBS) -lm
+endif
 endif
 
 SRCS_C = \

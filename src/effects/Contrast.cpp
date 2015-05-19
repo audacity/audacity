@@ -102,6 +102,12 @@ float ContrastDialog::GetDB()
    AudacityProject *p = GetActiveProject();
    TrackListOfKindIterator iter(Track::Wave, p->GetTracks());
    Track *t = iter.First();
+   if(!t)
+   {
+      wxMessageDialog m(NULL, _("No wave tracks exist."), _("Error"), wxOK);
+      m.ShowModal();
+      return 1234.0; // 'magic number', but the whole +ve dB range will 'almost' never occur
+   }
    if(mT0 > mT1)
    {
       wxMessageDialog m(NULL, _("Start time after end time!\nPlease enter reasonable times."), _("Error"), wxOK);
@@ -221,6 +227,8 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
   wxDialog(parent, id, title, pos, wxDefaultSize,
      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX )
 {
+   SetName(GetTitle());
+
    foregrounddB = 1234.0;
    backgrounddB = 1234.0;
 

@@ -55,16 +55,16 @@ public:
    // All plugins
 
    // These return untranslated strings
+   const wxString & GetID() const;
    const wxString & GetProviderID() const;
    const wxString & GetPath() const;
    const wxString & GetSymbol() const;
 
-   // These return translated strings (if available)
-   const wxString & GetID() const;
-   wxString GetName() const;
-   wxString GetVersion() const;
-   wxString GetVendor() const;
-   wxString GetDescription() const;
+   // These return translated strings (if available and if requested)
+   wxString GetName(bool translate = true) const;
+   wxString GetVersion(bool translate = true) const;
+   wxString GetVendor(bool translate = true) const;
+   wxString GetDescription(bool translate = true) const;
    bool IsEnabled() const;
    bool IsValid() const;
 
@@ -173,6 +173,8 @@ public:
 
    // PluginManagerInterface implementation
 
+   virtual bool IsPluginRegistered(const PluginID & ID);
+
    virtual const PluginID & RegisterPlugin(ModuleInterface *module);
    virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect);
    virtual const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer);
@@ -182,6 +184,7 @@ public:
                                     wxArrayString & files,
                                     bool directories = false);
 
+   virtual bool HasSharedConfigGroup(const PluginID & ID, const wxString & group);
    virtual bool GetSharedConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T(""));
@@ -201,6 +204,7 @@ public:
    virtual bool RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group);
    virtual bool RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key);
 
+   virtual bool HasPrivateConfigGroup(const PluginID & ID, const wxString & group);
    virtual bool GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T(""));
@@ -243,9 +247,6 @@ public:
    const PluginDescriptor *GetFirstPluginForEffectType(EffectType type);
    const PluginDescriptor *GetNextPluginForEffectType(EffectType type);
 
-   bool IsRegistered(const PluginID & ID);
-   void RegisterPlugin(const wxString & type, const wxString & path);
-
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
 
@@ -254,10 +255,15 @@ public:
    // Returns translated string
    wxString GetName(const PluginID & ID);
    IdentInterface *GetInstance(const PluginID & ID);
-   void SetInstance(const PluginID & ID, IdentInterface *instance);  // TODO: Remove after conversion
 
-   // For builtin effects
+   void CheckForUpdates(EffectType Type=EffectTypeNone);
+
+   // Here solely for the purpose of Nyquist Workbench until
+   // a better solution is devised.
    const PluginID & RegisterPlugin(EffectIdentInterface *effect);
+
+public:
+   bool mbRegisterAndEnable;
 
 private:
    void Load();
@@ -265,7 +271,6 @@ private:
    void Save();
    void SaveGroup(PluginType type);
 
-   void CheckForUpdates();
    void DisableMissing();
    wxArrayString IsNewOrUpdated(const wxArrayString & paths);
 
@@ -273,6 +278,7 @@ private:
 
    wxFileConfig *GetSettings();
 
+   bool HasGroup(const wxString & group);
    bool GetSubgroups(const wxString & group, wxArrayString & subgroups);
 
    bool GetConfig(const wxString & key, wxString & value, const wxString & defval = L"");

@@ -1,6 +1,6 @@
 #  test_streams - Simple test pattern generator
 #  Copyright (C) 2000-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -27,7 +27,15 @@ PROGRAM_NAME = test_streams
 
 INCLUDES = -I./include -I$(topdir)/include
 
-LIBS = -lm
+ifeq ($(OS),Darwin)
+    EXPLICIT_LIBS = $(libdir)/libgrabbag.a -lm
+else
+ifeq ($(findstring Windows,$(OS)),Windows)
+    LIBS = -lgrabbag -lwin_utf8_io -lm
+else
+    LIBS = -lgrabbag -lm
+endif
+endif
 
 SRCS_C = \
 	main.c

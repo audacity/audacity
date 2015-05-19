@@ -1,6 +1,6 @@
 /* test_streams - Simple test pattern generator
  * Copyright (C) 2000-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -33,11 +33,6 @@
 #include "FLAC/assert.h"
 #include "FLAC/ordinals.h"
 #include "share/compat.h"
-
-#ifndef M_PI
-/* math.h in VC++ doesn't seem to have this (how Microsoft is that?) */
-#define M_PI 3.14159265358979323846
-#endif
 
 #if !defined _MSC_VER && !defined __MINGW32__
 #define GET_RANDOM_BYTE (((unsigned)random()) & 0xff)

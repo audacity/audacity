@@ -304,8 +304,6 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
    samplePtr bufStart = data;
    streamContext* sc = NULL;
 
-   int nChannels;
-
    // printf("start %llu len %llu\n", start, len);
    //TODO update this to work with seek - this only works linearly now.
    if(mCurrentPos > start && mCurrentPos  <= start+len + kDecodeSampleAllowance)
@@ -370,7 +368,6 @@ int ODFFmpegDecoder::Decode(samplePtr & data, sampleFormat & format, sampleCount
       // ReadNextFrame returns 1 if stream is not to be imported
       if (sc != (streamContext*)1)
       {
-         nChannels = sc->m_stream->codec->channels < sc->m_initialchannels ? sc->m_stream->codec->channels : sc->m_initialchannels;
          //find out the dts we've seekd to.  can't use the stream->cur_dts because it is faulty.  also note that until we do the first seek, pkt.dts can be false and will change for the same samples after the initial seek.
          sampleCount actualDecodeStart = mCurrentPos;
 

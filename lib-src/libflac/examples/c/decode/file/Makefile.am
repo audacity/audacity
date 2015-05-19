@@ -1,6 +1,6 @@
 #  example_c_decode_file - Simple FLAC file decoder using libFLAC
 #  Copyright (C) 2007-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -18,7 +18,9 @@
 
 EXTRA_DIST = \
 	Makefile.lite \
-	example_c_decode_file.vcproj
+	example_c_decode_file.vcproj \
+	example_c_decode_file.vcxproj \
+	example_c_decode_file.vcxproj.filters
 
 AM_CPPFLAGS = -I$(top_builddir) -I$(srcdir)/include -I$(top_srcdir)/include
 noinst_PROGRAMS = example_c_decode_file
@@ -26,3 +28,5 @@ example_c_decode_file_LDADD = \
 	$(top_builddir)/src/libFLAC/libFLAC.la
 
 example_c_decode_file_SOURCES = main.c
+
+CLEANFILES = example_c_decode_file.exe

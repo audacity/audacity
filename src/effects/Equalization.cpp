@@ -18,7 +18,7 @@
 
 
    \class EffectEqualization
-   \brief An Effect.
+   \brief An Effect that modifies volume in different frequency bands.
 
    Performs filtering, using an FFT to do a FIR filter.
    It lets the user draw an arbitrary envelope (using the same
@@ -72,7 +72,6 @@
 #include <wx/string.h>
 #include <wx/textdlg.h>
 #include <wx/ffile.h>
-#include <wx/filedlg.h>
 #include <wx/filefn.h>
 #include <wx/stdpaths.h>
 #include <wx/settings.h>
@@ -98,6 +97,8 @@
 #include "../AllThemeResources.h"
 #include "../WaveTrack.h"
 #include "../float_cast.h"
+
+#include "FileDialog.h"
 
 #include "Equalization.h"
 
@@ -177,8 +178,6 @@ WX_DEFINE_OBJARRAY( EQCurveArray );
 
 BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
    EVT_SIZE( EffectEqualization::OnSize )
-   EVT_PAINT( EffectEqualization::OnPaint )
-   EVT_ERASE_BACKGROUND( EffectEqualization::OnErase )
 
    EVT_SLIDER( ID_Length, EffectEqualization::OnSliderM )
    EVT_SLIDER( ID_dBMax, EffectEqualization::OnSliderDBMAX )
@@ -216,18 +215,21 @@ EffectEqualization::EffectEqualization()
    mFilterFuncR = new float[windowSize];
    mFilterFuncI = new float[windowSize];
 
+   SetLinearEffectFlag(true);
+
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    mEffectEqualization48x=NULL;
 #endif
 
    mM = DEF_FilterLength;
    mLin = DEF_InterpLin;
-   mDrawMode = DEF_DrawMode;
-   mDrawGrid = DEF_DrawGrid;
    mInterp = DEF_InterpMeth;
-   mdBMin = DEF_dBMin;
-   mdBMax = DEF_dBMax;
    mCurveName = DEF_CurveName;
+
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
+   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
 
    for (int i = 0; i < kNumInterpolations; i++)
    {
@@ -250,16 +252,10 @@ EffectEqualization::EffectEqualization()
 
    mCurve = NULL;
    mDirty = false;
+   mDisallowCustom = false;
 
    // Load the EQ curves
    LoadCurves();
-   if (mDisallowCustom)
-   {
-      mCustomBackup.Name = wxT("unnamed");
-      EQCurve &realCustom = mCurves[mCurves.GetCount()-1];
-      wxASSERT(realCustom.Name.IsSameAs(wxT("unnamed")));
-      mCustomBackup.points = realCustom.points;
-   }
 
    // Note: initial curve is set in TransferDataToWindow
 
@@ -373,6 +369,16 @@ bool EffectEqualization::SetAutomationParameters(EffectAutomationParameters & pa
    mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope);
 
    return true;
+}
+
+bool EffectEqualization::LoadFactoryDefaults()
+{
+   mdBMin = DEF_dBMin;
+   mdBMax = DEF_dBMax;
+   mDrawMode = DEF_DrawMode;
+   mDrawGrid = DEF_DrawGrid;
+
+   return Effect::LoadFactoryDefaults();
 }
 
 // EffectUIClientInterface implementation
@@ -853,10 +859,9 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
 //
 bool EffectEqualization::TransferDataToWindow()
 {
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
+   // Start with a clean slate
+   Flatten();
+   mDirty = false;
 
    // Set log or lin freq scale (affects interpolation as well)
    mLinFreq->SetValue( mLin );
@@ -892,10 +897,10 @@ bool EffectEqualization::TransferDataToWindow()
    mInterpChoice->SetSelection(mInterp);
 
    // Set Graphic (Fader) or Draw mode
-   // Set Graphic (Fader) or Draw mode
    if (mDrawMode)
    {
       mDraw->SetValue(true);
+      UpdateDraw();
    }
    else
    {
@@ -956,7 +961,6 @@ bool EffectEqualization::TransferDataFromWindow()
 
    int m = 2 * mMSlider->GetValue() + 1;   // odd numbers only
    if (m != mM) {
-      rr = true;
       mM = m;
       mPanel->ForceRecalc();
 
@@ -1608,6 +1612,35 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
 }
 
 //
+// Flatten the curve
+//
+void EffectEqualization::Flatten()
+{
+   mLogEnvelope->Flatten(0.);
+   mLogEnvelope->SetTrackLen(1.0);
+   mLinEnvelope->Flatten(0.);
+   mLinEnvelope->SetTrackLen(1.0);
+   mPanel->ForceRecalc();
+   if( !mDrawMode )
+   {
+      for( int i=0; i< mBandsInUse; i++)
+      {
+         mSliders[i]->SetValue(0);
+         mSlidersOld[i] = 0;
+         mEQVals[i] = 0.;
+
+         wxString tip;
+         if( kThirdOct[i] < 1000.)
+            tip.Printf( wxT("%dHz\n%.1fdB"), (int)kThirdOct[i], 0. );
+         else
+            tip.Printf( wxT("%gkHz\n%.1fdB"), kThirdOct[i]/1000., 0. );
+         mSliders[i]->SetToolTip(tip);
+      }
+   }
+   EnvelopeUpdated();
+}
+
+//
 // Process XML tags and handle the ones we recognize
 //
 bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
@@ -1812,6 +1845,60 @@ void EffectEqualization::LayoutEQSliders()
    }
 
    mUIParent->RefreshRect(wxRect(szrG->GetPosition(), szrGSize));
+}
+
+void EffectEqualization::UpdateDraw()
+{
+   int numPoints = mLogEnvelope->GetNumberOfPoints();
+   double *when = new double[ numPoints ];
+   double *value = new double[ numPoints ];
+   double deltadB = 0.1;
+   double dx, dy, dx1, dy1, err;
+
+   mLogEnvelope->GetPoints( when, value, numPoints );
+
+   // set 'unnamed' as the selected curve
+   EnvelopeUpdated();
+
+   bool flag = true;
+   while (flag)
+   {
+      flag = false;
+      int numDeleted = 0;
+      mLogEnvelope->GetPoints( when, value, numPoints );
+      for(int j=0;j<numPoints-2;j++)
+      {
+         dx = when[j+2+numDeleted] - when[j+numDeleted];
+         dy = value[j+2+numDeleted] - value[j+numDeleted];
+         dx1 = when[j+numDeleted+1] - when[j+numDeleted];
+         dy1 = dy * dx1 / dx;
+         err = fabs(value[j+numDeleted+1] - (value[j+numDeleted] + dy1));
+         if( err < deltadB )
+         {   // within < deltadB dB?
+            mLogEnvelope->Delete(j+1);
+            numPoints--;
+            numDeleted++;
+            flag = true;
+         }
+      }
+   }
+   delete [] when;
+   delete [] value;
+
+   if(mLin)
+   {
+      EnvLogToLin();
+      mEnvelope = mLinEnvelope;
+      mFreqRuler->ruler.SetLog(false);
+      mFreqRuler->ruler.SetRange(0, mHiFreq);
+   }
+
+   szrV->Show(szrG,false);
+   szrH->Show(szrI,false);
+   szrH->Show(szrL,true);
+   mUIParent->Layout();
+   wxGetTopLevelParent(mUIParent)->Layout();
+   mPanel->ForceRecalc();     // it may have changed slightly due to the deletion of points
 }
 
 void EffectEqualization::UpdateGraphic()
@@ -2233,19 +2320,6 @@ void EffectEqualization::OnErase(wxEraseEvent & WXUNUSED(event))
    // Ignore it
 }
 
-void EffectEqualization::OnPaint(wxPaintEvent & event)
-{
-   wxPaintDC dc(mUIParent);
-
-#if defined(__WXGTK__)
-   dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
-#endif
-
-   dc.Clear();
-
-   event.Skip();
-}
-
 void EffectEqualization::OnSlider(wxCommandEvent & event)
 {
    wxSlider *s = (wxSlider *)event.GetEventObject();
@@ -2296,56 +2370,8 @@ void EffectEqualization::OnInterp(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnDrawMode(wxCommandEvent & WXUNUSED(event))
 {
-   int numPoints = mLogEnvelope->GetNumberOfPoints();
-   double *when = new double[ numPoints ];
-   double *value = new double[ numPoints ];
-   double deltadB = 0.1;
-   double dx, dy, dx1, dy1, err;
+   UpdateDraw();
 
-   mLogEnvelope->GetPoints( when, value, numPoints );
-
-   // set 'unnamed' as the selected curve
-   EnvelopeUpdated();
-
-   bool flag = true;
-   while (flag)
-   {
-      flag = false;
-      int numDeleted = 0;
-      mLogEnvelope->GetPoints( when, value, numPoints );
-      for(int j=0;j<numPoints-2;j++)
-      {
-         dx = when[j+2+numDeleted] - when[j+numDeleted];
-         dy = value[j+2+numDeleted] - value[j+numDeleted];
-         dx1 = when[j+numDeleted+1] - when[j+numDeleted];
-         dy1 = dy * dx1 / dx;
-         err = fabs(value[j+numDeleted+1] - (value[j+numDeleted] + dy1));
-         if( err < deltadB )
-         {   // within < deltadB dB?
-            mLogEnvelope->Delete(j+1);
-            numPoints--;
-            numDeleted++;
-            flag = true;
-         }
-      }
-   }
-   delete [] when;
-   delete [] value;
-
-   if(mLin)
-   {
-      EnvLogToLin();
-      mEnvelope = mLinEnvelope;
-      mFreqRuler->ruler.SetLog(false);
-      mFreqRuler->ruler.SetRange(0, mHiFreq);
-   }
-
-   szrV->Show(szrG,false);
-   szrH->Show(szrI,false);
-   szrH->Show(szrL,true);
-   mUIParent->Layout();
-   wxGetTopLevelParent(mUIParent)->Layout();
-   mPanel->ForceRecalc();     // it may have changed slightly due to the deletion of points
    mDrawMode = true;
 }
 
@@ -2394,28 +2420,7 @@ void EffectEqualization::OnManage(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnClear(wxCommandEvent & WXUNUSED(event))
 {
-   mLogEnvelope->Flatten(0.);
-   mLogEnvelope->SetTrackLen(1.0);
-   mLinEnvelope->Flatten(0.);
-   mLinEnvelope->SetTrackLen(1.0);
-   mPanel->ForceRecalc();
-   if( !mDrawMode )
-   {
-      for( int i=0; i< mBandsInUse; i++)
-      {
-         mSliders[i]->SetValue(0);
-         mSlidersOld[i] = 0;
-         mEQVals[i] = 0.;
-
-         wxString tip;
-         if( kThirdOct[i] < 1000.)
-            tip.Printf( wxT("%dHz\n%.1fdB"), (int)kThirdOct[i], 0. );
-         else
-            tip.Printf( wxT("%gkHz\n%.1fdB"), kThirdOct[i]/1000., 0. );
-         mSliders[i]->SetToolTip(tip);
-      }
-   }
-   EnvelopeUpdated();
+   Flatten();
 }
 
 void EffectEqualization::OnInvert(wxCommandEvent & WXUNUSED(event)) // Inverts any curve
@@ -2795,6 +2800,11 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
 void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)
 {
+   if (!mEffect->mDrawMode)
+   {
+      return;
+   }
+
    if (event.ButtonDown() && !HasCapture())
    {
       CaptureMouse();
@@ -3196,7 +3206,7 @@ void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 {
-   wxFileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
+   FileDialog filePicker(this, _("Choose an EQ curve file"), FileNames::DataDir(), wxT(""), _("xml files (*.xml;*.XML)|*.xml;*.XML"));
    wxString fileName = wxT("");
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;
@@ -3216,7 +3226,7 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
 
 void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {
-   wxFileDialog filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
+   FileDialog filePicker(this, _("Export EQ curves as..."), FileNames::DataDir(), wxT(""), wxT("*.XML"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);   // wxFD_CHANGE_DIR?
    wxString fileName = wxT("");
    if( filePicker.ShowModal() == wxID_CANCEL)
       return;

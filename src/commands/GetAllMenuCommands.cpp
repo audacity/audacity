@@ -37,7 +37,7 @@ bool GetAllMenuCommands::Apply(CommandExecutionContext context)
 {
    bool showStatus = GetBool(wxT("ShowStatus"));
    wxArrayString names;
-   CommandManager *cmdManager = context.proj->GetCommandManager();
+   CommandManager *cmdManager = context.GetProject()->GetCommandManager();
    cmdManager->GetAllCommandNames(names, false);
    wxArrayString::iterator iter;
    for (iter = names.begin(); iter != names.end(); ++iter)

@@ -121,7 +121,7 @@ GeometricInputTimeWarper::GeometricInputTimeWarper(double tStart, double tEnd,
 double GeometricOutputTimeWarper::Warp(double originalTime) const
 {
    double scaledTime = mTimeWarper.Warp(originalTime);
-   return mTStart + mScale*log(mC0 * scaledTime + 1.0);
+   return mTStart + mScale*log1p(mC0 * scaledTime);
 }
 
 GeometricOutputTimeWarper::GeometricOutputTimeWarper(double tStart, double tEnd,

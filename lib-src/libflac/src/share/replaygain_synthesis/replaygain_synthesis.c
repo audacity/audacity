@@ -1,6 +1,6 @@
 /* replaygain_synthesis - Routines for applying ReplayGain to a signal
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,22 +35,16 @@
  * Additional code by Magnus Holmgren and Gian-Carlo Pascutto
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
 #include <string.h> /* for memset() */
 #include <math.h>
-#include "private/fast_float_math_hack.h"
-#include "replaygain_synthesis.h"
+#include "share/replaygain_synthesis.h"
 #include "FLAC/assert.h"
 
-/* adjust for compilers that can't understand using LL suffix for int64_t literals */
-#ifdef _MSC_VER
-#define FLAC__I64L(x) x
-#else
 #define FLAC__I64L(x) x##LL
-#endif
 
 
 /*
@@ -300,41 +294,6 @@ static FLAC__int64 dither_output_(DitherContext *d, FLAC__bool do_dithering, int
 
 size_t FLAC__replaygain_synthesis__apply_gain(FLAC__byte *data_out, FLAC__bool little_endian_data_out, FLAC__bool unsigned_data_out, const FLAC__int32 * const input[], unsigned wide_samples, unsigned channels, const unsigned source_bps, const unsigned target_bps, const double scale, const FLAC__bool hard_limit, FLAC__bool do_dithering, DitherContext *dither_context)
 {
-	static const FLAC__int32 conv_factors_[33] = {
-		-1, /* 0 bits-per-sample (not supported) */
-		-1, /* 1 bits-per-sample (not supported) */
-		-1, /* 2 bits-per-sample (not supported) */
-		-1, /* 3 bits-per-sample (not supported) */
-		268435456, /* 4 bits-per-sample */
-		134217728, /* 5 bits-per-sample */
-		67108864, /* 6 bits-per-sample */
-		33554432, /* 7 bits-per-sample */
-		16777216, /* 8 bits-per-sample */
-		8388608, /* 9 bits-per-sample */
-		4194304, /* 10 bits-per-sample */
-		2097152, /* 11 bits-per-sample */
-		1048576, /* 12 bits-per-sample */
-		524288, /* 13 bits-per-sample */
-		262144, /* 14 bits-per-sample */
-		131072, /* 15 bits-per-sample */
-		65536, /* 16 bits-per-sample */
-		32768, /* 17 bits-per-sample */
-		16384, /* 18 bits-per-sample */
-		8192, /* 19 bits-per-sample */
-		4096, /* 20 bits-per-sample */
-		2048, /* 21 bits-per-sample */
-		1024, /* 22 bits-per-sample */
-		512, /* 23 bits-per-sample */
-		256, /* 24 bits-per-sample */
-		128, /* 25 bits-per-sample */
-		64, /* 26 bits-per-sample */
-		32, /* 27 bits-per-sample */
-		16, /* 28 bits-per-sample */
-		8, /* 29 bits-per-sample */
-		4, /* 30 bits-per-sample */
-		2, /* 31 bits-per-sample */
-		1 /* 32 bits-per-sample */
-	};
 	static const FLAC__int64 hard_clip_factors_[33] = {
 		0, /* 0 bits-per-sample (not supported) */
 		0, /* 1 bits-per-sample (not supported) */
@@ -370,7 +329,7 @@ size_t FLAC__replaygain_synthesis__apply_gain(FLAC__byte *data_out, FLAC__bool l
 		-1073741824, /* 31 bits-per-sample */
 		(FLAC__int64)(-1073741824) * 2 /* 32 bits-per-sample */
 	};
-	const FLAC__int32 conv_factor = conv_factors_[target_bps];
+	const FLAC__int32 conv_shift = 32 - target_bps;
 	const FLAC__int64 hard_clip_factor = hard_clip_factors_[target_bps];
 	/*
 	 * The integer input coming in has a varying range based on the
@@ -413,9 +372,9 @@ size_t FLAC__replaygain_synthesis__apply_gain(FLAC__byte *data_out, FLAC__bool l
 				else if(sample > 0.5)
 					sample = tanh((sample - 0.5) / (1-0.5)) * (1-0.5) + 0.5;
 			}
-			sample *= 2147483647.f;
+			sample *= 2147483647.;
 
-			val64 = dither_output_(dither_context, do_dithering, noise_shaping, (i + last_history_index) % 32, sample, channel) / conv_factor;
+			val64 = dither_output_(dither_context, do_dithering, noise_shaping, (i + last_history_index) % 32, sample, channel) >> conv_shift;
 
 			val32 = (FLAC__int32)val64;
 			if(val64 >= -hard_clip_factor)

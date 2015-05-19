@@ -147,7 +147,7 @@ public:
    bool Process(AudacityProject *project, bool selectedOnly,
                 double t0, double t1);
    bool Process(AudacityProject *project, int numChannels,
-                const wxChar *type, const wxString filename,
+                const wxChar *type, const wxString & filename,
                 bool selectedOnly, double t0, double t1);
 
    void DisplayOptions(int index);

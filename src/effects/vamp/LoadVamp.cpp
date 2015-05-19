@@ -160,7 +160,7 @@ wxArrayString VampEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(p
 
       int output = 0;
 
-      for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); j++)
+      for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); ++j)
       {
          if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate ||
                j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep ||
@@ -294,7 +294,7 @@ Plugin *VampEffectsModule::FindPlugin(const wxString & path,
 
    hasParameters = !vp->getParameterDescriptors().empty();
 
-   for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); j++)
+   for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); ++j)
    {
       if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate ||
             j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep ||

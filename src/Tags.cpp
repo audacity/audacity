@@ -409,7 +409,7 @@ bool Tags::GetFirst(wxString & name, wxString & value)
 
 bool Tags::GetNext(wxString & name, wxString & value)
 {
-   mIter++;
+   ++mIter;
    if (mIter == mMap.end()) {
       return false;
    }
@@ -664,6 +664,8 @@ TagsEditor::TagsEditor(wxWindow * parent,
    mEditTitle(editTitle),
    mEditTrack(editTrack)
 {
+   SetName(GetTitle());
+
    names[0] = LABEL_ARTIST;
    names[1] = LABEL_TITLE;
    names[2] = LABEL_ALBUM;
@@ -967,6 +969,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
    wxDialog dlg(this, wxID_ANY, _("Edit Genres"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+   dlg.SetName(dlg.GetTitle());
    wxTextCtrl *tc;
 
    ShuttleGui S(&dlg, eIsCreating);

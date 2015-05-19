@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \class EffectNormalize
-\brief An Effect.
+\brief An Effect to bring the peak level up to a chosen level.
 
 *//*******************************************************************/
 
@@ -45,10 +45,12 @@ END_EVENT_TABLE()
 
 EffectNormalize::EffectNormalize()
 {
-   mLevel = MIN_Level;
+   mLevel = DEF_Level;
    mDC = DEF_RemoveDC;
    mGain = DEF_ApplyGain;
    mStereoInd = DEF_StereoInd;
+
+   SetLinearEffectFlag(false);
 }
 
 EffectNormalize::~EffectNormalize()

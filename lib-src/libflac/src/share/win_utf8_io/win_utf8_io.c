@@ -1,5 +1,5 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2013  Xiph.Org Foundation
+ * Copyright (C) 2013-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -40,11 +40,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h> /* for WideCharToMultiByte and MultiByteToWideChar */
 
-#include "share/compat.h"
 #include "share/win_utf8_io.h"
-#include "share/compat.h"
+
+#define UTF8_BUFFER_SIZE 32768
+
+static
+int local_vsnprintf(char *str, size_t size, const char *fmt, va_list va)
+{
+	int rc;
+
+#if defined _MSC_VER
+	if (size == 0)
+		return 1024;
+	rc = vsnprintf_s (str, size, _TRUNCATE, fmt, va);
+	if (rc < 0)
+		rc = size - 1;
+#elif defined __MINGW32__
+	rc = __mingw_vsnprintf (str, size, fmt, va);
+#else
+	rc = vsnprintf (str, size, fmt, va);
+#endif
+
+	return rc;
+}
 
 static UINT win_utf8_io_codepage = CP_ACP;
 
@@ -90,8 +111,8 @@ wchar_t *wchar_from_utf8(const char *str)
 /* retrieve WCHAR commandline, expand wildcards and convert everything to UTF-8 */
 int get_utf8_argv(int *argc, char ***argv)
 {
-	typedef int (__cdecl *__wgetmainargs_)(int*, wchar_t***, wchar_t***, int, int*);
-	__wgetmainargs_ __wgetmainargs;
+	typedef int (__cdecl *wgetmainargs_t)(int*, wchar_t***, wchar_t***, int, int*);
+	wgetmainargs_t wgetmainargs;
 	HMODULE handle;
 	int wargc;
 	wchar_t **wargv;
@@ -100,10 +121,11 @@ int get_utf8_argv(int *argc, char ***argv)
 	int ret, i;
 
 	if ((handle = LoadLibrary("msvcrt.dll")) == NULL) return 1;
-	if ((__wgetmainargs = (__wgetmainargs_)GetProcAddress(handle, "__wgetmainargs")) == NULL) return 1;
+	if ((wgetmainargs = (wgetmainargs_t)GetProcAddress(handle, "__wgetmainargs")) == NULL) return 1;
 	i = 0;
-	if (__wgetmainargs(&wargc, &wargv, &wenv, 1, &i) != 0) return 1;
-	if ((utf8argv = (char **)malloc(wargc*sizeof(char*))) == NULL) return 1;
+	/* if __wgetmainargs expands wildcards then it also erroneously converts \\?\c:\path\to\file.flac to \\file.flac */
+	if (wgetmainargs(&wargc, &wargv, &wenv, 1, &i) != 0) return 1;
+	if ((utf8argv = (char **)calloc(wargc, sizeof(char*))) == NULL) return 1;
 	ret = 0;
 
 	for (i=0; i<wargc; i++) {
@@ -111,7 +133,6 @@ int get_utf8_argv(int *argc, char ***argv)
 			ret = 1;
 			break;
 		}
-		if (ret != 0) break;
 	}
 
 	FreeLibrary(handle);
@@ -121,6 +142,8 @@ int get_utf8_argv(int *argc, char ***argv)
 		*argc = wargc;
 		*argv = utf8argv;
 	} else {
+		for (i=0; i<wargc; i++)
+			free(utf8argv[i]);
 		free(utf8argv);
 	}
 
@@ -148,7 +171,7 @@ int win_get_console_width(void)
 
 /* print functions */
 
-int print_console(FILE *stream, const wchar_t *text, uint32_t len)
+int print_console(FILE *stream, const wchar_t *text, size_t len)
 {
 	static HANDLE hOut;
 	static HANDLE hErr;
@@ -162,7 +185,7 @@ int print_console(FILE *stream, const wchar_t *text, uint32_t len)
 		if (WriteConsoleW(hErr, text, len, &out, NULL) == 0) return -1;
 		return out;
 	} else {
-		int ret = fwprintf(stream, L"%s", text);
+		int ret = fputws(text, stream);
 		if (ret < 0) return ret;
 		return len;
 	}
@@ -176,9 +199,9 @@ int printf_utf8(const char *format, ...)
 
 	while (1) {
 		va_list argptr;
-		if (!(utmp = (char *)malloc(32768*sizeof(char)))) break;
+		if (!(utmp = (char *)malloc(UTF8_BUFFER_SIZE*sizeof(char)))) break;
 		va_start(argptr, format);
-		ret = vsprintf(utmp, format, argptr);
+		ret = local_vsnprintf(utmp, UTF8_BUFFER_SIZE, format, argptr);
 		va_end(argptr);
 		if (ret < 0) break;
 		if (!(wout = wchar_from_utf8(utmp))) {
@@ -202,9 +225,9 @@ int fprintf_utf8(FILE *stream, const char *format, ...)
 
 	while (1) {
 		va_list argptr;
-		if (!(utmp = (char *)malloc(32768*sizeof(char)))) break;
+		if (!(utmp = (char *)malloc(UTF8_BUFFER_SIZE*sizeof(char)))) break;
 		va_start(argptr, format);
-		ret = vsprintf(utmp, format, argptr);
+		ret = local_vsnprintf(utmp, UTF8_BUFFER_SIZE, format, argptr);
 		va_end(argptr);
 		if (ret < 0) break;
 		if (!(wout = wchar_from_utf8(utmp))) {
@@ -227,8 +250,8 @@ int vfprintf_utf8(FILE *stream, const char *format, va_list argptr)
 	int ret = -1;
 
 	while (1) {
-		if (!(utmp = (char *)malloc(32768*sizeof(char)))) break;
-		if ((ret = vsprintf(utmp, format, argptr)) < 0) break;
+		if (!(utmp = (char *)malloc(UTF8_BUFFER_SIZE*sizeof(char)))) break;
+		if ((ret = local_vsnprintf(utmp, UTF8_BUFFER_SIZE, format, argptr)) < 0) break;
 		if (!(wout = wchar_from_utf8(utmp))) {
 			ret = -1;
 			break;

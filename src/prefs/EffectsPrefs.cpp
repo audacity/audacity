@@ -134,6 +134,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
+#ifndef EXPERIMENTAL_EFFECT_MANAGEMENT
    S.StartStatic(_("Plugin Options"));
    {
       S.TieCheckBox(_("Check for updated plugins when Audacity starts"),
@@ -144,6 +145,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
                      false);
    }
    S.EndStatic();
+#endif
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    S.StartStatic(_("Instruction Set"));

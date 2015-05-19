@@ -1,6 +1,6 @@
 /* libFLAC++ - Free Lossless Audio Codec library
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,6 +31,10 @@
  */
 
 #define __STDC_LIMIT_MACROS 1 /* otherwise SIZE_MAX is not defined for c++ */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "share/alloc.h"
 #include "FLAC++/metadata.h"
 #include "FLAC/assert.h"
@@ -519,36 +523,72 @@ namespace FLAC {
 		// VorbisComment::Entry
 		//
 
-		VorbisComment::Entry::Entry()
+		VorbisComment::Entry::Entry() :
+			is_valid_(true),
+			entry_(),
+			field_name_(0),
+			field_name_length_(0),
+			field_value_(0),
+			field_value_length_(0)
 		{
 			zero();
 		}
 
-		VorbisComment::Entry::Entry(const char *field, unsigned field_length)
+		VorbisComment::Entry::Entry(const char *field, unsigned field_length) :
+			is_valid_(true),
+			entry_(),
+			field_name_(0),
+			field_name_length_(0),
+			field_value_(0),
+			field_value_length_(0)
 		{
 			zero();
 			construct(field, field_length);
 		}
 
-		VorbisComment::Entry::Entry(const char *field)
+		VorbisComment::Entry::Entry(const char *field) :
+			is_valid_(true),
+			entry_(),
+			field_name_(0),
+			field_name_length_(0),
+			field_value_(0),
+			field_value_length_(0)
 		{
 			zero();
 			construct(field);
 		}
 
-		VorbisComment::Entry::Entry(const char *field_name, const char *field_value, unsigned field_value_length)
+		VorbisComment::Entry::Entry(const char *field_name, const char *field_value, unsigned field_value_length) :
+			is_valid_(true),
+			entry_(),
+			field_name_(0),
+			field_name_length_(0),
+			field_value_(0),
+			field_value_length_(0)
 		{
 			zero();
 			construct(field_name, field_value, field_value_length);
 		}
 
-		VorbisComment::Entry::Entry(const char *field_name, const char *field_value)
+		VorbisComment::Entry::Entry(const char *field_name, const char *field_value) :
+			is_valid_(true),
+			entry_(),
+			field_name_(0),
+			field_name_length_(0),
+			field_value_(0),
+			field_value_length_(0)
 		{
 			zero();
 			construct(field_name, field_value);
 		}
 
-		VorbisComment::Entry::Entry(const Entry &entry)
+		VorbisComment::Entry::Entry(const Entry &entry) :
+			is_valid_(true),
+			entry_(),
+			field_name_(0),
+			field_name_length_(0),
+			field_value_(0),
+			field_value_length_(0)
 		{
 			FLAC__ASSERT(entry.is_valid());
 			zero();

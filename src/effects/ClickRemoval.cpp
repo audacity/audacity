@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class EffectClickRemoval
-\brief An Effect.
+\brief An Effect for removing clicks.
 
   Clicks are identified as small regions of high amplitude compared
   to the surrounding chunk of sound.  Anything sufficiently tall compared
@@ -60,6 +60,8 @@ EffectClickRemoval::EffectClickRemoval()
 {
    mThresholdLevel = DEF_Threshold;
    mClickWidth = DEF_Width;
+
+   SetLinearEffectFlag(false);
 
    windowSize = 8192;
    sep = 2049;

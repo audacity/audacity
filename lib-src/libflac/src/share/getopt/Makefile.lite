@@ -5,7 +5,7 @@
 topdir = ../../..
 
 LIB_NAME = libgetopt
-INCLUDES = -I$(topdir)/include -I$(topdir)/include/share
+INCLUDES = -I$(topdir)/include
 
 SRCS_C = \
 	getopt.c \

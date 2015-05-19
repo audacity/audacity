@@ -52,6 +52,7 @@
 typedef enum EffectType
 {
    EffectTypeNone,
+   EffectTypeHidden,
    EffectTypeGenerate,
    EffectTypeProcess,
    EffectTypeAnalyze
@@ -79,6 +80,9 @@ public:
 
    // Whether the effect supports realtime previewing (while audio is playing).
    virtual bool SupportsRealtime() = 0;
+
+   // Whether the effect should be shown in menus right from the start.
+   virtual bool EnableFromGetGo(){ return false;};
 
    // Can the effect be used without the UI.
    virtual bool SupportsAutomation() = 0;

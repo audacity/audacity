@@ -105,6 +105,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
   mRate(rate),
   mFormat(format)
 {
+   SetName(GetTitle());
+
    // Create the main sizer
    wxBoxSizer *vs = new wxBoxSizer(wxVERTICAL);
 

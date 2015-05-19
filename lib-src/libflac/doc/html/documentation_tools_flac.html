@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- Copyright (c) 2000-2009  Josh Coalson -->
-<!-- Copyright (c) 2011-2013  Xiph.Org Foundation -->
+<!-- Copyright (c) 2011-2014  Xiph.Org Foundation -->
 <!-- Permission is granted to copy, distribute and/or modify this document -->
 <!-- under the terms of the GNU Free Documentation License, Version 1.1 -->
 <!-- or any later version published by the Free Software Foundation; -->
@@ -20,7 +20,7 @@
 <body>
 
 <div class="logo">
-	<a href="http://flac.sourceforge.net/"><img src="images/logo130.gif" alt="FLAC Logo" align="middle" border="0" hspace="0" /></a>
+	<a href="index.html"><img src="images/logo130.gif" alt="FLAC Logo" align="middle" border="0" hspace="0" /></a>
 </div>
 
 <div class="above_nav"></div>
@@ -28,18 +28,10 @@
 <div class="navbar">
 	&nbsp;<a href="index.html">home</a>&nbsp;&nbsp;|
 	&nbsp;<a href="faq.html">faq</a>&nbsp;&nbsp;|
-	&nbsp;<a href="news.html">news</a>&nbsp;&nbsp;|
-	&nbsp;<a href="download.html">download</a>&nbsp;&nbsp;|
 	&nbsp;<a href="documentation.html">documentation</a>&nbsp;&nbsp;|
-	&nbsp;<a href="comparison.html">comparison</a>&nbsp;&nbsp;|
+	&nbsp;<a href="developers.html">developers</a>&nbsp;&nbsp;|
 	&nbsp;<a href="changelog.html">changelog</a>&nbsp;&nbsp;|
-	&nbsp;<a href="links.html">links</a>&nbsp;&nbsp;|
-	&nbsp;<a href="developers.html">developers</a>&nbsp;
-</div>
-
-<div class="langbar">
-	&nbsp;english&nbsp;&nbsp;|
-	&nbsp;<a href="ru/documentation.html">russian</a>&nbsp;
+	&nbsp;<a href="http://xiph.org/flac">more</a>
 </div>
 
 <div class="below_nav"></div>
@@ -363,29 +355,35 @@
 			<tr>
 				<td nowrap="nowrap" align="right" valign="top" bgcolor="#F4F4CC">
 					<a name="flac_options_skip" />
-					<span class="argument">--skip={#|mm:ss.ss}</span>
+					<span class="argument">--skip={#|mm:ss.ss}<br />--skip={#|mm:ss,ss}</span>
 				</td>
 				<td>
 					Skip over the first # of samples of the input.  This works for both encoding and decoding, but not testing.  The alternative form <span class="argument">mm:ss.ss</span> can be used to specify minutes, seconds, and fractions of a second.<br />
 					<br />
+					Note that the use of either a dot or a comma depends on the locale used for the system.<br />
+					<br />
 					Examples:<br />
 					<br />
 					<span class="argument">--skip=123</span> : skip the first 123 samples of the input<br />
-					<span class="argument">--skip=1:23.45</span> : skip the first 1 minute and 23.45 seconds of the input
+					<span class="argument">--skip=1:23.45</span> : skip the first 1 minute and 23.45 seconds of the input, with a locale using the point as decimal separator<br />
+					<span class="argument">--skip=1:23,45</span> : skip the first 1 minute and 23.45 seconds of the input, with a locale using the comma as decimal separator
 				</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" align="right" valign="top" bgcolor="#F4F4CC">
 					<a name="flac_options_until" />
-					<span class="argument">--until={#|[+|-]mm:ss.ss}</span>
+					<span class="argument">--until={#|[+|-]mm:ss.ss}<br />--until={#|[+|-]mm:ss,ss}</span>
 				</td>
 				<td>
 					Stop at the given sample number for each input file.  This works for both encoding and decoding, but not testing.  The given sample number is not included in the decoded output.  The alternative form <span class="argument">mm:ss.ss</span> can be used to specify minutes, seconds, and fractions of a second.  If a <span class="argument">+</span> sign is at the beginning, the <span class="argument">--until</span> point is relative to the <span class="argument">--skip</span> point.  If a <span class="argument">-</span> sign is at the beginning, the <span class="argument">--until</span> point is relative to end of the audio.<br />
+					<br />
+					Note that the use of either a dot or a comma depends on the locale used for the system.<br />
 					<br />
 					Examples:<br />
 					<br />
 					<span class="argument">--until=123</span> : decode only the first 123 samples of the input (samples 0-122, stopping at 123)<br />
 					<span class="argument">--until=1:23.45</span> : decode only the first 1 minute and 23.45 seconds of the input<br />
+					<span class="argument">--until=1:23,45</span> : decode only the first 1 minute and 23.45 seconds of the input, if your locale setting uses a comma as decimal separator<br />
 					<span class="argument">--skip=1:00 --until=+1:23.45</span> : decode 1:00.00 to 2:23.45<br />
 					<span class="argument">--until=-1:23.45</span> : decode everything except the last 1 minute and 23.45 seconds<br />
 					<span class="argument">--until=-0:00</span> : decode until the end of the input (the same as not specifying <span class="argument">--until</span>)
@@ -558,7 +556,7 @@
 					<span class="argument">--replay-gain</span>
 				</td>
 				<td>
-					Calculate <a href="http://www.replaygain.org/">ReplayGain</a> values and store them as FLAC tags, similar to <a href="http://packages.qa.debian.org/v/vorbisgain.html">VorbisGain</a>.  Title gains/peaks will be computed for each input file, and an album gain/peak will be computed for all files.  All input files must have the same resolution, sample rate, and number of channels.  Only mono and stereo files are allowed, and the sample rate must be one of 8, 11.025, 12, 16, 22.05, 24, 32, 44.1, or 48 kHz.  Also note that this option may leave a few extra bytes in a <span class="code">PADDING</span> block as the exact size of the tags is not known until all files are processed.<br />
+					Calculate <a href="http://wiki.hydrogenaud.io/index.php?title=ReplayGain_specification">ReplayGain</a> values and store them as FLAC tags, similar to <a href="http://packages.qa.debian.org/v/vorbisgain.html">VorbisGain</a>.  Title gains/peaks will be computed for each input file, and an album gain/peak will be computed for all files.  All input files must have the same resolution, sample rate, and number of channels.  Only mono and stereo files are allowed, and the sample rate must be one of 8, 11.025, 12, 16, 22.05, 24, 32, 44.1, or 48 kHz.  Also note that this option may leave a few extra bytes in a <span class="code">PADDING</span> block as the exact size of the tags is not known until all files are processed.<br />
 					<br />
 					Note that this option cannot be used when encoding to standard output (stdout).
 				</td>
@@ -800,7 +798,7 @@
 					<span class="argument">-6</span>, <span class="argument">--compression-level-6</span>
 				</td>
 				<td>
-					Synonymous with <span class="argument">-l 8 -b 4096 -m -r 6</span>
+					Synonymous with <span class="argument">-l 8 -b 4096 -m -r 6 -A tukey(0.5);partial_tukey(2)</span>
 				</td>
 			</tr>
 			<tr>
@@ -809,7 +807,7 @@
 					<span class="argument">-7</span>, <span class="argument">--compression-level-7</span>
 				</td>
 				<td>
-					Synonymous with <span class="argument">-l 8 -b 4096 -m -e -r 6</span>
+					Synonymous with <span class="argument">-l 12 -b 4096 -m -r 6 -A tukey(0.5);partial_tukey(2)</span>
 				</td>
 			</tr>
 			<tr>
@@ -818,7 +816,7 @@
 					<span class="argument">-8</span>, <span class="argument">--compression-level-8</span>
 				</td>
 				<td>
-					Synonymous with <span class="argument">-l 12 -b 4096 -m -e -r 6</span>
+					Synonymous with <span class="argument">-l 12 -b 4096 -m -r 6 -A tukey(0.5);partial_tukey(2);punchout_tukey(3)</span>
 				</td>
 			</tr>
 			<tr>
@@ -854,9 +852,11 @@
 					<span class="argument">-A "function"</span>, <span class="argument">--apodization="function"</span>
 				</td>
 				<td>
-					Window audio data with given the apodization function.  The functions are: bartlett, bartlett_hann, blackman, blackman_harris_4term_92db, connes, flattop, gauss(STDDEV), hamming, hann, kaiser_bessel, nuttall, rectangle, triangle, tukey(P), welch.<br />
+					Window audio data with given the apodization function.  The functions are: bartlett, bartlett_hann, blackman, blackman_harris_4term_92db, connes, flattop, gauss(STDDEV), hamming, hann, kaiser_bessel, nuttall, rectangle, triangle, tukey(P), partial_tukey(n[/ov[/P]]), punchout_tukey(n[/ov[/P]]), welch.<br />
 					For gauss(STDDEV), STDDEV is the standard deviation (0&lt;STDDEV&lt;=0.5).<br />
 					For tukey(P), P specifies the fraction of the window that is tapered (0&lt;=P&lt;=1; P=0 corresponds to "rectangle" and P=1 corresponds to "hann").<br />
+					For partial_tukey(n) and punchout_tukey(n), n apodization functions are added that span different parts of each block. Values of 2 to 6 seem to yield sane results. If necessary, an overlap can be specified, as can be the taper parameter, for example partial_tukey(2/0.2) or partial_tukey(2/0.2/0.5). ov should be smaller than 1 and can be negative.<br />
+					Please note that P, STDDEV and ov are locale specific, so a comma as decimal separator might be required instead of a dot.<br />
 					More than one -A option (up to 32) may be used.  Any function that is specified erroneously is silently dropped.  The encoder chooses suitable defaults in the absence of any -A options; any -A option specified replaces the default(s).<br />
 					When more than one function is specified, then for every subframe the encoder will try each of them separately and choose the window that results in the smallest compressed subframe.  Multiple functions can greatly increase the encoding time.<br />
 				</td>
@@ -896,7 +896,7 @@
 				<td>
 					Set the [min,]max residual partition order.  The min value defaults to 0 if unspecified.<br />
 					<br />
-					By default the encoder uses a single Rice parameter for the subframe's entire residual.  With this option, the residual is iteratively partitioned into 2^min# .. 2^max# pieces, each with its own Rice parameter.  Higher values of max# yield diminishing returns.  The most bang for the buck is usually with <span class="argument">-r 2,2</span> (more for higher block sizes).  This usually shaves off about 1.5%.  The technique tends to peak out about when blocksize/(2^n)=128.  Use <span class="argument">-r 0,16</span> to force the highest degree of optimization.
+					By default the encoder uses a single Rice parameter for the subframe's entire residual.  With this option, the residual is iteratively partitioned into 2^min# .. 2^max# pieces, each with its own Rice parameter.  Higher values of max# yield diminishing returns.  The most bang for the buck is usually with <span class="argument">-r 2,2</span> (more for higher block sizes).  This usually shaves off about 1.5%.  The technique tends to peak out about when blocksize/(2^n)=128.  Use <span class="argument">-r 0,15</span> to force the highest degree of optimization.
 				</td>
 			</tr>
 		</table>
@@ -1026,6 +1026,7 @@
 					<span class="argument">--no-mid-side</span><br />
 					<span class="argument">--no-ogg</span><br />
 					<span class="argument">--no-padding</span><br />
+					<span class="argument">--no-preserve-modtime</span><br />
 					<span class="argument">--no-qlp-coeff-prec-search</span><br />
 					<span class="argument">--no-residual-gnuplot</span><br />
 					<span class="argument">--no-residual-text</span><br />
@@ -1178,13 +1179,7 @@
 			<td align="left">
 				Copyright (c) 2000-2009  Josh Coalson
 				<br/>
-				Copyright (c) 2011-2013  Xiph.Org Foundation
-			</td>
-			<td width="1%" align="right">
-				<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=13478&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
-			</td>
-			<td width="1%" align="right">
-				<a href="http://www.eff.org/cafe/"><img src="images/cafebug.gif" alt="CAFE Logo" border="0" /></a><br />
+				Copyright (c) 2011-2014  Xiph.Org Foundation
 			</td>
 			<td width="1%" align="right">
 				<a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" border="0" hspace="0" /></a>

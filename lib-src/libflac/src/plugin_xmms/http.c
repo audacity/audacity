@@ -17,6 +17,10 @@
  */
 /* modified for FLAC support by Steven Richman (2003) */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "plugin.h"
 
 #include <sys/types.h>

@@ -94,6 +94,8 @@ EffectChangePitch::EffectChangePitch()
 
    m_pTextCtrl_PercentChange = NULL;
    m_pSlider_PercentChange = NULL;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectChangePitch::~EffectChangePitch()
@@ -136,9 +138,14 @@ bool EffectChangePitch::SetAutomationParameters(EffectAutomationParameters & par
 
    m_dPercentChange = Percentage;
 
-   m_dSemitonesChange = (12.0 * log((100.0 + m_dPercentChange) / 100.0)) / log(2.0);
-
    return true;
+}
+
+bool EffectChangePitch::LoadFactoryDefaults()
+{
+   DeduceFrequencies();
+
+   return Effect::LoadFactoryDefaults();
 }
 
 // Effect implementation
@@ -175,20 +182,6 @@ bool EffectChangePitch::CheckWhetherSkipEffect()
 void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
-
-   // effect parameters
-   double dFromMIDInote = FreqToMIDInote(m_dStartFrequency);
-   double dToMIDInote = dFromMIDInote + m_dSemitonesChange;
-   m_nFromPitch = PitchIndex(dFromMIDInote);
-   m_nFromOctave = PitchOctave(dFromMIDInote);
-   m_nToPitch = PitchIndex(dToMIDInote);
-   m_nToOctave = PitchOctave(dToMIDInote);
-
-   m_dSemitonesChange = m_dSemitonesChange;
-
-   m_FromFrequency = m_dStartFrequency;
-   Calc_PercentChange();
-   Calc_ToFrequency();
 
    wxArrayString pitch;
    pitch.Add(wxT("C"));
@@ -243,7 +236,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
-            FloatingPointValidator<double> vldSemitones(3, &m_dSemitonesChange, NUM_VAL_NO_TRAILING_ZEROES | NUM_VAL_ZERO_AS_BLANK);
+            FloatingPointValidator<double> vldSemitones(2, &m_dSemitonesChange, NUM_VAL_TWO_TRAILING_ZEROES);
             m_pTextCtrl_SemitonesChange =
                S.Id(ID_SemitonesChange).AddTextBox(_("Semitones (half-steps):"), wxT(""), 12);
             m_pTextCtrl_SemitonesChange->SetName(_("Semitones (half-steps)"));
@@ -257,13 +250,13 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartMultiColumn(5, wxALIGN_CENTER); // 5, because AddTextBox adds a wxStaticText and a wxTextCtrl.
          {
-            FloatingPointValidator<double> vldFromFrequency(3, &m_FromFrequency, NUM_VAL_NO_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldFromFrequency(3, &m_FromFrequency, NUM_VAL_THREE_TRAILING_ZEROES);
             vldFromFrequency.SetMin(0.0);
             m_pTextCtrl_FromFrequency = S.Id(ID_FromFrequency).AddTextBox(_("from"), wxT(""), 12);
             m_pTextCtrl_FromFrequency->SetName(_("from (Hz)"));
             m_pTextCtrl_FromFrequency->SetValidator(vldFromFrequency);
 
-            FloatingPointValidator<double> vldToFrequency(3, &m_ToFrequency, NUM_VAL_NO_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldToFrequency(3, &m_ToFrequency, NUM_VAL_THREE_TRAILING_ZEROES);
             vldToFrequency.SetMin(0.0);
             m_pTextCtrl_ToFrequency = S.Id(ID_ToFrequency).AddTextBox(_("to"), wxT(""), 12);
             m_pTextCtrl_ToFrequency->SetName(_("to (Hz)"));
@@ -275,7 +268,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
          S.StartHorizontalLay(wxALIGN_CENTER);
          {
-            FloatingPointValidator<double> vldPercentage(3, &m_dPercentChange, NUM_VAL_NO_TRAILING_ZEROES);
+            FloatingPointValidator<double> vldPercentage(3, &m_dPercentChange, NUM_VAL_THREE_TRAILING_ZEROES);
             vldPercentage.SetRange(MIN_Percentage, MAX_Percentage);
             m_pTextCtrl_PercentChange = S.Id(ID_PercentChange).AddTextBox(_("Percent Change:"), wxT(""), 12);
             m_pTextCtrl_PercentChange->SetValidator(vldPercentage);
@@ -307,13 +300,19 @@ bool EffectChangePitch::TransferDataToWindow()
       return false;
    }
 
-   // from/to pitch controls
-   m_pChoice_FromPitch->SetSelection(m_nFromPitch);
-   m_pSpin_FromOctave->SetValue(m_nFromOctave);
-   Update_Choice_ToPitch();
-   Update_Spin_ToOctave();
+   Calc_SemitonesChange_fromPercentChange();
+   Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
+   Calc_ToFrequency();
+   Calc_ToOctave(); // Call after Calc_ToFrequency().
 
-   // percent change controls
+   Update_Choice_FromPitch();
+   Update_Choice_ToPitch();
+   Update_Spin_FromOctave();
+   Update_Spin_ToOctave();
+   Update_Text_SemitonesChange();
+   Update_Text_FromFrequency();
+   Update_Text_ToFrequency();
+   Update_Text_PercentChange();
    Update_Slider_PercentChange();
 
    m_bLoopDetect = false;
@@ -405,6 +404,17 @@ void EffectChangePitch::DeduceFrequencies()
       lag = (windowSize/2 - 1) - argmax;
       m_dStartFrequency = rate / lag;
    }
+
+   double dFromMIDInote = FreqToMIDInote(m_dStartFrequency);
+   double dToMIDInote = dFromMIDInote + m_dSemitonesChange;
+   m_nFromPitch = PitchIndex(dFromMIDInote);
+   m_nFromOctave = PitchOctave(dFromMIDInote);
+   m_nToPitch = PitchIndex(dToMIDInote);
+   m_nToOctave = PitchOctave(dToMIDInote);
+
+   m_FromFrequency = m_dStartFrequency;
+   Calc_PercentChange();
+   Calc_ToFrequency();
 }
 
 // calculations
@@ -742,7 +752,6 @@ void EffectChangePitch::Update_Text_ToFrequency()
 {
    m_pTextCtrl_ToFrequency->GetValidator()->TransferToWindow();
 }
-
 
 void EffectChangePitch::Update_Text_PercentChange()
 {

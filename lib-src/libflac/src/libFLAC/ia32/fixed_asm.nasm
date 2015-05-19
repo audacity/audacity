@@ -2,7 +2,7 @@
 
 ;  libFLAC - Free Lossless Audio Codec library
 ;  Copyright (C) 2001-2009  Josh Coalson
-;  Copyright (C) 2011-2013  Xiph.Org Foundation
+;  Copyright (C) 2011-2014  Xiph.Org Foundation
 ;
 ;  Redistribution and use in source and binary forms, with or without
 ;  modification, are permitted provided that the following conditions
@@ -306,4 +306,4 @@ cident FLAC__fixed_compute_best_predictor_asm_ia32_mmx_cmov
 	pop	ebp
 	ret
 
-end
+; end

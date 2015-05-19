@@ -27,13 +27,11 @@
 
 #include "nyx.h"
 
-#include <string>
-
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 #define NYQUISTEFFECTS_FAMILY wxT("Nyquist")
 
-#define NYQUIST_PROMPT_ID wxT("=== Nyquist Prompt ===")
-#define NYQUIST_WORKER_ID wxT("=== Nyquist Worker ===")
+#define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
+#define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
 enum NyqControlType
 {
@@ -86,6 +84,7 @@ public:
    virtual wxString GetFamily();
    virtual bool IsInteractive();
    virtual bool IsDefault();
+   virtual bool EnableFromGetGo(){ return true;};
 
    // EffectClientInterface implementation
 
@@ -93,7 +92,9 @@ public:
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
    // Effect implementation
-
+   
+   virtual bool Init();
+   virtual bool CheckWhetherSkipEffect();
    virtual bool Process();
    virtual bool ShowInterface(wxWindow *parent, bool forceModal = false);
    virtual void PopulateOrExchange(ShuttleGui & S);
@@ -103,6 +104,7 @@ public:
    // NyquistEffect implementation
 
    // For Nyquist Workbench support
+   void RedirectOutput();
    void SetCommand(wxString cmd);
    void Continue();
    void Break();
@@ -128,6 +130,7 @@ private:
 
    static wxString NyquistToWxString(const char *nyqString);
    wxString EscapeString(const wxString & inStr);
+   wxArrayString ParseChoice(const NyqControl & ctrl);
 
    static int StaticGetCallback(float *buffer, int channel,
                                 long start, long len, long totlen,
@@ -193,8 +196,8 @@ private:
 
    bool              mEnablePreview;
    bool              mDebug;
-   std::string       *mDebugOutput;
-   wxString          mOutput;
+   bool              mRedirectOutput;
+   wxString          mDebugOutput;
 
    int               mVersion;
    NyqControlArray   mControls;

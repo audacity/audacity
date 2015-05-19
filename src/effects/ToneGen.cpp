@@ -105,6 +105,12 @@ EffectToneGen::EffectToneGen(bool isChirp)
    {
       mInterpolations.Add(wxGetTranslation(kInterStrings[i]));
    }
+   // Chirp varies over time so must use selected duration.
+   // TODO: When previewing, calculate only the first 'preview length'.
+   if (isChirp)
+      SetLinearEffectFlag(false);
+   else
+      SetLinearEffectFlag(true);
 }
 
 EffectToneGen::~EffectToneGen()
@@ -347,7 +353,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.AddPrompt(_("Amplitude (Hz):"));
+         S.AddPrompt(_("Amplitude (0-1):"));
          S.StartHorizontalLay(wxEXPAND);
          {
             S.StartHorizontalLay(wxLEFT, 50);

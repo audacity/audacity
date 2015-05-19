@@ -1292,14 +1292,14 @@ static double SolveIntegrateInverseInterpolated(double y1, double y2, double tim
       else if(1.0 + a * y1 * l <= 0.0)
          res = 1.0;
       else
-         res = log(1.0 + a * y1 * l) / l;
+         res = log1p(a * y1 * l) / l;
    }
    else
    {
       if(fabs(y2 - y1) < 1.0e-5) // fall back to average
          res = a * (y1 + y2) * 0.5;
       else
-         res = y1 * (exp(a * (y2 - y1)) - 1.0) / (y2 - y1);
+         res = y1 * expm1(a * (y2 - y1)) / (y2 - y1);
    }
    return std::max(0.0, std::min(1.0, res)) * time;
 }

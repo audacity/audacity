@@ -4,7 +4,7 @@
 
   Reverb_libSoX.h
   Stereo reverberation effect from libSoX,
-  adapted for Audacity (audacity.sourceforge.net)
+  adapted for Audacity
 
   Copyright (c) 2007-2013 robs@users.sourceforge.net
   Licence: LGPL v2.1

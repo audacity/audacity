@@ -1,6 +1,6 @@
 /* test_seeking - Seeking tester for libFLAC
  * Copyright (C) 2004-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -389,23 +389,6 @@ static FLAC__bool seek_barrage(FLAC__bool is_ogg, const char *filename, FLAC__of
 	return true;
 }
 
-#ifdef _MSC_VER
-/* There's no strtoull() in MSVC6 so we just write a specialized one */
-static FLAC__uint64 local__strtoull(const char *src)
-{
-	FLAC__uint64 ret = 0;
-	int c;
-	FLAC__ASSERT(0 != src);
-	while(0 != (c = *src++)) {
-		c -= '0';
-		if(c >= 0 && c <= 9)
-			ret = (ret * 10) + c;
-		else
-			break;
-	}
-	return ret;
-}
-#endif
 
 int main(int argc, char *argv[])
 {
@@ -428,11 +411,7 @@ int main(int argc, char *argv[])
 	if (argc > 2)
 		count = strtoul(argv[2], 0, 10);
 	if (argc > 3)
-#ifdef _MSC_VER
-		samples = local__strtoull(argv[3]);
-#else
 		samples = strtoull(argv[3], 0, 10);
-#endif
 	if (argc > 4)
 		rawfilename = argv[4];
 

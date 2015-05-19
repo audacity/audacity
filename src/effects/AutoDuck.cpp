@@ -90,6 +90,8 @@ EffectAutoDuck::EffectAutoDuck()
    mThresholdDb = DEF_ThresholdDb;
    mMaximumPause = DEF_MaximumPause;
 
+   SetLinearEffectFlag(true);
+
    mControlTrack = NULL;
 
    mPanel = NULL;
@@ -487,6 +489,8 @@ bool EffectAutoDuck::TransferDataToWindow()
    {
       return false;
    }
+
+   mPanel->Refresh(false);
 
    return true;
 }

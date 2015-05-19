@@ -19,7 +19,7 @@
 # instead of FLAC__ since autoconf triggers off 'AC_' in strings
 
 AC_PREREQ(2.60)
-AC_INIT([flac], [1.3.0], [flac-dev@xiph.org], [flac], [https://www.xiph.org/flac/])
+AC_INIT([flac], [1.3.1], [flac-dev@xiph.org], [flac], [https://www.xiph.org/flac/])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/flac/main.c])
 AC_CONFIG_MACRO_DIR([m4])
@@ -36,7 +36,10 @@ m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 LT_INIT([win32-dll disable-static pic-only])
 AM_PROG_AS
 AC_PROG_CXX
+XIPH_C_COMPILER_IS_CLANG
+XIPH_GCC_REALLY_IS_GCC
 AC_PROG_MAKE_SET
+AC_PROG_MKDIR_P
 
 AC_SYS_LARGEFILE
 AC_FUNC_FSEEKO
@@ -60,11 +63,12 @@ AC_C_INLINE
 AC_C_VARARRAYS
 AC_C_TYPEOF
 
-AC_CHECK_HEADERS([stdint.h inttypes.h byteswap.h sys/param.h termios.h])
+AC_CHECK_HEADERS([stdint.h inttypes.h byteswap.h sys/param.h termios.h x86intrin.h cpuid.h])
 
 AC_HEADER_TIOCGWINSZ
 
 XIPH_C_BSWAP32
+XIPH_C_BSWAP16
 
 ac_cv_c_big_endian=0
 ac_cv_c_little_endian=0
@@ -82,6 +86,14 @@ AC_DEFINE_UNQUOTED(CPU_IS_LITTLE_ENDIAN, ${ac_cv_c_little_endian},
 AC_DEFINE_UNQUOTED(WORDS_BIGENDIAN, ${ac_cv_c_big_endian},
 					[Target processor is big endian.])
 
+AC_ARG_ENABLE(asm-optimizations, AC_HELP_STRING([--disable-asm-optimizations], [Don't use any assembly optimization routines]), asm_opt=no, asm_opt=yes)
+dnl ' Terminate the damn single quote
+AM_CONDITIONAL(FLaC__NO_ASM, test "x$asm_opt" = xno)
+if test "x$asm_opt" = xno ; then
+AC_DEFINE(FLAC__NO_ASM)
+AH_TEMPLATE(FLAC__NO_ASM, [define to disable use of assembly code])
+fi
+
 # For the XMMS plugin.
 AC_CHECK_TYPES(socklen_t, [], [])
 
@@ -89,26 +101,50 @@ dnl check for getopt in standard library
 dnl AC_CHECK_FUNCS(getopt_long , , [LIBOBJS="$LIBOBJS getopt.o getopt1.o"] )
 AC_CHECK_FUNCS(getopt_long, [], [])
 
+AC_CHECK_SIZEOF(void*,1)
+
+asm_optimisation=no
 case "$host_cpu" in
+	x86_64)
+		if test $ac_cv_sizeof_voidp = 4 ; then
+			# This must be a 32 bit user space running on 64 bit kernel so treat
+			# this as ia32.
+			cpu_ia32=true
+			AC_DEFINE(FLAC__CPU_IA32)
+			AH_TEMPLATE(FLAC__CPU_IA32, [define if building for ia32/i386])
+		else
+			# x86_64 user space and kernel.
+			cpu_x86_64=true
+			AC_DEFINE(FLAC__CPU_X86_64)
+			AH_TEMPLATE(FLAC__CPU_X86_64, [define if building for x86_64])
+			fi
+		asm_optimisation=$asm_opt
+		;;
 	i*86)
 		cpu_ia32=true
 		AC_DEFINE(FLAC__CPU_IA32)
 		AH_TEMPLATE(FLAC__CPU_IA32, [define if building for ia32/i386])
+		asm_optimisation=$asm_opt
 		;;
 	powerpc|powerpc64)
 		cpu_ppc=true
 		AC_DEFINE(FLAC__CPU_PPC)
 		AH_TEMPLATE(FLAC__CPU_PPC, [define if building for PowerPC])
+		asm_optimisation=$asm_opt
 		;;
 	sparc)
 		cpu_sparc=true
 		AC_DEFINE(FLAC__CPU_SPARC)
 		AH_TEMPLATE(FLAC__CPU_SPARC, [define if building for SPARC])
+		asm_optimisation=$asm_opt
 		;;
 esac
+AM_CONDITIONAL(FLAC__CPU_X86_64, test "x$cpu_x86_64" = xtrue)
 AM_CONDITIONAL(FLaC__CPU_IA32, test "x$cpu_ia32" = xtrue)
 AM_CONDITIONAL(FLaC__CPU_PPC, test "x$cpu_ppc" = xtrue)
 AM_CONDITIONAL(FLaC__CPU_SPARC, test "x$cpu_sparc" = xtrue)
+
+AC_DEFINE_UNQUOTED([FLAC__HAS_X86INTRIN],${HAVE_X86INTRIN_H}, [Set to 1 if <x86intrin.h> is available.])
 
 case "$host" in
 	i386-*-openbsd3.[[0-3]]) OBJ_FORMAT=aoutb ;;
@@ -130,19 +166,11 @@ AM_CONDITIONAL(FLaC__CPU_PPC_SPE, test "x$abi_spe" = xtrue)
 os_is_windows=no
 case "$host" in
 	*-*-cygwin|*mingw*)
-		# define this variable for enabling strict exports with libtool; for now, it's supported by Win32 and OS/2
-		LT_NO_UNDEFINED="-no-undefined"
 		CPPFLAGS="-D__MSVCRT_VERSION__=0x0601 $CPPFLAGS"
 		os_is_windows=yes
 		;;
-	*emx*)
-		LT_NO_UNDEFINED="-no-undefined"
-		;;
-	*)
-		LT_NO_UNDEFINED=
-		;;
 esac
-AC_SUBST(LT_NO_UNDEFINED)
+
 AM_CONDITIONAL(OS_IS_WINDOWS, test "x$os_is_windows" = xyes)
 
 case "$host" in
@@ -160,17 +188,9 @@ esac
 AM_CONDITIONAL(FLaC__SYS_DARWIN, test "x$sys_darwin" = xtrue)
 AM_CONDITIONAL(FLaC__SYS_LINUX, test "x$sys_linux" = xtrue)
 
-if test "x$cpu_ia32" = xtrue ; then
+if test "x$cpu_ia32" = xtrue || test "x$cpu_x86_64" = xtrue ; then
 AC_DEFINE(FLAC__ALIGN_MALLOC_DATA)
 AH_TEMPLATE(FLAC__ALIGN_MALLOC_DATA, [define to align allocated memory on 32-byte boundaries])
-fi
-
-AC_ARG_ENABLE(asm-optimizations, AC_HELP_STRING([--disable-asm-optimizations], [Don't use any assembly optimization routines]), asm_opt=no, asm_opt=yes)
-dnl ' Terminate the damn single quote
-AM_CONDITIONAL(FLaC__NO_ASM, test "x$asm_opt" = xno)
-if test "x$asm_opt" = xno ; then
-AC_DEFINE(FLAC__NO_ASM)
-AH_TEMPLATE(FLAC__NO_ASM, [define to disable use of assembly code])
 fi
 
 AC_ARG_ENABLE(debug,
@@ -183,29 +203,16 @@ esac],[debug=false])
 AM_CONDITIONAL(DEBUG, test "x$debug" = xtrue)
 
 AC_ARG_ENABLE(sse,
-AC_HELP_STRING([--enable-sse], [Enable SSE support by asserting that the OS supports SSE instructions]),
+AC_HELP_STRING([--disable-sse], [Disable SSE if the OS does not support SSE instructions]),
 [case "${enableval}" in
-	yes) sse_os=true ;;
-	no)  sse_os=false ;;
+	yes) sse_os=yes ;;
+	no)  sse_os=no ;;
 	*) AC_MSG_ERROR(bad value ${enableval} for --enable-sse) ;;
-esac],[sse_os=false])
+esac],[sse_os=yes])
 AM_CONDITIONAL(FLaC__SSE_OS, test "x$sse_os" = xtrue)
-if test "x$sse_os" = xtrue ; then
+if test "x$sse_os" = xyes ; then
 AC_DEFINE(FLAC__SSE_OS)
 AH_TEMPLATE(FLAC__SSE_OS, [define if your operating system supports SSE instructions])
-fi
-
-AC_ARG_ENABLE(3dnow,
-AC_HELP_STRING([--disable-3dnow], [Disable 3DNOW! optimizations]),
-[case "${enableval}" in
-	yes) use_3dnow=true ;;
-	no)  use_3dnow=false ;;
-	*) AC_MSG_ERROR(bad value ${enableval} for --enable-3dnow) ;;
-esac],[use_3dnow=true])
-AM_CONDITIONAL(FLaC__USE_3DNOW, test "x$use_3dnow" = xtrue)
-if test "x$use_3dnow" = xtrue ; then
-AC_DEFINE(FLAC__USE_3DNOW)
-AH_TEMPLATE(FLAC__USE_3DNOW, [define to enable use of 3Dnow! instructions])
 fi
 
 AC_ARG_ENABLE(altivec,
@@ -244,8 +251,8 @@ FLAC__TEST_LEVEL=2
 fi
 AC_SUBST(FLAC__TEST_LEVEL)
 
-AC_ARG_ENABLE(gcc-werror,
-	AC_HELP_STRING([--enable-gcc-werror], [Enable -Werror in all Makefiles]))
+AC_ARG_ENABLE(werror,
+	AC_HELP_STRING([--enable-werror], [Enable -Werror in all Makefiles]))
 
 AC_ARG_ENABLE(stack-smash-protection,
 	AC_HELP_STRING([--enable-stack-smash-protection], [Enable GNU GCC stack smash protection]))
@@ -317,6 +324,7 @@ if test "x$have_ogg" = xyes ; then
 	OGG_PACKAGE="ogg"
 else
 	AC_DEFINE_UNQUOTED([FLAC__HAS_OGG],0)
+	have_ogg=no
 fi
 AC_SUBST(OGG_PACKAGE)
 
@@ -339,50 +347,36 @@ AC_DEFINE(FLAC__HAS_NASM)
 AH_TEMPLATE(FLAC__HAS_NASM, [define if you are compiling for x86 and have the NASM assembler])
 fi
 
-# only matters for PowerPC
-AC_CHECK_PROGS(AS, as, as)
-AC_CHECK_PROGS(GAS, gas, gas)
-
-# try -v (apple as) and --version (gas) at the same time
-test "$AS" = "as" && as --version -v < /dev/null 2>&1 | grep Apple >/dev/null || AS=gas
-
-AM_CONDITIONAL(FLaC__HAS_AS, test "$AS" = "as")
-AM_CONDITIONAL(FLaC__HAS_GAS, test "$AS" = "gas")
-if test "$AS" = "as" ; then
-AC_DEFINE(FLAC__HAS_AS)
-AH_TEMPLATE(FLAC__HAS_AS, [define if you are compiling for PowerPC and have the 'as' assembler])
-fi
-if test "$AS" = "gas" ; then
-# funniest. macro. ever.
-AC_DEFINE(FLAC__HAS_GAS)
-AH_TEMPLATE(FLAC__HAS_GAS, [define if you are compiling for PowerPC and have the 'gas' assembler])
-fi
-
 if test "x$debug" = xtrue; then
 	CPPFLAGS="-DDEBUG $CPPFLAGS"
+	CFLAGS=$(echo "$CFLAGS" | sed 's/-g//')
 	CFLAGS="-g $CFLAGS"
 else
 	CPPFLAGS="-DNDEBUG $CPPFLAGS"
-	if test "x$GCC" = xyes; then
-		if test "x$user_cflags" = x; then
-			CFLAGS="-O3 -funroll-loops -Wall -W -Winline"
-		fi
-	fi
+	CFLAGS=$(echo "$CFLAGS" | sed 's/-O2//;s/-g//')
+	CFLAGS="-O3 -funroll-loops $CFLAGS"
 fi
 
 XIPH_GCC_VERSION
 
 if test x$ac_cv_c_compiler_gnu = xyes ; then
-	CFLAGS="$CFLAGS -Wstrict-prototypes -Wmissing-prototypes -Waggregate-return -Wcast-align -Wnested-externs -Wshadow -Wundef -Wmissing-declarations " # -Wcast-qual -Wbad-function-cast -Wwrite-strings -Winline -Wconversion
-	CXXFLAGS="$CXXFLAGS -Wcast-align -Wshadow -Wwrite-strings -Wctor-dtor-privacy -Wnon-virtual-dtor -Wreorder -Wsign-promo -Wundef " # -Wcast-qual -Wbad-function-cast -Wwrite-strings -Woverloaded-virtual -Wmissing-declarations
+	CFLAGS="$CFLAGS -Wall -Wextra -Wstrict-prototypes -Wmissing-prototypes -Waggregate-return -Wcast-align -Wnested-externs -Wshadow -Wundef -Wmissing-declarations -Wunreachable-code -Winline " # -Wcast-qual -Wbad-function-cast -Wwrite-strings -Wconversion
+	CXXFLAGS="$CXXFLAGS -Wall -Wextra -Wcast-align -Wshadow -Wwrite-strings -Wctor-dtor-privacy -Wnon-virtual-dtor -Wreorder -Wsign-promo -Wundef -Wunreachable-code " # -Wcast-qual -Wbad-function-cast -Wwrite-strings -Woverloaded-virtual -Wmissing-declarations
 
+	XIPH_ADD_CFLAGS([-Wdeclaration-after-statement])
+	XIPH_ADD_CFLAGS([-D_FORTIFY_SOURCE=2])
 
-	if test x$enable_gcc_werror = "xyes" ; then
-		CFLAGS="$CFLAGS -Wall -Wextra -Werror "
-		CXXFLAGS="$CXXFLAGS -Wall -Wextra -Werror "
-		fi
+	AC_LANG_PUSH([C++])
+	XIPH_ADD_CXXFLAGS([-Weffc++])
+	AC_LANG_POP([C++])
 
 	if test "$GCC_MAJOR_VERSION" -ge 4 && test "$OBJ_FORMAT" = elf; then
+		CPPFLAGS="$CPPFLAGS -DFLAC__USE_VISIBILITY_ATTR"
+		CFLAGS="$CFLAGS -fvisibility=hidden"
+		CXXFLAGS="$CXXFLAGS -fvisibility=hidden"
+		fi
+
+	if test "$GCC_MAJOR_VERSION" -ge 4 && test "$OBJ_FORMAT" = macho; then
 		CPPFLAGS="$CPPFLAGS -DFLAC__USE_VISIBILITY_ATTR"
 		CFLAGS="$CFLAGS -fvisibility=hidden"
 		CXXFLAGS="$CXXFLAGS -fvisibility=hidden"
@@ -391,21 +385,26 @@ if test x$ac_cv_c_compiler_gnu = xyes ; then
 	if test "x$GCC_MAJOR_VERSION$GCC_MINOR_VERSION" = "x42" ; then
 		XIPH_ADD_CFLAGS([-fgnu89-inline])
 		fi
+
+	if test "x$asm_optimisation$sse_os" = "xyesyes" ; then
+		XIPH_ADD_CFLAGS([-msse2])
+		fi
+
 	fi
 
-
 XIPH_ADD_CFLAGS([-Wextra])
-XIPH_ADD_CFLAGS([-Wdeclaration-after-statement])
-XIPH_ADD_CFLAGS([-D_FORTIFY_SOURCE=2])
+
+if test x$enable_werror = "xyes" ; then
+	XIPH_ADD_CFLAGS([-Werror])
+	AC_LANG_PUSH([C++])
+	XIPH_ADD_CXXFLAGS([-Werror])
+	AC_LANG_POP([C++])
+	fi
 
 if test x$enable_stack_smash_protection = "xyes" ; then
 	XIPH_GCC_STACK_PROTECTOR
 	XIPH_GXX_STACK_PROTECTOR
 	fi
-
-#@@@
-AM_CONDITIONAL(FLaC__HAS_AS__TEMPORARILY_DISABLED, test "yes" = "no")
-AM_CONDITIONAL(FLaC__HAS_GAS__TEMPORARILY_DISABLED, test "yes" = "no")
 
 AC_CONFIG_FILES([ \
 	Makefile \
@@ -413,9 +412,6 @@ AC_CONFIG_FILES([ \
 	src/libFLAC/Makefile \
 	src/libFLAC/flac.pc \
 	src/libFLAC/ia32/Makefile \
-	src/libFLAC/ppc/Makefile \
-	src/libFLAC/ppc/as/Makefile \
-	src/libFLAC/ppc/gas/Makefile \
 	src/libFLAC/include/Makefile \
 	src/libFLAC/include/private/Makefile \
 	src/libFLAC/include/protected/Makefile \
@@ -423,9 +419,6 @@ AC_CONFIG_FILES([ \
 	src/libFLAC++/flac++.pc \
 	src/flac/Makefile \
 	src/metaflac/Makefile \
-	src/monkeys_audio_utilities/Makefile \
-	src/monkeys_audio_utilities/flac_mac/Makefile \
-	src/monkeys_audio_utilities/flac_ren/Makefile \
 	src/plugin_common/Makefile \
 	src/plugin_xmms/Makefile \
 	src/share/Makefile \
@@ -461,10 +454,9 @@ AC_CONFIG_FILES([ \
 	doc/Makefile \
 	doc/html/Makefile \
 	doc/html/images/Makefile \
-	doc/html/images/hw/Makefile \
-	doc/html/ru/Makefile \
 	m4/Makefile \
 	man/Makefile \
+	test/common.sh \
 	test/Makefile \
 	test/cuesheets/Makefile \
 	test/flac-to-flac-metadata-test-files/Makefile \
@@ -497,4 +489,8 @@ AC_MSG_RESULT([
 if test x$ac_cv_c_compiler_gnu = xyes ; then
 	echo "    GCC version : ......................... ${GCC_VERSION}"
 fi
+	echo "    Compiler is Clang : ................... ${xiph_cv_c_compiler_clang}"
+	echo "    SSE optimizations : ................... ${sse_os}"
+	echo "    Asm optimizations : ................... ${asm_optimisation}"
+	echo "    Ogg/FLAC support : .................... ${have_ogg}"
 echo

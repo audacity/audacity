@@ -236,6 +236,7 @@ static wxString AskCopyOrEdit()
    if (oldAskPref) {
       wxString newCopyPref = wxT("copy");
       wxDialog dialog(NULL, -1, wxString(_("Warning")));
+      dialog.SetName(dialog.GetTitle());
 
       wxBoxSizer *vbox = new wxBoxSizer(wxVERTICAL);
       dialog.SetSizer(vbox);

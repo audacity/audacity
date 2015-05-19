@@ -21,6 +21,7 @@
 
 EffectSilence::EffectSilence()
 {
+   SetLinearEffectFlag(true);
 }
 
 EffectSilence::~EffectSilence()

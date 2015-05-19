@@ -767,7 +767,7 @@ void Mixer::SetTimesAndSpeed(double t0, double t1, double speed)
    wxASSERT(isfinite(speed));
    mT0 = t0;
    mT1 = t1;
-   mSpeed = abs(speed);
+   mSpeed = fabs(speed);
    Reposition(t0);
 }
 

@@ -69,6 +69,8 @@ EffectTimeScale::EffectTimeScale()
    m_PitchHalfStepsEnd = DEF_HalfStepsEnd;
    m_PitchPercentChangeStart = DEF_PitchPercentStart;
    m_PitchPercentChangeEnd = DEF_PitchPercentEnd;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectTimeScale::~EffectTimeScale()

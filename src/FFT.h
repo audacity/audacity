@@ -29,6 +29,9 @@
   you need to use doubles.
 
 **********************************************************************/
+#ifndef __AUDACITY_FFT_H__
+#define __AUDACITY_FFT_H__
+
 /*
   Salvo Ventura - November 2006
   Added more window functions:
@@ -102,6 +105,21 @@ void FFT(int NumSamples,
  * 9: Gaussian(a=4.5)
  */
 
+enum eWindowFunctions
+{
+   eWinFuncRectangular,
+   eWinFuncBartlett,
+   eWinFuncHamming,
+   eWinFuncHanning,
+   eWinFuncBlackman,
+   eWinFuncBlackmanHarris,
+   eWinFuncWelch,
+   eWinFuncGaussian25,
+   eWinFuncGaussian35,
+   eWinFuncGaussian45,
+   eWinFuncCount
+};
+
 void WindowFunc(int whichFunction, int NumSamples, float *data);
 
 /*
@@ -117,3 +135,5 @@ const wxChar *WindowFuncName(int whichFunction);
 int NumWindowFuncs();
 
 void DeinitFFT();
+
+#endif

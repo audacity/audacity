@@ -1,6 +1,6 @@
 /* plugin_common - Routines common to several plugins
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Only slightly modified charset.h from:
  * charset.h - 2001/12/04

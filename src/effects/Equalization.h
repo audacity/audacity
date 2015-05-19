@@ -101,6 +101,7 @@ public:
 
    virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool LoadFactoryDefaults();
 
    // EffectUIClientInterface implementation
 
@@ -133,6 +134,7 @@ private:
    virtual bool CalcFilter();
    void Filter(sampleCount len, float *buffer);
    
+   void Flatten();
    void EnvelopeUpdated();
    void EnvelopeUpdated(Envelope *env, bool lin);
 
@@ -148,6 +150,8 @@ private:
    XMLTagHandler *HandleXMLChild(const wxChar *tag);
    void WriteXML(XMLWriter &xmlFile);
 
+   void UpdateDraw();
+
    void LayoutEQSliders();
    void UpdateGraphic(void);
    void EnvLogToLin(void);
@@ -159,7 +163,6 @@ private:
 
    void OnSize( wxSizeEvent & event );
    void OnErase( wxEraseEvent & event );
-   void OnPaint( wxPaintEvent & event );
    void OnSlider( wxCommandEvent & event );
    void OnInterp( wxCommandEvent & event );
    void OnSliderM( wxCommandEvent & event );
@@ -208,7 +211,6 @@ private:
    double mEQVals[NUMBER_OF_BANDS+1];
 
    EQCurveArray mCurves;
-   EQCurve mCustomBackup;
 
    Envelope *mLogEnvelope;
    Envelope *mLinEnvelope;

@@ -744,11 +744,6 @@ wxScrolledWindow * ShuttleGuiBase::StartScroller(int iStyle)
    pScroller->SetName(wxT("\a"));
    pScroller->SetLabel(wxT("\a"));
 
-   mpWind->SetBackgroundColour(
-      iStyle==0
-      ? wxColour( 245,244,240) :
-      wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)
-      );
    SetProportions( 1 );
    if( iStyle==2 )
    {
@@ -756,6 +751,11 @@ wxScrolledWindow * ShuttleGuiBase::StartScroller(int iStyle)
    }
    else
    {
+      mpWind->SetBackgroundColour(
+         iStyle==0
+         ? wxColour( 245,244,240) :
+         wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)
+         );
       UpdateSizers();  // adds window in to current sizer.
    }
 
@@ -844,7 +844,7 @@ void ShuttleGuiBase::EndNotebook()
 }
 
 
-wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString Name )
+wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString & Name )
 {
    if( mShuttleMode != eIsCreating )
       return NULL;
@@ -867,7 +867,7 @@ wxNotebookPage * ShuttleGuiBase::StartNotebookPage( const wxString Name )
    return pPage;
 }
 
-void ShuttleGuiBase::StartNotebookPage( const wxString Name, wxNotebookPage * pPage )
+void ShuttleGuiBase::StartNotebookPage( const wxString & Name, wxNotebookPage * pPage )
 {
    if( mShuttleMode != eIsCreating )
       return;
@@ -2213,13 +2213,6 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
       bs->Add( 20, 0 );
    }
 
-   if( buttons & eDebugButton )
-   {
-      b = new wxButton( parent, eDebugID, _("Debu&g") );
-      bs->Add( b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
-      bs->Add( 40, 0 );
-   }
-
    if( extra )
    {
       bs->Add( extra, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
@@ -2228,6 +2221,24 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
 
    bs->AddStretchSpacer();
    bs->Realize();
+
+   // Add any buttons that need to cuddle up to the right hand cluster
+   if( buttons & eDebugButton )
+   {
+      size_t lastSpacer = 0;
+      wxSizerItemList & list = bs->GetChildren();
+      for ( size_t i = 0, cnt = list.GetCount(); i < cnt; i++ )
+      {
+         if ( list[i]->IsSpacer() )
+         {
+            lastSpacer = i;
+         }
+      }
+
+      b = new wxButton( parent, eDebugID, _("Debu&g") );
+      bs->Insert( lastSpacer + 1, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
+   }
+
    wxSizer * s;
    s = new wxBoxSizer( wxVERTICAL );
    s->Add( bs, 1, wxEXPAND | wxALL, 7 );

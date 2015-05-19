@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\objs\debug\lib"
-			IntermediateDirectory="Debug_static"
+			OutputDirectory="$(SolutionDir)objs\$(ConfigurationName)\lib"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\include;..\..\..\include;..\..\..\include\share"
+				AdditionalIncludeDirectories=".\include;..\..\..\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;FLAC__NO_DLL;DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\objs\debug\lib\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -82,9 +81,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\objs\release\lib"
-			IntermediateDirectory="Release_static"
+			OutputDirectory="$(SolutionDir)objs\$(ConfigurationName)\lib"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -107,7 +107,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".\include;..\..\..\include;..\..\..\include\share"
+				AdditionalIncludeDirectories=".\include;..\..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FLAC__NO_DLL"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
@@ -129,7 +129,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\..\objs\release\lib\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"

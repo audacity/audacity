@@ -285,7 +285,7 @@ ScreenFrame::ScreenFrame(wxWindow * parent, wxWindowID id)
    // Note that the audio could be playing.
    // The monitoring will switch off temporarily
    // because we've switched monitor mid play.
-   mContext.proj->mToolManager->Reset();
+   mContext.GetProject()->mToolManager->Reset();
 }
 
 ScreenFrame::~ScreenFrame()
@@ -447,7 +447,7 @@ void ScreenFrame::PopulateOrExchange(ShuttleGui & S)
       CentreOnParent();
    }
 
-   SetIcon(mContext.proj->GetIcon());
+   SetIcon(mContext.GetProject()->GetIcon());
 }
 
 bool ScreenFrame::ProcessEvent(wxEvent & e)
@@ -541,9 +541,9 @@ void ScreenFrame::SizeMainWindow(int w, int h)
 {
    int top = 20;
 
-   mContext.proj->Maximize(false);
-   mContext.proj->SetSize(16, 16 + top, w, h);
-   mContext.proj->mToolManager->Reset();
+   mContext.GetProject()->Maximize(false);
+   mContext.GetProject()->SetSize(16, 16 + top, w, h);
+   mContext.GetProject()->mToolManager->Reset();
 }
 
 void ScreenFrame::OnMainWindowSmall(wxCommandEvent & WXUNUSED(event))
@@ -660,9 +660,9 @@ void ScreenFrame::OnCaptureSecondTrack(wxCommandEvent & WXUNUSED(event))
 void ScreenFrame::TimeZoom(double seconds)
 {
    int width, height;
-   mContext.proj->GetClientSize(&width, &height);
-   mContext.proj->mViewInfo.zoom = (0.75 * width) / seconds;
-   mContext.proj->RedrawProject();
+   mContext.GetProject()->GetClientSize(&width, &height);
+   mContext.GetProject()->mViewInfo.zoom = (0.75 * width) / seconds;
+   mContext.GetProject()->RedrawProject();
 }
 
 void ScreenFrame::OnOneSec(wxCommandEvent & WXUNUSED(event))
@@ -692,7 +692,7 @@ void ScreenFrame::OnOneHour(wxCommandEvent & WXUNUSED(event))
 
 void ScreenFrame::SizeTracks(int h)
 {
-   TrackListIterator iter(mContext.proj->GetTracks());
+   TrackListIterator iter(mContext.GetProject()->GetTracks());
    for (Track * t = iter.First(); t; t = iter.Next()) {
       if (t->GetKind() == Track::Wave) {
          if (t->GetLink()) {
@@ -703,18 +703,18 @@ void ScreenFrame::SizeTracks(int h)
          }
       }
    }
-   mContext.proj->RedrawProject();
+   mContext.GetProject()->RedrawProject();
 }
 
 void ScreenFrame::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
-   TrackListIterator iter(mContext.proj->GetTracks());
+   TrackListIterator iter(mContext.GetProject()->GetTracks());
    for (Track * t = iter.First(); t; t = iter.Next()) {
       if (t->GetKind() == Track::Wave) {
          t->SetHeight(t->GetMinimizedHeight());
       }
    }
-   mContext.proj->RedrawProject();
+   mContext.GetProject()->RedrawProject();
 }
 
 void ScreenFrame::OnMedTracks(wxCommandEvent & WXUNUSED(event))

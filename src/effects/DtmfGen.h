@@ -66,8 +66,10 @@ private:
 
    void UpdateUI();
 
-   void OnText(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
+   void OnSequence(wxCommandEvent & evt);
+   void OnAmplitude(wxCommandEvent & evt);
+   void OnDuration(wxCommandEvent & evt);
+   void OnDutyCycle(wxCommandEvent & evt);
 
 private:
    sampleCount numSamplesSequence;  // total number of samples to generate
@@ -79,14 +81,16 @@ private:
    bool isTone;                     // true if block is tone, otherwise silence
    int curSeqPos;                   // index into dtmf tone string
 
-   wxString dtmfString;             // dtmf tone string
+   wxString dtmfSequence;             // dtmf tone string
    int    dtmfNTones;               // total number of tones to generate
    double dtmfTone;                 // duration of a single tone in ms
    double dtmfSilence;              // duration of silence between tones in ms
    double dtmfDutyCycle;            // ratio of dtmfTone/(dtmfTone+dtmfSilence)
    double dtmfAmplitude;            // amplitude of dtmf tone sequence, restricted to (0-1)
 
-   wxSlider   *mDtmfDutyS;
+   wxTextCtrl *mDtmfSequenceT;
+   wxTextCtrl *mDtmfAmplitudeT;
+   wxSlider   *mDtmfDutyCycleS;
    NumericTextCtrl *mDtmfDurationT;
    wxStaticText *mDtmfToneT;
    wxStaticText *mDtmfSilenceT;

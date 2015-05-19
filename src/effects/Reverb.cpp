@@ -119,6 +119,8 @@ EffectReverb::EffectReverb()
    mParams.mWetOnly = DEF_WetOnly;
 
    mProcessingEvent = false;
+
+   SetLinearEffectFlag(true);
 }
 
 EffectReverb::~EffectReverb()

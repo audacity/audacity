@@ -486,13 +486,13 @@ void ModuleManager::UnloadModule(ModuleInterface *module)
    {
       module->Terminate();
 
-      delete module;
-
       if (mLibs.find(module) != mLibs.end())
       {
          mLibs[module]->Unload();
          mLibs.erase(module);
       }
+
+      delete module; //After terminating and unloading, we can safely delete the module
    }
 }
 

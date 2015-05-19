@@ -83,6 +83,8 @@ void OnPlayBeforeSelectionStart();
 void OnPlayAfterSelectionStart();
 void OnPlayBeforeSelectionEnd();
 void OnPlayAfterSelectionEnd();
+void OnPlayBeforeAndAfterSelectionStart();
+void OnPlayBeforeAndAfterSelectionEnd();
 void OnPlayLooped();
 void OnPlayCutPreview();
 
@@ -98,6 +100,10 @@ void OnTrackMenu();
 void OnTrackMute();
 void OnTrackSolo();
 void OnTrackClose();
+void OnTrackMoveUp();
+void OnTrackMoveDown();
+void OnTrackMoveTop();
+void OnTrackMoveBottom();
 
         // Device control
 void OnInputDevice();
@@ -123,11 +129,16 @@ void OnSetPlaySpeed();
 void OnPlaySpeedInc();
 void OnPlaySpeedDec();
 
-        // Selection-Editing Commands
+        // Moving track focus commands
 
 void OnCursorUp();
-void OnShiftUp();
 void OnCursorDown();
+void OnFirstTrack();
+void OnLastTrack();
+
+        // Selection-Editing Commands
+
+void OnShiftUp();
 void OnShiftDown();
 void OnToggle();
 
@@ -363,12 +374,17 @@ void OnRepeatLastEffect(int index);
 void OnApplyChain();
 void OnEditChains();
 void OnStereoToMono(int index);
+void OnManagePluginsMenu(EffectType Type);
+void OnManageGenerators();
+void OnManageEffects();
+void OnManageAnalyzers();
 
         // Help Menu
 
 void OnAbout();
 void OnQuickHelp();
 void OnManual();
+void OnCheckForUpdates();
 void OnShowLog();
 void OnHelpWelcome();
 void OnBenchmark();

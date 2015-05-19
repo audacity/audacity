@@ -1,6 +1,6 @@
 /* test_libFLAC++ - Unit tester for libFLAC++
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "encoders.h"
 #include "FLAC/assert.h"
 #include "FLAC++/encoder.h"
@@ -30,6 +34,11 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 #include "share/compat.h"
+
+#ifdef _MSC_VER
+// warning C4800: 'int' : forcing to bool 'true' or 'false' (performance warning)
+#pragma warning ( disable : 4800 )
+#endif
 
 typedef enum {
 	LAYER_STREAM = 0, /* FLAC__stream_encoder_init_stream() without seeking */
@@ -102,6 +111,9 @@ public:
 	::FLAC__StreamEncoderSeekStatus seek_callback(FLAC__uint64 absolute_byte_offset);
 	::FLAC__StreamEncoderTellStatus tell_callback(FLAC__uint64 *absolute_byte_offset);
 	void metadata_callback(const ::FLAC__StreamMetadata *metadata);
+private:
+	StreamEncoder(const StreamEncoder&);
+	StreamEncoder&operator=(const StreamEncoder&);
 };
 
 ::FLAC__StreamEncoderReadStatus StreamEncoder::read_callback(FLAC__byte buffer[], size_t *bytes)

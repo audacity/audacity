@@ -21,6 +21,12 @@ effects.
 #ifndef __AUDACITY_EFFECTMANAGER__
 #define __AUDACITY_EFFECTMANAGER__
 
+#include <wx/choice.h>
+#include <wx/dialog.h>
+#include <wx/event.h>
+#include <wx/listbox.h>
+#include <wx/string.h>
+
 #include "audacity/EffectInterface.h"
 #include "../PluginManager.h"
 #include "Effect.h"
@@ -70,14 +76,19 @@ public:
    wxString GetEffectName(const PluginID & ID);
    wxString GetEffectIdentifier(const PluginID & ID);
    wxString GetEffectDescription(const PluginID & ID);
+   bool IsHidden(const PluginID & ID);
 
    /** Support for batch commands */
    bool SupportsAutomation(const PluginID & ID);
    wxString GetEffectParameters(const PluginID & ID);
    bool SetEffectParameters(const PluginID & ID, const wxString & params);
    bool PromptUser(const PluginID & ID, wxWindow *parent);
+   bool HasPresets(const PluginID & ID);
+   wxString GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent);
+   wxString GetDefaultPreset(const PluginID & ID);
+   void SetBatchProcessing(const PluginID & ID, bool start);
 
-   // Realtime effect processing
+      // Realtime effect processing
    bool RealtimeIsActive();
    bool RealtimeIsSuspended();
    void RealtimeAddEffect(Effect *effect);
@@ -126,6 +137,7 @@ private:
 
    friend class EffectRack;
 #endif
+
 };
 
 

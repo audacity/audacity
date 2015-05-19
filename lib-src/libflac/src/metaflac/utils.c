@@ -1,6 +1,6 @@
 /* metaflac - Command-line FLAC metadata editor
  * Copyright (C) 2001-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -75,7 +75,7 @@ void local_strcat(char **dest, const char *source)
 	*dest = safe_realloc_add_3op_(*dest, ndest, /*+*/nsource, /*+*/1);
 	if(0 == *dest)
 		die("out of memory growing string");
-	safe_strncpy((*dest)+ndest, source, ndest + nsource + 1);
+	safe_strncpy((*dest)+ndest, source, nsource + 1);
 }
 
 static inline int local_isprint(int c)
@@ -167,7 +167,7 @@ void print_error_with_chain_status(FLAC__Metadata_Chain *chain, const char *form
 	}
 	else if(status == FLAC__METADATA_CHAIN_STATUS_BAD_METADATA) {
 		flac_fprintf(stderr, "\n"
-			"The metadata to be writted does not conform to the FLAC metadata\n"
+			"The metadata to be written does not conform to the FLAC metadata\n"
 			"specifications.\n"
 		);
 	}

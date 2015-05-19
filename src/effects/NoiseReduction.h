@@ -40,7 +40,7 @@ public:
 
 //   using Effect::TrackProgress;
 
-   virtual bool PromptUser(wxWindow *parent = NULL, bool isBatch = false);
+   virtual bool PromptUser(wxWindow *parent);
 
    virtual bool Init();
    virtual bool CheckWhetherSkipEffect();

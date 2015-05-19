@@ -11,7 +11,7 @@
 #define CPU_IS_LITTLE_ENDIAN 1
 
 /* define to align allocated memory on 32-byte boundaries */
-/* #undef FLAC__ALIGN_MALLOC_DATA */
+#define FLAC__ALIGN_MALLOC_DATA 1
 
 /* define if building for ia32/i386 */
 /* #undef FLAC__CPU_IA32 */
@@ -25,26 +25,26 @@
 /* define if building for SPARC */
 /* #undef FLAC__CPU_SPARC */
 
-/* define if you are compiling for PowerPC and have the 'as' assembler */
-/* #undef FLAC__HAS_AS */
+/* define if building for x86_64 */
+#define FLAC__CPU_X86_64 1
 
 /* define if you have docbook-to-man or docbook2man */
 /* #undef FLAC__HAS_DOCBOOK_TO_MAN */
-
-/* define if you are compiling for PowerPC and have the 'gas' assembler */
-#define FLAC__HAS_GAS 1
 
 /* define if you are compiling for x86 and have the NASM assembler */
 #define FLAC__HAS_NASM 1
 
 /* define if you have the ogg library */
-#define FLAC__HAS_OGG 1
+#define FLAC__HAS_OGG 0
+
+/* Set to 1 if <x86intrin.h> is available. */
+#define FLAC__HAS_X86INTRIN 
 
 /* define to disable use of assembly code */
 /* #undef FLAC__NO_ASM */
 
 /* define if your operating system supports SSE instructions */
-/* #undef FLAC__SSE_OS */
+#define FLAC__SSE_OS 1
 
 /* define if building for Darwin / MacOS X */
 #define FLAC__SYS_DARWIN 1
@@ -52,20 +52,23 @@
 /* define if building for Linux */
 /* #undef FLAC__SYS_LINUX */
 
-/* define to enable use of 3Dnow! instructions */
-#define FLAC__USE_3DNOW 1
-
 /* define to enable use of Altivec instructions */
 #define FLAC__USE_ALTIVEC 1
 
 /* Define to 1 if `TIOCGWINSZ' requires <sys/ioctl.h>. */
 /* #undef GWINSZ_IN_SYS_IOCTL */
 
+/* Compiler has the __builtin_bswap16 intrinsic */
+#define HAVE_BSWAP16 1
+
 /* Compiler has the __builtin_bswap32 intrinsic */
 #define HAVE_BSWAP32 1
 
 /* Define to 1 if you have the <byteswap.h> header file. */
 /* #undef HAVE_BYTESWAP_H */
+
+/* Define to 1 if you have the <cpuid.h> header file. */
+#define HAVE_CPUID_H 1
 
 /* Define to 1 if C++ supports variable-length arrays. */
 #define HAVE_CXX_VARARRAYS 1
@@ -130,15 +133,15 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
+/* Define to 1 if you have the <x86intrin.h> header file. */
+#define HAVE_X86INTRIN_H 1
+
 /* Define as const if the declaration of iconv() needs const. */
 #define ICONV_CONST 
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
 #define LT_OBJDIR ".libs/"
-
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-/* #undef NO_MINUS_C_MINUS_O */
 
 /* Name of package */
 #define PACKAGE "flac"
@@ -150,7 +153,7 @@
 #define PACKAGE_NAME "flac"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "flac 1.3.0"
+#define PACKAGE_STRING "flac 1.3.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "flac"
@@ -159,7 +162,7 @@
 #define PACKAGE_URL "https://www.xiph.org/flac/"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.3.0"
+#define PACKAGE_VERSION "1.3.1"
 
 /* The size of `off_t', as computed by sizeof. */
 #define SIZEOF_OFF_T 8
@@ -193,7 +196,7 @@
 
 
 /* Version number of package */
-#define VERSION "1.3.0"
+#define VERSION "1.3.1"
 
 /* Target processor is big endian. */
 #define WORDS_BIGENDIAN 0
@@ -230,9 +233,3 @@
 
 /* Define to __typeof__ if your compiler spells it that way. */
 /* #undef typeof */
-#ifdef WORDS_BIGENDIAN
-#undef WORDS_BIGENDIAN
-#endif
-#if defined(__BIG_ENDIAN__)
-#define WORDS_BIGENDIAN 1
-#endif

@@ -2,7 +2,7 @@
 
 ;  libFLAC - Free Lossless Audio Codec library
 ;  Copyright (C) 2001-2009  Josh Coalson
-;  Copyright (C) 2011-2013  Xiph.Org Foundation
+;  Copyright (C) 2011-2014  Xiph.Org Foundation
 ;
 ;  Redistribution and use in source and binary forms, with or without
 ;  modification, are permitted provided that the following conditions
@@ -39,11 +39,13 @@ cglobal FLAC__lpc_compute_autocorrelation_asm_ia32
 cglobal FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_4
 cglobal FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_8
 cglobal FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_12
-cglobal FLAC__lpc_compute_autocorrelation_asm_ia32_3dnow
+cglobal FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_16
 cglobal FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32
 cglobal FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32_mmx
+cglobal FLAC__lpc_compute_residual_from_qlp_coefficients_wide_asm_ia32
 cglobal FLAC__lpc_restore_signal_asm_ia32
 cglobal FLAC__lpc_restore_signal_asm_ia32_mmx
+cglobal FLAC__lpc_restore_signal_wide_asm_ia32
 
 	code_section
 
@@ -114,9 +116,8 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32
 	lea	edx, [eax + eax*2]
 	neg	edx
 	lea	edx, [eax + edx*4 + .jumper1_0 - .get_eip1]
-	call	.get_eip1
+	call	.mov_eip_to_ebx
 .get_eip1:
-	pop	ebx
 	add	edx, ebx
 	inc	edx				; compensate for the shorter opcode on the last iteration
 	inc	edx				; compensate for the shorter opcode on the last iteration
@@ -126,6 +127,10 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32
 	sub	edx, byte 9			; compensate for the longer opcodes on the first iteration
 .loop1_start:
 	jmp	edx
+
+.mov_eip_to_ebx:
+	mov	ebx, [esp]
+	ret
 
 	fld	st0				; ST = d d
 	fmul	dword [esi + (32*4)]		; ST = d*data[sample+32] d		WATCHOUT: not a byte displacement here!
@@ -284,9 +289,8 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32
 	lea	edx, [eax + eax*2]
 	neg	edx
 	lea	edx, [eax + edx*4 + .jumper2_0 - .get_eip2]
-	call	.get_eip2
+	call	.mov_eip_to_ebx
 .get_eip2:
-	pop	ebx
 	add	edx, ebx
 	inc	edx				; compensate for the shorter opcode on the last iteration
 	inc	edx				; compensate for the shorter opcode on the last iteration
@@ -596,7 +600,7 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_12
 	movss	xmm3, xmm2
 	movss	xmm2, xmm0
 
-	; xmm7:xmm6:xmm5 += xmm0:xmm0:xmm0 * xmm3:xmm3:xmm2
+	; xmm7:xmm6:xmm5 += xmm0:xmm0:xmm0 * xmm4:xmm3:xmm2
 	movaps	xmm1, xmm0
 	mulps	xmm1, xmm2
 	addps	xmm5, xmm1
@@ -619,123 +623,91 @@ cident FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_12
 	ret
 
 	ALIGN 16
-cident FLAC__lpc_compute_autocorrelation_asm_ia32_3dnow
-	;[ebp + 32] autoc
-	;[ebp + 28] lag
-	;[ebp + 24] data_len
-	;[ebp + 20] data
+cident FLAC__lpc_compute_autocorrelation_asm_ia32_sse_lag_16
+	;[ebp + 20] == autoc[]
+	;[ebp + 16] == lag
+	;[ebp + 12] == data_len
+	;[ebp +  8] == data[]
+	;[esp] == __m128
+	;[esp + 16] == __m128
 
 	push	ebp
-	push	ebx
-	push	esi
-	push	edi
 	mov	ebp, esp
+	and	esp, -16 ; stack realign for SSE instructions 'movaps' and 'addps'
+	sub	esp, 32
 
-	mov	esi, [ebp + 20]
-	mov	edi, [ebp + 24]
-	mov	edx, [ebp + 28]
-	inc	edx
-	and	edx, byte -2
-	mov	eax, edx
-	neg	eax
-	and	esp, byte -8
-	lea	esp, [esp + 4 * eax]
-	mov	ecx, edx
-	xor	eax, eax
-.loop0:
-	dec	ecx
-	mov	[esp + 4 * ecx], eax
-	jnz	short .loop0
+	;ASSERT(lag > 0)
+	;ASSERT(lag <= 12)
+	;ASSERT(lag <= data_len)
+	;ASSERT(data_len > 0)
 
-	mov	eax, edi
-	sub	eax, edx
-	mov	ebx, edx
-	and	ebx, byte 1
-	sub	eax, ebx
-	lea	ecx, [esi + 4 * eax - 12]
-	cmp	esi, ecx
-	mov	eax, esi
-	ja	short .loop2_pre
-	ALIGN	16		;4 nops
-.loop1_i:
-	movd	mm0, [eax]
-	movd	mm2, [eax + 4]
-	movd	mm4, [eax + 8]
-	movd	mm6, [eax + 12]
-	mov	ebx, edx
-	punpckldq	mm0, mm0
-	punpckldq	mm2, mm2
-	punpckldq	mm4, mm4
-	punpckldq	mm6, mm6
-	ALIGN	16		;3 nops
-.loop1_j:
-	sub	ebx, byte 2
-	movd	mm1, [eax + 4 * ebx]
-	movd	mm3, [eax + 4 * ebx + 4]
-	movd	mm5, [eax + 4 * ebx + 8]
-	movd	mm7, [eax + 4 * ebx + 12]
-	punpckldq	mm1, mm3
-	punpckldq	mm3, mm5
-	pfmul	mm1, mm0
-	punpckldq	mm5, mm7
-	pfmul	mm3, mm2
-	punpckldq	mm7, [eax + 4 * ebx + 16]
-	pfmul	mm5, mm4
-	pfmul	mm7, mm6
-	pfadd	mm1, mm3
-	movq	mm3, [esp + 4 * ebx]
-	pfadd	mm5, mm7
-	pfadd	mm1, mm5
-	pfadd	mm3, mm1
-	movq	[esp + 4 * ebx], mm3
-	jg	short .loop1_j
+	;	for(coeff = 0; coeff < lag; coeff++)
+	;		autoc[coeff] = 0.0;
+	xorps	xmm5, xmm5
+	xorps	xmm6, xmm6
+	movaps	[esp], xmm5
+	movaps	[esp + 16], xmm6
 
-	add	eax, byte 16
-	cmp	eax, ecx
-	jb	short .loop1_i
+	mov	edx, [ebp + 12]			; edx == data_len
+	mov	eax, [ebp +  8]			; eax == &data[sample] <- &data[0]
 
-.loop2_pre:
-	mov	ebx, eax
-	sub	eax, esi
-	shr	eax, 2
-	lea	ecx, [esi + 4 * edi]
-	mov	esi, ebx
-.loop2_i:
-	movd	mm0, [esi]
-	mov	ebx, edi
-	sub	ebx, eax
-	cmp	ebx, edx
-	jbe	short .loop2_j
-	mov	ebx, edx
-.loop2_j:
-	dec	ebx
-	movd	mm1, [esi + 4 * ebx]
-	pfmul	mm1, mm0
-	movd	mm2, [esp + 4 * ebx]
-	pfadd	mm1, mm2
-	movd	[esp + 4 * ebx], mm1
-
-	jnz	short .loop2_j
-
-	add	esi, byte 4
-	inc	eax
-	cmp	esi, ecx
-	jnz	short .loop2_i
-
-	mov	edi, [ebp + 32]
-	mov	edx, [ebp + 28]
-.loop3:
+	movss	xmm0, [eax]			; xmm0 = 0,0,0,data[0]
+	add	eax, 4
+	movaps	xmm1, xmm0			; xmm1 = 0,0,0,data[0]
+	shufps	xmm0, xmm0, 0		; xmm0 == data[sample],data[sample],data[sample],data[sample] = data[0],data[0],data[0],data[0]
+	xorps	xmm2, xmm2			; xmm2 = 0,0,0,0
+	xorps	xmm3, xmm3			; xmm3 = 0,0,0,0
+	xorps	xmm4, xmm4			; xmm4 = 0,0,0,0
+	movaps	xmm7, xmm0
+	mulps	xmm7, xmm1
+	addps	xmm5, xmm7
 	dec	edx
-	mov	eax, [esp + 4 * edx]
-	mov	[edi + 4 * edx], eax
-	jnz	short .loop3
+	jz	.loop_end
+	ALIGN 16
+.loop_start:
+	; start by reading the next sample
+	movss	xmm0, [eax]				; xmm0 = 0,0,0,data[sample]
+	add	eax, 4
+	shufps	xmm0, xmm0, 0			; xmm0 = data[sample],data[sample],data[sample],data[sample]
 
-	femms
+	; shift xmm4:xmm3:xmm2:xmm1 left by one float
+	shufps	xmm1, xmm1, 93h
+	shufps	xmm2, xmm2, 93h
+	shufps	xmm3, xmm3, 93h
+	shufps	xmm4, xmm4, 93h
+	movss	xmm4, xmm3
+	movss	xmm3, xmm2
+	movss	xmm2, xmm1
+	movss	xmm1, xmm0
 
+	; xmmB:xmmA:xmm6:xmm5 += xmm0:xmm0:xmm0:xmm0 * xmm4:xmm3:xmm2:xmm1
+	movaps	xmm7, xmm0
+	mulps	xmm7, xmm1
+	addps	xmm5, xmm7
+	movaps	xmm7, xmm0
+	mulps	xmm7, xmm2
+	addps	xmm6, xmm7
+	movaps	xmm7, xmm0
+	mulps	xmm7, xmm3
+	mulps	xmm0, xmm4
+	addps	xmm7, [esp]
+	addps	xmm0, [esp + 16]
+	movaps	[esp], xmm7
+	movaps	[esp + 16], xmm0
+
+	dec	edx
+	jnz	.loop_start
+.loop_end:
+	; store autoc
+	mov	edx, [ebp + 20]				; edx == autoc
+	movups	[edx], xmm5
+	movups	[edx + 16], xmm6
+	movaps	xmm5, [esp]
+	movaps	xmm6, [esp + 16]
+	movups	[edx + 32], xmm5
+	movups	[edx + 48], xmm6
+.end:
 	mov	esp, ebp
-	pop	edi
-	pop	esi
-	pop	ebx
 	pop	ebp
 	ret
 
@@ -778,7 +750,7 @@ cident FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32
 	mov	ecx, [esp + 28]
 	mov	edx, [ecx]			; edx = qlp_coeff[0]
 	mov	eax, [esi - 4]			; eax = data[-1]
-	mov	cl, [esp + 36]			; cl = lp_quantization
+	mov	ecx, [esp + 36]			; cl = lp_quantization
 	ALIGN	16
 .i_1_loop_i:
 	imul	eax, edx
@@ -816,7 +788,7 @@ cident FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32
 	inc	ecx
 	jnz	short .i_32more_loop_j
 
-	mov	cl, [esp + 36]
+	mov	ecx, [esp + 36]
 	sar	ebp, cl
 	neg	ebp
 	add	ebp, [esi]
@@ -829,13 +801,16 @@ cident FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32
 
 	jmp	.end
 
+.mov_eip_to_eax:
+	mov	eax, [esp]
+	ret
+
 .i_32:
 	sub	edi, esi
 	neg	eax
 	lea	edx, [eax + eax * 8 + .jumper_0 - .get_eip0]
-	call	.get_eip0
+	call	.mov_eip_to_eax
 .get_eip0:
-	pop	eax
 	add	edx, eax
 	inc	edx
 	mov	eax, [esp + 28]			; eax = qlp_coeff[]
@@ -940,7 +915,7 @@ cident FLAC__lpc_compute_residual_from_qlp_coefficients_asm_ia32
 	add	ebp, ecx
 .jumper_0:
 
-	mov	cl, [esp + 36]
+	mov	ecx, [esp + 36]
 	sar	ebp, cl
 	neg	ebp
 	add	ebp, [esi]
@@ -1185,7 +1160,7 @@ cident FLAC__lpc_restore_signal_asm_ia32
 	mov	ecx, [esp + 28]
 	mov	edx, [ecx]
 	mov	eax, [edi - 4]
-	mov	cl, [esp + 36]
+	mov	ecx, [esp + 36]
 	ALIGN	16
 .x87_1_loop_i:
 	imul	eax, edx
@@ -1221,7 +1196,7 @@ cident FLAC__lpc_restore_signal_asm_ia32
 	inc	ecx
 	jnz	short .x87_32more_loop_j
 
-	mov	cl, [esp + 36]
+	mov	ecx, [esp + 36]
 	sar	ebp, cl
 	add	ebp, [esi]
 	mov	[edi], ebp
@@ -1233,13 +1208,16 @@ cident FLAC__lpc_restore_signal_asm_ia32
 
 	jmp	.end
 
+.mov_eip_to_eax:
+	mov	eax, [esp]
+	ret
+
 .x87_32:
 	sub	esi, edi
 	neg	eax
 	lea	edx, [eax + eax * 8 + .jumper_0 - .get_eip0]
-	call	.get_eip0
+	call	.mov_eip_to_eax
 .get_eip0:
-	pop	eax
 	add	edx, eax
 	inc	edx				; compensate for the shorter opcode on the last iteration
 	mov	eax, [esp + 28]			; eax = qlp_coeff[]
@@ -1344,7 +1322,7 @@ cident FLAC__lpc_restore_signal_asm_ia32
 	add	ebp, ecx			; sum += qlp_coeff[ 0] * data[i- 1]
 .jumper_0:
 
-	mov	cl, [esp + 36]
+	mov	ecx, [esp + 36]
 	sar	ebp, cl				; ebp = (sum >> lp_quantization)
 	add	ebp, [esi + edi]		; ebp = residual[i] + (sum >> lp_quantization)
 	mov	[edi], ebp			; data[i] = residual[i] + (sum >> lp_quantization)
@@ -1505,4 +1483,567 @@ cident FLAC__lpc_restore_signal_asm_ia32_mmx
 	pop	ebp
 	ret
 
-end
+
+; **********************************************************************
+;
+;void FLAC__lpc_compute_residual_from_qlp_coefficients_wide(const FLAC__int32 *data, unsigned data_len, const FLAC__int32 qlp_coeff[], unsigned order, int lp_quantization, FLAC__int32 residual[])
+; {
+; 	unsigned i, j;
+; 	FLAC__int64 sum;
+;
+; 	FLAC__ASSERT(order > 0);
+;
+;	for(i = 0; i < data_len; i++) {
+;		sum = 0;
+;		for(j = 0; j < order; j++)
+;			sum += qlp_coeff[j] * (FLAC__int64)data[i-j-1];
+;		residual[i] = data[i] - (FLAC__int32)(sum >> lp_quantization);
+;	}
+; }
+	ALIGN	16
+cident FLAC__lpc_compute_residual_from_qlp_coefficients_wide_asm_ia32
+	;[esp + 40]	residual[]
+	;[esp + 36]	lp_quantization
+	;[esp + 32]	order
+	;[esp + 28]	qlp_coeff[]
+	;[esp + 24]	data_len
+	;[esp + 20]	data[]
+
+	;ASSERT(order > 0)
+	;ASSERT(order <= 32)
+	;ASSERT(lp_quantization <= 31)
+
+	push	ebp
+	push	ebx
+	push	esi
+	push	edi
+
+	mov	ebx, [esp + 24]			; ebx = data_len
+	test	ebx, ebx
+	jz	near .end				; do nothing if data_len == 0
+
+.begin:
+	mov	eax, [esp + 32]			; eax = order
+	cmp	eax, 1
+	jg	short .i_32
+
+	mov	esi, [esp + 40]			; esi = residual[]
+	mov	edi, [esp + 20]			; edi = data[]
+	mov	ecx, [esp + 28]			; ecx = qlp_coeff[]
+	mov	ebp, [ecx]				; ebp = qlp_coeff[0]
+	mov	eax, [edi - 4]			; eax = data[-1]
+	mov	ecx, [esp + 36]			; cl = lp_quantization
+	ALIGN	16
+.i_1_loop_i:
+	imul	ebp					; edx:eax = qlp_coeff[0] * (FLAC__int64)data[i-1]
+	shrd	eax, edx, cl		; 0 <= lp_quantization <= 15
+	neg	eax
+	add	eax, [edi]
+	mov	[esi], eax
+	mov	eax, [edi]
+	add	esi, 4
+	add	edi, 4
+	dec	ebx
+	jnz	.i_1_loop_i
+	jmp	.end
+
+.mov_eip_to_eax:
+	mov	eax, [esp]
+	ret
+
+.i_32:	; eax = order
+	neg	eax
+	add	eax, eax
+	lea	ebp, [eax + eax * 4 + .jumper_0 - .get_eip0]
+	call	.mov_eip_to_eax
+.get_eip0:
+	add	ebp, eax
+	inc	ebp				; compensate for the shorter opcode on the last iteration
+
+	mov	ebx, [esp + 28]			; ebx = qlp_coeff[]
+	mov	edi, [esp + 20]			; edi = data[]
+	sub	[esp + 40], edi			; residual[] -= data[]
+
+	xor	ecx, ecx
+	xor	esi, esi
+	jmp	ebp
+
+;eax = --
+;edx = --
+;ecx = 0
+;esi = 0
+;
+;ebx = qlp_coeff[]
+;edi = data[]
+;ebp = @address
+
+	mov	eax, [ebx + 124]			; eax =  qlp_coeff[31]
+	imul	dword [edi - 128]		; edx:eax =  qlp_coeff[31] * data[i-32]
+	add	ecx, eax
+	adc	esi, edx					; sum += qlp_coeff[31] * data[i-32]
+
+	mov	eax, [ebx + 120]			; eax =  qlp_coeff[30]
+	imul	dword [edi - 124]		; edx:eax =  qlp_coeff[30] * data[i-31]
+	add	ecx, eax
+	adc	esi, edx					; sum += qlp_coeff[30] * data[i-31]
+
+	mov	eax, [ebx + 116]
+	imul	dword [edi - 120]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 112]
+	imul	dword [edi - 116]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 108]
+	imul	dword [edi - 112]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 104]
+	imul	dword [edi - 108]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 100]
+	imul	dword [edi - 104]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 96]
+	imul	dword [edi - 100]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 92]
+	imul	dword [edi - 96]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 88]
+	imul	dword [edi - 92]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 84]
+	imul	dword [edi - 88]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 80]
+	imul	dword [edi - 84]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 76]
+	imul	dword [edi - 80]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 72]
+	imul	dword [edi - 76]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 68]
+	imul	dword [edi - 72]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 64]
+	imul	dword [edi - 68]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 60]
+	imul	dword [edi - 64]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 56]
+	imul	dword [edi - 60]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 52]
+	imul	dword [edi - 56]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 48]
+	imul	dword [edi - 52]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 44]
+	imul	dword [edi - 48]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 40]
+	imul	dword [edi - 44]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 36]
+	imul	dword [edi - 40]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 32]
+	imul	dword [edi - 36]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 28]
+	imul	dword [edi - 32]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 24]
+	imul	dword [edi - 28]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 20]
+	imul	dword [edi - 24]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 16]
+	imul	dword [edi - 20]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 12]
+	imul	dword [edi - 16]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 8]
+	imul	dword [edi - 12]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 4]
+	imul	dword [edi - 8]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx]					; eax =  qlp_coeff[ 0] (NOTE: one byte missing from instruction)
+	imul	dword [edi - 4]			; edx:eax =  qlp_coeff[ 0] * data[i- 1]
+	add	ecx, eax
+	adc	esi, edx					; sum += qlp_coeff[ 0] * data[i- 1]
+
+.jumper_0:
+	mov	edx, ecx
+;esi:edx = sum
+	mov	ecx, [esp + 36]			; cl = lp_quantization
+	shrd	edx, esi, cl		; edx = (sum >> lp_quantization)
+;eax = --
+;ecx = --
+;edx = sum >> lp_q
+;esi = --
+	neg	edx						; edx = -(sum >> lp_quantization)
+	mov	eax, [esp + 40]			; residual[] - data[]
+	add	edx, [edi]				; edx = data[i] - (sum >> lp_quantization)
+	mov	[edi + eax], edx
+	add	edi, 4
+
+	dec	dword [esp + 24]
+	jz	short .end
+	xor	ecx, ecx
+	xor	esi, esi
+	jmp	ebp
+
+.end:
+	pop	edi
+	pop	esi
+	pop	ebx
+	pop	ebp
+	ret
+
+; **********************************************************************
+;
+; void FLAC__lpc_restore_signal_wide(const FLAC__int32 residual[], unsigned data_len, const FLAC__int32 qlp_coeff[], unsigned order, int lp_quantization, FLAC__int32 data[])
+; {
+; 	unsigned i, j;
+; 	FLAC__int64 sum;
+;
+; 	FLAC__ASSERT(order > 0);
+;
+; 	for(i = 0; i < data_len; i++) {
+; 		sum = 0;
+; 		for(j = 0; j < order; j++)
+; 			sum += qlp_coeff[j] * (FLAC__int64)data[i-j-1];
+; 		data[i] = residual[i] + (FLAC__int32)(sum >> lp_quantization);
+; 	}
+; }
+	ALIGN	16
+cident FLAC__lpc_restore_signal_wide_asm_ia32
+	;[esp + 40]	data[]
+	;[esp + 36]	lp_quantization
+	;[esp + 32]	order
+	;[esp + 28]	qlp_coeff[]
+	;[esp + 24]	data_len
+	;[esp + 20]	residual[]
+
+	;ASSERT(order > 0)
+	;ASSERT(order <= 32)
+	;ASSERT(lp_quantization <= 31)
+
+	push	ebp
+	push	ebx
+	push	esi
+	push	edi
+
+	mov	ebx, [esp + 24]			; ebx = data_len
+	test	ebx, ebx
+	jz	near .end				; do nothing if data_len == 0
+
+.begin:
+	mov	eax, [esp + 32]			; eax = order
+	cmp	eax, 1
+	jg	short .x87_32
+
+	mov	esi, [esp + 20]			; esi = residual[]
+	mov	edi, [esp + 40]			; edi = data[]
+	mov	ecx, [esp + 28]			; ecx = qlp_coeff[]
+	mov	ebp, [ecx]				; ebp = qlp_coeff[0]
+	mov	eax, [edi - 4]			; eax = data[-1]
+	mov	ecx, [esp + 36]			; cl = lp_quantization
+	ALIGN	16
+.x87_1_loop_i:
+	imul	ebp					; edx:eax = qlp_coeff[0] * (FLAC__int64)data[i-1]
+	shrd	eax, edx, cl		; 0 <= lp_quantization <= 15
+;
+	add	eax, [esi]
+	mov	[edi], eax
+;
+	add	esi, 4
+	add	edi, 4
+	dec	ebx
+	jnz	.x87_1_loop_i
+	jmp	.end
+
+.mov_eip_to_eax:
+	mov	eax, [esp]
+	ret
+
+.x87_32:	; eax = order
+	neg	eax
+	add	eax, eax
+	lea	ebp, [eax + eax * 4 + .jumper_0 - .get_eip0]
+	call	.mov_eip_to_eax
+.get_eip0:
+	add	ebp, eax
+	inc	ebp				; compensate for the shorter opcode on the last iteration
+
+	mov	ebx, [esp + 28]			; ebx = qlp_coeff[]
+	mov	edi, [esp + 40]			; esi = data[]
+	sub	[esp + 20], edi			; residual[] -= data[]
+
+	xor	ecx, ecx
+	xor	esi, esi
+	jmp	ebp
+
+;eax = --
+;edx = --
+;ecx = 0
+;esi = 0
+;
+;ebx = qlp_coeff[]
+;edi = data[]
+;ebp = @address
+
+	mov	eax, [ebx + 124]			; eax =  qlp_coeff[31]
+	imul	dword [edi - 128]		; edx:eax =  qlp_coeff[31] * data[i-32]
+	add	ecx, eax
+	adc	esi, edx					; sum += qlp_coeff[31] * data[i-32]
+
+	mov	eax, [ebx + 120]			; eax =  qlp_coeff[30]
+	imul	dword [edi - 124]		; edx:eax =  qlp_coeff[30] * data[i-31]
+	add	ecx, eax
+	adc	esi, edx					; sum += qlp_coeff[30] * data[i-31]
+
+	mov	eax, [ebx + 116]
+	imul	dword [edi - 120]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 112]
+	imul	dword [edi - 116]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 108]
+	imul	dword [edi - 112]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 104]
+	imul	dword [edi - 108]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 100]
+	imul	dword [edi - 104]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 96]
+	imul	dword [edi - 100]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 92]
+	imul	dword [edi - 96]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 88]
+	imul	dword [edi - 92]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 84]
+	imul	dword [edi - 88]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 80]
+	imul	dword [edi - 84]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 76]
+	imul	dword [edi - 80]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 72]
+	imul	dword [edi - 76]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 68]
+	imul	dword [edi - 72]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 64]
+	imul	dword [edi - 68]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 60]
+	imul	dword [edi - 64]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 56]
+	imul	dword [edi - 60]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 52]
+	imul	dword [edi - 56]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 48]
+	imul	dword [edi - 52]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 44]
+	imul	dword [edi - 48]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 40]
+	imul	dword [edi - 44]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 36]
+	imul	dword [edi - 40]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 32]
+	imul	dword [edi - 36]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 28]
+	imul	dword [edi - 32]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 24]
+	imul	dword [edi - 28]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 20]
+	imul	dword [edi - 24]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 16]
+	imul	dword [edi - 20]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 12]
+	imul	dword [edi - 16]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 8]
+	imul	dword [edi - 12]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx + 4]
+	imul	dword [edi - 8]
+	add	ecx, eax
+	adc	esi, edx
+
+	mov	eax, [ebx]					; eax =  qlp_coeff[ 0] (NOTE: one byte missing from instruction)
+	imul	dword [edi - 4]			; edx:eax =  qlp_coeff[ 0] * data[i- 1]
+	add	ecx, eax
+	adc	esi, edx					; sum += qlp_coeff[ 0] * data[i- 1]
+
+.jumper_0:
+	mov	edx, ecx
+;esi:edx = sum
+	mov	ecx, [esp + 36]			; cl = lp_quantization
+	shrd	edx, esi, cl		; edx = (sum >> lp_quantization)
+;eax = --
+;ecx = --
+;edx = sum >> lp_q
+;esi = --
+;
+	mov	eax, [esp + 20]			; residual[] - data[]
+	add	edx, [edi + eax]		; edx = residual[i] + (sum >> lp_quantization)
+	mov	[edi], edx				; data[i] = residual[i] + (sum >> lp_quantization)
+	add	edi, 4
+
+	dec	dword [esp + 24]
+	jz	short .end
+	xor	ecx, ecx
+	xor	esi, esi
+	jmp	ebp
+
+.end:
+	pop	edi
+	pop	esi
+	pop	ebx
+	pop	ebp
+	ret
+
+; end

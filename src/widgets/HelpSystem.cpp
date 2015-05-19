@@ -61,6 +61,7 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX /*| wxDEFAULT_FRAME_STYLE */);
 
+   dlog.SetName(dlog.GetTitle());
    ShuttleGui S(&dlog, eIsCreating);
 
    S.StartVerticalLay(1);
@@ -115,6 +116,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
 #endif
       wxDEFAULT_FRAME_STYLE);
 
+   pWnd->SetName(pWnd->GetTitle());
    ShuttleGui S( pWnd, eIsCreating );
 
    S.SetStyle( wxNO_BORDER | wxTAB_TRAVERSAL );

@@ -367,7 +367,7 @@ int QTImportFileHandle::Import(TrackFactory *trackFactory,
          }
       } while (updateResult == eProgressSuccess);
    
-      bool res = (updateResult == eProgressSuccess && err == noErr);
+      res = (updateResult == eProgressSuccess && err == noErr);
    
       if (res) {
          for (c = 0; c < numchan; c++) {

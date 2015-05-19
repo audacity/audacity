@@ -79,6 +79,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual bool IsLegacy();
    virtual bool SupportsRealtime();
    virtual bool SupportsAutomation();
+   virtual bool EnableFromGetGo(){ return true;};
 
    // EffectClientInterface implementation
 
@@ -155,9 +156,11 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual wxString GetUserPresetsGroup(const wxString & name);
    virtual wxString GetCurrentSettingsGroup();
    virtual wxString GetFactoryDefaultsGroup();
+   virtual wxString GetSavedStateGroup();
 
    // ConfigClientInterface implementation
 
+   virtual bool HasSharedConfigGroup(const wxString & group);
    virtual bool GetSharedConfigSubgroups(const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetSharedConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString);
@@ -177,6 +180,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual bool RemoveSharedConfigSubgroup(const wxString & group);
    virtual bool RemoveSharedConfig(const wxString & group, const wxString & key);
 
+   virtual bool HasPrivateConfigGroup(const wxString & group);
    virtual bool GetPrivateConfigSubgroups(const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetPrivateConfig(const wxString & group, const wxString & key, wxString & value, const wxString & defval = wxEmptyString);
@@ -206,6 +210,14 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual bool GetAutomationParameters(wxString & parms);
    virtual bool SetAutomationParameters(const wxString & parms);
 
+   virtual wxArrayString GetUserPresets();
+   virtual bool HasCurrentSettings();
+   virtual bool HasFactoryDefaults();
+   virtual wxString GetPreset(wxWindow * parent, const wxString & parms);
+
+   virtual bool IsBatchProcessing();
+   virtual void SetBatchProcessing(bool start);
+
    void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ){
       if( Names ) mPresetNames = *Names;
       if( Values ) mPresetValues = *Values;
@@ -228,7 +240,7 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    bool IsRealtimeActive();
 
    virtual bool IsHidden();
-   
+
 //
 // protected virtual methods
 //
@@ -245,7 +257,7 @@ protected:
    // This method will not always be called (for example if a user
    // repeats an effect) but if it is called, it will be called
    // after Init.
-   virtual bool PromptUser(wxWindow *parent = NULL, bool isBatch = false);
+   virtual bool PromptUser(wxWindow *parent);
 
    // Check whether effect should be skipped
    // Typically this is only useful in automation, for example
@@ -277,6 +289,7 @@ protected:
    virtual bool TransferDataFromWindow();
    virtual bool EnableApply(bool enable = true);
    virtual bool EnablePreview(bool enable = true);
+   virtual void EnableDebug(bool enable = true);
 
    // The Progress methods all return true if the user has cancelled;
    // you should exit immediately if this happens (cleaning up memory
@@ -302,6 +315,16 @@ protected:
 
    void SetTimeWarper(TimeWarper *warper);
    TimeWarper *GetTimeWarper();
+
+   // Previewing linear effect can be optimised by pre-mixing. However this
+   // should not be used for non-linear effects such as dynamic processors
+   // To allow pre-mixing before Preview, set linearEffectFlag to true.
+   void SetLinearEffectFlag(bool linearEffectFlag);
+
+   // Most effects only require selected tracks to be copied for Preview.
+   // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
+   // preview copies of all wave tracks.
+   void IncludeNotSelectedPreviewTracks(bool includeNotSelected);
 
    // Use these two methods to copy the input tracks to mOutputTracks, if
    // doing the processing on them, and replacing the originals only on success (and not cancel).
@@ -343,11 +366,12 @@ protected:
    // UI
    wxDialog       *mUIDialog;
    wxWindow       *mUIParent;
+   int            mUIResultID;
 
-   sampleCount mSampleCnt;
+   sampleCount    mSampleCnt;
 
    // type of the tracks on mOutputTracks
-   int mOutputTracksType;
+   int            mOutputTracksType;
 
  // Used only by the base Effect class
  //
@@ -372,7 +396,16 @@ protected:
 private:
    wxWindow *mParent;
 
+   bool mIsBatch;
+
+   bool mIsLinearEffect;
+   bool mPreviewWithNotSelected;
+
    double mDuration;
+   // mSetDuration should ONLY be set when SetDuration() is called.
+   double mSetDuration;
+
+   bool mUIDebug;
 
    wxArrayPtrVoid mIMap;
    wxArrayPtrVoid mOMap;
@@ -400,9 +433,15 @@ private:
    wxCriticalSection mRealtimeSuspendLock;
    int mRealtimeSuspendCount;
 
+   const static wxString kUserPresetIdent;
+   const static wxString kFactoryPresetIdent;
+   const static wxString kCurrentSettingsIdent;
+   const static wxString kFactoryDefaultsIdent;
+
    friend class EffectManager;// so it can call PromptUser in support of batch commands.
    friend class EffectRack;
    friend class EffectUIHost;
+   friend class EffectPresetsDialog;
 };
 
 
@@ -457,18 +496,18 @@ public:
    virtual bool TransferDataToWindow();
    virtual bool TransferDataFromWindow();
 
-#if defined(__WXMAC__)
    virtual int ShowModal();
-#endif
 
    bool Initialize();
 
 private:
+   void OnInitDialog(wxInitDialogEvent & evt);
    void OnErase(wxEraseEvent & evt);
    void OnPaint(wxPaintEvent & evt);
    void OnClose(wxCloseEvent & evt);
    void OnApply(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
+   void OnDebug(wxCommandEvent & evt);
    void OnMenu(wxCommandEvent & evt);
    void OnEnable(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
@@ -502,6 +541,7 @@ private:
    bool mInitialized;
    bool mSupportsRealtime;
    bool mIsGUI;
+   bool mIsBatch;
 
 #if defined(__WXMAC__)
    bool mIsModal;
@@ -531,6 +571,34 @@ private:
 
    SelectedRegion mRegion;
    double mPlayPos;
+
+   DECLARE_EVENT_TABLE();
+};
+
+class EffectPresetsDialog : public wxDialog
+{
+public:
+   EffectPresetsDialog(wxWindow *parent, Effect *effect);
+   virtual ~EffectPresetsDialog();
+
+   wxString GetSelected() const;
+   void SetSelected(const wxString & parms);
+
+private:
+   void SetPrefix(const wxString & type, const wxString & prefix);
+   void UpdateUI();
+
+   void OnType(wxCommandEvent & evt);
+   void OnOk(wxCommandEvent & evt);
+   void OnCancel(wxCommandEvent & evt);
+
+private:
+   wxChoice *mType;
+   wxListBox *mPresets;
+
+   wxArrayString mFactoryPresets;
+   wxArrayString mUserPresets;
+   wxString mSelection;
 
    DECLARE_EVENT_TABLE();
 };

@@ -1,6 +1,6 @@
 #  plugin_common - Routines common to several plugins
 #  Copyright (C) 2002-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -37,7 +37,9 @@ libplugin_common_la_SOURCES = \
 EXTRA_DIST = \
 	Makefile.lite \
 	README \
-	plugin_common_static.vcproj
+	plugin_common_static.vcproj \
+	plugin_common_static.vcxproj \
+	plugin_common_static.vcxproj.filters
 
 debug:
 	$(MAKE) all CFLAGS="@DEBUG@"

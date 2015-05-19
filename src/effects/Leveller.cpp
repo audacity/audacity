@@ -9,7 +9,7 @@
 ******************************************************************//**
 
 \class EffectLeveller
-\brief An Effect
+\brief An Effect that aims to selectively make softer sounds louder.
 
 *//*******************************************************************/
 
@@ -283,7 +283,6 @@ void EffectLeveller::CalcLevellerFactors()
       limit         = gLimit[f];
       prevAdjLimit  = gAdjLimit[prev];
       addOnValue    = prevAdjLimit - (adjFactor * prevLimit);
-      upperAdjLimit = (adjFactor * limit) + addOnValue;
 
       gAddOnValue[f] = addOnValue;
       gAdjLimit[f]   = (adjFactor * limit) + addOnValue;

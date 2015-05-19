@@ -58,9 +58,9 @@ struct
 }
 static const kFormats[] =
 {
-   { SF_FORMAT_AIFF | SF_FORMAT_PCM_16,   wxT("AIFF"),   XO("AIFF (Apple) signed 16 bit PCM")    },
-   { SF_FORMAT_WAV | SF_FORMAT_PCM_16,    wxT("WAV"),    XO("WAV (Microsoft) signed 16 bit PCM") },
-   { SF_FORMAT_WAV | SF_FORMAT_FLOAT,     wxT("WAVFLT"), XO("WAV (Microsoft) float PCM")         },
+   { SF_FORMAT_AIFF | SF_FORMAT_PCM_16,   wxT("AIFF"),   XO("AIFF (Apple) signed 16-bit PCM")    },
+   { SF_FORMAT_WAV | SF_FORMAT_PCM_16,    wxT("WAV"),    XO("WAV (Microsoft) signed 16-bit PCM") },
+   { SF_FORMAT_WAV | SF_FORMAT_FLOAT,     wxT("WAVFLT"), XO("WAV (Microsoft) 32-bit float PCM")  },
    { SF_FORMAT_WAV | SF_FORMAT_GSM610,    wxT("GSM610"), XO("GSM 6.10 WAV (mobile)")             },
 };
 
@@ -129,6 +129,8 @@ ExportPCMOptions::ExportPCMOptions(wxWindow * WXUNUSED(parent), int selformat)
 :  wxDialog(NULL, wxID_ANY,
             wxString(_("Specify Uncompressed Options")))
 {
+   SetName(GetTitle());
+
    mOk = NULL;
 
    int format = 0;
@@ -327,7 +329,7 @@ public:
 
 private:
 
-   char *AdjustString(wxString wxStr, int sf_format);
+   char *AdjustString(const wxString & wxStr, int sf_format);
    bool AddStrings(AudacityProject *project, SNDFILE *sf, Tags *tags, int sf_format);
    void AddID3Chunk(wxString fName, Tags *tags, int sf_format);
 
@@ -574,7 +576,7 @@ int ExportPCM::Export(AudacityProject *project,
    return updateResult;
 }
 
-char *ExportPCM::AdjustString(const wxString wxStr, int sf_format)
+char *ExportPCM::AdjustString(const wxString & wxStr, int sf_format)
 {
    bool b_aiff = false;
    if ((sf_format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF)

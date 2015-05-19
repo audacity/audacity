@@ -74,6 +74,7 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
                                    const wxString & title):
    wxDialog(parent, id, title)
 {
+   SetName(GetTitle());
    GetLanguages(mLangCodes, mLangNames);
    int ndx = mLangCodes.Index(GetSystemLanguageCode());
    wxString lang;

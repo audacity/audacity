@@ -35,7 +35,7 @@ Command *ExecMenuCommandType::Create(CommandOutputTarget *target)
 
 bool ExecMenuCommand::Apply(CommandExecutionContext context)
 {
-   CommandManager *cmdManager = context.proj->GetCommandManager();
+   CommandManager *cmdManager = context.GetProject()->GetCommandManager();
 
    wxString cmdName = GetString(wxT("CommandName"));
    wxUint32 cmdFlags = 0; // TODO ?

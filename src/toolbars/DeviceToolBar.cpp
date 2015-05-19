@@ -310,7 +310,7 @@ void DeviceToolBar::UpdatePrefs()
       }
    }
 
-   long oldChannels = 1, newChannels;
+   long oldChannels, newChannels;
    oldChannels = mInputChannels->GetSelection() + 1;
    gPrefs->Read(wxT("/AudioIO/RecordChannels"), &newChannels, 0);
    if (newChannels > 0 && oldChannels != newChannels)
@@ -793,6 +793,7 @@ void DeviceToolBar::ShowComboDialog(wxChoice *combo, const wxString &title)
    wxArrayString inputSources = combo->GetStrings();
 
    wxDialog dlg(NULL, wxID_ANY, title);
+   dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    wxChoice *c;
 

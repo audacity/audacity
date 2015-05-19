@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\objs\debug\lib"
-			IntermediateDirectory="Debug_dynamic"
+			OutputDirectory="$(SolutionDir)objs\$(ConfigurationName)\lib"
+			IntermediateDirectory="$(ConfigurationName)_dynamic"
 			ConfigurationType="2"
 			>
 			<Tool
@@ -90,9 +90,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\objs\release\lib"
-			IntermediateDirectory="Release_dynamic"
+			OutputDirectory="$(SolutionDir)objs\$(ConfigurationName)\lib"
+			IntermediateDirectory="$(ConfigurationName)_dynamic"
 			ConfigurationType="2"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"

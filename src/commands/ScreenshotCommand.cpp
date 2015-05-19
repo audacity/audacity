@@ -354,9 +354,9 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    }
 
    // Reset the toolbars to a known state
-   context.proj->mToolManager->Reset();
+   context.GetProject()->mToolManager->Reset();
 
-   wxTopLevelWindow *w = GetFrontWindow(context.proj);
+   wxTopLevelWindow *w = GetFrontWindow(context.GetProject());
    if (!w)
    {
       return false;
@@ -370,7 +370,7 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
       w->ClientToScreen(&x, &y);
       w->GetClientSize(&width, &height);
 
-      if (w != context.proj && w->GetTitle() != wxT("")) {
+      if (w != context.GetProject() && w->GetTitle() != wxT("")) {
          fileName = MakeFileName(filePath,
                captureMode + (wxT("-") + w->GetTitle() + wxT("-")));
       }
@@ -385,7 +385,7 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
       r.SetPosition(w->GetScreenPosition());
       r = w->GetScreenRect();
 
-      if (w != context.proj && w->GetTitle() != wxT("")) {
+      if (w != context.GetProject() && w->GetTitle() != wxT("")) {
          fileName = MakeFileName(filePath,
                captureMode + (wxT("-") + w->GetTitle() + wxT("-")));
       }
@@ -417,43 +417,43 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    }
    else if (captureMode.IsSameAs(wxT("toolbars")))
    {
-      CaptureDock(context.proj->mToolManager->GetTopDock(), fileName);
+      CaptureDock(context.GetProject()->mToolManager->GetTopDock(), fileName);
    }
    else if (captureMode.IsSameAs(wxT("selectionbar")))
    {
-      CaptureDock(context.proj->mToolManager->GetBotDock(), fileName);
+      CaptureDock(context.GetProject()->mToolManager->GetBotDock(), fileName);
    }
    else if (captureMode.IsSameAs(wxT("tools")))
    {
-      CaptureToolbar(context.proj->mToolManager, ToolsBarID, fileName);
+      CaptureToolbar(context.GetProject()->mToolManager, ToolsBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("transport")))
    {
-      CaptureToolbar(context.proj->mToolManager, TransportBarID, fileName);
+      CaptureToolbar(context.GetProject()->mToolManager, TransportBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("mixer")))
    {
-      CaptureToolbar(context.proj->mToolManager, MixerBarID, fileName);
+      CaptureToolbar(context.GetProject()->mToolManager, MixerBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("meter")))
    {
-      CaptureToolbar(context.proj->mToolManager, MeterBarID, fileName);
+      CaptureToolbar(context.GetProject()->mToolManager, MeterBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("edit")))
    {
-      CaptureToolbar(context.proj->mToolManager, EditBarID, fileName);
+      CaptureToolbar(context.GetProject()->mToolManager, EditBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("device")))
    {
-      CaptureToolbar(context.proj->mToolManager, DeviceBarID, fileName);
+      CaptureToolbar(context.GetProject()->mToolManager, DeviceBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("transcription")))
    {
-      CaptureToolbar(context.proj->mToolManager, TranscriptionBarID, fileName);
+      CaptureToolbar(context.GetProject()->mToolManager, TranscriptionBarID, fileName);
    }
    else if (captureMode.IsSameAs(wxT("trackpanel")))
    {
-      TrackPanel *panel = context.proj->mTrackPanel;
+      TrackPanel *panel = context.GetProject()->mTrackPanel;
       //AdornedRulerPanel *ruler = panel->mRuler;
 
       int h = panel->mRuler->GetRulerHeight();
@@ -468,7 +468,7 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    }
    else if (captureMode.IsSameAs(wxT("ruler")))
    {
-      TrackPanel *panel = context.proj->mTrackPanel;
+      TrackPanel *panel = context.GetProject()->mTrackPanel;
       AdornedRulerPanel *ruler = panel->mRuler;
 
       int x = 0, y = 0;
@@ -483,7 +483,7 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    }
    else if (captureMode.IsSameAs(wxT("tracks")))
    {
-      TrackPanel *panel = context.proj->mTrackPanel;
+      TrackPanel *panel = context.GetProject()->mTrackPanel;
 
       int x = 0, y = 0;
       int width, height;
@@ -496,8 +496,8 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    }
    else if (captureMode.IsSameAs(wxT("firsttrack")))
    {
-      TrackPanel *panel = context.proj->mTrackPanel;
-      TrackListIterator iter(context.proj->GetTracks());
+      TrackPanel *panel = context.GetProject()->mTrackPanel;
+      TrackListIterator iter(context.GetProject()->GetTracks());
       Track * t = iter.First();
       if (!t) {
          return false;
@@ -516,8 +516,8 @@ bool ScreenshotCommand::Apply(CommandExecutionContext context)
    }
    else if (captureMode.IsSameAs(wxT("secondtrack")))
    {
-      TrackPanel *panel = context.proj->mTrackPanel;
-      TrackListIterator iter(context.proj->GetTracks());
+      TrackPanel *panel = context.GetProject()->mTrackPanel;
+      TrackListIterator iter(context.GetProject()->GetTracks());
       Track * t = iter.First();
       if (!t) {
          return false;

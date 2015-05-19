@@ -1,6 +1,6 @@
 /* libFLAC++ - Free Lossless Audio Codec library
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -241,8 +241,7 @@ namespace FLAC {
 		{ return (bool)::FLAC__metadata_object_is_equal(object_, object); }
 
 #ifdef _MSC_VER
-// @@@ how to re-enable?  the following doesn't work
-// #pragma warning ( enable : 4800 )
+#pragma warning ( default : 4800 )
 #endif
 
 		inline bool Prototype::operator!=(const Prototype &object) const
@@ -1090,6 +1089,10 @@ namespace FLAC {
 		protected:
 			::FLAC__Metadata_SimpleIterator *iterator_;
 			void clear();
+
+		private: // Do not use.
+			SimpleIterator(const SimpleIterator&);
+			SimpleIterator&operator=(const SimpleIterator&);
 		};
 
 		/* \} */
@@ -1174,6 +1177,10 @@ namespace FLAC {
 		protected:
 			::FLAC__Metadata_Chain *chain_;
 			virtual void clear();
+
+		private: // Do not use.
+			Chain(const Chain&);
+			Chain&operator=(const Chain&);
 		};
 
 		/** This class is a wrapper around the FLAC__metadata_iterator
@@ -1204,6 +1211,10 @@ namespace FLAC {
 		protected:
 			::FLAC__Metadata_Iterator *iterator_;
 			virtual void clear();
+
+		private: // Do not use.
+			Iterator(const Iterator&);
+			Iterator&operator=(const Iterator&);
 		};
 
 		/* \} */

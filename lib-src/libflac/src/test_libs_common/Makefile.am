@@ -1,6 +1,6 @@
 #  test_libs_common - Common code to library unit tests
 #  Copyright (C) 2000-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -27,4 +27,6 @@ libtest_libs_common_la_SOURCES = \
 EXTRA_DIST = \
 	Makefile.lite \
 	README \
-	test_libs_common_static.vcproj
+	test_libs_common_static.vcproj \
+	test_libs_common_static.vcxproj \
+	test_libs_common_static.vcxproj.filters
