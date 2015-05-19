@@ -1804,7 +1804,7 @@ static float sumFreqValues(
 // Helper function to decide on which color set to use.
 // dashCount counts both dashes and the spaces between them. 
 AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBinLo, 
-   float selBinCenter, float selBinHi, int dashCount )
+   float selBinCenter, float selBinHi, int dashCount, bool isSpectral )
 {
    if ( (selBinCenter >= 0) && (bin0 <= selBinCenter) && (selBinCenter < bin1) )
       return AColor::ColorGradientEdge;
@@ -1816,7 +1816,12 @@ AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBin
    else if (
       (selBinLo < 0 || selBinLo < bin1) && 
       (selBinHi < 0 || selBinHi > bin0) )
-      return  AColor::ColorGradientTimeAndFrequencySelected;
+      if (isSpectral) {
+         return  AColor::ColorGradientTimeAndFrequencySelected;
+      }
+      else {
+         return  AColor::ColorGradientTimeSelected;
+      }
    else
       return  AColor::ColorGradientTimeSelected;
 }
@@ -2110,7 +2115,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             // If we are in the time selected range, then we may use a differnt color set.
             if (ssel0 <= w0 && w1 < ssel1)
             {
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH );
+               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
+                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
             }
 
 
@@ -2222,7 +2229,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             // If we are in the time selected range, then we may use a differnt color set.
             if (ssel0 <= w0 && w1 < ssel1)
             {
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH );
+               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
+                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
             }
 
             if(!usePxCache) {
