@@ -1403,21 +1403,29 @@ Click the 'Help' button for known issue."),
 
 	   AudacityProject * p = CreateNewBackgroundAudacityProject();
 	   mCmdHandler->SetProject(p);
+	   ModuleManager::Get().Dispatch(AppInitialized);
 
 	   BatchCommands cmd;
 	   if (cmd.ReadChain(chainName)) {
 		   size_t paramct = parser->GetParamCount();
+		   wxString fullpath;
+		   wxFileName file;
 		   for (size_t i = 0; i < paramct; i++) {
 			   p->OnRemoveTracks();
-			   p->Import(parser->GetParam(i));
+			   file = wxFileName(wxGetCwd(), parser->GetParam(i));
+			   if (!file.IsOk()) {
+				   file = wxFileName(parser->GetParam(i));
+			   }
+			   p->Import(file.GetFullName());
 			   p->OnSelectAll();
-			   cmd.ApplyChain();
+			   cmd.ApplyChain(file.GetFullName());
 		   }
 		   p->Close(true);
+		   QuitAudacity(true);
 		   exit(0);
 	   }
 	   else {
-		   wxPrintf(_("Chain not found\n."));
+		   wxPrintf(_("Chain not found.\n"));
 		   exit(1);
 	   }
    }
