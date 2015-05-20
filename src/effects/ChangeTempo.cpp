@@ -207,7 +207,8 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
          //
          S.AddUnits(_("Length (seconds):"));
 
-         FloatingPointValidator<double> vldFromLength(2, &m_FromLength, NUM_VAL_TWO_TRAILING_ZEROES);
+         int precission = 2;
+         FloatingPointValidator<double> vldFromLength(precission, &m_FromLength, NUM_VAL_TWO_TRAILING_ZEROES);
          m_pTextCtrl_FromLength = S.Id(ID_FromLength)
             .AddTextBox(_("from"), wxT(""), 12);
          m_pTextCtrl_FromLength->SetName(_("From length in seconds"));
@@ -215,8 +216,14 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
          m_pTextCtrl_FromLength->Enable(false); // Disable because the value comes from the user selection.
 
          FloatingPointValidator<double> vldToLength(2, &m_ToLength, NUM_VAL_TWO_TRAILING_ZEROES);
-         vldToLength.SetRange((m_FromLength * 100.0) / (100.0 + MAX_Percentage),
-                              (m_FromLength * 100.0) / (100.0 + MIN_Percentage));
+
+         // min and max need same precision as what we're validating (bug 963)
+         double minLength = (m_FromLength * 100.0) / (100.0 + MAX_Percentage);
+         double maxLength = (m_FromLength * 100.0) / (100.0 + MIN_Percentage);
+         minLength = Internat::CompatibleToDouble(Internat::ToString(minLength, precission));
+         maxLength = Internat::CompatibleToDouble(Internat::ToString(maxLength, precission));
+
+         vldToLength.SetRange(minLength, maxLength);
          m_pTextCtrl_ToLength = S.Id(ID_ToLength)
             .AddTextBox(_("to"), wxT(""), 12);
          m_pTextCtrl_ToLength->SetName(_("To length in seconds"));
