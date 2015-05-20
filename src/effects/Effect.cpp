@@ -3184,6 +3184,24 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       menu->Append(0, _("User Presets"), sub);
    }
 
+   menu->Append(kSaveAsID, _("Save Preset..."));
+
+   if (mUserPresets.GetCount() == 0)
+   {
+      menu->Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
+   }
+   else
+   {
+      sub = new wxMenu();
+      for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
+      {
+         sub->Append(kDeletePresetID + i, mUserPresets[i]);
+      }
+      menu->Append(0, _("Delete Preset"), sub);
+   }
+
+   menu->AppendSeparator();
+
    wxArrayString factory = mEffect->GetFactoryPresets();
 
    sub = new wxMenu();
@@ -3204,22 +3222,6 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    }
    menu->Append(0, _("Factory Presets"), sub);
 
-   if (mUserPresets.GetCount() == 0)
-   {
-      menu->Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
-   }
-   else
-   {
-      sub = new wxMenu();
-      for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
-      {
-         sub->Append(kDeletePresetID + i, mUserPresets[i]);
-      }
-      menu->Append(0, _("Delete Preset"), sub);
-   }
-
-   menu->AppendSeparator();
-   menu->Append(kSaveAsID, _("Save As..."));
    menu->AppendSeparator();
    menu->Append(kImportID, _("Import..."))->Enable(mClient->CanExportPresets());
    menu->Append(kExportID, _("Export..."))->Enable(mClient->CanExportPresets());
