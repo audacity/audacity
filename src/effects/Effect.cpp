@@ -2472,8 +2472,8 @@ void Effect::Preview(bool dryOnly)
 
    double t0save = mT0;
    double t1save = mT1;
-   mT0 = t0;
-   mT1 = t1;
+   mT0 = 0;
+   mT1 = t1 - t0;
 
    // Apply effect
 
