@@ -2225,18 +2225,23 @@ wxSizer *CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
    // Add any buttons that need to cuddle up to the right hand cluster
    if( buttons & eDebugButton )
    {
+      size_t lastLastSpacer = 0;
       size_t lastSpacer = 0;
       wxSizerItemList & list = bs->GetChildren();
-      for ( size_t i = 0, cnt = list.GetCount(); i < cnt; i++ )
+      for( size_t i = 0, cnt = list.GetCount(); i < cnt; i++ )
       {
-         if ( list[i]->IsSpacer() )
+         if( list[i]->IsSpacer() )
          {
             lastSpacer = i;
+         }
+         else  
+         {
+            lastLastSpacer = lastSpacer;
          }
       }
 
       b = new wxButton( parent, eDebugID, _("Debu&g") );
-      bs->Insert( lastSpacer + 1, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
+      bs->Insert( lastLastSpacer + 1, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
    }
 
    wxSizer * s;
