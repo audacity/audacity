@@ -2407,7 +2407,10 @@ bool TrackPanel::ContinueScrubbing(wxCoord position, bool maySkip)
 {
    wxCoord leadPosition = position;
    double newEnd =
-	   std::min(PositionToTime(leadPosition, GetLeftOffset()), mTracks->GetEndTime());
+	   std::max(0.0,
+	      std::min(PositionToTime(leadPosition, GetLeftOffset()),
+		     mTracks->GetEndTime()
+   ));
 
    if (maySkip)
       // Cause OnTimer() to suppress the speed display
