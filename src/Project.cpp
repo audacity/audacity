@@ -518,6 +518,46 @@ AudacityProject *CreateNewAudacityProject()
    return p;
 }
 
+AudacityProject *CreateNewBackgroundAudacityProject()
+{
+	bool bMaximized;
+	wxRect wndRect;
+	bool bIconized;
+	GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
+
+	//Create and show a new project
+	AudacityProject *p = new AudacityProject(NULL, -1,
+		wxPoint(wndRect.x, wndRect.y),
+		wxSize(wndRect.width, wndRect.height));
+
+	gAudacityProjects.Add(p);
+
+	if (bMaximized) {
+		p->Maximize(true);
+	}
+	else if (bIconized) {
+		// if the user close down and iconized state we could start back up and iconized state
+		// p->Iconize(TRUE);
+	}
+
+	//Initialise the Listener
+	gAudioIO->SetListener(p);
+
+	//Set the new project as active:
+	SetActiveProject(p);
+
+	// Okay, GetActiveProject() is ready. Now we can get its CommandManager,
+	// and add the shortcut keys to the tooltips.
+	p->GetControlToolBar()->RegenerateToolsTooltips();
+
+	ModuleManager::Get().Dispatch(ProjectInitialized);
+
+	//p->Show(true);
+	p->Iconize(true);
+
+	return p;
+}
+
 void RedrawAllProjects()
 {
    size_t len = gAudacityProjects.GetCount();

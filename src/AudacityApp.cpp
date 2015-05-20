@@ -91,6 +91,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "ondemand/ODManager.h"
 #include "commands/Keyboard.h"
 #include "widgets/ErrorDialog.h"
+#include "BatchCommands.h"
 
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
@@ -1395,6 +1396,32 @@ Click the 'Help' button for known issue."),
       exit(1);
    }
 
+   wxString chainName;
+   if (parser->Found(wxT("c"), &chainName)) {
+	   InitAudioIO();
+	   Importer::Get().Initialize();
+
+	   AudacityProject * p = CreateNewBackgroundAudacityProject();
+	   mCmdHandler->SetProject(p);
+
+	   BatchCommands cmd;
+	   if (cmd.ReadChain(chainName)) {
+		   size_t paramct = parser->GetParamCount();
+		   for (size_t i = 0; i < paramct; i++) {
+			   p->OnRemoveTracks();
+			   p->Import(parser->GetParam(i));
+			   p->OnSelectAll();
+			   cmd.ApplyChain();
+		   }
+		   p->Close(true);
+		   exit(0);
+	   }
+	   else {
+		   wxPrintf(_("Chain not found\n."));
+		   exit(1);
+	   }
+   }
+
 // No Splash screen on wx3 whislt we sort out the problem
 // with showing a dialog AND a splash screen during inits.
 #if !wxCHECK_VERSION(3, 0, 0)
@@ -1841,6 +1868,8 @@ wxCmdLineParser *AudacityApp::ParseCommandLine()
    /*i18n-hint: This decodes an autosave file */
    parser->AddOption(wxT("d"), wxT("decode"), _("decode an autosave file"),
                      wxCMD_LINE_VAL_STRING);
+
+   parser->AddOption(wxT("c"), wxT("chain"), _("execute chain on input files"), wxCMD_LINE_VAL_STRING);
 
    /*i18n-hint: This displays a list of available options */
    parser->AddSwitch(wxT("h"), wxT("help"), _("this help message"),
