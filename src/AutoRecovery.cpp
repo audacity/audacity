@@ -694,10 +694,21 @@ bool AutoSaveFile::Decode(const wxString & fileName)
    // Decode to a temporary file to preserve the orignal.
    wxString tempName = fn.CreateTempFileName(fn.GetPath());
 
+   bool opened = false;
+
    XMLFileWriter out;
 
-   out.Open(tempName, wxT("wb"));
-   if (!out.IsOpened())
+   try
+   {
+	   out.Open(tempName, wxT("wb"));
+	   opened = out.IsOpened();
+   }
+   catch (XMLFileWriterException* pException)
+   {
+	   delete pException;
+   }
+
+   if (!opened)
    {
       delete[] buf;
 
