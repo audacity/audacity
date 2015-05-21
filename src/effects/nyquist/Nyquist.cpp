@@ -1263,10 +1263,10 @@ void NyquistEffect::Parse(wxString line)
       return;
    }
 
-   // As of version 4 plugins ";nyquist plug-in" is depricated in favour of ";nyquist plugin".
-   // The hyphenated version must be maintained while we support plugin versions < 4.
+   // Consistency decission is for "plug-in" as the correct spelling
+   // "plugin" is allowed as an undocumented convenience.
    if (len == 2 && tokens[0] == wxT("nyquist") &&
-      (tokens[1] == wxT("plugin") || tokens[1] == wxT("plug-in"))) {
+      (tokens[1] == wxT("plug-in") || tokens[1] == wxT("plugin"))) {
       mOK = true;
       return;
    }

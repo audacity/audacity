@@ -1,4 +1,3 @@
-
 ;nyquist plug-in
 ;version 3
 ;type generate
