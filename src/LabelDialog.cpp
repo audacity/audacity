@@ -39,6 +39,7 @@
 #include "widgets/NumericTextCtrl.h"
 
 #include "FileDialog.h"
+#include <limits>
 
 enum Column
 {
@@ -380,7 +381,6 @@ void LabelDialog::FindAllLabels()
    TrackListIterator iter(mTracks);
    Track *t;
 
-   mInitialRow = -1;
 
    // Add labels from all label tracks
    for (t = iter.First(); t; t = iter.Next()) {
@@ -388,6 +388,8 @@ void LabelDialog::FindAllLabels()
          AddLabels((LabelTrack *) t);
       }
    }
+
+   FindInitialRow();
 
    if (mData.GetCount() == 0) {
       wxCommandEvent e;
@@ -414,9 +416,45 @@ void LabelDialog::AddLabels(LabelTrack *t)
       rd->title = ls->title;
 
       mData.Add(rd);
+   }
+}
 
-      if (i == t->getSelectedIndex()) {
-         mInitialRow = mData.GetCount() - 1;
+void LabelDialog::FindInitialRow()
+{
+   int cnt = mData.GetCount();
+   mInitialRow = -1;
+
+   if (cnt == 0)
+      return;
+
+   // find closest previous label
+
+   double distMin = std::numeric_limits<double>::max();
+   double dist;
+   double t0 = mViewInfo->selectedRegion.t0();
+   int i;
+   for (i = 0; i < cnt; i++)
+   {
+      dist = t0 - mData[i]->selectedRegion.t0();
+      if (dist >= 0.0 && dist < distMin)
+      {
+         mInitialRow = i;
+         distMin = dist;
+      }
+   }
+
+   // if no previous label was found, find first label
+
+   if (mInitialRow == -1)
+   {
+      double t0Min = std::numeric_limits<double>::max();
+      for (i = 0; i < cnt; i++)
+      {
+         if (mData[i]->selectedRegion.t0() < t0Min)
+         {
+            mInitialRow  = i;
+            t0Min = mData[i]->selectedRegion.t0();
+         }
       }
    }
 }
