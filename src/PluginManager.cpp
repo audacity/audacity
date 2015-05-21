@@ -522,6 +522,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
        beside each one.*/
       S.StartStatic(_("Select Plugins then press ENTER to Install"), true);
       {
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
          S.StartHorizontalLay(wxALIGN_LEFT,0 );
          {
             wxRadioButton* rb;
@@ -538,6 +539,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
             rb->SetName(_("Show registered"));
          }
          S.EndHorizontalLay();
+#endif
 
          S.SetStyle(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_HRULES | wxLC_VRULES );
          mEffects = S.Id(EffectListID).AddListControlReportMode();
@@ -627,6 +629,10 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       iter2++;
    };
    RegenerateEffectsList( ID_ShowAll );
+#ifndef EXPERIMENTAL_EFFECT_MANAGEMENT
+   wxCommandEvent Evt;
+   OnSelectAll( Evt );
+#endif
 
    Layout();
    Fit();
@@ -718,6 +724,7 @@ void PluginRegistrationDialog::RegenerateEffectsList( int iShowWhat )
       item.SetId( i );
       item.SetMask( wxLIST_MASK_IMAGE );
       mEffects->GetItem( item );
+
       if( item.GetImage() != 0 )
          miState[ i ] = SHOW_CHECKED;
    }
