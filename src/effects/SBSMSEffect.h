@@ -28,7 +28,7 @@ public:
    void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
                       SlideType rateSlideType, SlideType pitchSlideType,
                       bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput);
-   virtual bool EnableFromGetGo(){ return false;};
+   //virtual bool EnableFromGetGo(){ return false;};
 
 
 private:

@@ -220,7 +220,7 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
    {
       S.AddChoice(_("Noise type:"), wxT(""), &typeChoices)->SetValidator(wxGenericValidator(&mType));
 
-      FloatingPointValidator<double> vldAmp(1, &mAmp, NUM_VAL_NO_TRAILING_ZEROES);
+      FloatingPointValidator<double> vldAmp(6, &mAmp, NUM_VAL_NO_TRAILING_ZEROES);
       vldAmp.SetRange(MIN_Amp, MAX_Amp);
       S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 12)->SetValidator(vldAmp);
 

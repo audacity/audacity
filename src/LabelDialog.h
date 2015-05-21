@@ -50,6 +50,7 @@ class LabelDialog:public wxDialog
    bool Validate();
    void FindAllLabels();
    void AddLabels(LabelTrack *t);
+   void FindInitialRow();
    wxString TrackName(int & index, wxString dflt = _("Label Track"));
 
    void OnUpdate(wxCommandEvent &event);

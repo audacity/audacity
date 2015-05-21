@@ -129,6 +129,8 @@ ExportPCMOptions::ExportPCMOptions(wxWindow * WXUNUSED(parent), int selformat)
 :  wxDialog(NULL, wxID_ANY,
             wxString(_("Specify Uncompressed Options")))
 {
+   SetName(GetTitle());
+
    mOk = NULL;
 
    int format = 0;

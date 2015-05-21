@@ -2472,8 +2472,8 @@ void Effect::Preview(bool dryOnly)
 
    double t0save = mT0;
    double t1save = mT1;
-   mT0 = t0;
-   mT1 = t1;
+   mT0 = 0;
+   mT1 = t1 - t0;
 
    // Apply effect
 
@@ -2827,6 +2827,7 @@ int EffectUIHost::ShowModal()
    wxButton *apply = new wxButton(mApplyBtn->GetParent(), wxID_APPLY);
    sz->Replace(mCloseBtn, apply);
    sz->Replace(mApplyBtn, mCloseBtn);
+   sz->Layout();
    delete mApplyBtn;
    mApplyBtn = apply;
    mApplyBtn->SetDefault();
@@ -2869,7 +2870,8 @@ bool EffectUIHost::Initialize()
    hs->Add(w, 1, wxEXPAND);
    vs->Add(hs, 1, wxEXPAND);
 
-   wxPanel *bar = new wxPanel(this, wxID_ANY);
+   wxPanel *buttonPanel = new wxPanel(this, wxID_ANY);
+   wxPanel *bar = new wxPanel(buttonPanel, wxID_ANY);
 
    // This fools NVDA into not saying "Panel" when the dialog gets focus
    bar->SetName(wxT("\a"));
@@ -3003,8 +3005,8 @@ bool EffectUIHost::Initialize()
       buttons += eDebugButton;
    }
 
-   wxSizer *s = CreateStdButtonSizer(this, buttons, bar);
-   vs->Add(s, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL);
+   buttonPanel->SetSizer(CreateStdButtonSizer(buttonPanel, buttons, bar));
+   vs->Add(buttonPanel, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL);
 
    SetSizer(vs);
    Layout();
@@ -3057,10 +3059,6 @@ void EffectUIHost::OnErase(wxEraseEvent & WXUNUSED(evt))
 void EffectUIHost::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
-
-#if defined(__WXGTK__)
-   dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
-#endif
 
    dc.Clear();
 }
@@ -3186,6 +3184,24 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       menu->Append(0, _("User Presets"), sub);
    }
 
+   menu->Append(kSaveAsID, _("Save Preset..."));
+
+   if (mUserPresets.GetCount() == 0)
+   {
+      menu->Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
+   }
+   else
+   {
+      sub = new wxMenu();
+      for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
+      {
+         sub->Append(kDeletePresetID + i, mUserPresets[i]);
+      }
+      menu->Append(0, _("Delete Preset"), sub);
+   }
+
+   menu->AppendSeparator();
+
    wxArrayString factory = mEffect->GetFactoryPresets();
 
    sub = new wxMenu();
@@ -3206,22 +3222,6 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    }
    menu->Append(0, _("Factory Presets"), sub);
 
-   if (mUserPresets.GetCount() == 0)
-   {
-      menu->Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
-   }
-   else
-   {
-      sub = new wxMenu();
-      for (size_t i = 0, cnt = mUserPresets.GetCount(); i < cnt; i++)
-      {
-         sub->Append(kDeletePresetID + i, mUserPresets[i]);
-      }
-      menu->Append(0, _("Delete Preset"), sub);
-   }
-
-   menu->AppendSeparator();
-   menu->Append(kSaveAsID, _("Save As..."));
    menu->AppendSeparator();
    menu->Append(kImportID, _("Import..."))->Enable(mClient->CanExportPresets());
    menu->Append(kExportID, _("Export..."))->Enable(mClient->CanExportPresets());

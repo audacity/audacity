@@ -1110,6 +1110,8 @@ ExportMixerDialog::ExportMixerDialog( TrackList *tracks, bool selectedOnly,
       const wxPoint &position, const wxSize& size, long style ) :
    wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
 {
+   SetName(GetTitle());
+
    int numTracks = 0;
    TrackListIterator iter( tracks );
 

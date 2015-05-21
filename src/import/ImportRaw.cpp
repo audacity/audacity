@@ -311,6 +311,8 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
     mOffset(offset),
     mRate(rate)
 {
+   SetName(GetTitle());
+
    ShuttleGui S(this, eIsCreating);
    wxArrayString encodings;
    wxArrayString endians;

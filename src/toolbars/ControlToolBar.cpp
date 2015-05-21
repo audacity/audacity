@@ -570,8 +570,8 @@ int ControlToolBar::PlayPlayRegion(const SelectedRegion &selectedRegion,
       if (backwards)
          std::swap(t0, t1);
 
-      t0 = wxMax(t0, 0.0);
-      t1 = wxMin(t1, latestEnd);
+      t0 = std::max(0.0, std::min(t0, latestEnd));
+      t1 = std::max(0.0, std::min(t1, latestEnd));
 
       if (backwards)
          std::swap(t0, t1);

@@ -178,8 +178,6 @@ WX_DEFINE_OBJARRAY( EQCurveArray );
 
 BEGIN_EVENT_TABLE(EffectEqualization, wxEvtHandler)
    EVT_SIZE( EffectEqualization::OnSize )
-   EVT_PAINT( EffectEqualization::OnPaint )
-   EVT_ERASE_BACKGROUND( EffectEqualization::OnErase )
 
    EVT_SLIDER( ID_Length, EffectEqualization::OnSliderM )
    EVT_SLIDER( ID_dBMax, EffectEqualization::OnSliderDBMAX )
@@ -2320,19 +2318,6 @@ void EffectEqualization::OnSize(wxSizeEvent & event)
 void EffectEqualization::OnErase(wxEraseEvent & WXUNUSED(event))
 {
    // Ignore it
-}
-
-void EffectEqualization::OnPaint(wxPaintEvent & event)
-{
-   wxPaintDC dc(mUIParent);
-
-#if defined(__WXGTK__)
-   dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
-#endif
-
-   dc.Clear();
-
-   event.Skip();
 }
 
 void EffectEqualization::OnSlider(wxCommandEvent & event)

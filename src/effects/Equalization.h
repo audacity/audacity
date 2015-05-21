@@ -163,7 +163,6 @@ private:
 
    void OnSize( wxSizeEvent & event );
    void OnErase( wxEraseEvent & event );
-   void OnPaint( wxPaintEvent & event );
    void OnSlider( wxCommandEvent & event );
    void OnInterp( wxCommandEvent & event );
    void OnSliderM( wxCommandEvent & event );

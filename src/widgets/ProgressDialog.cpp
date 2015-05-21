@@ -1009,6 +1009,8 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    mLastValue(0),
    mDisable(NULL)
 {
+   SetName(GetTitle());
+
    wxBoxSizer *v;
    wxWindow *w;
    wxSize ds;

@@ -31,6 +31,8 @@ effects from this one class.
 #include <wx/wxprec.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
+#include <wx/dcbuffer.h>
+#include <wx/dcclient.h>
 #include <wx/dynlib.h>
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -369,6 +371,106 @@ enum
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+// LadspaEffectMeter
+//
+///////////////////////////////////////////////////////////////////////////////
+
+class LadspaEffectMeter : public wxWindow
+{
+public:
+   LadspaEffectMeter(wxWindow *parent, const float & val, float min, float max);
+   virtual ~LadspaEffectMeter();
+
+private:
+   void OnErase(wxEraseEvent & evt);
+   void OnPaint(wxPaintEvent & evt);
+   void OnIdle(wxIdleEvent & evt);
+   void OnSize(wxSizeEvent & evt);
+
+private:
+   const float & mVal;
+   float mMin;
+   float mMax;
+   float mLastValue;
+
+   DECLARE_EVENT_TABLE();
+};
+
+BEGIN_EVENT_TABLE(LadspaEffectMeter, wxWindow)
+   EVT_IDLE(LadspaEffectMeter::OnIdle)
+   EVT_ERASE_BACKGROUND(LadspaEffectMeter::OnErase)
+   EVT_PAINT(LadspaEffectMeter::OnPaint)
+   EVT_SIZE(LadspaEffectMeter::OnSize)
+END_EVENT_TABLE()
+
+LadspaEffectMeter::LadspaEffectMeter(wxWindow *parent, const float & val, float min, float max)
+:  wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxDEFAULT_CONTROL_BORDER),
+   mVal(val)
+{
+   mMin = min;
+   mMax = max;
+   mLastValue = -mVal;
+
+   SetBackgroundColour(*wxWHITE);
+}
+
+LadspaEffectMeter::~LadspaEffectMeter()
+{
+}
+
+void LadspaEffectMeter::OnIdle(wxIdleEvent & WXUNUSED(evt))
+{
+   if (mLastValue != mVal)
+   {
+      Refresh(false);
+   }
+}
+
+void LadspaEffectMeter::OnErase(wxEraseEvent & WXUNUSED(evt))
+{
+   // Just ignore it to prevent flashing
+}
+
+void LadspaEffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
+{
+   wxPaintDC dc(this);
+
+   // Cache some metrics
+   wxRect r = GetClientRect();
+   wxCoord x = r.GetLeft();
+   wxCoord y = r.GetTop();
+   wxCoord w = r.GetWidth();
+   wxCoord h = r.GetHeight();
+
+   // These use unscaled value, min, and max
+   float val = mVal;
+   if (val > mMax)
+   {
+      val = mMax;
+   }
+   if (val < mMin)
+   {
+      val = mMin;
+   }
+   val -= mMin;
+
+   // Setup for erasing the background
+   dc.SetPen(*wxTRANSPARENT_PEN);
+   dc.SetBrush(wxColour(100, 100, 220));
+
+   dc.Clear();
+   dc.DrawRectangle(x, y, (w * (val / fabs(mMax - mMin))), h);
+
+   mLastValue = mVal;
+}
+
+void LadspaEffectMeter::OnSize(wxSizeEvent & WXUNUSED(evt))
+{
+   Refresh(false);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
 // LadspaEffect
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -675,16 +777,18 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
       }
       else if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_OUTPUT(d))
       {
-         mInteractive = true;
-
-         mNumOutputControls++;
          mOutputControls[p] = 0.0;
- 
+
          // LADSPA effects have a convention of providing latency on an output
          // control port whose name is "latency".
          if (strcmp(mData->PortNames[p], "latency") == 0)
          {
             mLatencyPort = p;
+         }
+         else
+         {
+            mInteractive = true;
+            mNumOutputControls++;
          }
       }
    }
@@ -1009,6 +1113,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
    mSliders = new wxSlider *[mData->PortCount];
    mFields = new wxTextCtrl *[mData->PortCount];
    mLabels = new wxStaticText *[mData->PortCount];
+   mMeters = new LadspaEffectMeter *[mData->PortCount];
 
    memset(mFields, 0, mData->PortCount * sizeof(wxTextCtrl *));
 
@@ -1024,7 +1129,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
    w->SetName(wxT("\a"));
    w->SetLabel(wxT("\a"));
 
-   mainSizer->Add(w, 0, wxEXPAND);
+   mainSizer->Add(w, 1, wxEXPAND);
    mParent->SetSizer(mainSizer);
 
    wxSizer *marginSizer = new wxBoxSizer(wxVERTICAL);
@@ -1232,7 +1337,7 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
       wxSizer *paramSizer = new wxStaticBoxSizer(wxVERTICAL, w, _("Effect Output"));
 
       wxFlexGridSizer *gridSizer = new wxFlexGridSizer(2, 0, 0);
-      gridSizer->AddGrowableCol(3);
+      gridSizer->AddGrowableCol(1);
 
       wxControl *item;
 
@@ -1248,15 +1353,42 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          item = new wxStaticText(w, 0, labelText + wxT(":"));
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
-         wxString fieldText;
+         LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
+         
+         wxString bound;
+         float lower = -FLT_MAX;
+         float upper = FLT_MAX;
+         bool haslo = false;
+         bool hashi = false;
+         bool forceint = false;
 
-         mFields[p] = new wxTextCtrl(w, wxID_ANY,
-                                     fieldText,
-                                     wxDefaultPosition,
-                                     wxDefaultSize,
-                                     wxTE_READONLY);
-         mFields[p]->SetName(labelText);
-         gridSizer->Add(mFields[p], 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+         if (LADSPA_IS_HINT_BOUNDED_BELOW(hint.HintDescriptor))
+         {
+            lower = hint.LowerBound;
+            haslo = true;
+         }
+
+         if (LADSPA_IS_HINT_BOUNDED_ABOVE(hint.HintDescriptor))
+         {
+            upper = hint.UpperBound;
+            hashi = true;
+         }
+
+         if (LADSPA_IS_HINT_SAMPLE_RATE(hint.HintDescriptor))
+         {
+            lower *= mSampleRate;
+            upper *= mSampleRate;
+            forceint = true;
+         }
+
+         // Limit to the UI precision
+         lower = ceilf(lower * 1000000.0) / 1000000.0;
+         upper = floorf(upper * 1000000.0) / 1000000.0;
+         mInputControls[p] = roundf(mInputControls[p] * 1000000.0) / 1000000.0;
+
+         mMeters[p] = new LadspaEffectMeter(w, mOutputControls[p], lower, upper);
+         mMeters[p]->SetName(labelText);
+         gridSizer->Add(mMeters[p], 1, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5);
       }
 
       paramSizer->Add(gridSizer, 0, wxEXPAND | wxALL, 5);
@@ -1265,8 +1397,15 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
       RefreshControls(true);
    }
 
-   w->SetSizerAndFit(marginSizer);
+   w->SetSizer(marginSizer);
+   w->Layout();
 
+   // Try to give the window a sensible default/minimum size
+   wxSize sz1 = marginSizer->GetMinSize();
+   wxSize sz2 = mParent->GetMinSize();
+   w->SetSizeHints(wxSize(wxMin(sz1.x, sz2.x), wxMin(sz1.y, sz2.y)));
+
+   // And let the parent reduce to the new minimum if possible
    mParent->SetSizeHints(-1, -1);
 
    return true;
@@ -1582,17 +1721,6 @@ void LadspaEffect::RefreshControls(bool outputOnly)
 
       if (LADSPA_IS_PORT_OUTPUT(d)) 
       {
-         if (LADSPA_IS_HINT_INTEGER(hint.HintDescriptor) || forceint)
-         {
-            fieldText.Printf(wxT("%d"), (int)(mOutputControls[p] + 0.5));
-         }
-         else
-         {
-            fieldText = Internat::ToDisplayString(mOutputControls[p]);
-         }
-
-         mFields[p]->SetValue(fieldText);
-
          continue;
       }
 

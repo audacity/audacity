@@ -80,6 +80,8 @@ ErrorDialog::ErrorDialog(
    const bool Close, const bool modal):
    wxDialog(parent, (wxWindowID)-1, dlogTitle)
 {
+   SetName(GetTitle());
+
    long buttonMask;
 
    // only add the help button if we have a URL

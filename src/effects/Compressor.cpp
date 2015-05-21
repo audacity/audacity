@@ -676,9 +676,6 @@ EffectCompressorPanel::EffectCompressorPanel(wxWindow *parent,
    noiseFloor(noiseFloor),
    ratio(ratio)
 {
-   mBitmap = NULL;
-   mWidth = 0;
-   mHeight = 0;
 }
 
 void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
@@ -688,15 +685,6 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    int width, height;
    GetSize(&width, &height);
 
-   if (!mBitmap || mWidth!=width || mHeight!=height) {
-      if (mBitmap)
-         delete mBitmap;
-
-      mWidth = width;
-      mHeight = height;
-      mBitmap = new wxBitmap(mWidth, mHeight);
-   }
-
    double rangeDB = 60;
 
    // Ruler
@@ -704,7 +692,7 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    int h = 0;
 
    Ruler vRuler;
-   vRuler.SetBounds(0, 0, mWidth, mHeight);
+   vRuler.SetBounds(0, 0, width, height);
    vRuler.SetOrientation(wxVERTICAL);
    vRuler.SetRange(0, -rangeDB);
    vRuler.SetFormat(Ruler::LinearDBFormat);
@@ -712,7 +700,7 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    vRuler.GetMaxSize(&w, NULL);
 
    Ruler hRuler;
-   hRuler.SetBounds(0, 0, mWidth, mHeight);
+   hRuler.SetBounds(0, 0, width, height);
    hRuler.SetOrientation(wxHORIZONTAL);
    hRuler.SetRange(-rangeDB, 0);
    hRuler.SetFormat(Ruler::LinearDBFormat);
@@ -720,84 +708,65 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    hRuler.SetFlip(true);
    hRuler.GetMaxSize(NULL, &h);
 
-   vRuler.SetBounds(0, 0, w, mHeight - h);
-   hRuler.SetBounds(w, mHeight - h, mWidth, mHeight);
+   vRuler.SetBounds(0, 0, w, height - h);
+   hRuler.SetBounds(w, height - h, width, height);
 
-   wxColour bkgnd = GetBackgroundColour();
-   wxBrush bkgndBrush(bkgnd, wxSOLID);
-
-   wxMemoryDC memDC;
-   memDC.SelectObject(*mBitmap);
-
-   wxRect bkgndRect;
-   bkgndRect.x = 0;
-   bkgndRect.y = 0;
-   bkgndRect.width = w;
-   bkgndRect.height = mHeight;
-   memDC.SetBrush(bkgndBrush);
-   memDC.SetPen(*wxTRANSPARENT_PEN);
-   memDC.DrawRectangle(bkgndRect);
-
-   bkgndRect.y = mHeight - h;
-   bkgndRect.width = mWidth;
-   bkgndRect.height = h;
-   memDC.DrawRectangle(bkgndRect);
+#if defined(__WXMSW__)
+   dc.Clear();
+#endif
 
    wxRect border;
    border.x = w;
    border.y = 0;
-   border.width = mWidth - w;
-   border.height = mHeight - h + 1;
+   border.width = width - w;
+   border.height = height - h + 1;
 
-   memDC.SetBrush(*wxWHITE_BRUSH);
-   memDC.SetPen(*wxBLACK_PEN);
-   memDC.DrawRectangle(border);
+   dc.SetBrush(*wxWHITE_BRUSH);
+   dc.SetPen(*wxBLACK_PEN);
+   dc.DrawRectangle(border);
 
-   mEnvRect = border;
-   mEnvRect.Deflate( 2, 2 );
+   wxRect envRect = border;
+   envRect.Deflate( 2, 2 );
 
-   int kneeX = lrint((rangeDB+threshold)*mEnvRect.width/rangeDB);
-   int kneeY = lrint((rangeDB+threshold/ratio)*mEnvRect.height/rangeDB);
+   int kneeX = lrint((rangeDB+threshold)*envRect.width/rangeDB);
+   int kneeY = lrint((rangeDB+threshold/ratio)*envRect.height/rangeDB);
 
-   int finalY = mEnvRect.height;
-   int startY = lrint((threshold*(1.0/ratio-1.0))*mEnvRect.height/rangeDB);
+   int finalY = envRect.height;
+   int startY = lrint((threshold*(1.0/ratio-1.0))*envRect.height/rangeDB);
 
    // Yellow line for threshold
-/*   memDC.SetPen(wxPen(wxColour(220, 220, 0), 1, wxSOLID));
-   AColor::Line(memDC,
-                mEnvRect.x,
-                mEnvRect.y + mEnvRect.height - kneeY,
-                mEnvRect.x + mEnvRect.width - 1,
-                mEnvRect.y + mEnvRect.height - kneeY);*/
+/*   dc.SetPen(wxPen(wxColour(220, 220, 0), 1, wxSOLID));
+   AColor::Line(dc,
+                envRect.x,
+                envRect.y + envRect.height - kneeY,
+                envRect.x + envRect.width - 1,
+                envRect.y + envRect.height - kneeY);*/
 
    // Was: Nice dark red line for the compression diagram
-//   memDC.SetPen(wxPen(wxColour(180, 40, 40), 3, wxSOLID));
+//   dc.SetPen(wxPen(wxColour(180, 40, 40), 3, wxSOLID));
 
    // Nice blue line for compressor, same color as used in the waveform envelope.
-   memDC.SetPen( AColor::WideEnvelopePen) ;
+   dc.SetPen( AColor::WideEnvelopePen) ;
 
-   AColor::Line(memDC,
-                mEnvRect.x,
-                mEnvRect.y + mEnvRect.height - startY,
-                mEnvRect.x + kneeX - 1,
-                mEnvRect.y + mEnvRect.height - kneeY);
+   AColor::Line(dc,
+                envRect.x,
+                envRect.y + envRect.height - startY,
+                envRect.x + kneeX - 1,
+                envRect.y + envRect.height - kneeY);
 
-   AColor::Line(memDC,
-                mEnvRect.x + kneeX,
-                mEnvRect.y + mEnvRect.height - kneeY,
-                mEnvRect.x + mEnvRect.width - 1,
-                mEnvRect.y + mEnvRect.height - finalY);
+   AColor::Line(dc,
+                envRect.x + kneeX,
+                envRect.y + envRect.height - kneeY,
+                envRect.x + envRect.width - 1,
+                envRect.y + envRect.height - finalY);
 
    // Paint border again
-   memDC.SetBrush(*wxTRANSPARENT_BRUSH);
-   memDC.SetPen(*wxBLACK_PEN);
-   memDC.DrawRectangle(border);
+   dc.SetBrush(*wxTRANSPARENT_BRUSH);
+   dc.SetPen(*wxBLACK_PEN);
+   dc.DrawRectangle(border);
 
-   vRuler.Draw(memDC);
-   hRuler.Draw(memDC);
-
-   dc.Blit(0, 0, mWidth, mHeight,
-           &memDC, 0, 0, wxCOPY, FALSE);
+   vRuler.Draw(dc);
+   hRuler.Draw(dc);
 }
 
 void EffectCompressorPanel::OnSize(wxSizeEvent & WXUNUSED(evt))

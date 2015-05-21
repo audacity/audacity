@@ -97,17 +97,20 @@ LV2EffectMeter::LV2EffectMeter(wxWindow *parent, const LV2Port & ctrl)
    mCtrl(ctrl)
 {
    mLastValue = -mCtrl.mVal;
+
+   SetBackgroundColour(*wxWHITE);
 }
 
 LV2EffectMeter::~LV2EffectMeter()
 {
 }
 
+
 void LV2EffectMeter::OnIdle(wxIdleEvent & WXUNUSED(evt))
 {
    if (mLastValue != mCtrl.mVal)
    {
-      Refresh();
+      Refresh(false);
    }
 }
 
@@ -137,12 +140,14 @@ void LV2EffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
    {
       val = mCtrl.mMin;
    }
+   val -= mCtrl.mMin;
 
    // Setup for erasing the background
    dc->SetPen(*wxTRANSPARENT_PEN);
    dc->SetBrush(wxColour(100, 100, 220));
 
-   dc->DrawRectangle(x, y, (w * (val / (mCtrl.mMax - mCtrl.mMin))), h);
+   dc->Clear();
+   dc->DrawRectangle(x, y, (w * (val / fabs(mCtrl.mMax - mCtrl.mMin))), h);
 
    mLastValue = mCtrl.mVal;
 
@@ -1827,6 +1832,14 @@ bool LV2Effect::BuildPlain()
    
    w->SetSizer(innerSizer);
    mParent->SetSizer(outerSizer);
+
+   // Try to give the window a sensible default/minimum size
+   wxSize sz1 = innerSizer->GetMinSize();
+   wxSize sz2 = mParent->GetMinSize();
+   w->SetSizeHints(wxSize(-1, wxMin(sz1.y, sz2.y)));
+
+   // And let the parent reduce to the new minimum if possible
+   mParent->SetSizeHints(w->GetMinSize());
 
    TransferDataToWindow();
 

@@ -57,6 +57,7 @@ AutoRecoveryDialog::AutoRecoveryDialog(wxWindow *parent) :
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)) // no close box
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }

@@ -68,11 +68,12 @@ private:
    void CheckClip();
 
 private:
-   float mPeak;
+   double mPeak;
 
-   float mRatio;
-   float mAmp;
-   float mNewPeak;
+   double mRatio;
+   double mRatioClip;   // maximum value of mRatio which does not cause clipping
+   double mAmp;
+   double mNewPeak;
    bool mCanClip;
 
    wxSlider *mAmpS;

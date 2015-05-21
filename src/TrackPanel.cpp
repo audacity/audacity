@@ -604,7 +604,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    mScrubToken = -1;
    mScrubStartClockTimeMillis = -1;
-   mScrubStartPosition = 0;
+   mScrubStartPosition = -1;
    mMaxScrubSpeed = 1.0;
    mScrubSpeedDisplayCountdown = 0;
 #endif
@@ -2128,30 +2128,10 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
    wxRect r;
    Track *t = FindTrack(event.m_x, event.m_y, false, false, &r);
 
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   if (
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-       event.MiddleDClick() ||
-#endif
-       event.MiddleDown()) {
-      if (IsScrubbing())
-         StopScrubbing();
-      // Don't actually start scrubbing, but collect some information
-      // needed for the decision to start scrubbing later when handling
-      // drag events.
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      mSmoothScrollingScrub = event.MiddleDClick();
-#endif
-      mScrubStartPosition = event.m_x;
-      mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
-      mMouseCapture = IsSelecting;
-      return;
-   }
-#endif
-
    // AS: Ok, did the user just click the mouse, release the mouse,
    //  or drag?
-   if (event.LeftDown()) {
+   if (event.LeftDown() ||
+	   (event.LeftDClick() && event.CmdDown())) {
       // AS: Now, did they click in a track somewhere?  If so, we want
       //  to extend the current selection or start a new selection,
       //  depending on the shift key.  If not, cancel all selections.
@@ -2179,7 +2159,11 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
       mFreqSelMode = FREQ_SEL_INVALID;
 #endif
 
-   } else if (event.LeftDClick() && !event.ShiftDown()) {
+   } else if (event.LeftDClick() && !event.ShiftDown()
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      && !event.CmdDown()
+#endif
+      ) {
       if (!mCapturedTrack) {
          wxRect r;
          mCapturedTrack =
@@ -2241,6 +2225,8 @@ void TrackPanel::HandleSelect(wxMouseEvent & event)
 }
 
 
+// Made obsolete by scrubbing:
+#ifndef EXPERIMENTAL_SCRUBBING_BASIC
 void TrackPanel::StartOrJumpPlayback(wxMouseEvent &event)
 {
    AudacityProject *p = GetActiveProject();
@@ -2276,22 +2262,8 @@ void TrackPanel::StartOrJumpPlayback(wxMouseEvent &event)
       }
    }
 }
+#endif
 
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-bool TrackPanel::IsScrubbing()
-{
-   if (mScrubToken <= 0)
-      return false;
-   else if (mScrubToken == GetProject()->GetAudioIOToken())
-      return true;
-   else {
-      // Some other command might have stopped scrub play before we
-      // reached StopScrubbing()!  But that is okay.
-      mScrubToken = -1;
-      return false;
-   }
-}
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
 double TrackPanel::FindScrubSpeed(double timeAtMouse) const
@@ -2335,12 +2307,48 @@ double TrackPanel::FindScrubSpeed(double timeAtMouse) const
 }
 #endif
 
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+bool TrackPanel::IsScrubbing()
+{
+   if (mScrubToken <= 0)
+      return false;
+   else if (mScrubToken == GetProject()->GetAudioIOToken())
+      return true;
+   else {
+      // Some other command might have stopped scrub play before we
+      // reached StopScrubbing()!  But that is okay.
+      mScrubToken = -1;
+      mScrubStartPosition = -1;
+      return false;
+   }
+}
+
+void TrackPanel::ToggleScrubbing(
+   wxCoord xx
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+   , bool smoothScrolling
+#endif
+)
+{
+   if (IsScrubbing())
+      StopScrubbing();
+   else {
+      // Don't actually start scrubbing, but collect some information
+      // needed for the decision to start scrubbing later when handling
+      // drag events.
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      mSmoothScrollingScrub = smoothScrolling;
+#endif
+      mScrubStartPosition = xx;
+      mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
+   }
+}
+
 bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
 {
    if (IsScrubbing())
       return false;
-   else
-   {
+   else if (mScrubStartPosition >= 0) {
       const bool busy = gAudioIO->IsBusy();
       if (busy && gAudioIO->GetNumCaptureChannels() > 0)
          // Do not stop recording
@@ -2354,8 +2362,7 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
          double maxTime = p->GetTracks()->GetEndTime();
          double time0 = std::min(maxTime, PositionToTime(mScrubStartPosition, GetLeftOffset()));
          double time1 = std::min(maxTime, PositionToTime(position, GetLeftOffset()));
-         if (time1 != time0)
-         {
+         if (time1 != time0) {
             if (busy)
                ctb->StopPlaying();
 
@@ -2383,19 +2390,27 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
          }
       }
       else
+         // Wait to test again
          mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
+
       if (IsScrubbing()) {
-         mMouseCapture = IsMiddleButtonScrubbing;
-         CaptureMouse();
+         //mMouseCapture = IsMiddleButtonScrubbing;
+         //CaptureMouse();
       }
       return IsScrubbing();
    }
+   else
+      return false;
 }
 
 bool TrackPanel::ContinueScrubbing(wxCoord position, bool maySkip)
 {
    wxCoord leadPosition = position;
-   double newEnd = PositionToTime(leadPosition, GetLeftOffset());
+   double newEnd =
+	   std::max(0.0,
+	      std::min(PositionToTime(leadPosition, GetLeftOffset()),
+		     mTracks->GetEndTime()
+   ));
 
    if (maySkip)
       // Cause OnTimer() to suppress the speed display
@@ -2424,6 +2439,7 @@ bool TrackPanel::StopScrubbing()
          }
       }
       mScrubToken = -1;
+      mScrubStartPosition = -1;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       mSmoothScrollingScrub = false;
@@ -2554,22 +2570,37 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       return;
    }
 
-/* Redundant now that we have a more comprehensive Quick-Play in the Timeline
-   // A control-click will set just the indicator to the clicked spot,
-   // and turn playback on.
    else if(event.CmdDown()
 #ifdef USE_MIDI
            && !stretch
 #endif
           ) {
 
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+      if (
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+         event.LeftDClick() ||
+#endif
+         event.LeftDown()) {
+         ToggleScrubbing(
+            event.m_x
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+            , event.LeftDClick()
+#endif
+            );
+         return;
+      }
+
+#else
+
       StartOrJumpPlayback(event);
+
+#endif
 
       // Not starting a drag
       SetCapturedTrack(NULL, IsUncaptured);
       return;
    }
-*/
 
    //Make sure you are within the selected track
    bool startNewSelection = true;
@@ -3308,6 +3339,19 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
 ///  handle it here.
 void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
 {
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   if (IsScrubbing()) {
+      // May need a screen update.
+      if (mAutoScrolling)
+         UpdateSelectionDisplay();
+   }
+   else if (mScrubStartPosition >= 0) {
+      MaybeStartScrubbing(event);
+      // Do nothing more, don't change selection
+      return;
+   }
+#endif
+
    // AS: If we're not in the process of selecting (set in
    //  the SelectionHandleClick above), fuhggeddaboudit.
    if (mMouseCapture!=IsSelecting)
@@ -3316,20 +3360,6 @@ void TrackPanel::SelectionHandleDrag(wxMouseEvent & event, Track *clickedTrack)
    // Also fuhggeddaboudit if we're not dragging and not autoscrolling.
    if (!event.Dragging() && !mAutoScrolling)
       return;
-
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   if (IsScrubbing()) {
-      // May need a screen update, but do nothing else.  Don't change selection.
-      if (mAutoScrolling)
-         UpdateSelectionDisplay();
-      return;
-   }
-   else if (event.MiddleIsDown()) {
-      MaybeStartScrubbing(event);
-      // Do nothing more, don't change selection
-      return;
-   }
-#endif
 
    if (event.CmdDown()) {
       // Ctrl-drag has no meaning, fuhggeddaboudit
@@ -6520,18 +6550,6 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
    case IsAdjustingLabel:
       HandleLabelTrackMouseEvent((LabelTrack *)mCapturedTrack, mCapturedRect, event);
       break;
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   case IsMiddleButtonScrubbing:
-      if (event.MiddleUp()) {
-         if (IsScrubbing()) {
-            StopScrubbing();
-            if (HasCapture())
-               ReleaseMouse();
-            mMouseCapture = IsUncaptured;
-         }
-      }
-      break;
-#endif
    default: //includes case of IsUncaptured
       HandleTrackSpecificMouseEvent(event);
       break;
@@ -7335,10 +7353,13 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
       }
    }
 
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
    if (IsScrubbing())
       DrawScrubSpeed(*dc);
+#endif
 }
 
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
 void TrackPanel::DrawScrubSpeed(wxDC &dc)
 {
    // Don't draw it during stutter play with shift down
@@ -7390,17 +7411,22 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
          yy += height + 2 * offset;
       yy = std::max(0, std::min(panelHeight - height, yy));
 
-      // To do, theming?
-      static const wxColour red(255, 0, 0), green(0, 255, 0);
+      // These two colors were previously saturated red and green.  However 
+      // we have a rule to try to only use red for reserved purposes of
+      //  (a) Recording
+      //  (b) Error alerts
+      // So they were changed to 'orange' and 'lime'.
+      static const wxColour clrNoScroll(215, 162, 0), clrScroll(0, 204, 153);
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (mSmoothScrollingScrub)
-         dc.SetTextForeground(green);
+         dc.SetTextForeground(clrScroll);
       else
 #endif
-         dc.SetTextForeground(red);
+         dc.SetTextForeground(clrNoScroll);
       dc.DrawText(text, xx, yy);
    }
 }
+#endif
 
 /// Draw zooming indicator that shows the region that will
 /// be zoomed into when the user clicks and drags with a
@@ -9097,6 +9123,7 @@ void TrackPanel::OnRateOther(wxCommandEvent &event)
    while (true)
    {
       wxDialog dlg(this, wxID_ANY, wxString(_("Set Rate")));
+      dlg.SetName(dlg.GetTitle());
       ShuttleGui S(&dlg, eIsCreating);
       wxString rate;
       wxArrayString rates;
@@ -9425,6 +9452,7 @@ void TrackPanel::OnSetFont(wxCommandEvent & WXUNUSED(event))
 
    /* i18n-hint: (noun) This is the font for the label track.*/
    wxDialog dlg(this, wxID_ANY, wxString(_("Label Track Font")));
+   dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    wxListBox *lb;
    wxSpinCtrl *sc;

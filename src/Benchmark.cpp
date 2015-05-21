@@ -129,6 +129,8 @@ BenchmarkDialog::BenchmarkDialog(wxWindow *parent):
                 wxDEFAULT_DIALOG_STYLE |
                 wxRESIZE_BORDER)
 {
+   SetName(GetTitle());
+
    mBlockSizeStr = wxT("64");
    mNumEditsStr = wxT("100");
    mDataSizeStr = wxT("32");

@@ -66,6 +66,8 @@ MultiDialog::MultiDialog(wxWindow * pParent,
                wxDefaultPosition, wxDefaultSize,
                wxCAPTION) // not wxDEFAULT_DIALOG_STYLE because we don't want wxCLOSE_BOX and wxSYSTEM_MENU
 {
+   SetName(GetTitle());
+
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *vSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *iconAndTextSizer = new wxBoxSizer( wxHORIZONTAL );

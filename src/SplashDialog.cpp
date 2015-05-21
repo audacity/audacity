@@ -63,6 +63,7 @@ SplashDialog::SplashDialog(wxWindow * parent)
       wxPoint( -1, 60 ), // default x position, y position 60 pixels from top of screen.
       wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
+   SetName(GetTitle());
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    m_pIcon = NULL;
    m_pLogo = NULL; //v

@@ -1966,6 +1966,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    // This determines where it pops up.
 
    wxDialog dlg(GetActiveProject(), wxID_ANY, title);
+   dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();
    {
