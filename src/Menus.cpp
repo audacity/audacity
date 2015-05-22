@@ -1014,7 +1014,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeProcess,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       TracksExistFlag | IsRealtimeNotActiveFlag);
+                       IsRealtimeNotActiveFlag);
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
    c->AddSeparator();
    // We could say Manage Effects on the menu, but More... is more intuitive.
@@ -1039,7 +1039,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeAnalyze,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       TracksExistFlag | IsRealtimeNotActiveFlag);
+                       IsRealtimeNotActiveFlag);
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
    c->AddSeparator();
    c->AddItem(wxT("ManageAnalyzers"), _("More..."), FN(OnManageAnalyzers));
