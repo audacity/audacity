@@ -3226,10 +3226,6 @@ bool AudacityProject::OnEffect(const PluginID & ID, int flags)
          mTracks->Add(newTrack);
          newTrack->SetSelected(true);
       }
-      else {
-         wxMessageBox(_("You must select a track first."));
-         return false;
-      }
    }
 
    EffectManager & em = EffectManager::Get();
@@ -3304,32 +3300,42 @@ void AudacityProject::OnRepeatLastEffect(int WXUNUSED(index))
 
 
 
-void AudacityProject::OnManagePluginsMenu(EffectType Type)
+void AudacityProject::OnManagePluginsMenu(EffectType type)
 {
-   //gPrefs->Write( wxT("/Plugins/Rescan"), true);
-   //gPrefs->Read(wxT("/Plugins/CheckForUpdates"), &doCheck, true);
-   PluginManager::Get().CheckForUpdates(Type);
+   if (PluginManager::Get().ShowManager(this, type))
+   {
+      for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+         AudacityProject *p = gAudacityProjects[i];
 
-   for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
-      AudacityProject *p = gAudacityProjects[i];
-
-      p->RebuildMenuBar();
+         p->RebuildMenuBar();
 #if defined(__WXGTK__)
-      // Workaround for:
-      //
-      //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
-      //
-      // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
-      wxRect r = p->GetRect();
-      p->SetSize(wxSize(1,1));
-      p->SetSize(r.GetSize());
+         // Workaround for:
+         //
+         //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
+         //
+         // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
+         wxRect r = p->GetRect();
+         p->SetSize(wxSize(1,1));
+         p->SetSize(r.GetSize());
 #endif
+      }
    }
 }
 
-void AudacityProject::OnManageGenerators(){   OnManagePluginsMenu(EffectTypeGenerate); }
-void AudacityProject::OnManageEffects(){      OnManagePluginsMenu(EffectTypeProcess); }
-void AudacityProject::OnManageAnalyzers(){    OnManagePluginsMenu(EffectTypeAnalyze); }
+void AudacityProject::OnManageGenerators()
+{
+   OnManagePluginsMenu(EffectTypeGenerate);
+}
+
+void AudacityProject::OnManageEffects()
+{
+   OnManagePluginsMenu(EffectTypeProcess);
+}
+
+void AudacityProject::OnManageAnalyzers()
+{
+   OnManagePluginsMenu(EffectTypeAnalyze);
+}
 
 
 

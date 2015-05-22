@@ -56,8 +56,6 @@ public:
    virtual wxString GetFamily();
    virtual bool IsInteractive();
    virtual bool IsDefault();
-   // May 21015: There aren't many analyse effects, so let us show them all (for now).
-   virtual bool EnableFromGetGo(){ return true;};
 
    // EffectClientInterface implementation
 
