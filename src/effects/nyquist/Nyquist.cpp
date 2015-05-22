@@ -521,6 +521,11 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'MIDITRACKS)\n"), numMidi);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TIMETRACKS)\n"), numTime);
 
+      double previewLen = 6.0;
+      gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
+                                 Internat::ToString(previewLen).c_str());
+
       SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
       int numChannels = 0;
       for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
