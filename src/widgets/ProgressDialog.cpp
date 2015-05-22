@@ -1118,27 +1118,31 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    {
       w = new wxButton(this, wxID_OK, _("Stop"));
       h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT, 10);
-      ds.x += w->GetSize().x + 10;
    }
 
    if (!(flags & pdlgHideCancelButton))
    {
       w = new wxButton(this, wxID_CANCEL, _("Cancel"));
       h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT, 10);
-      ds.x += w->GetSize().x + 10;
    }
 
    v->Add(h, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);
 
+   SetSizer(v);
+   Layout();
+
    ds.x = wxMax(g->GetSize().x, h->GetSize().x) + 10;
    ds.y += w->GetSize().y + 10;
 
-   SetSizerAndFit(v);
-
    wxClientDC dc(this);
-   dc.SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
    dc.GetMultiLineTextExtent(message, &mLastW, &mLastH);
-   ds.x = wxMax(wxMax(ds.x, mLastW + 20), 300);
+
+#if defined(__WXMAC__)
+   mMessage->SetMinSize(wxSize(mLastW, mLastH));
+#endif
+
+   // The 300 really isn't needed, but it keeps it at a decent width.
+   ds.x = wxMax(wxMax(wxMax(ds.x, mLastW) + 20, wxMax(ds.y, mLastH)), 300);
    SetClientSize(ds);
 
    Centre(wxCENTER_FRAME | wxBOTH);
@@ -1510,34 +1514,40 @@ ProgressDialog::SetMessage(const wxString & message)
    {
       mMessage->SetLabel(message);
 
+      int w, h;
       wxClientDC dc(mMessage);
-      dc.SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
-      wxCoord w = 0, h = 0;
       dc.GetMultiLineTextExtent(message, &w, &h);
 
       bool sizeUpdated = false;
-      wxSize sizeNeeded = GetClientSize();
+      wxSize ds = GetClientSize();
 
       if (w > mLastW)
       {
-         sizeNeeded.x += (mLastW - w);
+         ds.x += (w - mLastW);
          sizeUpdated = true;
          mLastW = w;
       }
 
       if (h > mLastH)
       {
-         sizeNeeded.y += (mLastH - h);
+         ds.y += (h - mLastH);
          sizeUpdated = true;
          mLastH = h;
       }
 
       if (sizeUpdated)
       {
-         SetClientSize(sizeNeeded);
+#if defined(__WXMAC__)
+         wxSize sz = mMessage->GetSize();
+         mMessage->SetMinSize(wxSize(wxMax(sz.x, mLastW), wxMax(sz.y, mLastH)));
+#endif
+         // No need to adjust for the margin here since we only add
+         // to the existing dimensions.
+         ds.x = wxMax(wxMax(ds.x, mLastW), wxMax(ds.y, mLastH));
+         SetClientSize(ds);
+         wxDialog::Update();
       }
 
-      wxDialog::Update();
    }
 }
 
