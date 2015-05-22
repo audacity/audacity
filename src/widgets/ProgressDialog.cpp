@@ -1049,7 +1049,7 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
                                wxDefaultSize,
                                wxALIGN_LEFT);
    mMessage->SetName(message); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-   v->Add(mMessage, 0, wxEXPAND | wxALL, 10);
+   v->Add(mMessage, 1, wxEXPAND | wxALL, 10);
    ds.y += mMessage->GetSize().y + 20;
 
    //
@@ -1117,28 +1117,28 @@ ProgressDialog::ProgressDialog(const wxString & title, const wxString & message,
    if (!(flags & pdlgHideStopButton))
    {
       w = new wxButton(this, wxID_OK, _("Stop"));
-      h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);
+      h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT, 10);
       ds.x += w->GetSize().x + 10;
    }
 
    if (!(flags & pdlgHideCancelButton))
    {
       w = new wxButton(this, wxID_CANCEL, _("Cancel"));
-      h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);
+      h->Add(w, 0, wxALIGN_RIGHT | wxRIGHT, 10);
       ds.x += w->GetSize().x + 10;
    }
 
    v->Add(h, 0, wxALIGN_RIGHT | wxRIGHT | wxBOTTOM, 10);
 
+   ds.x = wxMax(g->GetSize().x, h->GetSize().x) + 10;
    ds.y += w->GetSize().y + 10;
 
    SetSizerAndFit(v);
 
    wxClientDC dc(this);
    dc.SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
-   wxCoord widthText = 0;
-   dc.GetTextExtent(message, &widthText, NULL, NULL, NULL, NULL);
-   ds.x = (wxCoord) wxMax(wxMax(3 * widthText / 2, 4 * ds.y / 3), 300);
+   dc.GetMultiLineTextExtent(message, &mLastW, &mLastH);
+   ds.x = wxMax(wxMax(ds.x, mLastW + 20), 300);
    SetClientSize(ds);
 
    Centre(wxCENTER_FRAME | wxBOTH);
@@ -1508,14 +1508,35 @@ ProgressDialog::SetMessage(const wxString & message)
 {
    if (!message.IsEmpty())
    {
-      wxSize sizeBefore = this->GetClientSize();
       mMessage->SetLabel(message);
-      mMessage->Update();
-      wxSize sizeAfter = this->GetBestSize();
-      wxSize sizeNeeded;
-      sizeNeeded.x = wxMax(sizeBefore.x, sizeAfter.x);
-      sizeNeeded.y = wxMax(sizeBefore.y, sizeAfter.y);
-      this->SetClientSize(sizeNeeded);
+
+      wxClientDC dc(mMessage);
+      dc.SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+      wxCoord w = 0, h = 0;
+      dc.GetMultiLineTextExtent(message, &w, &h);
+
+      bool sizeUpdated = false;
+      wxSize sizeNeeded = GetClientSize();
+
+      if (w > mLastW)
+      {
+         sizeNeeded.x += (mLastW - w);
+         sizeUpdated = true;
+         mLastW = w;
+      }
+
+      if (h > mLastH)
+      {
+         sizeNeeded.y += (mLastH - h);
+         sizeUpdated = true;
+         mLastH = h;
+      }
+
+      if (sizeUpdated)
+      {
+         SetClientSize(sizeNeeded);
+      }
+
       wxDialog::Update();
    }
 }

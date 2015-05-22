@@ -89,6 +89,9 @@ class AUDACITY_DLL_API ProgressDialog:public wxDialog
    wxStaticText *mMessage;
    wxWindowDisabler *mDisable;
 
+   int mLastW;
+   int mLastH;
+
    DECLARE_EVENT_TABLE();
 };
 
