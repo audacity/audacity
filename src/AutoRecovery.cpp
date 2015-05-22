@@ -692,7 +692,7 @@ bool AutoSaveFile::Decode(const wxString & fileName)
    file.Close();
 
    // Decode to a temporary file to preserve the orignal.
-   wxString tempName = fn.CreateTempFileName(fn.GetPath(true));
+   wxString tempName = fn.CreateTempFileName(fn.GetPath());
 
    XMLFileWriter out;
 
