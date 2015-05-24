@@ -20,9 +20,6 @@ class Envelope;
 class NumericTextCtrl;
 class WaveTrack;
 
-void InitContrastDialog(wxWindow * parent);
-void CloseContrastDialog();
-
 //----------------------------------------------------------------------------
 // ContrastDialog
 //----------------------------------------------------------------------------

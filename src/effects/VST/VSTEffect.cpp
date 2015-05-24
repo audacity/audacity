@@ -486,7 +486,11 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
       VSTSubProcess *proc = new VSTSubProcess();
       try
       {
-         wxExecute(cmd, wxEXEC_SYNC | wxEXEC_NODISABLE, proc);
+         int flags = wxEXEC_SYNC | wxEXEC_NODISABLE;
+#if defined(__WXMSW__)
+         flags += wxEXEC_NOHIDE;
+#endif
+         wxExecute(cmd, flags, proc);
       }
       catch (...)
       {

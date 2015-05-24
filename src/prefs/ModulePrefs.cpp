@@ -62,13 +62,17 @@ void ModulePrefs::GetAllModuleStatuses(){
    while ( bCont ) {
       int iStatus;
       gPrefs->Read( str, &iStatus, kModuleDisabled );
-      if( iStatus > kModuleNew ){
-         iStatus = kModuleNew;
-         gPrefs->Write( str, iStatus );
+      wxString fname;
+      gPrefs->Read( wxString( wxT("/Module/path:") ) + str, &fname, wxEmptyString );
+      if( fname != wxEmptyString && wxFileExists( fname ) ){
+         if( iStatus > kModuleNew ){
+            iStatus = kModuleNew;
+            gPrefs->Write( str, iStatus );
+         }
+         //wxLogDebug( wxT("Entry: %s Value: %i"), str.c_str(), iStatus );
+         mModules.Add( str );
+         mStatuses.Add( iStatus );
       }
-      //wxLogDebug( wxT("Entry: %s Value: %i"), str.c_str(), iStatus );
-      mModules.Add( str );
-      mStatuses.Add( iStatus );
       bCont = gPrefs->GetNextEntry(str, dummy);
    }
    gPrefs->SetPath( wxT("") );
@@ -150,6 +154,8 @@ void ModulePrefs::SetModuleStatus( wxString fname, int iStatus ){
    wxString ShortName = wxFileName( fname ).GetName();
    wxString PrefName = wxString( wxT("/Module/") ) + ShortName.Lower();
    gPrefs->Write( PrefName, iStatus );
+   PrefName = wxString( wxT("/Module/path:") ) + ShortName.Lower();
+   gPrefs->Write( PrefName, fname );
    gPrefs->Flush();
 }
 

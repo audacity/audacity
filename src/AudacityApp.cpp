@@ -294,7 +294,6 @@ void QuitAudacity(bool bForce)
       gParentFrame->Destroy();
    gParentFrame = NULL;
 
-   CloseContrastDialog();
 #ifdef EXPERIMENTAL_SCOREALIGN
    CloseScoreAlignDialog();
 #endif
