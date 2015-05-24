@@ -50,6 +50,7 @@ simplifies construction of menu items.
 #include <wx/utils.h>
 
 #include "FreqWindow.h"
+#include "effects/Contrast.h"
 #include "TrackPanel.h"
 
 #include "Project.h"
@@ -109,7 +110,6 @@ simplifies construction of menu items.
 #include "TimerRecordDialog.h"
 #include "SoundActivatedRecord.h"
 #include "LabelDialog.h"
-#include "effects/Contrast.h"
 
 #include "FileDialog.h"
 #include "SplashDialog.h"
@@ -5136,7 +5136,34 @@ void AudacityProject::OnPlotSpectrum()
 
 void AudacityProject::OnContrast()
 {
-   InitContrastDialog(NULL);
+   // All of this goes away when the Contrast Dialog is converted to a module
+   if(!mContrastDialog)
+   {
+      wxPoint where;
+
+      where.x = 150;
+      where.y = 150;
+
+      mContrastDialog = new ContrastDialog(this, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
+
+      mContrastDialog->bFGset = false;
+      mContrastDialog->bBGset = false;
+   }
+
+   // Zero dialog boxes.  Do we need to do this here?
+   if( !mContrastDialog->bFGset )
+   {
+      mContrastDialog->mForegroundStartT->SetValue(0.0);
+      mContrastDialog->mForegroundEndT->SetValue(0.0);
+   }
+   if( !mContrastDialog->bBGset )
+   {
+      mContrastDialog->mBackgroundStartT->SetValue(0.0);
+      mContrastDialog->mBackgroundEndT->SetValue(0.0);
+   }
+
+   mContrastDialog->CentreOnParent();
+   mContrastDialog->Show();
 }
 
 

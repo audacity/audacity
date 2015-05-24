@@ -93,6 +93,7 @@ scroll information.  It also has some status flags.
 #include "Project.h"
 
 #include "FreqWindow.h"
+#include "effects/contrast.h"
 #include "AutoRecovery.h"
 #include "AudacityApp.h"
 #include "AColor.h"
@@ -755,6 +756,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mMixerBoard(NULL),
      mMixerBoardFrame(NULL),
      mFreqWindow(NULL),
+     mContrastDialog(NULL),
      mAliasMissingWarningDialog(NULL),
      mPlaybackMeter(NULL),
      mCaptureMeter(NULL),
@@ -2029,6 +2031,11 @@ void AudacityProject::OnCloseWindow(wxCloseEvent & event)
    if (mFreqWindow) {
       mFreqWindow->Destroy();
       mFreqWindow = NULL;
+   }
+
+   if (mContrastDialog) {
+      mContrastDialog->Destroy();
+      mContrastDialog = NULL;
    }
 
    // Check to see if we were playing or recording

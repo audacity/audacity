@@ -62,6 +62,7 @@ class EffectPlugs;
 
 class TrackPanel;
 class FreqWindow;
+class ContrastDialog;
 
 // toolbar classes
 class ControlToolBar;
@@ -537,6 +538,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    MixerBoardFrame* mMixerBoardFrame;
 
    FreqWindow *mFreqWindow;
+   ContrastDialog *mContrastDialog;
 
    // dialog for missing alias warnings
    wxDialog            *mAliasMissingWarningDialog;
