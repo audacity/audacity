@@ -557,6 +557,7 @@ void FreqWindow::GetAudio()
 {
    if (mData) {
       delete [] mData;
+      mData = NULL;
    }
    mDataLen = 0;
 

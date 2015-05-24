@@ -156,13 +156,11 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-WX_DECLARE_STRING_HASH_MAP(wxArrayString, ArrayStringMap);
-
-//WX_DECLARE_STRING_HASH_MAP(PluginDescriptor, PluginMap);
 typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
 typedef wxArrayString PluginIDList;
 
+class ProviderMap;
 class PluginRegistrationDialog;
 
 class PluginManager : public PluginManagerInterface
@@ -256,23 +254,19 @@ public:
    wxString GetName(const PluginID & ID);
    IdentInterface *GetInstance(const PluginID & ID);
 
-   void CheckForUpdates(EffectType Type=EffectTypeNone);
+   void CheckForUpdates();
+
+   bool ShowManager(wxWindow *parent, EffectType type = EffectTypeNone);
 
    // Here solely for the purpose of Nyquist Workbench until
    // a better solution is devised.
    const PluginID & RegisterPlugin(EffectIdentInterface *effect);
-
-public:
-   bool mbRegisterAndEnable;
 
 private:
    void Load();
    void LoadGroup(PluginType type);
    void Save();
    void SaveGroup(PluginType type);
-
-   void DisableMissing();
-   wxArrayString IsNewOrUpdated(const wxArrayString & paths);
 
    PluginDescriptor & CreatePlugin(const PluginID & id, IdentInterface *ident, PluginType type);
 

@@ -871,6 +871,7 @@ AudioUnitEffect::AudioUnitEffect(const wxString & path,
    mUnit = NULL;
    
    mBlockSize = 0.0;
+   mInteractive = false;
 
    mUIHost = NULL;
    mDialog = NULL;
@@ -970,6 +971,7 @@ wxString AudioUnitEffect::GetFamily()
 
 bool AudioUnitEffect::IsInteractive()
 {
+printf("isinter %d\n", mInteractive);
    return mInteractive;
 }
 
@@ -1179,6 +1181,32 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
       {
          return false;
       }
+
+      AudioUnitCocoaViewInfo cocoaViewInfo;
+      dataSize = sizeof(AudioUnitCocoaViewInfo);
+   
+      // Check for a Cocoa UI
+      result = AudioUnitGetProperty(mUnit,
+                                    kAudioUnitProperty_CocoaUI,
+                                    kAudioUnitScope_Global,
+                                    0,
+                                    &cocoaViewInfo,
+                                    &dataSize);
+
+      bool hasCocoa = result == noErr;
+
+      // Check for a Carbon UI
+      ComponentDescription compDesc;
+      dataSize = sizeof(compDesc);
+      result = AudioUnitGetProperty(mUnit,
+                                    kAudioUnitProperty_GetUIComponentList,
+                                    kAudioUnitScope_Global,
+                                    0,
+                                    &compDesc,
+                                    &dataSize);
+      bool hasCarbon = result == noErr;
+
+      mInteractive = (cnt > 0) || hasCocoa || hasCarbon;
    }
 
    return true;

@@ -844,7 +844,7 @@ void AudacityProject::CreateMenusAndCommands()
 
    c->BeginSubMenu(_("Add &New"));
 
-   c->AddItem(wxT("NewAudioTrack"),  _("&Audio Track"), FN(OnNewWaveTrack), wxT("Ctrl+Shift+N"));
+   c->AddItem(wxT("NewMonoTrack"),  _("&Mono Track"), FN(OnNewWaveTrack), wxT("Ctrl+Shift+N"));
    c->AddItem(wxT("NewStereoTrack"), _("&Stereo Track"), FN(OnNewStereoTrack));
    c->AddItem(wxT("NewLabelTrack"),  _("&Label Track"), FN(OnNewLabelTrack));
    c->AddItem(wxT("NewTimeTrack"),   _("&Time Track"), FN(OnNewTimeTrack));
@@ -1014,7 +1014,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeProcess,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag | IsRealtimeNotActiveFlag);
+                       IsRealtimeNotActiveFlag);
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
    c->AddSeparator();
    // We could say Manage Effects on the menu, but More... is more intuitive.
@@ -1039,7 +1039,7 @@ void AudacityProject::CreateMenusAndCommands()
    PopulateEffectsMenu(c,
                        EffectTypeAnalyze,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
-                       AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag | IsRealtimeNotActiveFlag);
+                       IsRealtimeNotActiveFlag);
 #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
    c->AddSeparator();
    c->AddItem(wxT("ManageAnalyzers"), _("More..."), FN(OnManageAnalyzers));
@@ -3300,32 +3300,42 @@ void AudacityProject::OnRepeatLastEffect(int WXUNUSED(index))
 
 
 
-void AudacityProject::OnManagePluginsMenu(EffectType Type)
+void AudacityProject::OnManagePluginsMenu(EffectType type)
 {
-   //gPrefs->Write( wxT("/Plugins/Rescan"), true);
-   //gPrefs->Read(wxT("/Plugins/CheckForUpdates"), &doCheck, true);
-   PluginManager::Get().CheckForUpdates(Type);
+   if (PluginManager::Get().ShowManager(this, type))
+   {
+      for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
+         AudacityProject *p = gAudacityProjects[i];
 
-   for (size_t i = 0; i < gAudacityProjects.GetCount(); i++) {
-      AudacityProject *p = gAudacityProjects[i];
-
-      p->RebuildMenuBar();
+         p->RebuildMenuBar();
 #if defined(__WXGTK__)
-      // Workaround for:
-      //
-      //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
-      //
-      // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
-      wxRect r = p->GetRect();
-      p->SetSize(wxSize(1,1));
-      p->SetSize(r.GetSize());
+         // Workaround for:
+         //
+         //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
+         //
+         // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
+         wxRect r = p->GetRect();
+         p->SetSize(wxSize(1,1));
+         p->SetSize(r.GetSize());
 #endif
+      }
    }
 }
 
-void AudacityProject::OnManageGenerators(){   OnManagePluginsMenu(EffectTypeGenerate); }
-void AudacityProject::OnManageEffects(){      OnManagePluginsMenu(EffectTypeProcess); }
-void AudacityProject::OnManageAnalyzers(){    OnManagePluginsMenu(EffectTypeAnalyze); }
+void AudacityProject::OnManageGenerators()
+{
+   OnManagePluginsMenu(EffectTypeGenerate);
+}
+
+void AudacityProject::OnManageEffects()
+{
+   OnManagePluginsMenu(EffectTypeProcess);
+}
+
+void AudacityProject::OnManageAnalyzers()
+{
+   OnManagePluginsMenu(EffectTypeAnalyze);
+}
 
 
 

@@ -521,6 +521,11 @@ bool NyquistEffect::Process()
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'MIDITRACKS)\n"), numMidi);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TIMETRACKS)\n"), numTime);
 
+      double previewLen = 6.0;
+      gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
+                                 Internat::ToString(previewLen).c_str());
+
       SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
       int numChannels = 0;
       for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
@@ -1263,10 +1268,10 @@ void NyquistEffect::Parse(wxString line)
       return;
    }
 
-   // As of version 4 plugins ";nyquist plug-in" is depricated in favour of ";nyquist plugin".
-   // The hyphenated version must be maintained while we support plugin versions < 4.
+   // Consistency decission is for "plug-in" as the correct spelling
+   // "plugin" is allowed as an undocumented convenience.
    if (len == 2 && tokens[0] == wxT("nyquist") &&
-      (tokens[1] == wxT("plugin") || tokens[1] == wxT("plug-in"))) {
+      (tokens[1] == wxT("plug-in") || tokens[1] == wxT("plugin"))) {
       mOK = true;
       return;
    }
@@ -1354,6 +1359,11 @@ void NyquistEffect::Parse(wxString line)
    if (len >= 2 && tokens[0] == wxT("preview")) {
       if (tokens[1] == wxT("enabled") || tokens[1] == wxT("true")) {
          mEnablePreview = true;
+         SetLinearEffectFlag(false);
+      }
+      else if (tokens[1] == wxT("linear")) {
+         mEnablePreview = true;
+         SetLinearEffectFlag(true);
       }
       else if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
          mEnablePreview = false;

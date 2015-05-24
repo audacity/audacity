@@ -1,4 +1,4 @@
-;nyquist plugin
+;nyquist plug-in
 ;version 4
 ;type process
 ;preview enabled

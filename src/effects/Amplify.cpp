@@ -214,15 +214,15 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       // Peak
       S.StartMultiColumn(2, wxCENTER);
       {
-         FloatingPointValidator<double> vldNewPeak(2, &mNewPeak);
+         int precission = 2;
+         FloatingPointValidator<double> vldNewPeak(precission, &mNewPeak);
          double minAmp = MIN_Amp + (20.0 * log10(mPeak));
          double maxAmp = MAX_Amp + (20.0 * log10(mPeak));
-         // TODO: This is a hack that should be fixed in the validator:
-         // If MAX_Amp is negative, then the truncated text value will be greater
-         // than the actual float value.
-         // Add 0.05 to the max value, equivalent to rounding the right way.
-         if (maxAmp < 0)
-            maxAmp += 0.005;
+
+         // min and max need same precision as what we're validating (bug 963)
+         minAmp = Internat::CompatibleToDouble(Internat::ToString(minAmp, precission));
+         maxAmp = Internat::CompatibleToDouble(Internat::ToString(maxAmp, precission));
+
          vldNewPeak.SetRange(minAmp, maxAmp);
          mNewPeakT = S.Id(ID_Peak).AddTextBox(_("New Peak Amplitude (dB):"), wxT(""), 12);
          mNewPeakT->SetValidator(vldNewPeak);

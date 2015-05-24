@@ -1,8 +1,9 @@
 ;nyquist plug-in
-;version 3
+;version 4
 ;type generate
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
 ;name "Click Track..."
+;preview linear
 ;action "Generating Click Track..."
 ;info "For help, select one of two help screens in 'Action choice' below."
 ;author "Dominic Mazzoni"
@@ -13,8 +14,8 @@
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 ;; original clicktrack.ny by Dominic Mazzoni,
 ;; modified by David R. Sky and Steve Daulton.
-;; Minimum Audacity version: 1.3.4
 ;;
+;; Updated to v4 by Steve Daulton May 2015
 ;; bug fixes and restructured by Steve Daulton Sept 2011.
 ;; string input verification added by Steve Daulton, 2009.
 ;; added click pitch [user request] and sound types fields September 2007 (D.R.Sky).
@@ -285,6 +286,12 @@ Use whole numbers only.~%"))))
         ;calculate measures from text input (if used)
         (if m-s (setq measures 
           (/ (m-s-to-seconds m-s)(* sig beatlen))))
+
+        ;if previewing, restrict number of measures
+        (let ((preview (/ (get '*project* 'preview-duration)
+                          (* sig beatlen)))) 
+          (if (not (get '*track* 'view))  ;NIL if preview
+              (setq measures (min preview measures))))
 
         ;round up number of measures
         (setq measures (round-up measures))
