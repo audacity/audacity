@@ -905,7 +905,7 @@ void VampEffect::OnTextCtrl(wxCommandEvent & evt)
 {
    int p = evt.GetId() - ID_Texts;
 
-   mFields[p]->GetValidator()->TransferToWindow();
+   mFields[p]->GetValidator()->TransferFromWindow();
 
    float lower = mParameters[p].minValue;
    float upper = mParameters[p].maxValue;
