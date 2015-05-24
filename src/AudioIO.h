@@ -90,6 +90,7 @@ struct AudioIOStartStreamOptions
       , maxScrubSpeed(1.0)
       , minScrubStutter(0.0)
       , scrubStartClockTimeMillis(-1)
+      , maxScrubTime(0.0)
 #endif
    {}
 
@@ -117,6 +118,9 @@ struct AudioIOStartStreamOptions
    // Scrubbing needs the time of start of the mouse movement that began
    // the scrub:
    wxLongLong scrubStartClockTimeMillis;
+
+   // usually from TrackList::GetEndTime()
+   double maxScrubTime;
 #endif
 };
 
