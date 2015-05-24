@@ -64,8 +64,6 @@ void AttachableScrollBar::SetScrollBarFromViewInfo()
 
    SetScrollbar(mViewInfo.sbarH, mViewInfo.sbarScreen,
                         mViewInfo.sbarTotal, mViewInfo.sbarScreen, TRUE);
-
-   mViewInfo.lastZoom = mViewInfo.zoom;
 }
 
 // Essentially an int to float conversion.

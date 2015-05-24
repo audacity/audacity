@@ -1489,7 +1489,11 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
          // the drawing of the tracks.  This prevents flashing of the indicator
          // at higher magnifications, and keeps the green line still in the middle.
          indicator = gAudioIO->GetStreamTime();
-         mViewInfo->h = std::max(0.0, indicator - mViewInfo->screen / 2.0);
+         mViewInfo->h = indicator - mViewInfo->screen / 2.0;
+#if !defined(EXPERIMENTAL_SCROLLING_LIMITS)
+         // Can't scroll too far left
+         mViewInfo->h = std::max(0.0, mViewInfo->h);
+#endif
       }
 #endif
 
@@ -2409,9 +2413,9 @@ bool TrackPanel::ContinueScrubbing(wxCoord position, bool maySkip)
 {
    wxCoord leadPosition = position;
    double newEnd =
-	   std::max(0.0,
-	      std::min(PositionToTime(leadPosition, GetLeftOffset()),
-		     mTracks->GetEndTime()
+          std::max(0.0,
+             std::min(PositionToTime(leadPosition, GetLeftOffset()),
+                    mTracks->GetEndTime()
    ));
 
    if (maySkip)
@@ -2710,7 +2714,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       if (startNewSelection) { // mouse is not at an edge, but after
          // quantization, we could be indicating the selection edge
          mSelStartValid = true;
-         mSelStart = PositionToTime(event.m_x, r.x);
+         mSelStart = std::max(0.0, PositionToTime(event.m_x, r.x));
          mStretchStart = nt->NearestBeatTime(mSelStart, &centerBeat);
          if (within(qBeat0, centerBeat, 0.1)) {
             mListener->TP_DisplayStatusMessage(
@@ -2801,8 +2805,10 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
 {
    mSelStartValid = true;
-   mSelStart = mViewInfo->h + ((mouseXCoordinate - trackLeftEdge)
-                               / mViewInfo->zoom);
+   mSelStart =
+      std::max(0.0,
+      mViewInfo->h + ((mouseXCoordinate - trackLeftEdge)
+      / mViewInfo->zoom));
 
    double s = mSelStart;
 
@@ -2832,7 +2838,7 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
       // Must be dragging frequency bounds only.
       return;
 
-   double selend = PositionToTime(mouseXCoordinate, trackLeftEdge);
+   double selend = std::max(0.0, PositionToTime(mouseXCoordinate, trackLeftEdge));
    clip_bottom(selend, 0.0);
 
    double origSel0, origSel1;
@@ -3264,7 +3270,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
    }
 
    NoteTrack *pNt = (NoteTrack *) pTrack;
-   double moveto = PositionToTime(mouseXCoordinate, trackLeftEdge);
+   double moveto = std::max(0.0, PositionToTime(mouseXCoordinate, trackLeftEdge));
 
    // check to make sure tempo is not higher than 20 beats per second
    // (In principle, tempo can be higher, but not infinity.)
