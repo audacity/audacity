@@ -2802,7 +2802,7 @@ void AudacityProject::NextWindow()
    }
 
    // Ran out of siblings, so make the current project active
-   if (!iter)
+   if (!iter && IsEnabled())
    {
       w = this;
    }
@@ -2851,7 +2851,7 @@ void AudacityProject::PrevWindow()
    }
 
    // Ran out of siblings, so make the current project active
-   if (!iter)
+   if (!iter && IsEnabled())
    {
       w = this;
    }
