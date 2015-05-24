@@ -1100,7 +1100,6 @@ void TrackPanel::OnTimer()
    //  that indicates where the current play/record position is. (This also
    //  draws the moving vertical line.)
 
-   // PRL: mIndicatorShowing never becomes true!
    if (!gAudioIO->IsPaused() &&
        ( mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken()))
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
@@ -1514,7 +1513,6 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
    // Update the indicator in case it was damaged if this project is playing
 
-   // PRL: mIndicatorShowing never becomes true!
    AudacityProject* p = GetProject();
    if (!gAudioIO->IsPaused() &&
       (mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken())))
@@ -2315,10 +2313,11 @@ bool TrackPanel::IsScrubbing()
    else if (mScrubToken == GetProject()->GetAudioIOToken())
       return true;
    else {
-      // Some other command might have stopped scrub play before we
-      // reached StopScrubbing()!  But that is okay.
       mScrubToken = -1;
       mScrubStartPosition = -1;
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      mSmoothScrollingScrub = false;
+#endif
       return false;
    }
 }
@@ -2350,9 +2349,12 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
       return false;
    else if (mScrubStartPosition >= 0) {
       const bool busy = gAudioIO->IsBusy();
-      if (busy && gAudioIO->GetNumCaptureChannels() > 0)
-         // Do not stop recording
+      if (busy && gAudioIO->GetNumCaptureChannels() > 0) {
+         // Do not stop recording, and don't try to start scrubbing after
+         // recording stops
+         mScrubStartPosition = -1;
          return false;
+      }
 
       wxCoord position = event.m_x;
       AudacityProject *p = GetActiveProject();
@@ -2438,13 +2440,6 @@ bool TrackPanel::StopScrubbing()
             ctb->StopPlaying();
          }
       }
-      mScrubToken = -1;
-      mScrubStartPosition = -1;
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      mSmoothScrollingScrub = false;
-#endif
-
       return true;
    }
    else
