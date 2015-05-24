@@ -174,17 +174,17 @@ ODLock   *AudacityProject::msAllProjectDeleteMutex = new ODLock();
 const int sbarSpaceWidth = 15;
 const int sbarControlWidth = 16;
 const int sbarExtraLen = 1;
-const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs
+const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
 #elif defined(__WXMSW__)
 const int sbarSpaceWidth = 16;
 const int sbarControlWidth = 16;
 const int sbarExtraLen = 0;
-const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs
+const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
 #else // wxGTK, wxMOTIF, wxX11
 const int sbarSpaceWidth = 15;
 const int sbarControlWidth = 15;
 const int sbarExtraLen = 0;
-const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs
+const int sbarHjump = 30;       //STM: This is how far the thumb jumps when the l/r buttons are pressed, or auto-scrolling occurs -- in pixels
 #include "Theme.h"
 #include "AllThemeResources.h"
 #endif
@@ -811,7 +811,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mViewInfo.screen = 1.0;
    mViewInfo.h = 0.0;
    mViewInfo.zoom = 44100.0 / 512.0;
-   mViewInfo.lastZoom = mViewInfo.zoom;
 
    // Vertical scrollbar
    mViewInfo.track = NULL;
@@ -1461,7 +1460,13 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 //
 void AudacityProject::TP_ScrollWindow(double scrollto)
 {
-   int pos = (int) (scrollto * mViewInfo.zoom * mViewInfo.sbarScale);
+   double timeOffset = 0;
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+   timeOffset = mViewInfo.screen / 2.0;
+#endif
+   int pos = (int) (
+      (scrollto + timeOffset) * mViewInfo.zoom * mViewInfo.sbarScale
+   );
    int max = mHsbar->GetRange() - mHsbar->GetThumbSize();
 
    if (pos > max)
@@ -1520,18 +1525,29 @@ void AudacityProject::FixScrollbars()
    int panelWidth, panelHeight;
    mTrackPanel->GetTracksUsableArea(&panelWidth, &panelHeight);
 
-   // Add 1/4 of a screen of blank space to the end of the longest track
    mViewInfo.screen = ((double) panelWidth) / mViewInfo.zoom;
+   double additional, lowerBound;
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+   // Add 1/2 of a screen of blank space to the end
+   // and another 1/2 screen before the beginning
+   // so that any point within the union of the selection and the track duration
+   // may be scrolled to the midline.
+   additional = mViewInfo.screen;
+   lowerBound = - additional / 2.0;
+#else
+   // Formerly just added 1/4 screen at the end
+   additional = mViewInfo.screen / 4.0;
+   lowerBound = 0.0;
+#endif
    double LastTime =
-      wxMax( mTracks->GetEndTime(), mViewInfo.selectedRegion.t1() );
-   mViewInfo.total = LastTime + mViewInfo.screen / 4;
+      std::max( mTracks->GetEndTime(), mViewInfo.selectedRegion.t1() );
+   mViewInfo.total = LastTime + additional;
 
    // Don't remove time from total that's still on the screen
-   if (mViewInfo.h > mViewInfo.total - mViewInfo.screen) {
-      mViewInfo.total = mViewInfo.h + mViewInfo.screen;
-   }
-   if (mViewInfo.h < 0.0) {
-      mViewInfo.h = 0.0;
+   mViewInfo.total = std::max(mViewInfo.total, mViewInfo.h + mViewInfo.screen);
+
+   if (mViewInfo.h < lowerBound) {
+      mViewInfo.h = lowerBound;
       rescroll = true;
    }
 
@@ -1603,13 +1619,21 @@ void AudacityProject::FixScrollbars()
    else
       mViewInfo.sbarScale = 1.0; // use maximum resolution
 
-   int scaledSbarH = (int)(mViewInfo.sbarH * mViewInfo.sbarScale);
-   int scaledSbarScreen = (int)(mViewInfo.sbarScreen * mViewInfo.sbarScale);
-   int scaledSbarTotal = (int)(mViewInfo.sbarTotal * mViewInfo.sbarScale);
+   {
+      int scaledSbarH = (int)(mViewInfo.sbarH * mViewInfo.sbarScale);
+      int scaledSbarScreen = (int)(mViewInfo.sbarScreen * mViewInfo.sbarScale);
+      int scaledSbarTotal = (int)(mViewInfo.sbarTotal * mViewInfo.sbarScale);
+      int offset;
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+      offset = scaledSbarScreen / 2;
+#else
+      offset = 0;
+#endif
 
-   mHsbar->SetScrollbar(scaledSbarH, scaledSbarScreen, scaledSbarTotal,
-                        scaledSbarScreen, TRUE);
-   mHsbar->Refresh();
+      mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
+         scaledSbarScreen, TRUE);
+      mHsbar->Refresh();
+   }
 
    // Vertical scrollbar
    mVsbar->SetScrollbar(mViewInfo.vpos / mViewInfo.scrollStep,
@@ -1617,7 +1641,6 @@ void AudacityProject::FixScrollbars()
                         totalHeight / mViewInfo.scrollStep,
                         panelHeight / mViewInfo.scrollStep, TRUE);
    mVsbar->Refresh();
-   mViewInfo.lastZoom = mViewInfo.zoom;
 
    if (refresh || (rescroll && mViewInfo.screen < mViewInfo.total)) {
       mTrackPanel->Refresh(false);
@@ -1796,16 +1819,26 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 {
    wxInt64 hlast = mViewInfo.sbarH;
 
-   mViewInfo.sbarH = (wxInt64)
-      (mHsbar->GetThumbPosition() / mViewInfo.sbarScale);
+   double lowerBound;
+   wxInt64 offset;
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+   offset = (0.5 + (mViewInfo.zoom * mViewInfo.screen / 2.0));
+   lowerBound = -mViewInfo.screen / 2.0;
+#else
+   offset = 0.0;
+   lowerBound = 0.0;
+#endif
+   mViewInfo.sbarH =
+      (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
 
    if (mViewInfo.sbarH != hlast) {
       mViewInfo.h = mViewInfo.sbarH / mViewInfo.zoom;
 
       if (mViewInfo.h > mViewInfo.total - mViewInfo.screen)
          mViewInfo.h = mViewInfo.total - mViewInfo.screen;
-      if (mViewInfo.h < 0.0)
-         mViewInfo.h = 0.0;
+
+      if (mViewInfo.h < lowerBound)
+         mViewInfo.h = lowerBound;
    }
 
    int lastv = mViewInfo.vpos;

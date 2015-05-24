@@ -33,7 +33,6 @@ struct ViewInfo {
    double screen;               // screen width in secs
    double total;                // total width in secs
    double zoom;                 // pixels per second
-   double lastZoom;
 
    // Current horizontal scroll bar positions, in pixels
    wxInt64 sbarH;
@@ -43,6 +42,7 @@ struct ViewInfo {
    // Internal wxScrollbar positions are only int in range, so multiply
    // the above values with the following member to get the actual
    // scroll bar positions as reported by the horizontal wxScrollbar's members
+   // i.e. units are scroll increments per pixel
    double sbarScale;
 
    // Vertical scroll step
