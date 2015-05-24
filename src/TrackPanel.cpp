@@ -2381,6 +2381,7 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
             // but it may be varied during the scrub.
             mMaxScrubSpeed = options.maxScrubSpeed =
                p->GetTranscriptionToolBar()->GetPlaySpeed();
+            options.maxScrubTime = mTracks->GetEndTime();
             const bool cutPreview = false;
             const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
@@ -2412,11 +2413,7 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
 bool TrackPanel::ContinueScrubbing(wxCoord position, bool maySkip)
 {
    wxCoord leadPosition = position;
-   double newEnd =
-          std::max(0.0,
-             std::min(PositionToTime(leadPosition, GetLeftOffset()),
-                    mTracks->GetEndTime()
-   ));
+   double newEnd = PositionToTime(leadPosition, GetLeftOffset());
 
    if (maySkip)
       // Cause OnTimer() to suppress the speed display
