@@ -3249,8 +3249,9 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
    menu->Append(0, _("About"), sub);
 
-   wxRect r = FindWindow(kMenuID)->GetParent()->GetRect();
-   PopupMenu(menu, wxPoint(r.GetLeft(), r.GetBottom()));
+   wxWindow *btn = FindWindow(kMenuID);
+   wxRect r = btn->GetRect();
+   btn->PopupMenu(menu, r.GetLeft(), r.GetBottom());
 
    delete menu;
 }
