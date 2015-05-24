@@ -104,13 +104,12 @@ void MousePrefs::CreateList()
    AddItem(_("Left-Drag"),         _("Select"),   _("Set Selection Range"));
    AddItem(_("Shift-Left-Click"),  _("Select"),   _("Extend Selection Range"));
    AddItem(_("Left-Double-Click"), _("Select"),   _("Select Clip or Entire Track"));
-   AddItem(_("Ctrl-Left-Click"),   _("Select"),   _("Set Selection Point and Play"));
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   AddItem(_("Middle-Drag"),              _("Select"), _("Scrub"));
-   AddItem(_("Shift-Middle-Drag"),        _("Select"), _("Seek"));
+   AddItem(_("Ctrl-Left-Click"),   _("Select"), _("Scrub"));
+   AddItem(_("Shift-Ctrl-Left-Click"), _("Select"), _("Seek"));
 #endif
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   AddItem(_("Middle-Double-Click-Drag"), _("Select"), _("Smooth Scrolling Scrub"));
+   AddItem(_("Shift-Left-Double-Click"), _("Select"), _("Smooth Scrolling Scrub"));
    AddItem(_("Wheel-Rotate"),      _("Select"),   _("Change maximum scrub speed"));
 #endif
 
@@ -144,14 +143,6 @@ void MousePrefs::CreateList()
 
    AddItem(_("Left-Click"),       _("Multi"),     _("Set Selection Point"), _("same as select tool"));
    AddItem(_("Left-Drag"),        _("Multi"),     _("Set Selection Range"), _("same as select tool"));
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   AddItem(_("Middle-Drag"),                    _("Select"), _("Scrub"), _("same as select tool"));
-   AddItem(_("Shift-Middle-Drag"),              _("Select"), _("Seek"), _("same as select tool"));
-#endif
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   AddItem(_("Middle-Double-Click-Drag"), _("Select"), _("Smooth Scrolling Scrub"), _("same as select tool"));
-   AddItem(_("Wheel-Rotate"),      _("Select"),   _("Change maximum scrub speed"), _("same as select tool"));
-#endif
    AddItem(_("Right-Click"),      _("Multi"),     _("Zoom out one step"),   _("same as zoom tool"));
    AddItem(_("Right-Drag"),       _("Multi"),     _("Zoom in on a Range"),  _("same as zoom tool"));
 
