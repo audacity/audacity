@@ -217,7 +217,7 @@ is time to refresh some aspect of the screen.
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "toolbars/ToolsToolBar.h"
-#include "toolbars/TranscriptionToolBar.h"
+// #include "toolbars/TranscriptionToolBar.h"
 
 #include "widgets/ASlider.h"
 #include "widgets/Ruler.h"
@@ -2375,10 +2375,15 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
             options.scrubDelay = (kTimerInterval / 1000.0);
             options.scrubStartClockTimeMillis = mScrubStartClockTimeMillis;
             options.minScrubStutter = 0.2;
+#if 0
             // Take the starting speed limit from the transcription toolbar,
             // but it may be varied during the scrub.
             mMaxScrubSpeed = options.maxScrubSpeed =
                p->GetTranscriptionToolBar()->GetPlaySpeed();
+#else
+            // That idea seems unpopular... just make it one
+            mMaxScrubSpeed = options.maxScrubSpeed = 1.0;
+#endif
             options.maxScrubTime = mTracks->GetEndTime();
             const bool cutPreview = false;
             const bool backwards = time1 < time0;
