@@ -109,8 +109,8 @@ void MousePrefs::CreateList()
    AddItem(_("Shift-Ctrl-Left-Click"), _("Select"), _("Seek"));
 #endif
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   AddItem(_("Shift-Left-Double-Click"), _("Select"), _("Smooth Scrolling Scrub"));
-   AddItem(_("Wheel-Rotate"),      _("Select"),   _("Change maximum scrub speed"));
+   AddItem(_("Ctrl-Left-Double-Click"), _("Select"), _("Smooth Scrolling Scrub"));
+   AddItem(_("Wheel-Rotate"),      _("Select"),   _("Change scrub speed"));
 #endif
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
