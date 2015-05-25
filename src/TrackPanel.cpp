@@ -967,6 +967,7 @@ void TrackPanel::GetTracksUsableArea(int *width, int *height) const
    *width -= GetLabelWidth();
    // AS: MAGIC NUMBER: What does 2 represent?
    *width -= 2 + kLeftInset;
+   *width = std::max(0, *width);
 }
 
 /// Gets the pointer to the AudacityProject that
