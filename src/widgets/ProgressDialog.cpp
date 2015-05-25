@@ -1336,7 +1336,6 @@ ProgressDialog::Show(bool show)
     return wxDialog::Show(show);
 }
 
-#include <wx/evtloop.h>
 //
 // Update the time and, optionally, the message
 //
@@ -1398,19 +1397,8 @@ ProgressDialog::Update(int value, const wxString & message)
 
       mLastUpdate = now;
    }
-#if wxCHECK_VERSION(3, 0, 0)
-   wxEventLoopBase *loop = wxEventLoop::GetActive();
-#else
-   wxEventLoop *loop = wxEventLoop::GetActive();
-#endif
-   if (loop)
-   {
-      int i = 10;
-      while (loop->Pending() && --i)
-      {
-         loop->Dispatch();
-      }
-   }
+
+   wxYieldIfNeeded();
 
    return eProgressSuccess;
 }
@@ -1663,19 +1651,7 @@ int TimerProgressDialog::Update(const wxString & message /*= wxEmptyString*/)
       mLastUpdate = now;
    }
 
-#if wxCHECK_VERSION(3, 0, 0)
-   wxEventLoopBase *loop = wxEventLoop::GetActive();
-#else
-   wxEventLoop *loop = wxEventLoop::GetActive();
-#endif
-   if (loop)
-   {
-      int i = 10;
-      while (loop->Pending() && --i)
-      {
-         loop->Dispatch();
-      }
-   }
+   wxYieldIfNeeded();
 
    return eProgressSuccess;
 }

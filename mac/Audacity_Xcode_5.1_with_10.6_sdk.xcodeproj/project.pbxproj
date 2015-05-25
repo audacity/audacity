@@ -8398,6 +8398,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-script-pipe";
 				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
 				ZERO_LINK = YES;
 			};
 			name = "Debug Static";
@@ -8430,6 +8431,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-script-pipe";
 				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
 				ZERO_LINK = YES;
 			};
 			name = "Release Static";
@@ -8766,6 +8768,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-script-pipe";
 				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
 				ZERO_LINK = YES;
 			};
 			name = "Debug Shared";
@@ -9104,6 +9107,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-script-pipe";
 				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
 				ZERO_LINK = YES;
 			};
 			name = "Release Shared";
@@ -9673,16 +9677,8 @@
 				INSTALL_PATH = /Audacity/modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
-				OTHER_CFLAGS = (
-					"-I",
-					../src,
-					"$(WX_CFLAGS)",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"-I",
-					../src,
-					"$(WX_CXXFLAGS)",
-				);
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -9692,6 +9688,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
 				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
 				ZERO_LINK = YES;
 			};
 			name = "Debug Static";
@@ -9711,16 +9708,8 @@
 				INSTALL_PATH = /Audacity/modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
-				OTHER_CFLAGS = (
-					"-I",
-					../src,
-					"$(WX_CFLAGS)",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"-I",
-					../src,
-					"$(WX_CXXFLAGS)",
-				);
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -9730,6 +9719,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
 				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
 				ZERO_LINK = YES;
 			};
 			name = "Debug Shared";
@@ -9749,16 +9739,8 @@
 				INSTALL_PATH = /Audacity/modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
-				OTHER_CFLAGS = (
-					"-I",
-					../src,
-					"$(WX_CFLAGS)",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"-I",
-					../src,
-					"$(WX_CXXFLAGS)",
-				);
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -9768,6 +9750,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
 				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
 				ZERO_LINK = YES;
 			};
 			name = "Release Static";
@@ -9787,16 +9770,8 @@
 				INSTALL_PATH = /Audacity/modules;
 				KEEP_PRIVATE_EXTERNS = NO;
 				MACH_O_TYPE = mh_dylib;
-				OTHER_CFLAGS = (
-					"-I",
-					../src,
-					"$(WX_CFLAGS)",
-				);
-				OTHER_CPLUSPLUSFLAGS = (
-					"-I",
-					../src,
-					"$(WX_CXXFLAGS)",
-				);
+				OTHER_CFLAGS = "$(WX_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = "$(WX_CXXFLAGS)";
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
@@ -9806,6 +9781,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "mod-nyq-bench";
 				SKIP_INSTALL = NO;
+				USER_HEADER_SEARCH_PATHS = "$(TOPLEVEL)/include $(TOPLEVEL)/mac/config/** $(TOPLEVEL)/src/**";
 				ZERO_LINK = YES;
 			};
 			name = "Release Shared";
