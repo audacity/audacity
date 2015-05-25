@@ -83,7 +83,7 @@ static const wxString preferencePath
 (wxT("/GUI/Toolbars/SpectralSelection/CenterAndWidthChoice"));
 
 SpectralSelectionBar::SpectralSelectionBar()
-: ToolBar(SpectralSelectionBarID, _("SpectralSelection"), wxT("SpectralSelection"))
+: ToolBar(SpectralSelectionBarID, _("Spectral Selection"), wxT("SpectralSelection"))
 , mListener(NULL), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
