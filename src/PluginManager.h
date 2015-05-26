@@ -31,7 +31,8 @@
 
 typedef enum
 {
-   PluginTypeNone,
+   PluginTypeNone = -1,          // 2.1.0 placeholder entries...not used by 2.1.1 or greater
+   PluginTypeStub,               // Used for plugins that have not yet been registered
    PluginTypeEffect,
    PluginTypeExporter,
    PluginTypeImporter,

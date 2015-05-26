@@ -591,7 +591,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       PluginDescriptor & plug = iter->second;
 
       PluginType plugType = plug.GetPluginType();
-      if (plugType != PluginTypeEffect && plugType != PluginTypeNone)
+      if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
       {
          continue;
       }
@@ -610,7 +610,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       // This is not right and will not work when other plugin types are added.
       // But it's presumed that the plugin manager dialog will be fully developed
       // by then.
-      else if (plugType == PluginTypeNone)
+      else if (plugType == PluginTypeStub)
       {
          wxFileName fname = path;
          item.name = fname.GetName();
@@ -743,7 +743,7 @@ void PluginRegistrationDialog::SetState(int i, bool toggle, bool state)
 
    ItemData *item = (ItemData *) li.m_data;
 
-   // If changing the state of a "New" (placeholder) entry, then we mark it as valid
+   // If changing the state of a "New" (stub) entry, then we mark it as valid
    // since it will either be registered if "Enabled" or ignored if "Disabled".
    if (item->state == STATE_New)
    {
@@ -929,7 +929,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       ItemData & item = iter->second;
       wxString path = item.path;
 
-      if (item.state == STATE_Enabled && item.plug->GetPluginType() == PluginTypeNone)
+      if (item.state == STATE_Enabled && item.plug->GetPluginType() == PluginTypeStub)
       {
          enableCount++;
       }
@@ -952,7 +952,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       ItemData & item = iter->second;
       wxString path = item.path;
 
-      if (item.state == STATE_Enabled && item.plug->GetPluginType() == PluginTypeNone)
+      if (item.state == STATE_Enabled && item.plug->GetPluginType() == PluginTypeStub)
       {
          last3 = last3.AfterFirst(wxT('\n')) + item.path + wxT("\n");
          status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3.c_str()));
@@ -963,12 +963,9 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
 
          if (mm.RegisterPlugin(item.plug->GetProviderID(), path))
          {
-            // Registration successful, so remove the placeholder
-            PluginMap::iterator iter = pm.mPlugins.find(path);
-            if (iter != pm.mPlugins.end())
-            {
-               pm.mPlugins.erase(iter);
-            }
+            // Registration successful, so remove the stub
+            PluginID ID = item.plug->GetProviderID() + wxT("_") + path;
+            pm.mPlugins.erase(ID);
          }
       }
       else if (item.state == STATE_New)
@@ -1703,16 +1700,12 @@ void PluginManager::Terminate()
 
 void PluginManager::Load()
 {
-   // Get the full scan setting
-   bool doRescan;
-   gPrefs->Read(wxT("/Plugins/Rescan"), &doRescan, true);
-
    // Create/Open the registry
    mRegistry = new wxFileConfig(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
 
    // If this group doesn't exist then we have something that's not a registry.
    // We should probably warn the user, but it's pretty unlikely that this will happen.
-   if (!mRegistry->HasGroup(REGROOT) || doRescan)
+   if (!mRegistry->HasGroup(REGROOT))
    {
       // Must start over
       mRegistry->DeleteAll();
@@ -1739,6 +1732,10 @@ void PluginManager::Load()
    LoadGroup(PluginTypeExporter);
    LoadGroup(PluginTypeImporter);
 
+   LoadGroup(PluginTypeStub);
+
+   // Not used by 2.1.1 or greater, but must load to allow users to switch between 2.1.0
+   // and 2.1.1+.  This should be removed after a few releases past 2.1.0.
    LoadGroup(PluginTypeNone);
 
    delete mRegistry;
@@ -1942,9 +1939,16 @@ void PluginManager::LoadGroup(PluginType type)
          }
          break;
 
+         case PluginTypeStub:
+         {
+            // Nothing additional for stubs
+         }
+         break;
+
+         // Not used by 2.1.1 or greater and should be removed after a few releases past 2.1.0.
          case PluginTypeNone:
          {
-            // Used for placeholder groups
+            // Used for stub groups
          }
          break;
 
@@ -1976,6 +1980,10 @@ void PluginManager::Save()
    SaveGroup(PluginTypeEffect);
    SaveGroup(PluginTypeExporter);
    SaveGroup(PluginTypeImporter);
+   SaveGroup(PluginTypeStub);
+
+   // Not used by 2.1.1 or greater, but must save to allow users to switch between 2.1.0
+   // and 2.1.1+.  This should be removed after a few releases past 2.1.0.
    SaveGroup(PluginTypeNone);
 
    // And now the providers
@@ -2073,6 +2081,20 @@ void PluginManager::CheckForUpdates()
    // Get ModuleManager reference
    ModuleManager & mm = ModuleManager::Get();
 
+   wxArrayString pathIndex;
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
+   {
+      PluginDescriptor & plug = iter->second;
+
+      // Bypass 2.1.0 placeholders...remove this after a few releases past 2.1.0
+      if (plug.GetPluginType() == PluginTypeNone)
+      {
+         continue;
+      }
+
+      pathIndex.Add(plug.GetProviderID() + plug.GetPath().BeforeFirst(wxT(';')));
+   }
+
    ProviderMap map;
 
    // Always check for and disable missing plugins
@@ -2081,13 +2103,18 @@ void PluginManager::CheckForUpdates()
    // a job for the plugin manager UI (once it is written).
    //
    // Also check for plugins that are no longer valid.
-   PluginMap::iterator iter = mPlugins.begin();
-   while (iter != mPlugins.end())
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
       PluginDescriptor & plug = iter->second;
       const PluginID & plugID = plug.GetID();
       const wxString & plugPath = plug.GetPath();
       PluginType plugType = plug.GetPluginType();
+
+      // Bypass 2.1.0 placeholders...remove this after a few releases past 2.1.0
+      if (plugType == PluginTypeNone)
+      {
+         continue;
+      }
 
       if (plugType == PluginTypeModule)
       {
@@ -2101,7 +2128,12 @@ void PluginManager::CheckForUpdates()
             wxArrayString paths = mm.FindPluginsForProvider(plugID, plugPath);
             for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++)
             {
-               map[paths[i]].Add(plugID);
+               wxString path = paths[i];
+               wxASSERT(!path.IsEmpty());
+               if (pathIndex.Index(plugID + path.BeforeFirst(wxT(';'))) == wxNOT_FOUND)
+               {
+                  map[path].Add(plugID);
+               }
             }
          }
       }
@@ -2109,33 +2141,30 @@ void PluginManager::CheckForUpdates()
       {
          plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath));
       }
-
-      ++iter;
    }
 
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
-   {
-      PluginDescriptor & plug = iter->second;
-      const wxString & plugPath = plug.GetPath().BeforeFirst(wxT(';'));
-      ProviderMap::iterator mapiter = map.find(plugPath);
-      if (mapiter != map.end())
-      {
-         map.erase(mapiter);
-      }
-   }
-
+   // The provider map now includes only paths that haven't been seen before,
+   // so create stub descriptors for them.
+   //
+   // In 2.1.0, they were called "placeholder" in the registry, but since 2.1.1+
+   // use them slightly differently, they are not called "stub" in the registry
+   // and the "placeholder" are left intact.  This way switching between 2.1.0
+   // and 2.1.1+ doesn't cause rescans each time.
    for (ProviderMap::iterator iter = map.begin(); iter != map.end(); ++iter)
    {
       wxString & path = iter->first;
       wxArrayString & providers = iter->second;
+
+      // Create a descriptor for each provider.  Don't know why there would
+      // be multiple providers for the same path, but might as well.
       for (size_t i = 0, cnt = providers.GetCount(); i < cnt; i++)
       {
-         // Create placeholder descriptors to show we've seen this plugin before.
-         //
-         // Placeholder descriptors have a plugin type of PluginTypeNone and the ID
-         // is the path.
-         PluginDescriptor & plug = mPlugins[path];
-         plug.SetID(path);
+         PluginID ID = providers[i] + wxT("_") + path;
+         // Stub descriptors have a plugin type of PluginTypeNone and the ID
+         // is the path.  They are also marked as disabled and not valid.
+         PluginDescriptor & plug = mPlugins[ID];  // This will create a new descriptor
+         plug.SetPluginType(PluginTypeStub);
+         plug.SetID(ID);
          plug.SetProviderID(providers[i]);
          plug.SetPath(path);
          plug.SetEnabled(false);
@@ -2389,6 +2418,9 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
    {
    case PluginTypeNone:
       str = wxT("Placeholder");
+      break;
+   case PluginTypeStub:
+      str = wxT("Stub");
       break;
    case PluginTypeEffect:
       str = wxT("Effect");
