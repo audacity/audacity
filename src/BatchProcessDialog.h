@@ -49,6 +49,7 @@ class BatchProcessDialog:public wxDialog {
 
    void OnApplyToProject(wxCommandEvent & event);
    void OnApplyToFiles(wxCommandEvent & event);
+   void ApplyChainToFiles(wxString name, const wxArrayString& files);
    void OnCancel(wxCommandEvent & event);
 
    wxButton *mOK;

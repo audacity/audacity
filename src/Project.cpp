@@ -553,9 +553,6 @@ AudacityProject *CreateNewBackgroundAudacityProject()
 
 	ModuleManager::Get().Dispatch(ProjectInitialized);
 
-	//p->Show(true);
-	p->Iconize(true);
-
 	return p;
 }
 

@@ -91,7 +91,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "ondemand/ODManager.h"
 #include "commands/Keyboard.h"
 #include "widgets/ErrorDialog.h"
-#include "BatchCommands.h"
+#include "BatchProcessDialog.h"
 
 //temporarilly commented out till it is added to all projects
 //#include "Profiler.h"
@@ -1400,36 +1400,26 @@ Click the 'Help' button for known issues."),
 
    wxString chainName;
    if (parser->Found(wxT("c"), &chainName)) {
-	   InitAudioIO();
-	   Importer::Get().Initialize();
+       InitAudioIO();
+       Importer::Get().Initialize();
 
-	   AudacityProject * p = CreateNewBackgroundAudacityProject();
-	   mCmdHandler->SetProject(p);
-	   ModuleManager::Get().Dispatch(AppInitialized);
+       AudacityProject * p = CreateNewBackgroundAudacityProject();
+       BatchProcessDialog dlg(NULL);
+       wxPathList pl;
+       wxString path;
+       wxArrayString files;
 
-	   BatchCommands cmd;
-	   if (cmd.ReadChain(chainName)) {
-		   size_t paramct = parser->GetParamCount();
-		   wxString fullpath;
-		   wxFileName file;
-		   for (size_t i = 0; i < paramct; i++) {
-			   p->OnRemoveTracks();
-			   file = wxFileName(wxGetCwd(), parser->GetParam(i));
-			   if (!file.IsOk()) {
-				   file = wxFileName(parser->GetParam(i));
-			   }
-			   p->Import(file.GetFullName());
-			   p->OnSelectAll();
-			   cmd.ApplyChain(file.GetFullName());
-		   }
-		   p->Close(true);
-		   QuitAudacity(true);
-		   exit(0);
-	   }
-	   else {
-		   wxPrintf(_("Chain not found.\n"));
-		   exit(1);
-	   }
+       pl.Add(wxGetCwd());
+
+       for (size_t i = 0; i < parser->GetParamCount(); i++) {
+           path = pl.FindAbsoluteValidPath(parser->GetParam(i));
+           if (path != wxT("")) {
+               files.Add(path);
+           }
+       }
+       dlg.ApplyChainToFiles(chainName, files);
+       QuitAudacity(true);
+       return;
    }
 
 // No Splash screen on wx3 whislt we sort out the problem
