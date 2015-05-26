@@ -977,6 +977,13 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 
 void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 {
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   if (gAudioIO->IsScrubbing())
+      // Pausing does not make sense.  Force the button
+      // to pop up below.
+      mPaused = true;
+#endif
+
    if(mPaused)
    {
       mPause->PopUp();
