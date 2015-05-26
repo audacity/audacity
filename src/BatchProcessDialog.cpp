@@ -264,6 +264,8 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
     dlog.GetPaths(files);
 
     files.Sort();
+
+    ApplyChainToFiles(name, files);
 }
 
 void BatchProcessDialog::ApplyChainToFiles(wxString name, const wxArrayString& files) {
