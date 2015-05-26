@@ -971,7 +971,6 @@ wxString AudioUnitEffect::GetFamily()
 
 bool AudioUnitEffect::IsInteractive()
 {
-printf("isinter %d\n", mInteractive);
    return mInteractive;
 }
 
@@ -2280,42 +2279,6 @@ bool AudioUnitEffect::SetRateAndChannels()
 {
    ComponentResult auResult;
 
-   auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_SampleRate,
-                                   kAudioUnitScope_Global,
-                                   0,
-                                   &mSampleRate,
-                                   sizeof(Float64));
-   if (auResult != 0)
-   {
-      printf("Didn't accept sample rate\n");
-      return false;
-   }
-
-   auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_SampleRate,
-                                   kAudioUnitScope_Input,
-                                   0,
-                                   &mSampleRate,
-                                   sizeof(Float64));
-   if (auResult != 0)
-   {
-      printf("Didn't accept sample rate\n");
-      return false;
-   }
-
-   auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_SampleRate,
-                                   kAudioUnitScope_Output,
-                                   0,
-                                   &mSampleRate,
-                                   sizeof(Float64));
-   if (auResult != 0)
-   {
-      printf("Didn't accept sample rate\n");
-      return false;
-   }
-
    AudioStreamBasicDescription streamFormat = {0};
 
    streamFormat.mSampleRate = mSampleRate;
@@ -2329,27 +2292,71 @@ bool AudioUnitEffect::SetRateAndChannels()
    streamFormat.mBytesPerPacket = sizeof(float);
 
    auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_StreamFormat,
-                                   kAudioUnitScope_Input,
+                                   kAudioUnitProperty_SampleRate,
+                                   kAudioUnitScope_Global,
                                    0,
-                                   &streamFormat,
-                                   sizeof(AudioStreamBasicDescription));
+                                   &mSampleRate,
+                                   sizeof(Float64));
    if (auResult != 0)
    {
+      printf("%ls Didn't accept sample rate on global\n", GetName().c_str());
       return false;
    }
 
-   streamFormat.mChannelsPerFrame = mAudioOuts;
-   auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_StreamFormat,
-                                   kAudioUnitScope_Output,
-                                   0,
-                                   &streamFormat,
-                                   sizeof(AudioStreamBasicDescription));
-
-   if (auResult != 0)
+   if (mAudioIns > 0)
    {
-      return false;
+      auResult = AudioUnitSetProperty(mUnit,
+                                      kAudioUnitProperty_SampleRate,
+                                      kAudioUnitScope_Input,
+                                      0,
+                                      &mSampleRate,
+                                      sizeof(Float64));
+      if (auResult != 0)
+      {
+         printf("%ls Didn't accept sample rate on input\n", GetName().c_str());
+         return false;
+      }
+
+      auResult = AudioUnitSetProperty(mUnit,
+                                      kAudioUnitProperty_StreamFormat,
+                                      kAudioUnitScope_Input,
+                                      0,
+                                      &streamFormat,
+                                      sizeof(AudioStreamBasicDescription));
+      if (auResult != 0)
+      {
+         printf("%ls didn't accept stream format on input\n", GetName().c_str());
+         return false;
+      }
+   }
+
+   if (mAudioOuts > 0)
+   {
+      auResult = AudioUnitSetProperty(mUnit,
+                                      kAudioUnitProperty_SampleRate,
+                                      kAudioUnitScope_Output,
+                                      0,
+                                      &mSampleRate,
+                                      sizeof(Float64));
+      if (auResult != 0)
+      {
+         printf("%ls Didn't accept sample rate on output\n", GetName().c_str());
+         return false;
+      }
+   
+      streamFormat.mChannelsPerFrame = mAudioOuts;
+      auResult = AudioUnitSetProperty(mUnit,
+                                      kAudioUnitProperty_StreamFormat,
+                                      kAudioUnitScope_Output,
+                                      0,
+                                      &streamFormat,
+                                      sizeof(AudioStreamBasicDescription));
+   
+      if (auResult != 0)
+      {
+         printf("%ls didn't accept stream format on output\n", GetName().c_str());
+         return false;
+      }
    }
 
    return true;
