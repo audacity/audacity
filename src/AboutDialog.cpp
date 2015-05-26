@@ -92,6 +92,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Jeremy R. Brown"), roleContributor);
    AddCredit(wxT("Alex S. Brown"), roleContributor);
    AddCredit(wxT("Chris Cannam"), roleContributor);
+   AddCredit(wxT("Cory Cook"), roleContributor);
    AddCredit(wxT("Craig DeForest"), roleContributor);
    AddCredit(wxT("Mitch Golden"), roleContributor);
    AddCredit(wxT("Brian Gunlogson"), roleContributor);

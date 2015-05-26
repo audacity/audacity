@@ -470,11 +470,18 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
 
 void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 {
+   // Save active settings
+   wxString settingsName(wxT("Export Save"));
+   mEffect->SaveParameters(settingsName);
+
    // Look for selected presets
    long sel = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    while (sel >= 0)
    {
       wxString name = mList->GetItemText(sel);
+
+      // Make the preset current
+      mEffect->LoadParameters(mEffect->mHost->GetUserPresetsGroup(name));
 
       // Make sure the user preset directory exists
       wxString path;
@@ -541,6 +548,10 @@ void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       sel = mList->GetNextItem(sel, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
 
+   // Restore active settings
+   mEffect->LoadParameters(settingsName);
+   mEffect->mHost->RemovePrivateConfigSubgroup(settingsName);
+   
    EndModal(wxID_OK);
 }
 
@@ -654,6 +665,10 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
 
 void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 {
+   // Save active settings
+   wxString settingsName(wxT("Import Save"));
+   mEffect->SaveParameters(settingsName);
+
    // Look for selected presets
    long sel = -1;
    while ((sel = mList->GetNextItem(sel, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) >= 0)
@@ -696,9 +711,9 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
       CFPropertyListRef content;
       content = CFPropertyListCreateFromXMLData(kCFAllocatorDefault,
-                                                 xml,
-                                                 kCFPropertyListImmutable,
-                                                 NULL);
+                                                xml,
+                                                kCFPropertyListImmutable,
+                                                NULL);
       CFRelease(xml);
 
       if (!content)
@@ -717,6 +732,10 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       mEffect->SaveUserPreset(mEffect->mHost->GetUserPresetsGroup(mList->GetItemText(sel)));
    }
 
+   // Restore active settings
+   mEffect->LoadParameters(settingsName);
+   mEffect->mHost->RemovePrivateConfigSubgroup(settingsName);
+   
    EndModal(wxID_OK);
 }
 
@@ -971,7 +990,6 @@ wxString AudioUnitEffect::GetFamily()
 
 bool AudioUnitEffect::IsInteractive()
 {
-printf("isinter %d\n", mInteractive);
    return mInteractive;
 }
 
@@ -2280,42 +2298,6 @@ bool AudioUnitEffect::SetRateAndChannels()
 {
    ComponentResult auResult;
 
-   auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_SampleRate,
-                                   kAudioUnitScope_Global,
-                                   0,
-                                   &mSampleRate,
-                                   sizeof(Float64));
-   if (auResult != 0)
-   {
-      printf("Didn't accept sample rate\n");
-      return false;
-   }
-
-   auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_SampleRate,
-                                   kAudioUnitScope_Input,
-                                   0,
-                                   &mSampleRate,
-                                   sizeof(Float64));
-   if (auResult != 0)
-   {
-      printf("Didn't accept sample rate\n");
-      return false;
-   }
-
-   auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_SampleRate,
-                                   kAudioUnitScope_Output,
-                                   0,
-                                   &mSampleRate,
-                                   sizeof(Float64));
-   if (auResult != 0)
-   {
-      printf("Didn't accept sample rate\n");
-      return false;
-   }
-
    AudioStreamBasicDescription streamFormat = {0};
 
    streamFormat.mSampleRate = mSampleRate;
@@ -2329,27 +2311,71 @@ bool AudioUnitEffect::SetRateAndChannels()
    streamFormat.mBytesPerPacket = sizeof(float);
 
    auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_StreamFormat,
-                                   kAudioUnitScope_Input,
+                                   kAudioUnitProperty_SampleRate,
+                                   kAudioUnitScope_Global,
                                    0,
-                                   &streamFormat,
-                                   sizeof(AudioStreamBasicDescription));
+                                   &mSampleRate,
+                                   sizeof(Float64));
    if (auResult != 0)
    {
+      printf("%ls Didn't accept sample rate on global\n", GetName().c_str());
       return false;
    }
 
-   streamFormat.mChannelsPerFrame = mAudioOuts;
-   auResult = AudioUnitSetProperty(mUnit,
-                                   kAudioUnitProperty_StreamFormat,
-                                   kAudioUnitScope_Output,
-                                   0,
-                                   &streamFormat,
-                                   sizeof(AudioStreamBasicDescription));
-
-   if (auResult != 0)
+   if (mAudioIns > 0)
    {
-      return false;
+      auResult = AudioUnitSetProperty(mUnit,
+                                      kAudioUnitProperty_SampleRate,
+                                      kAudioUnitScope_Input,
+                                      0,
+                                      &mSampleRate,
+                                      sizeof(Float64));
+      if (auResult != 0)
+      {
+         printf("%ls Didn't accept sample rate on input\n", GetName().c_str());
+         return false;
+      }
+
+      auResult = AudioUnitSetProperty(mUnit,
+                                      kAudioUnitProperty_StreamFormat,
+                                      kAudioUnitScope_Input,
+                                      0,
+                                      &streamFormat,
+                                      sizeof(AudioStreamBasicDescription));
+      if (auResult != 0)
+      {
+         printf("%ls didn't accept stream format on input\n", GetName().c_str());
+         return false;
+      }
+   }
+
+   if (mAudioOuts > 0)
+   {
+      auResult = AudioUnitSetProperty(mUnit,
+                                      kAudioUnitProperty_SampleRate,
+                                      kAudioUnitScope_Output,
+                                      0,
+                                      &mSampleRate,
+                                      sizeof(Float64));
+      if (auResult != 0)
+      {
+         printf("%ls Didn't accept sample rate on output\n", GetName().c_str());
+         return false;
+      }
+   
+      streamFormat.mChannelsPerFrame = mAudioOuts;
+      auResult = AudioUnitSetProperty(mUnit,
+                                      kAudioUnitProperty_StreamFormat,
+                                      kAudioUnitScope_Output,
+                                      0,
+                                      &streamFormat,
+                                      sizeof(AudioStreamBasicDescription));
+   
+      if (auResult != 0)
+      {
+         printf("%ls didn't accept stream format on output\n", GetName().c_str());
+         return false;
+      }
    }
 
    return true;
