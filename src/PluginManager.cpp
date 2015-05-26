@@ -613,7 +613,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       else if (plugType == PluginTypeStub)
       {
          wxFileName fname = path;
-         item.name = fname.GetName();
+         item.name = fname.GetName().Trim(false).Trim(true);
          if (!plug.IsValid())
          {
             item.state = STATE_New;
@@ -2137,7 +2137,7 @@ void PluginManager::CheckForUpdates()
             }
          }
       }
-      else if (plugType != PluginTypeNone)
+      else if (plugType != PluginTypeNone && plugType != PluginTypeStub)
       {
          plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath));
       }
