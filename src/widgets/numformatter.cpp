@@ -120,7 +120,7 @@ private:
 
 wxChar NumberFormatter::GetDecimalSeparator()
 {
-#if defined(WE_DO_NOT_CHANGE_THE_LOCALE_SO_PERIOD_IS_ALWAYS_THE_SEPERATOR) //wxUSE_INTL 
+#if wxUSE_INTL 
     // Notice that while using static variable here is not MT-safe, the worst
     // that can happen is that we redo the initialization if we're called
     // concurrently from more than one thread so it's not a real problem.
@@ -158,7 +158,7 @@ wxChar NumberFormatter::GetDecimalSeparator()
 
 bool NumberFormatter::GetThousandsSeparatorIfUsed(wxChar *sep)
 {
-#if defined(WE_DO_NOT_CHANGE_THE_LOCALE_SO_NO_SEPERATOR) //wxUSE_INTL
+#if wxUSE_INTL
     static wxChar s_thousandsSeparator = 0;
     static LocaleId s_localeUsedForInit;
 
