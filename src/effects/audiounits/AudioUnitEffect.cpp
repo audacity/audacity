@@ -470,11 +470,18 @@ void AudioUnitEffectExportDialog::PopulateOrExchange(ShuttleGui & S)
 
 void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 {
+   // Save active settings
+   wxString settingsName(wxT("Export Save"));
+   mEffect->SaveParameters(settingsName);
+
    // Look for selected presets
    long sel = mList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    while (sel >= 0)
    {
       wxString name = mList->GetItemText(sel);
+
+      // Make the preset current
+      mEffect->LoadParameters(mEffect->mHost->GetUserPresetsGroup(name));
 
       // Make sure the user preset directory exists
       wxString path;
@@ -541,6 +548,10 @@ void AudioUnitEffectExportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       sel = mList->GetNextItem(sel, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
 
+   // Restore active settings
+   mEffect->LoadParameters(settingsName);
+   mEffect->mHost->RemovePrivateConfigSubgroup(settingsName);
+   
    EndModal(wxID_OK);
 }
 
@@ -654,6 +665,10 @@ void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
 
 void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 {
+   // Save active settings
+   wxString settingsName(wxT("Import Save"));
+   mEffect->SaveParameters(settingsName);
+
    // Look for selected presets
    long sel = -1;
    while ((sel = mList->GetNextItem(sel, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) >= 0)
@@ -696,9 +711,9 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
       CFPropertyListRef content;
       content = CFPropertyListCreateFromXMLData(kCFAllocatorDefault,
-                                                 xml,
-                                                 kCFPropertyListImmutable,
-                                                 NULL);
+                                                xml,
+                                                kCFPropertyListImmutable,
+                                                NULL);
       CFRelease(xml);
 
       if (!content)
@@ -717,6 +732,10 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       mEffect->SaveUserPreset(mEffect->mHost->GetUserPresetsGroup(mList->GetItemText(sel)));
    }
 
+   // Restore active settings
+   mEffect->LoadParameters(settingsName);
+   mEffect->mHost->RemovePrivateConfigSubgroup(settingsName);
+   
    EndModal(wxID_OK);
 }
 
