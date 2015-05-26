@@ -6196,6 +6196,12 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
+   if (GetTracks()->IsEmpty())
+      // Scrolling and Zoom in and out commands are disabled when there are no tracks.
+      // This should be disabled too for consistency.  Otherwise
+      // you do see changes in the time ruler.
+      return;
+
    double steps = event.m_wheelRotation /
       (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
 
