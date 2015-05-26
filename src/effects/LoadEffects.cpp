@@ -128,14 +128,18 @@
    EFFECT( TRUNCATESILENCE,   EffectTruncSilence() )     \
    EFFECT( WAHWAH,            EffectWahwah() )           \
    EFFECT( FINDCLIPPING,      EffectFindClipping() )     \
+   NOISEREDUCTION_EFFECT                                 \
+   SOUNDTOUCH_EFFECTS
+
+//
+// Define the list of effects that do not get autoregistered
+//
+#define EXCLUDE_LIST \
    EFFECT( AUTODUCK,          EffectAutoDuck() )         \
    EFFECT( LEVELLER,          EffectLeveller() )         \
    EFFECT( PAULSTRETCH,       EffectPaulstretch() )      \
    CLASSICFILTER_EFFECT                                  \
-   SBSMS_EFFECTS                                         \
-   NOISEREDUCTION_EFFECT                                 \
-   SOUNDTOUCH_EFFECTS
-
+   SBSMS_EFFECTS
 
 //
 // Define the EFFECT() macro to generate enum names
@@ -148,6 +152,7 @@
 enum
 {
    EFFECT_LIST
+   EXCLUDE_LIST
 };
 
 //
@@ -164,6 +169,13 @@ static const wxChar *kEffectNames[] =
    EFFECT_LIST
 };
 
+//
+// Create the effect name array of excluded effects
+//
+static const wxChar *kExcludedNames[] =
+{
+   EXCLUDE_LIST
+};
 
 //
 // Redefine EFFECT() to generate a case statement for the lookup switch
@@ -257,6 +269,12 @@ bool BuiltinEffectsModule::Initialize()
    {
       mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + kEffectNames[i]);
    }
+
+   for (size_t i = 0; i < WXSIZEOF(kExcludedNames); i++)
+   {
+      mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + kExcludedNames[i]);
+   }
+
    return true;
 }
 
@@ -331,6 +349,7 @@ Effect *BuiltinEffectsModule::Instantiate(const wxString & path)
    switch (mNames.Index(path))
    {
       EFFECT_LIST;
+      EXCLUDE_LIST;
    }
 
    return NULL;

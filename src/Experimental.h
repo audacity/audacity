@@ -78,7 +78,7 @@
 //#define EFFECT_CATEGORIES
 
 // JKC Apr 2015, Menu item to manage effects.
-//#define EXPERIMENTAL_EFFECT_MANAGEMENT
+#define EXPERIMENTAL_EFFECT_MANAGEMENT
 
 // Andreas Micheler, 20.Nov 2007:
 // A spectrumLogF-like view mode with notes quantization.
@@ -170,7 +170,7 @@
 // #define EXPERIMENTAL_NYQUIST_SPLIT_CONTROL
 
 // Paul Licameli (PRL) 16 Apr 2015
-//Support for scrubbing in the AudioIO engine, without calls to it
+// Support for scrubbing in the AudioIO engine, without calls to it
 #define EXPERIMENTAL_SCRUBBING_SUPPORT
    
 // The following enable parts of the scrubbing user interface.
@@ -181,6 +181,10 @@
 // You must define EXPERIMENTAL_SCRUBBING_BASIC if you enable this:
 #define EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
 
+// Paul Licameli (PRL) 24 May 2015
+// Allow scrolling up to one half of a screenful beyond either end of the project.
+// This allows smooth-scrolling scrub to work more reasonably at the ends.
+#define EXPERIMENTAL_SCROLLING_LIMITS
 
 // Define to include crash reporting
 #define EXPERIMENTAL_CRASH_REPORT

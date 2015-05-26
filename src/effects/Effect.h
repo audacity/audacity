@@ -79,7 +79,6 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    virtual bool IsLegacy();
    virtual bool SupportsRealtime();
    virtual bool SupportsAutomation();
-   virtual bool EnableFromGetGo(){ return true;};
 
    // EffectClientInterface implementation
 

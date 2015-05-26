@@ -53,47 +53,6 @@
 
 #include "../PlatformCompatibility.h"
 
-static ContrastDialog *gContrastDialog = NULL;
-
-void InitContrastDialog(wxWindow * parent)
-{
-   if(!gContrastDialog)
-   {
-      wxPoint where;
-
-      where.x = 150;
-      where.y = 150;
-
-      gContrastDialog = new ContrastDialog(parent, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
-
-      gContrastDialog->bFGset = false;
-      gContrastDialog->bBGset = false;
-   }
-
-   // Zero dialog boxes.  Do we need to do this here?
-   if( !gContrastDialog->bFGset )
-   {
-      gContrastDialog->mForegroundStartT->SetValue(0.0);
-      gContrastDialog->mForegroundEndT->SetValue(0.0);
-   }
-   if( !gContrastDialog->bBGset )
-   {
-      gContrastDialog->mBackgroundStartT->SetValue(0.0);
-      gContrastDialog->mBackgroundEndT->SetValue(0.0);
-   }
-
-   gContrastDialog->CentreOnParent();
-   gContrastDialog->Show();
-}
-
-void CloseContrastDialog()
-{
-   if (gContrastDialog) {
-      delete gContrastDialog;
-      gContrastDialog = NULL;
-   }
-}
-
 float ContrastDialog::GetDB()
 {
    // FIXME: what if more than one track?

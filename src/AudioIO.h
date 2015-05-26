@@ -90,6 +90,7 @@ struct AudioIOStartStreamOptions
       , maxScrubSpeed(1.0)
       , minScrubStutter(0.0)
       , scrubStartClockTimeMillis(-1)
+      , maxScrubTime(0.0)
 #endif
    {}
 
@@ -117,6 +118,9 @@ struct AudioIOStartStreamOptions
    // Scrubbing needs the time of start of the mouse movement that began
    // the scrub:
    wxLongLong scrubStartClockTimeMillis;
+
+   // usually from TrackList::GetEndTime()
+   double maxScrubTime;
 #endif
 };
 
@@ -164,6 +168,8 @@ class AUDACITY_DLL_API AudioIO {
    void SeekStream(double seconds) { mSeek = seconds; }
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   bool IsScrubbing() { return IsBusy() && mScrubQueue != 0; }
+
    static double GetMaxScrubSpeed() { return 32.0; } // Is five octaves enough for your amusement?
    static double GetMinScrubSpeed() { return 0.01; }
    /** \brief enqueue a new end time, using the last end as the new start,

@@ -84,7 +84,6 @@ public:
    virtual wxString GetFamily();
    virtual bool IsInteractive();
    virtual bool IsDefault();
-   virtual bool EnableFromGetGo(){ return true;};
 
    // EffectClientInterface implementation
 

@@ -217,7 +217,7 @@ is time to refresh some aspect of the screen.
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "toolbars/ToolsToolBar.h"
-#include "toolbars/TranscriptionToolBar.h"
+// #include "toolbars/TranscriptionToolBar.h"
 
 #include "widgets/ASlider.h"
 #include "widgets/Ruler.h"
@@ -967,6 +967,7 @@ void TrackPanel::GetTracksUsableArea(int *width, int *height) const
    *width -= GetLabelWidth();
    // AS: MAGIC NUMBER: What does 2 represent?
    *width -= 2 + kLeftInset;
+   *width = std::max(0, *width);
 }
 
 /// Gets the pointer to the AudacityProject that
@@ -1100,7 +1101,6 @@ void TrackPanel::OnTimer()
    //  that indicates where the current play/record position is. (This also
    //  draws the moving vertical line.)
 
-   // PRL: mIndicatorShowing never becomes true!
    if (!gAudioIO->IsPaused() &&
        ( mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken()))
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
@@ -1474,9 +1474,6 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    // (See TrackPanel::Refresh())
    if (mRefreshBacking || (box == GetRect()))
    {
-      // Update visible sliders
-      mTrackInfo.UpdateSliderOffset(mViewInfo->track);
-
       // Reset (should a mutex be used???)
       mRefreshBacking = false;
 
@@ -1490,7 +1487,11 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
          // the drawing of the tracks.  This prevents flashing of the indicator
          // at higher magnifications, and keeps the green line still in the middle.
          indicator = gAudioIO->GetStreamTime();
-         mViewInfo->h = std::max(0.0, indicator - mViewInfo->screen / 2.0);
+         mViewInfo->h = indicator - mViewInfo->screen / 2.0;
+#if !defined(EXPERIMENTAL_SCROLLING_LIMITS)
+         // Can't scroll too far left
+         mViewInfo->h = std::max(0.0, mViewInfo->h);
+#endif
       }
 #endif
 
@@ -1514,7 +1515,6 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
    // Update the indicator in case it was damaged if this project is playing
 
-   // PRL: mIndicatorShowing never becomes true!
    AudacityProject* p = GetProject();
    if (!gAudioIO->IsPaused() &&
       (mIndicatorShowing || gAudioIO->IsStreamActive(p->GetAudioIOToken())))
@@ -2315,10 +2315,11 @@ bool TrackPanel::IsScrubbing()
    else if (mScrubToken == GetProject()->GetAudioIOToken())
       return true;
    else {
-      // Some other command might have stopped scrub play before we
-      // reached StopScrubbing()!  But that is okay.
       mScrubToken = -1;
       mScrubStartPosition = -1;
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      mSmoothScrollingScrub = false;
+#endif
       return false;
    }
 }
@@ -2350,9 +2351,12 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
       return false;
    else if (mScrubStartPosition >= 0) {
       const bool busy = gAudioIO->IsBusy();
-      if (busy && gAudioIO->GetNumCaptureChannels() > 0)
-         // Do not stop recording
+      if (busy && gAudioIO->GetNumCaptureChannels() > 0) {
+         // Do not stop recording, and don't try to start scrubbing after
+         // recording stops
+         mScrubStartPosition = -1;
          return false;
+      }
 
       wxCoord position = event.m_x;
       AudacityProject *p = GetActiveProject();
@@ -2371,10 +2375,16 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
             options.scrubDelay = (kTimerInterval / 1000.0);
             options.scrubStartClockTimeMillis = mScrubStartClockTimeMillis;
             options.minScrubStutter = 0.2;
+#if 0
             // Take the starting speed limit from the transcription toolbar,
             // but it may be varied during the scrub.
             mMaxScrubSpeed = options.maxScrubSpeed =
                p->GetTranscriptionToolBar()->GetPlaySpeed();
+#else
+            // That idea seems unpopular... just make it one
+            mMaxScrubSpeed = options.maxScrubSpeed = 1.0;
+#endif
+            options.maxScrubTime = mTracks->GetEndTime();
             const bool cutPreview = false;
             const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
@@ -2406,11 +2416,7 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
 bool TrackPanel::ContinueScrubbing(wxCoord position, bool maySkip)
 {
    wxCoord leadPosition = position;
-   double newEnd =
-	   std::max(0.0,
-	      std::min(PositionToTime(leadPosition, GetLeftOffset()),
-		     mTracks->GetEndTime()
-   ));
+   double newEnd = PositionToTime(leadPosition, GetLeftOffset());
 
    if (maySkip)
       // Cause OnTimer() to suppress the speed display
@@ -2438,13 +2444,6 @@ bool TrackPanel::StopScrubbing()
             ctb->StopPlaying();
          }
       }
-      mScrubToken = -1;
-      mScrubStartPosition = -1;
-
-#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      mSmoothScrollingScrub = false;
-#endif
-
       return true;
    }
    else
@@ -2715,7 +2714,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
       if (startNewSelection) { // mouse is not at an edge, but after
          // quantization, we could be indicating the selection edge
          mSelStartValid = true;
-         mSelStart = PositionToTime(event.m_x, r.x);
+         mSelStart = std::max(0.0, PositionToTime(event.m_x, r.x));
          mStretchStart = nt->NearestBeatTime(mSelStart, &centerBeat);
          if (within(qBeat0, centerBeat, 0.1)) {
             mListener->TP_DisplayStatusMessage(
@@ -2806,8 +2805,10 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
 void TrackPanel::StartSelection(int mouseXCoordinate, int trackLeftEdge)
 {
    mSelStartValid = true;
-   mSelStart = mViewInfo->h + ((mouseXCoordinate - trackLeftEdge)
-                               / mViewInfo->zoom);
+   mSelStart =
+      std::max(0.0,
+      mViewInfo->h + ((mouseXCoordinate - trackLeftEdge)
+      / mViewInfo->zoom));
 
    double s = mSelStart;
 
@@ -2837,7 +2838,7 @@ void TrackPanel::ExtendSelection(int mouseXCoordinate, int trackLeftEdge,
       // Must be dragging frequency bounds only.
       return;
 
-   double selend = PositionToTime(mouseXCoordinate, trackLeftEdge);
+   double selend = std::max(0.0, PositionToTime(mouseXCoordinate, trackLeftEdge));
    clip_bottom(selend, 0.0);
 
    double origSel0, origSel1;
@@ -3269,7 +3270,7 @@ void TrackPanel::Stretch(int mouseXCoordinate, int trackLeftEdge,
    }
 
    NoteTrack *pNt = (NoteTrack *) pTrack;
-   double moveto = PositionToTime(mouseXCoordinate, trackLeftEdge);
+   double moveto = std::max(0.0, PositionToTime(mouseXCoordinate, trackLeftEdge));
 
    // check to make sure tempo is not higher than 20 beats per second
    // (In principle, tempo can be higher, but not infinity.)
@@ -5412,12 +5413,12 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
 
    // On the Mac, we'll lose track capture if the slider dialog
    // is displayed, but it doesn't hurt to do this for all plats.
-   Track *capturedTrack = mCapturedTrack;
+   WaveTrack *capturedTrack = (WaveTrack *) mCapturedTrack;
 
    if (pan)
-      slider = mTrackInfo.PanSlider(capturedTrack->GetIndex());
+      slider = mTrackInfo.PanSlider(capturedTrack);
    else
-      slider = mTrackInfo.GainSlider(capturedTrack->GetIndex());
+      slider = mTrackInfo.GainSlider(capturedTrack);
 
    slider->OnMouseEvent(event);
 
@@ -5470,11 +5471,7 @@ void TrackPanel::HandleSliders(wxMouseEvent &event, bool pan)
    }
 #endif
 
-   VisibleTrackIterator iter(GetProject());
-   for (Track *t = iter.First(); t; t = iter.Next())
-   {
-      RefreshTrack(t);
-   }
+   RefreshTrack(capturedTrack);
 
    if (event.ButtonUp()) {
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -6199,6 +6196,12 @@ void TrackPanel::HandleResize(wxMouseEvent & event)
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
 void TrackPanel::HandleWheelRotation(wxMouseEvent & event)
 {
+   if (GetTracks()->IsEmpty())
+      // Scrolling and Zoom in and out commands are disabled when there are no tracks.
+      // This should be disabled too for consistency.  Otherwise
+      // you do see changes in the time ruler.
+      return;
+
    double steps = event.m_wheelRotation /
       (event.m_wheelDelta > 0 ? (double)event.m_wheelDelta : 120.0);
 
@@ -8320,7 +8323,7 @@ void TrackPanel::OnTrackPan()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.PanSlider(t->GetIndex());
+   LWSlider *slider = mTrackInfo.PanSlider((WaveTrack *) t);
    if (slider->ShowDialog()) {
       SetTrackPan(t, slider);
    }
@@ -8333,7 +8336,7 @@ void TrackPanel::OnTrackPanLeft()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.PanSlider(t->GetIndex());
+   LWSlider *slider = mTrackInfo.PanSlider((WaveTrack *) t);
    slider->Decrease(1);
    SetTrackPan(t, slider);
 }
@@ -8345,7 +8348,7 @@ void TrackPanel::OnTrackPanRight()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.PanSlider(t->GetIndex());
+   LWSlider *slider = mTrackInfo.PanSlider((WaveTrack *) t);
    slider->Increase(1);
    SetTrackPan(t, slider);
 }
@@ -8375,7 +8378,7 @@ void TrackPanel::OnTrackGain()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.GainSlider(t->GetIndex());
+   LWSlider *slider = mTrackInfo.GainSlider((WaveTrack *) t);
    if (slider->ShowDialog()) {
       SetTrackGain(t, slider);
    }
@@ -8388,7 +8391,7 @@ void TrackPanel::OnTrackGainInc()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.GainSlider(t->GetIndex());
+   LWSlider *slider = mTrackInfo.GainSlider((WaveTrack *) t);
    slider->Increase(1);
    SetTrackGain(t, slider);
 }
@@ -8400,7 +8403,7 @@ void TrackPanel::OnTrackGainDec()
       return;
    }
 
-   LWSlider *slider = mTrackInfo.GainSlider(t->GetIndex());
+   LWSlider *slider = mTrackInfo.GainSlider((WaveTrack *) t);
    slider->Decrease(1);
    SetTrackGain(t, slider);
 }
@@ -9784,16 +9787,30 @@ void TrackPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 
 **********************************************************************/
 
-TrackInfo::TrackInfo(wxWindow * pParentIn)
+TrackInfo::TrackInfo(TrackPanel * pParentIn)
 {
-
    pParent = pParentIn;
 
-   // Populate sliders array
-   for (unsigned int i = 0; i < kInitialSliders; ++i) {
-      MakeMoreSliders();
-   }
-   mSliderOffset = 0;
+   wxRect r(0, 0, 1000, 1000);
+   wxRect sliderRect;
+
+   GetGainRect(r, sliderRect);
+
+   /* i18n-hint: Title of the Gain slider, used to adjust the volume */
+   mGain = new LWSlider(pParent, _("Gain"),
+                        wxPoint(sliderRect.x, sliderRect.y),
+                        wxSize(sliderRect.width, sliderRect.height),
+                        DB_SLIDER);
+   mGain->SetDefaultValue(1.0);
+
+   GetPanRect(r, sliderRect);
+
+   /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
+   mPan = new LWSlider(pParent, _("Pan"),
+                       wxPoint(sliderRect.x, sliderRect.y),
+                       wxSize(sliderRect.width, sliderRect.height),
+                       PAN_SLIDER);
+   mPan->SetDefaultValue(0.0);
 
    int fontSize = 10;
    mFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -9814,11 +9831,8 @@ TrackInfo::TrackInfo(wxWindow * pParentIn)
 
 TrackInfo::~TrackInfo()
 {
-   unsigned int i;
-   for(i=0; i<mGains.Count(); i++)
-      delete mGains[i];
-   for(i=0; i<mPans.Count(); i++)
-      delete mPans[i];
+   delete mGain;
+   delete mPan;
 }
 
 static const int kTrackInfoWidth = 100;
@@ -9898,12 +9912,12 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & r, wxRect &dest) const
 
 
 /// \todo Probably should move to 'Utils.cpp'.
-void TrackInfo::SetTrackInfoFont(wxDC * dc)
+void TrackInfo::SetTrackInfoFont(wxDC * dc) const
 {
    dc->SetFont(mFont);
 }
 
-void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect & r, bool bHasMuteSolo)
+void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect & r, bool bHasMuteSolo) const
 {
    AColor::Dark(dc, false); // same color as border of toolbars (ToolBar::OnPaint())
 
@@ -9930,7 +9944,7 @@ void TrackInfo::DrawBordersWithin(wxDC* dc, const wxRect & r, bool bHasMuteSolo)
 }
 
 void TrackInfo::DrawBackground(wxDC * dc, const wxRect & r, bool bSelected,
-   bool WXUNUSED(bHasMuteSolo), const int labelw, const int WXUNUSED(vrul))
+   bool WXUNUSED(bHasMuteSolo), const int labelw, const int WXUNUSED(vrul)) const
 {
    // fill in label
    wxRect fill = r;
@@ -9969,7 +9983,7 @@ void TrackInfo::GetTrackControlsRect(const wxRect & r, wxRect & dest) const
 }
 
 
-void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & r, bool down)
+void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & r, bool down) const
 {
    wxRect bev;
    GetCloseBoxRect(r, bev);
@@ -9999,7 +10013,7 @@ void TrackInfo::DrawCloseBox(wxDC * dc, const wxRect & r, bool down)
 }
 
 void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & r, Track * t,
-                              bool down)
+                              bool down) const
 {
    wxRect bev;
    GetTitleBarRect(r, bev);
@@ -10045,7 +10059,7 @@ void TrackInfo::DrawTitleBar(wxDC * dc, const wxRect & r, Track * t,
 
 /// Draw the Mute or the Solo button, depending on the value of solo.
 void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & r, Track * t,
-                              bool down, bool solo, bool bHasSoloButton)
+                              bool down, bool solo, bool bHasSoloButton) const
 {
    wxRect bev;
    if( solo && !bHasSoloButton )
@@ -10097,7 +10111,7 @@ void TrackInfo::DrawMuteSolo(wxDC * dc, const wxRect & r, Track * t,
 }
 
 // Draw the minimize button *and* the sync-lock track icon, if necessary.
-void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & r, Track * t, bool down)
+void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & r, Track * t, bool down) const
 {
    wxRect bev;
    GetMinimizeRect(r, bev);
@@ -10123,43 +10137,8 @@ void TrackInfo::DrawMinimize(wxDC * dc, const wxRect & r, Track * t, bool down)
    AColor::BevelTrackInfo(*dc, !down, bev);
 }
 
-void TrackInfo::MakeMoreSliders()
-{
-   wxRect r(0, 0, 1000, 1000);
-   wxRect gainRect;
-   wxRect panRect;
-
-   GetGainRect(r, gainRect);
-   GetPanRect(r, panRect);
-
-   /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   LWSlider *slider = new LWSlider(pParent, _("Gain"),
-                                   wxPoint(gainRect.x, gainRect.y),
-                                   wxSize(gainRect.width, gainRect.height),
-                                   DB_SLIDER);
-   slider->SetDefaultValue(1.0);
-   mGains.Add(slider);
-
-   /* i18n-hint: Title of the Pan slider, used to move the sound left or right */
-   slider = new LWSlider(pParent, _("Pan"),
-                         wxPoint(panRect.x, panRect.y),
-                         wxSize(panRect.width, panRect.height),
-                         PAN_SLIDER);
-   slider->SetDefaultValue(0.0);
-   mPans.Add(slider);
-}
-
-// This covers the case where kInitialSliders - kSliderPageFlip is not big
-// enough
-void TrackInfo::EnsureSufficientSliders(int index)
-{
-   while (mGains.Count() < (unsigned int)index - mSliderOffset + 1 ||
-          mPans.Count() < (unsigned int)index - mSliderOffset + 1)
-      MakeMoreSliders();
-}
-
 #ifdef EXPERIMENTAL_MIDI_OUT
-void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect r)
+void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect r) const
 {
     wxRect gainRect;
     int index = t->GetIndex();
@@ -10174,127 +10153,43 @@ void TrackInfo::DrawVelocitySlider(wxDC *dc, NoteTrack *t, wxRect r)
 }
 #endif
 
-void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect r)
+void TrackInfo::DrawSliders(wxDC *dc, WaveTrack *t, wxRect r) const
 {
-   wxRect gainRect;
-   wxRect panRect;
-   int index = t->GetIndex();
+   wxRect sliderRect;
 
-   EnsureSufficientSliders( index );
-
-   GetGainRect(r, gainRect);
-   GetPanRect(r, panRect);
-
-   if (gainRect.y + gainRect.height < r.y + r.height - 19) {
-#ifdef EXPERIMENTAL_MIDI_OUT
-      GainSlider(index)->SetStyle(DB_SLIDER);
-#endif
-      GainSlider(index)->Move(wxPoint(gainRect.x, gainRect.y));
-      GainSlider(index)->Set(t->GetGain());
-      GainSlider(index)->OnPaint(*dc, t->GetSelected());
+   GetGainRect(r, sliderRect);
+   if (sliderRect.y + sliderRect.height < r.y + r.height - 19) {
+      GainSlider(t)->OnPaint(*dc, t->GetSelected());
    }
 
-   if (panRect.y + panRect.height < r.y + r.height - 19) {
-      PanSlider(index)->Move(wxPoint(panRect.x, panRect.y));
-      PanSlider(index)->Set(t->GetPan());
-      PanSlider(index)->OnPaint(*dc, t->GetSelected());
+   GetPanRect(r, sliderRect);
+   if (sliderRect.y + sliderRect.height < r.y + r.height - 19) {
+      PanSlider(t)->OnPaint(*dc, t->GetSelected());
    }
 }
 
-void TrackInfo::UpdateSliderOffset(Track *t)
+LWSlider * TrackInfo::GainSlider(WaveTrack *t) const
 {
-   if (!t)
-      return;
+   wxRect r(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
+   wxRect sliderRect;
+   GetGainRect(r, sliderRect);
 
-   // Ensure that the specified track is: (a) at least the second track in the
-   // arrays (if it's the second track in a stereo pair the first must be in);
-   // (b) no farther in than kSliderPageFlip
-   int newSliderOffset = (int)mSliderOffset;
-   if ((unsigned int)t->GetIndex() < mSliderOffset + 1 ||
-         (unsigned int)t->GetIndex() > mSliderOffset + kSliderPageFlip) {
-      newSliderOffset = t->GetIndex() - (int)kSliderPageFlip / 2;
-   }
-   // Slider offset can't be negative
-   if (newSliderOffset < 0) newSliderOffset = 0;
+   mGain->Move(wxPoint(sliderRect.x, sliderRect.y));
+   mGain->Set(t->GetGain());
 
-   // Rotate the array values if necessary
-   int delta = newSliderOffset - (int)mSliderOffset;
-
-   // If the rotation is greater than the array size, none of the old values
-   // are preserved, so don't bother rotating.
-   if (abs(delta) >= (int)mGains.Count())
-      delta = 0;
-
-   if (delta > 0) {
-      // Circularly shift values down in the arrays (temp arrays needed to
-      // avoid reading written-over values)
-      LWSliderArray tempGains;
-      LWSliderArray tempPans;
-      tempGains.SetCount(delta);
-      tempPans.SetCount(delta);
-
-      for (int i = 0; i < (int)mGains.Count(); ++i) {
-         int src = (i + delta) % (int)mGains.Count();
-         if (src < 0) src += (int)mGains.Count();
-
-         if (i < delta) {
-            // Save a copy of the first `delta` values
-            tempGains[i] = mGains[i];
-            tempPans[i] = mPans[i];
-         }
-         if (src >= delta) {
-            // These values have not been overwritten
-            mGains[i] = mGains[src];
-            mPans[i] = mPans[src];
-         }
-         else {
-            // These ones have
-            mGains[i] = tempGains[src];
-            mPans[i] = tempPans[src];
-         }
-      }
-   }
-   else if (delta < 0) {
-      // Circularly shift values up in the arrays
-      LWSliderArray tempGains;
-      LWSliderArray tempPans;
-      tempGains.SetCount(mGains.Count());
-      tempPans.SetCount(mPans.Count());
-
-      // Iterating backwards to do this
-      for (int i = mGains.Count() - 1; i >= 0; --i) {
-         int src = (i + delta) % (int)mGains.Count();
-         if (src < 0) src += (int)mGains.Count();
-
-         if (i >= (int)mGains.Count() + delta) {
-            // Save a copy of the last `delta` values
-            tempGains[i] = mGains[i];
-            tempPans[i] = mPans[i];
-         }
-         if (src < (int)mGains.Count() + delta) {
-            // These values have not been overwritten
-            mGains[i] = mGains[src];
-            mPans[i] = mPans[src];
-         }
-         else {
-            // These ones have
-            mGains[i] = tempGains[src];
-            mPans[i] = tempPans[src];
-         }
-      }
-   }
-
-   mSliderOffset = newSliderOffset;
+   return mGain;
 }
 
-LWSlider * TrackInfo::GainSlider(int trackIndex)
+LWSlider * TrackInfo::PanSlider(WaveTrack *t) const
 {
-   return mGains[trackIndex - mSliderOffset];
-}
+   wxRect r(kLeftInset, t->GetY() - pParent->GetViewInfo()->vpos + kTopInset, 1, t->GetHeight());
+   wxRect sliderRect;
+   GetPanRect(r, sliderRect);
 
-LWSlider * TrackInfo::PanSlider(int trackIndex)
-{
-   return mPans[trackIndex - mSliderOffset];
+   mPan->Move(wxPoint(sliderRect.x, sliderRect.y));
+   mPan->Set(t->GetPan());
+
+   return mPan;
 }
 
 static TrackPanel * TrackPanelFactory(wxWindow * parent,

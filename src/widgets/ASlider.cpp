@@ -883,6 +883,7 @@ void LWSlider::Draw()
       }
    }
 
+   dc->SelectObject(wxNullBitmap);
 
    // Must preceed creating the mask as that will attempt to
    // select the bitmap into another DC.

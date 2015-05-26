@@ -34,7 +34,6 @@ public:
    // EffectIdentInterface implementation
 
    virtual EffectType GetType();
-   //virtual bool EnableFromGetGo(){ return false;};
 
    // EffectClientInterface implementation
 

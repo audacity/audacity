@@ -2396,15 +2396,19 @@ void Effect::Preview(bool dryOnly)
    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
 
    double rate = mProjectRate;
+   double warpedPreviewLength = CalcPreviewInputLength(previewLen);
    double t0 = mT0;
-   double t1 = t0 + CalcPreviewInputLength(previewLen);
+   double t1 = t0 + warpedPreviewLength;
 
    // Generators can run without a selection.
    if (GetType() == EffectTypeGenerate) {
       // If a generator varies over time, it must use the selected duration.
       // otherwise set it as a linear effect and process no more than the preview length.
       // TODO: When previewing non-linear generate effect, calculate only the first 'preview length'.
-      double dur = (mIsLinearEffect)? wxMin(mSetDuration, CalcPreviewInputLength(previewLen)) : mSetDuration;
+      // For generate effects derived from the Nyquist Prompt, the duration is unknow, so
+      // ensure that we have at least preview length to copy.
+      double dur = (mIsLinearEffect)? wxMin(mSetDuration, warpedPreviewLength) :
+                                      wxMax(mSetDuration, warpedPreviewLength);
       t1 = t0 + dur;
       this->SetDuration(dur);
    }
@@ -2446,8 +2450,7 @@ void Effect::Preview(bool dryOnly)
          mTracks->Add(mixRight);
       }
 
-      // TODO:  Don't really think this is necessary, but doesn't hurt
-      // Reset times
+      // Reset t0 / t1 is required when source tracks have different start times.
       t0 = mixLeft->GetStartTime();
       t1 = mixLeft->GetEndTime();
    }
@@ -2472,8 +2475,15 @@ void Effect::Preview(bool dryOnly)
 
    double t0save = mT0;
    double t1save = mT1;
-   mT0 = 0;
-   mT1 = t1 - t0;
+
+   if (mIsLinearEffect) {
+      mT0 = t0;
+      mT1 = t1;
+   }
+   else {
+      mT0 = 0;
+      mT1 = t1 - t0;
+   }
 
    // Apply effect
 
@@ -3239,8 +3249,9 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
    menu->Append(0, _("About"), sub);
 
-   wxRect r = FindWindow(kMenuID)->GetParent()->GetRect();
-   PopupMenu(menu, wxPoint(r.GetLeft(), r.GetBottom()));
+   wxWindow *btn = FindWindow(kMenuID);
+   wxRect r = btn->GetRect();
+   btn->PopupMenu(menu, r.GetLeft(), r.GetBottom());
 
    delete menu;
 }

@@ -638,7 +638,7 @@ bool LadspaEffect::IsLegacy()
 
 bool LadspaEffect::SupportsRealtime()
 {
-   return GetType() == EffectTypeProcess;
+   return GetType() != EffectTypeGenerate;
 }
 
 bool LadspaEffect::SupportsAutomation()
@@ -1356,8 +1356,8 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
          LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
          
          wxString bound;
-         float lower = -FLT_MAX;
-         float upper = FLT_MAX;
+         float lower = 0.0;
+         float upper = 1.0;
          bool haslo = false;
          bool hashi = false;
          bool forceint = false;

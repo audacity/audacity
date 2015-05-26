@@ -295,7 +295,6 @@ void QuitAudacity(bool bForce)
       gParentFrame->Destroy();
    gParentFrame = NULL;
 
-   CloseContrastDialog();
 #ifdef EXPERIMENTAL_SCOREALIGN
    CloseScoreAlignDialog();
 #endif
@@ -968,7 +967,9 @@ void AudacityApp::InitLang( const wxString & lang )
 //
 //     2013-09-13:  I've checked this again and it is still required.  Still
 //                  no idea why.
-#if defined(__WXMAC__)
+//     2015-05-26:  Disabled the hack since it prevents use of locale specific
+//                  formatting (like comma as decimal separator).
+#if defined(__WXMAC__disabled)
    wxString oldval;
    bool existed;
 
@@ -982,7 +983,7 @@ void AudacityApp::InitLang( const wxString & lang )
    mLocale = new wxLocale(wxT(""), lang, wxT(""), true, true);
 #endif
 
-#if defined(__WXMAC__)
+#if defined(__WXMAC__disabled)
    if (existed) {
       wxSetEnv(wxT("LANG"), oldval);
    }

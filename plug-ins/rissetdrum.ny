@@ -1,14 +1,15 @@
 ;nyquist plug-in
-;version 3
+;version 4
 ;type generate
 ;categories "http://lv2plug.in/ns/lv2core#GeneratorPlugin"
+;preview linear
 ;name "Risset Drum..."
 ;action "Generating Risset Drum..."
 ;author "Steven Jones"
 ;copyright "Released under terms of the GNU General Public License version 2"
 
 ;; rissetdrum.ny by Steven Jones, after Jean Claude Risset.
-;; Updated by Steve Daulton July 2012.
+;; Updated by Steve Daulton July 2012 and May 2015.
 ;; Released under terms of the GNU General Public License version 2:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
@@ -16,7 +17,7 @@
 ;; http://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 ;control freq "Frequency (Hz)" real "" 100 50 2000
-;control decay "Decay (seconds)" real "" 2 0.125 10
+;control decay "Decay (seconds)" real "" 2 0.1 60
 ;control cf "Center frequency of noise (Hz)" real "" 500 100 5000
 ;control bw "Width of noise band (Hz)" real "" 400 10 1000
 ;control noise "Amount of noise in mix (percent)" real "" 25 0 100
@@ -26,12 +27,20 @@
 (defun sanitise (val minx maxx)
   (min (max val minx) maxx))
 
+;; Not required with validation in Audacity 2.1.1 but left
+;; for compatibility.
 (setq freq (sanitise freq 1 (/ *sound-srate* 2)))
 (setq decay (sanitise decay 0.1 600))
 (setq cf (sanitise cf 1 (/ *sound-srate* 2)))
 (setq bw (sanitise bw 10 1000))
 (setq noise (sanitise (/ noise 100) 0 1))
 (setq gain (sanitise gain 0 1))
+
+;; Get length of preview
+(setq pdur
+  (if (get '*track* 'view) ;NIL if preview
+      decay
+      (get '*project* 'preview-duration)))
 
 (setq *rdrum-table* 
   (list 
@@ -73,5 +82,6 @@
 
 ;; Generate and normalize
 (let* ((output (risset-drum freq decay cf bw noise))
+       (output (extract-abs 0 pdur output)) ; shorten if necessary for preview.
        (peakval (peak output ny:all)))
   (scale (/ gain peakval) output))
