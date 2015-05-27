@@ -947,7 +947,6 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
    ProgressDialog progress(_("Plugin Manager: Effects"), msg, pdlgHideStopButton);
    progress.CenterOnParent();
 
-   int status;
    int i = 0;
    for (ItemDataMap::iterator iter = mItems.begin(); iter != mItems.end(); ++iter)
    {
@@ -957,7 +956,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       if (item.state == STATE_Enabled && item.plugs[0]->GetPluginType() == PluginTypeStub)
       {
          last3 = last3.AfterFirst(wxT('\n')) + item.path + wxT("\n");
-         status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3.c_str()));
+         int status = progress.Update(++i, enableCount, wxString::Format(_("Enabling effect:\n\n%s"), last3.c_str()));
          if (!status)
          {
             break;
@@ -978,7 +977,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       }
       else if (item.state == STATE_New)
       {
-         for (size_t j = 0, cnt = item.plugs.GetCount(); i < cnt; i++)
+         for (size_t j = 0, cnt = item.plugs.GetCount(); j < cnt; j++)
          {
             item.plugs[j]->SetValid(false);
          }
