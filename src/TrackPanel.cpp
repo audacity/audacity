@@ -830,6 +830,9 @@ void TrackPanel::UpdateVirtualStereoOrder()
 
 void TrackPanel::UpdatePrefs()
 {
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+   gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &mScrollBeyondZero, false);
+#endif
    mdBr = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
    gPrefs->Read(wxT("/GUI/AutoScroll"), &mViewInfo->bUpdateTrackIndicator,
                true);
@@ -1488,10 +1491,9 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
          // at higher magnifications, and keeps the green line still in the middle.
          indicator = gAudioIO->GetStreamTime();
          mViewInfo->h = indicator - mViewInfo->screen / 2.0;
-#if !defined(EXPERIMENTAL_SCROLLING_LIMITS)
-         // Can't scroll too far left
-         mViewInfo->h = std::max(0.0, mViewInfo->h);
-#endif
+         if (!mScrollBeyondZero)
+            // Can't scroll too far left
+            mViewInfo->h = std::max(0.0, mViewInfo->h);
       }
 #endif
 
