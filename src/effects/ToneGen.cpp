@@ -394,20 +394,17 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          t->SetValidator(vldAmplitude);
       }
 
-      bool isSelection;
-      double duration = GetDuration(&isSelection);
-
       S.AddPrompt(_("Duration:"));
       mToneDurationT = new
          NumericTextCtrl(NumericConverter::TIME,
-                        S.GetParent(),
-                        wxID_ANY,
-                        isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                        duration,
-                        mProjectRate,
-                        wxDefaultPosition,
-                        wxDefaultSize,
-                        true);
+                         S.GetParent(),
+                         wxID_ANY,
+                         GetDurationFormat(),
+                         GetDuration(),
+                         mProjectRate,
+                         wxDefaultPosition,
+                         wxDefaultSize,
+                         true);
       mToneDurationT->SetName(_("Duration"));
       mToneDurationT->EnableMenu();
       S.AddWindow(mToneDurationT, wxALIGN_LEFT | wxALL);

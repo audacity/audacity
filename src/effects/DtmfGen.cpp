@@ -303,16 +303,13 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
       vldAmp.SetRange(MIN_Amplitude, MAX_Amplitude);
       S.Id(ID_Amplitude).AddTextBox(_("Amplitude (0-1):"), wxT(""), 10)->SetValidator(vldAmp);
 
-      bool isSelection;
-      double duration = GetDuration(&isSelection);
-
       S.AddPrompt(_("Duration:"));
       mDtmfDurationT = new
          NumericTextCtrl(NumericConverter::TIME,
                          S.GetParent(),
                          ID_Duration,
-                         isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                         duration,
+                         GetDurationFormat(),
+                         GetDuration(),
                          mProjectRate,
                          wxDefaultPosition,
                          wxDefaultSize,
@@ -370,8 +367,8 @@ bool EffectDtmf::TransferDataFromWindow()
       return false;
    }
 
-//   dtmfDutyCycle = (double) mDtmfDutyCycleS->GetValue() / SCL_DutyCycle;
-//   SetDuration(mDtmfDurationT->GetValue());
+   dtmfDutyCycle = (double) mDtmfDutyCycleS->GetValue() / SCL_DutyCycle;
+   SetDuration(mDtmfDurationT->GetValue());
 
    // recalculate to make sure all values are up-to-date. This is especially
    // important if the user did not change any values in the dialog

@@ -31,6 +31,7 @@
 
 class Envelope;
 class WaveCache;
+class WaveTrackCache;
 class SpecCache;
 
 class SpecPxCache {
@@ -140,7 +141,8 @@ public:
     * calculations and Contrast */
    bool GetWaveDisplay(float *min, float *max, float *rms,int* bl, sampleCount *where,
                        int numPixels, double t0, double pixelsPerSecond, bool &isLoadingOD);
-   bool GetSpectrogram(float *buffer, sampleCount *where,
+   bool GetSpectrogram(WaveTrackCache &cache,
+                       float *buffer, sampleCount *where,
                        int numPixels,
                        double t0, double pixelsPerSecond,
                        bool autocorrelation);

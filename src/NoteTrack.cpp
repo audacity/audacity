@@ -14,12 +14,13 @@
 *//*******************************************************************/
 
 
+#include "Audacity.h"
+#include "NoteTrack.h"
+
 #include <wx/dc.h>
 #include <wx/brush.h>
 #include <wx/pen.h>
 #include <wx/intl.h>
-
-#include "Audacity.h"
 
 #if defined(USE_MIDI)
 #include <sstream>
@@ -27,7 +28,6 @@
 #define ROUND(x) ((int) ((x) + 0.5))
 
 #include "AColor.h"
-#include "NoteTrack.h"
 #include "DirManager.h"
 #include "Internat.h"
 #include "Prefs.h"
@@ -171,13 +171,17 @@ Track *NoteTrack::Duplicate()
 }
 
 
-double NoteTrack::GetStartTime()
+double NoteTrack::GetOffset() const
+{
+   return mOffset;
+}
+
+double NoteTrack::GetStartTime() const
 {
    return GetOffset();
 }
 
-
-double NoteTrack::GetEndTime()
+double NoteTrack::GetEndTime() const
 {
    return GetStartTime() + (mSeq ? mSeq->get_real_dur() : 0.0);
 }

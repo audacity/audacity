@@ -113,6 +113,7 @@ scroll information.  It also has some status flags.
 #include "Prefs.h"
 #include "Snap.h"
 #include "Tags.h"
+#include "TimeTrack.h"
 #include "Track.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
@@ -1477,11 +1478,7 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 }
 
 
-//
-// This method, like the other methods prefaced with TP, handles TrackPanel
-// 'callback'.
-//
-void AudacityProject::TP_ScrollWindow(double scrollto)
+void AudacityProject::SetHorizontalThumb(double scrollto)
 {
    double timeOffset = 0;
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
@@ -1498,6 +1495,15 @@ void AudacityProject::TP_ScrollWindow(double scrollto)
       pos = 0;
 
    mHsbar->SetThumbPosition(pos);
+}
+
+//
+// This method, like the other methods prefaced with TP, handles TrackPanel
+// 'callback'.
+//
+void AudacityProject::TP_ScrollWindow(double scrollto)
+{
+   SetHorizontalThumb(scrollto);
 
    // Call our Scroll method which updates our ViewInfo variables
    // to reflect the positions of the scrollbars
@@ -1548,22 +1554,25 @@ void AudacityProject::FixScrollbars()
    int panelWidth, panelHeight;
    mTrackPanel->GetTracksUsableArea(&panelWidth, &panelHeight);
 
+   double LastTime =
+      std::max(mTracks->GetEndTime(), mViewInfo.selectedRegion.t1());
+
    mViewInfo.screen = ((double) panelWidth) / mViewInfo.zoom;
+   const double halfScreen = mViewInfo.screen / 2.0;
    double additional, lowerBound;
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
    // Add 1/2 of a screen of blank space to the end
    // and another 1/2 screen before the beginning
    // so that any point within the union of the selection and the track duration
    // may be scrolled to the midline.
-   additional = mViewInfo.screen;
-   lowerBound = - additional / 2.0;
+   // May add even more to the end, so that you can always scroll the starting time to zero.
+   additional = halfScreen + std::max(halfScreen, mViewInfo.screen - LastTime);
+   lowerBound = - halfScreen;
 #else
    // Formerly just added 1/4 screen at the end
    additional = mViewInfo.screen / 4.0;
    lowerBound = 0.0;
 #endif
-   double LastTime =
-      std::max( mTracks->GetEndTime(), mViewInfo.selectedRegion.t1() );
    mViewInfo.total = LastTime + additional;
 
    // Don't remove time from total that's still on the screen
@@ -1647,11 +1656,7 @@ void AudacityProject::FixScrollbars()
       int scaledSbarScreen = (int)(mViewInfo.sbarScreen * mViewInfo.sbarScale);
       int scaledSbarTotal = (int)(mViewInfo.sbarTotal * mViewInfo.sbarScale);
       int offset;
-#ifdef EXPERIMENTAL_SCROLLING_LIMITS
-      offset = scaledSbarScreen / 2;
-#else
-      offset = 0;
-#endif
+      offset = -lowerBound * mViewInfo.zoom * mViewInfo.sbarScale;
 
       mHsbar->SetScrollbar(scaledSbarH + offset, scaledSbarScreen, scaledSbarTotal,
          scaledSbarScreen, TRUE);
@@ -1863,6 +1868,15 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
       if (mViewInfo.h < lowerBound)
          mViewInfo.h = lowerBound;
    }
+
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+   enum { SCROLL_PIXEL_TOLERANCE = 10 };
+   if (fabs(mViewInfo.h * mViewInfo.zoom) < SCROLL_PIXEL_TOLERANCE) {
+      // Snap the scrollbar to 0
+      mViewInfo.h = 0;
+      SetHorizontalThumb(0.0);
+   }
+#endif
 
    int lastv = mViewInfo.vpos;
    mViewInfo.vpos = mVsbar->GetThumbPosition() * mViewInfo.scrollStep;

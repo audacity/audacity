@@ -159,9 +159,10 @@ class Sequence: public XMLTagHandler {
                   float * outRMS) const;
 
    //
-   // Getting block size information
+   // Getting block size and alignment information
    //
 
+   sampleCount GetBlockStart(sampleCount position) const;
    sampleCount GetBestBlockSize(sampleCount start) const;
    sampleCount GetMaxBlockSize() const;
    sampleCount GetIdealBlockSize() const;

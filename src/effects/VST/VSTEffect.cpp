@@ -3515,17 +3515,14 @@ void VSTEffect::BuildPlain()
    // Add the duration control for generators
    if (GetType() == EffectTypeGenerate)
    {
-      bool isSelection;
-      double duration = mHost->GetDuration(&isSelection);
-
       wxControl *item = new wxStaticText(scroller, 0, _("Duration:"));
       gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
       mDuration = new
          NumericTextCtrl(NumericConverter::TIME,
                          scroller,
                          ID_Duration,
-                         isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                         duration,
+                         mHost->GetDurationFormat(),
+                         mHost->GetDuration(),
                          mSampleRate,
                          wxDefaultPosition,
                          wxDefaultSize,

@@ -349,6 +349,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void SafeDisplayStatusMessage(const wxChar *msg);
 
+   void SetHorizontalThumb(double scrollto);
+
    // TrackPanel access
    virtual wxSize GetTPTracksUsableArea();
    virtual void RefreshTPTrack(Track* pTrk, bool refreshbacking = true);

@@ -55,16 +55,13 @@ void EffectSilence::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartHorizontalLay();
       {
-         bool isSelection;
-         double duration = GetDuration(&isSelection);
-
          S.AddPrompt(_("Duration:"));
          mDurationT = new
             NumericTextCtrl(NumericConverter::TIME,
                               S.GetParent(),
                               wxID_ANY,
-                              isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                              duration,
+                              GetDurationFormat(),
+                              GetDuration(),
                               mProjectRate,
                               wxDefaultPosition,
                               wxDefaultSize,
