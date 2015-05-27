@@ -521,25 +521,11 @@ AudacityProject *CreateNewAudacityProject()
 
 AudacityProject *CreateNewBackgroundAudacityProject()
 {
-	bool bMaximized;
-	wxRect wndRect;
-	bool bIconized;
-	GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
-
-	//Create and show a new project
 	AudacityProject *p = new AudacityProject(NULL, -1,
-		wxPoint(wndRect.x, wndRect.y),
-		wxSize(wndRect.width, wndRect.height));
+		wxPoint(0, 0),
+		wxSize(0, 0));
 
 	gAudacityProjects.Add(p);
-
-	if (bMaximized) {
-		p->Maximize(true);
-	}
-	else if (bIconized) {
-		// if the user close down and iconized state we could start back up and iconized state
-		// p->Iconize(TRUE);
-	}
 
 	//Initialise the Listener
 	gAudioIO->SetListener(p);
