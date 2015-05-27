@@ -5255,6 +5255,10 @@ void TrackPanel::UpdateViewIfNoTracks()
       //PRL: and default the rest of the selection information
       mViewInfo->selectedRegion = SelectedRegion();
 
+      // PRL:  Following causes the time ruler to align 0 with left edge.
+      // Bug 972
+      mViewInfo->h = 0;
+
       mListener->TP_RedrawScrollbars();
       mListener->TP_DisplayStatusMessage(wxT("")); //STM: Clear message if all tracks are removed
    }
