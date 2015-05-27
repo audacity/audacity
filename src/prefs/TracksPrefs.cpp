@@ -18,12 +18,12 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "TracksPrefs.h"
 
 #include <wx/defs.h>
 
+#include "../Experimental.h"
 #include "../ShuttleGui.h"
-
-#include "TracksPrefs.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -116,6 +116,11 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(_("Editing a clip can &move other clips"),
                     wxT("/GUI/EditClipCanMove"),
                     true);
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+      S.TieCheckBox(_("Enable scrolling left of &zero"),
+                    wxT("/GUI/ScrollBeyondZero"),
+                    false);
+#endif
 
       S.AddSpace(10);
 

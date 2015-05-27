@@ -576,6 +576,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mNormalizeOnLoad;  //lda
    bool mShowId3Dialog; //lda
    bool mEmptyCanBeDirty;
+
+   bool mScrollBeyondZero;
+
    bool mSelectAllOnNone;
 
    bool mIsSyncLocked;
