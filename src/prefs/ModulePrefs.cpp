@@ -53,6 +53,7 @@ void ModulePrefs::GetAllModuleStatuses(){
    // The old modules might be still around, and we do not want to use them.
    mModules.Clear();
    mStatuses.Clear();
+   mPaths.Clear();
 
 
    // Iterate through all Modules listed in prefs.
@@ -63,7 +64,7 @@ void ModulePrefs::GetAllModuleStatuses(){
       int iStatus;
       gPrefs->Read( str, &iStatus, kModuleDisabled );
       wxString fname;
-      gPrefs->Read( wxString( wxT("/Module/path:") ) + str, &fname, wxEmptyString );
+      gPrefs->Read( wxString( wxT("/ModulePath/") ) + str, &fname, wxEmptyString );
       if( fname != wxEmptyString && wxFileExists( fname ) ){
          if( iStatus > kModuleNew ){
             iStatus = kModuleNew;
@@ -72,6 +73,7 @@ void ModulePrefs::GetAllModuleStatuses(){
          //wxLogDebug( wxT("Entry: %s Value: %i"), str.c_str(), iStatus );
          mModules.Add( str );
          mStatuses.Add( iStatus );
+         mPaths.Add( fname );
       }
       bCont = gPrefs->GetNextEntry(str, dummy);
    }
@@ -129,8 +131,8 @@ bool ModulePrefs::Apply()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
    int i;
-   for(i=0;i<(int)mModules.GetCount();i++)
-      SetModuleStatus( mModules[i], mStatuses[i] );
+   for(i=0;i<(int)mPaths.GetCount();i++)
+      SetModuleStatus( mPaths[i], mStatuses[i] );
    return true;
 }
 
@@ -154,7 +156,7 @@ void ModulePrefs::SetModuleStatus( wxString fname, int iStatus ){
    wxString ShortName = wxFileName( fname ).GetName();
    wxString PrefName = wxString( wxT("/Module/") ) + ShortName.Lower();
    gPrefs->Write( PrefName, iStatus );
-   PrefName = wxString( wxT("/Module/path:") ) + ShortName.Lower();
+   PrefName = wxString( wxT("/ModulePath/") ) + ShortName.Lower();
    gPrefs->Write( PrefName, fname );
    gPrefs->Flush();
 }

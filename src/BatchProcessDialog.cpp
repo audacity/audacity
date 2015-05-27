@@ -326,7 +326,6 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       mList->SetItemImage(i, 1, 1);
       mList->EnsureVisible(i);
 
-      project->OnRemoveTracks();
       project->Import(files[i]);
       project->OnSelectAll();
       if (!mBatchCommands.ApplyChain()) {
@@ -338,8 +337,8 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       }
       UndoManager *um = project->GetUndoManager();
       um->ClearStates();
-	  project->OnSelectAll();
-	  project->OnRemoveTracks();
+      project->OnSelectAll();
+      project->OnRemoveTracks();
    }
    project->OnRemoveTracks();
 }

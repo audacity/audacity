@@ -51,6 +51,46 @@ const wxChar *GetSampleFormatStr(sampleFormat format);
 AUDACITY_DLL_API samplePtr NewSamples(int count, sampleFormat format);
 AUDACITY_DLL_API void DeleteSamples(samplePtr p);
 
+// RAII version of above
+class SampleBuffer {
+
+public:
+   SampleBuffer()
+      : mCount(0), mPtr(0)
+   {}
+   SampleBuffer(int count, sampleFormat format)
+      : mCount(count), mPtr(NewSamples(mCount, format))
+   {}
+   ~SampleBuffer()
+   {
+      Free();
+   }
+
+   // WARNING!  May not preserve contents.
+   void Resize(int count, sampleFormat format)
+   {
+      if (mCount < count) {
+         Free();
+         mPtr = NewSamples(count, format);
+         mCount = count;
+      }
+   }
+
+   void Free()
+   {
+      DeleteSamples(mPtr);
+      mPtr = 0;
+      mCount = 0;
+   }
+
+   samplePtr ptr() const { return mPtr; }
+
+
+private:
+   samplePtr mPtr;
+   int mCount;
+};
+
 //
 // Copying, Converting and Clearing Samples
 //
