@@ -224,20 +224,17 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
       vldAmp.SetRange(MIN_Amp, MAX_Amp);
       S.AddTextBox(_("Amplitude (0-1):"), wxT(""), 12)->SetValidator(vldAmp);
 
-      bool isSelection;
-      double duration = GetDuration(&isSelection);
-
       S.AddPrompt(_("Duration:"));
       mNoiseDurationT = new
          NumericTextCtrl(NumericConverter::TIME,
-                           S.GetParent(),
-                           wxID_ANY,
-                           isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                           duration,
-                           mProjectRate,
-                           wxDefaultPosition,
-                           wxDefaultSize,
-                           true);
+                         S.GetParent(),
+                         wxID_ANY,
+                         GetDurationFormat(),
+                         GetDuration(),
+                         mProjectRate,
+                         wxDefaultPosition,
+                         wxDefaultSize,
+                         true);
       mNoiseDurationT->SetName(_("Duration"));
       mNoiseDurationT->EnableMenu();
       S.AddWindow(mNoiseDurationT, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL);

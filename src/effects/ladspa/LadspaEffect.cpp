@@ -1146,17 +1146,14 @@ bool LadspaEffect::PopulateUI(wxWindow *parent)
       // Add the duration control for generators
       if (GetType() == EffectTypeGenerate)
       {
-         bool isSelection;
-         double duration = mHost->GetDuration(&isSelection);
-
          item = new wxStaticText(w, 0, _("Duration:"));
          gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
          mDuration = new
             NumericTextCtrl(NumericConverter::TIME,
                             w,
                             ID_Duration,
-                            isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                            duration,
+                            mHost->GetDurationFormat(),
+                            mHost->GetDuration(),
                             mSampleRate,
                             wxDefaultPosition,
                             wxDefaultSize,

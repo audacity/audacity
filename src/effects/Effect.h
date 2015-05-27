@@ -144,7 +144,8 @@ class AUDACITY_DLL_API Effect : public wxEvtHandler,
    // EffectHostInterface implementation
 
    virtual double GetDefaultDuration();
-   virtual double GetDuration(bool *isSelection = NULL);
+   virtual double GetDuration();
+   virtual wxString GetDurationFormat();
    virtual void SetDuration(double duration);
 
    virtual bool Apply();
@@ -400,7 +401,9 @@ private:
    bool mIsLinearEffect;
    bool mPreviewWithNotSelected;
 
+   bool mIsSelection;
    double mDuration;
+   wxString mDurationFormat;
    // mSetDuration should ONLY be set when SetDuration() is called.
    double mSetDuration;
 
