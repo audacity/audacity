@@ -187,85 +187,83 @@ void BatchProcessDialog::OnApplyToProject(wxCommandEvent & WXUNUSED(event))
 
 void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 {
-    long item = mChains->GetNextItem(-1,
-        wxLIST_NEXT_ALL,
-        wxLIST_STATE_SELECTED);
-    if (item == -1) {
-        wxMessageBox(_("No chain selected"));
-        return;
-    }
+   long item = mChains->GetNextItem(-1,
+                                    wxLIST_NEXT_ALL,
+                                    wxLIST_STATE_SELECTED);
+   if (item == -1) {
+      wxMessageBox(_("No chain selected"));
+      return;
+   }
 
-    wxString name = mChains->GetItemText(item);
-    gPrefs->Write(wxT("/Batch/ActiveChain"), name);
-    gPrefs->Flush();
+   wxString name = mChains->GetItemText(item);
+   gPrefs->Write(wxT("/Batch/ActiveChain"), name);
+   gPrefs->Flush();
 
-    AudacityProject *project = GetActiveProject();
-    if (!project->GetIsEmpty()) {
-        wxMessageBox(_("Please save and close the current project first."));
-        return;
-    }
+   AudacityProject *project = GetActiveProject();
+   if (!project->GetIsEmpty()) {
+      wxMessageBox(_("Please save and close the current project first."));
+      return;
+   }
 
-    wxString path = gPrefs->Read(wxT("/DefaultOpenPath"), ::wxGetCwd());
-    wxString prompt = _("Select file(s) for batch processing...");
+   wxString path = gPrefs->Read(wxT("/DefaultOpenPath"), ::wxGetCwd());
+   wxString prompt =  _("Select file(s) for batch processing...");
 
-    FormatList l;
-    wxString filter;
-    wxString all;
+   FormatList l;
+   wxString filter;
+   wxString all;
 
-    l.DeleteContents(true);
-    Importer::Get().GetSupportedImportFormats(&l);
-    for (FormatList::compatibility_iterator n = l.GetFirst(); n; n = n->GetNext()) {
-        Format *f = n->GetData();
+   l.DeleteContents(true);
+   Importer::Get().GetSupportedImportFormats(&l);
+   for (FormatList::compatibility_iterator n = l.GetFirst(); n; n = n->GetNext()) {
+      Format *f = n->GetData();
 
-        wxString newfilter = f->formatName + wxT("|");
-        for (size_t i = 0; i < f->formatExtensions.size(); i++) {
-            if (!newfilter.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
-                newfilter += wxT("*.") + f->formatExtensions[i] + wxT(";");
-            if (!all.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
-                all += wxT("*.") + f->formatExtensions[i] + wxT(";");
-        }
-        newfilter.RemoveLast(1);
-        filter += newfilter;
-        filter += wxT("|");
-    }
-    all.RemoveLast(1);
-    filter.RemoveLast(1);
+      wxString newfilter = f->formatName + wxT("|");
+      for (size_t i = 0; i < f->formatExtensions.size(); i++) {
+         if (!newfilter.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
+            newfilter += wxT("*.") + f->formatExtensions[i] + wxT(";");
+         if (!all.Contains(wxT("*.") + f->formatExtensions[i] + wxT(";")))
+            all += wxT("*.") + f->formatExtensions[i] + wxT(";");
+      }
+      newfilter.RemoveLast(1);
+      filter += newfilter;
+      filter += wxT("|");
+   }
+   all.RemoveLast(1);
+   filter.RemoveLast(1);
 
-    wxString mask = _("All files|*|All supported files|") +
-        all + wxT("|") +
-        filter;
+   wxString mask = _("All files|*|All supported files|") +
+                   all + wxT("|") +
+                   filter;
 
-    wxString type = gPrefs->Read(wxT("/DefaultOpenType"), mask.BeforeFirst(wxT('|')));
-    // Convert the type to the filter index
-    int index = mask.First(type + wxT("|"));
-    if (index == wxNOT_FOUND) {
-        index = 0;
-    }
-    else {
-        index = mask.Left(index).Freq(wxT('|')) / 2;
-        if (index < 0) {
-            index = 0;
-        }
-    }
+   wxString type = gPrefs->Read(wxT("/DefaultOpenType"),mask.BeforeFirst(wxT('|')));
+   // Convert the type to the filter index
+   int index = mask.First(type + wxT("|"));
+   if (index == wxNOT_FOUND) {
+      index = 0;
+   }
+   else {
+      index = mask.Left(index).Freq(wxT('|')) / 2;
+      if (index < 0) {
+         index = 0;
+      }
+   }
 
-    FileDialog dlog(this,
-        prompt,
-        path,
-        wxT(""),
-        mask,
-        wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
+   FileDialog dlog(this,
+                   prompt,
+                   path,
+                   wxT(""),
+                   mask,
+                   wxFD_OPEN | wxFD_MULTIPLE | wxRESIZE_BORDER);
 
-    dlog.SetFilterIndex(index);
-    if (dlog.ShowModal() != wxID_OK) {
-        return;
-    }
+   dlog.SetFilterIndex(index);
+   if (dlog.ShowModal() != wxID_OK) {
+      return;
+   }
 
-    wxArrayString files;
-    dlog.GetPaths(files);
+   wxArrayString files;
+   dlog.GetPaths(files);
 
-    files.Sort();
-
-    ApplyChainToFiles(name, files);
+   files.Sort();
 }
 
 void BatchProcessDialog::ApplyChainToFiles(wxString name, const wxArrayString& files) {
