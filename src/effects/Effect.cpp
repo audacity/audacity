@@ -2522,21 +2522,24 @@ void Effect::Preview(bool dryOnly)
       if (token) {
          int previewing = eProgressSuccess;
 
-         mProgress = new ProgressDialog(GetName(),
-                                       _("Previewing"), pdlgHideCancelButton);
+         // The progress dialog must be deleted before stopping the stream
+         // to allow events to flow to the app during StopStream processing.
+         // The progress dialog blocks these events.
+         ProgressDialog *progress =
+            new ProgressDialog(GetName(), _("Previewing"), pdlgHideCancelButton);
 
          while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
             ::wxMilliSleep(100);
-            previewing = mProgress->Update(gAudioIO->GetStreamTime() - mT0, mT1);
+            previewing = progress->Update(gAudioIO->GetStreamTime() - mT0, mT1);
          }
+
+         delete progress;
+
          gAudioIO->StopStream();
 
          while (gAudioIO->IsBusy()) {
             ::wxMilliSleep(100);
          }
-
-         delete mProgress;
-         mProgress = NULL;
       }
       else {
          wxMessageBox(_("Error while opening sound device. Please check the playback device settings and the project sample rate."),
