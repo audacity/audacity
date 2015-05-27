@@ -1579,17 +1579,14 @@ bool LV2Effect::BuildPlain()
 
       wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
    
-      bool isSelection;
-      double duration = mHost->GetDuration(&isSelection);
-
       wxWindow *item = new wxStaticText(w, 0, _("&Duration:"));
       sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
       mDuration = new
          NumericTextCtrl(NumericConverter::TIME,
                          w,
                          ID_Duration,
-                         isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds"),
-                         duration,
+                         mHost->GetDurationFormat(),
+                         mHost->GetDuration(),
                          mSampleRate,
                          wxDefaultPosition,
                          wxDefaultSize,

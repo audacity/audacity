@@ -94,7 +94,8 @@ public:
    virtual ~EffectHostInterface() {};
 
    virtual double GetDefaultDuration() = 0;
-   virtual double GetDuration(bool *isSelection = NULL) = 0;
+   virtual double GetDuration() = 0;
+   virtual wxString GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
 
    virtual bool Apply() = 0;

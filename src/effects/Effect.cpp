@@ -705,47 +705,19 @@ double Effect::GetDefaultDuration()
    return 30.0;
 }
 
-double Effect::GetDuration(bool *isSelection)
+double Effect::GetDuration()
 {
-   if (mT1 > mT0)
-   {
-      // there is a selection: let's fit in there...
-      // MJS: note that this is just for the TTC and is independent of the track rate
-      // but we do need to make sure we have the right number of samples at the project rate
-      double quantMT0 = QUANTIZED_TIME(mT0, mProjectRate);
-      double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
-      mDuration = quantMT1 - quantMT0;
-
-      if (isSelection)
-      {
-         *isSelection = true;
-      }
-
-      return mDuration;
-   }
-
-   if (isSelection)
-   {
-      *isSelection = false;
-   }
-
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("LastUsedDuration"), mDuration, 0.0);
-   if (mDuration > 0.0)
-   {
-      return mDuration;
-   }
-
    if (mDuration < 0.0)
    {
       mDuration = 0.0;
    }
 
-   if (GetType() == EffectTypeGenerate)
-   {
-      mDuration = GetDefaultDuration();
-   }
-
    return mDuration;
+}
+
+wxString Effect::GetDurationFormat()
+{
+   return mDurationFormat;
 }
 
 void Effect::SetDuration(double seconds)
@@ -755,13 +727,16 @@ void Effect::SetDuration(double seconds)
       seconds = 0.0;
    }
 
-   if (mDuration != seconds)
+   if (GetType() == EffectTypeGenerate)
    {
       SetPrivateConfig(GetCurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
    }
 
    mDuration = seconds;
+   mT1 = mT0 + mDuration;
    mSetDuration = mDuration;
+
+   mIsSelection = false;
 
    return;
 }
@@ -1170,9 +1145,33 @@ bool Effect::DoEffect(wxWindow *parent,
    mProjectRate = projectRate;
    mParent = parent;
    mTracks = list;
+   
+   bool isSelection = false;
+
+   mDuration = 0.0;
+
+   if (GetType() == EffectTypeGenerate)
+   {
+      GetPrivateConfig(GetCurrentSettingsGroup(), wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
+   }
+
    mT0 = selectedRegion->t0();
    mT1 = selectedRegion->t1();
-   mDuration = GetDuration();
+   if (mT1 > mT0)
+   {
+      // there is a selection: let's fit in there...
+      // MJS: note that this is just for the TTC and is independent of the track rate
+      // but we do need to make sure we have the right number of samples at the project rate
+      double quantMT0 = QUANTIZED_TIME(mT0, mProjectRate);
+      double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
+      mDuration = quantMT1 - quantMT0;
+      mT1 = mT0 + mDuration;
+
+      isSelection = true;
+   }
+
+   mDurationFormat = isSelection ? _("hh:mm:ss + samples") : _("hh:mm:ss + milliseconds");
+
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion->f0();
    mF1 = selectedRegion->f1();
