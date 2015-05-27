@@ -29,6 +29,7 @@ class wxHashTable;
 
 class Track;
 class WaveTrack;
+class WaveTrackCache;
 class WaveClip;
 class NoteTrack;
 class LabelTrack;
@@ -141,7 +142,7 @@ class AUDACITY_DLL_API TrackArtist {
                          bool drawEnvelope, bool drawSamples, bool drawSliders,
                          bool dB, bool muted);
 
-   void DrawClipSpectrum(WaveTrack *track, WaveClip *clip,
+   void DrawClipSpectrum(WaveTrackCache &cache, WaveClip *clip,
                          wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
                          bool autocorrelation, bool logF);
 

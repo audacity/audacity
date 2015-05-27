@@ -18,7 +18,7 @@
 #include "Spectrum.h"
 #include "FFT.h"
 
-bool ComputeSpectrum(float * data, int width,
+bool ComputeSpectrum(const float * data, int width,
                      int windowSize,
                      double WXUNUSED(rate), float *output,
                      bool autocorrelation, int windowFunc)

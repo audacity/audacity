@@ -143,8 +143,8 @@ audio tracks.
 *//*******************************************************************/
 
 #include "Audacity.h"
-#include "AudacityApp.h"
 #include "TrackArtist.h"
+#include "AudacityApp.h"
 #include "float_cast.h"
 
 #include <math.h>
@@ -1749,8 +1749,9 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
       return;
    }
 
+   WaveTrackCache cache(track);
    for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext()) {
-      DrawClipSpectrum(track, it->GetData(), dc, r, viewInfo, autocorrelation, logF);
+      DrawClipSpectrum(cache, it->GetData(), dc, r, viewInfo, autocorrelation, logF);
    }
 }
 
@@ -1822,7 +1823,7 @@ AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBin
 
 
 
-void TrackArtist::DrawClipSpectrum(WaveTrack *track,
+void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                                    WaveClip *clip,
                                    wxDC & dc,
                                    const wxRect & r,
@@ -1830,6 +1831,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                                    bool autocorrelation,
                                    bool logF)
 {
+   const WaveTrack *const track = cache.GetTrack();
+
    enum { MONOCHROME_LINE = 230, COLORED_LINE  = 0 };
    enum { DASH_LENGTH = 10 /* pixels */ };
 
@@ -1962,7 +1965,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    float *freq = new float[mid.width * half];
    sampleCount *where = new sampleCount[mid.width+1];
 
-   bool updated = clip->GetSpectrogram(freq, where, mid.width,
+   bool updated = clip->GetSpectrogram(cache, freq, where, mid.width,
                               t0, pps, autocorrelation);
    int ifreq = lrint(rate/2);
 

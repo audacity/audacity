@@ -301,6 +301,7 @@ writing audio.
 #include "RingBuffer.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "TimeTrack.h"
 #include "WaveTrack.h"
 #include "AutoRecovery.h"
 

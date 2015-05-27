@@ -22,7 +22,7 @@
   calculates windowSize/2 frequency samples
 */
 
-bool ComputeSpectrum(float * data, int width, int windowSize,
+bool ComputeSpectrum(const float * data, int width, int windowSize,
                      double rate, float *out, bool autocorrelation,
                      int windowFunc = eWinFuncHanning);
 

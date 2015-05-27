@@ -61,8 +61,9 @@ class AUDACITY_DLL_API NoteTrack:public Track {
 
    virtual int GetKind() const { return Note; }
 
-   virtual double GetStartTime();
-   virtual double GetEndTime();
+   virtual double GetOffset() const;
+   virtual double GetStartTime() const;
+   virtual double GetEndTime() const;
 
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
