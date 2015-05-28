@@ -8202,6 +8202,7 @@
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = yes;
 				CONFIG_UNICODE = yes;
+				COPY_PHASE_STRIP = NO;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -8215,6 +8216,7 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				STRIP_INSTALLED_PRODUCT = NO;
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -8467,6 +8469,7 @@
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
 				CONFIG_UNICODE = yes;
+				COPY_PHASE_STRIP = NO;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -8482,11 +8485,12 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				STRIP_INSTALLED_PRODUCT = NO;
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_macud_html-$(WX_VER)  -lwx_macud_adv-$(WX_VER) -lwx_macud_core-$(WX_VER) -lwx_base_carbonud_net-$(WX_VER) -lwx_base_carbonud-$(WX_VER) $(WX_PREFIX)/lib/libwxregexud-$(WX_VER).a $(WX_PREFIX)/lib/libwxexpatd-$(WX_VER).a $(WX_PREFIX)/lib/libwxtiffd-$(WX_VER).a $(WX_PREFIX)/lib/libwxjpegd-$(WX_VER).a $(WX_PREFIX)/lib/libwxpngd-$(WX_VER).a";
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_macud_qa-$(WX_VER) -lwx_macud_xrc-$(WX_VER)  -lwx_macud_html-$(WX_VER)  -lwx_macud_adv-$(WX_VER) -lwx_macud_core-$(WX_VER) -lwx_base_carbonud_xml-$(WX_VER) -lwx_base_carbonud_net-$(WX_VER) -lwx_base_carbonud-$(WX_VER) $(WX_PREFIX)/lib/libwxregexud-$(WX_VER).a $(WX_PREFIX)/lib/libwxexpatd-$(WX_VER).a $(WX_PREFIX)/lib/libwxtiffd-$(WX_VER).a $(WX_PREFIX)/lib/libwxjpegd-$(WX_VER).a $(WX_PREFIX)/lib/libwxpngd-$(WX_VER).a";
 				WX_PREFIX = /usr/local;
 				WX_VER = 2.8;
 				ZERO_LINK = NO;
@@ -8497,12 +8501,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /Audacity;
 				LIBRARY_SEARCH_PATHS = (
@@ -8776,6 +8782,7 @@
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
 				CONFIG_UNICODE = yes;
+				COPY_PHASE_STRIP = NO;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -8791,11 +8798,12 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				STRIP_INSTALLED_PRODUCT = NO;
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_macu_html-$(WX_VER)  -lwx_macu_adv-$(WX_VER) -lwx_macu_core-$(WX_VER) -lwx_base_carbonu_net-$(WX_VER) -lwx_base_carbonu-$(WX_VER) $(WX_PREFIX)/lib/libwxregexud-$(WX_VER).a $(WX_PREFIX)/lib/libwxexpatd-$(WX_VER).a $(WX_PREFIX)/lib/libwxtiffd-$(WX_VER).a $(WX_PREFIX)/lib/libwxjpegd-$(WX_VER).a $(WX_PREFIX)/lib/libwxpngd-$(WX_VER).a";
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_macu_xrc-$(WX_VER) -lwx_macu_qa-$(WX_VER) -lwx_macu_html-$(WX_VER)  -lwx_macu_adv-$(WX_VER) -lwx_macu_core-$(WX_VER) -lwx_base_carbonu_xml-$(WX_VER)  -lwx_base_carbonu_net-$(WX_VER) -lwx_base_carbonu-$(WX_VER) $(WX_PREFIX)/lib/libwxregexud-$(WX_VER).a $(WX_PREFIX)/lib/libwxexpatd-$(WX_VER).a $(WX_PREFIX)/lib/libwxtiffd-$(WX_VER).a $(WX_PREFIX)/lib/libwxjpegd-$(WX_VER).a $(WX_PREFIX)/lib/libwxpngd-$(WX_VER).a";
 				WX_PREFIX = /usr/local;
 				WX_VER = 2.8;
 				ZERO_LINK = NO;
@@ -9372,6 +9380,7 @@
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = yes;
 				CONFIG_UNICODE = yes;
+				COPY_PHASE_STRIP = NO;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -9385,6 +9394,7 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				STRIP_INSTALLED_PRODUCT = NO;
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
