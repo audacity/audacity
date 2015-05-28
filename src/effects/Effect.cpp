@@ -32,6 +32,7 @@ greater use in future.
 #include <wx/tglbtn.h>
 #include <wx/timer.h>
 #include <wx/utils.h>
+#include <wx/log.h>
 
 #include "audacity/ConfigInterface.h"
 
@@ -46,6 +47,7 @@ greater use in future.
 #include "../widgets/ProgressDialog.h"
 #include "../ondemand/ODManager.h"
 #include "TimeWarper.h"
+#include "nyquist/Nyquist.h"
 
 #if defined(__WXMAC__)
 #include <wx/mac/private.h>
@@ -91,8 +93,10 @@ Effect::Effect()
    mT0 = 0.0;
    mT1 = 0.0;
    mDuration = 0.0;
+   mIsPreview = false;
    mIsLinearEffect = false;
    mPreviewWithNotSelected = false;
+   mPreviewFullSelection = false;
    mNumTracks = 0;
    mNumGroups = 0;
    mProgress = NULL;
@@ -734,7 +738,6 @@ void Effect::SetDuration(double seconds)
 
    mDuration = seconds;
    mT1 = mT0 + mDuration;
-   mSetDuration = mDuration;
 
    mIsSelection = false;
 
@@ -1556,7 +1559,16 @@ bool Effect::ProcessTrack(int count,
    bool isProcessor = GetType() == EffectTypeProcess;
    if (isGenerator)
    {
-      genLength = left->GetRate() * mDuration;
+      double genDur;
+      if (mIsPreview) {
+         gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
+         genDur = wxMin(mDuration, CalcPreviewInputLength(genDur));
+      }
+      else {
+         genDur = mDuration;
+      }
+
+      genLength = left->GetRate() * genDur;
       delayRemaining = genLength;
       cleared = true;
 
@@ -1827,11 +1839,13 @@ bool Effect::ProcessTrack(int count,
 
    if (isGenerator)
    {
+      AudacityProject *p = GetActiveProject();
       StepTimeWarper *warper = new StepTimeWarper(mT0 + genLength, genLength - (mT1 - mT0));
 
       // Transfer the data from the temporary tracks to the actual ones
       genLeft->Flush();
-      left->ClearAndPaste(mT0, mT1, genLeft, true, true, warper);
+      // mT1 gives us the new selection. We want to replace up to GetSel1().
+      left->ClearAndPaste(mT0, p->GetSel1(), genLeft, true, true, warper);
       delete genLeft;
 
       if (genRight)
@@ -1951,6 +1965,12 @@ void Effect::SetLinearEffectFlag(bool linearEffectFlag)
 {
    mIsLinearEffect = linearEffectFlag;
 }
+
+void Effect::SetPreviewFullSelectionFlag(bool previewDurationFlag)
+{
+   mPreviewFullSelection = previewDurationFlag;
+}
+
 
 void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
 {
@@ -2383,75 +2403,77 @@ void Effect::Preview(bool dryOnly)
     else
        wxLogDebug(wxT("Non-linear Effect"));
 
-   if (mNumTracks==0) // nothing to preview
+   if (mNumTracks == 0) { // nothing to preview
       return;
+   }
 
-   wxWindow* FocusDialog = wxWindow::FindFocus();
-   if (gAudioIO->IsBusy())
+   if (gAudioIO->IsBusy()) {
       return;
+   }
+
+   wxWindow *FocusDialog = wxWindow::FindFocus();
+
+   double previewDuration;
+   bool isNyquist = (GetFamily().IsSameAs(NYQUISTEFFECTS_FAMILY))? true : false;
+   bool isGenerator = GetType() == EffectTypeGenerate;
 
    // Mix a few seconds of audio from all of the tracks
-   double previewLen = 6.0;
-   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
+   double previewLen;
+   gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen, 6.0);
 
    double rate = mProjectRate;
-   double warpedPreviewLength = CalcPreviewInputLength(previewLen);
-   double t0 = mT0;
-   double t1 = t0 + warpedPreviewLength;
 
-   // Generators can run without a selection.
-   if (GetType() == EffectTypeGenerate) {
-      // If a generator varies over time, it must use the selected duration.
-      // otherwise set it as a linear effect and process no more than the preview length.
-      // TODO: When previewing non-linear generate effect, calculate only the first 'preview length'.
-      // For generate effects derived from the Nyquist Prompt, the duration is unknow, so
-      // ensure that we have at least preview length to copy.
-      double dur = (mIsLinearEffect)? wxMin(mSetDuration, warpedPreviewLength) :
-                                      wxMax(mSetDuration, warpedPreviewLength);
-      t1 = t0 + dur;
-      this->SetDuration(dur);
+   if (isNyquist && isGenerator) {
+      previewDuration = CalcPreviewInputLength(previewLen);
    }
-   else if (t1 > mT1) {
+   else {
+      previewDuration = wxMin(mDuration, CalcPreviewInputLength(previewLen));
+   }
+
+   double t1 = mT0 + previewDuration;
+
+   if ((t1 > mT1) && !(isNyquist && isGenerator)) {
       t1 = mT1;
    }
-   if (t1 <= t0)
+
+   if (t1 <= mT0)
       return;
 
    bool success = true;
    WaveTrack *mixLeft = NULL;
    WaveTrack *mixRight = NULL;
+   double oldT0 = mT0;
+   double oldT1 = mT1;
+   // Most effects should stop at t1.
+   if (!mPreviewFullSelection)
+      mT1 = t1;
 
    // Save the original track list
    TrackList *saveTracks = mTracks;
 
-   // Linear Effect preview optimised by pre-mixing to one track.
-   // Generators need to generate per track.
-   if (mIsLinearEffect && !(GetType() == EffectTypeGenerate)) {
-      success = ::MixAndRender(mTracks, mFactory, rate, floatSample, t0, t1,
-                               &mixLeft, &mixRight);
-   }
-
    // Build new tracklist from rendering tracks
    mTracks = new TrackList();
 
-   if (mIsLinearEffect && !(GetType() == EffectTypeGenerate)) {
+   // Linear Effect preview optimised by pre-mixing to one track.
+   // Generators need to generate per track.
+   if (mIsLinearEffect && !isGenerator) {
+      success = ::MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1,
+                               &mixLeft, &mixRight);
       if (!success) {
          delete mTracks;
          mTracks = saveTracks;
          return;
       }
 
+      mixLeft->InsertSilence(0.0, mT0);
       mixLeft->SetSelected(true);
       mixLeft->SetDisplay(WaveTrack::NoDisplay);
       mTracks->Add(mixLeft);
       if (mixRight) {
+         mixRight->InsertSilence(0.0, mT0);
          mixRight->SetSelected(true);
          mTracks->Add(mixRight);
       }
-
-      // Reset t0 / t1 is required when source tracks have different start times.
-      t0 = mixLeft->GetStartTime();
-      t1 = mixLeft->GetEndTime();
    }
    else {
       TrackListOfKindIterator iter(Track::Wave, saveTracks);
@@ -2460,7 +2482,8 @@ void Effect::Preview(bool dryOnly)
       {
          WaveTrack *dest;
          if (src->GetSelected() || mPreviewWithNotSelected) {
-            src->Copy(t0, t1, (Track **) &dest);
+            src->Copy(mT0, t1, (Track **) &dest);
+            dest->InsertSilence(0.0, mT0);
             dest->SetSelected(src->GetSelected());
             dest->SetDisplay(WaveTrack::NoDisplay);
             mTracks->Add(dest);
@@ -2472,25 +2495,14 @@ void Effect::Preview(bool dryOnly)
    // Update track/group counts
    CountWaveTracks();
 
-   double t0save = mT0;
-   double t1save = mT1;
-
-   if (mIsLinearEffect) {
-      mT0 = t0;
-      mT1 = t1;
-   }
-   else {
-      mT0 = 0;
-      mT1 = t1 - t0;
-   }
-
    // Apply effect
-
    if (!dryOnly) {
       mProgress = new ProgressDialog(GetName(),
             _("Preparing preview"),
             pdlgHideCancelButton); // Have only "Stop" button.
+      mIsPreview = true;
       success = Process();
+      mIsPreview = false;
       delete mProgress;
       mProgress = NULL;
    }
@@ -2502,11 +2514,12 @@ void Effect::Preview(bool dryOnly)
 
       SelectedTrackListOfKindIterator iter(Track::Wave, mTracks);
       WaveTrack *src = (WaveTrack *) iter.First();
-      while (src)
-      {
+      while (src) {
          playbackTracks.Add(src);
          src = (WaveTrack *) iter.Next();
       }
+      if (isNyquist && isGenerator)
+         t1 = mT1;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
       NoteTrackArray empty;
@@ -2517,11 +2530,11 @@ void Effect::Preview(bool dryOnly)
 #ifdef EXPERIMENTAL_MIDI_OUT
                                empty,
 #endif
-                               rate, mT0, mT1);
+                               rate, mT0, t1);
 
       if (token) {
          int previewing = eProgressSuccess;
-
+wxLogDebug(wxT("mT0 %.3f   t1 %.3f"),mT0,t1);
          // The progress dialog must be deleted before stopping the stream
          // to allow events to flow to the app during StopStream processing.
          // The progress dialog blocks these events.
@@ -2530,7 +2543,7 @@ void Effect::Preview(bool dryOnly)
 
          while (gAudioIO->IsStreamActive(token) && previewing == eProgressSuccess) {
             ::wxMilliSleep(100);
-            previewing = progress->Update(gAudioIO->GetStreamTime() - mT0, mT1);
+            previewing = progress->Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
          }
 
          delete progress;
@@ -2547,10 +2560,6 @@ void Effect::Preview(bool dryOnly)
       }
    }
 
-   // Restore original selection
-   mT0 = t0save;
-   mT1 = t1save;
-
    if (FocusDialog) {
       FocusDialog->SetFocus();
    }
@@ -2562,6 +2571,9 @@ void Effect::Preview(bool dryOnly)
    delete mTracks;
 
    mTracks = saveTracks;
+   mT0 = oldT0;
+   mT1 = oldT1;
+
    // Effect is already inited; we call Process, End, and then Init
    // again, so the state is exactly the way it was before Preview
    // was called.

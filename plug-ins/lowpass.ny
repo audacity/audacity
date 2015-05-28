@@ -1,7 +1,7 @@
 ;nyquist plug-in
-;version 3
+;version 4
 ;type process
-;preview enabled
+;preview linear
 ;categories "http://lv2plug.in/ns/lv2core#LowpassPlugin"
 ;name "Low Pass Filter..."
 ;action "Performing Low Pass Filter..."
@@ -35,4 +35,4 @@
   (T 
     (funcall 
       (nth rolloff '(lp lowpass2 lowpass4 lowpass6 lowpass8))
-      s frequency)))
+      *track* frequency)))
