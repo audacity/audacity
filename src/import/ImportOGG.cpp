@@ -37,9 +37,11 @@
 
 #include <wx/intl.h>
 #include "../Audacity.h"
-#include "ImportOGG.h"
+#include "../Prefs.h"
 #include "../Internat.h"
 #include "../Tags.h"
+
+#include "ImportOGG.h"
 
 #define DESC _("Ogg Vorbis files")
 
