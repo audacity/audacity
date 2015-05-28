@@ -607,6 +607,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mScrubStartPosition = -1;
    mMaxScrubSpeed = 1.0;
    mScrubSpeedDisplayCountdown = 0;
+   mScrubHasFocus = false;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
@@ -2406,6 +2407,7 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
          mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 
       if (IsScrubbing()) {
+         mScrubHasFocus = true;
          //mMouseCapture = IsMiddleButtonScrubbing;
          //CaptureMouse();
       }
@@ -2417,8 +2419,11 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
 
 bool TrackPanel::ContinueScrubbing(wxCoord position, bool maySkip)
 {
-   wxCoord leadPosition = position;
-   double newEnd = PositionToTime(leadPosition, GetLeftOffset());
+   // When we don't have focus, enqueue silent scrubs until we regain focus.
+   if (!mScrubHasFocus)
+      return gAudioIO->EnqueueScrubBySignedSpeed(0, mMaxScrubSpeed, maySkip);
+
+   const double newEnd = PositionToTime(position, GetLeftOffset());
 
    if (maySkip)
       // Cause OnTimer() to suppress the speed display
@@ -7371,6 +7376,9 @@ void TrackPanel::DrawEverythingElse(wxDC * dc,
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
 void TrackPanel::DrawScrubSpeed(wxDC &dc)
 {
+   if (!mScrubHasFocus)
+      return;
+
    // Don't draw it during stutter play with shift down
    if (!::wxGetMouseState().ShiftDown() && (
 
@@ -9777,12 +9785,18 @@ void TrackPanel::SetFocusedTrack( Track *t )
 
 void TrackPanel::OnSetFocus(wxFocusEvent & WXUNUSED(event))
 {
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   mScrubHasFocus = IsScrubbing();
+#endif
    SetFocusedTrack( GetFocusedTrack() );
    Refresh( false );
 }
 
 void TrackPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   mScrubHasFocus = false;
+#endif
    Refresh( false);
 }
 

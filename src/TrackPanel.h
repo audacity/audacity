@@ -783,6 +783,7 @@ protected:
    wxCoord mScrubStartPosition;
    double mMaxScrubSpeed;
    int mScrubSpeedDisplayCountdown;
+   bool mScrubHasFocus;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
