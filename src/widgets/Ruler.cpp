@@ -54,6 +54,7 @@ array of Ruler::Label.
 *//******************************************************************/
 
 #include "../Audacity.h"
+#include "Ruler.h"
 
 #include <math.h>
 
@@ -68,7 +69,6 @@ array of Ruler::Label.
 #include "../AudioIO.h"
 #include "../Internat.h"
 #include "../Project.h"
-#include "Ruler.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
@@ -155,6 +155,8 @@ Ruler::Ruler()
    mGridLineLength = 0;
    mMajorGrid = false;
    mMinorGrid = false;
+
+   mTwoTone = false;
 }
 
 Ruler::~Ruler()
@@ -172,6 +174,11 @@ Ruler::~Ruler()
       delete[] mMinorLabels;
    if (mMinorMinorLabels)
       delete[] mMinorMinorLabels;
+}
+
+void Ruler::SetTwoTone(bool twoTone)
+{
+   mTwoTone = twoTone;
 }
 
 void Ruler::SetFormat(RulerFormat format)
@@ -734,6 +741,7 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    else
       label = &mMinorMinorLabels[mNumMinorMinor++];
 
+   label->value = d;
    label->pos = pos;
    label->lx = mLeft - 1000; // don't display
    label->ly = mTop - 1000;  // don't display
@@ -844,6 +852,7 @@ void Ruler::TickCustom(int labelIdx, bool major, bool minor)
    else
       label = &mMinorMinorLabels[labelIdx];
 
+   label->value = 0.0;
    pos = label->pos;         // already stored in label class
    l   = label->text;
    label->lx = mLeft - 1000; // don't display
@@ -1255,10 +1264,8 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
 
 #ifdef EXPERIMENTAL_THEMING
    mDC->SetPen(mPen);
-   mDC->SetTextForeground(mTickColour);
 #else
    mDC->SetPen(*wxBLACK_PEN);
-   mDC->SetTextForeground(*wxBLACK);
 #endif
 
    // Draws a long line the length of the ruler.
@@ -1316,10 +1323,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
          }
       }
 
-      if (mMajorLabels[i].text != wxT(""))
-         mDC->DrawText(mMajorLabels[i].text,
-                       mMajorLabels[i].lx,
-                       mMajorLabels[i].ly);
+      mMajorLabels[i].Draw(*mDC, mTwoTone);
    }
 
    if(mbMinor == true) {
@@ -1347,10 +1351,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
                                 mRight, mTop + pos);
             }
          }
-         if (mMinorLabels[i].text != wxT(""))
-            mDC->DrawText(mMinorLabels[i].text,
-                          mMinorLabels[i].lx,
-                          mMinorLabels[i].ly);
+         mMinorLabels[i].Draw(*mDC, mTwoTone);
       }
    }
 
@@ -1382,9 +1383,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
                                 mRight, mTop + pos);
             }
          }
-         mDC->DrawText(mMinorMinorLabels[i].text,
-                       mMinorMinorLabels[i].lx,
-                       mMinorMinorLabels[i].ly);
+         mMinorMinorLabels[i].Draw(*mDC, mTwoTone);
       }
    }
 }
@@ -1453,14 +1452,9 @@ int Ruler::FindZero(Label * label, const int len)
 {
    int i = 0;
    double d = 1.0;   // arbitrary
-   wxString s;
 
    do {
-      s = label[i].text;
-      if(!s.IsEmpty())
-         s.ToDouble(&d);
-      else
-         d = 1.0; // arbitrary, looking for some text here
+      d = label[i].value;
       i++;
    } while( (i < len) && (d != 0.0) );
 
@@ -1475,6 +1469,7 @@ int Ruler::GetZeroPosition()
    int zero;
    if((zero = FindZero(mMajorLabels, mNumMajor)) < 0)
       zero = FindZero(mMinorLabels, mNumMinor);
+   // PRL: don't consult minor minor??
    return zero;
 }
 
@@ -1525,6 +1520,22 @@ void Ruler::SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, 
       mMinorLabels[i].pos  = start + i*step;
    }
    //Remember: delete majorlabels....
+}
+
+void Ruler::Label::Draw(wxDC&dc, bool twoTone) const
+{
+   if (text != wxT("")) {
+      bool altColor = twoTone && value < 0.0;
+
+#ifdef EXPERIMENTAL_THEMING
+      // TODO:  handle color distinction
+      mDC->SetTextForeground(mTickColour);
+#else
+      dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
+#endif
+
+      dc.DrawText(text, lx, ly);
+   }
 }
 
 //
@@ -1670,8 +1681,9 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
    mQuickPlayEnabled = gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L); 
 
+   UpdatePrefs();
+
 #if wxUSE_TOOLTIPS
-   RegenerateTooltips();
    wxToolTip::Enable(true);
 #endif
 
@@ -1691,6 +1703,20 @@ AdornedRulerPanel::~AdornedRulerPanel()
 
    if (mSnapManager)
       delete mSnapManager;
+}
+
+void AdornedRulerPanel::UpdatePrefs()
+{
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+#ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
+   {
+      bool scrollBeyondZero = false;
+      gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &scrollBeyondZero, false);
+      ruler.SetTwoTone(scrollBeyondZero);
+   }
+#endif
+#endif
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::RegenerateTooltips()
