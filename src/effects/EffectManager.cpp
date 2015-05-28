@@ -65,10 +65,22 @@ EffectManager::~EffectManager()
 
 // Here solely for the purpose of Nyquist Workbench until
 // a better solution is devised.
-void EffectManager::RegisterEffect(Effect *f)
+const PluginID & EffectManager::RegisterEffect(Effect *f)
 {
-   // This will go away after all effects have been converted
-   mEffects[PluginManager::Get().RegisterPlugin(f)] = f;
+   const PluginID & ID = PluginManager::Get().RegisterPlugin(f);
+
+   mEffects[ID] = f;
+
+   return ID;
+}
+
+// Here solely for the purpose of Nyquist Workbench until
+// a better solution is devised.
+void EffectManager::UnregisterEffect(const PluginID & ID)
+{
+   PluginID id = ID;
+   PluginManager::Get().UnregisterPlugin(id);
+   mEffects.erase(id);
 }
 
 bool EffectManager::DoEffect(const PluginID & ID,

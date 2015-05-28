@@ -2201,6 +2201,18 @@ const PluginID & PluginManager::RegisterPlugin(EffectIdentInterface *effect)
    return plug.GetID();
 }
 
+// Here solely for the purpose of Nyquist Workbench until
+// a better solution is devised.
+void PluginManager::UnregisterPlugin(const PluginID & ID)
+{
+   if (mPlugins.find(ID) == mPlugins.end())
+   {
+      return;
+   }
+
+   mPlugins.erase(ID);
+}
+
 int PluginManager::GetPluginCount(PluginType type)
 {
    int num = 0;
