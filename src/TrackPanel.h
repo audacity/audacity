@@ -305,7 +305,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   static bool IsScrubSeekKeyDown();
    bool IsScrubbing();
    void ToggleScrubbing(
       wxCoord xx
@@ -314,7 +313,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 #endif
    );
    bool MaybeStartScrubbing(wxMouseEvent &event);
-   bool ContinueScrubbing(wxCoord position, bool hasFocus, bool maySkip);
+   bool ContinueScrubbing(wxCoord position, bool maySkip);
    bool StopScrubbing();
 #endif
 
@@ -782,8 +781,7 @@ protected:
    wxCoord mScrubStartPosition;
    double mMaxScrubSpeed;
    int mScrubSpeedDisplayCountdown;
-   bool mScrubHasFocus; // To do:  rely on wxWindow::HasFocus() instead, wx verions 2.9.0+
-   bool mScrubSeekKeypress;
+   bool mScrubHasFocus;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
