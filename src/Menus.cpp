@@ -4986,7 +4986,11 @@ void AudacityProject::OnZoomNormal()
 
 void AudacityProject::OnZoomFit()
 {
-   double len = mTracks->GetEndTime();
+   const double end = mTracks->GetEndTime();
+   const double start = mScrollBeyondZero
+      ? std::min(mTracks->GetStartTime(), 0.0)
+      : 0;
+   const double len = end - start;
 
    if (len <= 0.0)
       return;
@@ -4996,7 +5000,7 @@ void AudacityProject::OnZoomFit()
    w -= 10;
 
    Zoom(w / len);
-   TP_ScrollWindow(0.0);
+   TP_ScrollWindow(start);
 }
 
 void AudacityProject::DoZoomFitV()
@@ -5049,7 +5053,11 @@ void AudacityProject::OnZoomFitV()
 
 void AudacityProject::OnZoomSel()
 {
-   if (mViewInfo.selectedRegion.isPoint())
+   const double lowerBound =
+      std::max(mViewInfo.selectedRegion.t0(), ScrollingLowerBoundTime());
+   const double denom =
+      mViewInfo.selectedRegion.t1() - lowerBound;
+   if (denom <= 0.0)
       return;
 
    // LL:  The "-1" is just a hack to get around an issue where zooming to
@@ -5058,8 +5066,7 @@ void AudacityProject::OnZoomSel()
    //      where the selected region may be scrolled off the left of the screen.
    //      I know this isn't right, but until the real rounding or 1-off issue is
    //      found, this will have to work.
-   Zoom(((mViewInfo.zoom * mViewInfo.screen) - 1) /
-        (mViewInfo.selectedRegion.t1() - mViewInfo.selectedRegion.t0()));
+   Zoom(((mViewInfo.zoom * mViewInfo.screen) - 1) / denom);
    TP_ScrollWindow(mViewInfo.selectedRegion.t0());
 }
 

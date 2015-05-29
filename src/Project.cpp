@@ -1459,9 +1459,16 @@ void AudacityProject::OnScrollRightButton(wxScrollEvent & event)
 }
 
 
+double AudacityProject::ScrollingLowerBoundTime() const
+{
+   return mScrollBeyondZero
+      ? std::min(mTracks->GetStartTime(), -mViewInfo.screen / 2.0)
+      : 0;
+}
+
 void AudacityProject::SetHorizontalThumb(double scrollto)
 {
-   const double timeOffset = mScrollBeyondZero ? mViewInfo.screen / 2.0 : 0;
+   const double timeOffset = -ScrollingLowerBoundTime();
    int pos = (int) (
       (scrollto + timeOffset) * mViewInfo.zoom * mViewInfo.sbarScale
    );
@@ -1544,10 +1551,10 @@ void AudacityProject::FixScrollbars()
    // so that any point within the union of the selection and the track duration
    // may be scrolled to the midline.
    // May add even more to the end, so that you can always scroll the starting time to zero.
+   const double lowerBound = ScrollingLowerBoundTime();
    const double additional = mScrollBeyondZero
-      ? halfScreen + std::max(halfScreen, mViewInfo.screen - LastTime)
+      ? -lowerBound + std::max(halfScreen, mViewInfo.screen - LastTime)
       : mViewInfo.screen / 4.0;
-   const double lowerBound = mScrollBeyondZero ? -halfScreen : 0.0;
 
    mViewInfo.total = LastTime + additional;
 
@@ -1823,11 +1830,8 @@ void AudacityProject::OnScroll(wxScrollEvent & WXUNUSED(event))
 {
    const wxInt64 hlast = mViewInfo.sbarH;
 
-   const wxInt64 offset = mScrollBeyondZero
-      ? (0.5 + (mViewInfo.zoom * mViewInfo.screen / 2.0))
-      : 0.0;
-   const double lowerBound = mScrollBeyondZero
-      ? -mViewInfo.screen / 2.0 : 0.0;
+   const double lowerBound = ScrollingLowerBoundTime();
+   const wxInt64 offset = 0.5 + -lowerBound * mViewInfo.zoom;
 
    mViewInfo.sbarH =
       (wxInt64)(mHsbar->GetThumbPosition() / mViewInfo.sbarScale) - offset;
