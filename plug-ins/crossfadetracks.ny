@@ -3,7 +3,7 @@
 ;type process
 ;name "Crossfade Tracks..."
 ;action "Crossfading..."
-;preview disabled - cannot use preview because tracks are processed differently.
+;preview selection
 ;author "Steve Daulton"
 ;copyright "Released under terms of the GNU General Public License version 2"
 

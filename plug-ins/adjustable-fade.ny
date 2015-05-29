@@ -25,7 +25,8 @@
 
 
 (defun get-input (sig)
-"When previewing, we only need to process preview length."
+"Preview takes the entire selection so that we know the correct
+selection length, but preview only needs to process preview length."
   (if (get '*track* 'view)  ;NIL if preview
       sig
       (multichan-expand #'trim-input sig)))

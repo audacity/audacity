@@ -1,7 +1,7 @@
 ;nyquist plug-in
 ;version 4
 ;type process
-;preview enabled
+;preview linear
 ;name "Spectral edit shelves..."
 ;action "Filtering..."
 ;author "Paul Licameli"

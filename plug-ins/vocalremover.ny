@@ -1,7 +1,7 @@
 ;nyquist plug-in
 ;version 3
 ;type process
-;preview enabled
+;preview linear
 ;categories "http://lv2plug.in/ns/lv2core#UtilityPlugin"
 ;name "Vocal Remover..."
 ;action "Removing center-panned audio..."
