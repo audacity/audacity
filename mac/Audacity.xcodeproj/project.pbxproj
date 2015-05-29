@@ -11,7 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 17072E890988BD58008541CC /* Build configuration list for PBXAggregateTarget "Configure" */;
 			buildPhases = (
-				17072E8C0988BD85008541CC /* ShellScript */,
+				17072E8C0988BD85008541CC /* Configure */,
 			);
 			dependencies = (
 			);
@@ -6495,6 +6495,7 @@
 				1790AFAE09883B6D008A330A /* Frameworks */,
 				28032560131DAFAF0059D002 /* Copy nyquist */,
 				28032580131DB4960059D002 /* Copy plug-ins */,
+				28B4FD8E1B17A69D00E033A0 /* Install wxWidgets libs */,
 				288F0980131A400F0008E860 /* Install manual */,
 				282413DA131D52CE009FD931 /* Install plugins */,
 				2892CE28131AFB1900E1E17D /* Install miscellany */,
@@ -6806,7 +6807,7 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		17072E8C0988BD85008541CC /* ShellScript */ = {
+		17072E8C0988BD85008541CC /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -6814,6 +6815,7 @@
 			inputPaths = (
 				"$(TOPLEVEL)/Makefile.in",
 			);
+			name = Configure;
 			outputPaths = (
 				"$(TOPLEVEL)/Makefile",
 			);
@@ -6851,6 +6853,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; i++ ))\ndo\n   in=\"$(eval echo \\${SCRIPT_INPUT_FILE_${i}})\"\n   out=\"$(eval echo \\${SCRIPT_OUTPUT_FILE_${i}})\"\n   cp -pPR \"${in}\" \"${out}\" && find \"${out}\" -name .svn -print0 | xargs -0 rm -rf\ndone\n";
+			showEnvVarsInLog = 0;
 		};
 		28032580131DB4960059D002 /* Copy plug-ins */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6867,6 +6870,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "for (( i = 0; i < ${SCRIPT_INPUT_FILE_COUNT}; i++ ))\ndo\n   in=\"$(eval echo \\${SCRIPT_INPUT_FILE_${i}})\"\n   out=\"$(eval echo \\${SCRIPT_OUTPUT_FILE_${i}})\"\n   cp -pPR \"${in}\" \"${out}\" && find \"${out}\" -name .svn -print0 | xargs -0 rm -rf\ndone\n";
+			showEnvVarsInLog = 0;
 		};
 		282413D8131D51FC009FD931 /* Create dist */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6881,6 +6885,7 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "set -x\n\n# Setup\nVERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' Info.plist.h`\nRELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' Info.plist.h`\nREVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' Info.plist.h`\nVERSION=$VERSION.$RELEASE.$REVISION\n\ncd \"${DSTROOT}\"\nchmod -RH \"${INSTALL_MODE_FLAG}\" \"${TARGET_BUILD_DIR}\"\nchown -RH \"${INSTALL_OWNER}:${INSTALL_GROUP}\" \"${TARGET_BUILD_DIR}\"\n\necho \"Audacity has been installed to: ${DSTROOT}\"\n\ncd ..\n\nVOL=\"Audacity $VERSION\"\nDMG=\"audacity-macosx-ub-$VERSION\"\n\n# Preclean\nrm -rf \"$DMG\" \"$DMG.dmg\" TMP.dmg\n\n# Create structure\nmkdir \"$DMG\"\ncp -pR \"${DSTROOT}/\" \"${DMG}\"\n\n#Add a custom icon for the DMG\n#cp -p mac/Resources/Audacity.icns \"${DMG}\"/.VolumeIcon.icns\n\n# Create and mount the image\nhdiutil create -ov -format UDRW -srcdir \"$DMG\" -fs HFS+ -volname \"$VOL\" TMP.dmg\n\n#Mount the DMG and store the name it was mounted with\nTITLE=`hdiutil attach TMP.dmg | grep \\/Volumes | sed \"s/^.*\\/Volumes\\///\"`\n\n#Set the custom icon flag\n#SetFile -a C /Volumes/\"$TITLE\"\n\n#Make our DMG look pretty and install the custom background image\necho '\n   tell application \"Finder\"\n     tell disk \"'${TITLE}'\"\n           open\n           set current view of container window to icon view\n           set toolbar visible of container window to false\n           set statusbar visible of container window to false\n           set the bounds of container window to {400, 100, 1000, 550}\n           set theViewOptions to the icon view options of container window\n           set arrangement of theViewOptions to not arranged\n           set icon size of theViewOptions to 72\n           set background picture of theViewOptions to file \".background:Audacity-DMG-background.png\" \n           make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}\n           set position of item \"Audacity\" of container window to {170, 350}\n           set position of item \"Applications\" of container window to {430, 350}\n           close\n           open\n           update without registering applications\n           delay 5\n           eject\n     end tell\n   end tell\n' | osascript\n\n# Compress and prepare for Internet delivery\nhdiutil convert TMP.dmg -format UDZO -imagekey zlib-level=9 -o \"$DMG.dmg\"\n\n# Create zip version\nrm -rf \"${DMG}/Audacity/help/\"\nzip -r9 \"${DMG}.zip\" \"${DMG}\"\n\n# Cleanup\nrm -rf ${DMG} TMP.dmg\n";
+			showEnvVarsInLog = 0;
 		};
 		282413DA131D52CE009FD931 /* Install plugins */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6895,6 +6900,7 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "\"${PROJECT_DIR}/build_plugins.sh\"";
+			showEnvVarsInLog = 0;
 		};
 		288F0980131A400F0008E860 /* Install manual */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6909,6 +6915,21 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "\"${PROJECT_DIR}/build_manual.sh\"";
+			showEnvVarsInLog = 0;
+		};
+		28B4FD8E1B17A69D00E033A0 /* Install wxWidgets libs */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Install wxWidgets libs";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n\nupdate_paths()\n{\n   for lib in $(otool -L \"${1}\" | awk '/libwx/{print $1}')\n   do \n      install_name_tool -change \"${lib}\" @loader_path/../Frameworks/$(basename \"${lib}\") \"${1}\"\n   done\n}\n\nEXEPATH=\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\nLIBPATH=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\nmkdir -p \"${LIBPATH}\"\n\nfor lib in $(otool -L \"${EXEPATH}\" | awk '/libwx/{print $1}')\ndo \n   cp -p ${lib} \"${LIBPATH}\"\n   install_name_tool -change \"${lib}\" @executable_path/../Frameworks/$(basename \"${lib}\") \"${EXEPATH}\"\n   update_paths \"${lib}\"\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -8147,6 +8168,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/usr/local/lib/hide,
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug Static\"";
 				OTHER_CFLAGS = (
@@ -8202,6 +8224,7 @@
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = yes;
 				CONFIG_UNICODE = yes;
+				COPY_PHASE_STRIP = NO;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -8215,6 +8238,7 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				STRIP_INSTALLED_PRODUCT = NO;
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
@@ -8467,6 +8491,7 @@
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
 				CONFIG_UNICODE = yes;
+				COPY_PHASE_STRIP = NO;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -8482,11 +8507,12 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				STRIP_INSTALLED_PRODUCT = NO;
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-debug-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXDEBUG__ -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_macud_html-$(WX_VER)  -lwx_macud_adv-$(WX_VER) -lwx_macud_core-$(WX_VER) -lwx_base_carbonud_net-$(WX_VER) -lwx_base_carbonud-$(WX_VER) $(WX_PREFIX)/lib/libwxregexud-$(WX_VER).a $(WX_PREFIX)/lib/libwxexpatd-$(WX_VER).a $(WX_PREFIX)/lib/libwxtiffd-$(WX_VER).a $(WX_PREFIX)/lib/libwxjpegd-$(WX_VER).a $(WX_PREFIX)/lib/libwxpngd-$(WX_VER).a";
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_macud_qa-$(WX_VER) -lwx_macud_xrc-$(WX_VER)  -lwx_macud_html-$(WX_VER)  -lwx_macud_adv-$(WX_VER) -lwx_macud_core-$(WX_VER) -lwx_base_carbonud_xml-$(WX_VER) -lwx_base_carbonud_net-$(WX_VER) -lwx_base_carbonud-$(WX_VER) $(WX_PREFIX)/lib/libwxregexud-$(WX_VER).a $(WX_PREFIX)/lib/libwxexpatd-$(WX_VER).a $(WX_PREFIX)/lib/libwxtiffd-$(WX_VER).a $(WX_PREFIX)/lib/libwxjpegd-$(WX_VER).a $(WX_PREFIX)/lib/libwxpngd-$(WX_VER).a";
 				WX_PREFIX = /usr/local;
 				WX_VER = 2.8;
 				ZERO_LINK = NO;
@@ -8497,17 +8523,20 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5B70DF63FE500576305 /* Debug_Shared.xcconfig */;
 			buildSettings = {
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 					"BUILDING_AUDACITY=1",
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /Audacity;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/usr/local/lib/hide,
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug Static\"";
 				OTHER_CFLAGS = (
@@ -8776,6 +8805,7 @@
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = no;
 				CONFIG_UNICODE = yes;
+				COPY_PHASE_STRIP = NO;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -8791,11 +8821,12 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				STRIP_INSTALLED_PRODUCT = NO;
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";
 				WX_CXXFLAGS = "$(WX_CFLAGS)";
-				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_macu_html-$(WX_VER)  -lwx_macu_adv-$(WX_VER) -lwx_macu_core-$(WX_VER) -lwx_base_carbonu_net-$(WX_VER) -lwx_base_carbonu-$(WX_VER) $(WX_PREFIX)/lib/libwxregexud-$(WX_VER).a $(WX_PREFIX)/lib/libwxexpatd-$(WX_VER).a $(WX_PREFIX)/lib/libwxtiffd-$(WX_VER).a $(WX_PREFIX)/lib/libwxjpegd-$(WX_VER).a $(WX_PREFIX)/lib/libwxpngd-$(WX_VER).a";
+				WX_LDFLAGS = "-L$(WX_PREFIX)/lib -lwx_macu_xrc-$(WX_VER) -lwx_macu_qa-$(WX_VER) -lwx_macu_html-$(WX_VER)  -lwx_macu_adv-$(WX_VER) -lwx_macu_core-$(WX_VER) -lwx_base_carbonu_xml-$(WX_VER)  -lwx_base_carbonu_net-$(WX_VER) -lwx_base_carbonu-$(WX_VER) $(WX_PREFIX)/lib/libwxregexud-$(WX_VER).a $(WX_PREFIX)/lib/libwxexpatd-$(WX_VER).a $(WX_PREFIX)/lib/libwxtiffd-$(WX_VER).a $(WX_PREFIX)/lib/libwxjpegd-$(WX_VER).a $(WX_PREFIX)/lib/libwxpngd-$(WX_VER).a";
 				WX_PREFIX = /usr/local;
 				WX_VER = 2.8;
 				ZERO_LINK = NO;
@@ -8806,6 +8837,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2812A5BB0DF63FFD00576305 /* Release_Shared.xcconfig */;
 			buildSettings = {
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(TOPLEVEL)/src/AudacityHeaders.h";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -8814,11 +8846,13 @@
 					"$(GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS_QUOTED_FOR_TARGET_1 = "AUDACITY_DLL_API=\"\"";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /Audacity;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/usr/local/lib/hide,
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug Static\"";
 				OTHER_CFLAGS = (
@@ -9313,6 +9347,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					/usr/local/lib/hide,
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Debug Static\"";
 				OTHER_CFLAGS = (
@@ -9372,6 +9407,7 @@
 				CONFIG_FLAGS = "";
 				CONFIG_STATIC = yes;
 				CONFIG_UNICODE = yes;
+				COPY_PHASE_STRIP = NO;
 				FFMPEG_CFLAGS = "-I../lib-src/ffmpeg -D__STDC_CONSTANT_MACROS";
 				FFMPEG_CXXFLAGS = "$(FFMPEG_CFLAGS)";
 				FFMPEG_PREFIX = /usr/local;
@@ -9385,6 +9421,7 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
 				SSE_CPPFLAGS = "-Xarch_i386 -DAPPLE_I386 -Xarch_ppc -DAPPLE_PPC";
+				STRIP_INSTALLED_PRODUCT = NO;
 				TOPLEVEL = ..;
 				WX_CFLAGS = "-I$(WX_PREFIX)/lib/wx/include/mac-unicode-release-static-$(WX_VER) -I$(WX_PREFIX)/include/wx-$(WX_VER) -D__WXMAC__ -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES -DNO_GCC_PRAGMA";
 				WX_CONFIG = "$(WX_PREFIX)/bin/wx-config";

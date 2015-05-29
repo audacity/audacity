@@ -689,10 +689,6 @@ NyqBench::NyqBench(wxWindow * parent)
    mScript = NULL;
    mOutput = NULL;
 
-   // No need to delete...EffectManager will do it
-   mEffect = new NyquistEffect(wxT("===nyquistworker==="));
-   EffectManager::Get().RegisterEffect(mEffect);
-
    mPath = gPrefs->Read(wxT("NyqBench/Path"), wxEmptyString);
    mAutoLoad = (gPrefs->Read(wxT("NyqBench/AutoLoad"), 0L) != 0);
    mAutoWrap = (gPrefs->Read(wxT("NyqBench/AutoWrap"), true) != 0);
@@ -1353,6 +1349,10 @@ void NyqBench::OnLargeIcons(wxCommandEvent & e)
 
 void NyqBench::OnGo(wxCommandEvent & e)
 {
+   // No need to delete...EffectManager will do it
+   mEffect = new NyquistEffect(wxT("Nyquist Effect Workbench"));
+   const PluginID & ID = EffectManager::Get().RegisterEffect(mEffect);
+
    mEffect->SetCommand(mScript->GetValue());
    mEffect->RedirectOutput();
 
@@ -1366,14 +1366,15 @@ void NyqBench::OnGo(wxCommandEvent & e)
       mRunning = true;
       UpdateWindowUI();
 
-      const PluginID & id = EffectManager::Get().GetEffectByIdentifier(mEffect->GetSymbol());
-      p->OnEffect(id);
+      p->OnEffect(ID);
 
       mRunning = false;
       UpdateWindowUI();
    }
 
    Raise();
+
+   EffectManager::Get().UnregisterEffect(ID);
 }
 
 void NyqBench::OnStop(wxCommandEvent & e)

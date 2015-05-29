@@ -37,9 +37,11 @@
 
 #include <wx/intl.h>
 #include "../Audacity.h"
-#include "ImportOGG.h"
+#include "../Prefs.h"
 #include "../Internat.h"
 #include "../Tags.h"
+
+#include "ImportOGG.h"
 
 #define DESC _("Ogg Vorbis files")
 
@@ -104,6 +106,9 @@ public:
       mFile(file),
       mVorbisFile(vorbisFile)
    {
+      mFormat = (sampleFormat)
+         gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleFormat"), floatSample);
+
       mStreamInfo = new wxArrayString();
       mStreamUsage = new int[vorbisFile->links];
       for (int i = 0; i < vorbisFile->links; i++)
@@ -151,6 +156,8 @@ private:
    int            *mStreamUsage;
    wxArrayString  *mStreamInfo;
    WaveTrack    ***mChannels;
+
+   sampleFormat   mFormat;
 };
 
 void GetOGGImportPlugin(ImportPluginList *importPluginList,
@@ -248,7 +255,7 @@ int OggImportFileHandle::Import(TrackFactory *trackFactory, Track ***outTracks,
       mChannels[i] = new WaveTrack *[vi->channels];
 
       for (c = 0; c < vi->channels; c++) {
-         mChannels[i][c] = trackFactory->NewWaveTrack(int16Sample, vi->rate);
+         mChannels[i][c] = trackFactory->NewWaveTrack(mFormat, vi->rate);
 
          if (vi->channels == 2) {
             switch (c) {

@@ -262,6 +262,7 @@ public:
    // Here solely for the purpose of Nyquist Workbench until
    // a better solution is devised.
    const PluginID & RegisterPlugin(EffectIdentInterface *effect);
+   void UnregisterPlugin(const PluginID & ID);
 
 private:
    void Load();

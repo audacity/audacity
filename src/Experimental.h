@@ -182,9 +182,15 @@
 #define EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
 
 // Paul Licameli (PRL) 24 May 2015
-// Allow scrolling up to one half of a screenful beyond either end of the project.
+// Allow scrolling up to one half of a screenful beyond either end of the project,
+// if you turn on the appropriate Tracks preference.
 // This allows smooth-scrolling scrub to work more reasonably at the ends.
 #define EXPERIMENTAL_SCROLLING_LIMITS
+
+// Paul Licameli (PRL) 28 May 2015
+// Draw negative numbers on the time ruler in a different color, when
+// scrolling past zero is enabled. Perhaps that lessens confusion.
+#define EXPERIMENTAL_TWO_TONE_TIME_RULER
 
 // Define to include crash reporting
 #define EXPERIMENTAL_CRASH_REPORT

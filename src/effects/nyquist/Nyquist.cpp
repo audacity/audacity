@@ -150,11 +150,6 @@ NyquistEffect::~NyquistEffect()
 {
 }
 
-void NyquistEffect::RedirectOutput()
-{
-   wxFAIL_MSG(XO("JKC: This function used to exist.  Have a look in SVN and see if you can find it") );
-}
-
 // IdentInterface implementation
 
 wxString NyquistEffect::GetPath()
@@ -1180,6 +1175,12 @@ wxArrayString NyquistEffect::ParseChoice(const NyqControl & ctrl)
 
    return choices;
 }
+
+void NyquistEffect::RedirectOutput()
+{
+   mRedirectOutput = true;
+}
+
 void NyquistEffect::SetCommand(wxString cmd)
 {
    mExternal = true;

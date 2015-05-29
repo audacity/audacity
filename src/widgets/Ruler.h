@@ -60,6 +60,9 @@ class AUDACITY_DLL_API Ruler {
    // Optional Ruler Parameters
    //
 
+   // If twoTone is true, cause zero and positive numbers to appear black, negative in another color.
+   void SetTwoTone(bool twoTone);
+
    // IntFormat, RealFormat, or TimeFormat
    void SetFormat(RulerFormat format);
 
@@ -174,9 +177,12 @@ private:
 
    class Label {
     public:
+      double value;
       int pos;
       int lx, ly;
       wxString text;
+
+      void Draw(wxDC &dc, bool twoTone) const;
    };
 
    int          mNumMajor;
@@ -206,6 +212,7 @@ private:
    bool         mMinorGrid;      //         .
    int          mGridLineLength; //        end
    wxString     mUnits;
+   bool         mTwoTone;
 };
 
 class AUDACITY_DLL_API RulerPanel : public wxPanel {
@@ -269,6 +276,7 @@ public:
    void SetProject(AudacityProject* project) {mProject = project;};
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
+   void UpdatePrefs();
    void RegenerateTooltips();
 
    bool mIsSnapped;
