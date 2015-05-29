@@ -6929,7 +6929,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\nupdate_paths()\n{\n   for lib in $(otool -L \"${1}\" | awk '/libwx/{print $1}')\n   do \n      install_name_tool -change \"${lib}\" @loader_path/../Frameworks/$(basename \"${lib}\") \"${1}\"\n   done\n}\n\nEXEPATH=\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\nLIBPATH=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\nmkdir -p \"${LIBPATH}\"\n\nfor lib in $(otool -L \"${EXEPATH}\" | awk '/libwx/{print $1}')\ndo \n   cp -p ${lib} \"${LIBPATH}\"\n   install_name_tool -change \"${lib}\" @executable_path/../Frameworks/$(basename \"${lib}\") \"${EXEPATH}\"\n   update_paths \"${lib}\"\ndone\n";
+			shellScript = "#!/bin/sh\n\nupdate_paths()\n{\n   base=$(basename \"${1}\")\n   cp -p \"${1}\" \"${LIBPATH}\"\n\n   for lib in $(otool -L \"${1}\" | awk '/libwx/{print $1}')\n   do\n      install_name_tool -change \"${lib}\" @loader_path/../Frameworks/$(basename \"${lib}\") \"${LIBPATH}/${base}\"\n   done\n}\n\nEXEPATH=\"${BUILT_PRODUCTS_DIR}/${EXECUTABLE_PATH}\"\nLIBPATH=\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\nmkdir -p \"${LIBPATH}\"\n\nfor lib in $(otool -L \"${EXEPATH}\" | awk '/libwx/{print $1}')\ndo\n   install_name_tool -change \"${lib}\" @executable_path/../Frameworks/$(basename \"${lib}\") \"${EXEPATH}\"\n   update_paths \"${lib}\"\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
