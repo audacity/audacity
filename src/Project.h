@@ -348,6 +348,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void SafeDisplayStatusMessage(const wxChar *msg);
 
+   double ScrollingLowerBoundTime() const;
    void SetHorizontalThumb(double scrollto);
 
    // TrackPanel access
