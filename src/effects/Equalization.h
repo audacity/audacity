@@ -150,6 +150,7 @@ private:
    XMLTagHandler *HandleXMLChild(const wxChar *tag);
    void WriteXML(XMLWriter &xmlFile);
 
+   void UpdateCurves();
    void UpdateDraw();
 
    void LayoutEQSliders();

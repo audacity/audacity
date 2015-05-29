@@ -880,18 +880,7 @@ bool EffectEqualization::TransferDataToWindow()
    mdBMax = 0;                    // force refresh in TransferDataFromWindow()
 
    // Reload the curve names
-   mCurve->Clear();
-   for (size_t i = 0, cnt = mCurves.GetCount(); i < cnt; i++)
-   {
-      mCurve->Append(mCurves[ i ].Name);
-   }
-   mCurve->SetStringSelection(mCurveName);
-
-   // Allow the control to resize
-   mCurve->SetSizeHints(-1, -1);
-
-   // Set initial curve
-   setCurve( mCurveName );
+   UpdateCurves();
 
    // Set graphic interpolation mode
    mInterpChoice->SetSelection(mInterp);
@@ -1847,6 +1836,23 @@ void EffectEqualization::LayoutEQSliders()
    mUIParent->RefreshRect(wxRect(szrG->GetPosition(), szrGSize));
 }
 
+void EffectEqualization::UpdateCurves()
+{
+   // Reload the curve names
+   mCurve->Clear();
+   for (size_t i = 0, cnt = mCurves.GetCount(); i < cnt; i++)
+   {
+      mCurve->Append(mCurves[ i ].Name);
+   }
+   mCurve->SetStringSelection(mCurveName);
+
+   // Allow the control to resize
+   mCurve->SetSizeHints(-1, -1);
+
+   // Set initial curve
+   setCurve( mCurveName );
+}
+
 void EffectEqualization::UpdateDraw()
 {
    int numPoints = mLogEnvelope->GetNumberOfPoints();
@@ -2416,6 +2422,12 @@ void EffectEqualization::OnManage(wxCommandEvent & WXUNUSED(event))
 {
    EditCurvesDialog d(mUIParent, this, mCurve->GetSelection());
    d.ShowModal();
+
+   // Reload the curve names
+   UpdateCurves();
+
+   // Allow control to resize
+   mUIParent->Layout();
 }
 
 void EffectEqualization::OnClear(wxCommandEvent & WXUNUSED(event))
