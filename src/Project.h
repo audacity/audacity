@@ -304,7 +304,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void Zoom(double level);
    void Rewind(bool shift);
    void SkipEnd(bool shift);
-   void SetStop(bool bStopped);
    void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks );
    void EditClipboardByLabel( WaveTrack::EditDestFunction action );
    bool IsSyncLocked();

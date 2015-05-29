@@ -827,10 +827,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    UpdatePrefs();
 
-   // Some extra information
-   mViewInfo.bIsPlaying = false;
-   mViewInfo.bRedrawWaveform = false;
-
    mLockPlayRegion = false;
 
    // Make sure valgrind sees mIsSyncLocked is initialized, even
@@ -4283,11 +4279,6 @@ void AudacityProject::SetCaptureMeter(Meter *capture)
    {
       gAudioIO->SetCaptureMeter(this, mCaptureMeter);
    }
-}
-
-void AudacityProject::SetStop(bool bStopped)
-{
-   mTrackPanel->SetStop(bStopped);
 }
 
 void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
