@@ -51,10 +51,7 @@ struct ViewInfo {
    // Other stuff, mainly states (true or false) related to autoscroll and
    // drawing the waveform. Maybe this should be put somewhere else?
 
-   bool bRedrawWaveform;
    bool bUpdateTrackIndicator;
-
-   bool bIsPlaying;
 };
 
 #endif

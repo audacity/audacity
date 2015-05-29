@@ -550,7 +550,7 @@ bool Exporter::GetFilename()
                     mFilename.GetPath(),
                     mFilename.GetFullName(),
                     maskString,
-                    wxFD_SAVE | wxRESIZE_BORDER);
+                    wxFD_SAVE | wxRESIZE_BORDER | FD_NO_ADD_EXTENSION);
       mDialog = &fd;
 
       fd.SetFilterIndex(mFilterIndex);

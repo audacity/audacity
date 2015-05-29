@@ -1,6 +1,8 @@
 ;nyquist plug-in
-;version 3
+;version 4
 ;type process
+;preview linear
+;preview selection
 ;categories "http://lv2plug.in/ns/lv2core#MixerPlugin"
 ;name "Adjustable Fade..."
 ;action "Applying Fade..."
@@ -20,6 +22,20 @@
 ;control gain-string-0 "Start (or end)" string "" "0" ""
 ;control gain-string-1 "End (or start)" string "" "100" ""
 ;control preset "   Handy Presets\n(override controls)" choice "None Selected,Linear In,Linear Out,Exponential In,Exponential Out,Logarithmic In,Logarithmic Out,Rounded In,Rounded Out,Cosine In,Cosine Out,S-Curve In,S-Curve Out" 0
+
+
+(defun get-input (sig)
+"Preview takes the entire selection so that we know the correct
+selection length, but preview only needs to process preview length."
+  (if (get '*track* 'view)  ;NIL if preview
+      sig
+      (multichan-expand #'trim-input sig)))
+
+(defun trim-input (sig)
+"Trim input when previewing."
+  (let ((dur (min (get-duration 1)
+                  (get '*project* 'preview-duration))))
+    (setf sig (extract-abs 0 dur *track*))))
 
 
 (setq err "")
@@ -57,7 +73,7 @@
 
 ;;; select and apply fade
 (defun fade (sig type curve g0 g1)
-  (mult sig
+  (mult (get-input sig)
     (case preset
       (0  (case type                  ; Custom fade
             (0 (simple (min g0 g1) (max g0 g1) curve))
@@ -180,5 +196,5 @@
     (check-values gain0 gain1)
     (setf err (format nil "~a" (invalid-string gain0 gain1))))
   (if (= (length err) 0)
-      (fade s type curve gain0 gain1)
+      (fade *track* type curve gain0 gain1)
       (format nil "Error.~%~a." err)))

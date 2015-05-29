@@ -206,7 +206,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    virtual double GetEndTime() const = 0;
 
    // Checks if sync-lock is on and any track in its sync-lock group is selected.
-   bool IsSyncLockSelected();
+   bool IsSyncLockSelected() const;
 };
 
 struct TrackListNode

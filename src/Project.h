@@ -304,7 +304,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void Zoom(double level);
    void Rewind(bool shift);
    void SkipEnd(bool shift);
-   void SetStop(bool bStopped);
    void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks );
    void EditClipboardByLabel( WaveTrack::EditDestFunction action );
    bool IsSyncLocked();
@@ -397,6 +396,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    LyricsWindow* GetLyricsWindow() { return mLyricsWindow; }
    MixerBoard* GetMixerBoard() { return mMixerBoard; }
+
+   wxStatusBar* GetStatusBar() { return mStatusBar; }
 
    // SelectionBarListener callback methods
 

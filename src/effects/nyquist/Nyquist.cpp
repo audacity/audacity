@@ -1366,6 +1366,10 @@ void NyquistEffect::Parse(wxString line)
          mEnablePreview = true;
          SetLinearEffectFlag(true);
       }
+      else if (tokens[1] == wxT("selection")) {
+         mEnablePreview = true;
+         SetPreviewFullSelectionFlag(true);
+      }
       else if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
          mEnablePreview = false;
       }

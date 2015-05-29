@@ -87,8 +87,8 @@ public:
 
 
 private:
-   samplePtr mPtr;
    int mCount;
+   samplePtr mPtr;
 };
 
 //

@@ -86,6 +86,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    viewInfo.h = 0.0;
    viewInfo.screen = mTracks->GetEndTime() - viewInfo.h;
    viewInfo.total = viewInfo.screen;
+   viewInfo.zoom = width / viewInfo.screen;
    int y = rulerPageHeight;
 
    TrackListIterator iter(mTracks);

@@ -50,6 +50,8 @@ DECLARE_EVENT_TYPE(EVT_FILEDIALOG_SELECTION_CHANGED, -1);
 DECLARE_EVENT_TYPE(EVT_FILEDIALOG_FILTER_CHANGED, -1);
 DECLARE_EVENT_TYPE(EVT_FILEDIALOG_ADD_CONTROLS, -1);
 
+#define FD_NO_ADD_EXTENSION 0x0400
+
 //----------------------------------------------------------------------------
 // wxFileDialog convenience functions
 //----------------------------------------------------------------------------

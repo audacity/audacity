@@ -328,18 +328,21 @@ wxString FileDialog::GetPath() const
 
    if (!path.HasExt())
    {
-      int filterIndex = GetFilterIndex();
-      if (filterIndex != -1)
-      {
-         wxStringTokenizer tokenizer(m_patterns[filterIndex], wxT(";"));            
-         if (tokenizer.HasMoreTokens())
+      if (!(m_dialogStyle & FD_NO_ADD_EXTENSION))
+      {  
+         int filterIndex = GetFilterIndex();
+         if (filterIndex != -1)
          {
-            wxString extension = tokenizer.GetNextToken().AfterFirst(wxT('.'));
-            if (extension.Right(2) == wxT("*"))
+            wxStringTokenizer tokenizer(m_patterns[filterIndex], wxT(";"));            
+            if (tokenizer.HasMoreTokens())
             {
-               extension = wxEmptyString;
+               wxString extension = tokenizer.GetNextToken().AfterFirst(wxT('.'));
+               if (extension.Right(2) == wxT("*"))
+               {
+                  extension = wxEmptyString;
+               }
+               path.SetExt(extension);
             }
-            path.SetExt(extension);
          }
       }
    }

@@ -303,7 +303,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
     * @param pos The time number of samples from the start of the track to convert.
     * @return The time in seconds.
     */
-   double LongSamplesToTime(sampleCount pos);
+   double LongSamplesToTime(sampleCount pos) const;
 
    // Get access to the clips in the tracks. This is used by
    // track artists and also by TrackPanel when sliding...it would

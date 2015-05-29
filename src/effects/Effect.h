@@ -321,6 +321,10 @@ protected:
    // To allow pre-mixing before Preview, set linearEffectFlag to true.
    void SetLinearEffectFlag(bool linearEffectFlag);
 
+   // Most effects only need to preview a short selection. However some
+   // (such as fade effects) need to know the full selection length.
+   void SetPreviewFullSelectionFlag(bool previewDurationFlag);
+
    // Most effects only require selected tracks to be copied for Preview.
    // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
    // preview copies of all wave tracks.
@@ -400,12 +404,13 @@ private:
 
    bool mIsLinearEffect;
    bool mPreviewWithNotSelected;
+   bool mPreviewFullSelection;
 
    bool mIsSelection;
    double mDuration;
    wxString mDurationFormat;
-   // mSetDuration should ONLY be set when SetDuration() is called.
-   double mSetDuration;
+
+   bool mIsPreview;
 
    bool mUIDebug;
 

@@ -1737,18 +1737,6 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
          viewInfo->selectedRegion.t0(), viewInfo->selectedRegion.t1(), 
          viewInfo->h, viewInfo->zoom);
 
-   if(!viewInfo->bUpdateTrackIndicator && viewInfo->bIsPlaying) {
-      // BG: Draw (undecorated) waveform instead of spectrum
-      DrawWaveform(track, dc, r, viewInfo, false, false, false, false, false);
-      /*
-      // BG: uncomment to draw grey instead of spectrum
-      dc.SetBrush(unselectedBrush);
-      dc.SetPen(unselectedPen);
-      dc.DrawRectangle(r);
-      */
-      return;
-   }
-
    WaveTrackCache cache(track);
    for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext()) {
       DrawClipSpectrum(cache, it->GetData(), dc, r, viewInfo, autocorrelation, logF);

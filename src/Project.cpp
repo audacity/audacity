@@ -781,9 +781,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
      mMenuClose(false)
      , mbInitializingScrollbar(false)
 {
-   int widths[] = {-2, -1};
-   mStatusBar = CreateStatusBar(2);
-   mStatusBar->SetStatusWidths(2, widths);
+   mStatusBar = CreateStatusBar(3);
 
    wxGetApp().SetMissingAliasedFileWarningShouldShow(true);
 
@@ -826,10 +824,6 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
    mViewInfo.sbarScale = 1.0;
 
    UpdatePrefs();
-
-   // Some extra information
-   mViewInfo.bIsPlaying = false;
-   mViewInfo.bRedrawWaveform = false;
 
    mLockPlayRegion = false;
 
@@ -1020,9 +1014,11 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mTrackFactory = new TrackFactory(mDirManager);
 
+   int widths[] = {GetControlToolBar()->WidthForStatusBar(), -2, -1};
+   mStatusBar->SetStatusWidths(3, widths);
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
-   mStatusBar->SetStatusText(msg);
+   mStatusBar->SetStatusText(msg, 1);
    mLastStatusUpdateTime = ::wxGetUTCTime();
 
    mTimer = new wxTimer(this, AudacityProjectTimerID);
@@ -3507,7 +3503,7 @@ bool AudacityProject::Save(bool overwrite /* = true */ ,
       wxRemoveFile(safetyFileName);
 
    mStatusBar->SetStatusText(wxString::Format(_("Saved %s"),
-                                              mFileName.c_str()));
+                                              mFileName.c_str()), 1);
 
    return true;
 }
@@ -4285,11 +4281,6 @@ void AudacityProject::SetCaptureMeter(Meter *capture)
    }
 }
 
-void AudacityProject::SetStop(bool bStopped)
-{
-   mTrackPanel->SetStop(bStopped);
-}
-
 void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    MixerToolBar *mixerToolBar = GetMixerToolBar();
@@ -4330,7 +4321,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
          else
             msg.Printf(_("Out of disk space"));
 
-         mStatusBar->SetStatusText(msg);
+         mStatusBar->SetStatusText(msg, 1);
       }
    }
    else if(ODManager::IsInstanceCreated())
@@ -4351,7 +4342,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
 
 
             msg.Printf(_("On-demand import and waveform calculation complete."));
-            mStatusBar->SetStatusText(msg);
+            mStatusBar->SetStatusText(msg, 1);
 
          }
          else if(numTasks>1)
@@ -4362,7 +4353,7 @@ void AudacityProject::OnTimer(wxTimerEvent& WXUNUSED(event))
              ratioComplete*100.0);
 
 
-         mStatusBar->SetStatusText(msg);
+         mStatusBar->SetStatusText(msg, 1);
       }
    }
 }
@@ -4551,7 +4542,7 @@ void AudacityProject::EditClipboardByLabel( WaveTrack::EditDestFunction action )
 // TrackPanel callback method
 void AudacityProject::TP_DisplayStatusMessage(wxString msg)
 {
-   mStatusBar->SetStatusText(msg);
+   mStatusBar->SetStatusText(msg, 1);
    mLastStatusUpdateTime = ::wxGetUTCTime();
 }
 
@@ -4798,9 +4789,9 @@ void AudacityProject::OnAudioIORate(int rate)
    display = wxString::Format(_("Actual Rate: %d"), rate);
    int x, y;
    mStatusBar->GetTextExtent(display, &x, &y);
-   int widths[] = {-1, x+50};
-   mStatusBar->SetStatusWidths(2, widths);
-   mStatusBar->SetStatusText(display, 1);
+   int widths[] = {GetControlToolBar()->WidthForStatusBar(), -1, x+50};
+   mStatusBar->SetStatusWidths(3, widths);
+   mStatusBar->SetStatusText(display, 2);
 }
 
 void AudacityProject::OnAudioIOStartRecording()

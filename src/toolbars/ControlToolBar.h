@@ -85,6 +85,8 @@ class ControlToolBar:public ToolBar {
    virtual void ReCreateButtons();
    void RegenerateToolsTooltips();
 
+   int WidthForStatusBar();
+
  private:
 
    AButton *MakeButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
@@ -102,6 +104,7 @@ class ControlToolBar:public ToolBar {
    void SetupCutPreviewTracks(double playStart, double cutStart,
                              double cutEnd, double playEnd);
    void ClearCutPreviewTracks();
+   void UpdateStatusBar();
 
    enum
    {
@@ -134,6 +137,12 @@ class ControlToolBar:public ToolBar {
    wxBoxSizer *mSizer;
 
    TrackList* mCutPreviewTracks;
+
+   // strings for status bar
+   wxString mStatePlay;
+   wxString mStateStop;
+   wxString mStateRecord;
+   wxString mStatePause;
 
  public:
 

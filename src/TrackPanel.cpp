@@ -866,12 +866,6 @@ void TrackPanel::UpdatePrefs()
    Refresh();
 }
 
-void TrackPanel::SetStop(bool bStopped)
-{
-   mViewInfo->bIsPlaying = !bStopped;
-   Refresh(false);
-}
-
 /// Remembers the track we clicked on and why we captured it.
 /// We also use this method to clear the record
 /// of the captured track, passing NULL as the track.

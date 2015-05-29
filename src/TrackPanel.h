@@ -172,8 +172,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void SelectNone();
 
-   virtual void SetStop(bool bStopped);
-
    virtual void Refresh(bool eraseBackground = true,
                         const wxRect *rect = (const wxRect *) NULL);
    virtual void RefreshTrack(Track *trk, bool refreshbacking = true);
