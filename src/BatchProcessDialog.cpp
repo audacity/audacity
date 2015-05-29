@@ -265,6 +265,11 @@ void BatchProcessDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    files.Sort();
 
+   ApplyChainToFiles(name, files);
+}
+
+void BatchProcessDialog::ApplyChainToFiles(wxString name, const wxArrayString& files) {
+   AudacityProject * project = GetActiveProject();
    wxDialog d(this, wxID_ANY, GetTitle());
    d.SetName(d.GetTitle());
    ShuttleGui S(&d, eIsCreating);

@@ -520,6 +520,29 @@ AudacityProject *CreateNewAudacityProject()
    return p;
 }
 
+AudacityProject *CreateNewBackgroundAudacityProject()
+{
+	AudacityProject *p = new AudacityProject(NULL, -1,
+		wxPoint(0, 0),
+		wxSize(0, 0));
+
+	gAudacityProjects.Add(p);
+
+	//Initialise the Listener
+	gAudioIO->SetListener(p);
+
+	//Set the new project as active:
+	SetActiveProject(p);
+
+	// Okay, GetActiveProject() is ready. Now we can get its CommandManager,
+	// and add the shortcut keys to the tooltips.
+	p->GetControlToolBar()->RegenerateToolsTooltips();
+
+	ModuleManager::Get().Dispatch(ProjectInitialized);
+
+	return p;
+}
+
 void RedrawAllProjects()
 {
    size_t len = gAudacityProjects.GetCount();

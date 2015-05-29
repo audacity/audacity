@@ -87,6 +87,7 @@ class MixerBoardFrame;
 struct AudioIOStartStreamOptions;
 
 AudacityProject *CreateNewAudacityProject();
+AudacityProject *CreateNewBackgroundAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 void RedrawAllProjects();
 void RefreshCursorForAllProjects();
