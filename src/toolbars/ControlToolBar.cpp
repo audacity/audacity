@@ -46,6 +46,7 @@
 #include <wx/event.h>
 #include <wx/image.h>
 #include <wx/intl.h>
+#include <wx/statusbr.h>
 #include <wx/timer.h>
 #endif
 #include <wx/tooltip.h>
@@ -1083,7 +1084,11 @@ void ControlToolBar::ClearCutPreviewTracks()
 // works out the width of the field in the status bar needed for the state (eg play, record pause)
 int ControlToolBar::WidthForStatusBar()
 {
-   wxStatusBar* sb = GetActiveProject()->GetStatusBar();
+   AudacityProject* p = GetActiveProject();
+   if (!p)
+      return 100;  // dummy value to keep things happy before the project is fully created
+
+   wxStatusBar* sb = p->GetStatusBar();
    int xMax = 0;
    int x, y;
 
