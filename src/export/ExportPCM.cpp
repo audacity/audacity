@@ -325,7 +325,7 @@ public:
                Tags *metadata = NULL,
                int subformat = 0);
    // optional
-   wxString GetExtension(int index = 0);
+   wxString GetExtension(int index = WXSIZEOF(kFormats));
 
 private:
 
@@ -911,7 +911,7 @@ bool ExportPCM::DisplayOptions(wxWindow *parent, int format)
 
 wxString ExportPCM::GetExtension(int index)
 {
-   if (index == 0) {
+   if (index == WXSIZEOF(kFormats)) {
       // get extension libsndfile thinks is correct for currently selected format
       return sf_header_extension(ReadExportFormatPref());
    }

@@ -744,15 +744,18 @@ int FileDialog::ShowModal()
          wxFileName fn = ConvertSlashInFileName(thePath);
          if (!fn.HasExt())
          {
-            wxStringTokenizer tokenizer( myData.extensions[m_filterIndex], wxT(";"));            
-            if (tokenizer.HasMoreTokens())
+            if (!(m_dialogStyle & FD_NO_ADD_EXTENSION))
             {
-               wxString extension = tokenizer.GetNextToken().AfterFirst(wxT('.'));
-               if (extension.Right(2) == wxT("*"))
+               wxStringTokenizer tokenizer( myData.extensions[m_filterIndex], wxT(";"));            
+               if (tokenizer.HasMoreTokens())
                {
-                  extension = wxEmptyString;
+                  wxString extension = tokenizer.GetNextToken().AfterFirst(wxT('.'));
+                  if (extension.Right(2) == wxT("*"))
+                  {
+                     extension = wxEmptyString;
+                  }
+                  fn.SetExt(extension);
                }
-               fn.SetExt(extension);
             }
          }
          m_path = fn.GetFullPath();
