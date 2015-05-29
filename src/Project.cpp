@@ -1096,7 +1096,7 @@ void AudacityProject::UpdatePrefs()
    }
 
    if (mRuler) {
-      mRuler->RegenerateTooltips();
+      mRuler->UpdatePrefs();
    }
 
    // The toolbars will be recreated, so make sure we don't leave
