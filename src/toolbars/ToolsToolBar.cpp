@@ -85,9 +85,9 @@ ToolsToolBar::ToolsToolBar()
 
       mMessageOfTool[selectTool] =
 #if defined(__WXMAC__)
-         _("Click and drag to select audio, Command-Click to scrub, Command-Double-Click to scroll-scrub, Command to seek while scrubbing")
+         _("Click and drag to select audio, Command-Click to scrub, Command-Double-Click to scroll-scrub, Command-drag to seek")
 #else
-         _("Click and drag to select audio, Ctrl-Click to scrub, Ctrl-Double-Click to scroll-scrub, Ctrl to seek while scrubbing")
+         _("Click and drag to select audio, Ctrl-Click to scrub, Ctrl-Double-Click to scroll-scrub, Ctrl-drag to seek")
 #endif
          ;
 

@@ -608,7 +608,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mMaxScrubSpeed = 1.0;
    mScrubSpeedDisplayCountdown = 0;
    mScrubHasFocus = false;
-   mScrubSeekKeypress = false;
+   mScrubSeekPress = false;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
@@ -1037,18 +1037,17 @@ void TrackPanel::OnTimer()
 
    // Thus scrubbing relies mostly on periodic polling of mouse and keys,
    // not event notifications.  But there are a few event handlers that
-   // leave messages for this routine, in mScrubSeekKeypress and in mScrubHasFocus.
+   // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
    if (IsScrubbing())
    {
-      wxCoord position = ::wxGetMouseState().GetX();
-      // Detect key state here, or use the record of key transition
-      // made elsewhere.
-      const bool seek = mScrubSeekKeypress || IsScrubSeekKeyDown();
+      wxMouseState state(::wxGetMouseState());
+      wxCoord position = state.GetX();
+      const bool seek = mScrubSeekPress || state.LeftIsDown();
       ScreenToClient(&position, NULL);
       if (ContinueScrubbing(position, mScrubHasFocus, seek))
-         // Successfully enqueued one stutter
-         mScrubSeekKeypress = false;
-      // else if seeking, try again at the next round.
+         mScrubSeekPress = false;
+      // else, if seek requested, try again at a later time when we might
+      // enqueue a long enough stutter
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (mSmoothScrollingScrub)
@@ -1637,14 +1636,6 @@ void TrackPanel::HandleShiftKey(bool down)
 
 void TrackPanel::HandleControlKey(bool down)
 {
-#ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   // Scrubbing is mostly not event driven, it uses periodic polling and tests
-   // key state.  But it might otherwise miss a fast keypress and release,
-   // so this is not redundant:
-   if (down && IsScrubbing())
-      mScrubSeekKeypress = true;
-#endif
-
    mLastMouseEvent.m_controlDown = down;
    HandleCursorForLastMouseEvent();
 }
@@ -2323,11 +2314,6 @@ double TrackPanel::FindScrubSpeed(double timeAtMouse) const
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-bool TrackPanel::IsScrubSeekKeyDown()
-{
-   return ::wxGetMouseState().CmdDown();
-}
-
 bool TrackPanel::IsScrubbing()
 {
    if (mScrubToken <= 0)
@@ -2344,25 +2330,21 @@ bool TrackPanel::IsScrubbing()
    }
 }
 
-void TrackPanel::ToggleScrubbing(
+void TrackPanel::MarkScrubStart(
    wxCoord xx
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    , bool smoothScrolling
 #endif
 )
 {
-   if (IsScrubbing())
-      StopScrubbing();
-   else {
-      // Don't actually start scrubbing, but collect some information
-      // needed for the decision to start scrubbing later when handling
-      // drag events.
+   // Don't actually start scrubbing, but collect some information
+   // needed for the decision to start scrubbing later when handling
+   // drag events.
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      mSmoothScrollingScrub = smoothScrolling;
+   mSmoothScrollingScrub = smoothScrolling;
 #endif
-      mScrubStartPosition = xx;
-      mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
-   }
+   mScrubStartPosition = xx;
+   mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 }
 
 bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
@@ -2605,7 +2587,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          event.LeftDClick() ||
 #endif
          event.LeftDown()) {
-         ToggleScrubbing(
+         MarkScrubStart(
             event.m_x
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
             , event.LeftDClick()
@@ -6877,6 +6859,17 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
          return;
    }
 
+   if ((!pTrack ||
+        pTrack->GetKind() == Track::Wave) &&
+       IsScrubbing()) {
+      if (event.LeftDown()) {
+         mScrubSeekPress = true;
+         return;
+      }
+      else if (event.LeftIsDown())
+         return;
+   }
+
    if (pTrack && (pTrack->GetKind() == Track::Wave) &&
        (mMouseCapture == IsUncaptured || mMouseCapture == IsOverCutLine ||
         mMouseCapture == WasOverCutLine))
@@ -7397,7 +7390,7 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
       return;
 
    // Don't draw it during stutter play with shift down
-   if (!IsScrubSeekKeyDown() && (
+   if (!::wxGetMouseState().ShiftDown() && (
 
           mScrubSpeedDisplayCountdown > 0
 
