@@ -38,6 +38,7 @@ undo memory so as to free up space.
 
 enum {
    ID_AVAIL = 1000,
+   ID_TOTAL,
    ID_LEVELS,
    ID_DISCARD
 };
@@ -71,7 +72,7 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
    S.SetBorder(5);
    S.StartVerticalLay(true);
    {
-      S.StartStatic(_("Manage History"), 1);
+      S.StartStatic(_("&Manage History"), 1);
       {
          mList = S.AddListControlReportMode();
          // Do this BEFORE inserting the columns.  On the Mac at least, the
@@ -85,13 +86,15 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
 
          S.StartMultiColumn(3, wxCENTRE);
          {
+            mTotal = S.Id(ID_TOTAL).AddTextBox(_("&Total space used"), wxT("0"), 10);
+            mTotal->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
+            S.AddVariableText(wxT(""))->Hide();
+
             mAvail = S.Id(ID_AVAIL).AddTextBox(_("&Undo Levels Available"), wxT("0"), 10);
             mAvail->Connect(wxEVT_KEY_DOWN, wxKeyEventHandler(HistoryWindow::OnChar));
             S.AddVariableText(wxT(""))->Hide();
-         }
 
-         {
-            S.AddPrompt(_("Levels To Discard"));
+            S.AddPrompt(_("&Levels To Discard"));
             mLevels = new wxSpinCtrl(this,
                                      ID_LEVELS,
                                      wxT("1"),
@@ -146,14 +149,17 @@ void HistoryWindow::DoUpdate()
 
    mList->DeleteAllItems();
 
+   wxLongLong_t total = 0;
    mSelected = mManager->GetCurrentState() - 1;
    for (i = 0; i < (int)mManager->GetNumStates(); i++) {
       wxString desc, size;
 
-      mManager->GetLongDescription(i + 1, &desc, &size);
+      total += mManager->GetLongDescription(i + 1, &desc, &size);
       mList->InsertItem(i, desc, i == mSelected ? 1 : 0);
       mList->SetItem(i, 1, size);
    }
+
+   mTotal->SetValue(Internat::FormatSize(total));
 
    mList->EnsureVisible(mSelected);
 

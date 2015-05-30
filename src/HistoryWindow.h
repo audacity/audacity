@@ -44,6 +44,7 @@ class HistoryWindow :public wxDialog {
    AudacityProject   *mProject;
    UndoManager       *mManager;
    wxListCtrl        *mList;
+   wxTextCtrl        *mTotal;
    wxTextCtrl        *mAvail;
    wxSpinCtrl        *mLevels;
    wxButton          *mDiscard;
