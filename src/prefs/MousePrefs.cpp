@@ -105,11 +105,13 @@ void MousePrefs::CreateList()
    AddItem(_("Shift-Left-Click"),  _("Select"),   _("Extend Selection Range"));
    AddItem(_("Left-Double-Click"), _("Select"),   _("Select Clip or Entire Track"));
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
-   AddItem(_("Ctrl-Left-Click"),   _("Select"), _("Scrub"));
-   AddItem(_("Shift-Ctrl-Left-Click"), _("Select"), _("Seek"));
+   AddItem(_("Ctrl-Left-Click"),    _("Select"),  _("Scrub"));
+   AddItem(_("Ctrl-Left-Drag"),     _("Select"),  _("Seek"));
 #endif
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-   AddItem(_("Ctrl-Left-Double-Click"), _("Select"), _("Smooth Scrolling Scrub"));
+   AddItem(_("Ctrl-Left-Double-Click"), _("Select"), _("Scroll-scrub"));
+#endif
+#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    AddItem(_("Wheel-Rotate"),      _("Select"),   _("Change scrub speed"));
 #endif
 

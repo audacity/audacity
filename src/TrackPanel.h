@@ -306,14 +306,14 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
    bool IsScrubbing();
-   void ToggleScrubbing(
+   void MarkScrubStart(
       wxCoord xx
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       , bool smoothScrolling
 #endif
    );
    bool MaybeStartScrubbing(wxMouseEvent &event);
-   bool ContinueScrubbing(wxCoord position, bool maySkip);
+   bool ContinueScrubbing(wxCoord position, bool hasFocus, bool maySkip);
    bool StopScrubbing();
 #endif
 
@@ -782,6 +782,7 @@ protected:
    double mMaxScrubSpeed;
    int mScrubSpeedDisplayCountdown;
    bool mScrubHasFocus;
+   bool mScrubSeekPress;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL

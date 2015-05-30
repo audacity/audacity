@@ -608,6 +608,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    mMaxScrubSpeed = 1.0;
    mScrubSpeedDisplayCountdown = 0;
    mScrubHasFocus = false;
+   mScrubSeekPress = false;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
@@ -1033,12 +1034,20 @@ void TrackPanel::OnTimer()
    // Call ContinueScrubbing() here rather than in SelectionHandleDrag()
    // so that even without drag events, we can instruct the play head to
    // keep approaching the mouse cursor, when its maximum speed is limited.
+
+   // Thus scrubbing relies mostly on periodic polling of mouse and keys,
+   // not event notifications.  But there are a few event handlers that
+   // leave messages for this routine, in mScrubSeekPress and in mScrubHasFocus.
    if (IsScrubbing())
    {
-      wxMouseState state = ::wxGetMouseState();
+      wxMouseState state(::wxGetMouseState());
       wxCoord position = state.GetX();
+      const bool seek = mScrubSeekPress || state.LeftIsDown();
       ScreenToClient(&position, NULL);
-      ContinueScrubbing(position, state.ShiftDown());
+      if (ContinueScrubbing(position, mScrubHasFocus, seek))
+         mScrubSeekPress = false;
+      // else, if seek requested, try again at a later time when we might
+      // enqueue a long enough stutter
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
       if (mSmoothScrollingScrub)
@@ -2321,25 +2330,21 @@ bool TrackPanel::IsScrubbing()
    }
 }
 
-void TrackPanel::ToggleScrubbing(
+void TrackPanel::MarkScrubStart(
    wxCoord xx
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    , bool smoothScrolling
 #endif
 )
 {
-   if (IsScrubbing())
-      StopScrubbing();
-   else {
-      // Don't actually start scrubbing, but collect some information
-      // needed for the decision to start scrubbing later when handling
-      // drag events.
+   // Don't actually start scrubbing, but collect some information
+   // needed for the decision to start scrubbing later when handling
+   // drag events.
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
-      mSmoothScrollingScrub = smoothScrolling;
+   mSmoothScrollingScrub = smoothScrolling;
 #endif
-      mScrubStartPosition = xx;
-      mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
-   }
+   mScrubStartPosition = xx;
+   mScrubStartClockTimeMillis = ::wxGetLocalTimeMillis();
 }
 
 bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
@@ -2411,10 +2416,10 @@ bool TrackPanel::MaybeStartScrubbing(wxMouseEvent &event)
       return false;
 }
 
-bool TrackPanel::ContinueScrubbing(wxCoord position, bool maySkip)
+bool TrackPanel::ContinueScrubbing(wxCoord position, bool hasFocus, bool maySkip)
 {
    // When we don't have focus, enqueue silent scrubs until we regain focus.
-   if (!mScrubHasFocus)
+   if (!hasFocus)
       return gAudioIO->EnqueueScrubBySignedSpeed(0, mMaxScrubSpeed, maySkip);
 
    const double newEnd = PositionToTime(position, GetLeftOffset());
@@ -2582,7 +2587,7 @@ void TrackPanel::SelectionHandleClick(wxMouseEvent & event,
          event.LeftDClick() ||
 #endif
          event.LeftDown()) {
-         ToggleScrubbing(
+         MarkScrubStart(
             event.m_x
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
             , event.LeftDClick()
@@ -6851,6 +6856,17 @@ void TrackPanel::HandleTrackSpecificMouseEvent(wxMouseEvent & event)
    if (pTrack && (pTrack->GetKind() == Track::Label))
    {
       if(HandleLabelTrackMouseEvent( (LabelTrack *) pTrack, r, event ))
+         return;
+   }
+
+   if ((!pTrack ||
+        pTrack->GetKind() == Track::Wave) &&
+       IsScrubbing()) {
+      if (event.LeftDown()) {
+         mScrubSeekPress = true;
+         return;
+      }
+      else if (event.LeftIsDown())
          return;
    }
 
