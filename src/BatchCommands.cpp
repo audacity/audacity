@@ -57,7 +57,6 @@ static wxString SpecialCommands[] = {
    // wxT("Import"),   // non-functioning
    wxT("ExportMP3_56k_before"),
    wxT("ExportMP3_56k_after"),
-   wxT("StereoToMono"),
    wxT("ExportFLAC"),
    wxT("ExportMP3"),
    wxT("ExportOgg"),
@@ -283,13 +282,10 @@ wxArrayString BatchCommands::GetAllCommands()
    const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
    while (plug)
    {
-      if (plug->IsEffectAutomatable())
+      command = em.GetEffectIdentifier(plug->GetID());
+      if (!command.IsEmpty())
       {
-         command = em.GetEffectIdentifier(plug->GetID());
-         if (!command.IsEmpty())
-         {
-            commands.Add(command);
-         }
+         commands.Add(command);
       }
       plug = pm.GetNextPlugin(PluginTypeEffect);
    }
@@ -309,10 +305,10 @@ wxArrayString BatchCommands::GetAllCommands()
 }
 
 
-wxString BatchCommands::GetCurrentParamsFor(wxString command)
+wxString BatchCommands::GetCurrentParamsFor(const wxString & command)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
-   if( ID.empty() )
+   if (ID.empty())
    {
       return wxEmptyString;   // effect not found.
    }
@@ -320,16 +316,49 @@ wxString BatchCommands::GetCurrentParamsFor(wxString command)
    return EffectManager::Get().GetEffectParameters(ID);
 }
 
-bool BatchCommands::PromptForParamsFor(wxString command, wxWindow *parent)
+wxString BatchCommands::PromptForParamsFor(const wxString & command, const wxString & params, wxWindow *parent)
 {
    const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
-
    if (ID.empty())
    {
-      return false;
+      return wxEmptyString;   // effect not found
    }
 
-   return EffectManager::Get().PromptUser(ID, parent);
+   wxString res = params;
+
+   EffectManager::Get().SetBatchProcessing(ID, true);
+
+   if (EffectManager::Get().SetEffectParameters(ID, params))
+   {
+      if (EffectManager::Get().PromptUser(ID, parent))
+      {
+         res = EffectManager::Get().GetEffectParameters(ID);
+      }
+   }
+
+   EffectManager::Get().SetBatchProcessing(ID, false);
+
+   return res;
+}
+
+wxString BatchCommands::PromptForPresetFor(const wxString & command, const wxString & params, wxWindow *parent)
+{
+   const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
+   if (ID.empty())
+   {
+      return wxEmptyString;   // effect not found.
+   }
+
+   wxString preset = EffectManager::Get().GetPreset(ID, params, parent);
+
+   // Preset will be empty if the user cancelled the dialog, so return the original
+   // parameter value.
+   if (preset.IsEmpty())
+   {
+      return params;
+   }
+
+   return preset;
 }
 
 double BatchCommands::GetEndTime()
@@ -381,7 +410,54 @@ bool BatchCommands::IsMono()
    return mono;
 }
 
-bool BatchCommands::WriteMp3File( const wxString Name, int bitrate )
+wxString BatchCommands::BuildCleanFileName(wxString fileName, wxString extension)
+{
+   wxFileName newFileName(fileName);
+   wxString justName = newFileName.GetName();
+   wxString pathName = newFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
+
+   if (justName == wxT("")) {
+      wxDateTime now = wxDateTime::Now();
+      int year = now.GetYear();
+      wxDateTime::Month month = now.GetMonth();
+      wxString monthName = now.GetMonthName(month);
+      int dom = now.GetDay();
+      int hour = now.GetHour();
+      int minute = now.GetMinute();
+      int second = now.GetSecond();
+      justName = wxString::Format(wxT("%d-%s-%02d-%02d-%02d-%02d"),
+           year, monthName.c_str(), dom, hour, minute, second);
+
+//      SetName(cleanedFileName);
+//      bool isStereo;
+//      double endTime = project->mTracks->GetEndTime();
+//      double startTime = 0.0;
+      //OnSelectAll();
+      pathName = gPrefs->Read(wxT("/DefaultOpenPath"), ::wxGetCwd());
+      ::wxMessageBox(wxString::Format(wxT("Export recording to %s\n/cleaned/%s%s"),
+                                      pathName.c_str(), justName.c_str(), extension.c_str()),
+                     wxT("Export recording"),
+                  wxOK | wxCENTRE);
+      pathName += wxT("/");
+   }
+   wxString cleanedName = pathName;
+   cleanedName += wxT("cleaned");
+   bool flag  = ::wxFileName::FileExists(cleanedName);
+   if (flag == true) {
+      ::wxMessageBox(wxT("Cannot create directory 'cleaned'. \nFile already exists that is not a directory"));
+      return wxT("");
+   }
+   ::wxFileName::Mkdir(cleanedName, 0777, wxPATH_MKDIR_FULL); // make sure it exists
+
+   cleanedName += wxT("/");
+   cleanedName += justName;
+   cleanedName += extension;
+   wxGetApp().AddFileToHistory(cleanedName);
+
+   return cleanedName;
+}
+
+bool BatchCommands::WriteMp3File( const wxString & Name, int bitrate )
 {  //check if current project is mono or stereo
    int numChannels = 2;
    if (IsMono()) {
@@ -425,7 +501,7 @@ bool BatchCommands::WriteMp3File( const wxString Name, int bitrate )
 // and think again.
 // ======= IMPORTANT ========
 // CLEANSPEECH remnant
-bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString command,const wxString params)
+bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString & command,const wxString & params)
 {
    if (ReportAndSkip(command, params))
       return true;
@@ -450,10 +526,10 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString c
    else extension = wxT(".mp3");
 
    if (mFileName.IsEmpty()) {
-      filename = project->BuildCleanFileName(project->GetFileName(), extension);
+      filename = BuildCleanFileName(project->GetFileName(), extension);
    }
    else {
-      filename = project->BuildCleanFileName(mFileName, extension);
+      filename = BuildCleanFileName(mFileName, extension);
    }
 
    // We have a command index, but we don't use it!
@@ -470,14 +546,6 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString c
    } else if (command == wxT("ExportMP3_56k_after")) {
       filename.Replace(wxT("cleaned/"), wxT("cleaned/MasterAfter_"), false);
       return WriteMp3File(filename, 56);
-   } else if (command == wxT("StereoToMono")) {
-      // StereoToMono is an effect masquerading as a menu item.
-      const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
-      if (!ID.empty()) {
-         return ApplyEffectCommand(ID, command, params);
-      }
-      wxMessageBox(_("Stereo to Mono Effect not found"));
-      return false;
    } else if (command == wxT("ExportMP3")) {
       return WriteMp3File(filename, 0); // 0 bitrate means use default/current
    } else if (command == wxT("ExportWAV")) {
@@ -517,28 +585,7 @@ bool BatchCommands::ApplySpecialCommand(int WXUNUSED(iCommand), const wxString c
 }
 // end CLEANSPEECH remnant
 
-bool BatchCommands::SetCurrentParametersFor(const wxString command, const wxString params)
-{
-   // transfer the parameters to the effect...
-   if( !params.IsEmpty() )
-   {
-      const PluginID & ID = EffectManager::Get().GetEffectByIdentifier(command);
-      if (ID.empty())
-      {
-         return false;
-      }
-      if (!EffectManager::Get().SetEffectParameters(ID, params))
-      {
-         wxMessageBox(
-            wxString::Format(
-            _("Could not set parameters of effect %s\n to %s."), command.c_str(),params.c_str() ));
-         return false;
-      }
-   }
-   return true;
-}
-
-bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString command, const wxString params)
+bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString & command, const wxString & params)
 {
    //Possibly end processing here, if in batch-debug
    if( ReportAndSkip(command, params))
@@ -551,11 +598,24 @@ bool BatchCommands::ApplyEffectCommand(const PluginID & ID, const wxString comma
    // (most effects require that you have something selected).
    project->SelectAllIfNone();
 
-   // NOW actually apply the effect.
-   return project->OnEffect(ALL_EFFECTS | CONFIGURED_EFFECT , ID, params, false);
+   bool res = false;
+
+   EffectManager::Get().SetBatchProcessing(ID, true);
+
+   // transfer the parameters to the effect...
+   if (EffectManager::Get().SetEffectParameters(ID, params))
+   {
+      // and apply the effect...
+      res = project->OnEffect(ID, AudacityProject::OnEffectFlags::kConfigured |
+                                  AudacityProject::OnEffectFlags::kSkipState);
+   }
+
+   EffectManager::Get().SetBatchProcessing(ID, false);
+
+   return res;
 }
 
-bool BatchCommands::ApplyCommand(const wxString command, const wxString params)
+bool BatchCommands::ApplyCommand(const wxString & command, const wxString & params)
 {
 
    unsigned int i;
@@ -687,7 +747,7 @@ void BatchCommands::ResetChain()
 
 // ReportAndSkip() is a diagnostic function that avoids actually
 // applying the requested effect if in batch-debug mode.
-bool BatchCommands::ReportAndSkip(const wxString command, const wxString params)
+bool BatchCommands::ReportAndSkip(const wxString & command, const wxString & params)
 {
    int bDebug;
    gPrefs->Read(wxT("/Batch/Debug"), &bDebug, false);

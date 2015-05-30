@@ -79,6 +79,7 @@ typedef enum
 // Generic pointer to sample data
 // ----------------------------------------------------------------------------
 typedef char *samplePtr;
+typedef const char *constSamplePtr;
 
 // ----------------------------------------------------------------------------
 // The type for plugin IDs
@@ -120,7 +121,7 @@ typedef enum
    ChannelNameBottomFrontCenter,
    ChannelNameBottomFrontLeft,
    ChannelNameBottomFrontRight,
-} ChannelName;
+} ChannelName, *ChannelNames;
 
 // LLL FIXME: Until a complete API is devised, we have to use
 //            AUDACITY_DLL_API when defining API classes.  This

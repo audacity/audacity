@@ -409,7 +409,7 @@ bool Tags::GetFirst(wxString & name, wxString & value)
 
 bool Tags::GetNext(wxString & name, wxString & value)
 {
-   mIter++;
+   ++mIter;
    if (mIter == mMap.end()) {
       return false;
    }
@@ -636,7 +636,11 @@ enum {
 };
 
 BEGIN_EVENT_TABLE(TagsEditor, wxDialog)
+#if wxCHECK_VERSION(3,0,0)
+   EVT_GRID_CELL_CHANGED(TagsEditor::OnChange)
+#else
    EVT_GRID_CELL_CHANGE(TagsEditor::OnChange)
+#endif
    EVT_BUTTON(EditID, TagsEditor::OnEdit)
    EVT_BUTTON(ResetID, TagsEditor::OnReset)
    EVT_BUTTON(ClearID, TagsEditor::OnClear)
@@ -660,6 +664,8 @@ TagsEditor::TagsEditor(wxWindow * parent,
    mEditTitle(editTitle),
    mEditTrack(editTrack)
 {
+   SetName(GetTitle());
+
    names[0] = LABEL_ARTIST;
    names[1] = LABEL_TITLE;
    names[2] = LABEL_ALBUM;
@@ -963,6 +969,7 @@ void TagsEditor::OnEdit(wxCommandEvent & WXUNUSED(event))
    wxDialog dlg(this, wxID_ANY, _("Edit Genres"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+   dlg.SetName(dlg.GetTitle());
    wxTextCtrl *tc;
 
    ShuttleGui S(&dlg, eIsCreating);
@@ -1216,7 +1223,7 @@ void TagsEditor::OnAdd(wxCommandEvent & WXUNUSED(event))
 
 void TagsEditor::OnRemove(wxCommandEvent & WXUNUSED(event))
 {
-   size_t row = mGrid->GetCursorRow();
+   size_t row = mGrid->GetGridCursorRow();
 
    if (!mEditTitle && mGrid->GetCellValue(row, 0).CmpNoCase(LABEL_TITLE) == 0) {
       return;

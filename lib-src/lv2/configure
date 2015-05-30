@@ -18,6 +18,11 @@ function waf
    mkdir -p ${pkg}
    pushd >/dev/null ${pkg}
 
+   if [ ! -e "waflib" ]
+   then
+      cp -a "../${srcdir}/${pkg}"/waflib .
+   fi
+   
    for f in "../${srcdir}/${pkg}"/*
    do
       if [ ! -e "${f##*/}" ]
@@ -49,7 +54,7 @@ includedir=.
 Name: ${pkg}
 Version: ${version}
 Description: Temporary fake config file
-Libs: -L\${libdir} ${lib} -ldl
+Libs: -L\${libdir} ${lib} -ldl -lm
 Cflags: -I\${includedir}/${pkg}${major}
 EOF
 

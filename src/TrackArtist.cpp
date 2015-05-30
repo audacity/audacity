@@ -143,8 +143,8 @@ audio tracks.
 *//*******************************************************************/
 
 #include "Audacity.h"
-#include "AudacityApp.h"
 #include "TrackArtist.h"
+#include "AudacityApp.h"
 #include "float_cast.h"
 
 #include <math.h>
@@ -610,7 +610,7 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & r)
             // ISO standard: A440 is in the 4th octave, denoted
             // A4 <- the "4" should be a subscript.
             s.Printf(wxT("C%d"), octave - 1);
-            long width, height;
+            wxCoord width, height;
             dc->GetTextExtent(s, &width, &height);
             if (obottom - height + 4 > r.y &&
                 obottom + 4 < r.y + r.height) {
@@ -1737,26 +1737,21 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
          viewInfo->selectedRegion.t0(), viewInfo->selectedRegion.t1(), 
          viewInfo->h, viewInfo->zoom);
 
-   if(!viewInfo->bUpdateTrackIndicator && viewInfo->bIsPlaying) {
-      // BG: Draw (undecorated) waveform instead of spectrum
-      DrawWaveform(track, dc, r, viewInfo, false, false, false, false, false);
-      /*
-      // BG: uncomment to draw grey instead of spectrum
-      dc.SetBrush(unselectedBrush);
-      dc.SetPen(unselectedPen);
-      dc.DrawRectangle(r);
-      */
-      return;
-   }
-
+   WaveTrackCache cache(track);
    for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext()) {
-      DrawClipSpectrum(track, it->GetData(), dc, r, viewInfo, autocorrelation, logF);
+      DrawClipSpectrum(cache, it->GetData(), dc, r, viewInfo, autocorrelation, logF);
    }
 }
 
-static float sumFreqValues(float *freq, int x0, float bin0, float bin1)
+inline
+static float sumFreqValues(
+   const float *freq, int x, int half, float bin0, float bin1,
+   bool autocorrelation, int range, int gain)
 {
+   const int x0 = x * half;
    float value;
+#if 0
+   // Averaging method
    if (int(bin1) == int(bin0)) {
       value = freq[x0+int(bin0)];
    } else {
@@ -1768,9 +1763,28 @@ static float sumFreqValues(float *freq, int x0, float bin0, float bin1)
          value += freq[x0 + int(bin0)];
          bin0 += 1.0;
       }
+      // Do not reference past end of freq array.
+      if (int(bin1) >= half) {
+         bin1 -= 1.0;
+      }
+
       value += freq[x0 + int(bin1)] * (bin1 - int(bin1));
       value /= binwidth;
    }
+#else
+   // Maximum method, and no apportionment of any single bins over multiple pixel rows
+   // See Bug971
+   int bin = floor(0.5 + bin0);
+   const int limitBin = floor(0.5 + bin1);
+   value = freq[x0 + bin];
+   while (++bin < limitBin)
+      value = std::max(value, freq[x0 + bin]);
+#endif
+   if (!autocorrelation) {
+      // Last step converts dB to a 0.0-1.0 range
+      value = (value + range + gain) / (double)range;
+   }
+   value = std::min(1.0f, std::max(0.0f, value));
    return value;
 }
 
@@ -1797,7 +1811,7 @@ AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBin
 
 
 
-void TrackArtist::DrawClipSpectrum(WaveTrack *track,
+void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                                    WaveClip *clip,
                                    wxDC & dc,
                                    const wxRect & r,
@@ -1805,6 +1819,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                                    bool autocorrelation,
                                    bool logF)
 {
+   const WaveTrack *const track = cache.GetTrack();
+
    enum { MONOCHROME_LINE = 230, COLORED_LINE  = 0 };
    enum { DASH_LENGTH = 10 /* pixels */ };
 
@@ -1937,7 +1953,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
    float *freq = new float[mid.width * half];
    sampleCount *where = new sampleCount[mid.width+1];
 
-   bool updated = clip->GetSpectrogram(freq, where, mid.width,
+   bool updated = clip->GetSpectrogram(cache, freq, where, mid.width,
                               t0, pps, autocorrelation);
    int ifreq = lrint(rate/2);
 
@@ -2090,37 +2106,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
             float value;
 
             if(!usePxCache) {
-               if (int (bin1) == int (bin0))
-                  value = freq[half * x + int (bin0)];
-               else {
-                  float binwidth= bin1 - bin0;
-                  value = freq[half * x + int (bin0)] * (1.f - bin0 + (int)bin0);
-
-                  bin0 = 1 + int (bin0);
-                  while (bin0 < int (bin1)) {
-                     value += freq[half * x + int (bin0)];
-                     bin0 += 1.0;
-                  }
-
-                  // Do not reference past end of freq array.
-                  if (int(bin1) >= half) {
-                     bin1 -= 1.0;
-                  }
-
-                  value += freq[half * x + int (bin1)] * (bin1 - int (bin1));
-
-                  value /= binwidth;
-               }
-
-               if (!autocorrelation) {
-                  // Last step converts dB to a 0.0-1.0 range
-                  value = (value + range + gain) / (double)range;
-               }
-
-               if (value > 1.0)
-                  value = float(1.0);
-               if (value < 0.0)
-                  value = float(0.0);
+               value = sumFreqValues(freq, x, half, bin0, bin1,
+                  autocorrelation, range, gain);
                clip->mSpecPxCache->values[x * mid.height + yy] = value;
             }
             else
@@ -2138,7 +2125,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
       {
          unsigned char rv, gv, bv;
          float value;
-         int x0=x*half;
 
 #ifdef EXPERIMENTAL_FIND_NOTES
          int maximas=0;
@@ -2199,7 +2185,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
             }
          }
          int it=0;
-         int oldBin0=-1;
          bool inMaximum = false;
 #endif //EXPERIMENTAL_FIND_NOTES
 
@@ -2257,17 +2242,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrack *track,
                      value = minColor;
                } else
 #endif //EXPERIMENTAL_FIND_NOTES
-               {
-                  value=sumFreqValues(freq, x0, bin0, bin1);
-                  if (!autocorrelation) {
-                     // Last step converts dB to a 0.0-1.0 range
-                     value = (value + gain + range) / (double)range;
-                  }
-               }
-               if (value > 1.0)
-                  value = float(1.0);
-               if (value < 0.0)
-                  value = float(0.0);
+                  value=sumFreqValues(freq, x, half, bin0, bin1,
+                     autocorrelation, range, gain);
                clip->mSpecPxCache->values[x * mid.height + yy] = value;
             }
             else

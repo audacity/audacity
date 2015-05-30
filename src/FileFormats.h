@@ -96,6 +96,8 @@ bool sf_subtype_is_integer(unsigned int format);
 
 wxArrayString sf_get_all_extensions();
 
+wxString sf_normalize_name(const char *name);
+
 //
 // Mac OS 4-char type
 //

@@ -137,56 +137,49 @@ bin_PROGRAMS = audacity$(EXEEXT)
 
 @USE_LIBSOUNDTOUCH_TRUE@am__append_25 = $(SOUNDTOUCH_CFLAGS)
 @USE_LIBSOUNDTOUCH_TRUE@am__append_26 = $(SOUNDTOUCH_LIBS)
-@USE_LIBSOXR_TRUE@am__append_27 = $(SOXR_CFLAGS)
-@USE_LIBSOXR_TRUE@am__append_28 = $(SOXR_LIBS)
-@USE_LIBTWOLAME_TRUE@am__append_29 = $(LIBTWOLAME_CFLAGS)
-@USE_LIBTWOLAME_TRUE@am__append_30 = $(LIBTWOLAME_LIBS)
-@USE_LIBVORBIS_TRUE@am__append_31 = $(LIBVORBIS_CFLAGS)
-@USE_LIBVORBIS_TRUE@am__append_32 = $(LIBVORBIS_LIBS)
-@USE_LV2_TRUE@am__append_33 = $(LV2_CFLAGS)
-@USE_LV2_TRUE@am__append_34 = $(LV2_LIBS)
-@USE_LV2_TRUE@am__append_35 = \
+@USE_LIBTWOLAME_TRUE@am__append_27 = $(LIBTWOLAME_CFLAGS)
+@USE_LIBTWOLAME_TRUE@am__append_28 = $(LIBTWOLAME_LIBS)
+@USE_LIBVORBIS_TRUE@am__append_29 = $(LIBVORBIS_CFLAGS)
+@USE_LIBVORBIS_TRUE@am__append_30 = $(LIBVORBIS_LIBS)
+@USE_LV2_TRUE@am__append_31 = $(LV2_CFLAGS)
+@USE_LV2_TRUE@am__append_32 = $(LV2_LIBS)
+@USE_LV2_TRUE@am__append_33 = \
 @USE_LV2_TRUE@	effects/lv2/LoadLV2.cpp \
 @USE_LV2_TRUE@	effects/lv2/LoadLV2.h \
 @USE_LV2_TRUE@	effects/lv2/LV2Effect.cpp \
 @USE_LV2_TRUE@	effects/lv2/LV2Effect.h \
-@USE_LV2_TRUE@	effects/lv2/lv2_event.h \
-@USE_LV2_TRUE@	effects/lv2/lv2_event_helpers.h \
-@USE_LV2_TRUE@	effects/lv2/LV2PortGroup.cpp \
-@USE_LV2_TRUE@	effects/lv2/LV2PortGroup.h \
-@USE_LV2_TRUE@	effects/lv2/lv2_uri_map.h \
 @USE_LV2_TRUE@	$(NULL)
 
-@USE_PORTSMF_TRUE@am__append_36 = $(PORTSMF_CFLAGS)
-@USE_PORTSMF_TRUE@am__append_37 = $(PORTSMF_LIBS)
-@USE_PORTSMF_TRUE@am__append_38 = \
+@USE_PORTSMF_TRUE@am__append_34 = $(PORTSMF_CFLAGS)
+@USE_PORTSMF_TRUE@am__append_35 = $(PORTSMF_LIBS)
+@USE_PORTSMF_TRUE@am__append_36 = \
 @USE_PORTSMF_TRUE@	NoteTrack.cpp \
 @USE_PORTSMF_TRUE@	NoteTrack.h \
 @USE_PORTSMF_TRUE@	import/ImportMIDI.cpp \
 @USE_PORTSMF_TRUE@	import/ImportMIDI.h \
 @USE_PORTSMF_TRUE@	$(NULL)
 
-@USE_QUICKTIME_TRUE@am__append_39 = $(QUICKTIME_CFLAGS)
-@USE_QUICKTIME_TRUE@am__append_40 = $(QUICKTIME_LIBS)
-@USE_QUICKTIME_TRUE@am__append_41 = \
+@USE_QUICKTIME_TRUE@am__append_37 = $(QUICKTIME_CFLAGS)
+@USE_QUICKTIME_TRUE@am__append_38 = $(QUICKTIME_LIBS)
+@USE_QUICKTIME_TRUE@am__append_39 = \
 @USE_QUICKTIME_TRUE@	import/ImportQT.cpp \
 @USE_QUICKTIME_TRUE@	import/ImportQT.h \
 @USE_QUICKTIME_TRUE@	$(NULL)
 
-@USE_SBSMS_TRUE@am__append_42 = $(SBSMS_CFLAGS)
-@USE_SBSMS_TRUE@am__append_43 = $(SBSMS_LIBS)
-@USE_VAMP_TRUE@am__append_44 = $(VAMP_CFLAGS)
-@USE_VAMP_TRUE@am__append_45 = $(VAMP_LIBS)
-@USE_VAMP_TRUE@am__append_46 = \
+@USE_SBSMS_TRUE@am__append_40 = $(SBSMS_CFLAGS)
+@USE_SBSMS_TRUE@am__append_41 = $(SBSMS_LIBS)
+@USE_VAMP_TRUE@am__append_42 = $(VAMP_CFLAGS)
+@USE_VAMP_TRUE@am__append_43 = $(VAMP_LIBS)
+@USE_VAMP_TRUE@am__append_44 = \
 @USE_VAMP_TRUE@	effects/vamp/LoadVamp.cpp \
 @USE_VAMP_TRUE@	effects/vamp/LoadVamp.h \
 @USE_VAMP_TRUE@	effects/vamp/VampEffect.cpp \
 @USE_VAMP_TRUE@	effects/vamp/VampEffect.h \
 @USE_VAMP_TRUE@	$(NULL)
 
-@USE_VST_TRUE@am__append_47 = $(VST_CFLAGS)
-@USE_VST_TRUE@am__append_48 = $(VST_LIBS)
-@USE_VST_TRUE@am__append_49 = \
+@USE_VST_TRUE@am__append_45 = $(VST_CFLAGS)
+@USE_VST_TRUE@am__append_46 = $(VST_LIBS)
+@USE_VST_TRUE@am__append_47 = \
 @USE_VST_TRUE@	effects/VST/aeffectx.h \
 @USE_VST_TRUE@	effects/VST/VSTEffect.cpp \
 @USE_VST_TRUE@	effects/VST/VSTEffect.h \
@@ -207,8 +200,6 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_c99_func_lrint.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libid3tag.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libmad.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libnyquist.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libresample.m4 \
-	$(top_srcdir)/m4/audacity_checklib_libsamplerate.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsbsms.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsndfile.m4 \
 	$(top_srcdir)/m4/audacity_checklib_libsoundtouch.m4 \
@@ -288,46 +279,48 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	BatchProcessDialog.cpp BatchProcessDialog.h Benchmark.cpp \
 	Benchmark.h CaptureEvents.cpp CaptureEvents.h Dependencies.cpp \
 	Dependencies.h DeviceChange.cpp DeviceChange.h \
-	DeviceManager.cpp DeviceManager.h Envelope.cpp Envelope.h \
-	Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h FileIO.cpp \
-	FileIO.h FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
-	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
-	HistoryWindow.h ImageManipulation.cpp ImageManipulation.h \
-	InterpolateAudio.cpp InterpolateAudio.h LabelDialog.cpp \
-	LabelDialog.h LabelTrack.cpp LabelTrack.h LangChoice.cpp \
-	LangChoice.h Languages.cpp Languages.h Legacy.cpp Legacy.h \
-	Lyrics.cpp Lyrics.h LyricsWindow.cpp LyricsWindow.h \
-	MacroMagic.h Matrix.cpp Matrix.h Menus.cpp Menus.h Mix.cpp \
-	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
-	ModuleManager.h PitchName.cpp PitchName.h \
-	PlatformCompatibility.cpp PlatformCompatibility.h \
-	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
-	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
-	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h Resample.cpp \
-	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
-	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
-	SelectedRegion.h Shuttle.cpp Shuttle.h ShuttleGui.cpp \
-	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
-	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
-	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
+	DeviceManager.cpp DeviceManager.h Diags.cpp Diags.h \
+	Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp FFmpeg.h \
+	FFT.cpp FFT.h FileIO.cpp FileIO.h FileNames.cpp FileNames.h \
+	float_cast.h FreqWindow.cpp FreqWindow.h HelpText.cpp \
+	HelpText.h HistoryWindow.cpp HistoryWindow.h \
+	ImageManipulation.cpp ImageManipulation.h InterpolateAudio.cpp \
+	InterpolateAudio.h LabelDialog.cpp LabelDialog.h \
+	LabelTrack.cpp LabelTrack.h LangChoice.cpp LangChoice.h \
+	Languages.cpp Languages.h Legacy.cpp Legacy.h Lyrics.cpp \
+	Lyrics.h LyricsWindow.cpp LyricsWindow.h MacroMagic.h \
+	Matrix.cpp Matrix.h Menus.cpp Menus.h Mix.cpp Mix.h \
+	MixerBoard.cpp MixerBoard.h ModuleManager.cpp ModuleManager.h \
+	PitchName.cpp PitchName.h PlatformCompatibility.cpp \
+	PlatformCompatibility.h PluginManager.cpp PluginManager.h \
+	Printing.cpp Printing.h Profiler.cpp Profiler.h Project.cpp \
+	Project.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
+	RealFFTf48x.h Resample.cpp Resample.h RevisionIdent.h \
+	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
+	SelectedRegion.cpp SelectedRegion.h Shuttle.cpp Shuttle.h \
+	ShuttleGui.cpp ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h \
+	Snap.cpp Snap.h SoundActivatedRecord.cpp \
+	SoundActivatedRecord.h Spectrum.cpp Spectrum.h \
+	SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
 	ThemeAsCeeCode.h TimeDialog.cpp TimeDialog.h \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
-	UndoManager.cpp UndoManager.h ViewInfo.h VoiceKey.cpp \
-	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
-	WrappedType.cpp WrappedType.h commands/AppCommandEvent.cpp \
-	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
-	commands/BatchEvalCommand.h commands/Command.cpp \
-	commands/Command.h commands/CommandBuilder.cpp \
-	commands/CommandBuilder.h commands/CommandDirectory.cpp \
-	commands/CommandDirectory.h commands/CommandHandler.cpp \
-	commands/CommandHandler.h commands/CommandManager.cpp \
-	commands/CommandManager.h commands/CommandMisc.h \
-	commands/CommandSignature.cpp commands/CommandSignature.h \
-	commands/CommandTargets.h commands/CommandType.cpp \
-	commands/CommandType.h commands/CompareAudioCommand.cpp \
+	UndoManager.cpp UndoManager.h ViewInfo.cpp ViewInfo.h \
+	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
+	WaveTrack.h WrappedType.cpp WrappedType.h \
+	commands/AppCommandEvent.cpp commands/AppCommandEvent.h \
+	commands/BatchEvalCommand.cpp commands/BatchEvalCommand.h \
+	commands/Command.cpp commands/Command.h \
+	commands/CommandBuilder.cpp commands/CommandBuilder.h \
+	commands/CommandDirectory.cpp commands/CommandDirectory.h \
+	commands/CommandHandler.cpp commands/CommandHandler.h \
+	commands/CommandManager.cpp commands/CommandManager.h \
+	commands/CommandMisc.h commands/CommandSignature.cpp \
+	commands/CommandSignature.h commands/CommandTargets.h \
+	commands/CommandType.cpp commands/CommandType.h \
+	commands/CompareAudioCommand.cpp \
 	commands/CompareAudioCommand.h commands/ExecMenuCommand.cpp \
 	commands/ExecMenuCommand.h commands/GetAllMenuCommands.cpp \
 	commands/GetAllMenuCommands.h \
@@ -358,7 +351,6 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/Compressor.h effects/Contrast.cpp effects/Contrast.h \
 	effects/DtmfGen.cpp effects/DtmfGen.h effects/Echo.cpp \
 	effects/Echo.h effects/Effect.cpp effects/Effect.h \
-	effects/EffectCategory.cpp effects/EffectCategory.h \
 	effects/EffectManager.cpp effects/EffectManager.h \
 	effects/EffectRack.cpp effects/EffectRack.h \
 	effects/Equalization.cpp effects/Equalization.h \
@@ -473,14 +465,12 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/nyquist/Nyquist.cpp effects/nyquist/Nyquist.h \
 	effects/lv2/LoadLV2.cpp effects/lv2/LoadLV2.h \
 	effects/lv2/LV2Effect.cpp effects/lv2/LV2Effect.h \
-	effects/lv2/lv2_event.h effects/lv2/lv2_event_helpers.h \
-	effects/lv2/LV2PortGroup.cpp effects/lv2/LV2PortGroup.h \
-	effects/lv2/lv2_uri_map.h NoteTrack.cpp NoteTrack.h \
-	import/ImportMIDI.cpp import/ImportMIDI.h import/ImportQT.cpp \
-	import/ImportQT.h effects/vamp/LoadVamp.cpp \
-	effects/vamp/LoadVamp.h effects/vamp/VampEffect.cpp \
-	effects/vamp/VampEffect.h effects/VST/aeffectx.h \
-	effects/VST/VSTEffect.cpp effects/VST/VSTEffect.h
+	NoteTrack.cpp NoteTrack.h import/ImportMIDI.cpp \
+	import/ImportMIDI.h import/ImportQT.cpp import/ImportQT.h \
+	effects/vamp/LoadVamp.cpp effects/vamp/LoadVamp.h \
+	effects/vamp/VampEffect.cpp effects/vamp/VampEffect.h \
+	effects/VST/aeffectx.h effects/VST/VSTEffect.cpp \
+	effects/VST/VSTEffect.h
 am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 	audacity-DirManager.$(OBJEXT) audacity-Dither.$(OBJEXT) \
 	audacity-FileFormats.$(OBJEXT) audacity-Internat.$(OBJEXT) \
@@ -506,8 +496,7 @@ am__objects_1 = audacity-BlockFile.$(OBJEXT) \
 @USE_LIBNYQUIST_TRUE@am__objects_7 = effects/nyquist/audacity-LoadNyquist.$(OBJEXT) \
 @USE_LIBNYQUIST_TRUE@	effects/nyquist/audacity-Nyquist.$(OBJEXT)
 @USE_LV2_TRUE@am__objects_8 = effects/lv2/audacity-LoadLV2.$(OBJEXT) \
-@USE_LV2_TRUE@	effects/lv2/audacity-LV2Effect.$(OBJEXT) \
-@USE_LV2_TRUE@	effects/lv2/audacity-LV2PortGroup.$(OBJEXT)
+@USE_LV2_TRUE@	effects/lv2/audacity-LV2Effect.$(OBJEXT)
 @USE_PORTSMF_TRUE@am__objects_9 = audacity-NoteTrack.$(OBJEXT) \
 @USE_PORTSMF_TRUE@	import/audacity-ImportMIDI.$(OBJEXT)
 @USE_QUICKTIME_TRUE@am__objects_10 =  \
@@ -527,11 +516,11 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-Benchmark.$(OBJEXT) audacity-CaptureEvents.$(OBJEXT) \
 	audacity-Dependencies.$(OBJEXT) \
 	audacity-DeviceChange.$(OBJEXT) \
-	audacity-DeviceManager.$(OBJEXT) audacity-Envelope.$(OBJEXT) \
-	audacity-FFmpeg.$(OBJEXT) audacity-FFT.$(OBJEXT) \
-	audacity-FileIO.$(OBJEXT) audacity-FileNames.$(OBJEXT) \
-	audacity-FreqWindow.$(OBJEXT) audacity-HelpText.$(OBJEXT) \
-	audacity-HistoryWindow.$(OBJEXT) \
+	audacity-DeviceManager.$(OBJEXT) audacity-Diags.$(OBJEXT) \
+	audacity-Envelope.$(OBJEXT) audacity-FFmpeg.$(OBJEXT) \
+	audacity-FFT.$(OBJEXT) audacity-FileIO.$(OBJEXT) \
+	audacity-FileNames.$(OBJEXT) audacity-FreqWindow.$(OBJEXT) \
+	audacity-HelpText.$(OBJEXT) audacity-HistoryWindow.$(OBJEXT) \
 	audacity-ImageManipulation.$(OBJEXT) \
 	audacity-InterpolateAudio.$(OBJEXT) \
 	audacity-LabelDialog.$(OBJEXT) audacity-LabelTrack.$(OBJEXT) \
@@ -558,8 +547,9 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	audacity-TimeTrack.$(OBJEXT) audacity-Track.$(OBJEXT) \
 	audacity-TrackArtist.$(OBJEXT) audacity-TrackPanel.$(OBJEXT) \
 	audacity-TrackPanelAx.$(OBJEXT) audacity-UndoManager.$(OBJEXT) \
-	audacity-VoiceKey.$(OBJEXT) audacity-WaveClip.$(OBJEXT) \
-	audacity-WaveTrack.$(OBJEXT) audacity-WrappedType.$(OBJEXT) \
+	audacity-ViewInfo.$(OBJEXT) audacity-VoiceKey.$(OBJEXT) \
+	audacity-WaveClip.$(OBJEXT) audacity-WaveTrack.$(OBJEXT) \
+	audacity-WrappedType.$(OBJEXT) \
 	commands/audacity-AppCommandEvent.$(OBJEXT) \
 	commands/audacity-BatchEvalCommand.$(OBJEXT) \
 	commands/audacity-Command.$(OBJEXT) \
@@ -599,7 +589,6 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	effects/audacity-DtmfGen.$(OBJEXT) \
 	effects/audacity-Echo.$(OBJEXT) \
 	effects/audacity-Effect.$(OBJEXT) \
-	effects/audacity-EffectCategory.$(OBJEXT) \
 	effects/audacity-EffectManager.$(OBJEXT) \
 	effects/audacity-EffectRack.$(OBJEXT) \
 	effects/audacity-Equalization.$(OBJEXT) \
@@ -727,26 +716,25 @@ audacity_OBJECTS = $(am_audacity_OBJECTS)
 @USE_LIBMAD_TRUE@am__DEPENDENCIES_7 = $(am__DEPENDENCIES_1)
 @USE_LIBNYQUIST_TRUE@am__DEPENDENCIES_8 = $(am__DEPENDENCIES_1)
 @USE_LIBSOUNDTOUCH_TRUE@am__DEPENDENCIES_9 = $(am__DEPENDENCIES_1)
-@USE_LIBSOXR_TRUE@am__DEPENDENCIES_10 = $(am__DEPENDENCIES_1)
-@USE_LIBTWOLAME_TRUE@am__DEPENDENCIES_11 = $(am__DEPENDENCIES_1)
-@USE_LIBVORBIS_TRUE@am__DEPENDENCIES_12 = $(am__DEPENDENCIES_1)
-@USE_LV2_TRUE@am__DEPENDENCIES_13 = $(am__DEPENDENCIES_1)
-@USE_PORTSMF_TRUE@am__DEPENDENCIES_14 = $(am__DEPENDENCIES_1)
-@USE_SBSMS_TRUE@am__DEPENDENCIES_15 = $(am__DEPENDENCIES_1)
-@USE_VAMP_TRUE@am__DEPENDENCIES_16 = $(am__DEPENDENCIES_1)
+@USE_LIBTWOLAME_TRUE@am__DEPENDENCIES_10 = $(am__DEPENDENCIES_1)
+@USE_LIBVORBIS_TRUE@am__DEPENDENCIES_11 = $(am__DEPENDENCIES_1)
+@USE_LV2_TRUE@am__DEPENDENCIES_12 = $(am__DEPENDENCIES_1)
+@USE_PORTSMF_TRUE@am__DEPENDENCIES_13 = $(am__DEPENDENCIES_1)
+@USE_SBSMS_TRUE@am__DEPENDENCIES_14 = $(am__DEPENDENCIES_1)
+@USE_VAMP_TRUE@am__DEPENDENCIES_15 = $(am__DEPENDENCIES_1)
 audacity_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_3) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_4) \
-	$(am__DEPENDENCIES_5) $(am__DEPENDENCIES_6) \
-	$(am__DEPENDENCIES_7) $(am__DEPENDENCIES_8) \
-	$(am__DEPENDENCIES_9) $(am__DEPENDENCIES_10) \
-	$(am__DEPENDENCIES_11) $(am__DEPENDENCIES_12) \
-	$(am__DEPENDENCIES_13) $(am__DEPENDENCIES_14) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_15) \
-	$(am__DEPENDENCIES_16) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_4) $(am__DEPENDENCIES_5) \
+	$(am__DEPENDENCIES_6) $(am__DEPENDENCIES_7) \
+	$(am__DEPENDENCIES_8) $(am__DEPENDENCIES_9) \
+	$(am__DEPENDENCIES_10) $(am__DEPENDENCIES_11) \
+	$(am__DEPENDENCIES_12) $(am__DEPENDENCIES_13) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_14) \
+	$(am__DEPENDENCIES_15) $(am__DEPENDENCIES_1)
 audacity_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(audacity_CXXFLAGS) \
 	$(CXXFLAGS) $(audacity_LDFLAGS) $(LDFLAGS) -o $@
@@ -940,11 +928,7 @@ LIBMAD_LIBS = @LIBMAD_LIBS@
 LIBNYQUIST_CFLAGS = @LIBNYQUIST_CFLAGS@
 LIBNYQUIST_LIBS = @LIBNYQUIST_LIBS@
 LIBOBJS = @LIBOBJS@
-LIBRESAMPLE_CFLAGS = @LIBRESAMPLE_CFLAGS@
-LIBRESAMPLE_LIBS = @LIBRESAMPLE_LIBS@
 LIBS = @LIBS@
-LIBSAMPLERATE_SYSTEM_CFLAGS = @LIBSAMPLERATE_SYSTEM_CFLAGS@
-LIBSAMPLERATE_SYSTEM_LIBS = @LIBSAMPLERATE_SYSTEM_LIBS@
 LIBTOOL = @LIBTOOL@
 LIBTWOLAME_CFLAGS = @LIBTWOLAME_CFLAGS@
 LIBTWOLAME_LIBS = @LIBTWOLAME_LIBS@
@@ -988,8 +972,6 @@ PORTSMF_LIBS = @PORTSMF_LIBS@
 POSUB = @POSUB@
 PRECOMP_CFLAGS = @PRECOMP_CFLAGS@
 RANLIB = @RANLIB@
-SAMPLERATE_CFLAGS = @SAMPLERATE_CFLAGS@
-SAMPLERATE_LIBS = @SAMPLERATE_LIBS@
 SBSMS_CFLAGS = @SBSMS_CFLAGS@
 SBSMS_LIBS = @SBSMS_LIBS@
 SED = @SED@
@@ -1112,14 +1094,14 @@ libaudacity_la_SOURCES = \
 
 audacity_CPPFLAGS = -D__STDC_CONSTANT_MACROS -DLIBDIR=\"$(libdir)\" \
 	$(EXPAT_CFLAGS) $(FILEDIALOG_CFLAGS) $(PORTAUDIO_CFLAGS) \
-	$(PORTMIXER_CFLAGS) $(SNDFILE_CFLAGS) $(WIDGETEXTRA_CFLAGS) \
-	$(WX_CXXFLAGS) $(NULL) $(am__append_1) $(am__append_4) \
-	$(am__append_7) $(am__append_10) $(am__append_13) \
-	$(am__append_15) $(am__append_18) $(am__append_20) \
-	$(am__append_22) $(am__append_25) $(am__append_27) \
-	$(am__append_29) $(am__append_31) $(am__append_33) \
-	$(am__append_36) $(am__append_39) $(am__append_42) \
-	$(am__append_44) $(am__append_47)
+	$(PORTMIXER_CFLAGS) $(SNDFILE_CFLAGS) $(SOXR_CFLAGS) \
+	$(WIDGETEXTRA_CFLAGS) $(WX_CXXFLAGS) $(NULL) $(am__append_1) \
+	$(am__append_4) $(am__append_7) $(am__append_10) \
+	$(am__append_13) $(am__append_15) $(am__append_18) \
+	$(am__append_20) $(am__append_22) $(am__append_25) \
+	$(am__append_27) $(am__append_29) $(am__append_31) \
+	$(am__append_34) $(am__append_37) $(am__append_40) \
+	$(am__append_42) $(am__append_45)
 
 # Until we upgrade to a newer version of wxWidgets...will get rid of hundreds of these:
 #
@@ -1141,14 +1123,14 @@ audacity_CXXFLAGS = \
 
 audacity_LDFLAGS = -rdynamic
 audacity_LDADD = $(EXPAT_LIBS) $(FILEDIALOG_LIBS) $(PORTAUDIO_LIBS) \
-	$(PORTMIXER_LIBS) $(SNDFILE_LIBS) $(WIDGETEXTRA_LIBS) \
-	$(WX_LIBS) $(NULL) $(am__append_2) $(am__append_5) \
-	$(am__append_8) $(am__append_11) $(am__append_14) \
-	$(am__append_16) $(am__append_19) $(am__append_21) \
-	$(am__append_23) $(am__append_26) $(am__append_28) \
-	$(am__append_30) $(am__append_32) $(am__append_34) \
-	$(am__append_37) $(am__append_40) $(am__append_43) \
-	$(am__append_45) $(am__append_48)
+	$(PORTMIXER_LIBS) $(SNDFILE_LIBS) $(SOXR_LIBS) \
+	$(WIDGETEXTRA_LIBS) $(WX_LIBS) $(NULL) $(am__append_2) \
+	$(am__append_5) $(am__append_8) $(am__append_11) \
+	$(am__append_14) $(am__append_16) $(am__append_19) \
+	$(am__append_21) $(am__append_23) $(am__append_26) \
+	$(am__append_28) $(am__append_30) $(am__append_32) \
+	$(am__append_35) $(am__append_38) $(am__append_41) \
+	$(am__append_43) $(am__append_46)
 audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	AboutDialog.h AColor.cpp AColor.h AllThemeResources.h \
 	Audacity.h AudacityApp.cpp AudacityApp.h AudacityLogger.cpp \
@@ -1158,46 +1140,48 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	BatchProcessDialog.cpp BatchProcessDialog.h Benchmark.cpp \
 	Benchmark.h CaptureEvents.cpp CaptureEvents.h Dependencies.cpp \
 	Dependencies.h DeviceChange.cpp DeviceChange.h \
-	DeviceManager.cpp DeviceManager.h Envelope.cpp Envelope.h \
-	Experimental.h FFmpeg.cpp FFmpeg.h FFT.cpp FFT.h FileIO.cpp \
-	FileIO.h FileNames.cpp FileNames.h float_cast.h FreqWindow.cpp \
-	FreqWindow.h HelpText.cpp HelpText.h HistoryWindow.cpp \
-	HistoryWindow.h ImageManipulation.cpp ImageManipulation.h \
-	InterpolateAudio.cpp InterpolateAudio.h LabelDialog.cpp \
-	LabelDialog.h LabelTrack.cpp LabelTrack.h LangChoice.cpp \
-	LangChoice.h Languages.cpp Languages.h Legacy.cpp Legacy.h \
-	Lyrics.cpp Lyrics.h LyricsWindow.cpp LyricsWindow.h \
-	MacroMagic.h Matrix.cpp Matrix.h Menus.cpp Menus.h Mix.cpp \
-	Mix.h MixerBoard.cpp MixerBoard.h ModuleManager.cpp \
-	ModuleManager.h PitchName.cpp PitchName.h \
-	PlatformCompatibility.cpp PlatformCompatibility.h \
-	PluginManager.cpp PluginManager.h Printing.cpp Printing.h \
-	Profiler.cpp Profiler.h Project.cpp Project.h RealFFTf.cpp \
-	RealFFTf.h RealFFTf48x.cpp RealFFTf48x.h Resample.cpp \
-	Resample.h RevisionIdent.h RingBuffer.cpp RingBuffer.h \
-	Screenshot.cpp Screenshot.h SelectedRegion.cpp \
-	SelectedRegion.h Shuttle.cpp Shuttle.h ShuttleGui.cpp \
-	ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h Snap.cpp Snap.h \
-	SoundActivatedRecord.cpp SoundActivatedRecord.h Spectrum.cpp \
-	Spectrum.h SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
+	DeviceManager.cpp DeviceManager.h Diags.cpp Diags.h \
+	Envelope.cpp Envelope.h Experimental.h FFmpeg.cpp FFmpeg.h \
+	FFT.cpp FFT.h FileIO.cpp FileIO.h FileNames.cpp FileNames.h \
+	float_cast.h FreqWindow.cpp FreqWindow.h HelpText.cpp \
+	HelpText.h HistoryWindow.cpp HistoryWindow.h \
+	ImageManipulation.cpp ImageManipulation.h InterpolateAudio.cpp \
+	InterpolateAudio.h LabelDialog.cpp LabelDialog.h \
+	LabelTrack.cpp LabelTrack.h LangChoice.cpp LangChoice.h \
+	Languages.cpp Languages.h Legacy.cpp Legacy.h Lyrics.cpp \
+	Lyrics.h LyricsWindow.cpp LyricsWindow.h MacroMagic.h \
+	Matrix.cpp Matrix.h Menus.cpp Menus.h Mix.cpp Mix.h \
+	MixerBoard.cpp MixerBoard.h ModuleManager.cpp ModuleManager.h \
+	PitchName.cpp PitchName.h PlatformCompatibility.cpp \
+	PlatformCompatibility.h PluginManager.cpp PluginManager.h \
+	Printing.cpp Printing.h Profiler.cpp Profiler.h Project.cpp \
+	Project.h RealFFTf.cpp RealFFTf.h RealFFTf48x.cpp \
+	RealFFTf48x.h Resample.cpp Resample.h RevisionIdent.h \
+	RingBuffer.cpp RingBuffer.h Screenshot.cpp Screenshot.h \
+	SelectedRegion.cpp SelectedRegion.h Shuttle.cpp Shuttle.h \
+	ShuttleGui.cpp ShuttleGui.h ShuttlePrefs.cpp ShuttlePrefs.h \
+	Snap.cpp Snap.h SoundActivatedRecord.cpp \
+	SoundActivatedRecord.h Spectrum.cpp Spectrum.h \
+	SplashDialog.cpp SplashDialog.h SseMathFuncs.cpp \
 	SseMathFuncs.h Tags.cpp Tags.h Theme.cpp Theme.h \
 	ThemeAsCeeCode.h TimeDialog.cpp TimeDialog.h \
 	TimerRecordDialog.cpp TimerRecordDialog.h TimeTrack.cpp \
 	TimeTrack.h Track.cpp Track.h TrackArtist.cpp TrackArtist.h \
 	TrackPanel.cpp TrackPanel.h TrackPanelAx.cpp TrackPanelAx.h \
-	UndoManager.cpp UndoManager.h ViewInfo.h VoiceKey.cpp \
-	VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp WaveTrack.h \
-	WrappedType.cpp WrappedType.h commands/AppCommandEvent.cpp \
-	commands/AppCommandEvent.h commands/BatchEvalCommand.cpp \
-	commands/BatchEvalCommand.h commands/Command.cpp \
-	commands/Command.h commands/CommandBuilder.cpp \
-	commands/CommandBuilder.h commands/CommandDirectory.cpp \
-	commands/CommandDirectory.h commands/CommandHandler.cpp \
-	commands/CommandHandler.h commands/CommandManager.cpp \
-	commands/CommandManager.h commands/CommandMisc.h \
-	commands/CommandSignature.cpp commands/CommandSignature.h \
-	commands/CommandTargets.h commands/CommandType.cpp \
-	commands/CommandType.h commands/CompareAudioCommand.cpp \
+	UndoManager.cpp UndoManager.h ViewInfo.cpp ViewInfo.h \
+	VoiceKey.cpp VoiceKey.h WaveClip.cpp WaveClip.h WaveTrack.cpp \
+	WaveTrack.h WrappedType.cpp WrappedType.h \
+	commands/AppCommandEvent.cpp commands/AppCommandEvent.h \
+	commands/BatchEvalCommand.cpp commands/BatchEvalCommand.h \
+	commands/Command.cpp commands/Command.h \
+	commands/CommandBuilder.cpp commands/CommandBuilder.h \
+	commands/CommandDirectory.cpp commands/CommandDirectory.h \
+	commands/CommandHandler.cpp commands/CommandHandler.h \
+	commands/CommandManager.cpp commands/CommandManager.h \
+	commands/CommandMisc.h commands/CommandSignature.cpp \
+	commands/CommandSignature.h commands/CommandTargets.h \
+	commands/CommandType.cpp commands/CommandType.h \
+	commands/CompareAudioCommand.cpp \
 	commands/CompareAudioCommand.h commands/ExecMenuCommand.cpp \
 	commands/ExecMenuCommand.h commands/GetAllMenuCommands.cpp \
 	commands/GetAllMenuCommands.h \
@@ -1228,7 +1212,6 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	effects/Compressor.h effects/Contrast.cpp effects/Contrast.h \
 	effects/DtmfGen.cpp effects/DtmfGen.h effects/Echo.cpp \
 	effects/Echo.h effects/Effect.cpp effects/Effect.h \
-	effects/EffectCategory.cpp effects/EffectCategory.h \
 	effects/EffectManager.cpp effects/EffectManager.h \
 	effects/EffectRack.cpp effects/EffectRack.h \
 	effects/Equalization.cpp effects/Equalization.h \
@@ -1333,8 +1316,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	xml/XMLFileReader.cpp xml/XMLFileReader.h xml/XMLWriter.cpp \
 	xml/XMLWriter.h $(NULL) $(am__append_3) $(am__append_6) \
 	$(am__append_9) $(am__append_12) $(am__append_17) \
-	$(am__append_24) $(am__append_35) $(am__append_38) \
-	$(am__append_41) $(am__append_46) $(am__append_49)
+	$(am__append_24) $(am__append_33) $(am__append_36) \
+	$(am__append_39) $(am__append_44) $(am__append_47)
 
 # TODO: Check *.cpp and *.h files if they are needed.
 EXTRA_DIST = audacity.desktop.in xml/audacityproject.dtd \
@@ -1602,8 +1585,6 @@ effects/audacity-DtmfGen.$(OBJEXT): effects/$(am__dirstamp) \
 effects/audacity-Echo.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-Effect.$(OBJEXT): effects/$(am__dirstamp) \
-	effects/$(DEPDIR)/$(am__dirstamp)
-effects/audacity-EffectCategory.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-EffectManager.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
@@ -1919,9 +1900,6 @@ effects/lv2/audacity-LoadLV2.$(OBJEXT): effects/lv2/$(am__dirstamp) \
 	effects/lv2/$(DEPDIR)/$(am__dirstamp)
 effects/lv2/audacity-LV2Effect.$(OBJEXT): effects/lv2/$(am__dirstamp) \
 	effects/lv2/$(DEPDIR)/$(am__dirstamp)
-effects/lv2/audacity-LV2PortGroup.$(OBJEXT):  \
-	effects/lv2/$(am__dirstamp) \
-	effects/lv2/$(DEPDIR)/$(am__dirstamp)
 import/audacity-ImportMIDI.$(OBJEXT): import/$(am__dirstamp) \
 	import/$(DEPDIR)/$(am__dirstamp)
 import/audacity-ImportQT.$(OBJEXT): import/$(am__dirstamp) \
@@ -1990,6 +1968,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Dependencies.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-DeviceChange.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-DeviceManager.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Diags.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-DirManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Dither.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-Envelope.Po@am__quote@
@@ -2050,6 +2029,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-TrackPanelAx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-UndoManager.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-ViewInfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-VoiceKey.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-WaveClip.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audacity-WaveTrack.Po@am__quote@
@@ -2115,7 +2095,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-DtmfGen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Echo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Effect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-EffectCategory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-EffectManager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-EffectRack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Equalization.Po@am__quote@
@@ -2152,7 +2131,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@effects/audiounits/$(DEPDIR)/audacity-AudioUnitEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/ladspa/$(DEPDIR)/audacity-LadspaEffect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LV2Effect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/lv2/$(DEPDIR)/audacity-LoadLV2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/nyquist/$(DEPDIR)/audacity-LoadNyquist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/nyquist/$(DEPDIR)/audacity-Nyquist.Po@am__quote@
@@ -2805,6 +2783,20 @@ audacity-DeviceManager.obj: DeviceManager.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DeviceManager.cpp' object='audacity-DeviceManager.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-DeviceManager.obj `if test -f 'DeviceManager.cpp'; then $(CYGPATH_W) 'DeviceManager.cpp'; else $(CYGPATH_W) '$(srcdir)/DeviceManager.cpp'; fi`
+
+audacity-Diags.o: Diags.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Diags.o -MD -MP -MF $(DEPDIR)/audacity-Diags.Tpo -c -o audacity-Diags.o `test -f 'Diags.cpp' || echo '$(srcdir)/'`Diags.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-Diags.Tpo $(DEPDIR)/audacity-Diags.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Diags.cpp' object='audacity-Diags.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Diags.o `test -f 'Diags.cpp' || echo '$(srcdir)/'`Diags.cpp
+
+audacity-Diags.obj: Diags.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Diags.obj -MD -MP -MF $(DEPDIR)/audacity-Diags.Tpo -c -o audacity-Diags.obj `if test -f 'Diags.cpp'; then $(CYGPATH_W) 'Diags.cpp'; else $(CYGPATH_W) '$(srcdir)/Diags.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-Diags.Tpo $(DEPDIR)/audacity-Diags.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Diags.cpp' object='audacity-Diags.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-Diags.obj `if test -f 'Diags.cpp'; then $(CYGPATH_W) 'Diags.cpp'; else $(CYGPATH_W) '$(srcdir)/Diags.cpp'; fi`
 
 audacity-Envelope.o: Envelope.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-Envelope.o -MD -MP -MF $(DEPDIR)/audacity-Envelope.Tpo -c -o audacity-Envelope.o `test -f 'Envelope.cpp' || echo '$(srcdir)/'`Envelope.cpp
@@ -3534,6 +3526,20 @@ audacity-UndoManager.obj: UndoManager.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-UndoManager.obj `if test -f 'UndoManager.cpp'; then $(CYGPATH_W) 'UndoManager.cpp'; else $(CYGPATH_W) '$(srcdir)/UndoManager.cpp'; fi`
 
+audacity-ViewInfo.o: ViewInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ViewInfo.o -MD -MP -MF $(DEPDIR)/audacity-ViewInfo.Tpo -c -o audacity-ViewInfo.o `test -f 'ViewInfo.cpp' || echo '$(srcdir)/'`ViewInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ViewInfo.Tpo $(DEPDIR)/audacity-ViewInfo.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ViewInfo.cpp' object='audacity-ViewInfo.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ViewInfo.o `test -f 'ViewInfo.cpp' || echo '$(srcdir)/'`ViewInfo.cpp
+
+audacity-ViewInfo.obj: ViewInfo.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-ViewInfo.obj -MD -MP -MF $(DEPDIR)/audacity-ViewInfo.Tpo -c -o audacity-ViewInfo.obj `if test -f 'ViewInfo.cpp'; then $(CYGPATH_W) 'ViewInfo.cpp'; else $(CYGPATH_W) '$(srcdir)/ViewInfo.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-ViewInfo.Tpo $(DEPDIR)/audacity-ViewInfo.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ViewInfo.cpp' object='audacity-ViewInfo.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o audacity-ViewInfo.obj `if test -f 'ViewInfo.cpp'; then $(CYGPATH_W) 'ViewInfo.cpp'; else $(CYGPATH_W) '$(srcdir)/ViewInfo.cpp'; fi`
+
 audacity-VoiceKey.o: VoiceKey.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-VoiceKey.o -MD -MP -MF $(DEPDIR)/audacity-VoiceKey.Tpo -c -o audacity-VoiceKey.o `test -f 'VoiceKey.cpp' || echo '$(srcdir)/'`VoiceKey.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/audacity-VoiceKey.Tpo $(DEPDIR)/audacity-VoiceKey.Po
@@ -4135,20 +4141,6 @@ effects/audacity-Effect.obj: effects/Effect.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/Effect.cpp' object='effects/audacity-Effect.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-Effect.obj `if test -f 'effects/Effect.cpp'; then $(CYGPATH_W) 'effects/Effect.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/Effect.cpp'; fi`
-
-effects/audacity-EffectCategory.o: effects/EffectCategory.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-EffectCategory.o -MD -MP -MF effects/$(DEPDIR)/audacity-EffectCategory.Tpo -c -o effects/audacity-EffectCategory.o `test -f 'effects/EffectCategory.cpp' || echo '$(srcdir)/'`effects/EffectCategory.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-EffectCategory.Tpo effects/$(DEPDIR)/audacity-EffectCategory.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/EffectCategory.cpp' object='effects/audacity-EffectCategory.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-EffectCategory.o `test -f 'effects/EffectCategory.cpp' || echo '$(srcdir)/'`effects/EffectCategory.cpp
-
-effects/audacity-EffectCategory.obj: effects/EffectCategory.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-EffectCategory.obj -MD -MP -MF effects/$(DEPDIR)/audacity-EffectCategory.Tpo -c -o effects/audacity-EffectCategory.obj `if test -f 'effects/EffectCategory.cpp'; then $(CYGPATH_W) 'effects/EffectCategory.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/EffectCategory.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-EffectCategory.Tpo effects/$(DEPDIR)/audacity-EffectCategory.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/EffectCategory.cpp' object='effects/audacity-EffectCategory.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-EffectCategory.obj `if test -f 'effects/EffectCategory.cpp'; then $(CYGPATH_W) 'effects/EffectCategory.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/EffectCategory.cpp'; fi`
 
 effects/audacity-EffectManager.o: effects/EffectManager.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-EffectManager.o -MD -MP -MF effects/$(DEPDIR)/audacity-EffectManager.Tpo -c -o effects/audacity-EffectManager.o `test -f 'effects/EffectManager.cpp' || echo '$(srcdir)/'`effects/EffectManager.cpp
@@ -5899,20 +5891,6 @@ effects/lv2/audacity-LV2Effect.obj: effects/lv2/LV2Effect.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/lv2/LV2Effect.cpp' object='effects/lv2/audacity-LV2Effect.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/lv2/audacity-LV2Effect.obj `if test -f 'effects/lv2/LV2Effect.cpp'; then $(CYGPATH_W) 'effects/lv2/LV2Effect.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/lv2/LV2Effect.cpp'; fi`
-
-effects/lv2/audacity-LV2PortGroup.o: effects/lv2/LV2PortGroup.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/lv2/audacity-LV2PortGroup.o -MD -MP -MF effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Tpo -c -o effects/lv2/audacity-LV2PortGroup.o `test -f 'effects/lv2/LV2PortGroup.cpp' || echo '$(srcdir)/'`effects/lv2/LV2PortGroup.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Tpo effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/lv2/LV2PortGroup.cpp' object='effects/lv2/audacity-LV2PortGroup.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/lv2/audacity-LV2PortGroup.o `test -f 'effects/lv2/LV2PortGroup.cpp' || echo '$(srcdir)/'`effects/lv2/LV2PortGroup.cpp
-
-effects/lv2/audacity-LV2PortGroup.obj: effects/lv2/LV2PortGroup.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/lv2/audacity-LV2PortGroup.obj -MD -MP -MF effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Tpo -c -o effects/lv2/audacity-LV2PortGroup.obj `if test -f 'effects/lv2/LV2PortGroup.cpp'; then $(CYGPATH_W) 'effects/lv2/LV2PortGroup.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/lv2/LV2PortGroup.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Tpo effects/lv2/$(DEPDIR)/audacity-LV2PortGroup.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/lv2/LV2PortGroup.cpp' object='effects/lv2/audacity-LV2PortGroup.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/lv2/audacity-LV2PortGroup.obj `if test -f 'effects/lv2/LV2PortGroup.cpp'; then $(CYGPATH_W) 'effects/lv2/LV2PortGroup.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/lv2/LV2PortGroup.cpp'; fi`
 
 audacity-NoteTrack.o: NoteTrack.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT audacity-NoteTrack.o -MD -MP -MF $(DEPDIR)/audacity-NoteTrack.Tpo -c -o audacity-NoteTrack.o `test -f 'NoteTrack.cpp' || echo '$(srcdir)/'`NoteTrack.cpp

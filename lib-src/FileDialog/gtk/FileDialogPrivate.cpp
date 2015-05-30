@@ -323,9 +323,31 @@ void FileDialog::DoSetSize(int x, int y, int width, int height, int sizeFlags )
 wxString FileDialog::GetPath() const
 {
    char *f = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(m_widget));
-   wxString path = wxConvFileName->cMB2WX(f);
+   wxFileName path(wxConvFileName->cMB2WX(f));
    g_free(f);
-   return path;
+
+   if (!path.HasExt())
+   {
+      if (!(m_dialogStyle & FD_NO_ADD_EXTENSION))
+      {  
+         int filterIndex = GetFilterIndex();
+         if (filterIndex != -1)
+         {
+            wxStringTokenizer tokenizer(m_patterns[filterIndex], wxT(";"));            
+            if (tokenizer.HasMoreTokens())
+            {
+               wxString extension = tokenizer.GetNextToken().AfterFirst(wxT('.'));
+               if (extension.Right(2) == wxT("*"))
+               {
+                  extension = wxEmptyString;
+               }
+               path.SetExt(extension);
+            }
+         }
+      }
+   }
+
+   return path.GetFullPath();
 }
 
 void FileDialog::GetFilenames(wxArrayString& files) const
@@ -395,9 +417,7 @@ void FileDialog::SetFilename(const wxString& name)
 
 wxString FileDialog::GetFilename() const
 {
-   char *f = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(m_widget));
-   wxFileName name(wxConvFileName->cMB2WX(f));
-   g_free(f);
+   wxFileName name = GetPath();
    return name.GetFullName();
 }
 
@@ -432,7 +452,8 @@ void FileDialog::SetWildcard(const wxString& wildCard)
       {
          GtkFileFilter* filter = gtk_file_filter_new();
          gtk_file_filter_set_name(filter, wxGTK_CONV(wildDescriptions[n]));
-         
+
+         m_patterns.Add(wildFilters[n]);
          wxStringTokenizer exttok(wildFilters[n], wxT(";"));
          while (exttok.HasMoreTokens())
          {

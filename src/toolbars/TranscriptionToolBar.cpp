@@ -439,11 +439,13 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 #ifdef EXPERIMENTAL_MIDI_OUT
       gAudioIO->SetMidiPlaySpeed(mPlaySpeed);
 #endif
-      p->GetControlToolBar()->PlayPlayRegion(playRegionStart,
-                                             playRegionEnd,
-                                             looped,
-                                             cutPreview,
-                                             mTimeTrack);
+      AudioIOStartStreamOptions options(p->GetDefaultPlayOptions());
+      options.playLooped = looped;
+      options.timeTrack = mTimeTrack;
+      p->GetControlToolBar()->PlayPlayRegion
+         (SelectedRegion(playRegionStart, playRegionEnd),
+          options,
+          cutPreview);
    }
 }
 

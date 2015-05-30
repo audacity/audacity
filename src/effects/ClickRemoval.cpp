@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class EffectClickRemoval
-\brief An Effect.
+\brief An Effect for removing clicks.
 
   Clicks are identified as small regions of high amplitude compared
   to the surrounding chunk of sound.  Anything sufficiently tall compared
@@ -22,101 +22,135 @@
   This file is intended to become part of Audacity.  You may modify
   and/or distribute it under the same terms as Audacity itself.
 
-*//****************************************************************//**
-
-\class ClickRemovalDialog
-\brief Dialog used with EffectClickRemoval
-
 *//*******************************************************************/
-
 
 #include "../Audacity.h"
 
 #include <math.h>
 
-#if defined(__WXMSW__) && !defined(__CYGWIN__)
-#include <float.h>
-#define finite(x) _finite(x)
-#endif
-
-#include <wx/msgdlg.h>
-#include <wx/textdlg.h>
-#include <wx/brush.h>
-#include <wx/image.h>
-#include <wx/dcmemory.h>
-#include <wx/statbox.h>
 #include <wx/intl.h>
+#include <wx/msgdlg.h>
+#include <wx/valgen.h>
+
+#include "../Prefs.h"
+#include "../widgets/valnum.h"
 
 #include "ClickRemoval.h"
-#include "../ShuttleGui.h"
-#include "../Envelope.h"
-// #include "../FFT.h"
-#include "../WaveTrack.h"
-#include "../Prefs.h"
 
-#define MIN_THRESHOLD   0
-#define MAX_THRESHOLD   900
-#define MIN_CLICK_WIDTH 0
-#define MAX_CLICK_WIDTH 40
+enum
+{
+   ID_Thresh = 10000,
+   ID_Width
+};
+
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name       Type     Key               Def      Min      Max      Scale
+Param( Threshold, int,     XO("Threshold"),  200,     0,       900,     1  );
+Param( Width,     int,     XO("Width"),      20,      0,       40,      1  );
+
+BEGIN_EVENT_TABLE(EffectClickRemoval, wxEvtHandler)
+    EVT_SLIDER(ID_Thresh, EffectClickRemoval::OnThreshSlider)
+    EVT_SLIDER(ID_Width, EffectClickRemoval::OnWidthSlider)
+    EVT_TEXT(ID_Thresh, EffectClickRemoval::OnThreshText)
+    EVT_TEXT(ID_Width, EffectClickRemoval::OnWidthText)
+END_EVENT_TABLE()
 
 EffectClickRemoval::EffectClickRemoval()
 {
+   mThresholdLevel = DEF_Threshold;
+   mClickWidth = DEF_Width;
+
+   SetLinearEffectFlag(false);
+
    windowSize = 8192;
    sep = 2049;
-
-   Init();
 }
 
 EffectClickRemoval::~EffectClickRemoval()
 {
 }
 
-bool EffectClickRemoval::Init()
+// IdentInterface implementation
+
+wxString EffectClickRemoval::GetSymbol()
 {
-   mThresholdLevel = gPrefs->Read(wxT("/Effects/ClickRemoval/ClickThresholdLevel"), 200);
-   if ((mThresholdLevel < MIN_THRESHOLD) || (mThresholdLevel > MAX_THRESHOLD)) {  // corrupted Prefs?
-      mThresholdLevel = 0;  //Off-skip
-      gPrefs->Write(wxT("/Effects/ClickRemoval/ClickThresholdLevel"), mThresholdLevel);
-   }
-   mClickWidth = gPrefs->Read(wxT("/Effects/ClickRemoval/ClickWidth"), 20);
-   if ((mClickWidth < MIN_CLICK_WIDTH) || (mClickWidth > MAX_CLICK_WIDTH)) {  // corrupted Prefs?
-      mClickWidth = 0;  //Off-skip
-      gPrefs->Write(wxT("/Effects/ClickRemoval/ClickWidth"), mClickWidth);
-   }
-   return gPrefs->Flush();
+   return CLICKREMOVAL_PLUGIN_SYMBOL;
 }
+
+wxString EffectClickRemoval::GetDescription()
+{
+   return XO("Click Removal is designed to remove clicks on audio tracks");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectClickRemoval::GetType()
+{
+   return EffectTypeProcess;
+}
+
+// EffectClientInterface implementation
+
+bool EffectClickRemoval::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_Threshold, mThresholdLevel);
+   parms.Write(KEY_Width, mClickWidth);
+
+   return true;
+}
+
+bool EffectClickRemoval::SetAutomationParameters(EffectAutomationParameters & parms)
+{
+   ReadAndVerifyInt(Threshold);
+   ReadAndVerifyInt(Width);
+
+   mThresholdLevel = Threshold;
+   mClickWidth = Width;
+
+   return true;
+}
+
+// Effect implementation
 
 bool EffectClickRemoval::CheckWhetherSkipEffect()
 {
    return ((mClickWidth == 0) || (mThresholdLevel == 0));
 }
 
-bool EffectClickRemoval::PromptUser()
+bool EffectClickRemoval::Startup()
 {
-   ClickRemovalDialog dlog(this, mParent);
-   dlog.mThresh = mThresholdLevel;
-   dlog.mWidth = mClickWidth;
+   wxString base = wxT("/Effects/ClickRemoval/");
 
-   dlog.TransferDataToWindow();
-   dlog.CentreOnParent();
-   dlog.ShowModal();
+   // Migrate settings from 2.1.0 or before
 
-   if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
+   // Already migrated, so bail
+   if (gPrefs->Exists(base + wxT("Migrated")))
+   {
+      return true;
+   }
 
-   mThresholdLevel = dlog.mThresh;
-   mClickWidth = dlog.mWidth;
+   // Load the old "current" settings
+   if (gPrefs->Exists(base))
+   {
+      mThresholdLevel = gPrefs->Read(base + wxT("ClickThresholdLevel"), 200);
+      if ((mThresholdLevel < MIN_Threshold) || (mThresholdLevel > MAX_Threshold))
+      {  // corrupted Prefs?
+         mThresholdLevel = 0;  //Off-skip
+      }
+      mClickWidth = gPrefs->Read(base + wxT("ClickWidth"), 20);
+      if ((mClickWidth < MIN_Width) || (mClickWidth > MAX_Width))
+      {  // corrupted Prefs?
+         mClickWidth = 0;  //Off-skip
+      }
 
-   gPrefs->Write(wxT("/Effects/ClickRemoval/ClickThresholdLevel"), mThresholdLevel);
-   gPrefs->Write(wxT("/Effects/ClickRemoval/ClickWidth"), mClickWidth);
+      SaveUserPreset(GetCurrentSettingsGroup());
 
-   return gPrefs->Flush();
-}
+      // Do not migrate again
+      gPrefs->Write(base + wxT("Migrated"), true);
+      gPrefs->Flush();
+   }
 
-bool EffectClickRemoval::TransferParameters( Shuttle & shuttle )
-{
-   shuttle.TransferInt(wxT("Threshold"),mThresholdLevel,0);
-   shuttle.TransferInt(wxT("Width"),mClickWidth,0);
    return true;
 }
 
@@ -153,7 +187,7 @@ bool EffectClickRemoval::Process()
    if (bGoodResult && !mbDidSomething) // Processing successful, but ineffective.
       wxMessageBox(
          wxString::Format(_("Algorithm not effective on this audio. Nothing changed.")),
-         this->GetEffectName(),
+         GetName(),
          wxOK | wxICON_ERROR);
 
    this->ReplaceProcessedTracks(bGoodResult && mbDidSomething);
@@ -166,7 +200,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
    {
       wxMessageBox(
          wxString::Format(_("Selection must be larger than %d samples."), windowSize/2),
-         this->GetEffectName(),
+         GetName(),
          wxOK | wxICON_ERROR);
       return false;
    }
@@ -294,49 +328,8 @@ bool EffectClickRemoval::RemoveClicks(sampleCount len, float *buffer)
    return bResult;
 }
 
-
-// WDR: class implementations
-
-//----------------------------------------------------------------------------
-// ClickRemovalDialog
-//----------------------------------------------------------------------------
-
-const static wxChar *numbers[] =
+void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
 {
-   wxT("0"), wxT("1"), wxT("2"), wxT("3"), wxT("4"),
-   wxT("5"), wxT("6"), wxT("7"), wxT("8"), wxT("9")
-};
-
-// Declare window functions
-
-#define ID_THRESH_TEXT     10001
-#define ID_THRESH_SLIDER   10002
-#define ID_WIDTH_TEXT      10003
-#define ID_WIDTH_SLIDER    10004
-
-// Declare ranges
-
-BEGIN_EVENT_TABLE(ClickRemovalDialog, EffectDialog)
-    EVT_SLIDER(ID_THRESH_SLIDER, ClickRemovalDialog::OnThreshSlider)
-    EVT_SLIDER(ID_WIDTH_SLIDER, ClickRemovalDialog::OnWidthSlider)
-    EVT_TEXT(ID_THRESH_TEXT, ClickRemovalDialog::OnThreshText)
-    EVT_TEXT(ID_WIDTH_TEXT, ClickRemovalDialog::OnWidthText)
-    EVT_BUTTON(ID_EFFECT_PREVIEW, ClickRemovalDialog::OnPreview)
-END_EVENT_TABLE()
-
-ClickRemovalDialog::ClickRemovalDialog(EffectClickRemoval *effect,
-                                       wxWindow *parent)
-:  EffectDialog(parent, _("Click Removal"), PROCESS_EFFECT),
-   mEffect(effect)
-{
-   Init();
-}
-
-void ClickRemovalDialog::PopulateOrExchange(ShuttleGui & S)
-{
-   wxTextValidator vld(wxFILTER_INCLUDE_CHAR_LIST);
-   vld.SetIncludes(wxArrayString(10, numbers));
-
    S.AddSpace(0, 5);
    S.SetBorder(10);
 
@@ -344,115 +337,84 @@ void ClickRemovalDialog::PopulateOrExchange(ShuttleGui & S)
    S.SetStretchyCol(2);
    {
       // Threshold
-      mThreshT = S.Id(ID_THRESH_TEXT).AddTextBox(_("Threshold (lower is more sensitive):"),
-                                                  wxT(""),
-                                                  10);
-      mThreshT->SetValidator(vld);
+      IntegerValidator<int> vldThresh(&mThresholdLevel);
+      vldThresh.SetRange(MIN_Threshold, MAX_Threshold);
+      mThreshT = S.Id(ID_Thresh).AddTextBox(_("Threshold (lower is more sensitive):"),
+                                            wxT(""),
+                                            10);
+      mThreshT->SetValidator(vldThresh);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mThreshS = S.Id(ID_THRESH_SLIDER).AddSlider(wxT(""),
-                                                  0,
-                                                  MAX_THRESHOLD);
+      mThreshS = S.Id(ID_Thresh).AddSlider(wxT(""), mThresholdLevel, MAX_Threshold, MIN_Threshold);
       mThreshS->SetName(_("Threshold"));
-      mThreshS->SetRange(MIN_THRESHOLD, MAX_THRESHOLD);
+      mThreshS->SetValidator(wxGenericValidator(&mThresholdLevel));
 #if defined(__WXGTK__)
       // Force a minimum size since wxGTK allows it to go to zero
       mThreshS->SetMinSize(wxSize(100, -1));
 #endif
 
       // Click width
-      mWidthT = S.Id(ID_WIDTH_TEXT).AddTextBox(_("Max Spike Width (higher is more sensitive):"),
-                                               wxT(""),
-                                               10);
-      mWidthT->SetValidator(vld);
+      IntegerValidator<int> vldWidth(&mClickWidth);
+      vldWidth.SetRange(MIN_Width, MAX_Width);
+      mWidthT = S.Id(ID_Width).AddTextBox(_("Max Spike Width (higher is more sensitive):"),
+                                          wxT(""),
+                                          10);
+      mWidthT->SetValidator(vldWidth);
 
       S.SetStyle(wxSL_HORIZONTAL);
-      mWidthS = S.Id(ID_WIDTH_SLIDER).AddSlider(wxT(""),
-                                                0,
-                                                MAX_CLICK_WIDTH);
+      mWidthS = S.Id(ID_Width).AddSlider(wxT(""), mClickWidth, MAX_Width, MIN_Width);
       mWidthS->SetName(_("Max Spike Width"));
-      mWidthS->SetRange(MIN_CLICK_WIDTH, MAX_CLICK_WIDTH);
+      mWidthS->SetValidator(wxGenericValidator(&mClickWidth));
 #if defined(__WXGTK__)
       // Force a minimum size since wxGTK allows it to go to zero
       mWidthS->SetMinSize(wxSize(100, -1));
 #endif
    }
    S.EndMultiColumn();
+
    return;
 }
 
-bool ClickRemovalDialog::TransferDataToWindow()
+bool EffectClickRemoval::TransferDataToWindow()
 {
-   mWidthS->SetValue(mWidth);
-   mThreshS->SetValue(mThresh);
-
-   mWidthT->SetValue(wxString::Format(wxT("%d"), mWidth));
-   mThreshT->SetValue(wxString::Format(wxT("%d"), mThresh));
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
 
    return true;
 }
 
-bool ClickRemovalDialog::TransferDataFromWindow()
+bool EffectClickRemoval::TransferDataFromWindow()
 {
-   mWidth = TrapLong(mWidthS->GetValue(), MIN_CLICK_WIDTH, MAX_CLICK_WIDTH);
-   mThresh = TrapLong(mThreshS->GetValue(), MIN_THRESHOLD, MAX_THRESHOLD);
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
 
    return true;
 }
 
-// WDR: handler implementations for ClickRemovalDialog
-
-void ClickRemovalDialog::OnWidthText(wxCommandEvent & WXUNUSED(event))
+void EffectClickRemoval::OnWidthText(wxCommandEvent & WXUNUSED(evt))
 {
-   long val;
-
-   mWidthT->GetValue().ToLong(&val);
-   mWidthS->SetValue(TrapLong(val, MIN_CLICK_WIDTH, MAX_CLICK_WIDTH));
+   mWidthT->GetValidator()->TransferFromWindow();
+   mWidthS->GetValidator()->TransferToWindow();
 }
 
-void ClickRemovalDialog::OnThreshText(wxCommandEvent & WXUNUSED(event))
+void EffectClickRemoval::OnThreshText(wxCommandEvent & WXUNUSED(evt))
 {
-   long val;
-
-   mThreshT->GetValue().ToLong(&val);
-   mThreshS->SetValue(TrapLong(val, MIN_THRESHOLD, MAX_THRESHOLD));
+   mThreshT->GetValidator()->TransferFromWindow();
+   mThreshS->GetValidator()->TransferToWindow();
 }
 
-void ClickRemovalDialog::OnWidthSlider(wxCommandEvent & WXUNUSED(event))
+void EffectClickRemoval::OnWidthSlider(wxCommandEvent & WXUNUSED(evt))
 {
-   mWidthT->SetValue(wxString::Format(wxT("%d"), mWidthS->GetValue()));
+   mWidthS->GetValidator()->TransferFromWindow();
+   mWidthT->GetValidator()->TransferToWindow();
 }
 
-void ClickRemovalDialog::OnThreshSlider(wxCommandEvent & WXUNUSED(event))
+void EffectClickRemoval::OnThreshSlider(wxCommandEvent & WXUNUSED(evt))
 {
-   mThreshT->SetValue(wxString::Format(wxT("%d"), mThreshS->GetValue()));
+   mThreshS->GetValidator()->TransferFromWindow();
+   mThreshT->GetValidator()->TransferToWindow();
 }
-
-void ClickRemovalDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
-{
-   TransferDataFromWindow();
-   mEffect->mThresholdLevel = mThresh;
-   mEffect->mClickWidth = mWidth;
-   mEffect->Preview();
-}
-
-// WDR: handler implementations for NoiseRemovalDialog
-/*
-void ClickRemovalDialog::OnPreview(wxCommandEvent &event)
-{
-  // Save & restore parameters around Preview, because we didn't do OK.
-  int oldLevel = mEffect->mThresholdLevel;
-  int oldWidth = mEffect->mClickWidth;
-  int oldSep = mEffect->sep;
-
-  mEffect->mThresholdLevel = m_pSlider->GetValue();
-  mEffect->mClickWidth = m_pSlider_width->GetValue();
-  //  mEffect->sep = m_pSlider_sep->GetValue();
-
-  mEffect->Preview();
-
-  mEffect->sep   = oldSep;
-  mEffect->mClickWidth = oldWidth;
-  mEffect->mThresholdLevel = oldLevel;
-}
-*/

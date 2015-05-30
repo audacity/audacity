@@ -120,7 +120,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(HostID);
          /* i18n-hint: (noun) */
-         mHost = S.TieChoice(_("Host") + wxString(wxT(":")),
+         mHost = S.TieChoice(_("Host":),
                              wxT("/MidiIO/Host"),
                              wxT(""),
                              mHostNames,
@@ -138,7 +138,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       S.StartMultiColumn(2);
       {
          S.Id(PlayID);
-         mPlay = S.AddChoice(_("Device") + wxString(wxT(":")),
+         mPlay = S.AddChoice(_("Device:"),
                              wxEmptyString,
                              &empty);
          int latency = gPrefs->Read(wxT("/MidiIO/OutputLatency"),
@@ -156,13 +156,13 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       S.StartMultiColumn(2);
       {
          S.Id(RecordID);
-         mRecord = S.AddChoice(_("Device") + wxString(wxT(":")),
+         mRecord = S.AddChoice(_("Device:"),
                                wxEmptyString,
                                &empty);
 
          S.Id(ChannelsID);
          /*
-         mChannels = S.AddChoice(_("Channels") + wxString(wxT(":")),
+         mChannels = S.AddChoice(_("Channels:"),
                                  wxEmptyString,
                                  &empty);
          */

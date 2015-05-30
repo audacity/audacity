@@ -31,7 +31,8 @@
 
 typedef enum
 {
-   PluginTypeNone,
+   PluginTypeNone = -1,          // 2.1.0 placeholder entries...not used by 2.1.1 or greater
+   PluginTypeStub,               // Used for plugins that have not yet been registered
    PluginTypeEffect,
    PluginTypeExporter,
    PluginTypeImporter,
@@ -45,7 +46,7 @@ public:
    PluginDescriptor();
    virtual ~PluginDescriptor();
 
-   bool IsInstantiated();
+   bool IsInstantiated() const;
    IdentInterface *GetInstance();
    void SetInstance(IdentInterface *instance);
 
@@ -55,16 +56,16 @@ public:
    // All plugins
 
    // These return untranslated strings
+   const wxString & GetID() const;
    const wxString & GetProviderID() const;
    const wxString & GetPath() const;
    const wxString & GetSymbol() const;
 
-   // These return translated strings (if available)
-   const wxString & GetID() const;
-   wxString GetName() const;
-   wxString GetVersion() const;
-   wxString GetVendor() const;
-   wxString GetDescription() const;
+   // These return translated strings (if available and if requested)
+   wxString GetName(bool translate = true) const;
+   wxString GetVersion(bool translate = true) const;
+   wxString GetVendor(bool translate = true) const;
+   wxString GetDescription(bool translate = true) const;
    bool IsEnabled() const;
    bool IsValid() const;
 
@@ -74,7 +75,7 @@ public:
    void SetPath(const wxString & path);
    void SetSymbol(const wxString & symbol);
 
-   // These should be passed an untranslated value wrapped in wxTRANSLATE() so
+   // These should be passed an untranslated value wrapped in XO() so
    // the value will still be extracted for translation
    void SetName(const wxString & name);
    void SetVersion(const wxString & version);
@@ -156,13 +157,11 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-WX_DECLARE_STRING_HASH_MAP(wxArrayString, ArrayStringMap);
-
-//WX_DECLARE_STRING_HASH_MAP(PluginDescriptor, PluginMap);
 typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
 typedef wxArrayString PluginIDList;
 
+class ProviderMap;
 class PluginRegistrationDialog;
 
 class PluginManager : public PluginManagerInterface
@@ -173,15 +172,18 @@ public:
 
    // PluginManagerInterface implementation
 
-   const PluginID & RegisterModulePlugin(ModuleInterface *module);
-   const PluginID & RegisterEffectPlugin(ModuleInterface *provider, EffectIdentInterface *effect);
-   const PluginID & RegisterImporterPlugin(ModuleInterface *provider, ImporterInterface *importer);
+   virtual bool IsPluginRegistered(const PluginID & ID);
 
-   void FindFilesInPathList(const wxString & pattern,
-                            const wxArrayString & pathList,
-                            wxArrayString & files,
-                            bool directories = false);
+   virtual const PluginID & RegisterPlugin(ModuleInterface *module);
+   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect);
+   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer);
 
+   virtual void FindFilesInPathList(const wxString & pattern,
+                                    const wxArrayString & pathList,
+                                    wxArrayString & files,
+                                    bool directories = false);
+
+   virtual bool HasSharedConfigGroup(const PluginID & ID, const wxString & group);
    virtual bool GetSharedConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetSharedConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T(""));
@@ -201,6 +203,7 @@ public:
    virtual bool RemoveSharedConfigSubgroup(const PluginID & ID, const wxString & group);
    virtual bool RemoveSharedConfig(const PluginID & ID, const wxString & group, const wxString & key);
 
+   virtual bool HasPrivateConfigGroup(const PluginID & ID, const wxString & group);
    virtual bool GetPrivateConfigSubgroups(const PluginID & ID, const wxString & group, wxArrayString & subgroups);
 
    virtual bool GetPrivateConfig(const PluginID & ID, const wxString & group, const wxString & key, wxString & value, const wxString & defval = _T(""));
@@ -243,9 +246,6 @@ public:
    const PluginDescriptor *GetFirstPluginForEffectType(EffectType type);
    const PluginDescriptor *GetNextPluginForEffectType(EffectType type);
 
-   bool IsRegistered(const PluginID & ID);
-   void RegisterPlugin(const wxString & type, const wxString & path);
-
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
 
@@ -254,10 +254,15 @@ public:
    // Returns translated string
    wxString GetName(const PluginID & ID);
    IdentInterface *GetInstance(const PluginID & ID);
-   void SetInstance(const PluginID & ID, IdentInterface *instance);  // TODO: Remove after conversion
 
-   // 
-   const PluginID & RegisterLegacyEffectPlugin(EffectIdentInterface *effect);
+   void CheckForUpdates();
+
+   bool ShowManager(wxWindow *parent, EffectType type = EffectTypeNone);
+
+   // Here solely for the purpose of Nyquist Workbench until
+   // a better solution is devised.
+   const PluginID & RegisterPlugin(EffectIdentInterface *effect);
+   void UnregisterPlugin(const PluginID & ID);
 
 private:
    void Load();
@@ -265,14 +270,11 @@ private:
    void Save();
    void SaveGroup(PluginType type);
 
-   void CheckForUpdates();
-   void DisableMissing();
-   wxArrayString IsNewOrUpdated(const wxArrayString & paths);
-
    PluginDescriptor & CreatePlugin(const PluginID & id, IdentInterface *ident, PluginType type);
 
    wxFileConfig *GetSettings();
 
+   bool HasGroup(const wxString & group);
    bool GetSubgroups(const wxString & group, wxArrayString & subgroups);
 
    bool GetConfig(const wxString & key, wxString & value, const wxString & defval = L"");
@@ -289,7 +291,7 @@ private:
    bool SetConfig(const wxString & key, const double & value);
    bool SetConfig(const wxString & key, const sampleCount & value);
 
-   wxString SettingsID(const PluginID & ID);
+   wxString SettingsPath(const PluginID & ID, bool shared);
    wxString SharedGroup(const PluginID & ID, const wxString & group);
    wxString SharedKey(const PluginID & ID, const wxString & group, const wxString & key);
    wxString PrivateGroup(const PluginID & ID, const wxString & group);

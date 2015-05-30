@@ -54,6 +54,7 @@ array of Ruler::Label.
 *//******************************************************************/
 
 #include "../Audacity.h"
+#include "Ruler.h"
 
 #include <math.h>
 
@@ -61,26 +62,34 @@ array of Ruler::Label.
 #include <wx/dcmemory.h>
 #include <wx/dcbuffer.h>
 #include <wx/settings.h>
+#include <wx/menu.h>
+#include <wx/menuitem.h>
+#include <wx/tooltip.h>
 
 #include "../AudioIO.h"
 #include "../Internat.h"
 #include "../Project.h"
-#include "Ruler.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../Experimental.h"
 #include "../TimeTrack.h"
-#include <wx/tooltip.h>
+#include "../TrackPanel.h"
+#include "../Menus.h"
+#include "../Prefs.h"
+#include "../Snap.h"
 
 #define max(a,b)  ( (a<b)?b:a )
 
-#define SELECT_TOLERANCE_PIXEL 10
+#define SELECT_TOLERANCE_PIXEL 4
+#define QUICK_PLAY_SNAP_PIXEL 4     // pixel tolerance for snap guides
 
 #define PLAY_REGION_TRIANGLE_SIZE 6
 #define PLAY_REGION_RECT_WIDTH 1
 #define PLAY_REGION_RECT_HEIGHT 3
 #define PLAY_REGION_GLOBAL_OFFSET_Y 7
+
+#define kTopInset 4
 
 //
 // Ruler
@@ -146,6 +155,8 @@ Ruler::Ruler()
    mGridLineLength = 0;
    mMajorGrid = false;
    mMinorGrid = false;
+
+   mTwoTone = false;
 }
 
 Ruler::~Ruler()
@@ -163,6 +174,11 @@ Ruler::~Ruler()
       delete[] mMinorLabels;
    if (mMinorMinorLabels)
       delete[] mMinorMinorLabels;
+}
+
+void Ruler::SetTwoTone(bool twoTone)
+{
+   mTwoTone = twoTone;
 }
 
 void Ruler::SetFormat(RulerFormat format)
@@ -725,6 +741,7 @@ void Ruler::Tick(int pos, double d, bool major, bool minor)
    else
       label = &mMinorMinorLabels[mNumMinorMinor++];
 
+   label->value = d;
    label->pos = pos;
    label->lx = mLeft - 1000; // don't display
    label->ly = mTop - 1000;  // don't display
@@ -835,6 +852,7 @@ void Ruler::TickCustom(int labelIdx, bool major, bool minor)
    else
       label = &mMinorMinorLabels[labelIdx];
 
+   label->value = 0.0;
    pos = label->pos;         // already stored in label class
    l   = label->text;
    label->lx = mLeft - 1000; // don't display
@@ -858,7 +876,6 @@ void Ruler::TickCustom(int labelIdx, bool major, bool minor)
       }
       else {
 
-         strTop =-strH-mLead;
          strTop = mTop- mLead+4;// More space was needed...
          mMaxHeight = max(mMaxHeight, strH + 6);
       }
@@ -1247,10 +1264,8 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
 
 #ifdef EXPERIMENTAL_THEMING
    mDC->SetPen(mPen);
-   mDC->SetTextForeground(mTickColour);
 #else
    mDC->SetPen(*wxBLACK_PEN);
-   mDC->SetTextForeground(*wxBLACK);
 #endif
 
    // Draws a long line the length of the ruler.
@@ -1267,7 +1282,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
             mDC->DrawLine(mLeft, mTop, mLeft, mBottom+1);
          else
          {
-            // These calculations tappear to be wrong, and to never have been used (so not tested) prior to MixerBoard.
+            // These calculations appear to be wrong, and to never have been used (so not tested) prior to MixerBoard.
             //    mDC->DrawLine(mRect.x-mRect.width, mTop, mRect.x-mRect.width, mBottom+1);
             const int nLineX = mRight - 1;
             mDC->DrawLine(nLineX, mTop, nLineX, mBottom+1);
@@ -1308,10 +1323,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
          }
       }
 
-      if (mMajorLabels[i].text != wxT(""))
-         mDC->DrawText(mMajorLabels[i].text,
-                       mMajorLabels[i].lx,
-                       mMajorLabels[i].ly);
+      mMajorLabels[i].Draw(*mDC, mTwoTone);
    }
 
    if(mbMinor == true) {
@@ -1339,10 +1351,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
                                 mRight, mTop + pos);
             }
          }
-         if (mMinorLabels[i].text != wxT(""))
-            mDC->DrawText(mMinorLabels[i].text,
-                          mMinorLabels[i].lx,
-                          mMinorLabels[i].ly);
+         mMinorLabels[i].Draw(*mDC, mTwoTone);
       }
    }
 
@@ -1374,9 +1383,7 @@ void Ruler::Draw(wxDC& dc, TimeTrack* timetrack)
                                 mRight, mTop + pos);
             }
          }
-         mDC->DrawText(mMinorMinorLabels[i].text,
-                       mMinorMinorLabels[i].lx,
-                       mMinorMinorLabels[i].ly);
+         mMinorMinorLabels[i].Draw(*mDC, mTwoTone);
       }
    }
 }
@@ -1445,14 +1452,9 @@ int Ruler::FindZero(Label * label, const int len)
 {
    int i = 0;
    double d = 1.0;   // arbitrary
-   wxString s;
 
    do {
-      s = label[i].text;
-      if(!s.IsEmpty())
-         s.ToDouble(&d);
-      else
-         d = 1.0; // arbitrary, looking for some text here
+      d = label[i].value;
       i++;
    } while( (i < len) && (d != 0.0) );
 
@@ -1467,6 +1469,7 @@ int Ruler::GetZeroPosition()
    int zero;
    if((zero = FindZero(mMajorLabels, mNumMajor)) < 0)
       zero = FindZero(mMinorLabels, mNumMinor);
+   // PRL: don't consult minor minor??
    return zero;
 }
 
@@ -1519,6 +1522,22 @@ void Ruler::SetCustomMinorLabels(wxArrayString *label, int numLabel, int start, 
    //Remember: delete majorlabels....
 }
 
+void Ruler::Label::Draw(wxDC&dc, bool twoTone) const
+{
+   if (text != wxT("")) {
+      bool altColor = twoTone && value < 0.0;
+
+#ifdef EXPERIMENTAL_THEMING
+      // TODO:  handle color distinction
+      mDC->SetTextForeground(mTickColour);
+#else
+      dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
+#endif
+
+      dc.DrawText(text, lx, ly);
+   }
+}
+
 //
 // RulerPanel
 //
@@ -1551,11 +1570,10 @@ void RulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
 
-#if defined(__WXGTK__)
-   dc.SetBackground(wxBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
+#if defined(__WXMSW__)
+   dc.Clear();
 #endif
 
-   dc.Clear();
    ruler.Draw(dc);
 }
 
@@ -1591,12 +1609,25 @@ void RulerPanel::DoSetSize(int x, int y,
 #include "../ViewInfo.h"
 #include "../AColor.h"
 
+enum {
+   OnToggleQuickPlayID = 7000,
+   OnSyncQuickPlaySelID,
+   OnTimelineToolTipID,
+   OnAutoScrollID,
+   OnLockPlayRegionID
+};
+
 BEGIN_EVENT_TABLE(AdornedRulerPanel, wxPanel)
    EVT_ERASE_BACKGROUND(AdornedRulerPanel::OnErase)
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
    EVT_MOUSE_EVENTS(AdornedRulerPanel::OnMouseEvents)
    EVT_MOUSE_CAPTURE_LOST(AdornedRulerPanel::OnCaptureLost)
+   EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
+   EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
+   EVT_MENU(OnTimelineToolTipID, AdornedRulerPanel::OnTimelineToolTips)
+   EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
+   EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
 END_EVENT_TABLE()
 
 AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
@@ -1613,9 +1644,15 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
    mCurPos = -1;
    mIndPos = -1;
    mIndType = -1;
+   mQuickPlayInd = false;
    mPlayRegionStart = -1;
+   mPlayRegionLock = false;
    mPlayRegionEnd = -1;
+   mOldPlayRegionStart = -1;
+   mOldPlayRegionEnd = -1;
+   mLeftDownClick = -1;
    mMouseEventState = mesNone;
+   mIsDragging = false;
 
    mBuffer = new wxBitmap( 1, 1 );
    mViewInfo = viewinfo;
@@ -1635,10 +1672,18 @@ AdornedRulerPanel::AdornedRulerPanel(wxWindow* parent,
    ruler.SetLabelEdges( false );
    ruler.SetFormat( Ruler::TimeFormat );
 
+   mSnapManager = NULL;
+   mIsSnapped = false;
+
    mIsRecording = false;
 
+   mTimelineToolTip = gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L); 
+   mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
+   mQuickPlayEnabled = gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L); 
+
+   UpdatePrefs();
+
 #if wxUSE_TOOLTIPS
-   RegenerateTooltips();
    wxToolTip::Enable(true);
 #endif
 
@@ -1655,15 +1700,42 @@ AdornedRulerPanel::~AdornedRulerPanel()
                         NULL,
                         this);
    delete mBuffer;
+
+   if (mSnapManager)
+      delete mSnapManager;
+}
+
+void AdornedRulerPanel::UpdatePrefs()
+{
+#ifdef EXPERIMENTAL_SCROLLING_LIMITS
+#ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
+   {
+      bool scrollBeyondZero = false;
+      gPrefs->Read(wxT("/GUI/ScrollBeyondZero"), &scrollBeyondZero, false);
+      ruler.SetTwoTone(scrollBeyondZero);
+   }
+#endif
+#endif
+   RegenerateTooltips();
 }
 
 void AdornedRulerPanel::RegenerateTooltips()
 {
 #if wxUSE_TOOLTIPS
-   if (mIsRecording)
-      this->SetToolTip(_("Timeline actions disabled during recording"));
-   else
-      this->SetToolTip(_("Timeline - Quick Play enabled"));
+   if (mTimelineToolTip) {
+      if (mIsRecording) {
+         this->SetToolTip(_("Timeline actions disabled during recording"));
+      }
+      else if (!mQuickPlayEnabled) {
+         this->SetToolTip(_("Quick-Play disabled"));
+      }
+      else {
+         this->SetToolTip(_("Quick-Play enabled"));
+      }
+   }
+   else {
+      this->SetToolTip(NULL);
+   }
 #endif
 }
 
@@ -1710,6 +1782,11 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       DoDrawIndicator(&dc);
    }
 
+   if (mQuickPlayInd)
+   {
+      DrawQuickPlayIndicator(&dc, false);
+   }
+
    DoDrawMarks(&dc, true);
 
    if (mViewInfo->selectedRegion.isPoint())
@@ -1752,8 +1829,14 @@ double AdornedRulerPanel::Pos2Time(int p)
 
 int AdornedRulerPanel::Time2Pos(double t)
 {
-   return mLeftOffset + (int)((t-mViewInfo->h) * mViewInfo->zoom + 0.5);
+   return mLeftOffset + Seconds2Pixels(t-mViewInfo->h);
 }
+
+int AdornedRulerPanel::Seconds2Pixels(double t)
+{
+   return (int)(t * mViewInfo->zoom + 0.5);
+}
+
 
 bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
 {
@@ -1773,128 +1856,415 @@ void AdornedRulerPanel::OnMouseEvents(wxMouseEvent &evt)
    if (mIsRecording)
       return;
 
-   bool isWithinStart = IsWithinMarker(evt.GetX(), mPlayRegionStart);
-   bool isWithinEnd = IsWithinMarker(evt.GetX(), mPlayRegionEnd);
+   // Store the initial play region state
+   if(mMouseEventState == mesNone) {
+      mOldPlayRegionStart = mPlayRegionStart;
+      mOldPlayRegionEnd = mPlayRegionEnd;
+      mPlayRegionLock = mProject->IsPlayRegionLocked();
+   }
 
-   mLastMouseX = evt.GetX();
+   // Keep Quick-Play within usable track area.
+   TrackPanel *tp = mProject->GetTrackPanel();
+   int mousePosX, width, height;
+   tp->GetTracksUsableArea(&width, &height);
+   mousePosX = wxMax(evt.GetX(), tp->GetLeftOffset());
+   mousePosX = wxMin(mousePosX, tp->GetLeftOffset() + width - 1);
 
-   if (evt.Leaving())
-   {
+   bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegionStart);
+   bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegionEnd);
+   bool isWithinClick = (mLeftDownClick >= 0) && IsWithinMarker(mousePosX, mLeftDownClick);
+   bool canDragSel = !mPlayRegionLock && mPlayRegionDragsSelection;
+
+   double t0 = mProject->GetTracks()->GetStartTime();
+   double t1 = mProject->GetTracks()->GetEndTime();
+   double sel0 = mProject->GetSel0();
+   double sel1 = mProject->GetSel1();
+
+   mLastMouseX = mousePosX;
+   mQuickPlayPos = Pos2Time(mousePosX);
+   // If not looping, restrict selection to end of project
+   if (!evt.ShiftDown()) mQuickPlayPos = wxMin(t1, mQuickPlayPos);
+
+
+   if (evt.Leaving()) {
 #if defined(__WXMAC__)
       // We must install the cursor ourselves since the window under
       // the mouse is no longer this one and wx2.8.12 makes that check.
       // Should re-evaluate with wx3.
       wxSTANDARD_CURSOR->MacInstall();
 #endif
-   }
-   else if (isWithinStart || isWithinEnd)
-      SetCursor(wxCursor(wxCURSOR_SIZEWE));
-   else
-      SetCursor(wxCursor(wxCURSOR_HAND));
 
-   double mouseTime = Pos2Time(evt.GetX());
-   if (mouseTime < 0.0) {
-      mouseTime = 0.0;
+      mQuickPlayInd = false;
+      wxClientDC cdc(this);
+      DrawQuickPlayIndicator(&cdc, true);
+      Refresh(false);
    }
+   else if (mQuickPlayEnabled) {
+      mQuickPlayInd = true;
+      Refresh(false);
+
+      if (isWithinStart || isWithinEnd) {
+         SetCursor(wxCursor(wxCURSOR_SIZEWE));
+      }
+      else {
+         SetCursor(wxCursor(wxCURSOR_HAND));
+      }
+   }
+   else {
+      SetCursor(wxCursor(wxCURSOR_HAND));
+   }
+
+
+   if (evt.RightDown() && !(evt.LeftIsDown())) {
+      ShowMenu(evt.GetPosition());
+      if (HasCapture())
+         ReleaseMouse();
+   }
+
+   if (!mQuickPlayEnabled)
+      return;
+
+
+   HandleSnapping();
 
    if (evt.LeftDown())
    {
-      mButtonDownMousePos = evt.GetX();
-
-      if (isWithinStart && isWithinEnd)
-      {
-         // Both could be selected, check which marker is nearer
-         if (fabs(mouseTime-mPlayRegionStart) < fabs(mouseTime-mPlayRegionEnd))
-            mMouseEventState = mesDraggingPlayRegionStart;
-         else
-            mMouseEventState = mesDraggingPlayRegionEnd;
-      } else if (isWithinStart)
-         mMouseEventState = mesDraggingPlayRegionStart;
-      else if (isWithinEnd)
-         mMouseEventState = mesDraggingPlayRegionEnd;
-      else {
-         // First, we enter "click" mode to avoid selecting a small range
-         // accidentially
-         mMouseEventState = mesSelectingPlayRegionClick;
-         mPlayRegionStart = mouseTime;
-         mPlayRegionEnd = mouseTime;
-         Refresh();
+      // Temporarily unlock locked play region
+      if (mPlayRegionLock && evt.LeftDown()) {
+         //mPlayRegionLock = true;
+         mProject->OnUnlockPlayRegion();
       }
 
+      mLeftDownClick = mQuickPlayPos;
+      isWithinClick = IsWithinMarker(mousePosX, mLeftDownClick);
+
+      if (isWithinStart || isWithinEnd) {
+         // If Quick-Play is playing from a point, we need to treat it as a click
+         // not as dragging.
+         if (mOldPlayRegionStart == mOldPlayRegionEnd)
+            mMouseEventState = mesSelectingPlayRegionClick;
+         // otherwise check which marker is nearer
+         else {
+            if (fabs(mQuickPlayPos - mOldPlayRegionStart) < fabs(mQuickPlayPos - mOldPlayRegionEnd))
+               mMouseEventState = mesDraggingPlayRegionStart;
+            else
+               mMouseEventState = mesDraggingPlayRegionEnd;
+         }
+      }
+      else {
+         // Clicked but not yet dragging
+         mMouseEventState = mesSelectingPlayRegionClick;
+      }
+
+      // Check if we are dragging BEFORE CaptureMouse.
+      if (mMouseEventState != mesNone)
+         SetCursor(wxCursor(wxCURSOR_SIZEWE));
       CaptureMouse();
    }
 
-   switch (mMouseEventState)
-   {
-   case mesNone:
-      // do nothing
-      break;
-   case mesDraggingPlayRegionStart:
-      mPlayRegionStart = mouseTime;
-      Refresh();
-      break;
-   case mesDraggingPlayRegionEnd:
-      mPlayRegionEnd = mouseTime;
-      Refresh();
-      break;
-   case mesSelectingPlayRegionClick:
-      if (abs(evt.GetX() - mButtonDownMousePos) > SELECT_TOLERANCE_PIXEL)
+
+   if (evt.LeftIsDown()) {
+      switch (mMouseEventState)
       {
-         // User moved mouse at least SELECT_TOLERANCE_PIXEL, so change
-         // from "click" mode to "range" mode to allow selecting a range
-         mMouseEventState = mesSelectingPlayRegionRange;
-         mPlayRegionEnd = mouseTime;
-         Refresh();
+      case mesNone:
+         // If close to either end of play region, snap to closest
+         if (isWithinStart || isWithinEnd) {
+            if (fabs(mQuickPlayPos - mOldPlayRegionStart) < fabs(mQuickPlayPos - mOldPlayRegionEnd))
+               mQuickPlayPos = mOldPlayRegionStart;
+            else
+               mQuickPlayPos = mOldPlayRegionEnd;
+         }
+         break;
+      case mesDraggingPlayRegionStart:
+         // Don't start dragging until beyond tollerance initial playback start
+         if (!mIsDragging && isWithinStart)
+            mQuickPlayPos = mOldPlayRegionStart;
+         else
+            mIsDragging = true;
+         // avoid accidental tiny selection
+         if (isWithinEnd)
+            mQuickPlayPos = mOldPlayRegionEnd;
+         mPlayRegionStart = mQuickPlayPos;
+         if (canDragSel) {
+            DragSelection();
+         }
+         break;
+      case mesDraggingPlayRegionEnd:
+         if (!mIsDragging && isWithinEnd)
+            mQuickPlayPos = mOldPlayRegionEnd;
+         else
+            mIsDragging = true;
+         if (isWithinStart)
+            mQuickPlayPos = mOldPlayRegionStart;
+         mPlayRegionEnd = mQuickPlayPos;
+         if (canDragSel) {
+            DragSelection();
+         }
+         break;
+      case mesSelectingPlayRegionClick:
+         // Don't start dragging until mouse is beyond tollerance of initial click.
+         if (isWithinClick || mLeftDownClick == -1) {
+            mQuickPlayPos = mLeftDownClick;
+            mPlayRegionStart = mLeftDownClick;
+            mPlayRegionEnd = mLeftDownClick;
+         }
+         else {
+            mMouseEventState = mesSelectingPlayRegionRange;
+         }
+         break;
+      case mesSelectingPlayRegionRange:
+         if (isWithinClick) {
+            mQuickPlayPos = mLeftDownClick;
+         }
+
+         if (mQuickPlayPos < mLeftDownClick) {
+            mPlayRegionStart = mQuickPlayPos;
+            mPlayRegionEnd = mLeftDownClick;
+         }
+         else {
+            mPlayRegionEnd = mQuickPlayPos;
+            mPlayRegionStart = mLeftDownClick;
+         }
+         if (canDragSel) {
+            DragSelection();
+         }
+         break;
       }
-      break;
-   case mesSelectingPlayRegionRange:
-      mPlayRegionEnd = mouseTime;
-      Refresh();
-      break;
    }
 
    if (evt.LeftUp())
    {
+      mQuickPlayInd = false;
+      wxClientDC cdc(this);
+      DrawQuickPlayIndicator(&cdc, true);
+
       if (HasCapture())
          ReleaseMouse();
 
-      if (mPlayRegionStart < 0 && mPlayRegionEnd >= 0)
-      {
-         // This makes no sense, remove play region
-         mPlayRegionStart = -1;
-         mPlayRegionEnd = -1;
-      }
-
-      if (mPlayRegionEnd < mPlayRegionStart)
-      {
-         // Swap values to make sure mPlayRegionStart > mPlayRegionEnd
+      if (mPlayRegionEnd < mPlayRegionStart) {
+         // Swap values to ensure mPlayRegionStart < mPlayRegionEnd
          double tmp = mPlayRegionStart;
          mPlayRegionStart = mPlayRegionEnd;
          mPlayRegionEnd = tmp;
       }
 
-      bool startPlaying = mPlayRegionStart >= 0 &&
-         (mMouseEventState == mesSelectingPlayRegionClick ||
-          mMouseEventState == mesSelectingPlayRegionRange);
+      // We want some audio in the selection, but we allow a dragged
+      // region to include selected white-space and space before audio start.
+      if (evt.ShiftDown() && (mPlayRegionStart == mPlayRegionEnd)) {
+         // Looping the selection or project.
+         // Disable if track selection is in white-space beyond end of tracks and
+         // play position is outside of track contents.
+         if (((sel1 < t0) || (sel0 > t1)) &&
+            ((mPlayRegionStart < t0) || (mPlayRegionStart > t1))) {
+            ClearPlayRegion();
+         }
+      }
+      // Disable if beyond end.
+      else if (mPlayRegionStart >= t1) {
+         ClearPlayRegion();
+      }
+      // Disable if empty selection before start.
+      // (allow Quick-Play region to include 'pre-roll' white space)
+      else if (((mPlayRegionEnd - mPlayRegionStart) > 0.0) && (mPlayRegionEnd < t0)) {
+         ClearPlayRegion();
+      }
 
-      mMouseEventState = mesNone;
+      // Start / Restart playback on left click.
+      bool startPlaying = (mPlayRegionStart >= 0);
 
-      if (startPlaying)
-      {
+      if (startPlaying) {
          ControlToolBar* ctb = mProject->GetControlToolBar();
          ctb->StopPlaying();
-         ctb->PlayCurrentRegion(evt.ShiftDown(), evt.ControlDown() );
+
+         bool loopEnabled = true;
+         double start, end;
+
+         if ((mPlayRegionEnd - mPlayRegionStart == 0.0) && evt.ShiftDown()) {
+            // Loop play a point will loop either a selection or the project.
+            if ((mPlayRegionStart > sel0) && (mPlayRegionStart < sel1)) {
+               // we are in a selection, so use the selection
+               start = sel0;
+               end = sel1;
+            } // not in a selection, so use the project
+            else {
+               start = t0;
+               end = t1;
+            }
+         }
+         else {
+            start = mPlayRegionStart;
+            end = mPlayRegionEnd;
+         }
+         // Looping a tiny selection may freeze, so just play it once.
+         loopEnabled = ((end - start) > 0.001)? true : false;
+
+         AudioIOStartStreamOptions options(mProject->GetDefaultPlayOptions());
+         options.playLooped = (loopEnabled && evt.ShiftDown());
+
+         if (!evt.CmdDown())  // Use CmdDown rather than ControlDown. See bug 746
+            options.pStartTime = &mPlayRegionStart;
+         else
+            options.timeTrack = NULL;
+
+         ctb->PlayPlayRegion((SelectedRegion(start, end)),
+                             options,
+                             evt.CmdDown(),
+                             false,
+                             true);
+
+         mPlayRegionStart = start;
+         mPlayRegionEnd = end;
+         DoDrawPlayRegion(&cdc);
+      }
+
+      mMouseEventState = mesNone;
+      mIsDragging = false;
+      mLeftDownClick = -1;
+
+      if (mPlayRegionLock) {
+         // Restore Locked Play region
+         SetPlayRegion(mOldPlayRegionStart, mOldPlayRegionEnd);
+         mProject->OnLockPlayRegion();
+         // and release local lock
+         mPlayRegionLock = false;
       }
    }
 }
 
 void AdornedRulerPanel::OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(evt))
 {
+   wxClientDC cdc(this);
+   DrawQuickPlayIndicator(&cdc, true);
+
    wxMouseEvent e(wxEVT_LEFT_UP);
    e.m_x = mLastMouseX;
    OnMouseEvents(e);
 }
 
+
+// Pop-up menu
+
+void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
+{
+   wxMenu *rulerMenu = new wxMenu();
+
+   if (mQuickPlayEnabled)
+      rulerMenu->Append(OnToggleQuickPlayID, _("Disable Quick-Play"));
+   else
+      rulerMenu->Append(OnToggleQuickPlayID, _("Enable Quick-Play"));
+
+   wxMenuItem *dragitem;
+   if (mPlayRegionDragsSelection && !mProject->IsPlayRegionLocked())
+      dragitem = rulerMenu->Append(OnSyncQuickPlaySelID, _("Disable dragging selection"));
+   else
+      dragitem = rulerMenu->Append(OnSyncQuickPlaySelID, _("Enable dragging selection"));
+   dragitem->Enable(mQuickPlayEnabled && !mProject->IsPlayRegionLocked());
+
+#if wxUSE_TOOLTIPS
+   if (mTimelineToolTip)
+      rulerMenu->Append(OnTimelineToolTipID, _("Disable Timeline Tooltips"));
+   else
+      rulerMenu->Append(OnTimelineToolTipID, _("Enable Timeline Tooltips"));
+#endif
+
+   if (mViewInfo->bUpdateTrackIndicator)
+      rulerMenu->Append(OnAutoScrollID, _("Do not scroll while playing"));
+   else
+      rulerMenu->Append(OnAutoScrollID, _("Update display while playing"));
+
+   wxMenuItem *prlitem;
+   if (!mProject->IsPlayRegionLocked())
+      prlitem = rulerMenu->Append(OnLockPlayRegionID, _("Lock Play Region"));
+   else
+      prlitem = rulerMenu->Append(OnLockPlayRegionID, _("Unlock Play Region"));
+   prlitem->Enable(mProject->IsPlayRegionLocked() || (mPlayRegionStart != mPlayRegionEnd));
+
+   PopupMenu(rulerMenu, pos);
+
+   delete rulerMenu;
+   // dismiss and clear Quick-Play indicator
+   mQuickPlayInd = false;
+   wxClientDC cdc(this);
+   DrawQuickPlayIndicator(&cdc, true);
+}
+
+void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent& evt)
+{
+   mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
+   gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled);
+   gPrefs->Flush();
+   RegenerateTooltips();
+}
+
+void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent& evt)
+{
+   mPlayRegionDragsSelection = (mPlayRegionDragsSelection)? false : true;
+   gPrefs->Write(wxT("/QuickPlay/DragSelection"), mPlayRegionDragsSelection);
+   gPrefs->Flush();
+}
+
+void AdornedRulerPanel::DragSelection()
+{
+   if (mPlayRegionStart < mPlayRegionEnd) {
+      mProject->SetSel0(mPlayRegionStart);
+      mProject->SetSel1(mPlayRegionEnd);
+   }
+   else {
+      mProject->SetSel0(mPlayRegionEnd);
+      mProject->SetSel1(mPlayRegionStart);
+   }
+   mProject->GetTrackPanel()->TrackPanel::DisplaySelection();
+   mProject->GetTrackPanel()->TrackPanel::Refresh(false);
+}
+
+
+void AdornedRulerPanel::HandleSnapping()
+{
+   if (mSnapManager) {
+      // Create a new snap manager in case any snap-points have changed
+      delete mSnapManager;
+   }
+   mSnapManager = new SnapManager(mProject->GetTracks(), NULL,
+                                 mViewInfo->zoom,
+                                 QUICK_PLAY_SNAP_PIXEL);
+   bool snappedPoint, snappedTime;
+   mIsSnapped = (mSnapManager->Snap(NULL, mQuickPlayPos, false,
+                                    &mQuickPlayPos, &snappedPoint, &snappedTime));
+}
+
+
+void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent& evt)
+{
+   mTimelineToolTip = (mTimelineToolTip)? false : true;
+   gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
+   gPrefs->Flush();
+#if wxUSE_TOOLTIPS
+   RegenerateTooltips();
+#endif
+}
+
+
+void AdornedRulerPanel::OnAutoScroll(wxCommandEvent& evt)
+{
+   if (mViewInfo->bUpdateTrackIndicator)
+      gPrefs->Write(wxT("/GUI/AutoScroll"), false);
+   else
+      gPrefs->Write(wxT("/GUI/AutoScroll"), true);
+   mProject->UpdatePrefs();
+   gPrefs->Flush();
+}
+
+
+void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent& evt)
+{
+   if (mProject->IsPlayRegionLocked())
+      mProject->OnUnlockPlayRegion();
+   else
+      mProject->OnLockPlayRegion();
+}
+
+
+// Draws the horizontal <===>
 void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
 {
    double start, end;
@@ -2054,10 +2424,10 @@ void AdornedRulerPanel::DrawIndicator( double pos, bool rec )
    Refresh(false);
 }
 
+// Draws the play/recording position indicator.
 void AdornedRulerPanel::DoDrawIndicator(wxDC * dc)
 {
-   if( mIndType < 0 )
-   {
+   if (mIndType < 0) {
       return;
    }
 
@@ -2076,6 +2446,35 @@ void AdornedRulerPanel::DoDrawIndicator(wxDC * dc)
    dc->DrawPolygon( 3, tri );
 }
 
+// Draws the vertical line and green triangle indicating the Qick Play cursor position.
+void AdornedRulerPanel::DrawQuickPlayIndicator(wxDC * dc, bool clear)
+{
+   TrackPanel *tp = mProject->GetTrackPanel();
+   wxClientDC cdc(tp);
+
+   double latestEnd = wxMax(mProject->GetTracks()->GetEndTime(), mProject->GetSel1());
+   if (clear || (mQuickPlayPos >= latestEnd)) {
+      tp->TrackPanel::DrawQuickPlayIndicator(cdc, -1);
+      return;
+   }
+
+   int indsize = 4;
+   int x = mLeftOffset + int((mQuickPlayPos - mViewInfo->h) * mViewInfo->zoom);
+
+   wxPoint tri[3];
+   tri[0].x = -indsize;
+   tri[0].y = 1;
+   tri[1].x = indsize;
+   tri[1].y = 1;
+   tri[2].x = 0;
+   tri[2].y = ( indsize * 3 ) / 2 + 1;
+
+   AColor::IndicatorColor( dc, true);
+   dc->DrawPolygon( 3, tri, x );
+
+   tp->TrackPanel::DrawQuickPlayIndicator(cdc, x);
+}
+
 void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
                                       double playRegionEnd)
 {
@@ -2092,8 +2491,12 @@ void AdornedRulerPanel::SetPlayRegion(double playRegionStart,
 
 void AdornedRulerPanel::ClearPlayRegion()
 {
+   ControlToolBar* ctb = mProject->GetControlToolBar();
+   ctb->StopPlaying();
+
    mPlayRegionStart = -1;
    mPlayRegionEnd = -1;
+   mQuickPlayInd = false;
    Refresh();
 }
 

@@ -237,9 +237,7 @@ void MeterToolBar::OnSize( wxSizeEvent & event) //WXUNUSED(event) )
 
 bool MeterToolBar::Expose( bool show )
 {
-   bool updated = false;
    if( show ) {
-      Meter *meter;
       if( mPlayMeter ) {
          mProject->SetPlaybackMeter( mPlayMeter );
       }

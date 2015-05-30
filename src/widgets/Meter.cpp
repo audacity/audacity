@@ -1884,15 +1884,16 @@ void *Meter::SaveState()
 
 void Meter::RestoreState(void *state)
 {
-   mMonitoring = ((bool *)state)[0];
-   mActive = ((bool *)state)[1];
+   bool *s = (bool *)state;
+   mMonitoring = s[0];
+   mActive = s[1];
 
    if (mActive)
    {
       mTimer.Start(1000 / mMeterRefreshRate);
    }
 
-   delete [] state;
+   delete [] s;
 }
 
 //
@@ -1965,6 +1966,7 @@ void Meter::OnPreferences(wxCommandEvent & WXUNUSED(event))
    // This determines where it pops up.
 
    wxDialog dlg(GetActiveProject(), wxID_ANY, title);
+   dlg.SetName(dlg.GetTitle());
    ShuttleGui S(&dlg, eIsCreating);
    S.StartVerticalLay();
    {

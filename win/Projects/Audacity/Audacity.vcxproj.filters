@@ -336,9 +336,6 @@
     <ClCompile Include="..\..\..\src\effects\Effect.cpp">
       <Filter>src/effects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\effects\EffectCategory.cpp">
-      <Filter>src/effects</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\effects\EffectManager.cpp">
       <Filter>src/effects</Filter>
     </ClCompile>
@@ -792,9 +789,6 @@
     <ClCompile Include="..\..\..\src\effects\lv2\LV2Effect.cpp">
       <Filter>src/effects/lv2</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\effects\lv2\LV2PortGroup.cpp">
-      <Filter>src/effects/lv2</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\SseMathFuncs.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -838,6 +832,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\SelectedRegion.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Diags.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ViewInfo.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1122,9 +1122,6 @@
       <Filter>src/effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\Effect.h">
-      <Filter>src/effects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\effects\EffectCategory.h">
       <Filter>src/effects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\effects\EffectManager.h">
@@ -1598,9 +1595,6 @@
     <ClInclude Include="..\..\..\src\effects\lv2\LV2Effect.h">
       <Filter>src/effects/lv2</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\effects\lv2\LV2PortGroup.h">
-      <Filter>src/effects/lv2</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\SseMathFuncs.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1677,6 +1671,12 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\SelectedRegion.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Diags.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\AudacityHeaders.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

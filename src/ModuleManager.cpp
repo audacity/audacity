@@ -413,7 +413,7 @@ bool ModuleManager::DiscoverProviders()
       if (module)
       {
          // Register the provider
-         pm.RegisterModulePlugin(module);
+         pm.RegisterPlugin(module);
 
          // Now, allow the module to auto-register children
          module->AutoRegisterPlugins(pm);
@@ -434,7 +434,7 @@ void ModuleManager::InitializeBuiltins()
       if (module->Initialize())
       {
          // Register the provider
-         const PluginID & id = pm.RegisterModulePlugin(module);
+         const PluginID & id = pm.RegisterPlugin(module);
 
          // Need to remember it 
          mDynModules[id] = module;
@@ -486,13 +486,13 @@ void ModuleManager::UnloadModule(ModuleInterface *module)
    {
       module->Terminate();
 
-      delete module;
-
       if (mLibs.find(module) != mLibs.end())
       {
          mLibs[module]->Unload();
          mLibs.erase(module);
       }
+
+      delete module; //After terminating and unloading, we can safely delete the module
    }
 }
 
@@ -508,7 +508,7 @@ void ModuleManager::RegisterModule(ModuleInterface *module)
 
    mDynModules[id] = module;
 
-   PluginManager::Get().RegisterModulePlugin(module);
+   PluginManager::Get().RegisterPlugin(module);
 }
 
 void ModuleManager::FindAllPlugins(PluginIDList & providers, wxArrayString & paths)

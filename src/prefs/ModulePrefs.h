@@ -47,6 +47,7 @@ class ModulePrefs:public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S);
    wxArrayString mModules;
    wxArrayInt    mStatuses;
+   wxArrayString mPaths;
 };
 
 #endif

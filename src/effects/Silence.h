@@ -6,60 +6,50 @@
 
   Dominic Mazzoni
 
-  An effect for the "Generator" menu to add silence.
+  An effect to add silence.
 
 **********************************************************************/
 
 #ifndef __AUDACITY_EFFECT_SILENCE__
 #define __AUDACITY_EFFECT_SILENCE__
 
-#include <wx/defs.h>
-#include <wx/dialog.h>
-#include <wx/intl.h>
+#include <wx/string.h>
+
+#include "../WaveTrack.h"
+#include "../widgets/NumericTextCtrl.h"
 
 #include "Generator.h"
 
-class wxSizer;
-class wxTextCtrl;
+#define SILENCE_PLUGIN_SYMBOL XO("Silence")
 
-class EffectSilence : public Generator {
+class EffectSilence : public Generator
+{
+public:
+   EffectSilence();
+   virtual ~EffectSilence();
 
- public:
-   EffectSilence() {
-      SetEffectFlags(BUILTIN_EFFECT | INSERT_EFFECT);
-   }
+   // IdentInterface implementation
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Silence..."));
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#GeneratorPlugin"));
-      return result;
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Silence"));
-   }
+   virtual EffectType GetType();
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Generating Silence"));
-   }
+   // Effect implementation
 
-   // Return true if the effect supports processing via batch chains.
-   virtual bool SupportsChains() {
-      return false;
-   }
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
-   // Useful only after PromptUser values have been set.
-   virtual wxString GetEffectDescription() {
-      return wxString::Format(_("Applied effect: Generate Silence, %.6lf seconds"), mDuration);
-   }
+protected:
+   // Generator implementation
 
-   virtual bool PromptUser();
- protected:
    bool GenerateTrack(WaveTrack *tmp, const WaveTrack &track, int ntrack);
+
+private:
+   NumericTextCtrl *mDurationT;
 };
 
 #endif

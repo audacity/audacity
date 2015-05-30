@@ -20,55 +20,73 @@
 
 
 #include "../Audacity.h"
-#include "../AudacityApp.h"
 
-#include <wx/defs.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/validate.h>
-#include <wx/valtext.h>
-
-#include <wx/generic/textdlgg.h>
-#include <wx/intl.h>
 #include <math.h>
 
+#include <wx/intl.h>
+
+#include "../AudacityApp.h"
+#include "../widgets/valnum.h"
+
 #include "FindClipping.h"
-#include "../LabelTrack.h"
-#include "../WaveTrack.h"
+
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name    Type  Key               Def   Min   Max      Scale
+Param( Start,  int,  XO("Duty Cycle"), 3,    1,    INT_MAX, 1   );
+Param( Stop,   int,  XO("Duty Cycle"), 3,    1,    INT_MAX, 1   );
 
 EffectFindClipping::EffectFindClipping()
 {
-   SetEffectFlags(BUILTIN_EFFECT | ANALYZE_EFFECT);
-   mStart = 3;
-   mStop = 3;
+   mStart = DEF_Start;
+   mStop = DEF_Stop;
 }
 
-wxString EffectFindClipping::GetEffectDescription()
+EffectFindClipping::~EffectFindClipping()
 {
-   return wxString::Format(_("Detect clipping"));
 }
 
-bool EffectFindClipping::PromptUser()
-{
-   FindClippingDialog dlg(this, mParent);
-   dlg.CentreOnParent();
+// IdentInterface implementation
 
-   if (dlg.ShowModal() == wxID_CANCEL) {
-      return false;
-   }
+wxString EffectFindClipping::GetSymbol()
+{
+   return FINDCLIPPING_PLUGIN_SYMBOL;
+}
+
+wxString EffectFindClipping::GetDescription()
+{
+   return XO("This displays runs of clipped samples in a Label Track");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectFindClipping::GetType()
+{
+   return EffectTypeAnalyze;
+}
+
+// EffectClientInterface implementation
+
+bool EffectFindClipping::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_Start, mStart);
+   parms.Write(KEY_Stop, mStop);
 
    return true;
 }
 
-bool EffectFindClipping::TransferParameters(Shuttle & shuttle)
+bool EffectFindClipping::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   shuttle.TransferInt(wxT("Start"), mStart, 3);
-   shuttle.TransferInt(wxT("Stop"), mStop, 3);
+   ReadAndVerifyInt(Start);
+   ReadAndVerifyInt(Stop);
+
+   mStart = Start;
+   mStop = Stop;
 
    return true;
 }
+
+// Effect implementation
 
 bool EffectFindClipping::Process()
 {
@@ -203,41 +221,42 @@ bool EffectFindClipping::ProcessOne(LabelTrack * l,
    return bGoodResult;
 }
 
-//----------------------------------------------------------------------------
-// FindClippingDialog
-//----------------------------------------------------------------------------
-
-FindClippingDialog::FindClippingDialog(EffectFindClipping * effect, wxWindow * parent)
-: EffectDialog(parent, _("Find Clipping"), INSERT_EFFECT)
-{
-   mEffect = effect;
-
-   Init();
-}
-
-void FindClippingDialog::PopulateOrExchange(ShuttleGui & S)
+void EffectFindClipping::PopulateOrExchange(ShuttleGui & S)
 {
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
+      IntegerValidator<int> vldStart(&mStart);
+      vldStart.SetMin(MIN_Start);
       S.TieTextBox(_("Start threshold (samples):"),
-                   mEffect->mStart,
-                   10)->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
+                   mStart,
+                   10)->SetValidator(vldStart);
 
+      IntegerValidator<int> vldStop(&mStop);
+      vldStop.SetMin(MIN_Stop);
       S.TieTextBox(_("Stop threshold (samples):"),
-                   mEffect->mStop,
-                   10)->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
+                   mStop,
+                   10)->SetValidator(vldStop);
    }
    S.EndMultiColumn();
 }
 
-bool FindClippingDialog::TransferDataFromWindow()
+bool EffectFindClipping::TransferDataToWindow()
 {
-   EffectDialog::TransferDataFromWindow();
+   ShuttleGui S(mUIParent, eIsSettingToDialog);
+   PopulateOrExchange(S);
 
-   if (mEffect->mStart <= 0 || mEffect->mStop <= 0) {
-      wxMessageBox(_("Start and stop must be greater than 0."));
+   return true;
+}
+
+bool EffectFindClipping::TransferDataFromWindow()
+{
+   if (!mUIParent->Validate())
+   {
       return false;
    }
+
+   ShuttleGui S(mUIParent, eIsGettingFromDialog);
+   PopulateOrExchange(S);
 
    return true;
 }

@@ -64,6 +64,7 @@ ExportOGGOptions::ExportOGGOptions(wxWindow *parent, int WXUNUSED(format))
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify Ogg Vorbis Options")))
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    mOggQualityUnscaled = gPrefs->Read(wxT("/FileFormats/OggExportQuality"),50)/10;

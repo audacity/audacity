@@ -7,5 +7,6 @@
 ./test_grabbag.sh
 ./test_flac.sh
 ./test_metaflac.sh
+./test_replaygain.sh
 ./test_seeking.sh
 ./test_streams.sh

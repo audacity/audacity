@@ -1,6 +1,6 @@
 /* test_libFLAC - Unit tester for libFLAC
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -281,8 +281,14 @@ static void stream_decoder_metadata_callback_(const FLAC__StreamDecoder *decoder
 	if(dcd->error_occurred)
 		return;
 
-	printf("%d... ", dcd->current_metadata_number);
+	if (metadata->type == FLAC__METADATA_TYPE_APPLICATION) {
+		printf ("%d ('%c%c%c%c')... ", dcd->current_metadata_number, metadata->data.application.id [0], metadata->data.application.id [1], metadata->data.application.id [2], metadata->data.application.id [3]);
+	}
+	else {
+		printf("%d... ", dcd->current_metadata_number);
+	}
 	fflush(stdout);
+
 
 	if(dcd->current_metadata_number >= num_expected_) {
 		(void)die_("got more metadata blocks than expected");

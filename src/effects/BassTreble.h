@@ -12,56 +12,70 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include "TwoPassSimpleMono.h"
+#include <wx/checkbox.h>
+#include <wx/event.h>
+#include <wx/slider.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
-class wxSizer;
-class wxTextCtrl;
-class WaveTrack;
+#include "../ShuttleGui.h"
 
-class EffectBassTreble: public EffectTwoPassSimpleMono {
+#include "Effect.h"
 
+#define BASSTREBLE_PLUGIN_SYMBOL XO("Bass and Treble")
+
+class EffectBassTreble : public Effect
+{
 public:
    EffectBassTreble();
-   virtual ~EffectBassTreble() {};
+   virtual ~EffectBassTreble();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Bass and Treble..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#EQPlugin"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Bass and Treble"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Adjusting Bass and Treble"));
-   }
+   virtual EffectType GetType();
 
-   // Useful only after PromptUser values have been set.
-   virtual wxString GetEffectDescription();
+   // EffectClientInterface implementation
 
-protected:
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
-   virtual bool Init();
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
+   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
 
-   virtual bool ProcessPass1(float *buffer, sampleCount len);
-   virtual bool ProcessPass2(float *buffer, sampleCount len);
+   // Effect Implementation
+
+   virtual bool Startup();
+   virtual bool InitPass1();
+   virtual bool InitPass2();
+
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
+
+private:
+   // EffectBassTreble implementation
 
    void Coefficents(double hz, float slope, double gain, int type,
                     float& a0, float& a1, float& a2, float& b0, float& b1, float& b2);
+   float DoFilter(float in);
+   void UpdateUI();
+
+   void OnBassText(wxCommandEvent & evt);
+   void OnTrebleText(wxCommandEvent & evt);
+   void OnLevelText(wxCommandEvent & evt);
+   void OnBassSlider(wxCommandEvent & evt);
+   void OnTrebleSlider(wxCommandEvent & evt);
+   void OnLevelSlider(wxCommandEvent & evt);
+   void OnNormalize(wxCommandEvent & evt);
 
 private:
-   virtual bool NewTrackPass1();
-   virtual bool InitPass1();
-   virtual bool InitPass2();
-   float  DoFilter(float in);
-
    float xn1Bass, xn2Bass, yn1Bass, yn2Bass,
          wBass, swBass, cwBass, aBass, bBass,
          a0Bass, a1Bass, a2Bass, b0Bass, b1Bass, b2Bass;
@@ -75,36 +89,6 @@ private:
    bool   mbNormalize;
    double mPreGain;
 
-   friend class BassTrebleDialog;
-};
-
-//----------------------------------------------------------------------------
-// BassTrebleDialog
-//----------------------------------------------------------------------------
-class BassTrebleDialog:public EffectDialog {
-public:
-   BassTrebleDialog(EffectBassTreble *effect, wxWindow * parent);
-   virtual ~BassTrebleDialog() {};
-
-   // method declarations for BassTrebleDialog
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
-private:
-   // handler declarations for BassTrebleDialog
-   void OnBassText(wxCommandEvent & event);
-   void OnTrebleText(wxCommandEvent & event);
-   void OnLevelText(wxCommandEvent & event);
-   void OnBassSlider(wxCommandEvent & event);
-   void OnTrebleSlider(wxCommandEvent & event);
-   void OnLevelSlider(wxCommandEvent & event);
-   void OnNormalize(wxCommandEvent& evt);
-   void UpdateUI();
-   void OnPreview(wxCommandEvent & event);
-   void set_properties();
-
-private:
    wxSlider *mBassS;
    wxSlider *mTrebleS;
    wxSlider *mLevelS;
@@ -112,17 +96,9 @@ private:
    wxTextCtrl *mTrebleT;
    wxTextCtrl *mLevelT;
    wxCheckBox *mNormalizeCheckBox;
-   wxStaticText* mWarning;
+   wxStaticText *mWarning;
 
-public:
-   EffectBassTreble *mEffect;
-
-   double bass;
-   double treble;
-   double level;
-   bool mbNormalize;
-
-   DECLARE_EVENT_TABLE()
+   DECLARE_EVENT_TABLE();
 };
 
 #endif

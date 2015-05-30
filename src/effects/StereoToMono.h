@@ -11,52 +11,49 @@
 #ifndef __AUDACITY_EFFECT_STEREO_TO_MONO__
 #define __AUDACITY_EFFECT_STEREO_TO_MONO__
 
+#include <wx/string.h>
+
 #include "Effect.h"
 
-class EffectStereoToMono: public Effect {
+#define STEREOTOMONO_PLUGIN_SYMBOL XO("Stereo To Mono")
 
+class EffectStereoToMono : public Effect
+{
 public:
-
    EffectStereoToMono();
+   virtual ~EffectStereoToMono();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Stereo to Mono"));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-     std::set<wxString> result;
-     result.insert(wxT("http://lv2plug.in/ns/lv2core#MixerPlugin"));
-     return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   // Used internally, users will not see this.  Do not translate.
-   virtual wxString GetEffectIdentifier() {
-      return wxT("Stereo To Mono");
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Applying Stereo to Mono"));
-   }
-   virtual bool Init();
-   virtual void End();
-   virtual bool CheckWhetherSkipEffect();
+   virtual EffectType GetType();
+   virtual bool IsInteractive();
 
-   virtual bool PromptUser() {
-      return true;
-   }
+   // EffectClientInterface implementation
 
- protected:
-    virtual bool Process();
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
+
+   // Effect implementation
+
+   virtual bool Process();
+   virtual bool IsHidden();
 
 private:
-   bool ProcessOne(int);
+   // EffectStereoToMono implementation
 
+   bool ProcessOne(int count);
+
+private:
    sampleCount mStart;
    sampleCount mEnd;
    WaveTrack *mLeftTrack;
    WaveTrack *mRightTrack;
    WaveTrack *mOutTrack;
-
 };
 
 #endif

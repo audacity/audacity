@@ -1,6 +1,6 @@
 /* grabbag - Convenience lib for various routines common to several tools
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -242,11 +242,6 @@ static char *local__get_field_(char **s, FLAC__bool allow_quotes)
 
 static FLAC__bool local__cuesheet_parse_(FILE *file, const char **error_message, unsigned *last_line_read, FLAC__StreamMetadata *cuesheet, unsigned sample_rate, FLAC__bool is_cdda, FLAC__uint64 lead_out_offset)
 {
-#if defined _MSC_VER || defined __MINGW32__
-#define FLAC__STRCASECMP stricmp
-#else
-#define FLAC__STRCASECMP strcasecmp
-#endif
 	char buffer[4096], *line, *field;
 	unsigned forced_leadout_track_num = 0;
 	FLAC__uint64 forced_leadout_track_offset = 0;
@@ -590,7 +585,6 @@ static FLAC__bool local__cuesheet_parse_(FILE *file, const char **error_message,
 		return false;
 	}
 	return true;
-#undef FLAC__STRCASECMP
 }
 
 FLAC__StreamMetadata *grabbag__cuesheet_parse(FILE *file, const char **error_message, unsigned *last_line_read, unsigned sample_rate, FLAC__bool is_cdda, FLAC__uint64 lead_out_offset)

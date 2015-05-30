@@ -9,105 +9,64 @@
 *******************************************************************//**
 
 \class EffectStereoToMono
-\brief An Effect.
+\brief An Effect to convert stereo to mono.
 
 *//*******************************************************************/
 
-
 #include "../Audacity.h"
 
-// For compilers that support precompilation, includes "wx.h".
-#include <wx/wxprec.h>
+#include <wx/intl.h>
 
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-// Include your minimal set of headers here, or wx.h
-#include <wx/wx.h>
-#endif
-
-#include <math.h>
-#include "StereoToMono.h"
 #include "../Project.h"
+
+#include "StereoToMono.h"
 
 EffectStereoToMono::EffectStereoToMono()
 {
-   Init();
 }
 
-bool EffectStereoToMono::Init()
-{
-   return true;
-}
-
-void EffectStereoToMono::End()
+EffectStereoToMono::~EffectStereoToMono()
 {
 }
 
-//TODO: There are a lot of places where a track is being checked
-//      to see if it is stereo. Consolidate these
-bool EffectStereoToMono::CheckWhetherSkipEffect()
-{
-   TrackListOfKindIterator iter(Track::Wave, mTracks);
-   WaveTrack *t = (WaveTrack*)iter.First();
-   while (t) {
-      if (t->GetLinked()) {
-         return false;
-      }
-      t = (WaveTrack *)iter.Next();
-   }
+// IdentInterface implementation
 
-   return true;
+wxString EffectStereoToMono::GetSymbol()
+{
+   return STEREOTOMONO_PLUGIN_SYMBOL;
 }
 
-bool EffectStereoToMono::ProcessOne(int count)
+wxString EffectStereoToMono::GetDescription()
 {
-   float  curLeftFrame;
-   float  curRightFrame;
-   float  curMonoFrame;
-
-   sampleCount idealBlockLen = mLeftTrack->GetMaxBlockSize() * 2;
-   sampleCount index = mStart;
-   float *leftBuffer = new float[idealBlockLen];
-   float *rightBuffer = new float[idealBlockLen];
-   bool bResult = true;
-
-   while (index < mEnd) {
-      bResult &= mLeftTrack->Get((samplePtr)leftBuffer, floatSample, index, idealBlockLen);
-      bResult &= mRightTrack->Get((samplePtr)rightBuffer, floatSample, index, idealBlockLen);
-      sampleCount limit = idealBlockLen;
-      if ((index + idealBlockLen) > mEnd) {
-         limit = mEnd - index;
-      }
-      for (sampleCount i = 0; i < limit; ++i) {
-         index++;
-         curLeftFrame = leftBuffer[i];
-         curRightFrame = rightBuffer[i];
-         curMonoFrame = (curLeftFrame + curRightFrame) / 2.0;
-         leftBuffer[i] = curMonoFrame;
-      }
-      bResult &= mOutTrack->Append((samplePtr)leftBuffer, floatSample, limit);
-      if (TrackProgress(count, 2.*((double)index / (double)(mEnd - mStart))))
-         return false;
-   }
-
-   double minStart = wxMin(mLeftTrack->GetStartTime(), mRightTrack->GetStartTime());
-   bResult &= mLeftTrack->Clear(mLeftTrack->GetStartTime(), mLeftTrack->GetEndTime());
-   bResult &= mOutTrack->Flush();
-   bResult &= mLeftTrack->Paste(minStart, mOutTrack);
-   mLeftTrack->SetLinked(false);
-   mRightTrack->SetLinked(false);
-   mLeftTrack->SetChannel(Track::MonoChannel);
-   mOutputTracks->Remove(mRightTrack);
-   delete mRightTrack;
-
-   delete [] leftBuffer;
-   delete [] rightBuffer;
-
-   return bResult;
+   return XO("Converts stereo tracks to mono");
 }
+
+// EffectIdentInterface implementation
+
+EffectType EffectStereoToMono::GetType()
+{
+   // Really EffectTypeProcess, but this prevents it from showing in the Effect Menu
+   return EffectTypeHidden;
+}
+
+bool EffectStereoToMono::IsInteractive()
+{
+   return false;
+}
+
+// EffectClientInterface implementation
+
+int EffectStereoToMono::GetAudioInCount()
+{
+   return 2;
+}
+
+int EffectStereoToMono::GetAudioOutCount()
+{
+   return 1;
+}
+
+// Effect implementatino
 
 bool EffectStereoToMono::Process()
 {
@@ -170,3 +129,56 @@ bool EffectStereoToMono::Process()
    this->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
+
+bool EffectStereoToMono::ProcessOne(int count)
+{
+   float  curLeftFrame;
+   float  curRightFrame;
+   float  curMonoFrame;
+
+   sampleCount idealBlockLen = mLeftTrack->GetMaxBlockSize() * 2;
+   sampleCount index = mStart;
+   float *leftBuffer = new float[idealBlockLen];
+   float *rightBuffer = new float[idealBlockLen];
+   bool bResult = true;
+
+   while (index < mEnd) {
+      bResult &= mLeftTrack->Get((samplePtr)leftBuffer, floatSample, index, idealBlockLen);
+      bResult &= mRightTrack->Get((samplePtr)rightBuffer, floatSample, index, idealBlockLen);
+      sampleCount limit = idealBlockLen;
+      if ((index + idealBlockLen) > mEnd) {
+         limit = mEnd - index;
+      }
+      for (sampleCount i = 0; i < limit; ++i) {
+         index++;
+         curLeftFrame = leftBuffer[i];
+         curRightFrame = rightBuffer[i];
+         curMonoFrame = (curLeftFrame + curRightFrame) / 2.0;
+         leftBuffer[i] = curMonoFrame;
+      }
+      bResult &= mOutTrack->Append((samplePtr)leftBuffer, floatSample, limit);
+      if (TrackProgress(count, 2.*((double)index / (double)(mEnd - mStart))))
+         return false;
+   }
+
+   double minStart = wxMin(mLeftTrack->GetStartTime(), mRightTrack->GetStartTime());
+   bResult &= mLeftTrack->Clear(mLeftTrack->GetStartTime(), mLeftTrack->GetEndTime());
+   bResult &= mOutTrack->Flush();
+   bResult &= mLeftTrack->Paste(minStart, mOutTrack);
+   mLeftTrack->SetLinked(false);
+   mRightTrack->SetLinked(false);
+   mLeftTrack->SetChannel(Track::MonoChannel);
+   mOutputTracks->Remove(mRightTrack);
+   delete mRightTrack;
+
+   delete [] leftBuffer;
+   delete [] rightBuffer;
+
+   return bResult;
+}
+
+bool EffectStereoToMono::IsHidden()
+{
+   return true;
+}
+

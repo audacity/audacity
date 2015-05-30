@@ -16,54 +16,47 @@
 #ifndef __AUDACITY_EFFECT_CLICK_REMOVAL__
 #define __AUDACITY_EFFECT_CLICK_REMOVAL__
 
-#include <wx/bitmap.h>
-#include <wx/button.h>
-#include <wx/panel.h>
-#include <wx/sizer.h>
+#include <wx/event.h>
 #include <wx/slider.h>
-#include <wx/stattext.h>
-#include <wx/intl.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
-class wxString;
+#include "../Envelope.h"
+#include "../ShuttleGui.h"
+#include "../WaveTrack.h"
 
 #include "Effect.h"
 
-class Envelope;
-class WaveTrack;
+#define CLICKREMOVAL_PLUGIN_SYMBOL XO("Click Removal")
 
-class EffectClickRemoval: public Effect {
-
+class EffectClickRemoval : public Effect
+{
 public:
-
    EffectClickRemoval();
    virtual ~EffectClickRemoval();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Click Removal..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-     std::set<wxString> result;
-     result.insert(wxT("http://audacityteam.org/namespace#NoiseRemoval"));
-     return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Click Removal"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-         return wxString(_("Removing clicks and pops..."));
-   }
+   virtual EffectType GetType();
 
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   // EffectClientInterface implementation
 
-   virtual bool Init();
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
 
    virtual bool CheckWhetherSkipEffect();
-
+   virtual bool Startup();
    virtual bool Process();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
 private:
    bool ProcessOne(int count, WaveTrack * track,
@@ -71,54 +64,26 @@ private:
 
    bool RemoveClicks(sampleCount len, float *buffer);
 
+   void OnWidthText(wxCommandEvent & evt);
+   void OnThreshText(wxCommandEvent & evt);
+   void OnWidthSlider(wxCommandEvent & evt);
+   void OnThreshSlider(wxCommandEvent & evt);
+
+private:
    Envelope *mEnvelope;
 
    bool mbDidSomething; // This effect usually does nothing on real-world data.
-   int       windowSize;
-   int       mThresholdLevel;
-   int       mClickWidth;
-   int  sep;
+   int windowSize;
+   int mThresholdLevel;
+   int mClickWidth;
+   int sep;
 
-friend class ClickRemovalDialog;
-};
-
-// WDR: class declarations
-
-//----------------------------------------------------------------------------
-// BassWidthDialog
-//----------------------------------------------------------------------------
-class ClickRemovalDialog:public EffectDialog {
- public:
-   // constructors and destructors
-   ClickRemovalDialog(EffectClickRemoval *effect, wxWindow *parent);
-
-   // WDR: method declarations for BassWidthDialog
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
- private:
-   // WDR: handler declarations for BassWidthDialog
-   void OnWidthText(wxCommandEvent & event);
-   void OnThreshText(wxCommandEvent & event);
-   void OnWidthSlider(wxCommandEvent & event);
-   void OnThreshSlider(wxCommandEvent & event);
-   void OnPreview(wxCommandEvent & event);
-
- private:
    wxSlider *mWidthS;
    wxSlider *mThreshS;
    wxTextCtrl *mWidthT;
    wxTextCtrl *mThreshT;
 
-   DECLARE_EVENT_TABLE()
-
- public:
-   EffectClickRemoval *mEffect;
-
-   int mThresh;
-   int mWidth;
-
+   DECLARE_EVENT_TABLE();
 };
 
 #endif

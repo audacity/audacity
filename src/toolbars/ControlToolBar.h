@@ -30,6 +30,9 @@ class AudacityProject;
 class TrackList;
 class TimeTrack;
 
+struct AudioIOStartStreamOptions;
+class SelectedRegion;
+
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
 class ControlToolBar:public ToolBar {
 
@@ -64,13 +67,12 @@ class ControlToolBar:public ToolBar {
    // play from current cursor.
    void PlayCurrentRegion(bool looped = false, bool cutpreview = false);
    // Play the region [t0,t1]
-   void PlayPlayRegion(double t0, double t1,
-                       bool looped = false,
-                       bool cutpreview = false,
-                       TimeTrack *timetrack = NULL,
-                       // May be other than t0,
-                       // but will be constrained between t0 and t1
-                       const double *pStartTime = NULL);
+   // Return the Audio IO token or -1 for failure
+   int PlayPlayRegion(const SelectedRegion &selectedRegion,
+                      const AudioIOStartStreamOptions &options,
+                      bool cutpreview = false, bool backwards = false,
+                      // Allow t0 and t1 to be beyond end of tracks
+                      bool playWhiteSpace = false);
    void PlayDefault();
 
    // Stop playing
@@ -82,6 +84,8 @@ class ControlToolBar:public ToolBar {
 
    virtual void ReCreateButtons();
    void RegenerateToolsTooltips();
+
+   int WidthForStatusBar();
 
  private:
 
@@ -100,6 +104,7 @@ class ControlToolBar:public ToolBar {
    void SetupCutPreviewTracks(double playStart, double cutStart,
                              double cutEnd, double playEnd);
    void ClearCutPreviewTracks();
+   void UpdateStatusBar();
 
    enum
    {
@@ -132,6 +137,12 @@ class ControlToolBar:public ToolBar {
    wxBoxSizer *mSizer;
 
    TrackList* mCutPreviewTracks;
+
+   // strings for status bar
+   wxString mStatePlay;
+   wxString mStateStop;
+   wxString mStateRecord;
+   wxString mStatePause;
 
  public:
 

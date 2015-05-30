@@ -11,44 +11,37 @@
 #ifndef __AUDACITY_EFFECT_REPAIR__
 #define __AUDACITY_EFFECT_REPAIR__
 
-#include <wx/intl.h>
 #include <wx/string.h>
 
-#include "SimpleMono.h"
+#include "Effect.h"
+
+#define REPAIR_PLUGIN_SYMBOL XO("Repair")
 
 class WaveTrack;
 
-class EffectRepair: public Effect {
-
+class EffectRepair : public Effect
+{
 public:
-
    EffectRepair();
    virtual ~EffectRepair();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Repair"));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://audacityteam.org/namespace#NoiseRemoval"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Repair"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Repairing damaged audio"));
-   }
+   virtual EffectType GetType();
+   virtual bool IsInteractive();
 
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   // Effect implementation
 
    virtual bool Process();
 
 private:
+   // EffectRepair implementaion
+
    bool ProcessOne(int count, WaveTrack * track,
                    sampleCount start,
                    sampleCount len,

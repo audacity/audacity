@@ -25,11 +25,13 @@ UndoManager
 #include <wx/hashset.h>
 
 #include "BlockFile.h"
+#include "Diags.h"
 #include "Internat.h"
 #include "Sequence.h"
 #include "Track.h"
 #include "WaveTrack.h"          // temp
 #include "NoteTrack.h"  // for Sonify* function declarations
+#include "Diags.h"
 
 #include "UndoManager.h"
 
@@ -50,6 +52,7 @@ UndoManager::~UndoManager()
 
 void UndoManager::CalculateSpaceUsage()
 {
+   TIMER_START( "CalculateSpaceUsage", space_calc );
    TrackListOfKindIterator iter(Track::Wave);
 
    space.Clear();
@@ -102,6 +105,7 @@ void UndoManager::CalculateSpaceUsage()
 
    delete cur;
    delete prev;
+   TIMER_STOP( space_calc );
 }
 
 void UndoManager::GetLongDescription(unsigned int n, wxString *desc,

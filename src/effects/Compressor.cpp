@@ -19,65 +19,75 @@
 
 *//****************************************************************//**
 
-\class CompressorDialog
-\brief Dialog used with EffectCompressor.
-
-*//****************************************************************//**
-
 \class CompressorPanel
-\brief Panel used within the CompressorDialog for EffectCompressor.
+\brief Panel used within the EffectCompressor for EffectCompressor.
 
 *//*******************************************************************/
 
-
-#include "../Audacity.h" // for rint from configwin.h
+#include "../Audacity.h"
 
 #include <math.h>
 
-#include <wx/msgdlg.h>
-#include <wx/textdlg.h>
 #include <wx/brush.h>
-#include <wx/image.h>
+#include <wx/dcclient.h>
 #include <wx/dcmemory.h>
+#include <wx/intl.h>
+#include <wx/msgdlg.h>
+
+#include "../AColor.h"
+#include "../Prefs.h"
+#include "../float_cast.h"
+#include "../widgets/Ruler.h"
 
 #include "Compressor.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../widgets/Ruler.h"
-#include "../AColor.h"
-#include "../Shuttle.h"
-#include "../Prefs.h"
+
+enum
+{
+   ID_Threshold = 10000,
+   ID_NoiseFloor,
+   ID_Ratio,
+   ID_Attack,
+   ID_Decay
+};
+
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name          Type     Key                  Def      Min      Max      Scale
+Param( Threshold,    double,  XO("Threshold"),     -12.0,   -60.0,   -1.0,    1   );
+Param( NoiseFloor,   double,  XO("NoiseFloor"),    -40.0,   -80.0,   -20.0,   5   );
+Param( Ratio,        double,  XO("Ratio"),         2.0,     1.5,     10.0,    2   );
+Param( AttackTime,   double,  XO("AttackTime"),    0.2,     0.1,     5.0,     100 );
+Param( ReleaseTime,  double,  XO("ReleaseTime"),   1.0,     1.0,     30.0,    10  );
+Param( Normalize,    bool,    XO("Normalize"),     true,    false,   true,    1   );
+Param( UsePeak,      bool,    XO("UsePeak"),       false,   false,   true,    1   );
+
+//----------------------------------------------------------------------------
+// EffectCompressor
+//----------------------------------------------------------------------------
+
+BEGIN_EVENT_TABLE(EffectCompressor, wxEvtHandler)
+   EVT_SLIDER(wxID_ANY, EffectCompressor::OnSlider)
+END_EVENT_TABLE()
 
 EffectCompressor::EffectCompressor()
 {
-   mNormalize = true;
-   mUsePeak = false;
+   mThresholdDB = DEF_Threshold;
+   mNoiseFloorDB = DEF_NoiseFloor;
+   mAttackTime = DEF_AttackTime;          // seconds
+   mDecayTime = DEF_ReleaseTime;          // seconds
+   mRatio = DEF_Ratio;                    // positive number > 1.0
+   mNormalize = DEF_Normalize;
+   mUsePeak = DEF_UsePeak;
+
    mThreshold = 0.25;
-   mAttackTime = 0.2;      // seconds
-   mDecayTime = 1.0;       // seconds
-   mRatio = 2.0;           // positive number > 1.0
-   mCompression = 0.5;
-   mThresholdDB = -12.0;
-   mNoiseFloorDB = -40.0;
    mNoiseFloor = 0.01;
+   mCompression = 0.5;
    mCircle = NULL;
    mFollow1 = NULL;
    mFollow2 = NULL;
    mFollowLen = 0;
-}
 
-bool EffectCompressor::Init()
-{
-   // Restore the saved preferences
-   gPrefs->Read(wxT("/Effects/Compressor/ThresholdDB"), &mThresholdDB, -12.0f );
-   gPrefs->Read(wxT("/Effects/Compressor/NoiseFloorDB"), &mNoiseFloorDB, -40.0f );
-   gPrefs->Read(wxT("/Effects/Compressor/Ratio"), &mRatio, 2.0f );
-   gPrefs->Read(wxT("/Effects/Compressor/AttackTime"), &mAttackTime, 0.2f );
-   gPrefs->Read(wxT("/Effects/Compressor/DecayTime"), &mDecayTime, 1.0f );
-   gPrefs->Read(wxT("/Effects/Compressor/Normalize"), &mNormalize, true );
-   gPrefs->Read(wxT("/Effects/Compressor/UsePeak"), &mUsePeak, false );
-
-   return true;
+   SetLinearEffectFlag(false);
 }
 
 EffectCompressor::~EffectCompressor()
@@ -96,55 +106,225 @@ EffectCompressor::~EffectCompressor()
    }
 }
 
-bool EffectCompressor::TransferParameters( Shuttle & shuttle )
+// IdentInterface implementation
+
+wxString EffectCompressor::GetSymbol()
 {
-   shuttle.TransferDouble( wxT("Threshold"), mThresholdDB, -12.0f );
-   shuttle.TransferDouble( wxT("NoiseFloor"), mNoiseFloorDB, -40.0f );
-   shuttle.TransferDouble( wxT("Ratio"), mRatio, 2.0f );
-   shuttle.TransferDouble( wxT("AttackTime"), mAttackTime, 0.2f );
-   shuttle.TransferDouble( wxT("ReleaseTime"), mDecayTime, 1.0f );
-   shuttle.TransferBool( wxT("Normalize"), mNormalize, true );
-   shuttle.TransferBool( wxT("UsePeak"), mUsePeak, false );
+   return COMPRESSOR_PLUGIN_SYMBOL;
+}
+
+wxString EffectCompressor::GetDescription()
+{
+   return XO("Compresses the dynamic range of audio");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectCompressor::GetType()
+{
+   return EffectTypeProcess;
+}
+
+// EffectClientInterface implementation
+
+bool EffectCompressor::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_Threshold, mThresholdDB);
+   parms.Write(KEY_NoiseFloor, mNoiseFloorDB);
+   parms.Write(KEY_Ratio, mRatio);
+   parms.Write(KEY_AttackTime, mAttackTime);
+   parms.Write(KEY_ReleaseTime, mDecayTime);
+   parms.Write(KEY_Normalize, mNormalize);
+   parms.Write(KEY_UsePeak, mUsePeak);
+
    return true;
 }
 
-bool EffectCompressor::PromptUser()
+bool EffectCompressor::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   CompressorDialog dlog(this, mParent);
-   dlog.threshold = mThresholdDB;
-   dlog.noisefloor = mNoiseFloorDB;
-   dlog.ratio = mRatio;
-   dlog.attack = mAttackTime;
-   dlog.decay = mDecayTime;
-   dlog.useGain = mNormalize;
-   dlog.usePeak = mUsePeak;
-   dlog.TransferDataToWindow();
+   ReadAndVerifyDouble(Threshold);
+   ReadAndVerifyDouble(NoiseFloor);
+   ReadAndVerifyDouble(Ratio);
+   ReadAndVerifyDouble(AttackTime);
+   ReadAndVerifyDouble(ReleaseTime);
+   ReadAndVerifyBool(Normalize);
+   ReadAndVerifyBool(UsePeak);
 
-   dlog.CentreOnParent();
-   dlog.ShowModal();
+   mThresholdDB = Threshold;
+   mNoiseFloorDB = NoiseFloor;
+   mRatio = Ratio;
+   mAttackTime = AttackTime;
+   mDecayTime = ReleaseTime;
+   mNormalize = Normalize;
+   mUsePeak = UsePeak;
 
-   if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
-
-   mThresholdDB = dlog.threshold;
-   mNoiseFloorDB = dlog.noisefloor;
-   mRatio = dlog.ratio;
-   mAttackTime = dlog.attack;
-   mDecayTime = dlog.decay;
-   mNormalize = dlog.useGain;
-   mUsePeak = dlog.usePeak;
-
-   // Retain the settings
-   gPrefs->Write(wxT("/Effects/Compressor/ThresholdDB"), mThresholdDB);
-   gPrefs->Write(wxT("/Effects/Compressor/NoiseFloorDB"), mNoiseFloorDB);
-   gPrefs->Write(wxT("/Effects/Compressor/Ratio"), mRatio);
-   gPrefs->Write(wxT("/Effects/Compressor/AttackTime"), mAttackTime);
-   gPrefs->Write(wxT("/Effects/Compressor/DecayTime"), mDecayTime);
-   gPrefs->Write(wxT("/Effects/Compressor/Normalize"), mNormalize);
-   gPrefs->Write(wxT("/Effects/Compressor/UsePeak"), mUsePeak);
-
-   return gPrefs->Flush();
+   return true;
 }
+
+// Effect Implemenration
+
+bool EffectCompressor::Startup()
+{
+   wxString base = wxT("/Effects/Compressor/");
+
+   // Migrate settings from 2.1.0 or before
+
+   // Already migrated, so bail
+   if (gPrefs->Exists(base + wxT("Migrated")))
+   {
+      return true;
+   }
+
+   // Load the old "current" settings
+   if (gPrefs->Exists(base))
+   {
+      gPrefs->Read(base + wxT("ThresholdDB"), &mThresholdDB, -12.0f );
+      gPrefs->Read(base + wxT("NoiseFloorDB"), &mNoiseFloorDB, -40.0f );
+      gPrefs->Read(base + wxT("Ratio"), &mRatio, 2.0f );
+      gPrefs->Read(base + wxT("AttackTime"), &mAttackTime, 0.2f );
+      gPrefs->Read(base + wxT("DecayTime"), &mDecayTime, 1.0f );
+      gPrefs->Read(base + wxT("Normalize"), &mNormalize, true );
+      gPrefs->Read(base + wxT("UsePeak"), &mUsePeak, false );
+
+      SaveUserPreset(GetCurrentSettingsGroup());
+
+      // Do not migrate again
+      gPrefs->Write(base + wxT("Migrated"), true);
+      gPrefs->Flush();
+   }
+
+   return true;
+}
+
+void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
+{
+   S.SetBorder(5);
+
+   S.StartHorizontalLay(wxEXPAND, true);
+   {
+      S.SetBorder(10);
+      mPanel = new EffectCompressorPanel(S.GetParent(),
+                                         mThresholdDB,
+                                         mNoiseFloorDB,
+                                         mRatio);
+      mPanel->SetMinSize(wxSize(400, 200));
+      S.Prop(true).AddWindow(mPanel, wxEXPAND | wxALL);
+      S.SetBorder(5);
+   }
+   S.EndHorizontalLay();
+
+   S.StartStatic(wxT(""));
+   {
+      S.StartMultiColumn(3, wxEXPAND | wxALIGN_CENTER_VERTICAL);
+      {
+         S.SetStretchyCol(1);
+         mThresholdLabel = S.AddVariableText(_("Threshold:"), true,
+                                             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         S.SetStyle(wxSL_HORIZONTAL);
+         mThresholdSlider = S.Id(ID_Threshold).AddSlider(wxT(""),
+                                                         DEF_Threshold * SCL_Threshold,
+                                                         MAX_Threshold * SCL_Threshold,
+                                                         MIN_Threshold * SCL_Threshold);
+         mThresholdSlider->SetName(_("Threshold"));
+         mThresholdText = S.AddVariableText(wxT("XXX dB"), true,
+                                            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         mNoiseFloorLabel = S.AddVariableText(_("Noise Floor:"), true,
+                                             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         S.SetStyle(wxSL_HORIZONTAL);
+         mNoiseFloorSlider = S.Id(ID_NoiseFloor).AddSlider(wxT(""),
+                                                           DEF_NoiseFloor / SCL_NoiseFloor,
+                                                           MAX_NoiseFloor / SCL_NoiseFloor,
+                                                           MIN_NoiseFloor / SCL_NoiseFloor);
+         mNoiseFloorSlider->SetName(_("Noise Floor"));
+         mNoiseFloorText = S.AddVariableText(wxT("XXX dB"), true,
+                                            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         mRatioLabel = S.AddVariableText(_("Ratio:"), true,
+                                         wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         S.SetStyle(wxSL_HORIZONTAL);
+         mRatioSlider = S.Id(ID_Ratio).AddSlider(wxT(""),
+                                                 DEF_Ratio * SCL_Ratio,
+                                                 MAX_Ratio * SCL_Ratio,
+                                                 MIN_Ratio * SCL_Ratio);
+         mRatioSlider->SetName(_("Ratio"));
+         mRatioText = S.AddVariableText(wxT("XXXX:1"), true,
+                                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         /* i18n-hint: Particularly in percussion, sounds can be regarded as having
+          * an 'attack' phase where the sound builds up and a 'decay' where the
+          * sound dies away.  So this means 'onset duration'.  */
+         mAttackLabel = S.AddVariableText(_("Attack Time:"), true,
+                                         wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         S.SetStyle(wxSL_HORIZONTAL);
+         mAttackSlider = S.Id(ID_Attack).AddSlider(wxT(""),
+                                                   DEF_AttackTime * SCL_AttackTime,
+                                                   MAX_AttackTime * SCL_AttackTime,
+                                                   MIN_AttackTime * SCL_AttackTime);
+         mAttackSlider->SetName(_("Attack Time"));
+         mAttackText = S.AddVariableText(wxT("XXXX secs"), true,
+                                         wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         mDecayLabel = S.AddVariableText(_("Release Time:"), true,
+                                         wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         S.SetStyle(wxSL_HORIZONTAL);
+         mDecaySlider = S.Id(ID_Decay).AddSlider(wxT(""),
+                                                 DEF_ReleaseTime * SCL_ReleaseTime,
+                                                 MAX_ReleaseTime * SCL_ReleaseTime,
+                                                 MIN_ReleaseTime * SCL_ReleaseTime);
+         mDecaySlider->SetName(_("Release Time"));
+         mDecayText = S.AddVariableText(wxT("XXXX secs"), true,
+                                        wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+      }
+      S.EndMultiColumn();
+   }
+   S.EndStatic();
+
+   S.StartHorizontalLay(wxCENTER, false);
+   {
+      /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
+      mGainCheckBox = S.AddCheckBox(_("Make-up gain for 0 dB after compressing"),
+                                    DEF_Normalize ? wxT("true") : wxT("false"));
+      mPeakCheckBox = S.AddCheckBox(_("Compress based on Peaks"),
+                                    DEF_UsePeak ? wxT("true") : wxT("false"));
+   }
+   S.EndHorizontalLay();
+}
+
+bool EffectCompressor::TransferDataToWindow()
+{
+   mThresholdSlider->SetValue(lrint(mThresholdDB));
+   mNoiseFloorSlider->SetValue(lrint(mNoiseFloorDB / SCL_NoiseFloor));
+   mRatioSlider->SetValue(lrint(mRatio * SCL_Ratio));
+   mAttackSlider->SetValue(lrint(mAttackTime * SCL_AttackTime));
+   mDecaySlider->SetValue(lrint(mDecayTime * SCL_ReleaseTime));
+   mGainCheckBox->SetValue(mNormalize);
+   mPeakCheckBox->SetValue(mUsePeak);
+
+   UpdateUI();
+
+   return true;
+}
+
+bool EffectCompressor::TransferDataFromWindow()
+{
+   if (!mUIParent->Validate())
+   {
+      return false;
+   }
+
+   mThresholdDB = (double) mThresholdSlider->GetValue();
+   mNoiseFloorDB = (double) mNoiseFloorSlider->GetValue() * SCL_NoiseFloor;
+   mRatio = (double) mRatioSlider->GetValue() / SCL_Ratio;
+   mAttackTime = (double) mAttackSlider->GetValue() / 100.0; //SCL_AttackTime;
+   mDecayTime = (double) mDecaySlider->GetValue() / SCL_ReleaseTime;
+   mNormalize = mGainCheckBox->GetValue();
+   mUsePeak = mPeakCheckBox->GetValue();
+
+   return true;
+}
+
+// EffectTwoPassSimpleMono implementation
 
 bool EffectCompressor::NewTrackPass1()
 {
@@ -175,6 +355,7 @@ bool EffectCompressor::NewTrackPass1()
 
    return true;
 }
+
 bool EffectCompressor::InitPass1()
 {
    mMax=0.0;
@@ -209,11 +390,12 @@ bool EffectCompressor::InitPass1()
 
    return true;
 }
+
 bool EffectCompressor::InitPass2()
 {
-    // Actually, this should not even be called, because we call
-    // DisableSecondPass() before, if mNormalize is false.
-    return mNormalize;
+   // Actually, this should not even be called, because we call
+   // DisableSecondPass() before, if mNormalize is false.
+   return mNormalize;
 }
 
 // Process the input with 2 buffers available at a time
@@ -432,39 +614,76 @@ float EffectCompressor::DoCompression(float value, double env)
    return out;
 }
 
-//----------------------------------------------------------------------------
-// CompressorPanel
-//----------------------------------------------------------------------------
-
-BEGIN_EVENT_TABLE(CompressorPanel, wxPanel)
-    EVT_PAINT(CompressorPanel::OnPaint)
-END_EVENT_TABLE()
-
-CompressorPanel::CompressorPanel( wxWindow *parent, wxWindowID id,
-                          const wxPoint& pos,
-                          const wxSize& size):
-   wxPanel(parent, id, pos, size)
+void EffectCompressor::OnSlider(wxCommandEvent & WXUNUSED(evt))
 {
-   mBitmap = NULL;
-   mWidth = 0;
-   mHeight = 0;
+   TransferDataFromWindow();
+   UpdateUI();
 }
 
-void CompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
+void EffectCompressor::UpdateUI()
+{
+   mThresholdLabel->SetName(wxString::Format(_("Threshold %d dB"), (int) mThresholdDB));
+   /* i18n-hint: usually leave this as is as dB doesn't get translated*/
+   mThresholdText->SetLabel(wxString::Format(_("%3d dB"), (int) mThresholdDB));
+   mThresholdText->SetName(mThresholdText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+
+   mNoiseFloorLabel->SetName(wxString::Format(_("Noise Floor %d dB"), (int) mNoiseFloorDB));
+   mNoiseFloorText->SetLabel(wxString::Format(_("%3d dB"), (int) mNoiseFloorDB));
+   mNoiseFloorText->SetName(mNoiseFloorText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+
+   if (mRatioSlider->GetValue() % 2 == 0) {
+      mRatioLabel->SetName(wxString::Format(_("Ratio %.0f to 1"), mRatio));
+      /* i18n-hint: Unless your language has a different convention for ratios,
+       * like 8:1, leave as is.*/
+      mRatioText->SetLabel(wxString::Format(_("%.0f:1"), mRatio));
+   }
+   else {
+      mRatioLabel->SetName(wxString::Format(_("Ratio %.1f to 1"), mRatio));
+      /* i18n-hint: Unless your language has a different convention for ratios,
+       * like 8:1, leave as is.*/
+      mRatioText->SetLabel(wxString::Format(_("%.1f:1"), mRatio));
+   }
+   mRatioText->SetName(mRatioText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+
+   mAttackLabel->SetName(wxString::Format(_("Attack Time %.2f secs"), mAttackTime));
+   mAttackText->SetLabel(wxString::Format(_("%.2f secs"), mAttackTime));
+   mAttackText->SetName(mAttackText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+
+   mDecayLabel->SetName(wxString::Format(_("Release Time %.1f secs"), mDecayTime));
+   mDecayText->SetLabel(wxString::Format(_("%.1f secs"), mDecayTime));
+   mDecayText->SetName(mDecayText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+
+   mPanel->Refresh(false);
+
+   return;
+}
+
+//----------------------------------------------------------------------------
+// EffectCompressorPanel
+//----------------------------------------------------------------------------
+
+BEGIN_EVENT_TABLE(EffectCompressorPanel, wxPanel)
+   EVT_PAINT(EffectCompressorPanel::OnPaint)
+   EVT_SIZE(EffectCompressorPanel::OnSize)
+END_EVENT_TABLE()
+
+EffectCompressorPanel::EffectCompressorPanel(wxWindow *parent,
+                                             double & threshold,
+                                             double & noiseFloor,
+                                             double & ratio)
+:  wxPanel(parent),
+   threshold(threshold),
+   noiseFloor(noiseFloor),
+   ratio(ratio)
+{
+}
+
+void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
 
    int width, height;
    GetSize(&width, &height);
-
-   if (!mBitmap || mWidth!=width || mHeight!=height) {
-      if (mBitmap)
-         delete mBitmap;
-
-      mWidth = width;
-      mHeight = height;
-      mBitmap = new wxBitmap(mWidth, mHeight);
-   }
 
    double rangeDB = 60;
 
@@ -473,7 +692,7 @@ void CompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    int h = 0;
 
    Ruler vRuler;
-   vRuler.SetBounds(0, 0, mWidth, mHeight);
+   vRuler.SetBounds(0, 0, width, height);
    vRuler.SetOrientation(wxVERTICAL);
    vRuler.SetRange(0, -rangeDB);
    vRuler.SetFormat(Ruler::LinearDBFormat);
@@ -481,7 +700,7 @@ void CompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    vRuler.GetMaxSize(&w, NULL);
 
    Ruler hRuler;
-   hRuler.SetBounds(0, 0, mWidth, mHeight);
+   hRuler.SetBounds(0, 0, width, height);
    hRuler.SetOrientation(wxHORIZONTAL);
    hRuler.SetRange(-rangeDB, 0);
    hRuler.SetFormat(Ruler::LinearDBFormat);
@@ -489,306 +708,68 @@ void CompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    hRuler.SetFlip(true);
    hRuler.GetMaxSize(NULL, &h);
 
-   vRuler.SetBounds(0, 0, w, mHeight - h);
-   hRuler.SetBounds(w, mHeight - h, mWidth, mHeight);
+   vRuler.SetBounds(0, 0, w, height - h);
+   hRuler.SetBounds(w, height - h, width, height);
 
-   wxColour bkgnd = GetBackgroundColour();
-   wxBrush bkgndBrush(bkgnd, wxSOLID);
-
-   wxMemoryDC memDC;
-   memDC.SelectObject(*mBitmap);
-
-   wxRect bkgndRect;
-   bkgndRect.x = 0;
-   bkgndRect.y = 0;
-   bkgndRect.width = w;
-   bkgndRect.height = mHeight;
-   memDC.SetBrush(bkgndBrush);
-   memDC.SetPen(*wxTRANSPARENT_PEN);
-   memDC.DrawRectangle(bkgndRect);
-
-   bkgndRect.y = mHeight - h;
-   bkgndRect.width = mWidth;
-   bkgndRect.height = h;
-   memDC.DrawRectangle(bkgndRect);
+#if defined(__WXMSW__)
+   dc.Clear();
+#endif
 
    wxRect border;
    border.x = w;
    border.y = 0;
-   border.width = mWidth - w;
-   border.height = mHeight - h + 1;
+   border.width = width - w;
+   border.height = height - h + 1;
 
-   memDC.SetBrush(*wxWHITE_BRUSH);
-   memDC.SetPen(*wxBLACK_PEN);
-   memDC.DrawRectangle(border);
+   dc.SetBrush(*wxWHITE_BRUSH);
+   dc.SetPen(*wxBLACK_PEN);
+   dc.DrawRectangle(border);
 
-   mEnvRect = border;
-   mEnvRect.Deflate( 2, 2 );
+   wxRect envRect = border;
+   envRect.Deflate( 2, 2 );
 
-   int kneeX = (int)rint((rangeDB+threshold)*mEnvRect.width/rangeDB);
-   int kneeY = (int)rint((rangeDB+threshold/ratio)*mEnvRect.height/rangeDB);
+   int kneeX = lrint((rangeDB+threshold)*envRect.width/rangeDB);
+   int kneeY = lrint((rangeDB+threshold/ratio)*envRect.height/rangeDB);
 
-   int finalY = mEnvRect.height;
-   int startY = (int)rint((threshold*(1.0/ratio-1.0))*mEnvRect.height/rangeDB);
+   int finalY = envRect.height;
+   int startY = lrint((threshold*(1.0/ratio-1.0))*envRect.height/rangeDB);
 
    // Yellow line for threshold
-/*   memDC.SetPen(wxPen(wxColour(220, 220, 0), 1, wxSOLID));
-   AColor::Line(memDC,
-                mEnvRect.x,
-                mEnvRect.y + mEnvRect.height - kneeY,
-                mEnvRect.x + mEnvRect.width - 1,
-                mEnvRect.y + mEnvRect.height - kneeY);*/
+/*   dc.SetPen(wxPen(wxColour(220, 220, 0), 1, wxSOLID));
+   AColor::Line(dc,
+                envRect.x,
+                envRect.y + envRect.height - kneeY,
+                envRect.x + envRect.width - 1,
+                envRect.y + envRect.height - kneeY);*/
 
    // Was: Nice dark red line for the compression diagram
-//   memDC.SetPen(wxPen(wxColour(180, 40, 40), 3, wxSOLID));
+//   dc.SetPen(wxPen(wxColour(180, 40, 40), 3, wxSOLID));
 
    // Nice blue line for compressor, same color as used in the waveform envelope.
-   memDC.SetPen( AColor::WideEnvelopePen) ;
+   dc.SetPen( AColor::WideEnvelopePen) ;
 
-   AColor::Line(memDC,
-                mEnvRect.x,
-                mEnvRect.y + mEnvRect.height - startY,
-                mEnvRect.x + kneeX - 1,
-                mEnvRect.y + mEnvRect.height - kneeY);
+   AColor::Line(dc,
+                envRect.x,
+                envRect.y + envRect.height - startY,
+                envRect.x + kneeX - 1,
+                envRect.y + envRect.height - kneeY);
 
-   AColor::Line(memDC,
-                mEnvRect.x + kneeX,
-                mEnvRect.y + mEnvRect.height - kneeY,
-                mEnvRect.x + mEnvRect.width - 1,
-                mEnvRect.y + mEnvRect.height - finalY);
+   AColor::Line(dc,
+                envRect.x + kneeX,
+                envRect.y + envRect.height - kneeY,
+                envRect.x + envRect.width - 1,
+                envRect.y + envRect.height - finalY);
 
    // Paint border again
-   memDC.SetBrush(*wxTRANSPARENT_BRUSH);
-   memDC.SetPen(*wxBLACK_PEN);
-   memDC.DrawRectangle(border);
+   dc.SetBrush(*wxTRANSPARENT_BRUSH);
+   dc.SetPen(*wxBLACK_PEN);
+   dc.DrawRectangle(border);
 
-   vRuler.Draw(memDC);
-   hRuler.Draw(memDC);
-
-   dc.Blit(0, 0, mWidth, mHeight,
-           &memDC, 0, 0, wxCOPY, FALSE);
+   vRuler.Draw(dc);
+   hRuler.Draw(dc);
 }
 
-//----------------------------------------------------------------------------
-// CompressorDialog
-//----------------------------------------------------------------------------
-
-enum {
-   ThresholdID = 7100,
-   NoiseFloorID,
-   RatioID,
-   AttackID,
-   DecayID
-};
-
-BEGIN_EVENT_TABLE(CompressorDialog, EffectDialog)
-   EVT_SIZE( CompressorDialog::OnSize )
-   EVT_BUTTON( ID_EFFECT_PREVIEW, CompressorDialog::OnPreview )
-   EVT_SLIDER( ThresholdID, CompressorDialog::OnSlider )
-   EVT_SLIDER( NoiseFloorID, CompressorDialog::OnSlider )
-   EVT_SLIDER( RatioID, CompressorDialog::OnSlider )
-   EVT_SLIDER( AttackID, CompressorDialog::OnSlider )
-   EVT_SLIDER( DecayID, CompressorDialog::OnSlider )
-END_EVENT_TABLE()
-
-CompressorDialog::CompressorDialog(EffectCompressor *effect, wxWindow *parent)
-:  EffectDialog(parent, _("Dynamic Range Compressor"), PROCESS_EFFECT,
-                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
-   mEffect(effect)
+void EffectCompressorPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
-   Init();
-
-   SetSizeHints(500, 400);
-   SetSize(500, 500);
-}
-
-void CompressorDialog::PopulateOrExchange(ShuttleGui & S)
-{
-   S.SetBorder(5);
-
-   S.StartHorizontalLay(wxEXPAND, true);
-   {
-      S.SetBorder(10);
-      mPanel = new CompressorPanel(S.GetParent(), wxID_ANY);
-      mPanel->threshold = threshold;
-      mPanel->noisefloor = noisefloor;
-      mPanel->ratio = ratio;
-      S.Prop(true).AddWindow(mPanel, wxEXPAND | wxALL);
-      S.SetBorder(5);
-   }
-   S.EndHorizontalLay();
-
-   S.StartStatic(wxT(""));
-   {
-      S.StartMultiColumn(3, wxEXPAND | wxALIGN_CENTER_VERTICAL);
-      {
-         S.SetStretchyCol(1);
-         mThresholdLabel = S.AddVariableText(_("Threshold:"), true,
-                                             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         S.SetStyle(wxSL_HORIZONTAL);
-         mThresholdSlider = S.Id(ThresholdID).AddSlider(wxT(""), -12, -1, -60);
-         mThresholdSlider->SetName(_("Threshold"));
-         mThresholdText = S.AddVariableText(wxT("XXX dB"), true,
-                                            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-
-         mNoiseFloorLabel = S.AddVariableText(_("Noise Floor:"), true,
-                                             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         S.SetStyle(wxSL_HORIZONTAL);
-         mNoiseFloorSlider = S.Id(NoiseFloorID).AddSlider(wxT(""), -8, -4, -16);
-         mNoiseFloorSlider->SetName(_("Noise Floor"));
-         mNoiseFloorText = S.AddVariableText(wxT("XXX dB"), true,
-                                            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-
-         mRatioLabel = S.AddVariableText(_("Ratio:"), true,
-                                         wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         S.SetStyle(wxSL_HORIZONTAL);
-         mRatioSlider = S.Id(RatioID).AddSlider(wxT(""), 4, 20, 3);
-         mRatioSlider->SetName(_("Ratio"));
-         mRatioText = S.AddVariableText(wxT("XXXX:1"), true,
-                                             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-
-         /* i18n-hint: Particularly in percussion, sounds can be regarded as having
-          * an 'attack' phase where the sound builds up and a 'decay' where the
-          * sound dies away.  So this means 'onset duration'.  */
-         mAttackLabel = S.AddVariableText(_("Attack Time:"), true,
-                                         wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         S.SetStyle(wxSL_HORIZONTAL);
-         mAttackSlider = S.Id(AttackID).AddSlider(wxT(""), 2, 500, 1);
-         mAttackSlider->SetName(_("Attack Time"));
-         mAttackText = S.AddVariableText(wxT("XXXX secs"), true,
-                                         wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-
-         mDecayLabel = S.AddVariableText(_("Release Time:"), true,
-                                         wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         S.SetStyle(wxSL_HORIZONTAL);
-         mDecaySlider = S.Id(DecayID).AddSlider(wxT(""), 10, 300, 1);
-         mDecaySlider->SetName(_("Release Time"));
-         mDecayText = S.AddVariableText(wxT("XXXX secs"), true,
-                                        wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-      }
-      S.EndMultiColumn();
-   }
-   S.EndStatic();
-
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
-      mGainCheckBox = S.AddCheckBox(_("Make-up gain for 0 dB after compressing"),
-                                    wxT("true"));
-      mPeakCheckBox = S.AddCheckBox(_("Compress based on Peaks"),
-                                    wxT("false"));
-   }
-   S.EndHorizontalLay();
-}
-
-bool CompressorDialog::TransferDataToWindow()
-{
-   mPanel->threshold = threshold;
-   mPanel->noisefloor = noisefloor;
-   mPanel->ratio = ratio;
-
-   mThresholdSlider->SetValue((int)rint(threshold));
-   mNoiseFloorSlider->SetValue((int)rint(noisefloor/5));
-   mRatioSlider->SetValue((int)rint(ratio*2));
-   mAttackSlider->SetValue((int)rint(attack*100));
-   mDecaySlider->SetValue((int)rint(decay*10));
-   mGainCheckBox->SetValue(useGain);
-   mPeakCheckBox->SetValue(usePeak);
-
-   TransferDataFromWindow();
-
-   return true;
-}
-
-bool CompressorDialog::TransferDataFromWindow()
-{
-   threshold = (double)mThresholdSlider->GetValue();
-   noisefloor = (double)mNoiseFloorSlider->GetValue() * 5.0;
-   ratio = (double)(mRatioSlider->GetValue() / 2.0);
-   attack = (double)(mAttackSlider->GetValue() / 100.0);
-   decay = (double)(mDecaySlider->GetValue() / 10.0);
-   useGain = mGainCheckBox->GetValue();
-   usePeak = mPeakCheckBox->GetValue();
-
-   mPanel->threshold = threshold;
-   mPanel->noisefloor = noisefloor;
-   mPanel->ratio = ratio;
-
-   mThresholdLabel->SetName(wxString::Format(_("Threshold %d dB"), (int) threshold));
-   /* i18n-hint: usually leave this as is as dB doesn't get translated*/
-   mThresholdText->SetLabel(wxString::Format(_("%3d dB"), (int) threshold));
-   mThresholdText->SetName(mThresholdText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-
-   mNoiseFloorLabel->SetName(wxString::Format(_("Noise Floor %d dB"), (int) noisefloor));
-   mNoiseFloorText->SetLabel(wxString::Format(_("%3d dB"), (int) noisefloor));
-   mNoiseFloorText->SetName(mNoiseFloorText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-
-   if (mRatioSlider->GetValue()%2 == 0) {
-      mRatioLabel->SetName(wxString::Format(_("Ratio %.0f to 1"), ratio));
-      /* i18n-hint: Unless your language has a different convention for ratios,
-       * like 8:1, leave as is.*/
-      mRatioText->SetLabel(wxString::Format(_("%.0f:1"), ratio));
-   }
-   else {
-      mRatioLabel->SetName(wxString::Format(_("Ratio %.1f to 1"), ratio));
-      /* i18n-hint: Unless your language has a different convention for ratios,
-       * like 8:1, leave as is.*/
-      mRatioText->SetLabel(wxString::Format(_("%.1f:1"), ratio));
-   }
-   mRatioText->SetName(mRatioText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-
-   mAttackLabel->SetName(wxString::Format(_("Attack Time %.2f secs"), attack));
-   mAttackText->SetLabel(wxString::Format(_("%.2f secs"), attack));
-   mAttackText->SetName(mAttackText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-
-   mDecayLabel->SetName(wxString::Format(_("Release Time %.1f secs"), decay));
-   mDecayText->SetLabel(wxString::Format(_("%.1f secs"), decay));
-   mDecayText->SetName(mDecayText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-
-   mPanel->Refresh(false);
-
-   return true;
-}
-
-void CompressorDialog::OnSize(wxSizeEvent &event)
-{
-   mPanel->Refresh( false );
-   event.Skip();
-}
-
-void CompressorDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
-{
-   TransferDataFromWindow();
-
-   // Save & restore parameters around Preview, because we didn't do OK.
-   double    oldAttackTime = mEffect->mAttackTime;
-   double    oldDecayTime = mEffect->mDecayTime;
-   double    oldThresholdDB = mEffect->mThresholdDB;
-   double    oldNoiseFloorDB = mEffect->mNoiseFloorDB;
-   double    oldRatio = mEffect->mRatio;
-   bool      oldUseGain = mEffect->mNormalize;
-   bool      oldUsePeak = mEffect->mUsePeak;
-
-   mEffect->mAttackTime = attack;
-   mEffect->mDecayTime = decay;
-   mEffect->mThresholdDB = threshold;
-   mEffect->mNoiseFloorDB = noisefloor;
-   mEffect->mRatio = ratio;
-   mEffect->mNormalize = useGain;
-   mEffect->mUsePeak = usePeak;
-
-   mEffect->Preview();
-
-   mEffect->mAttackTime = oldAttackTime;
-   mEffect->mDecayTime = oldDecayTime;
-   mEffect->mThresholdDB = oldThresholdDB;
-   mEffect->mNoiseFloorDB = oldNoiseFloorDB;
-   mEffect->mRatio = oldRatio;
-   mEffect->mNormalize = oldUseGain;
-   mEffect->mUsePeak = oldUsePeak;
-}
-
-void CompressorDialog::OnSlider(wxCommandEvent & WXUNUSED(event))
-{
-   TransferDataFromWindow();
+   Refresh(false);
 }

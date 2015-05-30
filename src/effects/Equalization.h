@@ -42,7 +42,10 @@
 #include "../widgets/Ruler.h"
 #include "../RealFFTf.h"
 
-class EqualizationDialog;
+#define EQUALIZATION_PLUGIN_SYMBOL XO("Equalization")
+
+
+class EqualizationPanel;
 
 //
 // One point in a curve
@@ -67,7 +70,7 @@ WX_DECLARE_OBJARRAY( EQPoint, EQPointArray);
 class EQCurve
 {
 public:
-   EQCurve( const wxString & name ) { Name = name; }
+   EQCurve( const wxString & name = wxEmptyString ) { Name = name; }
    EQCurve( const wxChar * name ) { Name = name; }
    wxString Name;
    EQPointArray points;
@@ -78,37 +81,46 @@ WX_DECLARE_OBJARRAY( EQCurve, EQCurveArray );
 class EffectEqualization48x;
 #endif
 
-class EffectEqualization: public Effect {
-
+class EffectEqualization : public Effect,
+                           public XMLTagHandler
+{
 public:
-
    EffectEqualization();
    virtual ~EffectEqualization();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Equalization..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#EQPlugin"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Equalization"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Performing Equalization"));
-   }
+   virtual EffectType GetType();
 
+   // EffectClientInterface implementation
+
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool LoadFactoryDefaults();
+
+   // EffectUIClientInterface implementation
+
+   virtual bool ValidateUI();
+
+   // Effect implementation
+
+   virtual bool Startup();
    virtual bool Init();
-   virtual bool PromptUser();
-   virtual bool DontPromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
-
    virtual bool Process();
+
+   virtual bool PopulateUI(wxWindow *parent);
+   virtual bool CloseUI();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
+
+private:
+   // EffectEqualization implementation
 
    // Number of samples in an FFT window
    enum {windowSize=16384};   //MJS - work out the optimum for this at run time?  Have a dialog box for it?
@@ -117,17 +129,60 @@ public:
    // low range of human hearing
    enum {loFreqI=20};
 
-
-
-private:
    bool ProcessOne(int count, WaveTrack * t,
                    sampleCount start, sampleCount len);
+   virtual bool CalcFilter();
+   void Filter(sampleCount len, float *buffer);
+   
+   void Flatten();
+   void EnvelopeUpdated();
+   void EnvelopeUpdated(Envelope *env, bool lin);
 
-   void Filter(sampleCount len,
-               float *buffer);
+   void LoadCurves(wxString fileName = wxT(""), bool append = false);
+   void SaveCurves(wxString fileName = wxT(""));
+   void Select(int sel);
+   void setCurve(int currentCurve);
+   void setCurve(wxString curveName);
+   void setCurve(void);
+   
+   // XMLTagHandler callback methods for loading and saving
+   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
+   XMLTagHandler *HandleXMLChild(const wxChar *tag);
+   void WriteXML(XMLWriter &xmlFile);
 
-   void ReadPrefs();
+   void UpdateCurves();
+   void UpdateDraw();
 
+   void LayoutEQSliders();
+   void UpdateGraphic(void);
+   void EnvLogToLin(void);
+   void EnvLinToLog(void);
+   void ErrMin(void);
+   void GraphicEQ(Envelope *env);
+   void spline(double x[], double y[], int n, double y2[]);
+   double splint(double x[], double y[], int n, double y2[], double xr);
+
+   void OnSize( wxSizeEvent & event );
+   void OnErase( wxEraseEvent & event );
+   void OnSlider( wxCommandEvent & event );
+   void OnInterp( wxCommandEvent & event );
+   void OnSliderM( wxCommandEvent & event );
+   void OnSliderDBMAX( wxCommandEvent & event );
+   void OnSliderDBMIN( wxCommandEvent & event );
+   void OnDrawMode( wxCommandEvent &event );
+   void OnGraphicMode( wxCommandEvent &event );
+   void OnCurve( wxCommandEvent & event );
+   void OnManage( wxCommandEvent & event );
+   void OnClear( wxCommandEvent & event );
+   void OnInvert( wxCommandEvent & event );
+   void OnGridOnOff( wxCommandEvent & event );
+   void OnLinFreq( wxCommandEvent & event );
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   void OnProcessingRadio( wxCommandEvent & event );
+   void OnBench( wxCommandEvent & event );
+#endif
+
+private:
    HFFT hFFT;
    float *mFFTBuffer;
    float *mFilterFuncR;
@@ -135,231 +190,39 @@ private:
    int mM;
    wxString mCurveName;
    bool mLin;
-   double mdBMax;
-   double mdBMin;
+   float mdBMax;
+   float mdBMin;
    bool mDrawMode;
    int mInterp;
-   bool mPrompting;
    bool mDrawGrid;
-   bool mEditingBatchParams;
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   bool mBench;
-   EffectEqualization48x *mEffectEqualization48x;
-friend class EffectEqualization48x;
-#endif
 
-public:
+   double mWhens[NUM_PTS];
+   double mWhenSliders[NUMBER_OF_BANDS+1];
+   int mBandsInUse;
+   RulerPanel *mdBRuler;
+   RulerPanel *mFreqRuler;
 
-friend class EqualizationDialog;
-friend class EqualizationPanel;
-};
-
-
-class EqualizationPanel: public wxPanel
-{
-public:
-   EqualizationPanel( double loFreq, double hiFreq,
-               Envelope *env,
-               EqualizationDialog *parent,
-               float *filterFuncR, float *filterFuncI, long windowSize,
-               wxWindowID id,
-               const wxPoint& pos = wxDefaultPosition,
-               const wxSize& size = wxDefaultSize);
-   ~EqualizationPanel();
-
-   void OnMouseEvent(wxMouseEvent & event);
-   void OnCaptureLost(wxMouseCaptureLostEvent & event);
-   void OnPaint(wxPaintEvent & event);
-   void OnSize (wxSizeEvent & event);
-
-   // We don't need or want to accept focus.
-   bool AcceptsFocus() const { return false; }
-
-   void Recalc();
-
-   int M;
-   float dBMax;
-   float dBMin;
-   bool RecalcRequired;
-
-   Envelope *mEnvelope;
-
-private:
-
-   wxBitmap *mBitmap;
-   wxRect mEnvRect;
-   EqualizationDialog *mParent;
-   int mWidth;
-   int mHeight;
-   long mWindowSize;
-   float *mFilterFuncR;
-   float *mFilterFuncI;
-   float *mOutr;
-   float *mOuti;
-
-   double mLoFreq;
-   double mHiFreq;
-
-   DECLARE_EVENT_TABLE()
-};
-
-
-// WDR: class declarations
-
-//----------------------------------------------------------------------------
-// EqualizationDialog
-//----------------------------------------------------------------------------
-
-class EqualizationDialog: public wxDialog, public XMLTagHandler
-{
-public:
-   // constructors and destructors
-   EqualizationDialog(EffectEqualization * effect,
-               double loFreq, double hiFreq,
-               float *filterFuncR, float *filterFuncI, long windowSize, wxString CurveName, bool disallowCustom,
-               wxWindow *parent, wxWindowID id,
-               const wxString &title,
-               const wxPoint& pos = wxDefaultPosition,
-               const wxSize& size = wxDefaultSize,
-               long style = wxDEFAULT_DIALOG_STYLE );
-   ~EqualizationDialog();
-
-   // WDR: method declarations for EqualizationDialog
-   virtual bool Validate();
-   virtual bool TransferDataToWindow();
-   virtual bool TransferDataFromWindow();
-   virtual bool CalcFilter();
-
-   void EnvelopeUpdated();
-   void EnvelopeUpdated(Envelope *env, bool lin);
-   static const double thirdOct[];
-   wxRadioButton *mFaderOrDraw[2];
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   wxRadioButton *mMathProcessingType[5]; // default, sse, sse threaded, AVX, AVX threaded (note AVX is not implemented yet
-#endif
-   wxChoice *mInterpChoice;
-   wxCheckBox *mLinFreq;
-   int M;
-   wxString curveName;
-   bool linCheck;
-   float dBMin;
-   float dBMax;
-   double whens[NUM_PTS];
-   double whenSliders[NUMBER_OF_BANDS+1];
-   int bandsInUse;
-   bool drawMode;
-   int interp;
-   bool drawGrid;
-   RulerPanel *dBRuler;
-   RulerPanel *freqRuler;
-   friend class EditCurvesDialog;
-
-private:
-   void MakeEqualizationDialog();
-   void CreateChoice();
-   void LoadCurves(wxString fileName = wxT(""), bool append = false);
-   void SaveCurves(wxString fileName = wxT(""));
-   void Select(int sel);
-   void setCurve(int currentCurve);
-   void setCurve(wxString curveName);
-   void setCurve(void);
-   void GraphicEQ(Envelope *env);
-   void spline(double x[], double y[], int n, double y2[]);
-   double splint(double x[], double y[], int n, double y2[], double xr);
-   void LayoutEQSliders();
-   void RevertCustom();
-   void Finish(bool ok);
-
-   // XMLTagHandler callback methods for loading and saving
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs);
-   XMLTagHandler *HandleXMLChild(const wxChar *tag);
-   void WriteXML(XMLWriter &xmlFile);
-
-private:
-   // WDR: member variable declarations for EqualizationDialog
-
-   enum
-   {
-      ID_FILTERPANEL = 10000,
-      ID_LENGTH,
-      ID_DBMAX,
-      ID_DBMIN,
-      ID_CURVE,
-      ID_MANAGE,
-      ID_DELETE,
-      ID_CLEAR,
-      ID_INVERT,
-      drawRadioID,
-      sliderRadioID,
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-      defaultMathRadioID,
-      sSERadioID,
-      sSEThreadedRadioID,
-      aVXRadioID,
-      aVXThreadedRadioID,
-      ID_BENCH,
-#endif
-      ID_INTERP,
-      ID_LIN_FREQ,
-      GridOnOffID,
-      ID_SLIDER   // needs to come last
-   };
-
-private:
-   // WDR: handler declarations for EqualizationDialog
-   void OnPaint( wxPaintEvent &event );
-   void OnSize( wxSizeEvent &event );
-   void OnErase( wxEraseEvent &event );
-   void OnSlider( wxCommandEvent &event );
-   void OnInterp( wxCommandEvent &event );
-   void OnSliderM( wxCommandEvent &event );
-   void OnSliderDBMAX( wxCommandEvent &event );
-   void OnSliderDBMIN( wxCommandEvent &event );
-   void OnDrawRadio(wxCommandEvent &event );
-   void OnSliderRadio(wxCommandEvent &event );
-#ifdef EXPERIMENTAL_EQ_SSE_THREADED
-   void OnProcessingRadio(wxCommandEvent &event );
-   void OnBench( wxCommandEvent & event);
-#endif
-   void OnLinFreq(wxCommandEvent &event );
-   void UpdateGraphic(void);
-   void EnvLogToLin(void);
-   void EnvLinToLog(void);
-   void ErrMin(void);
-   void OnCurve( wxCommandEvent &event );
-   void OnManage( wxCommandEvent &event );
-   void OnClear( wxCommandEvent &event );
-   void OnInvert( wxCommandEvent &event );
-   void OnPreview(wxCommandEvent &event);
-   void OnOk( wxCommandEvent &event );
-   void OnCancel( wxCommandEvent &event );
-   void OnGridOnOff( wxCommandEvent &event );
-private:
-   EffectEqualization * m_pEffect;
-
+   wxArrayString mInterpolations;
    bool mDisallowCustom;
    double mLoFreq;
    double mHiFreq;
-   float *mFilterFuncR;
-   float *mFilterFuncI;
    long mWindowSize;
    bool mDirty;
-   wxSlider * m_sliders[NUMBER_OF_BANDS];
-   int m_sliders_old[NUMBER_OF_BANDS];
-   double m_EQVals[NUMBER_OF_BANDS+1];
+   int mSlidersOld[NUMBER_OF_BANDS];
+   double mEQVals[NUMBER_OF_BANDS+1];
 
-   EqualizationPanel *mPanel;
+   EQCurveArray mCurves;
+
    Envelope *mLogEnvelope;
    Envelope *mLinEnvelope;
-   wxBoxSizer *mCurveSizer;
-   wxChoice *mCurve;
-   wxButton *mDelete;
-   wxButton *mManage;
-   wxStaticText *mMText;
-   wxStaticText *octText;
-   wxSlider *MSlider;
-   wxSlider *dBMinSlider;
-   wxSlider *dBMaxSlider;
+   Envelope *mEnvelope;
+
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   bool mBench;
+   EffectEqualization48x *mEffectEqualization48x;
+   friend class EffectEqualization48x;
+#endif
+
    wxBoxSizer *szrC;
    wxBoxSizer *szrG;
    wxBoxSizer *szrV;
@@ -374,22 +237,87 @@ private:
    wxBoxSizer *szr3;
    wxBoxSizer *szr4;
    wxBoxSizer *szr5;
-   wxSize size;
+
+   wxSizerItem *mLeftSpacer;
+
+   EqualizationPanel *mPanel;
+   wxRadioButton *mDraw;
+   wxRadioButton *mGraphic;
+   wxCheckBox *mLinFreq;
    wxCheckBox *mGridOnOff;
-   EQCurveArray mCurves;
-   EQCurve mCustomBackup;
+   wxChoice *mInterpChoice;
+   wxChoice *mCurve;
+   wxButton *mManage;
+   wxStaticText *mMText;
+   wxSlider *mMSlider;
+   wxSlider *mdBMinSlider;
+   wxSlider *mdBMaxSlider;
+   wxSlider *mSliders[NUMBER_OF_BANDS];
+
+#ifdef EXPERIMENTAL_EQ_SSE_THREADED
+   wxRadioButton *mMathProcessingType[5]; // default, sse, sse threaded, AVX, AVX threaded (note AVX is not implemented yet
+   wxBoxSizer *szrM;
+#endif
+
+   DECLARE_EVENT_TABLE();
+
+   friend class EqualizationPanel;
+   friend class EditCurvesDialog;
+};
+
+class EqualizationPanel: public wxPanel
+{
+public:
+   EqualizationPanel(EffectEqualization *effect, wxWindow *parent);
+   ~EqualizationPanel();
+
+   // We don't need or want to accept focus.
+   bool AcceptsFocus() const { return false; }
+
+   void ForceRecalc();
 
 private:
-   DECLARE_EVENT_TABLE()
+   void Recalc();
 
+   void OnMouseEvent(wxMouseEvent & event);
+   void OnCaptureLost(wxMouseCaptureLostEvent & event);
+   void OnPaint(wxPaintEvent & event);
+   void OnSize (wxSizeEvent & event);
+
+public:
+//   int & mM;
+//   float & mdBMax;
+//   float & mdBMin;
+//   Envelope & mEnvelope;
+
+private:
+   wxWindow *mParent;
+   EffectEqualization *mEffect;
+
+   bool mRecalcRequired;
+
+   wxBitmap *mBitmap;
+   wxRect mEnvRect;
+   int mWidth;
+   int mHeight;
+//   long mWindowSize;
+//   float *mFilterFuncR;
+//   float *mFilterFuncI;
+   float *mOutr;
+   float *mOuti;
+
+//   double mLoFreq;
+//   double mHiFreq;
+
+   DECLARE_EVENT_TABLE();
 };
 
 // EditCurvesDialog.  Note that the 'modified' curve used to be called 'custom' but is now called 'unnamed'
 // Some things that deal with 'unnamed' curves still use, for example, 'mCustomBackup' as variable names.
-class EditCurvesDialog:public wxDialog
+class EditCurvesDialog : public wxDialog
 {
 public:
-   EditCurvesDialog(EqualizationDialog * parent, int position);
+   EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position);
    ~EditCurvesDialog();
 
 private:
@@ -409,7 +337,8 @@ private:
 
    wxListCtrl *mList;   // List of curves.
    EQCurveArray mEditCurves;   // Copy of curves to muck about with
-   EqualizationDialog *mParent;   // the parent EQ Dialog
+   wxWindow *mParent; // the parent EQ Dialog
+   EffectEqualization *mEffect;   // the parent EQ effect
    int mPosition; // position of current curve in list
    void Populate();
    void PopulateOrExchange(ShuttleGui &S);
@@ -426,7 +355,6 @@ private:
    void OnOK(wxCommandEvent &event);
    DECLARE_EVENT_TABLE()
 };
-
 
 #if wxUSE_ACCESSIBILITY
 

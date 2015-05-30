@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/sh -e
 
 #  FLAC - Free Lossless Audio Codec
 #  Copyright (C) 2004-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
 #  components distributed under different licenses.  The codec libraries
@@ -18,23 +18,8 @@
 #  restrictive of those mentioned above.  See the file COPYING.Xiph in this
 #  distribution.
 
-die ()
-{
-	echo $* 1>&2
-	exit 1
-}
+. ./common.sh
 
-if [ x = x"$1" ] ; then 
-	BUILD=debug
-else
-	BUILD="$1"
-fi
-
-LD_LIBRARY_PATH=../src/libFLAC/.libs:$LD_LIBRARY_PATH
-LD_LIBRARY_PATH=../objs/$BUILD/lib:$LD_LIBRARY_PATH
-export LD_LIBRARY_PATH
-export MALLOC_CHECK_=3
-export MALLOC_PERTURB_=$((RANDOM % 255 + 1))
 PATH=../src/flac:$PATH
 PATH=../src/metaflac:$PATH
 PATH=../src/test_seeking:$PATH
@@ -45,16 +30,16 @@ if [ x"$FLAC__TEST_LEVEL" = x ] ; then
 	FLAC__TEST_LEVEL=1
 fi
 
-flac --help 1>/dev/null 2>/dev/null || die "ERROR can't find flac executable"
-metaflac --help 1>/dev/null 2>/dev/null || die "ERROR can't find metaflac executable"
+flac${EXE} --help 1>/dev/null 2>/dev/null || die "ERROR can't find flac executable"
+metaflac${EXE} --help 1>/dev/null 2>/dev/null || die "ERROR can't find metaflac executable"
 
 run_flac ()
 {
 	if [ x"$FLAC__TEST_WITH_VALGRIND" = xyes ] ; then
 		echo "valgrind --leak-check=yes --show-reachable=yes --num-callers=50 flac $*" >>test_seeking.valgrind.log
-		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 flac $* 4>>test_seeking.valgrind.log
+		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 flac${EXE} --no-error-on-compression-fail $* 4>>test_seeking.valgrind.log
 	else
-		flac $*
+		flac${EXE} --no-error-on-compression-fail $*
 	fi
 }
 
@@ -62,9 +47,9 @@ run_metaflac ()
 {
 	if [ x"$FLAC__TEST_WITH_VALGRIND" = xyes ] ; then
 		echo "valgrind --leak-check=yes --show-reachable=yes --num-callers=50 metaflac $*" >>test_seeking.valgrind.log
-		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 metaflac $* 4>>test_seeking.valgrind.log
+		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 metaflac${EXE} $* 4>>test_seeking.valgrind.log
 	else
-		metaflac $*
+		metaflac${EXE} $*
 	fi
 }
 
@@ -74,19 +59,17 @@ run_test_seeking ()
 		echo "valgrind --leak-check=yes --show-reachable=yes --num-callers=50 test_seeking $*" >>test_seeking.valgrind.log
 		valgrind --leak-check=yes --show-reachable=yes --num-callers=50 --log-fd=4 test_seeking $* 4>>test_seeking.valgrind.log
 	else
-		test_seeking $*
+		test_seeking${EXE} $*
 	fi
 }
 
-echo "Checking for --ogg support in flac..."
-if flac --ogg --silent --force-raw-format --endian=little --sign=signed --channels=1 --bps=8 --sample-rate=44100 -c $0 1>/dev/null 2>&1 ; then
+echo -n "Checking for --ogg support in flac ... "
+if flac${EXE} --ogg --no-error-on-compression-fail --silent --force-raw-format --endian=little --sign=signed --channels=1 --bps=8 --sample-rate=44100 -c $0 1>/dev/null 2>&1 ; then
 	has_ogg=yes;
-	echo "flac --ogg works"
 else
 	has_ogg=no;
-	echo "flac --ogg doesn't work"
 fi
-
+echo ${has_ogg}
 
 echo "Generating streams..."
 if [ ! -f noise.raw ] ; then
@@ -99,8 +82,8 @@ run_flac --verify --force --silent --force-raw-format --endian=big --sign=signed
 run_flac --verify --force --silent --force-raw-format --endian=big --sign=signed --sample-rate=44100 --bps=8 --channels=1 --blocksize=576 -S10x --output-name=tiny-s.flac noise8m32.raw || die "ERROR generating FLAC file"
 run_flac --verify --force --silent --force-raw-format --endian=big --sign=signed --sample-rate=44100 --bps=16 --channels=2 --blocksize=576 -S10x --output-name=small-s.flac noise.raw || die "ERROR generating FLAC file"
 
-tiny_samples=`metaflac --show-total-samples tiny.flac`
-small_samples=`metaflac --show-total-samples small.flac`
+tiny_samples=`metaflac${EXE} --show-total-samples tiny.flac`
+small_samples=`metaflac${EXE} --show-total-samples small.flac`
 
 tiny_seek_count=100
 if [ "$FLAC__TEST_LEVEL" -gt 1 ] ; then

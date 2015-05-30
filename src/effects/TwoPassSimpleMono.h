@@ -17,17 +17,15 @@
 
 class WaveTrack;
 
-class EffectTwoPassSimpleMono:public Effect {
+class EffectTwoPassSimpleMono : public Effect
+{
+public:
+   // Effect implementation
 
- public:
    virtual bool Process();
 
- private:
-   bool ProcessOne(WaveTrack * t,
-                   sampleCount start, sampleCount end);
-   bool ProcessPass();
-
- protected:
+protected:
+   // EffectTwoPassSimpleMono implemetation
 
    // Override these methods if you need to initialize something
    // before each pass. Return None if processing should stop.
@@ -66,6 +64,10 @@ class EffectTwoPassSimpleMono:public Effect {
    int    mPass;
    bool   mSecondPassDisabled;
 
+private:
+   bool ProcessOne(WaveTrack * t,
+                   sampleCount start, sampleCount end);
+   bool ProcessPass();
 };
 
 #endif

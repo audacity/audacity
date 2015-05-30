@@ -1,6 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -61,9 +61,9 @@
 
 #elif defined(_MSC_VER)
 #ifdef FLAC_API_EXPORTS
-#define	FLAC_API	_declspec(dllexport)
+#define	FLAC_API __declspec(dllexport)
 #else
-#define FLAC_API	_declspec(dllimport)
+#define FLAC_API __declspec(dllimport)
 #endif
 
 #elif defined(FLAC__USE_VISIBILITY_ATTR)

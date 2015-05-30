@@ -8,57 +8,92 @@
 
 *******************************************************************//**
 
-\class EffectFadeIn
-\brief An EffectSimpleMono
-
-*//****************************************************************//**
-
-\class EffectFadeOut
-\brief An EffectSimpleMono
+\class EffectFade
+\brief An Effect that reduces the volume to zero over  achosen interval.
 
 *//*******************************************************************/
 
 #include "../Audacity.h"
 
+#include <wx/intl.h>
+
 #include "Fade.h"
-#include "../WaveTrack.h"
 
-#include <wx/generic/textdlgg.h>
-#include <math.h>
-
-bool EffectFadeIn::NewTrackSimpleMono()
+EffectFade::EffectFade(bool fadeIn)
 {
-   mLen = (int)((mCurT1 - mCurT0) * mCurRate + 0.5);
+   mFadeIn = fadeIn;
+}
+
+EffectFade::~EffectFade()
+{
+}
+
+// IdentInterface implementation
+
+wxString EffectFade::GetSymbol()
+{
+   return mFadeIn
+      ? FADEIN_PLUGIN_SYMBOL
+      : FADEOUT_PLUGIN_SYMBOL;
+}
+
+wxString EffectFade::GetDescription()
+{
+   return mFadeIn
+      ? XO("Applies a linear fade-in to the selected audio")
+      : XO("Applies a linear fade-out to the selected audio");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectFade::GetType()
+{
+   return EffectTypeProcess;
+}
+
+bool EffectFade::IsInteractive()
+{
+   return false;
+}
+
+// EffectClientInterface implementation
+
+int EffectFade::GetAudioInCount()
+{
+   return 1;
+}
+
+int EffectFade::GetAudioOutCount()
+{
+   return 1;
+}
+
+bool EffectFade::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+{
    mSample = 0;
 
    return true;
 }
 
-bool EffectFadeIn::ProcessSimpleMono(float *buffer, sampleCount len)
+sampleCount EffectFade::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
-   for (sampleCount i = 0; i < len; i++)
-      buffer[i] = (float) (buffer[i] * (float) (mSample + i)
-                           / (float) (mLen));
-   mSample += len;
+   float *ibuf = inBlock[0];
+   float *obuf = outBlock[0];
 
-   return true;
-}
+   if (mFadeIn)
+   {
+      for (sampleCount i = 0; i < blockLen; i++)
+      {
+         obuf[i] = (ibuf[i] * ((float) mSample++)) / mSampleCnt;
+      }
+   }
+   else
+   {
+      for (sampleCount i = 0; i < blockLen; i++)
+      {
+         obuf[i] = (ibuf[i] * ((float) mSampleCnt - 1 - mSample++)) / mSampleCnt;
+      }
+   }
 
-bool EffectFadeOut::NewTrackSimpleMono()
-{
-   mLen = (int)((mCurT1 - mCurT0) * mCurRate + 0.5);
-   mSample = 0;
-
-   return true;
-}
-
-bool EffectFadeOut::ProcessSimpleMono(float *buffer, sampleCount len)
-{
-   for (sampleCount i = 0; i < len; i++)
-      buffer[i] = (float) (buffer[i]
-                           * (float) (mLen - 1 - (mSample + i))
-                           / (float) (mLen));
-   mSample += len;
-
-   return true;
+   return blockLen;
 }

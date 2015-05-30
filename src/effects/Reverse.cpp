@@ -18,10 +18,11 @@
 
 #include <math.h>
 
-#include "Reverse.h"
-#include "../Project.h"
-#include "../WaveTrack.h"
+#include <wx/intl.h>
+
 #include "../LabelTrack.h"
+
+#include "Reverse.h"
 
 //
 // EffectReverse
@@ -30,6 +31,36 @@
 EffectReverse::EffectReverse()
 {
 }
+
+EffectReverse::~EffectReverse()
+{
+}
+
+// IdentInterface implementation
+
+wxString EffectReverse::GetSymbol()
+{
+   return REVERSE_PLUGIN_SYMBOL;
+}
+
+wxString EffectReverse::GetDescription()
+{
+   return XO("Reverses the selected audio");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectReverse::GetType()
+{
+   return EffectTypeProcess;
+}
+
+bool EffectReverse::IsInteractive()
+{
+   return false;
+}
+
+// Effect implementation
 
 bool EffectReverse::Process()
 {
@@ -234,4 +265,3 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
 
    return rc;
 }
-

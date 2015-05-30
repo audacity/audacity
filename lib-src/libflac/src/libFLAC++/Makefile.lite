@@ -1,6 +1,6 @@
 #  libFLAC++ - Free Lossless Audio Codec library
 #  Copyright (C) 2002-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -39,7 +39,11 @@ libdir = $(topdir)/objs/$(BUILD)/lib
 ifeq ($(OS),Darwin)
     EXPLICIT_LIBS = $(libdir)/libFLAC.a $(OGG_EXPLICIT_LIBS) -lm -lstdc++
 else
+ifeq ($(findstring Windows,$(OS)),Windows)
+    LIBS = -lFLAC -lwin_utf8_io $(OGG_LIBS) -lm -lsupc++
+else
     LIBS = -lFLAC $(OGG_LIBS) -lm -lsupc++
+endif
 endif
 
 LIB_NAME = libFLAC++

@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2005-2009  Josh Coalson
- * Copyright (c) 2011-2013  Xiph.Org Foundation
+ * Copyright (c)  2005,2006,2007  Josh Coalson
  * Permission is granted to copy, distribute and/or modify this document
  * under the terms of the GNU Free Documentation License, Version 1.1
  * or any later version published by the Free Software Foundation;
@@ -10,18 +9,19 @@
 
 body
 {
-	background-color: #99CC99;
+	background-color: #9a9;
 	color: black;
-	margin: 0px;
+	margin: 0 auto;
 	padding: 0px;
+	max-width: 1200px;
 }
 
-div
+/*div
 {
 	background-color: #99CC99;
 	margin: 0px;
 	padding: 0px;
-}
+}*/
 
 div.logo
 {
@@ -40,15 +40,6 @@ div.navbar
 	text-align: center;
 }
 
-div.langbar
-{
-	border-width: 0px 0px 2px 0px;
-	border-style: solid;
-	border-color: black;
-	background-color: #EEEED4;
-	padding: 3px;
-	text-align: center;
-}
 
 div.above_nav
 {
@@ -68,7 +59,7 @@ div.body_with_sidebar
 div.box
 {
 	text-align: left;
-	margin: 0px 8px 0px 8px;
+	margin: 0;
 	background-color: #EEEED4;
 }
 
@@ -78,7 +69,7 @@ div.box_title
 	border-style: solid;
 	border-color: black;
 	background-color: #D3D4C5;
-	padding: 3px;
+	padding: 3px 6px;
 	font-family: lucida, verdana, helvetica, arial, sans-serif;
 	font-weight: bold;
 	font-size: 150%;
@@ -105,16 +96,27 @@ div.box_footer
 div.box_body
 {
 	background-color: #EEEED4;
-	padding: 0px 3px 0px 3px;
+	padding: 0px 6px;
 	font-family: lucida, verdana, helvetica, arial, sans-serif;
 	font-weight: normal;
 	font-size: 100%;
 }
 
+#newsbox h3
+{
+	margin: 5px 0 0 0; 
+	font-size: 0.9em; 
+}
+
+#newsbox p
+{
+	margin: 0;
+}
+
 div.smallbox
 {
 	text-align: left;
-	margin: 0px 8px 0px 0px;
+	margin: 0 0 0 8px;
 	background-color: #EEEED4;
 }
 

@@ -9,54 +9,84 @@
 *******************************************************************//**
 
 \class EffectSilence
-\brief An Effect for the "Generator" menu to add silence.
+\brief An effect to add silence.
 
 *//*******************************************************************/
 
-
 #include "../Audacity.h"
 
-#include <wx/defs.h>
-
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
+#include <wx/intl.h>
 
 #include "Silence.h"
-#include "../WaveTrack.h"
-#include "../TimeDialog.h"
-#include "../Prefs.h"
 
-bool EffectSilence::PromptUser()
+EffectSilence::EffectSilence()
 {
-   wxString fmt;
+   SetLinearEffectFlag(true);
+}
 
-   if (mT1 > mT0) {
-      // there is a selection: let's fit in there...
-      mDuration = mT1 - mT0;
-      fmt = _("hh:mm:ss + samples");
-   } else {
-      // Retrieve last used values
-      gPrefs->Read(wxT("/Effects/SilenceGen/Duration"), &mDuration, 30L);
-      fmt = _("hh:mm:ss + milliseconds");
-   }
+EffectSilence::~EffectSilence()
+{
+}
 
-   TimeDialog dlog(mParent, _("Silence Generator"), fmt, mProjectRate,
-      mDuration );
+// IdentInterface implementation
 
-   if (dlog.ShowModal() == wxID_CANCEL)
-      return false;
+wxString EffectSilence::GetSymbol()
+{
+   return SILENCE_PLUGIN_SYMBOL;
+}
 
-   mDuration = dlog.GetTimeValue();
-   /* Save last used values.
-      Save duration unless value was got from selection, so we save only
-      when user explicitly set up a value */
-   if (mT1 == mT0)
+wxString EffectSilence::GetDescription()
+{
+   return XO("Creates audio of zero amplitude");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectSilence::GetType()
+{
+   return EffectTypeGenerate;
+}
+
+// Effect implementation
+
+void EffectSilence::PopulateOrExchange(ShuttleGui & S)
+{
+   S.StartVerticalLay();
    {
-      gPrefs->Write(wxT("/Effects/SilenceGen/Duration"), mDuration);
-      gPrefs->Flush();
+      S.StartHorizontalLay();
+      {
+         S.AddPrompt(_("Duration:"));
+         mDurationT = new
+            NumericTextCtrl(NumericConverter::TIME,
+                              S.GetParent(),
+                              wxID_ANY,
+                              GetDurationFormat(),
+                              GetDuration(),
+                              mProjectRate,
+                              wxDefaultPosition,
+                              wxDefaultSize,
+                              true);
+         mDurationT->SetName(_("Duration"));
+         mDurationT->EnableMenu();
+         S.AddWindow(mDurationT, wxALIGN_CENTER | wxALL);
+      }
+      S.EndHorizontalLay();
    }
+   S.EndVerticalLay();
+
+   return;
+}
+
+bool EffectSilence::TransferDataToWindow()
+{
+   mDurationT->SetValue(GetDuration());
+
+   return true;
+}
+
+bool EffectSilence::TransferDataFromWindow()
+{
+   SetDuration(mDurationT->GetValue());
 
    return true;
 }
@@ -65,7 +95,7 @@ bool EffectSilence::GenerateTrack(WaveTrack *tmp,
                                   const WaveTrack & WXUNUSED(track),
                                   int WXUNUSED(ntrack))
 {
-   const bool bResult = tmp->InsertSilence(0.0, mDuration);
+   bool bResult = tmp->InsertSilence(0.0, GetDuration());
    wxASSERT(bResult);
    return bResult;
 }

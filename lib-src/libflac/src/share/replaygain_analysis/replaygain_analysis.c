@@ -38,8 +38,8 @@
  *
  *  to initialize everything. Call
  *
- *    AnalyzeSamples ( const Float_t*  left_samples,
- *                     const Float_t*  right_samples,
+ *    AnalyzeSamples ( const flac_float_t*  left_samples,
+ *                     const flac_float_t*  right_samples,
  *                     size_t          num_samples,
  *                     int             num_channels );
  *
@@ -59,8 +59,8 @@
  *
  *  Pseudo-code to process an album:
  *
- *    Float_t       l_samples [4096];
- *    Float_t       r_samples [4096];
+ *    flac_float_t       l_samples [4096];
+ *    flac_float_t       r_samples [4096];
  *    size_t        num_samples;
  *    unsigned int  num_songs;
  *    unsigned int  i;
@@ -89,7 +89,7 @@
  *  Optimization/clarity suggestions are welcome.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -97,15 +97,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "share/compat.h"
+#include "share/replaygain_analysis.h"
 
-#include "replaygain_analysis.h"
-
-Float_t ReplayGainReferenceLoudness = 89.0; /* in dB SPL */
-
-typedef unsigned short  Uint16_t;
-typedef signed short    Int16_t;
-typedef unsigned int    Uint32_t;
-typedef signed int      Int32_t;
+flac_float_t ReplayGainReferenceLoudness = 89.0; /* in dB SPL */
 
 #define YULE_ORDER         10
 #define BUTTER_ORDER        2
@@ -117,29 +112,29 @@ typedef signed int      Int32_t;
 #define MAX_ORDER               (BUTTER_ORDER > YULE_ORDER ? BUTTER_ORDER : YULE_ORDER)
 #define PINK_REF                64.82 /* 298640883795 */                          /* calibration value */
 
-static Float_t          linprebuf [MAX_ORDER * 2];
-static Float_t*         linpre;                                          /* left input samples, with pre-buffer */
-static Float_t*         lstepbuf;
-static Float_t*         lstep;                                           /* left "first step" (i.e. post first filter) samples */
-static Float_t*         loutbuf;
-static Float_t*         lout;                                            /* left "out" (i.e. post second filter) samples */
-static Float_t          rinprebuf [MAX_ORDER * 2];
-static Float_t*         rinpre;                                          /* right input samples ... */
-static Float_t*         rstepbuf;
-static Float_t*         rstep;
-static Float_t*         routbuf;
-static Float_t*         rout;
+static flac_float_t          linprebuf [MAX_ORDER * 2];
+static flac_float_t*         linpre;                                          /* left input samples, with pre-buffer */
+static flac_float_t*         lstepbuf;
+static flac_float_t*         lstep;                                           /* left "first step" (i.e. post first filter) samples */
+static flac_float_t*         loutbuf;
+static flac_float_t*         lout;                                            /* left "out" (i.e. post second filter) samples */
+static flac_float_t          rinprebuf [MAX_ORDER * 2];
+static flac_float_t*         rinpre;                                          /* right input samples ... */
+static flac_float_t*         rstepbuf;
+static flac_float_t*         rstep;
+static flac_float_t*         routbuf;
+static flac_float_t*         rout;
 static unsigned int              sampleWindow;                           /* number of samples required to reach number of milliseconds required for RMS window */
 static unsigned long    totsamp;
 static double           lsum;
 static double           rsum;
 #if 0
-static Uint32_t  A [(size_t)(STEPS_per_dB * MAX_dB)];
-static Uint32_t  B [(size_t)(STEPS_per_dB * MAX_dB)];
+static uint32_t  A [(size_t)(STEPS_per_dB * MAX_dB)];
+static uint32_t  B [(size_t)(STEPS_per_dB * MAX_dB)];
 #else
 /* [JEC] Solaris Forte compiler doesn't like float calc in array indices */
-static Uint32_t  A [120 * 100];
-static Uint32_t  B [120 * 100];
+static uint32_t  A [120 * 100];
+static uint32_t  B [120 * 100];
 #endif
 
 #ifdef _MSC_VER
@@ -149,10 +144,10 @@ static Uint32_t  B [120 * 100];
 struct ReplayGainFilter {
     long rate;
     unsigned downsample;
-    Float_t BYule[YULE_ORDER+1];
-    Float_t AYule[YULE_ORDER+1];
-    Float_t BButter[BUTTER_ORDER+1];
-    Float_t AButter[BUTTER_ORDER+1];
+    flac_float_t BYule[YULE_ORDER+1];
+    flac_float_t AYule[YULE_ORDER+1];
+    flac_float_t BButter[BUTTER_ORDER+1];
+    flac_float_t AButter[BUTTER_ORDER+1];
 };
 
 static struct ReplayGainFilter *replaygainfilter;
@@ -273,17 +268,17 @@ static const struct ReplayGainFilter ReplayGainFilters[] = {
 /* When calling this procedure, make sure that ip[-order] and op[-order] point to real data! */
 
 static void
-filter ( const Float_t* input, Float_t* output, size_t nSamples, const Float_t* a, const Float_t* b, size_t order, unsigned downsample )
+filter ( const flac_float_t* input, flac_float_t* output, size_t nSamples, const flac_float_t* a, const flac_float_t* b, size_t order, unsigned downsample )
 {
     double  y;
     size_t  i;
     size_t  k;
 
-    const Float_t* input_head = input;
-    const Float_t* input_tail;
+    const flac_float_t* input_head = input;
+    const flac_float_t* input_tail;
 
-    Float_t* output_head = output;
-    Float_t* output_tail;
+    flac_float_t* output_head = output;
+    flac_float_t* output_tail;
 
     for ( i = 0; i < nSamples; i++, input_head += downsample, ++output_head ) {
 
@@ -298,7 +293,7 @@ filter ( const Float_t* input, Float_t* output, size_t nSamples, const Float_t* 
             y += *input_tail * b[k] - *output_tail * a[k];
         }
 
-        output[i] = (Float_t)y;
+        output[i] = (flac_float_t)y;
     }
 }
 
@@ -342,7 +337,7 @@ CreateGainFilter ( long samplefreq )
 }
 
 static void*
-ReallocateWindowBuffer(unsigned window_size, Float_t **window_buffer)
+ReallocateWindowBuffer(unsigned window_size, flac_float_t **window_buffer)
 {
     void *p = realloc(
         *window_buffer, sizeof(**window_buffer) * (window_size + MAX_ORDER));
@@ -421,11 +416,11 @@ InitGainAnalysis ( long samplefreq )
 /* returns GAIN_ANALYSIS_OK if successful, GAIN_ANALYSIS_ERROR if not */
 
 int
-AnalyzeSamples ( const Float_t* left_samples, const Float_t* right_samples, size_t num_samples, int num_channels )
+AnalyzeSamples ( const flac_float_t* left_samples, const flac_float_t* right_samples, size_t num_samples, int num_channels )
 {
     unsigned        downsample = replaygainfilter->downsample;
-    const Float_t*  curleft;
-    const Float_t*  curright;
+    const flac_float_t*  curleft;
+    const flac_float_t*  curright;
     long            prebufsamples;
     long            batchsamples;
     long            cursamples;
@@ -491,10 +486,10 @@ AnalyzeSamples ( const Float_t* left_samples, const Float_t* right_samples, size
             if ( ival >= (int)(sizeof(A)/sizeof(*A)) ) ival = (int)(sizeof(A)/sizeof(*A)) - 1;
             A [ival]++;
             lsum = rsum = 0.;
-            memmove ( loutbuf , loutbuf  + totsamp, MAX_ORDER * sizeof(Float_t) );
-            memmove ( routbuf , routbuf  + totsamp, MAX_ORDER * sizeof(Float_t) );
-            memmove ( lstepbuf, lstepbuf + totsamp, MAX_ORDER * sizeof(Float_t) );
-            memmove ( rstepbuf, rstepbuf + totsamp, MAX_ORDER * sizeof(Float_t) );
+            memmove ( loutbuf , loutbuf  + totsamp, MAX_ORDER * sizeof(flac_float_t) );
+            memmove ( routbuf , routbuf  + totsamp, MAX_ORDER * sizeof(flac_float_t) );
+            memmove ( lstepbuf, lstepbuf + totsamp, MAX_ORDER * sizeof(flac_float_t) );
+            memmove ( rstepbuf, rstepbuf + totsamp, MAX_ORDER * sizeof(flac_float_t) );
             totsamp = 0;
         }
         if ( totsamp > sampleWindow )   /* somehow I really screwed up: Error in programming! Contact author about totsamp > sampleWindow */
@@ -502,10 +497,10 @@ AnalyzeSamples ( const Float_t* left_samples, const Float_t* right_samples, size
     }
 
     if ( num_samples < MAX_ORDER ) {
-        memmove ( linprebuf,                           linprebuf + num_samples, (MAX_ORDER-num_samples) * sizeof(Float_t) );
-        memmove ( rinprebuf,                           rinprebuf + num_samples, (MAX_ORDER-num_samples) * sizeof(Float_t) );
-        memcpy  ( linprebuf + MAX_ORDER - num_samples, left_samples,          num_samples             * sizeof(Float_t) );
-        memcpy  ( rinprebuf + MAX_ORDER - num_samples, right_samples,         num_samples             * sizeof(Float_t) );
+        memmove ( linprebuf,                           linprebuf + num_samples, (MAX_ORDER-num_samples) * sizeof(flac_float_t) );
+        memmove ( rinprebuf,                           rinprebuf + num_samples, (MAX_ORDER-num_samples) * sizeof(flac_float_t) );
+        memcpy  ( linprebuf + MAX_ORDER - num_samples, left_samples,          num_samples             * sizeof(flac_float_t) );
+        memcpy  ( rinprebuf + MAX_ORDER - num_samples, right_samples,         num_samples             * sizeof(flac_float_t) );
     }
     else {
         downsample = replaygainfilter->downsample;
@@ -523,11 +518,11 @@ AnalyzeSamples ( const Float_t* left_samples, const Float_t* right_samples, size
 }
 
 
-static Float_t
-analyzeResult ( Uint32_t* Array, size_t len )
+static flac_float_t
+analyzeResult ( uint32_t* Array, size_t len )
 {
-    Uint32_t  elems;
-    Int32_t   upper;
+    uint32_t  elems;
+    int32_t   upper;
     size_t    i;
 
     elems = 0;
@@ -536,20 +531,25 @@ analyzeResult ( Uint32_t* Array, size_t len )
     if ( elems == 0 )
         return GAIN_NOT_ENOUGH_SAMPLES;
 
-    upper = (Int32_t) ceil (elems * (1. - RMS_PERCENTILE));
+/* workaround for GCC bug #61423: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61423 */
+#if 0
+    upper = (int32_t) ceil (elems * (1. - RMS_PERCENTILE));
+#else
+    upper = (int32_t) (elems / 20 + ((elems % 20) ? 1 : 0));
+#endif
     for ( i = len; i-- > 0; ) {
         if ( (upper -= Array[i]) <= 0 )
             break;
     }
 
-    return (Float_t) ((Float_t)PINK_REF - (Float_t)i / (Float_t)STEPS_per_dB);
+    return (flac_float_t) ((flac_float_t)PINK_REF - (flac_float_t)i / (flac_float_t)STEPS_per_dB);
 }
 
 
-Float_t
+flac_float_t
 GetTitleGain ( void )
 {
-    Float_t  retval;
+    flac_float_t  retval;
     unsigned int    i;
 
     retval = analyzeResult ( A, sizeof(A)/sizeof(*A) );
@@ -568,7 +568,7 @@ GetTitleGain ( void )
 }
 
 
-Float_t
+flac_float_t
 GetAlbumGain ( void )
 {
     return analyzeResult ( B, sizeof(B)/sizeof(*B) );

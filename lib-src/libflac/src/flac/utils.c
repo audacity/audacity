@@ -1,6 +1,6 @@
 /* flac - Command-line FLAC encoder/decoder
  * Copyright (C) 2002-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -176,17 +176,20 @@ static int console_chars_left;
 
 int get_console_width(void)
 {
-	int width = 80;
+	int width = 0;
 #if defined _WIN32
 	width = win_get_console_width();
 #elif defined __EMX__
 	int s[2];
 	_scrsize (s);
 	width = s[0];
-#elif !defined __ANDROID__
+#elif defined GWINSZ_IN_SYS_IOCTL
 	struct winsize w;
-	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1)	width = w.ws_col;
+	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) != -1)
+		width = w.ws_col;
 #endif
+	if (width <= 0)
+		width = 80;
 	return width;
 }
 
@@ -244,12 +247,8 @@ void stats_print_info(int level, const char *format, ...)
 	if (flac__utils_verbosity_ >= level) {
 		va_list args;
 		va_start(args, format);
-		len = vsnprintf(tmp, sizeof(tmp), format, args);
+		len = flac_vsnprintf(tmp, sizeof(tmp), format, args);
 		va_end(args);
-		if (len < 0 || len == sizeof(tmp)) {
-			tmp[sizeof(tmp)-1] = '\0';
-			len = sizeof(tmp)-1;
-		}
 		stats_clear();
 		if (len >= console_chars_left) {
 			clear_len = console_chars_left;
@@ -258,6 +257,7 @@ void stats_print_info(int level, const char *format, ...)
 			console_chars_left = console_width;
 		}
 		stats_char_count = fprintf(stderr, "%s", tmp);
+		fflush(stderr);
 	}
 }
 
@@ -387,7 +387,7 @@ FLAC__bool flac__utils_set_channel_mask_tag(FLAC__StreamMetadata *object, FLAC__
 
 	FLAC__ASSERT(object);
 	FLAC__ASSERT(object->type == FLAC__METADATA_TYPE_VORBIS_COMMENT);
-	FLAC__ASSERT(strlen(CHANNEL_MASK_TAG+1+2+16+1) <= sizeof(tag)); /* +1 for =, +2 for 0x, +16 for digits, +1 for NUL */
+	FLAC__ASSERT(strlen(CHANNEL_MASK_TAG)+1+2+16+1 <= sizeof(tag)); /* +1 for =, +2 for 0x, +16 for digits, +1 for NUL */
 	entry.entry = (FLAC__byte*)tag;
 	if((entry.length = flac_snprintf(tag, sizeof(tag), "%s=0x%04X", CHANNEL_MASK_TAG, (unsigned)channel_mask)) >= sizeof(tag))
 		return false;

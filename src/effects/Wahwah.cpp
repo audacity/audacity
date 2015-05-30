@@ -14,99 +14,107 @@
 *******************************************************************//**
 
 \class EffectWahwah
-\brief An EffectSimpleMono
-
-*//****************************************************************//**
-
-\class WahwahDialog
-\brief Dialog for EffectWahwah
+\brief An Effect that adds a 'spectral glide'.
 
 *//*******************************************************************/
 
-
-
 #include "../Audacity.h"
-
-#include "Wahwah.h"
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../FFT.h"
 
 #include <math.h>
 
 #include <wx/intl.h>
-#include <wx/button.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/sizer.h>
-#include <wx/intl.h>
-#include <wx/valtext.h>
+
+#include "../widgets/valnum.h"
+
+#include "Wahwah.h"
+
+enum
+{
+   ID_Freq = 10000,
+   ID_Phase,
+   ID_Depth,
+   ID_Res,
+   ID_FreqOfs
+};
+
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name       Type     Key               Def      Min      Max      Scale
+Param( Freq,      double,  XO("Freq"),       1.5,     0.1,     4.0,     10  );
+Param( Phase,     double,  XO("Phase"),      0.0,     0.0,     359.0,   1   );
+Param( Depth,     int,     XO("Depth"),      70,      0,       100,     1   ); // scaled to 0-1 before processing
+Param( Res,       double,  XO("Resonance"),  2.5,     0.1,     10.0,    10  );
+Param( FreqOfs,   int,     XO("Offset"),     30,      0,       100,     1   ); // scaled to 0-1 before processing
+
+// How many samples are processed before recomputing the lfo value again
+#define lfoskipsamples 30
 
 //
 // EffectWahwah
 //
 
-#define lfoskipsamples 30
+BEGIN_EVENT_TABLE(EffectWahwah, wxEvtHandler)
+    EVT_SLIDER(ID_Freq, EffectWahwah::OnFreqSlider)
+    EVT_SLIDER(ID_Phase, EffectWahwah::OnPhaseSlider)
+    EVT_SLIDER(ID_Depth, EffectWahwah::OnDepthSlider)
+    EVT_SLIDER(ID_Res, EffectWahwah::OnResonanceSlider)
+    EVT_SLIDER(ID_FreqOfs, EffectWahwah::OnFreqOffSlider)
+    EVT_TEXT(ID_Freq, EffectWahwah::OnFreqText)
+    EVT_TEXT(ID_Phase, EffectWahwah::OnPhaseText)
+    EVT_TEXT(ID_Depth, EffectWahwah::OnDepthText)
+    EVT_TEXT(ID_Res, EffectWahwah::OnResonanceText)
+    EVT_TEXT(ID_FreqOfs, EffectWahwah::OnFreqOffText)
+END_EVENT_TABLE();
 
 EffectWahwah::EffectWahwah()
 {
-   freq = float(1.5);
-   startphase = 0;
-   depth = (float)0.7;
-   freqofs = (float)0.3;
-   res = float(2.5);
+   mFreq = DEF_Freq;
+   mPhase = DEF_Phase;
+   mDepth = DEF_Depth;
+   mRes = DEF_Res;
+   mFreqOfs = DEF_FreqOfs;
+
+   SetLinearEffectFlag(true);
 }
 
-wxString EffectWahwah::GetEffectDescription() {
-   // Note: This is useful only after values have been set.
-   return wxString::Format(_("Applied effect: %s frequency = %.1f Hz, start phase = %.0f deg, depth = %.0f%%, resonance = %.1f, frequency offset = %.0f%%"),
-                           this->GetEffectName().c_str(),
-                           freq,
-                           (startphase * 180 / M_PI),
-                           (depth * 100),
-                           res,
-                           (freqofs * 100));
-}
-
-bool EffectWahwah::PromptUser()
+EffectWahwah::~EffectWahwah()
 {
-   WahwahDialog dlog(this, mParent);
-
-   dlog.freq = freq;
-   dlog.freqoff = freqofs * 100;
-   dlog.startphase = startphase * 180 / M_PI;
-   dlog.res = res;
-   dlog.depth = depth * 100;
-
-   dlog.TransferDataToWindow();
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-
-   if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
-
-   freq = dlog.freq;
-   freqofs = dlog.freqoff / 100;
-   startphase = dlog.startphase * M_PI / 180;
-   res = dlog.res;
-   depth = dlog.depth / 100;
-
-   return true;
 }
 
-bool EffectWahwah::TransferParameters( Shuttle & shuttle )
+// IdentInterface implementation
+
+wxString EffectWahwah::GetSymbol()
 {
-   shuttle.TransferFloat(wxT("Freq"),freq,1.5f);
-   shuttle.TransferFloat(wxT("Phase"),startphase,0.0f);
-   shuttle.TransferFloat(wxT("Depth"),depth,0.7f);
-   shuttle.TransferFloat(wxT("Resonance"),res,2.5f);
-   shuttle.TransferFloat(wxT("Offset"),freqofs,0.3f);
-   return true;
+   return WAHWAH_PLUGIN_SYMBOL;
 }
 
-bool EffectWahwah::NewTrackSimpleMono()
+wxString EffectWahwah::GetDescription()
 {
-   lfoskip = freq * 2 * M_PI / mCurRate;
+   return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectWahwah::GetType()
+{
+   return EffectTypeProcess;
+}
+
+// EffectClientInterface implementation
+
+int EffectWahwah::GetAudioInCount()
+{
+   return 1;
+}
+
+int EffectWahwah::GetAudioOutCount()
+{
+   return 1;
+}
+
+bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
+{
+   lfoskip = mFreq * 2 * M_PI / mSampleRate;
    skipcount = 0;
    xn1 = 0;
    xn2 = 0;
@@ -119,29 +127,38 @@ bool EffectWahwah::NewTrackSimpleMono()
    a1 = 0;
    a2 = 0;
 
-   phase = startphase;
-   if (mCurChannel == Track::RightChannel)
-      phase += (float)M_PI;
+   depth = mDepth / 100.0;
+   freqofs = mFreqOfs / 100.0;
+
+   phase = mPhase * M_PI / 180.0;
+   if (chanMap[0] == ChannelNameFrontRight)
+   {
+      phase += M_PI;
+   }
 
    return true;
 }
 
-bool EffectWahwah::ProcessSimpleMono(float *buffer, sampleCount len)
+sampleCount EffectWahwah::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
-   float frequency, omega, sn, cs, alpha;
-   float in, out;
+   float *ibuf = inBlock[0];
+   float *obuf = outBlock[0];
+   double frequency, omega, sn, cs, alpha;
+   double in, out;
 
-   for (int i = 0; i < len; i++) {
-      in = buffer[i];
+   for (int i = 0; i < blockLen; i++)
+   {
+      in = (double) ibuf[i];
 
-      if ((skipcount++) % lfoskipsamples == 0) {
+      if ((skipcount++) % lfoskipsamples == 0)
+      {
          frequency = (1 + cos(skipcount * lfoskip + phase)) / 2;
          frequency = frequency * depth * (1 - freqofs) + freqofs;
          frequency = exp((frequency - 1) * 6);
          omega = M_PI * frequency;
          sn = sin(omega);
          cs = cos(omega);
-         alpha = sn / (2 * res);
+         alpha = sn / (2 * mRes);
          b0 = (1 - cs) / 2;
          b1 = 1 - cs;
          b2 = (1 - cs) / 2;
@@ -155,359 +172,217 @@ bool EffectWahwah::ProcessSimpleMono(float *buffer, sampleCount len)
       yn2 = yn1;
       yn1 = out;
 
-      buffer[i] = (float) out;
+      obuf[i] = (float) out;
+   }
+
+   return blockLen;
+}
+
+bool EffectWahwah::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_Freq, mFreq);
+   parms.Write(KEY_Phase, mPhase);
+   parms.Write(KEY_Depth, mDepth);
+   parms.Write(KEY_Res, mRes);
+   parms.Write(KEY_FreqOfs, mFreqOfs);
+   
+   return true;
+}
+
+bool EffectWahwah::SetAutomationParameters(EffectAutomationParameters & parms)
+{
+   ReadAndVerifyDouble(Freq);
+   ReadAndVerifyDouble(Phase);
+   ReadAndVerifyInt(Depth);
+   ReadAndVerifyDouble(Res);
+   ReadAndVerifyInt(FreqOfs);
+
+   mFreq = Freq;
+   mPhase = Phase;
+   mDepth = Depth;
+   mRes = Res;
+   mFreqOfs = FreqOfs;
+
+   return true;
+}
+
+// Effect implementation
+
+void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
+{
+   S.SetBorder(5);
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(3, wxEXPAND);
+   {
+      S.SetStretchyCol(2);
+
+      FloatingPointValidator<double> vldfreq(1, &mFreq);
+      vldfreq.SetRange(MIN_Freq, MAX_Freq);
+      mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Frequency (Hz):"), wxT(""), 12);
+      mFreqT->SetValidator(vldfreq);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mFreqS = S.Id(ID_Freq).AddSlider(wxT(""), DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, MIN_Freq * SCL_Freq);
+      mFreqS->SetName(_("LFO frequency in hertz"));
+      mFreqS->SetMinSize(wxSize(100, -1));
+
+      FloatingPointValidator<double> vldphase(1, &mPhase);
+      vldphase.SetRange(MIN_Phase, MAX_Phase);
+      mPhaseT = S.Id(ID_Phase).AddTextBox(_("LFO Start Phase (deg.):"), wxT(""), 12);
+      mPhaseT->SetValidator(vldphase);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mPhaseS = S.Id(ID_Phase).AddSlider(wxT(""), DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
+      mPhaseS->SetName(_("LFO start phase in degrees"));
+      mPhaseS->SetLineSize(10);
+      mPhaseS->SetMinSize(wxSize(100, -1));
+
+      IntegerValidator<int> vlddepth(&mDepth);
+      vlddepth.SetRange(MIN_Depth, MAX_Depth);
+      mDepthT = S.Id(ID_Depth).AddTextBox(_("Depth (%):"), wxT(""), 12);
+      mDepthT->SetValidator(vlddepth);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mDepthS = S.Id(ID_Depth).AddSlider(wxT(""), DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
+      mDepthS->SetName(_("Depth in percent"));
+      mDepthS->SetMinSize(wxSize(100, -1));
+
+      FloatingPointValidator<double> vldres(1, &mRes);
+      vldres.SetRange(MIN_Res, MAX_Res);
+      mResT = S.Id(ID_Res).AddTextBox(_("Resonance:"), wxT(""), 12);
+      mResT->SetValidator(vldres);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mResS = S.Id(ID_Res).AddSlider(wxT(""), DEF_Res * SCL_Res, MAX_Res * SCL_Res, MIN_Res * SCL_Res);
+      mResS->SetName(_("Resonance"));
+      mResS->SetMinSize(wxSize(100, -1));
+
+      IntegerValidator<int> vldfreqoffset(&mFreqOfs);
+      vldfreqoffset.SetRange(MIN_FreqOfs, MAX_FreqOfs);
+      mFreqOfsT = S.Id(ID_FreqOfs).AddTextBox(_("Wah Frequency Offset (%):"), wxT(""), 12);
+      mFreqOfsT->SetValidator(vldfreqoffset);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mFreqOfsS = S.Id(ID_FreqOfs).AddSlider(wxT(""), DEF_FreqOfs * SCL_FreqOfs, MAX_FreqOfs * SCL_FreqOfs, MIN_FreqOfs * SCL_FreqOfs);
+      mFreqOfsT->SetName(_("Wah frequency offset in percent"));
+      mFreqOfsT->SetMinSize(wxSize(100, -1));
+   }
+   S.EndMultiColumn();
+}
+
+bool EffectWahwah::TransferDataToWindow()
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
+   mFreqS->SetValue((int) (mFreq * SCL_Freq));
+   mPhaseS->SetValue((int) (mPhase * SCL_Phase));
+   mDepthS->SetValue((int) (mDepth * SCL_Depth));
+   mResS->SetValue((int) (mRes * SCL_Res));
+   mFreqOfsS->SetValue((int) (mFreqOfs * SCL_FreqOfs));
+
+   return true;
+}
+
+bool EffectWahwah::TransferDataFromWindow()
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
    }
 
    return true;
 }
 
-// WDR: class implementations
+// EffectWahwah implementation
 
-//----------------------------------------------------------------------------
-// WahwahDialog
-//----------------------------------------------------------------------------
-
-#define FREQ_MIN 1
-#define FREQ_MAX 40
-#define FREQOFF_MIN 0
-#define FREQOFF_MAX 100
-#define PHASE_MIN 0
-#define PHASE_MAX 359
-#define DEPTH_MIN 0
-#define DEPTH_MAX 100
-#define RES_MIN 0
-#define RES_MAX 100
-
-// WDR: event table for WahwahDialog
-
-BEGIN_EVENT_TABLE(WahwahDialog, EffectDialog)
-    EVT_BUTTON(ID_EFFECT_PREVIEW, WahwahDialog::OnPreview)
-    EVT_TEXT(ID_FREQTEXT, WahwahDialog::OnFreqText)
-    EVT_TEXT(ID_FREQOFFTEXT, WahwahDialog::OnFreqOffText)
-    EVT_TEXT(ID_PHASETEXT, WahwahDialog::OnPhaseText)
-    EVT_TEXT(ID_DEPTHTEXT, WahwahDialog::OnDepthText)
-    EVT_TEXT(ID_RESONANCETEXT, WahwahDialog::OnResonanceText)
-    EVT_SLIDER(ID_FREQSLIDER, WahwahDialog::OnFreqSlider)
-    EVT_SLIDER(ID_FREQOFFSLIDER, WahwahDialog::OnFreqOffSlider)
-    EVT_SLIDER(ID_PHASESLIDER, WahwahDialog::OnPhaseSlider)
-    EVT_SLIDER(ID_DEPTHSLIDER, WahwahDialog::OnDepthSlider)
-    EVT_SLIDER(ID_RESONANCESLIDER, WahwahDialog::OnResonanceSlider)
-END_EVENT_TABLE()
-
-WahwahDialog::WahwahDialog(EffectWahwah * effect, wxWindow * parent)
-:  EffectDialog(parent, _("Wahwah"), PROCESS_EFFECT),
-   mEffect(effect)
+void EffectWahwah::OnFreqSlider(wxCommandEvent & evt)
 {
-   Init();
+   mFreq = (double) evt.GetInt() / SCL_Freq;
+   mFreqT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
 }
 
-void WahwahDialog::PopulateOrExchange(ShuttleGui & S)
+void EffectWahwah::OnPhaseSlider(wxCommandEvent & evt)
 {
-   wxTextValidator vld(wxFILTER_NUMERIC);
+   int val = ((evt.GetInt() + 5) / 10) * 10; // round to nearest multiple of 10
+   val = val > MAX_Phase * SCL_Phase ? MAX_Phase * SCL_Phase : val;
+   mPhaseS->SetValue(val);
+   mPhase = (double) val / SCL_Phase;
+   mPhaseT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
 
-   S.SetBorder(5);
-   S.AddSpace(0, 5);
+void EffectWahwah::OnDepthSlider(wxCommandEvent & evt)
+{
+   mDepth = evt.GetInt() / SCL_Depth;
+   mDepthT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
 
-   S.StartMultiColumn(3, wxCENTER);
+void EffectWahwah::OnResonanceSlider(wxCommandEvent & evt)
+{
+   mRes = (double) evt.GetInt() / SCL_Res;
+   mResT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
+
+void EffectWahwah::OnFreqOffSlider(wxCommandEvent & evt)
+{
+   mFreqOfs = evt.GetInt() / SCL_FreqOfs;
+   mFreqOfsT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
+
+void EffectWahwah::OnFreqText(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
    {
-      wxSlider *s;
-      wxTextCtrl * tempTC;
-      tempTC = S.Id(ID_FREQTEXT).AddTextBox(_("LFO Frequency (Hz):"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_FREQSLIDER).AddSlider(wxT(""), 100, FREQ_MAX, FREQ_MIN);
-      s->SetName(_("LFO frequency in hertz"));
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
-
-      tempTC = S.Id(ID_PHASETEXT).AddTextBox(_("LFO Start Phase (deg.):"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_PHASESLIDER).AddSlider(wxT(""), 0, PHASE_MAX, PHASE_MIN);
-      s->SetName(_("LFO start phase in degrees"));
-      s->SetLineSize(10);
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
-
-      tempTC = S.Id(ID_DEPTHTEXT).AddTextBox(_("Depth (%):"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_DEPTHSLIDER).AddSlider(wxT(""), 0, DEPTH_MAX, DEPTH_MIN);
-      s->SetName(_("Depth in percent"));
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
-
-      tempTC = S.Id(ID_RESONANCETEXT).AddTextBox(_("Resonance:"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_RESONANCESLIDER).AddSlider(wxT(""), 0, RES_MAX, RES_MIN);
-      s->SetName(_("Resonance"));
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
-
-      tempTC = S.Id(ID_FREQOFFTEXT).AddTextBox(_("Wah Frequency Offset (%):"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s  =S.Id(ID_FREQOFFSLIDER).AddSlider(wxT(""), 0, FREQOFF_MAX, FREQOFF_MIN);
-      s->SetName(_("Wah frequency offset in percent"));
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
+      return;
    }
-   S.EndMultiColumn();
+
+   mFreqS->SetValue((int) (mFreq * SCL_Freq));
 }
 
-bool WahwahDialog::TransferDataToWindow()
+void EffectWahwah::OnPhaseText(wxCommandEvent & WXUNUSED(evt))
 {
-   wxSlider *slider;
-
-   slider = GetFreqSlider();
-   if (slider)
-      slider->SetValue((int)(freq * 10));
-
-   slider = GetFreqOffSlider();
-   if (slider)
-      slider->SetValue((int)freqoff);
-
-   slider = GetDepthSlider();
-   if (slider)
-      slider->SetValue((int)depth);
-
-   slider = GetPhaseSlider();
-   if (slider)
-      slider->SetValue((int)startphase);
-
-   slider = GetResonanceSlider();
-   if (slider)
-      slider->SetValue((int)(res * 10));
-
-   wxTextCtrl *text = GetFreqText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%.1f"), freq);
-      text->SetValue(str);
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
    }
 
-   text = GetFreqOffText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%d"), (int) freqoff);
-      text->SetValue(str);
-   }
-
-   text = GetPhaseText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%d"), (int) startphase);
-      text->SetValue(str);
-   }
-
-   text = GetDepthText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%d"), (int) depth);
-      text->SetValue(str);
-   }
-
-   text = GetResonanceText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%.1f"), res);
-      text->SetValue(str);
-   }
-
-   return TRUE;
+   mPhaseS->SetValue((int) (mPhase * SCL_Phase));
 }
 
-bool WahwahDialog::TransferDataFromWindow()
+void EffectWahwah::OnDepthText(wxCommandEvent & WXUNUSED(evt))
 {
-   wxTextCtrl *c;
-   long x;
-
-   c = GetFreqText();
-   if (c) {
-      double d;
-      c->GetValue().ToDouble(&d);
-      freq = TrapDouble(d * 10, FREQ_MIN, FREQ_MAX) / 10;
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
    }
 
-   c = GetFreqOffText();
-   if (c) {
-      double d;
-      c->GetValue().ToDouble(&d);
-      freqoff = TrapDouble(d, FREQOFF_MIN, FREQOFF_MAX);
+   mDepthS->SetValue((int) (mDepth * SCL_Depth));
+}
+
+void EffectWahwah::OnResonanceText(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
    }
 
-   c = GetPhaseText();
-   if (c) {
-      c->GetValue().ToLong(&x);
-      startphase = TrapLong(x, PHASE_MIN, PHASE_MAX);
+   mResS->SetValue((int) (mRes * SCL_Res));
+}
+
+void EffectWahwah::OnFreqOffText(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
    }
 
-   c = GetDepthText();
-   if (c) {
-      c->GetValue().ToLong(&x);
-      depth = TrapLong(x, DEPTH_MIN, DEPTH_MAX);
-   }
-
-   c = GetResonanceText();
-   if (c) {
-      double d;
-      c->GetValue().ToDouble(&d);
-      res = TrapDouble(d * 10, RES_MIN, RES_MAX) / 10;
-   }
-
-   return TRUE;
+   mFreqOfsS->SetValue((int) (mFreqOfs * SCL_FreqOfs));
 }
-
-// WDR: handler implementations for WahwahDialog
-
-void WahwahDialog::OnResonanceSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long res = GetResonanceSlider()->GetValue();
-   str.Printf(wxT("%.1f"), res / 10.0);
-   GetResonanceText()->SetValue(str);
-}
-
-void WahwahDialog::OnDepthSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long depth = GetDepthSlider()->GetValue();
-   str.Printf(wxT("%ld"), depth);
-   GetDepthText()->SetValue(str);
-}
-
-void WahwahDialog::OnPhaseSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long phase = GetPhaseSlider()->GetValue();
-   phase = ((phase + 5) / 10) * 10;     // round to nearest multiple of 10
-   str.Printf(wxT("%ld"), phase);
-   GetPhaseText()->SetValue(str);
-}
-
-void WahwahDialog::OnFreqSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long freql = GetFreqSlider()->GetValue();
-   str.Printf(wxT("%.1f"), freql / 10.0);
-   GetFreqText()->SetValue(str);
-}
-
-void WahwahDialog::OnFreqOffSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long freqoff = GetFreqOffSlider()->GetValue();
-   str.Printf(wxT("%d"), (int) freqoff);
-   GetFreqOffText()->SetValue(str);
-}
-
-void WahwahDialog::OnResonanceText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetResonanceText();
-   if (c) {
-      double resd;
-      c->GetValue().ToDouble(&resd);
-
-      res = resd;
-      res = TrapDouble(resd * 10, RES_MIN, RES_MAX) / 10.0;
-
-      wxSlider *slider = GetResonanceSlider();
-      if (slider)
-         slider->SetValue((int)floor(res * 10 + .5));
-   }
-}
-
-void WahwahDialog::OnDepthText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetDepthText();
-   if (c) {
-      long depth;
-
-      c->GetValue().ToLong(&depth);
-      depth = TrapLong(depth, DEPTH_MIN, DEPTH_MAX);
-
-      wxSlider *slider = GetDepthSlider();
-      if (slider)
-         slider->SetValue(depth);
-   }
-}
-
-void WahwahDialog::OnPhaseText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetPhaseText();
-   if (c) {
-      long phase;
-
-      c->GetValue().ToLong(&phase);
-      phase = TrapLong(phase, PHASE_MIN, PHASE_MAX);
-
-      wxSlider *slider = GetPhaseSlider();
-      if (slider)
-         slider->SetValue(phase);
-   }
-}
-
-void WahwahDialog::OnFreqText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetFreqText();
-   if (c) {
-      long freql;
-      double freqd;
-      c->GetValue().ToDouble(&freqd);
-
-      freq = freqd;
-      freql = TrapLong(((long)floor(freq * 10 + .5)), FREQ_MIN, FREQ_MAX);
-
-      wxSlider *slider = GetFreqSlider();
-      if (slider)
-         slider->SetValue(freql);
-   }
-}
-
-void WahwahDialog::OnFreqOffText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetFreqOffText();
-   if (c) {
-      double freqoff;
-      c->GetValue().ToDouble(&freqoff);
-      freqoff = TrapDouble(freqoff, FREQOFF_MIN, FREQOFF_MAX);
-
-      wxSlider *slider = GetFreqOffSlider();
-      if (slider)
-         slider->SetValue((int)freqoff);
-   }
-}
-
-void WahwahDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
-{
-   TransferDataFromWindow();
-
-   // Save & restore parameters around Preview, because we didn't do OK.
-   float old_freq = mEffect->freq;
-   float old_freqofs = mEffect->freqofs;
-   float old_startphase = mEffect->startphase;
-   float old_res = mEffect->res;
-   float old_depth = mEffect->depth;
-
-   mEffect->freq = freq;
-   mEffect->freqofs = freqoff / 100;
-   mEffect->startphase = startphase * M_PI / 180;
-   mEffect->res = res;
-   mEffect->depth = depth / 100;
-
-   mEffect->Preview();
-
-   mEffect->freq = old_freq;
-   mEffect->freqofs = old_freqofs;
-   mEffect->startphase = old_startphase;
-   mEffect->res = old_res;
-   mEffect->depth = old_depth;
-}
-
-

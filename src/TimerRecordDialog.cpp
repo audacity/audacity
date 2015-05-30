@@ -70,6 +70,8 @@ TimerRecordDialog::TimerRecordDialog(wxWindow* parent)
 : wxDialog(parent, -1, _("Audacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
 {
+   SetName(GetTitle());
+
    m_DateTime_Start = wxDateTime::UNow();
    long seconds; // default duration is 1 hour = 3600 seconds
    gPrefs->Read(wxT("/TimerRecord/LastDuration"), &seconds, 3600);

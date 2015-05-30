@@ -52,6 +52,7 @@ class wxScrollBar;
 class wxPanel;
 
 class AudacityProject;
+class AutoSaveFile;
 class Importer;
 class ODLock;
 class RecordingRecoveryHandler;
@@ -61,6 +62,7 @@ class EffectPlugs;
 
 class TrackPanel;
 class FreqWindow;
+class ContrastDialog;
 
 // toolbar classes
 class ControlToolBar;
@@ -82,6 +84,7 @@ class LyricsWindow;
 class MixerBoard;
 class MixerBoardFrame;
 
+struct AudioIOStartStreamOptions;
 
 AudacityProject *CreateNewAudacityProject();
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
@@ -134,6 +137,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    AudacityProject(wxWindow * parent, wxWindowID id,
                    const wxPoint & pos, const wxSize & size);
    virtual ~AudacityProject();
+
+   AudioIOStartStreamOptions GetDefaultPlayOptions();
 
    TrackList *GetTracks() { return mTracks; }
    UndoManager *GetUndoManager() { return &mUndoManager; }
@@ -197,7 +202,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
     */
    static wxArrayString ShowOpenDialog(wxString extraformat = wxEmptyString,
          wxString extrafilter = wxEmptyString);
-   static bool IsAlreadyOpen(const wxString projPathName);
+   static bool IsAlreadyOpen(const wxString & projPathName);
    static void OpenFiles(AudacityProject *proj);
    void OpenFile(wxString fileName, bool addtohistory = true);
    bool WarnOfLegacyFile( );
@@ -211,9 +216,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void UnlockAllBlocks();
    bool Save(bool overwrite = true, bool fromSaveAs = false, bool bWantSaveCompressed = false);
    bool SaveAs(bool bWantSaveCompressed = false);
-   bool SaveAs(const wxString newFileName, bool bWantSaveCompressed = false, bool addToHistory = true);
+   bool SaveAs(const wxString & newFileName, bool bWantSaveCompressed = false, bool addToHistory = true);
    #ifdef USE_LIBVORBIS
-      bool SaveCompressedWaveTracks(const wxString strProjectPathName); // full path for aup except extension
+      bool SaveCompressedWaveTracks(const wxString & strProjectPathName); // full path for aup except extension
    #endif
    void Clear();
 
@@ -299,7 +304,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void Zoom(double level);
    void Rewind(bool shift);
    void SkipEnd(bool shift);
-   void SetStop(bool bStopped);
    void EditByLabel( WaveTrack::EditFunction action, bool bSyncLockedTracks );
    void EditClipboardByLabel( WaveTrack::EditDestFunction action );
    bool IsSyncLocked();
@@ -342,6 +346,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    void FixScrollbars();
 
    void SafeDisplayStatusMessage(const wxChar *msg);
+
+   double ScrollingLowerBoundTime() const;
+   void SetHorizontalThumb(double scrollto);
 
    // TrackPanel access
    virtual wxSize GetTPTracksUsableArea();
@@ -390,6 +397,8 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    LyricsWindow* GetLyricsWindow() { return mLyricsWindow; }
    MixerBoard* GetMixerBoard() { return mMixerBoard; }
 
+   wxStatusBar* GetStatusBar() { return mStatusBar; }
+
    // SelectionBarListener callback methods
 
    virtual double AS_GetRate();
@@ -433,7 +442,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    virtual void OnAudioIORate(int rate);
    virtual void OnAudioIOStartRecording();
    virtual void OnAudioIOStopRecording();
-   virtual void OnAudioIONewBlockFiles(const wxString& blockFileLog);
+   virtual void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog);
 
    // Command Handling
    bool TryToMakeActionAllowed( wxUint32 & flags, wxUint32 flagsRqd, wxUint32 mask );
@@ -447,6 +456,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
  private:
 
+   void OnCapture(wxCommandEvent & evt);
    void ClearClipboard();
    void InitialState();
    void ModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
@@ -460,8 +470,6 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    void AutoSave();
    void DeleteCurrentAutoSaveFile();
-
-   static bool GetCacheBlockFiles();
 
  public:
    bool IsSoloSimple() { return mSoloPref == wxT("Simple"); }
@@ -534,6 +542,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    MixerBoardFrame* mMixerBoardFrame;
 
    FreqWindow *mFreqWindow;
+   ContrastDialog *mContrastDialog;
 
    // dialog for missing alias warnings
    wxDialog            *mAliasMissingWarningDialog;
@@ -569,6 +578,9 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
    bool mNormalizeOnLoad;  //lda
    bool mShowId3Dialog; //lda
    bool mEmptyCanBeDirty;
+
+   bool mScrollBeyondZero;
+
    bool mSelectAllOnNone;
 
    bool mIsSyncLocked;
@@ -605,8 +617,7 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    // Last effect applied to this project
    PluginID mLastEffect;
-   int mLastEffectType;
-
+   
    // The screenshot class needs to access internals
    friend class ScreenshotCommand;
 
@@ -620,13 +631,16 @@ class AUDACITY_DLL_API AudacityProject:  public wxFrame,
 
    bool mbInitializingScrollbar;
 
+   // Flag that we're recoding.
+   bool mIsCapturing;
+
    DECLARE_EVENT_TABLE()
 };
 
 typedef void (AudacityProject::*audCommandFunction)();
 typedef void (AudacityProject::*audCommandKeyFunction)(const wxEvent *);
 typedef void (AudacityProject::*audCommandListFunction)(int);
-typedef void (AudacityProject::*audCommandPluginFunction)(const PluginID &);
+typedef bool (AudacityProject::*audCommandPluginFunction)(const PluginID &, int);
 
 // Previously this was in menus.cpp, and the declaration of the
 // command functor was not visible anywhere else.
@@ -642,11 +656,6 @@ public:
    AudacityProjectCommandFunctor(AudacityProject *project,
       audCommandPluginFunction commandFunction,
       const PluginID & pluginID);
-#if defined(EFFECT_CATEGORIES)
-   AudacityProjectCommandFunctor(AudacityProject *project,
-      audCommandListFunction commandFunction,
-      wxArrayInt explicitIndices);
-#endif
 
    virtual void operator()(int index = 0, const wxEvent *evt = NULL);
 
@@ -657,9 +666,6 @@ private:
    audCommandListFunction mCommandListFunction;
    audCommandPluginFunction mCommandPluginFunction;
    PluginID mPluginID;
-#if defined(EFFECT_CATEGORIES)
-   wxArrayInt mExplicitIndices;
-#endif
 };
 
 #endif

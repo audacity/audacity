@@ -162,11 +162,13 @@ void TrackPanelAx::Updated()
 {
 #if wxUSE_ACCESSIBILITY
    Track *t = GetFocus();
-   NotifyEvent(wxACC_EVENT_OBJECT_NAMECHANGE,
+
+   // logically, this should be an OBJECT_NAMECHANGE event, but Window eyes 9.1
+   // does not read out the name with this event type, hence use OBJECT_FOCUS.
+   NotifyEvent(wxACC_EVENT_OBJECT_FOCUS,
                mTrackPanel,
                wxOBJID_CLIENT,
                TrackNum(t));
-   SetFocus(t);
 #endif
 }
 

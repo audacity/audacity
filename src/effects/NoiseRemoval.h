@@ -12,6 +12,10 @@
 #ifndef __AUDACITY_EFFECT_NOISE_REMOVAL__
 #define __AUDACITY_EFFECT_NOISE_REMOVAL__
 
+#include "../Audacity.h"
+
+#if !defined(EXPERIMENTAL_NOISE_REDUCTION)
+
 #include "Effect.h"
 
 #include <wx/dialog.h>
@@ -26,37 +30,25 @@ class WaveTrack;
 
 #include "../RealFFTf.h"
 
-class EffectNoiseRemoval: public Effect {
-
+class EffectNoiseRemoval : public Effect
+{
 public:
-
    EffectNoiseRemoval();
    virtual ~EffectNoiseRemoval();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Noise Removal..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://audacityteam.org/namespace#NoiseRemoval"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Noise Removal"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      if (mDoProfile)
-         return wxString(_("Creating Noise Profile"));
-      else
-         return wxString(_("Removing Noise"));
-   }
+   virtual EffectType GetType();
+   virtual bool SupportsAutomation();
+
+   // Effect implementation
 
    virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
-
    virtual bool Init();
    virtual bool CheckWhetherSkipEffect();
    virtual bool Process();
@@ -123,7 +115,7 @@ private:
    float   **mRealFFTs;         // mHistoryLen x mWindowSize
    float   **mImagFFTs;         // mHistoryLen x mWindowSize
 
-friend class NoiseRemovalDialog;
+   friend class NoiseRemovalDialog;
 };
 
 // WDR: class declarations
@@ -197,5 +189,7 @@ private:
    DECLARE_EVENT_TABLE()
 
 };
+
+#endif
 
 #endif

@@ -1,6 +1,6 @@
 #  test_picture - Simple tester for picture routines in grabbag
 #  Copyright (C) 2006-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -18,7 +18,9 @@
 
 EXTRA_DIST = \
 	Makefile.lite \
-	test_picture.vcproj
+	test_picture.vcproj \
+	test_picture.vcxproj \
+	test_picture.vcxproj.filters
 
 AM_CPPFLAGS = -I$(top_builddir) -I$(srcdir)/include -I$(top_srcdir)/include
 noinst_PROGRAMS = test_picture

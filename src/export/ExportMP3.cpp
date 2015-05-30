@@ -309,6 +309,8 @@ ExportMP3Options::ExportMP3Options(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify MP3 Options")))
 {
+   SetName(GetTitle());
+
    InitMP3_Statics();
 
    mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
@@ -563,6 +565,7 @@ public:
    /* i18n-hint: LAME is the name of an MP3 converter and should not be translated*/
    wxString(_("Locate Lame")))
    {
+      SetName(GetTitle());
       ShuttleGui S(this, eIsCreating);
 
       mPath = path;
@@ -1878,6 +1881,7 @@ wxString ExportMP3::FindName(CHOICES *choices, int cnt, int needle)
 int ExportMP3::AskResample(int bitrate, int rate, int lowrate, int highrate)
 {
    wxDialog d(NULL, wxID_ANY, wxString(_("Invalid sample rate")));
+   d.SetName(d.GetTitle());
    wxChoice *choice;
    ShuttleGui S(&d, eIsCreating);
    wxString text;

@@ -14,73 +14,51 @@
 
 class wxString;
 
-#include <wx/dialog.h>
+#include <wx/string.h>
 
-#include <wx/intl.h>
+#include "../LabelTrack.h"
+#include "../WaveTrack.h"
 
 #include "Effect.h"
 
-class wxStaticText;
+#define FINDCLIPPING_PLUGIN_SYMBOL XO("Find Clipping")
 
-class WaveTrack;
-
-class EffectFindClipping:public Effect
+class EffectFindClipping : public Effect
 {
- friend class FindClippingDialog;
-
- public:
-
+public:
    EffectFindClipping();
+   virtual ~EffectFindClipping();
 
-   virtual wxString GetEffectName()
-   {
-      return wxString(wxTRANSLATE("Find Clipping..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories()
-   {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#AnalyserPlugin"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier()
-   {
-      return wxString(wxT("Find Clipping"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction()
-   {
-      return wxString(_("Detecting clipping"));
-   }
+   virtual EffectType GetType();
 
-   virtual wxString GetEffectDescription();
+   // EffectClientInterface implementation
 
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
 
    virtual bool Process();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
- private:
+private:
+   // EffectFindCliping implementation
+
    bool ProcessOne(LabelTrack *l, int count, WaveTrack * t,
                    sampleCount start, sampleCount len);
 
+private:
    int mStart;   ///< Using int rather than sampleCount because values are only ever small numbers
    int mStop;    ///< Using int rather than sampleCount because values are only ever small numbers
-};
-
-//----------------------------------------------------------------------------
-// FindClippingDialog
-//----------------------------------------------------------------------------
-class FindClippingDialog:public EffectDialog {
- public:
-   FindClippingDialog(EffectFindClipping * effect, wxWindow * parent);
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataFromWindow();
-
- private:
-   EffectFindClipping *mEffect;
 };
 
 #endif // __AUDACITY_EFFECT_FINDCLIPPING__

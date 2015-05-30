@@ -7,14 +7,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mod-script-pipe", "mod-scri
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug wx284|Win32 = Debug wx284|Win32
-		Modular_Release|Win32 = Modular_Release|Win32
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Debug wx284|Win32.ActiveCfg = Debug wx284|Win32
-		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Debug wx284|Win32.Build.0 = Debug wx284|Win32
-		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Modular_Release|Win32.ActiveCfg = Modular_Release|Win32
-		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Modular_Release|Win32.Build.0 = Modular_Release|Win32
+		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Debug|Win32.Build.0 = Debug|Win32
+		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Release|Win32.ActiveCfg = Release|Win32
+		{85774A29-EA2F-4A40-994F-6BE593D847A5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

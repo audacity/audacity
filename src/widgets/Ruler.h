@@ -22,6 +22,7 @@
 struct ViewInfo;
 class AudacityProject;
 class TimeTrack;
+class SnapManager;
 
 class AUDACITY_DLL_API Ruler {
  public:
@@ -58,6 +59,9 @@ class AUDACITY_DLL_API Ruler {
    //
    // Optional Ruler Parameters
    //
+
+   // If twoTone is true, cause zero and positive numbers to appear black, negative in another color.
+   void SetTwoTone(bool twoTone);
 
    // IntFormat, RealFormat, or TimeFormat
    void SetFormat(RulerFormat format);
@@ -173,9 +177,12 @@ private:
 
    class Label {
     public:
+      double value;
       int pos;
       int lx, ly;
       wxString text;
+
+      void Draw(wxDC &dc, bool twoTone) const;
    };
 
    int          mNumMajor;
@@ -205,6 +212,7 @@ private:
    bool         mMinorGrid;      //         .
    int          mGridLineLength; //        end
    wxString     mUnits;
+   bool         mTwoTone;
 };
 
 class AUDACITY_DLL_API RulerPanel : public wxPanel {
@@ -268,7 +276,10 @@ public:
    void SetProject(AudacityProject* project) {mProject = project;};
    void GetMaxSize(wxCoord *width, wxCoord *height);
 
+   void UpdatePrefs();
    void RegenerateTooltips();
+
+   bool mIsSnapped;
 
 private:
    void OnCapture(wxCommandEvent & evt);
@@ -283,10 +294,12 @@ private:
    void DoDrawCursor(wxDC * dc);
    void DoDrawSelection(wxDC * dc);
    void DoDrawIndicator(wxDC * dc);
+   void DrawQuickPlayIndicator(wxDC * dc, bool clear /*delete old only*/);
    void DoDrawPlayRegion(wxDC * dc);
 
    double Pos2Time(int p);
    int Time2Pos(double t);
+   int Seconds2Pixels(double t);
 
    bool IsWithinMarker(int mousePosX, double markerTime);
 
@@ -303,13 +316,36 @@ private:
 
    double mCurPos;
 
-   int mIndType;     // -1 = No indicator, 0 = Play, 1 = Record
+   int    mIndType;     // -1 = No indicator, 0 = Play, 1 = Record
    double mIndPos;
+   bool   mQuickPlayInd;
+   double mQuickPlayPos;
+   SnapManager *mSnapManager;
 
+   bool   mPlayRegionLock;
    double mPlayRegionStart;
    double mPlayRegionEnd;
+   double mOldPlayRegionStart;
+   double mOldPlayRegionEnd;
 
    bool mIsRecording;
+
+   //
+   // Pop-up menu
+   //
+   void ShowMenu(const wxPoint & pos);
+   void DragSelection();
+   void HandleSnapping();
+   void OnToggleQuickPlay(wxCommandEvent &evt);
+   void OnSyncSelToQuickPlay(wxCommandEvent &evt);
+   void OnTimelineToolTips(wxCommandEvent &evt);
+   void OnAutoScroll(wxCommandEvent &evt);
+   void OnLockPlayRegion(wxCommandEvent &evt);
+
+   bool mPlayRegionDragsSelection;
+   bool mTimelineToolTip;
+   bool mQuickPlayEnabled;
+
 
    enum MouseEventState {
       mesNone,
@@ -320,8 +356,9 @@ private:
    };
 
    MouseEventState mMouseEventState;
-   int mButtonDownMousePos;
-   int mLastMouseX;
+   double mLeftDownClick;  // click position in seconds
+   int mLastMouseX;  // Pixel position
+   bool mIsDragging;
 
    DECLARE_EVENT_TABLE()
 };

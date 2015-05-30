@@ -14,560 +14,425 @@
 *******************************************************************//**
 
 \class EffectPhaser
-\brief An EffectSimpleMono
-
-*//****************************************************************//**
-
-\class PhaserDialog
-\brief Dialog for EffectPhaser
+\brief An Effect that changes frequencies in a time varying manner.
 
 *//*******************************************************************/
 
 
 #include "../Audacity.h"
 
+#include <math.h>
+
+#include <wx/intl.h>
+
+#include "../widgets/valnum.h"
+
 #include "Phaser.h"
 
-#include "../ShuttleGui.h"
-#include "../WaveTrack.h"
-#include "../FFT.h"
+enum
+{
+   ID_Stages = 10000,
+   ID_DryWet,
+   ID_Freq,
+   ID_Phase,
+   ID_Depth,
+   ID_Feedback
+};
 
-#include <wx/button.h>
-#include <wx/textctrl.h>
-#include <wx/sizer.h>
-#include <wx/spinctrl.h>
-#include <wx/stattext.h>
-#include <wx/valtext.h>
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name       Type     Key               Def   Min   Max         Scale
+Param( Stages,    int,     XO("Stages"),     2,    2,    NUM_STAGES, 1  );
+Param( DryWet,    int,     XO("DryWet"),     128,  0,    255,        1  );
+Param( Freq,      double,  XO("Freq"),       0.4,  0.1,  4.0,        10 );
+Param( Phase,     double,  XO("Phase"),      0.0,  0.0,  359.0,      1  );
+Param( Depth,     int,     XO("Depth"),      100,  0,    255,        1  );
+Param( Feedback,  int,     XO("Feedback"),   0,    -100, 100,        1  );
 
-#include <math.h>
+//
+#define phaserlfoshape 4.0
+
+// How many samples are processed before recomputing the lfo value again
+#define lfoskipsamples 20
 
 //
 // EffectPhaser
 //
 
-
-#define phaserlfoshape 4.0
-
-// How many samples are processed before compute the lfo value again
-#define lfoskipsamples 20
+BEGIN_EVENT_TABLE(EffectPhaser, wxEvtHandler)
+    EVT_SLIDER(ID_Stages, EffectPhaser::OnStagesSlider)
+    EVT_SLIDER(ID_DryWet, EffectPhaser::OnDryWetSlider)
+    EVT_SLIDER(ID_Freq, EffectPhaser::OnFreqSlider)
+    EVT_SLIDER(ID_Phase, EffectPhaser::OnPhaseSlider)
+    EVT_SLIDER(ID_Depth, EffectPhaser::OnDepthSlider)
+    EVT_SLIDER(ID_Feedback, EffectPhaser::OnFeedbackSlider)
+    EVT_TEXT(ID_Stages, EffectPhaser::OnStagesText)
+    EVT_TEXT(ID_DryWet, EffectPhaser::OnDryWetText)
+    EVT_TEXT(ID_Freq, EffectPhaser::OnFreqText)
+    EVT_TEXT(ID_Phase, EffectPhaser::OnPhaseText)
+    EVT_TEXT(ID_Depth, EffectPhaser::OnDepthText)
+    EVT_TEXT(ID_Feedback, EffectPhaser::OnFeedbackText)
+END_EVENT_TABLE()
 
 EffectPhaser::EffectPhaser()
 {
-   freq = (float)0.4;
-   depth = 100;
-   startphase = float(0.0);
-   stages = 2;
-   drywet = 128;
-   fb = float(0.0);
+   mStages = DEF_Stages;
+   mDryWet = DEF_DryWet;
+   mFreq = DEF_Freq;
+   mPhase = DEF_Phase;
+   mDepth = DEF_Depth;
+   mFeedback = DEF_Feedback;
+
+   SetLinearEffectFlag(true);
 }
 
-wxString EffectPhaser::GetEffectDescription() {
-   // Note: This is useful only after values have been set.
-   return wxString::Format(_("Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start phase = %.0f deg, depth = %d, feedback = %.0f%%"),
-                           this->GetEffectName().c_str(),
-                           stages,
-                           float(drywet*100/255),
-                           freq,
-                           (startphase * 180 / M_PI),
-                           depth,
-                           fb);
-}
-
-bool EffectPhaser::PromptUser()
+EffectPhaser::~EffectPhaser()
 {
-   PhaserDialog dlog(this, mParent);
-
-   dlog.freq = freq;
-   dlog.startphase = startphase * 180 / M_PI;
-   dlog.fb = fb;
-   dlog.depth = depth;
-   dlog.stages = stages;
-   dlog.drywet = drywet;
-
-   dlog.TransferDataToWindow();
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-
-  if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
-
-   freq = dlog.freq;
-   startphase = dlog.startphase * M_PI / 180;
-   fb = dlog.fb;
-   depth = dlog.depth;
-   stages = dlog.stages;
-   drywet = dlog.drywet;
-
-   return true;
 }
 
-bool EffectPhaser::TransferParameters( Shuttle & shuttle )
+// IdentInterface implementation
+
+wxString EffectPhaser::GetSymbol()
 {
-   shuttle.TransferInt(wxT("Stages"),stages,2);
-   shuttle.TransferInt(wxT("Wet"),drywet,128);
-   shuttle.TransferFloat(wxT("Freq"),freq,0.4f);
-   shuttle.TransferInt(wxT("Depth"),depth,100);
-   shuttle.TransferFloat(wxT("Feedback"),fb,0.0f);
-   return true;
+   return PHASER_PLUGIN_SYMBOL;
 }
 
-bool EffectPhaser::NewTrackSimpleMono()
+wxString EffectPhaser::GetDescription()
 {
-   for (int j = 0; j < stages; j++)
+   return XO("Combines phase-shifted signals with the original signal");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectPhaser::GetType()
+{
+   return EffectTypeProcess;
+}
+
+// EffectClientInterface implementation
+
+int EffectPhaser::GetAudioInCount()
+{
+   return 1;
+}
+
+int EffectPhaser::GetAudioOutCount()
+{
+   return 1;
+}
+
+bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
+{
+   for (int j = 0; j < mStages; j++)
+   {
       old[j] = 0;
+   }
 
    skipcount = 0;
    gain = 0;
    fbout = 0;
-   lfoskip = freq * 2 * M_PI / mCurRate;
+   lfoskip = mFreq * 2 * M_PI / mSampleRate;
 
-   phase = startphase;
-   if (mCurChannel == Track::RightChannel)
-      phase += (float)M_PI;
+   phase = mPhase * M_PI / 180;
+   if (chanMap[0] == ChannelNameFrontRight)
+   {
+      phase += M_PI;
+   }
 
    return true;
 }
 
-bool EffectPhaser::ProcessSimpleMono(float *buffer, sampleCount len)
+sampleCount EffectPhaser::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
-   float m, tmp, in, out;
-   int i, j;
+   float *ibuf = inBlock[0];
+   float *obuf = outBlock[0];
 
-   for (i = 0; i < len; i++) {
-      in = buffer[i];
+   for (sampleCount i = 0; i < blockLen; i++)
+   {
+      double in = ibuf[i];
 
-      m = in + fbout * fb / 100;
-      if (((skipcount++) % lfoskipsamples) == 0) {
+      double m = in + fbout * mFeedback / 100;
+
+      if (((skipcount++) % lfoskipsamples) == 0)
+      {
          //compute sine between 0 and 1
-         gain = (1 + cos(skipcount * lfoskip + phase)) / 2;
+         gain = (1.0 + cos(skipcount * lfoskip + phase)) / 2.0;
 
          // change lfo shape
-         gain =
-            (exp(gain * phaserlfoshape) - 1) / (exp(phaserlfoshape)-1);
+         gain = expm1(gain * phaserlfoshape) / expm1(phaserlfoshape);
 
-         gain = 1 - gain / 255 * depth;      // attenuate the lfo
+         // attenuate the lfo
+         gain = 1.0 - gain / 255.0 * mDepth;
       }
+
       // phasing routine
-      for (j = 0; j < stages; j++) {
-         tmp = old[j];
+      for (int j = 0; j < mStages; j++)
+      {
+         double tmp = old[j];
          old[j] = gain * tmp + m;
          m = tmp - gain * old[j];
       }
       fbout = m;
-      out = (m * drywet + in * (255 - drywet)) / 255;
 
-      buffer[i] = out;
+      obuf[i] = (float) ((m * mDryWet + in * (255 - mDryWet)) / 255);
+   }
+
+   return blockLen;
+}
+
+bool EffectPhaser::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_Stages, mStages);
+   parms.Write(KEY_DryWet, mDryWet);
+   parms.Write(KEY_Freq, mFreq);
+   parms.Write(KEY_Phase, mPhase);
+   parms.Write(KEY_Depth, mDepth);
+   parms.Write(KEY_Feedback, mFeedback);
+
+   return true;
+}
+
+bool EffectPhaser::SetAutomationParameters(EffectAutomationParameters & parms)
+{
+   ReadAndVerifyInt(Stages);
+   ReadAndVerifyInt(DryWet);
+   ReadAndVerifyDouble(Freq);
+   ReadAndVerifyDouble(Phase);
+   ReadAndVerifyInt(Depth);
+   ReadAndVerifyInt(Feedback);
+
+   if (Stages & 1)    // must be even, but don't complain about it
+   {
+      Stages &= ~1;
+   }
+
+   mFreq = Freq;
+   mFeedback = Feedback;
+   mStages = Stages;
+   mDryWet = DryWet;
+   mDepth = Depth;
+   mPhase = Phase;
+
+   return true;
+}
+
+// Effect implementation
+
+void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
+{
+   S.SetBorder(5);
+
+   S.StartMultiColumn(3, wxEXPAND);
+   {
+      S.SetStretchyCol(2);
+
+      IntegerValidator<int> vldStages(&mStages);
+      vldStages.SetRange(MIN_Stages, MAX_Stages);
+      mStagesT = S.Id(ID_Stages).AddTextBox(_("Stages:"), wxT(""), 12);
+      mStagesT->SetValidator(vldStages);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mStagesS = S.Id(ID_Stages).AddSlider(wxT(""), DEF_Stages * SCL_Stages, MAX_Stages * SCL_Stages, MIN_Stages * SCL_Stages);
+      mStagesS->SetName(_("Stages"));
+      mStagesS->SetLineSize(2);
+      mStagesS->SetMinSize(wxSize(100, -1));
+
+      IntegerValidator<int> vldDryWet(&mDryWet);
+      vldDryWet.SetRange(MIN_DryWet, MAX_DryWet);
+      mDryWetT = S.Id(ID_DryWet).AddTextBox(_("Dry/Wet:"), wxT(""), 12);
+      mDryWetT->SetValidator(vldDryWet);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mDryWetS = S.Id(ID_DryWet).AddSlider(wxT(""), DEF_DryWet * SCL_DryWet, MAX_DryWet * SCL_DryWet, MIN_DryWet * SCL_DryWet);
+      mDryWetS->SetName(_("Dry Wet"));
+      mDryWetS->SetMinSize(wxSize(100, -1));
+
+      FloatingPointValidator<double> vldFreq(1, &mFreq);
+      vldFreq.SetRange(MIN_Freq, MAX_Freq);
+      mFreqT = S.Id(ID_Freq).AddTextBox(_("LFO Frequency (Hz):"), wxT(""), 12);
+      mFreqT->SetValidator(vldFreq);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mFreqS = S.Id(ID_Freq).AddSlider(wxT(""), DEF_Freq * SCL_Freq, MAX_Freq * SCL_Freq, MIN_Freq * SCL_Freq);
+      mFreqS ->SetName(_("LFO frequency in hertz"));
+      mFreqS ->SetMinSize(wxSize(100, -1));
+
+      FloatingPointValidator<double> vldPhase(1, &mPhase);
+      vldPhase.SetRange(MIN_Phase, MAX_Phase);
+      mPhaseT = S.Id(ID_Phase).AddTextBox(_("LFO Start Phase (deg.):"), wxT(""), 12);
+      mPhaseT->SetValidator(vldPhase);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mPhaseS = S.Id(ID_Phase).AddSlider(wxT(""), DEF_Phase * SCL_Phase, MAX_Phase * SCL_Phase, MIN_Phase * SCL_Phase);
+      mPhaseS->SetName(_("LFO start phase in degrees"));
+      mPhaseS->SetLineSize(10);
+      mPhaseS->SetMinSize(wxSize(100, -1));
+
+      IntegerValidator<int> vldDepth(&mDepth);
+      vldDepth.SetRange(MIN_Depth, MAX_Depth);
+      mDepthT = S.Id(ID_Depth).AddTextBox(_("Depth:"), wxT(""), 12);
+      mDepthT->SetValidator(vldDepth);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mDepthS = S.Id(ID_Depth).AddSlider(wxT(""), DEF_Depth * SCL_Depth, MAX_Depth * SCL_Depth, MIN_Depth * SCL_Depth);
+      mDepthS->SetName(_("Depth in percent"));
+      mDepthS->SetMinSize(wxSize(100, -1));
+
+      IntegerValidator<int> vldFeedback(&mFeedback);
+      vldFeedback.SetRange(MIN_Feedback, MAX_Feedback);
+      mFeedbackT = S.Id(ID_Feedback).AddTextBox(_("Feedback (%):"), wxT(""), 12);
+      mFeedbackT->SetValidator(vldFeedback);
+
+      S.SetStyle(wxSL_HORIZONTAL);
+      mFeedbackS = S.Id(ID_Feedback).AddSlider(wxT(""), DEF_Feedback * SCL_Feedback, MAX_Feedback * SCL_Feedback, MIN_Feedback * SCL_Feedback);
+      mFeedbackS->SetName(_("Feedback in percent"));
+      mFeedbackS->SetLineSize(10);
+      mFeedbackS->SetMinSize(wxSize(100, -1));
+   }
+   S.EndMultiColumn();
+}
+
+bool EffectPhaser::TransferDataToWindow()
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
+   mStagesS->SetValue((int) (mStages * SCL_Stages));
+   mDryWetS->SetValue((int) (mDryWet * SCL_DryWet));
+   mFreqS->SetValue((int) (mFreq * SCL_Freq));
+   mPhaseS->SetValue((int) (mPhase * SCL_Phase));
+   mDepthS->SetValue((int) (mDepth * SCL_Depth));
+   mFeedbackS->SetValue((int) (mFeedback * SCL_Feedback));
+
+   return true;
+}
+
+bool EffectPhaser::TransferDataFromWindow()
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   if (mStages & 1)    // must be even
+   {
+      mStages &= ~1;
+      mStagesT->GetValidator()->TransferToWindow();
    }
 
    return true;
 }
 
-// WDR: class implementations
+// EffectPhaser implementation
 
-//----------------------------------------------------------------------------
-// PhaserDialog
-//----------------------------------------------------------------------------
-
-#define FREQ_MIN 1
-#define FREQ_MAX 40
-#define PHASE_MIN 0
-#define PHASE_MAX 359
-#define DEPTH_MIN 0
-#define DEPTH_MAX 255
-#define STAGES_MIN 2
-#define STAGES_MAX 24
-#define DRYWET_MIN 0
-#define DRYWET_MAX 255
-#define FB_MIN -100
-#define FB_MAX 100
-
-// WDR: event table for PhaserDialog
-
-BEGIN_EVENT_TABLE(PhaserDialog, EffectDialog)
-    EVT_TEXT(ID_PHASER_STAGESTEXT, PhaserDialog::OnStagesText)
-    EVT_TEXT(ID_PHASER_DRYWETTEXT, PhaserDialog::OnDryWetText)
-    EVT_TEXT(ID_PHASER_FREQTEXT, PhaserDialog::OnFreqText)
-    EVT_TEXT(ID_PHASER_PHASETEXT, PhaserDialog::OnPhaseText)
-    EVT_TEXT(ID_PHASER_DEPTHTEXT, PhaserDialog::OnDepthText)
-    EVT_TEXT(ID_PHASER_FEEDBACKTEXT, PhaserDialog::OnFeedbackText)
-    EVT_SLIDER(ID_PHASER_STAGESSLIDER, PhaserDialog::OnStagesSlider)
-    EVT_SLIDER(ID_PHASER_DRYWETSLIDER, PhaserDialog::OnDryWetSlider)
-    EVT_SLIDER(ID_PHASER_FREQSLIDER, PhaserDialog::OnFreqSlider)
-    EVT_SLIDER(ID_PHASER_PHASESLIDER, PhaserDialog::OnPhaseSlider)
-    EVT_SLIDER(ID_PHASER_DEPTHSLIDER, PhaserDialog::OnDepthSlider)
-    EVT_SLIDER(ID_PHASER_FEEDBACKSLIDER, PhaserDialog::OnFeedbackSlider)
-    EVT_BUTTON(ID_EFFECT_PREVIEW, PhaserDialog::OnPreview)
-END_EVENT_TABLE()
-
-PhaserDialog::PhaserDialog(EffectPhaser * effect, wxWindow * parent)
-:  EffectDialog(parent, _("Phaser"), PROCESS_EFFECT),
-   mEffect(effect)
+void EffectPhaser::OnStagesSlider(wxCommandEvent & evt)
 {
-   Init();
+   mStages = (evt.GetInt() / SCL_Stages) & ~1;  // must be even;
+   mPhaseS->SetValue(mStages * SCL_Stages);
+   mStagesT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
 }
 
-void PhaserDialog::PopulateOrExchange(ShuttleGui & S)
+void EffectPhaser::OnDryWetSlider(wxCommandEvent & evt)
 {
-   wxTextValidator vld(wxFILTER_NUMERIC);
+   mDryWet = evt.GetInt() / SCL_DryWet;
+   mDryWetT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
 
-   S.SetBorder(5);
+void EffectPhaser::OnFreqSlider(wxCommandEvent & evt)
+{
+   mFreq = (double) evt.GetInt() / SCL_Freq;
+   mFreqT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
 
-   S.StartMultiColumn(3, wxEXPAND);
+void EffectPhaser::OnPhaseSlider(wxCommandEvent & evt)
+{
+   int val = ((evt.GetInt() + 5) / 10) * 10; // round to nearest multiple of 10
+   val = val > MAX_Phase * SCL_Phase ? MAX_Phase * SCL_Phase : val;
+   mPhaseS->SetValue(val);
+   mPhase =  (double) val / SCL_Phase;
+   mPhaseT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
+
+void EffectPhaser::OnDepthSlider(wxCommandEvent & evt)
+{
+   mDepth = evt.GetInt() / SCL_Depth;
+   mDepthT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
+
+void EffectPhaser::OnFeedbackSlider(wxCommandEvent & evt)
+{
+   int val = evt.GetInt();
+   val = ((val + (val > 0 ? 5 : -5)) / 10) * 10; // round to nearest multiple of 10
+   val = val > MAX_Feedback * SCL_Feedback ? MAX_Feedback * SCL_Feedback : val;
+   mFeedbackS->SetValue(val);
+   mFeedback = val / SCL_Feedback;
+   mFeedbackT->GetValidator()->TransferToWindow();
+   EnableApply(mUIParent->Validate());
+}
+
+void EffectPhaser::OnStagesText(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
    {
-      wxSlider *s;
-      wxTextCtrl * tempTC;
-      S.SetStretchyCol(1);
-      tempTC = S.Id(ID_PHASER_STAGESTEXT).AddTextBox(_("Stages:"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_PHASER_STAGESSLIDER).AddSlider(wxT(""), 2, STAGES_MAX, STAGES_MIN);
-      s->SetName(_("Stages"));
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
-
-      tempTC = S.Id(ID_PHASER_DRYWETTEXT).AddTextBox(_("Dry/Wet:"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_PHASER_DRYWETSLIDER).AddSlider(wxT(""), 0, DRYWET_MAX, DRYWET_MIN);
-      s->SetName(_("Dry Wet"));
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
-
-      tempTC = S.Id(ID_PHASER_FREQTEXT).AddTextBox(_("LFO Frequency (Hz):"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_PHASER_FREQSLIDER).AddSlider(wxT(""), 100, FREQ_MAX, FREQ_MIN);
-      s->SetName(_("LFO frequency in hertz"));
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
-
-      tempTC = S.Id(ID_PHASER_PHASETEXT).AddTextBox(_("LFO Start Phase (deg.):"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_PHASER_PHASESLIDER).AddSlider(wxT(""), 0, PHASE_MAX, PHASE_MIN);
-      s->SetName(_("LFO start phase in degrees"));
-      s->SetLineSize(10);
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
-
-      tempTC = S.Id(ID_PHASER_DEPTHTEXT).AddTextBox(_("Depth:"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_PHASER_DEPTHSLIDER).AddSlider(wxT(""), 0, DEPTH_MAX, DEPTH_MIN);
-      s->SetName(_("Depth in percent"));
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
-
-      tempTC = S.Id(ID_PHASER_FEEDBACKTEXT).AddTextBox(_("Feedback (%):"), wxT(""), 12);
-      S.SetStyle(wxSL_HORIZONTAL);
-      tempTC->SetValidator(vld);
-      s = S.Id(ID_PHASER_FEEDBACKSLIDER).AddSlider(wxT(""), 0, FB_MAX, FB_MIN);
-      s->SetName(_("Feedback in percent"));
-      s->SetLineSize(10);
-#if defined(__WXGTK__)
-      s->SetMinSize(wxSize(100, -1));
-#endif
+      return;
    }
-   S.EndMultiColumn();
+
+   mStagesS->SetValue((int) (mStages * SCL_Stages));
 }
 
-bool PhaserDialog::TransferDataToWindow()
+void EffectPhaser::OnDryWetText(wxCommandEvent & WXUNUSED(evt))
 {
-   wxSlider *slider;
-
-   slider = GetFreqSlider();
-   if (slider)
-      slider->SetValue((int)(freq * 10));
-
-   slider = GetPhaseSlider();
-   if (slider)
-      slider->SetValue((int)startphase);
-
-   slider = GetDepthSlider();
-   if (slider)
-      slider->SetValue((int)depth);
-
-   slider = GetFeedbackSlider();
-   if (slider)
-      slider->SetValue((int)fb);
-
-   slider = GetDryWetSlider();
-   if (slider)
-      slider->SetValue((int)drywet);
-
-   slider = GetStagesSlider();
-   if (slider)
-      slider->SetValue((int)stages);
-
-   wxTextCtrl *text;
-
-   text = GetStagesText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%d"), stages);
-      text->SetValue(str);
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
    }
 
-   text = GetDryWetText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%d"), drywet);
-      text->SetValue(str);
-   }
-
-   text = GetFreqText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%.1f"), freq);
-      text->SetValue(str);
-   }
-
-   text = GetPhaseText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%d"), (int) startphase);
-      text->SetValue(str);
-   }
-
-   text = GetDepthText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%d"), (int) depth);
-      text->SetValue(str);
-   }
-
-   text = GetFeedbackText();
-   if (text) {
-      wxString str;
-      str.Printf(wxT("%d"), (int) fb);
-      text->SetValue(str);
-   }
-
-   return TRUE;
+   mDryWetS->SetValue((int) (mDryWet * SCL_DryWet));
 }
 
-bool PhaserDialog::TransferDataFromWindow()
+void EffectPhaser::OnFreqText(wxCommandEvent & WXUNUSED(evt))
 {
-   wxTextCtrl *c;
-   long x;
-
-   c = GetFreqText();
-   if (c) {
-      double d;
-      c->GetValue().ToDouble(&d);
-      freq = TrapDouble(d * 10, FREQ_MIN, FREQ_MAX) / 10;
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
    }
 
-   c = GetPhaseText();
-   if (c) {
-      c->GetValue().ToLong(&x);
-      startphase = TrapLong(x, PHASE_MIN, PHASE_MAX);
+   mFreqS->SetValue((int) (mFreq * SCL_Freq));
+}
+
+void EffectPhaser::OnPhaseText(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
    }
 
-   c = GetDepthText();
-   if (c) {
-      c->GetValue().ToLong(&x);
-      depth = TrapLong(x, DEPTH_MIN, DEPTH_MAX);
+   mPhaseS->SetValue((int) (mPhase * SCL_Phase));
+}
+
+void EffectPhaser::OnDepthText(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
    }
 
-   c = GetFeedbackText();
-   if (c) {
-      c->GetValue().ToLong(&x);
-      fb = TrapLong(x, FB_MIN, FB_MAX);
+   mDepthS->SetValue((int) (mDepth * SCL_Depth));
+}
+
+void EffectPhaser::OnFeedbackText(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
+      return;
    }
 
-   c = GetStagesText();
-   if (c) {
-      c->GetValue().ToLong(&x);
-      stages = TrapLong(x, STAGES_MIN, STAGES_MAX);
-      if ((stages % 2) == 1)    // must be even
-         stages = TrapLong(stages - 1, STAGES_MIN, STAGES_MAX);
-   }
-
-   c = GetDryWetText();
-   if (c) {
-      c->GetValue().ToLong(&x);
-      drywet = TrapLong(x, DRYWET_MIN, DRYWET_MAX);
-   }
-
-   return TRUE;
-}
-
-// WDR: handler implementations for PhaserDialog
-
-void PhaserDialog::OnStagesSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long stage = GetStagesSlider()->GetValue();
-   str.Printf(wxT("%ld"), stage);
-   GetStagesText()->SetValue(str);
-}
-
-void PhaserDialog::OnDryWetSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long drywet = GetDryWetSlider()->GetValue();
-   str.Printf(wxT("%ld"), drywet);
-   GetDryWetText()->SetValue(str);
-}
-
-void PhaserDialog::OnFeedbackSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long fb = GetFeedbackSlider()->GetValue();
-   if (fb > 0)                  // round to nearest multiple of 10
-      fb = ((fb + 5) / 10) * 10;
-   else
-      fb = ((fb - 5) / 10) * 10;
-   str.Printf(wxT("%ld"), fb);
-   GetFeedbackText()->SetValue(str);
-}
-
-void PhaserDialog::OnDepthSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long depth = GetDepthSlider()->GetValue();
-   str.Printf(wxT("%ld"), depth);
-   GetDepthText()->SetValue(str);
-}
-
-void PhaserDialog::OnPhaseSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long phase = GetPhaseSlider()->GetValue();
-   phase = ((phase + 5) / 10) * 10;     // round to nearest multiple of 10
-   str.Printf(wxT("%ld"), phase);
-   GetPhaseText()->SetValue(str);
-}
-
-void PhaserDialog::OnFreqSlider(wxCommandEvent & WXUNUSED(event))
-{
-   wxString str;
-   long freq = GetFreqSlider()->GetValue();
-   str.Printf(wxT("%.1f"), freq / 10.0);
-   GetFreqText()->SetValue(str);
-}
-
-void PhaserDialog::OnStagesText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetStagesText();
-   if (c) {
-      long stage;
-
-      c->GetValue().ToLong(&stage);
-      stage = TrapLong(stage, STAGES_MIN, STAGES_MAX);
-
-      wxSlider *slider = GetStagesSlider();
-      if (slider)
-         slider->SetValue(stage);
-   }
-}
-
-void PhaserDialog::OnDryWetText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetDryWetText();
-   if (c) {
-      long drywet;
-
-      c->GetValue().ToLong(&drywet);
-      drywet = TrapLong(drywet, DRYWET_MIN, DRYWET_MAX);
-
-      wxSlider *slider = GetDryWetSlider();
-      if (slider)
-         slider->SetValue(drywet);
-   }
-}
-
-void PhaserDialog::OnFeedbackText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetFeedbackText();
-   if (c) {
-      long fb;
-
-      c->GetValue().ToLong(&fb);
-      fb = TrapLong(fb, FB_MIN, FB_MAX);
-
-      wxSlider *slider = GetFeedbackSlider();
-      if (slider)
-         slider->SetValue(fb);
-   }
-}
-
-void PhaserDialog::OnDepthText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetDepthText();
-   if (c) {
-      long depth;
-
-      c->GetValue().ToLong(&depth);
-      depth = TrapLong(depth, DEPTH_MIN, DEPTH_MAX);
-
-      wxSlider *slider = GetDepthSlider();
-      if (slider)
-         slider->SetValue(depth);
-   }
-}
-
-void PhaserDialog::OnPhaseText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetPhaseText();
-   if (c) {
-      long phase;
-
-      c->GetValue().ToLong(&phase);
-      phase = TrapLong(phase, PHASE_MIN, PHASE_MAX);
-
-      wxSlider *slider = GetPhaseSlider();
-      if (slider)
-         slider->SetValue(phase);
-   }
-}
-
-void PhaserDialog::OnFreqText(wxCommandEvent & WXUNUSED(event))
-{
-   wxTextCtrl *c = GetFreqText();
-   if (c) {
-      double freq;
-
-      c->GetValue().ToDouble(&freq);
-      freq = TrapDouble(freq * 10, FREQ_MIN, FREQ_MAX);
-
-      wxSlider *slider = GetFreqSlider();
-      if (slider)
-         slider->SetValue((int)freq);
-   }
-}
-
-void PhaserDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
-{
-   TransferDataFromWindow();
-
-   // Save & restore parameters around Preview, because we didn't do OK.
-   float old_freq = mEffect->freq;
-   float old_startphase = mEffect->startphase;
-   float old_fb = mEffect->fb;
-   int old_depth = mEffect->depth;
-   int old_stages = mEffect->stages;
-   int old_drywet = mEffect->drywet;
-
-   mEffect->freq = freq;
-   mEffect->startphase = startphase * M_PI / 180;
-   mEffect->fb = fb;
-   mEffect->depth = depth;
-   mEffect->stages = stages;
-   mEffect->drywet = drywet;
-
-   mEffect->Preview();
-
-   mEffect->freq = old_freq;
-   mEffect->startphase = old_startphase;
-   mEffect->fb = old_fb;
-   mEffect->depth = old_depth;
-   mEffect->stages = old_stages;
-   mEffect->drywet = old_drywet;
+   mFeedbackS->SetValue((int) (mFeedback * SCL_Feedback));
 }

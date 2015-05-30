@@ -1,6 +1,6 @@
 /* flac - Command-line FLAC encoder/decoder
  * Copyright (C) 2000-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
 
@@ -263,6 +263,23 @@ FLAC__bool DecoderSession_construct(DecoderSession *d, FLAC__bool is_ogg, FLAC__
 void DecoderSession_destroy(DecoderSession *d, FLAC__bool error_occurred)
 {
 	if(0 != d->fout && d->fout != stdout) {
+#ifdef _WIN32
+		if(!error_occurred) {
+			FLAC__off_t written_size = ftello(d->fout);
+			if(written_size > 0) {
+				HANDLE fh = CreateFile_utf8(d->outfilename, GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+				if(fh != INVALID_HANDLE_VALUE) {
+					if(GetFileType(fh) == FILE_TYPE_DISK) {
+						LARGE_INTEGER size;
+						size.QuadPart = written_size;
+						if(SetFilePointerEx(fh, size, NULL, FILE_CURRENT)) /* correct the file size */
+							SetEndOfFile(fh); 
+					}
+					CloseHandle(fh);
+				}
+			}
+		}
+#endif
 		fclose(d->fout);
 		if(error_occurred)
 			flac_unlink(d->outfilename);
@@ -294,7 +311,7 @@ FLAC__bool DecoderSession_init_decoder(DecoderSession *decoder_session, const ch
 	FLAC__stream_decoder_set_md5_checking(decoder_session->decoder, true);
 	if (0 != decoder_session->cue_specification)
 		FLAC__stream_decoder_set_metadata_respond(decoder_session->decoder, FLAC__METADATA_TYPE_CUESHEET);
-	if (decoder_session->replaygain.spec.apply)
+	if (decoder_session->replaygain.spec.apply || !decoder_session->channel_map_none)
 		FLAC__stream_decoder_set_metadata_respond(decoder_session->decoder, FLAC__METADATA_TYPE_VORBIS_COMMENT);
 
 #if FLAC__HAS_OGG
@@ -339,7 +356,7 @@ FLAC__bool DecoderSession_process(DecoderSession *d)
 	/* only the channel mask must be set if it was not already picked up from the WAVEFORMATEXTENSIBLE_CHANNEL_MASK tag */
 	if(!d->channel_map_none && d->channel_mask == 0) {
 		if(d->channels == 1) {
-			d->channel_mask = 0x0001;
+			d->channel_mask = 0x0004;
 		}
 		else if(d->channels == 2) {
 			d->channel_mask = 0x0003;
@@ -363,6 +380,32 @@ FLAC__bool DecoderSession_process(DecoderSession *d)
 			d->channel_mask = 0x063f;
 		}
 	}
+
+#ifdef _WIN32
+	if(!d->analysis_mode && !d->test_only && d->total_samples > 0 && d->fout != stdout) {
+		HANDLE fh = CreateFile_utf8(d->outfilename, GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if(fh != INVALID_HANDLE_VALUE) {
+			if (GetFileType(fh) == FILE_TYPE_DISK) {
+				LARGE_INTEGER size;
+				size.QuadPart = d->total_samples * d->channels * ((d->bps+7)/8);
+				if(d->format != FORMAT_RAW) {
+					size.QuadPart += 512;
+					if(d->foreign_metadata) {
+						size_t i;
+						for(i = d->format==FORMAT_RF64?2:1; i < d->foreign_metadata->num_blocks; i++) {
+							if(i != d->foreign_metadata->format_block && i != d->foreign_metadata->audio_block)
+								size.QuadPart += d->foreign_metadata->blocks[i].size;
+						}
+					}
+				}
+
+				if(SetFilePointerEx(fh, size, NULL, FILE_CURRENT)) /* tell filesystem the expected filesize to eliminate fragmentation */
+					SetEndOfFile(fh); 
+			}
+			CloseHandle(fh);
+		}
+	}
+#endif
 
 	/* write the WAVE/AIFF headers if necessary */
 	if(!d->analysis_mode && !d->test_only && d->format != FORMAT_RAW) {
@@ -966,12 +1009,17 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 	));
 	unsigned wide_samples = frame->header.blocksize, wide_sample, sample, channel;
 	unsigned frame_bytes = 0;
-	static FLAC__int8 s8buffer[FLAC__MAX_BLOCK_SIZE * FLAC__MAX_CHANNELS * sizeof(FLAC__int32)]; /* WATCHOUT: can be up to 2 megs */
-	FLAC__uint8  *u8buffer  = (FLAC__uint8  *)s8buffer;
-	FLAC__int16  *s16buffer = (FLAC__int16  *)s8buffer;
-	FLAC__uint16 *u16buffer = (FLAC__uint16 *)s8buffer;
-	FLAC__int32  *s32buffer = (FLAC__int32  *)s8buffer;
-	FLAC__uint32 *u32buffer = (FLAC__uint32 *)s8buffer;
+
+	static union
+	{	/* The arrays defined within this union are all the same size. */
+		FLAC__int8	 s8buffer	[FLAC__MAX_BLOCK_SIZE * FLAC__MAX_CHANNELS * sizeof(FLAC__int32)]; /* WATCHOUT: can be up to 2 megs */
+		FLAC__uint8  u8buffer	[FLAC__MAX_BLOCK_SIZE * FLAC__MAX_CHANNELS * sizeof(FLAC__int32)];
+		FLAC__int16  s16buffer	[FLAC__MAX_BLOCK_SIZE * FLAC__MAX_CHANNELS * sizeof(FLAC__int16)];
+		FLAC__uint16 u16buffer	[FLAC__MAX_BLOCK_SIZE * FLAC__MAX_CHANNELS * sizeof(FLAC__int16)];
+		FLAC__int32  s32buffer	[FLAC__MAX_BLOCK_SIZE * FLAC__MAX_CHANNELS];
+		FLAC__uint32 u32buffer	[FLAC__MAX_BLOCK_SIZE * FLAC__MAX_CHANNELS];
+	} ubuf;
+
 	size_t bytes_to_write = 0;
 
 	(void)decoder;
@@ -1078,7 +1126,7 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 		decoder_session->samples_processed += wide_samples;
 		decoder_session->frame_counter++;
 
-		if(!(decoder_session->frame_counter & 0x3f))
+		if(!(decoder_session->frame_counter & 0x1ff))
 			print_stats(decoder_session);
 
 		if(decoder_session->analysis_mode) {
@@ -1092,7 +1140,7 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 			}
 			if(decoder_session->replaygain.apply) {
 				bytes_to_write = FLAC__replaygain_synthesis__apply_gain(
-					u8buffer,
+					ubuf.u8buffer,
 					!is_big_endian,
 					is_unsigned_samples,
 					buffer,
@@ -1108,17 +1156,17 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 			}
 			/* first some special code for common cases */
 			else if(is_big_endian == is_big_endian_host_ && !is_unsigned_samples && channels == 2 && bps+shift == 16) {
-				FLAC__int16 *buf1_ = s16buffer + 1;
+				FLAC__int16 *buf1_ = ubuf.s16buffer + 1;
 				if(is_big_endian)
-					memcpy(s16buffer, ((FLAC__byte*)(buffer[0]))+2, sizeof(FLAC__int32) * wide_samples - 2);
+					memcpy(ubuf.s16buffer, ((FLAC__byte*)(buffer[0]))+2, sizeof(FLAC__int32) * wide_samples - 2);
 				else
-					memcpy(s16buffer, buffer[0], sizeof(FLAC__int32) * wide_samples);
+					memcpy(ubuf.s16buffer, buffer[0], sizeof(FLAC__int32) * wide_samples);
 				for(sample = 0; sample < wide_samples; sample++, buf1_+=2)
 					*buf1_ = (FLAC__int16)buffer[1][sample];
 				bytes_to_write = 4 * sample;
 			}
 			else if(is_big_endian == is_big_endian_host_ && !is_unsigned_samples && channels == 1 && bps+shift == 16) {
-				FLAC__int16 *buf1_ = s16buffer;
+				FLAC__int16 *buf1_ = ubuf.s16buffer;
 				for(sample = 0; sample < wide_samples; sample++)
 					*buf1_++ = (FLAC__int16)buffer[0][sample];
 				bytes_to_write = 2 * sample;
@@ -1128,35 +1176,35 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 				if(is_unsigned_samples) {
 					if(channels == 2) {
 						for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++) {
-							u16buffer[sample++] = (FLAC__uint16)(buffer[0][wide_sample] + 0x8000);
-							u16buffer[sample++] = (FLAC__uint16)(buffer[1][wide_sample] + 0x8000);
+							ubuf.u16buffer[sample++] = (FLAC__uint16)(buffer[0][wide_sample] + 0x8000);
+							ubuf.u16buffer[sample++] = (FLAC__uint16)(buffer[1][wide_sample] + 0x8000);
 						}
 					}
 					else if(channels == 1) {
 						for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++)
-							u16buffer[sample++] = (FLAC__uint16)(buffer[0][wide_sample] + 0x8000);
+							ubuf.u16buffer[sample++] = (FLAC__uint16)(buffer[0][wide_sample] + 0x8000);
 					}
 					else { /* works for any 'channels' but above flavors are faster for 1 and 2 */
 						for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++)
 							for(channel = 0; channel < channels; channel++, sample++)
-								u16buffer[sample] = (FLAC__uint16)(buffer[channel][wide_sample] + 0x8000);
+								ubuf.u16buffer[sample] = (FLAC__uint16)(buffer[channel][wide_sample] + 0x8000);
 					}
 				}
 				else {
 					if(channels == 2) {
 						for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++) {
-							s16buffer[sample++] = (FLAC__int16)(buffer[0][wide_sample]);
-							s16buffer[sample++] = (FLAC__int16)(buffer[1][wide_sample]);
+							ubuf.s16buffer[sample++] = (FLAC__int16)(buffer[0][wide_sample]);
+							ubuf.s16buffer[sample++] = (FLAC__int16)(buffer[1][wide_sample]);
 						}
 					}
 					else if(channels == 1) {
 						for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++)
-							s16buffer[sample++] = (FLAC__int16)(buffer[0][wide_sample]);
+							ubuf.s16buffer[sample++] = (FLAC__int16)(buffer[0][wide_sample]);
 					}
 					else { /* works for any 'channels' but above flavors are faster for 1 and 2 */
 						for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++)
 							for(channel = 0; channel < channels; channel++, sample++)
-								s16buffer[sample] = (FLAC__int16)(buffer[channel][wide_sample]);
+								ubuf.s16buffer[sample] = (FLAC__int16)(buffer[channel][wide_sample]);
 					}
 				}
 				if(is_big_endian != is_big_endian_host_) {
@@ -1164,9 +1212,9 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 					const unsigned bytes = sample * 2;
 					unsigned b;
 					for(b = 0; b < bytes; b += 2) {
-						tmp = u8buffer[b];
-						u8buffer[b] = u8buffer[b+1];
-						u8buffer[b+1] = tmp;
+						tmp = ubuf.u8buffer[b];
+						ubuf.u8buffer[b] = ubuf.u8buffer[b+1];
+						ubuf.u8buffer[b+1] = tmp;
 					}
 				}
 				bytes_to_write = 2 * sample;
@@ -1175,24 +1223,24 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 				if(is_unsigned_samples) {
 					for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++)
 						for(channel = 0; channel < channels; channel++, sample++)
-							u32buffer[sample] = buffer[channel][wide_sample] + 0x800000;
+							ubuf.u32buffer[sample] = buffer[channel][wide_sample] + 0x800000;
 				}
 				else {
 					for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++)
 						for(channel = 0; channel < channels; channel++, sample++)
-							s32buffer[sample] = buffer[channel][wide_sample];
+							ubuf.s32buffer[sample] = buffer[channel][wide_sample];
 				}
 				if(is_big_endian != is_big_endian_host_) {
 					unsigned char tmp;
 					const unsigned bytes = sample * 4;
 					unsigned b;
 					for(b = 0; b < bytes; b += 4) {
-						tmp = u8buffer[b];
-						u8buffer[b] = u8buffer[b+3];
-						u8buffer[b+3] = tmp;
-						tmp = u8buffer[b+1];
-						u8buffer[b+1] = u8buffer[b+2];
-						u8buffer[b+2] = tmp;
+						tmp = ubuf.u8buffer[b];
+						ubuf.u8buffer[b] = ubuf.u8buffer[b+3];
+						ubuf.u8buffer[b+3] = tmp;
+						tmp = ubuf.u8buffer[b+1];
+						ubuf.u8buffer[b+1] = ubuf.u8buffer[b+2];
+						ubuf.u8buffer[b+2] = tmp;
 					}
 				}
 				if(is_big_endian) {
@@ -1200,18 +1248,18 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 					const unsigned bytes = sample * 4;
 					for(lbyte = b = 0; b < bytes; ) {
 						b++;
-						u8buffer[lbyte++] = u8buffer[b++];
-						u8buffer[lbyte++] = u8buffer[b++];
-						u8buffer[lbyte++] = u8buffer[b++];
+						ubuf.u8buffer[lbyte++] = ubuf.u8buffer[b++];
+						ubuf.u8buffer[lbyte++] = ubuf.u8buffer[b++];
+						ubuf.u8buffer[lbyte++] = ubuf.u8buffer[b++];
 					}
 				}
 				else {
 					unsigned b, lbyte;
 					const unsigned bytes = sample * 4;
 					for(lbyte = b = 0; b < bytes; ) {
-						u8buffer[lbyte++] = u8buffer[b++];
-						u8buffer[lbyte++] = u8buffer[b++];
-						u8buffer[lbyte++] = u8buffer[b++];
+						ubuf.u8buffer[lbyte++] = ubuf.u8buffer[b++];
+						ubuf.u8buffer[lbyte++] = ubuf.u8buffer[b++];
+						ubuf.u8buffer[lbyte++] = ubuf.u8buffer[b++];
 						b++;
 					}
 				}
@@ -1221,12 +1269,12 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 				if(is_unsigned_samples) {
 					for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++)
 						for(channel = 0; channel < channels; channel++, sample++)
-							u8buffer[sample] = (FLAC__uint8)(buffer[channel][wide_sample] + 0x80);
+							ubuf.u8buffer[sample] = (FLAC__uint8)(buffer[channel][wide_sample] + 0x80);
 				}
 				else {
 					for(sample = wide_sample = 0; wide_sample < wide_samples; wide_sample++)
 						for(channel = 0; channel < channels; channel++, sample++)
-							s8buffer[sample] = (FLAC__int8)(buffer[channel][wide_sample]);
+							ubuf.s8buffer[sample] = (FLAC__int8)(buffer[channel][wide_sample]);
 				}
 				bytes_to_write = sample;
 			}
@@ -1239,7 +1287,7 @@ FLAC__StreamDecoderWriteStatus write_callback(const FLAC__StreamDecoder *decoder
 		}
 	}
 	if(bytes_to_write > 0) {
-		if(flac__utils_fwrite(u8buffer, 1, bytes_to_write, fout) != bytes_to_write) {
+		if(flac__utils_fwrite(ubuf.u8buffer, 1, bytes_to_write, fout) != bytes_to_write) {
 			/* if a pipe closed when writing to stdout, we let it go without an error message */
 			if(errno == EPIPE && decoder_session->fout == stdout)
 				decoder_session->aborting_due_to_until = true;
@@ -1414,7 +1462,7 @@ void print_error_with_state(const DecoderSession *d, const char *message)
 			"not able to decode the file.  If the version number is not, the file\n"
 			"may be corrupted, or you may have found a bug.  In this case please\n"
 			"submit a bug report to\n"
-			"    http://sourceforge.net/bugs/?func=addbug&group_id=13478\n"
+			"    https://sourceforge.net/p/flac/bugs/\n"
 			"Make sure to use the \"Monitor\" feature to monitor the bug status.\n",
 			d->inbasefilename, FLAC__VERSION_STRING
 		);
@@ -1424,12 +1472,7 @@ void print_error_with_state(const DecoderSession *d, const char *message)
 void print_stats(const DecoderSession *decoder_session)
 {
 	if(flac__utils_verbosity_ >= 2) {
-#if defined _MSC_VER || defined __MINGW32__
-		/* with MSVC you have to spoon feed it the casting */
-		const double progress = (double)(FLAC__int64)decoder_session->samples_processed / (double)(FLAC__int64)decoder_session->total_samples * 100.0;
-#else
 		const double progress = (double)decoder_session->samples_processed / (double)decoder_session->total_samples * 100.0;
-#endif
 
 		if(decoder_session->total_samples > 0) {
 			if ((unsigned)floor(progress + 0.5) == 100)

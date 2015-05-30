@@ -54,6 +54,7 @@ audacity_CPPFLAGS = \
 	$(PORTAUDIO_CFLAGS) \
 	$(PORTMIXER_CFLAGS) \
 	$(SNDFILE_CFLAGS) \
+	$(SOXR_CFLAGS) \
 	$(WIDGETEXTRA_CFLAGS) \
 	$(WX_CXXFLAGS) \
 	$(NULL)
@@ -83,6 +84,7 @@ audacity_LDADD = \
 	$(PORTAUDIO_LIBS) \
 	$(PORTMIXER_LIBS) \
 	$(SNDFILE_LIBS) \
+	$(SOXR_LIBS) \
 	$(WIDGETEXTRA_LIBS) \
 	$(WX_LIBS) \
 	$(NULL)
@@ -120,6 +122,8 @@ audacity_SOURCES = \
 	DeviceChange.h \
 	DeviceManager.cpp \
 	DeviceManager.h \
+	Diags.cpp \
+	Diags.h \
 	Envelope.cpp \
 	Envelope.h \
 	Experimental.h \
@@ -229,6 +233,7 @@ audacity_SOURCES = \
 	TrackPanelAx.h \
 	UndoManager.cpp \
 	UndoManager.h \
+	ViewInfo.cpp \
 	ViewInfo.h \
 	VoiceKey.cpp \
 	VoiceKey.h \
@@ -319,8 +324,6 @@ audacity_SOURCES = \
 	effects/Echo.h \
 	effects/Effect.cpp \
 	effects/Effect.h \
-	effects/EffectCategory.cpp \
-	effects/EffectCategory.h \
 	effects/EffectManager.cpp \
 	effects/EffectManager.h \
 	effects/EffectRack.cpp \
@@ -636,11 +639,6 @@ audacity_CPPFLAGS += $(SOUNDTOUCH_CFLAGS)
 audacity_LDADD += $(SOUNDTOUCH_LIBS)
 endif
 
-if USE_LIBSOXR
-audacity_CPPFLAGS += $(SOXR_CFLAGS)
-audacity_LDADD += $(SOXR_LIBS)
-endif
-
 if USE_LIBTWOLAME
 audacity_CPPFLAGS += $(LIBTWOLAME_CFLAGS)
 audacity_LDADD += $(LIBTWOLAME_LIBS)
@@ -659,11 +657,6 @@ audacity_SOURCES += \
 	effects/lv2/LoadLV2.h \
 	effects/lv2/LV2Effect.cpp \
 	effects/lv2/LV2Effect.h \
-	effects/lv2/lv2_event.h \
-	effects/lv2/lv2_event_helpers.h \
-	effects/lv2/LV2PortGroup.cpp \
-	effects/lv2/LV2PortGroup.h \
-	effects/lv2/lv2_uri_map.h \
 	$(NULL)
 endif
 

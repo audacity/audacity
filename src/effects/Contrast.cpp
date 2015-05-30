@@ -53,47 +53,6 @@
 
 #include "../PlatformCompatibility.h"
 
-static ContrastDialog *gContrastDialog = NULL;
-
-void InitContrastDialog(wxWindow * parent)
-{
-   if(!gContrastDialog)
-   {
-      wxPoint where;
-
-      where.x = 150;
-      where.y = 150;
-
-      gContrastDialog = new ContrastDialog(parent, -1, _("Contrast Analysis (WCAG 2 compliance)"), where);
-
-      gContrastDialog->bFGset = false;
-      gContrastDialog->bBGset = false;
-   }
-
-   // Zero dialog boxes.  Do we need to do this here?
-   if( !gContrastDialog->bFGset )
-   {
-      gContrastDialog->mForegroundStartT->SetValue(0.0);
-      gContrastDialog->mForegroundEndT->SetValue(0.0);
-   }
-   if( !gContrastDialog->bBGset )
-   {
-      gContrastDialog->mBackgroundStartT->SetValue(0.0);
-      gContrastDialog->mBackgroundEndT->SetValue(0.0);
-   }
-
-   gContrastDialog->CentreOnParent();
-   gContrastDialog->Show();
-}
-
-void CloseContrastDialog()
-{
-   if (gContrastDialog) {
-      delete gContrastDialog;
-      gContrastDialog = NULL;
-   }
-}
-
 float ContrastDialog::GetDB()
 {
    // FIXME: what if more than one track?
@@ -102,6 +61,12 @@ float ContrastDialog::GetDB()
    AudacityProject *p = GetActiveProject();
    TrackListOfKindIterator iter(Track::Wave, p->GetTracks());
    Track *t = iter.First();
+   if(!t)
+   {
+      wxMessageDialog m(NULL, _("No wave tracks exist."), _("Error"), wxOK);
+      m.ShowModal();
+      return 1234.0; // 'magic number', but the whole +ve dB range will 'almost' never occur
+   }
    if(mT0 > mT1)
    {
       wxMessageDialog m(NULL, _("Start time after end time!\nPlease enter reasonable times."), _("Error"), wxOK);
@@ -221,6 +186,8 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
   wxDialog(parent, id, title, pos, wxDefaultSize,
      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX )
 {
+   SetName(GetTitle());
+
    foregrounddB = 1234.0;
    backgrounddB = 1234.0;
 
@@ -257,7 +224,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 
          //Foreground
          S.AddFixedText(_("&Foreground:"), false);
-         if (mForegroundStartT == NULL)
+         if (S.GetMode() == eIsCreating)
          {
             mForegroundStartT = new
                NumericTextCtrl(NumericConverter::TIME, this,
@@ -273,7 +240,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          }
          S.AddWindow(mForegroundStartT);
 
-         if (mForegroundEndT == NULL)
+         if (S.GetMode() == eIsCreating)
          {
             mForegroundEndT = new
                NumericTextCtrl(NumericConverter::TIME, this,
@@ -295,7 +262,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
 
          //Background
          S.AddFixedText(_("&Background:"));
-         if (mBackgroundStartT == NULL)
+         if (S.GetMode() == eIsCreating)
          {
             mBackgroundStartT = new
                NumericTextCtrl(NumericConverter::TIME, this,
@@ -311,7 +278,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
          }
          S.AddWindow(mBackgroundStartT);
 
-         if (mBackgroundEndT == NULL)
+         if (S.GetMode() == eIsCreating)
          {
             mBackgroundEndT = new
                NumericTextCtrl(NumericConverter::TIME, this,

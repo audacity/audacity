@@ -1,6 +1,6 @@
 #  FLAC - Free Lossless Audio Codec
 #  Copyright (C) 2001-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
 #  components distributed under different licenses.  The codec libraries
@@ -31,8 +31,8 @@
 
 topdir = .
 
-.PHONY: all doc src examples libFLAC libFLAC++ share plugin_common plugin_xmms flac metaflac test_grabbag test_libFLAC test_libFLAC++ test_seeking test_streams utils flacdiff flactimer
-all: doc src examples
+.PHONY: all doc src examples libFLAC libFLAC++ share/win_utf8_io share plugin_common flac metaflac test_grabbag test_libFLAC test_libFLAC++ test_seeking test_streams flacdiff flactimer
+all: src examples
 
 DEFAULT_CONFIG = release
 
@@ -52,7 +52,7 @@ doc:
 src examples:
 	(cd $@ && $(MAKE) -f Makefile.lite $(CONFIG))
 
-libFLAC libFLAC++ share flac metaflac plugin_common plugin_xmms test_libs_common test_seeking test_streams test_grabbag test_libFLAC test_libFLAC++:
+libFLAC libFLAC++ share/win_utf8_io share flac metaflac plugin_common plugin_xmms test_libs_common test_seeking test_streams test_grabbag test_libFLAC test_libFLAC++:
 	(cd src/$@ && $(MAKE) -f Makefile.lite $(CONFIG))
 
 flacdiff flactimer:

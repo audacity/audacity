@@ -13,44 +13,37 @@
 #ifndef __AUDACITY_EFFECT_REVERSE__
 #define __AUDACITY_EFFECT_REVERSE__
 
-#include <wx/intl.h>
+#include <wx/string.h>
+
+#include "../WaveTrack.h"
 
 #include "Effect.h"
 
-#define __UNINITIALIZED__ (-1)
+#define REVERSE_PLUGIN_SYMBOL XO("Reverse")
 
-class WaveTrack;
-
-class EffectReverse:public Effect {
-
- public:
+class EffectReverse : public Effect
+{
+public:
    EffectReverse();
+   virtual ~EffectReverse();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Reverse"));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://audacityteam.org/namespace#TimelineChanger"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Reverse"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Reversing"));
-   }
+   virtual EffectType GetType();
+   virtual bool IsInteractive();
 
-   virtual bool PromptUser() {
-      return true;
-   }
+   // Effect implementation
 
    virtual bool Process();
 
- private:
+private:
+   // EffectReverse implementation
+
    bool ProcessOneClip(int count, WaveTrack* track,
                    sampleCount start, sampleCount len, sampleCount originalStart, sampleCount originalEnd);
    bool ProcessOneWave(int count, WaveTrack* track, sampleCount start, sampleCount len);

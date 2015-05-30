@@ -56,9 +56,11 @@ class PluginManagerInterface
 public:
    virtual ~PluginManagerInterface() {};
 
-   virtual const PluginID & RegisterModulePlugin(ModuleInterface *module) = 0;
-   virtual const PluginID & RegisterEffectPlugin(ModuleInterface *provider, EffectIdentInterface *effect) = 0;
-   virtual const PluginID & RegisterImporterPlugin(ModuleInterface *provider, ImporterInterface *importer) = 0;
+   virtual bool IsPluginRegistered(const PluginID & ID) = 0;
+
+   virtual const PluginID & RegisterPlugin(ModuleInterface *module) = 0;
+   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect) = 0;
+   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer) = 0;
 
    virtual void FindFilesInPathList(const wxString & pattern,
                                     const wxArrayString & pathList,

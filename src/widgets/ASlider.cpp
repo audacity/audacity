@@ -245,6 +245,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
    wxDialog(parent,id,title,position),
    mStyle(style)
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreating);
 
    S.StartVerticalLay();
@@ -882,6 +883,7 @@ void LWSlider::Draw()
       }
    }
 
+   dc->SelectObject(wxNullBitmap);
 
    // Must preceed creating the mask as that will attempt to
    // select the bitmap into another DC.

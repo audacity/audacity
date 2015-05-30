@@ -43,11 +43,11 @@ class TimeTrack: public Track {
 
    // TimeTrack parameters
 
-   virtual double GetOffset() { return 0.0; };
-   virtual void SetOffset(double /* t */) {};
+   virtual double GetOffset() const { return 0.0; }
+   virtual void SetOffset(double /* t */) {}
 
-   virtual double GetStartTime() { return 0.0; };
-   virtual double GetEndTime() { return 0.0; };
+   virtual double GetStartTime() const { return 0.0; }
+   virtual double GetEndTime() const { return 0.0; }
 
    void Draw(wxDC & dc, const wxRect & r, double h, double pps);
 

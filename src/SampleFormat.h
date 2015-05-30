@@ -51,6 +51,46 @@ const wxChar *GetSampleFormatStr(sampleFormat format);
 AUDACITY_DLL_API samplePtr NewSamples(int count, sampleFormat format);
 AUDACITY_DLL_API void DeleteSamples(samplePtr p);
 
+// RAII version of above
+class SampleBuffer {
+
+public:
+   SampleBuffer()
+      : mCount(0), mPtr(0)
+   {}
+   SampleBuffer(int count, sampleFormat format)
+      : mCount(count), mPtr(NewSamples(mCount, format))
+   {}
+   ~SampleBuffer()
+   {
+      Free();
+   }
+
+   // WARNING!  May not preserve contents.
+   void Resize(int count, sampleFormat format)
+   {
+      if (mCount < count) {
+         Free();
+         mPtr = NewSamples(count, format);
+         mCount = count;
+      }
+   }
+
+   void Free()
+   {
+      DeleteSamples(mPtr);
+      mPtr = 0;
+      mCount = 0;
+   }
+
+   samplePtr ptr() const { return mPtr; }
+
+
+private:
+   int mCount;
+   samplePtr mPtr;
+};
+
 //
 // Copying, Converting and Clearing Samples
 //
@@ -69,6 +109,9 @@ void      CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
 
 void      ClearSamples(samplePtr buffer, sampleFormat format,
                        int start, int len);
+
+void      ReverseSamples(samplePtr buffer, sampleFormat format,
+                         int start, int len);
 
 //
 // This must be called on startup and everytime new ditherers

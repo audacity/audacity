@@ -152,23 +152,10 @@ void QuitAudacity();
    #endif
 #endif
 
-// For compilers that support precompilation, includes "wx/wx.h".
-// Mainly for MSVC developers.
-//
-// This precompilation is only done for non-unicode debug builds.
-// The rationale is that this is where there is the big time saving
-// because that's what you build whilst debugging.
-// Whilst disabling precompilation for other builds will ensure
-// that missing headers that would affect other platforms do get
-// seen by MSVC developers too.
-
-#ifndef UNICODE
-#ifdef __WXDEBUG__
-//#include <wx/wxprec.h>
-#endif
-#endif
-
 // This macro is used widely, so declared here.
 #define QUANTIZED_TIME(time, rate) ((double)((sampleCount)floor(((double)(time) * (rate)) + 0.5))) / (rate)
+
+// Marks strings for extraction only...must use wxGetTranslation() to translate.
+#define XO(s) wxT(s)
 
 #endif // __AUDACITY_H__

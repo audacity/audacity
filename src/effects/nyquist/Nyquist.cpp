@@ -8,24 +8,14 @@
 
 ******************************************************************//**
 
-\class EffectNyquist
+\class NyquistEffect
 \brief An Effect that calls up a Nyquist (XLISP) plug in, i.e. many possible
 effects from this one class.
 
 *//****************************************************************//**
 
-\class NyquistInputDialog
-\brief Dialog used with EffectNyquist
-
-*//****************************************************************//**
-
 \class NyquistOutputDialog
-\brief Dialog used with EffectNyquist
-
-*//****************************************************************//**
-
-\class NyquistDialog
-\brief Base class for NyquistInputDialog and NyquistOutputDialog.
+\brief Dialog used with NyquistEffect
 
 *//****************************************************************//**
 
@@ -34,25 +24,22 @@ effects from this one class.
 
 *//*******************************************************************/
 
-
-
 #include "../../Audacity.h"
 
 #include <math.h>
 #include <locale.h>
 
-#include <wx/defs.h>
-#include <wx/log.h>
-#include <wx/intl.h>
-#include <wx/msgdlg.h>
-#include <wx/textdlg.h>
-#include <wx/textfile.h>
-#include <wx/choice.h>
 #include <wx/checkbox.h>
-
-#if defined EXPERIMENTAL_NYQUIST_TIME_PROPERTY
+#include <wx/choice.h>
 #include <wx/datetime.h>
-#endif
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/msgdlg.h>
+#include <wx/sstream.h>
+#include <wx/textdlg.h>
+#include <wx/txtstrm.h>
+#include <wx/valgen.h>
+#include <wx/wfstream.h>
 
 #include "../../AudacityApp.h"
 #include "../../FileNames.h"
@@ -64,6 +51,8 @@ effects from this one class.
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
 #include "../../Prefs.h"
+
+#include "FileDialog.h"
 
 #include "Nyquist.h"
 
@@ -77,7 +66,22 @@ effects from this one class.
 #include <sstream>
 #include <float.h>
 
-#include <wx/arrimpl.cpp>
+enum
+{
+   ID_Editor = 10000,
+   ID_Version,
+   ID_Load,
+   ID_Save,
+
+   ID_Slider = 11000,
+   ID_Text = 12000,
+   ID_Choice = 13000
+};
+
+#define UNINITIALIZED_CONTROL ((double)99999999.99)
+
+static const wxChar *KEY_Version = XO("Version");
+static const wxChar *KEY_Command = XO("Command");
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -85,24 +89,36 @@ effects from this one class.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#define UNINITIALIZED_CONTROL ((double)99999999.99)
-
+#include <wx/arrimpl.cpp>
 WX_DEFINE_OBJARRAY(NyqControlArray);
 
-EffectNyquist::EffectNyquist(wxString fName)
+BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
+   EVT_BUTTON(ID_Load, NyquistEffect::OnLoad)
+   EVT_BUTTON(ID_Save, NyquistEffect::OnSave)
+
+   EVT_COMMAND_RANGE(ID_Slider, ID_Slider+99,
+                     wxEVT_COMMAND_SLIDER_UPDATED, NyquistEffect::OnSlider)
+   EVT_COMMAND_RANGE(ID_Text, ID_Text+99,
+                     wxEVT_COMMAND_TEXT_UPDATED, NyquistEffect::OnText)
+   EVT_COMMAND_RANGE(ID_Choice, ID_Choice + 99,
+                     wxEVT_COMMAND_CHOICE_SELECTED, NyquistEffect::OnChoice)
+END_EVENT_TABLE()
+
+NyquistEffect::NyquistEffect(wxString fName)
 {
    mAction = _("Applying Nyquist Effect...");
    mInputCmd = wxEmptyString;
    mCmd = wxEmptyString;
-   SetEffectFlags(HIDDEN_EFFECT);
-   mInteractive = false;
+   mIsPrompt = false;
    mExternal = false;
    mCompiler = false;
+   mRedirectOutput = false;
    mDebug = false;
    mIsSal = false;
    mOK = false;
    mAuthor = wxT("N/A");
    mCopyright = wxT("N/A");
+
    // set clip/split handling when applying over clip boundary.
    mRestoreSplits = true;  // Default: Restore split lines. 
    mMergeClips = -1;       // Default (auto):  Merge if length remains unchanged.
@@ -113,22 +129,16 @@ EffectNyquist::EffectNyquist(wxString fName)
    mBreak = false;
    mCont = false;
 
-   if (!SetXlispPath()) {
-      wxLogWarning(wxT("Critical Nyquist files could not be found. Nyquist effects will not work."));
-      return;
-   }
-
-   if (fName == wxT("")) {
-      // Interactive Nyquist
-      gPrefs->Read(wxT("/Effects/NyquistPrompt/Version"), &mVersion, 4);
+   // Interactive Nyquist
+   if (fName == NYQUIST_PROMPT_ID)
+   {
+      mName = XO("Nyquist Prompt");
+      mType = EffectTypeProcess;
       mOK = true;
-      mInteractive = true;
-      mName = wxTRANSLATE("Nyquist Prompt...");
-      SetEffectFlags(PROCESS_EFFECT | BUILTIN_EFFECT | ADVANCED_EFFECT);
+      mIsPrompt = true;
+
       return;
    }
-
-   // wxLogNull dontLog; // Vaughan, 2010-08-27: Why turn off logging? Logging is good!
 
    mName = wxFileName(fName).GetName();
    mFileName = wxFileName(fName);
@@ -136,38 +146,40 @@ EffectNyquist::EffectNyquist(wxString fName)
    ParseFile();
 }
 
-EffectNyquist::~EffectNyquist()
+NyquistEffect::~NyquistEffect()
 {
-   nyx_set_xlisp_path(NULL);
 }
 
-// ============================================================================
 // IdentInterface implementation
-// ============================================================================
 
-wxString EffectNyquist::GetPath()
+wxString NyquistEffect::GetPath()
 {
-   if (mFileName.GetFullPath().IsEmpty())
+   if (mIsPrompt)
    {
-      return wxT("nyquist prompt");
+      return NYQUIST_PROMPT_ID;
    }
 
    return mFileName.GetFullPath();
 }
 
-wxString EffectNyquist::GetSymbol()
+wxString NyquistEffect::GetSymbol()
 {
+   if (mIsPrompt)
+   {
+      return XO("Nyquist Prompt");
+   }
+
    return mName;
 }
 
-wxString EffectNyquist::GetName()
+wxString NyquistEffect::GetName()
 {
    return GetSymbol();
 }
 
-wxString EffectNyquist::GetVendor()
+wxString NyquistEffect::GetVendor()
 {
-   if (GetPath() == wxT("nyquist prompt"))
+   if (mIsPrompt)
    {
       return _("Audacity");
    }
@@ -175,296 +187,215 @@ wxString EffectNyquist::GetVendor()
    return mAuthor;
 }
 
-wxString EffectNyquist::GetVersion()
+wxString NyquistEffect::GetVersion()
 {
    return wxT("N/A");
 }
 
-wxString EffectNyquist::GetDescription()
+wxString NyquistEffect::GetDescription()
 {
    return mCopyright;
 }
 
-// ============================================================================
 // EffectIdentInterface implementation
-// ============================================================================
 
-EffectType EffectNyquist::GetType()
+EffectType NyquistEffect::GetType()
 {
-   // For now, relegate to Effect()
-   return Effect::GetType();
+   return mType;
 }
 
-wxString EffectNyquist::GetFamily()
+wxString NyquistEffect::GetFamily()
 {
    return NYQUISTEFFECTS_FAMILY;
 }
 
-bool EffectNyquist::IsInteractive()
+bool NyquistEffect::IsInteractive()
 {
-   // For now, relegate to Effect()
-   return Effect::IsInteractive();
-}
-
-bool EffectNyquist::IsDefault()
-{
-   if (GetPath() == wxT("nyquist prompt"))
+   if (mIsPrompt)
    {
       return true;
    }
 
-   return false;
+   return mControls.GetCount() != 0;
 }
 
-bool EffectNyquist::IsLegacy()
+bool NyquistEffect::IsDefault()
 {
+   return mIsPrompt;
+}
+
+// EffectClientInterface implementation
+
+bool NyquistEffect::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   if (mExternal)
+   {
+      return true;
+   }
+
+   if (mIsPrompt)
+   {
+      parms.Write(KEY_Command, mInputCmd);
+      parms.Write(KEY_Version, mVersion);
+
+      return true;
+   }
+
+   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   {
+      NyqControl & ctrl = mControls[c];
+      double d = ctrl.val;
+
+      if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
+      {
+         d = GetCtrlValue(ctrl.valStr);
+      }
+
+      if (ctrl.type == NYQ_CTRL_REAL)
+      {
+         parms.Write(ctrl.var, d);
+      }
+      else if (ctrl.type == NYQ_CTRL_INT)
+      {
+         parms.Write(ctrl.var, (int) d);
+      }
+      else if (ctrl.type == NYQ_CTRL_CHOICE)
+      {
+         wxArrayString choices = ParseChoice(ctrl);
+         parms.WriteEnum(ctrl.var, (int) d, choices);
+      }
+      else if (ctrl.type == NYQ_CTRL_STRING)
+      {
+         parms.Write(ctrl.var, ctrl.valStr);
+      }
+   }
+
    return true;
 }
 
-bool EffectNyquist::SupportsRealtime()
+bool NyquistEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   return false;
-}
+   if (mExternal)
+   {
+      return true;
+   }
 
-bool EffectNyquist::SupportsAutomation()
-{
-   return true;
-}
+   if (mIsPrompt)
+   {
+      parms.Read(KEY_Command, &mInputCmd, wxEmptyString);
+      parms.Read(KEY_Version, &mVersion, mVersion);
 
-// ============================================================================
-// Effect Implementation
-// ============================================================================
+      return true;
+   }
 
-bool EffectNyquist::SupportsChains()
-{
-   return (GetEffectFlags() & PROCESS_EFFECT) != 0;
-}
-
-bool EffectNyquist::TransferParameters( Shuttle & shuttle )
-{
-
-   for (size_t i = 0; i < mControls.GetCount(); i++) {
-      NyqControl *ctrl = &mControls[i];
-      double d = ctrl->val;
+   // First pass verifies values
+   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   {
+      NyqControl & ctrl = mControls[c];
       bool good = false;
 
-      if (d == UNINITIALIZED_CONTROL) {
-         if (ctrl->type != NYQ_CTRL_STRING) {
-            if (!shuttle.mbStoreInClient) {
-               d = GetCtrlValue(ctrl->valStr);
-            }
-         }
+      if (ctrl.type == NYQ_CTRL_REAL)
+      {
+         double val;
+         good = parms.Read(ctrl.var, &val) &&
+                val >= ctrl.low &&
+                val <= ctrl.high;
+      }
+      else if (ctrl.type == NYQ_CTRL_INT)
+      {
+         int val;
+         good = parms.Read(ctrl.var, &val) &&
+                val >= ctrl.low &&
+                val <= ctrl.high;
+      }
+      else if (ctrl.type == NYQ_CTRL_CHOICE)
+      {
+         int val;
+         wxArrayString choices = ParseChoice(ctrl);
+         good = parms.ReadEnum(ctrl.var, &val, choices) &&
+                val != wxNOT_FOUND;
+      }
+      else if (ctrl.type == NYQ_CTRL_STRING)
+      {
+         wxString val;
+         good = parms.Read(ctrl.var, &val);
       }
 
-      if (ctrl->type == NYQ_CTRL_REAL) {
-         good = shuttle.TransferDouble(ctrl->var, d, 0.0);
+      if (!good)
+      {
+         return false;
       }
-      else if (ctrl->type == NYQ_CTRL_INT) {
-         int val = (int) d;
-         good = shuttle.TransferInt(ctrl->var, val, 0);
-         d = (double) val;
-      }
-      else if (ctrl->type == NYQ_CTRL_CHOICE) {
-         //str is coma separated labels for each choice
-         wxString str = ctrl->label;
-         wxArrayString choices;
+   }
 
-         while (1) {
-            int ci = str.Find( ',' ); //coma index
+   // Second pass sets the variables
+   for (size_t c = 0, cnt = mControls.GetCount(); c < cnt; c++)
+   {
+      NyqControl & ctrl = mControls[c];
 
-            if (ci == -1) {
-               choices.Add( str );
-               break;
-            }
-            else {
-               choices.Add(str.Left(ci));
-            }
-
-            str = str.Right(str.length() - ci - 1);
-         }
-
-         int cnt = choices.GetCount();
-         if (choices.GetCount() > 0) {
-            wxString *array = NULL;
-            array = new wxString[cnt];
-            for (int j = 0; j < cnt; j++ ) {
-               array[j] = choices[j];
-            }
-
-            int val = (int) d;
-            good = shuttle.TransferEnum(ctrl->var, val, cnt, array);
-            d = (double) val;
-
-            delete [] array;
-         }
-      }
-      else if (ctrl->type == NYQ_CTRL_STRING) {
-         good = shuttle.TransferString(ctrl->var, ctrl->valStr, wxEmptyString);
+      double d = ctrl.val;
+      if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
+      {
+         d = GetCtrlValue(ctrl.valStr);
       }
 
-      if (ctrl->type != NYQ_CTRL_STRING) {
-         if (shuttle.mbStoreInClient && good) {
-            ctrl->val = d;
-         }
+      if (ctrl.type == NYQ_CTRL_REAL)
+      {
+         parms.Read(ctrl.var, &ctrl.val);
+      }
+      else if (ctrl.type == NYQ_CTRL_INT)
+      {
+         int val;
+         parms.Read(ctrl.var, &val);
+         ctrl.val = (double) val;
+      }
+      else if (ctrl.type == NYQ_CTRL_CHOICE)
+      {
+         int val;
+         wxArrayString choices = ParseChoice(ctrl);
+         parms.ReadEnum(ctrl.var, &val, choices);
+         ctrl.val = (double) val;
+      }
+      else if (ctrl.type == NYQ_CTRL_STRING)
+      {
+         parms.Read(ctrl.var, &ctrl.valStr);
       }
    }
 
    return true;
 }
 
-bool EffectNyquist::GeneratorPreview()
+// Effect Implementation
+
+bool NyquistEffect::Init()
 {
-   // Enable Nyquist generator plug-ins to create preview without a selection
-   return (mEnablePreview && (GetEffectFlags() & INSERT_EFFECT));
-}
-
-bool EffectNyquist::PromptUser()
-{
-   while (mInteractive) {
-      NyquistInputDialog dlog(wxGetTopLevelParent(NULL), -1,
-                              _("Nyquist Prompt"),
-                              _("Enter Nyquist Command: "),
-                              mInputCmd);
-      dlog.mVersion = mVersion;
-      dlog.CentreOnParent();
-      int result = dlog.ShowModal();
-
-      if (result == wxID_CANCEL) {
-         return false;
-      }
-
-      mVersion = dlog.mVersion;
-
-      /*if (result == eDebugID) {
-         mDebug = true;
-      }*/
-      mDebug = (result == eDebugID);
-
-      // remember exact input in mInputCmd which will appear in the next
-      // NyquistInputDialog. Copy to mCmd for possible embedding in
-      // "function main() begin ... end":
-      mCmd = mInputCmd = dlog.GetCommand();
-
-      // Is this LISP or SAL? Both allow comments. After comments, LISP
-      // must begin with "(". Technically, a LISP expression could be a
-      // symbol or number or string, etc., but these are not really
-      // useful expressions. If the input begins with a symbol, number,
-      // or string, etc., it is more likely an erroneous attempt to type
-      // a SAL expression (which should probably begin with "return"),
-      // so we will treat it as SAL.
-
-      // this is a state machine to scan past LISP comments and white
-      // space to find the first real character of LISP or SAL. Note
-      // that #| ... |# style comments are not valid in SAL, so we do
-      // not skip these. Instead, "#|" indicates LISP if found.
-      //
-      unsigned int i = 0;
-      bool inComment = false; // handle "; ... \n" comments
-      while (i < mCmd.Len()) {
-         if (inComment) {
-            inComment = (mCmd[i] != wxT('\n'));
-         } else if (mCmd[i] == wxT(';')) {
-            inComment = true;
-         } else if (!wxIsspace(mCmd[i])) {
-            break; // found the first non-comment, non-space character
-         }
-         i++;
-      }
-
-      // invariant: i == mCmd.Len() |
-      //            mCmd[i] is first non-comment, non-space character
-
-      mIsSal = false;
-      if (mCmd.Len() > i && mCmd[i] != wxT('(') &&
-          (mCmd[i] != wxT('#') || mCmd.Len() <= i + 1 ||
-           mCmd[i + 1] != wxT('|'))) {
-         mIsSal = true;
-         wxString cmdUp = mCmd.Upper();
-         int returnLoc = cmdUp.Find(wxT("RETURN"));
-         if (returnLoc == wxNOT_FOUND) {
-            wxMessageBox(_("Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n\treturn s * 0.1\nfor SAL, or begin with an open parenthesis such as\n\t(mult s 0.1)\n for LISP."), _("Error in Nyquist code"), wxOK | wxCENTRE);
-            return false;
-         }
-      }
-
-      if (result != ePreviewID)
-      {
-         return true;
-      }
-
-      Preview();
-   }
-
-   if (!mExternal) {
+   if (!mIsPrompt && !mExternal)
+   {
       //TODO: If we want to auto-add parameters from spectral selection,
       //we will need to modify this test.
       //Note that removing it stops the caching of parameter values,
       //(during this session).
       if (mFileName.GetModificationTime().IsLaterThan(mFileModified)) 
       {
+         SaveUserPreset(GetCurrentSettingsGroup());
+
          ParseFile();
          mFileModified = mFileName.GetModificationTime();
+
+         LoadUserPreset(GetCurrentSettingsGroup());
       }
    }
-
-   if (mControls.GetCount() == 0) {
-      return true;
-   }
-
-   for (unsigned int i = 0; i < mControls.GetCount(); i++) {
-      NyqControl *ctrl = &mControls[i];
-
-      if (ctrl->type == NYQ_CTRL_STRING) {
-         continue;
-      }
-
-      if (ctrl->val == UNINITIALIZED_CONTROL) {
-         ctrl->val = GetCtrlValue(ctrl->valStr);
-      }
-
-      if (ctrl->type == NYQ_CTRL_CHOICE) {
-         continue;
-      }
-
-      ctrl->low = GetCtrlValue(ctrl->lowStr);
-      ctrl->high = GetCtrlValue(ctrl->highStr);
-
-      if (ctrl->high < ctrl->low) {
-         ctrl->high = ctrl->low + 1;
-      }
-
-      if (ctrl->val < ctrl->low) {
-         ctrl->val = ctrl->low;
-      }
-
-      if (ctrl->val > ctrl->high) {
-         ctrl->val = ctrl->high;
-      }
-
-      ctrl->ticks = 1000;
-      if (ctrl->type == NYQ_CTRL_INT &&
-          (ctrl->high - ctrl->low < ctrl->ticks)) {
-         ctrl->ticks = (int)(ctrl->high - ctrl->low);
-      }
-   }
-
-   NyquistDialog dlog(mParent, -1, mName, mInfo, mEnablePreview, this);
-   dlog.CentreOnParent();
-   int result = dlog.ShowModal();
-
-   if (result == wxID_CANCEL) {
-      return false;
-   }
-
-   /* if (result == eDebugID) {
-      mDebug = true;
-   } */
-   mDebug = (result == eDebugID);
 
    return true;
 }
 
-bool EffectNyquist::Process()
+bool NyquistEffect::CheckWhetherSkipEffect()
+{
+   // If we're a prompt and we have controls, then we've already processed
+   // the audio, so skip further processing.
+   return (mIsPrompt && mControls.GetCount() > 0);
+}
+
+bool NyquistEffect::Process()
 {
    bool success = true;
 
@@ -475,7 +406,7 @@ bool EffectNyquist::Process()
    // We must copy all the tracks, because Paste needs label tracks to ensure
    // correct sync-lock group behavior when the timeline is affected; then we just want
    // to operate on the selected wave tracks
-   this->CopyInputTracks(Track::All);
+   CopyInputTracks(Track::All);
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
    mCurTrack[0] = (WaveTrack *) iter.First();
    mOutputTime = 0;
@@ -483,7 +414,7 @@ bool EffectNyquist::Process()
    mProgressIn = 0;
    mProgressOut = 0;
    mProgressTot = 0;
-   mScale = (GetEffectFlags() & PROCESS_EFFECT ? 0.5 : 1.0) / GetNumWaveGroups();
+   mScale = (GetType() == EffectTypeProcess ? 0.5 : 1.0) / GetNumWaveGroups();
 
    mStop = false;
    mBreak = false;
@@ -491,7 +422,7 @@ bool EffectNyquist::Process()
 
    mTrackIndex = 0;
 
-   mDebugOutput = "";
+   mDebugOutput.Clear();
 
    if (mVersion >= 4)
    {
@@ -506,7 +437,7 @@ bool EffectNyquist::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HELP)\n"), EscapeString(FileNames::HtmlHelpDir().RemoveLast()).c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'TEMP)\n"), EscapeString(FileNames::TempDir()).c_str());
 
-      wxArrayString paths = EffectNyquist::GetNyquistSearchPath();
+      wxArrayString paths = NyquistEffect::GetNyquistSearchPath();
       wxString list;
       for (size_t i = 0, cnt = paths.GetCount(); i < cnt; i++)
       {
@@ -514,7 +445,7 @@ bool EffectNyquist::Process()
       }
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* (list %s) 'PLUGIN)\n"), list.RemoveLast().c_str());
 
-#if defined EXPERIMENTAL_NYQUIST_TIME_PROPERTY
+
       // Date and time:
       wxDateTime now = wxDateTime::Now();
       int year = now.GetYear();
@@ -537,7 +468,6 @@ bool EffectNyquist::Process()
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* %d 'MONTH)\n"), month);
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'MONTH-NAME)\n"), now.GetMonthName(month).c_str());
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-TIME* \"%s\" 'DAY-NAME)\n"), now.GetWeekDayName(day).c_str());
-#endif
 
 
       TrackListIterator all(project->GetTracks());
@@ -586,6 +516,11 @@ bool EffectNyquist::Process()
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'MIDITRACKS)\n"), numMidi);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TIMETRACKS)\n"), numTime);
 
+      double previewLen = 6.0;
+      gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen);
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'PREVIEW-DURATION)\n"),
+                                 Internat::ToString(previewLen).c_str());
+
       SelectedTrackListOfKindIterator sel(Track::Wave, mOutputTracks);
       int numChannels = 0;
       for (WaveTrack *t = (WaveTrack *) sel.First(); t; t = (WaveTrack *) sel.Next()) {
@@ -632,7 +567,6 @@ bool EffectNyquist::Process()
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz.c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz.c_str());
       mProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'BANDWIDTH)\n"), bandwidth.c_str());
-
    }
 
    // Keep track of whether the current track is first selected in its sync-lock group
@@ -651,7 +585,7 @@ bool EffectNyquist::Process()
             if (mCurTrack[1]->GetRate() != mCurTrack[0]->GetRate()) {
                wxMessageBox(_("Sorry, cannot apply effect on stereo tracks where the tracks don't match."),
                             wxT("Nyquist"),
-                            wxOK | wxCENTRE, mParent);
+                            wxOK | wxCENTRE, mUIParent);
                success = false;
                goto finish;
             }
@@ -712,23 +646,109 @@ bool EffectNyquist::Process()
 
  finish:
 
-   if (mDebug && !mExternal) {
-      NyquistOutputDialog dlog(mParent, -1,
+   if (mDebug && !mRedirectOutput) {
+      NyquistOutputDialog dlog(mUIParent, -1,
                                _("Nyquist"),
                                _("Nyquist Output: "),
-                               NyquistToWxString(mDebugOutput.c_str()));
+                               mDebugOutput.c_str());
       dlog.CentreOnParent();
       dlog.ShowModal();
    }
 
-   this->ReplaceProcessedTracks(success);
+   ReplaceProcessedTracks(success);
 
    mDebug = false;
 
    return success;
 }
 
-bool EffectNyquist::ProcessOne()
+bool NyquistEffect::ShowInterface(wxWindow *parent, bool forceModal)
+{
+   // Show the normal (prompt or effect) interface
+   bool res = Effect::ShowInterface(parent, forceModal);
+
+   // Remember if the user clicked debug
+   mDebug = (mUIResultID == eDebugID);
+
+   // We're done if the user clicked "Close", we are not the Nyquist Prompt,
+   // or the program currently loaded into the prompt doesn't have a UI.
+   if (!res || !mIsPrompt || mControls.GetCount() == 0)
+   {
+      return res;
+   }
+
+   NyquistEffect effect(NYQUIST_WORKER_ID);
+
+   effect.SetCommand(mInputCmd);
+   effect.mDebug = (mUIResultID == eDebugID);
+
+   SelectedRegion region(mT0, mT1);
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   region.setF0(mF0);
+   region.setF1(mF1);
+#endif
+   return effect.DoEffect(parent,
+                          mProjectRate,
+                          mTracks,
+                          mFactory,
+                          &region,
+                          true);
+}
+
+void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
+{
+   if (mIsPrompt)
+   {
+      BuildPromptWindow(S);
+   }
+   else
+   {
+      BuildEffectWindow(S);
+   }
+
+   EnableDebug();
+}
+
+bool NyquistEffect::TransferDataToWindow()
+{
+   mUIParent->TransferDataToWindow();
+
+   bool success;
+   if (mIsPrompt)
+   {
+      success = TransferDataToPromptWindow();
+   }
+   else
+   {
+      success = TransferDataToEffectWindow();
+   }
+
+   if (success)
+   {
+      EnablePreview(mEnablePreview);
+   }
+
+   return success;
+}
+
+bool NyquistEffect::TransferDataFromWindow()
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   if (mIsPrompt)
+   {
+      return TransferDataFromPromptWindow();
+   }
+
+   return TransferDataFromEffectWindow();
+}
+
+// NyquistEffect implementation
+
+bool NyquistEffect::ProcessOne()
 {
    nyx_rval rval;
 
@@ -837,7 +857,7 @@ bool EffectNyquist::ProcessOne()
                               Internat::ToString(maxPeak).c_str());
    }
 
-   if (GetEffectFlags() & INSERT_EFFECT) {
+   if (GetType() == EffectTypeGenerate) {
       nyx_set_audio_params(mCurTrack[0]->GetRate(), 0);
    }
    else {
@@ -850,7 +870,7 @@ bool EffectNyquist::ProcessOne()
 
    // Restore the Nyquist sixteenth note symbol for Generate plugins.
    // See http://bugzilla.audacityteam.org/show_bug.cgi?id=490.
-   if (GetEffectFlags() & INSERT_EFFECT) {
+   if (GetType() == EffectTypeGenerate) {
       cmd += wxT("(setf s 0.25)\n");
    }
 
@@ -894,8 +914,7 @@ bool EffectNyquist::ProcessOne()
    }
 
    if (mIsSal) {
-      wxString str = mCmd;
-      EscapeString(str);
+      wxString str = EscapeString(mCmd);
       // this is tricky: we need SAL to call main so that we can get a
       // SAL traceback in the event of an error (sal-compile catches the
       // error and calls sal-error-output), but SAL does not return values.
@@ -946,13 +965,13 @@ bool EffectNyquist::ProcessOne()
    if (rval == nyx_string) {
       wxMessageBox(NyquistToWxString(nyx_get_string()),
                    wxT("Nyquist"),
-                   wxOK | wxCENTRE, mParent);
+                   wxOK | wxCENTRE, mUIParent);
 
       // True if not process type.
       // If not returning audio from process effect,
       // return first reult then stop (disables preview)
       // but allow all output from Nyquist Prompt.
-      return (!(GetEffectFlags() & PROCESS_EFFECT)|| mInteractive);
+      return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
    if (rval == nyx_double) {
@@ -960,8 +979,8 @@ bool EffectNyquist::ProcessOne()
       str.Printf(_("Nyquist returned the value:") + wxString(wxT(" %f")),
                  nyx_get_double());
       wxMessageBox(str, wxT("Nyquist"),
-                   wxOK | wxCENTRE, mParent);
-      return (!(GetEffectFlags() & PROCESS_EFFECT)|| mInteractive);
+                   wxOK | wxCENTRE, mUIParent);
+      return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
    if (rval == nyx_int) {
@@ -969,8 +988,8 @@ bool EffectNyquist::ProcessOne()
       str.Printf(_("Nyquist returned the value:") + wxString(wxT(" %d")),
                  nyx_get_int());
       wxMessageBox(str, wxT("Nyquist"),
-                   wxOK | wxCENTRE, mParent);
-      return (!(GetEffectFlags() & PROCESS_EFFECT)|| mInteractive);
+                   wxOK | wxCENTRE, mUIParent);
+      return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
    if (rval == nyx_labels) {
@@ -988,7 +1007,7 @@ bool EffectNyquist::ProcessOne()
 
       if (!ltrack) {
          ltrack = mFactory->NewLabelTrack();
-         this->AddToOutputTracks((Track *)ltrack);
+         AddToOutputTracks((Track *)ltrack);
       }
 
       for (l = 0; l < numLabels; l++) {
@@ -1001,13 +1020,13 @@ bool EffectNyquist::ProcessOne()
 
          ltrack->AddLabel(SelectedRegion(t0 + mT0, t1 + mT0), UTF8CTOWX(str));
       }
-      return (!(GetEffectFlags() & PROCESS_EFFECT)|| mInteractive);
+      return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
    if (rval != nyx_audio) {
       // This should not happen, but leaving in for now just in case (Dec 2014)
       wxMessageBox(_("Undefined return value.\n"), wxT("Nyquist"),
-                   wxOK | wxCENTRE, mParent);
+                   wxOK | wxCENTRE, mUIParent);
       return false;
    }
 
@@ -1017,21 +1036,21 @@ bool EffectNyquist::ProcessOne()
    if (outChannels > mCurNumChannels) {
       wxMessageBox(_("Nyquist returned too many audio channels.\n"),
                    wxT("Nyquist"),
-                   wxOK | wxCENTRE, mParent);
+                   wxOK | wxCENTRE, mUIParent);
       return false;
    }
 
    if (outChannels == -1) {
       wxMessageBox(_("Nyquist returned one audio channel as an array.\n"),
                    wxT("Nyquist"),
-                   wxOK | wxCENTRE, mParent);
+                   wxOK | wxCENTRE, mUIParent);
       return false;
    }
 
    if (outChannels == 0) {
       wxMessageBox(_("Nyquist returned an empty array.\n"),
                    wxT("Nyquist"),
-                   wxOK | wxCENTRE, mParent);
+                   wxOK | wxCENTRE, mUIParent);
       return false;
    }
 
@@ -1067,7 +1086,7 @@ bool EffectNyquist::ProcessOne()
       if (mOutputTime <= 0) {
          wxMessageBox(_("Nyquist did not return audio.\n"),
                       wxT("Nyquist"),
-                      wxOK | wxCENTRE, mParent);
+                      wxOK | wxCENTRE, mUIParent);
          for (i = 0; i < outChannels; i++) {
             delete mOutputTrack[i];
             mOutputTrack[i] = NULL;
@@ -1093,7 +1112,7 @@ bool EffectNyquist::ProcessOne()
          mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, bMergeClips);
       }
       else {
-         mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, mMergeClips);
+         mCurTrack[i]->ClearAndPaste(mT0, mT1, out, mRestoreSplits, mMergeClips != 0);
       }
          
       // If we were first in the group adjust non-selected group tracks
@@ -1121,10 +1140,10 @@ bool EffectNyquist::ProcessOne()
 }
 
 // ============================================================================
-// EffectNyquist Implementation
+// NyquistEffect Implementation
 // ============================================================================
 
-wxString EffectNyquist::NyquistToWxString(const char *nyqString)
+wxString NyquistEffect::NyquistToWxString(const char *nyqString)
 {
     wxString str(nyqString, wxConvUTF8);
     if (nyqString != NULL && nyqString[0] && str.IsEmpty()) {
@@ -1135,7 +1154,7 @@ wxString EffectNyquist::NyquistToWxString(const char *nyqString)
     return str;
 }
 
-wxString EffectNyquist::EscapeString(const wxString & inStr)
+wxString NyquistEffect::EscapeString(const wxString & inStr)
 {
    wxString str = inStr;
 
@@ -1145,22 +1164,46 @@ wxString EffectNyquist::EscapeString(const wxString & inStr)
    return str;
 }
 
-void EffectNyquist::Break()
+wxArrayString NyquistEffect::ParseChoice(const NyqControl & ctrl)
+{
+   wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
+
+   for (size_t i = 0, cnt = choices.GetCount();i < cnt; i++)
+   {
+      choices[i] = choices[i].Trim(true).Trim(false);
+   }
+
+   return choices;
+}
+
+void NyquistEffect::RedirectOutput()
+{
+   mRedirectOutput = true;
+}
+
+void NyquistEffect::SetCommand(wxString cmd)
+{
+   mExternal = true;
+
+   ParseCommand(cmd);
+}
+
+void NyquistEffect::Break()
 {
    mBreak = true;
 }
 
-void EffectNyquist::Continue()
+void NyquistEffect::Continue()
 {
    mCont = true;
 }
 
-void EffectNyquist::Stop()
+void NyquistEffect::Stop()
 {
    mStop = true;
 }
 
-wxString EffectNyquist::UnQuote(wxString s)
+wxString NyquistEffect::UnQuote(wxString s)
 {
    wxString out;
    int len = s.Length();
@@ -1172,7 +1215,7 @@ wxString EffectNyquist::UnQuote(wxString s)
    return s;
 }
 
-double EffectNyquist::GetCtrlValue(wxString s)
+double NyquistEffect::GetCtrlValue(wxString s)
 {
    if (s == wxT("rate")) {
       TrackListOfKindIterator iter(Track::Wave, mTracks);
@@ -1182,7 +1225,7 @@ double EffectNyquist::GetCtrlValue(wxString s)
    return Internat::CompatibleToDouble(s);
 }
 
-void EffectNyquist::Parse(wxString line)
+void NyquistEffect::Parse(wxString line)
 {
    wxArrayString tokens;
 
@@ -1226,33 +1269,36 @@ void EffectNyquist::Parse(wxString line)
       return;
    }
 
-   // As of version 4 plugins ";nyquist plug-in" is depricated in favour of ";nyquist plugin".
-   // The hyphenated version must be maintained while we support plugin versions < 4.
+   // Consistency decission is for "plug-in" as the correct spelling
+   // "plugin" is allowed as an undocumented convenience.
    if (len == 2 && tokens[0] == wxT("nyquist") &&
-      (tokens[1] == wxT("plugin") || tokens[1] == wxT("plug-in"))) {
+      (tokens[1] == wxT("plug-in") || tokens[1] == wxT("plugin"))) {
       mOK = true;
       return;
    }
 
    if (len >= 2 && tokens[0] == wxT("type")) {
       if (tokens[1] == wxT("process")) {
-         SetEffectFlags(PROCESS_EFFECT | PLUGIN_EFFECT);
+         mType = EffectTypeProcess;
       }
       else if (tokens[1] == wxT("generate")) {
-         SetEffectFlags(INSERT_EFFECT | PLUGIN_EFFECT);
+         mType = EffectTypeGenerate;
       }
       else if (tokens[1] == wxT("analyze")) {
-         SetEffectFlags(ANALYZE_EFFECT | PLUGIN_EFFECT);
+         mType = EffectTypeAnalyze;
       }
       return;
    }
 
    if (len == 2 && tokens[0] == wxT("codetype")) {
+      // This will stop ParseProgram() from doing a best guess as program type.
       if (tokens[1] == wxT("lisp")) {
          mIsSal = false;
+         mFoundType = true;
       }
       else if (tokens[1] == wxT("sal")) {
          mIsSal = true;
+         mFoundType = true;
       }
       return;
    }
@@ -1294,6 +1340,10 @@ void EffectNyquist::Parse(wxString line)
 
    if (len >= 2 && tokens[0] == wxT("name")) {
       mName = UnQuote(tokens[1]);
+      if (mName.EndsWith(wxT("...")))
+      {
+         mName = mName.RemoveLast(3);
+      }
       return;
    }
 
@@ -1310,6 +1360,18 @@ void EffectNyquist::Parse(wxString line)
    if (len >= 2 && tokens[0] == wxT("preview")) {
       if (tokens[1] == wxT("enabled") || tokens[1] == wxT("true")) {
          mEnablePreview = true;
+         SetLinearEffectFlag(false);
+      }
+      else if (tokens[1] == wxT("linear")) {
+         mEnablePreview = true;
+         SetLinearEffectFlag(true);
+      }
+      else if (tokens[1] == wxT("selection")) {
+         mEnablePreview = true;
+         SetPreviewFullSelectionFlag(true);
+      }
+      else if (tokens[1] == wxT("disabled") || tokens[1] == wxT("false")) {
+         mEnablePreview = false;
       }
       return;
    }
@@ -1349,11 +1411,12 @@ void EffectNyquist::Parse(wxString line)
       ctrl.name = tokens[2];
       ctrl.label = tokens[4];
       ctrl.valStr = tokens[5];
+      ctrl.val = GetCtrlValue(ctrl.valStr);
 
       if (tokens[3] == wxT("string")) {
          ctrl.type = NYQ_CTRL_STRING;
       }
-      else if (tokens[ 3 ] == wxT("choice")) {
+      else if (tokens[3] == wxT("choice")) {
          ctrl.type = NYQ_CTRL_CHOICE;
       }
       else {
@@ -1382,10 +1445,28 @@ void EffectNyquist::Parse(wxString line)
          }
 
          ctrl.lowStr = tokens[6];
+         ctrl.low = GetCtrlValue(ctrl.lowStr);
          ctrl.highStr = tokens[7];
-      }
+         ctrl.high = GetCtrlValue(ctrl.highStr);
 
-      ctrl.val = UNINITIALIZED_CONTROL;
+         if (ctrl.high < ctrl.low) {
+            ctrl.high = ctrl.low + 1;
+         }
+
+         if (ctrl.val < ctrl.low) {
+            ctrl.val = ctrl.low;
+         }
+
+         if (ctrl.val > ctrl.high) {
+            ctrl.val = ctrl.high;
+         }
+
+         ctrl.ticks = 1000;
+         if (ctrl.type == NYQ_CTRL_INT &&
+             (ctrl.high - ctrl.low < ctrl.ticks)) {
+            ctrl.ticks = (int)(ctrl.high - ctrl.low);
+         }
+      }
 
       if( mPresetNames.Index( ctrl.var ) == wxNOT_FOUND )
       {
@@ -1400,100 +1481,83 @@ void EffectNyquist::Parse(wxString line)
    }
 }
 
-void EffectNyquist::ParseFile()
+bool NyquistEffect::ParseProgram(wxInputStream & stream)
 {
-   wxTextFile f(mFileName.GetFullPath());
-   if (!f.Open())
-      return;
+   if (!stream.IsOk())
+   {
+      return false;
+   }
+
+   wxTextInputStream pgm(stream);
 
    mCmd = wxT("");
-   SetEffectFlags(PROCESS_EFFECT | PLUGIN_EFFECT);
-   mOK = false;
-   mEnablePreview = false;
    mIsSal = false;
    mControls.Clear();
-   mDebug = false;
+   mCategories.Clear();
 
-   int i;
-   int len = f.GetLineCount();
-   wxString line;
-   for (i = 0; i < len; i++) {
-      line = f[i];
-      if (line.Length() > 1 && line[0] == wxT(';')) {
+   mFoundType = false;
+   while (!stream.Eof() && stream.IsOk())
+   {
+      wxString line = pgm.ReadLine().Trim(false);
+      if (line.Length() > 1 && line[0] == wxT(';'))
+      {
          Parse(line);
       }
+      else if (!mFoundType && line.Length() > 0)
+      {
+         mFoundType = true;
+
+         if (line[0] == wxT('(') ||
+            (line[0] == wxT('#') && line.Length() > 1 && line[1] == wxT('|')))
+         {
+            mIsSal = false;
+         }
+         else if (line.Upper().Find(wxT("RETURN")) != wxNOT_FOUND)
+         {
+            mIsSal = true;
+         }
+         else if (mIsPrompt)
+         {
+            wxMessageBox(_("Your code looks like SAL syntax, but there is no return statement. Either use a return statement such as\n\treturn s * 0.1\nfor SAL, or begin with an open parenthesis such as\n\t(mult s 0.1)\n for LISP."), _("Error in Nyquist code"), wxOK | wxCENTRE);
+            return false;
+         }
+         // Just throw it at Nyquist to see what happens
+      }
+
       // preserve comments so that SAL effects compile with proper line numbers
       mCmd += line + wxT("\n");
    }
+
+   return true;
 }
 
-void EffectNyquist::SetCommand(wxString cmd)
+void NyquistEffect::ParseFile()
 {
-   mExternal = true;
-   mInteractive = false;
-   mCmd = wxT("");
-   SetEffectFlags(INSERT_EFFECT | HIDDEN_EFFECT);
-   mOK = false;
-   mIsSal = false;
-   mControls.Clear();
+   mEnablePreview = true;
 
-   wxStringTokenizer lines(cmd, wxT("\n"));
-   while (lines.HasMoreTokens()) {
-      wxString line = lines.GetNextToken();
+   wxFileInputStream stream(mFileName.GetFullPath());
 
-      if (line.Length() > 1 && line[0] == wxT(';')) {
-         Parse(line);
-      }
-      else {
-         mCmd += line + wxT("\n");
-      }
-   }
+   ParseProgram(stream);
 }
 
-bool EffectNyquist::SetXlispPath()
+bool NyquistEffect::ParseCommand(const wxString & cmd)
 {
-   wxString fname;
+   mEnablePreview = true;
 
-   fname = mXlispPath + wxFILE_SEP_PATH + wxT("nyinit.lsp");
-   if (!(::wxFileExists(fname))) {
-      mXlispPath = wxT("");
-   }
+   wxStringInputStream stream(cmd + wxT(" "));
 
-   if (mXlispPath == wxT("")) {
-      wxArrayString audacityPathList = wxGetApp().audacityPathList;
-      wxArrayString pathList;
-      wxArrayString files;
-      unsigned int i;
-
-      for (i = 0; i < audacityPathList.GetCount(); i++) {
-         wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
-         wxGetApp().AddUniquePathToPathList(prefix + wxT("nyquist"),
-                                            pathList);
-      }
-
-      wxGetApp().FindFilesInPathList(wxT("nyquist.lsp"), pathList, files);
-
-      if (files.GetCount() > 0) {
-         mXlispPath = ::wxPathOnly(files[0]);
-      }
-   }
-
-   /* set_xlisp_path doesn't handle fn_Str() in Unicode build. May or may not actually work. */
-   nyx_set_xlisp_path(mXlispPath.mb_str());
-
-   fname = mXlispPath + wxFILE_SEP_PATH + wxT("nyinit.lsp");
-   return ::wxFileExists(fname);
+   return ParseProgram(stream);
 }
 
-int EffectNyquist::StaticGetCallback(float *buffer, int channel,
+int NyquistEffect::StaticGetCallback(float *buffer, int channel,
                                      long start, long len, long totlen,
                                      void *userdata)
 {
-   EffectNyquist *This = (EffectNyquist *)userdata;
+   NyquistEffect *This = (NyquistEffect *)userdata;
    return This->GetCallback(buffer, channel, start, len, totlen);
 }
 
-int EffectNyquist::GetCallback(float *buffer, int ch,
+int NyquistEffect::GetCallback(float *buffer, int ch,
                                long start, long len, long WXUNUSED(totlen))
 {
    if (mCurBuffer[ch]) {
@@ -1547,15 +1611,15 @@ int EffectNyquist::GetCallback(float *buffer, int ch,
    return 0;
 }
 
-int EffectNyquist::StaticPutCallback(float *buffer, int channel,
+int NyquistEffect::StaticPutCallback(float *buffer, int channel,
                                      long start, long len, long totlen,
                                      void *userdata)
 {
-   EffectNyquist *This = (EffectNyquist *)userdata;
+   NyquistEffect *This = (NyquistEffect *)userdata;
    return This->PutCallback(buffer, channel, start, len, totlen);
 }
 
-int EffectNyquist::PutCallback(float *buffer, int channel,
+int NyquistEffect::PutCallback(float *buffer, int channel,
                                long start, long len, long totlen)
 {
    if (channel == 0) {
@@ -1577,26 +1641,27 @@ int EffectNyquist::PutCallback(float *buffer, int channel,
    return -1; // failure
 }
 
-void EffectNyquist::StaticOutputCallback(int c, void *This)
+void NyquistEffect::StaticOutputCallback(int c, void *This)
 {
-   ((EffectNyquist *)This)->OutputCallback(c);
+   ((NyquistEffect *)This)->OutputCallback(c);
 }
 
-void EffectNyquist::OutputCallback(int c)
+void NyquistEffect::OutputCallback(int c)
 {
-   if (mDebug && !mExternal) {
+   if (mDebug && !mRedirectOutput) {
       mDebugOutput += (char)c;
       return;
    }
+
    std::cout << (char)c;
 }
 
-void EffectNyquist::StaticOSCallback(void *This)
+void NyquistEffect::StaticOSCallback(void *This)
 {
-   ((EffectNyquist *)This)->OSCallback();
+   ((NyquistEffect *)This)->OSCallback();
 }
 
-void EffectNyquist::OSCallback()
+void NyquistEffect::OSCallback()
 {
    if (mStop) {
       mStop = false;
@@ -1626,7 +1691,7 @@ void EffectNyquist::OSCallback()
 #endif
 }
 
-wxArrayString EffectNyquist::GetNyquistSearchPath()
+wxArrayString NyquistEffect::GetNyquistSearchPath()
 {
    wxArrayString audacityPathList = wxGetApp().audacityPathList;
    wxArrayString pathList;
@@ -1642,400 +1707,342 @@ wxArrayString EffectNyquist::GetNyquistSearchPath()
    return pathList;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// NyquistDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-#define ID_NYQ_SLIDER 2000
-#define ID_NYQ_TEXT   3000
-#define ID_NYQ_CHOICE 4000
-
-BEGIN_EVENT_TABLE(NyquistDialog, wxDialog)
-   EVT_BUTTON(wxID_OK, NyquistDialog::OnOk)
-   EVT_BUTTON(wxID_CANCEL, NyquistDialog::OnCancel)
-   EVT_BUTTON(eDebugID, NyquistDialog::OnDebug)
-   EVT_BUTTON(ePreviewID, NyquistDialog::OnPreview)
-   EVT_COMMAND_RANGE(ID_NYQ_SLIDER, ID_NYQ_SLIDER+99,
-                     wxEVT_COMMAND_SLIDER_UPDATED, NyquistDialog::OnSlider)
-   EVT_COMMAND_RANGE(ID_NYQ_TEXT, ID_NYQ_TEXT+99,
-                      wxEVT_COMMAND_TEXT_UPDATED, NyquistDialog::OnText)
-   EVT_COMMAND_RANGE( ID_NYQ_CHOICE, ID_NYQ_CHOICE + 99,
-                     wxEVT_COMMAND_CHOICE_SELECTED, NyquistDialog::OnChoice )
-END_EVENT_TABLE()
-
-NyquistDialog::NyquistDialog(wxWindow * parent, wxWindowID id,
-                             const wxString & title,
-                             wxString info,
-                             bool preview,
-                             EffectNyquist *effect)
-:   wxDialog(parent, id, title)
+bool NyquistEffect::TransferDataToPromptWindow()
 {
-   mEffect = effect;
-   mControls = &mEffect->mControls;
-   mInHandler = true; // prevents race condition on MSW
+   mCommandText->ChangeValue(mInputCmd);
+   mVersionCheckBox->SetValue(mVersion <= 3);
 
-   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
-
-   if (info.Length() > 0) {
-      wxControl  *item;
-      item = new wxStaticText(this, -1, info);
-      item->SetName(info);    // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-      mainSizer->Add(item, 0, wxALIGN_LEFT | wxALL, 5);
-   }
-
-   wxFlexGridSizer *grid = new wxFlexGridSizer(4, 0, 0);
-
-   for (size_t i = 0; i < mControls->GetCount(); i++) {
-      wxControl  *item;
-      NyqControl *ctrl = &((*mControls)[i]);
-
-      item = new wxStaticText(this, -1, ctrl->name + wxT(":"));
-      item->SetName(item->GetLabel());    // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-      grid->Add(item, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5);
-
-      if (ctrl->type == NYQ_CTRL_STRING) {
-         grid->Add(10, 10);
-
-         item = new wxTextCtrl(this, ID_NYQ_TEXT+i, ctrl->valStr,
-                               wxDefaultPosition, wxSize(150, -1));
-         item->SetName(ctrl->name);
-         grid->Add(item, 0, wxALIGN_CENTRE | wxALIGN_CENTER_VERTICAL | wxALL, 5);
-      }
-      else if (ctrl->type == NYQ_CTRL_CHOICE) {
-         //str is coma separated labels for each choice
-         wxString str = ctrl->label;
-         wxArrayString choices;
-
-         while (1) {
-            int ci = str.Find( ',' ); //coma index
-
-            if (ci == -1) {
-               choices.Add( str );
-               break;
-            }
-            else {
-               choices.Add(str.Left(ci));
-            }
-
-            str = str.Right(str.length() - ci - 1);
-         }
-
-         wxChoice *choice = new wxChoice(this, ID_NYQ_CHOICE + i,
-               wxDefaultPosition, wxSize(150, -1), choices);
-         choice->SetName(ctrl->name);
-
-         int val = (int)ctrl->val;
-         if (val >= 0 && val < (int)choice->GetCount()) {
-            choice->SetSelection(val);
-         }
-
-         grid->Add(10, 10);
-         grid->Add(choice, 0, wxALIGN_CENTRE | wxALIGN_CENTER_VERTICAL | wxALL, 5);
-      }
-      else {
-         // Integer or Real
-         int val = (int)(0.5 + ctrl->ticks * (ctrl->val - ctrl->low) /
-               (ctrl->high - ctrl->low));
-
-         item = new wxTextCtrl(this, ID_NYQ_TEXT+i, wxT(""),
-                               wxDefaultPosition, wxSize(60, -1));
-         item->SetName(ctrl->name);
-         if (ctrl->type == NYQ_CTRL_REAL) {
-            // > 12 decimal places can cause rounding errors in display.
-            FloatingPointValidator<double> vld(12, &ctrl->val);
-            vld.SetRange(-FLT_MAX, FLT_MAX);
-            // Set number of decimal places
-            if (ctrl->high - ctrl->low < 10) {
-               vld.SetStyle(NUM_VAL_THREE_TRAILING_ZEROES);
-            } else if (ctrl->high - ctrl->low < 100) {
-               vld.SetStyle(NUM_VAL_TWO_TRAILING_ZEROES);
-            } else {
-               vld.SetStyle(NUM_VAL_ONE_TRAILING_ZERO);
-            }
-            item->SetValidator(vld);
-         }
-         else {
-            IntegerValidator<double> vld(&ctrl->val);
-            vld.SetRange(INT_MIN, INT_MAX);
-            item->SetValidator(vld);
-         }
-
-         grid->Add(item, 0, wxALIGN_CENTRE | wxALIGN_CENTER_VERTICAL | wxALL, 5);
-
-         item = new wxSlider(this, ID_NYQ_SLIDER+i, val, 0, ctrl->ticks,
-                             wxDefaultPosition, wxSize(150, -1));
-         item->SetName(ctrl->name);
-
-         grid->Add(item, 0, wxALIGN_CENTRE | wxALIGN_CENTER_VERTICAL | wxALL, 5);
-      }
-
-      if (ctrl->type == NYQ_CTRL_CHOICE) {
-         grid->Add( 10, 10 );
-      }
-      else {
-         item = new wxStaticText(this, -1, ctrl->label);
-         item->SetName(ctrl->label);   // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-         grid->Add(item, 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL, 5);
-      }
-   }
-   mainSizer->Add(grid, 0, wxALIGN_CENTRE | wxALL, 5);
-
-   if (preview) {
-      mainSizer->Add(CreateStdButtonSizer(this, ePreviewButton | eDebugButton | eCancelButton | eOkButton),
-                     0,
-                     wxEXPAND);
-   } else {
-      mainSizer->Add(CreateStdButtonSizer(this, eDebugButton | eCancelButton | eOkButton),
-                     0,
-                     wxEXPAND);
-   }
-
-   mInHandler = false;
-
-   wxCommandEvent dummy;
-   OnSlider(dummy);
-
-   SetAutoLayout(true);
-   SetSizer(mainSizer);
-   mainSizer->Fit(this);
-   mainSizer->SetSizeHints(this);
+   return true;
 }
 
-// ============================================================================
-// NyquistDialog implementation
-// ============================================================================
-
-void NyquistDialog::OnSlider(wxCommandEvent & /* event */)
+bool NyquistEffect::TransferDataToEffectWindow()
 {
-   if (mInHandler) {
-      return; // prevent recursing forever
+   for (size_t i = 0, cnt = mControls.GetCount(); i < cnt; i++)
+   {
+      NyqControl & ctrl = mControls[i];
+
+      if (ctrl.type == NYQ_CTRL_CHOICE)
+      {
+         wxArrayString choices = ParseChoice(ctrl);
+
+         int val = (int)ctrl.val;
+         if (val < 0 || val >= (int)choices.GetCount())
+         {
+            val = 0;
+         }
+
+         wxChoice *c = (wxChoice *) mUIParent->FindWindow(ID_Choice + i);
+         c->SetSelection(val);
+      }
+      else if (ctrl.type != NYQ_CTRL_STRING)
+      {
+         // wxTextCtrls are handled by the validators
+         double range = ctrl.high - ctrl.low;
+         int val = (int)(0.5 + ctrl.ticks * (ctrl.val - ctrl.low) / range);
+         wxSlider *s = (wxSlider *) mUIParent->FindWindow(ID_Slider + i);
+         s->SetValue(val);
+      }
    }
 
-   mInHandler = true;
+   return true;
+}
 
-   for (size_t i = 0; i < mControls->GetCount(); i++) {
-      NyqControl *ctrl = &((*mControls)[i]);
+bool NyquistEffect::TransferDataFromPromptWindow()
+{
+   mInputCmd = mCommandText->GetValue();
+   mVersion = mVersionCheckBox->GetValue() ? 3 : 4;
 
-      if (ctrl->type == NYQ_CTRL_STRING || ctrl->type == NYQ_CTRL_CHOICE) {
+   return ParseCommand(mInputCmd);
+}
+
+bool NyquistEffect::TransferDataFromEffectWindow()
+{
+   if (mControls.GetCount() == 0)
+   {
+      return true;
+   }
+
+   for (unsigned int i = 0; i < mControls.GetCount(); i++)
+   {
+      NyqControl *ctrl = &mControls[i];
+
+      if (ctrl->type == NYQ_CTRL_STRING)
+      {
          continue;
       }
 
-      wxSlider *slider = (wxSlider *)FindWindow(ID_NYQ_SLIDER + i);
-      wxTextCtrl *text = (wxTextCtrl *)FindWindow(ID_NYQ_TEXT + i);
-      wxASSERT(slider && text);
-
-      int val = slider->GetValue();
-
-      double newVal = (val / (double)ctrl->ticks)*
-         (ctrl->high - ctrl->low) + ctrl->low;
-
-      // Determine precision for displayed number
-      int precision = ctrl->high - ctrl->low < 1 ? 3 :
-                      ctrl->high - ctrl->low < 10 ? 2 :
-                      ctrl->high - ctrl->low < 100 ? 1 :
-                      0;
-
-      // If the value is at least one tick different from the current value
-      // change it (this prevents changes from manually entered values unless
-      // the slider actually moved)
-      if (fabs(newVal - ctrl->val) >= (1 / (double)ctrl->ticks) *
-                                      (ctrl->high - ctrl->low) &&
-          fabs(newVal - ctrl->val) >= pow(0.1, precision) / 2 )
+      if (ctrl->val == UNINITIALIZED_CONTROL)
       {
-         // First round to the appropriate precision
-         newVal *= pow(10.0, precision);
-         newVal = floor(newVal + 0.5);
-         newVal /= pow(10.0, precision);
+         ctrl->val = GetCtrlValue(ctrl->valStr);
+      }
 
-         ctrl->val = newVal;
+      if (ctrl->type == NYQ_CTRL_CHOICE)
+      {
+         continue;
+      }
 
-         text->GetValidator()->TransferToWindow();
+      ctrl->low = GetCtrlValue(ctrl->lowStr);
+      ctrl->high = GetCtrlValue(ctrl->highStr);
+
+      if (ctrl->high < ctrl->low)
+      {
+         ctrl->high = ctrl->low + 1;
+      }
+
+      if (ctrl->val < ctrl->low)
+      {
+         ctrl->val = ctrl->low;
+      }
+
+      if (ctrl->val > ctrl->high)
+      {
+         ctrl->val = ctrl->high;
+      }
+
+      ctrl->ticks = 1000;
+      if (ctrl->type == NYQ_CTRL_INT &&
+          (ctrl->high - ctrl->low < ctrl->ticks))
+      {
+         ctrl->ticks = (int)(ctrl->high - ctrl->low);
       }
    }
 
-   mInHandler = false;
+   return true;
 }
 
-void NyquistDialog::OnChoice( wxCommandEvent &event )
+void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
 {
-   if (mInHandler) {
-      return; // prevent recursing forever
-   }
-   mInHandler = true;
-
-   unsigned int ctrlId = event.GetId() - ID_NYQ_CHOICE;
-   wxASSERT(ctrlId >= 0 && ctrlId < mControls->GetCount());
-
-   NyqControl *ctrl = &(mControls->Item(ctrlId));
-   wxChoice *choice = (wxChoice *)FindWindow(ID_NYQ_CHOICE + ctrlId);
-   wxASSERT(choice);
-
-   ctrl->val = choice->GetSelection();
-
-   mInHandler = false;
-}
-
-void NyquistDialog::OnText(wxCommandEvent &event)
-{
-   if (mInHandler) {
-      return; // prevent recursing forever
-   }
-
-   mInHandler = true;
-
-   unsigned int ctrlId = event.GetId() - ID_NYQ_TEXT;
-   wxASSERT(ctrlId >= 0 && ctrlId < mControls->GetCount());
-
-   NyqControl *ctrl = &((*mControls)[ctrlId]);
-   wxTextCtrl *text = (wxTextCtrl *)FindWindow(ID_NYQ_TEXT + ctrlId);
-   wxASSERT(text);
-
-   if (ctrl->type == NYQ_CTRL_STRING) {
-      ctrl->valStr = text->GetValue();
-   } else {
-      text->GetValidator()->TransferFromWindow();
-      wxSlider *slider = (wxSlider *)FindWindow(ID_NYQ_SLIDER + ctrlId);
-      wxASSERT(slider);
-
-      int pos = (int)floor((ctrl->val - ctrl->low) /
-                           (ctrl->high - ctrl->low) * ctrl->ticks + 0.5);
-      if (pos < 0) {
-         pos = 0;
-      }
-      else if (pos > ctrl->ticks) {
-         pos = ctrl->ticks;
-      }
-
-      slider->SetValue(pos);
-   }
-
-   mInHandler = false;
-}
-
-void NyquistDialog::OnOk(wxCommandEvent & /* event */)
-{
-   // Transfer data
-
-   EndModal(wxID_OK);
-}
-
-void NyquistDialog::OnCancel(wxCommandEvent & /* event */)
-{
-   EndModal(wxID_CANCEL);
-}
-
-void NyquistDialog::OnDebug(wxCommandEvent & /* event */)
-{
-   // Transfer data
-
-   EndModal(eDebugID);
-}
-
-void NyquistDialog::OnPreview(wxCommandEvent & /* event */)
-{
-   mEffect->Preview();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// NyquistInputDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-#define ID_VERSION 1001
-
-BEGIN_EVENT_TABLE(NyquistInputDialog, wxDialog)
-   EVT_CHECKBOX(ID_VERSION, NyquistInputDialog::OnVersionCheck)
-   EVT_BUTTON(wxID_OK, NyquistInputDialog::OnOk)
-   EVT_BUTTON(wxID_CANCEL, NyquistInputDialog::OnCancel)
-   EVT_BUTTON(eDebugID, NyquistInputDialog::OnDebug)
-   EVT_BUTTON(ePreviewID, NyquistInputDialog::OnPreview)
-END_EVENT_TABLE()
-
-NyquistInputDialog::NyquistInputDialog(wxWindow * parent, wxWindowID id,
-                                       const wxString & title,
-                                       const wxString & prompt,
-                                       wxString initialCommand)
-:  wxDialog(parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
-{
-   // Recover last used setting.
-   gPrefs->Read(wxT("/Effects/NyquistPrompt/Version"), &mVersion, 4);
-
-   ShuttleGui S(this, eIsCreating);
-
    S.StartVerticalLay();
    {
-      S.StartHorizontalLay(wxEXPAND, 0);
+      S.StartMultiColumn(3, wxEXPAND);
       {
-          S.AddVariableText(prompt);
+         S.SetStretchyCol(1);
+
+         S.AddVariableText(_("Enter Nyquist Command: "));
+
+         S.AddSpace(1, 1);
+
+         mVersionCheckBox = S.AddCheckBox(_("&Use legacy (version 3) syntax."),
+                                          (mVersion == 3) ? wxT("true") : wxT("false"));  
       }
-      S.EndHorizontalLay();
+      S.EndMultiColumn();
 
       S.StartHorizontalLay(wxEXPAND, 1);
       {
-          mCommandText = S.AddTextWindow(initialCommand);
+          mCommandText = S.AddTextWindow(wxT(""));
           mCommandText->SetMinSize(wxSize(500, 200));
       }
       S.EndHorizontalLay();
 
-      S.StartHorizontalLay(wxEXPAND, 0);
+      S.StartHorizontalLay(wxALIGN_CENTER, 0);
       {
-         mVersionCheckBox = S.Id(ID_VERSION).AddCheckBox(_("&Use legacy (version 3) syntax."),
-                                    (mVersion == 3) ? wxT("true") : wxT("false"));
-        
+         S.Id(ID_Load).AddButton(_("&Load"));
+         S.Id(ID_Save).AddButton(_("&Save"));
       }
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
 
-   // Debug, OK, & Cancel buttons
-   S.AddStandardButtons(ePreviewButton|eDebugButton|eCancelButton|eOkButton);
-
-   GetSizer()->SetSizeHints(this);
-
    mCommandText->SetFocus();
 }
 
-// ============================================================================
-// NyquistInputDialog implementation
-// ============================================================================
- 
-wxString NyquistInputDialog::GetCommand()
+void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
 {
-   return mCommandText->GetValue();
+   S.SetStyle(wxVSCROLL | wxTAB_TRAVERSAL);
+   wxScrolledWindow *scroller = S.StartScroller(2);
+   {
+      S.StartMultiColumn(4);
+      {
+         for (size_t i = 0; i < mControls.GetCount(); i++)
+         {
+            NyqControl & ctrl = mControls[i];
+
+            S.AddPrompt(ctrl.name + wxT(":"));
+
+            if (ctrl.type == NYQ_CTRL_STRING)
+            {
+               S.AddSpace(10, 10);
+            
+               wxTextCtrl *item = S.Id(ID_Text + i).AddTextBox(wxT(""), wxT(""), 12);
+               item->SetValidator(wxGenericValidator(&ctrl.valStr));
+            }
+            else if (ctrl.type == NYQ_CTRL_CHOICE)
+            {
+               S.AddSpace(10, 10);
+
+               wxArrayString choices = wxStringTokenize(ctrl.label, wxT(","));
+               S.Id(ID_Choice + i).AddChoice(wxT(""), wxT(""), &choices);
+            }
+            else
+            {
+               // Integer or Real
+               wxTextCtrl *item = S.Id(ID_Text+i).AddTextBox(wxT(""), wxT(""), 12);
+
+               double range = ctrl.high - ctrl.low;
+
+               if (ctrl.type == NYQ_CTRL_REAL)
+               {
+                  // > 12 decimal places can cause rounding errors in display.
+                  FloatingPointValidator<double> vld(12, &ctrl.val);
+                  vld.SetRange(ctrl.low, ctrl.high);
+
+                  // Set number of decimal places
+                  int style = range < 10 ? NUM_VAL_THREE_TRAILING_ZEROES :
+                              range < 100 ? NUM_VAL_TWO_TRAILING_ZEROES :
+                              NUM_VAL_ONE_TRAILING_ZERO;
+                  vld.SetStyle(style);
+
+                  item->SetValidator(vld);
+               }
+               else
+               {
+                  IntegerValidator<double> vld(&ctrl.val);
+                  vld.SetRange((int) ctrl.low, (int) ctrl.high);
+                  item->SetValidator(vld);
+               }
+
+               S.SetStyle(wxSL_HORIZONTAL);
+               S.Id(ID_Slider + i).AddSlider(wxT(""), 0, ctrl.ticks, 0);
+               S.SetSizeHints(150, -1);
+            }
+
+            if (ctrl.type == NYQ_CTRL_CHOICE || ctrl.label.IsEmpty())
+            {
+               S.AddSpace(10, 10);
+            }
+            else
+            {
+               S.AddUnits(ctrl.label);
+            }
+         }
+      }
+      S.EndMultiColumn();
+   }
+   S.EndScroller();
+
+   scroller->SetScrollRate(0, 20);
+
+   // This fools NVDA into not saying "Panel" when the dialog gets focus
+   scroller->SetName(wxT("\a"));
+   scroller->SetLabel(wxT("\a"));
 }
 
-void NyquistInputDialog::OnVersionCheck(wxCommandEvent& WXUNUSED(evt))
+// NyquistEffect implementation
+
+bool NyquistEffect::IsOk()
 {
-   mVersion = (mVersionCheckBox->GetValue()) ? 3 : 4;
-   gPrefs->Write(wxT("/Effects/NyquistPrompt/Version"), mVersion);
-   gPrefs->Flush();
+   return mOK;
 }
 
-void NyquistInputDialog::OnOk(wxCommandEvent & /* event */)
+void NyquistEffect::OnLoad(wxCommandEvent & WXUNUSED(evt))
 {
-   EndModal(wxID_OK);
+   if (mCommandText->IsModified())
+   {
+      if (wxMessageBox(_("Current program has been modified.\nDiscard changes?"),
+                       GetName(),
+                       wxYES_NO) == wxNO)
+      {
+         return;
+      }
+   }
+
+   FileDialog dlog(mUIParent,
+                   _("Load Nyquist script"),
+                   mFileName.GetPath(),
+                   wxEmptyString,
+                   _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|*.txt|All files|*"),
+                   wxFD_OPEN | wxRESIZE_BORDER);
+
+   if (dlog.ShowModal() != wxID_OK)
+   {
+      return;
+   }
+
+   mFileName = dlog.GetPath();
+
+   if (!mCommandText->LoadFile(mFileName.GetFullPath()))
+   {
+      wxMessageBox(_("File could not be loaded"), GetName());
+   }
 }
 
-void NyquistInputDialog::OnCancel(wxCommandEvent & /* event */)
+void NyquistEffect::OnSave(wxCommandEvent & WXUNUSED(evt))
 {
-   EndModal(wxID_CANCEL);
+   FileDialog dlog(mUIParent,
+                   _("Save Nyquist script"),
+                   mFileName.GetPath(),
+                   mFileName.GetFullName(),
+                   _("Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"),
+                   wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
+
+   if (dlog.ShowModal() != wxID_OK)
+   {
+      return;
+   }
+
+   mFileName = dlog.GetPath();
+
+   if (!mCommandText->SaveFile(mFileName.GetFullPath()))
+   {
+      wxMessageBox(_("File could not be saved"), GetName());
+   }
 }
 
-void NyquistInputDialog::OnDebug(wxCommandEvent & /* event */)
+void NyquistEffect::OnSlider(wxCommandEvent & evt)
 {
-   // Transfer data
+   int i = evt.GetId() - ID_Slider;
+   NyqControl & ctrl = mControls[i];
 
-   EndModal(eDebugID);
+   int val = evt.GetInt();
+   double range = ctrl.high - ctrl.low;
+   double newVal = (val / (double)ctrl.ticks) * range + ctrl.low;
+
+   // Determine precision for displayed number
+   int precision = range < 1.0 ? 3 :
+                   range < 10.0 ? 2 :
+                   range < 100.0 ? 1 :
+                   0;
+
+   // If the value is at least one tick different from the current value
+   // change it (this prevents changes from manually entered values unless
+   // the slider actually moved)
+   if (fabs(newVal - ctrl.val) >= (1 / (double)ctrl.ticks) * range &&
+       fabs(newVal - ctrl.val) >= pow(0.1, precision) / 2)
+   {
+      // First round to the appropriate precision
+      newVal *= pow(10.0, precision);
+      newVal = floor(newVal + 0.5);
+      newVal /= pow(10.0, precision);
+
+      ctrl.val = newVal;
+
+      mUIParent->FindWindow(ID_Text + i)->GetValidator()->TransferToWindow();
+   }
 }
 
-void NyquistInputDialog::OnPreview(wxCommandEvent & /* event */)
+void NyquistEffect::OnChoice(wxCommandEvent & evt)
 {
-   EndModal(ePreviewID);
+   mControls[evt.GetId() - ID_Choice].val = (double) evt.GetInt();
 }
 
+void NyquistEffect::OnText(wxCommandEvent & evt)
+{
+   int i = evt.GetId() - ID_Text;
+
+   NyqControl & ctrl = mControls[i];
+
+   if (wxDynamicCast(evt.GetEventObject(), wxWindow)->GetValidator()->TransferFromWindow())
+   {
+      if (ctrl.type != NYQ_CTRL_STRING)
+      {
+         int pos = (int)floor((ctrl.val - ctrl.low) /
+                              (ctrl.high - ctrl.low) * ctrl.ticks + 0.5);
+
+         wxSlider *slider = (wxSlider *)mUIParent->FindWindow(ID_Slider + i);
+         slider->SetValue(pos);
+      }
+   }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -2054,6 +2061,8 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
                                        wxString message)
 :  wxDialog(parent, id, title)
 {
+   SetName(GetTitle());
+
    wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer *hSizer;
    wxButton   *button;

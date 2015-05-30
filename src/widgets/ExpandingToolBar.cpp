@@ -1113,7 +1113,7 @@ void ToolBarArea::OnSize(wxSizeEvent & WXUNUSED(event))
 
    wxSize currentSize = GetClientSize();
 
-   if (abs(currentSize.x - mLastLayoutSize.x >= 100)) {
+   if (abs(currentSize.x - mLastLayoutSize.x) >= 100) {
       // If they resize by more than 100 pixels (horizontally),
       // we totally redo the layout, preserving the order of the
       // toolbars but not the exact position.

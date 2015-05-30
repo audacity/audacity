@@ -95,21 +95,21 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    };
 
    virtual ~WaveTrack();
-   virtual double GetOffset();
+   virtual double GetOffset() const;
    virtual void SetOffset (double o);
 
    /** @brief Get the time at which the first clip in the track starts
     *
     * @return time in seconds, or zero if there are no clips in the track
     */
-   double GetStartTime();
+   double GetStartTime() const;
 
    /** @brief Get the time at which the last clip in the track ends, plus
     * recorded stuff
     *
     * @return time in seconds, or zero if there are no clips in the track.
     */
-   double GetEndTime();
+   double GetEndTime() const;
 
    //
    // Identifying the type of track
@@ -138,7 +138,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    void SetPan(float newPan);
 #endif
    // Takes gain and pan into account
-   float GetChannelGain(int channel);
+   float GetChannelGain(int channel) const;
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
    void SetVirtualState(bool state, bool half=false);
 #endif
@@ -231,11 +231,11 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    /// guaranteed that the same samples are affected.
    ///
    bool Get(samplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len, fillFormat fill=fillZero);
+                   sampleCount start, sampleCount len, fillFormat fill=fillZero) const;
    bool Set(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len);
    void GetEnvelopeValues(double *buffer, int bufferLen,
-                         double t0, double tstep);
+                         double t0, double tstep) const;
    bool GetMinMax(float *min, float *max,
                   double t0, double t1);
    bool GetRMS(float *rms, double t0, double t1);
@@ -255,11 +255,12 @@ class AUDACITY_DLL_API WaveTrack: public Track {
 
    //
    // Getting information about the track's internal block sizes
-   // for efficiency
+   // and alignment for efficiency
    //
-
-   sampleCount GetBestBlockSize(sampleCount t);
-   sampleCount GetMaxBlockSize();
+   
+   sampleCount GetBlockStart(sampleCount t) const;
+   sampleCount GetBestBlockSize(sampleCount t) const;
+   sampleCount GetMaxBlockSize() const;
    sampleCount GetIdealBlockSize();
 
    //
@@ -302,7 +303,7 @@ class AUDACITY_DLL_API WaveTrack: public Track {
     * @param pos The time number of samples from the start of the track to convert.
     * @return The time in seconds.
     */
-   double LongSamplesToTime(sampleCount pos);
+   double LongSamplesToTime(sampleCount pos) const;
 
    // Get access to the clips in the tracks. This is used by
    // track artists and also by TrackPanel when sliding...it would
@@ -391,6 +392,14 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    bool Resample(int rate, ProgressDialog *progress = NULL);
 
    //
+   // AutoSave related
+   //
+   // Retrieve the unique autosave ID
+   int GetAutoSaveIdent();
+   // Set the unique autosave ID
+   void SetAutoSaveIdent(int id);
+
+   //
    // The following code will eventually become part of a GUIWaveTrack
    // and will be taken out of the WaveTrack class:
    //
@@ -454,7 +463,52 @@ class AUDACITY_DLL_API WaveTrack: public Track {
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
+   int mAutoSaveIdent;
+};
 
+// This is meant to be a short-lived object, during whose lifetime,
+// the contents of the WaveTrack are known not to change.  It can replace
+// repeated calls to WaveTrack::Get() (each of which opens and closes at least
+// one block file).
+class WaveTrackCache {
+public:
+   explicit WaveTrackCache(const WaveTrack *pTrack = 0)
+      : mPTrack(0)
+      , mBufferSize(0)
+      , mOverlapBuffer()
+      , mNValidBuffers(0)
+   {
+      SetTrack(pTrack);
+   }
+   ~WaveTrackCache();
+
+   const WaveTrack *GetTrack() const { return mPTrack; }
+   void SetTrack(const WaveTrack *pTrack);
+
+   // Uses fillZero always
+   // Returns null on failure
+   // Returned pointer may be invalidated if Get is called again
+   // Do not delete[] the pointer
+   constSamplePtr Get(sampleFormat format, sampleCount start, sampleCount len);
+
+private:
+   void Free();
+
+   struct Buffer {
+      float *data;
+      sampleCount start;
+      sampleCount len;
+
+      Buffer() : data(0), start(0), len(0) {}
+      void Free() { delete[] data; data = 0; start = 0; len = 0; }
+      sampleCount end() const { return start + len; }
+   };
+
+   const WaveTrack *mPTrack;
+   sampleCount mBufferSize;
+   Buffer mBuffers[2];
+   SampleBuffer mOverlapBuffer;
+   int mNValidBuffers;
 };
 
 #endif // __AUDACITY_WAVETRACK__

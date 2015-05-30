@@ -14,12 +14,13 @@
 *//*******************************************************************/
 
 
+#include "Audacity.h"
+#include "NoteTrack.h"
+
 #include <wx/dc.h>
 #include <wx/brush.h>
 #include <wx/pen.h>
 #include <wx/intl.h>
-
-#include "Audacity.h"
 
 #if defined(USE_MIDI)
 #include <sstream>
@@ -27,7 +28,6 @@
 #define ROUND(x) ((int) ((x) + 0.5))
 
 #include "AColor.h"
-#include "NoteTrack.h"
 #include "DirManager.h"
 #include "Internat.h"
 #include "Prefs.h"
@@ -171,13 +171,17 @@ Track *NoteTrack::Duplicate()
 }
 
 
-double NoteTrack::GetStartTime()
+double NoteTrack::GetOffset() const
+{
+   return mOffset;
+}
+
+double NoteTrack::GetStartTime() const
 {
    return GetOffset();
 }
 
-
-double NoteTrack::GetEndTime()
+double NoteTrack::GetEndTime() const
 {
    return GetStartTime() + (mSeq ? mSeq->get_real_dur() : 0.0);
 }
@@ -214,7 +218,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
    Alg_iterator iter(mSeq, false);
    iter.begin();
    Alg_event_ptr event;
-   while ((event = iter.next()) && event->time < t1) {
+   while (0 != (event = iter.next()) && event->time < t1) {
       if (event->is_note() && event->time >= t0 &&
           // Allegro data structure does not restrict channels to 16.
           // Since there is not way to select more than 16 channels,
@@ -318,8 +322,8 @@ int NoteTrack::DrawLabelControls(wxDC & dc, wxRect & r)
          }
 
          wxString t;
-         long w;
-         long h;
+         wxCoord w;
+         wxCoord h;
 
          t.Printf(wxT("%d"), chanName);
          dc.GetTextExtent(t, &w, &h);

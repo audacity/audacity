@@ -39,7 +39,7 @@
 #define EXPERIMENTAL_FULL_WASAPI
 
 // JKC (effect by Norm C, 02 Oct 2013)
-//#define EXPERIMENTAL_SCIENCE_FILTERS
+#define EXPERIMENTAL_SCIENCE_FILTERS
 
 // LLL, 01 Oct 2013:
 // new key assignment view for preferences
@@ -73,7 +73,12 @@
 // As a minimum, if this is turned on for a release,
 // it should have an easy mechanism to disable it at run-time, such as a menu item or a pref,
 // preferrably disabled until other work is done.  Martyn 22/12/2008.
+// 
+// All code removed after 2.1.0 release since it was unmaintained. LLL
 //#define EFFECT_CATEGORIES
+
+// JKC Apr 2015, Menu item to manage effects.
+#define EXPERIMENTAL_EFFECT_MANAGEMENT
 
 // Andreas Micheler, 20.Nov 2007:
 // A spectrumLogF-like view mode with notes quantization.
@@ -104,9 +109,6 @@
 
 // Paul Licameli (PRL) 5 Oct 2014
 #define EXPERIMENTAL_SPECTRAL_EDITING
-
-// Paul Licameli (PRL) 29 Nov 2014
-// #define EXPERIMENTAL_SCRUBBING
 
 // Paul Licameli (PRL) 29 Nov 2014
 // #define EXPERIMENTAL_IMPROVED_SEEKING
@@ -150,10 +152,7 @@
 
 // Module prefs provides a panel in prefs where users can choose which modules
 // to enable.
-// #define EXPERIMENTAL_MODULE_PREFS
-
-// Define to include realtime effects processing.
-#define EXPERIMENTAL_REALTIME_EFFECTS
+#define EXPERIMENTAL_MODULE_PREFS
 
 // Define to include the effects rack (such as it is).
 //#define EXPERIMENTAL_EFFECTS_RACK
@@ -170,7 +169,34 @@
 // Define to enable Nyquist audio clip boundary control (Steve Daulton Dec 2014)
 // #define EXPERIMENTAL_NYQUIST_SPLIT_CONTROL
 
-// Define to enable Nyquist time/date property list
-// #define EXPERIMENTAL_NYQUIST_TIME_PROPERTY
+// Paul Licameli (PRL) 16 Apr 2015
+// Support for scrubbing in the AudioIO engine, without calls to it
+#define EXPERIMENTAL_SCRUBBING_SUPPORT
+   
+// The following enable parts of the scrubbing user interface.
+// You must define EXPERIMENTAL_SCRUBBING_SUPPORT if you enable this:
+#define EXPERIMENTAL_SCRUBBING_BASIC
+// You must define EXPERIMENTAL_SCRUBBING_BASIC if you enable this:
+#define EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+// You must define EXPERIMENTAL_SCRUBBING_BASIC if you enable this:
+#define EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
+
+// Paul Licameli (PRL) 24 May 2015
+// Allow scrolling up to one half of a screenful beyond either end of the project,
+// if you turn on the appropriate Tracks preference.
+// This allows smooth-scrolling scrub to work more reasonably at the ends.
+#define EXPERIMENTAL_SCROLLING_LIMITS
+
+// Paul Licameli (PRL) 28 May 2015
+// Draw negative numbers on the time ruler in a different color, when
+// scrolling past zero is enabled. Perhaps that lessens confusion.
+#define EXPERIMENTAL_TWO_TONE_TIME_RULER
+
+// Define to include crash reporting
+#define EXPERIMENTAL_CRASH_REPORT
+#if !defined(wxUSE_DEBUGREPORT) || !wxUSE_DEBUGREPORT
+#undef EXPERIMENTAL_CRASH_REPORT
+#endif
+
 
 #endif

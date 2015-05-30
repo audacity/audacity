@@ -44,8 +44,15 @@ function build
    # Build the plugin if it doesn't exist
    if [ ! -e "${TARGET_BUILD_DIR}/${target}.so" ]
    then 
-      echo "Building ${target}"
-      gcc-"${GCC_VERSION}" -bundle -arch ${ARCHS/ / -arch } \
+      GCC=gcc
+      if [ -e "${GCC}-${GCC_VERSION}" ]
+      then
+         GCC="${GCC}-${GCC_VERSION}"
+      fi
+      
+      echo "Building ${target} using ${GCC}"
+
+      "${GCC}" -bundle -arch ${ARCHS/ / -arch } \
           -mmacosx-version-min="${MACOSX_DEPLOYMENT_TARGET}" -isysroot "${SDKROOT}" \
           -O3 -fomit-frame-pointer -fstrength-reduce -funroll-loops -ffast-math \
           "-D_init=__attribute__ ((constructor)) _${target}_init" \
@@ -76,23 +83,8 @@ function buildAction
    # Get to where we need to be
    cd "${swhpath}"
     
-   # We won't be using fftw, but configure won't complete without it, so just
-   # create a dummy pkg-config file.
-   export PKG_CONFIG_PATH="."
-   cat <<EOF >fftw3f.pc 
-Name: FFTW
-Description: dummy for pkg-config
-Version: 3.0.0
-Libs:
-Cflags:
-EOF
-
-   # Run configure
-   if [ ! -e "config.status" ]
-   then
-      echo "Configuring plugins"
-      ./configure --disable-dependency-tracking --enable-shared --disable-static >/dev/null 2>&1
-   fi
+   # Get rid of the existing config.h options
+   echo >config.h
     
    # Build the 2 standard plugins
    build hard_limiter_1413 hard_limiter_1413.c

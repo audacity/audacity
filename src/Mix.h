@@ -67,12 +67,29 @@ class AUDACITY_DLL_API MixerSpec
 
 class AUDACITY_DLL_API Mixer {
  public:
-   //
+
+    // An argument to Mixer's constructor
+    class WarpOptions
+    {
+    public:
+       explicit WarpOptions(TimeTrack *t)
+          : timeTrack(t), minSpeed(0.0), maxSpeed(0.0)
+       {}
+
+       WarpOptions(double min, double max);
+
+    private:
+       friend class Mixer;
+       TimeTrack *timeTrack;
+       double minSpeed, maxSpeed;
+    };
+
+    //
    // Constructor / Destructor
    //
 
    Mixer(int numInputTracks, WaveTrack **inputTracks,
-         TimeTrack *timeTrack,
+         const WarpOptions &warpOptions,
          double startTime, double stopTime,
          int numOutChannels, int outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
@@ -104,6 +121,9 @@ class AUDACITY_DLL_API Mixer {
    /// Process() is called.
    void Reposition(double t);
 
+   // Used in scrubbing.
+   void SetTimesAndSpeed(double t0, double t1, double speed);
+
    /// Current time in seconds (unwarped, i.e. always between startTime and stopTime)
    /// This value is not accurate, it's useful for progress bars and indicators, but nothing else.
    double MixGetCurrentTime();
@@ -129,6 +149,7 @@ class AUDACITY_DLL_API Mixer {
    // Input
    int              mNumInputTracks;
    WaveTrack      **mInputTrack;
+   bool             mbVariableRates;
    TimeTrack       *mTimeTrack;
    sampleCount     *mSamplePos;
    bool             mApplyTrackGains;
@@ -157,6 +178,7 @@ class AUDACITY_DLL_API Mixer {
    samplePtr       *mTemp;
    float           *mFloatBuffer;
    double           mRate;
+   double           mSpeed;
    bool             mHighQuality;
 };
 

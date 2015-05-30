@@ -8,8 +8,12 @@
 
 **********************************************************************/
 
-#include "../EffectManager.h"
+#include "../../AudacityApp.h"
+
+#include <wx/log.h>
+
 #include "Nyquist.h"
+
 #include "LoadNyquist.h"
 
 // ============================================================================
@@ -64,17 +68,17 @@ wxString NyquistEffectsModule::GetPath()
 
 wxString NyquistEffectsModule::GetSymbol()
 {
-   return wxT("Nyquist Effects");
+   return XO("Nyquist Effects");
 }
 
 wxString NyquistEffectsModule::GetName()
 {
-   return wxTRANSLATE("Nyquist Effects");
+   return GetSymbol();
 }
 
 wxString NyquistEffectsModule::GetVendor()
 {
-   return wxTRANSLATE("The Audacity Team");
+   return XO("The Audacity Team");
 }
 
 wxString NyquistEffectsModule::GetVersion()
@@ -85,7 +89,7 @@ wxString NyquistEffectsModule::GetVersion()
 
 wxString NyquistEffectsModule::GetDescription()
 {
-   return wxTRANSLATE("Provides Nyquist Effects support to Audacity");
+   return XO("Provides Nyquist Effects support to Audacity");
 }
 
 // ============================================================================
@@ -94,65 +98,70 @@ wxString NyquistEffectsModule::GetDescription()
 
 bool NyquistEffectsModule::Initialize()
 {
-   // Nothing to do here
-   return true;
+   wxArrayString audacityPathList = wxGetApp().audacityPathList;
+
+   for (size_t i = 0, cnt = audacityPathList.GetCount(); i < cnt; i++)
+   {
+      wxFileName name(audacityPathList[i], wxT(""));
+      name.AppendDir(wxT("nyquist"));
+      name.SetFullName(wxT("nyquist.lsp"));
+      if (name.FileExists())
+      {
+         // set_xlisp_path doesn't handle fn_Str() in Unicode build. May or may not actually work.
+         nyx_set_xlisp_path(name.GetPath().ToUTF8());
+         return true;
+      }
+   }
+
+   wxLogWarning(wxT("Critical Nyquist files could not be found. Nyquist effects will not work."));
+
+   return false;
 }
 
 void NyquistEffectsModule::Terminate()
 {
-   // Nothing to do here
+   nyx_set_xlisp_path(NULL);
+
    return;
 }
 
-bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
 {
-   // For Nyquist, we autoregister plugins at this time using the legacy
-   // interface.  This will change eventually.
-   
-   wxArrayString pathList = EffectNyquist::GetNyquistSearchPath();
+   // Nothing to do here
+   return false;
+}
+
+wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & pm)
+{
+   wxArrayString pathList = NyquistEffect::GetNyquistSearchPath();
    wxArrayString files;
 
-   // Create one "interactive Nyquist" effect
-   EffectNyquist *effect = new EffectNyquist(wxT(""));
-   EffectManager::Get().RegisterEffect(this, effect);
-
+   // Add the Nyquist prompt effect
+   files.Add(NYQUIST_PROMPT_ID);
+   
    // Load .ny plug-ins
    pm.FindFilesInPathList(wxT("*.ny"), pathList, files);
-#ifdef  __WXGTK__
+   // LLL:  Works for all platform with new plugin support (dups are removed)
    pm.FindFilesInPathList(wxT("*.NY"), pathList, files); // Ed's fix for bug 179
-#endif
 
-   for (size_t i = 0; i < files.GetCount(); i++)
+   return files;
+}
+
+bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+{
+   NyquistEffect effect(path);
+   if (effect.IsOk())
    {
-      EffectNyquist *effect = new EffectNyquist(files[i]);
-      if (effect->LoadedNyFile())
-      {
-         EffectManager::Get().RegisterEffect(this, effect);
-      }
-      else
-      {
-         delete effect;
-      }
+      pm.RegisterPlugin(this, &effect);
+      return true;
    }
 
-   return true;
-}
-
-wxArrayString NyquistEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm))
-{
-   // Nothing to do here yet
-   return wxArrayString();
-}
-
-bool NyquistEffectsModule::RegisterPlugin(PluginManagerInterface & WXUNUSED(pm), const wxString & WXUNUSED(path))
-{
-   // Nothing to do here yet
    return false;
 }
 
 bool NyquistEffectsModule::IsPluginValid(const wxString & path)
 {
-   if (path == wxT("nyquist prompt"))
+   if (path == NYQUIST_PROMPT_ID)
    {
       return true;
    }
@@ -162,11 +171,8 @@ bool NyquistEffectsModule::IsPluginValid(const wxString & path)
 
 IdentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
 {
-   // Normally, we wouldn't have anything to do here since we're autoregistering, but
-   // if we have Nyquist effects in directories we didn't scan.
-
-   EffectNyquist *effect = new EffectNyquist(path);
-   if (effect->LoadedNyFile())
+   NyquistEffect *effect = new NyquistEffect(path);
+   if (effect->IsOk())
    {
       return effect;
    }
@@ -178,10 +184,13 @@ IdentInterface *NyquistEffectsModule::CreateInstance(const wxString & path)
 
 void NyquistEffectsModule::DeleteInstance(IdentInterface *instance)
 {
-   // Nothing to do here
+   NyquistEffect *effect = dynamic_cast<NyquistEffect *>(instance);
+   if (effect)
+   {
+      delete effect;
+   }
 }
 
 // ============================================================================
 // NyquistEffectsModule implementation
 // ============================================================================
-

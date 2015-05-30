@@ -883,7 +883,7 @@ void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
 
 // class MusicalInstrument
 
-MusicalInstrument::MusicalInstrument(wxBitmap* pBitmap, const wxString strXPMfilename)
+MusicalInstrument::MusicalInstrument(wxBitmap* pBitmap, const wxString & strXPMfilename)
 {
    mBitmap = pBitmap;
 
@@ -1219,7 +1219,7 @@ void MixerBoard::RemoveTrackCluster(const WaveTrack* pTrack)
 
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(wxString name)
+wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const wxString & name)
 #else
 wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const WaveTrack* pLeftTrack)
 #endif

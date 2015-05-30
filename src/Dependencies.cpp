@@ -316,6 +316,7 @@ DependencyDialog::DependencyDialog(wxWindow *parent,
    mCopyAllFilesButton(NULL),
    mFutureActionChoice(NULL)
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }

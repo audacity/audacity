@@ -54,6 +54,8 @@ HistoryWindow::HistoryWindow(AudacityProject *parent, UndoManager *manager):
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 {
+   SetName(GetTitle());
+
    mManager = manager;
    mProject = parent;
    mSelected = 0;

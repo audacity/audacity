@@ -57,14 +57,14 @@ bool SetProjectInfoCommand::Apply(CommandExecutionContext context)
    wxString settingsString = GetString(wxT(kSetOfTracksStr));
 
    if (mode.IsSameAs(wxT("SelectedTracks")))
-      SetAllTracksParam( context.proj->GetTracks(), settingsString,
+      SetAllTracksParam( context.GetProject()->GetTracks(), settingsString,
 &SetProjectInfoCommand::setSelected);
 
    else if (mode.IsSameAs(wxT("SoloTracks")))
-      SetAllTracksParam( context.proj->GetTracks(), settingsString, &SetProjectInfoCommand::setSolo);
+      SetAllTracksParam( context.GetProject()->GetTracks(), settingsString, &SetProjectInfoCommand::setSolo);
 
    else if (mode.IsSameAs(wxT("MuteTracks")))
-      SetAllTracksParam( context.proj->GetTracks(), settingsString, &SetProjectInfoCommand::setMute);
+      SetAllTracksParam( context.GetProject()->GetTracks(), settingsString, &SetProjectInfoCommand::setMute);
    else
    {
       Error(wxT("Invalid info type!"));

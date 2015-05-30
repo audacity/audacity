@@ -1,6 +1,6 @@
 #  test_libFLAC - Unit tester for libFLAC
 #  Copyright (C) 2000-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This program is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License
@@ -18,7 +18,9 @@
 
 EXTRA_DIST = \
 	Makefile.lite \
-	test_libFLAC.vcproj
+	test_libFLAC.vcproj \
+	test_libFLAC.vcxproj \
+	test_libFLAC.vcxproj.filters
 
 AM_CPPFLAGS = -I$(top_builddir) -I$(srcdir)/include -I$(top_srcdir)/include -I$(top_srcdir)/src/libFLAC/include
 
@@ -40,15 +42,19 @@ test_libFLAC_SOURCES = \
 	bitwriter.c \
 	decoders.c \
 	encoders.c \
+	endswap.c \
 	format.c \
 	main.c \
 	metadata.c \
 	metadata_manip.c \
 	metadata_object.c \
+	md5.c \
 	bitwriter.h \
 	decoders.h \
 	encoders.h \
+	endswap.h \
 	format.h \
-	metadata.h
+	metadata.h \
+	md5.h
 
 CLEANFILES = test_libFLAC.exe

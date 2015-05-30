@@ -1,6 +1,6 @@
 /* flactimer - Runs a command and prints timing information
  * Copyright (C) 2007-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,14 +17,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
 #include "share/compat.h"
 #include "share/safe_str.h"
-
-#define int64_t __int64
-#define uint64_t unsigned int64_t
 
 static inline uint64_t time2nsec(const FILETIME &t)
 {
@@ -36,7 +37,7 @@ static inline uint64_t time2nsec(const FILETIME &t)
 
 static void printtime(FILE *fout, uint64_t nsec, uint64_t total)
 {
-	unsigned pct = (unsigned)(100.0 * ((double)(int64_t)nsec / (double)(int64_t)total));
+	unsigned pct = (unsigned)(100.0 * ((double)nsec / (double)total));
 	uint64_t msec = nsec / 1000000; nsec -= msec * 1000000;
 	uint64_t sec = msec / 1000; msec -= sec * 1000;
 	uint64_t min = sec / 60; sec -= min * 60;

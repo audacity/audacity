@@ -49,6 +49,7 @@
 #include "AudacityApp.h"
 #include "AudioIO.h"
 #include "BlockFile.h"
+#include "Diags.h"
 #include "DirManager.h"
 #include "Envelope.h"
 #include "FFT.h"

@@ -11,82 +11,57 @@
 #ifndef __AUDACITY_EFFECT_REPEAT__
 #define __AUDACITY_EFFECT_REPEAT__
 
+#include <wx/event.h>
+#include <wx/string.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+
+#include "../ShuttleGui.h"
+
 #include "Effect.h"
 
-#include <wx/intl.h>
-#include <wx/dialog.h>
+#define REPEAT_PLUGIN_SYMBOL XO("Repeat")
 
-class wxString;
-class wxStaticText;
-class wxTextCtrl;
-
-class WaveTrack;
-
-class EffectRepeat:public Effect
+class EffectRepeat : public Effect
 {
- friend class RepeatDialog;
-
- public:
+public:
    EffectRepeat();
+   virtual ~EffectRepeat();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Repeat..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://audacityteam.org/namespace#TimelineChanger"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Repeat"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Performing Repeat"));
-   }
+   virtual EffectType GetType();
 
-   // Useful only after PromptUser values have been set.
-   virtual wxString GetEffectDescription();
+   // EffectClientInterface implementation
 
-   virtual bool PromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
 
    virtual bool Process();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
- private:
-   int repeatCount;
-};
+private:
+   // EffectRepeat implementation
 
-class RepeatDialog:public EffectDialog {
- public:
-   // constructors and destructors
-   RepeatDialog(EffectRepeat *effect, wxWindow * parent);
-
-   // method declarations
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow();
-   bool TransferDataFromWindow();
-
- private:
-   // handlers
-   void OnRepeatTextChange(wxCommandEvent & event);
-   void OnPreview( wxCommandEvent &event );
-
+   void OnRepeatTextChange(wxCommandEvent & evt);
    void DisplayNewTime();
 
- private:
-   EffectRepeat *mEffect;
+private:
+   int repeatCount;
+
    wxTextCtrl   *mRepeatCount;
    wxStaticText *mTotalTime;
 
-   DECLARE_EVENT_TABLE()
-
- public:
-   int repeatCount;
-   int maxCount;
-   double selectionTimeSecs;
+   DECLARE_EVENT_TABLE();
 };
 
 #endif

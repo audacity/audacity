@@ -701,6 +701,13 @@ int Importer::Import(wxString fName,
          return 0;
       }
 
+      // Audacity project
+      if (extension.IsSameAs(wxT("aup"), false)) {
+         errorMessage.Printf(_("\"%s\" is an Audacity Project file. \nUse the 'File > Open' command to open Audacity Projects."), fName.c_str());
+         pProj->mbBusyImporting = false;
+         return 0;
+      }
+
       // we were not able to recognize the file type
       errorMessage.Printf(_("Audacity did not recognize the type of the file '%s'.\nIf it is uncompressed, try importing it using \"Import Raw\"."),fName.c_str());
    }
@@ -740,6 +747,8 @@ ImportStreamDialog::ImportStreamDialog( ImportFileHandle *_mFile, wxWindow *pare
                                        const wxPoint &position, const wxSize& size, long style ):
 wxDialog( parent, id, title, position, size, style | wxRESIZE_BORDER )
 {
+   SetName(GetTitle());
+
    mFile = _mFile;
    scount = mFile->GetStreamCount();
    for (wxInt32 i = 0; i < scount; i++)

@@ -11,112 +11,134 @@
 \class EffectTimeScale
 \brief An EffectTimeScale does high quality sliding time scaling/pitch shifting
 
-*//****************************************************************//**
-
-\class TimeScaleDialog
-\brief Dialog used with EffectTimeScale
-
 *//*******************************************************************/
 
 #include "../Audacity.h" // for USE_SBSMS
 
 #if USE_SBSMS
 
+#include <math.h>
+
+#include <wx/intl.h>
+
+#include "../widgets/valnum.h"
+
 #include "TimeScale.h"
 #include "sbsms.h"
 
-#include "../ShuttleGui.h"
+enum
+{
+   ID_RatePercentChangeStart = 10000,
+   ID_RatePercentChangeEnd,
+   ID_PitchHalfStepsStart,
+   ID_PitchHalfStepsEnd,
+   ID_PitchPercentChangeStart,
+   ID_PitchPercentChangeEnd
+};
 
-#include <math.h>
-
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/checkbox.h>
-#include <wx/valtext.h>
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name                Type    Key                            Def   Min      Max    Scale
+Param( RatePercentStart,   double, XO("RatePercentChangeStart"),  0.0,  -90.0,   500,   1  );
+Param( RatePercentEnd,     double, XO("RatePercentChangeEnd"),    0.0,  -90.0,   500,   1  );
+Param( HalfStepsStart,     double, XO("PitchHalfStepsStart"),     0.0,  -12.0,   12.0,  1  );
+Param( HalfStepsEnd,       double, XO("PitchHalfStepsEnd"),       0.0,  -12.0,   12.0,  1  );
+Param( PitchPercentStart,  double, XO("PitchPercentChangeStart"), 0.0,  -50.0,   100.0, 1  );
+Param( PitchPercentEnd,    double, XO("PitchPercentChangeEnd"),   0.0,  -50.0,   100.0, 1  );
 
 //
 // EffectTimeScale
 //
 
+BEGIN_EVENT_TABLE(EffectTimeScale, wxEvtHandler)
+   EVT_TEXT(ID_RatePercentChangeStart, EffectTimeScale::OnText_RatePercentChangeStart)
+   EVT_TEXT(ID_RatePercentChangeEnd, EffectTimeScale::OnText_RatePercentChangeEnd)
+   EVT_TEXT(ID_PitchHalfStepsStart, EffectTimeScale::OnText_PitchHalfStepsStart)
+   EVT_TEXT(ID_PitchHalfStepsEnd, EffectTimeScale::OnText_PitchHalfStepsEnd)
+   EVT_TEXT(ID_PitchPercentChangeStart, EffectTimeScale::OnText_PitchPercentChangeStart)
+   EVT_TEXT(ID_PitchPercentChangeEnd, EffectTimeScale::OnText_PitchPercentChangeEnd)
+   EVT_SLIDER(ID_RatePercentChangeStart, EffectTimeScale::OnSlider_RatePercentChangeStart)
+   EVT_SLIDER(ID_RatePercentChangeEnd, EffectTimeScale::OnSlider_RatePercentChangeEnd)
+END_EVENT_TABLE()
+
 EffectTimeScale::EffectTimeScale()
 {
-   m_RatePercentChangeStart = 0;
-   m_RatePercentChangeEnd = 0;
-   m_PitchHalfStepsStart = 0;
-   m_PitchHalfStepsEnd = 0;
-   m_PitchPercentChangeStart = 0;
-   m_PitchPercentChangeEnd = 0;
-   m_PreAnalyze = false;
+   m_RatePercentChangeStart = DEF_RatePercentStart;
+   m_RatePercentChangeEnd = DEF_RatePercentEnd;
+   m_PitchHalfStepsStart = DEF_HalfStepsStart;
+   m_PitchHalfStepsEnd = DEF_HalfStepsEnd;
+   m_PitchPercentChangeStart = DEF_PitchPercentStart;
+   m_PitchPercentChangeEnd = DEF_PitchPercentEnd;
+
+   SetLinearEffectFlag(true);
 }
 
-wxString EffectTimeScale::GetEffectDescription() {
-   // Note: This is useful only after change amount has been set.
-   return wxString::Format(_("Applied effect: %s"), this->GetEffectName().c_str());
+EffectTimeScale::~EffectTimeScale()
+{
 }
+
+// IdentInterface implementation
+
+wxString EffectTimeScale::GetSymbol()
+{
+   return TIMESCALE_PLUGIN_SYMBOL;
+}
+
+wxString EffectTimeScale::GetName()
+{
+   return XO("Sliding Time Scale/Pitch Shift");
+}
+
+wxString EffectTimeScale::GetDescription()
+{
+   return XO("Allows continuous changes to the tempo and/or pitch");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectTimeScale::GetType()
+{
+   return EffectTypeProcess;
+}
+
+// EffectClientInterface implementation
+
+bool EffectTimeScale::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_RatePercentStart, m_RatePercentChangeStart);
+   parms.Write(KEY_RatePercentEnd, m_RatePercentChangeEnd);
+   parms.Write(KEY_HalfStepsStart, m_PitchHalfStepsStart);
+   parms.Write(KEY_HalfStepsEnd, m_PitchHalfStepsEnd);
+   parms.Write(KEY_PitchPercentStart, m_PitchPercentChangeStart);
+   parms.Write(KEY_PitchPercentEnd, m_PitchPercentChangeEnd);
+
+   return true;
+}
+
+bool EffectTimeScale::SetAutomationParameters(EffectAutomationParameters & parms)
+{
+   ReadAndVerifyDouble(RatePercentStart);
+   ReadAndVerifyDouble(RatePercentEnd);
+   ReadAndVerifyDouble(HalfStepsStart);
+   ReadAndVerifyDouble(HalfStepsEnd);
+   ReadAndVerifyDouble(PitchPercentStart);
+   ReadAndVerifyDouble(PitchPercentEnd);
+
+   m_RatePercentChangeStart = RatePercentStart;
+   m_RatePercentChangeEnd = RatePercentEnd;
+   m_PitchHalfStepsStart = HalfStepsStart;
+   m_PitchHalfStepsEnd = HalfStepsEnd;
+   m_PitchPercentChangeStart = PitchPercentStart;
+   m_PitchPercentChangeEnd = PitchPercentEnd;
+   
+   return true;
+}
+
+// Effect implementation
 
 bool EffectTimeScale::Init()
 {
    return true;
-}
-
-bool EffectTimeScale::PromptUser()
-{
-   TimeScaleDialog dlog(this, mParent);
-   dlog.m_RatePercentChangeStart = m_RatePercentChangeStart;
-   dlog.m_RatePercentChangeEnd = m_RatePercentChangeEnd;
-   dlog.m_PitchHalfStepsStart = m_PitchHalfStepsStart;
-   dlog.m_PitchHalfStepsEnd = m_PitchHalfStepsEnd;
-   dlog.m_PitchPercentChangeStart = m_PitchPercentChangeStart;
-   dlog.m_PitchPercentChangeEnd = m_PitchPercentChangeEnd;
-   dlog.m_PreAnalyze = m_PreAnalyze;
-
-   // Don't need to call TransferDataToWindow, although other
-   // Audacity dialogs (from which I derived this one) do it, because
-   // ShowModal calls stuff that eventually calls wxWindowBase::OnInitDialog,
-   // which calls dlog.TransferDataToWindow();
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-
-   if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
-
-   m_RatePercentChangeStart = dlog.m_RatePercentChangeStart;
-   m_RatePercentChangeEnd = dlog.m_RatePercentChangeEnd;
-   m_PitchHalfStepsStart = dlog.m_PitchHalfStepsStart;
-   m_PitchHalfStepsEnd = dlog.m_PitchHalfStepsEnd;
-   m_PitchPercentChangeStart = dlog.m_PitchPercentChangeStart;
-   m_PitchPercentChangeEnd = dlog.m_PitchPercentChangeEnd;
-   m_PreAnalyze = dlog.m_PreAnalyze;
-
-   return true;
-}
-
-bool EffectTimeScale::TransferParameters( Shuttle & shuttle )
-{
-   shuttle.TransferDouble(wxT("RatePercentChangeStart"),m_RatePercentChangeStart,0.0);
-   shuttle.TransferDouble(wxT("RatePercentChangeEnd"),m_RatePercentChangeEnd,0.0);
-   shuttle.TransferDouble(wxT("PitchHalfStepsStart"),m_PitchHalfStepsStart,0.0);
-   shuttle.TransferDouble(wxT("PitchHalfStepsEnd"),m_PitchHalfStepsEnd,0.0);
-   shuttle.TransferDouble(wxT("PitchPercentChangeStart"),m_PitchPercentChangeStart,0.0);
-   shuttle.TransferDouble(wxT("PitchPercentChangeEnd"),m_PitchPercentChangeEnd,0.0);
-   shuttle.TransferBool(wxT("PreAnalyze"),m_PreAnalyze,false);
-   return true;
-}
-
-inline double PercentChangeToRatio(double percentChange)
-{
-   return 1.0 + percentChange / 100.0;
-}
-
-inline double HalfStepsToPercentChange(double halfSteps)
-{
-   return 100.0 * (pow(2.0,halfSteps/12.0) - 1.0);
-}
-
-inline double PercentChangeToHalfSteps(double percentChange)
-{
-   return 17.312340490667560888319096172023 * log(PercentChangeToRatio(percentChange));
 }
 
 bool EffectTimeScale::Process()
@@ -125,490 +147,273 @@ bool EffectTimeScale::Process()
    double pitchEnd = PercentChangeToRatio(m_PitchPercentChangeEnd);
    double rateStart = PercentChangeToRatio(m_RatePercentChangeStart);
    double rateEnd = PercentChangeToRatio(m_RatePercentChangeEnd);
-   this->EffectSBSMS::setParameters(rateStart,rateEnd,pitchStart,pitchEnd,SlideLinearOutputRate,SlideLinearOutputRate,false,false,false);
-   return this->EffectSBSMS::Process();
+   EffectSBSMS::setParameters(rateStart,rateEnd,pitchStart,pitchEnd,SlideLinearOutputRate,SlideLinearOutputRate,false,false,false);
+   return EffectSBSMS::Process();
 }
 
-//----------------------------------------------------------------------------
-// TimeScaleDialog
-//----------------------------------------------------------------------------
-
-#define RATE_PERCENTCHANGE_MAX_SLIDER 150
-#define RATE_PERCENTCHANGE_MIN_SLIDER -75
-#define RATE_PERCENTCHANGE_MAX_TEXT 500
-#define RATE_PERCENTCHANGE_MIN_TEXT -90
-#define RATE_PERCENTCHANGE_DEFAULT 0
-#define PITCH_HALFSTEPS_MIN_TEXT -12
-#define PITCH_HALFSTEPS_MAX_TEXT 12
-#define PITCH_PERCENTCHANGE_MIN_TEXT -50
-#define PITCH_PERCENTCHANGE_MAX_TEXT 100
-
-
-#define ID_TEXT_RATE_PERCENTCHANGE_START 10001
-#define ID_TEXT_RATE_PERCENTCHANGE_END 10002
-#define ID_TEXT_PITCH_HALFSTEPS_START 10003
-#define ID_TEXT_PITCH_HALFSTEPS_END 10004
-#define ID_TEXT_PITCH_PERCENTCHANGE_START 10005
-#define ID_TEXT_PITCH_PERCENTCHANGE_END 10006
-#define ID_SLIDER_RATE_PERCENTCHANGE_START 10007
-#define ID_SLIDER_RATE_PERCENTCHANGE_END 10008
-#define ID_CHECKBOX_PREANALYZE 10009
-
-// event table for TimeScaleDialog
-
-BEGIN_EVENT_TABLE(TimeScaleDialog, EffectDialog)
-   EVT_TEXT(ID_TEXT_RATE_PERCENTCHANGE_START, TimeScaleDialog::OnText_RatePercentChangeStart)
-   EVT_TEXT(ID_TEXT_RATE_PERCENTCHANGE_END, TimeScaleDialog::OnText_RatePercentChangeEnd)
-   EVT_TEXT(ID_TEXT_PITCH_HALFSTEPS_START, TimeScaleDialog::OnText_PitchHalfStepsStart)
-   EVT_TEXT(ID_TEXT_PITCH_HALFSTEPS_END, TimeScaleDialog::OnText_PitchHalfStepsEnd)
-   EVT_TEXT(ID_TEXT_PITCH_PERCENTCHANGE_START, TimeScaleDialog::OnText_PitchPercentChangeStart)
-   EVT_TEXT(ID_TEXT_PITCH_PERCENTCHANGE_END, TimeScaleDialog::OnText_PitchPercentChangeEnd)
-   EVT_SLIDER(ID_SLIDER_RATE_PERCENTCHANGE_START, TimeScaleDialog::OnSlider_RatePercentChangeStart)
-   EVT_SLIDER(ID_SLIDER_RATE_PERCENTCHANGE_END, TimeScaleDialog::OnSlider_RatePercentChangeEnd)
-   EVT_CHECKBOX(ID_CHECKBOX_PREANALYZE, TimeScaleDialog::OnCheckBox_PreAnalyze)
-END_EVENT_TABLE()
-
-TimeScaleDialog::TimeScaleDialog(EffectTimeScale *effect, wxWindow *parent)
-   :  EffectDialog(parent, _("Sliding Time Scale/Pitch Shift"), INSERT_EFFECT),
-      mEffect(effect)
+void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
 {
-   m_bLoopDetect = false;
-
-   // NULL out these control members because there are some cases where the
-   // event table handlers get called during this method, and those handlers that
-   // can cause trouble check for NULL.
-
-   m_pTextCtrl_RatePercentChangeStart = NULL;
-   m_pTextCtrl_RatePercentChangeEnd = NULL;
-   m_pSlider_RatePercentChangeStart = NULL;
-   m_pSlider_RatePercentChangeEnd = NULL;
-   m_pTextCtrl_PitchPercentChangeStart = NULL;
-   m_pTextCtrl_PitchPercentChangeEnd = NULL;
-   m_pTextCtrl_PitchHalfStepsStart = NULL;
-   m_pTextCtrl_PitchHalfStepsEnd = NULL;
-   m_pCheckBox_PreAnalyze = NULL;
-
-   // effect parameters
-   m_RatePercentChangeStart = 0;
-   m_RatePercentChangeEnd = 0;
-   m_PitchPercentChangeStart = 0;
-   m_PitchPercentChangeEnd = 0;
-   m_PitchHalfStepsStart = 0;
-   m_PitchHalfStepsEnd = 0;
-   m_PreAnalyze = false;
-
-   Init();
-}
-
-void TimeScaleDialog::PopulateOrExchange(ShuttleGui & S)
-{
-
-   wxTextValidator nullvld(wxFILTER_INCLUDE_CHAR_LIST);
-   wxTextValidator numvld(wxFILTER_NUMERIC);
-
    S.SetBorder(5);
    S.AddSpace(0, 5);
 
-   S.StartMultiColumn(2, 0);
-   // Rate Start
-   S.StartStatic(_("Initial Tempo Change (%)"));
+   S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.StartMultiColumn(1, wxCENTER);
+      // Rate Start
+      S.StartStatic(_("Initial Tempo Change (%)"));
       {
-         m_pTextCtrl_RatePercentChangeStart = S.Id(ID_TEXT_RATE_PERCENTCHANGE_START)
-            .AddTextBox(wxT(""), wxT(""), 12);
-         m_pTextCtrl_RatePercentChangeStart->SetValidator(numvld);
+         S.StartMultiColumn(1, wxCENTER);
+         {
+            FloatingPointValidator<double>
+               vldRatePercentChangeStart(3, &m_RatePercentChangeStart, NUM_VAL_NO_TRAILING_ZEROES);
+            vldRatePercentChangeStart.SetRange(MIN_RatePercentStart, MAX_RatePercentStart);
+         
+            m_pTextCtrl_RatePercentChangeStart = S.Id(ID_RatePercentChangeStart)
+               .AddTextBox(wxT(""), wxT(""), 12);
+            m_pTextCtrl_RatePercentChangeStart->SetValidator(vldRatePercentChangeStart);
+         }
+         S.EndMultiColumn();
+         S.StartHorizontalLay(wxEXPAND, 0);
+         {
+            S.SetStyle(wxSL_HORIZONTAL);
+            m_pSlider_RatePercentChangeStart = S.Id(ID_RatePercentChangeStart)
+               .AddSlider(wxT(""), DEF_RatePercentStart, MAX_RatePercentStart, MIN_RatePercentStart);
+         }
+         S.EndHorizontalLay();
       }
-      S.EndMultiColumn();
-      S.StartHorizontalLay(wxEXPAND,0);
+      S.EndStatic();
+
+      S.StartStatic(_("Final Tempo Change (%)"));
       {
-         S.SetStyle(wxSL_HORIZONTAL);
-         m_pSlider_RatePercentChangeStart = S.Id(ID_SLIDER_RATE_PERCENTCHANGE_START)
-            .AddSlider(wxT(""), (int)RATE_PERCENTCHANGE_DEFAULT, (int)RATE_PERCENTCHANGE_MAX_SLIDER, (int)RATE_PERCENTCHANGE_MIN_SLIDER);
+         S.StartMultiColumn(1, wxCENTER);
+         {
+            FloatingPointValidator<double>
+               vldRatePercentChangeEnd(3, &m_RatePercentChangeEnd, NUM_VAL_NO_TRAILING_ZEROES);
+            vldRatePercentChangeEnd.SetRange(MIN_RatePercentEnd, MAX_RatePercentEnd);
+         
+            m_pTextCtrl_RatePercentChangeEnd = S.Id(ID_RatePercentChangeEnd)
+               .AddTextBox(wxT(""), wxT(""), 12);
+            m_pTextCtrl_RatePercentChangeEnd->SetValidator(vldRatePercentChangeEnd);
+         }
+         S.EndMultiColumn();
+         S.StartHorizontalLay(wxEXPAND, 0);
+         {
+            S.SetStyle(wxSL_HORIZONTAL);
+            m_pSlider_RatePercentChangeEnd = S.Id(ID_RatePercentChangeEnd)
+               .AddSlider(wxT(""), DEF_RatePercentEnd, MAX_RatePercentEnd, MIN_RatePercentEnd);
+         }
+         S.EndHorizontalLay();
       }
-      S.EndHorizontalLay();
+      S.EndStatic();
+
+      // Pitch Start
+      S.StartStatic(_("Initial Pitch Shift"));
+      {
+         S.StartMultiColumn(2, wxCENTER);
+         {
+            FloatingPointValidator<double>
+               vldPitchHalfStepsStart(3, &m_PitchHalfStepsStart, NUM_VAL_NO_TRAILING_ZEROES);
+            vldPitchHalfStepsStart.SetRange(MIN_HalfStepsStart, MAX_HalfStepsStart);
+         
+            m_pTextCtrl_PitchHalfStepsStart = S.Id(ID_PitchHalfStepsStart)
+               .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
+            m_pTextCtrl_PitchHalfStepsStart->SetValidator(vldPitchHalfStepsStart);
+
+            FloatingPointValidator<double>
+               vldPitchPercentChangeStart(3, &m_PitchPercentChangeStart, NUM_VAL_NO_TRAILING_ZEROES);
+            vldPitchPercentChangeStart.SetRange(MIN_PitchPercentStart, MAX_PitchPercentStart);
+         
+            m_pTextCtrl_PitchPercentChangeStart = S.Id(ID_PitchPercentChangeStart)
+               .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
+            m_pTextCtrl_PitchPercentChangeStart->SetValidator(vldPitchPercentChangeStart);
+         }
+         S.EndMultiColumn();
+      }
+      S.EndStatic();
+
+      // Pitch End
+      S.StartStatic(_("Final Pitch Shift"));
+      {
+         S.StartMultiColumn(2, wxCENTER);
+         {
+            FloatingPointValidator<double>
+               vldPitchHalfStepsEnd(3, &m_PitchHalfStepsEnd, NUM_VAL_NO_TRAILING_ZEROES);
+            vldPitchHalfStepsEnd.SetRange(MIN_HalfStepsEnd, MAX_HalfStepsEnd);
+         
+            m_pTextCtrl_PitchHalfStepsEnd = S.Id(ID_PitchHalfStepsEnd)
+               .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
+            m_pTextCtrl_PitchHalfStepsEnd->SetValidator(vldPitchHalfStepsEnd);
+
+            FloatingPointValidator<double>
+               vldPitchPercentChangeEnd(3, &m_PitchPercentChangeEnd, NUM_VAL_NO_TRAILING_ZEROES);
+            vldPitchPercentChangeEnd.SetRange(MIN_PitchPercentStart, MAX_PitchPercentStart);
+         
+            m_pTextCtrl_PitchPercentChangeEnd = S.Id(ID_PitchPercentChangeEnd)
+               .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
+            m_pTextCtrl_PitchPercentChangeEnd->SetValidator(vldPitchPercentChangeEnd);
+         }
+         S.EndMultiColumn();
+      }
+      S.EndStatic();
    }
-   S.EndStatic();
-
-   S.StartStatic(_("Final Tempo Change (%)"));
-   {
-      S.StartMultiColumn(1, wxCENTER);
-      {
-         m_pTextCtrl_RatePercentChangeEnd = S.Id(ID_TEXT_RATE_PERCENTCHANGE_END)
-            .AddTextBox(wxT(""), wxT(""), 12);
-         m_pTextCtrl_RatePercentChangeEnd->SetValidator(numvld);
-      }
-      S.EndMultiColumn();
-      S.StartHorizontalLay(wxEXPAND,0);
-      {
-         S.SetStyle(wxSL_HORIZONTAL);
-         m_pSlider_RatePercentChangeEnd = S.Id(ID_SLIDER_RATE_PERCENTCHANGE_END)
-            .AddSlider(wxT(""), (int)RATE_PERCENTCHANGE_DEFAULT, (int)RATE_PERCENTCHANGE_MAX_SLIDER, (int)RATE_PERCENTCHANGE_MIN_SLIDER);
-      }
-      S.EndHorizontalLay();
-   }
-   S.EndStatic();
-
-   // Pitch Start
-   S.StartStatic(_("Initial Pitch Shift"));
-   {
-      S.StartMultiColumn(2, wxCENTER);
-      {
-         m_pTextCtrl_PitchHalfStepsStart = S.Id(ID_TEXT_PITCH_HALFSTEPS_START)
-            .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
-         m_pTextCtrl_PitchHalfStepsStart->SetValidator(numvld);
-
-         m_pTextCtrl_PitchPercentChangeStart = S.Id(ID_TEXT_PITCH_PERCENTCHANGE_START)
-            .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
-         m_pTextCtrl_PitchPercentChangeStart->SetValidator(numvld);
-      }
-      S.EndMultiColumn();
-   }
-   S.EndStatic();
-
-   // Pitch End
-   S.StartStatic(_("Final Pitch Shift"));
-   {
-      S.StartMultiColumn(2, wxCENTER);
-      {
-         m_pTextCtrl_PitchHalfStepsEnd = S.Id(ID_TEXT_PITCH_HALFSTEPS_END)
-            .AddTextBox(_("(semitones) [-12 to 12]:"), wxT(""), 12);
-         m_pTextCtrl_PitchHalfStepsEnd->SetValidator(numvld);
-
-         m_pTextCtrl_PitchPercentChangeEnd = S.Id(ID_TEXT_PITCH_PERCENTCHANGE_END)
-            .AddTextBox(_("(%) [-50 to 100]:"), wxT(""), 12);
-         m_pTextCtrl_PitchPercentChangeEnd->SetValidator(numvld);
-      }
-      S.EndMultiColumn();
-   }
-   S.EndStatic();
    S.EndMultiColumn();
 
    return;
 }
 
-bool TimeScaleDialog::TransferDataToWindow()
+bool EffectTimeScale::TransferDataToWindow()
 {
-   m_bLoopDetect = true;
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
 
-   this->Update_Text_RatePercentChangeStart();
-   this->Update_Text_RatePercentChangeEnd();
-   this->Update_Slider_RatePercentChangeStart();
-   this->Update_Slider_RatePercentChangeEnd();
-   this->Update_Text_PitchHalfStepsStart();
-   this->Update_Text_PitchHalfStepsEnd();
-   this->Update_Text_PitchPercentChangeStart();
-   this->Update_Text_PitchPercentChangeEnd();
-   this->Update_CheckBox_PreAnalyze();
-
-   m_bLoopDetect = false;
+   Update_Slider_RatePercentChangeStart();
+   Update_Slider_RatePercentChangeEnd();
 
    return true;
 }
 
-bool TimeScaleDialog::TransferDataFromWindow()
+bool EffectTimeScale::TransferDataFromWindow()
 {
-   wxString str;
-
-   if (m_pTextCtrl_RatePercentChangeStart) {
-      str = m_pTextCtrl_RatePercentChangeStart->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_RatePercentChangeStart = newValue;
-   }
-
-   if (m_pTextCtrl_RatePercentChangeEnd) {
-      str = m_pTextCtrl_RatePercentChangeEnd->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_RatePercentChangeEnd = newValue;
-   }
-
-   if (m_pTextCtrl_PitchHalfStepsStart) {
-      str = m_pTextCtrl_PitchHalfStepsStart->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_PitchHalfStepsStart = newValue;
-   }
-
-   if (m_pTextCtrl_PitchHalfStepsEnd) {
-      str = m_pTextCtrl_PitchHalfStepsEnd->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_PitchHalfStepsEnd = newValue;
-   }
-
-   if (m_pTextCtrl_PitchPercentChangeStart) {
-      str = m_pTextCtrl_PitchPercentChangeStart->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_PitchPercentChangeStart = newValue;
-   }
-
-   if (m_pTextCtrl_PitchPercentChangeEnd) {
-      str = m_pTextCtrl_PitchPercentChangeEnd->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_PitchPercentChangeEnd = newValue;
-   }
-
-   if(m_pCheckBox_PreAnalyze) {
-      m_PreAnalyze = m_pCheckBox_PreAnalyze->GetValue();
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
    }
 
    return true;
 }
 
-bool TimeScaleDialog::CheckParameters()
+inline double EffectTimeScale::PercentChangeToRatio(double percentChange)
 {
-   return
-      (m_RatePercentChangeStart >= RATE_PERCENTCHANGE_MIN_TEXT &&
-       m_RatePercentChangeStart <= RATE_PERCENTCHANGE_MAX_TEXT)
-      &&
-      (m_RatePercentChangeEnd >= RATE_PERCENTCHANGE_MIN_TEXT &&
-       m_RatePercentChangeEnd <= RATE_PERCENTCHANGE_MAX_TEXT)
-      &&
-      (m_PitchHalfStepsStart >= PITCH_HALFSTEPS_MIN_TEXT &&
-       m_PitchHalfStepsStart <= PITCH_HALFSTEPS_MAX_TEXT)
-      &&
-      (m_PitchHalfStepsEnd >= PITCH_HALFSTEPS_MIN_TEXT &&
-       m_PitchHalfStepsEnd <= PITCH_HALFSTEPS_MAX_TEXT)
-      &&
-      (m_PitchPercentChangeStart >= PITCH_PERCENTCHANGE_MIN_TEXT &&
-       m_PitchPercentChangeStart <= PITCH_PERCENTCHANGE_MAX_TEXT)
-      &&
-      (m_PitchPercentChangeEnd >= PITCH_PERCENTCHANGE_MIN_TEXT &&
-       m_PitchPercentChangeEnd <= PITCH_PERCENTCHANGE_MAX_TEXT);
+   return 1.0 + percentChange / 100.0;
 }
 
-// handler implementations for TimeScaleDialog
-
-void TimeScaleDialog::OnText_RatePercentChangeStart(wxCommandEvent & WXUNUSED(event))
+inline double EffectTimeScale::HalfStepsToPercentChange(double halfSteps)
 {
-   if (m_bLoopDetect)
+   return 100.0 * (pow(2.0,halfSteps/12.0) - 1.0);
+}
+
+inline double EffectTimeScale::PercentChangeToHalfSteps(double percentChange)
+{
+   return 12.0 * log2(PercentChangeToRatio(percentChange));
+}
+
+void EffectTimeScale::Update_Text_RatePercentChangeStart()
+{
+   m_pTextCtrl_RatePercentChangeStart->GetValidator()->TransferToWindow();
+}
+
+void EffectTimeScale::Update_Text_RatePercentChangeEnd()
+{
+   m_pTextCtrl_RatePercentChangeEnd->GetValidator()->TransferToWindow();
+}
+
+void EffectTimeScale::Update_Slider_RatePercentChangeStart()
+{
+   m_pSlider_RatePercentChangeStart->SetValue((int)(m_RatePercentChangeStart + 0.5));
+}
+
+void EffectTimeScale::Update_Slider_RatePercentChangeEnd()
+{
+   m_pSlider_RatePercentChangeEnd->SetValue((int)(m_RatePercentChangeEnd + 0.5));
+}
+
+void EffectTimeScale::Update_Text_PitchHalfStepsStart()
+{
+   m_pTextCtrl_PitchHalfStepsStart->GetValidator()->TransferToWindow();
+}
+
+void EffectTimeScale::Update_Text_PitchHalfStepsEnd()
+{
+   m_pTextCtrl_PitchHalfStepsEnd->GetValidator()->TransferToWindow();
+}
+
+void EffectTimeScale::Update_Text_PitchPercentChangeStart()
+{
+   m_pTextCtrl_PitchPercentChangeStart->GetValidator()->TransferToWindow();
+}
+
+void EffectTimeScale::Update_Text_PitchPercentChangeEnd()
+{
+   m_pTextCtrl_PitchPercentChangeEnd->GetValidator()->TransferToWindow();
+}
+
+void EffectTimeScale::OnText_RatePercentChangeStart(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
       return;
-
-   if (m_pTextCtrl_RatePercentChangeStart) {
-      wxString str = m_pTextCtrl_RatePercentChangeStart->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_RatePercentChangeStart = newValue;
-
-      m_bLoopDetect = true;
-      this->Update_Slider_RatePercentChangeStart();
-      m_bLoopDetect = false;
-
-      FindWindow(wxID_OK)->Enable(CheckParameters());
    }
+
+   Update_Slider_RatePercentChangeStart();
 }
 
-void TimeScaleDialog::OnText_RatePercentChangeEnd(wxCommandEvent & WXUNUSED(event))
+void EffectTimeScale::OnText_RatePercentChangeEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (m_bLoopDetect)
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
       return;
-
-   if (m_pTextCtrl_RatePercentChangeEnd) {
-      wxString str = m_pTextCtrl_RatePercentChangeEnd->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_RatePercentChangeEnd = newValue;
-
-      m_bLoopDetect = true;
-      this->Update_Slider_RatePercentChangeEnd();
-      m_bLoopDetect = false;
-
-      FindWindow(wxID_OK)->Enable(CheckParameters());
    }
+
+   Update_Slider_RatePercentChangeEnd();
 }
 
-void TimeScaleDialog::OnSlider_RatePercentChangeStart(wxCommandEvent & WXUNUSED(event))
+void EffectTimeScale::OnSlider_RatePercentChangeStart(wxCommandEvent & evt)
 {
-   if (m_bLoopDetect)
+   m_RatePercentChangeStart = (double) evt.GetInt();
+
+   Update_Text_RatePercentChangeStart();
+}
+
+void EffectTimeScale::OnSlider_RatePercentChangeEnd(wxCommandEvent & evt)
+{
+   m_RatePercentChangeEnd = (double) evt.GetInt();
+
+   Update_Text_RatePercentChangeEnd();
+}
+
+void EffectTimeScale::OnText_PitchHalfStepsStart(wxCommandEvent & WXUNUSED(evt))
+{
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
       return;
-
-   if (m_pSlider_RatePercentChangeStart) {
-      m_RatePercentChangeStart = (double)(m_pSlider_RatePercentChangeStart->GetValue());
-
-      m_bLoopDetect = true;
-      this->Update_Text_RatePercentChangeStart();
-      m_bLoopDetect = false;
    }
+
+   m_PitchPercentChangeStart = HalfStepsToPercentChange(m_PitchHalfStepsStart);
+   Update_Text_PitchPercentChangeStart();
 }
 
-void TimeScaleDialog::OnSlider_RatePercentChangeEnd(wxCommandEvent & WXUNUSED(event))
+void EffectTimeScale::OnText_PitchHalfStepsEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (m_bLoopDetect)
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
       return;
-
-   if (m_pSlider_RatePercentChangeEnd) {
-      m_RatePercentChangeEnd = (double)(m_pSlider_RatePercentChangeEnd->GetValue());
-
-      m_bLoopDetect = true;
-      this->Update_Text_RatePercentChangeEnd();
-      m_bLoopDetect = false;
    }
+
+   m_PitchPercentChangeEnd = HalfStepsToPercentChange(m_PitchHalfStepsEnd);
+   Update_Text_PitchPercentChangeEnd();
 }
 
-void TimeScaleDialog::OnText_PitchHalfStepsStart(wxCommandEvent & WXUNUSED(event))
+void EffectTimeScale::OnText_PitchPercentChangeStart(wxCommandEvent & WXUNUSED(evt))
 {
-   if (m_bLoopDetect)
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
       return;
-
-   if (m_pTextCtrl_PitchHalfStepsStart) {
-      wxString str = m_pTextCtrl_PitchHalfStepsStart->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_PitchHalfStepsStart = newValue;
-      m_PitchPercentChangeStart = HalfStepsToPercentChange(newValue);
-
-      m_bLoopDetect = true;
-      this->Update_Text_PitchPercentChangeStart();
-      m_bLoopDetect = false;
-
-      FindWindow(wxID_OK)->Enable(CheckParameters());
    }
+
+   m_PitchHalfStepsStart = PercentChangeToHalfSteps(m_PitchPercentChangeStart);
+   Update_Text_PitchHalfStepsStart();
 }
 
-void TimeScaleDialog::OnText_PitchHalfStepsEnd(wxCommandEvent & WXUNUSED(event))
+void EffectTimeScale::OnText_PitchPercentChangeEnd(wxCommandEvent & WXUNUSED(evt))
 {
-   if (m_bLoopDetect)
+   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   {
       return;
-
-   if (m_pTextCtrl_PitchHalfStepsEnd) {
-      wxString str = m_pTextCtrl_PitchHalfStepsEnd->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_PitchHalfStepsEnd = newValue;
-      m_PitchPercentChangeEnd = HalfStepsToPercentChange(newValue);
-
-      m_bLoopDetect = true;
-      this->Update_Text_PitchPercentChangeEnd();
-      m_bLoopDetect = false;
-
-      FindWindow(wxID_OK)->Enable(CheckParameters());
    }
-}
 
-void TimeScaleDialog::OnText_PitchPercentChangeStart(wxCommandEvent & WXUNUSED(event))
-{
-   if (m_bLoopDetect)
-      return;
-
-   if (m_pTextCtrl_PitchPercentChangeStart) {
-      wxString str = m_pTextCtrl_PitchPercentChangeStart->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_PitchPercentChangeStart = newValue;
-      m_PitchHalfStepsStart = PercentChangeToHalfSteps(newValue);
-
-      m_bLoopDetect = true;
-      this->Update_Text_PitchHalfStepsStart();
-      m_bLoopDetect = false;
-
-      FindWindow(wxID_OK)->Enable(CheckParameters());
-   }
-}
-
-void TimeScaleDialog::OnText_PitchPercentChangeEnd(wxCommandEvent & WXUNUSED(event))
-{
-   if (m_bLoopDetect)
-      return;
-
-   if (m_pTextCtrl_PitchPercentChangeEnd) {
-      wxString str = m_pTextCtrl_PitchPercentChangeEnd->GetValue();
-      double newValue = 0;
-      str.ToDouble(&newValue);
-      m_PitchPercentChangeEnd = newValue;
-      m_PitchHalfStepsEnd = PercentChangeToHalfSteps(newValue);
-
-      m_bLoopDetect = true;
-      this->Update_Text_PitchHalfStepsEnd();
-      m_bLoopDetect = false;
-
-      FindWindow(wxID_OK)->Enable(CheckParameters());
-   }
-}
-
-void TimeScaleDialog::OnCheckBox_PreAnalyze(wxCommandEvent & WXUNUSED(event))
-{
-   if (m_pCheckBox_PreAnalyze) {
-      m_PreAnalyze = m_pCheckBox_PreAnalyze->GetValue();
-   }
-}
-
-void TimeScaleDialog::Update_Text_RatePercentChangeStart()
-{
-   if (m_pTextCtrl_RatePercentChangeStart) {
-      wxString str;
-      str.Printf(wxT("%.3f"), m_RatePercentChangeStart);
-      m_pTextCtrl_RatePercentChangeStart->SetValue(str);
-   }
-}
-
-void TimeScaleDialog::Update_Text_RatePercentChangeEnd()
-{
-   if (m_pTextCtrl_RatePercentChangeEnd) {
-      wxString str;
-      str.Printf(wxT("%.3f"), m_RatePercentChangeEnd);
-      m_pTextCtrl_RatePercentChangeEnd->SetValue(str);
-   }
-}
-
-void TimeScaleDialog::Update_Slider_RatePercentChangeStart()
-{
-   if (m_pSlider_RatePercentChangeStart) {
-      m_pSlider_RatePercentChangeStart->SetValue((int)(m_RatePercentChangeStart + 0.5));
-   }
-}
-
-void TimeScaleDialog::Update_Slider_RatePercentChangeEnd()
-{
-   if (m_pSlider_RatePercentChangeEnd) {
-      m_pSlider_RatePercentChangeEnd->SetValue((int)(m_RatePercentChangeEnd + 0.5));
-   }
-}
-
-void TimeScaleDialog::Update_Text_PitchHalfStepsStart()
-{
-   if (m_pTextCtrl_PitchHalfStepsStart) {
-      wxString str;
-      str.Printf(wxT("%.3f"), m_PitchHalfStepsStart);
-      m_pTextCtrl_PitchHalfStepsStart->SetValue(str);
-   }
-}
-
-void TimeScaleDialog::Update_Text_PitchHalfStepsEnd()
-{
-   if (m_pTextCtrl_PitchHalfStepsEnd) {
-      wxString str;
-      str.Printf(wxT("%.3f"), m_PitchHalfStepsEnd);
-      m_pTextCtrl_PitchHalfStepsEnd->SetValue(str);
-   }
-}
-
-void TimeScaleDialog::Update_Text_PitchPercentChangeStart()
-{
-   if (m_pTextCtrl_PitchPercentChangeStart) {
-      wxString str;
-      str.Printf(wxT("%.3f"), m_PitchPercentChangeStart);
-      m_pTextCtrl_PitchPercentChangeStart->SetValue(str);
-   }
-}
-
-void TimeScaleDialog::Update_Text_PitchPercentChangeEnd()
-{
-   if (m_pTextCtrl_PitchPercentChangeEnd) {
-      wxString str;
-      str.Printf(wxT("%.3f"), m_PitchPercentChangeEnd);
-      m_pTextCtrl_PitchPercentChangeEnd->SetValue(str);
-   }
-}
-
-void TimeScaleDialog::Update_CheckBox_PreAnalyze()
-{
-   if (m_pCheckBox_PreAnalyze) {
-      m_pCheckBox_PreAnalyze->SetValue(m_PreAnalyze);
-   }
+   m_PitchHalfStepsEnd = PercentChangeToHalfSteps(m_PitchPercentChangeEnd);
+   Update_Text_PitchHalfStepsEnd();
 }
 
 #endif

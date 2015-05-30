@@ -11,47 +11,91 @@
 #ifndef __AUDACITY_EFFECT_AUTODUCK__
 #define __AUDACITY_EFFECT_AUTODUCK__
 
-#include <wx/dialog.h>
+#include <wx/bitmap.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
 #include <wx/panel.h>
+#include <wx/string.h>
 #include <wx/textctrl.h>
+#include <wx/window.h>
+
+#include "../ShuttleGui.h"
+#include "../WaveTrack.h"
 
 #include "Effect.h"
 
-class EffectAutoDuck;
 class EffectAutoDuckPanel;
-
-class EffectAutoDuckDialog: public wxDialog
-{
-public:
-   EffectAutoDuckDialog(EffectAutoDuck* effect, wxWindow* parent);
-
-private:
-   friend class EffectAutoDuckPanel;
-
-   void OnOk(wxCommandEvent& evt);
-   void OnCancel(wxCommandEvent& evt);
-   void OnValueChanged(wxCommandEvent& evt);
-
-   EffectAutoDuck* mEffect;
-
-   wxTextCtrl* mDuckAmountDbBox;
-   wxTextCtrl* mInnerFadeDownLenBox;
-   wxTextCtrl* mInnerFadeUpLenBox;
-   wxTextCtrl* mOuterFadeDownLenBox;
-   wxTextCtrl* mOuterFadeUpLenBox;
-   wxTextCtrl* mThresholdDbBox;
-   wxTextCtrl* mMaximumPauseBox;
-   EffectAutoDuckPanel* mPanel;
-
-   DECLARE_EVENT_TABLE()
-};
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
 
-class EffectAutoDuckPanel: public wxPanel
+#define AUTODUCK_PLUGIN_SYMBOL XO("Auto Duck")
+
+class EffectAutoDuck : public Effect
 {
 public:
-   EffectAutoDuckPanel(EffectAutoDuckDialog* parent, wxWindowID id);
+   EffectAutoDuck();
+   virtual ~EffectAutoDuck();
+
+   // IdentInterface implementation
+
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
+
+   // EffectIdentInterface implementation
+
+   virtual EffectType GetType();
+
+   // EffectClientInterface implementation
+
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
+
+   virtual bool Startup();
+   virtual bool Init();
+   virtual void End();
+   virtual bool Process();
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
+
+private:
+   // EffectAutoDuck implementation
+
+   bool ApplyDuckFade(int trackNumber, WaveTrack *t, double t0, double t1);
+
+   void OnValueChanged(wxCommandEvent & evt);
+
+private:
+   double mDuckAmountDb;
+   double mInnerFadeDownLen;
+   double mInnerFadeUpLen;
+   double mOuterFadeDownLen;
+   double mOuterFadeUpLen;
+   double mThresholdDb;
+   double mMaximumPause;
+
+   WaveTrack *mControlTrack;
+
+   wxTextCtrl *mDuckAmountDbBox;
+   wxTextCtrl *mInnerFadeDownLenBox;
+   wxTextCtrl *mInnerFadeUpLenBox;
+   wxTextCtrl *mOuterFadeDownLenBox;
+   wxTextCtrl *mOuterFadeUpLenBox;
+   wxTextCtrl *mThresholdDbBox;
+   wxTextCtrl *mMaximumPauseBox;
+   EffectAutoDuckPanel *mPanel;
+
+   DECLARE_EVENT_TABLE();
+
+   friend class EffectAutoDuckPanel;
+};
+
+class EffectAutoDuckPanel : public wxPanel
+{
+public:
+   EffectAutoDuckPanel(wxWindow *parent, EffectAutoDuck *effect);
    virtual ~EffectAutoDuckPanel();
 
 private:
@@ -65,80 +109,29 @@ private:
       none = 99,
    };
 
-#if defined(__WXMAC__) && wxUSE_ACCESSIBILITY
    virtual bool AcceptsFocus() const {return false;}
-#endif
 
-   void OnPaint(wxPaintEvent& evt);
-   void OnMouseCaptureChanged(wxMouseCaptureChangedEvent &evt);
-   void OnMouseCaptureLost(wxMouseCaptureLostEvent &evt);
-   void OnLeftDown(wxMouseEvent &evt);
-   void OnLeftUp(wxMouseEvent &evt);
-   void OnMotion(wxMouseEvent &evt);
+   void OnPaint(wxPaintEvent & evt);
+   void OnMouseCaptureChanged(wxMouseCaptureChangedEvent & evt);
+   void OnMouseCaptureLost(wxMouseCaptureLostEvent & evt);
+   void OnLeftDown(wxMouseEvent & evt);
+   void OnLeftUp(wxMouseEvent & evt);
+   void OnMotion(wxMouseEvent & evt);
 
    void ResetControlPoints();
-   EControlPoint GetNearestControlPoint(const wxPoint& pt);
+   EControlPoint GetNearestControlPoint(const wxPoint & pt);
 
-   EffectAutoDuckDialog* mParent;
-   wxBitmap* mBackgroundBitmap;
+private:
+   wxWindow *mParent;
+   EffectAutoDuck *mEffect;
+   wxBitmap *mBackgroundBitmap;
    EControlPoint mCurrentControlPoint;
    wxPoint mControlPoints[AUTO_DUCK_PANEL_NUM_CONTROL_POINTS];
    wxPoint mMoveStartControlPoints[AUTO_DUCK_PANEL_NUM_CONTROL_POINTS];
    wxPoint mMouseDownPoint;
    bool mControlPointMoveActivated;
 
-   DECLARE_EVENT_TABLE()
-};
-
-class EffectAutoDuck: public Effect
-{
-   friend class EffectAutoDuckDialog;
-
-public:
-   EffectAutoDuck();
-
-   virtual wxString GetEffectName()
-   {
-      return wxString(wxTRANSLATE("Auto Duck..."));
-   }
-
-   virtual std::set<wxString> GetEffectCategories()
-   {
-     std::set<wxString> result;
-     result.insert(wxT("http://lv2plug.in/ns/lv2core#DynamicsPlugin"));
-     return result;
-   }
-
-   virtual wxString GetEffectIdentifier()
-   {
-      return wxString(wxT("AutoDuck"));
-   }
-
-   virtual wxString GetEffectAction()
-   {
-      return wxString(_("Processing Auto Duck..."));
-   }
-
-   virtual bool PromptUser();
-   virtual bool TransferParameters(Shuttle & shuttle);
-
-   virtual bool Init();
-   virtual void End();
-   virtual bool CheckWhetherSkipEffect();
-   virtual bool Process();
-
-private:
-   bool ApplyDuckFade(int trackNumber, WaveTrack* t, double t0, double t1);
-
-   double mDuckAmountDb;
-   double mInnerFadeDownLen;
-   double mInnerFadeUpLen;
-   double mOuterFadeDownLen;
-   double mOuterFadeUpLen;
-   double mThresholdDb;
-   double mMaximumPause;
-
-   WaveTrack* mControlTrack;
+   DECLARE_EVENT_TABLE();
 };
 
 #endif

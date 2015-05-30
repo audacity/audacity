@@ -1,5 +1,5 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2012  Xiph.org Foundation
+ * Copyright (C) 2012-2014  Xiph.org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -67,12 +67,6 @@
 
 #ifndef MAX
 #define MAX(x,y)	((x) >= (y) ? (x) : (y))
-#endif
-
-#if !defined(__cplusplus) && defined(_MSC_VER)
-#ifndef inline
-#define inline __inline
-#endif
 #endif
 
 #endif

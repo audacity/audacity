@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Public Header Files">
+      <UniqueIdentifier>{d4e83ff0-6406-4b76-bd64-6192e6b8e47a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Header Files\grabbag">
+      <UniqueIdentifier>{82df5da8-3a2c-402e-a7cd-a88de1a7be91}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="alloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cuesheet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="picture.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="replaygain.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="seektable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="snprintf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\share\grabbag.h">
+      <Filter>Public Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\share\grabbag\cuesheet.h">
+      <Filter>Public Header Files\grabbag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\share\grabbag\file.h">
+      <Filter>Public Header Files\grabbag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\share\grabbag\picture.h">
+      <Filter>Public Header Files\grabbag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\share\grabbag\replaygain.h">
+      <Filter>Public Header Files\grabbag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\share\grabbag\seektable.h">
+      <Filter>Public Header Files\grabbag</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -62,19 +62,6 @@ WX_DECLARE_OBJARRAY(TrackClip, TrackClipArray);
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
 
-//
-// TrackInfo sliders: we keep a pool of sliders, and attach them to tracks as
-// they come on screen (this helps deal with very large numbers of tracks, esp.
-// on MSW).
-//
-// With the initial set of sliders smaller than the page size, a new slider is
-// created at track-creation time for tracks between 16 and when 80 goes past
-// the top of the screen. After that, existing sliders are re-used for new
-// tracks.
-//
-const unsigned int kInitialSliders = 16;
-const unsigned int kSliderPageFlip = 80;
-
 // JKC Nov 2011: Disabled warning C4251 which is to do with DLL linkage
 // and only a worry when there are DLLs using the structures.
 // LWSliderArray and TrackClipArray are private in TrackInfo, so we will not
@@ -91,56 +78,44 @@ const unsigned int kSliderPageFlip = 80;
 class AUDACITY_DLL_API TrackInfo
 {
 public:
-   TrackInfo(wxWindow * pParentIn);
+   TrackInfo(TrackPanel * pParentIn);
    ~TrackInfo();
 
-   int GetTrackInfoWidth() const;
-
-   void UpdateSliderOffset(Track *t);
-
 private:
-   void MakeMoreSliders();
-   void EnsureSufficientSliders(int index);
+   int GetTrackInfoWidth() const;
+   void SetTrackInfoFont(wxDC *dc) const;
 
-   void SetTrackInfoFont(wxDC *dc);
-   void DrawBackground(wxDC * dc, const wxRect r, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul);
-   void DrawBordersWithin(wxDC * dc, const wxRect r, bool bHasMuteSolo );
-   void DrawCloseBox(wxDC * dc, const wxRect r, bool down);
-   void DrawTitleBar(wxDC * dc, const wxRect r, Track * t, bool down);
-   void DrawMuteSolo(wxDC * dc, const wxRect r, Track * t, bool down, bool solo, bool bHasSoloButton);
-   void DrawVRuler(wxDC * dc, const wxRect r, Track * t);
+   void DrawBackground(wxDC * dc, const wxRect & r, bool bSelected, bool bHasMuteSolo, const int labelw, const int vrul) const;
+   void DrawBordersWithin(wxDC * dc, const wxRect & r, bool bHasMuteSolo ) const;
+   void DrawCloseBox(wxDC * dc, const wxRect & r, bool down) const;
+   void DrawTitleBar(wxDC * dc, const wxRect & r, Track * t, bool down) const;
+   void DrawMuteSolo(wxDC * dc, const wxRect & r, Track * t, bool down, bool solo, bool bHasSoloButton) const;
+   void DrawVRuler(wxDC * dc, const wxRect & r, Track * t) const;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect r);
+   void DrawVelocitySlider(wxDC * dc, NoteTrack *t, wxRect r) const ;
 #endif
-   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect r);
+   void DrawSliders(wxDC * dc, WaveTrack *t, wxRect r) const;
 
    // Draw the minimize button *and* the sync-lock track icon, if necessary.
-   void DrawMinimize(wxDC * dc, const wxRect r, Track * t, bool down);
+   void DrawMinimize(wxDC * dc, const wxRect & r, Track * t, bool down) const;
 
-   void GetTrackControlsRect(const wxRect r, wxRect &dest) const;
-   void GetCloseBoxRect(const wxRect r, wxRect &dest) const;
-   void GetTitleBarRect(const wxRect r, wxRect &dest) const;
-   void GetMuteSoloRect(const wxRect r, wxRect &dest, bool solo, bool bHasSoloButton) const;
-   void GetGainRect(const wxRect r, wxRect &dest) const;
-   void GetPanRect(const wxRect r, wxRect &dest) const;
-   void GetMinimizeRect(const wxRect r, wxRect &dest) const;
-   void GetSyncLockIconRect(const wxRect r, wxRect &dest) const;
+   void GetTrackControlsRect(const wxRect & r, wxRect &dest) const;
+   void GetCloseBoxRect(const wxRect & r, wxRect &dest) const;
+   void GetTitleBarRect(const wxRect & r, wxRect &dest) const;
+   void GetMuteSoloRect(const wxRect & r, wxRect &dest, bool solo, bool bHasSoloButton) const;
+   void GetGainRect(const wxRect & r, wxRect &dest) const;
+   void GetPanRect(const wxRect & r, wxRect &dest) const;
+   void GetMinimizeRect(const wxRect & r, wxRect &dest) const;
+   void GetSyncLockIconRect(const wxRect & r, wxRect &dest) const;
 
-   // These arrays are always kept the same size.
-   LWSliderArray mGains;
-   LWSliderArray mPans;
+   LWSlider * GainSlider(WaveTrack *t) const;
+   LWSlider * PanSlider(WaveTrack *t) const;
 
-   // index of track whose pan/gain sliders are at index 0 in the above arrays
-   unsigned int mSliderOffset;
-
-public:
-
-   // Slider access by track index
-   LWSlider * GainSlider(int trackIndex);
-   LWSlider * PanSlider(int trackIndex);
-
-   wxWindow * pParent;
+private:
+   TrackPanel * pParent;
    wxFont mFont;
+   LWSlider *mGain;
+   LWSlider *mPan;
 
    friend class TrackPanel;
 };
@@ -197,8 +172,6 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void SelectNone();
 
-   virtual void SetStop(bool bStopped);
-
    virtual void Refresh(bool eraseBackground = true,
                         const wxRect *rect = (const wxRect *) NULL);
    virtual void RefreshTrack(Track *trk, bool refreshbacking = true);
@@ -219,6 +192,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
    virtual void OnPrevTrack(bool shift = false);
    virtual void OnNextTrack(bool shift = false);
+   virtual void OnFirstTrack();
+   virtual void OnLastTrack();
    virtual void OnToggle();
 
    virtual void OnCursorLeft(bool shift, bool ctrl, bool keyup = false);
@@ -238,6 +213,10 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void OnTrackMute(bool shiftdown, Track *t = NULL);
    virtual void OnTrackSolo(bool shiftdown, Track *t = NULL);
    virtual void OnTrackClose();
+   virtual void OnTrackMoveUp();
+   virtual void OnTrackMoveDown();
+   virtual void OnTrackMoveTop();
+   virtual void OnTrackMoveBottom();
    virtual Track * GetFirstSelectedTrack();
    virtual bool IsMouseCaptured();
 
@@ -252,6 +231,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void UpdateVRuler(Track *t);
    virtual void UpdateTrackVRuler(Track *t);
    virtual void UpdateVRulerSize();
+
+   virtual void DrawQuickPlayIndicator(wxDC & dc, double pos);
 
  protected:
    virtual MixerBoard* GetMixerBoard();
@@ -270,7 +251,8 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    virtual void DrawIndicator();
    /// draws the green line on the tracks to show playback position
    /// @param repairOld if true the playback position is not updated/erased, and simply redrawn
-   virtual void DoDrawIndicator(wxDC & dc, bool repairOld = false);
+   /// @param indicator if nonnegative, overrides the indicator value obtainable from AudioIO
+   virtual void DoDrawIndicator(wxDC & dc, bool repairOld = false, double indicator = -1);
    virtual void DrawCursor();
    virtual void DoDrawCursor(wxDC & dc);
 
@@ -312,10 +294,29 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    // AS: Selection handling
    virtual void HandleSelect(wxMouseEvent & event);
    virtual void SelectionHandleDrag(wxMouseEvent &event, Track *pTrack);
+
+   // Made obsolete by scrubbing:
+#ifndef EXPERIMENTAL_SCRUBBING_BASIC
    void StartOrJumpPlayback(wxMouseEvent &event);
-#ifdef EXPERIMENTAL_SCRUBBING
-   void StartScrubbing(double position);
 #endif
+
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+   double FindScrubSpeed(double timeAtMouse) const;
+#endif
+
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   bool IsScrubbing();
+   void MarkScrubStart(
+      wxCoord xx
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+      , bool smoothScrolling
+#endif
+   );
+   bool MaybeStartScrubbing(wxMouseEvent &event);
+   bool ContinueScrubbing(wxCoord position, bool hasFocus, bool maySkip);
+   bool StopScrubbing();
+#endif
+
    virtual void SelectionHandleClick(wxMouseEvent &event,
                                      Track* pTrack, wxRect r);
    virtual void StartSelection (int mouseXCoordinate, int trackLeftEdge);
@@ -449,6 +450,7 @@ protected:
    virtual void OnSetFont(wxCommandEvent &event);
 
    virtual void OnMoveTrack    (wxCommandEvent &event);
+   virtual void MoveTrack(Track* target, int eventId);
    virtual void OnChangeOctave (wxCommandEvent &event);
    virtual void OnChannelChange(wxCommandEvent &event);
    virtual void OnSetDisplay   (wxCommandEvent &event);
@@ -510,16 +512,19 @@ public:
 protected:
    virtual void DrawTracks(wxDC * dc);
 
-   virtual void DrawEverythingElse(wxDC *dc, const wxRegion region,
-                           const wxRect panelRect, const wxRect clip);
-   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect rec,
-                    const wxRect trackRect);
-   virtual void DrawZooming(wxDC* dc, const wxRect clip);
+   virtual void DrawEverythingElse(wxDC *dc, const wxRegion & region,
+                           const wxRect & clip);
+   virtual void DrawOutside(Track *t, wxDC *dc, const wxRect & rec,
+                    const wxRect &trackRect);
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   void DrawScrubSpeed(wxDC &dc);
+#endif
+   virtual void DrawZooming(wxDC* dc, const wxRect & clip);
 
-   virtual void HighlightFocusedTrack (wxDC* dc, const wxRect r);
-   virtual void DrawShadow            (Track *t, wxDC* dc, const wxRect r);
-   virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect r, const int labelw, const int vrul);
-   virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect r);
+   virtual void HighlightFocusedTrack (wxDC* dc, const wxRect &r);
+   virtual void DrawShadow            (Track *t, wxDC* dc, const wxRect & r);
+   virtual void DrawBordersAroundTrack(Track *t, wxDC* dc, const wxRect & r, const int labelw, const int vrul);
+   virtual void DrawOutsideOfTrack    (Track *t, wxDC* dc, const wxRect & r);
 
    virtual int IdOfRate( int rate );
    virtual int IdOfFormat( int format );
@@ -563,6 +568,9 @@ protected:
    // and cursor
    double mLastIndicator;
    double mLastCursor;
+
+   // Quick-Play indicator postion
+   double mOldQPIndicatorPos;
 
    int mTimeCount;
 
@@ -731,6 +739,7 @@ protected:
       IsClosing,
       IsSelecting,
       IsAdjustingLabel,
+      IsAdjustingSample,
       IsResizing,
       IsResizingBetweenLinkedTracks,
       IsResizingBelowLinkedTracks,
@@ -748,12 +757,14 @@ protected:
 #ifdef USE_MIDI
       IsStretching,
 #endif
-      IsZooming
+      IsZooming,
+
    };
 
    enum MouseCaptureEnum mMouseCapture;
    virtual void SetCapturedTrack( Track * t, enum MouseCaptureEnum MouseCapture=IsUncaptured );
 
+   bool mScrollBeyondZero;
    bool mAdjustSelectionEdges;
    bool mSlideUpDownOnly;
    bool mCircularTrackNavigation;
@@ -764,10 +775,22 @@ protected:
    int mMoveUpThreshold;
    int mMoveDownThreshold;
 
-#ifdef EXPERIMENTAL_SCRUBBING
-   bool mScrubbing;
-   wxLongLong mLastScrubTime; // milliseconds
-   double mLastScrubPosition;
+#ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   int mScrubToken;
+   wxLongLong mScrubStartClockTimeMillis;
+   wxCoord mScrubStartPosition;
+   double mMaxScrubSpeed;
+   int mScrubSpeedDisplayCountdown;
+   bool mScrubHasFocus;
+   bool mScrubSeekPress;
+#endif
+
+#ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
+   bool mSmoothScrollingScrub;
+#endif
+
+#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
+   int mLogMaxScrubSpeed;
 #endif
 
    wxCursor *mArrowCursor;

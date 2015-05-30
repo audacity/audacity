@@ -25,12 +25,13 @@ the audio, rather than actually finding the clicks.
 
 #include <math.h>
 
-#include <wx/msgdlg.h>
 #include <wx/intl.h>
+#include <wx/msgdlg.h>
+
+#include "../InterpolateAudio.h"
+#include "../WaveTrack.h"
 
 #include "Repair.h"
-#include "../WaveTrack.h"
-#include "../InterpolateAudio.h"
 
 EffectRepair::EffectRepair()
 {
@@ -40,17 +41,31 @@ EffectRepair::~EffectRepair()
 {
 }
 
-bool EffectRepair::PromptUser()
+// IdentInterface implementation
+
+wxString EffectRepair::GetSymbol()
 {
-   return true;
+   return REPAIR_PLUGIN_SYMBOL;
 }
 
-bool EffectRepair::TransferParameters( Shuttle & WXUNUSED(shuttle) )
+wxString EffectRepair::GetDescription()
 {
-   //TODO: pop-click values.
-//   shuttle.TransferInt("",,0);
-   return true;
+   return XO("Sets the peak amplitude of a one or more tracks");
 }
+
+// EffectIdentInterface implementation
+
+EffectType EffectRepair::GetType()
+{
+   return EffectTypeProcess;
+}
+
+bool EffectRepair::IsInteractive()
+{
+   return false;
+}
+
+// Effect implementation
 
 bool EffectRepair::Process()
 {

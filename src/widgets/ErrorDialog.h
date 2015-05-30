@@ -46,11 +46,15 @@ class HtmlTextHelpDialog : public BrowserFrame
 public:
    HtmlTextHelpDialog() : BrowserFrame()
    {
+#if !wxCHECK_VERSION(3, 1, 0)
       MakeModal( true );
+#endif
    }
    virtual ~HtmlTextHelpDialog()
    {
+#if !wxCHECK_VERSION(3, 1, 0)
       MakeModal( false );
+#endif
       // On Windows, for some odd reason, the Audacity window will be sent to
       // the back.  So, make sure that doesn't happen.
       GetParent()->Raise();

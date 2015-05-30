@@ -6,4 +6,4 @@ before_install:
 language: cpp
 compiler:
     - gcc
-script: ./configure && make
+script: aclocal --install -I m4 && automake && ./configure && make

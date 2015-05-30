@@ -85,11 +85,14 @@ void AboutDialog::CreateCreditsList()
 
    // All other contributors
    AddCredit(wxT("Lynn Allan"), roleContributor);
+   AddCredit(wxT("David Avery"), roleContributor);
    AddCredit(wxT("David Bailes"), roleContributor);
    AddCredit(wxT("William Bland"), roleContributor);
+   AddCredit(wxT("Sami Boukortt"), roleContributor);
    AddCredit(wxT("Jeremy R. Brown"), roleContributor);
    AddCredit(wxT("Alex S. Brown"), roleContributor);
    AddCredit(wxT("Chris Cannam"), roleContributor);
+   AddCredit(wxT("Cory Cook"), roleContributor);
    AddCredit(wxT("Craig DeForest"), roleContributor);
    AddCredit(wxT("Mitch Golden"), roleContributor);
    AddCredit(wxT("Brian Gunlogson"), roleContributor);
@@ -117,6 +120,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Philip Van Baren"), roleContributor);
    AddCredit(wxT("Salvo Ventura"), roleContributor);
    AddCredit(wxT("Jun Wan"), roleContributor);
+   AddCredit(wxT("Daniel Winzen"), roleContributor);
    AddCredit(wxT("Tom Woodhams"), roleContributor);
    AddCredit(wxT("Wing Yu"), roleContributor);
 
@@ -124,15 +128,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("FLAC"), roleLibrary);
    AddCredit(wxT("LAME"), roleLibrary);
    AddCredit(wxT("libmad"), roleLibrary);
-   #if USE_LIBRESAMPLE
-      AddCredit(wxT("libresample, by Dominic Mazzoni and Julius Smith"), roleLibrary);
-   #endif
-   #if USE_LIBSAMPLERATE
-      AddCredit(wxT("libsamplerate, by Erik de Castro Lopo"), roleLibrary);
-   #endif
-   #if USE_LIBSOXR
-      AddCredit(wxT("libsoxr, by Rob Sykes"), roleLibrary);
-   #endif
+   AddCredit(wxT("libsoxr, by Rob Sykes"), roleLibrary);
    #if USE_LV2
       AddCredit(wxT("lilv, serd, sord, and sratom, by David Robillard"), roleLibrary);
       AddCredit(wxT("msinttypes, by Alexander Chemeris"), roleLibrary);
@@ -184,6 +180,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
                wxDefaultPosition, wxDefaultSize,
                wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
+   SetName(GetTitle());
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
    icon = NULL;
    ShuttleGui S( this, eIsCreating );
@@ -215,9 +212,8 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
    CreateCreditsList();
 
    wxString par1Str = _(
-"Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacity.sourceforge.net/community/developers\">developers</a>. \
-We thank <a href=\"http://code.google.com\">Google Code</a> and <a href=\"http://sourceforge.net\">SourceForge</a> for hosting our project. \
-Audacity is <a href=\"http://audacity.sourceforge.net/download/\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
+"Audacity is a free program written by a worldwide team of volunteer <a href=\"http://audacityteam.org/about/credits\">developers</a>. \
+Audacity is <a href=\"http://audacityteam.org/download\">available</a> for Windows, Mac, and GNU/Linux (and other Unix-like systems).");
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
@@ -252,7 +248,7 @@ visit our <a href=\"http://forum.audacityteam.org/\">forum</a>.");
       wxT("<body bgcolor=\"#ffffff\"><center>") +
       wxT("<h3>Audacity ") + wxString(AUDACITY_VERSION_STRING) + wxT("</h3>")+
       _("free, open source, cross-platform software for recording and editing sounds<br>") +
-      wxT("<a href=\"http://audacity.sourceforge.net/\">http://audacity.sourceforge.net/</a>") +
+      wxT("<a href=\"http://audacityteam.org/\">http://audacityteam.org/</a>") +
       wxT("<p><br>") + par1Str +
       wxT("<p>") + par2Str +
       wxT("<h3>") + _("Credits") + wxT("</h3>") +
@@ -431,27 +427,8 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr += _("Core Libraries");
    informationStr += wxT("</h3>\n<table>");  // start table of features
 
-
-   #if USE_LIBRESAMPLE
-   AddBuildinfoRow(&informationStr, wxT("libresample"),
+   AddBuildinfoRow(&informationStr, wxT("libsoxr"),
          _("Sample rate conversion"), enabled);
-   #elif USE_LIBSAMPLERATE
-   AddBuildinfoRow(&informationStr, wxT("libsamplerate"),
-         _("Sample rate conversion"), enabled);
-   #else
-      AddBuildinfoRow(&informationStr, wxT("libresample"),
-            _("Sample rate conversion"), disabled);
-      AddBuildinfoRow(&informationStr, wxT("libsamplerate"),
-            _("Sample rate conversion"), disabled);
-   #endif
-
-   #if USE_LIBSOXR
-      AddBuildinfoRow(&informationStr, wxT("libsoxr"),
-            _("Sample rate conversion"), enabled);
-   #else
-      AddBuildinfoRow(&informationStr, wxT("libsoxr"),
-            _("Sample rate conversion"), disabled);
-   #endif
 
    AddBuildinfoRow(&informationStr, wxT("PortAudio"),
          _("Audio playback and recording"), wxString(wxT("v19")));
@@ -548,6 +525,10 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    // Current date
    AddBuildinfoRow(&informationStr, _("Program build date: "), __TDATE__);
+
+// Uncomment the next two lines to test hyperlinks work from here.
+//   AddBuildinfoRow(&informationStr, wxT("Link Test:"), 
+//      wxT("<a href=\"https:web.audacityteam.org\">Click bait</a>") );
 
    AddBuildinfoRow(&informationStr, _("Commit Id:"),
 #include "RevisionIdent.h"

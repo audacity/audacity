@@ -50,11 +50,11 @@ Command *GetProjectInfoCommandType::Create(CommandOutputTarget *target)
 bool GetProjectInfoCommand::Apply(CommandExecutionContext context)
 {
    wxString mode = GetString(wxT("Type"));
-   TrackList *projTracks = context.proj->GetTracks();
+   TrackList *projTracks = context.GetProject()->GetTracks();
 
    if (mode.IsSameAs(wxT("Name")))
    {
-      Status(context.proj->GetFileName());
+      Status(context.GetProject()->GetFileName());
    }
    else if (mode.IsSameAs(wxT("FocusedTrackID")))
    {
@@ -94,7 +94,7 @@ int GetProjectInfoCommand::SendNumberOfTracks(CommandExecutionContext context)
 {
    int returnVal=0;
 
-   TrackListIterator iter(context.proj->GetTracks());
+   TrackListIterator iter(context.GetProject()->GetTracks());
    Track *t = iter.First();
    while (t)
    {
@@ -111,10 +111,10 @@ int GetProjectInfoCommand::SendFocusedTrackIndex(CommandExecutionContext context
 {
    int returnVal=0;
    int focusTrackIndex=0;
-   TrackPanel *panel = context.proj->GetTrackPanel();
+   TrackPanel *panel = context.GetProject()->GetTrackPanel();
    Track* focusedTrack = panel->GetFocusedTrack();
 
-   TrackListIterator iter(context.proj->GetTracks());
+   TrackListIterator iter(context.GetProject()->GetTracks());
    Track *t = iter.First();
    while (t)
    {

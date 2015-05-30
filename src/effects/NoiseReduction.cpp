@@ -417,6 +417,25 @@ EffectNoiseReduction::~EffectNoiseReduction()
 {
 }
 
+// IdentInterface implementation
+
+wxString EffectNoiseReduction::GetSymbol()
+{
+   return NOISEREDUCTION_PLUGIN_SYMBOL;
+}
+
+wxString EffectNoiseReduction::GetDescription()
+{
+   return XO("Removes background noise such as fans, tape noise, or hums");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectNoiseReduction::GetType()
+{
+   return EffectTypeProcess;
+}
+
 bool EffectNoiseReduction::Init()
 {
    return true;
@@ -427,37 +446,12 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
    return false;
 }
 
-wxString EffectNoiseReduction::GetEffectName()
-{
-   return wxString(wxTRANSLATE("Noise Reduction..."));
-}
-
-std::set<wxString> EffectNoiseReduction::GetEffectCategories()
-{
-   std::set<wxString> result;
-   result.insert(wxT("http://audacityteam.org/namespace#NoiseReduction"));
-   return result;
-}
-
-wxString EffectNoiseReduction::GetEffectIdentifier()
-{
-   return wxString(wxT("Noise Reduction"));
-}
-
-wxString EffectNoiseReduction::GetEffectAction()
-{
-  if (mSettings->mDoProfile)
-     return wxString(_("Creating Noise Profile"));
-  else
-     return wxString(_("Reducing Noise"));
-}
-
-bool EffectNoiseReduction::PromptUser()
+bool EffectNoiseReduction::PromptUser(wxWindow *parent)
 {
    // We may want to twiddle the levels if we are setting
    // from an automation dialog, the only case in which we can
    // get here without any wavetracks.
-   return mSettings->PromptUser(this, mParent,
+   return mSettings->PromptUser(this, parent,
       (mStatistics.get() != 0), (GetNumWaveTracks() == 0));
 }
 
@@ -593,13 +587,6 @@ bool EffectNoiseReduction::Settings::Validate() const
       return false;
    }
 
-   return true;
-}
-
-bool EffectNoiseReduction::TransferParameters( Shuttle & WXUNUSED(shuttle) )
-{
-   //shuttle.TransferDouble(wxT("Gain"), mNoiseGain, 0.0);
-   //shuttle.TransferDouble(wxT("Freq"), mFreqSmoothingHz, 0.0);
    return true;
 }
 
@@ -1449,34 +1436,47 @@ struct ControlInfo {
    // (valueMin - valueMax) / sliderMax is the value increment of the slider
    const wxChar* format;
    bool formatAsInt;
-   const wxChar* textBoxCaption_;  wxString textBoxCaption() const { return wxGetTranslation(textBoxCaption_); }
-   const wxChar* sliderName_;  wxString sliderName() const { return wxGetTranslation(sliderName_); }
-}; const ControlInfo *controlInfo() { static const ControlInfo table[] = {
-   { &EffectNoiseReduction::Settings::mNoiseGain,
-     0.0, 48.0, 48, wxT("%d"), true,
-	 wxString(wxTRANSLATE("&Noise reduction (dB):")), wxString(wxTRANSLATE("Noise reduction")) },
-   { &EffectNoiseReduction::Settings::mNewSensitivity,
-      0.0, 24.0, 48, wxT("%.2f"), false,
-	  wxString(wxTRANSLATE("&Sensitivity:")), wxString(wxTRANSLATE("Sensitivity")) },
+   const wxString textBoxCaption_;  wxString textBoxCaption() const { return wxGetTranslation(textBoxCaption_); }
+   const wxString sliderName_;  wxString sliderName() const { return wxGetTranslation(sliderName_); }
+
+   ControlInfo(MemberPointer f, double vMin, double vMax, long sMax, const wxChar* fmt, bool fAsInt,
+      const wxString &caption, const wxString &name)
+      : field(f), valueMin(vMin), valueMax(vMax), sliderMax(sMax), format(fmt), formatAsInt(fAsInt)
+      , textBoxCaption_(caption), sliderName_(name)
+   {
+   }
+};
+
+const ControlInfo *controlInfo() {
+   static const ControlInfo table[] = {
+         ControlInfo(&EffectNoiseReduction::Settings::mNoiseGain,
+         0.0, 48.0, 48, wxT("%d"), true,
+         XO("&Noise reduction (dB):"), XO("Noise reduction")),
+         ControlInfo(&EffectNoiseReduction::Settings::mNewSensitivity,
+         0.0, 24.0, 48, wxT("%.2f"), false,
+         XO("&Sensitivity:"), XO("Sensitivity")),
 #ifdef ATTACK_AND_RELEASE
-   { &EffectNoiseReduction::Settings::mAttackTime,
-     0, 1.0, 100, wxT("%.2f"), false,
-	 wxString(wxTRANSLATE("Attac&k time (secs):")), wxString(wxTRANSLATE("Attack time")) },
-   { &EffectNoiseReduction::Settings::mReleaseTime,
-     0, 1.0, 100, wxT("%.2f"), false,
-	 wxTRANSLATE("R&elease time (secs):"), wxString(wxTRANSLATE("Release time")) },
+         ControlInfo(&EffectNoiseReduction::Settings::mAttackTime,
+         0, 1.0, 100, wxT("%.2f"), false,
+         XO("Attac&k time (secs):"), XO("Attack time")),
+         ControlInfo(&EffectNoiseReduction::Settings::mReleaseTime,
+         0, 1.0, 100, wxT("%.2f"), false,
+         XO("R&elease time (secs):"), XO("Release time")),
 #endif
-   { &EffectNoiseReduction::Settings::mFreqSmoothingBands,
-     0, 6, 6, wxT("%d"), true,
-	 wxString(wxTRANSLATE("&Frequency smoothing (bands):")), wxString(wxTRANSLATE("Frequency smoothing")) },
+         ControlInfo(&EffectNoiseReduction::Settings::mFreqSmoothingBands,
+         0, 6, 6, wxT("%d"), true,
+         XO("&Frequency smoothing (bands):"), XO("Frequency smoothing")),
 
 #ifdef ADVANCED_SETTINGS
-   { &EffectNoiseReduction::Settings::mOldSensitivity,
-     -20.0, 20.0, 4000, wxT("%.2f"), false,
-	 wxString(wxTRANSLATE("Sensiti&vity (dB):")), wxString(wxTRANSLATE("Old Sensitivity")) },
-   // add here
+         ControlInfo(&EffectNoiseReduction::Settings::mOldSensitivity,
+         -20.0, 20.0, 4000, wxT("%.2f"), false,
+         XO("Sensiti&vity (dB):"), XO("Old Sensitivity")),
+         // add here
 #endif
-}; return table; }
+   };
+
+return table;
+}
 
 } // namespace
 
@@ -1527,7 +1527,7 @@ EffectNoiseReduction::Dialog::Dialog
 (EffectNoiseReduction *effect,
  EffectNoiseReduction::Settings *settings,
  wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings)
-   : EffectDialog( parent, _("Noise Reduction"), PROCESS_EFFECT)
+   : EffectDialog( parent, _("Noise Reduction"), EffectTypeProcess)
    , m_pEffect(effect)
    , m_pSettings(settings) // point to
    , mTempSettings(*settings)  // copy

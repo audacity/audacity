@@ -39,6 +39,9 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "../Experimental.h"
+
+#if !defined(EXPERIMENTAL_NOISE_REDUCTION)
 
 #include "NoiseRemoval.h"
 
@@ -108,6 +111,32 @@ EffectNoiseRemoval::~EffectNoiseRemoval()
    delete [] mNoiseThreshold;
 }
 
+// IdentInterface implementation
+
+wxString EffectNoiseRemoval::GetSymbol()
+{
+   return XO("Noise Removal");
+}
+
+wxString EffectNoiseRemoval::GetDescription()
+{
+   return XO("Removes constant background noise such as fans, tape noise, or hums");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectNoiseRemoval::GetType()
+{
+   return EffectTypeProcess;
+}
+
+bool EffectNoiseRemoval::SupportsAutomation()
+{
+   return false;
+}
+
+// Effect implementation
+
 #define MAX_NOISE_LEVEL  30
 bool EffectNoiseRemoval::Init()
 {
@@ -121,8 +150,7 @@ bool EffectNoiseRemoval::Init()
 
 bool EffectNoiseRemoval::CheckWhetherSkipEffect()
 {
-   bool rc = (mLevel == 0);
-   return rc;
+   return (mLevel == 0);
 }
 
 bool EffectNoiseRemoval::PromptUser()
@@ -172,14 +200,6 @@ bool EffectNoiseRemoval::PromptUser()
 
    mDoProfile = (dlog.GetReturnCode() == 1);
    return gPrefs->Flush();
-}
-
-bool EffectNoiseRemoval::TransferParameters( Shuttle & WXUNUSED(shuttle) )
-{
-   //shuttle.TransferDouble(wxT("Gain"), mNoiseGain, 0.0);
-   //shuttle.TransferDouble(wxT("Freq"), mFreqSmoothingHz, 0.0);
-   //shuttle.TransferDouble(wxT("Time"), mAttackDecayTime, 0.0);
-   return true;
 }
 
 bool EffectNoiseRemoval::Process()
@@ -866,3 +886,5 @@ void NoiseRemovalDialog::OnTimeSlider(wxCommandEvent & WXUNUSED(event))
    mTime = mTimeS->GetValue() / (TIME_MAX*1.0);
    mTimeT->SetValue(wxString::Format(wxT("%.2f"), mTime));
 }
+
+#endif

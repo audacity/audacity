@@ -336,7 +336,7 @@ dnl Optional library support. Lots of things we could use, but
 dnl can do without if they aren't available.
 dnl-------------------------------------------------------------
 dnl GSTREAMER removed for 2.0.6 release
-LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBRESAMPLE LIBSAMPLERATE LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
+LIBRARIES="EXPAT FFMPEG LAME LIBFLAC LIBID3TAG LIBMAD LIBNYQUIST LIBSBSMS LIBSNDFILE LIBSOUNDTOUCH LIBSOXR LIBTWOLAME LIBVAMP LIBVORBIS LV2 PORTAUDIO PORTSMF WIDGETEXTRA"
 
 AC_MSG_NOTICE([Determining what libraries are available in this tree and on the system])
 
@@ -348,8 +348,6 @@ AUDACITY_CHECKLIB_LIBFLAC
 AUDACITY_CHECKLIB_LIBID3TAG
 AUDACITY_CHECKLIB_LIBMAD
 AUDACITY_CHECKLIB_LIBNYQUIST
-AUDACITY_CHECKLIB_LIBRESAMPLE
-AUDACITY_CHECKLIB_LIBSAMPLERATE
 AUDACITY_CHECKLIB_LIBSBSMS
 AUDACITY_CHECKLIB_LIBSNDFILE
 AUDACITY_CHECKLIB_LIBSOUNDTOUCH
@@ -417,7 +415,7 @@ done
 #   * we need to have libwidgetextra one way or another
 #   * we need to have libsndfile one way or another
 #   * we need to have portaudio way or another
-#   * we can only use one of libsoxr, libsamplerate and libresample
+#   * we need to have libsoxr
 
 if test "$EXPAT_USE_LOCAL" != "yes" -a "$EXPAT_USE_SYSTEM" != "yes"; then
    AC_MSG_ERROR([Audacity requires expat to be enabled.])
@@ -435,51 +433,9 @@ if test "$PORTAUDIO_USE_LOCAL" != "yes" && test "$PORTAUDIO_USE_SYSTEM" != "yes"
    AC_MSG_ERROR([Audacity requires portaudio to be enabled])
 fi
 
-dnl we can only have one alternative resampling library used.
-dnl by now we will have multiple enabled if they are present, regardless of whether
-dnl they were requested, unless some were specifically disabled.
-dnl we would like to honour requests at this stage, so need to know about
-dnl the original options, not just which LIB_USE variables have been set.
-if test x"$LIBSAMPLERATE_ARGUMENT" = x"unspecified" ; then
-   dnl they didn't ask for libsamplerate, they don't get it
-   LIBSAMPLERATE_USE_LOCAL="no"
-   LIBSAMPLERATE_USE_SYSTEM="no"
+if test "$LIBSOXR_USE_LOCAL" != "yes" && test "$LIBSOXR_USE_SYSTEM" != "yes" ; then
+   AC_MSG_ERROR([Audacity requires libsoxr to be enabled])
 fi
-if test x"$LIBRESAMPLE_ARGUMENT" = x"unspecified" ; then
-   dnl they didn't ask for libresample, they don't get it
-   LIBRESAMPLE_USE_LOCAL="no"
-   LIBRESAMPLE_USE_SYSTEM="no"
-fi
-dnl The above favours libsoxr (by ommission) if no options are passed
-
-
-dnl favour libsoxr over libresample
-if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "yes") && ( test "$LIBSOXR_USE_LOCAL" = "yes" || test "$LIBSOXR_USE_SYSTEM" = "yes"); then
-   dnl if we get here, both libsoxr and libresample available and have been
-   dnl requested: use libsoxr, disable libresample
-   AC_MSG_NOTICE([Both libresample and libsoxr were requested: favouring libsoxr.])
-   LIBRESAMPLE_USE_LOCAL="no"
-   LIBRESAMPLE_USE_SYSTEM="no"
-fi
-
-dnl favour libsamplerate over libresample
-if ( test "$LIBRESAMPLE_USE_LOCAL" = "yes" || test "$LIBRESAMPLE_USE_SYSTEM" = "yes") && ( test "$LIBSAMPLERATE_USE_LOCAL" = "yes" || test "$LIBSAMPLERATE_USE_SYSTEM" = "yes"); then
-   dnl if we get here, both libresample and libsamplerate available and requested:
-   dnl use libsamplerate, disable libresample.
-   AC_MSG_NOTICE([Both libresample and libsamplerate were requested: favouring libsamplerate])
-   LIBRESAMPLE_USE_LOCAL="no"
-   LIBRESAMPLE_USE_SYSTEM="no"
-fi
-
-dnl by now the only possible combination is libsamplerate and libsoxr: favour libsoxr.
-if ( test "$LIBSOXR_USE_LOCAL" = "yes" || test "$LIBSOXR_USE_SYSTEM" = "yes") && ( test "$LIBSAMPLERATE_USE_LOCAL" = "yes" || test "$LIBSAMPLERATE_USE_SYSTEM" = "yes"); then
-   dnl if we get here, both libsoxr and libsamplerate available and requested:
-   dnl use libsoxr, disable libsamplerate.
-   AC_MSG_NOTICE([Both libsoxr and libsamplerate were requested: favouring libsoxr])
-   LIBSOXR_USE_LOCAL="no"
-   LIBSOXR_USE_SYSTEM="no"
-fi
-
 
 dnl-----------------------------------------------------------------
 dnl Based on the optional lib selections, modify CXXFLAGS, etc
@@ -520,8 +476,6 @@ AUDACITY_CONFIG_LIBFLAC
 AUDACITY_CONFIG_LIBID3TAG
 AUDACITY_CONFIG_LIBMAD
 AUDACITY_CONFIG_LIBNYQUIST
-AUDACITY_CONFIG_LIBRESAMPLE
-AUDACITY_CONFIG_LIBSAMPLERATE
 AUDACITY_CONFIG_LIBSBSMS
 AUDACITY_CONFIG_LIBSNDFILE
 AUDACITY_CONFIG_LIBSOUNDTOUCH

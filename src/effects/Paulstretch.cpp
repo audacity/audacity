@@ -1,87 +1,136 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+  Audacity: A Digital Audio Editor
 
-Paulstretch.cpp
+  Paulstretch.cpp
 
-Nasca Octavian Paul (Paul Nasca)
-Some GUI code was taken from the Echo effect
+  Nasca Octavian Paul (Paul Nasca)
+  Some GUI code was taken from the Echo effect
 
- *******************************************************************/
+*******************************************************************//**
 
-/**
+\class EffectPaulstretch
+\brief An Extreme Time Stretch and Time Smear effect
 
-  \class EffectPaulstretch
-  \brief An Extreme Time Stretch and Time Smear effect
-
-*//****************************************************************/
-
-/**
-
-\class PaulstretchDialog
-\brief PaulstretchDialog used with EffectPaulstretch
-
-*/
-
-/*******************************************************************/
+*//*******************************************************************/
 
 #include "../Audacity.h"
 
-#include <wx/defs.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/validate.h>
-#include <wx/valtext.h>
-
-#include <wx/generic/textdlgg.h>
-#include <wx/intl.h>
 #include <math.h>
-#include <stdlib.h>
+#include <float.h>
+
+#include <wx/intl.h>
+#include <wx/valgen.h>
+
+#include "../FFT.h"
+#include "../widgets/valnum.h"
 
 #include "Paulstretch.h"
-#include "../WaveTrack.h"
-#include "../FFT.h"
 
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name    Type     Key                     Def      Min      Max      Scale
+Param( Amount, float,   XO("Stretch Factor"),   10.0,    1.0,     FLT_MAX, 1   );
+Param( Time,   float,   XO("Time Resolution"),  0.25f,   0.001f,  FLT_MAX, 1   );
 
-EffectPaulstretch::EffectPaulstretch(){
-   amount=10.0;
-   time_resolution=0.25;
+class PaulStretch
+{
+public:
+   PaulStretch(float rap_,int in_bufsize_,float samplerate_);
+   //in_bufsize is also a half of a FFT buffer (in samples)
+   virtual ~PaulStretch();
+
+   void process(float *smps,int nsmps);
+
+   int in_bufsize;
+   int poolsize;//how many samples are inside the input_pool size (need to know how many samples to fill when seeking)
+
+   int out_bufsize;
+   float *out_buf;
+
+   int get_nsamples();//how many samples are required to be added in the pool next time
+   int get_nsamples_for_fill();//how many samples are required to be added for a complete buffer refill (at start of the song or after seek)
+
+   void set_rap(float newrap);//set the current stretch value
+
+protected:
+   virtual void process_spectrum(float *WXUNUSED(freq)){};
+   float samplerate;
+
+private:
+   float *in_pool;//de marimea in_bufsize
+   float rap;
+   float *old_out_smp_buf;
+
+   float *fft_smps,*fft_c,*fft_s,*fft_freq,*fft_tmp;
+
+   double remained_samples;//how many fraction of samples has remained (0..1)
 };
 
-wxString EffectPaulstretch::GetEffectDescription(){
-   // Note: This is useful only after values have been set.
-   return wxString::Format(_("Applied effect: %s stretch factor = %f times, time resolution = %f seconds"),
-         this->GetEffectName().c_str(), amount,time_resolution);
+//
+// EffectPaulstretch
+//
 
-};
+BEGIN_EVENT_TABLE(EffectPaulstretch, wxEvtHandler)
+    EVT_TEXT(wxID_ANY, EffectPaulstretch::OnText)
+END_EVENT_TABLE()
 
-bool EffectPaulstretch::PromptUser(){
-   PaulstretchDialog dlog(this, mParent);
-   dlog.amount = amount;
-   dlog.time_resolution = time_resolution;
-   dlog.CentreOnParent();
-   dlog.ShowModal();
+EffectPaulstretch::EffectPaulstretch()
+{
+   amount = DEF_Amount;
+   time_resolution = DEF_Time;
 
-   if (dlog.GetReturnCode() == wxID_CANCEL)
-      return false;
+   SetLinearEffectFlag(true);
+}
 
-   amount = dlog.amount;
-   time_resolution = dlog.time_resolution;
+EffectPaulstretch::~EffectPaulstretch()
+{
+}
+
+// IdentInterface implementation
+
+wxString EffectPaulstretch::GetSymbol()
+{
+   return PAULSTRETCH_PLUGIN_SYMBOL;
+}
+
+wxString EffectPaulstretch::GetDescription()
+{
+   return XO("Use Paulstretch only for an extreme time-stretch or \"stasis\" effect");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectPaulstretch::GetType()
+{
+   return EffectTypeProcess;
+}
+
+// EffectClientInterface implementation
+
+bool EffectPaulstretch::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.WriteFloat(KEY_Amount, amount);
+   parms.WriteFloat(KEY_Time, time_resolution);
 
    return true;
-};
+}
 
-bool EffectPaulstretch::TransferParameters(Shuttle &shuttle){
-   shuttle.TransferFloat(wxT("Stretch Factor"),amount,10.0);
-   shuttle.TransferFloat(wxT("Time Resolution"),time_resolution,0.25);
+bool EffectPaulstretch::SetAutomationParameters(EffectAutomationParameters & parms)
+{
+   ReadAndVerifyFloat(Amount);
+   ReadAndVerifyFloat(Time);
+
+   amount = Amount;
+   time_resolution = Time;
 
    return true;
-};
+}
 
+// Effect implementation
 
-bool EffectPaulstretch::Process(){
+bool EffectPaulstretch::Process()
+{
    CopyInputTracks();
    SelectedTrackListOfKindIterator iter(Track::Wave, mOutputTracks);
    WaveTrack *track = (WaveTrack *) iter.First();
@@ -108,44 +157,57 @@ bool EffectPaulstretch::Process(){
    return true;
 }
 
-class PaulStretch{
-   public:
-      PaulStretch(float rap_,int in_bufsize_,float samplerate_);
-      //in_bufsize is also a half of a FFT buffer (in samples)
-      virtual ~PaulStretch();
+void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
+{
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      FloatingPointValidator<float> vldAmount(1, &amount);
+      vldAmount.SetMin(MIN_Amount);
 
-      void process(float *smps,int nsmps);
+      /* i18n-hint: This is how many times longer the sound will be, e.g. applying
+       * the effect to a 1-second sample, with the default Stretch Factor of 10.0
+       * will give an (approximately) 10 second sound
+       */
+      S.AddTextBox(_("Stretch Factor:"), wxT(""), 10)->SetValidator(vldAmount);
 
-      int in_bufsize;
-      int poolsize;//how many samples are inside the input_pool size (need to know how many samples to fill when seeking)
-
-      int out_bufsize;
-      float *out_buf;
-
-      int get_nsamples();//how many samples are required to be added in the pool next time
-      int get_nsamples_for_fill();//how many samples are required to be added for a complete buffer refill (at start of the song or after seek)
-
-      void set_rap(float newrap);//set the current stretch value
-
-
-   protected:
-      virtual void process_spectrum(float *WXUNUSED(freq)){};
-      float samplerate;
-   private:
-      float *in_pool;//de marimea in_bufsize
-      float rap;
-      float *old_out_smp_buf;
-
-      float *fft_smps,*fft_c,*fft_s,*fft_freq,*fft_tmp;
-
-      double remained_samples;//how many fraction of samples has remained (0..1)
+      FloatingPointValidator<float> vldTime(1, &time_resolution);
+      vldTime.SetMin(MIN_Time);
+      S.AddTextBox(_("Time Resolution (seconds):"), wxT(""), 10)->SetValidator(vldTime);
+   }
+   S.EndMultiColumn();
 };
 
+bool EffectPaulstretch::TransferDataToWindow()
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
 
-bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int count){
+   return true;
+}
 
+bool EffectPaulstretch::TransferDataFromWindow()
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   return true;
+}
+
+// EffectPaulstretch implementation
+
+void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
+{
+   EnableApply(mUIParent->TransferDataFromWindow());
+}
+
+bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int count)
+{
    int stretch_buf_size;//must be power of 2 (because Audacity's fft requires it)
-   if (time_resolution<0.001) time_resolution=0.001f;
+   if (time_resolution<MIN_Time) time_resolution=MIN_Time;
    {
       float tmp=track->GetRate()*time_resolution*0.5;
       tmp=log(tmp)/log(2.0);
@@ -154,7 +216,7 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    };
    if (stretch_buf_size<128) stretch_buf_size=128;
    double amount=this->amount;
-   if (amount<1.0) amount=1.0;
+   if (amount<MIN_Amount) amount=MIN_Amount;
 
    sampleCount start = track->TimeToLongSamples(t0);
    sampleCount end = track->TimeToLongSamples(t1);
@@ -249,14 +311,11 @@ bool EffectPaulstretch::ProcessOne(WaveTrack *track,double t0,double t1,int coun
    return !cancelled;
 };
 
-
-
 /*************************************************************/
 
 
-
-
-PaulStretch::PaulStretch(float rap_,int in_bufsize_,float samplerate_){
+PaulStretch::PaulStretch(float rap_,int in_bufsize_,float samplerate_)
+{
    samplerate=samplerate_;
    rap=rap_;
    in_bufsize=in_bufsize_;
@@ -286,7 +345,8 @@ PaulStretch::PaulStretch(float rap_,int in_bufsize_,float samplerate_){
 
 };
 
-PaulStretch::~PaulStretch(){
+PaulStretch::~PaulStretch()
+{
    delete [] out_buf;
    delete [] old_out_smp_buf;
    delete [] in_pool;
@@ -297,12 +357,14 @@ PaulStretch::~PaulStretch(){
    delete [] fft_tmp;
 };
 
-void PaulStretch::set_rap(float newrap){
+void PaulStretch::set_rap(float newrap)
+{
    if (rap>=1.0) rap=newrap;
    else rap=1.0;
 };
 
-void PaulStretch::process(float *smps,int nsmps){
+void PaulStretch::process(float *smps,int nsmps)
+{
    //add new samples to the pool
    if ((smps!=NULL)&&(nsmps!=0)){
       if (nsmps>poolsize){
@@ -373,8 +435,8 @@ void PaulStretch::process(float *smps,int nsmps){
 
 };
 
-
-int PaulStretch::get_nsamples(){
+int PaulStretch::get_nsamples()
+{
    double r=out_bufsize/rap;
    int ri=(int)floor(r);
    double rf=r-floor(r);
@@ -392,93 +454,7 @@ int PaulStretch::get_nsamples(){
    return ri;
 };
 
-int PaulStretch::get_nsamples_for_fill(){
+int PaulStretch::get_nsamples_for_fill()
+{
    return poolsize;
 };
-
-   BEGIN_EVENT_TABLE(PaulstretchDialog, EffectDialog)
-   EVT_BUTTON(ID_EFFECT_PREVIEW, PaulstretchDialog::OnPreview)
-END_EVENT_TABLE()
-
-   PaulstretchDialog::PaulstretchDialog(EffectPaulstretch *effect, wxWindow *parent):EffectDialog(parent,wxT("Paulstretch")){
-      m_bLoopDetect=false;
-      m_pEffect=effect;
-
-      m_pTextCtrl_Amount=NULL;
-      m_pTextCtrl_TimeResolution=NULL;
-
-      amount=10.0;
-      time_resolution=0.25;
-
-      Init();
-   };
-
-
-void PaulstretchDialog::PopulateOrExchange(ShuttleGui & S)
-{
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      /* i18n-hint: This is how many times longer the sound will be, e.g. applying
-       * the effect to a 1-second sample, with the default Stretch Factor of 10.0
-       * will give an (approximately) 10 second sound
-       */
-      m_pTextCtrl_Amount = S.AddTextBox(_("Stretch Factor:"),wxT("10.0"),10);
-      m_pTextCtrl_Amount->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
-
-      m_pTextCtrl_TimeResolution= S.AddTextBox(_("Time Resolution (seconds):"), wxT("0.25"),10);
-      m_pTextCtrl_TimeResolution->SetValidator(wxTextValidator(wxFILTER_NUMERIC));
-   }
-   S.EndMultiColumn();
-
-};
-
-bool PaulstretchDialog::TransferDataToWindow(){
-   m_bLoopDetect = true;
-
-   wxString str;
-   if (m_pTextCtrl_Amount) {
-      str.Printf(wxT("%g"), amount);
-      m_pTextCtrl_Amount->SetValue(str);
-   }
-   if (m_pTextCtrl_TimeResolution) {
-      str.Printf(wxT("%g"), time_resolution);
-      m_pTextCtrl_TimeResolution->SetValue(str);
-   }
-
-   m_bLoopDetect = false;
-   return true;
-}
-bool PaulstretchDialog::TransferDataFromWindow(){
-   double newValue;
-   wxString str;
-   if (m_pTextCtrl_Amount) {
-      str = m_pTextCtrl_Amount->GetValue();
-      str.ToDouble(&newValue);
-      amount = (float)(newValue);
-   }
-   if (m_pTextCtrl_TimeResolution) {
-      str = m_pTextCtrl_TimeResolution->GetValue();
-      str.ToDouble(&newValue);
-      time_resolution = (float)(newValue);
-   }
-   return true;
-}
-
-void PaulstretchDialog::OnPreview(wxCommandEvent & WXUNUSED(event)){
-   TransferDataFromWindow();
-
-   // Save & restore parameters around Preview, because we didn't do OK.
-   float oldAmount = m_pEffect->amount;
-   float oldTimeResolution = m_pEffect->time_resolution;
-
-   m_pEffect->amount = amount;
-   m_pEffect->time_resolution = time_resolution;
-
-   m_pEffect->Preview();
-
-   m_pEffect->amount = oldAmount;
-   m_pEffect->time_resolution = oldTimeResolution;
-}
-
-
-

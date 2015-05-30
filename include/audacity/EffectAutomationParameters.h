@@ -48,17 +48,28 @@
 class EffectAutomationParameters : public wxFileConfig
 {
 public:
-   EffectAutomationParameters()
+   EffectAutomationParameters(const wxString & parms = wxEmptyString)
    :  wxFileConfig(wxEmptyString,
                    wxEmptyString,
                    wxEmptyString,
                    wxEmptyString,
                    0)
    {
+      SetParameters(parms);
    }
 
    virtual ~EffectAutomationParameters()
    {
+   }
+
+   virtual bool HasGroup(const wxString & strName) const
+   {
+      return wxFileConfig::HasGroup(NormalizeName(strName));
+   }
+
+   virtual bool HasEntry(const wxString& strName) const
+   {
+      return wxFileConfig::HasEntry(NormalizeName(strName));
    }
 
    virtual bool DoReadString(const wxString & key, wxString *pStr) const
@@ -81,19 +92,45 @@ public:
       return wxFileConfig::DoWriteLong(NormalizeName(key), lValue);
    }
 
+   virtual bool DoWriteDouble(const wxString & key, double value)
+   {
+      return DoWriteString(key, wxString::Format(wxT("%.12g"), value));
+   }
+
+   bool ReadFloat(const wxString & key, float *pf) const
+   {
+      double d = *pf;
+      bool success = Read(key, &d);
+      if (success)
+      {
+         *pf = (float) d;
+      }
+      return success;
+   }
+
+   bool ReadFloat(const wxString & key, float *pf, float defVal) const
+   {
+      if (!ReadFloat(key, pf))
+      {
+         *pf = defVal;
+      }
+      return true;
+   }
+
+   bool WriteFloat(const wxString & key, float f)
+   {
+      return Write(key, f);
+   }
+
    bool ReadEnum(const wxString & key, int *pi, const wxArrayString & choices) const
    {
       wxString s;
-      if (wxFileConfig::Read(key, &s))
+      if (!wxFileConfig::Read(key, &s))
       {
-         int i = choices.Index(s);
-         if (i != wxNOT_FOUND)
-         {
-            *pi = i;
-            return true;
-         }
+         return false;
       }
-      return false;
+      *pi = choices.Index(s);
+      return true;
    }
 
    bool ReadEnum(const wxString & key, int *pi, int defVal, const wxArrayString & choices) const
@@ -101,6 +138,15 @@ public:
       if (!ReadEnum(key, pi, choices))
       {
          *pi = defVal;
+      }
+      return true;
+   }
+
+   bool ReadEnum(const wxString & key, int *pi, const wxString & defVal, const wxArrayString & choices) const
+   {
+      if (!ReadEnum(key, pi, choices))
+      {
+         *pi = choices.Index(defVal);
       }
       return true;
    }
@@ -113,6 +159,54 @@ public:
       }
 
       return wxFileConfig::Write(key, choices[value]);
+   }
+
+   bool ReadAndVerify(const wxString & key, float *val, float defVal, float min, float max) const
+   {
+      ReadFloat(key, val, defVal);
+      return (*val >= min && *val <= max);
+   }
+
+   bool ReadAndVerify(const wxString & key, double *val, double defVal, double min, double max) const
+   {
+      Read(key, val, defVal);
+      return (*val >= min && *val <= max);
+   }
+
+   bool ReadAndVerify(const wxString & key, int *val, int defVal, int min, int max) const
+   {
+      Read(key, val, defVal);
+      return (*val >= min && *val <= max);
+   }
+
+   bool ReadAndVerify(const wxString & key, long *val, long defVal, long min, long max) const
+   {
+      Read(key, val, defVal);
+      return (*val >= min && *val <= max);
+   }
+
+   bool ReadAndVerify(const wxString & key, bool *val, bool defVal) const
+   {
+      Read(key, val, defVal);
+      return true;
+   }
+
+   bool ReadAndVerify(const wxString & key, wxString *val, const wxString & defVal) const
+   {
+      Read(key, val, defVal);
+      return true;
+   }
+
+   bool ReadAndVerify(const wxString & key, int *val, int defVal, const wxArrayString & choices) const
+   {
+      ReadEnum(key, val, defVal, choices);
+      return (*val != wxNOT_FOUND);
+   }
+
+   bool ReadAndVerify(const wxString & key, int *val, const wxString & defVal, const wxArrayString & choices) const
+   {
+      ReadEnum(key, val, defVal, choices);
+      return (*val != wxNOT_FOUND);
    }
 
    wxString NormalizeName(const wxString & name) const
@@ -145,7 +239,7 @@ public:
             return false;
          }
 
-         str += key + wxT("=\"") + val + wxT("\" ");
+         str += key + wxT("=\"") + Escape(val) + wxT("\" ");
 
          res = wxFileConfig::GetNextEntry(key, ndx);
       }
@@ -167,13 +261,31 @@ public:
          wxString key = parsed[i].BeforeFirst(wxT('=')).Trim(false).Trim(true);
          wxString val = parsed[i].AfterFirst(wxT('=')).Trim(false).Trim(true);
 
-         if (!wxFileConfig::Write(key, val))
+         if (!wxFileConfig::Write(key, Unescape(val)))
          {
             return false;
          }
       }
 
       return true;
+   }
+
+   wxString Escape(wxString val)
+   {
+      val.Replace(wxT("\\"), wxT("\\\\"), true);
+      val.Replace(wxT("\""), wxT("\\\""), true);
+      val.Replace(wxT("\n"), wxT("\\n"), true);
+
+      return val;
+   }
+
+   wxString Unescape(wxString val)
+   {
+      val.Replace(wxT("\\n"), wxT("\n"), true);
+      val.Replace(wxT("\\\""), wxT("\""), true);
+      val.Replace(wxT("\\\\"), wxT("\\"), true);
+
+      return val;
    }
 };
 

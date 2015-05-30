@@ -1,6 +1,6 @@
 #  libFLAC - Free Lossless Audio Codec library
 #  Copyright (C) 2001-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -38,9 +38,7 @@ AM_CPPFLAGS = -I$(top_builddir) -I$(srcdir)/include -I$(top_srcdir)/include
 
 noinst_LTLIBRARIES = libFLAC-asm.la
 libFLAC_asm_la_SOURCES = \
-	bitreader_asm.nasm \
 	cpu_asm.nasm \
 	fixed_asm.nasm \
 	lpc_asm.nasm \
-	nasm.h \
-	stream_encoder_asm.nasm
+	nasm.h

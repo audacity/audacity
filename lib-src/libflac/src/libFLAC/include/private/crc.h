@@ -1,6 +1,6 @@
 /* libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000-2009  Josh Coalson
- * Copyright (C) 2011-2013  Xiph.Org Foundation
+ * Copyright (C) 2011-2014  Xiph.Org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -51,7 +51,7 @@ FLAC__uint8 FLAC__crc8(const FLAC__byte *data, unsigned len);
 */
 extern unsigned const FLAC__crc16_table[256];
 
-#define FLAC__CRC16_UPDATE(data, crc) (((((crc)<<8) & 0xffff) ^ FLAC__crc16_table[((crc)>>8) ^ (data)]))
+#define FLAC__CRC16_UPDATE(data, crc) ((((crc)<<8) & 0xffff) ^ FLAC__crc16_table[((crc)>>8) ^ (data)])
 /* this alternate may be faster on some systems/compilers */
 #if 0
 #define FLAC__CRC16_UPDATE(data, crc) ((((crc)<<8) ^ FLAC__crc16_table[((crc)>>8) ^ (data)]) & 0xffff)

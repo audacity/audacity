@@ -9,74 +9,252 @@
 ******************************************************************//**
 
 \class EffectLeveller
-\brief An EffectSimpleMono
-
-*//***************************************************************//**
-
-\class LevellerDialog
-\brief Dialog for EffectLeveller
+\brief An Effect that aims to selectively make softer sounds louder.
 
 *//*******************************************************************/
 
-
-
 #include "../Audacity.h"
 
-// For compilers that support precompilation, includes "wx.h".
-#include <wx/wxprec.h>
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-// Include your minimal set of headers here, or wx.h
-#include <wx/wx.h>
-#endif
-
 #include <math.h>
+
+#include <wx/choice.h>
+#include <wx/intl.h>
+#include <wx/valgen.h>
+
 #include "../Prefs.h"
+
 #include "Leveller.h"
+
+enum kPasses
+{
+   kLight,
+   kModerate,
+   kHeavy,
+   kHeavier,
+   kHeaviest,
+   kNumPasses
+};
+
+static const wxString kPassStrings[kNumPasses] =
+{
+   /* i18n-hint: Of strength of an effect.  Not strongly.*/
+   XO("Light"),
+   XO("Moderate"),
+   /* i18n-hint: Of strength of an effect.  Strongly.*/
+   XO("Heavy"),
+   XO("Heavier"),
+   XO("Heaviest"),
+};
+
+// Define keys, defaults, minimums, and maximums for the effect parameters
+//
+//     Name    Type  Key            Def        Min   Max                        Scale
+Param( Level,  int,  XO("dB"),      10,        0,    Enums::NumDbChoices - 1,   1  );
+Param( Passes, int,  XO("Passes"),  kModerate, 0,    kNumPasses - 1,            1  );
+
+//
+// EffectLeveller
+//
 
 EffectLeveller::EffectLeveller()
 {
-   Init();
+   mPassIndex = DEF_Passes;
+   mDbIndex = DEF_Level;
+
+   mNumPasses = mPassIndex + 1;
+   mDbSilenceThreshold = Enums::Db2Signal[mDbIndex];
+
+   CalcLevellerFactors();
 }
 
-#define NUM_PASSES_CHOICES 5
-
-bool EffectLeveller::Init()
+EffectLeveller::~EffectLeveller()
 {
-   mLevellerNumPasses = gPrefs->Read(wxT("/Effects/Leveller/LevellerNumPasses"), 2L) ;
-   if ((mLevellerNumPasses <= 0) || (mLevellerNumPasses > NUM_PASSES_CHOICES)) {  // corrupted Prefs?
-      mLevellerNumPasses = 1;
-      gPrefs->Write(wxT("/Effects/Leveller/LevellerNumPasses"), 1);
-   }
-   mLevellerDbChoiceIndex = gPrefs->Read(wxT("/Effects/Leveller/LevellerDbChoiceIndex"), 10L);
-   if ((mLevellerDbChoiceIndex < 0) || (mLevellerDbChoiceIndex >= Enums::NumDbChoices)) {  // corrupted Prefs?
-      mLevellerDbChoiceIndex = 0;  //Least dB
-      gPrefs->Write(wxT("/Effects/Leveller/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
-   }
-   gPrefs->Flush();
+}
 
-   mLevellerDbSilenceThreshold = Enums::Db2Signal[mLevellerDbChoiceIndex];
+// IdentInterface implementation
+
+wxString EffectLeveller::GetSymbol()
+{
+   return LEVELLER_PLUGIN_SYMBOL;
+}
+
+wxString EffectLeveller::GetDescription()
+{
+   return XO("Leveler is a simple, combined compressor and limiter effect for reducing the dynamic range of audio");
+}
+
+// EffectIdentInterface implementation
+
+EffectType EffectLeveller::GetType()
+{
+   return EffectTypeProcess;
+}
+
+// EffectClientInterface implementation
+
+int EffectLeveller::GetAudioInCount()
+{
+   return 1;
+}
+
+int EffectLeveller::GetAudioOutCount()
+{
+   return 1;
+}
+
+sampleCount EffectLeveller::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
+{
+   float *ibuf = inBlock[0];
+   float *obuf = outBlock[0];
+   
+   for (sampleCount i = 0; i < blockLen; i++)
+   {
+      float frame = ibuf[i];
+      for (int pass = 0; pass < mNumPasses; pass++)
+      {
+         frame = LevelOneFrame(frame);
+      }
+      obuf[i] = frame;
+   }
+
+   return blockLen;
+}
+
+bool EffectLeveller::GetAutomationParameters(EffectAutomationParameters & parms)
+{
+   parms.Write(KEY_Level, Enums::DbChoices[mDbIndex]);
+   parms.Write(KEY_Passes, kPassStrings[mPassIndex]);
+
+   return true;
+}
+
+bool EffectLeveller::SetAutomationParameters(EffectAutomationParameters & parms)
+{
+   // Allow for 2.1.0 and before
+   wxArrayString passChoices(kNumPasses, kPassStrings);
+   passChoices.Insert(wxT("1"), 0);
+   passChoices.Insert(wxT("2"), 1);
+   passChoices.Insert(wxT("3"), 2);
+   passChoices.Insert(wxT("4"), 3);
+   passChoices.Insert(wxT("5"), 4);
+
+   ReadAndVerifyEnum(Level, wxArrayString(Enums::NumDbChoices,Enums::GetDbChoices()));
+   ReadAndVerifyEnum(Passes, passChoices);
+
+   mDbIndex = Level;
+   mPassIndex = Passes;
+
+   // Readjust for 2.1.0 or before
+   if (mPassIndex >= kNumPasses)
+   {
+      mPassIndex -= kNumPasses;
+   }
+
+   mNumPasses = mPassIndex + 1;
+   mDbSilenceThreshold = Enums::Db2Signal[mDbIndex];
 
    CalcLevellerFactors();
 
    return true;
 }
 
-bool EffectLeveller::CheckWhetherSkipEffect()
+// Effect implementation
+
+bool EffectLeveller::Startup()
 {
-   return mLevellerNumPasses == 0;
+   wxString base = wxT("/Effects/Leveller/");
+
+   // Migrate settings from 2.1.0 or before
+
+   // Already migrated, so bail
+   if (gPrefs->Exists(base + wxT("Migrated")))
+   {
+      return true;
+   }
+
+   // Load the old "current" settings
+   if (gPrefs->Exists(base))
+   {
+      mNumPasses = gPrefs->Read(base + wxT("LevellerNumPasses"), 2L);
+      if ((mNumPasses <= 0) || (mNumPasses > kNumPasses))
+      {  // corrupted Pr
+         mNumPasses = 1;
+      }
+      mDbIndex = gPrefs->Read(base + wxT("LevellerDbChoiceIndex"), 10L);
+      if ((mDbIndex < 0) || (mDbIndex >= Enums::NumDbChoices))
+      {  // cor
+         mDbIndex = 0;  //Least dB
+      }
+
+      SaveUserPreset(GetCurrentSettingsGroup());
+
+      // Do not migrate again
+      gPrefs->Write(base + wxT("Migrated"), true);
+      gPrefs->Flush();
+   }
+
+   return true;
 }
 
-void EffectLeveller::End()
+void EffectLeveller::PopulateOrExchange(ShuttleGui & S)
 {
-   int frameSum = (int)mFrameSum;
-   gPrefs->Write(wxT("/Validate/LevellerFrameSum"), frameSum);
-   gPrefs->Flush();
+   wxASSERT(kNumPasses == WXSIZEOF(kPassStrings));
+
+   wxArrayString passChoices;
+   for (int i = 0; i < kNumPasses; i++)
+   {
+      passChoices.Add(wxGetTranslation(kPassStrings[i]));
+   }
+
+   wxArrayString dBChoices(Enums::NumDbChoices,Enums::GetDbChoices());
+
+   S.SetBorder(5);
+
+   S.StartVerticalLay();
+   {
+      S.AddSpace(5);
+      S.StartMultiColumn(2, wxALIGN_CENTER);
+      {
+         S.AddChoice(_("Degree of Leveling:"),
+                     wxT(""),
+                     &passChoices)->SetValidator(wxGenericValidator(&mPassIndex));
+         S.AddChoice(_("Noise Threshold:"),
+                     wxT(""),
+                     &dBChoices)->SetValidator(wxGenericValidator(&mDbIndex));
+      }
+      S.EndMultiColumn();
+   }
+   S.EndVerticalLay();
+
+   return;
 }
+
+bool EffectLeveller::TransferDataToWindow()
+{
+   if (!mUIParent->TransferDataToWindow())
+   {
+      return false;
+   }
+
+   return true;
+}
+
+bool EffectLeveller::TransferDataFromWindow()
+{
+   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   mNumPasses = mPassIndex + 1;
+   mDbSilenceThreshold = Enums::Db2Signal[mDbIndex];
+
+   CalcLevellerFactors();
+
+   return true;
+}
+
+// EffectLeveller implementation
 
 #define LEVELER_FACTORS 6
 static double gLimit[LEVELER_FACTORS] = { 0.0001, 0.0, 0.1, 0.3, 0.5, 1.0 };
@@ -87,8 +265,7 @@ static double gAdjFactor[LEVELER_FACTORS] = { 0.80, 1.00, 1.20, 1.20, 1.00, 0.80
 
 void EffectLeveller::CalcLevellerFactors()
 {
-   mFrameSum            = 0.0;
-   gLimit[1]            = mLevellerDbSilenceThreshold;
+   gLimit[1]            = mDbSilenceThreshold;
    int    prev          = 0;
    double addOnValue    = 0.0;
    double prevLimit     = 0.0;
@@ -106,45 +283,10 @@ void EffectLeveller::CalcLevellerFactors()
       limit         = gLimit[f];
       prevAdjLimit  = gAdjLimit[prev];
       addOnValue    = prevAdjLimit - (adjFactor * prevLimit);
-      upperAdjLimit = (adjFactor * limit) + addOnValue;
 
       gAddOnValue[f] = addOnValue;
       gAdjLimit[f]   = (adjFactor * limit) + addOnValue;
    }
-}
-
-bool EffectLeveller::PromptUser()
-{
-   LevellerDialog dlog(this, mParent);
-   dlog.mLevellerDbChoiceIndex = mLevellerDbChoiceIndex;
-   dlog.mLevellerNumPassesChoiceIndex = mLevellerNumPasses-1;
-   dlog.TransferDataToWindow();
-
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-
-   if (dlog.GetReturnCode() == wxID_CANCEL) {
-      return false;
-   }
-
-   mLevellerNumPasses = dlog.mLevellerNumPassesChoiceIndex+1;
-   mLevellerDbChoiceIndex = dlog.mLevellerDbChoiceIndex;
-   mLevellerDbSilenceThreshold = Enums::Db2Signal[mLevellerDbChoiceIndex];
-
-   gPrefs->Write(wxT("/Effects/Leveller/LevellerDbChoiceIndex"), mLevellerDbChoiceIndex);
-   gPrefs->Write(wxT("/Effects/Leveller/LevellerNumPasses"), mLevellerNumPasses);
-   gPrefs->Flush();
-
-   CalcLevellerFactors();
-
-   return true;
-}
-
-bool EffectLeveller::TransferParameters( Shuttle & shuttle )
-{
-   shuttle.TransferEnum(wxT("dB"),mLevellerDbChoiceIndex,Enums::NumDbChoices,Enums::GetDbChoices());
-   shuttle.TransferInt(wxT("Passes"),mLevellerNumPasses,1);
-   return true;
 }
 
 float EffectLeveller::LevelOneFrame(float frameInBuffer)
@@ -161,7 +303,6 @@ float EffectLeveller::LevelOneFrame(float frameInBuffer)
       curSign = 1.0;
    }
    fabsCurFrame = (float)fabs(curFrame);
-   mFrameSum += fabsCurFrame;
 
    for (int f = 0; f < LEVELER_FACTORS; ++f) {
      if (fabsCurFrame <= gLimit[f]) {
@@ -173,74 +314,3 @@ float EffectLeveller::LevelOneFrame(float frameInBuffer)
    return (float)0.99;
 }
 
-bool EffectLeveller::ProcessSimpleMono(float *buffer, sampleCount len)
-{
-   for (int pass = 0; pass < mLevellerNumPasses; ++pass) {
-      for (int i = 0; i < len; ++i) {
-         buffer[i] = LevelOneFrame(buffer[i]);
-      }
-   }
-   return true;
-}
-
-//----------------------------------------------------------------------------
-// LevellerDialog
-//----------------------------------------------------------------------------
-
-BEGIN_EVENT_TABLE(LevellerDialog, EffectDialog)
-   EVT_BUTTON(ID_EFFECT_PREVIEW, LevellerDialog::OnPreview)
-END_EVENT_TABLE()
-
-LevellerDialog::LevellerDialog(EffectLeveller *effect, wxWindow *parent)
-:  EffectDialog(parent, _("Leveler"), PROCESS_EFFECT), // Lynn called it "Leveller", but preferred spelling is "Leveler".
-   mEffect(effect)
-{
-   mLevellerNumPassesChoiceIndex = 0;//
-   mLevellerDbChoiceIndex = 0;
-   Init();
-}
-
-void LevellerDialog::PopulateOrExchange(ShuttleGui & S)
-{
-   wxArrayString db(Enums::NumDbChoices, Enums::GetDbChoices());
-   wxArrayString numPasses;
-
-   /* i18n-hint: Of strength of an effect.  Not strongly.*/
-   numPasses.Add(_("Light"));
-   numPasses.Add(_("Moderate"));
-   /* i18n-hint: Of strength of an effect.  Strongly.*/
-   numPasses.Add(_("Heavy"));
-   numPasses.Add(_("Heavier"));
-   numPasses.Add(_("Heaviest"));
-
-   S.SetBorder(5);
-   S.AddSpace(5);
-
-   S.StartMultiColumn(2);
-   {
-      S.TieChoice(_("Degree of Leveling:"),
-                  mLevellerNumPassesChoiceIndex,
-                  &numPasses);
-      S.TieChoice(_("Noise Threshold:"),
-                  mLevellerDbChoiceIndex,
-                  &db);
-   }
-   S.EndMultiColumn();
-}
-
-void LevellerDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
-{
-   TransferDataFromWindow();
-
-   // Save & restore parameters around Preview.
-   int oldLevellerDbChoiceIndex = mEffect->mLevellerDbChoiceIndex;
-   int oldLevellerNumPasses = mEffect->mLevellerNumPasses;
-
-   mEffect->mLevellerDbChoiceIndex = mLevellerDbChoiceIndex;
-   mEffect->mLevellerNumPasses = mLevellerNumPassesChoiceIndex+1;
-
-   mEffect->Preview();
-
-   mEffect->mLevellerDbChoiceIndex = oldLevellerDbChoiceIndex;
-   mEffect->mLevellerNumPasses = oldLevellerNumPasses;
-}

@@ -83,7 +83,6 @@
 #include "../../FileNames.h"
 #include "../../Internat.h"
 #include "../../PlatformCompatibility.h"
-#include "../../Prefs.h"
 #include "../../ShuttleGui.h"
 #include "../../effects/Effect.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -307,17 +306,17 @@ wxString VSTEffectsModule::GetPath()
 
 wxString VSTEffectsModule::GetSymbol()
 {
-   return wxT("VST Effects");
+   return XO("VST Effects");
 }
 
 wxString VSTEffectsModule::GetName()
 {
-   return _("VST Effects");
+   return GetSymbol();
 }
 
 wxString VSTEffectsModule::GetVendor()
 {
-   return _("The Audacity Team");
+   return XO("The Audacity Team");
 }
 
 wxString VSTEffectsModule::GetVersion()
@@ -328,7 +327,7 @@ wxString VSTEffectsModule::GetVersion()
 
 wxString VSTEffectsModule::GetDescription()
 {
-   return _("Adds the ability to use VST effects in Audacity.");
+   return XO("Adds the ability to use VST effects in Audacity.");
 }
 
 // ============================================================================
@@ -487,7 +486,11 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
       VSTSubProcess *proc = new VSTSubProcess();
       try
       {
-         wxExecute(cmd, wxEXEC_SYNC | wxEXEC_NODISABLE, proc);
+         int flags = wxEXEC_SYNC | wxEXEC_NODISABLE;
+#if defined(__WXMSW__)
+         flags += wxEXEC_NOHIDE;
+#endif
+         wxExecute(cmd, flags, proc);
       }
       catch (...)
       {
@@ -609,7 +612,7 @@ bool VSTEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxStrin
                if (!skip && cont)
                {
                   valid = true;
-                  pm.RegisterEffectPlugin(this, proc);
+                  pm.RegisterPlugin(this, proc);
                }
             }
             break;
@@ -875,54 +878,25 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// LadspaEffectEventHelper
+// VSTEffect
 //
 ///////////////////////////////////////////////////////////////////////////////
 
 enum
 {
-   ID_DURATION = 20000,
-   ID_SLIDERS = 21000,
+   ID_Duration = 20000,
+   ID_Sliders = 21000,
 };
-
-BEGIN_EVENT_TABLE(VSTEffectEventHelper, wxEvtHandler)
-   EVT_COMMAND_RANGE(ID_SLIDERS, ID_SLIDERS + 999, wxEVT_COMMAND_SLIDER_UPDATED, VSTEffectEventHelper::OnSlider)
-
-   // Events from the audioMaster callback
-   EVT_COMMAND(wxID_ANY, EVT_SIZEWINDOW, VSTEffectEventHelper::OnSizeWindow)
-END_EVENT_TABLE()
-
-VSTEffectEventHelper::VSTEffectEventHelper(VSTEffect *effect)
-{
-   mEffect = effect;
-}
-
-VSTEffectEventHelper::~VSTEffectEventHelper()
-{
-}
-
-// ============================================================================
-// VSTEffectEventHelper implementation
-// ============================================================================
-
-void VSTEffectEventHelper::OnSlider(wxCommandEvent & evt)
-{
-   mEffect->OnSlider(evt);
-}
-
-void VSTEffectEventHelper::OnSizeWindow(wxCommandEvent & evt)
-{
-   mEffect->OnSizeWindow(evt);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// VSTEffect
-//
-///////////////////////////////////////////////////////////////////////////////
 
 DEFINE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW);
 DEFINE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY);
+
+BEGIN_EVENT_TABLE(VSTEffect, wxEvtHandler)
+   EVT_COMMAND_RANGE(ID_Sliders, ID_Sliders + 999, wxEVT_COMMAND_SLIDER_UPDATED, VSTEffect::OnSlider)
+
+   // Events from the audioMaster callback
+   EVT_COMMAND(wxID_ANY, EVT_SIZEWINDOW, VSTEffect::OnSizeWindow)
+END_EVENT_TABLE()
 
 #if defined(__WXMAC__)
 
@@ -987,9 +961,6 @@ OSStatus VSTEffect::OnTrackingEvent(EventRef event)
 // Events to be captured in the overlay window
 static const EventTypeSpec OverlayEventList[] =
 {
-#if !defined(EXPERIMENTAL_REALTIME_EFFECTS)
-   { kEventClassWindow, kEventWindowGetClickModality },
-#endif
 #if 0
    { kEventClassMouse,  kEventMouseDown },
    { kEventClassMouse,  kEventMouseUp },
@@ -1114,14 +1085,6 @@ OSStatus VSTEffect::OnOverlayEvent(EventHandlerCallRef handler, EventRef event)
                            sizeof(res),
                            &res);
 
-#if !defined(EXPERIMENTAL_REALTIME_EFFECTS)
-         // If the front window is the overlay, then make our window
-         // the selected one so that the mouse click goes to it instead.
-         if (frontwin == mOverlayRef)
-         {
-            SelectWindow(mWindowRef);
-         }
-#endif
          return noErr;
       }
       break;
@@ -1287,12 +1250,6 @@ OSStatus VSTEffect::OnWindowEvent(EventHandlerCallRef handler, EventRef event)
                                        &mOverlayViewTrackingHandlerRef);
             HIViewNewTrackingArea(root, NULL, 0, NULL);
             HIViewNewTrackingArea(view, NULL, 0, NULL);
-
-//#if !defined(EXPERIMENTAL_REALTIME_EFFECTS)
-            // Since we set the activation scope to independent,
-            // we need to make sure the overlay gets activated.
-            ActivateWindow(mOverlayRef, TRUE);
-//#endif
          }
       }
       break;
@@ -1490,7 +1447,6 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
          return 0;
       }
 
-#if defined(EXPERIMENTAL_REALTIME_EFFECTS)
       case audioMasterBeginEdit:
       case audioMasterEndEdit:
          return 0;
@@ -1502,13 +1458,6 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
          }
          return 0;
 
-#else
-      // These are not needed since we don't need the parameter values until after the editor
-      // has already been closed.  If we did realtime effects, then we'd need these.
-      case audioMasterBeginEdit:
-      case audioMasterEndEdit:
-      case audioMasterAutomate:
-#endif
       // We're always connected (sort of)
       case audioMasterPinConnected:
 
@@ -1541,7 +1490,6 @@ VSTEffect::VSTEffect(const wxString & path, VSTEffect *master)
    mModule = NULL;
    mAEffect = NULL;
    mDialog = NULL;
-   mEventHelper = NULL;
 
    mTimer = new VSTEffectTimer(this);
    mTimerGuard = 0;
@@ -1816,7 +1764,7 @@ int VSTEffect::GetMidiOutCount()
    return mMidiOuts;
 }
 
-sampleCount VSTEffect::GetBlockSize(sampleCount maxBlockSize)
+sampleCount VSTEffect::SetBlockSize(sampleCount maxBlockSize)
 {
    if (mUserBlockSize > maxBlockSize)
    {
@@ -1858,7 +1806,7 @@ bool VSTEffect::IsReady()
    return mReady;
 }
 
-bool VSTEffect::ProcessInitialize()
+bool VSTEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
 {
    // Initialize time info
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
@@ -1893,15 +1841,19 @@ bool VSTEffect::ProcessFinalize()
    return true;
 }
 
-sampleCount VSTEffect::ProcessBlock(float **inbuf, float **outbuf, sampleCount size)
+sampleCount VSTEffect::ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen)
 {
-   // Go let the plugin moleste the samples
-   callProcessReplacing(inbuf, outbuf, size);
+   // Only call the effect if there's something to do...some do not like zero-length block
+   if (blockLen)
+   {
+      // Go let the plugin moleste the samples
+      callProcessReplacing(inBlock, outBlock, blockLen);
 
-   // And track the position
-   mTimeInfo.samplePos += ((double) size / mTimeInfo.sampleRate);
+      // And track the position
+      mTimeInfo.samplePos += ((double) blockLen / mTimeInfo.sampleRate);
+   }
 
-   return size;
+   return blockLen;
 }
 
 int VSTEffect::GetChannelCount()
@@ -1929,7 +1881,7 @@ bool VSTEffect::RealtimeInitialize()
       mMasterOut[i] = new float[mBlockSize];
    }
 
-   return ProcessInitialize();
+   return ProcessInitialize(0, NULL);
 }
 
 bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
@@ -1937,7 +1889,7 @@ bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
    VSTEffect *slave = new VSTEffect(mPath, this);
    mSlaves.Add(slave);
 
-   slave->GetBlockSize(mBlockSize);
+   slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
    slave->SetSampleRate(sampleRate);
 
@@ -1965,7 +1917,7 @@ bool VSTEffect::RealtimeAddProcessor(int numChannels, float sampleRate)
       callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
    }
 
-   return slave->ProcessInitialize();
+   return slave->ProcessInitialize(0, NULL);
 }
 
 bool VSTEffect::RealtimeFinalize()
@@ -2093,23 +2045,7 @@ bool VSTEffect::ShowInterface(wxWindow *parent, bool forceModal)
    {
       mSampleRate = 44100;
       mBlockSize = 8192;
-      ProcessInitialize();
-   }
-
-   // I can't believe we haven't run into this before, but a terrible assumption has
-   // been made all along...effects do NOT have to provide textual parameters.  Examples
-   // of effects that do not support parameters are some from BBE Sound.  These effects
-   // are NOT broken.  They just weren't written to support textual parameters.
-   long gui = (gPrefs->Read(wxT("/VST/GUI"), (long) true) != 0);
-   if (!gui && mAEffect->numParams == 0)
-   {
-#if defined(__WXGTK__)
-      wxMessageBox(_("This effect does not support a textual interface. At this time, you may not use this effect on Linux."),
-                   _("VST Effect"));
-#else
-      wxMessageBox(_("This effect does not support a textual interface.  Falling back to graphical display."),
-                   _("VST Effect"));
-#endif
+      ProcessInitialize(0, NULL);
    }
 
    mDialog = mHost->CreateUI(parent, this);
@@ -2176,11 +2112,65 @@ bool VSTEffect::SetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
+
+bool VSTEffect::LoadUserPreset(const wxString & name)
+{
+   if (!LoadParameters(name))
+   {
+      return false;
+   }
+
+   RefreshParameters();
+
+   return true;
+}
+
+bool VSTEffect::SaveUserPreset(const wxString & name)
+{
+   return SaveParameters(name);
+}
+
+wxArrayString VSTEffect::GetFactoryPresets()
+{
+   wxArrayString progs; 
+
+   // Some plugins, like Guitar Rig 5, only report 128 programs while they have hundreds.  While
+   // I was able to come up with a hack in the Guitar Rig case to gather all of the program names
+   // it would not let me set a program outside of the first 128.
+   for (int i = 0; i < mAEffect->numPrograms; i++)
+   {
+      progs.Add(GetString(effGetProgramNameIndexed, i));
+   }
+
+   return progs;
+}
+
+bool VSTEffect::LoadFactoryPreset(int id)
+{
+   callSetProgram(id);
+
+   RefreshParameters();
+
+   return true;
+}
+
+bool VSTEffect::LoadFactoryDefaults()
+{
+   if (!LoadParameters(mHost->GetFactoryDefaultsGroup()))
+   {
+      return false;
+   }
+
+   RefreshParameters();
+
+   return true;
+}
+
 // ============================================================================
 // EffectUIClientInterface implementation
 // ============================================================================
 
-void VSTEffect::SetUIHost(EffectUIHostInterface *host)
+void VSTEffect::SetHostUI(EffectUIHostInterface *host)
 {
    mUIHost = host;
 }
@@ -2190,8 +2180,7 @@ bool VSTEffect::PopulateUI(wxWindow *parent)
    mDialog = (wxDialog *) wxGetTopLevelParent(parent);
    mParent = parent;
 
-   mEventHelper = new VSTEffectEventHelper(this);
-   mParent->PushEventHandler(mEventHelper);
+   mParent->PushEventHandler(this);
 
    // Determine if the VST editor is supposed to be used or not
    mHost->GetSharedConfig(wxT("Options"),
@@ -2226,6 +2215,16 @@ bool VSTEffect::IsGraphicalUI()
 
 bool VSTEffect::ValidateUI()
 {
+   if (!mParent->Validate() || !mParent->TransferDataFromWindow())
+   {
+      return false;
+   }
+
+   if (GetType() == EffectTypeGenerate)
+   {
+      mHost->SetDuration(mDuration->GetValue());
+   }
+
    return true;
 }
 
@@ -2236,8 +2235,7 @@ bool VSTEffect::HideUI()
 
 bool VSTEffect::CloseUI()
 {
-   mParent->RemoveEventHandler(mEventHelper);
-   delete mEventHelper;
+   mParent->RemoveEventHandler(this);
 
    PowerOff();
 
@@ -2276,48 +2274,7 @@ bool VSTEffect::CloseUI()
    return true;
 }
 
-void VSTEffect::LoadUserPreset(const wxString & name)
-{
-   LoadParameters(name);
-
-   RefreshParameters();
-}
-
-void VSTEffect::SaveUserPreset(const wxString & name)
-{
-   SaveParameters(name);
-}
-
-wxArrayString VSTEffect::GetFactoryPresets()
-{
-   wxArrayString progs; 
-
-   // Some plugins, like Guitar Rig 5, only report 128 programs while they have hundreds.  While
-   // I was able to come up with a hack in the Guitar Rig case to gather all of the program names
-   // it would not let me set a program outside of the first 128.
-   for (int i = 0; i < mAEffect->numPrograms; i++)
-   {
-      progs.Add(GetString(effGetProgramNameIndexed, i));
-   }
-
-   return progs;
-}
-
-void VSTEffect::LoadFactoryPreset(int id)
-{
-   callSetProgram(id);
-
-   RefreshParameters();
-}
-
-void VSTEffect::LoadFactoryDefaults()
-{
-   LoadParameters(mHost->GetFactoryDefaultsGroup());
-
-   RefreshParameters();
-}
-
-bool VSTEffect::CanExport()
+bool VSTEffect::CanExportPresets()
 {
    return true;
 }
@@ -2810,7 +2767,7 @@ wxArrayInt VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
-void VSTEffect::LoadParameters(const wxString & group)
+bool VSTEffect::LoadParameters(const wxString & group)
 {
    wxString value;
 
@@ -2823,7 +2780,7 @@ void VSTEffect::LoadParameters(const wxString & group)
        (info.pluginVersion != mAEffect->version) ||
        (info.numElements != mAEffect->numParams))
    {
-      return;
+      return false;
    }
 
    if (mHost->GetPrivateConfig(group, wxT("Chunk"), value, wxEmptyString))
@@ -2837,39 +2794,44 @@ void VSTEffect::LoadParameters(const wxString & group)
       }
       delete [] buf;
 
-      return;
+      return true;
+   }
+
+   if (!mHost->GetPrivateConfig(group, wxT("Value"), value, wxEmptyString))
+   {
+      return false;
    }
 
    if (callDispatcher(effBeginLoadProgram, 0, 0, &info, 0.0) == -1)
    {
-      return;
+      return false;
    }
 
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
-   if (mHost->GetPrivateConfig(group, wxT("Value"), value, wxEmptyString))
-   {
-      size_t cnt = mSlaves.GetCount();
+   size_t cnt = mSlaves.GetCount();
       
-      wxStringTokenizer st(value, wxT(','));
-      for (int i = 0; st.HasMoreTokens(); i++)
-      {
-         double val = 0.0;
-         st.GetNextToken().ToDouble(&val);
+   wxStringTokenizer st(value, wxT(','));
+   for (int i = 0; st.HasMoreTokens(); i++)
+   {
+      double val = 0.0;
+      st.GetNextToken().ToDouble(&val);
 
-         if (val >= -1.0 && val <= 1.0)
+      if (val >= -1.0 && val <= 1.0)
+      {
+         callSetParameter(i, val);
+         for (size_t i = 0; i < cnt; i++)
          {
-            callSetParameter(i, val);
-            for (size_t i = 0; i < cnt; i++)
-            {
-               mSlaves[i]->callSetParameter(i, val);
-            }
+            mSlaves[i]->callSetParameter(i, val);
          }
       }
    }
+
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+
+   return true;
 }
 
-void VSTEffect::SaveParameters(const wxString & group)
+bool VSTEffect::SaveParameters(const wxString & group)
 {
    mHost->SetPrivateConfig(group, wxT("UniqueID"), mAEffect->uniqueID);
    mHost->SetPrivateConfig(group, wxT("Version"), mAEffect->version);
@@ -2879,11 +2841,13 @@ void VSTEffect::SaveParameters(const wxString & group)
    {
       void *chunk = NULL;
       int clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
-      if (clen > 0)
+      if (clen <= 0)
       {
-         mHost->SetPrivateConfig(group, wxT("Chunk"), VSTEffect::b64encode(chunk, clen));
-         return;
+         return false;
       }
+
+      mHost->SetPrivateConfig(group, wxT("Chunk"), VSTEffect::b64encode(chunk, clen));
+      return true;
    }
 
    wxString parms;
@@ -2892,7 +2856,7 @@ void VSTEffect::SaveParameters(const wxString & group)
       parms += wxString::Format(wxT(",%f"), callGetParameter(i));
    }
 
-   mHost->SetPrivateConfig(group, wxT("Value"), parms.Mid(1));
+   return mHost->SetPrivateConfig(group, wxT("Value"), parms.Mid(1));
 }
 
 void VSTEffect::OnTimer()
@@ -3519,12 +3483,31 @@ void VSTEffect::BuildFancy()
 
 void VSTEffect::BuildPlain()
 {
+   wxBoxSizer *mainSizer = new wxBoxSizer(wxVERTICAL);
+   wxScrolledWindow *scroller = new wxScrolledWindow(mParent,
+                                                     wxID_ANY,
+                                                     wxDefaultPosition,
+                                                     wxDefaultSize,
+                                                     wxVSCROLL | wxTAB_TRAVERSAL);
+
+   // Try to give the window a sensible default/minimum size
+   scroller->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
+                        mParent->GetSize().GetHeight() / 2));
+   scroller->SetScrollRate(0, 20);
+
+   // This fools NVDA into not saying "Panel" when the dialog gets focus
+   scroller->SetName(wxT("\a"));
+   scroller->SetLabel(wxT("\a"));
+
+   mainSizer->Add(scroller, 1, wxEXPAND | wxALL, 5);
+   mParent->SetSizer(mainSizer);
+
    mNames = new wxStaticText *[mAEffect->numParams];
    mSliders = new wxSlider *[mAEffect->numParams];
    mDisplays = new wxStaticText *[mAEffect->numParams];
    mLabels = new wxStaticText *[mAEffect->numParams];
 
-   wxSizer *paramSizer = new wxStaticBoxSizer(wxVERTICAL, mParent, _("Effect Settings"));
+   wxSizer *paramSizer = new wxStaticBoxSizer(wxVERTICAL, scroller, _("Effect Settings"));
 
    wxFlexGridSizer *gridSizer = new wxFlexGridSizer(4, 0, 0);
    gridSizer->AddGrowableCol(1);
@@ -3532,17 +3515,18 @@ void VSTEffect::BuildPlain()
    // Add the duration control for generators
    if (GetType() == EffectTypeGenerate)
    {
-      wxControl *item = new wxStaticText(mParent, 0, _("Duration:"));
+      wxControl *item = new wxStaticText(scroller, 0, _("Duration:"));
       gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
-      mDuration = new NumericTextCtrl(NumericConverter::TIME,
-                                     mParent,
-                                     ID_DURATION,
-                                     _("hh:mm:ss + milliseconds"),
-                                     mHost->GetDuration(),
-                                     mSampleRate,
-                                     wxDefaultPosition,
-                                     wxDefaultSize,
-                                     true);
+      mDuration = new
+         NumericTextCtrl(NumericConverter::TIME,
+                         scroller,
+                         ID_Duration,
+                         mHost->GetDurationFormat(),
+                         mHost->GetDuration(),
+                         mSampleRate,
+                         wxDefaultPosition,
+                         wxDefaultSize,
+                         true);
       mDuration->SetName(_("Duration"));
       mDuration->EnableMenu();
       gridSizer->Add(mDuration, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
@@ -3563,18 +3547,18 @@ void VSTEffect::BuildPlain()
          text += wxT(':');
       }
 
-      mParent->GetTextExtent(text, &w, &h);
+      scroller->GetTextExtent(text, &w, &h);
       if (w > namew)
       {
          namew = w;
       }
    }
 
-   mParent->GetTextExtent(wxT("HHHHHHHH"), &w, &h);
+   scroller->GetTextExtent(wxT("HHHHHHHH"), &w, &h);
 
    for (int i = 0; i < mAEffect->numParams; i++)
    {
-      mNames[i] = new wxStaticText(mParent,
+      mNames[i] = new wxStaticText(scroller,
                                    wxID_ANY,
                                    wxEmptyString,
                                    wxDefaultPosition,
@@ -3582,8 +3566,8 @@ void VSTEffect::BuildPlain()
                                    wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
       gridSizer->Add(mNames[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
-      mSliders[i] = new wxSlider(mParent,
-                                 ID_SLIDERS + i,
+      mSliders[i] = new wxSlider(scroller,
+                                 ID_Sliders + i,
                                  0,
                                  0,
                                  1000,
@@ -3591,7 +3575,7 @@ void VSTEffect::BuildPlain()
                                  wxSize(200, -1));
       gridSizer->Add(mSliders[i], 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
 
-      mDisplays[i] = new wxStaticText(mParent,
+      mDisplays[i] = new wxStaticText(scroller,
                                       wxID_ANY,
                                       wxEmptyString,
                                       wxDefaultPosition,
@@ -3599,7 +3583,7 @@ void VSTEffect::BuildPlain()
                                       wxALIGN_RIGHT | wxST_NO_AUTORESIZE);
       gridSizer->Add(mDisplays[i], 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
 
-      mLabels[i] = new wxStaticText(mParent,
+      mLabels[i] = new wxStaticText(scroller,
                                     wxID_ANY,
                                     wxEmptyString,
                                     wxDefaultPosition,
@@ -3609,7 +3593,7 @@ void VSTEffect::BuildPlain()
    }
 
    paramSizer->Add(gridSizer, 1, wxEXPAND | wxALL, 5);
-   mParent->SetSizer(paramSizer);
+   scroller->SetSizer(paramSizer);
 
    RefreshParameters();
 
@@ -3674,7 +3658,7 @@ void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
       return;
    }
 
-   // This really needs some work.  We should know anything about the parent...
+   // This really needs some work.  We shouldn't know anything about the parent...
    mContainer->SetMinSize(evt.GetInt(), (int) evt.GetExtraLong());
    mParent->SetMinSize(mContainer->GetMinSize());
    mDialog->Layout();
@@ -3684,7 +3668,7 @@ void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
 void VSTEffect::OnSlider(wxCommandEvent & evt)
 {
    wxSlider *s = (wxSlider *) evt.GetEventObject();
-   int i = s->GetId() - ID_SLIDERS;
+   int i = s->GetId() - ID_Sliders;
 
    callSetParameter(i, s->GetValue() / 1000.0);
 

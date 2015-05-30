@@ -33,6 +33,9 @@
     #include <wx/textctrl.h>
 #endif
 
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
+
 #include "valnum.h"
 #include "numformatter.h"
 
@@ -42,6 +45,7 @@
 
 BEGIN_EVENT_TABLE(NumValidatorBase, wxValidator)
     EVT_CHAR(NumValidatorBase::OnChar)
+    EVT_TEXT_PASTE(wxID_ANY, NumValidatorBase::OnPaste)
     EVT_KILL_FOCUS(NumValidatorBase::OnKillFocus)
 END_EVENT_TABLE()
 
@@ -87,7 +91,12 @@ bool NumValidatorBase::Validate(wxWindow *parent)
     {
         wxMessageBox(errmsg, _("Validation error"),
                      wxOK | wxICON_ERROR, parent);
-        m_validatorWindow->SetFocus();
+        wxTextEntry *te = GetTextEntry();
+        if ( te )
+        {
+            te->SelectAll();
+            te->SetFocus();
+        }
         return false;
     }
 
@@ -190,6 +199,66 @@ void NumValidatorBase::OnChar(wxKeyEvent& event)
     }
 }
 
+void NumValidatorBase::OnPaste(wxClipboardTextEvent& event)
+{
+    event.Skip(false);
+
+    wxTextEntry * const control = GetTextEntry();
+    if ( !control )
+    {
+        return;
+    }
+
+    wxClipboardLocker cb;
+//    if (!wxClipboard::Get()->IsSupported(wxDataFormat(wxDF_TEXT)))
+    if (!wxClipboard::Get()->IsSupported(wxDF_TEXT))
+    {
+        return;
+    }
+
+    wxTextDataObject data;
+    if (!wxClipboard::Get()->GetData( data ))
+    {
+        return;
+    }
+
+    wxString toPaste = data.GetText();
+    wxString val;
+    int pos;
+    GetCurrentValueAndInsertionPoint(val, pos);
+
+    for (size_t i = 0, cnt = toPaste.Length(); i < cnt; i++)
+    {
+        const wxChar ch = toPaste[i];
+
+        // Check if this character is allowed in the current state.
+        if ( IsCharOk(val, pos, ch) )
+        {
+            val = GetValueAfterInsertingChar(val, pos++, ch);
+        }
+        else if ( !wxValidator::IsSilent() )
+        {
+                wxBell();
+        }
+    }
+
+    // When we change the control value below, its "modified" status is reset
+    // so we need to explicitly keep it marked as modified if it was so in the
+    // first place.
+    //
+    // Notice that only wxTextCtrl (and not wxTextEntry) has
+    // IsModified()/MarkDirty() methods hence the need for dynamic cast.
+    wxTextCtrl * const text = wxDynamicCast(m_validatorWindow, wxTextCtrl);
+    const bool wasModified = text ? text->IsModified() : false;
+
+    control->ChangeValue(NormalizeString(val));
+
+    if ( wasModified )
+    {
+        text->MarkDirty();
+    }
+}
+
 void NumValidatorBase::OnKillFocus(wxFocusEvent& event)
 {
     wxTextEntry * const control = GetTextEntry();
@@ -254,7 +323,7 @@ IntegerValidatorBase::IsCharOk(const wxString& val, int pos, wxChar ch) const
         wxChar thousands;
         if ( NumberFormatter::GetThousandsSeparatorIfUsed(&thousands) )
         {
-            if (ch != thousands)
+//            if (ch != thousands)
                 return false;
         }
         else
@@ -376,7 +445,7 @@ FloatingPointValidatorBase::IsCharOk(const wxString& val,
         wxChar thousands;
         if ( NumberFormatter::GetThousandsSeparatorIfUsed(&thousands) )
         {
-            if (ch != thousands)
+//            if (ch != thousands)
                 return false;
         }
         else
@@ -426,7 +495,23 @@ bool FloatingPointValidatorBase::DoValidateNumber(wxString * errMsg) const
         {
             res = IsInRange(value);
             if ( !res )
-                *errMsg = _("Not in range");
+            {
+                if (m_minSet && m_maxSet)
+                {
+                    errMsg->Printf(_("Value not in range: %.*f to %.*f"),
+                        m_precision, m_min, m_precision, m_max);
+                }
+                else if (m_minSet)
+                {
+                    errMsg->Printf(_("Value must not be less than %.*f"),
+                        m_precision, m_min);
+                }
+                else if (m_maxSet)
+                {
+                    errMsg->Printf(_("Value must not be greather than %.*f"),
+                        m_precision, m_max);
+                }
+            }
         }
     }
 

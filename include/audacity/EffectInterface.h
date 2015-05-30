@@ -52,6 +52,7 @@
 typedef enum EffectType
 {
    EffectTypeNone,
+   EffectTypeHidden,
    EffectTypeGenerate,
    EffectTypeProcess,
    EffectTypeAnalyze
@@ -87,14 +88,15 @@ public:
 class EffectUIHostInterface;
 class EffectUIClientInterface;
 
-class AUDACITY_DLL_API EffectHostInterface : public EffectIdentInterface,
-                                             public ConfigClientInterface
+class AUDACITY_DLL_API EffectHostInterface : public ConfigClientInterface
 {
 public:
    virtual ~EffectHostInterface() {};
 
+   virtual double GetDefaultDuration() = 0;
    virtual double GetDuration() = 0;
-   virtual bool SetDuration(double seconds) = 0;
+   virtual wxString GetDurationFormat() = 0;
+   virtual void SetDuration(double seconds) = 0;
 
    virtual bool Apply() = 0;
    virtual void Preview() = 0;
@@ -108,7 +110,7 @@ public:
    virtual wxString GetFactoryDefaultsGroup() = 0;
 };
 
-class EffectClientInterface : public EffectIdentInterface
+class AUDACITY_DLL_API EffectClientInterface : public EffectIdentInterface
 {
 public:
    virtual ~EffectClientInterface() {};
@@ -122,15 +124,15 @@ public:
    virtual int GetMidiOutCount() = 0;
 
    virtual void SetSampleRate(sampleCount rate) = 0;
-   virtual sampleCount GetBlockSize(sampleCount maxBlockSize) = 0;
+   virtual sampleCount SetBlockSize(sampleCount maxBlockSize) = 0;
 
    virtual sampleCount GetLatency() = 0;
    virtual sampleCount GetTailSize() = 0;
 
    virtual bool IsReady() = 0;
-   virtual bool ProcessInitialize() = 0;
+   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) = 0;
    virtual bool ProcessFinalize() = 0;
-   virtual sampleCount ProcessBlock(float **inbuf, float **outbuf, sampleCount size) = 0;
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen) = 0;
 
    virtual bool RealtimeInitialize() = 0;
    virtual bool RealtimeAddProcessor(int numChannels, float sampleRate) = 0;
@@ -138,41 +140,41 @@ public:
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() = 0;
    virtual bool RealtimeProcessStart() = 0;
-   virtual sampleCount RealtimeProcess(int group, float **inbuf, float **outbuf, sampleCount numSamples) = 0;
+   virtual sampleCount RealtimeProcess(int group, float **inBuf, float **outBuf, sampleCount numSamples) = 0;
    virtual bool RealtimeProcessEnd() = 0;
 
    virtual bool ShowInterface(wxWindow *parent, bool forceModal = false) = 0;
 
    virtual bool GetAutomationParameters(EffectAutomationParameters & parms) = 0;
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms) = 0;
+
+   virtual bool LoadUserPreset(const wxString & name) = 0;
+   virtual bool SaveUserPreset(const wxString & name) = 0;
+
+   virtual wxArrayString GetFactoryPresets() = 0;
+   virtual bool LoadFactoryPreset(int id) = 0;
+   virtual bool LoadFactoryDefaults() = 0;
 };
 
-class EffectUIHostInterface
+class AUDACITY_DLL_API EffectUIHostInterface
 {
 public:
    virtual ~EffectUIHostInterface() {};
 };
 
-class EffectUIClientInterface
+class AUDACITY_DLL_API EffectUIClientInterface
 {
 public:
    virtual ~EffectUIClientInterface() {};
 
-   virtual void SetUIHost(EffectUIHostInterface *host) = 0;
-   virtual bool PopulateUI(wxWindow *parent) = 0;
+   virtual void SetHostUI(EffectUIHostInterface *host) = 0;
    virtual bool IsGraphicalUI() = 0;
+   virtual bool PopulateUI(wxWindow *parent) = 0;
    virtual bool ValidateUI() = 0;
    virtual bool HideUI() = 0;
    virtual bool CloseUI() = 0;
 
-   virtual void LoadUserPreset(const wxString & name) = 0;
-   virtual void SaveUserPreset(const wxString & name) = 0;
-
-   virtual wxArrayString GetFactoryPresets() = 0;
-   virtual void LoadFactoryPreset(int id) = 0;
-   virtual void LoadFactoryDefaults() = 0;
-
-   virtual bool CanExport() = 0;
+   virtual bool CanExportPresets() = 0;
    virtual void ExportPresets() = 0;
    virtual void ImportPresets() = 0;
 
@@ -180,7 +182,7 @@ public:
    virtual void ShowOptions() = 0;
 };
 
-class EffectManagerInterface
+class AUDACITY_DLL_API EffectManagerInterface
 {
 public:
    virtual ~EffectManagerInterface() {};

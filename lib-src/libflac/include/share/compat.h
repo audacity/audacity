@@ -1,5 +1,5 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2012  Xiph.org Foundation
+ * Copyright (C) 2012-2014  Xiph.org Foundation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -73,23 +73,25 @@
 #endif
 
 #if defined(_MSC_VER)
-#if _MSC_VER < 1500
-/* Visual Studio 2008 has restrict. */
-#define restrict __restrict
-#endif
 #define inline __inline
 #endif
 
-/* adjust for compilers that can't understand using LLU suffix for uint64_t literals */
-#ifdef _MSC_VER
-#define FLAC__U64L(x) x
+#if defined __INTEL_COMPILER || (defined _MSC_VER && defined _WIN64)
+/* MSVS generates VERY slow 32-bit code with __restrict */
+#define flac_restrict __restrict
+#elif defined __GNUC__
+#define flac_restrict __restrict__
 #else
-#define FLAC__U64L(x) x##LLU
+#define flac_restrict
 #endif
 
+#define FLAC__U64L(x) x##ULL
+
 #if defined _MSC_VER || defined __BORLANDC__ || defined __MINGW32__
+#define FLAC__STRCASECMP stricmp
 #define FLAC__STRNCASECMP strnicmp
 #else
+#define FLAC__STRCASECMP strcasecmp
 #define FLAC__STRNCASECMP strncasecmp
 #endif
 
@@ -161,12 +163,7 @@
 #define flac_utime utime
 #define flac_unlink unlink
 #define flac_rename rename
-
-#ifdef _WIN32
-#define flac_stat _stat64
-#else
 #define flac_stat stat
-#endif
 
 #endif
 
@@ -178,17 +175,25 @@
 #define flac_fstat fstat
 #endif
 
+#ifndef M_LN2
+#define M_LN2 0.69314718055994530942
+#endif
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
-/* FLAC needs to compile and work correctly on systems with a norrmal ISO C99
+/* FLAC needs to compile and work correctly on systems with a normal ISO C99
  * snprintf as well as Microsoft Visual Studio which has an non-standards
  * conformant snprint_s function.
  *
  * This function wraps the MS version to behave more like the the ISO version.
  */
+#include <stdarg.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
 int flac_snprintf(char *str, size_t size, const char *fmt, ...);
+int flac_vsnprintf(char *str, size_t size, const char *fmt, va_list va);
 #ifdef __cplusplus
 };
 #endif

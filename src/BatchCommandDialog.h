@@ -48,6 +48,7 @@ class BatchCommandDialog:public wxDialog {
    void Populate();
    void PopulateOrExchange(ShuttleGui &S);
    void OnEditParams(wxCommandEvent &event);
+   void OnUsePreset(wxCommandEvent &event);
    void OnChoice(wxCommandEvent &event);
    void OnOk(wxCommandEvent &event);
    void OnCancel(wxCommandEvent &event);
@@ -58,6 +59,7 @@ class BatchCommandDialog:public wxDialog {
    int GetSelectedItem();
 
    wxButton   *mEditParams;
+   wxButton   *mUsePreset;
    wxListCtrl *mChoices;
    wxTextCtrl * mCommand;
    wxTextCtrl * mParameters;

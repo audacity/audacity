@@ -13,40 +13,33 @@
 #ifndef __AUDACITY_EFFECT_INVERT__
 #define __AUDACITY_EFFECT_INVERT__
 
-#include <wx/intl.h>
 #include <wx/string.h>
 
-#include "SimpleMono.h"
+#include "Effect.h"
 
-class WaveTrack;
+#define INVERT_PLUGIN_SYMBOL XO("Invert")
 
-class EffectInvert:public EffectSimpleMono {
+class EffectInvert : public Effect
+{
+public:
+   EffectInvert();
+   virtual ~EffectInvert();
 
- public:
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Invert"));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#UtilityPlugin"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Invert"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Inverting"));
-   }
+   virtual EffectType GetType();
+   virtual bool IsInteractive();
 
-   virtual bool PromptUser() {
-      return true;
-   }
+   // EffectClientInterface implementation
 
- protected:
-   virtual bool ProcessSimpleMono(float *buffer, sampleCount len);
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
 };
 
 #endif

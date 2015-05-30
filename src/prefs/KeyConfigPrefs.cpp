@@ -151,6 +151,7 @@ void KeyConfigPrefs::Populate()
    else if (mViewByKey->GetValue()) {
       mViewType = ViewByKey;
       mFilterLabel->SetLabel(_("&Hotkey:"));
+      mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
    }
 
    mView->SetView(mViewType);
@@ -207,7 +208,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                         wxSize(210, -1),
 #endif
                                         wxTE_PROCESS_ENTER);
-               mFilter->SetName(_("Filter"));
+               mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
                mFilter->Connect(wxEVT_KEY_DOWN,
                                 wxKeyEventHandler(KeyConfigPrefs::OnFilterKeyDown),
                                 NULL,
@@ -617,6 +618,7 @@ void KeyConfigPrefs::OnViewBy(wxCommandEvent & e)
    }
 
    mView->SetView(mViewType);
+   mFilter->SetName(wxStripMenuCodes(mFilterLabel->GetLabel()));
 }
 
 bool KeyConfigPrefs::Apply()

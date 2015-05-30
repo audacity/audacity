@@ -53,6 +53,7 @@ void ModulePrefs::GetAllModuleStatuses(){
    // The old modules might be still around, and we do not want to use them.
    mModules.Clear();
    mStatuses.Clear();
+   mPaths.Clear();
 
 
    // Iterate through all Modules listed in prefs.
@@ -62,13 +63,18 @@ void ModulePrefs::GetAllModuleStatuses(){
    while ( bCont ) {
       int iStatus;
       gPrefs->Read( str, &iStatus, kModuleDisabled );
-      if( iStatus > kModuleNew ){
-         iStatus = kModuleNew;
-         gPrefs->Write( str, iStatus );
+      wxString fname;
+      gPrefs->Read( wxString( wxT("/ModulePath/") ) + str, &fname, wxEmptyString );
+      if( fname != wxEmptyString && wxFileExists( fname ) ){
+         if( iStatus > kModuleNew ){
+            iStatus = kModuleNew;
+            gPrefs->Write( str, iStatus );
+         }
+         //wxLogDebug( wxT("Entry: %s Value: %i"), str.c_str(), iStatus );
+         mModules.Add( str );
+         mStatuses.Add( iStatus );
+         mPaths.Add( fname );
       }
-      //wxLogDebug( wxT("Entry: %s Value: %i"), str.c_str(), iStatus );
-      mModules.Add( str );
-      mStatuses.Add( iStatus );
       bCont = gPrefs->GetNextEntry(str, dummy);
    }
    gPrefs->SetPath( wxT("") );
@@ -96,7 +102,7 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
    StatusChoices.Add( _("New" ) );
    S.SetBorder(2);
 
-   S.StartStatic(_(""));
+   S.StartStatic(wxT(""));
    {
       S.AddFixedText(_("These are experimental modules. Enable them only if you've read the Audacity Manual\nand know what you are doing.") );
       S.AddFixedText(wxString(wxT("  ")) + _("'Ask' means Audacity will ask if you want to load the module each time it starts.") );
@@ -125,8 +131,8 @@ bool ModulePrefs::Apply()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
    int i;
-   for(i=0;i<(int)mModules.GetCount();i++)
-      SetModuleStatus( mModules[i], mStatuses[i] );
+   for(i=0;i<(int)mPaths.GetCount();i++)
+      SetModuleStatus( mPaths[i], mStatuses[i] );
    return true;
 }
 
@@ -150,6 +156,8 @@ void ModulePrefs::SetModuleStatus( wxString fname, int iStatus ){
    wxString ShortName = wxFileName( fname ).GetName();
    wxString PrefName = wxString( wxT("/Module/") ) + ShortName.Lower();
    gPrefs->Write( PrefName, iStatus );
+   PrefName = wxString( wxT("/ModulePath/") ) + ShortName.Lower();
+   gPrefs->Write( PrefName, fname );
    gPrefs->Flush();
 }
 

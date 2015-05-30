@@ -38,7 +38,7 @@ Command *ImportCommandType::Create(CommandOutputTarget *target)
 bool ImportCommand::Apply(CommandExecutionContext context)
 {
    wxString filename = GetString(wxT("Filename"));
-   return context.proj->Import(filename);
+   return context.GetProject()->Import(filename);
 }
 
 ImportCommand::~ImportCommand()
@@ -81,13 +81,13 @@ bool ExportCommand::Apply(CommandExecutionContext context)
    double t0, t1;
    if (selection)
    {
-      t0 = context.proj->mViewInfo.selectedRegion.t0();
-      t1 = context.proj->mViewInfo.selectedRegion.t1();
+      t0 = context.GetProject()->mViewInfo.selectedRegion.t0();
+      t1 = context.GetProject()->mViewInfo.selectedRegion.t1();
    }
    else
    {
       t0 = 0.0;
-      t1 = context.proj->GetTracks()->GetEndTime();
+      t1 = context.GetProject()->GetTracks()->GetEndTime();
    }
 
    // Find the extension and check it's valid
@@ -101,7 +101,7 @@ bool ExportCommand::Apply(CommandExecutionContext context)
 
    Exporter exporter;
 
-   bool exportSuccess = exporter.Process(context.proj, numChannels,
+   bool exportSuccess = exporter.Process(context.GetProject(), numChannels,
                                          extension.c_str(), filename,
                                          selection, t0, t1);
 

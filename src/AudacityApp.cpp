@@ -67,7 +67,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "DirManager.h"
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
-#include "effects/LoadEffects.h"
 #include "effects/Contrast.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
@@ -99,6 +98,12 @@ It handles initialization and termination by subclassing wxApp.
 #include "ModuleManager.h"
 
 #include "import/Import.h"
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+#include <wx/debugrpt.h>
+#include <wx/evtloop.h>
+#include <wx/textdlg.h>
+#endif
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
@@ -138,18 +143,6 @@ It handles initialization and termination by subclassing wxApp.
 
 #  if defined(USE_LIBMAD)
 #     pragma comment(lib, "libmad")
-#  endif
-
-#  if defined(USE_LIBRESAMPLE)
-#     pragma comment(lib, "libresample")
-#  endif
-
-#  if defined(USE_LIBSAMPLERATE)
-#     pragma comment(lib, "libsamplerate")
-#  endif
-
-#  if defined(USE_LIBSOXR)
-#     pragma comment(lib, "libsoxr")
 #  endif
 
 #  if defined(USE_LIBTWOLAME)
@@ -196,6 +189,26 @@ It handles initialization and termination by subclassing wxApp.
 #  if defined(USE_VAMP)
 #     pragma comment(lib, "libvamp")
 #  endif
+
+#  if defined(__WXDEBUG__)
+#     define D "d"
+#  else
+#     define D ""
+#  endif
+#  if wxCHECK_VERSION(3, 1, 0)
+#     define V "31"
+#  elif wxCHECK_VERSION(3, 0, 0)
+#     define V "30"
+#  else
+#     define V "28"
+#  endif
+
+#  if defined(EXPERIMENTAL_CRASH_REPORT)
+#     pragma comment(lib, "wxmsw" V "u" D "_qa")
+#  endif
+
+#  undef V
+#  undef D
 
 #endif //(__WXMSW__)
 
@@ -281,7 +294,6 @@ void QuitAudacity(bool bForce)
       gParentFrame->Destroy();
    gParentFrame = NULL;
 
-   CloseContrastDialog();
 #ifdef EXPERIMENTAL_SCOREALIGN
    CloseScoreAlignDialog();
 #endif
@@ -938,7 +950,9 @@ bool AudacityApp::ShouldShowMissingAliasedFileWarning()
 
 AudacityLogger *AudacityApp::GetLogger()
 {
-   return static_cast<AudacityLogger *>(wxLog::GetActiveTarget());
+   // Use dynamic_cast so that we get a NULL ptr if we haven't yet
+   // setup our logger.
+   return dynamic_cast<AudacityLogger *>(wxLog::GetActiveTarget());
 }
 
 void AudacityApp::InitLang( const wxString & lang )
@@ -952,7 +966,9 @@ void AudacityApp::InitLang( const wxString & lang )
 //
 //     2013-09-13:  I've checked this again and it is still required.  Still
 //                  no idea why.
-#if defined(__WXMAC__)
+//     2015-05-26:  Disabled the hack since it prevents use of locale specific
+//                  formatting (like comma as decimal separator).
+#if defined(__WXMAC__disabled)
    wxString oldval;
    bool existed;
 
@@ -966,7 +982,7 @@ void AudacityApp::InitLang( const wxString & lang )
    mLocale = new wxLocale(wxT(""), lang, wxT(""), true, true);
 #endif
 
-#if defined(__WXMAC__)
+#if defined(__WXMAC__disabled)
    if (existed) {
       wxSetEnv(wxT("LANG"), oldval);
    }
@@ -997,11 +1013,60 @@ void AudacityApp::InitLang( const wxString & lang )
    Internat::Init();
 }
 
-// Only used when checking plugins
 void AudacityApp::OnFatalException()
 {
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+   GenerateCrashReport(wxDebugReport::Context_Exception);
+#endif
+
    exit(-1);
 }
+
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+void AudacityApp::GenerateCrashReport(wxDebugReport::Context ctx)
+{
+   wxDebugReportCompress rpt;
+   rpt.AddAll(ctx);
+
+   wxFileName fn(FileNames::DataDir(), wxT("audacity.cfg"));
+   rpt.AddFile(fn.GetFullPath(), wxT("Audacity Configuration"));
+   rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
+   rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
+
+   if (ctx == wxDebugReport::Context_Current)
+   {
+      rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
+   }
+
+   AudacityLogger *logger = GetLogger();
+   if (logger)
+   {
+      rpt.AddText(wxT("log.txt"), logger->GetLog(), wxT("Audacity Log"));
+   }
+
+   bool ok = wxDebugReportPreviewStd().Show(rpt);
+
+#if defined(__WXMSW__)
+   wxEventLoop::SetCriticalWindow(NULL);
+#endif
+
+   if (ok && rpt.Process())
+   {
+      wxTextEntryDialog dlg(NULL,
+                              _("Report generated to:"),
+                              _("Audacity Support Data"),
+                              rpt.GetCompressedFileName(),
+                              wxOK | wxCENTER);
+      dlg.SetName(dlg.GetTitle());
+      dlg.ShowModal();
+
+      wxLogMessage(wxT("Report generated to: %s"),
+                     rpt.GetCompressedFileName().c_str());
+
+      rpt.Reset();
+   }
+}
+#endif
 
 #if defined(__WXGTK__)
 // On wxGTK, there's a focus issue where dialogs do not automatically pass focus
@@ -1026,6 +1091,18 @@ int AudacityApp::FilterEvent(wxEvent & event)
    return -1;
 }
 #endif
+
+AudacityApp::AudacityApp()
+{
+// Do not capture crashes in debug builds
+#if !defined(__WXDEBUG__)
+#if defined(EXPERIMENTAL_CRASH_REPORT)
+#if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
+   wxHandleFatalExceptions();
+#endif
+#endif
+#endif
+}
 
 // The `main program' equivalent, creating the windows and returning the
 // main frame
@@ -1263,9 +1340,10 @@ void AudacityApp::FinishInits()
                     wxT("Bad Version"),
                     wxT(
 "Audacity should be built with wxWidgets 2.8.12.\n\n  This version \
-of Audacity is using wxWidgets 3.0 or later.\n  We're not ready for it yet.\n  \
-Click the 'Help' button for known issue."),
-                    wxT("http://bugzilla.audacityteam.org/buglist.cgi?keywords=wx3&resolution=---"),
+of Audacity (") AUDACITY_VERSION_STRING wxT(") is using ")  wxVERSION_STRING  \
+wxT( ".\n  We're not ready for that version of wxWidgets yet.\n\n  \
+Click the 'Help' button for known issues."),
+                    wxT("http://wiki.audacityteam.org/wiki/Incorrect_wxWidgets_Version"),
                      true);
 #endif
 
@@ -1304,6 +1382,21 @@ Click the 'Help' button for known issue."),
       Sequence::SetMaxDiskBlockSize(lval);
    }
 
+   wxString fileName;
+   if (parser->Found(wxT("d"), &fileName))
+   {
+      AutoSaveFile asf;
+      if (asf.Decode(fileName))
+      {
+         wxPrintf(_("File decoded successfully\n"));
+      }
+      else
+      {
+         wxPrintf(_("Decoding failed\n"));
+      }
+      exit(1);
+   }
+
 // No Splash screen on wx3 whislt we sort out the problem
 // with showing a dialog AND a splash screen during inits.
 #if !wxCHECK_VERSION(3, 0, 0)
@@ -1331,8 +1424,6 @@ Click the 'Help' button for known issue."),
 
    InitDitherers();
    InitAudioIO();
-
-   LoadEffects();
 
 #ifdef __WXMAC__
 
@@ -1549,7 +1640,7 @@ bool AudacityApp::CreateSingleInstanceChecker(wxString dir)
    mChecker = new wxSingleInstanceChecker();
 
 #if defined(__UNIX__)
-   wxString sockFile(FileNames::DataDir() + wxT("/.audacity.sock"));
+   wxString sockFile(defaultTempDir + wxT("/.audacity.sock"));
 #endif
 
    wxString runningTwoCopiesStr = _("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
@@ -1749,6 +1840,10 @@ wxCmdLineParser *AudacityApp::ParseCommandLine()
    parser->AddOption(wxT("b"), wxT("blocksize"), _("set max disk block size in bytes"),
                      wxCMD_LINE_VAL_NUMBER);
 
+   /*i18n-hint: This decodes an autosave file */
+   parser->AddOption(wxT("d"), wxT("decode"), _("decode an autosave file"),
+                     wxCMD_LINE_VAL_STRING);
+
    /*i18n-hint: This displays a list of available options */
    parser->AddSwitch(wxT("h"), wxT("help"), _("this help message"),
                      wxCMD_LINE_OPTION_HELP);
@@ -1937,8 +2032,6 @@ int AudacityApp::OnExit()
 #ifdef USE_FFMPEG
    DropFFmpegLibs();
 #endif
-
-   UnloadEffects();
 
    DeinitFFT();
    BlockFile::Deinit();

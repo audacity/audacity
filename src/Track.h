@@ -165,7 +165,7 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    void SetSolo    (bool s) { mSolo     = s; }
 
    int    GetChannel() const { return mChannel; }
-   virtual double GetOffset () { return mOffset; }
+   virtual double GetOffset() const = 0;
 
    void Offset(double t) { SetOffset(GetOffset() + t); }
    virtual void SetOffset (double o) { mOffset = o; }
@@ -202,11 +202,11 @@ class AUDACITY_DLL_API Track: public XMLTagHandler
    // open the track from XML
    virtual bool GetErrorOpening() { return false; }
 
-   virtual double GetStartTime() { return 0.0; }
-   virtual double GetEndTime() { return 0.0; }
+   virtual double GetStartTime() const = 0;
+   virtual double GetEndTime() const = 0;
 
    // Checks if sync-lock is on and any track in its sync-lock group is selected.
-   bool IsSyncLockSelected();
+   bool IsSyncLockSelected() const;
 };
 
 struct TrackListNode
@@ -220,7 +220,7 @@ class AUDACITY_DLL_API TrackListIterator
 {
  public:
    TrackListIterator(TrackList * val = NULL);
-   virtual ~TrackListIterator() {};
+   virtual ~TrackListIterator() {}
 
    // Iterate functions
    virtual Track *First(TrackList * val = NULL);
@@ -243,8 +243,8 @@ class AUDACITY_DLL_API TrackListCondIterator: public TrackListIterator
 {
    public:
       TrackListCondIterator(TrackList *val = NULL)
-         :  TrackListIterator(val) {};
-      virtual ~TrackListCondIterator() {};
+         :  TrackListIterator(val) {}
+      virtual ~TrackListCondIterator() {}
 
       // Iteration functions
       Track *First(TrackList *val = NULL);
@@ -266,7 +266,7 @@ class AUDACITY_DLL_API TrackListOfKindIterator: public TrackListCondIterator
 {
  public:
    TrackListOfKindIterator(int kind, TrackList * val = NULL);
-   virtual ~TrackListOfKindIterator() {};
+   virtual ~TrackListOfKindIterator() {}
 
  protected:
    virtual bool Condition(Track *t);
@@ -283,8 +283,8 @@ class AUDACITY_DLL_API TrackListOfKindIterator: public TrackListCondIterator
 class AUDACITY_DLL_API SelectedTrackListOfKindIterator: public TrackListOfKindIterator
 {
  public:
-    SelectedTrackListOfKindIterator(int kind, TrackList * val = NULL) : TrackListOfKindIterator(kind, val) {};
-   virtual ~SelectedTrackListOfKindIterator() {};
+    SelectedTrackListOfKindIterator(int kind, TrackList * val = NULL) : TrackListOfKindIterator(kind, val) {}
+   virtual ~SelectedTrackListOfKindIterator() {}
 
  protected:
    bool Condition(Track *t);
@@ -299,7 +299,7 @@ class AUDACITY_DLL_API VisibleTrackIterator: public TrackListCondIterator
 {
  public:
    VisibleTrackIterator(AudacityProject *project);
-   virtual ~VisibleTrackIterator() {};
+   virtual ~VisibleTrackIterator() {}
 
  protected:
    bool Condition(Track *t);
@@ -316,7 +316,7 @@ class AUDACITY_DLL_API SyncLockedTracksIterator : public TrackListIterator
 {
  public:
    SyncLockedTracksIterator(TrackList * val);
-   virtual ~SyncLockedTracksIterator() {};
+   virtual ~SyncLockedTracksIterator() {}
 
    // Iterate functions
    Track *First(Track *member);

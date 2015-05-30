@@ -108,6 +108,7 @@ ExportMP2Options::ExportMP2Options(wxWindow *parent)
 :  wxDialog(parent, wxID_ANY,
             wxString(_("Specify MP2 Options")))
 {
+   SetName(GetTitle());
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
    for (unsigned int i=0; i < (sizeof(iBitrates)/sizeof(int)); i++)

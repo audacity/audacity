@@ -1,6 +1,6 @@
 #  FLAC - Free Lossless Audio Codec
 #  Copyright (C) 2001-2009  Josh Coalson
-#  Copyright (C) 2011-2013  Xiph.Org Foundation
+#  Copyright (C) 2011-2014  Xiph.Org Foundation
 #
 #  This file is part the FLAC project.  FLAC is comprised of several
 #  components distributed under different licenses.  The codec libraries
@@ -26,12 +26,17 @@ else
 ifeq ($(PROC),x86_64)
     EXTRA_TARGETS =
 else
-    EXTRA_TARGETS = plugin_xmms
+	# Can add plugin_xmms here if desired.
+    EXTRA_TARGETS =
 endif
 endif
 
-.PHONY: all flac libFLAC libFLAC++ metaflac plugin_common plugin_xmms share test_grabbag test_libs_common test_libFLAC test_libFLAC++ test_seeking test_streams utils flacdiff flactimer
-all: flac libFLAC libFLAC++ metaflac plugin_common $(EXTRA_TARGETS) share test_grabbag test_libs_common test_libFLAC test_libFLAC++ test_seeking test_streams utils
+ifeq ($(findstring Windows,$(OS)),Windows)
+    EXTRA_TARGETS += share/win_utf8_io
+endif
+
+.PHONY: all flac libFLAC libFLAC++ metaflac plugin_common plugin_xmms share/win_utf8_io share test_grabbag test_libs_common test_libFLAC test_libFLAC++ test_seeking test_streams flacdiff flactimer
+all: flac libFLAC libFLAC++ metaflac plugin_common $(EXTRA_TARGETS) share test_grabbag test_libs_common test_libFLAC test_libFLAC++ test_seeking test_streams
 
 DEFAULT_CONFIG = release
 
@@ -45,9 +50,7 @@ debug   : all
 valgrind: all
 release : all
 
-all: flac libFLAC libFLAC++ metaflac plugin_common plugin_xmms share test_grabbag test_libs_common test_libFLAC test_libFLAC++ test_seeking test_streams utils
-
-flac libFLAC libFLAC++ metaflac plugin_common plugin_xmms share test_grabbag test_libs_common test_libFLAC test_libFLAC++ test_seeking test_streams:
+flac libFLAC libFLAC++ metaflac plugin_common plugin_xmms share/win_utf8_io share test_grabbag test_libs_common test_libFLAC test_libFLAC++ test_seeking test_streams:
 	(cd $@ ; $(MAKE) -f Makefile.lite $(CONFIG))
 
 flacdiff flactimer:

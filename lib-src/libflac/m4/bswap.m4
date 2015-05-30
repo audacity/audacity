@@ -1,4 +1,4 @@
-dnl Copyright (C) 2012  Xiph.org Foundation
+dnl Copyright (C) 2012-2014 Xiph.org Foundation
 dnl
 dnl Redistribution and use in source and binary forms, with or without
 dnl modification, are permitted provided that the following conditions
@@ -36,20 +36,47 @@ dnl Dtermine whether the compiler has the __builtin_bswap32() intrinsic which
 dnl is likely to be present for most versions of GCC as well as Clang.
 
 AC_DEFUN([XIPH_C_BSWAP32],
-[AC_CACHE_CHECK(has bswap32 instrinsic,
-	ac_cv_c_bswap,
+[AC_CACHE_CHECK(for bswap32 instrinsic,
+  ac_cv_c_bswap32,
 
-	# Initialize to no
-	ac_cv_c_bswap=no
-	HAVE_BSWAP32=0
+  # Initialize to no
+  ac_cv_c_bswap32=no
+  HAVE_BSWAP32=0
 
-	[AC_TRY_LINK([],
-		return __builtin_bswap32 (0) ;,
-			ac_cv_c_bswap=yes
-			HAVE_BSWAP32=1
-			)]
-	AC_DEFINE_UNQUOTED(HAVE_BSWAP32, ${HAVE_BSWAP32},
-					[Compiler has the __builtin_bswap32 intrinsic])
+  [AC_TRY_LINK([],
+    return __builtin_bswap32 (0) ;,
+    ac_cv_c_bswap32=yes
+    HAVE_BSWAP32=1
+  )]
+  AC_DEFINE_UNQUOTED(HAVE_BSWAP32, ${HAVE_BSWAP32},
+    [Compiler has the __builtin_bswap32 intrinsic])
 
-	)]
+  )]
 )# XIPH_C_BSWAP32
+
+
+dnl @synopsis XIPH_C_BSWAP16
+dnl
+dnl @author Erik de Castro Lopo <erikd@mega-nerd.com>
+dnl
+dnl Dtermine whether the compiler has the __builtin_bswap16() intrinsic which
+dnl is likely to be present for most versions of GCC as well as Clang.
+
+AC_DEFUN([XIPH_C_BSWAP16],
+[AC_CACHE_CHECK(for bswap16 instrinsic,
+  ac_cv_c_bswap16,
+
+  # Initialize to no
+  ac_cv_c_bswap16=no
+  HAVE_BSWAP16=0
+
+  [AC_TRY_LINK([],
+    return __builtin_bswap16 (0) ;,
+    ac_cv_c_bswap16=yes
+    HAVE_BSWAP16=1
+  )]
+  AC_DEFINE_UNQUOTED(HAVE_BSWAP16, ${HAVE_BSWAP16},
+    [Compiler has the __builtin_bswap16 intrinsic])
+
+  )]
+)# XIPH_C_BSWAP16

@@ -57,216 +57,300 @@
 #include "ChangeTempo.h"
 #endif
 
-void LoadEffects()
+//
+// Include the SoundTouch effects, if requested
+//
+#if defined(USE_SOUNDTOUCH)
+#define SOUNDTOUCH_EFFECTS \
+   EFFECT( CHANGEPITCH, EffectChangePitch() ) \
+   EFFECT( CHANGETEMPO, EffectChangeTempo() )
+#else
+#define SOUNDTOUCH_EFFECTS
+#endif
+
+//
+// Select the desired Noise Reduction/Removal effect
+//
+#if defined(EXPERIMENTAL_NOISE_REDUCTION)
+#define NOISEREDUCTION_EFFECT \
+   EFFECT( NOISEREDUCTION, EffectNoiseReduction() )
+#else
+#define NOISEREDUCTION_EFFECT \
+   EFFECT( NOISEREMOVAL, EffectNoiseRemoval() )
+#endif
+
+//
+// Include the Classic Filters effect, if requested
+//
+#if defined(EXPERIMENTAL_SCIENCE_FILTERS)
+#define CLASSICFILTER_EFFECT \
+   EFFECT( CLASSICFILTERS, EffectScienFilter() )
+#else
+#define CLASSICFILTER_EFFECT
+#endif
+
+//
+// Include the SBSMS effect, if requested
+//
+#if defined(USE_SBSMS)
+#define SBSMS_EFFECTS \
+   EFFECT( TIMESCALE, EffectTimeScale() )
+#else
+#define SBSMS_EFFECTS
+#endif
+
+//
+// Define the list of effects that will be autoregistered and how to instantiate each
+//
+#define EFFECT_LIST \
+   EFFECT( CHIRP,             EffectToneGen(true) )      \
+   EFFECT( DTMFTONES,         EffectDtmf() )             \
+   EFFECT( NOISE,             EffectNoise() )            \
+   EFFECT( SILENCE,           EffectSilence() )          \
+   EFFECT( TONE,              EffectToneGen(false) )     \
+   EFFECT( AMPLIFY,           EffectAmplify() )          \
+   EFFECT( BASSTREBLE,        EffectBassTreble() )       \
+   EFFECT( CHANGESPEED,       EffectChangeSpeed() )      \
+   EFFECT( CLICKREMOVAL,      EffectClickRemoval() )     \
+   EFFECT( COMPRESSOR,        EffectCompressor() )       \
+   EFFECT( ECHO,              EffectEcho() )             \
+   EFFECT( EQUALIZATION,      EffectEqualization() )     \
+   EFFECT( FADEIN,            EffectFade(true) )         \
+   EFFECT( FADEOUT,           EffectFade(false) )        \
+   EFFECT( INVERT,            EffectInvert() )           \
+   EFFECT( NORMALIZE,         EffectNormalize() )        \
+   EFFECT( PHASER,            EffectPhaser() )           \
+   EFFECT( REPAIR,            EffectRepair() )           \
+   EFFECT( REPEAT,            EffectRepeat() )           \
+   EFFECT( REVERB,            EffectReverb() )           \
+   EFFECT( REVERSE,           EffectReverse() )          \
+   EFFECT( STEREOTOMONO,      EffectStereoToMono() )     \
+   EFFECT( TRUNCATESILENCE,   EffectTruncSilence() )     \
+   EFFECT( WAHWAH,            EffectWahwah() )           \
+   EFFECT( FINDCLIPPING,      EffectFindClipping() )     \
+   NOISEREDUCTION_EFFECT                                 \
+   SOUNDTOUCH_EFFECTS
+
+//
+// Define the list of effects that do not get autoregistered
+//
+#define EXCLUDE_LIST \
+   EFFECT( AUTODUCK,          EffectAutoDuck() )         \
+   EFFECT( LEVELLER,          EffectLeveller() )         \
+   EFFECT( PAULSTRETCH,       EffectPaulstretch() )      \
+   CLASSICFILTER_EFFECT                                  \
+   SBSMS_EFFECTS
+
+//
+// Define the EFFECT() macro to generate enum names
+//
+#define EFFECT(n, i) ENUM_ ## n,
+
+//
+// Create the enum for the list of effects (will be used in a switch statement)
+//
+enum
 {
+   EFFECT_LIST
+   EXCLUDE_LIST
+};
 
-   EffectManager& em = EffectManager::Get();
+//
+// Redefine EFFECT() to add the effect's name to an array
+//
+#undef EFFECT
+#define EFFECT(n, i) n ## _PLUGIN_SYMBOL,
 
-#ifdef EFFECT_CATEGORIES
+//
+// Create the effect name array
+//
+static const wxChar *kEffectNames[] =
+{
+   EFFECT_LIST
+};
 
-   // Create effect category graph. These categories and relationships
-   // are taken from revision 2 of lv2.ttl, loaders for other plugin systems
-   // (such as LADSPA/LRDF) should map their categories to these ones when
-   // applicable. Individual LADSPA/LRDF and LV2 plugins can add new
-   // categories and make them subcategories of the existing ones, but not
-   // add subcategory relationships between these categories.
-   //
-   // We need some persistent, global identifiers for categories - LRDF
-   // and LV2 uses URI strings so we do that too. The URIs here are the
-   // same ones as in lv2.ttl. Category identifiers in other plugin systems
-   // must be mapped to URIs by their loaders.
+//
+// Create the effect name array of excluded effects
+//
+static const wxChar *kExcludedNames[] =
+{
+   EXCLUDE_LIST
+};
 
-#define LV2PREFIX "http://lv2plug.in/ns/lv2core#"
+//
+// Redefine EFFECT() to generate a case statement for the lookup switch
+//
+#undef EFFECT
+#define EFFECT(n, i) case ENUM_ ## n: return new i;
 
-   typedef EffectCategory* CatPtr;
-
-   CatPtr gen = em.AddCategory(wxT(LV2PREFIX) wxT("GeneratorPlugin"),
-                               _("Generator"));
-   CatPtr inst = em.AddCategory(wxT(LV2PREFIX) wxT("InstrumentPlugin"),
-   /* i18n-hint: (noun).*/
-                                _("Instrument"));
-   CatPtr osc = em.AddCategory(wxT(LV2PREFIX) wxT("OscillatorPlugin"),
-                               _("Oscillator"));
-   CatPtr util = em.AddCategory(wxT(LV2PREFIX) wxT("UtilityPlugin"),
-                                _("Utility"));
-   CatPtr conv = em.AddCategory(wxT(LV2PREFIX) wxT("ConverterPlugin"),
-                                _("Converter"));
-   CatPtr anal = em.AddCategory(wxT(LV2PREFIX) wxT("AnalyserPlugin"),
-                                _("Analyser"));
-   CatPtr mix = em.AddCategory(wxT(LV2PREFIX) wxT("MixerPlugin"),
-                               _("Mixer"));
-   CatPtr sim = em.AddCategory(wxT(LV2PREFIX) wxT("SimulatorPlugin"),
-                               _("Simulator"));
-   CatPtr del = em.AddCategory(wxT(LV2PREFIX) wxT("DelayPlugin"),
-                               _("Delay"));
-   CatPtr mod = em.AddCategory(wxT(LV2PREFIX) wxT("ModulatorPlugin"),
-                               _("Modulator"));
-   CatPtr rev = em.AddCategory(wxT(LV2PREFIX) wxT("ReverbPlugin"),
-                               _("Reverb"));
-   CatPtr phas = em.AddCategory(wxT(LV2PREFIX) wxT("PhaserPlugin"),
-                                _("Phaser"));
-   CatPtr flng = em.AddCategory(wxT(LV2PREFIX) wxT("FlangerPlugin"),
-                                _("Flanger"));
-   CatPtr chor = em.AddCategory(wxT(LV2PREFIX) wxT("ChorusPlugin"),
-                                _("Chorus"));
-   CatPtr flt = em.AddCategory(wxT(LV2PREFIX) wxT("FilterPlugin"),
-                               _("Filter"));
-   CatPtr lp = em.AddCategory(wxT(LV2PREFIX) wxT("LowpassPlugin"),
-                              _("Lowpass"));
-   CatPtr bp = em.AddCategory(wxT(LV2PREFIX) wxT("BandpassPlugin"),
-                              _("Bandpass"));
-   CatPtr hp = em.AddCategory(wxT(LV2PREFIX) wxT("HighpassPlugin"),
-                              _("Highpass"));
-   CatPtr comb = em.AddCategory(wxT(LV2PREFIX) wxT("CombPlugin"),
-                                _("Comb"));
-   CatPtr alp = em.AddCategory(wxT(LV2PREFIX) wxT("AllpassPlugin"),
-                               _("Allpass"));
-   CatPtr eq = em.AddCategory(wxT(LV2PREFIX) wxT("EQPlugin"),
-                              _("Equaliser"));
-   CatPtr peq = em.AddCategory(wxT(LV2PREFIX) wxT("ParaEQPlugin"),
-                               _("Parametric"));
-   CatPtr meq = em.AddCategory(wxT(LV2PREFIX) wxT("MultiEQPlugin"),
-                               _("Multiband"));
-   CatPtr spec = em.AddCategory(wxT(LV2PREFIX) wxT("SpectralPlugin"),
-                                _("Spectral Processor"));
-   CatPtr ptch = em.AddCategory(wxT(LV2PREFIX) wxT("PitchPlugin"),
-                                _("Pitch Shifter"));
-   CatPtr amp = em.AddCategory(wxT(LV2PREFIX) wxT("AmplifierPlugin"),
-                               _("Amplifier"));
-   CatPtr dist = em.AddCategory(wxT(LV2PREFIX) wxT("DistortionPlugin"),
-                                _("Distortion"));
-   CatPtr shp = em.AddCategory(wxT(LV2PREFIX) wxT("WaveshaperPlugin"),
-                               _("Waveshaper"));
-   CatPtr dyn = em.AddCategory(wxT(LV2PREFIX) wxT("DynamicsPlugin"),
-                               _("Dynamics Processor"));
-   CatPtr cmp = em.AddCategory(wxT(LV2PREFIX) wxT("CompressorPlugin"),
-                               _("Compressor"));
-   CatPtr exp = em.AddCategory(wxT(LV2PREFIX) wxT("ExpanderPlugin"),
-                               _("Expander"));
-   CatPtr lim = em.AddCategory(wxT(LV2PREFIX) wxT("LimiterPlugin"),
-                               _("Limiter"));
-   CatPtr gate = em.AddCategory(wxT(LV2PREFIX) wxT("GatePlugin"),
-                                _("Gate"));
-
-   em.AddCategoryParent(inst, gen);
-   em.AddCategoryParent(osc, gen);
-   em.AddCategoryParent(conv, util);
-   em.AddCategoryParent(anal, util);
-   em.AddCategoryParent(mix, util);
-   em.AddCategoryParent(rev, sim);
-   em.AddCategoryParent(rev, del);
-   em.AddCategoryParent(phas, mod);
-   em.AddCategoryParent(flng, mod);
-   em.AddCategoryParent(chor, mod);
-   em.AddCategoryParent(lp, flt);
-   em.AddCategoryParent(bp, flt);
-   em.AddCategoryParent(hp, flt);
-   em.AddCategoryParent(comb, flt);
-   em.AddCategoryParent(alp, flt);
-   em.AddCategoryParent(eq, flt);
-   em.AddCategoryParent(peq, eq);
-   em.AddCategoryParent(meq, eq);
-   em.AddCategoryParent(ptch, spec);
-   em.AddCategoryParent(shp, dist);
-   em.AddCategoryParent(cmp, dyn);
-   em.AddCategoryParent(exp, dyn);
-   em.AddCategoryParent(lim, dyn);
-   em.AddCategoryParent(gate, dyn);
-
-   // We also add a couple of categories for internal use. These are not
-   // in lv2.ttl.
-
-#define ATEAM "http://audacityteam.org/namespace#"
-
-#ifdef EXPERIMENTAL_NOISE_REDUCTION
-   CatPtr nrm = em.AddCategory(wxT(ATEAM) wxT("NoiseReduction"),
-      _("Noise Reduction"));
-#else
-   CatPtr nrm = em.AddCategory(wxT(ATEAM) wxT("NoiseRemoval"),
-      _("Noise Removal"));
-#endif
-   CatPtr pnt = em.AddCategory(wxT(ATEAM) wxT("PitchAndTempo"),
-                               _("Pitch and Tempo"));
-   CatPtr tim = em.AddCategory(wxT(ATEAM) wxT("TimelineChanger"),
-                               _("Timeline Changer"));
-   CatPtr aTim = em.AddCategory(wxT(ATEAM) wxT("TimeAnalyser"),
-                                _("Time"));
-   CatPtr onst = em.AddCategory(wxT(ATEAM) wxT("OnsetDetector"),
-                                _("Onsets"));
-   em.AddCategoryParent(nrm, util);
-   em.AddCategoryParent(tim, util);
-   em.AddCategoryParent(aTim, anal);
-   em.AddCategoryParent(onst, aTim);
-
-   // We freeze the internal subcategory relations between the categories
-   // added so far so LADSPA/LRDF or other category systems don't ruin
-   // our hierarchy.
-   em.FreezeCategories();
-
-#endif
-
-   // Generate menu
-   em.RegisterEffect(new EffectNoise());
-   em.RegisterEffect(new EffectSilence());
-   em.RegisterEffect(new EffectToneGen());
-   em.RegisterEffect(new EffectDtmf());
-   // A little magic to convert 'Tone' to chirps.
-   em.RegisterEffect(&((new EffectToneGen())->EnableForChirps()));
-
-   // Effect menu
-
-   em.RegisterEffect(new EffectAmplify());
-
-   //Commented out now that the Compressor effect works better
-   //em.RegisterEffect(new EffectAvcCompressor());
-
-   const int SIMPLE_EFFECT = BUILTIN_EFFECT | PROCESS_EFFECT;
-   // In this list, designating an effect as 'SIMPLE_EFFECT' just means
-   // that it should be included in even the most basic of menus.
-
-   em.RegisterEffect(new EffectAutoDuck());
-   em.RegisterEffect(new EffectBassTreble());
-   em.RegisterEffect(new EffectChangeSpeed());
-   #ifdef USE_SOUNDTOUCH
-      em.RegisterEffect(new EffectChangePitch());
-      em.RegisterEffect(new EffectChangeTempo());
-   #endif
-   em.RegisterEffect(new EffectClickRemoval());
-   em.RegisterEffect(new EffectCompressor());
-   em.RegisterEffect(new EffectEcho());
-   em.RegisterEffect(new EffectPaulstretch());
-   em.RegisterEffect(new EffectEqualization());
-   em.RegisterEffect(new EffectFadeIn(), SIMPLE_EFFECT);
-   em.RegisterEffect(new EffectFadeOut(), SIMPLE_EFFECT);
-   em.RegisterEffect(new EffectInvert());
-   em.RegisterEffect(new EffectLeveller(), SIMPLE_EFFECT);
-#ifdef EXPERIMENTAL_NOISE_REDUCTION
-   em.RegisterEffect(new EffectNoiseReduction(), SIMPLE_EFFECT);
-#else
-   em.RegisterEffect(new EffectNoiseRemoval(), SIMPLE_EFFECT);
-#endif
-   em.RegisterEffect(new EffectNormalize(), SIMPLE_EFFECT);
-   em.RegisterEffect(new EffectPhaser());
-   em.RegisterEffect(new EffectRepair());
-   em.RegisterEffect(new EffectRepeat());
-   em.RegisterEffect(new EffectReverb());
-   em.RegisterEffect(new EffectReverse());
-#ifdef EXPERIMENTAL_SCIENCE_FILTERS
-   em.RegisterEffect(new EffectScienFilter());
-#endif
-   em.RegisterEffect(new EffectStereoToMono(), HIDDEN_EFFECT);// NOT in normal effects list.
-   em.RegisterEffect(new EffectTruncSilence(), SIMPLE_EFFECT);
-#ifdef USE_SBSMS
-   em.RegisterEffect(new EffectTimeScale());
-#endif
-   em.RegisterEffect(new EffectWahwah());
-
-   // Analyze menu
-   em.RegisterEffect(new EffectFindClipping());
+// ============================================================================
+// Module registration entry point
+//
+// This is the symbol that Audacity looks for when the module is built as a
+// dynamic library.
+//
+// When the module is builtin to Audacity, we use the same function, but it is
+// declared static so as not to clash with other builtin modules.
+// ============================================================================
+DECLARE_MODULE_ENTRY(AudacityModule)
+{
+   // Create and register the importer
+   return new BuiltinEffectsModule(moduleManager, path);
 }
 
-void UnloadEffects()
+// ============================================================================
+// Register this as a builtin module
+// ============================================================================
+DECLARE_BUILTIN_MODULE(BuiltinsEffectBuiltin);
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// BuiltinEffectsModule
+//
+///////////////////////////////////////////////////////////////////////////////
+
+BuiltinEffectsModule::BuiltinEffectsModule(ModuleManagerInterface *moduleManager,
+                                           const wxString *path)
 {
-   EffectManager::Get().UnregisterEffects();
+   mModMan = moduleManager;
+   if (path)
+   {
+      mPath = *path;
+   }
 }
 
+BuiltinEffectsModule::~BuiltinEffectsModule()
+{
+   mPath.Clear();
+}
+
+// ============================================================================
+// IdentInterface implementation
+// ============================================================================
+
+wxString BuiltinEffectsModule::GetPath()
+{
+   return mPath;
+}
+
+wxString BuiltinEffectsModule::GetSymbol()
+{
+   return XO("Builtin Effects");
+}
+
+wxString BuiltinEffectsModule::GetName()
+{
+   return XO("Builtin Effects");
+}
+
+wxString BuiltinEffectsModule::GetVendor()
+{
+   return XO("The Audacity Team");
+}
+
+wxString BuiltinEffectsModule::GetVersion()
+{
+   // This "may" be different if this were to be maintained as a separate DLL
+   return AUDACITY_VERSION_STRING;
+}
+
+wxString BuiltinEffectsModule::GetDescription()
+{
+   return XO("Provides builtin effects to Audacity");
+}
+
+// ============================================================================
+// ModuleInterface implementation
+// ============================================================================
+
+bool BuiltinEffectsModule::Initialize()
+{
+   for (size_t i = 0; i < WXSIZEOF(kEffectNames); i++)
+   {
+      mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + kEffectNames[i]);
+   }
+
+   for (size_t i = 0; i < WXSIZEOF(kExcludedNames); i++)
+   {
+      mNames.Add(wxString(BUILTIN_EFFECT_PREFIX) + kExcludedNames[i]);
+   }
+
+   return true;
+}
+
+void BuiltinEffectsModule::Terminate()
+{
+   // Nothing to do here
+   return;
+}
+
+bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+{
+   for (size_t i = 0; i < WXSIZEOF(kEffectNames); i++)
+   {
+      PluginID ID(wxString(BUILTIN_EFFECT_PREFIX) + kEffectNames[i]);
+
+      if (!pm.IsPluginRegistered(ID))
+      {
+         RegisterPlugin(pm, ID);
+      }
+   }
+
+   // We still want to be called during the normal registration process
+   return false;
+}
+
+wxArrayString BuiltinEffectsModule::FindPlugins(PluginManagerInterface & WXUNUSED(pm))
+{
+   return mNames;
+}
+
+bool BuiltinEffectsModule::RegisterPlugin(PluginManagerInterface & pm, const wxString & path)
+{
+   Effect *effect = Instantiate(path);
+   if (effect)
+   {
+      pm.RegisterPlugin(this, effect);
+      delete effect;
+      return true;
+   }
+
+   return false;
+}
+
+bool BuiltinEffectsModule::IsPluginValid(const wxString & path)
+{
+   return mNames.Index(path) != wxNOT_FOUND;
+}
+
+IdentInterface *BuiltinEffectsModule::CreateInstance(const wxString & path)
+{
+   return Instantiate(path);
+}
+
+void BuiltinEffectsModule::DeleteInstance(IdentInterface *instance)
+{
+   Effect *effect = dynamic_cast<Effect *>(instance);
+   if (effect)
+   {
+      delete effect;
+   }
+}
+
+// ============================================================================
+// BuiltinEffectsModule implementation
+// ============================================================================
+
+Effect *BuiltinEffectsModule::Instantiate(const wxString & path)
+{
+   wxASSERT(path.StartsWith(BUILTIN_EFFECT_PREFIX));
+   wxASSERT(mNames.Index(path) != wxNOT_FOUND);
+
+   switch (mNames.Index(path))
+   {
+      EFFECT_LIST;
+      EXCLUDE_LIST;
+   }
+
+   return NULL;
+}

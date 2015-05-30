@@ -13,247 +13,160 @@ Vaughan Johnson (Preview)
 #ifndef __AUDACITY_EFFECT_SCIENFILTER__
 #define __AUDACITY_EFFECT_SCIENFILTER__
 
-#define MAX_FILTER_ORDER 10
-
-#include <wx/button.h>
-#include <wx/panel.h>
-#include <wx/dialog.h>
-#include <wx/dynarray.h>
-#include <wx/intl.h>
-#include <wx/stattext.h>
-#include <wx/slider.h>
-#include <wx/sizer.h>
-#include <wx/string.h>
+#include <wx/arrstr.h>
 #include <wx/bitmap.h>
 #include <wx/choice.h>
-#include <wx/checkbox.h>
+#include <wx/event.h>
+#include <wx/panel.h>
+#include <wx/slider.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/window.h>
 
-#if wxUSE_ACCESSIBILITY
-#include <wx/access.h>
-#endif
-
-#include "Effect.h"
-#include "../WaveTrack.h"
+#include "../ShuttleGui.h"
 #include "../widgets/Ruler.h"
 #include "Biquad.h"
 
-class ScienFilterDialog;
+#include "Effect.h"
 
+#define CLASSICFILTERS_PLUGIN_SYMBOL XO("Classic Filters")
 
-class EffectScienFilter: public Effect {
+class EffectScienFilterPanel;
 
+class EffectScienFilter : public Effect
+{
 public:
-
    EffectScienFilter();
    virtual ~EffectScienFilter();
 
-   virtual wxString GetEffectName() {
-      return wxString(wxTRANSLATE("Classic Filters..."));
-   }
+   // IdentInterface implementation
 
-   virtual std::set<wxString> GetEffectCategories() {
-      std::set<wxString> result;
-      result.insert(wxT("http://lv2plug.in/ns/lv2core#EQPlugin"));
-      return result;
-   }
+   virtual wxString GetSymbol();
+   virtual wxString GetDescription();
 
-   virtual wxString GetEffectIdentifier() {
-      return wxString(wxT("Classic Filters"));
-   }
+   // EffectIdentInterface implementation
 
-   virtual wxString GetEffectAction() {
-      return wxString(_("Performing Classic Filtering"));
-   }
+   virtual EffectType GetType();
 
+   // EffectClientInterface implementation
+
+   virtual int GetAudioInCount();
+   virtual int GetAudioOutCount();
+   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL);
+   virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
+   virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+
+   // Effect implementation
+
+   virtual bool Startup();
    virtual bool Init();
-   virtual bool PromptUser();
-   virtual bool DontPromptUser();
-   virtual bool TransferParameters( Shuttle & shuttle );
-   bool CalcFilterCoeffs (void);
-
-   virtual bool Process();
-
-   // Lowest frequency to display in response graph
-   enum {loFreqI=20};
+   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual bool TransferDataToWindow();
+   virtual bool TransferDataFromWindow();
 
 private:
-   bool ProcessOne(int count, WaveTrack * t,
-      sampleCount start, sampleCount len);
+   // EffectScienFilter implementation
 
-   void Filter(sampleCount len,
-      float *buffer);
-   void ReadPrefs();
+   virtual bool TransferGraphLimitsFromWindow();
+   virtual bool CalcFilter();
+   double ChebyPoly (int Order, double NormFreq);
+   float FilterMagnAtFreq(float Freq);
 
-   //int mM;
+   bool CalcFilterCoeffs (void);
 
+   void EnableDisableRippleCtl (int FilterType);
+
+   void OnSize( wxSizeEvent & evt );
+   void OnSlider( wxCommandEvent & evt );
+
+   void OnOrder( wxCommandEvent & evt );
+   void OnCutoff( wxCommandEvent & evt );
+   void OnRipple( wxCommandEvent & evt );
+   void OnStopbandRipple( wxCommandEvent & evt );
+   void OnFilterType( wxCommandEvent & evt );
+   void OnFilterSubtype( wxCommandEvent & evt );
+
+   void OnSliderDBMAX( wxCommandEvent & evt );
+   void OnSliderDBMIN( wxCommandEvent & evt );
+
+private:
    float mCutoff;
-   int mOrder;
    float mRipple;
    float mStopbandRipple;
    int mFilterType;		// Butterworth etc.
    int mFilterSubtype;	// lowpass, highpass
-   BiquadStruct* mpBiquad[5];	// MAX_ORDER/2
+   int mOrder;
+   int mOrderIndex;
+   BiquadStruct *mpBiquad;
 
    double mdBMax;
    double mdBMin;
-   bool mPrompting;
    bool mEditingBatchParams;
-
-public:
-
-   friend class ScienFilterDialog;
-   friend class ScienFilterPanel;
-};
-
-
-class ScienFilterPanel: public wxPanel
-{
-public:
-   ScienFilterPanel( double loFreq, double hiFreq,
-      ScienFilterDialog *parent,
-      wxWindowID id,
-      const wxPoint& pos = wxDefaultPosition,
-      const wxSize& size = wxDefaultSize);
-   ~ScienFilterPanel();
-
-#if 0
-   Needed only if user can draw in the graph
-      void OnMouseEvent(wxMouseEvent & event);
-   void OnCaptureLost(wxMouseCaptureLostEvent & event);
-#endif
-   void OnPaint(wxPaintEvent & event);
-   void OnSize (wxSizeEvent & event);
-
-   // We don't need or want to accept focus.
-   bool AcceptsFocus() const { return false; }
-
-   float dBMax;
-   float dBMin;
-
-private:
-
-   wxBitmap *mBitmap;
-   wxRect mEnvRect;
-   ScienFilterDialog *mParent;
-   int mWidth;
-   int mHeight;
-
-   double mLoFreq;
-   double mHiFreq;
-
-   DECLARE_EVENT_TABLE()
-};
-
-
-// WDR: class declarations
-
-//----------------------------------------------------------------------------
-// ScienFilterDialog
-//----------------------------------------------------------------------------
-
-class ScienFilterDialog: public wxDialog //, public XMLTagHandler
-{
-public:
-   // constructors and destructors
-   ScienFilterDialog(EffectScienFilter * effect,
-      double loFreq, double hiFreq,
-      wxWindow *parent, wxWindowID id,
-      const wxString &title,
-      const wxPoint& pos = wxDefaultPosition,
-      const wxSize& size = wxDefaultSize,
-      long style = wxDEFAULT_DIALOG_STYLE );
-   ~ScienFilterDialog();
-
-   // WDR: method declarations for ScienFilterDialog
-   virtual bool Validate();
-   virtual bool TransferDataToWindow();
-   virtual bool TransferGraphLimitsFromWindow();
-   virtual bool CalcFilter(EffectScienFilter* effect);
-   float FilterMagnAtFreq (float Freq);
-
-   wxChoice* mFilterTypeCtl;
-   wxChoice* mFilterSubTypeCtl;
-   wxChoice* mFilterOrderCtl;
-
-   float Cutoff;
-   int Order;
-   float Ripple;
-   float StopbandRipple;
-   int FilterType;		// Butterworth etc.
-   int FilterSubtype;	// lowpass, highpass
-
-   float dBMin;
-   float dBMax;
-   int interp;
-   RulerPanel *dBRuler;
-   RulerPanel *freqRuler;
-
-private:
-   void MakeScienFilterDialog();
-   void Finish(bool ok);
-
-private:
-   // WDR: member variable declarations for ScienFilterDialog
-
-   enum
-   {
-      ID_FILTERPANEL = 10000,
-      ID_DBMAX,
-      ID_DBMIN,
-      ID_FILTER_TYPE,
-      ID_FILTER_SUBTYPE,
-      ID_FILTER_ORDER,
-      ID_RIPPLE,
-      ID_CUTOFF,
-      ID_STOPBAND_RIPPLE
-   };
-
-private:
-   // WDR: handler declarations for ScienFilterDialog
-   void OnPaint( wxPaintEvent &event );
-   void OnSize( wxSizeEvent &event );
-   void OnErase( wxEraseEvent &event );
-   void OnSlider( wxCommandEvent &event );
-
-   void OnOrder( wxCommandEvent &event );
-   void OnCutoff( wxCommandEvent &event );
-   void OnRipple( wxCommandEvent &event );
-   void OnStopbandRipple( wxCommandEvent &event );
-   void OnFilterType( wxCommandEvent &event );
-   void OnFilterSubtype( wxCommandEvent &event );
-
-   void OnSliderDBMAX( wxCommandEvent &event );
-   void OnSliderDBMIN( wxCommandEvent &event );
-   void OnPreview(wxCommandEvent &event);
-   void OnOk( wxCommandEvent &event );
-   void OnCancel( wxCommandEvent &event );
-   void EnableDisableRippleCtl (int FilterType);
-private:
-   EffectScienFilter * m_pEffect;
 
    double mLoFreq;
    double mNyquist;
 
-   ScienFilterPanel *mPanel;
-   wxSlider *dBMinSlider;
-   wxSlider *dBMaxSlider;
-   wxBoxSizer *szrV;
-   wxFlexGridSizer *szr3;
-   wxBoxSizer *szr4;
-   wxBoxSizer *szr2;
-   wxFlexGridSizer *szr1;
-   wxSize size;
-   wxTextCtrl* mRippleCtl;
-   wxTextCtrl* mStopbandRippleCtl;
-   wxTextCtrl* mCutoffCtl;
+   EffectScienFilterPanel *mPanel;
+   wxSlider *mdBMinSlider;
+   wxSlider *mdBMaxSlider;
 
-   // sizers for pass and stop-band attenuations
-   wxBoxSizer *szrPass;
-   wxBoxSizer *szrStop;
+   wxStaticText *mRippleCtlP;
+   wxTextCtrl *mRippleCtl;
+   wxStaticText *mRippleCtlU;
+
+   wxTextCtrl *mCutoffCtl;
+
+   wxStaticText *mStopbandRippleCtlP;
+   wxTextCtrl *mStopbandRippleCtl;
+   wxStaticText *mStopbandRippleCtlU;
+
+   wxChoice *mFilterTypeCtl;
+   wxChoice *mFilterSubTypeCtl;
+   wxChoice *mFilterOrderCtl;
+
+   RulerPanel *mdBRuler;
+   RulerPanel *mfreqRuler;
+
+   DECLARE_EVENT_TABLE();
+
+   friend class EffectScienFilterPanel;
+};
+
+class EffectScienFilterPanel : public wxPanel
+{
+public:
+   EffectScienFilterPanel(EffectScienFilter *effect, wxWindow *parent);
+   virtual ~EffectScienFilterPanel();
+
+   // We don't need or want to accept focus.
+   bool AcceptsFocus() const;
+
+   void SetFreqRange(double lo, double hi);
+   void SetDbRange(double min, double max);
 
 private:
-   DECLARE_EVENT_TABLE()
+   void OnPaint(wxPaintEvent & evt);
+   void OnSize(wxSizeEvent & evt);
 
+private:
+   EffectScienFilter *mEffect;
+   wxWindow *mParent;
+
+   double mLoFreq;
+   double mHiFreq;
+
+   double mDbMin;
+   double mDbMax;
+
+   wxBitmap *mBitmap;
+   wxRect mEnvRect;
+   int mWidth;
+   int mHeight;
+
+   friend class EffectScienFilter;
+
+   DECLARE_EVENT_TABLE();
 };
 
 #if wxUSE_ACCESSIBILITY

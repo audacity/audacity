@@ -4,7 +4,7 @@
   <!ENTITY dhfirstname "<firstname>Matt</firstname>">
   <!ENTITY dhsurname   "<surname>Zimmerman</surname>">
   <!-- Please adjust the date whenever revising the manpage. -->
-  <!ENTITY dhdate      "<date>2013/04/30</date>">
+  <!ENTITY dhdate      "<date>2013/09/18</date>">
   <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
        allowed: see man(7), man(1). -->
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
@@ -559,7 +559,7 @@
 		<term><option>-6</option>, <option>--compression-level-6</option></term>
 
 		<listitem>
-		  <para>Synonymous with -l 8 -b 4096 -m -r 6</para>
+		  <para>Synonymous with -l 8 -b 4096 -m -r 6 -A tukey(0.5) -A partial_tukey(2)</para>
 		</listitem>
 	      </varlistentry>
 
@@ -567,7 +567,7 @@
 		<term><option>-7</option>, <option>--compression-level-7</option></term>
 
 		<listitem>
-		  <para>Synonymous with -l 8 -b 4096 -m -e -r 6</para>
+		  <para>Synonymous with -l 8 -b 4096 -m -e -r 6 -A tukey(0.5) -A partial_tukey(2)</para>
 		</listitem>
 	      </varlistentry>
 
@@ -575,7 +575,7 @@
 		<term><option>-8</option>, <option>--compression-level-8</option></term>
 
 		<listitem>
-		  <para>Synonymous with -l 12 -b 4096 -m -e -r 6</para>
+		  <para>Synonymous with -l 12 -b 4096 -m -e -r 6 -A tukey(0.5) -A partial_tukey(2) -A punchout_tukey(3)</para>
 		</listitem>
 	      </varlistentry>
 	    </variablelist>
@@ -612,9 +612,11 @@
 	  <term><option>-A</option> <replaceable>function</replaceable>, <option>--apodization</option>=<replaceable>function</replaceable></term>
 
 	  <listitem>
-	    <para>Window audio data with given the apodization function.  The functions are: bartlett, bartlett_hann, blackman, blackman_harris_4term_92db, connes, flattop, gauss(STDDEV), hamming, hann, kaiser_bessel, nuttall, rectangle, triangle, tukey(P), welch.</para>
+	    <para>Window audio data with given the apodization function.  The functions are: bartlett, bartlett_hann, blackman, blackman_harris_4term_92db, connes, flattop, gauss(STDDEV), hamming, hann, kaiser_bessel, nuttall, rectangle, triangle, tukey(P), partial_tukey(n[/ov[/P]]), punchout_tukey(n[/ov[/P]]), welch.</para>
 	    <para>For gauss(STDDEV), STDDEV is the standard deviation (0&lt;STDDEV&lt;=0.5).</para>
 	    <para>For tukey(P), P specifies the fraction of the window that is tapered (0&lt;=P&lt;=1; P=0 corresponds to "rectangle" and P=1 corresponds to "hann").</para>
+	    <para>For partial_tukey(n) and punchout_tukey(n), n apodization functions are added that span different parts of each block. Values of 2 to 6 seem to yield sane results. If necessary, an overlap can be specified, as can be the taper parameter, for example partial_tukey(2/0.2) or partial_tukey(2/0.2/0.5). ov should be smaller than 1 and can be negative.</para>
+	    <para>Please note that P, STDDEV and ov are locale specific, so a comma as decimal separator might be required instead of a dot.</para>
 	    <para>More than one -A option (up to 32) may be used.  Any function that is specified erroneously is silently dropped.  The encoder chooses suitable defaults in the absence of any -A options; any -A option specified replaces the default(s).</para>
 	    <para>When more than one function is specified, then for every subframe the encoder will try each of them separately and choose the window that results in the smallest compressed subframe.  Multiple functions can greatly increase the encoding time.</para>
 	  </listitem>
@@ -648,7 +650,7 @@
 	  <term><option>-r</option> [<replaceable>#</replaceable>,]<replaceable>#</replaceable>, <option>--rice-partition-order</option>=[<replaceable>#</replaceable>,]<replaceable>#</replaceable></term>
 
 	  <listitem>
-	    <para>Set the [min,]max residual partition order (0..16). min defaults to 0 if unspecified.  Default is -r 5.</para>
+	    <para>Set the [min,]max residual partition order (0..15). min defaults to 0 if unspecified.  Default is -r 5.</para>
 	  </listitem>
 	</varlistentry>
 
@@ -780,14 +782,14 @@
   <refsect1>
     <title>SEE ALSO</title>
 
-    <para>metaflac(1).</para>
+    <para>metaflac(1)</para>
 
     <para>The programs are documented fully by HTML format documentation, available in <filename>/usr/share/doc/libflac-doc/html</filename> on &debian; systems.</para>
   </refsect1>
   <refsect1>
     <title>AUTHOR</title>
 
-    <para>This manual page was written by &dhusername; &dhemail; for the &debian; system (but may be used by others).</para>
+    <para>This manual page was initially written by &dhusername; &dhemail; for the &debian; system (but may be used by others). It has been kept up-to-date by the Xiph.org Foundation.</para>
 
     <!-- <para>Permission is granted to copy, distribute and/or modify this document under the terms of the <acronym>GNU</acronym> Free Documentation License, Version 1.1 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A copy of the license can be found under <filename>/usr/share/common-licenses/FDL</filename>.</para> -->
 

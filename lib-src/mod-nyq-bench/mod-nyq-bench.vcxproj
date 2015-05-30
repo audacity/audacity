@@ -66,7 +66,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>audacity.lib;wxbase28ud.lib;wxbase28ud_net.lib;wxmsw28ud_adv.lib;wxmsw28ud_core.lib;wxmsw28ud_html.lib;wxpngd.lib;wxzlibd.lib;wxjpegd.lib;wxtiffd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)modules\$(ProjectName).dll</OutputFile>
+      <OutputFile>..\..\win\$(ConfigurationName)\modules\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>..\..\win/$(Configuration);$(WXWIN)\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -91,7 +91,7 @@ copy "$(TargetPath)" "%25dest%25"
     </ClCompile>
     <Link>
       <AdditionalDependencies>audacity.lib;wxbase28u.lib;wxbase28u_net.lib;wxmsw28u_adv.lib;wxmsw28u_core.lib;wxmsw28u_html.lib;wxpng.lib;wxzlib.lib;wxjpeg.lib;wxtiff.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)modules\$(ProjectName).dll</OutputFile>
+      <OutputFile>..\..\win\$(ConfigurationName)\modules\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>../../win/$(Configuration);$(WXWIN)\lib\vc_dll;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
