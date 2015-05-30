@@ -3293,10 +3293,28 @@ void AudacityProject::UnlockAllBlocks()
    }
 }
 
+class ProjectDisabler
+{
+public:
+   ProjectDisabler(wxWindow *w)
+   :  mWindow(w)
+   {
+      mWindow->GetEventHandler()->SetEvtHandlerEnabled(false);
+   }
+   ~ProjectDisabler()
+   {
+      mWindow->GetEventHandler()->SetEvtHandlerEnabled(true);
+   }
+private:
+   wxWindow *mWindow;
+};
+
 bool AudacityProject::Save(bool overwrite /* = true */ ,
                            bool fromSaveAs /* = false */,
                            bool bWantSaveCompressed /*= false*/)
 {
+   ProjectDisabler disabler(this);
+
    if (bWantSaveCompressed)
       wxASSERT(fromSaveAs);
    else
