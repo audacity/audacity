@@ -198,7 +198,7 @@ void SpectralSelectionBar::UpdatePrefs()
    }
 
    // Set label to pull in language change
-   SetLabel(_("SpectralSelection"));
+   SetLabel(_("Spectral Selection"));
 
    // Give base class a chance
    ToolBar::UpdatePrefs();
