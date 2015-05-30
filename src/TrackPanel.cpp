@@ -723,9 +723,9 @@ void TrackPanel::BuildMenus(void)
    /* i18n-hint: short form of 'logarithm'*/
    mWaveTrackMenu->Append(OnSpectrumLogID, _("Spectrogram l&og(f)"));
    /* i18n-hint: Spectral Selection is spectrogram with ability to select frequencies too'*/
-   mWaveTrackMenu->Append(OnSpectralSelID, _("Spectral Selection"));
+   mWaveTrackMenu->Append(OnSpectralSelID, _("S&pectral Selection"));
    /* i18n-hint: short form of 'logarithm'*/
-   mWaveTrackMenu->Append(OnSpectralSelLogID, _("Spectral Selection l&og(f)"));
+   mWaveTrackMenu->Append(OnSpectralSelLogID, _("Spectral Selection lo&g(f)"));
 
    mWaveTrackMenu->Append(OnPitchID, _("Pitc&h (EAC)"));
    mWaveTrackMenu->AppendSeparator();
