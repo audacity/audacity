@@ -7339,7 +7339,7 @@ void TrackPanel::DrawScrubSpeed(wxDC &dc)
       return;
 
    // Don't draw it during stutter play with shift down
-   if (!::wxGetMouseState().ShiftDown() && (
+   if (!::wxGetMouseState().LeftDown() && (
 
           mScrubSpeedDisplayCountdown > 0
 
