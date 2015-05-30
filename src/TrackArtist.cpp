@@ -438,6 +438,12 @@ void TrackArtist::DrawTrack(const Track * t,
       case WaveTrack::SpectrumLogDisplay:
          DrawSpectrum(wt, dc, r, viewInfo, false, true);
          break;
+      case WaveTrack::SpectralSelectionDisplay:
+         DrawSpectrum(wt, dc, r, viewInfo, false, false);
+         break;
+      case WaveTrack::SpectralSelectionLogDisplay:
+         DrawSpectrum(wt, dc, r, viewInfo, false, true);
+         break;
       case WaveTrack::PitchDisplay:
          DrawSpectrum(wt, dc, r, viewInfo, true, false);
          break;
@@ -763,7 +769,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
          vruler->SetLabelEdges(true);
          vruler->SetLog(false);
       }
-      else if (display == WaveTrack::SpectrumDisplay) {
+      else if ( 
+         (display == WaveTrack::SpectrumDisplay) || 
+         (display == WaveTrack::SpectralSelectionDisplay) )
+      {
          // Spectrum
 
          if (r.height < 60)
@@ -806,7 +815,10 @@ void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
          }
          vruler->SetLog(false);
       }
-      else if (display == WaveTrack::SpectrumLogDisplay) {
+      else if ( 
+         (display == WaveTrack::SpectrumLogDisplay) || 
+         (display == WaveTrack::SpectralSelectionLogDisplay) )
+      {
          // SpectrumLog
 
          if (r.height < 10)
@@ -1792,23 +1804,22 @@ static float sumFreqValues(
 // Helper function to decide on which color set to use.
 // dashCount counts both dashes and the spaces between them. 
 AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBinLo, 
-   float selBinCenter, float selBinHi, int dashCount )
+   float selBinCenter, float selBinHi, int dashCount, bool isSpectral )
 {
-   if ( (selBinCenter >= 0) && (bin0 <= selBinCenter) && (selBinCenter < bin1) )
+   if (!isSpectral)
+      return  AColor::ColorGradientTimeSelected;
+   if ((selBinCenter >= 0) && (bin0 <= selBinCenter) &&
+       (selBinCenter < bin1))
       return AColor::ColorGradientEdge;
-   else if (
-      (0 == dashCount % 2)    &&
-      (((selBinLo >= 0) && (bin0 <= selBinLo) && ( selBinLo < bin1))  ||
-       ((selBinHi >= 0) && (bin0 <= selBinHi) && ( selBinHi < bin1)) ) )
+   if ((0 == dashCount % 2) &&
+       (((selBinLo >= 0) && (bin0 <= selBinLo) && ( selBinLo < bin1))  ||
+        ((selBinHi >= 0) && (bin0 <= selBinHi) && ( selBinHi < bin1))))
       return AColor::ColorGradientEdge;
-   else if (
-      (selBinLo < 0 || selBinLo < bin1) && 
-      (selBinHi < 0 || selBinHi > bin0) )
+   if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0))
       return  AColor::ColorGradientTimeAndFrequencySelected;
-   else
+
       return  AColor::ColorGradientTimeSelected;
 }
-
 
 
 void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
@@ -2098,7 +2109,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             // If we are in the time selected range, then we may use a differnt color set.
             if (ssel0 <= w0 && w1 < ssel1)
             {
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH );
+               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
+                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
             }
 
 
@@ -2210,7 +2223,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             // If we are in the time selected range, then we may use a differnt color set.
             if (ssel0 <= w0 && w1 < ssel1)
             {
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH );
+               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
+                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
             }
 
             if(!usePxCache) {

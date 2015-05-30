@@ -322,6 +322,8 @@ enum {
    OnWaveformDBID,
    OnSpectrumID,
    OnSpectrumLogID,
+   OnSpectralSelID,
+   OnSpectralSelLogID,
    OnPitchID,
 
    OnSplitStereoID,
@@ -720,6 +722,11 @@ void TrackPanel::BuildMenus(void)
    mWaveTrackMenu->Append(OnSpectrumID, _("&Spectrogram"));
    /* i18n-hint: short form of 'logarithm'*/
    mWaveTrackMenu->Append(OnSpectrumLogID, _("Spectrogram l&og(f)"));
+   /* i18n-hint: Spectral Selection is spectrogram with ability to select frequencies too'*/
+   mWaveTrackMenu->Append(OnSpectralSelID, _("S&pectral Selection"));
+   /* i18n-hint: short form of 'logarithm'*/
+   mWaveTrackMenu->Append(OnSpectralSelLogID, _("Spectral Selection lo&g(f)"));
+
    mWaveTrackMenu->Append(OnPitchID, _("Pitc&h (EAC)"));
    mWaveTrackMenu->AppendSeparator();
    mWaveTrackMenu->AppendRadioItem(OnChannelMonoID, _("&Mono"));
@@ -1721,8 +1728,7 @@ void TrackPanel::SetCursorAndTipWhenInLabel( Track * t,
 {
    if (event.m_x >= GetVRulerOffset() &&
          (t->GetKind() == Track::Wave) &&
-         (((WaveTrack *) t)->GetDisplay() <= WaveTrack::SpectrumDisplay ||
-            ((WaveTrack *) t)->GetDisplay() <= WaveTrack::SpectrumLogDisplay))
+         ( ((WaveTrack *) t)->GetDisplay() <= WaveTrack::SpectralSelectionLogDisplay) )
    {
       *ppTip = _("Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.");
       SetCursor(event.ShiftDown()? *mZoomOutCursor : *mZoomInCursor);
@@ -1796,15 +1802,17 @@ void TrackPanel::SetCursorAndTipWhenInLabelTrack( LabelTrack * pLT,
 
 namespace {
 
+// This returns true if we're a spectral editing track.
 inline bool isSpectrogramTrack(const Track *pTrack, bool *pLogf = NULL) {
    if (pTrack &&
        pTrack->GetKind() == Track::Wave) {
       const int display =
          static_cast<const WaveTrack*>(pTrack)->GetDisplay();
-      const bool logF = (display == WaveTrack::SpectrumLogDisplay);
+      const bool logF = (display == WaveTrack::SpectrumLogDisplay) || 
+         (display == WaveTrack::SpectralSelectionLogDisplay);
       if (pLogf)
          *pLogf = logF;
-      return logF || (display == WaveTrack::SpectrumDisplay);
+      return (display == WaveTrack::SpectralSelectionLogDisplay) || (display == WaveTrack::SpectralSelectionDisplay);
    }
    else {
       if (pLogf)
@@ -3083,7 +3091,9 @@ void TrackPanel::ExtendFreqSelection(int mouseYCoordinate, int trackTopEdge,
 
    const WaveTrack* wt = mFreqSelTrack;
    const int display = wt->GetDisplay();
-   const bool logF = display == WaveTrack::SpectrumLogDisplay;
+   const bool logF = (display == WaveTrack::SpectrumLogDisplay) ||
+      (display == WaveTrack::SpectralSelectionLogDisplay) 
+      ;
    const double rate =  wt->GetRate();
    const double frequency =
       PositionToFrequency(true, mouseYCoordinate,
@@ -4566,7 +4576,7 @@ void TrackPanel::HandleVZoomClick( wxMouseEvent & event )
 
    // don't do anything if track is not wave or Spectrum/log Spectrum
    if (((mCapturedTrack->GetKind() == Track::Wave) &&
-            (((WaveTrack*)mCapturedTrack)->GetDisplay() <= WaveTrack::SpectrumLogDisplay))
+            (((WaveTrack*)mCapturedTrack)->GetDisplay() <= WaveTrack::SpectralSelectionLogDisplay))
 #ifdef USE_MIDI
             || mCapturedTrack->GetKind() == Track::Note
 #endif
@@ -4655,8 +4665,11 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
    int fftSkipPoints=0;
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
    double rate = ((WaveTrack *)track)->GetRate();
-   spectrum = ((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumDisplay;
-   spectrumLog=(((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumLogDisplay);
+   spectrum = (((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumDisplay) ||
+      (((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectralSelectionDisplay)  ;
+   spectrumLog=(((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectrumLogDisplay) ||
+      (((WaveTrack *) track)->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay) 
+      ;
    if(spectrum) {
       min = mTrackArtist->GetSpectrumMinFreq(0);
       if(min < 0)
@@ -8457,6 +8470,8 @@ void TrackPanel::OnTrackMenu(Track *t)
                         display != WaveTrack::WaveformDBDisplay);
       theMenu->Enable(OnSpectrumID, display != WaveTrack::SpectrumDisplay);
       theMenu->Enable(OnSpectrumLogID, display != WaveTrack::SpectrumLogDisplay);
+      theMenu->Enable(OnSpectralSelID, display != WaveTrack::SpectralSelectionDisplay);
+      theMenu->Enable(OnSpectralSelLogID, display != WaveTrack::SpectralSelectionLogDisplay);
       theMenu->Enable(OnPitchID, display != WaveTrack::PitchDisplay);
 
       WaveTrack * track = (WaveTrack *)t;

@@ -48,17 +48,22 @@ void TracksPrefs::Populate()
    mSoloChoices.Add(_("None"));
 
 
-   // Keep the same order as in TrackPanel.cpp menu: OnWaveformID, OnWaveformDBID, OnSpectrumID, OnSpectrumLogID, OnPitchID
+   // Keep the same order as in TrackPanel.cpp menu: OnWaveformID, OnWaveformDBID, OnSpectrumID, OnSpectrumLogID, 
+   // OnSpectralSelID, OnSpectralSelLogID, OnPitchID
    mViewCodes.Add(0);
    mViewCodes.Add(1);
    mViewCodes.Add(2);
    mViewCodes.Add(3);
    mViewCodes.Add(4);
+   mViewCodes.Add(5);
+   mViewCodes.Add(6);
 
    mViewChoices.Add(_("Waveform"));
    mViewChoices.Add(_("Waveform (dB)"));
    mViewChoices.Add(_("Spectrogram"));
    mViewChoices.Add(_("Spectrogram log(f)"));
+   mViewChoices.Add(_("Spectral Selection"));
+   mViewChoices.Add(_("Spectrogram Selection log(f)"));
    mViewChoices.Add(_("Pitch (EAC)"));
 
    //------------------------- Main section --------------------

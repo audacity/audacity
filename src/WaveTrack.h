@@ -409,6 +409,8 @@ class AUDACITY_DLL_API WaveTrack: public Track {
       WaveformDBDisplay,
       SpectrumDisplay,
       SpectrumLogDisplay,
+      SpectralSelectionDisplay,
+      SpectralSelectionLogDisplay,
       PitchDisplay,
       NoDisplay            // Preview track has no display
    } WaveTrackDisplay;
@@ -417,6 +419,10 @@ class AUDACITY_DLL_API WaveTrack: public Track {
       if(mDisplay<2)
          mLastDisplay=mDisplay;    // remember last display mode for wave and wavedb so they can remap
       mDisplay = display;
+      if( mDisplay == SpectralSelectionDisplay ){
+      }
+      if( mDisplay == SpectralSelectionLogDisplay ){
+      }
    }
    int GetDisplay() const {return mDisplay;}
    int GetLastDisplay() {return mLastDisplay;}
