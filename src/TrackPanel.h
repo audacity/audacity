@@ -302,9 +302,11 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 
 #ifdef EXPERIMENTAL_SCRUBBING_SMOOTH_SCROLL
    double FindScrubSpeed(double timeAtMouse) const;
+   double FindSeekSpeed(double timeAtMouse) const;
 #endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_BASIC
+   static bool PollIsSeeking();
    bool IsScrubbing();
    void MarkScrubStart(
       wxCoord xx
@@ -313,7 +315,7 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
 #endif
    );
    bool MaybeStartScrubbing(wxMouseEvent &event);
-   bool ContinueScrubbing(wxCoord position, bool hasFocus, bool maySkip);
+   bool ContinueScrubbing(wxCoord position, bool hasFocus, bool seek);
    bool StopScrubbing();
 #endif
 

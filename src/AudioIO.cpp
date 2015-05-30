@@ -403,7 +403,7 @@ struct AudioIO::ScrubQueue
    }
    ~ScrubQueue() {}
 
-   bool Producer(double startTime, double end, double maxSpeed, bool bySpeed, bool maySkip)
+   bool Producer(double end, double maxSpeed, bool bySpeed, bool maySkip)
    {
       // Main thread indicates a scrubbing interval
 
@@ -415,9 +415,8 @@ struct AudioIO::ScrubQueue
       {
          Entry &previous = mEntries[(mLeadingIdx + Size - 1) % Size];
 
-         if (startTime < 0.0)
-            // Use the previous end as new start.
-            startTime = previous.mS1 / mRate;
+         // Use the previous end as new start.
+         const double startTime = previous.mS1 / mRate;
          // Might reject the request because of zero duration,
          // or a too-short "stutter"
          const bool success =
@@ -518,7 +517,7 @@ private:
          bool maxed = false;
 
          // May change the requested speed (or reject)
-         if (speed > maxSpeed)
+         if (!adjustStart && speed > maxSpeed)
          {
             // Reduce speed to the maximum selected in the user interface.
             speed = maxSpeed;
@@ -579,10 +578,10 @@ private:
             {
                // When playback follows a fast mouse movement by "stuttering"
                // at maximum playback, don't make stutters too short to be useful.
-               if (maxed && duration < minStutter)
+               if (duration < minStutter)
                   return false;
-
-               const long diff = lrint(speed * duration);
+               // Limit diff because this is seeking.
+               const long diff = lrint(std::min(1.0, speed) * duration);
                if (s0 < s1)
                   s0 = s1 - diff;
                else
@@ -2413,7 +2412,7 @@ bool AudioIO::IsPaused()
 bool AudioIO::EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySkip)
 {
    if (mScrubQueue)
-      return mScrubQueue->Producer(-1.0, endTime, maxSpeed, false, maySkip);
+      return mScrubQueue->Producer(endTime, maxSpeed, false, maySkip);
    else
       return false;
 }
@@ -2421,7 +2420,7 @@ bool AudioIO::EnqueueScrubByPosition(double endTime, double maxSpeed, bool maySk
 bool AudioIO::EnqueueScrubBySignedSpeed(double speed, double maxSpeed, bool maySkip)
 {
    if (mScrubQueue)
-      return mScrubQueue->Producer(-1.0, speed, maxSpeed, true, maySkip);
+      return mScrubQueue->Producer(speed, maxSpeed, true, maySkip);
    else
       return false;
 }
