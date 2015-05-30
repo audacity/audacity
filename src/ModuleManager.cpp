@@ -253,11 +253,11 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
    wxGetApp().FindFilesInPathList(wxT("*.so"), pathList, files);
    #endif
 
+   wxString saveOldCWD = ::wxGetCwd();
    for (i = 0; i < files.GetCount(); i++) {
       // As a courtesy to some modules that might be bridges to
       // open other modules, we set the current working
       // directory to be the module's directory.
-      wxString saveOldCWD = ::wxGetCwd();
       wxString prefix = ::wxPathOnly(files[i]);
       ::wxSetWorkingDirectory(prefix);
 
@@ -329,8 +329,9 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
          // No need to save status, as we already set kModuleFailed.
          delete module;
       }
-      ::wxSetWorkingDirectory(saveOldCWD);
    }
+   ::wxSetWorkingDirectory(saveOldCWD);
+
    // After loading all the modules, we may have a registered scripting function.
    if(scriptFn)
    {
