@@ -1879,6 +1879,9 @@ bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
    if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
       return false;
 
+   if (event.GetKeyCode() == WXK_ESCAPE)
+      mTrackPanel->HandleEscapeKey(true);
+
    if (event.GetKeyCode() == WXK_ALT)
       mTrackPanel->HandleAltKey(true);
 
@@ -1924,6 +1927,9 @@ bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
    // All keypresses must be destined for this project window.
    if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
       return false;
+
+   if (event.GetKeyCode() == WXK_ESCAPE)
+      mTrackPanel->HandleEscapeKey(false);
 
    if (event.GetKeyCode() == WXK_ALT)
       mTrackPanel->HandleAltKey(false);
@@ -3287,10 +3293,28 @@ void AudacityProject::UnlockAllBlocks()
    }
 }
 
+class ProjectDisabler
+{
+public:
+   ProjectDisabler(wxWindow *w)
+   :  mWindow(w)
+   {
+      mWindow->GetEventHandler()->SetEvtHandlerEnabled(false);
+   }
+   ~ProjectDisabler()
+   {
+      mWindow->GetEventHandler()->SetEvtHandlerEnabled(true);
+   }
+private:
+   wxWindow *mWindow;
+};
+
 bool AudacityProject::Save(bool overwrite /* = true */ ,
                            bool fromSaveAs /* = false */,
                            bool bWantSaveCompressed /*= false*/)
 {
+   ProjectDisabler disabler(this);
+
    if (bWantSaveCompressed)
       wxASSERT(fromSaveAs);
    else
