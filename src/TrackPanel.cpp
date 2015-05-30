@@ -1565,8 +1565,11 @@ void TrackPanel::MakeParentResize()
    mListener->TP_HandleResize();
 }
 
-void TrackPanel::HandleEscapeKey()
+void TrackPanel::HandleEscapeKey(bool down)
 {
+   if (!down)
+      return;
+
    switch (mMouseCapture)
    {
    case IsSelecting:
@@ -6334,60 +6337,6 @@ void TrackPanel::OnCaptureKey(wxCommandEvent & event)
 void TrackPanel::OnKeyDown(wxKeyEvent & event)
 {
    Track *t = GetFocusedTrack();
-
-   if (event.GetKeyCode() == WXK_ESCAPE) {
-      HandleEscapeKey();
-      return;
-   }
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-#ifdef SPECTRAL_EDITING_ESC_KEY
-   // Test for pinning and unpinning of the center frequency
-   bool logF;
-   if (mAdjustSelectionEdges &&
-       event.GetKeyCode() == WXK_ESCAPE) {
-      if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) {
-         // Toggle center snapping off
-         // (left click can also turn it off)
-         mFreqSelMode = FREQ_SEL_INVALID;
-      }
-      else if (isSpectrogramTrack(t, &logF)) {
-         WaveTrack *wt = static_cast<WaveTrack*>(t);
-         if (mFreqSelMode == FREQ_SEL_INVALID) {
-            // Toggle center snapping on (the only way to do this)
-            mFreqSelMode = FREQ_SEL_SNAPPING_CENTER;
-            StartSnappingFreqSelection(wt);
-         }
-         else {
-            // Handle ESC during frequency drag
-            wxMouseState state(::wxGetMouseState());
-            wxCoord yy = state.GetY();
-            ScreenToClient(NULL, &yy);
-            wxRect r;
-            if (wt == FindTrack(state.GetX(), yy, false, false, &r)) {
-               eFreqSelMode saveMode = mFreqSelMode;
-               mFreqSelMode = FREQ_SEL_PINNED_CENTER;
-
-               StartSnappingFreqSelection(wt);
-               MoveSnappingFreqSelection(yy, r.y, r.height, wt);
-               ExtendFreqSelection(yy, r.y, r.height);
-               UpdateSelectionDisplay();
-
-               mFreqSelMode = saveMode;
-               double hint = -1.0;
-               if (mFreqSelMode == FREQ_SEL_FREE) {
-                  hint = PositionToFrequency
-                     (true, yy, r.y, r.height, wt->GetRate(), logF);
-               }
-               ResetFreqSelectionPin(hint, logF);
-               // MakeParentModifyState(false);
-            }
-         }
-         // And don't skip event, yet
-      }
-   }
-#endif
-#endif
 
    // Only deal with LabelTracks
    if (!t || t->GetKind() != Track::Label) {
