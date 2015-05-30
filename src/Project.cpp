@@ -1879,6 +1879,9 @@ bool AudacityProject::HandleKeyDown(wxKeyEvent & event)
    if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
       return false;
 
+   if (event.GetKeyCode() == WXK_ESCAPE)
+      mTrackPanel->HandleEscapeKey(true);
+
    if (event.GetKeyCode() == WXK_ALT)
       mTrackPanel->HandleAltKey(true);
 
@@ -1924,6 +1927,9 @@ bool AudacityProject::HandleKeyUp(wxKeyEvent & event)
    // All keypresses must be destined for this project window.
    if (wxGetTopLevelParent(wxWindow::FindFocus()) != this)
       return false;
+
+   if (event.GetKeyCode() == WXK_ESCAPE)
+      mTrackPanel->HandleEscapeKey(false);
 
    if (event.GetKeyCode() == WXK_ALT)
       mTrackPanel->HandleAltKey(false);
