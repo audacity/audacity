@@ -29,14 +29,24 @@
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Spectrograms"))
 {
-   Populate();
+   int windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+   Populate(windowSize);
 }
 
 SpectrumPrefs::~SpectrumPrefs()
 {
 }
 
-void SpectrumPrefs::Populate()
+enum { maxWindowSize = 32768 };
+
+enum {
+   ID_WINDOW_SIZE = 10001,
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   ID_PADDING_SIZE = 10002,
+#endif
+};
+
+void SpectrumPrefs::Populate(int windowSize)
 {
    mSizeChoices.Add(_("8 - most wideband"));
    mSizeChoices.Add(wxT("16"));
@@ -52,9 +62,13 @@ void SpectrumPrefs::Populate()
    mSizeChoices.Add(wxT("16384"));
    mSizeChoices.Add(_("32768 - most narrowband"));
 
+   int lastCode = 0;
    for (size_t i = 0; i < mSizeChoices.GetCount(); i++) {
-      mSizeCodes.Add(1 << (i + 3));
+      mSizeCodes.Add(lastCode = 1 << (i + 3));
    }
+   wxASSERT(lastCode == maxWindowSize);
+
+   PopulatePaddingChoices(windowSize);
 
    for (int i = 0; i < NumWindowFuncs(); i++) {
       mTypeChoices.Add(WindowFuncName(i));
@@ -71,6 +85,48 @@ void SpectrumPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
+void SpectrumPrefs::PopulatePaddingChoices(int windowSize)
+{
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   mZeroPaddingChoice = 1;
+
+   // The choice of window size restricts the choice of padding.
+   // So the padding menu might grow or shrink.
+
+   // If pPaddingSizeControl is NULL, we have not yet tied the choice control.
+   // If it is not NULL, we rebuild the control by hand.
+   // I don't yet know an easier way to do this with ShuttleGUI functions.
+   // PRL
+   wxChoice *const pPaddingSizeControl =
+      static_cast<wxChoice*>(wxWindow::FindWindowById(ID_PADDING_SIZE, this));
+
+   if (pPaddingSizeControl) {
+      mZeroPaddingChoice = pPaddingSizeControl->GetSelection();
+      pPaddingSizeControl->Clear();
+   }
+
+   mZeroPaddingCodes.Clear();
+
+   int padding = 1;
+   int numChoices = 0;
+   while (windowSize <= maxWindowSize) {
+      const wxString numeral = wxString::Format(wxT("%d"), padding);
+      mZeroPaddingChoices.Add(numeral);
+      mZeroPaddingCodes.Add(padding);
+      if (pPaddingSizeControl)
+         pPaddingSizeControl->Append(numeral);
+      windowSize <<= 1;
+      padding <<= 1;
+      ++numChoices;
+   }
+
+   mZeroPaddingChoice = std::min(mZeroPaddingChoice, numChoices - 1);
+
+   if (pPaddingSizeControl)
+      pPaddingSizeControl->SetSelection(mZeroPaddingChoice);
+#endif
+}
+
 void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -79,7 +135,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         S.TieChoice(_("Window &size:"),
+         S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
                      wxT("/Spectrum/FFTSize"),
                      256,
                      mSizeChoices,
@@ -92,6 +148,15 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                      mTypeChoices,
                      mTypeCodes);
          S.SetSizeHints(mTypeChoices);
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+         S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
+                     wxT("/Spectrum/ZeroPaddingFactor"),
+                     mZeroPaddingChoice,
+                     mZeroPaddingChoices,
+                     mZeroPaddingCodes);
+         S.SetSizeHints(mZeroPaddingChoices);
+#endif
       }
       S.EndMultiColumn();
    }
@@ -289,3 +354,15 @@ bool SpectrumPrefs::Apply()
 
    return true;
 }
+
+void SpectrumPrefs::OnWindowSize(wxCommandEvent &event)
+{
+   wxChoice *const pWindowSizeControl =
+      static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
+   int windowSize = 1 << (pWindowSizeControl->GetSelection() + 3);
+   PopulatePaddingChoices(windowSize);
+}
+
+BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
+   EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
+END_EVENT_TABLE()

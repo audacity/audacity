@@ -73,7 +73,7 @@ class AUDACITY_DLL_API TrackArtist {
    int GetSpectrumMaxFreq(int deffreq);
    int GetSpectrumLogMinFreq(int deffreq);
    int GetSpectrumLogMaxFreq(int deffreq);
-   int GetSpectrumWindowSize();
+   int GetSpectrumWindowSize(bool includeZeroPadding);
 
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
    int GetSpectrumFftSkipPoints();
@@ -184,6 +184,9 @@ class AUDACITY_DLL_API TrackArtist {
    int mMaxFreq;              // "/Spectrum/MaxFreq"
    int mMinFreq;              // "/Spectrum/MinFreq"
    int mWindowSize;           // "/Spectrum/FFTSize"
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   int mZeroPaddingFactor;    // "/Spectrum/ZeroPaddingFactor"
+#endif
    bool mIsGrayscale;         // "/Spectrum/Grayscale"
    bool mbShowTrackNameInWaveform;  // "/GUI/ShowTrackNameInWaveform"
 

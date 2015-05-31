@@ -1803,6 +1803,7 @@ static float sumFreqValues(
 
 // Helper function to decide on which color set to use.
 // dashCount counts both dashes and the spaces between them. 
+inline
 AColor::ColorGradientChoice ChooseColorSet( float bin0, float bin1, float selBinLo, 
    float selBinCenter, float selBinHi, int dashCount, bool isSpectral )
 {
@@ -1959,8 +1960,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    if (!image)return;
    unsigned char *data = image->GetData();
 
-   int windowSize = GetSpectrumWindowSize();
-   int half = windowSize/2;
+   int windowSize = GetSpectrumWindowSize(!autocorrelation);
+   const int half = windowSize / 2;
    float *freq = new float[mid.width * half];
    sampleCount *where = new sampleCount[mid.width+1];
 
@@ -2106,7 +2107,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 
             AColor::ColorGradientChoice selected =
                AColor::ColorGradientUnselected;
-            // If we are in the time selected range, then we may use a differnt color set.
+            // If we are in the time selected range, then we may use a different color set.
             if (ssel0 <= w0 && w1 < ssel1)
             {
                bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
@@ -2220,7 +2221,7 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 
             AColor::ColorGradientChoice selected =
                AColor::ColorGradientUnselected;
-            // If we are in the time selected range, then we may use a differnt color set.
+            // If we are in the time selected range, then we may use a different color set.
             if (ssel0 <= w0 && w1 < ssel1)
             {
                bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
@@ -3029,6 +3030,9 @@ void TrackArtist::UpdatePrefs()
       mLogMinFreq = 1;
 
    mWindowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   mZeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
+#endif
    mIsGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
@@ -3070,9 +3074,14 @@ int TrackArtist::GetSpectrumLogMaxFreq(int deffreq)
    return mLogMaxFreq < 0 ? deffreq : mLogMaxFreq;
 }
 
-int TrackArtist::GetSpectrumWindowSize()
+int TrackArtist::GetSpectrumWindowSize(bool includeZeroPadding)
 {
-   return mWindowSize;
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   if (includeZeroPadding)
+      return mWindowSize * mZeroPaddingFactor;
+   else
+#endif
+      return mWindowSize;
 }
 
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
