@@ -257,6 +257,7 @@ protected:
    int           mWindowType;
    int           mWindowSize;
 #endif
+   int           mZeroPaddingFactor;
    samplePtr     mAppendBuffer;
    sampleCount   mAppendBufferLen;
 

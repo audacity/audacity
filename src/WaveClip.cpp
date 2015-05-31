@@ -226,6 +226,7 @@ public:
       rangeOld = -1;
       windowTypeOld = -1;
       windowSizeOld = -1;
+      zeroPaddingFactorOld = 1;
       frequencyGainOld = false;
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
       fftSkipPointsOld = -1;
@@ -252,6 +253,7 @@ public:
    int          rangeOld;
    int          windowTypeOld;
    int          windowSizeOld;
+   int          zeroPaddingFactorOld;
    int          frequencyGainOld;
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
    int          fftSkipPointsOld;
@@ -284,8 +286,9 @@ static void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, float *window
    else
       out[0] = 10.0*log10(power);
    for(i=1;i<hFFT->Points;i++) {
-      power = (buffer[hFFT->BitReversed[i]  ]*buffer[hFFT->BitReversed[i]  ])
-            + (buffer[hFFT->BitReversed[i]+1]*buffer[hFFT->BitReversed[i]+1]);
+      const int index = hFFT->BitReversed[i];
+      const float re = buffer[index], im = buffer[index + 1];
+      power = re * re + im * im;
       if(power <= 0)
          out[i] = -160.0;
       else
@@ -307,6 +310,7 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
    hFFT = NULL;
    mWindow = NULL;
 #endif
+   mZeroPaddingFactor = 1;
    mSpecCache = new SpecCache(0, 1, false);
    mSpecPxCache = new SpecPxCache(1);
    mAppendBuffer = NULL;
@@ -335,6 +339,7 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
    hFFT = NULL;
    mWindow = NULL;
 #endif
+   mZeroPaddingFactor = 1;
    mSpecCache = new SpecCache(0, 1, false);
    mSpecPxCache = new SpecPxCache(1);
 
@@ -754,6 +759,67 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
    return true;
 }
 
+namespace
+{
+enum { WINDOW, TWINDOW, DWINDOW };
+void RecreateWindow(
+   float *&window, int which, int fftLen,
+   int padding, int windowType, int windowSize, double &scale)
+{
+   if (window != NULL)
+      delete[] window;
+   // Create the requested window function
+   window = new float[fftLen];
+   int ii;
+
+   wxASSERT(windowSize % 2 == 0);
+   const int endOfWindow = padding + windowSize;
+   // Left and right padding
+   for (ii = 0; ii < padding; ++ii) {
+      window[ii] = 0.0;
+      window[fftLen - ii - 1] = 0.0;
+   }
+   // Default rectangular window in the middle
+   for (; ii < endOfWindow; ++ii)
+      window[ii] = 1.0;
+   // Overwrite middle as needed
+   switch (which) {
+   case WINDOW:
+      WindowFunc(windowType, windowSize, window + padding);
+      // NewWindowFunc(windowType, windowSize, extra, window + padding);
+      break;
+   case TWINDOW:
+      wxASSERT(false);
+#if 0
+      // Future, reassignment
+      NewWindowFunc(windowType, windowSize, extra, window + padding);
+      for (int ii = padding, multiplier = -windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
+         window[ii] *= multiplier;
+      break;
+#endif
+   case DWINDOW:
+      wxASSERT(false);
+#if 0
+      // Future, reassignment
+      DerivativeOfWindowFunc(windowType, windowSize, extra, window + padding);
+      break;
+#endif
+   default:
+      wxASSERT(false);
+   }
+   // Scale the window function to give 0dB spectrum for 0dB sine tone
+   if (which == WINDOW) {
+      scale = 0.0;
+      for (ii = padding; ii < endOfWindow; ++ii)
+         scale += window[ii];
+      if (scale > 0)
+         scale = 2.0 / scale;
+   }
+   for (ii = padding; ii < endOfWindow; ++ii)
+      window[ii] *= scale;
+}
+}
+
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               float *freq, sampleCount *where,
                               int numPixels,
@@ -771,36 +837,33 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    int fftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);
    int fftSkipPoints1 = fftSkipPoints+1;
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-   int half = windowSize/2;
+   const int zeroPaddingFactor =
+      autocorrelation ? 1 : gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
    gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, 3);
+
+   // FFT length may be longer than the window of samples that affect results
+   // because of zero padding done for increased frequency resolution
+   const int fftLen = windowSize * zeroPaddingFactor;
+   const int half = fftLen / 2;
+   const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
 
 #ifdef EXPERIMENTAL_USE_REALFFTF
    // Update the FFT and window if necessary
    if((mWindowType != windowType) || (mWindowSize != windowSize)
-      || (hFFT == NULL) || (mWindow == NULL) || (mWindowSize != hFFT->Points*2) ) {
+      || (hFFT == NULL) || (mWindow == NULL) || (fftLen != hFFT->Points * 2)
+      || (mZeroPaddingFactor != zeroPaddingFactor)) {
       mWindowType = windowType;
       mWindowSize = windowSize;
       if(hFFT != NULL)
          EndFFT(hFFT);
-      hFFT = InitializeFFT(mWindowSize);
-      if(mWindow != NULL) delete[] mWindow;
-      // Create the requested window function
-      mWindow = new float[mWindowSize];
-      int i;
-      for(i=0; i<windowSize; i++)
-         mWindow[i]=1.0;
-      WindowFunc(mWindowType, mWindowSize, mWindow);
-      // Scale the window function to give 0dB spectrum for 0dB sine tone
-      double ws=0;
-      for(i=0; i<windowSize; i++)
-         ws += mWindow[i];
-      if(ws > 0) {
-         ws = 2.0/ws;
-         for(i=0; i<windowSize; i++)
-            mWindow[i] *= ws;
-      }
+      hFFT = InitializeFFT(fftLen);
+      double scale;
+      RecreateWindow(mWindow, WINDOW, fftLen, padding, mWindowType, mWindowSize, scale);
    }
 #endif // EXPERIMENTAL_USE_REALFFTF
+
+
+   mZeroPaddingFactor = zeroPaddingFactor;
 
    const bool match =
       mSpecCache &&
@@ -811,6 +874,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       mSpecCache->gainOld == gain &&
       mSpecCache->windowTypeOld == windowType &&
       mSpecCache->windowSizeOld == windowSize &&
+      mSpecCache->zeroPaddingFactorOld == zeroPaddingFactor &&
       mSpecCache->frequencyGainOld == frequencygain &&
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
       mSpecCache->fftSkipPointsOld == fftSkipPoints &&
@@ -914,19 +978,26 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       }
    }
 
-   float *useBuffer;
+   float *useBuffer = 0;
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   float *buffer = new float[windowSize*fftSkipPoints1];
+   float *buffer = new float[fftLen*fftSkipPoints1];
    mSpecCache->fftSkipPointsOld = fftSkipPoints;
 #else //!EXPERIMENTAL_FFT_SKIP_POINTS
-   float *buffer = new float[windowSize];
+   float *buffer = new float[fftLen];
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
+   // Initialize zero padding in the buffer
+   for (int ii = 0; ii < padding; ++ii) {
+      buffer[ii] = 0.0;
+      buffer[fftLen - ii - 1] = 0.0;
+   }
+
    mSpecCache->minFreqOld = minFreq;
    mSpecCache->maxFreqOld = maxFreq;
    mSpecCache->gainOld = gain;
    mSpecCache->rangeOld = range;
    mSpecCache->windowTypeOld = windowType;
    mSpecCache->windowSizeOld = windowSize;
+   mSpecCache->zeroPaddingFactorOld = zeroPaddingFactor;
    mSpecCache->frequencyGainOld = frequencygain;
 
    float *gainfactor = NULL;
@@ -953,10 +1024,9 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                mSpecCache->freq[half * x + i] = 0;
 
          }
-         else
-         {
-            bool copy = !autocorrelation;
-            float *adj = buffer;
+         else {
+            bool copy = !autocorrelation || (padding > 0);
+            float *adj = buffer + padding;
             start -= windowSize >> 1;
 
             if (start < 0) {
@@ -1015,7 +1085,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                                mRate, &mSpecCache->freq[half * x],
                                autocorrelation, windowType);
             } else {
-               ComputeSpectrumUsingRealFFTf(useBuffer, hFFT, mWindow, mWindowSize, &mSpecCache->freq[half * x]);
+               ComputeSpectrumUsingRealFFTf(useBuffer, hFFT, mWindow, fftLen, &mSpecCache->freq[half * x]);
             }
 #else  // EXPERIMENTAL_USE_REALFFTF
            ComputeSpectrum(buffer, windowSize, windowSize,
