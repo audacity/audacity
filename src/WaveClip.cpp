@@ -792,6 +792,8 @@ void SpecCache::CalculateOneSpectrum
     const std::vector<float> &gainFactors,
     float *scratch)
 {
+   const bool reassignment =
+      (settings.algorithm == SpectrogramSettings::algReassignment);
    const int windowSize = settings.windowSize;
    sampleCount start = where[xx];
    const bool autocorrelation =
@@ -800,72 +802,142 @@ void SpecCache::CalculateOneSpectrum
    const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
    const int fftLen = windowSize * zeroPaddingFactor;
    const int half = fftLen / 2;
-   float *const results = &freq[half * xx];
-
-   sampleCount len = windowSize;
 
    if (start <= 0 || start >= numSamples) {
-      // Pixel column is out of bounds of the clip!  Should not happen.
-      std::fill(results, results + half, 0.0f);
+      if (xx >= 0 && xx < len) {
+         // Pixel column is out of bounds of the clip!  Should not happen.
+         float *const results = &freq[half * xx];
+         std::fill(results, results + half, 0.0f);
+      }
    }
    else {
-      bool copy = !autocorrelation || (padding > 0);
+      // We can avoid copying memory when ComputeSpectrum is used below
+      bool copy = !autocorrelation || (padding > 0) || reassignment;
       float *useBuffer = 0;
       float *adj = scratch + padding;
 
-      // Take a window of the track centered at this sample.
-      start -= windowSize >> 1;
-      if (start < 0) {
-         // Near the start of the clip, pad left with zeroes as needed.
-         for (sampleCount ii = start; ii < 0; ++ii)
-            *adj++ = 0;
-         len += start;
-         start = 0;
-         copy = true;
-      }
-      if (start + len > numSamples) {
-         // Near the end of the clip, pad right with zeroes as needed.
-         int newlen = numSamples - start;
-         for (sampleCount ii = newlen; ii < (sampleCount)len; ++ii)
-            adj[ii] = 0;
-         len = newlen;
-         copy = true;
-      }
+      {
+         sampleCount myLen = windowSize;
+         // Take a window of the track centered at this sample.
+         start -= windowSize >> 1;
+         if (start < 0) {
+            // Near the start of the clip, pad left with zeroes as needed.
+            for (sampleCount ii = start; ii < 0; ++ii)
+               *adj++ = 0;
+            myLen += start;
+            start = 0;
+            copy = true;
+         }
 
-      if (len > 0) {
-         // Copy samples out of the track.
-         useBuffer = (float*)(waveTrackCache.Get(floatSample,
-                             floor(0.5 + start + offset * rate), len));
-         if (copy)
-            memcpy(adj, useBuffer, len * sizeof(float));
+         if (start + myLen > numSamples) {
+            // Near the end of the clip, pad right with zeroes as needed.
+            int newlen = numSamples - start;
+            for (sampleCount ii = newlen; ii < (sampleCount)myLen; ++ii)
+               adj[ii] = 0;
+            myLen = newlen;
+            copy = true;
+         }
+
+         if (myLen > 0) {
+            useBuffer = (float*)(waveTrackCache.Get(floatSample,
+               floor(0.5 + start + offset * rate), myLen));
+            if (copy)
+               memcpy(adj, useBuffer, myLen * sizeof(float));
+         }
       }
 
       if (copy)
          useBuffer = scratch;
 
 #ifdef EXPERIMENTAL_USE_REALFFTF
-      if (autocorrelation)
+      if (autocorrelation) {
+         float *const results = &freq[half * xx];
+         // This function does not mutate useBuffer
          ComputeSpectrum(useBuffer, windowSize, windowSize,
             rate, results,
             autocorrelation, settings.windowType);
-      else
-         // Do the FFT.  Note that scratch is multiplied by the window,
+      }
+      else if (reassignment) {
+         static const double epsilon = 1e-16;
+         const HFFT hFFT = settings.hFFT;
+
+         float *const scratch2 = scratch + fftLen;
+         std::copy(scratch, scratch2, scratch2);
+
+         {
+            const float *const window = settings.window;
+            for (int ii = 0; ii < fftLen; ++ii)
+               scratch[ii] *= window[ii];
+            RealFFTf(scratch, hFFT);
+         }
+
+         {
+            const float *const dWindow = settings.dWindow;
+            for (int ii = 0; ii < fftLen; ++ii)
+               scratch2[ii] *= dWindow[ii];
+            RealFFTf(scratch2, hFFT);
+         }
+
+         const double multiplier = -fftLen / (2.0f * M_PI);
+         for (int ii = 0; ii < hFFT->Points; ++ii) {
+            const int index = hFFT->BitReversed[ii];
+            const float
+               denomRe = scratch[index],
+               denomIm = ii == 0 ? 0 : scratch[index + 1];
+            const double power = denomRe * denomRe + denomIm * denomIm;
+            if (power < epsilon)
+               // Avoid dividing by near-zero below
+               continue;
+
+            const float
+               numRe = scratch2[index],
+               numIm = ii == 0 ? 0 : scratch2[index + 1];
+            // Find complex quotient --
+            // Which means, multiply numerator by conjugate of denominator,
+            // then divide by norm squared of denominator --
+            // Then just take its imaginary part.
+            const double
+               quotIm = (-numRe * denomIm + numIm * denomRe) / power;
+            // With appropriate multiplier, that becomes the correction of
+            // the frequency bin.
+            const double correction = multiplier * quotIm;
+            const int bin = int(ii + correction + 0.5f);
+            if (bin >= 0 && bin < hFFT->Points)
+               freq[half * xx + bin] += power;
+         }
+
+         // Now Convert to dB terms
+         for (int ii = 0; ii < hFFT->Points; ++ii) {
+            float &power = freq[half * xx + ii];
+            if (power <= 0)
+               power = -160.0;
+            else
+               power = 10.0*log10f(power);
+         }
+      }
+      else {
+         float *const results = &freq[half * xx];
+
+         // Do the FFT.  Note that useBuffer is multiplied by the window,
          // and the window is initialized with leading and trailing zeroes
          // when there is padding.  Therefore we did not need to reinitialize
-         // the part of scratch in the padding zones.
+         // the part of useBuffer in the padding zones.
+
+         // This function mutates useBuffer
          ComputeSpectrumUsingRealFFTf
             (useBuffer, settings.hFFT, settings.window, fftLen, results);
+         if (!gainFactors.empty()) {
+            // Apply a frequency-dependant gain factor
+            for (int ii = 0; ii < half; ++ii)
+               results[ii] += gainFactors[ii];
+         }
+      }
 #else  // EXPERIMENTAL_USE_REALFFTF
-      ComputeSpectrum(buffer, windowSize, windowSize,
+      // This function does not mutate scratch
+      ComputeSpectrum(scratch, windowSize, windowSize,
          rate, results,
          autocorrelation, settings.windowType);
 #endif // EXPERIMENTAL_USE_REALFFTF
-      if (!autocorrelation &&
-          !gainFactors.empty()) {
-         // Apply a frequency-dependant gain factor
-         for (int ii = 0; ii < half; ++ii)
-            results[ii] += gainFactors[ii];
-      }
    }
 }
 
@@ -883,6 +955,8 @@ void SpecCache::Populate
    const int &windowSize = settings.windowSize;
    const bool autocorrelation =
       settings.algorithm == SpectrogramSettings::algPitchEAC;
+   const bool reassignment =
+      settings.algorithm == SpectrogramSettings::algReassignment;
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    const int &zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
 #else
@@ -892,13 +966,15 @@ void SpecCache::Populate
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
    const int fftLen = windowSize * zeroPaddingFactor;
+   const int half = fftLen / 2;
 
-   std::vector<float> buffer(
-      fftLen
-   );
+   const size_t bufferSize = fftLen;
+
+   std::vector<float> buffer(reassignment ? 2 * bufferSize : bufferSize);
 
    std::vector<float> gainFactors;
-   ComputeSpectrogramGainFactors(fftLen, rate, frequencyGain, gainFactors);
+   if (!autocorrelation)
+      ComputeSpectrogramGainFactors(fftLen, rate, frequencyGain, gainFactors);
 
    // Loop over the ranges before and after the copied portion and compute anew.
    // One of the ranges may be empty.
@@ -909,6 +985,27 @@ void SpecCache::Populate
          CalculateOneSpectrum(
          settings, waveTrackCache, xx, numSamples,
          offset, rate, gainFactors, &buffer[0]);
+
+      if (reassignment) {
+         // Now Convert to dB terms.  Do this only after accumulating
+         // power values, which may cross columns with the time correction.
+         for (sampleCount xx = lowerBoundX; xx < upperBoundX; ++xx) {
+            float *const results = &freq[half * xx];
+            const HFFT hFFT = settings.hFFT;
+            for (int ii = 0; ii < hFFT->Points; ++ii) {
+               float &power = results[ii];
+               if (power <= 0)
+                  power = -160.0;
+               else
+                  power = 10.0*log10f(power);
+            }
+            if (!gainFactors.empty()) {
+               // Apply a frequency-dependant gain factor
+               for (int ii = 0; ii < half; ++ii)
+                  results[ii] += gainFactors[ii];
+            }
+         }
+      }
    }
 }
 
@@ -979,6 +1076,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       numPixels, settings.algorithm, pixelsPerSecond, t0,
       windowType, windowSize, zeroPaddingFactor, frequencyGain);
 
+   // purposely offset the display 1/2 sample to the left (as compared
+   // to waveform display) to properly center response of the FFT
    fillWhere(mSpecCache->where, numPixels, 0.5, correction,
       t0, mRate, samplesPerPixel);
 
