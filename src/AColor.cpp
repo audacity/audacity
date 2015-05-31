@@ -22,6 +22,7 @@ It is also a place to document colour usage policy in Audacity
 #include <wx/settings.h>
 #include <wx/utils.h>
 
+#include "Prefs.h"
 #include "AColor.h"
 #include "Theme.h"
 #include "Experimental.h"
@@ -589,13 +590,36 @@ void AColor::PreComputeGradient() {
                      r = g = b = 0.84 - 0.84 * value;
                   } else {
                      const int gsteps = 4;
-                     float gradient[gsteps + 1][3] = {
+                     /*float gradient[gsteps + 1][3] = {
                         {float(0.75), float(0.75), float(0.75)},    // lt gray
                         {float(0.30), float(0.60), float(1.00)},    // lt blue
                         {float(0.90), float(0.10), float(0.90)},    // violet
                         {float(1.00), float(0.00), float(0.00)},    // red
                         {float(1.00), float(1.00), float(1.00)}     // white
-                     };
+                     };*/
+							float r1 = (float)(gPrefs->Read(wxT("/Spectrum/R1"), -1)) / 255;
+							float r2 = (float)(gPrefs->Read(wxT("/Spectrum/R2"), -1)) / 255;
+							float r3 = (float)(gPrefs->Read(wxT("/Spectrum/R3"), -1)) / 255;
+							float r4 = (float)(gPrefs->Read(wxT("/Spectrum/R4"), -1)) / 255;
+							float r5 = (float)(gPrefs->Read(wxT("/Spectrum/R5"), -1)) / 255;
+							float g1 = (float)(gPrefs->Read(wxT("/Spectrum/G1"), -1)) / 255;
+							float g2 = (float)(gPrefs->Read(wxT("/Spectrum/G2"), -1)) / 255;
+							float g3 = (float)(gPrefs->Read(wxT("/Spectrum/G3"), -1)) / 255;
+							float g4 = (float)(gPrefs->Read(wxT("/Spectrum/G4"), -1)) / 255;
+							float g5 = (float)(gPrefs->Read(wxT("/Spectrum/G5"), -1)) / 255;
+							float b1 = (float)(gPrefs->Read(wxT("/Spectrum/B1"), -1)) / 255;
+							float b2 = (float)(gPrefs->Read(wxT("/Spectrum/B2"), -1)) / 255;
+							float b3 = (float)(gPrefs->Read(wxT("/Spectrum/B3"), -1)) / 255;
+							float b4 = (float)(gPrefs->Read(wxT("/Spectrum/B4"), -1)) / 255;
+							float b5 = (float)(gPrefs->Read(wxT("/Spectrum/B5"), -1)) / 255;
+							float gradient[gsteps + 1][3] =
+							{
+								{ r1, g1, b1 },
+								{ r2, g2, b2 },
+								{ r3, g3, b3 },
+								{ r4, g4, b4 },
+								{ r5, g5, b5 }
+							};
 
                      int left = int (value * gsteps);
                      int right = (left == gsteps ? gsteps : left + 1);

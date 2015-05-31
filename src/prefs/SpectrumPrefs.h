@@ -24,6 +24,9 @@
 #include <wx/defs.h>
 #include <wx/string.h>
 #include <wx/window.h>
+#include <wx/statbmp.h>
+#include <wx/dcbuffer.h>
+#include <wx/colordlg.h>
 
 #include "../Experimental.h"
 #include "../ShuttleGui.h"
@@ -39,12 +42,8 @@ class SpectrumPrefs:public PrefsPanel
    virtual bool Validate();
 
  private:
-   void Populate(int windowSize);
-   void PopulatePaddingChoices(int windowSize);
+   void Populate();
    void PopulateOrExchange(ShuttleGui & S);
-
-   void OnWindowSize(wxCommandEvent &event);
-   DECLARE_EVENT_TABLE()
 
    wxTextCtrl *mMinFreq;
    wxTextCtrl *mMaxFreq;
@@ -55,15 +54,26 @@ class SpectrumPrefs:public PrefsPanel
    wxArrayString mSizeChoices;
    wxArrayInt mSizeCodes;
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   int mZeroPaddingChoice;
-   wxArrayString mZeroPaddingChoices;
-   wxArrayInt mZeroPaddingCodes;
-#endif
-
    wxArrayString mTypeChoices;
    wxArrayInt mTypeCodes;
 
+	wxArrayString mColorScaleChoices;
+	wxArrayInt mColorScaleCodes;
+
+	wxTextCtrl *R1, *R2, *R3, *R4, *R5, *G1, *G2, *G3, *G4, *G5, *B1, *B2, *B3, *B4, *B5;
+	int cScale;
+	float *red, *blue, *green;
+	wxColour C1, C2, C3, C4, C5;
+
+	void PaintColorScale();
+	void OnRefresh(wxCommandEvent & e);
+	void OnChangeColor1(wxCommandEvent& e);
+	void OnChangeColor2(wxCommandEvent& e);
+	void OnChangeColor3(wxCommandEvent& e);
+	void OnChangeColor4(wxCommandEvent& e);
+	void OnChangeColor5(wxCommandEvent& e);
+
+	DECLARE_EVENT_TABLE();
 
 #ifdef EXPERIMENTAL_FIND_NOTES
    wxTextCtrl *mFindNotesMinA;
