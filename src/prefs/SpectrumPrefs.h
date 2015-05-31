@@ -39,8 +39,12 @@ class SpectrumPrefs:public PrefsPanel
    virtual bool Validate();
 
  private:
-   void Populate();
+   void Populate(int windowSize);
+   void PopulatePaddingChoices(int windowSize);
    void PopulateOrExchange(ShuttleGui & S);
+
+   void OnWindowSize(wxCommandEvent &event);
+   DECLARE_EVENT_TABLE()
 
    wxTextCtrl *mMinFreq;
    wxTextCtrl *mMaxFreq;
@@ -50,6 +54,12 @@ class SpectrumPrefs:public PrefsPanel
 
    wxArrayString mSizeChoices;
    wxArrayInt mSizeCodes;
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   int mZeroPaddingChoice;
+   wxArrayString mZeroPaddingChoices;
+   wxArrayInt mZeroPaddingCodes;
+#endif
 
    wxArrayString mTypeChoices;
    wxArrayInt mTypeCodes;

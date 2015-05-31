@@ -198,5 +198,10 @@
 #undef EXPERIMENTAL_CRASH_REPORT
 #endif
 
+// Paul Licameli (PRL) 31 May 2015
+// Zero-padding factor for spectrograms can smooth the display of spectrograms by
+// interpolating in frequency domain.
+#define EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+
 
 #endif
