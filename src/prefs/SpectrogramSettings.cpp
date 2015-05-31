@@ -190,6 +190,8 @@ const wxArrayString &SpectrogramSettings::GetAlgorithmNames()
    if (theArray.IsEmpty()) {
       // Keep in correspondence with enum SpectrogramSettings::Algorithm:
       theArray.Add(_("Frequencies"));
+      /* i18n-hint: the Reassignment algorithm for spectrograms */
+      theArray.Add(_("Reassignment"));
       /* i18n-hint: EAC abbreviates "Enhanced Autocorrelation" */
       theArray.Add(_("Pitch (EAC)"));
    }
@@ -557,7 +559,7 @@ int SpectrogramSettings::GetFFTLength() const
 {
    return windowSize
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-      * ((algorithm == algSTFT) ? zeroPaddingFactor : 1);
+      * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
 #endif
    ;
 }

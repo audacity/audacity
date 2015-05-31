@@ -459,7 +459,8 @@ void SpectrumPrefs::OnAlgorithm(wxCommandEvent &evt)
 void SpectrumPrefs::EnableDisableSTFTOnlyControls()
 {
    // Enable or disable other controls that are applicable only to STFT.
-   const bool STFT = (mAlgorithmChoice->GetSelection() == 0);
+   const bool STFT =
+      (mAlgorithmChoice->GetSelection() != SpectrogramSettings::algPitchEAC);
    mGain->Enable(STFT);
    mRange->Enable(STFT);
    mFrequencyGain->Enable(STFT);

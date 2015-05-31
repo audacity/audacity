@@ -130,6 +130,7 @@ public:
 
    enum Algorithm {
       algSTFT = 0,
+      algReassignment,
       algPitchEAC,
 
       algNumAlgorithms,
