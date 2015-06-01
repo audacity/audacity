@@ -189,6 +189,42 @@ audio tracks.
    #endif
 double gWaveformTimeTotal = 0;
 int gWaveformTimeCount = 0;
+
+namespace {
+   struct Profiler {
+      Profiler()
+      {
+#   ifdef __WXMSW__
+         _time64(&tv0);
+#   else
+         gettimeofday(&tv0, NULL);
+#   endif
+      }
+
+      ~Profiler()
+      {
+#   ifdef __WXMSW__
+         _time64(&tv1);
+         double elapsed = _difftime64(tv1, tv0);
+#   else
+         gettimeofday(&tv1, NULL);
+         double elapsed =
+            (tv1.tv_sec + tv1.tv_usec*0.000001) -
+            (tv0.tv_sec + tv0.tv_usec*0.000001);
+#   endif
+         gWaveformTimeTotal += elapsed;
+         gWaveformTimeCount++;
+         wxPrintf(wxT("Avg waveform drawing time: %f\n"),
+            gWaveformTimeTotal / gWaveformTimeCount);
+      }
+
+#   ifdef __WXMSW__
+      __time64_t tv0, tv1;
+#else
+      struct timeval tv0, tv1;
+#endif
+   };
+}
 #endif
 
 #ifdef USE_MIDI
@@ -1445,14 +1481,8 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
                                    bool dB,
                                    bool muted)
 {
-#if PROFILE_WAVEFORM
-#   ifdef __WXMSW__
-   __time64_t tv0, tv1;
-   _time64(&tv0);
-#   else
-   struct timeval tv0, tv1;
-   gettimeofday(&tv0, NULL);
-#   endif
+#ifdef PROFILE_WAVEFORM
+   Profiler profiler;
 #endif
    double h = viewInfo->h;          //The horizontal position in seconds
    double pps = viewInfo->zoom;     //points-per-second--the zoom level
@@ -1547,20 +1577,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    // The "mid" rect contains the part of the display actually
    // containing the waveform.  If it's empty, we're done.
    if (mid.width <= 0) {
-#if PROFILE_WAVEFORM
-#   ifdef __WXMSW__
-      _time64(&tv1);
-      double elapsed = _difftime64(tv1, tv0);
-#   else
-      gettimeofday(&tv1, NULL);
-      double elapsed =
-         (tv1.tv_sec + tv1.tv_usec*0.000001) -
-         (tv0.tv_sec + tv0.tv_usec*0.000001);
-#   endif
-      gWaveformTimeTotal += elapsed;
-      gWaveformTimeCount++;
-#endif
-
      return;
    }
 
@@ -1660,22 +1676,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
                    mid.x + mid.width, mid.y,
                    mid.x + mid.width, mid.y + r.height);
    }
-
-#if PROFILE_WAVEFORM
-#   ifdef __WXMSW__
-   _time64(&tv1);
-   double elapsed = _difftime64(tv1, tv0);
-#   else
-   gettimeofday(&tv1, NULL);
-   double elapsed =
-      (tv1.tv_sec + tv1.tv_usec*0.000001) -
-      (tv0.tv_sec + tv0.tv_usec*0.000001);
-#   endif
-   gWaveformTimeTotal += elapsed;
-   gWaveformTimeCount++;
-   wxPrintf(wxT("Avg waveform drawing time: %f\n"),
-          gWaveformTimeTotal / gWaveformTimeCount);
-#endif
 }
 
 
@@ -1831,20 +1831,15 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                                    bool autocorrelation,
                                    bool logF)
 {
+#ifdef PROFILE_WAVEFORM
+   Profiler profiler;
+#endif
+
    const WaveTrack *const track = cache.GetTrack();
 
    enum { MONOCHROME_LINE = 230, COLORED_LINE  = 0 };
    enum { DASH_LENGTH = 10 /* pixels */ };
 
-#if PROFILE_WAVEFORM
-#  ifdef __WXMSW__
-   __time64_t tv0, tv1;
-   _time64(&tv0);
-#  else
-   struct timeval tv0, tv1;
-   gettimeofday(&tv0, NULL);
-#  endif
-#endif
    double h = viewInfo->h;
    double pps = viewInfo->zoom;
    double sel0 = viewInfo->selectedRegion.t0();
@@ -1936,19 +1931,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    // The "mid" rect contains the part of the display actually
    // containing the waveform.  If it's empty, we're done.
    if (mid.width <= 0) {
-#if PROFILE_WAVEFORM
-#   ifdef __WXMSW__
-      _time64(&tv1);
-      double elapsed = _difftime64(tv1, tv0);
-#   else
-      gettimeofday(&tv1, NULL);
-      double elapsed =
-         (tv1.tv_sec + tv1.tv_usec*0.000001) -
-         (tv0.tv_sec + tv0.tv_usec*0.000001);
-#   endif
-      gWaveformTimeTotal += elapsed;
-      gWaveformTimeCount++;
-#endif
       return;
    }
 
