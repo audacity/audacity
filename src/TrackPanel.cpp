@@ -1594,7 +1594,7 @@ void TrackPanel::HandleEscapeKey(bool down)
       break;
    case IsZooming:
    case IsVZooming:
-   case IsAdjustingSample:
+   //case IsAdjustingSample:
       break;
    case IsResizing:
       mCapturedTrack->SetHeight(mInitialActualHeight);
