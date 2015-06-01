@@ -1843,8 +1843,8 @@ static inline float findValue
    half;
    // Maximum method, and no apportionment of any single bins over multiple pixel rows
    // See Bug971
-   int bin = floor(0.5 + bin0);
-   const int limitBin = floor(0.5 + bin1);
+   int bin = std::min(half - 1, int(floor(0.5 + bin0)));
+   const int limitBin = std::min(half, int(floor(0.5 + bin1)));
    value = spectrum[bin];
    while (++bin < limitBin)
       value = std::max(value, spectrum[bin]);
