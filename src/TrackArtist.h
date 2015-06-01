@@ -140,7 +140,7 @@ class AUDACITY_DLL_API TrackArtist {
 
    void DrawClipWaveform(WaveTrack *track, WaveClip *clip,
                          wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
-                         bool drawEnvelope, bool drawSamples, bool drawSliders,
+                         bool drawEnvelope, bool drawSamples,
                          bool dB, bool muted);
 
    void DrawClipSpectrum(WaveTrackCache &cache, WaveClip *clip,

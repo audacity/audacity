@@ -1448,7 +1448,7 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
 
    for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext())
       DrawClipWaveform(track, it->GetData(), dc, r, viewInfo,
-                       drawEnvelope, drawSamples, drawSliders,
+                       drawEnvelope, drawSamples,
                        dB, muted);
 
    // Update cache for locations, e.g. cutlines and merge points
@@ -1470,6 +1470,11 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
          dc.SetPen(*wxGREY_PEN);
          AColor::Line(dc, (int) (r.x + x + 1), r.y, (int) (r.x + x + 1), r.y + r.height);
       }
+   }
+
+   if (drawSliders) {
+      DrawTimeSlider(track, dc, r, viewInfo, true);  // directed right
+      DrawTimeSlider(track, dc, r, viewInfo, false); // directed left
    }
 }
 
@@ -1617,7 +1622,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
                                    const ViewInfo *viewInfo,
                                    bool drawEnvelope,
                                    bool drawSamples,
-                                   bool drawSliders,
                                    bool dB,
                                    bool muted)
 {
@@ -1712,11 +1716,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    // beginning of time.  :)
    if (h == 0.0 && tOffset < 0.0) {
       DrawNegativeOffsetTrackArrows(dc, r);
-   }
-
-   if (drawSliders) {
-      DrawTimeSlider(track, dc, r, viewInfo, true);  // directed right
-      DrawTimeSlider(track, dc, r, viewInfo, false); // directed left
    }
 
    // Draw clip edges
