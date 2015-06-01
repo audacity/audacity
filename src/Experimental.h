@@ -167,7 +167,7 @@
 #define EXPERIMENTAL_NOISE_REDUCTION
 
 // Define to enable Nyquist audio clip boundary control (Steve Daulton Dec 2014)
-// #define EXPERIMENTAL_NYQUIST_SPLIT_CONTROL
+#define EXPERIMENTAL_NYQUIST_SPLIT_CONTROL
 
 // Paul Licameli (PRL) 16 Apr 2015
 // Support for scrubbing in the AudioIO engine, without calls to it
