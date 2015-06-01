@@ -29,6 +29,7 @@ drawing).  Cache's the Spectrogram frequency samples.
 
 #include <math.h>
 #include <memory>
+#include <functional>
 #include <vector>
 #include <wx/log.h>
 
@@ -41,14 +42,23 @@ drawing).  Cache's the Spectrogram frequency samples.
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
 
+namespace {
+inline int CountODPixels(int *bl, int start, int end)
+{
+   using namespace std;
+   return count_if(bl + start, bl + end, bind2nd(less<int>(), 0));
+}
+}
+
+
 class WaveCache {
 public:
    WaveCache(int cacheLen)
+      : len(cacheLen)
    {
       dirty = -1;
       start = -1.0;
       pps = 0.0;
-      len = cacheLen;
       min = len ? new float[len] : 0;
       max = len ? new float[len] : 0;
       rms = len ? new float[len] : 0;
@@ -70,7 +80,7 @@ public:
    }
 
    int          dirty;
-   sampleCount  len;
+   const sampleCount  len;
    double       start;
    double       pps;
    int          rate;
@@ -121,7 +131,7 @@ public:
          invalEnd = len;
 
 
-      mRegionsMutex.Lock();
+      ODLocker locker(mRegionsMutex);
 
       //look thru the region array for a place to insert.  We could make this more spiffy than a linear search
       //but right now it is not needed since there will usually only be one region (which grows) for OD loading.
@@ -187,18 +197,12 @@ public:
             break;
          }
       }
-
-
-      mRegionsMutex.Unlock();
    }
 
    //lock before calling these in a section.  unlock after finished.
-   int GetNumInvalidRegions(){return mRegions.size();}
-   int GetInvalidRegionStart(int i){return mRegions[i]->start;}
-   int GetInvalidRegionEnd(int i){return mRegions[i]->end;}
-
-   void LockInvalidRegions(){mRegionsMutex.Lock();}
-   void UnlockInvalidRegions(){mRegionsMutex.Unlock();}
+   int GetNumInvalidRegions() const {return mRegions.size();}
+   int GetInvalidRegionStart(int i) const {return mRegions[i]->start;}
+   int GetInvalidRegionEnd(int i) const {return mRegions[i]->end;}
 
    void ClearInvalidRegions()
    {
@@ -207,6 +211,38 @@ public:
          delete mRegions[i];
       }
       mRegions.clear();
+   }
+
+   void LoadInvalidRegion(int ii, Sequence *sequence, bool updateODCount)
+   {
+      const int invStart = GetInvalidRegionStart(ii);
+      const int invEnd = GetInvalidRegionEnd(ii);
+
+      //before check number of ODPixels
+      int regionODPixels = 0;
+      if (updateODCount)
+         regionODPixels = CountODPixels(bl, invStart, invEnd);
+
+      sequence->GetWaveDisplay(&min[invStart],
+         &max[invStart],
+         &rms[invStart],
+         &bl[invStart],
+         invEnd - invStart,
+         &where[invStart]);
+
+      //after check number of ODPixels
+      if (updateODCount)
+      {
+         const int regionODPixelsAfter = CountODPixels(bl, invStart, invEnd);
+         numODPixels -= (regionODPixels - regionODPixelsAfter);
+      }
+   }
+
+   void LoadInvalidRegions(Sequence *sequence, bool updateODCount)
+   {
+      //invalid regions are kept in a sorted array.
+      for (int i = 0; i < GetNumInvalidRegions(); i++)
+         LoadInvalidRegion(i, sequence, updateODCount);
    }
 
 
@@ -444,20 +480,18 @@ bool WaveClip::AfterClip(double t) const
 ///Delete the wave cache - force redraw.  Thread-safe
 void WaveClip::DeleteWaveCache()
 {
-   mWaveCacheMutex.Lock();
+   ODLocker locker(mWaveCacheMutex);
    if(mWaveCache!=NULL)
       delete mWaveCache;
    mWaveCache = new WaveCache(0);
-   mWaveCacheMutex.Unlock();
 }
 
 ///Adds an invalid region to the wavecache so it redraws that portion only.
 void WaveClip::AddInvalidRegion(long startSample, long endSample)
 {
-   mWaveCacheMutex.Lock();
+   ODLocker locker(mWaveCacheMutex);
    if(mWaveCache!=NULL)
       mWaveCache->AddInvalidRegion(startSample,endSample);
-   mWaveCacheMutex.Unlock();
 }
 
 namespace {
@@ -524,7 +558,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                                int numPixels, double t0,
                                double pixelsPerSecond, bool &isLoadingOD)
 {
-   mWaveCacheMutex.Lock();
+   ODLocker locker(mWaveCacheMutex);
 
 
    const bool match =
@@ -536,40 +570,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
        mWaveCache->start == t0 &&
        mWaveCache->len >= numPixels) {
 
-      //check for invalid regions, and make the bottom if an else if.
-      //invalid regions are kept in a sorted array.
-      for(int i=0;i<mWaveCache->GetNumInvalidRegions();i++)
-      {
-         int invStart;
-         invStart = mWaveCache->GetInvalidRegionStart(i);
-         int invEnd;
-         invEnd = mWaveCache->GetInvalidRegionEnd(i);
-
-         int regionODPixels;
-         regionODPixels =0;
-         int regionODPixelsAfter;
-         regionODPixelsAfter =0;
-         //before check number of ODPixels
-         for(int j=invStart;j<invEnd;j++)
-         {
-            if(mWaveCache->bl[j]<0)
-               regionODPixels++;
-         }
-         mSequence->GetWaveDisplay(&mWaveCache->min[invStart],
-                                        &mWaveCache->max[invStart],
-                                        &mWaveCache->rms[invStart],
-                                        &mWaveCache->bl[invStart],
-                                        invEnd-invStart,
-                                        &mWaveCache->where[invStart]);
-         //after check number of ODPixels
-         for(int j=invStart;j<invEnd;j++)
-         {
-            if(mWaveCache->bl[j]<0)
-               regionODPixelsAfter++;
-         }
-         //decrement the number of od pixels.
-         mWaveCache->numODPixels -= (regionODPixels - regionODPixelsAfter);
-      }
+      mWaveCache->LoadInvalidRegions(mSequence, true);
       mWaveCache->ClearInvalidRegions();
 
 
@@ -579,7 +580,6 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
       memcpy(bl, mWaveCache->bl, numPixels*sizeof(int));
       memcpy(where, mWaveCache->where, (numPixels+1)*sizeof(sampleCount));
       isLoadingOD = mWaveCache->numODPixels>0;
-      mWaveCacheMutex.Unlock();
       return true;
    }
 
@@ -626,24 +626,10 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
       p0 = mWaveCache->len;
       p1 = 0;
 
-      //check for invalid regions, and make the bottom if an else if.
-      //invalid regions are keep in a sorted array.
-      //TODO:integrate into below for loop so that we only load inval regions if
+      //TODO: only load inval regions if
       //necessary.  (usually is the case, so no rush.)
       //also, we should be updating the NEW cache, but here we are patching the old one up.
-      for(int i=0;i<oldCache->GetNumInvalidRegions();i++)
-      {
-         int invStart;
-         invStart = oldCache->GetInvalidRegionStart(i);
-         int invEnd;
-         invEnd = oldCache->GetInvalidRegionEnd(i);
-         mSequence->GetWaveDisplay(&oldCache->min[invStart],
-                                        &oldCache->max[invStart],
-                                        &oldCache->rms[invStart],
-                                        &oldCache->bl[invStart],
-                                        invEnd-invStart,
-                                        &oldCache->where[invStart]);
-      }
+      oldCache->LoadInvalidRegions(mSequence, false);
       oldCache->ClearInvalidRegions();
 
       for (sampleCount x = 0; x < mWaveCache->len; x++)
@@ -756,7 +742,6 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                                         &mWaveCache->where[p0]))
          {
             isLoadingOD=false;
-            mWaveCacheMutex.Unlock();
             return false;
          }
       }
@@ -778,7 +763,6 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
          mWaveCache->numODPixels++;
 
    isLoadingOD = mWaveCache->numODPixels>0;
-   mWaveCacheMutex.Unlock();
    return true;
 }
 
