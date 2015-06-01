@@ -101,6 +101,8 @@ SimpleBlockFile::SimpleBlockFile(wxFileName baseFileName,
                                  bool bypassCache /* = false */):
    BlockFile(wxFileName(baseFileName.GetFullPath() + wxT(".au")), sampleLen)
 {
+   mFormat = format;
+
    mCache.active = false;
 
    bool useCache = GetCache() && (!bypassCache);
@@ -543,7 +545,7 @@ wxLongLong SimpleBlockFile::GetSpaceUsage()
       return 0;
    } else
    {
-      return sizeof(auHeader) + mSummaryInfo.totalSummaryBytes + (GetLength() * SAMPLE_SIZE(floatSample));
+      return sizeof(auHeader) + mSummaryInfo.totalSummaryBytes + (GetLength() * SAMPLE_SIZE(mFormat));
    }
 }
 
