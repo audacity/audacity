@@ -1470,6 +1470,143 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
    }
 }
 
+
+namespace {
+struct ClipParameters
+{
+   // Do a bunch of calculations common to waveform and spectrum drawing.
+   ClipParameters
+      (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &r,
+      const SelectedRegion &selectedRegion, const ViewInfo &viewInfo)
+   {
+      selectedRegion;
+
+      tOffset = clip->GetOffset();
+      rate = clip->GetRate();
+
+      h = viewInfo.h;          //The horizontal position in seconds
+      pps = viewInfo.zoom;     //points-per-second--the zoom level
+
+      double sel0 = viewInfo.selectedRegion.t0();    //left selection bound
+      double sel1 = viewInfo.selectedRegion.t1();    //right selection bound
+
+      //If the track isn't selected, make the selection empty
+      if (!track->GetSelected() &&
+         (spectrum || !track->IsSyncLockSelected())) { // PRL: why was there a difference for spectrum?
+         sel0 = sel1 = 0.0;
+      }
+
+      const double trackLen = clip->GetEndTime() - clip->GetStartTime();
+
+      tstep = 1.0 / pps; // Seconds per point
+      tpre = h - tOffset;                 // offset corrected time of
+      //  left edge of display
+      tpost = tpre + (r.width * tstep);   // offset corrected time of
+      //  right edge of display
+
+      const double sps = 1. / rate;            //seconds-per-sample
+
+      // Determine whether we should show individual samples
+      // or draw circular points as well
+      showIndividualSamples = (pps / rate > 0.5);   //zoomed in a lot
+      showPoints = (pps / rate > 3.0);              //zoomed in even more
+
+      // Calculate actual selection bounds so that t0 > 0 and t1 < the
+      // end of the track
+      t0 = (tpre >= 0.0 ? tpre : 0.0);
+      t1 = (tpost < trackLen - sps * .99 ? tpost : trackLen - sps * .99);
+      if (showIndividualSamples) {
+         // adjustment so that the last circular point doesn't appear
+         // to be hanging off the end
+         t1 += 2. / pps;
+      }
+
+      // Make sure t1 (the right bound) is greater than 0
+      if (t1 < 0.0) {
+         t1 = 0.0;
+      }
+
+      // Make sure t1 is greater than t0
+      if (t0 > t1) {
+         t0 = t1;
+      }
+
+      // Use the WaveTrack method to show what is selected and 'should' be copied, pasted etc.
+      ssel0 = std::max(sampleCount(0), spectrum
+         ? sampleCount((sel0 - tOffset) * rate + .99) // PRL: why?
+         : track->TimeToLongSamples(sel0 - tOffset)
+      );
+      ssel1 = std::max(sampleCount(0), spectrum
+         ? sampleCount((sel1 - tOffset) * rate + .99) // PRL: why?
+         : track->TimeToLongSamples(sel1 - tOffset)
+      );
+
+      //trim selection so that it only contains the actual samples
+      if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * rate)) {
+         ssel1 = (sampleCount)(0.5 + trackLen * rate);
+      }
+
+      // The variable "mid" will be the rectangle containing the
+      // actual waveform, as opposed to any blank area before
+      // or after the track.
+      mid = r;
+
+      // If the left edge of the track is to the right of the left
+      // edge of the display, then there's some blank area to the
+      // left of the track.  Reduce the "mid"
+      // rect by size of the blank area.
+      if (tpre < 0) {
+         // Fill in the area to the left of the track
+         double delta = r.width;
+         if (t0 < tpost) {
+            delta = (int)((t0 - tpre) * pps);
+         }
+
+         // Offset the rectangle containing the waveform by the width
+         // of the area we just erased.
+         mid.x += (int)delta;
+         mid.width -= (int)delta;
+      }
+
+      // If the right edge of the track is to the left of the the right
+      // edge of the display, then there's some blank area to the right
+      // of the track.  Reduce the "mid" rect by the
+      // size of the blank area.
+      if (tpost > t1) {
+         wxRect post = r;
+         if (t1 > tpre) {
+            post.x += (int)((t1 - tpre) * pps);
+         }
+         post.width = r.width - (post.x - r.x);
+         // Reduce the rectangle containing the waveform by the width
+         // of the area we just erased.
+         mid.width -= post.width;
+      }
+   }
+
+   double tOffset;
+   double rate;
+   double h; // absolute time of left edge of display
+   double tstep;
+   double tpre; // offset corrected time of left edge of display
+   // double h1;
+   double tpost; // offset corrected time of right edge of display
+
+   // Calculate actual selection bounds so that t0 > 0 and t1 < the
+   // end of the track
+   double t0;
+   double t1;
+
+   double pps;
+   bool showIndividualSamples, showPoints;
+
+   sampleCount ssel0;
+   sampleCount ssel1;
+
+   wxRect mid;
+};
+}
+
 void TrackArtist::DrawClipWaveform(WaveTrack *track,
                                    WaveClip *clip,
                                    wxDC & dc,
@@ -1484,101 +1621,31 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
 #ifdef PROFILE_WAVEFORM
    Profiler profiler;
 #endif
-   double h = viewInfo->h;          //The horizontal position in seconds
-   double pps = viewInfo->zoom;     //points-per-second--the zoom level
-   double sel0 = viewInfo->selectedRegion.t0();    //left selection bound
-   double sel1 = viewInfo->selectedRegion.t1();    //right selection bound
-   double trackLen = clip->GetEndTime() - clip->GetStartTime();
-   double tOffset = clip->GetOffset();
-   double rate = clip->GetRate();
-   double sps = 1./rate;            //seconds-per-sample
 
-   //If the track isn't selected, make the selection empty
-   if (!track->GetSelected() && !track->IsSyncLockSelected()) {
-      sel0 = sel1 = 0.0;
-   }
-
-   //Some bookkeeping time variables:
-   double tstep = 1.0 / pps;                  // Seconds per point
-   double tpre = h - tOffset;                 // offset corrected time of
-                                              //  left edge of display
-   double tpost = tpre + (r.width * tstep);   // offset corrected time of
-                                              //  right edge of display
-
-   // Determine whether we should show individual samples
-   // or draw circular points as well
-   bool showIndividualSamples = (pps / rate > 0.5);   //zoomed in a lot
-   bool showPoints = (pps / rate > 3.0);              //zoomed in even more
-
-   // Calculate actual selection bounds so that t0 > 0 and t1 < the
-   // end of the track
-
-   double t0 = (tpre >= 0.0 ? tpre : 0.0);
-   double t1 = (tpost < trackLen - sps * .99 ? tpost : trackLen - sps * .99);
-   if (showIndividualSamples) {
-      // adjustment so that the last circular point doesn't appear
-      // to be hanging off the end
-      t1 += 2. / pps;
-   }
-
-   // Make sure t1 (the right bound) is greater than 0
-   if (t1 < 0.0) {
-      t1 = 0.0;
-   }
-
-   // Make sure t1 is greater than t0
-   if (t0 > t1) {
-      t0 = t1;
-   }
-
-   // Calculate sample-based offset-corrected selection
-
-   // Use the WaveTrack method to show what is selected and 'should' be copied, pasted etc.
-   sampleCount ssel0 = wxMax(0, track->TimeToLongSamples(sel0 - tOffset));
-   sampleCount ssel1 = wxMax(0, track->TimeToLongSamples(sel1 - tOffset));
-
-   //trim selection so that it only contains the actual samples
-   if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * rate)) {
-      ssel1 = (sampleCount)(0.5 + trackLen * rate);
-   }
-
-   // The variable "mid" will be the rectangle containing the
-   // actual waveform, as opposed to any blank area before
-   // or after the track.
-   wxRect mid = r;
-
-   dc.SetPen(*wxTRANSPARENT_PEN);
-
-   // If the left edge of the track is to the right of the left
-   // edge of the display, then there's some blank area to the
-   // left of the track.  Reduce the "mid"
-   if (tpre < 0) {
-      double delta = r.width;
-      if (t0 < tpost) {
-         delta = (int) ((t0 - tpre) * pps);
-      }
-      mid.x += (int)delta;
-      mid.width -= (int)delta;
-   }
-
-   // If the right edge of the track is to the left of the the right
-   // edge of the display, then there's some blank area to the right
-   // of the track.  Reduce the "mid" rect by the
-   // size of the blank area.
-   if (tpost > t1) {
-      wxRect post = r;
-      if (t1 > tpre) {
-         post.x += (int) ((t1 - tpre) * pps);
-      }
-      post.width = r.width - (post.x - r.x);
-      mid.width -= post.width;
-   }
-
+   const ClipParameters params(false, track, clip, r, viewInfo->selectedRegion, *viewInfo);
+   const wxRect &mid = params.mid;
    // The "mid" rect contains the part of the display actually
    // containing the waveform.  If it's empty, we're done.
    if (mid.width <= 0) {
-     return;
+      return;
    }
+
+   const double &t0 = params.t0;
+   const double &pps = params.pps;
+   const double &tOffset = params.tOffset;
+   const double &tstep = params.tstep;
+   const double &ssel0 = params.ssel0;
+   const double &ssel1 = params.ssel1;
+   const bool &showIndividualSamples = params.showIndividualSamples;
+   const bool &showPoints = params.showPoints;
+   const double &h = params.h;
+   const double &tpre = params.tpre;
+   const double &tpost = params.tpost;
+   const double &t1 = params.t1;
+
+   // Calculate sample-based offset-corrected selection
+
+   dc.SetPen(*wxTRANSPARENT_PEN);
 
    // If we get to this point, the clip is actually visible on the
    // screen, so remember the display rectangle.
@@ -1840,10 +1907,20 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    enum { MONOCHROME_LINE = 230, COLORED_LINE  = 0 };
    enum { DASH_LENGTH = 10 /* pixels */ };
 
-   double h = viewInfo->h;
-   double pps = viewInfo->zoom;
-   double sel0 = viewInfo->selectedRegion.t0();
-   double sel1 = viewInfo->selectedRegion.t1();
+   const ClipParameters params(true, track, clip, r, viewInfo->selectedRegion, *viewInfo);
+   const wxRect &mid = params.mid;
+   // The "mid" rect contains the part of the display actually
+   // containing the waveform.  If it's empty, we're done.
+   if (mid.width <= 0) {
+      return;
+   }
+
+   const double &t0 = params.t0;
+   const double &pps = params.pps;
+   const double &tstep = params.tstep;
+   const double &ssel0 = params.ssel0;
+   const double &ssel1 = params.ssel1;
+   const double &rate = params.rate;
 
    double freqLo = SelectedRegion::UndefinedFrequency;
    double freqHi = SelectedRegion::UndefinedFrequency;
@@ -1854,85 +1931,11 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    }
 #endif
 
-   double tOffset = clip->GetOffset();
-   double rate = clip->GetRate();
-   double sps = 1./rate;
-
    int range = gPrefs->Read(wxT("/Spectrum/Range"), 80L);
    int gain = gPrefs->Read(wxT("/Spectrum/Gain"), 20L);
 
-   if (!track->GetSelected())
-      sel0 = sel1 = 0.0;
-
-   double tpre = h - tOffset;
-   double tstep = 1.0 / pps;
-   double tpost = tpre + (r.width * tstep);
-   double trackLen = clip->GetEndTime() - clip->GetStartTime();
-
-   bool showIndividualSamples = (pps / rate > 0.5);   //zoomed in a lot
-   double t0 = (tpre >= 0.0 ? tpre : 0.0);
-   double t1 = (tpost < trackLen - sps*.99 ? tpost : trackLen - sps*.99);
-   if(showIndividualSamples) t1+=2./pps; // for display consistency
-   // with Waveform display
-
-   // Make sure t1 (the right bound) is greater than 0
-   if (t1 < 0.0)
-      t1 = 0.0;
-
-   // Make sure t1 is greater than t0
-   if (t0 > t1)
-      t0 = t1;
-
-   sampleCount ssel0 = wxMax(0, sampleCount((sel0 - tOffset) * rate + .99));
-   sampleCount ssel1 = wxMax(0, sampleCount((sel1 - tOffset) * rate + .99));
-
-   //trim selection so that it only contains the actual samples
-   if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5+trackLen*rate))
-      ssel1 = (sampleCount)(0.5+trackLen*rate);
-
-   // The variable "mid" will be the rectangle containing the
-   // actual waveform, as opposed to any blank area before
-   // or after the track.
-   wxRect mid = r;
 
    dc.SetPen(*wxTRANSPARENT_PEN);
-
-   // If the left edge of the track is to the right of the left
-   // edge of the display, then there's some blank area to the
-   // left of the track.  Reduce the "mid"
-   // rect by size of the blank area.
-   if (tpre < 0) {
-      // Fill in the area to the left of the track
-      wxRect pre = r;
-      if (t0 < tpost)
-         pre.width = (int) ((t0 - tpre) * pps);
-
-      // Offset the rectangle containing the waveform by the width
-      // of the area we just erased.
-      mid.x += pre.width;
-      mid.width -= pre.width;
-   }
-
-   // If the right edge of the track is to the left of the the right
-   // edge of the display, then there's some blank area to the right
-   // of the track.  Reduce the "mid" rect by the
-   // size of the blank area.
-   if (tpost > t1) {
-      wxRect post = r;
-      if (t1 > tpre)
-         post.x += (int) ((t1 - tpre) * pps);
-      post.width = r.width - (post.x - r.x);
-
-      // Reduce the rectangle containing the waveform by the width
-      // of the area we just erased.
-      mid.width -= post.width;
-   }
-
-   // The "mid" rect contains the part of the display actually
-   // containing the waveform.  If it's empty, we're done.
-   if (mid.width <= 0) {
-      return;
-   }
 
    // We draw directly to a bit image in memory,
    // and then paint this directly to our offscreen
