@@ -102,10 +102,10 @@ ControlToolBar::ControlToolBar()
    mCutPreviewTracks = NULL;
 
    // strings for status bar
-   mStatePlay = _("Play");
-   mStateStop = _("Stop");
-   mStateRecord = _("Record");
-   mStatePause = _("Pause");
+   mStatePlay = _("Playing");
+   mStateStop = _("Stopped");
+   mStateRecord = _("Recording");
+   mStatePause = _("Paused");
 }
 
 ControlToolBar::~ControlToolBar()
@@ -1092,15 +1092,15 @@ int ControlToolBar::WidthForStatusBar()
    int xMax = 0;
    int x, y;
 
-   sb->GetTextExtent(mStatePlay + wxT(" ") + mStatePause, &x, &y);
+   sb->GetTextExtent(mStatePlay + wxT(" ") + mStatePause + wxT("."), &x, &y);
    if (x > xMax)
       xMax = x;
 
-   sb->GetTextExtent(mStateStop + wxT(" ") + mStatePause, &x, &y);
+   sb->GetTextExtent(mStateStop + wxT(" ") + mStatePause + wxT("."), &x, &y);
    if (x > xMax)
       xMax = x;
 
-   sb->GetTextExtent(mStateRecord + wxT(" ") + mStatePause, &x, &y);
+   sb->GetTextExtent(mStateRecord + wxT(" ") + mStatePause + wxT("."), &x, &y);
    if (x > xMax)
       xMax = x;
 
@@ -1123,6 +1123,8 @@ void ControlToolBar::UpdateStatusBar()
       state.Append(wxT(" "));
       state.Append(mStatePause);
    }
+
+   state.Append(wxT("."));
 
    GetActiveProject()->GetStatusBar()->SetStatusText(state);
 }
