@@ -1106,15 +1106,18 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
 void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                                 float zoomMin, float zoomMax, bool dB,
-                                const float min[], const float max[], const float rms[],
-                                const int bl[], bool showProgress, bool muted, const float gain)
+                                const WaveDisplay &display, bool showProgress, bool muted, const float gain)
 #else
 void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                                 float zoomMin, float zoomMax, bool dB,
-                                const float min[], const float max[], const float rms[],
-                                const int bl[], bool WXUNUSED(showProgress), bool muted)
+                                const WaveDisplay &display, bool WXUNUSED(showProgress), bool muted)
 #endif
 {
+   const float *const min = display.min;
+   const float *const max = display.max;
+   const float *const rms = display.rms;
+   const int *const bl = display.bl;
+
    // Display a line representing the
    // min and max of the samples in this region
    int lasth1 = std::numeric_limits<int>::max();
@@ -1656,26 +1659,16 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    float zoomMin, zoomMax;
    track->GetDisplayBounds(&zoomMin, &zoomMax);
 
-   // Arrays containing the shape of the waveform - each array
-   // has one value per pixel.
-   float *min = new float[mid.width];
-   float *max = new float[mid.width];
-   float *rms = new float[mid.width];
-   sampleCount *where = new sampleCount[mid.width + 1];
-   int *bl = new int[mid.width];
+   WaveDisplay display;
    bool isLoadingOD = false;//true if loading on demand block in sequence.
 
    // The WaveClip class handles the details of computing the shape
    // of the waveform.  The only way GetWaveDisplay will fail is if
    // there's a serious error, like some of the waveform data can't
    // be loaded.  So if the function returns false, we can just exit.
-   if (!clip->GetWaveDisplay(min, max, rms, bl, where,
-                             mid.width, t0, pps, isLoadingOD)) {
-      delete[] min;
-      delete[] max;
-      delete[] rms;
-      delete[] where;
-      delete[] bl;
+   display.Allocate(mid.width);
+   if (!clip->GetWaveDisplay(display,
+      t0, pps, isLoadingOD)) {
       return;
    }
 
@@ -1690,7 +1683,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    // the envelope and using a colored pen for the selected
    // part of the waveform
    DrawWaveformBackground(dc, mid, envValues, zoomMin, zoomMax, dB,
-                          where, ssel0, ssel1, drawEnvelope,
+                          display.where, ssel0, ssel1, drawEnvelope,
                           !track->GetSelected());
 
    if (!showIndividualSamples) {
@@ -1699,7 +1692,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
                     min, max, rms, bl, isLoadingOD, muted, track->GetChannelGain(track->GetChannel()));
 #else
       DrawMinMaxRMS(dc, mid, envValues, zoomMin, zoomMax, dB,
-                    min, max, rms, bl, isLoadingOD, muted);
+                    display, isLoadingOD, muted);
 #endif
    }
    else {
@@ -1714,11 +1707,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    }
 
    delete[] envValues;
-   delete[] min;
-   delete[] max;
-   delete[] rms;
-   delete[] where;
-   delete[] bl;
 
    // Draw arrows on the left side if the track extends to the left of the
    // beginning of time.  :)

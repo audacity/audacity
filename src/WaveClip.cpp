@@ -553,11 +553,16 @@ fillWhere(sampleCount where[], int len, double bias, double correction,
 // clipping calculations
 //
 
-bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
-                               sampleCount *where,
-                               int numPixels, double t0,
+bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                                double pixelsPerSecond, bool &isLoadingOD)
 {
+   int numPixels = display.width;
+   float *const min = display.min;
+   float *const max = display.max;
+   float *const rms = display.rms;
+   int *const bl = display.bl;
+   sampleCount *const where = display.where;
+
    ODLocker locker(mWaveCacheMutex);
 
 
