@@ -1234,12 +1234,16 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                }
             }
          }
+
+         // Restore the pen for remaining pixel columns!
+         dc.SetPen(muted ? muteSamplePen : samplePen);
       }
       else {
          AColor::Line(dc, xx, r.y + h2, xx, r.y + h1);
       }
    }
 
+   // Stroke rms over the min-max
    dc.SetPen(muted ? muteRmsPen : rmsPen);
    for (int x = 0; x < r.width; x++) {
       int xx = r.x + x;
