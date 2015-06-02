@@ -1539,38 +1539,36 @@ void LadspaEffect::Unload()
 
 bool LadspaEffect::LoadParameters(const wxString & group)
 {
-   wxString value;
-
-   if (!mHost->GetPrivateConfig(group, wxT("Value"), value, wxEmptyString))
+   wxString parms;
+   if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
    {
       return false;
    }
 
-   wxStringTokenizer st(value, wxT(','));
-   if (st.CountTokens() != mData->PortCount)
+   EffectAutomationParameters eap;
+   if (!eap.SetParameters(parms))
    {
       return false;
    }
 
-   for (unsigned long p = 0; st.HasMoreTokens(); p++)
-   {
-      double val = 0.0;
-      st.GetNextToken().ToDouble(&val);
-      mInputControls[p] = val;
-   }
-
-   return true;
+   return SetAutomationParameters(eap);
 }
 
 bool LadspaEffect::SaveParameters(const wxString & group)
 {
-   wxString parms;
-   for (unsigned long p = 0; p < mData->PortCount; p++)
+   EffectAutomationParameters eap;
+   if (!GetAutomationParameters(eap))
    {
-      parms += wxString::Format(wxT(",%f"), mInputControls[p]);
+      return false;
    }
 
-   return mHost->SetPrivateConfig(group, wxT("Value"), parms.Mid(1));
+   wxString parms;
+   if (!eap.GetParameters(parms))
+   {
+      return false;
+   }
+
+   return mHost->SetPrivateConfig(group, wxT("Parameters"), parms);
 }
 
 LADSPA_Handle LadspaEffect::InitInstance(float sampleRate)
