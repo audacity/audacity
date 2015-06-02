@@ -109,6 +109,12 @@ enum PlayMode {
    loopedPlay
 };
 
+enum StatusBarField {
+   stateStatusBarField = 1,
+   mainStatusBarField = 2,
+   rateStatusBarField = 3
+};
+
 // XML handler for <import> tag
 class ImportXMLTagHandler : public XMLTagHandler
 {

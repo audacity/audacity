@@ -1082,13 +1082,8 @@ void ControlToolBar::ClearCutPreviewTracks()
 }
 
 // works out the width of the field in the status bar needed for the state (eg play, record pause)
-int ControlToolBar::WidthForStatusBar()
+int ControlToolBar::WidthForStatusBar(wxStatusBar* const sb)
 {
-   AudacityProject* p = GetActiveProject();
-   if (!p)
-      return 100;  // dummy value to keep things happy before the project is fully created
-
-   wxStatusBar* sb = p->GetStatusBar();
    int xMax = 0;
    int x, y;
 
@@ -1110,7 +1105,7 @@ int ControlToolBar::WidthForStatusBar()
    return xMax + 30;    // added constant needed because xMax isn't large enough for some reason, plus some space.
 }
 
-void ControlToolBar::UpdateStatusBar()
+wxString ControlToolBar::StateForStatusBar()
 {
    wxString state;
 
@@ -1129,6 +1124,11 @@ void ControlToolBar::UpdateStatusBar()
 
    state.Append(wxT("."));
 
-   GetActiveProject()->GetStatusBar()->SetStatusText(state);
+   return state;
+}
+
+void ControlToolBar::UpdateStatusBar()
+{
+   GetActiveProject()->GetStatusBar()->SetStatusText(StateForStatusBar(), stateStatusBarField);
 }
 

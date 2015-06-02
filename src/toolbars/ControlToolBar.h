@@ -85,7 +85,8 @@ class ControlToolBar:public ToolBar {
    virtual void ReCreateButtons();
    void RegenerateToolsTooltips();
 
-   int WidthForStatusBar();
+   int WidthForStatusBar(wxStatusBar* const);
+   wxString StateForStatusBar();
 
  private:
 
