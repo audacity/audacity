@@ -331,7 +331,7 @@ void Envelope::WriteXML(XMLWriter &xmlFile)
 float Envelope::ValueOfPixel( int y, int height, bool upper, bool dB,
                               float zoomMin, float zoomMax)
 {
-   double dBRange;
+   double dBRange = 0;
    if (dB)
       // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
       dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
