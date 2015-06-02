@@ -959,6 +959,33 @@ int GetWaveYPos(float value, float min, float max,
    return (int) (value * (height - 1) + 0.5);
 }
 
+float FromDB(float value, double dBRange)
+{
+   if (value == 0)
+      return 0;
+
+   double sign = (value >= 0 ? 1 : -1);
+   return pow(10.0, ((fabs(value) * dBRange) - dBRange) / 20.0)*sign;
+}
+
+float ValueOfPixel(int y, int height, bool offset,
+   bool dB, double dBRange, float zoomMin, float zoomMax)
+{
+   wxASSERT(height > 0);
+   float v = zoomMax - (y / (float)height) * (zoomMax - zoomMin);
+   if (offset) {
+      if (v > 0.0)
+         v += .5;
+      else
+         v -= .5;
+   }
+
+   if (dB)
+      v = FromDB(v, dBRange);
+
+   return v;
+}
+
 void TrackArtist::DrawNegativeOffsetTrackArrows(wxDC &dc, const wxRect &r)
 {
    // Draws two black arrows on the left side of the track to
