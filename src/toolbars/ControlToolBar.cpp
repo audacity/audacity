@@ -102,10 +102,10 @@ ControlToolBar::ControlToolBar()
    mCutPreviewTracks = NULL;
 
    // strings for status bar
-   mStatePlay = _("Playing");
-   mStateStop = _("Stopped");
-   mStateRecord = _("Recording");
-   mStatePause = _("Paused");
+   mStatePlay = XO("Playing");
+   mStateStop = XO("Stopped");
+   mStateRecord = XO("Recording");
+   mStatePause = XO("Paused");
 }
 
 ControlToolBar::~ControlToolBar()
@@ -1092,15 +1092,18 @@ int ControlToolBar::WidthForStatusBar()
    int xMax = 0;
    int x, y;
 
-   sb->GetTextExtent(mStatePlay + wxT(" ") + mStatePause + wxT("."), &x, &y);
+   sb->GetTextExtent(wxString(wxGetTranslation(mStatePlay)) + wxT(" ") +
+                     wxString(wxGetTranslation(mStatePause)) + wxT("."), &x, &y);
    if (x > xMax)
       xMax = x;
 
-   sb->GetTextExtent(mStateStop + wxT(" ") + mStatePause + wxT("."), &x, &y);
+   sb->GetTextExtent(wxString(wxGetTranslation(mStateStop)) + wxT(" ") +
+                     wxString(wxGetTranslation(mStatePause)) + wxT("."), &x, &y);
    if (x > xMax)
       xMax = x;
 
-   sb->GetTextExtent(mStateRecord + wxT(" ") + mStatePause + wxT("."), &x, &y);
+   sb->GetTextExtent(wxString(wxGetTranslation(mStateRecord)) + wxT(" ") +
+                     wxString(wxGetTranslation(mStatePause)) + wxT("."), &x, &y);
    if (x > xMax)
       xMax = x;
 
@@ -1112,16 +1115,16 @@ void ControlToolBar::UpdateStatusBar()
    wxString state;
 
    if (mPlay->IsDown())
-      state = mStatePlay;
+      state = wxGetTranslation(mStatePlay);
    else if (mRecord->IsDown())
-      state = mStateRecord;
+      state = wxGetTranslation(mStateRecord);
    else
-      state = mStateStop;
+      state = wxGetTranslation(mStateStop);
 
    if (mPause->IsDown())
    {
       state.Append(wxT(" "));
-      state.Append(mStatePause);
+      state.Append(wxGetTranslation(mStatePause));
    }
 
    state.Append(wxT("."));
