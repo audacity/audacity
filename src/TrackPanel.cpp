@@ -5042,19 +5042,15 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
    //If we are still around, we are drawing in earnest.  Set some member data structures up:
    //First, calculate the starting sample.  To get this, we need the time
    double t0 = PositionToTime(event.m_x, GetLeftOffset());
-   double rate = ((WaveTrack *)mDrawingTrack)->GetRate();
 
    // Default to zero for ALT case, so it doesn't cause a runtime fault on MSVC in
    // the mDrawingLastDragSampleValue assignment at the bottom of this method.
    float newLevel = 0.0f;   //Declare this for use later
 
    //convert t0 to samples
-   mDrawingStartSample = (sampleCount) (double)(t0 * rate + 0.5 );
-
-   //Now, figure out what the value of that sample is.
-   //First, get the sequence of samples so you can mess with it
-   //Sequence *seq = ((WaveTrack *)mDrawingTrack)->GetSequence();
-
+   mDrawingStartSample = mDrawingTrack->TimeToLongSamples(t0);
+   // quantize
+   t0 = mDrawingTrack->LongSamplesToTime(mDrawingStartSample);
 
    //Determine how drawing should occur.  If alt is down,
    //do a smoothing, instead of redrawing.
@@ -5125,6 +5121,8 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       //Clean this up right away to avoid a memory leak
       delete[] sampleRegion;
       delete[] newSampleRegion;
+
+      mDrawingLastDragSampleValue = 0;
    }
    else
    {
@@ -5139,11 +5137,12 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 
       //Set the sample to the point of the mouse event
       mDrawingTrack->Set((samplePtr)&newLevel, floatSample, mDrawingStartSample, 1);
+
+      mDrawingLastDragSampleValue = newLevel;
    }
 
    //Set the member data structures for drawing
    mDrawingLastDragSample=mDrawingStartSample;
-   mDrawingLastDragSampleValue = newLevel;
 
    //Redraw the region of the selected track
    RefreshTrack(mDrawingTrack);
@@ -5165,12 +5164,7 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
    if (mMouseCapture != IsAdjustingSample)
       return;
 
-   //Get the rate of the sequence, for use later
-   float rate = ((WaveTrack *)mDrawingTrack)->GetRate();
    sampleCount s0;     //declare this for use below.  It designates the sample number which to draw.
-
-   // Figure out what time the click was at
-   double t0 = PositionToTime(event.m_x, GetLeftOffset());
 
    //Find the point that we want to redraw at. If the control button is down,
    //adjust only the originally clicked-on sample
@@ -5190,8 +5184,11 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
 
       //Otherwise, adjust the sample you are dragging over right now.
       //convert this to samples
-      s0 = (sampleCount) (double)(t0 * rate + 0.5);
+      const double t = PositionToTime(event.m_x, GetLeftOffset());
+      s0 = mDrawingTrack->TimeToLongSamples(t);
    }
+
+   const double t0 = mDrawingTrack->LongSamplesToTime(s0);
 
    //Otherwise, do normal redrawing, based on the mouse position.
    // Calculate where the mouse is located vertically (between +/- 1)
