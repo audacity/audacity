@@ -75,7 +75,7 @@ struct WaveDisplay
       Deallocate();
    }
 
-   void WaveDisplay::Allocate(int w)
+   void Allocate(int w)
    {
       width = w;
 
@@ -88,7 +88,7 @@ struct WaveDisplay
       bl = new int[width];
    }
 
-   void WaveDisplay::Deallocate()
+   void Deallocate()
    {
       delete[] where;
       where = 0;

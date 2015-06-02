@@ -1738,6 +1738,13 @@ bool AudioUnitEffect::SetAutomationParameters(EffectAutomationParameters & parms
 
    delete [] array;
 
+   AudioUnitParameter aup;
+   aup.mAudioUnit = mUnit;
+   aup.mParameterID = kAUParameterListener_AnyParameter;
+   aup.mScope = kAudioUnitScope_Global;
+   aup.mElement = 0;
+   AUParameterListenerNotify(NULL, NULL, &aup);
+
    return true;
 }
 
@@ -2163,135 +2170,36 @@ void AudioUnitEffect::RemoveHandler()
 
 bool AudioUnitEffect::LoadParameters(const wxString & group)
 {
-   OSStatus result;
-   UInt32 dataSize;
-   Boolean isWritable;
-
-   wxString value;
-   if (!mHost->GetPrivateConfig(group, wxT("Value"), value, wxEmptyString))
-   {
-      return false;
-   }
-   wxStringTokenizer tokens(value, wxT(','));
-
-   result = AudioUnitGetPropertyInfo(mUnit,
-                                     kAudioUnitProperty_ParameterList,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result != noErr)
+   wxString parms;
+   if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
    {
       return false;
    }
 
-   UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-
-   if (cnt != tokens.CountTokens())
+   EffectAutomationParameters eap;
+   if (!eap.SetParameters(parms))
    {
       return false;
    }
 
-   AudioUnitParameterID *array = new AudioUnitParameterID[cnt];
-
-   result = AudioUnitGetProperty(mUnit,
-                                 kAudioUnitProperty_ParameterList,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 array,
-                                 &dataSize);  
-   if (result != noErr)
-   {
-      delete [] array;
-      return false;
-   }
-
-   for (int i = 0; i < cnt; i++)
-   {
-      double d = 0.0;
-      tokens.GetNextToken().ToDouble(&d);
-
-      AudioUnitParameterValue value = d;
-      result = AudioUnitSetParameter(mUnit,
-                                     array[i],
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     value,
-                                     0);
-      if (result != noErr)
-      {
-         delete [] array;
-         return false;
-      }
-   }
-
-   AudioUnitParameter aup;
-   aup.mAudioUnit = mUnit;
-   aup.mParameterID = kAUParameterListener_AnyParameter;
-   aup.mScope = kAudioUnitScope_Global;
-   aup.mElement = 0;
-   AUParameterListenerNotify(NULL, NULL, &aup);
-
-   delete [] array;
-
-   return true;
+   return SetAutomationParameters(eap);
 }
 
 bool AudioUnitEffect::SaveParameters(const wxString & group)
 {
-   OSStatus result;
-   UInt32 dataSize;
-   Boolean isWritable;
+   EffectAutomationParameters eap;
+   if (!GetAutomationParameters(eap))
+   {
+      return false;
+   }
+
    wxString parms;
-
-   result = AudioUnitGetPropertyInfo(mUnit,
-                                     kAudioUnitProperty_ParameterList,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result != noErr)
+   if (!eap.GetParameters(parms))
    {
       return false;
    }
 
-   UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   AudioUnitParameterID *array = new AudioUnitParameterID[cnt];
-
-   result = AudioUnitGetProperty(mUnit,
-                                 kAudioUnitProperty_ParameterList,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 array,
-                                 &dataSize);  
-   if (result != noErr)
-   {
-      delete [] array;
-      return false;
-   }
-
-   for (int i = 0; i < cnt; i++)
-   {
-      AudioUnitParameterValue value;
-      result = AudioUnitGetParameter(mUnit,
-                                     array[i],
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &value);
-      if (result != noErr)
-      {
-         delete [] array;
-         return false;
-      }
-
-      parms += wxString::Format(wxT(",%f"), value);
-   }
-
-   mHost->SetPrivateConfig(group, wxT("Value"), parms.Mid(1));
-
-   delete [] array;
-
-   return true;
+   return mHost->SetPrivateConfig(group, wxT("Parameters"), parms);
 }
 
 bool AudioUnitEffect::SetRateAndChannels()

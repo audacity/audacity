@@ -27,6 +27,7 @@ should be reference-counted.
 #include <wx/statusbr.h>
 #include "../widgets/ProgressDialog.h"
 #include "../commands/ResponseQueue.h"
+#include "../src/Project.h"
 
 /// Interface for objects that can receive command progress information
 class CommandProgressTarget
@@ -117,7 +118,7 @@ public:
    {}
    virtual void Update(wxString message)
    {
-      mStatus.SetStatusText(message, 1);
+      mStatus.SetStatusText(message, mainStatusBarField);
    }
 };
 
