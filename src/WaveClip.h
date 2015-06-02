@@ -58,8 +58,9 @@ class WaveClip;
 WX_DECLARE_USER_EXPORTED_LIST(WaveClip, WaveClipList, AUDACITY_DLL_API);
 WX_DEFINE_USER_EXPORTED_ARRAY_PTR(WaveClip*, WaveClipArray, class AUDACITY_DLL_API);
 
-struct WaveDisplay
+class WaveDisplay
 {
+public:
    int width;
    sampleCount *where;
    float *min, *max, *rms;

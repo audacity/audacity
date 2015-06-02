@@ -249,5 +249,8 @@ class AUDACITY_DLL_API TrackArtist {
 extern int GetWaveYPos(float value, float min, float max,
                        int height, bool dB, bool outer, float dBr,
                        bool clip);
+extern float FromDB(float value, double dBRange);
+extern float ValueOfPixel(int y, int height, bool offset,
+                          bool dB, double dBRange, float zoomMin, float zoomMax);
 
 #endif                          // define __AUDACITY_TRACKARTIST__
