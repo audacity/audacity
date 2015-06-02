@@ -24,6 +24,7 @@ class wxKeyEvent;
 class wxTimer;
 class wxTimerEvent;
 class wxWindow;
+class wxStatusBar;
 
 class AButton;
 class AudacityProject;
