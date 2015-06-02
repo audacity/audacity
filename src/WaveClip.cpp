@@ -460,6 +460,60 @@ void WaveClip::AddInvalidRegion(long startSample, long endSample)
    mWaveCacheMutex.Unlock();
 }
 
+namespace {
+
+inline
+void findCorrection(const sampleCount oldWhere[], int oldLen, int newLen,
+         double t0, double rate, double samplesPerPixel,
+         double &oldWhere0, double &denom, int &oldX0, int &oldXLast, double &correction)
+{
+   // Mitigate the accumulation of location errors
+   // in copies of copies of ... of caches.
+   // Look at the loop that populates "where" below to understand this.
+
+   // Find the sample position that is the origin in the old cache.
+   oldWhere0 = oldWhere[1] - samplesPerPixel;
+   const double oldWhereLast = oldWhere0 + oldLen * samplesPerPixel;
+   // Find the length in samples of the old cache.
+   denom = oldWhereLast - oldWhere0;
+
+   // Skip unless denom rounds off to at least 1.
+   if (denom >= 0.5)
+   {
+      // What sample would go in where[0] with no correction?
+      const double guessWhere0 = t0 * rate;
+      // What integer position in the old cache array does that map to?
+      // (even if it is out of bounds)
+      oldX0 = floor(0.5 + oldLen * (guessWhere0 - oldWhere0) / denom);
+      // What sample count would the old cache have put there?
+      const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
+      // What correction is needed to align the new cache with the old?
+      correction = where0 - guessWhere0;
+      wxASSERT(-samplesPerPixel <= correction && correction <= samplesPerPixel);
+      // What integer position in the old cache array does our last column
+      // map to?  (even if out of bounds)
+      oldXLast = floor(0.5 + oldLen * (
+         (where0 + double(newLen) * samplesPerPixel - oldWhere0)
+         / denom
+         ));
+   }
+}
+
+inline void
+fillWhere(sampleCount where[], int len, double bias, double correction,
+          double t0, double rate, double samplesPerPixel)
+{
+   // Be careful to make the first value non-negative
+   correction += 0.5 + bias;
+   where[0] = sampleCount(std::max(0.0, floor(correction + t0 * rate)));
+   for (sampleCount x = 1; x < len + 1; x++)
+      where[x] = sampleCount(
+         floor(correction + t0 * rate + double(x) * samplesPerPixel)
+      );
+}
+
+}
+
 //
 // Getting high-level data from the track for screen display and
 // clipping calculations
@@ -541,47 +595,16 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
    double oldWhere0 = 0;
    double denom = 0;
    int oldX0 = 0, oldXLast = 0;
-   double error = 0.0;
+   double correction = 0.0;
    if (match &&
        oldCache->len > 0) {
-      // Mitigate the accumulation of location errors
-      // in copies of copies of ... of caches.
-      // Look at the loop that populates "where" below to understand this.
-
-      // Find the sample position that is the origin in the old cache.
-      oldWhere0 = oldCache->where[1] - samplesPerPixel;
-      const double oldWhereLast = oldWhere0 + oldCache->len * samplesPerPixel;
-      // Find the length in samples of the old cache.
-      denom = oldWhereLast - oldWhere0;
-
-      // Skip unless denom rounds off to at least 1.
-      if (denom >= 0.5)
-      {
-         // What sample would go in where[0] with no correction?
-         const double guessWhere0 = t0 * mRate;
-         // What integer position in the old cache array does that map to?
-         // (even if it is out of bounds)
-         oldX0 = floor(0.5 + oldCache->len * (guessWhere0 - oldWhere0) / denom);
-         // What sample count would the old cache have put there?
-         const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
-         // What correction is needed to align the new cache with the old?
-         error = where0 - guessWhere0;
-         wxASSERT(-samplesPerPixel <= error && error <= samplesPerPixel);
-         // What integer position in the old cache array does our last column
-         // map to?  (even if out of bounds)
-         oldXLast = floor(0.5 + oldCache->len * (
-            (where0 + double(mWaveCache->len) * samplesPerPixel - oldWhere0)
-            / denom
-         ));
-      }
+      findCorrection(oldCache->where, oldCache->len, mWaveCache->len,
+         t0, mRate, samplesPerPixel,
+         oldWhere0, denom, oldX0, oldXLast, correction);
    }
 
-   // Be careful to make the first value non-negative
-   mWaveCache->where[0] = sampleCount(std::max(0.0, floor(0.5 + error + t0 * mRate)));
-   for (sampleCount x = 1; x < mWaveCache->len + 1; x++)
-      mWaveCache->where[x] = sampleCount(
-            floor(0.5 + error + t0 * mRate + double(x) * samplesPerPixel)
-      );
+   fillWhere(mWaveCache->where, mWaveCache->len, 0.0, correction,
+      t0, mRate, samplesPerPixel);
 
    //mchinen: I think s0 - s1 represents the range of samples that we will need to look up.  likewise p0-p1 the number of pixels.
    sampleCount s0 = mWaveCache->where[0];
@@ -897,6 +920,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    mSpecCache->start = t0;
 
    bool *recalc = new bool[mSpecCache->len + 1];
+   std::fill(&recalc[0], &recalc[mSpecCache->len + 1], true);
 
    const double tstep = 1.0 / pixelsPerSecond;
    const double samplesPerPixel = mRate * tstep;
@@ -906,52 +930,17 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    double oldWhere0 = 0;
    double denom = 0;
    int oldX0 = 0, oldXLast = 0;
-   double error = 0.0;
+   double correction = 0.0;
 
    if (match &&
        oldCache->len > 0) {
-      // Mitigate the accumulation of location errors
-      // in copies of copies of ... of caches.
-      // Look at the loop that populates "where" below to understand this.
-
-      // Find the sample position that is the origin in the old cache.
-      oldWhere0 = oldCache->where[1] - samplesPerPixel;
-      const double oldWhereLast = oldWhere0 + oldCache->len * samplesPerPixel;
-      // Find the length in samples of the old cache.
-      denom = oldWhereLast - oldWhere0;
-
-      // Skip unless denom rounds off to at least 1.
-      if (denom >= 0.5)
-      {
-         // What sample would go in where[0] with no correction?
-         const double guessWhere0 = t0 * mRate;
-         // What integer position in the old cache array does that map to?
-         // (even if it is out of bounds)
-         oldX0 = floor(0.5 + oldCache->len * (guessWhere0 - oldWhere0) / denom);
-         // What sample count would the old cache have put there?
-         const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
-         // What correction is needed to align the new cache with the old?
-         error = where0 - guessWhere0;
-         wxASSERT(-samplesPerPixel <= error && error <= samplesPerPixel);
-         // What integer position in the old cache array does our last column
-         // map to?  (even if out of bounds)
-         oldXLast = floor(0.5 + oldCache->len * (
-            (where0 + double(mWaveCache->len) * samplesPerPixel - oldWhere0)
-            / denom
-         ));
-      }
+      findCorrection(oldCache->where, oldCache->len, mSpecCache->len,
+         t0, mRate, samplesPerPixel,
+         oldWhere0, denom, oldX0, oldXLast, correction);
    }
 
-   // Be careful to make the first value non-negative
-   recalc[0] = true;
-   mSpecCache->where[0] = sampleCount(std::max(0.0, floor(1.0 + error + t0 * mRate)));
-   for (sampleCount x = 1; x < mSpecCache->len + 1; x++) {
-      recalc[x] = true;
-      // purposely offset the display 1/2 bin to the left (as compared
-      // to waveform display to properly center response of the FFT
-      mSpecCache->where[x] =
-         sampleCount(floor(1.0 + error + t0 * mRate + double(x) * samplesPerPixel));
-   }
+   fillWhere(mSpecCache->where, mSpecCache->len, 0.5, correction,
+      t0, mRate, samplesPerPixel);
 
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
