@@ -5034,7 +5034,6 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
          ReleaseMouse();
       return;
    }
-   SetCapturedTrack( t, IsAdjustingSample);
 
    /// \todo Should mCapturedTrack take the place of mDrawingTrack??
    mDrawingTrack = static_cast<WaveTrack*>(t);
@@ -5133,6 +5132,8 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       //***   PLAIN DOWN-CLICK (NORMAL DRAWING)       ***
       //*************************************************
 
+      SetCapturedTrack(t, IsAdjustingSample);
+
       //Otherwise (e.g., the alt button is not down) do normal redrawing, based on the mouse position.
       const float newLevel = FindSampleEditingLevel(event, t0);
 
@@ -5161,7 +5162,7 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
       return;
 
    //Exit dragging if the alt key is down--Don't allow left-right dragging for smoothing operation
-   if (event.m_altDown)
+   if (mMouseCapture != IsAdjustingSample)
       return;
 
    //Get the rate of the sequence, for use later
