@@ -166,5 +166,26 @@ protected:
 
 #endif // __WXMAC__
 
+// Like wxMutexLocker
+// So you can use the RAII idiom with ODLock, on whatever platform
+class ODLocker
+{
+public:
+   ODLocker(ODLock &lock)
+      : mLock(lock)
+   {
+      mLock.Lock();
+   }
+
+   ~ODLocker()
+   {
+      mLock.Unlock();
+   }
+
+private:
+
+   ODLock &mLock;
+};
+
 #endif //__AUDACITY_ODTASKTHREAD__
 

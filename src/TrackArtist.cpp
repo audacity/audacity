@@ -189,6 +189,42 @@ audio tracks.
    #endif
 double gWaveformTimeTotal = 0;
 int gWaveformTimeCount = 0;
+
+namespace {
+   struct Profiler {
+      Profiler()
+      {
+#   ifdef __WXMSW__
+         _time64(&tv0);
+#   else
+         gettimeofday(&tv0, NULL);
+#   endif
+      }
+
+      ~Profiler()
+      {
+#   ifdef __WXMSW__
+         _time64(&tv1);
+         double elapsed = _difftime64(tv1, tv0);
+#   else
+         gettimeofday(&tv1, NULL);
+         double elapsed =
+            (tv1.tv_sec + tv1.tv_usec*0.000001) -
+            (tv0.tv_sec + tv0.tv_usec*0.000001);
+#   endif
+         gWaveformTimeTotal += elapsed;
+         gWaveformTimeCount++;
+         wxPrintf(wxT("Avg waveform drawing time: %f\n"),
+            gWaveformTimeTotal / gWaveformTimeCount);
+      }
+
+#   ifdef __WXMSW__
+      __time64_t tv0, tv1;
+#else
+      struct timeval tv0, tv1;
+#endif
+   };
+}
 #endif
 
 #ifdef USE_MIDI
@@ -1070,15 +1106,18 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
 void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                                 float zoomMin, float zoomMax, bool dB,
-                                const float min[], const float max[], const float rms[],
-                                const int bl[], bool showProgress, bool muted, const float gain)
+                                const WaveDisplay &display, bool showProgress, bool muted, const float gain)
 #else
 void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                                 float zoomMin, float zoomMax, bool dB,
-                                const float min[], const float max[], const float rms[],
-                                const int bl[], bool WXUNUSED(showProgress), bool muted)
+                                const WaveDisplay &display, bool WXUNUSED(showProgress), bool muted)
 #endif
 {
+   const float *const min = display.min;
+   const float *const max = display.max;
+   const float *const rms = display.rms;
+   const int *const bl = display.bl;
+
    // Display a line representing the
    // min and max of the samples in this region
    int lasth1 = std::numeric_limits<int>::max();
@@ -1195,12 +1234,16 @@ void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
                }
             }
          }
+
+         // Restore the pen for remaining pixel columns!
+         dc.SetPen(muted ? muteSamplePen : samplePen);
       }
       else {
          AColor::Line(dc, xx, r.y + h2, xx, r.y + h1);
       }
    }
 
+   // Stroke rms over the min-max
    dc.SetPen(muted ? muteRmsPen : rmsPen);
    for (int x = 0; x < r.width; x++) {
       int xx = r.x + x;
@@ -1409,7 +1452,7 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
 
    for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext())
       DrawClipWaveform(track, it->GetData(), dc, r, viewInfo,
-                       drawEnvelope, drawSamples, drawSliders,
+                       drawEnvelope, drawSamples,
                        dB, muted);
 
    // Update cache for locations, e.g. cutlines and merge points
@@ -1432,6 +1475,148 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
          AColor::Line(dc, (int) (r.x + x + 1), r.y, (int) (r.x + x + 1), r.y + r.height);
       }
    }
+
+   if (drawSliders) {
+      DrawTimeSlider(track, dc, r, viewInfo, true);  // directed right
+      DrawTimeSlider(track, dc, r, viewInfo, false); // directed left
+   }
+}
+
+
+namespace {
+struct ClipParameters
+{
+   // Do a bunch of calculations common to waveform and spectrum drawing.
+   ClipParameters
+      (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &r,
+      const SelectedRegion &selectedRegion, const ViewInfo &viewInfo)
+   {
+      selectedRegion;
+
+      tOffset = clip->GetOffset();
+      rate = clip->GetRate();
+
+      h = viewInfo.h;          //The horizontal position in seconds
+      pps = viewInfo.zoom;     //points-per-second--the zoom level
+
+      double sel0 = viewInfo.selectedRegion.t0();    //left selection bound
+      double sel1 = viewInfo.selectedRegion.t1();    //right selection bound
+
+      //If the track isn't selected, make the selection empty
+      if (!track->GetSelected() &&
+         (spectrum || !track->IsSyncLockSelected())) { // PRL: why was there a difference for spectrum?
+         sel0 = sel1 = 0.0;
+      }
+
+      const double trackLen = clip->GetEndTime() - clip->GetStartTime();
+
+      tstep = 1.0 / pps; // Seconds per point
+      tpre = h - tOffset;                 // offset corrected time of
+      //  left edge of display
+      tpost = tpre + (r.width * tstep);   // offset corrected time of
+      //  right edge of display
+
+      const double sps = 1. / rate;            //seconds-per-sample
+
+      // Determine whether we should show individual samples
+      // or draw circular points as well
+      showIndividualSamples = (pps / rate > 0.5);   //zoomed in a lot
+      showPoints = (pps / rate > 3.0);              //zoomed in even more
+
+      // Calculate actual selection bounds so that t0 > 0 and t1 < the
+      // end of the track
+      t0 = (tpre >= 0.0 ? tpre : 0.0);
+      t1 = (tpost < trackLen - sps * .99 ? tpost : trackLen - sps * .99);
+      if (showIndividualSamples) {
+         // adjustment so that the last circular point doesn't appear
+         // to be hanging off the end
+         t1 += 2. / pps;
+      }
+
+      // Make sure t1 (the right bound) is greater than 0
+      if (t1 < 0.0) {
+         t1 = 0.0;
+      }
+
+      // Make sure t1 is greater than t0
+      if (t0 > t1) {
+         t0 = t1;
+      }
+
+      // Use the WaveTrack method to show what is selected and 'should' be copied, pasted etc.
+      ssel0 = std::max(sampleCount(0), spectrum
+         ? sampleCount((sel0 - tOffset) * rate + .99) // PRL: why?
+         : track->TimeToLongSamples(sel0 - tOffset)
+      );
+      ssel1 = std::max(sampleCount(0), spectrum
+         ? sampleCount((sel1 - tOffset) * rate + .99) // PRL: why?
+         : track->TimeToLongSamples(sel1 - tOffset)
+      );
+
+      //trim selection so that it only contains the actual samples
+      if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * rate)) {
+         ssel1 = (sampleCount)(0.5 + trackLen * rate);
+      }
+
+      // The variable "mid" will be the rectangle containing the
+      // actual waveform, as opposed to any blank area before
+      // or after the track.
+      mid = r;
+
+      // If the left edge of the track is to the right of the left
+      // edge of the display, then there's some blank area to the
+      // left of the track.  Reduce the "mid"
+      // rect by size of the blank area.
+      if (tpre < 0) {
+         // Fill in the area to the left of the track
+         double delta = r.width;
+         if (t0 < tpost) {
+            delta = (int)((t0 - tpre) * pps);
+         }
+
+         // Offset the rectangle containing the waveform by the width
+         // of the area we just erased.
+         mid.x += (int)delta;
+         mid.width -= (int)delta;
+      }
+
+      // If the right edge of the track is to the left of the the right
+      // edge of the display, then there's some blank area to the right
+      // of the track.  Reduce the "mid" rect by the
+      // size of the blank area.
+      if (tpost > t1) {
+         wxRect post = r;
+         if (t1 > tpre) {
+            post.x += (int)((t1 - tpre) * pps);
+         }
+         post.width = r.width - (post.x - r.x);
+         // Reduce the rectangle containing the waveform by the width
+         // of the area we just erased.
+         mid.width -= post.width;
+      }
+   }
+
+   double tOffset;
+   double rate;
+   double h; // absolute time of left edge of display
+   double tstep;
+   double tpre; // offset corrected time of left edge of display
+   // double h1;
+   double tpost; // offset corrected time of right edge of display
+
+   // Calculate actual selection bounds so that t0 > 0 and t1 < the
+   // end of the track
+   double t0;
+   double t1;
+
+   double pps;
+   bool showIndividualSamples, showPoints;
+
+   sampleCount ssel0;
+   sampleCount ssel1;
+
+   wxRect mid;
+};
 }
 
 void TrackArtist::DrawClipWaveform(WaveTrack *track,
@@ -1441,128 +1626,37 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
                                    const ViewInfo *viewInfo,
                                    bool drawEnvelope,
                                    bool drawSamples,
-                                   bool drawSliders,
                                    bool dB,
                                    bool muted)
 {
-#if PROFILE_WAVEFORM
-#   ifdef __WXMSW__
-   __time64_t tv0, tv1;
-   _time64(&tv0);
-#   else
-   struct timeval tv0, tv1;
-   gettimeofday(&tv0, NULL);
-#   endif
+#ifdef PROFILE_WAVEFORM
+   Profiler profiler;
 #endif
-   double h = viewInfo->h;          //The horizontal position in seconds
-   double pps = viewInfo->zoom;     //points-per-second--the zoom level
-   double sel0 = viewInfo->selectedRegion.t0();    //left selection bound
-   double sel1 = viewInfo->selectedRegion.t1();    //right selection bound
-   double trackLen = clip->GetEndTime() - clip->GetStartTime();
-   double tOffset = clip->GetOffset();
-   double rate = clip->GetRate();
-   double sps = 1./rate;            //seconds-per-sample
 
-   //If the track isn't selected, make the selection empty
-   if (!track->GetSelected() && !track->IsSyncLockSelected()) {
-      sel0 = sel1 = 0.0;
-   }
-
-   //Some bookkeeping time variables:
-   double tstep = 1.0 / pps;                  // Seconds per point
-   double tpre = h - tOffset;                 // offset corrected time of
-                                              //  left edge of display
-   double tpost = tpre + (r.width * tstep);   // offset corrected time of
-                                              //  right edge of display
-
-   // Determine whether we should show individual samples
-   // or draw circular points as well
-   bool showIndividualSamples = (pps / rate > 0.5);   //zoomed in a lot
-   bool showPoints = (pps / rate > 3.0);              //zoomed in even more
-
-   // Calculate actual selection bounds so that t0 > 0 and t1 < the
-   // end of the track
-
-   double t0 = (tpre >= 0.0 ? tpre : 0.0);
-   double t1 = (tpost < trackLen - sps * .99 ? tpost : trackLen - sps * .99);
-   if (showIndividualSamples) {
-      // adjustment so that the last circular point doesn't appear
-      // to be hanging off the end
-      t1 += 2. / pps;
-   }
-
-   // Make sure t1 (the right bound) is greater than 0
-   if (t1 < 0.0) {
-      t1 = 0.0;
-   }
-
-   // Make sure t1 is greater than t0
-   if (t0 > t1) {
-      t0 = t1;
-   }
-
-   // Calculate sample-based offset-corrected selection
-
-   // Use the WaveTrack method to show what is selected and 'should' be copied, pasted etc.
-   sampleCount ssel0 = wxMax(0, track->TimeToLongSamples(sel0 - tOffset));
-   sampleCount ssel1 = wxMax(0, track->TimeToLongSamples(sel1 - tOffset));
-
-   //trim selection so that it only contains the actual samples
-   if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5 + trackLen * rate)) {
-      ssel1 = (sampleCount)(0.5 + trackLen * rate);
-   }
-
-   // The variable "mid" will be the rectangle containing the
-   // actual waveform, as opposed to any blank area before
-   // or after the track.
-   wxRect mid = r;
-
-   dc.SetPen(*wxTRANSPARENT_PEN);
-
-   // If the left edge of the track is to the right of the left
-   // edge of the display, then there's some blank area to the
-   // left of the track.  Reduce the "mid"
-   if (tpre < 0) {
-      double delta = r.width;
-      if (t0 < tpost) {
-         delta = (int) ((t0 - tpre) * pps);
-      }
-      mid.x += (int)delta;
-      mid.width -= (int)delta;
-   }
-
-   // If the right edge of the track is to the left of the the right
-   // edge of the display, then there's some blank area to the right
-   // of the track.  Reduce the "mid" rect by the
-   // size of the blank area.
-   if (tpost > t1) {
-      wxRect post = r;
-      if (t1 > tpre) {
-         post.x += (int) ((t1 - tpre) * pps);
-      }
-      post.width = r.width - (post.x - r.x);
-      mid.width -= post.width;
-   }
-
+   const ClipParameters params(false, track, clip, r, viewInfo->selectedRegion, *viewInfo);
+   const wxRect &mid = params.mid;
    // The "mid" rect contains the part of the display actually
    // containing the waveform.  If it's empty, we're done.
    if (mid.width <= 0) {
-#if PROFILE_WAVEFORM
-#   ifdef __WXMSW__
-      _time64(&tv1);
-      double elapsed = _difftime64(tv1, tv0);
-#   else
-      gettimeofday(&tv1, NULL);
-      double elapsed =
-         (tv1.tv_sec + tv1.tv_usec*0.000001) -
-         (tv0.tv_sec + tv0.tv_usec*0.000001);
-#   endif
-      gWaveformTimeTotal += elapsed;
-      gWaveformTimeCount++;
-#endif
-
-     return;
+      return;
    }
+
+   const double &t0 = params.t0;
+   const double &pps = params.pps;
+   const double &tOffset = params.tOffset;
+   const double &tstep = params.tstep;
+   const double &ssel0 = params.ssel0;
+   const double &ssel1 = params.ssel1;
+   const bool &showIndividualSamples = params.showIndividualSamples;
+   const bool &showPoints = params.showPoints;
+   const double &h = params.h;
+   const double &tpre = params.tpre;
+   const double &tpost = params.tpost;
+   const double &t1 = params.t1;
+
+   // Calculate sample-based offset-corrected selection
+
+   dc.SetPen(*wxTRANSPARENT_PEN);
 
    // If we get to this point, the clip is actually visible on the
    // screen, so remember the display rectangle.
@@ -1573,26 +1667,16 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    float zoomMin, zoomMax;
    track->GetDisplayBounds(&zoomMin, &zoomMax);
 
-   // Arrays containing the shape of the waveform - each array
-   // has one value per pixel.
-   float *min = new float[mid.width];
-   float *max = new float[mid.width];
-   float *rms = new float[mid.width];
-   sampleCount *where = new sampleCount[mid.width + 1];
-   int *bl = new int[mid.width];
+   WaveDisplay display;
    bool isLoadingOD = false;//true if loading on demand block in sequence.
 
    // The WaveClip class handles the details of computing the shape
    // of the waveform.  The only way GetWaveDisplay will fail is if
    // there's a serious error, like some of the waveform data can't
    // be loaded.  So if the function returns false, we can just exit.
-   if (!clip->GetWaveDisplay(min, max, rms, bl, where,
-                             mid.width, t0, pps, isLoadingOD)) {
-      delete[] min;
-      delete[] max;
-      delete[] rms;
-      delete[] where;
-      delete[] bl;
+   display.Allocate(mid.width);
+   if (!clip->GetWaveDisplay(display,
+      t0, pps, isLoadingOD)) {
       return;
    }
 
@@ -1607,7 +1691,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    // the envelope and using a colored pen for the selected
    // part of the waveform
    DrawWaveformBackground(dc, mid, envValues, zoomMin, zoomMax, dB,
-                          where, ssel0, ssel1, drawEnvelope,
+                          display.where, ssel0, ssel1, drawEnvelope,
                           !track->GetSelected());
 
    if (!showIndividualSamples) {
@@ -1616,7 +1700,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
                     min, max, rms, bl, isLoadingOD, muted, track->GetChannelGain(track->GetChannel()));
 #else
       DrawMinMaxRMS(dc, mid, envValues, zoomMin, zoomMax, dB,
-                    min, max, rms, bl, isLoadingOD, muted);
+                    display, isLoadingOD, muted);
 #endif
    }
    else {
@@ -1631,21 +1715,11 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    }
 
    delete[] envValues;
-   delete[] min;
-   delete[] max;
-   delete[] rms;
-   delete[] where;
-   delete[] bl;
 
    // Draw arrows on the left side if the track extends to the left of the
    // beginning of time.  :)
    if (h == 0.0 && tOffset < 0.0) {
       DrawNegativeOffsetTrackArrows(dc, r);
-   }
-
-   if (drawSliders) {
-      DrawTimeSlider(track, dc, r, viewInfo, true);  // directed right
-      DrawTimeSlider(track, dc, r, viewInfo, false); // directed left
    }
 
    // Draw clip edges
@@ -1660,22 +1734,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
                    mid.x + mid.width, mid.y,
                    mid.x + mid.width, mid.y + r.height);
    }
-
-#if PROFILE_WAVEFORM
-#   ifdef __WXMSW__
-   _time64(&tv1);
-   double elapsed = _difftime64(tv1, tv0);
-#   else
-   gettimeofday(&tv1, NULL);
-   double elapsed =
-      (tv1.tv_sec + tv1.tv_usec*0.000001) -
-      (tv0.tv_sec + tv0.tv_usec*0.000001);
-#   endif
-   gWaveformTimeTotal += elapsed;
-   gWaveformTimeCount++;
-   wxPrintf(wxT("Avg waveform drawing time: %f\n"),
-          gWaveformTimeTotal / gWaveformTimeCount);
-#endif
 }
 
 
@@ -1755,24 +1813,22 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
    }
 }
 
-inline
-static float sumFreqValues(
-   const float *freq, int x, int half, float bin0, float bin1,
-   bool autocorrelation, int range, int gain)
+static inline float findValue
+(float *spectrum, float bin0, float bin1, int half,
+ bool autocorrelation, int gain, int range)
 {
-   const int x0 = x * half;
    float value;
 #if 0
    // Averaging method
    if (int(bin1) == int(bin0)) {
-      value = freq[x0+int(bin0)];
+      value = spectrum[int(bin0)];
    } else {
       float binwidth= bin1 - bin0;
-      value = freq[x0 + int(bin0)] * (1.f - bin0 + (int)bin0);
+      value = spectrum[int(bin0)] * (1.f - bin0 + (int)bin0);
 
       bin0 = 1 + int (bin0);
       while (bin0 < int(bin1)) {
-         value += freq[x0 + int(bin0)];
+         value += spectrum[int(bin0)];
          bin0 += 1.0;
       }
       // Do not reference past end of freq array.
@@ -1780,17 +1836,18 @@ static float sumFreqValues(
          bin1 -= 1.0;
       }
 
-      value += freq[x0 + int(bin1)] * (bin1 - int(bin1));
+      value += spectrum[int(bin1)] * (bin1 - int(bin1));
       value /= binwidth;
    }
 #else
+   half;
    // Maximum method, and no apportionment of any single bins over multiple pixel rows
    // See Bug971
-   int bin = floor(0.5 + bin0);
-   const int limitBin = floor(0.5 + bin1);
-   value = freq[x0 + bin];
+   int bin = std::min(half - 1, int(floor(0.5 + bin0)));
+   const int limitBin = std::min(half, int(floor(0.5 + bin1)));
+   value = spectrum[bin];
    while (++bin < limitBin)
-      value = std::max(value, freq[x0 + bin]);
+      value = std::max(value, spectrum[bin]);
 #endif
    if (!autocorrelation) {
       // Last step converts dB to a 0.0-1.0 range
@@ -1831,24 +1888,29 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                                    bool autocorrelation,
                                    bool logF)
 {
+#ifdef PROFILE_WAVEFORM
+   Profiler profiler;
+#endif
+
    const WaveTrack *const track = cache.GetTrack();
 
    enum { MONOCHROME_LINE = 230, COLORED_LINE  = 0 };
    enum { DASH_LENGTH = 10 /* pixels */ };
 
-#if PROFILE_WAVEFORM
-#  ifdef __WXMSW__
-   __time64_t tv0, tv1;
-   _time64(&tv0);
-#  else
-   struct timeval tv0, tv1;
-   gettimeofday(&tv0, NULL);
-#  endif
-#endif
-   double h = viewInfo->h;
-   double pps = viewInfo->zoom;
-   double sel0 = viewInfo->selectedRegion.t0();
-   double sel1 = viewInfo->selectedRegion.t1();
+   const ClipParameters params(true, track, clip, r, viewInfo->selectedRegion, *viewInfo);
+   const wxRect &mid = params.mid;
+   // The "mid" rect contains the part of the display actually
+   // containing the waveform.  If it's empty, we're done.
+   if (mid.width <= 0) {
+      return;
+   }
+
+   const double &t0 = params.t0;
+   const double &pps = params.pps;
+   const double &tstep = params.tstep;
+   const double &ssel0 = params.ssel0;
+   const double &ssel1 = params.ssel1;
+   const double &rate = params.rate;
 
    double freqLo = SelectedRegion::UndefinedFrequency;
    double freqHi = SelectedRegion::UndefinedFrequency;
@@ -1859,98 +1921,11 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    }
 #endif
 
-   double tOffset = clip->GetOffset();
-   double rate = clip->GetRate();
-   double sps = 1./rate;
-
    int range = gPrefs->Read(wxT("/Spectrum/Range"), 80L);
    int gain = gPrefs->Read(wxT("/Spectrum/Gain"), 20L);
 
-   if (!track->GetSelected())
-      sel0 = sel1 = 0.0;
-
-   double tpre = h - tOffset;
-   double tstep = 1.0 / pps;
-   double tpost = tpre + (r.width * tstep);
-   double trackLen = clip->GetEndTime() - clip->GetStartTime();
-
-   bool showIndividualSamples = (pps / rate > 0.5);   //zoomed in a lot
-   double t0 = (tpre >= 0.0 ? tpre : 0.0);
-   double t1 = (tpost < trackLen - sps*.99 ? tpost : trackLen - sps*.99);
-   if(showIndividualSamples) t1+=2./pps; // for display consistency
-   // with Waveform display
-
-   // Make sure t1 (the right bound) is greater than 0
-   if (t1 < 0.0)
-      t1 = 0.0;
-
-   // Make sure t1 is greater than t0
-   if (t0 > t1)
-      t0 = t1;
-
-   sampleCount ssel0 = wxMax(0, sampleCount((sel0 - tOffset) * rate + .99));
-   sampleCount ssel1 = wxMax(0, sampleCount((sel1 - tOffset) * rate + .99));
-
-   //trim selection so that it only contains the actual samples
-   if (ssel0 != ssel1 && ssel1 > (sampleCount)(0.5+trackLen*rate))
-      ssel1 = (sampleCount)(0.5+trackLen*rate);
-
-   // The variable "mid" will be the rectangle containing the
-   // actual waveform, as opposed to any blank area before
-   // or after the track.
-   wxRect mid = r;
 
    dc.SetPen(*wxTRANSPARENT_PEN);
-
-   // If the left edge of the track is to the right of the left
-   // edge of the display, then there's some blank area to the
-   // left of the track.  Reduce the "mid"
-   // rect by size of the blank area.
-   if (tpre < 0) {
-      // Fill in the area to the left of the track
-      wxRect pre = r;
-      if (t0 < tpost)
-         pre.width = (int) ((t0 - tpre) * pps);
-
-      // Offset the rectangle containing the waveform by the width
-      // of the area we just erased.
-      mid.x += pre.width;
-      mid.width -= pre.width;
-   }
-
-   // If the right edge of the track is to the left of the the right
-   // edge of the display, then there's some blank area to the right
-   // of the track.  Reduce the "mid" rect by the
-   // size of the blank area.
-   if (tpost > t1) {
-      wxRect post = r;
-      if (t1 > tpre)
-         post.x += (int) ((t1 - tpre) * pps);
-      post.width = r.width - (post.x - r.x);
-
-      // Reduce the rectangle containing the waveform by the width
-      // of the area we just erased.
-      mid.width -= post.width;
-   }
-
-   // The "mid" rect contains the part of the display actually
-   // containing the waveform.  If it's empty, we're done.
-   if (mid.width <= 0) {
-#if PROFILE_WAVEFORM
-#   ifdef __WXMSW__
-      _time64(&tv1);
-      double elapsed = _difftime64(tv1, tv0);
-#   else
-      gettimeofday(&tv1, NULL);
-      double elapsed =
-         (tv1.tv_sec + tv1.tv_usec*0.000001) -
-         (tv0.tv_sec + tv0.tv_usec*0.000001);
-#   endif
-      gWaveformTimeTotal += elapsed;
-      gWaveformTimeCount++;
-#endif
-      return;
-   }
 
    // We draw directly to a bit image in memory,
    // and then paint this directly to our offscreen
@@ -1967,6 +1942,12 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 
    bool updated = clip->GetSpectrogram(cache, freq, where, mid.width,
                               t0, pps, autocorrelation);
+
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+   int fftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);
+   int fftSkipPoints1 = fftSkipPoints + 1;
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+
    int ifreq = lrint(rate/2);
 
    int maxFreq;
@@ -1990,9 +1971,41 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
          minFreq = 1.0;
    }
 
-   bool usePxCache = false;
+   // PRL:  Must the following two be integers?
+   int minSamples = int((double)minFreq * (double)windowSize / rate + 0.5);   // units are fft bins
+   int maxSamples = int((double)maxFreq * (double)windowSize / rate + 0.5);
+   float binPerPx = float(maxSamples - minSamples) / float(mid.height);
 
-   if( !updated && clip->mSpecPxCache->valid && (clip->mSpecPxCache->len == mid.height * mid.width)
+   const float
+      //      e=exp(1.0f),
+      f = rate / 2.0f / half,
+      lmin = logf(float(minFreq)),
+      lmax = logf(float(maxFreq)),
+      scale = lmax - lmin;
+
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   const float
+      log2 = logf(2.0f),
+      scale2 = (lmax - lmin) / log2,
+      lmin2 = lmin / log2;
+
+   bool *yGrid;
+   yGrid = new bool[mid.height];
+   for (int y = 0; y < mid.height; y++) {
+      float n = (float(y) / mid.height*scale2 - lmin2) * 12;
+      float n2 = (float(y + 1) / mid.height*scale2 - lmin2) * 12;
+      float f = float(minFreq) / (mFftSkipPoints + 1)*powf(2.0f, n / 12.0f + lmin2);
+      float f2 = float(minFreq) / (mFftSkipPoints + 1)*powf(2.0f, n2 / 12.0f + lmin2);
+      n = logf(f / 440) / log2 * 12;
+      n2 = logf(f2 / 440) / log2 * 12;
+      if (floor(n) < floor(n2))
+         yGrid[y] = true;
+      else
+         yGrid[y] = false;
+   }
+#endif //EXPERIMENTAL_FFT_Y_GRID
+
+   if (!updated && clip->mSpecPxCache->valid && (clip->mSpecPxCache->len == mid.height * mid.width)
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    && mFftYGrid==fftYGridOld
 #endif //EXPERIMENTAL_FFT_Y_GRID
@@ -2003,12 +2016,11 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    && mFindNotesQuantize==findNotesQuantizeOld
 #endif
    ) {
-      usePxCache = true;
+      // cache is up to date
    }
    else {
       delete clip->mSpecPxCache;
       clip->mSpecPxCache = new SpecPxCache(mid.width * mid.height);
-      usePxCache = false;
       clip->mSpecPxCache->valid = true;
 #ifdef EXPERIMENTAL_FIND_NOTES
       fftFindNotesOld=mFftFindNotes;
@@ -2016,220 +2028,129 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
       findNotesNOld=mNumberOfMaxima;
       findNotesQuantizeOld=mFindNotesQuantize;
 #endif
-   }
-
-   // PRL:  Must the following two be integers?
-   int minSamples = int ((double)minFreq * (double)windowSize / rate + 0.5);   // units are fft bins
-   int maxSamples = int ((double)maxFreq * (double)windowSize / rate + 0.5);
-   float binPerPx = float(maxSamples - minSamples) / float(mid.height);
-   float selBinLo = freqLo * (double)windowSize / rate;
-   float selBinHi = freqHi * (double)windowSize / rate;
-   float selBinCenter =
-      ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi))
-       * (double)windowSize / rate;
-
-   int x = 0;
-   sampleCount w1 = (sampleCount) ((t0*rate + x *rate *tstep) + .5);
-
-   const float
-//      e=exp(1.0f),
-      f=rate/2.0f/half,
-      lmin=logf(float(minFreq)),
-      lmax=logf(float(maxFreq)),
-#ifdef EXPERIMENTAL_FIND_NOTES
-      log2=logf(2.0f),
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      lmins=logf(float(minFreq)/(mFftSkipPoints+1)),
-      lmaxs=logf(float(maxFreq)/(mFftSkipPoints+1)),
-#else //!EXPERIMENTAL_FFT_SKIP_POINTS
-      lmins=lmin,
-      lmaxs=lmax,
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-#endif //EXPERIMENTAL_FIND_NOTES
-      scale=lmax-lmin /*,
-      expo=exp(scale)*/ ;
-
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   const float
-      scale2=(lmax-lmin)/log2,
-      lmin2=lmin/log2;
-
-   bool *yGrid;
-   yGrid=new bool[mid.height];
-   for (int y = 0; y < mid.height; y++) {
-      float n =(float(y  )/mid.height*scale2-lmin2)*12;
-      float n2=(float(y+1)/mid.height*scale2-lmin2)*12;
-      float f =float(minFreq)/(mFftSkipPoints+1)*powf(2.0f, n /12.0f+lmin2);
-      float f2=float(minFreq)/(mFftSkipPoints+1)*powf(2.0f, n2/12.0f+lmin2);
-      n =logf(f /440)/log2*12;
-      n2=logf(f2/440)/log2*12;
-      if (floor(n) < floor(n2))
-         yGrid[y]=true;
-      else
-         yGrid[y]=false;
-   }
-#endif //EXPERIMENTAL_FFT_Y_GRID
 
 #ifdef EXPERIMENTAL_FIND_NOTES
-   int maxima[128];
-   float maxima0[128], maxima1[128];
-   const float
+      const float
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      f2bin = half/(rate/2.0f/(mFftSkipPoints+1)),
+         lmins = logf(float(minFreq) / (mFftSkipPoints + 1)),
+         lmaxs = logf(float(maxFreq) / (mFftSkipPoints + 1)),
 #else //!EXPERIMENTAL_FFT_SKIP_POINTS
-      f2bin = half/(rate/2.0f),
+         lmins = lmin,
+         lmaxs = lmax,
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-      bin2f = 1.0f/f2bin,
-      minDistance = powf(2.0f, 2.0f/12.0f),
-      i0=expf(lmin)/f,
-      i1=expf(scale+lmin)/f,
-      minColor=0.0f;
-   const int maxTableSize=1024;
-   int *indexes=new int[maxTableSize];
+         ;
 #endif //EXPERIMENTAL_FIND_NOTES
 
-   while (x < mid.width)
-   {
-      sampleCount w0 = w1;
-      w1 = (sampleCount) ((t0*rate + (x+1) *rate *tstep) + .5);
+#ifdef EXPERIMENTAL_FIND_NOTES
+      int maxima[128];
+      float maxima0[128], maxima1[128];
+      const float
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+         f2bin = half / (rate / 2.0f / (mFftSkipPoints + 1)),
+#else //!EXPERIMENTAL_FFT_SKIP_POINTS
+         f2bin = half / (rate / 2.0f),
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+         bin2f = 1.0f / f2bin,
+         minDistance = powf(2.0f, 2.0f / 12.0f),
+         i0 = expf(lmin) / f,
+         i1 = expf(scale + lmin) / f,
+         minColor = 0.0f;
+      const int maxTableSize = 1024;
+      int *indexes = new int[maxTableSize];
+#endif //EXPERIMENTAL_FIND_NOTES
 
-      // TODO: The logF and non-logF case are very similar.
-      // They should be merged and simplified.
-      if (!logF)
+      for (int x = 0; x < mid.width; ++x)
       {
-         for (int yy = 0; yy < mid.height; yy++) {
-            float bin0 = float (yy) * binPerPx + minSamples;
-            float bin1 = float (yy + 1) * binPerPx + minSamples;
-
-            // For spectral selection, determine what colour
-            // set to use.  We use a darker selection if
-            // in both spectral range and time range.
-
-            AColor::ColorGradientChoice selected =
-               AColor::ColorGradientUnselected;
-            // If we are in the time selected range, then we may use a different color set.
-            if (ssel0 <= w0 && w1 < ssel1)
-            {
-               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
-                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
-            }
-
-
-            unsigned char rv, gv, bv;
-            float value;
-
-            if(!usePxCache) {
-               value = sumFreqValues(freq, x, half, bin0, bin1,
-                  autocorrelation, range, gain);
+         if (!logF) {
+            for (int yy = 0; yy < mid.height; yy++) {
+               float bin0 = float(yy) * binPerPx + minSamples;
+               float bin1 = float(yy + 1) * binPerPx + minSamples;
+               const float value = findValue
+                  (freq + half * x, bin0, bin1, half, autocorrelation, gain, range);
                clip->mSpecPxCache->values[x * mid.height + yy] = value;
             }
-            else
-               value = clip->mSpecPxCache->values[x * mid.height + yy];
+         }
+         else {
+#ifdef EXPERIMENTAL_FIND_NOTES
+            int maximas=0;
+            if (!usePxCache && mFftFindNotes) {
+               for (int i = maxTableSize-1; i >= 0; i--)
+                  indexes[i]=-1;
 
-            GetColorGradient(value, selected, mIsGrayscale, &rv, &gv, &bv);
+               // Build a table of (most) values, put the index in it.
+               for (int i = int(i0); i < int(i1); i++) {
+                  float freqi=freq[x0+int(i)];
+                  int value=int((freqi+gain+range)/range*(maxTableSize-1));
+                  if (value < 0)
+                     value=0;
+                  if (value >= maxTableSize)
+                     value=maxTableSize-1;
+                  indexes[value]=i;
+               }
+               // Build from the indices an array of maxima.
+               for (int i = maxTableSize-1; i >= 0; i--) {
+                  int index=indexes[i];
+                  if (index >= 0) {
+                     float freqi=freq[x0+index];
+                     if (freqi < mFindNotesMinA)
+                        break;
 
-            int px = ((mid.height - 1 - yy) * mid.width + x) * 3;
-            data[px++] = rv;
-            data[px++] = gv;
-            data[px] = bv;
+                     bool ok=true;
+                     for (int m=0; m < maximas; m++) {
+                        // Avoid to store very close maxima.
+                        float maxm = maxima[m];
+                        if (maxm/index < minDistance && index/maxm < minDistance) {
+                           ok=false;
+                           break;
+                        }
+                     }
+                     if (ok) {
+                        maxima[maximas++] = index;
+                        if (maximas >= mNumberOfMaxima)
+                           break;
+            }
          }
       }
-      else //logF
-      {
-         unsigned char rv, gv, bv;
-         float value;
-
-#ifdef EXPERIMENTAL_FIND_NOTES
-         int maximas=0;
-         if (!usePxCache && mFftFindNotes) {
-            for (int i = maxTableSize-1; i >= 0; i--)
-               indexes[i]=-1;
-
-            // Build a table of (most) values, put the index in it.
-            for (int i = int(i0); i < int(i1); i++) {
-               float freqi=freq[x0+int(i)];
-               int value=int((freqi+gain+range)/range*(maxTableSize-1));
-               if (value < 0)
-                  value=0;
-               if (value >= maxTableSize)
-                  value=maxTableSize-1;
-               indexes[value]=i;
-            }
-            // Build from the indices an array of maxima.
-            for (int i = maxTableSize-1; i >= 0; i--) {
-               int index=indexes[i];
-               if (index >= 0) {
-                  float freqi=freq[x0+index];
-                  if (freqi < mFindNotesMinA)
-                     break;
-
-                  bool ok=true;
-                  for (int m=0; m < maximas; m++) {
-                     // Avoid to store very close maxima.
-                     float maxm = maxima[m];
-                     if (maxm/index < minDistance && index/maxm < minDistance) {
-                        ok=false;
-                        break;
-                     }
-                  }
-                  if (ok) {
-                     maxima[maximas++] = index;
-                     if (maximas >= mNumberOfMaxima)
-                        break;
-                  }
-               }
-            }
 
 // The f2pix helper macro converts a frequency into a pixel coordinate.
 #define f2pix(f) (logf(f)-lmins)/(lmaxs-lmins)*mid.height
 
-            // Possibly quantize the maxima frequencies and create the pixel block limits.
-            for (int i=0; i < maximas; i++) {
-               int index=maxima[i];
-               float f = float(index)*bin2f;
-               if (mFindNotesQuantize)
-               {  f = expf(int(log(f/440)/log2*12-0.5)/12.0f*log2)*440;
+               // Possibly quantize the maxima frequencies and create the pixel block limits.
+               for (int i=0; i < maximas; i++) {
+                  int index=maxima[i];
+                  float f = float(index)*bin2f;
+                  if (mFindNotesQuantize)
+                  {  f = expf(int(log(f/440)/log2*12-0.5)/12.0f*log2)*440;
                   maxima[i] = f*f2bin;
+                  }
+                  float f0 = expf((log(f/440)/log2*24-1)/24.0f*log2)*440;
+                  maxima0[i] = f2pix(f0);
+                  float f1 = expf((log(f/440)/log2*24+1)/24.0f*log2)*440;
+                  maxima1[i] = f2pix(f1);
                }
-               float f0 = expf((log(f/440)/log2*24-1)/24.0f*log2)*440;
-               maxima0[i] = f2pix(f0);
-               float f1 = expf((log(f/440)/log2*24+1)/24.0f*log2)*440;
-               maxima1[i] = f2pix(f1);
             }
-         }
-         int it=0;
-         bool inMaximum = false;
+            int it=0;
+            int oldBin0=-1;
+            bool inMaximum = false;
 #endif //EXPERIMENTAL_FIND_NOTES
 
-         double yy2_base=exp(lmin)/f;
-         float yy2 = yy2_base;
-         double exp_scale_per_height = exp(scale/mid.height);
-         for (int yy = 0; yy < mid.height; yy++) {
-            if (int(yy2)>=half)
-               yy2=half-1;
-            if (yy2<0)
-               yy2=0;
-            float bin0 = float(yy2);
-            yy2_base *= exp_scale_per_height;
-            float yy3 = yy2_base;
-            if (int(yy3)>=half)
-               yy3=half-1;
-            if (yy3<0)
-               yy3=0;
-            float bin1 = float(yy3);
-
-            AColor::ColorGradientChoice selected =
-               AColor::ColorGradientUnselected;
-            // If we are in the time selected range, then we may use a different color set.
-            if (ssel0 <= w0 && w1 < ssel1)
-            {
-               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
-                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
-               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
-            }
-
-            if(!usePxCache) {
+            double yy2_base = exp(lmin) / f;
+            float yy2 = yy2_base;
+            double exp_scale_per_height = exp(scale / mid.height);
+            for (int yy = 0; yy < mid.height; yy++) {
+               if (int(yy2) >= half)
+                  yy2=half-1;
+               if (yy2<0)
+                  yy2=0;
+               float bin0 = float(yy2);
+               yy2_base *= exp_scale_per_height;
+               float yy3 = yy2_base;
+               if (int(yy3)>=half)
+                  yy3=half-1;
+               if (yy3<0)
+                  yy3=0;
+               float bin1 = float(yy3);
+               float value;
 
 #ifdef EXPERIMENTAL_FIND_NOTES
                if (mFftFindNotes) {
@@ -2258,14 +2179,101 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                      value = minColor;
                } else
 #endif //EXPERIMENTAL_FIND_NOTES
-                  value=sumFreqValues(freq, x, half, bin0, bin1,
-                     autocorrelation, range, gain);
+               {
+                  value = findValue
+                     (freq + half * x, bin0, bin1, half, autocorrelation, gain, range);
+               }
                clip->mSpecPxCache->values[x * mid.height + yy] = value;
+               yy2 = yy2_base;
+            } // each y
+         } // is logF
+      } // each x
+
+
+   } // updating cache
+
+   float selBinLo = freqLo * (double)windowSize / rate;
+   float selBinHi = freqHi * (double)windowSize / rate;
+   float selBinCenter =
+      ((freqLo < 0 || freqHi < 0) ? -1 : sqrt(freqLo * freqHi))
+       * (double)windowSize / rate;
+
+   sampleCount w1 = sampleCount(0.5 + rate *
+      t0
+   );
+
+   for (int x = 0; x < mid.width; ++x)
+   {
+      sampleCount w0 = w1;
+      w1 = sampleCount(0.5 + rate *
+         (t0 + (x+1) * tstep)
+      );
+
+      // TODO: The logF and non-logF case are very similar.
+      // They should be merged and simplified.
+      if (!logF)
+      {
+         for (int yy = 0; yy < mid.height; yy++) {
+            float bin0 = float (yy) * binPerPx + minSamples;
+            float bin1 = float (yy + 1) * binPerPx + minSamples;
+
+            // For spectral selection, determine what colour
+            // set to use.  We use a darker selection if
+            // in both spectral range and time range.
+
+            AColor::ColorGradientChoice selected =
+               AColor::ColorGradientUnselected;
+            // If we are in the time selected range, then we may use a different color set.
+            if (ssel0 <= w0 && w1 < ssel1)
+            {
+               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
+                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
             }
-            else
-               value = clip->mSpecPxCache->values[x * mid.height + yy];
+
+            unsigned char rv, gv, bv;
+            const float value =
+               clip->mSpecPxCache->values[x * mid.height + yy];
+            GetColorGradient(value, selected, mIsGrayscale, &rv, &gv, &bv);
+            int px = ((mid.height - 1 - yy) * mid.width + x) * 3;
+            data[px++] = rv;
+            data[px++] = gv;
+            data[px] = bv;
+         }
+      }
+      else //logF
+      {
+         double yy2_base=exp(lmin)/f;
+         float yy2 = yy2_base;
+         double exp_scale_per_height = exp(scale/mid.height);
+         for (int yy = 0; yy < mid.height; yy++) {
+            if (int(yy2)>=half)
+               yy2=half-1;
+            if (yy2<0)
+               yy2=0;
+            float bin0 = float(yy2);
+            yy2_base *= exp_scale_per_height;
+            float yy3 = yy2_base;
+            if (int(yy3)>=half)
+               yy3=half-1;
+            if (yy3<0)
+               yy3=0;
+            float bin1 = float(yy3);
+
+            AColor::ColorGradientChoice selected =
+               AColor::ColorGradientUnselected;
+            // If we are in the time selected range, then we may use a different color set.
+            if (ssel0 <= w0 && w1 < ssel1)
+            {
+               bool isSpectral = ((track->GetDisplay() == WaveTrack::SpectralSelectionDisplay) ||
+                                  (track->GetDisplay() == WaveTrack::SpectralSelectionLogDisplay));
+               selected = ChooseColorSet( bin0, bin1, selBinLo, selBinCenter, selBinHi, x/DASH_LENGTH, isSpectral );
+            }
+
+            const float value = clip->mSpecPxCache->values[x * mid.height + yy];
             yy2 = yy2_base;
 
+            unsigned char rv, gv, bv;
             GetColorGradient(value, selected, mIsGrayscale, &rv, &gv, &bv);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
@@ -2280,10 +2288,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
             data[px++] = rv;
             data[px++] = gv;
             data[px] = bv;
-         }
-      }
-      x++;
-   }
+         } // each y
+      } // logF
+   } // each x
 
    // If we get to this point, the clip is actually visible on the
    // screen, so remember the display rectangle.

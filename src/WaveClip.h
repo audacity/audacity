@@ -58,6 +58,51 @@ class WaveClip;
 WX_DECLARE_USER_EXPORTED_LIST(WaveClip, WaveClipList, AUDACITY_DLL_API);
 WX_DEFINE_USER_EXPORTED_ARRAY_PTR(WaveClip*, WaveClipArray, class AUDACITY_DLL_API);
 
+struct WaveDisplay
+{
+   int width;
+   sampleCount *where;
+   float *min, *max, *rms;
+   int* bl;
+
+   WaveDisplay()
+      : width(0), where(0), min(0), max(0), rms(0), bl(0)
+   {
+   }
+
+   ~WaveDisplay()
+   {
+      Deallocate();
+   }
+
+   void WaveDisplay::Allocate(int w)
+   {
+      width = w;
+
+      // One more to hold the past-the-end sample count:
+      where = new sampleCount[1 + width];
+
+      min = new float[width];
+      max = new float[width];
+      rms = new float[width];
+      bl = new int[width];
+   }
+
+   void WaveDisplay::Deallocate()
+   {
+      delete[] where;
+      where = 0;
+      delete[] min;
+      min = 0;
+      delete[] max;
+      max = 0;
+      delete[] rms;
+      rms = 0;
+      delete[] bl;
+      bl = 0;
+   }
+};
+
 class AUDACITY_DLL_API WaveClip : public XMLTagHandler
 {
 private:
@@ -139,8 +184,8 @@ public:
 
    /** Getting high-level data from the for screen display and clipping
     * calculations and Contrast */
-   bool GetWaveDisplay(float *min, float *max, float *rms,int* bl, sampleCount *where,
-                       int numPixels, double t0, double pixelsPerSecond, bool &isLoadingOD);
+   bool GetWaveDisplay(WaveDisplay &display,
+                       double t0, double pixelsPerSecond, bool &isLoadingOD);
    bool GetSpectrogram(WaveTrackCache &cache,
                        float *buffer, sampleCount *where,
                        int numPixels,

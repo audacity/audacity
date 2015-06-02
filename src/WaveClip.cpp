@@ -29,6 +29,7 @@ drawing).  Cache's the Spectrogram frequency samples.
 
 #include <math.h>
 #include <memory>
+#include <functional>
 #include <vector>
 #include <wx/log.h>
 
@@ -41,14 +42,23 @@ drawing).  Cache's the Spectrogram frequency samples.
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
 
+namespace {
+inline int CountODPixels(int *bl, int start, int end)
+{
+   using namespace std;
+   return count_if(bl + start, bl + end, bind2nd(less<int>(), 0));
+}
+}
+
+
 class WaveCache {
 public:
    WaveCache(int cacheLen)
+      : len(cacheLen)
    {
       dirty = -1;
       start = -1.0;
       pps = 0.0;
-      len = cacheLen;
       min = len ? new float[len] : 0;
       max = len ? new float[len] : 0;
       rms = len ? new float[len] : 0;
@@ -70,7 +80,7 @@ public:
    }
 
    int          dirty;
-   sampleCount  len;
+   const sampleCount  len;
    double       start;
    double       pps;
    int          rate;
@@ -121,7 +131,7 @@ public:
          invalEnd = len;
 
 
-      mRegionsMutex.Lock();
+      ODLocker locker(mRegionsMutex);
 
       //look thru the region array for a place to insert.  We could make this more spiffy than a linear search
       //but right now it is not needed since there will usually only be one region (which grows) for OD loading.
@@ -187,18 +197,12 @@ public:
             break;
          }
       }
-
-
-      mRegionsMutex.Unlock();
    }
 
    //lock before calling these in a section.  unlock after finished.
-   int GetNumInvalidRegions(){return mRegions.size();}
-   int GetInvalidRegionStart(int i){return mRegions[i]->start;}
-   int GetInvalidRegionEnd(int i){return mRegions[i]->end;}
-
-   void LockInvalidRegions(){mRegionsMutex.Lock();}
-   void UnlockInvalidRegions(){mRegionsMutex.Unlock();}
+   int GetNumInvalidRegions() const {return mRegions.size();}
+   int GetInvalidRegionStart(int i) const {return mRegions[i]->start;}
+   int GetInvalidRegionEnd(int i) const {return mRegions[i]->end;}
 
    void ClearInvalidRegions()
    {
@@ -207,6 +211,38 @@ public:
          delete mRegions[i];
       }
       mRegions.clear();
+   }
+
+   void LoadInvalidRegion(int ii, Sequence *sequence, bool updateODCount)
+   {
+      const int invStart = GetInvalidRegionStart(ii);
+      const int invEnd = GetInvalidRegionEnd(ii);
+
+      //before check number of ODPixels
+      int regionODPixels = 0;
+      if (updateODCount)
+         regionODPixels = CountODPixels(bl, invStart, invEnd);
+
+      sequence->GetWaveDisplay(&min[invStart],
+         &max[invStart],
+         &rms[invStart],
+         &bl[invStart],
+         invEnd - invStart,
+         &where[invStart]);
+
+      //after check number of ODPixels
+      if (updateODCount)
+      {
+         const int regionODPixelsAfter = CountODPixels(bl, invStart, invEnd);
+         numODPixels -= (regionODPixels - regionODPixelsAfter);
+      }
+   }
+
+   void LoadInvalidRegions(Sequence *sequence, bool updateODCount)
+   {
+      //invalid regions are kept in a sorted array.
+      for (int i = 0; i < GetNumInvalidRegions(); i++)
+         LoadInvalidRegion(i, sequence, updateODCount);
    }
 
 
@@ -444,20 +480,72 @@ bool WaveClip::AfterClip(double t) const
 ///Delete the wave cache - force redraw.  Thread-safe
 void WaveClip::DeleteWaveCache()
 {
-   mWaveCacheMutex.Lock();
+   ODLocker locker(mWaveCacheMutex);
    if(mWaveCache!=NULL)
       delete mWaveCache;
    mWaveCache = new WaveCache(0);
-   mWaveCacheMutex.Unlock();
 }
 
 ///Adds an invalid region to the wavecache so it redraws that portion only.
 void WaveClip::AddInvalidRegion(long startSample, long endSample)
 {
-   mWaveCacheMutex.Lock();
+   ODLocker locker(mWaveCacheMutex);
    if(mWaveCache!=NULL)
       mWaveCache->AddInvalidRegion(startSample,endSample);
-   mWaveCacheMutex.Unlock();
+}
+
+namespace {
+
+inline
+void findCorrection(const sampleCount oldWhere[], int oldLen, int newLen,
+         double t0, double rate, double samplesPerPixel,
+         double &oldWhere0, double &denom, int &oldX0, int &oldXLast, double &correction)
+{
+   // Mitigate the accumulation of location errors
+   // in copies of copies of ... of caches.
+   // Look at the loop that populates "where" below to understand this.
+
+   // Find the sample position that is the origin in the old cache.
+   oldWhere0 = oldWhere[1] - samplesPerPixel;
+   const double oldWhereLast = oldWhere0 + oldLen * samplesPerPixel;
+   // Find the length in samples of the old cache.
+   denom = oldWhereLast - oldWhere0;
+
+   // Skip unless denom rounds off to at least 1.
+   if (denom >= 0.5)
+   {
+      // What sample would go in where[0] with no correction?
+      const double guessWhere0 = t0 * rate;
+      // What integer position in the old cache array does that map to?
+      // (even if it is out of bounds)
+      oldX0 = floor(0.5 + oldLen * (guessWhere0 - oldWhere0) / denom);
+      // What sample count would the old cache have put there?
+      const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
+      // What correction is needed to align the new cache with the old?
+      correction = where0 - guessWhere0;
+      wxASSERT(-samplesPerPixel <= correction && correction <= samplesPerPixel);
+      // What integer position in the old cache array does our last column
+      // map to?  (even if out of bounds)
+      oldXLast = floor(0.5 + oldLen * (
+         (where0 + double(newLen) * samplesPerPixel - oldWhere0)
+         / denom
+         ));
+   }
+}
+
+inline void
+fillWhere(sampleCount where[], int len, double bias, double correction,
+          double t0, double rate, double samplesPerPixel)
+{
+   // Be careful to make the first value non-negative
+   correction += 0.5 + bias;
+   where[0] = sampleCount(std::max(0.0, floor(correction + t0 * rate)));
+   for (sampleCount x = 1; x < len + 1; x++)
+      where[x] = sampleCount(
+         floor(correction + t0 * rate + double(x) * samplesPerPixel)
+      );
+}
+
 }
 
 //
@@ -465,12 +553,17 @@ void WaveClip::AddInvalidRegion(long startSample, long endSample)
 // clipping calculations
 //
 
-bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
-                               sampleCount *where,
-                               int numPixels, double t0,
+bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                                double pixelsPerSecond, bool &isLoadingOD)
 {
-   mWaveCacheMutex.Lock();
+   int numPixels = display.width;
+   float *const min = display.min;
+   float *const max = display.max;
+   float *const rms = display.rms;
+   int *const bl = display.bl;
+   sampleCount *const where = display.where;
+
+   ODLocker locker(mWaveCacheMutex);
 
 
    const bool match =
@@ -482,40 +575,7 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
        mWaveCache->start == t0 &&
        mWaveCache->len >= numPixels) {
 
-      //check for invalid regions, and make the bottom if an else if.
-      //invalid regions are kept in a sorted array.
-      for(int i=0;i<mWaveCache->GetNumInvalidRegions();i++)
-      {
-         int invStart;
-         invStart = mWaveCache->GetInvalidRegionStart(i);
-         int invEnd;
-         invEnd = mWaveCache->GetInvalidRegionEnd(i);
-
-         int regionODPixels;
-         regionODPixels =0;
-         int regionODPixelsAfter;
-         regionODPixelsAfter =0;
-         //before check number of ODPixels
-         for(int j=invStart;j<invEnd;j++)
-         {
-            if(mWaveCache->bl[j]<0)
-               regionODPixels++;
-         }
-         mSequence->GetWaveDisplay(&mWaveCache->min[invStart],
-                                        &mWaveCache->max[invStart],
-                                        &mWaveCache->rms[invStart],
-                                        &mWaveCache->bl[invStart],
-                                        invEnd-invStart,
-                                        &mWaveCache->where[invStart]);
-         //after check number of ODPixels
-         for(int j=invStart;j<invEnd;j++)
-         {
-            if(mWaveCache->bl[j]<0)
-               regionODPixelsAfter++;
-         }
-         //decrement the number of od pixels.
-         mWaveCache->numODPixels -= (regionODPixels - regionODPixelsAfter);
-      }
+      mWaveCache->LoadInvalidRegions(mSequence, true);
       mWaveCache->ClearInvalidRegions();
 
 
@@ -525,7 +585,6 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
       memcpy(bl, mWaveCache->bl, numPixels*sizeof(int));
       memcpy(where, mWaveCache->where, (numPixels+1)*sizeof(sampleCount));
       isLoadingOD = mWaveCache->numODPixels>0;
-      mWaveCacheMutex.Unlock();
       return true;
    }
 
@@ -541,47 +600,16 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
    double oldWhere0 = 0;
    double denom = 0;
    int oldX0 = 0, oldXLast = 0;
-   double error = 0.0;
+   double correction = 0.0;
    if (match &&
        oldCache->len > 0) {
-      // Mitigate the accumulation of location errors
-      // in copies of copies of ... of caches.
-      // Look at the loop that populates "where" below to understand this.
-
-      // Find the sample position that is the origin in the old cache.
-      oldWhere0 = oldCache->where[1] - samplesPerPixel;
-      const double oldWhereLast = oldWhere0 + oldCache->len * samplesPerPixel;
-      // Find the length in samples of the old cache.
-      denom = oldWhereLast - oldWhere0;
-
-      // Skip unless denom rounds off to at least 1.
-      if (denom >= 0.5)
-      {
-         // What sample would go in where[0] with no correction?
-         const double guessWhere0 = t0 * mRate;
-         // What integer position in the old cache array does that map to?
-         // (even if it is out of bounds)
-         oldX0 = floor(0.5 + oldCache->len * (guessWhere0 - oldWhere0) / denom);
-         // What sample count would the old cache have put there?
-         const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
-         // What correction is needed to align the new cache with the old?
-         error = where0 - guessWhere0;
-         wxASSERT(-samplesPerPixel <= error && error <= samplesPerPixel);
-         // What integer position in the old cache array does our last column
-         // map to?  (even if out of bounds)
-         oldXLast = floor(0.5 + oldCache->len * (
-            (where0 + double(mWaveCache->len) * samplesPerPixel - oldWhere0)
-            / denom
-         ));
-      }
+      findCorrection(oldCache->where, oldCache->len, mWaveCache->len,
+         t0, mRate, samplesPerPixel,
+         oldWhere0, denom, oldX0, oldXLast, correction);
    }
 
-   // Be careful to make the first value non-negative
-   mWaveCache->where[0] = sampleCount(std::max(0.0, floor(0.5 + error + t0 * mRate)));
-   for (sampleCount x = 1; x < mWaveCache->len + 1; x++)
-      mWaveCache->where[x] = sampleCount(
-            floor(0.5 + error + t0 * mRate + double(x) * samplesPerPixel)
-      );
+   fillWhere(mWaveCache->where, mWaveCache->len, 0.0, correction,
+      t0, mRate, samplesPerPixel);
 
    //mchinen: I think s0 - s1 represents the range of samples that we will need to look up.  likewise p0-p1 the number of pixels.
    sampleCount s0 = mWaveCache->where[0];
@@ -603,24 +631,10 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
       p0 = mWaveCache->len;
       p1 = 0;
 
-      //check for invalid regions, and make the bottom if an else if.
-      //invalid regions are keep in a sorted array.
-      //TODO:integrate into below for loop so that we only load inval regions if
+      //TODO: only load inval regions if
       //necessary.  (usually is the case, so no rush.)
       //also, we should be updating the NEW cache, but here we are patching the old one up.
-      for(int i=0;i<oldCache->GetNumInvalidRegions();i++)
-      {
-         int invStart;
-         invStart = oldCache->GetInvalidRegionStart(i);
-         int invEnd;
-         invEnd = oldCache->GetInvalidRegionEnd(i);
-         mSequence->GetWaveDisplay(&oldCache->min[invStart],
-                                        &oldCache->max[invStart],
-                                        &oldCache->rms[invStart],
-                                        &oldCache->bl[invStart],
-                                        invEnd-invStart,
-                                        &oldCache->where[invStart]);
-      }
+      oldCache->LoadInvalidRegions(mSequence, false);
       oldCache->ClearInvalidRegions();
 
       for (sampleCount x = 0; x < mWaveCache->len; x++)
@@ -733,7 +747,6 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
                                         &mWaveCache->where[p0]))
          {
             isLoadingOD=false;
-            mWaveCacheMutex.Unlock();
             return false;
          }
       }
@@ -755,7 +768,6 @@ bool WaveClip::GetWaveDisplay(float *min, float *max, float *rms,int* bl,
          mWaveCache->numODPixels++;
 
    isLoadingOD = mWaveCache->numODPixels>0;
-   mWaveCacheMutex.Unlock();
    return true;
 }
 
@@ -897,6 +909,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    mSpecCache->start = t0;
 
    bool *recalc = new bool[mSpecCache->len + 1];
+   std::fill(&recalc[0], &recalc[mSpecCache->len + 1], true);
 
    const double tstep = 1.0 / pixelsPerSecond;
    const double samplesPerPixel = mRate * tstep;
@@ -906,52 +919,17 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    double oldWhere0 = 0;
    double denom = 0;
    int oldX0 = 0, oldXLast = 0;
-   double error = 0.0;
+   double correction = 0.0;
 
    if (match &&
        oldCache->len > 0) {
-      // Mitigate the accumulation of location errors
-      // in copies of copies of ... of caches.
-      // Look at the loop that populates "where" below to understand this.
-
-      // Find the sample position that is the origin in the old cache.
-      oldWhere0 = oldCache->where[1] - samplesPerPixel;
-      const double oldWhereLast = oldWhere0 + oldCache->len * samplesPerPixel;
-      // Find the length in samples of the old cache.
-      denom = oldWhereLast - oldWhere0;
-
-      // Skip unless denom rounds off to at least 1.
-      if (denom >= 0.5)
-      {
-         // What sample would go in where[0] with no correction?
-         const double guessWhere0 = t0 * mRate;
-         // What integer position in the old cache array does that map to?
-         // (even if it is out of bounds)
-         oldX0 = floor(0.5 + oldCache->len * (guessWhere0 - oldWhere0) / denom);
-         // What sample count would the old cache have put there?
-         const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
-         // What correction is needed to align the new cache with the old?
-         error = where0 - guessWhere0;
-         wxASSERT(-samplesPerPixel <= error && error <= samplesPerPixel);
-         // What integer position in the old cache array does our last column
-         // map to?  (even if out of bounds)
-         oldXLast = floor(0.5 + oldCache->len * (
-            (where0 + double(mWaveCache->len) * samplesPerPixel - oldWhere0)
-            / denom
-         ));
-      }
+      findCorrection(oldCache->where, oldCache->len, mSpecCache->len,
+         t0, mRate, samplesPerPixel,
+         oldWhere0, denom, oldX0, oldXLast, correction);
    }
 
-   // Be careful to make the first value non-negative
-   recalc[0] = true;
-   mSpecCache->where[0] = sampleCount(std::max(0.0, floor(1.0 + error + t0 * mRate)));
-   for (sampleCount x = 1; x < mSpecCache->len + 1; x++) {
-      recalc[x] = true;
-      // purposely offset the display 1/2 bin to the left (as compared
-      // to waveform display to properly center response of the FFT
-      mSpecCache->where[x] =
-         sampleCount(floor(1.0 + error + t0 * mRate + double(x) * samplesPerPixel));
-   }
+   fillWhere(mSpecCache->where, mSpecCache->len, 0.5, correction,
+      t0, mRate, samplesPerPixel);
 
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
