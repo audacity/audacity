@@ -469,19 +469,11 @@ void TrackArtist::DrawTrack(const Track * t,
                       drawEnvelope,  drawSamples, drawSliders, true, muted);
          break;
       case WaveTrack::SpectrumDisplay:
-         DrawSpectrum(wt, dc, r, viewInfo, false, false);
-         break;
       case WaveTrack::SpectrumLogDisplay:
-         DrawSpectrum(wt, dc, r, viewInfo, false, true);
-         break;
       case WaveTrack::SpectralSelectionDisplay:
-         DrawSpectrum(wt, dc, r, viewInfo, false, false);
-         break;
       case WaveTrack::SpectralSelectionLogDisplay:
-         DrawSpectrum(wt, dc, r, viewInfo, false, true);
-         break;
       case WaveTrack::PitchDisplay:
-         DrawSpectrum(wt, dc, r, viewInfo, true, false);
+         DrawSpectrum(wt, dc, r, viewInfo);
          break;
       }
       if (mbShowTrackNameInWaveform &&
@@ -1130,15 +1122,13 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &r, const double
 }
 
 
+void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
+                                float zoomMin, float zoomMax, bool dB,
+                                const WaveDisplay &display, bool /* showProgress */, bool muted
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
-                                float zoomMin, float zoomMax, bool dB,
-                                const WaveDisplay &display, bool showProgress, bool muted, const float gain)
-#else
-void TrackArtist::DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
-                                float zoomMin, float zoomMax, bool dB,
-                                const WaveDisplay &display, bool WXUNUSED(showProgress), bool muted)
+                                , const float gain
 #endif
+                               )
 {
    const float *const min = display.min;
    const float *const max = display.max;
@@ -1504,8 +1494,8 @@ void TrackArtist::DrawWaveform(WaveTrack *track,
    }
 
    if (drawSliders) {
-      DrawTimeSlider(track, dc, r, viewInfo, true);  // directed right
-      DrawTimeSlider(track, dc, r, viewInfo, false); // directed left
+      DrawTimeSlider(dc, r, true);  // directed right
+      DrawTimeSlider(dc, r, false); // directed left
    }
 }
 
@@ -1764,10 +1754,8 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
 }
 
 
-void TrackArtist::DrawTimeSlider(WaveTrack * WXUNUSED(track),
-                                 wxDC & dc,
+void TrackArtist::DrawTimeSlider(wxDC & dc,
                                  const wxRect & r,
-                                 const ViewInfo * WXUNUSED(viewInfo),
                                  bool rightwards)
 {
    const int border = 3; // 3 pixels all round.
@@ -1826,9 +1814,7 @@ void TrackArtist::DrawTimeSlider(WaveTrack * WXUNUSED(track),
 void TrackArtist::DrawSpectrum(WaveTrack *track,
                                wxDC & dc,
                                const wxRect & r,
-                               const ViewInfo *viewInfo,
-                               bool autocorrelation,
-                               bool logF)
+                               const ViewInfo *viewInfo)
 {
    DrawBackgroundWithSelection(&dc, r, track, blankSelectedBrush, blankBrush,
          viewInfo->selectedRegion.t0(), viewInfo->selectedRegion.t1(), 
@@ -1836,7 +1822,7 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
 
    WaveTrackCache cache(track);
    for (WaveClipList::compatibility_iterator it = track->GetClipIterator(); it; it = it->GetNext()) {
-      DrawClipSpectrum(cache, it->GetData(), dc, r, viewInfo, autocorrelation, logF);
+      DrawClipSpectrum(cache, it->GetData(), dc, r, viewInfo);
    }
 }
 
@@ -1911,15 +1897,17 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                                    WaveClip *clip,
                                    wxDC & dc,
                                    const wxRect & r,
-                                   const ViewInfo *viewInfo,
-                                   bool autocorrelation,
-                                   bool logF)
+                                   const ViewInfo *viewInfo)
 {
 #ifdef PROFILE_WAVEFORM
    Profiler profiler;
 #endif
 
    const WaveTrack *const track = cache.GetTrack();
+   const int display = track->GetDisplay();
+   const bool autocorrelation = (WaveTrack::PitchDisplay == display);
+   const bool logF = (WaveTrack::SpectrumLogDisplay == display
+      || WaveTrack::SpectralSelectionLogDisplay == display);
 
    enum { MONOCHROME_LINE = 230, COLORED_LINE  = 0 };
    enum { DASH_LENGTH = 10 /* pixels */ };
