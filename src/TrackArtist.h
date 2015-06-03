@@ -113,8 +113,7 @@ class AUDACITY_DLL_API TrackArtist {
                      bool dB, bool muted);
 
    void DrawSpectrum(WaveTrack *track,
-                     wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
-                     bool autocorrelation, bool logF);
+                     wxDC & dc, const wxRect & r, const ViewInfo *viewInfo);
 #ifdef USE_MIDI
    int GetBottom(NoteTrack *t, const wxRect &r);
    void DrawNoteBackground(NoteTrack *track, wxDC &dc,
@@ -134,8 +133,7 @@ class AUDACITY_DLL_API TrackArtist {
    void DrawTimeTrack(TimeTrack *track,
                       wxDC & dc, const wxRect & r, const ViewInfo *viewInfo);
 
-   void DrawTimeSlider(WaveTrack *track,
-                       wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
+   void DrawTimeSlider(wxDC & dc, const wxRect & r,
                        bool rightwards);
 
    void DrawClipWaveform(WaveTrack *track, WaveClip *clip,
@@ -144,8 +142,7 @@ class AUDACITY_DLL_API TrackArtist {
                          bool dB, bool muted);
 
    void DrawClipSpectrum(WaveTrackCache &cache, WaveClip *clip,
-                         wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
-                         bool autocorrelation, bool logF);
+                         wxDC & dc, const wxRect & r, const ViewInfo *viewInfo);
 
    // Waveform utility functions
 
@@ -154,15 +151,13 @@ class AUDACITY_DLL_API TrackArtist {
                                const sampleCount where[],
                                sampleCount ssel0, sampleCount ssel1,
                                bool drawEnvelope, bool bIsSyncLockSelected);
+   void DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
+                      float zoomMin, float zoomMax, bool dB,
+                      const WaveDisplay &display, bool /* showProgress */, bool muted
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   void DrawMinMaxRMS(wxDC & dc, const wxRect & r, const double env[],
-                      float zoomMin, float zoomMax, bool dB,
-                      const WaveDisplay &display, bool showProgress, bool muted, const float gain);
-#else
-   void DrawMinMaxRMS(wxDC & dc, const wxRect & r, const double env[],
-                      float zoomMin, float zoomMax, bool dB,
-                      const WaveDisplay &display, bool showProgress, bool muted);
+                      , const float gain
 #endif
+   );
    void DrawIndividualSamples(wxDC & dc, const wxRect & r,
                               float zoomMin, float zoomMax, bool dB,
                               WaveClip *clip,
