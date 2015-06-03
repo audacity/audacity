@@ -1883,5 +1883,11 @@
     <copy Include="..\..\..\plug-ins\SpectralEditShelves.ny">
       <Filter>plug-ins</Filter>
     </copy>
+    <copy Include="..\..\..\plug-ins\crossfadeclips.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
+    <copy Include="..\..\..\plug-ins\limiter.ny">
+      <Filter>plug-ins</Filter>
+    </copy>
   </ItemGroup>
 </Project>
