@@ -744,6 +744,8 @@
 		285D3CBE0F09FCB2007883FC /* PluginAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CBC0F09FCB2007883FC /* PluginAdapter.cpp */; };
 		285D3CBF0F09FCB2007883FC /* RealTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CBD0F09FCB2007883FC /* RealTime.cpp */; };
 		285DE1FA0BF03C7800A20DF0 /* Screenshot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */; };
+		2860736C1B1ED77100850872 /* crossfadeclips.ny in Resources */ = {isa = PBXBuildFile; fileRef = 2860736A1B1ED77100850872 /* crossfadeclips.ny */; };
+		2860736D1B1ED77100850872 /* limiter.ny in Resources */ = {isa = PBXBuildFile; fileRef = 2860736B1B1ED77100850872 /* limiter.ny */; };
 		2860BA240E0F0D8600A13878 /* SoundActivatedRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA200E0F0D8600A13878 /* SoundActivatedRecord.cpp */; };
 		2860BA250E0F0D8600A13878 /* TimerRecordDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA220E0F0D8600A13878 /* TimerRecordDialog.cpp */; };
 		2860BA280E0F0DD800A13878 /* ExportFFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA260E0F0DD800A13878 /* ExportFFmpeg.cpp */; };
@@ -2442,6 +2444,8 @@
 		285D3CBD0F09FCB2007883FC /* RealTime.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = RealTime.cpp; path = "libvamp/src/vamp-sdk/RealTime.cpp"; sourceTree = "<group>"; tabWidth = 3; };
 		285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Screenshot.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		285DE1F90BF03C7800A20DF0 /* Screenshot.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Screenshot.h; sourceTree = "<group>"; tabWidth = 3; };
+		2860736A1B1ED77100850872 /* crossfadeclips.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crossfadeclips.ny; path = "../plug-ins/crossfadeclips.ny"; sourceTree = "<group>"; };
+		2860736B1B1ED77100850872 /* limiter.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = limiter.ny; path = "../plug-ins/limiter.ny"; sourceTree = "<group>"; };
 		2860BA200E0F0D8600A13878 /* SoundActivatedRecord.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SoundActivatedRecord.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		2860BA210E0F0D8600A13878 /* SoundActivatedRecord.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = SoundActivatedRecord.h; sourceTree = "<group>"; tabWidth = 3; };
 		2860BA220E0F0D8600A13878 /* TimerRecordDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = TimerRecordDialog.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5237,10 +5241,12 @@
 				28AA28130F267A2D008AED9E /* beat.ny */,
 				28AA28140F267A2D008AED9E /* clicktrack.ny */,
 				28AA28150F267A2D008AED9E /* clipfix.ny */,
+				2860736A1B1ED77100850872 /* crossfadeclips.ny */,
 				28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */,
 				28AA28180F267A2D008AED9E /* delay.ny */,
 				28AA28190F267A2D008AED9E /* equalabel.ny */,
 				28AA281A0F267A2D008AED9E /* highpass.ny */,
+				2860736B1B1ED77100850872 /* limiter.ny */,
 				28AA281B0F267A2D008AED9E /* lowpass.ny */,
 				28ED7B701A1C77B0008A01D9 /* notch.ny */,
 				28AA281C0F267A2D008AED9E /* pluck.ny */,
@@ -6683,6 +6689,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2860736D1B1ED77100850872 /* limiter.ny in Resources */,
 				174F73D0098D516D009CD6E0 /* Audacity.icns in Resources */,
 				174F73D1098D516D009CD6E0 /* AudacityAIFF.icns in Resources */,
 				174F73D2098D516D009CD6E0 /* AudacityAU.icns in Resources */,
@@ -6694,6 +6701,7 @@
 				28006FFB132C167600BD34D7 /* Install.txt in Resources */,
 				ED9551A1195D95FC0027176E /* Audacity-DMG-background.png in Resources */,
 				28ED7B711A1C77B0008A01D9 /* adjustable-fade.ny in Resources */,
+				2860736C1B1ED77100850872 /* crossfadeclips.ny in Resources */,
 				28ED7B721A1C77B0008A01D9 /* crossfadetracks.ny in Resources */,
 				28ED7B731A1C77B0008A01D9 /* notch.ny in Resources */,
 				28ED7B7A1A1C77BF008A01D9 /* sample-data-export.ny in Resources */,
