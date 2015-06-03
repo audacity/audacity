@@ -35,9 +35,9 @@ AppVerName=Audacity {#AppVersion}
 ; Specify AppVersion as well, so it appears in the Add/Remove Programs entry. 
 AppVersion={#AppVersion}
 AppPublisher="Audacity Team"
-AppPublisherURL=http://audacity.sourceforge.net
-AppSupportURL=http://audacity.sourceforge.net
-AppUpdatesURL=http://audacity.sourceforge.net
+AppPublisherURL=http://web.audacityteam.org
+AppSupportURL=http://web.audacityteam.org
+AppUpdatesURL=http://web.audacityteam.org
 ChangesAssociations=yes
 
 DefaultDirName={pf}\Audacity
@@ -122,12 +122,12 @@ Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 #endif
 
 [INI]
-Filename: "{app}\FirstTime.ini"; Section: "FromInno"; Key: "ResetThePrefs"; String: "yes"; Tasks: resetPrefs;
+Filename: "{app}\FirstTime.ini"; Section: "FromInno"; Key: "ResetPrefs"; String: "1"; Tasks: resetPrefs;
 Filename: "{app}\FirstTime.ini"; Section: "FromInno"; Key: "Language"; String: "{language}"
 
 [Tasks]
-Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
-Name: resetPrefs; Description:  "Reset Preferences"; Flags: unchecked
+Name: desktopicon; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+Name: resetPrefs; Description:  "{cm:ResetPrefs}"; Flags: unchecked
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
 ; Name: associate_aup; Description: "&Associate Audacity project files"; GroupDescription: "Other tasks:"; Flags: checkedonce
 
@@ -148,13 +148,12 @@ Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
 ; 2) Need the DLL's in the release dir for testing, anyway.
 Source: "..\win\release\wxbase28u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxbase28u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\wxbase28u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\wxmsw28u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\wxmsw28u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxmsw28u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\wxmsw28u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\wxbase28u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; MSVC runtime DLLs. Some users can't put these in the system dir, so just put them in the EXE dir.
 ; It's legal, per http://www.fsf.org/licensing/licenses/gpl-faq.html#WindowsRuntimeAndGPL .
@@ -249,3 +248,7 @@ Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; Va
 [Run]
 Filename: "{app}\audacity.exe"; Description: "Launch Audacity"; Flags: nowait postinstall skipifsilent
 
+[CustomMessages]
+en.ResetPrefs=Reset Preferences
+es.ResetPrefs=¿Desea restablecer las preferencias?
+fr.ResetPrefs=Réinitialiser les  Préférences
