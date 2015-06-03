@@ -5237,7 +5237,7 @@ void TrackPanel::HandleSampleEditingButtonUp( wxMouseEvent & WXUNUSED(event))
    SetCapturedTrack( NULL );
    //On up-click, send the state to the undo stack
    mDrawingTrack=NULL;       //Set this to NULL so it will catch improper drag events.
-   MakeParentPushState(_("Moved Sample"),
+   MakeParentPushState(_("Moved Samples"),
                        _("Sample Edit"),
                        PUSH_CONSOLIDATE|PUSH_AUTOSAVE);
 }
