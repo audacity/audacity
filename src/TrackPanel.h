@@ -396,6 +396,7 @@ protected:
    // Handle sample editing using the 'draw' tool.
    virtual bool IsSampleEditingPossible( wxMouseEvent & event, Track * t );
    virtual void HandleSampleEditing(wxMouseEvent & event);
+   float FindSampleEditingLevel(wxMouseEvent &event, double t0);
    virtual void HandleSampleEditingClick( wxMouseEvent & event );
    virtual void HandleSampleEditingDrag( wxMouseEvent & event );
    virtual void HandleSampleEditingButtonUp( wxMouseEvent & event );
@@ -676,10 +677,9 @@ protected:
 
    NumericConverter mConverter;
 
-   Track * mDrawingTrack;          // Keeps track of which track you are drawing on between events cf. HandleDraw()
+   WaveTrack * mDrawingTrack;          // Keeps track of which track you are drawing on between events cf. HandleDraw()
    int mDrawingTrackTop;           // Keeps track of the top position of the drawing track.
    sampleCount mDrawingStartSample;   // sample of last click-down
-   float mDrawingStartSampleValue;    // value of last click-down
    sampleCount mDrawingLastDragSample; // sample of last drag-over
    float mDrawingLastDragSampleValue;  // value of last drag-over
 
