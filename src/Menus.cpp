@@ -6478,7 +6478,9 @@ void AudacityProject::OnMuteAllTracks()
 
    while (t)
    {
-      t->SetMute(true);
+      if (t->GetKind() == Track::Wave)
+         t->SetMute(true);
+
       t = iter.Next();
    }
 
