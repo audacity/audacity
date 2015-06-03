@@ -135,6 +135,25 @@ bool EffectAmplify::SetAutomationParameters(EffectAutomationParameters & parms)
    return true;
 }
 
+bool EffectAmplify::LoadFactoryDefaults()
+{
+   Init();
+
+   mRatioClip = 0.0;
+   if (mPeak > 0.0)
+   {
+      mRatio = 1.0 / mPeak;
+      mRatioClip = mRatio;
+   }
+   else
+   {
+      mRatio = 1.0;
+   }
+   mCanClip = false;
+
+   return TransferDataToWindow();
+}
+
 // Effect implementation
 
 bool EffectAmplify::Init()

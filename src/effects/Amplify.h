@@ -49,6 +49,7 @@ public:
    virtual sampleCount ProcessBlock(float **inBlock, float **outBlock, sampleCount blockLen);
    virtual bool GetAutomationParameters(EffectAutomationParameters & parms);
    virtual bool SetAutomationParameters(EffectAutomationParameters & parms);
+   virtual bool LoadFactoryDefaults();
 
    // Effect implementation
 
