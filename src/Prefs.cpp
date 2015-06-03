@@ -61,17 +61,9 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
+#include "AudacityApp.h"
 #include "FileNames.h"
-
-#include "sndfile.h"
-
-#ifdef __WXMAC__
-#include <CoreServices/CoreServices.h>
-
-/* prototype of MoreFiles fn, included in wxMac already */
-pascal OSErr FSpGetFullPath(const FSSpec * spec,
-                            short *fullPathLength, Handle * fullPath);
-#endif
+#include "Languages.h"
 
 #include "Prefs.h"
 
@@ -148,26 +140,68 @@ void InitPreferences()
 
    wxConfigBase::Set(gPrefs);
 
-   static wxString resourcesDir;
-   resourcesDir = wxStandardPaths::Get().GetResourcesDir();
-   wxFileName fn;
-   fn = wxFileName( resourcesDir, wxT("resetPrefs.txt") );
-   if( fn.FileExists() )   // it will exist if the (win) installer put it there on request
+   bool resetPrefs = false;
+   wxString langCode = gPrefs->Read(wxT("/Locale/Language"), wxEmptyString);
+   bool writeLang = false;
+
+   wxFileName fn(wxStandardPaths::Get().GetResourcesDir(), wxT("FirstTime.ini"));
+   if (fn.FileExists())   // it will exist if the (win) installer put it there
+   {
+      wxFileConfig ini(wxEmptyString,
+                       wxEmptyString,
+                       fn.GetFullPath(),
+                       wxEmptyString,
+                       wxCONFIG_USE_LOCAL_FILE);
+
+      wxString lang;
+      if (ini.Read(wxT("/FromInno/Language"), &lang))
+      {
+         // Only change "langCode" if the language was actually specified in the ini file.
+         langCode = lang;
+         writeLang = true;
+
+         // Inno Setup doesn't allow special characters in the Name values, so "0" is used
+         // to represent the "@" character.
+         langCode.Replace(wxT("0"), wxT("@"));
+      }
+
+      ini.Read(wxT("/FromInno/ResetPrefs"), &resetPrefs, false);
+
+      bool gone = wxRemoveFile(fn.GetFullPath());  // remove FirstTime.ini
+      if (!gone)
+      {
+         wxString fileName = fn.GetFullPath();
+         wxMessageBox(wxString::Format( _("Failed to remove %s"), fileName.c_str()), _("Failed!"));
+      }
+   }
+
+   // Use the system default language if one wasn't specified or if the user selected System.
+   if (langCode.IsEmpty())
+   {
+      langCode = GetSystemLanguageCode();
+   }
+
+   // Initialize the language
+   wxGetApp().InitLang(langCode);
+
+   // User requested that the preferences be completely reset
+   if (resetPrefs)
    {
       // pop up a dialogue
       wxString prompt = _("Reset Preferences?\n\nThis is a one-time question, after an 'install' where you asked to have the Preferences reset.");
       int action = wxMessageBox(prompt, _("Reset Audacity Preferences"),
                                 wxYES_NO, NULL);
-      if(action == wxYES)   // reset
+      if (action == wxYES)   // reset
       {
          gPrefs->DeleteAll();
+         writeLang = true;
       }
-      bool gone = wxRemoveFile(fn.GetFullPath());  // remove resetPrefs.txt
-      if(!gone)
-      {
-         wxString fileName = fn.GetFullPath();
-         wxMessageBox(wxString::Format( _("Failed to remove %s"), fileName.c_str()), _("Failed!"));
-      }
+   }
+
+   // Save the specified language
+   if (writeLang)
+   {
+      gPrefs->Write(wxT("/Locale/Language"), langCode);
    }
 
    // In AUdacity 2.1.0 support for the legacy 1.2.x preferences (depreciated since Audacity
