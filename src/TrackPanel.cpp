@@ -4956,7 +4956,8 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent & WXUNUSED(event), Track 
 
    //Get out of here if we shouldn't be drawing right now:
    //If we aren't displaying the waveform, Display a message dialog
-   if(((WaveTrack *)t)->GetDisplay() != WaveTrack::WaveformDisplay)
+   WaveTrack *const wt = static_cast<WaveTrack*>(t);
+   if(wt->GetDisplay() != WaveTrack::WaveformDisplay)
    {
       wxMessageBox(_("To use Draw, choose 'Waveform' in the Track Drop-down Menu."), wxT("Draw Tool"));
       return false;
@@ -4964,8 +4965,8 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent & WXUNUSED(event), Track 
 
    //Get rate in order to calculate the critical zoom threshold
    //Find out the zoom level
-   double rate = ((WaveTrack *)t)->GetRate();
-   bool showPoints = (mViewInfo->zoom / rate > 3.0);
+   const double rate = wt->GetRate();
+   const bool showPoints = (mViewInfo->zoom / rate > 3.0);
 
    //If we aren't zoomed in far enough, show a message dialog.
    if(!showPoints)
@@ -4991,11 +4992,10 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 {
    //declare a rectangle to determine clicking position
    wxRect r;
-   Track *t;
 
    //Get the track the mouse is over, and save it away for future events
    mDrawingTrack = NULL;
-   t = FindTrack(event.m_x, event.m_y, false, false, &r);
+   Track *const t = FindTrack(event.m_x, event.m_y, false, false, &r);
 
    if (!t || (t->GetKind() != Track::Wave))
       return;
@@ -5009,7 +5009,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
    SetCapturedTrack( t, IsAdjustingSample);
 
    /// \todo Should mCapturedTrack take the place of mDrawingTrack??
-   mDrawingTrack = t;
+   mDrawingTrack = static_cast<WaveTrack*>(t);
    mDrawingTrackTop=r.y;
 
    //If we are still around, we are drawing in earnest.  Set some member data structures up:
@@ -5051,7 +5051,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       float * newSampleRegion = new float[1 + 2 * SMOOTHING_BRUSH_RADIUS];
 
       //Get a sample  from the track to do some tricks on.
-      ((WaveTrack*)mDrawingTrack)->Get((samplePtr)sampleRegion, floatSample,
+      mDrawingTrack->Get((samplePtr)sampleRegion, floatSample,
                                        (int)mDrawingStartSample - SMOOTHING_KERNEL_RADIUS - SMOOTHING_BRUSH_RADIUS,
                                        sampleRegionSize);
       int i, j;
@@ -5093,7 +5093,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
             sampleRegion[SMOOTHING_BRUSH_RADIUS + SMOOTHING_KERNEL_RADIUS + j] * (1 - prob);
       }
       //Set the sample to the point of the mouse event
-      ((WaveTrack*)mDrawingTrack)->Set((samplePtr)newSampleRegion, floatSample, mDrawingStartSample - SMOOTHING_BRUSH_RADIUS, 1 + 2 * SMOOTHING_BRUSH_RADIUS);
+      mDrawingTrack->Set((samplePtr)newSampleRegion, floatSample, mDrawingStartSample - SMOOTHING_BRUSH_RADIUS, 1 + 2 * SMOOTHING_BRUSH_RADIUS);
 
       //Clean this up right away to avoid a memory leak
       delete[] sampleRegion;
@@ -5107,15 +5107,14 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
 
       //Otherwise (e.g., the alt button is not down) do normal redrawing, based on the mouse position.
       // Calculate where the mouse is located vertically (between +/- 1)
-      ((WaveTrack*)mDrawingTrack)->Get((samplePtr)&mDrawingStartSampleValue, floatSample,(int) mDrawingStartSample, 1);
       float zoomMin, zoomMax;
-      ((WaveTrack *)mDrawingTrack)->GetDisplayBounds(&zoomMin, &zoomMax);
+      mDrawingTrack->GetDisplayBounds(&zoomMin, &zoomMax);
       newLevel = zoomMax -
          ((event.m_y - mDrawingTrackTop)/(float)mDrawingTrack->GetHeight()) *
          (zoomMax - zoomMin);
 
       //Take the envelope into account
-      Envelope *env = ((WaveTrack *)mDrawingTrack)->GetEnvelopeAtX(event.GetX());
+      Envelope *env = mDrawingTrack->GetEnvelopeAtX(event.GetX());
 
       if (env)
       {
@@ -5131,7 +5130,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       }
 
       //Set the sample to the point of the mouse event
-      ((WaveTrack*)mDrawingTrack)->Set((samplePtr)&newLevel, floatSample, mDrawingStartSample, 1);
+      mDrawingTrack->Set((samplePtr)&newLevel, floatSample, mDrawingStartSample, 1);
    }
 
    //Set the member data structures for drawing
@@ -5186,21 +5185,18 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
       s0 = (sampleCount) (double)(t0 * rate + 0.5);
    }
 
-   //Sequence *seq = ((WaveTrack *)mDrawingTrack)->GetSequence();
-   ((WaveTrack*)mDrawingTrack)->Get((samplePtr)&mDrawingStartSampleValue, floatSample, (int)mDrawingStartSample, 1);
-
    //Otherwise, do normal redrawing, based on the mouse position.
    // Calculate where the mouse is located vertically (between +/- 1)
 
 
    float zoomMin, zoomMax;
-   ((WaveTrack *)mDrawingTrack)->GetDisplayBounds(&zoomMin, &zoomMax);
+   mDrawingTrack->GetDisplayBounds(&zoomMin, &zoomMax);
    newLevel = zoomMax -
       ((event.m_y - mDrawingTrackTop)/(float)mDrawingTrack->GetHeight()) *
       (zoomMax - zoomMin);
 
    //Take the envelope into account
-   Envelope *env = ((WaveTrack *)mDrawingTrack)->GetEnvelopeAtX(event.GetX());
+   Envelope *env = mDrawingTrack->GetEnvelopeAtX(event.GetX());
    if (env)
    {
       double envValue = env->GetValue(t0);
@@ -5223,7 +5219,7 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
    // avoid division by zero....
 #define LLABS(n) ((n) < 0 ? -(n) : (n))
    if(LLABS(s0 - mDrawingLastDragSample) <= 1){
-      ((WaveTrack*)mDrawingTrack)->Set((samplePtr)&newLevel,  floatSample, s0, 1);
+      mDrawingTrack->Set((samplePtr)&newLevel,  floatSample, s0, 1);
    }
    else
    {
@@ -5234,9 +5230,10 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
          //This interpolates each sample linearly:
          tmpvalue=mDrawingLastDragSampleValue + (newLevel - mDrawingLastDragSampleValue)  *
             (float)(i-mDrawingLastDragSample)/(s0-mDrawingLastDragSample );
-         ((WaveTrack*)mDrawingTrack)->Set((samplePtr)&tmpvalue, floatSample, i, 1);
+         mDrawingTrack->Set((samplePtr)&tmpvalue, floatSample, i, 1);
       }
    }
+
    //Update the member data structures.
    mDrawingLastDragSample=s0;
    mDrawingLastDragSampleValue = newLevel;
@@ -5266,7 +5263,6 @@ void TrackPanel::HandleSampleEditingButtonUp( wxMouseEvent & WXUNUSED(event))
 ///                                 jump to a new track
 ///  - mDrawingTrackTop:            The top position of the drawing track--makes drawing easier.
 ///  - mDrawingStartSample:         The sample you clicked down on, so that you can hold it steady
-///  - mDrawingStartSampleValue:    The original value of the initial sample
 ///  - mDrawingLastDragSample:      When drag-drawing, this keeps track of the last sample you dragged over,
 ///                                 so it can smoothly redraw samples that got skipped over
 ///  - mDrawingLastDragSampleValue: The value of the last
@@ -8500,7 +8496,6 @@ void TrackPanel::OnTrackMenu(Track *t)
       theMenu->Enable(OnSplitStereoMonoID, t->GetLinked());
 
       // We only need to set check marks. Clearing checks causes problems on Linux (bug 851)
-      int channels = t->GetChannel();
       switch (t->GetChannel()) {
       case Track::LeftChannel:
          theMenu->Check(OnChannelLeftID, true);
