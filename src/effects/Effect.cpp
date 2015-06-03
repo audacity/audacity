@@ -2465,11 +2465,13 @@ void Effect::Preview(bool dryOnly)
          return;
       }
 
+      mixLeft->Offset(-mixLeft->GetStartTime());
       mixLeft->InsertSilence(0.0, mT0);
       mixLeft->SetSelected(true);
       mixLeft->SetDisplay(WaveTrack::NoDisplay);
       mTracks->Add(mixLeft);
       if (mixRight) {
+         mixRight->Offset(-mixRight->GetStartTime());
          mixRight->InsertSilence(0.0, mT0);
          mixRight->SetSelected(true);
          mTracks->Add(mixRight);
