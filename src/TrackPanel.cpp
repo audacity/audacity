@@ -4957,11 +4957,21 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent & WXUNUSED(event), Track 
    //Get out of here if we shouldn't be drawing right now:
    //If we aren't displaying the waveform, Display a message dialog
    WaveTrack *const wt = static_cast<WaveTrack*>(t);
-   if(wt->GetDisplay() != WaveTrack::WaveformDisplay)
+   const int display = wt->GetDisplay();
+#if 1
+   if (!(WaveTrack::WaveformDisplay == display ||
+         WaveTrack::WaveformDBDisplay == display))
+   {
+      wxMessageBox(_("To use Draw, choose 'Waveform' or 'Waveform dB' in the Track Drop-down Menu."), wxT("Draw Tool"));
+      return false;
+   }
+#else
+   if(WaveTrack::WaveformDisplay != display)
    {
       wxMessageBox(_("To use Draw, choose 'Waveform' in the Track Drop-down Menu."), wxT("Draw Tool"));
       return false;
    }
+#endif
 
    //Get rate in order to calculate the critical zoom threshold
    //Find out the zoom level
@@ -5042,10 +5052,6 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
    //If we are still around, we are drawing in earnest.  Set some member data structures up:
    //First, calculate the starting sample.  To get this, we need the time
    double t0 = PositionToTime(event.m_x, GetLeftOffset());
-
-   // Default to zero for ALT case, so it doesn't cause a runtime fault on MSVC in
-   // the mDrawingLastDragSampleValue assignment at the bottom of this method.
-   float newLevel = 0.0f;   //Declare this for use later
 
    //convert t0 to samples
    mDrawingStartSample = mDrawingTrack->TimeToLongSamples(t0);
@@ -5166,18 +5172,18 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
 
    sampleCount s0;     //declare this for use below.  It designates the sample number which to draw.
 
+   // Figure out what time the click was at
    //Find the point that we want to redraw at. If the control button is down,
    //adjust only the originally clicked-on sample
 
-   //*************************************************
-   //***   CTRL-DOWN (Hold Initial Sample Constant ***
-   //*************************************************
-
    if( event.m_controlDown) {
+      //*************************************************
+      //***   CTRL-DOWN (Hold Initial Sample Constant ***
+      //*************************************************
+
       s0 = mDrawingStartSample;
    }
-   else
-   {
+   else {
       //*************************************************
       //***    Normal CLICK-drag  (Normal drawing)    ***
       //*************************************************
@@ -7073,7 +7079,8 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
       return false;
 
    int displayType = wavetrack->GetDisplay();
-   if ( displayType > 1)
+   bool dB = (WaveTrack::WaveformDBDisplay == displayType);
+   if (!(WaveTrack::WaveformDisplay == displayType) || dB)
       return false;  // Not a wave, so return.
 
    float oneSample;
@@ -7085,7 +7092,6 @@ bool TrackPanel::HitTestSamples(Track *track, wxRect &r, wxMouseEvent & event)
    wavetrack->Get((samplePtr)&oneSample, floatSample, s0, 1);
 
    // Get y distance of envelope point from center line (in pixels).
-   bool dB = (displayType == 1);
    float zoomMin, zoomMax;
 
    wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
