@@ -5195,28 +5195,23 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
 
    const float newLevel = FindSampleEditingLevel(event, t0);
 
-   //Now, redraw all samples between current and last redrawn sample
-
-   float tmpvalue;
-   //Handle cases of 0 or 1 special, to improve speed
-   //JKC I don't think this makes any noticeable difference to speed
-   // whatsoever!  The real reason for the special case is probably to
-   // avoid division by zero....
-#define LLABS(n) ((n) < 0 ? -(n) : (n))
-   if(LLABS(s0 - mDrawingLastDragSample) <= 1){
-      mDrawingTrack->Set((samplePtr)&newLevel,  floatSample, s0, 1);
+   //Now, redraw all samples between current and last redrawn sample, inclusive
+   //Go from the smaller to larger sample.
+   const int start = std::min( s0, mDrawingLastDragSample);
+   const int end   = std::max( s0, mDrawingLastDragSample);
+   const int size = end - start + 1;
+   if (size == 1) {
+      mDrawingTrack->Set((samplePtr)&newLevel, floatSample, start, size);
    }
-   else
-   {
-      //Go from the smaller to larger sample.
-      int start = wxMin( s0, mDrawingLastDragSample) +1;
-      int end   = wxMax( s0, mDrawingLastDragSample);
-      for(sampleCount i= start; i<= end; i++) {
+   else {
+      std::vector<float> values(size);
+      for (sampleCount i = start; i <= end; ++i) {
          //This interpolates each sample linearly:
-         tmpvalue=mDrawingLastDragSampleValue + (newLevel - mDrawingLastDragSampleValue)  *
-            (float)(i-mDrawingLastDragSample)/(s0-mDrawingLastDragSample );
-         mDrawingTrack->Set((samplePtr)&tmpvalue, floatSample, i, 1);
+         values[i - start] =
+            mDrawingLastDragSampleValue + (newLevel - mDrawingLastDragSampleValue)  *
+            (float)(i - mDrawingLastDragSample) / (s0 - mDrawingLastDragSample);
       }
+      mDrawingTrack->Set((samplePtr)&values[0], floatSample, start, size);
    }
 
    //Update the member data structures.
