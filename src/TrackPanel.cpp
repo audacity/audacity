@@ -4986,6 +4986,34 @@ bool TrackPanel::IsSampleEditingPossible( wxMouseEvent & WXUNUSED(event), Track 
    return true;
 }
 
+float TrackPanel::FindSampleEditingLevel(wxMouseEvent &event, double t0)
+{
+   // Calculate where the mouse is located vertically (between +/- 1)
+   float zoomMin, zoomMax;
+   mDrawingTrack->GetDisplayBounds(&zoomMin, &zoomMax);
+
+   const int y = event.m_y - mDrawingTrackTop;
+   const int height = mDrawingTrack->GetHeight();
+   const bool dB = (WaveTrack::WaveformDBDisplay == mDrawingTrack->GetDisplay());
+   float newLevel = ::ValueOfPixel(y, height, false, dB, mdBr, zoomMin, zoomMax);
+
+   //Take the envelope into account
+   Envelope *const env = mDrawingTrack->GetEnvelopeAtX(event.m_x);
+   if (env)
+   {
+      double envValue = env->GetValue(t0);
+      if (envValue > 0)
+         newLevel /= envValue;
+      else
+         newLevel = 0;
+
+      //Make sure the new level is between +/-1
+      newLevel = std::max(-1.0f, std::min(1.0f, newLevel));
+   }
+
+   return newLevel;
+}
+
 /// We're in a track view and zoomed enough to see the samples.
 /// Someone has just clicked the mouse.  What do we do?
 void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
@@ -5106,28 +5134,7 @@ void TrackPanel::HandleSampleEditingClick( wxMouseEvent & event )
       //*************************************************
 
       //Otherwise (e.g., the alt button is not down) do normal redrawing, based on the mouse position.
-      // Calculate where the mouse is located vertically (between +/- 1)
-      float zoomMin, zoomMax;
-      mDrawingTrack->GetDisplayBounds(&zoomMin, &zoomMax);
-      newLevel = zoomMax -
-         ((event.m_y - mDrawingTrackTop)/(float)mDrawingTrack->GetHeight()) *
-         (zoomMax - zoomMin);
-
-      //Take the envelope into account
-      Envelope *env = mDrawingTrack->GetEnvelopeAtX(event.GetX());
-
-      if (env)
-      {
-         double envValue = env->GetValue(t0);
-         if (envValue > 0)
-            newLevel /= envValue;
-         else
-            newLevel = 0;
-
-         //Make sure the new level is between +/-1
-         newLevel = newLevel >  1.0 ?  1.0: newLevel;
-         newLevel = newLevel < -1.0 ? -1.0: newLevel;
-      }
+      const float newLevel = FindSampleEditingLevel(event, t0);
 
       //Set the sample to the point of the mouse event
       mDrawingTrack->Set((samplePtr)&newLevel, floatSample, mDrawingStartSample, 1);
@@ -5163,7 +5170,7 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
 
    // Figure out what time the click was at
    double t0 = PositionToTime(event.m_x, GetLeftOffset());
-   float newLevel;
+
    //Find the point that we want to redraw at. If the control button is down,
    //adjust only the originally clicked-on sample
 
@@ -5188,27 +5195,7 @@ void TrackPanel::HandleSampleEditingDrag( wxMouseEvent & event )
    //Otherwise, do normal redrawing, based on the mouse position.
    // Calculate where the mouse is located vertically (between +/- 1)
 
-
-   float zoomMin, zoomMax;
-   mDrawingTrack->GetDisplayBounds(&zoomMin, &zoomMax);
-   newLevel = zoomMax -
-      ((event.m_y - mDrawingTrackTop)/(float)mDrawingTrack->GetHeight()) *
-      (zoomMax - zoomMin);
-
-   //Take the envelope into account
-   Envelope *env = mDrawingTrack->GetEnvelopeAtX(event.GetX());
-   if (env)
-   {
-      double envValue = env->GetValue(t0);
-      if (envValue > 0)
-         newLevel /= envValue;
-      else
-         newLevel = 0;
-
-      //Make sure the new level is between +/-1
-      newLevel = newLevel >  1.0 ?  1.0: newLevel;
-      newLevel = newLevel < -1.0 ? -1.0: newLevel;
-   }
+   const float newLevel = FindSampleEditingLevel(event, t0);
 
    //Now, redraw all samples between current and last redrawn sample
 

@@ -396,6 +396,7 @@ protected:
    // Handle sample editing using the 'draw' tool.
    virtual bool IsSampleEditingPossible( wxMouseEvent & event, Track * t );
    virtual void HandleSampleEditing(wxMouseEvent & event);
+   float FindSampleEditingLevel(wxMouseEvent &event, double t0);
    virtual void HandleSampleEditingClick( wxMouseEvent & event );
    virtual void HandleSampleEditingDrag( wxMouseEvent & event );
    virtual void HandleSampleEditingButtonUp( wxMouseEvent & event );
