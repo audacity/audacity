@@ -29,6 +29,8 @@
 #include <wx/list.h>
 #include <wx/msgdlg.h>
 
+#include <vector>
+
 class Envelope;
 class WaveCache;
 class WaveTrackCache;
@@ -187,6 +189,11 @@ public:
     * calculations and Contrast */
    bool GetWaveDisplay(WaveDisplay &display,
                        double t0, double pixelsPerSecond, bool &isLoadingOD);
+   void ComputeSpectrogramGainFactors(
+         int fftLen,
+         int frequencyGain, // db/decade
+         std::vector<float> &gainFactors
+      );
    bool GetSpectrogram(WaveTrackCache &cache,
                        float *buffer, sampleCount *where,
                        int numPixels,
