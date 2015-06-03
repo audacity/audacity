@@ -765,6 +765,8 @@
 		285D3CBB0F09FC8F007883FC /* RealTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CB30F09FC8F007883FC /* RealTime.cpp */; };
 		285D3CBE0F09FCB2007883FC /* PluginAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CBC0F09FCB2007883FC /* PluginAdapter.cpp */; };
 		285D3CBF0F09FCB2007883FC /* RealTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285D3CBD0F09FCB2007883FC /* RealTime.cpp */; };
+		285D9EAE1B1ED65F006D11F0 /* crossfadeclips.ny in Resources */ = {isa = PBXBuildFile; fileRef = 285D9EAC1B1ED65F006D11F0 /* crossfadeclips.ny */; };
+		285D9EAF1B1ED65F006D11F0 /* limiter.ny in Resources */ = {isa = PBXBuildFile; fileRef = 285D9EAD1B1ED65F006D11F0 /* limiter.ny */; };
 		285DE1FA0BF03C7800A20DF0 /* Screenshot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */; };
 		2860BA240E0F0D8600A13878 /* SoundActivatedRecord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA200E0F0D8600A13878 /* SoundActivatedRecord.cpp */; };
 		2860BA250E0F0D8600A13878 /* TimerRecordDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2860BA220E0F0D8600A13878 /* TimerRecordDialog.cpp */; };
@@ -2478,6 +2480,8 @@
 		285D3CB30F09FC8F007883FC /* RealTime.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = RealTime.cpp; path = "libvamp/src/vamp-hostsdk/RealTime.cpp"; sourceTree = "<group>"; tabWidth = 3; };
 		285D3CBC0F09FCB2007883FC /* PluginAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = PluginAdapter.cpp; path = "libvamp/src/vamp-sdk/PluginAdapter.cpp"; sourceTree = "<group>"; tabWidth = 3; };
 		285D3CBD0F09FCB2007883FC /* RealTime.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; name = RealTime.cpp; path = "libvamp/src/vamp-sdk/RealTime.cpp"; sourceTree = "<group>"; tabWidth = 3; };
+		285D9EAC1B1ED65F006D11F0 /* crossfadeclips.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = crossfadeclips.ny; path = "../plug-ins/crossfadeclips.ny"; sourceTree = SOURCE_ROOT; };
+		285D9EAD1B1ED65F006D11F0 /* limiter.ny */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = limiter.ny; path = "../plug-ins/limiter.ny"; sourceTree = SOURCE_ROOT; };
 		285DE1F80BF03C7800A20DF0 /* Screenshot.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = Screenshot.cpp; sourceTree = "<group>"; tabWidth = 3; };
 		285DE1F90BF03C7800A20DF0 /* Screenshot.h */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.c.h; path = Screenshot.h; sourceTree = "<group>"; tabWidth = 3; };
 		2860BA200E0F0D8600A13878 /* SoundActivatedRecord.cpp */ = {isa = PBXFileReference; fileEncoding = 5; indentWidth = 3; lastKnownFileType = sourcecode.cpp.cpp; path = SoundActivatedRecord.cpp; sourceTree = "<group>"; tabWidth = 3; };
@@ -5306,10 +5310,12 @@
 				28AA28130F267A2D008AED9E /* beat.ny */,
 				28AA28140F267A2D008AED9E /* clicktrack.ny */,
 				28AA28150F267A2D008AED9E /* clipfix.ny */,
+				285D9EAC1B1ED65F006D11F0 /* crossfadeclips.ny */,
 				28ED7B6F1A1C77B0008A01D9 /* crossfadetracks.ny */,
 				28AA28180F267A2D008AED9E /* delay.ny */,
 				28AA28190F267A2D008AED9E /* equalabel.ny */,
 				28AA281A0F267A2D008AED9E /* highpass.ny */,
+				285D9EAD1B1ED65F006D11F0 /* limiter.ny */,
 				28AA281B0F267A2D008AED9E /* lowpass.ny */,
 				28ED7B701A1C77B0008A01D9 /* notch.ny */,
 				28AA281C0F267A2D008AED9E /* pluck.ny */,
@@ -6791,6 +6797,8 @@
 				2862CED11AD3900000A53194 /* test.lsp in Resources */,
 				2862CED21AD3900000A53194 /* upic.sal in Resources */,
 				2862CED31AD3900000A53194 /* velocity.lsp in Resources */,
+				285D9EAE1B1ED65F006D11F0 /* crossfadeclips.ny in Resources */,
+				285D9EAF1B1ED65F006D11F0 /* limiter.ny in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
