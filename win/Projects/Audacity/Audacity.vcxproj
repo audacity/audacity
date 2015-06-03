@@ -788,10 +788,12 @@
     <copy Include="..\..\..\plug-ins\beat.ny" />
     <copy Include="..\..\..\plug-ins\clicktrack.ny" />
     <copy Include="..\..\..\plug-ins\clipfix.ny" />
+    <copy Include="..\..\..\plug-ins\crossfadeclips.ny" />
     <copy Include="..\..\..\plug-ins\crossfadetracks.ny" />
     <copy Include="..\..\..\plug-ins\delay.ny" />
     <copy Include="..\..\..\plug-ins\equalabel.ny" />
     <copy Include="..\..\..\plug-ins\highpass.ny" />
+    <copy Include="..\..\..\plug-ins\limiter.ny" />
     <copy Include="..\..\..\plug-ins\lowpass.ny" />
     <copy Include="..\..\..\plug-ins\notch.ny" />
     <copy Include="..\..\..\plug-ins\pluck.ny" />

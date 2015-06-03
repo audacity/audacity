@@ -36,6 +36,7 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/msgdlg.h>
 #include <wx/snglinst.h>
 #include <wx/splash.h>
+#include <wx/stdpaths.h>
 #include <wx/sysopt.h>
 #include <wx/fontmap.h>
 
@@ -1110,8 +1111,7 @@ bool AudacityApp::OnInit()
 {
    delete wxLog::SetActiveTarget(new AudacityLogger);
 
-
-
+   mLocale = NULL;
 
    m_aliasMissingWarningShouldShow = true;
    m_LastMissingBlockFile = NULL;
@@ -1148,37 +1148,18 @@ bool AudacityApp::OnInit()
 
    wxFileSystem::AddHandler(new wxZipFSHandler);
 
-   // Use the system language for dialogs that are displayed before
-   // the user selected language is available from preferences.
-   mLocale = NULL;
-   InitLang(GetSystemLanguageCode());
-
-   InitPreferences();
-
-   #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
-      this->AssociateFileTypes();
-   #endif
-
-   // TODO - read the number of files to store in history from preferences
-   mRecentFiles = new FileHistory(ID_RECENT_LAST - ID_RECENT_FIRST + 1, ID_RECENT_CLEAR);
-   mRecentFiles->Load(*gPrefs, wxT("RecentFiles"));
-
    //
    // Paths: set search path and temp dir path
    //
 
-   wxString home = wxGetHomeDir();
-   theTheme.EnsureInitialised();
-
-   // AColor depends on theTheme.
-   AColor::Init();
-
+#ifdef __WXGTK__
    /* Search path (for plug-ins, translations etc) is (in this order):
       * The AUDACITY_PATH environment variable
       * The current directory
       * The user's .audacity-files directory in their home directory
       * The "share" and "share/doc" directories in their install path */
-   #ifdef __WXGTK__
+   wxString home = wxGetHomeDir();
+
    /* On Unix systems, the default temp dir is in /var/tmp. */
    defaultTempDir.Printf(wxT("/var/tmp/audacity-%s"), wxGetUserId().c_str());
 
@@ -1186,27 +1167,28 @@ bool AudacityApp::OnInit()
    if (pathVar != wxT(""))
       AddMultiPathsToPathList(pathVar, audacityPathList);
    AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
-   #ifdef AUDACITY_NAME
-     AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
+
+#ifdef AUDACITY_NAME
+   AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
                                             home.c_str(), wxT(AUDACITY_NAME)),
-                              audacityPathList);
-     AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
-                                               wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
-                              audacityPathList);
-      AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/%s"),
-                                               wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
-                              audacityPathList);
-   #else //AUDACITY_NAME
-     AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
-                                              home.c_str()),
-                              audacityPathList);
-    AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
-                                               wxT(INSTALL_PREFIX)),
-                              audacityPathList);
-      AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/audacity"),
-                                               wxT(INSTALL_PREFIX)),
-                              audacityPathList);
-   #endif //AUDACITY_NAME
+                           audacityPathList);
+   AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
+                                            wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
+                           audacityPathList);
+   AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/%s"),
+                                            wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
+                           audacityPathList);
+#else //AUDACITY_NAME
+   AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
+                                            home.c_str()),
+                            audacityPathList);
+   AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
+                                            wxT(INSTALL_PREFIX)),
+                           audacityPathList);
+   AddUniquePathToPathList(wxString::Format(wxT("%s/share/doc/audacity"),
+                                            wxT(INSTALL_PREFIX)),
+                           audacityPathList);
+#endif //AUDACITY_NAME
 
    AddUniquePathToPathList(wxString::Format(wxT("%s/share/locale"),
                                             wxT(INSTALL_PREFIX)),
@@ -1215,7 +1197,7 @@ bool AudacityApp::OnInit()
    AddUniquePathToPathList(wxString::Format(wxT("./locale")),
                            audacityPathList);
 
-   #endif //__WXGTK__
+#endif //__WXGTK__
 
    wxFileName tmpFile;
    tmpFile.AssignTempFileName(wxT("nn"));
@@ -1223,7 +1205,7 @@ bool AudacityApp::OnInit()
    ::wxRemoveFile(tmpFile.GetFullPath());
 
    // On Mac and Windows systems, use the directory which contains Audacity.
-   #ifdef __WXMSW__
+#ifdef __WXMSW__
    // On Windows, the path to the Audacity program is in argv[0]
    wxString progPath = wxPathOnly(argv[0]);
    AddUniquePathToPathList(progPath, audacityPathList);
@@ -1231,9 +1213,9 @@ bool AudacityApp::OnInit()
 
    defaultTempDir.Printf(wxT("%s\\audacity_temp"),
                          tmpDirLoc.c_str());
-   #endif //__WXWSW__
+#endif //__WXWSW__
 
-   #ifdef __WXMAC__
+#ifdef __WXMAC__
    // On Mac OS X, the path to the Audacity program is in argv[0]
    wxString progPath = wxPathOnly(argv[0]);
 
@@ -1249,16 +1231,23 @@ bool AudacityApp::OnInit()
    defaultTempDir.Printf(wxT("%s/audacity-%s"),
                          tmpDirLoc.c_str(),
                          wxGetUserId().c_str());
-   #endif //__WXMAC__
+#endif //__WXMAC__
 
-   // Reset the language now that translation paths and preferences are available
+   // Initialize preferences and language
+   InitPreferences();
 
-   wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
+   #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
+      this->AssociateFileTypes();
+   #endif
 
-   if (lang == wxT(""))
-      lang = GetSystemLanguageCode();
+   // TODO - read the number of files to store in history from preferences
+   mRecentFiles = new FileHistory(ID_RECENT_LAST - ID_RECENT_FIRST + 1, ID_RECENT_CLEAR);
+   mRecentFiles->Load(*gPrefs, wxT("RecentFiles"));
 
-   InitLang( lang );
+   theTheme.EnsureInitialised();
+
+   // AColor depends on theTheme.
+   AColor::Init();
 
    // Init DirManager, which initializes the temp directory
    // If this fails, we must exit the program.
