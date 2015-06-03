@@ -516,7 +516,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: The dialog shows a list of plugins with check-boxes 
        beside each one.*/
-      S.StartStatic(_("Select Plugins, click the Enable or Disable button, then click OK."), true);
+      S.StartStatic(_("Select Plug-ins, click the Enable or Disable button, then click OK."), true);
       {
          S.StartHorizontalLay(wxALIGN_LEFT,0 );
          {
