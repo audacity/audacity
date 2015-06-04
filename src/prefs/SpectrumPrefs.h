@@ -30,6 +30,8 @@
 
 #include "PrefsPanel.h"
 
+struct FFTParam;
+
 class SpectrumPrefs:public PrefsPanel
 {
  public:
@@ -76,8 +78,11 @@ struct SpectrogramSettings
 {
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
+   ~SpectrogramSettings();
 
    void UpdatePrefs();
+   void DestroyWindows();
+   void CacheWindows() const;
 
    int minFreq;
    int maxFreq;
@@ -111,6 +116,14 @@ struct SpectrogramSettings
    bool numberOfMaxima;
    bool findNotesQuantize;
 #endif //EXPERIMENTAL_FIND_NOTES
+
+   // Following fields are derived from preferences.
+
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   // Variables used for computing the spectrum
+   mutable FFTParam      *hFFT;
+   mutable float         *window;
+#endif
 };
 
 #endif

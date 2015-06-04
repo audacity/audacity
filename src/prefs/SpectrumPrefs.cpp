@@ -370,6 +370,8 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 SpectrogramSettings::SpectrogramSettings()
+: hFFT(0)
+, window(0)
 {
    UpdatePrefs();
 }
@@ -382,6 +384,8 @@ SpectrogramSettings& SpectrogramSettings::defaults()
 
 void SpectrogramSettings::UpdatePrefs()
 {
+   bool destroy = false;
+
    minFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), -1L);
    maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
 
@@ -401,13 +405,26 @@ void SpectrogramSettings::UpdatePrefs()
    gain = gPrefs->Read(wxT("/Spectrum/Gain"), 20L);
    frequencyGain = gPrefs->Read(wxT("/Spectrum/FrequencyGain"), 0L);
 
-   windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+   const int newWindowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+   if (newWindowSize != windowSize) {
+      destroy = true;
+      windowSize = newWindowSize;
+   }
 
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   zeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
+   const int newZeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
+   if (newZeroPaddingFactor != zeroPaddingFactor) {
+      destroy = true;
+      zeroPaddingFactor = newZeroPaddingFactor;
+   }
 #endif
 
-   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, 3);
+   int newWindowType;
+   gPrefs->Read(wxT("/Spectrum/WindowType"), &newWindowType, 3);
+   if (newWindowType != windowType) {
+      destroy = true;
+      windowType = newWindowType;
+   }
 
    isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
 
@@ -425,4 +442,105 @@ void SpectrogramSettings::UpdatePrefs()
    numberOfMaxima = gPrefs->Read(wxT("/Spectrum/FindNotesN"), 5L);
    findNotesQuantize = (gPrefs->Read(wxT("/Spectrum/FindNotesQuantize"), 0L) != 0);
 #endif //EXPERIMENTAL_FIND_NOTES
+
+   if (destroy)
+      DestroyWindows();
+}
+
+SpectrogramSettings::~SpectrogramSettings()
+{
+   DestroyWindows();
+}
+
+void SpectrogramSettings::DestroyWindows()
+{
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   if (hFFT != NULL) {
+      EndFFT(hFFT);
+      hFFT = NULL;
+   }
+   if (window != NULL) {
+      delete[] window;
+      window = NULL;
+   }
+#endif
+}
+
+
+namespace
+{
+   enum { WINDOW, TWINDOW, DWINDOW };
+   void RecreateWindow(
+      float *&window, int which, int fftLen,
+      int padding, int windowType, int windowSize, double &scale)
+   {
+      if (window != NULL)
+         delete[] window;
+      // Create the requested window function
+      window = new float[fftLen];
+      int ii;
+
+      wxASSERT(windowSize % 2 == 0);
+      const int endOfWindow = padding + windowSize;
+      // Left and right padding
+      for (ii = 0; ii < padding; ++ii) {
+         window[ii] = 0.0;
+         window[fftLen - ii - 1] = 0.0;
+      }
+      // Default rectangular window in the middle
+      for (; ii < endOfWindow; ++ii)
+         window[ii] = 1.0;
+      // Overwrite middle as needed
+      switch (which) {
+      case WINDOW:
+         WindowFunc(windowType, windowSize, window + padding);
+         // NewWindowFunc(windowType, windowSize, extra, window + padding);
+         break;
+      case TWINDOW:
+         wxASSERT(false);
+#if 0
+         // Future, reassignment
+         NewWindowFunc(windowType, windowSize, extra, window + padding);
+         for (int ii = padding, multiplier = -windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
+            window[ii] *= multiplier;
+         break;
+#endif
+      case DWINDOW:
+         wxASSERT(false);
+#if 0
+         // Future, reassignment
+         DerivativeOfWindowFunc(windowType, windowSize, extra, window + padding);
+         break;
+#endif
+      default:
+         wxASSERT(false);
+      }
+      // Scale the window function to give 0dB spectrum for 0dB sine tone
+      if (which == WINDOW) {
+         scale = 0.0;
+         for (ii = padding; ii < endOfWindow; ++ii)
+            scale += window[ii];
+         if (scale > 0)
+            scale = 2.0 / scale;
+      }
+      for (ii = padding; ii < endOfWindow; ++ii)
+         window[ii] *= scale;
+   }
+}
+
+void SpectrogramSettings::CacheWindows() const
+{
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   if (hFFT == NULL || window == NULL) {
+
+      double scale;
+      const int fftLen = windowSize * zeroPaddingFactor;
+      const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
+
+      if (hFFT != NULL)
+         EndFFT(hFFT);
+      hFFT = InitializeFFT(fftLen);
+      RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
+   }
+#endif // EXPERIMENTAL_USE_REALFFTF
 }

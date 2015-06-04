@@ -336,7 +336,7 @@ public:
 
 #ifdef EXPERIMENTAL_USE_REALFFTF
 #include "FFT.h"
-static void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, float *window, int len, float *out)
+static void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, const float *window, int len, float *out)
 {
    int i;
    if(len > hFFT->Points*2)
@@ -371,13 +371,6 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
    mSequence = new Sequence(projDirManager, format);
    mEnvelope = new Envelope();
    mWaveCache = new WaveCache(0);
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   mWindowType = -1;
-   mWindowSize = -1;
-   hFFT = NULL;
-   mWindow = NULL;
-#endif
-   mZeroPaddingFactor = 1;
    mSpecCache = new SpecCache();
    mSpecPxCache = new SpecPxCache(1);
    mAppendBuffer = NULL;
@@ -400,13 +393,6 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
    mEnvelope->SetOffset(orig.GetOffset());
    mEnvelope->SetTrackLen(((double)orig.mSequence->GetNumSamples()) / orig.mRate);
    mWaveCache = new WaveCache(0);
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   mWindowType = -1;
-   mWindowSize = -1;
-   hFFT = NULL;
-   mWindow = NULL;
-#endif
-   mZeroPaddingFactor = 1;
    mSpecCache = new SpecCache();
    mSpecPxCache = new SpecPxCache(1);
 
@@ -429,12 +415,6 @@ WaveClip::~WaveClip()
    delete mWaveCache;
    delete mSpecCache;
    delete mSpecPxCache;
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   if(hFFT != NULL)
-      EndFFT(hFFT);
-   if(mWindow != NULL)
-      delete[] mWindow;
-#endif
 
    if (mAppendBuffer)
       DeleteSamples(mAppendBuffer);
@@ -820,67 +800,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
    return true;
 }
 
-namespace
-{
-enum { WINDOW, TWINDOW, DWINDOW };
-void RecreateWindow(
-   float *&window, int which, int fftLen,
-   int padding, int windowType, int windowSize, double &scale)
-{
-   if (window != NULL)
-      delete[] window;
-   // Create the requested window function
-   window = new float[fftLen];
-   int ii;
-
-   wxASSERT(windowSize % 2 == 0);
-   const int endOfWindow = padding + windowSize;
-   // Left and right padding
-   for (ii = 0; ii < padding; ++ii) {
-      window[ii] = 0.0;
-      window[fftLen - ii - 1] = 0.0;
-   }
-   // Default rectangular window in the middle
-   for (; ii < endOfWindow; ++ii)
-      window[ii] = 1.0;
-   // Overwrite middle as needed
-   switch (which) {
-   case WINDOW:
-      WindowFunc(windowType, windowSize, window + padding);
-      // NewWindowFunc(windowType, windowSize, extra, window + padding);
-      break;
-   case TWINDOW:
-      wxASSERT(false);
-#if 0
-      // Future, reassignment
-      NewWindowFunc(windowType, windowSize, extra, window + padding);
-      for (int ii = padding, multiplier = -windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
-         window[ii] *= multiplier;
-      break;
-#endif
-   case DWINDOW:
-      wxASSERT(false);
-#if 0
-      // Future, reassignment
-      DerivativeOfWindowFunc(windowType, windowSize, extra, window + padding);
-      break;
-#endif
-   default:
-      wxASSERT(false);
-   }
-   // Scale the window function to give 0dB spectrum for 0dB sine tone
-   if (which == WINDOW) {
-      scale = 0.0;
-      for (ii = padding; ii < endOfWindow; ++ii)
-         scale += window[ii];
-      if (scale > 0)
-         scale = 2.0 / scale;
-   }
-   for (ii = padding; ii < endOfWindow; ++ii)
-      window[ii] *= scale;
-}
-}
-
 void WaveClip::ComputeSpectrogramGainFactors(int fftLen, int frequencyGain, std::vector<float> &gainFactors)
 {
    if (frequencyGain > 0) {
@@ -921,30 +840,17 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 #else
    const int zeroPaddingFactor = 1;
 #endif
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   settings.CacheWindows();
+   const HFFT &hFFT = settings.hFFT;
+   const float *const &window = settings.window;
+#endif
 
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
    const int fftLen = windowSize * zeroPaddingFactor;
    const int half = fftLen / 2;
    const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
-
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   // Update the FFT and window if necessary
-   if((mWindowType != windowType) || (mWindowSize != windowSize)
-      || (hFFT == NULL) || (mWindow == NULL) || (fftLen != hFFT->Points * 2)
-      || (mZeroPaddingFactor != zeroPaddingFactor)) {
-      mWindowType = windowType;
-      mWindowSize = windowSize;
-      if(hFFT != NULL)
-         EndFFT(hFFT);
-      hFFT = InitializeFFT(fftLen);
-      double scale;
-      RecreateWindow(mWindow, WINDOW, fftLen, padding, mWindowType, mWindowSize, scale);
-   }
-#endif // EXPERIMENTAL_USE_REALFFTF
-
-
-   mZeroPaddingFactor = zeroPaddingFactor;
 
    const bool match =
       mSpecCache &&
@@ -1119,7 +1025,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                                mRate, &mSpecCache->freq[half * x],
                                autocorrelation, windowType);
             } else {
-               ComputeSpectrumUsingRealFFTf(useBuffer, hFFT, mWindow, fftLen, &mSpecCache->freq[half * x]);
+               ComputeSpectrumUsingRealFFTf(useBuffer, hFFT, window, fftLen, &mSpecCache->freq[half * x]);
             }
 #else  // EXPERIMENTAL_USE_REALFFTF
            ComputeSpectrum(buffer, windowSize, windowSize,

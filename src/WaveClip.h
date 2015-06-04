@@ -307,14 +307,6 @@ protected:
    WaveCache    *mWaveCache;
    ODLock       mWaveCacheMutex;
    SpecCache    *mSpecCache;
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   // Variables used for computing the spectrum
-   HFFT          hFFT;
-   float         *mWindow;
-   int           mWindowType;
-   int           mWindowSize;
-#endif
-   int           mZeroPaddingFactor;
    samplePtr     mAppendBuffer;
    sampleCount   mAppendBufferLen;
 
