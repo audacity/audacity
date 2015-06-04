@@ -961,35 +961,33 @@ void AudacityApp::InitLang( const wxString & lang )
    if( mLocale )
       delete mLocale;
 
-// LL: I do not know why loading translations fail on the Mac if LANG is not
-//     set, but for some reason it does.  So wrap the creation of wxLocale
-//     with the default translation.
-//
-//     2013-09-13:  I've checked this again and it is still required.  Still
-//                  no idea why.
-//     2015-05-26:  Disabled the hack since it prevents use of locale specific
-//                  formatting (like comma as decimal separator).
-#if defined(__WXMAC__disabled)
-   wxString oldval;
-   bool existed;
+   wxString canon = lang;
 
-   existed = wxGetEnv(wxT("LANG"), &oldval);
-   wxSetEnv(wxT("LANG"), wxT("en_US"));
+#if defined(__MACOSX__)
+   // This should be reviewed again during the wx3 conversion.
+
+   // On OSX, the eventual call to setlocale() will fail to completely
+   // set the locale causing printf() and kin to still use the period
+   // as the decimal separator when the locale specifies something
+   // else.
+   const wxLanguageInfo *info = wxLocale::FindLanguageInfo(lang);
+   if (info) {
+      canon = info->CanonicalName;
+   }
+
+   // On OSX, if the LANG environment variable isn't set when
+   // using a language like Japanese, an assertion will trigger
+   // because conversion to Japanese from "?" doesn't return a
+   // valid length, so make OSX happy by defining/overriding
+   // the LANG environment variable with what the user has
+   // chosen.
+   wxSetEnv(wxT("LANG"), canon);
 #endif
 
 #if wxCHECK_VERSION(3,0,0)
    mLocale = new wxLocale(wxT(""), lang, wxT(""), true);
 #else
    mLocale = new wxLocale(wxT(""), lang, wxT(""), true, true);
-#endif
-
-#if defined(__WXMAC__disabled)
-   if (existed) {
-      wxSetEnv(wxT("LANG"), oldval);
-   }
-   else {
-      wxUnsetEnv(wxT("LANG"));
-   }
 #endif
 
    for(unsigned int i=0; i<audacityPathList.GetCount(); i++)
