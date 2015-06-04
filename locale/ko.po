@@ -6778,7 +6778,7 @@ msgstr "레벨 조절기 적용중..."
 
 #: src/effects/Noise.cpp:46
 msgid "White"
-msgstr "흰색"
+msgstr "백색"
 
 #: src/effects/Noise.cpp:47
 msgid "Pink"
@@ -6794,7 +6794,7 @@ msgstr "잡음 생성기"
 
 #: src/effects/Noise.cpp:195
 msgid "Noise type:"
-msgstr "잡음 형식:"
+msgstr "잡음 종류:"
 
 #: src/effects/Noise.h:44
 msgid "Noise..."
@@ -6908,7 +6908,7 @@ msgstr "참"
 #: src/effects/Normalize.cpp:82
 #, c-format
 msgid ", maximum amplitude = %.1f dB"
-msgstr ", 최대 증폭 = %.1f dB"
+msgstr ", 최대 진폭 = %.1f dB"
 
 #: src/effects/Normalize.cpp:168
 msgid "Removing DC offset and Normalizing...\n"
@@ -6928,7 +6928,7 @@ msgstr "분석중:"
 
 #: src/effects/Normalize.cpp:194
 msgid "Analyzing first track of stereo pair: "
-msgstr "두 스테레오 채널에 대한 첫번째 트랙 분석중:"
+msgstr "스테레오 신호의 첫번째 트랙 분석중:"
 
 #: src/effects/Normalize.cpp:202 src/effects/Reverb.cpp:126
 msgid "Processing: "
@@ -6940,15 +6940,15 @@ msgstr "스테레오 채널을 독립적으로 처리중:"
 
 #: src/effects/Normalize.cpp:222
 msgid "Analyzing second track of stereo pair: "
-msgstr "두 스테레오 채널에 대한 두번째 트랙 분석중:"
+msgstr "스테레오 신호의 두번째 트랙 분석중:"
 
 #: src/effects/Normalize.cpp:237
 msgid "Processing first track of stereo pair: "
-msgstr "두 스테레오 채널에 대한 첫번째 트랙 처리중:"
+msgstr "스테레오 신호의 첫번째 트랙 처리중:"
 
 #: src/effects/Normalize.cpp:246
 msgid "Processing second track of stereo pair: "
-msgstr "두 스테레오 채널에 대한 두번째 트랙 처리중:"
+msgstr "스테레오 신호의 두번째 트랙 처리중:"
 
 #: src/effects/Normalize.cpp:451
 msgid "Normalize"
@@ -6960,11 +6960,11 @@ msgstr "DC 오프셋 제거(수직 0.0을 중심으로)"
 
 #: src/effects/Normalize.cpp:479
 msgid "Normalize maximum amplitude to"
-msgstr "다음으로 최대 증폭값 정규화"
+msgstr "다음으로 최대 진폭 정규화"
 
 #: src/effects/Normalize.cpp:484
 msgid "Maximum amplitude dB"
-msgstr "최대 증폭 dB"
+msgstr "최대 진폭 dB"
 
 #: src/effects/Normalize.cpp:491
 msgid "Normalize stereo channels independently"
@@ -7065,7 +7065,7 @@ msgstr "퍼센트 단위 깊이"
 
 #: src/effects/Phaser.cpp:266
 msgid "Feedback (%):"
-msgstr "피드백(%):"
+msgstr "피드백 (%):"
 
 #: src/effects/Phaser.cpp:270
 msgid "Feedback in percent"
