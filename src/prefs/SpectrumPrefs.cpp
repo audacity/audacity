@@ -15,6 +15,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "SpectrumPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
@@ -23,7 +24,6 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
-#include "SpectrumPrefs.h"
 #include "../FFT.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent)
@@ -352,10 +352,12 @@ bool SpectrumPrefs::Apply()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   SpectrogramSettings::defaults().UpdatePrefs();
+
    return true;
 }
 
-void SpectrumPrefs::OnWindowSize(wxCommandEvent &event)
+void SpectrumPrefs::OnWindowSize(wxCommandEvent &)
 {
    wxChoice *const pWindowSizeControl =
       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
@@ -366,3 +368,179 @@ void SpectrumPrefs::OnWindowSize(wxCommandEvent &event)
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
 END_EVENT_TABLE()
+
+SpectrogramSettings::SpectrogramSettings()
+: hFFT(0)
+, window(0)
+{
+   UpdatePrefs();
+}
+
+SpectrogramSettings& SpectrogramSettings::defaults()
+{
+   static SpectrogramSettings instance;
+   return instance;
+}
+
+void SpectrogramSettings::UpdatePrefs()
+{
+   bool destroy = false;
+
+   minFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), -1L);
+   maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
+
+   // These preferences are not written anywhere in the program as of now,
+   // but I keep this legacy here.  Who knows, someone might edit prefs files
+   // directly.  PRL
+   logMaxFreq = gPrefs->Read(wxT("/SpectrumLog/MaxFreq"), -1);
+   if (logMaxFreq < 0)
+      logMaxFreq = maxFreq;
+   logMinFreq = gPrefs->Read(wxT("/SpectrumLog/MinFreq"), -1);
+   if (logMinFreq < 0)
+      logMinFreq = minFreq;
+   if (logMinFreq < 1)
+      logMinFreq = 1;
+
+   range = gPrefs->Read(wxT("/Spectrum/Range"), 80L);
+   gain = gPrefs->Read(wxT("/Spectrum/Gain"), 20L);
+   frequencyGain = gPrefs->Read(wxT("/Spectrum/FrequencyGain"), 0L);
+
+   const int newWindowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+   if (newWindowSize != windowSize) {
+      destroy = true;
+      windowSize = newWindowSize;
+   }
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   const int newZeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
+   if (newZeroPaddingFactor != zeroPaddingFactor) {
+      destroy = true;
+      zeroPaddingFactor = newZeroPaddingFactor;
+   }
+#endif
+
+   int newWindowType;
+   gPrefs->Read(wxT("/Spectrum/WindowType"), &newWindowType, 3);
+   if (newWindowType != windowType) {
+      destroy = true;
+      windowType = newWindowType;
+   }
+
+   isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
+
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+   fftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);
+#endif
+
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   fftYGrid = (gPrefs->Read(wxT("/Spectrum/FFTYGrid"), 0L) != 0);
+#endif //EXPERIMENTAL_FFT_Y_GRID
+
+#ifdef EXPERIMENTAL_FIND_NOTES
+   fftFindNotes = (gPrefs->Read(wxT("/Spectrum/FFTFindNotes"), 0L) != 0);
+   findNotesMinA = gPrefs->Read(wxT("/Spectrum/FindNotesMinA"), -30.0);
+   numberOfMaxima = gPrefs->Read(wxT("/Spectrum/FindNotesN"), 5L);
+   findNotesQuantize = (gPrefs->Read(wxT("/Spectrum/FindNotesQuantize"), 0L) != 0);
+#endif //EXPERIMENTAL_FIND_NOTES
+
+   if (destroy)
+      DestroyWindows();
+}
+
+SpectrogramSettings::~SpectrogramSettings()
+{
+   DestroyWindows();
+}
+
+void SpectrogramSettings::DestroyWindows()
+{
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   if (hFFT != NULL) {
+      EndFFT(hFFT);
+      hFFT = NULL;
+   }
+   if (window != NULL) {
+      delete[] window;
+      window = NULL;
+   }
+#endif
+}
+
+
+namespace
+{
+   enum { WINDOW, TWINDOW, DWINDOW };
+   void RecreateWindow(
+      float *&window, int which, int fftLen,
+      int padding, int windowType, int windowSize, double &scale)
+   {
+      if (window != NULL)
+         delete[] window;
+      // Create the requested window function
+      window = new float[fftLen];
+      int ii;
+
+      wxASSERT(windowSize % 2 == 0);
+      const int endOfWindow = padding + windowSize;
+      // Left and right padding
+      for (ii = 0; ii < padding; ++ii) {
+         window[ii] = 0.0;
+         window[fftLen - ii - 1] = 0.0;
+      }
+      // Default rectangular window in the middle
+      for (; ii < endOfWindow; ++ii)
+         window[ii] = 1.0;
+      // Overwrite middle as needed
+      switch (which) {
+      case WINDOW:
+         WindowFunc(windowType, windowSize, window + padding);
+         // NewWindowFunc(windowType, windowSize, extra, window + padding);
+         break;
+      case TWINDOW:
+         wxASSERT(false);
+#if 0
+         // Future, reassignment
+         NewWindowFunc(windowType, windowSize, extra, window + padding);
+         for (int ii = padding, multiplier = -windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
+            window[ii] *= multiplier;
+         break;
+#endif
+      case DWINDOW:
+         wxASSERT(false);
+#if 0
+         // Future, reassignment
+         DerivativeOfWindowFunc(windowType, windowSize, extra, window + padding);
+         break;
+#endif
+      default:
+         wxASSERT(false);
+      }
+      // Scale the window function to give 0dB spectrum for 0dB sine tone
+      if (which == WINDOW) {
+         scale = 0.0;
+         for (ii = padding; ii < endOfWindow; ++ii)
+            scale += window[ii];
+         if (scale > 0)
+            scale = 2.0 / scale;
+      }
+      for (ii = padding; ii < endOfWindow; ++ii)
+         window[ii] *= scale;
+   }
+}
+
+void SpectrogramSettings::CacheWindows() const
+{
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   if (hFFT == NULL || window == NULL) {
+
+      double scale;
+      const int fftLen = windowSize * zeroPaddingFactor;
+      const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
+
+      if (hFFT != NULL)
+         EndFFT(hFFT);
+      hFFT = InitializeFFT(fftLen);
+      RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
+   }
+#endif // EXPERIMENTAL_USE_REALFFTF
+}

@@ -43,6 +43,7 @@ public:
       len = cacheLen;
       values = new float[len];
       valid = false;
+      range = gain = -1;
    }
 
    ~SpecPxCache()
@@ -53,6 +54,9 @@ public:
    sampleCount  len;
    float       *values;
    bool         valid;
+
+   int range;
+   int gain;
 };
 
 class WaveClip;
@@ -303,14 +307,6 @@ protected:
    WaveCache    *mWaveCache;
    ODLock       mWaveCacheMutex;
    SpecCache    *mSpecCache;
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   // Variables used for computing the spectrum
-   HFFT          hFFT;
-   float         *mWindow;
-   int           mWindowType;
-   int           mWindowSize;
-#endif
-   int           mZeroPaddingFactor;
    samplePtr     mAppendBuffer;
    sampleCount   mAppendBufferLen;
 

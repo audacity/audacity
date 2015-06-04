@@ -39,6 +39,8 @@ drawing).  Cache's the Spectrogram frequency samples.
 #include "Resample.h"
 #include "Project.h"
 
+#include "prefs/SpectrumPrefs.h"
+
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
 
@@ -254,26 +256,58 @@ protected:
 
 class SpecCache {
 public:
-   SpecCache(int cacheLen, int half, bool autocorrelation)
-   {
-      minFreqOld = -1;
-      maxFreqOld = -1;
-      gainOld = -1;
-      rangeOld = -1;
-      windowTypeOld = -1;
-      windowSizeOld = -1;
-      zeroPaddingFactorOld = 1;
-      frequencyGainOld = false;
+
+   // Make invalid cache
+   SpecCache()
+      : len(-1)
+      , ac(false)
+      , pps(-1.0)
+      , start(-1.0)
+      , windowType(-1)
+      , windowSize(-1)
+      , zeroPaddingFactor(-1)
+      , frequencyGain(-1)
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      fftSkipPointsOld = -1;
+      , fftSkipPoints(-1)
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-      dirty = -1;
-      start = -1.0;
-      pps = 0.0;
-      len = cacheLen;
-      ac = autocorrelation;
-      freq = len ? new float[len*half] : 0;
-      where = new sampleCount[len+1];
+
+      , freq(NULL)
+      , where(NULL)
+
+      , dirty(-1)
+   {
+   }
+
+   // Make valid cache, to be filled in
+   SpecCache(int cacheLen, bool autocorrelation,
+      double pps_, double start_, int windowType_, int windowSize_,
+      int zeroPaddingFactor_, int frequencyGain_
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+      , int fftSkipPoints_
+#endif
+      )
+      : len(cacheLen)
+      , ac(autocorrelation)
+      , pps(pps_)
+      , start(start_)
+      , windowType(windowType_)
+      , windowSize(windowSize_)
+      , zeroPaddingFactor(zeroPaddingFactor_)
+      , frequencyGain(frequencyGain_)
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+      , fftSkipPoints(fftSkipPoints_)
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+
+      // len columns, and so many rows, column-major.
+      // Don't take column literally -- this isn't pixel data yet, it's the
+      // raw data to be mapped onto the display.
+      , freq(len ? new float[len * ((windowSize * zeroPaddingFactor) / 2)] : 0)
+
+      // Sample counts corresponding to the columns, and to one past the end.
+      , where(new sampleCount[len + 1])
+
+      , dirty(-1)
+   {
       where[0] = 0;
    }
 
@@ -283,29 +317,26 @@ public:
       delete[] where;
    }
 
-   int          minFreqOld;
-   int          maxFreqOld;
-   int          gainOld;
-   int          rangeOld;
-   int          windowTypeOld;
-   int          windowSizeOld;
-   int          zeroPaddingFactorOld;
-   int          frequencyGainOld;
+   const sampleCount  len;
+   const bool         ac;
+   const double       pps;
+   const double       start;
+   const int          windowType;
+   const int          windowSize;
+   const int          zeroPaddingFactor;
+   const int          frequencyGain;
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int          fftSkipPointsOld;
+   const int          fftSkipPoints;
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
+   float *const       freq;
+   sampleCount *const where;
+
    int          dirty;
-   bool         ac;
-   sampleCount  len;
-   double       start;
-   double       pps;
-   sampleCount *where;
-   float       *freq;
 };
 
 #ifdef EXPERIMENTAL_USE_REALFFTF
 #include "FFT.h"
-static void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, float *window, int len, float *out)
+static void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, const float *window, int len, float *out)
 {
    int i;
    if(len > hFFT->Points*2)
@@ -340,14 +371,7 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
    mSequence = new Sequence(projDirManager, format);
    mEnvelope = new Envelope();
    mWaveCache = new WaveCache(0);
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   mWindowType = -1;
-   mWindowSize = -1;
-   hFFT = NULL;
-   mWindow = NULL;
-#endif
-   mZeroPaddingFactor = 1;
-   mSpecCache = new SpecCache(0, 1, false);
+   mSpecCache = new SpecCache();
    mSpecPxCache = new SpecPxCache(1);
    mAppendBuffer = NULL;
    mAppendBufferLen = 0;
@@ -369,14 +393,7 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
    mEnvelope->SetOffset(orig.GetOffset());
    mEnvelope->SetTrackLen(((double)orig.mSequence->GetNumSamples()) / orig.mRate);
    mWaveCache = new WaveCache(0);
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   mWindowType = -1;
-   mWindowSize = -1;
-   hFFT = NULL;
-   mWindow = NULL;
-#endif
-   mZeroPaddingFactor = 1;
-   mSpecCache = new SpecCache(0, 1, false);
+   mSpecCache = new SpecCache();
    mSpecPxCache = new SpecPxCache(1);
 
    for (WaveClipList::compatibility_iterator it=orig.mCutLines.GetFirst(); it; it=it->GetNext())
@@ -398,12 +415,6 @@ WaveClip::~WaveClip()
    delete mWaveCache;
    delete mSpecCache;
    delete mSpecPxCache;
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   if(hFFT != NULL)
-      EndFFT(hFFT);
-   if(mWindow != NULL)
-      delete[] mWindow;
-#endif
 
    if (mAppendBuffer)
       DeleteSamples(mAppendBuffer);
@@ -499,7 +510,8 @@ namespace {
 inline
 void findCorrection(const sampleCount oldWhere[], int oldLen, int newLen,
          double t0, double rate, double samplesPerPixel,
-         double &oldWhere0, double &denom, long &oldX0, long &oldXLast, double &correction)
+         double &oldWhere0, double &denom, long &oldX0, long &oldXLast, double &correction,
+         bool &overlap)
 {
    // Mitigate the accumulation of location errors
    // in copies of copies of ... of caches.
@@ -533,6 +545,7 @@ void findCorrection(const sampleCount oldWhere[], int oldLen, int newLen,
       denom < 0.5)
    {
       correction = 0.0;
+      overlap = false;
    }
    else
    {
@@ -540,6 +553,7 @@ void findCorrection(const sampleCount oldWhere[], int oldLen, int newLen,
       const double correction0 = where0 - guessWhere0;
       correction = std::max(-samplesPerPixel, std::min(samplesPerPixel, correction0));
       wxASSERT(correction == correction0);
+      overlap = true;
    }
 }
 
@@ -598,25 +612,31 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       return true;
    }
 
-   WaveCache *oldCache = mWaveCache;
-
-   mWaveCache = new WaveCache(numPixels);
-   mWaveCache->pps = pixelsPerSecond;
-   mWaveCache->rate = mRate;
-   mWaveCache->start = t0;
-   double tstep = 1.0 / pixelsPerSecond;
-   double samplesPerPixel = mRate * tstep;
+   std::auto_ptr<WaveCache> oldCache(mWaveCache);
+   mWaveCache = 0;
 
    double oldWhere0 = 0;
    double denom = 0;
    long oldX0 = 0, oldXLast = 0;
    double correction = 0.0;
+   bool overlap = false;
+   const double tstep = 1.0 / pixelsPerSecond;
+   const double samplesPerPixel = mRate * tstep;
+
    if (match &&
        oldCache->len > 0) {
-      findCorrection(oldCache->where, oldCache->len, mWaveCache->len,
+      findCorrection(oldCache->where, oldCache->len, numPixels,
          t0, mRate, samplesPerPixel,
-         oldWhere0, denom, oldX0, oldXLast, correction);
+         oldWhere0, denom, oldX0, oldXLast, correction, overlap);
    }
+
+   if (!overlap)
+      oldCache.reset(0);
+
+   mWaveCache = new WaveCache(numPixels);
+   mWaveCache->pps = pixelsPerSecond;
+   mWaveCache->rate = mRate;
+   mWaveCache->start = t0;
 
    fillWhere(mWaveCache->where, mWaveCache->len, 0.0, correction,
       t0, mRate, samplesPerPixel);
@@ -630,7 +650,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
    // possible
-   if (match &&
+   if (match && overlap &&
        denom >= 0.5 &&
        oldX0 < oldCache->len &&
        oldXLast > oldCache->start) {
@@ -763,7 +783,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
    }
 
    mWaveCache->dirty = mDirty;
-   delete oldCache;
 
    memcpy(min, mWaveCache->min, numPixels*sizeof(float));
    memcpy(max, mWaveCache->max, numPixels*sizeof(float));
@@ -779,67 +798,6 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
    isLoadingOD = mWaveCache->numODPixels>0;
    return true;
-}
-
-namespace
-{
-enum { WINDOW, TWINDOW, DWINDOW };
-void RecreateWindow(
-   float *&window, int which, int fftLen,
-   int padding, int windowType, int windowSize, double &scale)
-{
-   if (window != NULL)
-      delete[] window;
-   // Create the requested window function
-   window = new float[fftLen];
-   int ii;
-
-   wxASSERT(windowSize % 2 == 0);
-   const int endOfWindow = padding + windowSize;
-   // Left and right padding
-   for (ii = 0; ii < padding; ++ii) {
-      window[ii] = 0.0;
-      window[fftLen - ii - 1] = 0.0;
-   }
-   // Default rectangular window in the middle
-   for (; ii < endOfWindow; ++ii)
-      window[ii] = 1.0;
-   // Overwrite middle as needed
-   switch (which) {
-   case WINDOW:
-      WindowFunc(windowType, windowSize, window + padding);
-      // NewWindowFunc(windowType, windowSize, extra, window + padding);
-      break;
-   case TWINDOW:
-      wxASSERT(false);
-#if 0
-      // Future, reassignment
-      NewWindowFunc(windowType, windowSize, extra, window + padding);
-      for (int ii = padding, multiplier = -windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
-         window[ii] *= multiplier;
-      break;
-#endif
-   case DWINDOW:
-      wxASSERT(false);
-#if 0
-      // Future, reassignment
-      DerivativeOfWindowFunc(windowType, windowSize, extra, window + padding);
-      break;
-#endif
-   default:
-      wxASSERT(false);
-   }
-   // Scale the window function to give 0dB spectrum for 0dB sine tone
-   if (which == WINDOW) {
-      scale = 0.0;
-      for (ii = padding; ii < endOfWindow; ++ii)
-         scale += window[ii];
-      if (scale > 0)
-         scale = 2.0 / scale;
-   }
-   for (ii = padding; ii < endOfWindow; ++ii)
-      window[ii] *= scale;
-}
 }
 
 void WaveClip::ComputeSpectrogramGainFactors(int fftLen, int frequencyGain, std::vector<float> &gainFactors)
@@ -867,20 +825,26 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               double t0, double pixelsPerSecond,
                               bool autocorrelation)
 {
-   int minFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), 0L);
-   int maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
-   int range = gPrefs->Read(wxT("/Spectrum/Range"), 80L);
-   int gain = gPrefs->Read(wxT("/Spectrum/Gain"), 20L);
-   int frequencyGain = gPrefs->Read(wxT("/Spectrum/FrequencyGain"), 0L);
-   int windowType;
-   int windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+   const SpectrogramSettings &settings = SpectrogramSettings::defaults();
+
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int fftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);
-   int fftSkipPoints1 = fftSkipPoints+1;
+   int fftSkipPoints = settings.fftSkipPoints;
+   int fftSkipPoints1 = fftSkipPoints + 1;
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-   const int zeroPaddingFactor =
-      autocorrelation ? 1 : gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
-   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, 3);
+
+   const int &frequencyGain = settings.frequencyGain;
+   const int &windowSize = settings.windowSize;
+   const int &windowType = settings.windowType;
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   const int &zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
+#else
+   const int zeroPaddingFactor = 1;
+#endif
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   settings.CacheWindows();
+   const HFFT &hFFT = settings.hFFT;
+   const float *const &window = settings.window;
+#endif
 
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
@@ -888,37 +852,15 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    const int half = fftLen / 2;
    const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
 
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   // Update the FFT and window if necessary
-   if((mWindowType != windowType) || (mWindowSize != windowSize)
-      || (hFFT == NULL) || (mWindow == NULL) || (fftLen != hFFT->Points * 2)
-      || (mZeroPaddingFactor != zeroPaddingFactor)) {
-      mWindowType = windowType;
-      mWindowSize = windowSize;
-      if(hFFT != NULL)
-         EndFFT(hFFT);
-      hFFT = InitializeFFT(fftLen);
-      double scale;
-      RecreateWindow(mWindow, WINDOW, fftLen, padding, mWindowType, mWindowSize, scale);
-   }
-#endif // EXPERIMENTAL_USE_REALFFTF
-
-
-   mZeroPaddingFactor = zeroPaddingFactor;
-
    const bool match =
       mSpecCache &&
       mSpecCache->dirty == mDirty &&
-      mSpecCache->minFreqOld == minFreq &&
-      mSpecCache->maxFreqOld == maxFreq &&
-      mSpecCache->rangeOld == range &&
-      mSpecCache->gainOld == gain &&
-      mSpecCache->windowTypeOld == windowType &&
-      mSpecCache->windowSizeOld == windowSize &&
-      mSpecCache->zeroPaddingFactorOld == zeroPaddingFactor &&
-      mSpecCache->frequencyGainOld == frequencyGain &&
+      mSpecCache->windowType == windowType &&
+      mSpecCache->windowSize == windowSize &&
+      mSpecCache->zeroPaddingFactor == zeroPaddingFactor &&
+      mSpecCache->frequencyGain == frequencyGain &&
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      mSpecCache->fftSkipPointsOld == fftSkipPoints &&
+      mSpecCache->fftSkipPoints == fftSkipPoints &&
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
       mSpecCache->ac == autocorrelation &&
       mSpecCache->pps == pixelsPerSecond;
@@ -931,14 +873,11 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       return false;  //hit cache completely
    }
 
-   SpecCache *oldCache = mSpecCache;
+   std::auto_ptr<SpecCache> oldCache(mSpecCache);
+   mSpecCache = 0;
 
-   mSpecCache = new SpecCache(numPixels, half, autocorrelation);
-   mSpecCache->pps = pixelsPerSecond;
-   mSpecCache->start = t0;
-
-   bool *recalc = new bool[mSpecCache->len + 1];
-   std::fill(&recalc[0], &recalc[mSpecCache->len + 1], true);
+   bool *recalc = new bool[numPixels + 1];
+   std::fill(&recalc[0], &recalc[numPixels + 1], true);
 
    const double tstep = 1.0 / pixelsPerSecond;
    const double samplesPerPixel = mRate * tstep;
@@ -949,13 +888,25 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    double denom = 0;
    long oldX0 = 0, oldXLast = 0;
    double correction = 0.0;
+   bool overlap = false;
 
    if (match &&
        oldCache->len > 0) {
-      findCorrection(oldCache->where, oldCache->len, mSpecCache->len,
+      findCorrection(oldCache->where, oldCache->len, numPixels,
          t0, mRate, samplesPerPixel,
-         oldWhere0, denom, oldX0, oldXLast, correction);
+         oldWhere0, denom, oldX0, oldXLast, correction, overlap);
    }
+
+   if (!overlap)
+      oldCache.reset(0);
+
+   mSpecCache = new SpecCache(
+      numPixels, autocorrelation, pixelsPerSecond, t0,
+      windowType, windowSize, zeroPaddingFactor, frequencyGain
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+      , fftSkipPoints
+#endif
+   );
 
    fillWhere(mSpecCache->where, mSpecCache->len, 0.5, correction,
       t0, mRate, samplesPerPixel);
@@ -963,7 +914,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
    // possible
-   if (match &&
+   if (match && overlap &&
        denom >= 0.5 &&
        oldX0 < oldCache->len &&
        oldXLast > oldCache->start) {
@@ -988,7 +939,6 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
    float *useBuffer = 0;
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
    float *buffer = new float[fftLen*fftSkipPoints1];
-   mSpecCache->fftSkipPointsOld = fftSkipPoints;
 #else //!EXPERIMENTAL_FFT_SKIP_POINTS
    float *buffer = new float[fftLen];
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
@@ -997,15 +947,6 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
       buffer[ii] = 0.0;
       buffer[fftLen - ii - 1] = 0.0;
    }
-
-   mSpecCache->minFreqOld = minFreq;
-   mSpecCache->maxFreqOld = maxFreq;
-   mSpecCache->gainOld = gain;
-   mSpecCache->rangeOld = range;
-   mSpecCache->windowTypeOld = windowType;
-   mSpecCache->windowSizeOld = windowSize;
-   mSpecCache->zeroPaddingFactorOld = zeroPaddingFactor;
-   mSpecCache->frequencyGainOld = frequencyGain;
 
    std::vector<float> gainFactors;
    ComputeSpectrogramGainFactors(fftLen, frequencyGain, gainFactors);
@@ -1084,7 +1025,7 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                                mRate, &mSpecCache->freq[half * x],
                                autocorrelation, windowType);
             } else {
-               ComputeSpectrumUsingRealFFTf(useBuffer, hFFT, mWindow, fftLen, &mSpecCache->freq[half * x]);
+               ComputeSpectrumUsingRealFFTf(useBuffer, hFFT, window, fftLen, &mSpecCache->freq[half * x]);
             }
 #else  // EXPERIMENTAL_USE_REALFFTF
            ComputeSpectrum(buffer, windowSize, windowSize,
@@ -1101,7 +1042,6 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
    delete[]buffer;
    delete[]recalc;
-   delete oldCache;
 
    mSpecCache->dirty = mDirty;
    memcpy(freq, mSpecCache->freq, numPixels*half*sizeof(float));
@@ -1759,7 +1699,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
       // Invalidate the spectrum display cache
       if (mSpecCache)
          delete mSpecCache;
-      mSpecCache = new SpecCache(0, 1, false);
+      mSpecCache = new SpecCache();
    }
 
    return !error;

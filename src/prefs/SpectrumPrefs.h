@@ -30,6 +30,8 @@
 
 #include "PrefsPanel.h"
 
+struct FFTParam;
+
 class SpectrumPrefs:public PrefsPanel
 {
  public:
@@ -68,6 +70,59 @@ class SpectrumPrefs:public PrefsPanel
 #ifdef EXPERIMENTAL_FIND_NOTES
    wxTextCtrl *mFindNotesMinA;
    wxTextCtrl *mFindNotesN;
+#endif
+};
+
+
+struct SpectrogramSettings
+{
+   static SpectrogramSettings &defaults();
+   SpectrogramSettings();
+   ~SpectrogramSettings();
+
+   void UpdatePrefs();
+   void DestroyWindows();
+   void CacheWindows() const;
+
+   int minFreq;
+   int maxFreq;
+
+   int logMinFreq;
+   int logMaxFreq;
+
+   int range;
+   int gain;
+   int frequencyGain;
+
+   int windowType;
+   int windowSize;
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   int zeroPaddingFactor;
+#endif
+
+   bool isGrayscale;
+
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+   int fftSkipPoints;
+#endif
+
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   bool fftYGrid;
+#endif //EXPERIMENTAL_FFT_Y_GRID
+
+#ifdef EXPERIMENTAL_FIND_NOTES
+   bool fftFindNotes;
+   bool findNotesMinA;
+   bool numberOfMaxima;
+   bool findNotesQuantize;
+#endif //EXPERIMENTAL_FIND_NOTES
+
+   // Following fields are derived from preferences.
+
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   // Variables used for computing the spectrum
+   mutable FFTParam      *hFFT;
+   mutable float         *window;
 #endif
 };
 
