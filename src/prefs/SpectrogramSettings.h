@@ -156,9 +156,7 @@ public:
    mutable float         *window;
 
    // Two other windows for computing reassigned spectrogram
-#if 0
    mutable float         *tWindow; // Window times time parameter
-#endif
    mutable float         *dWindow; // Derivative of window
 
 #endif

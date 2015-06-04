@@ -57,6 +57,7 @@ SpectrogramSettings::SpectrogramSettings()
    : hFFT(0)
    , window(0)
    , dWindow(0)
+   , tWindow(0)
 {
    LoadPrefs();
 }
@@ -93,9 +94,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
    // Do not copy these!
    , hFFT(0)
    , window(0)
-#if 0
    , tWindow(0)
-#endif
    , dWindow(0)
 {
 }
@@ -397,6 +396,10 @@ void SpectrogramSettings::DestroyWindows()
       delete[] dWindow;
       dWindow = NULL;
    }
+   if (tWindow != NULL) {
+      delete[] tWindow;
+      tWindow = NULL;
+   }
 #endif
 }
 
@@ -433,14 +436,12 @@ namespace
       case WINDOW:
          NewWindowFunc(windowType, windowSize, extra, window + padding);
          break;
-#if 0
          // Future, reassignment
       case TWINDOW:
          NewWindowFunc(windowType, windowSize, extra, window + padding);
          for (int ii = padding, multiplier = -windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
             window[ii] *= multiplier;
          break;
-#endif
       case DWINDOW:
          DerivativeOfWindowFunc(windowType, windowSize, extra, window + padding);
          break;
@@ -474,9 +475,7 @@ void SpectrogramSettings::CacheWindows() const
       hFFT = InitializeFFT(fftLen);
       RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
       if (algorithm == algReassignment) {
-#if 0
          RecreateWindow(tWindow, TWINDOW, fftLen, padding, windowType, windowSize, scale);
-#endif
          RecreateWindow(dWindow, DWINDOW, fftLen, padding, windowType, windowSize, scale);
       }
    }

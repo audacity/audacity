@@ -788,7 +788,8 @@ void SpecCache::CalculateOneSpectrum
    (const SpectrogramSettings &settings,
     WaveTrackCache &waveTrackCache,
     int xx, sampleCount numSamples,
-    double offset, double rate,
+    double offset, double rate, double pixelsPerSecond,
+    int lowerBoundX, int upperBoundX,
     const std::vector<float> &gainFactors,
     float *scratch)
 {
@@ -864,6 +865,9 @@ void SpecCache::CalculateOneSpectrum
          float *const scratch2 = scratch + fftLen;
          std::copy(scratch, scratch2, scratch2);
 
+         float *const scratch3 = scratch + 2 * fftLen;
+         std::copy(scratch, scratch2, scratch3);
+
          {
             const float *const window = settings.window;
             for (int ii = 0; ii < fftLen; ++ii)
@@ -878,7 +882,13 @@ void SpecCache::CalculateOneSpectrum
             RealFFTf(scratch2, hFFT);
          }
 
-         const double multiplier = -fftLen / (2.0f * M_PI);
+         {
+            const float *const tWindow = settings.tWindow;
+            for (int ii = 0; ii < fftLen; ++ii)
+               scratch3[ii] *= tWindow[ii];
+            RealFFTf(scratch3, hFFT);
+         }
+
          for (int ii = 0; ii < hFFT->Points; ++ii) {
             const int index = hFFT->BitReversed[ii];
             const float
@@ -889,30 +899,41 @@ void SpecCache::CalculateOneSpectrum
                // Avoid dividing by near-zero below
                continue;
 
-            const float
-               numRe = scratch2[index],
-               numIm = ii == 0 ? 0 : scratch2[index + 1];
-            // Find complex quotient --
-            // Which means, multiply numerator by conjugate of denominator,
-            // then divide by norm squared of denominator --
-            // Then just take its imaginary part.
-            const double
-               quotIm = (-numRe * denomIm + numIm * denomRe) / power;
-            // With appropriate multiplier, that becomes the correction of
-            // the frequency bin.
-            const double correction = multiplier * quotIm;
-            const int bin = int(ii + correction + 0.5f);
-            if (bin >= 0 && bin < hFFT->Points)
-               freq[half * xx + bin] += power;
-         }
+            double freqCorrection;
+            {
+               const double multiplier = -fftLen / (2.0f * M_PI);
+               const float
+                  numRe = scratch2[index],
+                  numIm = ii == 0 ? 0 : scratch2[index + 1];
+               // Find complex quotient --
+               // Which means, multiply numerator by conjugate of denominator,
+               // then divide by norm squared of denominator --
+               // Then just take its imaginary part.
+               const double
+                  quotIm = (-numRe * denomIm + numIm * denomRe) / power;
+               // With appropriate multiplier, that becomes the correction of
+               // the frequency bin.
+               freqCorrection = multiplier * quotIm;
+            }
 
-         // Now Convert to dB terms
-         for (int ii = 0; ii < hFFT->Points; ++ii) {
-            float &power = freq[half * xx + ii];
-            if (power <= 0)
-               power = -160.0;
-            else
-               power = 10.0*log10f(power);
+            const int bin = int(ii + freqCorrection + 0.5f);
+            if (bin >= 0 && bin < hFFT->Points) {
+               double timeCorrection;
+               {
+                  const float
+                     numRe = scratch3[index],
+                     numIm = ii == 0 ? 0 : scratch3[index + 1];
+                  // Find another complex quotient --
+                  // Then just take its real part.
+                  // The result has sample interval as unit.
+                  timeCorrection =
+                     (numRe * denomRe + numIm * denomIm) / power;
+               }
+
+               int correctedX = (floor(0.5 + xx + timeCorrection * pixelsPerSecond / rate));
+               if (correctedX >= lowerBoundX && correctedX < upperBoundX)
+                  freq[half * correctedX + bin] += power;
+            }
          }
       }
       else {
@@ -945,7 +966,7 @@ void SpecCache::Populate
    (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
     int copyBegin, int copyEnd, int numPixels,
     sampleCount numSamples,
-    double offset, double rate)
+    double offset, double rate, double pixelsPerSecond)
 {
 #ifdef EXPERIMENTAL_USE_REALFFTF
    settings.CacheWindows();
@@ -970,7 +991,7 @@ void SpecCache::Populate
 
    const size_t bufferSize = fftLen;
 
-   std::vector<float> buffer(reassignment ? 2 * bufferSize : bufferSize);
+   std::vector<float> buffer(reassignment ? 3 * bufferSize : bufferSize);
 
    std::vector<float> gainFactors;
    if (!autocorrelation)
@@ -983,8 +1004,10 @@ void SpecCache::Populate
       const int upperBoundX = jj == 0 ? copyBegin : numPixels;
       for (sampleCount xx = lowerBoundX; xx < upperBoundX; ++xx)
          CalculateOneSpectrum(
-         settings, waveTrackCache, xx, numSamples,
-         offset, rate, gainFactors, &buffer[0]);
+            settings, waveTrackCache, xx, numSamples,
+            offset, rate, pixelsPerSecond,
+            lowerBoundX, upperBoundX,
+            gainFactors, &buffer[0]);
 
       if (reassignment) {
          // Now Convert to dB terms.  Do this only after accumulating
@@ -1092,7 +1115,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
    mSpecCache->Populate
       (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
-       mSequence->GetNumSamples(), mOffset, mRate);
+       mSequence->GetNumSamples(),
+       mOffset, mRate, pixelsPerSecond);
 
    mSpecCache->dirty = mDirty;
    spectrogram = &mSpecCache->freq[0];
