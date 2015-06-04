@@ -43,6 +43,7 @@ public:
       len = cacheLen;
       values = new float[len];
       valid = false;
+      range = gain = -1;
    }
 
    ~SpecPxCache()
@@ -53,6 +54,9 @@ public:
    sampleCount  len;
    float       *values;
    bool         valid;
+
+   int range;
+   int gain;
 };
 
 class WaveClip;
