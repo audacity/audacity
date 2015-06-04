@@ -957,7 +957,7 @@ AudacityLogger *AudacityApp::GetLogger()
 }
 
 #if defined(__WXMSW__)
-#define WL(lang, sublang) (lang), (sublang)
+#define WL(lang, sublang) (lang), (sublang),
 #else
 #define WL(lang,sublang)
 #endif
@@ -965,7 +965,7 @@ AudacityLogger *AudacityApp::GetLogger()
 wxLanguageInfo userLangs[] =
 {
 #if !wxCHECK_VERSION(3, 0, 1)
-   { wxLANGUAGE_USER_DEFINED, wxT("bs"), WL(0, SUBLANG_DEFAULT), wxT("Bosnian"), wxLayout_LeftToRight }
+   { wxLANGUAGE_USER_DEFINED, wxT("bs"), WL(0, SUBLANG_DEFAULT) wxT("Bosnian"), wxLayout_LeftToRight }
 #endif
 };
 
