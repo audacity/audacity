@@ -268,7 +268,7 @@ public:
       , zeroPaddingFactor(-1)
       , frequencyGain(-1)
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      , fftSkipPoints(-1);
+      , fftSkipPoints(-1)
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
 
       , freq(NULL)
@@ -295,7 +295,7 @@ public:
       , zeroPaddingFactor(zeroPaddingFactor_)
       , frequencyGain(frequencyGain_)
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      , fftSkipPoints(fftSkipPoints_);
+      , fftSkipPoints(fftSkipPoints_)
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
 
       // len columns, and so many rows, column-major.

@@ -665,6 +665,10 @@ void TrackArtist::DrawVRuler(Track *t, wxDC * dc, wxRect & r)
 
 void TrackArtist::UpdateVRuler(Track *t, wxRect & r)
 {
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+   const int fftSkipPoints = SpectrogramSettings::defaults().fftSkipPoints;
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+
    // Label tracks do not have a vruler
    if (t->GetKind() == Track::Label) {
       return;
@@ -1939,6 +1943,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    const bool &numberOfMaxima = settings.numberOfMaxima;
    const bool &findNotesQuantize = settings.findNotesQuantize;
 #endif
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   const bool &fftYGrid = settings.fftYGrid;
+#endif
 
    dc.SetPen(*wxTRANSPARENT_PEN);
 
@@ -2049,13 +2056,13 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 #endif
 
 #ifdef EXPERIMENTAL_FIND_NOTES
-      const float
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+      const float
          lmins = logf(float(minFreq) / (fftSkipPoints + 1)),
-         lmaxs = logf(float(maxFreq) / (fftSkipPoints + 1)),
+         lmaxs = logf(float(maxFreq) / (fftSkipPoints + 1))
 #else //!EXPERIMENTAL_FFT_SKIP_POINTS
          lmins = lmin,
-         lmaxs = lmax,
+         lmaxs = lmax
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
          ;
 #endif //EXPERIMENTAL_FIND_NOTES
@@ -2092,13 +2099,14 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
          else {
 #ifdef EXPERIMENTAL_FIND_NOTES
             int maximas=0;
-            if (!usePxCache && fftFindNotes) {
+            const int x0 = half * x;
+            if (fftFindNotes) {
                for (int i = maxTableSize-1; i >= 0; i--)
                   indexes[i]=-1;
 
                // Build a table of (most) values, put the index in it.
                for (int i = int(i0); i < int(i1); i++) {
-                  float freqi=freq[x0+int(i)];
+                  float freqi=freq[x0 + int(i)];
                   int value=int((freqi+gain+range)/range*(maxTableSize-1));
                   if (value < 0)
                      value=0;
@@ -2107,19 +2115,19 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                   indexes[value]=i;
                }
                // Build from the indices an array of maxima.
-               for (int i = maxTableSize-1; i >= 0; i--) {
-                  int index=indexes[i];
+               for (int i = maxTableSize - 1; i >= 0; i--) {
+                  int index = indexes[i];
                   if (index >= 0) {
-                     float freqi=freq[x0+index];
+                     float freqi = freq[x0 + index];
                      if (freqi < findNotesMinA)
                         break;
 
-                     bool ok=true;
-                     for (int m=0; m < maximas; m++) {
+                     bool ok = true;
+                     for (int m = 0; m < maximas; m++) {
                         // Avoid to store very close maxima.
                         float maxm = maxima[m];
-                        if (maxm/index < minDistance && index/maxm < minDistance) {
-                           ok=false;
+                        if (maxm / index < minDistance && index / maxm < minDistance) {
+                           ok = false;
                            break;
                         }
                      }
@@ -2127,9 +2135,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                         maxima[maximas++] = index;
                         if (maximas >= numberOfMaxima)
                            break;
-            }
-         }
-      }
+                     }
+                  }
+               }
 
 // The f2pix helper macro converts a frequency into a pixel coordinate.
 #define f2pix(f) (logf(f)-lmins)/(lmaxs-lmins)*mid.height
@@ -2181,11 +2189,9 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
                      if (inMaximum) {
                         float i1=maxima1[it];
                         if (yy+1 <= i1) {
-                           value=sumFreqValues(freq, x0, bin0, bin1);
+                           value=findValue(freq + x0, bin0, bin1, half, autocorrelation, gain, range);
                            if (value < findNotesMinA)
                               value = minColor;
-                           else
-                              value = (value + gain + range) / (double)range;
                         } else {
                            it++;
                            inMaximum = false;
@@ -2329,9 +2335,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    delete[] yGrid;
 #endif //EXPERIMENTAL_FFT_Y_GRID
-#ifdef EXPERIMENTAL_FIND_NOTES
-   delete[] indexes;
-#endif //EXPERIMENTAL_FIND_NOTES
 }
 
 void TrackArtist::InvalidateSpectrumCache(TrackList *tracks)
