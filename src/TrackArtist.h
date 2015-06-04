@@ -173,31 +173,7 @@ class AUDACITY_DLL_API TrackArtist {
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
    long mShowClipping;        // "/GUI/ShowClipping"
-   int mLogMaxFreq;           // "/SpectrumLog/MaxFreq"
-   int mLogMinFreq;           // "/SpectrumLog/MinFreq"
-   int mMaxFreq;              // "/Spectrum/MaxFreq"
-   int mMinFreq;              // "/Spectrum/MinFreq"
-   int mWindowSize;           // "/Spectrum/FFTSize"
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   int mZeroPaddingFactor;    // "/Spectrum/ZeroPaddingFactor"
-#endif
-   bool mIsGrayscale;         // "/Spectrum/Grayscale"
    bool mbShowTrackNameInWaveform;  // "/GUI/ShowTrackNameInWaveform"
-
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int mFftSkipPoints;        // "/Spectrum/FFTSkipPoints"
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   bool mFftYGrid;            // "/Spectrum/FFTYGrid"
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
-#ifdef EXPERIMENTAL_FIND_NOTES
-   bool mFftFindNotes;        // "/Spectrum/FFTFindNotes"
-   float mFindNotesMinA;      // "/Spectrum/FindNotesMinA"
-   int mNumberOfMaxima;       // "/Spectrum/FindNotesN"
-   bool mFindNotesQuantize;   // "/Spectrum/FindNotesQuantize")
-#endif //EXPERIMENTAL_FIND_NOTES
 
    int mInsetLeft;
    int mInsetTop;

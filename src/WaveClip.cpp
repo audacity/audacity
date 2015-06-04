@@ -39,6 +39,8 @@ drawing).  Cache's the Spectrogram frequency samples.
 #include "Resample.h"
 #include "Project.h"
 
+#include "prefs/SpectrumPrefs.h"
+
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
 
@@ -904,16 +906,21 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               double t0, double pixelsPerSecond,
                               bool autocorrelation)
 {
-   int frequencyGain = gPrefs->Read(wxT("/Spectrum/FrequencyGain"), 0L);
-   int windowType;
-   int windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+   const SpectrogramSettings &settings = SpectrogramSettings::defaults();
+
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int fftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);
-   int fftSkipPoints1 = fftSkipPoints+1;
+   int fftSkipPoints = settings.fftSkipPoints;
+   int fftSkipPoints1 = fftSkipPoints + 1;
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-   const int zeroPaddingFactor =
-      autocorrelation ? 1 : gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
-   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, 3);
+
+   const int &frequencyGain = settings.frequencyGain;
+   const int &windowSize = settings.windowSize;
+   const int &windowType = settings.windowType;
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   const int &zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
+#else
+   const int zeroPaddingFactor = 1;
+#endif
 
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution

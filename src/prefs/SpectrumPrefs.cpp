@@ -15,6 +15,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "SpectrumPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
@@ -23,7 +24,6 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
-#include "SpectrumPrefs.h"
 #include "../FFT.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent)
@@ -352,10 +352,12 @@ bool SpectrumPrefs::Apply()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   SpectrogramSettings::defaults().UpdatePrefs();
+
    return true;
 }
 
-void SpectrumPrefs::OnWindowSize(wxCommandEvent &event)
+void SpectrumPrefs::OnWindowSize(wxCommandEvent &)
 {
    wxChoice *const pWindowSizeControl =
       static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
@@ -366,3 +368,61 @@ void SpectrumPrefs::OnWindowSize(wxCommandEvent &event)
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
 END_EVENT_TABLE()
+
+SpectrogramSettings::SpectrogramSettings()
+{
+   UpdatePrefs();
+}
+
+SpectrogramSettings& SpectrogramSettings::defaults()
+{
+   static SpectrogramSettings instance;
+   return instance;
+}
+
+void SpectrogramSettings::UpdatePrefs()
+{
+   minFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), -1L);
+   maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
+
+   // These preferences are not written anywhere in the program as of now,
+   // but I keep this legacy here.  Who knows, someone might edit prefs files
+   // directly.  PRL
+   logMaxFreq = gPrefs->Read(wxT("/SpectrumLog/MaxFreq"), -1);
+   if (logMaxFreq < 0)
+      logMaxFreq = maxFreq;
+   logMinFreq = gPrefs->Read(wxT("/SpectrumLog/MinFreq"), -1);
+   if (logMinFreq < 0)
+      logMinFreq = minFreq;
+   if (logMinFreq < 1)
+      logMinFreq = 1;
+
+   range = gPrefs->Read(wxT("/Spectrum/Range"), 80L);
+   gain = gPrefs->Read(wxT("/Spectrum/Gain"), 20L);
+   frequencyGain = gPrefs->Read(wxT("/Spectrum/FrequencyGain"), 0L);
+
+   windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   zeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
+#endif
+
+   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, 3);
+
+   isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
+
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+   fftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);
+#endif
+
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   fftYGrid = (gPrefs->Read(wxT("/Spectrum/FFTYGrid"), 0L) != 0);
+#endif //EXPERIMENTAL_FFT_Y_GRID
+
+#ifdef EXPERIMENTAL_FIND_NOTES
+   fftFindNotes = (gPrefs->Read(wxT("/Spectrum/FFTFindNotes"), 0L) != 0);
+   findNotesMinA = gPrefs->Read(wxT("/Spectrum/FindNotesMinA"), -30.0);
+   numberOfMaxima = gPrefs->Read(wxT("/Spectrum/FindNotesN"), 5L);
+   findNotesQuantize = (gPrefs->Read(wxT("/Spectrum/FindNotesQuantize"), 0L) != 0);
+#endif //EXPERIMENTAL_FIND_NOTES
+}

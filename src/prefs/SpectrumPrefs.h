@@ -71,4 +71,46 @@ class SpectrumPrefs:public PrefsPanel
 #endif
 };
 
+
+struct SpectrogramSettings
+{
+   static SpectrogramSettings &defaults();
+   SpectrogramSettings();
+
+   void UpdatePrefs();
+
+   int minFreq;
+   int maxFreq;
+
+   int logMinFreq;
+   int logMaxFreq;
+
+   int range;
+   int gain;
+   int frequencyGain;
+
+   int windowType;
+   int windowSize;
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   int zeroPaddingFactor;
+#endif
+
+   bool isGrayscale;
+
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+   int fftSkipPoints;
+#endif
+
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   bool fftYGrid;
+#endif //EXPERIMENTAL_FFT_Y_GRID
+
+#ifdef EXPERIMENTAL_FIND_NOTES
+   bool fftFindNotes;
+   bool findNotesMinA;
+   bool numberOfMaxima;
+   bool findNotesQuantize;
+#endif //EXPERIMENTAL_FIND_NOTES
+};
+
 #endif

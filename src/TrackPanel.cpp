@@ -214,6 +214,8 @@ is time to refresh some aspect of the screen.
 
 #include "ondemand/ODManager.h"
 
+#include "prefs/SpectrumPrefs.h"
+
 #include "toolbars/ControlToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "toolbars/ToolsToolBar.h"
@@ -3045,8 +3047,7 @@ void TrackPanel::StartSnappingFreqSelection (WaveTrack *pTrack)
 
    while(windowSize > effectiveLength)
       windowSize >>= 1;
-   int windowType;
-   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, 3);
+   const int windowType = SpectrogramSettings::defaults().windowType;
    mFrequencySnapper->Calculate(
       SpectrumAnalyst::Spectrum, windowType, windowSize, rate,
       &frequencySnappingData[0], length);
@@ -4722,7 +4723,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
       // Always spectrogram, never pitch view, pass true
       windowSize = mTrackArtist->GetSpectrumWindowSize(true);
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      fftSkipPoints = mTrackArtist->GetSpectrumFftSkipPoints();
+      fftSkipPoints = SpectrogramSettings::defaults().fftSkipPoints;
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
       binSize = rate / windowSize;
       minBins = wxMin(10, windowSize/2); //minimum 10 freq bins, unless there are less
@@ -4739,7 +4740,7 @@ void TrackPanel::HandleVZoomButtonUp( wxMouseEvent & event )
          // Always spectrogram, never pitch view, pass true
          windowSize = mTrackArtist->GetSpectrumWindowSize(true);
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-         fftSkipPoints = mTrackArtist->GetSpectrumFftSkipPoints();
+         fftSkipPoints = SpectrogramSettings::defaults().fftSkipPoints;
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
          binSize = rate / windowSize;
          minBins = wxMin(10, windowSize/2); //minimum 10 freq bins, unless there are less
