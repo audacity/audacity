@@ -963,7 +963,7 @@ void AudacityApp::InitLang( const wxString & lang )
 
    wxString canon = lang;
 
-#if defined(__MACOSX__)
+#if defined(__WXMAC__)
    // This should be reviewed again during the wx3 conversion.
 
    // On OSX, the eventual call to setlocale() will fail to completely
@@ -985,9 +985,9 @@ void AudacityApp::InitLang( const wxString & lang )
 #endif
 
 #if wxCHECK_VERSION(3,0,0)
-   mLocale = new wxLocale(wxT(""), lang, wxT(""), true);
+   mLocale = new wxLocale(wxT(""), canon, wxT(""), true);
 #else
-   mLocale = new wxLocale(wxT(""), lang, wxT(""), true, true);
+   mLocale = new wxLocale(wxT(""), canon, wxT(""), true, true);
 #endif
 
    for(unsigned int i=0; i<audacityPathList.GetCount(); i++)
