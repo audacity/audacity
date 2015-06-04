@@ -974,13 +974,6 @@ void AudacityApp::InitLang( const wxString & lang )
    if( mLocale )
       delete mLocale;
 
-   // Define languanges for which we have translations, but that are not yet
-   // supported by wxWidgets.
-   for (size_t i = 0, cnt = WXSIZEOF(userLangs); i < cnt; i++)
-   {
-      wxLocale::AddLanguage(userLangs[i]);
-   }
-
    wxString canon = lang;
 
 #if defined(__WXMAC__)
@@ -1250,6 +1243,16 @@ bool AudacityApp::OnInit()
                          tmpDirLoc.c_str(),
                          wxGetUserId().c_str());
 #endif //__WXMAC__
+
+   // Define languanges for which we have translations, but that are not yet
+   // supported by wxWidgets.
+   //
+   // TODO:  The whole Language initialization really need to be reworked.
+   //        It's all over the place.
+   for (size_t i = 0, cnt = WXSIZEOF(userLangs); i < cnt; i++)
+   {
+      wxLocale::AddLanguage(userLangs[i]);
+   }
 
    // Initialize preferences and language
    InitPreferences();
