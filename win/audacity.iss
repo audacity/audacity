@@ -1,4 +1,4 @@
-;   Audacity: A Digital Audio Editor
+﻿;   Audacity: A Digital Audio Editor
 ;   Audacity(R) is copyright (c) 1999-2015 Audacity Team.
 ;   License: GPL v2.  See License.txt.
 ;
@@ -65,61 +65,6 @@ InfoAfterFile=..\README.txt
 
 ; cosmetic-related directives
 SetupIconFile=audacity.ico
-
-[Languages]
-Name: "en"; MessagesFile: "compiler:Default.isl"
-Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "co"; MessagesFile: "compiler:Languages\Corsican.isl"
-Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
-Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl"
-Name: "el"; MessagesFile: "compiler:Languages\Greek.isl"
-Name: "he"; MessagesFile: "compiler:Languages\Hebrew.isl"
-Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
-Name: "ne"; MessagesFile: "compiler:Languages\Nepali.islu"
-Name: "nb"; MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
-Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
-Name: "sr_RS"; MessagesFile: "compiler:Languages\SerbianCyrillic.isl"
-; "0" will be translated to "@" when read by Audacity.
-Name: "sr_RS0latin"; MessagesFile: "compiler:Languages\SerbianLatin.isl"
-Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl"
-Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
-Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
-
-; Additional Inno Setup translations can be downloaded from:
-;
-; http://www.jrsoftware.org/files/istrans/
-;
-; If you find one that will work, add it to the win/InnoSetupLanguages directory.
-; The filename must be the locale name and the ".isl" extension.  For example, "af.isl"
-; would have the "Afrikaans" translation.
-;
-; Add any additional languages from the win/InnoSetupLanguages directory
-;
-; Based on the examples from the ISS Preprocessor manual
-;
-#define FindHandle
-#define FindResult
-
-#sub AddLanguage
-  #define FileName FindGetFileName(FindHandle)
-  #define LangCode Local[0] = Copy(FileName, 1, Pos(".", FileName) - 1)
-  Name: {#LangCode}; MessagesFile: "InnoSetupLanguages\{#FileName}"
-#endsub
-
-#for {FindHandle = FindResult = FindFirst("InnoSetupLanguages\*.isl", 0); FindResult; FindResult = FindNext(FindHandle)} AddLanguage
-#if FindHandle
-  #expr FindClose(FindHandle)
-#endif
 
 [INI]
 Filename: "{app}\FirstTime.ini"; Section: "FromInno"; Key: "ResetPrefs"; String: "1"; Tasks: resetPrefs;
@@ -246,9 +191,177 @@ Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; Va
 ;Root: HKCR; Subkey: "Audacity.Project\Path";  ValueType: string; ValueData: {app}; Flags: createvalueifdoesntexist uninsdeletekey;
 
 [Run]
-Filename: "{app}\audacity.exe"; Description: "Launch Audacity"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\audacity.exe"; Description: "{cm:LaunchProgram,Audacity}"; Flags: nowait postinstall skipifsilent
 
+[Languages]
+; NOTE: "0" in locale name will be translated to "@" when read by Audacity.
+
+; Create subdirectories where we'll store the unofficial and dummy translation files
+{#expr Exec("cmd", "/c mkdir """ + CompilerPath + "Languages\dummy""", , , SW_HIDE), \
+       Exec("cmd", "/c mkdir """ + CompilerPath + "Languages\unofficial""", , , SW_HIDE)}
+
+; Download Additional Inno Setup translations from:
+;
+; http://www.jrsoftware.org/files/istrans/
+;
+; Set this to the base of the unofficial  Inno Setup translations
+#define UrlBase "http://raw.github.com/jrsoftware/issrc/master/Files/Languages/Unofficial/"
+
+; This macro will use the Windows PowerShell to download the given translation into
+; the Inno Setup Languages folder if it hasn't already been downloaded.
+; (Sorry, it's not a quick process, but it only happens once.)
+#define Get(URL) \
+  Local[0] = "Languages\unofficial\" + Copy(URL, RPos("/", URL) + 1), \
+  Local[1] = (FileExists(CompilerPath + Local[0]) \
+    ? "alreadyexists" \
+    : Exec("powershell", "echo 'Downloading: " + URL + "'; $wc = new-object System.Net.WebClient; $wc.DownloadFile('" + URLBase + URL + "', '" + Local[0] + "')", , , SW_NORMAL)), \
+  "compiler:" + Local[0]
+
+; This macro will define a dummy translation based on the Defaults.isl
+#define Dummy(NAME, ID) \
+  Local[0] = "Languages\dummy\", \
+  Local[1] = Local[0] + NAME + ".isl", \
+  Local[2] = CompilerPath + Local[1], \
+  Local[3] = (FileExists(Local[2]) \
+    ? "alreadyexists" \
+    : (CopyFile(CompilerPath + "Default.isl", Local[2]), \
+       WriteIni(Local[2], "LangOptions", "LanguageName", NAME), \
+       WriteIni(Local[2], "LangOptions", "LanguageID", "$" + ID))), \
+  "compiler:" + Local[1]
+
+Name: "af"; MessagesFile: "{#Get('Afrikaans.isl')}"
+Name: "ar"; MessagesFile: "{#Get('Arabic.isl')}"
+Name: "be"; MessagesFile: "{#Get('Belarusian.isl')}"
+Name: "bg"; MessagesFile: "{#Get('Bulgarian.isl')}"
+Name: "bn"; MessagesFile: "{#Get('Bengali.islu')}"
+Name: "bs"; MessagesFile: "{#Get('Bosnian.isl')}"
+Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
+Name: "ca0valencia"; MessagesFile: "{#Get('Valencian.isl')}"
+Name: "co"; MessagesFile: "compiler:Languages\Corsican.isl"
+Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
+Name: "cy"; MessagesFile: "{#Dummy('Welsh', '0452')}"
+Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl"
+Name: "el"; MessagesFile: "compiler:Languages\Greek.isl"
+Name: "en"; MessagesFile: "compiler:Default.isl"
+Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "eu"; MessagesFile: "{#Get('Basque.isl')}"
+Name: "fa"; MessagesFile: "{#Get('Farsi.isl')}"
+Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
+Name: "ga"; MessagesFile: "{#Dummy('Gaeilge', '083C')}"
+Name: "gl"; MessagesFile: "{#Get('Galician.isl')}"
+Name: "he"; MessagesFile: "compiler:Languages\Hebrew.isl"
+Name: "hi"; MessagesFile: "{#Get('Hindi.islu')}"
+Name: "hr"; MessagesFile: "{#Get('Croatian.isl')}"
+Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
+Name: "hy"; MessagesFile: "{#Get('Armenian.islu')}"
+Name: "id"; MessagesFile: "{#Get('Indonesian.isl')}"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: "ka"; MessagesFile: "{#Get('Georgian.islu')}"
+Name: "km"; MessagesFile: "{#Dummy('Khmer', '0409')}"
+Name: "ko"; MessagesFile: "{#Dummy('Korean', '0412')}"
+Name: "lt"; MessagesFile: "{#Get('Lithuanian.isl')}"
+Name: "mk"; MessagesFile: "{#Get('Macedonian.isl')}"
+Name: "my"; MessagesFile: "{#Dummy('Burmese', '0409')}"
+Name: "nb"; MessagesFile: "compiler:Languages\Norwegian.isl"
+Name: "ne"; MessagesFile: "compiler:Languages\Nepali.islu"
+Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "oc"; MessagesFile: "{#Get('Occitan.isl')}"
+Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
+Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "ro"; MessagesFile: "{#Get('Romanian.isl')}"
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "sk"; MessagesFile: "{#Get('Slovak.isl')}"
+Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl"
+Name: "sr_RS"; MessagesFile: "compiler:Languages\SerbianCyrillic.isl"
+Name: "sr_RS0latin"; MessagesFile: "compiler:Languages\SerbianLatin.isl"
+Name: "sv"; MessagesFile: "{#Get('Swedish.isl')}"
+Name: "ta"; MessagesFile: "{#Dummy('Tamil', '0449')}"
+Name: "tg"; MessagesFile: "{#Dummy('Tajik', '0428')}"
+Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
+Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
+Name: "vi"; MessagesFile: "{#Get('Vietnamese.isl')}"
+Name: "zh"; MessagesFile: "{#Get('ChineseSimplified.isl')}"
+Name: "zh_TW"; MessagesFile: "{#Get('ChineseTraditional.isl')}"
+
+; To include additional translations add it to the win/InnoSetupLanguages directory.
+; The filename must be the locale name and the ".isl" extension.  For example, "af.isl"
+; would have the "Afrikaans" translation.
+
+; Pull in additional translations from the win/InnoSetupLanguages directory
+#define FindHandle
+#define FindResult
+
+#sub AddLanguage
+  #define FileName FindGetFileName(FindHandle)
+  #define LangCode Local[0] = Copy(FileName, 1, Pos(".", FileName) - 1)
+  Name: {#LangCode}; MessagesFile: "InnoSetupLanguages\{#FileName}"
+#endsub
+
+#for {FindHandle = FindResult = FindFirst("InnoSetupLanguages\*.isl", 0); FindResult; FindResult = FindNext(FindHandle)} AddLanguage
+#if FindHandle
+  #expr FindClose(FindHandle)
+#endif
+
+; These could be included from a different file to make it easier to update...
 [CustomMessages]
+af.ResetPrefs=Reset Preferences
+ar.ResetPrefs=Reset Preferences
+be.ResetPrefs=Reset Preferences
+bg.ResetPrefs=Да се нулират ли настройките?
+bn.ResetPrefs=Reset Preferences
+bs.ResetPrefs=Reset Preferences
+ca.ResetPrefs=Voleu restablir les preferències?
+ca0valencia.ResetPrefs=Reset Preferences
+co.ResetPrefs=Reset Preferences
+cs.ResetPrefs=Vynulovat nastavení?
+cy.ResetPrefs=Reset Preferences
+da.ResetPrefs=Gendan indstillinger?
+de.ResetPrefs=Einstellungen zurücksetzen?
+el.ResetPrefs=Επαναφορά προτιμήσεων;
 en.ResetPrefs=Reset Preferences
-es.ResetPrefs=�Desea restablecer las preferencias?
-fr.ResetPrefs=R�initialiser les  Pr�f�rences
+es.ResetPrefs=¿Desea restablecer las preferencias?
+eu.ResetPrefs=Berrezarri Hobespenak?
+fa.ResetPrefs=Reset Preferences
+fi.ResetPrefs=Reset Preferences
+fr.ResetPrefs=Réinitialiser les  Préférences ?
+ga.ResetPrefs=Reset Preferences
+gl.ResetPrefs=Restabelecer as preferencias?
+he.ResetPrefs=?אתה רוצה לשחזר העדפות
+hi.ResetPrefs=वरीयताएँ रीसेट करें?
+hr.ResetPrefs=Resetirati Postavke?
+hu.ResetPrefs=Alapra állítja a beállításokat?
+hy.ResetPrefs=Վերափոխե՞լ կարգավորումները:
+id.ResetPrefs=Reset Preferences
+it.ResetPrefs=Ripristino Preferenze?
+ja.ResetPrefs=設定をリセットしますか?
+ka.ResetPrefs=Reset Preferences
+km.ResetPrefs=Reset Preferences
+ko.ResetPrefs=기본 설정을 재설정하시겠습니까?
+lt.ResetPrefs=Reset Preferences
+mk.ResetPrefs=Reset Preferences
+my.ResetPrefs=Reset Preferences
+nb.ResetPrefs=Reset Preferences
+ne.ResetPrefs=Reset Preferences
+nl.ResetPrefs=Voorkeuren herstellen?
+oc.ResetPrefs=Reset Preferences
+pl.ResetPrefs=Zresetować ustawienia?
+pt.ResetPrefs=Reconfigurar as Preferências?
+pt_BR.ResetPrefs=Redefinir Preferências?
+ro.ResetPrefs=Reset Preferences
+ru.ResetPrefs=Сбросить Параметры?
+sk.ResetPrefs=Obnoviť nastavenia?
+sl.ResetPrefs=Želite ponastaviti možnosti?
+sr_RS.ResetPrefs=Да вратим на старе поставке?
+sr_RS0latin.ResetPrefs=Da vratim na stare postavke?
+sv.ResetPrefs=Återställ inställningar?
+ta.ResetPrefs="விருப்பங்களை மீட்டமைக்க?
+tg.ResetPrefs=Reset Preferences
+tr.ResetPrefs=Ayarlar Sıfırlansın mı?
+uk.ResetPrefs=Відновити початкові значення параметрів?
+vi.ResetPrefs=Reset Preferences
+zh.ResetPrefs=重置配置吗？
+zh_TW.ResetPrefs=是否重設偏好設定？

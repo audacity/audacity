@@ -27,9 +27,6 @@
     <msgfmt Include="..\..\..\locale\ca.po">
       <Filter>Source Files</Filter>
     </msgfmt>
-    <msgfmt Include="..\..\..\locale\ca%40valencia.po">
-      <Filter>Source Files</Filter>
-    </msgfmt>
     <msgfmt Include="..\..\..\locale\cs.po">
       <Filter>Source Files</Filter>
     </msgfmt>
@@ -166,6 +163,9 @@
       <Filter>Source Files</Filter>
     </msgfmt>
     <msgfmt Include="..\..\..\locale\zh_TW.po">
+      <Filter>Source Files</Filter>
+    </msgfmt>
+    <msgfmt Include="..\..\..\locale\ca_ES%40valencia.po">
       <Filter>Source Files</Filter>
     </msgfmt>
   </ItemGroup>

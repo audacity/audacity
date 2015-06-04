@@ -835,7 +835,7 @@
 		28884947131B6CF600B59735 /* bn.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884916131B6CF500B59735 /* bn.po */; };
 		28884948131B6CF600B59735 /* bs.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884917131B6CF500B59735 /* bs.po */; };
 		28884949131B6CF600B59735 /* ca.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884918131B6CF500B59735 /* ca.po */; };
-		2888494A131B6CF600B59735 /* ca@valencia.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884919131B6CF500B59735 /* ca@valencia.po */; };
+		2888494A131B6CF600B59735 /* ca_ES@valencia.po in Sources */ = {isa = PBXBuildFile; fileRef = 28884919131B6CF500B59735 /* ca_ES@valencia.po */; };
 		2888494B131B6CF600B59735 /* cs.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888491A131B6CF500B59735 /* cs.po */; };
 		2888494C131B6CF600B59735 /* cy.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888491B131B6CF500B59735 /* cy.po */; };
 		2888494D131B6CF600B59735 /* da.po in Sources */ = {isa = PBXBuildFile; fileRef = 2888491C131B6CF500B59735 /* da.po */; };
@@ -2567,7 +2567,7 @@
 		28884916131B6CF500B59735 /* bn.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = bn.po; path = ../locale/bn.po; sourceTree = SOURCE_ROOT; };
 		28884917131B6CF500B59735 /* bs.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = bs.po; path = ../locale/bs.po; sourceTree = SOURCE_ROOT; };
 		28884918131B6CF500B59735 /* ca.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = ca.po; path = ../locale/ca.po; sourceTree = SOURCE_ROOT; };
-		28884919131B6CF500B59735 /* ca@valencia.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = "ca@valencia.po"; path = "../locale/ca@valencia.po"; sourceTree = SOURCE_ROOT; };
+		28884919131B6CF500B59735 /* ca_ES@valencia.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = "ca_ES@valencia.po"; path = "../locale/ca_ES@valencia.po"; sourceTree = SOURCE_ROOT; };
 		2888491A131B6CF500B59735 /* cs.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = cs.po; path = ../locale/cs.po; sourceTree = SOURCE_ROOT; };
 		2888491B131B6CF500B59735 /* cy.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = cy.po; path = ../locale/cy.po; sourceTree = SOURCE_ROOT; };
 		2888491C131B6CF500B59735 /* da.po */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 5; name = da.po; path = ../locale/da.po; sourceTree = SOURCE_ROOT; };
@@ -5185,7 +5185,7 @@
 				28884916131B6CF500B59735 /* bn.po */,
 				28884917131B6CF500B59735 /* bs.po */,
 				28884918131B6CF500B59735 /* ca.po */,
-				28884919131B6CF500B59735 /* ca@valencia.po */,
+				28884919131B6CF500B59735 /* ca_ES@valencia.po */,
 				2888491A131B6CF500B59735 /* cs.po */,
 				2888491B131B6CF500B59735 /* cy.po */,
 				2888491C131B6CF500B59735 /* da.po */,
@@ -7645,7 +7645,7 @@
 				28884947131B6CF600B59735 /* bn.po in Sources */,
 				28884948131B6CF600B59735 /* bs.po in Sources */,
 				28884949131B6CF600B59735 /* ca.po in Sources */,
-				2888494A131B6CF600B59735 /* ca@valencia.po in Sources */,
+				2888494A131B6CF600B59735 /* ca_ES@valencia.po in Sources */,
 				2888494B131B6CF600B59735 /* cs.po in Sources */,
 				2888494C131B6CF600B59735 /* cy.po in Sources */,
 				2888494D131B6CF600B59735 /* da.po in Sources */,

@@ -110,7 +110,7 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
    localLanguageName[wxT("bn")] = wxT("Bengali");
    localLanguageName[wxT("bs")] = wxT("Bosnian");
    localLanguageName[wxT("ca")] = wxT("Catalan");
-   localLanguageName[wxT("ca@valencia")] = wxT("Valencian (southern Catalan)");
+   localLanguageName[wxT("ca_ES@valencia")] = wxT("Valencian (southern Catalan)");
    localLanguageName[wxT("cs")] = wxT("Czech");
    localLanguageName[wxT("cy")] = wxT("Welsh");
    localLanguageName[wxT("da")] = wxT("Dansk");
@@ -163,12 +163,17 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
    wxGetApp().AddUniquePathToPathList(wxString::Format(wxT("%s/share/locale"),
                                                        wxT(INSTALL_PREFIX)),
                                       audacityPathList);
-   int i;
-   for(i=wxLANGUAGE_UNKNOWN; i<wxLANGUAGE_USER_DEFINED;i++) {
-      const wxLanguageInfo *info = wxLocale::GetLanguageInfo(i);
 
-      if (!info)
+   for (LangHash::iterator i = localLanguageName.begin();
+        i != localLanguageName.end();
+        i++)
+   {
+      const wxLanguageInfo *info = wxLocale::FindLanguageInfo(i->first);
+
+      if (!info) {
+         wxASSERT(info != NULL);
          continue;
+      }
 
       wxString fullCode = info->CanonicalName;
       wxString code = fullCode.Left(2);
@@ -213,7 +218,6 @@ void GetLanguages(wxArrayString &langCodes, wxArrayString &langNames)
                       name.c_str());*/
       }
    }
-
 
    // JKC: Adding language for simplified audacity.
    {
