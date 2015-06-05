@@ -72,41 +72,13 @@ public:
    float *min, *max, *rms;
    int* bl;
 
-   WaveDisplay()
-      : width(0), where(0), min(0), max(0), rms(0), bl(0)
+   WaveDisplay(int w)
+      : width(w), where(0), min(0), max(0), rms(0), bl(0)
    {
    }
 
    ~WaveDisplay()
    {
-      Deallocate();
-   }
-
-   void Allocate(int w)
-   {
-      width = w;
-
-      // One more to hold the past-the-end sample count:
-      where = new sampleCount[1 + width];
-
-      min = new float[width];
-      max = new float[width];
-      rms = new float[width];
-      bl = new int[width];
-   }
-
-   void Deallocate()
-   {
-      delete[] where;
-      where = 0;
-      delete[] min;
-      min = 0;
-      delete[] max;
-      max = 0;
-      delete[] rms;
-      rms = 0;
-      delete[] bl;
-      bl = 0;
    }
 };
 
@@ -193,13 +165,8 @@ public:
     * calculations and Contrast */
    bool GetWaveDisplay(WaveDisplay &display,
                        double t0, double pixelsPerSecond, bool &isLoadingOD);
-   void ComputeSpectrogramGainFactors(
-         int fftLen,
-         int frequencyGain, // db/decade
-         std::vector<float> &gainFactors
-      );
    bool GetSpectrogram(WaveTrackCache &cache,
-                       float *buffer, sampleCount *where,
+                       const float *& spectrogram, const sampleCount *& where,
                        int numPixels,
                        double t0, double pixelsPerSecond,
                        bool autocorrelation);
