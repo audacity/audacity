@@ -981,14 +981,16 @@ void AudacityProject::CreateMenusAndCommands()
    c->BeginMenu(_("&Generate"));
    c->SetDefaultFlags(AudioIONotBusyFlag, AudioIONotBusyFlag);
 
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+   c->AddItem(wxT("ManageGenerators"), _("Manage Generators..."), FN(OnManageGenerators));
+   c->AddSeparator();
+#endif
+
+
    PopulateEffectsMenu(c,
                        EffectTypeGenerate,
                        AudioIONotBusyFlag,
                        AudioIONotBusyFlag);
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-   c->AddSeparator();
-   c->AddItem(wxT("ManageGenerators"), _("More..."), FN(OnManageGenerators));
-#endif
 
    c->EndMenu();
 
@@ -1006,6 +1008,11 @@ void AudacityProject::CreateMenusAndCommands()
    else
       buildMenuLabel.Printf(_("Repeat Last Effect"));
 
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+   c->AddItem(wxT("ManageEffects"), _("Manage Effects..."), FN(OnManageEffects));
+   c->AddSeparator();
+#endif
+
    c->AddItem(wxT("RepeatLastEffect"), buildMenuLabel, FN(OnRepeatLastEffect), wxT("Ctrl+R"),
               AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag | HasLastEffectFlag,
               AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag | HasLastEffectFlag);
@@ -1016,11 +1023,6 @@ void AudacityProject::CreateMenusAndCommands()
                        EffectTypeProcess,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
                        IsRealtimeNotActiveFlag);
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-   c->AddSeparator();
-   // We could say Manage Effects on the menu, but More... is more intuitive.
-   c->AddItem(wxT("ManageEffects"), _("More..."), FN(OnManageEffects));
-#endif
 
    c->EndMenu();
 
@@ -1029,6 +1031,12 @@ void AudacityProject::CreateMenusAndCommands()
    //////////////////////////////////////////////////////////////////////////
 
    c->BeginMenu(_("&Analyze"));
+
+#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
+   c->AddItem(wxT("ManageAnalyzers"), _("Manage Analyzers..."), FN(OnManageAnalyzers));
+   c->AddSeparator();
+#endif
+
 
    c->AddItem(wxT("ContrastAnalyser"), _("Contrast..."), FN(OnContrast), wxT("Ctrl+Shift+T"),
               AudioIONotBusyFlag | WaveTracksSelectedFlag | TimeSelectedFlag,
@@ -1041,10 +1049,6 @@ void AudacityProject::CreateMenusAndCommands()
                        EffectTypeAnalyze,
                        AudioIONotBusyFlag | TimeSelectedFlag | WaveTracksSelectedFlag,
                        IsRealtimeNotActiveFlag);
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
-   c->AddSeparator();
-   c->AddItem(wxT("ManageAnalyzers"), _("More..."), FN(OnManageAnalyzers));
-#endif
 
    c->EndMenu();
 
