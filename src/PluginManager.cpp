@@ -516,25 +516,41 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: The dialog shows a list of plugins with check-boxes 
        beside each one.*/
-      S.StartStatic(_("Select Plug-ins, click the Enable or Disable button, then click OK."), true);
+      S.StartStatic(_("Effects"), true);
       {
-         S.StartHorizontalLay(wxALIGN_LEFT,0 );
+         S.StartHorizontalLay(wxEXPAND, 0);
          {
-            wxRadioButton* rb;
-            /* i18n-hint: This is before radio buttons selecting which effects to show */
-            S.AddPrompt(_("Show:"));
-            /* i18n-hint: Radio button to show all effects */
-            rb = S.Id(ID_ShowAll).AddRadioButton(_("&All"));
-            rb->SetName(_("Show all"));
-            /* i18n-hint: Radio button to show just the currently disabled effects */
-            rb = S.Id(ID_ShowDisabled).AddRadioButtonToGroup(_("D&isabled"));
-            rb->SetName(_("Show disabled"));
-            /* i18n-hint: Radio button to show just the currently enabled effects */
-            rb = S.Id(ID_ShowEnabled).AddRadioButtonToGroup(_("E&nabled"));
-            rb->SetName(_("Show enabled"));
-            /* i18n-hint: Radio button to show just the newly discovered effects */
-            rb = S.Id(ID_ShowNew).AddRadioButtonToGroup(_("Ne&w"));
-            rb->SetName(_("Show new"));
+            S.StartHorizontalLay(wxALIGN_LEFT, 0);
+            {
+               S.AddPrompt(_("Select effects, click the Enable or Disable button, then click OK."));
+            }
+            S.EndHorizontalLay();
+
+            S.StartHorizontalLay(wxCENTER, 1);
+            {
+               S.AddSpace(1);
+            }
+            S.EndHorizontalLay();
+
+            S.StartHorizontalLay(wxALIGN_RIGHT, 0);
+            {
+               wxRadioButton* rb;
+               /* i18n-hint: This is before radio buttons selecting which effects to show */
+               S.AddPrompt(_("Show:"));
+               /* i18n-hint: Radio button to show all effects */
+               rb = S.Id(ID_ShowAll).AddRadioButton(_("&All"));
+               rb->SetName(_("Show all"));
+               /* i18n-hint: Radio button to show just the currently disabled effects */
+               rb = S.Id(ID_ShowDisabled).AddRadioButtonToGroup(_("D&isabled"));
+               rb->SetName(_("Show disabled"));
+               /* i18n-hint: Radio button to show just the currently enabled effects */
+               rb = S.Id(ID_ShowEnabled).AddRadioButtonToGroup(_("E&nabled"));
+               rb->SetName(_("Show enabled"));
+               /* i18n-hint: Radio button to show just the newly discovered effects */
+               rb = S.Id(ID_ShowNew).AddRadioButtonToGroup(_("Ne&w"));
+               rb->SetName(_("Show new"));
+            }
+            S.EndHorizontalLay();
          }
          S.EndHorizontalLay();
 
