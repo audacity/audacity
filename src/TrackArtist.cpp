@@ -1681,14 +1681,13 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    float zoomMin, zoomMax;
    track->GetDisplayBounds(&zoomMin, &zoomMax);
 
-   WaveDisplay display;
+   WaveDisplay display(mid.width);
    bool isLoadingOD = false;//true if loading on demand block in sequence.
 
    // The WaveClip class handles the details of computing the shape
    // of the waveform.  The only way GetWaveDisplay will fail is if
    // there's a serious error, like some of the waveform data can't
    // be loaded.  So if the function returns false, we can just exit.
-   display.Allocate(mid.width);
    if (!clip->GetWaveDisplay(display,
       t0, pps, isLoadingOD)) {
       return;
@@ -1705,7 +1704,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    // the envelope and using a colored pen for the selected
    // part of the waveform
    DrawWaveformBackground(dc, mid, envValues, zoomMin, zoomMax, dB,
-                          display.where, ssel0, ssel1, drawEnvelope,
+                          &display.where[0], ssel0, ssel1, drawEnvelope,
                           !track->GetSelected());
 
    if (!showIndividualSamples) {
@@ -1824,7 +1823,7 @@ void TrackArtist::DrawSpectrum(WaveTrack *track,
 }
 
 static inline float findValue
-(float *spectrum, float bin0, float bin1, int half,
+(const float *spectrum, float bin0, float bin1, int half,
  bool autocorrelation, int gain, int range)
 {
    float value;
@@ -1959,8 +1958,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
 
    int windowSize = GetSpectrumWindowSize(!autocorrelation);
    const int half = windowSize / 2;
-   float *freq = new float[mid.width * half];
-   sampleCount *where = new sampleCount[mid.width+1];
+   const float *freq = 0;
+   const sampleCount *where = 0;
 
    bool updated = clip->GetSpectrogram(cache, freq, where, mid.width,
                               t0, pps, autocorrelation);
@@ -2330,8 +2329,6 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    dc.Blit(mid.x, mid.y, mid.width, mid.height, &memDC, 0, 0, wxCOPY, FALSE);
 
    delete image;
-   delete[] where;
-   delete[] freq;
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    delete[] yGrid;
 #endif //EXPERIMENTAL_FFT_Y_GRID

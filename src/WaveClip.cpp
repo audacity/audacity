@@ -44,53 +44,56 @@ drawing).  Cache's the Spectrogram frequency samples.
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(WaveClipList);
 
-namespace {
-inline int CountODPixels(int *bl, int start, int end)
-{
-   using namespace std;
-   return count_if(bl + start, bl + end, bind2nd(less<int>(), 0));
-}
-}
-
-
 class WaveCache {
 public:
-   WaveCache(int cacheLen)
-      : len(cacheLen)
+   WaveCache()
+      : dirty(-1)
+      , len(-1)
+      , start(-1)
+      , pps(0)
+      , rate(-1)
+      , where(0)
+      , min(0)
+      , max(0)
+      , rms(0)
+      , bl(0)
+      , numODPixels(0)
    {
-      dirty = -1;
-      start = -1.0;
-      pps = 0.0;
-      min = len ? new float[len] : 0;
-      max = len ? new float[len] : 0;
-      rms = len ? new float[len] : 0;
-      bl = len ? new int[len] : 0;
-      where = new sampleCount[len+1];
-      where[0] = 0;
-      numODPixels=0;
+   }
+
+   WaveCache(int len_, double pixelsPerSecond, double rate_, double t0)
+      : dirty(-1)
+      , len(len_)
+      , start(t0)
+      , pps(pixelsPerSecond)
+      , rate(rate_)
+      , where(1 + len)
+      , min(len)
+      , max(len)
+      , rms(len)
+      , bl(len)
+      , numODPixels(0)
+   {
+
+      //find the number of OD pixels - the only way to do this is by recounting since we've lost some old cache.
+      numODPixels = CountODPixels(0, len);
    }
 
    ~WaveCache()
    {
-      delete[] min;
-      delete[] max;
-      delete[] rms;
-      delete[] bl;
-      delete[] where;
-
       ClearInvalidRegions();
    }
 
    int          dirty;
-   const sampleCount  len;
-   double       start;
-   double       pps;
-   int          rate;
-   sampleCount *where;
-   float       *min;
-   float       *max;
-   float       *rms;
-   int         *bl;
+   const int    len; // counts pixels, not samples
+   const double start;
+   const double pps;
+   const int    rate;
+   std::vector<sampleCount> where;
+   std::vector<float> min;
+   std::vector<float> max;
+   std::vector<float> rms;
+   std::vector<int> bl;
    int         numODPixels;
 
    class InvalidRegion
@@ -223,7 +226,7 @@ public:
       //before check number of ODPixels
       int regionODPixels = 0;
       if (updateODCount)
-         regionODPixels = CountODPixels(bl, invStart, invEnd);
+         regionODPixels = CountODPixels(invStart, invEnd);
 
       sequence->GetWaveDisplay(&min[invStart],
          &max[invStart],
@@ -235,7 +238,7 @@ public:
       //after check number of ODPixels
       if (updateODCount)
       {
-         const int regionODPixelsAfter = CountODPixels(bl, invStart, invEnd);
+         const int regionODPixelsAfter = CountODPixels(invStart, invEnd);
          numODPixels -= (regionODPixels - regionODPixelsAfter);
       }
    }
@@ -247,10 +250,16 @@ public:
          LoadInvalidRegion(i, sequence, updateODCount);
    }
 
+   int CountODPixels(int start, int end)
+   {
+      using namespace std;
+      const int *begin = &bl[0];
+      return count_if(begin + start, begin + end, bind2nd(less<int>(), 0));
+   }
 
 protected:
    std::vector<InvalidRegion*> mRegions;
-      ODLock mRegionsMutex;
+   ODLock mRegionsMutex;
 
 };
 
@@ -301,10 +310,10 @@ public:
       // len columns, and so many rows, column-major.
       // Don't take column literally -- this isn't pixel data yet, it's the
       // raw data to be mapped onto the display.
-      , freq(len ? new float[len * ((windowSize * zeroPaddingFactor) / 2)] : 0)
+      , freq(len * ((windowSize * zeroPaddingFactor) / 2))
 
       // Sample counts corresponding to the columns, and to one past the end.
-      , where(new sampleCount[len + 1])
+      , where(len + 1)
 
       , dirty(-1)
    {
@@ -313,11 +322,27 @@ public:
 
    ~SpecCache()
    {
-      delete[] freq;
-      delete[] where;
    }
 
-   const sampleCount  len;
+   bool Matches(int dirty_, bool autocorrelation, double pixelsPerSecond,
+      const SpectrogramSettings &settings) const;
+
+   void CalculateOneSpectrum
+      (const SpectrogramSettings &settings,
+       WaveTrackCache &waveTrackCache,
+       int xx, sampleCount numSamples,
+       double offset, double rate,
+       bool autocorrelation, const std::vector<float> &gainFactors,
+       float *scratch);
+
+   void Populate
+      (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
+       int copyBegin, int copyEnd, int numPixels,
+       sampleCount numSamples,
+       double offset, double rate,
+       bool autocorrelation);
+
+   const int          len; // counts pixels, not samples
    const bool         ac;
    const double       pps;
    const double       start;
@@ -328,8 +353,8 @@ public:
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
    const int          fftSkipPoints;
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
-   float *const       freq;
-   sampleCount *const where;
+   std::vector<float> freq;
+   std::vector<sampleCount> where;
 
    int          dirty;
 };
@@ -370,7 +395,7 @@ WaveClip::WaveClip(DirManager *projDirManager, sampleFormat format, int rate)
    mRate = rate;
    mSequence = new Sequence(projDirManager, format);
    mEnvelope = new Envelope();
-   mWaveCache = new WaveCache(0);
+   mWaveCache = new WaveCache();
    mSpecCache = new SpecCache();
    mSpecPxCache = new SpecPxCache(1);
    mAppendBuffer = NULL;
@@ -392,7 +417,7 @@ WaveClip::WaveClip(const WaveClip& orig, DirManager *projDirManager)
    mEnvelope->Paste(0.0, orig.mEnvelope);
    mEnvelope->SetOffset(orig.GetOffset());
    mEnvelope->SetTrackLen(((double)orig.mSequence->GetNumSamples()) / orig.mRate);
-   mWaveCache = new WaveCache(0);
+   mWaveCache = new WaveCache();
    mSpecCache = new SpecCache();
    mSpecPxCache = new SpecPxCache(1);
 
@@ -494,7 +519,7 @@ void WaveClip::DeleteWaveCache()
    ODLocker locker(mWaveCacheMutex);
    if(mWaveCache!=NULL)
       delete mWaveCache;
-   mWaveCache = new WaveCache(0);
+   mWaveCache = new WaveCache();
 }
 
 ///Adds an invalid region to the wavecache so it redraws that portion only.
@@ -508,35 +533,22 @@ void WaveClip::AddInvalidRegion(long startSample, long endSample)
 namespace {
 
 inline
-void findCorrection(const sampleCount oldWhere[], int oldLen, int newLen,
+void findCorrection(const std::vector<sampleCount> &oldWhere, int oldLen, int newLen,
          double t0, double rate, double samplesPerPixel,
-         double &oldWhere0, double &denom, long &oldX0, long &oldXLast, double &correction,
-         bool &overlap)
+         int &oldX0, double &correction)
 {
    // Mitigate the accumulation of location errors
    // in copies of copies of ... of caches.
    // Look at the loop that populates "where" below to understand this.
 
    // Find the sample position that is the origin in the old cache.
-   oldWhere0 = oldWhere[1] - samplesPerPixel;
+   const double oldWhere0 = oldWhere[1] - samplesPerPixel;
    const double oldWhereLast = oldWhere0 + oldLen * samplesPerPixel;
    // Find the length in samples of the old cache.
-   denom = oldWhereLast - oldWhere0;
+   const double denom = oldWhereLast - oldWhere0;
 
    // What sample would go in where[0] with no correction?
    const double guessWhere0 = t0 * rate;
-
-   // What integer position in the old cache array does that map to?
-   // (even if it is out of bounds)
-   oldX0 = floor(0.5 + oldLen * (guessWhere0 - oldWhere0) / denom);
-   // What sample count would the old cache have put there?
-   const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
-   // What integer position in the old cache array does our last column
-   // map to?  (even if out of bounds)
-   oldXLast = floor(0.5 + oldLen * (
-      (where0 + double(newLen) * samplesPerPixel - oldWhere0)
-      / denom
-   ));
 
    if ( // Skip if old and new are disjoint:
       oldWhereLast <= guessWhere0 ||
@@ -544,21 +556,27 @@ void findCorrection(const sampleCount oldWhere[], int oldLen, int newLen,
       // Skip unless denom rounds off to at least 1.
       denom < 0.5)
    {
+      // The computation of oldX0 in the other branch
+      // may underflow and the assertion would be violated.
+      oldX0 =  oldLen;
       correction = 0.0;
-      overlap = false;
    }
    else
    {
+      // What integer position in the old cache array does that map to?
+      // (even if it is out of bounds)
+      oldX0 = floor(0.5 + oldLen * (guessWhere0 - oldWhere0) / denom);
+      // What sample count would the old cache have put there?
+      const double where0 = oldWhere0 + double(oldX0) * samplesPerPixel;
       // What correction is needed to align the new cache with the old?
       const double correction0 = where0 - guessWhere0;
       correction = std::max(-samplesPerPixel, std::min(samplesPerPixel, correction0));
       wxASSERT(correction == correction0);
-      overlap = true;
    }
 }
 
 inline void
-fillWhere(sampleCount where[], int len, double bias, double correction,
+fillWhere(std::vector<sampleCount> &where, int len, double bias, double correction,
           double t0, double rate, double samplesPerPixel)
 {
    // Be careful to make the first value non-negative
@@ -581,85 +599,76 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                                double pixelsPerSecond, bool &isLoadingOD)
 {
    int numPixels = display.width;
-   float *const min = display.min;
-   float *const max = display.max;
-   float *const rms = display.rms;
-   int *const bl = display.bl;
-   sampleCount *const where = display.where;
 
    ODLocker locker(mWaveCacheMutex);
 
-
    const bool match =
       mWaveCache &&
+      mWaveCache->len > 0 &&
       mWaveCache->dirty == mDirty &&
       mWaveCache->pps == pixelsPerSecond;
 
    if (match &&
        mWaveCache->start == t0 &&
        mWaveCache->len >= numPixels) {
-
       mWaveCache->LoadInvalidRegions(mSequence, true);
       mWaveCache->ClearInvalidRegions();
 
-
-      memcpy(min, mWaveCache->min, numPixels*sizeof(float));
-      memcpy(max, mWaveCache->max, numPixels*sizeof(float));
-      memcpy(rms, mWaveCache->rms, numPixels*sizeof(float));
-      memcpy(bl, mWaveCache->bl, numPixels*sizeof(int));
-      memcpy(where, mWaveCache->where, (numPixels+1)*sizeof(sampleCount));
-      isLoadingOD = mWaveCache->numODPixels>0;
+      // Satisfy the request completely from the cache
+      display.min = &mWaveCache->min[0];
+      display.max = &mWaveCache->max[0];
+      display.rms = &mWaveCache->rms[0];
+      display.bl = &mWaveCache->bl[0];
+      display.where = &mWaveCache->where[0];
+      isLoadingOD = mWaveCache->numODPixels > 0;
       return true;
    }
 
    std::auto_ptr<WaveCache> oldCache(mWaveCache);
    mWaveCache = 0;
 
-   double oldWhere0 = 0;
-   double denom = 0;
-   long oldX0 = 0, oldXLast = 0;
-   double correction = 0.0;
-   bool overlap = false;
    const double tstep = 1.0 / pixelsPerSecond;
    const double samplesPerPixel = mRate * tstep;
 
-   if (match &&
-       oldCache->len > 0) {
+   int oldX0 = 0;
+   double correction = 0.0;
+
+   int copyBegin = 0, copyEnd = 0;
+   if (match) {
       findCorrection(oldCache->where, oldCache->len, numPixels,
          t0, mRate, samplesPerPixel,
-         oldWhere0, denom, oldX0, oldXLast, correction, overlap);
+         oldX0, correction);
+      // Remember our first pixel maps to oldX0 in the old cache,
+      // possibly out of bounds.
+      // For what range of pixels can data be copied?
+      copyBegin = std::min(numPixels, std::max(0, -oldX0));
+      copyEnd = std::min(numPixels,
+         copyBegin + oldCache->len - std::max(0, oldX0)
+      );
    }
 
-   if (!overlap)
+   if (!(copyEnd > copyBegin))
       oldCache.reset(0);
 
-   mWaveCache = new WaveCache(numPixels);
-   mWaveCache->pps = pixelsPerSecond;
-   mWaveCache->rate = mRate;
-   mWaveCache->start = t0;
+   mWaveCache = new WaveCache(numPixels, pixelsPerSecond, mRate, t0);
+   float *const min = &mWaveCache->min[0];
+   float *const max = &mWaveCache->max[0];
+   float *const rms = &mWaveCache->rms[0];
+   int *const bl = &mWaveCache->bl[0];
+   std::vector<sampleCount> &where = mWaveCache->where;
 
-   fillWhere(mWaveCache->where, mWaveCache->len, 0.0, correction,
+   fillWhere(where, numPixels, 0.0, correction,
       t0, mRate, samplesPerPixel);
 
-   //mchinen: I think s0 - s1 represents the range of samples that we will need to look up.  likewise p0-p1 the number of pixels.
-   sampleCount s0 = mWaveCache->where[0];
-   sampleCount s1 = mWaveCache->where[mWaveCache->len];
-   int p0 = 0;
-   int p1 = mWaveCache->len;
+   // The range of pixels we must fetch from the Sequence:
+   const int p0 = (copyBegin > 0) ? 0 : copyEnd;
+   int p1 = (copyEnd >= numPixels) ? copyBegin : numPixels;
 
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
    // possible
-   if (match && overlap &&
-       denom >= 0.5 &&
-       oldX0 < oldCache->len &&
-       oldXLast > oldCache->start) {
 
-      //now we are assuming the entire range is covered by the old cache and reducing s1/s0 as we find out otherwise.
-      s0 = mWaveCache->where[mWaveCache->len];  //mchinen:s0 is the min sample covered up to by the wave cache.  will shrink if old doen't overlap
-      s1 = mWaveCache->where[0];  //mchinen - same, but the maximum sample covered.
-      p0 = mWaveCache->len;
-      p1 = 0;
+   if (oldCache.get()) {
 
       //TODO: only load inval regions if
       //necessary.  (usually is the case, so no rush.)
@@ -667,30 +676,14 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
       oldCache->LoadInvalidRegions(mSequence, false);
       oldCache->ClearInvalidRegions();
 
-      for (sampleCount x = 0; x < mWaveCache->len; x++)
-      {
-         //if we hit a cached column, load it up.
-         const double whereX = t0 * mRate + ((double)x) * samplesPerPixel;
-         const double oxd = (double(oldCache->len) * (whereX - oldWhere0)) / denom;
-         int ox = floor(0.5 + oxd);
-
-         //below is regular cache access.
-         if (ox >= 0 && ox < oldCache->len) {
-            mWaveCache->min[x] = oldCache->min[ox];
-            mWaveCache->max[x] = oldCache->max[ox];
-            mWaveCache->rms[x] = oldCache->rms[ox];
-            mWaveCache->bl[x] = oldCache->bl[ox];
-         } else {
-            if (mWaveCache->where[x] < s0) {
-               s0 = mWaveCache->where[x];
-               p0 = x;
-            }
-            if (mWaveCache->where[x + 1] > s1) {
-               s1 = mWaveCache->where[x + 1];
-               p1 = x + 1;
-            }
-         }
-      }
+      // Copy what we can from the old cache.
+      const int length = copyEnd - copyBegin;
+      const size_t sizeFloats = length * sizeof(float);
+      const int srcIdx = copyBegin + oldX0;
+      memcpy(&min[copyBegin], &oldCache->min[srcIdx], sizeFloats);
+      memcpy(&max[copyBegin], &oldCache->max[srcIdx], sizeFloats);
+      memcpy(&rms[copyBegin], &oldCache->rms[srcIdx], sizeFloats);
+      memcpy(&bl[copyBegin], &oldCache->bl[srcIdx], length * sizeof(int));
    }
 
    if (p1 > p0) {
@@ -699,9 +692,8 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
       int numSamples = mSequence->GetNumSamples();
       int a;
-
-      for(a=p0; a<p1; a++)
-         if (mWaveCache->where[a+1] > numSamples)
+      for(a = p0; a < p1; ++a)
+         if (where[a+1] > numSamples)
             break;
 
       //compute the values that are outside the overlap from scratch.
@@ -712,9 +704,9 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          bool didUpdate = false;
          for(i=a; i<p1; i++) {
             sampleCount left;
-            left = mWaveCache->where[i] - numSamples;
+            left = where[i] - numSamples;
             sampleCount right;
-            right = mWaveCache->where[i+1] - numSamples;
+            right = where[i+1] - numSamples;
 
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
 
@@ -737,22 +729,23 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                               (samplePtr)b, floatSample, len);
                }
 
-               float max = b[0];
-               float min = b[0];
-               float sumsq = b[0] * b[0];
-
+               float theMax, theMin, sumsq;
+               {
+                  const float val = b[0];
+                  theMax = theMin = val;
+                  sumsq = val * val;
+               }
                for(j=1; j<len; j++) {
-                  if (b[j] > max)
-                     max = b[j];
-                  if (b[j] < min)
-                     min = b[j];
-                  sumsq += b[j]*b[j];
+                  const float val = b[j];
+                  theMax = std::max(theMax, val);
+                  theMin = std::min(theMin, val);
+                  sumsq += val * val;
                }
 
-               mWaveCache->min[i] = min;
-               mWaveCache->max[i] = max;
-               mWaveCache->rms[i] = (float)sqrt(sumsq / len);
-               mWaveCache->bl[i] = 1; //for now just fake it.
+               min[i] = theMin;
+               max[i] = theMax;
+               rms[i] = (float)sqrt(sumsq / len);
+               bl[i] = 1; //for now just fake it.
 
                if (seqFormat != floatSample)
                   delete[] b;
@@ -761,20 +754,18 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
             }
          }
 
-         // So that the sequence doesn't try to write any
-         // of these values
-         //mchinen: but only do this if we've updated pixels in the cache.
+         // Shrink the right end of the range to fetch from Sequence
          if(didUpdate)
             p1 = a;
       }
 
       if (p1 > p0) {
-         if (!mSequence->GetWaveDisplay(&mWaveCache->min[p0],
-                                        &mWaveCache->max[p0],
-                                        &mWaveCache->rms[p0],
-                                        &mWaveCache->bl[p0],
+         if (!mSequence->GetWaveDisplay(&min[p0],
+                                        &max[p0],
+                                        &rms[p0],
+                                        &bl[p0],
                                         p1-p0,
-                                        &mWaveCache->where[p0]))
+                                        &where[p0]))
          {
             isLoadingOD=false;
             return false;
@@ -784,30 +775,27 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 
    mWaveCache->dirty = mDirty;
 
-   memcpy(min, mWaveCache->min, numPixels*sizeof(float));
-   memcpy(max, mWaveCache->max, numPixels*sizeof(float));
-   memcpy(rms, mWaveCache->rms, numPixels*sizeof(float));
-   memcpy(bl, mWaveCache->bl, numPixels*sizeof(int));
-   memcpy(where, mWaveCache->where, (numPixels+1)*sizeof(sampleCount));
-
-   //find the number of OD pixels - the only way to do this is by recounting since we've lost some old cache.
-   mWaveCache->numODPixels = 0;
-   for(int j=0;j<mWaveCache->len;j++)
-      if(mWaveCache->bl[j]<0)
-         mWaveCache->numODPixels++;
-
-   isLoadingOD = mWaveCache->numODPixels>0;
+   // Now report the results
+   display.min = min;
+   display.max = max;
+   display.rms = rms;
+   display.bl = bl;
+   display.where = &where[0];
+   isLoadingOD = mWaveCache->numODPixels > 0;
    return true;
 }
 
-void WaveClip::ComputeSpectrogramGainFactors(int fftLen, int frequencyGain, std::vector<float> &gainFactors)
+namespace {
+
+void ComputeSpectrogramGainFactors
+   (int fftLen, double rate, int frequencyGain, std::vector<float> &gainFactors)
 {
    if (frequencyGain > 0) {
       // Compute a frequency-dependent gain factor
       // scaled such that 1000 Hz gets a gain of 0dB
 
       // This is the reciprocal of the bin number of 1000 Hz:
-      const double factor = ((double)mRate / (double)fftLen) / 1000.0;
+      const double factor = ((double)rate / (double)fftLen) / 1000.0;
 
       const int half = fftLen / 2;
       gainFactors.reserve(half);
@@ -819,8 +807,187 @@ void WaveClip::ComputeSpectrogramGainFactors(int fftLen, int frequencyGain, std:
    }
 }
 
+}
+
+bool SpecCache::Matches
+   (int dirty_, bool autocorrelation, double pixelsPerSecond,
+    const SpectrogramSettings &settings) const
+{
+   return
+      dirty == dirty_ &&
+      windowType == settings.windowType &&
+      windowSize == settings.windowSize &&
+      zeroPaddingFactor == settings.zeroPaddingFactor &&
+      frequencyGain == settings.frequencyGain &&
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+      fftSkipPoints == settings.fftSkipPoints &&
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+      ac == autocorrelation &&
+      pps == pixelsPerSecond;
+}
+
+void SpecCache::CalculateOneSpectrum
+   (const SpectrogramSettings &settings,
+    WaveTrackCache &waveTrackCache,
+    int xx, sampleCount numSamples,
+    double offset, double rate,
+    bool autocorrelation, const std::vector<float> &gainFactors,
+    float *scratch)
+{
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+   int fftSkipPoints = settings.fftSkipPoints;
+   int fftSkipPoints1 = fftSkipPoints + 1;
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+
+   const int windowSize = settings.windowSize;
+   sampleCount start = where[xx];
+   const int zeroPaddingFactor = (autocorrelation ? 1 : settings.zeroPaddingFactor);
+   const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
+   const int fftLen = windowSize * zeroPaddingFactor;
+   const int half = fftLen / 2;
+   float *const results = &freq[half * xx];
+
+   sampleCount len = windowSize;
+
+   if (start <= 0 || start >= numSamples) {
+      std::fill(results, results + half, 0.0f);
+   }
+   else {
+      bool copy = !autocorrelation || (padding > 0);
+      float *useBuffer = 0;
+      float *adj = scratch + padding;
+      start -= windowSize >> 1;
+      if (start < 0) {
+         for (sampleCount ii = start; ii < 0; ++ii)
+            *adj++ = 0;
+         len += start;
+         start = 0;
+         copy = true;
+      }
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+      copy = true;
+      if (start + len*fftSkipPoints1 > numSamples) {
+         int newlen = (numSamples - start) / fftSkipPoints1;
+         for (int i = newlen*fftSkipPoints1; i < (sampleCount)len*fftSkipPoints1; i++)
+            adj[i] = 0;
+         len = newlen;
+      }
+#else //!EXPERIMENTAL_FFT_SKIP_POINTS
+      if (start + len > numSamples) {
+         int newlen = numSamples - start;
+         for (sampleCount ii = newlen; ii < (sampleCount)len; ++ii)
+            adj[ii] = 0;
+         len = newlen;
+         copy = true;
+      }
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+
+      if (len > 0) {
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+         useBuffer = (float*)(waveTrackCache.Get(floatSample,
+                            floor(0.5 + start + offset * rate), len*fftSkipPoints1));
+         memcpy(adj, useBuffer, len * fftSkipPoints1 * sizeof(float));
+         if (fftSkipPoints) {
+            // TODO: (maybe) alternatively change Get to include skipping of points
+            int j = 0;
+            for (int i = 0; i < len; i++) {
+               adj[i] = adj[j];
+               j += fftSkipPoints1;
+            }
+         }
+#else //!EXPERIMENTAL_FFT_SKIP_POINTS
+         useBuffer = (float*)(waveTrackCache.Get(floatSample,
+                             floor(0.5 + start + offset * rate), len));
+         if (copy)
+            memcpy(adj, useBuffer, len * sizeof(float));
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+      }
+
+      if (copy)
+         useBuffer = scratch;
+
+#ifdef EXPERIMENTAL_USE_REALFFTF
+      if (autocorrelation)
+         ComputeSpectrum(useBuffer, windowSize, windowSize,
+            rate, results,
+            autocorrelation, settings.windowType);
+      else
+         ComputeSpectrumUsingRealFFTf
+            (useBuffer, settings.hFFT, settings.window, fftLen, results);
+#else  // EXPERIMENTAL_USE_REALFFTF
+      ComputeSpectrum(buffer, windowSize, windowSize,
+         rate, results,
+         autocorrelation, settings.windowType);
+#endif // EXPERIMENTAL_USE_REALFFTF
+      if (!gainFactors.empty()) {
+         // Apply a frequency-dependant gain factor
+         for (int ii = 0; ii < half; ++ii)
+            results[ii] += gainFactors[ii];
+      }
+   }
+}
+
+void SpecCache::Populate
+   (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
+    int copyBegin, int copyEnd, int numPixels,
+    sampleCount numSamples,
+    double offset, double rate,
+    bool autocorrelation)
+{
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   settings.CacheWindows();
+#endif
+
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+   int fftSkipPoints = settings.fftSkipPoints;
+   int fftSkipPoints1 = fftSkipPoints + 1;
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+
+   const int &frequencyGain = settings.frequencyGain;
+   const int &windowSize = settings.windowSize;
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   const int &zeroPaddingFactor = autocorrelation ? 1 : settings.zeroPaddingFactor;
+#else
+   const int zeroPaddingFactor = 1;
+#endif
+
+   // FFT length may be longer than the window of samples that affect results
+   // because of zero padding done for increased frequency resolution
+   const int fftLen = windowSize * zeroPaddingFactor;
+   const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
+
+   std::vector<float> buffer(
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+      fftLen*fftSkipPoints1
+#else //!EXPERIMENTAL_FFT_SKIP_POINTS
+      fftLen
+#endif //EXPERIMENTAL_FFT_SKIP_POINTS
+   );
+
+   // Initialize zero padding in the buffer
+   for (int ii = 0; ii < padding; ++ii) {
+      buffer[ii] = 0.0;
+      buffer[fftLen - ii - 1] = 0.0;
+   }
+
+   std::vector<float> gainFactors;
+   ComputeSpectrogramGainFactors(fftLen, rate, frequencyGain, gainFactors);
+
+   // Loop over the ranges before and after the copied portion and compute anew.
+   // One of the ranges may be empty.
+   for (sampleCount xx = 0; xx < copyBegin; ++xx)
+      CalculateOneSpectrum(
+         settings, waveTrackCache, xx, numSamples,
+         offset, rate, autocorrelation, gainFactors, &buffer[0]);
+
+   for (sampleCount xx = copyEnd; xx < numPixels; ++xx)
+      CalculateOneSpectrum(
+         settings, waveTrackCache, xx, numSamples,
+         offset, rate, autocorrelation, gainFactors, &buffer[0]);
+}
+
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
-                              float *freq, sampleCount *where,
+                              const float *& spectrogram, const sampleCount *& where,
                               int numPixels,
                               double t0, double pixelsPerSecond,
                               bool autocorrelation)
@@ -829,7 +996,6 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
    int fftSkipPoints = settings.fftSkipPoints;
-   int fftSkipPoints1 = fftSkipPoints + 1;
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
 
    const int &frequencyGain = settings.frequencyGain;
@@ -840,64 +1006,49 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 #else
    const int zeroPaddingFactor = 1;
 #endif
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   settings.CacheWindows();
-   const HFFT &hFFT = settings.hFFT;
-   const float *const &window = settings.window;
-#endif
 
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
    const int fftLen = windowSize * zeroPaddingFactor;
    const int half = fftLen / 2;
-   const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
 
    const bool match =
       mSpecCache &&
-      mSpecCache->dirty == mDirty &&
-      mSpecCache->windowType == windowType &&
-      mSpecCache->windowSize == windowSize &&
-      mSpecCache->zeroPaddingFactor == zeroPaddingFactor &&
-      mSpecCache->frequencyGain == frequencyGain &&
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-      mSpecCache->fftSkipPoints == fftSkipPoints &&
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-      mSpecCache->ac == autocorrelation &&
-      mSpecCache->pps == pixelsPerSecond;
+      mSpecCache->len > 0 &&
+      mSpecCache->Matches(mDirty, autocorrelation, pixelsPerSecond, settings);
 
    if (match &&
        mSpecCache->start == t0 &&
        mSpecCache->len >= numPixels) {
-      memcpy(freq, mSpecCache->freq, numPixels*half*sizeof(float));
-      memcpy(where, mSpecCache->where, (numPixels+1)*sizeof(sampleCount));
+      spectrogram = &mSpecCache->freq[0];
+      where = &mSpecCache->where[0];
       return false;  //hit cache completely
    }
 
    std::auto_ptr<SpecCache> oldCache(mSpecCache);
    mSpecCache = 0;
 
-   bool *recalc = new bool[numPixels + 1];
-   std::fill(&recalc[0], &recalc[numPixels + 1], true);
-
    const double tstep = 1.0 / pixelsPerSecond;
    const double samplesPerPixel = mRate * tstep;
 
-   // To do:  eliminate duplicate logic with the wave clip code for cache
-   // reuse and finding corrections
-   double oldWhere0 = 0;
-   double denom = 0;
-   long oldX0 = 0, oldXLast = 0;
+   int oldX0 = 0;
    double correction = 0.0;
-   bool overlap = false;
 
-   if (match &&
-       oldCache->len > 0) {
+   int copyBegin = 0, copyEnd = 0;
+   if (match) {
       findCorrection(oldCache->where, oldCache->len, numPixels,
          t0, mRate, samplesPerPixel,
-         oldWhere0, denom, oldX0, oldXLast, correction, overlap);
+         oldX0, correction);
+      // Remember our first pixel maps to oldX0 in the old cache,
+      // possibly out of bounds.
+      // For what range of pixels can data be copied?
+      copyBegin = std::min(numPixels, std::max(0, -oldX0));
+      copyEnd = std::min(numPixels,
+         copyBegin + oldCache->len - std::max(0, oldX0)
+      );
    }
 
-   if (!overlap)
+   if (!(copyEnd > copyBegin))
       oldCache.reset(0);
 
    mSpecCache = new SpecCache(
@@ -908,144 +1059,25 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 #endif
    );
 
-   fillWhere(mSpecCache->where, mSpecCache->len, 0.5, correction,
+   fillWhere(mSpecCache->where, numPixels, 0.5, correction,
       t0, mRate, samplesPerPixel);
 
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
    // possible
-   if (match && overlap &&
-       denom >= 0.5 &&
-       oldX0 < oldCache->len &&
-       oldXLast > oldCache->start) {
-      for (sampleCount x = 0; x < mSpecCache->len; x++) {
-         //if we hit a cached column, load it up.
-         const double whereX = t0 * mRate + ((double)x) * samplesPerPixel;
-         const double oxd = (double(oldCache->len) * (whereX - oldWhere0)) / denom;
-         int ox = floor(0.5 + oxd);
-
-         //below is regular cache access.
-         if (ox >= 0 && ox < oldCache->len) {
-            if (mSpecCache->where[x] >= oldCache->where[0] &&
-                mSpecCache->where[x] <= oldCache->where[oldCache->len]) {
-               for (sampleCount i = 0; i < (sampleCount)half; i++)
-                  mSpecCache->freq[half * x + i] = oldCache->freq[half * ox + i];
-               recalc[x] = false;
-            }
-         }
-      }
+   if (oldCache.get()) {
+      memcpy(&mSpecCache->freq[half * copyBegin],
+         &oldCache->freq[half * (copyBegin + oldX0)],
+         half * (copyEnd - copyBegin) * sizeof(float));
    }
 
-   float *useBuffer = 0;
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   float *buffer = new float[fftLen*fftSkipPoints1];
-#else //!EXPERIMENTAL_FFT_SKIP_POINTS
-   float *buffer = new float[fftLen];
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-   // Initialize zero padding in the buffer
-   for (int ii = 0; ii < padding; ++ii) {
-      buffer[ii] = 0.0;
-      buffer[fftLen - ii - 1] = 0.0;
-   }
-
-   std::vector<float> gainFactors;
-   ComputeSpectrogramGainFactors(fftLen, frequencyGain, gainFactors);
-
-   for (sampleCount x = 0; x < mSpecCache->len; x++)
-      if (recalc[x]) {
-
-         sampleCount start = mSpecCache->where[x];
-         sampleCount len = windowSize;
-         sampleCount i;
-
-         if (start <= 0 || start >= mSequence->GetNumSamples()) {
-
-            for (i = 0; i < (sampleCount)half; i++)
-               mSpecCache->freq[half * x + i] = 0;
-
-         }
-         else {
-            bool copy = !autocorrelation || (padding > 0);
-            float *adj = buffer + padding;
-            start -= windowSize >> 1;
-
-            if (start < 0) {
-               for (i = start; i < 0; i++)
-                  *adj++ = 0;
-               len += start;
-               start = 0;
-               copy = true;
-            }
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-            copy = true;
-            if (start + len*fftSkipPoints1 > mSequence->GetNumSamples()) {
-               int newlen = (mSequence->GetNumSamples() - start)/fftSkipPoints1;
-               for (i = newlen*fftSkipPoints1; i < (sampleCount)len*fftSkipPoints1; i++)
-                  adj[i] = 0;
-               len = newlen;
-            }
-#else //!EXPERIMENTAL_FFT_SKIP_POINTS
-            if (start + len > mSequence->GetNumSamples()) {
-               int newlen = mSequence->GetNumSamples() - start;
-               for (i = newlen; i < (sampleCount)len; i++)
-                  adj[i] = 0;
-               len = newlen;
-               copy = true;
-            }
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-
-            if (len > 0) {
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-               useBuffer = (float*)(waveTrackCache.Get(floatSample,
-                                  floor(0.5 + start + mOffset * mRate),
-                                  len * fftSkipPoints1));
-               memmove(adj, useBuffer, len * fftSkipPoints1 * sizeof(float));
-               if (fftSkipPoints) {
-                  // TODO: (maybe) alternatively change Get to include skipping of points
-                  int j=0;
-                  for (int i=0; i < len; i++) {
-                     adj[i]=adj[j];
-                     j+=fftSkipPoints1;
-                  }
-               }
-#else //!EXPERIMENTAL_FFT_SKIP_POINTS
-               useBuffer = (float*)(waveTrackCache.Get(floatSample,
-                                  floor(0.5 + start + mOffset * mRate), len));
-               if (copy)
-                  memmove(adj, useBuffer, len * sizeof(float));
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-            }
-
-            if (copy)
-               useBuffer = buffer;
-
-#ifdef EXPERIMENTAL_USE_REALFFTF
-            if(autocorrelation) {
-               ComputeSpectrum(useBuffer, windowSize, windowSize,
-                               mRate, &mSpecCache->freq[half * x],
-                               autocorrelation, windowType);
-            } else {
-               ComputeSpectrumUsingRealFFTf(useBuffer, hFFT, window, fftLen, &mSpecCache->freq[half * x]);
-            }
-#else  // EXPERIMENTAL_USE_REALFFTF
-           ComputeSpectrum(buffer, windowSize, windowSize,
-                           mRate, &mSpecCache->freq[half * x],
-                           autocorrelation, windowType);
-#endif // EXPERIMENTAL_USE_REALFFTF
-           if (!gainFactors.empty()) {
-              // Apply a frequency-dependent gain factor
-              for(i=0; i<half; i++)
-                 mSpecCache->freq[half * x + i] += gainFactors[i];
-           }
-         }
-      }
-
-   delete[]buffer;
-   delete[]recalc;
+   mSpecCache->Populate
+      (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
+       mSequence->GetNumSamples(), mOffset, mRate, autocorrelation);
 
    mSpecCache->dirty = mDirty;
-   memcpy(freq, mSpecCache->freq, numPixels*half*sizeof(float));
-   memcpy(where, mSpecCache->where, (numPixels+1)*sizeof(sampleCount));
+   spectrogram = &mSpecCache->freq[0];
+   where = &mSpecCache->where[0];
    return true;
 }
 
@@ -1695,7 +1727,7 @@ bool WaveClip::Resample(int rate, ProgressDialog *progress)
          delete mWaveCache;
          mWaveCache = NULL;
       }
-      mWaveCache = new WaveCache(0);
+      mWaveCache = new WaveCache();
       // Invalidate the spectrum display cache
       if (mSpecCache)
          delete mSpecCache;
