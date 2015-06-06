@@ -516,7 +516,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /*i18n-hint: The dialog shows a list of plugins with check-boxes 
        beside each one.*/
-      S.StartStatic(_("Effects"), true);
+//      S.StartStatic(_("Effects"), true);
+      S.StartVerticalLay();
       {
          S.StartHorizontalLay(wxEXPAND, 0);
          {
@@ -584,7 +585,8 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          }
          S.EndHorizontalLay();
       }
-      S.EndStatic();
+//      S.EndStatic();
+      S.EndVerticalLay();
 
       S.AddStandardButtons(eOkButton | eCancelButton);
    }
@@ -742,7 +744,7 @@ void PluginRegistrationDialog::RegenerateEffectsList(int filter)
    if (mEffects->GetItemCount() > 0)
    {
       // Make sure first item is selected/focused.
-      mEffects->SetFocus();
+//      mEffects->SetFocus();
       mEffects->SetItemState(0, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
 #if wxUSE_ACCESSIBILITY
       mAx->SetSelected(0);
