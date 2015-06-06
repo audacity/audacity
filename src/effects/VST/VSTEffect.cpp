@@ -1635,9 +1635,9 @@ wxString VSTEffect::GetDescription()
    // VST does have a product string opcode and sum effects return a short
    // description, but most do not or they just return the name again.  So,
    // try to provide some sort of useful information.
-   mDescription = _("Audio In: ") +
+   mDescription = XO("Audio In: ") +
                   wxString::Format(wxT("%d"), mAudioIns) +
-                  _(", Audio Out: ") +
+                  XO(", Audio Out: ") +
                   wxString::Format(wxT("%d"), mAudioOuts);
 
    return mDescription;

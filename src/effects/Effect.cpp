@@ -195,7 +195,7 @@ wxString Effect::GetVendor()
       return mClient->GetVendor();
    }
 
-   return _("Audacity");
+   return XO("Audacity");
 }
 
 wxString Effect::GetVersion()
@@ -225,7 +225,7 @@ wxString Effect::GetFamily()
       return mClient->GetFamily();
    }
 
-   return _("Audacity");
+   return XO("Audacity");
 }
 
 bool Effect::IsInteractive()
