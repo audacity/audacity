@@ -473,14 +473,14 @@ END_EVENT_TABLE()
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType type)
 :  wxDialog(parent,
             wxID_ANY,
-            _("Plugin Manager: Effects"),
+            _("Plug-in Manager: Effects"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    mType = type;
    mEffects = NULL;
-   SetLabel(_("Plugin Manager: Effects"));         // Provide visual label
-   SetName(_("Plugin Manager: Effects"));          // Provide audible label
+   SetLabel(_("Plug-in Manager: Effects"));         // Provide visual label
+   SetName(_("Plug-in Manager: Effects"));          // Provide audible label
 
    mStates.SetCount(STATE_COUNT);
    mStates[STATE_Enabled] = _("Enabled");
