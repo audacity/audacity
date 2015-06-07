@@ -850,14 +850,18 @@ void SpecCache::CalculateOneSpectrum
    sampleCount len = windowSize;
 
    if (start <= 0 || start >= numSamples) {
+      // Pixel column is out of bounds of the clip!  Should not happen.
       std::fill(results, results + half, 0.0f);
    }
    else {
       bool copy = !autocorrelation || (padding > 0);
       float *useBuffer = 0;
       float *adj = scratch + padding;
+
+      // Take a window of the track centered at this sample.
       start -= windowSize >> 1;
       if (start < 0) {
+         // Near the start of the clip, pad left with zeroes as needed.
          for (sampleCount ii = start; ii < 0; ++ii)
             *adj++ = 0;
          len += start;
@@ -874,6 +878,7 @@ void SpecCache::CalculateOneSpectrum
       }
 #else //!EXPERIMENTAL_FFT_SKIP_POINTS
       if (start + len > numSamples) {
+         // Near the end of the clip, pad right with zeroes as needed.
          int newlen = numSamples - start;
          for (sampleCount ii = newlen; ii < (sampleCount)len; ++ii)
             adj[ii] = 0;
@@ -883,6 +888,7 @@ void SpecCache::CalculateOneSpectrum
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
 
       if (len > 0) {
+         // Copy samples out of the track.
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
          useBuffer = (float*)(waveTrackCache.Get(floatSample,
                             floor(0.5 + start + offset * rate), len*fftSkipPoints1));
@@ -912,6 +918,10 @@ void SpecCache::CalculateOneSpectrum
             rate, results,
             autocorrelation, settings.windowType);
       else
+         // Do the FFT.  Note that scratch is multiplied by the window,
+         // and the window is initialized with leading and trailing zeroes
+         // when there is padding.  Therefore we did not need to reinitialize
+         // the part of scratch in the padding zones.
          ComputeSpectrumUsingRealFFTf
             (useBuffer, settings.hFFT, settings.window, fftLen, results);
 #else  // EXPERIMENTAL_USE_REALFFTF
@@ -964,26 +974,19 @@ void SpecCache::Populate
 #endif //EXPERIMENTAL_FFT_SKIP_POINTS
    );
 
-   // Initialize zero padding in the buffer
-   for (int ii = 0; ii < padding; ++ii) {
-      buffer[ii] = 0.0;
-      buffer[fftLen - ii - 1] = 0.0;
-   }
-
    std::vector<float> gainFactors;
    ComputeSpectrogramGainFactors(fftLen, rate, frequencyGain, gainFactors);
 
    // Loop over the ranges before and after the copied portion and compute anew.
    // One of the ranges may be empty.
-   for (sampleCount xx = 0; xx < copyBegin; ++xx)
-      CalculateOneSpectrum(
+   for (int jj = 0; jj < 2; ++jj) {
+      const int lowerBoundX = jj == 0 ? 0 : copyEnd;
+      const int upperBoundX = jj == 0 ? copyBegin : numPixels;
+      for (sampleCount xx = lowerBoundX; xx < upperBoundX; ++xx)
+         CalculateOneSpectrum(
          settings, waveTrackCache, xx, numSamples,
          offset, rate, autocorrelation, gainFactors, &buffer[0]);
-
-   for (sampleCount xx = copyEnd; xx < numPixels; ++xx)
-      CalculateOneSpectrum(
-         settings, waveTrackCache, xx, numSamples,
-         offset, rate, autocorrelation, gainFactors, &buffer[0]);
+   }
 }
 
 bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
