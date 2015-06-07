@@ -971,36 +971,24 @@ wxLanguageInfo userLangs[] =
 
 void AudacityApp::InitLang( const wxString & lang )
 {
-   if( mLocale )
+   if (mLocale)
       delete mLocale;
-
-   wxString canon = lang;
 
 #if defined(__WXMAC__)
    // This should be reviewed again during the wx3 conversion.
-
-   // On OSX, the eventual call to setlocale() will fail to completely
-   // set the locale causing printf() and kin to still use the period
-   // as the decimal separator when the locale specifies something
-   // else.
-   const wxLanguageInfo *info = wxLocale::FindLanguageInfo(lang);
-   if (info) {
-      canon = info->CanonicalName;
-   }
 
    // On OSX, if the LANG environment variable isn't set when
    // using a language like Japanese, an assertion will trigger
    // because conversion to Japanese from "?" doesn't return a
    // valid length, so make OSX happy by defining/overriding
-   // the LANG environment variable with what the user has
-   // chosen.
-   wxSetEnv(wxT("LANG"), canon);
+   // the LANG environment variable with U.S. English for now.
+   wxSetEnv(wxT("LANG"), wxT("en_US.UTF-8"));
 #endif
 
 #if wxCHECK_VERSION(3,0,0)
-   mLocale = new wxLocale(wxT(""), canon, wxT(""), true);
+   mLocale = new wxLocale(wxT(""), lang, wxT(""), true);
 #else
-   mLocale = new wxLocale(wxT(""), canon, wxT(""), true, true);
+   mLocale = new wxLocale(wxT(""), lang, wxT(""), true, true);
 #endif
 
    for(unsigned int i=0; i<audacityPathList.GetCount(); i++)

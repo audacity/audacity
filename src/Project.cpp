@@ -4730,7 +4730,7 @@ void AudacityProject::AutoSave()
    wxString projName;
 
    if (mFileName.IsEmpty())
-      projName = _("New Project");
+      projName = wxT("New Project");
    else
       projName = wxFileName(mFileName).GetName();
 

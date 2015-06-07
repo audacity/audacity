@@ -129,17 +129,17 @@
    EFFECT( WAHWAH,            EffectWahwah() )           \
    EFFECT( FINDCLIPPING,      EffectFindClipping() )     \
    NOISEREDUCTION_EFFECT                                 \
-   SOUNDTOUCH_EFFECTS
+   SOUNDTOUCH_EFFECTS                                    \
+   EFFECT( AUTODUCK,          EffectAutoDuck() )         \
+   EFFECT( LEVELLER,          EffectLeveller() )         \
+   EFFECT( PAULSTRETCH,       EffectPaulstretch() )      \
+   SBSMS_EFFECTS
 
 //
 // Define the list of effects that do not get autoregistered
 //
 #define EXCLUDE_LIST \
-   EFFECT( AUTODUCK,          EffectAutoDuck() )         \
-   EFFECT( LEVELLER,          EffectLeveller() )         \
-   EFFECT( PAULSTRETCH,       EffectPaulstretch() )      \
-   CLASSICFILTER_EFFECT                                  \
-   SBSMS_EFFECTS
+   CLASSICFILTER_EFFECT
 
 //
 // Define the EFFECT() macro to generate enum names

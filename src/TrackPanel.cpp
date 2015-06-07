@@ -1950,8 +1950,11 @@ void TrackPanel::SetCursorAndTipWhenSelectTool( Track * t,
 
    // If not shift-down and not snapping center, then
    // choose boundaries only in snapping tolerance,
-   // and may choose center
-   SelectionBoundary boundary = ChooseBoundary(event, t, r, !bShiftDown, !bShiftDown);
+   // and may choose center.
+   // But don't change the cursor when scrubbing.
+   SelectionBoundary boundary = IsScrubbing()
+      ? SBNone
+      : ChooseBoundary(event, t, r, !bShiftDown, !bShiftDown);
 
 #ifdef USE_MIDI
    // The MIDI HitTest will only succeed if we are on a midi track, so 

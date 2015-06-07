@@ -52,6 +52,7 @@ public:
    // Effect implementation
 
    virtual bool Startup();
+   virtual bool Init();
    virtual void PopulateOrExchange(ShuttleGui & S);
    virtual bool TransferDataFromWindow();
    virtual bool TransferDataToWindow();

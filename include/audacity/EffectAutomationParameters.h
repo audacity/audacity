@@ -42,6 +42,8 @@
 #ifndef __AUDACITY_EFFECTAUTOMATIONPARAMETERS_H__
 #define __AUDACITY_EFFECTAUTOMATIONPARAMETERS_H__
 
+#include <locale.h>
+
 #include <wx/cmdline.h>
 #include <wx/fileconf.h>
 #include <wx/intl.h>
@@ -88,7 +90,8 @@ public:
       wxString str;
       if (Read(key, &str))
       {
-         wxString dec = wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER);
+         struct lconv *info = localeconv();
+         wxString dec = info ? wxString::FromUTF8(info->decimal_point) : wxT(".");
 
          str.Replace(wxT(","), dec);
          str.Replace(wxT("."), dec);
