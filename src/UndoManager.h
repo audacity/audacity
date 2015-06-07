@@ -64,7 +64,9 @@ struct UndoStackElem {
 };
 
 WX_DEFINE_USER_EXPORTED_ARRAY(UndoStackElem *, UndoStack, class AUDACITY_DLL_API);
-WX_DEFINE_USER_EXPORTED_ARRAY_SIZE_T(size_t, SpaceArray, class AUDACITY_DLL_API);
+// wxWidgets arrays have a base size and to use wxLongLong_t we need to use DOUBLE
+// to ensure we get a size big enough to hold a wxLongLong_t.
+WX_DEFINE_USER_EXPORTED_ARRAY_DOUBLE(wxLongLong_t, SpaceArray, class AUDACITY_DLL_API);
 
 // These flags control what extra to do on a PushState
 // Default is PUSH_AUTOSAVE
@@ -91,7 +93,7 @@ class AUDACITY_DLL_API UndoManager {
    unsigned int GetCurrentState();
 
    void GetShortDescription(unsigned int n, wxString *desc);
-   void GetLongDescription(unsigned int n, wxString *desc, wxString *size);
+   wxLongLong_t GetLongDescription(unsigned int n, wxString *desc, wxString *size);
    void SetLongDescription(unsigned int n, wxString desc);
 
    TrackList *SetStateTo(unsigned int n, SelectedRegion *selectedRegion);

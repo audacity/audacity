@@ -383,7 +383,7 @@ XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
 //
 // It is not intended that the user view or modify the file.
 //
-// It IS intended that as little work be done during auto save, so numbers
+// It IS intended that very little work be done during auto save, so numbers
 // and strings are written in their native format.  They will be converted
 // during recovery.
 //
@@ -393,8 +393,8 @@ XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
 //    name dictionary   dictionary of all names used in the document
 //    data fields       the "encoded" XML document
 //
-// If a subtree is added, it will be preceeded with FT_Push tell the decoder
-// to preserve the active dictionary.  The decoder when then restore the
+// If a subtree is added, it will be preceeded with FT_Push to tell the decoder
+// to preserve the active dictionary.  The decoder will then restore the
 // dictionary when an FT_Pop is encountered.  Nesting is unlimited.
 //
 // To save space, each name (attribute or element) encountered is stored in
@@ -402,7 +402,7 @@ XMLTagHandler* RecordingRecoveryHandler::HandleXMLChild(const wxChar *tag)
 //
 // All strings are in native unicode format, 2-byte or 4-byte.
 //
-// All "lengths" are 2-byte signed, so are limited to 32767 bytes long/
+// All "lengths" are 2-byte signed, so are limited to 32767 bytes long.
 
 enum FieldTypes
 {

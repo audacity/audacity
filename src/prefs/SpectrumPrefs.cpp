@@ -15,6 +15,7 @@
 *//*******************************************************************/
 
 #include "../Audacity.h"
+#include "SpectrumPrefs.h"
 
 #include <wx/defs.h>
 #include <wx/intl.h>
@@ -23,20 +24,29 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
-#include "SpectrumPrefs.h"
 #include "../FFT.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Spectrograms"))
 {
-   Populate();
+   int windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+   Populate(windowSize);
 }
 
 SpectrumPrefs::~SpectrumPrefs()
 {
 }
 
-void SpectrumPrefs::Populate()
+enum { maxWindowSize = 32768 };
+
+enum {
+   ID_WINDOW_SIZE = 10001,
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   ID_PADDING_SIZE = 10002,
+#endif
+};
+
+void SpectrumPrefs::Populate(int windowSize)
 {
    mSizeChoices.Add(_("8 - most wideband"));
    mSizeChoices.Add(wxT("16"));
@@ -52,9 +62,13 @@ void SpectrumPrefs::Populate()
    mSizeChoices.Add(wxT("16384"));
    mSizeChoices.Add(_("32768 - most narrowband"));
 
+   int lastCode = 0;
    for (size_t i = 0; i < mSizeChoices.GetCount(); i++) {
-      mSizeCodes.Add(1 << (i + 3));
+      mSizeCodes.Add(lastCode = 1 << (i + 3));
    }
+   wxASSERT(lastCode == maxWindowSize);
+
+   PopulatePaddingChoices(windowSize);
 
    for (int i = 0; i < NumWindowFuncs(); i++) {
       mTypeChoices.Add(WindowFuncName(i));
@@ -71,6 +85,48 @@ void SpectrumPrefs::Populate()
    // ----------------------- End of main section --------------
 }
 
+void SpectrumPrefs::PopulatePaddingChoices(int windowSize)
+{
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   mZeroPaddingChoice = 1;
+
+   // The choice of window size restricts the choice of padding.
+   // So the padding menu might grow or shrink.
+
+   // If pPaddingSizeControl is NULL, we have not yet tied the choice control.
+   // If it is not NULL, we rebuild the control by hand.
+   // I don't yet know an easier way to do this with ShuttleGUI functions.
+   // PRL
+   wxChoice *const pPaddingSizeControl =
+      static_cast<wxChoice*>(wxWindow::FindWindowById(ID_PADDING_SIZE, this));
+
+   if (pPaddingSizeControl) {
+      mZeroPaddingChoice = pPaddingSizeControl->GetSelection();
+      pPaddingSizeControl->Clear();
+   }
+
+   mZeroPaddingCodes.Clear();
+
+   int padding = 1;
+   int numChoices = 0;
+   while (windowSize <= maxWindowSize) {
+      const wxString numeral = wxString::Format(wxT("%d"), padding);
+      mZeroPaddingChoices.Add(numeral);
+      mZeroPaddingCodes.Add(padding);
+      if (pPaddingSizeControl)
+         pPaddingSizeControl->Append(numeral);
+      windowSize <<= 1;
+      padding <<= 1;
+      ++numChoices;
+   }
+
+   mZeroPaddingChoice = std::min(mZeroPaddingChoice, numChoices - 1);
+
+   if (pPaddingSizeControl)
+      pPaddingSizeControl->SetSelection(mZeroPaddingChoice);
+#endif
+}
+
 void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -79,7 +135,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-         S.TieChoice(_("Window &size:"),
+         S.Id(ID_WINDOW_SIZE).TieChoice(_("Window &size:"),
                      wxT("/Spectrum/FFTSize"),
                      256,
                      mSizeChoices,
@@ -92,6 +148,15 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                      mTypeChoices,
                      mTypeCodes);
          S.SetSizeHints(mTypeChoices);
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+         S.Id(ID_PADDING_SIZE).TieChoice(_("&Zero padding factor") + wxString(wxT(":")),
+                     wxT("/Spectrum/ZeroPaddingFactor"),
+                     mZeroPaddingChoice,
+                     mZeroPaddingChoices,
+                     mZeroPaddingCodes);
+         S.SetSizeHints(mZeroPaddingChoices);
+#endif
       }
       S.EndMultiColumn();
    }
@@ -287,5 +352,195 @@ bool SpectrumPrefs::Apply()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
+   SpectrogramSettings::defaults().UpdatePrefs();
+
    return true;
+}
+
+void SpectrumPrefs::OnWindowSize(wxCommandEvent &)
+{
+   wxChoice *const pWindowSizeControl =
+      static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
+   int windowSize = 1 << (pWindowSizeControl->GetSelection() + 3);
+   PopulatePaddingChoices(windowSize);
+}
+
+BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
+   EVT_CHOICE(ID_WINDOW_SIZE, SpectrumPrefs::OnWindowSize)
+END_EVENT_TABLE()
+
+SpectrogramSettings::SpectrogramSettings()
+: hFFT(0)
+, window(0)
+{
+   UpdatePrefs();
+}
+
+SpectrogramSettings& SpectrogramSettings::defaults()
+{
+   static SpectrogramSettings instance;
+   return instance;
+}
+
+void SpectrogramSettings::UpdatePrefs()
+{
+   bool destroy = false;
+
+   minFreq = gPrefs->Read(wxT("/Spectrum/MinFreq"), -1L);
+   maxFreq = gPrefs->Read(wxT("/Spectrum/MaxFreq"), 8000L);
+
+   // These preferences are not written anywhere in the program as of now,
+   // but I keep this legacy here.  Who knows, someone might edit prefs files
+   // directly.  PRL
+   logMaxFreq = gPrefs->Read(wxT("/SpectrumLog/MaxFreq"), -1);
+   if (logMaxFreq < 0)
+      logMaxFreq = maxFreq;
+   logMinFreq = gPrefs->Read(wxT("/SpectrumLog/MinFreq"), -1);
+   if (logMinFreq < 0)
+      logMinFreq = minFreq;
+   if (logMinFreq < 1)
+      logMinFreq = 1;
+
+   range = gPrefs->Read(wxT("/Spectrum/Range"), 80L);
+   gain = gPrefs->Read(wxT("/Spectrum/Gain"), 20L);
+   frequencyGain = gPrefs->Read(wxT("/Spectrum/FrequencyGain"), 0L);
+
+   const int newWindowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 256);
+   if (newWindowSize != windowSize) {
+      destroy = true;
+      windowSize = newWindowSize;
+   }
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   const int newZeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
+   if (newZeroPaddingFactor != zeroPaddingFactor) {
+      destroy = true;
+      zeroPaddingFactor = newZeroPaddingFactor;
+   }
+#endif
+
+   int newWindowType;
+   gPrefs->Read(wxT("/Spectrum/WindowType"), &newWindowType, 3);
+   if (newWindowType != windowType) {
+      destroy = true;
+      windowType = newWindowType;
+   }
+
+   isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
+
+#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
+   fftSkipPoints = gPrefs->Read(wxT("/Spectrum/FFTSkipPoints"), 0L);
+#endif
+
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   fftYGrid = (gPrefs->Read(wxT("/Spectrum/FFTYGrid"), 0L) != 0);
+#endif //EXPERIMENTAL_FFT_Y_GRID
+
+#ifdef EXPERIMENTAL_FIND_NOTES
+   fftFindNotes = (gPrefs->Read(wxT("/Spectrum/FFTFindNotes"), 0L) != 0);
+   findNotesMinA = gPrefs->Read(wxT("/Spectrum/FindNotesMinA"), -30.0);
+   numberOfMaxima = gPrefs->Read(wxT("/Spectrum/FindNotesN"), 5L);
+   findNotesQuantize = (gPrefs->Read(wxT("/Spectrum/FindNotesQuantize"), 0L) != 0);
+#endif //EXPERIMENTAL_FIND_NOTES
+
+   if (destroy)
+      DestroyWindows();
+}
+
+SpectrogramSettings::~SpectrogramSettings()
+{
+   DestroyWindows();
+}
+
+void SpectrogramSettings::DestroyWindows()
+{
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   if (hFFT != NULL) {
+      EndFFT(hFFT);
+      hFFT = NULL;
+   }
+   if (window != NULL) {
+      delete[] window;
+      window = NULL;
+   }
+#endif
+}
+
+
+namespace
+{
+   enum { WINDOW, TWINDOW, DWINDOW };
+   void RecreateWindow(
+      float *&window, int which, int fftLen,
+      int padding, int windowType, int windowSize, double &scale)
+   {
+      if (window != NULL)
+         delete[] window;
+      // Create the requested window function
+      window = new float[fftLen];
+      int ii;
+
+      wxASSERT(windowSize % 2 == 0);
+      const int endOfWindow = padding + windowSize;
+      // Left and right padding
+      for (ii = 0; ii < padding; ++ii) {
+         window[ii] = 0.0;
+         window[fftLen - ii - 1] = 0.0;
+      }
+      // Default rectangular window in the middle
+      for (; ii < endOfWindow; ++ii)
+         window[ii] = 1.0;
+      // Overwrite middle as needed
+      switch (which) {
+      case WINDOW:
+         WindowFunc(windowType, windowSize, window + padding);
+         // NewWindowFunc(windowType, windowSize, extra, window + padding);
+         break;
+      case TWINDOW:
+         wxASSERT(false);
+#if 0
+         // Future, reassignment
+         NewWindowFunc(windowType, windowSize, extra, window + padding);
+         for (int ii = padding, multiplier = -windowSize / 2; ii < endOfWindow; ++ii, ++multiplier)
+            window[ii] *= multiplier;
+         break;
+#endif
+      case DWINDOW:
+         wxASSERT(false);
+#if 0
+         // Future, reassignment
+         DerivativeOfWindowFunc(windowType, windowSize, extra, window + padding);
+         break;
+#endif
+      default:
+         wxASSERT(false);
+      }
+      // Scale the window function to give 0dB spectrum for 0dB sine tone
+      if (which == WINDOW) {
+         scale = 0.0;
+         for (ii = padding; ii < endOfWindow; ++ii)
+            scale += window[ii];
+         if (scale > 0)
+            scale = 2.0 / scale;
+      }
+      for (ii = padding; ii < endOfWindow; ++ii)
+         window[ii] *= scale;
+   }
+}
+
+void SpectrogramSettings::CacheWindows() const
+{
+#ifdef EXPERIMENTAL_USE_REALFFTF
+   if (hFFT == NULL || window == NULL) {
+
+      double scale;
+      const int fftLen = windowSize * zeroPaddingFactor;
+      const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
+
+      if (hFFT != NULL)
+         EndFFT(hFFT);
+      hFFT = InitializeFFT(fftLen);
+      RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
+   }
+#endif // EXPERIMENTAL_USE_REALFFTF
 }

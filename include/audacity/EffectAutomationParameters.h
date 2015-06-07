@@ -42,8 +42,11 @@
 #ifndef __AUDACITY_EFFECTAUTOMATIONPARAMETERS_H__
 #define __AUDACITY_EFFECTAUTOMATIONPARAMETERS_H__
 
+#include <locale.h>
+
 #include <wx/cmdline.h>
 #include <wx/fileconf.h>
+#include <wx/intl.h>
 
 class EffectAutomationParameters : public wxFileConfig
 {
@@ -82,6 +85,23 @@ public:
       return wxFileConfig::DoReadLong(NormalizeName(key), pl);
    }
 
+   virtual bool DoReadDouble(const wxString & key, double *pd) const
+   {
+      wxString str;
+      if (Read(key, &str))
+      {
+         struct lconv *info = localeconv();
+         wxString dec = info ? wxString::FromUTF8(info->decimal_point) : wxT(".");
+
+         str.Replace(wxT(","), dec);
+         str.Replace(wxT("."), dec);
+
+         return str.ToDouble(pd);
+      }
+
+      return false;
+   }
+
    virtual bool DoWriteString(const wxString & key, const wxString & szValue)
    {
       return wxFileConfig::DoWriteString(NormalizeName(key), szValue);
@@ -94,7 +114,7 @@ public:
 
    virtual bool DoWriteDouble(const wxString & key, double value)
    {
-      return DoWriteString(key, wxString::Format(wxT("%.12g"), value));
+      return DoWriteString(key, wxString::Format(wxT("%.12f"), value));
    }
 
    bool ReadFloat(const wxString & key, float *pf) const
@@ -209,19 +229,6 @@ public:
       return (*val != wxNOT_FOUND);
    }
 
-   wxString NormalizeName(const wxString & name) const
-   {
-      wxString cleaned = name;
-
-      cleaned.Trim(true).Trim(false);
-      cleaned.Replace(wxT(" "), wxT("_"));
-      cleaned.Replace(wxT("/"), wxT("_"));
-      cleaned.Replace(wxT("\\"), wxT("_"));
-      cleaned.Replace(wxT(":"), wxT("_"));
-
-      return cleaned;
-   }
-
    bool GetParameters(wxString & parms)
    {
       wxFileConfig::SetPath(wxT("/"));
@@ -268,6 +275,19 @@ public:
       }
 
       return true;
+   }
+
+   wxString NormalizeName(const wxString & name) const
+   {
+      wxString cleaned = name;
+
+      cleaned.Trim(true).Trim(false);
+      cleaned.Replace(wxT(" "), wxT("_"));
+      cleaned.Replace(wxT("/"), wxT("_"));
+      cleaned.Replace(wxT("\\"), wxT("_"));
+      cleaned.Replace(wxT(":"), wxT("_"));
+
+      return cleaned;
    }
 
    wxString Escape(wxString val)

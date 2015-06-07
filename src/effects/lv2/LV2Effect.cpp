@@ -380,7 +380,7 @@ wxString LV2Effect::GetVendor()
 
    if (vendor.IsEmpty())
    {
-      vendor = _("N/A");
+      vendor = XO("N/A");
    }
 
    return vendor;
@@ -393,7 +393,7 @@ wxString LV2Effect::GetVersion()
 
 wxString LV2Effect::GetDescription()
 {
-   return _("N/A");
+   return XO("N/A");
 }
 
 // ============================================================================
@@ -1282,34 +1282,36 @@ void LV2Effect::ShowOptions()
 
 bool LV2Effect::LoadParameters(const wxString & group)
 {
-   wxString value;
-
-   if (!mHost->GetPrivateConfig(group, wxT("Value"), value, wxEmptyString))
+   wxString parms;
+   if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
    {
       return false;
    }
 
-   wxStringTokenizer st(value, wxT(','));
-   for (size_t p = 0; st.HasMoreTokens(); p++)
+   EffectAutomationParameters eap;
+   if (!eap.SetParameters(parms))
    {
-      double val = 0.0;
-      st.GetNextToken().ToDouble(&val);
-      mControls[p].mVal = (float) val;
+      return false;
    }
 
-   return true;
+   return SetAutomationParameters(eap);
 }
 
 bool LV2Effect::SaveParameters(const wxString & group)
 {
-   wxString parms;
-
-   for (size_t i = 0, cnt = mControls.GetCount(); i < cnt; i++)
+   EffectAutomationParameters eap;
+   if (!GetAutomationParameters(eap))
    {
-      parms += wxString::Format(wxT(",%f"), mControls[i].mVal);
+      return false;
    }
 
-   return mHost->SetPrivateConfig(group, wxT("Value"), parms.Mid(1));
+   wxString parms;
+   if (!eap.GetParameters(parms))
+   {
+      return false;
+   }
+
+   return mHost->SetPrivateConfig(group, wxT("Parameters"), parms);
 }
 
 LV2_Options_Option *LV2Effect::AddOption(const char *key, uint32_t size, const char *type, void *value)

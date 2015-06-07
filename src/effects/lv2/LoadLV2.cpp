@@ -98,17 +98,17 @@ wxString LV2EffectsModule::GetPath()
 
 wxString LV2EffectsModule::GetSymbol()
 {
-   return wxT("LV2 Effects Module");
+   return XO("LV2 Effects Module");
 }
 
 wxString LV2EffectsModule::GetName()
 {
-   return _("LV2 Effects Module");
+   return GetSymbol();
 }
 
 wxString LV2EffectsModule::GetVendor()
 {
-   return _("The Audacity Team");
+   return XO("The Audacity Team");
 }
 
 wxString LV2EffectsModule::GetVersion()
@@ -119,7 +119,7 @@ wxString LV2EffectsModule::GetVersion()
 
 wxString LV2EffectsModule::GetDescription()
 {
-   return _("Provides LV2 Effects support to Audacity");
+   return XO("Provides LV2 Effects support to Audacity");
 }
 
 // ============================================================================

@@ -88,7 +88,7 @@ public:
    // Effect plugins only
 
    // Will return an untranslated string
-   const wxString & GetEffectFamily() const;
+   wxString GetEffectFamily(bool translate = true) const;
    EffectType GetEffectType() const;
    bool IsEffectDefault() const;
    bool IsEffectInteractive() const;

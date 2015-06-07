@@ -91,6 +91,8 @@ class SimpleBlockFile : public BlockFile {
    void ReadIntoCache();
 
    SimpleBlockFileCache mCache;
+
+   sampleFormat mFormat;
 };
 
 #endif

@@ -258,16 +258,16 @@ bool EffectToneGen::GetAutomationParameters(EffectAutomationParameters & parms)
       parms.Write(KEY_Amplitude, mAmplitude[0]);
    }
 
-   parms.Write(KEY_Waveform, mWaveforms[mWaveform]);
-   parms.Write(KEY_Interp, mInterpolations[mInterpolation]);
+   parms.Write(KEY_Waveform, kWaveStrings[mWaveform]);
+   parms.Write(KEY_Interp, kInterStrings[mInterpolation]);
 
    return true;
 }
 
 bool EffectToneGen::SetAutomationParameters(EffectAutomationParameters & parms)
 {
-   ReadAndVerifyEnum(Waveform, mWaveforms);
-   ReadAndVerifyEnum(Interp, mInterpolations);
+   ReadAndVerifyEnum(Waveform,  wxArrayString(kNumWaveforms, kWaveStrings));
+   ReadAndVerifyEnum(Interp, wxArrayString(kNumInterpolations, kInterStrings));
    if (mChirp)
    {
       ReadAndVerifyDouble(StartFreq);

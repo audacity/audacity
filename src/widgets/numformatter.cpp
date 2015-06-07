@@ -39,77 +39,6 @@
 // local helpers
 // ----------------------------------------------------------------------------
 
-namespace
-{
-
-// Contains information about the locale which was used to initialize our
-// cached values of the decimal and thousands separators. Notice that it isn't
-// enough to store just wxLocale because the user code may call setlocale()
-// directly and storing just C locale string is not enough because we can use
-// the OS API directly instead of the CRT ones on some platforms. So just store
-// both.
-class LocaleId
-{
-public:
-    LocaleId()
-    {
-#if wxUSE_INTL
-        m_wxloc = NULL;
-#endif // wxUSE_INTL
-        m_cloc = NULL;
-    }
-
-    ~LocaleId()
-    {
-        Free();
-    }
-
-#if wxUSE_INTL
-    // Return true if this is the first time this function is called for this
-    // object or if the program locale has changed since the last time it was
-    // called. Otherwise just return false indicating that updating locale-
-    // dependent information is not necessary.
-    bool NotInitializedOrHasChanged()
-    {
-        wxLocale * const wxloc = wxGetLocale();
-        const char * const cloc = setlocale(LC_ALL, NULL);
-        if ( m_wxloc || m_cloc )
-        {
-            if ( m_wxloc == wxloc && strcmp(m_cloc, cloc) == 0 )
-                return false;
-
-            Free();
-        }
-        //else: Not initialized yet.
-
-        m_wxloc = wxloc;
-        m_cloc = strdup(cloc);
-
-        return true;
-    }
-#endif // wxUSE_INTL
-
-private:
-    void Free()
-    {
-#if wxUSE_INTL
-        free(m_cloc);
-#endif // wxUSE_INTL
-    }
-
-#if wxUSE_INTL
-    // Non-owned pointer to wxLocale which was used.
-    wxLocale *m_wxloc;
-#endif // wxUSE_INTL
-
-    // Owned pointer to the C locale string.
-    char *m_cloc;
-
-//    wxDECLARE_NO_COPY_CLASS(LocaleId);
-};
-
-} // anonymous namespace
-
 // ============================================================================
 // NumberFormatter implementation
 // ============================================================================
@@ -120,93 +49,35 @@ private:
 
 wxChar NumberFormatter::GetDecimalSeparator()
 {
-#if wxUSE_INTL 
-    // Notice that while using static variable here is not MT-safe, the worst
-    // that can happen is that we redo the initialization if we're called
-    // concurrently from more than one thread so it's not a real problem.
-    static wxChar s_decimalSeparator = 0;
+#if wxUSE_INTL
+   struct lconv *info = localeconv();
+   wxString s = info ? wxString::FromUTF8(info->decimal_point) : wxT(".");
+   if (s.empty())
+   {
+      // We really must have something for decimal separator, so fall
+      // back to the C locale default.
+      s = wxT(".");
+   }
 
-    // Remember the locale which was current when we initialized, we must redo
-    // the initialization if the locale changed.
-    static LocaleId s_localeUsedForInit;
-
-    if ( s_localeUsedForInit.NotInitializedOrHasChanged() )
-    {
-        const wxString
-            s = wxLocale::GetInfo(wxLOCALE_DECIMAL_POINT, wxLOCALE_CAT_NUMBER);
-        if ( s.empty() )
-        {
-            // We really must have something for decimal separator, so fall
-            // back to the C locale default.
-            s_decimalSeparator = '.';
-        }
-        else
-        {
-            // To the best of my knowledge there are no locales like this.
-            wxASSERT_MSG( s.length() == 1,
-                          wxT("Multi-character decimal separator?") );
-
-            s_decimalSeparator = s[0];
-        }
-    }
-
-    return s_decimalSeparator;
+   return s[0];
 #else // !wxUSE_INTL
-    return wxT('.');
+   return wxT('.');
 #endif // wxUSE_INTL/!wxUSE_INTL
 }
 
 bool NumberFormatter::GetThousandsSeparatorIfUsed(wxChar *sep)
 {
 #if wxUSE_INTL
-    static wxChar s_thousandsSeparator = 0;
-    static LocaleId s_localeUsedForInit;
+   struct lconv *info = localeconv();
+   wxString s = info ? wxString::FromUTF8(info->thousands_sep) : wxT("");
 
-    if ( s_localeUsedForInit.NotInitializedOrHasChanged() )
-    {
-#if defined(__WXMSW__)
-       wxUint32 lcid = LOCALE_USER_DEFAULT;
+   if (s.IsEmpty())
+   {
+      return false;
+   }
 
-       if (wxGetLocale())
-       {
-          const wxLanguageInfo *info = wxLocale::GetLanguageInfo(wxGetLocale()->GetLanguage());
-           if (info)
-           {                         ;
-               lcid = MAKELCID(MAKELANGID(info->WinLang, info->WinSublang),
-                                        SORT_DEFAULT);
-           }
-       }
-
-       wxString s;
-       wxChar buffer[256];
-       buffer[0] = wxT('\0');
-       size_t count = GetLocaleInfo(lcid, LOCALE_STHOUSAND, buffer, 256);
-       if (!count)
-           s << wxT(",");
-       else
-           s << buffer;
-#else
-        wxString
-          s = wxLocale::GetInfo(wxLOCALE_THOUSANDS_SEP, wxLOCALE_CAT_NUMBER);
-#endif
-        if ( !s.empty() )
-        {
-            wxASSERT_MSG( s.length() == 1,
-                          wxT("Multi-character thousands separator?") );
-
-            s_thousandsSeparator = s[0];
-        }
-        //else: Unlike above it's perfectly fine for the thousands separator to
-        //      be empty if grouping is not used, so just leave it as 0.
-    }
-
-    if ( !s_thousandsSeparator )
-        return false;
-
-    if ( sep )
-        *sep = s_thousandsSeparator;
-
-    return true;
+   *sep = s[0];
+   return true;
 #else // !wxUSE_INTL
     wxUnusedVar(sep);
     return false;

@@ -131,7 +131,7 @@ goto :EOF
     <msgfmt Include="..\..\..\locale\bn.po" />
     <msgfmt Include="..\..\..\locale\bs.po" />
     <msgfmt Include="..\..\..\locale\ca.po" />
-    <msgfmt Include="..\..\..\locale\ca%40valencia.po" />
+    <msgfmt Include="..\..\..\locale\ca_ES%40valencia.po" />
     <msgfmt Include="..\..\..\locale\cs.po" />
     <msgfmt Include="..\..\..\locale\cy.po" />
     <msgfmt Include="..\..\..\locale\da.po" />

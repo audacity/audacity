@@ -1,4 +1,4 @@
-;   Audacity: A Digital Audio Editor
+﻿;   Audacity: A Digital Audio Editor
 ;   Audacity(R) is copyright (c) 1999-2015 Audacity Team.
 ;   License: GPL v2.  See License.txt.
 ;
@@ -6,13 +6,23 @@
 ;   Vaughan Johnson, Leland Lucius, Martyn Shaw, Richard Ash, & others
 ;
 
+; This requires that the ISS Preprocessor be installed
+#define AppExe "..\win\release\audacity.exe" 
+#define AppMajor ""
+#define AppMinor ""
+#define AppRev ""
+#define AppBuild ""
+#define FullVersion ParseVersion(AppExe, AppMajor, AppMinor, AppRev, AppBuild)
+#define AppVersion Str(AppMajor) + "." + Str(AppMinor) + "." + Str(AppRev)
+#define AppName GetStringFileInfo(AppExe, PRODUCT_NAME)
+
 [UninstallRun]
 ; Uninstall prior installations.
 Filename: "{app}\unins*.*"; 
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-2.1.0
+OutputBaseFilename=audacity-win-{#AppVersion}
 
 WizardImageFile=audacity_InnoWizardImage.bmp
 WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
@@ -20,17 +30,23 @@ WizardSmallImageFile=audacity_InnoWizardSmallImage.bmp
 SolidCompression=yes
 
 ; installer-related directives
-AppName=Audacity
-AppVerName=Audacity 2.1.0
+AppName={#AppName}
+AppVerName=Audacity {#AppVersion}
 ; Specify AppVersion as well, so it appears in the Add/Remove Programs entry. 
-AppVersion=2.1.0
-AppPublisher=Audacity Team
-AppPublisherURL=http://audacity.sourceforge.net
-AppSupportURL=http://audacity.sourceforge.net
-AppUpdatesURL=http://audacity.sourceforge.net
+AppVersion={#AppVersion}
+AppPublisher="Audacity Team"
+AppPublisherURL=http://web.audacityteam.org
+AppSupportURL=http://web.audacityteam.org
+AppUpdatesURL=http://web.audacityteam.org
 ChangesAssociations=yes
 
 DefaultDirName={pf}\Audacity
+
+VersionInfoProductName={#AppName}
+VersionInfoProductTextVersion={#GetFileProductVersion(AppExe)}
+VersionInfoDescription={#AppName + " " + AppVersion + " Setup"}
+VersionInfoVersion={#GetFileVersion(AppExe)}
+VersionInfoCopyright={#GetFileCopyright(AppExe)}
 
 ; Always warn if dir exists, because we'll overwrite previous Audacity.
 DirExistsWarning=yes
@@ -50,39 +66,13 @@ InfoAfterFile=..\README.txt
 ; cosmetic-related directives
 SetupIconFile=audacity.ico
 
-[Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
-; Name: "basque"; MessagesFile: "compiler:Languages\Basque.isl"
-Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
-Name: "catalan"; MessagesFile: "compiler:Languages\Catalan.isl"
-Name: "Corsican"; MessagesFile: "compiler:Languages\Corsican.isl"
-Name: "czech"; MessagesFile: "compiler:Languages\Czech.isl"
-Name: "danish"; MessagesFile: "compiler:Languages\Danish.isl"
-Name: "dutch"; MessagesFile: "compiler:Languages\Dutch.isl"
-Name: "finnish"; MessagesFile: "compiler:Languages\Finnish.isl"
-Name: "french"; MessagesFile: "compiler:Languages\French.isl"
-Name: "german"; MessagesFile: "compiler:Languages\German.isl"
-Name: "Greek"; MessagesFile: "compiler:Languages\Greek.isl"
-Name: "hebrew"; MessagesFile: "compiler:Languages\Hebrew.isl"
-Name: "hungarian"; MessagesFile: "compiler:Languages\Hungarian.isl"
-Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
-Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
-Name: "Nepali"; MessagesFile: "compiler:Languages\Nepali.islu"
-Name: "norwegian"; MessagesFile: "compiler:Languages\Norwegian.isl"
-Name: "polish"; MessagesFile: "compiler:Languages\Polish.isl"
-Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
-Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
-Name: "SerbianCyrillic"; MessagesFile: "compiler:Languages\SerbianCyrillic.isl"
-Name: "SerbianLatin"; MessagesFile: "compiler:Languages\SerbianLatin.isl"
-; Name: "slovak"; MessagesFile: "compiler:Languages\Slovak.isl"
-Name: "slovenian"; MessagesFile: "compiler:Languages\Slovenian.isl"
-Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
-Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
-Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
+[INI]
+Filename: "{app}\FirstTime.ini"; Section: "FromInno"; Key: "ResetPrefs"; String: "1"; Tasks: resetPrefs;
+Filename: "{app}\FirstTime.ini"; Section: "FromInno"; Key: "Language"; String: "{language}"
 
 [Tasks]
-Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"
-Name: resetPrefs; Description:  "Reset Preferences"; Flags: unchecked
+Name: desktopicon; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+Name: resetPrefs; Description:  "{cm:ResetPrefs}"; Flags: unchecked
 ; No longer allow user to choose whether to associate AUP file type with Audacity.
 ; Name: associate_aup; Description: "&Associate Audacity project files"; GroupDescription: "Other tasks:"; Flags: checkedonce
 
@@ -91,7 +81,7 @@ Name: resetPrefs; Description:  "Reset Preferences"; Flags: unchecked
 Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "..\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\win\release\audacity.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
 Source: "..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
@@ -103,10 +93,12 @@ Source: "..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 ; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
 ; 2) Need the DLL's in the release dir for testing, anyway.
 Source: "..\win\release\wxbase28u_net_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxbase28u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\wxbase28u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\wxmsw28u_adv_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\wxmsw28u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\win\release\wxmsw28u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\win\release\wxmsw28u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 ; MSVC runtime DLLs. Some users can't put these in the system dir, so just put them in the EXE dir.
 ; It's legal, per http://www.fsf.org/licensing/licenses/gpl-faq.html#WindowsRuntimeAndGPL .
@@ -126,17 +118,13 @@ Source: "..\win\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignore
 Source: "..\win\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
 Source: "..\win\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
 
-; File that acts as a markers to reset prefs.
-; Needs the 'Permissions' so that Audacity can delete it
-Source: "resetPrefs.txt"; DestDir: "{app}"; Permissions: users-modify; Tasks: resetPrefs  
-
 [Icons]
 Name: "{commonprograms}\Audacity"; Filename: "{app}\audacity.exe"
 Name: "{commondesktop}\Audacity"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
 
 [InstallDelete]
-; Get rid of previous 'reset prefs' file, in case somebody want to reinstall without the reset option after they installed with it
-Type: files; Name: "{app}\resetPrefs.txt" 
+; Get rid of previous 'first time' file, in case somebody want to reinstall without the reset option after they installed with it
+Type: files; Name: "{app}\FirstTime.txt" 
 
 ; Get rid of Audacity 1.0.0 stuff that's no longer used.
 Type: files; Name: "{app}\audacity-help.htb"
@@ -203,5 +191,177 @@ Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; Va
 ;Root: HKCR; Subkey: "Audacity.Project\Path";  ValueType: string; ValueData: {app}; Flags: createvalueifdoesntexist uninsdeletekey;
 
 [Run]
-Filename: "{app}\audacity.exe"; Description: "Launch Audacity"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\audacity.exe"; Description: "{cm:LaunchProgram,Audacity}"; Flags: nowait postinstall skipifsilent
 
+[Languages]
+; NOTE: "0" in locale name will be translated to "@" when read by Audacity.
+
+; Create subdirectories where we'll store the unofficial and dummy translation files
+{#expr Exec("cmd", "/c mkdir """ + CompilerPath + "Languages\dummy""", , , SW_HIDE), \
+       Exec("cmd", "/c mkdir """ + CompilerPath + "Languages\unofficial""", , , SW_HIDE)}
+
+; Download Additional Inno Setup translations from:
+;
+; http://www.jrsoftware.org/files/istrans/
+;
+; Set this to the base of the unofficial  Inno Setup translations
+#define UrlBase "http://raw.github.com/jrsoftware/issrc/master/Files/Languages/Unofficial/"
+
+; This macro will use the Windows PowerShell to download the given translation into
+; the Inno Setup Languages folder if it hasn't already been downloaded.
+; (Sorry, it's not a quick process, but it only happens once.)
+#define Get(URL) \
+  Local[0] = "Languages\unofficial\" + Copy(URL, RPos("/", URL) + 1), \
+  Local[1] = (FileExists(CompilerPath + Local[0]) \
+    ? "alreadyexists" \
+    : Exec("powershell", "echo 'Downloading: " + URL + "'; $wc = new-object System.Net.WebClient; $wc.DownloadFile('" + URLBase + URL + "', '" + Local[0] + "')", , , SW_NORMAL)), \
+  "compiler:" + Local[0]
+
+; This macro will define a dummy translation based on the Defaults.isl
+#define Dummy(NAME, ID) \
+  Local[0] = "Languages\dummy\", \
+  Local[1] = Local[0] + NAME + ".isl", \
+  Local[2] = CompilerPath + Local[1], \
+  Local[3] = (FileExists(Local[2]) \
+    ? "alreadyexists" \
+    : (CopyFile(CompilerPath + "Default.isl", Local[2]), \
+       WriteIni(Local[2], "LangOptions", "LanguageName", NAME), \
+       WriteIni(Local[2], "LangOptions", "LanguageID", "$" + ID))), \
+  "compiler:" + Local[1]
+
+Name: "af"; MessagesFile: "{#Get('Afrikaans.isl')}"
+Name: "ar"; MessagesFile: "{#Get('Arabic.isl')}"
+Name: "be"; MessagesFile: "{#Get('Belarusian.isl')}"
+Name: "bg"; MessagesFile: "{#Get('Bulgarian.isl')}"
+Name: "bn"; MessagesFile: "{#Get('Bengali.islu')}"
+Name: "bs"; MessagesFile: "{#Get('Bosnian.isl')}"
+Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
+Name: "ca_ES0valencia"; MessagesFile: "{#Get('Valencian.isl')}"
+Name: "co"; MessagesFile: "compiler:Languages\Corsican.isl"
+Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
+Name: "cy"; MessagesFile: "{#Dummy('Welsh', '0452')}"
+Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl"
+Name: "el"; MessagesFile: "compiler:Languages\Greek.isl"
+Name: "en"; MessagesFile: "compiler:Default.isl"
+Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "eu"; MessagesFile: "{#Get('Basque.isl')}"
+Name: "fa"; MessagesFile: "{#Get('Farsi.isl')}"
+Name: "fi"; MessagesFile: "compiler:Languages\Finnish.isl"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl"
+Name: "ga"; MessagesFile: "{#Dummy('Gaeilge', '083C')}"
+Name: "gl"; MessagesFile: "{#Get('Galician.isl')}"
+Name: "he"; MessagesFile: "compiler:Languages\Hebrew.isl"
+Name: "hi"; MessagesFile: "{#Get('Hindi.islu')}"
+Name: "hr"; MessagesFile: "{#Get('Croatian.isl')}"
+Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
+Name: "hy"; MessagesFile: "{#Get('Armenian.islu')}"
+Name: "id"; MessagesFile: "{#Get('Indonesian.isl')}"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
+Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
+Name: "ka"; MessagesFile: "{#Get('Georgian.islu')}"
+Name: "km"; MessagesFile: "{#Dummy('Khmer', '0409')}"
+Name: "ko"; MessagesFile: "{#Dummy('Korean', '0412')}"
+Name: "lt"; MessagesFile: "{#Get('Lithuanian.isl')}"
+Name: "mk"; MessagesFile: "{#Get('Macedonian.isl')}"
+Name: "my"; MessagesFile: "{#Dummy('Burmese', '0409')}"
+Name: "nb"; MessagesFile: "compiler:Languages\Norwegian.isl"
+Name: "ne"; MessagesFile: "compiler:Languages\Nepali.islu"
+Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
+Name: "oc"; MessagesFile: "{#Get('Occitan.isl')}"
+Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
+Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl"
+Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
+Name: "ro"; MessagesFile: "{#Get('Romanian.isl')}"
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
+Name: "sk"; MessagesFile: "{#Get('Slovak.isl')}"
+Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl"
+Name: "sr_RS"; MessagesFile: "compiler:Languages\SerbianCyrillic.isl"
+Name: "sr_RS0latin"; MessagesFile: "compiler:Languages\SerbianLatin.isl"
+Name: "sv"; MessagesFile: "{#Get('Swedish.isl')}"
+Name: "ta"; MessagesFile: "{#Dummy('Tamil', '0449')}"
+Name: "tg"; MessagesFile: "{#Dummy('Tajik', '0428')}"
+Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
+Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
+Name: "vi"; MessagesFile: "{#Get('Vietnamese.isl')}"
+Name: "zh"; MessagesFile: "{#Get('ChineseSimplified.isl')}"
+Name: "zh_TW"; MessagesFile: "{#Get('ChineseTraditional.isl')}"
+
+; To include additional translations add it to the win/InnoSetupLanguages directory.
+; The filename must be the locale name and the ".isl" extension.  For example, "af.isl"
+; would have the "Afrikaans" translation.
+
+; Pull in additional translations from the win/InnoSetupLanguages directory
+#define FindHandle
+#define FindResult
+
+#sub AddLanguage
+  #define FileName FindGetFileName(FindHandle)
+  #define LangCode Local[0] = Copy(FileName, 1, Pos(".", FileName) - 1)
+  Name: {#LangCode}; MessagesFile: "InnoSetupLanguages\{#FileName}"
+#endsub
+
+#for {FindHandle = FindResult = FindFirst("InnoSetupLanguages\*.isl", 0); FindResult; FindResult = FindNext(FindHandle)} AddLanguage
+#if FindHandle
+  #expr FindClose(FindHandle)
+#endif
+
+; These could be included from a different file to make it easier to update...
+[CustomMessages]
+af.ResetPrefs=Reset Preferences
+ar.ResetPrefs=Reset Preferences
+be.ResetPrefs=Reset Preferences
+bg.ResetPrefs=Да се нулират ли настройките?
+bn.ResetPrefs=Reset Preferences
+bs.ResetPrefs=Reset Preferences
+ca.ResetPrefs=Voleu restablir les preferències?
+ca_ES0valencia.ResetPrefs=Reset Preferences
+co.ResetPrefs=Reset Preferences
+cs.ResetPrefs=Vynulovat nastavení?
+cy.ResetPrefs=Reset Preferences
+da.ResetPrefs=Gendan indstillinger?
+de.ResetPrefs=Einstellungen zurücksetzen?
+el.ResetPrefs=Επαναφορά προτιμήσεων;
+en.ResetPrefs=Reset Preferences
+es.ResetPrefs=¿Desea restablecer las preferencias?
+eu.ResetPrefs=Berrezarri Hobespenak?
+fa.ResetPrefs=Reset Preferences
+fi.ResetPrefs=Reset Preferences
+fr.ResetPrefs=Réinitialiser les  Préférences ?
+ga.ResetPrefs=Reset Preferences
+gl.ResetPrefs=Restabelecer as preferencias?
+he.ResetPrefs=?אתה רוצה לשחזר העדפות
+hi.ResetPrefs=वरीयताएँ रीसेट करें?
+hr.ResetPrefs=Resetirati Postavke?
+hu.ResetPrefs=Alapra állítja a beállításokat?
+hy.ResetPrefs=Վերափոխե՞լ կարգավորումները:
+id.ResetPrefs=Reset Preferences
+it.ResetPrefs=Ripristino Preferenze?
+ja.ResetPrefs=設定をリセットしますか?
+ka.ResetPrefs=Reset Preferences
+km.ResetPrefs=Reset Preferences
+ko.ResetPrefs=기본 설정을 재설정하시겠습니까?
+lt.ResetPrefs=Reset Preferences
+mk.ResetPrefs=Reset Preferences
+my.ResetPrefs=Reset Preferences
+nb.ResetPrefs=Reset Preferences
+ne.ResetPrefs=Reset Preferences
+nl.ResetPrefs=Voorkeuren herstellen?
+oc.ResetPrefs=Reset Preferences
+pl.ResetPrefs=Zresetować ustawienia?
+pt.ResetPrefs=Reconfigurar as Preferências?
+pt_BR.ResetPrefs=Redefinir Preferências?
+ro.ResetPrefs=Reset Preferences
+ru.ResetPrefs=Сбросить Параметры?
+sk.ResetPrefs=Obnoviť nastavenia?
+sl.ResetPrefs=Želite ponastaviti možnosti?
+sr_RS.ResetPrefs=Да вратим на старе поставке?
+sr_RS0latin.ResetPrefs=Da vratim na stare postavke?
+sv.ResetPrefs=Återställ inställningar?
+ta.ResetPrefs="விருப்பங்களை மீட்டமைக்க?
+tg.ResetPrefs=Reset Preferences
+tr.ResetPrefs=Ayarlar Sıfırlansın mı?
+uk.ResetPrefs=Відновити початкові значення параметрів?
+vi.ResetPrefs=Reset Preferences
+zh.ResetPrefs=重置配置吗？
+zh_TW.ResetPrefs=是否重設偏好設定？

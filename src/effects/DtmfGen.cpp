@@ -282,6 +282,13 @@ bool EffectDtmf::Startup()
    return true;
 }
 
+bool EffectDtmf::Init()
+{
+   Recalculate();
+
+   return true;
+}
+
 void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
 {
    // dialog will be passed values from effect

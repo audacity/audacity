@@ -194,7 +194,6 @@ class Envelope : public XMLTagHandler {
                   int bufferLen) const;
 
 private:
-   double fromDB(double x) const;
    double toDB(double x);
    EnvPoint *  AddPointAtEnd( double t, double val );
    void MarkDragPointForDeletion();

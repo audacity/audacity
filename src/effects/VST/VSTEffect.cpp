@@ -1635,9 +1635,9 @@ wxString VSTEffect::GetDescription()
    // VST does have a product string opcode and sum effects return a short
    // description, but most do not or they just return the name again.  So,
    // try to provide some sort of useful information.
-   mDescription = _("Audio In: ") +
+   mDescription = XO("Audio In: ") +
                   wxString::Format(wxT("%d"), mAudioIns) +
-                  _(", Audio Out: ") +
+                  XO(", Audio Out: ") +
                   wxString::Format(wxT("%d"), mAudioOuts);
 
    return mDescription;
@@ -2090,6 +2090,8 @@ bool VSTEffect::GetAutomationParameters(EffectAutomationParameters & parms)
 
 bool VSTEffect::SetAutomationParameters(EffectAutomationParameters & parms)
 {
+   size_t slaveCnt = mSlaves.GetCount();
+
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -2105,7 +2107,14 @@ bool VSTEffect::SetAutomationParameters(EffectAutomationParameters & parms)
          return false;
       }
 
-      callSetParameter(i, d);
+      if (d >= -1.0 && d <= 1.0)
+      {
+         callSetParameter(i, d);
+         for (size_t i = 0; i < slaveCnt; i++)
+         {
+            mSlaves[i]->callSetParameter(i, d);
+         }
+      }
    }
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 
@@ -2797,38 +2806,19 @@ bool VSTEffect::LoadParameters(const wxString & group)
       return true;
    }
 
-   if (!mHost->GetPrivateConfig(group, wxT("Value"), value, wxEmptyString))
+   wxString parms;
+   if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
    {
       return false;
    }
 
-   if (callDispatcher(effBeginLoadProgram, 0, 0, &info, 0.0) == -1)
+   EffectAutomationParameters eap;
+   if (!eap.SetParameters(parms))
    {
       return false;
    }
 
-   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
-   size_t cnt = mSlaves.GetCount();
-      
-   wxStringTokenizer st(value, wxT(','));
-   for (int i = 0; st.HasMoreTokens(); i++)
-   {
-      double val = 0.0;
-      st.GetNextToken().ToDouble(&val);
-
-      if (val >= -1.0 && val <= 1.0)
-      {
-         callSetParameter(i, val);
-         for (size_t i = 0; i < cnt; i++)
-         {
-            mSlaves[i]->callSetParameter(i, val);
-         }
-      }
-   }
-
-   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
-
-   return true;
+   return SetAutomationParameters(eap);
 }
 
 bool VSTEffect::SaveParameters(const wxString & group)
@@ -2850,13 +2840,19 @@ bool VSTEffect::SaveParameters(const wxString & group)
       return true;
    }
 
-   wxString parms;
-   for (int i = 0; i < mAEffect->numParams; i++)
+   EffectAutomationParameters eap;
+   if (!GetAutomationParameters(eap))
    {
-      parms += wxString::Format(wxT(",%f"), callGetParameter(i));
+      return false;
    }
 
-   return mHost->SetPrivateConfig(group, wxT("Value"), parms.Mid(1));
+   wxString parms;
+   if (!eap.GetParameters(parms))
+   {
+      return false;
+   }
+
+   return mHost->SetPrivateConfig(group, wxT("Parameters"), parms);
 }
 
 void VSTEffect::OnTimer()

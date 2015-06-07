@@ -2,15 +2,15 @@
 #define __realfftf_h
 
 #define fft_type float
-typedef struct FFTParamType {
+struct FFTParam {
    int *BitReversed;
    fft_type *SinTable;
    int Points;
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    int pow2Bits;
 #endif
-} FFTParam;
-#define HFFT FFTParam *
+};
+typedef FFTParam * HFFT;
 
 HFFT InitializeFFT(int);
 void EndFFT(HFFT);

@@ -24,6 +24,7 @@ class wxKeyEvent;
 class wxTimer;
 class wxTimerEvent;
 class wxWindow;
+class wxStatusBar;
 
 class AButton;
 class AudacityProject;
@@ -85,7 +86,8 @@ class ControlToolBar:public ToolBar {
    virtual void ReCreateButtons();
    void RegenerateToolsTooltips();
 
-   int WidthForStatusBar();
+   int WidthForStatusBar(wxStatusBar* const);
+   wxString StateForStatusBar();
 
  private:
 

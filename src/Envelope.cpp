@@ -189,17 +189,6 @@ double Envelope::toDB(double value)
    return sign * val;
 }
 
-double Envelope::fromDB(double value) const
-{
-   if (value == 0)
-      return 0;
-
-   double sign = (value >= 0 ? 1 : -1);
-   // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
-   double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
-   return pow(10.0, ((fabs(value) * dBRange) - dBRange) / 20.0)*sign;;
-}
-
 /// TODO: This should probably move to track artist.
 static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 {
@@ -342,19 +331,12 @@ void Envelope::WriteXML(XMLWriter &xmlFile)
 float Envelope::ValueOfPixel( int y, int height, bool upper, bool dB,
                               float zoomMin, float zoomMax)
 {
-   float v;
-
-   wxASSERT( height > 0 );
-   v = zoomMax - (y/(float)height) * (zoomMax - zoomMin);
-
-   if (mContourOffset) {
-     if( v > 0.0 )
-       v += .5;
-     else
-       v -= .5;
-   }
+   double dBRange = 0;
    if (dB)
-      v = fromDB(v);
+      // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
+      dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
+
+   float v = ::ValueOfPixel(y, height, mContourOffset, dB, dBRange, zoomMin, zoomMax);
 
    // MB: this is mostly equivalent to what the old code did, I'm not sure
    // if anything special is needed for asymmetric ranges

@@ -63,7 +63,7 @@ void TracksPrefs::Populate()
    mViewChoices.Add(_("Spectrogram"));
    mViewChoices.Add(_("Spectrogram log(f)"));
    mViewChoices.Add(_("Spectral Selection"));
-   mViewChoices.Add(_("Spectrogram Selection log(f)"));
+   mViewChoices.Add(_("Spectral Selection log(f)"));
    mViewChoices.Add(_("Pitch (EAC)"));
 
    //------------------------- Main section --------------------

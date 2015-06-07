@@ -28,6 +28,7 @@ class wxRect;
 class wxHashTable;
 
 class Track;
+class WaveDisplay;
 class WaveTrack;
 class WaveTrackCache;
 class WaveClip;
@@ -73,7 +74,7 @@ class AUDACITY_DLL_API TrackArtist {
    int GetSpectrumMaxFreq(int deffreq);
    int GetSpectrumLogMinFreq(int deffreq);
    int GetSpectrumLogMaxFreq(int deffreq);
-   int GetSpectrumWindowSize();
+   int GetSpectrumWindowSize(bool includeZeroPadding);
 
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
    int GetSpectrumFftSkipPoints();
@@ -112,8 +113,7 @@ class AUDACITY_DLL_API TrackArtist {
                      bool dB, bool muted);
 
    void DrawSpectrum(WaveTrack *track,
-                     wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
-                     bool autocorrelation, bool logF);
+                     wxDC & dc, const wxRect & r, const ViewInfo *viewInfo);
 #ifdef USE_MIDI
    int GetBottom(NoteTrack *t, const wxRect &r);
    void DrawNoteBackground(NoteTrack *track, wxDC &dc,
@@ -133,18 +133,16 @@ class AUDACITY_DLL_API TrackArtist {
    void DrawTimeTrack(TimeTrack *track,
                       wxDC & dc, const wxRect & r, const ViewInfo *viewInfo);
 
-   void DrawTimeSlider(WaveTrack *track,
-                       wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
+   void DrawTimeSlider(wxDC & dc, const wxRect & r,
                        bool rightwards);
 
    void DrawClipWaveform(WaveTrack *track, WaveClip *clip,
                          wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
-                         bool drawEnvelope, bool drawSamples, bool drawSliders,
+                         bool drawEnvelope, bool drawSamples,
                          bool dB, bool muted);
 
    void DrawClipSpectrum(WaveTrackCache &cache, WaveClip *clip,
-                         wxDC & dc, const wxRect & r, const ViewInfo *viewInfo,
-                         bool autocorrelation, bool logF);
+                         wxDC & dc, const wxRect & r, const ViewInfo *viewInfo);
 
    // Waveform utility functions
 
@@ -153,17 +151,13 @@ class AUDACITY_DLL_API TrackArtist {
                                const sampleCount where[],
                                sampleCount ssel0, sampleCount ssel1,
                                bool drawEnvelope, bool bIsSyncLockSelected);
+   void DrawMinMaxRMS(wxDC &dc, const wxRect &r, const double env[],
+                      float zoomMin, float zoomMax, bool dB,
+                      const WaveDisplay &display, bool /* showProgress */, bool muted
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
-   void DrawMinMaxRMS(wxDC & dc, const wxRect & r, const double env[],
-                      float zoomMin, float zoomMax, bool dB,
-                      const float min[], const float max[], const float rms[],
-                      const int bl[], bool showProgress, bool muted, const float gain);
-#else
-   void DrawMinMaxRMS(wxDC & dc, const wxRect & r, const double env[],
-                      float zoomMin, float zoomMax, bool dB,
-                      const float min[], const float max[], const float rms[],
-                      const int bl[], bool showProgress, bool muted);
+                      , const float gain
 #endif
+   );
    void DrawIndividualSamples(wxDC & dc, const wxRect & r,
                               float zoomMin, float zoomMax, bool dB,
                               WaveClip *clip,
@@ -179,28 +173,7 @@ class AUDACITY_DLL_API TrackArtist {
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
    long mShowClipping;        // "/GUI/ShowClipping"
-   int mLogMaxFreq;           // "/SpectrumLog/MaxFreq"
-   int mLogMinFreq;           // "/SpectrumLog/MinFreq"
-   int mMaxFreq;              // "/Spectrum/MaxFreq"
-   int mMinFreq;              // "/Spectrum/MinFreq"
-   int mWindowSize;           // "/Spectrum/FFTSize"
-   bool mIsGrayscale;         // "/Spectrum/Grayscale"
    bool mbShowTrackNameInWaveform;  // "/GUI/ShowTrackNameInWaveform"
-
-#ifdef EXPERIMENTAL_FFT_SKIP_POINTS
-   int mFftSkipPoints;        // "/Spectrum/FFTSkipPoints"
-#endif //EXPERIMENTAL_FFT_SKIP_POINTS
-
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   bool mFftYGrid;            // "/Spectrum/FFTYGrid"
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
-#ifdef EXPERIMENTAL_FIND_NOTES
-   bool mFftFindNotes;        // "/Spectrum/FFTFindNotes"
-   float mFindNotesMinA;      // "/Spectrum/FindNotesMinA"
-   int mNumberOfMaxima;       // "/Spectrum/FindNotesN"
-   bool mFindNotesQuantize;   // "/Spectrum/FindNotesQuantize")
-#endif //EXPERIMENTAL_FIND_NOTES
 
    int mInsetLeft;
    int mInsetTop;
@@ -247,5 +220,8 @@ class AUDACITY_DLL_API TrackArtist {
 extern int GetWaveYPos(float value, float min, float max,
                        int height, bool dB, bool outer, float dBr,
                        bool clip);
+extern float FromDB(float value, double dBRange);
+extern float ValueOfPixel(int y, int height, bool offset,
+                          bool dB, double dBRange, float zoomMin, float zoomMax);
 
 #endif                          // define __AUDACITY_TRACKARTIST__

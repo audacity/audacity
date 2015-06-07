@@ -29,6 +29,8 @@
 #include <wx/list.h>
 #include <wx/msgdlg.h>
 
+#include <vector>
+
 class Envelope;
 class WaveCache;
 class WaveTrackCache;
@@ -41,6 +43,7 @@ public:
       len = cacheLen;
       values = new float[len];
       valid = false;
+      range = gain = -1;
    }
 
    ~SpecPxCache()
@@ -51,12 +54,33 @@ public:
    sampleCount  len;
    float       *values;
    bool         valid;
+
+   int range;
+   int gain;
 };
 
 class WaveClip;
 
 WX_DECLARE_USER_EXPORTED_LIST(WaveClip, WaveClipList, AUDACITY_DLL_API);
 WX_DEFINE_USER_EXPORTED_ARRAY_PTR(WaveClip*, WaveClipArray, class AUDACITY_DLL_API);
+
+class WaveDisplay
+{
+public:
+   int width;
+   sampleCount *where;
+   float *min, *max, *rms;
+   int* bl;
+
+   WaveDisplay(int w)
+      : width(w), where(0), min(0), max(0), rms(0), bl(0)
+   {
+   }
+
+   ~WaveDisplay()
+   {
+   }
+};
 
 class AUDACITY_DLL_API WaveClip : public XMLTagHandler
 {
@@ -139,10 +163,10 @@ public:
 
    /** Getting high-level data from the for screen display and clipping
     * calculations and Contrast */
-   bool GetWaveDisplay(float *min, float *max, float *rms,int* bl, sampleCount *where,
-                       int numPixels, double t0, double pixelsPerSecond, bool &isLoadingOD);
+   bool GetWaveDisplay(WaveDisplay &display,
+                       double t0, double pixelsPerSecond, bool &isLoadingOD);
    bool GetSpectrogram(WaveTrackCache &cache,
-                       float *buffer, sampleCount *where,
+                       const float *& spectrogram, const sampleCount *& where,
                        int numPixels,
                        double t0, double pixelsPerSecond,
                        bool autocorrelation);
@@ -250,13 +274,6 @@ protected:
    WaveCache    *mWaveCache;
    ODLock       mWaveCacheMutex;
    SpecCache    *mSpecCache;
-#ifdef EXPERIMENTAL_USE_REALFFTF
-   // Variables used for computing the spectrum
-   HFFT          hFFT;
-   float         *mWindow;
-   int           mWindowType;
-   int           mWindowSize;
-#endif
    samplePtr     mAppendBuffer;
    sampleCount   mAppendBufferLen;
 
