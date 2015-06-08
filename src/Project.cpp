@@ -1021,7 +1021,7 @@ AudacityProject::AudacityProject(wxWindow * parent, wxWindowID id,
 
    mTrackFactory = new TrackFactory(mDirManager);
 
-   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -2, -1};
+   int widths[] = {0, GetControlToolBar()->WidthForStatusBar(mStatusBar), -1, 150};
    mStatusBar->SetStatusWidths(4, widths);
    wxString msg = wxString::Format(_("Welcome to Audacity version %s"),
                                    AUDACITY_VERSION_STRING);
