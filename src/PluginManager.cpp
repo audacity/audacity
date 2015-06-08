@@ -122,7 +122,7 @@ public:
    // or child.
    virtual wxAccStatus GetValue( int childId, wxString *strValue );
 
-   void SetSelected( int item );
+   void SetSelected( int item, bool focused = true );
 
 private:
    wxListCtrl *mParent;
@@ -140,7 +140,7 @@ CheckListAx::~CheckListAx()
 {
 }
 
-void CheckListAx::SetSelected( int item )
+void CheckListAx::SetSelected( int item, bool focused )
 {
    if (mLastId != -1)
    {
@@ -153,10 +153,13 @@ void CheckListAx::SetSelected( int item )
 
    if (item != -1)
    {
-      NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
-                  mParent,
-                  wxOBJID_CLIENT,
-                  item + 1 );
+      if (focused)
+      {
+         NotifyEvent( wxACC_EVENT_OBJECT_FOCUS,
+                     mParent,
+                     wxOBJID_CLIENT,
+                     item + 1 );
+      }
 
       NotifyEvent( wxACC_EVENT_OBJECT_SELECTION,
                   mParent,
@@ -747,7 +750,7 @@ void PluginRegistrationDialog::RegenerateEffectsList(int filter)
 //      mEffects->SetFocus();
       mEffects->SetItemState(0, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED, wxLIST_STATE_FOCUSED|wxLIST_STATE_SELECTED);
 #if wxUSE_ACCESSIBILITY
-      mAx->SetSelected(0);
+      mAx->SetSelected(0, false);
 #endif
    }
 }
