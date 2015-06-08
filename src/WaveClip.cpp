@@ -349,7 +349,8 @@ public:
 
 #ifdef EXPERIMENTAL_USE_REALFFTF
 #include "FFT.h"
-static void ComputeSpectrumUsingRealFFTf(float *buffer, HFFT hFFT, const float *window, int len, float *out)
+static void ComputeSpectrumUsingRealFFTf
+   (float *buffer, HFFT hFFT, const float *window, int len, float *out)
 {
    int i;
    if(len > hFFT->Points*2)
@@ -568,11 +569,11 @@ fillWhere(std::vector<sampleCount> &where, int len, double bias, double correcti
           double t0, double rate, double samplesPerPixel)
 {
    // Be careful to make the first value non-negative
-   correction += 0.5 + bias;
-   where[0] = sampleCount(std::max(0.0, floor(correction + t0 * rate)));
+   const double w0 = 0.5 + correction + bias + t0 * rate;
+   where[0] = sampleCount(std::max(0.0, floor(w0)));
    for (sampleCount x = 1; x < len + 1; x++)
       where[x] = sampleCount(
-         floor(correction + t0 * rate + double(x) * samplesPerPixel)
+         floor(w0 + double(x) * samplesPerPixel)
       );
 }
 

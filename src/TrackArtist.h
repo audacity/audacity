@@ -21,7 +21,7 @@
 #include <wx/brush.h>
 #include <wx/pen.h>
 #include "Experimental.h"
-#include "Sequence.h"
+#include "audacity/Types.h"
 
 class wxDC;
 class wxRect;
@@ -144,7 +144,7 @@ class AUDACITY_DLL_API TrackArtist {
 
    void DrawWaveformBackground(wxDC & dc, const wxRect &rect, const double env[],
                                float zoomMin, float zoomMax, bool dB,
-                               const sampleCount where[],
+                               const ViewInfo &viewInfo, double t0, double rate,
                                sampleCount ssel0, sampleCount ssel1,
                                bool drawEnvelope, bool bIsSyncLockSelected);
    void DrawMinMaxRMS(wxDC &dc, const wxRect &rect, const double env[],

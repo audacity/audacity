@@ -988,7 +988,7 @@ void TrackArtist::DrawNegativeOffsetTrackArrows(wxDC &dc, const wxRect &rect)
 
 void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &rect, const double env[],
                                          float zoomMin, float zoomMax, bool dB,
-                                         const sampleCount where[],
+                                         const ViewInfo &viewInfo, double t0, double rate,
                                          sampleCount ssel0, sampleCount ssel1,
                                          bool drawEnvelope, bool bIsSyncLockSelected)
 {
@@ -1015,7 +1015,10 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &rect, const dou
    dc.SetBrush(blankBrush);
    dc.DrawRectangle(rect);
 
-   for (xx = 0; xx < rect.width; ++xx) {
+   const double samplesPerPixel = rate / viewInfo.zoom;
+   double where = t0 * rate;
+   for (xx = 0; xx < rect.width; ++xx, where += samplesPerPixel) {
+
       // First we compute the truncated shape of the waveform background.
       // If drawEnvelope is true, then we compute the lower border of the
       // envelope.
@@ -1040,7 +1043,7 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &rect, const dou
       }
 
       // We don't draw selection color for sync-lock selected tracks.
-      sel = (ssel0 <= where[xx] && where[xx + 1] < ssel1) && !bIsSyncLockSelected;
+      sel = (ssel0 <= where && where + samplesPerPixel < ssel1) && !bIsSyncLockSelected;
 
       if (lmaxtop == maxtop &&
           lmintop == mintop &&
@@ -1085,9 +1088,10 @@ void TrackArtist::DrawWaveformBackground(wxDC &dc, const wxRect &rect, const dou
    if (bIsSyncLockSelected && ssel0 < ssel1) {
       // Find the beginning/end of the selection
       int begin, end;
-      for (xx = 0; xx < rect.width && where[xx] < ssel0; ++xx);
+      double where = t0 * rate;
+      for (xx = 0; xx < rect.width && where < ssel0; ++xx, where += samplesPerPixel);
       begin = xx;
-      for (; xx < rect.width && where[xx] < ssel1; ++xx);
+      for (; xx < rect.width && where < ssel1; ++xx, where += samplesPerPixel);
       end = xx;
       DrawSyncLockTiles(&dc, wxRect(rect.x + begin, rect.y, end - 1 - begin, rect.height));
    }
@@ -1650,6 +1654,7 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    const double &tpre = params.tpre;
    const double &tpost = params.tpost;
    const double &t1 = params.t1;
+   const double &rate = params.rate;
 
    // Calculate sample-based offset-corrected selection
 
@@ -1664,18 +1669,6 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    float zoomMin, zoomMax;
    track->GetDisplayBounds(&zoomMin, &zoomMax);
 
-   WaveDisplay display(mid.width);
-   bool isLoadingOD = false;//true if loading on demand block in sequence.
-
-   // The WaveClip class handles the details of computing the shape
-   // of the waveform.  The only way GetWaveDisplay will fail is if
-   // there's a serious error, like some of the waveform data can't
-   // be loaded.  So if the function returns false, we can just exit.
-   if (!clip->GetWaveDisplay(display,
-      t0, pps, isLoadingOD)) {
-      return;
-   }
-
    // Get the values of the envelope corresponding to each pixel
    // in the display, and use these to compute the height of the
    // track at each pixel
@@ -1687,10 +1680,23 @@ void TrackArtist::DrawClipWaveform(WaveTrack *track,
    // the envelope and using a colored pen for the selected
    // part of the waveform
    DrawWaveformBackground(dc, mid, envValues, zoomMin, zoomMax, dB,
-                          &display.where[0], ssel0, ssel1, drawEnvelope,
+                          *viewInfo, t0, rate,
+                          ssel0, ssel1, drawEnvelope,
                           !track->GetSelected());
 
    if (!showIndividualSamples) {
+      WaveDisplay display(mid.width);
+      bool isLoadingOD = false;//true if loading on demand block in sequence.
+
+      // The WaveClip class handles the details of computing the shape
+      // of the waveform.  The only way GetWaveDisplay will fail is if
+      // there's a serious error, like some of the waveform data can't
+      // be loaded.  So if the function returns false, we can just exit.
+      if (!clip->GetWaveDisplay(display,
+         t0, pps, isLoadingOD)) {
+         return;
+      }
+
 #ifdef EXPERIMENTAL_OUTPUT_DISPLAY
       DrawMinMaxRMS(dc, mid, envValues, zoomMin, zoomMax, dB,
                     min, max, rms, bl, isLoadingOD, muted, track->GetChannelGain(track->GetChannel()));
