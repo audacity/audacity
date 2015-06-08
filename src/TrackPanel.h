@@ -316,7 +316,9 @@ class AUDACITY_DLL_API TrackPanel:public wxPanel {
    );
    bool MaybeStartScrubbing(wxMouseEvent &event);
    bool ContinueScrubbing(wxCoord position, bool hasFocus, bool seek);
+public:
    bool StopScrubbing();
+protected:
 #endif
 
    virtual void SelectionHandleClick(wxMouseEvent &event,
