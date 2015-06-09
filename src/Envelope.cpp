@@ -1026,14 +1026,6 @@ double Envelope::GetValue(double t) const
    return temp;
 }
 
-// 'X' is in pixels and relative to track.
-double Envelope::GetValueAtX(int x, const wxRect & r, double h, double pps)
-{
-   // Convert x to time.
-   double t = (x - r.x) / pps + h ;//-mOffset;
-   return GetValue(t);
-}
-
 /// @param Lo returns last index at or before this time.
 /// @param Hi returns first index after this time.
 void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const

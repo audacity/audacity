@@ -7008,8 +7008,8 @@ bool TrackPanel::HitTestEnvelope(Track *track, wxRect &r, wxMouseEvent & event)
       return false;  // No envelope, not a hit, so return.
 
    // Get envelope point, range 0.0 to 1.0
-   double envValue = envelope->GetValueAtX(
-      event.m_x, r, mViewInfo->h, mViewInfo->zoom );
+   // Convert x to time.
+   const double envValue = envelope->GetValue(mViewInfo->PositionToTime(event.m_x, r.x));
 
    float zoomMin, zoomMax;
    wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);

@@ -151,8 +151,6 @@ class Envelope : public XMLTagHandler {
    // Accessors
    /** \brief Get envelope value at time t */
    double GetValue(double t) const;
-   /** \brief Get envelope value at pixel X */
-   double GetValueAtX(int x, const wxRect & r, double h, double pps);
 
    /** \brief Get many envelope points at once.
     *
