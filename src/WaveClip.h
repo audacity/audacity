@@ -151,6 +151,8 @@ class WaveClip;
 WX_DECLARE_USER_EXPORTED_LIST(WaveClip, WaveClipList, AUDACITY_DLL_API);
 WX_DEFINE_USER_EXPORTED_ARRAY_PTR(WaveClip*, WaveClipArray, class AUDACITY_DLL_API);
 
+// A bundle of arrays needed for drawing waveforms.  The object may or may not
+// own the storage for those arrays.  If it does, it destroys them.
 class WaveDisplay
 {
 public:
@@ -159,9 +161,36 @@ public:
    float *min, *max, *rms;
    int* bl;
 
+   std::vector<sampleCount> ownWhere;
+   std::vector<float> ownMin, ownMax, ownRms;
+   std::vector<int> ownBl;
+
+public:
    WaveDisplay(int w)
       : width(w), where(0), min(0), max(0), rms(0), bl(0)
    {
+   }
+
+   // Create "own" arrays.
+   void Allocate()
+   {
+      ownWhere.resize(width + 1);
+      ownMin.resize(width);
+      ownMax.resize(width);
+      ownRms.resize(width);
+      ownBl.resize(width);
+
+      where = &ownWhere[0];
+      if (width > 0) {
+         min = &ownMin[0];
+         max = &ownMax[0];
+         rms = &ownRms[0];
+         bl = &ownBl[0];
+      }
+      else {
+         min = max = rms = 0;
+         bl = 0;
+      }
    }
 
    ~WaveDisplay()
