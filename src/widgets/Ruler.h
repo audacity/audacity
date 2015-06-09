@@ -56,6 +56,13 @@ class AUDACITY_DLL_API Ruler {
    // (at the center of the pixel, in both cases)
    void SetRange(double min, double max);
 
+   // An overload needed for the special case of fisheye
+   // min is the value at (x, y)
+   // max is the value at (x+width, y+height)
+   // hiddenMin, hiddenMax are the values that would be shown without the fisheye.
+   // (at the center of the pixel, in both cases)
+   void SetRange(double min, double max, double hiddenMin, double hiddenMax);
+
    //
    // Optional Ruler Parameters
    //
@@ -167,6 +174,7 @@ private:
    bool         mUserFonts;
 
    double       mMin, mMax;
+   double       mHiddenMin, mHiddenMax;
 
    double       mMajor;
    double       mMinor;
@@ -305,8 +313,8 @@ private:
    void DrawQuickPlayIndicator(wxDC * dc, bool clear /*delete old only*/);
    void DoDrawPlayRegion(wxDC * dc);
 
-   double Pos2Time(int p);
-   int Time2Pos(double t);
+   double Pos2Time(int p, bool ignoreFisheye = false);
+   int Time2Pos(double t, bool ignoreFisheye = false);
 
    bool IsWithinMarker(int mousePosX, double markerTime);
 

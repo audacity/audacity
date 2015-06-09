@@ -98,8 +98,8 @@ using std::max;
 
 Ruler::Ruler()
 {
-   mMin = 0.0;
-   mMax = 100.0;
+   mMin = mHiddenMin = 0.0;
+   mMax = mHiddenMax = 100.0;
    mOrientation = wxHORIZONTAL;
    mSpacing = 6;
    mHasSetSpacing = false;
@@ -234,13 +234,26 @@ void Ruler::SetOrientation(int orient)
 
 void Ruler::SetRange(double min, double max)
 {
+   SetRange(min, max, min, max);
+}
+
+void Ruler::SetRange
+   (double min, double max, double hiddenMin, double hiddenMax)
+{
    // For a horizontal ruler,
    // min is the value in the center of pixel "left",
    // max is the value in the center of pixel "right".
 
-   if (mMin != min || mMax != max) {
+   // In the special case of a time ruler,
+   // hiddenMin and hiddenMax are values that would be shown with the fisheye
+   // turned off.  In other cases they equal min and max respectively.
+
+   if (mMin != min || mMax != max ||
+      mHiddenMin != hiddenMin || mHiddenMax != hiddenMax) {
       mMin = min;
       mMax = max;
+      mHiddenMin = hiddenMin;
+      mHiddenMax = hiddenMax;
 
       Invalidate();
    }
@@ -1070,7 +1083,11 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
 
    } else if(mLog==false) {
 
-      double UPP = (mMax-mMin)/mLength;  // Units per pixel
+      // Use the "hidden" min and max to determine the tick size.
+      // That may make a difference with fisheye.
+      // Otherwise you may see the tick size for the whole ruler change
+      // when the fisheye approaches start or end.
+      double UPP = (mHiddenMax-mHiddenMin)/mLength;  // Units per pixel
       FindLinearTickSizes(UPP);
 
       // Left and Right Edges
@@ -1148,7 +1165,7 @@ void Ruler::Update(TimeTrack* timetrack)// Envelope *speedEnv, long minSpeed, lo
    }
    else {
       // log case
-      mDigits=2;	//TODO: implement dynamic digit computation
+      mDigits=2;  //TODO: implement dynamic digit computation
       double loLog = log10(mMin);
       double hiLog = log10(mMax);
       double scale = mLength/(hiLog - loLog);
@@ -1843,14 +1860,18 @@ void AdornedRulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
    Refresh( false );
 }
 
-double AdornedRulerPanel::Pos2Time(int p)
+double AdornedRulerPanel::Pos2Time(int p, bool ignoreFisheye)
 {
-   return mViewInfo->PositionToTime(p, mLeftOffset);
+   return mViewInfo->PositionToTime(p, mLeftOffset
+      , ignoreFisheye
+   );
 }
 
-int AdornedRulerPanel::Time2Pos(double t)
+int AdornedRulerPanel::Time2Pos(double t, bool ignoreFisheye)
 {
-   return mViewInfo->TimeToPosition(t, mLeftOffset);
+   return mViewInfo->TimeToPosition(t, mLeftOffset
+      , ignoreFisheye
+   );
 }
 
 
@@ -2360,10 +2381,12 @@ void AdornedRulerPanel::DoDrawBorder(wxDC * dc)
 void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
 {
    const double min = Pos2Time(0);
+   const double hiddenMin = Pos2Time(0, true);
    const double max = Pos2Time(mInner.width);
+   const double hiddenMax = Pos2Time(mInner.width, true);
 
    ruler.SetTickColour( theTheme.Colour( clrTrackPanelText ) );
-   ruler.SetRange( min, max );
+   ruler.SetRange( min, max, hiddenMin, hiddenMax );
    ruler.Draw( *dc );
 }
 
