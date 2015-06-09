@@ -1346,14 +1346,17 @@ void PluginDescriptor::SetImporterExtensions(const wxArrayString & extensions)
 //
 // ============================================================================
 
-bool PluginManager::IsPluginRegistered(const PluginID & ID)
+bool PluginManager::IsPluginRegistered(const wxString & path)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
+   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
-      return false;
+      if (iter->second.GetPath().IsSameAs(path))
+      {
+         return true;
+      }
    }
 
-   return true;
+   return false;
 }
 
 const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)

@@ -288,11 +288,11 @@ bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    for (size_t i = 0; i < WXSIZEOF(kEffectNames); i++)
    {
-      PluginID ID(wxString(BUILTIN_EFFECT_PREFIX) + kEffectNames[i]);
+      wxString path(wxString(BUILTIN_EFFECT_PREFIX) + kEffectNames[i]);
 
-      if (!pm.IsPluginRegistered(ID))
+      if (!pm.IsPluginRegistered(path))
       {
-         RegisterPlugin(pm, ID);
+         RegisterPlugin(pm, path);
       }
    }
 

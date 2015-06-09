@@ -172,7 +172,7 @@ public:
 
    // PluginManagerInterface implementation
 
-   virtual bool IsPluginRegistered(const PluginID & ID);
+   virtual bool IsPluginRegistered(const wxString & path);
 
    virtual const PluginID & RegisterPlugin(ModuleInterface *module);
    virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectIdentInterface *effect);
