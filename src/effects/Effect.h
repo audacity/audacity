@@ -34,7 +34,7 @@ class wxWindow;
 #include "../Internat.h"
 #include "../widgets/ProgressDialog.h"
 
-#define BUILTIN_EFFECT_PREFIX wxT("Builtin Effect: ")
+#define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
 class SelectedRegion;
 class TimeWarper;
