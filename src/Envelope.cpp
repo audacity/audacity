@@ -65,6 +65,8 @@ Envelope::Envelope()
    mMaxValue = 2.0;
 
    mButton = wxMOUSE_BTN_NONE;
+
+   mSearchGuess = -1;
 }
 
 Envelope::~Envelope()
@@ -1023,6 +1025,7 @@ void Envelope::SetTrackLen(double trackLen)
 // Accessors
 double Envelope::GetValue(double t) const
 {
+   // t is absolute time
    double temp;
 
    GetValues(&temp, 1, t, 1.0);
@@ -1037,14 +1040,38 @@ double Envelope::GetValueAtX(int x, const wxRect & r, double h, double pps)
    return GetValue(t);
 }
 
-/// @param Lo returns index before this time.
-/// @param Hi returns index after this time.
+/// @param Lo returns last index at or before this time.
+/// @param Hi returns first index after this time.
 void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
 {
    Lo = 0;
    Hi = mEnv.Count() - 1;
    // JC: Do we have a problem if the envelope only has one point??
-   wxASSERT( Hi > Lo );
+   wxASSERT(Hi > Lo);
+
+   // Optimizations for the usual pattern of repeated calls with
+   // small increases of t.
+   {
+      if (mSearchGuess >= 0 && mSearchGuess < int(mEnv.Count()) - 1) {
+         if (t >= mEnv[mSearchGuess]->GetT() &&
+            t < mEnv[1 + mSearchGuess]->GetT()) {
+            Lo = mSearchGuess;
+            Hi = 1 + mSearchGuess;
+            return;
+         }
+      }
+
+      ++mSearchGuess;
+      if (mSearchGuess >= 0 && mSearchGuess < int(mEnv.Count()) - 1) {
+         if (t >= mEnv[mSearchGuess]->GetT() &&
+            t < mEnv[1 + mSearchGuess]->GetT()) {
+            Lo = mSearchGuess;
+            Hi = 1 + mSearchGuess;
+            return;
+         }
+      }
+   }
+
    while (Hi > (Lo + 1)) {
       int mid = (Lo + Hi) / 2;
       if (t < mEnv[mid]->GetT())
@@ -1053,6 +1080,8 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
          Lo = mid;
    }
    wxASSERT( Hi == ( Lo+1 ));
+
+   mSearchGuess = Lo;
 }
 
 /// GetInterpolationStartValueAtPoint() is used to select either the
@@ -1072,6 +1101,7 @@ double Envelope::GetInterpolationStartValueAtPoint( int iPoint ) const
 void Envelope::GetValues(double *buffer, int bufferLen,
                          double t0, double tstep) const
 {
+   // Convert t0 from absolute to clip-relative time
    t0 -= mOffset;
 
    // JC: If bufferLen ==0 we have probably just allocated a zero sized buffer.

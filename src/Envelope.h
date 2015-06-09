@@ -248,6 +248,8 @@ private:
    double lastIntegral_t1;
    double lastIntegral_result;
 
+   mutable int mSearchGuess;
+
 };
 
 inline double EnvPoint::ClampValue(double val)
