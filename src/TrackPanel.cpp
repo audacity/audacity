@@ -7207,13 +7207,14 @@ void TrackPanel::DrawTracks(wxDC * dc)
    ToolsToolBar *pTtb = mListener->TP_GetToolsToolBar();
    bool bMultiToolDown = pTtb->IsDown(multiTool);
    bool envelopeFlag   = pTtb->IsDown(envelopeTool) || bMultiToolDown;
-   bool samplesFlag    = pTtb->IsDown(drawTool) || bMultiToolDown;
+   bool bigPointsFlag  = pTtb->IsDown(drawTool) || bMultiToolDown;
    bool sliderFlag     = bMultiToolDown;
 
    // The track artist actually draws the stuff inside each track
    mTrackArtist->DrawTracks(mTracks, GetProject()->GetFirstVisible(),
-                            *dc, region, tracksRect, clip, mViewInfo,
-                            envelopeFlag, samplesFlag, sliderFlag);
+                            *dc, region, tracksRect, clip,
+                            mViewInfo->selectedRegion, *mViewInfo,
+                            envelopeFlag, bigPointsFlag, sliderFlag);
 
    DrawEverythingElse(dc, region, clip);
 }

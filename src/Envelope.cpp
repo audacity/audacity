@@ -202,13 +202,9 @@ static void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
 }
 
 /// TODO: This should probably move to track artist.
-void Envelope::DrawPoints(wxDC & dc, const wxRect & r, double h, double pps, bool dB,
+void Envelope::DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo, bool dB,
                     float zoomMin, float zoomMax)
 {
-   h -= mOffset;
-
-   wxASSERT( pps > 0 );
-   double tright = h + (r.width / pps);
    // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
    double dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
 
@@ -216,7 +212,9 @@ void Envelope::DrawPoints(wxDC & dc, const wxRect & r, double h, double pps, boo
    dc.SetBrush(*wxWHITE_BRUSH);
 
    for (int i = 0; i < (int)mEnv.Count(); i++) {
-      if (mEnv[i]->GetT() >= h && mEnv[i]->GetT() <= tright) {
+      const double time = mEnv[i]->GetT() + mOffset;
+      const wxInt64 position = zoomInfo.TimeToPosition(time);
+      if (position >= 0 && position < r.width) {
          // Change colour if this is the draggable point...
          if (i == mDragPoint) {
             dc.SetPen(AColor::envelopePen);
@@ -224,7 +222,7 @@ void Envelope::DrawPoints(wxDC & dc, const wxRect & r, double h, double pps, boo
          }
 
          double v = mEnv[i]->GetVal();
-         int x = int ((mEnv[i]->GetT() - h) * pps);
+         int x = int(position);
          int y, y2;
 
          y = GetWaveYPos(v, zoomMin, zoomMax, r.height, dB,

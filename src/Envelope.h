@@ -118,7 +118,7 @@ class Envelope : public XMLTagHandler {
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag);
    virtual void WriteXML(XMLWriter &xmlFile);
 
-   void DrawPoints(wxDC & dc, const wxRect & r, double h, double pps, bool dB,
+   void DrawPoints(wxDC & dc, const wxRect & r, const ZoomInfo &zoomInfo, bool dB,
              float zoomMin=-1.0, float zoomMax=1.0);
 
    // Event Handlers

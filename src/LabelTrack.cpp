@@ -444,7 +444,7 @@ void LabelTrack::ComputeTextPosition(const wxRect & r, int index)
 /// ComputeLayout determines which row each label
 /// should be placed on, and reserves space for it.
 /// Function assumes that the labels are sorted.
-void LabelTrack::ComputeLayout(const wxRect & r, double h, double pps)
+void LabelTrack::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo)
 {
    int i;
    int iRow;
@@ -461,15 +461,17 @@ void LabelTrack::ComputeLayout(const wxRect & r, double h, double pps)
    const int nRows = wxMin((r.height / yRowHeight) + 1, MAX_NUM_ROWS);
    // Initially none of the rows have been used.
    // So set a value that is less than any valid value.
-   const int xStart = r.x -(int)(h*pps) -100;
-   for(i=0;i<MAX_NUM_ROWS;i++)
-      xUsed[i]=xStart;
+   {
+      const int xStart = zoomInfo.TimeToPosition(0.0, r.x) - 100;
+      for(i=0;i<MAX_NUM_ROWS;i++)
+         xUsed[i]=xStart;
+   }
    int nRowsUsed=0;
 
    for (i = 0; i < (int)mLabels.Count(); i++)
    {
-      int x  = r.x + (int) ((mLabels[i]->getT0()  - h) * pps);
-      int x1 = r.x + (int) ((mLabels[i]->getT1() - h) * pps);
+      const int x = zoomInfo.TimeToPosition(mLabels[i]->getT0(), r.x);
+      const int x1 = zoomInfo.TimeToPosition(mLabels[i]->getT1(), r.x);
       int y = r.y;
 
       mLabels[i]->x=x;
@@ -727,8 +729,9 @@ bool LabelTrack::CalcCursorX(wxWindow * parent, int * x)
 /// Draw calls other functions to draw the LabelTrack.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
-void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
-                      double sel0, double sel1)
+void LabelTrack::Draw(wxDC & dc, const wxRect & r,
+   const SelectedRegion &selectedRegion,
+   const ZoomInfo &zoomInfo)
 {
    if(msFont.Ok())
       dc.SetFont(msFont);
@@ -738,7 +741,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
 
    TrackArtist::DrawBackgroundWithSelection(&dc, r, this,
          AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
-         sel0, sel1, h, pps);
+         selectedRegion, zoomInfo);
 
    int i;
 
@@ -765,7 +768,7 @@ void LabelTrack::Draw(wxDC & dc, const wxRect & r, double h, double pps,
    // happens with a new label track.
    dc.GetTextExtent(wxT("Demo Text x^y"), &textWidth, &textHeight);
    mTextHeight = (int)textHeight;
-   ComputeLayout( r, h , pps );
+   ComputeLayout( r, zoomInfo );
    dc.SetTextForeground(theTheme.Colour( clrLabelTrackText));
    dc.SetBackgroundMode(wxTRANSPARENT);
    dc.SetBrush(AColor::labelTextNormalBrush);
