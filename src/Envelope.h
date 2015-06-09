@@ -160,6 +160,11 @@ class Envelope : public XMLTagHandler {
     * more than one value in a row. */
    void GetValues(double *buffer, int len, double t0, double tstep) const;
 
+   /** \brief Get many envelope points at once, but don't assume uniform time step.
+   */
+   void GetValues
+      (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const;
+
    int NumberOfPointsAfter(double t);
    double NextPointAfter(double t);
 

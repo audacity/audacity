@@ -1180,6 +1180,13 @@ void Envelope::GetValues(double *buffer, int bufferLen,
    }
 }
 
+void Envelope::GetValues
+   (double *buffer, int bufferLen, int leftOffset, const ZoomInfo &zoomInfo) const
+{
+   for (int xx = 0; xx < bufferLen; ++xx)
+      buffer[xx] = GetValue(zoomInfo.PositionToTime(xx, -leftOffset));
+}
+
 int Envelope::NumberOfPointsAfter(double t)
 {
    if( t >= mEnv[mEnv.Count()-1]->GetT() )
