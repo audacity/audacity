@@ -53,7 +53,8 @@ TimeTrack::TimeTrack(DirManager *projDirManager):
    SetDefaultName(_("Time Track"));
    SetName(GetDefaultName());
 
-   mRuler = new Ruler();
+   mRuler = new Ruler;
+   mRuler->SetUseZoomInfo(0);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
 
@@ -77,7 +78,8 @@ TimeTrack::TimeTrack(TimeTrack &orig):
    mEnvelope->Paste(0.0, orig.mEnvelope);
 
    ///@TODO: Give Ruler:: a copy-constructor instead of this?
-   mRuler = new Ruler();
+   mRuler = new Ruler;
+   mRuler->SetUseZoomInfo(0);
    mRuler->SetLabelEdges(false);
    mRuler->SetFormat(Ruler::TimeFormat);
 
