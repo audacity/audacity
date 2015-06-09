@@ -964,7 +964,6 @@ void SpecCache::Populate
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
    const int fftLen = windowSize * zeroPaddingFactor;
-   const int padding = (windowSize * (zeroPaddingFactor - 1)) / 2;
 
    std::vector<float> buffer(
 #ifdef EXPERIMENTAL_FFT_SKIP_POINTS
