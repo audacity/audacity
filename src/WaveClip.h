@@ -32,9 +32,93 @@
 #include <vector>
 
 class Envelope;
+class SpectrogramSettings;
 class WaveCache;
 class WaveTrackCache;
-class SpecCache;
+
+class SpecCache {
+public:
+
+   // Make invalid cache
+   SpecCache()
+      : len(-1)
+      , ac(false)
+      , pps(-1.0)
+      , start(-1.0)
+      , windowType(-1)
+      , windowSize(-1)
+      , zeroPaddingFactor(-1)
+      , frequencyGain(-1)
+
+      , freq(NULL)
+      , where(NULL)
+
+      , dirty(-1)
+   {
+   }
+
+   // Make valid cache, to be filled in
+   SpecCache(int cacheLen, bool autocorrelation,
+      double pps_, double start_, int windowType_, int windowSize_,
+      int zeroPaddingFactor_, int frequencyGain_
+      )
+      : len(cacheLen)
+      , ac(autocorrelation)
+      , pps(pps_)
+      , start(start_)
+      , windowType(windowType_)
+      , windowSize(windowSize_)
+      , zeroPaddingFactor(zeroPaddingFactor_)
+      , frequencyGain(frequencyGain_)
+
+      // len columns, and so many rows, column-major.
+      // Don't take column literally -- this isn't pixel data yet, it's the
+      // raw data to be mapped onto the display.
+      , freq(len * ((windowSize * zeroPaddingFactor) / 2))
+
+      // Sample counts corresponding to the columns, and to one past the end.
+      , where(len + 1)
+
+      , dirty(-1)
+   {
+      where[0] = 0;
+   }
+
+   ~SpecCache()
+   {
+   }
+
+   bool Matches(int dirty_, bool autocorrelation, double pixelsPerSecond,
+      const SpectrogramSettings &settings, double rate) const;
+
+   void CalculateOneSpectrum
+      (const SpectrogramSettings &settings,
+       WaveTrackCache &waveTrackCache,
+       int xx, sampleCount numSamples,
+       double offset, double rate,
+       bool autocorrelation, const std::vector<float> &gainFactors,
+       float *scratch);
+
+   void Populate
+      (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
+       int copyBegin, int copyEnd, int numPixels,
+       sampleCount numSamples,
+       double offset, double rate,
+       bool autocorrelation);
+
+   const int          len; // counts pixels, not samples
+   const bool         ac;
+   const double       pps;
+   const double       start;
+   const int          windowType;
+   const int          windowSize;
+   const int          zeroPaddingFactor;
+   const int          frequencyGain;
+   std::vector<float> freq;
+   std::vector<sampleCount> where;
+
+   int          dirty;
+};
 
 class SpecPxCache {
 public:
