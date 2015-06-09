@@ -32,6 +32,8 @@ public:
    double h;                    // h pos in secs
 
    double screen;               // screen width in secs
+
+protected:
    double zoom;                 // pixels per second
 
 public:
