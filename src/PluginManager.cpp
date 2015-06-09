@@ -482,8 +482,7 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType 
 {
    mType = type;
    mEffects = NULL;
-   SetLabel(_("Plug-in Manager: Effects"));         // Provide visual label
-   SetName(_("Plug-in Manager: Effects"));          // Provide audible label
+   SetLabel(GetTitle());
 
    mStates.SetCount(STATE_COUNT);
    mStates[STATE_Enabled] = _("Enabled");
