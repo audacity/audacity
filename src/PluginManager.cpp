@@ -482,7 +482,7 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType 
 {
    mType = type;
    mEffects = NULL;
-   SetLabel(GetTitle());
+   SetName(GetTitle());
 
    mStates.SetCount(STATE_COUNT);
    mStates[STATE_Enabled] = _("Enabled");
