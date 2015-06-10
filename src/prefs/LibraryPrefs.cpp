@@ -140,6 +140,9 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #if !defined(USE_FFMPEG) || defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
          bdwn->Enable(FALSE);
          bfnd->Enable(FALSE);
+#else
+         // fix compilation warnings about unused variables
+         bfnd, bdwn;
 #endif
       }
       S.EndTwoColumn();

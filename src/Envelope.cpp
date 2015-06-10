@@ -336,7 +336,7 @@ float Envelope::ValueOfPixel( int y, int height, bool upper, bool dB,
       // TODO: Cache the gPrefs value.  Reading it every time is inefficient.
       dBRange = gPrefs->Read(wxT("/GUI/EnvdBRange"), ENV_DB_RANGE);
 
-   float v = ::ValueOfPixel(y, height, mContourOffset, dB, dBRange, zoomMin, zoomMax);
+   float v = ::ValueOfPixel(y, height, 0 != mContourOffset, dB, dBRange, zoomMin, zoomMax);
 
    // MB: this is mostly equivalent to what the old code did, I'm not sure
    // if anything special is needed for asymmetric ranges
@@ -1413,7 +1413,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area )
    if(area == 0.0)
       return t0;
 
-   unsigned int count = mEnv.Count();
+   int count = mEnv.Count();
    if(count == 0) // 'empty' envelope
       return t0 + area * mDefaultValue;
 

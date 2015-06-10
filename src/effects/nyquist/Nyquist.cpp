@@ -1391,7 +1391,7 @@ void NyquistEffect::Parse(wxString line)
       long v;
       // Splits are restored by default. Set to 0 to prevent.
       tokens[1].ToLong(&v);
-      mRestoreSplits = v;
+      mRestoreSplits = !!v;
       return;
    }
 #endif
