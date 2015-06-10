@@ -26,6 +26,8 @@
 #include "../ShuttleGui.h"
 #include "../FFT.h"
 
+#include <algorithm>
+
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent)
 :  PrefsPanel(parent, _("Spectrograms"))
 {
