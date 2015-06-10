@@ -2029,6 +2029,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
    if (!updated && clip->mSpecPxCache->valid && (clip->mSpecPxCache->len == mid.height * mid.width)
       && gain == clip->mSpecPxCache->gain
       && range == clip->mSpecPxCache->range
+      && minFreq == clip->mSpecPxCache->minFreq
+      && maxFreq == clip->mSpecPxCache->maxFreq
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    && fftYGrid==fftYGridOld
 #endif //EXPERIMENTAL_FFT_Y_GRID
@@ -2047,6 +2049,8 @@ void TrackArtist::DrawClipSpectrum(WaveTrackCache &cache,
       clip->mSpecPxCache->valid = true;
       clip->mSpecPxCache->gain = gain;
       clip->mSpecPxCache->range = range;
+      clip->mSpecPxCache->minFreq = minFreq;
+      clip->mSpecPxCache->maxFreq = maxFreq;
 #ifdef EXPERIMENTAL_FIND_NOTES
       fftFindNotesOld = fftFindNotes;
       findNotesMinAOld = findNotesMinA;

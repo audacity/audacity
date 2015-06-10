@@ -44,6 +44,7 @@ public:
       values = new float[len];
       valid = false;
       range = gain = -1;
+      minFreq = maxFreq = -1;
    }
 
    ~SpecPxCache()
@@ -57,6 +58,8 @@ public:
 
    int range;
    int gain;
+   int minFreq;
+   int maxFreq;
 };
 
 class WaveClip;
